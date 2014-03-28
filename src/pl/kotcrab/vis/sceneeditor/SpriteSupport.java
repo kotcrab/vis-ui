@@ -157,4 +157,10 @@ public class SpriteSupport implements SceneEditorSupport<Sprite>
 		return s.getBoundingRectangle();
 	}
 
+	@Override
+	public void setSize(Sprite s, float width, float height)
+	{
+		s.setSize(width, height);
+	}
+
 }

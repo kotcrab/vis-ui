@@ -37,7 +37,8 @@ public interface SceneEditorSupport<O> extends Disposable
 	public float getOriginX(O obj);
 	public float getOriginY(O obj);
 	
-	public void setScale(O obj, float x, float y);
+	public void setScale(O obj, float scaleX, float scaleY);
+	public void setSize(O obj, float width, float height);
 	
 	public float getScaleX(O obj);
 	public float getScaleY(O obj);

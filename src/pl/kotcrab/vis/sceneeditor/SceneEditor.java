@@ -14,7 +14,6 @@
  * limitations under the License.
  ******************************************************************************/
 
-
 package pl.kotcrab.vis.sceneeditor;
 
 import java.io.File;
@@ -39,8 +38,8 @@ import com.badlogic.gdx.math.Rectangle;
 
 //TODO better selecting system
 
-@SuppressWarnings({ "rawtypes", "unchecked" })
 // yeah, you know there are just warnings...
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class SceneEditor extends InputAdapter
 {
 	private SpriteBatch guiBatch;
@@ -61,6 +60,10 @@ public class SceneEditor extends InputAdapter
 	private boolean pointerInsideScaleArea;
 	private float attachPointX;
 	private float attachPointY;
+	private float attachScreenX;
+	private float attachScreenY;
+	private float startingWidth;
+	private float startingHeight;
 	
 	public SceneEditor(FileHandle arialFontFile, FileHandle sceneFile, Camera camera, boolean devMode)
 	{
@@ -113,14 +116,14 @@ public class SceneEditor extends InputAdapter
 	
 	public SceneEditor add(Object obj, String identifier)
 	{
-		if(devMode && isSupportForObjectAvaiable(obj)) objectMap.put(identifier, obj);
+		if(isSupportForObjectAvaiable(obj)) objectMap.put(identifier, obj);
 		
 		return this;
 	}
 	
 	public void registerSupport(Class<?> klass, SceneEditorSupport<?> support)
 	{
-		if(devMode) supportMap.put(klass, support);
+		supportMap.put(klass, support);
 	}
 	
 	public boolean isSupportForObjectAvaiable(Object obj)
@@ -158,6 +161,11 @@ public class SceneEditor extends InputAdapter
 					
 					renderObjectScaleBox(sup, obj);
 				}
+				
+				if(sup.isRotatingSupported())
+				{
+					renderObjectRotateBox(sup, obj);
+				}
 			}
 			
 			if(selectedObj != null)
@@ -180,11 +188,14 @@ public class SceneEditor extends InputAdapter
 			
 			shapeRenderer.end();
 			
-			guiBatch.begin();
-			drawTextAtLine("VisSceneEditor - Edit Mode", 0);
-			
-			if(selectedObj != null) drawTextAtLine("Selected object: " + getIdentifierForObject(selectedObj), 2);
-			guiBatch.end();
+			if(SceneEditorConfig.drawGui)
+			{
+				guiBatch.begin();
+				drawTextAtLine("VisSceneEditor - Edit Mode", 0);
+				
+				if(selectedObj != null) drawTextAtLine("Selected object: " + getIdentifierForObject(selectedObj), 2);
+				guiBatch.end();
+			}
 		}
 	}
 	
@@ -212,6 +223,12 @@ public class SceneEditor extends InputAdapter
 	private void drawTextAtLine(String text, int line)
 	{
 		font.draw(guiBatch, text, 2, Gdx.graphics.getHeight() - 2 - (line * 17));
+	}
+	
+	private void renderObjectRotateBox(SceneEditorSupport sup, Object obj)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 	
 	@Override
@@ -248,6 +265,12 @@ public class SceneEditor extends InputAdapter
 					selectedObj = obj;
 					attachPointX = (x - sup.getX(selectedObj));
 					attachPointY = (y - sup.getY(selectedObj));
+					attachScreenX = x;
+					attachScreenY = y;
+					startingWidth = sup.getWidth(selectedObj);
+					startingHeight = sup.getHeight(selectedObj);
+					
+					checkIfPointerInsideScaleArea(x, y);
 					
 					return true;
 				}
@@ -264,30 +287,42 @@ public class SceneEditor extends InputAdapter
 		float x = camController.calcX(screenX);
 		float y = camController.calcY(screenY);
 		
-		if(selectedObj != null)
-		{
-			if(buildRectangeForScaleArea(supportMap.get(selectedObj.getClass()), selectedObj).contains(x, y))
-				pointerInsideScaleArea = true;
-			else
-				pointerInsideScaleArea = false;
-			
-		}
+		checkIfPointerInsideScaleArea(x, y);
 		
 		return false;
 	}
 	
 	public boolean touchDragged(int screenX, int screenY, int pointer)
 	{
+		float x = camController.calcX(screenX);
+		float y = camController.calcY(screenY);
+		
 		if(editing)
 		{
 			if(selectedObj != null && Gdx.input.isButtonPressed(Buttons.LEFT))
 			{
 				SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
 				
-				if(sup.isMovingSupported())
+				if(sup.isScallingSupported() && pointerInsideScaleArea)
 				{
-					sup.setX(selectedObj, camController.calcX(screenX) - attachPointX);
-					sup.setY(selectedObj, camController.calcY(screenY) - attachPointY);
+					float deltaX = x - attachScreenX;
+					float deltaY = y - attachScreenY;
+					
+					if(Gdx.input.isKeyPressed(SceneEditorConfig.SCALE_LOCK_RATIO))
+					{
+						float ratio = startingWidth / startingHeight;
+						deltaY = deltaX / ratio;
+					}
+					
+					sup.setSize(selectedObj, startingWidth + deltaX, startingHeight + deltaY);
+				}
+				else
+				{
+					if(sup.isMovingSupported())
+					{
+						sup.setX(selectedObj, camController.calcX(screenX) - attachPointX);
+						sup.setY(selectedObj, camController.calcY(screenY) - attachPointY);
+					}
 				}
 				
 				return true;
@@ -296,15 +331,28 @@ public class SceneEditor extends InputAdapter
 		return false;
 	}
 	
+	private void checkIfPointerInsideScaleArea(float x, float y)
+	{
+		if(selectedObj != null)
+		{
+			if(buildRectangeForScaleArea(supportMap.get(selectedObj.getClass()), selectedObj).contains(x, y))
+				pointerInsideScaleArea = true;
+			else
+				pointerInsideScaleArea = false;
+			
+		}
+	}
+	
 	public void dispose()
 	{
 		if(devMode)
 		{
 			guiBatch.dispose();
 			font.dispose();
-			for(Entry<Class<?>, SceneEditorSupport<?>> entry : supportMap.entrySet())
-				entry.getValue().dispose();
 		}
+		
+		for(Entry<Class<?>, SceneEditorSupport<?>> entry : supportMap.entrySet())
+			entry.getValue().dispose();
 	}
 	
 	public void resize()
