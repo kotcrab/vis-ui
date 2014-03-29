@@ -33,6 +33,8 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 
@@ -57,13 +59,19 @@ public class SceneEditor extends InputAdapter
 	private HashMap<String, Object> objectMap;
 	
 	private Object selectedObj;
-	private boolean pointerInsideScaleArea;
-	private float attachPointX;
+	private boolean pointerInsideScaleBox;
+	private boolean pointerInsideRotateCircle;
+	
+	private float attachPointX; // for moving object
 	private float attachPointY;
-	private float attachScreenX;
+	
+	private float attachScreenX; // for scaling/rotating object
 	private float attachScreenY;
-	private float startingWidth;
+	
+	private float startingWidth; // for scalling object
 	private float startingHeight;
+	
+	private float startingRotation; // for rotating object;
 	
 	public SceneEditor(FileHandle arialFontFile, FileHandle sceneFile, Camera camera, boolean devMode)
 	{
@@ -154,7 +162,7 @@ public class SceneEditor extends InputAdapter
 				
 				if(sup.isScallingSupported())
 				{
-					if(obj == selectedObj && pointerInsideScaleArea)
+					if(obj == selectedObj && pointerInsideScaleBox)
 						shapeRenderer.setColor(Color.RED);
 					else
 						shapeRenderer.setColor(Color.WHITE);
@@ -162,10 +170,15 @@ public class SceneEditor extends InputAdapter
 					renderObjectScaleBox(sup, obj);
 				}
 				
-				if(sup.isRotatingSupported())
-				{
-					renderObjectRotateBox(sup, obj);
-				}
+				// if(sup.isRotatingSupported())
+				// {
+				// if(obj == selectedObj && pointerInsideRotateCircle)
+				// shapeRenderer.setColor(Color.RED);
+				// else
+				// shapeRenderer.setColor(Color.WHITE);
+				//
+				// renderObjectRotateCricle(sup, obj);
+				// }
 			}
 			
 			if(selectedObj != null)
@@ -177,12 +190,22 @@ public class SceneEditor extends InputAdapter
 				
 				if(sup.isScallingSupported())
 				{
-					if(pointerInsideScaleArea)
+					if(pointerInsideScaleBox)
 						shapeRenderer.setColor(Color.RED);
 					else
 						shapeRenderer.setColor(Color.WHITE);
 					
 					renderObjectScaleBox(sup, selectedObj);
+				}
+				
+				if(sup.isRotatingSupported())
+				{
+					if(pointerInsideRotateCircle)
+						shapeRenderer.setColor(Color.RED);
+					else
+						shapeRenderer.setColor(Color.WHITE);
+					
+					renderObjectRotateCricle(sup, selectedObj);
 				}
 			}
 			
@@ -206,13 +229,27 @@ public class SceneEditor extends InputAdapter
 	
 	private void renderObjectScaleBox(SceneEditorSupport sup, Object obj)
 	{
-		renderRectangle(buildRectangeForScaleArea(sup, obj));
+		renderRectangle(buildRectangeForScaleBox(sup, obj));
 	}
 	
-	private Rectangle buildRectangeForScaleArea(SceneEditorSupport sup, Object obj)
+	private void renderObjectRotateCricle(SceneEditorSupport sup, Object obj)
+	{
+		renderCircle(buildCirlcleForRotateBox(sup, obj));
+	}
+	
+	private Rectangle buildRectangeForScaleBox(SceneEditorSupport sup, Object obj)
 	{
 		Rectangle rect = sup.getBoundingRectangle(obj);
 		return new Rectangle(rect.x + rect.width - 15, rect.y + rect.height - 15, 15, 15);
+	}
+	
+	private Circle buildCirlcleForRotateBox(SceneEditorSupport sup, Object obj)
+	{
+		Rectangle rect = sup.getBoundingRectangle(obj);
+		
+		int cWidth = 5;
+		
+		return new Circle(rect.x + rect.width / 2 + cWidth, rect.y + rect.height + cWidth, cWidth);
 	}
 	
 	private void renderRectangle(Rectangle rect)
@@ -220,15 +257,14 @@ public class SceneEditor extends InputAdapter
 		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
 	}
 	
+	private void renderCircle(Circle cir)
+	{
+		shapeRenderer.circle(cir.x, cir.y, cir.radius);
+	}
+	
 	private void drawTextAtLine(String text, int line)
 	{
 		font.draw(guiBatch, text, 2, Gdx.graphics.getHeight() - 2 - (line * 17));
-	}
-	
-	private void renderObjectRotateBox(SceneEditorSupport sup, Object obj)
-	{
-		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override
@@ -251,33 +287,43 @@ public class SceneEditor extends InputAdapter
 	{
 		if(editing)
 		{
-			float x = camController.calcX(screenX);
-			float y = camController.calcY(screenY);
+			final float x = camController.calcX(screenX);
+			final float y = camController.calcY(screenY);
 			
-			for(Entry<String, Object> entry : objectMap.entrySet())
+			if(pointerInsideRotateCircle == false) // without this it would deselect active object if pointer clicked in rotate cricle
 			{
-				Object obj = entry.getValue();
-				
-				SceneEditorSupport sup = supportMap.get(obj.getClass());
-				
-				if(sup.contains(obj, camController.calcX(screenX), camController.calcY(screenY)))
+				for(Entry<String, Object> entry : objectMap.entrySet())
 				{
-					selectedObj = obj;
-					attachPointX = (x - sup.getX(selectedObj));
-					attachPointY = (y - sup.getY(selectedObj));
-					attachScreenX = x;
-					attachScreenY = y;
-					startingWidth = sup.getWidth(selectedObj);
-					startingHeight = sup.getHeight(selectedObj);
+					Object obj = entry.getValue();
 					
-					checkIfPointerInsideScaleArea(x, y);
+					SceneEditorSupport sup = supportMap.get(obj.getClass());
 					
-					return true;
+					if(sup.contains(obj, camController.calcX(screenX), camController.calcY(screenY)))
+					{
+						selectedObj = obj;
+						attachPointX = (x - sup.getX(selectedObj));
+						attachPointY = (y - sup.getY(selectedObj));
+						attachScreenX = x;
+						attachScreenY = y;
+						startingWidth = sup.getWidth(selectedObj);
+						startingHeight = sup.getHeight(selectedObj);
+						startingRotation = sup.getRotation(selectedObj);
+						
+						checkIfPointerInsideScaleBox(x, y);
+						
+						return true;
+					}
 				}
+				
+				selectedObj = null;
 			}
-			
-			selectedObj = null;
 		}
+		return false;
+	}
+	
+	@Override
+	public boolean touchUp(int screenX, int screenY, int pointer, int button)
+	{
 		return false;
 	}
 	
@@ -287,15 +333,17 @@ public class SceneEditor extends InputAdapter
 		float x = camController.calcX(screenX);
 		float y = camController.calcY(screenY);
 		
-		checkIfPointerInsideScaleArea(x, y);
+		checkIfPointerInsideScaleBox(x, y);
+		checkIfPointerInsideRotateCircle(x, y);
 		
 		return false;
 	}
 	
+	@Override
 	public boolean touchDragged(int screenX, int screenY, int pointer)
 	{
-		float x = camController.calcX(screenX);
-		float y = camController.calcY(screenY);
+		final float x = camController.calcX(screenX);
+		final float y = camController.calcY(screenY);
 		
 		if(editing)
 		{
@@ -303,7 +351,7 @@ public class SceneEditor extends InputAdapter
 			{
 				SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
 				
-				if(sup.isScallingSupported() && pointerInsideScaleArea)
+				if(sup.isScallingSupported() && pointerInsideScaleBox)
 				{
 					float deltaX = x - attachScreenX;
 					float deltaY = y - attachScreenY;
@@ -316,12 +364,27 @@ public class SceneEditor extends InputAdapter
 					
 					sup.setSize(selectedObj, startingWidth + deltaX, startingHeight + deltaY);
 				}
+				else if(sup.isRotatingSupported() && pointerInsideRotateCircle)
+				{
+					float deltaX = x - attachScreenX;
+					float deltaY = y - attachScreenY;
+					
+					float deg = MathUtils.atan2(-deltaX, deltaY) / MathUtils.degreesToRadians;
+					
+					if(Gdx.input.isKeyPressed(SceneEditorConfig.ROTATE_SNAP_VALUES))
+					{
+						int roundDeg =  Math.round(deg / 30);
+						sup.setRotation(selectedObj, roundDeg * 30);
+					}
+					else
+						sup.setRotation(selectedObj, deg);
+				}
 				else
 				{
 					if(sup.isMovingSupported())
 					{
-						sup.setX(selectedObj, camController.calcX(screenX) - attachPointX);
-						sup.setY(selectedObj, camController.calcY(screenY) - attachPointY);
+						sup.setX(selectedObj, x - attachPointX);
+						sup.setY(selectedObj, y - attachPointY);
 					}
 				}
 				
@@ -331,15 +394,26 @@ public class SceneEditor extends InputAdapter
 		return false;
 	}
 	
-	private void checkIfPointerInsideScaleArea(float x, float y)
+	private void checkIfPointerInsideScaleBox(float x, float y)
 	{
 		if(selectedObj != null)
 		{
-			if(buildRectangeForScaleArea(supportMap.get(selectedObj.getClass()), selectedObj).contains(x, y))
-				pointerInsideScaleArea = true;
+			if(buildRectangeForScaleBox(supportMap.get(selectedObj.getClass()), selectedObj).contains(x, y))
+				pointerInsideScaleBox = true;
 			else
-				pointerInsideScaleArea = false;
+				pointerInsideScaleBox = false;
 			
+		}
+	}
+	
+	private void checkIfPointerInsideRotateCircle(float x, float y)
+	{
+		if(selectedObj != null)
+		{
+			if(buildCirlcleForRotateBox(supportMap.get(selectedObj.getClass()), selectedObj).contains(x, y))
+				pointerInsideRotateCircle = true;
+			else
+				pointerInsideRotateCircle = false;
 		}
 	}
 	
