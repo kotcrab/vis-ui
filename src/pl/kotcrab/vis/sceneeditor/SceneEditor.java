@@ -38,8 +38,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
-//TODO better selecting system
-
 // yeah, you know there are just warnings...
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class SceneEditor extends SceneEditorInputAdapater {
@@ -53,6 +51,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private boolean devMode;
 	private boolean editing;
+	private boolean cameraLocked;
 
 	private ObjectMap<Class<?>, SceneEditorSupport<?>> supportMap;
 	private ObjectMap<String, Object> objectMap;
@@ -216,7 +215,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			}
 
 			if (camController.isCameraDirty()) {
-				shapeRenderer.setColor(Color.GREEN);
+				if (cameraLocked)
+					shapeRenderer.setColor(Color.RED);
+				else
+					shapeRenderer.setColor(Color.GREEN);
 				renderRectangle(camController.getOrginalCameraRectangle());
 			}
 
@@ -225,7 +227,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			if (SceneEditorConfig.DRAW_GUI) {
 				guiBatch.begin();
 				drawTextAtLine("VisSceneEditor - Edit Mode - Entities: " + objectMap.size, 0);
-				drawTextAtLine("Camera is not locked. Press R to reset camera properties", 1);
+				if (cameraLocked)
+					drawTextAtLine("Camera is locked.", 1);
+				else
+					drawTextAtLine("Camera is not locked.", 1);
 
 				if (selectedObj != null) drawTextAtLine("Selected object: " + getIdentifierForObject(selectedObj), 3);
 				guiBatch.end();
@@ -272,8 +277,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	@Override
 	public boolean keyDown (int keycode) {
+
 		if (editing) {
 			if (keycode == SceneEditorConfig.KEY_RESET_CAMERA) camController.restoreOrginalCameraProperties();
+			if (keycode == SceneEditorConfig.KEY_LOCK_CAMERA) cameraLocked = !cameraLocked;
 		}
 
 		if (keycode == SceneEditorConfig.KEY_TOGGLE_EDIT_MODE) {
@@ -365,8 +372,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 					sup.setSize(selectedObj, startingWidth + deltaX, startingHeight + deltaY);
 				} else if (sup.isRotatingSupported() && pointerInsideRotateCircle) {
-					float deltaX = x - attachPointX;
-					float deltaY = y - attachPointY;
+					float deltaX = x - attachScreenX;
+					float deltaY = y - attachScreenY;
 
 					float deg = MathUtils.atan2(-deltaX, deltaY) / MathUtils.degreesToRadians;
 
@@ -391,7 +398,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	@Override
 	public boolean scrolled (int amount) {
-		if (editing) {
+		if (editing && cameraLocked == false) {
 			OrthographicCamera camera = camController.getCamera();
 
 			float newZoom = 0;
@@ -430,7 +437,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	// pan is worse because you must drag mouse a little bit to fire this event
 	@Override
 	public boolean pan (float x, float y, float deltaX, float deltaY) {
-		if (selectedObj == null) {
+		if (selectedObj == null && cameraLocked == false) {
 			if (Gdx.input.isButtonPressed(Buttons.LEFT) && Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) {
 				OrthographicCamera camera = camController.getCamera();
 				camera.position.x = camera.position.x - deltaX * camera.zoom;

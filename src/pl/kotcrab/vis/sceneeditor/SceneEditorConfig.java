@@ -8,6 +8,7 @@ public class SceneEditorConfig {
 	public static int KEY_SCALE_LOCK_RATIO = Keys.SHIFT_LEFT;
 
 	public static int KEY_RESET_CAMERA = Keys.R;
+	public static int KEY_LOCK_CAMERA = Keys.L;
 	public static int KEY_TOGGLE_EDIT_MODE = Keys.F11;
 
 	/** Maximum zooming in camera value.<br>
