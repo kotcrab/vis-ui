@@ -60,14 +60,17 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private boolean pointerInsideScaleBox;
 	private boolean pointerInsideRotateCircle;
 
-	private float attachPointX; // for moving object
-	private float attachPointY;
+	//private float attachPointX; // for moving object
+	//private float attachPointY;
 
 	private float attachScreenX; // for scaling/rotating object
 	private float attachScreenY;
 
 	private float startingWidth; // for scalling object
 	private float startingHeight;
+
+	private float lastX;
+	private float lastY;
 
 	private float startingRotation; // for rotating object;
 
@@ -133,8 +136,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (selectedObj != null) {
 			SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
 
-			attachPointX = (x - sup.getX(selectedObj));
-			attachPointY = (y - sup.getY(selectedObj));
+			//attachPointX = (x - sup.getX(selectedObj));
+			//attachPointY = (y - sup.getY(selectedObj));
 			attachScreenX = x;
 			attachScreenY = y;
 			startingWidth = sup.getWidth(selectedObj);
@@ -300,6 +303,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (editing) {
 			final float x = camController.calcX(screenX);
 			final float y = camController.calcY(screenY);
+			lastX = x;
+			lastY = y;
 
 			if (pointerInsideRotateCircle == false && pointerInsideScaleBox == false) // without this it would deselect active object
 			{
@@ -384,10 +389,23 @@ public class SceneEditor extends SceneEditorInputAdapater {
 						sup.setRotation(selectedObj, deg);
 				} else {
 					if (sup.isMovingSupported()) {
-						sup.setX(selectedObj, x - attachPointX);
-						sup.setY(selectedObj, y - attachPointY);
+						float deltaX = (x - lastX);
+						float deltaY = (y - lastY);
+
+						if(Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE))
+						{
+							deltaX /= SceneEditorConfig.PRECISION_DIVIDE_BY;
+							deltaY /= SceneEditorConfig.PRECISION_DIVIDE_BY;
+						}
+						
+						sup.setX(selectedObj, sup.getX(selectedObj) + deltaX);
+						sup.setY(selectedObj, sup.getY(selectedObj) + deltaY);
+						
+						lastX = x;
+						lastY = y;
 					}
 				}
+
 
 				return true;
 			}
