@@ -16,15 +16,18 @@
 
 package pl.kotcrab.vis.sceneeditor.sample;
 
+import pl.kotcrab.core.KotcrabText;
+import pl.kotcrab.core.KotcrabTextSupport;
 import pl.kotcrab.vis.sceneeditor.SceneEditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class SampleScene extends AbstractScene {
+public class SampleSceneKotcrabText extends AbstractScene{
 	private SceneEditor sceneEditor;
 
 	private Texture bushTexture;
@@ -34,8 +37,10 @@ public class SampleScene extends AbstractScene {
 	private Sprite bush2;
 	private Sprite net1;
 	private Sprite net2;
+	
+	private KotcrabText text;
 
-	public SampleScene (OrthographicCamera camera) {
+	public SampleSceneKotcrabText (OrthographicCamera camera) {
 		//SceneEditorConfig.backupFolderPath = "F:\\Projekty\\VisSceneEditor\\backup\\"; //Optonal, will backup your files before saving new scene 
 		
 		bushTexture = new Texture(Gdx.files.internal("sample_assets/bush.png"));
@@ -46,16 +51,17 @@ public class SampleScene extends AbstractScene {
 		net1 = new Sprite(netTexture);
 		net2 = new Sprite(netTexture);
 
-		net1.setRotation(45); // DEBUG
-		net1.setPosition(450, 240);
-
+		text = new KotcrabText(new BitmapFont(Gdx.files.internal("assets/data/arial.fnt")), "Just some random text", false, 0, 0);
+		
 		sceneEditor = new SceneEditor(Gdx.files.internal("assets/data/arial.fnt"), Gdx.files.internal("sample_assets/scene.xml"),
 			camera, true);
+		sceneEditor.registerSupport(KotcrabText.class, new KotcrabTextSupport());
 		sceneEditor.add(bush1, "bush1").add(bush2, "bush2").add(net1, "net1").add(net2, "net2");
+		sceneEditor.add(text, "text");
 		sceneEditor.load();
 		sceneEditor.enable();
 	}
-
+	
 	@Override
 	public void render (SpriteBatch batch) {
 		batch.begin();
@@ -63,6 +69,7 @@ public class SampleScene extends AbstractScene {
 		bush2.draw(batch);
 		net1.draw(batch);
 		net2.draw(batch);
+		text.draw(batch);
 		batch.end();
 
 		sceneEditor.render();
@@ -79,5 +86,4 @@ public class SampleScene extends AbstractScene {
 	public void resize () {
 		sceneEditor.resize();
 	}
-
 }

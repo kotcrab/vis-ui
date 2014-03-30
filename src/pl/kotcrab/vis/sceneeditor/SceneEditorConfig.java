@@ -1,8 +1,6 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
-import java.io.File;
-
 import com.badlogic.gdx.Input.Keys;
 
 public class SceneEditorConfig {

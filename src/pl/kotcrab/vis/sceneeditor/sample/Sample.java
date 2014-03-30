@@ -26,7 +26,7 @@ public class Sample implements ApplicationListener {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 
-	private SampleScene scene;
+	private AbstractScene scene;
 
 	@Override
 	public void create () {
@@ -35,12 +35,13 @@ public class Sample implements ApplicationListener {
 		camera.position.x = 800 / 2;
 		camera.position.y = 480 / 2;
 
-		scene = new SampleScene(camera);
+		//scene = new SampleScene(camera);
+		scene = new SampleSceneKotcrabText(camera);
 	}
 
 	@Override
 	public void resize (int width, int height) {
-		scene.reisze();
+		scene.resize();
 	}
 
 	@Override
