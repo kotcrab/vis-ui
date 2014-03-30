@@ -17,8 +17,6 @@
 package pl.kotcrab.vis.sceneeditor;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map.Entry;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -37,6 +35,8 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 //TODO better selecting system
 
@@ -54,8 +54,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private boolean devMode;
 	private boolean editing;
 
-	private HashMap<Class<?>, SceneEditorSupport<?>> supportMap;
-	private HashMap<String, Object> objectMap;
+	private ObjectMap<Class<?>, SceneEditorSupport<?>> supportMap;
+	private ObjectMap<String, Object> objectMap;
 
 	private Object selectedObj;
 	private boolean pointerInsideScaleBox;
@@ -77,7 +77,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 		file = new File(sceneFile.path());
 
-		supportMap = new HashMap<>();
+		supportMap = new ObjectMap<>();
 		registerSupport(Sprite.class, new SpriteSupport());
 
 		if (devMode) {
@@ -87,7 +87,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			camController = new CameraController(camera);
 			font = new BitmapFont(arialFontFile);
 
-			objectMap = new HashMap<>();
+			objectMap = new ObjectMap<>();
 
 			attachInputProcessor();
 		}
@@ -145,8 +145,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	}
 
 	public String getIdentifierForObject (Object obj) {
-		for (Entry<String, Object> entry : objectMap.entrySet()) {
-			if (entry.getValue().equals(obj)) return entry.getKey();
+		for (Entry<String, Object> entry : objectMap.entries()) {
+			if (entry.value.equals(obj)) return entry.key;
 		}
 
 		return null;
@@ -158,8 +158,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (editing) {
 			shapeRenderer.begin(ShapeType.Line);
 
-			for (Entry<String, Object> entry : objectMap.entrySet()) {
-				Object obj = entry.getValue();
+			for (Entry<String, Object> entry : objectMap.entries()) {
+				Object obj = entry.value;
 
 				SceneEditorSupport sup = supportMap.get(obj.getClass());
 
@@ -224,7 +224,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 			if (SceneEditorConfig.DRAW_GUI) {
 				guiBatch.begin();
-				drawTextAtLine("VisSceneEditor - Edit Mode - Entities: " + objectMap.size(), 0);
+				drawTextAtLine("VisSceneEditor - Edit Mode - Entities: " + objectMap.size, 0);
 				drawTextAtLine("Camera is not locked. Press R to reset camera properties", 1);
 
 				if (selectedObj != null) drawTextAtLine("Selected object: " + getIdentifierForObject(selectedObj), 3);
@@ -299,8 +299,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				Object matchingObject = null;
 				int lastSurfaceArea = Integer.MAX_VALUE;
 
-				for (Entry<String, Object> entry : objectMap.entrySet()) {
-					Object obj = entry.getValue();
+				for (Entry<String, Object> entry : objectMap.entries()) {
+					Object obj = entry.value;
 
 					SceneEditorSupport sup = supportMap.get(obj.getClass());
 
@@ -334,6 +334,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	@Override
 	public boolean mouseMoved (int screenX, int screenY) {
 		if (editing) {
+
 			float x = camController.calcX(screenX);
 			float y = camController.calcY(screenY);
 
@@ -466,8 +467,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			font.dispose();
 		}
 
-		for (Entry<Class<?>, SceneEditorSupport<?>> entry : supportMap.entrySet())
-			entry.getValue().dispose();
+		for (Entry<Class<?>, SceneEditorSupport<?>> entry : supportMap.entries())
+			entry.value.dispose();
 	}
 
 	public void resize () {
