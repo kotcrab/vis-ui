@@ -20,7 +20,7 @@ package pl.kotcrab.vis.sceneeditor;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-public class SpriteSupport implements SceneEditorSupport<Sprite>
+class SpriteSupport implements SceneEditorSupport<Sprite>
 {
 	
 	

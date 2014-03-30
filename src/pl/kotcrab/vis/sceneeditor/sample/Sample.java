@@ -14,7 +14,6 @@
  * limitations under the License.
  ******************************************************************************/
 
-
 package pl.kotcrab.vis.sceneeditor.sample;
 
 import com.badlogic.gdx.ApplicationListener;

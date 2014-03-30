@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright 2013 Pawel Pastuszak
+ * Copyright 2013-2014 Pawel Pastuszak
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,9 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
-import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 /**
@@ -25,29 +26,74 @@ import com.badlogic.gdx.math.Vector3;
  * 
  * @author Pawel Pastuszak
  */
-public class CameraController
+class CameraController
 {
-	private Camera camera;
-	private Camera rawCamera;
+	private OrthographicCamera camera;
+	private OrthographicCamera orginalCamera;
 	private Vector3 calcVector;
 	
 	/** Prepares class for use */
-	public CameraController(Camera camera)
+	public CameraController(OrthographicCamera camera)
 	{
 		this.camera = camera;
-		rawCamera = new OrthographicCamera(camera.viewportWidth, camera.viewportHeight);
+		
+		orginalCamera = new OrthographicCamera(camera.viewportWidth, camera.viewportHeight);
+		orginalCamera.position.x = camera.position.x;
+		orginalCamera.position.y = camera.position.y;
+		orginalCamera.zoom = camera.zoom;
+		orginalCamera.update();
+		
 		calcVector = new Vector3(0, 0, 0);
 	}
 	
 	/** Return camera */
-	public Camera getCamera()
+	public OrthographicCamera getCamera()
 	{
 		return camera;
 	}
 	
+	
+	public void switchCameraProperties()
+	{
+		float x = camera.position.x;
+		float y = camera.position.y;
+		float zoom = camera.zoom;
+		
+		camera.position.x = orginalCamera.position.x;
+		camera.position.y = orginalCamera.position.y;
+		camera.zoom = orginalCamera.zoom;
+		
+		orginalCamera.position.x = x;
+		orginalCamera.position.y = y;
+		orginalCamera.zoom = zoom;
+	}
+	
+	public void restoreOrginalCameraProperties()
+	{
+		camera.position.x = orginalCamera.position.x;
+		camera.position.y = orginalCamera.position.y;
+		camera.zoom = orginalCamera.zoom;
+	}
+	
+//	public void restoreCameraProperties()
+//	{
+//		orginalCamera.position.x = camera.position.x;
+//		orginalCamera.position.y = camera.position.y;
+//		orginalCamera.zoom = camera.zoom;
+//	}
+	
+	public boolean isCameraDirty()
+	{
+		return camera.position.x != orginalCamera.position.x || camera.position.y != orginalCamera.position.y || camera.zoom != orginalCamera.zoom;
+	}
+	
+	public Rectangle getOrginalCameraRectangle()
+	{
+		return new Rectangle(orginalCamera.position.x - orginalCamera.viewportWidth / 2, orginalCamera.position.y - orginalCamera.viewportHeight / 2, orginalCamera.viewportWidth, orginalCamera.viewportHeight);
+	}
+	
 	/**
 	 * Return proper touch posistion using provided camera<br>
-	 * Call the {@link #setCamera(OrthographicCamera camera) setCamera} method before using.
 	 * 
 	 * @param x
 	 *            form Gdx.input.getX() or event method
@@ -60,7 +106,7 @@ public class CameraController
 	}
 	
 	/**
-	 * Return proper touch posistion using provided camera<br> Call the {@link #setCamera(OrthographicCamera camera) setCamera} method before using.
+	 * Return proper touch posistion using provided camera<br>
 	 * 
 	 * @param y
 	 *            form Gdx.input.getY() or event method
@@ -70,5 +116,15 @@ public class CameraController
 		calcVector.y = y;
 		camera.unproject(calcVector);
 		return calcVector.y;
+	}
+	
+	public float getX()
+	{
+		return calcX(Gdx.input.getX());
+	}
+	
+	public float getY()
+	{
+		return calcY(Gdx.input.getY());
 	}
 }
