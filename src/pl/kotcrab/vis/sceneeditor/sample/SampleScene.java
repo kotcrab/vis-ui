@@ -17,6 +17,7 @@
 package pl.kotcrab.vis.sceneeditor.sample;
 
 import pl.kotcrab.vis.sceneeditor.SceneEditor;
+import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -36,6 +37,8 @@ public class SampleScene {
 	private Sprite net2;
 
 	public SampleScene (OrthographicCamera camera) {
+		//SceneEditorConfig.backupFolderPath = "F:\\Projekty\\VisSceneEditor\\backup\\"; //Optonal, will backup your files before saving new scene 
+		
 		bushTexture = new Texture(Gdx.files.internal("sample_assets/bush.png"));
 		netTexture = new Texture(Gdx.files.internal("sample_assets/net.png"));
 

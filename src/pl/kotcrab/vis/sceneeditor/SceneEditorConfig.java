@@ -1,6 +1,8 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
+import java.io.File;
+
 import com.badlogic.gdx.Input.Keys;
 
 public class SceneEditorConfig {
@@ -22,4 +24,10 @@ public class SceneEditorConfig {
 	public static float CAMERA_MAX_ZOOM_OUT = 4f;
 
 	public static boolean DRAW_GUI = true;
+	public static boolean DRAW_OBJECT_INFO = true;
+	
+	/**
+	 * Path to backup folder, must be ended with File.separator
+	 */
+	public static String backupFolderPath = null;
 }

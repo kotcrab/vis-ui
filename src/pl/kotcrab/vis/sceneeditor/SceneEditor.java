@@ -17,6 +17,12 @@
 package pl.kotcrab.vis.sceneeditor;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -60,8 +66,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private boolean pointerInsideScaleBox;
 	private boolean pointerInsideRotateCircle;
 
-	//private float attachPointX; // for moving object
-	//private float attachPointY;
+	// private float attachPointX; // for moving object
+	// private float attachPointY;
 
 	private float attachScreenX; // for scaling/rotating object
 	private float attachScreenY;
@@ -116,6 +122,25 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	}
 
 	private void save () {
+		if(file.exists() && SceneEditorConfig.backupFolderPath != null)
+		{
+			createBackup();
+		}
+	}
+
+	private void createBackup () {
+		try {
+			String fileName = file.getName();
+			fileName = fileName.substring(0, fileName.length() - 4);
+			
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+			Date date = new Date();
+			fileName += "-" + dateFormat.format(date) + ".xml";
+			
+			Files.copy(file.toPath(), new File(SceneEditorConfig.backupFolderPath + fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
 	}
 
 	public SceneEditor add (Object obj, String identifier) {
@@ -136,8 +161,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (selectedObj != null) {
 			SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
 
-			//attachPointX = (x - sup.getX(selectedObj));
-			//attachPointY = (y - sup.getY(selectedObj));
+			// attachPointX = (x - sup.getX(selectedObj));
+			// attachPointY = (y - sup.getY(selectedObj));
 			attachScreenX = x;
 			attachScreenY = y;
 			startingWidth = sup.getWidth(selectedObj);
@@ -235,7 +260,16 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				else
 					drawTextAtLine("Camera is not locked.", 1);
 
-				if (selectedObj != null) drawTextAtLine("Selected object: " + getIdentifierForObject(selectedObj), 3);
+				if (selectedObj != null) {
+					SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
+
+					drawTextAtLine("Selected object: " + getIdentifierForObject(selectedObj), 3);
+					
+					if (SceneEditorConfig.DRAW_OBJECT_INFO)
+						drawTextAtLine(
+							"X: " + (int)sup.getX(selectedObj) + " Y:" + (int)sup.getY(selectedObj) + " Width: "
+								+ (int)sup.getWidth(selectedObj) + " Heihgt: " + (int)sup.getHeight(selectedObj), 4);
+				}
 				guiBatch.end();
 			}
 		}
@@ -392,20 +426,18 @@ public class SceneEditor extends SceneEditorInputAdapater {
 						float deltaX = (x - lastX);
 						float deltaY = (y - lastY);
 
-						if(Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE))
-						{
+						if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE)) {
 							deltaX /= SceneEditorConfig.PRECISION_DIVIDE_BY;
 							deltaY /= SceneEditorConfig.PRECISION_DIVIDE_BY;
 						}
-						
+
 						sup.setX(selectedObj, sup.getX(selectedObj) + deltaX);
 						sup.setY(selectedObj, sup.getY(selectedObj) + deltaY);
-						
+
 						lastX = x;
 						lastY = y;
 					}
 				}
-
 
 				return true;
 			}
