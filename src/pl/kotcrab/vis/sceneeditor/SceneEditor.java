@@ -17,16 +17,25 @@
 package pl.kotcrab.vis.sceneeditor;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import org.jdom2.Attribute;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.JDOMException;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -99,26 +108,56 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	public void load () {
 		if (file.exists() == false) return;
 
-		// try
-		// {
-		// SAXBuilder builder = new SAXBuilder();
-		// Document document = builder.build(file);
-		//
-		// Element rootNode = document.getRootElement();
-		// List<Element> elementList = rootNode.getChildren();
-		//
-		// // Element startNode = rootNode.getChildren("dStart").get(0);
-		// // target = Integer.valueOf(startNode.getChildText("target0"));
-		// }
-		// catch (JDOMException | IOException e)
-		// {
-		// e.printStackTrace();
-		// }
+		try {
+			SAXBuilder builder = new SAXBuilder();
+			Document document = builder.build(file);
+
+			List<Element> elementList = document.getRootElement().getChildren();
+
+			for(Element element : elementList)
+			{
+				
+			}
+		} catch (JDOMException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void save () {
 		if (file.exists() && SceneEditorConfig.backupFolderPath != null) {
 			createBackup();
+		}
+
+		Element root = new Element("objects");
+		Document doc = new Document(root);
+
+		for (Entry<String, Object> entry : objectMap.entries()) {
+			Object obj = entry.value;
+
+			SceneEditorSupport sup = supportMap.get(obj.getClass());
+
+			Element element = new Element("object");
+			element.setAttribute(new Attribute("class", obj.getClass().getName()));
+			element.addContent(new Element("x").setText(String.valueOf(sup.getX(obj))));
+			element.addContent(new Element("y").setText(String.valueOf(sup.getY(obj))));
+			element.addContent(new Element("originX").setText(String.valueOf(sup.getOriginX(obj))));
+			element.addContent(new Element("originY").setText(String.valueOf(sup.getOriginY(obj))));
+			element.addContent(new Element("scaleX").setText(String.valueOf(sup.getScaleX(obj))));
+			element.addContent(new Element("scaleY").setText(String.valueOf(sup.getScaleY(obj))));
+			element.addContent(new Element("width").setText(String.valueOf(sup.getY(obj))));
+			element.addContent(new Element("height").setText(String.valueOf(sup.getY(obj))));
+			element.addContent(new Element("rotation").setText(String.valueOf(sup.getRotation(obj))));
+
+			doc.getRootElement().addContent(element);
+		}
+
+		XMLOutputter xmlOutput = new XMLOutputter();
+
+		xmlOutput.setFormat(Format.getPrettyFormat());
+		try {
+			xmlOutput.output(doc, new FileWriter(file));
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -488,12 +527,12 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (editing && selectedObj == null && cameraLocked == false) {
 			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
 				OrthographicCamera camera = camController.getCamera();
-				
+
 				if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE)) {
 					deltaX /= SceneEditorConfig.PRECISION_DIVIDE_BY;
 					deltaY /= SceneEditorConfig.PRECISION_DIVIDE_BY;
 				}
-				
+
 				camera.position.x = camera.position.x - deltaX * camera.zoom;
 				camera.position.y = camera.position.y + deltaY * camera.zoom;
 				return true;
