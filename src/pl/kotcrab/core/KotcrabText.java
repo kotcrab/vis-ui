@@ -22,150 +22,156 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Polygon;
+import com.badlogic.gdx.math.Rectangle;
 
 /** Text that you can scale, rotate, change color itp. Supports distance field fonts
  * 
  * @author Pawel Pastuszak */
 public class KotcrabText {
-	private Vector2 position; // pozycja
-	private Vector2 origin; // origin
-	private Vector2 scale; // skala
+	private float x, y;
+	private float originX = 0, originY = 0;
+	private float scaleX = 1, scaleY = 1;
 
-	private float rotation; // rotacja
+	private float rotation;
 
-	private Color color; // kolor
+	private BitmapFontCache bitmapFontCache;
+	private TextBounds textBounds;
+	private Rectangle boundingRectangle;
 
-	protected BitmapFontCache bitmapFontCache;
-	protected TextBounds textBounds;
+	private boolean autoSetOriginToCenter;
 
-	protected boolean autoSetOriginToMiddle; // automatyczne ustawianie originiu
+	private Matrix4 oldMatrix;
+	private Matrix4 newMatrix;
 
-	private Matrix4 oldMatrix; // stary matrix do przeksztalcen
-	private Matrix4 newMatrix; // nowy matrix do przeksztalcen
+	public KotcrabText (BitmapFont bitmapFont, String text, boolean autoSetOriginToCenter, float x, float y) {
+		this.autoSetOriginToCenter = autoSetOriginToCenter;
+		this.x = x;
+		this.y = y;
 
-	// konstruktor
-	public KotcrabText (BitmapFont bitmapFont, String text, boolean alwaysSetOriginToMiddle, float x, float y) {
-		bitmapFontCache = new BitmapFontCache(bitmapFont); // przygotowanie tekstu
+		rotation = 0;
+
+		newMatrix = new Matrix4();
+		bitmapFontCache = new BitmapFontCache(bitmapFont);
 		textBounds = bitmapFontCache.setText(text, 0, 0);
 
-		position = new Vector2(x, y); // ustawienie pozycji
-		scale = new Vector2(1, 1); // ustaiwnie skali
-		rotation = 0; // ustawienie rotacji
+		if (autoSetOriginToCenter == true) setOriginCenter();
 
-		autoSetOriginToMiddle = alwaysSetOriginToMiddle; // config automatycznego origina
-
-		if (autoSetOriginToMiddle == true) {
-			calculateOrigin(); // obliczenie wlasciwego origina
-		} else
-			origin = new Vector2(0, 0); // ustawienie orgina na 0
-
-		color = new Color(); // kolor
-		newMatrix = new Matrix4(); // matrix
 
 		translate();
 	}
 
-	public void draw (SpriteBatch spriteBatch) // render tekstu
-	{
-		oldMatrix = spriteBatch.getTransformMatrix().cpy(); // kopia matrixa
-
-		spriteBatch.setTransformMatrix(newMatrix); // ustawienie nowego matrixa do tekstu
-
-		bitmapFontCache.draw(spriteBatch); // redner tekstu
-
-		spriteBatch.setTransformMatrix(oldMatrix); // przywrocenie matrixa
+	public void draw (SpriteBatch spriteBatch) {
+		oldMatrix = spriteBatch.getTransformMatrix().cpy();
+		spriteBatch.setTransformMatrix(newMatrix);
+		bitmapFontCache.draw(spriteBatch);
+		spriteBatch.setTransformMatrix(oldMatrix);
 	}
 
 	private void translate () {
-		newMatrix.idt(); // przeksztalcenie tekstu
-		newMatrix.translate(position.x + origin.x, position.y + origin.y + bitmapFontCache.getBounds().height, 0);
+		newMatrix.idt();
+
+		newMatrix.translate(x + originX, y + originY, 0);
 		newMatrix.rotate(0, 0, 1, rotation);
-		newMatrix.scale(scale.x, scale.y, 1);
-		newMatrix.translate(-origin.x, -origin.y, 0);
+		newMatrix.scale(scaleX, scaleY, 1);
+		newMatrix.translate(-originX, -originY, 0);
+		newMatrix.translate(0, textBounds.height, 0);
+
+		calculateBoundingRectangle();
 	}
 
-	public void setText (String text) // zmiana tekstu
-	{
-		textBounds = bitmapFontCache.setText(text, 0, 0); // tak to musi byc 0 poniewaz pozycja jest ustalona podczas przeksztalanie
-// matrixa (zobacz translate())
+	private void calculateBoundingRectangle () {
+		Polygon polygon = new Polygon(new float[] {0, 0, textBounds.width, 0, textBounds.width, textBounds.height, 0,
+			textBounds.height});
 
-		if (autoSetOriginToMiddle == true) // wymagane poznowne obliczenie origina
-			calculateOrigin();
+		polygon.setPosition(x, y);
+		polygon.setRotation(rotation);
+		polygon.setScale(scaleX, scaleY);
+		polygon.setOrigin(originX, originY);
+
+		boundingRectangle = polygon.getBoundingRectangle();
+	}
+
+	public void setText (String text) {
+		textBounds = bitmapFontCache.setText(text, 0, 0);
+
+		if (autoSetOriginToCenter == true) setOriginCenter();
 
 		translate();
 	}
 
-	protected void calculateOrigin () // obliczanie origina
-	{
-		origin = new Vector2(textBounds.width / 2, -textBounds.height / 2);
+	public void setOriginCenter () {
+		setOrigin(textBounds.width / 2, -textBounds.height / 2);
+	}
+
+	public void center (int screenWidth) {
+		x = (screenWidth - textBounds.width * scaleX) / 2;
+		translate();
 	}
 
 	// Getter and setter
-	public Vector2 getPosition () {
-		return position;
-	}
-
-	public void setPosition (Vector2 newPosition) {
-		position = newPosition;
-
-		translate();
-	}
-
 	public void setPosition (float x, float y) {
-		position.set(x, y);
+		this.x = x;
+		this.y = y;
 
 		translate();
 	}
 
 	public void setX (float x) {
-		position.x = x;
+		this.x = x;
 
 		translate();
 	}
 
 	public void setY (float y) {
-		position.y = y;
+		this.y = y;
 
 		translate();
 	}
 
-	public Vector2 getOrigin () {
-		return origin;
+	public float getX () {
+		return x;
 	}
 
-	public void setOrigin (Vector2 newOrigin) {
-		origin = newOrigin;
+	public float getY () {
+		return y;
+	}
+
+	public void setOrigin (float originX, float originY) {
+		this.originX = originX;
+		this.originY = originY;
 
 		translate();
 	}
 
-	public void setOrigin (float x, float y) {
-		origin.set(x, y);
+	public float getOriginX () {
+		return originX;
+	}
+
+	public float getOriginY () {
+		return originY;
+	}
+
+	public void setScale (float scaleX, float scaleY) {
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
 
 		translate();
 	}
 
-	public Vector2 getScale () {
-		return scale;
-	}
-
-	public void setScale (Vector2 newScale) {
-		scale = newScale;
+	public void setScale (float scaleXY) {
+		scaleX = scaleXY;
+		scaleY = scaleXY;
 
 		translate();
 	}
 
-	public void setScale (float x, float y) {
-		scale.set(x, y);
-
-		translate();
+	public float getScaleX () {
+		return scaleX;
 	}
 
-	public void setScale (float XY) {
-		scale.set(XY, XY);
-
-		translate();
+	public float getScaleY () {
+		return scaleY;
 	}
 
 	public float getRotation () {
@@ -179,27 +185,31 @@ public class KotcrabText {
 	}
 
 	public Color getColor () {
-		return color;
+		return bitmapFontCache.getColor();
 	}
 
 	public void setColor (float r, float g, float b, float a) {
-		color.r = r;
-		color.g = g;
-		color.b = b;
-		color.a = a;
-		bitmapFontCache.setColor(color.r, color.g, color.b, color.a); // ustawienie koloru
+		bitmapFontCache.setColor(new Color(r, g, b, a));
 	}
 
-	public TextBounds getTextBounds () {
-		return textBounds;
+	public void setColor (Color color) {
+		bitmapFontCache.setColor(color);
 	}
 
-	public BitmapFontCache getBitmapFontCache () {
-		return bitmapFontCache;
+	public void setSize (float width, float height) {
+		setScale(width / textBounds.width, height / textBounds.height);
 	}
 
-	public void center (int scrWidth) {
-		position.x = (scrWidth - textBounds.width * scale.x) / 2;
-		translate();
+	public float getWidth () {
+		return boundingRectangle.width;
 	}
+
+	public float getHeight () {
+		return boundingRectangle.height;
+	}
+
+	public Rectangle getBoundingRectangle () {
+		return boundingRectangle;
+	}
+
 }
