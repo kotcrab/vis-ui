@@ -114,11 +114,21 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 			List<Element> elementList = document.getRootElement().getChildren();
 
-			for(Element element : elementList)
-			{
+			for (Element element : elementList) {
+				Class<?> klass = Class.forName(element.getAttribute("class").getValue());
+				SceneEditorSupport sup = supportMap.get(klass);
 				
+				String identifier = element.getChildText("identifier");
+				Object obj = objectMap.get(identifier);
+				
+				sup.setX(obj, Float.valueOf(element.getChildText("x")));
+				sup.setY(obj, Float.valueOf(element.getChildText("y")));
+				sup.setOrigin(obj, Float.valueOf(element.getChildText("originX")), Float.valueOf(element.getChildText("originY")));
+				sup.setSize(obj, Float.valueOf(element.getChildText("width")), Float.valueOf(element.getChildText("height")));
+				sup.setScale(obj, Float.valueOf(element.getChildText("scaleX")), Float.valueOf(element.getChildText("scaleY")));
+				sup.setRotation(obj, Float.valueOf(element.getChildText("rotation")));
 			}
-		} catch (JDOMException | IOException e) {
+		} catch (JDOMException | IOException | ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -138,14 +148,15 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 			Element element = new Element("object");
 			element.setAttribute(new Attribute("class", obj.getClass().getName()));
+			element.addContent(new Element("identifier").setText(entry.key));
 			element.addContent(new Element("x").setText(String.valueOf(sup.getX(obj))));
 			element.addContent(new Element("y").setText(String.valueOf(sup.getY(obj))));
 			element.addContent(new Element("originX").setText(String.valueOf(sup.getOriginX(obj))));
 			element.addContent(new Element("originY").setText(String.valueOf(sup.getOriginY(obj))));
 			element.addContent(new Element("scaleX").setText(String.valueOf(sup.getScaleX(obj))));
 			element.addContent(new Element("scaleY").setText(String.valueOf(sup.getScaleY(obj))));
-			element.addContent(new Element("width").setText(String.valueOf(sup.getY(obj))));
-			element.addContent(new Element("height").setText(String.valueOf(sup.getY(obj))));
+			element.addContent(new Element("width").setText(String.valueOf(sup.getWidth(obj))));
+			element.addContent(new Element("height").setText(String.valueOf(sup.getHeight(obj))));
 			element.addContent(new Element("rotation").setText(String.valueOf(sup.getRotation(obj))));
 
 			doc.getRootElement().addContent(element);
