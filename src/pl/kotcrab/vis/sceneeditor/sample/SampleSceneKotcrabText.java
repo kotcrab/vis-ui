@@ -39,6 +39,7 @@ public class SampleSceneKotcrabText extends AbstractScene{
 	private Sprite net2;
 	
 	private KotcrabText text;
+	private KotcrabText text2;
 
 	public SampleSceneKotcrabText (OrthographicCamera camera) {
 		//SceneEditorConfig.backupFolderPath = "F:\\Projekty\\VisSceneEditor\\backup\\"; //Optonal, will backup your files before saving new scene 
@@ -52,12 +53,14 @@ public class SampleSceneKotcrabText extends AbstractScene{
 		net2 = new Sprite(netTexture);
 
 		text = new KotcrabText(new BitmapFont(Gdx.files.internal("assets/data/arial.fnt")), "Just some random text", false, 0, 0);
+		text2 = new KotcrabText(new BitmapFont(Gdx.files.internal("assets/data/arial.fnt")), "Just some random text with orign centred", true, 0, 0);
 		
 		sceneEditor = new SceneEditor(Gdx.files.internal("assets/data/arial.fnt"), Gdx.files.internal("sample_assets/scene.xml"),
 			camera, true);
 		sceneEditor.registerSupport(KotcrabText.class, new KotcrabTextSupport());
 		sceneEditor.add(bush1, "bush1").add(bush2, "bush2").add(net1, "net1").add(net2, "net2");
 		sceneEditor.add(text, "text");
+		sceneEditor.add(text2, "text2");
 		sceneEditor.load();
 		sceneEditor.enable();
 	}
@@ -70,6 +73,7 @@ public class SampleSceneKotcrabText extends AbstractScene{
 		net1.draw(batch);
 		net2.draw(batch);
 		text.draw(batch);
+		text2.draw(batch);
 		batch.end();
 
 		sceneEditor.render();

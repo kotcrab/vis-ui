@@ -66,9 +66,6 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private boolean pointerInsideScaleBox;
 	private boolean pointerInsideRotateCircle;
 
-	// private float attachPointX; // for moving object
-	// private float attachPointY;
-
 	private float attachScreenX; // for scaling/rotating object
 	private float attachScreenY;
 
@@ -78,9 +75,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private float lastX;
 	private float lastY;
 
-	private float startingRotation; // for rotating object;
-
-	public SceneEditor (FileHandle arialFontFile, FileHandle sceneFile, OrthographicCamera camera, boolean devMode) {
+	public SceneEditor (FileHandle arial16FontFile, FileHandle sceneFile, OrthographicCamera camera, boolean devMode) {
 		this.devMode = devMode;
 
 		file = new File(sceneFile.path());
@@ -93,7 +88,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			shapeRenderer = new ShapeRenderer();
 
 			camController = new CameraController(camera);
-			font = new BitmapFont(arialFontFile);
+			font = new BitmapFont(arial16FontFile);
 
 			objectMap = new ObjectMap<>();
 
@@ -122,8 +117,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	}
 
 	private void save () {
-		if(file.exists() && SceneEditorConfig.backupFolderPath != null)
-		{
+		if (file.exists() && SceneEditorConfig.backupFolderPath != null) {
 			createBackup();
 		}
 	}
@@ -132,17 +126,23 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		try {
 			String fileName = file.getName();
 			fileName = fileName.substring(0, fileName.length() - 4);
-			
+
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 			Date date = new Date();
 			fileName += "-" + dateFormat.format(date) + ".xml";
-			
-			Files.copy(file.toPath(), new File(SceneEditorConfig.backupFolderPath + fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+			Files.copy(file.toPath(), new File(SceneEditorConfig.backupFolderPath + fileName).toPath(),
+				StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
 
+	/** TODO
+	 * @param obj
+	 * @param identifier
+	 * 
+	 * @return This SceneEditor for the purpose of chaining methods together. */
 	public SceneEditor add (Object obj, String identifier) {
 		if (isSupportForObjectAvaiable(obj)) objectMap.put(identifier, obj);
 
@@ -161,13 +161,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (selectedObj != null) {
 			SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
 
-			// attachPointX = (x - sup.getX(selectedObj));
-			// attachPointY = (y - sup.getY(selectedObj));
 			attachScreenX = x;
 			attachScreenY = y;
 			startingWidth = sup.getWidth(selectedObj);
 			startingHeight = sup.getHeight(selectedObj);
-			startingRotation = sup.getRotation(selectedObj);
 		}
 	}
 
@@ -264,7 +261,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 					SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
 
 					drawTextAtLine("Selected object: " + getIdentifierForObject(selectedObj), 3);
-					
+
 					if (SceneEditorConfig.DRAW_OBJECT_INFO)
 						drawTextAtLine(
 							"X: " + (int)sup.getX(selectedObj) + " Y:" + (int)sup.getY(selectedObj) + " Width: "
@@ -340,7 +337,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			lastX = x;
 			lastY = y;
 
-			if (pointerInsideRotateCircle == false && pointerInsideScaleBox == false) // without this it would deselect active object
+			if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_NO_SELECT_MODE) == false && pointerInsideRotateCircle == false
+				&& pointerInsideScaleBox == false) // without this it would deselect active object
 			{
 				Object matchingObject = null;
 				int lastSurfaceArea = Integer.MAX_VALUE;
@@ -411,8 +409,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 					sup.setSize(selectedObj, startingWidth + deltaX, startingHeight + deltaY);
 				} else if (sup.isRotatingSupported() && pointerInsideRotateCircle) {
-					float deltaX = x - attachScreenX;
-					float deltaY = y - attachScreenY;
+					float deltaX = x - (sup.getX(selectedObj) + sup.getWidth(selectedObj) / 2); // - attachScreenX
+					float deltaY = y - (sup.getY(selectedObj) + sup.getHeight(selectedObj) / 2);
 
 					float deg = MathUtils.atan2(-deltaX, deltaY) / MathUtils.degreesToRadians;
 
@@ -487,9 +485,15 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	// pan is worse because you must drag mouse a little bit to fire this event
 	@Override
 	public boolean pan (float x, float y, float deltaX, float deltaY) {
-		if (selectedObj == null && cameraLocked == false) {
-			if (Gdx.input.isButtonPressed(Buttons.LEFT) && Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) {
+		if (editing && selectedObj == null && cameraLocked == false) {
+			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
 				OrthographicCamera camera = camController.getCamera();
+				
+				if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE)) {
+					deltaX /= SceneEditorConfig.PRECISION_DIVIDE_BY;
+					deltaY /= SceneEditorConfig.PRECISION_DIVIDE_BY;
+				}
+				
 				camera.position.x = camera.position.x - deltaX * camera.zoom;
 				camera.position.y = camera.position.y + deltaY * camera.zoom;
 				return true;

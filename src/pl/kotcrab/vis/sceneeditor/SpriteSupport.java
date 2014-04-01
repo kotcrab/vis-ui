@@ -22,7 +22,7 @@ import com.badlogic.gdx.math.Rectangle;
 class SpriteSupport implements SceneEditorSupport<Sprite> {
 
 	@Override
-	public Object load () {
+	public Sprite load () {
 		// TODO Auto-generated method stub
 		return null;
 	}

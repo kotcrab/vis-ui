@@ -20,9 +20,15 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 
 public interface SceneEditorSupport<O> extends Disposable {
-	public Object load ();
+	public O load ();
 
 	public void save (O obj);
+
+	public boolean isScallingSupported ();
+
+	public boolean isRotatingSupported ();
+
+	public boolean isMovingSupported ();
 
 	public void setX (O obj, float x);
 
@@ -53,12 +59,6 @@ public interface SceneEditorSupport<O> extends Disposable {
 	public float getRotation (O obj);
 
 	public void setRotation (O obj, float rotation);
-
-	public boolean isScallingSupported ();
-
-	public boolean isRotatingSupported ();
-
-	public boolean isMovingSupported ();
 
 	public boolean contains (O obj, float x, float y);
 
