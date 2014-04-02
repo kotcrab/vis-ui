@@ -2,14 +2,16 @@
 <project default="export"
 	name="Export VisSceneEditor to samples project.">
 	<target name="export">
-	    <delete file="E:/Git/VisSceneEditor/Samples/core/libs/VisSceneEditor.jar"/>
-		<jar destfile="E:/Git/VisSceneEditor/Samples/core/libs/VisSceneEditor.jar">
-			<fileset dir="E:/Git/VisSceneEditor/SceneEditor/bin">
+	    <property name="base.dir" location=".."/>
+	    
+	    <delete file="${base.dir}/Samples/core/libs/VisSceneEditor.jar"/>
+		<jar destfile="${base.dir}/Samples/core/libs/VisSceneEditor.jar">
+			<fileset dir="${base.dir}/SceneEditor/bin">
 				<include name="pl/kotcrab/vis/sceneeditor/" />
 				<exclude name="pl/kotcrab/core/" />
 			</fileset>
-			<fileset dir="E:/Git/VisSceneEditor/SceneEditor/assets/"></fileset>
+			<fileset dir="${base.dir}/SceneEditor/assets/"></fileset>
 		</jar>
-		  <copy file="E:/Git/VisSceneEditor/Samples/core/libs/VisSceneEditor.jar" tofile="E:/Git/VisSceneEditor/Samples/android/libs/VisSceneEditor.jar"/>
+		  <copy file="${base.dir}/Samples/core/libs/VisSceneEditor.jar" tofile="${base.dir}/Samples/android/libs/VisSceneEditor.jar"/>
 	</target>
 </project>
