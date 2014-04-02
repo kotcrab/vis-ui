@@ -22,19 +22,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.sun.org.apache.regexp.internal.recompile;
 
 public class KotcrabTextSupport implements SceneEditorSupport<KotcrabText> {
-
-	@Override
-	public KotcrabText load () {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void save (KotcrabText k) {
-		// TODO Auto-generated method stub
-
-	}
-
 	@Override
 	public void dispose () {
 	}

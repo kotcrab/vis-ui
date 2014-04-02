@@ -20,10 +20,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 
 public interface SceneEditorSupport<O> extends Disposable {
-	public O load ();
-
-	public void save (O obj);
-
 	public boolean isScallingSupported ();
 
 	public boolean isRotatingSupported ();

@@ -20,19 +20,6 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
 class SpriteSupport implements SceneEditorSupport<Sprite> {
-
-	@Override
-	public Sprite load () {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void save (Sprite s) {
-		// TODO Auto-generated method stub
-
-	}
-
 	@Override
 	public void dispose () {
 	}
