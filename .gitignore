@@ -15,9 +15,6 @@ local.properties
 .settings/
 .loadpath
 
-#For VisSceneEditor
-sample_assets/scene.xml
-
 # External tool builders
 .externalToolBuilders/
 

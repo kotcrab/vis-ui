@@ -4,6 +4,16 @@ package pl.kotcrab.vis.sceneeditor;
 import com.badlogic.gdx.Input.Keys;
 
 public class SceneEditorConfig {
+	/**
+	 * Path to backup folder, must be ended with File.separator
+	 */
+	public static String backupFolderPath = null;
+	
+	/**
+	 * Path to Android project assets folder, must be ended with File.separator
+	 */
+	public static String assetsFolderPath = null;
+	
 	public static int KEY_ROTATE_SNAP_VALUES = Keys.SHIFT_LEFT;
 	public static int KEY_SCALE_LOCK_RATIO = Keys.SHIFT_LEFT;
 	
@@ -25,8 +35,4 @@ public class SceneEditorConfig {
 	public static boolean DRAW_GUI = true;
 	public static boolean DRAW_OBJECT_INFO = true;
 	
-	/**
-	 * Path to backup folder, must be ended with File.separator
-	 */
-	public static String backupFolderPath = null;
 }

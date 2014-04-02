@@ -17,6 +17,7 @@
 package pl.kotcrab.vis.sceneeditor.sample;
 
 import pl.kotcrab.vis.sceneeditor.SceneEditor;
+import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -36,7 +37,10 @@ public class SampleScene extends AbstractScene {
 	private Sprite net2;
 
 	public SampleScene (OrthographicCamera camera) {
-		//SceneEditorConfig.backupFolderPath = "F:\\Projekty\\VisSceneEditor\\backup\\"; //Optonal, will backup your files before saving new scene 
+		SceneEditorConfig.backupFolderPath = "F:\\Projekty\\VisSceneEditor\\backup\\"; // Optonal, will backup your files before
+		// saving new scene
+		SceneEditorConfig.assetsFolderPath = "E:\\Git\\VisSceneEditor\\sample_assets\\"; // Required, path to assets folder of
+// Android project
 		
 		bushTexture = new Texture(Gdx.files.internal("sample_assets/bush.png"));
 		netTexture = new Texture(Gdx.files.internal("sample_assets/net.png"));
@@ -49,8 +53,7 @@ public class SampleScene extends AbstractScene {
 		net1.setRotation(45); // DEBUG
 		net1.setPosition(450, 240);
 
-		sceneEditor = new SceneEditor(Gdx.files.internal("assets/data/arial.fnt"), Gdx.files.internal("sample_assets/scene.xml"),
-			camera, true);
+		sceneEditor = new SceneEditor(Gdx.files.internal("sample_assets/scene.json"), camera, true);
 		sceneEditor.add(bush1, "bush1").add(bush2, "bush2").add(net1, "net1").add(net2, "net2");
 		sceneEditor.load();
 		sceneEditor.enable();

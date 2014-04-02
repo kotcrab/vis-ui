@@ -17,23 +17,15 @@
 package pl.kotcrab.vis.sceneeditor;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import org.jdom2.Attribute;
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.JDOMException;
-import org.jdom2.input.SAXBuilder;
-import org.jdom2.output.Format;
-import org.jdom2.output.XMLOutputter;
-
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.InputMultiplexer;
@@ -50,19 +42,22 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 // yeah, you know there are just warnings...
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class SceneEditor extends SceneEditorInputAdapater {
+	private Json json;
+
 	private SpriteBatch guiBatch;
 	private ShapeRenderer shapeRenderer;
 	private BitmapFont font;
 
 	private CameraController camController;
 
-	private File file;
+	private FileHandle file;
 
 	private boolean devMode;
 	private boolean editing;
@@ -84,10 +79,17 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private float lastX;
 	private float lastY;
 
-	public SceneEditor (FileHandle arial16FontFile, FileHandle sceneFile, OrthographicCamera camera, boolean devMode) {
+	public SceneEditor (FileHandle sceneFile, OrthographicCamera camera, boolean devMode) {
+		if(SceneEditorConfig.assetsFolderPath == null)
+			throw new RuntimeException("Path to assets folder not set! See SceneEditorConfig.assetsFolderPath.");
+		
 		this.devMode = devMode;
+		this.file = sceneFile;
 
-		file = new File(sceneFile.path());
+		if (Gdx.app.getType() != ApplicationType.Desktop) this.devMode = false;
+
+		json = new Json();
+		json.addClassTag("objectInfo", ObjectInfo.class);
 
 		supportMap = new ObjectMap<>();
 		registerSupport(Sprite.class, new SpriteSupport());
@@ -97,7 +99,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			shapeRenderer = new ShapeRenderer();
 
 			camController = new CameraController(camera);
-			font = new BitmapFont(arial16FontFile);
+			font = new BitmapFont(Gdx.files.internal("data/arial.fnt"));
 
 			objectMap = new ObjectMap<>();
 
@@ -108,80 +110,73 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	public void load () {
 		if (file.exists() == false) return;
 
-		try {
-			SAXBuilder builder = new SAXBuilder();
-			Document document = builder.build(file);
+		ArrayList<ObjectInfo> infos = new ArrayList<>();
+		infos = json.fromJson(infos.getClass(), file);
 
-			List<Element> elementList = document.getRootElement().getChildren();
+		for (ObjectInfo info : infos) {
 
-			for (Element element : elementList) {
-				Class<?> klass = Class.forName(element.getAttribute("class").getValue());
+			try {
+				Class<?> klass = Class.forName(info.className);
 				SceneEditorSupport sup = supportMap.get(klass);
-				
-				String identifier = element.getChildText("identifier");
-				Object obj = objectMap.get(identifier);
-				
-				sup.setX(obj, Float.valueOf(element.getChildText("x")));
-				sup.setY(obj, Float.valueOf(element.getChildText("y")));
-				sup.setOrigin(obj, Float.valueOf(element.getChildText("originX")), Float.valueOf(element.getChildText("originY")));
-				sup.setSize(obj, Float.valueOf(element.getChildText("width")), Float.valueOf(element.getChildText("height")));
-				sup.setScale(obj, Float.valueOf(element.getChildText("scaleX")), Float.valueOf(element.getChildText("scaleY")));
-				sup.setRotation(obj, Float.valueOf(element.getChildText("rotation")));
+
+				Object obj = objectMap.get(info.identifier);
+
+				sup.setX(obj, info.x);
+				sup.setY(obj, info.y);
+				sup.setOrigin(obj, info.originX, info.originY);
+				sup.setSize(obj, info.width, info.height);
+				sup.setScale(obj, info.scaleX, info.scaleY);
+				sup.setRotation(obj, info.rotation);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
 			}
-		} catch (JDOMException | IOException | ClassNotFoundException e) {
-			e.printStackTrace();
+
 		}
 	}
+
 
 	private void save () {
 		if (file.exists() && SceneEditorConfig.backupFolderPath != null) {
 			createBackup();
 		}
 
-		Element root = new Element("objects");
-		Document doc = new Document(root);
+		ArrayList<ObjectInfo> infos = new ArrayList<>();
 
 		for (Entry<String, Object> entry : objectMap.entries()) {
+
 			Object obj = entry.value;
 
 			SceneEditorSupport sup = supportMap.get(obj.getClass());
 
-			Element element = new Element("object");
-			element.setAttribute(new Attribute("class", obj.getClass().getName()));
-			element.addContent(new Element("identifier").setText(entry.key));
-			element.addContent(new Element("x").setText(String.valueOf(sup.getX(obj))));
-			element.addContent(new Element("y").setText(String.valueOf(sup.getY(obj))));
-			element.addContent(new Element("originX").setText(String.valueOf(sup.getOriginX(obj))));
-			element.addContent(new Element("originY").setText(String.valueOf(sup.getOriginY(obj))));
-			element.addContent(new Element("scaleX").setText(String.valueOf(sup.getScaleX(obj))));
-			element.addContent(new Element("scaleY").setText(String.valueOf(sup.getScaleY(obj))));
-			element.addContent(new Element("width").setText(String.valueOf(sup.getWidth(obj))));
-			element.addContent(new Element("height").setText(String.valueOf(sup.getHeight(obj))));
-			element.addContent(new Element("rotation").setText(String.valueOf(sup.getRotation(obj))));
+			ObjectInfo info = new ObjectInfo();
+			info.className = obj.getClass().getName();
+			info.identifier = entry.key;
+			info.x = sup.getX(obj);
+			info.y = sup.getY(obj);
+			info.scaleX = sup.getScaleX(obj);
+			info.scaleY = sup.getScaleY(obj);
+			info.originX = sup.getOriginX(obj);
+			info.originY = sup.getOriginY(obj);
+			info.width = sup.getWidth(obj);
+			info.height = sup.getHeight(obj);
+			info.rotation = sup.getRotation(obj);
 
-			doc.getRootElement().addContent(element);
+			infos.add(info);
 		}
 
-		XMLOutputter xmlOutput = new XMLOutputter();
-
-		xmlOutput.setFormat(Format.getPrettyFormat());
-		try {
-			xmlOutput.output(doc, new FileWriter(file));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		json.toJson(infos, Gdx.files.absolute(SceneEditorConfig.assetsFolderPath + file.path()));
 	}
 
 	private void createBackup () {
 		try {
-			String fileName = file.getName();
-			fileName = fileName.substring(0, fileName.length() - 4);
+			String fileName = file.name();
+			fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 			Date date = new Date();
-			fileName += "-" + dateFormat.format(date) + ".xml";
+			fileName += "-" + dateFormat.format(date) + ".json";
 
-			Files.copy(file.toPath(), new File(SceneEditorConfig.backupFolderPath + fileName).toPath(),
+			Files.copy(new File(SceneEditorConfig.assetsFolderPath + file.path()).toPath(), new File(SceneEditorConfig.backupFolderPath + fileName).toPath(),
 				StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			e.printStackTrace();

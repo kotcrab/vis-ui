@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="export"
+	name="Create Runnable Jar for Project VisSceneEditor with libraries in sub-folder">
+	<target name="export">
+	    <delete file="C:/Users/Headcrab/Desktop/VisSceneEditor.jar"/>
+		<jar destfile="C:/Users/Headcrab/Desktop/VisSceneEditor.jar">
+			<fileset dir="E:/Git/VisSceneEditor/bin">
+				<include name="pl/kotcrab/vis/sceneeditor/" />
+				<exclude name="pl/kotcrab/vis/sceneeditor/sample/" />
+				<exclude name="pl/kotcrab/core/" />
+			</fileset>
+			<fileset dir="E:/Git/VisSceneEditor/assets/"></fileset>
+		</jar>
+	</target>
+</project>

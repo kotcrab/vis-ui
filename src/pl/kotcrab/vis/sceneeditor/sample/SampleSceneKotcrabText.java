@@ -19,6 +19,7 @@ package pl.kotcrab.vis.sceneeditor.sample;
 import pl.kotcrab.core.KotcrabText;
 import pl.kotcrab.core.KotcrabTextSupport;
 import pl.kotcrab.vis.sceneeditor.SceneEditor;
+import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -27,7 +28,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class SampleSceneKotcrabText extends AbstractScene{
+public class SampleSceneKotcrabText extends AbstractScene {
 	private SceneEditor sceneEditor;
 
 	private Texture bushTexture;
@@ -37,13 +38,15 @@ public class SampleSceneKotcrabText extends AbstractScene{
 	private Sprite bush2;
 	private Sprite net1;
 	private Sprite net2;
-	
+
 	private KotcrabText text;
 	private KotcrabText text2;
 
 	public SampleSceneKotcrabText (OrthographicCamera camera) {
-		//SceneEditorConfig.backupFolderPath = "F:\\Projekty\\VisSceneEditor\\backup\\"; //Optonal, will backup your files before saving new scene 
-		
+		//SceneEditorConfig.backupFolderPath = "F:\\Projekty\\VisSceneEditor\\backup\\"; // Optonal, will backup your files before
+// saving new scene
+		SceneEditorConfig.assetsFolderPath = "E:\\Git\\VisSceneEditor\\sample_assets\\"; // Required, path to assets folder of Android project
+
 		bushTexture = new Texture(Gdx.files.internal("sample_assets/bush.png"));
 		netTexture = new Texture(Gdx.files.internal("sample_assets/net.png"));
 
@@ -53,10 +56,10 @@ public class SampleSceneKotcrabText extends AbstractScene{
 		net2 = new Sprite(netTexture);
 
 		text = new KotcrabText(new BitmapFont(Gdx.files.internal("assets/data/arial.fnt")), "Just some random text", false, 0, 0);
-		text2 = new KotcrabText(new BitmapFont(Gdx.files.internal("assets/data/arial.fnt")), "Just some random text with orign centred", true, 0, 0);
-		
-		sceneEditor = new SceneEditor(Gdx.files.internal("assets/data/arial.fnt"), Gdx.files.internal("sample_assets/scene.xml"),
-			camera, true);
+		text2 = new KotcrabText(new BitmapFont(Gdx.files.internal("assets/data/arial.fnt")),
+			"Just some random text with orign centred", true, 0, 0);
+
+		sceneEditor = new SceneEditor(Gdx.files.internal("sample_assets/kotcrabtext_scene.json"), camera, true);
 		sceneEditor.registerSupport(KotcrabText.class, new KotcrabTextSupport());
 		sceneEditor.add(bush1, "bush1").add(bush2, "bush2").add(net1, "net1").add(net2, "net2");
 		sceneEditor.add(text, "text");
@@ -64,7 +67,7 @@ public class SampleSceneKotcrabText extends AbstractScene{
 		sceneEditor.load();
 		sceneEditor.enable();
 	}
-	
+
 	@Override
 	public void render (SpriteBatch batch) {
 		batch.begin();
