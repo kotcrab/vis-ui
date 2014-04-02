@@ -76,6 +76,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private float startingWidth; // for scalling object
 	private float startingHeight;
 
+	private float startingRotation;
+
 	private float lastX;
 	private float lastY;
 
@@ -131,7 +133,6 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 	}
 
-
 	private void save () {
 		if (file.exists() && SceneEditorConfig.backupFolderPath != null) {
 			createBackup();
@@ -173,8 +174,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			Date date = new Date();
 			fileName += " - " + dateFormat.format(date) + ".json";
 
-			Files.copy(new File(new File("").getAbsolutePath() + File.separator + file.path()).toPath(), new File(SceneEditorConfig.backupFolderPath + fileName).toPath(),
-				StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(new File(new File("").getAbsolutePath() + File.separator + file.path()).toPath(), new File(
+				SceneEditorConfig.backupFolderPath + fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -279,6 +280,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 					renderObjectRotateCricle(sup, selectedObj);
 				}
+
 			}
 
 			if (camController.isCameraDirty()) {
@@ -379,6 +381,13 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			lastX = x;
 			lastY = y;
 
+			checkIfPointerInsideScaleBox(x, y);
+			if (pointerInsideScaleBox && selectedObj != null) {
+				SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
+				startingRotation = sup.getRotation(selectedObj);
+				sup.setRotation(selectedObj, 0);
+			}
+
 			if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_NO_SELECT_MODE) == false && pointerInsideRotateCircle == false
 				&& pointerInsideScaleBox == false) // without this it would deselect active object
 			{
@@ -413,6 +422,18 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			}
 
 			setValuesForSelectedObject(x, y);
+
+		}
+		return false;
+	}
+
+	@Override
+	public boolean touchUp (int screenX, int screenY, int pointer, int button) {
+		if (editing) {
+			if (pointerInsideScaleBox) {
+				SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
+				sup.setRotation(selectedObj, startingRotation);
+			}
 		}
 		return false;
 	}
@@ -451,8 +472,9 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 					sup.setSize(selectedObj, startingWidth + deltaX, startingHeight + deltaY);
 				} else if (sup.isRotatingSupported() && pointerInsideRotateCircle) {
-					float deltaX = x - (sup.getX(selectedObj) + sup.getWidth(selectedObj) / 2); // - attachScreenX
-					float deltaY = y - (sup.getY(selectedObj) + sup.getHeight(selectedObj) / 2);
+					Rectangle rect = sup.getBoundingRectangle(selectedObj);
+					float deltaX = x - (rect.x + rect.width / 2);
+					float deltaY = y - (rect.y + rect.height / 2);
 
 					float deg = MathUtils.atan2(-deltaX, deltaY) / MathUtils.degreesToRadians;
 
