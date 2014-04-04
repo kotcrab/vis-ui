@@ -17,7 +17,6 @@
 package pl.kotcrab.vis.sceneeditor.sample;
 
 import pl.kotcrab.vis.sceneeditor.SceneEditor;
-import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -40,18 +39,15 @@ public class SampleScene extends AbstractScene {
 		//SceneEditorConfig.backupFolderPath = "F:\\Projekty\\VisSceneEditor\\backup\\"; // Optonal, will backup your files before
 		// saving new scene
 		
-		bushTexture = new Texture(Gdx.files.internal("sample_assets/bush.png"));
-		netTexture = new Texture(Gdx.files.internal("sample_assets/net.png"));
+		bushTexture = new Texture(Gdx.files.internal("bush.png"));
+		netTexture = new Texture(Gdx.files.internal("net.png"));
 
 		bush1 = new Sprite(bushTexture);
 		bush2 = new Sprite(bushTexture);
 		net1 = new Sprite(netTexture);
 		net2 = new Sprite(netTexture);
 
-		net1.setRotation(45); // DEBUG
-		net1.setPosition(450, 240);
-
-		sceneEditor = new SceneEditor(Gdx.files.internal("sample_assets/scene.json"), camera, true);
+		sceneEditor = new SceneEditor(Gdx.files.internal("scene.json"), camera, true);
 		sceneEditor.add(bush1, "bush1").add(bush2, "bush2").add(net1, "net1").add(net2, "net2");
 		sceneEditor.load();
 		sceneEditor.enable();
