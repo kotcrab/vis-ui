@@ -14,6 +14,6 @@ public class GwtLauncher extends GwtApplication {
 
         @Override
         public ApplicationListener getApplicationListener () {
-                return new Samples();
+                return new Samples(false);
         }
 }

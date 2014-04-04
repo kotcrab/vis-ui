@@ -1,5 +1,8 @@
 #VisSceneEditor
 Samples/android/assets/*.json
+Samples/core/libs/
+Samples/gwt/
+Samples/ios/
 
 ## Java
 

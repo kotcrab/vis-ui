@@ -12,6 +12,5 @@
 			</fileset>
 			<fileset dir="${base.dir}/SceneEditor/assets/"></fileset>
 		</jar>
-		  <copy file="${base.dir}/Samples/core/libs/VisSceneEditor.jar" tofile="${base.dir}/Samples/android/libs/VisSceneEditor.jar"/>
 	</target>
 </project>

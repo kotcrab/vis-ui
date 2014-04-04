@@ -3,6 +3,7 @@ apply plugin: "java"
 sourceCompatibility = 1.6
 
 dependencies {
+	compile files('libs/VisSceneEditor.jar')
     compile "com.badlogicgames.gdx:gdx:$gdxVersion"
 }
 

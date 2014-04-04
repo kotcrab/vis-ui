@@ -3,11 +3,15 @@
 <module rename-to="html">
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 	<inherits name='pl.kotcrab.vis.sceneeditor.sample.Samples' />
+
 	<entry-point class='pl.kotcrab.vis.sceneeditor.sample.client.GwtLauncher' />
-	
-	<add-linker name="xsiframe"/>
-	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
-	<set-configuration-property name="devModeRedirectEnabled" value="true"/>
-	
-	<set-configuration-property name="gdx.assetpath" value="../android/assets" />
+
+	<add-linker name="xsiframe" />
+	<set-configuration-property name='xsiframe.failIfScriptTag'
+		value='FALSE' />
+	<set-configuration-property name="devModeRedirectEnabled"
+		value="true" />
+
+	<set-configuration-property name="gdx.assetpath"
+		value="../android/assets" />
 </module>
