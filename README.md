@@ -1,0 +1,54 @@
+VisSceneEditor
+==============
+
+VisSceneEditor is a real-time simple 2D scene editor for Libgdx.
+
+![Screenshot](http://dl.kotcrab.pl/github/vissceneeditor.png)
+
+It allows you to easily adjust position, scale and rotation of sprites or any other objects. (currently it works only with Libgdx Gradle projects)
+
+##Usage:
+
+1.Create SceneEditor and add your objects:
+```java
+bush1 = new Sprite(bushTexture);
+bush2 = new Sprite(bushTexture);
+net1 = new Sprite(netTexture);
+net2 = new Sprite(netTexture);
+
+sceneEditor = new SceneEditor(Gdx.files.internal("scene.json"), camera, true);
+sceneEditor.add(bush1, "bush1").add(bush2, "bush2").add(net1, "net1").add(net2, "net2");
+sceneEditor.load();
+```
+
+```java
+sceneEditor = new SceneEditor(Gdx.files.internal("scene.json"), camera, true);
+```
+Constructor takes location of a scene file, an OrthograhicCamera, the last argument is a devMode flag. If true it will allow you to edit sprites if false all editing features will be disabled. When you are publishing your game this should be set to false.
+
+If scene files does not exist it will be created.
+
+2.Call sceneEditor.render() in your render() method. <br>
+3.Call sceneEditor.dispose() in your dispose() method. <br>
+4.Call sceneEditor.resize() in your resize() method. <br>
+
+[Full sample](https://github.com/kotcrab/VisSceneEditor/blob/master/Samples/core/src/pl/kotcrab/vis/sceneeditor/sample/SampleScene.java) <br>
+
+SceneEditor automatically attaches its InputProcessor, if you change current InputProcessor you will have to call:
+```java
+sceneEditor.attachInputProcessor();
+```
+<br>
+To enable or disable editing use:
+```java
+sceneEditor.enable();
+sceneEditor.disable();
+```
+(or you can press F11 to toggle edit mode)
+
+##Edit mode:
+
+In edit mode you can adjust position, rotation and scale. To move object just click and drag ut, you can hold Left Ctrl to move it precisely. To scale object use small rectangle in the upper right corner, you can hold Left Shift to scale with keeping object ratio. To adjust rotation use circle above the object (you must select it to make it visible)
+
+When you exit edit mode all changes are automatically saved. Next time when you load your game all properties of objects will be restored.
+
