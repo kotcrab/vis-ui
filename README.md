@@ -48,7 +48,7 @@ sceneEditor.disable();
 
 ##Edit mode
 
-In edit mode you can adjust position, rotation and scale. To move object just click and drag ut, you can hold Left Ctrl to move it precisely. To scale object use small rectangle in the upper right corner, you can hold Left Shift to scale with keeping object ratio. To adjust rotation use circle above the object (you must select it to make it visible)
+In edit mode you can adjust position, rotation and scale. To move object just click and drag it, you can hold Left Ctrl to move it precisely. To scale object use small rectangle in the upper right corner, you can hold Left Shift to scale with keeping object ratio. To adjust rotation use circle above the object (you must select it to make it visible)
 
 When you exit edit mode all changes are automatically saved. Next time when you load your game all properties of objects will be restored.
 
