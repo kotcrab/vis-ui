@@ -42,13 +42,17 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
+import com.badlogic.gdx.utils.SerializationException;
 
 // yeah, you know there are just warnings...
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class SceneEditor extends SceneEditorInputAdapater {
+	private static final String TAG = "VisSceneEditor";
+
 	private Json json;
 
 	private SpriteBatch guiBatch;
@@ -61,6 +65,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private boolean devMode;
 	private boolean editing;
+	private boolean dirty;
 	private boolean cameraLocked;
 
 	private ObjectMap<Class<?>, SceneEditorSupport<?>> supportMap;
@@ -81,7 +86,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private float lastX;
 	private float lastY;
 
-	public SceneEditor (FileHandle sceneFile, OrthographicCamera camera, boolean devMode) {
+	public SceneEditor (FileHandle sceneFile, OrthographicCamera camera, boolean devMode, boolean registerBasicsSupports) {
 		this.devMode = devMode;
 		this.file = sceneFile;
 
@@ -91,7 +96,11 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		json.addClassTag("objectInfo", ObjectInfo.class);
 
 		supportMap = new ObjectMap<>();
-		registerSupport(Sprite.class, new SpriteSupport());
+
+		if (registerBasicsSupports) {
+			registerSupport(Sprite.class, new SpriteSupport());
+			registerSupport(Actor.class, new ActorSupport());
+		}
 
 		if (devMode) {
 			guiBatch = new SpriteBatch();
@@ -106,6 +115,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 	}
 
+	public SceneEditor (FileHandle sceneFile, OrthographicCamera camera, boolean devMode) {
+		this(sceneFile, camera, devMode, true);
+	}
+
 	public void load () {
 		if (file.exists() == false) return;
 
@@ -116,7 +129,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 			try {
 				Class<?> klass = Class.forName(info.className);
-				SceneEditorSupport sup = supportMap.get(klass);
+				SceneEditorSupport sup = getSupportForClass(klass);
 
 				Object obj = objectMap.get(info.identifier);
 
@@ -144,7 +157,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 			Object obj = entry.value;
 
-			SceneEditorSupport sup = supportMap.get(obj.getClass());
+			SceneEditorSupport sup = getSupportForClass(obj.getClass());
 
 			ObjectInfo info = new ObjectInfo();
 			info.className = obj.getClass().getName();
@@ -162,7 +175,16 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			infos.add(info);
 		}
 
-		json.toJson(infos, Gdx.files.absolute(new File("").getAbsolutePath() + File.separator + file.path()));
+		try {
+
+			json.toJson(infos, Gdx.files.absolute(new File("").getAbsolutePath() + File.separator + file.path()));
+			Gdx.app.log(TAG, "Saved changes to file.");
+			dirty = false;
+		} catch (SerializationException e) {
+			Gdx.app.log(TAG, "Error while saving file.");
+			e.printStackTrace();
+		}
+
 	}
 
 	private void createBackup () {
@@ -176,7 +198,9 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 			Files.copy(new File(new File("").getAbsolutePath() + File.separator + file.path()).toPath(), new File(
 				SceneEditorConfig.backupFolderPath + fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
+			Gdx.app.log(TAG, "Backup file created.");
 		} catch (IOException e) {
+			Gdx.app.log(TAG, "Error while creating backup.");
 			e.printStackTrace();
 		}
 	}
@@ -187,7 +211,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	 * 
 	 * @return This SceneEditor for the purpose of chaining methods together. */
 	public SceneEditor add (Object obj, String identifier) {
-		if (isSupportForObjectAvaiable(obj)) objectMap.put(identifier, obj);
+		if (isSupportForClassAvaiable(obj.getClass())) objectMap.put(identifier, obj);
 
 		return this;
 	}
@@ -196,13 +220,39 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		supportMap.put(klass, support);
 	}
 
-	public boolean isSupportForObjectAvaiable (Object obj) {
-		return supportMap.containsKey(obj.getClass());
+//	public boolean isSupportForObjectAvaiable (Object obj) {
+//		return supportMap.containsKey(obj.getClass());
+//	}
+	
+	public boolean isSupportForClassAvaiable(Class klass)
+	{
+		if(supportMap.containsKey(klass))
+			return true;
+		else
+		{
+			if(klass.getSuperclass() != null)
+				return isSupportForClassAvaiable(klass.getSuperclass());
+			else
+				return false;
+		}
+	}
+	
+	public SceneEditorSupport<?> getSupportForClass(Class klass)
+	{
+		if(supportMap.containsKey(klass))
+			return supportMap.get(klass);
+		else
+		{
+			if(klass.getSuperclass() != null)
+				return getSupportForClass(klass.getSuperclass());
+			else
+				return null;
+		}
 	}
 
 	private void setValuesForSelectedObject (float x, float y) {
 		if (selectedObj != null) {
-			SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
+			SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 
 			attachScreenX = x;
 			attachScreenY = y;
@@ -228,7 +278,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			for (Entry<String, Object> entry : objectMap.entries()) {
 				Object obj = entry.value;
 
-				SceneEditorSupport sup = supportMap.get(obj.getClass());
+				SceneEditorSupport sup = getSupportForClass(obj.getClass());
 
 				if (sup.isMovingSupported())
 					shapeRenderer.setColor(Color.WHITE);
@@ -245,20 +295,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 					renderObjectScaleBox(sup, obj);
 				}
-
-				// if(sup.isRotatingSupported())
-				// {
-				// if(obj == selectedObj && pointerInsideRotateCircle)
-				// shapeRenderer.setColor(Color.RED);
-				// else
-				// shapeRenderer.setColor(Color.WHITE);
-				//
-				// renderObjectRotateCricle(sup, obj);
-				// }
 			}
 
 			if (selectedObj != null) {
-				SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
+				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 				shapeRenderer.setColor(Color.RED);
 
 				renderObjectOutline(sup, selectedObj);
@@ -293,23 +333,35 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 			shapeRenderer.end();
 
-			if (SceneEditorConfig.DRAW_GUI) {
+			int line = 0;
+
+			if (SceneEditorConfig.GUI_DRAW) {
 				guiBatch.begin();
-				drawTextAtLine("VisSceneEditor - Edit Mode - Entities: " + objectMap.size, 0);
+
+				if (SceneEditorConfig.GUI_DRAW_TITLE)
+					drawTextAtLine("VisSceneEditor - Edit Mode - Entities: " + objectMap.size, line++);
+
 				if (cameraLocked)
-					drawTextAtLine("Camera is locked.", 1);
+					drawTextAtLine("Camera is locked.", line++);
 				else
-					drawTextAtLine("Camera is not locked.", 1);
+					drawTextAtLine("Camera is not locked.", line++);
+
+				if (dirty)
+					drawTextAtLine("Unsaved changes. Exit edit mode to save them.", line++);
+				else
+					drawTextAtLine("All changes saved.", line++);
+
+				line++;
 
 				if (selectedObj != null) {
-					SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
+					SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 
-					drawTextAtLine("Selected object: " + getIdentifierForObject(selectedObj), 3);
+					drawTextAtLine("Selected object: " + getIdentifierForObject(selectedObj), line++);
 
-					if (SceneEditorConfig.DRAW_OBJECT_INFO)
+					if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO)
 						drawTextAtLine(
 							"X: " + (int)sup.getX(selectedObj) + " Y:" + (int)sup.getY(selectedObj) + " Width: "
-								+ (int)sup.getWidth(selectedObj) + " Heihgt: " + (int)sup.getHeight(selectedObj), 4);
+								+ (int)sup.getWidth(selectedObj) + " Heihgt: " + (int)sup.getHeight(selectedObj), line++);
 				}
 				guiBatch.end();
 			}
@@ -383,7 +435,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 			checkIfPointerInsideScaleBox(x, y);
 			if (pointerInsideScaleBox && selectedObj != null) {
-				SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
+				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 				startingRotation = sup.getRotation(selectedObj);
 				sup.setRotation(selectedObj, 0);
 			}
@@ -397,7 +449,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				for (Entry<String, Object> entry : objectMap.entries()) {
 					Object obj = entry.value;
 
-					SceneEditorSupport sup = supportMap.get(obj.getClass());
+					SceneEditorSupport sup = getSupportForClass(obj.getClass());
 
 					if (sup.contains(obj, camController.calcX(screenX), camController.calcY(screenY))) {
 						int currentSurfaceArea = (int)(sup.getWidth(obj) * sup.getHeight(obj));
@@ -431,7 +483,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	public boolean touchUp (int screenX, int screenY, int pointer, int button) {
 		if (editing) {
 			if (pointerInsideScaleBox) {
-				SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
+				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 				sup.setRotation(selectedObj, startingRotation);
 			}
 		}
@@ -459,7 +511,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 		if (editing) {
 			if (selectedObj != null && Gdx.input.isButtonPressed(Buttons.LEFT)) {
-				SceneEditorSupport sup = supportMap.get(selectedObj.getClass());
+				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 
 				if (sup.isScallingSupported() && pointerInsideScaleBox) {
 					float deltaX = x - attachScreenX;
@@ -471,6 +523,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 					}
 
 					sup.setSize(selectedObj, startingWidth + deltaX, startingHeight + deltaY);
+					dirty = true;
+
 				} else if (sup.isRotatingSupported() && pointerInsideRotateCircle) {
 					Rectangle rect = sup.getBoundingRectangle(selectedObj);
 					float deltaX = x - (rect.x + rect.width / 2);
@@ -483,6 +537,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 						sup.setRotation(selectedObj, roundDeg * 30);
 					} else
 						sup.setRotation(selectedObj, deg);
+
+					dirty = true;
 				} else {
 					if (sup.isMovingSupported()) {
 						float deltaX = (x - lastX);
@@ -498,6 +554,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 						lastX = x;
 						lastY = y;
+
+						dirty = true;
 					}
 				}
 
@@ -569,7 +627,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private void checkIfPointerInsideScaleBox (float x, float y) {
 		if (selectedObj != null) {
-			if (buildRectangeForScaleBox(supportMap.get(selectedObj.getClass()), selectedObj).contains(x, y))
+			if (buildRectangeForScaleBox(getSupportForClass(selectedObj.getClass()), selectedObj).contains(x, y))
 				pointerInsideScaleBox = true;
 			else
 				pointerInsideScaleBox = false;
@@ -579,7 +637,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private void checkIfPointerInsideRotateCircle (float x, float y) {
 		if (selectedObj != null) {
-			if (buildCirlcleForRotateBox(supportMap.get(selectedObj.getClass()), selectedObj).contains(x, y))
+			if (buildCirlcleForRotateBox(getSupportForClass(selectedObj.getClass()), selectedObj).contains(x, y))
 				pointerInsideRotateCircle = true;
 			else
 				pointerInsideRotateCircle = false;
@@ -591,9 +649,6 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			guiBatch.dispose();
 			font.dispose();
 		}
-
-		for (Entry<Class<?>, SceneEditorSupport<?>> entry : supportMap.entries())
-			entry.value.dispose();
 	}
 
 	public void resize () {
@@ -628,14 +683,14 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 			if (Gdx.input.getInputProcessor() instanceof InputMultiplexer) {
 				InputMultiplexer mul = (InputMultiplexer)Gdx.input.getInputProcessor();
-				mul.addProcessor(this);
-				mul.addProcessor(new GestureDetector(this));
+				mul.addProcessor(0, this);
+				mul.addProcessor(1, new GestureDetector(this));
 				Gdx.input.setInputProcessor(mul);
 			} else {
 				InputMultiplexer mul = new InputMultiplexer();
-				mul.addProcessor(Gdx.input.getInputProcessor());
 				mul.addProcessor(this);
 				mul.addProcessor(new GestureDetector(this));
+				mul.addProcessor(Gdx.input.getInputProcessor());
 				Gdx.input.setInputProcessor(mul);
 			}
 		}

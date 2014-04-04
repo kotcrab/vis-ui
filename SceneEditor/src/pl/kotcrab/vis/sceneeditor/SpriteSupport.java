@@ -19,11 +19,7 @@ package pl.kotcrab.vis.sceneeditor;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-class SpriteSupport implements SceneEditorSupport<Sprite> {
-	@Override
-	public void dispose () {
-	}
-
+public class SpriteSupport implements SceneEditorSupport<Sprite> {
 	@Override
 	public void setX (Sprite s, float x) {
 		s.setX(x);

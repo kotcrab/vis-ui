@@ -17,9 +17,8 @@
 package pl.kotcrab.vis.sceneeditor;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Disposable;
 
-public interface SceneEditorSupport<O> extends Disposable {
+public interface SceneEditorSupport<O> {
 	public boolean isScallingSupported ();
 
 	public boolean isRotatingSupported ();

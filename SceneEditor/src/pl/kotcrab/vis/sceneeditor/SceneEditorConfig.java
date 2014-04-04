@@ -27,7 +27,8 @@ public class SceneEditorConfig {
 	 * Note: Final zoom may be bigger than this value. */
 	public static float CAMERA_MAX_ZOOM_OUT = 4f;
 
-	public static boolean DRAW_GUI = true;
-	public static boolean DRAW_OBJECT_INFO = true;
+	public static boolean GUI_DRAW = true;
+	public static boolean GUI_DRAW_OBJECT_INFO = true;
+	public static boolean GUI_DRAW_TITLE = true;
 	
 }
