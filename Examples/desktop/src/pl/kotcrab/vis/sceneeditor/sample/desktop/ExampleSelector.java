@@ -26,51 +26,60 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-public class ExampleSelector extends JDialog {
+public class ExampleSelector extends JDialog
+{
 	private static final long serialVersionUID = 1L;
-
+	
 	private JPanel contentPane;
-
-	public ExampleSelector (final ExampleSelected sampleSelected) {
+	
+	public ExampleSelector(final ExampleSelected sampleSelected)
+	{
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 137);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new GridLayout(0, 1, 0, 0));
-
+		
 		JButton btnExample1 = new JButton("Example Scene");
-		btnExample1.addActionListener(new ActionListener() {
-			public void actionPerformed (ActionEvent e) {
+		btnExample1.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				sampleSelected.exampleSelected(0);
 				dispose();
 			}
 		});
 		contentPane.add(btnExample1);
-
+		
 		JButton btnExample2 = new JButton("Example Scene with KotcrabText");
-		btnExample2.addActionListener(new ActionListener() {
-			public void actionPerformed (ActionEvent e) {
+		btnExample2.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				sampleSelected.exampleSelected(1);
 				dispose();
 			}
 		});
 		contentPane.add(btnExample2);
-
+		
 		JButton btnExample3 = new JButton("Scene2d Example");
-		btnExample3.addActionListener(new ActionListener() {
-			public void actionPerformed (ActionEvent e) {
+		btnExample3.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
 				sampleSelected.exampleSelected(2);
 				dispose();
 			}
 		});
 		contentPane.add(btnExample3);
-
+		
 		setVisible(true);
-
+		
 	}
 }
 
-interface ExampleSelected {
-	public void exampleSelected (int exampleId);
+interface ExampleSelected
+{
+	public void exampleSelected(int exampleId);
 }

@@ -22,19 +22,24 @@ import pl.kotcrab.vis.sceneeditor.example.scene2d.ExampleScene2d;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
-public class DesktopLauncher {
-
+public class DesktopLauncher
+{
+	
 	@SuppressWarnings("unused")
-	public static void main (String[] arg) {
-
-		ExampleSelector selector = new ExampleSelector(new ExampleSelected() {
+	public static void main(String[] arg)
+	{
+		
+		ExampleSelector selector = new ExampleSelector(new ExampleSelected()
+		{
 			@Override
-			public void exampleSelected (int exampleId) {
+			public void exampleSelected(int exampleId)
+			{
 				LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 				config.width = 800;
 				config.height = 480;
-
-				switch (exampleId) {
+				
+				switch (exampleId)
+				{
 				case 0:
 					new LwjglApplication(new Examples(false), config);
 					break;
@@ -47,9 +52,9 @@ public class DesktopLauncher {
 				default:
 					break;
 				}
-
+				
 			}
 		});
-
+		
 	}
 }

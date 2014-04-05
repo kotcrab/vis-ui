@@ -19,107 +19,127 @@ package pl.kotcrab.core;
 import pl.kotcrab.vis.sceneeditor.SceneEditorSupport;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.sun.org.apache.regexp.internal.recompile;
 
-public class KotcrabTextSupport implements SceneEditorSupport<KotcrabText> {
+public class KotcrabTextSupport implements SceneEditorSupport<KotcrabText>
+{
 	@Override
-	public boolean isScallingSupported () {
+	public boolean isScallingSupported()
+	{
 		return true;
 	}
-
+	
 	@Override
-	public boolean isRotatingSupported () {
+	public boolean isRotatingSupported()
+	{
 		return true;
 	}
-
+	
 	@Override
-	public boolean isMovingSupported () {
+	public boolean isMovingSupported()
+	{
 		return true;
 	}
-
+	
 	@Override
-	public void setX (KotcrabText k, float x) {
+	public void setX(KotcrabText k, float x)
+	{
 		k.setX(x);
 	}
-
+	
 	@Override
-	public void setY (KotcrabText k, float y) {
+	public void setY(KotcrabText k, float y)
+	{
 		k.setY(y);
 	}
-
+	
 	@Override
-	public float getX (KotcrabText k) {
+	public float getX(KotcrabText k)
+	{
 		return k.getX();
 	}
-
+	
 	@Override
-	public float getY (KotcrabText k) {
+	public float getY(KotcrabText k)
+	{
 		return k.getY();
 	}
-
+	
 	@Override
-	public float getWidth (KotcrabText k) {
+	public float getWidth(KotcrabText k)
+	{
 		return k.getWidth();
 	}
-
+	
 	@Override
-	public float getHeight (KotcrabText k) {
+	public float getHeight(KotcrabText k)
+	{
 		return k.getHeight();
 	}
-
+	
 	@Override
-	public void setScale (KotcrabText k, float x, float y) {
+	public void setScale(KotcrabText k, float x, float y)
+	{
 		k.setScale(x, y);
 	}
-
+	
 	@Override
-	public float getScaleX (KotcrabText k) {
+	public float getScaleX(KotcrabText k)
+	{
 		return k.getScaleX();
 	}
-
+	
 	@Override
-	public float getScaleY (KotcrabText k) {
+	public float getScaleY(KotcrabText k)
+	{
 		return k.getScaleY();
 	}
-
+	
 	@Override
-	public void setSize (KotcrabText k, float width, float height) {
+	public void setSize(KotcrabText k, float width, float height)
+	{
 		k.setSize(width, height);
 	}
-
+	
 	@Override
-	public float getRotation (KotcrabText k) {
+	public float getRotation(KotcrabText k)
+	{
 		return k.getRotation();
 	}
-
+	
 	@Override
-	public void setRotation (KotcrabText k, float rotation) {
+	public void setRotation(KotcrabText k, float rotation)
+	{
 		k.setRotation(rotation);
 	}
-
+	
 	@Override
-	public void setOrigin (KotcrabText k, float x, float y) {
+	public void setOrigin(KotcrabText k, float x, float y)
+	{
 		k.setOrigin(x, y);
 	}
-
+	
 	@Override
-	public float getOriginX (KotcrabText k) {
+	public float getOriginX(KotcrabText k)
+	{
 		return k.getOriginX();
 	}
-
+	
 	@Override
-	public float getOriginY (KotcrabText k) {
+	public float getOriginY(KotcrabText k)
+	{
 		return k.getOriginY();
 	}
-
+	
 	@Override
-	public Rectangle getBoundingRectangle (KotcrabText k) {
+	public Rectangle getBoundingRectangle(KotcrabText k)
+	{
 		return k.getBoundingRectangle();
 	}
-
+	
 	@Override
-	public boolean contains (KotcrabText k, float x, float y) {
+	public boolean contains(KotcrabText k, float x, float y)
+	{
 		return k.getBoundingRectangle().contains(x, y);
 	}
-
+	
 }

@@ -69,7 +69,7 @@ class GUI {
 							+ (int)sup.getWidth(selectedObj) + " Height: " + (int)sup.getHeight(selectedObj) + " Rotation: "
 							+ (int)sup.getRotation(selectedObj), line++);
 			}
-			
+
 			guiBatch.end();
 		}
 	}

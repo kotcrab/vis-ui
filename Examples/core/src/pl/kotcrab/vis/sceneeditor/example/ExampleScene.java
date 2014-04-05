@@ -24,57 +24,62 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class ExampleScene extends AbstractScene {
+public class ExampleScene extends AbstractScene
+{
 	private SceneEditor sceneEditor;
-
+	
 	private Texture bushTexture;
 	private Texture netTexture;
-
+	
 	private Sprite bush1;
 	private Sprite bush2;
 	private Sprite net1;
 	private Sprite net2;
-
-	public ExampleScene (OrthographicCamera camera) {
-		//SceneEditorConfig.backupFolderPath = "F:\\Projekty\\VisSceneEditor\\backup\\"; // Optonal, will backup your files before
+	
+	public ExampleScene(OrthographicCamera camera)
+	{
+		// SceneEditorConfig.backupFolderPath = "F:\\Projekty\\VisSceneEditor\\backup\\"; // Optonal, will backup your files before
 		// saving new scene
 		
 		bushTexture = new Texture(Gdx.files.internal("bush.png"));
 		netTexture = new Texture(Gdx.files.internal("net.png"));
-
+		
 		bush1 = new Sprite(bushTexture);
 		bush2 = new Sprite(bushTexture);
 		net1 = new Sprite(netTexture);
 		net2 = new Sprite(netTexture);
-
+		
 		sceneEditor = new SceneEditor(Gdx.files.internal("scene.json"), camera, true);
 		sceneEditor.add(bush1, "bush1").add(bush2, "bush2").add(net1, "net1").add(net2, "net2");
 		sceneEditor.load();
 		sceneEditor.enable();
 	}
-
+	
 	@Override
-	public void render (SpriteBatch batch) {
+	public void render(SpriteBatch batch)
+	{
 		batch.begin();
 		bush1.draw(batch);
 		bush2.draw(batch);
 		net1.draw(batch);
 		net2.draw(batch);
 		batch.end();
-
+		
 		sceneEditor.render();
 	}
-
+	
 	@Override
-	public void dispose () {
+	public void dispose()
+	{
 		bushTexture.dispose();
 		netTexture.dispose();
 		sceneEditor.dispose();
 	}
-
+	
 	@Override
-	public void resize () {
+	public void resize()
+	{
 		sceneEditor.resize();
 	}
-
+	
 }

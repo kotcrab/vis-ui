@@ -32,15 +32,12 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
@@ -252,11 +249,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 	}
 
-	/**
-	 * 
-	 * @param x pointer cordinate unprocjeted by camera
-	 * @param y pointer cordinate unprocjeted by camera
-	 */
+	/** @param x pointer cordinate unprocjeted by camera
+	 * @param y pointer cordinate unprocjeted by camera */
 	private void setValuesForSelectedObject (float x, float y) {
 		if (selectedObj != null) {
 			SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());

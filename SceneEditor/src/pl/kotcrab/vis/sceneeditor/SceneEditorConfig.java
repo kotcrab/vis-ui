@@ -43,7 +43,7 @@ public class SceneEditorConfig {
 	public static int KEY_SPECIAL_SAVE_CHANGES = Keys.S;
 	public static int KEY_SPECIAL_UNDO = Keys.Z;
 	public static int KEY_SPECIAL_REDO = Keys.Y;
-	
+
 	/** Maximum zooming in camera value.<br>
 	 * Note: Final zoom may be smaller than this value. */
 	public static float CAMERA_MAX_ZOOM_IN = 0.5f;

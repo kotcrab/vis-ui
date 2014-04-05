@@ -16,8 +16,7 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
-class ObjectInfo
-{
+class ObjectInfo {
 	public String identifier;
 	public String className;
 	public float x;
