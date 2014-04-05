@@ -22,7 +22,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class GUI {
+class GUI {
 	private SceneEditor sceneEditor;
 
 	private SpriteBatch guiBatch;
@@ -33,7 +33,7 @@ public class GUI {
 
 		guiBatch = new SpriteBatch();
 		font = new BitmapFont(Gdx.files.internal("data/arial.fnt"));
-
+		font.setColor(SceneEditorConfig.GUI_TEXT_COLOR);
 	}
 
 	public void render (int entityNumber, boolean cameraLocked, boolean dirty, Object selectedObj) {
@@ -52,7 +52,7 @@ public class GUI {
 			guiBatch.flush(); // is this a libgdx bug? without it cpu usage jumps to 25%
 
 			if (dirty)
-				drawTextAtLine("Unsaved changes. Exit edit mode to save them.", line++);
+				drawTextAtLine("Unsaved changes.", line++);
 			else
 				drawTextAtLine("All changes saved.", line++);
 
@@ -66,8 +66,10 @@ public class GUI {
 				if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO)
 					drawTextAtLine(
 						"X: " + (int)sup.getX(selectedObj) + " Y:" + (int)sup.getY(selectedObj) + " Width: "
-							+ (int)sup.getWidth(selectedObj) + " Height: " + (int)sup.getHeight(selectedObj), line++);
+							+ (int)sup.getWidth(selectedObj) + " Height: " + (int)sup.getHeight(selectedObj) + " Rotation: "
+							+ (int)sup.getRotation(selectedObj), line++);
 			}
+			
 			guiBatch.end();
 		}
 	}
@@ -78,11 +80,10 @@ public class GUI {
 
 	public void dispose () {
 		guiBatch.dispose();
-		font.dispose();		
+		font.dispose();
 	}
-	
-	public void resize()
-	{
+
+	public void resize () {
 		guiBatch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 	}
 }

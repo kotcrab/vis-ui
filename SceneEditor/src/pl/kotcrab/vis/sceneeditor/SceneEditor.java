@@ -59,7 +59,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private ShapeRenderer shapeRenderer;
 
 	private GUI gui;
-	
+
 	private CameraController camController;
 
 	private FileHandle file;
@@ -82,17 +82,14 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private float attachScreenX; // for scaling/rotating object
 	private float attachScreenY;
 
-	private float startingWidth; // for scalling object
+	private float startingWidth; // object properies before moving/scalling/rotating/etc
 	private float startingHeight;
 	private float startingRotation;
 	private float startingX;
 	private float startingY;
 
-	private float deltaX;
-	private float deltaY;
-
-	private float lastX;
-	private float lastY;
+	private float lastTouchX;
+	private float lastTouchY;
 
 	public SceneEditor (FileHandle sceneFile, OrthographicCamera camera, boolean devMode, boolean registerBasicsSupports) {
 		this.devMode = devMode;
@@ -136,7 +133,6 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		infos = json.fromJson(infos.getClass(), file);
 
 		for (ObjectInfo info : infos) {
-
 			try {
 				Class<?> klass = Class.forName(info.className);
 				SceneEditorSupport sup = getSupportForClass(klass);
@@ -256,14 +252,22 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 	}
 
+	/**
+	 * 
+	 * @param x pointer cordinate unprocjeted by camera
+	 * @param y pointer cordinate unprocjeted by camera
+	 */
 	private void setValuesForSelectedObject (float x, float y) {
 		if (selectedObj != null) {
 			SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 
 			attachScreenX = x;
 			attachScreenY = y;
+			startingX = sup.getX(selectedObj);
+			startingY = sup.getY(selectedObj);
 			startingWidth = sup.getWidth(selectedObj);
 			startingHeight = sup.getHeight(selectedObj);
+			startingRotation = sup.getRotation(selectedObj);
 		}
 	}
 
@@ -274,9 +278,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 		return null;
 	}
-	
-	public Object findObjectWithSamllestSurfaceArea(float x, float y)
-	{
+
+	public Object findObjectWithSamllestSurfaceArea (float x, float y) {
 		Object matchingObject = null;
 		int lastSurfaceArea = Integer.MAX_VALUE;
 
@@ -294,7 +297,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				}
 			}
 		}
-		
+
 		return matchingObject;
 	}
 
@@ -402,26 +405,26 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private void undo () {
 		if (undoActions.size > 0) {
 			EditorAction action = undoActions.pop();
-			
+
 			SceneEditorSupport sup = getSupportForClass(action.obj.getClass());
 
 			switch (action.type) {
-			case ORIGIN: //origin not implemented yet
+			case ORIGIN: // TODO (origin not implemented yet)
 				break;
 			case POS:
 				redoActions.add(new EditorAction(action.obj, ActionType.POS, sup.getX(action.obj), sup.getY(action.obj)));
-				sup.setX(action.obj, action.xDiff);
-				sup.setY(action.obj, action.yDiff);
+				sup.setX(action.obj, action.xVal);
+				sup.setY(action.obj, action.yVal);
 				break;
-			case SCALE: //scale is not used for now
+			case SCALE: // scale is not used for now
 				break;
 			case SIZE:
-				redoActions.add(new EditorAction(action.obj, ActionType.SIZE, action.xDiff, action.yDiff));
-				sup.setSize(action.obj, sup.getWidth(action.obj) - action.xDiff, sup.getHeight(action.obj) - action.yDiff);
+				redoActions.add(new EditorAction(action.obj, ActionType.SIZE, sup.getWidth(action.obj), sup.getHeight(action.obj)));
+				sup.setSize(action.obj, action.xVal, action.yVal);
 				break;
 			case ROTATION:
 				redoActions.add(new EditorAction(action.obj, ActionType.ROTATION, sup.getRotation(action.obj), 0));
-				sup.setRotation(action.obj, action.xDiff);
+				sup.setRotation(action.obj, action.xVal);
 				break;
 			default:
 				break;
@@ -432,36 +435,34 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	}
 
 	private void redo () {
-		if(redoActions.size > 0)
-		{
+		if (redoActions.size > 0) {
 			EditorAction action = redoActions.pop();
-			
+
 			SceneEditorSupport sup = getSupportForClass(action.obj.getClass());
 
 			switch (action.type) {
-			case ORIGIN: //origin not implemented yet
+			case ORIGIN: // origin not implemented yet
 				break;
 			case POS:
 				undoActions.add(new EditorAction(action.obj, ActionType.POS, sup.getX(action.obj), sup.getY(action.obj)));
-				sup.setX(action.obj, action.xDiff);
-				sup.setY(action.obj, action.yDiff);
+				sup.setX(action.obj, action.xVal);
+				sup.setY(action.obj, action.yVal);
 				break;
-			case SCALE: //scale is not used for now
+			case SCALE: // scale is not used for now
 				break;
 			case SIZE:
-				undoActions.add(new EditorAction(action.obj, ActionType.SIZE, action.xDiff, action.yDiff));
-				sup.setSize(action.obj, sup.getWidth(action.obj) + action.xDiff, sup.getHeight(action.obj) + action.yDiff);
+				undoActions.add(new EditorAction(action.obj, ActionType.SIZE, sup.getWidth(action.obj), sup.getHeight(action.obj)));
+				sup.setSize(action.obj, action.xVal, action.yVal);
 				break;
 			case ROTATION:
 				undoActions.add(new EditorAction(action.obj, ActionType.ROTATION, sup.getRotation(action.obj), 0));
-				sup.setRotation(action.obj, action.xDiff);
+				sup.setRotation(action.obj, action.xVal);
 				break;
 			default:
 				break;
 
 			}
-		}
-		else
+		} else
 			Gdx.app.log(TAG, "Can't redo any more!");
 	}
 
@@ -496,48 +497,41 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (editing) {
 			final float x = camController.calcX(screenX);
 			final float y = camController.calcY(screenY);
-			lastX = x;
-			lastY = y;
+			lastTouchX = x;
+			lastTouchY = y;
 
-			checkIfPointerInsideScaleBox(x, y);
-			checkIfPointerInsideRotateCircle(x, y);
-			
-			if (pointerInsideScaleBox && selectedObj != null) {
-				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
-				startingRotation = sup.getRotation(selectedObj);
-				sup.setRotation(selectedObj, 0);
-			}
-			
-			if (pointerInsideRotateCircle && selectedObj != null) {
-				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
-				startingRotation = sup.getRotation(selectedObj);
-			}
-			
-			if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_NO_SELECT_MODE) == false && pointerInsideRotateCircle == false
-				&& pointerInsideScaleBox == false) // without this it would deselect active object
-			{
-				Object matchingObject = findObjectWithSamllestSurfaceArea(x, y);
+			if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_NO_SELECT_MODE) == false) {
+				if (pointerInsideRotateCircle == false && pointerInsideScaleBox == false) {
+					Object matchingObject = findObjectWithSamllestSurfaceArea(x, y);
 
-				if (matchingObject != null) {
-					selectedObj = matchingObject;
-					
-					SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
+					if (matchingObject != null) {
+						selectedObj = matchingObject;
 
-					setValuesForSelectedObject(x, y);
+						setValuesForSelectedObject(x, y);
+						checkIfPointerInsideScaleBox(x, y);
+						setValuesForSelectedObject(x, y);
+
+						return true;
+					}
+
+					selectedObj = null;
+				} else {
 					checkIfPointerInsideScaleBox(x, y);
-					
-					startingX = sup.getX(selectedObj);
-					startingY = sup.getY(selectedObj);
+					checkIfPointerInsideRotateCircle(x, y);
+					setValuesForSelectedObject(x, y);
+
+					if (pointerInsideScaleBox && selectedObj != null) {
+						SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
+						sup.setRotation(selectedObj, 0);
+					}
 
 					return true;
 				}
 
-				selectedObj = null;
+				setValuesForSelectedObject(x, y);
 			}
-
-			setValuesForSelectedObject(x, y);
-
 		}
+
 		return false;
 	}
 
@@ -548,21 +542,17 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 				sup.setRotation(selectedObj, startingRotation);
 
-				undoActions.add(new EditorAction(selectedObj, ActionType.SIZE, deltaX, deltaY));
-				deltaX = 0;
-				deltaY = 0;
+				undoActions.add(new EditorAction(selectedObj, ActionType.SIZE, startingWidth, startingHeight));
 			}
-			
-			if(pointerInsideRotateCircle)
-			{
+
+			if (pointerInsideRotateCircle) {
 				undoActions.add(new EditorAction(selectedObj, ActionType.ROTATION, startingRotation, 0));
 			}
-			
-			if(pointerInsideScaleBox == false && pointerInsideRotateCircle == false && selectedObj != null)
-			{
+
+			if (pointerInsideScaleBox == false && pointerInsideRotateCircle == false && selectedObj != null) {
 				undoActions.add(new EditorAction(selectedObj, ActionType.POS, startingX, startingY));
 			}
-			
+
 		}
 		return false;
 	}
@@ -590,8 +580,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 
 				if (sup.isScallingSupported() && pointerInsideScaleBox) {
-					deltaX = x - attachScreenX;
-					deltaY = y - attachScreenY;
+					float deltaX = x - attachScreenX;
+					float deltaY = y - attachScreenY;
 
 					if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_SCALE_LOCK_RATIO)) {
 						float ratio = startingWidth / startingHeight;
@@ -600,8 +590,11 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 					sup.setSize(selectedObj, startingWidth + deltaX, startingHeight + deltaY);
 					dirty = true;
+					return true;
 
-				} else if (sup.isRotatingSupported() && pointerInsideRotateCircle) {
+				}
+
+				if (sup.isRotatingSupported() && pointerInsideRotateCircle) {
 					Rectangle rect = sup.getBoundingRectangle(selectedObj);
 					float deltaX = x - (rect.x + rect.width / 2);
 					float deltaY = y - (rect.y + rect.height / 2);
@@ -615,27 +608,28 @@ public class SceneEditor extends SceneEditorInputAdapater {
 						sup.setRotation(selectedObj, deg);
 
 					dirty = true;
-				} else {
-					if (sup.isMovingSupported()) {
-						deltaX = (x - lastX);
-						deltaY = (y - lastY);
-
-						if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE)) {
-							deltaX /= SceneEditorConfig.PRECISION_DIVIDE_BY;
-							deltaY /= SceneEditorConfig.PRECISION_DIVIDE_BY;
-						}
-
-						sup.setX(selectedObj, sup.getX(selectedObj) + deltaX);
-						sup.setY(selectedObj, sup.getY(selectedObj) + deltaY);
-
-						lastX = x;
-						lastY = y;
-
-						dirty = true;
-					}
+					return true;
 				}
 
-				return true;
+				if (sup.isMovingSupported()) {
+					float deltaX = (x - lastTouchX);
+					float deltaY = (y - lastTouchY);
+
+					if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE)) {
+						deltaX /= SceneEditorConfig.PRECISION_DIVIDE_BY;
+						deltaY /= SceneEditorConfig.PRECISION_DIVIDE_BY;
+					}
+
+					sup.setX(selectedObj, sup.getX(selectedObj) + deltaX);
+					sup.setY(selectedObj, sup.getY(selectedObj) + deltaY);
+
+					lastTouchX = x;
+					lastTouchY = y;
+
+					dirty = true;
+					return true;
+				}
+
 			}
 
 		}
@@ -648,8 +642,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			OrthographicCamera camera = camController.getCamera();
 
 			float newZoom = 0;
-			float x = camController.getX();
-			float y = camController.getY();
+			float camX = camController.getX();
+			float camY = camController.getY();
 
 			if (amount == 1) // out
 			{
@@ -657,10 +651,11 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 				newZoom = camera.zoom + 0.1f * camera.zoom * 2;
 
-				camera.position.x = x + (camera.zoom / newZoom) * (camera.position.x - x);
-				camera.position.y = y + (camera.zoom / newZoom) * (camera.position.y - y);
+				// some complicated callucations, basicly we want to zoom in/out where mouse pointer is
+				camera.position.x = camX + (camera.zoom / newZoom) * (camera.position.x - camX);
+				camera.position.y = camY + (camera.zoom / newZoom) * (camera.position.y - camY);
 
-				camera.zoom += 0.1f * camera.zoom * 2;
+				camera.zoom = newZoom;
 			}
 
 			if (amount == -1) // in
@@ -669,10 +664,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 				newZoom = camera.zoom - 0.1f * camera.zoom * 2;
 
-				camera.position.x = x + (newZoom / camera.zoom) * (camera.position.x - x);
-				camera.position.y = y + (newZoom / camera.zoom) * (camera.position.y - y);
+				camera.position.x = camX + (newZoom / camera.zoom) * (camera.position.x - camX);
+				camera.position.y = camY + (newZoom / camera.zoom) * (camera.position.y - camY);
 
-				camera.zoom -= 0.1f * camera.zoom * 2;
+				camera.zoom = newZoom;
 			}
 			return true;
 		}
@@ -680,21 +675,23 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		return false;
 	}
 
-	// pan is worse because you must drag mouse a little bit to fire this event
+	// pan is worse because you must drag mouse a little bit to fire this event, but it's simpler
 	@Override
 	public boolean pan (float x, float y, float deltaX, float deltaY) {
-		if (editing && selectedObj == null && cameraLocked == false) {
+		if (editing) {
 			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
-				OrthographicCamera camera = camController.getCamera();
+				if (selectedObj == null && cameraLocked == false) {
+					OrthographicCamera camera = camController.getCamera();
 
-				if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE)) {
-					deltaX /= SceneEditorConfig.PRECISION_DIVIDE_BY;
-					deltaY /= SceneEditorConfig.PRECISION_DIVIDE_BY;
+					if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE)) {
+						deltaX /= SceneEditorConfig.PRECISION_DIVIDE_BY;
+						deltaY /= SceneEditorConfig.PRECISION_DIVIDE_BY;
+					}
+
+					camera.position.x = camera.position.x - deltaX * camera.zoom;
+					camera.position.y = camera.position.y + deltaY * camera.zoom;
+					return true;
 				}
-
-				camera.position.x = camera.position.x - deltaX * camera.zoom;
-				camera.position.y = camera.position.y + deltaY * camera.zoom;
-				return true;
 			}
 		}
 
@@ -727,8 +724,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	}
 
 	public void resize () {
-		if (devMode)
-			gui.resize();
+		if (devMode) gui.resize();
 	}
 
 	public void enable () {

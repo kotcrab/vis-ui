@@ -16,23 +16,20 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
-class EditorAction
-{
-	public Object obj;
+class EditorAction {
 	public ActionType type;
-	public float xDiff;
-	public float yDiff;
-	
-	public EditorAction(Object obj, ActionType type, float xDiff, float yDiff)
-	{
+	public Object obj;
+	public float xVal;
+	public float yVal;
+
+	public EditorAction (Object obj, ActionType type, float xDiff, float yDiff) {
 		this.obj = obj;
 		this.type = type;
-		this.xDiff = xDiff;
-		this.yDiff = yDiff;
+		this.xVal = xDiff;
+		this.yVal = yDiff;
 	}
 }
 
-enum ActionType
-{
+enum ActionType {
 	POS, SIZE, SCALE, ORIGIN, ROTATION
 }

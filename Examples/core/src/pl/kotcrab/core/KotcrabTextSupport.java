@@ -19,6 +19,7 @@ package pl.kotcrab.core;
 import pl.kotcrab.vis.sceneeditor.SceneEditorSupport;
 
 import com.badlogic.gdx.math.Rectangle;
+import com.sun.org.apache.regexp.internal.recompile;
 
 public class KotcrabTextSupport implements SceneEditorSupport<KotcrabText> {
 	@Override

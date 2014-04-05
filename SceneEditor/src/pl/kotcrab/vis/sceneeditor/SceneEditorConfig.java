@@ -17,6 +17,7 @@
 package pl.kotcrab.vis.sceneeditor;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
 
 public class SceneEditorConfig {
 	/** Path to backup folder, must be ended with File.separator */
@@ -53,5 +54,6 @@ public class SceneEditorConfig {
 	public static boolean GUI_DRAW = true;
 	public static boolean GUI_DRAW_OBJECT_INFO = true;
 	public static boolean GUI_DRAW_TITLE = true;
+	public static Color GUI_TEXT_COLOR = Color.WHITE;
 
 }
