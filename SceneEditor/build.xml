@@ -4,8 +4,8 @@
 	<target name="export">
 	    <property name="base.dir" location=".."/>
 	    
-	    <delete file="${base.dir}/Samples/core/libs/VisSceneEditor.jar"/>
-		<jar destfile="${base.dir}/Samples/core/libs/VisSceneEditor.jar">
+	    <delete file="${base.dir}/Examples/core/libs/VisSceneEditor.jar"/>
+		<jar destfile="${base.dir}/Examples/core/libs/VisSceneEditor.jar">
 			<fileset dir="${base.dir}/SceneEditor/bin">
 				<include name="pl/kotcrab/vis/sceneeditor/" />
 				<exclude name="pl/kotcrab/core/" />

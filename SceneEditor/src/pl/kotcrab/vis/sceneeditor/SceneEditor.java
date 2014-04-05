@@ -51,6 +51,7 @@ import com.badlogic.gdx.utils.SerializationException;
 // yeah, you know there are just warnings...
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class SceneEditor extends SceneEditorInputAdapater {
+	
 	private static final String TAG = "VisSceneEditor";
 
 	private Json json;
@@ -177,7 +178,11 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 		try {
 
-			json.toJson(infos, Gdx.files.absolute(new File("").getAbsolutePath() + File.separator + file.path()));
+			if (SceneEditorConfig.assetsFolderPath == null)
+				json.toJson(infos, Gdx.files.absolute(new File("").getAbsolutePath() + File.separator + file.path()));
+			else
+				json.toJson(infos, Gdx.files.absolute(SceneEditorConfig.assetsFolderPath + file.path()));
+
 			Gdx.app.log(TAG, "Saved changes to file.");
 			dirty = false;
 		} catch (SerializationException e) {
@@ -220,30 +225,26 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		supportMap.put(klass, support);
 	}
 
-//	public boolean isSupportForObjectAvaiable (Object obj) {
-//		return supportMap.containsKey(obj.getClass());
-//	}
-	
-	public boolean isSupportForClassAvaiable(Class klass)
-	{
-		if(supportMap.containsKey(klass))
+// public boolean isSupportForObjectAvaiable (Object obj) {
+// return supportMap.containsKey(obj.getClass());
+// }
+
+	public boolean isSupportForClassAvaiable (Class klass) {
+		if (supportMap.containsKey(klass))
 			return true;
-		else
-		{
-			if(klass.getSuperclass() != null)
+		else {
+			if (klass.getSuperclass() != null)
 				return isSupportForClassAvaiable(klass.getSuperclass());
 			else
 				return false;
 		}
 	}
-	
-	public SceneEditorSupport<?> getSupportForClass(Class klass)
-	{
-		if(supportMap.containsKey(klass))
+
+	public SceneEditorSupport<?> getSupportForClass (Class klass) {
+		if (supportMap.containsKey(klass))
 			return supportMap.get(klass);
-		else
-		{
-			if(klass.getSuperclass() != null)
+		else {
+			if (klass.getSuperclass() != null)
 				return getSupportForClass(klass.getSuperclass());
 			else
 				return null;
@@ -347,12 +348,12 @@ public class SceneEditor extends SceneEditorInputAdapater {
 					drawTextAtLine("Camera is not locked.", line++);
 
 				guiBatch.flush();
-				
+
 				if (dirty)
 					drawTextAtLine("Unsaved changes. Exit edit mode to save them.", line++);
 				else
 					drawTextAtLine("All changes saved.", line++);
-				
+
 				line++;
 
 				if (selectedObj != null) {
