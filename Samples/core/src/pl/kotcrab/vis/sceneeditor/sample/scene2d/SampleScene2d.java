@@ -27,9 +27,6 @@ public class SampleScene2d implements ApplicationListener
 		actor1 = new MyActor(texture);
 		actor2 = new MyActor(texture);
 		
-		actor1.setX(20);
-		actor1.setY(20);
-		
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 		
@@ -44,7 +41,6 @@ public class SampleScene2d implements ApplicationListener
 	
 	public void resize(int width, int height)
 	{
-		// See below for what true means.
 		stage.getViewport().update(width, height, true);
 	}
 	

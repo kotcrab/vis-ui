@@ -346,11 +346,13 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				else
 					drawTextAtLine("Camera is not locked.", line++);
 
+				guiBatch.flush();
+				
 				if (dirty)
 					drawTextAtLine("Unsaved changes. Exit edit mode to save them.", line++);
 				else
 					drawTextAtLine("All changes saved.", line++);
-
+				
 				line++;
 
 				if (selectedObj != null) {
