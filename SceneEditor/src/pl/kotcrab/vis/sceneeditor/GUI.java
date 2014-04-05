@@ -51,7 +51,7 @@ public class GUI {
 				if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO)
 					drawTextAtLine(
 						"X: " + (int)sup.getX(selectedObj) + " Y:" + (int)sup.getY(selectedObj) + " Width: "
-							+ (int)sup.getWidth(selectedObj) + " Heihgt: " + (int)sup.getHeight(selectedObj), line++);
+							+ (int)sup.getWidth(selectedObj) + " Height: " + (int)sup.getHeight(selectedObj), line++);
 			}
 			guiBatch.end();
 		}
