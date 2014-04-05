@@ -32,7 +32,7 @@ If scene files does not exist it will be created.
 3.Call sceneEditor.dispose() in your dispose() method. <br>
 4.Call sceneEditor.resize() in your resize() method. <br>
 
-[Full sample](https://github.com/kotcrab/VisSceneEditor/blob/master/Samples/core/src/pl/kotcrab/vis/sceneeditor/sample/SampleScene.java) <br>
+[Full example](https://github.com/kotcrab/VisSceneEditor/blob/master/Samples/core/src/pl/kotcrab/vis/sceneeditor/sample/SampleScene.java) <br>
 
 SceneEditor automatically attaches its InputProcessor, if you change current InputProcessor you will have to call:
 ```java
