@@ -14,20 +14,13 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.sample.android;
+package pl.kotcrab.vis.sceneeditor.example;
 
-import android.os.Bundle;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import com.badlogic.gdx.backends.android.AndroidApplication;
-import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
-
-import pl.kotcrab.vis.sceneeditor.example.Examples;
-
-public class AndroidLauncher extends AndroidApplication {
-	@Override
-	protected void onCreate (Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		AndroidApplicationConfiguration config = new AndroidApplicationConfiguration();
-		initialize(new Examples(false), config);
-	}
+public abstract class AbstractScene
+{
+	public abstract void resize();
+	public abstract void dispose();
+	public abstract void render(SpriteBatch batch);
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.sample;
+package pl.kotcrab.vis.sceneeditor.example;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -22,7 +22,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Samples implements ApplicationListener
+public class Examples implements ApplicationListener
 {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
@@ -31,7 +31,7 @@ public class Samples implements ApplicationListener
 	
 	private boolean withKotcrabText;
 	
-	public Samples(boolean withKotcrabText)
+	public Examples(boolean withKotcrabText)
 	{
 		this.withKotcrabText = withKotcrabText;
 	}
@@ -45,9 +45,9 @@ public class Samples implements ApplicationListener
 		camera.position.y = 480 / 2;
 		
 		if(withKotcrabText)
-			scene = new SampleSceneKotcrabText(camera);
+			scene = new ExampleSceneKotcrabText(camera);
 		else
-			scene = new SampleScene(camera);
+			scene = new ExampleScene(camera);
 	}
 	
 	@Override

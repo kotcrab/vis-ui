@@ -14,17 +14,21 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.sample;
+package pl.kotcrab.vis.sceneeditor.example;
 
+import pl.kotcrab.core.KotcrabText;
+import pl.kotcrab.core.KotcrabTextSupport;
 import pl.kotcrab.vis.sceneeditor.SceneEditor;
+import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class SampleScene extends AbstractScene {
+public class ExampleSceneKotcrabText extends AbstractScene {
 	private SceneEditor sceneEditor;
 
 	private Texture bushTexture;
@@ -35,10 +39,13 @@ public class SampleScene extends AbstractScene {
 	private Sprite net1;
 	private Sprite net2;
 
-	public SampleScene (OrthographicCamera camera) {
+	private KotcrabText text;
+	private KotcrabText text2;
+
+	public ExampleSceneKotcrabText (OrthographicCamera camera) {
 		//SceneEditorConfig.backupFolderPath = "F:\\Projekty\\VisSceneEditor\\backup\\"; // Optonal, will backup your files before
-		// saving new scene
-		
+// saving new scene
+
 		bushTexture = new Texture(Gdx.files.internal("bush.png"));
 		netTexture = new Texture(Gdx.files.internal("net.png"));
 
@@ -47,10 +54,17 @@ public class SampleScene extends AbstractScene {
 		net1 = new Sprite(netTexture);
 		net2 = new Sprite(netTexture);
 
-		sceneEditor = new SceneEditor(Gdx.files.internal("scene.json"), camera, true);
+		text = new KotcrabText(new BitmapFont(Gdx.files.internal("data/arial.fnt")), "Just some random text", false, 0, 0);
+		text2 = new KotcrabText(new BitmapFont(Gdx.files.internal("data/arial.fnt")),
+			"Just some random text with orign centred", true, 0, 0);
+
+		sceneEditor = new SceneEditor(Gdx.files.internal("kotcrabtext_scene.json"), camera, true);
+		sceneEditor.registerSupport(KotcrabText.class, new KotcrabTextSupport());
 		sceneEditor.add(bush1, "bush1").add(bush2, "bush2").add(net1, "net1").add(net2, "net2");
+		sceneEditor.add(text, "text");
+		sceneEditor.add(text2, "text2");
 		sceneEditor.load();
-		//sceneEditor.enable();
+		sceneEditor.enable();
 	}
 
 	@Override
@@ -60,6 +74,8 @@ public class SampleScene extends AbstractScene {
 		bush2.draw(batch);
 		net1.draw(batch);
 		net2.draw(batch);
+		text.draw(batch);
+		text2.draw(batch);
 		batch.end();
 
 		sceneEditor.render();
@@ -76,5 +92,4 @@ public class SampleScene extends AbstractScene {
 	public void resize () {
 		sceneEditor.resize();
 	}
-
 }

@@ -1,4 +1,4 @@
-package pl.kotcrab.vis.sceneeditor.sample.scene2d;
+package pl.kotcrab.vis.sceneeditor.example.scene2d;
 
 import pl.kotcrab.vis.sceneeditor.SceneEditor;
 
@@ -10,7 +10,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class SampleScene2d implements ApplicationListener
+public class ExampleScene2d implements ApplicationListener
 {
 	private Texture texture;
 	

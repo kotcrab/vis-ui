@@ -1,4 +1,4 @@
-package pl.kotcrab.vis.sceneeditor.sample.scene2d;
+package pl.kotcrab.vis.sceneeditor.example.scene2d;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
