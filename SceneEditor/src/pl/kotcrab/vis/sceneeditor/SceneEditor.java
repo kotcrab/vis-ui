@@ -56,10 +56,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private Json json;
 
-	private SpriteBatch guiBatch;
 	private ShapeRenderer shapeRenderer;
-	private BitmapFont font;
 
+	private GUI gui;
+	
 	private CameraController camController;
 
 	private FileHandle file;
@@ -111,14 +111,13 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 
 		if (devMode) {
-			guiBatch = new SpriteBatch();
+			gui = new GUI(this);
 			shapeRenderer = new ShapeRenderer();
 
 			undoActions = new Array<>();
 			redoActions = new Array<>();
 
 			camController = new CameraController(camera);
-			font = new BitmapFont(Gdx.files.internal("data/arial.fnt"));
 
 			objectMap = new ObjectMap<>();
 
@@ -275,6 +274,29 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 		return null;
 	}
+	
+	public Object findObjectWithSamllestSurfaceArea(float x, float y)
+	{
+		Object matchingObject = null;
+		int lastSurfaceArea = Integer.MAX_VALUE;
+
+		for (Entry<String, Object> entry : objectMap.entries()) {
+			Object obj = entry.value;
+
+			SceneEditorSupport sup = getSupportForClass(obj.getClass());
+
+			if (sup.contains(obj, x, y)) {
+				int currentSurfaceArea = (int)(sup.getWidth(obj) * sup.getHeight(obj));
+
+				if (currentSurfaceArea < lastSurfaceArea) {
+					matchingObject = obj;
+					lastSurfaceArea = currentSurfaceArea;
+				}
+			}
+		}
+		
+		return matchingObject;
+	}
 
 	public void render () {
 		shapeRenderer.setProjectionMatrix(camController.getCamera().combined);
@@ -340,40 +362,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 			shapeRenderer.end();
 
-			int line = 0;
-
-			if (SceneEditorConfig.GUI_DRAW) {
-				guiBatch.begin();
-
-				if (SceneEditorConfig.GUI_DRAW_TITLE)
-					drawTextAtLine("VisSceneEditor - Edit Mode - Entities: " + objectMap.size, line++);
-
-				if (cameraLocked)
-					drawTextAtLine("Camera is locked.", line++);
-				else
-					drawTextAtLine("Camera is not locked.", line++);
-
-				guiBatch.flush(); // is this a libgdx bug? without it cpu usage jumps to 25%
-
-				if (dirty)
-					drawTextAtLine("Unsaved changes. Exit edit mode to save them.", line++);
-				else
-					drawTextAtLine("All changes saved.", line++);
-
-				line++;
-
-				if (selectedObj != null) {
-					SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
-
-					drawTextAtLine("Selected object: " + getIdentifierForObject(selectedObj), line++);
-
-					if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO)
-						drawTextAtLine(
-							"X: " + (int)sup.getX(selectedObj) + " Y:" + (int)sup.getY(selectedObj) + " Width: "
-								+ (int)sup.getWidth(selectedObj) + " Heihgt: " + (int)sup.getHeight(selectedObj), line++);
-				}
-				guiBatch.end();
-			}
+			gui.render(objectMap.size, cameraLocked, dirty, selectedObj);
 		}
 	}
 
@@ -395,10 +384,6 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private void renderCircle (Circle cir) {
 		shapeRenderer.circle(cir.x, cir.y, cir.radius);
-	}
-
-	private void drawTextAtLine (String text, int line) {
-		font.draw(guiBatch, text, 2, Gdx.graphics.getHeight() - 2 - (line * 17));
 	}
 
 	private Rectangle buildRectangeForScaleBox (SceneEditorSupport sup, Object obj) {
@@ -531,23 +516,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_NO_SELECT_MODE) == false && pointerInsideRotateCircle == false
 				&& pointerInsideScaleBox == false) // without this it would deselect active object
 			{
-				Object matchingObject = null;
-				int lastSurfaceArea = Integer.MAX_VALUE;
-
-				for (Entry<String, Object> entry : objectMap.entries()) {
-					Object obj = entry.value;
-
-					SceneEditorSupport sup = getSupportForClass(obj.getClass());
-
-					if (sup.contains(obj, camController.calcX(screenX), camController.calcY(screenY))) {
-						int currentSurfaceArea = (int)(sup.getWidth(obj) * sup.getHeight(obj));
-
-						if (currentSurfaceArea < lastSurfaceArea) {
-							matchingObject = obj;
-							lastSurfaceArea = currentSurfaceArea;
-						}
-					}
-				}
+				Object matchingObject = findObjectWithSamllestSurfaceArea(x, y);
 
 				if (matchingObject != null) {
 					selectedObj = matchingObject;
@@ -580,6 +549,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				sup.setRotation(selectedObj, startingRotation);
 
 				undoActions.add(new EditorAction(selectedObj, ActionType.SIZE, deltaX, deltaY));
+				deltaX = 0;
+				deltaY = 0;
 			}
 			
 			if(pointerInsideRotateCircle)
@@ -592,8 +563,6 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				undoActions.add(new EditorAction(selectedObj, ActionType.POS, startingX, startingY));
 			}
 			
-			deltaX = 0;
-			deltaY = 0;
 		}
 		return false;
 	}
@@ -601,7 +570,6 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	@Override
 	public boolean mouseMoved (int screenX, int screenY) {
 		if (editing) {
-
 			float x = camController.calcX(screenX);
 			float y = camController.calcY(screenY);
 
@@ -754,14 +722,13 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	public void dispose () {
 		if (devMode) {
-			guiBatch.dispose();
-			font.dispose();
+			gui.dispose();
 		}
 	}
 
 	public void resize () {
 		if (devMode)
-			guiBatch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
+			gui.resize();
 	}
 
 	public void enable () {
