@@ -50,7 +50,7 @@ public class ExampleScene extends AbstractScene {
 		sceneEditor = new SceneEditor(Gdx.files.internal("scene.json"), camera, true);
 		sceneEditor.add(bush1, "bush1").add(bush2, "bush2").add(net1, "net1").add(net2, "net2");
 		sceneEditor.load();
-		//sceneEditor.enable();
+		sceneEditor.enable();
 	}
 
 	@Override

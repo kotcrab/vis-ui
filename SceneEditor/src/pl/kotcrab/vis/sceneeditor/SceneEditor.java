@@ -43,6 +43,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
@@ -51,7 +52,6 @@ import com.badlogic.gdx.utils.SerializationException;
 // yeah, you know there are just warnings...
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class SceneEditor extends SceneEditorInputAdapater {
-	
 	private static final String TAG = "VisSceneEditor";
 
 	private Json json;
@@ -72,6 +72,9 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private ObjectMap<Class<?>, SceneEditorSupport<?>> supportMap;
 	private ObjectMap<String, Object> objectMap;
 
+	private Array<EditorAction> undoActions;
+	private Array<EditorAction> redoActions;
+
 	private Object selectedObj;
 	private boolean pointerInsideScaleBox;
 	private boolean pointerInsideRotateCircle;
@@ -81,8 +84,12 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private float startingWidth; // for scalling object
 	private float startingHeight;
-
 	private float startingRotation;
+	private float startingX;
+	private float startingY;
+
+	private float deltaX;
+	private float deltaY;
 
 	private float lastX;
 	private float lastY;
@@ -106,6 +113,9 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (devMode) {
 			guiBatch = new SpriteBatch();
 			shapeRenderer = new ShapeRenderer();
+
+			undoActions = new Array<>();
+			redoActions = new Array<>();
 
 			camController = new CameraController(camera);
 			font = new BitmapFont(Gdx.files.internal("data/arial.fnt"));
@@ -225,18 +235,14 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		supportMap.put(klass, support);
 	}
 
-// public boolean isSupportForObjectAvaiable (Object obj) {
-// return supportMap.containsKey(obj.getClass());
-// }
-
 	public boolean isSupportForClassAvaiable (Class klass) {
 		if (supportMap.containsKey(klass))
 			return true;
 		else {
-			if (klass.getSuperclass() != null)
-				return isSupportForClassAvaiable(klass.getSuperclass());
-			else
+			if (klass.getSuperclass() == null)
 				return false;
+			else
+				return isSupportForClassAvaiable(klass.getSuperclass());
 		}
 	}
 
@@ -244,10 +250,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (supportMap.containsKey(klass))
 			return supportMap.get(klass);
 		else {
-			if (klass.getSuperclass() != null)
-				return getSupportForClass(klass.getSuperclass());
-			else
+			if (klass.getSuperclass() == null)
 				return null;
+			else
+				return getSupportForClass(klass.getSuperclass());
 		}
 	}
 
@@ -347,7 +353,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				else
 					drawTextAtLine("Camera is not locked.", line++);
 
-				guiBatch.flush();
+				guiBatch.flush(); // is this a libgdx bug? without it cpu usage jumps to 25%
 
 				if (dirty)
 					drawTextAtLine("Unsaved changes. Exit edit mode to save them.", line++);
@@ -380,7 +386,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	}
 
 	private void renderObjectRotateCricle (SceneEditorSupport sup, Object obj) {
-		renderCircle(buildCirlcleForRotateBox(sup, obj));
+		renderCircle(buildCirlcleForRotateCircle(sup, obj));
 	}
 
 	private void renderRectangle (Rectangle rect) {
@@ -400,12 +406,78 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		return new Rectangle(rect.x + rect.width - 15, rect.y + rect.height - 15, 15, 15);
 	}
 
-	private Circle buildCirlcleForRotateBox (SceneEditorSupport sup, Object obj) {
+	private Circle buildCirlcleForRotateCircle (SceneEditorSupport sup, Object obj) {
 		Rectangle rect = sup.getBoundingRectangle(obj);
 
 		int cWidth = 5;
 
 		return new Circle(rect.x + rect.width / 2 + cWidth, rect.y + rect.height + cWidth, cWidth);
+	}
+
+	private void undo () {
+		if (undoActions.size > 0) {
+			EditorAction action = undoActions.pop();
+			
+			SceneEditorSupport sup = getSupportForClass(action.obj.getClass());
+
+			switch (action.type) {
+			case ORIGIN: //origin not implemented yet
+				break;
+			case POS:
+				redoActions.add(new EditorAction(action.obj, ActionType.POS, sup.getX(action.obj), sup.getY(action.obj)));
+				sup.setX(action.obj, action.xDiff);
+				sup.setY(action.obj, action.yDiff);
+				break;
+			case SCALE: //scale is not used for now
+				break;
+			case SIZE:
+				redoActions.add(new EditorAction(action.obj, ActionType.SIZE, action.xDiff, action.yDiff));
+				sup.setSize(action.obj, sup.getWidth(action.obj) - action.xDiff, sup.getHeight(action.obj) - action.yDiff);
+				break;
+			case ROTATION:
+				redoActions.add(new EditorAction(action.obj, ActionType.ROTATION, sup.getRotation(action.obj), 0));
+				sup.setRotation(action.obj, action.xDiff);
+				break;
+			default:
+				break;
+
+			}
+		} else
+			Gdx.app.log(TAG, "Can't undo any more!");
+	}
+
+	private void redo () {
+		if(redoActions.size > 0)
+		{
+			EditorAction action = redoActions.pop();
+			
+			SceneEditorSupport sup = getSupportForClass(action.obj.getClass());
+
+			switch (action.type) {
+			case ORIGIN: //origin not implemented yet
+				break;
+			case POS:
+				undoActions.add(new EditorAction(action.obj, ActionType.POS, sup.getX(action.obj), sup.getY(action.obj)));
+				sup.setX(action.obj, action.xDiff);
+				sup.setY(action.obj, action.yDiff);
+				break;
+			case SCALE: //scale is not used for now
+				break;
+			case SIZE:
+				undoActions.add(new EditorAction(action.obj, ActionType.SIZE, action.xDiff, action.yDiff));
+				sup.setSize(action.obj, sup.getWidth(action.obj) + action.xDiff, sup.getHeight(action.obj) + action.yDiff);
+				break;
+			case ROTATION:
+				undoActions.add(new EditorAction(action.obj, ActionType.ROTATION, sup.getRotation(action.obj), 0));
+				sup.setRotation(action.obj, action.xDiff);
+				break;
+			default:
+				break;
+
+			}
+		}
+		else
+			Gdx.app.log(TAG, "Can't redo any more!");
 	}
 
 	@Override
@@ -414,6 +486,12 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (editing) {
 			if (keycode == SceneEditorConfig.KEY_RESET_CAMERA) camController.restoreOrginalCameraProperties();
 			if (keycode == SceneEditorConfig.KEY_LOCK_CAMERA) cameraLocked = !cameraLocked;
+
+			if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_SPECIAL_ACTIONS)) {
+				if (keycode == SceneEditorConfig.KEY_SPECIAL_SAVE_CHANGES) save();
+				if (keycode == SceneEditorConfig.KEY_SPECIAL_UNDO) undo();
+				if (keycode == SceneEditorConfig.KEY_SPECIAL_REDO) redo();
+			}
 		}
 
 		if (keycode == SceneEditorConfig.KEY_TOGGLE_EDIT_MODE) {
@@ -437,12 +515,19 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			lastY = y;
 
 			checkIfPointerInsideScaleBox(x, y);
+			checkIfPointerInsideRotateCircle(x, y);
+			
 			if (pointerInsideScaleBox && selectedObj != null) {
 				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 				startingRotation = sup.getRotation(selectedObj);
 				sup.setRotation(selectedObj, 0);
 			}
-
+			
+			if (pointerInsideRotateCircle && selectedObj != null) {
+				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
+				startingRotation = sup.getRotation(selectedObj);
+			}
+			
 			if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_NO_SELECT_MODE) == false && pointerInsideRotateCircle == false
 				&& pointerInsideScaleBox == false) // without this it would deselect active object
 			{
@@ -466,9 +551,14 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 				if (matchingObject != null) {
 					selectedObj = matchingObject;
+					
+					SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 
 					setValuesForSelectedObject(x, y);
 					checkIfPointerInsideScaleBox(x, y);
+					
+					startingX = sup.getX(selectedObj);
+					startingY = sup.getY(selectedObj);
 
 					return true;
 				}
@@ -488,7 +578,22 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			if (pointerInsideScaleBox) {
 				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 				sup.setRotation(selectedObj, startingRotation);
+
+				undoActions.add(new EditorAction(selectedObj, ActionType.SIZE, deltaX, deltaY));
 			}
+			
+			if(pointerInsideRotateCircle)
+			{
+				undoActions.add(new EditorAction(selectedObj, ActionType.ROTATION, startingRotation, 0));
+			}
+			
+			if(pointerInsideScaleBox == false && pointerInsideRotateCircle == false && selectedObj != null)
+			{
+				undoActions.add(new EditorAction(selectedObj, ActionType.POS, startingX, startingY));
+			}
+			
+			deltaX = 0;
+			deltaY = 0;
 		}
 		return false;
 	}
@@ -517,8 +622,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 
 				if (sup.isScallingSupported() && pointerInsideScaleBox) {
-					float deltaX = x - attachScreenX;
-					float deltaY = y - attachScreenY;
+					deltaX = x - attachScreenX;
+					deltaY = y - attachScreenY;
 
 					if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_SCALE_LOCK_RATIO)) {
 						float ratio = startingWidth / startingHeight;
@@ -544,8 +649,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 					dirty = true;
 				} else {
 					if (sup.isMovingSupported()) {
-						float deltaX = (x - lastX);
-						float deltaY = (y - lastY);
+						deltaX = (x - lastX);
+						deltaY = (y - lastY);
 
 						if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE)) {
 							deltaX /= SceneEditorConfig.PRECISION_DIVIDE_BY;
@@ -640,7 +745,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private void checkIfPointerInsideRotateCircle (float x, float y) {
 		if (selectedObj != null) {
-			if (buildCirlcleForRotateBox(getSupportForClass(selectedObj.getClass()), selectedObj).contains(x, y))
+			if (buildCirlcleForRotateCircle(getSupportForClass(selectedObj.getClass()), selectedObj).contains(x, y))
 				pointerInsideRotateCircle = true;
 			else
 				pointerInsideRotateCircle = false;
