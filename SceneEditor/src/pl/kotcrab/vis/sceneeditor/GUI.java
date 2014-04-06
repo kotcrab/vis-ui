@@ -21,6 +21,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 
+/**
+ * GUI class for rendering VisSceneEditor gui.
+ * 
+ * @author Pawel Pastuszak
+ */
 @SuppressWarnings({"rawtypes", "unchecked"})
 class GUI {
 	private SceneEditor sceneEditor;

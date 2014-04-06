@@ -16,17 +16,22 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
+/**
+ * Represents edit action made in editor.
+ *  
+ * @author Pawel Pastuszak
+ */
 class EditorAction {
 	public ActionType type;
 	public Object obj;
 	public float xVal;
 	public float yVal;
 
-	public EditorAction (Object obj, ActionType type, float xDiff, float yDiff) {
+	public EditorAction (Object obj, ActionType type, float xXal, float yYDiff) {
 		this.obj = obj;
 		this.type = type;
-		this.xVal = xDiff;
-		this.yVal = yDiff;
+		this.xVal = xXal;
+		this.yVal = yYDiff;
 	}
 }
 

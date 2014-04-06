@@ -16,11 +16,39 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 
 class SceneEditorInputAdapater extends InputAdapter implements GestureListener {
+	/** Attaches own InputProcessor to all others currently set. This must be called when changed active InputProcessor (called
+	 * Gdx.input.setInputProcessor()) */
+	public void attachInputProcessor () {
+		if (Gdx.input.getInputProcessor() == null) {
+			InputMultiplexer mul = new InputMultiplexer();
+			mul.addProcessor(this);
+			mul.addProcessor(new GestureDetector(this));
+			Gdx.input.setInputProcessor(mul);
+			return;
+		}
+
+		if (Gdx.input.getInputProcessor() instanceof InputMultiplexer) {
+			InputMultiplexer mul = (InputMultiplexer)Gdx.input.getInputProcessor();
+			mul.addProcessor(0, this);
+			mul.addProcessor(1, new GestureDetector(this));
+			Gdx.input.setInputProcessor(mul);
+		} else {
+			InputMultiplexer mul = new InputMultiplexer();
+			mul.addProcessor(this);
+			mul.addProcessor(new GestureDetector(this));
+			mul.addProcessor(Gdx.input.getInputProcessor());
+			Gdx.input.setInputProcessor(mul);
+		}
+	}
+
 	@Override
 	public boolean touchDown (float x, float y, int pointer, int button) {
 		return false;

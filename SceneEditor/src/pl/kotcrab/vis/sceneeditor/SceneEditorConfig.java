@@ -19,6 +19,11 @@ package pl.kotcrab.vis.sceneeditor;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 
+/**
+ * Configuration of SceneEditor
+ * 
+ * @author Pawel Pastuszak
+ */
 public class SceneEditorConfig {
 	/** Path to backup folder, must be ended with File.separator */
 	public static String backupFolderPath = null;

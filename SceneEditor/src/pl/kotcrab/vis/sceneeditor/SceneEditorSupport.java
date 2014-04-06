@@ -18,11 +18,31 @@ package pl.kotcrab.vis.sceneeditor;
 
 import com.badlogic.gdx.math.Rectangle;
 
+/** Interface that all supports must implement. <br>
+ * 
+ * Method that must be implemneted: getX, getY, getBoundingRectangle, contains. For other plese refer to isMovingSupported(),
+ * isRotatingSupported() and isScallingSupported()
+ * @see SceneEditorSupport#isMovingSupported()
+ * @see SceneEditorSupport#isRotatingSupported()
+ * @see SceneEditorSupport#isScallingSupported()
+ * 
+ * @author Pawel Pastuszak
+ * 
+ * @param <O> Object that this class will support */
 public interface SceneEditorSupport<O> {
+	/** When this method return true, setScale, setSize, getScaleX, getScaleY, getWidth, getHeight must be implemented
+	 * 
+	 * @return true if object support scalling, false otherwise */
 	public boolean isScallingSupported ();
 
+	/** When this method return true, setRotation, getRotation must be implemented
+	 * 
+	 * @return true if object support rotating, false otherwise */
 	public boolean isRotatingSupported ();
 
+	/** When this method return true, setX, setY must be implemented
+	 * 
+	 * @return true if object support moving, false otherwise */
 	public boolean isMovingSupported ();
 
 	public void setX (O obj, float x);

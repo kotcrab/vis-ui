@@ -19,6 +19,9 @@ package pl.kotcrab.vis.sceneeditor;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+/** Scene2d Actor support.
+ * 
+ * @author Pawel Pastuszak */
 public class ActorSupport implements SceneEditorSupport<Actor> {
 	@Override
 	public void setX (Actor a, float x) {

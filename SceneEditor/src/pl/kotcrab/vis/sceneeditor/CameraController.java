@@ -21,7 +21,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
-/** Class for caluclating propper touch cordinates
+/** Class for caluclating propper touch cordinates and controlling camera
  * 
  * @author Pawel Pastuszak */
 class CameraController {
@@ -66,13 +66,6 @@ class CameraController {
 		camera.position.y = orginalCamera.position.y;
 		camera.zoom = orginalCamera.zoom;
 	}
-
-// public void restoreCameraProperties()
-// {
-// orginalCamera.position.x = camera.position.x;
-// orginalCamera.position.y = camera.position.y;
-// orginalCamera.zoom = camera.zoom;
-// }
 
 	public boolean isCameraDirty () {
 		return camera.position.x != orginalCamera.position.x || camera.position.y != orginalCamera.position.y

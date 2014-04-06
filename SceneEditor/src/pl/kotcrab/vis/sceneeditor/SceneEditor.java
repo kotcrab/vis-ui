@@ -25,6 +25,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import sun.security.util.DisabledAlgorithmConstraints;
+
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -46,18 +48,19 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.SerializationException;
 
-// yeah, you know there are just warnings...
+/** Main class of VisSceneEditor
+ * 
+ * @author Pawel Pastuszak */
 @SuppressWarnings({"rawtypes", "unchecked"})
+// yeah, you know there are just warnings...
 public class SceneEditor extends SceneEditorInputAdapater {
 	private static final String TAG = "VisSceneEditor";
 
 	private Json json;
+	private GUI gui;
+	private CameraController camController;
 
 	private ShapeRenderer shapeRenderer;
-
-	private GUI gui;
-
-	private CameraController camController;
 
 	private FileHandle file;
 
@@ -88,10 +91,13 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private float lastTouchX;
 	private float lastTouchY;
 
+	/** @see SceneEditor#SceneEditor(FileHandle, OrthographicCamera, boolean)
+	 * @param registerBasicsSupports if true Sprite and Actor support will be registered */
 	public SceneEditor (FileHandle sceneFile, OrthographicCamera camera, boolean devMode, boolean registerBasicsSupports) {
 		this.devMode = devMode;
 		this.file = sceneFile;
 
+		// DevMode can be only actived on desktop
 		if (Gdx.app.getType() != ApplicationType.Desktop) this.devMode = false;
 
 		json = new Json();
@@ -119,10 +125,16 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 	}
 
+	/** Constructs SceneEditor with basic supports for Sprite and Actor
+	 * 
+	 * @param sceneFile path to scene file, typicaly with .json extension
+	 * @param camera camera used for rendering
+	 * @param devMode devMode allow to enter editing mode, if not on desktop it will automaticly be set to false */
 	public SceneEditor (FileHandle sceneFile, OrthographicCamera camera, boolean devMode) {
 		this(sceneFile, camera, devMode, true);
 	}
 
+	/** Loads all properties from provied scene file. If file does not exist it will do nothing */
 	public void load () {
 		if (file.exists() == false) return;
 
@@ -149,10 +161,9 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 	}
 
+	/** Saves all changes to provied scene file */
 	private void save () {
-		if (file.exists() && SceneEditorConfig.backupFolderPath != null) {
-			createBackup();
-		}
+		createBackup();
 
 		ArrayList<ObjectInfo> infos = new ArrayList<>();
 
@@ -194,27 +205,30 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	}
 
+	/** Backup provided scene file */
 	private void createBackup () {
-		try {
-			String fileName = file.name();
-			fileName = fileName.substring(0, fileName.lastIndexOf('.'));
+		if (file.exists() && SceneEditorConfig.backupFolderPath != null) {
+			try {
+				String fileName = file.name();
+				fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-			Date date = new Date();
-			fileName += " - " + dateFormat.format(date) + ".json";
+				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
+				Date date = new Date();
+				fileName += " - " + dateFormat.format(date) + file.extension();
 
-			Files.copy(new File(new File("").getAbsolutePath() + File.separator + file.path()).toPath(), new File(
-				SceneEditorConfig.backupFolderPath + fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
-			Gdx.app.log(TAG, "Backup file created.");
-		} catch (IOException e) {
-			Gdx.app.log(TAG, "Error while creating backup.");
-			e.printStackTrace();
+				Files.copy(new File(new File("").getAbsolutePath() + File.separator + file.path()).toPath(), new File(
+					SceneEditorConfig.backupFolderPath + fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
+				Gdx.app.log(TAG, "Backup file created.");
+			} catch (IOException e) {
+				Gdx.app.log(TAG, "Error while creating backup.");
+				e.printStackTrace();
+			}
 		}
 	}
 
-	/** TODO
-	 * @param obj
-	 * @param identifier
+	/** Add obj to object list, if support for this object class was not registed it won't be added
+	 * @param obj object that will be added to list
+	 * @param identifier unique identifer, used when saving and loading
 	 * 
 	 * @return This SceneEditor for the purpose of chaining methods together. */
 	public SceneEditor add (Object obj, String identifier) {
@@ -223,10 +237,14 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		return this;
 	}
 
+	/** Register support and allow object of provied class be added to scene */
 	public void registerSupport (Class<?> klass, SceneEditorSupport<?> support) {
 		supportMap.put(klass, support);
 	}
 
+	/** Check if support for provied class is available
+	 * @param klass class that will be checked
+	 * @return true if support is avaiable. false otherwise */
 	public boolean isSupportForClassAvaiable (Class klass) {
 		if (supportMap.containsKey(klass))
 			return true;
@@ -238,7 +256,11 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 	}
 
-	public SceneEditorSupport<?> getSupportForClass (Class klass) {
+	/** Returns support for provided class
+	 * 
+	 * @param klass class that support will be return if available
+	 * @return support if available, null otherwise */
+	public SceneEditorSupport getSupportForClass (Class klass) {
 		if (supportMap.containsKey(klass))
 			return supportMap.get(klass);
 		else {
@@ -265,6 +287,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 	}
 
+	/** Finds and return identifer for provied object
+	 * 
+	 * @param obj that identifier will be returned
+	 * @return identifier if found, null otherwise */
 	public String getIdentifierForObject (Object obj) {
 		for (Entry<String, Object> entry : objectMap.entries()) {
 			if (entry.value.equals(obj)) return entry.key;
@@ -273,7 +299,11 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		return null;
 	}
 
-	public Object findObjectWithSamllestSurfaceArea (float x, float y) {
+	/** Finds object with smallest surface area that contains x,y point
+	 * @param x pointer cordinate unprocjeted by camera
+	 * @param y pointer cordinate unprocjeted by camera
+	 * @return */
+	private Object findObjectWithSamllestSurfaceArea (float x, float y) {
 		Object matchingObject = null;
 		int lastSurfaceArea = Integer.MAX_VALUE;
 
@@ -295,6 +325,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		return matchingObject;
 	}
 
+	/** Renders everything */
 	public void render () {
 		shapeRenderer.setProjectionMatrix(camController.getCamera().combined);
 
@@ -711,53 +742,43 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 	}
 
+	/** Releases used assets */
 	public void dispose () {
 		if (devMode) {
+			shapeRenderer.dispose();
 			gui.dispose();
 		}
 	}
 
+	/** This must be called when screen size changed */
 	public void resize () {
 		if (devMode) gui.resize();
 	}
 
+	/** Enabled editing mode */
 	public void enable () {
 		if (devMode) {
-			editing = true;
-			camController.switchCameraProperties();
+			if (editing == false) {
+				editing = true;
+				camController.switchCameraProperties();
+			}
 		}
 	}
 
+	/** Disabled editing mode */
 	public void disable () {
 		if (devMode) {
-			editing = false;
-			camController.switchCameraProperties();
-			save();
+			if (editing) {
+				editing = false;
+				camController.switchCameraProperties();
+				save();
+			}
 		}
 	}
 
+	/** {@inheritDoc} */
+	@Override
 	public void attachInputProcessor () {
-		if (devMode) {
-			if (Gdx.input.getInputProcessor() == null) {
-				InputMultiplexer mul = new InputMultiplexer();
-				mul.addProcessor(this);
-				mul.addProcessor(new GestureDetector(this));
-				Gdx.input.setInputProcessor(mul);
-				return;
-			}
-
-			if (Gdx.input.getInputProcessor() instanceof InputMultiplexer) {
-				InputMultiplexer mul = (InputMultiplexer)Gdx.input.getInputProcessor();
-				mul.addProcessor(0, this);
-				mul.addProcessor(1, new GestureDetector(this));
-				Gdx.input.setInputProcessor(mul);
-			} else {
-				InputMultiplexer mul = new InputMultiplexer();
-				mul.addProcessor(this);
-				mul.addProcessor(new GestureDetector(this));
-				mul.addProcessor(Gdx.input.getInputProcessor());
-				Gdx.input.setInputProcessor(mul);
-			}
-		}
+		if (devMode) super.attachInputProcessor();
 	}
 }
