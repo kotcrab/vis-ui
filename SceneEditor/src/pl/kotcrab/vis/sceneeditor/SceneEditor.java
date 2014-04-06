@@ -25,20 +25,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import sun.security.util.DisabledAlgorithmConstraints;
-
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -57,10 +49,9 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private static final String TAG = "VisSceneEditor";
 
 	private Json json;
-	private GUI gui;
 	private CameraController camController;
 
-	private ShapeRenderer shapeRenderer;
+	private Renderer renderer;
 
 	private FileHandle file;
 
@@ -104,6 +95,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		json.addClassTag("objectInfo", ObjectInfo.class);
 
 		supportMap = new ObjectMap<>();
+		objectMap = new ObjectMap<>();
 
 		if (registerBasicsSupports) {
 			registerSupport(Sprite.class, new SpriteSupport());
@@ -111,15 +103,12 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 
 		if (devMode) {
-			gui = new GUI(this);
-			shapeRenderer = new ShapeRenderer();
-
+			camController = new CameraController(camera);
+			
 			undoActions = new Array<>();
 			redoActions = new Array<>();
-
-			camController = new CameraController(camera);
-
-			objectMap = new ObjectMap<>();
+			
+			renderer = new Renderer(this, camController, objectMap);
 
 			attachInputProcessor();
 		}
@@ -327,104 +316,11 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	/** Renders everything */
 	public void render () {
-		shapeRenderer.setProjectionMatrix(camController.getCamera().combined);
 
 		if (editing) {
-			shapeRenderer.begin(ShapeType.Line);
-
-			for (Entry<String, Object> entry : objectMap.entries()) {
-				Object obj = entry.value;
-
-				SceneEditorSupport sup = getSupportForClass(obj.getClass());
-
-				if (sup.isMovingSupported())
-					shapeRenderer.setColor(Color.WHITE);
-				else
-					shapeRenderer.setColor(Color.GRAY);
-
-				renderObjectOutline(sup, obj);
-
-				if (sup.isScallingSupported()) {
-					if (obj == selectedObj && pointerInsideScaleBox)
-						shapeRenderer.setColor(Color.RED);
-					else
-						shapeRenderer.setColor(Color.WHITE);
-
-					renderObjectScaleBox(sup, obj);
-				}
-			}
-
-			if (selectedObj != null) {
-				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
-				shapeRenderer.setColor(Color.RED);
-
-				renderObjectOutline(sup, selectedObj);
-
-				if (sup.isScallingSupported()) {
-					if (pointerInsideScaleBox)
-						shapeRenderer.setColor(Color.RED);
-					else
-						shapeRenderer.setColor(Color.WHITE);
-
-					renderObjectScaleBox(sup, selectedObj);
-				}
-
-				if (sup.isRotatingSupported()) {
-					if (pointerInsideRotateCircle)
-						shapeRenderer.setColor(Color.RED);
-					else
-						shapeRenderer.setColor(Color.WHITE);
-
-					renderObjectRotateCricle(sup, selectedObj);
-				}
-
-			}
-
-			if (camController.isCameraDirty()) {
-				if (cameraLocked)
-					shapeRenderer.setColor(Color.RED);
-				else
-					shapeRenderer.setColor(Color.GREEN);
-				renderRectangle(camController.getOrginalCameraRectangle());
-			}
-
-			shapeRenderer.end();
-
-			gui.render(objectMap.size, cameraLocked, dirty, selectedObj);
+			renderer.render(cameraLocked, selectedObj, pointerInsideRotateCircle, pointerInsideScaleBox);
+			renderer.renderGUI(objectMap.size, cameraLocked, dirty, selectedObj);
 		}
-	}
-
-	private void renderObjectOutline (SceneEditorSupport sup, Object obj) {
-		renderRectangle(sup.getBoundingRectangle(obj));
-	}
-
-	private void renderObjectScaleBox (SceneEditorSupport sup, Object obj) {
-		renderRectangle(buildRectangeForScaleBox(sup, obj));
-	}
-
-	private void renderObjectRotateCricle (SceneEditorSupport sup, Object obj) {
-		renderCircle(buildCirlcleForRotateCircle(sup, obj));
-	}
-
-	private void renderRectangle (Rectangle rect) {
-		shapeRenderer.rect(rect.x, rect.y, rect.width, rect.height);
-	}
-
-	private void renderCircle (Circle cir) {
-		shapeRenderer.circle(cir.x, cir.y, cir.radius);
-	}
-
-	private Rectangle buildRectangeForScaleBox (SceneEditorSupport sup, Object obj) {
-		Rectangle rect = sup.getBoundingRectangle(obj);
-		return new Rectangle(rect.x + rect.width - 15, rect.y + rect.height - 15, 15, 15);
-	}
-
-	private Circle buildCirlcleForRotateCircle (SceneEditorSupport sup, Object obj) {
-		Rectangle rect = sup.getBoundingRectangle(obj);
-
-		int cWidth = 5;
-
-		return new Circle(rect.x + rect.width / 2 + cWidth, rect.y + rect.height + cWidth, cWidth);
 	}
 
 	private void undo () {
@@ -725,7 +621,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private void checkIfPointerInsideScaleBox (float x, float y) {
 		if (selectedObj != null) {
-			if (buildRectangeForScaleBox(getSupportForClass(selectedObj.getClass()), selectedObj).contains(x, y))
+			if (Utils.buildRectangeForScaleBox(getSupportForClass(selectedObj.getClass()), selectedObj).contains(x, y))
 				pointerInsideScaleBox = true;
 			else
 				pointerInsideScaleBox = false;
@@ -735,7 +631,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private void checkIfPointerInsideRotateCircle (float x, float y) {
 		if (selectedObj != null) {
-			if (buildCirlcleForRotateCircle(getSupportForClass(selectedObj.getClass()), selectedObj).contains(x, y))
+			if (Utils.buildCirlcleForRotateCircle(getSupportForClass(selectedObj.getClass()), selectedObj).contains(x, y))
 				pointerInsideRotateCircle = true;
 			else
 				pointerInsideRotateCircle = false;
@@ -745,14 +641,13 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	/** Releases used assets */
 	public void dispose () {
 		if (devMode) {
-			shapeRenderer.dispose();
-			gui.dispose();
+			renderer.dispose();
 		}
 	}
 
 	/** This must be called when screen size changed */
 	public void resize () {
-		if (devMode) gui.resize();
+		if (devMode) renderer.resize();
 	}
 
 	/** Enabled editing mode */
