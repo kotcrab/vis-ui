@@ -48,20 +48,18 @@ import com.badlogic.gdx.utils.SerializationException;
 public class SceneEditor extends SceneEditorInputAdapater {
 	private static final String TAG = "VisSceneEditor";
 
-	private Json json;
 	private CameraController camController;
 
+	private ObjectMap<Class<?>, SceneEditorSupport<?>> supportMap;
+	private ObjectMap<String, Object> objectMap;
+	
 	private Renderer renderer;
-
-	private FileHandle file;
+	private Serializer serializer;
 
 	private boolean devMode;
 	private boolean editing;
 	private boolean dirty;
 	private boolean cameraLocked;
-
-	private ObjectMap<Class<?>, SceneEditorSupport<?>> supportMap;
-	private ObjectMap<String, Object> objectMap;
 
 	private Array<EditorAction> undoActions;
 	private Array<EditorAction> redoActions;
@@ -86,16 +84,15 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	 * @param registerBasicsSupports if true Sprite and Actor support will be registered */
 	public SceneEditor (FileHandle sceneFile, OrthographicCamera camera, boolean devMode, boolean registerBasicsSupports) {
 		this.devMode = devMode;
-		this.file = sceneFile;
 
 		// DevMode can be only actived on desktop
 		if (Gdx.app.getType() != ApplicationType.Desktop) this.devMode = false;
 
-		json = new Json();
-		json.addClassTag("objectInfo", ObjectInfo.class);
 
 		supportMap = new ObjectMap<>();
 		objectMap = new ObjectMap<>();
+		
+		serializer = new Serializer(this, sceneFile, objectMap);
 
 		if (registerBasicsSupports) {
 			registerSupport(Sprite.class, new SpriteSupport());
@@ -104,10 +101,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 		if (devMode) {
 			camController = new CameraController(camera);
-			
+
 			undoActions = new Array<>();
 			redoActions = new Array<>();
-			
+
 			renderer = new Renderer(this, camController, objectMap);
 
 			attachInputProcessor();
@@ -123,96 +120,13 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		this(sceneFile, camera, devMode, true);
 	}
 
-	/** Loads all properties from provied scene file. If file does not exist it will do nothing */
 	public void load () {
-		if (file.exists() == false) return;
-
-		ArrayList<ObjectInfo> infos = new ArrayList<>();
-		infos = json.fromJson(infos.getClass(), file);
-
-		for (ObjectInfo info : infos) {
-			try {
-				Class<?> klass = Class.forName(info.className);
-				SceneEditorSupport sup = getSupportForClass(klass);
-
-				Object obj = objectMap.get(info.identifier);
-
-				sup.setX(obj, info.x);
-				sup.setY(obj, info.y);
-				sup.setOrigin(obj, info.originX, info.originY);
-				sup.setSize(obj, info.width, info.height);
-				sup.setScale(obj, info.scaleX, info.scaleY);
-				sup.setRotation(obj, info.rotation);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
-
-		}
+		serializer.load();
 	}
 
-	/** Saves all changes to provied scene file */
 	private void save () {
-		createBackup();
+		if (serializer.save()) dirty = false;
 
-		ArrayList<ObjectInfo> infos = new ArrayList<>();
-
-		for (Entry<String, Object> entry : objectMap.entries()) {
-
-			Object obj = entry.value;
-
-			SceneEditorSupport sup = getSupportForClass(obj.getClass());
-
-			ObjectInfo info = new ObjectInfo();
-			info.className = obj.getClass().getName();
-			info.identifier = entry.key;
-			info.x = sup.getX(obj);
-			info.y = sup.getY(obj);
-			info.scaleX = sup.getScaleX(obj);
-			info.scaleY = sup.getScaleY(obj);
-			info.originX = sup.getOriginX(obj);
-			info.originY = sup.getOriginY(obj);
-			info.width = sup.getWidth(obj);
-			info.height = sup.getHeight(obj);
-			info.rotation = sup.getRotation(obj);
-
-			infos.add(info);
-		}
-
-		try {
-
-			if (SceneEditorConfig.assetsFolderPath == null)
-				json.toJson(infos, Gdx.files.absolute(new File("").getAbsolutePath() + File.separator + file.path()));
-			else
-				json.toJson(infos, Gdx.files.absolute(SceneEditorConfig.assetsFolderPath + file.path()));
-
-			Gdx.app.log(TAG, "Saved changes to file.");
-			dirty = false;
-		} catch (SerializationException e) {
-			Gdx.app.log(TAG, "Error while saving file.");
-			e.printStackTrace();
-		}
-
-	}
-
-	/** Backup provided scene file */
-	private void createBackup () {
-		if (file.exists() && SceneEditorConfig.backupFolderPath != null) {
-			try {
-				String fileName = file.name();
-				fileName = fileName.substring(0, fileName.lastIndexOf('.'));
-
-				DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-				Date date = new Date();
-				fileName += " - " + dateFormat.format(date) + file.extension();
-
-				Files.copy(new File(new File("").getAbsolutePath() + File.separator + file.path()).toPath(), new File(
-					SceneEditorConfig.backupFolderPath + fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
-				Gdx.app.log(TAG, "Backup file created.");
-			} catch (IOException e) {
-				Gdx.app.log(TAG, "Error while creating backup.");
-				e.printStackTrace();
-			}
-		}
 	}
 
 	/** Add obj to object list, if support for this object class was not registed it won't be added
@@ -316,7 +230,6 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	/** Renders everything */
 	public void render () {
-
 		if (editing) {
 			renderer.render(cameraLocked, selectedObj, pointerInsideRotateCircle, pointerInsideScaleBox);
 			renderer.renderGUI(objectMap.size, cameraLocked, dirty, selectedObj);
