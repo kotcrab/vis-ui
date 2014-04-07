@@ -19,11 +19,9 @@ package pl.kotcrab.vis.sceneeditor;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 
-/**
- * Configuration of SceneEditor
+/** Configuration of SceneEditor
  * 
- * @author Pawel Pastuszak
- */
+ * @author Pawel Pastuszak */
 public class SceneEditorConfig {
 	/** Path to backup folder, must be ended with File.separator */
 	public static String backupFolderPath = null;
@@ -49,6 +47,16 @@ public class SceneEditorConfig {
 	public static int KEY_SPECIAL_UNDO = Keys.Z;
 	public static int KEY_SPECIAL_REDO = Keys.Y;
 
+	public static int KEY_INPUT_MODE_EDIT_CANCEL = Keys.ESCAPE;
+	public static int KEY_INPUT_MODE_EDIT_CONFIRM = Keys.ENTER;
+	public static int KEY_INPUT_MODE_EDIT_BACKSPACE = Keys.BACKSPACE;
+
+	public static int KEY_INPUT_MODE_EDIT_POSX = Keys.X;
+	public static int KEY_INPUT_MODE_EDIT_POSY = Keys.Y;
+	public static int KEY_INPUT_MODE_EDIT_ROTATION = Keys.R;
+	public static int KEY_INPUT_MODE_EDIT_WIDTH = Keys.W;
+	public static int KEY_INPUT_MODE_EDIT_HEIGHT = Keys.H;
+
 	/** Maximum zooming in camera value.<br>
 	 * Note: Final zoom may be smaller than this value. */
 	public static float CAMERA_MAX_ZOOM_IN = 0.5f;
@@ -57,8 +65,8 @@ public class SceneEditorConfig {
 	public static float CAMERA_MAX_ZOOM_OUT = 4f;
 
 	public static boolean GUI_DRAW = true;
-	public static boolean GUI_DRAW_OBJECT_INFO = true;
 	public static boolean GUI_DRAW_TITLE = true;
+	public static boolean GUI_DRAW_OBJECT_INFO = true;
 	public static Color GUI_TEXT_COLOR = Color.WHITE;
 
 }

@@ -16,15 +16,6 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -35,10 +26,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
-import com.badlogic.gdx.utils.SerializationException;
 
 /** Main class of VisSceneEditor
  * 
@@ -52,9 +41,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private ObjectMap<Class<?>, SceneEditorSupport<?>> supportMap;
 	private ObjectMap<String, Object> objectMap;
-	
+
 	private Renderer renderer;
 	private Serializer serializer;
+	private KeyboardInputMode keyboardInputMode;
 
 	private boolean devMode;
 	private boolean editing;
@@ -88,10 +78,9 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		// DevMode can be only actived on desktop
 		if (Gdx.app.getType() != ApplicationType.Desktop) this.devMode = false;
 
-
 		supportMap = new ObjectMap<>();
 		objectMap = new ObjectMap<>();
-		
+
 		serializer = new Serializer(this, sceneFile, objectMap);
 
 		if (registerBasicsSupports) {
@@ -105,7 +94,14 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			undoActions = new Array<>();
 			redoActions = new Array<>();
 
-			renderer = new Renderer(this, camController, objectMap);
+			keyboardInputMode = new KeyboardInputMode(new KeyboardInputActionFinished() {
+				@Override
+				public void editingFinished (EditorAction action) {
+					undoActions.add(action);
+				}
+			});
+
+			renderer = new Renderer(this, camController, keyboardInputMode, objectMap);
 
 			attachInputProcessor();
 		}
@@ -302,16 +298,43 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	@Override
 	public boolean keyDown (int keycode) {
-
 		if (editing) {
-			if (keycode == SceneEditorConfig.KEY_RESET_CAMERA) camController.restoreOrginalCameraProperties();
-			if (keycode == SceneEditorConfig.KEY_LOCK_CAMERA) cameraLocked = !cameraLocked;
+			if (keyboardInputMode.isActive() == false) {
+				if (keycode == SceneEditorConfig.KEY_RESET_CAMERA) camController.restoreOrginalCameraProperties();
+				if (keycode == SceneEditorConfig.KEY_LOCK_CAMERA) cameraLocked = !cameraLocked;
 
-			if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_SPECIAL_ACTIONS)) {
-				if (keycode == SceneEditorConfig.KEY_SPECIAL_SAVE_CHANGES) save();
-				if (keycode == SceneEditorConfig.KEY_SPECIAL_UNDO) undo();
-				if (keycode == SceneEditorConfig.KEY_SPECIAL_REDO) redo();
+				if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_SPECIAL_ACTIONS)) {
+					if (keycode == SceneEditorConfig.KEY_SPECIAL_SAVE_CHANGES) save();
+					if (keycode == SceneEditorConfig.KEY_SPECIAL_UNDO) undo();
+					if (keycode == SceneEditorConfig.KEY_SPECIAL_REDO) redo();
+					return true; // we don't want to trigger diffrent events
+				}
+
+				if (selectedObj != null) {
+					SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
+
+					if (sup.isMovingSupported()) {
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX)
+							keyboardInputMode.setObject(EditType.X, sup, selectedObj);
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY)
+							keyboardInputMode.setObject(EditType.Y, sup, selectedObj);
+					}
+
+					if (sup.isScallingSupported()) {
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH)
+							keyboardInputMode.setObject(EditType.WIDTH, sup, selectedObj);
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT)
+							keyboardInputMode.setObject(EditType.HEIGHT, sup, selectedObj);
+					}
+
+					if (sup.isRotatingSupported()) {
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION)
+							keyboardInputMode.setObject(EditType.ROTATION, sup, selectedObj);
+					}
+				}
 			}
+
+			keyboardInputMode.keyDown(keycode);
 		}
 
 		if (keycode == SceneEditorConfig.KEY_TOGGLE_EDIT_MODE) {
@@ -328,7 +351,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	@Override
 	public boolean touchDown (int screenX, int screenY, int pointer, int button) {
+
 		if (editing) {
+			keyboardInputMode.finish();
+
 			final float x = camController.calcX(screenX);
 			final float y = camController.calcY(screenY);
 			lastTouchX = x;
@@ -371,7 +397,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	@Override
 	public boolean touchUp (int screenX, int screenY, int pointer, int button) {
+
 		if (editing) {
+			keyboardInputMode.finish();
+
 			if (pointerInsideScaleBox) {
 				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 				sup.setRotation(selectedObj, startingRotation);
@@ -410,6 +439,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		final float y = camController.calcY(screenY);
 
 		if (editing) {
+			keyboardInputMode.finish();
+
 			if (selectedObj != null && Gdx.input.isButtonPressed(Buttons.LEFT)) {
 				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
 
@@ -437,9 +468,9 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 					if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_ROTATE_SNAP_VALUES)) {
 						int roundDeg = Math.round(deg / 30);
-						sup.setRotation(selectedObj, roundDeg * 30);
+						sup.setRotation(selectedObj, startingRotation + roundDeg * 30);
 					} else
-						sup.setRotation(selectedObj, deg);
+						sup.setRotation(selectedObj, startingRotation + deg);
 
 					dirty = true;
 					return true;
@@ -513,6 +544,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	@Override
 	public boolean pan (float x, float y, float deltaX, float deltaY) {
 		if (editing) {
+			keyboardInputMode.finish();
+
 			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
 				if (selectedObj == null && cameraLocked == false) {
 					OrthographicCamera camera = camController.getCamera();
@@ -578,6 +611,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (devMode) {
 			if (editing) {
 				editing = false;
+				keyboardInputMode.cancel();
 				camController.switchCameraProperties();
 				save();
 			}

@@ -16,11 +16,8 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
-/**
- * Represetns informtation about object in scene. Used when saving/loading scene.
- * @author Pawel Pastuszak
- *
- */
+/** Represetns informtation about object in scene. Used when saving/loading scene.
+ * @author Pawel Pastuszak */
 class ObjectInfo {
 	public String identifier;
 	public String className;

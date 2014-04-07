@@ -25,27 +25,25 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-class Renderer
-{
+class Renderer {
 	private SceneEditor editor;
 	private CameraController camController;
 	private ObjectMap<String, Object> objectMap;
-	
+
 	private ShapeRenderer shapeRenderer;
 	private GUI gui;
-	
-	public Renderer(SceneEditor editor, CameraController camController, ObjectMap<String, Object> objectMap)
-	{
+
+	public Renderer (SceneEditor editor, CameraController camController, KeyboardInputMode keyboardInputMode,
+		ObjectMap<String, Object> objectMap) {
 		this.editor = editor;
 		this.camController = camController;
 		this.objectMap = objectMap;
-		
-		gui = new GUI(editor);
+
+		gui = new GUI(editor, keyboardInputMode);
 		shapeRenderer = new ShapeRenderer();
 	}
-	
-	public void render(boolean cameraLocked, Object selectedObj, boolean pointerInsideRotateCircle, boolean pointerInsideScaleBox)
-	{
+
+	public void render (boolean cameraLocked, Object selectedObj, boolean pointerInsideRotateCircle, boolean pointerInsideScaleBox) {
 		shapeRenderer.setProjectionMatrix(camController.getCamera().combined);
 		shapeRenderer.begin(ShapeType.Line);
 
@@ -107,12 +105,11 @@ class Renderer
 
 		shapeRenderer.end();
 	}
-	
-	public void renderGUI(int entityNumber, boolean cameraLocked, boolean dirty, Object selectedObj)
-	{
+
+	public void renderGUI (int entityNumber, boolean cameraLocked, boolean dirty, Object selectedObj) {
 		gui.render(entityNumber, cameraLocked, dirty, selectedObj);
 	}
-	
+
 	private void renderObjectOutline (SceneEditorSupport sup, Object obj) {
 		renderRectangle(sup.getBoundingRectangle(obj));
 	}
@@ -132,14 +129,12 @@ class Renderer
 	private void renderCircle (Circle cir) {
 		shapeRenderer.circle(cir.x, cir.y, cir.radius);
 	}
-	
-	public void resize()
-	{
+
+	public void resize () {
 		gui.resize();
 	}
-	
-	public void dispose()
-	{
+
+	public void dispose () {
 		gui.dispose();
 		shapeRenderer.dispose();
 	}

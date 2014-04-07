@@ -29,30 +29,28 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.SerializationException;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
+import com.badlogic.gdx.utils.SerializationException;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-class Serializer
-{
+class Serializer {
 	private static final String TAG = "VisSceneEditor:Serializer";
-	
+
 	private SceneEditor editor;
 	private ObjectMap<String, Object> objectMap;
-	
+
 	private Json json;
 	private FileHandle file;
-	
-	public Serializer(SceneEditor editor, FileHandle file, ObjectMap<String, Object> objectMap)
-	{
+
+	public Serializer (SceneEditor editor, FileHandle file, ObjectMap<String, Object> objectMap) {
 		this.editor = editor;
 		this.file = file;
 		this.objectMap = objectMap;
-		
+
 		json = new Json();
 		json.addClassTag("objectInfo", ObjectInfo.class);
 	}
-	
+
 	/** Loads all properties from provied scene file. If file does not exist it will do nothing */
 	public void load () {
 		if (file.exists() == false) return;

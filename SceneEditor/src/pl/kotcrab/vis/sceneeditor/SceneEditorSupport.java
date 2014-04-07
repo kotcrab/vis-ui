@@ -20,7 +20,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 /** Interface that all supports must implement. <br>
  * 
- * Method that must be implemneted: getX, getY, getBoundingRectangle, contains. For other plese refer to isMovingSupported(),
+ * Method that must be implemneted: getX, getY, getBoundingRectangle, contains. For other please refer to isMovingSupported(),
  * isRotatingSupported() and isScallingSupported()
  * @see SceneEditorSupport#isMovingSupported()
  * @see SceneEditorSupport#isRotatingSupported()

@@ -20,21 +20,25 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.TimeUtils;
 
-/**
- * GUI class for rendering VisSceneEditor gui.
+/** GUI class for rendering VisSceneEditor gui.
  * 
- * @author Pawel Pastuszak
- */
+ * @author Pawel Pastuszak */
 @SuppressWarnings({"rawtypes", "unchecked"})
 class GUI {
 	private SceneEditor sceneEditor;
+	private KeyboardInputMode keyboardInputMode;
 
 	private SpriteBatch guiBatch;
 	private BitmapFont font;
 
-	public GUI (SceneEditor sceneEditor) {
+	private boolean renderFlashingCursor;
+	private long startTime;
+
+	public GUI (SceneEditor sceneEditor, KeyboardInputMode keyboardInputMode) {
 		this.sceneEditor = sceneEditor;
+		this.keyboardInputMode = keyboardInputMode;
 
 		guiBatch = new SpriteBatch();
 		font = new BitmapFont(Gdx.files.internal("data/arial.fnt"));
@@ -68,11 +72,28 @@ class GUI {
 
 				drawTextAtLine("Selected object: " + sceneEditor.getIdentifierForObject(selectedObj), line++);
 
-				if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO)
+				if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO) {
 					drawTextAtLine(
 						"X: " + (int)sup.getX(selectedObj) + " Y:" + (int)sup.getY(selectedObj) + " Width: "
 							+ (int)sup.getWidth(selectedObj) + " Height: " + (int)sup.getHeight(selectedObj) + " Rotation: "
 							+ (int)sup.getRotation(selectedObj), line++);
+				}
+
+				if (keyboardInputMode.isActive()) {
+					if (renderFlashingCursor)
+						drawTextAtLine(
+							"Input new " + keyboardInputMode.getEditTypeText() + " : " + keyboardInputMode.getEditingValueText() + "_",
+							line++);
+					else
+						drawTextAtLine(
+							"Input new " + keyboardInputMode.getEditTypeText() + " : " + keyboardInputMode.getEditingValueText(), line++);
+
+					if (TimeUtils.millis() - startTime > 500) {
+						renderFlashingCursor = !renderFlashingCursor;
+						startTime = TimeUtils.millis();
+					}
+				}
+
 			}
 
 			guiBatch.end();
