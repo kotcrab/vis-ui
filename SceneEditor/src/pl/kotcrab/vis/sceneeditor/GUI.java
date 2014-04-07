@@ -82,11 +82,11 @@ class GUI {
 				if (keyboardInputMode.isActive()) {
 					if (renderFlashingCursor)
 						drawTextAtLine(
-							"Input new " + keyboardInputMode.getEditTypeText() + " : " + keyboardInputMode.getEditingValueText() + "_",
+							"Input new " + keyboardInputMode.getEditTypeText() + ": " + keyboardInputMode.getEditingValueText() + "_",
 							line++);
 					else
 						drawTextAtLine(
-							"Input new " + keyboardInputMode.getEditTypeText() + " : " + keyboardInputMode.getEditingValueText(), line++);
+							"Input new " + keyboardInputMode.getEditTypeText() + ": " + keyboardInputMode.getEditingValueText(), line++);
 
 					if (TimeUtils.millis() - startTime > 500) {
 						renderFlashingCursor = !renderFlashingCursor;
