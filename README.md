@@ -5,11 +5,17 @@ VisSceneEditor is a real-time simple 2D scene editor for Libgdx.
 
 ![Screenshot](http://dl.kotcrab.pl/github/vissceneeditor.png)
 
-It allows you to easily adjust position, scale and rotation of sprites or any other objects. (currently it works only with Libgdx Gradle projects)
+It allows you to easily adjust position, scale and rotation of sprites or any other objects.
 
 ##Usage
 
-1.Create SceneEditor and add your objects:
+1.Set path to your Android project assets folder for example:
+```java
+SceneEditorConfig.assetsFolderPath = "E:/Git/VisSceneEditor/Examples/android/assets/";
+```
+Path must be ended wtih File.separator
+
+2.Create SceneEditor and add your objects:
 ```java
 bush1 = new Sprite(bushTexture);
 bush2 = new Sprite(bushTexture);
@@ -28,9 +34,9 @@ Constructor takes location of a scene file, an OrthograhicCamera, the last argum
 
 If scene files does not exist it will be created.
 
-2.Call sceneEditor.render() in your render() method. <br>
-3.Call sceneEditor.dispose() in your dispose() method. <br>
-4.Call sceneEditor.resize() in your resize() method. <br>
+3.Call sceneEditor.render() in your render() method. <br>
+4.Call sceneEditor.dispose() in your dispose() method. <br>
+5.Call sceneEditor.resize() in your resize() method. <br>
 
 [Full example](https://github.com/kotcrab/VisSceneEditor/blob/master/Examples/core/src/pl/kotcrab/vis/sceneeditor/example/ExampleScene.java) <br>
 
