@@ -16,6 +16,7 @@
 
 package pl.kotcrab.vis.sceneeditor.sample.desktop;
 
+import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 import pl.kotcrab.vis.sceneeditor.example.Examples;
 import pl.kotcrab.vis.sceneeditor.example.scene2d.ExampleScene2d;
 
@@ -28,6 +29,8 @@ public class DesktopLauncher
 	@SuppressWarnings("unused")
 	public static void main(String[] arg)
 	{
+		// this is required and important
+		SceneEditorConfig.assetsFolderPath = "E:/Git/VisSceneEditor/Examples/android/assets/";
 		
 		ExampleSelector selector = new ExampleSelector(new ExampleSelected()
 		{

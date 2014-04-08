@@ -41,6 +41,8 @@ public class ExampleScene extends AbstractScene
 		// SceneEditorConfig.backupFolderPath = "F:\\Projekty\\VisSceneEditor\\backup\\"; // Optonal, will backup your files before
 		// saving new scene
 		
+		// SceneEditorConfig.assetsFolderPath THIS IS REQUIRED, it is set in desktop project launcher, see DesktopLauncher.java in desktop project
+		
 		bushTexture = new Texture(Gdx.files.internal("bush.png"));
 		netTexture = new Texture(Gdx.files.internal("net.png"));
 		

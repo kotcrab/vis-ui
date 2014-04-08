@@ -107,15 +107,16 @@ class Serializer {
 		}
 
 		try {
-			if (SceneEditorConfig.assetsFolderPath == null)
-				json.toJson(infos, Gdx.files.absolute(new File("").getAbsolutePath() + File.separator + file.path()));
-			else
+			if (SceneEditorConfig.assetsFolderPath == null) {
+				Gdx.app.error(TAG, "Error while saving file. Path to assets folder not set! See SceneEditorConfig.assetsFolderPath");
+				return false;
+			} else
 				json.toJson(infos, Gdx.files.absolute(SceneEditorConfig.assetsFolderPath + file.path()));
 
 			Gdx.app.log(TAG, "Saved changes to file.");
 			return true;
 		} catch (SerializationException e) {
-			Gdx.app.log(TAG, "Error while saving file.");
+			Gdx.app.error(TAG, "Error while saving file.");
 			e.printStackTrace();
 			return false;
 		}
@@ -136,7 +137,7 @@ class Serializer {
 					SceneEditorConfig.backupFolderPath + fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
 				Gdx.app.log(TAG, "Backup file created.");
 			} catch (IOException e) {
-				Gdx.app.log(TAG, "Error while creating backup.");
+				Gdx.app.error(TAG, "Error while creating backup.");
 				e.printStackTrace();
 			}
 		}

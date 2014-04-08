@@ -38,6 +38,8 @@ public class ExampleScene2d implements ApplicationListener
 	
 	public void create()
 	{
+		// SceneEditorConfig.assetsFolderPath THIS IS REQUIRED, it is set in desktop project launcher, see DesktopLauncher.java in desktop project
+		
 		texture = new Texture("bush.png");
 		
 		actor1 = new MyActor(texture);
