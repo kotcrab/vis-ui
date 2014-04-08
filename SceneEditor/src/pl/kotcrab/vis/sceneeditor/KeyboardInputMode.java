@@ -32,6 +32,9 @@ class KeyboardInputMode {
 	private int value;
 	private String valueString;
 
+	private float scaleRatio;
+	private boolean lockRatio;
+
 	public KeyboardInputMode (KeyboardInputActionFinished listener) {
 		this.listener = listener;
 	}
@@ -42,9 +45,16 @@ class KeyboardInputMode {
 		this.obj = obj;
 		active = true;
 
+		lockRatio = false;
+		scaleRatio = 0;
+
 		startingValue = getEditingValue();
 		value = startingValue;
 		valueString = String.valueOf(value);
+
+		if (type == EditType.HEIGHT || type == EditType.WIDTH) {
+			scaleRatio = sup.getWidth(obj) / sup.getHeight(obj);
+		}
 	}
 
 	public void keyDown (int keycode) {
@@ -55,8 +65,11 @@ class KeyboardInputMode {
 
 		if (active) {
 			if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_CONFIRM) finish();
-
 			if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_BACKSPACE) removeDigit();
+
+			if (type == EditType.HEIGHT || type == EditType.WIDTH) {
+				if (keycode == SceneEditorConfig.KEY_SCALE_LOCK_RATIO) lockRatio = !lockRatio;
+			}
 
 			if (keycode == Keys.MINUS) {
 				// if string is empty pressing minus would not decrease value, but we have to add '-' to text string
@@ -180,10 +193,16 @@ class KeyboardInputMode {
 			sup.setY(obj, newValue);
 			break;
 		case WIDTH:
-			sup.setSize(obj, newValue, sup.getHeight(obj));
+			if (lockRatio)
+				sup.setSize(obj, newValue, newValue / scaleRatio);
+			else
+				sup.setSize(obj, newValue, sup.getHeight(obj));
 			break;
 		case HEIGHT:
-			sup.setSize(obj, sup.getWidth(obj), newValue);
+			if (lockRatio)
+				sup.setSize(obj, newValue / scaleRatio, newValue);
+			else
+				sup.setSize(obj, sup.getWidth(obj), newValue);
 			break;
 		case ROTATION:
 			sup.setRotation(obj, newValue);
@@ -194,7 +213,10 @@ class KeyboardInputMode {
 	}
 
 	public String getEditTypeText () {
-		return type.toString().toLowerCase();
+		if (lockRatio)
+			return type.toString().toLowerCase() + " (ratio locked)";
+		else
+			return type.toString().toLowerCase();
 	}
 }
 
