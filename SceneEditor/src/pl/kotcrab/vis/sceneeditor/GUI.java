@@ -69,8 +69,8 @@ class GUI {
 
 			line++;
 
-			for (ObjectRepresentation orep : selectedObjs) {
-				if (selectedObjs.size == 1) {
+			if (selectedObjs.size == 1) {
+				for (ObjectRepresentation orep : selectedObjs) {
 					drawTextAtLine("Selected object: " + sceneEditor.getIdentifierForObject(orep.obj), line++);
 
 					if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO) {
@@ -78,24 +78,24 @@ class GUI {
 							+ " Height: " + (int)orep.getHeight() + " Rotation: " + (int)orep.getRotation(), line++);
 					}
 
-					if (keyboardInputMode.isActive()) {
-						if (renderFlashingCursor)
-							drawTextAtLine(
-								"Input new " + keyboardInputMode.getEditTypeText() + ": " + keyboardInputMode.getEditingValueText() + "_",
-								line++);
-						else
-							drawTextAtLine(
-								"Input new " + keyboardInputMode.getEditTypeText() + ": " + keyboardInputMode.getEditingValueText(),
-								line++);
+				}
+			} else if (selectedObjs.size > 1) drawTextAtLine("Multiple objects selected.", line++);
 
-						if (TimeUtils.millis() - startTime > 500) {
-							renderFlashingCursor = !renderFlashingCursor;
-							startTime = TimeUtils.millis();
-						}
+			if (selectedObjs.size > 0) {
+				if (keyboardInputMode.isActive()) {
+					if (renderFlashingCursor)
+						drawTextAtLine(
+							"Input new " + keyboardInputMode.getEditTypeText() + ": " + keyboardInputMode.getEditingValueText() + "_",
+							line++);
+					else
+						drawTextAtLine(
+							"Input new " + keyboardInputMode.getEditTypeText() + ": " + keyboardInputMode.getEditingValueText(), line++);
+
+					if (TimeUtils.millis() - startTime > 500) {
+						renderFlashingCursor = !renderFlashingCursor;
+						startTime = TimeUtils.millis();
 					}
-				} else
-					drawTextAtLine("Multiple object selected", line++);
-
+				}
 			}
 
 			guiBatch.end();

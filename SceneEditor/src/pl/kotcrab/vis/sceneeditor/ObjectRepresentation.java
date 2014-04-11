@@ -40,8 +40,8 @@ public class ObjectRepresentation {
 	private float startingWidth; // object properies before moving/scalling/rotating/etc
 	private float startingHeight;
 	private float startingRotation;
-	//private float startingX;
-	//private float startingY;
+	// private float startingX;
+	// private float startingY;
 
 	private EditorAction lastEditorAction;
 
@@ -60,8 +60,8 @@ public class ObjectRepresentation {
 		lastTouchX = x;
 		lastTouchY = y;
 
-		//startingX = sup.getX(obj);
-		//startingY = sup.getY(obj);
+		// startingX = sup.getX(obj);
+		// startingY = sup.getY(obj);
 		startingWidth = sup.getWidth(obj);
 		startingHeight = sup.getHeight(obj);
 		startingRotation = sup.getRotation(obj);

@@ -39,18 +39,19 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private ObjectMap<Class<?>, SceneEditorSupport<?>> supportMap;
 	private ObjectMap<String, Object> objectMap;
+	private Array<ObjectRepresentation> objectRepresenationList;
+	private Array<ObjectRepresentation> selectedObjs;
 
+	// modules
 	private Renderer renderer;
 	private Serializer serializer;
 	private KeyboardInputMode keyboardInputMode;
+	private RectangularSelection rectangularSelection;
 
 	private boolean devMode;
 	private boolean editing;
 	private boolean dirty;
 	private boolean cameraLocked;
-
-	private Array<ObjectRepresentation> selectedObjs;
-	private Array<ObjectRepresentation> objectRepresenationList;
 
 	private Array<Array<EditorAction>> undoList;
 	private Array<Array<EditorAction>> redoList;
@@ -88,7 +89,17 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				}
 			}, selectedObjs);
 
-			renderer = new Renderer(this, camController, keyboardInputMode, objectMap, selectedObjs);
+			rectangularSelection = new RectangularSelection(new RectangularSelectionListener() {
+
+				@Override
+				public void finishedDrawing (Array<ObjectRepresentation> matchingObjects) {
+					selectedObjs.clear();
+					selectedObjs.addAll(matchingObjects); // we can't just swap tables
+
+				}
+			}, camController, objectRepresenationList);
+
+			renderer = new Renderer(this, camController, keyboardInputMode, rectangularSelection, objectMap, selectedObjs);
 
 			attachInputProcessor();
 		}
@@ -379,6 +390,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_NO_SELECT_MODE))
 				selectedObjs.clear();
 			else {
+				rectangularSelection.touchDown(screenX, screenY, pointer, button);
+
 				if (isMouseInsideSelectedObjectAreas() == false) {
 					ObjectRepresentation matchingObject = findObjectWithSamllestSurfaceArea(x, y);
 
@@ -415,6 +428,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (editing) {
 			keyboardInputMode.finish();
 
+			rectangularSelection.touchUp(screenX, screenY, pointer, button);
+
 			if (selectedObjs.size > 0) addUndoActions();
 		}
 
@@ -442,6 +457,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (editing) {
 			keyboardInputMode.finish();
 
+			rectangularSelection.touchDragged(screenX, screenY, pointer);
 			// sorry...
 			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
 				for (ObjectRepresentation orep : selectedObjs) {

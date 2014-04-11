@@ -50,7 +50,10 @@ class KeyboardInputMode {
 		else
 			value = 0;
 
-		valueString = String.valueOf(value);
+		if (value == 0)
+			valueString = "";
+		else
+			valueString = String.valueOf(value);
 	}
 
 	private boolean checkIfAllObjectHaveSameValue () {

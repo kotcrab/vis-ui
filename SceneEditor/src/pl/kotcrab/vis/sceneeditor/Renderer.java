@@ -29,6 +29,7 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 class Renderer {
 	private SceneEditor editor;
 	private CameraController camController;
+	private RectangularSelection rectangularSelection;
 	private ObjectMap<String, Object> objectMap;
 	private Array<ObjectRepresentation> selectedObjs;
 
@@ -36,9 +37,10 @@ class Renderer {
 	private GUI gui;
 
 	public Renderer (SceneEditor editor, CameraController camController, KeyboardInputMode keyboardInputMode,
-		ObjectMap<String, Object> objectMap, Array<ObjectRepresentation> selectedObjs) {
+		RectangularSelection rectangularSelection, ObjectMap<String, Object> objectMap, Array<ObjectRepresentation> selectedObjs) {
 		this.editor = editor;
 		this.camController = camController;
+		this.rectangularSelection = rectangularSelection;
 		this.objectMap = objectMap;
 		this.selectedObjs = selectedObjs;
 
@@ -104,6 +106,7 @@ class Renderer {
 		}
 
 		shapeRenderer.end();
+		rectangularSelection.render(shapeRenderer);
 	}
 
 	public void renderGUI (int entityNumber, boolean cameraLocked, boolean dirty) {
