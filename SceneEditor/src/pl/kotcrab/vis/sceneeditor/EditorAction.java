@@ -20,19 +20,57 @@ package pl.kotcrab.vis.sceneeditor;
  * 
  * @author Pawel Pastuszak */
 class EditorAction {
-	public ActionType type;
-	public Object obj;
-	public float xVal;
-	public float yVal;
+	private ObjectRepresentation orep;
+	private float x;
+	private float y;
+	private float scaleX;
+	private float scaleY;
+	private float originX;
+	private float originY;
+	private float width;
+	private float height;
+	private float rotation;
 
-	public EditorAction (Object obj, ActionType type, float xVal, float yVal) {
-		this.obj = obj;
-		this.type = type;
-		this.xVal = xVal;
-		this.yVal = yVal;
+	public EditorAction (ObjectRepresentation orep) {
+		this.orep = orep;
+
+		x = orep.getX();
+		y = orep.getY();
+		scaleX = orep.getScaleX();
+		scaleY = orep.getScaleX();
+		originX = orep.getOriginX();
+		originY = orep.getOriginY();
+		width = orep.getWidth();
+		height = orep.getHeight();
+		rotation = orep.getRotation();
 	}
-}
 
-enum ActionType {
-	POS, SIZE, SCALE, ORIGIN, ROTATION
+	public void switchValues () {
+		float xTemp = orep.getX();
+		float yTemp = orep.getY();
+		float scaleXTemp = orep.getScaleX();
+		float scaleYTemp = orep.getScaleX();
+		float originXTemp = orep.getOriginX();
+		float originYTemp = orep.getOriginY();
+		float widthTemp = orep.getWidth();
+		float heightTemp = orep.getHeight();
+		float rotationTemp = orep.getRotation();
+
+		orep.setX(x);
+		orep.setY(y);
+		orep.setScale(scaleX, scaleY);
+		orep.setSize(width, height);
+		orep.setOrigin(originX, originY);
+		orep.setRotation(rotation);
+
+		x = xTemp;
+		y = yTemp;
+		scaleX = scaleXTemp;
+		scaleY = scaleYTemp;
+		originX = originXTemp;
+		originY = originYTemp;
+		width = widthTemp;
+		height = heightTemp;
+		rotation = rotationTemp;
+	}
 }

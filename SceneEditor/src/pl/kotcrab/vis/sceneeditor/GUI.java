@@ -20,15 +20,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 /** GUI class for rendering VisSceneEditor gui.
  * 
  * @author Pawel Pastuszak */
-@SuppressWarnings({"rawtypes", "unchecked"})
 class GUI {
 	private SceneEditor sceneEditor;
 	private KeyboardInputMode keyboardInputMode;
+	private Array<ObjectRepresentation> selectedObjs;
 
 	private SpriteBatch guiBatch;
 	private BitmapFont font;
@@ -36,16 +37,17 @@ class GUI {
 	private boolean renderFlashingCursor;
 	private long startTime;
 
-	public GUI (SceneEditor sceneEditor, KeyboardInputMode keyboardInputMode) {
+	public GUI (SceneEditor sceneEditor, KeyboardInputMode keyboardInputMode, Array<ObjectRepresentation> selectedObjs) {
 		this.sceneEditor = sceneEditor;
 		this.keyboardInputMode = keyboardInputMode;
+		this.selectedObjs = selectedObjs;
 
 		guiBatch = new SpriteBatch();
 		font = new BitmapFont(Gdx.files.internal("data/arial.fnt"));
 		font.setColor(SceneEditorConfig.GUI_TEXT_COLOR);
 	}
 
-	public void render (int entityNumber, boolean cameraLocked, boolean dirty, Object selectedObj) {
+	public void render (int entityNumber, boolean cameraLocked, boolean dirty) {
 		int line = 0;
 
 		if (SceneEditorConfig.GUI_DRAW) {
@@ -67,32 +69,32 @@ class GUI {
 
 			line++;
 
-			if (selectedObj != null) {
-				SceneEditorSupport sup = sceneEditor.getSupportForClass(selectedObj.getClass());
+			for (ObjectRepresentation orep : selectedObjs) {
+				if (selectedObjs.size == 1) {
+					drawTextAtLine("Selected object: " + sceneEditor.getIdentifierForObject(orep.obj), line++);
 
-				drawTextAtLine("Selected object: " + sceneEditor.getIdentifierForObject(selectedObj), line++);
-
-				if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO) {
-					drawTextAtLine(
-						"X: " + (int)sup.getX(selectedObj) + " Y:" + (int)sup.getY(selectedObj) + " Width: "
-							+ (int)sup.getWidth(selectedObj) + " Height: " + (int)sup.getHeight(selectedObj) + " Rotation: "
-							+ (int)sup.getRotation(selectedObj), line++);
-				}
-
-				if (keyboardInputMode.isActive()) {
-					if (renderFlashingCursor)
-						drawTextAtLine(
-							"Input new " + keyboardInputMode.getEditTypeText() + ": " + keyboardInputMode.getEditingValueText() + "_",
-							line++);
-					else
-						drawTextAtLine(
-							"Input new " + keyboardInputMode.getEditTypeText() + ": " + keyboardInputMode.getEditingValueText(), line++);
-
-					if (TimeUtils.millis() - startTime > 500) {
-						renderFlashingCursor = !renderFlashingCursor;
-						startTime = TimeUtils.millis();
+					if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO) {
+						drawTextAtLine("X: " + (int)orep.getX() + " Y:" + (int)orep.getY() + " Width: " + (int)orep.getWidth()
+							+ " Height: " + (int)orep.getHeight() + " Rotation: " + (int)orep.getRotation(), line++);
 					}
-				}
+
+					if (keyboardInputMode.isActive()) {
+						if (renderFlashingCursor)
+							drawTextAtLine(
+								"Input new " + keyboardInputMode.getEditTypeText() + ": " + keyboardInputMode.getEditingValueText() + "_",
+								line++);
+						else
+							drawTextAtLine(
+								"Input new " + keyboardInputMode.getEditTypeText() + ": " + keyboardInputMode.getEditingValueText(),
+								line++);
+
+						if (TimeUtils.millis() - startTime > 500) {
+							renderFlashingCursor = !renderFlashingCursor;
+							startTime = TimeUtils.millis();
+						}
+					}
+				} else
+					drawTextAtLine("Multiple object selected", line++);
 
 			}
 

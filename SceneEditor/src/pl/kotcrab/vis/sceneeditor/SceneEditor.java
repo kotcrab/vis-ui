@@ -22,8 +22,6 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -32,7 +30,7 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 /** Main class of VisSceneEditor
  * 
  * @author Pawel Pastuszak */
-@SuppressWarnings({"rawtypes", "unchecked"})
+@SuppressWarnings({"rawtypes"})
 // yeah, you know there are just warnings...
 public class SceneEditor extends SceneEditorInputAdapater {
 	private static final String TAG = "VisSceneEditor";
@@ -51,31 +49,18 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private boolean dirty;
 	private boolean cameraLocked;
 
-	private Array<EditorAction> undoActions;
-	private Array<EditorAction> redoActions;
+	private Array<ObjectRepresentation> selectedObjs;
+	private Array<ObjectRepresentation> objectRepresenationList;
 
-	private Object selectedObj;
-	private boolean pointerInsideScaleBox;
-	private boolean pointerInsideRotateCircle;
-
-	private float attachScreenX; // for scaling/rotating object
-	private float attachScreenY;
-
-	private float startingWidth; // object properies before moving/scalling/rotating/etc
-	private float startingHeight;
-	private float startingRotation;
-	private float startingX;
-	private float startingY;
-
-	private float lastTouchX;
-	private float lastTouchY;
+	private Array<Array<EditorAction>> undoList;
+	private Array<Array<EditorAction>> redoList;
 
 	/** @see SceneEditor#SceneEditor(FileHandle, OrthographicCamera, boolean)
 	 * @param registerBasicsSupports if true Sprite and Actor support will be registered */
 	public SceneEditor (FileHandle sceneFile, OrthographicCamera camera, boolean devMode, boolean registerBasicsSupports) {
 		this.devMode = devMode;
 
-		// DevMode can be only actived on desktop
+		// DevMode can be only activated on desktop
 		if (Gdx.app.getType() != ApplicationType.Desktop) this.devMode = false;
 
 		supportMap = new ObjectMap<>();
@@ -89,19 +74,21 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 
 		if (devMode) {
-			camController = new CameraController(camera);
+			undoList = new Array<Array<EditorAction>>();
+			redoList = new Array<Array<EditorAction>>();
+			objectRepresenationList = new Array<ObjectRepresentation>();
+			selectedObjs = new Array<ObjectRepresentation>();
 
-			undoActions = new Array<>();
-			redoActions = new Array<>();
+			camController = new CameraController(camera);
 
 			keyboardInputMode = new KeyboardInputMode(new KeyboardInputActionFinished() {
 				@Override
-				public void editingFinished (EditorAction action) {
-					undoActions.add(action);
+				public void editingFinished (Array<EditorAction> actions) {
+					undoList.add(actions);
 				}
-			});
+			}, selectedObjs);
 
-			renderer = new Renderer(this, camController, keyboardInputMode, objectMap);
+			renderer = new Renderer(this, camController, keyboardInputMode, objectMap, selectedObjs);
 
 			attachInputProcessor();
 		}
@@ -131,7 +118,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	 * 
 	 * @return This SceneEditor for the purpose of chaining methods together. */
 	public SceneEditor add (Object obj, String identifier) {
-		if (isSupportForClassAvaiable(obj.getClass())) objectMap.put(identifier, obj);
+		if (isSupportForClassAvaiable(obj.getClass())) {
+			objectMap.put(identifier, obj);
+			objectRepresenationList.add(new ObjectRepresentation(getSupportForObject(obj), obj));
+		}
 
 		return this;
 	}
@@ -170,20 +160,15 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 	}
 
+	public SceneEditorSupport getSupportForObject (Object obj) {
+		return getSupportForClass(obj.getClass());
+	}
+
 	/** @param x pointer cordinate unprocjeted by camera
 	 * @param y pointer cordinate unprocjeted by camera */
 	private void setValuesForSelectedObject (float x, float y) {
-		if (selectedObj != null) {
-			SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
-
-			attachScreenX = x;
-			attachScreenY = y;
-			startingX = sup.getX(selectedObj);
-			startingY = sup.getY(selectedObj);
-			startingWidth = sup.getWidth(selectedObj);
-			startingHeight = sup.getHeight(selectedObj);
-			startingRotation = sup.getRotation(selectedObj);
-		}
+		for (ObjectRepresentation orep : selectedObjs)
+			orep.setValues(x, y);
 	}
 
 	/** Finds and return identifer for provied object
@@ -202,20 +187,16 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	 * @param x pointer cordinate unprocjeted by camera
 	 * @param y pointer cordinate unprocjeted by camera
 	 * @return */
-	private Object findObjectWithSamllestSurfaceArea (float x, float y) {
-		Object matchingObject = null;
+	private ObjectRepresentation findObjectWithSamllestSurfaceArea (float x, float y) {
+		ObjectRepresentation matchingObject = null;
 		int lastSurfaceArea = Integer.MAX_VALUE;
 
-		for (Entry<String, Object> entry : objectMap.entries()) {
-			Object obj = entry.value;
-
-			SceneEditorSupport sup = getSupportForClass(obj.getClass());
-
-			if (sup.contains(obj, x, y)) {
-				int currentSurfaceArea = (int)(sup.getWidth(obj) * sup.getHeight(obj));
+		for (ObjectRepresentation orep : objectRepresenationList) {
+			if (orep.contains(x, y)) {
+				int currentSurfaceArea = (int)(orep.getWidth() * orep.getHeight());
 
 				if (currentSurfaceArea < lastSurfaceArea) {
-					matchingObject = obj;
+					matchingObject = orep;
 					lastSurfaceArea = currentSurfaceArea;
 				}
 			}
@@ -227,361 +208,72 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	/** Renders everything */
 	public void render () {
 		if (editing) {
-			renderer.render(cameraLocked, selectedObj, pointerInsideRotateCircle, pointerInsideScaleBox);
-			renderer.renderGUI(objectMap.size, cameraLocked, dirty, selectedObj);
+			renderer.render(cameraLocked);
+			renderer.renderGUI(objectMap.size, cameraLocked, dirty); // TODO render obj info
 		}
 	}
 
 	private void undo () {
-		if (undoActions.size > 0) {
-			EditorAction action = undoActions.pop();
+		if (undoList.size > 0) {
+			Array<EditorAction> actions = undoList.pop();
 
-			SceneEditorSupport sup = getSupportForClass(action.obj.getClass());
+			for (EditorAction action : actions)
+				action.switchValues();
 
-			switch (action.type) {
-			case ORIGIN: // TODO (origin not implemented yet)
-				break;
-			case POS:
-				redoActions.add(new EditorAction(action.obj, ActionType.POS, sup.getX(action.obj), sup.getY(action.obj)));
-				sup.setX(action.obj, action.xVal);
-				sup.setY(action.obj, action.yVal);
-				break;
-			case SCALE: // scale is not used for now
-				break;
-			case SIZE:
-				redoActions.add(new EditorAction(action.obj, ActionType.SIZE, sup.getWidth(action.obj), sup.getHeight(action.obj)));
-				sup.setSize(action.obj, action.xVal, action.yVal);
-				break;
-			case ROTATION:
-				redoActions.add(new EditorAction(action.obj, ActionType.ROTATION, sup.getRotation(action.obj), 0));
-				sup.setRotation(action.obj, action.xVal);
-				break;
-			default:
-				break;
-
-			}
+			redoList.add(actions);
 		} else
 			Gdx.app.log(TAG, "Can't undo any more!");
 	}
 
 	private void redo () {
-		if (redoActions.size > 0) {
-			EditorAction action = redoActions.pop();
+		if (redoList.size > 0) {
+			Array<EditorAction> actions = redoList.pop();
 
-			SceneEditorSupport sup = getSupportForClass(action.obj.getClass());
+			for (EditorAction action : actions)
+				action.switchValues();
 
-			switch (action.type) {
-			case ORIGIN: // origin not implemented yet
-				break;
-			case POS:
-				undoActions.add(new EditorAction(action.obj, ActionType.POS, sup.getX(action.obj), sup.getY(action.obj)));
-				sup.setX(action.obj, action.xVal);
-				sup.setY(action.obj, action.yVal);
-				break;
-			case SCALE: // scale is not used for now
-				break;
-			case SIZE:
-				undoActions.add(new EditorAction(action.obj, ActionType.SIZE, sup.getWidth(action.obj), sup.getHeight(action.obj)));
-				sup.setSize(action.obj, action.xVal, action.yVal);
-				break;
-			case ROTATION:
-				undoActions.add(new EditorAction(action.obj, ActionType.ROTATION, sup.getRotation(action.obj), 0));
-				sup.setRotation(action.obj, action.xVal);
-				break;
-			default:
-				break;
-
-			}
+			undoList.add(actions);
 		} else
 			Gdx.app.log(TAG, "Can't redo any more!");
 	}
 
-	@Override
-	public boolean keyDown (int keycode) {
-		if (editing) {
-			if (keyboardInputMode.isActive() == false) {
-				if (keycode == SceneEditorConfig.KEY_RESET_CAMERA) camController.restoreOrginalCameraProperties();
-				if (keycode == SceneEditorConfig.KEY_LOCK_CAMERA) cameraLocked = !cameraLocked;
+	private void addUndoActions () {
+		Array<EditorAction> localUndoList = new Array<EditorAction>();
 
-				if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_SPECIAL_ACTIONS)) {
-					if (keycode == SceneEditorConfig.KEY_SPECIAL_SAVE_CHANGES) save();
-					if (keycode == SceneEditorConfig.KEY_SPECIAL_UNDO) undo();
-					if (keycode == SceneEditorConfig.KEY_SPECIAL_REDO) redo();
-					return true; // we don't want to trigger diffrent events
-				}
+		for (ObjectRepresentation orep : selectedObjs)
+			localUndoList.add(orep.getLastEditorAction());
 
-				if (selectedObj != null) {
-					SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
-
-					if (sup.isMovingSupported()) {
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX)
-							keyboardInputMode.setObject(EditType.X, sup, selectedObj);
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY)
-							keyboardInputMode.setObject(EditType.Y, sup, selectedObj);
-					}
-
-					if (sup.isScallingSupported()) {
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH)
-							keyboardInputMode.setObject(EditType.WIDTH, sup, selectedObj);
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT)
-							keyboardInputMode.setObject(EditType.HEIGHT, sup, selectedObj);
-					}
-
-					if (sup.isRotatingSupported()) {
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION)
-							keyboardInputMode.setObject(EditType.ROTATION, sup, selectedObj);
-					}
-				}
-			}
-
-			keyboardInputMode.keyDown(keycode);
-		}
-
-		if (keycode == SceneEditorConfig.KEY_TOGGLE_EDIT_MODE) {
-			if (editing)
-				disable();
-			else
-				enable();
-
-			return true;
-		}
-
-		return false;
+		undoList.add(localUndoList);
 	}
 
-	@Override
-	public boolean touchDown (int screenX, int screenY, int pointer, int button) {
-
-		if (editing) {
-			keyboardInputMode.finish();
-
-			final float x = camController.calcX(screenX);
-			final float y = camController.calcY(screenY);
-			lastTouchX = x;
-			lastTouchY = y;
-
-			if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_NO_SELECT_MODE) == false) {
-				if (pointerInsideRotateCircle == false && pointerInsideScaleBox == false) {
-					Object matchingObject = findObjectWithSamllestSurfaceArea(x, y);
-
-					if (matchingObject != null) {
-						selectedObj = matchingObject;
-
-						setValuesForSelectedObject(x, y);
-						checkIfPointerInsideScaleBox(x, y);
-						setValuesForSelectedObject(x, y);
-
-						return true;
-					}
-
-					selectedObj = null;
-				} else {
-					checkIfPointerInsideScaleBox(x, y);
-					checkIfPointerInsideRotateCircle(x, y);
-					setValuesForSelectedObject(x, y);
-
-					if (pointerInsideScaleBox && selectedObj != null) {
-						SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
-						sup.setRotation(selectedObj, 0);
-					}
-
-					return true;
-				}
-
-				setValuesForSelectedObject(x, y);
+	private boolean areAllSelectedObjectSupportsMoving () {
+		for (ObjectRepresentation orep : selectedObjs) {
+			if (orep.isMovingSupported() == false) {
+				Gdx.app.log(TAG, "Some of the selected object does not support moving.");
+				return false;
 			}
 		}
-
-		return false;
+		return true;
 	}
 
-	@Override
-	public boolean touchUp (int screenX, int screenY, int pointer, int button) {
-
-		if (editing) {
-			keyboardInputMode.finish();
-
-			if (pointerInsideScaleBox) {
-				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
-				sup.setRotation(selectedObj, startingRotation);
-
-				undoActions.add(new EditorAction(selectedObj, ActionType.SIZE, startingWidth, startingHeight));
+	private boolean areAllSelectedObjectSupportsScalling () {
+		for (ObjectRepresentation orep : selectedObjs) {
+			if (orep.isScallingSupported() == false) {
+				Gdx.app.log(TAG, "Some of the selected object does not support scalling.");
+				return false;
 			}
-
-			if (pointerInsideRotateCircle) {
-				undoActions.add(new EditorAction(selectedObj, ActionType.ROTATION, startingRotation, 0));
-			}
-
-			if (pointerInsideScaleBox == false && pointerInsideRotateCircle == false && selectedObj != null) {
-				undoActions.add(new EditorAction(selectedObj, ActionType.POS, startingX, startingY));
-			}
-
 		}
-		return false;
+		return true;
 	}
 
-	@Override
-	public boolean mouseMoved (int screenX, int screenY) {
-		if (editing) {
-			float x = camController.calcX(screenX);
-			float y = camController.calcY(screenY);
-
-			checkIfPointerInsideScaleBox(x, y);
-			checkIfPointerInsideRotateCircle(x, y);
-		}
-
-		return false;
-	}
-
-	@Override
-	public boolean touchDragged (int screenX, int screenY, int pointer) {
-		final float x = camController.calcX(screenX);
-		final float y = camController.calcY(screenY);
-
-		if (editing) {
-			keyboardInputMode.finish();
-
-			if (selectedObj != null && Gdx.input.isButtonPressed(Buttons.LEFT)) {
-				SceneEditorSupport sup = getSupportForClass(selectedObj.getClass());
-
-				if (sup.isScallingSupported() && pointerInsideScaleBox) {
-					float deltaX = x - attachScreenX;
-					float deltaY = y - attachScreenY;
-
-					if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_SCALE_LOCK_RATIO)) {
-						float ratio = startingWidth / startingHeight;
-						deltaY = deltaX / ratio;
-					}
-
-					sup.setSize(selectedObj, startingWidth + deltaX, startingHeight + deltaY);
-					dirty = true;
-					return true;
-
-				}
-
-				if (sup.isRotatingSupported() && pointerInsideRotateCircle) {
-					Rectangle rect = sup.getBoundingRectangle(selectedObj);
-					float deltaX = x - (rect.x + rect.width / 2);
-					float deltaY = y - (rect.y + rect.height / 2);
-
-					float deg = MathUtils.atan2(-deltaX, deltaY) / MathUtils.degreesToRadians;
-
-					if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_ROTATE_SNAP_VALUES)) {
-						int roundDeg = Math.round(deg / 30);
-						sup.setRotation(selectedObj, startingRotation + roundDeg * 30);
-					} else
-						sup.setRotation(selectedObj, startingRotation + deg);
-
-					dirty = true;
-					return true;
-				}
-
-				if (sup.isMovingSupported()) {
-					float deltaX = (x - lastTouchX);
-					float deltaY = (y - lastTouchY);
-
-					if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE)) {
-						deltaX /= SceneEditorConfig.PRECISION_DIVIDE_BY;
-						deltaY /= SceneEditorConfig.PRECISION_DIVIDE_BY;
-					}
-
-					sup.setX(selectedObj, sup.getX(selectedObj) + deltaX);
-					sup.setY(selectedObj, sup.getY(selectedObj) + deltaY);
-
-					lastTouchX = x;
-					lastTouchY = y;
-
-					dirty = true;
-					return true;
-				}
-
-			}
-
-		}
-		return false;
-	}
-
-	@Override
-	public boolean scrolled (int amount) {
-		if (editing && cameraLocked == false) {
-			OrthographicCamera camera = camController.getCamera();
-
-			float newZoom = 0;
-			float camX = camController.getX();
-			float camY = camController.getY();
-
-			if (amount == 1) // out
-			{
-				if (camera.zoom >= SceneEditorConfig.CAMERA_MAX_ZOOM_OUT) return false;
-
-				newZoom = camera.zoom + 0.1f * camera.zoom * 2;
-
-				// some complicated callucations, basicly we want to zoom in/out where mouse pointer is
-				camera.position.x = camX + (camera.zoom / newZoom) * (camera.position.x - camX);
-				camera.position.y = camY + (camera.zoom / newZoom) * (camera.position.y - camY);
-
-				camera.zoom = newZoom;
-			}
-
-			if (amount == -1) // in
-			{
-				if (camera.zoom <= SceneEditorConfig.CAMERA_MAX_ZOOM_IN) return false;
-
-				newZoom = camera.zoom - 0.1f * camera.zoom * 2;
-
-				camera.position.x = camX + (newZoom / camera.zoom) * (camera.position.x - camX);
-				camera.position.y = camY + (newZoom / camera.zoom) * (camera.position.y - camY);
-
-				camera.zoom = newZoom;
-			}
-			return true;
-		}
-
-		return false;
-	}
-
-	// pan is worse because you must drag mouse a little bit to fire this event, but it's simpler
-	@Override
-	public boolean pan (float x, float y, float deltaX, float deltaY) {
-		if (editing) {
-			keyboardInputMode.finish();
-
-			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
-				if (selectedObj == null && cameraLocked == false) {
-					OrthographicCamera camera = camController.getCamera();
-
-					if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE)) {
-						deltaX /= SceneEditorConfig.PRECISION_DIVIDE_BY;
-						deltaY /= SceneEditorConfig.PRECISION_DIVIDE_BY;
-					}
-
-					camera.position.x = camera.position.x - deltaX * camera.zoom;
-					camera.position.y = camera.position.y + deltaY * camera.zoom;
-					return true;
-				}
+	private boolean areAllSelectedObjectSupportsRotating () {
+		for (ObjectRepresentation orep : selectedObjs) {
+			if (orep.isRotatingSupported() == false) {
+				Gdx.app.log(TAG, "Some of the selected object does not support rotating.");
+				return false;
 			}
 		}
-
-		return false;
-	}
-
-	private void checkIfPointerInsideScaleBox (float x, float y) {
-		if (selectedObj != null) {
-			if (Utils.buildRectangeForScaleBox(getSupportForClass(selectedObj.getClass()), selectedObj).contains(x, y))
-				pointerInsideScaleBox = true;
-			else
-				pointerInsideScaleBox = false;
-
-		}
-	}
-
-	private void checkIfPointerInsideRotateCircle (float x, float y) {
-		if (selectedObj != null) {
-			if (Utils.buildCirlcleForRotateCircle(getSupportForClass(selectedObj.getClass()), selectedObj).contains(x, y))
-				pointerInsideRotateCircle = true;
-			else
-				pointerInsideRotateCircle = false;
-		}
+		return true;
 	}
 
 	/** Releases used assets */
@@ -618,9 +310,175 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 	}
 
+	public boolean isDevMode () {
+		return devMode;
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public void attachInputProcessor () {
 		if (devMode) super.attachInputProcessor();
 	}
+
+	@Override
+	public boolean keyDown (int keycode) {
+		if (editing) {
+			if (keyboardInputMode.isActive() == false) {
+				if (keycode == SceneEditorConfig.KEY_RESET_CAMERA) camController.restoreOrginalCameraProperties();
+				if (keycode == SceneEditorConfig.KEY_LOCK_CAMERA) cameraLocked = !cameraLocked;
+
+				if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_SPECIAL_ACTIONS)) {
+					if (keycode == SceneEditorConfig.KEY_SPECIAL_SAVE_CHANGES) save();
+					if (keycode == SceneEditorConfig.KEY_SPECIAL_UNDO) undo();
+					if (keycode == SceneEditorConfig.KEY_SPECIAL_REDO) redo();
+					return true; // we don't want to trigger diffrent events
+				}
+
+				if (selectedObjs.size > 0) {
+
+					if (areAllSelectedObjectSupportsMoving()) {
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX) keyboardInputMode.setObject(EditType.X);
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY) keyboardInputMode.setObject(EditType.Y);
+					}
+
+					if (areAllSelectedObjectSupportsScalling()) {
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH) keyboardInputMode.setObject(EditType.WIDTH);
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT) keyboardInputMode.setObject(EditType.HEIGHT);
+					}
+
+					if (areAllSelectedObjectSupportsRotating()) {
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION) keyboardInputMode.setObject(EditType.ROTATION);
+					}
+				}
+			}
+
+			keyboardInputMode.keyDown(keycode);
+		}
+
+		if (keycode == SceneEditorConfig.KEY_TOGGLE_EDIT_MODE) {
+			if (editing)
+				disable();
+			else
+				enable();
+
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean touchDown (int screenX, int screenY, int pointer, int button) {
+
+		if (editing) {
+			keyboardInputMode.finish();
+
+			final float x = camController.calcX(screenX);
+			final float y = camController.calcY(screenY);
+
+			if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_NO_SELECT_MODE))
+				selectedObjs.clear();
+			else {
+				if (isMouseInsideSelectedObjectAreas() == false) {
+					ObjectRepresentation matchingObject = findObjectWithSamllestSurfaceArea(x, y);
+
+					if (matchingObject != null) {
+						selectedObjs.clear();
+						selectedObjs.add(matchingObject);
+
+						setValuesForSelectedObject(x, y);
+
+						return true;
+					}
+
+					selectedObjs.clear();
+				} else {
+					setValuesForSelectedObject(x, y);
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	private boolean isMouseInsideSelectedObjectAreas () {
+		for (ObjectRepresentation orep : selectedObjs) {
+			if (orep.isPointerInsideRotateArea() || orep.isPointerInsideScaleArea()) return true;
+		}
+		return false;
+	}
+
+	@Override
+	public boolean touchUp (int screenX, int screenY, int pointer, int button) {
+
+		if (editing) {
+			keyboardInputMode.finish();
+
+			if (selectedObjs.size > 0) addUndoActions();
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean mouseMoved (int screenX, int screenY) {
+		if (editing) {
+			float x = camController.calcX(screenX);
+			float y = camController.calcY(screenY);
+
+			for (ObjectRepresentation orep : selectedObjs)
+				orep.mouseMoved(x, y);
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean touchDragged (int screenX, int screenY, int pointer) {
+		final float x = camController.calcX(screenX);
+		final float y = camController.calcY(screenY);
+
+		if (editing) {
+			keyboardInputMode.finish();
+
+			// sorry...
+			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
+				for (ObjectRepresentation orep : selectedObjs) {
+					if (orep.isPointerInsideRotateArea()) {
+						if (orep.draggedRotate(x, y)) dirty = true;
+
+					} else if (orep.isPointerInsideScaleArea()) {
+						if (orep.draggedScale(x, y)) dirty = true;
+
+					} else if (orep.draggedMove(x, y)) dirty = true;
+				}
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean scrolled (int amount) {
+		if (editing && cameraLocked == false) return camController.scrolled(amount);
+
+		return false;
+	}
+
+	// pan is worse because you must drag mouse a little bit to fire this event, but it's simpler
+	@Override
+	public boolean pan (float x, float y, float deltaX, float deltaY) {
+		if (editing) {
+			keyboardInputMode.finish();
+
+			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
+				if (selectedObjs.size == 0 && cameraLocked == false) {
+					return camController.pan(deltaX, deltaY);
+				}
+			}
+		}
+
+		return false;
+	}
+
 }

@@ -41,6 +41,12 @@ public class KotcrabTextSupport implements SceneEditorSupport<KotcrabText>
 	}
 	
 	@Override
+	public boolean isOriginSupported()
+	{
+		return true;
+	}
+	
+	@Override
 	public void setX(KotcrabText k, float x)
 	{
 		k.setX(x);

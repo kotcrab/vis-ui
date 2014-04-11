@@ -34,4 +34,17 @@ class Utils {
 
 		return new Circle(rect.x + rect.width / 2 + cWidth, rect.y + rect.height + cWidth, cWidth);
 	}
+
+	public static Rectangle buildRectangeForScaleArea (ObjectRepresentation orep) {
+		Rectangle rect = orep.getBoundingRectangle();
+		return new Rectangle(rect.x + rect.width - 15, rect.y + rect.height - 15, 15, 15);
+	}
+
+	public static Circle buildCirlcleForRotateArea (ObjectRepresentation orep) {
+		Rectangle rect = orep.getBoundingRectangle();
+
+		int cWidth = 5;
+
+		return new Circle(rect.x + rect.width / 2 + cWidth, rect.y + rect.height + cWidth, cWidth);
+	}
 }

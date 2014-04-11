@@ -17,44 +17,56 @@
 package pl.kotcrab.vis.sceneeditor;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.utils.Array;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
 class KeyboardInputMode {
 	private KeyboardInputActionFinished listener;
+	private Array<ObjectRepresentation> selectedObjs;
 
 	private EditType type;
-	private SceneEditorSupport sup;
-	private Object obj;
 
 	private boolean active = false;
 
-	private int startingValue;
 	private int value;
 	private String valueString;
 
-	private float scaleRatio;
 	private boolean lockRatio;
 
-	public KeyboardInputMode (KeyboardInputActionFinished listener) {
+	public KeyboardInputMode (KeyboardInputActionFinished listener, Array<ObjectRepresentation> selectedObjs) {
 		this.listener = listener;
+		this.selectedObjs = selectedObjs;
 	}
 
-	public void setObject (EditType type, SceneEditorSupport sup, Object obj) {
+	public void setObject (EditType type) {
 		this.type = type;
-		this.sup = sup;
-		this.obj = obj;
 		active = true;
 
 		lockRatio = false;
-		scaleRatio = 0;
 
-		startingValue = getEditingValue();
-		value = startingValue;
+		setStartingValuesForObjects();
+
+		if (checkIfAllObjectHaveSameValue())
+			value = getEditingValue(selectedObjs.first());
+		else
+			value = 0;
+
 		valueString = String.valueOf(value);
+	}
 
-		if (type == EditType.HEIGHT || type == EditType.WIDTH) {
-			scaleRatio = sup.getWidth(obj) / sup.getHeight(obj);
+	private boolean checkIfAllObjectHaveSameValue () {
+		int value = getEditingValue(selectedObjs.first());
+
+		for (ObjectRepresentation orep : selectedObjs) {
+			if (value != getEditingValue(orep)) return false;
 		}
+
+		return true;
+	}
+
+	private void setStartingValuesForObjects () {
+		for (ObjectRepresentation orep : selectedObjs)
+			orep.setStartingValue(getEditingValue(orep));
+
 	}
 
 	public void keyDown (int keycode) {
@@ -141,22 +153,22 @@ class KeyboardInputMode {
 		active = false;
 	}
 
-	private EditorAction buildAction () {
-		switch (type) {
-		case X:
-			return new EditorAction(obj, ActionType.POS, value, sup.getY(obj));
-		case Y:
-			return new EditorAction(obj, ActionType.POS, sup.getX(obj), value);
-		case WIDTH:
-			return new EditorAction(obj, ActionType.SIZE, value, sup.getHeight(obj));
-		case HEIGHT:
-			return new EditorAction(obj, ActionType.SIZE, sup.getWidth(obj), value);
-		case ROTATION:
-			return new EditorAction(obj, ActionType.ROTATION, value, 0);
-		default:
-			return null;
-
-		}
+	private Array<EditorAction> buildAction () {
+// switch (type) {
+// case X:
+// return new EditorAction(obj, ActionType.POS, value, sup.getY(obj));
+// case Y:
+// return new EditorAction(obj, ActionType.POS, sup.getX(obj), value);
+// case WIDTH:
+// return new EditorAction(obj, ActionType.SIZE, value, sup.getHeight(obj));
+// case HEIGHT:
+// return new EditorAction(obj, ActionType.SIZE, sup.getWidth(obj), value);
+// case ROTATION:
+// return new EditorAction(obj, ActionType.ROTATION, value, 0);
+// default:
+		return null;
+//
+// }
 	}
 
 	public boolean isActive () {
@@ -167,48 +179,50 @@ class KeyboardInputMode {
 		return valueString;
 	}
 
-	public int getEditingValue () {
+	public int getEditingValue (ObjectRepresentation orep) {
 		switch (type) {
 		case X:
-			return (int)sup.getX(obj);
+			return (int)orep.getX();
 		case Y:
-			return (int)sup.getY(obj);
+			return (int)orep.getY();
 		case WIDTH:
-			return (int)sup.getWidth(obj);
+			return (int)orep.getWidth();
 		case HEIGHT:
-			return (int)sup.getHeight(obj);
+			return (int)orep.getHeight();
 		case ROTATION:
-			return (int)sup.getRotation(obj);
+			return (int)orep.getRotation();
 		default:
 			return 0;
 		}
 	}
 
 	private void setEditingValue (int newValue) {
-		switch (type) {
-		case X:
-			sup.setX(obj, newValue);
-			break;
-		case Y:
-			sup.setY(obj, newValue);
-			break;
-		case WIDTH:
-			if (lockRatio)
-				sup.setSize(obj, newValue, newValue / scaleRatio);
-			else
-				sup.setSize(obj, newValue, sup.getHeight(obj));
-			break;
-		case HEIGHT:
-			if (lockRatio)
-				sup.setSize(obj, newValue / scaleRatio, newValue);
-			else
-				sup.setSize(obj, sup.getWidth(obj), newValue);
-			break;
-		case ROTATION:
-			sup.setRotation(obj, newValue);
-			break;
-		default:
-			break;
+		for (ObjectRepresentation orep : selectedObjs) {
+			switch (type) {
+			case X:
+				orep.setX(newValue);
+				break;
+			case Y:
+				orep.setY(newValue);
+				break;
+			case WIDTH:
+				if (lockRatio)
+					orep.setSize(newValue, newValue / orep.getScaleRatio());
+				else
+					orep.setSize(newValue, orep.getHeight());
+				break;
+			case HEIGHT:
+				if (lockRatio)
+					orep.setSize(newValue / orep.getScaleRatio(), newValue);
+				else
+					orep.setSize(orep.getWidth(), newValue);
+				break;
+			case ROTATION:
+				orep.setRotation(newValue);
+				break;
+			default:
+				break;
+			}
 		}
 	}
 
@@ -225,5 +239,5 @@ enum EditType {
 }
 
 interface KeyboardInputActionFinished {
-	public void editingFinished (EditorAction action);
+	public void editingFinished (Array<EditorAction> actions);
 }

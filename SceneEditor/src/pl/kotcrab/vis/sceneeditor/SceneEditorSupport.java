@@ -45,6 +45,11 @@ public interface SceneEditorSupport<O> {
 	 * @return true if object support moving, false otherwise */
 	public boolean isMovingSupported ();
 
+	/** When this method return true, setOrigin, getOriginX, getOriginY must be implemented
+	 * 
+	 * @return true if object support origin, false otherwise */
+	public boolean isOriginSupported ();
+
 	public void setX (O obj, float x);
 
 	public float getX (O obj);

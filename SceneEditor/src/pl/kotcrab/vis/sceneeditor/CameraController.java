@@ -77,6 +77,51 @@ class CameraController {
 			- orginalCamera.viewportHeight / 2, orginalCamera.viewportWidth, orginalCamera.viewportHeight);
 	}
 
+	public boolean scrolled (int amount) {
+		float newZoom = 0;
+		float camX = getX();
+		float camY = getY();
+
+		if (amount == 1) // out
+		{
+			if (camera.zoom >= SceneEditorConfig.CAMERA_MAX_ZOOM_OUT) return false;
+
+			newZoom = camera.zoom + 0.1f * camera.zoom * 2;
+
+			// some complicated callucations, basicly we want to zoom in/out where mouse pointer is
+			camera.position.x = camX + (camera.zoom / newZoom) * (camera.position.x - camX);
+			camera.position.y = camY + (camera.zoom / newZoom) * (camera.position.y - camY);
+
+			camera.zoom = newZoom;
+		}
+
+		if (amount == -1) // in
+		{
+			if (camera.zoom <= SceneEditorConfig.CAMERA_MAX_ZOOM_IN) return false;
+
+			newZoom = camera.zoom - 0.1f * camera.zoom * 2;
+
+			camera.position.x = camX + (newZoom / camera.zoom) * (camera.position.x - camX);
+			camera.position.y = camY + (newZoom / camera.zoom) * (camera.position.y - camY);
+
+			camera.zoom = newZoom;
+		}
+
+		return true;
+	}
+
+	public boolean pan (float deltaX, float deltaY) {
+		if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE)) {
+			deltaX /= SceneEditorConfig.PRECISION_DIVIDE_BY;
+			deltaY /= SceneEditorConfig.PRECISION_DIVIDE_BY;
+		}
+
+		camera.position.x = camera.position.x - deltaX * camera.zoom;
+		camera.position.y = camera.position.y + deltaY * camera.zoom;
+		return true;
+
+	}
+
 	/** Return proper touch posistion using provided camera<br>
 	 * 
 	 * @param x form Gdx.input.getX() or event method */

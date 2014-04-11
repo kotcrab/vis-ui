@@ -34,7 +34,7 @@ public class SceneEditorConfig {
 	public static int KEY_ROTATE_SNAP_VALUES = Keys.SHIFT_LEFT;
 	public static int KEY_SCALE_LOCK_RATIO = Keys.SHIFT_LEFT;
 
-	public static int KEY_NO_SELECT_MODE = Keys.SHIFT_LEFT;
+	public static int KEY_NO_SELECT_MODE = Keys.CONTROL_LEFT;
 	public static int KEY_PRECISION_MODE = Keys.CONTROL_LEFT;
 	public static int PRECISION_DIVIDE_BY = 10;
 

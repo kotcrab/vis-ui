@@ -88,6 +88,11 @@ public class SpriteSupport implements SceneEditorSupport<Sprite> {
 	}
 
 	@Override
+	public boolean isOriginSupported () {
+		return true;
+	}
+
+	@Override
 	public float getRotation (Sprite s) {
 		return s.getRotation();
 	}

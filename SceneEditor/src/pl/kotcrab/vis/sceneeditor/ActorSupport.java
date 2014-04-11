@@ -89,6 +89,11 @@ public class ActorSupport implements SceneEditorSupport<Actor> {
 	}
 
 	@Override
+	public boolean isOriginSupported () {
+		return true;
+	}
+
+	@Override
 	public float getRotation (Actor a) {
 		return a.getRotation();
 	}

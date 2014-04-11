@@ -47,6 +47,9 @@ class Serializer {
 		this.file = file;
 		this.objectMap = objectMap;
 
+		if (editor.isDevMode() && SceneEditorConfig.assetsFolderPath == null)
+			Gdx.app.error(TAG, "Path to assets folder is not set! See SceneEditorConfig.assetsFolderPath. Saving is disabled!");
+
 		json = new Json();
 		json.addClassTag("objectInfo", ObjectInfo.class);
 	}

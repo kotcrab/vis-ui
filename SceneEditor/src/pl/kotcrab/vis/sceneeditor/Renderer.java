@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
@@ -29,21 +30,24 @@ class Renderer {
 	private SceneEditor editor;
 	private CameraController camController;
 	private ObjectMap<String, Object> objectMap;
+	private Array<ObjectRepresentation> selectedObjs;
 
 	private ShapeRenderer shapeRenderer;
 	private GUI gui;
 
 	public Renderer (SceneEditor editor, CameraController camController, KeyboardInputMode keyboardInputMode,
-		ObjectMap<String, Object> objectMap) {
+		ObjectMap<String, Object> objectMap, Array<ObjectRepresentation> selectedObjs) {
 		this.editor = editor;
 		this.camController = camController;
 		this.objectMap = objectMap;
+		this.selectedObjs = selectedObjs;
 
-		gui = new GUI(editor, keyboardInputMode);
 		shapeRenderer = new ShapeRenderer();
+
+		gui = new GUI(editor, keyboardInputMode, selectedObjs);
 	}
 
-	public void render (boolean cameraLocked, Object selectedObj, boolean pointerInsideRotateCircle, boolean pointerInsideScaleBox) {
+	public void render (boolean cameraLocked) {
 		shapeRenderer.setProjectionMatrix(camController.getCamera().combined);
 		shapeRenderer.begin(ShapeType.Line);
 
@@ -60,37 +64,33 @@ class Renderer {
 			renderObjectOutline(sup, obj);
 
 			if (sup.isScallingSupported()) {
-				if (obj == selectedObj && pointerInsideScaleBox)
-					shapeRenderer.setColor(Color.RED);
-				else
-					shapeRenderer.setColor(Color.WHITE);
+// if (obj == selectedObj && pointerInsideScaleBox)
 
 				renderObjectScaleBox(sup, obj);
 			}
 		}
 
-		if (selectedObj != null) {
-			SceneEditorSupport sup = editor.getSupportForClass(selectedObj.getClass());
+		for (ObjectRepresentation orep : selectedObjs) {
 			shapeRenderer.setColor(Color.RED);
 
-			renderObjectOutline(sup, selectedObj);
+			renderObjectOutline(orep);
 
-			if (sup.isScallingSupported()) {
-				if (pointerInsideScaleBox)
+			if (orep.isScallingSupported()) {
+				if (orep.isPointerInsideScaleArea())
 					shapeRenderer.setColor(Color.RED);
 				else
 					shapeRenderer.setColor(Color.WHITE);
 
-				renderObjectScaleBox(sup, selectedObj);
+				renderObjectScaleBox(orep);
 			}
 
-			if (sup.isRotatingSupported()) {
-				if (pointerInsideRotateCircle)
+			if (orep.isRotatingSupported()) {
+				if (orep.isPointerInsideRotateArea())
 					shapeRenderer.setColor(Color.RED);
 				else
 					shapeRenderer.setColor(Color.WHITE);
 
-				renderObjectRotateCricle(sup, selectedObj);
+				renderObjectRotateCricle(orep);
 			}
 
 		}
@@ -106,8 +106,8 @@ class Renderer {
 		shapeRenderer.end();
 	}
 
-	public void renderGUI (int entityNumber, boolean cameraLocked, boolean dirty, Object selectedObj) {
-		gui.render(entityNumber, cameraLocked, dirty, selectedObj);
+	public void renderGUI (int entityNumber, boolean cameraLocked, boolean dirty) {
+		gui.render(entityNumber, cameraLocked, dirty);
 	}
 
 	private void renderObjectOutline (SceneEditorSupport sup, Object obj) {
@@ -118,8 +118,20 @@ class Renderer {
 		renderRectangle(Utils.buildRectangeForScaleBox(sup, obj));
 	}
 
-	private void renderObjectRotateCricle (SceneEditorSupport sup, Object obj) {
-		renderCircle(Utils.buildCirlcleForRotateCircle(sup, obj));
+// private void renderObjectRotateCricle (SceneEditorSupport sup, Object obj) {
+// renderCircle(Utils.buildCirlcleForRotateCircle(sup, obj));
+// }
+
+	private void renderObjectOutline (ObjectRepresentation orep) {
+		renderRectangle(orep.getBoundingRectangle());
+	}
+
+	private void renderObjectScaleBox (ObjectRepresentation orep) {
+		renderRectangle(Utils.buildRectangeForScaleArea(orep));
+	}
+
+	private void renderObjectRotateCricle (ObjectRepresentation orep) {
+		renderCircle(Utils.buildCirlcleForRotateArea(orep));
 	}
 
 	private void renderRectangle (Rectangle rect) {
