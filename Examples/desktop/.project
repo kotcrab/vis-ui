@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>VisSceneEditorExamples-desktop</name>
+	<name>VisSceneEditorSamples-desktop</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -19,13 +19,7 @@
 		<link>
 			<name>assets</name>
 			<type>2</type>
-			<locationURI>copy_PARENT/android/assets</locationURI>
+			<locationURI>PARENT-1-PROJECT_LOC/android/assets</locationURI>
 		</link>
 	</linkedResources>
-	<variableList>
-		<variable>
-			<name>copy_PARENT</name>
-			<value>$%7BPARENT-2-PROJECT_LOC%7D/Git/VisSceneEditor/Examples</value>
-		</variable>
-	</variableList>
 </projectDescription>

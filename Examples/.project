@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>Examples</name>
+	<name>VisSceneEditorExamples</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -17,7 +17,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1396679306812</id>
+			<id>1397306852016</id>
 			<name></name>
 			<type>26</type>
 			<matcher>
