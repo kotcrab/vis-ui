@@ -21,13 +21,15 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-public class ObjectRepresentation {
+class ObjectRepresentation {
 	public SceneEditorSupport sup;
 	public Object obj;
 
 	private float startingValue; // keyboard input mode uses this when inputing object properties
 
-	private float scaleRatio;
+	private final float scaleRatio;
+	private final float defaultWidth;
+	private final float defaultHeight;
 
 	private boolean pointerInsideScaleArea;
 	private boolean pointerInsideRotateArea;
@@ -50,6 +52,8 @@ public class ObjectRepresentation {
 		this.obj = obj;
 
 		scaleRatio = getWidth() / getHeight();
+		defaultWidth = getWidth();
+		defaultHeight = getHeight();
 	}
 
 	/** @param x unprocjeted by camera screen x
@@ -62,9 +66,9 @@ public class ObjectRepresentation {
 
 		// startingX = sup.getX(obj);
 		// startingY = sup.getY(obj);
-		startingWidth = sup.getWidth(obj);
-		startingHeight = sup.getHeight(obj);
-		startingRotation = sup.getRotation(obj);
+		startingWidth = getWidth();
+		startingHeight = getHeight();
+		startingRotation = getRotation();
 
 		lastEditorAction = new EditorAction(this);
 	}
@@ -75,7 +79,7 @@ public class ObjectRepresentation {
 	}
 
 	public boolean draggedScale (float x, float y) {
-		if (isScallingSupported() && pointerInsideScaleArea) {
+		if (isScallingSupported()) {
 			float deltaX = x - attachScreenX;
 			float deltaY = y - attachScreenY;
 
@@ -90,7 +94,7 @@ public class ObjectRepresentation {
 	}
 
 	public boolean draggedMove (float x, float y) {
-		if (isMovingSupported() && pointerInsideScaleArea == false) {
+		if (isMovingSupported()) {
 			float deltaX = (x - lastTouchX);
 			float deltaY = (y - lastTouchY);
 
@@ -109,7 +113,7 @@ public class ObjectRepresentation {
 	}
 
 	public boolean draggedRotate (float x, float y) {
-		if (sup.isRotatingSupported() && pointerInsideRotateArea) {
+		if (isRotatingSupported()) {
 			Rectangle rect = getBoundingRectangle();
 			float deltaX = x - (rect.x + rect.width / 2);
 			float deltaY = y - (rect.y + rect.height / 2);
@@ -127,12 +131,20 @@ public class ObjectRepresentation {
 			return false;
 	}
 
+	public void resetSize () {
+		setSize(defaultWidth, defaultHeight);
+	}
+
 	public float getStartingValue () {
 		return startingValue;
 	}
 
 	public void setStartingValue (float startingValue) {
 		this.startingValue = startingValue;
+	}
+
+	public float getStartingRotation () {
+		return startingRotation;
 	}
 
 	public EditorAction getLastEditorAction () {

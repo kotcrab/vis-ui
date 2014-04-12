@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="export"
-	name="Export VisSceneEditor to samples project.">
+<project default="export" name="Export VisSceneEditor to samples project.">
 	<target name="export">
-	    <property name="base.dir" location=".."/>
-	    <property name="build.dir" location="build"/>
-	    <property name="jar.file" location="${build.dir}/VisSceneEditor.jar"/>
-	    
-	    <delete file="${jar.file}"/>
+		<property name="base.dir" location=".." />
+		<property name="build.dir" location="build" />
+		<property name="jar.file" location="${build.dir}/VisSceneEditor.jar" />
+		<property name="sourcejar.file" location="${build.dir}/VisSceneEditor-source.jar" />
+
+		<delete file="${jar.file}" />
 		<jar destfile="${jar.file}">
 			<fileset dir="${base.dir}/SceneEditor/bin">
 				<include name="pl/kotcrab/vis/sceneeditor/" />
 			</fileset>
 			<fileset dir="${base.dir}/SceneEditor/assets/"></fileset>
 		</jar>
-		
-		<delete file="${base.dir}/Examples/core/libs/VisSceneEditor.jar"/>
-		<copy file="${jar.file}" tofile="${base.dir}/Examples/core/libs/VisSceneEditor.jar"/>
+
+		<delete file="${sourcejar.file}" />
+		<jar destfile="${sourcejar.file}">
+			<fileset dir="${base.dir}/SceneEditor/src">
+				<include name="pl/kotcrab/vis/sceneeditor/" />
+			</fileset>
+			<fileset dir="${base.dir}/SceneEditor/assets/"></fileset>
+		</jar>
+
+		<delete file="${base.dir}/Examples/core/libs/VisSceneEditor.jar" />
+		<copy file="${jar.file}" tofile="${base.dir}/Examples/core/libs/VisSceneEditor.jar" />
+
+		<delete file="${base.dir}/Examples/core/libs/VisSceneEditor-source.jar" />
+		<copy file="${sourcejar.file}" tofile="${base.dir}/Examples/core/libs/VisSceneEditor-source.jar" />
 	</target>
 </project>

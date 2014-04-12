@@ -38,8 +38,9 @@ public class SceneEditorConfig {
 	public static int KEY_PRECISION_MODE = Keys.CONTROL_LEFT;
 	public static int PRECISION_DIVIDE_BY = 10;
 
-	public static int KEY_RESET_CAMERA = Keys.F2;
 	public static int KEY_LOCK_CAMERA = Keys.F1;
+	public static int KEY_RESET_CAMERA = Keys.F2;
+	public static int KEY_RESET_OBJECT_SIZE = Keys.F3;
 	public static int KEY_TOGGLE_EDIT_MODE = Keys.F11;
 
 	public static int KEY_SPECIAL_ACTIONS = Keys.CONTROL_LEFT;

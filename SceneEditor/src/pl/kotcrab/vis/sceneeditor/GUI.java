@@ -79,7 +79,10 @@ class GUI {
 					}
 
 				}
-			} else if (selectedObjs.size > 1) drawTextAtLine("Multiple objects selected.", line++);
+			} else if (selectedObjs.size > 1) {
+				drawTextAtLine("Multiple objects selected.", line++);
+
+			}
 
 			if (selectedObjs.size > 0) {
 				if (keyboardInputMode.isActive()) {
@@ -104,6 +107,16 @@ class GUI {
 
 	private void drawTextAtLine (String text, int line) {
 		font.draw(guiBatch, text, 2, Gdx.graphics.getHeight() - 2 - (line * 17));
+	}
+
+	private boolean checkIfAllSelectedObjectHaveSameX () {
+		int value = (int)selectedObjs.first().getX();
+
+		for (ObjectRepresentation orep : selectedObjs) {
+			if (value != orep.getX()) return false;
+		}
+
+		return true;
 	}
 
 	public void dispose () {

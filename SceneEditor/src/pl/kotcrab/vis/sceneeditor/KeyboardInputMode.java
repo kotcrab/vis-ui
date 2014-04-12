@@ -23,6 +23,8 @@ class KeyboardInputMode {
 	private KeyboardInputActionFinished listener;
 	private Array<ObjectRepresentation> selectedObjs;
 
+	private Array<EditorAction> editorActions;
+
 	private EditType type;
 
 	private boolean active = false;
@@ -54,6 +56,8 @@ class KeyboardInputMode {
 			valueString = "";
 		else
 			valueString = String.valueOf(value);
+
+		editorActions = buildActions();
 	}
 
 	private boolean checkIfAllObjectHaveSameValue () {
@@ -147,7 +151,7 @@ class KeyboardInputMode {
 	public void finish () {
 		if (active) {
 			setEditingValue(value);
-			listener.editingFinished(buildAction());
+			listener.editingFinished(editorActions);
 			active = false;
 		}
 	}
@@ -156,22 +160,12 @@ class KeyboardInputMode {
 		active = false;
 	}
 
-	private Array<EditorAction> buildAction () {
-// switch (type) {
-// case X:
-// return new EditorAction(obj, ActionType.POS, value, sup.getY(obj));
-// case Y:
-// return new EditorAction(obj, ActionType.POS, sup.getX(obj), value);
-// case WIDTH:
-// return new EditorAction(obj, ActionType.SIZE, value, sup.getHeight(obj));
-// case HEIGHT:
-// return new EditorAction(obj, ActionType.SIZE, sup.getWidth(obj), value);
-// case ROTATION:
-// return new EditorAction(obj, ActionType.ROTATION, value, 0);
-// default:
-		return null;
-//
-// }
+	private Array<EditorAction> buildActions () {
+		Array<EditorAction> actions = new Array<EditorAction>();
+		for (ObjectRepresentation orep : selectedObjs)
+			actions.add(new EditorAction(orep));
+
+		return actions;
 	}
 
 	public boolean isActive () {

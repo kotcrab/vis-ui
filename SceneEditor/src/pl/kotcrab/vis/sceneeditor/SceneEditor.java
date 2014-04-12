@@ -41,6 +41,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private ObjectMap<String, Object> objectMap;
 	private Array<ObjectRepresentation> objectRepresenationList;
 	private Array<ObjectRepresentation> selectedObjs;
+	private ObjectRepresentation masterOrep;
 
 	// modules
 	private Renderer renderer;
@@ -48,13 +49,13 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private KeyboardInputMode keyboardInputMode;
 	private RectangularSelection rectangularSelection;
 
+	private Array<Array<EditorAction>> undoList;
+	private Array<Array<EditorAction>> redoList;
+
 	private boolean devMode;
 	private boolean editing;
 	private boolean dirty;
 	private boolean cameraLocked;
-
-	private Array<Array<EditorAction>> undoList;
-	private Array<Array<EditorAction>> redoList;
 
 	/** @see SceneEditor#SceneEditor(FileHandle, OrthographicCamera, boolean)
 	 * @param registerBasicsSupports if true Sprite and Actor support will be registered */
@@ -180,6 +181,15 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private void setValuesForSelectedObject (float x, float y) {
 		for (ObjectRepresentation orep : selectedObjs)
 			orep.setValues(x, y);
+
+		if (selectedObjs.size > 1 && isMouseInsideAnySelectedObjectsRotateArea()) {
+			for (ObjectRepresentation orep : selectedObjs) {
+				if (orep.isPointerInsideRotateArea()) {
+					masterOrep = orep;
+					return;
+				}
+			}
+		}
 	}
 
 	/** Finds and return identifer for provied object
@@ -252,9 +262,9 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		Array<EditorAction> localUndoList = new Array<EditorAction>();
 
 		for (ObjectRepresentation orep : selectedObjs)
-			localUndoList.add(orep.getLastEditorAction());
+			if (orep.getLastEditorAction() != null) localUndoList.add(orep.getLastEditorAction());
 
-		undoList.add(localUndoList);
+		if (localUndoList.size > 0) undoList.add(localUndoList);
 	}
 
 	private boolean areAllSelectedObjectSupportsMoving () {
@@ -287,16 +297,25 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		return true;
 	}
 
-	/** Releases used assets */
-	public void dispose () {
-		if (devMode) {
-			renderer.dispose();
+	private boolean isMouseInsideAnySelectedObjectsScaleArea () {
+		for (ObjectRepresentation orep : selectedObjs) {
+			if (orep.isPointerInsideScaleArea()) return true;
 		}
+		return false;
 	}
 
-	/** This must be called when screen size changed */
-	public void resize () {
-		if (devMode) renderer.resize();
+	private boolean isMouseInsideAnySelectedObjectsRotateArea () {
+		for (ObjectRepresentation orep : selectedObjs) {
+			if (orep.isPointerInsideRotateArea()) return true;
+		}
+		return false;
+	}
+
+	private boolean isMouseInsideSelectedObjects (float x, float y) {
+		for (ObjectRepresentation orep : selectedObjs) {
+			if (orep.contains(x, y)) return true;
+		}
+		return false;
 	}
 
 	/** Enabled editing mode */
@@ -321,6 +340,18 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 	}
 
+	/** Releases used assets */
+	public void dispose () {
+		if (devMode) {
+			renderer.dispose();
+		}
+	}
+
+	/** This must be called when screen size changed */
+	public void resize () {
+		if (devMode) renderer.resize();
+	}
+
 	public boolean isDevMode () {
 		return devMode;
 	}
@@ -335,8 +366,9 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	public boolean keyDown (int keycode) {
 		if (editing) {
 			if (keyboardInputMode.isActive() == false) {
-				if (keycode == SceneEditorConfig.KEY_RESET_CAMERA) camController.restoreOrginalCameraProperties();
 				if (keycode == SceneEditorConfig.KEY_LOCK_CAMERA) cameraLocked = !cameraLocked;
+				if (keycode == SceneEditorConfig.KEY_RESET_CAMERA) camController.restoreOrginalCameraProperties();
+				if (keycode == SceneEditorConfig.KEY_RESET_OBJECT_SIZE) resetSelectedObjectsSize();
 
 				if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_SPECIAL_ACTIONS)) {
 					if (keycode == SceneEditorConfig.KEY_SPECIAL_SAVE_CHANGES) save();
@@ -378,6 +410,11 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		return false;
 	}
 
+	private void resetSelectedObjectsSize () {
+		for (ObjectRepresentation orep : selectedObjs)
+			orep.resetSize();
+	}
+
 	@Override
 	public boolean touchDown (int screenX, int screenY, int pointer, int button) {
 
@@ -392,7 +429,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			else {
 				rectangularSelection.touchDown(screenX, screenY, pointer, button);
 
-				if (isMouseInsideSelectedObjectAreas() == false) {
+				if (isMouseInsideSelectedObjects(x, y) == false && isMouseInsideAnySelectedObjectsRotateArea() == false) {
 					ObjectRepresentation matchingObject = findObjectWithSamllestSurfaceArea(x, y);
 
 					if (matchingObject != null) {
@@ -400,7 +437,6 @@ public class SceneEditor extends SceneEditorInputAdapater {
 						selectedObjs.add(matchingObject);
 
 						setValuesForSelectedObject(x, y);
-
 						return true;
 					}
 
@@ -410,15 +446,9 @@ public class SceneEditor extends SceneEditorInputAdapater {
 					return true;
 				}
 			}
+
 		}
 
-		return false;
-	}
-
-	private boolean isMouseInsideSelectedObjectAreas () {
-		for (ObjectRepresentation orep : selectedObjs) {
-			if (orep.isPointerInsideRotateArea() || orep.isPointerInsideScaleArea()) return true;
-		}
 		return false;
 	}
 
@@ -431,6 +461,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			rectangularSelection.touchUp(screenX, screenY, pointer, button);
 
 			if (selectedObjs.size > 0) addUndoActions();
+
+			masterOrep = null;
 		}
 
 		return false;
@@ -458,13 +490,24 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			keyboardInputMode.finish();
 
 			rectangularSelection.touchDragged(screenX, screenY, pointer);
+
 			// sorry...
 			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
-				for (ObjectRepresentation orep : selectedObjs) {
-					if (orep.isPointerInsideRotateArea()) {
-						if (orep.draggedRotate(x, y)) dirty = true;
+				boolean isMouseInsideAnyScaleArea = isMouseInsideAnySelectedObjectsScaleArea();
+				boolean isMouseInsideAnyRotateArea = isMouseInsideAnySelectedObjectsRotateArea();
 
-					} else if (orep.isPointerInsideScaleArea()) {
+				if (masterOrep != null && isMouseInsideAnyRotateArea) masterOrep.draggedRotate(x, y);
+
+				for (ObjectRepresentation orep : selectedObjs) {
+					if (isMouseInsideAnyRotateArea) {
+						if (selectedObjs.size > 1) {
+							if (masterOrep == orep) continue;
+
+							orep.setRotation(masterOrep.getRotation());
+							dirty = true;
+						} else if (orep.draggedRotate(x, y)) dirty = true;
+
+					} else if (isMouseInsideAnyScaleArea) {
 						if (orep.draggedScale(x, y)) dirty = true;
 
 					} else if (orep.draggedMove(x, y)) dirty = true;

@@ -25,7 +25,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
-public class RectangularSelection {
+class RectangularSelection {
 	private RectangularSelectionListener listener;
 	private Array<ObjectRepresentation> objectRepresenationList;
 	private CameraController cameraController;
