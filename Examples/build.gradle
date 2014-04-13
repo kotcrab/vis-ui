@@ -37,7 +37,7 @@ project(":core") {
     
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile fileTree(dir: 'libs', include: '*.jar')
+        compile "pl.kotcrab.vis:VisSceneEditor:0.0.1"
     }
 }
 

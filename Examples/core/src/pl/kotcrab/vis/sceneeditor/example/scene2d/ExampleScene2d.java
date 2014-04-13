@@ -36,6 +36,7 @@ public class ExampleScene2d implements ApplicationListener
 	private MyActor actor1;
 	private MyActor actor2;
 	
+	@Override
 	public void create()
 	{
 		// SceneEditorConfig.assetsFolderPath THIS IS REQUIRED, it is set in desktop project launcher, see DesktopLauncher.java in desktop project
@@ -57,11 +58,13 @@ public class ExampleScene2d implements ApplicationListener
 		sceneEditor.load();
 	}
 	
+	@Override
 	public void resize(int width, int height)
 	{
 		stage.getViewport().update(width, height, true);
 	}
 	
+	@Override
 	public void render()
 	{
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -70,6 +73,7 @@ public class ExampleScene2d implements ApplicationListener
 		sceneEditor.render();
 	}
 	
+	@Override
 	public void dispose()
 	{
 		texture.dispose();

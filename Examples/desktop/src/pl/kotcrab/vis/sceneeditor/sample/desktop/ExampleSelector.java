@@ -24,6 +24,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 
 public class ExampleSelector extends JDialog
@@ -35,7 +36,7 @@ public class ExampleSelector extends JDialog
 	public ExampleSelector(final ExampleSelected sampleSelected)
 	{
 		setTitle("Select example");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 450, 137);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -45,6 +46,7 @@ public class ExampleSelector extends JDialog
 		JButton btnExample1 = new JButton("Example scene");
 		btnExample1.addActionListener(new ActionListener()
 		{
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				sampleSelected.exampleSelected(0);
@@ -56,6 +58,7 @@ public class ExampleSelector extends JDialog
 		JButton btnExample2 = new JButton("Example scene with KotcrabText");
 		btnExample2.addActionListener(new ActionListener()
 		{
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				sampleSelected.exampleSelected(1);
@@ -67,6 +70,7 @@ public class ExampleSelector extends JDialog
 		JButton btnExample3 = new JButton("Scene2d example");
 		btnExample3.addActionListener(new ActionListener()
 		{
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				sampleSelected.exampleSelected(2);

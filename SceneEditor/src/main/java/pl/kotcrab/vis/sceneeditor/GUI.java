@@ -109,6 +109,7 @@ class GUI {
 		font.draw(guiBatch, text, 2, Gdx.graphics.getHeight() - 2 - (line * 17));
 	}
 
+	//TODO
 	private boolean checkIfAllSelectedObjectHaveSameX () {
 		int value = (int)selectedObjs.first().getX();
 

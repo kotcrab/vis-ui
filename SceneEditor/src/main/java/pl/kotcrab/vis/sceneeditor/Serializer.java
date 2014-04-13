@@ -58,7 +58,7 @@ class Serializer {
 	public void load () {
 		if (file.exists() == false) return;
 
-		ArrayList<ObjectInfo> infos = new ArrayList<>();
+		ArrayList<ObjectInfo> infos = new ArrayList<ObjectInfo>();
 		infos = json.fromJson(infos.getClass(), file);
 
 		for (ObjectInfo info : infos) {
@@ -85,7 +85,7 @@ class Serializer {
 	public boolean save () {
 		createBackup();
 
-		ArrayList<ObjectInfo> infos = new ArrayList<>();
+		ArrayList<ObjectInfo> infos = new ArrayList<ObjectInfo>();
 
 		for (Entry<String, Object> entry : objectMap.entries()) {
 

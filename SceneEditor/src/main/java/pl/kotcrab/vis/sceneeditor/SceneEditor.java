@@ -65,8 +65,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		// DevMode can be only activated on desktop
 		if (Gdx.app.getType() != ApplicationType.Desktop) this.devMode = false;
 
-		supportMap = new ObjectMap<>();
-		objectMap = new ObjectMap<>();
+		supportMap = new ObjectMap<Class<?>, SceneEditorSupport<?>>();
+		objectMap = new ObjectMap<String, Object>();
 
 		serializer = new Serializer(this, sceneFile, objectMap);
 
@@ -91,7 +91,6 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			}, selectedObjs);
 
 			rectangularSelection = new RectangularSelection(new RectangularSelectionListener() {
-
 				@Override
 				public void finishedDrawing (Array<ObjectRepresentation> matchingObjects) {
 					selectedObjs.clear();
