@@ -56,6 +56,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private boolean editing;
 	private boolean dirty;
 	private boolean cameraLocked;
+	private boolean hideOutlines;
 
 	/** @see SceneEditor#SceneEditor(FileHandle, OrthographicCamera, boolean)
 	 * @param registerBasicsSupports if true Sprite and Actor support will be registered */
@@ -228,8 +229,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	/** Renders everything */
 	public void render () {
 		if (editing) {
-			renderer.render(cameraLocked);
-			renderer.renderGUI(objectMap.size, cameraLocked, dirty); // TODO render obj info
+			if (hideOutlines == false) renderer.render(cameraLocked);
+			renderer.renderGUI(cameraLocked, dirty);
 		}
 	}
 
@@ -368,6 +369,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				if (keycode == SceneEditorConfig.KEY_LOCK_CAMERA) cameraLocked = !cameraLocked;
 				if (keycode == SceneEditorConfig.KEY_RESET_CAMERA) camController.restoreOrginalCameraProperties();
 				if (keycode == SceneEditorConfig.KEY_RESET_OBJECT_SIZE) resetSelectedObjectsSize();
+				if (keycode == SceneEditorConfig.KEY_HIDE_OUTLINES) hideOutlines = !hideOutlines;
 
 				if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_SPECIAL_ACTIONS)) {
 					if (keycode == SceneEditorConfig.KEY_SPECIAL_SAVE_CHANGES) save();
@@ -428,12 +430,19 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			else {
 				rectangularSelection.touchDown(screenX, screenY, pointer, button);
 
-				if (isMouseInsideSelectedObjects(x, y) == false && isMouseInsideAnySelectedObjectsRotateArea() == false) {
+				// is no multislecy key is pressed, it will check that isMouseInsideSelectedObjects if true this won't execture
+				// because it would deslect clicked object
+				if ((Gdx.input.isKeyPressed(SceneEditorConfig.KEY_MULTISELECT) || isMouseInsideSelectedObjects(x, y) == false)
+					&& isMouseInsideAnySelectedObjectsRotateArea() == false) {
 					ObjectRepresentation matchingObject = findObjectWithSamllestSurfaceArea(x, y);
 
 					if (matchingObject != null) {
-						selectedObjs.clear();
-						selectedObjs.add(matchingObject);
+						if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_MULTISELECT) == false) selectedObjs.clear();
+
+						if (selectedObjs.contains(matchingObject, false))
+							selectedObjs.removeValue(matchingObject, false);
+						else
+							selectedObjs.add(matchingObject);
 
 						setValuesForSelectedObject(x, y);
 						return true;

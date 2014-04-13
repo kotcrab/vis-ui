@@ -109,8 +109,8 @@ class Renderer {
 		rectangularSelection.render(shapeRenderer);
 	}
 
-	public void renderGUI (int entityNumber, boolean cameraLocked, boolean dirty) {
-		gui.render(entityNumber, cameraLocked, dirty);
+	public void renderGUI (boolean cameraLocked, boolean dirty) {
+		gui.render(objectMap.size, cameraLocked, dirty);
 	}
 
 	private void renderObjectOutline (SceneEditorSupport sup, Object obj) {

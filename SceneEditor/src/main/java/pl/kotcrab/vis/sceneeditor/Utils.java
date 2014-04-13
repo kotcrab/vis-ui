@@ -30,9 +30,9 @@ class Utils {
 	public static Circle buildCirlcleForRotateCircle (SceneEditorSupport sup, Object obj) {
 		Rectangle rect = sup.getBoundingRectangle(obj);
 
-		int cWidth = 5;
+		int rectWidth = 5;
 
-		return new Circle(rect.x + rect.width / 2 + cWidth, rect.y + rect.height + cWidth, cWidth);
+		return new Circle(rect.x + rect.width / 2 + rectWidth, rect.y + rect.height + rectWidth, rectWidth);
 	}
 
 	public static Rectangle buildRectangeForScaleArea (ObjectRepresentation orep) {
@@ -43,7 +43,7 @@ class Utils {
 	public static Circle buildCirlcleForRotateArea (ObjectRepresentation orep) {
 		Rectangle rect = orep.getBoundingRectangle();
 
-		int cWidth = 5;
+		int cWidth = 7;
 
 		return new Circle(rect.x + rect.width / 2 + cWidth, rect.y + rect.height + cWidth, cWidth);
 	}

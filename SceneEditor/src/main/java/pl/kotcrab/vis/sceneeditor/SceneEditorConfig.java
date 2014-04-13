@@ -33,6 +33,7 @@ public class SceneEditorConfig {
 
 	public static int KEY_ROTATE_SNAP_VALUES = Keys.SHIFT_LEFT;
 	public static int KEY_SCALE_LOCK_RATIO = Keys.SHIFT_LEFT;
+	public static int KEY_MULTISELECT = Keys.SHIFT_LEFT;
 
 	public static int KEY_NO_SELECT_MODE = Keys.ALT_LEFT;
 	public static int KEY_PRECISION_MODE = Keys.CONTROL_LEFT;
@@ -41,6 +42,7 @@ public class SceneEditorConfig {
 	public static int KEY_LOCK_CAMERA = Keys.F1;
 	public static int KEY_RESET_CAMERA = Keys.F2;
 	public static int KEY_RESET_OBJECT_SIZE = Keys.F3;
+	public static int KEY_HIDE_OUTLINES = Keys.F4;
 	public static int KEY_TOGGLE_EDIT_MODE = Keys.F11;
 
 	public static int KEY_SPECIAL_ACTIONS = Keys.CONTROL_LEFT;

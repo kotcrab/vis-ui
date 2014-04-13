@@ -60,8 +60,6 @@ class GUI {
 			else
 				drawTextAtLine("Camera is not locked.", line++);
 
-			guiBatch.flush(); // is this a libgdx bug? without it cpu usage jumps to 25%
-
 			if (dirty)
 				drawTextAtLine("Unsaved changes.", line++);
 			else
@@ -70,18 +68,17 @@ class GUI {
 			line++;
 
 			if (selectedObjs.size == 1) {
-				for (ObjectRepresentation orep : selectedObjs) {
-					drawTextAtLine("Selected object: " + sceneEditor.getIdentifierForObject(orep.obj), line++);
+				ObjectRepresentation orep = selectedObjs.first();
+				drawTextAtLine("Selected object: " + sceneEditor.getIdentifierForObject(orep.obj), line++);
 
-					if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO) {
-						drawTextAtLine("X: " + (int)orep.getX() + " Y:" + (int)orep.getY() + " Width: " + (int)orep.getWidth()
-							+ " Height: " + (int)orep.getHeight() + " Rotation: " + (int)orep.getRotation(), line++);
-					}
-
+				if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO) {
+					drawTextAtLine("X: " + (int)orep.getX() + " Y:" + (int)orep.getY() + " Width: " + (int)orep.getWidth()
+						+ " Height: " + (int)orep.getHeight() + " Rotation: " + (int)orep.getRotation(), line++);
 				}
-			} else if (selectedObjs.size > 1) {
-				drawTextAtLine("Multiple objects selected.", line++);
 
+			} else if (selectedObjs.size > 1) {
+				drawTextAtLine("Multiple objects selected: " + selectedObjs.size, line++);
+				drawTextAtLine(buildMultipleObjectInfo(), line++);
 			}
 
 			if (selectedObjs.size > 0) {
@@ -105,16 +102,93 @@ class GUI {
 		}
 	}
 
-	private void drawTextAtLine (String text, int line) {
-		font.draw(guiBatch, text, 2, Gdx.graphics.getHeight() - 2 - (line * 17));
+	private String buildMultipleObjectInfo () {
+		
+		String info = "X: ";
+		if (checkIfAllSelectedObjectHaveSameX())
+			info += (int)selectedObjs.first().getX();
+		else
+			info += "?";
+
+		info += " Y: ";
+		if (checkIfAllSelectedObjectHaveSameY())
+			info += (int)selectedObjs.first().getY();
+		else
+			info += "?";
+		
+		info += " Width: ";
+		if (checkIfAllSelectedObjectHaveSameWidth())
+			info += (int)selectedObjs.first().getWidth();
+		else
+			info += "?";
+		
+		info += " Height: ";
+		if (checkIfAllSelectedObjectHaveSameHeight())
+			info += (int)selectedObjs.first().getHeight();
+		else
+			info += "?";
+		
+		info += " Rotation: ";
+		if (checkIfAllSelectedObjectHaveSameRotation())
+			info += (int)selectedObjs.first().getRotation();
+		else
+			info += "?";
+
+		return info;
 	}
 
-	//TODO
+	private void drawTextAtLine (String text, int line) {
+		font.draw(guiBatch, text, 2, Gdx.graphics.getHeight() - 2 - (line * 17));
+
+		if (line % 3 == 0) // is this a libgdx bug? without it cpu usage jumps to 25%, need to be done every 3 text lines...
+			guiBatch.flush();
+	}
+
 	private boolean checkIfAllSelectedObjectHaveSameX () {
 		int value = (int)selectedObjs.first().getX();
 
 		for (ObjectRepresentation orep : selectedObjs) {
 			if (value != orep.getX()) return false;
+		}
+
+		return true;
+	}
+
+	private boolean checkIfAllSelectedObjectHaveSameY () {
+		int value = (int)selectedObjs.first().getY();
+
+		for (ObjectRepresentation orep : selectedObjs) {
+			if (value != orep.getY()) return false;
+		}
+
+		return true;
+	}
+
+	private boolean checkIfAllSelectedObjectHaveSameWidth () {
+		int value = (int)selectedObjs.first().getWidth();
+
+		for (ObjectRepresentation orep : selectedObjs) {
+			if (value != orep.getWidth()) return false;
+		}
+
+		return true;
+	}
+
+	private boolean checkIfAllSelectedObjectHaveSameHeight () {
+		int value = (int)selectedObjs.first().getHeight();
+
+		for (ObjectRepresentation orep : selectedObjs) {
+			if (value != orep.getHeight()) return false;
+		}
+
+		return true;
+	}
+
+	private boolean checkIfAllSelectedObjectHaveSameRotation () {
+		int value = (int)selectedObjs.first().getRotation();
+
+		for (ObjectRepresentation orep : selectedObjs) {
+			if (value != orep.getRotation()) return false;
 		}
 
 		return true;
