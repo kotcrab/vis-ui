@@ -24,8 +24,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
@@ -133,6 +131,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	public void setSerializer (SceneSerializer serializer) {
 		this.serializer = serializer;
+		serializer.setObjectMap(objectMap);
 	}
 
 	/** Add obj to object list, if support for this object class was not registed it won't be added

@@ -46,7 +46,7 @@
 					<execution>
 						<id>attach-javadocs</id>
 						<goals>
-							<goal>jar-no-fork</goal>
+							<goal>jar</goal>
 						</goals>
 					</execution>
 				</executions>

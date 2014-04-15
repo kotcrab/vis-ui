@@ -25,6 +25,7 @@ public class PreferencesSerializer extends AbstractJsonSerializer {
 	public boolean saveJsonData (ArrayList<ObjectInfo> infos) {
 		try {
 			prefs.putString(keyName, getJson().toJson(infos));
+			prefs.flush();
 			Gdx.app.log(TAG, "Saved changes to preferences.");
 			return true;
 		} catch (SerializationException e) {
