@@ -15,7 +15,7 @@ SceneEditorConfig.assetsFolderPath = "E:/Git/VisSceneEditor/Examples/android/ass
 ```
 Path must be ended wtih File.separator
 
-2.Create SceneEditor and add your objects:
+2.Create SceneEditor, register supports and add your objects:
 ```java
 bush1 = new Sprite(bushTexture);
 bush2 = new Sprite(bushTexture);
@@ -23,6 +23,7 @@ net1 = new Sprite(netTexture);
 net2 = new Sprite(netTexture);
 
 sceneEditor = new SceneEditor(Gdx.files.internal("scene.json"), camera, true);
+sceneEditor.registerSupport(Sprite.class, new SpriteSupport());
 sceneEditor.add(bush1, "bush1").add(bush2, "bush2").add(net1, "net1").add(net2, "net2");
 sceneEditor.load();
 ```
@@ -38,7 +39,7 @@ If scene files does not exist it will be created.
 4.Call sceneEditor.dispose() in your dispose() method. <br>
 5.Call sceneEditor.resize() in your resize() method. <br>
 
-[Full example](https://github.com/kotcrab/VisSceneEditor/blob/master/Examples/core/src/pl/kotcrab/vis/sceneeditor/example/ExampleScene.java) <br>
+[Full example](https://github.com/kotcrab/VisSceneEditorExamples/blob/master/core/src/pl/kotcrab/vis/sceneeditor/example/scene/ExampleScene.java) <br>
 
 SceneEditor automatically attaches its InputProcessor, if you change current InputProcessor you will have to call:
 ```java
