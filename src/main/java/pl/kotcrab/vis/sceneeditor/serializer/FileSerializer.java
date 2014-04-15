@@ -32,6 +32,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.SerializationException;
 
+/** Json based file serializer
+ * @author Pawel Pastuszak */
 public class FileSerializer extends AbstractJsonSerializer {
 	private static final String TAG = "VisSceneEditor:FileSerializer";
 

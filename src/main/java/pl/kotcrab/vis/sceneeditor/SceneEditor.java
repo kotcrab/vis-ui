@@ -32,7 +32,6 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
  * 
  * @author Pawel Pastuszak */
 @SuppressWarnings({"rawtypes"})
-// yeah, you know there are just warnings...
 public class SceneEditor extends SceneEditorInputAdapater {
 	private static final String TAG = "VisSceneEditor";
 
@@ -40,8 +39,11 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private ObjectMap<Class<?>, SceneEditorSupport<?>> supportMap;
 	private ObjectMap<String, Object> objectMap;
+
 	private Array<ObjectRepresentation> objectRepresenationList;
 	private Array<ObjectRepresentation> selectedObjs;
+
+	// when rotating multiple objcets, only masterOrep will be rotated, other objects rotation will be set to masterOrep rotation
 	private ObjectRepresentation masterOrep;
 
 	// modules
@@ -59,8 +61,11 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private boolean cameraLocked;
 	private boolean hideOutlines;
 
-	/** @see SceneEditor#SceneEditor(FileHandle, OrthographicCamera, boolean)
-	 * @param registerBasicsSupports if true Sprite and Actor support will be registered */
+	/** Constructs SceneEditor, this contrustor does not create Serializer for you. You must do it manualy using
+	 * {@link SceneEditor#setSerializer(SceneSerializer)}
+	 * 
+	 * @param camera camera used for rendering
+	 * @param devMode devMode allow to enter editing mode, if not on desktop it will automaticly be set to false */
 	public SceneEditor (OrthographicCamera camera, boolean devMode) {
 		this.devMode = devMode;
 
@@ -82,6 +87,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				@Override
 				public void editingFinished (Array<EditorAction> actions) {
 					undoList.add(actions);
+					dirty = true;
 				}
 			}, selectedObjs);
 
@@ -94,7 +100,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				}
 			}, camController, objectRepresenationList);
 
-			renderer = new Renderer(this, camController, keyboardInputMode, rectangularSelection, objectMap, selectedObjs);
+			renderer = new Renderer(camController, keyboardInputMode, rectangularSelection, objectRepresenationList, selectedObjs);
 
 			attachInputProcessor();
 		}
@@ -111,9 +117,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		serializer.setObjectMap(objectMap);
 	}
 
+	/** Loads all objects saved data, called first time will do nothing */
 	public void load () {
 		if (serializer == null) {
-			Gdx.app.error(TAG, "Serializer not set, loading is not available!! See SceneEditor.setSerializer()");
+			Gdx.app.error(TAG, "Serializer not set, loading is not available! See SceneEditor.setSerializer()");
 			return;
 		}
 
@@ -122,19 +129,23 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	private void save () {
 		if (serializer == null) {
-			Gdx.app.error(TAG, "Serializer not set, saving is not available!! See SceneEditor.setSerializer()");
+			Gdx.app.error(TAG, "Serializer not set, saving is not available! See SceneEditor.setSerializer()");
 			return;
 		}
 
 		if (serializer.save()) dirty = false;
 	}
 
+	/** Sets SceneSerializer for SceneEditor
+	 * 
+	 * @param serializer used for saving and loading objects data */
 	public void setSerializer (SceneSerializer serializer) {
 		this.serializer = serializer;
 		serializer.setObjectMap(objectMap);
 	}
 
 	/** Add obj to object list, if support for this object class was not registed it won't be added
+	 * 
 	 * @param obj object that will be added to list
 	 * @param identifier unique identifer, used when saving and loading
 	 * 
@@ -142,7 +153,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	public SceneEditor add (Object obj, String identifier) {
 		if (isSupportForClassAvaiable(obj.getClass())) {
 			objectMap.put(identifier, obj);
-			objectRepresenationList.add(new ObjectRepresentation(getSupportForObject(obj), obj));
+
+			if (devMode) objectRepresenationList.add(new ObjectRepresentation(getSupportForObject(obj), obj, identifier));
 		} else {
 			Gdx.app.error(TAG,
 				"Could not add object with identifier: '" + identifier + "'. Support not found for class " + obj.getClass()
@@ -158,6 +170,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	}
 
 	/** Check if support for provied class is available
+	 * 
 	 * @param klass class that will be checked
 	 * @return true if support is avaiable. false otherwise */
 	public boolean isSupportForClassAvaiable (Class klass) {
@@ -186,6 +199,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 	}
 
+	/** Returns support for provided object
+	 * 
+	 * @param obj object that support will be return if available
+	 * @return support if available, null otherwise */
 	public SceneEditorSupport getSupportForObject (Object obj) {
 		return getSupportForClass(obj.getClass());
 	}
@@ -219,9 +236,9 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	}
 
 	/** Finds object with smallest surface area that contains x,y point
+	 * 
 	 * @param x pointer cordinate unprocjeted by camera
-	 * @param y pointer cordinate unprocjeted by camera
-	 * @return */
+	 * @param y pointer cordinate unprocjeted by camera */
 	private ObjectRepresentation findObjectWithSamllestSurfaceArea (float x, float y) {
 		ObjectRepresentation matchingObject = null;
 		int lastSurfaceArea = Integer.MAX_VALUE;
@@ -281,7 +298,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (localUndoList.size > 0) undoList.add(localUndoList);
 	}
 
-	private boolean areAllSelectedObjectSupportsMoving () {
+	private boolean doesAllSelectedObjectSupportsMoving () {
 		for (ObjectRepresentation orep : selectedObjs) {
 			if (orep.isMovingSupported() == false) {
 				Gdx.app.log(TAG, "Some of the selected object does not support moving.");
@@ -291,7 +308,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		return true;
 	}
 
-	private boolean areAllSelectedObjectSupportsScalling () {
+	private boolean doesAllSelectedObjectSupportsScalling () {
 		for (ObjectRepresentation orep : selectedObjs) {
 			if (orep.isScallingSupported() == false) {
 				Gdx.app.log(TAG, "Some of the selected object does not support scalling.");
@@ -301,7 +318,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		return true;
 	}
 
-	private boolean areAllSelectedObjectSupportsRotating () {
+	private boolean doesAllSelectedObjectSupportsRotating () {
 		for (ObjectRepresentation orep : selectedObjs) {
 			if (orep.isRotatingSupported() == false) {
 				Gdx.app.log(TAG, "Some of the selected object does not support rotating.");
@@ -394,18 +411,25 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 				if (selectedObjs.size > 0) {
 
-					if (areAllSelectedObjectSupportsMoving()) {
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX) keyboardInputMode.setObject(EditType.X);
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY) keyboardInputMode.setObject(EditType.Y);
-					}
+					if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX || keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY
+						|| keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH
+						|| keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT
+						|| keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION) {
 
-					if (areAllSelectedObjectSupportsScalling()) {
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH) keyboardInputMode.setObject(EditType.WIDTH);
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT) keyboardInputMode.setObject(EditType.HEIGHT);
-					}
+						if (doesAllSelectedObjectSupportsMoving()) {
+							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX) keyboardInputMode.setObject(EditType.X);
+							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY) keyboardInputMode.setObject(EditType.Y);
+						}
 
-					if (areAllSelectedObjectSupportsRotating()) {
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION) keyboardInputMode.setObject(EditType.ROTATION);
+						if (doesAllSelectedObjectSupportsScalling()) {
+							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH) keyboardInputMode.setObject(EditType.WIDTH);
+							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT) keyboardInputMode.setObject(EditType.HEIGHT);
+						}
+
+						if (doesAllSelectedObjectSupportsRotating()) {
+							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION)
+								keyboardInputMode.setObject(EditType.ROTATION);
+						}
 					}
 				}
 			}
@@ -432,7 +456,6 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	@Override
 	public boolean touchDown (int screenX, int screenY, int pointer, int button) {
-
 		if (editing) {
 			keyboardInputMode.finish();
 
@@ -496,7 +519,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			float x = camController.calcX(screenX);
 			float y = camController.calcY(screenY);
 
-			for (ObjectRepresentation orep : selectedObjs)
+			for (ObjectRepresentation orep : objectRepresenationList)
 				orep.mouseMoved(x, y);
 		}
 

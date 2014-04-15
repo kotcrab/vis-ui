@@ -27,7 +27,6 @@ import com.badlogic.gdx.utils.TimeUtils;
  * 
  * @author Pawel Pastuszak */
 class GUI {
-	private SceneEditor sceneEditor;
 	private KeyboardInputMode keyboardInputMode;
 	private Array<ObjectRepresentation> selectedObjs;
 
@@ -37,8 +36,7 @@ class GUI {
 	private boolean renderFlashingCursor;
 	private long startTime;
 
-	public GUI (SceneEditor sceneEditor, KeyboardInputMode keyboardInputMode, Array<ObjectRepresentation> selectedObjs) {
-		this.sceneEditor = sceneEditor;
+	public GUI (KeyboardInputMode keyboardInputMode, Array<ObjectRepresentation> selectedObjs) {
 		this.keyboardInputMode = keyboardInputMode;
 		this.selectedObjs = selectedObjs;
 
@@ -69,7 +67,7 @@ class GUI {
 
 			if (selectedObjs.size == 1) {
 				ObjectRepresentation orep = selectedObjs.first();
-				drawTextAtLine("Selected object: " + sceneEditor.getIdentifierForObject(orep.obj), line++);
+				drawTextAtLine("Selected object: " + orep.getIdentifier(), line++);
 
 				if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO) {
 					drawTextAtLine("X: " + (int)orep.getX() + " Y:" + (int)orep.getY() + " Width: " + (int)orep.getWidth()
@@ -103,7 +101,7 @@ class GUI {
 	}
 
 	private String buildMultipleObjectInfo () {
-		
+
 		String info = "X: ";
 		if (checkIfAllSelectedObjectHaveSameX())
 			info += (int)selectedObjs.first().getX();
@@ -115,19 +113,19 @@ class GUI {
 			info += (int)selectedObjs.first().getY();
 		else
 			info += "?";
-		
+
 		info += " Width: ";
 		if (checkIfAllSelectedObjectHaveSameWidth())
 			info += (int)selectedObjs.first().getWidth();
 		else
 			info += "?";
-		
+
 		info += " Height: ";
 		if (checkIfAllSelectedObjectHaveSameHeight())
 			info += (int)selectedObjs.first().getHeight();
 		else
 			info += "?";
-		
+
 		info += " Rotation: ";
 		if (checkIfAllSelectedObjectHaveSameRotation())
 			info += (int)selectedObjs.first().getRotation();

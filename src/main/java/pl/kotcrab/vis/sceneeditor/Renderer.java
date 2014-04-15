@@ -22,53 +22,48 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.ObjectMap.Entry;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
 class Renderer {
-	private SceneEditor editor;
 	private CameraController camController;
 	private RectangularSelection rectangularSelection;
-	private ObjectMap<String, Object> objectMap;
+	private Array<ObjectRepresentation> objectRepresentationList;
 	private Array<ObjectRepresentation> selectedObjs;
 
 	private ShapeRenderer shapeRenderer;
 	private GUI gui;
 
-	public Renderer (SceneEditor editor, CameraController camController, KeyboardInputMode keyboardInputMode,
-		RectangularSelection rectangularSelection, ObjectMap<String, Object> objectMap, Array<ObjectRepresentation> selectedObjs) {
-		this.editor = editor;
+	public Renderer (CameraController camController, KeyboardInputMode keyboardInputMode,
+		RectangularSelection rectangularSelection, Array<ObjectRepresentation> objectRepresentationList,
+		Array<ObjectRepresentation> selectedObjs) {
 		this.camController = camController;
 		this.rectangularSelection = rectangularSelection;
-		this.objectMap = objectMap;
+		this.objectRepresentationList = objectRepresentationList;
 		this.selectedObjs = selectedObjs;
 
 		shapeRenderer = new ShapeRenderer();
 
-		gui = new GUI(editor, keyboardInputMode, selectedObjs);
+		gui = new GUI(keyboardInputMode, selectedObjs);
 	}
 
 	public void render (boolean cameraLocked) {
 		shapeRenderer.setProjectionMatrix(camController.getCamera().combined);
 		shapeRenderer.begin(ShapeType.Line);
 
-		for (Entry<String, Object> entry : objectMap.entries()) {
-			Object obj = entry.value;
-
-			SceneEditorSupport sup = editor.getSupportForClass(obj.getClass());
-
-			if (sup.isMovingSupported())
+		for (ObjectRepresentation orep : objectRepresentationList) {
+			if (orep.isMovingSupported())
 				shapeRenderer.setColor(Color.WHITE);
 			else
 				shapeRenderer.setColor(Color.GRAY);
 
-			renderObjectOutline(sup, obj);
+			renderRectangle(orep.getBoundingRectangle());
 
-			if (sup.isScallingSupported()) {
-// if (obj == selectedObj && pointerInsideScaleBox)
+			if (orep.isScallingSupported()) {
+				if (orep.isPointerInsideScaleArea())
+					shapeRenderer.setColor(Color.RED);
+				else
+					shapeRenderer.setColor(Color.WHITE);
 
-				renderObjectScaleBox(sup, obj);
+				renderObjectScaleBox(orep);
 			}
 		}
 
@@ -110,20 +105,8 @@ class Renderer {
 	}
 
 	public void renderGUI (boolean cameraLocked, boolean dirty) {
-		gui.render(objectMap.size, cameraLocked, dirty);
+		gui.render(objectRepresentationList.size, cameraLocked, dirty);
 	}
-
-	private void renderObjectOutline (SceneEditorSupport sup, Object obj) {
-		renderRectangle(sup.getBoundingRectangle(obj));
-	}
-
-	private void renderObjectScaleBox (SceneEditorSupport sup, Object obj) {
-		renderRectangle(Utils.buildRectangeForScaleBox(sup, obj));
-	}
-
-// private void renderObjectRotateCricle (SceneEditorSupport sup, Object obj) {
-// renderCircle(Utils.buildCirlcleForRotateCircle(sup, obj));
-// }
 
 	private void renderObjectOutline (ObjectRepresentation orep) {
 		renderRectangle(orep.getBoundingRectangle());

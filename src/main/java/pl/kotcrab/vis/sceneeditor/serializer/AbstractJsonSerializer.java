@@ -11,16 +11,22 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
+/**
+ * Base class for Json based SceneSerializer, this object does not perfrom serlization and saving data, child class must do it
+ * @author Pawel Pastuszak
+ */
 public abstract class AbstractJsonSerializer implements SceneSerializer {
 	private SceneEditor editor;
 	private ObjectMap<String, Object> objectMap;
 
 	private Json json;
 
-	public abstract boolean saveJsonData(ArrayList<ObjectInfo> infos);
-	public abstract boolean isReadyToLoad();
-	public abstract ArrayList<ObjectInfo> loadJsonData();
-	
+	public abstract boolean saveJsonData (ArrayList<ObjectInfo> infos);
+
+	public abstract boolean isReadyToLoad ();
+
+	public abstract ArrayList<ObjectInfo> loadJsonData ();
+
 	public AbstractJsonSerializer (SceneEditor editor) {
 		this.editor = editor;
 
@@ -32,7 +38,7 @@ public abstract class AbstractJsonSerializer implements SceneSerializer {
 	public void setObjectMap (ObjectMap<String, Object> objectMap) {
 		this.objectMap = objectMap;
 	}
-	
+
 	/** Loads all properties from provied scene file. If file does not exist it will do nothing */
 	public void load () {
 		if (isReadyToLoad() == false) return;
@@ -87,9 +93,8 @@ public abstract class AbstractJsonSerializer implements SceneSerializer {
 
 		return saveJsonData(infos);
 	}
-	
-	protected Json getJson()
-	{
+
+	protected Json getJson () {
 		return json;
 	}
 

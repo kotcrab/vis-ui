@@ -22,8 +22,9 @@ import com.badlogic.gdx.math.Rectangle;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 class ObjectRepresentation {
-	public SceneEditorSupport sup;
-	public Object obj;
+	private SceneEditorSupport sup;
+	private Object obj;
+	private String identifier;
 
 	private float startingValue; // keyboard input mode uses this when inputing object properties
 
@@ -47,9 +48,10 @@ class ObjectRepresentation {
 
 	private EditorAction lastEditorAction;
 
-	public ObjectRepresentation (SceneEditorSupport sup, Object obj) {
+	public ObjectRepresentation (SceneEditorSupport sup, Object obj, String identifier) {
 		this.sup = sup;
 		this.obj = obj;
+		this.identifier = identifier;
 
 		scaleRatio = getWidth() / getHeight();
 		defaultWidth = getWidth();
@@ -158,6 +160,16 @@ class ObjectRepresentation {
 	public boolean isPointerInsideRotateArea () {
 		return pointerInsideRotateArea;
 	}
+
+	public Object getObject () {
+		return obj;
+	}
+
+	public String getIdentifier () {
+		return identifier;
+	}
+
+	// SceneEditorSupport impl
 
 	public boolean isScallingSupported () {
 		return sup.isScallingSupported();

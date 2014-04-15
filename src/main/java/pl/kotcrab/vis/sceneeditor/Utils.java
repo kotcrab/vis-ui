@@ -19,22 +19,7 @@ package pl.kotcrab.vis.sceneeditor;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 
-@SuppressWarnings({"rawtypes", "unchecked"})
 class Utils {
-
-	public static Rectangle buildRectangeForScaleBox (SceneEditorSupport sup, Object obj) {
-		Rectangle rect = sup.getBoundingRectangle(obj);
-		return new Rectangle(rect.x + rect.width - 15, rect.y + rect.height - 15, 15, 15);
-	}
-
-	public static Circle buildCirlcleForRotateCircle (SceneEditorSupport sup, Object obj) {
-		Rectangle rect = sup.getBoundingRectangle(obj);
-
-		int rectWidth = 5;
-
-		return new Circle(rect.x + rect.width / 2 + rectWidth, rect.y + rect.height + rectWidth, rectWidth);
-	}
-
 	public static Rectangle buildRectangeForScaleArea (ObjectRepresentation orep) {
 		Rectangle rect = orep.getBoundingRectangle();
 		return new Rectangle(rect.x + rect.width - 15, rect.y + rect.height - 15, 15, 15);
