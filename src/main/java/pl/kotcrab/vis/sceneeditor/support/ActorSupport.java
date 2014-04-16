@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor;
+package pl.kotcrab.vis.sceneeditor.support;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -23,6 +23,31 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
  * 
  * @author Pawel Pastuszak */
 public class ActorSupport implements SceneEditorSupport<Actor> {
+	@Override
+	public boolean isScallingSupported () {
+		return true;
+	}
+
+	@Override
+	public boolean isRotatingSupported () {
+		return true;
+	}
+
+	@Override
+	public boolean isMovingSupported () {
+		return true;
+	}
+
+	@Override
+	public boolean isOriginSupported () {
+		return true;
+	}
+
+	@Override
+	public Class<?> getSupportedClass () {
+		return Actor.class;
+	}
+	
 	@Override
 	public void setX (Actor a, float x) {
 		a.setX(x);
@@ -71,26 +96,6 @@ public class ActorSupport implements SceneEditorSupport<Actor> {
 	@Override
 	public boolean contains (Actor a, float x, float y) {
 		return a.getX() <= x && a.getX() + a.getWidth() >= x && a.getY() <= y && a.getY() + a.getHeight() >= y;
-	}
-
-	@Override
-	public boolean isScallingSupported () {
-		return true;
-	}
-
-	@Override
-	public boolean isRotatingSupported () {
-		return true;
-	}
-
-	@Override
-	public boolean isMovingSupported () {
-		return true;
-	}
-
-	@Override
-	public boolean isOriginSupported () {
-		return true;
 	}
 
 	@Override

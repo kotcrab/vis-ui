@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor;
+package pl.kotcrab.vis.sceneeditor.support;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
@@ -22,6 +22,32 @@ import com.badlogic.gdx.math.Rectangle;
 /** Support for Sprite class
  * @author Pawel Pastuszak */
 public class SpriteSupport implements SceneEditorSupport<Sprite> {
+
+	@Override
+	public boolean isScallingSupported () {
+		return true;
+	}
+
+	@Override
+	public boolean isRotatingSupported () {
+		return true;
+	}
+
+	@Override
+	public boolean isMovingSupported () {
+		return true;
+	}
+
+	@Override
+	public boolean isOriginSupported () {
+		return true;
+	}
+	
+	@Override
+	public Class<?> getSupportedClass () {
+		return Sprite.class;
+	}
+	
 	@Override
 	public void setX (Sprite s, float x) {
 		s.setX(x);
@@ -70,26 +96,6 @@ public class SpriteSupport implements SceneEditorSupport<Sprite> {
 	@Override
 	public boolean contains (Sprite s, float x, float y) {
 		return s.getBoundingRectangle().contains(x, y);
-	}
-
-	@Override
-	public boolean isScallingSupported () {
-		return true;
-	}
-
-	@Override
-	public boolean isRotatingSupported () {
-		return true;
-	}
-
-	@Override
-	public boolean isMovingSupported () {
-		return true;
-	}
-
-	@Override
-	public boolean isOriginSupported () {
-		return true;
 	}
 
 	@Override

@@ -16,6 +16,8 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
+import pl.kotcrab.vis.sceneeditor.support.SceneEditorSupport;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;

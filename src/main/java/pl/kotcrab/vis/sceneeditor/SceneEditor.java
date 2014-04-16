@@ -18,6 +18,7 @@ package pl.kotcrab.vis.sceneeditor;
 
 import pl.kotcrab.vis.sceneeditor.serializer.FileSerializer;
 import pl.kotcrab.vis.sceneeditor.serializer.SceneSerializer;
+import pl.kotcrab.vis.sceneeditor.support.SceneEditorSupport;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
@@ -165,8 +166,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	}
 
 	/** Register support and allow object of provied class be added to scene */
-	public void registerSupport (Class<?> klass, SceneEditorSupport<?> support) {
-		supportMap.put(klass, support);
+	public void registerSupport (SceneEditorSupport<?> support) {
+		supportMap.put(support.getSupportedClass(), support);
 	}
 
 	/** Check if support for provied class is available
@@ -476,9 +477,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 					if (matchingObject != null) {
 						if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_MULTISELECT) == false) selectedObjs.clear();
 
-						if (selectedObjs.contains(matchingObject, false))
-							selectedObjs.removeValue(matchingObject, false);
-						else
+						if (selectedObjs.contains(matchingObject, false)) {
+							if (matchingObject.isPointerInsideScaleArea() == false && matchingObject.isPointerInsideRotateArea() == false)
+								selectedObjs.removeValue(matchingObject, false);
+						} else
 							selectedObjs.add(matchingObject);
 
 						setValuesForSelectedObject(x, y);

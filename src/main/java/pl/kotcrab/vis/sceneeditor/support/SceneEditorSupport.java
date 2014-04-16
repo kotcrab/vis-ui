@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor;
+package pl.kotcrab.vis.sceneeditor.support;
 
 import com.badlogic.gdx.math.Rectangle;
 
@@ -50,6 +50,8 @@ public interface SceneEditorSupport<O> {
 	 * @return true if object support origin, false otherwise */
 	public boolean isOriginSupported ();
 
+	public Class<?> getSupportedClass();
+	
 	public void setX (O obj, float x);
 
 	public float getX (O obj);

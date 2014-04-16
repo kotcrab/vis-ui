@@ -4,7 +4,7 @@ package pl.kotcrab.vis.sceneeditor.serializer;
 import java.util.ArrayList;
 
 import pl.kotcrab.vis.sceneeditor.SceneEditor;
-import pl.kotcrab.vis.sceneeditor.SceneEditorSupport;
+import pl.kotcrab.vis.sceneeditor.support.SceneEditorSupport;
 
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
