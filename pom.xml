@@ -6,6 +6,26 @@
 	<version>0.0.1</version>
 	<packaging>jar</packaging>
 	<name>VisSceneEditor</name>
+	<description>Real-time simple 2D scene editor for Libgdx</description>
+	<url>https://github.com/kotcrab/VisSceneEditor</url>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>Pawel Pastuszak</name>
+			<email>kontakt@kotcrab.pl</email>
+			<url>www.kotcrab.pl</url>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:git@github.com:kotcrab/VisSceneEditor.git</connection>
+		<developerConnection>scm:git:git@github.com:kotcrab/VisSceneEditor.git</developerConnection>
+		<url>git@github.com:kotcrab/VisSceneEditor.git</url>
+	</scm>
 
 	<repositories>
 		<repository>
