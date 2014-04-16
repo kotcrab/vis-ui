@@ -70,8 +70,7 @@ class GUI {
 				drawTextAtLine("Selected object: " + orep.getIdentifier(), line++);
 
 				if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO) {
-					drawTextAtLine("X: " + (int)orep.getX() + " Y:" + (int)orep.getY() + " Width: " + (int)orep.getWidth()
-						+ " Height: " + (int)orep.getHeight() + " Rotation: " + (int)orep.getRotation(), line++);
+					drawTextAtLine(buildSingleObjectInfo(orep), line++);
 				}
 
 			} else if (selectedObjs.size > 1) {
@@ -98,6 +97,15 @@ class GUI {
 
 			guiBatch.end();
 		}
+	}
+
+	private String buildSingleObjectInfo (ObjectRepresentation orep) {
+		String info = "X: " + (int)orep.getX() + " Y:" + (int)orep.getY() + " Width: " + (int)orep.getWidth() + " Height: "
+			+ (int)orep.getHeight();
+
+		if (orep.isRotatingSupported()) info += " Rotation: " + (int)orep.getRotation();
+
+		return info;
 	}
 
 	private String buildMultipleObjectInfo () {
