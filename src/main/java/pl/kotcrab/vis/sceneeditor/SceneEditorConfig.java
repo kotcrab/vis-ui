@@ -23,14 +23,6 @@ import com.badlogic.gdx.graphics.Color;
  * 
  * @author Pawel Pastuszak */
 public class SceneEditorConfig {
-	/** Path to backup folder, must be ended with File.separator */
-	public static String backupFolderPath = null;
-
-	/** Path to Android project assets folder. Set this only if you are not using Gradle (your dekstop project directory is not set
-	 * to assets folder). Path must be ended with File.separator. If this is not set for non Gradle project files may be saved in
-	 * wrong location! */
-	public static String assetsFolderPath = null;
-
 	public static int KEY_ROTATE_SNAP_VALUES = Keys.SHIFT_LEFT;
 	public static int KEY_SCALE_LOCK_RATIO = Keys.SHIFT_LEFT;
 	public static int KEY_MULTISELECT = Keys.SHIFT_LEFT;

@@ -43,12 +43,12 @@ public class TouchpadSupport implements SceneEditorSupport<Touchpad> {
 	public boolean isOriginSupported () {
 		return false;
 	}
-	
+
 	@Override
 	public Class<?> getSupportedClass () {
 		return Touchpad.class;
 	}
-	
+
 	@Override
 	public void setX (Touchpad t, float x) {
 		t.setX(x);
@@ -98,7 +98,7 @@ public class TouchpadSupport implements SceneEditorSupport<Touchpad> {
 	public boolean contains (Touchpad t, float x, float y) {
 		return t.getX() <= x && t.getX() + t.getWidth() >= x && t.getY() <= y && t.getY() + t.getHeight() >= y;
 	}
-	
+
 	@Override
 	public float getRotation (Touchpad t) {
 		return t.getRotation();

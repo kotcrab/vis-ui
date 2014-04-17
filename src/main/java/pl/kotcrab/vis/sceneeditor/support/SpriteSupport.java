@@ -42,12 +42,12 @@ public class SpriteSupport implements SceneEditorSupport<Sprite> {
 	public boolean isOriginSupported () {
 		return true;
 	}
-	
+
 	@Override
 	public Class<?> getSupportedClass () {
 		return Sprite.class;
 	}
-	
+
 	@Override
 	public void setX (Sprite s, float x) {
 		s.setX(x);

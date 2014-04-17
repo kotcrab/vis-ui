@@ -50,8 +50,8 @@ public interface SceneEditorSupport<O> {
 	 * @return true if object support origin, false otherwise */
 	public boolean isOriginSupported ();
 
-	public Class<?> getSupportedClass();
-	
+	public Class<?> getSupportedClass ();
+
 	public void setX (O obj, float x);
 
 	public float getX (O obj);

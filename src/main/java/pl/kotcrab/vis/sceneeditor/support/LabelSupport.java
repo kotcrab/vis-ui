@@ -43,12 +43,12 @@ public class LabelSupport implements SceneEditorSupport<Label> {
 	public boolean isOriginSupported () {
 		return false;
 	}
-	
+
 	@Override
 	public Class<?> getSupportedClass () {
 		return Label.class;
 	}
-	
+
 	@Override
 	public void setX (Label l, float x) {
 		l.setX(x);
@@ -98,7 +98,7 @@ public class LabelSupport implements SceneEditorSupport<Label> {
 	public boolean contains (Label l, float x, float y) {
 		return l.getX() <= x && l.getX() + l.getWidth() >= x && l.getY() <= y && l.getY() + l.getHeight() >= y;
 	}
-	
+
 	@Override
 	public float getRotation (Label l) {
 		return l.getRotation();

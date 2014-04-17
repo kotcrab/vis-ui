@@ -48,7 +48,7 @@ public class CheckBoxSupport implements SceneEditorSupport<CheckBox> {
 	public Class<?> getSupportedClass () {
 		return CheckBox.class;
 	}
-	
+
 	@Override
 	public void setX (CheckBox cb, float x) {
 		cb.setX(x);
@@ -98,7 +98,7 @@ public class CheckBoxSupport implements SceneEditorSupport<CheckBox> {
 	public boolean contains (CheckBox cb, float x, float y) {
 		return cb.getX() <= x && cb.getX() + cb.getWidth() >= x && cb.getY() <= y && cb.getY() + cb.getHeight() >= y;
 	}
-	
+
 	@Override
 	public float getRotation (CheckBox cb) {
 		return cb.getRotation();

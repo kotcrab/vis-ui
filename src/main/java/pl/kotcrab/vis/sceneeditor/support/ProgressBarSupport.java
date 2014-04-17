@@ -48,7 +48,7 @@ public class ProgressBarSupport implements SceneEditorSupport<ProgressBar> {
 	public Class<?> getSupportedClass () {
 		return ProgressBar.class;
 	}
-	
+
 	@Override
 	public void setX (ProgressBar pb, float x) {
 		pb.setX(x);
@@ -98,7 +98,7 @@ public class ProgressBarSupport implements SceneEditorSupport<ProgressBar> {
 	public boolean contains (ProgressBar pb, float x, float y) {
 		return pb.getX() <= x && pb.getX() + pb.getWidth() >= x && pb.getY() <= y && pb.getY() + pb.getHeight() >= y;
 	}
-	
+
 	@Override
 	public float getRotation (ProgressBar pb) {
 		return pb.getRotation();

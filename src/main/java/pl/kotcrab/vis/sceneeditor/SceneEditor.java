@@ -114,6 +114,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	 * @param devMode devMode allow to enter editing mode, if not on desktop it will automaticly be set to false */
 	public SceneEditor (FileHandle sceneFile, OrthographicCamera camera, boolean devMode) {
 		this(camera, devMode);
+
 		serializer = new FileSerializer(this, sceneFile);
 		serializer.setObjectMap(objectMap);
 	}
@@ -143,6 +144,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	public void setSerializer (SceneSerializer serializer) {
 		this.serializer = serializer;
 		serializer.setObjectMap(objectMap);
+	}
+
+	public SceneSerializer getSerializer () {
+		return serializer;
 	}
 
 	/** Add obj to object list, if support for this object class was not registed it won't be added
@@ -411,27 +416,22 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				}
 
 				if (selectedObjs.size > 0) {
-
-					if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX || keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY
-						|| keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH
-						|| keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT
-						|| keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION) {
-
-						if (doesAllSelectedObjectSupportsMoving()) {
-							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX) keyboardInputMode.setObject(EditType.X);
-							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY) keyboardInputMode.setObject(EditType.Y);
-						}
-
-						if (doesAllSelectedObjectSupportsScalling()) {
-							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH) keyboardInputMode.setObject(EditType.WIDTH);
-							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT) keyboardInputMode.setObject(EditType.HEIGHT);
-						}
-
-						if (doesAllSelectedObjectSupportsRotating()) {
-							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION)
-								keyboardInputMode.setObject(EditType.ROTATION);
-						}
+					if ((keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX || keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY)
+						&& doesAllSelectedObjectSupportsMoving()) {
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX) keyboardInputMode.setObject(EditType.X);
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY) keyboardInputMode.setObject(EditType.Y);
 					}
+
+					if ((keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH || keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT)
+						&& doesAllSelectedObjectSupportsScalling()) {
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH) keyboardInputMode.setObject(EditType.WIDTH);
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT) keyboardInputMode.setObject(EditType.HEIGHT);
+					}
+
+					if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION && doesAllSelectedObjectSupportsRotating()) {
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION) keyboardInputMode.setObject(EditType.ROTATION);
+					}
+					// }
 				}
 			}
 
@@ -478,8 +478,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 						if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_MULTISELECT) == false) selectedObjs.clear();
 
 						if (selectedObjs.contains(matchingObject, false)) {
-							if (matchingObject.isPointerInsideScaleArea() == false && matchingObject.isPointerInsideRotateArea() == false)
-								selectedObjs.removeValue(matchingObject, false);
+							if (matchingObject.isPointerInsideScaleArea() == false
+								&& matchingObject.isPointerInsideRotateArea() == false) selectedObjs.removeValue(matchingObject, false);
 						} else
 							selectedObjs.add(matchingObject);
 

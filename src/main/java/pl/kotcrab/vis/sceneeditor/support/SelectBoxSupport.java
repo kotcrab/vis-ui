@@ -49,7 +49,7 @@ public class SelectBoxSupport implements SceneEditorSupport<SelectBox> {
 	public Class<?> getSupportedClass () {
 		return SelectBox.class;
 	}
-	
+
 	@Override
 	public void setX (SelectBox sb, float x) {
 		sb.setX(x);

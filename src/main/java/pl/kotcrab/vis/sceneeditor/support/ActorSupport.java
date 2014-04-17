@@ -47,7 +47,7 @@ public class ActorSupport implements SceneEditorSupport<Actor> {
 	public Class<?> getSupportedClass () {
 		return Actor.class;
 	}
-	
+
 	@Override
 	public void setX (Actor a, float x) {
 		a.setX(x);

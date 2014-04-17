@@ -44,7 +44,7 @@ public class ListSupport implements SceneEditorSupport<List> {
 	public boolean isOriginSupported () {
 		return false;
 	}
-	
+
 	@Override
 	public Class<?> getSupportedClass () {
 		return List.class;

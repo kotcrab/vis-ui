@@ -42,12 +42,12 @@ public class ButtonSupport implements SceneEditorSupport<Button> {
 	public boolean isOriginSupported () {
 		return false;
 	}
-	
+
 	@Override
 	public Class<?> getSupportedClass () {
 		return Button.class;
 	}
-	
+
 	@Override
 	public void setX (Button b, float x) {
 		b.setX(x);

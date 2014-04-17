@@ -17,23 +17,25 @@
 package pl.kotcrab.vis.sceneeditor;
 
 import pl.kotcrab.vis.sceneeditor.serializer.SceneSerializer;
+import pl.kotcrab.vis.sceneeditor.support.ButtonSupport;
 import pl.kotcrab.vis.sceneeditor.support.CheckBoxSupport;
 import pl.kotcrab.vis.sceneeditor.support.LabelSupport;
 import pl.kotcrab.vis.sceneeditor.support.ListSupport;
 import pl.kotcrab.vis.sceneeditor.support.ProgressBarSupport;
 import pl.kotcrab.vis.sceneeditor.support.SelectBoxSupport;
-import pl.kotcrab.vis.sceneeditor.support.ButtonSupport;
 import pl.kotcrab.vis.sceneeditor.support.TouchpadSupport;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
 /** Simplified SceneEditor for scene2d (and scene2d.ui)
@@ -66,8 +68,8 @@ public class StageSceneEditor extends SceneEditor {
 		this.stage = stage;
 	}
 
-	/** Add actor to object list, if support for this object class was not registed it won't be added.
-	 * Also adds actor to stage, even is support is not registed!
+	/** Add actor to object list, if support for this object class was not registed it won't be added. Also adds actor to stage,
+	 * even is support is not registed!
 	 * 
 	 * @param a actor that will be added to list
 	 * @param identifier unique identifer, used when saving and loading
@@ -99,10 +101,8 @@ public class StageSceneEditor extends SceneEditor {
 		autoSizeLists = true;
 	}
 
-	/**
-	 * Disabled auto sizing lists and selectboxed
-	 * @see StageSceneEditor#autoSizeLists()
-	 */
+	/** Disabled auto sizing lists and selectboxed
+	 * @see StageSceneEditor#autoSizeLists() */
 	public void disableAutoSizeLists () {
 		autoSizeLists = false;
 	}
