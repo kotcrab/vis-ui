@@ -16,6 +16,8 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
+import java.io.IOException;
+
 import pl.kotcrab.vis.sceneeditor.serializer.FileSerializer;
 import pl.kotcrab.vis.sceneeditor.serializer.SceneSerializer;
 import pl.kotcrab.vis.sceneeditor.support.SceneEditorSupport;
@@ -23,6 +25,7 @@ import pl.kotcrab.vis.sceneeditor.support.SceneEditorSupport;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.Array;
@@ -61,6 +64,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private boolean dirty;
 	private boolean cameraLocked;
 	private boolean hideOutlines;
+	private boolean exitingEditMode; // when exiting edit mode and changes are not saved
 
 	/** Constructs SceneEditor, this contrustor does not create Serializer for you. You must do it manualy using
 	 * {@link SceneEditor#setSerializer(SceneSerializer)}
@@ -267,7 +271,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	public void render () {
 		if (editing) {
 			if (hideOutlines == false) renderer.render(cameraLocked);
-			renderer.renderGUI(cameraLocked, dirty);
+			renderer.renderGUI(cameraLocked, dirty, exitingEditMode);
 		}
 	}
 
@@ -369,12 +373,23 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	public void disable () {
 		if (devMode) {
 			if (editing) {
-				editing = false;
 				keyboardInputMode.cancel();
-				camController.switchCameraProperties();
-				save();
+
+				if (dirty)
+					exitingEditMode = true;
+				else {
+					forceDisableEditMode();
+				}
 			}
 		}
+	}
+
+	/** Disabled edit mode, without checking if any chagnes was made */
+	private void forceDisableEditMode () {
+		keyboardInputMode.cancel();
+		camController.switchCameraProperties();
+		editing = false;
+		exitingEditMode = false;
 	}
 
 	/** Releases used assets */
@@ -382,9 +397,36 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (devMode) {
 			renderer.dispose();
 		}
+
+		if (SceneEditorConfig.lastChanceSave && dirty) lastChanceSave();
 	}
 
-	/** This must be called when screen size changed */
+	private void lastChanceSave () {
+		Gdx.app.log(TAG, "Exited before saving! It's you last chance to save! Save changes? (Y/N)");
+
+		try {
+			while (true) {
+				char input = '0';
+				input = (char)System.in.read();
+
+				if (input == 'Y' || input == 'y') {
+					System.out.println("Good choice!");
+					save();
+					break;
+				} else if (input == 'N' || input == 'n') {
+					System.out.println("Ok, bye!");
+					break;
+				} else {
+					System.out.println("Wrong key :( Try again.");
+					System.in.skip(Long.MAX_VALUE);
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/** Must be called when screen size changed */
 	public void resize () {
 		if (devMode) renderer.resize();
 	}
@@ -399,43 +441,61 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (devMode) super.attachInputProcessor();
 	}
 
+	private void resetSelectedObjectsSize () {
+		for (ObjectRepresentation orep : selectedObjs)
+			orep.resetSize();
+	}
+
+	// ===========Input methods=================
+
 	@Override
 	public boolean keyDown (int keycode) {
 		if (editing) {
-			if (keyboardInputMode.isActive() == false) {
-				if (keycode == SceneEditorConfig.KEY_LOCK_CAMERA) cameraLocked = !cameraLocked;
-				if (keycode == SceneEditorConfig.KEY_RESET_CAMERA) camController.restoreOrginalCameraProperties();
-				if (keycode == SceneEditorConfig.KEY_RESET_OBJECT_SIZE) resetSelectedObjectsSize();
-				if (keycode == SceneEditorConfig.KEY_HIDE_OUTLINES) hideOutlines = !hideOutlines;
-
-				if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_SPECIAL_ACTIONS)) {
-					if (keycode == SceneEditorConfig.KEY_SPECIAL_SAVE_CHANGES) save();
-					if (keycode == SceneEditorConfig.KEY_SPECIAL_UNDO) undo();
-					if (keycode == SceneEditorConfig.KEY_SPECIAL_REDO) redo();
-					return true; // we don't want to trigger diffrent events
+			if (exitingEditMode) {
+				// gui dialog "Unsaved changes, save before exit? (Y/N)"
+				if (keycode == Keys.N) forceDisableEditMode();
+				if (keycode == Keys.Y) {
+					save();
+					disable();
 				}
 
-				if (selectedObjs.size > 0) {
-					if ((keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX || keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY)
-						&& doesAllSelectedObjectSupportsMoving()) {
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX) keyboardInputMode.setObject(EditType.X);
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY) keyboardInputMode.setObject(EditType.Y);
+			} else {
+				if (keyboardInputMode.isActive() == false) {
+					if (keycode == SceneEditorConfig.KEY_LOCK_CAMERA) cameraLocked = !cameraLocked;
+					if (keycode == SceneEditorConfig.KEY_RESET_CAMERA) camController.restoreOrginalCameraProperties();
+					if (keycode == SceneEditorConfig.KEY_RESET_OBJECT_SIZE) resetSelectedObjectsSize();
+					if (keycode == SceneEditorConfig.KEY_HIDE_OUTLINES) hideOutlines = !hideOutlines;
+
+					if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_SPECIAL_ACTIONS)) {
+						if (keycode == SceneEditorConfig.KEY_SPECIAL_SAVE_CHANGES) save();
+						if (keycode == SceneEditorConfig.KEY_SPECIAL_UNDO) undo();
+						if (keycode == SceneEditorConfig.KEY_SPECIAL_REDO) redo();
+						return true; // we don't want to trigger diffrent events
 					}
 
-					if ((keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH || keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT)
-						&& doesAllSelectedObjectSupportsScalling()) {
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH) keyboardInputMode.setObject(EditType.WIDTH);
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT) keyboardInputMode.setObject(EditType.HEIGHT);
-					}
+					if (selectedObjs.size > 0) {
+						if ((keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX || keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY)
+							&& doesAllSelectedObjectSupportsMoving()) {
+							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSX) keyboardInputMode.setObject(EditType.X);
+							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_POSY) keyboardInputMode.setObject(EditType.Y);
+						}
 
-					if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION && doesAllSelectedObjectSupportsRotating()) {
-						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION) keyboardInputMode.setObject(EditType.ROTATION);
+						if ((keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH || keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT)
+							&& doesAllSelectedObjectSupportsScalling()) {
+							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_WIDTH) keyboardInputMode.setObject(EditType.WIDTH);
+							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_HEIGHT) keyboardInputMode.setObject(EditType.HEIGHT);
+						}
+
+						if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION && doesAllSelectedObjectSupportsRotating()) {
+							if (keycode == SceneEditorConfig.KEY_INPUT_MODE_EDIT_ROTATION)
+								keyboardInputMode.setObject(EditType.ROTATION);
+						}
+						// }
 					}
-					// }
 				}
+
+				keyboardInputMode.keyDown(keycode);
 			}
-
-			keyboardInputMode.keyDown(keycode);
 		}
 
 		if (keycode == SceneEditorConfig.KEY_TOGGLE_EDIT_MODE) {
@@ -447,12 +507,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			return true;
 		}
 
-		return false;
-	}
-
-	private void resetSelectedObjectsSize () {
-		for (ObjectRepresentation orep : selectedObjs)
-			orep.resetSize();
+		return true;
 	}
 
 	@Override
@@ -496,7 +551,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 		}
 
-		return false;
+		return true;
 	}
 
 	@Override
@@ -512,7 +567,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			masterOrep = null;
 		}
 
-		return false;
+		return true;
 	}
 
 	@Override
@@ -525,7 +580,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				orep.mouseMoved(x, y);
 		}
 
-		return false;
+		return true;
 	}
 
 	@Override
@@ -538,7 +593,6 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 			rectangularSelection.touchDragged(screenX, screenY, pointer);
 
-			// sorry...
 			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
 				boolean isMouseInsideAnyScaleArea = isMouseInsideAnySelectedObjectsScaleArea();
 				boolean isMouseInsideAnyRotateArea = isMouseInsideAnySelectedObjectsRotateArea();
@@ -561,14 +615,14 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean scrolled (int amount) {
 		if (editing && cameraLocked == false) return camController.scrolled(amount);
 
-		return false;
+		return true;
 	}
 
 	// pan is worse because you must drag mouse a little bit to fire this event, but it's simpler
@@ -584,7 +638,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			}
 		}
 
-		return false;
+		return true;
 	}
 
 }

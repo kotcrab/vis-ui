@@ -45,7 +45,7 @@ class GUI {
 		font.setColor(SceneEditorConfig.GUI_TEXT_COLOR);
 	}
 
-	public void render (int entityNumber, boolean cameraLocked, boolean dirty) {
+	public void render (int entityNumber, boolean cameraLocked, boolean dirty, boolean exitingEditMode) {
 		int line = 0;
 
 		if (SceneEditorConfig.GUI_DRAW) {
@@ -53,49 +53,55 @@ class GUI {
 
 			if (SceneEditorConfig.GUI_DRAW_TITLE) drawTextAtLine("VisSceneEditor - Edit Mode - Entities: " + entityNumber, line++);
 
-			if (cameraLocked)
-				drawTextAtLine("Camera is locked.", line++);
-			else
-				drawTextAtLine("Camera is not locked.", line++);
+			if (exitingEditMode) {
+				String text = "Unsaved changes, save before exit? (Y/N)";
+				if (renderFlashingCursor) text += "_";
 
-			if (dirty)
-				drawTextAtLine("Unsaved changes.", line++);
-			else
-				drawTextAtLine("All changes saved.", line++);
+				drawTextAtLine(text, line++);
+			} else {
+				if (cameraLocked)
+					drawTextAtLine("Camera is locked.", line++);
+				else
+					drawTextAtLine("Camera is not locked.", line++);
 
-			line++;
+				if (dirty)
+					drawTextAtLine("Unsaved changes.", line++);
+				else
+					drawTextAtLine("All changes saved.", line++);
 
-			if (selectedObjs.size == 1) {
-				ObjectRepresentation orep = selectedObjs.first();
-				drawTextAtLine("Selected object: " + orep.getIdentifier(), line++);
+				line++;
 
-				if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO) {
-					drawTextAtLine(buildSingleObjectInfo(orep), line++);
+				if (selectedObjs.size == 1) {
+					ObjectRepresentation orep = selectedObjs.first();
+					drawTextAtLine("Selected object: " + orep.getIdentifier(), line++);
+
+					if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO) {
+						drawTextAtLine(buildSingleObjectInfo(orep), line++);
+					}
+
+				} else if (selectedObjs.size > 1) {
+					drawTextAtLine("Multiple objects selected: " + selectedObjs.size, line++);
+					drawTextAtLine(buildMultipleObjectInfo(), line++);
 				}
 
-			} else if (selectedObjs.size > 1) {
-				drawTextAtLine("Multiple objects selected: " + selectedObjs.size, line++);
-				drawTextAtLine(buildMultipleObjectInfo(), line++);
-			}
+				if (selectedObjs.size > 0) {
+					if (keyboardInputMode.isActive()) {
+						String text = "Input new " + keyboardInputMode.getEditTypeText() + ": "
+							+ keyboardInputMode.getEditingValueText();
 
-			if (selectedObjs.size > 0) {
-				if (keyboardInputMode.isActive()) {
-					if (renderFlashingCursor)
-						drawTextAtLine(
-							"Input new " + keyboardInputMode.getEditTypeText() + ": " + keyboardInputMode.getEditingValueText() + "_",
-							line++);
-					else
-						drawTextAtLine(
-							"Input new " + keyboardInputMode.getEditTypeText() + ": " + keyboardInputMode.getEditingValueText(), line++);
-
-					if (TimeUtils.millis() - startTime > 500) {
-						renderFlashingCursor = !renderFlashingCursor;
-						startTime = TimeUtils.millis();
+						if (renderFlashingCursor) text += "_";
+						
+						drawTextAtLine(text, line++);
 					}
 				}
 			}
 
 			guiBatch.end();
+
+			if (TimeUtils.millis() - startTime > 500) {
+				renderFlashingCursor = !renderFlashingCursor;
+				startTime = TimeUtils.millis();
+			}
 		}
 	}
 

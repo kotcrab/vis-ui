@@ -104,8 +104,8 @@ class Renderer {
 		rectangularSelection.render(shapeRenderer);
 	}
 
-	public void renderGUI (boolean cameraLocked, boolean dirty) {
-		gui.render(objectRepresentationList.size, cameraLocked, dirty);
+	public void renderGUI (boolean cameraLocked, boolean dirty, boolean exitingEditMode) {
+		gui.render(objectRepresentationList.size, cameraLocked, dirty, exitingEditMode);
 	}
 
 	private void renderObjectOutline (ObjectRepresentation orep) {

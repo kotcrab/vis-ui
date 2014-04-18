@@ -52,6 +52,10 @@ public class SceneEditorConfig {
 	public static int KEY_INPUT_MODE_EDIT_WIDTH = Keys.W;
 	public static int KEY_INPUT_MODE_EDIT_HEIGHT = Keys.H;
 
+	/** When Libgdx app is exiting, and {@link SceneEditor#dispose()} was called. Exit will be stoped and user will have to input in
+	 * console Y or N, when he wants to save changes to file or not */
+	public static boolean lastChanceSave = true;
+
 	/** Maximum zooming in camera value.<br>
 	 * Note: Final zoom may be smaller than this value. */
 	public static float CAMERA_MAX_ZOOM_IN = 0.5f;
