@@ -1,9 +1,3 @@
-#VisSceneEditor
-Examples/android/assets/*.json
-Examples/core/libs/
-Examples/gwt/
-Examples/ios/
-
 ## Java
 
 *.class
@@ -61,4 +55,6 @@ nb-configuration.xml
 
 .gradle
 build/
+/target
+/target
 /target

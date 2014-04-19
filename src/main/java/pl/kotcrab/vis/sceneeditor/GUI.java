@@ -41,7 +41,7 @@ class GUI {
 		this.selectedObjs = selectedObjs;
 
 		guiBatch = new SpriteBatch();
-		font = new BitmapFont(Gdx.files.internal("data/arial.fnt"));
+		font = new BitmapFont(Gdx.files.internal("pl/kotcrab/vis/arial.fnt"));
 		font.setColor(SceneEditorConfig.GUI_TEXT_COLOR);
 	}
 

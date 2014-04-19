@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 /** Scene2d.ui Button support.
  * 
  * @author Pawel Pastuszak */
-public class ButtonSupport implements SceneEditorSupport<Button> {
+public class ButtonSupport extends DefaultSceneEditorSupport<Button> {
 	@Override
 	public boolean isScallingSupported () {
 		return true;

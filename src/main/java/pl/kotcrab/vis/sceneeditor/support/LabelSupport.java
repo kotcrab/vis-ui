@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 /** Scene2d.ui Label support.
  * 
  * @author Pawel Pastuszak */
-public class LabelSupport implements SceneEditorSupport<Label> {
+public class LabelSupport extends DefaultSceneEditorSupport<Label> {
 
 	@Override
 	public boolean isScallingSupported () {

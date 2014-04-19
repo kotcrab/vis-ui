@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
  * 
  * @author Pawel Pastuszak */
 @SuppressWarnings("rawtypes")
-public class ListSupport implements SceneEditorSupport<List> {
+public class ListSupport extends DefaultSceneEditorSupport<List> {
 
 	@Override
 	public boolean isScallingSupported () {

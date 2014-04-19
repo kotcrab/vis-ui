@@ -52,6 +52,8 @@ public interface SceneEditorSupport<O> {
 
 	public Class<?> getSupportedClass ();
 
+	public String getIdentifier();
+	
 	public void setX (O obj, float x);
 
 	public float getX (O obj);

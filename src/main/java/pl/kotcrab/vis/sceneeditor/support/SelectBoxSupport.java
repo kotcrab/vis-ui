@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
  * 
  * @author Pawel Pastuszak */
 @SuppressWarnings("rawtypes")
-public class SelectBoxSupport implements SceneEditorSupport<SelectBox> {
+public class SelectBoxSupport extends DefaultSceneEditorSupport<SelectBox> {
 
 	@Override
 	public boolean isScallingSupported () {

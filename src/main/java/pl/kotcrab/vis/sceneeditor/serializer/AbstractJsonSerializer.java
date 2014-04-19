@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import pl.kotcrab.vis.sceneeditor.SceneEditor;
 import pl.kotcrab.vis.sceneeditor.support.SceneEditorSupport;
 
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
@@ -21,11 +22,11 @@ public abstract class AbstractJsonSerializer implements SceneSerializer {
 
 	private Json json;
 
-	public abstract boolean saveJsonData (ArrayList<ObjectInfo> infos);
+	public abstract boolean saveJsonData (Array<ObjectInfo> infos);
 
 	public abstract boolean isReadyToLoad ();
 
-	public abstract ArrayList<ObjectInfo> loadJsonData ();
+	public abstract Array<ObjectInfo> loadJsonData ();
 
 	public AbstractJsonSerializer (SceneEditor editor) {
 		this.editor = editor;
@@ -43,31 +44,26 @@ public abstract class AbstractJsonSerializer implements SceneSerializer {
 	public void load () {
 		if (isReadyToLoad() == false) return;
 
-		ArrayList<ObjectInfo> infos = new ArrayList<ObjectInfo>();
+		Array<ObjectInfo> infos = new Array<ObjectInfo>();
 		infos = loadJsonData();
 
 		for (ObjectInfo info : infos) {
-			try {
-				Class<?> klass = Class.forName(info.className);
-				SceneEditorSupport sup = editor.getSupportForClass(klass);
+			SceneEditorSupport sup = editor.getSupportForIdentifier(info.supportIdentifier);
 
-				Object obj = objectMap.get(info.identifier);
+			Object obj = objectMap.get(info.identifier);
 
-				sup.setX(obj, info.x);
-				sup.setY(obj, info.y);
-				sup.setOrigin(obj, info.originX, info.originY);
-				sup.setSize(obj, info.width, info.height);
-				sup.setScale(obj, info.scaleX, info.scaleY);
-				sup.setRotation(obj, info.rotation);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+			sup.setX(obj, info.x);
+			sup.setY(obj, info.y);
+			sup.setOrigin(obj, info.originX, info.originY);
+			sup.setSize(obj, info.width, info.height);
+			sup.setScale(obj, info.scaleX, info.scaleY);
+			sup.setRotation(obj, info.rotation);
 		}
 	}
 
 	/** Saves all changes to provied scene file */
 	public boolean save () {
-		ArrayList<ObjectInfo> infos = new ArrayList<ObjectInfo>();
+		Array<ObjectInfo> infos = new Array<ObjectInfo>();
 
 		for (Entry<String, Object> entry : objectMap.entries()) {
 
@@ -76,7 +72,7 @@ public abstract class AbstractJsonSerializer implements SceneSerializer {
 			SceneEditorSupport sup = editor.getSupportForClass(obj.getClass());
 
 			ObjectInfo info = new ObjectInfo();
-			info.className = obj.getClass().getName();
+			info.supportIdentifier = sup.getIdentifier();
 			info.identifier = entry.key;
 			info.x = sup.getX(obj);
 			info.y = sup.getY(obj);

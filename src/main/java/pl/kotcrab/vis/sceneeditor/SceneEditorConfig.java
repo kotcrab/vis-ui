@@ -23,6 +23,13 @@ import com.badlogic.gdx.graphics.Color;
  * 
  * @author Pawel Pastuszak */
 public class SceneEditorConfig {
+	
+	/**
+	 * Must be set manualy only for desktop, on other platforms this must be null.
+	 * Set to SceneEditorConfig.desktopInterface = new DesktopHandler();
+	 */
+	public static DesktopInterface desktopInterface;
+	
 	public static int KEY_ROTATE_SNAP_VALUES = Keys.SHIFT_LEFT;
 	public static int KEY_SCALE_LOCK_RATIO = Keys.SHIFT_LEFT;
 	public static int KEY_MULTISELECT = Keys.SHIFT_LEFT;
@@ -67,5 +74,4 @@ public class SceneEditorConfig {
 	public static boolean GUI_DRAW_TITLE = true;
 	public static boolean GUI_DRAW_OBJECT_INFO = true;
 	public static Color GUI_TEXT_COLOR = Color.WHITE;
-
 }

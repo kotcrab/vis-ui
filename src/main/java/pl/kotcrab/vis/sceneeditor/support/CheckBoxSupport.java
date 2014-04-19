@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 /** Scene2d.ui CheckBox support.
  * 
  * @author Pawel Pastuszak */
-public class CheckBoxSupport implements SceneEditorSupport<CheckBox> {
+public class CheckBoxSupport extends DefaultSceneEditorSupport<CheckBox> {
 
 	@Override
 	public boolean isScallingSupported () {

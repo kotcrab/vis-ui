@@ -66,7 +66,7 @@ class RectangularSelection {
 		for (ObjectRepresentation orep : objectRepresenationList)
 			if (rectToDraw.contains(orep.getBoundingRectangle())) foundComponents.add(orep);
 
-		listener.finishedDrawing(foundComponents);
+		listener.drawingFinished(foundComponents);
 	}
 
 	public boolean touchDown (int screenX, int screenY, int pointer, int button) {
@@ -132,5 +132,5 @@ class RectangularSelection {
 }
 
 interface RectangularSelectionListener {
-	public void finishedDrawing (Array<ObjectRepresentation> matchingObjects);
+	public void drawingFinished (Array<ObjectRepresentation> matchingObjects);
 }

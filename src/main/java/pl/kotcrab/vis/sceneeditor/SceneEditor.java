@@ -16,8 +16,6 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
-import java.io.IOException;
-
 import pl.kotcrab.vis.sceneeditor.serializer.FileSerializer;
 import pl.kotcrab.vis.sceneeditor.serializer.SceneSerializer;
 import pl.kotcrab.vis.sceneeditor.support.SceneEditorSupport;
@@ -42,6 +40,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private CameraController camController;
 
 	private ObjectMap<Class<?>, SceneEditorSupport<?>> supportMap;
+	// private ObjectMap<Class<?>, String> classNameMap; // because GWT and we can't use Class.forName()
 	private ObjectMap<String, Object> objectMap;
 
 	private Array<ObjectRepresentation> objectRepresenationList;
@@ -70,17 +69,21 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	 * {@link SceneEditor#setSerializer(SceneSerializer)}
 	 * 
 	 * @param camera camera used for rendering
-	 * @param devMode devMode allow to enter editing mode, if not on desktop it will automaticly be set to false */
-	public SceneEditor (OrthographicCamera camera, boolean devMode) {
-		this.devMode = devMode;
+	 * @param enableDevMode devMode allow to enter editing mode, if not on desktop it will automaticly be set to false */
+	public SceneEditor (OrthographicCamera camera, boolean enableDevMode) {
+		devMode = enableDevMode;
 
 		// DevMode can be only activated on desktop
-		if (Gdx.app.getType() != ApplicationType.Desktop) this.devMode = false;
+		if (Gdx.app.getType() != ApplicationType.Desktop) devMode = false;
 
 		supportMap = new ObjectMap<Class<?>, SceneEditorSupport<?>>();
 		objectMap = new ObjectMap<String, Object>();
 
 		if (devMode) {
+			if (SceneEditorConfig.desktopInterface == null)
+				Gdx.app.error(TAG, "SceneEditorConfig.desktopInterface not set, some functions will not be avaiable! "
+					+ "Add 'SceneEditorConfig.desktopInterface = new DesktopHandler();' in your Libgdx desktop project!");
+
 			undoList = new Array<Array<EditorAction>>();
 			redoList = new Array<Array<EditorAction>>();
 			objectRepresenationList = new Array<ObjectRepresentation>();
@@ -98,7 +101,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 			rectangularSelection = new RectangularSelection(new RectangularSelectionListener() {
 				@Override
-				public void finishedDrawing (Array<ObjectRepresentation> matchingObjects) {
+				public void drawingFinished (Array<ObjectRepresentation> matchingObjects) {
 					selectedObjs.clear();
 					selectedObjs.addAll(matchingObjects); // we can't just swap tables
 
@@ -181,31 +184,31 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	/** Check if support for provied class is available
 	 * 
-	 * @param klass class that will be checked
+	 * @param clazz class that will be checked
 	 * @return true if support is avaiable. false otherwise */
-	public boolean isSupportForClassAvaiable (Class klass) {
-		if (supportMap.containsKey(klass))
+	public boolean isSupportForClassAvaiable (Class clazz) {
+		if (supportMap.containsKey(clazz))
 			return true;
 		else {
-			if (klass.getSuperclass() == null)
+			if (clazz.getSuperclass() == null)
 				return false;
 			else
-				return isSupportForClassAvaiable(klass.getSuperclass());
+				return isSupportForClassAvaiable(clazz.getSuperclass());
 		}
 	}
 
 	/** Returns support for provided class
 	 * 
-	 * @param klass class that support will be return if available
+	 * @param clazz class that support will be return if available
 	 * @return support if available, null otherwise */
-	public SceneEditorSupport getSupportForClass (Class klass) {
-		if (supportMap.containsKey(klass))
-			return supportMap.get(klass);
+	public SceneEditorSupport getSupportForClass (Class clazz) {
+		if (supportMap.containsKey(clazz))
+			return supportMap.get(clazz);
 		else {
-			if (klass.getSuperclass() == null)
+			if (clazz.getSuperclass() == null)
 				return null;
 			else
-				return getSupportForClass(klass.getSuperclass());
+				return getSupportForClass(clazz.getSuperclass());
 		}
 	}
 
@@ -215,6 +218,14 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	 * @return support if available, null otherwise */
 	public SceneEditorSupport getSupportForObject (Object obj) {
 		return getSupportForClass(obj.getClass());
+	}
+
+	public SceneEditorSupport getSupportForIdentifier (String identifier) {
+		for (Entry<Class<?>, SceneEditorSupport<?>> entry : supportMap.entries()) {
+			if (entry.value.getIdentifier().equals(identifier)) return entry.value;
+		}
+
+		return null;
 	}
 
 	/** @param x pointer cordinate unprocjeted by camera
@@ -404,26 +415,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private void lastChanceSave () {
 		Gdx.app.log(TAG, "Exited before saving! It's you last chance to save! Save changes? (Y/N)");
 
-		try {
-			while (true) {
-				char input = '0';
-				input = (char)System.in.read();
-
-				if (input == 'Y' || input == 'y') {
-					System.out.println("Good choice!");
-					save();
-					break;
-				} else if (input == 'N' || input == 'n') {
-					System.out.println("Ok, bye!");
-					break;
-				} else {
-					System.out.println("Wrong key :( Try again.");
-					System.in.skip(Long.MAX_VALUE);
-				}
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		if (SceneEditorConfig.desktopInterface.lastChanceSave()) save();
 	}
 
 	/** Must be called when screen size changed */

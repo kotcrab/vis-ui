@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 /** Scene2d Actor support.
  * 
  * @author Pawel Pastuszak */
-public class ActorSupport implements SceneEditorSupport<Actor> {
+public class ActorSupport extends DefaultSceneEditorSupport<Actor> {
 	@Override
 	public boolean isScallingSupported () {
 		return true;

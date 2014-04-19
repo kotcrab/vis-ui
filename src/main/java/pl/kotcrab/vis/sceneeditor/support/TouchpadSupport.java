@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 /** Scene2d.ui Touchpad support.
  * 
  * @author Pawel Pastuszak */
-public class TouchpadSupport implements SceneEditorSupport<Touchpad> {
+public class TouchpadSupport extends DefaultSceneEditorSupport<Touchpad> {
 
 	@Override
 	public boolean isScallingSupported () {

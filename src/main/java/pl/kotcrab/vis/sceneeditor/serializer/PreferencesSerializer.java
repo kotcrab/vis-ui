@@ -1,12 +1,11 @@
 
 package pl.kotcrab.vis.sceneeditor.serializer;
 
-import java.util.ArrayList;
-
 import pl.kotcrab.vis.sceneeditor.SceneEditor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.utils.Array;
 
 /** Json based SceneSerializer which saved data using {@link Preferences}
  * 
@@ -29,7 +28,7 @@ public class PreferencesSerializer extends AbstractJsonSerializer {
 	}
 
 	@Override
-	public boolean saveJsonData (ArrayList<ObjectInfo> infos) {
+	public boolean saveJsonData (Array<ObjectInfo> infos) {
 		prefs.putString(keyName, getJson().toJson(infos));
 		prefs.flush();
 		Gdx.app.log(TAG, "Saved changes to preferences.");
@@ -38,8 +37,8 @@ public class PreferencesSerializer extends AbstractJsonSerializer {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<ObjectInfo> loadJsonData () {
-		return getJson().fromJson(new ArrayList<ObjectInfo>().getClass(), prefs.getString(keyName));
+	public Array<ObjectInfo> loadJsonData () {
+		return getJson().fromJson(new Array<ObjectInfo>().getClass(), prefs.getString(keyName));
 	}
 
 	@Override

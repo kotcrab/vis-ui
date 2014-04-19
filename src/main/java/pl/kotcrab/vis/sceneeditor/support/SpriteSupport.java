@@ -21,7 +21,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 /** Support for Sprite class
  * @author Pawel Pastuszak */
-public class SpriteSupport implements SceneEditorSupport<Sprite> {
+public class SpriteSupport extends DefaultSceneEditorSupport<Sprite> {
 
 	@Override
 	public boolean isScallingSupported () {

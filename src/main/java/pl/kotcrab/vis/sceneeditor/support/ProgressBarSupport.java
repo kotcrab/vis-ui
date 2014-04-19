@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 /** Scene2d.ui ProgressBar pbupport.
  * 
  * @author Pawel Pastuszak */
-public class ProgressBarSupport implements SceneEditorSupport<ProgressBar> {
+public class ProgressBarSupport extends DefaultSceneEditorSupport<ProgressBar> {
 
 	@Override
 	public boolean isScallingSupported () {
