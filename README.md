@@ -1,6 +1,8 @@
 VisSceneEditor
 ==============
 
+(outdated will update ASAP, see examples for now)
+
 VisSceneEditor is a real-time simple 2D scene editor for Libgdx.
 
 ![Screenshot](http://dl.kotcrab.pl/github/vissceneeditor.png)
@@ -15,7 +17,7 @@ SceneEditorConfig.assetsFolderPath = "E:/Git/VisSceneEditor/Examples/android/ass
 ```
 Path must be ended wtih File.separator
 
-2.Create SceneEditor, register supports and add your objects:
+2.Create SceneEditor, register accessors and add your objects:
 ```java
 bush1 = new Sprite(bushTexture);
 bush2 = new Sprite(bushTexture);

@@ -13,7 +13,6 @@ import java.util.Date;
 import pl.kotcrab.vis.sceneeditor.serializer.ObjectsData;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
 
@@ -22,16 +21,19 @@ import com.badlogic.gdx.utils.SerializationException;
 public class DesktopHandler implements DesktopInterface {
 
 	@Override
-	public void createBackupFile (String TAG, FileHandle file, String backupFolderPath) {
+	public void createBackupFile (String TAG, String filePath, String backupFolderPath) {
 		try {
-			String fileName = file.name();
+			
+			String fileName = filePath.substring(filePath.lastIndexOf(File.separator));
+			
+			String extension = fileName.substring(fileName.lastIndexOf('.') - 1);
 			fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
 			Date date = new Date();
-			fileName += " - " + dateFormat.format(date) + file.extension();
+			fileName += " - " + dateFormat.format(date) + extension;
 
-			Files.copy(new File(new File("").getAbsolutePath() + File.separator + file.path()).toPath(), new File(backupFolderPath
+			Files.copy(new File(filePath).toPath(), new File(backupFolderPath
 				+ fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
 			Gdx.app.log(TAG, "Backup file created.");
 		} catch (IOException e) {
@@ -41,9 +43,9 @@ public class DesktopHandler implements DesktopInterface {
 	}
 
 	@Override
-	public boolean saveJsonDataToFile (String TAG, FileHandle file, Json json, ObjectsData data) {
+	public boolean saveJsonDataToFile (String TAG, String filePath, Json json, ObjectsData data) {
 		try {
-			json.toJson(data, new FileWriter(file.file()));
+			json.toJson(data, new FileWriter(new File(filePath)));
 			Gdx.app.log(TAG, "Saved changes to file.");
 			return true;
 		} catch (SerializationException e) {
@@ -78,7 +80,7 @@ public class DesktopHandler implements DesktopInterface {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return false;
 	}
 }

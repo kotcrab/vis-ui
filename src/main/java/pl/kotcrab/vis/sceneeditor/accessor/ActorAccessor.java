@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.support;
+package pl.kotcrab.vis.sceneeditor.accessor;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 /** Scene2d Actor support.
  * 
  * @author Pawel Pastuszak */
-public class ActorSupport extends DefaultSceneEditorSupport<Actor> {
+public class ActorAccessor extends DefaultSceneEditorAccessor<Actor> {
 	@Override
 	public boolean isScallingSupported () {
 		return true;

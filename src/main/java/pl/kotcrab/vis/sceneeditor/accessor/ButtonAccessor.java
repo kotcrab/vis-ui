@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.support;
+package pl.kotcrab.vis.sceneeditor.accessor;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 /** Scene2d.ui Button support.
  * 
  * @author Pawel Pastuszak */
-public class ButtonSupport extends DefaultSceneEditorSupport<Button> {
+public class ButtonAccessor extends DefaultSceneEditorAccessor<Button> {
 	@Override
 	public boolean isScallingSupported () {
 		return true;

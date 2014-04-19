@@ -16,7 +16,7 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
-import pl.kotcrab.vis.sceneeditor.support.SceneEditorSupport;
+import pl.kotcrab.vis.sceneeditor.accessor.SceneEditorAccessor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
@@ -24,7 +24,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 class ObjectRepresentation {
-	private SceneEditorSupport sup;
+	private SceneEditorAccessor sup;
 	private Object obj;
 	private String identifier;
 
@@ -50,7 +50,7 @@ class ObjectRepresentation {
 
 	private EditorAction lastEditorAction;
 
-	public ObjectRepresentation (SceneEditorSupport sup, Object obj, String identifier) {
+	public ObjectRepresentation (SceneEditorAccessor sup, Object obj, String identifier) {
 		this.sup = sup;
 		this.obj = obj;
 		this.identifier = identifier;

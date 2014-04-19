@@ -19,7 +19,7 @@ package pl.kotcrab.vis.sceneeditor.serializer;
 /** Represetns informtation about object in scene. Used when saving/loading scene.
  * @author Pawel Pastuszak */
 public class ObjectInfo {
-	public String supportIdentifier;
+	public String accessorIdentifier;
 	public String identifier;
 	public float x;
 	public float y;

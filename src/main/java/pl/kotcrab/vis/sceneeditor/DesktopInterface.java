@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Json;
  */
 public interface DesktopInterface
 {
-	public void createBackupFile(String TAG, FileHandle sceneFile, String backupFolderPath);
-	public boolean saveJsonDataToFile(String TAG, FileHandle sceneFile, Json json, ObjectsData data);
+	public void createBackupFile(String TAG, String filePath, String backupFolderPath);
+	public boolean saveJsonDataToFile(String TAG, String filePath, Json json, ObjectsData data);
 	public boolean lastChanceSave();
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.support;
+package pl.kotcrab.vis.sceneeditor.accessor;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 /** Scene2d.ui CheckBox support.
  * 
  * @author Pawel Pastuszak */
-public class CheckBoxSupport extends DefaultSceneEditorSupport<CheckBox> {
+public class CheckBoxAccessor extends DefaultSceneEditorAccessor<CheckBox> {
 
 	@Override
 	public boolean isScallingSupported () {

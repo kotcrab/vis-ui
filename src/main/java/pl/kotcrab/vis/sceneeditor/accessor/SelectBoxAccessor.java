@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.support;
+package pl.kotcrab.vis.sceneeditor.accessor;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
  * 
  * @author Pawel Pastuszak */
 @SuppressWarnings("rawtypes")
-public class SelectBoxSupport extends DefaultSceneEditorSupport<SelectBox> {
+public class SelectBoxAccessor extends DefaultSceneEditorAccessor<SelectBox> {
 
 	@Override
 	public boolean isScallingSupported () {

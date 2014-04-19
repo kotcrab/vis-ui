@@ -16,14 +16,14 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
+import pl.kotcrab.vis.sceneeditor.accessor.ButtonAccessor;
+import pl.kotcrab.vis.sceneeditor.accessor.CheckBoxAccessor;
+import pl.kotcrab.vis.sceneeditor.accessor.LabelAccessor;
+import pl.kotcrab.vis.sceneeditor.accessor.ListAccessor;
+import pl.kotcrab.vis.sceneeditor.accessor.ProgressBarAccessor;
+import pl.kotcrab.vis.sceneeditor.accessor.SelectBoxAccessor;
+import pl.kotcrab.vis.sceneeditor.accessor.TouchpadAccessor;
 import pl.kotcrab.vis.sceneeditor.serializer.SceneSerializer;
-import pl.kotcrab.vis.sceneeditor.support.ButtonSupport;
-import pl.kotcrab.vis.sceneeditor.support.CheckBoxSupport;
-import pl.kotcrab.vis.sceneeditor.support.LabelSupport;
-import pl.kotcrab.vis.sceneeditor.support.ListSupport;
-import pl.kotcrab.vis.sceneeditor.support.ProgressBarSupport;
-import pl.kotcrab.vis.sceneeditor.support.SelectBoxSupport;
-import pl.kotcrab.vis.sceneeditor.support.TouchpadSupport;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -68,8 +68,8 @@ public class StageSceneEditor extends SceneEditor {
 		this.stage = stage;
 	}
 
-	/** Add actor to object list, if support for this object class was not registed it won't be added. Also adds actor to stage,
-	 * even is support is not registed!
+	/** Add actor to object list, if accessor for this object class was not registed it won't be added. Also adds actor to stage,
+	 * even is accessor is not registed!
 	 * 
 	 * @param a actor that will be added to list
 	 * @param identifier unique identifer, used when saving and loading
@@ -107,21 +107,21 @@ public class StageSceneEditor extends SceneEditor {
 		autoSizeLists = false;
 	}
 
-	/** Automaticly registers all built-in scene2d.ui supports.
+	/** Automaticly registers all built-in scene2d.ui accessors.
 	 * 
-	 * Support are registed for {@link Label}, {@link Button}, {@link CheckBox}, {@link ProgressBar}, {@link List},
+	 * Accessors are registed for {@link Label}, {@link Button}, {@link CheckBox}, {@link ProgressBar}, {@link List},
 	 * {@link SelectBox}, {@link Touchpad}
 	 * 
 	 * @param activeAutoSizeLists if true {@link StageSceneEditor#autoSizeLists()} will be called. */
-	public void registerScene2dUISupports (boolean activeAutoSizeLists) {
+	public void registerScene2dUIAccessors (boolean activeAutoSizeLists) {
 		if (activeAutoSizeLists) autoSizeLists();
 
-		registerSupport(new LabelSupport());
-		registerSupport(new ButtonSupport());
-		registerSupport(new CheckBoxSupport());
-		registerSupport(new ProgressBarSupport());
-		registerSupport(new ListSupport());
-		registerSupport(new SelectBoxSupport());
-		registerSupport(new TouchpadSupport());
+		registerAccessor(new LabelAccessor());
+		registerAccessor(new ButtonAccessor());
+		registerAccessor(new CheckBoxAccessor());
+		registerAccessor(new ProgressBarAccessor());
+		registerAccessor(new ListAccessor());
+		registerAccessor(new SelectBoxAccessor());
+		registerAccessor(new TouchpadAccessor());
 	}
 }

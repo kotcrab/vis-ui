@@ -14,14 +14,14 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.support;
+package pl.kotcrab.vis.sceneeditor.accessor;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
 /** Support for Sprite class
  * @author Pawel Pastuszak */
-public class SpriteSupport extends DefaultSceneEditorSupport<Sprite> {
+public class SpriteAccessor extends DefaultSceneEditorAccessor<Sprite> {
 
 	@Override
 	public boolean isScallingSupported () {

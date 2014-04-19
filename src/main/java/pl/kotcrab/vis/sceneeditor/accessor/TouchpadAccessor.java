@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.support;
+package pl.kotcrab.vis.sceneeditor.accessor;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 /** Scene2d.ui Touchpad support.
  * 
  * @author Pawel Pastuszak */
-public class TouchpadSupport extends DefaultSceneEditorSupport<Touchpad> {
+public class TouchpadAccessor extends DefaultSceneEditorAccessor<Touchpad> {
 
 	@Override
 	public boolean isScallingSupported () {

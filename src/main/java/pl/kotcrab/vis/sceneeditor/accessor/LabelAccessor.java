@@ -14,20 +14,19 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.support;
+package pl.kotcrab.vis.sceneeditor.accessor;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
-/** Scene2d.ui List support.
+/** Scene2d.ui Label support.
  * 
  * @author Pawel Pastuszak */
-@SuppressWarnings("rawtypes")
-public class ListSupport extends DefaultSceneEditorSupport<List> {
+public class LabelAccessor extends DefaultSceneEditorAccessor<Label> {
 
 	@Override
 	public boolean isScallingSupported () {
-		return true;
+		return false;
 	}
 
 	@Override
@@ -47,91 +46,91 @@ public class ListSupport extends DefaultSceneEditorSupport<List> {
 
 	@Override
 	public Class<?> getSupportedClass () {
-		return List.class;
+		return Label.class;
 	}
 
 	@Override
-	public void setX (List l, float x) {
+	public void setX (Label l, float x) {
 		l.setX(x);
 	}
 
 	@Override
-	public void setY (List l, float y) {
+	public void setY (Label l, float y) {
 		l.setY(y);
 	}
 
 	@Override
-	public float getX (List l) {
+	public float getX (Label l) {
 		return l.getX();
 	}
 
 	@Override
-	public float getY (List l) {
+	public float getY (Label l) {
 		return l.getY();
 	}
 
 	@Override
-	public float getWidth (List l) {
+	public float getWidth (Label l) {
 		return l.getWidth();
 	}
 
 	@Override
-	public float getHeight (List l) {
+	public float getHeight (Label l) {
 		return l.getHeight();
 	}
 
 	@Override
-	public void setScale (List l, float x, float y) {
+	public void setScale (Label l, float x, float y) {
 		l.setScale(x, y);
 	}
 
 	@Override
-	public float getScaleX (List l) {
+	public float getScaleX (Label l) {
 		return l.getScaleX();
 	}
 
 	@Override
-	public float getScaleY (List l) {
+	public float getScaleY (Label l) {
 		return l.getScaleY();
 	}
 
 	@Override
-	public boolean contains (List l, float x, float y) {
+	public boolean contains (Label l, float x, float y) {
 		return l.getX() <= x && l.getX() + l.getWidth() >= x && l.getY() <= y && l.getY() + l.getHeight() >= y;
 	}
 
 	@Override
-	public float getRotation (List l) {
+	public float getRotation (Label l) {
 		return l.getRotation();
 	}
 
 	@Override
-	public void setRotation (List l, float rotation) {
+	public void setRotation (Label l, float rotation) {
 		l.setRotation(rotation);
 	}
 
 	@Override
-	public void setOrigin (List l, float x, float y) {
+	public void setOrigin (Label l, float x, float y) {
 		l.setOrigin(x, y);
 	}
 
 	@Override
-	public float getOriginX (List l) {
+	public float getOriginX (Label l) {
 		return l.getOriginX();
 	}
 
 	@Override
-	public float getOriginY (List l) {
+	public float getOriginY (Label l) {
 		return l.getOriginY();
 	}
 
 	@Override
-	public Rectangle getBoundingRectangle (List l) {
+	public Rectangle getBoundingRectangle (Label l) {
 		return new Rectangle(l.getX(), l.getY(), l.getWidth(), l.getHeight());
 	}
 
 	@Override
-	public void setSize (List l, float width, float height) {
+	public void setSize (Label l, float width, float height) {
 		l.setSize(width, height);
 	}
 

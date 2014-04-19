@@ -16,9 +16,11 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
+import java.io.File;
+
+import pl.kotcrab.vis.sceneeditor.accessor.SceneEditorAccessor;
 import pl.kotcrab.vis.sceneeditor.serializer.FileSerializer;
 import pl.kotcrab.vis.sceneeditor.serializer.SceneSerializer;
-import pl.kotcrab.vis.sceneeditor.support.SceneEditorSupport;
 
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
@@ -37,9 +39,11 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 public class SceneEditor extends SceneEditorInputAdapater {
 	private static final String TAG = "VisSceneEditor";
 
+	private String assetsPath;
+
 	private CameraController camController;
 
-	private ObjectMap<Class<?>, SceneEditorSupport<?>> supportMap;
+	private ObjectMap<Class<?>, SceneEditorAccessor<?>> accessorMap;
 	// private ObjectMap<Class<?>, String> classNameMap; // because GWT and we can't use Class.forName()
 	private ObjectMap<String, Object> objectMap;
 
@@ -76,7 +80,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		// DevMode can be only activated on desktop
 		if (Gdx.app.getType() != ApplicationType.Desktop) devMode = false;
 
-		supportMap = new ObjectMap<Class<?>, SceneEditorSupport<?>>();
+		accessorMap = new ObjectMap<Class<?>, SceneEditorAccessor<?>>();
 		objectMap = new ObjectMap<String, Object>();
 
 		if (devMode) {
@@ -84,6 +88,22 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				Gdx.app.error(TAG, "SceneEditorConfig.desktopInterface not set, some functions will not be avaiable! "
 					+ "Add 'SceneEditorConfig.desktopInterface = new DesktopHandler();' in your Libgdx desktop project!");
 
+			assetsPath = System.getProperty("vis.assets");
+			if(assetsPath == null)
+				Gdx.app.error(TAG, "Assets folder path not set! Add \"-Dvis.assets=path/to/project/android/assets/\" to your launch configartion VM arguments");
+			else
+			{
+				if(assetsPath.endsWith(File.separator) == false)
+					assetsPath += File.separator;
+				
+				String msg = "Assets folder path:" + assetsPath;
+				
+				if(Gdx.files.absolute(assetsPath).exists() && assetsPath.contains("assets"))
+					Gdx.app.log(TAG, msg + " Looks good!");
+				else
+					Gdx.app.error(TAG, msg + " Invalid path!");
+			}
+			
 			undoList = new Array<Array<EditorAction>>();
 			redoList = new Array<Array<EditorAction>>();
 			objectRepresenationList = new Array<ObjectRepresentation>();
@@ -123,7 +143,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		this(camera, devMode);
 
 		serializer = new FileSerializer(this, sceneFile);
-		serializer.setObjectMap(objectMap);
+		serializer.init(assetsPath, objectMap);
 	}
 
 	/** Loads all objects saved data, called first time will do nothing */
@@ -150,78 +170,78 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	 * @param serializer used for saving and loading objects data */
 	public void setSerializer (SceneSerializer serializer) {
 		this.serializer = serializer;
-		serializer.setObjectMap(objectMap);
+		serializer.init(assetsPath,objectMap);
 	}
 
 	public SceneSerializer getSerializer () {
 		return serializer;
 	}
 
-	/** Add obj to object list, if support for this object class was not registed it won't be added
+	/** Add obj to object list, if accessor for this object class was not registed it won't be added
 	 * 
 	 * @param obj object that will be added to list
 	 * @param identifier unique identifer, used when saving and loading
 	 * 
 	 * @return This SceneEditor for the purpose of chaining methods together. */
 	public SceneEditor add (Object obj, String identifier) {
-		if (isSupportForClassAvaiable(obj.getClass())) {
+		if (isAccessorForClassAvaiable(obj.getClass())) {
 			objectMap.put(identifier, obj);
 
-			if (devMode) objectRepresenationList.add(new ObjectRepresentation(getSupportForObject(obj), obj, identifier));
+			if (devMode) objectRepresenationList.add(new ObjectRepresentation(getAccessorForObject(obj), obj, identifier));
 		} else {
 			Gdx.app.error(TAG,
-				"Could not add object with identifier: '" + identifier + "'. Support not found for class " + obj.getClass()
-					+ ". See SceneEditor.registerSupport()");
+				"Could not add object with identifier: '" + identifier + "'. Accessor not found for class " + obj.getClass()
+					+ ". See SceneEditor.registerAccessor()");
 		}
 
 		return this;
 	}
 
-	/** Register support and allow object of provied class be added to scene */
-	public void registerSupport (SceneEditorSupport<?> support) {
-		supportMap.put(support.getSupportedClass(), support);
+	/** Register accessor and allow object of provied class be added to scene */
+	public void registerAccessor (SceneEditorAccessor<?> accessor) {
+		accessorMap.put(accessor.getSupportedClass(), accessor);
 	}
 
-	/** Check if support for provied class is available
+	/** Check if accessor for provied class is available
 	 * 
 	 * @param clazz class that will be checked
-	 * @return true if support is avaiable. false otherwise */
-	public boolean isSupportForClassAvaiable (Class clazz) {
-		if (supportMap.containsKey(clazz))
+	 * @return true if accessor is avaiable. false otherwise */
+	public boolean isAccessorForClassAvaiable (Class clazz) {
+		if (accessorMap.containsKey(clazz))
 			return true;
 		else {
 			if (clazz.getSuperclass() == null)
 				return false;
 			else
-				return isSupportForClassAvaiable(clazz.getSuperclass());
+				return isAccessorForClassAvaiable(clazz.getSuperclass());
 		}
 	}
 
-	/** Returns support for provided class
+	/** Returns accessor for provided class
 	 * 
-	 * @param clazz class that support will be return if available
-	 * @return support if available, null otherwise */
-	public SceneEditorSupport getSupportForClass (Class clazz) {
-		if (supportMap.containsKey(clazz))
-			return supportMap.get(clazz);
+	 * @param clazz class that accessor will be return if available
+	 * @return accessor if available, null otherwise */
+	public SceneEditorAccessor getAccessorForClass (Class clazz) {
+		if (accessorMap.containsKey(clazz))
+			return accessorMap.get(clazz);
 		else {
 			if (clazz.getSuperclass() == null)
 				return null;
 			else
-				return getSupportForClass(clazz.getSuperclass());
+				return getAccessorForClass(clazz.getSuperclass());
 		}
 	}
 
-	/** Returns support for provided object
+	/** Returns accessor for provided object
 	 * 
-	 * @param obj object that support will be return if available
-	 * @return support if available, null otherwise */
-	public SceneEditorSupport getSupportForObject (Object obj) {
-		return getSupportForClass(obj.getClass());
+	 * @param obj object that accessor will be return if available
+	 * @return accessor if available, null otherwise */
+	public SceneEditorAccessor getAccessorForObject (Object obj) {
+		return getAccessorForClass(obj.getClass());
 	}
 
-	public SceneEditorSupport getSupportForIdentifier (String identifier) {
-		for (Entry<Class<?>, SceneEditorSupport<?>> entry : supportMap.entries()) {
+	public SceneEditorAccessor getAccessorForIdentifier (String identifier) {
+		for (Entry<Class<?>, SceneEditorAccessor<?>> entry : accessorMap.entries()) {
 			if (entry.value.getIdentifier().equals(identifier)) return entry.value;
 		}
 

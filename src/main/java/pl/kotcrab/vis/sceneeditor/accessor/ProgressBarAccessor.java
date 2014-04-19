@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.support;
+package pl.kotcrab.vis.sceneeditor.accessor;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 /** Scene2d.ui ProgressBar pbupport.
  * 
  * @author Pawel Pastuszak */
-public class ProgressBarSupport extends DefaultSceneEditorSupport<ProgressBar> {
+public class ProgressBarAccessor extends DefaultSceneEditorAccessor<ProgressBar> {
 
 	@Override
 	public boolean isScallingSupported () {

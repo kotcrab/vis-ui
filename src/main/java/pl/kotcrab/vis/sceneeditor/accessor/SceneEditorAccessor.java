@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.support;
+package pl.kotcrab.vis.sceneeditor.accessor;
 
 import com.badlogic.gdx.math.Rectangle;
 
@@ -22,14 +22,14 @@ import com.badlogic.gdx.math.Rectangle;
  * 
  * Method that must be implemneted: getX, getY, getBoundingRectangle, contains. For other please refer to isMovingSupported(),
  * isRotatingSupported() and isScallingSupported()
- * @see SceneEditorSupport#isMovingSupported()
- * @see SceneEditorSupport#isRotatingSupported()
- * @see SceneEditorSupport#isScallingSupported()
+ * @see SceneEditorAccessor#isMovingSupported()
+ * @see SceneEditorAccessor#isRotatingSupported()
+ * @see SceneEditorAccessor#isScallingSupported()
  * 
  * @author Pawel Pastuszak
  * 
  * @param <O> Object that this class will support */
-public interface SceneEditorSupport<O> {
+public interface SceneEditorAccessor<O> {
 	/** When this method return true, setScale, setSize, getScaleX, getScaleY, getWidth, getHeight must be implemented
 	 * 
 	 * @return true if object support scalling, false otherwise */
