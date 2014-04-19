@@ -13,4 +13,7 @@
 
 	<extend-configuration-property name="gdx.reflect.include"
 		value="pl.kotcrab.vis.sceneeditor.serializer.ObjectInfo" />
+
+	<extend-configuration-property name="gdx.reflect.include"
+		value="pl.kotcrab.vis.sceneeditor.serializer.ObjectsData" />
 </module>

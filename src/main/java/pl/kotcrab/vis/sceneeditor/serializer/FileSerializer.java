@@ -16,9 +16,6 @@
 
 package pl.kotcrab.vis.sceneeditor.serializer;
 
-import java.util.ArrayList;
-
-import pl.kotcrab.vis.sceneeditor.DesktopHandler;
 import pl.kotcrab.vis.sceneeditor.SceneEditor;
 import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 
@@ -57,13 +54,15 @@ public class FileSerializer extends AbstractJsonSerializer {
 
 	@Override
 	public boolean saveJsonData (Array<ObjectInfo> infos) {
-		return SceneEditorConfig.desktopInterface.saveJsonDataToFile(TAG, file, getJson(), infos);
+		ObjectsData data = new ObjectsData();
+		data.versionCode = SceneEditorConfig.VERSION_CODE;
+		data.data = infos;
+		return SceneEditorConfig.desktopInterface.saveJsonDataToFile(TAG, file, getJson(), data);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Array<ObjectInfo> loadJsonData () {
-		return getJson().fromJson(new Array<ObjectInfo>().getClass(), file);
+		return getJson().fromJson(ObjectsData.class, file).data;
 	}
 
 	@Override

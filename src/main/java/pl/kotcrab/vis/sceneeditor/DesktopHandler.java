@@ -10,11 +10,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import pl.kotcrab.vis.sceneeditor.serializer.ObjectInfo;
+import pl.kotcrab.vis.sceneeditor.serializer.ObjectsData;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
 
@@ -42,9 +41,9 @@ public class DesktopHandler implements DesktopInterface {
 	}
 
 	@Override
-	public boolean saveJsonDataToFile (String TAG, FileHandle file, Json json, Array<ObjectInfo> infos) {
+	public boolean saveJsonDataToFile (String TAG, FileHandle file, Json json, ObjectsData data) {
 		try {
-			json.toJson(infos, new FileWriter(file.file()));
+			json.toJson(data, new FileWriter(file.file()));
 			Gdx.app.log(TAG, "Saved changes to file.");
 			return true;
 		} catch (SerializationException e) {
