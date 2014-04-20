@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2014 Pawel Pastuszak
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 
 package pl.kotcrab.vis.sceneeditor;
 
@@ -23,9 +38,9 @@ public class DesktopHandler implements DesktopInterface {
 	@Override
 	public void createBackupFile (String TAG, String filePath, String backupFolderPath) {
 		try {
-			
+
 			String fileName = filePath.substring(filePath.lastIndexOf(File.separator));
-			
+
 			String extension = fileName.substring(fileName.lastIndexOf('.') - 1);
 			fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 
@@ -33,8 +48,8 @@ public class DesktopHandler implements DesktopInterface {
 			Date date = new Date();
 			fileName += " - " + dateFormat.format(date) + extension;
 
-			Files.copy(new File(filePath).toPath(), new File(backupFolderPath
-				+ fileName).toPath(), StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(new File(filePath).toPath(), new File(backupFolderPath + fileName).toPath(),
+				StandardCopyOption.REPLACE_EXISTING);
 			Gdx.app.log(TAG, "Backup file created.");
 		} catch (IOException e) {
 			Gdx.app.error(TAG, "Error while creating backup.");
@@ -61,6 +76,8 @@ public class DesktopHandler implements DesktopInterface {
 
 	@Override
 	public boolean lastChanceSave () {
+		System.out.println("Exited before saving! It's you last chance to save! Save changes? (Y/N)");
+
 		try {
 			while (true) {
 				char input = '0';

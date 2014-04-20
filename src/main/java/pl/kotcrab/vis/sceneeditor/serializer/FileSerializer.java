@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2014 Pawel Pastuszak
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 
 package pl.kotcrab.vis.sceneeditor.serializer;
 
@@ -13,24 +28,22 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 /**
- * Base class for Json based SceneSerializer, this object does not perfrom serlization and saving data, child class must do it
+ * Json based SceneSerializer
  * @author Pawel Pastuszak
  */
 public class FileSerializer implements SceneSerializer {
 	private static final String TAG = "VisSceneEditor:FileSerializer";
-	
+
 	private SceneEditor editor;
 	private FileHandle file;
 	private ObjectMap<String, Object> objectMap;
-	protected String assetsPath;
 
 	private Json json;
-	
+
 	/** Path to backup folder, must be ended with File.separator */
 	private String backupFolderPath;
 
-	public FileSerializer (SceneEditor editor, FileHandle file) {
-		this.editor = editor;
+	public FileSerializer (FileHandle file) {
 		this.file = file;
 
 		json = new Json();
@@ -38,18 +51,17 @@ public class FileSerializer implements SceneSerializer {
 	}
 
 	@Override
-	public void init (String assetsPath, ObjectMap<String, Object> objectMap) {
+	public void init (SceneEditor editor, ObjectMap<String, Object> objectMap) {
+		this.editor = editor;
 		this.objectMap = objectMap;
-		this.assetsPath = assetsPath;
 	}
 
-	/** Loads all properties from provied scene file. If file does not exist it will do nothing */
+	/** {@inheritDoc} */
 	public void load () {
 		if (file.exists() == false) return;
 
 		Array<ObjectInfo> infos = new Array<ObjectInfo>();
-		infos = 	json.fromJson(ObjectsData.class, file).data;
-
+		infos = json.fromJson(ObjectsData.class, file).data;
 
 		for (ObjectInfo info : infos) {
 			SceneEditorAccessor sup = editor.getAccessorForIdentifier(info.accessorIdentifier);
@@ -65,10 +77,10 @@ public class FileSerializer implements SceneSerializer {
 		}
 	}
 
-	/** Saves all changes to provied scene file */
+	/** {@inheritDoc} */
 	public boolean save () {
 		createBackup();
-		
+
 		Array<ObjectInfo> infos = new Array<ObjectInfo>();
 
 		for (Entry<String, Object> entry : objectMap.entries()) {
@@ -96,16 +108,20 @@ public class FileSerializer implements SceneSerializer {
 		ObjectsData data = new ObjectsData();
 		data.versionCode = SceneEditorConfig.VERSION_CODE;
 		data.data = infos;
-		return SceneEditorConfig.desktopInterface.saveJsonDataToFile(TAG, assetsPath + file.path(), json, data);
+
+		if (SceneEditorConfig.assetsPath != null)
+			return SceneEditorConfig.desktopInterface
+				.saveJsonDataToFile(TAG, SceneEditorConfig.assetsPath + file.path(), json, data);
+		else
+			return false;
 	}
 
 	/** Backup provided scene file */
 	private void createBackup () {
 		if (file.exists() && backupFolderPath != null) {
-			SceneEditorConfig.desktopInterface.createBackupFile(TAG, assetsPath + file.path(), backupFolderPath);
+			SceneEditorConfig.desktopInterface.createBackupFile(TAG, SceneEditorConfig.assetsPath + file.path(), backupFolderPath);
 		}
 	}
-	
 
 	public String getBackupFolderPath () {
 		return backupFolderPath;

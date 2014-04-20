@@ -16,8 +16,6 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
-import java.io.File;
-
 import pl.kotcrab.vis.sceneeditor.accessor.SceneEditorAccessor;
 import pl.kotcrab.vis.sceneeditor.serializer.FileSerializer;
 import pl.kotcrab.vis.sceneeditor.serializer.SceneSerializer;
@@ -39,12 +37,9 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 public class SceneEditor extends SceneEditorInputAdapater {
 	private static final String TAG = "VisSceneEditor";
 
-	private String assetsPath;
-
 	private CameraController camController;
 
 	private ObjectMap<Class<?>, SceneEditorAccessor<?>> accessorMap;
-	// private ObjectMap<Class<?>, String> classNameMap; // because GWT and we can't use Class.forName()
 	private ObjectMap<String, Object> objectMap;
 
 	private Array<ObjectRepresentation> objectRepresenationList;
@@ -66,16 +61,17 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private boolean editing;
 	private boolean dirty;
 	private boolean cameraLocked;
+	private boolean cameraDragging;
 	private boolean hideOutlines;
 	private boolean exitingEditMode; // when exiting edit mode and changes are not saved
-
+	
 	/** Constructs SceneEditor, this contrustor does not create Serializer for you. You must do it manualy using
 	 * {@link SceneEditor#setSerializer(SceneSerializer)}
 	 * 
 	 * @param camera camera used for rendering
-	 * @param enableDevMode devMode allow to enter editing mode, if not on desktop it will automaticly be set to false */
-	public SceneEditor (OrthographicCamera camera, boolean enableDevMode) {
-		devMode = enableDevMode;
+	 * @param enableEditMode devMode allow to enter editing mode, if not on desktop it will automaticly be set to false */
+	public SceneEditor (OrthographicCamera camera, boolean enableEditMode) {
+		devMode = enableEditMode;
 
 		// DevMode can be only activated on desktop
 		if (Gdx.app.getType() != ApplicationType.Desktop) devMode = false;
@@ -84,25 +80,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		objectMap = new ObjectMap<String, Object>();
 
 		if (devMode) {
-			if (SceneEditorConfig.desktopInterface == null)
-				Gdx.app.error(TAG, "SceneEditorConfig.desktopInterface not set, some functions will not be avaiable! "
-					+ "Add 'SceneEditorConfig.desktopInterface = new DesktopHandler();' in your Libgdx desktop project!");
-
-			assetsPath = System.getProperty("vis.assets");
-			if(assetsPath == null)
-				Gdx.app.error(TAG, "Assets folder path not set! Add \"-Dvis.assets=path/to/project/android/assets/\" to your launch configartion VM arguments");
-			else
-			{
-				if(assetsPath.endsWith(File.separator) == false)
-					assetsPath += File.separator;
-				
-				String msg = "Assets folder path:" + assetsPath;
-				
-				if(Gdx.files.absolute(assetsPath).exists() && assetsPath.contains("assets"))
-					Gdx.app.log(TAG, msg + " Looks good!");
-				else
-					Gdx.app.error(TAG, msg + " Invalid path!");
-			}
+			SceneEditorConfig.load();
 			
 			undoList = new Array<Array<EditorAction>>();
 			redoList = new Array<Array<EditorAction>>();
@@ -141,9 +119,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	 * @param devMode devMode allow to enter editing mode, if not on desktop it will automaticly be set to false */
 	public SceneEditor (FileHandle sceneFile, OrthographicCamera camera, boolean devMode) {
 		this(camera, devMode);
-
-		serializer = new FileSerializer(this, sceneFile);
-		serializer.init(assetsPath, objectMap);
+		setSerializer(new FileSerializer(sceneFile));
 	}
 
 	/** Loads all objects saved data, called first time will do nothing */
@@ -170,7 +146,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	 * @param serializer used for saving and loading objects data */
 	public void setSerializer (SceneSerializer serializer) {
 		this.serializer = serializer;
-		serializer.init(assetsPath,objectMap);
+		serializer.init(this, objectMap);
 	}
 
 	public SceneSerializer getSerializer () {
@@ -429,12 +405,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 			renderer.dispose();
 		}
 
-		if (SceneEditorConfig.lastChanceSave && dirty) lastChanceSave();
+		if (SceneEditorConfig.LAST_CHANCE_SAVE_ENABLED && dirty) lastChanceSave();
 	}
 
 	private void lastChanceSave () {
-		Gdx.app.log(TAG, "Exited before saving! It's you last chance to save! Save changes? (Y/N)");
-
 		if (SceneEditorConfig.desktopInterface.lastChanceSave()) save();
 	}
 
@@ -568,9 +542,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	@Override
 	public boolean touchUp (int screenX, int screenY, int pointer, int button) {
-
 		if (editing) {
 			keyboardInputMode.finish();
+			
+			cameraDragging = false;
 
 			rectangularSelection.touchUp(screenX, screenY, pointer, button);
 
@@ -627,7 +602,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 	@Override
@@ -642,8 +617,14 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	public boolean pan (float x, float y, float deltaX, float deltaY) {
 		if (editing) {
 			keyboardInputMode.finish();
-
-			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
+			
+			if(cameraDragging == false) //we wan't to ignore first deltaX
+			{
+				cameraDragging = true;
+				return true;
+			}
+			
+			if (Gdx.input.isButtonPressed(Buttons.LEFT) && cameraDragging) {
 				if (selectedObjs.size == 0 && cameraLocked == false) {
 					return camController.pan(deltaX, deltaY);
 				}

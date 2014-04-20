@@ -47,16 +47,15 @@ class RectangularSelection {
 		if (rectToDraw != null) {
 			Gdx.gl20.glEnable(GL20.GL_BLEND);
 
-			shapeRenderer.setColor(Color.BLUE);
+			shapeRenderer.setColor(Color.RED);
 			shapeRenderer.begin(ShapeType.Line);
 			shapeRenderer.rect(rectToDraw.getX(), rectToDraw.getY(), rectToDraw.getWidth(), rectToDraw.getHeight());
 			shapeRenderer.end();
 
-			shapeRenderer.setColor(0f, 0f, 0.7f, 0.3f);
+			shapeRenderer.setColor(0.7f, 0f, 0f, 0.3f);
 			shapeRenderer.begin(ShapeType.Filled);
 			shapeRenderer.rect(rectToDraw.getX(), rectToDraw.getY(), rectToDraw.getWidth(), rectToDraw.getHeight());
 			shapeRenderer.end();
-
 		}
 	}
 

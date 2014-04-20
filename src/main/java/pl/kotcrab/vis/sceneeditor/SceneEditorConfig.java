@@ -16,21 +16,22 @@
 
 package pl.kotcrab.vis.sceneeditor;
 
+import java.io.File;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 
-/** Configuration of SceneEditor
+/** Configuration of VisSceneEditor
  * 
  * @author Pawel Pastuszak */
 public class SceneEditorConfig {
-	/**
-	 * Must be set manualy only for desktop, on other platforms this must be null.
-	 * Set to SceneEditorConfig.desktopInterface = new DesktopHandler();
-	 */
+	/** Must be set manualy only for desktop, on other platforms this must be null. Set to SceneEditorConfig.desktopInterface = new
+	 * DesktopHandler(); from desktop project only! */
 	public static DesktopInterface desktopInterface;
-	
+
 	public static final int VERSION_CODE = 1;
-	
+
 	public static int KEY_ROTATE_SNAP_VALUES = Keys.SHIFT_LEFT;
 	public static int KEY_SCALE_LOCK_RATIO = Keys.SHIFT_LEFT;
 	public static int KEY_MULTISELECT = Keys.SHIFT_LEFT;
@@ -62,7 +63,7 @@ public class SceneEditorConfig {
 
 	/** When Libgdx app is exiting, and {@link SceneEditor#dispose()} was called. Exit will be stoped and user will have to input in
 	 * console Y or N, when he wants to save changes to file or not */
-	public static boolean lastChanceSave = true;
+	public static boolean LAST_CHANCE_SAVE_ENABLED = true;
 
 	/** Maximum zooming in camera value.<br>
 	 * Note: Final zoom may be smaller than this value. */
@@ -75,4 +76,40 @@ public class SceneEditorConfig {
 	public static boolean GUI_DRAW_TITLE = true;
 	public static boolean GUI_DRAW_OBJECT_INFO = true;
 	public static Color GUI_TEXT_COLOR = Color.WHITE;
+
+	public static String assetsPath;
+
+	private static final String TAG = "VisSceneEditor";
+	private static boolean loaded = false;
+
+	/**
+	 * Called only from SceneEditor
+	 */
+	static void load () {
+		if (loaded == false) {
+			loaded = true;
+			if (desktopInterface == null) {
+				Gdx.app.error(TAG, "SceneEditorConfig.desktopInterface not set, saving is disabled! "
+					+ "Add 'SceneEditorConfig.desktopInterface = new DesktopHandler();' in your Libgdx desktop project!");
+				desktopInterface = new DesktopDefaultHandler();
+			}
+
+			assetsPath = System.getProperty("vis.assets");
+			if (assetsPath == null)
+				Gdx.app.error(TAG, "Assets folder path not set! Add \"-Dvis.assets=path/to/project/android/assets/\""
+					+ " to your launch configartion VM arguments. Saving is disabled!");
+			else {
+				if (assetsPath.endsWith(File.separator) == false) assetsPath += File.separator;
+
+				String msg = "Assets folder path:" + assetsPath;
+
+				if (Gdx.files.absolute(assetsPath).exists() && assetsPath.contains("assets"))
+					Gdx.app.log(TAG, msg + " Looks good!");
+				else {
+					Gdx.app.error(TAG, msg + " Invalid path! Saving is disabled!");
+					assetsPath = null;
+				}
+			}
+		}
+	}
 }
