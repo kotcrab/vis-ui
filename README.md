@@ -7,7 +7,11 @@ VisSceneEditor is a real-time simple 2D scene editor for Libgdx.
 
 It allows you to easily adjust position, scale and rotation of sprites or any other objects.
 
-See wiki for more information on how to use it.
+See wiki for more information on how to use it:  
+[Usage](https://github.com/kotcrab/VisSceneEditor/wiki/Usage)  
+[Simple example](https://github.com/kotcrab/VisSceneEditorExamples/blob/master/core/src/pl/kotcrab/vis/sceneeditor/example/scene/ExampleScene.java)
+
+Please don't be confused that it is only scene2d editor, although it can support Actor, it's not perfect. Sprite support works a lot better, support for scene2d.ui is pretty good though.
 
 Screenshots:
 
