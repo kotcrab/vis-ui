@@ -18,7 +18,6 @@ package pl.kotcrab.vis.sceneeditor;
 
 import pl.kotcrab.vis.sceneeditor.serializer.ObjectsData;
 
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 
 /**
