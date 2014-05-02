@@ -14,7 +14,9 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.accessor;
+package pl.kotcrab.vis.sceneeditor.accessor.scene2d;
+
+import pl.kotcrab.vis.sceneeditor.accessor.DefaultSceneEditorAccessor;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;

@@ -14,29 +14,18 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor;
+package pl.kotcrab.vis.sceneeditor.component;
 
 import pl.kotcrab.vis.sceneeditor.serializer.ObjectsData;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Json;
 
-public class DesktopDefaultHandler implements DesktopInterface {
+/** Funcitons that are not avaiable on GWT, muse be implemented via this interface
+ * @author Pawel Pastuszak */
+public interface DesktopInterface {
+	public void createBackupFile (String TAG, String filePath, String backupFolderPath);
 
-	@Override
-	public void createBackupFile (String TAG, String filePath, String backupFolderPath) {
-	}
+	public boolean saveJsonDataToFile (String TAG, String filePath, Json json, ObjectsData data);
 
-	@Override
-	public boolean saveJsonDataToFile (String TAG, String filePath, Json json, ObjectsData data) {
-		Gdx.app.error(TAG, "SceneEditorConfig.desktopInterface not set, saving is disabled! "
-			+ "Add 'SceneEditorConfig.desktopInterface = new DesktopHandler();' in your Libgdx desktop project!");
-		return false;
-	}
-
-	@Override
-	public boolean lastChanceSave () {
-		return false;
-	}
-
+	public boolean lastChanceSave ();
 }

@@ -14,10 +14,9 @@
  * limitations under the License.
  ******************************************************************************/
 
-
 package pl.kotcrab.vis.sceneeditor.serializer;
 
-import pl.kotcrab.vis.sceneeditor.SceneEditor;
+import pl.kotcrab.vis.sceneeditor.editor.SceneEditor;
 
 import com.badlogic.gdx.utils.ObjectMap;
 

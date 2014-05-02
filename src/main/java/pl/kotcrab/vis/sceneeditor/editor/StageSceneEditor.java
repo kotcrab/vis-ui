@@ -14,15 +14,15 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor;
+package pl.kotcrab.vis.sceneeditor.editor;
 
-import pl.kotcrab.vis.sceneeditor.accessor.ButtonAccessor;
-import pl.kotcrab.vis.sceneeditor.accessor.CheckBoxAccessor;
-import pl.kotcrab.vis.sceneeditor.accessor.LabelAccessor;
-import pl.kotcrab.vis.sceneeditor.accessor.ListAccessor;
-import pl.kotcrab.vis.sceneeditor.accessor.ProgressBarAccessor;
-import pl.kotcrab.vis.sceneeditor.accessor.SelectBoxAccessor;
-import pl.kotcrab.vis.sceneeditor.accessor.TouchpadAccessor;
+import pl.kotcrab.vis.sceneeditor.accessor.scene2d.ButtonAccessor;
+import pl.kotcrab.vis.sceneeditor.accessor.scene2d.CheckBoxAccessor;
+import pl.kotcrab.vis.sceneeditor.accessor.scene2d.LabelAccessor;
+import pl.kotcrab.vis.sceneeditor.accessor.scene2d.ListAccessor;
+import pl.kotcrab.vis.sceneeditor.accessor.scene2d.ProgressBarAccessor;
+import pl.kotcrab.vis.sceneeditor.accessor.scene2d.SelectBoxAccessor;
+import pl.kotcrab.vis.sceneeditor.accessor.scene2d.TouchpadAccessor;
 import pl.kotcrab.vis.sceneeditor.serializer.SceneSerializer;
 
 import com.badlogic.gdx.files.FileHandle;

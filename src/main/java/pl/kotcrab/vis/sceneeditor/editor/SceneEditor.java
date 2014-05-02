@@ -14,13 +14,22 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor;
+package pl.kotcrab.vis.sceneeditor.editor;
 
+import pl.kotcrab.vis.sceneeditor.EditorAction;
+import pl.kotcrab.vis.sceneeditor.ObjectRepresentation;
+import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 import pl.kotcrab.vis.sceneeditor.accessor.SceneEditorAccessor;
+import pl.kotcrab.vis.sceneeditor.component.DesktopInterface;
+import pl.kotcrab.vis.sceneeditor.component.EditType;
+import pl.kotcrab.vis.sceneeditor.component.KeyboardInputActionListener;
+import pl.kotcrab.vis.sceneeditor.component.KeyboardInputMode;
+import pl.kotcrab.vis.sceneeditor.component.RectangularSelection;
+import pl.kotcrab.vis.sceneeditor.component.RectangularSelectionActionListener;
+import pl.kotcrab.vis.sceneeditor.component.Renderer;
 import pl.kotcrab.vis.sceneeditor.serializer.FileSerializer;
 import pl.kotcrab.vis.sceneeditor.serializer.SceneSerializer;
 
-import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -33,13 +42,8 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 /** Main class of VisSceneEditor
  * 
  * @author Pawel Pastuszak */
-@SuppressWarnings({"rawtypes"})
-public class SceneEditor extends SceneEditorInputAdapater {
-	private static final String TAG = "VisSceneEditor";
+public class SceneEditor extends AbstractSceneEditor<SceneEditorAccessor<?>> {
 
-	private CameraController camController;
-
-	private ObjectMap<Class<?>, SceneEditorAccessor<?>> accessorMap;
 	private ObjectMap<String, Object> objectMap;
 
 	private Array<ObjectRepresentation> objectRepresenationList;
@@ -49,55 +53,39 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private ObjectRepresentation masterOrep;
 
 	// modules
-	private Renderer renderer;
 	private SceneSerializer serializer;
+	private DesktopInterface desktopInterface;
+	private Renderer renderer;
 	private KeyboardInputMode keyboardInputMode;
 	private RectangularSelection rectangularSelection;
 
-	private Array<Array<EditorAction>> undoList;
-	private Array<Array<EditorAction>> redoList;
+	public boolean cameraDragging;
 
-	private boolean devMode;
-	private boolean editing;
-	private boolean dirty;
-	private boolean cameraLocked;
-	private boolean cameraDragging;
-	private boolean hideOutlines;
-	private boolean exitingEditMode; // when exiting edit mode and changes are not saved
-	
 	/** Constructs SceneEditor, this contrustor does not create Serializer for you. You must do it manualy using
 	 * {@link SceneEditor#setSerializer(SceneSerializer)}
 	 * 
 	 * @param camera camera used for rendering
 	 * @param enableEditMode devMode allow to enter editing mode, if not on desktop it will automaticly be set to false */
 	public SceneEditor (OrthographicCamera camera, boolean enableEditMode) {
-		devMode = enableEditMode;
+		super(camera, enableEditMode);
 
-		// DevMode can be only activated on desktop
-		if (Gdx.app.getType() != ApplicationType.Desktop) devMode = false;
-
-		accessorMap = new ObjectMap<Class<?>, SceneEditorAccessor<?>>();
 		objectMap = new ObjectMap<String, Object>();
 
-		if (devMode) {
-			SceneEditorConfig.load();
-			
-			undoList = new Array<Array<EditorAction>>();
-			redoList = new Array<Array<EditorAction>>();
+		if (state.devMode) {
+			desktopInterface = SceneEditorConfig.desktopInterface;
+
 			objectRepresenationList = new Array<ObjectRepresentation>();
 			selectedObjs = new Array<ObjectRepresentation>();
 
-			camController = new CameraController(camera);
-
-			keyboardInputMode = new KeyboardInputMode(new KeyboardInputActionFinished() {
+			keyboardInputMode = new KeyboardInputMode(new KeyboardInputActionListener() {
 				@Override
 				public void editingFinished (Array<EditorAction> actions) {
-					undoList.add(actions);
-					dirty = true;
+					addUndoList(actions);
+					state.dirty = true;
 				}
 			}, selectedObjs);
 
-			rectangularSelection = new RectangularSelection(new RectangularSelectionListener() {
+			rectangularSelection = new RectangularSelection(new RectangularSelectionActionListener() {
 				@Override
 				public void drawingFinished (Array<ObjectRepresentation> matchingObjects) {
 					selectedObjs.clear();
@@ -106,7 +94,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				}
 			}, camController, objectRepresenationList);
 
-			renderer = new Renderer(camController, keyboardInputMode, rectangularSelection, objectRepresenationList, selectedObjs);
+			createRenderer();
 
 			attachInputProcessor();
 		}
@@ -132,13 +120,13 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		serializer.load();
 	}
 
-	private void save () {
+	public void save () {
 		if (serializer == null) {
 			Gdx.app.error(TAG, "Serializer not set, saving is not available! See SceneEditor.setSerializer()");
 			return;
 		}
 
-		if (serializer.save()) dirty = false;
+		if (serializer.save()) state.dirty = false;
 	}
 
 	/** Sets SceneSerializer for SceneEditor
@@ -163,7 +151,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		if (isAccessorForClassAvaiable(obj.getClass())) {
 			objectMap.put(identifier, obj);
 
-			if (devMode) objectRepresenationList.add(new ObjectRepresentation(getAccessorForObject(obj), obj, identifier));
+			if (state.devMode) objectRepresenationList.add(new ObjectRepresentation(getAccessorForObject(obj), obj, identifier));
 		} else {
 			Gdx.app.error(TAG,
 				"Could not add object with identifier: '" + identifier + "'. Accessor not found for class " + obj.getClass()
@@ -171,57 +159,6 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 
 		return this;
-	}
-
-	/** Register accessor and allow object of provied class be added to scene */
-	public void registerAccessor (SceneEditorAccessor<?> accessor) {
-		accessorMap.put(accessor.getSupportedClass(), accessor);
-	}
-
-	/** Check if accessor for provied class is available
-	 * 
-	 * @param clazz class that will be checked
-	 * @return true if accessor is avaiable. false otherwise */
-	public boolean isAccessorForClassAvaiable (Class clazz) {
-		if (accessorMap.containsKey(clazz))
-			return true;
-		else {
-			if (clazz.getSuperclass() == null)
-				return false;
-			else
-				return isAccessorForClassAvaiable(clazz.getSuperclass());
-		}
-	}
-
-	/** Returns accessor for provided class
-	 * 
-	 * @param clazz class that accessor will be return if available
-	 * @return accessor if available, null otherwise */
-	public SceneEditorAccessor getAccessorForClass (Class clazz) {
-		if (accessorMap.containsKey(clazz))
-			return accessorMap.get(clazz);
-		else {
-			if (clazz.getSuperclass() == null)
-				return null;
-			else
-				return getAccessorForClass(clazz.getSuperclass());
-		}
-	}
-
-	/** Returns accessor for provided object
-	 * 
-	 * @param obj object that accessor will be return if available
-	 * @return accessor if available, null otherwise */
-	public SceneEditorAccessor getAccessorForObject (Object obj) {
-		return getAccessorForClass(obj.getClass());
-	}
-
-	public SceneEditorAccessor getAccessorForIdentifier (String identifier) {
-		for (Entry<Class<?>, SceneEditorAccessor<?>> entry : accessorMap.entries()) {
-			if (entry.value.getIdentifier().equals(identifier)) return entry.value;
-		}
-
-		return null;
 	}
 
 	/** @param x pointer cordinate unprocjeted by camera
@@ -273,46 +210,26 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 		return matchingObject;
 	}
+	
+	private ObjectRepresentation getSelectedObjectForMousePosition (float x, float y) {
+		return findObjectWithSamllestSurfaceArea(x, y);
+	}
 
 	/** Renders everything */
 	public void render () {
-		if (editing) {
-			if (hideOutlines == false) renderer.render(cameraLocked);
-			renderer.renderGUI(cameraLocked, dirty, exitingEditMode);
+		if (state.editing) {
+			if (state.hideOutlines == false) renderer.render(state.cameraLocked);
+			renderer.renderGUI(state.cameraLocked, state.dirty, state.exitingEditMode);
 		}
 	}
 
-	private void undo () {
-		if (undoList.size > 0) {
-			Array<EditorAction> actions = undoList.pop();
-
-			for (EditorAction action : actions)
-				action.switchValues();
-
-			redoList.add(actions);
-		} else
-			Gdx.app.log(TAG, "Can't undo any more!");
-	}
-
-	private void redo () {
-		if (redoList.size > 0) {
-			Array<EditorAction> actions = redoList.pop();
-
-			for (EditorAction action : actions)
-				action.switchValues();
-
-			undoList.add(actions);
-		} else
-			Gdx.app.log(TAG, "Can't redo any more!");
-	}
-
-	private void addUndoActions () {
+	private void addUndoActionsAfterEdit () {
 		Array<EditorAction> localUndoList = new Array<EditorAction>();
 
 		for (ObjectRepresentation orep : selectedObjs)
 			if (orep.getLastEditorAction() != null) localUndoList.add(orep.getLastEditorAction());
 
-		if (localUndoList.size > 0) undoList.add(localUndoList);
+		if (localUndoList.size > 0) addUndoList(localUndoList);
 	}
 
 	private boolean doesAllSelectedObjectSupportsMoving () {
@@ -368,9 +285,9 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	/** Enabled editing mode */
 	public void enable () {
-		if (devMode) {
-			if (editing == false) {
-				editing = true;
+		if (state.devMode) {
+			if (state.editing == false) {
+				state.editing = true;
 				camController.switchCameraProperties();
 			}
 		}
@@ -378,12 +295,12 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	/** Disabled editing mode */
 	public void disable () {
-		if (devMode) {
-			if (editing) {
+		if (state.devMode) {
+			if (state.editing) {
 				keyboardInputMode.cancel();
 
-				if (dirty)
-					exitingEditMode = true;
+				if (state.dirty)
+					state.exitingEditMode = true;
 				else {
 					forceDisableEditMode();
 				}
@@ -395,36 +312,39 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	private void forceDisableEditMode () {
 		keyboardInputMode.cancel();
 		camController.switchCameraProperties();
-		editing = false;
-		exitingEditMode = false;
+		state.editing = false;
+		state.exitingEditMode = false;
 	}
 
 	/** Releases used assets */
 	public void dispose () {
-		if (devMode) {
+		if (state.devMode) {
 			renderer.dispose();
 		}
 
-		if (SceneEditorConfig.LAST_CHANCE_SAVE_ENABLED && dirty) lastChanceSave();
+		if (SceneEditorConfig.LAST_CHANCE_SAVE_ENABLED && state.dirty) lastChanceSave();
 	}
 
 	private void lastChanceSave () {
-		if (SceneEditorConfig.desktopInterface.lastChanceSave()) save();
+		if (desktopInterface.lastChanceSave()) save();
+	}
+
+	private void createRenderer () {
+		renderer = new Renderer(camController, keyboardInputMode, rectangularSelection, objectRepresenationList, selectedObjs);
 	}
 
 	/** Must be called when screen size changed */
 	public void resize () {
-		if (devMode) renderer.resize();
+		if (state.devMode) renderer.resize();
 	}
 
 	public boolean isDevMode () {
-		return devMode;
+		return state.devMode;
 	}
 
-	/** {@inheritDoc} */
 	@Override
 	public void attachInputProcessor () {
-		if (devMode) super.attachInputProcessor();
+		if (state.devMode) super.attachInputProcessor();
 	}
 
 	private void resetSelectedObjectsSize () {
@@ -436,8 +356,8 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	@Override
 	public boolean keyDown (int keycode) {
-		if (editing) {
-			if (exitingEditMode) {
+		if (state.editing) {
+			if (state.exitingEditMode) {
 				// gui dialog "Unsaved changes, save before exit? (Y/N)"
 				if (keycode == Keys.N) forceDisableEditMode();
 				if (keycode == Keys.Y) {
@@ -447,10 +367,10 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 			} else {
 				if (keyboardInputMode.isActive() == false) {
-					if (keycode == SceneEditorConfig.KEY_LOCK_CAMERA) cameraLocked = !cameraLocked;
+					if (keycode == SceneEditorConfig.KEY_LOCK_CAMERA) state.cameraLocked = !state.cameraLocked;
 					if (keycode == SceneEditorConfig.KEY_RESET_CAMERA) camController.restoreOrginalCameraProperties();
 					if (keycode == SceneEditorConfig.KEY_RESET_OBJECT_SIZE) resetSelectedObjectsSize();
-					if (keycode == SceneEditorConfig.KEY_HIDE_OUTLINES) hideOutlines = !hideOutlines;
+					if (keycode == SceneEditorConfig.KEY_HIDE_OUTLINES) state.hideOutlines = !state.hideOutlines;
 
 					if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_SPECIAL_ACTIONS)) {
 						if (keycode == SceneEditorConfig.KEY_SPECIAL_SAVE_CHANGES) save();
@@ -485,7 +405,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		}
 
 		if (keycode == SceneEditorConfig.KEY_TOGGLE_EDIT_MODE) {
-			if (editing)
+			if (state.editing)
 				disable();
 			else
 				enable();
@@ -498,7 +418,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	@Override
 	public boolean touchDown (int screenX, int screenY, int pointer, int button) {
-		if (editing) {
+		if (state.editing) {
 			keyboardInputMode.finish();
 
 			final float x = camController.calcX(screenX);
@@ -513,7 +433,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 				// because it would deslect clicked object
 				if ((Gdx.input.isKeyPressed(SceneEditorConfig.KEY_MULTISELECT) || isMouseInsideSelectedObjects(x, y) == false)
 					&& isMouseInsideAnySelectedObjectsRotateArea() == false) {
-					ObjectRepresentation matchingObject = findObjectWithSamllestSurfaceArea(x, y);
+					ObjectRepresentation matchingObject = getSelectedObjectForMousePosition(x, y);
 
 					if (matchingObject != null) {
 						if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_MULTISELECT) == false) selectedObjs.clear();
@@ -542,14 +462,14 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	@Override
 	public boolean touchUp (int screenX, int screenY, int pointer, int button) {
-		if (editing) {
+		if (state.editing) {
 			keyboardInputMode.finish();
-			
+
 			cameraDragging = false;
 
 			rectangularSelection.touchUp(screenX, screenY, pointer, button);
 
-			if (selectedObjs.size > 0) addUndoActions();
+			if (selectedObjs.size > 0) addUndoActionsAfterEdit();
 
 			masterOrep = null;
 		}
@@ -559,7 +479,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	@Override
 	public boolean mouseMoved (int screenX, int screenY) {
-		if (editing) {
+		if (state.editing) {
 			float x = camController.calcX(screenX);
 			float y = camController.calcY(screenY);
 
@@ -575,7 +495,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 		final float x = camController.calcX(screenX);
 		final float y = camController.calcY(screenY);
 
-		if (editing) {
+		if (state.editing) {
 			keyboardInputMode.finish();
 
 			rectangularSelection.touchDragged(screenX, screenY, pointer);
@@ -592,13 +512,13 @@ public class SceneEditor extends SceneEditorInputAdapater {
 							if (masterOrep == orep) continue;
 
 							orep.setRotation(masterOrep.getRotation());
-							dirty = true;
-						} else if (orep.draggedRotate(x, y)) dirty = true;
+							state.dirty = true;
+						} else if (orep.draggedRotate(x, y)) state.dirty = true;
 
 					} else if (isMouseInsideAnyScaleArea) {
-						if (orep.draggedScale(x, y)) dirty = true;
+						if (orep.draggedScale(x, y)) state.dirty = true;
 
-					} else if (orep.draggedMove(x, y)) dirty = true;
+					} else if (orep.draggedMove(x, y)) state.dirty = true;
 				}
 			}
 		}
@@ -607,7 +527,7 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 	@Override
 	public boolean scrolled (int amount) {
-		if (editing && cameraLocked == false) return camController.scrolled(amount);
+		if (state.editing && state.cameraLocked == false) return camController.scrolled(amount);
 
 		return true;
 	}
@@ -615,17 +535,17 @@ public class SceneEditor extends SceneEditorInputAdapater {
 	// pan is worse because you must drag mouse a little bit to fire this event, but it's simpler
 	@Override
 	public boolean pan (float x, float y, float deltaX, float deltaY) {
-		if (editing) {
+		if (state.editing) {
 			keyboardInputMode.finish();
-			
-			if(cameraDragging == false) //we wan't to ignore first deltaX
+
+			if (cameraDragging == false) // we wan't to ignore first deltaX
 			{
 				cameraDragging = true;
 				return true;
 			}
-			
+
 			if (Gdx.input.isButtonPressed(Buttons.LEFT) && cameraDragging) {
-				if (selectedObjs.size == 0 && cameraLocked == false) {
+				if (selectedObjs.size == 0 && state.cameraLocked == false) {
 					return camController.pan(deltaX, deltaY);
 				}
 			}
@@ -633,5 +553,4 @@ public class SceneEditor extends SceneEditorInputAdapater {
 
 		return true;
 	}
-
 }

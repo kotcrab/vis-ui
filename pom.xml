@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>pl.kotcrab.vis</groupId>
 	<artifactId>VisSceneEditor</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>VisSceneEditor</name>
 	<description>Real-time simple 2D scene editor for Libgdx</description>
@@ -22,6 +22,7 @@
 			<name>Pawel Pastuszak</name>
 			<email>kontakt@kotcrab.pl</email>
 			<url>www.kotcrab.pl</url>
+			<timezone>+1</timezone>
 		</developer>
 	</developers>
 

@@ -16,9 +16,9 @@
 
 package pl.kotcrab.vis.sceneeditor.serializer;
 
-import pl.kotcrab.vis.sceneeditor.SceneEditor;
 import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 import pl.kotcrab.vis.sceneeditor.accessor.SceneEditorAccessor;
+import pl.kotcrab.vis.sceneeditor.editor.SceneEditor;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
@@ -32,7 +32,7 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
  * @author Pawel Pastuszak
  */
 public class FileSerializer implements SceneSerializer {
-	private static final String TAG = "VisSceneEditor:FileSerializer";
+	public static final String TAG = "VisSceneEditor:FileSerializer";
 
 	private SceneEditor editor;
 	private FileHandle file;
@@ -60,7 +60,7 @@ public class FileSerializer implements SceneSerializer {
 	public void load () {
 		if (file.exists() == false) return;
 
-		Array<ObjectInfo> infos = new Array<ObjectInfo>();
+		Array<ObjectInfo> infos;
 		infos = json.fromJson(ObjectsData.class, file).data;
 
 		for (ObjectInfo info : infos) {
@@ -109,9 +109,9 @@ public class FileSerializer implements SceneSerializer {
 		data.versionCode = SceneEditorConfig.VERSION_CODE;
 		data.data = infos;
 
-		if (SceneEditorConfig.assetsPath != null)
-			return SceneEditorConfig.desktopInterface
-				.saveJsonDataToFile(TAG, SceneEditorConfig.assetsPath + file.path(), json, data);
+		if (SceneEditorConfig.getAssetsPath() != null)
+			return SceneEditorConfig.desktopInterface.saveJsonDataToFile(TAG, SceneEditorConfig.getAssetsPath() + file.path(), json,
+				data);
 		else
 			return false;
 	}
@@ -119,7 +119,8 @@ public class FileSerializer implements SceneSerializer {
 	/** Backup provided scene file */
 	private void createBackup () {
 		if (file.exists() && backupFolderPath != null) {
-			SceneEditorConfig.desktopInterface.createBackupFile(TAG, SceneEditorConfig.assetsPath + file.path(), backupFolderPath);
+			SceneEditorConfig.desktopInterface.createBackupFile(TAG, SceneEditorConfig.getAssetsPath() + file.path(),
+				backupFolderPath);
 		}
 	}
 

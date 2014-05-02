@@ -19,7 +19,7 @@ package pl.kotcrab.vis.sceneeditor;
 /** Represents edit action made in editor.
  * 
  * @author Pawel Pastuszak */
-class EditorAction {
+public class EditorAction {
 	private ObjectRepresentation orep;
 	private float x;
 	private float y;

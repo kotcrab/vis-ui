@@ -23,7 +23,7 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 
-class SceneEditorInputAdapater extends InputAdapter implements GestureListener {
+public class SceneEditorInputAdapter extends InputAdapter implements GestureListener {
 	/** Attaches own InputProcessor to all others currently set. This must be called when changed active InputProcessor (called
 	 * Gdx.input.setInputProcessor()) */
 	public void attachInputProcessor () {

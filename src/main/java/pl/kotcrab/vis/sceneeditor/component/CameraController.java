@@ -14,7 +14,9 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor;
+package pl.kotcrab.vis.sceneeditor.component;
+
+import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -24,7 +26,7 @@ import com.badlogic.gdx.math.Vector3;
 /** Class for caluclating propper touch cordinates and controlling camera
  * 
  * @author Pawel Pastuszak */
-class CameraController {
+public class CameraController {
 	private OrthographicCamera camera;
 	private OrthographicCamera orginalCamera;
 	private Vector3 calcVector;

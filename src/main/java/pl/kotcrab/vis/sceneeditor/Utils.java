@@ -19,7 +19,8 @@ package pl.kotcrab.vis.sceneeditor;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 
-class Utils {
+//TODO move this to ObjectRepresenation and cache if posible
+public class Utils {
 	public static Rectangle buildRectangeForScaleArea (ObjectRepresentation orep) {
 		Rectangle rect = orep.getBoundingRectangle();
 		return new Rectangle(rect.x + rect.width - 15, rect.y + rect.height - 15, 15, 15);

@@ -14,13 +14,17 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor;
+package pl.kotcrab.vis.sceneeditor.component;
+
+import pl.kotcrab.vis.sceneeditor.EditorAction;
+import pl.kotcrab.vis.sceneeditor.ObjectRepresentation;
+import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.utils.Array;
 
-class KeyboardInputMode {
-	private KeyboardInputActionFinished listener;
+public class KeyboardInputMode {
+	private KeyboardInputActionListener listener;
 	private Array<ObjectRepresentation> selectedObjs;
 
 	private Array<EditorAction> editorActions;
@@ -34,7 +38,7 @@ class KeyboardInputMode {
 
 	private boolean lockRatio;
 
-	public KeyboardInputMode (KeyboardInputActionFinished listener, Array<ObjectRepresentation> selectedObjs) {
+	public KeyboardInputMode (KeyboardInputActionListener listener, Array<ObjectRepresentation> selectedObjs) {
 		this.listener = listener;
 		this.selectedObjs = selectedObjs;
 	}
@@ -229,12 +233,4 @@ class KeyboardInputMode {
 		else
 			return type.toString().toLowerCase();
 	}
-}
-
-enum EditType {
-	X, Y, ROTATION, WIDTH, HEIGHT
-}
-
-interface KeyboardInputActionFinished {
-	public void editingFinished (Array<EditorAction> actions);
 }

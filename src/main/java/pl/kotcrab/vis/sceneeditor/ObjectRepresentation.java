@@ -23,7 +23,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
-class ObjectRepresentation {
+public class ObjectRepresentation {
 	private SceneEditorAccessor sup;
 	private Object obj;
 	private String identifier;
@@ -45,8 +45,6 @@ class ObjectRepresentation {
 	private float startingWidth; // object properies before moving/scalling/rotating/etc
 	private float startingHeight;
 	private float startingRotation;
-	// private float startingX;
-	// private float startingY;
 
 	private EditorAction lastEditorAction;
 
@@ -68,8 +66,6 @@ class ObjectRepresentation {
 		lastTouchX = x;
 		lastTouchY = y;
 
-		// startingX = sup.getX(obj);
-		// startingY = sup.getY(obj);
 		startingWidth = getWidth();
 		startingHeight = getHeight();
 		startingRotation = getRotation();

@@ -14,7 +14,9 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor;
+package pl.kotcrab.vis.sceneeditor.component;
+
+import pl.kotcrab.vis.sceneeditor.ObjectRepresentation;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -25,8 +27,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
-class RectangularSelection {
-	private RectangularSelectionListener listener;
+public class RectangularSelection {
+	private RectangularSelectionActionListener listener;
 	private Array<ObjectRepresentation> objectRepresenationList;
 	private CameraController cameraController;
 
@@ -36,7 +38,7 @@ class RectangularSelection {
 
 	private int drawingPointer = -1;
 
-	public RectangularSelection (RectangularSelectionListener listener, CameraController cameraController,
+	public RectangularSelection (RectangularSelectionActionListener listener, CameraController cameraController,
 		Array<ObjectRepresentation> objectRepresenationList) {
 		this.listener = listener;
 		this.cameraController = cameraController;
@@ -128,8 +130,4 @@ class RectangularSelection {
 			rectToDraw = new Rectangle(x, y, width, height);
 		}
 	}
-}
-
-interface RectangularSelectionListener {
-	public void drawingFinished (Array<ObjectRepresentation> matchingObjects);
 }

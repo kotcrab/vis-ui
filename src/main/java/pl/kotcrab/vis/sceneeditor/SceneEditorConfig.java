@@ -18,6 +18,10 @@ package pl.kotcrab.vis.sceneeditor;
 
 import java.io.File;
 
+import pl.kotcrab.vis.sceneeditor.component.DesktopDefaultHandler;
+import pl.kotcrab.vis.sceneeditor.component.DesktopInterface;
+import pl.kotcrab.vis.sceneeditor.editor.SceneEditor;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
@@ -77,15 +81,13 @@ public class SceneEditorConfig {
 	public static boolean GUI_DRAW_OBJECT_INFO = true;
 	public static Color GUI_TEXT_COLOR = Color.WHITE;
 
-	public static String assetsPath;
+	private static String assetsPath;
 
 	private static final String TAG = "VisSceneEditor";
 	private static boolean loaded = false;
 
-	/**
-	 * Called only from SceneEditor
-	 */
-	static void load () {
+	/** Called only from SceneEditor */
+	public static void load () {
 		if (loaded == false) {
 			loaded = true;
 			if (desktopInterface == null) {
@@ -112,4 +114,9 @@ public class SceneEditorConfig {
 			}
 		}
 	}
+
+	public static String getAssetsPath () {
+		return assetsPath;
+	}
+
 }

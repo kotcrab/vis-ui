@@ -14,7 +14,10 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor;
+package pl.kotcrab.vis.sceneeditor.component;
+
+import pl.kotcrab.vis.sceneeditor.ObjectRepresentation;
+import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -26,7 +29,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 /** GUI class for rendering VisSceneEditor gui.
  * 
  * @author Pawel Pastuszak */
-class GUI {
+public class GUI {
 	private KeyboardInputMode keyboardInputMode;
 	private Array<ObjectRepresentation> selectedObjs;
 
@@ -90,7 +93,7 @@ class GUI {
 							+ keyboardInputMode.getEditingValueText();
 
 						if (renderFlashingCursor) text += "_";
-						
+
 						drawTextAtLine(text, line++);
 					}
 				}

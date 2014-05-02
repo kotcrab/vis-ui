@@ -14,7 +14,10 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor;
+package pl.kotcrab.vis.sceneeditor.component;
+
+import pl.kotcrab.vis.sceneeditor.ObjectRepresentation;
+import pl.kotcrab.vis.sceneeditor.Utils;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -23,7 +26,7 @@ import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
-class Renderer {
+public class Renderer {
 	private CameraController camController;
 	private RectangularSelection rectangularSelection;
 	private Array<ObjectRepresentation> objectRepresentationList;
