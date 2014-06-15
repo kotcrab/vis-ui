@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright 2014 Pawel Pastuszak
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 
 package pl.kotcrab.vis.sceneeditor.plugin.impl;
 
@@ -26,36 +41,6 @@ public class ObjectManipulatorPlugin extends PluginState {
 		this.managerInterface = managerInterface;
 		this.undoInterface = undoInterface;
 		selectedObjs = managerInterface.getSelectedObjs();
-	}
-
-	private boolean doesAllSelectedObjectSupportsMoving () {
-		for (ObjectRepresentation orep : selectedObjs) {
-			if (orep.isMovingSupported() == false) {
-				Gdx.app.log(TAG, "Some of the selected object does not support moving.");
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private boolean doesAllSelectedObjectSupportsScalling () {
-		for (ObjectRepresentation orep : selectedObjs) {
-			if (orep.isScallingSupported() == false) {
-				Gdx.app.log(TAG, "Some of the selected object does not support scalling.");
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private boolean doesAllSelectedObjectSupportsRotating () {
-		for (ObjectRepresentation orep : selectedObjs) {
-			if (orep.isRotatingSupported() == false) {
-				Gdx.app.log(TAG, "Some of the selected object does not support rotating.");
-				return false;
-			}
-		}
-		return true;
 	}
 
 	private boolean isMouseInsideAnySelectedObjectsScaleArea () {
@@ -118,14 +103,27 @@ public class ObjectManipulatorPlugin extends PluginState {
 	}
 
 	@Override
+	public boolean keyDown (int keycode) {
+		if (keycode == SceneEditorConfig.KEY_RESET_OBJECT_SIZE) {
+			resetSelectedObjectsSize();
+			return true;
+		}
+
+		return false;
+	}
+
+	private void resetSelectedObjectsSize () {
+		for (ObjectRepresentation orep : selectedObjs)
+			orep.resetSize();
+	}
+
+	@Override
 	public boolean touchDown (int x, int y, int pointer, int button) {
 		if (state.editing) {
 			if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_NO_SELECT_MODE))
 				selectedObjs.clear();
 			else {
-				// rectangularSelection.touchDown(sceneX, sceneY, pointer, button);
-
-				// is no multislecy key is pressed, it will check that isMouseInsideSelectedObjects if true this won't execture
+				// if no multiselet key is pressed, it will check that isMouseInsideSelectedObjects, if true this won't execture
 				// because it would deslect clicked object
 				if ((Gdx.input.isKeyPressed(SceneEditorConfig.KEY_MULTISELECT) || isMouseInsideSelectedObjects(x, y) == false)
 					&& isMouseInsideAnySelectedObjectsRotateArea() == false) {
@@ -153,31 +151,27 @@ public class ObjectManipulatorPlugin extends PluginState {
 
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override
 	public boolean touchUp (int x, int y, int pointer, int button) {
 		if (state.editing) {
-			// keyboardInputMode.finish();
-
-			// rectangularSelection.touchUp(screenX, screenY, pointer, button);
-
 			if (selectedObjs.size > 0) addUndoActionsAfterEdit();
 
 			masterOrep = null;
 		}
 
-		return true;
+		return false;
 	}
 
-	private void addUndoActionsAfterEdit() {
+	private void addUndoActionsAfterEdit () {
 		Array<EditorAction> localUndoList = new Array<EditorAction>();
 
 		for (ObjectRepresentation orep : selectedObjs)
 			if (orep.getLastEditorAction() != null) localUndoList.add(orep.getLastEditorAction());
 
-		if (localUndoList.size > 0) undoInterface.addToUndoList(localUndoList);		
+		if (localUndoList.size > 0) undoInterface.addToUndoList(localUndoList);
 	}
 
 	@Override
@@ -193,9 +187,6 @@ public class ObjectManipulatorPlugin extends PluginState {
 
 	@Override
 	public boolean touchDragged (int x, int y, int pointer) {
-		// final float x = camController.calcX(screenX);
-		// final float y = camController.calcY(screenY);
-
 		if (state.editing) {
 			// keyboardInputMode.finish();
 

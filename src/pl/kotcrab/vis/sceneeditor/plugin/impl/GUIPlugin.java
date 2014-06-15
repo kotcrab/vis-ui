@@ -20,6 +20,8 @@ import pl.kotcrab.vis.sceneeditor.ObjectRepresentation;
 import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 import pl.kotcrab.vis.sceneeditor.plugin.PluginState;
 import pl.kotcrab.vis.sceneeditor.plugin.interfaces.ICameraController;
+import pl.kotcrab.vis.sceneeditor.plugin.interfaces.IKeybordInputMode;
+import pl.kotcrab.vis.sceneeditor.plugin.interfaces.IObjectManager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -33,7 +35,8 @@ import com.badlogic.gdx.utils.TimeUtils;
  * @author Pawel Pastuszak */
 public class GUIPlugin extends PluginState {
 	private ICameraController cameraController;
-	private ObjectManagerPlugin objectManager;
+	private IObjectManager objectManager;
+	private IKeybordInputMode keyboardInputModeInterface;
 
 	// linked to ObjectManager list
 	private Array<ObjectRepresentation> selectedObjs;
@@ -44,9 +47,10 @@ public class GUIPlugin extends PluginState {
 	private boolean renderFlashingCursor;
 	private long startTime;
 
-	public GUIPlugin (ICameraController cameraController, ObjectManagerPlugin objectManagerPlugin) {
+	public GUIPlugin (ICameraController cameraController, IObjectManager objectManagerPlugin, IKeybordInputMode keyboardInputModeInteraface) {
 		this.cameraController = cameraController;
 		this.objectManager = objectManagerPlugin;
+		this.keyboardInputModeInterface = keyboardInputModeInteraface;
 
 		selectedObjs = objectManager.getSelectedObjs();
 
@@ -64,7 +68,7 @@ public class GUIPlugin extends PluginState {
 				guiBatch.begin();
 
 				if (SceneEditorConfig.GUI_DRAW_TITLE)
-					drawTextAtLine("VisSceneEditor - Edit Mode - Entities: " + objectManager.getObjectMap().size, line++);
+					drawTextAtLine("VisSceneEditor - Edit Mode - Entities: " + objectManager.getObjectRepresenationList().size, line++);
 
 				if (state.exitingEditMode) {
 					String text = "Unsaved changes, save before exit? (Y/N)";
@@ -97,16 +101,16 @@ public class GUIPlugin extends PluginState {
 						drawTextAtLine(buildMultipleObjectInfo(), line++);
 					}
 
-// if (selectedObjs.size > 0) {
-// if (keyboardInputMode.isActive()) {
-// String text = "Input new " + keyboardInputMode.getEditTypeText() + ": "
-// + keyboardInputMode.getEditingValueText();
-//
-// if (renderFlashingCursor) text += "_";
-//
-// drawTextAtLine(text, line++);
-// }
-// }
+					if (selectedObjs.size > 0) {
+						if (keyboardInputModeInterface.isActive()) {
+							String text = "Input new " + keyboardInputModeInterface.getEditTypeText() + ": "
+								+ keyboardInputModeInterface.getEditingValueText();
+
+							if (renderFlashingCursor) text += "_";
+
+							drawTextAtLine(text, line++);
+						}
+					}
 				}
 
 				guiBatch.end();
@@ -166,7 +170,7 @@ public class GUIPlugin extends PluginState {
 	private void drawTextAtLine (String text, int line) {
 		font.draw(guiBatch, text, 2, Gdx.graphics.getHeight() - 2 - (line * 17));
 
-		if (line % 3 == 0) // is this a libgdx bug? without it cpu usage jumps to 25%, need to be done every 3 text lines...
+		if (line % 3 == 0) // FIXME is this a libgdx bug? without it cpu usage jumps to 25%, need to be done every 3 text lines...
 			guiBatch.flush();
 	}
 

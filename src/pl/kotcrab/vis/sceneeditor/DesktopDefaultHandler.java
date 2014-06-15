@@ -14,12 +14,29 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.plugin.interfaces;
+package pl.kotcrab.vis.sceneeditor;
 
-import pl.kotcrab.vis.sceneeditor.EditorAction;
+import pl.kotcrab.vis.sceneeditor.serializer.ObjectsData;
 
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Json;
 
-public interface IUndo {
-	public void addToUndoList (Array<EditorAction> undos);
+public class DesktopDefaultHandler implements DesktopInterface {
+
+	@Override
+	public void createBackupFile (String TAG, String filePath, String backupFolderPath) {
+	}
+
+	@Override
+	public boolean saveJsonDataToFile (String TAG, String filePath, Json json, ObjectsData data) {
+		Gdx.app.error(TAG, "SceneEditorConfig.desktopInterface not set, saving is disabled! "
+			+ "Add 'SceneEditorConfig.desktopInterface = new DesktopHandler();' in your Libgdx desktop project!");
+		return false;
+	}
+
+	@Override
+	public boolean lastChanceSave () {
+		return false;
+	}
+
 }

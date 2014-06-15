@@ -2,7 +2,7 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit trunk//EN" "http://google-web-toolkit.googlecode.com/svn/trunk/distro-source/core/src/gwt-module.dtd">
 <module rename-to="pl.kotcrab.vis.VisSceneEditor">
 	<source path="sceneeditor">
-		<exclude name="module/DesktopHandler.java" />
+		<exclude name="DesktopHandler.java" />
 	</source>
 
 	<extend-configuration-property name="gdx.files.classpath"

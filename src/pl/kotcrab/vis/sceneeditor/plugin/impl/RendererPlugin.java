@@ -21,17 +21,21 @@ import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 import pl.kotcrab.vis.sceneeditor.Utils;
 import pl.kotcrab.vis.sceneeditor.plugin.PluginState;
 import pl.kotcrab.vis.sceneeditor.plugin.interfaces.ICameraController;
+import pl.kotcrab.vis.sceneeditor.plugin.interfaces.Renderable;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class RendererPlugin extends PluginState {
+
 	private ICameraController cameraController;
 	private ObjectManagerPlugin objectManager;
-	// private RectangularSelectionPlugin rectangularSelectionPlugin;
+
+	private Array<Renderable> renderables;
 
 	private ShapeRenderer shapeRenderer;
 
@@ -42,6 +46,7 @@ public class RendererPlugin extends PluginState {
 		this.objectManager = objectManagerPlugin;
 
 		shapeRenderer = new ShapeRenderer();
+		renderables = new Array<Renderable>();
 	}
 
 	@Override
@@ -102,7 +107,9 @@ public class RendererPlugin extends PluginState {
 			}
 
 			shapeRenderer.end();
-			// rectangularSelection.render(shapeRenderer);
+
+			for (Renderable r : renderables)
+				r.renderSelf(shapeRenderer);
 		}
 	}
 
@@ -119,6 +126,10 @@ public class RendererPlugin extends PluginState {
 	@Override
 	public void dispose () {
 		shapeRenderer.dispose();
+	}
+
+	public void addRenderable (Renderable renderable) {
+		renderables.add(renderable);
 	}
 
 	private void renderObjectOutline (ObjectRepresentation orep) {

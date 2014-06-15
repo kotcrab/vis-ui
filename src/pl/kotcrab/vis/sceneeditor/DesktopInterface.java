@@ -14,12 +14,18 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.plugin.interfaces;
+package pl.kotcrab.vis.sceneeditor;
 
-import pl.kotcrab.vis.sceneeditor.EditorAction;
+import pl.kotcrab.vis.sceneeditor.serializer.ObjectsData;
 
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 
-public interface IUndo {
-	public void addToUndoList (Array<EditorAction> undos);
+/** Funcitons that are not avaiable on GWT, muse be implemented via this interface
+ * @author Pawel Pastuszak */
+public interface DesktopInterface {
+	public void createBackupFile (String TAG, String filePath, String backupFolderPath);
+
+	public boolean saveJsonDataToFile (String TAG, String filePath, Json json, ObjectsData data);
+
+	public boolean lastChanceSave ();
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.component;
+package pl.kotcrab.vis.sceneeditor;
 
 import java.io.File;
 import java.io.FileWriter;

@@ -14,18 +14,14 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.component;
+package pl.kotcrab.vis.sceneeditor.plugin.interfaces;
 
-import pl.kotcrab.vis.sceneeditor.serializer.ObjectsData;
+public interface IKeybordInputMode {
+	public boolean isActive ();
 
-import com.badlogic.gdx.utils.Json;
+	public void cancel ();
 
-/** Funcitons that are not avaiable on GWT, muse be implemented via this interface
- * @author Pawel Pastuszak */
-public interface DesktopInterface {
-	public void createBackupFile (String TAG, String filePath, String backupFolderPath);
+	public String getEditTypeText ();
 
-	public boolean saveJsonDataToFile (String TAG, String filePath, Json json, ObjectsData data);
-
-	public boolean lastChanceSave ();
+	public String getEditingValueText ();
 }
