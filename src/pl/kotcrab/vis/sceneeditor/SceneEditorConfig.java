@@ -81,10 +81,11 @@ public class SceneEditorConfig {
 	public static boolean GUI_DRAW_OBJECT_INFO = true;
 	public static Color GUI_TEXT_COLOR = Color.WHITE;
 
-	private static String assetsPath;
-
-	private static final String TAG = "VisSceneEditor";
+	//========not for user modification=======
+	public static final String TAG = "VisSceneEditor";
+	
 	private static boolean loaded = false;
+	private static String assetsPath;
 
 	/** Called only from SceneEditor */
 	public static void load () {
@@ -103,7 +104,7 @@ public class SceneEditorConfig {
 			else {
 				if (assetsPath.endsWith(File.separator) == false) assetsPath += File.separator;
 
-				String msg = "Assets folder path:" + assetsPath;
+				String msg = "Assets folder path: " + assetsPath;
 
 				if (Gdx.files.absolute(assetsPath).exists() && assetsPath.contains("assets"))
 					Gdx.app.log(TAG, msg + " Looks good!");

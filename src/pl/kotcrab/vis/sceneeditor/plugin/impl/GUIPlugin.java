@@ -14,10 +14,12 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.sceneeditor.component;
+package pl.kotcrab.vis.sceneeditor.plugin.impl;
 
 import pl.kotcrab.vis.sceneeditor.ObjectRepresentation;
 import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
+import pl.kotcrab.vis.sceneeditor.plugin.PluginState;
+import pl.kotcrab.vis.sceneeditor.plugin.interfaces.ICameraController;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -29,8 +31,11 @@ import com.badlogic.gdx.utils.TimeUtils;
 /** GUI class for rendering VisSceneEditor gui.
  * 
  * @author Pawel Pastuszak */
-public class GUI {
-	private KeyboardInputMode keyboardInputMode;
+public class GUIPlugin extends PluginState {
+	private ICameraController cameraController;
+	private ObjectManagerPlugin objectManager;
+
+	// linked to ObjectManager list
 	private Array<ObjectRepresentation> selectedObjs;
 
 	private SpriteBatch guiBatch;
@@ -39,71 +44,77 @@ public class GUI {
 	private boolean renderFlashingCursor;
 	private long startTime;
 
-	public GUI (KeyboardInputMode keyboardInputMode, Array<ObjectRepresentation> selectedObjs) {
-		this.keyboardInputMode = keyboardInputMode;
-		this.selectedObjs = selectedObjs;
+	public GUIPlugin (ICameraController cameraController, ObjectManagerPlugin objectManagerPlugin) {
+		this.cameraController = cameraController;
+		this.objectManager = objectManagerPlugin;
+
+		selectedObjs = objectManager.getSelectedObjs();
 
 		guiBatch = new SpriteBatch();
 		font = new BitmapFont(Gdx.files.internal("pl/kotcrab/vis/arial.fnt"));
 		font.setColor(SceneEditorConfig.GUI_TEXT_COLOR);
 	}
 
-	public void render (int entityNumber, boolean cameraLocked, boolean dirty, boolean exitingEditMode) {
-		int line = 0;
+	@Override
+	public void render () {
+		if (state.editing) {
+			int line = 0;
 
-		if (SceneEditorConfig.GUI_DRAW) {
-			guiBatch.begin();
+			if (SceneEditorConfig.GUI_DRAW) {
+				guiBatch.begin();
 
-			if (SceneEditorConfig.GUI_DRAW_TITLE) drawTextAtLine("VisSceneEditor - Edit Mode - Entities: " + entityNumber, line++);
+				if (SceneEditorConfig.GUI_DRAW_TITLE)
+					drawTextAtLine("VisSceneEditor - Edit Mode - Entities: " + objectManager.getObjectMap().size, line++);
 
-			if (exitingEditMode) {
-				String text = "Unsaved changes, save before exit? (Y/N)";
-				if (renderFlashingCursor) text += "_";
+				if (state.exitingEditMode) {
+					String text = "Unsaved changes, save before exit? (Y/N)";
+					if (renderFlashingCursor) text += "_";
 
-				drawTextAtLine(text, line++);
-			} else {
-				if (cameraLocked)
-					drawTextAtLine("Camera is locked.", line++);
-				else
-					drawTextAtLine("Camera is not locked.", line++);
+					drawTextAtLine(text, line++);
+				} else {
+					if (cameraController.isCameraLocked())
+						drawTextAtLine("Camera is locked.", line++);
+					else
+						drawTextAtLine("Camera is not locked.", line++);
 
-				if (dirty)
-					drawTextAtLine("Unsaved changes.", line++);
-				else
-					drawTextAtLine("All changes saved.", line++);
+					if (state.dirty)
+						drawTextAtLine("Unsaved changes.", line++);
+					else
+						drawTextAtLine("All changes saved.", line++);
 
-				line++;
+					line++;
 
-				if (selectedObjs.size == 1) {
-					ObjectRepresentation orep = selectedObjs.first();
-					drawTextAtLine("Selected object: " + orep.getIdentifier(), line++);
+					if (selectedObjs.size == 1) {
+						ObjectRepresentation orep = selectedObjs.first();
+						drawTextAtLine("Selected object: " + orep.getIdentifier(), line++);
 
-					if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO) {
-						drawTextAtLine(buildSingleObjectInfo(orep), line++);
+						if (SceneEditorConfig.GUI_DRAW_OBJECT_INFO) {
+							drawTextAtLine(buildSingleObjectInfo(orep), line++);
+						}
+
+					} else if (selectedObjs.size > 1) {
+						drawTextAtLine("Multiple objects selected: " + selectedObjs.size, line++);
+						drawTextAtLine(buildMultipleObjectInfo(), line++);
 					}
 
-				} else if (selectedObjs.size > 1) {
-					drawTextAtLine("Multiple objects selected: " + selectedObjs.size, line++);
-					drawTextAtLine(buildMultipleObjectInfo(), line++);
+// if (selectedObjs.size > 0) {
+// if (keyboardInputMode.isActive()) {
+// String text = "Input new " + keyboardInputMode.getEditTypeText() + ": "
+// + keyboardInputMode.getEditingValueText();
+//
+// if (renderFlashingCursor) text += "_";
+//
+// drawTextAtLine(text, line++);
+// }
+// }
 				}
 
-				if (selectedObjs.size > 0) {
-					if (keyboardInputMode.isActive()) {
-						String text = "Input new " + keyboardInputMode.getEditTypeText() + ": "
-							+ keyboardInputMode.getEditingValueText();
+				guiBatch.end();
 
-						if (renderFlashingCursor) text += "_";
-
-						drawTextAtLine(text, line++);
-					}
+				if (TimeUtils.millis() - startTime > 500) {
+					renderFlashingCursor = !renderFlashingCursor;
+					startTime = TimeUtils.millis();
 				}
-			}
-
-			guiBatch.end();
-
-			if (TimeUtils.millis() - startTime > 500) {
-				renderFlashingCursor = !renderFlashingCursor;
-				startTime = TimeUtils.millis();
 			}
 		}
 	}
@@ -209,11 +220,13 @@ public class GUI {
 		return true;
 	}
 
+	@Override
 	public void dispose () {
 		guiBatch.dispose();
 		font.dispose();
 	}
 
+	@Override
 	public void resize () {
 		guiBatch.setProjectionMatrix(new Matrix4().setToOrtho2D(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()));
 	}

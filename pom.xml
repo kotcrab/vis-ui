@@ -47,17 +47,17 @@
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
-			<version>1.0.0</version>
+			<version>1.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
-		<sourceDirectory>src/main/java</sourceDirectory>
+		<sourceDirectory>src</sourceDirectory>
 
 		<resources>
 			<resource>
-				<directory>src/main/java</directory>
+				<directory>src</directory>
 				<includes>
 					<include>**/*</include>
 				</includes>
