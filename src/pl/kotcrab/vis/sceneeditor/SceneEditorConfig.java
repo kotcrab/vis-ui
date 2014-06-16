@@ -32,7 +32,7 @@ public class SceneEditorConfig {
 	 * DesktopHandler(); from desktop project only! */
 	public static DesktopInterface desktopInterface;
 
-	public static final int VERSION_CODE = 1;
+	public static final int VERSION_CODE = 2;
 
 	public static int KEY_ROTATE_SNAP_VALUES = Keys.SHIFT_LEFT;
 	public static int KEY_SCALE_LOCK_RATIO = Keys.SHIFT_LEFT;

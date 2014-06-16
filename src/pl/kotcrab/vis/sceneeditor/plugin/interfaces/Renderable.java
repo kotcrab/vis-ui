@@ -16,8 +16,12 @@
 
 package pl.kotcrab.vis.sceneeditor.plugin.interfaces;
 
+import pl.kotcrab.vis.sceneeditor.plugin.impl.RendererPlugin;
+
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
+/** Plugins that want to render someting via ShapeRenerer should implement this interface and call
+ * {@link RendererPlugin#addRenderable(Renderable)} */
 public interface Renderable {
 	public void renderSelf (ShapeRenderer shapeRenderer);
 }

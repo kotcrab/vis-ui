@@ -96,7 +96,6 @@ public class SceneEditor extends SceneEditorInputAdapter implements Disposable {
 			pluginManger.registerPlugin(keyboardInputModePlugin);
 			pluginManger.registerPlugin(undoPlugin);
 		}
-
 	}
 
 	/** Add obj to object list, if accessor for this object class was not registed it won't be added
@@ -121,6 +120,11 @@ public class SceneEditor extends SceneEditorInputAdapter implements Disposable {
 
 	public void save () {
 		fileSerializerPlugin.save();
+	}
+
+	/** When saving, backup file will be copied to thid directorry. Path to backup folder, must be ended with File.separator */
+	public void setBackupPath (String path) {
+		fileSerializerPlugin.setBackupFolderPath(path);
 	}
 
 	/** Enables editing mode */
@@ -165,12 +169,22 @@ public class SceneEditor extends SceneEditorInputAdapter implements Disposable {
 		pluginManger.resize();
 	}
 
+	public boolean inputUsed () {
+		if (state.editing)
+			return true;
+		else
+			return false;
+	}
+
+	@Override
 	public boolean keyDown (int keycode) {
 		if (keycode == SceneEditorConfig.KEY_TOGGLE_EDIT_MODE) {
 			if (state.editing)
 				disable();
 			else
 				enable();
+			
+			return true;
 		}
 
 		if (state.exitingEditMode) {
@@ -180,41 +194,48 @@ public class SceneEditor extends SceneEditorInputAdapter implements Disposable {
 				save();
 				disable();
 			}
-		} else
+		} else {
 			pluginManger.keyDown(keycode);
+			return true;
+		}
 
 		return false;
 	}
 
+	@Override
 	public boolean keyUp (int keycode) {
 		pluginManger.keyUp(keycode);
-		return false;
+		return inputUsed();
 	}
 
+	@Override
 	public boolean keyTyped (char character) {
 		pluginManger.keyTyped(character);
-		return false;
+		return inputUsed();
 	}
 
+	@Override
 	public boolean touchDown (int screenX, int screenY, int pointer, int button) {
 		int sceneX = cameraControllerPlugin.calcX(screenX);
 		int sceneY = cameraControllerPlugin.calcY(screenY);
 		pluginManger.touchDown(sceneX, sceneY, pointer, button);
-		return false;
+		return inputUsed();
 	}
 
+	@Override
 	public boolean touchUp (int screenX, int screenY, int pointer, int button) {
 		int sceneX = cameraControllerPlugin.calcX(screenX);
 		int sceneY = cameraControllerPlugin.calcY(screenY);
 		pluginManger.touchUp(sceneX, sceneY, pointer, button);
-		return false;
+		return inputUsed();
 	}
 
+	@Override
 	public boolean touchDragged (int screenX, int screenY, int pointer) {
 		int sceneX = cameraControllerPlugin.calcX(screenX);
 		int sceneY = cameraControllerPlugin.calcY(screenY);
 		pluginManger.touchDragged(sceneX, sceneY, pointer);
-		return false;
+		return inputUsed();
 	}
 
 	@Override
@@ -222,12 +243,12 @@ public class SceneEditor extends SceneEditorInputAdapter implements Disposable {
 		int sceneX = cameraControllerPlugin.calcX(screenX);
 		int sceneY = cameraControllerPlugin.calcY(screenY);
 		pluginManger.mouseMoved(sceneX, sceneY);
-		return false;
+		return inputUsed();
 	}
 
 	@Override
 	public boolean scrolled (int amount) {
 		pluginManger.scrolled(amount);
-		return false;
+		return inputUsed();
 	}
 }

@@ -19,7 +19,6 @@ package pl.kotcrab.vis.sceneeditor.plugin.impl;
 import pl.kotcrab.vis.sceneeditor.AccessorHandler;
 import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 import pl.kotcrab.vis.sceneeditor.accessor.SceneEditorAccessor;
-import pl.kotcrab.vis.sceneeditor.plugin.PluginAdapter;
 import pl.kotcrab.vis.sceneeditor.plugin.PluginState;
 import pl.kotcrab.vis.sceneeditor.plugin.interfaces.IObjectManager;
 import pl.kotcrab.vis.sceneeditor.serializer.ObjectInfo;
@@ -45,7 +44,6 @@ public class FileSerializerPlugin extends PluginState {
 
 	private Json json;
 
-	/** Path to backup folder, must be ended with File.separator */
 	private String backupFolderPath;
 
 	public FileSerializerPlugin (FileHandle file, AccessorHandler<SceneEditorAccessor<?>> accessorHandler,
@@ -153,6 +151,7 @@ public class FileSerializerPlugin extends PluginState {
 		return backupFolderPath;
 	}
 
+	/** Path to backup folder, must be ended with File.separator */
 	public void setBackupFolderPath (String backupFolderPath) {
 		this.backupFolderPath = backupFolderPath;
 	}

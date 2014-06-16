@@ -38,10 +38,9 @@ public class DesktopHandler implements DesktopInterface {
 	@Override
 	public void createBackupFile (String TAG, String filePath, String backupFolderPath) {
 		try {
-
 			String fileName = filePath.substring(filePath.lastIndexOf(File.separator));
 
-			String extension = fileName.substring(fileName.lastIndexOf('.') - 1);
+			String extension = fileName.substring(fileName.lastIndexOf('.'));
 			fileName = fileName.substring(0, fileName.lastIndexOf('.'));
 
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
@@ -84,10 +83,8 @@ public class DesktopHandler implements DesktopInterface {
 				input = (char)System.in.read();
 
 				if (input == 'Y' || input == 'y') {
-					System.out.println("Good choice!");
 					return true;
 				} else if (input == 'N' || input == 'n') {
-					System.out.println("Ok, bye!");
 					return false;
 				} else {
 					System.out.println("Wrong key :( Try again.");

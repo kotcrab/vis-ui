@@ -16,7 +16,6 @@
 
 package pl.kotcrab.vis.sceneeditor.plugin.impl;
 
-import pl.kotcrab.vis.sceneeditor.ObjectRepresentation;
 import pl.kotcrab.vis.sceneeditor.SceneEditorConfig;
 import pl.kotcrab.vis.sceneeditor.plugin.PluginState;
 import pl.kotcrab.vis.sceneeditor.plugin.interfaces.ICameraController;
@@ -120,12 +119,7 @@ public class CameraControllerPlugin extends PluginState implements ICameraContro
 		return false;
 	}
 
-	/** Returns camera */
-	public OrthographicCamera getCamera () {
-		return camera;
-	}
-
-	public void pan (float deltaX, float deltaY) {
+	private void pan (float deltaX, float deltaY) {
 		if (Gdx.input.isKeyPressed(SceneEditorConfig.KEY_PRECISION_MODE)) {
 			deltaX /= SceneEditorConfig.PRECISION_DIVIDE_BY;
 			deltaY /= SceneEditorConfig.PRECISION_DIVIDE_BY;
@@ -134,6 +128,11 @@ public class CameraControllerPlugin extends PluginState implements ICameraContro
 		camera.position.x = camera.position.x - deltaX * camera.zoom;
 		camera.position.y = camera.position.y + deltaY * camera.zoom;
 
+	}
+	
+	/** Returns camera */
+	public OrthographicCamera getCamera () {
+		return camera;
 	}
 
 	public void switchCameraProperties () {
