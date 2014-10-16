@@ -1,6 +1,8 @@
 VisSceneEditor
 ==============
 
+#### I'm recreating this project, so source code here may not be up to date, however you can still use version 0.0.1 and read documentation for it in the wiki.
+
 VisSceneEditor is a real-time simple 2D scene editor for Libgdx.
 
 ![Screenshot](http://dl.kotcrab.pl/github/vis/vissceneeditor.png)
