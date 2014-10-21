@@ -2,7 +2,7 @@
 uiskin.png
 size: 256,128
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 check-off
   rotate: false
@@ -21,7 +21,7 @@ textfield
   index: -1
 check-on
   rotate: false
-  xy: 125, 35
+  xy: 151, 35
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
@@ -59,7 +59,7 @@ default-rect-pad
   index: -1
 default-pane-noborder
   rotate: false
-  xy: 170, 44
+  xy: 196, 44
   size: 1, 1
   split: 0, 0, 0, 0
   orig: 1, 1
@@ -75,7 +75,7 @@ default-rect
   index: -1
 default-rect-down
   rotate: false
-  xy: 170, 46
+  xy: 196, 46
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -156,7 +156,7 @@ default-splitpane
   index: -1
 default-splitpane-vertical
   rotate: false
-  xy: 125, 29
+  xy: 151, 29
   size: 3, 5
   split: 0, 0, 0, 5
   orig: 3, 5
@@ -170,30 +170,44 @@ default-window
   orig: 27, 29
   offset: 0, 0
   index: -1
+menu-button
+  rotate: false
+  xy: 125, 29
+  size: 12, 20
+  orig: 12, 20
+  offset: 0, 0
+  index: -1
+menu-button-down
+  rotate: false
+  xy: 138, 29
+  size: 12, 20
+  orig: 12, 20
+  offset: 0, 0
+  index: -1
 selection
   rotate: false
-  xy: 174, 48
+  xy: 200, 48
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 tree-minus
   rotate: false
-  xy: 140, 35
+  xy: 166, 35
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 tree-plus
   rotate: false
-  xy: 155, 35
+  xy: 181, 35
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 white
   rotate: false
-  xy: 129, 31
+  xy: 155, 31
   size: 3, 3
   orig: 3, 3
   offset: 0, 0

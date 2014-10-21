@@ -67,12 +67,13 @@ public class MenuBar extends Table {
 
 		public MenuItem (Menu menu) {
 			this.menu = menu;
-			menuOpenButton = new TextButton(menu.getTitle(), skin);
+			menuOpenButton = new TextButton(menu.getTitle(), skin, "menu");
 			add(menuOpenButton);
 
 			menuOpenButton.addListener(new InputListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+					if(lastDisplayedMenu != null) closeMenu();
 					showMenu();
 					return false;
 				}

@@ -50,17 +50,17 @@ public class Editor extends ApplicationAdapter {
 		mb.addMenu(m2);
 		mb.addMenu(m3);
 
-		m1.addItem(new TextButton("Test option 1", skin));
-		m1.addItem(new TextButton("Test option 2", skin));
-		m1.addItem(new TextButton("Test option 3", skin));
+		m1.addItem(new TextButton("Test option 1", skin, "menu"));
+		m1.addItem(new TextButton("Test option 2", skin, "menu"));
+		m1.addItem(new TextButton("Test option 3", skin, "menu"));
 
-		m2.addItem(new TextButton("Test option 4", skin));
-		m2.addItem(new TextButton("Test option 5", skin));
-		m2.addItem(new TextButton("Test option 6", skin));
+		m2.addItem(new TextButton("Test option 4", skin, "menu"));
+		m2.addItem(new TextButton("Test option 5", skin, "menu"));
+		m2.addItem(new TextButton("Test option 6", skin, "menu"));
 		
-		m3.addItem(new TextButton("Test option 7", skin));
-		m3.addItem(new TextButton("Test option 8", skin));
-		m3.addItem(new TextButton("Test option 9", skin));
+		m3.addItem(new TextButton("Test option 7", skin, "menu"));
+		m3.addItem(new TextButton("Test option 8", skin, "menu"));
+		m3.addItem(new TextButton("Test option 9", skin, "menu"));
 	}
 
 	@Override
