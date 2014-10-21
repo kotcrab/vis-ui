@@ -6,7 +6,7 @@
 	<version>0.0.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>VisSceneEditor</name>
-	<description>Real-time simple 2D scene editor for Libgdx</description>
+	<description>Runtime for 2D scene editor for LibGDX</description>
 	<url>https://github.com/kotcrab/VisSceneEditor</url>
 
 	<licenses>

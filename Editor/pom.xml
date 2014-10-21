@@ -4,6 +4,9 @@
 	<groupId>pl.kotcrab.vis</groupId>
 	<artifactId>vis-scene-editor</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
+	<name>VisSceneEditor</name>
+	<description>2D scene editor for LibGDX</description>
+	<url>https://github.com/kotcrab/VisSceneEditor</url>
 
 	<properties>
 		<jdk.version>1.7</jdk.version>
@@ -31,7 +34,7 @@
 			<version>${gdx.version}</version>
 			<classifier>natives-desktop</classifier>
 		</dependency>
-		
+
 	</dependencies>
 
 	<build>
