@@ -4,12 +4,10 @@ package pl.kotcrab.vis.editor.ui;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -102,9 +100,9 @@ public class MenuBar {
 				closeMenu();
 				showMenu();
 				menuVisible = true; // manually set that menu is visible because touch down event won't occur
-			}					
+			}
 		}
-		
+
 		private void showMenu () {
 			Vector2 pos = menuOpenButton.localToStageCoordinates(new Vector2(0, 0));
 

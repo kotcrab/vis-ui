@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class Editor extends ApplicationAdapter {
 
 	private Stage stage;
+	private Skin skin;
 	private Table root;
 	private ShapeRenderer shapeRenderer;
 	private MenuBar mb;
@@ -31,12 +32,11 @@ public class Editor extends ApplicationAdapter {
 
 		root = new Table();
 		root.setFillParent(true);
-//		root.debug();
+// root.debug();
 		stage.addActor(root);
-		
-		Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-		shapeRenderer = new ShapeRenderer();
 
+		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+		shapeRenderer = new ShapeRenderer();
 		mb = new MenuBar(stage, skin);
 
 		root.left().top();
@@ -57,7 +57,7 @@ public class Editor extends ApplicationAdapter {
 		m2.addItem(new TextButton("Test option 4", skin, "menu"));
 		m2.addItem(new TextButton("Test option 5", skin, "menu"));
 		m2.addItem(new TextButton("Test option 6", skin, "menu"));
-		
+
 		m3.addItem(new TextButton("Test option 7", skin, "menu"));
 		m3.addItem(new TextButton("Test option 8", skin, "menu"));
 		m3.addItem(new TextButton("Test option 9", skin, "menu"));
@@ -83,6 +83,7 @@ public class Editor extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		stage.dispose();
+		skin.dispose();
 		shapeRenderer.dispose();
 	}
 
