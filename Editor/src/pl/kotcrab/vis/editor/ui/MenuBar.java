@@ -1,9 +1,10 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,21 +22,21 @@ public class MenuBar {
 
 	private Table mainTable;
 	private Table menuItems;
-	
+
 	private Menu lastDisplayedMenu;
 	private boolean menuVisible = false;
 
 	public MenuBar (Stage stage, Skin skin) {
 		this.skin = skin;
 		this.stage = stage;
-		
+
 		menus = new Array<MenuItem>();
 		mainTable = new Table(skin);
 		menuItems = new Table(skin);
-		
+
 		mainTable.add(menuItems);
 		mainTable.add(new Image(skin.getRegion("menu-bar-button"))).expand().fill();
-		
+
 		stage.addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -57,6 +58,7 @@ public class MenuBar {
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 				if (lastDisplayedMenu != null && menuVisible) closeMenu();
 			}
+
 		});
 	}
 
@@ -83,13 +85,26 @@ public class MenuBar {
 			menuOpenButton.addListener(new InputListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-					if(lastDisplayedMenu != null) closeMenu();
+					if (lastDisplayedMenu != null) closeMenu();
 					showMenu();
 					return false;
+				}
+
+				@Override
+				public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+					switchMenu();
 				}
 			});
 		}
 
+		private void switchMenu () {
+			if (lastDisplayedMenu != null && lastDisplayedMenu != menu) {
+				closeMenu();
+				showMenu();
+				menuVisible = true; // manually set that menu is visible because touch down event won't occur
+			}					
+		}
+		
 		private void showMenu () {
 			Vector2 pos = menuOpenButton.localToStageCoordinates(new Vector2(0, 0));
 
