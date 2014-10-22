@@ -21,7 +21,7 @@ textfield
   index: -1
 check-on
   rotate: false
-  xy: 151, 35
+  xy: 164, 35
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
@@ -59,7 +59,7 @@ default-rect-pad
   index: -1
 default-pane-noborder
   rotate: false
-  xy: 196, 44
+  xy: 209, 44
   size: 1, 1
   split: 0, 0, 0, 0
   orig: 1, 1
@@ -75,7 +75,7 @@ default-rect
   index: -1
 default-rect-down
   rotate: false
-  xy: 196, 46
+  xy: 209, 46
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -156,7 +156,7 @@ default-splitpane
   index: -1
 default-splitpane-vertical
   rotate: false
-  xy: 151, 29
+  xy: 164, 29
   size: 3, 5
   split: 0, 0, 0, 5
   orig: 3, 5
@@ -170,10 +170,21 @@ default-window
   orig: 27, 29
   offset: 0, 0
   index: -1
-menu-button
+menu-bar-button
   rotate: false
   xy: 125, 29
   size: 12, 20
+  split: 0, 0, 0, 0
+  pad: 5, 5, 1, 1
+  orig: 12, 20
+  offset: 0, 0
+  index: -1
+menu-button
+  rotate: false
+  xy: 151, 29
+  size: 12, 20
+  split: 0, 0, 0, 0
+  pad: 5, 5, 1, 1
   orig: 12, 20
   offset: 0, 0
   index: -1
@@ -181,33 +192,35 @@ menu-button-down
   rotate: false
   xy: 138, 29
   size: 12, 20
+  split: 0, 0, 0, 0
+  pad: 5, 5, 1, 1
   orig: 12, 20
   offset: 0, 0
   index: -1
 selection
   rotate: false
-  xy: 200, 48
+  xy: 213, 48
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 tree-minus
   rotate: false
-  xy: 166, 35
+  xy: 179, 35
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 tree-plus
   rotate: false
-  xy: 181, 35
+  xy: 194, 35
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 white
   rotate: false
-  xy: 155, 31
+  xy: 168, 31
   size: 3, 3
   orig: 3, 3
   offset: 0, 0

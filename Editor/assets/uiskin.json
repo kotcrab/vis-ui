@@ -17,7 +17,8 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: { down: default-round-down, up: default-round, font: default-font, fontColor: white },
 	toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: default-font, fontColor: white, downFontColor: red },
 	
-	menu: { down: menu-button-down, up: menu-button, over: menu-button-down, font: default-font, fontColor: white }
+	menu: { down: menu-button-down, up: menu-button, over: menu-button-down, font: default-font, fontColor: white },
+	menu-bar: { down: menu-button-down, up: menu-bar-button, over: menu-button-down, font: default-font, fontColor: white }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: { vScroll: default-scroll, hScrollKnob: default-round-large, background: default-rect, hScroll: default-scroll, vScrollKnob: default-round-large }

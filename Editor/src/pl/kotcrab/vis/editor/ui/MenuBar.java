@@ -1,31 +1,41 @@
 
 package pl.kotcrab.vis.editor.ui;
 
+
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 
-public class MenuBar extends Table {
+public class MenuBar {
 	private Array<MenuItem> menus;
 	private Stage stage;
 	private Skin skin;
 
+	private Table mainTable;
+	private Table menuItems;
+	
 	private Menu lastDisplayedMenu;
 	private boolean menuVisible = false;
 
 	public MenuBar (Stage stage, Skin skin) {
-		super(skin);
 		this.skin = skin;
 		this.stage = stage;
-
+		
 		menus = new Array<MenuItem>();
-
+		mainTable = new Table(skin);
+		menuItems = new Table(skin);
+		
+		mainTable.add(menuItems);
+		mainTable.add(new Image(skin.getRegion("menu-bar-button"))).expand().fill();
+		
 		stage.addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -67,8 +77,8 @@ public class MenuBar extends Table {
 
 		public MenuItem (Menu menu) {
 			this.menu = menu;
-			menuOpenButton = new TextButton(menu.getTitle(), skin, "menu");
-			add(menuOpenButton);
+			menuOpenButton = new TextButton(menu.getTitle(), skin, "menu-bar");
+			menuItems.add(menuOpenButton);
 
 			menuOpenButton.addListener(new InputListener() {
 				@Override
@@ -88,5 +98,9 @@ public class MenuBar extends Table {
 
 			lastDisplayedMenu = menu;
 		}
+	}
+
+	public Table getTable () {
+		return mainTable;
 	}
 }

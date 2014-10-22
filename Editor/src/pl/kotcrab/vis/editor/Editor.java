@@ -31,7 +31,7 @@ public class Editor extends ApplicationAdapter {
 
 		root = new Table();
 		root.setFillParent(true);
-		root.debug();
+//		root.debug();
 		stage.addActor(root);
 		
 		Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
@@ -40,7 +40,7 @@ public class Editor extends ApplicationAdapter {
 		mb = new MenuBar(stage, skin);
 
 		root.left().top();
-		root.add(mb);
+		root.add(mb.getTable()).fillX().expandX();
 
 		Menu m1 = new Menu("File");
 		Menu m2 = new Menu("Scene");
