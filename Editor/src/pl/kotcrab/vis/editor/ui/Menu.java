@@ -1,7 +1,6 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class Menu extends Table {
@@ -15,8 +14,8 @@ public class Menu extends Table {
 		return title;
 	}
 
-	public void addItem (Button button) {
-		add(button).row();
+	public void addItem (MenuItem item) {
+		add(item.button).fillX().row();
 		pack();
 	}
 }

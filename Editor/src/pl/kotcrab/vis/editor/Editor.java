@@ -3,6 +3,8 @@ package pl.kotcrab.vis.editor;
 
 import pl.kotcrab.vis.editor.ui.Menu;
 import pl.kotcrab.vis.editor.ui.MenuBar;
+import pl.kotcrab.vis.editor.ui.MenuItem;
+import pl.kotcrab.vis.editor.ui.UI;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -22,51 +24,47 @@ public class Editor extends ApplicationAdapter {
 	private Skin skin;
 	private Table root;
 	private ShapeRenderer shapeRenderer;
-	private MenuBar mb;
+	private MenuBar menuBar;
 
 	@Override
 	public void create () {
+		UI.load();
+
 		stage = new Stage(new ScreenViewport());
 
 		Gdx.input.setInputProcessor(stage);
 
 		root = new Table();
 		root.setFillParent(true);
-// root.debug();
+		if (UI.DEBUG) root.debug();
+		
 		stage.addActor(root);
+		
 
+		UI.skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 		shapeRenderer = new ShapeRenderer();
-		mb = new MenuBar(stage, skin);
+		menuBar = new MenuBar(stage, skin);
 
 		root.left().top();
-		root.add(mb.getTable()).fillX().expandX();
+		root.add(menuBar.getTable()).fillX().expandX();
 
 		Menu m1 = new Menu("File");
-		Menu m2 = new Menu("Scene");
-		Menu m3 = new Menu("Help");
 
-		mb.addMenu(m1);
-		mb.addMenu(m2);
-		mb.addMenu(m3);
-
-		m1.addItem(new TextButton("Test option 1", skin, "menu"));
-		m1.addItem(new TextButton("Test option 2", skin, "menu"));
-		m1.addItem(new TextButton("Test option 3", skin, "menu"));
-
-		m2.addItem(new TextButton("Test option 4", skin, "menu"));
-		m2.addItem(new TextButton("Test option 5", skin, "menu"));
-		m2.addItem(new TextButton("Test option 6", skin, "menu"));
-
-		m3.addItem(new TextButton("Test option 7", skin, "menu"));
-		m3.addItem(new TextButton("Test option 8", skin, "menu"));
-		m3.addItem(new TextButton("Test option 9", skin, "menu"));
+		menuBar.addMenu(m1);
+		
+		m1.addItem(new MenuItem("New project..."));
+		m1.addItem(new MenuItem("Load project..."));
+		m1.addItem(new MenuItem("Close project"));
+		m1.addItem(new MenuItem("Exit"));
 	}
 
 	@Override
 	public void resize (int width, int height) {
 		stage.getViewport().update(width, height, true);
 		shapeRenderer.setTransformMatrix(new Matrix4().setToOrtho2D(0, 0, width, height));
+		
+		menuBar.resize();
 	}
 
 	@Override
@@ -82,6 +80,8 @@ public class Editor extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
+		UI.dispose();
+
 		stage.dispose();
 		skin.dispose();
 		shapeRenderer.dispose();

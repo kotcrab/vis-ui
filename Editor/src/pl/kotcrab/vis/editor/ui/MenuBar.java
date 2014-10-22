@@ -1,6 +1,7 @@
 
 package pl.kotcrab.vis.editor.ui;
 
+import com.badlogic.gdx.graphics.g3d.utils.FirstPersonCameraController;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -14,21 +15,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 
 public class MenuBar {
-	private Array<MenuItem> menus;
+	private Array<MenuBarItem> menus;
 	private Stage stage;
 	private Skin skin;
 
 	private Table mainTable;
 	private Table menuItems;
 
-	private Menu lastDisplayedMenu;
+	private MenuBarItem currentMenu;
 	private boolean menuVisible = false;
 
 	public MenuBar (Stage stage, Skin skin) {
 		this.skin = skin;
 		this.stage = stage;
 
-		menus = new Array<MenuItem>();
+		menus = new Array<MenuBarItem>();
 		mainTable = new Table(skin);
 		menuItems = new Table(skin);
 
@@ -38,10 +39,10 @@ public class MenuBar {
 		stage.addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (lastDisplayedMenu != null) {
+				if (currentMenu != null) {
 					if (menuVisible) {
-						Vector2 pos = lastDisplayedMenu.localToStageCoordinates(new Vector2(0, 0));
-						Rectangle rect = new Rectangle(pos.x, pos.y, lastDisplayedMenu.getWidth(), lastDisplayedMenu.getHeight());
+						Vector2 pos = currentMenu.menu.localToStageCoordinates(new Vector2(0, 0));
+						Rectangle rect = new Rectangle(pos.x, pos.y, currentMenu.menu.getWidth(), currentMenu.menu.getHeight());
 
 						if (rect.contains(x, y) == false) closeMenu();
 						return true;
@@ -54,28 +55,30 @@ public class MenuBar {
 
 			@Override
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				if (lastDisplayedMenu != null && menuVisible) closeMenu();
+				if (menuVisible) closeMenu();
 			}
 
 		});
 	}
 
 	private void closeMenu () {
-		lastDisplayedMenu.remove();
-		lastDisplayedMenu = null;
-		menuVisible = false;
+		if (currentMenu != null) {
+			currentMenu.menu.remove();
+			currentMenu = null;
+			menuVisible = false;
+		}
 	}
 
 	public void addMenu (Menu menu) {
-		menus.add(new MenuItem(menu));
+		menus.add(new MenuBarItem(menu));
 		menu.clear();
 	}
 
-	private class MenuItem {
+	private class MenuBarItem {
 		public Menu menu;
 		public TextButton menuOpenButton;
 
-		public MenuItem (Menu menu) {
+		public MenuBarItem (Menu menu) {
 			this.menu = menu;
 			menuOpenButton = new TextButton(menu.getTitle(), skin, "menu-bar");
 			menuItems.add(menuOpenButton);
@@ -83,7 +86,7 @@ public class MenuBar {
 			menuOpenButton.addListener(new InputListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-					if (lastDisplayedMenu != null) closeMenu();
+					closeMenu();
 					showMenu();
 					return false;
 				}
@@ -96,7 +99,7 @@ public class MenuBar {
 		}
 
 		private void switchMenu () {
-			if (lastDisplayedMenu != null && lastDisplayedMenu != menu) {
+			if (currentMenu != null && currentMenu != this) {
 				closeMenu();
 				showMenu();
 				menuVisible = true; // manually set that menu is visible because touch down event won't occur
@@ -105,15 +108,18 @@ public class MenuBar {
 
 		private void showMenu () {
 			Vector2 pos = menuOpenButton.localToStageCoordinates(new Vector2(0, 0));
-
 			menu.setPosition(pos.x, pos.y - menu.getHeight());
 			stage.addActor(menu);
 
-			lastDisplayedMenu = menu;
+			currentMenu = this;
 		}
 	}
 
 	public Table getTable () {
 		return mainTable;
+	}
+
+	public void resize () {
+		closeMenu();
 	}
 }
