@@ -4,6 +4,7 @@ package pl.kotcrab.vis.editor;
 import java.awt.EventQueue;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
 public class Main {
 	public static void main (String[] args) {
@@ -15,6 +16,11 @@ public class Main {
 				}
 			});
 		} else
-			new LwjglApplication(new Editor());
+		{
+			LwjglApplicationConfiguration c = new LwjglApplicationConfiguration();
+			c.width = 1280;
+			c.height = 720;
+			new LwjglApplication(new Editor(), c);
+		}
 	}
 }
