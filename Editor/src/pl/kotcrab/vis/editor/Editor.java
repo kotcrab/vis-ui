@@ -1,6 +1,7 @@
 
 package pl.kotcrab.vis.editor;
 
+
 import pl.kotcrab.vis.editor.ui.Menu;
 import pl.kotcrab.vis.editor.ui.MenuBar;
 import pl.kotcrab.vis.editor.ui.MenuItem;
@@ -13,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -40,8 +42,6 @@ public class Editor extends ApplicationAdapter {
 		
 		stage.addActor(root);
 		
-
-		UI.skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 		shapeRenderer = new ShapeRenderer();
 		menuBar = new MenuBar(stage, skin);

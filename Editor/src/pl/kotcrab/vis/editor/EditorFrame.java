@@ -25,6 +25,7 @@ public class EditorFrame extends JFrame {
 
 	@Override
 	public void dispose () {
+		super.dispose();
 		Gdx.app.exit();
 	}
 }
