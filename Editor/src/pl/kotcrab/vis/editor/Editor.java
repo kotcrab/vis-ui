@@ -52,11 +52,12 @@ public class Editor extends ApplicationAdapter {
 		Menu fileMenu = new Menu("File");
 
 		menuBar.addMenu(fileMenu);
+		stage.addActor(new NewProjectDialog(stage, skin));
 
 		fileMenu.addItem(new MenuItem("New project...", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				new NewProjectDialog(skin).show(stage);
+				stage.addActor(new NewProjectDialog(stage, skin));
 			}
 		}));
 
