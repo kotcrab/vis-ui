@@ -19,6 +19,11 @@
 
 package pl.kotcrab.vis.editor.ui;
 
+import pl.kotcrab.vis.editor.ui.components.EmptyWidget;
+import pl.kotcrab.vis.editor.ui.components.VisTextButton;
+import pl.kotcrab.vis.editor.ui.components.VisTextField;
+import pl.kotcrab.vis.editor.ui.components.VisWindow;
+
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -32,12 +37,11 @@ public class NewProjectDialog extends VisWindow {
 	public NewProjectDialog (Stage parent, Skin skin) {
 		super(parent, "New Project", skin);
 		setModal(true);
-		System.out.println(getParent());
-
-		TextField projectRoot = new TextField("", skin);
-		TextButton chooseButton = new TextButton("Choose..", skin);
-		TextField sourceLoc = new TextField("/core/src", skin);
-		TextField assetsLoc = new TextField("/android/assets", skin);
+		
+		TextField projectRoot = new VisTextField("", skin);
+		TextButton chooseButton = new VisTextButton("Choose...", skin);
+		TextField sourceLoc = new VisTextField("/core/src", skin);
+		TextField assetsLoc = new VisTextField("/android/assets", skin);
 
 		CheckBox signFiles = new CheckBox(" Sign files using private key", skin);
 
@@ -46,7 +50,8 @@ public class NewProjectDialog extends VisWindow {
 		columnDefaults(0).left();
 		columnDefaults(1).width(300);
 
-		add(new Label("Project root:", skin)).spaceTop(6);
+		add(new EmptyWidget(10, 3)).space(0).row();
+		add(new Label("Project root:", skin));
 		add(projectRoot);
 		add(chooseButton);
 		row();
@@ -59,22 +64,23 @@ public class NewProjectDialog extends VisWindow {
 		add(assetsLoc).fill();
 		row();
 
-		add(signFiles).colspan(2).spaceBottom(0);
+		add(signFiles).colspan(2);
 		row();
 
-		TableUtils.setColumnsDefaults(this);
 
 		Table buttonTable = new Table();
 		TableUtils.setSpaceDefaults(buttonTable);
+		buttonTable.defaults().minWidth(70);
+		
+		TextButton cancelButton = new VisTextButton("Cancel", skin);
+		TextButton createButton = new VisTextButton("Create", skin);
 
-		TextButton cancelButton = new TextButton("Cancel", skin);
-		TextButton createButton = new TextButton("Create", skin);
-
-		buttonTable.add(cancelButton).minWidth(70);
-		buttonTable.add(createButton).minWidth(70);
+		buttonTable.add(cancelButton);
+		buttonTable.add(createButton);
 
 		add(buttonTable).colspan(3).right();
-
+		
+		//TableUtils.setColumnsDefaults(this);
 		pack();
 		setPositionToCenter();
 	}
