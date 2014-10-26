@@ -19,11 +19,11 @@
 
 package pl.kotcrab.vis.editor;
 
-import pl.kotcrab.vis.editor.ui.Menu;
-import pl.kotcrab.vis.editor.ui.MenuBar;
-import pl.kotcrab.vis.editor.ui.MenuItem;
 import pl.kotcrab.vis.editor.ui.NewProjectDialog;
 import pl.kotcrab.vis.editor.ui.UI;
+import pl.kotcrab.vis.editor.ui.components.Menu;
+import pl.kotcrab.vis.editor.ui.components.MenuBar;
+import pl.kotcrab.vis.editor.ui.components.MenuItem;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -60,7 +60,7 @@ public class Editor extends ApplicationAdapter {
 
 		stage.addActor(root);
 
-		skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
+		skin = UI.skin;
 		shapeRenderer = new ShapeRenderer();
 		menuBar = new MenuBar(stage, skin);
 
@@ -98,9 +98,11 @@ public class Editor extends ApplicationAdapter {
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 
-		shapeRenderer.begin(ShapeType.Line);
-		root.drawDebug(shapeRenderer); // This is optional, but enables debug lines for tables.
-		shapeRenderer.end();
+		if (UI.DEBUG) {
+			shapeRenderer.begin(ShapeType.Line);
+			root.drawDebug(shapeRenderer); // This is optional, but enables debug lines for tables.
+			shapeRenderer.end();
+		}
 	}
 
 	@Override
