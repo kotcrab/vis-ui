@@ -14,7 +14,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	toggle: { down: default-round-down, checked: default-round-down, up: default-round }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-	default: { down: default-round-down, up: default-round, font: default-font, fontColor: white },
+	default: { down: flat-button-down, up: flat-button, over: flat-button-over, font: default-font, fontColor: white },
 	toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: default-font, fontColor: white, downFontColor: red },
 	
 	menu: { down: menu-button-down, up: menu-button, over: menu-button-down, font: default-font, fontColor: white },
@@ -35,7 +35,7 @@ com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle: {
 	default-horizontal: { handle: default-splitpane }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
-	default: { titleFont: default-font, background: default-window, titleFontColor: white },
+	default: { titleFont: default-font, background: flat-window, titleFontColor: white },
 	dialog: { titleFont: default-font, background: default-window, titleFontColor: white, stageBackground: dialogDim }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
@@ -63,5 +63,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
 	default: { minus: tree-minus, plus: tree-plus, selection: default-select-selection }
+},
+pl.kotcrab.vis.editor.ui.components.VisTextField$VisTextFieldStyle: {
+	default: { selection: selection, background: textfield, focusBorder: flat-border, font: default-font, fontColor: white, cursor: cursor }
+},
+pl.kotcrab.vis.editor.ui.components.VisTextButton$VisTextButtonStyle: {
+	default: { down: flat-button-down, up: flat-button, over: flat-button-over, focusBorder: flat-border, font: default-font, fontColor: white }
 }
 }
