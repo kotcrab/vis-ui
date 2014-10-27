@@ -4,6 +4,64 @@ size: 512,128
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
+check-down
+  rotate: false
+  xy: 284, 92
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+check-down-on
+  rotate: false
+  xy: 312, 113
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+check-off
+  rotate: false
+  xy: 76, 48
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+textfield
+  rotate: false
+  xy: 76, 48
+  size: 14, 14
+  split: 1, 1, 1, 1
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+check-on
+  rotate: false
+  xy: 284, 77
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+check-over-off
+  rotate: false
+  xy: 327, 113
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+textfield-over
+  rotate: false
+  xy: 327, 113
+  size: 14, 14
+  split: 1, 1, 1, 1
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+check-over-on
+  rotate: false
+  xy: 91, 48
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
 cursor
   rotate: false
   xy: 76, 44
@@ -45,7 +103,7 @@ default-pane-noborder
   index: -1
 default-rect
   rotate: false
-  xy: 342, 124
+  xy: 357, 124
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -103,7 +161,7 @@ default-select
   index: -1
 default-select-selection
   rotate: false
-  xy: 106, 59
+  xy: 121, 59
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -175,50 +233,6 @@ flat-button-over
   orig: 12, 20
   offset: 0, 0
   index: -1
-flat-check-off
-  rotate: false
-  xy: 284, 92
-  size: 14, 14
-  orig: 14, 14
-  offset: 0, 0
-  index: -1
-textfield
-  rotate: false
-  xy: 284, 92
-  size: 14, 14
-  split: 1, 1, 1, 1
-  orig: 14, 14
-  offset: 0, 0
-  index: -1
-flat-check-on
-  rotate: false
-  xy: 312, 113
-  size: 14, 14
-  orig: 14, 14
-  offset: 0, 0
-  index: -1
-flat-check-over-off
-  rotate: false
-  xy: 76, 48
-  size: 14, 14
-  orig: 14, 14
-  offset: 0, 0
-  index: -1
-textfield-over
-  rotate: false
-  xy: 76, 48
-  size: 14, 14
-  split: 1, 1, 1, 1
-  orig: 14, 14
-  offset: 0, 0
-  index: -1
-flat-check-over-on
-  rotate: false
-  xy: 284, 77
-  size: 14, 14
-  orig: 14, 14
-  offset: 0, 0
-  index: -1
 flat-window
   rotate: false
   xy: 1, 28
@@ -263,14 +277,14 @@ selection
   index: -1
 tree-minus
   rotate: false
-  xy: 327, 113
+  xy: 342, 113
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 tree-plus
   rotate: false
-  xy: 91, 48
+  xy: 106, 48
   size: 14, 14
   orig: 14, 14
   offset: 0, 0

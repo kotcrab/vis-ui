@@ -82,7 +82,12 @@ public class VisCheckBox extends TextButton implements Focusable {
 				checkbox = style.checkboxOffDisabled;
 		}
 		if (checkbox == null) {
-			if (isChecked()) {
+			if (isPressed())
+				if (isChecked())
+					checkbox = style.checkboxOnDown;
+				else
+					checkbox = style.checkboxDown;
+			else if (isChecked()) {
 				if (isOver())
 					checkbox = style.checkboxOnOver;
 				else
@@ -97,7 +102,6 @@ public class VisCheckBox extends TextButton implements Focusable {
 		image.setDrawable(checkbox);
 		super.draw(batch, parentAlpha);
 
-		Vector2 pos = image.localToParentCoordinates(new Vector2(0, 0));
 		if (drawBorder) style.focusBorder.draw(batch, getX(), getY() + image.getWidth() / 3, image.getWidth(), image.getHeight());
 	}
 
@@ -112,6 +116,8 @@ public class VisCheckBox extends TextButton implements Focusable {
 	static public class VisCheckBoxStyle extends CheckBoxStyle {
 		public Drawable checkboxOnOver;
 		public Drawable focusBorder;
+		public Drawable checkboxDown;
+		public Drawable checkboxOnDown;
 
 		public VisCheckBoxStyle () {
 			super();
@@ -125,6 +131,8 @@ public class VisCheckBox extends TextButton implements Focusable {
 			super(style);
 			this.checkboxOnOver = style.checkboxOnOver;
 			this.focusBorder = style.focusBorder;
+			this.checkboxDown = style.checkboxDown;
+			this.checkboxOnDown = style.checkboxOnDown;
 		}
 	}
 

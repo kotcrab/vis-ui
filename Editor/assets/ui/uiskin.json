@@ -53,7 +53,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: { selection: selection, background: textfield, font: default-font, fontColor: white, cursor: cursor }
 },
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
-	default: { checkboxOn: flat-check-on, checkboxOff: flat-check-off, font: default-font, fontColor: white }
+	default: { checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white }
 },
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: { fontColorUnselected: white, selection: selection, fontColorSelected: white, font: default-font }
@@ -71,7 +71,7 @@ pl.kotcrab.vis.editor.ui.components.VisTextButton$VisTextButtonStyle: {
 	default: { down: flat-button-down, up: flat-button, over: flat-button-over, focusBorder: flat-border, font: default-font, fontColor: white }
 },
 pl.kotcrab.vis.editor.ui.components.VisCheckBox$VisCheckBoxStyle: {
-	default: { checkboxOn: flat-check-on, checkboxOff: flat-check-off, checkboxOver: flat-check-over-off, checkboxOnOver: flat-check-over-on, focusBorder: flat-border,
-	 font: default-font, fontColor: white }
+	default: { checkboxOn: check-on, checkboxOff: check-off, checkboxOver: check-over-off, checkboxOnOver: check-over-on, focusBorder: flat-border,
+	checkboxDown: check-down, checkboxOnDown: check-down-on,  font: default-font, fontColor: white }
 }
 }
