@@ -30,7 +30,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 public class NewProjectDialog extends VisWindow {
 
@@ -38,10 +37,10 @@ public class NewProjectDialog extends VisWindow {
 		super(parent, "New Project", skin);
 		setModal(true);
 		
-		TextField projectRoot = new VisTextField("", skin);
+		VisTextField projectRoot = new VisTextField("", skin);
 		TextButton chooseButton = new VisTextButton("Choose...", skin);
-		TextField sourceLoc = new VisTextField("/core/src", skin);
-		TextField assetsLoc = new VisTextField("/android/assets", skin);
+		VisTextField sourceLoc = new VisTextField("/core/src", skin);
+		VisTextField assetsLoc = new VisTextField("/android/assets", skin);
 
 		CheckBox signFiles = new CheckBox(" Sign files using private key", skin);
 
