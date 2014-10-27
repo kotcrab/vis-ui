@@ -20,12 +20,12 @@
 package pl.kotcrab.vis.editor.ui;
 
 import pl.kotcrab.vis.editor.ui.components.EmptyWidget;
+import pl.kotcrab.vis.editor.ui.components.VisCheckBox;
 import pl.kotcrab.vis.editor.ui.components.VisTextButton;
 import pl.kotcrab.vis.editor.ui.components.VisTextField;
 import pl.kotcrab.vis.editor.ui.components.VisWindow;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -42,7 +42,7 @@ public class NewProjectDialog extends VisWindow {
 		VisTextField sourceLoc = new VisTextField("/core/src", skin);
 		VisTextField assetsLoc = new VisTextField("/android/assets", skin);
 
-		CheckBox signFiles = new CheckBox(" Sign files using private key", skin);
+		VisCheckBox signFiles = new VisCheckBox(" Sign files using private key", skin);
 
 		TableUtils.setSpaceDefaults(this);
 
@@ -62,7 +62,7 @@ public class NewProjectDialog extends VisWindow {
 		add(new Label("Assets folder:", skin));
 		add(assetsLoc).fill();
 		row();
-
+		
 		add(signFiles).colspan(2);
 		row();
 

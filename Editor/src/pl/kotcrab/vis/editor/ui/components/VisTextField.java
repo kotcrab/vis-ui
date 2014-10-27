@@ -1,6 +1,9 @@
 
 package pl.kotcrab.vis.editor.ui.components;
 
+import pl.kotcrab.vis.editor.ui.Focusable;
+import pl.kotcrab.vis.editor.ui.UI;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
@@ -44,10 +47,10 @@ import com.badlogic.gdx.utils.Timer.Task;
  * The desktop keyboard is a stub, as a softkeyboard is not needed on the desktop. The Android {@link OnscreenKeyboard}
  * implementation will bring up the default IME.
  * @author mzechner
- * @author Nathan Sweet 
- * @author Pawel Pastuszak*/
-public class VisTextField extends Widget implements Disableable {
-	//This class were copied from LibGDX TextField, few lines were changed
+ * @author Nathan Sweet
+ * @author Pawel Pastuszak */
+public class VisTextField extends Widget implements Disableable, Focusable {
+	// This class were copied from LibGDX TextField, few lines were changed
 	private VisTextFieldStyle style;
 
 	static private final char BACKSPACE = 8;
@@ -95,6 +98,8 @@ public class VisTextField extends Widget implements Disableable {
 	float keyRepeatTime = 0.1f;
 
 	private ClickListener clickListener;
+
+	private boolean drawBorder;
 
 	public VisTextField (String text, Skin skin) {
 		this(text, skin.get(VisTextFieldStyle.class));
@@ -261,7 +266,7 @@ public class VisTextField extends Widget implements Disableable {
 		Drawable background = (disabled && style.disabledBackground != null) ? style.disabledBackground
 			: ((focused && style.focusedBackground != null) ? style.focusedBackground : style.background);
 
-		//vis
+		// vis
 		if (clickListener.isOver() && style.backgroundOver != null) background = style.backgroundOver;
 
 		Color color = getColor();
@@ -306,8 +311,8 @@ public class VisTextField extends Widget implements Disableable {
 			}
 		}
 
-		//vis
-		if (focused && style.focusBorder != null) style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
+		// vis
+		if (drawBorder) style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
 
 	protected float getTextY (BitmapFont font, Drawable background) {
@@ -715,6 +720,7 @@ public class VisTextField extends Widget implements Disableable {
 			if (!super.touchDown(event, x, y, pointer, button)) return false;
 			if (pointer == 0 && button != 0) return false;
 			if (disabled) return true;
+			UI.focusManager.requestFocus(VisTextField.this);
 			setCursorPosition(x, y);
 			selectionStart = cursor;
 			Stage stage = getStage();
@@ -923,5 +929,15 @@ public class VisTextField extends Widget implements Disableable {
 			super(style);
 			this.focusBorder = style.focusBorder;
 		}
+	}
+
+	@Override
+	public void focusLost () {
+		drawBorder = false;
+	}
+
+	@Override
+	public void focusGained () {
+		drawBorder = true;
 	}
 }

@@ -1,13 +1,18 @@
 
 package pl.kotcrab.vis.editor.ui.components;
 
+import pl.kotcrab.vis.editor.ui.Focusable;
+import pl.kotcrab.vis.editor.ui.UI;
+
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
-public class VisTextButton extends TextButton {
+public class VisTextButton extends TextButton implements Focusable {
 	private VisTextButtonStyle style;
 
 	private boolean drawBorder;
@@ -15,20 +20,20 @@ public class VisTextButton extends TextButton {
 	public VisTextButton (String text, Skin skin) {
 		super(text, skin.get(VisTextButtonStyle.class));
 		style = (VisTextButtonStyle)getStyle();
-	}
 
-	@Override
-	public void act (float delta) {
-		super.act(delta);
-
-		if (isPressed()) drawBorder = true;
-		if (isOver() == false) drawBorder = false;
+		addListener(new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				UI.focusManager.requestFocus(VisTextButton.this);
+				return false;
+			}
+		});
 	}
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		if (style.focusBorder != null && drawBorder) style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
+		if (drawBorder) style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
 
 	static public class VisTextButtonStyle extends TextButtonStyle {
@@ -46,5 +51,15 @@ public class VisTextButton extends TextButton {
 			super(style);
 			this.focusBorder = style.focusBorder;
 		}
+	}
+
+	@Override
+	public void focusLost () {
+		drawBorder = false;
+	}
+
+	@Override
+	public void focusGained () {
+		drawBorder = true;
 	}
 }

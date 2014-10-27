@@ -69,5 +69,9 @@ pl.kotcrab.vis.editor.ui.components.VisTextField$VisTextFieldStyle: {
 },
 pl.kotcrab.vis.editor.ui.components.VisTextButton$VisTextButtonStyle: {
 	default: { down: flat-button-down, up: flat-button, over: flat-button-over, focusBorder: flat-border, font: default-font, fontColor: white }
+},
+pl.kotcrab.vis.editor.ui.components.VisCheckBox$VisCheckBoxStyle: {
+	default: { checkboxOn: flat-check-on, checkboxOff: flat-check-off, checkboxOver: flat-check-over-off, checkboxOnOver: flat-check-over-on, focusBorder: flat-border,
+	 font: default-font, fontColor: white }
 }
 }

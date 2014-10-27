@@ -45,7 +45,7 @@ default-pane-noborder
   index: -1
 default-rect
   rotate: false
-  xy: 284, 73
+  xy: 342, 124
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -53,7 +53,7 @@ default-rect
   index: -1
 default-rect-down
   rotate: false
-  xy: 91, 59
+  xy: 284, 73
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -103,7 +103,7 @@ default-select
   index: -1
 default-select-selection
   rotate: false
-  xy: 342, 124
+  xy: 106, 59
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -197,6 +197,28 @@ flat-check-on
   orig: 14, 14
   offset: 0, 0
   index: -1
+flat-check-over-off
+  rotate: false
+  xy: 76, 48
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+textfield-over
+  rotate: false
+  xy: 76, 48
+  size: 14, 14
+  split: 1, 1, 1, 1
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+flat-check-over-on
+  rotate: false
+  xy: 284, 77
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
 flat-window
   rotate: false
   xy: 1, 28
@@ -239,24 +261,16 @@ selection
   orig: 1, 1
   offset: 0, 0
   index: -1
-textfield-over
-  rotate: false
-  xy: 76, 48
-  size: 14, 14
-  split: 1, 1, 1, 1
-  orig: 14, 14
-  offset: 0, 0
-  index: -1
 tree-minus
   rotate: false
-  xy: 284, 77
+  xy: 327, 113
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 tree-plus
   rotate: false
-  xy: 327, 113
+  xy: 91, 48
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
