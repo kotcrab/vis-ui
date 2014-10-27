@@ -36,7 +36,7 @@ public class NewProjectDialog extends VisWindow {
 	public NewProjectDialog (Stage parent, Skin skin) {
 		super(parent, "New Project", skin);
 		setModal(true);
-		
+
 		VisTextField projectRoot = new VisTextField("", skin);
 		TextButton chooseButton = new VisTextButton("Choose...", skin);
 		VisTextField sourceLoc = new VisTextField("/core/src", skin);
@@ -62,15 +62,14 @@ public class NewProjectDialog extends VisWindow {
 		add(new Label("Assets folder:", skin));
 		add(assetsLoc).fill();
 		row();
-		
+
 		add(signFiles).colspan(2);
 		row();
-
 
 		Table buttonTable = new Table();
 		TableUtils.setSpaceDefaults(buttonTable);
 		buttonTable.defaults().minWidth(70);
-		
+
 		TextButton cancelButton = new VisTextButton("Cancel", skin);
 		TextButton createButton = new VisTextButton("Create", skin);
 
@@ -78,8 +77,8 @@ public class NewProjectDialog extends VisWindow {
 		buttonTable.add(createButton);
 
 		add(buttonTable).colspan(3).right();
-		
-		//TableUtils.setColumnsDefaults(this);
+
+		// TableUtils.setColumnsDefaults(this);
 		pack();
 		setPositionToCenter();
 	}
