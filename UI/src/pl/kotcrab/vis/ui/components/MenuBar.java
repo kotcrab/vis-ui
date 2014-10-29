@@ -16,6 +16,8 @@
 
 package pl.kotcrab.vis.ui.components;
 
+import pl.kotcrab.vis.ui.VisUI;
+
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -39,8 +41,8 @@ public class MenuBar {
 	private MenuBarItem currentMenu;
 	private boolean menuVisible = false;
 
-	public MenuBar (Stage stage, Skin skin) {
-		this.skin = skin;
+	public MenuBar (Stage stage) {
+		this.skin = VisUI.skin;
 		this.stage = stage;
 
 		menus = new Array<MenuBarItem>();

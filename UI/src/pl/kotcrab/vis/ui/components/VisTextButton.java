@@ -18,12 +18,12 @@ package pl.kotcrab.vis.ui.components;
 
 import pl.kotcrab.vis.ui.FocusManager;
 import pl.kotcrab.vis.ui.Focusable;
+import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
@@ -32,8 +32,8 @@ public class VisTextButton extends TextButton implements Focusable {
 
 	private boolean drawBorder;
 
-	public VisTextButton (String text, Skin skin) {
-		super(text, skin.get(VisTextButtonStyle.class));
+	public VisTextButton (String text) {
+		super(text, VisUI.skin.get(VisTextButtonStyle.class));
 		style = (VisTextButtonStyle)getStyle();
 
 		addListener(new InputListener() {

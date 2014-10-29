@@ -18,6 +18,7 @@ package pl.kotcrab.vis.ui.components;
 
 import pl.kotcrab.vis.ui.FocusManager;
 import pl.kotcrab.vis.ui.Focusable;
+import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -28,7 +29,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -46,12 +46,12 @@ public class VisCheckBox extends TextButton implements Focusable {
 
 	private boolean drawBorder;
 
-	public VisCheckBox (String text, Skin skin) {
-		this(text, skin.get(VisCheckBoxStyle.class));
+	public VisCheckBox (String text) {
+		this(text, VisUI.skin.get(VisCheckBoxStyle.class));
 	}
 
-	public VisCheckBox (String text, Skin skin, String styleName) {
-		this(text, skin.get(styleName, VisCheckBoxStyle.class));
+	public VisCheckBox (String text, String styleName) {
+		this(text, VisUI.skin.get(styleName, VisCheckBoxStyle.class));
 	}
 
 	public VisCheckBox (String text, VisCheckBoxStyle style) {

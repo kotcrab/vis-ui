@@ -33,7 +33,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -59,9 +58,8 @@ public class Editor extends ApplicationAdapter {
 
 		stage.addActor(root);
 
-		final Skin skin = VisUI.skin;
 		shapeRenderer = new ShapeRenderer();
-		menuBar = new MenuBar(stage, skin);
+		menuBar = new MenuBar(stage);
 
 		root.left().top();
 		root.add(menuBar.getTable()).fillX().expandX();
@@ -69,12 +67,12 @@ public class Editor extends ApplicationAdapter {
 		Menu fileMenu = new Menu("File");
 
 		menuBar.addMenu(fileMenu);
-		stage.addActor(new NewProjectDialog(stage, skin));
+		stage.addActor(new NewProjectDialog(stage));
 
 		fileMenu.addItem(new MenuItem("New project...", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				stage.addActor(new NewProjectDialog(stage, skin));
+				stage.addActor(new NewProjectDialog(stage));
 			}
 		}));
 

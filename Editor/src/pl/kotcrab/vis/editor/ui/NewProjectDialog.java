@@ -22,28 +22,27 @@ package pl.kotcrab.vis.editor.ui;
 import pl.kotcrab.vis.editor.ui.components.EmptyWidget;
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.components.VisCheckBox;
+import pl.kotcrab.vis.ui.components.VisLabel;
 import pl.kotcrab.vis.ui.components.VisTextButton;
 import pl.kotcrab.vis.ui.components.VisTextField;
 import pl.kotcrab.vis.ui.components.VisWindow;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 public class NewProjectDialog extends VisWindow {
 
-	public NewProjectDialog (Stage parent, Skin skin) {
+	public NewProjectDialog (Stage parent) {
 		super(parent, "New Project");
 		setModal(true);
 
-		VisTextField projectRoot = new VisTextField("", skin);
-		TextButton chooseButton = new VisTextButton("Choose...", skin);
-		VisTextField sourceLoc = new VisTextField("/core/src", skin);
-		VisTextField assetsLoc = new VisTextField("/android/assets", skin);
+		VisTextField projectRoot = new VisTextField("");
+		TextButton chooseButton = new VisTextButton("Choose...");
+		VisTextField sourceLoc = new VisTextField("/core/src");
+		VisTextField assetsLoc = new VisTextField("/android/assets");
 
-		VisCheckBox signFiles = new VisCheckBox(" Sign files using private key", skin);
+		VisCheckBox signFiles = new VisCheckBox(" Sign files using private key");
 
 		TableUtils.setSpaceDefaults(this);
 
@@ -51,16 +50,16 @@ public class NewProjectDialog extends VisWindow {
 		columnDefaults(1).width(300);
 
 		add(new EmptyWidget(10, 3)).space(0).row();
-		add(new Label("Project root:", skin));
+		add(new VisLabel("Project root:"));
 		add(projectRoot);
 		add(chooseButton);
 		row();
 
-		add(new Label("Source folder:", skin));
+		add(new VisLabel("Source folder:"));
 		add(sourceLoc).fill();
 		row();
 
-		add(new Label("Assets folder:", skin));
+		add(new VisLabel("Assets folder:"));
 		add(assetsLoc).fill();
 		row();
 
@@ -71,8 +70,8 @@ public class NewProjectDialog extends VisWindow {
 		TableUtils.setSpaceDefaults(buttonTable);
 		buttonTable.defaults().minWidth(70);
 
-		TextButton cancelButton = new VisTextButton("Cancel", skin);
-		TextButton createButton = new VisTextButton("Create", skin);
+		TextButton cancelButton = new VisTextButton("Cancel");
+		TextButton createButton = new VisTextButton("Create");
 
 		buttonTable.add(cancelButton);
 		buttonTable.add(createButton);

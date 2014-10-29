@@ -18,6 +18,7 @@ package pl.kotcrab.vis.ui.components;
 
 import pl.kotcrab.vis.ui.FocusManager;
 import pl.kotcrab.vis.ui.Focusable;
+import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -32,7 +33,6 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
@@ -116,12 +116,16 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 	private boolean drawBorder;
 
-	public VisTextField (String text, Skin skin) {
-		this(text, skin.get(VisTextFieldStyle.class));
+	public VisTextField () {
+		this("", VisUI.skin.get(VisTextFieldStyle.class));
 	}
 
-	public VisTextField (String text, Skin skin, String styleName) {
-		this(text, skin.get(styleName, VisTextFieldStyle.class));
+	public VisTextField (String text) {
+		this(text, VisUI.skin.get(VisTextFieldStyle.class));
+	}
+
+	public VisTextField (String text, String styleName) {
+		this(text, VisUI.skin.get(styleName, VisTextFieldStyle.class));
 	}
 
 	public VisTextField (String text, VisTextFieldStyle style) {
