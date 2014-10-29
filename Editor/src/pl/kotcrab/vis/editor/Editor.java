@@ -41,7 +41,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class Editor extends ApplicationAdapter {
 
 	private Stage stage;
-	private Skin skin;
 	private Table root;
 	private ShapeRenderer shapeRenderer;
 	private MenuBar menuBar;
@@ -60,7 +59,7 @@ public class Editor extends ApplicationAdapter {
 
 		stage.addActor(root);
 
-		skin = VisUI.skin;
+		final Skin skin = VisUI.skin;
 		shapeRenderer = new ShapeRenderer();
 		menuBar = new MenuBar(stage, skin);
 
@@ -110,7 +109,6 @@ public class Editor extends ApplicationAdapter {
 		VisUI.dispose();
 
 		stage.dispose();
-		skin.dispose();
 		shapeRenderer.dispose();
 	}
 
