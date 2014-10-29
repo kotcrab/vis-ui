@@ -64,13 +64,13 @@ com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
 	default: { minus: tree-minus, plus: tree-plus, selection: default-select-selection }
 },
-pl.kotcrab.vis.editor.ui.components.VisTextField$VisTextFieldStyle: {
+pl.kotcrab.vis.ui.components.VisTextField$VisTextFieldStyle: {
 	default: { selection: selection, background: textfield, backgroundOver: textfield-over, focusBorder: flat-border, font: default-font, fontColor: white, cursor: cursor }
 },
-pl.kotcrab.vis.editor.ui.components.VisTextButton$VisTextButtonStyle: {
+pl.kotcrab.vis.ui.components.VisTextButton$VisTextButtonStyle: {
 	default: { down: flat-button-down, up: flat-button, over: flat-button-over, focusBorder: flat-border, font: default-font, fontColor: white }
 },
-pl.kotcrab.vis.editor.ui.components.VisCheckBox$VisCheckBoxStyle: {
+pl.kotcrab.vis.ui.components.VisCheckBox$VisCheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, checkboxOver: check-over-off, checkboxOnOver: check-over-on, focusBorder: flat-border,
 	checkboxDown: check-down, checkboxOnDown: check-down-on,  font: default-font, fontColor: white }
 }
