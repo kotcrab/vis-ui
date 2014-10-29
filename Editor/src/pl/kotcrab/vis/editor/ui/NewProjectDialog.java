@@ -20,10 +20,10 @@
 package pl.kotcrab.vis.editor.ui;
 
 import pl.kotcrab.vis.editor.ui.components.EmptyWidget;
-import pl.kotcrab.vis.editor.ui.components.VisCheckBox;
-import pl.kotcrab.vis.editor.ui.components.VisTextButton;
-import pl.kotcrab.vis.editor.ui.components.VisTextField;
 import pl.kotcrab.vis.editor.ui.components.VisWindow;
+import pl.kotcrab.vis.ui.components.VisCheckBox;
+import pl.kotcrab.vis.ui.components.VisTextButton;
+import pl.kotcrab.vis.ui.components.VisTextField;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;

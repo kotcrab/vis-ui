@@ -35,6 +35,12 @@
 			<classifier>natives-desktop</classifier>
 		</dependency>
 
+		<dependency>
+			<groupId>pl.kotcrab.vis</groupId>
+			<artifactId>vis-ui</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

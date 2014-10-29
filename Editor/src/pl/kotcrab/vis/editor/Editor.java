@@ -20,10 +20,10 @@
 package pl.kotcrab.vis.editor;
 
 import pl.kotcrab.vis.editor.ui.NewProjectDialog;
-import pl.kotcrab.vis.editor.ui.UI;
-import pl.kotcrab.vis.editor.ui.components.Menu;
-import pl.kotcrab.vis.editor.ui.components.MenuBar;
-import pl.kotcrab.vis.editor.ui.components.MenuItem;
+import pl.kotcrab.vis.ui.VisUI;
+import pl.kotcrab.vis.ui.components.Menu;
+import pl.kotcrab.vis.ui.components.MenuBar;
+import pl.kotcrab.vis.ui.components.MenuItem;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -48,7 +48,7 @@ public class Editor extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		UI.load();
+		VisUI.load();
 
 		stage = new Stage(new ScreenViewport());
 
@@ -56,11 +56,11 @@ public class Editor extends ApplicationAdapter {
 
 		root = new Table();
 		root.setFillParent(true);
-		if (UI.DEBUG) root.debug();
+		if (VisUI.DEBUG) root.debug();
 
 		stage.addActor(root);
 
-		skin = UI.skin;
+		skin = VisUI.skin;
 		shapeRenderer = new ShapeRenderer();
 		menuBar = new MenuBar(stage, skin);
 
@@ -98,7 +98,7 @@ public class Editor extends ApplicationAdapter {
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 
-		if (UI.DEBUG) {
+		if (VisUI.DEBUG) {
 			shapeRenderer.begin(ShapeType.Line);
 			root.drawDebug(shapeRenderer); // This is optional, but enables debug lines for tables.
 			shapeRenderer.end();
@@ -107,7 +107,7 @@ public class Editor extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
-		UI.dispose();
+		VisUI.dispose();
 
 		stage.dispose();
 		skin.dispose();
