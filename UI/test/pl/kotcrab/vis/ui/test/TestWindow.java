@@ -1,40 +1,38 @@
-/**
+/*******************************************************************************
  * Copyright 2014 Pawel Pastuszak
- * 
- * This file is part of VisEditor.
- * 
- * VisEditor is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * VisEditor is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
- */
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 
 package pl.kotcrab.vis.ui.test;
 
+import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.components.VisCheckBox;
 import pl.kotcrab.vis.ui.components.VisTextButton;
 import pl.kotcrab.vis.ui.components.VisTextField;
+import pl.kotcrab.vis.ui.components.VisWindow;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
-public class TestWindow extends Window {
+public class TestWindow extends VisWindow {
 
 	public TestWindow (Stage parent) {
-		super("Test window", VisUI.skin);
+		super(parent, "Test window");
 		Skin skin = VisUI.skin;
 		setModal(true);
 
@@ -44,6 +42,8 @@ public class TestWindow extends Window {
 		VisTextField assetsLoc = new VisTextField("/android/assets", skin);
 
 		VisCheckBox signFiles = new VisCheckBox(" Sign files using private key", skin);
+
+		TableUtils.setSpaceDefaults(this);
 
 		columnDefaults(0).left();
 		columnDefaults(1).width(300);
@@ -65,6 +65,8 @@ public class TestWindow extends Window {
 		row();
 
 		Table buttonTable = new Table();
+		TableUtils.setSpaceDefaults(buttonTable);
+
 		buttonTable.defaults().minWidth(70);
 
 		TextButton cancelButton = new VisTextButton("Cancel", skin);
@@ -75,7 +77,7 @@ public class TestWindow extends Window {
 
 		add(buttonTable).colspan(3).right();
 
-		// TableUtils.setColumnsDefaults(this);
 		pack();
+		setPositionToCenter();
 	}
 }

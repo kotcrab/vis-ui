@@ -20,10 +20,11 @@
 package pl.kotcrab.vis.editor.ui;
 
 import pl.kotcrab.vis.editor.ui.components.EmptyWidget;
-import pl.kotcrab.vis.editor.ui.components.VisWindow;
+import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.components.VisCheckBox;
 import pl.kotcrab.vis.ui.components.VisTextButton;
 import pl.kotcrab.vis.ui.components.VisTextField;
+import pl.kotcrab.vis.ui.components.VisWindow;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -34,7 +35,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 public class NewProjectDialog extends VisWindow {
 
 	public NewProjectDialog (Stage parent, Skin skin) {
-		super(parent, "New Project", skin);
+		super(parent, "New Project");
 		setModal(true);
 
 		VisTextField projectRoot = new VisTextField("", skin);
