@@ -20,8 +20,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 public class VisUI {
-	public static FocusManager focusManager = new FocusManager();
-
 	public static final boolean DEBUG = false;
 	public static Skin skin;
 

@@ -16,8 +16,8 @@
 
 package pl.kotcrab.vis.ui.components;
 
+import pl.kotcrab.vis.ui.FocusManager;
 import pl.kotcrab.vis.ui.Focusable;
-import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -735,7 +735,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			if (!super.touchDown(event, x, y, pointer, button)) return false;
 			if (pointer == 0 && button != 0) return false;
 			if (disabled) return true;
-			VisUI.focusManager.requestFocus(VisTextField.this);
+			FocusManager.requestFocus(VisTextField.this);
 			setCursorPosition(x, y);
 			selectionStart = cursor;
 			Stage stage = getStage();

@@ -16,8 +16,8 @@
 
 package pl.kotcrab.vis.ui.components;
 
+import pl.kotcrab.vis.ui.FocusManager;
 import pl.kotcrab.vis.ui.Focusable;
-import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -66,7 +66,7 @@ public class VisCheckBox extends TextButton implements Focusable {
 		addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				VisUI.focusManager.requestFocus(VisCheckBox.this);
+				FocusManager.requestFocus(VisCheckBox.this);
 				return false;
 			}
 		});

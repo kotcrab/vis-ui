@@ -16,8 +16,8 @@
 
 package pl.kotcrab.vis.ui.components;
 
+import pl.kotcrab.vis.ui.FocusManager;
 import pl.kotcrab.vis.ui.Focusable;
-import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -39,7 +39,7 @@ public class VisTextButton extends TextButton implements Focusable {
 		addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				VisUI.focusManager.requestFocus(VisTextButton.this);
+				FocusManager.requestFocus(VisTextButton.this);
 				return false;
 			}
 		});
