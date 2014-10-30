@@ -20,6 +20,7 @@ import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.components.VisCheckBox;
 import pl.kotcrab.vis.ui.components.VisLabel;
+import pl.kotcrab.vis.ui.components.VisRadioButton;
 import pl.kotcrab.vis.ui.components.VisTextButton;
 import pl.kotcrab.vis.ui.components.VisTextField;
 import pl.kotcrab.vis.ui.components.VisWindow;
@@ -66,7 +67,20 @@ public class TestWindow extends VisWindow {
 		checkboxTable.add(disabledCheckedCheckbox);
 
 		// ---
+		VisRadioButton normalRadio= new VisRadioButton(" radio");
+		VisRadioButton disabledRadio = new VisRadioButton(" disabled");
+		VisRadioButton disabledCheckedRadio = new VisRadioButton(" disabled radio");
+		disabledRadio.setDisabled(true);
+		disabledCheckedCheckbox.setDisabled(true);
+		disabledCheckedRadio.setChecked(true);
 
+		VisTable radioTable = new VisTable(true);
+		radioTable.add(normalRadio);
+		radioTable.add(disabledRadio);
+		radioTable.add(disabledCheckedRadio);
+		
+		//---F
+		
 		VisTextField normalTextfield = new VisTextField("textbox");
 		VisTextField disabledTextfield = new VisTextField("disabled");
 		VisTextField passwordTextfield = new VisTextField("password");
@@ -83,6 +97,7 @@ public class TestWindow extends VisWindow {
 		add(labelTable).row();
 		add(buttonTable).row();
 		add(checkboxTable).row();
+		add(radioTable).row();
 		add(textfieldTable).row();
 
 		pack();
