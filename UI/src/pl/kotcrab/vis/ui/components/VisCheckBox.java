@@ -101,7 +101,7 @@ public class VisCheckBox extends TextButton implements Focusable {
 				if (isChecked())
 					checkbox = style.checkboxOnDown;
 				else
-					checkbox = style.checkboxDown;
+					checkbox = style.checkboxOffDown;
 			else if (isChecked()) {
 				if (isOver())
 					checkbox = style.checkboxOnOver;
@@ -129,10 +129,10 @@ public class VisCheckBox extends TextButton implements Focusable {
 	}
 
 	static public class VisCheckBoxStyle extends CheckBoxStyle {
-		public Drawable checkboxOnOver;
 		public Drawable focusBorder;
-		public Drawable checkboxDown;
+		public Drawable checkboxOnOver;
 		public Drawable checkboxOnDown;
+		public Drawable checkboxOffDown;
 
 		public VisCheckBoxStyle () {
 			super();
@@ -144,10 +144,10 @@ public class VisCheckBox extends TextButton implements Focusable {
 
 		public VisCheckBoxStyle (VisCheckBoxStyle style) {
 			super(style);
-			this.checkboxOnOver = style.checkboxOnOver;
 			this.focusBorder = style.focusBorder;
-			this.checkboxDown = style.checkboxDown;
+			this.checkboxOnOver = style.checkboxOnOver;
 			this.checkboxOnDown = style.checkboxOnDown;
+			this.checkboxOffDown = style.checkboxOffDown;
 		}
 	}
 
