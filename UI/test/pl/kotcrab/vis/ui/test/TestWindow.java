@@ -55,11 +55,15 @@ public class TestWindow extends VisWindow {
 
 		VisCheckBox normalCheckbox = new VisCheckBox(" checkbox");
 		VisCheckBox disabledCheckbox = new VisCheckBox(" disabled");
+		VisCheckBox disabledCheckedCheckbox = new VisCheckBox(" disabled checked");
 		disabledCheckbox.setDisabled(true);
+		disabledCheckedCheckbox.setDisabled(true);
+		disabledCheckedCheckbox.setChecked(true);
 
 		VisTable checkboxTable = new VisTable(true);
 		checkboxTable.add(normalCheckbox);
 		checkboxTable.add(disabledCheckbox);
+		checkboxTable.add(disabledCheckedCheckbox);
 
 		// ---
 
@@ -68,7 +72,6 @@ public class TestWindow extends VisWindow {
 		VisTextField passwordTextfield = new VisTextField("password");
 		disabledTextfield.setDisabled(true);
 		passwordTextfield.setPasswordMode(true);
-		passwordTextfield.setPasswordCharacter('*');
 
 		VisTable textfieldTable = new VisTable(true);
 		textfieldTable.add(normalTextfield);

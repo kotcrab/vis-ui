@@ -75,6 +75,6 @@ pl.kotcrab.vis.ui.components.VisTextButton$VisTextButtonStyle: {
 },
 pl.kotcrab.vis.ui.components.VisCheckBox$VisCheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, checkboxOver: check-over-off, checkboxOnOver: check-over-on, focusBorder: flat-border,
-	checkboxDown: check-down, checkboxOnDown: check-down-on,  font: default-font, fontColor: white }
+	checkboxDown: check-down, checkboxOnDown: check-down-on, checkboxOffDisabled: check-off, checkboxOnDisabled: check-on-disabled,  font: default-font, fontColor: white }
 }
 }

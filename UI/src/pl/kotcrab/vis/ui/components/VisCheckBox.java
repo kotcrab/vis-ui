@@ -66,7 +66,7 @@ public class VisCheckBox extends TextButton implements Focusable {
 		addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				FocusManager.requestFocus(VisCheckBox.this);
+				if (isDisabled() == false) FocusManager.requestFocus(VisCheckBox.this);
 				return false;
 			}
 		});
@@ -90,11 +90,12 @@ public class VisCheckBox extends TextButton implements Focusable {
 	public void draw (Batch batch, float parentAlpha) {
 		Drawable checkbox = null;
 		if (isDisabled()) {
-			if (isChecked() && style.checkboxOnDisabled != null)
+			if (isChecked() )
 				checkbox = style.checkboxOnDisabled;
 			else
 				checkbox = style.checkboxOffDisabled;
 		}
+		
 		if (checkbox == null) {
 			if (isPressed())
 				if (isChecked())

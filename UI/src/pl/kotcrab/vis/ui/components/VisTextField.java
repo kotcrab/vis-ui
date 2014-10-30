@@ -73,7 +73,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	static protected final char ENTER_ANDROID = '\n';
 	static private final char TAB = '\t';
 	static private final char DELETE = 127;
-	static private final char BULLET = 149;
+	static private final char BULLET = 8226;
 
 	static private final Vector2 tmp1 = new Vector2();
 	static private final Vector2 tmp2 = new Vector2();
