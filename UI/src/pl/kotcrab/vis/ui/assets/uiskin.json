@@ -4,7 +4,8 @@ com.badlogic.gdx.graphics.Color: {
 	green: { a: 1, b: 0, g: 1, r: 0 },
 	white: { a: 1, b: 1, g: 1, r: 1 },
 	red: { a: 1, b: 0, g: 0, r: 1 },
-	black: { a: 1, b: 0, g: 0, r: 0 }
+	black: { a: 1, b: 0, g: 0, r: 0 },
+	grey: { a: 1, b: 0.32, g: 0.32, r: 0.32 }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } }
@@ -65,10 +66,12 @@ com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
 	default: { minus: tree-minus, plus: tree-plus, selection: default-select-selection }
 },
 pl.kotcrab.vis.ui.components.VisTextField$VisTextFieldStyle: {
-	default: { selection: selection, background: textfield, backgroundOver: textfield-over, focusBorder: flat-border, font: default-font, fontColor: white, cursor: cursor }
+	default: { selection: selection, background: textfield, backgroundOver: textfield-over, focusBorder: flat-border, font: default-font, fontColor: white, disabledFontColor: grey,
+	cursor: cursor }
 },
 pl.kotcrab.vis.ui.components.VisTextButton$VisTextButtonStyle: {
-	default: { down: flat-button-down, up: flat-button, over: flat-button-over, focusBorder: flat-border, font: default-font, fontColor: white }
+	default: { down: flat-button-down, up: flat-button, over: flat-button-over, disabled: flat-button, focusBorder: flat-border, 
+	font: default-font, fontColor: white, disabledFontColor: grey }
 },
 pl.kotcrab.vis.ui.components.VisCheckBox$VisCheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, checkboxOver: check-over-off, checkboxOnOver: check-over-on, focusBorder: flat-border,
