@@ -79,6 +79,6 @@ pl.kotcrab.vis.ui.components.VisCheckBox$VisCheckBoxStyle: {
 	focusBorder: flat-border, font: default-font, fontColor: white },
 	radio: { checkboxOn: radio-on, checkboxOff: radio-off, checkboxOver: radio-over-off, checkboxOnOver: radio-over-on,
 	checkboxOffDown: radio-down, checkboxOnDown: radio-down-on, checkboxOffDisabled: radio-off, checkboxOnDisabled: radio-on-disabled, 
-	focusBorder: flat-border, font: default-font, fontColor: white }
+	focusBorder: flat-border-circle, font: default-font, fontColor: white }
 }
 }

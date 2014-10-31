@@ -67,20 +67,20 @@ public class TestWindow extends VisWindow {
 		checkboxTable.add(disabledCheckedCheckbox);
 
 		// ---
-		VisRadioButton normalRadio= new VisRadioButton(" radio");
+		VisRadioButton normalRadio = new VisRadioButton(" radio");
 		VisRadioButton disabledRadio = new VisRadioButton(" disabled");
-		VisRadioButton disabledCheckedRadio = new VisRadioButton(" disabled radio");
+		VisRadioButton disabledCheckedRadio = new VisRadioButton(" disabled checked");
 		disabledRadio.setDisabled(true);
-		disabledCheckedCheckbox.setDisabled(true);
+		disabledCheckedRadio.setDisabled(true);
 		disabledCheckedRadio.setChecked(true);
 
 		VisTable radioTable = new VisTable(true);
 		radioTable.add(normalRadio);
 		radioTable.add(disabledRadio);
 		radioTable.add(disabledCheckedRadio);
-		
-		//---F
-		
+
+		// ---
+
 		VisTextField normalTextfield = new VisTextField("textbox");
 		VisTextField disabledTextfield = new VisTextField("disabled");
 		VisTextField passwordTextfield = new VisTextField("password");
