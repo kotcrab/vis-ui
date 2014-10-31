@@ -40,7 +40,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	dialog: { titleFont: default-font, background: flat-window, titleFontColor: white, stageBackground: dialogDim }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
-	default-horizontal: { background: default-slider, knob: default-slider-knob },
+	default-horizontal: { background: progressbar, knob: progressbar-filled, knobBefore: progressbar-filled},
 	default-vertical: { background: default-slider, knob: default-round-large }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {

@@ -71,7 +71,7 @@ check-over-on
   index: -1
 cursor
   rotate: false
-  xy: 22, 79
+  xy: 59, 93
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -110,7 +110,7 @@ default-pane-noborder
   index: -1
 default-rect
   rotate: false
-  xy: 14, 58
+  xy: 1, 1
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -118,7 +118,7 @@ default-rect
   index: -1
 default-rect-down
   rotate: false
-  xy: 59, 93
+  xy: 16, 58
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -168,7 +168,7 @@ default-select
   index: -1
 default-select-selection
   rotate: false
-  xy: 1, 1
+  xy: 184, 228
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -207,7 +207,7 @@ default-splitpane-vertical
   index: -1
 flat-border
   rotate: false
-  xy: 184, 228
+  xy: 143, 186
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -282,6 +282,20 @@ menu-button-down
   orig: 12, 20
   offset: 0, 0
   index: -1
+progressbar
+  rotate: false
+  xy: 22, 66
+  size: 1, 16
+  orig: 1, 16
+  offset: 0, 0
+  index: -1
+progressbar-filled
+  rotate: false
+  xy: 14, 45
+  size: 1, 16
+  orig: 1, 16
+  offset: 0, 0
+  index: -1
 radio-down
   rotate: false
   xy: 229, 232
@@ -354,7 +368,7 @@ tree-plus
   index: -1
 white
   rotate: false
-  xy: 143, 186
+  xy: 24, 79
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
