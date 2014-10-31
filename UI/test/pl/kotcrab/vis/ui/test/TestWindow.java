@@ -18,11 +18,11 @@ package pl.kotcrab.vis.ui.test;
 
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisTable;
-import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.components.VisCheckBox;
 import pl.kotcrab.vis.ui.components.VisLabel;
 import pl.kotcrab.vis.ui.components.VisProgressBar;
 import pl.kotcrab.vis.ui.components.VisRadioButton;
+import pl.kotcrab.vis.ui.components.VisSlider;
 import pl.kotcrab.vis.ui.components.VisTextButton;
 import pl.kotcrab.vis.ui.components.VisTextField;
 import pl.kotcrab.vis.ui.components.VisWindow;
@@ -38,7 +38,7 @@ public class TestWindow extends VisWindow {
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		// TODO textarea list selectbox slider scroll pane splitpane tree
+		// TODO textarea list selectbox scroll pane splitpane tree
 
 		VisLabel label = new VisLabel("label");
 
@@ -97,10 +97,18 @@ public class TestWindow extends VisWindow {
 		// ---
 
 		VisProgressBar progressbar = new VisProgressBar(0, 100, 1, false);
+		VisSlider slider = new VisSlider(0, 100, 1, false);
+		VisSlider sliderDisabled = new VisSlider(0, 100, 1, false);
+
 		progressbar.setValue(50);
+		slider.setValue(50);
+		sliderDisabled.setValue(50);
+		sliderDisabled.setDisabled(true);
 
 		VisTable progressbarTable = new VisTable(true);
 		progressbarTable.add(progressbar);
+		progressbarTable.add(slider);
+		progressbarTable.add(sliderDisabled);
 
 		// --
 

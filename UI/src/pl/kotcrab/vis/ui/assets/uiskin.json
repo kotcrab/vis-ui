@@ -44,7 +44,7 @@ com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-vertical: { background: default-slider, knob: default-round-large }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
-	default-horizontal: { background: default-slider, knob: default-slider-knob },
+	default-horizontal: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled },
 	default-vertical: { background: default-slider, knob: default-round-large }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
@@ -73,10 +73,19 @@ pl.kotcrab.vis.ui.components.VisTextButton$VisTextButtonStyle: {
 	default: { down: flat-button-down, up: flat-button, over: flat-button-over, disabled: flat-button, focusBorder: flat-border, 
 	font: default-font, fontColor: white, disabledFontColor: grey }
 },
+pl.kotcrab.vis.ui.components.VisProgressBar$VisProgressBarStyle: {
+	default-horizontal: { background: progressbar, knob: progressbar-filled, knobBefore: progressbar-filled},
+	default-vertical: { background: default-slider, knob: default-round-large }
+},
+pl.kotcrab.vis.ui.components.VisSlider$VisSliderStyle: {
+	default-horizontal: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled, knobOver: slider-knob-over, knobDown: slider-knob-down },
+	default-vertical: { background: default-slider, knob: default-round-large }
+},
 pl.kotcrab.vis.ui.components.VisCheckBox$VisCheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, checkboxOver: check-over-off, checkboxOnOver: check-over-on,
 	checkboxOffDown: check-down, checkboxOnDown: check-down-on, checkboxOffDisabled: check-off, checkboxOnDisabled: check-on-disabled, 
 	focusBorder: flat-border, font: default-font, fontColor: white },
+	
 	radio: { checkboxOn: radio-on, checkboxOff: radio-off, checkboxOver: radio-over-off, checkboxOnOver: radio-over-on,
 	checkboxOffDown: radio-down, checkboxOnDown: radio-down-on, checkboxOffDisabled: radio-off, checkboxOnDisabled: radio-on-disabled, 
 	focusBorder: flat-border-circle, font: default-font, fontColor: white }
