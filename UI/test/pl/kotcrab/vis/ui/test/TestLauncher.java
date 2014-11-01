@@ -54,6 +54,7 @@ class TestApplication extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(stage);
 
 		stage.addActor(new TestWindow(stage));
+		stage.addActor(new TestTree(stage));
 
 		shapeRenderer = new ShapeRenderer();
 	}
