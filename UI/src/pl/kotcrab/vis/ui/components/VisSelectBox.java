@@ -16,22 +16,49 @@
 
 package pl.kotcrab.vis.ui.components;
 
+import pl.kotcrab.vis.ui.FocusManager;
+import pl.kotcrab.vis.ui.Focusable;
 import pl.kotcrab.vis.ui.VisUI;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 
-public class VisSelectBox<T> extends SelectBox<T> {
+public class VisSelectBox<T> extends SelectBox<T> implements Focusable {
 
 	public VisSelectBox (SelectBoxStyle style) {
 		super(style);
+		init();
 	}
 
 	public VisSelectBox (String styleName) {
 		super(VisUI.skin, styleName);
+		init();
 	}
 
 	public VisSelectBox () {
 		super(VisUI.skin);
+		init();
+	}
+
+	private void init () {
+		addListener(new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				FocusManager.requestFocus(VisSelectBox.this);
+				return false;
+			}
+		});
+	}
+
+	@Override
+	public void focusLost () {
+
+	}
+
+	@Override
+	public void focusGained () {
+
 	}
 
 }
