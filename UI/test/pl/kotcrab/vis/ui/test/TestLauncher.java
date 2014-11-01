@@ -33,8 +33,8 @@ public class TestLauncher {
 	public static void main (String[] args) {
 
 		LwjglApplicationConfiguration c = new LwjglApplicationConfiguration();
-		c.width = 800;
-		c.height = 480;
+		c.width = 1000;
+		c.height = 680;
 		new LwjglApplication(new TestApplication(), c);
 	}
 
@@ -55,6 +55,7 @@ class TestApplication extends ApplicationAdapter {
 
 		stage.addActor(new TestWindow(stage));
 		stage.addActor(new TestTree(stage));
+		stage.addActor(new TestTextAreaAndScroll(stage));
 
 		shapeRenderer = new ShapeRenderer();
 	}

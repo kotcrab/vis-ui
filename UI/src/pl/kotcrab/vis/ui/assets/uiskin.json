@@ -22,7 +22,8 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	menu-bar: { down: menu-button-down, up: menu-bar-button, over: menu-button-down, font: default-font, fontColor: white }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
-	default: { vScroll: default-scroll, hScrollKnob: default-round-large, background: flat-border, hScroll: default-scroll, vScrollKnob: default-round-large }
+	default: { vScroll: scroll, hScrollKnob: scroll-knob-hori, background: flat-border, hScroll: scroll, vScrollKnob: scroll-knob-vert },
+	list: { vScroll: scroll, hScrollKnob: scroll-knob-hori, hScroll: scroll, vScrollKnob: scroll-knob-vert }
 },
 com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {
