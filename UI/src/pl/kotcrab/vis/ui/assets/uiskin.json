@@ -22,13 +22,13 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	menu-bar: { down: menu-button-down, up: menu-bar-button, over: menu-button-down, font: default-font, fontColor: white }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
-	default: { vScroll: default-scroll, hScrollKnob: default-round-large, background: default-rect, hScroll: default-scroll, vScrollKnob: default-round-large }
+	default: { vScroll: default-scroll, hScrollKnob: default-round-large, background: flat-border, hScroll: default-scroll, vScrollKnob: default-round-large }
 },
 com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {
 		font: default-font, fontColor: white, background: default-select,
 		scrollStyle: default,
-		listStyle: { font: default-font, selection: default-select-selection }
+		listStyle: { font: default-font, selection: list-selection, background: select-box-list-bg }
 	}
 },
 com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle: {
