@@ -54,7 +54,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: { selection: selection, background: textfield, font: default-font, fontColor: white, cursor: cursor }
 },
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
-	default: { checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white }
+	default: { checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white, disabledFontColor: grey }
 },
 com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: { fontColorUnselected: white, selection: list-selection, fontColorSelected: white, font: default-font }
@@ -84,10 +84,10 @@ pl.kotcrab.vis.ui.components.VisSlider$VisSliderStyle: {
 pl.kotcrab.vis.ui.components.VisCheckBox$VisCheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, checkboxOver: check-over-off, checkboxOnOver: check-over-on,
 	checkboxOffDown: check-down, checkboxOnDown: check-down-on, checkboxOffDisabled: check-off, checkboxOnDisabled: check-on-disabled, 
-	focusBorder: flat-border, font: default-font, fontColor: white },
+	focusBorder: flat-border, font: default-font, fontColor: white, disabledFontColor: grey },
 	
 	radio: { checkboxOn: radio-on, checkboxOff: radio-off, checkboxOver: radio-over-off, checkboxOnOver: radio-over-on,
 	checkboxOffDown: radio-down, checkboxOnDown: radio-down-on, checkboxOffDisabled: radio-off, checkboxOnDisabled: radio-on-disabled, 
-	focusBorder: flat-border-circle, font: default-font, fontColor: white }
+	focusBorder: flat-border-circle, font: default-font, fontColor: white, disabledFontColor: grey }
 }
 }
