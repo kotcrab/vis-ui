@@ -17,12 +17,11 @@
 package pl.kotcrab.vis.ui.test;
 
 import pl.kotcrab.vis.ui.TableUtils;
-import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.components.VisLabel;
+import pl.kotcrab.vis.ui.components.VisTree;
 import pl.kotcrab.vis.ui.components.VisWindow;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 
 public class TestTree extends VisWindow {
@@ -34,7 +33,7 @@ public class TestTree extends VisWindow {
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		Tree tree = new Tree(VisUI.skin);
+		VisTree tree = new VisTree();
 		Node item1 = new Node(new VisLabel("item 1"));
 		Node item2 = new Node(new VisLabel("item 2"));
 		Node item3 = new Node(new VisLabel("item 3"));

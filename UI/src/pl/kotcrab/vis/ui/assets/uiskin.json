@@ -63,7 +63,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
 	default: { background: default-pane, knob: default-round-large }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
-	default: { minus: tree-minus, plus: tree-plus, selection: default-select-selection }
+	default: { minus: tree-minus, plus: tree-plus, selection: tree-selection }
 },
 pl.kotcrab.vis.ui.components.VisTextField$VisTextFieldStyle: {
 	default: { selection: selection, background: textfield, backgroundOver: textfield-over, focusBorder: flat-border, font: default-font, fontColor: white, disabledFontColor: grey,
