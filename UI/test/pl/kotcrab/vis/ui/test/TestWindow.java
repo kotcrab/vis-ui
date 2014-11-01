@@ -118,6 +118,7 @@ public class TestWindow extends VisWindow {
 
 		listTable.add(new VisLabel("list: ")).top().spaceRight(10);
 		listTable.add(list);
+		
 		// ---
 
 		add(labelTable).row();

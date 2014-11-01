@@ -14,19 +14,24 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.ui;
+package pl.kotcrab.vis.ui.components;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import pl.kotcrab.vis.ui.VisUI;
 
-public class VisTable extends Table {
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 
-	public VisTable () {
-		super(VisUI.skin);
+public class VisSelectBox<T> extends SelectBox<T> {
+
+	public VisSelectBox (SelectBoxStyle style) {
+		super(style);
 	}
 
-	public VisTable (boolean setVisDefautls) {
+	public VisSelectBox (String styleName) {
+		super(VisUI.skin, styleName);
+	}
+
+	public VisSelectBox () {
 		super(VisUI.skin);
-		if (setVisDefautls) TableUtils.setSpaceDefaults(this);
 	}
 
 }
