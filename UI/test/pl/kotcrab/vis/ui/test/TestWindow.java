@@ -20,6 +20,7 @@ import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.components.VisCheckBox;
 import pl.kotcrab.vis.ui.components.VisLabel;
+import pl.kotcrab.vis.ui.components.VisList;
 import pl.kotcrab.vis.ui.components.VisProgressBar;
 import pl.kotcrab.vis.ui.components.VisRadioButton;
 import pl.kotcrab.vis.ui.components.VisSlider;
@@ -33,12 +34,11 @@ public class TestWindow extends VisWindow {
 
 	public TestWindow (Stage parent) {
 		super(parent, "test window");
-		setModal(true);
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		// TODO textarea list selectbox scroll pane splitpane tree
+		// TODO textarea selectbox scrollpane splitpane
 
 		VisLabel label = new VisLabel("label");
 
@@ -110,7 +110,15 @@ public class TestWindow extends VisWindow {
 		progressbarTable.add(slider);
 		progressbarTable.add(sliderDisabled);
 
-		// --
+		// ---
+
+		VisTable listTable = new VisTable();
+		VisList<String> list = new VisList<String>();
+		list.setItems("item 1", "item 2", "item 3", "item 4");
+
+		listTable.add(new VisLabel("list: ")).top().spaceRight(10);
+		listTable.add(list);
+		// ---
 
 		add(labelTable).row();
 		add(buttonTable).row();
@@ -118,6 +126,7 @@ public class TestWindow extends VisWindow {
 		add(radioTable).row();
 		add(textfieldTable).row();
 		add(progressbarTable).row();
+		add(listTable).row();
 
 		pack();
 		setPositionToCenter();

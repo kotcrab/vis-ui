@@ -28,7 +28,6 @@ public class TestTree extends VisWindow {
 
 	public TestTree (Stage parent) {
 		super(parent, "test tree");
-		setModal(true);
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();

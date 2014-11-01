@@ -255,6 +255,13 @@ flat-window
   orig: 27, 34
   offset: 0, 0
   index: -1
+list-selection
+  rotate: false
+  xy: 13, 33
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
 menu-bar-button
   rotate: false
   xy: 167, 195
@@ -347,7 +354,7 @@ radio-over-on
   index: -1
 selection
   rotate: false
-  xy: 13, 33
+  xy: 119, 89
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
