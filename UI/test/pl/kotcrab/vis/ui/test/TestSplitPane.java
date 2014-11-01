@@ -17,6 +17,10 @@
 package pl.kotcrab.vis.ui.test;
 
 import pl.kotcrab.vis.ui.TableUtils;
+import pl.kotcrab.vis.ui.VisTable;
+import pl.kotcrab.vis.ui.components.VisLabel;
+import pl.kotcrab.vis.ui.components.VisScrollPane;
+import pl.kotcrab.vis.ui.components.VisSplitPane;
 import pl.kotcrab.vis.ui.components.VisWindow;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -29,8 +33,14 @@ public class TestSplitPane extends VisWindow {
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		setSize(380, 100);
+		VisLabel label = new VisLabel("label with some \nlong \ntext");
+		VisLabel label2 = new VisLabel("label with some \nlong \ntext");
+
+		VisSplitPane splitPane = new VisSplitPane(label, label2, false);
+		add(splitPane).fill().expand();
+
+		setSize(300, 150);
 		setPositionToCenter();
-		setPosition(getX(), getY()- 200);
+		setPosition(getX(), getY() - 250);
 	}
 }
