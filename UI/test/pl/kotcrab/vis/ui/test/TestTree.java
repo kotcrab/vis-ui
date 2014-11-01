@@ -49,6 +49,8 @@ public class TestTree extends VisWindow {
 		item3.add(new Node(new VisLabel("item 3.2")));
 		item3.add(new Node(new VisLabel("item 3.3")));
 		
+		item1.setExpanded(true);
+		
 		tree.add(item1);
 		tree.add(item2);
 		tree.add(item3);
