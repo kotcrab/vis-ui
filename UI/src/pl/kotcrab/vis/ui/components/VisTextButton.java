@@ -50,7 +50,7 @@ public class VisTextButton extends TextButton implements Focusable {
 		addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (isDisabled() == false) FocusManager.requestFocus(VisTextButton.this);
+				if (isDisabled() == false) FocusManager.getFocus(VisTextButton.this);
 				return false;
 			}
 		});		

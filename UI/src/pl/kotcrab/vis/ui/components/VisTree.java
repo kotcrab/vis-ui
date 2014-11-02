@@ -16,22 +16,37 @@
 
 package pl.kotcrab.vis.ui.components;
 
+import pl.kotcrab.vis.ui.FocusManager;
 import pl.kotcrab.vis.ui.VisUI;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 
 public class VisTree extends Tree {
 
 	public VisTree (String styleName) {
 		super(VisUI.skin, styleName);
+		init();
 	}
 
 	public VisTree () {
 		super(VisUI.skin);
+		init();
 	}
 
 	public VisTree (TreeStyle style) {
 		super(style);
+		init();
 	}
 
+	private void init () {
+		addListener(new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				FocusManager.getFocus();
+				return false;
+			}
+		});
+	}
 }

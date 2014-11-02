@@ -16,6 +16,7 @@
 
 package pl.kotcrab.vis.ui.components;
 
+import pl.kotcrab.vis.ui.FocusManager;
 import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.graphics.Color;
@@ -72,6 +73,7 @@ public class VisSlider extends VisProgressBar {
 				if (draggingPointer != -1) return false;
 				draggingPointer = pointer;
 				calculatePositionAndValue(x, y);
+				FocusManager.getFocus();
 				return true;
 			}
 

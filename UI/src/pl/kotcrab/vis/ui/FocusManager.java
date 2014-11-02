@@ -19,9 +19,14 @@ package pl.kotcrab.vis.ui;
 public class FocusManager {
 	private static Focusable focusedCompoennt;
 
-	public static void requestFocus (Focusable component) {
+	public static void getFocus (Focusable component) {
 		if (focusedCompoennt != null) focusedCompoennt.focusLost();
 		focusedCompoennt = component;
 		focusedCompoennt.focusGained();
+	}
+	
+	public static void getFocus () {
+		if (focusedCompoennt != null) focusedCompoennt.focusLost();
+		focusedCompoennt = null;
 	}
 }

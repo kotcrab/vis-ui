@@ -16,23 +16,38 @@
 
 package pl.kotcrab.vis.ui.components;
 
+import pl.kotcrab.vis.ui.FocusManager;
 import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 
 public class VisSplitPane extends SplitPane {
 
 	public VisSplitPane (Actor firstWidget, Actor secondWidget, boolean vertical, String styleName) {
 		super(firstWidget, secondWidget, vertical, VisUI.skin, styleName);
+		init();
 	}
 
 	public VisSplitPane (Actor firstWidget, Actor secondWidget, boolean vertical) {
 		super(firstWidget, secondWidget, vertical, VisUI.skin);
+		init();
 	}
 
 	public VisSplitPane (Actor firstWidget, Actor secondWidget, boolean vertical, SplitPaneStyle style) {
 		super(firstWidget, secondWidget, vertical, style);
+		init();
 	}
 
+	private void init () {
+		addListener(new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				FocusManager.getFocus();
+				return false;
+			}
+		});
+	}
 }

@@ -16,22 +16,37 @@
 
 package pl.kotcrab.vis.ui.components;
 
+import pl.kotcrab.vis.ui.FocusManager;
 import pl.kotcrab.vis.ui.VisUI;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 
 public class VisList<T> extends List<T> {
 
 	public VisList () {
 		super(VisUI.skin);
+		init();
 	}
 
 	public VisList (String styleName) {
 		super(VisUI.skin, styleName);
+		init();
 	}
 
 	public VisList (ListStyle style) {
 		super(style);
+		init();
 	}
 
+	private void init () {
+		addListener(new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				FocusManager.getFocus();
+				return false;
+			}
+		});
+	}
 }

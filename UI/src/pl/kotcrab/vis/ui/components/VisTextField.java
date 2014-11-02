@@ -323,7 +323,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			font.setColor(fontColor.r, fontColor.g, fontColor.b, fontColor.a * parentAlpha);
 			drawText(batch, font, x + bgLeftWidth, y + textY + yOffset);
 		}
-		if (focused && !disabled) {
+		if (drawBorder && focused && !disabled) {
 			blink();
 			if (cursorOn && cursorPatch != null) {
 				drawCursor(cursorPatch, batch, font, x + bgLeftWidth, y + textY);
@@ -739,7 +739,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			if (!super.touchDown(event, x, y, pointer, button)) return false;
 			if (pointer == 0 && button != 0) return false;
 			if (disabled) return true;
-			FocusManager.requestFocus(VisTextField.this);
+			FocusManager.getFocus(VisTextField.this);
 			setCursorPosition(x, y);
 			selectionStart = cursor;
 			Stage stage = getStage();

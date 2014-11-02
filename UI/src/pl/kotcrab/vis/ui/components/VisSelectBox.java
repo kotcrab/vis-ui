@@ -17,14 +17,13 @@
 package pl.kotcrab.vis.ui.components;
 
 import pl.kotcrab.vis.ui.FocusManager;
-import pl.kotcrab.vis.ui.Focusable;
 import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 
-public class VisSelectBox<T> extends SelectBox<T> implements Focusable {
+public class VisSelectBox<T> extends SelectBox<T> {
 
 	public VisSelectBox (SelectBoxStyle style) {
 		super(style);
@@ -45,20 +44,10 @@ public class VisSelectBox<T> extends SelectBox<T> implements Focusable {
 		addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				FocusManager.requestFocus(VisSelectBox.this);
+				FocusManager.getFocus();
 				return false;
 			}
 		});
-	}
-
-	@Override
-	public void focusLost () {
-
-	}
-
-	@Override
-	public void focusGained () {
-
 	}
 
 }
