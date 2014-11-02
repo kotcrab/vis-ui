@@ -33,7 +33,8 @@ public class TestTextAreaAndScroll extends VisWindow {
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		VisTextArea textArea = new VisTextArea("Lorem \nipsum \ndolor \nsit \namet.");
+		VisTextArea textArea = new VisTextArea(
+			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec iaculis odio.");
 		textArea.setPrefRows(5);
 
 		// ---

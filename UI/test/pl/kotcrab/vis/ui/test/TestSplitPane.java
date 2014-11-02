@@ -33,14 +33,19 @@ public class TestSplitPane extends VisWindow {
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		VisLabel label = new VisLabel("label with some \nlong \ntext");
-		VisLabel label2 = new VisLabel("label with some \nlong \ntext");
+		VisLabel label = new VisLabel("Lorem \nipsum \ndolor \nsit \namet");
+		VisLabel label2 = new VisLabel("Consectetur \nadipiscing \nelit");
+		VisTable table = new VisTable(true);
+		VisTable table2 = new VisTable(true);
+		
+		table.add(label);
+		table2.add(label2);
 
-		VisSplitPane splitPane = new VisSplitPane(label, label2, false);
+		VisSplitPane splitPane = new VisSplitPane(table, table2, false);
 		add(splitPane).fill().expand();
 
 		setSize(300, 150);
 		setPositionToCenter();
-		setPosition(getX(), getY() - 250);
+		setPosition(getX(), getY() - 170);
 	}
 }

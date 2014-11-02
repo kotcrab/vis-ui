@@ -142,5 +142,6 @@ public class TestWindow extends VisWindow {
 
 		pack();
 		setPositionToCenter();
+		setPosition(getX(), getY() + 100);
 	}
 }
