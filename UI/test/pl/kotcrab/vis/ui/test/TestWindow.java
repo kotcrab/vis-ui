@@ -91,10 +91,18 @@ public class TestWindow extends VisWindow {
 		checkboxTable.add(disabledCheckedCheckbox);
 
 		// ---
-		Label labelRadio = new VisLabel("radio button look is not available without vis components");
+		
+		CheckBox normalRadio = new CheckBox(" radio", skin, "radio");
+		CheckBox disabledRadio = new CheckBox(" disabled", skin, "radio");
+		CheckBox disabledCheckedRadio = new CheckBox(" disabled checked", skin, "radio");
+		disabledRadio.setDisabled(true);
+		disabledCheckedRadio.setDisabled(true);
+		disabledCheckedRadio.setChecked(true);
 
-		VisTable labelRadioTable = new VisTable(true);
-		labelRadioTable.add(labelRadio);
+		VisTable radioTable = new VisTable(true);
+		radioTable.add(normalRadio);
+		radioTable.add(disabledRadio);
+		radioTable.add(disabledCheckedRadio);
 
 		// ---
 
@@ -148,7 +156,7 @@ public class TestWindow extends VisWindow {
 		add(labelTable).row();
 		add(buttonTable).row();
 		add(checkboxTable).row();
-		add(labelRadioTable).row();
+		add(radioTable).row();
 		add(textfieldTable).row();
 		add(progressbarTable).row();
 		add(listTable).row();

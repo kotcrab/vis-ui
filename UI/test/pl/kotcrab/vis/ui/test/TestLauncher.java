@@ -40,7 +40,7 @@ public class TestLauncher {
 }
 
 class TestApplication extends ApplicationAdapter {
-	private static final boolean USE_VIS_COMPONENTS = false;
+	private static final boolean USE_VIS_COMPONENTS = true;
 
 	private Stage stage;
 	private ShapeRenderer shapeRenderer;
