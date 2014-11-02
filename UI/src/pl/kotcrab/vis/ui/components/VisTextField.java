@@ -66,7 +66,7 @@ import com.badlogic.gdx.utils.Timer.Task;
  * @author Pawel Pastuszak */
 public class VisTextField extends Widget implements Disableable, Focusable {
 	// This class were copied from LibGDX TextField, few lines were changed
-	private VisTextFieldStyle style;
+	VisTextFieldStyle style;
 
 	static private final char BACKSPACE = 8;
 	static protected final char ENTER_DESKTOP = '\r';
