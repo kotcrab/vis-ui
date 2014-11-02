@@ -16,7 +16,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: { down: flat-button-down, up: flat-button, over: flat-button-over, font: default-font, fontColor: white },
-	toggle: { down: default-round-down, up: default-round, checked: default-round-down, font: default-font, fontColor: white, downFontColor: red },
+	toggle: { down: flat-button-down, up: flat-button, checked: flat-button-down, over: flat-button-over, font: default-font, fontColor: white },
 	
 	menu: { down: menu-button-down, up: menu-button, over: menu-button-down, font: default-font, fontColor: white },
 	menu-bar: { down: menu-button-down, up: menu-bar-button, over: menu-button-down, font: default-font, fontColor: white }
@@ -73,7 +73,8 @@ pl.kotcrab.vis.ui.components.VisTextField$VisTextFieldStyle: {
 },
 pl.kotcrab.vis.ui.components.VisTextButton$VisTextButtonStyle: {
 	default: { down: flat-button-down, up: flat-button, over: flat-button-over, disabled: flat-button, focusBorder: flat-border, 
-	font: default-font, fontColor: white, disabledFontColor: grey }
+	font: default-font, fontColor: white, disabledFontColor: grey },
+	toggle: { down: flat-button-down, up: flat-button, checked: flat-button-down, over: flat-button-over, font: default-font, fontColor: white, focusBorder: flat-border },
 },
 pl.kotcrab.vis.ui.components.VisProgressBar$VisProgressBarStyle: {
 	default-horizontal: { background: progressbar, knob: progressbar-filled, knobBefore: progressbar-filled},

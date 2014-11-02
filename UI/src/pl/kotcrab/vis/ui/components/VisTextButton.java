@@ -32,17 +32,28 @@ public class VisTextButton extends TextButton implements Focusable {
 
 	private boolean drawBorder;
 
+	
+	
+	public VisTextButton (String text, String styleName) {
+		super(text, VisUI.skin.get(styleName, VisTextButtonStyle.class));
+		init();
+	}
+
 	public VisTextButton (String text) {
 		super(text, VisUI.skin.get(VisTextButtonStyle.class));
-		style = (VisTextButtonStyle)getStyle();
+		init();
+	}
 
+	private void init () {
+		style = (VisTextButtonStyle)getStyle();
+		
 		addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				if (isDisabled() == false) FocusManager.requestFocus(VisTextButton.this);
 				return false;
 			}
-		});
+		});		
 	}
 
 	@Override

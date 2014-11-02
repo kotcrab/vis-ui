@@ -59,6 +59,109 @@ public class TestWindow extends VisWindow {
 		setPosition(getX(), getY() + 100);
 	}
 
+	private void addVisComponents () {
+		VisLabel label = new VisLabel("label");
+
+		VisTable labelTable = new VisTable(true);
+		labelTable.add(label);
+		// ---
+
+		VisTextButton normalButton = new VisTextButton("button");
+		VisTextButton disabledButton = new VisTextButton("disabled");
+		VisTextButton toggleButton = new VisTextButton("toggle", "toggle");
+		disabledButton.setDisabled(true);
+
+		VisTable buttonTable = new VisTable(true);
+		buttonTable.add(normalButton);
+		buttonTable.add(disabledButton);
+		buttonTable.add(toggleButton);
+
+		// ---
+
+		VisCheckBox normalCheckbox = new VisCheckBox(" checkbox");
+		VisCheckBox disabledCheckbox = new VisCheckBox(" disabled");
+		VisCheckBox disabledCheckedCheckbox = new VisCheckBox(" disabled checked");
+		disabledCheckbox.setDisabled(true);
+		disabledCheckedCheckbox.setDisabled(true);
+		disabledCheckedCheckbox.setChecked(true);
+
+		VisTable checkboxTable = new VisTable(true);
+		checkboxTable.add(normalCheckbox);
+		checkboxTable.add(disabledCheckbox);
+		checkboxTable.add(disabledCheckedCheckbox);
+
+		// ---
+		VisRadioButton normalRadio = new VisRadioButton(" radio");
+		VisRadioButton disabledRadio = new VisRadioButton(" disabled");
+		VisRadioButton disabledCheckedRadio = new VisRadioButton(" disabled checked");
+		disabledRadio.setDisabled(true);
+		disabledCheckedRadio.setDisabled(true);
+		disabledCheckedRadio.setChecked(true);
+
+		VisTable radioTable = new VisTable(true);
+		radioTable.add(normalRadio);
+		radioTable.add(disabledRadio);
+		radioTable.add(disabledCheckedRadio);
+
+		// ---
+
+		VisTextField normalTextfield = new VisTextField("textbox");
+		VisTextField disabledTextfield = new VisTextField("disabled");
+		VisTextField passwordTextfield = new VisTextField("password");
+		disabledTextfield.setDisabled(true);
+		passwordTextfield.setPasswordMode(true);
+
+		VisTable textfieldTable = new VisTable(true);
+		textfieldTable.add(normalTextfield);
+		textfieldTable.add(disabledTextfield);
+		textfieldTable.add(passwordTextfield);
+
+		// ---
+
+		VisProgressBar progressbar = new VisProgressBar(0, 100, 1, false);
+		VisSlider slider = new VisSlider(0, 100, 1, false);
+		VisSlider sliderDisabled = new VisSlider(0, 100, 1, false);
+
+		progressbar.setValue(50);
+		slider.setValue(50);
+		sliderDisabled.setValue(50);
+		sliderDisabled.setDisabled(true);
+
+		VisTable progressbarTable = new VisTable(true);
+		progressbarTable.add(progressbar);
+		progressbarTable.add(slider);
+		progressbarTable.add(sliderDisabled);
+
+		// ---
+
+		VisTable listTable = new VisTable();
+		VisList<String> list = new VisList<String>();
+		list.setItems("item 1", "item 2", "item 3", "item 4");
+
+		listTable.add(new VisLabel("list: ")).top().spaceRight(10);
+		listTable.add(list);
+
+		// ---
+
+		VisTable selectBoxTable = new VisTable();
+		VisSelectBox<String> selectBox = new VisSelectBox<String>();
+		selectBox.setItems("item 1", "item 2", "item 3", "item 4");
+
+		selectBoxTable.add(new VisLabel("select box: ")).top().spaceRight(6);
+		selectBoxTable.add(selectBox);
+
+		// ---
+
+		add(labelTable).row();
+		add(buttonTable).row();
+		add(checkboxTable).row();
+		add(radioTable).row();
+		add(textfieldTable).row();
+		add(progressbarTable).row();
+		add(listTable).row();
+		add(selectBoxTable).row();
+	}
+	
 	private void addNormalComponents () {
 		Skin skin = VisUI.skin;
 		
@@ -70,11 +173,13 @@ public class TestWindow extends VisWindow {
 
 		TextButton normalButton = new TextButton("button", skin);
 		TextButton disabledButton = new TextButton("disabled", skin);
+		TextButton toggleButton = new TextButton("toggle", skin, "toggle");
 		disabledButton.setDisabled(true);
 
 		VisTable buttonTable = new VisTable(true);
 		buttonTable.add(normalButton);
 		buttonTable.add(disabledButton);
+		buttonTable.add(toggleButton);
 
 		// ---
 
@@ -163,104 +268,5 @@ public class TestWindow extends VisWindow {
 		add(selectBoxTable).row();
 	}
 
-	private void addVisComponents () {
-		VisLabel label = new VisLabel("label");
-
-		VisTable labelTable = new VisTable(true);
-		labelTable.add(label);
-		// ---
-
-		VisTextButton normalButton = new VisTextButton("button");
-		VisTextButton disabledButton = new VisTextButton("disabled");
-		disabledButton.setDisabled(true);
-
-		VisTable buttonTable = new VisTable(true);
-		buttonTable.add(normalButton);
-		buttonTable.add(disabledButton);
-
-		// ---
-
-		VisCheckBox normalCheckbox = new VisCheckBox(" checkbox");
-		VisCheckBox disabledCheckbox = new VisCheckBox(" disabled");
-		VisCheckBox disabledCheckedCheckbox = new VisCheckBox(" disabled checked");
-		disabledCheckbox.setDisabled(true);
-		disabledCheckedCheckbox.setDisabled(true);
-		disabledCheckedCheckbox.setChecked(true);
-
-		VisTable checkboxTable = new VisTable(true);
-		checkboxTable.add(normalCheckbox);
-		checkboxTable.add(disabledCheckbox);
-		checkboxTable.add(disabledCheckedCheckbox);
-
-		// ---
-		VisRadioButton normalRadio = new VisRadioButton(" radio");
-		VisRadioButton disabledRadio = new VisRadioButton(" disabled");
-		VisRadioButton disabledCheckedRadio = new VisRadioButton(" disabled checked");
-		disabledRadio.setDisabled(true);
-		disabledCheckedRadio.setDisabled(true);
-		disabledCheckedRadio.setChecked(true);
-
-		VisTable radioTable = new VisTable(true);
-		radioTable.add(normalRadio);
-		radioTable.add(disabledRadio);
-		radioTable.add(disabledCheckedRadio);
-
-		// ---
-
-		VisTextField normalTextfield = new VisTextField("textbox");
-		VisTextField disabledTextfield = new VisTextField("disabled");
-		VisTextField passwordTextfield = new VisTextField("password");
-		disabledTextfield.setDisabled(true);
-		passwordTextfield.setPasswordMode(true);
-
-		VisTable textfieldTable = new VisTable(true);
-		textfieldTable.add(normalTextfield);
-		textfieldTable.add(disabledTextfield);
-		textfieldTable.add(passwordTextfield);
-
-		// ---
-
-		VisProgressBar progressbar = new VisProgressBar(0, 100, 1, false);
-		VisSlider slider = new VisSlider(0, 100, 1, false);
-		VisSlider sliderDisabled = new VisSlider(0, 100, 1, false);
-
-		progressbar.setValue(50);
-		slider.setValue(50);
-		sliderDisabled.setValue(50);
-		sliderDisabled.setDisabled(true);
-
-		VisTable progressbarTable = new VisTable(true);
-		progressbarTable.add(progressbar);
-		progressbarTable.add(slider);
-		progressbarTable.add(sliderDisabled);
-
-		// ---
-
-		VisTable listTable = new VisTable();
-		VisList<String> list = new VisList<String>();
-		list.setItems("item 1", "item 2", "item 3", "item 4");
-
-		listTable.add(new VisLabel("list: ")).top().spaceRight(10);
-		listTable.add(list);
-
-		// ---
-
-		VisTable selectBoxTable = new VisTable();
-		VisSelectBox<String> selectBox = new VisSelectBox<String>();
-		selectBox.setItems("item 1", "item 2", "item 3", "item 4");
-
-		selectBoxTable.add(new VisLabel("select box: ")).top().spaceRight(6);
-		selectBoxTable.add(selectBox);
-
-		// ---
-
-		add(labelTable).row();
-		add(buttonTable).row();
-		add(checkboxTable).row();
-		add(radioTable).row();
-		add(textfieldTable).row();
-		add(progressbarTable).row();
-		add(listTable).row();
-		add(selectBoxTable).row();
-	}
+	
 }
