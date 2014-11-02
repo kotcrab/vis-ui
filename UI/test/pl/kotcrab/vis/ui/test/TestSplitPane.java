@@ -18,34 +18,60 @@ package pl.kotcrab.vis.ui.test;
 
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisTable;
+import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.components.VisLabel;
-import pl.kotcrab.vis.ui.components.VisScrollPane;
 import pl.kotcrab.vis.ui.components.VisSplitPane;
 import pl.kotcrab.vis.ui.components.VisWindow;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 
 public class TestSplitPane extends VisWindow {
 
-	public TestSplitPane (Stage parent) {
+	public TestSplitPane (Stage parent, boolean useVisComponets) {
 		super(parent, "splitpane");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		VisLabel label = new VisLabel("Lorem \nipsum \ndolor \nsit \namet");
-		VisLabel label2 = new VisLabel("Consectetur \nadipiscing \nelit");
-		VisTable table = new VisTable(true);
-		VisTable table2 = new VisTable(true);
-		
-		table.add(label);
-		table2.add(label2);
-
-		VisSplitPane splitPane = new VisSplitPane(table, table2, false);
-		add(splitPane).fill().expand();
+		if (useVisComponets)
+			addVisComponents();
+		else
+			addNormalComponents();
 
 		setSize(300, 150);
 		setPositionToCenter();
 		setPosition(getX(), getY() - 170);
 	}
+
+	private void addVisComponents () {
+		VisLabel label = new VisLabel("Lorem \nipsum \ndolor \nsit \namet");
+		VisLabel label2 = new VisLabel("Consectetur \nadipiscing \nelit");
+		VisTable table = new VisTable(true);
+		VisTable table2 = new VisTable(true);
+
+		table.add(label);
+		table2.add(label2);
+
+		VisSplitPane splitPane = new VisSplitPane(table, table2, false);
+		add(splitPane).fill().expand();
+	}
+
+	private void addNormalComponents () {
+		Skin skin = VisUI.skin;
+		Label label = new Label("Lorem \nipsum \ndolor \nsit \namet", skin);
+		Label label2 = new Label("Consectetur \nadipiscing \nelit", skin);
+
+		VisTable table = new VisTable(true);
+		VisTable table2 = new VisTable(true);
+
+		table.add(label);
+		table2.add(label2);
+
+		SplitPane splitPane = new SplitPane(table, table2, false, skin);
+		add(splitPane).fill().expand();
+	}
+
 }

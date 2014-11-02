@@ -31,7 +31,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class TestLauncher {
 
 	public static void main (String[] args) {
-
 		LwjglApplicationConfiguration c = new LwjglApplicationConfiguration();
 		c.width = 1000;
 		c.height = 680;
@@ -41,6 +40,7 @@ public class TestLauncher {
 }
 
 class TestApplication extends ApplicationAdapter {
+	private static final boolean USE_VIS_COMPONENTS = false;
 
 	private Stage stage;
 	private ShapeRenderer shapeRenderer;
@@ -53,10 +53,10 @@ class TestApplication extends ApplicationAdapter {
 
 		Gdx.input.setInputProcessor(stage);
 
-		stage.addActor(new TestWindow(stage));
-		stage.addActor(new TestTree(stage));
-		stage.addActor(new TestTextAreaAndScroll(stage));
-		stage.addActor(new TestSplitPane(stage));
+		stage.addActor(new TestWindow(stage, USE_VIS_COMPONENTS));
+		stage.addActor(new TestTree(stage, USE_VIS_COMPONENTS));
+		stage.addActor(new TestTextAreaAndScroll(stage, USE_VIS_COMPONENTS));
+		stage.addActor(new TestSplitPane(stage, USE_VIS_COMPONENTS));
 
 		shapeRenderer = new ShapeRenderer();
 	}

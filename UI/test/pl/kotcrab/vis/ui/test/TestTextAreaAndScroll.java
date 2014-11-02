@@ -18,23 +18,61 @@ package pl.kotcrab.vis.ui.test;
 
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisTable;
+import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.components.VisLabel;
 import pl.kotcrab.vis.ui.components.VisScrollPane;
 import pl.kotcrab.vis.ui.components.VisTextArea;
 import pl.kotcrab.vis.ui.components.VisWindow;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 
 public class TestTextAreaAndScroll extends VisWindow {
 
-	public TestTextAreaAndScroll (Stage parent) {
+	public TestTextAreaAndScroll (Stage parent, boolean useVisComponets) {
 		super(parent, "textarea / scrollpane");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		VisTextArea textArea = new VisTextArea(
-			"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec iaculis odio.");
+		if (useVisComponets)
+			addVisComponents();
+		else
+			addNormalComponents();
+
+		setSize(180, 380);
+		setPositionToCenter();
+		setPosition(getX() - 380, getY());
+	}
+
+	private void addNormalComponents () {
+		Skin skin = VisUI.skin;
+
+		TextArea textArea = new TextArea("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec iaculis odio.", skin);
+		textArea.setPrefRows(5);
+
+		// ---
+
+		VisTable table = new VisTable();
+
+		for (int i = 0; i < 20; i++)
+			table.add(new Label("Label #" + (i + 1), skin)).expand().fill().row();
+
+		ScrollPane scrollPane = new ScrollPane(table, skin, "list");
+		scrollPane.setFlickScroll(false);
+		scrollPane.setFadeScrollBars(false);
+
+		// ---
+
+		add(textArea).row();
+		add(scrollPane).spaceTop(8).fillX().expandX().row();
+	}
+
+	private void addVisComponents () {
+		VisTextArea textArea = new VisTextArea("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec iaculis odio.");
 		textArea.setPrefRows(5);
 
 		// ---
@@ -52,9 +90,5 @@ public class TestTextAreaAndScroll extends VisWindow {
 
 		add(textArea).row();
 		add(scrollPane).spaceTop(8).fillX().expandX().row();
-
-		setSize(180, 380);
-		setPositionToCenter();
-		setPosition(getX() - 380, getY());
 	}
 }
