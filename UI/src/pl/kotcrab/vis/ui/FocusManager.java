@@ -24,7 +24,7 @@ public class FocusManager {
 		focusedCompoennt = component;
 		focusedCompoennt.focusGained();
 	}
-	
+
 	public static void getFocus () {
 		if (focusedCompoennt != null) focusedCompoennt.focusLost();
 		focusedCompoennt = null;

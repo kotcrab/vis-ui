@@ -161,10 +161,10 @@ public class TestWindow extends VisWindow {
 		add(listTable).row();
 		add(selectBoxTable).row();
 	}
-	
+
 	private void addNormalComponents () {
 		Skin skin = VisUI.skin;
-		
+
 		Label label = new VisLabel("label");
 
 		VisTable labelTable = new VisTable(true);
@@ -196,7 +196,7 @@ public class TestWindow extends VisWindow {
 		checkboxTable.add(disabledCheckedCheckbox);
 
 		// ---
-		
+
 		CheckBox normalRadio = new CheckBox(" radio", skin, "radio");
 		CheckBox disabledRadio = new CheckBox(" disabled", skin, "radio");
 		CheckBox disabledCheckedRadio = new CheckBox(" disabled checked", skin, "radio");
@@ -268,5 +268,4 @@ public class TestWindow extends VisWindow {
 		add(selectBoxTable).row();
 	}
 
-	
 }

@@ -90,12 +90,12 @@ public class VisCheckBox extends TextButton implements Focusable {
 	public void draw (Batch batch, float parentAlpha) {
 		Drawable checkbox = null;
 		if (isDisabled()) {
-			if (isChecked() )
+			if (isChecked())
 				checkbox = style.checkboxOnDisabled;
 			else
 				checkbox = style.checkboxOffDisabled;
 		}
-		
+
 		if (checkbox == null) {
 			if (isPressed())
 				if (isChecked())

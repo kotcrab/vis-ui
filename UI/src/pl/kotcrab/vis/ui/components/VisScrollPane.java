@@ -14,7 +14,6 @@
  * limitations under the License.
  ******************************************************************************/
 
-
 package pl.kotcrab.vis.ui.components;
 
 import pl.kotcrab.vis.ui.VisUI;

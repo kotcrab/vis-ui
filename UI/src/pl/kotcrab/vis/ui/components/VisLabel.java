@@ -21,8 +21,7 @@ import pl.kotcrab.vis.ui.VisUI;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
-public class VisLabel extends Label
-{
+public class VisLabel extends Label {
 	public VisLabel (CharSequence text) {
 		super(text, VisUI.skin);
 	}
@@ -35,7 +34,7 @@ public class VisLabel extends Label
 		super(text, VisUI.skin, fontName, color);
 	}
 
-	public VisLabel (CharSequence text,  String fontName, String colorName) {
+	public VisLabel (CharSequence text, String fontName, String colorName) {
 		super(text, VisUI.skin, fontName, colorName);
 	}
 
