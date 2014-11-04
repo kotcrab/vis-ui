@@ -40,7 +40,7 @@ public class TestVertical extends VisWindow {
 		else
 			addNormalComponents();
 
-		setSize(200, 200);
+		setSize(100, 200);
 		setPositionToCenter();
 		setPosition(getX() + 380, getY() - 200);
 	}

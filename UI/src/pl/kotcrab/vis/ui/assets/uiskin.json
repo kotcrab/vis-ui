@@ -11,18 +11,18 @@ com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
-	default: { down: flat-button-down, up: flat-button },
-	toggle: { down: flat-button-down, checked: flat-button-down, up: flat-button }
+	default: { down: button-down, up: button },
+	toggle: { down: button-down, checked: button-down, up: button }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-	default: { down: flat-button-down, up: flat-button, over: flat-button-over, font: default-font, fontColor: white },
-	toggle: { down: flat-button-down, up: flat-button, checked: flat-button-down, over: flat-button-over, font: default-font, fontColor: white },
+	default: { down: button-down, up: button, over: button-over, font: default-font, fontColor: white },
+	toggle: { down: button-down, up: button, checked: button-down, over: button-over, font: default-font, fontColor: white },
 	
 	menu: { down: menu-button-down, up: menu-button, over: menu-button-down, font: default-font, fontColor: white },
 	menu-bar: { down: menu-button-down, up: menu-bar-button, over: menu-button-down, font: default-font, fontColor: white }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
-	default: { vScroll: scroll, hScrollKnob: scroll-knob-horizontal, background: flat-border, hScroll: scroll, vScrollKnob: scroll-knob-vertical },
+	default: { vScroll: scroll, hScrollKnob: scroll-knob-horizontal, background: border, hScroll: scroll, vScrollKnob: scroll-knob-vertical },
 	list: { vScroll: scroll, hScrollKnob: scroll-knob-horizontal, hScroll: scroll, vScrollKnob: scroll-knob-vertical }
 },
 com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
@@ -37,8 +37,8 @@ com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle: {
 	default-horizontal: { handle: splitpane }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
-	default: { titleFont: default-font, background: flat-window, titleFontColor: white },
-	dialog: { titleFont: default-font, background: flat-window, titleFontColor: white, stageBackground: dialogDim }
+	default: { titleFont: default-font, background: window, titleFontColor: white },
+	dialog: { titleFont: default-font, background: window, titleFontColor: white, stageBackground: dialogDim }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-horizontal: { background: progressbar, knob: progressbar-filled, knobBefore: progressbar-filled},
@@ -62,19 +62,19 @@ com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
 	default: { fontColorUnselected: white, selection: list-selection, fontColorSelected: white, font: default-font }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
-	default: { background: default-pane, knob: default-round-large }
+	default: { background: default-pane, knob: touchpad-knob }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
 	default: { minus: tree-minus, plus: tree-plus, selection: tree-selection }
 },
 pl.kotcrab.vis.ui.components.VisTextField$VisTextFieldStyle: {
-	default: { selection: selection, background: textfield, backgroundOver: textfield-over, focusBorder: flat-border, font: default-font, fontColor: white, disabledFontColor: grey,
+	default: { selection: selection, background: textfield, backgroundOver: textfield-over, focusBorder: border, font: default-font, fontColor: white, disabledFontColor: grey,
 	cursor: cursor }
 },
 pl.kotcrab.vis.ui.components.VisTextButton$VisTextButtonStyle: {
-	default: { down: flat-button-down, up: flat-button, over: flat-button-over, disabled: flat-button, focusBorder: flat-border, 
+	default: { down: button-down, up: button, over: button-over, disabled: button, focusBorder: border, 
 	font: default-font, fontColor: white, disabledFontColor: grey },
-	toggle: { down: flat-button-down, up: flat-button, checked: flat-button-down, over: flat-button-over, font: default-font, fontColor: white, focusBorder: flat-border },
+	toggle: { down: button-down, up: button, checked: button-down, over: button-over, font: default-font, fontColor: white, focusBorder: border },
 },
 pl.kotcrab.vis.ui.components.VisSlider$VisSliderStyle: {
 	default-horizontal: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled, knobOver: slider-knob-over, knobDown: slider-knob-down },
@@ -83,10 +83,10 @@ pl.kotcrab.vis.ui.components.VisSlider$VisSliderStyle: {
 pl.kotcrab.vis.ui.components.VisCheckBox$VisCheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, checkboxOver: check-over-off, checkboxOnOver: check-over-on,
 	checkboxOffDown: check-down, checkboxOnDown: check-down-on, checkboxOffDisabled: check-off, checkboxOnDisabled: check-on-disabled, 
-	focusBorder: flat-border, font: default-font, fontColor: white, disabledFontColor: grey },
+	focusBorder: border, font: default-font, fontColor: white, disabledFontColor: grey },
 	
 	radio: { checkboxOn: radio-on, checkboxOff: radio-off, checkboxOver: radio-over-off, checkboxOnOver: radio-over-on,
 	checkboxOffDown: radio-down, checkboxOnDown: radio-down-on, checkboxOffDisabled: radio-off, checkboxOnDisabled: radio-on-disabled, 
-	focusBorder: flat-border-circle, font: default-font, fontColor: white, disabledFontColor: grey }
+	focusBorder: border-circle, font: default-font, fontColor: white, disabledFontColor: grey }
 }
 }
