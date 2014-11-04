@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
@@ -44,7 +45,7 @@ import com.badlogic.gdx.utils.Pools;
  * @author mzechner
  * @author Nathan Sweet */
 public class VisProgressBar extends Widget implements Disableable {
-	private VisProgressBarStyle style;
+	private ProgressBarStyle style;
 	private float min, max, stepSize;
 	private float value, animateFromValue;
 	float position;
@@ -58,11 +59,11 @@ public class VisProgressBar extends Widget implements Disableable {
 
 	public VisProgressBar (float min, float max, float stepSize, boolean vertical) {
 		this(min, max, stepSize, vertical, VisUI.skin.get("default-" + (vertical ? "vertical" : "horizontal"),
-			VisProgressBarStyle.class));
+			ProgressBarStyle.class));
 	}
 
 	public VisProgressBar (float min, float max, float stepSize, boolean vertical, String styleName) {
-		this(min, max, stepSize, vertical, VisUI.skin.get(styleName, VisProgressBarStyle.class));
+		this(min, max, stepSize, vertical, VisUI.skin.get(styleName, ProgressBarStyle.class));
 	}
 
 	/** Creates a new progress bar. It's width is determined by the given prefWidth parameter, its height is determined by the
@@ -74,8 +75,8 @@ public class VisProgressBar extends Widget implements Disableable {
 	 * @param min the minimum value
 	 * @param max the maximum value
 	 * @param stepSize the step size between values
-	 * @param style the {@link VisProgressBarStyle} */
-	public VisProgressBar (float min, float max, float stepSize, boolean vertical, VisProgressBarStyle style) {
+	 * @param style the {@link ProgressBarStyle} */
+	public VisProgressBar (float min, float max, float stepSize, boolean vertical, ProgressBarStyle style) {
 		if (min > max) throw new IllegalArgumentException("max must be > min. min,max: " + min + ", " + max);
 		if (stepSize <= 0) throw new IllegalArgumentException("stepSize must be > 0: " + stepSize);
 		setStyle(style);
@@ -87,15 +88,15 @@ public class VisProgressBar extends Widget implements Disableable {
 		setSize(getPrefWidth(), getPrefHeight());
 	}
 
-	public void setStyle (VisProgressBarStyle style) {
+	public void setStyle (ProgressBarStyle style) {
 		if (style == null) throw new IllegalArgumentException("style cannot be null.");
 		this.style = style;
 		invalidateHierarchy();
 	}
 
 	/** Returns the progress bar's style. Modifying the returned style may not have an effect until
-	 * {@link #setStyle(VisProgressBarStyle)} is called. */
-	public VisProgressBarStyle getStyle () {
+	 * {@link #setStyle(ProgressBarStyle)} is called. */
+	public ProgressBarStyle getStyle () {
 		return style;
 	}
 
@@ -107,7 +108,7 @@ public class VisProgressBar extends Widget implements Disableable {
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
-		VisProgressBarStyle style = this.style;
+		ProgressBarStyle style = this.style;
 		boolean disabled = this.disabled;
 		final Drawable knob = (disabled && style.disabledKnob != null) ? style.disabledKnob : style.knob;
 		final Drawable bg = (disabled && style.disabledBackground != null) ? style.disabledBackground : style.background;
@@ -313,36 +314,4 @@ public class VisProgressBar extends Widget implements Disableable {
 		return disabled;
 	}
 
-	/** The style for a progress bar, see {@link VisProgressBar}.
-	 * @author mzechner
-	 * @author Nathan Sweet */
-	static public class VisProgressBarStyle {
-		/** The progress bar background, stretched only in one direction. */
-		public Drawable background;
-		/** Optional. **/
-		public Drawable disabledBackground;
-		/** Optional, centered on the background. */
-		public Drawable knob, disabledKnob;
-		/** Optional. */
-		public Drawable knobBefore, knobAfter, disabledKnobBefore, disabledKnobAfter;
-
-		public VisProgressBarStyle () {
-		}
-
-		public VisProgressBarStyle (Drawable background, Drawable knob) {
-			this.background = background;
-			this.knob = knob;
-		}
-
-		public VisProgressBarStyle (VisProgressBarStyle style) {
-			this.background = style.background;
-			this.disabledBackground = style.disabledBackground;
-			this.knob = style.knob;
-			this.disabledKnob = style.disabledKnob;
-			this.knobBefore = style.knobBefore;
-			this.knobAfter = style.knobAfter;
-			this.disabledKnobBefore = style.disabledKnobBefore;
-			this.disabledKnobAfter = style.disabledKnobAfter;
-		}
-	}
 }

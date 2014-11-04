@@ -102,7 +102,7 @@ default-rect-pad
   index: -1
 default-pane-noborder
   rotate: false
-  xy: 142, 208
+  xy: 158, 231
   size: 1, 1
   split: 0, 0, 0, 0
   orig: 1, 1
@@ -142,7 +142,7 @@ default-select
   index: -1
 default-select-selection
   rotate: false
-  xy: 86, 108
+  xy: 40, 100
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -174,7 +174,7 @@ default-splitpane-vertical
   index: -1
 flat-border
   rotate: false
-  xy: 125, 117
+  xy: 86, 108
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -224,7 +224,7 @@ flat-window
   index: -1
 list-selection
   rotate: false
-  xy: 5, 1
+  xy: 170, 233
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -268,6 +268,20 @@ progressbar-filled
   xy: 155, 214
   size: 1, 16
   orig: 1, 16
+  offset: 0, 0
+  index: -1
+progressbar-filled-vertical
+  rotate: false
+  xy: 1, 1
+  size: 16, 1
+  orig: 16, 1
+  offset: 0, 0
+  index: -1
+progressbar-vertical
+  rotate: false
+  xy: 41, 104
+  size: 16, 1
+  orig: 16, 1
   offset: 0, 0
   index: -1
 radio-down
@@ -327,7 +341,7 @@ scroll
   orig: 17, 6
   offset: 0, 0
   index: -1
-scroll-knob-hori
+scroll-knob-horizontal
   rotate: false
   xy: 22, 74
   size: 6, 17
@@ -336,7 +350,7 @@ scroll-knob-hori
   orig: 6, 17
   offset: 0, 0
   index: -1
-scroll-knob-vert
+scroll-knob-vertical
   rotate: false
   xy: 196, 234
   size: 17, 6
@@ -346,14 +360,14 @@ scroll-knob-vert
   index: -1
 select-box-list-bg
   rotate: false
-  xy: 7, 1
+  xy: 155, 212
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 selection
   rotate: false
-  xy: 9, 1
+  xy: 157, 229
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -395,7 +409,7 @@ slider-knob-over
   index: -1
 splitpane
   rotate: false
-  xy: 1, 1
+  xy: 142, 208
   size: 3, 1
   orig: 3, 1
   offset: 0, 0
@@ -423,7 +437,7 @@ tree-plus
   index: -1
 tree-selection
   rotate: false
-  xy: 136, 129
+  xy: 125, 117
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -431,7 +445,7 @@ tree-selection
   index: -1
 white
   rotate: false
-  xy: 15, 49
+  xy: 136, 129
   size: 3, 3
   orig: 3, 3
   offset: 0, 0

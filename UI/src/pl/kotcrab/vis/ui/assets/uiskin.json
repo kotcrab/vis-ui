@@ -22,8 +22,8 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	menu-bar: { down: menu-button-down, up: menu-bar-button, over: menu-button-down, font: default-font, fontColor: white }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
-	default: { vScroll: scroll, hScrollKnob: scroll-knob-hori, background: flat-border, hScroll: scroll, vScrollKnob: scroll-knob-vert },
-	list: { vScroll: scroll, hScrollKnob: scroll-knob-hori, hScroll: scroll, vScrollKnob: scroll-knob-vert }
+	default: { vScroll: scroll, hScrollKnob: scroll-knob-horizontal, background: flat-border, hScroll: scroll, vScrollKnob: scroll-knob-vertical },
+	list: { vScroll: scroll, hScrollKnob: scroll-knob-horizontal, hScroll: scroll, vScrollKnob: scroll-knob-vertical }
 },
 com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {
@@ -42,11 +42,11 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-horizontal: { background: progressbar, knob: progressbar-filled, knobBefore: progressbar-filled},
-	default-vertical: { background: default-slider, knob: default-round-large }
+	default-vertical: { background: progressbar-vertical, knob: progressbar-filled-vertical, knobBefore: progressbar-filled-vertical }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 	default-horizontal: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled },
-	default-vertical: { background: default-slider, knob: default-round-large }
+	default-vertical: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: { font: default-font, fontColor: white }
@@ -76,13 +76,9 @@ pl.kotcrab.vis.ui.components.VisTextButton$VisTextButtonStyle: {
 	font: default-font, fontColor: white, disabledFontColor: grey },
 	toggle: { down: flat-button-down, up: flat-button, checked: flat-button-down, over: flat-button-over, font: default-font, fontColor: white, focusBorder: flat-border },
 },
-pl.kotcrab.vis.ui.components.VisProgressBar$VisProgressBarStyle: {
-	default-horizontal: { background: progressbar, knob: progressbar-filled, knobBefore: progressbar-filled},
-	default-vertical: { background: default-slider, knob: default-round-large }
-},
 pl.kotcrab.vis.ui.components.VisSlider$VisSliderStyle: {
 	default-horizontal: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled, knobOver: slider-knob-over, knobDown: slider-knob-down },
-	default-vertical: { background: default-slider, knob: default-round-large }
+	default-vertical: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled, knobOver: slider-knob-over, knobDown: slider-knob-down }
 },
 pl.kotcrab.vis.ui.components.VisCheckBox$VisCheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, checkboxOver: check-over-off, checkboxOnOver: check-over-on,

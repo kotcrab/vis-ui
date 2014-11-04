@@ -43,7 +43,7 @@ public class TestTree extends VisWindow {
 
 		setSize(150, 380);
 		setPositionToCenter();
-		setPosition(getX() + 380, getY());
+		setPosition(getX() + 380, getY() + 100);
 	}
 
 	private void addNormalComponents () {

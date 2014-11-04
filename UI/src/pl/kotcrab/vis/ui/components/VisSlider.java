@@ -25,6 +25,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -238,7 +239,7 @@ public class VisSlider extends VisProgressBar {
 	/** The style for a slider, see {@link VisSlider}.
 	 * @author mzechner
 	 * @author Nathan Sweet */
-	static public class VisSliderStyle extends VisProgressBarStyle {
+	static public class VisSliderStyle extends ProgressBarStyle {
 		public Drawable knobOver;
 		public Drawable knobDown;
 
