@@ -39,8 +39,11 @@ import com.badlogic.gdx.utils.Pools;
  * The preferred height of a slider is determined by the larger of the knob and background. The preferred width of a slider is
  * 140, a relatively arbitrary size.
  * @author mzechner
- * @author Nathan Sweet */
+ * @author Nathan Sweet
+ * @author Pawel Pastuszak */
 public class VisSlider extends VisProgressBar {
+	// This class was copied from LibGDX, few lines were changed.
+	
 	int draggingPointer = -1;
 
 	private ClickListener clickListener;

@@ -28,6 +28,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class VisTextButton extends TextButton implements Focusable {
+	// This class was copied from LibGDX, few lines were changed.
+	
 	private VisTextButtonStyle style;
 
 	private boolean drawBorder;

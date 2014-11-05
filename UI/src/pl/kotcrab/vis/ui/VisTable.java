@@ -18,6 +18,8 @@ package pl.kotcrab.vis.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+/** VisTable is normal scene2d.ui {@link Table} that allows to set default vis spacing during creation
+ * @author Pawel Pastuszak */
 public class VisTable extends Table {
 
 	public VisTable () {

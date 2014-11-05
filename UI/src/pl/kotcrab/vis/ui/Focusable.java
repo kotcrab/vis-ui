@@ -16,6 +16,8 @@
 
 package pl.kotcrab.vis.ui;
 
+/** Implemented by objects that may acquire UI focus
+ * @author Pawel Pastuszak */
 public interface Focusable {
 	public void focusLost ();
 

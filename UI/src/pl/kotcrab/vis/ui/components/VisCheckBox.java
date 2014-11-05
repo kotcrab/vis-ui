@@ -38,7 +38,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
  * @author Pawel Pastuszak */
 @SuppressWarnings("rawtypes")
 public class VisCheckBox extends TextButton implements Focusable {
-	// This class were copied from LibGDX, few lines were changed.
+	// This class was copied from LibGDX, few lines were changed.
 
 	private Image image;
 	private Cell imageCell;

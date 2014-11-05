@@ -43,8 +43,11 @@ import com.badlogic.gdx.utils.Pools;
  * The preferred height of a progress bar is determined by the larger of the knob and background. The preferred width of progress
  * bar is 140, a relatively arbitrary size.
  * @author mzechner
- * @author Nathan Sweet */
+ * @author Nathan Sweet
+ * @author Pawel Pastuszak */
 public class VisProgressBar extends Widget implements Disableable {
+	// This class was copied from LibGDX, few lines were changed.
+
 	private ProgressBarStyle style;
 	private float min, max, stepSize;
 	private float value, animateFromValue;
