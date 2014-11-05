@@ -54,7 +54,7 @@ public class Editor extends ApplicationAdapter {
 
 		root = new Table();
 		root.setFillParent(true);
-		if (VisUI.DEBUG) root.debug();
+		//if (VisUI.DEBUG) root.debug();
 
 		stage.addActor(root);
 
@@ -95,11 +95,11 @@ public class Editor extends ApplicationAdapter {
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
 
-		if (VisUI.DEBUG) {
-			shapeRenderer.begin(ShapeType.Line);
-			root.drawDebug(shapeRenderer); // This is optional, but enables debug lines for tables.
-			shapeRenderer.end();
-		}
+//		if (VisUI.DEBUG) {
+//			shapeRenderer.begin(ShapeType.Line);
+//			root.drawDebug(shapeRenderer); // This is optional, but enables debug lines for tables.
+//			shapeRenderer.end();
+//		}
 	}
 
 	@Override
