@@ -784,6 +784,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 			Stage stage = getStage();
 			if (stage == null || stage.getKeyboardFocus() != VisTextField.this) return false;
+			if (drawBorder == false) return false;
 
 			boolean repeat = false;
 			boolean ctrl = UIUtils.ctrl();
@@ -894,6 +895,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 			Stage stage = getStage();
 			if (stage == null || stage.getKeyboardFocus() != VisTextField.this) return false;
+			if (drawBorder == false) return false;
 
 			if ((character == TAB || character == ENTER_ANDROID) && focusTraversal) {
 				next(UIUtils.shift());
