@@ -27,7 +27,7 @@ public class VisUI {
 
 	/** Loads default VisUI skin from library */
 	public static void load () {
-		load(Gdx.files.classpath("pl/kotcrab/vis/ui/assets/uiskin.json"));
+		load(Gdx.files.internal("pl/kotcrab/vis/ui/uiskin.json"));
 	}
 
 	/** Loads provied skin, skin must be compatible with default VisUI skin */
