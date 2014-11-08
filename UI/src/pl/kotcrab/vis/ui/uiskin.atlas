@@ -6,7 +6,7 @@ filter: Nearest,Nearest
 repeat: none
 border
   rotate: false
-  xy: 125, 123
+  xy: 130, 129
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -17,6 +17,14 @@ border-circle
   xy: 196, 241
   size: 14, 14
   orig: 14, 14
+  offset: 0, 0
+  index: -1
+border-error
+  rotate: false
+  xy: 125, 123
+  size: 3, 3
+  split: 1, 1, 1, 1
+  orig: 3, 3
   offset: 0, 0
   index: -1
 button
@@ -113,7 +121,7 @@ check-over-on
   index: -1
 cursor
   rotate: false
-  xy: 130, 129
+  xy: 20, 65
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -152,7 +160,7 @@ default-select
   index: -1
 default-select-selection
   rotate: false
-  xy: 20, 65
+  xy: 232, 237
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -380,7 +388,7 @@ tree-plus
   index: -1
 tree-selection
   rotate: false
-  xy: 232, 237
+  xy: 86, 108
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -388,7 +396,7 @@ tree-selection
   index: -1
 white
   rotate: false
-  xy: 86, 108
+  xy: 15, 47
   size: 3, 3
   orig: 3, 3
   offset: 0, 0

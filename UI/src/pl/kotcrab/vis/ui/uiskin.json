@@ -68,8 +68,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
 	default: { minus: tree-minus, plus: tree-plus, selection: tree-selection }
 },
 pl.kotcrab.vis.ui.components.VisTextField$VisTextFieldStyle: {
-	default: { selection: selection, background: textfield, backgroundOver: textfield-over, focusBorder: border, font: default-font, fontColor: white, disabledFontColor: grey,
-	cursor: cursor }
+	default: { selection: selection, background: textfield, backgroundOver: textfield-over, focusBorder: border, errorBorder: border-error,
+	font: default-font, fontColor: white, disabledFontColor: grey, cursor: cursor }
 },
 pl.kotcrab.vis.ui.components.VisTextButton$VisTextButtonStyle: {
 	default: { down: button-down, up: button, over: button-over, disabled: button, focusBorder: border, 

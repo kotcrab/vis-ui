@@ -115,6 +115,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	private ClickListener clickListener;
 
 	private boolean drawBorder;
+	private boolean inputValid = true;
 
 	public VisTextField () {
 		this("", VisUI.skin.get(VisTextFieldStyle.class));
@@ -331,7 +332,10 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		}
 
 		// vis
-		if (drawBorder) style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
+		if (inputValid == false)
+			style.errorBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
+		else if (drawBorder) style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
+
 	}
 
 	protected float getTextY (BitmapFont font, Drawable background) {
@@ -937,6 +941,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 	static public class VisTextFieldStyle extends TextFieldStyle {
 		public Drawable focusBorder;
+		public Drawable errorBorder;
 		public Drawable backgroundOver;
 
 		public VisTextFieldStyle () {
@@ -949,6 +954,8 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		public VisTextFieldStyle (VisTextFieldStyle style) {
 			super(style);
 			this.focusBorder = style.focusBorder;
+			this.errorBorder = style.errorBorder;
+			this.backgroundOver = style.backgroundOver;
 		}
 	}
 
@@ -960,5 +967,13 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	@Override
 	public void focusGained () {
 		drawBorder = true;
+	}
+
+	public boolean isInputValid () {
+		return inputValid;
+	}
+
+	public void setInputValid (boolean inputValid) {
+		this.inputValid = inputValid;
 	}
 }
