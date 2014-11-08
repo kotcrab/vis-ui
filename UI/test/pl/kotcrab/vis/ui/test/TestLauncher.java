@@ -58,6 +58,7 @@ class TestApplication extends ApplicationAdapter {
 		stage.addActor(new TestTextAreaAndScroll(stage, USE_VIS_COMPONENTS));
 		stage.addActor(new TestSplitPane(stage, USE_VIS_COMPONENTS));
 		stage.addActor(new TestVertical(stage, USE_VIS_COMPONENTS));
+		stage.addActor(new TestValidator(stage));
 
 		shapeRenderer = new ShapeRenderer();
 	}
