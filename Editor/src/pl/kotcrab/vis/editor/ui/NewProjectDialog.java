@@ -19,33 +19,48 @@
 
 package pl.kotcrab.vis.editor.ui;
 
+import pl.kotcrab.vis.editor.Project;
 import pl.kotcrab.vis.editor.ui.widgets.EmptyWidget;
 import pl.kotcrab.vis.ui.TableUtils;
+import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.widget.VisCheckBox;
 import pl.kotcrab.vis.ui.widget.VisLabel;
 import pl.kotcrab.vis.ui.widget.VisTextButton;
 import pl.kotcrab.vis.ui.widget.VisTextField;
+import pl.kotcrab.vis.ui.widget.VisTextField.TextFieldListener;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class NewProjectDialog extends VisWindow {
+	private VisTextField projectRoot;
+	private VisTextField sourceLoc;
+	private VisTextField assetsLoc;
+	private Project project = new Project();
+
+	private VisLabel errorLabel;
+
+	private VisTextButton cancelButton;
+	private VisTextButton createButton;
 
 	public NewProjectDialog (Stage parent) {
 		super(parent, "New Project");
 		setModal(true);
 
-		VisTextField projectRoot = new VisTextField("");
-		TextButton chooseButton = new VisTextButton("Choose...");
-		VisTextField sourceLoc = new VisTextField("/core/src");
-		VisTextField assetsLoc = new VisTextField("/android/assets");
+		projectRoot = new VisTextField("");
+		VisTextButton chooseButton = new VisTextButton("Choose...");
+		sourceLoc = new VisTextField("/core/src");
+		assetsLoc = new VisTextField("/android/assets");
+
+		errorLabel = new VisLabel("Project root cannot be empty!");
+		errorLabel.setColor(Color.RED);
 
 		VisCheckBox signFiles = new VisCheckBox("Sign files using private key");
 
 		TableUtils.setSpaceDefaults(this);
-
 		columnDefaults(0).left();
 		columnDefaults(1).width(300);
 
@@ -66,20 +81,54 @@ public class NewProjectDialog extends VisWindow {
 		add(signFiles).colspan(2);
 		row();
 
-		Table buttonTable = new Table();
-		TableUtils.setSpaceDefaults(buttonTable);
+		VisTable buttonTable = new VisTable(true);
 		buttonTable.defaults().minWidth(70);
 
-		TextButton cancelButton = new VisTextButton("Cancel");
-		TextButton createButton = new VisTextButton("Create");
+		cancelButton = new VisTextButton("Cancel");
+		createButton = new VisTextButton("Create");
 
+		buttonTable.add(errorLabel).fill().expand();
 		buttonTable.add(cancelButton);
 		buttonTable.add(createButton);
 
-		add(buttonTable).colspan(3).right();
+		add(buttonTable).colspan(3).fill().expand();
 
-		// TableUtils.setColumnsDefaults(this);
+		setupListeners();
 		pack();
 		setPositionToCenter();
+	}
+
+	private void setupListeners () {
+		createButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				createProject();
+			}
+		});
+
+		ProjectTextFieldChangeListener listener = new ProjectTextFieldChangeListener();
+		projectRoot.setTextFieldListener(listener);
+		sourceLoc.setTextFieldListener(listener);
+		assetsLoc.setTextFieldListener(listener);
+	}
+
+	private class ProjectTextFieldChangeListener implements TextFieldListener {
+		@Override
+		public void keyTyped (VisTextField textField, char c) {
+			errorLabel.setText("");
+			createButton.setDisabled(true);
+
+			if (projectRoot.isEmpty()) errorLabel.setText("Project root cannot be empty!");
+			if (sourceLoc.isEmpty()) errorLabel.setText("Source location cannot be empty!");
+			if (assetsLoc.isEmpty()) errorLabel.setText("Assets location cannot be empty!");
+
+			if (errorLabel.getText().length == 0) createButton.setDisabled(false);
+		}
+	}
+
+	private void createProject () {
+// project.root = projectRoot.getText();
+// project.assets = assetsLoc.getText();
+// project.source = sourceLoc.getText();
 	}
 }
