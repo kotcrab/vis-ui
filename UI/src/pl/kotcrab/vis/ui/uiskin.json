@@ -67,20 +67,20 @@ com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
 	default: { minus: tree-minus, plus: tree-plus, selection: tree-selection }
 },
-pl.kotcrab.vis.ui.components.VisTextField$VisTextFieldStyle: {
+pl.kotcrab.vis.ui.widget.VisTextField$VisTextFieldStyle: {
 	default: { selection: selection, background: textfield, backgroundOver: textfield-over, focusBorder: border, errorBorder: border-error,
 	font: default-font, fontColor: white, disabledFontColor: grey, cursor: cursor }
 },
-pl.kotcrab.vis.ui.components.VisTextButton$VisTextButtonStyle: {
+pl.kotcrab.vis.ui.widget.VisTextButton$VisTextButtonStyle: {
 	default: { down: button-down, up: button, over: button-over, disabled: button, focusBorder: border, 
 	font: default-font, fontColor: white, disabledFontColor: grey },
 	toggle: { down: button-down, up: button, checked: button-down, over: button-over, font: default-font, fontColor: white, focusBorder: border },
 },
-pl.kotcrab.vis.ui.components.VisSlider$VisSliderStyle: {
+pl.kotcrab.vis.ui.widget.VisSlider$VisSliderStyle: {
 	default-horizontal: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled, knobOver: slider-knob-over, knobDown: slider-knob-down },
 	default-vertical: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled, knobOver: slider-knob-over, knobDown: slider-knob-down }
 },
-pl.kotcrab.vis.ui.components.VisCheckBox$VisCheckBoxStyle: {
+pl.kotcrab.vis.ui.widget.VisCheckBox$VisCheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, checkboxOver: check-over-off, checkboxOnOver: check-over-on,
 	checkboxOffDown: check-down, checkboxOnDown: check-down-on, checkboxOffDisabled: check-off, checkboxOnDisabled: check-on-disabled, 
 	focusBorder: border, font: default-font, fontColor: white, disabledFontColor: grey },
