@@ -59,7 +59,7 @@ public class VisCheckBox extends TextButton implements Focusable {
 		clearChildren();
 		imageCell = add(image = new Image(style.checkboxOff));
 		Label label = getLabel();
-		add(label);
+		add(label).padLeft(5);
 		label.setAlignment(Align.left);
 		setSize(getPrefWidth(), getPrefHeight());
 

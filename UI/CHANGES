@@ -1,6 +1,7 @@
 [0.0.3]
 API change: Renamed 'components' package to 'widget' (sorry!)
 Added VisValidableTextField with InputValidator
+Better CheckBox text padding
 
 [0.0.2]
 Added GWT compatibility
