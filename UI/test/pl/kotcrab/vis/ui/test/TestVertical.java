@@ -19,9 +19,9 @@ package pl.kotcrab.vis.ui.test;
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.components.VisProgressBar;
-import pl.kotcrab.vis.ui.components.VisSlider;
-import pl.kotcrab.vis.ui.components.VisWindow;
+import pl.kotcrab.vis.ui.widget.VisProgressBar;
+import pl.kotcrab.vis.ui.widget.VisSlider;
+import pl.kotcrab.vis.ui.widget.VisWindow;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;

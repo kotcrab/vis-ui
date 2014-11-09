@@ -14,28 +14,25 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.ui.test;
+package pl.kotcrab.vis.ui.widget;
 
-import pl.kotcrab.vis.ui.TableUtils;
-import pl.kotcrab.vis.ui.widget.VisValidableTextField;
-import pl.kotcrab.vis.ui.widget.VisWindow;
+import pl.kotcrab.vis.ui.VisUI;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 
-public class TestValidator extends VisWindow {
+public class VisScrollPane extends ScrollPane {
 
-	public TestValidator (Stage parent) {
-		super(parent, "test validator (number)");
-
-		TableUtils.setSpaceDefaults(this);
-		columnDefaults(0).left();
-
-		VisValidableTextField textField = new VisValidableTextField(new IntegerValidator());
-
-		add(textField);
-
-		pack();
-		setPositionToCenter();
-		setPosition(getX() - 300, getY() - 250);
+	public VisScrollPane (Actor widget, ScrollPaneStyle style) {
+		super(widget, style);
 	}
+
+	public VisScrollPane (Actor widget, String styleName) {
+		super(widget, VisUI.skin, styleName);
+	}
+
+	public VisScrollPane (Actor widget) {
+		super(widget, VisUI.skin, "list");
+	}
+
 }

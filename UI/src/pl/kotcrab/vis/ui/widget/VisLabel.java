@@ -14,28 +14,28 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.ui.test;
+package pl.kotcrab.vis.ui.widget;
 
-import pl.kotcrab.vis.ui.TableUtils;
-import pl.kotcrab.vis.ui.widget.VisValidableTextField;
-import pl.kotcrab.vis.ui.widget.VisWindow;
+import pl.kotcrab.vis.ui.VisUI;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
-public class TestValidator extends VisWindow {
-
-	public TestValidator (Stage parent) {
-		super(parent, "test validator (number)");
-
-		TableUtils.setSpaceDefaults(this);
-		columnDefaults(0).left();
-
-		VisValidableTextField textField = new VisValidableTextField(new IntegerValidator());
-
-		add(textField);
-
-		pack();
-		setPositionToCenter();
-		setPosition(getX() - 300, getY() - 250);
+public class VisLabel extends Label {
+	public VisLabel (CharSequence text) {
+		super(text, VisUI.skin);
 	}
+
+	public VisLabel (CharSequence text, String styleName) {
+		super(text, VisUI.skin, styleName);
+	}
+
+	public VisLabel (CharSequence text, String fontName, Color color) {
+		super(text, VisUI.skin, fontName, color);
+	}
+
+	public VisLabel (CharSequence text, String fontName, String colorName) {
+		super(text, VisUI.skin, fontName, colorName);
+	}
+
 }

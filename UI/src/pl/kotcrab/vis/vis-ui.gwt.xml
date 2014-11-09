@@ -8,5 +8,5 @@
 	<extend-configuration-property name="gdx.files.classpath" value="pl/kotcrab/vis/ui/uiskin.png" />
 	<extend-configuration-property name="gdx.files.classpath" value="pl/kotcrab/vis/ui/default.fnt" />
 
-	<extend-configuration-property name="gdx.reflect.include" value="pl.kotcrab.vis.ui.components" />
+	<extend-configuration-property name="gdx.reflect.include" value="pl.kotcrab.vis.ui.widget" />
 </module>

@@ -14,28 +14,23 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.ui.test;
+package pl.kotcrab.vis.ui.widget;
 
-import pl.kotcrab.vis.ui.TableUtils;
-import pl.kotcrab.vis.ui.widget.VisValidableTextField;
-import pl.kotcrab.vis.ui.widget.VisWindow;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
+public class Menu extends Table {
+	private String title;
 
-public class TestValidator extends VisWindow {
+	public Menu (String title) {
+		this.title = title;
+	}
 
-	public TestValidator (Stage parent) {
-		super(parent, "test validator (number)");
+	public String getTitle () {
+		return title;
+	}
 
-		TableUtils.setSpaceDefaults(this);
-		columnDefaults(0).left();
-
-		VisValidableTextField textField = new VisValidableTextField(new IntegerValidator());
-
-		add(textField);
-
+	public void addItem (MenuItem item) {
+		add(item.button).fillX().row();
 		pack();
-		setPositionToCenter();
-		setPosition(getX() - 300, getY() - 250);
 	}
 }

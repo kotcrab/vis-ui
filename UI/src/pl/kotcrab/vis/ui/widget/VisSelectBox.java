@@ -14,28 +14,40 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.ui.test;
+package pl.kotcrab.vis.ui.widget;
 
-import pl.kotcrab.vis.ui.TableUtils;
-import pl.kotcrab.vis.ui.widget.VisValidableTextField;
-import pl.kotcrab.vis.ui.widget.VisWindow;
+import pl.kotcrab.vis.ui.FocusManager;
+import pl.kotcrab.vis.ui.VisUI;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 
-public class TestValidator extends VisWindow {
+public class VisSelectBox<T> extends SelectBox<T> {
 
-	public TestValidator (Stage parent) {
-		super(parent, "test validator (number)");
-
-		TableUtils.setSpaceDefaults(this);
-		columnDefaults(0).left();
-
-		VisValidableTextField textField = new VisValidableTextField(new IntegerValidator());
-
-		add(textField);
-
-		pack();
-		setPositionToCenter();
-		setPosition(getX() - 300, getY() - 250);
+	public VisSelectBox (SelectBoxStyle style) {
+		super(style);
+		init();
 	}
+
+	public VisSelectBox (String styleName) {
+		super(VisUI.skin, styleName);
+		init();
+	}
+
+	public VisSelectBox () {
+		super(VisUI.skin);
+		init();
+	}
+
+	private void init () {
+		addListener(new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				FocusManager.getFocus();
+				return false;
+			}
+		});
+	}
+
 }

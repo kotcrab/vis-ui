@@ -18,9 +18,9 @@ package pl.kotcrab.vis.ui.test;
 
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.components.VisLabel;
-import pl.kotcrab.vis.ui.components.VisTree;
-import pl.kotcrab.vis.ui.components.VisWindow;
+import pl.kotcrab.vis.ui.widget.VisLabel;
+import pl.kotcrab.vis.ui.widget.VisTree;
+import pl.kotcrab.vis.ui.widget.VisWindow;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;

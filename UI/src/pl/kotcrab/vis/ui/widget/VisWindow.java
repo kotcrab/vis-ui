@@ -14,28 +14,28 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.ui.test;
+package pl.kotcrab.vis.ui.widget;
 
-import pl.kotcrab.vis.ui.TableUtils;
-import pl.kotcrab.vis.ui.widget.VisValidableTextField;
-import pl.kotcrab.vis.ui.widget.VisWindow;
+import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
-public class TestValidator extends VisWindow {
+public class VisWindow extends Window {
+	private Stage parent;
 
-	public TestValidator (Stage parent) {
-		super(parent, "test validator (number)");
-
-		TableUtils.setSpaceDefaults(this);
-		columnDefaults(0).left();
-
-		VisValidableTextField textField = new VisValidableTextField(new IntegerValidator());
-
-		add(textField);
-
-		pack();
-		setPositionToCenter();
-		setPosition(getX() - 300, getY() - 250);
+	public VisWindow (Stage parent, String title) {
+		super(title, VisUI.skin);
+		this.parent = parent;
 	}
+
+	@Override
+	public void setPosition (float x, float y) {
+		super.setPosition((int)x, (int)y);
+	}
+
+	public void setPositionToCenter () {
+		if (parent != null) setPosition((parent.getWidth() - getWidth()) / 2, (parent.getHeight() - getHeight()) / 2);
+	}
+
 }
