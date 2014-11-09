@@ -1,5 +1,5 @@
 
-package pl.kotcrab.vis.editor.ui.components;
+package pl.kotcrab.vis.editor.ui.widgets;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 

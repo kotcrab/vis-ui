@@ -21,9 +21,9 @@ package pl.kotcrab.vis.editor;
 
 import pl.kotcrab.vis.editor.ui.NewProjectDialog;
 import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.components.Menu;
-import pl.kotcrab.vis.ui.components.MenuBar;
-import pl.kotcrab.vis.ui.components.MenuItem;
+import pl.kotcrab.vis.ui.widget.Menu;
+import pl.kotcrab.vis.ui.widget.MenuBar;
+import pl.kotcrab.vis.ui.widget.MenuItem;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
