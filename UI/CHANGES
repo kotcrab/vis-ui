@@ -1,5 +1,7 @@
 [0.0.3]
-Added VisValidableTextField
+API change: Renamed 'components' package to 'widgets' (sorry!)
+Added VisValidableTextField with InputValidator
+
 
 [0.0.2]
 Added GWT compatibility
