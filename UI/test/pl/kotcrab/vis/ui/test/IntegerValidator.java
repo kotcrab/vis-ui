@@ -29,5 +29,4 @@ public class IntegerValidator implements Validator {
 			return false;
 		}
 	}
-
 }

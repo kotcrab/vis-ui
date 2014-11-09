@@ -17,17 +17,10 @@
 package pl.kotcrab.vis.ui.test;
 
 import pl.kotcrab.vis.ui.TableUtils;
-import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.components.VisLabel;
-import pl.kotcrab.vis.ui.components.VisTree;
 import pl.kotcrab.vis.ui.components.VisValidableTextField;
 import pl.kotcrab.vis.ui.components.VisWindow;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Tree;
-import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 
 public class TestValidator extends VisWindow {
 
@@ -36,13 +29,13 @@ public class TestValidator extends VisWindow {
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
-		
+
 		VisValidableTextField textField = new VisValidableTextField(new IntegerValidator());
+
 		add(textField);
 
 		pack();
 		setPositionToCenter();
 		setPosition(getX() - 300, getY() - 250);
 	}
-
 }

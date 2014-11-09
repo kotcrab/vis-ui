@@ -54,4 +54,5 @@ public class VisValidableTextField extends VisTextField {
 	public void addValidable (Validator validable) {
 		validables.add(validable);
 	}
+
 }

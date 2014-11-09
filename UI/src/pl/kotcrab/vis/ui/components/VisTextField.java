@@ -114,6 +114,8 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 	private ClickListener clickListener;
 
+	// --
+
 	private boolean drawBorder;
 	private boolean inputValid = true;
 

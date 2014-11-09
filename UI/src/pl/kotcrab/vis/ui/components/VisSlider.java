@@ -43,7 +43,7 @@ import com.badlogic.gdx.utils.Pools;
  * @author Pawel Pastuszak */
 public class VisSlider extends VisProgressBar {
 	// This class was copied from LibGDX, few lines were changed.
-	
+
 	int draggingPointer = -1;
 
 	private ClickListener clickListener;
