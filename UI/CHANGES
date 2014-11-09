@@ -1,3 +1,6 @@
+[0.0.4]
+API change: VisValidableTextField#addValidable -> VisValidableTextFieldaddValidator
+
 [0.0.3]
 API change: Renamed 'components' package to 'widget' (sorry!)
 Added VisValidableTextField with InputValidator

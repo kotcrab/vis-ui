@@ -23,13 +23,13 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Array;
 
 public class VisValidableTextField extends VisTextField {
-	private Array<InputValidator> validables;
+	private Array<InputValidator> validators;
 
-	public VisValidableTextField (InputValidator... validables) {
-		this.validables = new Array<InputValidator>();
+	public VisValidableTextField (InputValidator... validators) {
+		this.validators = new Array<InputValidator>();
 
-		for (InputValidator validable : validables)
-			this.validables.add(validable);
+		for (InputValidator validator : validators)
+			this.validators.add(validator);
 
 		addListener(new InputListener() {
 			@Override
@@ -41,8 +41,8 @@ public class VisValidableTextField extends VisTextField {
 	}
 
 	private void validateInput () {
-		for (InputValidator validable : this.validables) {
-			if (!validable.validateInput(getText())) {
+		for (InputValidator validator : validators) {
+			if (validator.validateInput(getText()) == false) {
 				setInputValid(false);
 				return;
 			}
@@ -51,8 +51,8 @@ public class VisValidableTextField extends VisTextField {
 		setInputValid(true);
 	}
 
-	public void addValidable (InputValidator validable) {
-		validables.add(validable);
+	public void addValidator (InputValidator validator) {
+		validators.add(validator);
 	}
 
 }
