@@ -16,19 +16,19 @@
 
 package pl.kotcrab.vis.ui.widget;
 
-import pl.kotcrab.vis.ui.Validator;
+import pl.kotcrab.vis.ui.InputValidator;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Array;
 
 public class VisValidableTextField extends VisTextField {
-	private Array<Validator> validables;
+	private Array<InputValidator> validables;
 
-	public VisValidableTextField (Validator... validables) {
-		this.validables = new Array<Validator>();
+	public VisValidableTextField (InputValidator... validables) {
+		this.validables = new Array<InputValidator>();
 
-		for (Validator validable : validables)
+		for (InputValidator validable : validables)
 			this.validables.add(validable);
 
 		addListener(new InputListener() {
@@ -41,7 +41,7 @@ public class VisValidableTextField extends VisTextField {
 	}
 
 	private void validateInput () {
-		for (Validator validable : this.validables) {
+		for (InputValidator validable : this.validables) {
 			if (!validable.validateInput(getText())) {
 				setInputValid(false);
 				return;
@@ -51,7 +51,7 @@ public class VisValidableTextField extends VisTextField {
 		setInputValid(true);
 	}
 
-	public void addValidable (Validator validable) {
+	public void addValidable (InputValidator validable) {
 		validables.add(validable);
 	}
 
