@@ -971,6 +971,10 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		drawBorder = true;
 	}
 
+	public boolean isEmpty () {
+		return text.length() == 0;
+	}
+
 	public boolean isInputValid () {
 		return inputValid;
 	}
