@@ -1,6 +1,7 @@
-[0.0.4]
+[0.0.4] [WIP]
 API change: VisValidableTextField#addValidable -> VisValidableTextFieldaddValidator
 Added: VisTextField#isEmpty()
+VisWindow can be created with border or without it
 
 [0.0.3]
 API change: Renamed 'components' package to 'widget' (sorry!)

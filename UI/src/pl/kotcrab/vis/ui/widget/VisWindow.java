@@ -25,7 +25,11 @@ public class VisWindow extends Window {
 	private Stage parent;
 
 	public VisWindow (Stage parent, String title) {
-		super(title, VisUI.skin);
+		this(parent, title, true);
+	}
+
+	public VisWindow (Stage parent, String title, boolean showBorder) {
+		super(title, VisUI.skin, showBorder ? "default" : "noborder");
 		this.parent = parent;
 	}
 
