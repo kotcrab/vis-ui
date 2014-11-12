@@ -1,16 +1,17 @@
-[0.0.4] [WIP]
-API change: VisValidableTextField#addValidable -> VisValidableTextFieldaddValidator
-Added: VisTextField#isEmpty()
-VisWindow can be created with border or without it
-MenuItem can be created with icon
+[0.1.0] [WIP]
+-API change: VisValidableTextField#addValidable -> VisValidableTextFieldaddValidator
+-Added: VisTextField#isEmpty()
+-VisWindow can be created with border or without it
+-MenuItem can be created with icon
+-Added FileChooser (Desktop only)
 
 [0.0.3]
-API change: Renamed 'components' package to 'widget' (sorry!)
-Added VisValidableTextField with InputValidator
-Better CheckBox text padding
+-API change: Renamed 'components' package to 'widget' (sorry!)
+-Added VisValidableTextField with InputValidator
+-Better CheckBox text padding
 
 [0.0.2]
-Added GWT compatibility
+-Added GWT compatibility
 
 [0.0.1]
-Initial release
+-Initial release
