@@ -126,7 +126,6 @@ public class MenuBar {
 			Vector2 pos = menuOpenButton.localToStageCoordinates(new Vector2(0, 0));
 			menu.setPosition(pos.x, pos.y - menu.getHeight());
 			stage.addActor(menu);
-
 			currentMenu = this;
 		}
 	}

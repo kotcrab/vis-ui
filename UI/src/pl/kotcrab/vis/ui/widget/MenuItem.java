@@ -18,24 +18,122 @@ package pl.kotcrab.vis.ui.widget;
 
 import pl.kotcrab.vis.ui.VisUI;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Scaling;
 
-public class MenuItem {
-	public TextButton button;
-
-	public MenuItem (String text, ChangeListener listener) {
-		this(text);
-		button.addListener(listener);
-	}
+/** A button with a child {@link Image} and {@link Label}.
+ * @see ImageButton
+ * @see TextButton
+ * @see Button
+ * @author Nathan Sweet
+ * @author Pawel Pastuszak */
+public class MenuItem extends Button {
+	private final Image image;
+	private final Label label;
+	private TextButtonStyle style;
 
 	public MenuItem (String text) {
-		button = new TextButton(text, VisUI.skin, "menu");
-		button.getLabel().setAlignment(Align.left);
+		this(text, null, VisUI.skin.get(TextButtonStyle.class));
+		setSkin(VisUI.skin);
 	}
 
-	public void addListener (ChangeListener listener) {
-		button.addListener(listener);
+	public MenuItem (String text, Drawable image, ChangeListener changeListener) {
+		this(text, image, VisUI.skin.get(TextButtonStyle.class));
+		setSkin(VisUI.skin);
 	}
+
+	public MenuItem (String text, Drawable image, String styleName) {
+		this(text, image, VisUI.skin.get(styleName, TextButtonStyle.class));
+		setSkin(VisUI.skin);
+	}
+
+	public MenuItem (String text, Drawable icon, TextButtonStyle style) {
+		super(style);
+		this.style = style;
+		defaults().space(3);
+
+		image = new Image(icon);
+		image.setScaling(Scaling.fit);
+		add(image).padLeft(icon != null ? 0 : 24);
+
+		label = new Label(text, new LabelStyle(style.font, style.fontColor));
+		label.setAlignment(Align.left);
+		add(label).expand().fill();
+
+		setStyle(style);
+
+		setSize(getPrefWidth(), getPrefHeight());
+	}
+
+	@Override
+	public void setStyle (ButtonStyle style) {
+		if (!(style instanceof TextButtonStyle)) throw new IllegalArgumentException("style must be a ImageTextButtonStyle.");
+		super.setStyle(style);
+		this.style = (TextButtonStyle)style;
+		if (label != null) {
+			TextButtonStyle textButtonStyle = (TextButtonStyle)style;
+			LabelStyle labelStyle = label.getStyle();
+			labelStyle.font = textButtonStyle.font;
+			labelStyle.fontColor = textButtonStyle.fontColor;
+			label.setStyle(labelStyle);
+		}
+	}
+
+	@Override
+	public TextButtonStyle getStyle () {
+		return style;
+	}
+
+	@Override
+	public void draw (Batch batch, float parentAlpha) {
+		Color fontColor;
+		if (isDisabled() && style.disabledFontColor != null)
+			fontColor = style.disabledFontColor;
+		else if (isPressed() && style.downFontColor != null)
+			fontColor = style.downFontColor;
+		else if (isChecked() && style.checkedFontColor != null)
+			fontColor = (isOver() && style.checkedOverFontColor != null) ? style.checkedOverFontColor : style.checkedFontColor;
+		else if (isOver() && style.overFontColor != null)
+			fontColor = style.overFontColor;
+		else
+			fontColor = style.fontColor;
+		if (fontColor != null) label.getStyle().fontColor = fontColor;
+		super.draw(batch, parentAlpha);
+	}
+
+	public Image getImage () {
+		return image;
+	}
+	public Cell<?> getImageCell () {
+		return getCell(image);
+	}
+
+	public Label getLabel () {
+		return label;
+	}
+	
+	public Cell<?> getLabelCell () {
+		return getCell(label);
+	}
+
+	public void setText (CharSequence text) {
+		label.setText(text);
+	}
+
+	public CharSequence getText () {
+		return label.getText();
+	}
+
 }

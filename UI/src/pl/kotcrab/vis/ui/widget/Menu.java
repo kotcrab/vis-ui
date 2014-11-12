@@ -30,7 +30,7 @@ public class Menu extends Table {
 	}
 
 	public void addItem (MenuItem item) {
-		add(item.button).fillX().row();
+		add(item).fillX().row();
 		pack();
 	}
 }
