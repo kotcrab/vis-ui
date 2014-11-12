@@ -4,6 +4,7 @@
 -VisWindow can be created with border or without it
 -MenuItem can be created with icon
 -Added FileChooser (Desktop only)
+-Fixed horizontal scroll pane slider not fully visible
 
 [0.0.3]
 -API change: Renamed 'components' package to 'widget' (sorry!)

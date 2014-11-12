@@ -144,7 +144,7 @@ default-pane
   index: -1
 default-pane-noborder
   rotate: false
-  xy: 13, 44
+  xy: 142, 198
   size: 1, 1
   split: 0, 0, 0, 0
   orig: 1, 1
@@ -168,7 +168,7 @@ default-select-selection
   index: -1
 list-selection
   rotate: false
-  xy: 15, 44
+  xy: 52, 104
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -285,9 +285,18 @@ scroll
   orig: 17, 6
   offset: 0, 0
   index: -1
-scroll-knob-horizontal
+scroll-horizontal
   rotate: false
   xy: 41, 86
+  size: 6, 17
+  split: 2, 2, 0, 17
+  pad: -1, -1, 2, 2
+  orig: 6, 17
+  offset: 0, 0
+  index: -1
+scroll-knob-horizontal
+  rotate: false
+  xy: 145, 182
   size: 6, 17
   split: 2, 2, 0, 17
   pad: -1, -1, 6, 6
@@ -304,7 +313,7 @@ scroll-knob-vertical
   index: -1
 select-box-list-bg
   rotate: false
-  xy: 52, 104
+  xy: 152, 198
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -353,7 +362,7 @@ slider-knob-over
   index: -1
 splitpane
   rotate: false
-  xy: 142, 198
+  xy: 13, 44
   size: 3, 1
   orig: 3, 1
   offset: 0, 0
@@ -396,7 +405,7 @@ tree-selection
   index: -1
 white
   rotate: false
-  xy: 158, 227
+  xy: 145, 178
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
