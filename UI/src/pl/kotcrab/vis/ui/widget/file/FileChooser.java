@@ -1,21 +1,18 @@
-/**
+/*******************************************************************************
  * Copyright 2014 Pawel Pastuszak
- * 
- * This file is part of VisEditor.
- * 
- * VisEditor is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- * 
- * VisEditor is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- * 
- * You should have received a copy of the GNU General Public License
- * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
- */
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ******************************************************************************/
 
 package pl.kotcrab.vis.ui.widget.file;
 
@@ -26,22 +23,24 @@ import javax.swing.filechooser.FileSystemView;
 
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.VisUI;
+import pl.kotcrab.vis.ui.widget.Separator;
 import pl.kotcrab.vis.ui.widget.VisLabel;
 import pl.kotcrab.vis.ui.widget.VisScrollPane;
 import pl.kotcrab.vis.ui.widget.VisSplitPane;
 import pl.kotcrab.vis.ui.widget.VisTextButton;
 import pl.kotcrab.vis.ui.widget.VisWindow;
-import pl.kotcrab.vis.ui.widget.file.FileUtils;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 
 public class FileChooser extends VisWindow {
@@ -50,18 +49,19 @@ public class FileChooser extends VisWindow {
 	};
 
 	private FileFilter fileFilter = new DefaultFileFilter();
+	
+	private static final Drawable highlightBg = VisUI.skin.getDrawable("list-selection");
 
 	private File currentDirectory;
 	private VisTable shortcutsTable;
 	private VisTable fileTable;
 
-	private LabelStyle highlightedLabelStyle;
-	private LabelStyle normalLabelStyle;
-
 	private VisTextButton cancelButton;
 	private VisTextButton chooseButton;
 
 	private FileItem highlitedItem;
+
+	private FileChooserStyle style;
 
 	private Mode mode;
 
@@ -69,10 +69,8 @@ public class FileChooser extends VisWindow {
 		super(parent, title);
 		this.mode = mode;
 
+		style = new FileChooserStyle();
 		setTitleAlignment(Align.left);
-
-		normalLabelStyle = VisUI.skin.get(LabelStyle.class);
-		highlightedLabelStyle = createHighlightedStyle(normalLabelStyle);
 
 		cancelButton = new VisTextButton("Cancel");
 		chooseButton = new VisTextButton("Choose");
@@ -92,7 +90,7 @@ public class FileChooser extends VisWindow {
 		shortcutsScrollPane.add(createScrollPane(shortcutsTable)).pad(2).top().expand().fillX();
 
 		VisSplitPane splitPane = new VisSplitPane(shortcutsScrollPane, fileScrollPaneTable, false);
-		splitPane.setSplitAmount(0.2f);
+		splitPane.setSplitAmount(0.3f);
 
 		row();
 		add(splitPane).expand().fill();
@@ -139,14 +137,6 @@ public class FileChooser extends VisWindow {
 		buttonTable.add(chooseButton);
 	}
 
-	private LabelStyle createHighlightedStyle (LabelStyle style) {
-		LabelStyle newStyle = new LabelStyle();
-		newStyle.background = VisUI.skin.getDrawable("list-selection");
-		newStyle.font = style.font;
-		newStyle.fontColor = style.fontColor;
-		return newStyle;
-	}
-
 	public void setDirectory (String directory) {
 		setDirectory(new File(directory));
 	}
@@ -162,8 +152,15 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void buildShortcutsList () {
-		File[] roots = File.listRoots();
 		shortcutsTable.clear();
+
+		shortcutsTable.add(new FileItem(new File(System.getProperty("user.home") + "/Desktop"), style.iconFolder)).expand().fill()
+			.row();
+		shortcutsTable.add(new FileItem(new File(System.getProperty("user.home")), style.iconFolder)).expand().fill().row();
+
+		shortcutsTable.add(new Separator()).fill().expand().row();
+
+		File[] roots = File.listRoots();
 
 		for (int i = 0; i < roots.length; i++) {
 			File root = roots[i];
@@ -174,13 +171,18 @@ public class FileChooser extends VisWindow {
 				String displayName = view.getSystemDisplayName(root);
 
 				if (displayName != null && displayName.equals("") == false)
-					item = new FileItem(root, displayName);
+					item = new FileItem(root, displayName, style.iconDrive);
 				else
-					item = new FileItem(root, root.toString());
+					item = new FileItem(root, root.toString(), style.iconDrive);
 
 				shortcutsTable.add(item).expand().fill().row();
 			}
 		}
+
+		shortcutsTable.add(new Separator()).fill().expand().row();
+
+		shortcutsTable.add(new FileItem(null, "Favorite", style.iconFolder)).expand().fill().row();
+
 	}
 
 	private void rebuildList () {
@@ -206,12 +208,16 @@ public class FileChooser extends VisWindow {
 		public boolean accept (File f) {
 			if (f.isHidden()) return false;
 			if (mode == Mode.LOAD ? f.canRead() == false : f.canWrite() == false) return false;
+			if (f.isFile()) return true;
 			if (f.list() == null) return false;
+
 			return true;
 		}
 	}
 
 	private class FileItem extends Table {
+		
+		private Image icon;
 		private VisLabel name;
 		private VisLabel size;
 		public File file;
@@ -226,7 +232,37 @@ public class FileChooser extends VisWindow {
 			addListener();
 		}
 
+		public FileItem (File file, String customName, Drawable icon) {
+			this.file = file;
+			this.name = new VisLabel(customName);
+
+			add(new Image(icon)).padTop(3);
+			add(name).expand().fill().left().padRight(6);
+			pack();
+
+			addListener();
+		}
+
 		public FileItem (File file) {
+			this.file = file;
+			this.name = new VisLabel(file.getName());
+
+			if (file.isDirectory())
+			{
+				add(new Image(style.iconFolder)).padTop(3);
+				size = new VisLabel("");
+			}
+			else
+				size = new VisLabel(FileUtils.readableFileSize(file.length()));
+
+			add(name).expand().fill().left();
+			add(size).padRight(6);
+			pack();
+
+			addListener();
+		}
+
+		public FileItem (File file, Drawable icon) {
 			this.file = file;
 			this.name = new VisLabel(file.getName());
 
@@ -235,6 +271,7 @@ public class FileChooser extends VisWindow {
 			else
 				size = new VisLabel(FileUtils.readableFileSize(file.length()));
 
+			add(new Image(icon)).padTop(3);
 			add(name).expand().fill().left();
 			add(size).padRight(6);
 			pack();
@@ -246,7 +283,7 @@ public class FileChooser extends VisWindow {
 			addListener(new ClickListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-					highlightLabel();
+					highlight();
 					return super.touchDown(event, x, y, pointer, button);
 				}
 
@@ -261,18 +298,36 @@ public class FileChooser extends VisWindow {
 			});
 		}
 
-		private void highlightLabel () {
+		private void highlight () {
 			if (highlitedItem != null) highlitedItem.resetHighlight();
 			highlitedItem = FileItem.this;
-			name.setStyle(highlightedLabelStyle);
-			if (size != null) size.setStyle(highlightedLabelStyle);
+			setBackground(highlightBg);
 		}
 
 		private void resetHighlight () {
-			name.setStyle(normalLabelStyle);
-			if (size != null) size.setStyle(normalLabelStyle);
+			setBackground((Drawable)null);
 		}
 
+	}
+
+	static public class FileChooserStyle {
+		public Drawable iconFolder;
+		public Drawable iconDrive;
+
+		public FileChooserStyle () {
+			iconFolder = VisUI.skin.getDrawable("icon-folder");
+			iconDrive = VisUI.skin.getDrawable("icon-drive");
+		}
+
+		public FileChooserStyle (Drawable iconFolder, Drawable iconDrive) {
+			this.iconFolder = iconFolder;
+			this.iconDrive = iconDrive;
+		}
+
+		public FileChooserStyle (FileChooserStyle style) {
+			iconFolder = style.iconFolder;
+			iconDrive = style.iconDrive;
+		}
 	}
 
 }
