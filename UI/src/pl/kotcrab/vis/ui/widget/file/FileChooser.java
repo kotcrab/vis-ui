@@ -23,7 +23,7 @@ import javax.swing.filechooser.FileSystemView;
 
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.widget.Separator;
+import pl.kotcrab.vis.ui.widget.VisImageButton;
 import pl.kotcrab.vis.ui.widget.VisLabel;
 import pl.kotcrab.vis.ui.widget.VisScrollPane;
 import pl.kotcrab.vis.ui.widget.VisSplitPane;
@@ -34,9 +34,10 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -49,12 +50,20 @@ public class FileChooser extends VisWindow {
 	};
 
 	private FileFilter fileFilter = new DefaultFileFilter();
-	
+
 	private static final Drawable highlightBg = VisUI.skin.getDrawable("list-selection");
 
 	private File currentDirectory;
-	private VisTable shortcutsTable;
+
+	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
+
 	private VisTable fileTable;
+	private VisScrollPane fileScrollPane;
+	private VisTable fileScrollPaneTable;
+
+	private VisTable shortcutsTable;
+	private VisScrollPane shorcutsScrollPane;
+	private VisTable shortcutsScrollPaneTable;
 
 	private VisTextButton cancelButton;
 	private VisTextButton chooseButton;
@@ -64,6 +73,8 @@ public class FileChooser extends VisWindow {
 	private FileChooserStyle style;
 
 	private Mode mode;
+
+	private VisSplitPane splitPane;
 
 	public FileChooser (Stage parent, String title, Mode mode) {
 		super(parent, title);
@@ -77,29 +88,33 @@ public class FileChooser extends VisWindow {
 
 		createToolbar();
 
-		shortcutsTable = new VisTable();
+		// fileTable is contained in fileScrollPane contained in fileScrollPaneTable contained in splitPane
+		// same for shortcuts
 		fileTable = new VisTable();
+		fileScrollPane = createScrollPane(fileTable);
+		fileScrollPaneTable = new VisTable();
+		fileScrollPaneTable.add(fileScrollPane).pad(2).top().expand().fillX();
 
-		// debug();
-		// fileTable.debug();
+		shortcutsTable = new VisTable();
+		shorcutsScrollPane = createScrollPane(shortcutsTable);
+		shortcutsScrollPaneTable = new VisTable();
+		shortcutsScrollPaneTable.add(shorcutsScrollPane).pad(2).top().expand().fillX();
 
-		VisTable fileScrollPaneTable = new VisTable();
-		fileScrollPaneTable.add(createScrollPane(fileTable)).pad(2).top().expand().fillX();
-
-		VisTable shortcutsScrollPane = new VisTable();
-		shortcutsScrollPane.add(createScrollPane(shortcutsTable)).pad(2).top().expand().fillX();
-
-		VisSplitPane splitPane = new VisSplitPane(shortcutsScrollPane, fileScrollPaneTable, false);
+		splitPane = new VisSplitPane(shortcutsScrollPaneTable, fileScrollPaneTable, false);
 		splitPane.setSplitAmount(0.3f);
+		splitPane.setMinSplitAmount(0.05f);
+		splitPane.setMaxSplitAmount(0.8913f);
 
 		row();
 		add(splitPane).expand().fill();
 		row();
 
+		pack();
+
 		buildShortcutsList();
 		createButtons();
 
-		setDirectory(System.getProperty("user.home") + File.separator);
+		setDirectory(System.getProperty("user.home"));
 		setSize(500, 600);
 		setPositionToCenter();
 	}
@@ -108,6 +123,7 @@ public class FileChooser extends VisWindow {
 		VisScrollPane scrollPane = new VisScrollPane(table);
 		scrollPane.setOverscroll(false, true);
 		scrollPane.setFadeScrollBars(false);
+		scrollPane.setScrollingDisabled(true, false);
 		return scrollPane;
 	}
 
@@ -116,8 +132,19 @@ public class FileChooser extends VisWindow {
 		toolbarTable.defaults().minWidth(70).right();
 		add(toolbarTable).fillX().expandX();
 
+		VisImageButton backButton  =new VisImageButton(style.iconArrowLeft);
+		
 		VisTextButton dirupButton = new VisTextButton("<-");
+		toolbarTable.add(backButton);
 		toolbarTable.add(dirupButton);
+		backButton.addListener(new ChangeListener() {
+
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				File parent = currentDirectory.getParentFile();
+				if (parent != null) setDirectory(parent);
+			}
+		});
 		dirupButton.addListener(new ChangeListener() {
 
 			@Override
@@ -154,44 +181,60 @@ public class FileChooser extends VisWindow {
 	private void buildShortcutsList () {
 		shortcutsTable.clear();
 
-		shortcutsTable.add(new FileItem(new File(System.getProperty("user.home") + "/Desktop"), style.iconFolder)).expand().fill()
-			.row();
-		shortcutsTable.add(new FileItem(new File(System.getProperty("user.home")), style.iconFolder)).expand().fill().row();
+		String userHome = System.getProperty("user.home");
+		String userName = System.getProperty("user.name");
 
-		shortcutsTable.add(new Separator()).fill().expand().row();
+		shortcutsTable.add(new FileItem(fileSystemView.getHomeDirectory(), "Desktop", style.iconFolder)).expand().fill().row();
+		shortcutsTable.add(new FileItem(new File(userHome), userName, style.iconFolder)).expand().fill().row();
+
+		shortcutsTable.addSeparator();
 
 		File[] roots = File.listRoots();
 
 		for (int i = 0; i < roots.length; i++) {
 			File root = roots[i];
 			FileItem item = null;
-			FileSystemView view = FileSystemView.getFileSystemView();
 
 			if (mode == Mode.LOAD ? root.canRead() : root.canWrite()) {
-				String displayName = view.getSystemDisplayName(root);
+				String displayName = fileSystemView.getSystemDisplayName(root);
 
 				if (displayName != null && displayName.equals("") == false)
 					item = new FileItem(root, displayName, style.iconDrive);
 				else
 					item = new FileItem(root, root.toString(), style.iconDrive);
 
-				shortcutsTable.add(item).expand().fill().row();
+				shortcutsTable.add(item).expandX().fillX().row();
 			}
 		}
 
-		shortcutsTable.add(new Separator()).fill().expand().row();
+		shortcutsTable.addSeparator();
 
 		shortcutsTable.add(new FileItem(null, "Favorite", style.iconFolder)).expand().fill().row();
-
 	}
 
 	private void rebuildList () {
+		fileTable.clear();
 		File[] files = currentDirectory.listFiles(fileFilter);
+
+		if (files.length == 0) return;
+
 		Array<File> fileList = FileUtils.sortFiles(files);
 
-		fileTable.clear();
 		for (File f : fileList)
-			if (f.isHidden() == false) fileTable.add(new FileItem(f)).expand().fill().row();
+			if (f.isHidden() == false) fileTable.add(new FileItem(f, null)).expand().fill().row();
+
+		fileScrollPane.setScrollX(0);
+		fileScrollPane.setScrollY(0);
+
+		// because stupid scroll pane returns not valid size of taken space we calculate it manually,
+		// if taken space if bigger than available (scroll bars will be showed) then add padding
+		float scrollHeightY = files.length * fileTable.getCells().get(0).getPrefHeight();
+		if (scrollHeightY > fileScrollPaneTable.getHeight()) {
+			for (Cell<?> c : fileTable.getCells())
+				c.padRight(22);
+
+			fileTable.invalidate();
+		}
 	}
 
 	public FileFilter getFileFilter () {
@@ -203,7 +246,6 @@ public class FileChooser extends VisWindow {
 	}
 
 	private class DefaultFileFilter implements FileFilter {
-
 		@Override
 		public boolean accept (File f) {
 			if (f.isHidden()) return false;
@@ -216,67 +258,68 @@ public class FileChooser extends VisWindow {
 	}
 
 	private class FileItem extends Table {
-		
-		private Image icon;
 		private VisLabel name;
 		private VisLabel size;
 		public File file;
 
-		public FileItem (File file, String customName) {
+		/** Used only by shortcuts panel */
+		public FileItem (final File file, String customName, Drawable icon) {
 			this.file = file;
-			this.name = new VisLabel(customName);
-
-			add(name).expand().fill().left().padRight(6);
-			pack();
-
-			addListener();
-		}
-
-		public FileItem (File file, String customName, Drawable icon) {
-			this.file = file;
-			this.name = new VisLabel(customName);
-
+			name = new VisLabel(customName);
+			name.setEllipse(true);
 			add(new Image(icon)).padTop(3);
-			add(name).expand().fill().left().padRight(6);
-			pack();
+			Cell<VisLabel> labelCell = add(name).expand().fill().padRight(6);
+
+			labelCell.width(new Value() {
+				@Override
+				public float get (Actor context) {
+					return shortcutsScrollPaneTable.getWidth() - getUsedWidth() - 10;
+				}
+			});
 
 			addListener();
 		}
 
-		public FileItem (File file) {
+		/** Used only by file panel */
+		public FileItem (final File file, Drawable icon) {
 			this.file = file;
-			this.name = new VisLabel(file.getName());
+			name = new VisLabel(file.getName());
+			name.setEllipse(true);
 
 			if (file.isDirectory())
-			{
-				add(new Image(style.iconFolder)).padTop(3);
 				size = new VisLabel("");
+			else
+				size = new VisLabel(FileUtils.readableFileSize(file.length()));
+
+			if (icon == null && file.isDirectory()) icon = style.iconFolder;
+
+			if (icon != null) add(new Image(icon)).padTop(3);
+			Cell<VisLabel> labelCell = add(name).padLeft(icon == null ? 22 : 0);
+
+			labelCell.width(new Value() {
+				@Override
+				public float get (Actor context) {
+					int padding = file.isDirectory() ? 35 : 60;
+					return fileScrollPaneTable.getWidth() - getUsedWidth() - padding;
+				}
+			});
+
+			add(size).expandX().right().padRight(6);
+
+			addListener();
+		}
+
+		private int getUsedWidth () {
+			@SuppressWarnings("rawtypes")
+			Array<Cell> cells = getCells();
+
+			int width = 0;
+			for (Cell<?> cell : cells) {
+				if (cell.getActor() == name) continue;
+				width += cell.getActor().getWidth();
 			}
-			else
-				size = new VisLabel(FileUtils.readableFileSize(file.length()));
 
-			add(name).expand().fill().left();
-			add(size).padRight(6);
-			pack();
-
-			addListener();
-		}
-
-		public FileItem (File file, Drawable icon) {
-			this.file = file;
-			this.name = new VisLabel(file.getName());
-
-			if (file.isDirectory())
-				size = new VisLabel("");
-			else
-				size = new VisLabel(FileUtils.readableFileSize(file.length()));
-
-			add(new Image(icon)).padTop(3);
-			add(name).expand().fill().left();
-			add(size).padRight(6);
-			pack();
-
-			addListener();
+			return width;
 		}
 
 		private void addListener () {
@@ -311,10 +354,12 @@ public class FileChooser extends VisWindow {
 	}
 
 	static public class FileChooserStyle {
+		public Drawable iconArrowLeft;
 		public Drawable iconFolder;
 		public Drawable iconDrive;
 
 		public FileChooserStyle () {
+			iconArrowLeft = VisUI.skin.getDrawable("icon-arrow-left");
 			iconFolder = VisUI.skin.getDrawable("icon-folder");
 			iconDrive = VisUI.skin.getDrawable("icon-drive");
 		}
