@@ -16,6 +16,8 @@
 
 package pl.kotcrab.vis.ui;
 
+import pl.kotcrab.vis.ui.widget.Separator;
+
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 /** VisTable is normal scene2d.ui {@link Table} that allows to set default vis spacing during creation
@@ -29,6 +31,10 @@ public class VisTable extends Table {
 	public VisTable (boolean setVisDefautls) {
 		super(VisUI.skin);
 		if (setVisDefautls) TableUtils.setSpaceDefaults(this);
+	}
+
+	public void addSeparator () {
+		add(new Separator()).padTop(2).padBottom(2).fill().expand().row();
 	}
 
 }

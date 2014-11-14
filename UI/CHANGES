@@ -1,9 +1,11 @@
 [0.1.0] [WIP]
 -API change: VisValidableTextField#addValidable -> VisValidableTextFieldaddValidator
 -Added: VisTextField#isEmpty()
+-Added: VisTable#addSeparator()
+-Added FileChooser (Desktop only)
+-Added ImageButton
 -VisWindow can be created with border or without it
 -MenuItem can be created with icon
--Added FileChooser (Desktop only)
 -Fixed horizontal scroll pane slider not fully visible
 
 [0.0.3]
