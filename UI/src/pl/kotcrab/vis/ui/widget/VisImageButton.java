@@ -20,6 +20,7 @@ import pl.kotcrab.vis.ui.FocusManager;
 import pl.kotcrab.vis.ui.Focusable;
 import pl.kotcrab.vis.ui.VisUI;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -27,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 
 public class VisImageButton extends Button implements Focusable {
@@ -35,6 +37,8 @@ public class VisImageButton extends Button implements Focusable {
 	private VisImageButtonStyle style;
 
 	private boolean drawBorder;
+
+	private boolean generateDisabledImage = false;
 
 	public VisImageButton (Drawable imageUp) {
 		this(imageUp, null, null);
@@ -45,7 +49,7 @@ public class VisImageButton extends Button implements Focusable {
 	}
 
 	public VisImageButton (Drawable imageUp, Drawable imageDown, Drawable imageChecked) {
-		setStyle(VisUI.skin.get(VisImageButtonStyle.class));
+		setStyle(new VisImageButtonStyle(VisUI.skin.get(VisImageButtonStyle.class)));
 		style.imageUp = imageUp;
 		style.imageDown = imageDown;
 		style.imageChecked = imageChecked;
@@ -62,6 +66,10 @@ public class VisImageButton extends Button implements Focusable {
 				return false;
 			}
 		});
+	}
+
+	public void setGeneateDisabledImage (boolean generate) {
+		generateDisabledImage = true;
 	}
 
 	@Override
@@ -90,6 +98,11 @@ public class VisImageButton extends Button implements Focusable {
 		else if (style.imageUp != null) //
 			drawable = style.imageUp;
 		image.setDrawable(drawable);
+
+		if (generateDisabledImage && style.imageDisabled == null)
+			image.setColor(Color.GRAY);
+		else
+			image.setColor(Color.WHITE);
 	}
 
 	@Override
@@ -137,9 +150,6 @@ public class VisImageButton extends Button implements Focusable {
 			this.focusBorder = style.focusBorder;
 		}
 
-		public VisImageButtonStyle (ButtonStyle style) {
-			super(style);
-		}
 	}
 
 	@Override

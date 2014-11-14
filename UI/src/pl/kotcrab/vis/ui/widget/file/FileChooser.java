@@ -28,10 +28,14 @@ import pl.kotcrab.vis.ui.widget.VisLabel;
 import pl.kotcrab.vis.ui.widget.VisScrollPane;
 import pl.kotcrab.vis.ui.widget.VisSplitPane;
 import pl.kotcrab.vis.ui.widget.VisTextButton;
+import pl.kotcrab.vis.ui.widget.VisTextField;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
@@ -76,12 +80,18 @@ public class FileChooser extends VisWindow {
 
 	private VisSplitPane splitPane;
 
+	private VisTextField currentPath;
+
 	public FileChooser (Stage parent, String title, Mode mode) {
 		super(parent, title);
 		this.mode = mode;
 
 		style = new FileChooserStyle();
 		setTitleAlignment(Align.left);
+		
+		setModal(true);
+		setResizable(true);
+		setMovable(true);
 
 		cancelButton = new VisTextButton("Cancel");
 		chooseButton = new VisTextButton("Choose");
@@ -118,7 +128,7 @@ public class FileChooser extends VisWindow {
 		setSize(500, 600);
 		setPositionToCenter();
 	}
-
+	
 	private VisScrollPane createScrollPane (VisTable table) {
 		VisScrollPane scrollPane = new VisScrollPane(table);
 		scrollPane.setOverscroll(false, true);
@@ -129,23 +139,21 @@ public class FileChooser extends VisWindow {
 
 	private void createToolbar () {
 		VisTable toolbarTable = new VisTable(true);
-		toolbarTable.defaults().minWidth(70).right();
-		add(toolbarTable).fillX().expandX();
+		toolbarTable.defaults().minWidth(30).right();
+		add(toolbarTable).fillX().expandX().pad(3).padRight(2);
 
-		VisImageButton backButton  =new VisImageButton(style.iconArrowLeft);
-		
-		VisTextButton dirupButton = new VisTextButton("<-");
+		VisImageButton backButton = new VisImageButton(style.iconArrowLeft);
+		VisImageButton forwardButton = new VisImageButton(style.iconArrowRight);
+		forwardButton.setDisabled(true);
+		forwardButton.setGeneateDisabledImage(true);
+
+		currentPath = new VisTextField();
+
 		toolbarTable.add(backButton);
-		toolbarTable.add(dirupButton);
-		backButton.addListener(new ChangeListener() {
+		toolbarTable.add(forwardButton);
+		toolbarTable.add(currentPath).expand().fill();
 
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				File parent = currentDirectory.getParentFile();
-				if (parent != null) setDirectory(parent);
-			}
-		});
-		dirupButton.addListener(new ChangeListener() {
+		backButton.addListener(new ChangeListener() {
 
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
@@ -215,6 +223,7 @@ public class FileChooser extends VisWindow {
 	private void rebuildList () {
 		fileTable.clear();
 		File[] files = currentDirectory.listFiles(fileFilter);
+		currentPath.setText(currentDirectory.getAbsolutePath());
 
 		if (files.length == 0) return;
 
@@ -355,23 +364,15 @@ public class FileChooser extends VisWindow {
 
 	static public class FileChooserStyle {
 		public Drawable iconArrowLeft;
+		public Drawable iconArrowRight;
 		public Drawable iconFolder;
 		public Drawable iconDrive;
 
 		public FileChooserStyle () {
 			iconArrowLeft = VisUI.skin.getDrawable("icon-arrow-left");
+			iconArrowRight = VisUI.skin.getDrawable("icon-arrow-right");
 			iconFolder = VisUI.skin.getDrawable("icon-folder");
 			iconDrive = VisUI.skin.getDrawable("icon-drive");
-		}
-
-		public FileChooserStyle (Drawable iconFolder, Drawable iconDrive) {
-			this.iconFolder = iconFolder;
-			this.iconDrive = iconDrive;
-		}
-
-		public FileChooserStyle (FileChooserStyle style) {
-			iconFolder = style.iconFolder;
-			iconDrive = style.iconDrive;
 		}
 	}
 
