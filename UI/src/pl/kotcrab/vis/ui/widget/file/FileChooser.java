@@ -88,7 +88,7 @@ public class FileChooser extends VisWindow {
 
 		style = new FileChooserStyle();
 		setTitleAlignment(Align.left);
-		
+
 		setModal(true);
 		setResizable(true);
 		setMovable(true);
@@ -98,6 +98,28 @@ public class FileChooser extends VisWindow {
 
 		createToolbar();
 
+		createCenterContentPanel();
+
+		splitPane = new VisSplitPane(shortcutsScrollPaneTable, fileScrollPaneTable, false);
+		splitPane.setSplitAmount(0.3f);
+		splitPane.setMinSplitAmount(0.05f);
+		splitPane.setMaxSplitAmount(0.8913f);
+
+		row();
+		add(splitPane).expand().fill();
+		row();
+
+		crateFileTextBox();
+		createButtons();
+
+		buildShortcutsList();
+
+		setDirectory(System.getProperty("user.home"));
+		setSize(500, 600);
+		setPositionToCenter();
+	}
+
+	private void createCenterContentPanel () {
 		// fileTable is contained in fileScrollPane contained in fileScrollPaneTable contained in splitPane
 		// same for shortcuts
 		fileTable = new VisTable();
@@ -109,26 +131,20 @@ public class FileChooser extends VisWindow {
 		shorcutsScrollPane = createScrollPane(shortcutsTable);
 		shortcutsScrollPaneTable = new VisTable();
 		shortcutsScrollPaneTable.add(shorcutsScrollPane).pad(2).top().expand().fillX();
-
-		splitPane = new VisSplitPane(shortcutsScrollPaneTable, fileScrollPaneTable, false);
-		splitPane.setSplitAmount(0.3f);
-		splitPane.setMinSplitAmount(0.05f);
-		splitPane.setMaxSplitAmount(0.8913f);
-
-		row();
-		add(splitPane).expand().fill();
-		row();
-
-		pack();
-
-		buildShortcutsList();
-		createButtons();
-
-		setDirectory(System.getProperty("user.home"));
-		setSize(500, 600);
-		setPositionToCenter();
 	}
-	
+
+	private void crateFileTextBox () {
+		VisTable table = new VisTable(true);
+		VisLabel nameLabel = new VisLabel("File name:");
+		VisTextField textBox = new VisTextField();
+		
+		table.add(nameLabel);
+		table.add(textBox).expand().fill();
+		
+		add(table).expand().fill().pad(3).padRight(2).padBottom(2f);
+		row();
+	}
+
 	private VisScrollPane createScrollPane (VisTable table) {
 		VisScrollPane scrollPane = new VisScrollPane(table);
 		scrollPane.setOverscroll(false, true);
