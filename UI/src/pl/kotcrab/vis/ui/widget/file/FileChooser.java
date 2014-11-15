@@ -59,16 +59,17 @@ public class FileChooser extends VisWindow {
 	private Mode mode;
 	private SelectionMode selectionMode = SelectionMode.FILES;
 	private boolean multiselectionEnabled = false;
-	
+	private FileChooserListener listener;
+
 	private FileFilter fileFilter = new DefaultFileFilter();
 	private File currentDirectory;
 
 	private FileChooserStyle style;
-	
+
 	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
 
 	private VisSplitPane splitPane;
-	
+
 	private VisTable fileTable;
 	private VisScrollPane fileScrollPane;
 	private VisTable fileScrollPaneTable;
@@ -80,6 +81,7 @@ public class FileChooser extends VisWindow {
 	private VisTextButton cancelButton;
 	private VisTextButton chooseButton;
 
+	private Array<FileItem> selectedItems;
 	private FileItem selectedItem;
 
 	private VisTextField currentPath;
@@ -112,9 +114,9 @@ public class FileChooser extends VisWindow {
 		row();
 
 		crateFileTextBox();
-		createButtons();
+		createBottomButtons();
 
-		buildShortcutsList();
+		rebuildShortcutsList();
 
 		setDirectory(System.getProperty("user.home"));
 		setSize(500, 600);
@@ -135,12 +137,12 @@ public class FileChooser extends VisWindow {
 
 	public void setDirectory (FileHandle directory) {
 		currentDirectory = directory.file();
-		rebuildList();
+		rebuildFileList();
 	}
 
 	public void setDirectory (File directory) {
 		currentDirectory = directory;
-		rebuildList();
+		rebuildFileList();
 	}
 
 	public FileFilter getFileFilter () {
@@ -165,6 +167,15 @@ public class FileChooser extends VisWindow {
 
 	public void setMultiselectionEnabled (boolean multiselectionEnabled) {
 		this.multiselectionEnabled = multiselectionEnabled;
+	}
+
+	public void setListener (FileChooserListener listener) {
+		this.listener = listener;
+		validateSettings();
+	}
+
+	private void validateSettings () {
+		if (listener == null) listener = new FileChooserAdapter();
 	}
 
 	private void createToolbar () {
@@ -215,11 +226,11 @@ public class FileChooser extends VisWindow {
 		table.add(nameLabel);
 		table.add(textBox).expand().fill();
 
-		add(table).expand().fill().pad(3).padRight(2).padBottom(2f);
+		add(table).expandX().fillX().pad(3).padRight(2).padBottom(2f);
 		row();
 	}
 
-	private void createButtons () {
+	private void createBottomButtons () {
 		VisTable buttonTable = new VisTable(true);
 		buttonTable.defaults().minWidth(70).right();
 		add(buttonTable).padTop(3).padBottom(3).padRight(2).fillX().expandX();
@@ -236,7 +247,7 @@ public class FileChooser extends VisWindow {
 		return scrollPane;
 	}
 
-	private void buildShortcutsList () {
+	private void rebuildShortcutsList () {
 		shortcutsTable.clear();
 
 		String userHome = System.getProperty("user.home");
@@ -267,11 +278,11 @@ public class FileChooser extends VisWindow {
 
 		shortcutsTable.addSeparator();
 
-		//test
+		// test
 		shortcutsTable.add(new FileItem(null, "Favorite", style.iconFolder)).expand().fill().row();
 	}
 
-	private void rebuildList () {
+	private void rebuildFileList () {
 		fileTable.clear();
 		File[] files = currentDirectory.listFiles(fileFilter);
 		currentPath.setText(currentDirectory.getAbsolutePath());
