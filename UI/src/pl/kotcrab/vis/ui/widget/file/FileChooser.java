@@ -16,9 +16,6 @@
 
 package pl.kotcrab.vis.ui.widget.file;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-
 import java.io.File;
 import java.io.FileFilter;
 
@@ -35,11 +32,9 @@ import pl.kotcrab.vis.ui.widget.VisTextField;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -49,7 +44,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Array;
 
 public class FileChooser extends VisWindow {
@@ -89,6 +83,7 @@ public class FileChooser extends VisWindow {
 	private VisTextButton confirmButton;
 
 	private Array<FileItem> selectedItems = new Array<FileItem>();
+	private ShortcutItem selectedShortcut;
 
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextBox;
@@ -299,8 +294,8 @@ public class FileChooser extends VisWindow {
 		String userHome = System.getProperty("user.home");
 		String userName = System.getProperty("user.name");
 
-		shortcutsTable.add(new FileItem(fileSystemView.getHomeDirectory(), "Desktop", style.iconFolder)).expand().fill().row();
-		shortcutsTable.add(new FileItem(new File(userHome), userName, style.iconFolder)).expand().fill().row();
+		shortcutsTable.add(new ShortcutItem(fileSystemView.getHomeDirectory(), "Desktop", style.iconFolder)).expand().fill().row();
+		shortcutsTable.add(new ShortcutItem(new File(userHome), userName, style.iconFolder)).expand().fill().row();
 
 		shortcutsTable.addSeparator();
 
@@ -308,15 +303,15 @@ public class FileChooser extends VisWindow {
 
 		for (int i = 0; i < roots.length; i++) {
 			File root = roots[i];
-			FileItem item = null;
+			ShortcutItem item = null;
 
 			if (mode == Mode.OPEN ? root.canRead() : root.canWrite()) {
 				String displayName = fileSystemView.getSystemDisplayName(root);
 
 				if (displayName != null && displayName.equals("") == false)
-					item = new FileItem(root, displayName, style.iconDrive);
+					item = new ShortcutItem(root, displayName, style.iconDrive);
 				else
-					item = new FileItem(root, root.toString(), style.iconDrive);
+					item = new ShortcutItem(root, root.toString(), style.iconDrive);
 
 				shortcutsTable.add(item).expandX().fillX().row();
 			}
@@ -325,10 +320,13 @@ public class FileChooser extends VisWindow {
 		shortcutsTable.addSeparator();
 
 		// test
-		shortcutsTable.add(new FileItem(null, "Favorite", style.iconFolder)).expand().fill().row();
+		shortcutsTable.add(new ShortcutItem(new File(System.getProperty("user.home")), "Favorite", style.iconFolder)).expand()
+			.fill().row();
 	}
 
 	private void rebuildFileList () {
+		deselectAll();
+
 		fileTable.clear();
 		File[] files = currentDirectory.listFiles(fileFilter);
 		currentPath.setText(currentDirectory.getAbsolutePath());
@@ -382,6 +380,8 @@ public class FileChooser extends VisWindow {
 	private void deselectAll () {
 		for (FileItem item : selectedItems)
 			item.deselect();
+
+		selectedFileTextBox.setText("");
 	}
 
 	private class DefaultFileFilter implements FileFilter {
@@ -398,7 +398,7 @@ public class FileChooser extends VisWindow {
 
 	public void hide () {
 		remove();
-		//addAction(sequence(fadeOut(0.1f, Interpolation.fade), Actions.removeActor()));
+		// addAction(sequence(fadeOut(0.1f, Interpolation.fade), Actions.removeActor()));
 	}
 
 	private class FileItem extends Table {
@@ -406,25 +406,6 @@ public class FileChooser extends VisWindow {
 		private VisLabel size;
 		public File file;
 
-		/** Used only by shortcuts panel */
-		public FileItem (final File file, String customName, Drawable icon) {
-			this.file = file;
-			name = new VisLabel(customName);
-			name.setEllipse(true);
-			add(new Image(icon)).padTop(3);
-			Cell<VisLabel> labelCell = add(name).expand().fill().padRight(6);
-
-			labelCell.width(new Value() {
-				@Override
-				public float get (Actor context) {
-					return shortcutsScrollPaneTable.getWidth() - getUsedWidth() - 10;
-				}
-			});
-
-			addListener();
-		}
-
-		/** Used only by file panel */
 		public FileItem (final File file, Drawable icon) {
 			this.file = file;
 			name = new VisLabel(file.getName());
@@ -471,11 +452,13 @@ public class FileChooser extends VisWindow {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 					deselectAll();
+					selectedShortcut.deselect();
 					select();
 					setSelectedFileTextField();
 					return super.touchDown(event, x, y, pointer, button);
 				}
 
+				@Override
 				public void clicked (InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
 					if (getTapCount() == 2) {
@@ -487,8 +470,6 @@ public class FileChooser extends VisWindow {
 		}
 
 		private void select () {
-			// //if (selectedItem != null) selectedItem.resetHighlight();
-			// selectedItem = FileItem.this;
 			setBackground(highlightBg);
 			selectedItems.add(this);
 		}
@@ -496,6 +477,74 @@ public class FileChooser extends VisWindow {
 		private void deselect () {
 			setBackground((Drawable)null);
 			selectedItems.removeValue(this, true);
+		}
+	}
+
+	private class ShortcutItem extends Table {
+		private VisLabel name;
+		public File file;
+
+		/** Used only by shortcuts panel */
+		public ShortcutItem (final File file, String customName, Drawable icon) {
+			this.file = file;
+			name = new VisLabel(customName);
+			name.setEllipse(true);
+			add(new Image(icon)).padTop(3);
+			Cell<VisLabel> labelCell = add(name).expand().fill().padRight(6);
+
+			labelCell.width(new Value() {
+				@Override
+				public float get (Actor context) {
+					return shortcutsScrollPaneTable.getWidth() - getUsedWidth() - 10;
+				}
+			});
+
+			addListener();
+		}
+
+		private int getUsedWidth () {
+			@SuppressWarnings("rawtypes")
+			Array<Cell> cells = getCells();
+
+			int width = 0;
+			for (Cell<?> cell : cells) {
+				if (cell.getActor() == name) continue;
+				width += cell.getActor().getWidth();
+			}
+
+			return width;
+		}
+
+		private void addListener () {
+
+			addListener(new ClickListener() {
+				@Override
+				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+					deselectAll();
+					setSelectedFileTextField();
+					select();
+					return super.touchDown(event, x, y, pointer, button);
+				}
+
+				@Override
+				public void clicked (InputEvent event, float x, float y) {
+					super.clicked(event, x, y);
+					if (getTapCount() == 1) {
+						File file = ShortcutItem.this.file;
+						if (file.isDirectory()) setDirectory(file.getAbsolutePath());
+					}
+				}
+			});
+		}
+
+		private void select () {
+			if (selectedShortcut != null) selectedShortcut.deselect();
+			selectedShortcut = ShortcutItem.this;
+			setBackground(highlightBg);
+		}
+
+		private void deselect () {
+			setBackground((Drawable)null);
 		}
 
 	}
