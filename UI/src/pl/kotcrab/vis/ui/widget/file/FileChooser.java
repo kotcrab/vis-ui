@@ -32,10 +32,7 @@ import pl.kotcrab.vis.ui.widget.VisTextField;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
@@ -49,18 +46,29 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 
 public class FileChooser extends VisWindow {
+	private static final Drawable highlightBg = VisUI.skin.getDrawable("list-selection");
+
 	public enum Mode {
 		LOAD, SAVE
 	};
 
+	public enum SelectionMode {
+		FILES, DIRECTORIES, FILES_AND_DIRECTORIES
+	}
+
+	private Mode mode;
+	private SelectionMode selectionMode = SelectionMode.FILES;
+	private boolean multiselectionEnabled = false;
+	
 	private FileFilter fileFilter = new DefaultFileFilter();
-
-	private static final Drawable highlightBg = VisUI.skin.getDrawable("list-selection");
-
 	private File currentDirectory;
 
+	private FileChooserStyle style;
+	
 	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
 
+	private VisSplitPane splitPane;
+	
 	private VisTable fileTable;
 	private VisScrollPane fileScrollPane;
 	private VisTable fileScrollPaneTable;
@@ -72,13 +80,7 @@ public class FileChooser extends VisWindow {
 	private VisTextButton cancelButton;
 	private VisTextButton chooseButton;
 
-	private FileItem highlitedItem;
-
-	private FileChooserStyle style;
-
-	private Mode mode;
-
-	private VisSplitPane splitPane;
+	private FileItem selectedItem;
 
 	private VisTextField currentPath;
 
@@ -119,38 +121,50 @@ public class FileChooser extends VisWindow {
 		setPositionToCenter();
 	}
 
-	private void createCenterContentPanel () {
-		// fileTable is contained in fileScrollPane contained in fileScrollPaneTable contained in splitPane
-		// same for shortcuts
-		fileTable = new VisTable();
-		fileScrollPane = createScrollPane(fileTable);
-		fileScrollPaneTable = new VisTable();
-		fileScrollPaneTable.add(fileScrollPane).pad(2).top().expand().fillX();
-
-		shortcutsTable = new VisTable();
-		shorcutsScrollPane = createScrollPane(shortcutsTable);
-		shortcutsScrollPaneTable = new VisTable();
-		shortcutsScrollPaneTable.add(shorcutsScrollPane).pad(2).top().expand().fillX();
+	public Mode getMode () {
+		return mode;
 	}
 
-	private void crateFileTextBox () {
-		VisTable table = new VisTable(true);
-		VisLabel nameLabel = new VisLabel("File name:");
-		VisTextField textBox = new VisTextField();
-		
-		table.add(nameLabel);
-		table.add(textBox).expand().fill();
-		
-		add(table).expand().fill().pad(3).padRight(2).padBottom(2f);
-		row();
+	public void setMode (Mode mode) {
+		this.mode = mode;
 	}
 
-	private VisScrollPane createScrollPane (VisTable table) {
-		VisScrollPane scrollPane = new VisScrollPane(table);
-		scrollPane.setOverscroll(false, true);
-		scrollPane.setFadeScrollBars(false);
-		scrollPane.setScrollingDisabled(true, false);
-		return scrollPane;
+	public void setDirectory (String directory) {
+		setDirectory(new File(directory));
+	}
+
+	public void setDirectory (FileHandle directory) {
+		currentDirectory = directory.file();
+		rebuildList();
+	}
+
+	public void setDirectory (File directory) {
+		currentDirectory = directory;
+		rebuildList();
+	}
+
+	public FileFilter getFileFilter () {
+		return fileFilter;
+	}
+
+	public void setFileFilter (FileFilter fileFilter) {
+		this.fileFilter = fileFilter;
+	}
+
+	public SelectionMode getSelectionMode () {
+		return selectionMode;
+	}
+
+	public void setSelectionMode (SelectionMode selectionMode) {
+		this.selectionMode = selectionMode;
+	}
+
+	public boolean isMultiselectionEnabled () {
+		return multiselectionEnabled;
+	}
+
+	public void setMultiselectionEnabled (boolean multiselectionEnabled) {
+		this.multiselectionEnabled = multiselectionEnabled;
 	}
 
 	private void createToolbar () {
@@ -179,6 +193,32 @@ public class FileChooser extends VisWindow {
 		});
 	}
 
+	private void createCenterContentPanel () {
+		// fileTable is contained in fileScrollPane contained in fileScrollPaneTable contained in splitPane
+		// same for shortcuts
+		fileTable = new VisTable();
+		fileScrollPane = createScrollPane(fileTable);
+		fileScrollPaneTable = new VisTable();
+		fileScrollPaneTable.add(fileScrollPane).pad(2).top().expand().fillX();
+
+		shortcutsTable = new VisTable();
+		shorcutsScrollPane = createScrollPane(shortcutsTable);
+		shortcutsScrollPaneTable = new VisTable();
+		shortcutsScrollPaneTable.add(shorcutsScrollPane).pad(2).top().expand().fillX();
+	}
+
+	private void crateFileTextBox () {
+		VisTable table = new VisTable(true);
+		VisLabel nameLabel = new VisLabel("File name:");
+		VisTextField textBox = new VisTextField();
+
+		table.add(nameLabel);
+		table.add(textBox).expand().fill();
+
+		add(table).expand().fill().pad(3).padRight(2).padBottom(2f);
+		row();
+	}
+
 	private void createButtons () {
 		VisTable buttonTable = new VisTable(true);
 		buttonTable.defaults().minWidth(70).right();
@@ -188,18 +228,12 @@ public class FileChooser extends VisWindow {
 		buttonTable.add(chooseButton);
 	}
 
-	public void setDirectory (String directory) {
-		setDirectory(new File(directory));
-	}
-
-	public void setDirectory (FileHandle directory) {
-		currentDirectory = directory.file();
-		rebuildList();
-	}
-
-	public void setDirectory (File directory) {
-		currentDirectory = directory;
-		rebuildList();
+	private VisScrollPane createScrollPane (VisTable table) {
+		VisScrollPane scrollPane = new VisScrollPane(table);
+		scrollPane.setOverscroll(false, true);
+		scrollPane.setFadeScrollBars(false);
+		scrollPane.setScrollingDisabled(true, false);
+		return scrollPane;
 	}
 
 	private void buildShortcutsList () {
@@ -233,6 +267,7 @@ public class FileChooser extends VisWindow {
 
 		shortcutsTable.addSeparator();
 
+		//test
 		shortcutsTable.add(new FileItem(null, "Favorite", style.iconFolder)).expand().fill().row();
 	}
 
@@ -260,14 +295,6 @@ public class FileChooser extends VisWindow {
 
 			fileTable.invalidate();
 		}
-	}
-
-	public FileFilter getFileFilter () {
-		return fileFilter;
-	}
-
-	public void setFileFilter (FileFilter fileFilter) {
-		this.fileFilter = fileFilter;
 	}
 
 	private class DefaultFileFilter implements FileFilter {
@@ -367,8 +394,8 @@ public class FileChooser extends VisWindow {
 		}
 
 		private void highlight () {
-			if (highlitedItem != null) highlitedItem.resetHighlight();
-			highlitedItem = FileItem.this;
+			if (selectedItem != null) selectedItem.resetHighlight();
+			selectedItem = FileItem.this;
 			setBackground(highlightBg);
 		}
 
