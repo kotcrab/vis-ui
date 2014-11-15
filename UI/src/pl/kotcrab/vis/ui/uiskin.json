@@ -1,5 +1,6 @@
 {
 com.badlogic.gdx.graphics.g2d.BitmapFont: { default-font: { file: default.fnt } },
+com.badlogic.gdx.graphics.g2d.BitmapFont: { markup-font: { file: markup-font.fnt } },
 com.badlogic.gdx.graphics.Color: {
 	green: { a: 1, b: 0, g: 1, r: 0 },
 	white: { a: 1, b: 1, g: 1, r: 1 },
@@ -17,6 +18,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: { down: button-down, up: button, over: button-over, font: default-font, fontColor: white },
 	toggle: { down: button-down, up: button, checked: button-down, over: button-over, font: default-font, fontColor: white },
+	markup: { down: button-down, up: button, over: button-over, font: markup-font, fontColor: white },
 	
 	menu: { down: menu-button-down, up: menu-button, over: menu-button-down, font: default-font, fontColor: white },
 	menu-bar: { down: menu-button-down, up: menu-bar-button, over: menu-button-down, font: default-font, fontColor: white }
@@ -70,7 +72,9 @@ com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
 },
 pl.kotcrab.vis.ui.widget.VisTextField$VisTextFieldStyle: {
 	default: { selection: selection, background: textfield, backgroundOver: textfield-over, focusBorder: border, errorBorder: border-error,
-	font: default-font, fontColor: white, disabledFontColor: grey, cursor: cursor }
+	font: default-font, fontColor: white, disabledFontColor: grey, cursor: cursor },
+	markup: { selection: selection, background: textfield, backgroundOver: textfield-over, focusBorder: border, errorBorder: border-error,
+	font: markup-font, fontColor: white, disabledFontColor: grey, cursor: cursor }
 },
 pl.kotcrab.vis.ui.widget.VisTextButton$VisTextButtonStyle: {
 	default: { down: button-down, up: button, over: button-over, disabled: button, focusBorder: border, 
