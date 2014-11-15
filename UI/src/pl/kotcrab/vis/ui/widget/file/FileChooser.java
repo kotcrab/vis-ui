@@ -16,6 +16,9 @@
 
 package pl.kotcrab.vis.ui.widget.file;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeOut;
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
+
 import java.io.File;
 import java.io.FileFilter;
 
@@ -32,10 +35,13 @@ import pl.kotcrab.vis.ui.widget.VisTextField;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
@@ -43,13 +49,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Array;
 
 public class FileChooser extends VisWindow {
 	private static final Drawable highlightBg = VisUI.skin.getDrawable("list-selection");
 
 	public enum Mode {
-		LOAD, SAVE
+		OPEN, SAVE
 	};
 
 	public enum SelectionMode {
@@ -79,12 +86,12 @@ public class FileChooser extends VisWindow {
 	private VisTable shortcutsScrollPaneTable;
 
 	private VisTextButton cancelButton;
-	private VisTextButton chooseButton;
+	private VisTextButton confirmButton;
 
-	private Array<FileItem> selectedItems;
-	private FileItem selectedItem;
+	private Array<FileItem> selectedItems = new Array<FileItem>();
 
 	private VisTextField currentPath;
+	private VisTextField selectedFileTextBox;
 
 	public FileChooser (Stage parent, String title, Mode mode) {
 		super(parent, title);
@@ -98,7 +105,7 @@ public class FileChooser extends VisWindow {
 		setMovable(true);
 
 		cancelButton = new VisTextButton("Cancel");
-		chooseButton = new VisTextButton("Choose");
+		confirmButton = new VisTextButton(mode == Mode.OPEN ? "Open" : "Save");
 
 		createToolbar();
 
@@ -121,6 +128,8 @@ public class FileChooser extends VisWindow {
 		setDirectory(System.getProperty("user.home"));
 		setSize(500, 600);
 		setPositionToCenter();
+
+		validateSettings();
 	}
 
 	public Mode getMode () {
@@ -195,7 +204,6 @@ public class FileChooser extends VisWindow {
 		toolbarTable.add(currentPath).expand().fill();
 
 		backButton.addListener(new ChangeListener() {
-
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				File parent = currentDirectory.getParentFile();
@@ -208,12 +216,12 @@ public class FileChooser extends VisWindow {
 		// fileTable is contained in fileScrollPane contained in fileScrollPaneTable contained in splitPane
 		// same for shortcuts
 		fileTable = new VisTable();
-		fileScrollPane = createScrollPane(fileTable);
+		fileScrollPane = getScrollPane(fileTable);
 		fileScrollPaneTable = new VisTable();
 		fileScrollPaneTable.add(fileScrollPane).pad(2).top().expand().fillX();
 
 		shortcutsTable = new VisTable();
-		shorcutsScrollPane = createScrollPane(shortcutsTable);
+		shorcutsScrollPane = getScrollPane(shortcutsTable);
 		shortcutsScrollPaneTable = new VisTable();
 		shortcutsScrollPaneTable.add(shorcutsScrollPane).pad(2).top().expand().fillX();
 	}
@@ -221,13 +229,14 @@ public class FileChooser extends VisWindow {
 	private void crateFileTextBox () {
 		VisTable table = new VisTable(true);
 		VisLabel nameLabel = new VisLabel("File name:");
-		VisTextField textBox = new VisTextField();
+		selectedFileTextBox = new VisTextField();
 
 		table.add(nameLabel);
-		table.add(textBox).expand().fill();
+		table.add(selectedFileTextBox).expand().fill();
 
 		add(table).expandX().fillX().pad(3).padRight(2).padBottom(2f);
 		row();
+
 	}
 
 	private void createBottomButtons () {
@@ -236,15 +245,52 @@ public class FileChooser extends VisWindow {
 		add(buttonTable).padTop(3).padBottom(3).padRight(2).fillX().expandX();
 
 		buttonTable.add(cancelButton).expand().right();
-		buttonTable.add(chooseButton);
+		buttonTable.add(confirmButton);
+
+		cancelButton.addListener(new ChangeListener() {
+
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				hide();
+				listener.canceled();
+			}
+		});
+
+		confirmButton.addListener(new ChangeListener() {
+
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				if (selectedItems.size > 0) {
+					hide();
+
+					listener.selected(getFileListFromSelected());
+					listener.selected(selectedItems.get(0).file);
+				} else {
+					Dialog dialog = new Dialog("Message", VisUI.skin);
+					dialog.text("You must choose a file!");
+					dialog.button("OK");
+					dialog.pack();
+					getStage().addActor(dialog);
+				}
+			}
+		});
 	}
 
-	private VisScrollPane createScrollPane (VisTable table) {
+	private VisScrollPane getScrollPane (VisTable table) {
 		VisScrollPane scrollPane = new VisScrollPane(table);
 		scrollPane.setOverscroll(false, true);
 		scrollPane.setFadeScrollBars(false);
 		scrollPane.setScrollingDisabled(true, false);
 		return scrollPane;
+	}
+
+	private Array<File> getFileListFromSelected () {
+		Array<File> list = new Array<File>();
+
+		for (FileItem f : selectedItems)
+			list.add(f.file);
+
+		return list;
 	}
 
 	private void rebuildShortcutsList () {
@@ -264,7 +310,7 @@ public class FileChooser extends VisWindow {
 			File root = roots[i];
 			FileItem item = null;
 
-			if (mode == Mode.LOAD ? root.canRead() : root.canWrite()) {
+			if (mode == Mode.OPEN ? root.canRead() : root.canWrite()) {
 				String displayName = fileSystemView.getSystemDisplayName(root);
 
 				if (displayName != null && displayName.equals("") == false)
@@ -308,16 +354,51 @@ public class FileChooser extends VisWindow {
 		}
 	}
 
+	public void setVisble (boolean visible) {
+		if (isVisible() == false && visible) deselectAll(); // reset selected item when dialog is changed from invisible to visible
+
+		super.setVisible(visible);
+	}
+
+	private void setSelectedFileTextField () {
+
+		if (selectedItems.size == 0)
+			selectedFileTextBox.setText("");
+		else if (selectedItems.size == 1)
+			selectedFileTextBox.setText(selectedItems.get(0).file.getName());
+		else {
+			StringBuilder b = new StringBuilder();
+
+			for (FileItem item : selectedItems) {
+				b.append('"');
+				b.append(item.file.getName());
+				b.append("\" ");
+			}
+
+			selectedFileTextBox.setText(b.toString());
+		}
+	}
+
+	private void deselectAll () {
+		for (FileItem item : selectedItems)
+			item.deselect();
+	}
+
 	private class DefaultFileFilter implements FileFilter {
 		@Override
 		public boolean accept (File f) {
 			if (f.isHidden()) return false;
-			if (mode == Mode.LOAD ? f.canRead() == false : f.canWrite() == false) return false;
+			if (mode == Mode.OPEN ? f.canRead() == false : f.canWrite() == false) return false;
 			if (f.isFile()) return true;
 			if (f.list() == null) return false;
 
 			return true;
 		}
+	}
+
+	public void hide () {
+		remove();
+		//addAction(sequence(fadeOut(0.1f, Interpolation.fade), Actions.removeActor()));
 	}
 
 	private class FileItem extends Table {
@@ -389,11 +470,12 @@ public class FileChooser extends VisWindow {
 			addListener(new ClickListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-					highlight();
+					deselectAll();
+					select();
+					setSelectedFileTextField();
 					return super.touchDown(event, x, y, pointer, button);
 				}
 
-				@Override
 				public void clicked (InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
 					if (getTapCount() == 2) {
@@ -404,14 +486,16 @@ public class FileChooser extends VisWindow {
 			});
 		}
 
-		private void highlight () {
-			if (selectedItem != null) selectedItem.resetHighlight();
-			selectedItem = FileItem.this;
+		private void select () {
+			// //if (selectedItem != null) selectedItem.resetHighlight();
+			// selectedItem = FileItem.this;
 			setBackground(highlightBg);
+			selectedItems.add(this);
 		}
 
-		private void resetHighlight () {
+		private void deselect () {
 			setBackground((Drawable)null);
+			selectedItems.removeValue(this, true);
 		}
 
 	}

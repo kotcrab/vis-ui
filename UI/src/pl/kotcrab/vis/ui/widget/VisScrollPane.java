@@ -34,5 +34,4 @@ public class VisScrollPane extends ScrollPane {
 	public VisScrollPane (Actor widget) {
 		super(widget, VisUI.skin, "list");
 	}
-
 }
