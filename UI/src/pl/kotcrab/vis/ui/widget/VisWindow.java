@@ -22,11 +22,16 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 
 public class VisWindow extends Window {
 	public static float FADE_TIME = 0.3f;
 
 	private Stage parent;
+
+	public VisWindow (String title) {
+		this(null, title, true);
+	}
 
 	public VisWindow (Stage parent, String title) {
 		this(parent, title, true);
@@ -35,6 +40,7 @@ public class VisWindow extends Window {
 	public VisWindow (Stage parent, String title, boolean showBorder) {
 		super(title, VisUI.skin, showBorder ? "default" : "noborder");
 		this.parent = parent;
+		setTitleAlignment(Align.left);
 	}
 
 	@Override
