@@ -17,12 +17,15 @@
 package pl.kotcrab.vis.ui.widget.file;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
 import com.badlogic.gdx.utils.Array;
 
 public class FileUtils {
+	public static final String OS = System.getProperty("os.name").toLowerCase();
+
 	private static final String[] units = new String[] {"B", "KB", "MB", "GB", "TB", "EB"};
 
 	public static String readableFileSize (long size) {
@@ -48,4 +51,26 @@ public class FileUtils {
 		directoriesList.addAll(filesList); // combine lists
 		return directoriesList;
 	}
+
+	public static boolean isValidFileName (String name) {
+		try {
+			if (isWindows()) if (name.contains(">") || name.contains("<")) return false;
+			return new File(name).getCanonicalFile().getName().equals(name);
+		} catch (IOException e) {
+			return false;
+		}
+	}
+
+	public static boolean isWindows () {
+		return (OS.indexOf("win") >= 0);
+	}
+
+	public static boolean isMac () {
+		return (OS.indexOf("mac") >= 0);
+	}
+
+	public static boolean isUnix () {
+		return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
+	}
+
 }

@@ -37,6 +37,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -127,7 +128,7 @@ public class FileChooser extends VisWindow {
 		add(splitPane).expand().fill();
 		row();
 
-		crateFileTextBox();
+		createFileTextBox();
 		createBottomButtons();
 
 		rebuildShortcutsList();
@@ -242,13 +243,21 @@ public class FileChooser extends VisWindow {
 		shortcutsScrollPaneTable.add(shorcutsScrollPane).pad(2).top().expand().fillX();
 	}
 
-	private void crateFileTextBox () {
+	private void createFileTextBox () {
 		VisTable table = new VisTable(true);
 		VisLabel nameLabel = new VisLabel(locale.fileName);
 		selectedFileTextBox = new VisTextField();
 
 		table.add(nameLabel);
 		table.add(selectedFileTextBox).expand().fill();
+
+		selectedFileTextBox.addListener(new InputListener() {
+			@Override
+			public boolean keyTyped (InputEvent event, char character) {
+				deselectAll(false);
+				return false;
+			}
+		});
 
 		add(table).expandX().fillX().pad(3).padRight(2).padBottom(2f);
 		row();
@@ -273,7 +282,6 @@ public class FileChooser extends VisWindow {
 		});
 
 		confirmButton.addListener(new ChangeListener() {
-
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				selectionFinished();
@@ -304,15 +312,21 @@ public class FileChooser extends VisWindow {
 			}
 		}
 
-		if (selectedItems.size > 0) {
-
-			fadeOut();
-
-			listener.selected(getFileListFromSelected());
-			listener.selected(selectedItems.get(0).file);
+		if (selectedItems.size > 0 || mode == Mode.SAVE) {
+			Array<File> files = getFileListFromSelected();
+			notifyListnerAndCloseDialog(files);
 		} else {
 			showDialog(locale.popupChooseFile);
 		}
+	}
+
+	private void notifyListnerAndCloseDialog (Array<File> files) {
+		if (files == null) return;
+
+		listener.selected(files);
+		listener.selected(files.get(0));
+
+		fadeOut();
 	}
 
 	private void showDialog (String text) {
@@ -335,10 +349,53 @@ public class FileChooser extends VisWindow {
 	private Array<File> getFileListFromSelected () {
 		Array<File> list = new Array<File>();
 
-		for (FileItem f : selectedItems)
-			list.add(f.file);
+		if (mode == Mode.OPEN) {
+			for (FileItem f : selectedItems)
+				list.add(f.file);
 
-		return list;
+			return list;
+		} else if (selectedItems.size > 0) {
+			for (FileItem f : selectedItems)
+				list.add(f.file);
+			
+			showOverwriteQuestion(list);
+			return null;
+		} else {
+			String fileName = selectedFileTextBox.getText();
+			File file = new File(currentDirectory + File.separator + fileName);
+
+			if (FileUtils.isValidFileName(fileName) == false) {
+				showDialog(locale.popupFilenameInvalid);
+				return null;
+			}
+
+			if (file.exists()) {
+				list.add(file);
+				showOverwriteQuestion(list);
+
+				return null;
+			} else {
+				list.add(file);
+				return list;
+			}
+		}
+
+	}
+
+	private void showOverwriteQuestion (Array<File> filesList) {
+		VisDialog dialog = new VisDialog(getStage(), locale.popupTitle) {
+			@Override
+			@SuppressWarnings("unchecked")
+			protected void result (Object object) {
+				notifyListnerAndCloseDialog((Array<File>)object);
+			}
+		};
+		dialog.text(filesList.size == 1 ? locale.popupFileExistOverwrite : locale.popupMutipleFileExistOverwrite);
+		dialog.button(locale.popupNo, null);
+		dialog.button(locale.popupYes, filesList);
+		dialog.pack();
+		dialog.setPositionToCenter();
+		getStage().addActor(dialog.fadeIn());
 	}
 
 	private void rebuildShortcutsList () {
@@ -431,12 +488,16 @@ public class FileChooser extends VisWindow {
 		}
 	}
 
-	private void deselectAll () {
+	private void deselectAll (boolean updateTextField) {
 		for (FileItem item : selectedItems)
 			item.deselect(false);
 
 		selectedItems.clear();
-		setSelectedFileTextField();
+		if (updateTextField) setSelectedFileTextField();
+	}
+
+	private void deselectAll () {
+		deselectAll(true);
 	}
 
 	private class DefaultFileFilter implements FileFilter {

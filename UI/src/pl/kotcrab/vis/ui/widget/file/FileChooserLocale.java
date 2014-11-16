@@ -14,7 +14,12 @@ public class FileChooserLocale {
 	public String popupTitle = "Message";
 	public String popupChooseFile = "You must choose a file!";
 	public String popupOnlyDirectoreis = "Only directories are allowed!";
+	public String popupFilenameInvalid = "File name is invalid!";
+	public String popupFileExistOverwrite = "This file already exist, do you want to overwrite it?";
+	public String popupMutipleFileExistOverwrite = "Those files already exist, do you want to overwrite them?";
 	public String popupOK = "OK";
+	public String popupYes = "Yes";
+	public String popupNo = "No";
 
 	public FileChooserLocale () {
 	}
