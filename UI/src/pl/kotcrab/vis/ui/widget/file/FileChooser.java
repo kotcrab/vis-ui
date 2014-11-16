@@ -60,8 +60,8 @@ public class FileChooser extends VisWindow {
 	}
 
 	private Mode mode;
-	private SelectionMode selectionMode = SelectionMode.DIRECTORIES;
-	private boolean multiselectionEnabled = true;
+	private SelectionMode selectionMode = SelectionMode.FILES;
+	private boolean multiselectionEnabled = false;
 	private FileChooserListener listener;
 
 	private FileFilter fileFilter = new DefaultFileFilter();
