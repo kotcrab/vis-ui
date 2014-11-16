@@ -23,6 +23,7 @@ import javax.swing.filechooser.FileSystemView;
 
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.VisUI;
+import pl.kotcrab.vis.ui.widget.VisDialog;
 import pl.kotcrab.vis.ui.widget.VisImageButton;
 import pl.kotcrab.vis.ui.widget.VisLabel;
 import pl.kotcrab.vis.ui.widget.VisScrollPane;
@@ -31,12 +32,13 @@ import pl.kotcrab.vis.ui.widget.VisTextButton;
 import pl.kotcrab.vis.ui.widget.VisTextField;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
@@ -58,8 +60,8 @@ public class FileChooser extends VisWindow {
 	}
 
 	private Mode mode;
-	private SelectionMode selectionMode = SelectionMode.FILES;
-	private boolean multiselectionEnabled = false;
+	private SelectionMode selectionMode = SelectionMode.DIRECTORIES;
+	private boolean multiselectionEnabled = true;
 	private FileChooserListener listener;
 
 	private FileFilter fileFilter = new DefaultFileFilter();
@@ -69,6 +71,14 @@ public class FileChooser extends VisWindow {
 
 	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
 
+	private FileChooserLocale locale;
+
+	private Array<FileItem> selectedItems = new Array<FileItem>();
+	private ShortcutItem selectedShortcut;
+
+	private int multiselectKey = Keys.CONTROL_LEFT;
+
+	// UI
 	private VisSplitPane splitPane;
 
 	private VisTable fileTable;
@@ -82,15 +92,17 @@ public class FileChooser extends VisWindow {
 	private VisTextButton cancelButton;
 	private VisTextButton confirmButton;
 
-	private Array<FileItem> selectedItems = new Array<FileItem>();
-	private ShortcutItem selectedShortcut;
-
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextBox;
 
 	public FileChooser (Stage parent, String title, Mode mode) {
+		this(new FileChooserLocale(), parent, title, mode);
+	}
+
+	public FileChooser (FileChooserLocale locale, Stage parent, String title, Mode mode) {
 		super(parent, title);
 		this.mode = mode;
+		this.locale = locale;
 
 		style = new FileChooserStyle();
 		setTitleAlignment(Align.left);
@@ -99,8 +111,8 @@ public class FileChooser extends VisWindow {
 		setResizable(true);
 		setMovable(true);
 
-		cancelButton = new VisTextButton("Cancel");
-		confirmButton = new VisTextButton(mode == Mode.OPEN ? "Open" : "Save");
+		cancelButton = new VisTextButton(locale.cancel);
+		confirmButton = new VisTextButton(mode == Mode.OPEN ? locale.open : locale.save);
 
 		createToolbar();
 
@@ -178,6 +190,15 @@ public class FileChooser extends VisWindow {
 		validateSettings();
 	}
 
+	public int getMultiselectKey () {
+		return multiselectKey;
+	}
+
+	/** @param multiselectKey from {@link Keys} */
+	public void setMultiselectKey (int multiselectKey) {
+		this.multiselectKey = multiselectKey;
+	}
+
 	private void validateSettings () {
 		if (listener == null) listener = new FileChooserAdapter();
 	}
@@ -223,7 +244,7 @@ public class FileChooser extends VisWindow {
 
 	private void crateFileTextBox () {
 		VisTable table = new VisTable(true);
-		VisLabel nameLabel = new VisLabel("File name:");
+		VisLabel nameLabel = new VisLabel(locale.fileName);
 		selectedFileTextBox = new VisTextField();
 
 		table.add(nameLabel);
@@ -255,20 +276,52 @@ public class FileChooser extends VisWindow {
 
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				if (selectedItems.size > 0) {
-					fadeOut();
-
-					listener.selected(getFileListFromSelected());
-					listener.selected(selectedItems.get(0).file);
-				} else {
-					Dialog dialog = new Dialog("Message", VisUI.skin);
-					dialog.text("You must choose a file!");
-					dialog.button("OK");
-					dialog.pack();
-					getStage().addActor(dialog);
-				}
+				selectionFinished();
 			}
 		});
+	}
+
+	private void selectionFinished () {
+		if (selectedItems.size == 1) {
+			// only files allowed but directory is selected?
+			// navigate to that directory!
+			if (selectionMode == SelectionMode.FILES) {
+				File selected = selectedItems.get(0).file;
+				if (selected.isDirectory()) {
+					setDirectory(selected.getAbsolutePath());
+					return;
+				}
+			}
+
+			// only directories allowed but file is selected?
+			// display dialog :(
+			if (selectionMode == SelectionMode.DIRECTORIES) {
+				File selected = selectedItems.get(0).file;
+				if (selected.isFile()) {
+					showDialog(locale.popupOnlyDirectoreis);
+					return;
+				}
+			}
+		}
+
+		if (selectedItems.size > 0) {
+
+			fadeOut();
+
+			listener.selected(getFileListFromSelected());
+			listener.selected(selectedItems.get(0).file);
+		} else {
+			showDialog(locale.popupChooseFile);
+		}
+	}
+
+	private void showDialog (String text) {
+		VisDialog dialog = new VisDialog(getStage(), locale.popupTitle);
+		dialog.text(text);
+		dialog.button(locale.popupOK);
+		dialog.pack();
+		dialog.setPositionToCenter();
+		getStage().addActor(dialog.fadeIn());
 	}
 
 	private VisScrollPane getScrollPane (VisTable table) {
@@ -294,7 +347,8 @@ public class FileChooser extends VisWindow {
 		String userHome = System.getProperty("user.home");
 		String userName = System.getProperty("user.name");
 
-		shortcutsTable.add(new ShortcutItem(fileSystemView.getHomeDirectory(), "Desktop", style.iconFolder)).expand().fill().row();
+		shortcutsTable.add(new ShortcutItem(fileSystemView.getHomeDirectory(), locale.desktop, style.iconFolder)).expand().fill()
+			.row();
 		shortcutsTable.add(new ShortcutItem(new File(userHome), userName, style.iconFolder)).expand().fill().row();
 
 		shortcutsTable.addSeparator();
@@ -379,9 +433,10 @@ public class FileChooser extends VisWindow {
 
 	private void deselectAll () {
 		for (FileItem item : selectedItems)
-			item.deselect();
+			item.deselect(false);
 
-		selectedFileTextBox.setText("");
+		selectedItems.clear();
+		setSelectedFileTextField();
 	}
 
 	private class DefaultFileFilter implements FileFilter {
@@ -446,33 +501,69 @@ public class FileChooser extends VisWindow {
 			addListener(new ClickListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-					deselectAll();
 					if (selectedShortcut != null) selectedShortcut.deselect();
-					select();
+
+					if (multiselectionEnabled == false || Gdx.input.isKeyPressed(multiselectKey) == false) deselectAll();
+					boolean itemSelected = select();
+
+					if (selectedItems.size > 1) removeInvalidSelections();
+
 					setSelectedFileTextField();
+
+					// very fast selecting and deselecting folder would navigate to that folder
+					// return false will protect against that (tap count won't be increased)
+					if (itemSelected == false) return false;
+
 					return super.touchDown(event, x, y, pointer, button);
+				}
+
+				private void removeInvalidSelections () {
+					if (selectionMode == SelectionMode.FILES) {
+						for (FileItem item : selectedItems)
+							if (item.file.isDirectory()) item.deselect();
+					}
+
+					if (selectionMode == SelectionMode.DIRECTORIES) {
+						for (FileItem item : selectedItems)
+							if (item.file.isFile()) item.deselect();
+					}
 				}
 
 				@Override
 				public void clicked (InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
-					if (getTapCount() == 2) {
+					if (getTapCount() == 2 && selectedItems.contains(FileItem.this, true)) {
 						File file = FileItem.this.file;
-						if (file.isDirectory()) setDirectory(file.getAbsolutePath());
+						if (file.isDirectory())
+							setDirectory(file.getAbsolutePath());
+						else
+							selectionFinished();
 					}
 				}
 			});
 		}
 
-		private void select () {
+		/** Selects this items, if item is already in selectedList it will be deselected */
+		private boolean select () {
+			if (selectedItems.contains(this, true)) {
+				deselect();
+				return false;
+			}
+
 			setBackground(highlightBg);
 			selectedItems.add(this);
+			return true;
 		}
 
 		private void deselect () {
-			setBackground((Drawable)null);
-			selectedItems.removeValue(this, true);
+			deselect(true);
 		}
+
+		private void deselect (boolean removeFromList) {
+			setBackground((Drawable)null);
+			if (removeFromList) selectedItems.removeValue(this, true);
+		}
+
 	}
 
 	private class ShortcutItem extends Table {
