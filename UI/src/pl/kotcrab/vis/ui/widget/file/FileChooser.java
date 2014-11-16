@@ -246,7 +246,7 @@ public class FileChooser extends VisWindow {
 
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				hide();
+				fadeOut();
 				listener.canceled();
 			}
 		});
@@ -256,7 +256,7 @@ public class FileChooser extends VisWindow {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				if (selectedItems.size > 0) {
-					hide();
+					fadeOut();
 
 					listener.selected(getFileListFromSelected());
 					listener.selected(selectedItems.get(0).file);
@@ -396,11 +396,6 @@ public class FileChooser extends VisWindow {
 		}
 	}
 
-	public void hide () {
-		remove();
-		// addAction(sequence(fadeOut(0.1f, Interpolation.fade), Actions.removeActor()));
-	}
-
 	private class FileItem extends Table {
 		private VisLabel name;
 		private VisLabel size;
@@ -452,7 +447,7 @@ public class FileChooser extends VisWindow {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 					deselectAll();
-					selectedShortcut.deselect();
+					if (selectedShortcut != null) selectedShortcut.deselect();
 					select();
 					setSelectedFileTextField();
 					return super.touchDown(event, x, y, pointer, button);
