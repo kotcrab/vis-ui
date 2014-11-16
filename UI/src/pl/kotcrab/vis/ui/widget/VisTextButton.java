@@ -44,6 +44,11 @@ public class VisTextButton extends TextButton implements Focusable {
 		init();
 	}
 
+	public VisTextButton (String text, VisTextButtonStyle buttonStyle) {
+		super(text, buttonStyle);
+		init();
+	}
+
 	private void init () {
 		style = (VisTextButtonStyle)getStyle();
 
