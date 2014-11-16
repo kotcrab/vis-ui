@@ -18,10 +18,14 @@ package pl.kotcrab.vis.ui.widget;
 
 import pl.kotcrab.vis.ui.VisUI;
 
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 
 public class VisWindow extends Window {
+	public static float FADE_TIME = 0.3f;
+
 	private Stage parent;
 
 	public VisWindow (Stage parent, String title) {
@@ -42,4 +46,22 @@ public class VisWindow extends Window {
 		if (parent != null) setPosition((parent.getWidth() - getWidth()) / 2, (parent.getHeight() - getHeight()) / 2);
 	}
 
+	public void fadeOut (float time) {
+		addAction(Actions.sequence(Actions.fadeOut(time, Interpolation.fade), Actions.removeActor()));
+	}
+
+	/** @return this window for the purpose of chaining methods eg. stage.addActor(new MyWindow(stage).fadeIn()); */
+	public VisWindow fadeIn (float time) {
+		setColor(1, 1, 1, 0);
+		addAction(Actions.sequence(Actions.fadeIn(time, Interpolation.fade)));
+		return this;
+	}
+
+	public void fadeOut () {
+		fadeOut(FADE_TIME);
+	}
+
+	public VisWindow fadeIn () {
+		return fadeIn(FADE_TIME);
+	}
 }
