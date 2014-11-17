@@ -79,6 +79,9 @@ public class FileChooser extends VisWindow {
 	private Array<FileItem> selectedItems = new Array<FileItem>();
 	private ShortcutItem selectedShortcut;
 
+	private Array<FileHandle> history;
+	private int historyIndex = 0;
+
 	private FavouritesIO favouritesIO;
 
 	// UI
@@ -95,6 +98,8 @@ public class FileChooser extends VisWindow {
 	private VisTextButton cancelButton;
 	private VisTextButton confirmButton;
 
+	private VisImageButton backButton;
+	private VisImageButton forwardButton;
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextBox;
 
@@ -161,17 +166,24 @@ public class FileChooser extends VisWindow {
 	}
 
 	public void setDirectory (String directory) {
-		setDirectory(new File(directory));
-	}
-
-	public void setDirectory (FileHandle directory) {
-		currentDirectory = directory;
-		rebuildFileList();
+		setDirectory(Gdx.files.absolute(directory));
 	}
 
 	public void setDirectory (File directory) {
-		currentDirectory = Gdx.files.absolute(directory.getAbsolutePath());
+		setDirectory(Gdx.files.absolute(directory.getAbsolutePath()));
+	}
+
+	public void setDirectory (FileHandle directory) {
+		setDirectory(directory, true);
+	}
+
+	private void setDirectory (FileHandle directory, boolean rebuildHistory) {
+		if (directory.exists() == false) throw new IllegalStateException("Provided directory does not exist!");
+		if (directory.isDirectory() == false) throw new IllegalStateException("Provided directory path is a file, not directory!");
+
+		currentDirectory = directory;
 		rebuildFileList();
+		if (rebuildHistory) historyBuild();
 	}
 
 	public FileFilter getFileFilter () {
@@ -221,10 +233,11 @@ public class FileChooser extends VisWindow {
 		toolbarTable.defaults().minWidth(30).right();
 		add(toolbarTable).fillX().expandX().pad(3).padRight(2);
 
-		VisImageButton backButton = new VisImageButton(style.iconArrowLeft);
-		VisImageButton forwardButton = new VisImageButton(style.iconArrowRight);
+		backButton = new VisImageButton(style.iconArrowLeft);
+		forwardButton = new VisImageButton(style.iconArrowRight);
 		forwardButton.setDisabled(true);
 		forwardButton.setGeneateDisabledImage(true);
+		backButton.setGeneateDisabledImage(true);
 
 		currentPath = new VisTextField();
 
@@ -235,8 +248,14 @@ public class FileChooser extends VisWindow {
 		backButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				FileHandle parent = currentDirectory.parent();
-				if (parent != null) setDirectory(parent);
+				historyBack();
+			}
+		});
+
+		forwardButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				historyForward();
 			}
 		});
 	}
@@ -285,7 +304,6 @@ public class FileChooser extends VisWindow {
 		buttonTable.add(confirmButton);
 
 		cancelButton.addListener(new ChangeListener() {
-
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				fadeOut();
@@ -512,6 +530,63 @@ public class FileChooser extends VisWindow {
 		deselectAll(true);
 	}
 
+	private void historyBuild () {
+
+		Array<FileHandle> fileTree = new Array<FileHandle>();
+		fileTree.add(currentDirectory);
+		FileHandle next = currentDirectory;
+
+		while (true) {
+			FileHandle parent = next.parent();
+			if (next.file().getParent() == null) break;
+			next = parent;
+
+			fileTree.add(parent);
+		}
+
+		fileTree.reverse();
+		history = fileTree;
+		historyIndex = fileTree.size - 1;
+
+		if (historyIndex == 0)
+			backButton.setDisabled(true);
+		else
+			backButton.setDisabled(false);
+
+		forwardButton.setDisabled(true);
+	}
+
+	private void historyAdd (FileHandle file) {
+		history.add(file);
+		historyIndex++;
+		backButton.setDisabled(false);
+	}
+
+// private void historyClear () {
+// forwardButton.setDisabled(true);
+// history.clear();
+// hi
+// }
+
+	private void historyBack () {
+		if (historyIndex > 0) {
+			historyIndex--;
+			setDirectory(history.get(historyIndex), false);
+			forwardButton.setDisabled(false);
+		}
+
+		if (historyIndex == 0) backButton.setDisabled(true);
+	}
+
+	private void historyForward () {
+		historyIndex++;
+		setDirectory(history.get(historyIndex), false);
+		
+		if (historyIndex == history.size - 1) forwardButton.setDisabled(true);
+
+		backButton.setDisabled(false);
+	}
+
 	private class DefaultFileFilter implements FileFilter {
 		@Override
 		public boolean accept (File f) {
@@ -607,9 +682,10 @@ public class FileChooser extends VisWindow {
 					super.clicked(event, x, y);
 					if (getTapCount() == 2 && selectedItems.contains(FileItem.this, true)) {
 						FileHandle file = FileItem.this.file;
-						if (file.isDirectory())
+						if (file.isDirectory()) {
+							historyAdd(file);
 							setDirectory(file);
-						else
+						} else
 							selectionFinished();
 					}
 				}

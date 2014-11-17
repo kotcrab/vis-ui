@@ -99,7 +99,7 @@ public class VisImageButton extends Button implements Focusable {
 			drawable = style.imageUp;
 		image.setDrawable(drawable);
 
-		if (generateDisabledImage && style.imageDisabled == null)
+		if (generateDisabledImage && style.imageDisabled == null && isDisabled())
 			image.setColor(Color.GRAY);
 		else
 			image.setColor(Color.WHITE);
@@ -118,6 +118,12 @@ public class VisImageButton extends Button implements Focusable {
 
 	public Cell<?> getImageCell () {
 		return getCell(image);
+	}
+	
+	@Override
+	public void setDisabled (boolean disabled) {
+		super.setDisabled(disabled);
+		if(disabled) FocusManager.getFocus();
 	}
 
 	/** The style for an image button, see {@link ImageButton}.

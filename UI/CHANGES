@@ -8,6 +8,7 @@
 -Added fadeOut(), fadeIn() to VisWindow
 -Added VisImageButton
 -Added VisDialog
+-Disabling button will remove its focus
 -VisWindow can be created with border or without it
 -MenuItem can be created with icon
 -Fixed horizontal scroll pane slider not fully visible
