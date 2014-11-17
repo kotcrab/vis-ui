@@ -251,7 +251,7 @@ public class FileChooser extends VisWindow {
 					if (file.exists())
 						setDirectory(file);
 					else {
-						showDialog("Directory not found!");
+						showDialog(locale.popupDirectoryDoesNotExist);
 						currentPath.setText(currentDirectory.path());
 					}
 				}
