@@ -16,14 +16,13 @@
 
 package pl.kotcrab.vis.ui.widget.file;
 
-import java.io.File;
-
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 
 public interface FileChooserListener {
-	public void selected (Array<File> files);
+	public void selected (Array<FileHandle> files);
 
-	public void selected (File file);
+	public void selected (FileHandle file);
 
 	public void canceled ();
 }

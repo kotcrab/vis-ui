@@ -16,8 +16,7 @@
 
 package pl.kotcrab.vis.ui.widget.file;
 
-import java.io.File;
-
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 
 public class FileChooserAdapter implements FileChooserListener {
@@ -28,12 +27,12 @@ public class FileChooserAdapter implements FileChooserListener {
 	}
 
 	@Override
-	public void selected (Array<File> files) {
+	public void selected (Array<FileHandle> files) {
 
 	}
 
 	@Override
-	public void selected (File file) {
+	public void selected (FileHandle file) {
 
 	}
 

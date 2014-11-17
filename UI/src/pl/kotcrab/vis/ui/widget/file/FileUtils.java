@@ -20,7 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Comparator;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 
 public class FileUtils {
@@ -28,20 +30,27 @@ public class FileUtils {
 
 	private static final String[] units = new String[] {"B", "KB", "MB", "GB", "TB", "EB"};
 
+	private static final Comparator<FileHandle> fileComparator = new Comparator<FileHandle>() {
+		@Override
+		public int compare (FileHandle f1, FileHandle f2) {
+			return f1.name().compareTo(f2.name());
+		}
+	};
+
 	public static String readableFileSize (long size) {
 		if (size <= 0) return "0 B";
 		int digitGroups = (int)(Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)).replace(",", ".") + " " + units[digitGroups];
 	}
 
-	public static Array<File> sortFiles (File[] files) {
-		Array<File> directoriesList = new Array<File>();
-		Array<File> filesList = new Array<File>();
+	public static Array<FileHandle> sortFiles (FileHandle[] files) {
+		Array<FileHandle> directoriesList = new Array<FileHandle>();
+		Array<FileHandle> filesList = new Array<FileHandle>();
 
-		Arrays.sort(files);
+		Arrays.sort(files, fileComparator);
 
 		for (int i = 0; i < files.length; i++) {
-			File f = files[i];
+			FileHandle f = files[i];
 			if (f.isDirectory())
 				directoriesList.add(f);
 			else

@@ -50,6 +50,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 
 public class FileChooser extends VisWindow {
+
 	private static final Drawable highlightBg = VisUI.skin.getDrawable("list-selection");
 
 	public enum Mode {
@@ -64,9 +65,10 @@ public class FileChooser extends VisWindow {
 	private SelectionMode selectionMode = SelectionMode.FILES;
 	private boolean multiselectionEnabled = false;
 	private FileChooserListener listener;
+	private int multiselectKey = Keys.CONTROL_LEFT;
 
 	private FileFilter fileFilter = new DefaultFileFilter();
-	private File currentDirectory;
+	private FileHandle currentDirectory;
 
 	private FileChooserStyle style;
 
@@ -77,7 +79,7 @@ public class FileChooser extends VisWindow {
 	private Array<FileItem> selectedItems = new Array<FileItem>();
 	private ShortcutItem selectedShortcut;
 
-	private int multiselectKey = Keys.CONTROL_LEFT;
+	private FavouritesIO favouritesIO;
 
 	// UI
 	private VisSplitPane splitPane;
@@ -96,6 +98,14 @@ public class FileChooser extends VisWindow {
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextBox;
 
+	public static String getFavouritePrefsName () {
+		return FavouritesIO.getFavouritePrefsName();
+	}
+
+	public static void setFavouritePrefsName (String name) {
+		FavouritesIO.setFavouritePrefsName(name);
+	}
+
 	public FileChooser (Stage parent, String title, Mode mode) {
 		this(new FileChooserLocale(), parent, title, mode);
 	}
@@ -111,6 +121,8 @@ public class FileChooser extends VisWindow {
 		setModal(true);
 		setResizable(true);
 		setMovable(true);
+
+		favouritesIO = new FavouritesIO();
 
 		cancelButton = new VisTextButton(locale.cancel);
 		confirmButton = new VisTextButton(mode == Mode.OPEN ? locale.open : locale.save);
@@ -153,12 +165,12 @@ public class FileChooser extends VisWindow {
 	}
 
 	public void setDirectory (FileHandle directory) {
-		currentDirectory = directory.file();
+		currentDirectory = directory;
 		rebuildFileList();
 	}
 
 	public void setDirectory (File directory) {
-		currentDirectory = directory;
+		currentDirectory = Gdx.files.absolute(directory.getAbsolutePath());
 		rebuildFileList();
 	}
 
@@ -223,7 +235,7 @@ public class FileChooser extends VisWindow {
 		backButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				File parent = currentDirectory.getParentFile();
+				FileHandle parent = currentDirectory.parent();
 				if (parent != null) setDirectory(parent);
 			}
 		});
@@ -294,9 +306,9 @@ public class FileChooser extends VisWindow {
 			// only files allowed but directory is selected?
 			// navigate to that directory!
 			if (selectionMode == SelectionMode.FILES) {
-				File selected = selectedItems.get(0).file;
+				FileHandle selected = selectedItems.get(0).file;
 				if (selected.isDirectory()) {
-					setDirectory(selected.getAbsolutePath());
+					setDirectory(selected);
 					return;
 				}
 			}
@@ -304,8 +316,8 @@ public class FileChooser extends VisWindow {
 			// only directories allowed but file is selected?
 			// display dialog :(
 			if (selectionMode == SelectionMode.DIRECTORIES) {
-				File selected = selectedItems.get(0).file;
-				if (selected.isFile()) {
+				FileHandle selected = selectedItems.get(0).file;
+				if (selected.isDirectory() == false) {
 					showDialog(locale.popupOnlyDirectoreis);
 					return;
 				}
@@ -313,14 +325,14 @@ public class FileChooser extends VisWindow {
 		}
 
 		if (selectedItems.size > 0 || mode == Mode.SAVE) {
-			Array<File> files = getFileListFromSelected();
+			Array<FileHandle> files = getFileListFromSelected();
 			notifyListnerAndCloseDialog(files);
 		} else {
 			showDialog(locale.popupChooseFile);
 		}
 	}
 
-	private void notifyListnerAndCloseDialog (Array<File> files) {
+	private void notifyListnerAndCloseDialog (Array<FileHandle> files) {
 		if (files == null) return;
 
 		listener.selected(files);
@@ -346,8 +358,8 @@ public class FileChooser extends VisWindow {
 		return scrollPane;
 	}
 
-	private Array<File> getFileListFromSelected () {
-		Array<File> list = new Array<File>();
+	private Array<FileHandle> getFileListFromSelected () {
+		Array<FileHandle> list = new Array<FileHandle>();
 
 		if (mode == Mode.OPEN) {
 			for (FileItem f : selectedItems)
@@ -357,12 +369,12 @@ public class FileChooser extends VisWindow {
 		} else if (selectedItems.size > 0) {
 			for (FileItem f : selectedItems)
 				list.add(f.file);
-			
+
 			showOverwriteQuestion(list);
 			return null;
 		} else {
 			String fileName = selectedFileTextBox.getText();
-			File file = new File(currentDirectory + File.separator + fileName);
+			FileHandle file = currentDirectory.child(fileName);
 
 			if (FileUtils.isValidFileName(fileName) == false) {
 				showDialog(locale.popupFilenameInvalid);
@@ -382,12 +394,12 @@ public class FileChooser extends VisWindow {
 
 	}
 
-	private void showOverwriteQuestion (Array<File> filesList) {
+	private void showOverwriteQuestion (Array<FileHandle> filesList) {
 		VisDialog dialog = new VisDialog(getStage(), locale.popupTitle) {
 			@Override
 			@SuppressWarnings("unchecked")
 			protected void result (Object object) {
-				notifyListnerAndCloseDialog((Array<File>)object);
+				notifyListnerAndCloseDialog((Array<FileHandle>)object);
 			}
 		};
 		dialog.text(filesList.size == 1 ? locale.popupFileExistOverwrite : locale.popupMutipleFileExistOverwrite);
@@ -439,15 +451,15 @@ public class FileChooser extends VisWindow {
 		deselectAll();
 
 		fileTable.clear();
-		File[] files = currentDirectory.listFiles(fileFilter);
-		currentPath.setText(currentDirectory.getAbsolutePath());
+		FileHandle[] files = currentDirectory.list(fileFilter);
+		currentPath.setText(currentDirectory.path());
 
 		if (files.length == 0) return;
 
-		Array<File> fileList = FileUtils.sortFiles(files);
+		Array<FileHandle> fileList = FileUtils.sortFiles(files);
 
-		for (File f : fileList)
-			if (f.isHidden() == false) fileTable.add(new FileItem(f, null)).expand().fill().row();
+		for (FileHandle f : fileList)
+			if (f.file() == null || f.file().isHidden() == false) fileTable.add(new FileItem(f, null)).expand().fill().row();
 
 		fileScrollPane.setScrollX(0);
 		fileScrollPane.setScrollY(0);
@@ -474,13 +486,13 @@ public class FileChooser extends VisWindow {
 		if (selectedItems.size == 0)
 			selectedFileTextBox.setText("");
 		else if (selectedItems.size == 1)
-			selectedFileTextBox.setText(selectedItems.get(0).file.getName());
+			selectedFileTextBox.setText(selectedItems.get(0).file.name());
 		else {
 			StringBuilder b = new StringBuilder();
 
 			for (FileItem item : selectedItems) {
 				b.append('"');
-				b.append(item.file.getName());
+				b.append(item.file.name());
 				b.append("\" ");
 			}
 
@@ -515,11 +527,11 @@ public class FileChooser extends VisWindow {
 	private class FileItem extends Table {
 		private VisLabel name;
 		private VisLabel size;
-		public File file;
+		public FileHandle file;
 
-		public FileItem (final File file, Drawable icon) {
+		public FileItem (final FileHandle file, Drawable icon) {
 			this.file = file;
-			name = new VisLabel(file.getName());
+			name = new VisLabel(file.name());
 			name.setEllipse(true);
 
 			if (file.isDirectory())
@@ -586,7 +598,7 @@ public class FileChooser extends VisWindow {
 
 					if (selectionMode == SelectionMode.DIRECTORIES) {
 						for (FileItem item : selectedItems)
-							if (item.file.isFile()) item.deselect();
+							if (item.file.isDirectory() == false) item.deselect();
 					}
 				}
 
@@ -594,9 +606,9 @@ public class FileChooser extends VisWindow {
 				public void clicked (InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
 					if (getTapCount() == 2 && selectedItems.contains(FileItem.this, true)) {
-						File file = FileItem.this.file;
+						FileHandle file = FileItem.this.file;
 						if (file.isDirectory())
-							setDirectory(file.getAbsolutePath());
+							setDirectory(file);
 						else
 							selectionFinished();
 					}
@@ -678,6 +690,10 @@ public class FileChooser extends VisWindow {
 					super.clicked(event, x, y);
 					if (getTapCount() == 1) {
 						File file = ShortcutItem.this.file;
+						if (file.exists() == false) {
+							showDialog("This directory does not exist!");
+							return;
+						}
 						if (file.isDirectory()) setDirectory(file.getAbsolutePath());
 					}
 				}
