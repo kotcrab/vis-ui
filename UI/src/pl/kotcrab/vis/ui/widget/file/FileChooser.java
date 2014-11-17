@@ -36,6 +36,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -240,6 +241,23 @@ public class FileChooser extends VisWindow {
 		backButton.setGeneateDisabledImage(true);
 
 		currentPath = new VisTextField();
+
+		currentPath.addListener(new InputListener() {
+			/** Called when a key goes down. When true is returned, the event is {@link Event#handle() handled}. */
+			@Override
+			public boolean keyDown (InputEvent event, int keycode) {
+				if (keycode == Keys.ENTER) {
+					FileHandle file = Gdx.files.absolute(currentPath.getText());
+					if (file.exists())
+						setDirectory(file);
+					else {
+						showDialog("Directory not found!");
+						currentPath.setText(currentDirectory.path());
+					}
+				}
+				return false;
+			}
+		});
 
 		toolbarTable.add(backButton);
 		toolbarTable.add(forwardButton);
@@ -581,7 +599,7 @@ public class FileChooser extends VisWindow {
 	private void historyForward () {
 		historyIndex++;
 		setDirectory(history.get(historyIndex), false);
-		
+
 		if (historyIndex == history.size - 1) forwardButton.setDisabled(true);
 
 		backButton.setDisabled(false);
