@@ -83,7 +83,7 @@ public class FileChooser extends VisWindow {
 	private Array<FileHandle> history;
 	private int historyIndex = 0;
 
-	private FavouritesIO favouritesIO;
+	private FavoritesIO favouritesIO;
 
 	// UI
 	private VisSplitPane splitPane;
@@ -104,12 +104,12 @@ public class FileChooser extends VisWindow {
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextBox;
 
-	public static String getFavouritePrefsName () {
-		return FavouritesIO.getFavouritePrefsName();
+	public static String getFavoritesPrefsName () {
+		return FavoritesIO.getFavoritesPrefsName();
 	}
 
-	public static void setFavouritePrefsName (String name) {
-		FavouritesIO.setFavouritePrefsName(name);
+	public static void setFavoritesPrefsName (String name) {
+		FavoritesIO.setFavoritesPrefsName(name);
 	}
 
 	public FileChooser (Stage parent, String title, Mode mode) {
@@ -128,7 +128,7 @@ public class FileChooser extends VisWindow {
 		setResizable(true);
 		setMovable(true);
 
-		favouritesIO = new FavouritesIO();
+		favouritesIO = new FavoritesIO();
 
 		cancelButton = new VisTextButton(locale.cancel);
 		confirmButton = new VisTextButton(mode == Mode.OPEN ? locale.open : locale.save);
@@ -476,11 +476,14 @@ public class FileChooser extends VisWindow {
 			}
 		}
 
-		shortcutsTable.addSeparator();
+		Array<FileHandle> favourites = favouritesIO.loadFavorites();
 
-		// test
-		shortcutsTable.add(new ShortcutItem(new File(System.getProperty("user.home")), "Favorite", style.iconFolder)).expand()
-			.fill().row();
+		if (favourites.size > 0) {
+			shortcutsTable.addSeparator();
+
+			for (FileHandle f : favourites)
+				shortcutsTable.add(new ShortcutItem(f.file(), f.name(), style.iconFolder)).expand().fill().row();
+		}
 	}
 
 	private void rebuildFileList () {
