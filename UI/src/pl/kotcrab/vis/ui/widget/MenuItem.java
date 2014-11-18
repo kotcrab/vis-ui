@@ -80,7 +80,7 @@ public class MenuItem extends Button {
 
 	@Override
 	public void setStyle (ButtonStyle style) {
-		if (!(style instanceof TextButtonStyle)) throw new IllegalArgumentException("style must be a ImageTextButtonStyle.");
+		if (!(style instanceof TextButtonStyle)) throw new IllegalArgumentException("style must be a TextButtonStyle.");
 		super.setStyle(style);
 		this.style = (TextButtonStyle)style;
 		if (label != null) {

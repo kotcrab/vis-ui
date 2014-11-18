@@ -16,15 +16,14 @@
 
 package pl.kotcrab.vis.ui.widget;
 
-public class Menu extends PopupMenu {
-	private String title;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-	public Menu (String title) {
-		this.title = title;
+public class PopupMenu extends Table {
+	public PopupMenu () {
 	}
 
-	public String getTitle () {
-		return title;
+	public void addItem (MenuItem item) {
+		add(item).fillX().row();
+		pack();
 	}
-
 }
