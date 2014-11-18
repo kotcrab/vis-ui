@@ -112,8 +112,23 @@ public class FileChooser extends VisWindow {
 		FavoritesIO.setFavoritesPrefsName(name);
 	}
 
+	public FileChooser (Stage parent, Mode mode) {
+		super(parent, "");
+
+		this.locale = new FileChooserLocale();
+		this.mode = mode;
+
+		setTitle(locale.title);
+
+		init();
+	}
+
 	public FileChooser (Stage parent, String title, Mode mode) {
-		this(new FileChooserLocale(), parent, title, mode);
+		super(parent, title);
+		this.mode = mode;
+		this.locale = new FileChooserLocale();
+
+		init();
 	}
 
 	public FileChooser (FileChooserLocale locale, Stage parent, String title, Mode mode) {
@@ -121,6 +136,10 @@ public class FileChooser extends VisWindow {
 		this.mode = mode;
 		this.locale = locale;
 
+		init();
+	}
+
+	private void init () {
 		style = new FileChooserStyle();
 		setTitleAlignment(Align.left);
 
@@ -156,77 +175,6 @@ public class FileChooser extends VisWindow {
 		setPositionToCenter();
 
 		validateSettings();
-	}
-
-	public Mode getMode () {
-		return mode;
-	}
-
-	public void setMode (Mode mode) {
-		this.mode = mode;
-	}
-
-	public void setDirectory (String directory) {
-		setDirectory(Gdx.files.absolute(directory));
-	}
-
-	public void setDirectory (File directory) {
-		setDirectory(Gdx.files.absolute(directory.getAbsolutePath()));
-	}
-
-	public void setDirectory (FileHandle directory) {
-		setDirectory(directory, true);
-	}
-
-	private void setDirectory (FileHandle directory, boolean rebuildHistory) {
-		if (directory.exists() == false) throw new IllegalStateException("Provided directory does not exist!");
-		if (directory.isDirectory() == false) throw new IllegalStateException("Provided directory path is a file, not directory!");
-
-		currentDirectory = directory;
-		rebuildFileList();
-		if (rebuildHistory) historyBuild();
-	}
-
-	public FileFilter getFileFilter () {
-		return fileFilter;
-	}
-
-	public void setFileFilter (FileFilter fileFilter) {
-		this.fileFilter = fileFilter;
-	}
-
-	public SelectionMode getSelectionMode () {
-		return selectionMode;
-	}
-
-	public void setSelectionMode (SelectionMode selectionMode) {
-		this.selectionMode = selectionMode;
-	}
-
-	public boolean isMultiselectionEnabled () {
-		return multiselectionEnabled;
-	}
-
-	public void setMultiselectionEnabled (boolean multiselectionEnabled) {
-		this.multiselectionEnabled = multiselectionEnabled;
-	}
-
-	public void setListener (FileChooserListener listener) {
-		this.listener = listener;
-		validateSettings();
-	}
-
-	public int getMultiselectKey () {
-		return multiselectKey;
-	}
-
-	/** @param multiselectKey from {@link Keys} */
-	public void setMultiselectKey (int multiselectKey) {
-		this.multiselectKey = multiselectKey;
-	}
-
-	private void validateSettings () {
-		if (listener == null) listener = new FileChooserAdapter();
 	}
 
 	private void createToolbar () {
@@ -282,12 +230,12 @@ public class FileChooser extends VisWindow {
 		// fileTable is contained in fileScrollPane contained in fileScrollPaneTable contained in splitPane
 		// same for shortcuts
 		fileTable = new VisTable();
-		fileScrollPane = getScrollPane(fileTable);
+		fileScrollPane = createScrollPane(fileTable);
 		fileScrollPaneTable = new VisTable();
 		fileScrollPaneTable.add(fileScrollPane).pad(2).top().expand().fillX();
 
 		shortcutsTable = new VisTable();
-		shorcutsScrollPane = getScrollPane(shortcutsTable);
+		shorcutsScrollPane = createScrollPane(shortcutsTable);
 		shortcutsScrollPaneTable = new VisTable();
 		shortcutsScrollPaneTable.add(shorcutsScrollPane).pad(2).top().expand().fillX();
 	}
@@ -377,16 +325,7 @@ public class FileChooser extends VisWindow {
 		fadeOut();
 	}
 
-	private void showDialog (String text) {
-		VisDialog dialog = new VisDialog(getStage(), locale.popupTitle);
-		dialog.text(text);
-		dialog.button(locale.popupOK);
-		dialog.pack();
-		dialog.setPositionToCenter();
-		getStage().addActor(dialog.fadeIn());
-	}
-
-	private VisScrollPane getScrollPane (VisTable table) {
+	private VisScrollPane createScrollPane (VisTable table) {
 		VisScrollPane scrollPane = new VisScrollPane(table);
 		scrollPane.setOverscroll(false, true);
 		scrollPane.setFadeScrollBars(false);
@@ -430,6 +369,15 @@ public class FileChooser extends VisWindow {
 
 	}
 
+	private void showDialog (String text) {
+		VisDialog dialog = new VisDialog(getStage(), locale.popupTitle);
+		dialog.text(text);
+		dialog.button(locale.popupOK);
+		dialog.pack();
+		dialog.setPositionToCenter();
+		getStage().addActor(dialog.fadeIn());
+	}
+	
 	private void showOverwriteQuestion (Array<FileHandle> filesList) {
 		VisDialog dialog = new VisDialog(getStage(), locale.popupTitle) {
 			@Override
@@ -539,6 +487,10 @@ public class FileChooser extends VisWindow {
 		}
 	}
 
+	private void deselectAll () {
+		deselectAll(true);
+	}
+
 	private void deselectAll (boolean updateTextField) {
 		for (FileItem item : selectedItems)
 			item.deselect(false);
@@ -547,12 +499,7 @@ public class FileChooser extends VisWindow {
 		if (updateTextField) setSelectedFileTextField();
 	}
 
-	private void deselectAll () {
-		deselectAll(true);
-	}
-
 	private void historyBuild () {
-
 		Array<FileHandle> fileTree = new Array<FileHandle>();
 		fileTree.add(currentDirectory);
 		FileHandle next = currentDirectory;
@@ -583,12 +530,6 @@ public class FileChooser extends VisWindow {
 		backButton.setDisabled(false);
 	}
 
-// private void historyClear () {
-// forwardButton.setDisabled(true);
-// history.clear();
-// hi
-// }
-
 	private void historyBack () {
 		if (historyIndex > 0) {
 			historyIndex--;
@@ -606,6 +547,77 @@ public class FileChooser extends VisWindow {
 		if (historyIndex == history.size - 1) forwardButton.setDisabled(true);
 
 		backButton.setDisabled(false);
+	}
+
+	public Mode getMode () {
+		return mode;
+	}
+
+	public void setMode (Mode mode) {
+		this.mode = mode;
+	}
+
+	public void setDirectory (String directory) {
+		setDirectory(Gdx.files.absolute(directory));
+	}
+
+	public void setDirectory (File directory) {
+		setDirectory(Gdx.files.absolute(directory.getAbsolutePath()));
+	}
+
+	public void setDirectory (FileHandle directory) {
+		setDirectory(directory, true);
+	}
+
+	private void setDirectory (FileHandle directory, boolean rebuildHistory) {
+		if (directory.exists() == false) throw new IllegalStateException("Provided directory does not exist!");
+		if (directory.isDirectory() == false) throw new IllegalStateException("Provided directory path is a file, not directory!");
+
+		currentDirectory = directory;
+		rebuildFileList();
+		if (rebuildHistory) historyBuild();
+	}
+
+	public FileFilter getFileFilter () {
+		return fileFilter;
+	}
+
+	public void setFileFilter (FileFilter fileFilter) {
+		this.fileFilter = fileFilter;
+	}
+
+	public SelectionMode getSelectionMode () {
+		return selectionMode;
+	}
+
+	public void setSelectionMode (SelectionMode selectionMode) {
+		this.selectionMode = selectionMode;
+	}
+
+	public boolean isMultiselectionEnabled () {
+		return multiselectionEnabled;
+	}
+
+	public void setMultiselectionEnabled (boolean multiselectionEnabled) {
+		this.multiselectionEnabled = multiselectionEnabled;
+	}
+
+	public void setListener (FileChooserListener listener) {
+		this.listener = listener;
+		validateSettings();
+	}
+
+	public int getMultiselectKey () {
+		return multiselectKey;
+	}
+
+	/** @param multiselectKey from {@link Keys} */
+	public void setMultiselectKey (int multiselectKey) {
+		this.multiselectKey = multiselectKey;
+	}
+
+	private void validateSettings () {
+		if (listener == null) listener = new FileChooserAdapter();
 	}
 
 	private class DefaultFileFilter implements FileFilter {
