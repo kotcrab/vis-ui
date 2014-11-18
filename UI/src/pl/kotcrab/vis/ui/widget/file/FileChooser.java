@@ -23,6 +23,8 @@ import javax.swing.filechooser.FileSystemView;
 
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.VisUI;
+import pl.kotcrab.vis.ui.widget.MenuItem;
+import pl.kotcrab.vis.ui.widget.PopupMenu;
 import pl.kotcrab.vis.ui.widget.VisDialog;
 import pl.kotcrab.vis.ui.widget.VisImageButton;
 import pl.kotcrab.vis.ui.widget.VisLabel;
@@ -33,10 +35,10 @@ import pl.kotcrab.vis.ui.widget.VisTextField;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -72,10 +74,9 @@ public class FileChooser extends VisWindow {
 	private FileHandle currentDirectory;
 
 	private FileChooserStyle style;
+	private FileChooserLocale locale;
 
 	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
-
-	private FileChooserLocale locale;
 
 	private Array<FileItem> selectedItems = new Array<FileItem>();
 	private ShortcutItem selectedShortcut;
@@ -83,7 +84,8 @@ public class FileChooser extends VisWindow {
 	private Array<FileHandle> history;
 	private int historyIndex = 0;
 
-	private FavoritesIO favouritesIO;
+	private FavoritesIO favoritesIO;
+	private Array<FileHandle> favorites;
 
 	// UI
 	private VisSplitPane splitPane;
@@ -103,6 +105,8 @@ public class FileChooser extends VisWindow {
 	private VisImageButton forwardButton;
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextBox;
+
+	private FilePopupMenu fileMenu;
 
 	public static String getFavoritesPrefsName () {
 		return FavoritesIO.getFavoritesPrefsName();
@@ -147,27 +151,16 @@ public class FileChooser extends VisWindow {
 		setResizable(true);
 		setMovable(true);
 
-		favouritesIO = new FavoritesIO();
-
-		cancelButton = new VisTextButton(locale.cancel);
-		confirmButton = new VisTextButton(mode == Mode.OPEN ? locale.open : locale.save);
+		favoritesIO = new FavoritesIO();
+		favorites = favoritesIO.loadFavorites();
 
 		createToolbar();
-
 		createCenterContentPanel();
-
-		splitPane = new VisSplitPane(shortcutsScrollPaneTable, fileScrollPaneTable, false);
-		splitPane.setSplitAmount(0.3f);
-		splitPane.setMinSplitAmount(0.05f);
-		splitPane.setMaxSplitAmount(0.8913f);
-
-		row();
-		add(splitPane).expand().fill();
-		row();
-
 		createFileTextBox();
 		createBottomButtons();
 
+		fileMenu = new FilePopupMenu();
+		
 		rebuildShortcutsList();
 
 		setDirectory(System.getProperty("user.home"));
@@ -175,6 +168,14 @@ public class FileChooser extends VisWindow {
 		setPositionToCenter();
 
 		validateSettings();
+		
+		addListener(new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				fileMenu.remove();
+				return false;
+			}
+		});
 	}
 
 	private void createToolbar () {
@@ -191,7 +192,6 @@ public class FileChooser extends VisWindow {
 		currentPath = new VisTextField();
 
 		currentPath.addListener(new InputListener() {
-			/** Called when a key goes down. When true is returned, the event is {@link Event#handle() handled}. */
 			@Override
 			public boolean keyDown (InputEvent event, int keycode) {
 				if (keycode == Keys.ENTER) {
@@ -238,6 +238,15 @@ public class FileChooser extends VisWindow {
 		shorcutsScrollPane = createScrollPane(shortcutsTable);
 		shortcutsScrollPaneTable = new VisTable();
 		shortcutsScrollPaneTable.add(shorcutsScrollPane).pad(2).top().expand().fillX();
+
+		splitPane = new VisSplitPane(shortcutsScrollPaneTable, fileScrollPaneTable, false);
+		splitPane.setSplitAmount(0.3f);
+		splitPane.setMinSplitAmount(0.05f);
+		splitPane.setMaxSplitAmount(0.8913f);
+
+		row();
+		add(splitPane).expand().fill();
+		row();
 	}
 
 	private void createFileTextBox () {
@@ -262,6 +271,9 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void createBottomButtons () {
+		cancelButton = new VisTextButton(locale.cancel);
+		confirmButton = new VisTextButton(mode == Mode.OPEN ? locale.open : locale.save);
+
 		VisTable buttonTable = new VisTable(true);
 		buttonTable.defaults().minWidth(70).right();
 		add(buttonTable).padTop(3).padBottom(3).padRight(2).fillX().expandX();
@@ -377,7 +389,7 @@ public class FileChooser extends VisWindow {
 		dialog.setPositionToCenter();
 		getStage().addActor(dialog.fadeIn());
 	}
-	
+
 	private void showOverwriteQuestion (Array<FileHandle> filesList) {
 		VisDialog dialog = new VisDialog(getStage(), locale.popupTitle) {
 			@Override
@@ -424,7 +436,7 @@ public class FileChooser extends VisWindow {
 			}
 		}
 
-		Array<FileHandle> favourites = favouritesIO.loadFavorites();
+		Array<FileHandle> favourites = favoritesIO.loadFavorites();
 
 		if (favourites.size > 0) {
 			shortcutsTable.addSeparator();
@@ -679,6 +691,23 @@ public class FileChooser extends VisWindow {
 		}
 
 		private void addListener () {
+			addListener(new InputListener() {
+				@Override
+				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+					return true;
+				}
+
+				@Override
+				public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+					if (event.getButton() == Buttons.RIGHT) {
+						fileMenu.build(favorites, file);
+						fileMenu.setPosition(event.getStageX(), event.getStageY() - fileMenu.getHeight());
+						getStage().addActor(fileMenu);
+					}
+
+				}
+			});
+
 			addListener(new ClickListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -797,6 +826,7 @@ public class FileChooser extends VisWindow {
 				@Override
 				public void clicked (InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
+
 					if (getTapCount() == 1) {
 						File file = ShortcutItem.this.file;
 						if (file.exists() == false) {
