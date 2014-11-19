@@ -16,6 +16,7 @@
 
 package pl.kotcrab.vis.ui.widget.file;
 
+import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.files.FileHandle;
@@ -42,11 +43,11 @@ public class FavoritesIO {
 	}
 
 	public Array<FileHandle> loadFavorites () {
-		String data = prefs.getString(keyName, "");
-		if (data.equals(""))
+		String data = prefs.getString(keyName, null);
+		if (data == null)
 			return new Array<FileHandle>();
 		else
-			return json.fromJson(FavouriteData.class, data).data;
+			return json.fromJson(FavouriteData.class, data).toFileHadnleArray();
 	}
 
 	public void saveFavorites (Array<FileHandle> favorites) {
@@ -54,13 +55,59 @@ public class FavoritesIO {
 		prefs.flush();
 	}
 
-	private class FavouriteData {
-		public Array<FileHandle> data;
+	@SuppressWarnings("unused")
+	private static class FavouriteData {
+		public Array<FileHandleData> data;
 
-		public FavouriteData (Array<FileHandle> data) {
-			this.data = data;
+		public FavouriteData () {
+
 		}
 
+		public FavouriteData (Array<FileHandle> favourites) {
+			data = new Array<FileHandleData>();
+			for (FileHandle file : favourites)
+				data.add(new FileHandleData(file));
+		}
+
+		public Array<FileHandle> toFileHadnleArray () {
+			Array<FileHandle> files = new Array<FileHandle>();
+
+			for (FileHandleData fileData : data)
+				files.add(fileData.toFileHandle());
+
+			return files;
+		}
+	}
+
+	@SuppressWarnings("unused")
+	private static class FileHandleData {
+		public FileType type;
+		public String path;
+
+		public FileHandleData () {
+		}
+
+		public FileHandleData (FileHandle file) {
+			type = file.type();
+			path = file.path();
+		}
+
+		public FileHandle toFileHandle () {
+			switch (type) {
+			case Absolute:
+				return Gdx.files.absolute(path);
+			case Classpath:
+				return Gdx.files.classpath(path);
+			case External:
+				return Gdx.files.external(path);
+			case Internal:
+				return Gdx.files.internal(path);
+			case Local:
+				return Gdx.files.local(path);
+			default:
+				throw new IllegalStateException("Unknown file type!");
+			}
+		}
 	}
 
 }

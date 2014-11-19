@@ -23,8 +23,6 @@ import javax.swing.filechooser.FileSystemView;
 
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.widget.MenuItem;
-import pl.kotcrab.vis.ui.widget.PopupMenu;
 import pl.kotcrab.vis.ui.widget.VisDialog;
 import pl.kotcrab.vis.ui.widget.VisImageButton;
 import pl.kotcrab.vis.ui.widget.VisLabel;
@@ -86,6 +84,8 @@ public class FileChooser extends VisWindow {
 
 	private FavoritesIO favoritesIO;
 	private Array<FileHandle> favorites;
+
+	private Array<ShortcutItem> fileRootsCache = new Array<ShortcutItem>();
 
 	// UI
 	private VisSplitPane splitPane;
@@ -159,8 +159,8 @@ public class FileChooser extends VisWindow {
 		createFileTextBox();
 		createBottomButtons();
 
-		fileMenu = new FilePopupMenu();
-		
+		fileMenu = new FilePopupMenu(this, locale);
+
 		rebuildShortcutsList();
 
 		setDirectory(System.getProperty("user.home"));
@@ -168,7 +168,7 @@ public class FileChooser extends VisWindow {
 		setPositionToCenter();
 
 		validateSettings();
-		
+
 		addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -406,17 +406,40 @@ public class FileChooser extends VisWindow {
 		getStage().addActor(dialog.fadeIn());
 	}
 
-	private void rebuildShortcutsList () {
+	private void rebuildShortcutsList (boolean rebuildRootCache) {
 		shortcutsTable.clear();
 
 		String userHome = System.getProperty("user.home");
 		String userName = System.getProperty("user.name");
 
-		shortcutsTable.add(new ShortcutItem(fileSystemView.getHomeDirectory(), locale.desktop, style.iconFolder)).expand().fill()
-			.row();
+		// yes, getHomeDirectory returns path to desktop
+		File desktop = fileSystemView.getHomeDirectory();
+		shortcutsTable.add(new ShortcutItem(desktop, locale.desktop, style.iconFolder)).expand().fill().row();
 		shortcutsTable.add(new ShortcutItem(new File(userHome), userName, style.iconFolder)).expand().fill().row();
 
 		shortcutsTable.addSeparator();
+
+		if (rebuildRootCache) rebuildFileRootsCache();
+
+		for (ShortcutItem item : fileRootsCache)
+			shortcutsTable.add(item).expandX().fillX().row();
+
+		Array<FileHandle> favourites = favoritesIO.loadFavorites();
+
+		if (favourites.size > 0) {
+			shortcutsTable.addSeparator();
+
+			for (FileHandle f : favourites)
+				shortcutsTable.add(new ShortcutItem(f.file(), f.name(), style.iconFolder)).expand().fill().row();
+		}
+	}
+
+	private void rebuildShortcutsList () {
+		rebuildShortcutsList(true);
+	}
+
+	private void rebuildFileRootsCache () {
+		fileRootsCache.clear();
 
 		File[] roots = File.listRoots();
 
@@ -432,17 +455,8 @@ public class FileChooser extends VisWindow {
 				else
 					item = new ShortcutItem(root, root.toString(), style.iconDrive);
 
-				shortcutsTable.add(item).expandX().fillX().row();
+				fileRootsCache.add(item);
 			}
-		}
-
-		Array<FileHandle> favourites = favoritesIO.loadFavorites();
-
-		if (favourites.size > 0) {
-			shortcutsTable.addSeparator();
-
-			for (FileHandle f : favourites)
-				shortcutsTable.add(new ShortcutItem(f.file(), f.name(), style.iconFolder)).expand().fill().row();
 		}
 	}
 
@@ -472,6 +486,24 @@ public class FileChooser extends VisWindow {
 
 			fileTable.invalidate();
 		}
+	}
+
+	public void refresh () {
+		rebuildShortcutsList();
+		rebuildFileList();
+	}
+
+	public void addFavoruite (FileHandle favourite) {
+		favorites.add(favourite);
+		favoritesIO.saveFavorites(favorites);
+		rebuildShortcutsList(false);
+	}
+
+	public boolean removeFavoruite (FileHandle favourite) {
+		boolean removed = favorites.removeValue(favourite, true);
+		favoritesIO.saveFavorites(favorites);
+		rebuildShortcutsList(false);
+		return removed;
 	}
 
 	public void setVisble (boolean visible) {
@@ -702,6 +734,10 @@ public class FileChooser extends VisWindow {
 					if (event.getButton() == Buttons.RIGHT) {
 						fileMenu.build(favorites, file);
 						fileMenu.setPosition(event.getStageX(), event.getStageY() - fileMenu.getHeight());
+						if (getStage().getHeight() - fileMenu.getY()  > getStage().getHeight()) {
+							fileMenu.setY(fileMenu.getY() + fileMenu.getHeight() );
+
+						}
 						getStage().addActor(fileMenu);
 					}
 
