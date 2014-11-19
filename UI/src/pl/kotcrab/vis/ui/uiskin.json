@@ -100,5 +100,6 @@ pl.kotcrab.vis.ui.widget.VisCheckBox$VisCheckBoxStyle: {
 },
 pl.kotcrab.vis.ui.widget.PopupMenu$PopupMenuStyle: {
 	default: {border: border},
+	noborder: {},
 },
 }

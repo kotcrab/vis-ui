@@ -19,27 +19,80 @@ package pl.kotcrab.vis.ui.widget;
 import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class PopupMenu extends Table {
 	private PopupMenuStyle style;
-	
+	private boolean autoRemove;
+
+	private InputListener autoRemoveListener = new InputListener() {
+		@Override
+		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+			if (autoRemove) {
+				remove();
+				return true;
+			}
+
+			return false;
+		}
+	};
+
 	public PopupMenu () {
-		style = VisUI.skin.get(PopupMenuStyle.class);
+		this(false, "default");
+	}
+
+	public PopupMenu (boolean autoRemove) {
+		this(autoRemove, "default");
+	}
+
+	public PopupMenu (String styleName) {
+		this(false, styleName);
+	}
+
+	public PopupMenu (boolean autoRemove, String styleName) {
+		this.autoRemove = autoRemove;
+		style = VisUI.skin.get(styleName, PopupMenuStyle.class);
 	}
 
 	public void addItem (MenuItem item) {
 		add(item).fillX().row();
 		pack();
 	}
-	
+
 	@Override
-	public void draw(Batch batch, float parentAlpha)
-	{
+	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		style.border.draw(batch, getX(), getY(), getWidth(), getHeight());
-		
+		if (style.border != null) style.border.draw(batch, getX(), getY(), getWidth(), getHeight());
+	}
+
+	public void addMenuToStage (Stage stage, float x, float y) {
+		setPosition(x, y - getHeight());
+		if (stage.getHeight() - getY() > stage.getHeight()) setY(getY() + getHeight());
+		stage.addActor(this);
+	}
+
+	public boolean isAutoRemove () {
+		return autoRemove;
+	}
+
+	public void setAutoRemove (boolean autoRemove) {
+		this.autoRemove = autoRemove;
+	}
+
+	@Override
+	protected void setStage (Stage stage) {
+		super.setStage(stage);
+		if (getStage() != null) getStage().addListener(autoRemoveListener);
+	}
+
+	@Override
+	public boolean remove () {
+		if (getStage() != null) getStage().removeListener(autoRemoveListener);
+		return super.remove();
 	}
 
 	static public class PopupMenuStyle {
@@ -55,20 +108,5 @@ public class PopupMenu extends Table {
 		public PopupMenuStyle (PopupMenuStyle style) {
 			this.border = style.border;
 		}
-
-//
-// public VisTextFieldStyle () {
-// }
-//
-// public VisTextFieldStyle (BitmapFont font, Color fontColor, Drawable cursor, Drawable selection, Drawable background) {
-// super(font, fontColor, cursor, selection, background);
-// }
-//
-// public VisTextFieldStyle (VisTextFieldStyle style) {
-// super(style);
-// this.focusBorder = style.focusBorder;
-// this.errorBorder = style.errorBorder;
-// this.backgroundOver = style.backgroundOver;
-// }
 	}
 }

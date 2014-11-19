@@ -2,12 +2,14 @@
 package pl.kotcrab.vis.ui.widget.file;
 
 import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
 
 import pl.kotcrab.vis.ui.widget.MenuItem;
 import pl.kotcrab.vis.ui.widget.PopupMenu;
 import pl.kotcrab.vis.ui.widget.VisDialog;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -99,15 +101,27 @@ public class FilePopupMenu extends PopupMenu {
 
 		clear();
 
-		addItem(delete);
+		if (file.type() == FileType.Absolute || file.type() == FileType.External) addItem(delete);
 
-		if (file.type() == FileType.Absolute) addItem(showInExplorer);
+		if (file.type() == FileType.Absolute) {
+			addItem(showInExplorer);
 
-		if (file.isDirectory()) {
-			if (favorites.contains(file, true))
-				addItem(removeFromFavorites);
-			else
-				addItem(addToFavorites);
+			if (file.isDirectory()) {
+				if (favorites.contains(file, false))
+					addItem(removeFromFavorites);
+				else
+					addItem(addToFavorites);
+			}
 		}
+	}
+
+	public void buildForFavorite (Array<FileHandle> favorites, File file) {
+		this.file = Gdx.files.absolute(file.getAbsolutePath());
+
+		clear();
+
+		addItem(showInExplorer);
+
+		if (favorites.contains(this.file, false)) addItem(removeFromFavorites);
 	}
 }

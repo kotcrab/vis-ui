@@ -160,6 +160,7 @@ public class FileChooser extends VisWindow {
 		createBottomButtons();
 
 		fileMenu = new FilePopupMenu(this, locale);
+		fileMenu.setAutoRemove(true);
 
 		rebuildShortcutsList();
 
@@ -168,14 +169,6 @@ public class FileChooser extends VisWindow {
 		setPositionToCenter();
 
 		validateSettings();
-
-		addListener(new InputListener() {
-			@Override
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				fileMenu.remove();
-				return false;
-			}
-		});
 	}
 
 	private void createToolbar () {
@@ -395,6 +388,7 @@ public class FileChooser extends VisWindow {
 			@Override
 			@SuppressWarnings("unchecked")
 			protected void result (Object object) {
+				System.out.println("sug");
 				notifyListnerAndCloseDialog((Array<FileHandle>)object);
 			}
 		};
@@ -500,7 +494,7 @@ public class FileChooser extends VisWindow {
 	}
 
 	public boolean removeFavoruite (FileHandle favourite) {
-		boolean removed = favorites.removeValue(favourite, true);
+		boolean removed = favorites.removeValue(favourite, false);
 		favoritesIO.saveFavorites(favorites);
 		rebuildShortcutsList(false);
 		return removed;
@@ -733,12 +727,7 @@ public class FileChooser extends VisWindow {
 				public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 					if (event.getButton() == Buttons.RIGHT) {
 						fileMenu.build(favorites, file);
-						fileMenu.setPosition(event.getStageX(), event.getStageY() - fileMenu.getHeight());
-						if (getStage().getHeight() - fileMenu.getY()  > getStage().getHeight()) {
-							fileMenu.setY(fileMenu.getY() + fileMenu.getHeight() );
-
-						}
-						getStage().addActor(fileMenu);
+						fileMenu.addMenuToStage(getStage(), event.getStageX(), event.getStageY());
 					}
 
 				}
@@ -849,6 +838,21 @@ public class FileChooser extends VisWindow {
 		}
 
 		private void addListener () {
+			addListener(new InputListener() {
+				@Override
+				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+					return true;
+				}
+
+				@Override
+				public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+					if (event.getButton() == Buttons.RIGHT) {
+						fileMenu.buildForFavorite(favorites, file);
+						fileMenu.addMenuToStage(getStage(), event.getStageX(), event.getStageY());
+					}
+
+				}
+			});
 
 			addListener(new ClickListener() {
 				@Override
