@@ -19,6 +19,7 @@ package pl.kotcrab.vis.ui.widget;
 import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -27,12 +28,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class PopupMenu extends Table {
 	private PopupMenuStyle style;
+	
+	private Rectangle boundingRectangle;
 	private boolean autoRemove;
 
 	private InputListener autoRemoveListener = new InputListener() {
 		@Override
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-			if (autoRemove) {
+			if (contains(x, y) == false && autoRemove) {
 				remove();
 				return true;
 			}
@@ -83,6 +86,10 @@ public class PopupMenu extends Table {
 		this.autoRemove = autoRemove;
 	}
 
+	private boolean contains (float x, float y) {
+		return boundingRectangle.contains(x, y);
+	}
+	
 	@Override
 	protected void setStage (Stage stage) {
 		super.setStage(stage);
@@ -93,6 +100,12 @@ public class PopupMenu extends Table {
 	public boolean remove () {
 		if (getStage() != null) getStage().removeListener(autoRemoveListener);
 		return super.remove();
+	}
+
+	@Override
+	public void validate () {
+		super.validate();
+		boundingRectangle = new Rectangle(getX(), getY(), getWidth(), getHeight());
 	}
 
 	static public class PopupMenuStyle {
