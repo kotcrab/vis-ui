@@ -388,7 +388,6 @@ public class FileChooser extends VisWindow {
 			@Override
 			@SuppressWarnings("unchecked")
 			protected void result (Object object) {
-				System.out.println("sug");
 				notifyListnerAndCloseDialog((Array<FileHandle>)object);
 			}
 		};
@@ -870,7 +869,7 @@ public class FileChooser extends VisWindow {
 					if (getTapCount() == 1) {
 						File file = ShortcutItem.this.file;
 						if (file.exists() == false) {
-							showDialog("This directory does not exist!");
+							showDialog(locale.popupDirectoryDoesNotExist);
 							return;
 						}
 						if (file.isDirectory()) setDirectory(file.getAbsolutePath());

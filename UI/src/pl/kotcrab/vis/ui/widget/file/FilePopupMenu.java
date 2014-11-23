@@ -31,10 +31,10 @@ public class FilePopupMenu extends PopupMenu {
 		this.chooser = fileChooser;
 		this.locale = loc;
 
-		delete = new MenuItem("Delete");
-		showInExplorer = new MenuItem("Show in Explorer");
-		addToFavorites = new MenuItem("Add To Favorites");
-		removeFromFavorites = new MenuItem("Remove From Favorites");
+		delete = new MenuItem(locale.contextMenuDelete);
+		showInExplorer = new MenuItem(locale.contextMenuShowInExplorer);
+		addToFavorites = new MenuItem(locale.contextMenuAddToFavorites);
+		removeFromFavorites = new MenuItem(locale.contextMenuRemoveFromFavorites);
 
 		delete.addListener(new ClickListener() {
 			@Override
@@ -88,7 +88,7 @@ public class FilePopupMenu extends PopupMenu {
 				}
 			}
 		};
-		dialog.text("This file will be deleted permanently? Are you sure?");
+		dialog.text(locale.contextMenuDeleteWarning);
 		dialog.button(locale.popupNo, false);
 		dialog.button(locale.popupYes, true);
 		dialog.pack();

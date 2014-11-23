@@ -39,6 +39,12 @@ public class FileChooserLocale {
 	public String popupYes = "Yes";
 	public String popupNo = "No";
 
+	public String contextMenuDelete = "Delete";
+	public String contextMenuShowInExplorer = "Show in Explorer";
+	public String contextMenuAddToFavorites = "Add To Favorites";
+	public String contextMenuRemoveFromFavorites = "Remove From Favorites";
+	public String contextMenuDeleteWarning = "This file will be deleted permanently? Are you sure?";
+
 	public FileChooserLocale () {
 	}
 
