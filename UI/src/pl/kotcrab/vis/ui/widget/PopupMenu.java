@@ -69,7 +69,7 @@ public class PopupMenu extends Table {
 		if (style.border != null) style.border.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
 
-	public void addMenuToStage (Stage stage, float x, float y) {
+	public void displayMenu (Stage stage, float x, float y) {
 		setPosition(x, y - getHeight());
 		if (stage.getHeight() - getY() > stage.getHeight()) setY(getY() + getHeight());
 		stage.addActor(this);
