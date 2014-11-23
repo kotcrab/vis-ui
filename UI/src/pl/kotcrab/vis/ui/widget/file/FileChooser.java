@@ -160,7 +160,6 @@ public class FileChooser extends VisWindow {
 		createBottomButtons();
 
 		fileMenu = new FilePopupMenu(this, locale);
-		fileMenu.setAutoRemove(true);
 
 		rebuildShortcutsList();
 
@@ -486,13 +485,13 @@ public class FileChooser extends VisWindow {
 		rebuildFileList();
 	}
 
-	public void addFavoruite (FileHandle favourite) {
+	public void addFavorite (FileHandle favourite) {
 		favorites.add(favourite);
 		favoritesIO.saveFavorites(favorites);
 		rebuildShortcutsList(false);
 	}
 
-	public boolean removeFavoruite (FileHandle favourite) {
+	public boolean removeFavorite (FileHandle favourite) {
 		boolean removed = favorites.removeValue(favourite, false);
 		favoritesIO.saveFavorites(favorites);
 		rebuildShortcutsList(false);
