@@ -1,5 +1,5 @@
 [0.1.0] [WIP]
--API change: VisValidableTextField#addValidable -> VisValidableTextFiel#daddValidator
+-API change: VisValidableTextField#addValidable -> VisValidableTextField#addValidator
 -Added: VisTextField#isEmpty()
 -Added: VisTable#addSeparator()
 -Added: VisWindow(String title)
