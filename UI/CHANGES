@@ -1,4 +1,6 @@
-[0.1.0] [WIP]
+[0.1.1] [WIP]
+
+[0.1.0]
 -API change: VisValidableTextField#addValidable -> VisValidableTextField#addValidator
 -Added: VisTextField#isEmpty()
 -Added: VisTable#addSeparator()
