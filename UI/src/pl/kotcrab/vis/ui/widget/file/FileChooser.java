@@ -44,12 +44,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 
+/** Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called
+ * @author Pawel Pastuszak */
 public class FileChooser extends VisWindow {
 
 	private static final Drawable highlightBg = VisUI.skin.getDrawable("list-selection");
@@ -104,7 +105,7 @@ public class FileChooser extends VisWindow {
 	private VisImageButton backButton;
 	private VisImageButton forwardButton;
 	private VisTextField currentPath;
-	private VisTextField selectedFileTextBox;
+	private VisTextField selectedFileTextField;
 
 	private FilePopupMenu fileMenu;
 
@@ -112,6 +113,8 @@ public class FileChooser extends VisWindow {
 		return FavoritesIO.getFavoritesPrefsName();
 	}
 
+	/** Sets file name that will be used to store favorites, if not changed default will be used that may be shared with other
+	 * programs */
 	public static void setFavoritesPrefsName (String name) {
 		FavoritesIO.setFavoritesPrefsName(name);
 	}
@@ -145,7 +148,6 @@ public class FileChooser extends VisWindow {
 
 	private void init () {
 		style = new FileChooserStyle();
-		setTitleAlignment(Align.left);
 
 		setModal(true);
 		setResizable(true);
@@ -244,12 +246,12 @@ public class FileChooser extends VisWindow {
 	private void createFileTextBox () {
 		VisTable table = new VisTable(true);
 		VisLabel nameLabel = new VisLabel(locale.fileName);
-		selectedFileTextBox = new VisTextField();
+		selectedFileTextField = new VisTextField();
 
 		table.add(nameLabel);
-		table.add(selectedFileTextBox).expand().fill();
+		table.add(selectedFileTextField).expand().fill();
 
-		selectedFileTextBox.addListener(new InputListener() {
+		selectedFileTextField.addListener(new InputListener() {
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
 				deselectAll(false);
@@ -352,7 +354,7 @@ public class FileChooser extends VisWindow {
 			showOverwriteQuestion(list);
 			return null;
 		} else {
-			String fileName = selectedFileTextBox.getText();
+			String fileName = selectedFileTextField.getText();
 			FileHandle file = currentDirectory.child(fileName);
 
 			if (FileUtils.isValidFileName(fileName) == false) {
@@ -480,22 +482,30 @@ public class FileChooser extends VisWindow {
 		}
 	}
 
+	/** Refresh chooser lists content */
 	public void refresh () {
 		rebuildShortcutsList();
 		rebuildFileList();
 	}
 
+	/** Adds favorite to favorite list
+	 * @param favourite to be added */
 	public void addFavorite (FileHandle favourite) {
 		favorites.add(favourite);
 		favoritesIO.saveFavorites(favorites);
 		rebuildShortcutsList(false);
 	}
 
-	public boolean removeFavorite (FileHandle favourite) {
-		boolean removed = favorites.removeValue(favourite, false);
+	/** Removes favorite from current favorite list
+	 * @param favorite to be removed (path to favorite)
+	 * @return true if favorite was removed, false otherwise */
+	public boolean removeFavorite (FileHandle favorite) {
+		boolean removed = favorites.removeValue(favorite, false);
 		favoritesIO.saveFavorites(favorites);
 		rebuildShortcutsList(false);
+		setVisble(false);
 		return removed;
+
 	}
 
 	public void setVisble (boolean visible) {
@@ -504,12 +514,11 @@ public class FileChooser extends VisWindow {
 		super.setVisible(visible);
 	}
 
-	private void setSelectedFileTextField () {
-
+	private void setSelectedFileFieldText () {
 		if (selectedItems.size == 0)
-			selectedFileTextBox.setText("");
+			selectedFileTextField.setText("");
 		else if (selectedItems.size == 1)
-			selectedFileTextBox.setText(selectedItems.get(0).file.name());
+			selectedFileTextField.setText(selectedItems.get(0).file.name());
 		else {
 			StringBuilder b = new StringBuilder();
 
@@ -519,7 +528,7 @@ public class FileChooser extends VisWindow {
 				b.append("\" ");
 			}
 
-			selectedFileTextBox.setText(b.toString());
+			selectedFileTextField.setText(b.toString());
 		}
 	}
 
@@ -532,7 +541,7 @@ public class FileChooser extends VisWindow {
 			item.deselect(false);
 
 		selectedItems.clear();
-		if (updateTextField) setSelectedFileTextField();
+		if (updateTextField) setSelectedFileFieldText();
 	}
 
 	private void historyBuild () {
@@ -741,7 +750,7 @@ public class FileChooser extends VisWindow {
 
 					if (selectedItems.size > 1) removeInvalidSelections();
 
-					setSelectedFileTextField();
+					setSelectedFileFieldText();
 
 					// very fast selecting and deselecting folder would navigate to that folder
 					// return false will protect against that (tap count won't be increased)
@@ -856,7 +865,7 @@ public class FileChooser extends VisWindow {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 					deselectAll();
-					setSelectedFileTextField();
+					setSelectedFileFieldText();
 					select();
 					return super.touchDown(event, x, y, pointer, button);
 				}

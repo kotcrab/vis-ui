@@ -35,9 +35,9 @@ public class FileChooserLocale {
 	public String popupFilenameInvalid = "File name is invalid!";
 	public String popupFileExistOverwrite = "This file already exist, do you want to overwrite it?";
 	public String popupMutipleFileExistOverwrite = "Those files already exist, do you want to overwrite them?";
-	public String popupOK = "OK";
 	public String popupYes = "Yes";
 	public String popupNo = "No";
+	public String popupOK = "OK";
 
 	public String contextMenuDelete = "Delete";
 	public String contextMenuShowInExplorer = "Show in Explorer";
