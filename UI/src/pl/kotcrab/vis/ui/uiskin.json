@@ -19,9 +19,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: { down: button-down, up: button, over: button-over, font: default-font, fontColor: white },
 	toggle: { down: button-down, up: button, checked: button-down, over: button-over, font: default-font, fontColor: white },
 	markup: { down: button-down, up: button, over: button-over, font: markup-font, fontColor: white },
-	
-	menu: { down: menu-button-down, up: menu-button, over: menu-button-down, font: default-font, fontColor: white },
-	menu-bar: { down: menu-button-down, up: menu-bar-button, over: menu-button-down, font: default-font, fontColor: white }
+	menu-bar: { down: button-down, up: button, over: button-down, font: default-font, fontColor: white }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: { vScroll: scroll, vScrollKnob: scroll-knob-vertical, hScroll: scroll-horizontal, hScrollKnob: scroll-knob-horizontal, background: border},

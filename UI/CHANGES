@@ -1,4 +1,5 @@
 [0.1.1] [WIP]
+-Updated menu bar look
 
 [0.1.0]
 -API change: VisValidableTextField#addValidable -> VisValidableTextField#addValidator
