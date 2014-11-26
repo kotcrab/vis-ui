@@ -1,10 +1,12 @@
 [0.1.2] [WIP]
+-API change: moved InputValidator to pl.kotcrab.vis.ui.validator package
 -Fixed findNextTextField in VisTextField
 -Increased default bottom padding from 6 to 8
 -Added VisValidableTextField()
 -Added VisValidableTextField(InputValidator validator)
 -Added VisValidableTextField(String text)
 -Added VisLabel()
+-Added EmptyInputValidator
 
 [0.1.1]
 -Updated menu bar look

@@ -16,7 +16,7 @@
 
 package pl.kotcrab.vis.ui.widget;
 
-import pl.kotcrab.vis.ui.InputValidator;
+import pl.kotcrab.vis.ui.validator.InputValidator;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;

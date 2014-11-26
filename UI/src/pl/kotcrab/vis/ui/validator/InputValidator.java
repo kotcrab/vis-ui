@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.ui;
+package pl.kotcrab.vis.ui.validator;
 
 public interface InputValidator {
 	public boolean validateInput (String input);
