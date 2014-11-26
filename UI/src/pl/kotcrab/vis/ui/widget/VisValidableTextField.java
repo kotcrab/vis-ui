@@ -17,8 +17,6 @@
 package pl.kotcrab.vis.ui.widget;
 
 import pl.kotcrab.vis.ui.InputValidator;
-import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.widget.VisTextField.VisTextFieldStyle;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -74,6 +72,7 @@ public class VisValidableTextField extends VisTextField {
 
 	public void addValidator (InputValidator validator) {
 		validators.add(validator);
+		validateInput();
 	}
 
 }
