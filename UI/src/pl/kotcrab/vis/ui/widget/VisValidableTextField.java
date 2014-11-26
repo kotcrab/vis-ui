@@ -17,20 +17,41 @@
 package pl.kotcrab.vis.ui.widget;
 
 import pl.kotcrab.vis.ui.InputValidator;
+import pl.kotcrab.vis.ui.VisUI;
+import pl.kotcrab.vis.ui.widget.VisTextField.VisTextFieldStyle;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Array;
 
 public class VisValidableTextField extends VisTextField {
-	private Array<InputValidator> validators;
+	private Array<InputValidator> validators = new Array<InputValidator>();
+
+	public VisValidableTextField () {
+		super();
+		init();
+	}
+
+	public VisValidableTextField (String text) {
+		super(text);
+		init();
+	}
+
+	public VisValidableTextField (InputValidator validator) {
+		super();
+		addValidator(validator);
+		init();
+	}
 
 	public VisValidableTextField (InputValidator... validators) {
-		this.validators = new Array<InputValidator>();
-
+		super();
 		for (InputValidator validator : validators)
-			this.validators.add(validator);
+			addValidator(validator);
 
+		init();
+	}
+
+	private void init () {
 		addListener(new InputListener() {
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
