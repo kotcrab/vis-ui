@@ -22,6 +22,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
 public class VisLabel extends Label {
+	public VisLabel () {
+		super("", VisUI.skin);
+	}
+	
 	public VisLabel (CharSequence text) {
 		super(text, VisUI.skin);
 	}

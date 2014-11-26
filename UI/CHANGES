@@ -4,6 +4,7 @@
 -Added VisValidableTextField()
 -Added VisValidableTextField(InputValidator validator)
 -Added VisValidableTextField(String text)
+-Added VisLabel()
 
 [0.1.1]
 -Updated menu bar look
