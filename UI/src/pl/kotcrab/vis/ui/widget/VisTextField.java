@@ -492,7 +492,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		for (int i = 0, n = actors.size; i < n; i++) {
 			Actor actor = actors.get(i);
 			if (actor == this) continue;
-			if (actor instanceof TextField) {
+			if (actor instanceof VisTextField) {
 				VisTextField textField = (VisTextField)actor;
 				if (textField.isDisabled() || !textField.focusTraversal) continue;
 				Vector2 actorCoords = actor.getParent().localToStageCoordinates(tmp3.set(actor.getX(), actor.getY()));
