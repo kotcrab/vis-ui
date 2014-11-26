@@ -21,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 public class TableUtils {
 	/** Sets default table spacing for vis skin */
 	public static void setSpaceDefaults (Table table) {
-		table.defaults().spaceBottom(6);
+		table.defaults().spaceBottom(8);
 		table.defaults().spaceRight(6);
 	}
 

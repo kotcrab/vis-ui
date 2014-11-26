@@ -1,5 +1,6 @@
 [0.1.2] [WIP]
 -Fixed findNextTextField in VisTextField
+-Increased default bottom padding from 6 to 8
 
 [0.1.1]
 -Updated menu bar look
