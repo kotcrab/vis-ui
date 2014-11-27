@@ -26,20 +26,29 @@ import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.widget.VisCheckBox;
 import pl.kotcrab.vis.ui.widget.VisLabel;
 import pl.kotcrab.vis.ui.widget.VisTextButton;
-import pl.kotcrab.vis.ui.widget.VisTextField;
-import pl.kotcrab.vis.ui.widget.VisTextField.TextFieldListener;
+import pl.kotcrab.vis.ui.widget.VisValidableTextField;
 import pl.kotcrab.vis.ui.widget.VisWindow;
+import pl.kotcrab.vis.ui.widget.file.FileChooser;
+import pl.kotcrab.vis.ui.widget.file.FileChooser.Mode;
+import pl.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class NewProjectDialog extends VisWindow {
-	private VisTextField projectRoot;
-	private VisTextField sourceLoc;
-	private VisTextField assetsLoc;
-	private Project project = new Project();
+	@SuppressWarnings("unused") private Project project = new Project();
+
+	private FormValidator validator;
+
+	private VisValidableTextField projectRoot;
+	private VisValidableTextField sourceLoc;
+	private VisValidableTextField assetsLoc;
+
+	private VisTextButton chooseRootButton;
 
 	private VisLabel errorLabel;
 
@@ -48,14 +57,24 @@ public class NewProjectDialog extends VisWindow {
 
 	public NewProjectDialog (Stage parent) {
 		super(parent, "New Project");
+		setTitleAlignment(Align.center);
 		setModal(true);
 
-		projectRoot = new VisTextField("");
-		VisTextButton chooseButton = new VisTextButton("Choose...");
-		sourceLoc = new VisTextField("/core/src");
-		assetsLoc = new VisTextField("/android/assets");
+		craeteUI();
+		createListeners();
+		createValidators();
 
-		errorLabel = new VisLabel("Project root cannot be empty!");
+		pack();
+		setPositionToCenter();
+	}
+
+	private void craeteUI () {
+		projectRoot = new VisValidableTextField("");
+		chooseRootButton = new VisTextButton("Choose...");
+		sourceLoc = new VisValidableTextField("/core/src");
+		assetsLoc = new VisValidableTextField("/android/assets");
+
+		errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);
 
 		VisCheckBox signFiles = new VisCheckBox("Sign files using private key");
@@ -65,16 +84,16 @@ public class NewProjectDialog extends VisWindow {
 		columnDefaults(1).width(300);
 
 		add(new EmptyWidget(10, 3)).space(0).row();
-		add(new VisLabel("Project root:"));
+		add(new VisLabel("Project root"));
 		add(projectRoot);
-		add(chooseButton);
+		add(chooseRootButton);
 		row();
 
-		add(new VisLabel("Source folder:"));
+		add(new VisLabel("Source folder"));
 		add(sourceLoc).fill();
 		row();
 
-		add(new VisLabel("Assets folder:"));
+		add(new VisLabel("Assets folder"));
 		add(assetsLoc).fill();
 		row();
 
@@ -86,44 +105,53 @@ public class NewProjectDialog extends VisWindow {
 
 		cancelButton = new VisTextButton("Cancel");
 		createButton = new VisTextButton("Create");
+		createButton.setDisabled(true);
 
 		buttonTable.add(errorLabel).fill().expand();
 		buttonTable.add(cancelButton);
 		buttonTable.add(createButton);
 
 		add(buttonTable).colspan(3).fill().expand();
-
-		setupListeners();
-		pack();
-		setPositionToCenter();
+		padBottom(5);
 	}
 
-	private void setupListeners () {
+	private void createListeners () {
+		chooseRootButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				FileChooser chooser = new FileChooser(getStage(), "Choose file", Mode.OPEN);
+				getStage().addActor(chooser.fadeIn());
+
+				chooser.setListener(new FileChooserAdapter() {
+					@Override
+					public void selected (FileHandle file) {
+						projectRoot.setText(file.file().getAbsolutePath());
+					}
+				});
+			}
+		});
+
+		cancelButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				fadeOut();
+			}
+		});
+
 		createButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				createProject();
 			}
 		});
-
-		ProjectTextFieldChangeListener listener = new ProjectTextFieldChangeListener();
-		projectRoot.setTextFieldListener(listener);
-		sourceLoc.setTextFieldListener(listener);
-		assetsLoc.setTextFieldListener(listener);
 	}
 
-	private class ProjectTextFieldChangeListener implements TextFieldListener {
-		@Override
-		public void keyTyped (VisTextField textField, char c) {
-			errorLabel.setText("");
-			createButton.setDisabled(true);
+	private void createValidators () {
+		validator = new FormValidator(createButton, errorLabel);
 
-			if (projectRoot.isEmpty()) errorLabel.setText("Project root cannot be empty!");
-			if (sourceLoc.isEmpty()) errorLabel.setText("Source location cannot be empty!");
-			if (assetsLoc.isEmpty()) errorLabel.setText("Assets location cannot be empty!");
-
-			if (errorLabel.getText().length == 0) createButton.setDisabled(false);
-		}
+		validator.notEmpty(projectRoot, "Project root path cannot be empty!");
+		validator.notEmpty(sourceLoc, "Source location cannot be empty!");
+		validator.notEmpty(assetsLoc, "Assets location cannot be empty!");
 	}
 
 	private void createProject () {
