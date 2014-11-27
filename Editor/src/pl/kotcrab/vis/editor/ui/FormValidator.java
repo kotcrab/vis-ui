@@ -30,7 +30,7 @@ import com.badlogic.gdx.utils.Array;
 
 public class FormValidator {
 	private SharedListener listener = new SharedListener();
-	private Array<VisValidableTextField> fields = new Array<VisValidableTextField>();;
+	private Array<VisValidableTextField> fields = new Array<VisValidableTextField>();
 
 	private Button button;
 	private Label errorMsgLabel;
@@ -48,24 +48,17 @@ public class FormValidator {
 
 	private void checkAll () {
 		button.setDisabled(false);
-
-		for (VisValidableTextField f : fields) {
-			if (f.isInputValid() == false) {
-				button.setDisabled(true);
-				break;
-			}
-		}
-
 		errorMsgLabel.setText("");
 
 		for (VisValidableTextField field : fields) {
 			if (field.isInputValid() == false) {
+
 				ControllerValidator validator = (ControllerValidator)field.getValidator();
 				errorMsgLabel.setText(validator.getErrorMsg());
+				button.setDisabled(true);
 				break;
 			}
 		}
-
 	}
 
 	private class SharedListener extends InputListener {
