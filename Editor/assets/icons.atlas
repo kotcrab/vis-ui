@@ -1,0 +1,27 @@
+
+icons.png
+size: 128,32
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+exit
+  rotate: false
+  xy: 2, 2
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+load
+  rotate: false
+  xy: 26, 2
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+new
+  rotate: false
+  xy: 50, 2
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
