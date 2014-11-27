@@ -21,6 +21,8 @@ package pl.kotcrab.vis.editor;
 
 import java.awt.EventQueue;
 
+import pl.kotcrab.vis.editor.ui.EditorFrame;
+
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -37,6 +39,7 @@ public class Main {
 			LwjglApplicationConfiguration c = new LwjglApplicationConfiguration();
 			c.width = 1280;
 			c.height = 720;
+			c.backgroundFPS = -1;
 			new LwjglApplication(new Editor(), c);
 		}
 	}
