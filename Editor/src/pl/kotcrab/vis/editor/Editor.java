@@ -45,6 +45,7 @@ public class Editor extends ApplicationAdapter {
 
 	@Override
 	public void create () {
+		Assets.load();
 		VisUI.load();
 
 		stage = new Stage(new ScreenViewport());
@@ -53,7 +54,7 @@ public class Editor extends ApplicationAdapter {
 
 		root = new Table();
 		root.setFillParent(true);
-		//if (VisUI.DEBUG) root.debug();
+		// if (VisUI.DEBUG) root.debug();
 
 		stage.addActor(root);
 
@@ -64,20 +65,25 @@ public class Editor extends ApplicationAdapter {
 		root.add(menuBar.getTable()).fillX().expandX();
 
 		Menu fileMenu = new Menu("File");
+		Menu helpMenu = new Menu("Help");
 
 		menuBar.addMenu(fileMenu);
-		stage.addActor(new NewProjectDialog(stage));
+		menuBar.addMenu(helpMenu);
 
-		fileMenu.addItem(new MenuItem("New project...", new ChangeListener() {
+		//debug section
+		stage.addActor(new NewProjectDialog(stage));
+		// stage.addActor(new FileChooser(stage, "Choose file", FileChooser.Mode.SAVE));
+
+		fileMenu.addItem(new MenuItem("New project...", Assets.getIcon("new"), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				stage.addActor(new NewProjectDialog(stage));
+				stage.addActor(new NewProjectDialog(stage).fadeIn());
 			}
 		}));
 
-		fileMenu.addItem(new MenuItem("Load project..."));
+		fileMenu.addItem(new MenuItem("Load project...", Assets.getIcon("load")));
 		fileMenu.addItem(new MenuItem("Close project"));
-		fileMenu.addItem(new MenuItem("Exit"));
+		fileMenu.addItem(new MenuItem("Exit", Assets.getIcon("exit")));
 	}
 
 	@Override
@@ -93,20 +99,15 @@ public class Editor extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act(Gdx.graphics.getDeltaTime());
 		stage.draw();
-
-//		if (VisUI.DEBUG) {
-//			shapeRenderer.begin(ShapeType.Line);
-//			root.drawDebug(shapeRenderer); // This is optional, but enables debug lines for tables.
-//			shapeRenderer.end();
-//		}
 	}
 
 	@Override
 	public void dispose () {
-		VisUI.dispose();
-
 		stage.dispose();
 		shapeRenderer.dispose();
+
+		Assets.dispose();
+		VisUI.dispose();
 	}
 
 }
