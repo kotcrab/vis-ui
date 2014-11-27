@@ -41,6 +41,11 @@ public class MenuItem extends Button {
 		setSkin(VisUI.skin);
 	}
 
+	public MenuItem (String text, Drawable image) {
+		this(text, image, VisUI.skin.get(TextButtonStyle.class));
+		setSkin(VisUI.skin);
+	}
+	
 	public MenuItem (String text, Drawable image, ChangeListener changeListener) {
 		this(text, image, VisUI.skin.get(TextButtonStyle.class));
 		setSkin(VisUI.skin);

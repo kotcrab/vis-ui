@@ -7,6 +7,7 @@
 -Added VisLabel()
 -Added VisValidableTextField.getValidator()
 -Added VisValidableTextField.getValidators()
+-Added MenuItem(String text, Drawable image)
 
 [0.1.1]
 -Updated menu bar look
