@@ -44,6 +44,7 @@ public class FormValidator {
 		fields.add(field);
 		field.addValidator(new EmptyInputValidator(errorMsg));
 		field.addListener(listener);
+		checkAll();
 	}
 
 	private void checkAll () {
