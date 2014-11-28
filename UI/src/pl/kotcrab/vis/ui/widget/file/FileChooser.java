@@ -317,7 +317,13 @@ public class FileChooser extends VisWindow {
 			Array<FileHandle> files = getFileListFromSelected();
 			notifyListnerAndCloseDialog(files);
 		} else {
-			showDialog(locale.popupChooseFile);
+			if (selectionMode == SelectionMode.FILES)
+				showDialog(locale.popupChooseFile);
+			else {
+				Array<FileHandle> files = new Array<FileHandle>();
+				files.add(currentDirectory);
+				notifyListnerAndCloseDialog(files);
+			}
 		}
 	}
 
