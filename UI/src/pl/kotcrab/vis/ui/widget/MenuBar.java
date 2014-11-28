@@ -46,7 +46,14 @@ public class MenuBar {
 		this.stage = stage;
 
 		menus = new Array<MenuBarItem>();
-		mainTable = new Table(skin);
+		
+		mainTable = new Table(skin) {
+			@Override
+			protected void sizeChanged () {
+				super.sizeChanged();
+				closeMenu();
+			}
+		};
 		menuItems = new Table(skin);
 
 		mainTable.add(menuItems);
@@ -134,7 +141,9 @@ public class MenuBar {
 		return mainTable;
 	}
 
+	/** Calling no longer required, currently does nothing */
+	@Deprecated
 	public void resize () {
-		closeMenu();
+		// closeMenu();
 	}
 }

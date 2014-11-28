@@ -1,6 +1,7 @@
 [0.1.2] [WIP]
 -Fixed findNextTextField in VisTextField
 -Increased default bottom padding from 6 to 8
+-Calling MenuBar.reisze() no longer required
 -Added VisValidableTextField()
 -Added VisValidableTextField(InputValidator validator)
 -Added VisValidableTextField(String text)
