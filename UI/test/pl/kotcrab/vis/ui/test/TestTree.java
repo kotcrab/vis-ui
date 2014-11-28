@@ -22,7 +22,6 @@ import pl.kotcrab.vis.ui.widget.VisLabel;
 import pl.kotcrab.vis.ui.widget.VisTree;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree;
@@ -30,8 +29,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 
 public class TestTree extends VisWindow {
 
-	public TestTree (Stage parent, boolean useVisComponets) {
-		super(parent, "test tree");
+	public TestTree ( boolean useVisComponets) {
+		super("test tree");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
@@ -42,7 +41,7 @@ public class TestTree extends VisWindow {
 			addNormalComponents();
 
 		setSize(150, 380);
-		setPositionToCenter();
+		centerWindow();
 		setPosition(getX() + 380, getY() + 100);
 	}
 

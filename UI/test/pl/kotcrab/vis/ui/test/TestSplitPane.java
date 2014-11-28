@@ -23,15 +23,14 @@ import pl.kotcrab.vis.ui.widget.VisLabel;
 import pl.kotcrab.vis.ui.widget.VisSplitPane;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 
 public class TestSplitPane extends VisWindow {
 
-	public TestSplitPane (Stage parent, boolean useVisComponets) {
-		super(parent, "splitpane");
+	public TestSplitPane (boolean useVisComponets) {
+		super("splitpane");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
@@ -42,7 +41,7 @@ public class TestSplitPane extends VisWindow {
 			addNormalComponents();
 
 		setSize(300, 150);
-		setPositionToCenter();
+		centerWindow();
 		setPosition(getX(), getY() - 170);
 	}
 

@@ -20,12 +20,10 @@ import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.widget.VisValidableTextField;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
-
 public class TestValidator extends VisWindow {
 
-	public TestValidator (Stage parent) {
-		super(parent, "test validator (number)");
+	public TestValidator () {
+		super( "test validator (number)");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
@@ -35,7 +33,7 @@ public class TestValidator extends VisWindow {
 		add(textField);
 
 		pack();
-		setPositionToCenter();
+		centerWindow();
 		setPosition(getX() - 300, getY() - 250);
 	}
 }

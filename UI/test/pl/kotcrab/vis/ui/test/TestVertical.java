@@ -23,14 +23,13 @@ import pl.kotcrab.vis.ui.widget.VisProgressBar;
 import pl.kotcrab.vis.ui.widget.VisSlider;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 
 public class TestVertical extends VisWindow {
 
-	public TestVertical (Stage parent, boolean useVisComponets) {
-		super(parent, "test vertical");
+	public TestVertical ( boolean useVisComponets) {
+		super( "test vertical");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
@@ -41,7 +40,7 @@ public class TestVertical extends VisWindow {
 			addNormalComponents();
 
 		setSize(100, 200);
-		setPositionToCenter();
+		centerWindow();
 		setPosition(getX() + 380, getY() - 200);
 	}
 

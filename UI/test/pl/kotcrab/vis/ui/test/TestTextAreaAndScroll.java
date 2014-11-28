@@ -24,7 +24,6 @@ import pl.kotcrab.vis.ui.widget.VisScrollPane;
 import pl.kotcrab.vis.ui.widget.VisTextArea;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -32,8 +31,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 
 public class TestTextAreaAndScroll extends VisWindow {
 
-	public TestTextAreaAndScroll (Stage parent, boolean useVisComponets) {
-		super(parent, "textarea / scrollpane");
+	public TestTextAreaAndScroll (boolean useVisComponets) {
+		super("textarea / scrollpane");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
@@ -44,7 +43,7 @@ public class TestTextAreaAndScroll extends VisWindow {
 			addNormalComponents();
 
 		setSize(180, 380);
-		setPositionToCenter();
+		centerWindow();
 		setPosition(getX() - 380, getY());
 	}
 

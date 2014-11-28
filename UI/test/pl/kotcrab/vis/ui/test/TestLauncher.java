@@ -53,12 +53,12 @@ class TestApplication extends ApplicationAdapter {
 
 		Gdx.input.setInputProcessor(stage);
 
-		stage.addActor(new TestWindow(stage, USE_VIS_COMPONENTS));
-		stage.addActor(new TestTree(stage, USE_VIS_COMPONENTS));
-		stage.addActor(new TestTextAreaAndScroll(stage, USE_VIS_COMPONENTS));
-		stage.addActor(new TestSplitPane(stage, USE_VIS_COMPONENTS));
-		stage.addActor(new TestVertical(stage, USE_VIS_COMPONENTS));
-		stage.addActor(new TestValidator(stage));
+		stage.addActor(new TestWindow(USE_VIS_COMPONENTS));
+		stage.addActor(new TestTree(USE_VIS_COMPONENTS));
+		stage.addActor(new TestTextAreaAndScroll(USE_VIS_COMPONENTS));
+		stage.addActor(new TestSplitPane(USE_VIS_COMPONENTS));
+		stage.addActor(new TestVertical(USE_VIS_COMPONENTS));
+		stage.addActor(new TestValidator());
 
 		shapeRenderer = new ShapeRenderer();
 	}

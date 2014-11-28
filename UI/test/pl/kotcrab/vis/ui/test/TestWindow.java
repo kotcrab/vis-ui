@@ -30,7 +30,6 @@ import pl.kotcrab.vis.ui.widget.VisTextButton;
 import pl.kotcrab.vis.ui.widget.VisTextField;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -43,8 +42,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 
 public class TestWindow extends VisWindow {
 
-	public TestWindow (Stage parent, boolean useVisComponets) {
-		super(parent, "test window");
+	public TestWindow (boolean useVisComponets) {
+		super("test window");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
@@ -55,7 +54,7 @@ public class TestWindow extends VisWindow {
 			addNormalComponents();
 
 		pack();
-		setPositionToCenter();
+		centerWindow();
 		setPosition(getX(), getY() + 100);
 	}
 
