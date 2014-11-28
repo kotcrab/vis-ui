@@ -20,6 +20,7 @@ import pl.kotcrab.vis.ui.InputValidator;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 
 public class VisValidableTextField extends VisTextField {
@@ -57,6 +58,16 @@ public class VisValidableTextField extends VisTextField {
 				return false;
 			}
 		});
+	}
+
+	@Override
+	public void setText (String str) {
+		super.setText(str);
+		
+		if (validators != null) {
+			validateInput();
+			fire(new ChangeListener.ChangeEvent());
+		}
 	}
 
 	private void validateInput () {
