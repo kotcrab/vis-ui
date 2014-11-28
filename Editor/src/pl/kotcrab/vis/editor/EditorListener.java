@@ -17,35 +17,11 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor.ui.widgets;
+package pl.kotcrab.vis.editor;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
-public class EmptyWidget extends Widget {
-	private float prefWidth, prefHeight;
-
-	public EmptyWidget (float prefWidth, float prefHeight) {
-		this.prefWidth = prefWidth;
-		this.prefHeight = prefHeight;
-	}
-
-	@Override
-	public float getPrefWidth () {
-		return prefWidth;
-	}
-
-	@Override
-	public float getPrefHeight () {
-		return prefHeight;
-	}
-
-	@Override
-	public float getMaxWidth () {
-		return getPrefWidth();
-	}
-
-	@Override
-	public float getMaxHeight () {
-		return getPrefHeight();
-	}
+public interface EditorListener {
+	public void requestExit ();
+	public Stage getStage ();
 }

@@ -20,7 +20,6 @@
 package pl.kotcrab.vis.editor.ui;
 
 import pl.kotcrab.vis.editor.Project;
-import pl.kotcrab.vis.editor.ui.widgets.EmptyWidget;
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.widget.VisCheckBox;
@@ -35,7 +34,6 @@ import pl.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
@@ -55,8 +53,8 @@ public class NewProjectDialog extends VisWindow {
 	private VisTextButton cancelButton;
 	private VisTextButton createButton;
 
-	public NewProjectDialog (Stage parent) {
-		super(parent, "New Project");
+	public NewProjectDialog () {
+		super("New Project");
 		setTitleAlignment(Align.center);
 		setModal(true);
 
@@ -65,7 +63,7 @@ public class NewProjectDialog extends VisWindow {
 		createValidators();
 
 		pack();
-		setPositionToCenter();
+		centerWindow();
 	}
 
 	private void craeteUI () {
@@ -83,7 +81,7 @@ public class NewProjectDialog extends VisWindow {
 		columnDefaults(0).left();
 		columnDefaults(1).width(300);
 
-		add(new EmptyWidget(10, 3)).space(0).row();
+		row().padTop(4);
 		add(new VisLabel("Project root"));
 		add(projectRoot);
 		add(chooseRootButton);
@@ -119,7 +117,7 @@ public class NewProjectDialog extends VisWindow {
 		chooseRootButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				FileChooser chooser = new FileChooser(getStage(), "Choose file", Mode.OPEN);
+				FileChooser chooser = new FileChooser("Choose file", Mode.OPEN);
 				getStage().addActor(chooser.fadeIn());
 
 				chooser.setListener(new FileChooserAdapter() {

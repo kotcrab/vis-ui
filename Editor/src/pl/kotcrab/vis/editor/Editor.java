@@ -19,79 +19,57 @@
 
 package pl.kotcrab.vis.editor;
 
+import pl.kotcrab.vis.editor.module.MenuBarModule;
 import pl.kotcrab.vis.editor.ui.NewProjectDialog;
 import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.widget.Menu;
-import pl.kotcrab.vis.ui.widget.MenuBar;
-import pl.kotcrab.vis.ui.widget.MenuItem;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class Editor extends ApplicationAdapter {
+public class Editor extends ApplicationAdapter implements EditorListener {
+	private static Editor instance;
 
 	private Stage stage;
 	private Table root;
 	private ShapeRenderer shapeRenderer;
-	private MenuBar menuBar;
 
 	@Override
 	public void create () {
+		instance = this;
 		Assets.load();
 		VisUI.load();
 
 		stage = new Stage(new ScreenViewport());
-
+		shapeRenderer = new ShapeRenderer();
 		Gdx.input.setInputProcessor(stage);
 
 		root = new Table();
 		root.setFillParent(true);
-		// if (VisUI.DEBUG) root.debug();
-
 		stage.addActor(root);
 
-		shapeRenderer = new ShapeRenderer();
-		menuBar = new MenuBar(stage);
+		MenuBarModule menuBar = new MenuBarModule();
+		menuBar.addToStage(root);
 
-		root.left().top();
-		root.add(menuBar.getTable()).fillX().expandX();
-
-		Menu fileMenu = new Menu("File");
-		Menu helpMenu = new Menu("Help");
-
-		menuBar.addMenu(fileMenu);
-		menuBar.addMenu(helpMenu);
-
-		//debug section
-		stage.addActor(new NewProjectDialog(stage));
+		
+		// debug section
+		stage.addActor(new NewProjectDialog());
 		// stage.addActor(new FileChooser(stage, "Choose file", FileChooser.Mode.SAVE));
-
-		fileMenu.addItem(new MenuItem("New project...", Assets.getIcon("new"), new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				stage.addActor(new NewProjectDialog(stage).fadeIn());
-			}
-		}));
-
-		fileMenu.addItem(new MenuItem("Load project...", Assets.getIcon("load")));
-		fileMenu.addItem(new MenuItem("Close project"));
-		fileMenu.addItem(new MenuItem("Exit", Assets.getIcon("exit")));
+	}
+	
+	public static Editor getInstnace () {
+		return instance;
 	}
 
 	@Override
 	public void resize (int width, int height) {
 		stage.getViewport().update(width, height, true);
 		shapeRenderer.setTransformMatrix(new Matrix4().setToOrtho2D(0, 0, width, height));
-
-		menuBar.resize();
 	}
 
 	@Override
@@ -108,6 +86,17 @@ public class Editor extends ApplicationAdapter {
 
 		Assets.dispose();
 		VisUI.dispose();
+	}
+
+	@Override
+	public void requestExit () {
+		// here will be fancy do you really want to exit dialog
+		Gdx.app.exit();
+	}
+
+	@Override
+	public Stage getStage () {
+		return stage;
 	}
 
 }
