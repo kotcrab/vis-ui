@@ -19,6 +19,7 @@ package pl.kotcrab.vis.ui.widget;
 import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
@@ -27,19 +28,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 public class VisWindow extends Window {
 	public static float FADE_TIME = 0.3f;
 
-	private Stage parent;
+	private boolean centerOnAdd;
 
 	public VisWindow (String title) {
-		this(null, title, true);
+		this(title, true);
 	}
 
-	public VisWindow (Stage parent, String title) {
-		this(parent, title, true);
-	}
-
-	public VisWindow (Stage parent, String title, boolean showBorder) {
+	public VisWindow (String title, boolean showBorder) {
 		super(title, VisUI.skin, showBorder ? "default" : "noborder");
-		this.parent = parent;
 		setTitleAlignment(Align.left);
 	}
 
@@ -48,7 +44,32 @@ public class VisWindow extends Window {
 		super.setPosition((int)x, (int)y);
 	}
 
-	public void setPositionToCenter () {
+	/** Centers this window, if it has parent it will be done instantly, if it does not have parent it will be centered when it will
+	 * be added to stage
+	 * @return true when window was centered, false when window will be centered when added to stage */
+	public boolean centerWindow () {
+		Group parent = getParent();
+		if (parent == null) {
+			centerOnAdd = true;
+			return false;
+		} else {
+			moveToCenter();
+			return true;
+		}
+	}
+
+	@Override
+	protected void setStage (Stage stage) {
+		super.setStage(stage);
+		
+		if (centerOnAdd) {
+			centerOnAdd = false;
+			moveToCenter();
+		}
+	}
+
+	private void moveToCenter () {
+		Stage parent = getStage();
 		if (parent != null) setPosition((parent.getWidth() - getWidth()) / 2, (parent.getHeight() - getHeight()) / 2);
 	}
 

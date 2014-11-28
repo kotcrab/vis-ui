@@ -1,4 +1,6 @@
 [0.1.2] [WIP]
+-API change: removed Stage from VisWindow and VisDialog constructors
+-API change: removed VisWindow.setPositonToCenter() replaced with VisWindow.centerWindow() 
 -Fixed findNextTextField in VisTextField
 -Increased default bottom padding from 6 to 8
 -Calling MenuBar.reisze() no longer required

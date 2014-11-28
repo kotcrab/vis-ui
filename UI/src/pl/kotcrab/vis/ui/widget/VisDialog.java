@@ -59,14 +59,8 @@ public class VisDialog extends VisWindow {
 		}
 	};
 
-	public VisDialog (Stage parrent, String title) {
-		super(parrent, title);
-		this.skin = VisUI.skin;
-		initialize();
-	}
-
 	public VisDialog (String title) {
-		super(null, title);
+		super(title);
 		this.skin = VisUI.skin;
 		initialize();
 	}

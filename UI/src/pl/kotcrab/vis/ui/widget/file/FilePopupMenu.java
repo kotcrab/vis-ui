@@ -94,7 +94,7 @@ public class FilePopupMenu extends PopupMenu {
 	}
 
 	private void showDeleteDialog () {
-		VisDialog dialog = new VisDialog(chooser.getStage(), locale.popupTitle) {
+		VisDialog dialog = new VisDialog(locale.popupTitle) {
 			@Override
 			protected void result (Object object) {
 				boolean delete = Boolean.parseBoolean(object.toString());
@@ -108,7 +108,7 @@ public class FilePopupMenu extends PopupMenu {
 		dialog.button(locale.popupNo, false);
 		dialog.button(locale.popupYes, true);
 		dialog.pack();
-		dialog.setPositionToCenter();
+		dialog.centerWindow();
 		chooser.getStage().addActor(dialog.fadeIn());
 	}
 

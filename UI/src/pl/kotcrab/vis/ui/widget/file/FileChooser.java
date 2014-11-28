@@ -39,7 +39,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -119,8 +118,8 @@ public class FileChooser extends VisWindow {
 		FavoritesIO.setFavoritesPrefsName(name);
 	}
 
-	public FileChooser (Stage parent, Mode mode) {
-		super(parent, "");
+	public FileChooser (Mode mode) {
+		super("");
 
 		this.locale = new FileChooserLocale();
 		this.mode = mode;
@@ -130,16 +129,16 @@ public class FileChooser extends VisWindow {
 		init();
 	}
 
-	public FileChooser (Stage parent, String title, Mode mode) {
-		super(parent, title);
+	public FileChooser (String title, Mode mode) {
+		super(title);
 		this.mode = mode;
 		this.locale = new FileChooserLocale();
 
 		init();
 	}
 
-	public FileChooser (FileChooserLocale locale, Stage parent, String title, Mode mode) {
-		super(parent, title);
+	public FileChooser (FileChooserLocale locale, String title, Mode mode) {
+		super(title);
 		this.mode = mode;
 		this.locale = locale;
 
@@ -167,7 +166,7 @@ public class FileChooser extends VisWindow {
 
 		setDirectory(System.getProperty("user.home"));
 		setSize(500, 600);
-		setPositionToCenter();
+		centerWindow();
 
 		validateSettings();
 	}
@@ -376,16 +375,16 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void showDialog (String text) {
-		VisDialog dialog = new VisDialog(getStage(), locale.popupTitle);
+		VisDialog dialog = new VisDialog(locale.popupTitle);
 		dialog.text(text);
 		dialog.button(locale.popupOK);
 		dialog.pack();
-		dialog.setPositionToCenter();
+		dialog.centerWindow();
 		getStage().addActor(dialog.fadeIn());
 	}
 
 	private void showOverwriteQuestion (Array<FileHandle> filesList) {
-		VisDialog dialog = new VisDialog(getStage(), locale.popupTitle) {
+		VisDialog dialog = new VisDialog(locale.popupTitle) {
 			@Override
 			@SuppressWarnings("unchecked")
 			protected void result (Object object) {
@@ -396,7 +395,7 @@ public class FileChooser extends VisWindow {
 		dialog.button(locale.popupNo, null);
 		dialog.button(locale.popupYes, filesList);
 		dialog.pack();
-		dialog.setPositionToCenter();
+		dialog.centerWindow();
 		getStage().addActor(dialog.fadeIn());
 	}
 
