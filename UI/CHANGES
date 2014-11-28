@@ -1,4 +1,4 @@
-[0.1.2] [WIP]
+[0.2.0] [WIP]
 -API change: removed Stage from VisWindow and VisDialog constructors
 -API change: removed VisWindow.setPositonToCenter() replaced with VisWindow.centerWindow()
 -Fixed findNextTextField in VisTextField
