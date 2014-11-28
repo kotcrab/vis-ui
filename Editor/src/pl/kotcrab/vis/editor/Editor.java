@@ -20,6 +20,7 @@
 package pl.kotcrab.vis.editor;
 
 import pl.kotcrab.vis.editor.module.MenuBarModule;
+import pl.kotcrab.vis.editor.ui.EditorFrame;
 import pl.kotcrab.vis.editor.ui.NewProjectDialog;
 import pl.kotcrab.vis.ui.VisUI;
 
@@ -34,6 +35,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Editor extends ApplicationAdapter implements EditorListener {
 	private static Editor instance;
+
+	private EditorFrame frame;
 
 	private Stage stage;
 	private Table root;
@@ -56,12 +59,11 @@ public class Editor extends ApplicationAdapter implements EditorListener {
 		MenuBarModule menuBar = new MenuBarModule();
 		menuBar.addToStage(root);
 
-		
 		// debug section
 		stage.addActor(new NewProjectDialog());
 		// stage.addActor(new FileChooser(stage, "Choose file", FileChooser.Mode.SAVE));
 	}
-	
+
 	public static Editor getInstnace () {
 		return instance;
 	}
@@ -86,17 +88,27 @@ public class Editor extends ApplicationAdapter implements EditorListener {
 
 		Assets.dispose();
 		VisUI.dispose();
+
+		frame.dispose();
 	}
 
 	@Override
 	public void requestExit () {
-		// here will be fancy do you really want to exit dialog
+		// here will be fancy 'do you really want to exit' dialog
+		exit();
+	}
+
+	private void exit () {
 		Gdx.app.exit();
 	}
 
 	@Override
 	public Stage getStage () {
 		return stage;
+	}
+
+	public void setEditorFrame (EditorFrame frame) {
+		this.frame = frame;
 	}
 
 }

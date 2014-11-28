@@ -20,23 +20,41 @@
 package pl.kotcrab.vis.editor.ui;
 
 import java.awt.BorderLayout;
+import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
 import pl.kotcrab.vis.editor.Editor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglAWTCanvas;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 
 public class EditorFrame extends JFrame {
+	public static void main (String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			@Override
+			public void run () {
+				new EditorFrame().setVisible(true);
+			}
+		});
+	}
+
 	public EditorFrame () {
 		setSize(1280, 720);
-		setLocation(100, 100);
+		setLocationRelativeTo(null);
 		setTitle("Vis Editor");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-		LwjglAWTCanvas editorCanvas = new LwjglAWTCanvas(new Editor());
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.width = 1280;
+		config.height = 720;
+		config.backgroundFPS = -1;
+
+		Editor editor = new Editor();
+		LwjglCanvas editorCanvas = new LwjglCanvas(editor, config);
 		editorCanvas.getCanvas().setSize(1280, 720);
+		editor.setEditorFrame(this);
 
 		getContentPane().add(editorCanvas.getCanvas(), BorderLayout.CENTER);
 
