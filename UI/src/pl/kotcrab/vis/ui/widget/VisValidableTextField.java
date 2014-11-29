@@ -63,11 +63,9 @@ public class VisValidableTextField extends VisTextField {
 	@Override
 	public void setText (String str) {
 		super.setText(str);
-		
-		if (validators != null) {
-			validateInput();
-			fire(new ChangeListener.ChangeEvent());
-		}
+
+		fire(new ChangeListener.ChangeEvent());
+		if (validators != null) validateInput();
 	}
 
 	private void validateInput () {
