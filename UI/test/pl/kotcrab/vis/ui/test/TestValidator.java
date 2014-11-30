@@ -22,8 +22,8 @@ import pl.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestValidator extends VisWindow {
 
-	public TestValidator () {
-		super( "test validator (number)");
+	public TestValidator (boolean useVisComponets) {
+		super("test validator (number)");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();

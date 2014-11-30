@@ -48,7 +48,7 @@ class TestApplication extends ApplicationAdapter {
 	@Override
 	public void create () {
 		VisUI.load();
-
+		
 		stage = new Stage(new ScreenViewport());
 
 		Gdx.input.setInputProcessor(stage);
@@ -58,7 +58,7 @@ class TestApplication extends ApplicationAdapter {
 		stage.addActor(new TestTextAreaAndScroll(USE_VIS_COMPONENTS));
 		stage.addActor(new TestSplitPane(USE_VIS_COMPONENTS));
 		stage.addActor(new TestVertical(USE_VIS_COMPONENTS));
-		stage.addActor(new TestValidator());
+		stage.addActor(new TestValidator(USE_VIS_COMPONENTS));
 
 		shapeRenderer = new ShapeRenderer();
 	}
