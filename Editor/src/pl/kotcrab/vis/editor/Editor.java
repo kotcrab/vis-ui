@@ -40,7 +40,6 @@ public class Editor extends ApplicationAdapter implements EditorListener {
 
 	private Stage stage;
 	private Table root;
-	private ShapeRenderer shapeRenderer;
 
 	@Override
 	public void create () {
@@ -49,7 +48,6 @@ public class Editor extends ApplicationAdapter implements EditorListener {
 		VisUI.load();
 
 		stage = new Stage(new ScreenViewport());
-		shapeRenderer = new ShapeRenderer();
 		Gdx.input.setInputProcessor(stage);
 
 		root = new Table();
@@ -71,7 +69,6 @@ public class Editor extends ApplicationAdapter implements EditorListener {
 	@Override
 	public void resize (int width, int height) {
 		stage.getViewport().update(width, height, true);
-		shapeRenderer.setTransformMatrix(new Matrix4().setToOrtho2D(0, 0, width, height));
 	}
 
 	@Override
@@ -84,7 +81,7 @@ public class Editor extends ApplicationAdapter implements EditorListener {
 	@Override
 	public void dispose () {
 		stage.dispose();
-		shapeRenderer.dispose();
+		// shapeRenderer.dispose();
 
 		Assets.dispose();
 		VisUI.dispose();
