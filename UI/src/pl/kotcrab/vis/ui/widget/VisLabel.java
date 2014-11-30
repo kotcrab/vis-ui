@@ -25,7 +25,7 @@ public class VisLabel extends Label {
 	public VisLabel () {
 		super("", VisUI.skin);
 	}
-	
+
 	public VisLabel (CharSequence text) {
 		super(text, VisUI.skin);
 	}

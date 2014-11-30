@@ -119,11 +119,11 @@ public class VisImageButton extends Button implements Focusable {
 	public Cell<?> getImageCell () {
 		return getCell(image);
 	}
-	
+
 	@Override
 	public void setDisabled (boolean disabled) {
 		super.setDisabled(disabled);
-		if(disabled) FocusManager.getFocus();
+		if (disabled) FocusManager.getFocus();
 	}
 
 	/** The style for an image button, see {@link ImageButton}.

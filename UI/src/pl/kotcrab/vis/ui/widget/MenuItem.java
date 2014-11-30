@@ -45,7 +45,7 @@ public class MenuItem extends Button {
 		this(text, image, VisUI.skin.get(TextButtonStyle.class));
 		setSkin(VisUI.skin);
 	}
-	
+
 	public MenuItem (String text, Drawable image, ChangeListener changeListener) {
 		this(text, image, VisUI.skin.get(TextButtonStyle.class));
 		setSkin(VisUI.skin);
@@ -114,6 +114,7 @@ public class MenuItem extends Button {
 	public Image getImage () {
 		return image;
 	}
+
 	public Cell<?> getImageCell () {
 		return getCell(image);
 	}
@@ -121,7 +122,7 @@ public class MenuItem extends Button {
 	public Label getLabel () {
 		return label;
 	}
-	
+
 	public Cell<?> getLabelCell () {
 		return getCell(label);
 	}

@@ -66,9 +66,9 @@ public class FormValidator {
 
 		for (VisValidableTextField field : fields) {
 			field.validateInput();
-			
+
 			if (field.isInputValid() == false) {
-				
+
 				Array<InputValidator> validators = field.getValidators();
 				for (InputValidator v : validators) {
 					ControllerValidator validator = (ControllerValidator)v;
@@ -136,7 +136,7 @@ public class FormValidator {
 		protected boolean getResult () {
 			return result;
 		}
-		
+
 		@Override
 		public boolean validateInput (String input) {
 			return result;

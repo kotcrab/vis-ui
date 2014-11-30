@@ -48,7 +48,7 @@ class TestApplication extends ApplicationAdapter {
 	@Override
 	public void create () {
 		VisUI.load();
-		
+
 		stage = new Stage(new ScreenViewport());
 
 		Gdx.input.setInputProcessor(stage);

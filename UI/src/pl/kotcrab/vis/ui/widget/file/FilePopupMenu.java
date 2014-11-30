@@ -24,8 +24,8 @@ import pl.kotcrab.vis.ui.widget.MenuItem;
 import pl.kotcrab.vis.ui.widget.PopupMenu;
 import pl.kotcrab.vis.ui.widget.VisDialog;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Files.FileType;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;

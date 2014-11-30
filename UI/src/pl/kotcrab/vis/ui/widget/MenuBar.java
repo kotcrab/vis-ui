@@ -46,7 +46,7 @@ public class MenuBar {
 		this.stage = stage;
 
 		menus = new Array<MenuBarItem>();
-		
+
 		mainTable = new Table(skin) {
 			@Override
 			protected void sizeChanged () {

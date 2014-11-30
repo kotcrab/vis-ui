@@ -28,7 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class PopupMenu extends Table {
 	private PopupMenuStyle style;
-	
+
 	private Rectangle boundingRectangle;
 	private boolean autoRemove;
 
@@ -89,7 +89,7 @@ public class PopupMenu extends Table {
 	private boolean contains (float x, float y) {
 		return boundingRectangle.contains(x, y);
 	}
-	
+
 	@Override
 	protected void setStage (Stage stage) {
 		super.setStage(stage);

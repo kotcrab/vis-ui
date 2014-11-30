@@ -61,7 +61,7 @@ public class VisWindow extends Window {
 	@Override
 	protected void setStage (Stage stage) {
 		super.setStage(stage);
-		
+
 		if (centerOnAdd) {
 			centerOnAdd = false;
 			moveToCenter();

@@ -28,8 +28,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 
 public class TestVertical extends VisWindow {
 
-	public TestVertical ( boolean useVisComponets) {
-		super( "test vertical");
+	public TestVertical (boolean useVisComponets) {
+		super("test vertical");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
