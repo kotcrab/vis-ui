@@ -55,6 +55,7 @@ public class VisValidableTextField extends VisTextField {
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
 				validateInput();
+				fire(new ChangeListener.ChangeEvent());
 				return false;
 			}
 		});
@@ -68,7 +69,7 @@ public class VisValidableTextField extends VisTextField {
 		fire(new ChangeListener.ChangeEvent());
 	}
 
-	private void validateInput () {
+	public void validateInput () {
 		for (InputValidator validator : validators) {
 			if (validator.validateInput(getText()) == false) {
 				setInputValid(false);
