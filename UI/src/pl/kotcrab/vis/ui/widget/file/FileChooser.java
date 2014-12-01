@@ -179,8 +179,8 @@ public class FileChooser extends VisWindow {
 		backButton = new VisImageButton(style.iconArrowLeft);
 		forwardButton = new VisImageButton(style.iconArrowRight);
 		forwardButton.setDisabled(true);
-		forwardButton.setGeneateDisabledImage(true);
-		backButton.setGeneateDisabledImage(true);
+		forwardButton.setGenerateDisabledImage(true);
+		backButton.setGenerateDisabledImage(true);
 
 		currentPath = new VisTextField();
 

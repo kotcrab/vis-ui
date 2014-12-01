@@ -68,7 +68,7 @@ public class VisImageButton extends Button implements Focusable {
 		});
 	}
 
-	public void setGeneateDisabledImage (boolean generate) {
+	public void setGenerateDisabledImage (boolean generate) {
 		generateDisabledImage = true;
 	}
 
