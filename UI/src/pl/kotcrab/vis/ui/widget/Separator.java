@@ -23,25 +23,45 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class Separator extends Widget {
-	private Drawable bg;
+	private SeparatorStyle style;
 
 	public Separator () {
-		bg = VisUI.skin.getDrawable("splitpane");
+		style = VisUI.skin.get(SeparatorStyle.class);
 	}
-
-	@Override
-	public float getPrefWidth () {
-		return 1;
+	
+	public Separator (boolean useMenuStyle) {
+		style = VisUI.skin.get(useMenuStyle ? "menu" : "default", SeparatorStyle.class);
+	}
+	
+	public Separator (String styleName) {
+		style = VisUI.skin.get(styleName, SeparatorStyle.class);
+	}
+	
+	public Separator (SeparatorStyle style) {
+		this.style = style;
 	}
 
 	@Override
 	public float getPrefHeight () {
-		return 3;
+		return style.width;
 	}
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		validate();
-		bg.draw(batch, getX(), getY(), getWidth(), getHeight());
+		style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
+	}
+
+	static public class SeparatorStyle {
+		public Drawable background;
+		public int width;
+
+		public SeparatorStyle () {
+		}
+
+		public SeparatorStyle (Drawable bg, int width) {
+			this.background = bg;
+			this.width = width;
+		}
 	}
 }

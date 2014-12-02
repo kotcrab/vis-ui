@@ -66,8 +66,13 @@ public class PopupMenu extends Table {
 		pack();
 	}
 
+	public void addSeparator () {
+		add(new Separator(true)).padTop(2).padBottom(2).fill().expand().row();
+	}
+
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
+		if (style.background != null) style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
 		super.draw(batch, parentAlpha);
 		if (style.border != null) style.border.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
@@ -109,16 +114,19 @@ public class PopupMenu extends Table {
 	}
 
 	static public class PopupMenuStyle {
+		public Drawable background;
 		public Drawable border;
 
 		public PopupMenuStyle () {
 		}
 
-		public PopupMenuStyle (Drawable border) {
+		public PopupMenuStyle (Drawable background, Drawable border) {
+			this.background = background;
 			this.border = border;
 		}
 
 		public PopupMenuStyle (PopupMenuStyle style) {
+			this.background = style.background;
 			this.border = style.border;
 		}
 	}
