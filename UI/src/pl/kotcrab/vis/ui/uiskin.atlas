@@ -333,6 +333,20 @@ selection
   orig: 1, 1
   offset: 0, 0
   index: -1
+separator
+  rotate: false
+  xy: 24, 47
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+separator-menu
+  rotate: false
+  xy: 26, 64
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
 slider
   rotate: false
   xy: 13, 20

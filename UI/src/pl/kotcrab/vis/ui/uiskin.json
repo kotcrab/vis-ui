@@ -97,7 +97,11 @@ pl.kotcrab.vis.ui.widget.VisCheckBox$VisCheckBoxStyle: {
 	focusBorder: border-circle, font: default-font, fontColor: white, disabledFontColor: grey }
 },
 pl.kotcrab.vis.ui.widget.PopupMenu$PopupMenuStyle: {
-	default: {border: border},
-	noborder: {},
+	default: {background: button, border: border},
+	noborder: {background: button},
+},
+pl.kotcrab.vis.ui.widget.Separator$SeparatorStyle: {
+	default: {background: separator, width: 3},
+	menu: {background: separator-menu, width: 3},
 },
 }
