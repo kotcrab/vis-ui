@@ -8,6 +8,7 @@
 -When FileChooser is in SelectionMode.DIRECTORIES, none directory is selected, and finish button was clicked, current directory will be selected
 -VisValidableTextField will validate input on setText() and fire ChangeEvent
 -VisValidableTextField.validateInput() method is now public
+-Added FileUtils.toFileHandle(File file)
 -Added FormValidator
 -Added VisValidableTextField()
 -Added VisValidableTextField(InputValidator validator)
