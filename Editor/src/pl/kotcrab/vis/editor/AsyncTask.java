@@ -28,7 +28,7 @@ public abstract class AsyncTask {
 	public void failed (String reason) {
 		if (listener != null) listener.failed(reason);
 	}
-
+	
 	public abstract void execute ();
 
 	public int getProgressPercent () {
