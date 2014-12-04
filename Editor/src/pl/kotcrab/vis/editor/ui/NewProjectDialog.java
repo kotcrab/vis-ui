@@ -20,6 +20,9 @@
 package pl.kotcrab.vis.editor.ui;
 
 import pl.kotcrab.vis.editor.Project;
+import pl.kotcrab.vis.editor.ProjectCreator;
+import pl.kotcrab.vis.editor.util.DialogUtils;
+import pl.kotcrab.vis.ui.FormValidator;
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.widget.VisCheckBox;
@@ -29,6 +32,7 @@ import pl.kotcrab.vis.ui.widget.VisValidableTextField;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 import pl.kotcrab.vis.ui.widget.file.FileChooser;
 import pl.kotcrab.vis.ui.widget.file.FileChooser.Mode;
+import pl.kotcrab.vis.ui.widget.file.FileChooser.SelectionMode;
 import pl.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 
 import com.badlogic.gdx.files.FileHandle;
@@ -38,13 +42,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class NewProjectDialog extends VisWindow {
-	@SuppressWarnings("unused") private Project project = new Project();
-
 	private FormValidator validator;
 
 	private VisValidableTextField projectRoot;
 	private VisValidableTextField sourceLoc;
 	private VisValidableTextField assetsLoc;
+
+	private VisCheckBox signFiles;
 
 	private VisTextButton chooseRootButton;
 
@@ -52,6 +56,8 @@ public class NewProjectDialog extends VisWindow {
 
 	private VisTextButton cancelButton;
 	private VisTextButton createButton;
+
+	private FileChooser fileChooser;
 
 	public NewProjectDialog () {
 		super("New Project");
@@ -61,6 +67,15 @@ public class NewProjectDialog extends VisWindow {
 		craeteUI();
 		createListeners();
 		createValidators();
+
+		fileChooser = new FileChooser(Mode.OPEN);
+		fileChooser.setSelectionMode(SelectionMode.DIRECTORIES);
+		fileChooser.setListener(new FileChooserAdapter() {
+			@Override
+			public void selected (FileHandle file) {
+				projectRoot.setText(file.file().getAbsolutePath());
+			}
+		});
 
 		pack();
 		centerWindow();
@@ -75,7 +90,7 @@ public class NewProjectDialog extends VisWindow {
 		errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);
 
-		VisCheckBox signFiles = new VisCheckBox("Sign files using private key");
+		signFiles = new VisCheckBox("Sign files using private key");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
@@ -117,15 +132,7 @@ public class NewProjectDialog extends VisWindow {
 		chooseRootButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				FileChooser chooser = new FileChooser("Choose file", Mode.OPEN);
-				getStage().addActor(chooser.fadeIn());
-
-				chooser.setListener(new FileChooserAdapter() {
-					@Override
-					public void selected (FileHandle file) {
-						projectRoot.setText(file.file().getAbsolutePath());
-					}
-				});
+				getStage().addActor(fileChooser.fadeIn());
 			}
 		});
 
@@ -150,11 +157,24 @@ public class NewProjectDialog extends VisWindow {
 		validator.notEmpty(projectRoot, "Project root path cannot be empty!");
 		validator.notEmpty(sourceLoc, "Source location cannot be empty!");
 		validator.notEmpty(assetsLoc, "Assets location cannot be empty!");
+
+		validator.fileExist(projectRoot, "Project folder does not exist!");
+		validator.fileExist(sourceLoc, projectRoot, "Source folder does not exist!");
+		validator.fileExist(assetsLoc, projectRoot, "Assets folder does not exist!");
 	}
 
 	private void createProject () {
-// project.root = projectRoot.getText();
-// project.assets = assetsLoc.getText();
-// project.source = sourceLoc.getText();
+		Project project = new Project();
+		project.root = projectRoot.getText();
+		project.assets = assetsLoc.getText();
+		project.source = sourceLoc.getText();
+
+		String error = ProjectCreator.verify(project);
+		if (error == null) {
+			ProjectCreator.create(project, signFiles.isChecked());
+			fadeOut();
+		} else
+			DialogUtils.showOKDialog(getStage(), "Error", error);
+
 	}
 }
