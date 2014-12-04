@@ -24,6 +24,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
+import pl.kotcrab.vis.editor.App;
 import pl.kotcrab.vis.editor.Editor;
 
 import com.badlogic.gdx.Gdx;
@@ -32,6 +33,8 @@ import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 
 public class EditorFrame extends JFrame {
 	public static void main (String[] args) {
+		App.init();
+		
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run () {

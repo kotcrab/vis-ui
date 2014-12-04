@@ -19,5 +19,15 @@
 
 package pl.kotcrab.vis.editor;
 
+import pl.kotcrab.utils.Log;
+import pl.kotcrab.utils.event.EventBus;
+
 public class App {
+	public static EventBus eventBus;
+
+	public static void init () {
+		Log.init();
+
+		eventBus = new EventBus();
+	}
 }
