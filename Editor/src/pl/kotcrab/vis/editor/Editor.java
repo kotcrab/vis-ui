@@ -19,33 +19,40 @@
 
 package pl.kotcrab.vis.editor;
 
+import pl.kotcrab.utils.event.Event;
+import pl.kotcrab.utils.event.EventListener;
 import pl.kotcrab.vis.editor.module.MenuBarModule;
+import pl.kotcrab.vis.editor.module.ModuleManager;
+import pl.kotcrab.vis.editor.module.StatusBar;
 import pl.kotcrab.vis.editor.ui.EditorFrame;
-import pl.kotcrab.vis.editor.ui.NewProjectDialog;
 import pl.kotcrab.vis.ui.VisUI;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class Editor extends ApplicationAdapter implements EditorListener {
-	private static Editor instance;
+public class Editor extends ApplicationAdapter implements EditorListener, EventListener {
+	public static Editor instance;
 
 	private EditorFrame frame;
 
 	private Stage stage;
 	private Table root;
 
+	private ModuleManager moduleManager;
+
+	private StatusBar statusBar;
+
 	@Override
 	public void create () {
 		instance = this;
 		Assets.load();
 		VisUI.load();
+
+		App.eventBus.register(this);
 
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
@@ -54,16 +61,22 @@ public class Editor extends ApplicationAdapter implements EditorListener {
 		root.setFillParent(true);
 		stage.addActor(root);
 
-		MenuBarModule menuBar = new MenuBarModule();
-		menuBar.addToStage(root);
+		moduleManager = new ModuleManager();
+
+		moduleManager.add(new MenuBarModule());
+
+		root.add(new Table()).expand().fill().row();
+
+		moduleManager.add(new StatusBar());
 
 		// debug section
-		stage.addActor(new NewProjectDialog());
+		// stage.addActor(new NewProjectDialog());
+		// stage.addActor(new AsyncTaskProgressDialog(null));
 		// stage.addActor(new FileChooser(stage, "Choose file", FileChooser.Mode.SAVE));
 	}
 
-	public static Editor getInstnace () {
-		return instance;
+	public StatusBar getStatusBar () {
+		return statusBar;
 	}
 
 	@Override
@@ -81,11 +94,11 @@ public class Editor extends ApplicationAdapter implements EditorListener {
 	@Override
 	public void dispose () {
 		stage.dispose();
-		// shapeRenderer.dispose();
 
 		Assets.dispose();
 		VisUI.dispose();
 
+		moduleManager.dispose();
 		frame.dispose();
 	}
 
@@ -104,8 +117,17 @@ public class Editor extends ApplicationAdapter implements EditorListener {
 		return stage;
 	}
 
+	public Table getRoot () {
+		return root;
+	}
+
 	public void setEditorFrame (EditorFrame frame) {
 		this.frame = frame;
+	}
+
+	@Override
+	public boolean onEvent (Event event) {
+		return false;
 	}
 
 }

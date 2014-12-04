@@ -32,14 +32,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-public class MenuBarModule {
+public class MenuBarModule extends ModuleAdapter {
 	private EditorListener listener;
 
 	private Stage stage;
 	private MenuBar menuBar;
 
 	public MenuBarModule () {
-		listener = Editor.getInstnace();
+		listener = Editor.instance;
 
 		this.stage = listener.getStage();
 		this.menuBar = new MenuBar(stage);
@@ -48,6 +48,12 @@ public class MenuBarModule {
 		createHelpMenu();
 	}
 
+	@Override
+	public void added () {
+		addToStage(Editor.instance.getRoot());
+	}
+
+	
 	private void createFileMenu () {
 		Menu fileMenu = new Menu("File");
 		menuBar.addMenu(fileMenu);
@@ -61,6 +67,8 @@ public class MenuBarModule {
 
 		fileMenu.addItem(new MenuItem("Load project...", Assets.getIcon("load")));
 		fileMenu.addItem(new MenuItem("Close project"));
+		
+		fileMenu.addSeparator();
 
 		fileMenu.addItem(new MenuItem("Exit", Assets.getIcon("exit"), new ChangeListener() {
 			@Override
@@ -80,6 +88,6 @@ public class MenuBarModule {
 
 	public void addToStage (Table root) {
 		root.left().top();
-		root.add(menuBar.getTable()).fillX().expandX();
+		root.add(menuBar.getTable()).fillX().expandX().row();
 	}
 }
