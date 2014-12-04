@@ -41,6 +41,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>pl.kotcrab</groupId>
+			<artifactId>kotcrab-utils</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
 			<groupId>com.esotericsoftware.kryo</groupId>
 			<artifactId>kryo</artifactId>
 			<version>2.24.0</version>
