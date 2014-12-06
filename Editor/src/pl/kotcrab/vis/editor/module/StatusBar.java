@@ -5,7 +5,7 @@ import pl.kotcrab.utils.event.Event;
 import pl.kotcrab.utils.event.EventListener;
 import pl.kotcrab.vis.editor.App;
 import pl.kotcrab.vis.editor.Editor;
-import pl.kotcrab.vis.editor.StatusBarEvent;
+import pl.kotcrab.vis.editor.event.StatusBarEvent;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.widget.VisLabel;
@@ -34,7 +34,7 @@ public class StatusBar extends ModuleAdapter implements EventListener {
 	}
 
 	public void addToStage (Table root) {
-		root.add(table).fillX().expandX();
+		root.add(table).fillX().expandX().row();
 	}
 
 	public void setText (String newText, int timeSeconds) {

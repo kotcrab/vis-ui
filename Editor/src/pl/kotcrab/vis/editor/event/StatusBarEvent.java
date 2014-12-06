@@ -1,5 +1,5 @@
 
-package pl.kotcrab.vis.editor;
+package pl.kotcrab.vis.editor.event;
 
 import pl.kotcrab.utils.event.Event;
 
