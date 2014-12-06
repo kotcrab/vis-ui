@@ -34,9 +34,8 @@ public class Assets {
 	public static void dispose () {
 		icons.dispose();
 	}
-	
-	public static Drawable getIcon(String name)
-	{
+
+	public static Drawable getIcon (String name) {
 		return new TextureRegionDrawable(icons.findRegion(name));
 	}
 

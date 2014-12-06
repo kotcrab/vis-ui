@@ -23,5 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 public interface EditorListener {
 	public void requestExit ();
+
 	public Stage getStage ();
 }

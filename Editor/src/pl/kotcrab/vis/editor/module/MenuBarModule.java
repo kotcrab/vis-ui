@@ -53,7 +53,6 @@ public class MenuBarModule extends ModuleAdapter {
 		addToStage(Editor.instance.getRoot());
 	}
 
-	
 	private void createFileMenu () {
 		Menu fileMenu = new Menu("File");
 		menuBar.addMenu(fileMenu);
@@ -67,7 +66,7 @@ public class MenuBarModule extends ModuleAdapter {
 
 		fileMenu.addItem(new MenuItem("Load project...", Assets.getIcon("load")));
 		fileMenu.addItem(new MenuItem("Close project"));
-		
+
 		fileMenu.addSeparator();
 
 		fileMenu.addItem(new MenuItem("Exit", Assets.getIcon("exit"), new ChangeListener() {

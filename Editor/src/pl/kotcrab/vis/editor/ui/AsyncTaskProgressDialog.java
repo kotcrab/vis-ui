@@ -26,13 +26,9 @@ import pl.kotcrab.vis.editor.util.DialogUtils;
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.widget.VisLabel;
 import pl.kotcrab.vis.ui.widget.VisProgressBar;
-import pl.kotcrab.vis.ui.widget.VisTextButton;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class AsyncTaskProgressDialog extends VisWindow {
 	public AsyncTaskProgressDialog (String title, AsyncTask task) {
