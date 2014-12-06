@@ -17,11 +17,12 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package pl.kotcrab.vis.editor.ui;
 
 import pl.kotcrab.vis.editor.AsyncTask;
 import pl.kotcrab.vis.editor.AsyncTaskListener;
+import pl.kotcrab.vis.editor.Editor;
+import pl.kotcrab.vis.editor.util.DialogUtils;
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.widget.VisLabel;
 import pl.kotcrab.vis.ui.widget.VisProgressBar;
@@ -34,9 +35,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class AsyncTaskProgressDialog extends VisWindow {
-
-	private boolean failed;
-
 	public AsyncTaskProgressDialog (String title, AsyncTask task) {
 		super(title);
 		setTitleAlignment(Align.center);
@@ -53,7 +51,6 @@ public class AsyncTaskProgressDialog extends VisWindow {
 		add(progressBar).width(300).padTop(6).padBottom(6);
 
 		task.setListener(new AsyncTaskListener() {
-
 			@Override
 			public void progressChanged (int newProgressPercent) {
 				progressBar.setValue(newProgressPercent);
@@ -66,27 +63,17 @@ public class AsyncTaskProgressDialog extends VisWindow {
 
 			@Override
 			public void finished () {
-				if (failed == false) fadeOut();
+				fadeOut();
 			}
 
 			@Override
 			public void failed (String reason) {
-				failed = true;
-				statusLabel.setText("Error: " + reason);
-				statusLabel.setColor(Color.RED);
+				failed(reason, null);
+			}
 
-				VisTextButton okButton = new VisTextButton("OK");
-				okButton.addListener(new ChangeListener() {
-					@Override
-					public void changed (ChangeEvent event, Actor actor) {
-						fadeOut();
-					}
-				});
-
-				row();
-				add(okButton).right();
-				pack();
-				centerWindow();
+			@Override
+			public void failed (String reason, Exception ex) {
+				DialogUtils.showErrorDialog(Editor.instance.getStage(), reason, ex);
 			}
 		});
 

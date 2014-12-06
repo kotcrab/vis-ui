@@ -17,7 +17,6 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 package pl.kotcrab.vis.editor;
 
 public abstract class AsyncTask {
@@ -33,7 +32,12 @@ public abstract class AsyncTask {
 		runnable = new Runnable() {
 			@Override
 			public void run () {
-				execute();
+				try {
+					execute();
+				} catch (Exception e) {
+					failed(e.getMessage(), e);
+				}
+
 				if (listener != null) listener.finished();
 			}
 		};
@@ -47,7 +51,11 @@ public abstract class AsyncTask {
 	public void failed (String reason) {
 		if (listener != null) listener.failed(reason);
 	}
-	
+
+	public void failed (String reason, Exception ex) {
+		if (listener != null) listener.failed(reason, ex);
+	}
+
 	public abstract void execute ();
 
 	public int getProgressPercent () {

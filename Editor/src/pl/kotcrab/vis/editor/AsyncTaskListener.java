@@ -27,4 +27,6 @@ public interface AsyncTaskListener {
 	public void finished ();
 
 	public void failed (String reason);
+
+	public void failed (String reason, Exception ex);
 }
