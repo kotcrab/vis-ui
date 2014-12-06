@@ -19,17 +19,101 @@
 
 package pl.kotcrab.vis.editor.util;
 
+import pl.kotcrab.utils.ClipboardUtils;
+import pl.kotcrab.utils.ExceptionUtils;
+import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.widget.VisDialog;
+import pl.kotcrab.vis.ui.widget.VisLabel;
+import pl.kotcrab.vis.ui.widget.VisScrollPane;
+import pl.kotcrab.vis.ui.widget.VisTextButton;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class DialogUtils {
-	public static void showOKDialog (Stage stage, String title,  String text) {
+	public static void showOKDialog (Stage stage, String title, String text) {
 		VisDialog dialog = new VisDialog(title);
 		dialog.text(text);
 		dialog.button("OK");
 		dialog.pack();
 		dialog.centerWindow();
 		stage.addActor(dialog.fadeIn());
+	}
+
+	public static void showErrorDialog (Stage stage, String text) {
+		showErrorDialog(stage, text, (String)null);
+	}
+
+	public static void showErrorDialog (Stage stage, String text, Exception exception) {
+		showErrorDialog(stage, text, ExceptionUtils.getStackTrace(exception));
+	}
+
+	public static void showErrorDialog (Stage stage, String text, String stackTrace) {
+		ErrorDialog dialog = new ErrorDialog(text, stackTrace);
+		stage.addActor(dialog.fadeIn());
+	}
+
+	private static class ErrorDialog extends VisDialog {
+		final int OK = 0;
+		final int DETIALS = 1;
+
+		private VisTable detailsTable = new VisTable(true);
+		private Cell<?> detailsCell;
+
+		public ErrorDialog (String text, String stackTrace) {
+			super("Error");
+
+			text(text);
+
+			if (stackTrace != null) {
+				final VisTextButton copyButton = new VisTextButton("Copy");
+				final VisLabel errorLabel = new VisLabel(stackTrace);
+
+				copyButton.addListener(new ChangeListener() {
+					@Override
+					public void changed (ChangeEvent event, Actor actor) {
+						ClipboardUtils.copy(errorLabel.getText().toString());
+						copyButton.setText("Copied");
+					}
+				});
+
+				detailsTable.add(new VisLabel("Details:")).left().expand().padTop(6);
+				detailsTable.add(copyButton);
+				detailsTable.row();
+				detailsTable.add(createScrollPane(errorLabel)).colspan(2).width(550).height(300);
+
+				getContentTable().row();
+				detailsCell = getContentTable().add(detailsTable);
+				detailsCell.setActor(null);
+			}
+
+			button("Details", DETIALS);
+			button("OK", OK);
+			pack();
+			centerWindow();
+		}
+
+		@Override
+		protected void result (Object object) {
+			int result = (int)object;
+
+			System.out.println(result);
+			if (result == DETIALS) {
+				detailsCell.setActor(detailsCell.hasActor() ? null : detailsTable);
+				pack();
+				centerWindow();
+				cancel();
+			}
+		}
+	}
+
+	private static VisScrollPane createScrollPane (Actor widget) {
+		VisScrollPane scrollPane = new VisScrollPane(widget);
+		scrollPane.setOverscroll(false, true);
+		scrollPane.setFadeScrollBars(false);
+		scrollPane.setScrollingDisabled(true, false);
+		return scrollPane;
 	}
 }
