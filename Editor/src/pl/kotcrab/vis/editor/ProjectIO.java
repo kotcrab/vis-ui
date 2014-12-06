@@ -23,13 +23,37 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import pl.kotcrab.vis.editor.event.StatusBarEvent;
 import pl.kotcrab.vis.editor.ui.AsyncTaskProgressDialog;
 import pl.kotcrab.vis.editor.util.CopyFileVisitor;
 import pl.kotcrab.vis.ui.widget.file.FileUtils;
 
 import com.badlogic.gdx.utils.Json;
 
-public class ProjectCreator {
+public class ProjectIO {
+
+	public static boolean load (File projectRoot) throws EditorException {
+		if (projectRoot.getName() == "project.json") return loadProject(projectRoot);
+		if (projectRoot.getName() == "vis" && projectRoot.isDirectory()) return loadProject(new File(projectRoot, "project.json"));
+
+		File visFolder = new File(projectRoot, "vis");
+		if (visFolder.exists()) return loadProject(new File(visFolder, "project.json"));
+
+		throw new EditorException("Selected folder is not a Vis project!");
+	}
+
+	private static boolean loadProject (File jsonProjectFile) throws EditorException {
+
+		if (jsonProjectFile.exists() == false) throw new EditorException("Project file does not exist!");
+		Json json = new Json();
+
+		Project project = json.fromJson(Project.class, FileUtils.toFileHandle(jsonProjectFile));
+		project.root = jsonProjectFile.getParentFile().getParent();
+		
+		Editor.instance.projectLoaded(project);
+		
+		return true;
+	}
 
 	public static void create (final Project project, boolean signFiles) {
 		AsyncTask task = new AsyncTask("ProjectCreator") {

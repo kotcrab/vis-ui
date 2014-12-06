@@ -20,7 +20,7 @@
 package pl.kotcrab.vis.editor.ui;
 
 import pl.kotcrab.vis.editor.Project;
-import pl.kotcrab.vis.editor.ProjectCreator;
+import pl.kotcrab.vis.editor.ProjectIO;
 import pl.kotcrab.vis.editor.util.DialogUtils;
 import pl.kotcrab.vis.ui.FormValidator;
 import pl.kotcrab.vis.ui.TableUtils;
@@ -169,9 +169,9 @@ public class NewProjectDialog extends VisWindow {
 		project.assets = assetsLoc.getText();
 		project.source = sourceLoc.getText();
 
-		String error = ProjectCreator.verify(project);
+		String error = ProjectIO.verify(project);
 		if (error == null) {
-			ProjectCreator.create(project, signFiles.isChecked());
+			ProjectIO.create(project, signFiles.isChecked());
 			fadeOut();
 		} else
 			DialogUtils.showOKDialog(getStage(), "Error", error);
