@@ -18,7 +18,7 @@ package pl.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.utils.Array;
 
-public class ModuleManager {
+public class ModuleContainer {
 	private Array<Module> modules = new Array<Module>();
 	private boolean initFinished = false;
 
@@ -33,13 +33,22 @@ public class ModuleManager {
 
 		for (Module m : modules)
 			m.afterInit();
-		
+
 		initFinished = true;
+	}
+
+	public Module get (Class<? extends Module> moduleClazz) {
+		for (Module m : modules)
+			if (m.getClass() == moduleClazz) return m;
+
+		return null;
 	}
 
 	public void dispose () {
 		for (Module m : modules)
 			m.dispose();
+
+		modules.clear();
 	}
 
 }
