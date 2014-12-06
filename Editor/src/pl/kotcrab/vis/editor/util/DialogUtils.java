@@ -47,7 +47,10 @@ public class DialogUtils {
 	}
 
 	public static void showErrorDialog (Stage stage, String text, Exception exception) {
-		showErrorDialog(stage, text, ExceptionUtils.getStackTrace(exception));
+		if (exception == null)
+			showErrorDialog(stage, text, (String)null);
+		else
+			showErrorDialog(stage, text, ExceptionUtils.getStackTrace(exception));
 	}
 
 	public static void showErrorDialog (Stage stage, String text, String stackTrace) {
@@ -82,14 +85,17 @@ public class DialogUtils {
 				detailsTable.add(new VisLabel("Details:")).left().expand().padTop(6);
 				detailsTable.add(copyButton);
 				detailsTable.row();
-				detailsTable.add(createScrollPane(errorLabel)).colspan(2).width(550).height(300);
+
+				VisTable errorTable = new VisTable();
+				errorTable.add(errorLabel).top().expand().fillX();
+				detailsTable.add(createScrollPane(errorTable)).colspan(2).width(550).height(300);
 
 				getContentTable().row();
 				detailsCell = getContentTable().add(detailsTable);
 				detailsCell.setActor(null);
+				button("Details", DETIALS);
 			}
 
-			button("Details", DETIALS);
 			button("OK", OK);
 			pack();
 			centerWindow();
@@ -99,7 +105,6 @@ public class DialogUtils {
 		protected void result (Object object) {
 			int result = (int)object;
 
-			System.out.println(result);
 			if (result == DETIALS) {
 				detailsCell.setActor(detailsCell.hasActor() ? null : detailsTable);
 				pack();
