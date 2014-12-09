@@ -17,16 +17,18 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor.util;
+package pl.kotcrab.vis.ui.util;
 
-import pl.kotcrab.utils.ClipboardUtils;
-import pl.kotcrab.utils.ExceptionUtils;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.widget.VisDialog;
 import pl.kotcrab.vis.ui.widget.VisLabel;
 import pl.kotcrab.vis.ui.widget.VisScrollPane;
 import pl.kotcrab.vis.ui.widget.VisTextButton;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
@@ -50,7 +52,7 @@ public class DialogUtils {
 		if (exception == null)
 			showErrorDialog(stage, text, (String)null);
 		else
-			showErrorDialog(stage, text, ExceptionUtils.getStackTrace(exception));
+			showErrorDialog(stage, text, getStackTrace(exception));
 	}
 
 	public static void showErrorDialog (Stage stage, String text, String stackTrace) {
@@ -77,7 +79,7 @@ public class DialogUtils {
 				copyButton.addListener(new ChangeListener() {
 					@Override
 					public void changed (ChangeEvent event, Actor actor) {
-						ClipboardUtils.copy(errorLabel.getText().toString());
+						Gdx.app.getClipboard().setContents((errorLabel.getText().toString()));
 						copyButton.setText("Copied");
 					}
 				});
@@ -88,7 +90,7 @@ public class DialogUtils {
 
 				VisTable errorTable = new VisTable();
 				errorTable.add(errorLabel).top().expand().fillX();
-				detailsTable.add(createScrollPane(errorTable)).colspan(2).width(550).height(300);
+				detailsTable.add(createScrollPane(errorTable)).colspan(2).width(600).height(300);
 
 				getContentTable().row();
 				detailsCell = getContentTable().add(detailsTable);
@@ -103,7 +105,7 @@ public class DialogUtils {
 
 		@Override
 		protected void result (Object object) {
-			int result = (int)object;
+			int result = (Integer)object;
 
 			if (result == DETIALS) {
 				detailsCell.setActor(detailsCell.hasActor() ? null : detailsTable);
@@ -118,7 +120,13 @@ public class DialogUtils {
 		VisScrollPane scrollPane = new VisScrollPane(widget);
 		scrollPane.setOverscroll(false, true);
 		scrollPane.setFadeScrollBars(false);
-		scrollPane.setScrollingDisabled(true, false);
 		return scrollPane;
+	}
+
+	public static String getStackTrace (Throwable throwable) {
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw, true);
+		throwable.printStackTrace(pw);
+		return sw.getBuffer().toString();
 	}
 }

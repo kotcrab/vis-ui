@@ -19,6 +19,7 @@
 -Added VisValidableTextField.getValidator()
 -Added VisValidableTextField.getValidators()
 -Added MenuItem(String text, Drawable image)
+-Added DialogUtils
 
 [0.1.1]
 -Updated menu bar look

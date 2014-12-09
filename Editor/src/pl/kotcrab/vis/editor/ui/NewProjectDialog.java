@@ -21,10 +21,10 @@ package pl.kotcrab.vis.editor.ui;
 
 import pl.kotcrab.vis.editor.Project;
 import pl.kotcrab.vis.editor.ProjectIO;
-import pl.kotcrab.vis.editor.util.DialogUtils;
 import pl.kotcrab.vis.ui.FormValidator;
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisTable;
+import pl.kotcrab.vis.ui.util.DialogUtils;
 import pl.kotcrab.vis.ui.widget.VisCheckBox;
 import pl.kotcrab.vis.ui.widget.VisLabel;
 import pl.kotcrab.vis.ui.widget.VisTextButton;
