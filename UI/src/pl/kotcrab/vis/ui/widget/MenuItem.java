@@ -18,6 +18,7 @@ package pl.kotcrab.vis.ui.widget;
 
 import pl.kotcrab.vis.ui.VisUI;
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -35,6 +36,8 @@ public class MenuItem extends Button {
 	private final Image image;
 	private final Label label;
 	private TextButtonStyle style;
+
+	private Cell<VisLabel> shortcutLabelCell;
 
 	public MenuItem (String text) {
 		this(text, null, VisUI.skin.get(TextButtonStyle.class));
@@ -71,8 +74,6 @@ public class MenuItem extends Button {
 		add(label).expand().fill();
 
 		setStyle(style);
-
-		setSize(getPrefWidth(), getPrefHeight());
 	}
 
 	@Override
@@ -111,6 +112,23 @@ public class MenuItem extends Button {
 		super.draw(batch, parentAlpha);
 	}
 
+	public MenuItem setShortcut (int keycode) {
+		return setShortcut(Keys.toString(keycode));
+	}
+
+	public MenuItem setShortcut (int modifier, int keycode) {
+		return setShortcut(Keys.toString(modifier) + "+" + Keys.toString(keycode));
+	}
+
+	public MenuItem setShortcut (String text) {
+		if (shortcutLabelCell == null)
+			shortcutLabelCell = add(new VisLabel(text, "menuitem-shortcut")).padLeft(10).right();
+		else
+			shortcutLabelCell.getActor().setText(text);
+		
+		return this;
+	}
+
 	public Image getImage () {
 		return image;
 	}
@@ -134,5 +152,4 @@ public class MenuItem extends Button {
 	public CharSequence getText () {
 		return label.getText();
 	}
-
 }

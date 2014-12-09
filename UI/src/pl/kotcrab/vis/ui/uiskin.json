@@ -6,7 +6,8 @@ com.badlogic.gdx.graphics.Color: {
 	white: { a: 1, b: 1, g: 1, r: 1 },
 	red: { a: 1, b: 0, g: 0, r: 1 },
 	black: { a: 1, b: 0, g: 0, r: 0 },
-	grey: { a: 1, b: 0.32, g: 0.32, r: 0.32 }
+	grey: { a: 1, b: 0.32, g: 0.32, r: 0.32 },
+	menuitem-grey: { a: 1, b: 0.65, g: 0.65, r: 0.65 },
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } }
@@ -50,7 +51,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 	default-vertical: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
-	default: { font: default-font, fontColor: white }
+	default: { font: default-font, fontColor: white },
+	menuitem-shortcut: { font: default-font, fontColor: menuitem-grey },
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: { selection: selection, background: textfield, font: default-font, fontColor: white, cursor: cursor }
