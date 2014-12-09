@@ -98,7 +98,7 @@ public class PopupMenu extends Table {
 	@Override
 	protected void setStage (Stage stage) {
 		super.setStage(stage);
-		if (getStage() != null) getStage().addListener(autoRemoveListener);
+		if (stage != null) stage.addListener(autoRemoveListener);
 	}
 
 	@Override
