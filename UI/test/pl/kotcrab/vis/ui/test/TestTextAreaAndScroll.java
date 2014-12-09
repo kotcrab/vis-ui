@@ -43,8 +43,7 @@ public class TestTextAreaAndScroll extends VisWindow {
 			addNormalComponents();
 
 		setSize(180, 380);
-		centerWindow();
-		setPosition(getX() - 380, getY());
+		setPosition(40, 280);
 	}
 
 	private void addNormalComponents () {

@@ -23,8 +23,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -43,7 +41,6 @@ class TestApplication extends ApplicationAdapter {
 	private static final boolean USE_VIS_COMPONENTS = true;
 
 	private Stage stage;
-	private ShapeRenderer shapeRenderer;
 
 	@Override
 	public void create () {
@@ -59,14 +56,11 @@ class TestApplication extends ApplicationAdapter {
 		stage.addActor(new TestSplitPane(USE_VIS_COMPONENTS));
 		stage.addActor(new TestVertical(USE_VIS_COMPONENTS));
 		stage.addActor(new TestValidator(USE_VIS_COMPONENTS));
-
-		shapeRenderer = new ShapeRenderer();
 	}
 
 	@Override
 	public void resize (int width, int height) {
 		stage.getViewport().update(width, height, true);
-		shapeRenderer.setTransformMatrix(new Matrix4().setToOrtho2D(0, 0, width, height));
 	}
 
 	@Override
@@ -81,7 +75,6 @@ class TestApplication extends ApplicationAdapter {
 		VisUI.dispose();
 
 		stage.dispose();
-		shapeRenderer.dispose();
 	}
 
 }

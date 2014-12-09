@@ -40,8 +40,7 @@ public class TestVertical extends VisWindow {
 			addNormalComponents();
 
 		setSize(100, 200);
-		centerWindow();
-		setPosition(getX() + 380, getY() - 200);
+		setPosition(680, 40);
 	}
 
 	private void addNormalComponents () {

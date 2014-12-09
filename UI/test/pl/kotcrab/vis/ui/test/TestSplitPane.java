@@ -41,8 +41,7 @@ public class TestSplitPane extends VisWindow {
 			addNormalComponents();
 
 		setSize(300, 150);
-		centerWindow();
-		setPosition(getX(), getY() - 170);
+		setPosition(350, 40);
 	}
 
 	private void addVisComponents () {
