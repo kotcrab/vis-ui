@@ -675,8 +675,6 @@ public class FileChooser extends VisWindow {
 		public boolean accept (File f) {
 			if (f.isHidden()) return false;
 			if (mode == Mode.OPEN ? f.canRead() == false : f.canWrite() == false) return false;
-			if (f.isFile()) return true;
-			if (f.list() == null) return false;
 
 			return true;
 		}
