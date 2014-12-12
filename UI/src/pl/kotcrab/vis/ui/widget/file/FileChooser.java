@@ -690,7 +690,7 @@ public class FileChooser extends VisWindow {
 		public FileItem (final FileHandle file, Drawable icon) {
 			this.file = file;
 			name = new VisLabel(file.name());
-			name.setEllipse(true);
+			name.setEllipsis(true);
 
 			if (file.isDirectory())
 				size = new VisLabel("");
@@ -822,7 +822,7 @@ public class FileChooser extends VisWindow {
 		public ShortcutItem (final File file, String customName, Drawable icon) {
 			this.file = file;
 			name = new VisLabel(customName);
-			name.setEllipse(true);
+			name.setEllipsis(true);
 			add(new Image(icon)).padTop(3);
 			Cell<VisLabel> labelCell = add(name).expand().fill().padRight(6);
 
