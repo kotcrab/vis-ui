@@ -52,8 +52,8 @@ public class DialogUtils {
 			showErrorDialog(stage, text, getStackTrace(exception));
 	}
 
-	public static void showErrorDialog (Stage stage, String text, String stackTrace) {
-		ErrorDialog dialog = new ErrorDialog(text, stackTrace);
+	public static void showErrorDialog (Stage stage, String text, String details) {
+		ErrorDialog dialog = new ErrorDialog(text, details);
 		stage.addActor(dialog.fadeIn());
 	}
 
@@ -120,7 +120,7 @@ public class DialogUtils {
 		return scrollPane;
 	}
 
-	public static String getStackTrace (Throwable throwable) {
+	private static String getStackTrace (Throwable throwable) {
 		StringWriter sw = new StringWriter();
 		PrintWriter pw = new PrintWriter(sw, true);
 		throwable.printStackTrace(pw);
