@@ -140,10 +140,4 @@ public class MenuBar {
 	public Table getTable () {
 		return mainTable;
 	}
-
-	/** Calling no longer required, currently does nothing */
-	@Deprecated
-	public void resize () {
-		// closeMenu();
-	}
 }
