@@ -1,7 +1,9 @@
-VisSceneEditor
-==============
+VisEditor
+=========
 
-#### I'm recreating this project, so source code here is not up to date, though you can still use version 0.0.1 and read documentation for it in the wiki.
+### If you are looking for VisUI go [here](https://github.com/kotcrab/VisEditor/wiki/VisUI).
+
+#### I'm recreating editor project, so source code here is not up to date, though you can still use version 0.0.1 and read documentation for it in the wiki.
 
 VisSceneEditor is a real-time simple 2D scene editor for Libgdx.
 
