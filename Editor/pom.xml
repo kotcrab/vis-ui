@@ -66,10 +66,12 @@
 					<exclude>**/*.java</exclude>
 				</excludes>
 			</resource>
+			<resource>
+				<directory>assets</directory>
+			</resource>
 		</resources>
 
 		<plugins>
-
 			<plugin> <!-- Compiler -->
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
