@@ -42,8 +42,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class NewProjectDialog extends VisWindow {
-	private FormValidator validator;
-
 	private VisValidableTextField projectRoot;
 	private VisValidableTextField sourceLoc;
 	private VisValidableTextField assetsLoc;
@@ -152,7 +150,7 @@ public class NewProjectDialog extends VisWindow {
 	}
 
 	private void createValidators () {
-		validator = new FormValidator(createButton, errorLabel);
+		FormValidator validator = new FormValidator(createButton, errorLabel);
 
 		validator.notEmpty(projectRoot, "Project root path cannot be empty!");
 		validator.notEmpty(sourceLoc, "Source location cannot be empty!");
