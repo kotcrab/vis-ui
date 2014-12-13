@@ -112,7 +112,10 @@ public class MenuBarModule extends ModuleAdapter {
 		menu.addItem(new MenuItem("New Scene...", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				stage.addActor(new NewSceneDialog().fadeIn());
+				if (editor.isProjectLoaded())
+					stage.addActor(new NewSceneDialog().fadeIn());
+				else
+					editor.showProjectNotLoadedMsg();
 			}
 		}));
 	}

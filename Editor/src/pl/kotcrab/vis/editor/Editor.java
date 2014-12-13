@@ -140,7 +140,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	public boolean onEvent (Event e) {
 		return false;
 	}
-	
+
 	public boolean isProjectLoaded () {
 		return projectLoaded;
 	}
@@ -157,6 +157,10 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectModuleContainer.add(new FileAccessModule(project));
 		App.eventBus.post(new StatusBarEvent("Project loaded!", 3));
 		eventBus.post(new ProjectStatusEvent(Status.Loaded));
+	}
+
+	public void showProjectNotLoadedMsg () {
+		DialogUtils.showErrorDialog(stage, "You must load a project before you can use this option!");
 	}
 
 }
