@@ -64,9 +64,10 @@ public class FormValidator {
 		button.setDisabled(false);
 		errorMsgLabel.setText("");
 
-		for (VisValidableTextField field : fields) {
+		for (VisValidableTextField field : fields)
 			field.validateInput();
 
+		for (VisValidableTextField field : fields) {
 			if (field.isInputValid() == false) {
 
 				Array<InputValidator> validators = field.getValidators();
