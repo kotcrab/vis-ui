@@ -21,12 +21,20 @@ package pl.kotcrab.vis.editor.module;
 
 import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.Editor;
+import pl.kotcrab.vis.editor.EditorException;
 import pl.kotcrab.vis.editor.EditorListener;
+import pl.kotcrab.vis.editor.ProjectIO;
 import pl.kotcrab.vis.editor.ui.NewProjectDialog;
+import pl.kotcrab.vis.ui.util.DialogUtils;
 import pl.kotcrab.vis.ui.widget.Menu;
 import pl.kotcrab.vis.ui.widget.MenuBar;
 import pl.kotcrab.vis.ui.widget.MenuItem;
+import pl.kotcrab.vis.ui.widget.file.FileChooser;
+import pl.kotcrab.vis.ui.widget.file.FileChooser.Mode;
+import pl.kotcrab.vis.ui.widget.file.FileChooser.SelectionMode;
+import pl.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -38,11 +46,26 @@ public class MenuBarModule extends ModuleAdapter {
 	private Stage stage;
 	private MenuBar menuBar;
 
+	private FileChooser chooser;
+
 	public MenuBarModule () {
 		listener = Editor.instance;
 
 		this.stage = listener.getStage();
 		this.menuBar = new MenuBar(stage);
+
+		chooser = new FileChooser(Mode.OPEN);
+		chooser.setSelectionMode(SelectionMode.FILES_AND_DIRECTORIES);
+		chooser.setListener(new FileChooserAdapter() {
+			@Override
+			public void selected (FileHandle file) {
+				try {
+					ProjectIO.load(file.file());
+				} catch (EditorException e) {
+					DialogUtils.showErrorDialog(stage, e.getMessage(), e);
+				}
+			}
+		});
 
 		createFileMenu();
 		createHelpMenu();
@@ -64,7 +87,12 @@ public class MenuBarModule extends ModuleAdapter {
 			}
 		}));
 
-		fileMenu.addItem(new MenuItem("Load project...", Assets.getIcon("load")));
+		fileMenu.addItem(new MenuItem("Load project...", Assets.getIcon("load"), new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				stage.addActor(chooser.fadeIn());
+			}
+		}));
 		fileMenu.addItem(new MenuItem("Close project"));
 
 		fileMenu.addSeparator();

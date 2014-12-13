@@ -20,12 +20,19 @@
 package pl.kotcrab.vis.editor;
 
 import pl.kotcrab.utils.event.Event;
+import pl.kotcrab.utils.event.EventBus;
 import pl.kotcrab.utils.event.EventListener;
+import pl.kotcrab.vis.editor.event.ProjectStatusEvent;
+import pl.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
+import pl.kotcrab.vis.editor.event.StatusBarEvent;
+import pl.kotcrab.vis.editor.module.FileAccessModule;
 import pl.kotcrab.vis.editor.module.MenuBarModule;
-import pl.kotcrab.vis.editor.module.ModuleManager;
+import pl.kotcrab.vis.editor.module.ModuleContainer;
+import pl.kotcrab.vis.editor.module.ProjectModule;
 import pl.kotcrab.vis.editor.module.StatusBar;
 import pl.kotcrab.vis.editor.ui.EditorFrame;
 import pl.kotcrab.vis.ui.VisUI;
+import pl.kotcrab.vis.ui.util.DialogUtils;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -36,19 +43,24 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Editor extends ApplicationAdapter implements EditorListener, EventListener {
 	public static Editor instance;
+	private EventBus eventBus;
 
 	private EditorFrame frame;
 
 	private Stage stage;
 	private Table root;
 
-	private ModuleManager moduleManager;
+	private ModuleContainer moduleContainer;
+	private ModuleContainer projectModuleContainer;
+
+	private boolean projectLoaded = false;
 
 	private StatusBar statusBar;
 
 	@Override
 	public void create () {
 		instance = this;
+		eventBus = App.eventBus;
 		Assets.load();
 		VisUI.load();
 
@@ -61,13 +73,14 @@ public class Editor extends ApplicationAdapter implements EditorListener, EventL
 		root.setFillParent(true);
 		stage.addActor(root);
 
-		moduleManager = new ModuleManager();
+		moduleContainer = new ModuleContainer();
+		projectModuleContainer = new ModuleContainer();
 
-		moduleManager.add(new MenuBarModule());
+		moduleContainer.add(new MenuBarModule());
 
 		root.add(new Table()).expand().fill().row();
 
-		moduleManager.add(new StatusBar());
+		moduleContainer.add(new StatusBar());
 
 		// debug section
 		// stage.addActor(new NewProjectDialog());
@@ -98,7 +111,7 @@ public class Editor extends ApplicationAdapter implements EditorListener, EventL
 		Assets.dispose();
 		VisUI.dispose();
 
-		moduleManager.dispose();
+		moduleContainer.dispose();
 		frame.dispose();
 	}
 
@@ -126,8 +139,22 @@ public class Editor extends ApplicationAdapter implements EditorListener, EventL
 	}
 
 	@Override
-	public boolean onEvent (Event event) {
+	public boolean onEvent (Event e) {
 		return false;
+	}
+
+	public void projectLoaded (Project project) {
+		if (projectLoaded) {
+			DialogUtils.showOKDialog(getStage(), "Error", "Other project is already loaded!");
+			return;
+		}
+		projectLoaded = true;
+		// TODO unload previous project dialog
+		projectModuleContainer.dispose();
+		projectModuleContainer.add(new ProjectModule(project));
+		projectModuleContainer.add(new FileAccessModule(project));
+		App.eventBus.post(new StatusBarEvent("Project loaded!", 3));
+		eventBus.post(new ProjectStatusEvent(Status.Loaded));
 	}
 
 }
