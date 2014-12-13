@@ -86,7 +86,6 @@ public class MenuBarModule extends ModuleAdapter {
 	}
 
 	public void addToStage (Table root) {
-		root.left().top();
 		root.add(menuBar.getTable()).fillX().expandX().row();
 	}
 }
