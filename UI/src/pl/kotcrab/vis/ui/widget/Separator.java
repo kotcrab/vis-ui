@@ -28,15 +28,15 @@ public class Separator extends Widget {
 	public Separator () {
 		style = VisUI.skin.get(SeparatorStyle.class);
 	}
-	
+
 	public Separator (boolean useMenuStyle) {
 		style = VisUI.skin.get(useMenuStyle ? "menu" : "default", SeparatorStyle.class);
 	}
-	
+
 	public Separator (String styleName) {
 		style = VisUI.skin.get(styleName, SeparatorStyle.class);
 	}
-	
+
 	public Separator (SeparatorStyle style) {
 		this.style = style;
 	}

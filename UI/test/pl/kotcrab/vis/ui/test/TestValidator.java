@@ -35,5 +35,5 @@ public class TestValidator extends VisWindow {
 		pack();
 		setPosition(130, 40);
 	}
-	
+
 }

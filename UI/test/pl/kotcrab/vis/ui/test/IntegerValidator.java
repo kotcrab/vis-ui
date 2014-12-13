@@ -19,7 +19,6 @@ package pl.kotcrab.vis.ui.test;
 import pl.kotcrab.vis.ui.InputValidator;
 
 public class IntegerValidator implements InputValidator {
-
 	@Override
 	public boolean validateInput (String input) {
 		try {

@@ -136,7 +136,7 @@ public class FileChooser extends VisWindow {
 
 		init();
 	}
-	
+
 	public FileChooser (FileChooserLocale locale, Mode mode) {
 		super(locale.title);
 		this.mode = mode;
