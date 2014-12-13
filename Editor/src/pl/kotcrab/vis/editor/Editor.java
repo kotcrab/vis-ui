@@ -41,7 +41,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-public class Editor extends ApplicationAdapter implements EditorListener, EventListener {
+public class Editor extends ApplicationAdapter implements EventListener {
 	public static Editor instance;
 	private EventBus eventBus;
 
@@ -115,7 +115,6 @@ public class Editor extends ApplicationAdapter implements EditorListener, EventL
 		frame.dispose();
 	}
 
-	@Override
 	public void requestExit () {
 		// here will be fancy 'do you really want to exit' dialog
 		exit();
@@ -125,7 +124,6 @@ public class Editor extends ApplicationAdapter implements EditorListener, EventL
 		Gdx.app.exit();
 	}
 
-	@Override
 	public Stage getStage () {
 		return stage;
 	}
@@ -141,6 +139,10 @@ public class Editor extends ApplicationAdapter implements EditorListener, EventL
 	@Override
 	public boolean onEvent (Event e) {
 		return false;
+	}
+	
+	public boolean isProjectLoaded () {
+		return projectLoaded;
 	}
 
 	public void projectLoaded (Project project) {

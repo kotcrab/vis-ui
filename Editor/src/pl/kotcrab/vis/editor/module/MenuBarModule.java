@@ -22,7 +22,6 @@ package pl.kotcrab.vis.editor.module;
 import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.EditorException;
-import pl.kotcrab.vis.editor.EditorListener;
 import pl.kotcrab.vis.editor.ProjectIO;
 import pl.kotcrab.vis.editor.ui.NewProjectDialog;
 import pl.kotcrab.vis.ui.util.DialogUtils;
@@ -41,7 +40,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class MenuBarModule extends ModuleAdapter {
-	private EditorListener listener;
+	private Editor editor;
 
 	private Stage stage;
 	private MenuBar menuBar;
@@ -49,9 +48,9 @@ public class MenuBarModule extends ModuleAdapter {
 	private FileChooser chooser;
 
 	public MenuBarModule () {
-		listener = Editor.instance;
+		editor = Editor.instance;
 
-		this.stage = listener.getStage();
+		this.stage = editor.getStage();
 		this.menuBar = new MenuBar(stage);
 
 		chooser = new FileChooser(Mode.OPEN);
@@ -68,6 +67,7 @@ public class MenuBarModule extends ModuleAdapter {
 		});
 
 		createFileMenu();
+		createSceneMenu();
 		createHelpMenu();
 	}
 
@@ -77,40 +77,52 @@ public class MenuBarModule extends ModuleAdapter {
 	}
 
 	private void createFileMenu () {
-		Menu fileMenu = new Menu("File");
-		menuBar.addMenu(fileMenu);
+		Menu menu = new Menu("File");
+		menuBar.addMenu(menu);
 
-		fileMenu.addItem(new MenuItem("New project...", Assets.getIcon("new"), new ChangeListener() {
+		menu.addItem(new MenuItem("New project...", Assets.getIcon("new"), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				stage.addActor(new NewProjectDialog().fadeIn());
 			}
 		}));
 
-		fileMenu.addItem(new MenuItem("Load project...", Assets.getIcon("load"), new ChangeListener() {
+		menu.addItem(new MenuItem("Load project...", Assets.getIcon("load"), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				stage.addActor(chooser.fadeIn());
 			}
 		}));
-		fileMenu.addItem(new MenuItem("Close project"));
+		menu.addItem(new MenuItem("Close project"));
 
-		fileMenu.addSeparator();
+		menu.addSeparator();
 
-		fileMenu.addItem(new MenuItem("Exit", Assets.getIcon("exit"), new ChangeListener() {
+		menu.addItem(new MenuItem("Exit", Assets.getIcon("exit"), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				listener.requestExit();
+				editor.requestExit();
+			}
+		}));
+	}
+
+	private void createSceneMenu () {
+		Menu menu = new Menu("Scene");
+		menuBar.addMenu(menu);
+
+		menu.addItem(new MenuItem("New Scene...", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				stage.addActor(new NewSceneDialog().fadeIn());
 			}
 		}));
 	}
 
 	private void createHelpMenu () {
-		Menu helpMenu = new Menu("Help");
-		menuBar.addMenu(helpMenu);
+		Menu menu = new Menu("Help");
+		menuBar.addMenu(menu);
 
-		helpMenu.addItem(new MenuItem("Web"));
-		helpMenu.addItem(new MenuItem("About"));
+		menu.addItem(new MenuItem("Web"));
+		menu.addItem(new MenuItem("About"));
 	}
 
 	public void addToStage (Table root) {
