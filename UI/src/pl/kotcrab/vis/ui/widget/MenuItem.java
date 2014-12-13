@@ -44,6 +44,12 @@ public class MenuItem extends Button {
 		setSkin(VisUI.skin);
 	}
 
+	public MenuItem (String text, ChangeListener changeListener) {
+		this(text, null, VisUI.skin.get(TextButtonStyle.class));
+		setSkin(VisUI.skin);
+		addListener(changeListener);
+	}
+
 	public MenuItem (String text, Drawable image) {
 		this(text, image, VisUI.skin.get(TextButtonStyle.class));
 		setSkin(VisUI.skin);
@@ -112,10 +118,14 @@ public class MenuItem extends Button {
 		super.draw(batch, parentAlpha);
 	}
 
+	/** @param keycode from {@link Keys} */
 	public MenuItem setShortcut (int keycode) {
 		return setShortcut(Keys.toString(keycode));
 	}
 
+	/** Displayed as modifier+keycode (eg. Ctrl+F5)
+	 * @param modifier form {@link Keys}
+	 * @param keycode form {@link Keys} */
 	public MenuItem setShortcut (int modifier, int keycode) {
 		return setShortcut(Keys.toString(modifier) + "+" + Keys.toString(keycode));
 	}
@@ -125,7 +135,7 @@ public class MenuItem extends Button {
 			shortcutLabelCell = add(new VisLabel(text, "menuitem-shortcut")).padLeft(10).right();
 		else
 			shortcutLabelCell.getActor().setText(text);
-		
+
 		return this;
 	}
 

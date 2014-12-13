@@ -1,8 +1,9 @@
 [0.3.0]
 -LibGDX dependency version changed to 1.5.0
 -Added FileChooser(FileChooserLocale, Mode)
+-Added MenuItem (String, ChangeListener)
 -Removed deprecated resize() from MenuBar
--Fixed bug when FormValidator doesn't updated all fields borders after changes in other field 
+-Fixed bug when FormValidator doesn't updated all fields borders after changes in other field
 
 [0.2.0]
 -API change: removed Stage from VisWindow and VisDialog constructors
