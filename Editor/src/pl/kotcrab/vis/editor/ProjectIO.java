@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import pl.kotcrab.vis.editor.event.StatusBarEvent;
 import pl.kotcrab.vis.editor.ui.AsyncTaskProgressDialog;
 import pl.kotcrab.vis.editor.util.CopyFileVisitor;
+import pl.kotcrab.vis.ui.util.DialogUtils;
 import pl.kotcrab.vis.ui.widget.file.FileUtils;
 
 import com.badlogic.gdx.utils.Json;
@@ -33,8 +34,9 @@ import com.badlogic.gdx.utils.Json;
 public class ProjectIO {
 
 	public static boolean load (File projectRoot) throws EditorException {
-		if (projectRoot.getName() == "project.json") return loadProject(projectRoot);
-		if (projectRoot.getName() == "vis" && projectRoot.isDirectory()) return loadProject(new File(projectRoot, "project.json"));
+		if (projectRoot.getName().equals("project.json")) return loadProject(projectRoot);
+		if (projectRoot.getName().equals("vis") && projectRoot.isDirectory())
+			return loadProject(new File(projectRoot, "project.json"));
 
 		File visFolder = new File(projectRoot, "vis");
 		if (visFolder.exists()) return loadProject(new File(visFolder, "project.json"));
@@ -49,9 +51,9 @@ public class ProjectIO {
 
 		Project project = json.fromJson(Project.class, FileUtils.toFileHandle(jsonProjectFile));
 		project.root = jsonProjectFile.getParentFile().getParent();
-		
+
 		Editor.instance.projectLoaded(project);
-		
+
 		return true;
 	}
 
@@ -77,7 +79,7 @@ public class ProjectIO {
 				try {
 					Files.walkFileTree(standardAssetsDir.toPath(), new CopyFileVisitor(visAssetsDir.toPath()));
 				} catch (IOException e) {
-					failed(e.getMessage());
+					failed(e.getMessage(), e);
 					e.printStackTrace();
 				}
 
@@ -91,6 +93,13 @@ public class ProjectIO {
 
 				setProgressPercent(100);
 				App.eventBus.post(new StatusBarEvent("Project created!", 3));
+
+				try {
+					ProjectIO.load(projectFile);
+				} catch (EditorException e) {
+					DialogUtils.showErrorDialog(Editor.instance.getStage(), "Error occurred while loading project", e);
+					e.printStackTrace();
+				}
 			}
 		};
 
