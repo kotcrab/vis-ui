@@ -39,6 +39,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -909,6 +910,12 @@ public class FileChooser extends VisWindow {
 
 	}
 
+	@Override
+	protected void setStage (Stage stage) {
+		super.setStage(stage);
+		deselectAll();
+	}
+	
 	static public class FileChooserStyle {
 		public Drawable iconArrowLeft;
 		public Drawable iconArrowRight;

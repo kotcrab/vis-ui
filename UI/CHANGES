@@ -4,6 +4,7 @@
 -API Addition: FileChooser(FileChooserLocale, Mode)
 -API Addition: MenuItem (String, ChangeListener)
 -Fixed bug when FormValidator doesn't updated all fields borders after changes in other field
+-Chooser deselects all files when reopened
 
 [0.2.0]
 -API change: removed Stage from VisWindow and VisDialog constructors
