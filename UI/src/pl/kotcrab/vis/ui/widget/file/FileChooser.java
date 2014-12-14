@@ -869,7 +869,6 @@ public class FileChooser extends VisWindow {
 						fileMenu.buildForFavorite(favorites, file);
 						fileMenu.displayMenu(getStage(), event.getStageX(), event.getStageY());
 					}
-
 				}
 			});
 
@@ -892,7 +891,10 @@ public class FileChooser extends VisWindow {
 							showDialog(locale.popupDirectoryDoesNotExist);
 							return;
 						}
-						if (file.isDirectory()) setDirectory(file.getAbsolutePath());
+						if (file.isDirectory()) {
+							setDirectory(file.getAbsolutePath());
+							getStage().setScrollFocus(fileScrollPane);
+						}
 					}
 				}
 			});
@@ -915,7 +917,7 @@ public class FileChooser extends VisWindow {
 		super.setStage(stage);
 		deselectAll();
 	}
-	
+
 	static public class FileChooserStyle {
 		public Drawable iconArrowLeft;
 		public Drawable iconArrowRight;

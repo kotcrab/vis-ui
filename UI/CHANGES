@@ -5,6 +5,7 @@
 -API Addition: MenuItem (String, ChangeListener)
 -Fixed bug when FormValidator doesn't updated all fields borders after changes in other field
 -Chooser deselects all files when reopened
+-When clicked on drive shortcut file scroll pane table will get focus automaticly
 
 [0.2.0]
 -API change: removed Stage from VisWindow and VisDialog constructors
