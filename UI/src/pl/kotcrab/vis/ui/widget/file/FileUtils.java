@@ -34,7 +34,7 @@ public class FileUtils {
 	private static final Comparator<FileHandle> fileComparator = new Comparator<FileHandle>() {
 		@Override
 		public int compare (FileHandle f1, FileHandle f2) {
-			return f1.name().compareTo(f2.name());
+			return f1.name().toLowerCase().compareTo(f2.name().toLowerCase());
 		}
 	};
 
