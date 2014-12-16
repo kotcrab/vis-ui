@@ -17,7 +17,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	toggle: { down: button-down, checked: button-down, up: button }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
-	default: { down: button-down, up: button, over: button-over, font: default-font, fontColor: white },
+	default: { down: button-down, up: button, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey },
 	toggle: { down: button-down, up: button, checked: button-down, over: button-over, font: default-font, fontColor: white },
 	markup: { down: button-down, up: button, over: button-over, font: markup-font, fontColor: white },
 	menu-bar: { down: button-down, up: button, over: button-down, font: default-font, fontColor: white }

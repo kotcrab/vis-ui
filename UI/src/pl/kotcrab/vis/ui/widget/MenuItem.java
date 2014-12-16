@@ -37,37 +37,36 @@ public class MenuItem extends Button {
 	private final Label label;
 	private TextButtonStyle style;
 
+	private boolean generateDisabledImage = true;
+
 	private Cell<VisLabel> shortcutLabelCell;
 
 	public MenuItem (String text) {
 		this(text, null, VisUI.skin.get(TextButtonStyle.class));
-		setSkin(VisUI.skin);
 	}
 
 	public MenuItem (String text, ChangeListener changeListener) {
 		this(text, null, VisUI.skin.get(TextButtonStyle.class));
-		setSkin(VisUI.skin);
 		addListener(changeListener);
 	}
 
 	public MenuItem (String text, Drawable image) {
 		this(text, image, VisUI.skin.get(TextButtonStyle.class));
-		setSkin(VisUI.skin);
 	}
 
 	public MenuItem (String text, Drawable image, ChangeListener changeListener) {
 		this(text, image, VisUI.skin.get(TextButtonStyle.class));
-		setSkin(VisUI.skin);
 		addListener(changeListener);
 	}
 
 	public MenuItem (String text, Drawable image, String styleName) {
 		this(text, image, VisUI.skin.get(styleName, TextButtonStyle.class));
-		setSkin(VisUI.skin);
 	}
 
 	public MenuItem (String text, Drawable icon, TextButtonStyle style) {
 		super(style);
+		setSkin(VisUI.skin);
+
 		this.style = style;
 		defaults().space(3);
 
@@ -115,7 +114,23 @@ public class MenuItem extends Button {
 		else
 			fontColor = style.fontColor;
 		if (fontColor != null) label.getStyle().fontColor = fontColor;
+
+		if (generateDisabledImage) {
+			if (isDisabled())
+				image.setColor(Color.GRAY);
+			else
+				image.setColor(Color.WHITE);
+		}
+
 		super.draw(batch, parentAlpha);
+	}
+
+	public boolean isGenerateDisabledImage () {
+		return generateDisabledImage;
+	}
+
+	public void setGenerateDisabledImage (boolean generateDisabledImage) {
+		this.generateDisabledImage = generateDisabledImage;
 	}
 
 	/** @param keycode from {@link Keys} */
