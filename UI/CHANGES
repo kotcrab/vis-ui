@@ -7,6 +7,7 @@
 -FileChooser deselects all files when reopened
 -FileChooser: When clicked on drive shortcut file scroll pane table will get focus automaticly
 -FileChooser: When sorting file list chooser now ignores uppercase/lowercase
+-Fixed problem where Separator didn't set color before rendering
 
 [0.2.0]
 -API change: removed Stage from VisWindow and VisDialog constructors

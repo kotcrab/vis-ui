@@ -18,6 +18,7 @@ package pl.kotcrab.vis.ui.widget;
 
 import pl.kotcrab.vis.ui.VisUI;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -48,7 +49,8 @@ public class Separator extends Widget {
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
-		validate();
+		Color c = getColor();
+		batch.setColor(c.r, c.g, c.b, c.a);
 		style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
 
