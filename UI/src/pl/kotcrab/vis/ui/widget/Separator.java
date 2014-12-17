@@ -50,7 +50,7 @@ public class Separator extends Widget {
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		Color c = getColor();
-		batch.setColor(c.r, c.g, c.b, c.a);
+		batch.setColor(c.r, c.g, c.b, c.a * parentAlpha);
 		style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
 
