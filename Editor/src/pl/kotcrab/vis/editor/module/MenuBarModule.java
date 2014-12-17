@@ -24,6 +24,7 @@ import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.EditorException;
 import pl.kotcrab.vis.editor.ProjectIO;
 import pl.kotcrab.vis.editor.ui.NewProjectDialog;
+import pl.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
 import pl.kotcrab.vis.ui.util.DialogUtils;
 import pl.kotcrab.vis.ui.widget.Menu;
 import pl.kotcrab.vis.ui.widget.MenuBar;
@@ -45,6 +46,7 @@ public class MenuBarModule extends ModuleAdapter {
 	private Stage stage;
 	private MenuBar menuBar;
 
+	private ProjectStatusWidgetController controller;
 	private FileChooser chooser;
 
 	public MenuBarModule () {
@@ -52,6 +54,8 @@ public class MenuBarModule extends ModuleAdapter {
 
 		this.stage = editor.getStage();
 		this.menuBar = new MenuBar(stage);
+
+		controller = new ProjectStatusWidgetController();
 
 		chooser = new FileChooser(Mode.OPEN);
 		chooser.setSelectionMode(SelectionMode.FILES_AND_DIRECTORIES);
@@ -86,14 +90,23 @@ public class MenuBarModule extends ModuleAdapter {
 				stage.addActor(new NewProjectDialog().fadeIn());
 			}
 		}));
-
+		
 		menu.addItem(new MenuItem("Load project...", Assets.getIcon("load"), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				stage.addActor(chooser.fadeIn());
 			}
 		}));
-		menu.addItem(new MenuItem("Close project"));
+		
+		MenuItem closeProject = new MenuItem("Close project", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				editor.requestProjectUnload();
+			}
+		});
+		
+		menu.addItem(closeProject);
+		controller.addButton(closeProject);
 
 		menu.addSeparator();
 
@@ -109,15 +122,16 @@ public class MenuBarModule extends ModuleAdapter {
 		Menu menu = new Menu("Scene");
 		menuBar.addMenu(menu);
 
-		menu.addItem(new MenuItem("New Scene...", new ChangeListener() {
+		MenuItem item = new MenuItem("New Scene...", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				if (editor.isProjectLoaded())
-					stage.addActor(new NewSceneDialog().fadeIn());
-				else
-					editor.showProjectNotLoadedMsg();
+				stage.addActor(new NewSceneDialog().fadeIn());
 			}
-		}));
+		});
+
+		controller.addButton(item);
+
+		menu.addItem(item);
 	}
 
 	private void createHelpMenu () {
@@ -130,5 +144,10 @@ public class MenuBarModule extends ModuleAdapter {
 
 	public void addToStage (Table root) {
 		root.add(menuBar.getTable()).fillX().expandX().row();
+	}
+
+	@Override
+	public void dispose () {
+		controller.dispose();
 	}
 }

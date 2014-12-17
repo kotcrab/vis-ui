@@ -141,6 +141,13 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		return false;
 	}
 
+	public void requestProjectUnload () {
+		projectLoaded = false;
+		projectModuleContainer.dispose();
+		App.eventBus.post(new StatusBarEvent("Project unloaded!", 3));
+		eventBus.post(new ProjectStatusEvent(Status.Unloaded));
+	}
+	
 	public boolean isProjectLoaded () {
 		return projectLoaded;
 	}
@@ -158,9 +165,4 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		App.eventBus.post(new StatusBarEvent("Project loaded!", 3));
 		eventBus.post(new ProjectStatusEvent(Status.Loaded));
 	}
-
-	public void showProjectNotLoadedMsg () {
-		DialogUtils.showErrorDialog(stage, "You must load a project before you can use this option!");
-	}
-
 }
