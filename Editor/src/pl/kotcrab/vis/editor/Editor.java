@@ -161,14 +161,14 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			DialogUtils.showOKDialog(getStage(), "Error", "Other project is already loaded!");
 			return;
 		}
-		
+
 		projectLoaded = true;
 		projectModuleContainer.dispose();
 		projectModuleContainer.setProject(project);
-		
+
 		projectModuleContainer.add(new FileAccessModule());
 		App.eventBus.post(new StatusBarEvent("Project loaded!", 3));
-		
+
 		eventBus.post(new ProjectStatusEvent(Status.Loaded));
 	}
 

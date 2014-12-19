@@ -19,8 +19,7 @@
 
 package pl.kotcrab.vis.editor.module;
 
-
-public class FileAccessModule extends ProjectModule{
+public class FileAccessModule extends ProjectModule {
 
 	public FileAccessModule () {
 	}

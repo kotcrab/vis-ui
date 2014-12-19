@@ -91,21 +91,21 @@ public class MenuBarModule extends ModuleAdapter {
 				stage.addActor(new NewProjectDialog().fadeIn());
 			}
 		}));
-		
+
 		menu.addItem(new MenuItem("Load project...", Assets.getIcon("load"), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				stage.addActor(chooser.fadeIn());
 			}
 		}));
-		
+
 		MenuItem closeProject = new MenuItem("Close project", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				editor.requestProjectUnload();
 			}
 		});
-		
+
 		menu.addItem(closeProject);
 		controller.addButton(closeProject);
 

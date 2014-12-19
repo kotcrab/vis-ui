@@ -38,7 +38,6 @@ import pl.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class NewProjectDialog extends VisWindow {
