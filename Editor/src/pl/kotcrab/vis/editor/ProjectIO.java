@@ -68,11 +68,12 @@ public class ProjectIO {
 				File standardAssetsDir = new File(project.root, project.assets);
 				File visDir = new File(project.root, "vis");
 				File visAssetsDir = new File(visDir, "assets");
-				File visModulesDir = new File(visDir, "modules");
 
 				visDir.mkdir();
 				visAssetsDir.mkdir();
-				visModulesDir.mkdir();
+				
+				new File(visAssetsDir, "scene").mkdir();
+				new File(visDir, "modules").mkdir();
 
 				setProgressPercent(33);
 				setMessage("Moving assets...");
