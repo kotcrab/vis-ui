@@ -19,10 +19,12 @@ package pl.kotcrab.vis.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 
 /** Makes loading VisUI skin easier
  * @author Pawel Pastuszak */
 public class VisUI {
+	private static int defualtTitleAlign = Align.left;
 	public static Skin skin;
 
 	/** Loads default VisUI skin from library */
@@ -41,5 +43,16 @@ public class VisUI {
 			skin.dispose();
 			skin = null;
 		}
+	}
+
+	/** Sets default title align user for VisWindow and VisDialog
+	 * @param defualtTitleAlign int value from {@link Align} */
+	public static void setDefualtTitleAlign (int defualtTitleAlign) {
+		VisUI.defualtTitleAlign = defualtTitleAlign;
+	}
+
+	/** @return int value from {@link Align} */
+	public static int getDefualtTitleAlign () {
+		return defualtTitleAlign;
 	}
 }

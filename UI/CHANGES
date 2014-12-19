@@ -3,6 +3,8 @@
 -API Change: Removed deprecated resize() from MenuBar
 -API Addition: FileChooser(FileChooserLocale, Mode)
 -API Addition: MenuItem (String, ChangeListener)
+-API Addition: VisUI.setDefualtTitleAlign(int align) 
+-API Addition: VisUI.getDefualtTitleAlign()
 -Fixed bug when FormValidator doesn't updated all fields borders after changes in other field
 -FileChooser deselects all files when reopened
 -FileChooser: When clicked on drive shortcut file scroll pane table will get focus automaticly
