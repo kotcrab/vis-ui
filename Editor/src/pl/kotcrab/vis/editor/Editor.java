@@ -19,6 +19,8 @@
 
 package pl.kotcrab.vis.editor;
 
+import java.io.File;
+
 import pl.kotcrab.utils.event.Event;
 import pl.kotcrab.utils.event.EventBus;
 import pl.kotcrab.utils.event.EventListener;
@@ -30,6 +32,7 @@ import pl.kotcrab.vis.editor.module.MenuBarModule;
 import pl.kotcrab.vis.editor.module.ModuleContainer;
 import pl.kotcrab.vis.editor.module.ProjectModule;
 import pl.kotcrab.vis.editor.module.ProjectModuleContainer;
+import pl.kotcrab.vis.editor.module.SceneIOModule;
 import pl.kotcrab.vis.editor.module.StatusBar;
 import pl.kotcrab.vis.editor.ui.EditorFrame;
 import pl.kotcrab.vis.ui.VisUI;
@@ -90,6 +93,11 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		moduleContainer.add(new StatusBar());
 
 		// debug section
+		try {
+			ProjectIO.load(new File("F:\\Poligon\\TestProject"));
+		} catch (EditorException e) {
+			e.printStackTrace();
+		}
 		// stage.addActor(new NewProjectDialog());
 		// stage.addActor(new AsyncTaskProgressDialog(null));
 		// stage.addActor(new FileChooser(stage, "Choose file", FileChooser.Mode.SAVE));
@@ -147,7 +155,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	public void requestProjectUnload () {
 		projectLoaded = false;
 		projectModuleContainer.dispose();
-		App.eventBus.post(new StatusBarEvent("Project unloaded!", 3));
+		App.eventBus.post(new StatusBarEvent("Project unloaded", 3));
 		eventBus.post(new ProjectStatusEvent(Status.Unloaded));
 	}
 
@@ -158,21 +166,25 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	public void projectLoaded (Project project) {
 		// TODO unload previous project dialog
 		if (projectLoaded) {
-			DialogUtils.showOKDialog(getStage(), "Error", "Other project is already loaded!");
+			DialogUtils.showErrorDialog(getStage(), "Other project is already loaded!");
 			return;
 		}
 
 		projectLoaded = true;
-		projectModuleContainer.dispose();
 		projectModuleContainer.setProject(project);
 
 		projectModuleContainer.add(new FileAccessModule());
-		App.eventBus.post(new StatusBarEvent("Project loaded!", 3));
+		projectModuleContainer.add(new SceneIOModule());
+		App.eventBus.post(new StatusBarEvent("Project loaded", 3));
 
 		eventBus.post(new ProjectStatusEvent(Status.Loaded));
 	}
 
 	public ProjectModule getProjectModule (Class<? extends ProjectModule> moduleClass) {
 		return (ProjectModule)projectModuleContainer.get(moduleClass);
+	}
+
+	public File getProjectVisFolder () {
+		return new File(projectModuleContainer.getProject().root, "vis");
 	}
 }

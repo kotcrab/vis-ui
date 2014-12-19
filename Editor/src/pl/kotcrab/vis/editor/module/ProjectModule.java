@@ -22,10 +22,30 @@ package pl.kotcrab.vis.editor.module;
 import pl.kotcrab.vis.editor.Project;
 
 public abstract class ProjectModule implements Module {
-
 	protected Project project;
+	protected ProjectModuleContainer containter;
 
 	void setProject (Project project) {
 		this.project = project;
 	}
+
+	void setCotainter (ProjectModuleContainer container) {
+		this.containter = container;
+	}
+
+	@Override
+	public void added () {
+
+	}
+
+	@Override
+	public void init () {
+
+	}
+
+	@Override
+	public void dispose () {
+
+	}
+
 }

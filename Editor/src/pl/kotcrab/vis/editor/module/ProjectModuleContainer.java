@@ -36,5 +36,10 @@ public class ProjectModuleContainer extends ModuleContainer {
 
 	public void setProject (Project project) {
 		if (getModuleCounter() > 0) throw new IllegalStateException("Project can't be changed while modules are loaded!");
+		this.project = project;
+	}
+
+	public Project getProject () {
+		return project;
 	}
 }
