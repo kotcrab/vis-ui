@@ -33,7 +33,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 public class AsyncTaskProgressDialog extends VisWindow {
 	public AsyncTaskProgressDialog (String title, AsyncTask task) {
 		super(title);
-		setTitleAlignment(Align.center);
 		setModal(true);
 
 		TableUtils.setSpaceDefaults(this);

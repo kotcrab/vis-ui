@@ -59,7 +59,6 @@ public class NewProjectDialog extends VisWindow {
 
 	public NewProjectDialog () {
 		super("New Project");
-		setTitleAlignment(Align.center);
 		setModal(true);
 
 		craeteUI();
