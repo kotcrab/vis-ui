@@ -54,4 +54,7 @@ public class ModuleContainer {
 		modules.clear();
 	}
 
+	public int getModuleCounter () {
+		return modules.size;
+	}
 }

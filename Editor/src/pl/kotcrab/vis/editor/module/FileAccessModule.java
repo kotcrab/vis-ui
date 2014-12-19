@@ -19,13 +19,10 @@
 
 package pl.kotcrab.vis.editor.module;
 
-import pl.kotcrab.vis.editor.Project;
 
-public class FileAccessModule implements Module {
-	private Project project;
+public class FileAccessModule extends ProjectModule{
 
-	public FileAccessModule (Project project) {
-		this.project = project;
+	public FileAccessModule () {
 	}
 
 	@Override

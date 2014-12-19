@@ -29,6 +29,7 @@ import pl.kotcrab.vis.editor.module.FileAccessModule;
 import pl.kotcrab.vis.editor.module.MenuBarModule;
 import pl.kotcrab.vis.editor.module.ModuleContainer;
 import pl.kotcrab.vis.editor.module.ProjectModule;
+import pl.kotcrab.vis.editor.module.ProjectModuleContainer;
 import pl.kotcrab.vis.editor.module.StatusBar;
 import pl.kotcrab.vis.editor.ui.EditorFrame;
 import pl.kotcrab.vis.ui.VisUI;
@@ -51,7 +52,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private Table root;
 
 	private ModuleContainer moduleContainer;
-	private ModuleContainer projectModuleContainer;
+	private ProjectModuleContainer projectModuleContainer;
 
 	private boolean projectLoaded = false;
 
@@ -60,7 +61,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	public Editor (EditorFrame frame) {
 		this.frame = frame;
 	}
-	
+
 	@Override
 	public void create () {
 		instance = this;
@@ -78,7 +79,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		stage.addActor(root);
 
 		moduleContainer = new ModuleContainer();
-		projectModuleContainer = new ModuleContainer();
+		projectModuleContainer = new ProjectModuleContainer();
 
 		moduleContainer.add(new MenuBarModule());
 
@@ -147,22 +148,29 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		App.eventBus.post(new StatusBarEvent("Project unloaded!", 3));
 		eventBus.post(new ProjectStatusEvent(Status.Unloaded));
 	}
-	
+
 	public boolean isProjectLoaded () {
 		return projectLoaded;
 	}
 
 	public void projectLoaded (Project project) {
+		// TODO unload previous project dialog
 		if (projectLoaded) {
 			DialogUtils.showOKDialog(getStage(), "Error", "Other project is already loaded!");
 			return;
 		}
+		
 		projectLoaded = true;
-		// TODO unload previous project dialog
 		projectModuleContainer.dispose();
-		projectModuleContainer.add(new ProjectModule(project));
-		projectModuleContainer.add(new FileAccessModule(project));
+		projectModuleContainer.setProject(project);
+		
+		projectModuleContainer.add(new FileAccessModule());
 		App.eventBus.post(new StatusBarEvent("Project loaded!", 3));
+		
 		eventBus.post(new ProjectStatusEvent(Status.Loaded));
+	}
+
+	public ProjectModule getProjectModule (Class<? extends ProjectModule> moduleClass) {
+		return (ProjectModule)projectModuleContainer.get(moduleClass);
 	}
 }
