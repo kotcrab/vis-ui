@@ -54,6 +54,11 @@ public class FormValidator {
 		add(field);
 	}
 
+	public void fileExist (VisValidableTextField field, File relavtiveTo, String errorMsg) {
+		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg));
+		add(field);
+	}
+
 	private void add (VisValidableTextField field) {
 		fields.add(field);
 		field.addListener(changeListener);
@@ -100,6 +105,7 @@ public class FormValidator {
 
 	private class FileExistsValidator extends ControllerValidator {
 		VisTextField relativeTo;
+		File relativeToFile;
 
 		public FileExistsValidator (String errorMsg) {
 			super(errorMsg);
@@ -110,9 +116,21 @@ public class FormValidator {
 			this.relativeTo = relavativeTo;
 		}
 
+		public FileExistsValidator (File relavativeTo, String errorMsg) {
+			super(errorMsg);
+			this.relativeToFile = relavativeTo;
+		}
+
 		@Override
 		public boolean validateInput (String input) {
-			File f = new File(relativeTo == null ? null : relativeTo.getText(), input);
+			File f = null;
+			if (relativeTo != null)
+				f = new File(relativeTo.getText(), input);
+			else if (relativeToFile != null)
+				f = new File(relativeToFile, input);
+			else
+				f = new File(input);
+
 			setResult(f.exists());
 			return super.validateInput(input);
 		}
