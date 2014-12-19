@@ -22,7 +22,6 @@ package pl.kotcrab.vis.editor;
 import java.io.File;
 
 import pl.kotcrab.utils.event.Event;
-import pl.kotcrab.utils.event.EventBus;
 import pl.kotcrab.utils.event.EventListener;
 import pl.kotcrab.vis.editor.event.ProjectStatusEvent;
 import pl.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
@@ -48,7 +47,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Editor extends ApplicationAdapter implements EventListener {
 	public static Editor instance;
-	private EventBus eventBus;
 
 	private EditorFrame frame;
 
@@ -69,7 +67,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	@Override
 	public void create () {
 		instance = this;
-		eventBus = App.eventBus;
 		Assets.load();
 		VisUI.load();
 		VisUI.setDefualtTitleAlign(Align.center);
@@ -155,8 +152,9 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	public void requestProjectUnload () {
 		projectLoaded = false;
 		projectModuleContainer.dispose();
+		
 		App.eventBus.post(new StatusBarEvent("Project unloaded", 3));
-		eventBus.post(new ProjectStatusEvent(Status.Unloaded));
+		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded));
 	}
 
 	public boolean isProjectLoaded () {
@@ -175,9 +173,9 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		projectModuleContainer.add(new FileAccessModule());
 		projectModuleContainer.add(new SceneIOModule());
+		
 		App.eventBus.post(new StatusBarEvent("Project loaded", 3));
-
-		eventBus.post(new ProjectStatusEvent(Status.Loaded));
+		App.eventBus.post(new ProjectStatusEvent(Status.Loaded));
 	}
 
 	public ProjectModule getProjectModule (Class<? extends ProjectModule> moduleClass) {
