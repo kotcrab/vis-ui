@@ -33,13 +33,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
-public class StatusBar extends ModuleAdapter implements EventListener {
+public class StatusBarModule extends ModuleAdapter implements EventListener {
 	public VisTable table;
 	public VisLabel statusLabel;
 
 	public Timer timer;
 
-	public StatusBar () {
+	public StatusBarModule () {
 		timer = new Timer();
 
 		statusLabel = new VisLabel("Ready");

@@ -32,16 +32,19 @@ import pl.kotcrab.vis.editor.module.ModuleContainer;
 import pl.kotcrab.vis.editor.module.ProjectModule;
 import pl.kotcrab.vis.editor.module.ProjectModuleContainer;
 import pl.kotcrab.vis.editor.module.SceneIOModule;
-import pl.kotcrab.vis.editor.module.StatusBar;
+import pl.kotcrab.vis.editor.module.StatusBarModule;
+import pl.kotcrab.vis.editor.module.TabsModule;
 import pl.kotcrab.vis.editor.ui.EditorFrame;
 import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.util.DialogUtils;
+import pl.kotcrab.vis.ui.widget.VisTextButton;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -58,7 +61,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	private boolean projectLoaded = false;
 
-	private StatusBar statusBar;
+	private StatusBarModule statusBar;
 
 	public Editor (EditorFrame frame) {
 		this.frame = frame;
@@ -86,8 +89,10 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		moduleContainer.add(new MenuBarModule());
 
 		root.add(new Table()).expand().fill().row();
+		
+		root.row();
 
-		moduleContainer.add(new StatusBar());
+		moduleContainer.add(new StatusBarModule());
 
 		// debug section
 		try {
@@ -100,7 +105,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		// stage.addActor(new FileChooser(stage, "Choose file", FileChooser.Mode.SAVE));
 	}
 
-	public StatusBar getStatusBar () {
+	public StatusBarModule getStatusBar () {
 		return statusBar;
 	}
 
@@ -152,7 +157,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	public void requestProjectUnload () {
 		projectLoaded = false;
 		projectModuleContainer.dispose();
-		
+
 		App.eventBus.post(new StatusBarEvent("Project unloaded", 3));
 		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded));
 	}
@@ -173,7 +178,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		projectModuleContainer.add(new FileAccessModule());
 		projectModuleContainer.add(new SceneIOModule());
-		
+
 		App.eventBus.post(new StatusBarEvent("Project loaded", 3));
 		App.eventBus.post(new ProjectStatusEvent(Status.Loaded));
 	}
