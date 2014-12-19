@@ -34,6 +34,7 @@ import com.badlogic.gdx.utils.Json;
 public class ProjectIO {
 
 	public static boolean load (File projectRoot) throws EditorException {
+		if (projectRoot.exists() == false) throw new EditorException("Selected folder does not exist!");
 		if (projectRoot.getName().equals("project.json")) return loadProject(projectRoot);
 		if (projectRoot.getName().equals("vis") && projectRoot.isDirectory())
 			return loadProject(new File(projectRoot, "project.json"));
