@@ -54,10 +54,9 @@ public class EditorFrame extends JFrame {
 		config.height = 720;
 		config.backgroundFPS = -1;
 
-		Editor editor = new Editor();
+		Editor editor = new Editor(this);
 		LwjglCanvas editorCanvas = new LwjglCanvas(editor, config);
 		editorCanvas.getCanvas().setSize(1280, 720);
-		editor.setEditorFrame(this);
 
 		getContentPane().add(editorCanvas.getCanvas(), BorderLayout.CENTER);
 

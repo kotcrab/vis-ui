@@ -57,6 +57,10 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	private StatusBar statusBar;
 
+	public Editor (EditorFrame frame) {
+		this.frame = frame;
+	}
+	
 	@Override
 	public void create () {
 		instance = this;
@@ -130,10 +134,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	public Table getRoot () {
 		return root;
-	}
-
-	public void setEditorFrame (EditorFrame frame) {
-		this.frame = frame;
 	}
 
 	@Override
