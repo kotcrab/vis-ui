@@ -33,8 +33,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 
 public class MenuItem extends Button {
-	private final Image image;
-	private final Label label;
+	private Image image;
+	private Label label;
 	private TextButtonStyle style;
 
 	private boolean generateDisabledImage = true;
@@ -42,43 +42,57 @@ public class MenuItem extends Button {
 	private Cell<VisLabel> shortcutLabelCell;
 
 	public MenuItem (String text) {
-		this(text, null, VisUI.skin.get(TextButtonStyle.class));
+		this(text, (Image)null, VisUI.skin.get(TextButtonStyle.class));
 	}
 
 	public MenuItem (String text, ChangeListener changeListener) {
-		this(text, null, VisUI.skin.get(TextButtonStyle.class));
+		this(text, (Image)null, VisUI.skin.get(TextButtonStyle.class));
 		addListener(changeListener);
 	}
 
-	public MenuItem (String text, Drawable image) {
+	public MenuItem (String text, Drawable drawable) {
+		this(text, drawable, VisUI.skin.get(TextButtonStyle.class));
+	}
+
+	public MenuItem (String text, Drawable drawable, ChangeListener changeListener) {
+		this(text, drawable, VisUI.skin.get(TextButtonStyle.class));
+		addListener(changeListener);
+	}
+
+	public MenuItem (String text, Image image) {
 		this(text, image, VisUI.skin.get(TextButtonStyle.class));
 	}
 
-	public MenuItem (String text, Drawable image, ChangeListener changeListener) {
+	public MenuItem (String text, Image image, ChangeListener changeListener) {
 		this(text, image, VisUI.skin.get(TextButtonStyle.class));
 		addListener(changeListener);
 	}
 
-	public MenuItem (String text, Drawable image, String styleName) {
-		this(text, image, VisUI.skin.get(styleName, TextButtonStyle.class));
-	}
+	// Base constructors
 
-	public MenuItem (String text, Drawable icon, TextButtonStyle style) {
+	public MenuItem (String text, Image image, TextButtonStyle style) {
 		super(style);
+		init(text, image, style);
+	}
+
+	public MenuItem (String text, Drawable drawable, TextButtonStyle style) {
+		super(style);
+		init(text, new Image(drawable), style);
+	}
+
+	private void init (String text, Image image, TextButtonStyle style) {
+		this.style = style;
+		this.image = image;
 		setSkin(VisUI.skin);
 
-		this.style = style;
 		defaults().space(3);
 
-		image = new Image(icon);
-		image.setScaling(Scaling.fit);
-		add(image).padLeft(icon != null ? 0 : 24);
+		if (image != null) image.setScaling(Scaling.fit);
+		add(image).size(22);
 
 		label = new Label(text, new LabelStyle(style.font, style.fontColor));
 		label.setAlignment(Align.left);
 		add(label).expand().fill();
-
-		setStyle(style);
 	}
 
 	@Override
@@ -115,7 +129,7 @@ public class MenuItem extends Button {
 			fontColor = style.fontColor;
 		if (fontColor != null) label.getStyle().fontColor = fontColor;
 
-		if (generateDisabledImage) {
+		if (image != null && generateDisabledImage) {
 			if (isDisabled())
 				image.setColor(Color.GRAY);
 			else
