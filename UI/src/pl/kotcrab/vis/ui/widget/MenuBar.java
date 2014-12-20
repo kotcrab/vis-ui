@@ -57,7 +57,7 @@ public class MenuBar {
 		menuItems = new Table(skin);
 
 		mainTable.add(menuItems);
-		mainTable.add(new Image(skin.getRegion("button"))).expand().fill();
+		mainTable.add(new Image(skin.getRegion("menu-bg"))).expand().fill();
 
 		stage.addListener(new InputListener() {
 			@Override

@@ -208,6 +208,13 @@ list-selection
   orig: 1, 1
   offset: 0, 0
   index: -1
+menu-bg
+  rotate: false
+  xy: 130, 127
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
 progressbar
   rotate: false
   xy: 24, 49
@@ -321,28 +328,28 @@ scroll-knob-vertical
   index: -1
 select-box-list-bg
   rotate: false
-  xy: 130, 127
+  xy: 193, 232
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 selection
   rotate: false
-  xy: 193, 232
+  xy: 24, 47
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator
   rotate: false
-  xy: 24, 47
+  xy: 26, 64
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator-menu
   rotate: false
-  xy: 26, 64
+  xy: 153, 201
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
