@@ -37,14 +37,12 @@ import pl.kotcrab.vis.editor.module.TabsModule;
 import pl.kotcrab.vis.editor.ui.EditorFrame;
 import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.util.DialogUtils;
-import pl.kotcrab.vis.ui.widget.VisTextButton;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -87,6 +85,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectModuleContainer = new ProjectModuleContainer();
 
 		moduleContainer.add(new MenuBarModule());
+		moduleContainer.add(new TabsModule());
 
 		root.add(new Table()).expand().fill().row();
 		
