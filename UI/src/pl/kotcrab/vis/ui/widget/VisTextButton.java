@@ -33,6 +33,7 @@ public class VisTextButton extends TextButton implements Focusable {
 	private VisTextButtonStyle style;
 
 	private boolean drawBorder;
+	private boolean focusBorderEnabled = true;
 
 	public VisTextButton (String text, String styleName) {
 		super(text, VisUI.skin.get(styleName, VisTextButtonStyle.class));
@@ -64,7 +65,7 @@ public class VisTextButton extends TextButton implements Focusable {
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		if (drawBorder) style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
+		if (focusBorderEnabled && drawBorder) style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
 
 	static public class VisTextButtonStyle extends TextButtonStyle {
@@ -82,6 +83,14 @@ public class VisTextButton extends TextButton implements Focusable {
 			super(style);
 			this.focusBorder = style.focusBorder;
 		}
+	}
+	
+	public boolean isFocusBorderEnabled () {
+		return focusBorderEnabled;
+	}
+
+	public void setFocusBorderEnabled (boolean focusBorderEnabled) {
+		this.focusBorderEnabled = focusBorderEnabled;
 	}
 
 	@Override
