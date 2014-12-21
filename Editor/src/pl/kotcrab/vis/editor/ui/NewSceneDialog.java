@@ -22,7 +22,7 @@ package pl.kotcrab.vis.editor.ui;
 import java.io.File;
 
 import pl.kotcrab.vis.editor.Editor;
-import pl.kotcrab.vis.editor.module.FileAccessModule;
+import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.runtime.scene.SceneViewport;
 import pl.kotcrab.vis.ui.FormValidator;
 import pl.kotcrab.vis.ui.TableUtils;

@@ -17,14 +17,9 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor.module;
+package pl.kotcrab.vis.editor.module.project;
 
-import java.io.File;
-
-public class FileAccessModule extends ProjectModule {
-
-	public FileAccessModule () {
-	}
+public class SceneIOModule extends ProjectModule {
 
 	@Override
 	public void dispose () {
@@ -39,10 +34,6 @@ public class FileAccessModule extends ProjectModule {
 	@Override
 	public void init () {
 
-	}
-	
-	public File getVisFolder () {
-		return new File(project.root, "vis");
 	}
 
 }

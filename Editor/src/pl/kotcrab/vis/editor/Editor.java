@@ -26,13 +26,14 @@ import pl.kotcrab.vis.editor.event.EventListener;
 import pl.kotcrab.vis.editor.event.ProjectStatusEvent;
 import pl.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import pl.kotcrab.vis.editor.event.StatusBarEvent;
-import pl.kotcrab.vis.editor.module.FileAccessModule;
 import pl.kotcrab.vis.editor.module.MenuBarModule;
 import pl.kotcrab.vis.editor.module.ModuleContainer;
-import pl.kotcrab.vis.editor.module.ProjectModuleContainer;
-import pl.kotcrab.vis.editor.module.SceneIOModule;
 import pl.kotcrab.vis.editor.module.StatusBarModule;
 import pl.kotcrab.vis.editor.module.TabsModule;
+import pl.kotcrab.vis.editor.module.project.FileAccessModule;
+import pl.kotcrab.vis.editor.module.project.ProjectInfoTabModule;
+import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import pl.kotcrab.vis.editor.module.project.SceneIOModule;
 import pl.kotcrab.vis.editor.ui.EditorFrame;
 import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.util.DialogUtils;
@@ -82,7 +83,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		Gdx.input.setInputProcessor(stage);
 
 		contentTable = new Table();
-		
+
 		root = new Table();
 		root.setFillParent(true);
 		stage.addActor(root);
@@ -98,6 +99,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		root.row();
 
 		moduleContainer.add(new StatusBarModule());
+
+		moduleContainer.init();
 
 		// debug section
 		try {
@@ -184,7 +187,10 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		projectModuleContainer.add(new FileAccessModule());
 		projectModuleContainer.add(new SceneIOModule());
+		projectModuleContainer.add(new ProjectInfoTabModule());
 
+		projectModuleContainer.init();
+		
 		App.eventBus.post(new StatusBarEvent("Project loaded", 3));
 		App.eventBus.post(new ProjectStatusEvent(Status.Loaded));
 	}
@@ -195,9 +201,14 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		return projectModuleContainer.get(moduleClass);
 	}
 
+	public <T> T getModule (Class<T> moduleClass) {
+		return moduleContainer.get(moduleClass);
+	}
+
 	public void tabChanged (Tab tab) {
 		this.tab = tab;
 		contentTable.clear();
-		contentTable.add(tab.getContentTable()).expand().fill();
+		if (tab != null) contentTable.add(tab.getContentTable()).expand().fill();
 	}
+
 }

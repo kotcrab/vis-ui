@@ -17,9 +17,10 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor.module;
+package pl.kotcrab.vis.editor.module.project;
 
 import pl.kotcrab.vis.editor.Project;
+import pl.kotcrab.vis.editor.module.Module;
 
 public abstract class ProjectModule implements Module {
 	protected Project project;

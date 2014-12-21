@@ -17,29 +17,32 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor.module;
+package pl.kotcrab.vis.editor.module.project;
 
-import pl.kotcrab.vis.editor.Project;
+import java.io.File;
 
-public class ProjectModuleContainer extends ModuleContainer {
-	private Project project;
+public class FileAccessModule extends ProjectModule {
+
+	public FileAccessModule () {
+	}
 
 	@Override
-	public void add (Module module) {
-		if (module instanceof ProjectModule == false)
-			throw new IllegalStateException("Module must be instance of Project Module!");
-		if (project == null) throw new IllegalStateException("Module cannot be added before project has been set!");
+	public void dispose () {
 
-		((ProjectModule)module).setProject(project);
-		super.add(module);
 	}
 
-	public void setProject (Project project) {
-		if (getModuleCounter() > 0) throw new IllegalStateException("Project can't be changed while modules are loaded!");
-		this.project = project;
+	@Override
+	public void added () {
+
 	}
 
-	public Project getProject () {
-		return project;
+	@Override
+	public void init () {
+
 	}
+	
+	public File getVisFolder () {
+		return new File(project.root, "vis");
+	}
+
 }

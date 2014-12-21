@@ -15,9 +15,11 @@ public class StartPageTab implements Tab {
 
 	@Override
 	public Table getContentTable () {
-		Table tab = new Table();
-		tab.add(new VisLabel("Ohayou!"));
-		return tab;
+		Table content = new Table();
+		content.add(new VisLabel("Ohayou!"));
+		content.row();
+		content.add(new VisLabel("(here will be recent project list etc.)"));
+		return content;
 	}
 
 	@Override

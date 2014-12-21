@@ -42,6 +42,8 @@ public class TabbedPane {
 	private Array<Tab> tabs;
 	private ButtonGroup group;
 
+	private Tab activeTab;
+
 	private TabbedPaneListener listener;
 
 	public TabbedPane (TabbedPaneListener listener) {
@@ -60,13 +62,38 @@ public class TabbedPane {
 		mainTable.setBackground(VisUI.skin.getDrawable("menu-bg"));
 	}
 
-	public void add (final Tab tab) {
+	public void add (Tab tab) {
 		tabs.add(tab);
 		rebuildTabsTable();
 	}
 
+	public void add (int index, Tab tab) {
+		tabs.insert(index, tab);
+		rebuildTabsTable();
+	}
+
+	public boolean remove (Tab tab) {
+		boolean success = tabs.removeValue(tab, true);
+
+		if (success) {
+			rebuildTabsTable();
+			listener.removed(tab);
+
+			if (activeTab == tab) switchTab(0);
+
+			if (tabs.size == 0) listener.removedAll();
+		}
+
+		return success;
+	}
+
+	public void switchTab (int index) {
+		group.getButtons().get(index).setChecked(true);
+	}
+
 	private void rebuildTabsTable () {
 		tabItems.clear();
+		group.clear();
 
 		for (final Tab tab : tabs) {
 			final VisTextButton button = new VisTextButton(tab.getButtonText(), "toggle");
@@ -77,13 +104,13 @@ public class TabbedPane {
 
 			if (tabs.size == 1) {
 				button.setChecked(true);
-				listener.switchTab(tab);
+				listener.switched(tab);
 			}
 
 			button.addListener(new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
-					if (button.isChecked()) listener.switchTab(tab);
+					if (button.isChecked()) listener.switched(tab);
 				}
 			});
 		}
