@@ -21,8 +21,8 @@ package pl.kotcrab.vis.editor.module;
 
 import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.Tab;
-import pl.kotcrab.vis.editor.TabAdapater;
 import pl.kotcrab.vis.editor.TabbedPaneListener;
+import pl.kotcrab.vis.editor.ui.StartPageTab;
 import pl.kotcrab.vis.editor.ui.TabbedPane;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -36,40 +36,21 @@ public class TabsModule extends ModuleAdapter {
 
 	public TabsModule () {
 		editor = Editor.instance;
-
-		this.stage = editor.getStage();
-		this.tabbedPane = new TabbedPane(new TabbedPaneListener() {
+		stage = editor.getStage();
+		
+		tabbedPane = new TabbedPane(new TabbedPaneListener() {
 			@Override
 			public void switchTab (Tab tab) {
-
+				editor.tabChanged(tab);
 			}
 		});
 
-		tabbedPane.addTab(new TabAdapater() {
-			@Override
-			public String getButtonText () {
-				return "Start Page";
-			}
-		});
-
-		tabbedPane.addTab(new TabAdapater() {
-			@Override
-			public String getButtonText () {
-				return "Tab 1";
-			}
-		});
-
-		tabbedPane.addTab(new TabAdapater() {
-			@Override
-			public String getButtonText () {
-				return "Tab 2";
-			}
-		});
+		tabbedPane.add(new StartPageTab());
 	}
 
 	@Override
 	public void added () {
-		addToStage(Editor.instance.getRoot());
+		addToStage(editor.getRoot());
 	}
 
 	public void addToStage (Table root) {

@@ -40,6 +40,7 @@ import pl.kotcrab.vis.ui.util.DialogUtils;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -53,12 +54,16 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private Stage stage;
 	private Table root;
 
+	private Table contentTable;
+
 	private ModuleContainer moduleContainer;
 	private ProjectModuleContainer projectModuleContainer;
 
 	private boolean projectLoaded = false;
 
 	private StatusBarModule statusBar;
+
+	private Tab tab;
 
 	public Editor (EditorFrame frame) {
 		this.frame = frame;
@@ -76,6 +81,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 
+		contentTable = new Table();
+		
 		root = new Table();
 		root.setFillParent(true);
 		stage.addActor(root);
@@ -86,8 +93,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		moduleContainer.add(new MenuBarModule());
 		moduleContainer.add(new TabsModule());
 
-		root.add(new Table()).expand().fill().row();
-		
+		root.add(contentTable).expand().fill().row();
+
 		root.row();
 
 		moduleContainer.add(new StatusBarModule());
@@ -116,6 +123,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	public void render () {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act(Gdx.graphics.getDeltaTime());
+		if (tab != null) tab.render(stage.getBatch());
 		stage.draw();
 	}
 
@@ -182,7 +190,14 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	public <T> T getProjectModule (Class<T> moduleClass) {
-		if(projectLoaded == false) throw new IllegalStateException("Cannot access project module before project has been loaded!");
+		if (projectLoaded == false)
+			throw new IllegalStateException("Cannot access project module before project has been loaded!");
 		return projectModuleContainer.get(moduleClass);
+	}
+
+	public void tabChanged (Tab tab) {
+		this.tab = tab;
+		contentTable.clear();
+		contentTable.add(tab.getContentTable()).expand().fill();
 	}
 }

@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Array;
 
 public class TabbedPane {
 	private static final Drawable bottomBar = VisUI.skin.getDrawable("list-selection");
@@ -38,11 +39,10 @@ public class TabbedPane {
 	private VisTable tabItems;
 	private VisTable mainTable;
 
+	private Array<Tab> tabs;
 	private ButtonGroup group;
 
 	private TabbedPaneListener listener;
-
-	private int tabCounter;
 
 	public TabbedPane (TabbedPaneListener listener) {
 		this.listener = listener;
@@ -52,30 +52,41 @@ public class TabbedPane {
 		mainTable = new VisTable();
 		tabItems = new VisTable();
 
+		tabs = new Array<Tab>();
+
 		mainTable.add(tabItems).padTop(2).left().expand();
 		mainTable.row();
 		mainTable.add(new Image(bottomBar)).expand().fill();
 		mainTable.setBackground(VisUI.skin.getDrawable("menu-bg"));
 	}
 
-	public void addTab (final Tab tab) {
-		String text = tab.getButtonText();
-		VisTextButton button = new VisTextButton(text, "toggle");
-		button.setFocusBorderEnabled(false);
+	public void add (final Tab tab) {
+		tabs.add(tab);
+		rebuildTabsTable();
+	}
 
-		group.add(button);
+	private void rebuildTabsTable () {
+		tabItems.clear();
 
-		tabItems.add(button);
+		for (final Tab tab : tabs) {
+			final VisTextButton button = new VisTextButton(tab.getButtonText(), "toggle");
+			button.setFocusBorderEnabled(false);
 
-		if (tabCounter == 0) button.setChecked(true);
-		tabCounter++;
+			tabItems.add(button);
+			group.add(button);
 
-		button.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
+			if (tabs.size == 1) {
+				button.setChecked(true);
 				listener.switchTab(tab);
 			}
-		});
+
+			button.addListener(new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent event, Actor actor) {
+					if (button.isChecked()) listener.switchTab(tab);
+				}
+			});
+		}
 	}
 
 	public Table getTable () {

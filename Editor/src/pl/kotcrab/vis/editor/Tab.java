@@ -19,7 +19,7 @@
 
 package pl.kotcrab.vis.editor;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public interface Tab {
@@ -27,5 +27,5 @@ public interface Tab {
 
 	public Table getContentTable ();
 
-	public void render (SpriteBatch batch);
+	public void render (Batch batch);
 }

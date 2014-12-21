@@ -19,7 +19,7 @@
 
 package pl.kotcrab.vis.editor;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class TabAdapater implements Tab {
@@ -34,7 +34,7 @@ public class TabAdapater implements Tab {
 	}
 
 	@Override
-	public void render (SpriteBatch batch) {
+	public void render (Batch batch) {
 
 	}
 }
