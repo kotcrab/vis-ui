@@ -48,7 +48,6 @@ public class StatusBarModule extends ModuleAdapter implements EventListener {
 		table.setBackground(VisUI.skin.getDrawable("button"));
 		table.add(statusLabel);
 		table.add(new Image(VisUI.skin.getRegion("button"))).expand().fill();
-
 	}
 
 	public void addToStage (Table root) {

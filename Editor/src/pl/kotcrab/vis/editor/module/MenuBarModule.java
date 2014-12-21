@@ -52,9 +52,9 @@ public class MenuBarModule extends ModuleAdapter {
 
 	public MenuBarModule () {
 		editor = Editor.instance;
+		stage = editor.getStage();
 
-		this.stage = editor.getStage();
-		this.menuBar = new MenuBar(stage);
+		menuBar = new MenuBar(stage);
 
 		controller = new ProjectStatusWidgetController();
 
