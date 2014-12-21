@@ -19,10 +19,10 @@
 
 package pl.kotcrab.vis.editor.module;
 
-import pl.kotcrab.utils.event.Event;
-import pl.kotcrab.utils.event.EventListener;
 import pl.kotcrab.vis.editor.App;
 import pl.kotcrab.vis.editor.Editor;
+import pl.kotcrab.vis.editor.event.Event;
+import pl.kotcrab.vis.editor.event.EventListener;
 import pl.kotcrab.vis.editor.event.StatusBarEvent;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.VisUI;

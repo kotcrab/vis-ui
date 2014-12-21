@@ -19,9 +19,9 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-import pl.kotcrab.utils.event.Event;
-import pl.kotcrab.utils.event.EventListener;
 import pl.kotcrab.vis.editor.App;
+import pl.kotcrab.vis.editor.event.Event;
+import pl.kotcrab.vis.editor.event.EventListener;
 import pl.kotcrab.vis.editor.event.ProjectStatusEvent;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Button;

@@ -21,8 +21,8 @@ package pl.kotcrab.vis.editor;
 
 import java.io.File;
 
-import pl.kotcrab.utils.event.Event;
-import pl.kotcrab.utils.event.EventListener;
+import pl.kotcrab.vis.editor.event.Event;
+import pl.kotcrab.vis.editor.event.EventListener;
 import pl.kotcrab.vis.editor.event.ProjectStatusEvent;
 import pl.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import pl.kotcrab.vis.editor.event.StatusBarEvent;

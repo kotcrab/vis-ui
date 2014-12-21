@@ -19,7 +19,6 @@
 
 package pl.kotcrab.vis.editor.event;
 
-import pl.kotcrab.utils.event.Event;
 
 public class ProjectStatusEvent implements Event {
 	public enum Status {
