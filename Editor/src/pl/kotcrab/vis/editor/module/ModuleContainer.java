@@ -32,7 +32,7 @@ public class ModuleContainer {
 	}
 
 	public void init () {
-		if (initFinished) throw new IllegalStateException("ModuleManger cannot be initialized twice!");
+		if (initFinished) throw new IllegalStateException("ModuleContainer cannot be initialized twice!");
 
 		for (Module m : modules)
 			m.init();
@@ -40,9 +40,10 @@ public class ModuleContainer {
 		initFinished = true;
 	}
 
-	public Module get (Class<? extends Module> moduleClazz) {
+	@SuppressWarnings("unchecked")
+	public <T> T get (Class<T> moduleClass) {
 		for (Module m : modules)
-			if (m.getClass() == moduleClazz) return m;
+			if (m.getClass() == moduleClass) return (T)m;
 
 		return null;
 	}

@@ -19,6 +19,8 @@
 
 package pl.kotcrab.vis.editor.module;
 
+import java.io.File;
+
 public class FileAccessModule extends ProjectModule {
 
 	public FileAccessModule () {
@@ -37,6 +39,10 @@ public class FileAccessModule extends ProjectModule {
 	@Override
 	public void init () {
 
+	}
+	
+	public File getVisFolder () {
+		return new File(project.root, "vis");
 	}
 
 }

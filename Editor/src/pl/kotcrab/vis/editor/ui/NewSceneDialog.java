@@ -23,6 +23,7 @@ import java.io.File;
 
 import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.SceneViewport;
+import pl.kotcrab.vis.editor.module.FileAccessModule;
 import pl.kotcrab.vis.ui.FormValidator;
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisTable;
@@ -46,19 +47,19 @@ public class NewSceneDialog extends VisWindow {
 
 	private VisTextButton cancelButton;
 	private VisTextButton createButton;
-	
+
 	private File visFolder;
 
 	public NewSceneDialog () {
 		super("New Scene");
 		setModal(true);
 
-		visFolder = Editor.instance.getProjectVisFolder();
-		
+		FileAccessModule fileAccess = Editor.instance.getProjectModule(FileAccessModule.class);
+		visFolder = fileAccess.getVisFolder();
+
 		createUI();
 		createListeners();
 		createValidators();
-		
 
 		pack();
 		centerWindow();
@@ -120,7 +121,7 @@ public class NewSceneDialog extends VisWindow {
 			}
 		});
 	}
-	
+
 	private void createValidators () {
 		FormValidator validator = new FormValidator(createButton, errorLabel);
 

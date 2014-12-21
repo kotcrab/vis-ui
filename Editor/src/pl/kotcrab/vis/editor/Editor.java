@@ -182,11 +182,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		App.eventBus.post(new ProjectStatusEvent(Status.Loaded));
 	}
 
-	public ProjectModule getProjectModule (Class<? extends ProjectModule> moduleClass) {
-		return (ProjectModule)projectModuleContainer.get(moduleClass);
-	}
-
-	public File getProjectVisFolder () {
-		return new File(projectModuleContainer.getProject().root, "vis");
+	public <T> T getProjectModule (Class<T> moduleClass) {
+		if(projectLoaded == false) throw new IllegalStateException("Cannot access project module before project has been loaded!");
+		return projectModuleContainer.get(moduleClass);
 	}
 }
