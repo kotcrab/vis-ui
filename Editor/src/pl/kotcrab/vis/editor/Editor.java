@@ -29,7 +29,6 @@ import pl.kotcrab.vis.editor.event.StatusBarEvent;
 import pl.kotcrab.vis.editor.module.FileAccessModule;
 import pl.kotcrab.vis.editor.module.MenuBarModule;
 import pl.kotcrab.vis.editor.module.ModuleContainer;
-import pl.kotcrab.vis.editor.module.ProjectModule;
 import pl.kotcrab.vis.editor.module.ProjectModuleContainer;
 import pl.kotcrab.vis.editor.module.SceneIOModule;
 import pl.kotcrab.vis.editor.module.StatusBarModule;
