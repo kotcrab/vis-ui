@@ -58,6 +58,21 @@ public class FormValidator {
 		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg));
 		add(field);
 	}
+	
+	public void fileNotExist (VisValidableTextField field, String errorMsg) {
+		field.addValidator(new FileExistsValidator(errorMsg, true));
+		add(field);
+	}
+	
+	public void fileNotExist (VisValidableTextField field, VisTextField relavtiveTo, String errorMsg) {
+		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg, true));
+		add(field);
+	}
+
+	public void fileNotExist (VisValidableTextField field, File relavtiveTo, String errorMsg) {
+		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg, true));
+		add(field);
+	}
 
 	private void add (VisValidableTextField field) {
 		fields.add(field);
@@ -106,19 +121,35 @@ public class FormValidator {
 	private class FileExistsValidator extends ControllerValidator {
 		VisTextField relativeTo;
 		File relativeToFile;
+		boolean existNot;
 
 		public FileExistsValidator (String errorMsg) {
-			super(errorMsg);
+			this(errorMsg, false);
 		}
 
 		public FileExistsValidator (VisTextField relavativeTo, String errorMsg) {
-			super(errorMsg);
-			this.relativeTo = relavativeTo;
+			this(relavativeTo, errorMsg, false);
 		}
 
 		public FileExistsValidator (File relavativeTo, String errorMsg) {
+			this(relavativeTo, errorMsg, false);
+		}
+
+		public FileExistsValidator (String errorMsg, boolean existNot) {
+			super(errorMsg);
+			this.existNot = existNot;
+		}
+
+		public FileExistsValidator (VisTextField relavativeTo, String errorMsg, boolean existNot) {
+			super(errorMsg);
+			this.relativeTo = relavativeTo;
+			this.existNot = existNot;
+		}
+
+		public FileExistsValidator (File relavativeTo, String errorMsg, boolean existNot) {
 			super(errorMsg);
 			this.relativeToFile = relavativeTo;
+			this.existNot = existNot;
 		}
 
 		@Override
@@ -131,7 +162,11 @@ public class FormValidator {
 			else
 				f = new File(input);
 
-			setResult(f.exists());
+			if (existNot)
+				setResult(!f.exists());
+			else
+				setResult(f.exists());
+
 			return super.validateInput(input);
 		}
 	}
