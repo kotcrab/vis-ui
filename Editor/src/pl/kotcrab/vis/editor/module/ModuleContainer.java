@@ -53,6 +53,7 @@ public class ModuleContainer {
 			m.dispose();
 
 		modules.clear();
+		initFinished = false;
 	}
 
 	public int getModuleCounter () {
