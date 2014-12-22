@@ -20,11 +20,13 @@
 package pl.kotcrab.vis.runtime.scene;
 
 public enum SceneViewport {
-	STRETCH, FIT, FILL, SCREEN, EXTEND;
+	NONE, STRETCH, FIT, FILL, SCREEN, EXTEND;
 
 	@Override
 	public String toString () {
 		switch (this) {
+		case NONE:
+			return "None";
 		case STRETCH:
 			return "Stretch Viewport";
 		case FIT:
@@ -35,6 +37,7 @@ public enum SceneViewport {
 			return "Extend Viewport";
 		case SCREEN:
 			return "Screen Viewport";
+
 		default:
 			return super.toString();
 		}
