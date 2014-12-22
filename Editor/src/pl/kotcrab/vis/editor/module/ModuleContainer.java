@@ -34,23 +34,25 @@ public class ModuleContainer {
 	public void init () {
 		if (initFinished) throw new IllegalStateException("ModuleContainer cannot be initialized twice!");
 
-		for (Module m : modules)
-			m.init();
+		for (int i = 0; i < modules.size; i++)
+			modules.get(i).init();
 
 		initFinished = true;
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T> T get (Class<T> moduleClass) {
-		for (Module m : modules)
+		for (int i = 0; i < modules.size; i++) {
+			Module m = modules.get(i);
 			if (m.getClass() == moduleClass) return (T)m;
+		}
 
 		return null;
 	}
 
 	public void dispose () {
-		for (Module m : modules)
-			m.dispose();
+		for (int i = 0; i < modules.size; i++)
+			modules.get(i).dispose();
 
 		modules.clear();
 		initFinished = false;
