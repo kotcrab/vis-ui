@@ -159,9 +159,9 @@ public class NewProjectDialog extends VisWindow {
 		validator.notEmpty(sourceLoc, "Source location cannot be empty!");
 		validator.notEmpty(assetsLoc, "Assets location cannot be empty!");
 
-		validator.fileExist(projectRoot, "Project folder does not exist!");
-		validator.fileExist(sourceLoc, projectRoot, "Source folder does not exist!");
-		validator.fileExist(assetsLoc, projectRoot, "Assets folder does not exist!");
+		validator.fileExists(projectRoot, "Project folder does not exist!");
+		validator.fileExists(sourceLoc, projectRoot, "Source folder does not exist!");
+		validator.fileExists(assetsLoc, projectRoot, "Assets folder does not exist!");
 	}
 
 	private void createProject () {

@@ -44,32 +44,32 @@ public class FormValidator {
 		add(field);
 	}
 
-	public void fileExist (VisValidableTextField field, String errorMsg) {
+	public void fileExists (VisValidableTextField field, String errorMsg) {
 		field.addValidator(new FileExistsValidator(errorMsg));
 		add(field);
 	}
 
-	public void fileExist (VisValidableTextField field, VisTextField relavtiveTo, String errorMsg) {
+	public void fileExists (VisValidableTextField field, VisTextField relavtiveTo, String errorMsg) {
 		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg));
 		add(field);
 	}
 
-	public void fileExist (VisValidableTextField field, File relavtiveTo, String errorMsg) {
+	public void fileExists (VisValidableTextField field, File relavtiveTo, String errorMsg) {
 		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg));
 		add(field);
 	}
 
-	public void fileNotExist (VisValidableTextField field, String errorMsg) {
+	public void fileNotExists (VisValidableTextField field, String errorMsg) {
 		field.addValidator(new FileExistsValidator(errorMsg, true));
 		add(field);
 	}
 
-	public void fileNotExist (VisValidableTextField field, VisTextField relavtiveTo, String errorMsg) {
+	public void fileNotExists (VisValidableTextField field, VisTextField relavtiveTo, String errorMsg) {
 		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg, true));
 		add(field);
 	}
 
-	public void fileNotExist (VisValidableTextField field, File relavtiveTo, String errorMsg) {
+	public void fileNotExists (VisValidableTextField field, File relavtiveTo, String errorMsg) {
 		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg, true));
 		add(field);
 	}
