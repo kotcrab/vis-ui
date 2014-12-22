@@ -34,6 +34,7 @@ import pl.kotcrab.vis.ui.widget.file.FileUtils;
 
 import com.badlogic.gdx.utils.Json;
 
+//TODO refactor this into module
 public class ProjectIO {
 
 	public static boolean load (File projectRoot) throws EditorException {

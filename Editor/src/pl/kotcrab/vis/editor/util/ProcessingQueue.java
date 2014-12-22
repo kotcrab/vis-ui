@@ -19,13 +19,12 @@ package pl.kotcrab.vis.editor.util;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /** Blocking queue that allows processing objects of any type, one by one. Element are processed in different thread. This queue
- * orders elements FIFO. Uses {@link ArrayBlockingQueue}. When no longer needed {@link ProcessingQueue#stop()} must be called to
- * shutdown processing thread.
+ * orders elements FIFO. Uses {@link ArrayBlockingQueue}. If not started in daemon mode and no longer needed
+ * {@link ProcessingQueue#stop()} must be called to shutdown processing thread.
  * 
  * @author Pawel Pastuszak
  *
  * @param <E> type of objects that will be processed */
-// TODO switch to callback instead of extending class?
 public abstract class ProcessingQueue<E> {
 	private boolean running = true;
 
