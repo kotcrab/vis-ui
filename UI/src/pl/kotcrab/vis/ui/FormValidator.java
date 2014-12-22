@@ -58,12 +58,12 @@ public class FormValidator {
 		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg));
 		add(field);
 	}
-	
+
 	public void fileNotExist (VisValidableTextField field, String errorMsg) {
 		field.addValidator(new FileExistsValidator(errorMsg, true));
 		add(field);
 	}
-	
+
 	public void fileNotExist (VisValidableTextField field, VisTextField relavtiveTo, String errorMsg) {
 		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg, true));
 		add(field);
@@ -92,7 +92,7 @@ public class FormValidator {
 
 				Array<InputValidator> validators = field.getValidators();
 				for (InputValidator v : validators) {
-					ControllerValidator validator = (ControllerValidator)v;
+					FormInputValidator validator = (FormInputValidator)v;
 
 					if (validator.getResult() == false) {
 						errorMsgLabel.setText(validator.getErrorMsg());
@@ -106,7 +106,7 @@ public class FormValidator {
 		}
 	}
 
-	private class EmptyInputValidator extends ControllerValidator {
+	private class EmptyInputValidator extends FormInputValidator {
 		public EmptyInputValidator (String errorMsg) {
 			super(errorMsg);
 		}
@@ -118,7 +118,7 @@ public class FormValidator {
 		}
 	}
 
-	private class FileExistsValidator extends ControllerValidator {
+	private class FileExistsValidator extends FormInputValidator {
 		VisTextField relativeTo;
 		File relativeToFile;
 		boolean existNot;
@@ -168,32 +168,6 @@ public class FormValidator {
 				setResult(f.exists());
 
 			return super.validateInput(input);
-		}
-	}
-
-	private abstract class ControllerValidator implements InputValidator {
-		private String errorMsg;
-		private boolean result;
-
-		public ControllerValidator (String errorMsg) {
-			this.errorMsg = errorMsg;
-		}
-
-		public String getErrorMsg () {
-			return errorMsg;
-		}
-
-		protected void setResult (boolean result) {
-			this.result = result;
-		}
-
-		protected boolean getResult () {
-			return result;
-		}
-
-		@Override
-		public boolean validateInput (String input) {
-			return result;
 		}
 	}
 
