@@ -21,7 +21,6 @@ package pl.kotcrab.vis.editor.module;
 
 import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.Editor;
-import pl.kotcrab.vis.editor.ProjectIO;
 import pl.kotcrab.vis.editor.ui.NewProjectDialog;
 import pl.kotcrab.vis.editor.ui.NewSceneDialog;
 import pl.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
@@ -63,11 +62,7 @@ public class MenuBarModule extends ModuleAdapter {
 		chooser.setListener(new FileChooserAdapter() {
 			@Override
 			public void selected (FileHandle file) {
-				try {
-					ProjectIO.load(file.file());
-				} catch (EditorException e) {
-					DialogUtils.showErrorDialog(stage, e.getMessage(), e);
-				}
+				loadProject(file);
 			}
 		});
 
@@ -76,6 +71,14 @@ public class MenuBarModule extends ModuleAdapter {
 		createHelpMenu();
 	}
 
+	private void loadProject (FileHandle file) {
+		try {
+			editor.getModule(ProjectIOModule.class).load(file.file());
+		} catch (EditorException e) {
+			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
+		}				
+	}
+	
 	@Override
 	public void added () {
 		addToStage(Editor.instance.getRoot());

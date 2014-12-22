@@ -17,12 +17,14 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor;
+package pl.kotcrab.vis.editor.module;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import pl.kotcrab.vis.editor.App;
+import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.event.StatusBarEvent;
 import pl.kotcrab.vis.editor.module.project.Project;
 import pl.kotcrab.vis.editor.ui.AsyncTaskProgressDialog;
@@ -34,10 +36,9 @@ import pl.kotcrab.vis.ui.widget.file.FileUtils;
 
 import com.badlogic.gdx.utils.Json;
 
-//TODO refactor this into module
-public class ProjectIO {
+public class ProjectIOModule extends ModuleAdapter{
 
-	public static boolean load (File projectRoot) throws EditorException {
+	public boolean load (File projectRoot) throws EditorException {
 		if (projectRoot.exists() == false) throw new EditorException("Selected folder does not exist!");
 		if (projectRoot.getName().equals("project.json")) return loadProject(projectRoot);
 		if (projectRoot.getName().equals("vis") && projectRoot.isDirectory())
@@ -49,7 +50,7 @@ public class ProjectIO {
 		throw new EditorException("Selected folder is not a Vis project!");
 	}
 
-	private static boolean loadProject (File jsonProjectFile) throws EditorException {
+	private boolean loadProject (File jsonProjectFile) throws EditorException {
 
 		if (jsonProjectFile.exists() == false) throw new EditorException("Project file does not exist!");
 		Json json = new Json();
@@ -62,7 +63,7 @@ public class ProjectIO {
 		return true;
 	}
 
-	public static void create (final Project project, boolean signFiles) {
+	public void create (final Project project, boolean signFiles) {
 		AsyncTask task = new AsyncTask("ProjectCreator") {
 
 			@Override
@@ -101,7 +102,7 @@ public class ProjectIO {
 				App.eventBus.post(new StatusBarEvent("Project created!", 3));
 
 				try {
-					ProjectIO.load(projectFile);
+					load(projectFile);
 				} catch (EditorException e) {
 					DialogUtils.showErrorDialog(Editor.instance.getStage(), "Error occurred while loading project", e);
 					e.printStackTrace();
@@ -112,7 +113,7 @@ public class ProjectIO {
 		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Creating project...", task).fadeIn());
 	}
 
-	public static String verify (Project project) {
+	public String verify (Project project) {
 		File visDir = new File(project.root, "vis");
 		if (visDir.exists()) return "This folder is already a VisEditor project. Use File->Load Project.";
 		return null;

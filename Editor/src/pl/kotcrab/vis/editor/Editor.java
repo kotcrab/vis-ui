@@ -28,6 +28,7 @@ import pl.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import pl.kotcrab.vis.editor.event.StatusBarEvent;
 import pl.kotcrab.vis.editor.module.MenuBarModule;
 import pl.kotcrab.vis.editor.module.ModuleContainer;
+import pl.kotcrab.vis.editor.module.ProjectIOModule;
 import pl.kotcrab.vis.editor.module.StatusBarModule;
 import pl.kotcrab.vis.editor.module.TabsModule;
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
@@ -93,6 +94,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		moduleContainer = new ModuleContainer();
 		projectModuleContainer = new ProjectModuleContainer();
 
+		moduleContainer.add(new ProjectIOModule());
+
 		moduleContainer.add(new MenuBarModule());
 		moduleContainer.add(new TabsModule());
 
@@ -106,7 +109,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		// debug section
 		try {
-			ProjectIO.load(new File("F:\\Poligon\\TestProject"));
+			moduleContainer.get(ProjectIOModule.class).load((new File("F:\\Poligon\\TestProject")));
 		} catch (EditorException e) {
 			e.printStackTrace();
 		}

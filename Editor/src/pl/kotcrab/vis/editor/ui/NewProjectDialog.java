@@ -19,7 +19,8 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-import pl.kotcrab.vis.editor.ProjectIO;
+import pl.kotcrab.vis.editor.Editor;
+import pl.kotcrab.vis.editor.module.ProjectIOModule;
 import pl.kotcrab.vis.editor.module.project.Project;
 import pl.kotcrab.vis.ui.FormValidator;
 import pl.kotcrab.vis.ui.TableUtils;
@@ -56,9 +57,13 @@ public class NewProjectDialog extends VisWindow {
 
 	private FileChooser fileChooser;
 
+	private ProjectIOModule projectIO;
+
 	public NewProjectDialog () {
 		super("New Project");
 		setModal(true);
+
+		projectIO = Editor.instance.getModule(ProjectIOModule.class);
 
 		craeteUI();
 		createListeners();
@@ -165,9 +170,9 @@ public class NewProjectDialog extends VisWindow {
 		project.assets = assetsLoc.getText();
 		project.source = sourceLoc.getText();
 
-		String error = ProjectIO.verify(project);
+		String error = projectIO.verify(project);
 		if (error == null) {
-			ProjectIO.create(project, signFiles.isChecked());
+			projectIO.create(project, signFiles.isChecked());
 			fadeOut();
 		} else
 			DialogUtils.showOKDialog(getStage(), "Error", error);
