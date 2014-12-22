@@ -74,6 +74,11 @@ public class FormValidator {
 		add(field);
 	}
 
+	public void custom (VisValidableTextField field, FormInputValidator customValidator) {
+		field.addValidator(customValidator);
+		add(field);
+	}
+
 	private void add (VisValidableTextField field) {
 		fields.add(field);
 		field.addListener(changeListener);

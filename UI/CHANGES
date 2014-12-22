@@ -8,7 +8,8 @@
 -API Addition: VisUI.getDefualtTitleAlign()
 -API Addition: FormValidator.fileExist(VisValidableTextField field, File relavtiveTo, String errorMsg)
 -API Addition: Added VisTextField.isFocusBorderEnabled() and VisTextField.setFocusBorderEnabled(boolean)
--API Addition: FormValidator.fileNotExist(...) methods
+-API Addition: Added FormValidator.fileNotExist(...) methods
+-API Addition: Added FormValidator.custom (VisValidableTextField field, FormInputValidator customValidator)
 -Fixed bug when FormValidator doesn't updated all fields borders after changes in other field
 -FileChooser deselects all files when reopened
 -FileChooser: When clicked on drive shortcut file scroll pane table will get focus automaticly
