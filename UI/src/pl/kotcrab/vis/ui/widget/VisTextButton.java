@@ -84,7 +84,7 @@ public class VisTextButton extends TextButton implements Focusable {
 			this.focusBorder = style.focusBorder;
 		}
 	}
-	
+
 	public boolean isFocusBorderEnabled () {
 		return focusBorderEnabled;
 	}

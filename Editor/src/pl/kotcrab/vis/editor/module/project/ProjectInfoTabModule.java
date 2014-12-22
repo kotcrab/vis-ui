@@ -25,7 +25,7 @@ public class ProjectInfoTabModule extends ProjectModule implements EventListener
 		tab = new ProjectInfoTab(project);
 		tabsModule.addTab(tab);
 	}
-	
+
 	@Override
 	public void added () {
 		App.eventBus.register(this);

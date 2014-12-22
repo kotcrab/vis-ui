@@ -71,7 +71,7 @@ public class ProjectIO {
 
 				visDir.mkdir();
 				visAssetsDir.mkdir();
-				
+
 				new File(visAssetsDir, "scene").mkdir();
 				new File(visDir, "modules").mkdir();
 

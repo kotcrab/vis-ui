@@ -19,7 +19,6 @@
 
 package pl.kotcrab.vis.editor.event;
 
-
 public class ProjectStatusEvent implements Event {
 	public enum Status {
 		Loaded, Unloaded

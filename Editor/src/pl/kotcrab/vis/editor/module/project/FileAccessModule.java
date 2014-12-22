@@ -40,7 +40,7 @@ public class FileAccessModule extends ProjectModule {
 	public void init () {
 
 	}
-	
+
 	public File getVisFolder () {
 		return new File(project.root, "vis");
 	}

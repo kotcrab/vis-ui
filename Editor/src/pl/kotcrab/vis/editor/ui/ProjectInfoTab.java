@@ -1,13 +1,13 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-
 import pl.kotcrab.vis.editor.Project;
 import pl.kotcrab.vis.editor.Tab;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.widget.VisLabel;
+
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class ProjectInfoTab implements Tab {
 

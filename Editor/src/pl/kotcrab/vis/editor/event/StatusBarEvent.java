@@ -19,7 +19,6 @@
 
 package pl.kotcrab.vis.editor.event;
 
-
 public class StatusBarEvent implements Event {
 	public String text;
 	public int timeSeconds;

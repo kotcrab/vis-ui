@@ -23,6 +23,7 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.WindowConstants;
 
 import pl.kotcrab.vis.editor.App;
 import pl.kotcrab.vis.editor.Editor;
@@ -47,7 +48,7 @@ public class EditorFrame extends JFrame {
 		setSize(1280, 720);
 		setLocationRelativeTo(null);
 		setTitle("Vis Editor");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
