@@ -1,7 +1,7 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-import pl.kotcrab.vis.editor.Tab;
+import pl.kotcrab.vis.editor.ui.tab.Tab;
 import pl.kotcrab.vis.ui.widget.VisLabel;
 
 import com.badlogic.gdx.graphics.g2d.Batch;

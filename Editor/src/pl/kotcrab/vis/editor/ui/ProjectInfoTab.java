@@ -1,8 +1,8 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-import pl.kotcrab.vis.editor.Project;
-import pl.kotcrab.vis.editor.Tab;
+import pl.kotcrab.vis.editor.module.project.Project;
+import pl.kotcrab.vis.editor.ui.tab.Tab;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.widget.VisLabel;
 

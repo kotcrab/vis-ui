@@ -31,10 +31,13 @@ import pl.kotcrab.vis.editor.module.ModuleContainer;
 import pl.kotcrab.vis.editor.module.StatusBarModule;
 import pl.kotcrab.vis.editor.module.TabsModule;
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
+import pl.kotcrab.vis.editor.module.project.Project;
 import pl.kotcrab.vis.editor.module.project.ProjectInfoTabModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import pl.kotcrab.vis.editor.module.project.SceneIOModule;
 import pl.kotcrab.vis.editor.ui.EditorFrame;
+import pl.kotcrab.vis.editor.ui.tab.Tab;
+import pl.kotcrab.vis.editor.util.EditorException;
 import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.util.DialogUtils;
 

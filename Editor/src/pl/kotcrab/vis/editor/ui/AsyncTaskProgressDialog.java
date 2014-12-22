@@ -19,9 +19,9 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-import pl.kotcrab.vis.editor.AsyncTask;
-import pl.kotcrab.vis.editor.AsyncTaskListener;
 import pl.kotcrab.vis.editor.Editor;
+import pl.kotcrab.vis.editor.util.AsyncTask;
+import pl.kotcrab.vis.editor.util.AsyncTaskListener;
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.util.DialogUtils;
 import pl.kotcrab.vis.ui.widget.VisLabel;

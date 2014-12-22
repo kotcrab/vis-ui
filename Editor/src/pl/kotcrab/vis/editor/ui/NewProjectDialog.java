@@ -19,8 +19,8 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-import pl.kotcrab.vis.editor.Project;
 import pl.kotcrab.vis.editor.ProjectIO;
+import pl.kotcrab.vis.editor.module.project.Project;
 import pl.kotcrab.vis.ui.FormValidator;
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisTable;

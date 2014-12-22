@@ -18,8 +18,8 @@ package pl.kotcrab.vis.editor.event;
 
 import java.util.ArrayList;
 
-import pl.kotcrab.vis.editor.Log;
-import pl.kotcrab.vis.editor.ProcessingQueue;
+import pl.kotcrab.vis.editor.util.Log;
+import pl.kotcrab.vis.editor.util.ProcessingQueue;
 
 public class EventBus {
 	private ArrayList<EventListener> listeners;

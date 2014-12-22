@@ -17,16 +17,24 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor;
+package pl.kotcrab.vis.editor.ui.tab;
 
-public interface AsyncTaskListener {
-	public void messageChanged (String newMsg);
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-	public void progressChanged (int newProgressPercent);
+public class TabAdapater implements Tab {
+	@Override
+	public String getButtonText () {
+		return "";
+	}
 
-	public void finished ();
+	@Override
+	public Table getContentTable () {
+		return null;
+	}
 
-	public void failed (String reason);
+	@Override
+	public void render (Batch batch) {
 
-	public void failed (String reason, Exception ex);
+	}
 }

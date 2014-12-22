@@ -24,8 +24,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 import pl.kotcrab.vis.editor.event.StatusBarEvent;
+import pl.kotcrab.vis.editor.module.project.Project;
 import pl.kotcrab.vis.editor.ui.AsyncTaskProgressDialog;
+import pl.kotcrab.vis.editor.util.AsyncTask;
 import pl.kotcrab.vis.editor.util.CopyFileVisitor;
+import pl.kotcrab.vis.editor.util.EditorException;
 import pl.kotcrab.vis.ui.util.DialogUtils;
 import pl.kotcrab.vis.ui.widget.file.FileUtils;
 

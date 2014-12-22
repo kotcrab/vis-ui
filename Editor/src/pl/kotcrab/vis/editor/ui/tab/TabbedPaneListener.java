@@ -17,10 +17,12 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor;
+package pl.kotcrab.vis.editor.ui.tab;
 
-public class Project {
-	public String root;
-	public String assets;
-	public String source;
+public interface TabbedPaneListener {
+	public void switched (Tab tab);
+
+	public void removed (Tab tab);
+
+	public void removedAll ();
 }

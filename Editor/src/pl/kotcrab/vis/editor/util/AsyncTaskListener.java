@@ -17,12 +17,16 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor;
+package pl.kotcrab.vis.editor.util;
 
-public interface TabbedPaneListener {
-	public void switched (Tab tab);
+public interface AsyncTaskListener {
+	public void messageChanged (String newMsg);
 
-	public void removed (Tab tab);
+	public void progressChanged (int newProgressPercent);
 
-	public void removedAll ();
+	public void finished ();
+
+	public void failed (String reason);
+
+	public void failed (String reason, Exception ex);
 }

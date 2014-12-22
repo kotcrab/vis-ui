@@ -20,6 +20,7 @@
 package pl.kotcrab.vis.editor;
 
 import pl.kotcrab.vis.editor.event.EventBus;
+import pl.kotcrab.vis.editor.util.Log;
 
 public class App {
 	public static EventBus eventBus;

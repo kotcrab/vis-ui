@@ -17,10 +17,8 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor.ui;
+package pl.kotcrab.vis.editor.ui.tab;
 
-import pl.kotcrab.vis.editor.Tab;
-import pl.kotcrab.vis.editor.TabbedPaneListener;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.widget.VisTextButton;

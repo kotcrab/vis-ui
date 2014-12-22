@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.editor;
+package pl.kotcrab.vis.editor.util;
 
 import java.util.concurrent.ArrayBlockingQueue;
 

@@ -19,7 +19,6 @@
 
 package pl.kotcrab.vis.editor.module.project;
 
-import pl.kotcrab.vis.editor.Project;
 import pl.kotcrab.vis.editor.module.Module;
 import pl.kotcrab.vis.editor.module.ModuleContainer;
 

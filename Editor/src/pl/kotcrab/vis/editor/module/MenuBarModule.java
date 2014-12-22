@@ -21,11 +21,11 @@ package pl.kotcrab.vis.editor.module;
 
 import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.Editor;
-import pl.kotcrab.vis.editor.EditorException;
 import pl.kotcrab.vis.editor.ProjectIO;
 import pl.kotcrab.vis.editor.ui.NewProjectDialog;
 import pl.kotcrab.vis.editor.ui.NewSceneDialog;
 import pl.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
+import pl.kotcrab.vis.editor.util.EditorException;
 import pl.kotcrab.vis.ui.util.DialogUtils;
 import pl.kotcrab.vis.ui.widget.Menu;
 import pl.kotcrab.vis.ui.widget.MenuBar;

@@ -21,13 +21,13 @@ package pl.kotcrab.vis.editor.module;
 
 import pl.kotcrab.vis.editor.App;
 import pl.kotcrab.vis.editor.Editor;
-import pl.kotcrab.vis.editor.Tab;
-import pl.kotcrab.vis.editor.TabbedPaneListener;
 import pl.kotcrab.vis.editor.event.Event;
 import pl.kotcrab.vis.editor.event.EventListener;
 import pl.kotcrab.vis.editor.event.ProjectStatusEvent;
 import pl.kotcrab.vis.editor.ui.StartPageTab;
-import pl.kotcrab.vis.editor.ui.TabbedPane;
+import pl.kotcrab.vis.editor.ui.tab.Tab;
+import pl.kotcrab.vis.editor.ui.tab.TabbedPane;
+import pl.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
