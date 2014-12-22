@@ -76,9 +76,9 @@ public class MenuBarModule extends ModuleAdapter {
 			editor.getModule(ProjectIOModule.class).load(file.file());
 		} catch (EditorException e) {
 			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
-		}				
+		}
 	}
-	
+
 	@Override
 	public void added () {
 		addToStage(Editor.instance.getRoot());
