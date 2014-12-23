@@ -333,6 +333,13 @@ select-box-list-bg
   orig: 1, 1
   offset: 0, 0
   index: -1
+window-bg
+  rotate: false
+  xy: 193, 232
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
 selection
   rotate: false
   xy: 24, 47
