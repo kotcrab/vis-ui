@@ -8,6 +8,7 @@
 -API Addition: VisUI.setDefualtTitleAlign(int align) 
 -API Addition: VisUI.getDefualtTitleAlign()
 -API Addition: FormValidator.fileExist(VisValidableTextField field, File relavtiveTo, String errorMsg)
+-API Addition: FormValidator can also take FileHandle when using file(Not)Exist relativeTo method 
 -API Addition: Added VisTextField.isFocusBorderEnabled() and VisTextField.setFocusBorderEnabled(boolean)
 -API Addition: Added FormValidator.fileNotExist(...) methods
 -API Addition: Added FormValidator.custom (VisValidableTextField field, FormInputValidator customValidator)

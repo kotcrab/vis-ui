@@ -21,6 +21,7 @@ import java.io.File;
 import pl.kotcrab.vis.ui.widget.VisTextField;
 import pl.kotcrab.vis.ui.widget.VisValidableTextField;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -59,6 +60,11 @@ public class FormValidator {
 		add(field);
 	}
 
+	public void fileExists (VisValidableTextField field, FileHandle relavtiveTo, String errorMsg) {
+		field.addValidator(new FileExistsValidator(relavtiveTo.file(), errorMsg));
+		add(field);
+	}
+
 	public void fileNotExists (VisValidableTextField field, String errorMsg) {
 		field.addValidator(new FileExistsValidator(errorMsg, true));
 		add(field);
@@ -71,6 +77,11 @@ public class FormValidator {
 
 	public void fileNotExists (VisValidableTextField field, File relavtiveTo, String errorMsg) {
 		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg, true));
+		add(field);
+	}
+
+	public void fileNotExists (VisValidableTextField field, FileHandle relavtiveTo, String errorMsg) {
+		field.addValidator(new FileExistsValidator(relavtiveTo.file(), errorMsg, true));
 		add(field);
 	}
 
