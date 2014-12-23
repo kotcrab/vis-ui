@@ -35,12 +35,14 @@ import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.project.Project;
 import pl.kotcrab.vis.editor.module.project.ProjectInfoTabModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import pl.kotcrab.vis.editor.module.project.SceneIOModule;
+import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
 import pl.kotcrab.vis.editor.ui.EditorFrame;
 import pl.kotcrab.vis.editor.ui.tab.Tab;
+import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
 import pl.kotcrab.vis.editor.util.EditorException;
 import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.util.DialogUtils;
+import pl.kotcrab.vis.ui.widget.VisSplitPane;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -58,7 +60,10 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private Stage stage;
 	private Table root;
 
-	private Table contentTable;
+	private Table mainContentTable;
+	private Table tabContentTable;
+	private Table projectContentTable;
+	private VisSplitPane splitPane;
 
 	private ModuleContainer moduleContainer;
 	private ProjectModuleContainer projectModuleContainer;
@@ -85,7 +90,11 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 
-		contentTable = new Table();
+		mainContentTable = new Table();
+		tabContentTable = new Table();
+		projectContentTable = new Table();
+		splitPane = new VisSplitPane(null, null, true);
+		splitPane.setSplitAmount(0.7f);
 
 		root = new Table();
 		root.setFillParent(true);
@@ -99,8 +108,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		moduleContainer.add(new MenuBarModule());
 		moduleContainer.add(new TabsModule());
 
-		root.add(contentTable).expand().fill().row();
-
+		root.add(mainContentTable).expand().fill().row();
 		root.row();
 
 		moduleContainer.add(new StatusBarModule());
@@ -201,8 +209,12 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	public <T> T getProjectModule (Class<T> moduleClass) {
-		if (projectLoaded == false)
-			throw new IllegalStateException("Cannot access project module before project has been loaded!");
+		if (projectLoaded == false) {
+			IllegalStateException ex = new IllegalStateException("Cannot access project module before project has been loaded!");
+			DialogUtils.showErrorDialog(getStage(), "Editor tried to access project module while project was not loaded!", ex);
+			throw ex;
+		}
+
 		return projectModuleContainer.get(moduleClass);
 	}
 
@@ -212,8 +224,21 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	public void tabChanged (Tab tab) {
 		this.tab = tab;
-		contentTable.clear();
-		if (tab != null) contentTable.add(tab.getContentTable()).expand().fill();
+
+		tabContentTable.clear();
+		mainContentTable.clear();
+		splitPane.setWidgets(null, null);
+
+		if (tab != null) {
+			tabContentTable.add(tab.getContentTable()).expand().fill();
+			if (tab.getViewMode() == TabViewMode.TAB_ONLY)
+				mainContentTable.add(tabContentTable).expand().fill();
+			else {
+				splitPane.setWidgets(tabContentTable, projectContentTable);
+				mainContentTable.add(splitPane).expand().fill();
+			}
+		}
+
 	}
 
 }

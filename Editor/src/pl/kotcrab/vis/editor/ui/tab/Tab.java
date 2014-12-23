@@ -28,4 +28,6 @@ public interface Tab {
 	public Table getContentTable ();
 
 	public void render (Batch batch);
+
+	public TabViewMode getViewMode ();
 }

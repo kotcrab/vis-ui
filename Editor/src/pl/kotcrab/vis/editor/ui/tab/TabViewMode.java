@@ -19,27 +19,6 @@
 
 package pl.kotcrab.vis.editor.ui.tab;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-
-public class TabAdapater implements Tab {
-	@Override
-	public String getButtonText () {
-		return "";
-	}
-
-	@Override
-	public Table getContentTable () {
-		return null;
-	}
-
-	@Override
-	public void render (Batch batch) {
-
-	}
-
-	@Override
-	public TabViewMode getViewMode () {
-		return TabViewMode.TAB_ONLY;
-	}
+public enum TabViewMode {
+	TAB_ONLY, WITH_PROJECT_ASSETS_MANAGER
 }

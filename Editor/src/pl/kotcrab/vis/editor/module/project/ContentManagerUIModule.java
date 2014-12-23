@@ -17,29 +17,9 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor.ui.tab;
+package pl.kotcrab.vis.editor.module.project;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-
-public class TabAdapater implements Tab {
-	@Override
-	public String getButtonText () {
-		return "";
-	}
-
-	@Override
-	public Table getContentTable () {
-		return null;
-	}
-
-	@Override
-	public void render (Batch batch) {
-
-	}
-
-	@Override
-	public TabViewMode getViewMode () {
-		return TabViewMode.TAB_ONLY;
-	}
+public class ContentManagerUIModule extends ProjectModule
+{
+	
 }

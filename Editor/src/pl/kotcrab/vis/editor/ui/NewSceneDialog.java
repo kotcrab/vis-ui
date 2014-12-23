@@ -23,7 +23,9 @@ import java.io.File;
 
 import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
+import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
 import pl.kotcrab.vis.runtime.scene.SceneViewport;
+import pl.kotcrab.vis.ui.FormInputValidator;
 import pl.kotcrab.vis.ui.FormValidator;
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisTable;
@@ -38,6 +40,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class NewSceneDialog extends VisWindow {
+	private Editor editor;
 
 	private VisValidableTextField nameTextField;
 	private VisValidableTextField pathTextField;
@@ -49,13 +52,17 @@ public class NewSceneDialog extends VisWindow {
 	private VisTextButton createButton;
 
 	private File visFolder;
+	private SceneIOModule sceneIO;
 
 	public NewSceneDialog () {
 		super("New Scene");
+		editor = Editor.instance;
 		setModal(true);
 
-		FileAccessModule fileAccess = Editor.instance.getProjectModule(FileAccessModule.class);
+		FileAccessModule fileAccess = editor.getProjectModule(FileAccessModule.class);
 		visFolder = fileAccess.getVisFolder();
+
+		sceneIO = editor.getProjectModule(SceneIOModule.class);
 
 		createUI();
 		createListeners();
@@ -79,8 +86,13 @@ public class NewSceneDialog extends VisWindow {
 		columnDefaults(1).width(300);
 
 		row().padTop(4);
+
+		VisTable fileFieldTable = new VisTable(true);
+		fileFieldTable.add(nameTextField).expand().fill();
+		fileFieldTable.add(new VisLabel(".json"));
+
 		add(new VisLabel("File name"));
-		add(nameTextField);
+		add(fileFieldTable);
 		row();
 
 		add(new VisLabel("Path"));
@@ -118,17 +130,26 @@ public class NewSceneDialog extends VisWindow {
 		createButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
+				sceneIO.create(visFolder, new File(pathTextField.getText(), nameTextField.getText() + ".json"));
 			}
 		});
 	}
 
 	private void createValidators () {
 		FormValidator validator = new FormValidator(createButton, errorLabel);
-
 		validator.notEmpty(nameTextField, "Name cannot be empty!");
 		validator.notEmpty(pathTextField, "Path cannot be empty!");
 
-		validator.fileExist(pathTextField, visFolder, "Path does not exist!");
-	}
+		validator.fileExists(pathTextField, visFolder, "Path does not exist!");
 
+		validator.custom(nameTextField, new FormInputValidator("That scene already exists!") {
+			@Override
+			public boolean validateInput (String input) {
+				File path = new File(visFolder, pathTextField.getText());
+				setResult(!new File(path, input + ".json").exists());
+
+				return super.validateInput(input);
+			}
+		});
+	}
 }

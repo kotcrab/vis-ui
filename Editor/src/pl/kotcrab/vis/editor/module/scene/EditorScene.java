@@ -17,22 +17,10 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor.module.project;
+package pl.kotcrab.vis.editor.module.scene;
 
-public class SceneIOModule extends ProjectModule {
+import java.io.File;
 
-	@Override
-	public void dispose () {
-
-	}
-
-	@Override
-	public void added () {
-
-	}
-
-	@Override
-	public void init () {
-
-	}
+public class EditorScene {
+	public File path;
 }
