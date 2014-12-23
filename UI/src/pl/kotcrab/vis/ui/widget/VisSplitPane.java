@@ -292,6 +292,13 @@ public class VisSplitPane extends WidgetGroup {
 		this.maxAmount = maxAmount;
 	}
 
+	/** @param firstWidget May be null
+	 * @param secondWidget May be null */
+	public void setWidgets (Actor firstWidget, Actor secondWidget) {
+		setFirstWidget(firstWidget);
+		setSecondWidget(secondWidget);
+	}
+
 	/** @param widget May be null. */
 	public void setFirstWidget (Actor widget) {
 		if (firstWidget != null) super.removeActor(firstWidget);
