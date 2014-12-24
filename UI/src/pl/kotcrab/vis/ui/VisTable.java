@@ -18,6 +18,7 @@ package pl.kotcrab.vis.ui;
 
 import pl.kotcrab.vis.ui.widget.Separator;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class VisTable extends Table {
@@ -34,8 +35,8 @@ public class VisTable extends Table {
 
 	/** Adds {@link Separator} widget to table with padding top, bottom 2px with fill and expand properties and inserts new row
 	 * after separator (not before!) */
-	public void addSeparator () {
-		add(new Separator()).padTop(2).padBottom(2).fill().expand().row();
+	public Cell<Separator> addSeparator () {
+		return add(new Separator()).padTop(2).padBottom(2).fill().expand().row();
 	}
 
 }

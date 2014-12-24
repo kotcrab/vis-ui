@@ -5,6 +5,7 @@
 -API Change: Removed deprecated resize() from MenuBar
 -API Change: New MenuItem constructors which takes Image instead of Drawable, removed MenuItem (String text, Drawable image, String styleName)
 -API Change: FormValidator.fileExist(...) -> FormValidator.fileExists(...)
+-API Change: VisTable.addSeparator() returns Cell<Separator> instead of void
 -API Addition: FileChooser(FileChooserLocale, Mode)
 -API Addition: MenuItem (String, ChangeListener)
 -API Addition: VisUI.setDefualtTitleAlign(int align) 
