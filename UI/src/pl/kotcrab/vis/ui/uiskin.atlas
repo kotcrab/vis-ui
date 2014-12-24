@@ -399,15 +399,15 @@ slider-knob-over
 splitpane
   rotate: false
   xy: 322, 222
-  size: 3, 1
-  orig: 3, 1
+  size: 4, 1
+  orig: 4, 1
   offset: 0, 0
   index: -1
 splitpane-vertical
   rotate: false
-  xy: 287, 211
-  size: 1, 3
-  orig: 1, 3
+  xy: 287, 210
+  size: 1, 4
+  orig: 1, 4
   offset: 0, 0
   index: -1
 touchpad-knob

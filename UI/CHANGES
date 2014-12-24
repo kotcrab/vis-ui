@@ -1,6 +1,7 @@
 [0.3.0]
 -LibGDX dependency version changed to 1.5.0
 -Font size changed to 15
+-Separator width changed to 4px, split pane bar width/height changed to 4px
 -API Change: Removed deprecated resize() from MenuBar
 -API Change: New MenuItem constructors which takes Image instead of Drawable, removed MenuItem (String text, Drawable image, String styleName)
 -API Change: FormValidator.fileExist(...) -> FormValidator.fileExists(...)
