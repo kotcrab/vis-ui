@@ -19,8 +19,6 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-import java.io.File;
-
 import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
@@ -35,6 +33,8 @@ import pl.kotcrab.vis.ui.widget.VisTextButton;
 import pl.kotcrab.vis.ui.widget.VisValidableTextField;
 import pl.kotcrab.vis.ui.widget.VisWindow;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -51,7 +51,7 @@ public class NewSceneDialog extends VisWindow {
 	private VisTextButton cancelButton;
 	private VisTextButton createButton;
 
-	private File visFolder;
+	private FileHandle visFolder;
 	private SceneIOModule sceneIO;
 
 	public NewSceneDialog () {
@@ -130,7 +130,7 @@ public class NewSceneDialog extends VisWindow {
 		createButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				sceneIO.create(visFolder, new File(pathTextField.getText(), nameTextField.getText() + ".json"));
+				sceneIO.create(visFolder, Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".json"));
 			}
 		});
 	}
@@ -145,8 +145,8 @@ public class NewSceneDialog extends VisWindow {
 		validator.custom(nameTextField, new FormInputValidator("That scene already exists!") {
 			@Override
 			public boolean validateInput (String input) {
-				File path = new File(visFolder, pathTextField.getText());
-				setResult(!new File(path, input + ".json").exists());
+				FileHandle sceneFile = visFolder.child(pathTextField.getText()).child(input + ".json");
+				setResult(!sceneFile.exists());
 
 				return super.validateInput(input);
 			}

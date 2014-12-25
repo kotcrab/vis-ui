@@ -61,4 +61,9 @@ public class ModuleContainer {
 	public int getModuleCounter () {
 		return modules.size;
 	}
+
+	public void resize () {
+		for (int i = 0; i < modules.size; i++)
+			modules.get(i).resize();
+	}
 }

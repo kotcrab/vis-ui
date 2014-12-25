@@ -1,10 +1,24 @@
 
 icons.png
-size: 128,32
+size: 128,128
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 exit
+  rotate: false
+  xy: 2, 26
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+folder-open
+  rotate: false
+  xy: 68, 92
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+import
   rotate: false
   xy: 2, 2
   size: 22, 22
@@ -13,14 +27,35 @@ exit
   index: -1
 load
   rotate: false
-  xy: 26, 2
+  xy: 26, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 new
   rotate: false
-  xy: 50, 2
+  xy: 68, 68
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+search
+  rotate: false
+  xy: 92, 92
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+search-big
+  rotate: false
+  xy: 2, 50
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+settings-view
+  rotate: false
+  xy: 26, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0

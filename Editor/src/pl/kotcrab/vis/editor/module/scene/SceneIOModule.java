@@ -19,9 +19,9 @@
 
 package pl.kotcrab.vis.editor.module.scene;
 
-import java.io.File;
-
 import pl.kotcrab.vis.editor.module.project.ProjectModule;
+
+import com.badlogic.gdx.files.FileHandle;
 
 public class SceneIOModule extends ProjectModule {
 
@@ -32,7 +32,7 @@ public class SceneIOModule extends ProjectModule {
 		tabsControllerModule = containter.get(SceneTabsControllerModule.class);
 	}
 
-	public EditorScene load (File file) {
+	public EditorScene load (FileHandle file) {
 		return null;
 	}
 
@@ -40,7 +40,8 @@ public class SceneIOModule extends ProjectModule {
 
 	}
 
-	public void create (File visFolder, File relativeScenePath) {
-		
+	// TODO this should not take visFolder, it should get it from FileAccessModule
+	public void create (FileHandle visFolder, FileHandle relativeScenePath) {
+
 	}
 }

@@ -19,30 +19,26 @@
 
 package pl.kotcrab.vis.editor.module.project;
 
-import java.io.File;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 
 public class FileAccessModule extends ProjectModule {
-
-	public FileAccessModule () {
-	}
-
-	@Override
-	public void dispose () {
-
-	}
-
-	@Override
-	public void added () {
-
-	}
+	private FileHandle root;
+	private FileHandle visFolder;
+	private FileHandle assetsFolder;
 
 	@Override
 	public void init () {
-
+		root = Gdx.files.absolute(project.root);
+		visFolder = root.child("vis");
+		assetsFolder = visFolder.child("assets");
 	}
 
-	public File getVisFolder () {
-		return new File(project.root, "vis");
+	public FileHandle getVisFolder () {
+		return visFolder;
 	}
 
+	public FileHandle getAssetsFolder () {
+		return assetsFolder;
+	}
 }

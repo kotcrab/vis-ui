@@ -25,4 +25,6 @@ public interface Module {
 	public void added ();
 
 	public void init ();
+	
+	public void resize();
 }

@@ -48,4 +48,9 @@ public abstract class ProjectModule implements Module {
 
 	}
 
+	@Override
+	public void resize () {
+		
+	}
+
 }

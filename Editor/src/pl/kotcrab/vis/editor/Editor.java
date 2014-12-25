@@ -31,6 +31,7 @@ import pl.kotcrab.vis.editor.module.ModuleContainer;
 import pl.kotcrab.vis.editor.module.ProjectIOModule;
 import pl.kotcrab.vis.editor.module.StatusBarModule;
 import pl.kotcrab.vis.editor.module.TabsModule;
+import pl.kotcrab.vis.editor.module.project.AssetsManagerUIModule;
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.project.Project;
 import pl.kotcrab.vis.editor.module.project.ProjectInfoTabModule;
@@ -40,8 +41,10 @@ import pl.kotcrab.vis.editor.ui.EditorFrame;
 import pl.kotcrab.vis.editor.ui.tab.Tab;
 import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
 import pl.kotcrab.vis.editor.util.EditorException;
+import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.util.DialogUtils;
+import pl.kotcrab.vis.ui.widget.VisLabel;
 import pl.kotcrab.vis.ui.widget.VisSplitPane;
 
 import com.badlogic.gdx.ApplicationAdapter;
@@ -60,9 +63,10 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private Stage stage;
 	private Table root;
 
+	//TODO move to module
 	private Table mainContentTable;
 	private Table tabContentTable;
-	private Table projectContentTable;
+	private VisTable projectContentTable;
 	private VisSplitPane splitPane;
 
 	private ModuleContainer moduleContainer;
@@ -92,9 +96,11 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		mainContentTable = new Table();
 		tabContentTable = new Table();
-		projectContentTable = new Table();
+		projectContentTable = new VisTable(true);
 		splitPane = new VisSplitPane(null, null, true);
 		splitPane.setSplitAmount(0.7f);
+
+		projectContentTable.add(new VisLabel("Project Content Manager has not been loaded yet"));
 
 		root = new Table();
 		root.setFillParent(true);
@@ -133,6 +139,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	@Override
 	public void resize (int width, int height) {
 		stage.getViewport().update(width, height, true);
+		moduleContainer.resize();
+		projectModuleContainer.resize();
 	}
 
 	@Override
@@ -201,6 +209,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectModuleContainer.add(new FileAccessModule());
 		projectModuleContainer.add(new SceneIOModule());
 		projectModuleContainer.add(new ProjectInfoTabModule());
+		projectModuleContainer.add(new AssetsManagerUIModule());
 
 		projectModuleContainer.init();
 
@@ -241,4 +250,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	}
 
+	public VisTable getProjectContentTable () {
+		return projectContentTable;
+	}
 }

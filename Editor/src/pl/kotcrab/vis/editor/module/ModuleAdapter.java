@@ -34,4 +34,9 @@ public class ModuleAdapter implements Module {
 
 	}
 
+	@Override
+	public void resize () {
+		
+	}
+
 }

@@ -20,13 +20,11 @@
 package pl.kotcrab.vis.editor.ui;
 
 import pl.kotcrab.vis.editor.module.project.Project;
-import pl.kotcrab.vis.editor.ui.tab.Tab;
 import pl.kotcrab.vis.editor.ui.tab.TabAdapater;
 import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.widget.VisLabel;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class ProjectInfoTab extends TabAdapater {
@@ -47,7 +45,7 @@ public class ProjectInfoTab extends TabAdapater {
 
 	@Override
 	public String getButtonText () {
-		return "Project";
+		return "Project Info";
 	}
 
 	@Override
