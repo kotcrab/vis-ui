@@ -37,7 +37,6 @@ public enum SceneViewport {
 			return "Extend Viewport";
 		case SCREEN:
 			return "Screen Viewport";
-
 		default:
 			return super.toString();
 		}
