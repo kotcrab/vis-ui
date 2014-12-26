@@ -73,7 +73,7 @@ public class MenuBarModule extends Module {
 
 	private void loadProject (FileHandle file) {
 		try {
-			editor.getModule(ProjectIOModule.class).load(file.file());
+			containter.get(ProjectIOModule.class).load(file.file());
 		} catch (EditorException e) {
 			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
 		}

@@ -35,7 +35,7 @@ public class ProjectInfoTabModule extends ProjectModule implements EventListener
 
 	public ProjectInfoTabModule () {
 		editor = Editor.instance;
-		tabsModule = editor.getModule(TabsModule.class);
+		tabsModule = containter.get(TabsModule.class);
 	}
 
 	@Override

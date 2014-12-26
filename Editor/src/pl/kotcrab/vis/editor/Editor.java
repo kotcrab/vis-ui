@@ -217,6 +217,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		App.eventBus.post(new ProjectStatusEvent(Status.Loaded));
 	}
 
+	@Deprecated
 	public <T> T getProjectModule (Class<T> moduleClass) {
 		if (projectLoaded == false) {
 			IllegalStateException ex = new IllegalStateException("Cannot access project module before project has been loaded!");
@@ -227,6 +228,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		return projectModuleContainer.get(moduleClass);
 	}
 
+	@Deprecated
 	public <T> T getModule (Class<T> moduleClass) {
 		return moduleContainer.get(moduleClass);
 	}
