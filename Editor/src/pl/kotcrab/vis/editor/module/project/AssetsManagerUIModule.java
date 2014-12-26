@@ -79,7 +79,7 @@ public class AssetsManagerUIModule extends ProjectModule {
 
 	@Override
 	public void init () {
-		fileAccess = containter.get(FileAccessModule.class);
+		fileAccess = projectContainter.get(FileAccessModule.class);
 		visFolder = fileAccess.getVisFolder();
 		assetsFolder = fileAccess.getAssetsFolder();
 

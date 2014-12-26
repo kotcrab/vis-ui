@@ -29,7 +29,7 @@ public class SceneIOModule extends ProjectModule {
 
 	@Override
 	public void init () {
-		tabsControllerModule = containter.get(SceneTabsControllerModule.class);
+		tabsControllerModule = projectContainter.get(SceneTabsControllerModule.class);
 	}
 
 	public EditorScene load (FileHandle file) {

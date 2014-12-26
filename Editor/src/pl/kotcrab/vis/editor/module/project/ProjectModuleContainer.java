@@ -32,7 +32,7 @@ public class ProjectModuleContainer extends ModuleContainer {
 		if (project == null) throw new IllegalStateException("Module cannot be added before project has been set!");
 
 		((ProjectModule)module).setProject(project);
-		((ProjectModule)module).setContainter(this);
+		((ProjectModule)module).setProjectModuleContainter(this);
 		super.add(module);
 	}
 

@@ -36,7 +36,7 @@ import pl.kotcrab.vis.ui.widget.file.FileUtils;
 
 import com.badlogic.gdx.utils.Json;
 
-public class ProjectIOModule extends ModuleAdapter {
+public class ProjectIOModule extends Module {
 
 	public boolean load (File projectRoot) throws EditorException {
 		if (projectRoot.exists() == false) throw new EditorException("Selected folder does not exist!");

@@ -19,12 +19,25 @@
 
 package pl.kotcrab.vis.editor.module;
 
-public interface Module {
-	public void dispose ();
+import com.badlogic.gdx.utils.Disposable;
 
-	public void added ();
-
-	public void init ();
+public abstract class Module implements Disposable {
+	protected ModuleContainer containter;
 	
-	public void resize();
+	@Override
+	public void dispose () {
+	}
+
+	public void added () {
+	}
+
+	public void init () {
+	}
+
+	public void resize () {
+	}
+	
+	void setContainter (ModuleContainer container) {
+		this.containter = container;
+	}
 }
