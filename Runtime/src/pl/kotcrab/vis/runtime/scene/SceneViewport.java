@@ -22,8 +22,7 @@ package pl.kotcrab.vis.runtime.scene;
 public enum SceneViewport {
 	NONE, STRETCH, FIT, FILL, SCREEN, EXTEND;
 
-	@Override
-	public String toString () {
+	public String toListString () {
 		switch (this) {
 		case NONE:
 			return "None";

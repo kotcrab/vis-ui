@@ -37,19 +37,23 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.ObjectMap;
 
 public class NewSceneDialog extends VisWindow {
 	private VisValidableTextField nameTextField;
 	private VisValidableTextField pathTextField;
-	private VisSelectBox<SceneViewport> viewportModeSelectBox;
+	private VisSelectBox<String> viewportModeSelectBox;
 
 	private VisLabel errorLabel;
 
 	private VisTextButton cancelButton;
 	private VisTextButton createButton;
 
-	private FileHandle visFolder;
 	private SceneIOModule sceneIO;
+
+	private FileHandle visFolder;
+
+	private ObjectMap<String, SceneViewport> viewportMap;
 
 	public NewSceneDialog (FileAccessModule fileAccess, SceneIOModule sceneIO) {
 		super("New Scene");
@@ -57,6 +61,11 @@ public class NewSceneDialog extends VisWindow {
 
 		this.sceneIO = sceneIO;
 		visFolder = fileAccess.getVisFolder();
+
+		viewportMap = new ObjectMap<String, SceneViewport>();
+		SceneViewport[] values = SceneViewport.values();
+		for (int i = 0; i < values.length; i++)
+			viewportMap.put(values[i].toListString(), values[i]);
 
 		createUI();
 		createListeners();
@@ -69,9 +78,9 @@ public class NewSceneDialog extends VisWindow {
 	private void createUI () {
 		nameTextField = new VisValidableTextField();
 		pathTextField = new VisValidableTextField("/assets/scene/");
-		viewportModeSelectBox = new VisSelectBox<SceneViewport>();
-		viewportModeSelectBox.setItems(SceneViewport.values());
-
+		viewportModeSelectBox = new VisSelectBox<String>();
+		viewportModeSelectBox.setItems(viewportMap.keys().toArray());
+		
 		errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);
 
