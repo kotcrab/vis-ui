@@ -29,7 +29,7 @@ public abstract class ProjectModule implements Module {
 		this.project = project;
 	}
 
-	void setCotainter (ProjectModuleContainer container) {
+	void setContainter (ProjectModuleContainer container) {
 		this.containter = container;
 	}
 
