@@ -19,7 +19,6 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
 import pl.kotcrab.vis.runtime.scene.SceneViewport;
@@ -40,8 +39,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class NewSceneDialog extends VisWindow {
-	private Editor editor;
-
 	private VisValidableTextField nameTextField;
 	private VisValidableTextField pathTextField;
 	private VisSelectBox<SceneViewport> viewportModeSelectBox;
@@ -54,15 +51,12 @@ public class NewSceneDialog extends VisWindow {
 	private FileHandle visFolder;
 	private SceneIOModule sceneIO;
 
-	public NewSceneDialog () {
+	public NewSceneDialog (FileAccessModule fileAccess, SceneIOModule sceneIO) {
 		super("New Scene");
-		editor = Editor.instance;
 		setModal(true);
 
-		FileAccessModule fileAccess = editor.getProjectModule(FileAccessModule.class);
+		this.sceneIO = sceneIO;
 		visFolder = fileAccess.getVisFolder();
-
-		sceneIO = editor.getProjectModule(SceneIOModule.class);
 
 		createUI();
 		createListeners();

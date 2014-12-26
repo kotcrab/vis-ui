@@ -24,7 +24,6 @@ import pl.kotcrab.vis.editor.module.project.ProjectModule;
 import com.badlogic.gdx.files.FileHandle;
 
 public class SceneIOModule extends ProjectModule {
-
 	private SceneTabsControllerModule tabsControllerModule;
 
 	@Override

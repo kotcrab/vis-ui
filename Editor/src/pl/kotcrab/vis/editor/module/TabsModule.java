@@ -34,15 +34,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class TabsModule extends Module implements EventListener {
 	private Editor editor;
-
-	private Stage stage;
+	
 	private TabbedPane tabbedPane;
 
 	private StartPageTab startPageTab;
 
 	public TabsModule () {
 		editor = Editor.instance;
-		stage = editor.getStage();
 
 		tabbedPane = new TabbedPane(new TabbedPaneListener() {
 			@Override

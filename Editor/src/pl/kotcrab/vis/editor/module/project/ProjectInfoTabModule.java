@@ -20,21 +20,17 @@
 package pl.kotcrab.vis.editor.module.project;
 
 import pl.kotcrab.vis.editor.App;
-import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.event.Event;
 import pl.kotcrab.vis.editor.event.EventListener;
 import pl.kotcrab.vis.editor.module.TabsModule;
 import pl.kotcrab.vis.editor.ui.ProjectInfoTab;
 
 public class ProjectInfoTabModule extends ProjectModule implements EventListener {
-
-	private Editor editor;
 	private TabsModule tabsModule;
 
 	private ProjectInfoTab tab;
 
 	public ProjectInfoTabModule () {
-		editor = Editor.instance;
 		tabsModule = containter.get(TabsModule.class);
 	}
 

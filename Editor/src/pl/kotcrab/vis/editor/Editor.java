@@ -63,7 +63,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private Stage stage;
 	private Table root;
 
-	//TODO move to module
+	// TODO move to module
 	private Table mainContentTable;
 	private Table tabContentTable;
 	private VisTable projectContentTable;
@@ -111,7 +111,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		moduleContainer.add(new ProjectIOModule());
 
-		moduleContainer.add(new MenuBarModule());
+		// GUI modules
+		moduleContainer.add(new MenuBarModule(projectModuleContainer));
 		moduleContainer.add(new TabsModule());
 
 		root.add(mainContentTable).expand().fill().row();
@@ -127,9 +128,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		} catch (EditorException e) {
 			e.printStackTrace();
 		}
-		// stage.addActor(new NewProjectDialog());
-		// stage.addActor(new AsyncTaskProgressDialog(null));
-		// stage.addActor(new FileChooser(stage, "Choose file", FileChooser.Mode.SAVE));
 	}
 
 	public StatusBarModule getStatusBar () {
@@ -215,17 +213,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		App.eventBus.post(new StatusBarEvent("Project loaded", 3));
 		App.eventBus.post(new ProjectStatusEvent(Status.Loaded));
-	}
-
-	@Deprecated
-	public <T> T getProjectModule (Class<T> moduleClass) {
-		if (projectLoaded == false) {
-			IllegalStateException ex = new IllegalStateException("Cannot access project module before project has been loaded!");
-			DialogUtils.showErrorDialog(getStage(), "Editor tried to access project module while project was not loaded!", ex);
-			throw ex;
-		}
-
-		return projectModuleContainer.get(moduleClass);
 	}
 
 	public void tabChanged (Tab tab) {

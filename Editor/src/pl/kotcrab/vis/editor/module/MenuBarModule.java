@@ -21,6 +21,9 @@ package pl.kotcrab.vis.editor.module;
 
 import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.Editor;
+import pl.kotcrab.vis.editor.module.project.FileAccessModule;
+import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
 import pl.kotcrab.vis.editor.ui.NewProjectDialog;
 import pl.kotcrab.vis.editor.ui.NewSceneDialog;
 import pl.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
@@ -41,19 +44,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class MenuBarModule extends Module {
+	private ProjectModuleContainer projectContainer;
 	private Editor editor;
 
-	private ProjectIOModule projectIOModule;
-	
 	private Stage stage;
 	private MenuBar menuBar;
 
 	private ProjectStatusWidgetController controller;
 	private FileChooser chooser;
 
-	public MenuBarModule () {
+	private ProjectIOModule projectIOModule;
+
+	public MenuBarModule (ProjectModuleContainer moduleContainer) {
 		editor = Editor.instance;
 		stage = editor.getStage();
+		projectContainer = moduleContainer;
 
 		menuBar = new MenuBar(stage);
 
@@ -73,7 +78,6 @@ public class MenuBarModule extends Module {
 		createHelpMenu();
 	}
 
-
 	@Override
 	public void init () {
 		projectIOModule = containter.get(ProjectIOModule.class);
@@ -91,8 +95,7 @@ public class MenuBarModule extends Module {
 			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
 		}
 	}
-	
-	
+
 	private void createFileMenu () {
 		Menu menu = new Menu("File");
 		menuBar.addMenu(menu);
@@ -138,7 +141,9 @@ public class MenuBarModule extends Module {
 		MenuItem item = new MenuItem("New Scene...", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				stage.addActor(new NewSceneDialog().fadeIn());
+				FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
+				SceneIOModule sceneIO = projectContainer.get(SceneIOModule.class);
+				stage.addActor(new NewSceneDialog(fileAccess, sceneIO).fadeIn());
 			}
 		});
 

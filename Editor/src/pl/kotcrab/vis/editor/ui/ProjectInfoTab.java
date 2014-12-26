@@ -28,7 +28,6 @@ import pl.kotcrab.vis.ui.widget.VisLabel;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class ProjectInfoTab extends TabAdapater {
-
 	private Project project;
 
 	private Table content;
