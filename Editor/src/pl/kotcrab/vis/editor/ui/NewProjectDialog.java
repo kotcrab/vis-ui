@@ -19,7 +19,6 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.module.ProjectIOModule;
 import pl.kotcrab.vis.editor.module.project.Project;
 import pl.kotcrab.vis.ui.FormValidator;
@@ -59,11 +58,11 @@ public class NewProjectDialog extends VisWindow {
 
 	private ProjectIOModule projectIO;
 
-	public NewProjectDialog () {
+	public NewProjectDialog (ProjectIOModule projectIO) {
 		super("New Project");
 		setModal(true);
 
-		projectIO = Editor.instance.getModule(ProjectIOModule.class);
+		this.projectIO = projectIO;
 
 		craeteUI();
 		createListeners();

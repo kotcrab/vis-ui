@@ -43,6 +43,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 public class MenuBarModule extends Module {
 	private Editor editor;
 
+	private ProjectIOModule projectIOModule;
+	
 	private Stage stage;
 	private MenuBar menuBar;
 
@@ -71,12 +73,10 @@ public class MenuBarModule extends Module {
 		createHelpMenu();
 	}
 
-	private void loadProject (FileHandle file) {
-		try {
-			containter.get(ProjectIOModule.class).load(file.file());
-		} catch (EditorException e) {
-			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
-		}
+
+	@Override
+	public void init () {
+		projectIOModule = containter.get(ProjectIOModule.class);
 	}
 
 	@Override
@@ -84,6 +84,15 @@ public class MenuBarModule extends Module {
 		addToStage(Editor.instance.getRoot());
 	}
 
+	private void loadProject (FileHandle file) {
+		try {
+			containter.get(ProjectIOModule.class).load(file.file());
+		} catch (EditorException e) {
+			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
+		}
+	}
+	
+	
 	private void createFileMenu () {
 		Menu menu = new Menu("File");
 		menuBar.addMenu(menu);
@@ -91,7 +100,7 @@ public class MenuBarModule extends Module {
 		menu.addItem(new MenuItem("New project...", Assets.getIcon("new"), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				stage.addActor(new NewProjectDialog().fadeIn());
+				stage.addActor(new NewProjectDialog(projectIOModule).fadeIn());
 			}
 		}));
 

@@ -228,11 +228,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		return projectModuleContainer.get(moduleClass);
 	}
 
-	@Deprecated
-	public <T> T getModule (Class<T> moduleClass) {
-		return moduleContainer.get(moduleClass);
-	}
-
 	public void tabChanged (Tab tab) {
 		this.tab = tab;
 
