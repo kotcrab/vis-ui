@@ -107,7 +107,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		stage.addActor(root);
 
 		moduleContainer = new ModuleContainer();
-		projectModuleContainer = new ProjectModuleContainer();
+		projectModuleContainer = new ProjectModuleContainer(moduleContainer);
 
 		moduleContainer.add(new ProjectIOModule());
 

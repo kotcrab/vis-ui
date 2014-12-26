@@ -23,7 +23,12 @@ import pl.kotcrab.vis.editor.module.Module;
 import pl.kotcrab.vis.editor.module.ModuleContainer;
 
 public class ProjectModuleContainer extends ModuleContainer {
+	private ModuleContainer editorModuleContainer;
 	private Project project;
+	
+	public ProjectModuleContainer (ModuleContainer editorModuleContainter) {
+		this.editorModuleContainer = editorModuleContainter;
+	}
 
 	@Override
 	public void add (Module module) {
@@ -34,6 +39,7 @@ public class ProjectModuleContainer extends ModuleContainer {
 		((ProjectModule)module).setProject(project);
 		((ProjectModule)module).setProjectModuleContainter(this);
 		super.add(module);
+		module.setContainer(editorModuleContainer);
 	}
 
 	public void setProject (Project project) {

@@ -37,7 +37,7 @@ public abstract class Module implements Disposable {
 	public void resize () {
 	}
 	
-	void setContainter (ModuleContainer container) {
+	public void setContainer (ModuleContainer container) {
 		this.containter = container;
 	}
 }

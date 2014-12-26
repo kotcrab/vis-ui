@@ -30,12 +30,9 @@ public class ProjectInfoTabModule extends ProjectModule implements EventListener
 
 	private ProjectInfoTab tab;
 
-	public ProjectInfoTabModule () {
-		tabsModule = containter.get(TabsModule.class);
-	}
-
 	@Override
 	public void init () {
+		tabsModule = containter.get(TabsModule.class);
 		tab = new ProjectInfoTab(project);
 		tabsModule.addTab(tab);
 	}
@@ -53,7 +50,6 @@ public class ProjectInfoTabModule extends ProjectModule implements EventListener
 
 	@Override
 	public boolean onEvent (Event e) {
-
 		return false;
 	}
 }

@@ -26,7 +26,7 @@ public class ModuleContainer {
 	private boolean initFinished = false;
 
 	public void add (Module module) {
-		module.setContainter(this);
+		module.setContainer(this);
 		modules.add(module);
 		module.added();
 		if (initFinished) module.init();
