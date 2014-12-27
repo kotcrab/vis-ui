@@ -23,7 +23,6 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.maps.Map;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
@@ -79,7 +78,17 @@ public class FileAccessModule extends ProjectModule {
 		fileTypeMap.put(relativePath, type);
 		saveFileTypeMap();
 	}
-	
+
+	public EditorFileType getFileType (FileHandle file) {
+		String relativePath = file.path().substring(visFolder.path().length());
+
+		for (Entry<String, EditorFileType> e: fileTypeMap.entries()) {
+			if(e.key.equals(relativePath)) return e.value;
+		}
+
+		return EditorFileType.UNKNOWN;
+	}
+
 	public FileHandle getVisFolder () {
 		return visFolder;
 	}
