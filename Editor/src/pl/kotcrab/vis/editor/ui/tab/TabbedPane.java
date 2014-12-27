@@ -24,6 +24,7 @@ import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.widget.VisTextButton;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -105,9 +106,12 @@ public class TabbedPane {
 				listener.switched(tab);
 			}
 
+			if (tab == activeTab) button.setChecked(true);
+
 			button.addListener(new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
+					activeTab = tab;
 					if (button.isChecked()) listener.switched(tab);
 				}
 			});
