@@ -19,6 +19,8 @@
 
 package pl.kotcrab.vis.editor.ui;
 
+import pl.kotcrab.vis.editor.App;
+import pl.kotcrab.vis.editor.event.StatusBarEvent;
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
 import pl.kotcrab.vis.runtime.scene.SceneViewport;
@@ -37,7 +39,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.OrderedMap;
 
 public class NewSceneDialog extends VisWindow {
 	private VisValidableTextField nameTextField;
@@ -53,16 +55,16 @@ public class NewSceneDialog extends VisWindow {
 
 	private FileHandle visFolder;
 
-	private ObjectMap<String, SceneViewport> viewportMap;
+	private OrderedMap<String, SceneViewport> viewportMap;
 
-	public NewSceneDialog (FileAccessModule fileAccess, SceneIOModule sceneIO) {
+	public NewSceneDialog (FileAccessModule fileAccess, SceneIOModule sceneIOModule) {
 		super("New Scene");
 		setModal(true);
 
-		this.sceneIO = sceneIO;
+		sceneIO = sceneIOModule;
 		visFolder = fileAccess.getVisFolder();
 
-		viewportMap = new ObjectMap<String, SceneViewport>();
+		viewportMap = new OrderedMap<String, SceneViewport>();
 		SceneViewport[] values = SceneViewport.values();
 		for (int i = 0; i < values.length; i++)
 			viewportMap.put(values[i].toListString(), values[i]);
@@ -122,7 +124,6 @@ public class NewSceneDialog extends VisWindow {
 	}
 
 	private void createListeners () {
-
 		cancelButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
@@ -133,7 +134,10 @@ public class NewSceneDialog extends VisWindow {
 		createButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				sceneIO.create(Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".json"));
+				FileHandle targetFile = Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".json");
+				sceneIO.create(targetFile, viewportMap.get(viewportModeSelectBox.getSelected()));
+				App.eventBus.post(new StatusBarEvent("Scene created: " + targetFile.path()));
+				fadeOut();
 			}
 		});
 	}
