@@ -19,8 +19,20 @@
 
 package pl.kotcrab.vis.editor.module.scene;
 
-import java.io.File;
+import pl.kotcrab.vis.runtime.scene.SceneViewport;
+
+import com.badlogic.gdx.files.FileHandle;
 
 public class EditorScene {
-	public File path;
+	/** Scene file, path is relative to project vis folder */
+	public FileHandle file;
+	public SceneViewport viewport;
+
+	public EditorScene () {
+	}
+
+	public EditorScene (FileHandle path, SceneViewport viewport) {
+		this.file = path;
+		this.viewport = viewport;
+	}
 }

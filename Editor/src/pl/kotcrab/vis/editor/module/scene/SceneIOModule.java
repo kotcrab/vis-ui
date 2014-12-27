@@ -21,28 +21,41 @@ package pl.kotcrab.vis.editor.module.scene;
 
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModule;
+import pl.kotcrab.vis.runtime.scene.SceneViewport;
 
+import com.badlogic.gdx.backends.lwjgl.LwjglFileHandle;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Json;
 
 public class SceneIOModule extends ProjectModule {
+	private Json json;
+
 	private FileAccessModule fileAccessModule;
-	private SceneTabsControllerModule tabsControllerModule;
+
+	private FileHandle visFolder;
 
 	@Override
 	public void init () {
 		fileAccessModule = projectContainter.get(FileAccessModule.class);
-		tabsControllerModule = projectContainter.get(SceneTabsControllerModule.class);
+
+		visFolder = fileAccessModule.getVisFolder();
+
+		json = new Json();
+		json.setElementType(EditorScene.class, "file", LwjglFileHandle.class);
 	}
 
 	public EditorScene load (FileHandle file) {
-		return null;
+		EditorScene scene = json.fromJson(EditorScene.class, file);
+		scene.file = file;
+		return scene;
 	}
 
-	public void save (EditorScene file) {
-
+	public void save (EditorScene scene) {
+		json.toJson(scene, visFolder.child(scene.file.path()));
 	}
 
-	public void create (FileHandle relativeScenePath) {
-
+	public void create (FileHandle relativeScenePath, SceneViewport viewport) {
+		EditorScene scene = new EditorScene(relativeScenePath, viewport);
+		save(scene);
 	}
 }
