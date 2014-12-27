@@ -20,6 +20,7 @@
 package pl.kotcrab.vis.editor.module.scene;
 
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
+import pl.kotcrab.vis.editor.module.project.EditorFileType;
 import pl.kotcrab.vis.editor.module.project.ProjectModule;
 import pl.kotcrab.vis.runtime.scene.SceneViewport;
 
@@ -51,11 +52,16 @@ public class SceneIOModule extends ProjectModule {
 	}
 
 	public void save (EditorScene scene) {
-		json.toJson(scene, visFolder.child(scene.file.path()));
+		json.toJson(scene, getFileHandleForScene(scene));
 	}
 
 	public void create (FileHandle relativeScenePath, SceneViewport viewport) {
 		EditorScene scene = new EditorScene(relativeScenePath, viewport);
+		fileAccessModule.addFileType(getFileHandleForScene(scene), EditorFileType.SCENE);
 		save(scene);
+	}
+
+	public FileHandle getFileHandleForScene (EditorScene scene) {
+		return visFolder.child(scene.file.path());
 	}
 }
