@@ -133,7 +133,7 @@ public class NewSceneDialog extends VisWindow {
 		createButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				sceneIO.create(visFolder, Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".json"));
+				sceneIO.create(Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".json"));
 			}
 		});
 	}

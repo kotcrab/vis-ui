@@ -19,15 +19,18 @@
 
 package pl.kotcrab.vis.editor.module.scene;
 
+import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModule;
 
 import com.badlogic.gdx.files.FileHandle;
 
 public class SceneIOModule extends ProjectModule {
+	private FileAccessModule fileAccessModule;
 	private SceneTabsControllerModule tabsControllerModule;
 
 	@Override
 	public void init () {
+		fileAccessModule = projectContainter.get(FileAccessModule.class);
 		tabsControllerModule = projectContainter.get(SceneTabsControllerModule.class);
 	}
 
@@ -39,8 +42,7 @@ public class SceneIOModule extends ProjectModule {
 
 	}
 
-	// TODO this should not take visFolder, it should get it from FileAccessModule
-	public void create (FileHandle visFolder, FileHandle relativeScenePath) {
-
+	public void create (FileHandle relativeScenePath) {
+		
 	}
 }
