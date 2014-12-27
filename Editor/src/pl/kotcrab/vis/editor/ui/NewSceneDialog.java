@@ -136,7 +136,7 @@ public class NewSceneDialog extends VisWindow {
 			public void changed (ChangeEvent event, Actor actor) {
 				FileHandle targetFile = Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".json");
 				sceneIO.create(targetFile, viewportMap.get(viewportModeSelectBox.getSelected()));
-				App.eventBus.post(new StatusBarEvent("Scene created: " + targetFile.path()));
+				App.eventBus.post(new StatusBarEvent("Scene created: " + targetFile.path().substring(1)));
 				fadeOut();
 			}
 		});
