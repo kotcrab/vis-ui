@@ -206,8 +206,9 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectModuleContainer.setProject(project);
 
 		projectModuleContainer.add(new FileAccessModule());
-		projectModuleContainer.add(new SceneTabsControllerModule());
 		projectModuleContainer.add(new SceneIOModule());
+
+		projectModuleContainer.add(new SceneTabsControllerModule());
 		projectModuleContainer.add(new ProjectInfoTabModule());
 		projectModuleContainer.add(new AssetsManagerUIModule());
 
