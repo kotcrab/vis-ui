@@ -80,7 +80,7 @@ public class NewSceneDialog extends VisWindow {
 		pathTextField = new VisValidableTextField("/assets/scene/");
 		viewportModeSelectBox = new VisSelectBox<String>();
 		viewportModeSelectBox.setItems(viewportMap.keys().toArray());
-		
+
 		errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);
 

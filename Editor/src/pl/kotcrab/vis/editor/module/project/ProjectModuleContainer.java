@@ -25,7 +25,7 @@ import pl.kotcrab.vis.editor.module.ModuleContainer;
 public class ProjectModuleContainer extends ModuleContainer {
 	private ModuleContainer editorModuleContainer;
 	private Project project;
-	
+
 	public ProjectModuleContainer (ModuleContainer editorModuleContainter) {
 		this.editorModuleContainer = editorModuleContainter;
 	}

@@ -23,7 +23,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 public abstract class Module implements Disposable {
 	protected ModuleContainer containter;
-	
+
 	@Override
 	public void dispose () {
 	}
@@ -36,7 +36,7 @@ public abstract class Module implements Disposable {
 
 	public void resize () {
 	}
-	
+
 	public void setContainer (ModuleContainer container) {
 		this.containter = container;
 	}

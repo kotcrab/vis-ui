@@ -43,6 +43,6 @@ public class SceneIOModule extends ProjectModule {
 	}
 
 	public void create (FileHandle relativeScenePath) {
-		
+
 	}
 }

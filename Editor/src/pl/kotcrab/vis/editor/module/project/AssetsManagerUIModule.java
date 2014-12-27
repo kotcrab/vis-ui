@@ -110,7 +110,7 @@ public class AssetsManagerUIModule extends ProjectModule {
 	private void createToolbarTable () {
 		contentTtileLabel = new VisLabel("Content");
 		searchTextField = new VisTextField();
-		
+
 		toolbarTable.add(contentTtileLabel).expand().left().padLeft(3);
 		toolbarTable.add(new VisImageButton(Assets.getIcon("folder-open")));
 		toolbarTable.add(new VisImageButton(Assets.getIcon("settings-view")));

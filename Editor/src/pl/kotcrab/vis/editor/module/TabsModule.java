@@ -29,12 +29,11 @@ import pl.kotcrab.vis.editor.ui.tab.Tab;
 import pl.kotcrab.vis.editor.ui.tab.TabbedPane;
 import pl.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
 
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class TabsModule extends Module implements EventListener {
 	private Editor editor;
-	
+
 	private TabbedPane tabbedPane;
 
 	private StartPageTab startPageTab;

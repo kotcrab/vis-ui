@@ -28,10 +28,10 @@ public class SceneTabsControllerModule extends ProjectModule {
 	private ArrayList<Tab> loadedTabs;
 
 	public SceneTabsControllerModule () {
-		//loadedTabs = new ArrayList<Tab>();
+		// loadedTabs = new ArrayList<Tab>();
 	}
 
 	public void open (EditorScene scene) {
-		
+
 	}
 }
