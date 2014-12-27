@@ -187,7 +187,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectLoaded = false;
 		projectModuleContainer.dispose();
 
-		App.eventBus.post(new StatusBarEvent("Project unloaded", 3));
+		App.eventBus.post(new StatusBarEvent("Project unloaded"));
 		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded));
 	}
 
@@ -213,7 +213,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		projectModuleContainer.init();
 
-		App.eventBus.post(new StatusBarEvent("Project loaded", 3));
+		App.eventBus.post(new StatusBarEvent("Project loaded"));
 		App.eventBus.post(new ProjectStatusEvent(Status.Loaded));
 	}
 

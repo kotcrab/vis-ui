@@ -99,7 +99,7 @@ public class ProjectIOModule extends Module {
 				json.toJson(project, FileUtils.toFileHandle(projectFile));
 
 				setProgressPercent(100);
-				App.eventBus.post(new StatusBarEvent("Project created!", 3));
+				App.eventBus.post(new StatusBarEvent("Project created!"));
 
 				try {
 					load(projectFile);
