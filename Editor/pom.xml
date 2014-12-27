@@ -14,7 +14,6 @@
 	</properties>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
@@ -45,17 +44,9 @@
 			<artifactId>vis-runtime</artifactId>
 			<version>0.0.2-SNAPSHOT</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com.esotericsoftware.kryo</groupId>
-			<artifactId>kryo</artifactId>
-			<version>2.24.0</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>
-
 		<sourceDirectory>src</sourceDirectory>
 		<testSourceDirectory>test</testSourceDirectory>
 
