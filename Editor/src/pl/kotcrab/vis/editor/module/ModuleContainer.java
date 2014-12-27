@@ -48,7 +48,7 @@ public class ModuleContainer {
 			if (m.getClass() == moduleClass) return (T)m;
 		}
 
-		return null;
+		throw new IllegalStateException("Failed to get module: '" + moduleClass + "' from ModuleContainer, module not found!");
 	}
 
 	public void dispose () {
