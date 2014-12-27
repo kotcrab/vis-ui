@@ -21,17 +21,23 @@ package pl.kotcrab.vis.editor.module.scene;
 
 import java.util.ArrayList;
 
+import pl.kotcrab.vis.editor.module.TabsModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModule;
-import pl.kotcrab.vis.editor.ui.tab.Tab;
 
-public class SceneTabsControllerModule extends ProjectModule {
-	private ArrayList<Tab> loadedTabs;
+public class SceneTabsModule extends ProjectModule {
+	private TabsModule tabsModule;
+	
+	private ArrayList<SceneTab> loadedTabs;
 
-	public SceneTabsControllerModule () {
-		// loadedTabs = new ArrayList<Tab>();
+	@Override
+	public void init () {
+		tabsModule = containter.get(TabsModule.class);
+		loadedTabs = new ArrayList<SceneTab>();
 	}
-
+	
 	public void open (EditorScene scene) {
-
+		SceneTab tab = new SceneTab(scene);
+		loadedTabs.add(tab);
+		tabsModule.addTab(tab);
 	}
 }

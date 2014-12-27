@@ -19,13 +19,22 @@
 
 package pl.kotcrab.vis.editor.module.project;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
+import java.nio.file.Paths;
 
 import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.Editor;
+import pl.kotcrab.vis.editor.event.RecursiveWatcher;
+import pl.kotcrab.vis.editor.event.RecursiveWatcher.WatchListener;
+import pl.kotcrab.vis.editor.module.scene.EditorScene;
+import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
+import pl.kotcrab.vis.editor.module.scene.SceneTabsModule;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.VisUI;
+import pl.kotcrab.vis.ui.util.DialogUtils;
 import pl.kotcrab.vis.ui.widget.Separator;
 import pl.kotcrab.vis.ui.widget.VisImageButton;
 import pl.kotcrab.vis.ui.widget.VisLabel;
@@ -36,25 +45,34 @@ import pl.kotcrab.vis.ui.widget.VisTree;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Scaling;
 
+// TODO smaller font for names
+
 @SuppressWarnings("rawtypes")
 public class AssetsManagerUIModule extends ProjectModule {
 	private Editor editor;
+	private Stage stage;
 	private VisTable editorTable;
 
 	private FileAccessModule fileAccess;
+	private SceneIOModule sceneIO;
+	private SceneTabsModule sceneTabsModule;
+
 	private FileHandle visFolder;
 	private FileHandle assetsFolder;
 
@@ -67,19 +85,25 @@ public class AssetsManagerUIModule extends ProjectModule {
 	private VisLabel contentTtileLabel;
 
 	private int itemSize = 92;
+	private boolean refreshRequested;
 	private VisTable contentsTable;
 	private VisTextField searchTextField;
 	private FileHandle currenDirectory;
 
-	public AssetsManagerUIModule () {
-		this.editor = Editor.instance;
-		editorTable = editor.getProjectContentTable();
-		editorTable.setBackground("window-bg");
-	}
+	private RecursiveWatcher watcher;
 
 	@Override
 	public void init () {
+		this.editor = Editor.instance;
+		this.stage = editor.getStage();
+
+		editorTable = editor.getProjectContentTable();
+		editorTable.setBackground("window-bg");
+
 		fileAccess = projectContainter.get(FileAccessModule.class);
+		sceneIO = projectContainter.get(SceneIOModule.class);
+		sceneTabsModule = projectContainter.get(SceneTabsModule.class);
+
 		visFolder = fileAccess.getVisFolder();
 		assetsFolder = fileAccess.getAssetsFolder();
 
@@ -105,19 +129,45 @@ public class AssetsManagerUIModule extends ProjectModule {
 
 		rebuildFolderTree();
 		contentTree.getSelection().set(contentTree.getNodes().get(0)); // select first item in tree
+
+		watcher = new RecursiveWatcher(Paths.get(assetsFolder.path()), new WatchListener() {
+			@Override
+			public void changed (FileHandle file) {
+				if (file.equals(currenDirectory)) refreshRequested = true;
+
+			}
+		});
+		watcher.start();
 	}
 
 	private void createToolbarTable () {
 		contentTtileLabel = new VisLabel("Content");
 		searchTextField = new VisTextField();
 
+		VisImageButton exploreButton = new VisImageButton(Assets.getIcon("folder-open"));
+
 		toolbarTable.add(contentTtileLabel).expand().left().padLeft(3);
-		toolbarTable.add(new VisImageButton(Assets.getIcon("folder-open")));
+		toolbarTable.add(exploreButton);
 		toolbarTable.add(new VisImageButton(Assets.getIcon("settings-view")));
 		toolbarTable.add(new VisImageButton(Assets.getIcon("import")));
 		toolbarTable.add(new Image(Assets.getIcon("search"))).spaceRight(3);
 
 		toolbarTable.add(searchTextField).width(200);
+
+		exploreButton.addListener(new ChangeListener() {
+
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				try {
+					if (currenDirectory.isDirectory())
+						Desktop.getDesktop().open(currenDirectory.file());
+					else
+						Desktop.getDesktop().open(currenDirectory.parent().file());
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		});
 
 		searchTextField.addListener(new InputListener() {
 			@Override
@@ -185,6 +235,7 @@ public class AssetsManagerUIModule extends ProjectModule {
 	}
 
 	private void refreshFilesList () {
+		refreshRequested = false;
 		changeCurrentDirectory(currenDirectory);
 	}
 
@@ -239,11 +290,33 @@ public class AssetsManagerUIModule extends ProjectModule {
 		}
 	}
 
+	private void openFile (FileHandle file, EditorFileType fileType) {
+		switch (fileType) {
+		case SCENE:
+			EditorScene scene = sceneIO.load(file);
+			sceneTabsModule.open(scene);
+			break;
+		case UNKNOWN:
+			// TODO add 'open as' dialog
+			DialogUtils.showErrorDialog(stage,
+				"Failed to load file, type is unknown and cannot be determined because file is not in the database!");
+			break;
+		}
+	}
+
+	@Override
+	public void dispose () {
+		watcher.stop();
+	}
+
 	private class FileItem extends Table implements Disposable {
+		private FileHandle file;
+
 		private Texture texture;
 
 		public FileItem (FileHandle file) {
 			super(VisUI.skin);
+			this.file = file;
 			VisLabel name = new VisLabel(file.name());
 
 			if (file.extension().equals("jpg") || file.extension().equals("png")) {
@@ -258,12 +331,32 @@ public class AssetsManagerUIModule extends ProjectModule {
 			name.setWrap(true);
 			name.setAlignment(Align.center);
 			add(name).expand().fill();
+
+			addListener();
+		}
+
+		private void addListener () {
+			addListener(new ClickListener() {
+				@Override
+				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+					return super.touchDown(event, x, y, pointer, button);
+				}
+
+				@Override
+				public void clicked (InputEvent event, float x, float y) {
+					super.clicked(event, x, y);
+
+					if (getTapCount() == 2) openFile(file, fileAccess.getFileType(file));
+				}
+
+			});
 		}
 
 		@Override
 		public void dispose () {
 			if (texture != null) texture.dispose();
 		}
+
 	}
 
 	private class FolderItem extends Table {
@@ -293,6 +386,12 @@ public class AssetsManagerUIModule extends ProjectModule {
 				actors.add(c.getActor());
 
 			rebuildFilesList(actors);
+		}
+
+		@Override
+		public void draw (Batch batch, float parentAlpha) {
+			super.draw(batch, parentAlpha);
+			if (refreshRequested) refreshFilesList();
 		}
 	}
 }

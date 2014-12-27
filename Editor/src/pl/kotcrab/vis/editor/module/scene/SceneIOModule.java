@@ -19,15 +19,18 @@
 
 package pl.kotcrab.vis.editor.module.scene;
 
-import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.project.EditorFileType;
+import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModule;
 import pl.kotcrab.vis.runtime.scene.SceneViewport;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglFileHandle;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 
+@SuppressWarnings("rawtypes")
 public class SceneIOModule extends ProjectModule {
 	private Json json;
 
@@ -42,13 +45,24 @@ public class SceneIOModule extends ProjectModule {
 		visFolder = fileAccessModule.getVisFolder();
 
 		json = new Json();
-		json.setElementType(EditorScene.class, "file", LwjglFileHandle.class);
+
+		json.setSerializer(LwjglFileHandle.class, new Json.Serializer<LwjglFileHandle>() {
+			@Override
+			public void write (Json json, LwjglFileHandle file, Class knownType) {
+				json.writeObjectStart();
+				json.writeValue("path2424", file.path());
+				json.writeObjectEnd();
+			}
+
+			@Override
+			public LwjglFileHandle read (Json json, JsonValue jsonData, Class type) {
+				return (LwjglFileHandle)Gdx.files.absolute(jsonData.child().asString());
+			}
+		});
 	}
 
 	public EditorScene load (FileHandle file) {
-		EditorScene scene = json.fromJson(EditorScene.class, file);
-		scene.file = file;
-		return scene;
+		return json.fromJson(EditorScene.class, file);
 	}
 
 	public void save (EditorScene scene) {
@@ -62,6 +76,6 @@ public class SceneIOModule extends ProjectModule {
 	}
 
 	public FileHandle getFileHandleForScene (EditorScene scene) {
-		return visFolder.child(scene.file.path());
+		return visFolder.child(scene.path);
 	}
 }

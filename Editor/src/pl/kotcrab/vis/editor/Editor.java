@@ -37,7 +37,7 @@ import pl.kotcrab.vis.editor.module.project.Project;
 import pl.kotcrab.vis.editor.module.project.ProjectInfoTabModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
-import pl.kotcrab.vis.editor.module.scene.SceneTabsControllerModule;
+import pl.kotcrab.vis.editor.module.scene.SceneTabsModule;
 import pl.kotcrab.vis.editor.ui.EditorFrame;
 import pl.kotcrab.vis.editor.ui.tab.Tab;
 import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
@@ -208,7 +208,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectModuleContainer.add(new FileAccessModule());
 		projectModuleContainer.add(new SceneIOModule());
 
-		projectModuleContainer.add(new SceneTabsControllerModule());
+		projectModuleContainer.add(new SceneTabsModule());
 		projectModuleContainer.add(new ProjectInfoTabModule());
 		projectModuleContainer.add(new AssetsManagerUIModule());
 
