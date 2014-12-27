@@ -28,13 +28,9 @@ import pl.kotcrab.vis.ui.widget.VisLabel;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class ProjectInfoTab extends TabAdapater {
-	private Project project;
-
 	private Table content;
 
 	public ProjectInfoTab (Project project) {
-		this.project = project;
-
 		content = new VisTable(true);
 
 		content.add(new VisLabel("Some project info:"));
