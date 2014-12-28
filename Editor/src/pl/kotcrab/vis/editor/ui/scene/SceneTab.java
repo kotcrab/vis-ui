@@ -23,23 +23,41 @@ import pl.kotcrab.vis.editor.module.scene.EditorScene;
 import pl.kotcrab.vis.editor.ui.tab.TabAdapater;
 import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
 import pl.kotcrab.vis.ui.VisTable;
-import pl.kotcrab.vis.ui.widget.VisLabel;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class SceneTab extends TabAdapater {
 	private EditorScene scene;
 
-	private Table content;
+	private VisTable content;
+	private VisTable leftColumn;
+	private VisTable rightColumn;
+	
+	private SceneOutline outline;
+	private ActorProperites actorProperties;
 
 	public SceneTab (EditorScene scene) {
 		this.scene = scene;
 
-		content = new VisTable(true);
+		outline = new SceneOutline();
+		actorProperties = new ActorProperites();
+		
+		content = new VisTable(false);
+		leftColumn = new VisTable(false);
+		rightColumn = new VisTable(false);
+		
+		leftColumn.top();
+		rightColumn.top();
+		
+		content.add(leftColumn).width(300).expandY().fillY();
+		content.add().fill().expand();
+		content.add(rightColumn).width(300).expandY().fillY();
+		
+		leftColumn.top();
+		leftColumn.add(outline).height(300).expandX().fillX();
 
-		content.add(new VisLabel("Some scene info:"));
-		content.row();
-		content.add(new VisLabel("File name: " + scene.getFile().name()));
+		rightColumn.top();
+		rightColumn.add(actorProperties).height(300).expandX().fillX();
 	}
 
 	@Override
