@@ -31,7 +31,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.OrderedMap;
 
 public class TabbedPane {
 	private static final Drawable bottomBar = VisUI.skin.getDrawable("list-selection");
@@ -132,6 +131,4 @@ public class TabbedPane {
 	public Table getTable () {
 		return mainTable;
 	}
-
-
 }
