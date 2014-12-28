@@ -62,7 +62,9 @@ public class TabbedPane {
 
 	public void add (Tab tab) {
 		tabs.add(tab);
+		activeTab = tab;
 		rebuildTabsTable();
+		listener.switched(tab);
 	}
 
 	public void add (int index, Tab tab) {
