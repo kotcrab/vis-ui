@@ -50,6 +50,6 @@ public class ProjectInfoTab extends TabAdapater {
 
 	@Override
 	public TabViewMode getViewMode () {
-		return TabViewMode.WITH_PROJECT_ASSETS_MANAGER;
+		return TabViewMode.TAB_ONLY;
 	}
 }

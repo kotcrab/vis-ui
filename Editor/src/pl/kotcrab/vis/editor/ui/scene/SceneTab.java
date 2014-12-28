@@ -19,6 +19,7 @@
 
 package pl.kotcrab.vis.editor.ui.scene;
 
+import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import pl.kotcrab.vis.editor.module.scene.EditorScene;
 import pl.kotcrab.vis.editor.module.scene.SceneModuleContainer;
@@ -26,17 +27,23 @@ import pl.kotcrab.vis.editor.ui.tab.TabAdapater;
 import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
 import pl.kotcrab.vis.ui.VisTable;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class SceneTab extends TabAdapater {
 	private EditorScene scene;
 
+	private OrthographicCamera camera;
+
 	private SceneModuleContainer moduleContainer;
-	
+
 	private VisTable content;
 	private VisTable leftColumn;
 	private VisTable rightColumn;
-	
+
 	private SceneOutline outline;
 	private ActorProperites actorProperties;
 
@@ -44,26 +51,46 @@ public class SceneTab extends TabAdapater {
 		this.scene = scene;
 
 		moduleContainer = new SceneModuleContainer(projectMC);
+		moduleContainer.init();
+
+		camera = new OrthographicCamera();
 		
 		outline = new SceneOutline();
 		actorProperties = new ActorProperites();
-		
-		content = new VisTable(false);
+
+		content = new VisTable(false) {
+			@Override
+			protected void sizeChanged () {
+				super.sizeChanged();
+				moduleContainer.resize();
+				resize();
+			}
+		};
 		leftColumn = new VisTable(false);
 		rightColumn = new VisTable(false);
-		
+
 		leftColumn.top();
 		rightColumn.top();
-		
+
 		content.add(leftColumn).width(300).expandY().fillY();
 		content.add().fill().expand();
 		content.add(rightColumn).width(300).expandY().fillY();
-		
+
 		leftColumn.top();
 		leftColumn.add(outline).height(300).expandX().fillX();
 
 		rightColumn.top();
 		rightColumn.add(actorProperties).height(300).expandX().fillX();
+	}
+
+	private void resize () {
+		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+
+	@Override
+	public void render (Batch batch) {
+		camera.update();
+		batch.setProjectionMatrix(camera.combined);
 	}
 
 	@Override
