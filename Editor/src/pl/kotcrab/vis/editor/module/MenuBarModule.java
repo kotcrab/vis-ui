@@ -90,7 +90,7 @@ public class MenuBarModule extends Module {
 
 	private void loadProject (FileHandle file) {
 		try {
-			containter.get(ProjectIOModule.class).load(file.file());
+			containter.get(ProjectIOModule.class).load(file);
 		} catch (EditorException e) {
 			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
 		}

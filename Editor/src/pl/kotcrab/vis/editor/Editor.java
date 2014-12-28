@@ -19,8 +19,6 @@
 
 package pl.kotcrab.vis.editor;
 
-import java.io.File;
-
 import pl.kotcrab.vis.editor.event.Event;
 import pl.kotcrab.vis.editor.event.EventListener;
 import pl.kotcrab.vis.editor.event.ProjectStatusEvent;
@@ -128,7 +126,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		// debug section
 		try {
-			moduleContainer.get(ProjectIOModule.class).load((new File("F:\\Poligon\\TestProject")));
+			moduleContainer.get(ProjectIOModule.class).load((Gdx.files.absolute("F:\\Poligon\\TestProject")));
 		} catch (EditorException e) {
 			e.printStackTrace();
 		}

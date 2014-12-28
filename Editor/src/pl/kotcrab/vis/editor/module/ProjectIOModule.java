@@ -32,31 +32,30 @@ import pl.kotcrab.vis.editor.util.AsyncTask;
 import pl.kotcrab.vis.editor.util.CopyFileVisitor;
 import pl.kotcrab.vis.editor.util.EditorException;
 import pl.kotcrab.vis.ui.util.DialogUtils;
-import pl.kotcrab.vis.ui.widget.file.FileUtils;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 
 public class ProjectIOModule extends Module {
-
-	public boolean load (File projectRoot) throws EditorException {
+	public boolean load (FileHandle projectRoot) throws EditorException {
 		if (projectRoot.exists() == false) throw new EditorException("Selected folder does not exist!");
-		if (projectRoot.getName().equals("project.json")) return loadProject(projectRoot);
-		if (projectRoot.getName().equals("vis") && projectRoot.isDirectory())
-			return loadProject(new File(projectRoot, "project.json"));
+		if (projectRoot.name().equals("project.json")) return loadProject(projectRoot);
+		if (projectRoot.name().equals("vis") && projectRoot.isDirectory()) return loadProject(projectRoot.child("project.json"));
 
-		File visFolder = new File(projectRoot, "vis");
-		if (visFolder.exists()) return loadProject(new File(visFolder, "project.json"));
+		FileHandle visFolder = projectRoot.child("vis");
+		if (visFolder.exists()) return loadProject(visFolder.child("project.json"));
 
 		throw new EditorException("Selected folder is not a Vis project!");
 	}
 
-	private boolean loadProject (File jsonProjectFile) throws EditorException {
+	private boolean loadProject (FileHandle jsonProjectFile) throws EditorException {
 
 		if (jsonProjectFile.exists() == false) throw new EditorException("Project file does not exist!");
 		Json json = new Json();
 
-		Project project = json.fromJson(Project.class, FileUtils.toFileHandle(jsonProjectFile));
-		project.root = jsonProjectFile.getParentFile().getParent();
+		Project project = json.fromJson(Project.class, jsonProjectFile);
+		project.root = jsonProjectFile.parent().parent().path();
 
 		Editor.instance.projectLoaded(project);
 
@@ -70,21 +69,22 @@ public class ProjectIOModule extends Module {
 			public void execute () {
 				setMessage("Creating directory structure...");
 
-				File standardAssetsDir = new File(project.root, project.assets);
-				File visDir = new File(project.root, "vis");
-				File visAssetsDir = new File(visDir, "assets");
+				FileHandle projectRoot = Gdx.files.absolute(project.root);
+				FileHandle standardAssetsDir = projectRoot.child(project.assets);
+				FileHandle visDir = projectRoot.child("vis");
+				FileHandle visAssetsDir = visDir.child("assets");
 
-				visDir.mkdir();
-				visAssetsDir.mkdir();
+				visDir.mkdirs();
+				visAssetsDir.mkdirs();
 
-				new File(visAssetsDir, "scene").mkdir();
-				new File(visDir, "modules").mkdir();
+				visAssetsDir.child("scene").mkdirs();
+				visDir.child("modules").mkdirs();
 
 				setProgressPercent(33);
 				setMessage("Moving assets...");
 
 				try {
-					Files.walkFileTree(standardAssetsDir.toPath(), new CopyFileVisitor(visAssetsDir.toPath()));
+					Files.walkFileTree(standardAssetsDir.file().toPath(), new CopyFileVisitor(visAssetsDir.file().toPath()));
 				} catch (IOException e) {
 					failed(e.getMessage(), e);
 					e.printStackTrace();
@@ -93,10 +93,10 @@ public class ProjectIOModule extends Module {
 				setProgressPercent(66);
 				setMessage("Saving project files...");
 
-				File projectFile = new File(visDir, "project.json");
+				FileHandle projectFile = visDir.child("project.json");
 
 				Json json = new Json();
-				json.toJson(project, FileUtils.toFileHandle(projectFile));
+				json.toJson(project, projectFile);
 
 				setProgressPercent(100);
 				App.eventBus.post(new StatusBarEvent("Project created!"));
