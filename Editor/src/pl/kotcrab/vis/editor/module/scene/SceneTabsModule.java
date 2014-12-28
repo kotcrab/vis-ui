@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import pl.kotcrab.vis.editor.module.TabsModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModule;
+import pl.kotcrab.vis.editor.ui.SceneTab;
 
 public class SceneTabsModule extends ProjectModule {
 	private TabsModule tabsModule;

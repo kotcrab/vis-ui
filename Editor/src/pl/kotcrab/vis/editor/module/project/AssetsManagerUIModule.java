@@ -27,11 +27,11 @@ import java.nio.file.Paths;
 
 import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.Editor;
-import pl.kotcrab.vis.editor.event.RecursiveWatcher;
-import pl.kotcrab.vis.editor.event.RecursiveWatcher.WatchListener;
 import pl.kotcrab.vis.editor.module.scene.EditorScene;
 import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
 import pl.kotcrab.vis.editor.module.scene.SceneTabsModule;
+import pl.kotcrab.vis.editor.util.RecursiveWatcher;
+import pl.kotcrab.vis.editor.util.RecursiveWatcher.WatchListener;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.util.DialogUtils;
