@@ -37,6 +37,7 @@ import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.project.Project;
 import pl.kotcrab.vis.editor.module.project.ProjectInfoTabModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import pl.kotcrab.vis.editor.module.scene.EditorScene;
 import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
 import pl.kotcrab.vis.editor.module.scene.SceneTabsModule;
 import pl.kotcrab.vis.editor.ui.EditorFrame;
@@ -131,6 +132,9 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		} catch (EditorException e) {
 			e.printStackTrace();
 		}
+		
+		EditorScene testScene = projectModuleContainer.get(SceneIOModule.class).load(Gdx.files.absolute("F:\\Poligon\\TestProject\\vis\\assets\\scene\\test.json"));
+		projectModuleContainer.get(SceneTabsModule.class).open(testScene);
 	}
 
 	public StatusBarModule getStatusBar () {
