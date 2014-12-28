@@ -70,8 +70,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private VisTable projectContentTable;
 	private VisSplitPane splitPane;
 
-	private EditorModuleContainer moduleContainer;
-	private ProjectModuleContainer projectModuleContainer;
+	private EditorModuleContainer editorMC;
+	private ProjectModuleContainer projectMC;
 
 	private boolean projectLoaded = false;
 
@@ -107,32 +107,32 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		root.setFillParent(true);
 		stage.addActor(root);
 
-		moduleContainer = new EditorModuleContainer();
-		projectModuleContainer = new ProjectModuleContainer(moduleContainer);
+		editorMC = new EditorModuleContainer();
+		projectMC = new ProjectModuleContainer(editorMC);
 
-		moduleContainer.add(new ProjectIOModule());
+		editorMC.add(new ProjectIOModule());
 
 		// GUI modules
-		moduleContainer.add(new MenuBarModule(projectModuleContainer));
-		moduleContainer.add(new ToolbarModule());
-		moduleContainer.add(new TabsModule());
+		editorMC.add(new MenuBarModule(projectMC));
+		editorMC.add(new ToolbarModule());
+		editorMC.add(new TabsModule());
 
 		root.add(mainContentTable).expand().fill().row();
 		root.row();
 
-		moduleContainer.add(new StatusBarModule());
+		editorMC.add(new StatusBarModule());
 
-		moduleContainer.init();
+		editorMC.init();
 
 		// debug section
 		try {
-			moduleContainer.get(ProjectIOModule.class).load((Gdx.files.absolute("F:\\Poligon\\TestProject")));
+			editorMC.get(ProjectIOModule.class).load((Gdx.files.absolute("F:\\Poligon\\TestProject")));
 		} catch (EditorException e) {
 			e.printStackTrace();
 		}
 		
-		EditorScene testScene = projectModuleContainer.get(SceneIOModule.class).load(Gdx.files.absolute("F:\\Poligon\\TestProject\\vis\\assets\\scene\\test.json"));
-		projectModuleContainer.get(SceneTabsModule.class).open(testScene);
+		EditorScene testScene = projectMC.get(SceneIOModule.class).load(Gdx.files.absolute("F:\\Poligon\\TestProject\\vis\\assets\\scene\\test.json"));
+		projectMC.get(SceneTabsModule.class).open(testScene);
 	}
 
 	public StatusBarModule getStatusBar () {
@@ -142,8 +142,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	@Override
 	public void resize (int width, int height) {
 		stage.getViewport().update(width, height, true);
-		moduleContainer.resize();
-		projectModuleContainer.resize();
+		editorMC.resize();
+		projectMC.resize();
 	}
 
 	@Override
@@ -161,7 +161,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		Assets.dispose();
 		VisUI.dispose();
 
-		moduleContainer.dispose();
+		editorMC.dispose();
 		frame.dispose();
 	}
 
@@ -189,7 +189,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	public void requestProjectUnload () {
 		projectLoaded = false;
-		projectModuleContainer.dispose();
+		projectMC.dispose();
 
 		App.eventBus.post(new StatusBarEvent("Project unloaded"));
 		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded));
@@ -207,16 +207,16 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		}
 
 		projectLoaded = true;
-		projectModuleContainer.setProject(project);
+		projectMC.setProject(project);
 
-		projectModuleContainer.add(new FileAccessModule());
-		projectModuleContainer.add(new SceneIOModule());
+		projectMC.add(new FileAccessModule());
+		projectMC.add(new SceneIOModule());
 
-		projectModuleContainer.add(new SceneTabsModule());
-		projectModuleContainer.add(new ProjectInfoTabModule());
-		projectModuleContainer.add(new AssetsManagerUIModule());
+		projectMC.add(new SceneTabsModule());
+		projectMC.add(new ProjectInfoTabModule());
+		projectMC.add(new AssetsManagerUIModule());
 
-		projectModuleContainer.init();
+		projectMC.init();
 
 		App.eventBus.post(new StatusBarEvent("Project loaded"));
 		App.eventBus.post(new ProjectStatusEvent(Status.Loaded));
@@ -238,7 +238,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 				mainContentTable.add(splitPane).expand().fill();
 			}
 		}
-
 	}
 
 	public VisTable getProjectContentTable () {

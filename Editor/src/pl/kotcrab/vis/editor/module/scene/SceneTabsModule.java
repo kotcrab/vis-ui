@@ -40,7 +40,7 @@ public class SceneTabsModule extends ProjectModule {
 		SceneTab oldTab = getTabByScene(scene);
 
 		if (oldTab == null) {
-			SceneTab tab = new SceneTab(scene);
+			SceneTab tab = new SceneTab(scene, projectContainter);
 			loadedTabs.add(tab);
 			tabsModule.addTab(tab);
 		} else

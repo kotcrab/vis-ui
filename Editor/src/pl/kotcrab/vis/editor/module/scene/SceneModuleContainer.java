@@ -29,8 +29,8 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 	private EditorModuleContainer editorModuleContainer;
 	private ProjectModuleContainer projectModuleContainer;
 
-	public SceneModuleContainer (EditorModuleContainer editorModuleContainter, ProjectModuleContainer projectModuleContainer) {
-		this.editorModuleContainer = editorModuleContainter;
+	public SceneModuleContainer (ProjectModuleContainer projectModuleContainer) {
+		this.editorModuleContainer = projectModuleContainer.getEditorContainer();
 		this.projectModuleContainer = projectModuleContainer;
 	}
 

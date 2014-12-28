@@ -19,7 +19,9 @@
 
 package pl.kotcrab.vis.editor.ui.scene;
 
+import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import pl.kotcrab.vis.editor.module.scene.EditorScene;
+import pl.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import pl.kotcrab.vis.editor.ui.tab.TabAdapater;
 import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
 import pl.kotcrab.vis.ui.VisTable;
@@ -29,6 +31,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 public class SceneTab extends TabAdapater {
 	private EditorScene scene;
 
+	private SceneModuleContainer moduleContainer;
+	
 	private VisTable content;
 	private VisTable leftColumn;
 	private VisTable rightColumn;
@@ -36,9 +40,11 @@ public class SceneTab extends TabAdapater {
 	private SceneOutline outline;
 	private ActorProperites actorProperties;
 
-	public SceneTab (EditorScene scene) {
+	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
 		this.scene = scene;
 
+		moduleContainer = new SceneModuleContainer(projectMC);
+		
 		outline = new SceneOutline();
 		actorProperties = new ActorProperites();
 		
