@@ -21,12 +21,11 @@ package pl.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.utils.Array;
 
-public class ModuleContainer {
-	private Array<Module> modules = new Array<Module>();
+public class BaseModuleContainer<T extends BaseModule> {
+	private Array<T> modules = new Array<T>();
 	private boolean initFinished = false;
 
-	public void add (Module module) {
-		module.setContainer(this);
+	public void add (T module) {
 		modules.add(module);
 		module.added();
 		if (initFinished) module.init();
@@ -42,10 +41,10 @@ public class ModuleContainer {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T> T get (Class<T> moduleClass) {
+	public <C> C get (Class<C> moduleClass) {
 		for (int i = 0; i < modules.size; i++) {
-			Module m = modules.get(i);
-			if (m.getClass() == moduleClass) return (T)m;
+			BaseModule m = modules.get(i);
+			if (m.getClass() == moduleClass) return (C)m;
 		}
 
 		throw new IllegalStateException("Failed to get module: '" + moduleClass + "' from ModuleContainer, module not found!");

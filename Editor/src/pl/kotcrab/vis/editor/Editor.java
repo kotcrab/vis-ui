@@ -24,8 +24,8 @@ import pl.kotcrab.vis.editor.event.EventListener;
 import pl.kotcrab.vis.editor.event.ProjectStatusEvent;
 import pl.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import pl.kotcrab.vis.editor.event.StatusBarEvent;
+import pl.kotcrab.vis.editor.module.EditorModuleContainer;
 import pl.kotcrab.vis.editor.module.MenuBarModule;
-import pl.kotcrab.vis.editor.module.ModuleContainer;
 import pl.kotcrab.vis.editor.module.ProjectIOModule;
 import pl.kotcrab.vis.editor.module.StatusBarModule;
 import pl.kotcrab.vis.editor.module.TabsModule;
@@ -70,7 +70,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private VisTable projectContentTable;
 	private VisSplitPane splitPane;
 
-	private ModuleContainer moduleContainer;
+	private EditorModuleContainer moduleContainer;
 	private ProjectModuleContainer projectModuleContainer;
 
 	private boolean projectLoaded = false;
@@ -107,7 +107,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		root.setFillParent(true);
 		stage.addActor(root);
 
-		moduleContainer = new ModuleContainer();
+		moduleContainer = new EditorModuleContainer();
 		projectModuleContainer = new ProjectModuleContainer(moduleContainer);
 
 		moduleContainer.add(new ProjectIOModule());

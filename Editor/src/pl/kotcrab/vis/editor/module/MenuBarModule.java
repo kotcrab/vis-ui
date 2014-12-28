@@ -43,7 +43,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-public class MenuBarModule extends Module {
+public class MenuBarModule extends EditorModule {
 	private ProjectModuleContainer projectContainer;
 	private Editor editor;
 

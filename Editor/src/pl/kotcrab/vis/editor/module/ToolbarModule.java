@@ -30,7 +30,7 @@ import pl.kotcrab.vis.ui.widget.VisImageButton;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-public class ToolbarModule extends Module implements EventListener {
+public class ToolbarModule extends EditorModule implements EventListener {
 	public VisTable table;
 	public VisImageButton saveButton;
 

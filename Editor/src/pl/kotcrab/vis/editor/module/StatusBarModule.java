@@ -32,7 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
-public class StatusBarModule extends Module implements EventListener {
+public class StatusBarModule extends EditorModule implements EventListener {
 	public VisTable table;
 	public VisLabel statusLabel;
 

@@ -37,7 +37,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 
-public class ProjectIOModule extends Module {
+public class ProjectIOModule extends EditorModule {
 	public boolean load (FileHandle projectRoot) throws EditorException {
 		if (projectRoot.exists() == false) throw new EditorException("Selected folder does not exist!");
 		if (projectRoot.name().equals("project.json")) return loadProject(projectRoot);
