@@ -80,6 +80,8 @@ public class AssetsManagerUIModule extends ProjectModule {
 	private FilesItemsTable filesTable;
 	private VisTable toolbarTable;
 
+	private int filesDisplayed;
+
 	private VisTree contentTree;
 
 	private VisLabel contentTtileLabel;
@@ -134,7 +136,6 @@ public class AssetsManagerUIModule extends ProjectModule {
 			@Override
 			public void changed (FileHandle file) {
 				if (file.equals(currenDirectory)) refreshRequested = true;
-
 			}
 		});
 		watcher.start();
@@ -173,6 +174,12 @@ public class AssetsManagerUIModule extends ProjectModule {
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
 				refreshFilesList();
+
+				if (filesDisplayed == 0)
+					searchTextField.setInputValid(false);
+				else
+					searchTextField.setInputValid(true);
+				
 				return false;
 			}
 		});
@@ -208,6 +215,7 @@ public class AssetsManagerUIModule extends ProjectModule {
 		disposeFilesTableCells();
 		filesTable.clear();
 		filesTable.top().left();
+		filesDisplayed = 0;
 
 		FileHandle[] files = directory.list(new FileFilter() {
 
@@ -226,6 +234,7 @@ public class AssetsManagerUIModule extends ProjectModule {
 
 			if (file.isDirectory() == false) {
 				actors.add(new FileItem(file));
+				filesDisplayed++;
 				rebuildFilesList(actors);
 			}
 		}
