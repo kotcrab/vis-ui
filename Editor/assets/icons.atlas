@@ -39,9 +39,16 @@ new
   orig: 22, 22
   offset: 0, 0
   index: -1
-search
+save
   rotate: false
   xy: 92, 92
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+search
+  rotate: false
+  xy: 26, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -55,7 +62,7 @@ search-big
   index: -1
 settings-view
   rotate: false
-  xy: 26, 2
+  xy: 92, 68
   size: 22, 22
   orig: 22, 22
   offset: 0, 0

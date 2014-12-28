@@ -135,6 +135,7 @@ public class AssetsManagerUIModule extends ProjectModule {
 		watcher = new RecursiveWatcher(Paths.get(assetsFolder.path()), new WatchListener() {
 			@Override
 			public void changed (FileHandle file) {
+				//TODO refresh tree
 				if (file.equals(currenDirectory)) refreshRequested = true;
 			}
 		});
@@ -156,7 +157,6 @@ public class AssetsManagerUIModule extends ProjectModule {
 		toolbarTable.add(searchTextField).width(200);
 
 		exploreButton.addListener(new ChangeListener() {
-
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				try {

@@ -31,6 +31,7 @@ import pl.kotcrab.vis.editor.module.ModuleContainer;
 import pl.kotcrab.vis.editor.module.ProjectIOModule;
 import pl.kotcrab.vis.editor.module.StatusBarModule;
 import pl.kotcrab.vis.editor.module.TabsModule;
+import pl.kotcrab.vis.editor.module.ToolbarModule;
 import pl.kotcrab.vis.editor.module.project.AssetsManagerUIModule;
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.project.Project;
@@ -114,6 +115,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		// GUI modules
 		moduleContainer.add(new MenuBarModule(projectModuleContainer));
+		moduleContainer.add(new ToolbarModule());
 		moduleContainer.add(new TabsModule());
 
 		root.add(mainContentTable).expand().fill().row();
