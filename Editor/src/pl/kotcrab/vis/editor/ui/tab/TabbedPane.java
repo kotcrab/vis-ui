@@ -30,6 +30,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.OrderedMap;
 
 public class TabbedPane {
 	private static final Drawable bottomBar = VisUI.skin.getDrawable("list-selection");
@@ -38,6 +40,7 @@ public class TabbedPane {
 	private VisTable mainTable;
 
 	private Array<Tab> tabs;
+	private ObjectMap<Tab, VisTextButton> tabsButtonMap;
 	private ButtonGroup group;
 
 	private Tab activeTab;
@@ -53,6 +56,7 @@ public class TabbedPane {
 		tabItems = new VisTable();
 
 		tabs = new Array<Tab>();
+		tabsButtonMap = new ObjectMap<Tab, VisTextButton>();
 
 		mainTable.add(tabItems).padTop(2).left().expand();
 		mainTable.row();
@@ -90,17 +94,23 @@ public class TabbedPane {
 	public void switchTab (int index) {
 		group.getButtons().get(index).setChecked(true);
 	}
+	
+	public void switchTab (Tab tab) {
+		tabsButtonMap.get(tab).setChecked(true);
+	}
 
 	private void rebuildTabsTable () {
 		tabItems.clear();
 		group.clear();
-
+		tabsButtonMap.clear();
+		
 		for (final Tab tab : tabs) {
 			final VisTextButton button = new VisTextButton(tab.getButtonText(), "toggle");
 			button.setFocusBorderEnabled(false);
 
 			tabItems.add(button);
 			group.add(button);
+			tabsButtonMap.put(tab, button);
 
 			if (tabs.size == 1) {
 				button.setChecked(true);
@@ -122,4 +132,6 @@ public class TabbedPane {
 	public Table getTable () {
 		return mainTable;
 	}
+
+
 }

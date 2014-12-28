@@ -56,4 +56,8 @@ public class SceneTab extends TabAdapater {
 	public TabViewMode getViewMode () {
 		return TabViewMode.WITH_PROJECT_ASSETS_MANAGER;
 	}
+
+	public EditorScene getScene () {
+		return scene;
+	}
 }

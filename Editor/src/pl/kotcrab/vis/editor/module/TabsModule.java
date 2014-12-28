@@ -71,6 +71,10 @@ public class TabsModule extends Module implements EventListener {
 		return tabbedPane.remove(tab);
 	}
 
+	public void switchTab (Tab tab) {
+		tabbedPane.switchTab(tab);
+	}
+
 	@Override
 	public void added () {
 		App.eventBus.register(this);

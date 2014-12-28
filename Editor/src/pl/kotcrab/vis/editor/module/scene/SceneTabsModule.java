@@ -19,26 +19,38 @@
 
 package pl.kotcrab.vis.editor.module.scene;
 
-import java.util.ArrayList;
-
 import pl.kotcrab.vis.editor.module.TabsModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModule;
 import pl.kotcrab.vis.editor.ui.SceneTab;
 
+import com.badlogic.gdx.utils.Array;
+
 public class SceneTabsModule extends ProjectModule {
 	private TabsModule tabsModule;
-	
-	private ArrayList<SceneTab> loadedTabs;
+
+	private Array<SceneTab> loadedTabs;
 
 	@Override
 	public void init () {
 		tabsModule = containter.get(TabsModule.class);
-		loadedTabs = new ArrayList<SceneTab>();
+		loadedTabs = new Array<SceneTab>();
 	}
-	
+
 	public void open (EditorScene scene) {
-		SceneTab tab = new SceneTab(scene);
-		loadedTabs.add(tab);
-		tabsModule.addTab(tab);
+		SceneTab oldTab = getTabByScene(scene);
+
+		if (oldTab == null) {
+			SceneTab tab = new SceneTab(scene);
+			loadedTabs.add(tab);
+			tabsModule.addTab(tab);
+		} else
+			tabsModule.switchTab(oldTab);
+	}
+
+	private SceneTab getTabByScene (EditorScene scene) {
+		for (SceneTab tab : loadedTabs)
+			if (tab.getScene().path.equals(scene.path)) return tab;
+
+		return null;
 	}
 }
