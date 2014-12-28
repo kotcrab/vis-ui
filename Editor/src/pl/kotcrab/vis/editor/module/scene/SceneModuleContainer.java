@@ -17,26 +17,31 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor.module.project;
+package pl.kotcrab.vis.editor.module.scene;
 
 import pl.kotcrab.vis.editor.module.BaseModuleContainer;
 import pl.kotcrab.vis.editor.module.EditorModuleContainer;
+import pl.kotcrab.vis.editor.module.project.Project;
+import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 
-public class ProjectModuleContainer extends BaseModuleContainer<ProjectModule> {
-	private EditorModuleContainer editorModuleContainer;
+public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 	private Project project;
+	private EditorModuleContainer editorModuleContainer;
+	private ProjectModuleContainer projectModuleContainer;
 
-	public ProjectModuleContainer (EditorModuleContainer editorModuleContainter) {
+	public SceneModuleContainer (EditorModuleContainer editorModuleContainter, ProjectModuleContainer projectModuleContainer) {
 		this.editorModuleContainer = editorModuleContainter;
+		this.projectModuleContainer = projectModuleContainer;
 	}
 
 	@Override
-	public void add (ProjectModule module) {
+	public void add (SceneModule module) {
 		if (project == null) throw new IllegalStateException("Module cannot be added before project has been set!");
 
 		module.setProject(project);
-		module.setProjectModuleContainter(this);
+		module.setProjectModuleContainter(projectModuleContainer);
 		module.setContainer(editorModuleContainer);
+		module.setSceneModuleContainer(this);
 
 		super.add(module);
 	}

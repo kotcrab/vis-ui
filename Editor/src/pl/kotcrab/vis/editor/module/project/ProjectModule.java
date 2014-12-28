@@ -25,11 +25,11 @@ public abstract class ProjectModule extends EditorModule {
 	protected Project project;
 	protected ProjectModuleContainer projectContainter;
 
-	void setProject (Project project) {
+	public void setProject (Project project) {
 		this.project = project;
 	}
 
-	void setProjectModuleContainter (ProjectModuleContainer container) {
+	public void setProjectModuleContainter (ProjectModuleContainer container) {
 		this.projectContainter = container;
 	}
 }
