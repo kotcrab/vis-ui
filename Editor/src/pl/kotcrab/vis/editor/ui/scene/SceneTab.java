@@ -17,7 +17,7 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor.ui;
+package pl.kotcrab.vis.editor.ui.scene;
 
 import pl.kotcrab.vis.editor.module.scene.EditorScene;
 import pl.kotcrab.vis.editor.ui.tab.TabAdapater;

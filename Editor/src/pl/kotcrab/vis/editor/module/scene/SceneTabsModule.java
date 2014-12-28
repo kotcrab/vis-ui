@@ -21,7 +21,7 @@ package pl.kotcrab.vis.editor.module.scene;
 
 import pl.kotcrab.vis.editor.module.TabsModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModule;
-import pl.kotcrab.vis.editor.ui.SceneTab;
+import pl.kotcrab.vis.editor.ui.scene.SceneTab;
 
 import com.badlogic.gdx.utils.Array;
 
