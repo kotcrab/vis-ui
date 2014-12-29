@@ -99,7 +99,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		tabContentTable = new Table();
 		projectContentTable = new VisTable(true);
 		splitPane = new VisSplitPane(null, null, true);
-		splitPane.setSplitAmount(0.7f);
+		splitPane.setSplitAmount(0.78f);
 
 		projectContentTable.add(new VisLabel("Project Content Manager has not been loaded yet"));
 
