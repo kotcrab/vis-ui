@@ -30,13 +30,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
 public class SceneTab extends TabAdapater {
 	private EditorScene scene;
 
 	private OrthographicCamera camera;
 
-	private SceneModuleContainer moduleContainer;
+	private SceneModuleContainer sceneMC;
 
 	private VisTable content;
 	private VisTable leftColumn;
@@ -48,22 +49,15 @@ public class SceneTab extends TabAdapater {
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
 		this.scene = scene;
 
-		moduleContainer = new SceneModuleContainer(projectMC);
-		moduleContainer.init();
+		sceneMC = new SceneModuleContainer(projectMC);
+		sceneMC.init();
 
 		camera = new OrthographicCamera();
 
 		outline = new SceneOutline();
 		actorProperties = new ActorProperites();
 
-		content = new VisTable(false) {
-			@Override
-			protected void sizeChanged () {
-				super.sizeChanged();
-				moduleContainer.resize();
-				resize();
-			}
-		};
+		content = new ContentTable();
 
 		leftColumn = new VisTable(false);
 		rightColumn = new VisTable(false);
@@ -71,18 +65,24 @@ public class SceneTab extends TabAdapater {
 		leftColumn.top();
 		rightColumn.top();
 
-		content.add(leftColumn).width(300).expandY().fillY();
-		content.add().fill().expand();
-		content.add(rightColumn).width(300).expandY().fillY();
+		//dummy widgets allows content table to get input events
+		content.add(leftColumn).width(300).fillY().expandY();
+		content.add(new Widget()).fill().expand();
+		content.add(rightColumn).width(300).fillY().expandY();
 
 		leftColumn.top();
-		leftColumn.add(outline).height(300).expandX().fillX();
+		leftColumn.add(outline).height(300).fillX().expandX();
+		leftColumn.row();
+		leftColumn.add(new Widget()).fill().expand();
 
 		rightColumn.top();
 		rightColumn.add(actorProperties).height(300).expandX().fillX();
+		rightColumn.row();
+		rightColumn.add(new Widget()).fill().expand();
 	}
 
 	private void resize () {
+		sceneMC.resize();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
@@ -109,5 +109,19 @@ public class SceneTab extends TabAdapater {
 
 	public EditorScene getScene () {
 		return scene;
+	}
+
+	private class ContentTable extends VisTable {
+		public ContentTable () {
+			super(false);
+			addListener(new SceneInputListener(this, sceneMC));
+		}
+
+		@Override
+		protected void sizeChanged () {
+			super.sizeChanged();
+			sceneMC.resize();
+			resize();
+		}
 	}
 }

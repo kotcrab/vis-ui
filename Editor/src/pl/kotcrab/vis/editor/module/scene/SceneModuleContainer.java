@@ -19,6 +19,9 @@
 
 package pl.kotcrab.vis.editor.module.scene;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+
 import pl.kotcrab.vis.editor.module.BaseModuleContainer;
 import pl.kotcrab.vis.editor.module.EditorModuleContainer;
 import pl.kotcrab.vis.editor.module.project.Project;
@@ -53,5 +56,67 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 
 	public Project getProject () {
 		return project;
+	}
+
+	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+		for (int i = 0; i < modules.size; i++)
+			if (modules.get(i).touchDown(event, x, y, pointer, button)) return true;
+
+		return false;
+	}
+
+	public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+		for (int i = 0; i < modules.size; i++)
+			modules.get(i).touchUp(event, x, y, pointer, button);
+	}
+
+	public void touchDragged (InputEvent event, float x, float y, int pointer) {
+		for (int i = 0; i < modules.size; i++)
+			modules.get(i).touchDragged(event, x, y, pointer);
+	}
+
+	public boolean mouseMoved (InputEvent event, float x, float y) {
+		for (int i = 0; i < modules.size; i++)
+			if (modules.get(i).mouseMoved(event, x, y)) return true;
+
+		return false;
+	}
+
+	public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+		for (int i = 0; i < modules.size; i++)
+			modules.get(i).enter(event, x, y, pointer, fromActor);
+	}
+
+	public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+		for (int i = 0; i < modules.size; i++)
+			modules.get(i).exit(event, x, y, pointer, toActor);
+	}
+
+	public boolean scrolled (InputEvent event, float x, float y, int amount) {
+		for (int i = 0; i < modules.size; i++)
+			if (modules.get(i).scrolled(event, x, y, amount)) return true;
+
+		return false;
+	}
+
+	public boolean keyDown (InputEvent event, int keycode) {
+		for (int i = 0; i < modules.size; i++)
+			if (modules.get(i).keyDown(event, keycode)) return true;
+
+		return false;
+	}
+
+	public boolean keyUp (InputEvent event, int keycode) {
+		for (int i = 0; i < modules.size; i++)
+			if (modules.get(i).keyUp(event, keycode)) return true;
+
+		return false;
+	}
+
+	public boolean keyTyped (InputEvent event, char character) {
+		for (int i = 0; i < modules.size; i++)
+			if (modules.get(i).keyTyped(event, character)) return true;
+
+		return false;
 	}
 }

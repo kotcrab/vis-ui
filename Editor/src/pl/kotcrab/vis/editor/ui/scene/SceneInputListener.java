@@ -17,53 +17,74 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor.module.scene;
+package pl.kotcrab.vis.editor.ui.scene;
 
-import pl.kotcrab.vis.editor.module.project.ProjectModule;
+import pl.kotcrab.vis.editor.Editor;
+import pl.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-public abstract class SceneModule extends ProjectModule {
-	protected SceneModuleContainer sceneContainter;
+public class SceneInputListener extends InputListener {
+	private Table target;
+	private SceneModuleContainer sceneMC;
 
-	public void setSceneModuleContainer (SceneModuleContainer projectContainter) {
-		this.sceneContainter = projectContainter;
+	public SceneInputListener (Table focusTarget, SceneModuleContainer sceneMC) {
+		this.target = focusTarget;
+		this.sceneMC = sceneMC;
 	}
 
+	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-		return false;
+		Editor.instance.getStage().setKeyboardFocus(target);
+		Editor.instance.getStage().setScrollFocus(target);
+		return sceneMC.touchDown(event, x, y, pointer, button);
 	}
 
+	@Override
 	public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+		sceneMC.touchUp(event, x, y, pointer, button);
 	}
 
+	@Override
 	public void touchDragged (InputEvent event, float x, float y, int pointer) {
+		sceneMC.touchDragged(event, x, y, pointer);
 	}
 
+	@Override
 	public boolean mouseMoved (InputEvent event, float x, float y) {
-		return false;
+		return sceneMC.mouseMoved(event, x, y);
 	}
 
+	@Override
 	public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+		sceneMC.enter(event, x, y, pointer, fromActor);
 	}
 
+	@Override
 	public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+		sceneMC.exit(event, x, y, pointer, toActor);
 	}
 
+	@Override
 	public boolean scrolled (InputEvent event, float x, float y, int amount) {
-		return false;
+		return sceneMC.scrolled(event, x, y, amount);
 	}
 
+	@Override
 	public boolean keyDown (InputEvent event, int keycode) {
-		return false;
+		return sceneMC.keyDown(event, keycode);
 	}
 
+	@Override
 	public boolean keyUp (InputEvent event, int keycode) {
-		return false;
+		return sceneMC.keyUp(event, keycode);
 	}
 
+	@Override
 	public boolean keyTyped (InputEvent event, char character) {
-		return false;
+		return sceneMC.keyTyped(event, character);
 	}
 }
