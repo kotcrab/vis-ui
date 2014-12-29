@@ -93,7 +93,7 @@ public class TabbedPane {
 	public void switchTab (int index) {
 		group.getButtons().get(index).setChecked(true);
 	}
-	
+
 	public void switchTab (Tab tab) {
 		tabsButtonMap.get(tab).setChecked(true);
 	}
@@ -102,7 +102,7 @@ public class TabbedPane {
 		tabItems.clear();
 		group.clear();
 		tabsButtonMap.clear();
-		
+
 		for (final Tab tab : tabs) {
 			final VisTextButton button = new VisTextButton(tab.getButtonText(), "toggle");
 			button.setFocusBorderEnabled(false);

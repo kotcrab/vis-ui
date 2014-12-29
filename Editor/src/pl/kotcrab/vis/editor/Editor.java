@@ -130,8 +130,9 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		} catch (EditorException e) {
 			e.printStackTrace();
 		}
-		
-		EditorScene testScene = projectMC.get(SceneIOModule.class).load(Gdx.files.absolute("F:\\Poligon\\TestProject\\vis\\assets\\scene\\test.json"));
+
+		EditorScene testScene = projectMC.get(SceneIOModule.class).load(
+			Gdx.files.absolute("F:\\Poligon\\TestProject\\vis\\assets\\scene\\test.json"));
 		projectMC.get(SceneTabsModule.class).open(testScene);
 	}
 

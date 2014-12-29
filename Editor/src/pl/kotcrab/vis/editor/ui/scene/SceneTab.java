@@ -19,7 +19,6 @@
 
 package pl.kotcrab.vis.editor.ui.scene;
 
-import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import pl.kotcrab.vis.editor.module.scene.EditorScene;
 import pl.kotcrab.vis.editor.module.scene.SceneModuleContainer;
@@ -31,7 +30,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class SceneTab extends TabAdapater {
 	private EditorScene scene;
@@ -54,7 +52,7 @@ public class SceneTab extends TabAdapater {
 		moduleContainer.init();
 
 		camera = new OrthographicCamera();
-		
+
 		outline = new SceneOutline();
 		actorProperties = new ActorProperites();
 
@@ -66,6 +64,7 @@ public class SceneTab extends TabAdapater {
 				resize();
 			}
 		};
+
 		leftColumn = new VisTable(false);
 		rightColumn = new VisTable(false);
 

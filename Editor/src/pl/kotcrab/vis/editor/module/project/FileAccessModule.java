@@ -82,8 +82,8 @@ public class FileAccessModule extends ProjectModule {
 	public EditorFileType getFileType (FileHandle file) {
 		String relativePath = file.path().substring(visFolder.path().length());
 
-		for (Entry<String, EditorFileType> e: fileTypeMap.entries()) {
-			if(e.key.equals(relativePath)) return e.value;
+		for (Entry<String, EditorFileType> e : fileTypeMap.entries()) {
+			if (e.key.equals(relativePath)) return e.value;
 		}
 
 		return EditorFileType.UNKNOWN;

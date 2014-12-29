@@ -135,7 +135,7 @@ public class AssetsManagerUIModule extends ProjectModule {
 		watcher = new RecursiveWatcher(Paths.get(assetsFolder.path()), new WatchListener() {
 			@Override
 			public void changed (FileHandle file) {
-				//TODO refresh tree
+				// TODO refresh tree
 				if (file.equals(currenDirectory)) refreshRequested = true;
 			}
 		});
@@ -179,7 +179,7 @@ public class AssetsManagerUIModule extends ProjectModule {
 					searchTextField.setInputValid(false);
 				else
 					searchTextField.setInputValid(true);
-				
+
 				return false;
 			}
 		});
