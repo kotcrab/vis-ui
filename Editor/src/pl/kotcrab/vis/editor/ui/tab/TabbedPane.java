@@ -24,6 +24,7 @@ import pl.kotcrab.vis.ui.VisUI;
 import pl.kotcrab.vis.ui.widget.VisTextButton;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -40,7 +41,7 @@ public class TabbedPane {
 
 	private Array<Tab> tabs;
 	private ObjectMap<Tab, VisTextButton> tabsButtonMap;
-	private ButtonGroup group;
+	private ButtonGroup<Button> group;
 
 	private Tab activeTab;
 
@@ -49,7 +50,7 @@ public class TabbedPane {
 	public TabbedPane (TabbedPaneListener listener) {
 		this.listener = listener;
 
-		group = new ButtonGroup();
+		group = new ButtonGroup<Button>();
 
 		mainTable = new VisTable();
 		tabItems = new VisTable();
