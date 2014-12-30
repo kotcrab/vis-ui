@@ -23,13 +23,13 @@ import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import pl.kotcrab.vis.editor.module.scene.CameraModule;
 import pl.kotcrab.vis.editor.module.scene.EditorScene;
+import pl.kotcrab.vis.editor.module.scene.RendererModule;
 import pl.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import pl.kotcrab.vis.editor.ui.tab.TabAdapater;
 import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
 import pl.kotcrab.vis.ui.VisTable;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
@@ -79,6 +79,7 @@ public class SceneTab extends TabAdapater {
 		rightColumn.add(new Widget()).fill().expand();
 
 		sceneMC.add(new CameraModule());
+		sceneMC.add(new RendererModule());
 		sceneMC.init();
 	}
 

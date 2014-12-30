@@ -23,6 +23,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
@@ -90,5 +91,25 @@ public class CameraModule extends SceneModule {
 	private void pan (float deltaX, float deltaY) {
 		camera.position.x = camera.position.x - deltaX * camera.zoom;
 		camera.position.y = camera.position.y + deltaY * camera.zoom;
+	}
+
+	public Matrix4 getCombinedMatrix () {
+		return camera.combined;
+	}
+
+	public float getX () {
+		return camera.position.x;
+	}
+
+	public float getY () {
+		return camera.position.y;
+	}
+
+	public float getHeight () {
+		return camera.viewportHeight * camera.zoom;
+	}
+
+	public float getWidth () {
+		return camera.viewportWidth * camera.zoom;
 	}
 }
