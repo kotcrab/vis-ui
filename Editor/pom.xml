@@ -10,7 +10,7 @@
 	<properties>
 		<jdk.version>1.7</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<gdx.version>1.5.0</gdx.version>
+		<gdx.version>1.5.2</gdx.version>
 	</properties>
 
 	<dependencies>
@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>pl.kotcrab.vis</groupId>
 			<artifactId>vis-ui</artifactId>
-			<version>0.3.0-SNAPSHOT</version>
+			<version>0.3.1-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
