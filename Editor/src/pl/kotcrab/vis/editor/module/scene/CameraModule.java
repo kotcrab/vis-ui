@@ -21,7 +21,6 @@ package pl.kotcrab.vis.editor.module.scene;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector3;
@@ -85,7 +84,7 @@ public class CameraModule extends SceneModule {
 
 	@Override
 	public void touchDragged (InputEvent event, float x, float y, int pointer) {
-		if (Gdx.input.isButtonPressed(Buttons.LEFT)) pan(Gdx.input.getDeltaX(), Gdx.input.getDeltaY());
+		if (Gdx.input.isButtonPressed(Buttons.RIGHT)) pan(Gdx.input.getDeltaX(), Gdx.input.getDeltaY());
 	}
 
 	private void pan (float deltaX, float deltaY) {

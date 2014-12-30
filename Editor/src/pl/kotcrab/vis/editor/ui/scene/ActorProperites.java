@@ -27,7 +27,10 @@ public class ActorProperites extends VisTable {
 	public ActorProperites () {
 		super(true);
 		setBackground(VisUI.skin.getDrawable("window-bg"));
+
 		top();
 		add(new VisLabel("Actor Properties"));
+		row();
+		add(new VisLabel("No actor is selected!")).fillY().expandY();
 	}
 }

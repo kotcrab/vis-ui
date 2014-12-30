@@ -69,7 +69,7 @@ public class SceneTab extends TabAdapater {
 		content.add(rightColumn).width(300).fillY().expandY();
 
 		leftColumn.top();
-		leftColumn.add(outline).height(300).fillX().expandX();
+		//leftColumn.add(outline).height(300).fillX().expandX();
 		leftColumn.row();
 		leftColumn.add(new Widget()).fill().expand();
 
