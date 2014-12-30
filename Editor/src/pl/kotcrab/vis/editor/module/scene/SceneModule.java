@@ -21,6 +21,7 @@ package pl.kotcrab.vis.editor.module.scene;
 
 import pl.kotcrab.vis.editor.module.project.ProjectModule;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
@@ -29,6 +30,9 @@ public abstract class SceneModule extends ProjectModule {
 
 	public void setSceneModuleContainer (SceneModuleContainer projectContainter) {
 		this.sceneContainter = projectContainter;
+	}
+
+	public void render (Batch batch) {
 	}
 
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {

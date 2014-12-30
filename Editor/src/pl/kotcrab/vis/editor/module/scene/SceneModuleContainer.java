@@ -19,13 +19,14 @@
 
 package pl.kotcrab.vis.editor.module.scene;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-
 import pl.kotcrab.vis.editor.module.BaseModuleContainer;
 import pl.kotcrab.vis.editor.module.EditorModuleContainer;
 import pl.kotcrab.vis.editor.module.project.Project;
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
 public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 	private Project project;
@@ -39,9 +40,7 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 
 	@Override
 	public void add (SceneModule module) {
-		if (project == null) throw new IllegalStateException("Module cannot be added before project has been set!");
-
-		module.setProject(project);
+		module.setProject(projectModuleContainer.getProject());
 		module.setProjectModuleContainter(projectModuleContainer);
 		module.setContainer(editorModuleContainer);
 		module.setSceneModuleContainer(this);
@@ -56,6 +55,11 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 
 	public Project getProject () {
 		return project;
+	}
+
+	public void render (Batch batch) {
+		for (int i = 0; i < modules.size; i++)
+			modules.get(i).render(batch);
 	}
 
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {

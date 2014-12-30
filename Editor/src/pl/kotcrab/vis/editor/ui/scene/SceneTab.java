@@ -19,23 +19,24 @@
 
 package pl.kotcrab.vis.editor.ui.scene;
 
+import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import pl.kotcrab.vis.editor.module.scene.CameraModule;
 import pl.kotcrab.vis.editor.module.scene.EditorScene;
 import pl.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import pl.kotcrab.vis.editor.ui.tab.TabAdapater;
 import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
 import pl.kotcrab.vis.ui.VisTable;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 public class SceneTab extends TabAdapater {
 	private EditorScene scene;
-
-	private OrthographicCamera camera;
 
 	private SceneModuleContainer sceneMC;
 
@@ -50,9 +51,6 @@ public class SceneTab extends TabAdapater {
 		this.scene = scene;
 
 		sceneMC = new SceneModuleContainer(projectMC);
-		sceneMC.init();
-
-		camera = new OrthographicCamera();
 
 		outline = new SceneOutline();
 		actorProperties = new ActorProperites();
@@ -65,7 +63,7 @@ public class SceneTab extends TabAdapater {
 		leftColumn.top();
 		rightColumn.top();
 
-		//dummy widgets allows content table to get input events
+		// dummy widgets allows content table to get input events
 		content.add(leftColumn).width(300).fillY().expandY();
 		content.add(new Widget()).fill().expand();
 		content.add(rightColumn).width(300).fillY().expandY();
@@ -79,17 +77,30 @@ public class SceneTab extends TabAdapater {
 		rightColumn.add(actorProperties).height(300).expandX().fillX();
 		rightColumn.row();
 		rightColumn.add(new Widget()).fill().expand();
+
+		sceneMC.add(new CameraModule());
+		sceneMC.init();
 	}
 
 	private void resize () {
 		sceneMC.resize();
-		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
+
+	Drawable test = Assets.getIcon("settings-view");
 
 	@Override
 	public void render (Batch batch) {
-		camera.update();
-		batch.setProjectionMatrix(camera.combined);
+		Color oldColor = batch.getColor().cpy();
+		batch.setColor(1, 1, 1, 1);
+		batch.begin();
+		
+		sceneMC.render(batch);
+
+		test.draw(batch, 250, 250, 22, 22);
+		test.draw(batch, 250, 300, 22, 22);
+
+		batch.end();
+		batch.setColor(oldColor);
 	}
 
 	@Override

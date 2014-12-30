@@ -22,6 +22,7 @@ package pl.kotcrab.vis.editor.ui.scene;
 import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -40,37 +41,38 @@ public class SceneInputListener extends InputListener {
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 		Editor.instance.getStage().setKeyboardFocus(target);
 		Editor.instance.getStage().setScrollFocus(target);
-		return sceneMC.touchDown(event, x, y, pointer, button);
+
+		return sceneMC.touchDown(event, Gdx.input.getX(), Gdx.input.getY(), pointer, button);
 	}
 
 	@Override
 	public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-		sceneMC.touchUp(event, x, y, pointer, button);
+		sceneMC.touchUp(event, Gdx.input.getX(), Gdx.input.getY(), pointer, button);
 	}
 
 	@Override
 	public void touchDragged (InputEvent event, float x, float y, int pointer) {
-		sceneMC.touchDragged(event, x, y, pointer);
+		sceneMC.touchDragged(event, Gdx.input.getX(), Gdx.input.getY(), pointer);
 	}
 
 	@Override
 	public boolean mouseMoved (InputEvent event, float x, float y) {
-		return sceneMC.mouseMoved(event, x, y);
+		return sceneMC.mouseMoved(event, Gdx.input.getX(), Gdx.input.getY());
 	}
 
 	@Override
 	public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-		sceneMC.enter(event, x, y, pointer, fromActor);
+		sceneMC.enter(event, Gdx.input.getX(), Gdx.input.getY(), pointer, fromActor);
 	}
 
 	@Override
 	public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
-		sceneMC.exit(event, x, y, pointer, toActor);
+		sceneMC.exit(event, Gdx.input.getX(), Gdx.input.getY(), pointer, toActor);
 	}
 
 	@Override
 	public boolean scrolled (InputEvent event, float x, float y, int amount) {
-		return sceneMC.scrolled(event, x, y, amount);
+		return sceneMC.scrolled(event, Gdx.input.getX(), Gdx.input.getY(), amount);
 	}
 
 	@Override
