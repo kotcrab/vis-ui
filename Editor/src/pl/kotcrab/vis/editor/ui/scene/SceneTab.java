@@ -23,6 +23,7 @@ import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import pl.kotcrab.vis.editor.module.scene.CameraModule;
 import pl.kotcrab.vis.editor.module.scene.EditorScene;
+import pl.kotcrab.vis.editor.module.scene.GridRendererModule;
 import pl.kotcrab.vis.editor.module.scene.RendererModule;
 import pl.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import pl.kotcrab.vis.editor.ui.tab.TabAdapater;
@@ -44,7 +45,7 @@ public class SceneTab extends TabAdapater {
 	private VisTable leftColumn;
 	private VisTable rightColumn;
 
-	private SceneOutline outline;
+	//private SceneOutline outline;
 	private ActorProperites actorProperties;
 
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
@@ -52,7 +53,7 @@ public class SceneTab extends TabAdapater {
 
 		sceneMC = new SceneModuleContainer(projectMC);
 
-		outline = new SceneOutline();
+		//outline = new SceneOutline();
 		actorProperties = new ActorProperites();
 
 		content = new ContentTable();
@@ -69,7 +70,7 @@ public class SceneTab extends TabAdapater {
 		content.add(rightColumn).width(300).fillY().expandY();
 
 		leftColumn.top();
-		//leftColumn.add(outline).height(300).fillX().expandX();
+		// leftColumn.add(outline).height(300).fillX().expandX();
 		leftColumn.row();
 		leftColumn.add(new Widget()).fill().expand();
 
@@ -80,6 +81,7 @@ public class SceneTab extends TabAdapater {
 
 		sceneMC.add(new CameraModule());
 		sceneMC.add(new RendererModule());
+		sceneMC.add(new GridRendererModule());
 		sceneMC.init();
 	}
 
@@ -94,7 +96,7 @@ public class SceneTab extends TabAdapater {
 		Color oldColor = batch.getColor().cpy();
 		batch.setColor(1, 1, 1, 1);
 		batch.begin();
-		
+
 		sceneMC.render(batch);
 
 		test.draw(batch, 250, 250, 22, 22);
