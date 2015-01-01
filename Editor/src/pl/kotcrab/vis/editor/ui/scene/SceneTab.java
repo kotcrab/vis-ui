@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Pawel Pastuszak
+ * Copyright 2014-2015 Pawel Pastuszak
  * 
  * This file is part of VisEditor.
  * 
@@ -45,7 +45,7 @@ public class SceneTab extends TabAdapater {
 	private VisTable leftColumn;
 	private VisTable rightColumn;
 
-	//private SceneOutline outline;
+	// private SceneOutline outline;
 	private ActorProperites actorProperties;
 
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
@@ -53,7 +53,7 @@ public class SceneTab extends TabAdapater {
 
 		sceneMC = new SceneModuleContainer(projectMC);
 
-		//outline = new SceneOutline();
+		// outline = new SceneOutline();
 		actorProperties = new ActorProperites();
 
 		content = new ContentTable();

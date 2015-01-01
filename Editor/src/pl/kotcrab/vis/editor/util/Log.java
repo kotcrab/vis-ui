@@ -1,5 +1,5 @@
 /**
- * Copyright 2014 Pawel Pastuszak
+ * Copyright 2014-2015 Pawel Pastuszak
  * 
  * This file is part of VisEditor.
  * 
