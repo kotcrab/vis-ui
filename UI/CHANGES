@@ -1,3 +1,6 @@
+[0.3.1]
+-Fixed VisImageButton.setGenerateDisabledImage(boolean)
+
 [0.3.0]
 -LibGDX dependency version changed to 1.5.0
 -Font size changed to 15

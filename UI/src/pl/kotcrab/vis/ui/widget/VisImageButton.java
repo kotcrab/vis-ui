@@ -69,7 +69,7 @@ public class VisImageButton extends Button implements Focusable {
 	}
 
 	public void setGenerateDisabledImage (boolean generate) {
-		generateDisabledImage = true;
+		generateDisabledImage = generate;
 	}
 
 	@Override
