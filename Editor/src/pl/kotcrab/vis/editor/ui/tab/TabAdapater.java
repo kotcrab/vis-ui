@@ -42,4 +42,14 @@ public class TabAdapater implements Tab {
 	public TabViewMode getViewMode () {
 		return TabViewMode.TAB_ONLY;
 	}
+
+	@Override
+	public void onShow () {
+		
+	}
+
+	@Override
+	public void onHide () {
+		
+	}
 }

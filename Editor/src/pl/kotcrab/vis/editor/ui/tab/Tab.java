@@ -30,4 +30,8 @@ public interface Tab {
 	public void render (Batch batch);
 
 	public TabViewMode getViewMode ();
+	
+	public void onShow();
+	
+	public void onHide();
 }

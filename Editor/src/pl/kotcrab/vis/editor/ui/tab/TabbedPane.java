@@ -34,9 +34,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public class TabbedPane {
-	private static final Drawable bottomBar = VisUI.skin.getDrawable("list-selection");
-
-	private VisTable tabItems;
+	private VisTable tabsTable;
 	private VisTable mainTable;
 
 	private Array<Tab> tabs;
@@ -53,22 +51,24 @@ public class TabbedPane {
 		group = new ButtonGroup<Button>();
 
 		mainTable = new VisTable();
-		tabItems = new VisTable();
+		tabsTable = new VisTable();
 
 		tabs = new Array<Tab>();
 		tabsButtonMap = new ObjectMap<Tab, VisTextButton>();
 
-		mainTable.add(tabItems).padTop(2).left().expand();
+		mainTable.add(tabsTable).padTop(2).left().expand();
 		mainTable.row();
-		mainTable.add(new Image(bottomBar)).expand().fill();
+		// if height is not set bottomBar may sometimes disappear for some reason
+		mainTable.add(new Image(VisUI.skin.getDrawable("list-selection"))).expand().fill();
 		mainTable.setBackground(VisUI.skin.getDrawable("menu-bg"));
 	}
 
 	public void add (Tab tab) {
 		tabs.add(tab);
+		if (activeTab != null) activeTab.onHide();
 		activeTab = tab;
+
 		rebuildTabsTable();
-		listener.switched(tab);
 	}
 
 	public void add (int index, Tab tab) {
@@ -84,7 +84,6 @@ public class TabbedPane {
 			listener.removed(tab);
 
 			if (activeTab == tab) switchTab(0);
-
 			if (tabs.size == 0) listener.removedAll();
 		}
 
@@ -100,7 +99,7 @@ public class TabbedPane {
 	}
 
 	private void rebuildTabsTable () {
-		tabItems.clear();
+		tabsTable.clear();
 		group.clear();
 		tabsButtonMap.clear();
 
@@ -108,24 +107,22 @@ public class TabbedPane {
 			final VisTextButton button = new VisTextButton(tab.getButtonText(), "toggle");
 			button.setFocusBorderEnabled(false);
 
-			tabItems.add(button);
+			tabsTable.add(button);
 			group.add(button);
 			tabsButtonMap.put(tab, button);
-
-			if (tabs.size == 1) {
-				button.setChecked(true);
-				listener.switched(tab);
-			}
-
-			if (tab == activeTab) button.setChecked(true);
 
 			button.addListener(new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
+					if (activeTab != null) activeTab.onHide();
 					activeTab = tab;
-					if (button.isChecked()) listener.switched(tab);
+					listener.switched(tab);
+					tab.onShow();
 				}
 			});
+
+			if (tabs.size == 1) button.setChecked(true);
+			if (tab == activeTab) button.setChecked(true); // maintains current previous tab while rebuilding
 		}
 	}
 
