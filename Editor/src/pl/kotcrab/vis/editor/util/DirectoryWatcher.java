@@ -62,7 +62,7 @@ import com.badlogic.gdx.files.FileHandle;
  * @author Philipp C. Heckel <philipp.heckel@gmail.com>
  * @author Pawel Pastuszak */
 @SuppressWarnings("unchecked")
-public class RecursiveWatcher {
+public class DirectoryWatcher {
 	private Path root;
 	private int settleDelay;
 	private WatchListener listener;
@@ -72,7 +72,7 @@ public class RecursiveWatcher {
 	private Map<Path, WatchKey> watchPathKeyMap;
 	private Timer timer;
 
-	public RecursiveWatcher (Path root, WatchListener listener) {
+	public DirectoryWatcher (Path root, WatchListener listener) {
 		this.root = root;
 		this.settleDelay = 1;
 		this.listener = listener;
@@ -107,7 +107,6 @@ public class RecursiveWatcher {
 								Path dir = (Path)watchKey.watchable();
 								Path fullPath = dir.resolve(ev.context());
 								if (listener != null) listener.changed(Gdx.files.absolute(fullPath.getParent().toString()));
-
 							}
 
 							watchKey.reset();
