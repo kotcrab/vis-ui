@@ -46,6 +46,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
 
 //https://github.com/syncany/syncany/blob/59cf87c72de4322c737f0073ce8a7ddd992fd898/syncany-lib/src/main/java/org/syncany/operations/watch/RecursiveWatcher.java
 
@@ -65,22 +66,29 @@ import com.badlogic.gdx.files.FileHandle;
 public class DirectoryWatcher {
 	private Path root;
 	private int settleDelay;
-	private WatchListener listener;
+	private Array<WatchListener> listeners;
 	private AtomicBoolean running;
 	private WatchService watchService;
 	private Thread watchThread;
 	private Map<Path, WatchKey> watchPathKeyMap;
 	private Timer timer;
 
+	public DirectoryWatcher (Path root) {
+		this(root, null);
+	}
+
 	public DirectoryWatcher (Path root, WatchListener listener) {
 		this.root = root;
-		this.settleDelay = 1;
-		this.listener = listener;
-		this.running = new AtomicBoolean(false);
-		this.watchService = null;
-		this.watchThread = null;
-		this.watchPathKeyMap = new HashMap<Path, WatchKey>();
-		this.timer = null;
+
+		settleDelay = 1;
+		listeners = new Array<WatchListener>();
+		running = new AtomicBoolean(false);
+		watchService = null;
+		watchThread = null;
+		watchPathKeyMap = new HashMap<Path, WatchKey>();
+		timer = null;
+
+		if (listener != null) listeners.add(listener);
 	}
 
 	/** Starts the watcher service and registers watches in all of the sub-folders of the given root folder.
@@ -91,7 +99,6 @@ public class DirectoryWatcher {
 	 * take longer than a few milliseconds. */
 	public void start () {
 		try {
-
 			watchService = FileSystems.getDefault().newWatchService();
 			watchThread = new Thread(new Runnable() {
 				@Override
@@ -106,7 +113,9 @@ public class DirectoryWatcher {
 								WatchEvent<Path> ev = (WatchEvent<Path>)event;
 								Path dir = (Path)watchKey.watchable();
 								Path fullPath = dir.resolve(ev.context());
-								if (listener != null) listener.changed(Gdx.files.absolute(fullPath.getParent().toString()));
+
+								for (WatchListener listener : listeners)
+									listener.changed(Gdx.files.absolute(fullPath.getParent().toString()));
 							}
 
 							watchKey.reset();
@@ -211,6 +220,14 @@ public class DirectoryWatcher {
 			watchKey.cancel();
 			watchPathKeyMap.remove(dir);
 		}
+	}
+
+	public void addListener (WatchListener listener) {
+		listeners.add(listener);
+	}
+
+	public boolean removeListener (WatchListener listener) {
+		return listeners.removeValue(listener, true);
 	}
 
 	public interface WatchListener {
