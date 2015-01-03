@@ -96,7 +96,7 @@ public class ImageProcessor {
 		Rect rect = processImage(image, name);
 
 		if (rect == null) {
-			System.out.println("Ignoring blank input image: " + name);
+			//System.out.println("Ignoring blank input image: " + name);
 			return null;
 		}
 
@@ -104,7 +104,7 @@ public class ImageProcessor {
 			String crc = hash(rect.getImage(this));
 			Rect existing = crcs.get(crc);
 			if (existing != null) {
-				System.out.println(rect.name + " (alias of " + existing.name + ")");
+				//System.out.println(rect.name + " (alias of " + existing.name + ")");
 				existing.aliases.add(new Alias(rect));
 				return null;
 			}

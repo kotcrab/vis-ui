@@ -35,7 +35,6 @@ import javax.imageio.ImageIO;
  * @author Geert Konijnendijk
  * @author Nathan Sweet
  * @author Michael Bazos */
-@SuppressWarnings("all")
 public class TextureUnpacker {
 	private static final String DEFAULT_OUTPUT_PATH = "output";
 	private static final int NINEPATCH_PADDING = 1;

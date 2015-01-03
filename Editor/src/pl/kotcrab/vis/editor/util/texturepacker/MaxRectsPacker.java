@@ -114,7 +114,7 @@ public class MaxRectsPacker implements Packer {
 		minWidth = Math.max(minWidth, settings.minWidth);
 		minHeight = Math.max(minHeight, settings.minHeight);
 
-		System.out.print("Packing");
+		//System.out.print("Packing");
 
 		// Find the minimal page size that fits all rects.
 		Page bestResult = null;
@@ -125,12 +125,12 @@ public class MaxRectsPacker implements Packer {
 			int size = sizeSearch.reset(), i = 0;
 			while (size != -1) {
 				Page result = packAtSize(true, size - edgePaddingX, size - edgePaddingY, inputRects);
-				if (++i % 70 == 0) System.out.println();
-				System.out.print(".");
+				//if (++i % 70 == 0) System.out.println();
+				//System.out.print(".");
 				bestResult = getBest(bestResult, result);
 				size = sizeSearch.next(result == null);
 			}
-			System.out.println();
+			//System.out.println();
 			// Rects don't fit on one page. Fill a whole page and return.
 			if (bestResult == null) bestResult = packAtSize(false, maxSize - edgePaddingX, maxSize - edgePaddingY, inputRects);
 			sort.sort(bestResult.outputRects, rectComparator);
@@ -146,8 +146,8 @@ public class MaxRectsPacker implements Packer {
 				Page bestWidthResult = null;
 				while (width != -1) {
 					Page result = packAtSize(true, width - edgePaddingX, height - edgePaddingY, inputRects);
-					if (++i % 70 == 0) System.out.println();
-					System.out.print(".");
+					//if (++i % 70 == 0) System.out.println();
+					//System.out.print(".");
 					bestWidthResult = getBest(bestWidthResult, result);
 					width = widthSearch.next(result == null);
 					if (settings.square) height = width;
@@ -158,7 +158,7 @@ public class MaxRectsPacker implements Packer {
 				if (height == -1) break;
 				width = widthSearch.reset();
 			}
-			System.out.println();
+			//System.out.println();
 			// Rects don't fit on one page. Fill a whole page and return.
 			if (bestResult == null)
 				bestResult = packAtSize(false, settings.maxWidth - edgePaddingX, settings.maxHeight - edgePaddingY, inputRects);

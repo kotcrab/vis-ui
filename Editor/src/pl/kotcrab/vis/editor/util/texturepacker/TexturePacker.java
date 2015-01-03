@@ -157,7 +157,7 @@ public class TexturePacker {
 			BufferedImage canvas = new BufferedImage(width, height, getBufferedImageType(settings.format));
 			Graphics2D g = (Graphics2D)canvas.getGraphics();
 
-			System.out.println("Writing " + canvas.getWidth() + "x" + canvas.getHeight() + ": " + outputFile);
+			//System.out.println("Writing " + canvas.getWidth() + "x" + canvas.getHeight() + ": " + outputFile);
 
 			for (Rect rect : page.outputRects) {
 				BufferedImage image = rect.getImage(imageProcessor);
