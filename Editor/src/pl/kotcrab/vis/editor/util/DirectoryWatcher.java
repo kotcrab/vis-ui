@@ -115,7 +115,7 @@ public class DirectoryWatcher {
 								Path fullPath = dir.resolve(ev.context());
 
 								for (WatchListener listener : listeners)
-									listener.changed(Gdx.files.absolute(fullPath.getParent().toString()));
+									listener.fileChanged(Gdx.files.absolute(fullPath.getParent().toString()));
 							}
 
 							watchKey.reset();
@@ -231,6 +231,6 @@ public class DirectoryWatcher {
 	}
 
 	public interface WatchListener {
-		public void changed (FileHandle file);
+		public void fileChanged (FileHandle file);
 	}
 }
