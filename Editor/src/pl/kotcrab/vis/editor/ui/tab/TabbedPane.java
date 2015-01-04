@@ -58,7 +58,7 @@ public class TabbedPane {
 		mainTable.add(tabsTable).padTop(2).left().expand();
 		mainTable.row();
 		// if height is not set bottomBar may sometimes disappear for some reason
-		mainTable.add(new Image(VisUI.skin.getDrawable("list-selection"))).expand().fill();
+		mainTable.add(new Image(VisUI.skin.getDrawable("list-selection"))).expand().fill().height(1);
 		mainTable.setBackground(VisUI.skin.getDrawable("menu-bg"));
 	}
 
