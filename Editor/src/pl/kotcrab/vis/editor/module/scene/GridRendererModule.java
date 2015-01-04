@@ -34,8 +34,8 @@ public class GridRendererModule extends SceneModule {
 
 	@Override
 	public void init () {
-		renderer = containter.get(RendererModule.class);
-		camera = containter.get(CameraModule.class);
+		renderer = sceneContainter.get(RendererModule.class);
+		camera = sceneContainter.get(CameraModule.class);
 
 		shapeRenderer = renderer.getShapeRenderer();
 	}
