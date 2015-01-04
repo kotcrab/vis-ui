@@ -31,10 +31,12 @@ import pl.kotcrab.vis.editor.module.StatusBarModule;
 import pl.kotcrab.vis.editor.module.TabsModule;
 import pl.kotcrab.vis.editor.module.ToolbarModule;
 import pl.kotcrab.vis.editor.module.project.AssetsManagerUIModule;
+import pl.kotcrab.vis.editor.module.project.AssetsWatcherModule;
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.project.Project;
 import pl.kotcrab.vis.editor.module.project.ProjectInfoTabModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import pl.kotcrab.vis.editor.module.project.TextureCacheModule;
 import pl.kotcrab.vis.editor.module.scene.EditorScene;
 import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
 import pl.kotcrab.vis.editor.module.scene.SceneTabsModule;
@@ -157,12 +159,13 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	@Override
 	public void dispose () {
+		editorMC.dispose();
+		if(projectLoaded) projectMC.dispose();
+		
 		stage.dispose();
-
 		Assets.dispose();
 		VisUI.dispose();
-
-		editorMC.dispose();
+		
 		frame.dispose();
 	}
 
@@ -211,6 +214,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.setProject(project);
 
 		projectMC.add(new FileAccessModule());
+		projectMC.add(new AssetsWatcherModule());
+		projectMC.add(new TextureCacheModule());
 		projectMC.add(new SceneIOModule());
 
 		projectMC.add(new SceneTabsModule());
