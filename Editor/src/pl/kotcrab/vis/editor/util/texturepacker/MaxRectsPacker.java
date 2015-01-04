@@ -1,18 +1,21 @@
-/*******************************************************************************
- * Copyright 2011 See AUTHORS file.
+/**
+ * Copyright 2014-2015 Pawel Pastuszak
  * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This file is part of VisEditor.
  * 
- *   http://www.apache.org/licenses/LICENSE-2.0
+ * VisEditor is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- ******************************************************************************/
+ * VisEditor is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 package pl.kotcrab.vis.editor.util.texturepacker;
 
@@ -114,7 +117,7 @@ public class MaxRectsPacker implements Packer {
 		minWidth = Math.max(minWidth, settings.minWidth);
 		minHeight = Math.max(minHeight, settings.minHeight);
 
-		//System.out.print("Packing");
+		// System.out.print("Packing");
 
 		// Find the minimal page size that fits all rects.
 		Page bestResult = null;
@@ -125,12 +128,12 @@ public class MaxRectsPacker implements Packer {
 			int size = sizeSearch.reset(), i = 0;
 			while (size != -1) {
 				Page result = packAtSize(true, size - edgePaddingX, size - edgePaddingY, inputRects);
-				//if (++i % 70 == 0) System.out.println();
-				//System.out.print(".");
+				// if (++i % 70 == 0) System.out.println();
+				// System.out.print(".");
 				bestResult = getBest(bestResult, result);
 				size = sizeSearch.next(result == null);
 			}
-			//System.out.println();
+			// System.out.println();
 			// Rects don't fit on one page. Fill a whole page and return.
 			if (bestResult == null) bestResult = packAtSize(false, maxSize - edgePaddingX, maxSize - edgePaddingY, inputRects);
 			sort.sort(bestResult.outputRects, rectComparator);
@@ -146,8 +149,8 @@ public class MaxRectsPacker implements Packer {
 				Page bestWidthResult = null;
 				while (width != -1) {
 					Page result = packAtSize(true, width - edgePaddingX, height - edgePaddingY, inputRects);
-					//if (++i % 70 == 0) System.out.println();
-					//System.out.print(".");
+					// if (++i % 70 == 0) System.out.println();
+					// System.out.print(".");
 					bestWidthResult = getBest(bestWidthResult, result);
 					width = widthSearch.next(result == null);
 					if (settings.square) height = width;
@@ -158,7 +161,7 @@ public class MaxRectsPacker implements Packer {
 				if (height == -1) break;
 				width = widthSearch.reset();
 			}
-			//System.out.println();
+			// System.out.println();
 			// Rects don't fit on one page. Fill a whole page and return.
 			if (bestResult == null)
 				bestResult = packAtSize(false, settings.maxWidth - edgePaddingX, settings.maxHeight - edgePaddingY, inputRects);
