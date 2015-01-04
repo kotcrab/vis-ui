@@ -112,4 +112,8 @@ public class CameraModule extends SceneModule {
 	public float getWidth () {
 		return camera.viewportWidth * camera.zoom;
 	}
+
+	public Vector3 unproject (Vector3 vector) {
+		return camera.unproject(vector);
+	}
 }
