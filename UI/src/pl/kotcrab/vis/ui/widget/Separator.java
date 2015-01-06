@@ -44,7 +44,7 @@ public class Separator extends Widget {
 
 	@Override
 	public float getPrefHeight () {
-		return style.width;
+		return style.height;
 	}
 
 	@Override
@@ -56,14 +56,14 @@ public class Separator extends Widget {
 
 	static public class SeparatorStyle {
 		public Drawable background;
-		public int width;
+		public int height;
 
 		public SeparatorStyle () {
 		}
 
-		public SeparatorStyle (Drawable bg, int width) {
+		public SeparatorStyle (Drawable bg, int height) {
 			this.background = bg;
-			this.width = width;
+			this.height = height;
 		}
 	}
 }
