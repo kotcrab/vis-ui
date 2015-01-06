@@ -94,7 +94,6 @@ public class MenuBar {
 
 	public void addMenu (Menu menu) {
 		menus.add(new MenuBarItem(menu));
-		menu.clear();
 	}
 
 	private class MenuBarItem {
