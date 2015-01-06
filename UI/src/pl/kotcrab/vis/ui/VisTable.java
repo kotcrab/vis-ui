@@ -36,7 +36,7 @@ public class VisTable extends Table {
 	/** Adds {@link Separator} widget to table with padding top, bottom 2px with fill and expand properties and inserts new row
 	 * after separator (not before!) */
 	public Cell<Separator> addSeparator () {
-		Cell<Separator> cell = add(new Separator()).padTop(2).padBottom(2).fill().expand();
+		Cell<Separator> cell = add(new Separator()).padTop(2).padBottom(2).fillX().expandX();
 		row();
 		return cell;
 	}
