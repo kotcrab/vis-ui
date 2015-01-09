@@ -16,9 +16,6 @@
 
 package pl.kotcrab.vis.ui.util;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.widget.VisDialog;
 import pl.kotcrab.vis.ui.widget.VisLabel;
@@ -121,9 +118,13 @@ public class DialogUtils {
 	}
 
 	private static String getStackTrace (Throwable throwable) {
-		StringWriter sw = new StringWriter();
-		PrintWriter pw = new PrintWriter(sw, true);
-		throwable.printStackTrace(pw);
-		return sw.getBuffer().toString();
+		StringBuilder builder = new StringBuilder();
+
+		for (StackTraceElement element : throwable.getStackTrace()) {
+			builder.append(element);
+			builder.append("\n");
+		}
+		
+		return builder.toString();
 	}
 }
