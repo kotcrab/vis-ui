@@ -23,7 +23,7 @@ import pl.kotcrab.vis.ui.widget.VisWindow;
 public class TestValidator extends VisWindow {
 
 	public TestValidator (boolean useVisComponets) {
-		super("test validator (number)");
+		super("input validator (int number)");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
@@ -33,7 +33,7 @@ public class TestValidator extends VisWindow {
 		add(textField);
 
 		pack();
-		setPosition(130, 40);
+		setPosition(100, 150);
 	}
 
 }

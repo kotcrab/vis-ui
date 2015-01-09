@@ -54,7 +54,7 @@ public class TestWindow extends VisWindow {
 			addNormalComponents();
 
 		pack();
-		setPosition(255, 280);
+		setPosition(255, 300);
 	}
 
 	private void addVisComponents () {

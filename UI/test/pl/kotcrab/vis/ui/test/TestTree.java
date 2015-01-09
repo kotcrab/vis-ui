@@ -30,7 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 public class TestTree extends VisWindow {
 
 	public TestTree (boolean useVisComponets) {
-		super("test tree");
+		super("tree");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();

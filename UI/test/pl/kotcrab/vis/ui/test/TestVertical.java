@@ -29,7 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 public class TestVertical extends VisWindow {
 
 	public TestVertical (boolean useVisComponets) {
-		super("test vertical");
+		super("vertical");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
@@ -40,7 +40,7 @@ public class TestVertical extends VisWindow {
 			addNormalComponents();
 
 		setSize(100, 200);
-		setPosition(680, 40);
+		setPosition(1100, 90);
 	}
 
 	private void addNormalComponents () {
