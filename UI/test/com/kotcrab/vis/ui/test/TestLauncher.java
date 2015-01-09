@@ -72,7 +72,7 @@ class TestApplication extends ApplicationAdapter {
 		stage.addActor(new TestVertical(USE_VIS_COMPONENTS));
 		stage.addActor(new TestValidator(USE_VIS_COMPONENTS));
 		stage.addActor(new TestDialogUtils(USE_VIS_COMPONENTS));
-		stage.addActor(new TestCollapsable(USE_VIS_COMPONENTS));
+		stage.addActor(new TestCollapsible(USE_VIS_COMPONENTS));
 		stage.addActor(new TestFormValidator(USE_VIS_COMPONENTS));
 	}
 

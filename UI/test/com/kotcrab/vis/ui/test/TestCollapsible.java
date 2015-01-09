@@ -27,9 +27,9 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
-public class TestCollapsable extends VisWindow {
+public class TestCollapsible extends VisWindow {
 
-	public TestCollapsable (boolean useVisComponets) {
+	public TestCollapsible (boolean useVisComponets) {
 		super("collapsiblewidget");
 
 		columnDefaults(0).left();
@@ -41,11 +41,11 @@ public class TestCollapsable extends VisWindow {
 	}
 
 	private void addVisComponents () {
-		VisCheckBox collapse = new VisCheckBox("show advanced settings");
-		collapse.setChecked(true);
+		VisCheckBox collapseCheckBox = new VisCheckBox("show advanced settings");
+		collapseCheckBox.setChecked(true);
 
 		VisTable table = new VisTable();
-		final CollapsibleWidget collapsibleWidget = new CollapsibleWidget(table, false);
+		final CollapsibleWidget collapsibleWidget = new CollapsibleWidget(table);
 
 		VisTable numberTable = new VisTable(true);
 		numberTable.add(new VisLabel("2 + 2 * 2 = "));
@@ -56,7 +56,7 @@ public class TestCollapsable extends VisWindow {
 		table.add(new VisCheckBox("advanced option #2")).row();
 		table.add(numberTable).padTop(3).row();
 
-		collapse.addListener(new ChangeListener() {
+		collapseCheckBox.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				collapsibleWidget.setCollapsed(!collapsibleWidget.isCollapsed());
@@ -71,7 +71,7 @@ public class TestCollapsable extends VisWindow {
 		notAdvancedTable.add(new VisCheckBox("option #2")).row();
 		notAdvancedTable.add(new VisTextButton("button"));
 
-		add(collapse).row();
+		add(collapseCheckBox).row();
 		add(collapsibleWidget).expandX().fillX().row();
 		add(new Separator()).padTop(10).fillX().expandX().row();
 		add(notAdvancedTable).expandX().fillX().padTop(5).row();
