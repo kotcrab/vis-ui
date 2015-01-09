@@ -21,24 +21,24 @@ package pl.kotcrab.vis.editor.ui;
 
 import pl.kotcrab.vis.editor.module.ProjectIOModule;
 import pl.kotcrab.vis.editor.module.project.Project;
-import pl.kotcrab.vis.ui.FormValidator;
-import pl.kotcrab.vis.ui.TableUtils;
-import pl.kotcrab.vis.ui.VisTable;
-import pl.kotcrab.vis.ui.util.DialogUtils;
-import pl.kotcrab.vis.ui.widget.VisCheckBox;
-import pl.kotcrab.vis.ui.widget.VisLabel;
-import pl.kotcrab.vis.ui.widget.VisTextButton;
-import pl.kotcrab.vis.ui.widget.VisValidableTextField;
-import pl.kotcrab.vis.ui.widget.VisWindow;
-import pl.kotcrab.vis.ui.widget.file.FileChooser;
-import pl.kotcrab.vis.ui.widget.file.FileChooser.Mode;
-import pl.kotcrab.vis.ui.widget.file.FileChooser.SelectionMode;
-import pl.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.ui.FormValidator;
+import com.kotcrab.vis.ui.TableUtils;
+import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.widget.VisCheckBox;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisWindow;
+import com.kotcrab.vis.ui.widget.file.FileChooser;
+import com.kotcrab.vis.ui.widget.file.FileChooser.Mode;
+import com.kotcrab.vis.ui.widget.file.FileChooser.SelectionMode;
+import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 
 public class NewProjectDialog extends VisWindow {
 	private VisValidableTextField projectRoot;

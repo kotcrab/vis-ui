@@ -24,13 +24,13 @@ import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.event.Event;
 import pl.kotcrab.vis.editor.event.EventListener;
 import pl.kotcrab.vis.editor.event.StatusBarEvent;
-import pl.kotcrab.vis.ui.VisTable;
-import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.widget.VisLabel;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class StatusBarModule extends EditorModule implements EventListener {
 	public VisTable table;

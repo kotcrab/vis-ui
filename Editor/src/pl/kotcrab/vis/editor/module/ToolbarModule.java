@@ -24,11 +24,11 @@ import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.event.Event;
 import pl.kotcrab.vis.editor.event.EventListener;
-import pl.kotcrab.vis.ui.VisTable;
-import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.widget.VisImageButton;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisImageButton;
 
 public class ToolbarModule extends EditorModule implements EventListener {
 	public VisTable table;

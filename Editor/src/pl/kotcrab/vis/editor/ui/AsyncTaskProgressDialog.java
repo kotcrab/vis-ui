@@ -22,11 +22,12 @@ package pl.kotcrab.vis.editor.ui;
 import pl.kotcrab.vis.editor.Editor;
 import pl.kotcrab.vis.editor.util.AsyncTask;
 import pl.kotcrab.vis.editor.util.AsyncTaskListener;
-import pl.kotcrab.vis.ui.TableUtils;
-import pl.kotcrab.vis.ui.util.DialogUtils;
-import pl.kotcrab.vis.ui.widget.VisLabel;
-import pl.kotcrab.vis.ui.widget.VisProgressBar;
-import pl.kotcrab.vis.ui.widget.VisWindow;
+
+import com.kotcrab.vis.ui.TableUtils;
+import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisProgressBar;
+import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class AsyncTaskProgressDialog extends VisWindow {
 	public AsyncTaskProgressDialog (String title, AsyncTask task) {

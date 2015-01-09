@@ -24,15 +24,6 @@ import pl.kotcrab.vis.editor.event.StatusBarEvent;
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
 import pl.kotcrab.vis.runtime.scene.SceneViewport;
-import pl.kotcrab.vis.ui.FormInputValidator;
-import pl.kotcrab.vis.ui.FormValidator;
-import pl.kotcrab.vis.ui.TableUtils;
-import pl.kotcrab.vis.ui.VisTable;
-import pl.kotcrab.vis.ui.widget.VisLabel;
-import pl.kotcrab.vis.ui.widget.VisSelectBox;
-import pl.kotcrab.vis.ui.widget.VisTextButton;
-import pl.kotcrab.vis.ui.widget.VisValidableTextField;
-import pl.kotcrab.vis.ui.widget.VisWindow;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -40,6 +31,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.OrderedMap;
+import com.kotcrab.vis.ui.FormInputValidator;
+import com.kotcrab.vis.ui.FormValidator;
+import com.kotcrab.vis.ui.TableUtils;
+import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisSelectBox;
+import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class NewSceneDialog extends VisWindow {
 	private VisValidableTextField nameTextField;

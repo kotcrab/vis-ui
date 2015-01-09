@@ -20,9 +20,9 @@
 package pl.kotcrab.vis.editor.ui;
 
 import pl.kotcrab.vis.editor.ui.tab.TabAdapater;
-import pl.kotcrab.vis.ui.widget.VisLabel;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class StartPageTab extends TabAdapater {
 	@Override

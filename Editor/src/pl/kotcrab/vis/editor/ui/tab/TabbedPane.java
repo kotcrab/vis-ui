@@ -19,10 +19,6 @@
 
 package pl.kotcrab.vis.editor.ui.tab;
 
-import pl.kotcrab.vis.ui.VisTable;
-import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.widget.VisTextButton;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
@@ -31,6 +27,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 
 public class TabbedPane {
 	private VisTable tabsTable;

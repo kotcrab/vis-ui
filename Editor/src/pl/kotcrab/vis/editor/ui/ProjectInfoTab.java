@@ -22,10 +22,10 @@ package pl.kotcrab.vis.editor.ui;
 import pl.kotcrab.vis.editor.module.project.Project;
 import pl.kotcrab.vis.editor.ui.tab.TabAdapater;
 import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
-import pl.kotcrab.vis.ui.VisTable;
-import pl.kotcrab.vis.ui.widget.VisLabel;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class ProjectInfoTab extends TabAdapater {
 	private Table content;

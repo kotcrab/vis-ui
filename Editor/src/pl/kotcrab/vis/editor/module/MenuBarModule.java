@@ -28,20 +28,20 @@ import pl.kotcrab.vis.editor.ui.NewProjectDialog;
 import pl.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
 import pl.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import pl.kotcrab.vis.editor.util.EditorException;
-import pl.kotcrab.vis.ui.util.DialogUtils;
-import pl.kotcrab.vis.ui.widget.Menu;
-import pl.kotcrab.vis.ui.widget.MenuBar;
-import pl.kotcrab.vis.ui.widget.MenuItem;
-import pl.kotcrab.vis.ui.widget.file.FileChooser;
-import pl.kotcrab.vis.ui.widget.file.FileChooser.Mode;
-import pl.kotcrab.vis.ui.widget.file.FileChooser.SelectionMode;
-import pl.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.widget.Menu;
+import com.kotcrab.vis.ui.widget.MenuBar;
+import com.kotcrab.vis.ui.widget.MenuItem;
+import com.kotcrab.vis.ui.widget.file.FileChooser;
+import com.kotcrab.vis.ui.widget.file.FileChooser.Mode;
+import com.kotcrab.vis.ui.widget.file.FileChooser.SelectionMode;
+import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 
 public class MenuBarModule extends EditorModule {
 	private ProjectModuleContainer projectContainer;

@@ -31,11 +31,11 @@ import pl.kotcrab.vis.editor.ui.AsyncTaskProgressDialog;
 import pl.kotcrab.vis.editor.util.AsyncTask;
 import pl.kotcrab.vis.editor.util.CopyFileVisitor;
 import pl.kotcrab.vis.editor.util.EditorException;
-import pl.kotcrab.vis.ui.util.DialogUtils;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
+import com.kotcrab.vis.ui.util.DialogUtils;
 
 public class ProjectIOModule extends EditorModule {
 	public boolean load (FileHandle projectRoot) throws EditorException {

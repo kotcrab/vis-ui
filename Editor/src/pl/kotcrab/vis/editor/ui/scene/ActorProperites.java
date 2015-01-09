@@ -19,9 +19,9 @@
 
 package pl.kotcrab.vis.editor.ui.scene;
 
-import pl.kotcrab.vis.ui.VisTable;
-import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class ActorProperites extends VisTable {
 	public ActorProperites () {
