@@ -52,6 +52,7 @@ public class TestCollapsible extends VisWindow {
 		numberTable.add(new VisTextField());
 
 		table.defaults().left();
+		table.defaults().padLeft(10);
 		table.add(new VisCheckBox("advanced option #1")).row();
 		table.add(new VisCheckBox("advanced option #2")).row();
 		table.add(numberTable).padTop(3).row();
