@@ -90,13 +90,15 @@ public class CollapsibleWidget extends WidgetGroup {
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
-		batch.flush();
-		boolean clipEnabled = clipBegin(getX(), getY(), getWidth(), currentHeight);
+		if (currentHeight > 1) {
+			batch.flush();
+			boolean clipEnabled = clipBegin(getX(), getY(), getWidth(), currentHeight);
 
-		if (currentHeight > 0) super.draw(batch, parentAlpha);
+			super.draw(batch, parentAlpha);
 
-		batch.flush();
-		if (clipEnabled) clipEnd();
+			batch.flush();
+			if (clipEnabled) clipEnd();
+		}
 	}
 
 	@Override
