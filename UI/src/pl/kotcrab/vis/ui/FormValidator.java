@@ -22,27 +22,12 @@ import pl.kotcrab.vis.ui.widget.VisTextField;
 import pl.kotcrab.vis.ui.widget.VisValidableTextField;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Array;
 
-public class FormValidator {
-	private ChangeSharedListener changeListener = new ChangeSharedListener();
-	private Array<VisValidableTextField> fields = new Array<VisValidableTextField>();
-
-	private Button button;
-	private Label errorMsgLabel;
-
+public class FormValidator extends BasicFormValidator {
 	public FormValidator (Button buttonToDisable, Label errorMsgLabel) {
-		this.button = buttonToDisable;
-		this.errorMsgLabel = errorMsgLabel;
-	}
-
-	public void notEmpty (VisValidableTextField field, String errorMsg) {
-		field.addValidator(new EmptyInputValidator(errorMsg));
-		add(field);
+		super(buttonToDisable, errorMsgLabel);
 	}
 
 	public void fileExists (VisValidableTextField field, String errorMsg) {
@@ -83,55 +68,6 @@ public class FormValidator {
 	public void fileNotExists (VisValidableTextField field, FileHandle relavtiveTo, String errorMsg) {
 		field.addValidator(new FileExistsValidator(relavtiveTo.file(), errorMsg, true));
 		add(field);
-	}
-
-	public void custom (VisValidableTextField field, FormInputValidator customValidator) {
-		field.addValidator(customValidator);
-		add(field);
-	}
-
-	private void add (VisValidableTextField field) {
-		fields.add(field);
-		field.addListener(changeListener);
-		checkAll();
-	}
-
-	private void checkAll () {
-		button.setDisabled(false);
-		errorMsgLabel.setText("");
-
-		for (VisValidableTextField field : fields)
-			field.validateInput();
-
-		for (VisValidableTextField field : fields) {
-			if (field.isInputValid() == false) {
-
-				Array<InputValidator> validators = field.getValidators();
-				for (InputValidator v : validators) {
-					FormInputValidator validator = (FormInputValidator)v;
-
-					if (validator.getResult() == false) {
-						errorMsgLabel.setText(validator.getErrorMsg());
-						button.setDisabled(true);
-						break;
-					}
-				}
-
-				break;
-			}
-		}
-	}
-
-	private class EmptyInputValidator extends FormInputValidator {
-		public EmptyInputValidator (String errorMsg) {
-			super(errorMsg);
-		}
-
-		@Override
-		public boolean validateInput (String input) {
-			setResult(!input.isEmpty());
-			return super.validateInput(input);
-		}
 	}
 
 	private class FileExistsValidator extends FormInputValidator {
@@ -184,13 +120,6 @@ public class FormValidator {
 				setResult(f.exists());
 
 			return super.validateInput(input);
-		}
-	}
-
-	private class ChangeSharedListener extends ChangeListener {
-		@Override
-		public void changed (ChangeEvent event, Actor actor) {
-			checkAll();
 		}
 	}
 }

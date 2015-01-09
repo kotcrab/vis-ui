@@ -3,6 +3,7 @@
 -Fixed VisImageButton.setGenerateDisabledImage(boolean)
 -Fixed MenuBar not rendering Menu content if added Menu to MenuBar after adding items to it
 -VisTable.addSeparator() now sets expandX() and fillX() for separator instead of expand() and fill()
+-GWT compatibility for DialogUtils and FormValidator
 
 [0.3.0]
 -LibGDX dependency version changed to 1.5.0

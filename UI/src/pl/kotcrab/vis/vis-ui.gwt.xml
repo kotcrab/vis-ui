@@ -3,6 +3,7 @@
 <module>
 	<source path='ui'>
 		<exclude name="widget/file/*.java" />
+		<exclude name="FormValidator.java" />
 	</source>
 
 	<extend-configuration-property name="gdx.files.classpath" value="pl/kotcrab/vis/ui/uiskin.json" />

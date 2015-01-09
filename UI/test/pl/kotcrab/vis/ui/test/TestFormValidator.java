@@ -16,7 +16,7 @@
 
 package pl.kotcrab.vis.ui.test;
 
-import pl.kotcrab.vis.ui.FormValidator;
+import pl.kotcrab.vis.ui.BasicFormValidator;
 import pl.kotcrab.vis.ui.TableUtils;
 import pl.kotcrab.vis.ui.VisTable;
 import pl.kotcrab.vis.ui.widget.VisLabel;
@@ -57,8 +57,8 @@ public class TestFormValidator extends VisWindow {
 		row();
 		add(buttonTable).fill().expand().colspan(2).padBottom(3);
 
-		FormValidator validator;
-		validator = new FormValidator(acceptButton, errorLabel);
+		BasicFormValidator validator; //for GWT compatibility
+		validator = new BasicFormValidator(acceptButton, errorLabel);
 		validator.notEmpty(firstNameField, "first name cannot be empty");
 		validator.notEmpty(lastNameField, "last name cannot be empty");
 
