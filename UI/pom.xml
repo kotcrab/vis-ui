@@ -6,7 +6,7 @@
 	<packaging>jar</packaging>
 	<name>VisUI</name>
 	<description>Flat UI skin for LibGDX scene2d.ui</description>
-	<url>https://github.com/kotcrab/VisSceneEditor</url>
+	<url>https://github.com/kotcrab/VisEditor</url>
 
 	<licenses>
 		<license>
