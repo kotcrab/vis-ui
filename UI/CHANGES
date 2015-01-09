@@ -4,7 +4,7 @@
 -Important: Moving everything to com.kotcrab.vis package, new Gradle definitions:
  in core: com.kotcrab.vis:vis-ui:$visuiVersion
  in html: com.kotcrab.vis:vis-ui:$visuiVersion:sources
- Also don't forget to update your GdxDefinition.gwt.xml and GdxDefinitionSuperdev.gwt.xml file!
+ Also don't forget to update your GdxDefinition.gwt.xml and GdxDefinitionSuperdev.gwt.xml files!
 
 [0.3.1]
 -Added CollapsibleWidget
