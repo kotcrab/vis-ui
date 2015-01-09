@@ -1,4 +1,6 @@
-[0.4.0]
+[0.4.1]
+
+[0.4.0] [Important]
 -Important: Moving everything to com.kotcrab.vis package, new Gradle definitions:
  in core: com.kotcrab.vis:vis-ui:$visuiVersion
  in html: com.kotcrab.vis:vis-ui:$visuiVersion:sources
