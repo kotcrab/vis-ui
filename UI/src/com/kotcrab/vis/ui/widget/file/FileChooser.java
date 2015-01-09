@@ -482,16 +482,6 @@ public class FileChooser extends VisWindow {
 
 		fileScrollPane.setScrollX(0);
 		fileScrollPane.setScrollY(0);
-
-		// because stupid scroll pane returns not valid size of taken space we calculate it manually,
-		// if taken space if bigger than available (scroll bars will be showed) then add padding
-		float scrollHeightY = files.length * fileTable.getCells().get(0).getPrefHeight();
-		if (scrollHeightY > fileScrollPaneTable.getHeight()) {
-			for (Cell<?> c : fileTable.getCells())
-				c.padRight(22);
-
-			fileTable.invalidate();
-		}
 	}
 
 	/** Refresh chooser lists content */

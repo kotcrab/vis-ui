@@ -1,4 +1,5 @@
 [0.4.1]
+-Fixed FileChooser padding when scrollbar was showed (because LibGDX scrollpane was probably fixed as well) 
 
 [0.4.0] [Important]
 -Important: Moving everything to com.kotcrab.vis package, new Gradle definitions:
