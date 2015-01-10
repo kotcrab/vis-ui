@@ -113,7 +113,23 @@ public class CameraModule extends SceneModule {
 		return camera.viewportWidth * camera.zoom;
 	}
 
+	public float getZoom () {
+		return camera.zoom;
+	}
+
 	public Vector3 unproject (Vector3 vector) {
 		return camera.unproject(vector);
+	}
+
+	public float getInputX () {
+		unprojectVec.x = Gdx.input.getX();
+		camera.unproject(unprojectVec);
+		return unprojectVec.x;
+	}
+
+	public float getInputY () {
+		unprojectVec.y = Gdx.input.getY();
+		camera.unproject(unprojectVec);
+		return unprojectVec.y;
 	}
 }
