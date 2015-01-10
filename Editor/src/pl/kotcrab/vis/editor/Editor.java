@@ -90,7 +90,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		instance = this;
 		Assets.load();
 		VisUI.load();
-		VisUI.setDefualtTitleAlign(Align.center);
+		VisUI.setDefaultTitleAlign(Align.center);
 
 		App.eventBus.register(this);
 
