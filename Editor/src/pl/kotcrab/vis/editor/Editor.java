@@ -44,11 +44,6 @@ import pl.kotcrab.vis.editor.ui.EditorFrame;
 import pl.kotcrab.vis.editor.ui.tab.Tab;
 import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
 import pl.kotcrab.vis.editor.util.EditorException;
-import pl.kotcrab.vis.ui.VisTable;
-import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.util.DialogUtils;
-import pl.kotcrab.vis.ui.widget.VisLabel;
-import pl.kotcrab.vis.ui.widget.VisSplitPane;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -57,6 +52,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisSplitPane;
 
 public class Editor extends ApplicationAdapter implements EventListener {
 	public static Editor instance;
@@ -160,12 +160,12 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	@Override
 	public void dispose () {
 		editorMC.dispose();
-		if(projectLoaded) projectMC.dispose();
-		
+		if (projectLoaded) projectMC.dispose();
+
 		stage.dispose();
 		Assets.dispose();
 		VisUI.dispose();
-		
+
 		frame.dispose();
 	}
 
