@@ -43,17 +43,17 @@ public class TabsModule extends EditorModule implements EventListener {
 
 		tabbedPane = new TabbedPane(new TabbedPaneListener() {
 			@Override
-			public void switched (Tab tab) {
+			public void switchedTab (Tab tab) {
 				editor.tabChanged(tab);
 			}
 
 			@Override
-			public void removed (Tab tab) {
+			public void removedTab (Tab tab) {
 
 			}
 
 			@Override
-			public void removedAll () {
+			public void removedAllTabs () {
 				editor.tabChanged(null);
 			}
 		});
@@ -75,6 +75,14 @@ public class TabsModule extends EditorModule implements EventListener {
 		tabbedPane.switchTab(tab);
 	}
 
+	public void addListener (TabbedPaneListener listener) {
+		tabbedPane.addListener(listener);
+	}
+	
+	public boolean removeListener (TabbedPaneListener listener) {
+		return tabbedPane.removeListener(listener);
+	}
+	
 	@Override
 	public void added () {
 		App.eventBus.register(this);
@@ -98,10 +106,8 @@ public class TabsModule extends EditorModule implements EventListener {
 				tabbedPane.remove(startPageTab);
 			else
 				tabbedPane.add(0, startPageTab);
-
 		}
 
 		return false;
 	}
-
 }

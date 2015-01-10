@@ -20,9 +20,9 @@
 package pl.kotcrab.vis.editor.ui.tab;
 
 public interface TabbedPaneListener {
-	public void switched (Tab tab);
+	public void switchedTab (Tab tab);
 
-	public void removed (Tab tab);
+	public void removedTab (Tab tab);
 
-	public void removedAll ();
+	public void removedAllTabs ();
 }

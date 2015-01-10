@@ -41,10 +41,11 @@ public class TabbedPane {
 
 	private Tab activeTab;
 
-	private TabbedPaneListener listener;
+	private Array<TabbedPaneListener> listeners;
 
 	public TabbedPane (TabbedPaneListener listener) {
-		this.listener = listener;
+		listeners = new Array<TabbedPaneListener>();
+		listeners.add(listener);
 
 		group = new ButtonGroup<Button>();
 
@@ -79,10 +80,10 @@ public class TabbedPane {
 
 		if (success) {
 			rebuildTabsTable();
-			listener.removed(tab);
+			notifyListenersRemoved(tab);
 
 			if (activeTab == tab) switchTab(0);
-			if (tabs.size == 0) listener.removedAll();
+			if (tabs.size == 0) notifyListenersRemovedAll();
 		}
 
 		return success;
@@ -114,7 +115,7 @@ public class TabbedPane {
 				public void changed (ChangeEvent event, Actor actor) {
 					if (activeTab != null) activeTab.onHide();
 					activeTab = tab;
-					listener.switched(tab);
+					notifyListenersSwitched(tab);
 					tab.onShow();
 				}
 			});
@@ -126,5 +127,28 @@ public class TabbedPane {
 
 	public Table getTable () {
 		return mainTable;
+	}
+
+	public void addListener (TabbedPaneListener listener) {
+		listeners.add(listener);
+	}
+
+	public boolean removeListener (TabbedPaneListener listener) {
+		return listeners.removeValue(listener, true);
+	}
+
+	private void notifyListenersSwitched (Tab tab) {
+		for (TabbedPaneListener listener : listeners)
+			listener.switchedTab(tab);
+	}
+
+	private void notifyListenersRemoved (Tab tab) {
+		for (TabbedPaneListener listener : listeners)
+			listener.removedTab(tab);
+	}
+
+	private void notifyListenersRemovedAll () {
+		for (TabbedPaneListener listener : listeners)
+			listener.removedAllTabs();
 	}
 }
