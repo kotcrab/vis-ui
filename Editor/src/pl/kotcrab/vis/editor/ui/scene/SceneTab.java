@@ -19,27 +19,34 @@
 
 package pl.kotcrab.vis.editor.ui.scene;
 
-import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import pl.kotcrab.vis.editor.module.scene.CameraModule;
 import pl.kotcrab.vis.editor.module.scene.EditorScene;
 import pl.kotcrab.vis.editor.module.scene.GridRendererModule;
+import pl.kotcrab.vis.editor.module.scene.Object2d;
 import pl.kotcrab.vis.editor.module.scene.RendererModule;
 import pl.kotcrab.vis.editor.module.scene.SceneModuleContainer;
+import pl.kotcrab.vis.editor.module.scene.SceneObject;
+import pl.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import pl.kotcrab.vis.editor.ui.tab.TabAdapater;
 import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
-import pl.kotcrab.vis.ui.VisTable;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
+import com.kotcrab.vis.ui.VisTable;
 
-public class SceneTab extends TabAdapater {
+public class SceneTab extends TabAdapater implements DragAndDropTarget {
 	private EditorScene scene;
 
 	private SceneModuleContainer sceneMC;
+	private CameraModule cameraModule;
 
 	private VisTable content;
 	private VisTable leftColumn;
@@ -47,6 +54,8 @@ public class SceneTab extends TabAdapater {
 
 	// private SceneOutline outline;
 	private ActorProperites actorProperties;
+
+	private Target dropTarget;
 
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
 		this.scene = scene;
@@ -83,13 +92,33 @@ public class SceneTab extends TabAdapater {
 		sceneMC.add(new RendererModule());
 		sceneMC.add(new GridRendererModule());
 		sceneMC.init();
+
+		cameraModule = sceneMC.get(CameraModule.class);
+
+		dropTarget = new Target(content) {
+			@Override
+			public void drop (Source source, Payload payload, float x, float y, int pointer) {
+				dropped(payload);
+			}
+
+			@Override
+			public boolean drag (Source source, Payload payload, float x, float y, int pointer) {
+				return true;
+			}
+		};
+	}
+
+	private void dropped (Payload payload) {
+		TextureRegion tex = (TextureRegion)payload.getObject();
+		Sprite s = new Sprite(tex);
+		CameraModule c = sceneMC.get(CameraModule.class);
+		s.setPosition(c.getInputX() - s.getWidth() / 2, c.getInputY() - s.getHeight() / 2);
+		scene.objects.add(new Object2d(s));
 	}
 
 	private void resize () {
 		sceneMC.resize();
 	}
-
-	Drawable test = Assets.getIcon("settings-view");
 
 	@Override
 	public void render (Batch batch) {
@@ -98,9 +127,10 @@ public class SceneTab extends TabAdapater {
 		batch.begin();
 
 		sceneMC.render(batch);
-
-		test.draw(batch, 250, 250, 22, 22);
-		test.draw(batch, 250, 300, 22, 22);
+		for (SceneObject obj : scene.objects) {
+			Object2d obj2d = (Object2d)obj;
+			obj2d.sprite.draw(batch);
+		}
 
 		batch.end();
 		batch.setColor(oldColor);
@@ -114,6 +144,16 @@ public class SceneTab extends TabAdapater {
 	@Override
 	public Table getContentTable () {
 		return content;
+	}
+
+	@Override
+	public Target getDropTarget () {
+		return dropTarget;
+	}
+
+	@Override
+	public float getCameraZoom () {
+		return cameraModule.getZoom();
 	}
 
 	@Override

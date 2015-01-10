@@ -17,29 +17,12 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package pl.kotcrab.vis.editor.module.scene;
+package pl.kotcrab.vis.editor.ui.tab;
 
-import pl.kotcrab.vis.runtime.scene.SceneViewport;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
+public interface DragAndDropTarget {
+	public float getCameraZoom ();
 
-public class EditorScene {
-	/** Scene file, path is relative to project vis folder */
-	public String path;
-	public SceneViewport viewport;
-	public Array<SceneObject> objects = new Array<SceneObject>();
-
-	public EditorScene () {
-	}
-
-	public EditorScene (FileHandle file, SceneViewport viewport) {
-		this.path = file.path();
-		this.viewport = viewport;
-	}
-
-	public FileHandle getFile () {
-		return Gdx.files.absolute(path);
-	}
+	public Target getDropTarget ();
 }

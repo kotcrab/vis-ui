@@ -19,27 +19,6 @@
 
 package pl.kotcrab.vis.editor.module.scene;
 
-import pl.kotcrab.vis.runtime.scene.SceneViewport;
+public class SceneObject {
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
-
-public class EditorScene {
-	/** Scene file, path is relative to project vis folder */
-	public String path;
-	public SceneViewport viewport;
-	public Array<SceneObject> objects = new Array<SceneObject>();
-
-	public EditorScene () {
-	}
-
-	public EditorScene (FileHandle file, SceneViewport viewport) {
-		this.path = file.path();
-		this.viewport = viewport;
-	}
-
-	public FileHandle getFile () {
-		return Gdx.files.absolute(path);
-	}
 }

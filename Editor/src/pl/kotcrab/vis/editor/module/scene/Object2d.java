@@ -19,27 +19,14 @@
 
 package pl.kotcrab.vis.editor.module.scene;
 
-import pl.kotcrab.vis.runtime.scene.SceneViewport;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
+public class Object2d extends SceneObject {
+	//we obviously can save sprite to json so this will have to be changed
+	public Sprite sprite;
 
-public class EditorScene {
-	/** Scene file, path is relative to project vis folder */
-	public String path;
-	public SceneViewport viewport;
-	public Array<SceneObject> objects = new Array<SceneObject>();
-
-	public EditorScene () {
+	public Object2d (Sprite sprite) {
+		this.sprite = sprite;
 	}
 
-	public EditorScene (FileHandle file, SceneViewport viewport) {
-		this.path = file.path();
-		this.viewport = viewport;
-	}
-
-	public FileHandle getFile () {
-		return Gdx.files.absolute(path);
-	}
 }

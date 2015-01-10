@@ -23,29 +23,21 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
-import java.nio.file.Paths;
 
 import pl.kotcrab.vis.editor.Assets;
 import pl.kotcrab.vis.editor.Editor;
+import pl.kotcrab.vis.editor.module.TabsModule;
 import pl.kotcrab.vis.editor.module.scene.EditorScene;
 import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
 import pl.kotcrab.vis.editor.module.scene.SceneTabsModule;
-import pl.kotcrab.vis.editor.util.RecursiveWatcher;
-import pl.kotcrab.vis.editor.util.RecursiveWatcher.WatchListener;
-import pl.kotcrab.vis.ui.VisTable;
-import pl.kotcrab.vis.ui.VisUI;
-import pl.kotcrab.vis.ui.util.DialogUtils;
-import pl.kotcrab.vis.ui.widget.Separator;
-import pl.kotcrab.vis.ui.widget.VisImageButton;
-import pl.kotcrab.vis.ui.widget.VisLabel;
-import pl.kotcrab.vis.ui.widget.VisScrollPane;
-import pl.kotcrab.vis.ui.widget.VisSplitPane;
-import pl.kotcrab.vis.ui.widget.VisTextField;
-import pl.kotcrab.vis.ui.widget.VisTree;
+import pl.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
+import pl.kotcrab.vis.editor.ui.tab.Tab;
+import pl.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
+import pl.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -57,19 +49,35 @@ import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.Scaling;
+import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.widget.Separator;
+import com.kotcrab.vis.ui.widget.VisImageButton;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisScrollPane;
+import com.kotcrab.vis.ui.widget.VisSplitPane;
+import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kotcrab.vis.ui.widget.VisTree;
 
 // TODO smaller font for names
 
 @SuppressWarnings("rawtypes")
-public class AssetsManagerUIModule extends ProjectModule {
+public class AssetsManagerUIModule extends ProjectModule implements WatchListener, TabbedPaneListener {
 	private Editor editor;
 	private Stage stage;
 	private VisTable editorTable;
 
+	private TabsModule tabsModule;
+
 	private FileAccessModule fileAccess;
+	private AssetsWatcherModule assetsWatcher;
+	private TextureCacheModule textureCache;
 	private SceneIOModule sceneIO;
 	private SceneTabsModule sceneTabsModule;
 
@@ -92,17 +100,25 @@ public class AssetsManagerUIModule extends ProjectModule {
 	private VisTextField searchTextField;
 	private FileHandle currenDirectory;
 
-	private RecursiveWatcher watcher;
+	private DragAndDrop dragAndDrop;
+	private DragAndDropTarget dropTargetTab;
 
 	@Override
 	public void init () {
 		this.editor = Editor.instance;
 		this.stage = editor.getStage();
 
+		dragAndDrop = new DragAndDrop();
+		dragAndDrop.setKeepWithinStage(false);
+
 		editorTable = editor.getProjectContentTable();
 		editorTable.setBackground("window-bg");
 
+		tabsModule = containter.get(TabsModule.class);
+
 		fileAccess = projectContainter.get(FileAccessModule.class);
+		assetsWatcher = projectContainter.get(AssetsWatcherModule.class);
+		textureCache = projectContainter.get(TextureCacheModule.class);
 		sceneIO = projectContainter.get(SceneIOModule.class);
 		sceneTabsModule = projectContainter.get(SceneTabsModule.class);
 
@@ -132,14 +148,14 @@ public class AssetsManagerUIModule extends ProjectModule {
 		rebuildFolderTree();
 		contentTree.getSelection().set(contentTree.getNodes().get(0)); // select first item in tree
 
-		watcher = new RecursiveWatcher(Paths.get(assetsFolder.path()), new WatchListener() {
-			@Override
-			public void changed (FileHandle file) {
-				// TODO refresh tree
-				if (file.equals(currenDirectory)) refreshRequested = true;
-			}
-		});
-		watcher.start();
+		tabsModule.addListener(this);
+		assetsWatcher.addListener(this);
+	}
+
+	@Override
+	public void dispose () {
+		tabsModule.removeListener(this);
+		assetsWatcher.removeListener(this);
 	}
 
 	private void createToolbarTable () {
@@ -212,13 +228,11 @@ public class AssetsManagerUIModule extends ProjectModule {
 
 	private void changeCurrentDirectory (FileHandle directory) {
 		this.currenDirectory = directory;
-		disposeFilesTableCells();
 		filesTable.clear();
 		filesTable.top().left();
 		filesDisplayed = 0;
 
 		FileHandle[] files = directory.list(new FileFilter() {
-
 			@Override
 			public boolean accept (File file) {
 				if (searchTextField.getText().equals("")) return true;
@@ -233,25 +247,56 @@ public class AssetsManagerUIModule extends ProjectModule {
 			FileHandle file = files[i];
 
 			if (file.isDirectory() == false) {
-				actors.add(new FileItem(file));
+				final FileItem item = new FileItem(file);
+				actors.add(item);
 				filesDisplayed++;
+
 				rebuildFilesList(actors);
 			}
 		}
+
+		rebuildDragAndDrop();
 
 		String currentPath = directory.path().substring(visFolder.path().length() + 1);
 		contentTtileLabel.setText("Content [" + currentPath + "]");
 	}
 
+	private void rebuildDragAndDrop () {
+		if (dropTargetTab != null) {
+			dragAndDrop.clear();
+
+			Array<Actor> actors = getActorsList();
+
+			for (Actor actor : actors) {
+				final FileItem item = (FileItem)actor;
+
+				if (item.isTexture) {
+					dragAndDrop.addSource(new Source(item) {
+						@Override
+						public Payload dragStart (InputEvent event, float x, float y, int pointer) {
+							Payload payload = new Payload();
+
+							payload.setObject(item.region);
+							Image img = new Image(item.region);
+							float invZoom = 1.0f / dropTargetTab.getCameraZoom();
+							img.setScale(invZoom);
+							payload.setDragActor(img);
+							dragAndDrop.setDragActorPosition(-img.getWidth() * invZoom / 2, img.getHeight() - img.getHeight() * invZoom
+								/ 2);
+
+							return payload;
+						}
+					});
+				}
+			}
+
+			dragAndDrop.addTarget(dropTargetTab.getDropTarget());
+		}
+	}
+
 	private void refreshFilesList () {
 		refreshRequested = false;
 		changeCurrentDirectory(currenDirectory);
-	}
-
-	private void disposeFilesTableCells () {
-		Array<Cell> cells = filesTable.getCells();
-		for (Cell c : cells)
-			((Disposable)c.getActor()).dispose();
 	}
 
 	private void rebuildFilesList (Array<Actor> actors) {
@@ -313,15 +358,21 @@ public class AssetsManagerUIModule extends ProjectModule {
 		}
 	}
 
-	@Override
-	public void dispose () {
-		watcher.stop();
+	private Array<Actor> getActorsList () {
+		Array<Cell> cells = filesTable.getCells();
+		Array<Actor> actors = new Array<Actor>(cells.size);
+
+		for (Cell c : cells)
+			actors.add(c.getActor());
+
+		return actors;
 	}
 
-	private class FileItem extends Table implements Disposable {
+	private class FileItem extends Table {
 		private FileHandle file;
 
-		private Texture texture;
+		private TextureRegion region;
+		private boolean isTexture;
 
 		public FileItem (FileHandle file) {
 			super(VisUI.skin);
@@ -329,11 +380,14 @@ public class AssetsManagerUIModule extends ProjectModule {
 			VisLabel name = new VisLabel(file.name());
 
 			if (file.extension().equals("jpg") || file.extension().equals("png")) {
-				texture = new Texture(file);
+				TextureRegion region = textureCache.getRegion(file);
 
-				Image img = new Image(texture);
+				Image img = new Image(region);
 				img.setScaling(Scaling.fit);
 				add(img).row();
+
+				this.region = region;
+				isTexture = true;
 			}
 
 			setBackground("menu-bg");
@@ -360,12 +414,6 @@ public class AssetsManagerUIModule extends ProjectModule {
 
 			});
 		}
-
-		@Override
-		public void dispose () {
-			if (texture != null) texture.dispose();
-		}
-
 	}
 
 	private class FolderItem extends Table {
@@ -388,13 +436,7 @@ public class AssetsManagerUIModule extends ProjectModule {
 
 		@Override
 		protected void sizeChanged () {
-			Array<Cell> cells = filesTable.getCells();
-			Array<Actor> actors = new Array<Actor>(cells.size);
-
-			for (Cell c : cells)
-				actors.add(c.getActor());
-
-			rebuildFilesList(actors);
+			rebuildFilesList(getActorsList());
 		}
 
 		@Override
@@ -402,5 +444,28 @@ public class AssetsManagerUIModule extends ProjectModule {
 			super.draw(batch, parentAlpha);
 			if (refreshRequested) refreshFilesList();
 		}
+	}
+
+	@Override
+	public void fileChanged (FileHandle file) {
+		// TODO refresh tree
+		if (file.equals(currenDirectory)) refreshRequested = true;
+	}
+
+	@Override
+	public void switchedTab (Tab tab) {
+		if (tab instanceof DragAndDropTarget) {
+			dropTargetTab = (DragAndDropTarget)tab;
+			rebuildDragAndDrop();
+		} else
+			dragAndDrop.clear();
+	}
+
+	@Override
+	public void removedTab (Tab tab) {
+	}
+
+	@Override
+	public void removedAllTabs () {
 	}
 }
