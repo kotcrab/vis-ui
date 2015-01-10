@@ -1,4 +1,6 @@
 [0.4.2]
+-API Addition: VisValidableTextField.setValidationEnabled(boolean)
+-API Addition: VisValidableTextField.isValidationEnabled()
 
 [0.4.1]
 -Fixed FileChooser padding when scrollbar was showed (because LibGDX scrollpane was probably fixed as well) 

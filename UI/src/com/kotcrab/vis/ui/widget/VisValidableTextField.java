@@ -24,6 +24,7 @@ import com.kotcrab.vis.ui.InputValidator;
 
 public class VisValidableTextField extends VisTextField {
 	private Array<InputValidator> validators = new Array<InputValidator>();
+	private boolean validationEnabled = true;
 
 	public VisValidableTextField () {
 		super();
@@ -69,13 +70,16 @@ public class VisValidableTextField extends VisTextField {
 	}
 
 	public void validateInput () {
-		for (InputValidator validator : validators) {
-			if (validator.validateInput(getText()) == false) {
-				setInputValid(false);
-				return;
+		if (validationEnabled) {
+			for (InputValidator validator : validators) {
+				if (validator.validateInput(getText()) == false) {
+					setInputValid(false);
+					return;
+				}
 			}
 		}
 
+		// validation not enabled or validators does not returned false (input was valid)
 		setInputValid(true);
 	}
 
@@ -94,4 +98,15 @@ public class VisValidableTextField extends VisTextField {
 		return validators.size == 0 ? null : validators.get(0);
 	}
 
+	/** Enables or disabled validation, after changing this setting validateInput() is called, if validationEnabled == false then
+	 * field is marked as valid otherwise standard validation is performed
+	 * @param validationEnabled enable or disable validation */
+	public void setValidationEnabled (boolean validationEnabled) {
+		this.validationEnabled = validationEnabled;
+		validateInput();
+	}
+
+	public boolean isValidationEnabled () {
+		return validationEnabled;
+	}
 }
