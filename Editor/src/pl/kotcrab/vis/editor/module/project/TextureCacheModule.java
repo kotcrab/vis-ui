@@ -34,13 +34,10 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 
 public class TextureCacheModule extends ProjectModule implements WatchListener {
-	private FileAccessModule fileAccess;
 	private AssetsWatcherModule watcher;
 
 	private String assetsPath;
 	private String outPath;
-
-	private FileHandle out;
 
 	private Settings settings;
 
@@ -56,10 +53,10 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	@Override
 	public void init () {
-		fileAccess = projectContainter.get(FileAccessModule.class);
+		FileAccessModule fileAccess = projectContainter.get(FileAccessModule.class);
 		watcher = projectContainter.get(AssetsWatcherModule.class);
 
-		regions = new ObjectMap<String, TextureRegion>();
+		regions = new ObjectMap<>();
 
 		waitTimer = new Timer();
 
@@ -69,7 +66,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		loadingRegion = Assets.icons.findRegion("refresh-big");
 		missingRegion = Assets.icons.findRegion("file-question-big");
 
-		out = fileAccess.getModuleFolder(".textureCache");
+		FileHandle out = fileAccess.getModuleFolder(".textureCache");
 		outPath = out.path();
 		cacheFile = out.child("cache.atlas");
 
@@ -85,12 +82,12 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		new Thread(new Runnable() {
 			@Override
 			public void run () {
-				perfromUpdate();
+				performUpdate();
 			}
 		}).start();
 	}
 
-	private void perfromUpdate () {
+	private void performUpdate () {
 		TexturePacker.processIfModified(settings, assetsPath, outPath, "cache");
 
 		Gdx.app.postRunnable(new Runnable() {
@@ -146,7 +143,6 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		TextureRegion region = regions.get(path);
 
 		if (region == null) {
-
 			if (cache != null) region = cache.findRegion(path);
 
 			if (region == null) region = new TextureRegion(loadingRegion);
