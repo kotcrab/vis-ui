@@ -1,39 +1,23 @@
 /**
  * Copyright 2014-2015 Pawel Pastuszak
- * 
+ *
  * This file is part of VisEditor.
- * 
+ *
  * VisEditor is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * VisEditor is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package pl.kotcrab.vis.editor.module.project;
-
-import java.awt.Desktop;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-
-import pl.kotcrab.vis.editor.Assets;
-import pl.kotcrab.vis.editor.Editor;
-import pl.kotcrab.vis.editor.module.TabsModule;
-import pl.kotcrab.vis.editor.module.scene.EditorScene;
-import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
-import pl.kotcrab.vis.editor.module.scene.SceneTabsModule;
-import pl.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
-import pl.kotcrab.vis.editor.ui.tab.Tab;
-import pl.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
-import pl.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -57,21 +41,28 @@ import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.DialogUtils;
-import com.kotcrab.vis.ui.widget.Separator;
-import com.kotcrab.vis.ui.widget.VisImageButton;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisScrollPane;
-import com.kotcrab.vis.ui.widget.VisSplitPane;
-import com.kotcrab.vis.ui.widget.VisTextField;
-import com.kotcrab.vis.ui.widget.VisTree;
+import com.kotcrab.vis.ui.widget.*;
+import pl.kotcrab.vis.editor.Assets;
+import pl.kotcrab.vis.editor.Editor;
+import pl.kotcrab.vis.editor.module.TabsModule;
+import pl.kotcrab.vis.editor.module.scene.EditorScene;
+import pl.kotcrab.vis.editor.module.scene.SceneIOModule;
+import pl.kotcrab.vis.editor.module.scene.SceneTabsModule;
+import pl.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
+import pl.kotcrab.vis.editor.ui.tab.Tab;
+import pl.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
+import pl.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
+
+import java.awt.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
 
 // TODO smaller font for names
 
 @SuppressWarnings("rawtypes")
 public class AssetsManagerUIModule extends ProjectModule implements WatchListener, TabbedPaneListener {
-	private Editor editor;
 	private Stage stage;
-	private VisTable editorTable;
 
 	private TabsModule tabsModule;
 
@@ -92,26 +83,25 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 
 	private VisTree contentTree;
 
-	private VisLabel contentTtileLabel;
+	private VisLabel contentTitleLabel;
 
 	private int itemSize = 92;
 	private boolean refreshRequested;
-	private VisTable contentsTable;
 	private VisTextField searchTextField;
-	private FileHandle currenDirectory;
+	private FileHandle currentDirectory;
 
 	private DragAndDrop dragAndDrop;
 	private DragAndDropTarget dropTargetTab;
 
 	@Override
 	public void init () {
-		this.editor = Editor.instance;
+		Editor editor = Editor.instance;
 		this.stage = editor.getStage();
 
 		dragAndDrop = new DragAndDrop();
 		dragAndDrop.setKeepWithinStage(false);
 
-		editorTable = editor.getProjectContentTable();
+		VisTable editorTable = editor.getProjectContentTable();
 		editorTable.setBackground("window-bg");
 
 		tabsModule = containter.get(TabsModule.class);
@@ -129,7 +119,7 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 		toolbarTable = new VisTable(true);
 		filesTable = new FilesItemsTable(false);
 
-		contentsTable = new VisTable(false);
+		VisTable contentsTable = new VisTable(false);
 		contentsTable.add(toolbarTable).expandX().fillX().pad(3).padBottom(0);
 		contentsTable.row();
 		contentsTable.add(new Separator()).padTop(3).expandX().fillX();
@@ -159,12 +149,12 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 	}
 
 	private void createToolbarTable () {
-		contentTtileLabel = new VisLabel("Content");
+		contentTitleLabel = new VisLabel("Content");
 		searchTextField = new VisTextField();
 
 		VisImageButton exploreButton = new VisImageButton(Assets.getIcon("folder-open"));
 
-		toolbarTable.add(contentTtileLabel).expand().left().padLeft(3);
+		toolbarTable.add(contentTitleLabel).expand().left().padLeft(3);
 		toolbarTable.add(exploreButton);
 		toolbarTable.add(new VisImageButton(Assets.getIcon("settings-view")));
 		toolbarTable.add(new VisImageButton(Assets.getIcon("import")));
@@ -176,10 +166,10 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				try {
-					if (currenDirectory.isDirectory())
-						Desktop.getDesktop().open(currenDirectory.file());
+					if (currentDirectory.isDirectory())
+						Desktop.getDesktop().open(currentDirectory.file());
 					else
-						Desktop.getDesktop().open(currenDirectory.parent().file());
+						Desktop.getDesktop().open(currentDirectory.parent().file());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -212,7 +202,7 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 				Node node = contentTree.getSelection().first();
 
 				if (node != null) {
-					FolderItem item = (FolderItem)node.getActor();
+					FolderItem item = (FolderItem) node.getActor();
 					changeCurrentDirectory(item.file);
 				}
 			}
@@ -227,7 +217,7 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 	}
 
 	private void changeCurrentDirectory (FileHandle directory) {
-		this.currenDirectory = directory;
+		this.currentDirectory = directory;
 		filesTable.clear();
 		filesTable.top().left();
 		filesDisplayed = 0;
@@ -241,11 +231,9 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 			}
 		});
 
-		Array<Actor> actors = new Array<Actor>(files.length);
+		Array<Actor> actors = new Array<>(files.length);
 
-		for (int i = 0; i < files.length; i++) {
-			FileHandle file = files[i];
-
+		for (FileHandle file : files) {
 			if (file.isDirectory() == false) {
 				final FileItem item = new FileItem(file);
 				actors.add(item);
@@ -258,7 +246,7 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 		rebuildDragAndDrop();
 
 		String currentPath = directory.path().substring(visFolder.path().length() + 1);
-		contentTtileLabel.setText("Content [" + currentPath + "]");
+		contentTitleLabel.setText("Content [" + currentPath + "]");
 	}
 
 	private void rebuildDragAndDrop () {
@@ -268,7 +256,7 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 			Array<Actor> actors = getActorsList();
 
 			for (Actor actor : actors) {
-				final FileItem item = (FileItem)actor;
+				final FileItem item = (FileItem) actor;
 
 				if (item.isTexture) {
 					dragAndDrop.addSource(new Source(item) {
@@ -282,7 +270,7 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 							img.setScale(invZoom);
 							payload.setDragActor(img);
 							dragAndDrop.setDragActorPosition(-img.getWidth() * invZoom / 2, img.getHeight() - img.getHeight() * invZoom
-								/ 2);
+									/ 2);
 
 							return payload;
 						}
@@ -296,7 +284,7 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 
 	private void refreshFilesList () {
 		refreshRequested = false;
-		changeCurrentDirectory(currenDirectory);
+		changeCurrentDirectory(currentDirectory);
 	}
 
 	private void rebuildFilesList (Array<Actor> actors) {
@@ -332,9 +320,7 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 	private void processFolder (Node node, FileHandle dir) {
 		FileHandle[] files = dir.list();
 
-		for (int i = 0; i < files.length; i++) {
-			FileHandle file = files[i];
-
+		for (FileHandle file : files) {
 			if (file.isDirectory()) {
 				Node currentNode = new Node(new FolderItem(file, file.name()));
 				node.add(currentNode);
@@ -346,26 +332,49 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 
 	private void openFile (FileHandle file, EditorFileType fileType) {
 		switch (fileType) {
-		case SCENE:
-			EditorScene scene = sceneIO.load(file);
-			sceneTabsModule.open(scene);
-			break;
-		case UNKNOWN:
-			// TODO add 'open as' dialog
-			DialogUtils.showErrorDialog(stage,
-				"Failed to load file, type is unknown and cannot be determined because file is not in the database!");
-			break;
+			case SCENE:
+				EditorScene scene = sceneIO.load(file);
+				sceneTabsModule.open(scene);
+				break;
+			case UNKNOWN:
+				// TODO add 'open as' dialog
+				DialogUtils.showErrorDialog(stage,
+						"Failed to load file, type is unknown and cannot be determined because file is not in the database!");
+				break;
 		}
 	}
 
 	private Array<Actor> getActorsList () {
 		Array<Cell> cells = filesTable.getCells();
-		Array<Actor> actors = new Array<Actor>(cells.size);
+		Array<Actor> actors = new Array<>(cells.size);
 
 		for (Cell c : cells)
 			actors.add(c.getActor());
 
 		return actors;
+	}
+
+	@Override
+	public void fileChanged (FileHandle file) {
+		// TODO refresh tree
+		if (file.equals(currentDirectory)) refreshRequested = true;
+	}
+
+	@Override
+	public void switchedTab (Tab tab) {
+		if (tab instanceof DragAndDropTarget) {
+			dropTargetTab = (DragAndDropTarget) tab;
+			rebuildDragAndDrop();
+		} else
+			dragAndDrop.clear();
+	}
+
+	@Override
+	public void removedTab (Tab tab) {
+	}
+
+	@Override
+	public void removedAllTabs () {
 	}
 
 	private class FileItem extends Table {
@@ -417,8 +426,8 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 	}
 
 	private class FolderItem extends Table {
-		private VisLabel name;
 		public FileHandle file;
+		private VisLabel name;
 
 		public FolderItem (final FileHandle file, String customName) {
 			this.file = file;
@@ -444,28 +453,5 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 			super.draw(batch, parentAlpha);
 			if (refreshRequested) refreshFilesList();
 		}
-	}
-
-	@Override
-	public void fileChanged (FileHandle file) {
-		// TODO refresh tree
-		if (file.equals(currenDirectory)) refreshRequested = true;
-	}
-
-	@Override
-	public void switchedTab (Tab tab) {
-		if (tab instanceof DragAndDropTarget) {
-			dropTargetTab = (DragAndDropTarget)tab;
-			rebuildDragAndDrop();
-		} else
-			dragAndDrop.clear();
-	}
-
-	@Override
-	public void removedTab (Tab tab) {
-	}
-
-	@Override
-	public void removedAllTabs () {
 	}
 }
