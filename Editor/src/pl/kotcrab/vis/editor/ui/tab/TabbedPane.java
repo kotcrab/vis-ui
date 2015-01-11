@@ -44,16 +44,16 @@ public class TabbedPane {
 	private Array<TabbedPaneListener> listeners;
 
 	public TabbedPane (TabbedPaneListener listener) {
-		listeners = new Array<TabbedPaneListener>();
+		listeners = new Array<>();
 		listeners.add(listener);
 
-		group = new ButtonGroup<Button>();
+		group = new ButtonGroup<>();
 
 		mainTable = new VisTable();
 		tabsTable = new VisTable();
 
-		tabs = new Array<Tab>();
-		tabsButtonMap = new ObjectMap<Tab, VisTextButton>();
+		tabs = new Array<>();
+		tabsButtonMap = new ObjectMap<>();
 
 		mainTable.add(tabsTable).padTop(2).left().expand();
 		mainTable.row();
@@ -85,7 +85,8 @@ public class TabbedPane {
 			rebuildTabsTable();
 			notifyListenersRemoved(tab);
 
-			if (tabs.size == 0) notifyListenersRemovedAll();
+			if (tabs.size == 0)
+				notifyListenersRemovedAll();
 			else if (activeTab == tab) switchTab(0);
 		}
 
@@ -98,6 +99,10 @@ public class TabbedPane {
 
 	public void switchTab (Tab tab) {
 		tabsButtonMap.get(tab).setChecked(true);
+	}
+
+	public void updateTabTitle (Tab tab) {
+		tabsButtonMap.get(tab).setText(tab.getButtonText());
 	}
 
 	private void rebuildTabsTable () {

@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public abstract class Tab {
+	private boolean activeTab;
 	private TabbedPane pane;
 
 	public abstract String getButtonText ();
@@ -38,11 +39,15 @@ public abstract class Tab {
 	}
 
 	public void onShow () {
-
+		activeTab = true;
 	}
 
 	public void onHide () {
-
+		activeTab = false;
+	}
+	
+	public boolean isActiveTab () {
+		return activeTab;
 	}
 
 	public TabbedPane getPane () {
