@@ -20,5 +20,4 @@
 package pl.kotcrab.vis.editor.module.scene;
 
 public class SceneObject {
-
 }

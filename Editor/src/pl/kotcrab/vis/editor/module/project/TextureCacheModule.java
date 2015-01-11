@@ -161,4 +161,13 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		else
 			return path;
 	}
+
+	public String getRelativePath (TextureRegion region) {
+		for (Entry<String, TextureRegion> e : regions.entries()) {
+			if(e.value == region)
+				return e.key;
+		}
+
+		throw new IllegalStateException("Region not found in cache!");
+	}
 }

@@ -20,6 +20,7 @@
 package pl.kotcrab.vis.editor.ui.scene;
 
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import pl.kotcrab.vis.editor.module.project.TextureCacheModule;
 import pl.kotcrab.vis.editor.module.scene.CameraModule;
 import pl.kotcrab.vis.editor.module.scene.EditorScene;
 import pl.kotcrab.vis.editor.module.scene.GridRendererModule;
@@ -45,6 +46,8 @@ import com.kotcrab.vis.ui.VisTable;
 public class SceneTab extends TabAdapater implements DragAndDropTarget {
 	private EditorScene scene;
 
+	private TextureCacheModule cacheModule;
+
 	private SceneModuleContainer sceneMC;
 	private CameraModule cameraModule;
 
@@ -59,6 +62,8 @@ public class SceneTab extends TabAdapater implements DragAndDropTarget {
 
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
 		this.scene = scene;
+
+		cacheModule = projectMC.get(TextureCacheModule.class);
 
 		sceneMC = new SceneModuleContainer(projectMC);
 
@@ -109,11 +114,12 @@ public class SceneTab extends TabAdapater implements DragAndDropTarget {
 	}
 
 	private void dropped (Payload payload) {
-		TextureRegion tex = (TextureRegion)payload.getObject();
-		Sprite s = new Sprite(tex);
-		CameraModule c = sceneMC.get(CameraModule.class);
-		s.setPosition(c.getInputX() - s.getWidth() / 2, c.getInputY() - s.getHeight() / 2);
-		scene.objects.add(new Object2d(s));
+		TextureRegion region = (TextureRegion)payload.getObject();
+
+		Sprite sprite = new Sprite(region);
+		sprite.setPosition(cameraModule.getInputX() - sprite.getWidth() / 2, cameraModule.getInputY() - sprite.getHeight() / 2);
+
+		scene.objects.add(new Object2d(cacheModule.getRelativePath(region), sprite));
 	}
 
 	private void resize () {
