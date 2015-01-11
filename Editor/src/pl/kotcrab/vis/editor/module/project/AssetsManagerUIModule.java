@@ -331,11 +331,13 @@ public class AssetsManagerUIModule extends ProjectModule implements WatchListene
 	}
 
 	private void openFile (FileHandle file, EditorFileType fileType) {
+		if (file.extension().equals("scene")) {
+			EditorScene scene = sceneIO.load(file);
+			sceneTabsModule.open(scene);
+			return;
+		}
+
 		switch (fileType) {
-			case SCENE:
-				EditorScene scene = sceneIO.load(file);
-				sceneTabsModule.open(scene);
-				break;
 			case UNKNOWN:
 				// TODO add 'open as' dialog
 				DialogUtils.showErrorDialog(stage,

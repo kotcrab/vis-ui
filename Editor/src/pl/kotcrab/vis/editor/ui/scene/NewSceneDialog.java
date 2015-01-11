@@ -94,7 +94,7 @@ public class NewSceneDialog extends VisWindow {
 
 		VisTable fileFieldTable = new VisTable(true);
 		fileFieldTable.add(nameTextField).expand().fill();
-		fileFieldTable.add(new VisLabel(".json"));
+		fileFieldTable.add(new VisLabel(".scene"));
 
 		add(new VisLabel("File name"));
 		add(fileFieldTable);
@@ -134,7 +134,7 @@ public class NewSceneDialog extends VisWindow {
 		createButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				FileHandle targetFile = Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".json");
+				FileHandle targetFile = Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".scene");
 				sceneIO.create(targetFile, viewportMap.get(viewportModeSelectBox.getSelected()));
 				App.eventBus.post(new StatusBarEvent("Scene created: " + targetFile.path().substring(1)));
 				fadeOut();
@@ -152,7 +152,7 @@ public class NewSceneDialog extends VisWindow {
 		validator.custom(nameTextField, new FormInputValidator("That scene already exists!") {
 			@Override
 			public boolean validateInput (String input) {
-				FileHandle sceneFile = visFolder.child(pathTextField.getText()).child(input + ".json");
+				FileHandle sceneFile = visFolder.child(pathTextField.getText()).child(input + ".scene");
 				setResult(!sceneFile.exists());
 
 				return super.validateInput(input);

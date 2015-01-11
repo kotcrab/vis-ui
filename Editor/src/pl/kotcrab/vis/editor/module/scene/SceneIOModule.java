@@ -1,18 +1,18 @@
 /**
  * Copyright 2014-2015 Pawel Pastuszak
- * 
+ *
  * This file is part of VisEditor.
- * 
+ *
  * VisEditor is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * VisEditor is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -20,15 +20,21 @@
 package pl.kotcrab.vis.editor.module.scene;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Json;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 import pl.kotcrab.vis.editor.module.project.EditorFileType;
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModule;
 import pl.kotcrab.vis.runtime.scene.SceneViewport;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
 @SuppressWarnings("rawtypes")
 public class SceneIOModule extends ProjectModule {
-	private Json json;
+	private Kryo kryo;
 
 	private FileAccessModule fileAccessModule;
 
@@ -40,20 +46,33 @@ public class SceneIOModule extends ProjectModule {
 
 		visFolder = fileAccessModule.getVisFolder();
 
-		json = new Json();
+		kryo = new Kryo();
 	}
 
 	public EditorScene load (FileHandle file) {
-		return json.fromJson(EditorScene.class, file);
+		try {
+			Input input = new Input(new FileInputStream(file.file()));
+			EditorScene scene = kryo.readObject(input, EditorScene.class);
+			input.close();
+			return scene;
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public void save (EditorScene scene) {
-		json.toJson(scene, getFileHandleForScene(scene));
+		try {
+			Output output = new Output(new FileOutputStream(getFileHandleForScene(scene).file()));
+			kryo.writeObject(output, scene);
+			output.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void create (FileHandle relativeScenePath, SceneViewport viewport) {
 		EditorScene scene = new EditorScene(relativeScenePath, viewport);
-		fileAccessModule.addFileType(getFileHandleForScene(scene), EditorFileType.SCENE);
 		save(scene);
 	}
 
