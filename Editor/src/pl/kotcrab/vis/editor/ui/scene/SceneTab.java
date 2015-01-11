@@ -19,19 +19,6 @@
 
 package pl.kotcrab.vis.editor.ui.scene;
 
-import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import pl.kotcrab.vis.editor.module.project.TextureCacheModule;
-import pl.kotcrab.vis.editor.module.scene.CameraModule;
-import pl.kotcrab.vis.editor.module.scene.EditorScene;
-import pl.kotcrab.vis.editor.module.scene.GridRendererModule;
-import pl.kotcrab.vis.editor.module.scene.Object2d;
-import pl.kotcrab.vis.editor.module.scene.RendererModule;
-import pl.kotcrab.vis.editor.module.scene.SceneModuleContainer;
-import pl.kotcrab.vis.editor.module.scene.SceneObject;
-import pl.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
-import pl.kotcrab.vis.editor.ui.tab.TabAdapater;
-import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -42,8 +29,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.kotcrab.vis.ui.VisTable;
+import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import pl.kotcrab.vis.editor.module.project.TextureCacheModule;
+import pl.kotcrab.vis.editor.module.scene.*;
+import pl.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
+import pl.kotcrab.vis.editor.ui.tab.Tab;
+import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
 
-public class SceneTab extends TabAdapater implements DragAndDropTarget {
+public class SceneTab extends Tab implements DragAndDropTarget {
 	private EditorScene scene;
 
 	private TextureCacheModule cacheModule;

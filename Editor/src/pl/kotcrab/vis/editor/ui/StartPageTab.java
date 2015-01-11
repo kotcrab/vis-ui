@@ -19,12 +19,12 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-import pl.kotcrab.vis.editor.ui.tab.TabAdapater;
-
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.ui.widget.VisLabel;
+import pl.kotcrab.vis.editor.ui.tab.Tab;
+import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
 
-public class StartPageTab extends TabAdapater {
+public class StartPageTab extends Tab {
 	@Override
 	public String getButtonText () {
 		return "Start Page";
@@ -39,4 +39,8 @@ public class StartPageTab extends TabAdapater {
 		return content;
 	}
 
+	@Override
+	public TabViewMode getViewMode () {
+		return TabViewMode.TAB_ONLY;
+	}
 }

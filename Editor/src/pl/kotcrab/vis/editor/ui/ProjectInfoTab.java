@@ -19,15 +19,14 @@
 
 package pl.kotcrab.vis.editor.ui;
 
-import pl.kotcrab.vis.editor.module.project.Project;
-import pl.kotcrab.vis.editor.ui.tab.TabAdapater;
-import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
-
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.widget.VisLabel;
+import pl.kotcrab.vis.editor.module.project.Project;
+import pl.kotcrab.vis.editor.ui.tab.Tab;
+import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
 
-public class ProjectInfoTab extends TabAdapater {
+public class ProjectInfoTab extends Tab {
 	private Table content;
 
 	public ProjectInfoTab (Project project) {
@@ -50,6 +49,6 @@ public class ProjectInfoTab extends TabAdapater {
 
 	@Override
 	public TabViewMode getViewMode () {
-		return TabViewMode.TAB_ONLY;
+		return TabViewMode.WITH_PROJECT_ASSETS_MANAGER;
 	}
 }

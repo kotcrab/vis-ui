@@ -133,7 +133,6 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 			@Override
 			public void run () {
 				updateCache();
-
 			}
 		}, 0.5f);
 	}
