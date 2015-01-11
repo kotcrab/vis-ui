@@ -1,4 +1,5 @@
 VisEditor
 =========
 
-### If you are looking for VisUI go [here](https://github.com/kotcrab/VisEditor/wiki/VisUI).
+### VisEditor - Work in Progress
+### [VisUI](https://github.com/kotcrab/VisEditor/wiki/VisUI) - 0.4.1 released
