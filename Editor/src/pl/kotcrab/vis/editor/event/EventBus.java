@@ -32,12 +32,10 @@ public class EventBus {
 		listeners = new ArrayList<EventListener>();
 
 		queue = new ProcessingQueue<Event>("EventBus", true) {
-
 			@Override
 			protected void processQueueElement (Event event) {
 				processEvent(event);
 			}
-
 		};
 	}
 
