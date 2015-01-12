@@ -1,28 +1,23 @@
 /**
  * Copyright 2014-2015 Pawel Pastuszak
- * 
+ *
  * This file is part of VisEditor.
- * 
+ *
  * VisEditor is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * VisEditor is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package pl.kotcrab.vis.editor.module.project;
-
-import pl.kotcrab.vis.editor.Assets;
-import pl.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
-import pl.kotcrab.vis.editor.util.texturepacker.TexturePacker;
-import pl.kotcrab.vis.editor.util.texturepacker.TexturePacker.Settings;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -32,6 +27,10 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import pl.kotcrab.vis.editor.Assets;
+import pl.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
+import pl.kotcrab.vis.editor.util.texturepacker.TexturePacker;
+import pl.kotcrab.vis.editor.util.texturepacker.TexturePacker.Settings;
 
 public class TextureCacheModule extends ProjectModule implements WatchListener {
 	private AssetsWatcherModule watcher;
@@ -138,15 +137,18 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	public TextureRegion getRegion (FileHandle file) {
-		String path = resolvePath(file);
-		TextureRegion region = regions.get(path);
+		return getRegion(resolvePath(file));
+	}
+
+	public TextureRegion getRegion (String relativePath) {
+		TextureRegion region = regions.get(relativePath);
 
 		if (region == null) {
-			if (cache != null) region = cache.findRegion(path);
+			if (cache != null) region = cache.findRegion(relativePath);
 
 			if (region == null) region = new TextureRegion(loadingRegion);
 
-			regions.put(path, region);
+			regions.put(relativePath, region);
 		}
 
 		return region;
@@ -163,7 +165,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	public String getRelativePath (TextureRegion region) {
 		for (Entry<String, TextureRegion> e : regions.entries()) {
-			if(e.value == region)
+			if (e.value == region)
 				return e.key;
 		}
 
