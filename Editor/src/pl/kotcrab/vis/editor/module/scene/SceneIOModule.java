@@ -23,9 +23,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import pl.kotcrab.vis.editor.module.project.EditorFileType;
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModule;
+import pl.kotcrab.vis.editor.module.project.TextureCacheModule;
 import pl.kotcrab.vis.runtime.scene.SceneViewport;
 
 import java.io.FileInputStream;
@@ -36,12 +36,14 @@ import java.io.FileOutputStream;
 public class SceneIOModule extends ProjectModule {
 	private Kryo kryo;
 
+	private TextureCacheModule cacheModule;
 	private FileAccessModule fileAccessModule;
 
 	private FileHandle visFolder;
 
 	@Override
 	public void init () {
+		cacheModule = projectContainter.get(TextureCacheModule.class);
 		fileAccessModule = projectContainter.get(FileAccessModule.class);
 
 		visFolder = fileAccessModule.getVisFolder();
@@ -54,6 +56,9 @@ public class SceneIOModule extends ProjectModule {
 			Input input = new Input(new FileInputStream(file.file()));
 			EditorScene scene = kryo.readObject(input, EditorScene.class);
 			input.close();
+
+			prepareScene(scene);
+
 			return scene;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -61,14 +66,26 @@ public class SceneIOModule extends ProjectModule {
 		return null;
 	}
 
-	public void save (EditorScene scene) {
+	private void prepareScene (EditorScene scene) {
+		for (SceneObject object : scene.objects) {
+			if (object instanceof Object2d) {
+				Object2d object2d = (Object2d) object;
+				object2d.region = cacheModule.getRegion(object2d.regionRelativePath);
+			}
+		}
+	}
+
+	public boolean save (EditorScene scene) {
 		try {
 			Output output = new Output(new FileOutputStream(getFileHandleForScene(scene).file()));
 			kryo.writeObject(output, scene);
 			output.close();
+			return true;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+
+		return false;
 	}
 
 	public void create (FileHandle relativeScenePath, SceneViewport viewport) {

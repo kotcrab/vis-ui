@@ -19,14 +19,27 @@
 
 package pl.kotcrab.vis.editor.module.scene;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Object2d extends SceneObject {
-	public String regionRelativePath;
-	public transient Sprite sprite;
+	public transient TextureRegion region;
 
-	public Object2d (String regionRelativePath, Sprite sprite) {
+	public String regionRelativePath;
+
+	private float x, y;
+	private float originX, originY;
+	private float rotation;
+	private float scaleX = 1, scaleY = 1;
+
+	public Object2d (String regionRelativePath, TextureRegion region, float x, float y) {
 		this.regionRelativePath = regionRelativePath;
-		this.sprite = sprite;
+		this.region = region;
+		this.x = x;
+		this.y = y;
+	}
+
+	public void draw (Batch batch) {
+		batch.draw(region, x, y, originX, originY, region.getRegionWidth(), region.getRegionHeight(), scaleX, scaleY, rotation);
 	}
 }

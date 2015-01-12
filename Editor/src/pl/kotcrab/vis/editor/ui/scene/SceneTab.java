@@ -1,18 +1,18 @@
 /**
  * Copyright 2014-2015 Pawel Pastuszak
- * 
+ *
  * This file is part of VisEditor.
- * 
+ *
  * VisEditor is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * VisEditor is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -29,6 +29,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.kotcrab.vis.ui.VisTable;
+import pl.kotcrab.vis.editor.App;
+import pl.kotcrab.vis.editor.event.Event;
+import pl.kotcrab.vis.editor.event.EventListener;
+import pl.kotcrab.vis.editor.event.MenuEvent;
+import pl.kotcrab.vis.editor.event.MenuEventType;
 import pl.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import pl.kotcrab.vis.editor.module.project.TextureCacheModule;
 import pl.kotcrab.vis.editor.module.scene.*;
@@ -36,27 +41,29 @@ import pl.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import pl.kotcrab.vis.editor.ui.tab.Tab;
 import pl.kotcrab.vis.editor.ui.tab.TabViewMode;
 
-public class SceneTab extends Tab implements DragAndDropTarget {
+public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 	private EditorScene scene;
 
 	private TextureCacheModule cacheModule;
+	private SceneIOModule sceneIOModule;
 
 	private SceneModuleContainer sceneMC;
 	private CameraModule cameraModule;
 
 	private VisTable content;
-	private VisTable leftColumn;
-	private VisTable rightColumn;
 
 	// private SceneOutline outline;
 	private ActorProperites actorProperties;
 
 	private Target dropTarget;
 
+	private boolean dirty;
+
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
 		this.scene = scene;
 
 		cacheModule = projectMC.get(TextureCacheModule.class);
+		sceneIOModule = projectMC.get(SceneIOModule.class);
 
 		sceneMC = new SceneModuleContainer(projectMC);
 
@@ -65,8 +72,8 @@ public class SceneTab extends Tab implements DragAndDropTarget {
 
 		content = new ContentTable();
 
-		leftColumn = new VisTable(false);
-		rightColumn = new VisTable(false);
+		VisTable leftColumn = new VisTable(false);
+		VisTable rightColumn = new VisTable(false);
 
 		leftColumn.top();
 		rightColumn.top();
@@ -107,12 +114,14 @@ public class SceneTab extends Tab implements DragAndDropTarget {
 	}
 
 	private void dropped (Payload payload) {
-		TextureRegion region = (TextureRegion)payload.getObject();
+		TextureRegion region = (TextureRegion) payload.getObject();
 
 		Sprite sprite = new Sprite(region);
-		sprite.setPosition(cameraModule.getInputX() - sprite.getWidth() / 2, cameraModule.getInputY() - sprite.getHeight() / 2);
+		float x = cameraModule.getInputX() - sprite.getWidth() / 2;
+		float y = cameraModule.getInputY() - sprite.getHeight() / 2;
 
-		scene.objects.add(new Object2d(cacheModule.getRelativePath(region), sprite));
+		scene.objects.add(new Object2d(cacheModule.getRelativePath(region), region, x, y));
+		setDirty(true);
 	}
 
 	private void resize () {
@@ -127,8 +136,8 @@ public class SceneTab extends Tab implements DragAndDropTarget {
 
 		sceneMC.render(batch);
 		for (SceneObject obj : scene.objects) {
-			Object2d obj2d = (Object2d)obj;
-			obj2d.sprite.draw(batch);
+			Object2d obj2d = (Object2d) obj;
+			obj2d.draw(batch);
 		}
 
 		batch.end();
@@ -137,7 +146,14 @@ public class SceneTab extends Tab implements DragAndDropTarget {
 
 	@Override
 	public String getButtonText () {
-		return scene.getFile().name();
+		String title;
+
+		if (isDirty())
+			title = "*";
+		else
+			title = "";
+
+		return title + scene.getFile().name();
 	}
 
 	@Override
@@ -160,8 +176,40 @@ public class SceneTab extends Tab implements DragAndDropTarget {
 		return TabViewMode.WITH_PROJECT_ASSETS_MANAGER;
 	}
 
+	@Override
+	public void onHide () {
+		super.onHide();
+		App.eventBus.unregister(this);
+	}
+
+	@Override
+	public void onShow () {
+		super.onShow();
+		App.eventBus.register(this);
+	}
+
 	public EditorScene getScene () {
 		return scene;
+	}
+
+	public boolean isDirty () {
+		return dirty;
+	}
+
+	public void setDirty (boolean dirty) {
+		this.dirty = dirty;
+		getPane().updateTabTitle(this);
+	}
+
+	@Override
+	public boolean onEvent (Event event) {
+		if (event instanceof MenuEvent) {
+			MenuEventType type = ((MenuEvent) event).type;
+
+			if (type == MenuEventType.FILE_SAVE)
+				if (sceneIOModule.save(scene)) setDirty(false);
+		}
+		return false;
 	}
 
 	private class ContentTable extends VisTable {
