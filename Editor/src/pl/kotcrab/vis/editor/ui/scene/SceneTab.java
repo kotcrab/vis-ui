@@ -53,7 +53,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 	private VisTable content;
 
 	// private SceneOutline outline;
-	private ActorProperites actorProperties;
+	private ActorProperties actorProperties;
 
 	private Target dropTarget;
 
@@ -65,10 +65,10 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 		cacheModule = projectMC.get(TextureCacheModule.class);
 		sceneIOModule = projectMC.get(SceneIOModule.class);
 
-		sceneMC = new SceneModuleContainer(projectMC);
+		sceneMC = new SceneModuleContainer(projectMC, scene);
 
 		// outline = new SceneOutline();
-		actorProperties = new ActorProperites();
+		actorProperties = new ActorProperties();
 
 		content = new ContentTable();
 
@@ -135,10 +135,6 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 		batch.begin();
 
 		sceneMC.render(batch);
-		for (SceneObject obj : scene.objects) {
-			Object2d obj2d = (Object2d) obj;
-			obj2d.draw(batch);
-		}
 
 		batch.end();
 		batch.setColor(oldColor);

@@ -26,10 +26,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
 public abstract class SceneModule extends ProjectModule {
-	protected SceneModuleContainer sceneContainter;
+	protected EditorScene scene;
+	protected SceneModuleContainer sceneContainer;
 
-	public void setSceneModuleContainer (SceneModuleContainer projectContainter) {
-		this.sceneContainter = projectContainter;
+	public void setSceneObjects (SceneModuleContainer projectContainer, EditorScene scene) {
+		this.sceneContainer = projectContainer;
+		this.scene = scene;
 	}
 
 	public void render (Batch batch) {

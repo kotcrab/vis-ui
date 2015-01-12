@@ -33,9 +33,12 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 	private EditorModuleContainer editorModuleContainer;
 	private ProjectModuleContainer projectModuleContainer;
 
-	public SceneModuleContainer (ProjectModuleContainer projectModuleContainer) {
+	private EditorScene scene;
+
+	public SceneModuleContainer (ProjectModuleContainer projectModuleContainer, EditorScene scene) {
 		this.editorModuleContainer = projectModuleContainer.getEditorContainer();
 		this.projectModuleContainer = projectModuleContainer;
+		this.scene = scene;
 	}
 
 	@Override
@@ -43,7 +46,7 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 		module.setProject(projectModuleContainer.getProject());
 		module.setProjectModuleContainter(projectModuleContainer);
 		module.setContainer(editorModuleContainer);
-		module.setSceneModuleContainer(this);
+		module.setSceneObjects(this, scene);
 
 		super.add(module);
 	}
