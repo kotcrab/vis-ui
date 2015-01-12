@@ -64,7 +64,9 @@ public class NewProjectDialog extends VisWindow {
 
 		this.projectIO = projectIO;
 
-		craeteUI();
+		addCloseButton();
+
+		createUI();
 		createListeners();
 		createValidators();
 
@@ -81,7 +83,7 @@ public class NewProjectDialog extends VisWindow {
 		centerWindow();
 	}
 
-	private void craeteUI () {
+	private void createUI () {
 		projectRoot = new VisValidableTextField("");
 		chooseRootButton = new VisTextButton("Choose...");
 		sourceLoc = new VisValidableTextField("/core/src");
