@@ -81,6 +81,7 @@ com.kotcrab.vis.ui.widget.VisTextButton$VisTextButtonStyle: {
 com.kotcrab.vis.ui.widget.VisImageButton$VisImageButtonStyle: {
 	default: { down: button-down, up: button, over: button-over, disabled: button, focusBorder: border },
 	toggle: { down: button-down, up: button, checked: button-down, over: button-over, focusBorder: border }
+    close: { down: button-red, up: button-window-bg, over: button-over, imageUp: icon-close}
 },
 com.kotcrab.vis.ui.widget.VisSlider$VisSliderStyle: {
 	default-horizontal: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled, knobOver: slider-knob-over, knobDown: slider-knob-down },
