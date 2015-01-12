@@ -31,7 +31,7 @@ import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
 
 public class VisImageButton extends Button implements Focusable {
-	private final Image image;
+	private Image image;
 
 	private VisImageButtonStyle style;
 
@@ -53,6 +53,15 @@ public class VisImageButton extends Button implements Focusable {
 		style.imageDown = imageDown;
 		style.imageChecked = imageChecked;
 
+		init();
+	}
+
+	public VisImageButton (String styleName) {
+		setStyle(new VisImageButtonStyle(VisUI.skin.get(styleName, VisImageButtonStyle.class)));
+		init();
+	}
+
+	private void init () {
 		image = new Image();
 		image.setScaling(Scaling.fit);
 		add(image);
@@ -72,16 +81,17 @@ public class VisImageButton extends Button implements Focusable {
 	}
 
 	@Override
-	public void setStyle (ButtonStyle style) {
-		if (!(style instanceof VisImageButtonStyle)) throw new IllegalArgumentException("style must be an ImageButtonStyle.");
-		super.setStyle(style);
-		this.style = (VisImageButtonStyle)style;
-		if (image != null) updateImage();
+	public VisImageButtonStyle getStyle () {
+		return style;
 	}
 
 	@Override
-	public VisImageButtonStyle getStyle () {
-		return style;
+	public void setStyle (ButtonStyle style) {
+		if (!(style instanceof VisImageButtonStyle))
+			throw new IllegalArgumentException("style must be an ImageButtonStyle.");
+		super.setStyle(style);
+		this.style = (VisImageButtonStyle) style;
+		if (image != null) updateImage();
 	}
 
 	private void updateImage () {
@@ -108,7 +118,8 @@ public class VisImageButton extends Button implements Focusable {
 	public void draw (Batch batch, float parentAlpha) {
 		updateImage();
 		super.draw(batch, parentAlpha);
-		if (drawBorder) style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
+		if (drawBorder && style.focusBorder != null)
+			style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
 
 	public Image getImage () {
@@ -125,8 +136,20 @@ public class VisImageButton extends Button implements Focusable {
 		if (disabled) FocusManager.getFocus();
 	}
 
-	/** The style for an image button, see {@link ImageButton}.
-	 * @author Nathan Sweet */
+	@Override
+	public void focusLost () {
+		drawBorder = false;
+	}
+
+	@Override
+	public void focusGained () {
+		drawBorder = true;
+	}
+
+	/**
+	 * The style for an image button, see {@link ImageButton}.
+	 * @author Nathan Sweet
+	 */
 	static public class VisImageButtonStyle extends ButtonStyle {
 		/** Optional. */
 		public Drawable imageUp, imageDown, imageOver, imageChecked, imageCheckedOver, imageDisabled;
@@ -136,7 +159,7 @@ public class VisImageButton extends Button implements Focusable {
 		}
 
 		public VisImageButtonStyle (Drawable up, Drawable down, Drawable checked, Drawable imageUp, Drawable imageDown,
-			Drawable imageChecked) {
+									Drawable imageChecked) {
 			super(up, down, checked);
 			this.imageUp = imageUp;
 			this.imageDown = imageDown;
@@ -155,15 +178,5 @@ public class VisImageButton extends Button implements Focusable {
 			this.focusBorder = style.focusBorder;
 		}
 
-	}
-
-	@Override
-	public void focusLost () {
-		drawBorder = false;
-	}
-
-	@Override
-	public void focusGained () {
-		drawBorder = true;
 	}
 }

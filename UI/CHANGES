@@ -1,6 +1,8 @@
 [0.4.2]
 -API Addition: VisValidableTextField.setValidationEnabled(boolean)
 -API Addition: VisValidableTextField.isValidationEnabled()
+-API Addition: VisImageButton (String styleName)
+-API Addition: VisWindow.addCloseButton()
 -API Change: VisUI.setDefaultTitleAlign and VisUI.getDefaultTitleAlign (typo fixed)
 
 [0.4.1]

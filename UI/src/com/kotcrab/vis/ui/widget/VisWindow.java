@@ -17,10 +17,12 @@
 package com.kotcrab.vis.ui.widget;
 
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.VisUI;
 
 public class VisWindow extends Window {
@@ -39,12 +41,14 @@ public class VisWindow extends Window {
 
 	@Override
 	public void setPosition (float x, float y) {
-		super.setPosition((int)x, (int)y);
+		super.setPosition((int) x, (int) y);
 	}
 
-	/** Centers this window, if it has parent it will be done instantly, if it does not have parent it will be centered when it will
+	/**
+	 * Centers this window, if it has parent it will be done instantly, if it does not have parent it will be centered when it will
 	 * be added to stage
-	 * @return true when window was centered, false when window will be centered when added to stage */
+	 * @return true when window was centered, false when window will be centered when added to stage
+	 */
 	public boolean centerWindow () {
 		Group parent = getParent();
 		if (parent == null) {
@@ -88,5 +92,21 @@ public class VisWindow extends Window {
 
 	public VisWindow fadeIn () {
 		return fadeIn(FADE_TIME);
+	}
+
+	/** If close button was added using addCloseButton() then this function is called when that button has been pressed */
+	protected void close () {
+		fadeOut();
+	}
+
+	public void addCloseButton () {
+		VisImageButton closeButton = new VisImageButton("close");
+		getButtonTable().add(closeButton).padRight(1).padBottom(1);
+		closeButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				close();
+			}
+		});
 	}
 }
