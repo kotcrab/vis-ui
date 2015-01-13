@@ -21,7 +21,7 @@ package com.kotcrab.vis.editor.module.scene;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
-public class ObjectSelectorMoudle extends SceneModule {
+public class ObjectSelectorModule extends SceneModule {
 	@Override
 	public void added () {
 	}
@@ -36,6 +36,7 @@ public class ObjectSelectorMoudle extends SceneModule {
 
 	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+
 		return true;
 	}
 }

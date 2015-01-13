@@ -70,7 +70,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 		sceneMC.add(new CameraModule());
 		sceneMC.add(new GridRendererModule());
 		sceneMC.add(new RendererModule());
-		sceneMC.add(new ObjectSelectorMoudle());
+		sceneMC.add(new ObjectSelectorModule());
 		sceneMC.add(new ObjectManipulatorModule());
 		sceneMC.init();
 
