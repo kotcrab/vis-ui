@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.module.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.ProjectIOModule;
@@ -131,10 +132,9 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			e.printStackTrace();
 		}
 
-		boolean load = true;
-		if(load) {
-			EditorScene testScene = projectMC.get(SceneIOModule.class).load(
-					Gdx.files.absolute("F:\\Poligon\\TestProject\\vis\\assets\\scene\\test.scene"));
+		FileHandle scene =Gdx.files.absolute("F:\\Poligon\\TestProject\\vis\\assets\\scene\\test.scene");
+		if(scene.exists()) {
+			EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
 			projectMC.get(SceneTabsModule.class).open(testScene);
 		}
 		//debug end
