@@ -27,7 +27,10 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.event.StatusBarEvent;
+import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.texturepacker.TexturePacker;
 import com.kotcrab.vis.editor.util.texturepacker.TexturePacker.Settings;
@@ -116,7 +119,19 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 				region.setRegion(newRegion);
 		}
 
-		if (oldCache != null) oldCache.dispose();
+		disposeOldCacheLater(oldCache);
+
+		App.eventBus.post(new TexturesReloadedEvent());
+		App.eventBus.post(new StatusBarEvent("Textures reloaded"));
+	}
+
+	private void disposeOldCacheLater (final TextureAtlas oldCache) {
+		Timer.instance().scheduleTask(new Task() {
+			@Override
+			public void run () {
+				if (oldCache != null) oldCache.dispose();
+			}
+		}, 0.5f);
 	}
 
 	@Override
@@ -127,13 +142,15 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	@Override
 	public void fileChanged (FileHandle file) {
-		waitTimer.clear();
-		waitTimer.scheduleTask(new Task() {
-			@Override
-			public void run () {
-				updateCache();
-			}
-		}, 0.5f);
+		if (file.extension().equals("jpg") || file.extension().equals("png")) {
+			waitTimer.clear();
+			waitTimer.scheduleTask(new Task() {
+				@Override
+				public void run () {
+					updateCache();
+				}
+			}, 0.5f);
+		}
 	}
 
 	public TextureRegion getRegion (FileHandle file) {
