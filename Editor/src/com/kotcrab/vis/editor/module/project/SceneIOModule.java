@@ -23,9 +23,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.module.project.ProjectModule;
-import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
 import com.kotcrab.vis.editor.module.scene.Object2d;
 import com.kotcrab.vis.editor.module.scene.SceneObject;
@@ -60,7 +57,7 @@ public class SceneIOModule extends ProjectModule {
 			EditorScene scene = kryo.readObject(input, EditorScene.class);
 			input.close();
 
-			prepareScene(scene);
+			prepareSceneAfterLoad(scene);
 
 			return scene;
 		} catch (FileNotFoundException e) {
@@ -69,16 +66,19 @@ public class SceneIOModule extends ProjectModule {
 		return null;
 	}
 
-	private void prepareScene (EditorScene scene) {
+	private void prepareSceneAfterLoad (EditorScene scene) {
 		for (SceneObject object : scene.objects) {
 			if (object instanceof Object2d) {
 				Object2d object2d = (Object2d) object;
-				object2d.region = cacheModule.getRegion(object2d.regionRelativePath);
+				object2d.loadSpriteValuesFromData();
+				object2d.sprite.setRegion(cacheModule.getRegion(object2d.regionRelativePath));
 			}
 		}
 	}
 
 	public boolean save (EditorScene scene) {
+		prepareSceneForSave(scene);
+
 		try {
 			Output output = new Output(new FileOutputStream(getFileHandleForScene(scene).file()));
 			kryo.writeObject(output, scene);
@@ -89,6 +89,15 @@ public class SceneIOModule extends ProjectModule {
 		}
 
 		return false;
+	}
+
+	private void prepareSceneForSave (EditorScene scene) {
+		for (SceneObject object : scene.objects) {
+			if (object instanceof Object2d) {
+				Object2d object2d = (Object2d) object;
+				object2d.saveSpriteDataValuesToData();
+			}
+		}
 	}
 
 	public void create (FileHandle relativeScenePath, SceneViewport viewport) {

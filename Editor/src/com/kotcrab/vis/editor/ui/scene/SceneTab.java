@@ -29,10 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.Event;
-import com.kotcrab.vis.editor.event.EventListener;
-import com.kotcrab.vis.editor.event.MenuEvent;
-import com.kotcrab.vis.editor.event.MenuEventType;
+import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
@@ -207,6 +204,17 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 			if (type == MenuEventType.FILE_SAVE)
 				if (sceneIOModule.save(scene)) setDirty(false);
 		}
+
+		if (event instanceof TexturesReloadedEvent) {
+			for (SceneObject object : scene.objects) {
+				if (object instanceof Object2d) {
+					Object2d object2d = (Object2d) object;
+					object2d.sprite.setRegion(cacheModule.getRegion(object2d.regionRelativePath));
+				}
+			}
+
+		}
+
 		return false;
 	}
 
