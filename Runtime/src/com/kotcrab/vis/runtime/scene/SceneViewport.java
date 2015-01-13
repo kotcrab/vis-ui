@@ -14,7 +14,7 @@
  * limitations under the License.
  ******************************************************************************/
 
-package pl.kotcrab.vis.runtime.scene;
+package com.kotcrab.vis.runtime.scene;
 
 public enum SceneViewport {
 	NONE, STRETCH, FIT, FILL, SCREEN, EXTEND;

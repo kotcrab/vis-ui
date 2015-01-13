@@ -19,7 +19,7 @@
 
 package pl.kotcrab.vis.editor.module.scene;
 
-import pl.kotcrab.vis.runtime.scene.SceneViewport;
+import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;

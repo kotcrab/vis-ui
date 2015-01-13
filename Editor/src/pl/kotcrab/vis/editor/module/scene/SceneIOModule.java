@@ -26,7 +26,7 @@ import com.esotericsoftware.kryo.io.Output;
 import pl.kotcrab.vis.editor.module.project.FileAccessModule;
 import pl.kotcrab.vis.editor.module.project.ProjectModule;
 import pl.kotcrab.vis.editor.module.project.TextureCacheModule;
-import pl.kotcrab.vis.runtime.scene.SceneViewport;
+import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
