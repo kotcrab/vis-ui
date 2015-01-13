@@ -1,32 +1,31 @@
 /**
  * Copyright 2014-2015 Pawel Pastuszak
- * 
+ *
  * This file is part of VisEditor.
- * 
+ *
  * VisEditor is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * VisEditor is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 package com.kotcrab.vis.editor.module.scene;
 
-import com.kotcrab.vis.editor.module.EditorModuleContainer;
-import com.kotcrab.vis.editor.module.project.Project;
-import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import com.kotcrab.vis.editor.module.BaseModuleContainer;
-
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.kotcrab.vis.editor.module.BaseModuleContainer;
+import com.kotcrab.vis.editor.module.EditorModuleContainer;
+import com.kotcrab.vis.editor.module.project.Project;
+import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 
 public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 	private Project project;
@@ -51,13 +50,14 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 		super.add(module);
 	}
 
-	public void setProject (Project project) {
-		if (getModuleCounter() > 0) throw new IllegalStateException("Project can't be changed while modules are loaded!");
-		this.project = project;
-	}
-
 	public Project getProject () {
 		return project;
+	}
+
+	public void setProject (Project project) {
+		if (getModuleCounter() > 0)
+			throw new IllegalStateException("Project can't be changed while modules are loaded!");
+		this.project = project;
 	}
 
 	public void render (Batch batch) {
@@ -66,10 +66,12 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 	}
 
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-		for (int i = 0; i < modules.size; i++)
-			if (modules.get(i).touchDown(event, x, y, pointer, button)) return true;
+		boolean returnValue = false;
 
-		return false;
+		for (int i = 0; i < modules.size; i++)
+			if (modules.get(i).touchDown(event, x, y, pointer, button)) returnValue = true;
+
+		return returnValue;
 	}
 
 	public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
@@ -83,10 +85,12 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 	}
 
 	public boolean mouseMoved (InputEvent event, float x, float y) {
-		for (int i = 0; i < modules.size; i++)
-			if (modules.get(i).mouseMoved(event, x, y)) return true;
+		boolean returnValue = false;
 
-		return false;
+		for (int i = 0; i < modules.size; i++)
+			if (modules.get(i).mouseMoved(event, x, y)) returnValue = true;
+
+		return returnValue;
 	}
 
 	public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
@@ -100,30 +104,38 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 	}
 
 	public boolean scrolled (InputEvent event, float x, float y, int amount) {
-		for (int i = 0; i < modules.size; i++)
-			if (modules.get(i).scrolled(event, x, y, amount)) return true;
+		boolean returnValue = false;
 
-		return false;
+		for (int i = 0; i < modules.size; i++)
+			if (modules.get(i).scrolled(event, x, y, amount)) returnValue = true;
+
+		return returnValue;
 	}
 
 	public boolean keyDown (InputEvent event, int keycode) {
-		for (int i = 0; i < modules.size; i++)
-			if (modules.get(i).keyDown(event, keycode)) return true;
+		boolean returnValue = false;
 
-		return false;
+		for (int i = 0; i < modules.size; i++)
+			if (modules.get(i).keyDown(event, keycode)) returnValue = true;
+
+		return returnValue;
 	}
 
 	public boolean keyUp (InputEvent event, int keycode) {
-		for (int i = 0; i < modules.size; i++)
-			if (modules.get(i).keyUp(event, keycode)) return true;
+		boolean returnValue = false;
 
-		return false;
+		for (int i = 0; i < modules.size; i++)
+			if (modules.get(i).keyUp(event, keycode)) returnValue = true;
+
+		return returnValue;
 	}
 
 	public boolean keyTyped (InputEvent event, char character) {
-		for (int i = 0; i < modules.size; i++)
-			if (modules.get(i).keyTyped(event, character)) return true;
+		boolean returnValue = false;
 
-		return false;
+		for (int i = 0; i < modules.size; i++)
+			if (modules.get(i).keyTyped(event, character)) returnValue = true;
+
+		return returnValue;
 	}
 }
