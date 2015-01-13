@@ -131,9 +131,13 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			e.printStackTrace();
 		}
 
-		EditorScene testScene = projectMC.get(SceneIOModule.class).load(
-			Gdx.files.absolute("F:\\Poligon\\TestProject\\vis\\assets\\scene\\test.scene"));
-		projectMC.get(SceneTabsModule.class).open(testScene);
+		boolean load = true;
+		if(load) {
+			EditorScene testScene = projectMC.get(SceneIOModule.class).load(
+					Gdx.files.absolute("F:\\Poligon\\TestProject\\vis\\assets\\scene\\test.scene"));
+			projectMC.get(SceneTabsModule.class).open(testScene);
+		}
+		//debug end
 	}
 
 	@Override
@@ -191,10 +195,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		App.eventBus.post(new StatusBarEvent("Project unloaded"));
 		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded));
-	}
-
-	public boolean isProjectLoaded () {
-		return projectLoaded;
 	}
 
 	public void projectLoaded (Project project) {
