@@ -22,7 +22,7 @@ package com.kotcrab.vis.editor.ui.scene;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.module.scene.SceneIOModule;
+import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 import com.badlogic.gdx.Gdx;

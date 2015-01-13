@@ -29,17 +29,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.module.scene.*;
-import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.MenuEvent;
 import com.kotcrab.vis.editor.event.MenuEventType;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
+import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
+import com.kotcrab.vis.ui.VisTable;
 
 public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 	private EditorScene scene;
@@ -52,7 +53,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 
 	private VisTable content;
 
-	// private SceneOutline outline;
+	private SceneOutline outline;
 	private ActorProperties actorProperties;
 
 	private Target dropTarget;
@@ -66,8 +67,16 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 		sceneIOModule = projectMC.get(SceneIOModule.class);
 
 		sceneMC = new SceneModuleContainer(projectMC, scene);
+		sceneMC.add(new CameraModule());
+		sceneMC.add(new GridRendererModule());
+		sceneMC.add(new RendererModule());
+		sceneMC.add(new ObjectSelectorMoudle());
+		sceneMC.add(new ObjectManipulatorModule());
+		sceneMC.init();
 
-		// outline = new SceneOutline();
+		cameraModule = sceneMC.get(CameraModule.class);
+
+		outline = new SceneOutline();
 		actorProperties = new ActorProperties();
 
 		content = new ContentTable();
@@ -84,7 +93,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 		content.add(rightColumn).width(300).fillY().expandY();
 
 		leftColumn.top();
-		// leftColumn.add(outline).height(300).fillX().expandX();
+		//leftColumn.add(outline).height(300).fillX().expandX();
 		leftColumn.row();
 		leftColumn.add(new Widget()).fill().expand();
 
@@ -92,13 +101,6 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 		rightColumn.add(actorProperties).height(300).expandX().fillX();
 		rightColumn.row();
 		rightColumn.add(new Widget()).fill().expand();
-
-		sceneMC.add(new CameraModule());
-		sceneMC.add(new GridRendererModule());
-		sceneMC.add(new RendererModule());
-		sceneMC.init();
-
-		cameraModule = sceneMC.get(CameraModule.class);
 
 		dropTarget = new Target(content) {
 			@Override

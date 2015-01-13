@@ -22,7 +22,7 @@ package com.kotcrab.vis.editor.module;
 import com.badlogic.gdx.utils.Array;
 
 public class BaseModuleContainer<T extends BaseModule> {
-	protected Array<T> modules = new Array<T>();
+	protected Array<T> modules = new Array<>();
 	private boolean initFinished = false;
 
 	public void add (T module) {

@@ -17,7 +17,7 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.esotericsoftware.kryo.Kryo;
@@ -26,6 +26,9 @@ import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
+import com.kotcrab.vis.editor.module.scene.EditorScene;
+import com.kotcrab.vis.editor.module.scene.Object2d;
+import com.kotcrab.vis.editor.module.scene.SceneObject;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 import java.io.FileInputStream;

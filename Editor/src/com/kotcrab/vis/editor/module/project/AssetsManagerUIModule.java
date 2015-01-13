@@ -42,8 +42,6 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.TabsModule;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
-import com.kotcrab.vis.editor.module.scene.SceneIOModule;
-import com.kotcrab.vis.editor.module.scene.SceneTabsModule;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
 import com.kotcrab.vis.editor.util.DirectoryWatcher;

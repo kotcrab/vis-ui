@@ -22,7 +22,7 @@ package com.kotcrab.vis.editor.module;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import com.kotcrab.vis.editor.module.scene.SceneIOModule;
+import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.ui.NewProjectDialog;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
