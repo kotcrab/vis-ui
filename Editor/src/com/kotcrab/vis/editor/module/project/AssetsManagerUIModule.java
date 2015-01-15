@@ -98,6 +98,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 
 		dragAndDrop = new DragAndDrop();
 		dragAndDrop.setKeepWithinStage(false);
+		dragAndDrop.setDragTime(0);
 
 		VisTable editorTable = editor.getProjectContentTable();
 		editorTable.setBackground("window-bg");
