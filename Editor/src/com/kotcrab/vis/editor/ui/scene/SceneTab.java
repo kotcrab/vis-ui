@@ -191,12 +191,14 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 	@Override
 	public void onHide () {
 		super.onHide();
+		sceneMC.onHide();
 		App.eventBus.unregister(this);
 	}
 
 	@Override
 	public void onShow () {
 		super.onShow();
+		sceneMC.onShow();
 		App.eventBus.register(this);
 	}
 

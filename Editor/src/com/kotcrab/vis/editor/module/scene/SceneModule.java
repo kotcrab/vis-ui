@@ -19,11 +19,10 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
-import com.kotcrab.vis.editor.module.project.ProjectModule;
-
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.kotcrab.vis.editor.module.project.ProjectModule;
 
 public abstract class SceneModule extends ProjectModule {
 	protected EditorScene scene;
@@ -35,6 +34,16 @@ public abstract class SceneModule extends ProjectModule {
 	}
 
 	public void render (Batch batch) {
+	}
+
+	/** Called by module container, when editor tab has been switched to tab, that this module belongs to */
+	public void onShow () {
+
+	}
+
+	/** Called by module container, when editor tab has been switched to some other tab */
+	public void onHide () {
+
 	}
 
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
