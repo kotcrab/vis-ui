@@ -19,18 +19,14 @@
 
 package com.kotcrab.vis.editor.ui;
 
-import java.awt.BorderLayout;
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.WindowConstants;
-
-import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.Editor;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
+import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.Editor;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class EditorFrame extends JFrame {
 	public static void main (String[] args) {
@@ -45,24 +41,22 @@ public class EditorFrame extends JFrame {
 	}
 
 	public EditorFrame () {
-		setSize(1280, 720);
-		setLocationRelativeTo(null);
-		setTitle("Vis Editor");
-		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		setTitle("VisEditor");
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 720;
 		config.backgroundFPS = -1;
 
-		Editor editor = new Editor(this);
-		LwjglCanvas editorCanvas = new LwjglCanvas(editor, config);
-		editorCanvas.getCanvas().setSize(1280, 720);
+		LwjglCanvas editorCanvas = new LwjglCanvas(new Editor(this), config);
+		Canvas canvas = editorCanvas.getCanvas();
+		canvas.setSize(1280, 720);
 
-		getContentPane().add(editorCanvas.getCanvas(), BorderLayout.CENTER);
+		getContentPane().add(canvas, BorderLayout.CENTER);
 
 		pack();
-		setVisible(true);
+		setLocationRelativeTo(null);
 	}
 
 	@Override
