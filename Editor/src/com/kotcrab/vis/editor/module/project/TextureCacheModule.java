@@ -53,6 +53,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	private Timer waitTimer;
 
+	private boolean firstReload = true;
+
 	@Override
 	public void init () {
 		FileAccessModule fileAccess = projectContainter.get(FileAccessModule.class);
@@ -122,7 +124,11 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		disposeOldCacheLater(oldCache);
 
 		App.eventBus.post(new TexturesReloadedEvent());
-		App.eventBus.post(new StatusBarEvent("Textures reloaded"));
+		if(firstReload == false) {
+			//we don't want to display 'textures reloaded' right after editor startup
+			App.eventBus.post(new StatusBarEvent("Textures reloaded"));
+			firstReload = true;
+		}
 	}
 
 	private void disposeOldCacheLater (final TextureAtlas oldCache) {
