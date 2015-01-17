@@ -32,9 +32,11 @@ import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
 
-/** A checkbox is a button that contains an image indicating the checked or unchecked state and a label.
+/**
+ * A checkbox is a button that contains an image indicating the checked or unchecked state and a label.
  * @author Nathan Sweet
- * @author Pawel Pastuszak */
+ * @author Pawel Pastuszak
+ */
 @SuppressWarnings("rawtypes")
 public class VisCheckBox extends TextButton implements Focusable {
 	// This class was copied from LibGDX, few lines were changed.
@@ -71,18 +73,21 @@ public class VisCheckBox extends TextButton implements Focusable {
 		});
 	}
 
-	@Override
-	public void setStyle (ButtonStyle style) {
-		if (!(style instanceof VisCheckBoxStyle)) throw new IllegalArgumentException("style must be a VisCheckBoxStyle.");
-		super.setStyle(style);
-		this.style = (VisCheckBoxStyle)style;
-	}
-
-	/** Returns the checkbox's style. Modifying the returned style may not have an effect until {@link #setStyle(ButtonStyle)} is
-	 * called. */
+	/**
+	 * Returns the checkbox's style. Modifying the returned style may not have an effect until {@link #setStyle(ButtonStyle)} is
+	 * called.
+	 */
 	@Override
 	public CheckBoxStyle getStyle () {
 		return style;
+	}
+
+	@Override
+	public void setStyle (ButtonStyle style) {
+		if (!(style instanceof VisCheckBoxStyle))
+			throw new IllegalArgumentException("style must be a VisCheckBoxStyle.");
+		super.setStyle(style);
+		this.style = (VisCheckBoxStyle) style;
 	}
 
 	@Override
@@ -116,7 +121,8 @@ public class VisCheckBox extends TextButton implements Focusable {
 		image.setDrawable(checkbox);
 		super.draw(batch, parentAlpha);
 
-		if (drawBorder) style.focusBorder.draw(batch, getX(), getY() + image.getWidth() / 3 - 0.5f, image.getWidth(), image.getHeight());
+		if (drawBorder)
+			style.focusBorder.draw(batch, getX(), getY() + image.getWidth() / 3 - 0.5f, image.getWidth(), image.getHeight());
 	}
 
 	public Image getImage () {
@@ -125,6 +131,16 @@ public class VisCheckBox extends TextButton implements Focusable {
 
 	public Cell getImageCell () {
 		return imageCell;
+	}
+
+	@Override
+	public void focusLost () {
+		drawBorder = false;
+	}
+
+	@Override
+	public void focusGained () {
+		drawBorder = true;
 	}
 
 	static public class VisCheckBoxStyle extends CheckBoxStyle {
@@ -148,15 +164,5 @@ public class VisCheckBox extends TextButton implements Focusable {
 			this.checkboxOnDown = style.checkboxOnDown;
 			this.checkboxOffDown = style.checkboxOffDown;
 		}
-	}
-
-	@Override
-	public void focusLost () {
-		drawBorder = false;
-	}
-
-	@Override
-	public void focusGained () {
-		drawBorder = true;
 	}
 }
