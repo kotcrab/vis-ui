@@ -139,7 +139,7 @@ public class ObjectManagerModule extends SceneModule {
 
 		@Override
 		public void execute () {
-			scene.objects.removeAll(selectedObjects, true);
+			scene.objects.removeAll(objects, true);
 		}
 
 		@Override
