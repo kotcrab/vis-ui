@@ -22,27 +22,28 @@ package com.kotcrab.vis.editor.module.scene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 
 public class UndoModule extends SceneModule {
+	private InputModule input;
+
 	private Array<UndoableAction> undoList;
 	private Array<UndoableAction> redoList;
+
+	private boolean tabActive;
 
 	@Override
 	public void added () {
 		undoList = new Array<>();
 		redoList = new Array<>();
+
+		input = containter.get(InputModule.class);
+		input.addListener(new UndoInputListener());
 	}
 
-	@Override
-	public void init () {
-	}
-
-	@Override
-	public void dispose () {
-	}
 
 	public void undo () {
 		if (undoList.size > 0) {
@@ -69,14 +70,27 @@ public class UndoModule extends SceneModule {
 	}
 
 	@Override
-	public boolean keyDown (InputEvent event, int keycode) {
-		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
-			if (keycode == Keys.Z) undo();
-			if (keycode == Keys.Y) redo();
+	public void onHide () {
+		tabActive = false;
+	}
 
-			return true;
+	@Override
+	public void onShow () {
+		tabActive = true;
+	}
+
+	private class UndoInputListener extends InputListener {
+		public boolean keyDown (InputEvent event, int keycode) {
+			if(tabActive) {
+				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+					if (keycode == Keys.Z) undo();
+					if (keycode == Keys.Y) redo();
+
+					return true;
+				}
+			}
+
+			return false;
 		}
-
-		return false;
 	}
 }
