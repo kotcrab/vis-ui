@@ -157,6 +157,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	@Override
 	public void dispose () {
+		App.eventBus.stop();
 		editorMC.dispose();
 		if (projectLoaded) projectMC.dispose();
 
