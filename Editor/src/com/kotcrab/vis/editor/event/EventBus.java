@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor.event;
 
+import com.badlogic.gdx.Gdx;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.ProcessingQueue;
 
@@ -56,9 +57,18 @@ public class EventBus {
 	}
 
 	private void processEvent (final Event event) {
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run () {
+				postEvent(event);
+			}
+		});
+	}
+
+	private void postEvent (Event event) {
 		try {
-			for (EventListener listener : listeners)
-				if (listener.onEvent(event)) break;
+			for (int i = 0; i < listeners.size(); i++)
+				if (listeners.get(i).onEvent(event)) break;
 		} catch (Exception e) {
 			Log.exception(e);
 		}
