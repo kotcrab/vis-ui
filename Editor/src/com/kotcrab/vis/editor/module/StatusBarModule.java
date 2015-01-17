@@ -19,15 +19,13 @@
 
 package com.kotcrab.vis.editor.module;
 
-import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.event.Event;
-import com.kotcrab.vis.editor.event.EventListener;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
-
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.event.Event;
+import com.kotcrab.vis.editor.event.EventListener;
+import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -37,6 +35,12 @@ public class StatusBarModule extends EditorModule implements EventListener {
 	public VisLabel statusLabel;
 
 	public Timer timer;
+	private Task resetTask = new Task() {
+		@Override
+		public void run () {
+			statusLabel.setText("Ready");
+		}
+	};
 
 	public StatusBarModule () {
 		timer = new Timer();
@@ -49,10 +53,6 @@ public class StatusBarModule extends EditorModule implements EventListener {
 		table.add().expand().fill();
 	}
 
-	public void addToStage (Table root) {
-		root.add(table).fillX().expandX().row();
-	}
-
 	public void setText (String newText, int timeSeconds) {
 		statusLabel.setText(newText);
 		timer.clear();
@@ -62,7 +62,6 @@ public class StatusBarModule extends EditorModule implements EventListener {
 	@Override
 	public void added () {
 		App.eventBus.register(this);
-		addToStage(Editor.instance.getRoot());
 	}
 
 	@Override
@@ -70,17 +69,14 @@ public class StatusBarModule extends EditorModule implements EventListener {
 		App.eventBus.unregister(this);
 	}
 
-	private Task resetTask = new Task() {
-		@Override
-		public void run () {
-			statusLabel.setText("Ready");
-		}
-	};
+	public Table getTable () {
+		return table;
+	}
 
 	@Override
 	public boolean onEvent (Event e) {
 		if (e instanceof StatusBarEvent) {
-			StatusBarEvent event = (StatusBarEvent)e;
+			StatusBarEvent event = (StatusBarEvent) e;
 			setText(event.text, event.timeSeconds);
 			return true;
 		}

@@ -24,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.MenuEvent;
@@ -43,14 +42,9 @@ public class ToolbarModule extends EditorModule implements EventListener {
 		table.add().expand().fill();
 	}
 
-	public void addToStage (Table root) {
-		root.add(table).fillX().expandX().row();
-	}
-
 	@Override
 	public void added () {
 		App.eventBus.register(this);
-		addToStage(Editor.instance.getRoot());
 	}
 
 	@Override
@@ -61,6 +55,10 @@ public class ToolbarModule extends EditorModule implements EventListener {
 	@Override
 	public boolean onEvent (Event e) {
 		return false;
+	}
+
+	public Table getTable () {
+		return table;
 	}
 
 	private VisImageButton createButton (String iconName, MenuEventType eventType) {

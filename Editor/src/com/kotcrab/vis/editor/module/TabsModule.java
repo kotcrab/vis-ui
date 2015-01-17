@@ -19,17 +19,16 @@
 
 package com.kotcrab.vis.editor.module;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.ui.StartPageTab;
-import com.kotcrab.vis.editor.ui.tab.Tab;
-import com.kotcrab.vis.editor.ui.tab.TabbedPane;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
+import com.kotcrab.vis.editor.ui.StartPageTab;
+import com.kotcrab.vis.editor.ui.tab.Tab;
+import com.kotcrab.vis.editor.ui.tab.TabbedPane;
 import com.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
-
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 public class TabsModule extends EditorModule implements EventListener {
 	private Editor editor;
@@ -78,15 +77,18 @@ public class TabsModule extends EditorModule implements EventListener {
 	public void addListener (TabbedPaneListener listener) {
 		tabbedPane.addListener(listener);
 	}
-	
+
 	public boolean removeListener (TabbedPaneListener listener) {
 		return tabbedPane.removeListener(listener);
 	}
-	
+
+	public Table getTable () {
+		return tabbedPane.getTable();
+	}
+
 	@Override
 	public void added () {
 		App.eventBus.register(this);
-		addToStage(editor.getRoot());
 	}
 
 	@Override
@@ -94,14 +96,10 @@ public class TabsModule extends EditorModule implements EventListener {
 		App.eventBus.unregister(this);
 	}
 
-	public void addToStage (Table root) {
-		root.add(tabbedPane.getTable()).fillX().expandX().row();
-	}
-
 	@Override
 	public boolean onEvent (Event e) {
 		if (e instanceof ProjectStatusEvent) {
-			ProjectStatusEvent event = (ProjectStatusEvent)e;
+			ProjectStatusEvent event = (ProjectStatusEvent) e;
 			if (event.status == ProjectStatusEvent.Status.Loaded)
 				tabbedPane.remove(startPageTab);
 			else

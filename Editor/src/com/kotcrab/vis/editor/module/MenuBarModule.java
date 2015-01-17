@@ -83,11 +83,6 @@ public class MenuBarModule extends EditorModule {
 		projectIOModule = containter.get(ProjectIOModule.class);
 	}
 
-	@Override
-	public void added () {
-		addToStage(Editor.instance.getRoot());
-	}
-
 	private void loadProject (FileHandle file) {
 		try {
 			containter.get(ProjectIOModule.class).load(file);
@@ -160,8 +155,8 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(new MenuItem("About"));
 	}
 
-	public void addToStage (Table root) {
-		root.add(menuBar.getTable()).fillX().expandX().row();
+	public Table getTable(){
+		return menuBar.getTable();
 	}
 
 	@Override

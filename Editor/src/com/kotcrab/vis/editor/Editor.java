@@ -116,18 +116,21 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		editorMC.add(new ProjectIOModule());
 		editorMC.add(new InputModule(mainContentTable));
+
 		editorMC.add(new MenuBarModule(projectMC));
 		editorMC.add(new ToolbarModule());
 		editorMC.add(new TabsModule());
-
-		inputModule = editorMC.get(InputModule.class);
-
-		root.add(mainContentTable).expand().fill().row();
-		root.row();
-
 		editorMC.add(new StatusBarModule());
 
 		editorMC.init();
+
+		inputModule = editorMC.get(InputModule.class);
+
+		root.add(editorMC.get(MenuBarModule.class).getTable()).fillX().expandX().row();
+		root.add(editorMC.get(ToolbarModule.class).getTable()).fillX().expandX().row();
+		root.add(editorMC.get(TabsModule.class).getTable()).fillX().expandX().row();
+		root.add(mainContentTable).expand().fill().row();
+		root.add(editorMC.get(StatusBarModule.class).getTable()).fillX().expandX().row();
 
 		// debug section
 		try {
@@ -183,10 +186,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	public Stage getStage () {
 		return stage;
-	}
-
-	public Table getRoot () {
-		return root;
 	}
 
 	@Override
