@@ -26,6 +26,7 @@ import com.kotcrab.vis.editor.module.ProjectIOModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
+import com.kotcrab.vis.editor.module.scene.InputModule;
 import com.kotcrab.vis.editor.ui.EditorFrame;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
@@ -73,6 +74,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private VisTable projectContentTable;
 	private VisSplitPane splitPane;
 
+	private InputModule inputModule;
+
 	private EditorModuleContainer editorMC;
 	private ProjectModuleContainer projectMC;
 
@@ -112,11 +115,12 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC = new ProjectModuleContainer(editorMC);
 
 		editorMC.add(new ProjectIOModule());
-
-		// GUI modules
+		editorMC.add(new InputModule(mainContentTable));
 		editorMC.add(new MenuBarModule(projectMC));
 		editorMC.add(new ToolbarModule());
 		editorMC.add(new TabsModule());
+
+		inputModule = editorMC.get(InputModule.class);
 
 		root.add(mainContentTable).expand().fill().row();
 		root.row();
@@ -239,6 +243,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 				mainContentTable.add(splitPane).expand().fill();
 			}
 		}
+
+		inputModule.reattachListeners();
 	}
 
 	public VisTable getProjectContentTable () {
