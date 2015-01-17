@@ -31,8 +31,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 
 public class ObjectManagerModule extends SceneModule {
-	private CameraModule cameraModule;
+	private CameraModule camera;
 	private RendererModule renderer;
+	private UndoModule undoModule;
 
 	private ShapeRenderer shapeRenderer;
 
@@ -43,8 +44,9 @@ public class ObjectManagerModule extends SceneModule {
 	@Override
 	public void added () {
 		this.objects = scene.objects;
-		cameraModule = sceneContainer.get(CameraModule.class);
+		camera = sceneContainer.get(CameraModule.class);
 		renderer = sceneContainer.get(RendererModule.class);
+		undoModule = sceneContainer.get(UndoModule.class);
 
 		shapeRenderer = renderer.getShapeRenderer();
 
@@ -80,8 +82,8 @@ public class ObjectManagerModule extends SceneModule {
 	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 		if (button == Buttons.LEFT) {
-			x = cameraModule.getInputX();
-			y = cameraModule.getInputY();
+			x = camera.getInputX();
+			y = camera.getInputY();
 
 			selectedObjects.clear();
 			Object2d result = findObjectWithSmallestSurfaceArea(x, y);
@@ -119,12 +121,30 @@ public class ObjectManagerModule extends SceneModule {
 	@Override
 	public boolean keyDown (InputEvent event, int keycode) {
 		if (keycode == Keys.FORWARD_DEL) { //Delete
-			scene.objects.removeAll(selectedObjects, true);
+			undoModule.execute(new ObjectsRemoved(selectedObjects));
 			selectedObjects.clear();
 
 			return true;
 		}
 
 		return false;
+	}
+
+	private class ObjectsRemoved implements UndoableAction {
+		private Array<Object2d> objects;
+
+		public ObjectsRemoved (Array<Object2d> selectedObjects) {
+			objects = new Array<>(selectedObjects);
+		}
+
+		@Override
+		public void execute () {
+			scene.objects.removeAll(selectedObjects, true);
+		}
+
+		@Override
+		public void undo () {
+			scene.objects.addAll(objects);
+		}
 	}
 }

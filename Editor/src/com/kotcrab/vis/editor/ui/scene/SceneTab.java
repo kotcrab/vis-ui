@@ -34,6 +34,7 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.*;
+import com.kotcrab.vis.editor.module.scene.UndoableAction;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
@@ -46,6 +47,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 	private SceneIOModule sceneIOModule;
 
 	private SceneModuleContainer sceneMC;
+	private UndoModule undoModule;
 	private CameraModule cameraModule;
 
 	private VisTable content;
@@ -67,10 +69,12 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 		sceneMC.add(new CameraModule());
 		sceneMC.add(new GridRendererModule());
 		sceneMC.add(new RendererModule());
+		sceneMC.add(new UndoModule());
 		sceneMC.add(new ObjectManagerModule());
 		sceneMC.add(new ObjectManipulatorModule());
 		sceneMC.init();
 
+		undoModule = sceneMC.get(UndoModule.class);
 		cameraModule = sceneMC.get(CameraModule.class);
 
 		outline = new SceneOutline();
@@ -119,7 +123,20 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 		float x = cameraModule.getInputX() - sprite.getWidth() / 2;
 		float y = cameraModule.getInputY() - sprite.getHeight() / 2;
 
-		scene.objects.add(new Object2d(cacheModule.getRelativePath(region), region, x, y));
+		final Object2d object = new Object2d(cacheModule.getRelativePath(region), region, x, y);
+
+		undoModule.execute(new UndoableAction() {
+			@Override
+			public void execute () {
+				scene.objects.add(object);
+			}
+
+			@Override
+			public void undo () {
+				scene.objects.removeValue(object, true);
+			}
+		});
+
 		setDirty(true);
 	}
 
@@ -212,7 +229,6 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 					object2d.sprite.setRegion(cacheModule.getRegion(object2d.regionRelativePath));
 				}
 			}
-
 		}
 
 		return false;

@@ -62,9 +62,10 @@ public class UndoModule extends SceneModule {
 			App.eventBus.post(new StatusBarEvent("Can't redo more!"));
 	}
 
-	public void add (UndoableAction action) {
+	public void execute (UndoableAction action) {
 		action.execute();
 		undoList.add(action);
+		redoList.clear();
 	}
 
 	@Override
