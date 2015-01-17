@@ -121,10 +121,12 @@ public class TabbedPane {
 			button.addListener(new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
-					if (activeTab != null) activeTab.onHide();
-					activeTab = tab;
-					notifyListenersSwitched(tab);
-					tab.onShow();
+					if(button.isChecked()) {
+						if (activeTab != null) activeTab.onHide();
+						activeTab = tab;
+						notifyListenersSwitched(tab);
+						tab.onShow();
+					}
 				}
 			});
 
