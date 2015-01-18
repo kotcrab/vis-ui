@@ -39,8 +39,9 @@ import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 import com.kotcrab.vis.ui.VisTable;
+import com.sun.media.jfxmediaimpl.MediaDisposer.Disposable;
 
-public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
+public class SceneTab extends Tab implements DragAndDropTarget, EventListener, Disposable {
 	private EditorScene scene;
 
 	private TextureCacheModule cacheModule;
@@ -234,6 +235,12 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener {
 		}
 
 		return false;
+	}
+
+	@Override
+	public void dispose () {
+		sceneMC.dispose();
+		App.eventBus.unregister(this);
 	}
 
 	private class ContentTable extends VisTable {

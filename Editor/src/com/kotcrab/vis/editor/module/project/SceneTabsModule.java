@@ -19,12 +19,10 @@
 
 package com.kotcrab.vis.editor.module.project;
 
-import com.kotcrab.vis.editor.module.project.ProjectModule;
+import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.TabsModule;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
-import com.kotcrab.vis.editor.module.TabsModule;
-
-import com.badlogic.gdx.utils.Array;
 
 public class SceneTabsModule extends ProjectModule {
 	private TabsModule tabsModule;
@@ -35,6 +33,12 @@ public class SceneTabsModule extends ProjectModule {
 	public void init () {
 		tabsModule = containter.get(TabsModule.class);
 		loadedTabs = new Array<>();
+	}
+
+	@Override
+	public void dispose () {
+		for(SceneTab tab : loadedTabs)
+			tab.dispose();
 	}
 
 	public void open (EditorScene scene) {
