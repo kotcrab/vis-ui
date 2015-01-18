@@ -19,14 +19,14 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
-import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
+import com.kotcrab.vis.ui.widget.VisTextField;
 
 public class SceneInputListener extends InputListener {
 	private Table target;
@@ -39,7 +39,11 @@ public class SceneInputListener extends InputListener {
 
 	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-		Editor.instance.getStage().setKeyboardFocus(target);
+
+		//we don't want to steal text field focus, so if event occurred on it, do not change focus
+		if (event.getTarget() instanceof VisTextField == false)
+			Editor.instance.getStage().setKeyboardFocus(target);
+
 		Editor.instance.getStage().setScrollFocus(target);
 
 		return sceneMC.touchDown(event, Gdx.input.getX(), Gdx.input.getY(), pointer, button);
