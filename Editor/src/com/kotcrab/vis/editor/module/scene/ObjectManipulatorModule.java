@@ -21,15 +21,15 @@ package com.kotcrab.vis.editor.module.scene;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.scene.ObjectSelectorModule.ObjectSelectorListener;
-import com.kotcrab.vis.editor.ui.scene.ActorProperties;
+import com.kotcrab.vis.editor.ui.scene.ObjectProperties;
 
 public class ObjectManipulatorModule extends SceneModule {
-	private ActorProperties actorProperties;
+	private ObjectProperties objectProperties;
 	private ObjectSelectorModule objectSelector;
 
 	@Override
 	public void added () {
-		actorProperties = new ActorProperties();
+		objectProperties = new ObjectProperties();
 		objectSelector = sceneContainer.get(ObjectSelectorModule.class);
 	}
 
@@ -47,7 +47,7 @@ public class ObjectManipulatorModule extends SceneModule {
 	public void dispose () {
 	}
 
-	public ActorProperties getActorProperties () {
-		return actorProperties;
+	public ObjectProperties getObjectProperties () {
+		return objectProperties;
 	}
 }

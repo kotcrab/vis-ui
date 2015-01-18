@@ -24,11 +24,11 @@ import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
-public class ActorProperties extends VisTable {
+public class ObjectProperties extends VisTable {
 	private VisTable propertiesTable;
 	private Cell<VisTable> tableCell;
 
-	public ActorProperties () {
+	public ObjectProperties () {
 		super(true);
 		setBackground(VisUI.skin.getDrawable("window-bg"));
 

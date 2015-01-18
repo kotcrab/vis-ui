@@ -98,7 +98,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		leftColumn.add(new Widget()).fill().expand();
 
 		rightColumn.top();
-		rightColumn.add(sceneMC.get(ObjectManipulatorModule.class).getActorProperties()).expandX().fillX();
+		rightColumn.add(sceneMC.get(ObjectManipulatorModule.class).getObjectProperties()).expandX().fillX();
 		rightColumn.row();
 		rightColumn.add(new Widget()).fill().expand();
 
