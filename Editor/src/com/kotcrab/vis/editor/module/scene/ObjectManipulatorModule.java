@@ -22,6 +22,7 @@ package com.kotcrab.vis.editor.module.scene;
 import com.badlogic.gdx.utils.Array;
 
 public class ObjectManipulatorModule extends SceneModule {
+	private ObjectSelectorModule object;
 	private Array<SceneObject> objects;
 
 	@Override

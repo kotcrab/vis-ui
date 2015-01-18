@@ -30,7 +30,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 
-public class ObjectManagerModule extends SceneModule {
+public class ObjectSelectorModule extends SceneModule {
 	private CameraModule camera;
 	private RendererModule renderer;
 	private UndoModule undoModule;
