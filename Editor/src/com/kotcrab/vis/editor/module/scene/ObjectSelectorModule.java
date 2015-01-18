@@ -31,6 +31,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 
 public class ObjectSelectorModule extends SceneModule {
+	private ObjectSelectorListener listener;
+
 	private CameraModule camera;
 	private RendererModule renderer;
 	private UndoModule undoModule;
@@ -40,6 +42,7 @@ public class ObjectSelectorModule extends SceneModule {
 	private Array<SceneObject> objects;
 
 	private Array<Object2d> selectedObjects;
+
 
 	@Override
 	public void added () {
@@ -94,6 +97,7 @@ public class ObjectSelectorModule extends SceneModule {
 		return false;
 	}
 
+
 	private Object2d findObjectWithSmallestSurfaceArea (float x, float y) {
 		Object2d matchingObject = null;
 		float lastSurfaceArea = Float.MAX_VALUE;
@@ -128,6 +132,14 @@ public class ObjectSelectorModule extends SceneModule {
 		}
 
 		return false;
+	}
+
+	public void setListener (ObjectSelectorListener listener) {
+		this.listener = listener;
+	}
+
+	public interface ObjectSelectorListener {
+		public void selected (Array<Object2d> selected);
 	}
 
 	private class ObjectsRemoved implements UndoableAction {

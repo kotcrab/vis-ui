@@ -51,10 +51,9 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 	private UndoModule undoModule;
 	private CameraModule cameraModule;
 
-	private VisTable content;
+	private ContentTable content;
 
 	private SceneOutline outline;
-	private ActorProperties actorProperties;
 
 	private Target dropTarget;
 
@@ -79,7 +78,6 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		cameraModule = sceneMC.get(CameraModule.class);
 
 		outline = new SceneOutline();
-		actorProperties = new ActorProperties();
 
 		content = new ContentTable();
 
@@ -100,7 +98,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		leftColumn.add(new Widget()).fill().expand();
 
 		rightColumn.top();
-		rightColumn.add(actorProperties).height(300).expandX().fillX();
+		rightColumn.add(sceneMC.get(ObjectManipulatorModule.class).getActorProperties()).expandX().fillX();
 		rightColumn.row();
 		rightColumn.add(new Widget()).fill().expand();
 
@@ -151,6 +149,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		batch.setColor(1, 1, 1, 1);
 		batch.begin();
 
+		content.debugAll();
 		sceneMC.render(batch);
 
 		batch.end();

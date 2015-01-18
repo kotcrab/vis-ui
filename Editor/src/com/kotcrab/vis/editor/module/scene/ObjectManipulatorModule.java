@@ -20,22 +20,34 @@
 package com.kotcrab.vis.editor.module.scene;
 
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.scene.ObjectSelectorModule.ObjectSelectorListener;
+import com.kotcrab.vis.editor.ui.scene.ActorProperties;
 
 public class ObjectManipulatorModule extends SceneModule {
-	private ObjectSelectorModule object;
-	private Array<SceneObject> objects;
+	private ActorProperties actorProperties;
+	private ObjectSelectorModule objectSelector;
 
 	@Override
 	public void added () {
-		objects = scene.objects;
+		actorProperties = new ActorProperties();
+		objectSelector = sceneContainer.get(ObjectSelectorModule.class);
 	}
 
 	@Override
 	public void init () {
+		objectSelector.setListener(new ObjectSelectorListener() {
+			@Override
+			public void selected (Array<Object2d> selected) {
+
+			}
+		});
 	}
 
 	@Override
 	public void dispose () {
 	}
 
+	public ActorProperties getActorProperties () {
+		return actorProperties;
+	}
 }

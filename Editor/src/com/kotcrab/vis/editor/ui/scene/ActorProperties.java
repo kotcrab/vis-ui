@@ -19,18 +19,37 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class ActorProperties extends VisTable {
+	private VisTable propertiesTable;
+	private Cell<VisTable> tableCell;
+
 	public ActorProperties () {
 		super(true);
 		setBackground(VisUI.skin.getDrawable("window-bg"));
 
+		propertiesTable = new VisTable(true);
+
 		top();
 		add(new VisLabel("Actor Properties"));
-		row();
-		add(new VisLabel("No actor is selected!")).fillY().expandY();
+		tableCell = add(propertiesTable).fillY().expandY();
+	}
+
+	@Override
+	public void setVisible (boolean visible) {
+		super.setVisible(visible);
+		invalidateHierarchy();
+	}
+
+	@Override
+	public float getPrefHeight () {
+		if(isVisible())
+			return 300;
+		else
+			return 0;
 	}
 }
