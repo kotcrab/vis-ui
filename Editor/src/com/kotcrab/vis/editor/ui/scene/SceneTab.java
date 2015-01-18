@@ -23,8 +23,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
@@ -34,7 +34,6 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.*;
-import com.kotcrab.vis.editor.module.scene.UndoableAction;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
@@ -79,7 +78,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 		outline = new SceneOutline();
 
-		content = new ContentTable();
+
 
 		VisTable leftColumn = new VisTable(false);
 		VisTable rightColumn = new VisTable(false);
@@ -87,20 +86,22 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		leftColumn.top();
 		rightColumn.top();
 
-		// dummy widgets allows content table to get input events
+		content = new ContentTable();
+		content.setTouchable(Touchable.enabled);
+
 		content.add(leftColumn).width(300).fillY().expandY();
-		content.add(new Widget()).fill().expand();
+		content.add().fill().expand();
 		content.add(rightColumn).width(300).fillY().expandY();
 
 		leftColumn.top();
 		//leftColumn.add(outline).height(300).fillX().expandX();
 		leftColumn.row();
-		leftColumn.add(new Widget()).fill().expand();
+		leftColumn.add().fill().expand();
 
 		rightColumn.top();
 		rightColumn.add(sceneMC.get(ObjectManipulatorModule.class).getObjectProperties()).expandX().fillX();
 		rightColumn.row();
-		rightColumn.add(new Widget()).fill().expand();
+		rightColumn.add().fill().expand();
 
 		dropTarget = new Target(content) {
 			@Override
