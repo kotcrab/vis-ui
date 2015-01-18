@@ -93,6 +93,16 @@ public class TabbedPane {
 		return success;
 	}
 
+	public void removeAll () {
+		for (Tab tab : tabs)
+			tab.setPane(null);
+
+		tabs.clear();
+
+		rebuildTabsTable();
+		notifyListenersRemovedAll();
+	}
+
 	public void switchTab (int index) {
 		group.getButtons().get(index).setChecked(true);
 	}
@@ -121,7 +131,7 @@ public class TabbedPane {
 			button.addListener(new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
-					if(button.isChecked()) {
+					if (button.isChecked()) {
 						if (activeTab != null) activeTab.onHide();
 						activeTab = tab;
 						notifyListenersSwitched(tab);
@@ -130,7 +140,11 @@ public class TabbedPane {
 				}
 			});
 
-			if (tabs.size == 1) button.setChecked(true);
+			if (tabs.size == 1) {
+				button.setChecked(true);
+				notifyListenersSwitched(tab);
+			}
+
 			if (tab == activeTab) button.setChecked(true); // maintains current previous tab while rebuilding
 		}
 	}

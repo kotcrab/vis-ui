@@ -102,8 +102,10 @@ public class TabsModule extends EditorModule implements EventListener {
 			ProjectStatusEvent event = (ProjectStatusEvent) e;
 			if (event.status == ProjectStatusEvent.Status.Loaded)
 				tabbedPane.remove(startPageTab);
-			else
-				tabbedPane.add(0, startPageTab);
+			else {
+				tabbedPane.removeAll();
+				tabbedPane.add(startPageTab);
+			}
 		}
 
 		return false;

@@ -19,41 +19,27 @@
 
 package com.kotcrab.vis.editor;
 
-import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.editor.event.*;
-import com.kotcrab.vis.editor.module.EditorModuleContainer;
-import com.kotcrab.vis.editor.module.ProjectIOModule;
-import com.kotcrab.vis.editor.module.project.*;
-import com.kotcrab.vis.editor.module.project.SceneIOModule;
-import com.kotcrab.vis.editor.module.project.SceneTabsModule;
-import com.kotcrab.vis.editor.module.scene.InputModule;
-import com.kotcrab.vis.editor.ui.EditorFrame;
-import com.kotcrab.vis.editor.event.EventListener;
-import com.kotcrab.vis.editor.event.ProjectStatusEvent;
-import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
-import com.kotcrab.vis.editor.module.MenuBarModule;
-import com.kotcrab.vis.editor.module.StatusBarModule;
-import com.kotcrab.vis.editor.module.TabsModule;
-import com.kotcrab.vis.editor.module.ToolbarModule;
-import com.kotcrab.vis.editor.module.project.AssetsManagerUIModule;
-import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.module.project.Project;
-import com.kotcrab.vis.editor.module.project.ProjectInfoTabModule;
-import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import com.kotcrab.vis.editor.module.project.TextureCacheModule;
-import com.kotcrab.vis.editor.module.scene.EditorScene;
-import com.kotcrab.vis.editor.ui.tab.Tab;
-import com.kotcrab.vis.editor.ui.tab.TabViewMode;
-import com.kotcrab.vis.editor.util.EditorException;
-
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.kotcrab.vis.editor.event.Event;
+import com.kotcrab.vis.editor.event.EventListener;
+import com.kotcrab.vis.editor.event.ProjectStatusEvent;
+import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
+import com.kotcrab.vis.editor.event.StatusBarEvent;
+import com.kotcrab.vis.editor.module.*;
+import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.module.scene.EditorScene;
+import com.kotcrab.vis.editor.module.scene.InputModule;
+import com.kotcrab.vis.editor.ui.EditorFrame;
+import com.kotcrab.vis.editor.ui.tab.Tab;
+import com.kotcrab.vis.editor.ui.tab.TabViewMode;
+import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.DialogUtils;
@@ -66,7 +52,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private EditorFrame frame;
 
 	private Stage stage;
-	private Table root;
 
 	// TODO move to module
 	private Table mainContentTable;
@@ -107,7 +92,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		projectContentTable.add(new VisLabel("Project Content Manager has not been loaded yet"));
 
-		root = new Table();
+		Table root = new Table();
 		root.setFillParent(true);
 		stage.addActor(root);
 
@@ -115,7 +100,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC = new ProjectModuleContainer(editorMC);
 
 		editorMC.add(new ProjectIOModule());
-		editorMC.add(new InputModule(mainContentTable));
+		editorMC.add(inputModule = new InputModule(mainContentTable));
 
 		editorMC.add(new MenuBarModule(projectMC));
 		editorMC.add(new ToolbarModule());
@@ -123,8 +108,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(new StatusBarModule());
 
 		editorMC.init();
-
-		inputModule = editorMC.get(InputModule.class);
 
 		root.add(editorMC.get(MenuBarModule.class).getTable()).fillX().expandX().row();
 		root.add(editorMC.get(ToolbarModule.class).getTable()).fillX().expandX().row();
@@ -139,8 +122,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			e.printStackTrace();
 		}
 
-		FileHandle scene =Gdx.files.absolute("F:\\Poligon\\TestProject\\vis\\assets\\scene\\test.scene");
-		if(scene.exists()) {
+		FileHandle scene = Gdx.files.absolute("F:\\Poligon\\TestProject\\vis\\assets\\scene\\test.scene");
+		if (scene.exists()) {
 			EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
 			projectMC.get(SceneTabsModule.class).open(testScene);
 		}
