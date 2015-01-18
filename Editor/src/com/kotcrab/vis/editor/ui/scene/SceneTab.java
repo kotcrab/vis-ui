@@ -78,8 +78,6 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 		outline = new SceneOutline();
 
-
-
 		VisTable leftColumn = new VisTable(false);
 		VisTable rightColumn = new VisTable(false);
 
@@ -91,7 +89,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 		content.add(leftColumn).width(300).fillY().expandY();
 		content.add().fill().expand();
-		content.add(rightColumn).width(300).fillY().expandY();
+		content.add(rightColumn).width(270).fillY().expandY();
 
 		leftColumn.top();
 		//leftColumn.add(outline).height(300).fillX().expandX();
@@ -150,7 +148,6 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		batch.setColor(1, 1, 1, 1);
 		batch.begin();
 
-		content.debugAll();
 		sceneMC.render(batch);
 
 		batch.end();
