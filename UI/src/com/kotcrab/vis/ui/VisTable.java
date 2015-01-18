@@ -26,10 +26,10 @@ public class VisTable extends Table {
 		super(VisUI.skin);
 	}
 
-	/** @param setVisDefautls if true default vis spacing defaults will be set */
-	public VisTable (boolean setVisDefautls) {
+	/** @param setVisDefaults if true default vis spacing defaults will be set */
+	public VisTable (boolean setVisDefaults) {
 		super(VisUI.skin);
-		if (setVisDefautls) TableUtils.setSpaceDefaults(this);
+		if (setVisDefaults) TableUtils.setSpaceDefaults(this);
 	}
 
 	/** Adds {@link Separator} widget to table with padding top, bottom 2px with fill and expand properties and inserts new row
