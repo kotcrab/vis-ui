@@ -8,6 +8,9 @@
 -API Addition: constructor VisImageButton (String styleName)
 -API Addition: VisWindow.addCloseButton()
 -API Addition: VisTextField.focusField()
+-API Addition: DialogUtils.showInputDialog (Stage stage, String title, String fieldTitle, InputDialogListener listener)
+-API Addition: DialogUtils.showInputDialog (Stage stage, String title, String fieldTitle, InputValidator validator, InputDialogListener listener)
+-API Addition: VisTextField.focusField()
 -API Change: VisUI.setDefaultTitleAlign and VisUI.getDefaultTitleAlign (typo fixed)
 
 [0.4.1]
