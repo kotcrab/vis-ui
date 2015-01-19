@@ -29,11 +29,11 @@ import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.ui.widget.VisTextField;
 
 public class SceneInputListener extends InputListener {
-	private Table target;
+	private Table focusTarget;
 	private SceneModuleContainer sceneMC;
 
 	public SceneInputListener (Table focusTarget, SceneModuleContainer sceneMC) {
-		this.target = focusTarget;
+		this.focusTarget = focusTarget;
 		this.sceneMC = sceneMC;
 	}
 
@@ -42,9 +42,9 @@ public class SceneInputListener extends InputListener {
 
 		//we don't want to steal text field focus, so if event occurred on it, do not change focus
 		if (event.getTarget() instanceof VisTextField == false)
-			Editor.instance.getStage().setKeyboardFocus(target);
+			Editor.instance.getStage().setKeyboardFocus(focusTarget);
 
-		Editor.instance.getStage().setScrollFocus(target);
+		Editor.instance.getStage().setScrollFocus(focusTarget);
 
 		return sceneMC.touchDown(event, Gdx.input.getX(), Gdx.input.getY(), pointer, button);
 	}
