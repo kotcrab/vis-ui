@@ -12,6 +12,7 @@
 -API Addition: DialogUtils.showInputDialog (Stage stage, String title, String fieldTitle, InputValidator validator, InputDialogListener listener)
 -API Addition: VisTextField.focusField()
 -API Change: VisUI.setDefaultTitleAlign and VisUI.getDefaultTitleAlign (typo fixed)
+-API Change: Removed deprecated TableUtils.setColumnsDefaults(Table)
 
 [0.4.1]
 -Fixed FileChooser padding when scrollbar was showed (because LibGDX scrollpane was probably fixed as well) 

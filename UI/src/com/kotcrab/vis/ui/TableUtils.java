@@ -24,10 +24,4 @@ public class TableUtils {
 		table.defaults().spaceBottom(8);
 		table.defaults().spaceRight(6);
 	}
-
-	@Deprecated
-	public static void setColumnsDefaults (Table table) {
-		table.columnDefaults(0).spaceLeft(3);
-		table.columnDefaults(table.getColumns()).spaceRight(3);
-	}
 }
