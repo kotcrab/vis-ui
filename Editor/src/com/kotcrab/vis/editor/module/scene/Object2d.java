@@ -35,10 +35,6 @@ public class Object2d extends SceneObject {
 		sprite.setPosition(x, y);
 	}
 
-	public SpriteData getSpriteData () {
-		return data;
-	}
-
 	public void saveSpriteDataValuesToData () {
 		data.save(sprite);
 	}
