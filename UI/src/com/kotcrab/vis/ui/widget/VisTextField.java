@@ -684,6 +684,18 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		return isWordCharacter(c);
 	}
 
+	/** Focuses this field, field must be added to stage before this method can be called */
+	public void focusField () {
+		if (disabled) return;
+		FocusManager.getFocus(VisTextField.this);
+		setCursorPosition(0);
+		selectionStart = cursor;
+		Stage stage = getStage();
+		if (stage != null) stage.setKeyboardFocus(VisTextField.this);
+		keyboard.show(true);
+		hasSelection = true;
+	}
+
 	@Override
 	public void focusLost () {
 		drawBorder = false;
