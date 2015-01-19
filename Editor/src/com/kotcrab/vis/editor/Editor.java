@@ -128,8 +128,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			projectMC.get(SceneTabsModule.class).open(testScene);
 		}
 		//debug end
-
-		DialogUtils.showInputDialog(getStage(), "Input something please", "Name:");
 	}
 
 	@Override
