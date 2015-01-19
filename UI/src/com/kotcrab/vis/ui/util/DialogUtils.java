@@ -55,7 +55,7 @@ public class DialogUtils {
 
 	private static class ErrorDialog extends VisDialog {
 		final int OK = 0;
-		final int DETIALS = 1;
+		final int DETAILS = 1;
 
 		private VisTable detailsTable = new VisTable(true);
 		private Cell<?> detailsCell;
@@ -88,7 +88,7 @@ public class DialogUtils {
 				getContentTable().row();
 				detailsCell = getContentTable().add(detailsTable);
 				detailsCell.setActor(null);
-				button("Details", DETIALS);
+				button("Details", DETAILS);
 			}
 
 			button("OK", OK);
@@ -100,7 +100,7 @@ public class DialogUtils {
 		protected void result (Object object) {
 			int result = (Integer)object;
 
-			if (result == DETIALS) {
+			if (result == DETAILS) {
 				detailsCell.setActor(detailsCell.hasActor() ? null : detailsTable);
 				pack();
 				centerWindow();
