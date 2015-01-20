@@ -38,7 +38,7 @@ public class ObjectManipulatorModule extends SceneModule {
 		objectSelector.setListener(new ObjectSelectorListener() {
 			@Override
 			public void selected (Array<Object2d> selected) {
-
+				objectProperties.setValuesToFields(selected);
 			}
 		});
 	}

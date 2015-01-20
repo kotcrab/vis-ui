@@ -43,7 +43,6 @@ public class ObjectSelectorModule extends SceneModule {
 
 	private Array<Object2d> selectedObjects;
 
-
 	@Override
 	public void added () {
 		this.objects = scene.objects;
@@ -69,13 +68,16 @@ public class ObjectSelectorModule extends SceneModule {
 		if (selectedObjects.size > 0) {
 			batch.end();
 
-			Rectangle bounds = selectedObjects.get(0).sprite.getBoundingRectangle();
 
 			shapeRenderer.setColor(Color.WHITE);
 			shapeRenderer.begin(ShapeType.Line);
-			shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+
+			for (Object2d object : selectedObjects) {
+				Rectangle bounds = object.sprite.getBoundingRectangle();
+				shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
+			}
+
 			shapeRenderer.end();
-			Gdx.gl.glLineWidth(1);
 
 			batch.begin();
 		}
@@ -88,9 +90,14 @@ public class ObjectSelectorModule extends SceneModule {
 			x = camera.getInputX();
 			y = camera.getInputY();
 
-			selectedObjects.clear();
+			//multiple select made easy
+			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) selectedObjects.clear();
+
 			Object2d result = findObjectWithSmallestSurfaceArea(x, y);
-			if (result != null) selectedObjects.add(result);
+			if (result != null && selectedObjects.contains(result, true) == false) selectedObjects.add(result);
+
+			if (listener != null) listener.selected(selectedObjects);
+
 			return true;
 		}
 
@@ -98,6 +105,12 @@ public class ObjectSelectorModule extends SceneModule {
 	}
 
 
+	/**
+	 * Returns object with smallest surface area that contains point x,y.
+	 * <p/>
+	 * When selecting objects, and few of them are overlapping, selecting object with smallest
+	 * area gives better results than just selecting first one.
+	 */
 	private Object2d findObjectWithSmallestSurfaceArea (float x, float y) {
 		Object2d matchingObject = null;
 		float lastSurfaceArea = Float.MAX_VALUE;
