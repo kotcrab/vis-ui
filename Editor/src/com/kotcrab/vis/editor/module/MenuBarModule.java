@@ -95,6 +95,21 @@ public class MenuBarModule extends EditorModule {
 		Menu menu = new Menu("File");
 		menuBar.addMenu(menu);
 
+		MenuItem closeProject = new MenuItem("Close project", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				editor.requestProjectUnload();
+			}
+		});
+
+		MenuItem settings = new MenuItem("Settings", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				editor.showSettingsWindow();
+			}
+		});
+
+
 		menu.addItem(new MenuItem("New project...", Assets.getIcon("new"), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
@@ -109,15 +124,12 @@ public class MenuBarModule extends EditorModule {
 			}
 		}));
 
-		MenuItem closeProject = new MenuItem("Close project", new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				editor.requestProjectUnload();
-			}
-		});
 
 		menu.addItem(closeProject);
-		controller.addButton(closeProject);
+
+		menu.addSeparator();
+
+		menu.addItem(settings);
 
 		menu.addSeparator();
 
@@ -127,6 +139,8 @@ public class MenuBarModule extends EditorModule {
 				editor.requestExit();
 			}
 		}));
+
+		controller.addButton(closeProject);
 	}
 
 	private void createSceneMenu () {
