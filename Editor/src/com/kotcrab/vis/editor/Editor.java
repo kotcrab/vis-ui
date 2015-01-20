@@ -52,6 +52,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private EditorFrame frame;
 
 	private Stage stage;
+	private Table root;
 
 	// TODO move to module
 	private Table mainContentTable;
@@ -84,36 +85,13 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		stage = new Stage(new ScreenViewport());
 		Gdx.input.setInputProcessor(stage);
 
-		mainContentTable = new Table();
-		tabContentTable = new Table();
-		projectContentTable = new VisTable(true);
-		splitPane = new VisSplitPane(null, null, true);
-		splitPane.setSplitAmount(0.78f);
-
-		projectContentTable.add(new VisLabel("Project Content Manager has not been loaded yet"));
-
-		Table root = new Table();
+		root = new Table();
 		root.setFillParent(true);
 		stage.addActor(root);
 
-		editorMC = new EditorModuleContainer();
-		projectMC = new ProjectModuleContainer(editorMC);
-
-		editorMC.add(new ProjectIOModule());
-		editorMC.add(inputModule = new InputModule(mainContentTable));
-
-		editorMC.add(new MenuBarModule(projectMC));
-		editorMC.add(new ToolbarModule());
-		editorMC.add(new TabsModule());
-		editorMC.add(new StatusBarModule());
-
-		editorMC.init();
-
-		root.add(editorMC.get(MenuBarModule.class).getTable()).fillX().expandX().row();
-		root.add(editorMC.get(ToolbarModule.class).getTable()).fillX().expandX().row();
-		root.add(editorMC.get(TabsModule.class).getTable()).fillX().expandX().row();
-		root.add(mainContentTable).expand().fill().row();
-		root.add(editorMC.get(StatusBarModule.class).getTable()).fillX().expandX().row();
+		createUI();
+		createModuleContainers();
+		createModulesUI();
 
 		// debug section
 		try {
@@ -129,6 +107,40 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		}
 		//debug end
 	}
+
+	private void createUI () {
+		mainContentTable = new Table();
+		tabContentTable = new Table();
+		projectContentTable = new VisTable(true);
+		splitPane = new VisSplitPane(null, null, true);
+		splitPane.setSplitAmount(0.78f);
+
+		projectContentTable.add(new VisLabel("Project Content Manager has not been loaded yet"));
+	}
+
+	private void createModuleContainers () {
+		editorMC = new EditorModuleContainer();
+		projectMC = new ProjectModuleContainer(editorMC);
+
+		editorMC.add(new ProjectIOModule());
+		editorMC.add(inputModule = new InputModule(mainContentTable));
+
+		editorMC.add(new MenuBarModule(projectMC));
+		editorMC.add(new ToolbarModule());
+		editorMC.add(new TabsModule());
+		editorMC.add(new StatusBarModule());
+
+		editorMC.init();
+	}
+
+	private void createModulesUI () {
+		root.add(editorMC.get(MenuBarModule.class).getTable()).fillX().expandX().row();
+		root.add(editorMC.get(ToolbarModule.class).getTable()).fillX().expandX().row();
+		root.add(editorMC.get(TabsModule.class).getTable()).fillX().expandX().row();
+		root.add(mainContentTable).expand().fill().row();
+		root.add(editorMC.get(StatusBarModule.class).getTable()).fillX().expandX().row();
+	}
+
 
 	@Override
 	public void resize (int width, int height) {
@@ -231,5 +243,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	public VisTable getProjectContentTable () {
 		return projectContentTable;
+	}
+
+	public void showSettingsWindow () {
 	}
 }
