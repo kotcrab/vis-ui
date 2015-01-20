@@ -103,13 +103,13 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		VisTable editorTable = editor.getProjectContentTable();
 		editorTable.setBackground("window-bg");
 
-		tabsModule = containter.get(TabsModule.class);
+		tabsModule = container.get(TabsModule.class);
 
-		fileAccess = projectContainter.get(FileAccessModule.class);
-		assetsWatcher = projectContainter.get(AssetsWatcherModule.class);
-		textureCache = projectContainter.get(TextureCacheModule.class);
-		sceneIO = projectContainter.get(SceneIOModule.class);
-		sceneTabsModule = projectContainter.get(SceneTabsModule.class);
+		fileAccess = projectContainer.get(FileAccessModule.class);
+		assetsWatcher = projectContainer.get(AssetsWatcherModule.class);
+		textureCache = projectContainer.get(TextureCacheModule.class);
+		sceneIO = projectContainer.get(SceneIOModule.class);
+		sceneTabsModule = projectContainer.get(SceneTabsModule.class);
 
 		visFolder = fileAccess.getVisFolder();
 		assetsFolder = fileAccess.getAssetsFolder();

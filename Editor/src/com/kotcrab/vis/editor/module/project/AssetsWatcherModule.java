@@ -28,7 +28,7 @@ public class AssetsWatcherModule extends ProjectModule {
 
 	@Override
 	public void init () {
-		FileAccessModule fileAccess = projectContainter.get(FileAccessModule.class);
+		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
 		FileHandle assetsFolder = fileAccess.getAssetsFolder();
 
 		watcher = new DirectoryWatcher(assetsFolder.file().toPath());

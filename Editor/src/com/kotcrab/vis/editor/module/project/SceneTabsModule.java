@@ -31,7 +31,7 @@ public class SceneTabsModule extends ProjectModule {
 
 	@Override
 	public void init () {
-		tabsModule = containter.get(TabsModule.class);
+		tabsModule = container.get(TabsModule.class);
 		loadedTabs = new Array<>();
 	}
 
@@ -45,7 +45,7 @@ public class SceneTabsModule extends ProjectModule {
 		SceneTab oldTab = getTabByScene(scene);
 
 		if (oldTab == null) {
-			SceneTab tab = new SceneTab(scene, projectContainter);
+			SceneTab tab = new SceneTab(scene, projectContainer);
 			loadedTabs.add(tab);
 			tabsModule.addTab(tab);
 		} else

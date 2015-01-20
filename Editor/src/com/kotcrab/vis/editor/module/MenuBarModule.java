@@ -80,12 +80,12 @@ public class MenuBarModule extends EditorModule {
 
 	@Override
 	public void init () {
-		projectIOModule = containter.get(ProjectIOModule.class);
+		projectIOModule = container.get(ProjectIOModule.class);
 	}
 
 	private void loadProject (FileHandle file) {
 		try {
-			containter.get(ProjectIOModule.class).load(file);
+			container.get(ProjectIOModule.class).load(file);
 		} catch (EditorException e) {
 			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
 		}

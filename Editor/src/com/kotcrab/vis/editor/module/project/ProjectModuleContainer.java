@@ -35,7 +35,7 @@ public class ProjectModuleContainer extends BaseModuleContainer<ProjectModule> {
 		if (project == null) throw new IllegalStateException("Module cannot be added before project has been set!");
 
 		module.setProject(project);
-		module.setProjectModuleContainter(this);
+		module.setProjectModuleContainer(this);
 		module.setContainer(editorMC);
 
 		super.add(module);

@@ -43,8 +43,8 @@ public class SceneIOModule extends ProjectModule {
 
 	@Override
 	public void init () {
-		cacheModule = projectContainter.get(TextureCacheModule.class);
-		fileAccessModule = projectContainter.get(FileAccessModule.class);
+		cacheModule = projectContainer.get(TextureCacheModule.class);
+		fileAccessModule = projectContainer.get(FileAccessModule.class);
 
 		visFolder = fileAccessModule.getVisFolder();
 

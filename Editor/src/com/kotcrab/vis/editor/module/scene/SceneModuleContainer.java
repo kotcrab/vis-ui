@@ -43,7 +43,7 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 	@Override
 	public void add (SceneModule module) {
 		module.setProject(projectModuleContainer.getProject());
-		module.setProjectModuleContainter(projectModuleContainer);
+		module.setProjectModuleContainer(projectModuleContainer);
 		module.setContainer(editorModuleContainer);
 		module.setSceneObjects(this, scene);
 

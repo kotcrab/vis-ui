@@ -40,7 +40,7 @@ public class UndoModule extends SceneModule {
 		undoList = new Array<>();
 		redoList = new Array<>();
 
-		input = containter.get(InputModule.class);
+		input = container.get(InputModule.class);
 		input.addListener(new UndoInputListener());
 	}
 

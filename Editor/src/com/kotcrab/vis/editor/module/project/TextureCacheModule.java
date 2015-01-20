@@ -57,8 +57,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	@Override
 	public void init () {
-		FileAccessModule fileAccess = projectContainter.get(FileAccessModule.class);
-		watcher = projectContainter.get(AssetsWatcherModule.class);
+		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
+		watcher = projectContainer.get(AssetsWatcherModule.class);
 
 		regions = new ObjectMap<>();
 

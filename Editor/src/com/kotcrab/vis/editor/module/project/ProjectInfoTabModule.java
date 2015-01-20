@@ -32,7 +32,7 @@ public class ProjectInfoTabModule extends ProjectModule implements EventListener
 
 	@Override
 	public void init () {
-		tabsModule = containter.get(TabsModule.class);
+		tabsModule = container.get(TabsModule.class);
 		tab = new ProjectInfoTab(project);
 		tabsModule.addTab(tab);
 	}

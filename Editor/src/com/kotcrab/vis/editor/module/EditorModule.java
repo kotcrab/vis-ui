@@ -20,9 +20,9 @@
 package com.kotcrab.vis.editor.module;
 
 public class EditorModule extends BaseModule {
-	protected EditorModuleContainer containter;
+	protected EditorModuleContainer container;
 
 	public void setContainer (EditorModuleContainer container) {
-		this.containter = container;
+		this.container = container;
 	}
 }

@@ -23,13 +23,13 @@ import com.kotcrab.vis.editor.module.EditorModule;
 
 public abstract class ProjectModule extends EditorModule {
 	protected Project project;
-	protected ProjectModuleContainer projectContainter;
+	protected ProjectModuleContainer projectContainer;
 
 	public void setProject (Project project) {
 		this.project = project;
 	}
 
-	public void setProjectModuleContainter (ProjectModuleContainer container) {
-		this.projectContainter = container;
+	public void setProjectModuleContainer (ProjectModuleContainer container) {
+		this.projectContainer = container;
 	}
 }
