@@ -3,6 +3,7 @@
 -API Addition: VisValidableTextField.isValidationEnabled()
 -API Addition: VisValidableTextField.setDisregardInvalidInput(boolean)
 -API Addition: VisValidableTextField.isDisregardInvalidInput()
+-API Addition: VisValidableTextField.setProgrammaticChangeEvents(boolean)
 -API Addition: constructor VisValidableTextField (boolean disregardInvalidInput)
 -API Addition: constructor VisValidableTextField (InputValidator validator, boolean disregardInvalidInput)
 -API Addition: constructor VisImageButton (String styleName)
@@ -10,7 +11,6 @@
 -API Addition: VisTextField.focusField()
 -API Addition: DialogUtils.showInputDialog (Stage stage, String title, String fieldTitle, InputDialogListener listener)
 -API Addition: DialogUtils.showInputDialog (Stage stage, String title, String fieldTitle, InputValidator validator, InputDialogListener listener)
--API Addition: VisTextField.focusField()
 -API Change: VisUI.setDefaultTitleAlign and VisUI.getDefaultTitleAlign (typo fixed)
 -API Change: Removed deprecated TableUtils.setColumnsDefaults(Table)
 

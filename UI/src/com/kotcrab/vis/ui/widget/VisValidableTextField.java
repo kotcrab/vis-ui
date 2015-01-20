@@ -27,6 +27,7 @@ public class VisValidableTextField extends VisTextField {
 	private Array<InputValidator> validators = new Array<InputValidator>();
 	private boolean validationEnabled = true;
 	private boolean disregardInvalidInput = false;
+	private boolean programmaticChangeEvents = true;
 
 	public VisValidableTextField () {
 		super();
@@ -88,7 +89,7 @@ public class VisValidableTextField extends VisTextField {
 		super.setText(str);
 
 		if (validators != null) validateInput();
-		fire(new ChangeListener.ChangeEvent());
+		if (programmaticChangeEvents) fire(new ChangeListener.ChangeEvent());
 
 		previousText = text;
 	}
@@ -161,9 +162,17 @@ public class VisValidableTextField extends VisTextField {
 	 * non-number character won't do anything.
 	 * <p/>
 	 * Changing this does not affect already typed text
-	 * @param disregardInvalidInput if true input disregard will be enalbed false otherwise
+	 * @param disregardInvalidInput if true input disregard will be enabled false otherwise
 	 */
 	public void setDisregardInvalidInput (boolean disregardInvalidInput) {
 		this.disregardInvalidInput = disregardInvalidInput;
+	}
+
+	/**
+	 * If false events font be fired when text was changed using {@link #setText(String)}
+	 * @param programmaticChangeEvents enable or disable firing programmatic change events
+	 */
+	public void setProgrammaticChangeEvents (boolean programmaticChangeEvents) {
+		this.programmaticChangeEvents = programmaticChangeEvents;
 	}
 }
