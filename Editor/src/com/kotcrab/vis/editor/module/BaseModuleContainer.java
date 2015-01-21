@@ -44,10 +44,14 @@ public class BaseModuleContainer<T extends BaseModule> {
 	public <C> C get (Class<C> moduleClass) {
 		for (int i = 0; i < modules.size; i++) {
 			BaseModule m = modules.get(i);
-			if (m.getClass() == moduleClass) return (C)m;
+			if (m.getClass() == moduleClass) return (C) m;
 		}
 
 		throw new IllegalStateException("Failed to get module: '" + moduleClass + "' from ModuleContainer, module not found!");
+	}
+
+	public Array<T> getModules () {
+		return modules;
 	}
 
 	public void dispose () {
