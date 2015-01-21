@@ -19,21 +19,20 @@
 
 package com.kotcrab.vis.editor.module;
 
-import com.kotcrab.vis.editor.Assets;
-import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import com.kotcrab.vis.editor.module.project.SceneIOModule;
-import com.kotcrab.vis.editor.ui.NewProjectDialog;
-import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
-import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
-import com.kotcrab.vis.editor.util.EditorException;
-
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import com.kotcrab.vis.editor.module.project.SceneIOModule;
+import com.kotcrab.vis.editor.ui.NewProjectDialog;
+import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
+import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
+import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
@@ -102,7 +101,7 @@ public class MenuBarModule extends EditorModule {
 			}
 		});
 
-		MenuItem settings = new MenuItem("Settings", new ChangeListener() {
+		MenuItem settings = new MenuItem("Settings", Assets.getIcon("settings"), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				editor.showSettingsWindow();
@@ -169,7 +168,7 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(new MenuItem("About"));
 	}
 
-	public Table getTable(){
+	public Table getTable () {
 		return menuBar.getTable();
 	}
 

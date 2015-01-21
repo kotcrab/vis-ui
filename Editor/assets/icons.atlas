@@ -74,9 +74,16 @@ search-big
   orig: 64, 64
   offset: 0, 0
   index: -1
-settings-view
+settings
   rotate: false
   xy: 50, 2
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+settings-view
+  rotate: false
+  xy: 74, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
