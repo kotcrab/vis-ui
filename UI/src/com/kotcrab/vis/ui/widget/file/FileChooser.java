@@ -16,11 +16,6 @@
 
 package com.kotcrab.vis.ui.widget.file;
 
-import java.io.File;
-import java.io.FileFilter;
-
-import javax.swing.filechooser.FileSystemView;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
@@ -39,83 +34,51 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.VisDialog;
-import com.kotcrab.vis.ui.widget.VisImageButton;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisScrollPane;
-import com.kotcrab.vis.ui.widget.VisSplitPane;
-import com.kotcrab.vis.ui.widget.VisTextButton;
-import com.kotcrab.vis.ui.widget.VisTextField;
-import com.kotcrab.vis.ui.widget.VisWindow;
+import com.kotcrab.vis.ui.widget.*;
 
-/** Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called
- * @author Pawel Pastuszak */
+import javax.swing.filechooser.FileSystemView;
+import java.io.File;
+import java.io.FileFilter;
+
+/**
+ * Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called
+ * @author Pawel Pastuszak
+ */
 public class FileChooser extends VisWindow {
 	private static final Drawable highlightBg = VisUI.skin.getDrawable("list-selection");
-
-	public enum Mode {
-		OPEN, SAVE
-	};
-
-	public enum SelectionMode {
-		FILES, DIRECTORIES, FILES_AND_DIRECTORIES
-	}
-
 	private Mode mode;
+	;
 	private SelectionMode selectionMode = SelectionMode.FILES;
 	private boolean multiselectionEnabled = false;
 	private FileChooserListener listener;
 	private int multiselectKey = Keys.CONTROL_LEFT;
-
 	private FileFilter fileFilter = new DefaultFileFilter();
 	private FileHandle currentDirectory;
-
 	private FileChooserStyle style;
 	private FileChooserLocale locale;
-
 	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
-
 	private Array<FileItem> selectedItems = new Array<FileItem>();
 	private ShortcutItem selectedShortcut;
-
 	private Array<FileHandle> history;
 	private int historyIndex = 0;
-
 	private FavoritesIO favoritesIO;
 	private Array<FileHandle> favorites;
-
 	private Array<ShortcutItem> fileRootsCache = new Array<ShortcutItem>();
-
 	// UI
 	private VisSplitPane splitPane;
-
 	private VisTable fileTable;
 	private VisScrollPane fileScrollPane;
 	private VisTable fileScrollPaneTable;
-
 	private VisTable shortcutsTable;
 	private VisScrollPane shorcutsScrollPane;
 	private VisTable shortcutsScrollPaneTable;
-
 	private VisTextButton cancelButton;
 	private VisTextButton confirmButton;
-
 	private VisImageButton backButton;
 	private VisImageButton forwardButton;
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextField;
-
 	private FilePopupMenu fileMenu;
-
-	public static String getFavoritesPrefsName () {
-		return FavoritesIO.getFavoritesPrefsName();
-	}
-
-	/** Sets file name that will be used to store favorites, if not changed default will be used that may be shared with other
-	 * programs, should be package name e.g. com.seriouscompay.seriousprogram */
-	public static void setFavoritesPrefsName (String name) {
-		FavoritesIO.setFavoritesPrefsName(name);
-	}
 
 	public FileChooser (Mode mode) {
 		super("");
@@ -152,12 +115,25 @@ public class FileChooser extends VisWindow {
 		init();
 	}
 
+	public static String getFavoritesPrefsName () {
+		return FavoritesIO.getFavoritesPrefsName();
+	}
+
+	/**
+	 * Sets file name that will be used to store favorites, if not changed default will be used that may be shared with other
+	 * programs, should be package name e.g. com.seriouscompay.seriousprogram
+	 */
+	public static void setFavoritesPrefsName (String name) {
+		FavoritesIO.setFavoritesPrefsName(name);
+	}
+
 	private void init () {
 		style = new FileChooserStyle();
 
 		setModal(true);
 		setResizable(true);
 		setMovable(true);
+		addCloseButton();
 
 		favoritesIO = new FavoritesIO();
 		favorites = favoritesIO.loadFavorites();
@@ -334,6 +310,12 @@ public class FileChooser extends VisWindow {
 		}
 	}
 
+	@Override
+	protected void close () {
+		listener.canceled();
+		super.close();
+	}
+
 	private void notifyListnerAndCloseDialog (Array<FileHandle> files) {
 		if (files == null) return;
 
@@ -401,7 +383,7 @@ public class FileChooser extends VisWindow {
 			@Override
 			@SuppressWarnings("unchecked")
 			protected void result (Object object) {
-				notifyListnerAndCloseDialog((Array<FileHandle>)object);
+				notifyListnerAndCloseDialog((Array<FileHandle>) object);
 			}
 		};
 		dialog.text(filesList.size == 1 ? locale.popupFileExistOverwrite : locale.popupMutipleFileExistOverwrite);
@@ -478,7 +460,8 @@ public class FileChooser extends VisWindow {
 		Array<FileHandle> fileList = FileUtils.sortFiles(files);
 
 		for (FileHandle f : fileList)
-			if (f.file() == null || f.file().isHidden() == false) fileTable.add(new FileItem(f, null)).expand().fill().row();
+			if (f.file() == null || f.file().isHidden() == false)
+				fileTable.add(new FileItem(f, null)).expand().fill().row();
 
 		fileScrollPane.setScrollX(0);
 		fileScrollPane.setScrollY(0);
@@ -490,17 +473,21 @@ public class FileChooser extends VisWindow {
 		rebuildFileList();
 	}
 
-	/** Adds favorite to favorite list
-	 * @param favourite to be added */
+	/**
+	 * Adds favorite to favorite list
+	 * @param favourite to be added
+	 */
 	public void addFavorite (FileHandle favourite) {
 		favorites.add(favourite);
 		favoritesIO.saveFavorites(favorites);
 		rebuildShortcutsList(false);
 	}
 
-	/** Removes favorite from current favorite list
+	/**
+	 * Removes favorite from current favorite list
 	 * @param favorite to be removed (path to favorite)
-	 * @return true if favorite was removed, false otherwise */
+	 * @return true if favorite was removed, false otherwise
+	 */
 	public boolean removeFavorite (FileHandle favorite) {
 		boolean removed = favorites.removeValue(favorite, false);
 		favoritesIO.saveFavorites(favorites);
@@ -511,7 +498,8 @@ public class FileChooser extends VisWindow {
 	}
 
 	public void setVisble (boolean visible) {
-		if (isVisible() == false && visible) deselectAll(); // reset selected item when dialog is changed from invisible to visible
+		if (isVisible() == false && visible)
+			deselectAll(); // reset selected item when dialog is changed from invisible to visible
 
 		super.setVisible(visible);
 	}
@@ -618,7 +606,8 @@ public class FileChooser extends VisWindow {
 
 	private void setDirectory (FileHandle directory, boolean rebuildHistory) {
 		if (directory.exists() == false) throw new IllegalStateException("Provided directory does not exist!");
-		if (directory.isDirectory() == false) throw new IllegalStateException("Provided directory path is a file, not directory!");
+		if (directory.isDirectory() == false)
+			throw new IllegalStateException("Provided directory path is a file, not directory!");
 
 		currentDirectory = directory;
 		rebuildFileList();
@@ -667,6 +656,34 @@ public class FileChooser extends VisWindow {
 		if (listener == null) listener = new FileChooserAdapter();
 	}
 
+	@Override
+	protected void setStage (Stage stage) {
+		super.setStage(stage);
+		deselectAll();
+	}
+
+	public enum Mode {
+		OPEN, SAVE
+	}
+
+	public enum SelectionMode {
+		FILES, DIRECTORIES, FILES_AND_DIRECTORIES
+	}
+
+	static public class FileChooserStyle {
+		public Drawable iconArrowLeft;
+		public Drawable iconArrowRight;
+		public Drawable iconFolder;
+		public Drawable iconDrive;
+
+		public FileChooserStyle () {
+			iconArrowLeft = VisUI.skin.getDrawable("icon-arrow-left");
+			iconArrowRight = VisUI.skin.getDrawable("icon-arrow-right");
+			iconFolder = VisUI.skin.getDrawable("icon-folder");
+			iconDrive = VisUI.skin.getDrawable("icon-drive");
+		}
+	}
+
 	private class DefaultFileFilter implements FileFilter {
 		@Override
 		public boolean accept (File f) {
@@ -678,9 +695,9 @@ public class FileChooser extends VisWindow {
 	}
 
 	private class FileItem extends Table {
+		public FileHandle file;
 		private VisLabel name;
 		private VisLabel size;
-		public FileHandle file;
 
 		public FileItem (final FileHandle file, Drawable icon) {
 			this.file = file;
@@ -745,7 +762,8 @@ public class FileChooser extends VisWindow {
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 					if (selectedShortcut != null) selectedShortcut.deselect();
 
-					if (multiselectionEnabled == false || Gdx.input.isKeyPressed(multiselectKey) == false) deselectAll();
+					if (multiselectionEnabled == false || Gdx.input.isKeyPressed(multiselectKey) == false)
+						deselectAll();
 					boolean itemSelected = select();
 
 					if (selectedItems.size > 1) removeInvalidSelections();
@@ -803,15 +821,15 @@ public class FileChooser extends VisWindow {
 		}
 
 		private void deselect (boolean removeFromList) {
-			setBackground((Drawable)null);
+			setBackground((Drawable) null);
 			if (removeFromList) selectedItems.removeValue(this, true);
 		}
 
 	}
 
 	private class ShortcutItem extends Table {
-		private VisLabel name;
 		public File file;
+		private VisLabel name;
 
 		/** Used only by shortcuts panel */
 		public ShortcutItem (final File file, String customName, Drawable icon) {
@@ -895,29 +913,9 @@ public class FileChooser extends VisWindow {
 		}
 
 		private void deselect () {
-			setBackground((Drawable)null);
+			setBackground((Drawable) null);
 		}
 
-	}
-
-	@Override
-	protected void setStage (Stage stage) {
-		super.setStage(stage);
-		deselectAll();
-	}
-
-	static public class FileChooserStyle {
-		public Drawable iconArrowLeft;
-		public Drawable iconArrowRight;
-		public Drawable iconFolder;
-		public Drawable iconDrive;
-
-		public FileChooserStyle () {
-			iconArrowLeft = VisUI.skin.getDrawable("icon-arrow-left");
-			iconArrowRight = VisUI.skin.getDrawable("icon-arrow-right");
-			iconFolder = VisUI.skin.getDrawable("icon-folder");
-			iconDrive = VisUI.skin.getDrawable("icon-drive");
-		}
 	}
 
 }
