@@ -84,7 +84,7 @@ public class ObjectProperties extends VisTable {
 		propertiesTable.add(rotationField = new VisValidableTextField(numValidator, true)).width(FIELD_WIDTH);
 
 		top();
-		add(new VisLabel("Actor Properties"));
+		add(new VisLabel("Object Properties"));
 		row();
 		add(propertiesTable).fill().expand().padRight(0);
 
@@ -231,7 +231,6 @@ public class ObjectProperties extends VisTable {
 	}
 
 	private void setValuesToSprite () {
-		System.out.println(objects.size);
 		for (Object2d object : objects) {
 			Sprite sprite = object.sprite;
 
@@ -274,6 +273,7 @@ public class ObjectProperties extends VisTable {
 			if (input.endsWith("d") || input.endsWith("f")) return false;
 			if (input.equals("?")) return true;
 			if (input.equals("")) return true;
+			if (input.equals("-")) return true;
 
 			try {
 				Float.parseFloat(input);
