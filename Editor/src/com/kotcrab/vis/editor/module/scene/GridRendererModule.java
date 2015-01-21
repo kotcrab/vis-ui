@@ -64,9 +64,9 @@ public class GridRendererModule extends SceneModule {
 		int linesToDraw = (int)(camera.getHeight() / cellSize) + 1;
 
 		int drawingPointStart = leftDownY / cellSize;
-		int drawingPonintEnd = drawingPointStart + linesToDraw;
+		int drawingPointEnd = drawingPointStart + linesToDraw;
 
-		for (int i = drawingPointStart; i < drawingPonintEnd; i++)
+		for (int i = drawingPointStart; i < drawingPointEnd; i++)
 			shapeRenderer.line(xStart, i * cellSize, xEnd, i * cellSize);
 	}
 
@@ -78,9 +78,9 @@ public class GridRendererModule extends SceneModule {
 		int linesToDraw = (int)(camera.getWidth() / cellSize) + 1;
 
 		int drawingPointStart = leftDownX / cellSize;
-		int drawingPonintEnd = drawingPointStart + linesToDraw;
+		int drawingPointEnd = drawingPointStart + linesToDraw;
 
-		for (int i = drawingPointStart; i < drawingPonintEnd; i++)
+		for (int i = drawingPointStart; i < drawingPointEnd; i++)
 			shapeRenderer.line(i * cellSize, yStart, i * cellSize, yEnd);
 	}
 }
