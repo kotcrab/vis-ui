@@ -46,38 +46,51 @@ import java.io.FileFilter;
  */
 public class FileChooser extends VisWindow {
 	private static final Drawable highlightBg = VisUI.skin.getDrawable("list-selection");
+
 	private Mode mode;
-	;
 	private SelectionMode selectionMode = SelectionMode.FILES;
 	private boolean multiselectionEnabled = false;
 	private FileChooserListener listener;
 	private int multiselectKey = Keys.CONTROL_LEFT;
+
 	private FileFilter fileFilter = new DefaultFileFilter();
 	private FileHandle currentDirectory;
+
 	private FileChooserStyle style;
 	private FileChooserLocale locale;
+
 	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
+
 	private Array<FileItem> selectedItems = new Array<FileItem>();
 	private ShortcutItem selectedShortcut;
+
 	private Array<FileHandle> history;
 	private int historyIndex = 0;
+
 	private FavoritesIO favoritesIO;
 	private Array<FileHandle> favorites;
+
 	private Array<ShortcutItem> fileRootsCache = new Array<ShortcutItem>();
+
 	// UI
 	private VisSplitPane splitPane;
+
 	private VisTable fileTable;
 	private VisScrollPane fileScrollPane;
 	private VisTable fileScrollPaneTable;
+
 	private VisTable shortcutsTable;
-	private VisScrollPane shorcutsScrollPane;
+	private VisScrollPane shortcutsScrollPane;
 	private VisTable shortcutsScrollPaneTable;
+
 	private VisTextButton cancelButton;
 	private VisTextButton confirmButton;
+
 	private VisImageButton backButton;
 	private VisImageButton forwardButton;
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextField;
+
 	private FilePopupMenu fileMenu;
 
 	public FileChooser (Mode mode) {
@@ -211,9 +224,9 @@ public class FileChooser extends VisWindow {
 		fileScrollPaneTable.add(fileScrollPane).pad(2).top().expand().fillX();
 
 		shortcutsTable = new VisTable();
-		shorcutsScrollPane = createScrollPane(shortcutsTable);
+		shortcutsScrollPane = createScrollPane(shortcutsTable);
 		shortcutsScrollPaneTable = new VisTable();
-		shortcutsScrollPaneTable.add(shorcutsScrollPane).pad(2).top().expand().fillX();
+		shortcutsScrollPaneTable.add(shortcutsScrollPane).pad(2).top().expand().fillX();
 
 		splitPane = new VisSplitPane(shortcutsScrollPaneTable, fileScrollPaneTable, false);
 		splitPane.setSplitAmount(0.3f);
