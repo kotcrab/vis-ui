@@ -19,6 +19,8 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -26,6 +28,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.module.scene.Object2d;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.VisTable;
@@ -33,6 +37,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import org.lwjgl.input.Keyboard;
 
 public class ObjectProperties extends VisTable {
 	private static final int FIELD_WIDTH = 70;
@@ -88,6 +93,7 @@ public class ObjectProperties extends VisTable {
 		row();
 		add(propertiesTable).fill().expand().padRight(0);
 
+
 		executeForFields(new FieldExecutor() {
 			@Override
 			public void execute (VisValidableTextField field) {
@@ -137,6 +143,12 @@ public class ObjectProperties extends VisTable {
 			@Override
 			public void execute (VisValidableTextField field) {
 				field.addListener(fieldChangeListener);
+			}
+		});
+		executeForFields(new FieldExecutor() {
+			@Override
+			public void execute (VisValidableTextField field) {
+				field.addListener(new FieldInputListener(field));
 			}
 		});
 
@@ -265,6 +277,75 @@ public class ObjectProperties extends VisTable {
 
 	private interface FieldExecutor {
 		public void execute (VisValidableTextField field);
+	}
+
+	private class FieldInputListener extends InputListener {
+		VisTextField field;
+		private TimerRepeatTask timerTask;
+		private boolean keyTypedReturnValue;
+
+		public FieldInputListener (VisTextField field) {
+			this.field = field;
+			timerTask = new TimerRepeatTask();
+		}
+
+		@Override
+		public boolean keyUp (InputEvent event, int keycode) {
+			event.cancel();
+			return true;
+		}
+
+		@Override
+		public boolean keyTyped (InputEvent event, char character) {
+			keyTypedReturnValue = false;
+
+			checkKeys();
+
+			return keyTypedReturnValue;
+		}
+
+		private void checkKeys () {
+			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+				float delta = 1;
+				if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) delta = 10;
+
+				//current workaround for https://github.com/libgdx/libgdx/pull/2592
+				if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) {
+					changeFieldValue(delta * -1);
+					timerTask.cancel();
+					Timer.schedule(timerTask, 0.1f);
+				}
+
+				if (Gdx.input.isKeyPressed(Keys.PLUS)) {
+					changeFieldValue(delta);
+					timerTask.cancel();
+					Timer.schedule(timerTask, 0.1f);
+				}
+			}
+		}
+
+		private void changeFieldValue (float value) {
+			keyTypedReturnValue = true;
+
+			try {
+				float fieldValue = Float.parseFloat(field.getText());
+				fieldValue += value;
+
+				int lastPos = field.getCursorPosition();
+				field.setText(floatToString(fieldValue));
+				field.setCursorPosition(lastPos);
+
+				setValuesToSprite();
+			} catch (NumberFormatException ex) {
+			}
+		}
+
+		private class TimerRepeatTask extends Task {
+			@Override
+			public void run () {
+				checkKeys();
+			}
+		}
 	}
 
 	private class NumberValidator implements InputValidator {
