@@ -8,6 +8,7 @@
 -API Addition: constructor VisValidableTextField (InputValidator validator, boolean disregardInvalidInput)
 -API Addition: constructor VisImageButton (String styleName)
 -API Addition: VisWindow.addCloseButton()
+-API Addition: VisWindow.closeOnEscape()
 -API Addition: VisTextField.focusField()
 -API Addition: DialogUtils.showInputDialog (Stage stage, String title, String fieldTitle, InputDialogListener listener)
 -API Addition: DialogUtils.showInputDialog (Stage stage, String title, String fieldTitle, InputValidator validator, InputDialogListener listener)
@@ -15,6 +16,7 @@
 -API Change: Removed deprecated TableUtils.setColumnsDefaults(Table)
 -Separator style "menu" height changed to 3px (was 4px) that means PopupMenu separator height is now 3px as well
 -File chooser now have close button in top right corner
+-File chooser now closes when escape key has been pressed
 
 [0.4.1]
 -Fixed FileChooser padding when scrollbar was showed (because LibGDX scrollpane was probably fixed as well) 

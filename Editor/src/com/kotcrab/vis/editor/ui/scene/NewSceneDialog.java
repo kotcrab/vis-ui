@@ -60,6 +60,7 @@ public class NewSceneDialog extends VisWindow {
 	public NewSceneDialog (FileAccessModule fileAccess, SceneIOModule sceneIOModule) {
 		super("New Scene");
 		addCloseButton();
+		closeOnEscape();
 		setModal(true);
 
 		sceneIO = sceneIOModule;

@@ -65,6 +65,7 @@ public class NewProjectDialog extends VisWindow {
 		this.projectIO = projectIO;
 
 		addCloseButton();
+		closeOnEscape();
 
 		createUI();
 		createListeners();

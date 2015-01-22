@@ -147,6 +147,7 @@ public class FileChooser extends VisWindow {
 		setResizable(true);
 		setMovable(true);
 		addCloseButton();
+		closeOnEscape();
 
 		favoritesIO = new FavoritesIO();
 		favorites = favoritesIO.loadFavorites();
