@@ -17,6 +17,7 @@
 -Separator style "menu" height changed to 3px (was 4px) that means PopupMenu separator height is now 3px as well
 -File chooser now have close button in top right corner
 -File chooser now closes when escape key has been pressed
+-Fixed bug where VisValidableTextField would loss focus if user type something and field don't have ChangeListener attached
 
 [0.4.1]
 -Fixed FileChooser padding when scrollbar was showed (because LibGDX scrollpane was probably fixed as well) 

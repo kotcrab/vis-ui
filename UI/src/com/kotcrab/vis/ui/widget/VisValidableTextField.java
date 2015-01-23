@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui.widget;
 
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -28,6 +29,12 @@ public class VisValidableTextField extends VisTextField {
 	private boolean validationEnabled = true;
 	private boolean disregardInvalidInput = false;
 	private boolean programmaticChangeEvents = true;
+
+	/**
+	 * If true, a ChangeListener has been added to a field, tracking this is required for firing change events,
+	 * if field does not have ChangeListener and ChangeEvent would be fired, field will lost focus
+	 */
+	private boolean changeListenerAdded;
 
 	public VisValidableTextField () {
 		super();
@@ -77,7 +84,7 @@ public class VisValidableTextField extends VisTextField {
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
 				validateInput();
-				fire(new ChangeListener.ChangeEvent());
+				if (changeListenerAdded) fire(new ChangeListener.ChangeEvent());
 				previousText = getText();
 				return false;
 			}
@@ -88,7 +95,7 @@ public class VisValidableTextField extends VisTextField {
 	public void setText (String str) {
 		super.setText(str);
 
-		if (validators != null) validateInput();
+		validateInput();
 		if (programmaticChangeEvents) fire(new ChangeListener.ChangeEvent());
 
 		previousText = text;
@@ -110,6 +117,22 @@ public class VisValidableTextField extends VisTextField {
 
 		// validation not enabled or validators does not returned false (input was valid)
 		setInputValid(true);
+	}
+
+	public boolean addListener (EventListener listener) {
+		//see changeListenerAdded comment
+		if (listener instanceof ChangeListener) changeListenerAdded = true;
+		return super.addListener(listener);
+	}
+
+	public boolean removeListener (EventListener listener) {
+		//see changeListenerAdded comment
+		boolean result = super.removeListener(listener);
+		for (EventListener fieldListener : getListeners())
+			if (fieldListener instanceof ChangeListener) return result;
+
+		changeListenerAdded = false;
+		return result;
 	}
 
 	private void restorePreviousText () {
