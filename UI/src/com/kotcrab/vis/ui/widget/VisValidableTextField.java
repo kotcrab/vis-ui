@@ -24,10 +24,8 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.InputValidator;
 
 public class VisValidableTextField extends VisTextField {
-	String previousText = "";
 	private Array<InputValidator> validators = new Array<InputValidator>();
 	private boolean validationEnabled = true;
-	private boolean disregardInvalidInput = false;
 	private boolean programmaticChangeEvents = true;
 
 	/**
@@ -41,15 +39,6 @@ public class VisValidableTextField extends VisTextField {
 		init();
 	}
 
-	/**
-	 * See {@link #setDisregardInvalidInput(boolean)}
-	 */
-	public VisValidableTextField (boolean disregardInvalidInput) {
-		super();
-		this.disregardInvalidInput = disregardInvalidInput;
-		init();
-	}
-
 	public VisValidableTextField (String text) {
 		super(text);
 		init();
@@ -58,16 +47,6 @@ public class VisValidableTextField extends VisTextField {
 	public VisValidableTextField (InputValidator validator) {
 		super();
 		addValidator(validator);
-		init();
-	}
-
-	/**
-	 * See {@link #setDisregardInvalidInput(boolean)}
-	 */
-	public VisValidableTextField (InputValidator validator, boolean disregardInvalidInput) {
-		super();
-		addValidator(validator);
-		this.disregardInvalidInput = disregardInvalidInput;
 		init();
 	}
 
@@ -85,7 +64,6 @@ public class VisValidableTextField extends VisTextField {
 			public boolean keyTyped (InputEvent event, char character) {
 				validateInput();
 				if (changeListenerAdded) fire(new ChangeListener.ChangeEvent());
-				previousText = getText();
 				return false;
 			}
 		});
@@ -97,17 +75,15 @@ public class VisValidableTextField extends VisTextField {
 
 		validateInput();
 		if (programmaticChangeEvents) fire(new ChangeListener.ChangeEvent());
-
-		previousText = text;
 	}
 
 	public void validateInput () {
 		if (validationEnabled) {
 			for (InputValidator validator : validators) {
 				if (validator.validateInput(getText()) == false) {
-					if (disregardInvalidInput)
-						restorePreviousText();
-					else
+					//if (disregardInvalidInput)
+					//	restorePreviousText();
+					//else
 						setInputValid(false);
 
 					return;
@@ -133,15 +109,6 @@ public class VisValidableTextField extends VisTextField {
 
 		changeListenerAdded = false;
 		return result;
-	}
-
-	private void restorePreviousText () {
-		int cursorPos = getCursorPosition() - 1;
-
-		super.setText(previousText);
-
-		if (cursorPos >= 0)
-			setCursorPosition(cursorPos);
 	}
 
 	public void addValidator (InputValidator validator) {
@@ -173,22 +140,6 @@ public class VisValidableTextField extends VisTextField {
 	public void setValidationEnabled (boolean validationEnabled) {
 		this.validationEnabled = validationEnabled;
 		validateInput();
-	}
-
-	public boolean isDisregardInvalidInput () {
-		return disregardInvalidInput;
-	}
-
-	/**
-	 * Enables or disables input disregard, if true, user can't input something that is not valid,
-	 * for example is field validator only allow to input number, trying to input letter or other
-	 * non-number character won't do anything.
-	 * <p/>
-	 * Changing this does not affect already typed text
-	 * @param disregardInvalidInput if true input disregard will be enabled false otherwise
-	 */
-	public void setDisregardInvalidInput (boolean disregardInvalidInput) {
-		this.disregardInvalidInput = disregardInvalidInput;
 	}
 
 	/**
