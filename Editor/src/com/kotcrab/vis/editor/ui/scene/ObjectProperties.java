@@ -93,13 +93,6 @@ public class ObjectProperties extends VisTable {
 		row();
 		add(propertiesTable).fill().expand().padRight(0);
 
-
-		executeForFields(new FieldExecutor() {
-			@Override
-			public void execute (VisValidableTextField field) {
-				field.setProgrammaticChangeEvents(false);
-			}
-		});
 		addListeners();
 	}
 
@@ -305,10 +298,11 @@ public class ObjectProperties extends VisTable {
 		}
 
 		private void checkKeys () {
-			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
-				float delta = 1;
-				if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) delta = 10;
+			float delta = 0;
+			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) delta = 1;
+			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) delta = 10;
 
+			if (delta != 0) {
 				//current workaround for https://github.com/libgdx/libgdx/pull/2592
 				if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) {
 					changeFieldValue(delta * -1);
