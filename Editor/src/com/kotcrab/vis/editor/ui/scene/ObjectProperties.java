@@ -36,6 +36,7 @@ import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import org.lwjgl.input.Keyboard;
 
@@ -51,13 +52,24 @@ public class ObjectProperties extends VisTable {
 
 	private Array<Object2d> objects;
 
+	private ChangeListener sharedChangeListener;
+	private FieldFilter sharedFieldFilter;
+	private FieldValidator sharedFieldValidator;
+
 	public ObjectProperties () {
 		super(true);
 		setBackground(VisUI.skin.getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
 		setVisible(false);
 
-		NumberValidator numValidator = new NumberValidator();
+		sharedChangeListener = new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				setValuesToSprite();
+			}
+		};
+		sharedFieldFilter = new FieldFilter();
+		sharedFieldValidator = new FieldValidator();
 
 		VisTable propertiesTable = new VisTable(true);
 		propertiesTable.top();
@@ -65,28 +77,28 @@ public class ObjectProperties extends VisTable {
 
 		propertiesTable.add(new VisLabel("Position"));
 		propertiesTable.add(new VisLabel("X"));
-		propertiesTable.add(xField = new VisValidableTextField(numValidator, true)).width(FIELD_WIDTH);
+		propertiesTable.add(xField = new InputField()).width(FIELD_WIDTH);
 		propertiesTable.add(new VisLabel("Y"));
-		propertiesTable.add(yField = new VisValidableTextField(numValidator, true)).width(FIELD_WIDTH);
+		propertiesTable.add(yField = new InputField()).width(FIELD_WIDTH);
 		propertiesTable.row();
 
 		propertiesTable.add(new VisLabel("Scale"));
 		propertiesTable.add(new VisLabel("X"));
-		propertiesTable.add(xScaleField = new VisValidableTextField(numValidator, true)).width(FIELD_WIDTH);
+		propertiesTable.add(xScaleField = new InputField()).width(FIELD_WIDTH);
 		propertiesTable.add(new VisLabel("Y"));
-		propertiesTable.add(yScaleField = new VisValidableTextField(numValidator, true)).width(FIELD_WIDTH);
+		propertiesTable.add(yScaleField = new InputField()).width(FIELD_WIDTH);
 		propertiesTable.row();
 
 		propertiesTable.add(new VisLabel("Origin"));
 		propertiesTable.add(new VisLabel("X"));
-		propertiesTable.add(xOriginField = new VisValidableTextField(numValidator, true)).width(FIELD_WIDTH);
+		propertiesTable.add(xOriginField = new InputField()).width(FIELD_WIDTH);
 		propertiesTable.add(new VisLabel("Y"));
-		propertiesTable.add(yOriginField = new VisValidableTextField(numValidator, true)).width(FIELD_WIDTH);
+		propertiesTable.add(yOriginField = new InputField()).width(FIELD_WIDTH);
 		propertiesTable.row();
 
 		propertiesTable.add(new VisLabel("Rotation"));
 		propertiesTable.add(new VisLabel(" "));
-		propertiesTable.add(rotationField = new VisValidableTextField(numValidator, true)).width(FIELD_WIDTH);
+		propertiesTable.add(rotationField = new InputField()).width(FIELD_WIDTH);
 
 		top();
 		add(new VisLabel("Object Properties"));
@@ -126,25 +138,6 @@ public class ObjectProperties extends VisTable {
 	}
 
 	private void addListeners () {
-		final ChangeListener fieldChangeListener = new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				setValuesToSprite();
-			}
-		};
-		executeForFields(new FieldExecutor() {
-			@Override
-			public void execute (VisValidableTextField field) {
-				field.addListener(fieldChangeListener);
-			}
-		});
-		executeForFields(new FieldExecutor() {
-			@Override
-			public void execute (VisValidableTextField field) {
-				field.addListener(new FieldInputListener(field));
-			}
-		});
-
 		//stops touchDown and keyDown events from being received by parent
 		addListener(new InputListener() {
 			@Override
@@ -254,101 +247,14 @@ public class ObjectProperties extends VisTable {
 		}
 	}
 
-	private void executeForFields (FieldExecutor executor) {
-		executor.execute(xField);
-		executor.execute(yField);
-		executor.execute(xScaleField);
-		executor.execute(yScaleField);
-		executor.execute(xOriginField);
-		executor.execute(yOriginField);
-		executor.execute(rotationField);
-	}
-
 	private interface ObjectValue {
 		public float getValue (Object2d object);
 	}
 
-	private interface FieldExecutor {
-		public void execute (VisValidableTextField field);
-	}
-
-	private class FieldInputListener extends InputListener {
-		VisTextField field;
-		private TimerRepeatTask timerTask;
-		private boolean keyTypedReturnValue;
-
-		public FieldInputListener (VisTextField field) {
-			this.field = field;
-			timerTask = new TimerRepeatTask();
-		}
-
-		@Override
-		public boolean keyUp (InputEvent event, int keycode) {
-			event.cancel();
-			return true;
-		}
-
-		@Override
-		public boolean keyTyped (InputEvent event, char character) {
-			keyTypedReturnValue = false;
-
-			checkKeys();
-
-			return keyTypedReturnValue;
-		}
-
-		private void checkKeys () {
-			float delta = 0;
-			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) delta = 1;
-			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) delta = 10;
-
-			if (delta != 0) {
-				//current workaround for https://github.com/libgdx/libgdx/pull/2592
-				if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) {
-					changeFieldValue(delta * -1);
-					timerTask.cancel();
-					Timer.schedule(timerTask, 0.1f);
-				}
-
-				if (Gdx.input.isKeyPressed(Keys.PLUS)) {
-					changeFieldValue(delta);
-					timerTask.cancel();
-					Timer.schedule(timerTask, 0.1f);
-				}
-			}
-		}
-
-		private void changeFieldValue (float value) {
-			keyTypedReturnValue = true;
-
-			try {
-				float fieldValue = Float.parseFloat(field.getText());
-				fieldValue += value;
-
-				int lastPos = field.getCursorPosition();
-				field.setText(floatToString(fieldValue));
-				field.setCursorPosition(lastPos);
-
-				setValuesToSprite();
-			} catch (NumberFormatException ex) {
-			}
-		}
-
-		private class TimerRepeatTask extends Task {
-			@Override
-			public void run () {
-				checkKeys();
-			}
-		}
-	}
-
-	private class NumberValidator implements InputValidator {
+	private class FieldValidator implements InputValidator {
 		@Override
 		public boolean validateInput (String input) {
-			if (input.endsWith("d") || input.endsWith("f")) return false;
 			if (input.equals("?")) return true;
-			if (input.equals("")) return true;
-			if (input.equals("-")) return true;
 
 			try {
 				Float.parseFloat(input);
@@ -359,4 +265,113 @@ public class ObjectProperties extends VisTable {
 			return false;
 		}
 	}
+
+	private class FieldFilter implements TextFieldFilter {
+		@Override
+		public boolean acceptChar (VisTextField textField, char c) {
+			//if(textField.getCursorPosition() > 0 && Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) && c == '-') return false;
+			//if(textField.getCursorPosition() > 0 && c == '-') return false;
+			if (c == '.') return true;
+			if (c == '-') return true;
+			if (c == '+') return false;
+
+			if (c == '?') return true;
+
+			return Character.isDigit(c);
+		}
+	}
+
+	private class InputField extends VisValidableTextField {
+		public InputField () {
+			addValidator(sharedFieldValidator);
+		}
+
+		@Override
+		protected void initialize () {
+			super.initialize();
+
+			//without disabling it, it would case to set old values from new object on switch
+			setProgrammaticChangeEvents(false);
+
+			addListener(sharedChangeListener);
+			setTextFieldFilter(sharedFieldFilter);
+		}
+
+		@Override
+		protected InputListener createInputListener () {
+			return new InputFieldListener();
+		}
+
+		public class InputFieldListener extends TextFieldClickListener {
+			private TimerRepeatTask timerTask;
+			private boolean keyTypedReturnValue;
+
+			public InputFieldListener () {
+				timerTask = new TimerRepeatTask();
+			}
+
+			@Override
+			public boolean keyDown (InputEvent event, int keycode) {
+				return super.keyDown(event, keycode);
+			}
+
+			@Override
+			public boolean keyTyped (InputEvent event, char character) {
+				keyTypedReturnValue = false;
+
+				checkKeys();
+
+				//does not allow to input minus when cursor not at the beggiing of the number and when minus is already in text
+				if (character == '-' && InputField.this.getCursorPosition() > 0 && getText().startsWith("-") == false)
+					return keyTypedReturnValue;
+
+				return (keyTypedReturnValue || super.keyTyped(event, character));
+			}
+
+			private void checkKeys () {
+				float delta = 0;
+				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) delta = 1;
+				if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) delta = 10;
+
+				if (delta != 0) {
+					//current workaround for https://github.com/libgdx/libgdx/pull/2592
+					if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) {
+						changeFieldValue(delta * -1);
+						timerTask.cancel();
+						Timer.schedule(timerTask, 0.1f);
+					}
+
+					if (Gdx.input.isKeyPressed(Keys.PLUS)) {
+						changeFieldValue(delta);
+						timerTask.cancel();
+						Timer.schedule(timerTask, 0.1f);
+					}
+				}
+			}
+
+			private void changeFieldValue (float value) {
+				keyTypedReturnValue = true;
+
+				try {
+					float fieldValue = Float.parseFloat(getText());
+					fieldValue += value;
+
+					int lastPos = getCursorPosition();
+					setText(floatToString(fieldValue));
+					InputField.this.setCursorPosition(lastPos);
+
+					setValuesToSprite();
+				} catch (NumberFormatException ex) {
+				}
+			}
+
+			private class TimerRepeatTask extends Task {
+				@Override
+				public void run () {
+					checkKeys();
+				}
+			}
+		}
+	}
+
 }
