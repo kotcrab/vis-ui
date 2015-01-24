@@ -31,6 +31,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.module.scene.Object2d;
+import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
@@ -232,18 +233,10 @@ public class ObjectProperties extends VisTable {
 		for (Object2d object : objects) {
 			Sprite sprite = object.sprite;
 
-			sprite.setPosition(getValueFromField(xField, sprite.getX()), getValueFromField(yField, sprite.getY()));
-			sprite.setScale(getValueFromField(xScaleField, sprite.getScaleX()), getValueFromField(yScaleField, sprite.getScaleY()));
-			sprite.setOrigin(getValueFromField(xOriginField, sprite.getOriginX()), getValueFromField(yOriginField, sprite.getOriginY()));
-			sprite.setRotation(getValueFromField(rotationField, sprite.getRotation()));
-		}
-	}
-
-	private float getValueFromField (VisTextField field, float valueIfError) {
-		try {
-			return Float.parseFloat(field.getText());
-		} catch (NumberFormatException ex) {
-			return valueIfError;
+			sprite.setPosition(FieldUtils.getFloat(xField, sprite.getX()), FieldUtils.getFloat(yField, sprite.getY()));
+			sprite.setScale(FieldUtils.getFloat(xScaleField, sprite.getScaleX()), FieldUtils.getFloat(yScaleField, sprite.getScaleY()));
+			sprite.setOrigin(FieldUtils.getFloat(xOriginField, sprite.getOriginX()), FieldUtils.getFloat(yOriginField, sprite.getOriginY()));
+			sprite.setRotation(FieldUtils.getFloat(rotationField, sprite.getRotation()));
 		}
 	}
 
