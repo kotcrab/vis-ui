@@ -35,8 +35,10 @@ import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.*;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
+import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.InputModule;
 import com.kotcrab.vis.editor.ui.EditorFrame;
+import com.kotcrab.vis.editor.ui.SettingsDialog;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 import com.kotcrab.vis.editor.util.EditorException;
@@ -59,6 +61,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private Table tabContentTable;
 	private VisTable projectContentTable;
 	private VisSplitPane splitPane;
+
+	private SettingsDialog settingsDialog;
 
 	private InputModule inputModule;
 
@@ -105,6 +109,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
 			projectMC.get(SceneTabsModule.class).open(testScene);
 		}
+
+		showSettingsWindow();
 		//debug end
 	}
 
@@ -116,6 +122,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		splitPane.setSplitAmount(0.78f);
 
 		projectContentTable.add(new VisLabel("Project Content Manager has not been loaded yet"));
+
+		settingsDialog = new SettingsDialog();
 	}
 
 	private void createModuleContainers () {
@@ -130,7 +138,11 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(new TabsModule());
 		editorMC.add(new StatusBarModule());
 
+		editorMC.add(new GridSettingsModule());
+
 		editorMC.init();
+
+		settingsDialog.addAll(editorMC.getModules());
 	}
 
 	private void createModulesUI () {
@@ -191,6 +203,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	public void requestProjectUnload () {
 		projectLoaded = false;
 		projectMC.dispose();
+		settingsDialog.removeAll(projectMC.getModules());
 
 		App.eventBus.post(new StatusBarEvent("Project unloaded"));
 		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded));
@@ -216,6 +229,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.add(new AssetsManagerUIModule());
 
 		projectMC.init();
+
+		settingsDialog.addAll(projectMC.getModules());
 
 		App.eventBus.post(new StatusBarEvent("Project loaded"));
 		App.eventBus.post(new ProjectStatusEvent(Status.Loaded));
@@ -246,5 +261,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	public void showSettingsWindow () {
+		stage.addActor(settingsDialog.fadeIn());
 	}
 }
