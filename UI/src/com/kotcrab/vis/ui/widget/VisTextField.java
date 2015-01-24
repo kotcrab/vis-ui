@@ -476,8 +476,10 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 				tmp1.set(Float.MAX_VALUE, Float.MAX_VALUE);
 			textField = findNextTextField(getStage().getActors(), null, tmp2, tmp1, up);
 		}
-		if (textField != null)
-			stage.setKeyboardFocus(textField);
+		if (textField != null) {
+			textField.focusField();
+			textField.setCursorPosition(textField.getText().length());
+		}
 		else
 			Gdx.input.setOnscreenKeyboardVisible(false);
 	}
