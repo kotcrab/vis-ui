@@ -51,6 +51,11 @@ public class VisCheckBox extends TextButton implements Focusable {
 		this(text, VisUI.skin.get(VisCheckBoxStyle.class));
 	}
 
+	public VisCheckBox (String text, boolean checked) {
+		this(text, VisUI.skin.get(VisCheckBoxStyle.class));
+		setChecked(checked);
+	}
+
 	public VisCheckBox (String text, String styleName) {
 		this(text, VisUI.skin.get(styleName, VisCheckBoxStyle.class));
 	}

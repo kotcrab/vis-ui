@@ -3,6 +3,7 @@
 -API Addition: VisValidableTextField.isValidationEnabled()
 -API Addition: VisValidableTextField.setProgrammaticChangeEvents(boolean)
 -API Addition: constructor VisImageButton (String styleName)
+-API Addition: constructor VisCheckBox (String text, boolean checked)
 -API Addition: VisWindow.addCloseButton()
 -API Addition: VisWindow.closeOnEscape()
 -API Addition: VisTextField.focusField()
