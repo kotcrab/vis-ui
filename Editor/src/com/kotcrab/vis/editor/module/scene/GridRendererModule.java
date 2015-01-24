@@ -23,6 +23,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.kotcrab.vis.editor.module.EditorSettingsModule;
+import com.kotcrab.vis.editor.util.FieldUtils;
+import com.kotcrab.vis.editor.util.Validators;
+import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisCheckBox;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
+import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 public class GridRendererModule extends SceneModule {
 	private CameraModule camera;
@@ -30,57 +38,106 @@ public class GridRendererModule extends SceneModule {
 
 	private ShapeRenderer shapeRenderer;
 
-	private int cellSize = 256;
+	private GridSettingsModule config;
 
 	@Override
 	public void init () {
 		renderer = sceneContainer.get(RendererModule.class);
 		camera = sceneContainer.get(CameraModule.class);
 
+		config = container.get(GridSettingsModule.class);
+
 		shapeRenderer = renderer.getShapeRenderer();
 	}
 
 	@Override
 	public void render (Batch batch) {
-		batch.end();
+		if (config.drawGrid) {
+			batch.end();
 
-		shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
-		shapeRenderer.begin(ShapeType.Line);
-		shapeRenderer.setColor(new Color(0.32f, 0.32f, 0.32f, 1f));
+			shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
+			shapeRenderer.begin(ShapeType.Line);
+			shapeRenderer.setColor(new Color(0.32f, 0.32f, 0.32f, 1f));
 
-		drawVerticalLines();
-		drawHorizontalLines();
+			drawVerticalLines();
+			drawHorizontalLines();
 
-		shapeRenderer.end();
+			shapeRenderer.end();
 
-		batch.begin();
+			batch.begin();
+		}
 	}
 
 	private void drawVerticalLines () {
+		int gridSize = config.gridSize;
 		float xStart = camera.getX() - camera.getWidth() / 2;
 		float xEnd = xStart + camera.getWidth();
 
-		int leftDownY = (int)(camera.getY() - camera.getHeight() / 2);
-		int linesToDraw = (int)(camera.getHeight() / cellSize) + 1;
+		int leftDownY = (int) (camera.getY() - camera.getHeight() / 2);
+		int linesToDraw = (int) (camera.getHeight() / gridSize) + 1;
 
-		int drawingPointStart = leftDownY / cellSize;
+		int drawingPointStart = leftDownY / gridSize;
 		int drawingPointEnd = drawingPointStart + linesToDraw;
 
 		for (int i = drawingPointStart; i < drawingPointEnd; i++)
-			shapeRenderer.line(xStart, i * cellSize, xEnd, i * cellSize);
+			shapeRenderer.line(xStart, i * gridSize, xEnd, i * gridSize);
 	}
 
 	private void drawHorizontalLines () {
+		int gridSize = config.gridSize;
 		float yStart = camera.getY() - camera.getHeight() / 2;
 		float yEnd = yStart + camera.getHeight();
 
-		int leftDownX = (int)(camera.getX() - camera.getWidth() / 2);
-		int linesToDraw = (int)(camera.getWidth() / cellSize) + 1;
+		int leftDownX = (int) (camera.getX() - camera.getWidth() / 2);
+		int linesToDraw = (int) (camera.getWidth() / gridSize) + 1;
 
-		int drawingPointStart = leftDownX / cellSize;
+		int drawingPointStart = leftDownX / gridSize;
 		int drawingPointEnd = drawingPointStart + linesToDraw;
 
 		for (int i = drawingPointStart; i < drawingPointEnd; i++)
-			shapeRenderer.line(i * cellSize, yStart, i * cellSize, yEnd);
+			shapeRenderer.line(i * gridSize, yStart, i * gridSize, yEnd);
+	}
+
+	public static class GridSettingsModule extends EditorSettingsModule {
+		public boolean drawGrid = true;
+		public int gridSize = 256;
+
+		private VisCheckBox drawGridCheck;
+		private VisValidableTextField gridSizeField;
+
+		protected void rebuildSettingsTable () {
+			VisTable sizeTable = new VisTable(true);
+
+			sizeTable.add(new VisLabel("Grid size: "));
+			sizeTable.add(gridSizeField = new VisValidableTextField(Validators.integers));
+
+			settingsTable.clear();
+			settingsTable.left().top();
+			settingsTable.defaults().expandX().left();
+			settingsTable.add(drawGridCheck = new VisCheckBox("Draw grid", drawGrid)).left();
+			settingsTable.row();
+			settingsTable.add(sizeTable);
+
+			drawGridCheck.setChecked(true);
+			gridSizeField.setTextFieldFilter(new DigitsOnlyFilter());
+			gridSizeField.addValidator(new Validators.GreaterThanValidator(0));
+			gridSizeField.setText(String.valueOf(gridSize));
+		}
+
+		@Override
+		public String getSettingsName () {
+			return "Grid";
+		}
+
+		@Override
+		public boolean settingsChanged () {
+			return gridSizeField.isInputValid();
+		}
+
+		@Override
+		public void settingsApply () {
+			drawGrid = drawGridCheck.isChecked();
+			gridSize = FieldUtils.getInt(gridSizeField, 0);
+		}
 	}
 }
