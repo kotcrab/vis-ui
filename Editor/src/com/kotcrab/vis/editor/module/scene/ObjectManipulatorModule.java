@@ -19,35 +19,202 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.module.scene.ObjectSelectorModule.ObjectSelectorListener;
 import com.kotcrab.vis.editor.ui.scene.ObjectProperties;
 
 public class ObjectManipulatorModule extends SceneModule {
+	private CameraModule camera;
+	private UndoModule undoModule;
+
+	private ShapeRenderer shapeRenderer;
+
 	private ObjectProperties objectProperties;
-	private ObjectSelectorModule objectSelector;
+
+	private Array<SceneObject> objects;
+	private Array<Object2d> selectedObjects = new Array<>();
+
+	private float lastTouchX;
+	private float lastTouchY;
+
+	private boolean selected;
+	private boolean dragging;
+	private boolean dragged;
 
 	@Override
 	public void added () {
+		this.objects = scene.objects;
+
+		shapeRenderer = sceneContainer.get(RendererModule.class).getShapeRenderer();
+		camera = sceneContainer.get(CameraModule.class);
+		undoModule = sceneContainer.get(UndoModule.class);
+
 		objectProperties = new ObjectProperties();
-		objectSelector = sceneContainer.get(ObjectSelectorModule.class);
 	}
 
 	@Override
-	public void init () {
-		objectSelector.setListener(new ObjectSelectorListener() {
-			@Override
-			public void selected (Array<Object2d> selected) {
-				objectProperties.setValuesToFields(selected);
+	public void render (Batch batch) {
+		if (selectedObjects.size > 0) {
+			batch.end();
+
+			shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
+			shapeRenderer.setColor(Color.WHITE);
+			shapeRenderer.begin(ShapeType.Line);
+
+			for (Object2d object : selectedObjects) {
+				Rectangle bounds = object.sprite.getBoundingRectangle();
+				shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
 			}
-		});
-	}
 
-	@Override
-	public void dispose () {
+			shapeRenderer.end();
+
+			batch.begin();
+		}
 	}
 
 	public ObjectProperties getObjectProperties () {
 		return objectProperties;
+	}
+
+	private boolean isMouseInsideSelectedObjects (float x, float y) {
+		for (Object2d object : selectedObjects)
+			if (object.sprite.getBoundingRectangle().contains(x, y)) return true;
+
+		return false;
+	}
+
+	@Override
+	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+		x = camera.getInputX();
+		y = camera.getInputY();
+
+		if (button == Buttons.LEFT) {
+			if (isMouseInsideSelectedObjects(x, y)) {
+				dragging = true;
+				lastTouchX = x;
+				lastTouchY = y;
+			} else {
+				//multiple select made easy
+				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) selectedObjects.clear();
+
+				Object2d result = findObjectWithSmallestSurfaceArea(x, y);
+				if (result != null && selectedObjects.contains(result, true) == false)
+					selectedObjects.add(result);
+
+				objectProperties.setValuesToFields(selectedObjects);
+
+				selected = true;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+		x = camera.getInputX();
+		y = camera.getInputY();
+
+		if (dragged == false && selected == false) {
+			Object2d result = findObjectWithSmallestSurfaceArea(x, y);
+			if (result != null)
+				selectedObjects.removeValue(result, true);
+
+			objectProperties.setValuesToFields(selectedObjects);
+		}
+
+		lastTouchX = 0;
+		lastTouchY = 0;
+		selected = false;
+		dragging = false;
+		dragged = false;
+	}
+
+	@Override
+	public void touchDragged (InputEvent event, float x, float y, int pointer) {
+		x = camera.getInputX();
+		y = camera.getInputY();
+
+		if (dragging) {
+			dragged = true;
+			float deltaX = (x - lastTouchX);
+			float deltaY = (y - lastTouchY);
+
+			for (Object2d object : selectedObjects)
+				object.sprite.translate(deltaX, deltaY);
+
+			lastTouchX = x;
+			lastTouchY = y;
+
+			objectProperties.updateValues();
+		}
+	}
+
+	@Override
+	public boolean keyDown (InputEvent event, int keycode) {
+		if (keycode == Keys.FORWARD_DEL) { //Delete
+			undoModule.execute(new ObjectsRemoved(selectedObjects));
+			selectedObjects.clear();
+
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns object with smallest surface area that contains point x,y.
+	 * <p/>
+	 * When selecting objects, and few of them are overlapping, selecting object with smallest
+	 * area gives better results than just selecting first one.
+	 */
+	private Object2d findObjectWithSmallestSurfaceArea (float x, float y) {
+		Object2d matchingObject = null;
+		float lastSurfaceArea = Float.MAX_VALUE;
+
+		for (SceneObject object : objects) {
+
+			if (object instanceof Object2d) {
+				Object2d object2d = (Object2d) object;
+
+				if (object2d.sprite.getBoundingRectangle().contains(x, y)) {
+					float currentSurfaceArea = object2d.sprite.getWidth() * object2d.sprite.getHeight();
+
+					if (currentSurfaceArea < lastSurfaceArea) {
+						matchingObject = object2d;
+						lastSurfaceArea = currentSurfaceArea;
+					}
+				}
+			}
+
+		}
+
+		return matchingObject;
+	}
+
+	private class ObjectsRemoved implements UndoableAction {
+		private Array<Object2d> objects;
+
+		public ObjectsRemoved (Array<Object2d> selectedObjects) {
+			objects = new Array<>(selectedObjects);
+		}
+
+		@Override
+		public void execute () {
+			scene.objects.removeAll(objects, true);
+		}
+
+		@Override
+		public void undo () {
+			scene.objects.addAll(objects);
+		}
 	}
 }
