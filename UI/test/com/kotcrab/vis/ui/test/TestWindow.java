@@ -58,9 +58,12 @@ public class TestWindow extends VisWindow {
 
 	private void addVisComponents () {
 		VisLabel label = new VisLabel("label");
+		VisLabel labelWithTooltip = new VisLabel("label with tooltip");
+		labelWithTooltip.setTooltip("this label has a tooltip");
 
 		VisTable labelTable = new VisTable(true);
 		labelTable.add(label);
+		labelTable.add(labelWithTooltip);
 		// ---
 
 		VisTextButton normalButton = new VisTextButton("button");
