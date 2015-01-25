@@ -228,7 +228,7 @@ list-selection
   index: -1
 menu-bg
   rotate: false
-  xy: 82, 87
+  xy: 96, 89
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -346,35 +346,35 @@ scroll-knob-vertical
   index: -1
 select-box-list-bg
   rotate: false
-  xy: 96, 89
+  xy: 24, 48
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 window-bg
   rotate: false
-  xy: 96, 89
+  xy: 24, 48
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 selection
   rotate: false
-  xy: 24, 48
+  xy: 26, 65
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator
   rotate: false
-  xy: 26, 65
+  xy: 153, 202
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator-menu
   rotate: false
-  xy: 153, 202
+  xy: 155, 219
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -428,6 +428,14 @@ splitpane-vertical
   orig: 1, 4
   offset: 0, 0
   index: -1
+tooltip-bg
+  rotate: false
+  xy: 20, 40
+  size: 3, 3
+  split: 1, 1, 1, 1
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
 touchpad-knob
   rotate: false
   xy: 52, 104
@@ -451,7 +459,7 @@ tree-plus
   index: -1
 tree-selection
   rotate: false
-  xy: 20, 40
+  xy: 237, 237
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -459,7 +467,7 @@ tree-selection
   index: -1
 white
   rotate: false
-  xy: 237, 237
+  xy: 82, 85
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
