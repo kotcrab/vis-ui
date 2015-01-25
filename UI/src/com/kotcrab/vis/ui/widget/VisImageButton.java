@@ -31,6 +31,8 @@ import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
 
 public class VisImageButton extends Button implements Focusable {
+	private Tooltip tooltip;
+
 	private Image image;
 
 	private VisImageButtonStyle style;
@@ -41,6 +43,10 @@ public class VisImageButton extends Button implements Focusable {
 
 	public VisImageButton (Drawable imageUp) {
 		this(imageUp, null, null);
+	}
+	public VisImageButton (Drawable imageUp, String tooltipText) {
+		this(imageUp, null, null);
+		setTooltip(tooltipText);
 	}
 
 	public VisImageButton (Drawable imageUp, Drawable imageDown) {
@@ -128,6 +134,10 @@ public class VisImageButton extends Button implements Focusable {
 
 	public Cell<?> getImageCell () {
 		return getCell(image);
+	}
+
+	public void setTooltip (String text) {
+		tooltip = Tooltip.updateTooltip(this, tooltip, text);
 	}
 
 	@Override
