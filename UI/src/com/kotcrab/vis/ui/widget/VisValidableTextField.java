@@ -81,11 +81,7 @@ public class VisValidableTextField extends VisTextField {
 		if (validationEnabled) {
 			for (InputValidator validator : validators) {
 				if (validator.validateInput(getText()) == false) {
-					//if (disregardInvalidInput)
-					//	restorePreviousText();
-					//else
-						setInputValid(false);
-
+					setInputValid(false);
 					return;
 				}
 			}
