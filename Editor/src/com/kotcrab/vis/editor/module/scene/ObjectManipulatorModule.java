@@ -97,11 +97,11 @@ public class ObjectManipulatorModule extends SceneModule {
 		y = camera.getInputY();
 
 		if (button == Buttons.LEFT) {
-			if (isMouseInsideSelectedObjects(x, y)) {
-				dragging = true;
-				lastTouchX = x;
-				lastTouchY = y;
-			} else {
+			dragging = true;
+			lastTouchX = x;
+			lastTouchY = y;
+
+			if (isMouseInsideSelectedObjects(x, y) == false) {
 				//multiple select made easy
 				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) selectedObjects.clear();
 
