@@ -110,7 +110,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			projectMC.get(SceneTabsModule.class).open(testScene);
 		}
 
-		showSettingsWindow();
+		//showSettingsWindow();
 		//debug end
 	}
 
