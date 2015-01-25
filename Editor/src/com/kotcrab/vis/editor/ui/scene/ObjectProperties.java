@@ -133,7 +133,7 @@ public class ObjectProperties extends VisTable {
 	@Override
 	public float getPrefHeight () {
 		if (isVisible())
-			return 200;
+			return 160;
 		else
 			return 0;
 	}
@@ -240,6 +240,10 @@ public class ObjectProperties extends VisTable {
 		}
 	}
 
+	public void updateValues () {
+		setValuesToFields(objects);
+	}
+
 	private interface ObjectValue {
 		public float getValue (Object2d object);
 	}
@@ -277,11 +281,6 @@ public class ObjectProperties extends VisTable {
 	private class InputField extends VisValidableTextField {
 		public InputField () {
 			addValidator(sharedFieldValidator);
-		}
-
-		@Override
-		protected void initialize () {
-			super.initialize();
 
 			//without disabling it, it would case to set old values from new object on switch
 			setProgrammaticChangeEvents(false);
@@ -314,9 +313,10 @@ public class ObjectProperties extends VisTable {
 
 				checkKeys();
 
-				//does not allow to input minus when cursor not at the beggiing of the number and when minus is already in text
 				if (character == '-' && InputField.this.getCursorPosition() > 0 && getText().startsWith("-") == false)
 					return keyTypedReturnValue;
+
+				if(character == '.' && getText().contains(".")) return keyTypedReturnValue;
 
 				return (keyTypedReturnValue || super.keyTyped(event, character));
 			}
