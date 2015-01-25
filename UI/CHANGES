@@ -7,6 +7,7 @@
 -API Addition: VisWindow.addCloseButton()
 -API Addition: VisWindow.closeOnEscape()
 -API Addition: VisTextField.focusField()
+-API Addition: MenuItem.getShortcut()
 -API Addition: DialogUtils.showInputDialog (Stage stage, String title, String fieldTitle, InputDialogListener listener)
 -API Addition: DialogUtils.showInputDialog (Stage stage, String title, String fieldTitle, InputValidator validator, InputDialogListener listener)
 -API Change: VisUI.setDefaultTitleAlign and VisUI.getDefaultTitleAlign (typo fixed)

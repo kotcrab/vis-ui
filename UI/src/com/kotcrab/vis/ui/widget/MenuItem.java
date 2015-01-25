@@ -41,11 +41,11 @@ public class MenuItem extends Button {
 	private Cell<VisLabel> shortcutLabelCell;
 
 	public MenuItem (String text) {
-		this(text, (Image)null, VisUI.skin.get(TextButtonStyle.class));
+		this(text, (Image) null, VisUI.skin.get(TextButtonStyle.class));
 	}
 
 	public MenuItem (String text, ChangeListener changeListener) {
-		this(text, (Image)null, VisUI.skin.get(TextButtonStyle.class));
+		this(text, (Image) null, VisUI.skin.get(TextButtonStyle.class));
 		addListener(changeListener);
 	}
 
@@ -95,22 +95,22 @@ public class MenuItem extends Button {
 	}
 
 	@Override
+	public TextButtonStyle getStyle () {
+		return style;
+	}
+
+	@Override
 	public void setStyle (ButtonStyle style) {
 		if (!(style instanceof TextButtonStyle)) throw new IllegalArgumentException("style must be a TextButtonStyle.");
 		super.setStyle(style);
-		this.style = (TextButtonStyle)style;
+		this.style = (TextButtonStyle) style;
 		if (label != null) {
-			TextButtonStyle textButtonStyle = (TextButtonStyle)style;
+			TextButtonStyle textButtonStyle = (TextButtonStyle) style;
 			LabelStyle labelStyle = label.getStyle();
 			labelStyle.font = textButtonStyle.font;
 			labelStyle.fontColor = textButtonStyle.fontColor;
 			label.setStyle(labelStyle);
 		}
-	}
-
-	@Override
-	public TextButtonStyle getStyle () {
-		return style;
 	}
 
 	@Override
@@ -151,11 +151,17 @@ public class MenuItem extends Button {
 		return setShortcut(Keys.toString(keycode));
 	}
 
-	/** Displayed as modifier+keycode (eg. Ctrl+F5)
+	/**
+	 * Displayed as modifier+keycode (eg. Ctrl+F5)
 	 * @param modifier form {@link Keys}
-	 * @param keycode form {@link Keys} */
+	 * @param keycode  form {@link Keys}
+	 */
 	public MenuItem setShortcut (int modifier, int keycode) {
 		return setShortcut(Keys.toString(modifier) + "+" + Keys.toString(keycode));
+	}
+
+	public String getShortcut () {
+		return shortcutLabelCell.getActor().getText().toString();
 	}
 
 	public MenuItem setShortcut (String text) {
@@ -183,11 +189,11 @@ public class MenuItem extends Button {
 		return getCell(label);
 	}
 
-	public void setText (CharSequence text) {
-		label.setText(text);
-	}
-
 	public CharSequence getText () {
 		return label.getText();
+	}
+
+	public void setText (CharSequence text) {
+		label.setText(text);
 	}
 }
