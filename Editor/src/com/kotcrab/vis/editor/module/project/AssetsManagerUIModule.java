@@ -152,7 +152,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		searchTextField = new VisTextField();
 
 		VisImageButton exploreButton = new VisImageButton(Assets.getIcon("folder-open"), "Explore");
-		VisImageButton settingsButton = new VisImageButton(Assets.getIcon("settings-view"), "View Settings");
+		VisImageButton settingsButton = new VisImageButton(Assets.getIcon("settings-view"), "Change view");
 		VisImageButton importButton = new VisImageButton(Assets.getIcon("import"), "Import");
 
 		toolbarTable.add(contentTitleLabel).expand().left().padLeft(3);
