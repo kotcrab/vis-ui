@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -38,6 +39,9 @@ public class Tooltip extends VisTable {
 	private static final float APPEAR_DELAY_TIME = 0.6f;
 
 	private Actor target;
+	private Actor content;
+	private Cell<Actor> contentCell;
+
 	private TooltipInputListener listener;
 
 	private DisplayTask displayTask;
@@ -54,6 +58,10 @@ public class Tooltip extends VisTable {
 		init(target, content);
 	}
 
+	/**
+	 * Remove any attached tooltip from target actor
+	 * @param target that tooltips will be removed
+	 */
 	public static void removeTooltip (Actor target) {
 		Array<EventListener> listeners = target.getListeners();
 		for (EventListener listener : listeners)
@@ -62,12 +70,13 @@ public class Tooltip extends VisTable {
 
 	private void init (Actor target, Actor content) {
 		this.target = target;
+		this.content = content;
 		this.listener = new TooltipInputListener();
 		this.displayTask = new DisplayTask();
 
 		setBackground(background);
 
-		add(content).padLeft(3).padRight(3).padBottom(2);
+		contentCell = add(content).padLeft(3).padRight(3).padBottom(2);
 		pack();
 
 		attach();
@@ -102,6 +111,15 @@ public class Tooltip extends VisTable {
 		setColor(1, 1, 1, 0);
 		addAction(Actions.sequence(Actions.fadeIn(FADE_TIME, Interpolation.fade)));
 		return this;
+	}
+
+	public Actor getContent () {
+		return content;
+	}
+
+	public void setContent (Actor content) {
+		this.content = content;
+		contentCell.setActor(content);
 	}
 
 	@Override
