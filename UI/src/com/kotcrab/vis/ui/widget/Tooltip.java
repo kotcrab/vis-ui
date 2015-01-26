@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -31,14 +32,15 @@ import com.kotcrab.vis.ui.VisUI;
 
 public class Tooltip extends VisTable {
 	private static final Drawable background = VisUI.skin.getDrawable("tooltip-bg");
-	private static Vector2 tempVec;
-	private static float FADE_TIME = 0.3f;
+	private static final float FADE_TIME = 0.3f;
+	private static final float APPEAR_DELAY_TIME = 0.6f;
+	private static Vector2 tempTargetStagePos;
 
 	private Actor target;
 
 	private DisplayTask displayTask;
 
-	public Tooltip (Actor target, String text) {
+	public Tooltip (Actor target, Actor actor) {
 		super(true);
 		this.target = target;
 
@@ -46,20 +48,26 @@ public class Tooltip extends VisTable {
 
 		setBackground(background);
 
-		add(new VisLabel(text)).padLeft(3).padRight(3).padBottom(2);
+		add(actor).padLeft(3).padRight(3).padBottom(2);
 
 		pack();
 	}
 
-	static Tooltip updateTooltip (Actor target, Tooltip currentTooltip, String text) {
-		if (text == null) {
+	public static Tooltip updateTooltip (Actor target, Tooltip currentTooltip, Actor actor) {
+		if (actor == null) {
 			if (currentTooltip != null) target.removeListener(currentTooltip.getListener());
 			return null;
 		}
 
-		Tooltip tooltip = new Tooltip(target, text);
+		Tooltip tooltip = new Tooltip(target, actor);
 		target.addListener(tooltip.getListener());
 		return tooltip;
+	}
+
+	public static Tooltip updateTooltip (Actor target, Tooltip currentTooltip, String text) {
+		VisLabel label = new VisLabel(text);
+		label.setAlignment(Align.center);
+		return updateTooltip(target, currentTooltip, label);
 	}
 
 	public void fadeOut () {
@@ -81,13 +89,21 @@ public class Tooltip extends VisTable {
 
 	public InputListener getListener () {
 		return new InputListener() {
-
 			@Override
 			public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-				tempVec = target.localToStageCoordinates(new Vector2());
-				setPosition(tempVec.x + (target.getWidth() - getWidth()) / 2, tempVec.y - target.getHeight() - 10);
+				tempTargetStagePos = target.localToStageCoordinates(new Vector2());
+
+				setX(tempTargetStagePos.x + (target.getWidth() - getWidth()) / 2);
+
+				float tooltipY = tempTargetStagePos.y - getHeight() - 10;
+				float stageHeight = target.getStage().getHeight();
+				if (stageHeight - tooltipY > stageHeight) //is there enough space to display bellow widget
+					setY(tempTargetStagePos.y + target.getHeight() + 10); //display above widget
+				else
+					setY(tooltipY); //display bellow
+
 				displayTask.cancel();
-				Timer.schedule(displayTask, 0.6f);
+				Timer.schedule(displayTask, APPEAR_DELAY_TIME);
 			}
 
 			@Override
