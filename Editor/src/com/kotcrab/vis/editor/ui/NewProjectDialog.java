@@ -177,7 +177,7 @@ public class NewProjectDialog extends VisWindow {
 			projectIO.create(project, signFiles.isChecked());
 			fadeOut();
 		} else
-			DialogUtils.showOKDialog(getStage(), "Error", error);
+			DialogUtils.showErrorDialog(getStage(), error);
 
 	}
 }
