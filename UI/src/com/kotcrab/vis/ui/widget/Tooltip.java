@@ -44,12 +44,11 @@ public class Tooltip extends VisTable {
 
 		displayTask = new DisplayTask();
 
-		VisLabel label = new VisLabel(text);
-		add(label).pad(3).padLeft(2.5f);
+		setBackground(background);
+
+		add(new VisLabel(text)).padLeft(3).padRight(3).padBottom(2);
 
 		pack();
-
-		setBackground(background);
 	}
 
 	static Tooltip updateTooltip (Actor target, Tooltip currentTooltip, String text) {
@@ -73,6 +72,11 @@ public class Tooltip extends VisTable {
 		setColor(1, 1, 1, 0);
 		addAction(Actions.sequence(Actions.fadeIn(FADE_TIME, Interpolation.fade)));
 		return this;
+	}
+
+	@Override
+	public void setPosition (float x, float y) {
+		super.setPosition((int) x, (int) y);
 	}
 
 	public InputListener getListener () {
