@@ -28,16 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.kotcrab.vis.ui.TableUtils;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.VisCheckBox;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisList;
-import com.kotcrab.vis.ui.widget.VisProgressBar;
-import com.kotcrab.vis.ui.widget.VisRadioButton;
-import com.kotcrab.vis.ui.widget.VisSelectBox;
-import com.kotcrab.vis.ui.widget.VisSlider;
-import com.kotcrab.vis.ui.widget.VisTextButton;
-import com.kotcrab.vis.ui.widget.VisTextField;
-import com.kotcrab.vis.ui.widget.VisWindow;
+import com.kotcrab.vis.ui.widget.*;
 
 public class TestWindow extends VisWindow {
 
@@ -59,7 +50,7 @@ public class TestWindow extends VisWindow {
 	private void addVisComponents () {
 		VisLabel label = new VisLabel("label");
 		VisLabel labelWithTooltip = new VisLabel("label with tooltip");
-		labelWithTooltip.setTooltip("this label has a tooltip");
+		new Tooltip(labelWithTooltip, "this label has a tooltip");
 
 		VisTable labelTable = new VisTable(true);
 		labelTable.add(label);

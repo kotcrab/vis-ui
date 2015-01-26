@@ -17,6 +17,7 @@
 -File chooser now closes when escape key has been pressed
 -Fixed bug where VisValidableTextField would loss focus if user type something and field don't have ChangeListener attached
 -Fixed focusing next field when TAB key is pressed inside VisTextField
+-Added Tooltips
 
 [0.4.1]
 -Fixed FileChooser padding when scrollbar was showed (because LibGDX scrollpane was probably fixed as well) 

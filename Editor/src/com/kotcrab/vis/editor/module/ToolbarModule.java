@@ -62,9 +62,8 @@ public class ToolbarModule extends EditorModule implements EventListener {
 	}
 
 	private VisImageButton createButton (String iconName, MenuEventType eventType) {
-		VisImageButton button = new VisImageButton(Assets.getIcon(iconName));
+		VisImageButton button = new VisImageButton(Assets.getIcon(iconName), "Save");
 		button.addListener(new ToolbarButtonChangeListener(eventType));
-		button.setTooltip("Save");
 		return button;
 	}
 

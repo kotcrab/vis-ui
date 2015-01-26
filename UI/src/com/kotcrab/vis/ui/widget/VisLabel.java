@@ -21,8 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.kotcrab.vis.ui.VisUI;
 
 public class VisLabel extends Label {
-	private Tooltip tooltip;
-
 	public VisLabel () {
 		super("", VisUI.skin);
 	}
@@ -41,9 +39,5 @@ public class VisLabel extends Label {
 
 	public VisLabel (CharSequence text, String fontName, String colorName) {
 		super(text, VisUI.skin, fontName, colorName);
-	}
-
-	public void setTooltip (String text) {
-		tooltip = Tooltip.updateTooltip(this, tooltip, text);
 	}
 }
