@@ -32,13 +32,13 @@ import com.kotcrab.vis.ui.widget.*;
 
 public class TestWindow extends VisWindow {
 
-	public TestWindow (boolean useVisComponets) {
+	public TestWindow (boolean useVisComponents) {
 		super("test window");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		if (useVisComponets)
+		if (useVisComponents)
 			addVisComponents();
 		else
 			addNormalComponents();
