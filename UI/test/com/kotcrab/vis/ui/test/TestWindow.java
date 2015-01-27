@@ -96,20 +96,20 @@ public class TestWindow extends VisWindow {
 
 		// ---
 
-		VisTextField normalTextfield = new VisTextField("textbox");
-		VisTextField disabledTextfield = new VisTextField("disabled");
-		VisTextField passwordTextfield = new VisTextField("password");
-		VisTextField invalidTextfield = new VisTextField("invalid");
-		disabledTextfield.setDisabled(true);
-		passwordTextfield.setPasswordMode(true);
-		invalidTextfield.setInputValid(false);
+		VisTextField normalTextField = new VisTextField("textbox");
+		VisTextField disabledTextField = new VisTextField("disabled");
+		VisTextField passwordTextField = new VisTextField("password");
+		VisTextField invalidTextField = new VisTextField("invalid");
+		disabledTextField.setDisabled(true);
+		passwordTextField.setPasswordMode(true);
+		invalidTextField.setInputValid(false);
 
 		VisTable textfieldTable = new VisTable(true);
 		textfieldTable.defaults().width(120);
-		textfieldTable.add(normalTextfield);
-		textfieldTable.add(disabledTextfield);
-		textfieldTable.add(passwordTextfield);
-		textfieldTable.add(invalidTextfield);
+		textfieldTable.add(normalTextField);
+		textfieldTable.add(disabledTextField);
+		textfieldTable.add(passwordTextField);
+		textfieldTable.add(invalidTextField);
 
 		// ---
 
