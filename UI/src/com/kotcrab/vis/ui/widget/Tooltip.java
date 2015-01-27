@@ -82,7 +82,7 @@ public class Tooltip extends VisTable {
 		attach();
 	}
 
-	private void attach () {
+	public void attach () {
 		Array<EventListener> listeners = target.getListeners();
 		for (EventListener listener : listeners)
 			if (listener instanceof TooltipInputListener)
