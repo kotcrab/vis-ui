@@ -33,7 +33,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.kotcrab.vis.ui.FormInputValidator;
 import com.kotcrab.vis.ui.FormValidator;
-import com.kotcrab.vis.ui.TableUtils;
+import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSelectBox;

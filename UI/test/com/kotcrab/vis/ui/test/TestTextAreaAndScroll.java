@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
-import com.kotcrab.vis.ui.TableUtils;
+import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;

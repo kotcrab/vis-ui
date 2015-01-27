@@ -18,6 +18,7 @@ package com.kotcrab.vis.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.Separator;
 
 public class VisTable extends Table {

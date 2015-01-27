@@ -16,7 +16,7 @@
 
 package com.kotcrab.vis.ui.test;
 
-import com.kotcrab.vis.ui.TableUtils;
+import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
