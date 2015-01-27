@@ -1,3 +1,6 @@
+[0.5.1]
+-Added cancelable input dialog in DialogUtils
+
 [0.5.0]
 -API Addition: VisValidableTextField.setValidationEnabled(boolean)
 -API Addition: VisValidableTextField.isValidationEnabled()
@@ -18,6 +21,7 @@
 -Fixed bug where VisValidableTextField would loss focus if user type something and field don't have ChangeListener attached
 -Fixed focusing next field when TAB key is pressed inside VisTextField
 -Added Tooltips
+-Moved TableUtils to com.kotcrab.vis.util package (sorry!)
 
 [0.4.1]
 -Fixed FileChooser padding when scrollbar was showed (because LibGDX scrollpane was probably fixed as well) 

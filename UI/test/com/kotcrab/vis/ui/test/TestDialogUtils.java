@@ -18,8 +18,10 @@ package com.kotcrab.vis.ui.test;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.kotcrab.vis.ui.util.TableUtils;
+import com.kotcrab.vis.ui.InputDialogAdapter;
+import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
@@ -33,11 +35,23 @@ public class TestDialogUtils extends VisWindow {
 
 		VisTextButton showOKMsg = new VisTextButton("show ok popup");
 		VisTextButton showErrorMsg = new VisTextButton("show error popup");
-		VisTextButton showErrorDetialsMsg = new VisTextButton("show error with details popup");
+		VisTextButton showErrorDetailsMsg = new VisTextButton("show error with details popup");
+		VisTextButton showInputDialog = new VisTextButton("show input dialog");
+		VisTextButton showInputDialogIntOnly = new VisTextButton("show input dialog (int only)");
 
-		add(showOKMsg);
-		add(showErrorMsg);
-		add(showErrorDetialsMsg).padBottom(1);
+		VisTable firstRowTable = new VisTable(true);
+		VisTable secondRowTable = new VisTable(true);
+
+		firstRowTable.add(showOKMsg);
+		firstRowTable.add(showErrorMsg);
+		firstRowTable.add(showErrorDetailsMsg).padBottom(1);
+
+		secondRowTable.add(showInputDialog);
+		secondRowTable.add(showInputDialogIntOnly);
+
+		add(firstRowTable);
+		row();
+		add(secondRowTable);
 
 		showOKMsg.addListener(new ChangeListener() {
 
@@ -46,6 +60,7 @@ public class TestDialogUtils extends VisWindow {
 				DialogUtils.showOKDialog(getStage(), "VisUI demo", "Everything is OK!");
 			}
 		});
+
 		showErrorMsg.addListener(new ChangeListener() {
 
 			@Override
@@ -53,18 +68,43 @@ public class TestDialogUtils extends VisWindow {
 				DialogUtils.showErrorDialog(getStage(), "Error occurred while trying to show error popup");
 			}
 		});
-		showErrorDetialsMsg.addListener(new ChangeListener() {
+
+		showErrorDetailsMsg.addListener(new ChangeListener() {
 
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				DialogUtils.showErrorDialog(getStage(), "Error occurred while trying to show error popup", new IllegalStateException(
-					"Carrots cannot be casted to Potatoes"));
+						"Carrots cannot be casted to Potatoes"));
+			}
+		});
+
+		showInputDialog.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				DialogUtils.showInputDialog(getStage(), "enter your name", "name: ", new InputDialogAdapter() {
+					@Override
+					public void finished (String input) {
+						DialogUtils.showOKDialog(getStage(), "result", "your name is: " + input);
+					}
+				});
+			}
+		});
+
+		showInputDialogIntOnly.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				DialogUtils.showInputDialog(getStage(), "enter int number", null, new IntegerValidator(), new InputDialogAdapter() {
+					@Override
+					public void finished (String input) {
+						DialogUtils.showOKDialog(getStage(), "result", "you entered: " + input);
+					}
+				});
 			}
 		});
 
 		pack();
-		setPosition(255, 30);
+		setPosition(255, 20);
 	}
-	
+
 
 }

@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.ui.InputDialogListener;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.widget.*;
@@ -32,19 +33,40 @@ public class DialogUtils {
 	public static void showOKDialog (Stage stage, String title, String text) {
 		VisDialog dialog = new VisDialog(title);
 		dialog.text(text);
-		dialog.button("OK");
+		dialog.button("OK").padBottom(3);
 		dialog.pack();
 		dialog.centerWindow();
 		stage.addActor(dialog.fadeIn());
 	}
 
+	/**
+	 * @param fieldTitle may be null
+	 */
 	public static void showInputDialog (Stage stage, String title, String fieldTitle, InputDialogListener listener) {
-		new InputDialog(stage, title, fieldTitle, listener);
+		new InputDialog(stage, title, fieldTitle, true, null, listener);
 	}
 
+	/**
+	 * @param fieldTitle may be null
+	 */
 	public static void showInputDialog (Stage stage, String title, String fieldTitle, InputValidator validator, InputDialogListener listener) {
-		new InputDialog(stage, title, fieldTitle, validator, listener);
+		new InputDialog(stage, title, fieldTitle, true, validator, listener);
 	}
+
+	/**
+	 * @param fieldTitle may be null
+	 */
+	public static void showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputDialogListener listener) {
+		new InputDialog(stage, title, fieldTitle, cancelable, null, listener);
+	}
+
+	/**
+	 * @param fieldTitle may be null
+	 */
+	public static void showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputValidator validator, InputDialogListener listener) {
+		new InputDialog(stage, title, fieldTitle, cancelable, validator, listener);
+	}
+
 
 	public static void showErrorDialog (Stage stage, String text) {
 		showErrorDialog(stage, text, (String) null);
@@ -80,36 +102,43 @@ public class DialogUtils {
 		return builder.toString();
 	}
 
-	public interface InputDialogListener {
-		public void finished (String input);
-	}
-
 	private static class InputDialog extends VisWindow {
 		private InputDialogListener listener;
 		private VisTextField field;
 		private VisTextButton okButton;
+		private VisTextButton cancelButton;
 
-		public InputDialog (Stage stage, String title, String fieldTitle, InputDialogListener listener) {
-			this(stage, title, fieldTitle, null, listener);
-		}
 
-		public InputDialog (Stage stage, String title, String fieldTitle, InputValidator validator, InputDialogListener listener) {
+		public InputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputValidator validator, InputDialogListener listener) {
 			super(title);
 			this.listener = listener;
+
+			TableUtils.setSpaceDefaults(this);
+			setModal(true);
+
+			if (cancelable) {
+				addCloseButton();
+				closeOnEscape();
+			}
+
+			VisTable buttonsTable = new VisTable(true);
+			buttonsTable.add(cancelButton = new VisTextButton("Cancel"));
+			buttonsTable.add(okButton = new VisTextButton("OK"));
+
+			VisTable fieldTable = new VisTable(true);
 
 			if (validator == null)
 				field = new VisTextField();
 			else
 				field = new VisValidableTextField(validator);
 
-			setModal(true);
-			add(new VisLabel(fieldTitle)).spaceRight(6).spaceBottom(3);
-			add(field).padRight(3).spaceBottom(3);
-			row();
-			add(okButton = new VisTextButton("OK")).colspan(2).padBottom(2);
+			if (fieldTitle != null) fieldTable.add(new VisLabel(fieldTitle));
 
-			pack();
-			centerWindow();
+			fieldTable.add(field).expand().fill();
+
+			add(fieldTable).padTop(3).spaceBottom(4);
+			row();
+			add(buttonsTable).padBottom(3);
 
 			addListeners();
 
@@ -118,8 +147,17 @@ public class DialogUtils {
 				okButton.setDisabled(!field.isInputValid());
 			}
 
+			pack();
+			centerWindow();
+
 			stage.addActor(fadeIn());
 			field.focusField();
+		}
+
+		@Override
+		protected void close () {
+			super.close();
+			listener.canceled();
 		}
 
 		private void addValidableFieldListener (final VisTextField field) {
@@ -140,6 +178,13 @@ public class DialogUtils {
 				public void changed (ChangeEvent event, Actor actor) {
 					listener.finished(field.getText());
 					fadeOut();
+				}
+			});
+
+			cancelButton.addListener(new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent event, Actor actor) {
+					close();
 				}
 			});
 
@@ -195,7 +240,7 @@ public class DialogUtils {
 				button("Details", DETAILS);
 			}
 
-			button("OK", OK);
+			button("OK", OK).padBottom(3);
 			pack();
 			centerWindow();
 		}
