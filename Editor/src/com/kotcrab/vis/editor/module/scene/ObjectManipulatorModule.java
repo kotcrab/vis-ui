@@ -200,6 +200,10 @@ public class ObjectManipulatorModule extends SceneModule {
 		return matchingObject;
 	}
 
+	public Array<Object2d> getSelectedObjects () {
+		return selectedObjects;
+	}
+
 	private class ObjectsRemoved implements UndoableAction {
 		private Array<Object2d> objects;
 
