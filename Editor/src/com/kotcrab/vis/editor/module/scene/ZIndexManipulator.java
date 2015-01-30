@@ -24,19 +24,28 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 
 public class ZIndexManipulator extends SceneModule {
+	private UndoModule undoModule;
 	private ObjectManipulatorModule objectManipulator;
+
+	private UndoableActionGroup actionGroup;
 
 	@Override
 	public void init () {
+		undoModule = sceneContainer.get(UndoModule.class);
 		objectManipulator = sceneContainer.get(ObjectManipulatorModule.class);
 	}
 
 	private void moveSelectedObjects (boolean up) {
+		actionGroup = new UndoableActionGroup();
+
 		Array<Object2d> selectedObjects = objectManipulator.getSelectedObjects();
 
 		for (Object2d object : selectedObjects) {
 			moveObject(object, getOverlappingObjects(object, up), up);
 		}
+
+		actionGroup.finalize();
+		undoModule.add(actionGroup);
 	}
 
 	private void moveObject (Object2d object, Array<Object2d> overlappingObjects, boolean up) {
@@ -51,8 +60,7 @@ public class ZIndexManipulator extends SceneModule {
 					targetIndex = sceneIndex;
 			}
 
-			scene.objects.removeIndex(currentIndex);
-			scene.objects.insert(targetIndex, object);
+			actionGroup.execute(new ZIndexChangeAction(object, currentIndex, targetIndex));
 		}
 	}
 
@@ -91,5 +99,29 @@ public class ZIndexManipulator extends SceneModule {
 		}
 
 		return false;
+	}
+
+	private class ZIndexChangeAction implements UndoableAction {
+		private Object2d object;
+		private int currentIndex;
+		private int targetIndex;
+
+		public ZIndexChangeAction (Object2d object, int currentIndex, int targetIndex) {
+			this.object = object;
+			this.currentIndex = currentIndex;
+			this.targetIndex = targetIndex;
+		}
+
+		@Override
+		public void execute () {
+			scene.objects.removeIndex(currentIndex);
+			scene.objects.insert(targetIndex, object);
+		}
+
+		@Override
+		public void undo () {
+			scene.objects.removeIndex(targetIndex);
+			scene.objects.insert(currentIndex, object);
+		}
 	}
 }
