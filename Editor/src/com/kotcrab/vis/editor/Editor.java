@@ -153,7 +153,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		root.add(editorMC.get(StatusBarModule.class).getTable()).fillX().expandX().row();
 	}
 
-
 	@Override
 	public void resize (int width, int height) {
 		stage.getViewport().update(width, height, true);
