@@ -65,8 +65,13 @@ public class UndoModule extends SceneModule {
 
 	public void execute (UndoableAction action) {
 		action.execute();
+		add(action);
+	}
+
+	public void add (UndoableAction action) {
 		undoList.add(action);
 		redoList.clear();
+		sceneTab.setDirty(true);
 	}
 
 	@Override
@@ -81,7 +86,7 @@ public class UndoModule extends SceneModule {
 
 	private class UndoInputListener extends InputListener {
 		public boolean keyDown (InputEvent event, int keycode) {
-			if(tabActive) {
+			if (tabActive) {
 				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
 					if (keycode == Keys.Z) undo();
 					if (keycode == Keys.Y) redo();
