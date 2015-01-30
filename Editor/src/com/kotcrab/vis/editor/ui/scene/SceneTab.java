@@ -64,7 +64,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		cacheModule = projectMC.get(TextureCacheModule.class);
 		sceneIOModule = projectMC.get(SceneIOModule.class);
 
-		sceneMC = new SceneModuleContainer(projectMC, scene);
+		sceneMC = new SceneModuleContainer(projectMC, this, scene);
 		sceneMC.add(new CameraModule());
 		sceneMC.add(new GridRendererModule());
 		sceneMC.add(new RendererModule());
@@ -209,8 +209,12 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 	}
 
 	public void setDirty (boolean dirty) {
-		this.dirty = dirty;
-		getPane().updateTabTitle(this);
+		boolean update = (dirty != this.dirty);
+
+		if (update) {
+			this.dirty = dirty;
+			getPane().updateTabTitle(this);
+		}
 	}
 
 	@Override

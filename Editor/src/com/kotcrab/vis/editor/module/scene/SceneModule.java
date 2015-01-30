@@ -23,13 +23,16 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.kotcrab.vis.editor.module.project.ProjectModule;
+import com.kotcrab.vis.editor.ui.scene.SceneTab;
 
 public abstract class SceneModule extends ProjectModule {
 	protected EditorScene scene;
+	protected SceneTab sceneTab;
 	protected SceneModuleContainer sceneContainer;
 
-	public void setSceneObjects (SceneModuleContainer projectContainer, EditorScene scene) {
+	public void setSceneObjects (SceneModuleContainer projectContainer, SceneTab sceneTab, EditorScene scene) {
 		this.sceneContainer = projectContainer;
+		this.sceneTab = sceneTab;
 		this.scene = scene;
 	}
 

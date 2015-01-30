@@ -26,17 +26,20 @@ import com.kotcrab.vis.editor.module.BaseModuleContainer;
 import com.kotcrab.vis.editor.module.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import com.kotcrab.vis.editor.ui.scene.SceneTab;
 
 public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 	private Project project;
 	private EditorModuleContainer editorModuleContainer;
 	private ProjectModuleContainer projectModuleContainer;
 
+	private SceneTab sceneTab;
 	private EditorScene scene;
 
-	public SceneModuleContainer (ProjectModuleContainer projectModuleContainer, EditorScene scene) {
+	public SceneModuleContainer (ProjectModuleContainer projectModuleContainer, SceneTab sceneTab,  EditorScene scene) {
 		this.editorModuleContainer = projectModuleContainer.getEditorContainer();
 		this.projectModuleContainer = projectModuleContainer;
+		this.sceneTab = sceneTab;
 		this.scene = scene;
 	}
 
@@ -45,7 +48,7 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 		module.setProject(projectModuleContainer.getProject());
 		module.setProjectModuleContainer(projectModuleContainer);
 		module.setContainer(editorModuleContainer);
-		module.setSceneObjects(this, scene);
+		module.setSceneObjects(this, sceneTab, scene);
 
 		super.add(module);
 	}
