@@ -26,10 +26,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.InputDialogListener;
 import com.kotcrab.vis.ui.InputValidator;
+import com.kotcrab.vis.ui.OptionDialogListener;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.widget.*;
 
 public class DialogUtils {
+
+	private static final int BUTTON_CANCEL = 0;
+	private static final int BUTTON_YES = 1;
+	private static final int BUTTON_NO = 2;
+	private static final int BUTTON_OK = 3;
+	private static final int BUTTON_DETAILS = 4;
+
 	public static void showOKDialog (Stage stage, String title, String text) {
 		VisDialog dialog = new VisDialog(title);
 		dialog.text(text);
@@ -37,6 +45,10 @@ public class DialogUtils {
 		dialog.pack();
 		dialog.centerWindow();
 		stage.addActor(dialog.fadeIn());
+	}
+
+	public static OptionDialog showOptionDialog (Stage stage, String title, String text, OptionDialogType type, final OptionDialogListener listener) {
+		return new OptionDialog(stage, title, text, type, listener);
 	}
 
 	/**
@@ -66,7 +78,6 @@ public class DialogUtils {
 	public static void showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputValidator validator, InputDialogListener listener) {
 		new InputDialog(stage, title, fieldTitle, cancelable, validator, listener);
 	}
-
 
 	public static void showErrorDialog (Stage stage, String text) {
 		showErrorDialog(stage, text, (String) null);
@@ -102,7 +113,11 @@ public class DialogUtils {
 		return builder.toString();
 	}
 
-	private static class InputDialog extends VisWindow {
+	public enum OptionDialogType {
+		YES_NO, YES_NO_CANCEL, YES_CANCEL
+	}
+
+	public static class InputDialog extends VisWindow {
 		private InputDialogListener listener;
 		private VisTextField field;
 		private VisTextButton okButton;
@@ -202,9 +217,65 @@ public class DialogUtils {
 		}
 	}
 
-	private static class ErrorDialog extends VisDialog {
-		final int OK = 0;
-		final int DETAILS = 1;
+	public static class OptionDialog extends VisDialog {
+		private OptionDialogListener listener;
+
+		private VisTextButton yesButton = new VisTextButton("Yes");
+		private VisTextButton noButton = new VisTextButton("No");
+		private VisTextButton cancelButton = new VisTextButton("Cancel");
+
+		public OptionDialog (Stage stage, String title, String text, OptionDialogType type, OptionDialogListener listener) {
+			super(title);
+
+			this.listener = listener;
+
+			text(text);
+			defaults().padBottom(3);
+
+			switch (type) {
+				case YES_NO:
+					button(noButton, BUTTON_NO);
+					button(yesButton, BUTTON_YES);
+					break;
+				case YES_CANCEL:
+					button(yesButton, BUTTON_YES);
+					button(cancelButton, BUTTON_CANCEL);
+					break;
+				case YES_NO_CANCEL:
+					button(noButton, BUTTON_NO);
+					button(yesButton, BUTTON_YES);
+					button(cancelButton, BUTTON_CANCEL);
+					break;
+			}
+
+			pack();
+			centerWindow();
+			stage.addActor(fadeIn());
+		}
+
+		@Override
+		protected void result (Object object) {
+			int result = (Integer) object;
+
+			if (result == BUTTON_YES) listener.yes();
+			if (result == BUTTON_NO) listener.no();
+			if (result == BUTTON_CANCEL) listener.cancel();
+		}
+
+		public void setNoButtonText (String text) {
+			noButton.setText(text);
+		}
+
+		public void setYesButtonText (String text) {
+			yesButton.setText(text);
+		}
+
+		public void setCancelButtonText (String text) {
+			cancelButton.setText(text);
+		}
+	}
+
+	public static class ErrorDialog extends VisDialog {
 
 		private VisTable detailsTable = new VisTable(true);
 		private Cell<?> detailsCell;
@@ -237,10 +308,10 @@ public class DialogUtils {
 				getContentTable().row();
 				detailsCell = getContentTable().add(detailsTable);
 				detailsCell.setActor(null);
-				button("Details", DETAILS);
+				button("Details", BUTTON_DETAILS);
 			}
 
-			button("OK", OK).padBottom(3);
+			button("OK", BUTTON_OK).padBottom(3);
 			pack();
 			centerWindow();
 		}
@@ -249,7 +320,7 @@ public class DialogUtils {
 		protected void result (Object object) {
 			int result = (Integer) object;
 
-			if (result == DETAILS) {
+			if (result == BUTTON_DETAILS) {
 				detailsCell.setActor(detailsCell.hasActor() ? null : detailsTable);
 				pack();
 				centerWindow();

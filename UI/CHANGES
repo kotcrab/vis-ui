@@ -1,3 +1,6 @@
+[0.5.2]
+-Added OptionDialog in DialogUtils
+
 [0.5.1]
 -Added cancelable input dialog in DialogUtils
 
