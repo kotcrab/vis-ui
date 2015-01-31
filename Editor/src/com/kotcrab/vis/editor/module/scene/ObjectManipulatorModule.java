@@ -163,6 +163,7 @@ public class ObjectManipulatorModule extends SceneModule {
 		if (keycode == Keys.FORWARD_DEL) { //Delete
 			undoModule.execute(new ObjectsRemoved(selectedObjects));
 			selectedObjects.clear();
+			objectProperties.setValuesToFields(selectedObjects);
 
 			return true;
 		}
@@ -202,6 +203,12 @@ public class ObjectManipulatorModule extends SceneModule {
 
 	public Array<Object2d> getSelectedObjects () {
 		return selectedObjects;
+	}
+
+	public void select (Object2d object) {
+		selectedObjects.clear();
+		selectedObjects.add(object);
+		objectProperties.setValuesToFields(selectedObjects);
 	}
 
 	private class ObjectsRemoved implements UndoableAction {
