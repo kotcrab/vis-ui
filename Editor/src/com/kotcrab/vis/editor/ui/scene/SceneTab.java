@@ -45,6 +45,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 	private TextureCacheModule cacheModule;
 	private SceneIOModule sceneIOModule;
+	private ObjectManipulatorModule objectManipulatorModule;
 
 	private SceneModuleContainer sceneMC;
 	private UndoModule undoModule;
@@ -65,16 +66,13 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		sceneIOModule = projectMC.get(SceneIOModule.class);
 
 		sceneMC = new SceneModuleContainer(projectMC, this, scene);
-		sceneMC.add(new CameraModule());
+		sceneMC.add(cameraModule = new CameraModule());
 		sceneMC.add(new GridRendererModule());
 		sceneMC.add(new RendererModule());
-		sceneMC.add(new UndoModule());
+		sceneMC.add(undoModule = new UndoModule());
 		sceneMC.add(new ZIndexManipulator());
-		sceneMC.add(new ObjectManipulatorModule());
+		sceneMC.add(objectManipulatorModule = new ObjectManipulatorModule());
 		sceneMC.init();
-
-		undoModule = sceneMC.get(UndoModule.class);
-		cameraModule = sceneMC.get(CameraModule.class);
 
 		outline = new SceneOutline();
 
@@ -127,6 +125,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 			@Override
 			public void execute () {
 				scene.objects.add(object);
+				objectManipulatorModule.select(object);
 			}
 
 			@Override
