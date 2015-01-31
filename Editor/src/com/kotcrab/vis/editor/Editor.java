@@ -42,9 +42,11 @@ import com.kotcrab.vis.editor.ui.SettingsDialog;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 import com.kotcrab.vis.editor.util.EditorException;
+import com.kotcrab.vis.ui.OptionDialogAdapter;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.util.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
 
@@ -64,10 +66,12 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	private SettingsDialog settingsDialog;
 
-	private InputModule inputModule;
 
 	private EditorModuleContainer editorMC;
 	private ProjectModuleContainer projectMC;
+
+	private InputModule inputModule;
+	private GeneralSettingsModule settings;
 
 	private boolean projectLoaded = false;
 
@@ -138,6 +142,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(new TabsModule());
 		editorMC.add(new StatusBarModule());
 
+		editorMC.add(settings = new GeneralSettingsModule());
 		editorMC.add(new GridSettingsModule());
 
 		editorMC.init();
@@ -194,6 +199,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		} else
 			exit();
 	}
+
 
 	private void exit () {
 		Gdx.app.exit();
