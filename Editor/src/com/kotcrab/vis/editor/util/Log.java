@@ -23,14 +23,14 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/** Log utility, log events are redirected to listener and printed to standard output
- * @author Pawel Pastuszak */
+/**
+ * Log utility, log events are redirected to listener and printed to standard output
+ * @author Pawel Pastuszak
+ */
 public class Log {
 	private static boolean debug = false;
-	private static boolean deubgInterrupted = false;
-
+	private static boolean debugInterrupted = false;
 	private static LoggerListener listener = new DefaultLogListener();
-
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm] ");
 
 	public static boolean isDebug () {
@@ -41,12 +41,12 @@ public class Log {
 		Log.debug = debug;
 	}
 
-	public static boolean isDeubgInterrupted () {
-		return deubgInterrupted;
+	public static boolean isDebugInterrupted () {
+		return debugInterrupted;
 	}
 
-	public static void setDeubgInterrupted (boolean deubgInterrupted) {
-		Log.deubgInterrupted = deubgInterrupted;
+	public static void setDebugInterrupted (boolean debugInterrupted) {
+		Log.debugInterrupted = debugInterrupted;
 	}
 
 	public static void init () {
@@ -65,7 +65,7 @@ public class Log {
 	}
 
 	public static void interruptedEx (InterruptedException e) {
-		if (deubgInterrupted) exception(e);
+		if (debugInterrupted) exception(e);
 	}
 
 	// ============STANDARD LOGGING============
