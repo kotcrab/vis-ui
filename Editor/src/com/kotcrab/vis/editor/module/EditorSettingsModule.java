@@ -32,7 +32,7 @@ public abstract class EditorSettingsModule extends EditorModule implements Setta
 		return settingsTable;
 	}
 
-	protected abstract void rebuildSettingsTable();
+	protected abstract void rebuildSettingsTable ();
 
 	private void validate () {
 		if (settingsTable == null) settingsTable = new VisTable();
@@ -46,4 +46,22 @@ public abstract class EditorSettingsModule extends EditorModule implements Setta
 	public void settingsClose () {
 		rebuildNeeded = true;
 	}
+
+	@Override
+	public boolean settingsChanged () {
+		if (rebuildNeeded == false)
+			return changed();
+
+		return true;
+	}
+
+	@Override
+	public void settingsApply () {
+		if (rebuildNeeded == false)
+			apply();
+	}
+
+	public abstract void apply ();
+
+	public abstract boolean changed ();
 }

@@ -105,6 +105,7 @@ public class GridRendererModule extends SceneModule {
 		private VisCheckBox drawGridCheck;
 		private VisValidableTextField gridSizeField;
 
+		@Override
 		protected void rebuildSettingsTable () {
 			VisTable sizeTable = new VisTable(true);
 
@@ -125,19 +126,19 @@ public class GridRendererModule extends SceneModule {
 		}
 
 		@Override
-		public String getSettingsName () {
-			return "Grid";
+		public void apply () {
+			drawGrid = drawGridCheck.isChecked();
+			gridSize = FieldUtils.getInt(gridSizeField, 0);
 		}
 
 		@Override
-		public boolean settingsChanged () {
+		public boolean changed () {
 			return gridSizeField.isInputValid();
 		}
 
 		@Override
-		public void settingsApply () {
-			drawGrid = drawGridCheck.isChecked();
-			gridSize = FieldUtils.getInt(gridSizeField, 0);
+		public String getSettingsName () {
+			return "Grid";
 		}
 	}
 }
