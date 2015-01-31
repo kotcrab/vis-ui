@@ -60,13 +60,13 @@ public class CameraModule extends SceneModule {
 		float cursorY = unprojectVec.y;
 
 		if (amount == -1) { // zoom in
-			if (camera.zoom <= 0.5f) return false;
+			if (camera.zoom <= 0.3f) return false;
 			newZoom = camera.zoom - 0.1f * camera.zoom * 2;
 
 		}
 
 		if (amount == 1) { // zoom out
-			if (camera.zoom >= 4f) return false;
+			if (camera.zoom >= 10f) return false;
 			newZoom = camera.zoom + 0.1f * camera.zoom * 2;
 		}
 
