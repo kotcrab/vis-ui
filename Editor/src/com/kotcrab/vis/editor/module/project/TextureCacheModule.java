@@ -77,9 +77,9 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		assetsPath = fileAccess.getAssetsFolder().path();
 
 		watcher.addListener(this);
-		updateCache();
 
 		if (cacheFile.exists()) cache = new TextureAtlas(cacheFile);
+		updateCache();
 	}
 
 	private void updateCache () {
@@ -124,7 +124,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		disposeOldCacheLater(oldCache);
 
 		App.eventBus.post(new TexturesReloadedEvent());
-		if(firstReload == false) {
+		if (firstReload == false) {
 			//we don't want to display 'textures reloaded' right after editor startup
 			App.eventBus.post(new StatusBarEvent("Textures reloaded"));
 			firstReload = true;
