@@ -182,8 +182,17 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	public void requestExit () {
-		// here will be fancy 'do you really want to exit' dialog
-		exit();
+		if (settings.isConfirmExit()) {
+			DialogUtils.OptionDialog dialog = DialogUtils.showOptionDialog(getStage(), "Confirm Exit", "Are you sure you want to exit VisEditor?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+				@Override
+				public void yes () {
+					exit();
+				}
+			});
+
+			dialog.setYesButtonText("Exit");
+		} else
+			exit();
 	}
 
 	private void exit () {

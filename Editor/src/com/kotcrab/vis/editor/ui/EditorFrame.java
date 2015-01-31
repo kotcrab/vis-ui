@@ -27,8 +27,40 @@ import com.kotcrab.vis.editor.Editor;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class EditorFrame extends JFrame {
+	private Editor editor;
+
+	public EditorFrame () {
+		setTitle("VisEditor");
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing (WindowEvent e) {
+				editor.requestExit();
+			}
+		});
+
+		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.width = 1280;
+		config.height = 720;
+		config.backgroundFPS = -1;
+
+		editor = new Editor(this);
+
+		LwjglCanvas editorCanvas = new LwjglCanvas(editor, config);
+		Canvas canvas = editorCanvas.getCanvas();
+		canvas.setSize(1280, 720);
+
+		getContentPane().add(canvas, BorderLayout.CENTER);
+
+		pack();
+		setLocationRelativeTo(null);
+	}
+
 	public static void main (String[] args) {
 		App.init();
 
@@ -38,25 +70,6 @@ public class EditorFrame extends JFrame {
 				new EditorFrame().setVisible(true);
 			}
 		});
-	}
-
-	public EditorFrame () {
-		setTitle("VisEditor");
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
-		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		config.width = 1280;
-		config.height = 720;
-		config.backgroundFPS = -1;
-
-		LwjglCanvas editorCanvas = new LwjglCanvas(new Editor(this), config);
-		Canvas canvas = editorCanvas.getCanvas();
-		canvas.setSize(1280, 720);
-
-		getContentPane().add(canvas, BorderLayout.CENTER);
-
-		pack();
-		setLocationRelativeTo(null);
 	}
 
 	@Override
