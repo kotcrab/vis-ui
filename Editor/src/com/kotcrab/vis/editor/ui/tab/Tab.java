@@ -26,6 +26,16 @@ public abstract class Tab {
 	private boolean activeTab;
 	private TabbedPane pane;
 
+	private boolean savable;
+	private boolean dirty;
+
+	public Tab () {
+	}
+
+	public Tab (boolean savable) {
+		this.savable = savable;
+	}
+
 	public abstract String getButtonText ();
 
 	public abstract TabViewMode getViewMode ();
@@ -45,7 +55,7 @@ public abstract class Tab {
 	public void onHide () {
 		activeTab = false;
 	}
-	
+
 	public boolean isActiveTab () {
 		return activeTab;
 	}
@@ -56,5 +66,36 @@ public abstract class Tab {
 
 	public void setPane (TabbedPane pane) {
 		this.pane = pane;
+	}
+
+	public boolean isSavable () {
+		return savable;
+	}
+
+	public boolean isDirty () {
+		checkSavable();
+
+		return dirty;
+	}
+
+	public void setDirty (boolean dirty) {
+		checkSavable();
+
+		boolean update = (dirty != this.dirty);
+
+		if (update) {
+			this.dirty = dirty;
+			if (pane != null) getPane().updateTabTitle(this);
+		}
+	}
+
+	public boolean save () {
+		checkSavable();
+
+		return false;
+	}
+
+	private void checkSavable () {
+		if (savable == false) throw new IllegalStateException("Tab is not savable!");
 	}
 }

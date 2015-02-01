@@ -57,9 +57,8 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 	private Target dropTarget;
 
-	private boolean dirty;
-
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
+		super(false);
 		this.scene = scene;
 
 		cacheModule = projectMC.get(TextureCacheModule.class);
@@ -201,19 +200,6 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 	public EditorScene getScene () {
 		return scene;
-	}
-
-	public boolean isDirty () {
-		return dirty;
-	}
-
-	public void setDirty (boolean dirty) {
-		boolean update = (dirty != this.dirty);
-
-		if (update) {
-			this.dirty = dirty;
-			getPane().updateTabTitle(this);
-		}
 	}
 
 	@Override
