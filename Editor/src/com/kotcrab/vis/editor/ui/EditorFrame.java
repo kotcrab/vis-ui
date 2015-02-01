@@ -29,6 +29,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Set;
 
 public class EditorFrame extends JFrame {
 	private Editor editor;
@@ -36,13 +37,13 @@ public class EditorFrame extends JFrame {
 	public EditorFrame () {
 		setTitle("VisEditor");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing (WindowEvent e) {
-				editor.requestExit();
+				performEditorExit();
 			}
 		});
+
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
@@ -70,6 +71,24 @@ public class EditorFrame extends JFrame {
 				new EditorFrame().setVisible(true);
 			}
 		});
+	}
+
+	/**
+	 * Performs editor exit, if editor is still running, this will cause to display "Do you really want to exit?" dialog in editor window.
+	 * If editor LibGDX thread died, for example. after uncaught GdxRuntimeException this will simply kill app.
+	 */
+	private void performEditorExit () {
+		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+
+		for (Thread thread : threadSet) {
+			if (thread.getName().contains("LWJGL Timer")) {
+				editor.requestExit();
+				return;
+			}
+		}
+
+		System.err.println("Editor LibGDX thread is not running, performing force exit.");
+		System.exit(-1);
 	}
 
 	@Override
