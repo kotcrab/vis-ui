@@ -36,7 +36,7 @@ public class App {
 	public static final int VERSION_CODE = 2;
 	public static final String VERSION = "0.0.2-SNAPSHOT";
 
-	public static final boolean ERROR_REPORTS = true;
+	public static final boolean ERROR_REPORTS = false;
 	public static final boolean SNAPSHOT = VERSION.contains("SNAPSHOT");
 
 	public static final String JAR_FOLDER_PATH = getJarPath();
@@ -56,20 +56,20 @@ public class App {
 		eventBus = new EventBus();
 
 		if (ERROR_REPORTS == false)
-			Log.w(TAG, "Error reports are disabled!");
+			Log.warn(TAG, "Error reports are disabled!");
 	}
 
 	/** Checks if proper charset is set, if not tries to change it, if that fails method will throw IllegalStateException */
 	private static void checkCharset () {
 		if (Charset.defaultCharset().name().equals("UTF-8") == false) {
-			Log.err(TAG, "UTF-8 is not default charset, trying to change...");
+			Log.error(TAG, "UTF-8 is not default charset, trying to change...");
 
 			try {
 				System.setProperty("file.encoding", "UTF-8");
 				Field charset = Charset.class.getDeclaredField("defaultCharset");
 				charset.setAccessible(true);
 				charset.set(null, null);
-				Log.l(TAG, "Success, run with VM argument: -Dfile.encoding=UTF-8 to avoid this.");
+				Log.warn(TAG, "Success, run with VM argument: -Dfile.encoding=UTF-8 to avoid this.");
 			} catch (Exception e) {
 				String charsetChangeFailed = "Failed! UTF-8 charset is not default for this system and attempt to change it failed, " +
 						"cannot continue! Run with VM argument: -Dfile.encoding=UTF-8 to fix this.";

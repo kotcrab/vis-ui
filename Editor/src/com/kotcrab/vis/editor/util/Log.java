@@ -30,37 +30,19 @@ import java.util.Date;
  * @author Pawel Pastuszak
  */
 public class Log {
-
-	public static final int DEBUG = 0;
-	public static final int INFO = 1;
-	public static final int WARN = 2;
-	public static final int ERROR = 3;
-	public static final int FATAL = 4;
 	public static final int OFF = 5;
+	public static final int DEBUG = 4;
+	public static final int INFO = 3;
+	public static final int WARN = 2;
+	public static final int ERROR = 1;
+	public static final int FATAL = 0;
 
 	private static int logLevel = INFO;
 
-	private static boolean debug = false;
 	private static boolean debugInterrupted = false;
 
 	private static LoggerListener listener = new DefaultLogListener();
-	private static SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm] ");
-
-	public static boolean isDebug () {
-		return debug;
-	}
-
-	public static void setDebug (boolean debug) {
-		Log.debug = debug;
-	}
-
-	public static boolean isDebugInterrupted () {
-		return debugInterrupted;
-	}
-
-	public static void setDebugInterrupted (boolean debugInterrupted) {
-		Log.debugInterrupted = debugInterrupted;
-	}
+	private static SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm]");
 
 	public static void init () {
 		System.setErr(new Interceptor(System.err));
@@ -73,84 +55,51 @@ public class Log {
 		});
 	}
 
-	public static int getLogLevel () {
-		return logLevel;
-	}
-
-	public static void setLogLevel (int logLevel) {
-		Log.logLevel = logLevel;
-	}
-
-	public static void exception (Throwable e) {
-		if (e instanceof InterruptedException && debugInterrupted == false ) return;
-
-		e.printStackTrace();
-		listener.exception(ExceptionUtils.getStackTrace(e));
-	}
-
-	// ============STANDARD LOGGING============
-
-	public static void l (String msg) {
-		println(msg);
-	}
-
-	public static void w (String msg) {
-		println("WARNING: " + msg);
-	}
+	// Standard log
 
 	public static void debug (String msg) {
-		if (debug) println("DEBUG: " + msg);
+		if (logLevel >= DEBUG) print("[Debug]" + msg);
 	}
 
-	public static void err (String msg) {
-		printlnErr("ERROR: " + msg);
+	public static void info (String msg) {
+		if (logLevel >= INFO) print("[Info]" + msg);
 	}
 
-	// ============LOGGING WITHOUT NEW LINE============
-
-	public static void lNnl (String msg) {
-		print(msg);
+	public static void warn (String msg) {
+		if (logLevel >= WARN) print("[Warn]" + msg);
 	}
 
-	public static void wNnl (String msg) {
-		print("WARNING: " + msg);
+	public static void error (String msg) {
+		if (logLevel >= ERROR) printErr("[Error]" + msg);
 	}
 
-	public static void debugNnl (String msg) {
-		if (debug) print("DEBUG: " + msg);
+	public static void fatal (String msg) {
+		if (logLevel >= FATAL) printErr("[Fatal]" + msg);
 	}
 
-	public static void eNnl (String msg) {
-		printErr("ERROR: " + msg);
-	}
-
-	// ============LOGGING WITH TAG============
-
-	public static void l (String tag, String msg) {
-		println("[" + tag + "] " + msg);
-	}
-
-	public static void w (String tag, String msg) {
-		println("[" + tag + "] " + "WARNING: " + msg);
-	}
+	//Log with tag
 
 	public static void debug (String tag, String msg) {
-		if (debug) println("[" + tag + "] " + "DEBUG: " + msg);
+		if (logLevel >= DEBUG) print("[Debug][" + tag + "] " + msg);
 	}
 
-	public static void err (String tag, String msg) {
-		printlnErr("[" + tag + "] " + "ERROR: " + msg);
+	public static void info (String tag, String msg) {
+		if (logLevel >= INFO) print("[Info][" + tag + "] " + msg);
 	}
 
-	// ==========================================
+	public static void warn (String tag, String msg) {
+		if (logLevel >= WARN) print("[Warn][" + tag + "] " + msg);
+	}
+
+	public static void error (String tag, String msg) {
+		if (logLevel >= ERROR) printErr("[Error][" + tag + "] " + msg);
+	}
+
+	public static void fatal (String tag, String msg) {
+		if (logLevel >= FATAL) printErr("[Fatal][" + tag + "] " + msg);
+	}
 
 	private static void print (String msg) {
-		msg = getTimestamp() + msg;
-		listener.log(msg);
-		System.out.print(msg);
-	}
-
-	private static void println (String msg) {
 		msg = getTimestamp() + msg;
 		listener.log(msg);
 		System.out.println(msg);
@@ -159,21 +108,39 @@ public class Log {
 	private static void printErr (String msg) {
 		msg = getTimestamp() + msg;
 		listener.err(msg);
-		System.err.print(msg);
+		System.err.println(msg);
 	}
 
-	private static void printlnErr (String msg) {
-		msg = getTimestamp() + msg;
-		listener.err(msg);
-		System.err.println(msg);
+	public static void exception (Throwable e) {
+		if (e instanceof InterruptedException && debugInterrupted == false) return;
+
+		e.printStackTrace();
+		listener.exception(ExceptionUtils.getStackTrace(e));
+	}
+
+
+	private static String getTimestamp () {
+		return dateFormat.format(new Date());
 	}
 
 	public static void setListener (LoggerListener listener) {
 		Log.listener = listener;
 	}
 
-	private static String getTimestamp () {
-		return dateFormat.format(new Date());
+	public static int getLogLevel () {
+		return logLevel;
+	}
+
+	public static void setLogLevel (int logLevel) {
+		Log.logLevel = logLevel;
+	}
+
+	public static boolean isDebugInterrupted () {
+		return debugInterrupted;
+	}
+
+	public static void setDebugInterrupted (boolean debugInterrupted) {
+		Log.debugInterrupted = debugInterrupted;
 	}
 
 	private static class Interceptor extends PrintStream {
