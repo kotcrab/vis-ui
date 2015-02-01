@@ -58,7 +58,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 	private Target dropTarget;
 
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
-		super(false);
+		super(true);
 		this.scene = scene;
 
 		cacheModule = projectMC.get(TextureCacheModule.class);
