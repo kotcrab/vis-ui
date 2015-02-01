@@ -42,6 +42,7 @@ import com.kotcrab.vis.editor.ui.SettingsDialog;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 import com.kotcrab.vis.editor.util.EditorException;
+import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.ui.OptionDialogAdapter;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
@@ -50,6 +51,7 @@ import com.kotcrab.vis.ui.util.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
 
+//TODO crash report system
 public class Editor extends ApplicationAdapter implements EventListener {
 	public static Editor instance;
 
@@ -105,7 +107,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		try {
 			editorMC.get(ProjectIOModule.class).load((Gdx.files.absolute("F:\\Poligon\\TestProject")));
 		} catch (EditorException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 
 		FileHandle scene = Gdx.files.absolute("F:\\Poligon\\TestProject\\vis\\assets\\scene\\test.scene");

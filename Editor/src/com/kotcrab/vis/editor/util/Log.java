@@ -19,6 +19,8 @@
 
 package com.kotcrab.vis.editor.util;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,8 +30,19 @@ import java.util.Date;
  * @author Pawel Pastuszak
  */
 public class Log {
+
+	public static final int DEBUG = 0;
+	public static final int INFO = 1;
+	public static final int WARN = 2;
+	public static final int ERROR = 3;
+	public static final int FATAL = 4;
+	public static final int OFF = 5;
+
+	private static int logLevel = INFO;
+
 	private static boolean debug = false;
 	private static boolean debugInterrupted = false;
+
 	private static LoggerListener listener = new DefaultLogListener();
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm] ");
 
@@ -50,22 +63,29 @@ public class Log {
 	}
 
 	public static void init () {
+		System.setErr(new Interceptor(System.err));
+
 		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 			@Override
 			public void uncaughtException (Thread t, Throwable e) {
-				e.printStackTrace();
-				listener.exception(ExceptionUtils.getStackTrace(e));
+				Log.exception(e);
 			}
 		});
 	}
 
-	public static void exception (Exception e) {
-		e.printStackTrace();
-		listener.exception(ExceptionUtils.getStackTrace(e));
+	public static int getLogLevel () {
+		return logLevel;
 	}
 
-	public static void interruptedEx (InterruptedException e) {
-		if (debugInterrupted) exception(e);
+	public static void setLogLevel (int logLevel) {
+		Log.logLevel = logLevel;
+	}
+
+	public static void exception (Throwable e) {
+		if (e instanceof InterruptedException && debugInterrupted == false ) return;
+
+		e.printStackTrace();
+		listener.exception(ExceptionUtils.getStackTrace(e));
 	}
 
 	// ============STANDARD LOGGING============
@@ -155,18 +175,31 @@ public class Log {
 	private static String getTimestamp () {
 		return dateFormat.format(new Date());
 	}
+
+	private static class Interceptor extends PrintStream {
+		public Interceptor (OutputStream out) {
+			super(out, true);
+		}
+
+		@Override
+		public void print (String s) {
+			super.print(s);
+		}
+	}
+
+	private static class DefaultLogListener implements LoggerListener {
+		@Override
+		public void log (String msg) {
+		}
+
+		@Override
+		public void err (String msg) {
+		}
+
+		@Override
+		public void exception (String stacktrace) {
+		}
+	}
 }
 
-class DefaultLogListener implements LoggerListener {
-	@Override
-	public void log (String msg) {
-	}
 
-	@Override
-	public void err (String msg) {
-	}
-
-	@Override
-	public void exception (String stacktrace) {
-	}
-}

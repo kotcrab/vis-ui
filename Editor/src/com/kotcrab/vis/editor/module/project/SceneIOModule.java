@@ -26,6 +26,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
 import com.kotcrab.vis.editor.module.scene.Object2d;
 import com.kotcrab.vis.editor.module.scene.SceneObject;
+import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 import java.io.FileInputStream;
@@ -61,7 +62,7 @@ public class SceneIOModule extends ProjectModule {
 
 			return scene;
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 		return null;
 	}
@@ -85,7 +86,7 @@ public class SceneIOModule extends ProjectModule {
 			output.close();
 			return true;
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 
 		return false;

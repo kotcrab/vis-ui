@@ -45,6 +45,7 @@ import com.kotcrab.vis.editor.module.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
 import com.kotcrab.vis.editor.util.DirectoryWatcher;
+import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.DialogUtils;
@@ -172,7 +173,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 					else
 						Desktop.getDesktop().open(currentDirectory.parent().file());
 				} catch (IOException e) {
-					e.printStackTrace();
+					Log.exception(e);
 				}
 			}
 		});

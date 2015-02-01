@@ -19,23 +19,23 @@
 
 package com.kotcrab.vis.editor.module;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-
-import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.module.project.Project;
-import com.kotcrab.vis.editor.ui.AsyncTaskProgressDialog;
-import com.kotcrab.vis.editor.util.AsyncTask;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
-import com.kotcrab.vis.editor.util.EditorException;
-import com.kotcrab.vis.editor.util.CopyFileVisitor;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
+import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.event.StatusBarEvent;
+import com.kotcrab.vis.editor.module.project.Project;
+import com.kotcrab.vis.editor.ui.AsyncTaskProgressDialog;
+import com.kotcrab.vis.editor.util.AsyncTask;
+import com.kotcrab.vis.editor.util.CopyFileVisitor;
+import com.kotcrab.vis.editor.util.EditorException;
+import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.ui.util.DialogUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 public class ProjectIOModule extends EditorModule {
 	public boolean load (FileHandle projectRoot) throws EditorException {
@@ -87,7 +87,7 @@ public class ProjectIOModule extends EditorModule {
 					Files.walkFileTree(standardAssetsDir.file().toPath(), new CopyFileVisitor(visAssetsDir.file().toPath()));
 				} catch (IOException e) {
 					failed(e.getMessage(), e);
-					e.printStackTrace();
+					Log.exception(e);
 				}
 
 				setProgressPercent(66);
@@ -105,7 +105,7 @@ public class ProjectIOModule extends EditorModule {
 					load(projectFile);
 				} catch (EditorException e) {
 					DialogUtils.showErrorDialog(Editor.instance.getStage(), "Error occurred while loading project", e);
-					e.printStackTrace();
+					Log.exception(e);
 				}
 			}
 		};

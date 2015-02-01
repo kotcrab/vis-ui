@@ -76,8 +76,6 @@ public abstract class ProcessingQueue<E> {
 				while (running) {
 					try {
 						processQueueElement(queue.take());
-					} catch (InterruptedException e) {
-						Log.interruptedEx(e);
 					} catch (Exception e) {
 						Log.exception(e);
 					}
@@ -103,7 +101,7 @@ public abstract class ProcessingQueue<E> {
 		try {
 			queue.put(element);
 		} catch (InterruptedException e) { // if queue was stopped
-			Log.interruptedEx(e);
+			Log.exception(e);
 		}
 	}
 
