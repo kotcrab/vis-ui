@@ -23,11 +23,19 @@ import com.kotcrab.vis.editor.event.EventBus;
 import com.kotcrab.vis.editor.util.Log;
 
 public class App {
+	public static final int VERSION_CODE = 2;
+	public static final String VERSION = "0.0.2-SNAPSHOT";
+	public static final boolean SNAPSHOT = VERSION.contains("SNAPSHOT");
+	public static final boolean ERROR_REPORTS = true;
+
 	public static EventBus eventBus;
 
 	public static void init () {
 		Log.init();
 
 		eventBus = new EventBus();
+
+		if (ERROR_REPORTS == false)
+			Log.w("App", "Error reports are disabled!");
 	}
 }
