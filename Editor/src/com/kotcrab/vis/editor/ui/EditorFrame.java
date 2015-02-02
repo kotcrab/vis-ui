@@ -24,9 +24,12 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.util.Log;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JFrame;
+import java.awt.BorderLayout;
+import java.awt.Canvas;
+import java.awt.EventQueue;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Set;
@@ -87,7 +90,8 @@ public class EditorFrame extends JFrame {
 			}
 		}
 
-		System.err.println("Editor LibGDX thread is not running, performing force exit.");
+		Log.fatal("Editor LibGDX thread is not running, performing force exit.");
+		Log.dispose();
 		System.exit(-1);
 	}
 

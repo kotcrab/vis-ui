@@ -19,8 +19,14 @@
 
 package com.kotcrab.vis.editor.util;
 
+import com.kotcrab.vis.editor.App;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,43 +44,87 @@ public class Log {
 	public static final int FATAL = 0;
 
 	private static int logLevel = INFO;
-
 	private static boolean debugInterrupted = false;
 
+	private static File logFile;
+	private static PrintWriter logFileWriter;
 	private static LoggerListener listener = new DefaultLogListener();
-	private static SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm]");
+	private static SimpleDateFormat msgDateFormat = new SimpleDateFormat("[HH:mm]");
 
 	public static void init () {
-		System.setErr(new Interceptor(System.err));
+		System.setErr(new ErrorOutInterceptor(System.err));
 
 		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 			@Override
 			public void uncaughtException (Thread t, Throwable e) {
 				Log.exception(e);
+				Log.fatal("Uncaught exception occurred, error report will be send");
+
+				logFileWriter.flush();
+
+				try {
+					CrashReporter.sendReport(logFile);
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
 			}
 		});
+
+		prepareLogFile();
+	}
+
+	public static void dispose () {
+		info("Exiting");
+		logFileWriter.close();
+	}
+
+	private static void prepareLogFile () {
+		File logDirectory = new File(App.APP_FOLDER_PATH, "logs");
+		logDirectory.mkdir();
+
+		SimpleDateFormat fileDateFormat = new SimpleDateFormat("yy-MM-dd");
+		String fileName = fileDateFormat.format(new Date());
+		String fileNameYearMonth = fileName.substring(0, 5);
+
+		File[] files = logDirectory.listFiles();
+
+		//we are deleting files that are not from current month
+		for (File f : files)
+			if (f.getName().contains(fileNameYearMonth) == false) f.delete();
+
+		try {
+			logFile = new File(logDirectory, "viseditor-" + fileName + ".txt");
+			logFile.createNewFile();
+			logFileWriter = new PrintWriter(new FileWriter(logFile, true));
+		} catch (IOException e) {
+			exception(e);
+		}
+
+		logFileWriter.println();
+		info("VisEditor " + App.VERSION);
+		info("Started: " + fileName);
 	}
 
 	// Standard log
 
 	public static void debug (String msg) {
-		if (logLevel >= DEBUG) print("[Debug]" + msg);
+		if (logLevel >= DEBUG) print("[Debug] " + msg);
 	}
 
 	public static void info (String msg) {
-		if (logLevel >= INFO) print("[Info]" + msg);
+		if (logLevel >= INFO) print("[Info] " + msg);
 	}
 
 	public static void warn (String msg) {
-		if (logLevel >= WARN) print("[Warn]" + msg);
+		if (logLevel >= WARN) print("[Warning] " + msg);
 	}
 
 	public static void error (String msg) {
-		if (logLevel >= ERROR) printErr("[Error]" + msg);
+		if (logLevel >= ERROR) printErr("[Error] " + msg);
 	}
 
 	public static void fatal (String msg) {
-		if (logLevel >= FATAL) printErr("[Fatal]" + msg);
+		if (logLevel >= FATAL) printErr("[Fatal] " + msg);
 	}
 
 	//Log with tag
@@ -88,7 +138,7 @@ public class Log {
 	}
 
 	public static void warn (String tag, String msg) {
-		if (logLevel >= WARN) print("[Warn][" + tag + "] " + msg);
+		if (logLevel >= WARN) print("[Warning][" + tag + "] " + msg);
 	}
 
 	public static void error (String tag, String msg) {
@@ -101,6 +151,7 @@ public class Log {
 
 	private static void print (String msg) {
 		msg = getTimestamp() + msg;
+		logFileWriter.println(msg);
 		listener.log(msg);
 		System.out.println(msg);
 	}
@@ -114,13 +165,13 @@ public class Log {
 	public static void exception (Throwable e) {
 		if (e instanceof InterruptedException && debugInterrupted == false) return;
 
-		e.printStackTrace();
-		listener.exception(ExceptionUtils.getStackTrace(e));
+		String stack = ExceptionUtils.getStackTrace(e);
+		fatal(stack);
+		listener.exception(stack);
 	}
 
-
 	private static String getTimestamp () {
-		return dateFormat.format(new Date());
+		return msgDateFormat.format(new Date());
 	}
 
 	public static void setListener (LoggerListener listener) {
@@ -143,14 +194,15 @@ public class Log {
 		Log.debugInterrupted = debugInterrupted;
 	}
 
-	private static class Interceptor extends PrintStream {
-		public Interceptor (OutputStream out) {
+	private static class ErrorOutInterceptor extends PrintStream {
+		public ErrorOutInterceptor (OutputStream out) {
 			super(out, true);
 		}
 
 		@Override
 		public void print (String s) {
 			super.print(s);
+			if (logFileWriter != null) logFileWriter.println(s);
 		}
 	}
 

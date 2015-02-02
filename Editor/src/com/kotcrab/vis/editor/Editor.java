@@ -186,6 +186,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		VisUI.dispose();
 
 		frame.dispose();
+		Log.dispose();
 	}
 
 	public void requestExit () {
