@@ -63,7 +63,7 @@ public class Log {
 				logFileWriter.flush();
 
 				try {
-					CrashReporter.sendReport(logFile);
+					new CrashReporter(logFile).sendReport();
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}

@@ -25,37 +25,90 @@ import org.apache.commons.io.input.ReversedLinesFileReader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Set;
 
 public class CrashReporter {
-	public static void sendReport (File logFile) throws IOException {
-		StringBuilder crashReport = new StringBuilder();
-		crashReport.append("VisEditor Crash Report\n");
-		crashReport.append("VisEditor " + App.VERSION + "\n");
-		crashReport.append("VersionCode:" + App.VERSION_CODE + " Snapshot: " + App.SNAPSHOT + "\n\n");
+	private static final String PATH = "http://apps.kotcrab.com/vis/crash/index.php";
+	public static boolean reportSent;
 
-		crashReport.append("=======Dumping threads info:=======\n");
+	private StringBuilder crashReport;
+	private File logFile;
+	private String report;
+
+	public CrashReporter (File logFile) throws IOException {
+		this.logFile = logFile;
+		this.crashReport = new StringBuilder();
+
+		printHeader();
+		printThreadInfo();
+		printLog();
+
+		report = crashReport.toString();
+	}
+
+	public void sendReport () throws IOException {
+		if (App.ERROR_REPORTS) {
+
+			//don't send multiple reports from one instance of application
+			if (reportSent == false) {
+				Log.info("Sending crash report");
+				HttpURLConnection connection = (HttpURLConnection) new URL(PATH + "?filename=" + logFile.getName()).openConnection();
+				connection.setDoOutput(true);
+				connection.setRequestMethod("POST");
+				OutputStream os = connection.getOutputStream();
+
+				os.write(report.getBytes());
+				os.close();
+				Log.info("Crash report sent");
+			}
+
+
+			reportSent = true;
+		} else
+			Log.warn("CrashReporter", "Application requested to send report but error reports are disabled, ignoring.");
+	}
+
+	private void printHeader () {
+		println("--- VisEditor Crash Report ---");
+		println("VisEditor " + App.VERSION);
+		println("VersionCode: " + App.VERSION_CODE + " Snapshot: " + App.SNAPSHOT);
+		println();
+
+		println("Java: " + System.getProperty("java.version") + " " + System.getProperty("java.vendor"));
+		println("Java VM: " + System.getProperty("java.vm.name"));
+		println("OS: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " " + System.getProperty("os.arch"));
+		println();
+
+	}
+
+	private void printThreadInfo () {
+		println("--- Threads ---");
 
 		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
 
 		for (Thread t : threadSet) {
 			if (t.isDaemon()) {
-				crashReport.append("Skipping daemon thread: " + t.getName() + "\n");
+				println("Skipping daemon thread: " + t.getName());
 			} else {
-				crashReport.append("Thread: " + t.getName() + "\n");
+				println("Thread: " + t.getName());
 				for (StackTraceElement e : t.getStackTrace()) {
 					crashReport.append("\t");
-					crashReport.append(e.toString());
-					crashReport.append("\n");
+					println(e.toString());
 				}
 			}
 
-			crashReport.append("\n");
+			println();
 		}
 
-		crashReport.append("==========Thread info end==========\n\n");
+		println("---------------");
+		println();
+	}
 
-		crashReport.append("====Last 200 lines of log file:====\n");
+	private void printLog () throws IOException {
+		println("--- Log file (last 200 lines) ---");
 
 		ReversedLinesFileReader reader = new ReversedLinesFileReader(logFile);
 		Array<String> logLines = new Array<>();
@@ -63,17 +116,24 @@ public class CrashReporter {
 		for (int i = 0; i < 200; i++) {
 			String line = reader.readLine();
 			if (line == null) break;
-			logLines.add(line + "\n");
+			logLines.add(line);
 		}
 
 		logLines.reverse();
 
-		for(String s : logLines)
-			crashReport.append(s);
+		for (String s : logLines)
+			println(s);
 
-		crashReport.append("============Log file end===========\n");
-		crashReport.append("\n");
+		println("---------------------------------");
+		println();
+	}
 
-		String result = crashReport.toString();
+	private void println () {
+		crashReport.append('\n');
+	}
+
+	private void println (String s) {
+		crashReport.append(s);
+		crashReport.append('\n');
 	}
 }
