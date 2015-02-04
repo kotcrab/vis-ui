@@ -62,7 +62,7 @@ public class ProjectIOModule extends EditorModule {
 		return true;
 	}
 
-	public void create (final Project project, boolean signFiles) {
+	public void create (final Project project) {
 		AsyncTask task = new AsyncTask("ProjectCreator") {
 
 			@Override

@@ -19,18 +19,16 @@
 
 package com.kotcrab.vis.editor.ui;
 
-import com.kotcrab.vis.editor.module.ProjectIOModule;
-import com.kotcrab.vis.editor.module.project.Project;
-
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.editor.module.ProjectIOModule;
+import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.ui.FormValidator;
-import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.util.DialogUtils;
-import com.kotcrab.vis.ui.widget.VisCheckBox;
+import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
@@ -44,8 +42,6 @@ public class NewProjectDialog extends VisWindow {
 	private VisValidableTextField projectRoot;
 	private VisValidableTextField sourceLoc;
 	private VisValidableTextField assetsLoc;
-
-	private VisCheckBox signFiles;
 
 	private VisTextButton chooseRootButton;
 
@@ -93,8 +89,6 @@ public class NewProjectDialog extends VisWindow {
 		errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);
 
-		signFiles = new VisCheckBox("Sign files using private key");
-
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 		columnDefaults(1).width(300);
@@ -111,9 +105,6 @@ public class NewProjectDialog extends VisWindow {
 
 		add(new VisLabel("Assets folder"));
 		add(assetsLoc).fill();
-		row();
-
-		add(signFiles).colspan(2);
 		row();
 
 		VisTable buttonTable = new VisTable(true);
@@ -174,7 +165,7 @@ public class NewProjectDialog extends VisWindow {
 
 		String error = projectIO.verify(project);
 		if (error == null) {
-			projectIO.create(project, signFiles.isChecked());
+			projectIO.create(project);
 			fadeOut();
 		} else
 			DialogUtils.showErrorDialog(getStage(), error);
