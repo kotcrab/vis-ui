@@ -103,15 +103,7 @@ public class GridRendererModule extends SceneModule {
 		private VisValidableTextField gridSizeField;
 
 		public GridSettingsModule () {
-			super("gridSettings", GridConfig.class);
-		}
-
-
-		@Override
-		public void settingsApply () {
-			config.drawGrid = drawGridCheck.isChecked();
-			config.gridSize = FieldUtils.getInt(gridSizeField, 0);
-			settingsSave();
+			super("Grid", "gridSettings", GridConfig.class);
 		}
 
 		@Override
@@ -143,8 +135,10 @@ public class GridRendererModule extends SceneModule {
 		}
 
 		@Override
-		public String getSettingsName () {
-			return "Grid";
+		public void settingsApply () {
+			config.drawGrid = drawGridCheck.isChecked();
+			config.gridSize = FieldUtils.getInt(gridSizeField, 0);
+			settingsSave();
 		}
 	}
 

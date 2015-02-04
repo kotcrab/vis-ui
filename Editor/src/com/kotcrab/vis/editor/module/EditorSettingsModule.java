@@ -23,17 +23,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.ui.VisTable;
 
 public abstract class EditorSettingsModule<T> extends EditorModule implements SettableModule {
+	private String name;
+	private String settingsFileName;
+	private Class<T> configClass;
+
 	private EditorSettingsIOModule settingsIO;
 
 	protected Table settingsTable;
 
 	public T config;
-	private String settingsFileName;
-	private Class<T> configClass;
 
-	public EditorSettingsModule (String settingsFileName, Class<T> configClass) {
+	public EditorSettingsModule (String name, String settingsFileName, Class<T> configClass) {
+		this.name = name;
 		this.settingsFileName = settingsFileName;
 		this.configClass = configClass;
+	}
+
+	@Override
+	public String getSettingsName () {
+		return name;
 	}
 
 	@Override

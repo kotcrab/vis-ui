@@ -26,12 +26,7 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 	private VisCheckBox confirmExitCheck;
 
 	public GeneralSettingsModule () {
-		super("generalSettings", GeneralConfig.class);
-	}
-
-	@Override
-	public String getSettingsName () {
-		return "General";
+		super("General", "generalSettings", GeneralConfig.class);
 	}
 
 	@Override
