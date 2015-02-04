@@ -38,21 +38,21 @@ public class GridRendererModule extends SceneModule {
 
 	private ShapeRenderer shapeRenderer;
 
-	private GridSettingsModule config;
+	private GridSettingsModule settings;
 
 	@Override
 	public void init () {
 		renderer = sceneContainer.get(RendererModule.class);
 		camera = sceneContainer.get(CameraModule.class);
 
-		config = container.get(GridSettingsModule.class);
+		settings = container.get(GridSettingsModule.class);
 
 		shapeRenderer = renderer.getShapeRenderer();
 	}
 
 	@Override
 	public void render (Batch batch) {
-		if (config.drawGrid) {
+		if (settings.config.drawGrid) {
 			batch.end();
 
 			shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
@@ -69,7 +69,7 @@ public class GridRendererModule extends SceneModule {
 	}
 
 	private void drawVerticalLines () {
-		int gridSize = config.gridSize;
+		int gridSize = settings.config.gridSize;
 		float xStart = camera.getX() - camera.getWidth() / 2;
 		float xEnd = xStart + camera.getWidth();
 
@@ -84,7 +84,7 @@ public class GridRendererModule extends SceneModule {
 	}
 
 	private void drawHorizontalLines () {
-		int gridSize = config.gridSize;
+		int gridSize = settings.config.gridSize;
 		float yStart = camera.getY() - camera.getHeight() / 2;
 		float yEnd = yStart + camera.getHeight();
 
@@ -98,47 +98,58 @@ public class GridRendererModule extends SceneModule {
 			shapeRenderer.line(i * gridSize, yStart, i * gridSize, yEnd);
 	}
 
-	public static class GridSettingsModule extends EditorSettingsModule {
-		public boolean drawGrid = true;
-		public int gridSize = 256;
-
+	public static class GridSettingsModule extends EditorSettingsModule<GridConfig> {
 		private VisCheckBox drawGridCheck;
 		private VisValidableTextField gridSizeField;
 
+		public GridSettingsModule () {
+			super("gridSettings", GridConfig.class);
+		}
+
+
 		@Override
-		protected void rebuildSettingsTable () {
+		public void settingsApply () {
+			config.drawGrid = drawGridCheck.isChecked();
+			config.gridSize = FieldUtils.getInt(gridSizeField, 0);
+			settingsSave();
+		}
+
+		@Override
+		public boolean settingsChanged () {
+			return gridSizeField.isInputValid();
+		}
+
+		@Override
+		public void buildTable () {
 			VisTable sizeTable = new VisTable(true);
 
 			sizeTable.add(new VisLabel("Grid size: "));
 			sizeTable.add(gridSizeField = new VisValidableTextField(Validators.integers));
 
-			settingsTable.clear();
-			settingsTable.left().top();
-			settingsTable.defaults().expandX().left();
-			settingsTable.add(drawGridCheck = new VisCheckBox("Draw grid", drawGrid)).left();
+			prepareTable();
+			settingsTable.add(drawGridCheck = new VisCheckBox("Draw grid", config.drawGrid)).left();
 			settingsTable.row();
 			settingsTable.add(sizeTable);
 
-			drawGridCheck.setChecked(true);
 			gridSizeField.setTextFieldFilter(new DigitsOnlyFilter());
 			gridSizeField.addValidator(new Validators.GreaterThanValidator(0));
-			gridSizeField.setText(String.valueOf(gridSize));
+			gridSizeField.setText(String.valueOf(config.gridSize));
 		}
 
 		@Override
-		public void apply () {
-			drawGrid = drawGridCheck.isChecked();
-			gridSize = FieldUtils.getInt(gridSizeField, 0);
-		}
-
-		@Override
-		public boolean changed () {
-			return gridSizeField.isInputValid();
+		public void loadConfigToTable () {
+			drawGridCheck.setChecked(config.drawGrid);
+			gridSizeField.setText(String.valueOf(config.gridSize));
 		}
 
 		@Override
 		public String getSettingsName () {
 			return "Grid";
 		}
+	}
+
+	public static class GridConfig {
+		public boolean drawGrid = true;
+		public int gridSize = 256;
 	}
 }

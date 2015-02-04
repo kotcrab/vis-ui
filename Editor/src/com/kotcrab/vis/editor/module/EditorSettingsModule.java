@@ -22,46 +22,45 @@ package com.kotcrab.vis.editor.module;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.ui.VisTable;
 
-public abstract class EditorSettingsModule extends EditorModule implements SettableModule {
+public abstract class EditorSettingsModule<T> extends EditorModule implements SettableModule {
+	private EditorSettingsIOModule settingsIO;
+
 	protected Table settingsTable;
-	private boolean rebuildNeeded = true;
+
+	public T config;
+	private String settingsFileName;
+	private Class<T> configClass;
+
+	public EditorSettingsModule (String settingsFileName, Class<T> configClass) {
+		this.settingsFileName = settingsFileName;
+		this.configClass = configClass;
+	}
+
+	@Override
+	public void init () {
+		settingsIO = container.get(EditorSettingsIOModule.class);
+		config = settingsIO.load(settingsFileName, configClass);
+		buildTable();
+		loadConfigToTable();
+	}
 
 	@Override
 	public Table getSettingsTable () {
-		validate();
 		return settingsTable;
 	}
 
-	protected abstract void rebuildSettingsTable ();
-
-	private void validate () {
-		if (settingsTable == null) settingsTable = new VisTable();
-		if (rebuildNeeded) {
-			rebuildSettingsTable();
-			rebuildNeeded = false;
-		}
+	protected void settingsSave () {
+		settingsIO.save(config, settingsFileName);
 	}
 
-	@Override
-	public void settingsClose () {
-		rebuildNeeded = true;
+	protected void prepareTable () {
+		settingsTable = new VisTable(true);
+		settingsTable.clear();
+		settingsTable.left().top();
+		settingsTable.defaults().expandX().left();
 	}
 
-	@Override
-	public boolean settingsChanged () {
-		if (rebuildNeeded == false)
-			return changed();
+	public abstract void buildTable ();
 
-		return true;
-	}
-
-	@Override
-	public void settingsApply () {
-		if (rebuildNeeded == false)
-			apply();
-	}
-
-	public abstract void apply ();
-
-	public abstract boolean changed ();
+	public abstract void loadConfigToTable ();
 }

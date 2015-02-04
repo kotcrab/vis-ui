@@ -19,21 +19,14 @@
 
 package com.kotcrab.vis.editor.module;
 
+import com.kotcrab.vis.editor.module.GeneralSettingsModule.GeneralConfig;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 
-public class GeneralSettingsModule extends EditorSettingsModule {
-	private boolean confirmExit = true;
-
+public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 	private VisCheckBox confirmExitCheck;
 
-	@Override
-	protected void rebuildSettingsTable () {
-		settingsTable.clear();
-		settingsTable.left().top();
-		settingsTable.defaults().expandX().left();
-		settingsTable.add(confirmExitCheck = new VisCheckBox("Confirm exit", confirmExit)).left();
-
-		confirmExitCheck.setChecked(true);
+	public GeneralSettingsModule () {
+		super("generalSettings", GeneralConfig.class);
 	}
 
 	@Override
@@ -42,16 +35,32 @@ public class GeneralSettingsModule extends EditorSettingsModule {
 	}
 
 	@Override
-	public boolean changed () {
+	public boolean settingsChanged () {
 		return true;
 	}
 
 	@Override
-	public void apply () {
-		confirmExit = confirmExitCheck.isChecked();
+	public void buildTable () {
+		prepareTable();
+		settingsTable.add(confirmExitCheck = new VisCheckBox("Confirm exit", config.confirmExit)).left();
+	}
+
+	@Override
+	public void loadConfigToTable () {
+		confirmExitCheck.setChecked(config.confirmExit);
+	}
+
+	@Override
+	public void settingsApply () {
+		config.confirmExit = confirmExitCheck.isChecked();
+		settingsSave();
 	}
 
 	public boolean isConfirmExit () {
-		return confirmExit;
+		return config.confirmExit;
+	}
+
+	public static class GeneralConfig {
+		private boolean confirmExit = true;
 	}
 }

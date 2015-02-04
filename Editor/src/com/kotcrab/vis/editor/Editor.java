@@ -143,6 +143,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(new ToolbarModule());
 		editorMC.add(new TabsModule());
 		editorMC.add(new StatusBarModule());
+		editorMC.add(new EditorSettingsIOModule());
 
 		editorMC.add(settings = new GeneralSettingsModule());
 		editorMC.add(new GridSettingsModule());

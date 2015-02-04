@@ -160,13 +160,6 @@ public class SettingsDialog extends VisWindow {
 		});
 	}
 
-	@Override
-	protected void close () {
-		super.close();
-		for (SettableModule module : modulesMap.keys())
-			module.settingsClose();
-	}
-
 	public void add (final SettableModule module) {
 		Node node = new Node(new VisLabel(module.getSettingsName()));
 

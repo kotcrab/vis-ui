@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 /** Modules implementing this interface provide UI table that is displayed on Settings window. */
 public interface SettableModule {
-	/** @return table that will be displated in settings window, this method must always return same table instance */
+	/** @return table that will be displayed in settings window, this method must always return same table instance */
 	public Table getSettingsTable ();
 
 	public String getSettingsName ();
@@ -31,6 +31,4 @@ public interface SettableModule {
 	public boolean settingsChanged ();
 
 	public void settingsApply ();
-
-	public void settingsClose ();
 }
