@@ -361,7 +361,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 	@Override
 	public void fileChanged (FileHandle file) {
 		// TODO refresh tree
-		if (file.equals(currentDirectory)) refreshRequested = true;
+		if (file.parent().equals(currentDirectory)) refreshRequested = true;
 	}
 
 	@Override
