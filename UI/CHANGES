@@ -1,5 +1,6 @@
 [0.5.2]
 -Added OptionDialog in DialogUtils
+-Added FormValidator.fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty)
 
 [0.5.1]
 -Added cancelable input dialog in DialogUtils

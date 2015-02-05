@@ -39,6 +39,16 @@ public class FormValidator extends BasicFormValidator {
 		add(field);
 	}
 
+	/**
+	 * @param errorIfRelativeEmpty if true field input will be valid if 'relativeTo' field is empty, usually used with notEmpty validator on 'relativeTo' to
+	 *                             avoid form errors. Settings this to true improves UX, error are not displayed until user types something in 'relativeTo'
+	 *                             field
+	 */
+	public void fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty) {
+		field.addValidator(new FileExistsValidator(relativeTo, errorMsg, false, errorIfRelativeEmpty));
+		add(field);
+	}
+
 	public void fileExists (VisValidableTextField field, File relativeTo, String errorMsg) {
 		field.addValidator(new FileExistsValidator(relativeTo, errorMsg));
 		add(field);
@@ -72,7 +82,9 @@ public class FormValidator extends BasicFormValidator {
 	private class FileExistsValidator extends FormInputValidator {
 		VisTextField relativeTo;
 		File relativeToFile;
+
 		boolean existNot;
+		boolean errorIfRelativeEmpty;
 
 		public FileExistsValidator (String errorMsg) {
 			this(errorMsg, false);
@@ -103,12 +115,25 @@ public class FormValidator extends BasicFormValidator {
 			this.existNot = existNot;
 		}
 
+		public FileExistsValidator (VisTextField relativeTo, String errorMsg, boolean existNot, boolean errorIfRelativeEmpty) {
+			super(errorMsg);
+			this.relativeTo = relativeTo;
+			this.existNot = existNot;
+			this.errorIfRelativeEmpty = errorIfRelativeEmpty;
+		}
+
 		@Override
 		public boolean validateInput (String input) {
-			File f = null;
-			if (relativeTo != null)
+			File f;
+
+			if (relativeTo != null) {
+				if (relativeTo.getText().length() == 0 && errorIfRelativeEmpty == false) {
+					setResult(true);
+					return super.validateInput(input);
+				}
+
 				f = new File(relativeTo.getText(), input);
-			else if (relativeToFile != null)
+			} else if (relativeToFile != null)
 				f = new File(relativeToFile, input);
 			else
 				f = new File(input);
