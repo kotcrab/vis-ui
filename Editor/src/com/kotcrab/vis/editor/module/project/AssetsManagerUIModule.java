@@ -43,16 +43,21 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.TabsModule;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
+import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
 import com.kotcrab.vis.editor.util.DirectoryWatcher;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.util.DialogUtils;
-import com.kotcrab.vis.ui.widget.*;
-import com.kotcrab.vis.editor.ui.tab.Tab;
+import com.kotcrab.vis.ui.widget.Separator;
+import com.kotcrab.vis.ui.widget.VisImageButton;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisScrollPane;
+import com.kotcrab.vis.ui.widget.VisSplitPane;
+import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kotcrab.vis.ui.widget.VisTree;
 
-import java.awt.*;
+import java.awt.Desktop;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
@@ -332,19 +337,11 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		}
 	}
 
-	private void openFile (FileHandle file, EditorFileType fileType) {
+	private void openFile (FileHandle file) {
 		if (file.extension().equals("scene")) {
 			EditorScene scene = sceneIO.load(file);
 			sceneTabsModule.open(scene);
 			return;
-		}
-
-		switch (fileType) {
-			case UNKNOWN:
-				// TODO add 'open as' dialog
-				DialogUtils.showErrorDialog(stage,
-						"Failed to load file, type is unknown and cannot be determined because file is not in the database!");
-				break;
 		}
 	}
 
@@ -422,7 +419,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 				public void clicked (InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
 
-					if (getTapCount() == 2) openFile(file, fileAccess.getFileType(file));
+					if (getTapCount() == 2) openFile(file);
 				}
 
 			});
