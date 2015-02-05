@@ -21,11 +21,14 @@ package com.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Json;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.project.Project;
+import com.kotcrab.vis.editor.module.project.ProjectLibGDX;
 import com.kotcrab.vis.editor.ui.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.CopyFileVisitor;
@@ -34,35 +37,67 @@ import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.ui.util.DialogUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 
 public class ProjectIOModule extends EditorModule {
+	private static final String PROJECT_FILE = "project.data";
+	private Kryo kryo;
+
+	@Override
+	public void init () {
+		kryo = new Kryo();
+	}
+
 	public boolean load (FileHandle projectRoot) throws EditorException {
 		if (projectRoot.exists() == false) throw new EditorException("Selected folder does not exist!");
-		if (projectRoot.name().equals("project.json")) return loadProject(projectRoot);
-		if (projectRoot.name().equals("vis") && projectRoot.isDirectory()) return loadProject(projectRoot.child("project.json"));
+		if (projectRoot.name().equals(PROJECT_FILE)) return loadProject(projectRoot);
+		if (projectRoot.name().equals("vis") && projectRoot.isDirectory())
+			return loadProject(projectRoot.child(PROJECT_FILE));
 
 		FileHandle visFolder = projectRoot.child("vis");
-		if (visFolder.exists()) return loadProject(visFolder.child("project.json"));
+		if (visFolder.exists()) return loadProject(visFolder.child(PROJECT_FILE));
 
 		throw new EditorException("Selected folder is not a Vis project!");
 	}
 
-	private boolean loadProject (FileHandle jsonProjectFile) throws EditorException {
+	private boolean loadProject (FileHandle file) throws EditorException {
 
-		if (jsonProjectFile.exists() == false) throw new EditorException("Project file does not exist!");
-		Json json = new Json();
+//		if (file.exists() == false) throw new EditorException("Project file does not exist!");
+//		Json json = new Json();
+//
+//		Project project = json.fromJson(Project.class, file);
+//		project.root = file.parent().parent().path();
+//
+//		Editor.instance.projectLoaded(project);
+//
+//		return true;
+//
 
-		Project project = json.fromJson(Project.class, jsonProjectFile);
-		project.root = jsonProjectFile.parent().parent().path();
 
-		Editor.instance.projectLoaded(project);
+		if (file.exists() == false) throw new EditorException("Project file does not exist!");
+
+		try {
+			Input input = new Input(new FileInputStream(file.file()));
+			Project project = (Project) kryo.readClassAndObject(input);
+			input.close();
+
+			project.root = file.parent().parent().path();
+
+			Editor.instance.projectLoaded(project);
+		} catch (FileNotFoundException e) {
+			Log.exception(e);
+		}
 
 		return true;
+
+
 	}
 
-	public void create (final Project project) {
+	public void create (final ProjectLibGDX project) {
 		AsyncTask task = new AsyncTask("ProjectCreator") {
 
 			@Override
@@ -93,10 +128,15 @@ public class ProjectIOModule extends EditorModule {
 				setProgressPercent(66);
 				setMessage("Saving project files...");
 
-				FileHandle projectFile = visDir.child("project.json");
+				FileHandle projectFile = visDir.child(PROJECT_FILE);
 
-				Json json = new Json();
-				json.toJson(project, projectFile);
+				try {
+					Output output = new Output(new FileOutputStream(projectFile.file()));
+					kryo.writeClassAndObject(output, project);
+					output.close();
+				} catch (FileNotFoundException e) {
+					Log.exception(e);
+				}
 
 				setProgressPercent(100);
 				App.eventBus.post(new StatusBarEvent("Project created!"));

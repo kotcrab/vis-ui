@@ -19,17 +19,8 @@
 
 package com.kotcrab.vis.editor.module.project;
 
-public class Project {
-	public Type type;
-
-	/** Root of project, for LibGDX type this is root of Gradle folder, for generic this is same as assets folder */
-	public String root;
-	/** Assets export directory, for LibGDX this is usually gradle_root/android/assets, for generic this is directory provided by user */
-	public String assets;
-
-	public Project (Type type) {
-		this.type = type;
+public class ProjectGeneric extends Project {
+	public ProjectGeneric () {
+		super(Type.Generic);
 	}
-
-	public enum Type {LibGDX, Generic}
 }

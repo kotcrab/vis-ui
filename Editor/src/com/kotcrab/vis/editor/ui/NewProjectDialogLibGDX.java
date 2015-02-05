@@ -24,7 +24,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.module.ProjectIOModule;
-import com.kotcrab.vis.editor.module.project.Project;
+import com.kotcrab.vis.editor.module.project.ProjectLibGDX;
 import com.kotcrab.vis.ui.FormValidator;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.util.DialogUtils;
@@ -158,7 +158,7 @@ public class NewProjectDialogLibGDX extends VisWindow {
 	}
 
 	private void createProject () {
-		Project project = new Project();
+		ProjectLibGDX project = new ProjectLibGDX();
 		project.root = projectRoot.getText();
 		project.assets = assetsLoc.getText();
 		project.source = sourceLoc.getText();
