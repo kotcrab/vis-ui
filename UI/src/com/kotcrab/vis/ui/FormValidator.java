@@ -16,13 +16,13 @@
 
 package com.kotcrab.vis.ui;
 
-import java.io.File;
-
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
+
+import java.io.File;
 
 public class FormValidator extends BasicFormValidator {
 	public FormValidator (Button buttonToDisable, Label errorMsgLabel) {
@@ -34,18 +34,18 @@ public class FormValidator extends BasicFormValidator {
 		add(field);
 	}
 
-	public void fileExists (VisValidableTextField field, VisTextField relavtiveTo, String errorMsg) {
-		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg));
+	public void fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg) {
+		field.addValidator(new FileExistsValidator(relativeTo, errorMsg));
 		add(field);
 	}
 
-	public void fileExists (VisValidableTextField field, File relavtiveTo, String errorMsg) {
-		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg));
+	public void fileExists (VisValidableTextField field, File relativeTo, String errorMsg) {
+		field.addValidator(new FileExistsValidator(relativeTo, errorMsg));
 		add(field);
 	}
 
-	public void fileExists (VisValidableTextField field, FileHandle relavtiveTo, String errorMsg) {
-		field.addValidator(new FileExistsValidator(relavtiveTo.file(), errorMsg));
+	public void fileExists (VisValidableTextField field, FileHandle relativeTo, String errorMsg) {
+		field.addValidator(new FileExistsValidator(relativeTo.file(), errorMsg));
 		add(field);
 	}
 
@@ -54,18 +54,18 @@ public class FormValidator extends BasicFormValidator {
 		add(field);
 	}
 
-	public void fileNotExists (VisValidableTextField field, VisTextField relavtiveTo, String errorMsg) {
-		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg, true));
+	public void fileNotExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg) {
+		field.addValidator(new FileExistsValidator(relativeTo, errorMsg, true));
 		add(field);
 	}
 
-	public void fileNotExists (VisValidableTextField field, File relavtiveTo, String errorMsg) {
-		field.addValidator(new FileExistsValidator(relavtiveTo, errorMsg, true));
+	public void fileNotExists (VisValidableTextField field, File relativeTo, String errorMsg) {
+		field.addValidator(new FileExistsValidator(relativeTo, errorMsg, true));
 		add(field);
 	}
 
-	public void fileNotExists (VisValidableTextField field, FileHandle relavtiveTo, String errorMsg) {
-		field.addValidator(new FileExistsValidator(relavtiveTo.file(), errorMsg, true));
+	public void fileNotExists (VisValidableTextField field, FileHandle relativeTo, String errorMsg) {
+		field.addValidator(new FileExistsValidator(relativeTo.file(), errorMsg, true));
 		add(field);
 	}
 
@@ -78,12 +78,12 @@ public class FormValidator extends BasicFormValidator {
 			this(errorMsg, false);
 		}
 
-		public FileExistsValidator (VisTextField relavativeTo, String errorMsg) {
-			this(relavativeTo, errorMsg, false);
+		public FileExistsValidator (VisTextField relativeTo, String errorMsg) {
+			this(relativeTo, errorMsg, false);
 		}
 
-		public FileExistsValidator (File relavativeTo, String errorMsg) {
-			this(relavativeTo, errorMsg, false);
+		public FileExistsValidator (File relativeTo, String errorMsg) {
+			this(relativeTo, errorMsg, false);
 		}
 
 		public FileExistsValidator (String errorMsg, boolean existNot) {
@@ -91,15 +91,15 @@ public class FormValidator extends BasicFormValidator {
 			this.existNot = existNot;
 		}
 
-		public FileExistsValidator (VisTextField relavativeTo, String errorMsg, boolean existNot) {
+		public FileExistsValidator (VisTextField relativeTo, String errorMsg, boolean existNot) {
 			super(errorMsg);
-			this.relativeTo = relavativeTo;
+			this.relativeTo = relativeTo;
 			this.existNot = existNot;
 		}
 
-		public FileExistsValidator (File relavativeTo, String errorMsg, boolean existNot) {
+		public FileExistsValidator (File relativeTo, String errorMsg, boolean existNot) {
 			super(errorMsg);
-			this.relativeToFile = relavativeTo;
+			this.relativeToFile = relativeTo;
 			this.existNot = existNot;
 		}
 
