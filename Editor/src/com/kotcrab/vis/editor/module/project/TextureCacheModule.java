@@ -88,7 +88,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 			public void run () {
 				performUpdate();
 			}
-		}).start();
+		}, "TextureCache").start();
 	}
 
 	private void performUpdate () {
