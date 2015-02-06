@@ -23,15 +23,18 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Set;
 
 public class CrashReporter {
-	private static final String PATH = "http://apps.kotcrab.com/vis/crash/index.php";
+	private static final String TAG = "CrashReporter";
+	private static final String PATH = "http://apps.kotcrab.com/vis/crash/report.php";
 	public static boolean reportSent;
 
 	private StringBuilder crashReport;
@@ -54,21 +57,31 @@ public class CrashReporter {
 
 			//don't send multiple reports from one instance of application
 			if (reportSent == false) {
-				Log.info("Sending crash report");
+				Log.info(TAG, "Sending crash report");
 				HttpURLConnection connection = (HttpURLConnection) new URL(PATH + "?filename=" + logFile.getName()).openConnection();
 				connection.setDoOutput(true);
 				connection.setRequestMethod("POST");
 				OutputStream os = connection.getOutputStream();
 
 				os.write(report.getBytes());
+				os.flush();
 				os.close();
-				Log.info("Crash report sent");
+
+				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+				String s;
+				while ((s = in.readLine()) != null)
+					Log.debug(TAG, "Server response: " + s);
+				in.close();
+
+
+				Log.info(TAG, "Crash report sent");
 			}
 
 
 			reportSent = true;
 		} else
-			Log.warn("CrashReporter", "Application requested to send report but error reports are disabled, ignoring.");
+			Log.warn(TAG, "Application requested to send report but error reports are disabled, ignoring.");
 	}
 
 	private void printHeader () {
