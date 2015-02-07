@@ -56,6 +56,7 @@ public class SceneIOModule extends ProjectModule {
 		try {
 			Input input = new Input(new FileInputStream(file.file()));
 			EditorScene scene = kryo.readObject(input, EditorScene.class);
+			scene.path = fileAccessModule.relativizeToVisFolder(file.path());
 			input.close();
 
 			prepareSceneAfterLoad(scene);

@@ -23,8 +23,10 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.TabsModule;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
+import com.kotcrab.vis.editor.ui.tab.Tab;
+import com.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
 
-public class SceneTabsModule extends ProjectModule {
+public class SceneTabsModule extends ProjectModule implements TabbedPaneListener {
 	private TabsModule tabsModule;
 
 	private Array<SceneTab> loadedTabs;
@@ -32,13 +34,16 @@ public class SceneTabsModule extends ProjectModule {
 	@Override
 	public void init () {
 		tabsModule = container.get(TabsModule.class);
+		tabsModule.addListener(this);
 		loadedTabs = new Array<>();
 	}
 
 	@Override
 	public void dispose () {
-		for(SceneTab tab : loadedTabs)
+		for (SceneTab tab : loadedTabs)
 			tab.dispose();
+
+		tabsModule.removeListener(this);
 	}
 
 	public void open (EditorScene scene) {
@@ -57,5 +62,19 @@ public class SceneTabsModule extends ProjectModule {
 			if (tab.getScene().path.equals(scene.path)) return tab;
 
 		return null;
+	}
+
+	@Override
+	public void removedTab (Tab tab) {
+		if (tab instanceof SceneTab)
+			loadedTabs.removeValue((SceneTab) tab, true);
+	}
+
+	@Override
+	public void switchedTab (Tab tab) {
+	}
+
+	@Override
+	public void removedAllTabs () {
 	}
 }
