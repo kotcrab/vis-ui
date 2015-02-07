@@ -109,6 +109,8 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 				return true;
 			}
 		};
+
+		App.eventBus.register(this);
 	}
 
 	private void dropped (Payload payload) {
@@ -188,14 +190,12 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 	public void onHide () {
 		super.onHide();
 		sceneMC.onHide();
-		App.eventBus.unregister(this);
 	}
 
 	@Override
 	public void onShow () {
 		super.onShow();
 		sceneMC.onShow();
-		App.eventBus.register(this);
 	}
 
 	public EditorScene getScene () {
@@ -204,11 +204,13 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 	@Override
 	public boolean onEvent (Event event) {
-		if (event instanceof MenuEvent) {
-			MenuEventType type = ((MenuEvent) event).type;
+		if(isActiveTab()) {
+			if (event instanceof MenuEvent) {
+				MenuEventType type = ((MenuEvent) event).type;
 
-			if (type == MenuEventType.FILE_SAVE)
-				if (sceneIOModule.save(scene)) setDirty(false);
+				if (type == MenuEventType.FILE_SAVE)
+					if (sceneIOModule.save(scene)) setDirty(false);
+			}
 		}
 
 		if (event instanceof TexturesReloadedEvent) {
