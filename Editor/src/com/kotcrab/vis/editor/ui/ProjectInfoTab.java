@@ -30,6 +30,7 @@ public class ProjectInfoTab extends Tab {
 	private Table content;
 
 	public ProjectInfoTab (Project project) {
+		super(false, false);
 		content = new VisTable(true);
 
 		content.add(new VisLabel("Some project info:"));

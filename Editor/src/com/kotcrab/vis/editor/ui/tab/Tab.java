@@ -26,14 +26,20 @@ public abstract class Tab {
 	private boolean activeTab;
 	private TabbedPane pane;
 
-	private boolean savable;
-	private boolean dirty;
+	private boolean closeableByUser = true;
+	private boolean savable = false;
+	private boolean dirty = false;
 
 	public Tab () {
 	}
 
 	public Tab (boolean savable) {
 		this.savable = savable;
+	}
+
+	public Tab (boolean savable, boolean closeableByUser) {
+		this.savable = savable;
+		this.closeableByUser = closeableByUser;
 	}
 
 	public abstract String getButtonText ();
@@ -70,6 +76,10 @@ public abstract class Tab {
 
 	public boolean isSavable () {
 		return savable;
+	}
+
+	public boolean isCloseableByUser () {
+		return closeableByUser;
 	}
 
 	public boolean isDirty () {

@@ -25,6 +25,10 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 
 public class StartPageTab extends Tab {
+	public StartPageTab () {
+		super(false, false);
+	}
+
 	@Override
 	public String getButtonText () {
 		return "Start Page";
