@@ -27,6 +27,8 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.util.Log;
 
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.EventQueue;
@@ -67,6 +69,12 @@ public class EditorFrame extends JFrame {
 
 	public static void main (String[] args) {
 		App.init();
+
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
+			e.printStackTrace();
+		}
 
 		EventQueue.invokeLater(new Runnable() {
 			@Override
