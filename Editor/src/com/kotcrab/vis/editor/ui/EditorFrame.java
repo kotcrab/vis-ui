@@ -26,6 +26,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.util.Log;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -34,6 +35,9 @@ import java.awt.Canvas;
 import java.awt.EventQueue;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.util.Set;
 
 public class EditorFrame extends JFrame {
@@ -49,6 +53,7 @@ public class EditorFrame extends JFrame {
 			}
 		});
 
+		setIconImage(loadImage("/com/kotcrab/vis/editor/icon.png"));
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
@@ -107,5 +112,19 @@ public class EditorFrame extends JFrame {
 	public void dispose () {
 		super.dispose();
 		Gdx.app.exit();
+	}
+
+	private BufferedImage loadImage (String path) {
+		try {
+			return ImageIO.read(getResource(path));
+		} catch (IOException e) {
+			Log.exception(e);
+		}
+
+		return null;
+	}
+
+	public URL getResource (String path) {
+		return EditorFrame.class.getResource(path);
 	}
 }
