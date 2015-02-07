@@ -22,16 +22,17 @@ package com.kotcrab.vis.editor.module.project;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 
-@SuppressWarnings("unchecked")
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class FileAccessModule extends ProjectModule {
-	private FileHandle root;
 	private FileHandle visFolder;
 	private FileHandle assetsFolder;
 	private FileHandle modulesFolder;
 
 	@Override
 	public void init () {
-		root = Gdx.files.absolute(project.root);
+		FileHandle root = Gdx.files.absolute(project.root);
 		visFolder = root.child("vis");
 		assetsFolder = visFolder.child("assets");
 		modulesFolder = visFolder.child("modules");
@@ -49,5 +50,12 @@ public class FileAccessModule extends ProjectModule {
 		FileHandle moduleFolder = modulesFolder.child(moduleName);
 		if (modulesFolder.exists() == false) moduleFolder.mkdirs();
 		return moduleFolder;
+	}
+
+	public String relativizeToVisFolder (String path) {
+		Path pathAbsolute = Paths.get(path);
+		Path pathBase = Paths.get(visFolder.path());
+		Path pathRelative = pathBase.relativize(pathAbsolute);
+		return pathRelative.toString();
 	}
 }
