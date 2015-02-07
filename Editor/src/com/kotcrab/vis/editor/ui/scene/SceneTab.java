@@ -209,7 +209,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 				MenuEventType type = ((MenuEvent) event).type;
 
 				if (type == MenuEventType.FILE_SAVE)
-					if (sceneIOModule.save(scene)) setDirty(false);
+					save();
 			}
 		}
 
@@ -220,6 +220,16 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 					object2d.sprite.setRegion(cacheModule.getRegion(object2d.regionRelativePath));
 				}
 			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean save () {
+		if (sceneIOModule.save(scene)) {
+			setDirty(false);
+			return true;
 		}
 
 		return false;
