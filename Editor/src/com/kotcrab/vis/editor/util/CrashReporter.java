@@ -21,6 +21,7 @@ package com.kotcrab.vis.editor.util;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 
 import java.io.BufferedReader;
@@ -30,6 +31,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
 
 public class CrashReporter {
@@ -52,36 +55,36 @@ public class CrashReporter {
 		report = crashReport.toString();
 	}
 
-	public void sendReport () throws IOException {
+	public void processReport () throws IOException {
+		//don't send multiple reports from one instance of application
+		if (reportSent) return;
+		reportSent = true;
+
 		if (App.ERROR_REPORTS) {
+			Log.info(TAG, "Sending crash report");
+			HttpURLConnection connection = (HttpURLConnection) new URL(PATH + "?filename=" + logFile.getName()).openConnection();
+			connection.setDoOutput(true);
+			connection.setRequestMethod("POST");
+			OutputStream os = connection.getOutputStream();
 
-			//don't send multiple reports from one instance of application
-			if (reportSent == false) {
-				Log.info(TAG, "Sending crash report");
-				HttpURLConnection connection = (HttpURLConnection) new URL(PATH + "?filename=" + logFile.getName()).openConnection();
-				connection.setDoOutput(true);
-				connection.setRequestMethod("POST");
-				OutputStream os = connection.getOutputStream();
+			os.write(report.getBytes());
+			os.flush();
+			os.close();
 
-				os.write(report.getBytes());
-				os.flush();
-				os.close();
+			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+			String s;
+			while ((s = in.readLine()) != null)
+				Log.debug(TAG, "Server response: " + s);
+			in.close();
 
-				String s;
-				while ((s = in.readLine()) != null)
-					Log.debug(TAG, "Server response: " + s);
-				in.close();
-
-
-				Log.info(TAG, "Crash report sent");
-			}
-
-
-			reportSent = true;
+			Log.info(TAG, "Crash report sent");
 		} else
-			Log.warn(TAG, "Application requested to send report but error reports are disabled, ignoring.");
+			Log.warn(TAG, "Sending report is disabled");
+
+		File crashReportFile = new File(logFile.getParent(), "viseditor-crash " + new SimpleDateFormat("yy-MM-dd HH-mm-ss").format(new Date()) + ".txt");
+		FileUtils.writeStringToFile(crashReportFile, report);
+		Log.info(TAG, "Crash saved to file: " + crashReportFile.getAbsolutePath());
 	}
 
 	private void printHeader () {
@@ -142,11 +145,11 @@ public class CrashReporter {
 	}
 
 	private void println () {
-		crashReport.append('\n');
+		crashReport.append(System.lineSeparator());
 	}
 
 	private void println (String s) {
 		crashReport.append(s);
-		crashReport.append('\n');
+		crashReport.append(System.lineSeparator());
 	}
 }

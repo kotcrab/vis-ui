@@ -19,14 +19,24 @@
 
 package com.kotcrab.vis.editor.util;
 
-/** Interface for listening for log events
- * @author Pawel Pastuszak */
-public interface LoggerListener {
-	public void log (String msg);
+public class LoggerAdapter implements LoggerListener {
+	@Override
+	public void log (String msg) {
 
-	public void error (String msg);
+	}
 
-	public void exception (String stackTrace);
+	@Override
+	public void error (String msg) {
 
-	public void openGlCrash ();
+	}
+
+	@Override
+	public void exception (String stackTrace) {
+
+	}
+
+	@Override
+	public void openGlCrash () {
+
+	}
 }

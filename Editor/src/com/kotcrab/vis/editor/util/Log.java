@@ -19,8 +19,10 @@
 
 package com.kotcrab.vis.editor.util;
 
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 
+import javax.swing.JOptionPane;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -48,7 +50,7 @@ public class Log {
 
 	private static File logFile;
 	private static PrintWriter logFileWriter;
-	private static LoggerListener listener = new DefaultLogListener();
+	private static Array<LoggerListener> listeners = new Array<>();
 	private static SimpleDateFormat msgDateFormat = new SimpleDateFormat("[HH:mm]");
 
 	public static void init () {
@@ -62,10 +64,23 @@ public class Log {
 
 				logFileWriter.flush();
 
+				boolean openGlCrash = false;
+				if (e.getMessage().contains("No OpenGL context found in the current thread.")) {
+					openGlCrash = true;
+					notifyOpenGlCrash();
+				}
+
 				try {
-					new CrashReporter(logFile).sendReport();
+					new CrashReporter(logFile).processReport();
 				} catch (IOException ex) {
 					ex.printStackTrace();
+				}
+
+				if (openGlCrash) {
+					if (App.OPENGL_CRASH_BEFORE_EXIT_MESSAGE)
+						JOptionPane.showMessageDialog(null, "An unexpected error occurred and editor had to shutdown, please check log: " + logFile.getParent());
+
+					System.exit(-1);
 				}
 			}
 		});
@@ -152,13 +167,13 @@ public class Log {
 	private static void print (String msg) {
 		msg = getTimestamp() + msg;
 		logFileWriter.println(msg);
-		listener.log(msg);
+		notifyLog(msg);
 		System.out.println(msg);
 	}
 
 	private static void printErr (String msg) {
 		msg = getTimestamp() + msg;
-		listener.err(msg);
+		notifyError(msg);
 		System.err.println(msg);
 	}
 
@@ -167,15 +182,19 @@ public class Log {
 
 		String stack = ExceptionUtils.getStackTrace(e);
 		fatal(stack);
-		listener.exception(stack);
+		notifyException(stack);
 	}
 
 	private static String getTimestamp () {
 		return msgDateFormat.format(new Date());
 	}
 
-	public static void setListener (LoggerListener listener) {
-		Log.listener = listener;
+	public static void addListener (LoggerListener listener) {
+		listeners.add(listener);
+	}
+
+	public static boolean removeListener (LoggerListener listener) {
+		return listeners.removeValue(listener, true);
 	}
 
 	public static int getLogLevel () {
@@ -194,6 +213,26 @@ public class Log {
 		Log.debugInterrupted = debugInterrupted;
 	}
 
+	private static void notifyLog (String msg) {
+		for (LoggerListener listener : listeners)
+			listener.log(msg);
+	}
+
+	private static void notifyError (String msg) {
+		for (LoggerListener listener : listeners)
+			listener.error(msg);
+	}
+
+	private static void notifyException (String stacktrace) {
+		for (LoggerListener listener : listeners)
+			listener.exception(stacktrace);
+	}
+
+	private static void notifyOpenGlCrash () {
+		for (LoggerListener listener : listeners)
+			listener.openGlCrash();
+	}
+
 	private static class ErrorOutInterceptor extends PrintStream {
 		public ErrorOutInterceptor (OutputStream out) {
 			super(out, true);
@@ -203,20 +242,6 @@ public class Log {
 		public void print (String s) {
 			super.print(s);
 			if (logFileWriter != null) logFileWriter.println(s);
-		}
-	}
-
-	private static class DefaultLogListener implements LoggerListener {
-		@Override
-		public void log (String msg) {
-		}
-
-		@Override
-		public void err (String msg) {
-		}
-
-		@Override
-		public void exception (String stacktrace) {
 		}
 	}
 }
