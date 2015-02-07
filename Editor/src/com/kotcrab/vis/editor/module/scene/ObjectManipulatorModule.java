@@ -57,7 +57,7 @@ public class ObjectManipulatorModule extends SceneModule {
 		camera = sceneContainer.get(CameraModule.class);
 		undoModule = sceneContainer.get(UndoModule.class);
 
-		objectProperties = new ObjectProperties();
+		objectProperties = new ObjectProperties(sceneTab);
 	}
 
 	@Override
@@ -154,6 +154,7 @@ public class ObjectManipulatorModule extends SceneModule {
 			lastTouchX = x;
 			lastTouchY = y;
 
+			sceneTab.setDirty(true);
 			objectProperties.updateValues();
 		}
 	}

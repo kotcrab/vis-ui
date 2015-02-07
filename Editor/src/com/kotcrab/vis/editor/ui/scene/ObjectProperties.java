@@ -31,6 +31,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.module.scene.Object2d;
+import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.VisTable;
@@ -56,9 +57,12 @@ public class ObjectProperties extends VisTable {
 	private ChangeListener sharedChangeListener;
 	private FieldFilter sharedFieldFilter;
 	private FieldValidator sharedFieldValidator;
+	private Tab parentTab;
 
-	public ObjectProperties () {
+	public ObjectProperties (Tab parentTab) {
 		super(true);
+		this.parentTab = parentTab;
+
 		setBackground(VisUI.skin.getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
 		setVisible(false);
@@ -316,7 +320,9 @@ public class ObjectProperties extends VisTable {
 				if (character == '-' && InputField.this.getCursorPosition() > 0 && getText().startsWith("-") == false)
 					return keyTypedReturnValue;
 
-				if(character == '.' && getText().contains(".")) return keyTypedReturnValue;
+				if (character == '.' && getText().contains(".")) return keyTypedReturnValue;
+
+				parentTab.setDirty(true);
 
 				return (keyTypedReturnValue || super.keyTyped(event, character));
 			}
@@ -328,14 +334,10 @@ public class ObjectProperties extends VisTable {
 
 				if (delta != 0) {
 					//current workaround for https://github.com/libgdx/libgdx/pull/2592
-					if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) {
-						changeFieldValue(delta * -1);
-						timerTask.cancel();
-						Timer.schedule(timerTask, 0.1f);
-					}
+					if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) changeFieldValue(delta * -1);
+					if (Gdx.input.isKeyPressed(Keys.PLUS)) changeFieldValue(delta);
 
-					if (Gdx.input.isKeyPressed(Keys.PLUS)) {
-						changeFieldValue(delta);
+					if (keyTypedReturnValue) {
 						timerTask.cancel();
 						Timer.schedule(timerTask, 0.1f);
 					}
