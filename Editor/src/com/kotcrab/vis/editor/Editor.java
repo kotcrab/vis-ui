@@ -32,8 +32,23 @@ import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
-import com.kotcrab.vis.editor.module.*;
-import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.module.EditorModuleContainer;
+import com.kotcrab.vis.editor.module.EditorSettingsIOModule;
+import com.kotcrab.vis.editor.module.GeneralSettingsModule;
+import com.kotcrab.vis.editor.module.MenuBarModule;
+import com.kotcrab.vis.editor.module.ProjectIOModule;
+import com.kotcrab.vis.editor.module.StatusBarModule;
+import com.kotcrab.vis.editor.module.TabsModule;
+import com.kotcrab.vis.editor.module.ToolbarModule;
+import com.kotcrab.vis.editor.module.project.AssetsManagerUIModule;
+import com.kotcrab.vis.editor.module.project.AssetsWatcherModule;
+import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.editor.module.project.Project;
+import com.kotcrab.vis.editor.module.project.ProjectInfoTabModule;
+import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import com.kotcrab.vis.editor.module.project.SceneIOModule;
+import com.kotcrab.vis.editor.module.project.SceneTabsModule;
+import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
 import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.InputModule;
@@ -104,6 +119,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		createModulesUI();
 
 		// debug section
+
 		try {
 			editorMC.get(ProjectIOModule.class).load((Gdx.files.absolute("F:\\Poligon\\TestProject")));
 		} catch (EditorException e) {
@@ -117,6 +133,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		}
 
 		//showSettingsWindow();
+
 		//debug end
 	}
 
