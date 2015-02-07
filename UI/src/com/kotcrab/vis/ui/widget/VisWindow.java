@@ -99,7 +99,7 @@ public class VisWindow extends Window {
 	}
 
 	public void addCloseButton () {
-		VisImageButton closeButton = new VisImageButton("close");
+		VisImageButton closeButton = new VisImageButton("close-window");
 		getButtonTable().add(closeButton).padRight(1).padBottom(1);
 		closeButton.addListener(new ChangeListener() {
 			@Override
