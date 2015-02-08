@@ -66,8 +66,8 @@ public class TabsModule extends EditorModule implements EventListener {
 		tabbedPane.add(tab);
 	}
 
-	public boolean removeTab (Tab tab) {
-		return tabbedPane.remove(tab);
+	public void removeTab (Tab tab) {
+		tabbedPane.remove(tab);
 	}
 
 	public void switchTab (Tab tab) {

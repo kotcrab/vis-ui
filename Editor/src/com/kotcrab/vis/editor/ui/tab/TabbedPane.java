@@ -33,8 +33,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Scaling;
+import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.ui.OptionDialogAdapter;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.util.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisImageButton.VisImageButtonStyle;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -88,7 +92,35 @@ public class TabbedPane {
 		rebuildTabsTable();
 	}
 
-	public boolean remove (Tab tab) {
+	public void remove (Tab tab) {
+		remove(tab, true);
+	}
+
+	public void remove (final Tab tab, boolean ignoreTabDirty) {
+		if(ignoreTabDirty) {
+			removeTab(tab);
+			return;
+		}
+
+		if (tab.isSavable() && tab.isDirty()) {
+				DialogUtils.showOptionDialog(Editor.instance.getStage(), "Unsaved changes", "Do you want to save changes in this resource before closing it?",
+						OptionDialogType.YES_NO_CANCEL, new OptionDialogAdapter() {
+							@Override
+							public void yes () {
+								tab.save();
+								removeTab(tab);
+							}
+
+							@Override
+							public void no () {
+								removeTab(tab);
+							}
+						});
+		} else
+			removeTab(tab);
+	}
+
+	private void removeTab (Tab tab) {
 		int index = tabs.indexOf(tab, true);
 		boolean success = tabs.removeValue(tab, true);
 
@@ -102,8 +134,6 @@ public class TabbedPane {
 
 			rebuildTabsTable();
 		}
-
-		return success;
 	}
 
 	public void removeAll () {
@@ -208,7 +238,7 @@ public class TabbedPane {
 			closeButton.addListener(new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
-					TabbedPane.this.remove(tab);
+					TabbedPane.this.remove(tab, false);
 				}
 			});
 
