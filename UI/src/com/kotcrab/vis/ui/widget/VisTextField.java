@@ -24,7 +24,11 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
@@ -32,13 +36,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
-import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Clipboard;
+import com.badlogic.gdx.utils.FloatArray;
+import com.badlogic.gdx.utils.TimeUtils;
+import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
-
-import java.lang.StringBuilder;
 
 /**
  * A single-line text input field.
@@ -479,8 +485,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		if (textField != null) {
 			textField.focusField();
 			textField.setCursorPosition(textField.getText().length());
-		}
-		else
+		} else
 			Gdx.input.setOnscreenKeyboardVisible(false);
 	}
 
@@ -491,7 +496,8 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			if (actor == this) continue;
 			if (actor instanceof VisTextField) {
 				VisTextField textField = (VisTextField) actor;
-				if (textField.isDisabled() || !textField.focusTraversal) continue;
+				if (textField.isDisabled() || !textField.focusTraversal || isActorVisibleInStage(textField) == false)
+					continue;
 				Vector2 actorCoords = actor.getParent().localToStageCoordinates(tmp3.set(actor.getX(), actor.getY()));
 				if ((actorCoords.y < currentCoords.y || (actorCoords.y == currentCoords.y && actorCoords.x > currentCoords.x)) ^ up) {
 					if (best == null
@@ -504,6 +510,17 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 				best = findNextTextField(((Group) actor).getChildren(), best, bestCoords, currentCoords, up);
 		}
 		return best;
+	}
+
+	/**
+	 * Checks if actor is visible in stage acknowledging parent visibility.
+	 * If any parent returns false from isVisible then this method return false.
+	 * True is returned when this actor and all its parent are visible.
+	 */
+	private boolean isActorVisibleInStage (Actor actor) {
+		if (actor == null) return true;
+		if (actor.isVisible() == false) return false;
+		return isActorVisibleInStage(actor.getParent());
 	}
 
 	public InputListener getDefaultInputListener () {

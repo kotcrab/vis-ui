@@ -3,6 +3,7 @@
 -Added FormValidator.fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty)
 -Changed close button style name to 'close-window' (was 'close')
 -Added 'close' button style that matches other normal buttons
+-Fixed focus traversing when TAB pressed to invisible fields
 
 [0.5.1]
 -Added cancelable input dialog in DialogUtils
