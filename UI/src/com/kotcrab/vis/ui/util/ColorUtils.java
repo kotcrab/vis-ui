@@ -29,6 +29,7 @@ public class ColorUtils {
 	 * @return RGB values in LibGDX Color class
 	 */
 	public static Color HSVtoRGB (float h, float s, float v) {
+		if (h == 360) h = 359;
 		int r, g, b;
 		int i;
 		float f, p, q, t;
@@ -110,16 +111,22 @@ public class ColorUtils {
 			s = delta / max;
 		else {
 			s = 0;
-			h = -1;
+			h = 0;
 			return new int[]{MathUtils.round(h), MathUtils.round(s), MathUtils.round(v)};
 		}
 
-		if (r == max)
-			h = (g - b) / delta;
-		else if (g == max)
-			h = 2 + (b - r) / delta;
-		else
-			h = 4 + (r - g) / delta;
+		if (delta == 0)
+			h = 0;
+		else {
+
+			if (r == max)
+				h = (g - b) / delta;
+			else if (g == max)
+				h = 2 + (b - r) / delta;
+			else
+				h = 4 + (r - g) / delta;
+		}
+
 		h *= 60;
 		if (h < 0)
 			h += 360;
@@ -129,4 +136,5 @@ public class ColorUtils {
 
 		return new int[]{MathUtils.round(h), MathUtils.round(s), MathUtils.round(v)};
 	}
+
 }
