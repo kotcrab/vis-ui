@@ -23,6 +23,20 @@ import com.badlogic.gdx.math.MathUtils;
 public class ColorUtils {
 	/**
 	 * Converts HSV color system to RGB
+	 * @param h     hue 0-360
+	 * @param s     saturation 0-100
+	 * @param v     value 0-100
+	 * @param alpha 0-1
+	 * @return RGB values in LibGDX Color class
+	 */
+	public static Color HSVtoRGB (float h, float s, float v, float alpha) {
+		Color c = HSVtoRGB(h, s, v);
+		c.a = alpha;
+		return c;
+	}
+
+	/**
+	 * Converts HSV color system to RGB
 	 * @param h hue 0-360
 	 * @param s saturation 0-100
 	 * @param v value 0-100
