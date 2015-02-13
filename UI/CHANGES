@@ -4,6 +4,7 @@
 -Changed close button style name to 'close-window' (was 'close')
 -Added 'close' button style that matches other normal buttons
 -Fixed focus traversing when TAB pressed to invisible fields
+-Added ColorUtils
 -Added VisImage
 
 [0.5.1]
