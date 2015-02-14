@@ -65,7 +65,7 @@ public class VisSplitPane extends WidgetGroup {
 	/** @param firstWidget May be null.
 	 * @param secondWidget May be null. */
 	public VisSplitPane (Actor firstWidget, Actor secondWidget, boolean vertical, String styleName) {
-		this(firstWidget, secondWidget, vertical, VisUI.skin.get(styleName, SplitPaneStyle.class));
+		this(firstWidget, secondWidget, vertical, VisUI.getSkin().get(styleName, SplitPaneStyle.class));
 	}
 
 	/** @param firstWidget May be null.

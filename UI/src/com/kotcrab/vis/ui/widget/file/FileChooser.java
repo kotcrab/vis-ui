@@ -46,7 +46,7 @@ import java.io.FileFilter;
  * @author Pawel Pastuszak
  */
 public class FileChooser extends VisWindow {
-	private static final Drawable highlightBg = VisUI.skin.getDrawable("list-selection");
+	private static final Drawable highlightBg = VisUI.getSkin().getDrawable("list-selection");
 
 	private Mode mode;
 	private SelectionMode selectionMode = SelectionMode.FILES;
@@ -692,10 +692,10 @@ public class FileChooser extends VisWindow {
 		public Drawable iconDrive;
 
 		public FileChooserStyle () {
-			iconArrowLeft = VisUI.skin.getDrawable("icon-arrow-left");
-			iconArrowRight = VisUI.skin.getDrawable("icon-arrow-right");
-			iconFolder = VisUI.skin.getDrawable("icon-folder");
-			iconDrive = VisUI.skin.getDrawable("icon-drive");
+			iconArrowLeft = VisUI.getSkin().getDrawable("icon-arrow-left");
+			iconArrowRight = VisUI.getSkin().getDrawable("icon-arrow-right");
+			iconFolder = VisUI.getSkin().getDrawable("icon-folder");
+			iconDrive = VisUI.getSkin().getDrawable("icon-drive");
 		}
 	}
 

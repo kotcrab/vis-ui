@@ -41,7 +41,7 @@ public class MenuBar {
 	private boolean menuVisible = false;
 
 	public MenuBar (Stage stage) {
-		this.skin = VisUI.skin;
+		this.skin = VisUI.getSkin();
 		this.stage = stage;
 
 		menus = new Array<MenuBarItem>();

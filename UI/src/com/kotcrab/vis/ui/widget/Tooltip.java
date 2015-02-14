@@ -34,7 +34,7 @@ import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 
 public class Tooltip extends VisTable {
-	private static final Drawable background = VisUI.skin.getDrawable("tooltip-bg");
+	private static final Drawable background = VisUI.getSkin().getDrawable("tooltip-bg");
 	private static final float FADE_TIME = 0.3f;
 	private static final float APPEAR_DELAY_TIME = 0.6f;
 

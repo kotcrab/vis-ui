@@ -57,7 +57,7 @@ public class PopupMenu extends Table {
 
 	public PopupMenu (boolean autoRemove, String styleName) {
 		this.autoRemove = autoRemove;
-		style = VisUI.skin.get(styleName, PopupMenuStyle.class);
+		style = VisUI.getSkin().get(styleName, PopupMenuStyle.class);
 	}
 
 	public void addItem (MenuItem item) {

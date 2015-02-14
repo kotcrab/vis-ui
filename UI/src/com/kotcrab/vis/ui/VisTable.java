@@ -24,12 +24,12 @@ import com.kotcrab.vis.ui.widget.Separator;
 public class VisTable extends Table {
 
 	public VisTable () {
-		super(VisUI.skin);
+		super(VisUI.getSkin());
 	}
 
 	/** @param setVisDefaults if true default vis spacing defaults will be set */
 	public VisTable (boolean setVisDefaults) {
-		super(VisUI.skin);
+		super(VisUI.getSkin());
 		if (setVisDefaults) TableUtils.setSpaceDefaults(this);
 	}
 

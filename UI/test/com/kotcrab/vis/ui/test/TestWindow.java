@@ -158,7 +158,7 @@ public class TestWindow extends VisWindow {
 	}
 
 	private void addNormalComponents () {
-		Skin skin = VisUI.skin;
+		Skin skin = VisUI.getSkin();
 
 		Label label = new VisLabel("label");
 

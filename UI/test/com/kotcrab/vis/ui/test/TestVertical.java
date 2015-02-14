@@ -43,9 +43,9 @@ public class TestVertical extends VisWindow {
 	}
 
 	private void addNormalComponents () {
-		ProgressBar progressbar = new ProgressBar(0, 100, 1, true, VisUI.skin);
-		Slider slider = new Slider(0, 100, 1, true, VisUI.skin);
-		Slider sliderDisabled = new Slider(0, 100, 1, true, VisUI.skin);
+		ProgressBar progressbar = new ProgressBar(0, 100, 1, true, VisUI.getSkin());
+		Slider slider = new Slider(0, 100, 1, true, VisUI.getSkin());
+		Slider sliderDisabled = new Slider(0, 100, 1, true, VisUI.getSkin());
 
 		progressbar.setValue(50);
 		slider.setValue(50);

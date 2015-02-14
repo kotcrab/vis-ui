@@ -57,7 +57,7 @@ public class TestSplitPane extends VisWindow {
 	}
 
 	private void addNormalComponents () {
-		Skin skin = VisUI.skin;
+		Skin skin = VisUI.getSkin();
 		Label label = new Label("Lorem \nipsum \ndolor \nsit \namet", skin);
 		Label label2 = new Label("Consectetur \nadipiscing \nelit", skin);
 

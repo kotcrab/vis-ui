@@ -30,12 +30,12 @@ public class VisSelectBox<T> extends SelectBox<T> {
 	}
 
 	public VisSelectBox (String styleName) {
-		super(VisUI.skin, styleName);
+		super(VisUI.getSkin(), styleName);
 		init();
 	}
 
 	public VisSelectBox () {
-		super(VisUI.skin);
+		super(VisUI.getSkin());
 		init();
 	}
 

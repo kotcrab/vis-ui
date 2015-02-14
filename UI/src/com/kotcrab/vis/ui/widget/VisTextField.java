@@ -112,15 +112,15 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	private boolean inputValid = true;
 
 	public VisTextField () {
-		this("", VisUI.skin.get(VisTextFieldStyle.class));
+		this("", VisUI.getSkin().get(VisTextFieldStyle.class));
 	}
 
 	public VisTextField (String text) {
-		this(text, VisUI.skin.get(VisTextFieldStyle.class));
+		this(text, VisUI.getSkin().get(VisTextFieldStyle.class));
 	}
 
 	public VisTextField (String text, String styleName) {
-		this(text, VisUI.skin.get(styleName, VisTextFieldStyle.class));
+		this(text, VisUI.getSkin().get(styleName, VisTextFieldStyle.class));
 	}
 
 	public VisTextField (String text, VisTextFieldStyle style) {

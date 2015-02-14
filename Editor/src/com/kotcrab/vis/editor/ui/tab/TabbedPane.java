@@ -45,7 +45,7 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 
 public class TabbedPane {
-	private static final Drawable highlightBg = VisUI.skin.getDrawable("list-selection");
+	private static final Drawable highlightBg = VisUI.getSkin().getDrawable("list-selection");
 
 	private VisTable tabsTable;
 	private VisTable mainTable;
@@ -75,7 +75,7 @@ public class TabbedPane {
 
 		// if height is not set bottomBar may sometimes disappear for some reason
 		mainTable.add(new Image(highlightBg)).expand().fill().height(1);
-		mainTable.setBackground(VisUI.skin.getDrawable("menu-bg"));
+		mainTable.setBackground(VisUI.getSkin().getDrawable("menu-bg"));
 	}
 
 	public void add (Tab tab) {

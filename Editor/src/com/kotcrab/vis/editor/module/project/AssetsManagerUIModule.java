@@ -385,7 +385,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		private boolean isTexture;
 
 		public FileItem (FileHandle file) {
-			super(VisUI.skin);
+			super(VisUI.getSkin());
 			this.file = file;
 			VisLabel name = new VisLabel(file.name());
 
@@ -434,7 +434,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 			this.file = file;
 			name = new VisLabel(customName);
 			name.setEllipsis(true);
-			add(new Image(VisUI.skin.getDrawable("icon-folder"))).padTop(3);
+			add(new Image(VisUI.getSkin().getDrawable("icon-folder"))).padTop(3);
 			add(name).expand().fill().padRight(6);
 		}
 	}

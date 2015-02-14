@@ -24,7 +24,7 @@ import com.kotcrab.vis.ui.VisUI;
 
 /** Channel bar intended for alpha channel, renders alpha grid bellow channel texture. Not intended to use outside ColorPicker*/
 public class AlphaChannelBar extends ChannelBar {
-	private Drawable alphaBar = VisUI.skin.getDrawable("alpha-bar-10px");
+	private Drawable alphaBar = VisUI.getSkin().getDrawable("alpha-bar-10px");
 
 	public AlphaChannelBar (Texture texture, int value, int maxValue, ChangeListener listener) {
 		super(texture, value, maxValue, listener);

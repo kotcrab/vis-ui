@@ -26,7 +26,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 public class SceneOutline extends VisTable {
 	public SceneOutline () {
 		super(true);
-		setBackground(VisUI.skin.getDrawable("window-bg"));
+		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		top();
 		add(new VisLabel("Outline"));
 	}

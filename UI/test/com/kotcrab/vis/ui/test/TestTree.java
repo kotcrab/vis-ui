@@ -44,7 +44,7 @@ public class TestTree extends VisWindow {
 	}
 
 	private void addNormalComponents () {
-		Skin skin = VisUI.skin;
+		Skin skin = VisUI.getSkin();
 
 		Tree tree = new Tree(skin);
 		Node item1 = new Node(new Label("item 1", skin));

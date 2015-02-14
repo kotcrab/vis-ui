@@ -29,7 +29,7 @@ import com.kotcrab.vis.ui.widget.VisImage;
 
 /** Vertical channel bar, not intended to use outside ColorPicker */
 public class VerticalChannelBar extends VisImage {
-	private Drawable barSelector = VisUI.skin.getDrawable("color-picker-selector-vertical");
+	private Drawable barSelector = VisUI.getSkin().getDrawable("color-picker-selector-vertical");
 
 	private int maxValue;
 	private float selectorY;

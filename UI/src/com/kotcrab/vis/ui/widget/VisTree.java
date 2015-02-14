@@ -25,12 +25,12 @@ import com.kotcrab.vis.ui.VisUI;
 public class VisTree extends Tree {
 
 	public VisTree (String styleName) {
-		super(VisUI.skin, styleName);
+		super(VisUI.getSkin(), styleName);
 		init();
 	}
 
 	public VisTree () {
-		super(VisUI.skin);
+		super(VisUI.getSkin());
 		init();
 	}
 

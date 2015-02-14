@@ -63,7 +63,7 @@ public class ObjectProperties extends VisTable {
 		super(true);
 		this.parentTab = parentTab;
 
-		setBackground(VisUI.skin.getDrawable("window-bg"));
+		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
 		setVisible(false);
 

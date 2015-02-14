@@ -60,12 +60,12 @@ public class VisProgressBar extends Widget implements Disableable {
 	boolean shiftIgnoresSnap;
 
 	public VisProgressBar (float min, float max, float stepSize, boolean vertical) {
-		this(min, max, stepSize, vertical, VisUI.skin.get("default-" + (vertical ? "vertical" : "horizontal"),
-			ProgressBarStyle.class));
+		this(min, max, stepSize, vertical, VisUI.getSkin().get("default-" + (vertical ? "vertical" : "horizontal"),
+				ProgressBarStyle.class));
 	}
 
 	public VisProgressBar (float min, float max, float stepSize, boolean vertical, String styleName) {
-		this(min, max, stepSize, vertical, VisUI.skin.get(styleName, ProgressBarStyle.class));
+		this(min, max, stepSize, vertical, VisUI.getSkin().get(styleName, ProgressBarStyle.class));
 	}
 
 	/** Creates a new progress bar. It's width is determined by the given prefWidth parameter, its height is determined by the

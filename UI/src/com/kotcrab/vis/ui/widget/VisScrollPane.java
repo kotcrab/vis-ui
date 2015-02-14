@@ -27,10 +27,10 @@ public class VisScrollPane extends ScrollPane {
 	}
 
 	public VisScrollPane (Actor widget, String styleName) {
-		super(widget, VisUI.skin, styleName);
+		super(widget, VisUI.getSkin(), styleName);
 	}
 
 	public VisScrollPane (Actor widget) {
-		super(widget, VisUI.skin, "list");
+		super(widget, VisUI.getSkin(), "list");
 	}
 }

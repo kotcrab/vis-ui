@@ -25,12 +25,12 @@ import com.kotcrab.vis.ui.VisUI;
 public class VisList<T> extends List<T> {
 
 	public VisList () {
-		super(VisUI.skin);
+		super(VisUI.getSkin());
 		init();
 	}
 
 	public VisList (String styleName) {
-		super(VisUI.skin, styleName);
+		super(VisUI.getSkin(), styleName);
 		init();
 	}
 

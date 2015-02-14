@@ -26,9 +26,9 @@ import com.kotcrab.vis.ui.widget.VisImage;
 
 /** Colors palette, not intended to use outside ColorPicker */
 public class Palette extends VisImage {
-	private static final Drawable cross = VisUI.skin.getDrawable("color-picker-cross");
-	private static final Drawable verticalSelector = VisUI.skin.getDrawable("color-picker-selector-horizontal");
-	private static final Drawable horizontalSelector = VisUI.skin.getDrawable("color-picker-selector-vertical");
+	private static final Drawable cross = VisUI.getSkin().getDrawable("color-picker-cross");
+	private static final Drawable verticalSelector = VisUI.getSkin().getDrawable("color-picker-selector-horizontal");
+	private static final Drawable horizontalSelector = VisUI.getSkin().getDrawable("color-picker-selector-vertical");
 
 	private PaletteListener listener;
 

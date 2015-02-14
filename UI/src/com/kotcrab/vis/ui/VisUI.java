@@ -27,8 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
  */
 public class VisUI {
 	private static int defaultTitleAlign = Align.left;
-	//TODO make this private in 0.6.0
-	public static Skin skin;
+	private static Skin skin;
 
 	/** Loads default VisUI skin from library */
 	public static void load () {
@@ -38,6 +37,10 @@ public class VisUI {
 	/** Loads provided skin, skin must be compatible with default VisUI skin */
 	public static void load (FileHandle visSkinFile) {
 		skin = new Skin(visSkinFile);
+	}
+
+	public static Skin getSkin () {
+		return skin;
 	}
 
 	/** Unloads skin */

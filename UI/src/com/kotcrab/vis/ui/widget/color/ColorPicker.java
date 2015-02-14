@@ -40,8 +40,11 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import com.kotcrab.vis.ui.widget.VisWindow;
 import com.kotcrab.vis.ui.widget.color.Palette.PaletteListener;
 
+/**
+ * @since 0.6.0
+ */
 public class ColorPicker extends VisWindow implements Disposable {
-	private static final Drawable white = VisUI.skin.getDrawable("white");
+	private static final Drawable white = VisUI.getSkin().getDrawable("white");
 
 	static final int FIELD_WIDTH = 50;
 	static final int HEX_FIELD_WIDTH = 95;
@@ -524,7 +527,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 	}
 
 	private static class AlphaImage extends Image {
-		private Drawable alphaBar = VisUI.skin.getDrawable("alpha-bar-25px");
+		private Drawable alphaBar = VisUI.getSkin().getDrawable("alpha-bar-25px");
 
 		public AlphaImage (Drawable imageUp) {
 			super(imageUp);

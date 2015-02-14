@@ -48,12 +48,12 @@ public class VisSlider extends VisProgressBar {
 	private ClickListener clickListener;
 
 	public VisSlider (float min, float max, float stepSize, boolean vertical) {
-		this(min, max, stepSize, vertical, VisUI.skin
+		this(min, max, stepSize, vertical, VisUI.getSkin()
 			.get("default-" + (vertical ? "vertical" : "horizontal"), VisSliderStyle.class));
 	}
 
 	public VisSlider (float min, float max, float stepSize, boolean vertical, String styleName) {
-		this(min, max, stepSize, vertical, VisUI.skin.get(styleName, VisSliderStyle.class));
+		this(min, max, stepSize, vertical, VisUI.getSkin().get(styleName, VisSliderStyle.class));
 	}
 
 	/** Creates a new slider. It's width is determined by the given prefWidth parameter, its height is determined by the maximum of

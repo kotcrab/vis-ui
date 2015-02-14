@@ -46,7 +46,7 @@ public class TestTextAreaAndScroll extends VisWindow {
 	}
 
 	private void addNormalComponents () {
-		Skin skin = VisUI.skin;
+		Skin skin = VisUI.getSkin();
 
 		TextArea textArea = new TextArea("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec iaculis odio.", skin);
 		textArea.setPrefRows(5);

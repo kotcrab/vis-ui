@@ -1,13 +1,14 @@
 [0.6.0] [Snapshot]
 -API Change: moved FileUtils to util package, FileUtils renamed to FileUtils
--Added OptionDialog in DialogUtils
--Added FormValidator.fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty)
+-API Change: VisUI.skin is not private, use VisUI.getSkin() instead
+-API Addition: DialogUtils.showOptionDialog (Stage stage, String title, String text, OptionDialogType type, OptionDialogListener listener)
+-API Addition: FormValidator.fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty)
+-API Addition: ColorPicker
+-API Addition: ColorUtils
+-API Addition: VisImage
 -Changed close button style name to 'close-window' (was 'close')
 -Added 'close' button style that matches other normal buttons
 -Fixed focus traversing when TAB pressed to invisible fields
--Added ColorPicker
--Added ColorUtils
--Added VisImage
 
 [0.5.1]
 -Added cancelable input dialog in DialogUtils

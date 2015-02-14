@@ -41,29 +41,29 @@ public class MenuItem extends Button {
 	private Cell<VisLabel> shortcutLabelCell;
 
 	public MenuItem (String text) {
-		this(text, (Image) null, VisUI.skin.get(TextButtonStyle.class));
+		this(text, (Image) null, VisUI.getSkin().get(TextButtonStyle.class));
 	}
 
 	public MenuItem (String text, ChangeListener changeListener) {
-		this(text, (Image) null, VisUI.skin.get(TextButtonStyle.class));
+		this(text, (Image) null, VisUI.getSkin().get(TextButtonStyle.class));
 		addListener(changeListener);
 	}
 
 	public MenuItem (String text, Drawable drawable) {
-		this(text, drawable, VisUI.skin.get(TextButtonStyle.class));
+		this(text, drawable, VisUI.getSkin().get(TextButtonStyle.class));
 	}
 
 	public MenuItem (String text, Drawable drawable, ChangeListener changeListener) {
-		this(text, drawable, VisUI.skin.get(TextButtonStyle.class));
+		this(text, drawable, VisUI.getSkin().get(TextButtonStyle.class));
 		addListener(changeListener);
 	}
 
 	public MenuItem (String text, Image image) {
-		this(text, image, VisUI.skin.get(TextButtonStyle.class));
+		this(text, image, VisUI.getSkin().get(TextButtonStyle.class));
 	}
 
 	public MenuItem (String text, Image image, ChangeListener changeListener) {
-		this(text, image, VisUI.skin.get(TextButtonStyle.class));
+		this(text, image, VisUI.getSkin().get(TextButtonStyle.class));
 		addListener(changeListener);
 	}
 
@@ -82,7 +82,7 @@ public class MenuItem extends Button {
 	private void init (String text, Image image, TextButtonStyle style) {
 		this.style = style;
 		this.image = image;
-		setSkin(VisUI.skin);
+		setSkin(VisUI.getSkin());
 
 		defaults().space(3);
 

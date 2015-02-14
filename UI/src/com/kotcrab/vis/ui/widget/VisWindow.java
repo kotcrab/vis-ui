@@ -34,7 +34,7 @@ public class VisWindow extends Window {
 	}
 
 	public VisWindow (String title, boolean showBorder) {
-		super(title, VisUI.skin, showBorder ? "default" : "noborder");
+		super(title, VisUI.getSkin(), showBorder ? "default" : "noborder");
 		setTitleAlignment(VisUI.getDefaultTitleAlign());
 	}
 

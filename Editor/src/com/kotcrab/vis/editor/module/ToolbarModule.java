@@ -37,7 +37,7 @@ public class ToolbarModule extends EditorModule implements EventListener {
 
 	public ToolbarModule () {
 		table = new VisTable(false);
-		table.setBackground(VisUI.skin.getDrawable("button"));
+		table.setBackground(VisUI.getSkin().getDrawable("button"));
 		table.add(createButton("save", MenuEventType.FILE_SAVE));
 		table.add().expand().fill();
 	}

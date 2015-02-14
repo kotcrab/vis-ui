@@ -48,7 +48,7 @@ public class StatusBarModule extends EditorModule implements EventListener {
 		statusLabel = new VisLabel("Ready");
 
 		table = new VisTable();
-		table.setBackground(VisUI.skin.getDrawable("button"));
+		table.setBackground(VisUI.getSkin().getDrawable("button"));
 		table.add(statusLabel);
 		table.add().expand().fill();
 	}

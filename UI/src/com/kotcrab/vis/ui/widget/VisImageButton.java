@@ -52,7 +52,7 @@ public class VisImageButton extends Button implements Focusable {
 	}
 
 	public VisImageButton (Drawable imageUp, Drawable imageDown, Drawable imageChecked) {
-		setStyle(new VisImageButtonStyle(VisUI.skin.get(VisImageButtonStyle.class)));
+		setStyle(new VisImageButtonStyle(VisUI.getSkin().get(VisImageButtonStyle.class)));
 		style.imageUp = imageUp;
 		style.imageDown = imageDown;
 		style.imageChecked = imageChecked;
@@ -61,7 +61,7 @@ public class VisImageButton extends Button implements Focusable {
 	}
 
 	public VisImageButton (String styleName) {
-		setStyle(new VisImageButtonStyle(VisUI.skin.get(styleName, VisImageButtonStyle.class)));
+		setStyle(new VisImageButtonStyle(VisUI.getSkin().get(styleName, VisImageButtonStyle.class)));
 		init();
 	}
 
