@@ -45,6 +45,8 @@ local.properties
 .settings/
 .loadpath
 .pydevproject
+.project
+.classpath
 .externalToolBuilders/
 *.launch
 
