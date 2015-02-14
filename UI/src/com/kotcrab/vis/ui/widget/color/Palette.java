@@ -20,27 +20,29 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
 
-/** Colors palette, not intended to use outside ColorPicker */
+/** Colors palette used to display colors using all possible values of saturation and value, not intended to use outside ColorPicker */
 public class Palette extends VisImage {
 	private static final Drawable cross = VisUI.getSkin().getDrawable("color-picker-cross");
 	private static final Drawable verticalSelector = VisUI.getSkin().getDrawable("color-picker-selector-horizontal");
 	private static final Drawable horizontalSelector = VisUI.getSkin().getDrawable("color-picker-selector-vertical");
 
-	private PaletteListener listener;
-
+	private int x, y;
 	private int maxValue;
 	private float selectorX;
 	private float selectorY;
 
-	public Palette (Texture texture, int x, int y, final int maxValue, PaletteListener listener) {
+	public Palette (Texture texture, int x, int y, final int maxValue, ChangeListener listener) {
 		super(texture);
 		this.maxValue = maxValue;
-		this.listener = listener;
 		setValue(x, y);
+		addListener(listener);
 
 		addListener(new InputListener() {
 			@Override
@@ -65,26 +67,35 @@ public class Palette extends VisImage {
 	}
 
 	public void setValue (int v, int s) {
-		selectorX = ((float) v / maxValue) * ColorPicker.PALETTE_SIZE;
-		selectorY = ((float) s / maxValue) * ColorPicker.PALETTE_SIZE;
+		x = v;
+		y = s;
+
+		if (x < 0) x = 0;
+		if (x > maxValue) x = maxValue;
+
+		if (y < 0) y = 0;
+		if (y > maxValue) y = maxValue;
+
+		selectorX = ((float) x / maxValue) * ColorPicker.PALETTE_SIZE;
+		selectorY = ((float) y / maxValue) * ColorPicker.PALETTE_SIZE;
 	}
 
-	private void updateValueFromTouch (float x, float y) {
-		int newX = (int) (x / ColorPicker.PALETTE_SIZE * maxValue);
-		int newY = (int) (y / ColorPicker.PALETTE_SIZE * maxValue);
-
-		if (newX < 0) newX = 0;
-		if (newX > maxValue) newX = maxValue;
-
-		if (newY < 0) newY = 0;
-		if (newY > maxValue) newY = maxValue;
-
+	private void updateValueFromTouch (float touchX, float touchY) {
+		int newX = (int) (touchX / ColorPicker.PALETTE_SIZE * maxValue);
+		int newY = (int) (touchY / ColorPicker.PALETTE_SIZE * maxValue);
 
 		setValue(newX, newY);
-		listener.valueChanged(newX, newY);
+
+		ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);
+		fire(changeEvent);
+		Pools.free(changeEvent);
 	}
 
-	interface PaletteListener {
-		public void valueChanged (int newS, int newV);
+	public int getS () {
+		return x;
+	}
+
+	public int getV () {
+		return y;
 	}
 }

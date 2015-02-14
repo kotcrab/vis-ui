@@ -20,32 +20,34 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.color.ColorInputField.ColorInputFieldListener;
 
-class ColorBarWidget extends VisTable implements Disposable {
+/**
+ * Used to display one color channel (hue, saturation etc.) with label, ColorInputField and ChannelBar
+ */
+public class ColorChannelWidget extends VisTable implements Disposable {
 	private int value;
 	private int maxValue;
-	private ColorInputField.ColorBarListener drawer;
+	private ColorChannelWidgetListener drawer;
 	private boolean useAlphaBar;
 
 	private ColorInputField inputField;
 
 	private Texture texture;
 	private Pixmap pixmap;
-	private Cell<ChannelBar> cell;
+	private ChannelBar bar;
 
-	//private ChannelBar.ColorBarListener imageCallback;
 	private ChangeListener barListener;
 
-	public ColorBarWidget (String label, int maxValue, final ColorInputField.ColorBarListener drawer) {
+	public ColorChannelWidget (String label, int maxValue, final ColorChannelWidgetListener drawer) {
 		this(label, maxValue, false, drawer);
 	}
 
-	public ColorBarWidget (String label, int maxValue, boolean useAlphaBar, final ColorInputField.ColorBarListener drawer) {
+	public ColorChannelWidget (String label, int maxValue, boolean useAlphaBar, final ColorChannelWidgetListener drawer) {
 		super(true);
 
 		this.value = 0;
@@ -53,19 +55,10 @@ class ColorBarWidget extends VisTable implements Disposable {
 		this.drawer = drawer;
 		this.useAlphaBar = useAlphaBar;
 
-//		imageCallback = new ChannelBar.ColorBarListener() {
-//			@Override
-//			public void valueChanged (int newValue) {
-//				value = newValue;
-//				drawer.updateFields();
-//				inputField.setValue(newValue);
-//			}
-//		};
-
-		barListener= new ChangeListener() {
+		barListener = new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				value = cell.getActor().getValue();
+				value = bar.getValue();
 				drawer.updateFields();
 				inputField.setValue(value);
 			}
@@ -74,15 +67,15 @@ class ColorBarWidget extends VisTable implements Disposable {
 		pixmap = new Pixmap(maxValue, 1, Format.RGBA8888);
 		texture = new Texture(pixmap);
 		add(new VisLabel(label)).width(10).center();
-		add(inputField = new ColorInputField(maxValue, new ChannelBar.ColorBarListener() {
+		add(inputField = new ColorInputField(maxValue, new ColorInputFieldListener() {
 			@Override
-			public void valueChanged (int newValue) {
+			public void changed (int newValue) {
 				value = newValue;
 				drawer.updateFields();
-				cell.getActor().setValue(newValue);
+				bar.setValue(newValue);
 			}
 		})).width(ColorPicker.FIELD_WIDTH);
-		cell = add(getNewBarImage()).size(ColorPicker.BAR_WIDTH, ColorPicker.BAR_HEIGHT);
+		add(bar = createBarImage()).size(ColorPicker.BAR_WIDTH, ColorPicker.BAR_HEIGHT);
 
 		inputField.setValue(0);
 	}
@@ -97,7 +90,7 @@ class ColorBarWidget extends VisTable implements Disposable {
 		drawer.draw(pixmap);
 		texture.dispose();
 		texture = new Texture(pixmap);
-		cell.getActor().setDrawable(texture);
+		bar.setDrawable(texture);
 	}
 
 	public int getValue () {
@@ -107,10 +100,10 @@ class ColorBarWidget extends VisTable implements Disposable {
 	public void setValue (int value) {
 		this.value = value;
 		inputField.setValue(value);
-		cell.getActor().setValue(value);
+		bar.setValue(value);
 	}
 
-	private ChannelBar getNewBarImage () {
+	private ChannelBar createBarImage () {
 		if (useAlphaBar)
 			return new AlphaChannelBar(texture, value, maxValue, barListener);
 		else
@@ -119,5 +112,11 @@ class ColorBarWidget extends VisTable implements Disposable {
 
 	public boolean isInputValid () {
 		return inputField.isInputValid();
+	}
+
+	interface ColorChannelWidgetListener {
+		public void updateFields ();
+
+		public void draw (Pixmap pixmap);
 	}
 }

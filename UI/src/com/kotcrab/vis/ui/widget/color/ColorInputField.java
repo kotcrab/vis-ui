@@ -18,25 +18,27 @@ package com.kotcrab.vis.ui.widget.color;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
+/**
+ * Fields used to enter color numbers in color picker, verifies max allowed value
+ * provides quick increment/decrement of current value by pressing [shift +] plus or minus on numpad
+ */
 public class ColorInputField extends VisValidableTextField {
-	private ChannelBar.ColorBarListener callback;
 	private int value;
 	private int maxValue;
 
-	public ColorInputField (int maxValue, final ChannelBar.ColorBarListener callback) {
+	public ColorInputField (final int maxValue, final ColorInputFieldListener listener) {
 		super(new ColorFieldValidator(maxValue));
 		this.value = 0;
 		this.maxValue = maxValue;
-		this.callback = callback;
 
 		setProgrammaticChangeEvents(false);
 		setMaxLength(3);
@@ -56,11 +58,17 @@ public class ColorInputField extends VisValidableTextField {
 				if (character == '+') field.changeValue(Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) ? 10 : 1);
 				if (character == '-') field.changeValue(Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) ? -10 : -1);
 
-				if (character != 0) {
-					callback.valueChanged(getValue());
-				}
+				if (character != 0) listener.changed(getValue());
 
 				return true;
+			}
+		});
+
+		addListener(new FocusListener() {
+			@Override
+			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
+				if (focused == false && isInputValid() == false)
+					setValue(maxValue); //only possibility on invalid field is that entered value will be bigger than maxValue so we set field value to maxValue
 			}
 		});
 	}
@@ -74,11 +82,6 @@ public class ColorInputField extends VisValidableTextField {
 		updateUI();
 	}
 
-	private void updateUI () {
-		setText(String.valueOf(value));
-		setCursorPosition(getMaxLength());
-	}
-
 	public int getValue () {
 		return value;
 	}
@@ -88,10 +91,13 @@ public class ColorInputField extends VisValidableTextField {
 		updateUI();
 	}
 
-	interface ColorBarListener {
-		public void updateFields ();
+	private void updateUI () {
+		setText(String.valueOf(value));
+		setCursorPosition(getMaxLength());
+	}
 
-		public void draw (Pixmap pixmap);
+	interface ColorInputFieldListener {
+		public void changed (int newValue);
 	}
 
 	private static class NumberFilter implements TextFieldFilter {

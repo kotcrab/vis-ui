@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
 
-/** Channel bar intended for alpha channel, renders alpha grid bellow channel texture. Not intended to use outside ColorPicker*/
+/** Channel bar intended for alpha channel, renders alpha grid bellow channel texture. Not intended to use outside ColorPicker */
 public class AlphaChannelBar extends ChannelBar {
 	private Drawable alphaBar = VisUI.getSkin().getDrawable("alpha-bar-10px");
 

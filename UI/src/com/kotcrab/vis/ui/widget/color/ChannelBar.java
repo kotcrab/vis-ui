@@ -27,7 +27,7 @@ import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
 
-/** Class used to display channel color bar in color picker, not intended to use outside ColorPicker */
+/** Class used to display channel color bars in color picker, not intended to use outside ColorPicker */
 public class ChannelBar extends VisImage {
 	private Drawable barSelector = VisUI.getSkin().getDrawable("color-picker-bar-selector");
 
@@ -80,11 +80,6 @@ public class ChannelBar extends VisImage {
 		ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);
 		fire(changeEvent);
 		Pools.free(changeEvent);
-	}
-
-	@Deprecated
-	interface ColorBarListener {
-		public void valueChanged (int newValue);
 	}
 }
 

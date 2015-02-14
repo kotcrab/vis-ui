@@ -27,7 +27,7 @@ import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
 
-/** Vertical channel bar, not intended to use outside ColorPicker */
+/** Vertical channel bar used to display vertical hue bar, not intended to use outside ColorPicker */
 public class VerticalChannelBar extends VisImage {
 	private Drawable barSelector = VisUI.getSkin().getDrawable("color-picker-selector-vertical");
 
@@ -61,15 +61,16 @@ public class VerticalChannelBar extends VisImage {
 		barSelector.draw(batch, getX(), getY() + getImageY() + selectorY - 2.5f, getImageWidth(), barSelector.getMinHeight());
 	}
 
-	public void setValue (int value) {
+	public void setValue (int newValue) {
+		value = newValue;
+		if (value < 0) value = 0;
+		if (value > maxValue) value = maxValue;
+
 		selectorY = ((float) value / maxValue) * ColorPicker.PALETTE_SIZE;
 	}
 
 	private void updateValueFromTouch (float y) {
 		int newValue = (int) (y / ColorPicker.PALETTE_SIZE * maxValue);
-		if (newValue < 0) newValue = 0;
-		if (newValue > maxValue) newValue = maxValue;
-
 		setValue(newValue);
 
 		ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);
