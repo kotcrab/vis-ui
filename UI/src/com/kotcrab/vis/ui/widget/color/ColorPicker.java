@@ -20,7 +20,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -194,8 +193,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 	}
 
 	private void createColorWidgets () {
-		//palettePixmap have to be 101 in size because counting from 0 otherwise will be get 0 color on pixmap edges
-		palettePixmap = new Pixmap(101, 101, Format.RGBA8888);
+		palettePixmap = new Pixmap(100, 100, Format.RGBA8888);
 		barPixmap = new Pixmap(1, 360, Format.RGBA8888);
 
 		paletteTexture = new Texture(palettePixmap);
@@ -413,7 +411,11 @@ public class ColorPicker extends VisWindow implements Disposable {
 		hexField.setCursorPosition(hexField.getMaxLength());
 	}
 
+
+	@Override
+	/** Sets current selected color in picker.*/
 	public void setColor (Color c) {
+		//this method overrides setColor in Actor, not big deal we definitely don't need it
 		oldColor = new Color(c);
 		color = new Color(c);
 		updateFieldsFromColor();
@@ -466,6 +468,9 @@ public class ColorPicker extends VisWindow implements Disposable {
 		bBar.setValue(cb);
 
 		aBar.setValue(ca);
+
+		verticalBar.setValue(hBar.getValue());
+		palette.setValue(vBar.getValue(), sBar.getValue());
 	}
 
 	private void updateHSVValuesFromFields () {
@@ -511,20 +516,5 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 		verticalBar.setValue(hBar.getValue());
 		palette.setValue(vBar.getValue(), sBar.getValue());
-	}
-
-	private static class AlphaImage extends Image {
-		private Drawable alphaBar = VisUI.getSkin().getDrawable("alpha-bar-25px");
-
-		public AlphaImage (Drawable imageUp) {
-			super(imageUp);
-		}
-
-		@Override
-		public void draw (Batch batch, float parentAlpha) {
-			batch.setColor(1, 1, 1, parentAlpha);
-			alphaBar.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
-			super.draw(batch, parentAlpha);
-		}
 	}
 }
