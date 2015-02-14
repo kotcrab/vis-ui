@@ -1,4 +1,5 @@
 [0.6.0] [Snapshot]
+-API Change: moved FileUtils to util package, FileUtils renamed to FileUtils
 -Added OptionDialog in DialogUtils
 -Added FormValidator.fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty)
 -Changed close button style name to 'close-window' (was 'close')

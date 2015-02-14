@@ -34,6 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.FileUtils;
 import com.kotcrab.vis.ui.widget.*;
 
 import javax.swing.filechooser.FileSystemView;
