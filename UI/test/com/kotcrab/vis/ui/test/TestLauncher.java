@@ -65,15 +65,16 @@ class TestApplication extends ApplicationAdapter {
 
 		createMenus();
 
-		stage.addActor(new TestWindow(USE_VIS_COMPONENTS));
-		stage.addActor(new TestTree(USE_VIS_COMPONENTS));
-		stage.addActor(new TestTextAreaAndScroll(USE_VIS_COMPONENTS));
-		stage.addActor(new TestSplitPane(USE_VIS_COMPONENTS));
-		stage.addActor(new TestVertical(USE_VIS_COMPONENTS));
-		stage.addActor(new TestValidator(USE_VIS_COMPONENTS));
-		stage.addActor(new TestDialogUtils(USE_VIS_COMPONENTS));
 		stage.addActor(new TestCollapsible(USE_VIS_COMPONENTS));
+		stage.addActor(new TestColorPicker(USE_VIS_COMPONENTS));
+		stage.addActor(new TestDialogUtils(USE_VIS_COMPONENTS));
 		stage.addActor(new TestFormValidator(USE_VIS_COMPONENTS));
+		stage.addActor(new TestSplitPane(USE_VIS_COMPONENTS));
+		stage.addActor(new TestTextAreaAndScroll(USE_VIS_COMPONENTS));
+		stage.addActor(new TestTree(USE_VIS_COMPONENTS));
+		stage.addActor(new TestValidator(USE_VIS_COMPONENTS));
+		stage.addActor(new TestVertical(USE_VIS_COMPONENTS));
+		stage.addActor(new TestWindow(USE_VIS_COMPONENTS));
 	}
 
 	private void createMenus () {
