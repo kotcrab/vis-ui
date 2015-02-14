@@ -1,4 +1,4 @@
-[0.6.0] [Snapshot]
+[0.6.0] [LibGDX 1.5.4] [Snapshot]
 -API Change: moved FileUtils to util package, FileUtils renamed to FileUtils
 -API Change: VisUI.skin is not private, use VisUI.getSkin() instead
 -API Addition: DialogUtils.showOptionDialog (Stage stage, String title, String text, OptionDialogType type, OptionDialogListener listener)
@@ -10,10 +10,10 @@
 -Added 'close' button style that matches other normal buttons
 -Fixed focus traversing when TAB pressed to invisible fields
 
-[0.5.1]
+[0.5.1] [LibGDX 1.5.3]
 -Added cancelable input dialog in DialogUtils
 
-[0.5.0]
+[0.5.0] [LibGDX 1.5.3]
 -API Addition: VisValidableTextField.setValidationEnabled(boolean)
 -API Addition: VisValidableTextField.isValidationEnabled()
 -API Addition: VisValidableTextField.setProgrammaticChangeEvents(boolean)
@@ -35,16 +35,16 @@
 -Added Tooltips
 -Moved TableUtils to com.kotcrab.vis.util package (sorry!)
 
-[0.4.1]
+[0.4.1] [LibGDX 1.5.2]
 -Fixed FileChooser padding when scrollbar was showed (because LibGDX scrollpane was probably fixed as well) 
 
-[0.4.0] [Important]
+[0.4.0] [LibGDX 1.5.2] [Important]
 -Important: Moving everything to com.kotcrab.vis package, new Gradle definitions:
  in core: com.kotcrab.vis:vis-ui:$visuiVersion
  in html: com.kotcrab.vis:vis-ui:$visuiVersion:sources
  Also don't forget to update your GdxDefinition.gwt.xml and GdxDefinitionSuperdev.gwt.xml files!
 
-[0.3.1]
+[0.3.1] [LibGDX 1.5.0]
 -Added CollapsibleWidget
 -Fixed VisImageButton.setGenerateDisabledImage(boolean)
 -Fixed MenuBar not rendering Menu content if added Menu to MenuBar after adding items to it
@@ -52,7 +52,7 @@
 -GWT compatibility for DialogUtils and FormValidator
 -Fixed VisCheckBox and VisRadioButton focus border padding
 
-[0.3.0]
+[0.3.0] [LibGDX 1.5.0]
 -LibGDX dependency version changed to 1.5.0
 -Font size changed to 15
 -Separator width changed to 4px, split pane bar width/height changed to 4px
@@ -79,7 +79,7 @@
 -Fixed look of disabled MenuItem, if MenuItem has an image and it is disabled, image color will be set to Color.GRAY. 
  This can be disabled by calling item.setGenerateDisabledImage(false)
 
-[0.2.0]
+[0.2.0] [LibGDX 1.4.1]
 -API change: removed Stage from VisWindow and VisDialog constructors
 -API change: removed VisWindow.setPositonToCenter() replaced with VisWindow.centerWindow()
 -API change: VisImageButton.setGeneateDisabledImage() -> VisImageButton.setGenerateDisabledImage() (typo)
@@ -102,10 +102,10 @@
 -Added MenuItem(String text, Drawable image)
 -Added DialogUtils
 
-[0.1.1]
+[0.1.1] [LibGDX 1.4.1]
 -Updated menu bar look
 
-[0.1.0]
+[0.1.0] [LibGDX 1.4.1]
 -API change: VisValidableTextField#addValidable -> VisValidableTextField#addValidator
 -Added: VisTextField#isEmpty()
 -Added: VisTable#addSeparator()
@@ -122,13 +122,13 @@
 -Fixed horizontal scroll pane slider not fully visible
 -Fixed fade out animation not worked on VisSplitPane
 
-[0.0.3]
+[0.0.3] [LibGDX 1.4.1]
 -API change: Renamed 'components' package to 'widget' (sorry!)
 -Added VisValidableTextField with InputValidator
 -Better CheckBox text padding
 
-[0.0.2]
+[0.0.2] [LibGDX 1.4.1]
 -Added GWT compatibility
 
-[0.0.1]
+[0.0.1] [LibGDX 1.4.1]
 -Initial release
