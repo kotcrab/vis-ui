@@ -43,6 +43,7 @@ public class ColorInputField extends VisValidableTextField {
 		setProgrammaticChangeEvents(false);
 		setMaxLength(3);
 		setTextFieldFilter(new NumberFilter());
+
 		addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {

@@ -44,6 +44,7 @@ import java.io.FileFilter;
 /**
  * Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called
  * @author Pawel Pastuszak
+ * @since 0.1.0
  */
 public class FileChooser extends VisWindow {
 	private static final Drawable highlightBg = VisUI.getSkin().getDrawable("list-selection");

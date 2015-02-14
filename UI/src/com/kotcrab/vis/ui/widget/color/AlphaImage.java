@@ -21,6 +21,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
 
+/**
+ * Image that displays alpha grid as background, used by ColorPicker to display selected colors, should not be used outside Picker
+ * due to that this Image scales 25px grid image to whatever size it needed. It will look weird for smaller or bigger images.
+ */
 public class AlphaImage extends Image {
 	private Drawable alphaBar = VisUI.getSkin().getDrawable("alpha-bar-25px");
 

@@ -33,6 +33,10 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 
+/**
+ * Tooltips are widgets that appear bellow other widget after user hovers mouse pointer on that other widget.
+ * @since 0.5.0
+ */
 public class Tooltip extends VisTable {
 	private static final Drawable background = VisUI.getSkin().getDrawable("tooltip-bg");
 	private static final float FADE_TIME = 0.3f;
@@ -82,19 +86,28 @@ public class Tooltip extends VisTable {
 		attach();
 	}
 
+	/**
+	 * Attaches tooltip to current target, must be called if tooltip listener was removed from target (for example by
+	 * calling target.clearListeners() )
+	 */
 	public void attach () {
 		Array<EventListener> listeners = target.getListeners();
 		for (EventListener listener : listeners)
 			if (listener instanceof TooltipInputListener)
-				throw new IllegalStateException("More than one tooltip cannot be added to same target!");
+				throw new IllegalStateException("More than one tooltip cannot be added to the same target!");
 
 		target.addListener(listener);
 	}
 
+	/**
+	 * Deatches tooltip form current target, does not change tooltip target meaning that this tooltip can be reatched to
+	 * same target by calling {@link Tooltip#attach()}
+	 */
 	public void detach () {
 		target.removeListener(listener);
 	}
 
+	/** Sets new target for this tooltip, tooltip will be automatically detached from old target. */
 	public void setTarget (Actor newTarget) {
 		detach();
 		target = newTarget;

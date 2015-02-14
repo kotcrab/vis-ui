@@ -22,7 +22,6 @@ import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.Separator;
 
 public class VisTable extends Table {
-
 	public VisTable () {
 		super(VisUI.getSkin());
 	}

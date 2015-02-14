@@ -30,6 +30,7 @@ import com.kotcrab.vis.ui.OptionDialogListener;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.widget.*;
 
+/** Utilities for displaying various dialogs, equivalent of Swing JOptionPane */
 public class DialogUtils {
 
 	private static final int BUTTON_CANCEL = 0;
@@ -47,6 +48,7 @@ public class DialogUtils {
 		stage.addActor(dialog.fadeIn());
 	}
 
+	/** @since 0.6.0 */
 	public static OptionDialog showOptionDialog (Stage stage, String title, String text, OptionDialogType type, final OptionDialogListener listener) {
 		return new OptionDialog(stage, title, text, type, listener);
 	}

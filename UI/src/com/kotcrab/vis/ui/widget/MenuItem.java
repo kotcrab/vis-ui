@@ -31,6 +31,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.VisUI;
 
+/**
+ * MenuItem displayed in {@link Menu} and {@link PopupMenu}. MenuItem contains text or text with icon.
+ * Best icon size is 22px. MenuItem can also have hotkey text.
+ */
 public class MenuItem extends Button {
 	private Image image;
 	private Label label;
@@ -142,17 +146,26 @@ public class MenuItem extends Button {
 		return generateDisabledImage;
 	}
 
+	/**
+	 * Changes generateDisabledImage property, when true that function is enabled. When it is enabled and this MenuItem is disabled then image color will be changed
+	 * to gray meaning that it is disabled, by default it is enabled.
+	 */
 	public void setGenerateDisabledImage (boolean generateDisabledImage) {
 		this.generateDisabledImage = generateDisabledImage;
 	}
 
-	/** @param keycode from {@link Keys} */
+	/**
+	 * Set shortcuts text displayed in this menu item.
+	 * This DOES NOT set actual hot key for this menu item, it only makes shortcut text visible in item.
+	 * @param keycode from {@link Keys}.
+	 */
 	public MenuItem setShortcut (int keycode) {
 		return setShortcut(Keys.toString(keycode));
 	}
 
 	/**
-	 * Displayed as modifier+keycode (eg. Ctrl+F5)
+	 * Set shortcuts text displayed in this menu item.
+	 * Displayed as modifier+keycode (eg. Ctrl+F5). This DOES NOT set actual hot key for this menu item, it only makes shortcut text visible in item.
 	 * @param modifier form {@link Keys}
 	 * @param keycode  form {@link Keys}
 	 */
@@ -164,6 +177,12 @@ public class MenuItem extends Button {
 		return shortcutLabelCell.getActor().getText().toString();
 	}
 
+	/**
+	 * Set shortcuts text displayed in this menu item. This DOES NOT set actual hot key for this menu item,
+	 * it only makes shortcut text visible in item.
+	 * @param text text that will be displayed
+	 * @return this object for the purpose of chaining methods
+	 */
 	public MenuItem setShortcut (String text) {
 		if (shortcutLabelCell == null)
 			shortcutLabelCell = add(new VisLabel(text, "menuitem-shortcut")).padLeft(10).right();

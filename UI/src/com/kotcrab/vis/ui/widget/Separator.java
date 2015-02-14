@@ -20,11 +20,18 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 
+/**
+ * A separator that can be used in menus, tables or other widgets, typically add to new row with fillX() and expandX().
+ * {@link PopupMenu} and {@link VisTable} provides addSeparator() that automatically adds new separator
+ * @since 0.1.0
+ */
 public class Separator extends Widget {
 	private SeparatorStyle style;
 
+	/** New separator with default style */
 	public Separator () {
 		style = VisUI.getSkin().get(SeparatorStyle.class);
 	}

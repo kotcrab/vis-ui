@@ -23,6 +23,10 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
+/**
+ * Widget containing table that can be collapsed
+ * @since 0.3.1
+ */
 public class CollapsibleWidget extends WidgetGroup {
 	private Table table;
 
