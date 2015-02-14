@@ -1,4 +1,4 @@
-[0.5.2] [Snapshot]
+[0.6.0] [Snapshot]
 -Added OptionDialog in DialogUtils
 -Added FormValidator.fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty)
 -Changed close button style name to 'close-window' (was 'close')
