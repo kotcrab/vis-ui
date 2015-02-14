@@ -22,6 +22,7 @@ package com.kotcrab.vis.editor;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -65,8 +66,9 @@ import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.util.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
+import com.kotcrab.vis.ui.widget.color.ColorPicker;
+import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
 
-//TODO crash report system
 public class Editor extends ApplicationAdapter implements EventListener {
 	public static Editor instance;
 
@@ -82,7 +84,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private VisSplitPane splitPane;
 
 	private SettingsDialog settingsDialog;
-
 
 	private EditorModuleContainer editorMC;
 	private ProjectModuleContainer projectMC;
@@ -135,6 +136,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		//showSettingsWindow();
 
 		//debug end
+
+		Log.info("Loading completed");
 	}
 
 	private void createUI () {
