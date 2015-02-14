@@ -87,11 +87,19 @@ public class ColorPicker extends VisWindow implements Disposable {
 	private Image newColor;
 
 	public ColorPicker () {
-		this(null);
+		this("Color Picker");
+	}
+
+	public ColorPicker (String title) {
+		this(title, null);
 	}
 
 	public ColorPicker (ColorPickerListener listener) {
-		super("Color Picker");
+		this("Color Picker", listener);
+	}
+
+	public ColorPicker (String title, ColorPickerListener listener) {
+		super(title);
 		this.listener = listener;
 
 		setModal(true);
@@ -151,7 +159,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 		table.add(currentColor = new AlphaImage(white)).height(25).expandX().fillX();
 		table.row();
 		table.add(new VisLabel("New")).spaceRight(3);
-		table.add(newColor = new AlphaImage(white)).height(25).expandX().fillX();
+		table.add(newColor = new AlphaImage(white, true)).height(25).expandX().fillX();
 
 		currentColor.setColor(color);
 		newColor.setColor(color);
@@ -417,6 +425,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 	/** Sets current selected color in picker.*/
 	public void setColor (Color c) {
 		//this method overrides setColor in Actor, not big deal we definitely don't need it
+		currentColor.setColor(new Color(c));
 		oldColor = new Color(c);
 		color = new Color(c);
 		updateFieldsFromColor();

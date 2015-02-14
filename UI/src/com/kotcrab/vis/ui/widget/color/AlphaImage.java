@@ -27,15 +27,30 @@ import com.kotcrab.vis.ui.VisUI;
  */
 public class AlphaImage extends Image {
 	private Drawable alphaBar = VisUI.getSkin().getDrawable("alpha-bar-25px");
+	private Drawable alphaBarShifted = VisUI.getSkin().getDrawable("alpha-bar-25px-shifted");
+
+	private Drawable alphaDrawable;
+	private boolean shiftAlpha;
 
 	public AlphaImage (Drawable imageUp) {
 		super(imageUp);
+		setAlphaDrawable();
+	}
+
+	public AlphaImage (Drawable imageUp, boolean shiftAlpha) {
+		super(imageUp);
+		this.shiftAlpha = shiftAlpha;
+		setAlphaDrawable();
+	}
+
+	private void setAlphaDrawable () {
+		alphaDrawable = shiftAlpha ? alphaBarShifted : alphaBar;
 	}
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		batch.setColor(1, 1, 1, parentAlpha);
-		alphaBar.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
+		alphaDrawable.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
 		super.draw(batch, parentAlpha);
 	}
 }
