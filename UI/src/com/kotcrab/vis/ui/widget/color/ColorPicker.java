@@ -204,12 +204,12 @@ public class ColorPicker extends VisWindow implements Disposable {
 		palette = new Palette(paletteTexture, 0, 0, 100, new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				Color newColor = new Color(palettePixmap.getPixel(palette.getS(), 100 - palette.getV()));
-				newColor.a = color.a;
-				setColor(newColor);
-				updateFieldsFromColor();
+				//S ans V are flipped because the plate is flipped as well!
+				sBar.setValue(palette.getV());
+				vBar.setValue(palette.getS());
+
+				updateHSVValuesFromFields();
 				updatePixmaps();
-				verticalBar.setValue(hBar.getValue());
 			}
 		});
 
@@ -414,7 +414,6 @@ public class ColorPicker extends VisWindow implements Disposable {
 	}
 
 	public void setColor (Color c) {
-		currentColor.setColor(c);
 		oldColor = new Color(c);
 		color = new Color(c);
 		updateFieldsFromColor();
