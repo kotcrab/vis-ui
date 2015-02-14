@@ -42,7 +42,8 @@ import java.io.File;
 import java.io.FileFilter;
 
 /**
- * Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called
+ * Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called.
+ * FileChooser is heavy widget and should be reused whenever possible.
  * @author Pawel Pastuszak
  * @since 0.1.0
  */

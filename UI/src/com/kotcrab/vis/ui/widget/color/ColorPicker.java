@@ -39,7 +39,8 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 import com.kotcrab.vis.ui.widget.color.ColorChannelWidget.ColorChannelWidgetListener;
 
 /**
- * Color Picker widget, allows user to select color.
+ * Color Picker widget, allows user to select color. ColorPicker is heavy widget and should be reused whenever possible.
+ * This widget must be disposed when no longer needed!
  * @since 0.6.0
  */
 public class ColorPicker extends VisWindow implements Disposable {
