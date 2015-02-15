@@ -25,6 +25,11 @@ public class VisLabel extends Label {
 		super("", VisUI.getSkin());
 	}
 
+	public VisLabel (CharSequence text, Color textColor) {
+		super(text, VisUI.getSkin());
+		setColor(textColor);
+	}
+
 	public VisLabel (CharSequence text) {
 		super(text, VisUI.getSkin());
 	}

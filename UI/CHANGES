@@ -5,6 +5,7 @@
 -API Addition: ColorPicker
 -API Addition: ColorUtils
 -API Addition: VisImage
+-API Addition: constructor VisLabel (CharSequence text, Color textColor)
 -Changed close button style name to 'close-window' (was 'close')
 -Added 'close' button style that matches other normal buttons
 -Fixed focus traversing when TAB pressed to invisible fields
