@@ -31,7 +31,7 @@ public class ColorChannelWidget extends VisTable implements Disposable {
 	private int value;
 	private int maxValue;
 	private ColorChannelWidgetListener drawer;
-	private boolean useAlphaBar;
+	private boolean useAlpha;
 
 	private ColorInputField inputField;
 
@@ -45,13 +45,13 @@ public class ColorChannelWidget extends VisTable implements Disposable {
 		this(label, maxValue, false, drawer);
 	}
 
-	public ColorChannelWidget (String label, int maxValue, boolean useAlphaBar, final ColorChannelWidgetListener drawer) {
+	public ColorChannelWidget (String label, int maxValue, boolean useAlpha, final ColorChannelWidgetListener drawer) {
 		super(true);
 
 		this.value = 0;
 		this.maxValue = maxValue;
 		this.drawer = drawer;
-		this.useAlphaBar = useAlphaBar;
+		this.useAlpha = useAlpha;
 
 		barListener = new ChangeListener() {
 			@Override
@@ -62,7 +62,11 @@ public class ColorChannelWidget extends VisTable implements Disposable {
 			}
 		};
 
-		pixmap = new Pixmap(maxValue, 1, Format.RGBA8888);
+		if(useAlpha)
+			pixmap = new Pixmap(maxValue, 1, Format.RGBA8888);
+		else
+			pixmap = new Pixmap(maxValue, 1, Format.RGB888);
+
 		texture = new Texture(pixmap);
 		add(new VisLabel(label)).width(10).center();
 		add(inputField = new ColorInputField(maxValue, new ColorInputFieldListener() {
@@ -86,9 +90,7 @@ public class ColorChannelWidget extends VisTable implements Disposable {
 
 	public void redraw () {
 		drawer.draw(pixmap);
-		texture.dispose();
-		texture = new Texture(pixmap);
-		bar.setDrawable(texture);
+		texture.draw(pixmap, 0, 0);
 	}
 
 	public int getValue () {
@@ -102,7 +104,7 @@ public class ColorChannelWidget extends VisTable implements Disposable {
 	}
 
 	private ChannelBar createBarImage () {
-		if (useAlphaBar)
+		if (useAlpha)
 			return new AlphaChannelBar(texture, value, maxValue, barListener);
 		else
 			return new ChannelBar(texture, value, maxValue, barListener);

@@ -29,7 +29,6 @@ import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ColorUtils;
-import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
@@ -202,8 +201,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 	}
 
 	private void createColorWidgets () {
-		palettePixmap = new Pixmap(100, 100, Format.RGBA8888);
-		barPixmap = new Pixmap(1, 360, Format.RGBA8888);
+		palettePixmap = new Pixmap(100, 100, Format.RGB888);
+		barPixmap = new Pixmap(1, 360, Format.RGB888);
 
 		paletteTexture = new Texture(palettePixmap);
 		barTexture = new Texture(barPixmap);
@@ -401,8 +400,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 			barPixmap.drawPixel(0, h, ColorUtils.toIntRGBA(color));
 		}
 
-		paletteTexture = updateImage(palettePixmap, paletteTexture, palette);
-		barTexture = updateImage(barPixmap, barTexture, verticalBar);
+		paletteTexture.draw(palettePixmap, 0,0);
+		barTexture.draw(barPixmap, 0,0);
 
 		newColor.setColor(color);
 
@@ -430,13 +429,6 @@ public class ColorPicker extends VisWindow implements Disposable {
 		color = new Color(c);
 		updateFieldsFromColor();
 		updatePixmaps();
-	}
-
-	private Texture updateImage (Pixmap pixmap, Texture texture, VisImage image) {
-		texture.dispose();
-		texture = new Texture(pixmap);
-		image.setDrawable(texture);
-		return texture;
 	}
 
 	@Override
