@@ -43,6 +43,20 @@ public class ColorUtils {
 	 * @return RGB values in LibGDX Color class
 	 */
 	public static Color HSVtoRGB (float h, float s, float v) {
+		Color c = new Color(1, 1, 1, 1);
+		HSVtoRGB(h, s, v, c);
+		return c;
+	}
+
+
+	/**
+	 * Converts HSV color system to RGB
+	 * @param h           hue 0-360
+	 * @param s           saturation 0-100
+	 * @param v           value 0-100
+	 * @param targetColor color that result will be stored in
+	 */
+	public static void HSVtoRGB (float h, float s, float v, Color targetColor) {
 		if (h == 360) h = 359;
 		int r, g, b;
 		int i;
@@ -89,15 +103,8 @@ public class ColorUtils {
 				g = MathUtils.round(255 * p);
 				b = MathUtils.round(255 * q);
 		}
-		return new Color(r / 255.0f, g / 255.0f, b / 255.0f, 1);
-	}
 
-	/**
-	 * Packs the color components into a 32-bit integer with the format RGBA.
-	 * @return the packed color as a 32-bit int.
-	 */
-	public static int toIntRGBA (Color c) {
-		return ((int) (255 * c.r) << 24) | ((int) (255 * c.g) << 16) | ((int) (255 * c.b) << 8) | ((int) (255 * c.a));
+		targetColor.set(r / 255.0f, g / 255.0f, b / 255.0f, targetColor.a);
 	}
 
 	/** @return 3 element int array with hue (0-360), saturation (0-100) and value (0-100) */
