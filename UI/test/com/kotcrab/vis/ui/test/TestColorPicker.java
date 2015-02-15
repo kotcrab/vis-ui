@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
+import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
@@ -58,8 +59,10 @@ public class TestColorPicker extends VisWindow {
 
 		TableUtils.setSpaceDefaults(this);
 
-		add(showPickerButton);
-		add(image).size(32).pad(3);
+		add(showPickerButton).spaceBottom(0);
+		add(image).size(32).pad(3).spaceBottom(0);
+		row();
+		add(new VisLabel("picker may be slow in html", Color.RED)).colspan(2);
 
 		pack();
 		setPosition(800, 20);

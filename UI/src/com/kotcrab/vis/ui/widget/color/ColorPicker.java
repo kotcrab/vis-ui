@@ -57,6 +57,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 	private Color oldColor;
 	private Color color;
+	private Color tmpColor; //temp color used for hsv to rgb calculations
 
 	private Pixmap barPixmap;
 	private Texture barTexture;
@@ -109,6 +110,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 		oldColor = new Color(Color.BLACK);
 		color = new Color(Color.BLACK);
+		tmpColor = new Color(Color.BLACK);
 
 		createColorWidgets();
 		createUI();
@@ -202,9 +204,15 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 	private void createColorWidgets () {
 		palettePixmap = new Pixmap(100, 100, Format.RGB888);
+		paletteTexture = new Texture(palettePixmap);
+
 		barPixmap = new Pixmap(1, 360, Format.RGB888);
 
-		paletteTexture = new Texture(palettePixmap);
+		for (int h = 0; h < 360; h++) {
+			ColorUtils.HSVtoRGB(360 - h, 100, 100, tmpColor);
+			barPixmap.drawPixel(0, h, Color.rgba8888(tmpColor));
+		}
+
 		barTexture = new Texture(barPixmap);
 
 		palette = new Palette(paletteTexture, 0, 0, 100, new ChangeListener() {
@@ -223,6 +231,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				hBar.setValue(verticalBar.getValue());
+				updateHSVValuesFromFields();
 				updatePixmaps();
 			}
 		});
@@ -238,8 +247,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 			@Override
 			public void draw (Pixmap pixmap) {
 				for (int h = 0; h < 360; h++) {
-					Color color = ColorUtils.HSVtoRGB(h, sBar.getValue(), vBar.getValue());
-					pixmap.drawPixel(h, 0, ColorUtils.toIntRGBA(color));
+					ColorUtils.HSVtoRGB(h, sBar.getValue(), vBar.getValue(), tmpColor);
+					pixmap.drawPixel(h, 0, Color.rgba8888(tmpColor));
 				}
 			}
 		});
@@ -255,8 +264,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 			@Override
 			public void draw (Pixmap pixmap) {
 				for (int s = 0; s < 100; s++) {
-					Color color = ColorUtils.HSVtoRGB(hBar.getValue(), s, vBar.getValue());
-					pixmap.drawPixel(s, 0, ColorUtils.toIntRGBA(color));
+					ColorUtils.HSVtoRGB(hBar.getValue(), s, vBar.getValue(), tmpColor);
+					pixmap.drawPixel(s, 0, Color.rgba8888(tmpColor));
 				}
 			}
 		});
@@ -272,8 +281,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 			@Override
 			public void draw (Pixmap pixmap) {
 				for (int v = 0; v < 100; v++) {
-					Color color = ColorUtils.HSVtoRGB(hBar.getValue(), sBar.getValue(), v);
-					pixmap.drawPixel(v, 0, ColorUtils.toIntRGBA(color));
+					ColorUtils.HSVtoRGB(hBar.getValue(), sBar.getValue(), v, tmpColor);
+					pixmap.drawPixel(v, 0, Color.rgba8888(tmpColor));
 				}
 
 			}
@@ -289,8 +298,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 			@Override
 			public void draw (Pixmap pixmap) {
 				for (int r = 0; r < 255; r++) {
-					Color pixelColor = new Color(r / 255.0f, color.g, color.b, 1);
-					pixmap.drawPixel(r, 0, ColorUtils.toIntRGBA(pixelColor));
+					tmpColor.set(r / 255.0f, color.g, color.b, 1);
+					pixmap.drawPixel(r, 0, Color.rgba8888(tmpColor));
 				}
 			}
 		});
@@ -305,8 +314,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 			@Override
 			public void draw (Pixmap pixmap) {
 				for (int g = 0; g < 255; g++) {
-					Color pixelColor = new Color(color.r, g / 255.0f, color.b, 1);
-					pixmap.drawPixel(g, 0, ColorUtils.toIntRGBA(pixelColor));
+					tmpColor.set(color.r, g / 255.0f, color.b, 1);
+					pixmap.drawPixel(g, 0, Color.rgba8888(tmpColor));
 				}
 			}
 		});
@@ -321,8 +330,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 			@Override
 			public void draw (Pixmap pixmap) {
 				for (int b = 0; b < 255; b++) {
-					Color pixelColor = new Color(color.r, color.g, b / 255.0f, 1);
-					pixmap.drawPixel(b, 0, ColorUtils.toIntRGBA(pixelColor));
+					tmpColor.set(color.r, color.g, b / 255.0f, 1);
+					pixmap.drawPixel(b, 0, Color.rgba8888(tmpColor));
 				}
 
 			}
@@ -337,11 +346,10 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 			@Override
 			public void draw (Pixmap pixmap) {
-				pixmap.setColor(0, 0, 0, 0);
 				pixmap.fill();
 				for (int i = 0; i < 255; i++) {
-					Color pixelColor = new Color(color.r, color.g, color.b, i / 255.0f);
-					pixmap.drawPixel(i, 0, ColorUtils.toIntRGBA(pixelColor));
+					tmpColor.set(color.r, color.g, color.b, i / 255.0f);
+					pixmap.drawPixel(i, 0, Color.rgba8888(tmpColor));
 				}
 			}
 		});
@@ -390,18 +398,12 @@ public class ColorPicker extends VisWindow implements Disposable {
 	private void updatePixmaps () {
 		for (int v = 0; v <= 100; v++) {
 			for (int s = 0; s <= 100; s++) {
-				Color color = ColorUtils.HSVtoRGB(hBar.getValue(), s, v);
-				palettePixmap.drawPixel(v, 100 - s, ColorUtils.toIntRGBA(color));
+				ColorUtils.HSVtoRGB(hBar.getValue(), s, v, tmpColor);
+				palettePixmap.drawPixel(v, 100 - s, Color.rgba8888(tmpColor));
 			}
 		}
 
-		for (int h = 0; h < 360; h++) {
-			Color color = ColorUtils.HSVtoRGB(360 - h, 100, 100);
-			barPixmap.drawPixel(0, h, ColorUtils.toIntRGBA(color));
-		}
-
 		paletteTexture.draw(palettePixmap, 0,0);
-		barTexture.draw(barPixmap, 0,0);
 
 		newColor.setColor(color);
 
