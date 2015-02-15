@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.util;
+package com.kotcrab.vis.ui.widget.file;
 
 import java.io.File;
 import java.io.IOException;

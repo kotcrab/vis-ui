@@ -1,5 +1,4 @@
 [0.6.0] [LibGDX 1.5.4] [Snapshot]
--API Change: moved FileUtils to util package, FileUtils renamed to FileUtils
 -API Change: VisUI.skin is not private, use VisUI.getSkin() instead
 -API Addition: DialogUtils.showOptionDialog (Stage stage, String title, String text, OptionDialogType type, OptionDialogListener listener)
 -API Addition: FormValidator.fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty)
