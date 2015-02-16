@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.ColorPickerModule;
 import com.kotcrab.vis.editor.ui.scene.ObjectProperties;
 
 public class ObjectManipulatorModule extends SceneModule {
@@ -57,7 +58,8 @@ public class ObjectManipulatorModule extends SceneModule {
 		camera = sceneContainer.get(CameraModule.class);
 		undoModule = sceneContainer.get(UndoModule.class);
 
-		objectProperties = new ObjectProperties(sceneTab);
+		ColorPickerModule pickerModule = container.get(ColorPickerModule.class);
+		objectProperties = new ObjectProperties(pickerModule.getPicker(), sceneTab);
 	}
 
 	@Override

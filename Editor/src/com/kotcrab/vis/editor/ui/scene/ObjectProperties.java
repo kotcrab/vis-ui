@@ -21,15 +21,21 @@ package com.kotcrab.vis.editor.ui.scene;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.module.scene.Object2d;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.util.FieldUtils;
@@ -40,6 +46,9 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.color.ColorPicker;
+import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
+import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
 import org.lwjgl.input.Keyboard;
 
 public class ObjectProperties extends VisTable {
@@ -52,6 +61,8 @@ public class ObjectProperties extends VisTable {
 	private VisValidableTextField yOriginField;
 	private VisValidableTextField rotationField;
 
+	private ColorImage tint;
+
 	private Array<Object2d> objects;
 
 	private ChangeListener sharedChangeListener;
@@ -59,7 +70,9 @@ public class ObjectProperties extends VisTable {
 	private FieldValidator sharedFieldValidator;
 	private Tab parentTab;
 
-	public ObjectProperties (Tab parentTab) {
+	private ColorPickerListener pickerListener;
+
+	public ObjectProperties (final ColorPicker picker, final Tab parentTab) {
 		super(true);
 		this.parentTab = parentTab;
 
@@ -71,14 +84,40 @@ public class ObjectProperties extends VisTable {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				setValuesToSprite();
+				parentTab.setDirty(true);
 			}
 		};
 		sharedFieldFilter = new FieldFilter();
 		sharedFieldValidator = new FieldValidator();
 
+		pickerListener = new ColorPickerAdapter() {
+			@Override
+			public void finished (Color newColor) {
+				for (Object2d object : objects)
+					object.sprite.setColor(newColor);
+
+				parentTab.setDirty(true);
+				tint.setColor(newColor);
+				picker.setListener(null);
+			}
+		};
+
 		VisTable propertiesTable = new VisTable(true);
 		propertiesTable.top();
 		propertiesTable.columnDefaults(0).padRight(20).left();
+
+		VisTable tintTable = new VisTable(true);
+		tintTable.add(new VisLabel("Tint"));
+		tintTable.add(tint = new ColorImage()).size(20);
+
+		tint.addListener(new ClickListener() {
+			@Override
+			public void clicked (InputEvent event, float x, float y) {
+				picker.setColor(tint.getColor());
+				picker.setListener(pickerListener);
+				getStage().addActor(picker.fadeIn());
+			}
+		});
 
 		propertiesTable.add(new VisLabel("Position"));
 		propertiesTable.add(new VisLabel("X"));
@@ -104,6 +143,7 @@ public class ObjectProperties extends VisTable {
 		propertiesTable.add(new VisLabel("Rotation"));
 		propertiesTable.add(new VisLabel(" "));
 		propertiesTable.add(rotationField = new InputField()).width(FIELD_WIDTH);
+		propertiesTable.add(tintTable).colspan(2);
 
 		top();
 		add(new VisLabel("Object Properties"));
@@ -176,6 +216,8 @@ public class ObjectProperties extends VisTable {
 			xOriginField.setText(floatToString(obj.sprite.getOriginX()));
 			yOriginField.setText(floatToString(obj.sprite.getOriginY()));
 			rotationField.setText(floatToString(obj.sprite.getRotation()));
+			tint.setUnknown(false);
+			tint.setColor(obj.sprite.getColor());
 		} else {
 			setVisible(true);
 
@@ -221,6 +263,17 @@ public class ObjectProperties extends VisTable {
 					return object.sprite.getRotation();
 				}
 			}));
+
+			Color firstColor = objects.first().sprite.getColor();
+
+			for (Object2d object : objects) {
+				if (firstColor.equals(object.sprite.getColor()) == false) {
+					tint.setUnknown(true);
+					return;
+				}
+			}
+
+			tint.setColor(firstColor);
 		}
 	}
 
@@ -366,6 +419,40 @@ public class ObjectProperties extends VisTable {
 					checkKeys();
 				}
 			}
+		}
+	}
+
+	public class ColorImage extends Image {
+		private final Drawable alphaBar = Assets.getMisc("alpha-grid-20x20");
+		private final Drawable white = VisUI.getSkin().getDrawable("white");
+		private final Drawable questionMark = Assets.getIcon("question");
+
+		private boolean unknown;
+
+		public ColorImage () {
+			super();
+			setDrawable(white);
+		}
+
+		@Override
+		public void draw (Batch batch, float parentAlpha) {
+			batch.setColor(1, 1, 1, parentAlpha);
+
+			if (unknown)
+				questionMark.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
+			else {
+				alphaBar.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
+				super.draw(batch, parentAlpha);
+			}
+		}
+
+		public void setUnknown (boolean unknown) {
+			this.unknown = unknown;
+		}
+
+		@Override
+		public void setColor (Color color) {
+			super.setColor(color);
 		}
 	}
 

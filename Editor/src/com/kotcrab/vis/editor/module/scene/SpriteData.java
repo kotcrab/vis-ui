@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
 public class SpriteData {
@@ -27,6 +28,7 @@ public class SpriteData {
 	public float originX, originY;
 	public float rotation;
 	public float scaleX = 1, scaleY = 1;
+	public Color tint = Color.WHITE;
 
 	public void save (Sprite sprite) {
 		x = sprite.getX();
@@ -42,6 +44,8 @@ public class SpriteData {
 
 		scaleX = sprite.getScaleX();
 		scaleY = sprite.getScaleY();
+
+		tint = sprite.getColor();
 	}
 
 	public void load (Sprite sprite) {
@@ -50,5 +54,6 @@ public class SpriteData {
 		sprite.setOrigin(originX, originY);
 		sprite.setRotation(rotation);
 		sprite.setScale(scaleX, scaleY);
+		sprite.setColor(tint);
 	}
 }
