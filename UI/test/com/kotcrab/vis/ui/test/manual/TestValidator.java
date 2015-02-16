@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.test;
+package com.kotcrab.vis.ui.test.manual;
 
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.Validators;
