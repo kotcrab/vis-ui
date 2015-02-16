@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui.test;
 
+import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -66,7 +67,7 @@ class TestApplication extends ApplicationAdapter {
 		createMenus();
 
 		stage.addActor(new TestCollapsible(USE_VIS_COMPONENTS));
-		stage.addActor(new TestColorPicker(USE_VIS_COMPONENTS));
+		if(Gdx.app.getType() != ApplicationType.WebGL) stage.addActor(new TestColorPicker(USE_VIS_COMPONENTS));
 		stage.addActor(new TestDialogUtils(USE_VIS_COMPONENTS));
 		stage.addActor(new TestFormValidator(USE_VIS_COMPONENTS));
 		stage.addActor(new TestSplitPane(USE_VIS_COMPONENTS));
