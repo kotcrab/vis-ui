@@ -17,12 +17,12 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.runtime.data;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-public class SpriteData {
+public class SpriteData extends SceneEntityData {
 	public float x, y;
 	public float width, height;
 	public float originX, originY;
@@ -30,7 +30,7 @@ public class SpriteData {
 	public float scaleX = 1, scaleY = 1;
 	public Color tint = Color.WHITE;
 
-	public void save (Sprite sprite) {
+	public void saveFrom (Sprite sprite) {
 		x = sprite.getX();
 		y = sprite.getY();
 
@@ -48,7 +48,7 @@ public class SpriteData {
 		tint = sprite.getColor();
 	}
 
-	public void load (Sprite sprite) {
+	public void loadTo (Sprite sprite) {
 		sprite.setPosition(x,y);
 		sprite.setSize(width, height);
 		sprite.setOrigin(originX, originY);
