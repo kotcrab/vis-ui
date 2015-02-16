@@ -1,0 +1,20 @@
+
+misc.png
+size: 64,64
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+alpha-grid-20x20
+  rotate: false
+  xy: 2, 2
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+alpha-grid-32x32
+  rotate: false
+  xy: 2, 24
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1

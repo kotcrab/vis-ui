@@ -1,6 +1,6 @@
 
 icons.png
-size: 256,128
+size: 512,128
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -27,7 +27,7 @@ folder-open
   index: -1
 import
   rotate: false
-  xy: 224, 104
+  xy: 302, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -46,44 +46,51 @@ new
   orig: 22, 22
   offset: 0, 0
   index: -1
-refresh-big
+question
   rotate: false
   xy: 80, 50
   size: 76, 76
   orig: 76, 76
   offset: 0, 0
   index: -1
+refresh-big
+  rotate: false
+  xy: 158, 50
+  size: 76, 76
+  orig: 76, 76
+  offset: 0, 0
+  index: -1
 save
   rotate: false
-  xy: 224, 80
+  xy: 302, 80
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 search
   rotate: false
-  xy: 50, 26
+  xy: 326, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 search-big
   rotate: false
-  xy: 158, 62
+  xy: 236, 62
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 settings
   rotate: false
-  xy: 50, 2
+  xy: 50, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 settings-view
   rotate: false
-  xy: 74, 26
+  xy: 50, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0

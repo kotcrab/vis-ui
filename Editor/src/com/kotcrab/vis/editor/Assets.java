@@ -25,17 +25,23 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class Assets {
 	public static TextureAtlas icons;
+	public static TextureAtlas misc;
 
 	public static void load () {
 		icons = new TextureAtlas("icons.atlas");
+		misc = new TextureAtlas("misc.atlas");
 	}
 
 	public static void dispose () {
 		icons.dispose();
+		misc.dispose();
 	}
 
 	public static Drawable getIcon (String name) {
 		return new TextureRegionDrawable(icons.findRegion(name));
 	}
 
+	public static Drawable getMisc (String name) {
+		return new TextureRegionDrawable(misc.findRegion(name));
+	}
 }
