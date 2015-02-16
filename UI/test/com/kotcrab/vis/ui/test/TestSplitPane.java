@@ -28,22 +28,22 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestSplitPane extends VisWindow {
 
-	public TestSplitPane (boolean useVisComponets) {
+	public TestSplitPane (boolean useVisWidgets) {
 		super("splitpane");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		if (useVisComponets)
-			addVisComponents();
+		if (useVisWidgets)
+			addVisWidgets();
 		else
-			addNormalComponents();
+			addNormalWidgets();
 
 		setSize(300, 150);
 		setPosition(350, 120);
 	}
 
-	private void addVisComponents () {
+	private void addVisWidgets () {
 		VisLabel label = new VisLabel("Lorem \nipsum \ndolor \nsit \namet");
 		VisLabel label2 = new VisLabel("Consectetur \nadipiscing \nelit");
 		VisTable table = new VisTable(true);
@@ -56,7 +56,7 @@ public class TestSplitPane extends VisWindow {
 		add(splitPane).fill().expand();
 	}
 
-	private void addNormalComponents () {
+	private void addNormalWidgets () {
 		Skin skin = VisUI.getSkin();
 		Label label = new Label("Lorem \nipsum \ndolor \nsit \namet", skin);
 		Label label2 = new Label("Consectetur \nadipiscing \nelit", skin);

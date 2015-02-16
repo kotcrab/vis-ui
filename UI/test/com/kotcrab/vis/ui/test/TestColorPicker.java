@@ -31,7 +31,7 @@ import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 public class TestColorPicker extends VisWindow {
 	private static final Drawable white = VisUI.getSkin().getDrawable("white");
 
-	public TestColorPicker (boolean useVisComponets) {
+	public TestColorPicker () {
 		super("color picker");
 
 		final Image image = new Image(white);

@@ -30,22 +30,22 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestTextAreaAndScroll extends VisWindow {
 
-	public TestTextAreaAndScroll (boolean useVisComponets) {
+	public TestTextAreaAndScroll (boolean useVisWidgets) {
 		super("textarea / scrollpane");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		if (useVisComponets)
-			addVisComponents();
+		if (useVisWidgets)
+			addVisWidgets();
 		else
-			addNormalComponents();
+			addNormalWidgets();
 
 		setSize(180, 380);
 		setPosition(40, 280);
 	}
 
-	private void addNormalComponents () {
+	private void addNormalWidgets () {
 		Skin skin = VisUI.getSkin();
 
 		TextArea textArea = new TextArea("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec iaculis odio.", skin);
@@ -68,7 +68,7 @@ public class TestTextAreaAndScroll extends VisWindow {
 		add(scrollPane).spaceTop(8).fillX().expandX().row();
 	}
 
-	private void addVisComponents () {
+	private void addVisWidgets () {
 		VisTextArea textArea = new VisTextArea("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec iaculis odio.");
 		textArea.setPrefRows(5);
 

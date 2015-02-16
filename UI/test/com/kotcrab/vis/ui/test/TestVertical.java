@@ -27,22 +27,22 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestVertical extends VisWindow {
 
-	public TestVertical (boolean useVisComponets) {
+	public TestVertical (boolean useVisWidgets) {
 		super("vertical");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		if (useVisComponets)
-			addVisComponents();
+		if (useVisWidgets)
+			addVisWidgets();
 		else
-			addNormalComponents();
+			addNormalWidgets();
 
 		setSize(100, 200);
 		setPosition(1100, 90);
 	}
 
-	private void addNormalComponents () {
+	private void addNormalWidgets () {
 		ProgressBar progressbar = new ProgressBar(0, 100, 1, true, VisUI.getSkin());
 		Slider slider = new Slider(0, 100, 1, true, VisUI.getSkin());
 		Slider sliderDisabled = new Slider(0, 100, 1, true, VisUI.getSkin());
@@ -60,7 +60,7 @@ public class TestVertical extends VisWindow {
 		add(progressbarTable);
 	}
 
-	private void addVisComponents () {
+	private void addVisWidgets () {
 		VisProgressBar progressbar = new VisProgressBar(0, 100, 1, true);
 		VisSlider slider = new VisSlider(0, 100, 1, true);
 		VisSlider sliderDisabled = new VisSlider(0, 100, 1, true);

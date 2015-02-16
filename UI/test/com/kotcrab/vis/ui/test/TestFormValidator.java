@@ -27,7 +27,7 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestFormValidator extends VisWindow {
 
-	public TestFormValidator (boolean useVisComponets) {
+	public TestFormValidator () {
 		super("form validator");
 
 		TableUtils.setSpaceDefaults(this);

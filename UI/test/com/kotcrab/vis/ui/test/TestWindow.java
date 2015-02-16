@@ -32,22 +32,22 @@ import com.kotcrab.vis.ui.widget.*;
 
 public class TestWindow extends VisWindow {
 
-	public TestWindow (boolean useVisComponents) {
+	public TestWindow (boolean useVisWidgets) {
 		super("test window");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		if (useVisComponents)
-			addVisComponents();
+		if (useVisWidgets)
+			addVisWidgets();
 		else
-			addNormalComponents();
+			addNormalWidgets();
 
 		pack();
 		setPosition(255, 300);
 	}
 
-	private void addVisComponents () {
+	private void addVisWidgets () {
 		VisLabel label = new VisLabel("label");
 		VisLabel labelWithTooltip = new VisLabel("label with tooltip");
 		new Tooltip(labelWithTooltip, "this label has a tooltip");
@@ -157,7 +157,7 @@ public class TestWindow extends VisWindow {
 		add(selectBoxTable).row();
 	}
 
-	private void addNormalComponents () {
+	private void addNormalWidgets () {
 		Skin skin = VisUI.getSkin();
 
 		Label label = new VisLabel("label");

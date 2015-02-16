@@ -17,18 +17,19 @@
 package com.kotcrab.vis.ui.test;
 
 import com.kotcrab.vis.ui.util.TableUtils;
+import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestValidator extends VisWindow {
 
-	public TestValidator (boolean useVisComponets) {
+	public TestValidator () {
 		super("input validator (int number)");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		VisValidableTextField textField = new VisValidableTextField(new IntegerValidator());
+		VisValidableTextField textField = new VisValidableTextField(Validators.integers);
 
 		add(textField);
 

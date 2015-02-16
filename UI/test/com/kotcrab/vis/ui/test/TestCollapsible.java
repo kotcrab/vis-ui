@@ -29,7 +29,7 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestCollapsible extends VisWindow {
 
-	public TestCollapsible (boolean useVisComponets) {
+	public TestCollapsible () {
 		super("collapsiblewidget");
 
 		columnDefaults(0).left();

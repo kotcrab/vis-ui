@@ -28,22 +28,22 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestTree extends VisWindow {
 
-	public TestTree (boolean useVisComponets) {
+	public TestTree (boolean useVisWidgets) {
 		super("tree");
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		if (useVisComponets)
-			addVisComponents();
+		if (useVisWidgets)
+			addVisWidgets();
 		else
-			addNormalComponents();
+			addNormalWidgets();
 
 		setSize(150, 380);
 		setPosition(800, 280);
 	}
 
-	private void addNormalComponents () {
+	private void addNormalWidgets () {
 		Skin skin = VisUI.getSkin();
 
 		Tree tree = new Tree(skin);
@@ -72,7 +72,7 @@ public class TestTree extends VisWindow {
 		add(tree).expand().fill();
 	}
 
-	private void addVisComponents () {
+	private void addVisWidgets () {
 		VisTree tree = new VisTree();
 		Node item1 = new Node(new VisLabel("item 1"));
 		Node item2 = new Node(new VisLabel("item 2"));

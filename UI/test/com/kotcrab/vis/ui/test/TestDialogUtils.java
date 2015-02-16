@@ -22,12 +22,13 @@ import com.kotcrab.vis.ui.InputDialogAdapter;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.util.TableUtils;
+import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestDialogUtils extends VisWindow {
 
-	public TestDialogUtils (boolean useVisComponets) {
+	public TestDialogUtils () {
 		super("dialogutils");
 
 		TableUtils.setSpaceDefaults(this);
@@ -93,7 +94,7 @@ public class TestDialogUtils extends VisWindow {
 		showInputDialogIntOnly.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				DialogUtils.showInputDialog(getStage(), "enter int number", null, new IntegerValidator(), new InputDialogAdapter() {
+				DialogUtils.showInputDialog(getStage(), "enter int number", null, Validators.integers, new InputDialogAdapter() {
 					@Override
 					public void finished (String input) {
 						DialogUtils.showOKDialog(getStage(), "result", "you entered: " + input);

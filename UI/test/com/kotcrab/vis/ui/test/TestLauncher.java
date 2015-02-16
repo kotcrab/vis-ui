@@ -23,10 +23,13 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
 import com.kotcrab.vis.ui.widget.MenuItem;
@@ -43,9 +46,9 @@ public class TestLauncher {
 }
 
 class TestApplication extends ApplicationAdapter {
-	private static final boolean USE_VIS_COMPONENTS = true;
+	private static final int TESTS_VERSION = 1;
+	private static final boolean USE_VIS_WIDGETS = true;
 
-	private Table root;
 	private Stage stage;
 	private MenuBar menuBar;
 
@@ -54,7 +57,7 @@ class TestApplication extends ApplicationAdapter {
 		VisUI.load();
 
 		stage = new Stage(new ScreenViewport());
-		root = new Table();
+		Table root = new Table();
 		root.setFillParent(true);
 		stage.addActor(root);
 
@@ -66,16 +69,16 @@ class TestApplication extends ApplicationAdapter {
 
 		createMenus();
 
-		stage.addActor(new TestCollapsible(USE_VIS_COMPONENTS));
-		if(Gdx.app.getType() != ApplicationType.WebGL) stage.addActor(new TestColorPicker(USE_VIS_COMPONENTS));
-		stage.addActor(new TestDialogUtils(USE_VIS_COMPONENTS));
-		stage.addActor(new TestFormValidator(USE_VIS_COMPONENTS));
-		stage.addActor(new TestSplitPane(USE_VIS_COMPONENTS));
-		stage.addActor(new TestTextAreaAndScroll(USE_VIS_COMPONENTS));
-		stage.addActor(new TestTree(USE_VIS_COMPONENTS));
-		stage.addActor(new TestValidator(USE_VIS_COMPONENTS));
-		stage.addActor(new TestVertical(USE_VIS_COMPONENTS));
-		stage.addActor(new TestWindow(USE_VIS_COMPONENTS));
+		stage.addActor(new TestCollapsible());
+		if (Gdx.app.getType() != ApplicationType.WebGL) stage.addActor(new TestColorPicker());
+		stage.addActor(new TestDialogUtils());
+		stage.addActor(new TestFormValidator());
+		stage.addActor(new TestSplitPane(USE_VIS_WIDGETS));
+		stage.addActor(new TestTextAreaAndScroll(USE_VIS_WIDGETS));
+		stage.addActor(new TestTree(USE_VIS_WIDGETS));
+		stage.addActor(new TestValidator());
+		stage.addActor(new TestVertical(USE_VIS_WIDGETS));
+		stage.addActor(new TestWindow(USE_VIS_WIDGETS));
 	}
 
 	private void createMenus () {
@@ -86,8 +89,8 @@ class TestApplication extends ApplicationAdapter {
 
 		fileMenu.addItem(new MenuItem("MenuItem #1"));
 		fileMenu.addItem(new MenuItem("MenuItem #2").setShortcut(Keys.F1));
-		fileMenu.addItem(new MenuItem("MenuItem #3"));
-		fileMenu.addItem(new MenuItem("MenuItem #4").setShortcut(Keys.F5));
+		fileMenu.addItem(new MenuItem("MenuItem #3").setShortcut(Keys.F2));
+		fileMenu.addItem(new MenuItem("MenuItem #4").setShortcut("Alt + F4"));
 
 		editMenu.addItem(new MenuItem("MenuItem #5"));
 		editMenu.addItem(new MenuItem("MenuItem #6"));
@@ -103,6 +106,13 @@ class TestApplication extends ApplicationAdapter {
 
 		helpMenu.addItem(new MenuItem("MenuItem #13"));
 		helpMenu.addItem(new MenuItem("MenuItem #14"));
+
+		helpMenu.addItem(new MenuItem("About", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				DialogUtils.showOKDialog(stage, "About", "Tests version: " + TESTS_VERSION + " \nVisUI version: " + VisUI.VERSION );
+			}
+		}));
 
 		menuBar.addMenu(fileMenu);
 		menuBar.addMenu(editMenu);
@@ -125,7 +135,6 @@ class TestApplication extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		VisUI.dispose();
-
 		stage.dispose();
 	}
 
