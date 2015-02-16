@@ -8,7 +8,7 @@
 -API Addition: constructor VisLabel (CharSequence text, Color textColor)
 -Changed close button style name to 'close-window' (was 'close')
 -Added 'close' button style that matches other normal buttons
--Fixed focus traversing when TAB pressed to invisible fields
+-Fixed focus traversing when TAB pressed in VisTextField, doesn't change focus to invisible fields and doesn't leaves modal windows
 -Added built-in validators: IntegerValidator, FloatValidator, GreaterThanValidator, LesserThanValidator (see Validators class)
 -Added VERSION string constant in VisUI
 

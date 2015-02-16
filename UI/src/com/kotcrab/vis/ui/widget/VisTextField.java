@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -489,15 +490,23 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			Gdx.input.setOnscreenKeyboardVisible(false);
 	}
 
-	private VisTextField findNextTextField (Array<Actor> actors, VisTextField best, Vector2 bestCoords, Vector2 currentCoords,
-											boolean up) {
+	private VisTextField findNextTextField (Array<Actor> actors, VisTextField best, Vector2 bestCoords, Vector2 currentCoords, boolean up) {
+		Window modalWindow = findModalWindow(this);
+
 		for (int i = 0, n = actors.size; i < n; i++) {
 			Actor actor = actors.get(i);
 			if (actor == this) continue;
 			if (actor instanceof VisTextField) {
 				VisTextField textField = (VisTextField) actor;
+
+				if(modalWindow != null){
+					Window nextFieldModalWindow = findModalWindow(textField);
+					if(nextFieldModalWindow != modalWindow) continue;
+				}
+
 				if (textField.isDisabled() || !textField.focusTraversal || isActorVisibleInStage(textField) == false)
 					continue;
+
 				Vector2 actorCoords = actor.getParent().localToStageCoordinates(tmp3.set(actor.getX(), actor.getY()));
 				if ((actorCoords.y < currentCoords.y || (actorCoords.y == currentCoords.y && actorCoords.x > currentCoords.x)) ^ up) {
 					if (best == null
@@ -521,6 +530,12 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		if (actor == null) return true;
 		if (actor.isVisible() == false) return false;
 		return isActorVisibleInStage(actor.getParent());
+	}
+
+	private Window findModalWindow (Actor actor) {
+		if (actor == null) return null;
+		if (actor instanceof Window && ((Window) actor).isModal()) return (Window) actor;
+		return findModalWindow(actor.getParent());
 	}
 
 	public InputListener getDefaultInputListener () {
