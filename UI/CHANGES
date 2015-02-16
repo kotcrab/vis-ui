@@ -10,6 +10,7 @@
 -Added 'close' button style that matches other normal buttons
 -Fixed focus traversing when TAB pressed to invisible fields
 -Added built-in validators: IntegerValidator, FloatValidator, GreaterThanValidator, LesserThanValidator (see Validators class)
+-Added VERSION string constant in VisUI
 
 [0.5.1] [LibGDX 1.5.3]
 -Added cancelable input dialog in DialogUtils
