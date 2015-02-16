@@ -31,12 +31,14 @@ import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 public class TestColorPicker extends VisWindow {
 	private static final Drawable white = VisUI.getSkin().getDrawable("white");
 
+	private ColorPicker picker;
+
 	public TestColorPicker () {
 		super("color picker");
 
 		final Image image = new Image(white);
 
-		final ColorPicker picker = new ColorPicker("color picker", new ColorPickerAdapter() {
+		picker = new ColorPicker("color picker", new ColorPickerAdapter() {
 			@Override
 			public void finished (Color newColor) {
 				image.setColor(newColor);
@@ -65,4 +67,9 @@ public class TestColorPicker extends VisWindow {
 		setPosition(800, 20);
 	}
 
+	@Override
+	protected void close () {
+		super.close();
+		picker.dispose();
+	}
 }
