@@ -32,6 +32,7 @@ import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
+import com.kotcrab.vis.editor.module.ColorPickerModule;
 import com.kotcrab.vis.editor.module.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.EditorSettingsIOModule;
 import com.kotcrab.vis.editor.module.GeneralSettingsModule;
@@ -163,6 +164,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(new TabsModule());
 		editorMC.add(new StatusBarModule());
 		editorMC.add(new EditorSettingsIOModule());
+		editorMC.add(new ColorPickerModule());
 
 		editorMC.add(settings = new GeneralSettingsModule());
 		editorMC.add(new GridSettingsModule());
