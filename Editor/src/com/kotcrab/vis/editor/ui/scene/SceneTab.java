@@ -214,7 +214,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		}
 
 		if (event instanceof TexturesReloadedEvent) {
-			for (SceneObject object : scene.objects) {
+			for (EditorSceneObject object : scene.objects) {
 				if (object instanceof Object2d) {
 					Object2d object2d = (Object2d) object;
 					object2d.sprite.setRegion(cacheModule.getRegion(object2d.regionRelativePath));

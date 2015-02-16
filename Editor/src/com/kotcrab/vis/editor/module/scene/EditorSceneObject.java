@@ -19,5 +19,5 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
-public class SceneObject {
+public class EditorSceneObject {
 }

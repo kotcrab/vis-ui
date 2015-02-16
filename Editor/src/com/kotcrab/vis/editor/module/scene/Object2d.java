@@ -21,8 +21,9 @@ package com.kotcrab.vis.editor.module.scene;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.kotcrab.vis.runtime.data.SpriteData;
 
-public class Object2d extends SceneObject {
+public class Object2d extends EditorSceneObject {
 	public String regionRelativePath;
 	public transient Sprite sprite;
 
@@ -36,11 +37,11 @@ public class Object2d extends SceneObject {
 	}
 
 	public void saveSpriteDataValuesToData () {
-		data.save(sprite);
+		data.saveFrom(sprite);
 	}
 
 	public void loadSpriteValuesFromData () {
 		sprite = new Sprite();
-		data.load(sprite);
+		data.loadTo(sprite);
 	}
 }

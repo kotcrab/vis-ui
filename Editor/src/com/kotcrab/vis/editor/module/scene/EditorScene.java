@@ -29,10 +29,7 @@ public class EditorScene {
 	/** Scene file, path is relative to project vis folder */
 	public String path;
 	public SceneViewport viewport;
-	public Array<SceneObject> objects = new Array<SceneObject>();
-
-	public EditorScene () {
-	}
+	public Array<EditorSceneObject> objects = new Array<EditorSceneObject>();
 
 	public EditorScene (FileHandle file, SceneViewport viewport) {
 		this.path = file.path();

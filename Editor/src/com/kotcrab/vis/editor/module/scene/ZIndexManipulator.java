@@ -68,7 +68,7 @@ public class ZIndexManipulator extends SceneModule {
 		Array<Object2d> overlapping = new Array<>();
 		int objectIndex = scene.objects.indexOf(object, true);
 
-		for (SceneObject o : scene.objects) {
+		for (EditorSceneObject o : scene.objects) {
 			if (o instanceof Object2d) {
 				Object2d sceneObject = (Object2d) o;
 				int sceneObjectIndex = scene.objects.indexOf(sceneObject, true);

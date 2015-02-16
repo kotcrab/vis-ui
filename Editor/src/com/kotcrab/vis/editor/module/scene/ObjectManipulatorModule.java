@@ -40,7 +40,7 @@ public class ObjectManipulatorModule extends SceneModule {
 
 	private ObjectProperties objectProperties;
 
-	private Array<SceneObject> objects;
+	private Array<EditorSceneObject> objects;
 	private Array<Object2d> selectedObjects = new Array<>();
 
 	private float lastTouchX;
@@ -184,7 +184,7 @@ public class ObjectManipulatorModule extends SceneModule {
 		Object2d matchingObject = null;
 		float lastSurfaceArea = Float.MAX_VALUE;
 
-		for (SceneObject object : objects) {
+		for (EditorSceneObject object : objects) {
 
 			if (object instanceof Object2d) {
 				Object2d object2d = (Object2d) object;

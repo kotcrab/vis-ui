@@ -32,7 +32,7 @@ public class RendererModule extends SceneModule {
 
 	@Override
 	public void render (Batch batch) {
-		for (SceneObject obj : scene.objects) {
+		for (EditorSceneObject obj : scene.objects) {
 			Object2d obj2d = (Object2d) obj;
 			obj2d.sprite.draw(batch);
 		}
