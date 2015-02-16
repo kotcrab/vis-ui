@@ -23,6 +23,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
 import com.kotcrab.vis.editor.module.scene.Object2d;
 import com.kotcrab.vis.editor.module.scene.SceneObject;
@@ -50,6 +51,7 @@ public class SceneIOModule extends ProjectModule {
 		visFolder = fileAccessModule.getVisFolder();
 
 		kryo = new Kryo();
+		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 	}
 
 	public EditorScene load (FileHandle file) {
