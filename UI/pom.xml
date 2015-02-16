@@ -17,6 +17,7 @@
 
 	<properties>
 		<gdx.version>1.5.4</gdx.version>
+        <arguments></arguments>
 	</properties>
 
 	<developers>
