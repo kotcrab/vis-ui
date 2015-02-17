@@ -508,9 +508,7 @@ public class FileChooser extends VisWindow {
 		boolean removed = favorites.removeValue(favorite, false);
 		favoritesIO.saveFavorites(favorites);
 		rebuildShortcutsList(false);
-		setVisble(false);
 		return removed;
-
 	}
 
 	public void setVisble (boolean visible) {
