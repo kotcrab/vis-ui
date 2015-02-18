@@ -43,6 +43,7 @@ import com.kotcrab.vis.editor.module.TabsModule;
 import com.kotcrab.vis.editor.module.ToolbarModule;
 import com.kotcrab.vis.editor.module.project.AssetsManagerUIModule;
 import com.kotcrab.vis.editor.module.project.AssetsWatcherModule;
+import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectInfoTabModule;
@@ -122,12 +123,12 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		// debug section
 
 		try {
-			editorMC.get(ProjectIOModule.class).load((Gdx.files.absolute("F:\\Poligon\\TestProject")));
+			editorMC.get(ProjectIOModule.class).load((Gdx.files.absolute("F:\\Poligon\\Tester")));
 		} catch (EditorException e) {
 			Log.exception(e);
 		}
 
-		FileHandle scene = Gdx.files.absolute("F:\\Poligon\\TestProject\\vis\\assets\\scene\\test.scene");
+		FileHandle scene = Gdx.files.absolute("F:\\Poligon\\Tester\\vis\\assets\\scene\\test.scene");
 		if (scene.exists()) {
 			EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
 			projectMC.get(SceneTabsModule.class).open(testScene);
@@ -224,7 +225,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		} else
 			exit();
 	}
-
 
 	private void exit () {
 		Gdx.app.exit();
