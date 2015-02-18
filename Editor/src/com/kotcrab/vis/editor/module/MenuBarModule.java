@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
@@ -91,10 +92,7 @@ public class MenuBarModule extends EditorModule {
 	}
 
 	private void createFileMenu () {
-		Menu menu = new Menu("File");
-		menuBar.addMenu(menu);
-
-		MenuItem closeProject = new MenuItem("Close project", new ChangeListener() {
+		MenuItem closeProject = new MenuItem("Close Project", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				editor.requestProjectUnload();
@@ -108,15 +106,34 @@ public class MenuBarModule extends EditorModule {
 			}
 		});
 
+		MenuItem quickExport = new MenuItem("Quick Export", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				ExportModule exportModule = projectContainer.get(ExportModule.class);
+				exportModule.export(true);
+			}
+		});
 
-		menu.addItem(new MenuItem("New project...", Assets.getIcon("new"), new ChangeListener() {
+		MenuItem export = new MenuItem("Export", Assets.getIcon("export"), new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				ExportModule exportModule = projectContainer.get(ExportModule.class);
+				exportModule.export(false);
+			}
+		});
+
+		Menu menu = new Menu("File");
+		menuBar.addMenu(menu);
+
+
+		menu.addItem(new MenuItem("New Project...", Assets.getIcon("new"), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				stage.addActor(new NewProjectDialog(projectIOModule).fadeIn());
 			}
 		}));
 
-		menu.addItem(new MenuItem("Load project...", Assets.getIcon("load"), new ChangeListener() {
+		menu.addItem(new MenuItem("Load Project...", Assets.getIcon("load"), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				stage.addActor(chooser.fadeIn());
@@ -127,9 +144,10 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(closeProject);
 
 		menu.addSeparator();
-
+		menu.addItem(quickExport);
+		menu.addItem(export);
+		menu.addSeparator();
 		menu.addItem(settings);
-
 		menu.addSeparator();
 
 		menu.addItem(new MenuItem("Exit", Assets.getIcon("exit"), new ChangeListener() {
@@ -140,6 +158,8 @@ public class MenuBarModule extends EditorModule {
 		}));
 
 		controller.addButton(closeProject);
+		controller.addButton(quickExport);
+		controller.addButton(export);
 	}
 
 	private void createSceneMenu () {

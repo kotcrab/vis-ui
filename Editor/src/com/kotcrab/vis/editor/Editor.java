@@ -261,6 +261,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.add(new FileAccessModule());
 		projectMC.add(new AssetsWatcherModule());
 		projectMC.add(new TextureCacheModule());
+		projectMC.add(new ExportModule());
 		projectMC.add(new SceneIOModule());
 
 		projectMC.add(new SceneTabsModule());
