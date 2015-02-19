@@ -270,6 +270,11 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		editor.getStage().addActor(new SceneSettingsDialog(this).fadeIn());
 	}
 
+	@Override
+	public void resetCamera () {
+		cameraModule.reset();
+	}
+
 	private class ContentTable extends VisTable {
 		public ContentTable () {
 			super(false);

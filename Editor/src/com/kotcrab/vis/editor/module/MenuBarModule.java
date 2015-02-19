@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor.module;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -36,6 +37,7 @@ import com.kotcrab.vis.editor.ui.SceneStatusWidgetController;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
 import com.kotcrab.vis.editor.util.EditorException;
+import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
@@ -184,6 +186,14 @@ public class MenuBarModule extends EditorModule {
 
 		projectController.addButton(newScene);
 
+		MenuItem resetCamera = new MenuItem("Reset Camera", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				sceneButtonsListener.resetCamera();
+			}
+		});
+
+
 		MenuItem sceneSettings = new MenuItem("Scene Settings", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
@@ -191,9 +201,12 @@ public class MenuBarModule extends EditorModule {
 			}
 		});
 
+		sceneController.addButton(resetCamera);
 		sceneController.addButton(sceneSettings);
 
 		menu.addItem(newScene);
+		menu.addSeparator();
+		menu.addItem(resetCamera);
 		menu.addItem(sceneSettings);
 	}
 

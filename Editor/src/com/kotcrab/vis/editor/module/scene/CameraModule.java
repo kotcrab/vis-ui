@@ -46,8 +46,7 @@ public class CameraModule extends SceneModule {
 		metadata = metadataModule.getMap().get(scene.path);
 
 		if (metadata == null) {
-			camera.position.x = scene.width / 2;
-			camera.position.y = scene.height / 2;
+			reset();
 			metadata = new SceneMetadata(camera.position.x, camera.position.y, camera.zoom);
 			metadataModule.getMap().put(scene.path, metadata);
 		} else {
@@ -55,6 +54,12 @@ public class CameraModule extends SceneModule {
 			camera.position.y = metadata.lastCameraY;
 			camera.zoom = metadata.lastCameraZoom;
 		}
+	}
+
+	public void reset () {
+		camera.position.x = scene.width / 2;
+		camera.position.y = scene.height / 2;
+		camera.zoom = 1;
 	}
 
 	@Override

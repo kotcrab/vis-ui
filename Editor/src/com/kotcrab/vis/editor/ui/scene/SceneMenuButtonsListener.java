@@ -21,4 +21,6 @@ package com.kotcrab.vis.editor.ui.scene;
 
 public interface SceneMenuButtonsListener {
 	public void showSceneSettings();
+
+	public void resetCamera();
 }
