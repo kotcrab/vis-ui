@@ -30,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.MenuEvent;
@@ -57,6 +58,7 @@ import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 import com.kotcrab.vis.ui.VisTable;
 
 public class SceneTab extends Tab implements DragAndDropTarget, EventListener, Disposable, SceneMenuButtonsListener {
+	private Editor editor;
 	private EditorScene scene;
 
 	private MenuBarModule menuBarModule;
@@ -78,6 +80,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
 		super(true);
+		editor = Editor.instance;
 		this.scene = scene;
 
 		menuBarModule = projectMC.getEditorContainer().get(MenuBarModule.class);
@@ -249,6 +252,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 	public boolean save () {
 		if (sceneIOModule.save(scene)) {
 			setDirty(false);
+			sceneMC.save();
 			return true;
 		}
 
@@ -263,7 +267,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 	@Override
 	public void showSceneSettings () {
-
+		editor.getStage().addActor(new SceneSettingsDialog(this).fadeIn());
 	}
 
 	private class ContentTable extends VisTable {

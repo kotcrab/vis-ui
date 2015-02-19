@@ -19,22 +19,18 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
-import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
-import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.module.project.SceneIOModule;
-import com.kotcrab.vis.runtime.scene.SceneViewport;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.OrderedMap;
-import com.kotcrab.vis.ui.FormInputValidator;
+import com.kotcrab.vis.editor.module.scene.EditorScene;
+import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.ui.FormValidator;
-import com.kotcrab.vis.ui.util.TableUtils;
+import com.kotcrab.vis.ui.OptionDialogAdapter;
 import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.util.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -42,9 +38,9 @@ import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
-public class NewSceneDialog extends VisWindow {
-	private VisValidableTextField nameTextField;
-	private VisValidableTextField pathTextField;
+public class SceneSettingsDialog extends VisWindow {
+	private SceneTab sceneTab;
+	private EditorScene scene;
 
 	private VisValidableTextField widthField;
 	private VisValidableTextField heightField;
@@ -54,22 +50,20 @@ public class NewSceneDialog extends VisWindow {
 	private VisLabel errorLabel;
 
 	private VisTextButton cancelButton;
-	private VisTextButton createButton;
+	private VisTextButton saveButton;
 
-	private SceneIOModule sceneIO;
-
-	private FileHandle visFolder;
 
 	private OrderedMap<String, SceneViewport> viewportMap;
 
-	public NewSceneDialog (FileAccessModule fileAccess, SceneIOModule sceneIOModule) {
-		super("New Scene");
+	public SceneSettingsDialog (SceneTab tab) {
+		super("Scene Settings");
+
+		this.sceneTab = tab;
+		scene = tab.getScene();
+
 		addCloseButton();
 		closeOnEscape();
 		setModal(true);
-
-		sceneIO = sceneIOModule;
-		visFolder = fileAccess.getVisFolder();
 
 		viewportMap = new OrderedMap<>();
 		SceneViewport[] values = SceneViewport.values();
@@ -85,38 +79,25 @@ public class NewSceneDialog extends VisWindow {
 	}
 
 	private void createUI () {
-		nameTextField = new VisValidableTextField();
-		pathTextField = new VisValidableTextField("/assets/scene/");
 		viewportModeSelectBox = new VisSelectBox<>();
 		viewportModeSelectBox.setItems(viewportMap.keys().toArray());
+		viewportModeSelectBox.setSelected(viewportMap.findKey(scene.viewport, true));
 
+		//TODO error msg can't fit on window, for now we don't display it at all
 		errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);
 
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
-		columnDefaults(1).width(300);
 
 		row().padTop(4);
 
-		VisTable fileFieldTable = new VisTable(true);
-		fileFieldTable.add(nameTextField).expand().fill();
-		fileFieldTable.add(new VisLabel(".scene"));
-
-		add(new VisLabel("File name"));
-		add(fileFieldTable);
-		row();
-
-		add(new VisLabel("Path"));
-		add(pathTextField);
-		row();
-
 		add(new VisLabel("Viewport"));
-		add(viewportModeSelectBox);
+		add(viewportModeSelectBox).expand().fill();
 		row();
 
-		widthField = new VisValidableTextField("1280");
-		heightField = new VisValidableTextField("720");
+		widthField = new VisValidableTextField(String.valueOf(scene.width));
+		heightField = new VisValidableTextField(String.valueOf(scene.height));
 		widthField.setTextFieldFilter(new DigitsOnlyFilter());
 		heightField.setTextFieldFilter(new DigitsOnlyFilter());
 
@@ -125,21 +106,22 @@ public class NewSceneDialog extends VisWindow {
 		sizeTable.add(widthField).width(60);
 		sizeTable.add(new VisLabel("Height"));
 		sizeTable.add(heightField).width(60);
-		sizeTable.add().expand().fill();
 
 		add(sizeTable).expand().fill();
 		row();
+
+		//This wil save any change previous change in scene
 
 		VisTable buttonTable = new VisTable(true);
 		buttonTable.defaults().minWidth(70);
 
 		cancelButton = new VisTextButton("Cancel");
-		createButton = new VisTextButton("Create");
-		createButton.setDisabled(true);
+		saveButton = new VisTextButton("Save");
+		saveButton.setDisabled(true);
 
-		buttonTable.add(errorLabel).fill().expand();
+		buttonTable.add().fill().expand();
 		buttonTable.add(cancelButton);
-		buttonTable.add(createButton);
+		buttonTable.add(saveButton);
 
 		add(buttonTable).colspan(2).fill().expand();
 		padBottom(5);
@@ -153,37 +135,37 @@ public class NewSceneDialog extends VisWindow {
 			}
 		});
 
-		createButton.addListener(new ChangeListener() {
+		saveButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				FileHandle targetFile = Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".scene");
-				sceneIO.create(targetFile, viewportMap.get(viewportModeSelectBox.getSelected()), Integer.valueOf(widthField.getText()), Integer.valueOf(heightField.getText()));
-				App.eventBus.post(new StatusBarEvent("Scene created: " + targetFile.path().substring(1)));
+				if (sceneTab.isDirty()) {
+					DialogUtils.showOptionDialog(getStage(), "Save settings", "This will save any previous change in scene, continue?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+						@Override
+						public void yes () {
+							setValuesToSceneAndSave();
+						}
+					});
+				} else
+					setValuesToSceneAndSave();
+
 				fadeOut();
 			}
 		});
 	}
 
+	private void setValuesToSceneAndSave () {
+		scene.viewport = viewportMap.get(viewportModeSelectBox.getSelected());
+		scene.width = Integer.valueOf(widthField.getText());
+		scene.height = Integer.valueOf(heightField.getText());
+		sceneTab.save();
+	}
+
 	private void createValidators () {
-		FormValidator validator = new FormValidator(createButton, errorLabel);
-		validator.notEmpty(nameTextField, "Name cannot be empty!");
-		validator.notEmpty(pathTextField, "Path cannot be empty!");
+		FormValidator validator = new FormValidator(saveButton, errorLabel);
 
 		validator.integerNumber(widthField, "Width must be a number");
 		validator.integerNumber(heightField, "Height must be a number");
 		validator.valueGreaterThan(widthField, "Width must be greater than zero", 0);
 		validator.valueGreaterThan(heightField, "Height must be greater than zero", 0);
-
-		validator.fileExists(pathTextField, visFolder, "Path does not exist!");
-
-		validator.custom(nameTextField, new FormInputValidator("That scene already exists!") {
-			@Override
-			public boolean validateInput (String input) {
-				FileHandle sceneFile = visFolder.child(pathTextField.getText()).child(input + ".scene");
-				setResult(!sceneFile.exists());
-
-				return super.validateInput(input);
-			}
-		});
 	}
 }

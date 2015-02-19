@@ -187,7 +187,7 @@ public class MenuBarModule extends EditorModule {
 		MenuItem sceneSettings = new MenuItem("Scene Settings", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-
+				sceneButtonsListener.showSceneSettings();
 			}
 		});
 
