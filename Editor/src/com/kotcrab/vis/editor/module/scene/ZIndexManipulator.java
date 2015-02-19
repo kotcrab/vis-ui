@@ -44,7 +44,7 @@ public class ZIndexManipulator extends SceneModule {
 			moveObject(object, getOverlappingObjects(object, up), up);
 		}
 
-		actionGroup.finalize();
+		actionGroup.finalizeGroup();
 		undoModule.add(actionGroup);
 	}
 

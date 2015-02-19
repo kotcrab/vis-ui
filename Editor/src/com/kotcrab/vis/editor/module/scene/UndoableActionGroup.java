@@ -52,7 +52,7 @@ public class UndoableActionGroup implements UndoableAction {
 	}
 
 
-	public void finalize () {
+	public void finalizeGroup () {
 		finalized = true;
 	}
 
