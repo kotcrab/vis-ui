@@ -201,8 +201,22 @@ public class MenuBarModule extends EditorModule {
 		Menu menu = new Menu("Help");
 		menuBar.addMenu(menu);
 
-		menu.addItem(new MenuItem("Web"));
-		menu.addItem(new MenuItem("About"));
+		menu.addItem(new MenuItem("Web", Assets.getIcon("globe"), new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				Gdx.net.openURI("http://vis.kotcrab.com");
+			}
+		}));
+
+		menu.addItem(new MenuItem("About", Assets.getIcon("info"), new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				//TODO make better about
+				DialogUtils.showOKDialog(stage, "About", "VisEditor - game level editor " +
+						"\nLicensed under GPLv3 license, runtime licensed under Apache2 " +
+						"\nUsing VisUI " + VisUI.VERSION + "\nCopyright 2014-2015 Pawel Pastuszak");
+			}
+		}));
 	}
 
 	public Table getTable () {

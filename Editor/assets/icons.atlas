@@ -32,23 +32,37 @@ folder-open
   orig: 22, 22
   offset: 0, 0
   index: -1
-import
+globe
   rotate: false
   xy: 26, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
-load
+import
   rotate: false
   xy: 26, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
-new
+info
   rotate: false
   xy: 302, 80
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+load
+  rotate: false
+  xy: 326, 104
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+new
+  rotate: false
+  xy: 50, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -69,14 +83,14 @@ refresh-big
   index: -1
 save
   rotate: false
-  xy: 326, 104
+  xy: 50, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 search
   rotate: false
-  xy: 50, 26
+  xy: 326, 80
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -90,14 +104,14 @@ search-big
   index: -1
 settings
   rotate: false
-  xy: 50, 2
+  xy: 350, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 settings-view
   rotate: false
-  xy: 326, 80
+  xy: 74, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
