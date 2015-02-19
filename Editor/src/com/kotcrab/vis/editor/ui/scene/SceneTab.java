@@ -30,12 +30,27 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.*;
+import com.kotcrab.vis.editor.event.Event;
+import com.kotcrab.vis.editor.event.EventListener;
+import com.kotcrab.vis.editor.event.MenuEvent;
+import com.kotcrab.vis.editor.event.MenuEventType;
+import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.module.MenuBarModule;
+import com.kotcrab.vis.editor.module.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
-import com.kotcrab.vis.editor.module.scene.*;
+import com.kotcrab.vis.editor.module.scene.CameraModule;
+import com.kotcrab.vis.editor.module.scene.EditorScene;
+import com.kotcrab.vis.editor.module.scene.EditorSceneObject;
+import com.kotcrab.vis.editor.module.scene.GridRendererModule;
+import com.kotcrab.vis.editor.module.scene.Object2d;
+import com.kotcrab.vis.editor.module.scene.ObjectManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.RendererModule;
+import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
+import com.kotcrab.vis.editor.module.scene.UndoModule;
+import com.kotcrab.vis.editor.module.scene.UndoableAction;
+import com.kotcrab.vis.editor.module.scene.ZIndexManipulator;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
@@ -45,6 +60,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 	private EditorScene scene;
 
 	private MenuBarModule menuBarModule;
+	private StatusBarModule statusBarModule;
 
 	private TextureCacheModule cacheModule;
 	private SceneIOModule sceneIOModule;
@@ -65,6 +81,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		this.scene = scene;
 
 		menuBarModule = projectMC.getEditorContainer().get(MenuBarModule.class);
+		statusBarModule = projectMC.getEditorContainer().get(StatusBarModule.class);
 
 		cacheModule = projectMC.get(TextureCacheModule.class);
 		sceneIOModule = projectMC.get(SceneIOModule.class);
@@ -186,17 +203,19 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 	}
 
 	@Override
-	public void onHide () {
-		super.onHide();
-		sceneMC.onHide();
-		menuBarModule.setSceneButtonsListener(null);
-	}
-
-	@Override
 	public void onShow () {
 		super.onShow();
 		sceneMC.onShow();
 		menuBarModule.setSceneButtonsListener(this);
+		statusBarModule.setInfoLabelText("Scene: " + scene.width + " x " + scene.height);
+	}
+
+	@Override
+	public void onHide () {
+		super.onHide();
+		sceneMC.onHide();
+		menuBarModule.setSceneButtonsListener(null);
+		statusBarModule.setInfoLabelText("");
 	}
 
 	public EditorScene getScene () {
@@ -205,7 +224,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 	@Override
 	public boolean onEvent (Event event) {
-		if(isActiveTab()) {
+		if (isActiveTab()) {
 			if (event instanceof MenuEvent) {
 				MenuEventType type = ((MenuEvent) event).type;
 

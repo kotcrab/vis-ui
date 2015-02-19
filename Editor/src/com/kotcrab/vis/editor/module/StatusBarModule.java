@@ -33,6 +33,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 public class StatusBarModule extends EditorModule implements EventListener {
 	public VisTable table;
 	public VisLabel statusLabel;
+	public VisLabel infoLabel;
 
 	public Timer timer;
 	private Task resetTask = new Task() {
@@ -46,11 +47,13 @@ public class StatusBarModule extends EditorModule implements EventListener {
 		timer = new Timer();
 
 		statusLabel = new VisLabel("Ready");
+		infoLabel = new VisLabel("");
 
 		table = new VisTable();
 		table.setBackground(VisUI.getSkin().getDrawable("button"));
 		table.add(statusLabel);
 		table.add().expand().fill();
+		table.add(infoLabel);
 	}
 
 	public void setText (String newText, int timeSeconds) {
@@ -71,6 +74,10 @@ public class StatusBarModule extends EditorModule implements EventListener {
 
 	public Table getTable () {
 		return table;
+	}
+
+	public void setInfoLabelText (String text) {
+		infoLabel.setText(text);
 	}
 
 	@Override
