@@ -79,7 +79,7 @@ public class FormValidator extends BasicFormValidator {
 		add(field);
 	}
 
-	private class FileExistsValidator extends FormInputValidator {
+	public static class FileExistsValidator extends FormInputValidator {
 		VisTextField relativeTo;
 		File relativeToFile;
 

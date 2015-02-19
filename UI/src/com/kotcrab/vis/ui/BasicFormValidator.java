@@ -21,12 +21,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.ui.util.Validators;
+import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
+import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
-/** BasicFormValidator is GWT compatible and does not provide fileExists methods, if you are not using GWT use
+/**
+ * BasicFormValidator is GWT compatible and does not provide fileExists methods, if you are not using GWT use
  * {@link FormValidator}
+ * @author Pawel Pastuszak
  * @see {@link FormValidator}
- * @author Pawel Pastuszak */
+ */
 public class BasicFormValidator {
 	private ChangeSharedListener changeListener = new ChangeSharedListener();
 	private Array<VisValidableTextField> fields = new Array<VisValidableTextField>();
@@ -41,6 +46,35 @@ public class BasicFormValidator {
 
 	public void notEmpty (VisValidableTextField field, String errorMsg) {
 		field.addValidator(new EmptyInputValidator(errorMsg));
+		add(field);
+	}
+
+	public void integerNumber (VisValidableTextField field, String errorMsg) {
+		field.addValidator(new IntegerFormInputValidator(errorMsg));
+		add(field);
+	}
+
+	public void floatNumber (VisValidableTextField field, String errorMsg) {
+		field.addValidator(new FloatFormInputValidator(errorMsg));
+		add(field);
+	}
+
+
+	public void valueGreaterThan (VisValidableTextField field, String errorMsg, float value) {
+		valueGreaterThan(field, errorMsg, value, false);
+	}
+
+	public void valueLesserThan (VisValidableTextField field, String errorMsg, float value) {
+		valueLesserThan(field, errorMsg, value, false);
+	}
+
+	public void valueGreaterThan (VisValidableTextField field, String errorMsg, float value, boolean equals) {
+		field.addValidator(new GreaterThanFormInputValidator(errorMsg, value, equals));
+		add(field);
+	}
+
+	public void valueLesserThan (VisValidableTextField field, String errorMsg, float value, boolean equals) {
+		field.addValidator(new LesserThanFormInputValidator(errorMsg, value, equals));
 		add(field);
 	}
 
@@ -67,7 +101,7 @@ public class BasicFormValidator {
 
 				Array<InputValidator> validators = field.getValidators();
 				for (InputValidator v : validators) {
-					FormInputValidator validator = (FormInputValidator)v;
+					FormInputValidator validator = (FormInputValidator) v;
 
 					if (validator.getResult() == false) {
 						errorMsgLabel.setText(validator.getErrorMsg());
@@ -81,7 +115,7 @@ public class BasicFormValidator {
 		}
 	}
 
-	private class EmptyInputValidator extends FormInputValidator {
+	public static class EmptyInputValidator extends FormInputValidator {
 		public EmptyInputValidator (String errorMsg) {
 			super(errorMsg);
 		}
@@ -89,6 +123,60 @@ public class BasicFormValidator {
 		@Override
 		public boolean validateInput (String input) {
 			setResult(!input.isEmpty());
+			return super.validateInput(input);
+		}
+	}
+
+	public static class IntegerFormInputValidator extends FormInputValidator {
+		public IntegerFormInputValidator (String errorMsg) {
+			super(errorMsg);
+		}
+
+		@Override
+		public boolean validateInput (String input) {
+			setResult(Validators.integers.validateInput(input));
+			return super.validateInput(input);
+		}
+	}
+
+	public static class FloatFormInputValidator extends FormInputValidator {
+		public FloatFormInputValidator (String errorMsg) {
+			super(errorMsg);
+		}
+
+		@Override
+		public boolean validateInput (String input) {
+			setResult(Validators.floats.validateInput(input));
+			return super.validateInput(input);
+		}
+	}
+
+	public static class GreaterThanFormInputValidator extends FormInputValidator {
+		private GreaterThanValidator validator;
+
+		public GreaterThanFormInputValidator (String errorMsg, float value, boolean equals) {
+			super(errorMsg);
+			validator = new GreaterThanValidator(value, equals);
+		}
+
+		@Override
+		public boolean validateInput (String input) {
+			setResult(validator.validateInput(input));
+			return super.validateInput(input);
+		}
+	}
+
+	public static class LesserThanFormInputValidator extends FormInputValidator {
+		private LesserThanValidator validator;
+
+		public LesserThanFormInputValidator (String errorMsg, float value, boolean equals) {
+			super(errorMsg);
+			validator = new LesserThanValidator(value, equals);
+		}
+
+		@Override
+		public boolean validateInput (String input) {
+			setResult(validator.validateInput(input));
 			return super.validateInput(input);
 		}
 	}
