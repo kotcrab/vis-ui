@@ -88,7 +88,10 @@ public class ObjectManipulatorModule extends SceneModule {
 
 	private boolean isMouseInsideSelectedObjects (float x, float y) {
 		for (Object2d object : selectedObjects)
-			if (object.sprite.getBoundingRectangle().contains(x, y)) return true;
+			if (object.sprite.getBoundingRectangle().contains(x, y)){
+				Object2d result = findObjectWithSmallestSurfaceArea(x, y);
+				if(result == object) return true;
+			}
 
 		return false;
 	}
