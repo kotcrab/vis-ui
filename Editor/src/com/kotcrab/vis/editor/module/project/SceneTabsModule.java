@@ -47,6 +47,7 @@ public class SceneTabsModule extends ProjectModule implements TabbedPaneListener
 	}
 
 	public void open (EditorScene scene) {
+		if (scene == null) throw new IllegalArgumentException("Scene cannot be null");
 		SceneTab oldTab = getTabByScene(scene);
 
 		if (oldTab == null) {
