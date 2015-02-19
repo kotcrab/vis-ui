@@ -33,7 +33,7 @@ public class ProjectStatusWidgetController implements EventListener, Disposable 
 	private boolean loaded = false;
 
 	public ProjectStatusWidgetController () {
-		buttons = new Array<Button>();
+		buttons = new Array<>();
 		App.eventBus.register(this);
 	}
 
