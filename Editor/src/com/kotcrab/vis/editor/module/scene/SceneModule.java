@@ -49,6 +49,10 @@ public abstract class SceneModule extends ProjectModule {
 
 	}
 
+	public void save () {
+
+	}
+
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 		return false;
 	}

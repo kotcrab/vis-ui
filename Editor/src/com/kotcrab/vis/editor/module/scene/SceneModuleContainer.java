@@ -78,6 +78,11 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {
 			modules.get(i).onHide();
 	}
 
+	public void save () {
+		for (int i = 0; i < modules.size; i++)
+			modules.get(i).save();
+	}
+
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 		boolean returnValue = false;
 
