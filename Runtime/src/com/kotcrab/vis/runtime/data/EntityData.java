@@ -16,8 +16,7 @@
 
 package com.kotcrab.vis.runtime.data;
 
-/** Contains field that are only used and available in VisRuntime */
-public class SceneSpriteData extends SpriteData {
-	public String textureAtlas;
-	public String textureRegion;
+/** Base class for all entities data inside scene */
+public class EntityData {
+	public String id;
 }

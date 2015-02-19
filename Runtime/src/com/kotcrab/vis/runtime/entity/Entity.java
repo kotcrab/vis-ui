@@ -14,7 +14,22 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.data;
+package com.kotcrab.vis.runtime.entity;
 
-public class SceneEntityData {
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class Entity {
+	private String id;
+
+	public Entity (String id) {
+		this.id = id;
+	}
+
+	public void render (SpriteBatch batch) {
+
+	}
+
+	public String getId () {
+		return id;
+	}
 }

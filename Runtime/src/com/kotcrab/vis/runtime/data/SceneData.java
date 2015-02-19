@@ -17,11 +17,14 @@
 package com.kotcrab.vis.runtime.data;
 
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.scene.Scene;
+import com.kotcrab.vis.runtime.scene.SceneLoader;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
+/** Scene data, used to build {@link Scene} by {@link SceneLoader} */
 public class SceneData {
 	public SceneViewport viewport;
 	public int width;
 	public int height;
-	public Array<SceneEntityData> entities;
+	public Array<EntityData> entities;
 }

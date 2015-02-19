@@ -239,7 +239,10 @@ public class ObjectProperties extends VisTable {
 
 			Object2d obj = objects.get(0);
 
-			idField.setText(obj.id);
+			if (obj.id == null)
+				idField.setText("");
+			else
+				idField.setText(obj.id);
 
 			xField.setText(floatToString(obj.sprite.getX()));
 			yField.setText(floatToString(obj.sprite.getY()));
@@ -313,6 +316,7 @@ public class ObjectProperties extends VisTable {
 			}
 		}
 
+		if(firstId == null) return "";
 		return firstId;
 	}
 
@@ -362,7 +366,7 @@ public class ObjectProperties extends VisTable {
 		for (Object2d object : objects) {
 			Sprite sprite = object.sprite;
 
-			object.id = idField.getText();
+			object.id = idField.getText().equals("") ? null : idField.getText();
 			sprite.setPosition(FieldUtils.getFloat(xField, sprite.getX()), FieldUtils.getFloat(yField, sprite.getY()));
 			sprite.setScale(FieldUtils.getFloat(xScaleField, sprite.getScaleX()), FieldUtils.getFloat(yScaleField, sprite.getScaleY()));
 			sprite.setOrigin(FieldUtils.getFloat(xOriginField, sprite.getOriginX()), FieldUtils.getFloat(yOriginField, sprite.getOriginY()));

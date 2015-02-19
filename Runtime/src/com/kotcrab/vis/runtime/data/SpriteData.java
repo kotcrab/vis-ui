@@ -22,7 +22,10 @@ package com.kotcrab.vis.runtime.data;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 
-public class SpriteData extends SceneEntityData {
+/**
+ * SpriteData used by both VisRuntime and VisEditor
+ */
+public class SpriteData extends EntityData {
 	public float x, y;
 	public float width, height;
 	public float originX, originY;

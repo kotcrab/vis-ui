@@ -14,10 +14,26 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.data;
+package com.kotcrab.vis.runtime.entity;
 
-/** Contains field that are only used and available in VisRuntime */
-public class SceneSpriteData extends SpriteData {
-	public String textureAtlas;
-	public String textureRegion;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class SpriteEntity extends Entity {
+	private Sprite sprite;
+
+	public SpriteEntity (String id, Sprite sprite) {
+		super(id);
+		this.sprite = sprite;
+	}
+
+	@Override
+	public void render (SpriteBatch batch) {
+		System.out.println("DRAWING: " + getId());
+		sprite.draw(batch);
+	}
+
+	public Sprite getSprite () {
+		return sprite;
+	}
 }

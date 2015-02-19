@@ -28,8 +28,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.runtime.data.SceneData;
-import com.kotcrab.vis.runtime.data.SceneEntityData;
+import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.data.SceneSpriteData;
+import com.kotcrab.vis.runtime.entity.Entity;
+import com.kotcrab.vis.runtime.entity.SpriteEntity;
 
 public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.SceneParameter> {
 	private SceneData data;
@@ -58,10 +60,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
 
 
-		for(SceneEntityData entityData : data.entities)
-		{
-			if(entityData instanceof SceneSpriteData)
-			{
+		for (EntityData entityData : data.entities) {
+			if (entityData instanceof SceneSpriteData) {
 				SceneSpriteData spriteData = (SceneSpriteData) entityData;
 
 				deps.add(new AssetDescriptor(spriteData.textureAtlas, TextureAtlas.class));
@@ -76,14 +76,15 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 	public void loadAsync (AssetManager manager, String fileName, FileHandle file, SceneLoader.SceneParameter parameter) {
 		scene = new Scene(data.viewport, data.width, data.height);
 
-		Array<Sprite> sprites = new Array<Sprite>();
 		Array<TextureAtlas> atlases = new Array<TextureAtlas>();
-		scene.setSprites(sprites);
-		scene.setTextureAtlases(atlases);
+		Array<Entity> entities = new Array<Entity>();
 
-		for (SceneEntityData entity : data.entities) {
-			if (entity instanceof SceneSpriteData) {
-				SceneSpriteData spriteData = (SceneSpriteData) entity;
+		scene.setTextureAtlases(atlases);
+		scene.setEntities(entities);
+
+		for (EntityData entityData : data.entities) {
+			if (entityData instanceof SceneSpriteData) {
+				SceneSpriteData spriteData = (SceneSpriteData) entityData;
 
 				TextureAtlas atlas = manager.get(spriteData.textureAtlas, TextureAtlas.class);
 				if (atlases.contains(atlas, true) == false) atlases.add(atlas);
@@ -91,7 +92,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 				Sprite newSprite = new Sprite(atlas.findRegion(spriteData.textureRegion));
 
 				spriteData.loadTo(newSprite);
-				sprites.add(newSprite);
+				SpriteEntity entity = new SpriteEntity(entityData.id, newSprite);
+				entities.add(entity);
 			}
 		}
 

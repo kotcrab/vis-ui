@@ -17,7 +17,6 @@
 package com.kotcrab.vis.runtime.scene;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
@@ -27,13 +26,15 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.kotcrab.vis.runtime.entity.Entity;
 
 public class Scene {
 	private OrthographicCamera camera;
 	private Viewport viewport;
 
 	private Array<TextureAtlas> textureAtlases;
-	private Array<Sprite> sprites;
+
+	private Array<Entity> entities;
 
 	public Scene (SceneViewport viewportType, int width, int height) {
 		camera = new OrthographicCamera(width, height);
@@ -68,20 +69,21 @@ public class Scene {
 		this.textureAtlases = textureAtlases;
 	}
 
-	Array<Sprite> getSprites () {
-		return sprites;
+	public Array<Entity> getEntities () {
+		return entities;
 	}
 
-	void setSprites (Array<Sprite> sprites) {
-		this.sprites = sprites;
+	void setEntities (Array<Entity> entities) {
+		this.entities = entities;
 	}
 
 	public void render (SpriteBatch batch) {
 		batch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
-		for (Sprite s : sprites)
-			s.draw(batch);
+
+		for (Entity e : entities)
+			e.render(batch);
 
 		batch.end();
 	}
