@@ -52,7 +52,7 @@ public class Scene {
 				viewport = new FillViewport(width, height, camera);
 				break;
 			case SCREEN:
-				viewport = new ScreenViewport();
+				viewport = new ScreenViewport(camera);
 				break;
 			case EXTEND:
 				viewport = new ExtendViewport(width, height, camera);
