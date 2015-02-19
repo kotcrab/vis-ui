@@ -21,32 +21,58 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Scene {
 	private OrthographicCamera camera;
+	private Viewport viewport;
+
 	private Array<TextureAtlas> textureAtlases;
 	private Array<Sprite> sprites;
 
-	public Scene () {
-		camera = new OrthographicCamera(1280, 720);
-		camera.position.x = 1280 / 2;
-		camera.position.y = 720 / 2;
+	public Scene (SceneViewport viewportType, int width, int height) {
+		camera = new OrthographicCamera(width, height);
+		camera.position.x = width / 2;
+		camera.position.y = height / 2;
 		camera.update();
+
+		switch (viewportType) {
+			case STRETCH:
+				viewport = new StretchViewport(width, height, camera);
+				break;
+			case FIT:
+				viewport = new FitViewport(width, height, camera);
+				break;
+			case FILL:
+				viewport = new FillViewport(width, height, camera);
+				break;
+			case SCREEN:
+				viewport = new ScreenViewport();
+				break;
+			case EXTEND:
+				viewport = new ExtendViewport(width, height, camera);
+				break;
+		}
 	}
 
-	public Array<TextureAtlas> getTextureAtlases () {
+	Array<TextureAtlas> getTextureAtlases () {
 		return textureAtlases;
 	}
 
-	public void setTextureAtlases (Array<TextureAtlas> textureAtlases) {
+	void setTextureAtlases (Array<TextureAtlas> textureAtlases) {
 		this.textureAtlases = textureAtlases;
 	}
 
-	public Array<Sprite> getSprites () {
+	Array<Sprite> getSprites () {
 		return sprites;
 	}
 
-	public void setSprites (Array<Sprite> sprites) {
+	void setSprites (Array<Sprite> sprites) {
 		this.sprites = sprites;
 	}
 
@@ -58,5 +84,9 @@ public class Scene {
 			s.draw(batch);
 
 		batch.end();
+	}
+
+	public void resize (int width, int height) {
+		viewport.update(width, height);
 	}
 }

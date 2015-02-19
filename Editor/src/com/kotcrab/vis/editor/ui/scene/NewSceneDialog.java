@@ -38,12 +38,17 @@ import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
 import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class NewSceneDialog extends VisWindow {
 	private VisValidableTextField nameTextField;
 	private VisValidableTextField pathTextField;
+
+	private VisValidableTextField widthField;
+	private VisValidableTextField heightField;
+
 	private VisSelectBox<String> viewportModeSelectBox;
 
 	private VisLabel errorLabel;
@@ -66,7 +71,7 @@ public class NewSceneDialog extends VisWindow {
 		sceneIO = sceneIOModule;
 		visFolder = fileAccess.getVisFolder();
 
-		viewportMap = new OrderedMap<String, SceneViewport>();
+		viewportMap = new OrderedMap<>();
 		SceneViewport[] values = SceneViewport.values();
 		for (int i = 0; i < values.length; i++)
 			viewportMap.put(values[i].toListString(), values[i]);
@@ -82,7 +87,7 @@ public class NewSceneDialog extends VisWindow {
 	private void createUI () {
 		nameTextField = new VisValidableTextField();
 		pathTextField = new VisValidableTextField("/assets/scene/");
-		viewportModeSelectBox = new VisSelectBox<String>();
+		viewportModeSelectBox = new VisSelectBox<>();
 		viewportModeSelectBox.setItems(viewportMap.keys().toArray());
 
 		errorLabel = new VisLabel();
@@ -108,6 +113,21 @@ public class NewSceneDialog extends VisWindow {
 
 		add(new VisLabel("Viewport"));
 		add(viewportModeSelectBox);
+		row();
+
+		widthField = new VisValidableTextField("1280");
+		heightField = new VisValidableTextField("720");
+		widthField.setTextFieldFilter(new DigitsOnlyFilter());
+		heightField.setTextFieldFilter(new DigitsOnlyFilter());
+
+		VisTable sizeTable = new VisTable(true);
+		add(new VisLabel("Width"));
+		sizeTable.add(widthField = new VisValidableTextField("1280")).width(60);
+		sizeTable.add(new VisLabel("Height"));
+		sizeTable.add(heightField = new VisValidableTextField("720")).width(60);
+		sizeTable.add().expand().fill();
+
+		add(sizeTable).expand().fill();
 		row();
 
 		VisTable buttonTable = new VisTable(true);
@@ -137,7 +157,7 @@ public class NewSceneDialog extends VisWindow {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				FileHandle targetFile = Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".scene");
-				sceneIO.create(targetFile, viewportMap.get(viewportModeSelectBox.getSelected()));
+				sceneIO.create(targetFile, viewportMap.get(viewportModeSelectBox.getSelected()), Integer.valueOf(widthField.getText()), Integer.valueOf(heightField.getText()));
 				App.eventBus.post(new StatusBarEvent("Scene created: " + targetFile.path().substring(1)));
 				fadeOut();
 			}
@@ -148,6 +168,11 @@ public class NewSceneDialog extends VisWindow {
 		FormValidator validator = new FormValidator(createButton, errorLabel);
 		validator.notEmpty(nameTextField, "Name cannot be empty!");
 		validator.notEmpty(pathTextField, "Path cannot be empty!");
+
+		validator.integerNumber(widthField, "Width must be a number");
+		validator.integerNumber(heightField, "Height must be a number");
+		validator.valueGreaterThan(widthField, "Width must be greater than zero", 0);
+		validator.valueGreaterThan(heightField, "Height must be greater than zero", 0);
 
 		validator.fileExists(pathTextField, visFolder, "Path does not exist!");
 

@@ -191,6 +191,8 @@ public class ExportModule extends ProjectModule {
 					SceneData sceneData = new SceneData();
 
 					sceneData.viewport = editorScene.viewport;
+					sceneData.width = editorScene.width;
+					sceneData.height = editorScene.height;
 					sceneData.entities = new Array<>();
 
 					for (EditorSceneObject object : editorScene.objects) {

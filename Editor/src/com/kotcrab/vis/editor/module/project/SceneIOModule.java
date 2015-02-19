@@ -108,8 +108,8 @@ public class SceneIOModule extends ProjectModule {
 		}
 	}
 
-	public void create (FileHandle relativeScenePath, SceneViewport viewport) {
-		EditorScene scene = new EditorScene(relativeScenePath, viewport);
+	public void create (FileHandle relativeScenePath, SceneViewport viewport, int width, int height) {
+		EditorScene scene = new EditorScene(relativeScenePath, viewport, width, height);
 		save(scene);
 	}
 

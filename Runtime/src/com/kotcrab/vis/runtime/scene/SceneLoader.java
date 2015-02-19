@@ -68,7 +68,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 
 	@Override
 	public void loadAsync (AssetManager manager, String fileName, FileHandle file, SceneLoader.SceneParameter parameter) {
-		scene = new Scene();
+		scene = new Scene(data.viewport, data.width, data.height);
 
 		Array<Sprite> sprites = new Array<Sprite>();
 		Array<TextureAtlas> atlases = new Array<TextureAtlas>();

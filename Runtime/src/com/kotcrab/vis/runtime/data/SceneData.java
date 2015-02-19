@@ -21,5 +21,7 @@ import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 public class SceneData {
 	public SceneViewport viewport;
+	public int width;
+	public int height;
 	public Array<SceneEntityData> entities;
 }

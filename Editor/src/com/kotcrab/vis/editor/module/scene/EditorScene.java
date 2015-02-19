@@ -28,12 +28,17 @@ import com.badlogic.gdx.utils.Array;
 public class EditorScene {
 	/** Scene file, path is relative to project vis folder */
 	public String path;
+	public int width;
+	public int height;
 	public SceneViewport viewport;
 	public Array<EditorSceneObject> objects = new Array<EditorSceneObject>();
 
-	public EditorScene (FileHandle file, SceneViewport viewport) {
+	public EditorScene (FileHandle file, SceneViewport viewport, int width, int height) {
 		this.path = file.path();
 		this.viewport = viewport;
+		this.width=width;
+		this.height = height;
+
 	}
 
 	public FileHandle getFile () {
