@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.*;
+import com.kotcrab.vis.editor.module.MenuBarModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
@@ -40,8 +41,10 @@ import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 import com.kotcrab.vis.ui.VisTable;
 
-public class SceneTab extends Tab implements DragAndDropTarget, EventListener, Disposable {
+public class SceneTab extends Tab implements DragAndDropTarget, EventListener, Disposable, SceneMenuButtonsListener {
 	private EditorScene scene;
+
+	private MenuBarModule menuBarModule;
 
 	private TextureCacheModule cacheModule;
 	private SceneIOModule sceneIOModule;
@@ -60,6 +63,8 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
 		super(true);
 		this.scene = scene;
+
+		menuBarModule = projectMC.getEditorContainer().get(MenuBarModule.class);
 
 		cacheModule = projectMC.get(TextureCacheModule.class);
 		sceneIOModule = projectMC.get(SceneIOModule.class);
@@ -190,12 +195,14 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 	public void onHide () {
 		super.onHide();
 		sceneMC.onHide();
+		menuBarModule.setSceneButtonsListener(null);
 	}
 
 	@Override
 	public void onShow () {
 		super.onShow();
 		sceneMC.onShow();
+		menuBarModule.setSceneButtonsListener(this);
 	}
 
 	public EditorScene getScene () {
@@ -239,6 +246,11 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 	public void dispose () {
 		sceneMC.dispose();
 		App.eventBus.unregister(this);
+	}
+
+	@Override
+	public void showSceneSettings () {
+
 	}
 
 	private class ContentTable extends VisTable {

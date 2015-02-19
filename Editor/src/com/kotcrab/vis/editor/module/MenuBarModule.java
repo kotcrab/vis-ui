@@ -32,7 +32,9 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.ui.NewProjectDialog;
 import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
+import com.kotcrab.vis.editor.ui.SceneStatusWidgetController;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
+import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.widget.Menu;
@@ -50,10 +52,13 @@ public class MenuBarModule extends EditorModule {
 	private Stage stage;
 	private MenuBar menuBar;
 
-	private ProjectStatusWidgetController controller;
+	private ProjectStatusWidgetController projectController;
+	private SceneStatusWidgetController sceneController;
+
 	private FileChooser chooser;
 
 	private ProjectIOModule projectIOModule;
+	private SceneMenuButtonsListener sceneButtonsListener;
 
 	public MenuBarModule (ProjectModuleContainer moduleContainer) {
 		editor = Editor.instance;
@@ -62,7 +67,8 @@ public class MenuBarModule extends EditorModule {
 
 		menuBar = new MenuBar(stage);
 
-		controller = new ProjectStatusWidgetController();
+		projectController = new ProjectStatusWidgetController();
+		sceneController = new SceneStatusWidgetController();
 
 		chooser = new FileChooser(Mode.OPEN);
 		chooser.setSelectionMode(SelectionMode.FILES_AND_DIRECTORIES);
@@ -157,16 +163,16 @@ public class MenuBarModule extends EditorModule {
 			}
 		}));
 
-		controller.addButton(closeProject);
-		controller.addButton(quickExport);
-		controller.addButton(export);
+		projectController.addButton(closeProject);
+		projectController.addButton(quickExport);
+		projectController.addButton(export);
 	}
 
 	private void createSceneMenu () {
 		Menu menu = new Menu("Scene");
 		menuBar.addMenu(menu);
 
-		MenuItem item = new MenuItem("New Scene...", new ChangeListener() {
+		MenuItem newScene = new MenuItem("New Scene...", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
@@ -175,9 +181,20 @@ public class MenuBarModule extends EditorModule {
 			}
 		});
 
-		controller.addButton(item);
 
-		menu.addItem(item);
+		projectController.addButton(newScene);
+
+		MenuItem sceneSettings = new MenuItem("Scene Settings", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+
+			}
+		});
+
+		sceneController.addButton(sceneSettings);
+
+		menu.addItem(newScene);
+		menu.addItem(sceneSettings);
 	}
 
 	private void createHelpMenu () {
@@ -192,8 +209,13 @@ public class MenuBarModule extends EditorModule {
 		return menuBar.getTable();
 	}
 
+	public void setSceneButtonsListener (SceneMenuButtonsListener listener) {
+		sceneButtonsListener = listener;
+		sceneController.listenrChanged(listener);
+	}
+
 	@Override
 	public void dispose () {
-		controller.dispose();
+		projectController.dispose();
 	}
 }
