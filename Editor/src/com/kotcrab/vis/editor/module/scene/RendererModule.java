@@ -19,8 +19,10 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 public class RendererModule extends SceneModule {
 	private ShapeRenderer shapeRenderer;
@@ -36,6 +38,13 @@ public class RendererModule extends SceneModule {
 			Object2d obj2d = (Object2d) obj;
 			obj2d.sprite.draw(batch);
 		}
+
+		batch.end();
+		shapeRenderer.setColor(Color.WHITE);
+		shapeRenderer.begin(ShapeType.Line);
+		shapeRenderer.rect(0,0, scene.width, scene.height);
+		shapeRenderer.end();
+		batch.begin();
 	}
 
 	@Override
