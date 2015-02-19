@@ -97,25 +97,25 @@ public class TabbedPane {
 	}
 
 	public void remove (final Tab tab, boolean ignoreTabDirty) {
-		if(ignoreTabDirty) {
+		if (ignoreTabDirty) {
 			removeTab(tab);
 			return;
 		}
 
-		if (tab.isSavable() && tab.isDirty()) {
-				DialogUtils.showOptionDialog(Editor.instance.getStage(), "Unsaved changes", "Do you want to save changes in this resource before closing it?",
-						OptionDialogType.YES_NO_CANCEL, new OptionDialogAdapter() {
-							@Override
-							public void yes () {
-								tab.save();
-								removeTab(tab);
-							}
+		if (tab.isDirty()) {
+			DialogUtils.showOptionDialog(Editor.instance.getStage(), "Unsaved changes", "Do you want to save changes in this resource before closing it?",
+					OptionDialogType.YES_NO_CANCEL, new OptionDialogAdapter() {
+						@Override
+						public void yes () {
+							tab.save();
+							removeTab(tab);
+						}
 
-							@Override
-							public void no () {
-								removeTab(tab);
-							}
-						});
+						@Override
+						public void no () {
+							removeTab(tab);
+						}
+					});
 		} else
 			removeTab(tab);
 	}
@@ -155,7 +155,10 @@ public class TabbedPane {
 	}
 
 	public void updateTabTitle (Tab tab) {
-		tabsButtonMap.get(tab).button.setText(tab.getButtonText());
+		String title = tab.getButtonText();
+		if (tab.isDirty()) title = "*" + title;
+
+		tabsButtonMap.get(tab).button.setText(title);
 	}
 
 	private void rebuildTabsTable () {

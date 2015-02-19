@@ -83,8 +83,6 @@ public abstract class Tab {
 	}
 
 	public boolean isDirty () {
-		checkSavable();
-
 		return dirty;
 	}
 

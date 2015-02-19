@@ -161,14 +161,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 	@Override
 	public String getButtonText () {
-		String title;
-
-		if (isDirty())
-			title = "*";
-		else
-			title = "";
-
-		return title + scene.getFile().name();
+		return scene.getFile().name();
 	}
 
 	@Override
