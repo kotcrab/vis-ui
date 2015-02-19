@@ -20,4 +20,5 @@
 package com.kotcrab.vis.editor.module.scene;
 
 public class EditorSceneObject {
+	public String id = "";
 }

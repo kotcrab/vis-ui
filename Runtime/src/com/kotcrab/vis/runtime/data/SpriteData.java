@@ -29,6 +29,7 @@ public class SpriteData extends SceneEntityData {
 	public float rotation;
 	public float scaleX = 1, scaleY = 1;
 	public Color tint = Color.WHITE;
+	public boolean flipX, flipY;
 
 	public void saveFrom (Sprite sprite) {
 		x = sprite.getX();
@@ -46,14 +47,18 @@ public class SpriteData extends SceneEntityData {
 		scaleY = sprite.getScaleY();
 
 		tint = sprite.getColor();
+
+		flipX = sprite.isFlipX();
+		flipY = sprite.isFlipY();
 	}
 
 	public void loadTo (Sprite sprite) {
-		sprite.setPosition(x,y);
+		sprite.setPosition(x, y);
 		sprite.setSize(width, height);
 		sprite.setOrigin(originX, originY);
 		sprite.setRotation(rotation);
 		sprite.setScale(scaleX, scaleY);
 		sprite.setColor(tint);
+		sprite.setFlip(flipX, flipY);
 	}
 }

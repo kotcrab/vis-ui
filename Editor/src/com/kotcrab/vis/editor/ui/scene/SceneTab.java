@@ -112,7 +112,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 		content.add(leftColumn).width(300).fillY().expandY();
 		content.add().fill().expand();
-		content.add(rightColumn).width(270).fillY().expandY();
+		content.add(rightColumn).width(245).fillY().expandY();
 
 		leftColumn.top();
 		//leftColumn.add(outline).height(300).fillX().expandX();
@@ -240,7 +240,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 			for (EditorSceneObject object : scene.objects) {
 				if (object instanceof Object2d) {
 					Object2d object2d = (Object2d) object;
-					object2d.sprite.setRegion(cacheModule.getRegion(object2d.regionRelativePath));
+					object2d.updateSpriteRegion(cacheModule.getRegion(object2d.regionRelativePath));
 				}
 			}
 		}

@@ -20,6 +20,7 @@
 package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -78,8 +79,8 @@ public class SceneIOModule extends ProjectModule {
 		for (EditorSceneObject object : scene.objects) {
 			if (object instanceof Object2d) {
 				Object2d object2d = (Object2d) object;
+				object2d.sprite = new Sprite(cacheModule.getRegion(object2d.regionRelativePath));
 				object2d.loadSpriteValuesFromData();
-				object2d.sprite.setRegion(cacheModule.getRegion(object2d.regionRelativePath));
 			}
 		}
 	}

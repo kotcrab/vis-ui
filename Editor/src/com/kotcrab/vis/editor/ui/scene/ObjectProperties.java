@@ -42,6 +42,7 @@ import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
@@ -53,6 +54,8 @@ import org.lwjgl.input.Keyboard;
 
 public class ObjectProperties extends VisTable {
 	private static final int FIELD_WIDTH = 70;
+
+	private VisValidableTextField idField;
 	private VisValidableTextField xField;
 	private VisValidableTextField yField;
 	private VisValidableTextField xScaleField;
@@ -60,6 +63,8 @@ public class ObjectProperties extends VisTable {
 	private VisValidableTextField xOriginField;
 	private VisValidableTextField yOriginField;
 	private VisValidableTextField rotationField;
+	private VisCheckBox xFlipCheck;
+	private VisCheckBox yFlipCheck;
 
 	private ColorImage tint;
 
@@ -87,6 +92,7 @@ public class ObjectProperties extends VisTable {
 				parentTab.setDirty(true);
 			}
 		};
+
 		sharedFieldFilter = new FieldFilter();
 		sharedFieldValidator = new FieldValidator();
 
@@ -104,7 +110,7 @@ public class ObjectProperties extends VisTable {
 
 		VisTable propertiesTable = new VisTable(true);
 		propertiesTable.top();
-		propertiesTable.columnDefaults(0).padRight(20).left();
+		propertiesTable.columnDefaults(0).left();
 
 		VisTable tintTable = new VisTable(true);
 		tintTable.add(new VisLabel("Tint"));
@@ -118,6 +124,17 @@ public class ObjectProperties extends VisTable {
 				getStage().addActor(picker.fadeIn());
 			}
 		});
+
+
+		VisTable idTable = new VisTable(true);
+
+		idTable.add(new VisLabel("ID"));
+		idTable.add(idField = new VisValidableTextField()).expandX().fillX();
+		idField.setProgrammaticChangeEvents(false);
+		idField.addListener(sharedChangeListener);
+
+		propertiesTable.add(idTable).colspan(5).fillX();
+		propertiesTable.row();
 
 		propertiesTable.add(new VisLabel("Position"));
 		propertiesTable.add(new VisLabel("X"));
@@ -144,6 +161,19 @@ public class ObjectProperties extends VisTable {
 		propertiesTable.add(new VisLabel(" "));
 		propertiesTable.add(rotationField = new InputField()).width(FIELD_WIDTH);
 		propertiesTable.add(tintTable).colspan(2);
+		propertiesTable.row();
+
+		VisTable flipTable = new VisTable(true);
+
+		flipTable.add(new VisLabel("Flip"));
+		flipTable.add(xFlipCheck = new VisCheckBox("X"));
+		flipTable.add(yFlipCheck = new VisCheckBox("Y"));
+
+		xFlipCheck.addListener(sharedChangeListener);
+		yFlipCheck.addListener(sharedChangeListener);
+
+		propertiesTable.add(flipTable).colspan(5).right();
+		propertiesTable.row();
 
 		top();
 		add(new VisLabel("Object Properties"));
@@ -177,7 +207,7 @@ public class ObjectProperties extends VisTable {
 	@Override
 	public float getPrefHeight () {
 		if (isVisible())
-			return 160;
+			return 210;
 		else
 			return 0;
 	}
@@ -209,6 +239,8 @@ public class ObjectProperties extends VisTable {
 
 			Object2d obj = objects.get(0);
 
+			idField.setText(obj.id);
+
 			xField.setText(floatToString(obj.sprite.getX()));
 			yField.setText(floatToString(obj.sprite.getY()));
 			xScaleField.setText(floatToString(obj.sprite.getScaleX()));
@@ -218,9 +250,13 @@ public class ObjectProperties extends VisTable {
 			rotationField.setText(floatToString(obj.sprite.getRotation()));
 			tint.setUnknown(false);
 			tint.setColor(obj.sprite.getColor());
+
+			xFlipCheck.setChecked(obj.sprite.isFlipX());
+			yFlipCheck.setChecked(obj.sprite.isFlipY());
 		} else {
 			setVisible(true);
 
+			idField.setText(getObjectsId());
 			xField.setText(getObjectsFieldValue(new ObjectValue() {
 				@Override
 				public float getValue (Object2d object) {
@@ -263,18 +299,54 @@ public class ObjectProperties extends VisTable {
 					return object.sprite.getRotation();
 				}
 			}));
-
-			Color firstColor = objects.first().sprite.getColor();
-
-			for (Object2d object : objects) {
-				if (firstColor.equals(object.sprite.getColor()) == false) {
-					tint.setUnknown(true);
-					return;
-				}
-			}
-
-			tint.setColor(firstColor);
+			setTintForObjects();
+			setXCheckForObjects();
+			setYCheckForObjects();
 		}
+	}
+
+	private String getObjectsId () {
+		String firstId = objects.first().id;
+		for (Object2d object : objects) {
+			if (firstId.equals(object.id) == false) {
+				return "<?>";
+			}
+		}
+
+		return firstId;
+	}
+
+	private void setXCheckForObjects () {
+		boolean xFlip = objects.first().sprite.isFlipX();
+		for (Object2d object : objects) {
+			if (xFlip != object.sprite.isFlipX()) {
+				tint.setUnknown(false);
+				return;
+			}
+		}
+		xFlipCheck.setChecked(xFlip);
+	}
+
+	private void setYCheckForObjects () {
+		boolean yFlip = objects.first().sprite.isFlipY();
+		for (Object2d object : objects) {
+			if (yFlip != object.sprite.isFlipY()) {
+				tint.setUnknown(false);
+				return;
+			}
+		}
+		yFlipCheck.setChecked(yFlip);
+	}
+
+	private void setTintForObjects () {
+		Color firstColor = objects.first().sprite.getColor();
+		for (Object2d object : objects) {
+			if (firstColor.equals(object.sprite.getColor()) == false) {
+				tint.setUnknown(true);
+				return;
+			}
+		}
+		tint.setColor(firstColor);
 	}
 
 	private String getObjectsFieldValue (ObjectValue objValue) {
@@ -290,10 +362,12 @@ public class ObjectProperties extends VisTable {
 		for (Object2d object : objects) {
 			Sprite sprite = object.sprite;
 
+			object.id = idField.getText();
 			sprite.setPosition(FieldUtils.getFloat(xField, sprite.getX()), FieldUtils.getFloat(yField, sprite.getY()));
 			sprite.setScale(FieldUtils.getFloat(xScaleField, sprite.getScaleX()), FieldUtils.getFloat(yScaleField, sprite.getScaleY()));
 			sprite.setOrigin(FieldUtils.getFloat(xOriginField, sprite.getOriginX()), FieldUtils.getFloat(yOriginField, sprite.getOriginY()));
 			sprite.setRotation(FieldUtils.getFloat(rotationField, sprite.getRotation()));
+			sprite.setFlip(xFlipCheck.isChecked(), yFlipCheck.isChecked());
 		}
 	}
 
