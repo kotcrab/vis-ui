@@ -145,7 +145,7 @@ public class ObjectManipulatorModule extends SceneModule {
 		x = camera.getInputX();
 		y = camera.getInputY();
 
-		if (dragging) {
+		if (dragging && selectedObjects.size > 0) {
 			dragged = true;
 			float deltaX = (x - lastTouchX);
 			float deltaY = (y - lastTouchY);
