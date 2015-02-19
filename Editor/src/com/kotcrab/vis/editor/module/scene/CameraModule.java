@@ -26,17 +26,52 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.kotcrab.vis.editor.module.project.SceneMetadataModule;
 
 public class CameraModule extends SceneModule {
+	private SceneMetadataModule metadataModule;
+
 	private OrthographicCamera camera;
 
 	private Vector3 unprojectVec;
 
-	public CameraModule () {
-		camera = new OrthographicCamera();
-		camera.position.x = 1280 / 2;
-		camera.position.y = 720 / 2;
+	private SceneMetadata metadata;
+
+	@Override
+	public void added () {
 		unprojectVec = new Vector3();
+		camera = new OrthographicCamera();
+
+		metadataModule = projectContainer.get(SceneMetadataModule.class);
+		metadata = metadataModule.getMap().get(scene.path);
+
+		if (metadata == null) {
+			camera.position.x = scene.width / 2;
+			camera.position.y = scene.height / 2;
+			metadata = new SceneMetadata(camera.position.x, camera.position.y, camera.zoom);
+			metadataModule.getMap().put(scene.path, metadata);
+		} else {
+			camera.position.x = metadata.lastCameraX;
+			camera.position.y = metadata.lastCameraY;
+			camera.zoom = metadata.lastCameraZoom;
+		}
+	}
+
+	@Override
+	public void save () {
+		saveToMetadata();
+	}
+
+	@Override
+	public void dispose () {
+		saveToMetadata();
+		metadataModule.save();
+	}
+
+	private void saveToMetadata () {
+		metadata.lastCameraX = camera.position.x;
+		metadata.lastCameraY = camera.position.y;
+		metadata.lastCameraZoom = camera.zoom;
 	}
 
 	@Override

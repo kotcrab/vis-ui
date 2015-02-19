@@ -19,27 +19,17 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.scene.SceneViewport;
+public class SceneMetadata {
+	public float lastCameraX;
+	public float lastCameraY;
+	public float lastCameraZoom;
 
-public class EditorScene {
-	/** Scene file, path is relative to project vis folder */
-	public String path;
-	public int width;
-	public int height;
-	public SceneViewport viewport;
-	public Array<EditorSceneObject> objects = new Array<EditorSceneObject>();
-
-	public EditorScene (FileHandle file, SceneViewport viewport, int width, int height) {
-		this.path = file.path();
-		this.viewport = viewport;
-		this.width = width;
-		this.height = height;
+	public SceneMetadata () {
 	}
 
-	public FileHandle getFile () {
-		return Gdx.files.absolute(path);
+	public SceneMetadata (float lastCameraZoom, float lastCameraY, float lastCameraX) {
+		this.lastCameraZoom = lastCameraZoom;
+		this.lastCameraY = lastCameraY;
+		this.lastCameraX = lastCameraX;
 	}
 }
