@@ -21,6 +21,7 @@ import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -33,6 +34,11 @@ import com.kotcrab.vis.runtime.data.SceneSpriteData;
 public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.SceneParameter> {
 	private SceneData data;
 	private Scene scene;
+
+
+	public SceneLoader () {
+		super(new InternalFileHandleResolver());
+	}
 
 	public SceneLoader (FileHandleResolver resolver) {
 		super(resolver);
