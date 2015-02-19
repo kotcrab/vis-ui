@@ -17,12 +17,10 @@
 package com.kotcrab.vis.runtime.scene;
 
 public enum SceneViewport {
-	NONE, STRETCH, FIT, FILL, SCREEN, EXTEND;
+	STRETCH, FIT, FILL, SCREEN, EXTEND;
 
 	public String toListString () {
 		switch (this) {
-		case NONE:
-			return "None";
 		case STRETCH:
 			return "Stretch Viewport";
 		case FIT:
