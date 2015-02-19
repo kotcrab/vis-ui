@@ -249,10 +249,15 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded));
 	}
 
-	public void projectLoaded (Project project) {
-		// TODO unload previous project dialog
+	public void projectLoaded (final Project project) {
 		if (projectLoaded) {
-			DialogUtils.showErrorDialog(getStage(), "Other project is already loaded!");
+			DialogUtils.showOptionDialog(getStage(), "Warning", "Other project is already loaded, unload it and continue?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+				@Override
+				public void yes () {
+					switchProject(project);
+				}
+			});
+
 			return;
 		}
 
@@ -276,6 +281,17 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		App.eventBus.post(new StatusBarEvent("Project loaded"));
 		App.eventBus.post(new ProjectStatusEvent(Status.Loaded));
+	}
+
+	private void switchProject (final Project project) {
+		requestProjectUnload();
+
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run () {
+				projectLoaded(project);
+			}
+		});
 	}
 
 	public void tabChanged (Tab tab) {
