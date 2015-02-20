@@ -45,6 +45,7 @@ import com.kotcrab.vis.editor.module.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
+import com.kotcrab.vis.editor.util.DirectoriesOnlyFileFilter;
 import com.kotcrab.vis.editor.util.DirectoryWatcher;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.ui.VisTable;
@@ -317,23 +318,21 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 	private void rebuildFolderTree () {
 		contentTree.clearChildren();
 
-		Node mainNode = new Node(new FolderItem(assetsFolder, "Assets"));
-		mainNode.setExpanded(true);
-		contentTree.add(mainNode);
-
-		processFolder(mainNode, assetsFolder);
+		for (FileHandle contentRoot : assetsFolder.list(DirectoriesOnlyFileFilter.filter)) {
+			Node node = new Node(new FolderItem(contentRoot));
+			processFolder(node, contentRoot);
+			contentTree.add(node);
+		}
 	}
 
 	private void processFolder (Node node, FileHandle dir) {
-		FileHandle[] files = dir.list();
+		FileHandle[] files = dir.list(DirectoriesOnlyFileFilter.filter);
 
 		for (FileHandle file : files) {
-			if (file.isDirectory()) {
-				Node currentNode = new Node(new FolderItem(file, file.name()));
-				node.add(currentNode);
+			Node currentNode = new Node(new FolderItem(file));
+			node.add(currentNode);
 
-				processFolder(currentNode, file);
-			}
+			processFolder(currentNode, file);
 		}
 	}
 
@@ -430,9 +429,9 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		public FileHandle file;
 		private VisLabel name;
 
-		public FolderItem (final FileHandle file, String customName) {
+		public FolderItem (FileHandle file) {
 			this.file = file;
-			name = new VisLabel(customName);
+			name = new VisLabel(file.name());
 			name.setEllipsis(true);
 			add(new Image(VisUI.getSkin().getDrawable("icon-folder"))).padTop(3);
 			add(name).expand().fill().padRight(6);
