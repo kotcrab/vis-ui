@@ -310,13 +310,17 @@ public class ObjectProperties extends VisTable {
 
 	private String getObjectsId () {
 		String firstId = objects.first().id;
+		if (firstId == null) firstId = "";
+
 		for (Object2d object : objects) {
-			if (firstId.equals(object.id) == false) {
+			String objectId = object.id;
+			if (objectId == null) objectId = "";
+
+			if (firstId.equals(objectId) == false) {
 				return "<?>";
 			}
 		}
 
-		if(firstId == null) return "";
 		return firstId;
 	}
 
