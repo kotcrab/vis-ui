@@ -67,7 +67,7 @@ public class PopupMenu extends Table {
 	}
 
 	public void addSeparator () {
-		add(new Separator(true)).padTop(2).padBottom(2).fill().expand().row();
+		add(new Separator("menu")).padTop(2).padBottom(2).fill().expand().row();
 	}
 
 	@Override

@@ -1,5 +1,6 @@
-[0.6.2] [LibGDX 1.5.4] [Snapshot]
+[0.7.0] [LibGDX 1.5.4] [Snapshot]
 -Added new FormValidators: integerNumber, floatNumber, valueLesserThan, valueGreaterThan
+-Separator height property is now called size
 
 [0.6.1] [LibGDX 1.5.4]
 -Fixed FileChooser disappearing when removing favourite
