@@ -88,9 +88,9 @@ public class ObjectManipulatorModule extends SceneModule {
 
 	private boolean isMouseInsideSelectedObjects (float x, float y) {
 		for (Object2d object : selectedObjects)
-			if (object.sprite.getBoundingRectangle().contains(x, y)){
+			if (object.sprite.getBoundingRectangle().contains(x, y)) {
 				Object2d result = findObjectWithSmallestSurfaceArea(x, y);
-				if(result == object) return true;
+				if (result == object) return true;
 			}
 
 		return false;
@@ -218,20 +218,26 @@ public class ObjectManipulatorModule extends SceneModule {
 	}
 
 	private class ObjectsRemoved implements UndoableAction {
+		private Array<Integer> indexes;
 		private Array<Object2d> objects;
 
 		public ObjectsRemoved (Array<Object2d> selectedObjects) {
+			indexes = new Array<>(selectedObjects.size);
 			objects = new Array<>(selectedObjects);
 		}
 
 		@Override
 		public void execute () {
+			for (Object2d object2d : objects)
+				indexes.add(scene.objects.indexOf(object2d, true));
+
 			scene.objects.removeAll(objects, true);
 		}
 
 		@Override
 		public void undo () {
-			scene.objects.addAll(objects);
+			for (int i = 0; i < objects.size; i++)
+				scene.objects.insert(indexes.get(i), objects.get(i));
 		}
 	}
 }
