@@ -1,6 +1,9 @@
 [0.7.0] [LibGDX 1.5.4] [Snapshot]
--Added new FormValidators: integerNumber, floatNumber, valueLesserThan, valueGreaterThan
--Separator height property is now called size
+-API Change: Constructor Separator(boolean useMenuStyle) is now Separator(boolean vertical) use new Separator("menu") for menu styled separator
+-API Addition: New FormValidators: integerNumber, floatNumber, valueLesserThan, valueGreaterThan
+-API Addition: VisTable.addSeparator (boolean vertical)
+-Skin change: Separator 'height' property is now called 'thickness'
+-Skin change: Separator style now has 'vertical' property
 
 [0.6.1] [LibGDX 1.5.4]
 -Fixed FileChooser disappearing when removing favourite
