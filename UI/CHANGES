@@ -4,6 +4,7 @@
 -API Addition: VisTable.addSeparator (boolean vertical)
 -Skin change: Separator 'height' property is now called 'thickness'
 -Skin change: Separator style now has 'vertical' property
+-Added VisSplitPane handleOver
 
 [0.6.1] [LibGDX 1.5.4]
 -Fixed FileChooser disappearing when removing favourite

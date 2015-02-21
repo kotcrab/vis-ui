@@ -32,16 +32,18 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.VisUI;
 
-/** A container that contains two widgets and is divided either horizontally or vertically. The user may resize the widgets. The
+/**
+ * A container that contains two widgets and is divided either horizontally or vertically. The user may resize the widgets. The
  * child widgets are always sized to fill their half of the splitpane.
- * <p>
+ * <p/>
  * The preferred size of a splitpane is that of the child widgets and the size of the {@link SplitPaneStyle#handle}. The widgets
  * are sized depending on the splitpane's size and the {@link #setSplitAmount(float) split position}.
  * @author mzechner
  * @author Nathan Sweet
- * @author Pawel Pastuszak */
+ * @author Pawel Pastuszak
+ */
 public class VisSplitPane extends WidgetGroup {
-	SplitPaneStyle style;
+	VisSplitPaneStyle style;
 	private Actor firstWidget, secondWidget;
 	boolean vertical;
 	float splitAmount = 0.5f, minAmount, maxAmount = 1;
@@ -56,21 +58,29 @@ public class VisSplitPane extends WidgetGroup {
 	Vector2 lastPoint = new Vector2();
 	Vector2 handlePosition = new Vector2();
 
-	/** @param firstWidget May be null.
-	 * @param secondWidget May be null. */
+	private boolean mouseOnHandle;
+
+	/**
+	 * @param firstWidget  May be null.
+	 * @param secondWidget May be null.
+	 */
 	public VisSplitPane (Actor firstWidget, Actor secondWidget, boolean vertical) {
 		this(firstWidget, secondWidget, vertical, "default-" + (vertical ? "vertical" : "horizontal"));
 	}
 
-	/** @param firstWidget May be null.
-	 * @param secondWidget May be null. */
+	/**
+	 * @param firstWidget  May be null.
+	 * @param secondWidget May be null.
+	 */
 	public VisSplitPane (Actor firstWidget, Actor secondWidget, boolean vertical, String styleName) {
-		this(firstWidget, secondWidget, vertical, VisUI.getSkin().get(styleName, SplitPaneStyle.class));
+		this(firstWidget, secondWidget, vertical, VisUI.getSkin().get(styleName, VisSplitPaneStyle.class));
 	}
 
-	/** @param firstWidget May be null.
-	 * @param secondWidget May be null. */
-	public VisSplitPane (Actor firstWidget, Actor secondWidget, boolean vertical, SplitPaneStyle style) {
+	/**
+	 * @param firstWidget  May be null.
+	 * @param secondWidget May be null.
+	 */
+	public VisSplitPane (Actor firstWidget, Actor secondWidget, boolean vertical, VisSplitPaneStyle style) {
 		this.firstWidget = firstWidget;
 		this.secondWidget = secondWidget;
 		this.vertical = vertical;
@@ -106,6 +116,12 @@ public class VisSplitPane extends WidgetGroup {
 			}
 
 			@Override
+			public boolean mouseMoved (InputEvent event, float x, float y) {
+				mouseOnHandle = handleBounds.contains(x, y);
+				return false;
+			}
+
+			@Override
 			public void touchDragged (InputEvent event, float x, float y, int pointer) {
 				if (pointer != draggingPointer) return;
 
@@ -138,15 +154,17 @@ public class VisSplitPane extends WidgetGroup {
 		});
 	}
 
-	public void setStyle (SplitPaneStyle style) {
-		this.style = style;
-		invalidateHierarchy();
+	/**
+	 * Returns the split pane's style. Modifying the returned style may not have an effect until {@link #setStyle(VisSplitPaneStyle)}
+	 * is called.
+	 */
+	public VisSplitPaneStyle getStyle () {
+		return style;
 	}
 
-	/** Returns the split pane's style. Modifying the returned style may not have an effect until {@link #setStyle(SplitPaneStyle)}
-	 * is called. */
-	public SplitPaneStyle getStyle () {
-		return style;
+	public void setStyle (VisSplitPaneStyle style) {
+		this.style = style;
+		invalidateHierarchy();
 	}
 
 	@Override
@@ -160,13 +178,13 @@ public class VisSplitPane extends WidgetGroup {
 		if (firstWidget != null) {
 			Rectangle firstWidgetBounds = this.firstWidgetBounds;
 			firstWidget.setBounds(firstWidgetBounds.x, firstWidgetBounds.y, firstWidgetBounds.width, firstWidgetBounds.height);
-			if (firstWidget instanceof Layout) ((Layout)firstWidget).validate();
+			if (firstWidget instanceof Layout) ((Layout) firstWidget).validate();
 		}
 		Actor secondWidget = this.secondWidget;
 		if (secondWidget != null) {
 			Rectangle secondWidgetBounds = this.secondWidgetBounds;
 			secondWidget.setBounds(secondWidgetBounds.x, secondWidgetBounds.y, secondWidgetBounds.width, secondWidgetBounds.height);
-			if (secondWidget instanceof Layout) ((Layout)secondWidget).validate();
+			if (secondWidget instanceof Layout) ((Layout) secondWidget).validate();
 		}
 	}
 
@@ -174,9 +192,9 @@ public class VisSplitPane extends WidgetGroup {
 	public float getPrefWidth () {
 		float width = 0;
 		if (firstWidget != null)
-			width = firstWidget instanceof Layout ? ((Layout)firstWidget).getPrefWidth() : firstWidget.getWidth();
+			width = firstWidget instanceof Layout ? ((Layout) firstWidget).getPrefWidth() : firstWidget.getWidth();
 		if (secondWidget != null)
-			width += secondWidget instanceof Layout ? ((Layout)secondWidget).getPrefWidth() : secondWidget.getWidth();
+			width += secondWidget instanceof Layout ? ((Layout) secondWidget).getPrefWidth() : secondWidget.getWidth();
 		if (!vertical) width += style.handle.getMinWidth();
 		return width;
 	}
@@ -185,9 +203,9 @@ public class VisSplitPane extends WidgetGroup {
 	public float getPrefHeight () {
 		float height = 0;
 		if (firstWidget != null)
-			height = firstWidget instanceof Layout ? ((Layout)firstWidget).getPrefHeight() : firstWidget.getHeight();
+			height = firstWidget instanceof Layout ? ((Layout) firstWidget).getPrefHeight() : firstWidget.getHeight();
 		if (secondWidget != null)
-			height += secondWidget instanceof Layout ? ((Layout)secondWidget).getPrefHeight() : secondWidget.getHeight();
+			height += secondWidget instanceof Layout ? ((Layout) secondWidget).getPrefHeight() : secondWidget.getHeight();
 		if (vertical) height += style.handle.getMinHeight();
 		return height;
 	}
@@ -212,7 +230,7 @@ public class VisSplitPane extends WidgetGroup {
 		float height = getHeight();
 
 		float availWidth = getWidth() - handle.getMinWidth();
-		float leftAreaWidth = (int)(availWidth * splitAmount);
+		float leftAreaWidth = (int) (availWidth * splitAmount);
 		float rightAreaWidth = availWidth - leftAreaWidth;
 		float handleWidth = handle.getMinWidth();
 
@@ -228,7 +246,7 @@ public class VisSplitPane extends WidgetGroup {
 		float height = getHeight();
 
 		float availHeight = height - handle.getMinHeight();
-		float topAreaHeight = (int)(availHeight * splitAmount);
+		float topAreaHeight = (int) (availHeight * splitAmount);
 		float bottomAreaHeight = availHeight - topAreaHeight;
 		float handleHeight = handle.getMinHeight();
 
@@ -243,7 +261,6 @@ public class VisSplitPane extends WidgetGroup {
 
 		Color color = getColor();
 
-		Drawable handle = style.handle;
 		applyTransform(batch, computeTransform());
 		// Matrix4 transform = batch.getTransformMatrix();
 		if (firstWidget != null) {
@@ -263,10 +280,12 @@ public class VisSplitPane extends WidgetGroup {
 			}
 		}
 
-		// changed, original was batch.setColor(color.r, color.g, color.b, color.a);
+		Drawable handle = style.handle;
+		if(mouseOnHandle && style.handleOver != null) handle = style.handleOver;
 		batch.setColor(color.r, color.g, color.b, parentAlpha * color.a);
 		handle.draw(batch, handleBounds.x, handleBounds.y, handleBounds.width, handleBounds.height);
 		resetTransform(batch);
+
 	}
 
 	/** @param split The split amount between the min and max amount. */
@@ -291,8 +310,10 @@ public class VisSplitPane extends WidgetGroup {
 		this.maxAmount = maxAmount;
 	}
 
-	/** @param firstWidget May be null
-	 * @param secondWidget May be null */
+	/**
+	 * @param firstWidget  May be null
+	 * @param secondWidget May be null
+	 */
 	public void setWidgets (Actor firstWidget, Actor secondWidget) {
 		setFirstWidget(firstWidget);
 		setSecondWidget(secondWidget);
@@ -332,5 +353,13 @@ public class VisSplitPane extends WidgetGroup {
 	@Override
 	public boolean removeActor (Actor actor) {
 		throw new UnsupportedOperationException("Use ScrollPane#setWidget(null).");
+	}
+
+	public static class VisSplitPaneStyle extends SplitPaneStyle {
+		/** Optional **/
+		public Drawable handleOver;
+
+		public VisSplitPaneStyle () {
+		}
 	}
 }

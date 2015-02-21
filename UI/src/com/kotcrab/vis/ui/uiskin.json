@@ -106,4 +106,8 @@ com.kotcrab.vis.ui.widget.Separator$SeparatorStyle: {
     vertical: {background: separator, thickness: 4, vertical: true},
 	menu: {background: separator-menu, thickness: 3},
 },
+com.kotcrab.vis.ui.widget.VisSplitPane$VisSplitPaneStyle: {
+  default-vertical: { handle: splitpane-vertical, handleOver: splitpane-vertical-over },
+  default-horizontal: { handle: splitpane, handleOver: splitpane-over }
+},
 }
