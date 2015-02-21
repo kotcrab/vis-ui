@@ -193,6 +193,13 @@ public class MenuBarModule extends EditorModule {
 			}
 		});
 
+		MenuItem resetCameraZoom = new MenuItem("Reset Camera Zoom", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				sceneButtonsListener.resetCameraZoom();
+			}
+		});
+
 
 		MenuItem sceneSettings = new MenuItem("Scene Settings", new ChangeListener() {
 			@Override
@@ -202,11 +209,13 @@ public class MenuBarModule extends EditorModule {
 		});
 
 		sceneController.addButton(resetCamera);
+		sceneController.addButton(resetCameraZoom);
 		sceneController.addButton(sceneSettings);
 
 		menu.addItem(newScene);
 		menu.addSeparator();
 		menu.addItem(resetCamera);
+		menu.addItem(resetCameraZoom);
 		menu.addItem(sceneSettings);
 	}
 

@@ -62,6 +62,10 @@ public class CameraModule extends SceneModule {
 		camera.zoom = 1;
 	}
 
+	public void resetZoom () {
+		camera.zoom = 1;
+	}
+
 	@Override
 	public void save () {
 		saveToMetadata();

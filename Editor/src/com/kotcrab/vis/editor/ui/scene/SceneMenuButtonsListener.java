@@ -23,4 +23,6 @@ public interface SceneMenuButtonsListener {
 	public void showSceneSettings();
 
 	public void resetCamera();
+
+	public void resetCameraZoom();
 }
