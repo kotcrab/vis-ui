@@ -92,6 +92,7 @@ public class TestWindow extends VisWindow {
 		VisTable radioTable = new VisTable(true);
 		radioTable.add(normalRadio);
 		radioTable.add(disabledRadio);
+		radioTable.addSeparator(true);
 		radioTable.add(disabledCheckedRadio);
 
 		// ---

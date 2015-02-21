@@ -36,9 +36,8 @@ public class Separator extends Widget {
 		style = VisUI.getSkin().get(SeparatorStyle.class);
 	}
 
-	@Deprecated
-	public Separator (boolean useMenuStyle) {
-		style = VisUI.getSkin().get(useMenuStyle ? "menu" : "default", SeparatorStyle.class);
+	public Separator (boolean vertical) {
+		style = VisUI.getSkin().get(vertical ? "vertical" : "default", SeparatorStyle.class);
 	}
 
 	public Separator (String styleName) {
@@ -51,7 +50,12 @@ public class Separator extends Widget {
 
 	@Override
 	public float getPrefHeight () {
-		return style.size;
+		return style.thickness;
+	}
+
+	@Override
+	public float getPrefWidth () {
+		return style.thickness;
 	}
 
 	@Override
@@ -61,16 +65,26 @@ public class Separator extends Widget {
 		style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
 
+	public SeparatorStyle getStyle () {
+		return style;
+	}
+
 	static public class SeparatorStyle {
 		public Drawable background;
-		public int size;
+		public int thickness;
+		public boolean vertical;
 
 		public SeparatorStyle () {
 		}
 
-		public SeparatorStyle (Drawable bg, int size) {
+		public SeparatorStyle (Drawable bg, int thickness) {
+			this(bg, thickness, false);
+		}
+
+		public SeparatorStyle (Drawable bg, int thickness, boolean vertical) {
 			this.background = bg;
-			this.size = size;
+			this.thickness = thickness;
+			this.vertical = vertical;
 		}
 	}
 }

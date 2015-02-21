@@ -102,7 +102,8 @@ com.kotcrab.vis.ui.widget.PopupMenu$PopupMenuStyle: {
 	noborder: {background: button},
 },
 com.kotcrab.vis.ui.widget.Separator$SeparatorStyle: {
-	default: {background: separator, size: 4},
-	menu: {background: separator-menu, size: 3},
+	default: {background: separator, thickness: 4},
+    vertical: {background: separator, thickness: 4, vertical: true},
+	menu: {background: separator-menu, thickness: 3},
 },
 }

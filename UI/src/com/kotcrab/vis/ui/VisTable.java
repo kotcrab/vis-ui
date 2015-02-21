@@ -32,8 +32,27 @@ public class VisTable extends Table {
 		if (setVisDefaults) TableUtils.setSpaceDefaults(this);
 	}
 
-	/** Adds {@link Separator} widget to table with padding top, bottom 2px with fill and expand properties and inserts new row
-	 * after separator (not before!) */
+	/**
+	 * Adds vertical or horizontal {@link Separator} widget to table with padding top, bottom 2px with fill and expand properties.
+	 * If vertical == false then inserts new row after separator (not before!)
+	 */
+	public Cell<Separator> addSeparator (boolean vertical) {
+		Cell<Separator> cell = add(new Separator(vertical)).padTop(2).padBottom(2);
+
+		if (vertical)
+			cell.fillY().expandY();
+		else {
+			cell.fillX().expandX();
+			row();
+		}
+
+		return cell;
+	}
+
+	/**
+	 * Adds horizontal {@link Separator} widget to table with padding top, bottom 2px with fillX and expandX properties and inserts new row
+	 * after separator (not before!)
+	 */
 	public Cell<Separator> addSeparator () {
 		Cell<Separator> cell = add(new Separator()).padTop(2).padBottom(2).fillX().expandX();
 		row();
