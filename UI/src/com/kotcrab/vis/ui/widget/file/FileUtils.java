@@ -16,20 +16,20 @@
 
 package com.kotcrab.vis.ui.widget.file;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
-
 public class FileUtils {
 	public static final String OS = System.getProperty("os.name").toLowerCase();
 
-	private static final String[] units = new String[] {"B", "KB", "MB", "GB", "TB", "EB"};
+	private static final String[] units = new String[]{"B", "KB", "MB", "GB", "TB", "EB"};
 
 	private static final Comparator<FileHandle> fileComparator = new Comparator<FileHandle>() {
 		@Override
@@ -40,7 +40,7 @@ public class FileUtils {
 
 	public static String readableFileSize (long size) {
 		if (size <= 0) return "0 B";
-		int digitGroups = (int)(Math.log10(size) / Math.log10(1024));
+		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)).replace(",", ".") + " " + units[digitGroups];
 	}
 

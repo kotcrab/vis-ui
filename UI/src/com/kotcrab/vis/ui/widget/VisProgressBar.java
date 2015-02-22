@@ -32,18 +32,20 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.VisUI;
 
-/** A progress bar is a widget that visually displays the progress of some activity or a value within given range. The progress bar
+/**
+ * A progress bar is a widget that visually displays the progress of some activity or a value within given range. The progress bar
  * has a range (min, max) and a stepping between each value it represents. The percentage of completeness typically starts out as
  * an empty progress bar and gradually becomes filled in as the task or variable value progresses.
- * <p>
+ * <p/>
  * {@link ChangeEvent} is fired when the progress bar knob is moved. Cancelling the event will move the knob to where it was
  * previously.
- * <p>
+ * <p/>
  * The preferred height of a progress bar is determined by the larger of the knob and background. The preferred width of progress
  * bar is 140, a relatively arbitrary size.
  * @author mzechner
  * @author Nathan Sweet
- * @author Pawel Pastuszak */
+ * @author Pawel Pastuszak
+ */
 public class VisProgressBar extends Widget implements Disableable {
 	// This class was copied from LibGDX, few lines were changed.
 
@@ -68,16 +70,18 @@ public class VisProgressBar extends Widget implements Disableable {
 		this(min, max, stepSize, vertical, VisUI.getSkin().get(styleName, ProgressBarStyle.class));
 	}
 
-	/** Creates a new progress bar. It's width is determined by the given prefWidth parameter, its height is determined by the
+	/**
+	 * Creates a new progress bar. It's width is determined by the given prefWidth parameter, its height is determined by the
 	 * maximum of the height of either the progress bar {@link NinePatch} or progress bar handle {@link TextureRegion}. The min and
 	 * max values determine the range the values of this progress bar can take on, the stepSize parameter specifies the distance
 	 * between individual values.
-	 * <p>
+	 * <p/>
 	 * E.g. min could be 4, max could be 10 and stepSize could be 0.2, giving you a total of 30 values, 4.0 4.2, 4.4 and so on.
-	 * @param min the minimum value
-	 * @param max the maximum value
+	 * @param min      the minimum value
+	 * @param max      the maximum value
 	 * @param stepSize the step size between values
-	 * @param style the {@link ProgressBarStyle} */
+	 * @param style    the {@link ProgressBarStyle}
+	 */
 	public VisProgressBar (float min, float max, float stepSize, boolean vertical, ProgressBarStyle style) {
 		if (min > max) throw new IllegalArgumentException("max must be > min. min,max: " + min + ", " + max);
 		if (stepSize <= 0) throw new IllegalArgumentException("stepSize must be > 0: " + stepSize);
@@ -96,8 +100,10 @@ public class VisProgressBar extends Widget implements Disableable {
 		invalidateHierarchy();
 	}
 
-	/** Returns the progress bar's style. Modifying the returned style may not have an effect until
-	 * {@link #setStyle(ProgressBarStyle)} is called. */
+	/**
+	 * Returns the progress bar's style. Modifying the returned style may not have an effect until
+	 * {@link #setStyle(ProgressBarStyle)} is called.
+	 */
 	public ProgressBarStyle getStyle () {
 		return style;
 	}
@@ -129,7 +135,7 @@ public class VisProgressBar extends Widget implements Disableable {
 		batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 
 		if (vertical) {
-			bg.draw(batch, x + (int)((width - bg.getMinWidth()) * 0.5f), y, bg.getMinWidth(), height);
+			bg.draw(batch, x + (int) ((width - bg.getMinWidth()) * 0.5f), y, bg.getMinWidth(), height);
 
 			float positionHeight = height - (bg.getTopHeight() + bg.getBottomHeight());
 			float knobHeightHalf = 0;
@@ -149,16 +155,17 @@ public class VisProgressBar extends Widget implements Disableable {
 			if (knobBefore != null) {
 				float offset = 0;
 				if (bg != null) offset = bg.getTopHeight();
-				knobBefore.draw(batch, x + (int)((width - knobBefore.getMinWidth()) * 0.5f), y + offset, knobBefore.getMinWidth(),
-					(int)(position + knobHeightHalf));
+				knobBefore.draw(batch, x + (int) ((width - knobBefore.getMinWidth()) * 0.5f), y + offset, knobBefore.getMinWidth(),
+						(int) (position + knobHeightHalf));
 			}
 			if (knobAfter != null) {
-				knobAfter.draw(batch, x + (int)((width - knobAfter.getMinWidth()) * 0.5f), y + (int)(position + knobHeightHalf),
-					knobAfter.getMinWidth(), height - (int)(position + knobHeightHalf));
+				knobAfter.draw(batch, x + (int) ((width - knobAfter.getMinWidth()) * 0.5f), y + (int) (position + knobHeightHalf),
+						knobAfter.getMinWidth(), height - (int) (position + knobHeightHalf));
 			}
-			if (knob != null) knob.draw(batch, x + (int)((width - knobWidth) * 0.5f), (int)(y + position), knobWidth, knobHeight);
+			if (knob != null)
+				knob.draw(batch, x + (int) ((width - knobWidth) * 0.5f), (int) (y + position), knobWidth, knobHeight);
 		} else {
-			bg.draw(batch, x, y + (int)((height - bg.getMinHeight()) * 0.5f), width, bg.getMinHeight());
+			bg.draw(batch, x, y + (int) ((height - bg.getMinHeight()) * 0.5f), width, bg.getMinHeight());
 
 			float positionWidth = width - (bg.getLeftWidth() + bg.getRightWidth());
 			float knobWidthHalf = 0;
@@ -178,14 +185,15 @@ public class VisProgressBar extends Widget implements Disableable {
 			if (knobBefore != null) {
 				float offset = 0;
 				if (bg != null) offset = bg.getLeftWidth();
-				knobBefore.draw(batch, x + offset, y + (int)((height - knobBefore.getMinHeight()) * 0.5f),
-					(int)(position + knobWidthHalf), knobBefore.getMinHeight());
+				knobBefore.draw(batch, x + offset, y + (int) ((height - knobBefore.getMinHeight()) * 0.5f),
+						(int) (position + knobWidthHalf), knobBefore.getMinHeight());
 			}
 			if (knobAfter != null) {
-				knobAfter.draw(batch, x + (int)(position + knobWidthHalf), y + (int)((height - knobAfter.getMinHeight()) * 0.5f),
-					width - (int)(position + knobWidthHalf), knobAfter.getMinHeight());
+				knobAfter.draw(batch, x + (int) (position + knobWidthHalf), y + (int) ((height - knobAfter.getMinHeight()) * 0.5f),
+						width - (int) (position + knobWidthHalf), knobAfter.getMinHeight());
 			}
-			if (knob != null) knob.draw(batch, (int)(x + position), (int)(y + (height - knobHeight) * 0.5f), knobWidth, knobHeight);
+			if (knob != null)
+				knob.draw(batch, (int) (x + position), (int) (y + (height - knobHeight) * 0.5f), knobWidth, knobHeight);
 		}
 	}
 
@@ -195,7 +203,8 @@ public class VisProgressBar extends Widget implements Disableable {
 
 	/** If {@link #setAnimateDuration(float) animating} the progress bar value, this returns the value current displayed. */
 	public float getVisualValue () {
-		if (animateTime > 0) return animateInterpolation.apply(animateFromValue, value, 1 - animateTime / animateDuration);
+		if (animateTime > 0)
+			return animateInterpolation.apply(animateFromValue, value, 1 - animateTime / animateDuration);
 		return value;
 	}
 
@@ -204,9 +213,11 @@ public class VisProgressBar extends Widget implements Disableable {
 		return this.position;
 	}
 
-	/** Sets the progress bar position, rounded to the nearest step size and clamped to the minimum and maximum values.
+	/**
+	 * Sets the progress bar position, rounded to the nearest step size and clamped to the minimum and maximum values.
 	 * {@link #clamp(float)} can be overridden to allow values outside of the progress bar's min/max range.
-	 * @return false if the value was not changed because the progress bar already had the value or it was canceled by a listener. */
+	 * @return false if the value was not changed because the progress bar already had the value or it was canceled by a listener.
+	 */
 	public boolean setValue (float value) {
 		value = clamp(Math.round(value / stepSize) * stepSize);
 		if (!shiftIgnoresSnap || (!Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) && !Gdx.input.isKeyPressed(Keys.SHIFT_RIGHT)))
@@ -227,8 +238,10 @@ public class VisProgressBar extends Widget implements Disableable {
 		return !cancelled;
 	}
 
-	/** Clamps the value to the progress bar's min/max range. This can be overridden to allow a range different from the progress
-	 * bar knob's range. */
+	/**
+	 * Clamps the value to the progress bar's min/max range. This can be overridden to allow a range different from the progress
+	 * bar knob's range.
+	 */
 	protected float clamp (float value) {
 		return MathUtils.clamp(value, min, max);
 	}

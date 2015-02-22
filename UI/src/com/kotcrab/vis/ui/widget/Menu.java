@@ -16,7 +16,7 @@
 
 package com.kotcrab.vis.ui.widget;
 
-/** Menu used in MenuBar, it is a standard {@link PopupMenu} with tittle displayed in MenuBar*/
+/** Menu used in MenuBar, it is a standard {@link PopupMenu} with tittle displayed in MenuBar */
 public class Menu extends PopupMenu {
 	private String title;
 

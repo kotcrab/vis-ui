@@ -28,7 +28,13 @@ import com.kotcrab.vis.ui.InputDialogListener;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.OptionDialogListener;
 import com.kotcrab.vis.ui.VisTable;
-import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.VisDialog;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisScrollPane;
+import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisWindow;
 
 /** Utilities for displaying various dialogs, equivalent of Swing JOptionPane */
 public class DialogUtils {

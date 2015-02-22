@@ -50,7 +50,7 @@ public class VisTextButton extends TextButton implements Focusable {
 	}
 
 	private void init () {
-		style = (VisTextButtonStyle)getStyle();
+		style = (VisTextButtonStyle) getStyle();
 
 		addListener(new InputListener() {
 			@Override

@@ -29,7 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 
-/**Bar with menus displayed usually on top of the stage. */
+/** Bar with menus displayed usually on top of the stage. */
 public class MenuBar {
 	private Array<MenuBarItem> menus;
 	private Stage stage;

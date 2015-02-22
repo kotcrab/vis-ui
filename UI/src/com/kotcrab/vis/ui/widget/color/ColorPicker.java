@@ -403,7 +403,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 			}
 		}
 
-		paletteTexture.draw(palettePixmap, 0,0);
+		paletteTexture.draw(palettePixmap, 0, 0);
 
 		newColor.setColor(color);
 

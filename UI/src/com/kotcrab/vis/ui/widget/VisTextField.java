@@ -499,9 +499,9 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			if (actor instanceof VisTextField) {
 				VisTextField textField = (VisTextField) actor;
 
-				if(modalWindow != null){
+				if (modalWindow != null) {
 					Window nextFieldModalWindow = findModalWindow(textField);
-					if(nextFieldModalWindow != modalWindow) continue;
+					if (nextFieldModalWindow != modalWindow) continue;
 				}
 
 				if (textField.isDisabled() || !textField.focusTraversal || isActorVisibleInStage(textField) == false)

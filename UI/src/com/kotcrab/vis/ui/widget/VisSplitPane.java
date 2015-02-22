@@ -281,7 +281,7 @@ public class VisSplitPane extends WidgetGroup {
 		}
 
 		Drawable handle = style.handle;
-		if(mouseOnHandle && style.handleOver != null) handle = style.handleOver;
+		if (mouseOnHandle && style.handleOver != null) handle = style.handleOver;
 		batch.setColor(color.r, color.g, color.b, parentAlpha * color.a);
 		handle.draw(batch, handleBounds.x, handleBounds.y, handleBounds.width, handleBounds.height);
 		resetTransform(batch);
@@ -356,7 +356,7 @@ public class VisSplitPane extends WidgetGroup {
 	}
 
 	public static class VisSplitPaneStyle extends SplitPaneStyle {
-		/** Optional **/
+		/** Optional * */
 		public Drawable handleOver;
 
 		public VisSplitPaneStyle () {

@@ -16,10 +16,6 @@
 
 package com.kotcrab.vis.ui.widget.file;
 
-import java.awt.Desktop;
-import java.io.File;
-import java.io.IOException;
-
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -29,6 +25,10 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisDialog;
+
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
 
 public class FilePopupMenu extends PopupMenu {
 	private FileChooser chooser;

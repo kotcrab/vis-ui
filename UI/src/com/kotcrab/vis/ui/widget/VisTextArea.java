@@ -29,22 +29,22 @@ import com.badlogic.gdx.utils.IntArray;
 public class VisTextArea extends VisTextField {
 	// This class was copied from LibGDX, few lines were changed.
 
-	/** Array storing lines breaks positions **/
+	/** Array storing lines breaks positions * */
 	IntArray linesBreak;
 
-	/** Last text processed. This attribute is used to avoid unnecessary computations while calculating offsets **/
+	/** Last text processed. This attribute is used to avoid unnecessary computations while calculating offsets * */
 	private String lastText;
 
-	/** Current line for the cursor **/
+	/** Current line for the cursor * */
 	int cursorLine;
 
-	/** Index of the first line showed by the text area **/
+	/** Index of the first line showed by the text area * */
 	int firstLineShowing;
 
-	/** Number of lines showed by the text area **/
+	/** Number of lines showed by the text area * */
 	private int linesShowing;
 
-	/** Variable to maintain the x offset of the cursor when moving up and down. If it's set to -1, the offset is reset **/
+	/** Variable to maintain the x offset of the cursor when moving up and down. If it's set to -1, the offset is reset * */
 	float moveOffset;
 
 	private float prefRows;
@@ -113,24 +113,24 @@ public class VisTextArea extends VisTextField {
 			float prefHeight = textHeight * prefRows;
 			if (style.background != null) {
 				prefHeight = Math.max(prefHeight + style.background.getBottomHeight() + style.background.getTopHeight(),
-					style.background.getMinHeight());
+						style.background.getMinHeight());
 			}
 			return prefHeight;
 		}
 	}
 
-	/** Returns total number of lines that the text occupies **/
+	/** Returns total number of lines that the text occupies * */
 	public int getLines () {
 		return linesBreak.size / 2 + (newLineAtEnd() ? 1 : 0);
 	}
 
-	/** Returns if there's a new line at then end of the text **/
+	/** Returns if there's a new line at then end of the text * */
 	public boolean newLineAtEnd () {
 		return text.length() != 0
-			&& (text.charAt(text.length() - 1) == ENTER_ANDROID || text.charAt(text.length() - 1) == ENTER_DESKTOP);
+				&& (text.charAt(text.length() - 1) == ENTER_ANDROID || text.charAt(text.length() - 1) == ENTER_DESKTOP);
 	}
 
-	/** Moves the cursor to the given number line **/
+	/** Moves the cursor to the given number line * */
 	public void moveCursorLine (int line) {
 		if (line < 0) {
 			cursorLine = 0;
@@ -146,34 +146,34 @@ public class VisTextArea extends VisTextField {
 		} else if (line != cursorLine) {
 			if (moveOffset < 0) {
 				moveOffset = linesBreak.size <= cursorLine * 2 ? 0 : glyphPositions.get(cursor)
-					- glyphPositions.get(linesBreak.get(cursorLine * 2));
+						- glyphPositions.get(linesBreak.get(cursorLine * 2));
 			}
 			cursorLine = line;
 			cursor = cursorLine * 2 >= linesBreak.size ? text.length() : linesBreak.get(cursorLine * 2);
 			while (cursor < text.length() && cursor <= linesBreak.get(cursorLine * 2 + 1) - 1
-				&& glyphPositions.get(cursor) - glyphPositions.get(linesBreak.get(cursorLine * 2)) < moveOffset) {
+					&& glyphPositions.get(cursor) - glyphPositions.get(linesBreak.get(cursorLine * 2)) < moveOffset) {
 				cursor++;
 			}
 			showCursor();
 		}
 	}
 
-	/** Updates the current line, checking the cursor position in the text **/
+	/** Updates the current line, checking the cursor position in the text * */
 	void updateCurrentLine () {
 		int index = calculateCurrentLineIndex(cursor);
 		int line = index / 2;
 		// Special case when cursor moves to the beginning of the line from the end of another and a word
 		// wider than the box
 		if (index % 2 == 0 || index + 1 >= linesBreak.size || cursor != linesBreak.items[index]
-			|| linesBreak.items[index + 1] != linesBreak.items[index]) {
+				|| linesBreak.items[index + 1] != linesBreak.items[index]) {
 			if (line < linesBreak.size / 2 || text.length() == 0 || text.charAt(text.length() - 1) == ENTER_ANDROID
-				|| text.charAt(text.length() - 1) == ENTER_DESKTOP) {
+					|| text.charAt(text.length() - 1) == ENTER_DESKTOP) {
 				cursorLine = line;
 			}
 		}
 	}
 
-	/** Scroll the text area to show the line of the cursor **/
+	/** Scroll the text area to show the line of the cursor * */
 	void showCursor () {
 		updateCurrentLine();
 		if (cursorLine != firstLineShowing) {
@@ -184,7 +184,7 @@ public class VisTextArea extends VisTextField {
 		}
 	}
 
-	/** Calculates the text area line for the given cursor position **/
+	/** Calculates the text area line for the given cursor position * */
 	private int calculateCurrentLineIndex (int cursor) {
 		int index = 0;
 		while (index < linesBreak.size && cursor > linesBreak.items[index]) {
@@ -201,14 +201,14 @@ public class VisTextArea extends VisTextField {
 		BitmapFont font = style.font;
 		Drawable background = style.background;
 		float availableHeight = getHeight() - (background == null ? 0 : background.getBottomHeight() + background.getTopHeight());
-		linesShowing = (int)Math.floor(availableHeight / font.getLineHeight());
+		linesShowing = (int) Math.floor(availableHeight / font.getLineHeight());
 	}
 
 	@Override
 	protected float getTextY (BitmapFont font, Drawable background) {
 		float textY = getHeight();
 		if (background != null) {
-			textY = (int)(textY - background.getTopHeight());
+			textY = (int) (textY - background.getTopHeight());
 		}
 		return textY;
 	}
@@ -225,7 +225,7 @@ public class VisTextArea extends VisTextField {
 			int lineEnd = linesBreak.get(i + 1);
 
 			if (!((minIndex < lineStart && minIndex < lineEnd && maxIndex < lineStart && maxIndex < lineEnd) || (minIndex > lineStart
-				&& minIndex > lineEnd && maxIndex > lineStart && maxIndex > lineEnd))) {
+					&& minIndex > lineEnd && maxIndex > lineStart && maxIndex > lineEnd))) {
 
 				int start = Math.max(linesBreak.get(i), minIndex);
 				int end = Math.min(linesBreak.get(i + 1), maxIndex);
@@ -234,7 +234,7 @@ public class VisTextArea extends VisTextField {
 				float selectionWidth = glyphPositions.get(end) - glyphPositions.get(start);
 
 				selection.draw(batch, x + selectionX, y - textHeight - font.getDescent() - offsetY, selectionWidth,
-					font.getLineHeight());
+						font.getLineHeight());
 			}
 
 			offsetY += font.getLineHeight();
@@ -254,10 +254,10 @@ public class VisTextArea extends VisTextField {
 	@Override
 	protected void drawCursor (Drawable cursorPatch, Batch batch, BitmapFont font, float x, float y) {
 		float textOffset = cursor >= glyphPositions.size || cursorLine * 2 >= linesBreak.size ? 0 : glyphPositions.get(cursor)
-			- glyphPositions.get(linesBreak.items[cursorLine * 2]);
+				- glyphPositions.get(linesBreak.items[cursorLine * 2]);
 		cursorPatch.draw(batch, x + textOffset,
-			y - font.getDescent() / 2 - (cursorLine - firstLineShowing + 1) * font.getLineHeight(), cursorPatch.getMinWidth(),
-			font.getLineHeight());
+				y - font.getDescent() / 2 - (cursorLine - firstLineShowing + 1) * font.getLineHeight(), cursorPatch.getMinWidth(),
+				font.getLineHeight());
 	}
 
 	@Override
@@ -268,7 +268,7 @@ public class VisTextArea extends VisTextField {
 			BitmapFont.TextBounds bounds = new BitmapFont.TextBounds();
 			BitmapFont font = style.font;
 			float maxWidthLine = this.getWidth()
-				- (style.background != null ? style.background.getLeftWidth() + style.background.getRightWidth() : 0);
+					- (style.background != null ? style.background.getLeftWidth() + style.background.getRightWidth() : 0);
 			linesBreak.clear();
 			int lineStart = 0;
 			int lastSpace = 0;
@@ -334,7 +334,7 @@ public class VisTextArea extends VisTextField {
 	protected boolean continueCursor (int index, int offset) {
 		int pos = calculateCurrentLineIndex(index + offset);
 		return super.continueCursor(index, offset)
-			&& (pos < 0 || pos >= linesBreak.size || (linesBreak.items[pos + 1] != index) || (linesBreak.items[pos + 1] == linesBreak.items[pos + 2]));
+				&& (pos < 0 || pos >= linesBreak.size || (linesBreak.items[pos + 1] != index) || (linesBreak.items[pos + 1] == linesBreak.items[pos + 2]));
 	}
 
 	public int getCursorLine () {
@@ -349,7 +349,7 @@ public class VisTextArea extends VisTextField {
 		return linesShowing;
 	}
 
-	/** Input listener for the text area **/
+	/** Input listener for the text area * */
 	public class TextAreaListener extends TextFieldClickListener {
 
 		@Override
@@ -370,7 +370,7 @@ public class VisTextArea extends VisTextField {
 				y -= background.getTopHeight();
 			}
 
-			cursorLine = (int)Math.floor((height - y) / font.getLineHeight()) + firstLineShowing;
+			cursorLine = (int) Math.floor((height - y) / font.getLineHeight()) + firstLineShowing;
 			cursorLine = Math.max(0, Math.min(cursorLine, getLines() - 1));
 
 			super.setCursorPosition(x, y);

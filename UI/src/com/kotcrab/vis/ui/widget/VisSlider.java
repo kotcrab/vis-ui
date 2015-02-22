@@ -30,16 +30,18 @@ import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.VisUI;
 
-/** A slider is a horizontal indicator that allows a user to set a value. The slider has a range (min, max) and a stepping between
+/**
+ * A slider is a horizontal indicator that allows a user to set a value. The slider has a range (min, max) and a stepping between
  * each value the slider represents.
- * <p>
+ * <p/>
  * {@link ChangeEvent} is fired when the slider knob is moved. Canceling the event will move the knob to where it was previously.
- * <p>
+ * <p/>
  * The preferred height of a slider is determined by the larger of the knob and background. The preferred width of a slider is
  * 140, a relatively arbitrary size.
  * @author mzechner
  * @author Nathan Sweet
- * @author Pawel Pastuszak */
+ * @author Pawel Pastuszak
+ */
 public class VisSlider extends VisProgressBar {
 	// This class was copied from LibGDX, few lines were changed.
 
@@ -49,21 +51,23 @@ public class VisSlider extends VisProgressBar {
 
 	public VisSlider (float min, float max, float stepSize, boolean vertical) {
 		this(min, max, stepSize, vertical, VisUI.getSkin()
-			.get("default-" + (vertical ? "vertical" : "horizontal"), VisSliderStyle.class));
+				.get("default-" + (vertical ? "vertical" : "horizontal"), VisSliderStyle.class));
 	}
 
 	public VisSlider (float min, float max, float stepSize, boolean vertical, String styleName) {
 		this(min, max, stepSize, vertical, VisUI.getSkin().get(styleName, VisSliderStyle.class));
 	}
 
-	/** Creates a new slider. It's width is determined by the given prefWidth parameter, its height is determined by the maximum of
+	/**
+	 * Creates a new slider. It's width is determined by the given prefWidth parameter, its height is determined by the maximum of
 	 * the height of either the slider {@link NinePatch} or slider handle {@link TextureRegion}. The min and max values determine
 	 * the range the values of this slider can take on, the stepSize parameter specifies the distance between individual values.
 	 * E.g. min could be 4, max could be 10 and stepSize could be 0.2, giving you a total of 30 values, 4.0 4.2, 4.4 and so on.
-	 * @param min the minimum value
-	 * @param max the maximum value
+	 * @param min      the minimum value
+	 * @param max      the maximum value
 	 * @param stepSize the step size between values
-	 * @param style the {@link VisSliderStyle} */
+	 * @param style    the {@link VisSliderStyle}
+	 */
 	public VisSlider (float min, float max, float stepSize, boolean vertical, VisSliderStyle style) {
 		super(min, max, stepSize, vertical, style);
 
@@ -107,7 +111,7 @@ public class VisSlider extends VisProgressBar {
 		VisSliderStyle style = getStyle();
 		boolean disabled = this.disabled;
 		final Drawable knob = (disabled && style.disabledKnob != null) ? style.disabledKnob : //
-			(isDragging() ? style.knobDown : ((clickListener.isOver() == true) ? style.knobOver : style.knob));
+				(isDragging() ? style.knobDown : ((clickListener.isOver() == true) ? style.knobOver : style.knob));
 		final Drawable bg = (disabled && style.disabledBackground != null) ? style.disabledBackground : style.background;
 		final Drawable knobBefore = (disabled && style.disabledKnobBefore != null) ? style.disabledKnobBefore : style.knobBefore;
 		final Drawable knobAfter = (disabled && style.disabledKnobAfter != null) ? style.disabledKnobAfter : style.knobAfter;
@@ -127,7 +131,7 @@ public class VisSlider extends VisProgressBar {
 		batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 
 		if (vertical) {
-			bg.draw(batch, x + (int)((width - bg.getMinWidth()) * 0.5f), y, bg.getMinWidth(), height);
+			bg.draw(batch, x + (int) ((width - bg.getMinWidth()) * 0.5f), y, bg.getMinWidth(), height);
 
 			float positionHeight = height - (bg.getTopHeight() + bg.getBottomHeight());
 			float knobHeightHalf = 0;
@@ -147,16 +151,17 @@ public class VisSlider extends VisProgressBar {
 			if (knobBefore != null) {
 				float offset = 0;
 				if (bg != null) offset = bg.getTopHeight();
-				knobBefore.draw(batch, x + (int)((width - knobBefore.getMinWidth()) * 0.5f), y + offset, knobBefore.getMinWidth(),
-					(int)(position + knobHeightHalf));
+				knobBefore.draw(batch, x + (int) ((width - knobBefore.getMinWidth()) * 0.5f), y + offset, knobBefore.getMinWidth(),
+						(int) (position + knobHeightHalf));
 			}
 			if (knobAfter != null) {
-				knobAfter.draw(batch, x + (int)((width - knobAfter.getMinWidth()) * 0.5f), y + (int)(position + knobHeightHalf),
-					knobAfter.getMinWidth(), height - (int)(position + knobHeightHalf));
+				knobAfter.draw(batch, x + (int) ((width - knobAfter.getMinWidth()) * 0.5f), y + (int) (position + knobHeightHalf),
+						knobAfter.getMinWidth(), height - (int) (position + knobHeightHalf));
 			}
-			if (knob != null) knob.draw(batch, x + (int)((width - knobWidth) * 0.5f), (int)(y + position), knobWidth, knobHeight);
+			if (knob != null)
+				knob.draw(batch, x + (int) ((width - knobWidth) * 0.5f), (int) (y + position), knobWidth, knobHeight);
 		} else {
-			bg.draw(batch, x, y + (int)((height - bg.getMinHeight()) * 0.5f), width, bg.getMinHeight());
+			bg.draw(batch, x, y + (int) ((height - bg.getMinHeight()) * 0.5f), width, bg.getMinHeight());
 
 			float positionWidth = width - (bg.getLeftWidth() + bg.getRightWidth());
 			float knobWidthHalf = 0;
@@ -176,14 +181,15 @@ public class VisSlider extends VisProgressBar {
 			if (knobBefore != null) {
 				float offset = 0;
 				if (bg != null) offset = bg.getLeftWidth();
-				knobBefore.draw(batch, x + offset, y + (int)((height - knobBefore.getMinHeight()) * 0.5f),
-					(int)(position + knobWidthHalf), knobBefore.getMinHeight());
+				knobBefore.draw(batch, x + offset, y + (int) ((height - knobBefore.getMinHeight()) * 0.5f),
+						(int) (position + knobWidthHalf), knobBefore.getMinHeight());
 			}
 			if (knobAfter != null) {
-				knobAfter.draw(batch, x + (int)(position + knobWidthHalf), y + (int)((height - knobAfter.getMinHeight()) * 0.5f),
-					width - (int)(position + knobWidthHalf), knobAfter.getMinHeight());
+				knobAfter.draw(batch, x + (int) (position + knobWidthHalf), y + (int) ((height - knobAfter.getMinHeight()) * 0.5f),
+						width - (int) (position + knobWidthHalf), knobAfter.getMinHeight());
 			}
-			if (knob != null) knob.draw(batch, (int)(x + position), (int)(y + (height - knobHeight) * 0.5f), knobWidth, knobHeight);
+			if (knob != null)
+				knob.draw(batch, (int) (x + position), (int) (y + (height - knobHeight) * 0.5f), knobWidth, knobHeight);
 		}
 	}
 
@@ -193,11 +199,13 @@ public class VisSlider extends VisProgressBar {
 		super.setStyle(style);
 	}
 
-	/** Returns the slider's style. Modifying the returned style may not have an effect until {@link #setStyle(VisSliderStyle)} is
-	 * called. */
+	/**
+	 * Returns the slider's style. Modifying the returned style may not have an effect until {@link #setStyle(VisSliderStyle)} is
+	 * called.
+	 */
 	@Override
 	public VisSliderStyle getStyle () {
-		return (VisSliderStyle)super.getStyle();
+		return (VisSliderStyle) super.getStyle();
 	}
 
 	boolean calculatePositionAndValue (float x, float y) {
@@ -238,9 +246,11 @@ public class VisSlider extends VisProgressBar {
 		return draggingPointer != -1;
 	}
 
-	/** The style for a slider, see {@link VisSlider}.
+	/**
+	 * The style for a slider, see {@link VisSlider}.
 	 * @author mzechner
-	 * @author Nathan Sweet */
+	 * @author Nathan Sweet
+	 */
 	static public class VisSliderStyle extends ProgressBarStyle {
 		public Drawable knobOver;
 		public Drawable knobDown;

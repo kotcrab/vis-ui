@@ -62,7 +62,7 @@ public class ColorChannelWidget extends VisTable implements Disposable {
 			}
 		};
 
-		if(useAlpha)
+		if (useAlpha)
 			pixmap = new Pixmap(maxValue, 1, Format.RGBA8888);
 		else
 			pixmap = new Pixmap(maxValue, 1, Format.RGB888);

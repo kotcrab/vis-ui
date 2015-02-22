@@ -16,13 +16,17 @@
 
 package com.kotcrab.vis.ui;
 
-/** Manages focuses of VisUI components
- * @author Pawel Pastuszak */
+/**
+ * Manages focuses of VisUI components
+ * @author Pawel Pastuszak
+ */
 public class FocusManager {
 	private static Focusable focusedCompoennt;
 
-	/** Takes focus from current focused component (if any), and sets current focused component to provided component
-	 * @param component that will acquire focus */
+	/**
+	 * Takes focus from current focused component (if any), and sets current focused component to provided component
+	 * @param component that will acquire focus
+	 */
 	public static void getFocus (Focusable component) {
 		if (focusedCompoennt != null) focusedCompoennt.focusLost();
 		focusedCompoennt = component;

@@ -17,7 +17,7 @@
 package com.kotcrab.vis.ui;
 
 public interface InputDialogListener {
-		public void finished (String input);
+	public void finished (String input);
 
-		public void canceled ();
-	}
+	public void canceled ();
+}

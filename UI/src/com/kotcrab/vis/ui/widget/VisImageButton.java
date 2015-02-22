@@ -42,6 +42,7 @@ public class VisImageButton extends Button implements Focusable {
 	public VisImageButton (Drawable imageUp) {
 		this(imageUp, null, null);
 	}
+
 	public VisImageButton (Drawable imageUp, String tooltipText) {
 		this(imageUp, null, null);
 		new Tooltip(this, tooltipText);

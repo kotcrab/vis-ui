@@ -94,18 +94,18 @@ public class FavoritesIO {
 
 		public FileHandle toFileHandle () {
 			switch (type) {
-			case Absolute:
-				return Gdx.files.absolute(path);
-			case Classpath:
-				return Gdx.files.classpath(path);
-			case External:
-				return Gdx.files.external(path);
-			case Internal:
-				return Gdx.files.internal(path);
-			case Local:
-				return Gdx.files.local(path);
-			default:
-				throw new IllegalStateException("Unknown file type!");
+				case Absolute:
+					return Gdx.files.absolute(path);
+				case Classpath:
+					return Gdx.files.classpath(path);
+				case External:
+					return Gdx.files.external(path);
+				case Internal:
+					return Gdx.files.internal(path);
+				case Local:
+					return Gdx.files.local(path);
+				default:
+					throw new IllegalStateException("Unknown file type!");
 			}
 		}
 	}

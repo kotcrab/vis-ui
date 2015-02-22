@@ -16,8 +16,6 @@
 
 package com.kotcrab.vis.ui.widget;
 
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
@@ -38,15 +36,20 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 
-/** Displays a dialog, which is a modal window containing a content table with a button table underneath it. Methods are provided
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
+
+/**
+ * Displays a dialog, which is a modal window containing a content table with a button table underneath it. Methods are provided
  * to add a label to the content table and buttons to the button table, but any widgets can be added. When a button is clicked,
  * {@link #result(Object)} is called and the dialog is removed from the stage.
  * @author Nathan Sweet
- * @author Pawel Pastuszak */
+ * @author Pawel Pastuszak
+ */
 public class VisDialog extends VisWindow {
 	Table contentTable, buttonTable;
 	private Skin skin;
-	@SuppressWarnings({"unchecked", "rawtypes"}) ObjectMap<Actor, Object> values = new ObjectMap();
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	ObjectMap<Actor, Object> values = new ObjectMap();
 	boolean cancelHide;
 	Actor previousKeyboardFocus, previousScrollFocus;
 	FocusListener focusListener;
@@ -103,7 +106,7 @@ public class VisDialog extends VisWindow {
 			private void focusChanged (FocusEvent event) {
 				Stage stage = getStage();
 				if (isModal() && stage != null && stage.getRoot().getChildren().size > 0
-					&& stage.getRoot().getChildren().peek() == VisDialog.this) { // Dialog is top most actor.
+						&& stage.getRoot().getChildren().peek() == VisDialog.this) { // Dialog is top most actor.
 					Actor newFocusedActor = event.getRelatedActor();
 					if (newFocusedActor != null && !newFocusedActor.isDescendantOf(VisDialog.this)) event.cancel();
 				}
@@ -147,22 +150,28 @@ public class VisDialog extends VisWindow {
 		return this;
 	}
 
-	/** Adds a text button to the button table. Null will be passed to {@link #result(Object)} if this button is clicked. The dialog
-	 * must have been constructed with a skin to use this method. */
+	/**
+	 * Adds a text button to the button table. Null will be passed to {@link #result(Object)} if this button is clicked. The dialog
+	 * must have been constructed with a skin to use this method.
+	 */
 	public VisDialog button (String text) {
 		return button(text, null);
 	}
 
-	/** Adds a text button to the button table. The dialog must have been constructed with a skin to use this method.
-	 * @param object The object that will be passed to {@link #result(Object)} if this button is clicked. May be null. */
+	/**
+	 * Adds a text button to the button table. The dialog must have been constructed with a skin to use this method.
+	 * @param object The object that will be passed to {@link #result(Object)} if this button is clicked. May be null.
+	 */
 	public VisDialog button (String text, Object object) {
 		if (skin == null)
 			throw new IllegalStateException("This method may only be used if the dialog was constructed with a Skin.");
 		return button(text, object, skin.get(VisTextButtonStyle.class));
 	}
 
-	/** Adds a text button to the button table.
-	 * @param object The object that will be passed to {@link #result(Object)} if this button is clicked. May be null. */
+	/**
+	 * Adds a text button to the button table.
+	 * @param object The object that will be passed to {@link #result(Object)} if this button is clicked. May be null.
+	 */
 	public VisDialog button (String text, Object object, VisTextButtonStyle buttonStyle) {
 		return button(new VisTextButton(text, buttonStyle), object);
 	}
@@ -172,8 +181,10 @@ public class VisDialog extends VisWindow {
 		return button(button, null);
 	}
 
-	/** Adds the given button to the button table.
-	 * @param object The object that will be passed to {@link #result(Object)} if this button is clicked. May be null. */
+	/**
+	 * Adds the given button to the button table.
+	 * @param object The object that will be passed to {@link #result(Object)} if this button is clicked. May be null.
+	 */
 	public VisDialog button (Button button, Object object) {
 		buttonTable.add(button);
 		setObject(button, object);
@@ -229,19 +240,23 @@ public class VisDialog extends VisWindow {
 			remove();
 	}
 
-	/** Hides the dialog. Called automatically when a button is clicked. The default implementation fades out the dialog over 400
-	 * milliseconds and then removes it from the stage. */
+	/**
+	 * Hides the dialog. Called automatically when a button is clicked. The default implementation fades out the dialog over 400
+	 * milliseconds and then removes it from the stage.
+	 */
 	public void hide () {
 		hide(sequence(Actions.fadeOut(FADE_TIME, Interpolation.fade), Actions.removeListener(ignoreTouchDown, true),
-			Actions.removeActor()));
+				Actions.removeActor()));
 	}
 
 	public void setObject (Actor actor, Object object) {
 		values.put(actor, object);
 	}
 
-	/** If this key is pressed, {@link #result(Object)} is called with the specified object.
-	 * @see Keys */
+	/**
+	 * If this key is pressed, {@link #result(Object)} is called with the specified object.
+	 * @see Keys
+	 */
 	public VisDialog key (final int keycode, final Object object) {
 		addListener(new InputListener() {
 			@Override
@@ -257,8 +272,10 @@ public class VisDialog extends VisWindow {
 		return this;
 	}
 
-	/** Called when a button is clicked. The dialog will be hidden after this method returns unless {@link #cancel()} is called.
-	 * @param object The object specified when the button was added. */
+	/**
+	 * Called when a button is clicked. The dialog will be hidden after this method returns unless {@link #cancel()} is called.
+	 * @param object The object specified when the button was added.
+	 */
 	protected void result (Object object) {
 	}
 
