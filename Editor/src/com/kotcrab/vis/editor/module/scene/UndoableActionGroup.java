@@ -42,6 +42,8 @@ public class UndoableActionGroup implements UndoableAction {
 
 	@Override
 	public void undo () {
+		if (!finalized) throw new IllegalStateException("Group must be finalized before use");
+
 		if (reversed == false) {
 			actions.reverse();
 			reversed = true;
@@ -56,11 +58,17 @@ public class UndoableActionGroup implements UndoableAction {
 		finalized = true;
 	}
 
+	public void add (UndoableAction action) {
+		if (finalized) throw new IllegalStateException("Cannot add action to finalized group");
+
+		actions.add(action);
+	}
+
 	public void execute (UndoableAction action) {
 		if (finalized) throw new IllegalStateException("Cannot add action to finalized group");
 
 		action.execute();
-		actions.add(action);
+		add(action);
 	}
 
 }

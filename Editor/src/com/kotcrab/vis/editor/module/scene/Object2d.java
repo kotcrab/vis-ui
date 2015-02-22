@@ -44,6 +44,14 @@ public class Object2d extends EditorSceneObject {
 		data.loadTo(sprite);
 	}
 
+	public void writeStateTo (SpriteData data) {
+		data.saveFrom(sprite);
+	}
+
+	public void readStateFrom (SpriteData data) {
+		data.loadTo(sprite);
+	}
+
 	public void updateSpriteRegion (TextureRegion newRegion) {
 		saveSpriteDataValuesToData();
 		sprite.setRegion(newRegion);

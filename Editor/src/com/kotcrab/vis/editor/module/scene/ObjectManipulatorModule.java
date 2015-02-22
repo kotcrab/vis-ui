@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.ColorPickerModule;
 import com.kotcrab.vis.editor.ui.scene.ObjectProperties;
+import com.kotcrab.vis.runtime.data.SpriteData;
 
 public class ObjectManipulatorModule extends SceneModule {
 	private CameraModule camera;
@@ -49,6 +50,8 @@ public class ObjectManipulatorModule extends SceneModule {
 	private boolean selected;
 	private boolean dragging;
 	private boolean dragged;
+
+	private Array<MoveAction> moveActions = new Array<>();
 
 	@Override
 	public void added () {
@@ -124,29 +127,15 @@ public class ObjectManipulatorModule extends SceneModule {
 	}
 
 	@Override
-	public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-		x = camera.getInputX();
-		y = camera.getInputY();
-
-		if (dragged == false && selected == false) {
-			Object2d result = findObjectWithSmallestSurfaceArea(x, y);
-			if (result != null)
-				selectedObjects.removeValue(result, true);
-
-			objectProperties.setValuesToFields(selectedObjects);
-		}
-
-		lastTouchX = 0;
-		lastTouchY = 0;
-		selected = false;
-		dragging = false;
-		dragged = false;
-	}
-
-	@Override
 	public void touchDragged (InputEvent event, float x, float y, int pointer) {
 		x = camera.getInputX();
 		y = camera.getInputY();
+
+		if (dragged == false) {
+			moveActions.clear();
+			for (Object2d object : selectedObjects)
+				moveActions.add(new MoveAction(object));
+		}
 
 		if (dragging && selectedObjects.size > 0) {
 			dragged = true;
@@ -162,6 +151,41 @@ public class ObjectManipulatorModule extends SceneModule {
 			sceneTab.setDirty(true);
 			objectProperties.updateValues();
 		}
+	}
+
+	@Override
+	public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+		x = camera.getInputX();
+		y = camera.getInputY();
+
+		if (dragged == false && selected == false) {
+			Object2d result = findObjectWithSmallestSurfaceArea(x, y);
+			if (result != null)
+				selectedObjects.removeValue(result, true);
+
+			objectProperties.setValuesToFields(selectedObjects);
+		}
+
+		if (dragged) {
+			for (int i = 0; i < selectedObjects.size; i++) {
+				moveActions.get(i).newData.saveFrom(selectedObjects.get(i).sprite);
+			}
+
+			UndoableActionGroup group = new UndoableActionGroup();
+
+			for (MoveAction action : moveActions)
+				group.add(action);
+
+			group.finalizeGroup();
+
+			undoModule.add(group);
+		}
+
+		lastTouchX = 0;
+		lastTouchY = 0;
+		selected = false;
+		dragging = false;
+		dragged = false;
 	}
 
 	@Override
@@ -238,6 +262,27 @@ public class ObjectManipulatorModule extends SceneModule {
 		public void undo () {
 			for (int i = 0; i < objects.size; i++)
 				scene.objects.insert(indexes.get(i), objects.get(i));
+		}
+	}
+
+	private class MoveAction implements UndoableAction {
+		private SpriteData oldData = new SpriteData();
+		private SpriteData newData = new SpriteData();
+		private Object2d obj;
+
+		public MoveAction (Object2d obj) {
+			this.obj = obj;
+			obj.writeStateTo(oldData);
+		}
+
+		@Override
+		public void execute () {
+			obj.readStateFrom(newData);
+		}
+
+		@Override
+		public void undo () {
+			obj.readStateFrom(oldData);
 		}
 	}
 }
