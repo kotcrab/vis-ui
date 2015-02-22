@@ -36,7 +36,10 @@ import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
-/** Utilities for displaying various dialogs, equivalent of Swing JOptionPane */
+/**
+ * Utilities for displaying various dialogs, equivalent of Swing JOptionPane
+ * @author Kotcrab
+ */
 public class DialogUtils {
 
 	private static final int BUTTON_CANCEL = 0;
@@ -130,7 +133,6 @@ public class DialogUtils {
 		private VisTextField field;
 		private VisTextButton okButton;
 		private VisTextButton cancelButton;
-
 
 		public InputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputValidator validator, InputDialogListener listener) {
 			super(title);

@@ -91,7 +91,6 @@ public class PopupMenu extends Table {
 	 * Changes auto remove property, if true auto remove will be enabled. When auto remove is enabled and user click outside menu
 	 * it will be automatically removed from stage. By default this function is disabled. Please note that if user click on MenuItem and
 	 * auto remove is enabled then menu WON'T be removed, you have to do that manually from menu item listener.
-	 * @param autoRemove
 	 */
 	public void setAutoRemove (boolean autoRemove) {
 		this.autoRemove = autoRemove;

@@ -19,13 +19,16 @@ package com.kotcrab.vis.ui.util;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 
-/** Utilities for converting colors between HSV to RGB etc. */
+/**
+ * Utilities for converting colors between HSV to RGB etc.
+ * @author Kotcrab
+ */
 public class ColorUtils {
 	/**
 	 * Converts HSV color system to RGB
-	 * @param h     hue 0-360
-	 * @param s     saturation 0-100
-	 * @param v     value 0-100
+	 * @param h hue 0-360
+	 * @param s saturation 0-100
+	 * @param v value 0-100
 	 * @param alpha 0-1
 	 * @return RGB values in LibGDX Color class
 	 */
@@ -48,12 +51,11 @@ public class ColorUtils {
 		return c;
 	}
 
-
 	/**
 	 * Converts HSV color system to RGB
-	 * @param h           hue 0-360
-	 * @param s           saturation 0-100
-	 * @param v           value 0-100
+	 * @param h hue 0-360
+	 * @param s saturation 0-100
+	 * @param v value 0-100
 	 * @param targetColor color that result will be stored in
 	 */
 	public static void HSVtoRGB (float h, float s, float v, Color targetColor) {
@@ -157,5 +159,4 @@ public class ColorUtils {
 
 		return new int[]{MathUtils.round(h), MathUtils.round(s), MathUtils.round(v)};
 	}
-
 }

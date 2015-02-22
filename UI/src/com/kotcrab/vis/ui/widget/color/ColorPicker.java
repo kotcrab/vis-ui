@@ -421,7 +421,6 @@ public class ColorPicker extends VisWindow implements Disposable {
 		hexField.setCursorPosition(hexField.getMaxLength());
 	}
 
-
 	@Override
 	/** Sets current selected color in picker.*/
 	public void setColor (Color c) {

@@ -59,7 +59,6 @@ public class BasicFormValidator {
 		add(field);
 	}
 
-
 	public void valueGreaterThan (VisValidableTextField field, String errorMsg, float value) {
 		valueGreaterThan(field, errorMsg, value, false);
 	}
