@@ -34,7 +34,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.VisDialog;
+import com.kotcrab.vis.ui.widget.VisImageButton;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisScrollPane;
+import com.kotcrab.vis.ui.widget.VisSplitPane;
+import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kotcrab.vis.ui.widget.VisWindow;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
@@ -53,6 +60,7 @@ public class FileChooser extends VisWindow {
 	private SelectionMode selectionMode = SelectionMode.FILES;
 	private boolean multiselectionEnabled = false;
 	private FileChooserListener listener;
+	private int groupMultiselectKey = Keys.SHIFT_LEFT;
 	private int multiselectKey = Keys.CONTROL_LEFT;
 
 	private FileFilter fileFilter = new DefaultFileFilter();
@@ -95,7 +103,7 @@ public class FileChooser extends VisWindow {
 		this.locale = new FileChooserLocale();
 		this.mode = mode;
 
-		setTitle(locale.title);
+		setTitle(locale.titleChooseFiles);
 
 		init();
 	}
@@ -109,7 +117,7 @@ public class FileChooser extends VisWindow {
 	}
 
 	public FileChooser (FileChooserLocale locale, Mode mode) {
-		super(locale.title);
+		super(locale.titleChooseFiles);
 		this.mode = mode;
 		this.locale = locale;
 
@@ -636,6 +644,18 @@ public class FileChooser extends VisWindow {
 
 	public void setSelectionMode (SelectionMode selectionMode) {
 		this.selectionMode = selectionMode;
+
+		switch (selectionMode) {
+			case FILES:
+				setTitle(locale.titleChooseFiles);
+				break;
+			case DIRECTORIES:
+				setTitle(locale.titleChooseDirectories);
+				break;
+			case FILES_AND_DIRECTORIES:
+				setTitle(locale.titleChooseFilesAndDirectories);
+				break;
+		}
 	}
 
 	public boolean isMultiselectionEnabled () {
@@ -658,6 +678,15 @@ public class FileChooser extends VisWindow {
 	/** @param multiselectKey from {@link Keys} */
 	public void setMultiselectKey (int multiselectKey) {
 		this.multiselectKey = multiselectKey;
+	}
+
+	public int getGroupMultiselectKey () {
+		return groupMultiselectKey;
+	}
+
+	/** @param groupMultiselectKey from {@link Keys} */
+	public void setGroupMultiselectKey (int groupMultiselectKey) {
+		this.groupMultiselectKey = groupMultiselectKey;
 	}
 
 	private void validateSettings () {

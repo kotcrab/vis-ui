@@ -17,7 +17,9 @@
 package com.kotcrab.vis.ui.widget.file;
 
 public class FileChooserLocale {
-	public String title = "Choose file";
+	public String titleChooseFiles = "Choose file";
+	public String titleChooseDirectories = "Choose directory";
+	public String titleChooseFilesAndDirectories = "Choose directory or file";
 
 	public String cancel = "Cancel";
 	public String fileName = "File name:";
@@ -49,10 +51,10 @@ public class FileChooserLocale {
 	}
 
 	public FileChooserLocale (String title, String cancel, String open, String save) {
-		this.title = title;
-		this.cancel = cancel;
-		this.open = open;
-		this.save = save;
+		this(cancel, open, save);
+		this.titleChooseFiles = title;
+		this.titleChooseDirectories = title;
+		this.titleChooseFilesAndDirectories = title;
 	}
 
 	public FileChooserLocale (String cancel, String open, String save) {
