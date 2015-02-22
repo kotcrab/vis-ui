@@ -910,7 +910,7 @@ public class FileChooser extends VisWindow {
 			}
 
 			setBackground(highlightBg);
-			selectedItems.add(this);
+			if(selectedItems.contains(this, true) == false) selectedItems.add(this);
 			return true;
 		}
 
