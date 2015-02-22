@@ -74,9 +74,6 @@ public class FileChooser extends VisWindow {
 
 	private Array<ShortcutItem> fileRootsCache = new Array<ShortcutItem>();
 
-	// UI
-	private VisSplitPane splitPane;
-
 	private VisTable fileTable;
 	private VisScrollPane fileScrollPane;
 	private VisTable fileScrollPaneTable;
@@ -84,9 +81,6 @@ public class FileChooser extends VisWindow {
 	private VisTable shortcutsTable;
 	private VisScrollPane shortcutsScrollPane;
 	private VisTable shortcutsScrollPaneTable;
-
-	private VisTextButton cancelButton;
-	private VisTextButton confirmButton;
 
 	private VisImageButton backButton;
 	private VisImageButton forwardButton;
@@ -231,7 +225,7 @@ public class FileChooser extends VisWindow {
 		shortcutsScrollPaneTable = new VisTable();
 		shortcutsScrollPaneTable.add(shortcutsScrollPane).pad(2).top().expand().fillX();
 
-		splitPane = new VisSplitPane(shortcutsScrollPaneTable, fileScrollPaneTable, false);
+		VisSplitPane splitPane = new VisSplitPane(shortcutsScrollPaneTable, fileScrollPaneTable, false);
 		splitPane.setSplitAmount(0.3f);
 		splitPane.setMinSplitAmount(0.05f);
 		splitPane.setMaxSplitAmount(0.8913f);
@@ -263,8 +257,8 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void createBottomButtons () {
-		cancelButton = new VisTextButton(locale.cancel);
-		confirmButton = new VisTextButton(mode == Mode.OPEN ? locale.open : locale.save);
+		VisTextButton cancelButton = new VisTextButton(locale.cancel);
+		VisTextButton confirmButton = new VisTextButton(mode == Mode.OPEN ? locale.open : locale.save);
 
 		VisTable buttonTable = new VisTable(true);
 		buttonTable.defaults().minWidth(70).right();
