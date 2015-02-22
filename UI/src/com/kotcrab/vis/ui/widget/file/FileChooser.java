@@ -833,9 +833,13 @@ public class FileChooser extends VisWindow {
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 					if (selectedShortcut != null) selectedShortcut.deselect();
 
-					if (multiselectionEnabled == false || Gdx.input.isKeyPressed(multiselectKey) == false)
+					if (multiselectionEnabled == false || (Gdx.input.isKeyPressed(multiselectKey) == false && Gdx.input.isKeyPressed(groupMultiselectKey) == false))
 						deselectAll();
+
 					boolean itemSelected = select();
+
+					if (selectedItems.size > 1 && multiselectionEnabled && Gdx.input.isKeyPressed(groupMultiselectKey))
+						selectGroup();
 
 					if (selectedItems.size > 1) removeInvalidSelections();
 
@@ -859,6 +863,37 @@ public class FileChooser extends VisWindow {
 						} else
 							selectionFinished();
 					}
+				}
+
+				private void selectGroup () {
+					Array<Cell> cells = fileTable.getCells();
+
+					int thisSelectionIndex = getItemId(cells, FileItem.this);
+					int lastSelectionIndex = getItemId(cells, selectedItems.get(selectedItems.size - 2));
+
+					int start;
+					int end;
+
+					if (thisSelectionIndex > lastSelectionIndex) {
+						start = lastSelectionIndex;
+						end = thisSelectionIndex;
+					} else {
+						start = thisSelectionIndex;
+						end = lastSelectionIndex;
+					}
+
+					for (int i = start; i < end; i++) {
+						FileItem item = (FileItem) cells.get(i).getActor();
+						item.select(false);
+					}
+				}
+
+				private int getItemId (Array<Cell> cells, FileItem item) {
+					for (int i = 0; i < cells.size; i++) {
+						if (cells.get(i).getActor() == item) return i;
+					}
+
+					throw new IllegalStateException("Item not found in cells");
 				}
 			});
 		}
