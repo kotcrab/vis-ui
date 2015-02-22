@@ -421,6 +421,13 @@ separator
   orig: 1, 1
   offset: 0, 0
   index: -1
+tree-over
+  rotate: false
+  xy: 18, 3
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
 separator-menu
   rotate: false
   xy: 225, 217
