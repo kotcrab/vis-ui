@@ -170,6 +170,18 @@ public class FileChooser extends VisWindow {
 		centerWindow();
 
 		validateSettings();
+
+		addListener(new InputListener() {
+			@Override
+			public boolean keyDown (InputEvent event, int keycode) {
+				if (keycode == Keys.A && Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+					selectAll();
+					return true;
+				}
+
+				return false;
+			}
+		});
 	}
 
 	private void createToolbar () {
@@ -520,6 +532,29 @@ public class FileChooser extends VisWindow {
 		super.setVisible(visible);
 	}
 
+	private void deselectAll () {
+		deselectAll(true);
+	}
+
+	private void deselectAll (boolean updateTextField) {
+		for (FileItem item : selectedItems)
+			item.deselect(false);
+
+		selectedItems.clear();
+		if (updateTextField) setSelectedFileFieldText();
+	}
+
+	private void selectAll () {
+		Array<Cell> cells = fileTable.getCells();
+		for (Cell c : cells) {
+			FileItem item = (FileItem) c.getActor();
+			item.select(false);
+		}
+
+		removeInvalidSelections();
+		setSelectedFileFieldText();
+	}
+
 	private void setSelectedFileFieldText () {
 		if (selectedItems.size == 0)
 			selectedFileTextField.setText("");
@@ -538,16 +573,16 @@ public class FileChooser extends VisWindow {
 		}
 	}
 
-	private void deselectAll () {
-		deselectAll(true);
-	}
+	private void removeInvalidSelections () {
+		if (selectionMode == SelectionMode.FILES) {
+			for (FileItem item : selectedItems)
+				if (item.file.isDirectory()) item.deselect();
+		}
 
-	private void deselectAll (boolean updateTextField) {
-		for (FileItem item : selectedItems)
-			item.deselect(false);
-
-		selectedItems.clear();
-		if (updateTextField) setSelectedFileFieldText();
+		if (selectionMode == SelectionMode.DIRECTORIES) {
+			for (FileItem item : selectedItems)
+				if (item.file.isDirectory() == false) item.deselect();
+		}
 	}
 
 	private void historyBuild () {
@@ -790,7 +825,6 @@ public class FileChooser extends VisWindow {
 						fileMenu.build(favorites, file);
 						fileMenu.displayMenu(getStage(), event.getStageX(), event.getStageY());
 					}
-
 				}
 			});
 
@@ -814,18 +848,6 @@ public class FileChooser extends VisWindow {
 					return super.touchDown(event, x, y, pointer, button);
 				}
 
-				private void removeInvalidSelections () {
-					if (selectionMode == SelectionMode.FILES) {
-						for (FileItem item : selectedItems)
-							if (item.file.isDirectory()) item.deselect();
-					}
-
-					if (selectionMode == SelectionMode.DIRECTORIES) {
-						for (FileItem item : selectedItems)
-							if (item.file.isDirectory() == false) item.deselect();
-					}
-				}
-
 				@Override
 				public void clicked (InputEvent event, float x, float y) {
 					super.clicked(event, x, y);
@@ -843,7 +865,11 @@ public class FileChooser extends VisWindow {
 
 		/** Selects this items, if item is already in selectedList it will be deselected */
 		private boolean select () {
-			if (selectedItems.contains(this, true)) {
+			return select(true);
+		}
+
+		private boolean select (boolean deselectIfAlreadySelected) {
+			if (deselectIfAlreadySelected && selectedItems.contains(this, true)) {
 				deselect();
 				return false;
 			}
