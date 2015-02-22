@@ -7,6 +7,7 @@
 -Skin Change: Separator style now has 'vertical' property
 -Skin Addition: VisSplitPane handleOver property
 -Added VisTree/Tree mouse over drawable
+-Added shift selection for FileChooser (key can be changed by chooser.setGroupMultiselectKey(...))
 
 [0.6.1] [LibGDX 1.5.4]
 -Fixed FileChooser disappearing when removing favourite
