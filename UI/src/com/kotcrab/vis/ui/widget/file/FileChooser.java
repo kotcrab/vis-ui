@@ -742,6 +742,10 @@ public class FileChooser extends VisWindow {
 		FILES, DIRECTORIES, FILES_AND_DIRECTORIES
 	}
 
+	/**
+	 * File chooser style cannot be defined in uiskin.json because on GWT this class does not exist and Skin would fail
+	 * on serializing it.
+	 */
 	static public class FileChooserStyle {
 		public Drawable iconArrowLeft;
 		public Drawable iconArrowRight;
@@ -910,7 +914,7 @@ public class FileChooser extends VisWindow {
 			}
 
 			setBackground(highlightBg);
-			if(selectedItems.contains(this, true) == false) selectedItems.add(this);
+			if (selectedItems.contains(this, true) == false) selectedItems.add(this);
 			return true;
 		}
 
