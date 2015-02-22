@@ -94,7 +94,7 @@ public class TestDialogUtils extends VisWindow {
 		showInputDialogIntOnly.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				DialogUtils.showInputDialog(getStage(), "enter int number", null, Validators.integers, new InputDialogAdapter() {
+				DialogUtils.showInputDialog(getStage(), "enter int number", null, Validators.INTEGERS, new InputDialogAdapter() {
 					@Override
 					public void finished (String input) {
 						DialogUtils.showOKDialog(getStage(), "result", "you entered: " + input);

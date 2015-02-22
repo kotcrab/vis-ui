@@ -43,7 +43,7 @@ import com.kotcrab.vis.ui.widget.color.ColorChannelWidget.ColorChannelWidgetList
  * @since 0.6.0
  */
 public class ColorPicker extends VisWindow implements Disposable {
-	private static final Drawable white = VisUI.getSkin().getDrawable("white");
+	private static final Drawable WHITE = VisUI.getSkin().getDrawable("white");
 
 	static final int FIELD_WIDTH = 50;
 	static final int HEX_FIELD_WIDTH = 95;
@@ -157,10 +157,10 @@ public class ColorPicker extends VisWindow implements Disposable {
 	private VisTable createColorsPreviewTable () {
 		VisTable table = new VisTable(false);
 		table.add(new VisLabel("Old")).spaceRight(3);
-		table.add(currentColor = new AlphaImage(white)).height(25).expandX().fillX();
+		table.add(currentColor = new AlphaImage(WHITE)).height(25).expandX().fillX();
 		table.row();
 		table.add(new VisLabel("New")).spaceRight(3);
-		table.add(newColor = new AlphaImage(white, true)).height(25).expandX().fillX();
+		table.add(newColor = new AlphaImage(WHITE, true)).height(25).expandX().fillX();
 
 		currentColor.setColor(color);
 		newColor.setColor(color);

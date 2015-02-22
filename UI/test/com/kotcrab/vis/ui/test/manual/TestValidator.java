@@ -29,7 +29,7 @@ public class TestValidator extends VisWindow {
 		TableUtils.setSpaceDefaults(this);
 		columnDefaults(0).left();
 
-		VisValidableTextField textField = new VisValidableTextField(Validators.integers);
+		VisValidableTextField textField = new VisValidableTextField(Validators.INTEGERS);
 
 		add(textField);
 

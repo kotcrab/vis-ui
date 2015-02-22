@@ -29,7 +29,7 @@ import com.kotcrab.vis.ui.widget.VisImage;
 
 /** Class used to display channel color bars in color picker, not intended to use outside ColorPicker */
 public class ChannelBar extends VisImage {
-	private Drawable barSelector = VisUI.getSkin().getDrawable("color-picker-bar-selector");
+	private static final Drawable BAR_SELECTOR = VisUI.getSkin().getDrawable("color-picker-bar-selector");
 
 	private int maxValue;
 	private int value;
@@ -58,7 +58,7 @@ public class ChannelBar extends VisImage {
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		barSelector.draw(batch, getX() + selectorX - barSelector.getMinWidth() / 2, getY() - 2, barSelector.getMinWidth(), barSelector.getMinHeight());
+		BAR_SELECTOR.draw(batch, getX() + selectorX - BAR_SELECTOR.getMinWidth() / 2, getY() - 2, BAR_SELECTOR.getMinWidth(), BAR_SELECTOR.getMinHeight());
 	}
 
 	public void setValue (int newValue) {

@@ -39,8 +39,6 @@ import com.kotcrab.vis.ui.VisUI;
  */
 @SuppressWarnings("rawtypes")
 public class VisCheckBox extends TextButton implements Focusable {
-	// This class was copied from LibGDX, few lines were changed.
-
 	private Image image;
 	private Cell imageCell;
 	private VisCheckBoxStyle style;

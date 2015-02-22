@@ -54,7 +54,7 @@ import java.io.FileFilter;
  * @since 0.1.0
  */
 public class FileChooser extends VisWindow {
-	private static final Drawable highlightBg = VisUI.getSkin().getDrawable("list-selection");
+	private static final Drawable HIGHLIGHT = VisUI.getSkin().getDrawable("list-selection");
 
 	private Mode mode;
 	private SelectionMode selectionMode = SelectionMode.FILES;
@@ -913,7 +913,7 @@ public class FileChooser extends VisWindow {
 				return false;
 			}
 
-			setBackground(highlightBg);
+			setBackground(HIGHLIGHT);
 			if (selectedItems.contains(this, true) == false) selectedItems.add(this);
 			return true;
 		}
@@ -1011,7 +1011,7 @@ public class FileChooser extends VisWindow {
 		private void select () {
 			if (selectedShortcut != null) selectedShortcut.deselect();
 			selectedShortcut = ShortcutItem.this;
-			setBackground(highlightBg);
+			setBackground(HIGHLIGHT);
 		}
 
 		private void deselect () {

@@ -29,7 +29,7 @@ import com.kotcrab.vis.ui.widget.VisImage;
 
 /** Vertical channel bar used to display vertical hue bar, not intended to use outside ColorPicker */
 public class VerticalChannelBar extends VisImage {
-	private Drawable barSelector = VisUI.getSkin().getDrawable("color-picker-selector-vertical");
+	private static final Drawable BAR_SELECTOR = VisUI.getSkin().getDrawable("color-picker-selector-vertical");
 
 	private int maxValue;
 	private float selectorY;
@@ -58,7 +58,7 @@ public class VerticalChannelBar extends VisImage {
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		barSelector.draw(batch, getX(), getY() + getImageY() + selectorY - 2.5f, getImageWidth(), barSelector.getMinHeight());
+		BAR_SELECTOR.draw(batch, getX(), getY() + getImageY() + selectorY - 2.5f, getImageWidth(), BAR_SELECTOR.getMinHeight());
 	}
 
 	public void setValue (int newValue) {

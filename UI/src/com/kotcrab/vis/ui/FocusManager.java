@@ -21,21 +21,21 @@ package com.kotcrab.vis.ui;
  * @author Pawel Pastuszak
  */
 public class FocusManager {
-	private static Focusable focusedCompoennt;
+	private static Focusable focusedWidget;
 
 	/**
-	 * Takes focus from current focused component (if any), and sets current focused component to provided component
-	 * @param component that will acquire focus
+	 * Takes focus from current focused widget (if any), and sets current focused widget to provided widget
+	 * @param widget that will acquire focus
 	 */
-	public static void getFocus (Focusable component) {
-		if (focusedCompoennt != null) focusedCompoennt.focusLost();
-		focusedCompoennt = component;
-		focusedCompoennt.focusGained();
+	public static void getFocus (Focusable widget) {
+		if (focusedWidget != null) focusedWidget.focusLost();
+		focusedWidget = widget;
+		focusedWidget.focusGained();
 	}
 
-	/** Takes focus from current focused component (if any), and sets current focused component to null */
+	/** Takes focus from current focused widget (if any), and sets current focused widget to null */
 	public static void getFocus () {
-		if (focusedCompoennt != null) focusedCompoennt.focusLost();
-		focusedCompoennt = null;
+		if (focusedWidget != null) focusedWidget.focusLost();
+		focusedWidget = null;
 	}
 }

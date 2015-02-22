@@ -29,9 +29,9 @@ import com.kotcrab.vis.ui.widget.VisImage;
 
 /** Colors palette used to display colors using all possible values of saturation and value, not intended to use outside ColorPicker */
 public class Palette extends VisImage {
-	private static final Drawable cross = VisUI.getSkin().getDrawable("color-picker-cross");
-	private static final Drawable verticalSelector = VisUI.getSkin().getDrawable("color-picker-selector-horizontal");
-	private static final Drawable horizontalSelector = VisUI.getSkin().getDrawable("color-picker-selector-vertical");
+	private static final Drawable CROSS = VisUI.getSkin().getDrawable("color-picker-cross");
+	private static final Drawable VERTICAL_SELECTOR = VisUI.getSkin().getDrawable("color-picker-selector-horizontal");
+	private static final Drawable HORIZONTAL_SELECTOR = VisUI.getSkin().getDrawable("color-picker-selector-vertical");
 
 	private int x, y;
 	private int maxValue;
@@ -61,9 +61,9 @@ public class Palette extends VisImage {
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		horizontalSelector.draw(batch, getX(), getY() + selectorY - horizontalSelector.getMinHeight() / 2 + 0.1f, getImageWidth(), horizontalSelector.getMinHeight());
-		verticalSelector.draw(batch, getX() + selectorX - verticalSelector.getMinWidth() / 2 + 0.1f, getY(), verticalSelector.getMinWidth(), getImageHeight());
-		cross.draw(batch, getX() + selectorX - cross.getMinWidth() / 2 + 0.1f, getY() + selectorY - cross.getMinHeight() / 2 + 0.1f, cross.getMinWidth(), cross.getMinHeight());
+		HORIZONTAL_SELECTOR.draw(batch, getX(), getY() + selectorY - HORIZONTAL_SELECTOR.getMinHeight() / 2 + 0.1f, getImageWidth(), HORIZONTAL_SELECTOR.getMinHeight());
+		VERTICAL_SELECTOR.draw(batch, getX() + selectorX - VERTICAL_SELECTOR.getMinWidth() / 2 + 0.1f, getY(), VERTICAL_SELECTOR.getMinWidth(), getImageHeight());
+		CROSS.draw(batch, getX() + selectorX - CROSS.getMinWidth() / 2 + 0.1f, getY() + selectorY - CROSS.getMinHeight() / 2 + 0.1f, CROSS.getMinWidth(), CROSS.getMinHeight());
 	}
 
 	public void setValue (int v, int s) {

@@ -27,8 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.IntArray;
 
 public class VisTextArea extends VisTextField {
-	// This class was copied from LibGDX, few lines were changed.
-
 	/** Array storing lines breaks positions * */
 	IntArray linesBreak;
 

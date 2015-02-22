@@ -29,9 +29,9 @@ import java.util.Comparator;
 public class FileUtils {
 	public static final String OS = System.getProperty("os.name").toLowerCase();
 
-	private static final String[] units = new String[]{"B", "KB", "MB", "GB", "TB", "EB"};
+	private static final String[] UNITS = new String[]{"B", "KB", "MB", "GB", "TB", "EB"};
 
-	private static final Comparator<FileHandle> fileComparator = new Comparator<FileHandle>() {
+	private static final Comparator<FileHandle> FILE_COMPARATOR = new Comparator<FileHandle>() {
 		@Override
 		public int compare (FileHandle f1, FileHandle f2) {
 			return f1.name().toLowerCase().compareTo(f2.name().toLowerCase());
@@ -41,14 +41,14 @@ public class FileUtils {
 	public static String readableFileSize (long size) {
 		if (size <= 0) return "0 B";
 		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
-		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)).replace(",", ".") + " " + units[digitGroups];
+		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)).replace(",", ".") + " " + UNITS[digitGroups];
 	}
 
 	public static Array<FileHandle> sortFiles (FileHandle[] files) {
 		Array<FileHandle> directoriesList = new Array<FileHandle>();
 		Array<FileHandle> filesList = new Array<FileHandle>();
 
-		Arrays.sort(files, fileComparator);
+		Arrays.sort(files, FILE_COMPARATOR);
 
 		for (int i = 0; i < files.length; i++) {
 			FileHandle f = files[i];
@@ -72,15 +72,15 @@ public class FileUtils {
 	}
 
 	public static boolean isWindows () {
-		return (OS.indexOf("win") >= 0);
+		return (OS.contains("win"));
 	}
 
 	public static boolean isMac () {
-		return (OS.indexOf("mac") >= 0);
+		return (OS.contains("mac"));
 	}
 
 	public static boolean isUnix () {
-		return (OS.indexOf("nix") >= 0 || OS.indexOf("nux") >= 0 || OS.indexOf("aix") > 0);
+		return (OS.contains("nix") || OS.contains("nux") || OS.contains("aix"));
 	}
 
 	public static FileHandle toFileHandle (File file) {

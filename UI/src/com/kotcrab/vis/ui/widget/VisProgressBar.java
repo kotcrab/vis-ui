@@ -47,8 +47,6 @@ import com.kotcrab.vis.ui.VisUI;
  * @author Pawel Pastuszak
  */
 public class VisProgressBar extends Widget implements Disableable {
-	// This class was copied from LibGDX, few lines were changed.
-
 	private ProgressBarStyle style;
 	private float min, max, stepSize;
 	private float value, animateFromValue;
@@ -94,18 +92,18 @@ public class VisProgressBar extends Widget implements Disableable {
 		setSize(getPrefWidth(), getPrefHeight());
 	}
 
-	public void setStyle (ProgressBarStyle style) {
-		if (style == null) throw new IllegalArgumentException("style cannot be null.");
-		this.style = style;
-		invalidateHierarchy();
-	}
-
 	/**
 	 * Returns the progress bar's style. Modifying the returned style may not have an effect until
 	 * {@link #setStyle(ProgressBarStyle)} is called.
 	 */
 	public ProgressBarStyle getStyle () {
 		return style;
+	}
+
+	public void setStyle (ProgressBarStyle style) {
+		if (style == null) throw new IllegalArgumentException("style cannot be null.");
+		this.style = style;
+		invalidateHierarchy();
 	}
 
 	@Override
@@ -256,11 +254,6 @@ public class VisProgressBar extends Widget implements Disableable {
 		else if (value > max) setValue(max);
 	}
 
-	public void setStepSize (float stepSize) {
-		if (stepSize <= 0) throw new IllegalArgumentException("steps must be > 0: " + stepSize);
-		this.stepSize = stepSize;
-	}
-
 	@Override
 	public float getPrefWidth () {
 		if (vertical) {
@@ -294,6 +287,11 @@ public class VisProgressBar extends Widget implements Disableable {
 		return this.stepSize;
 	}
 
+	public void setStepSize (float stepSize) {
+		if (stepSize <= 0) throw new IllegalArgumentException("steps must be > 0: " + stepSize);
+		this.stepSize = stepSize;
+	}
+
 	/** If > 0, changes to the progress bar value via {@link #setValue(float)} will happen over this duration in seconds. */
 	public void setAnimateDuration (float duration) {
 		this.animateDuration = duration;
@@ -320,13 +318,13 @@ public class VisProgressBar extends Widget implements Disableable {
 		return value;
 	}
 
+	public boolean isDisabled () {
+		return disabled;
+	}
+
 	@Override
 	public void setDisabled (boolean disabled) {
 		this.disabled = disabled;
-	}
-
-	public boolean isDisabled () {
-		return disabled;
 	}
 
 }

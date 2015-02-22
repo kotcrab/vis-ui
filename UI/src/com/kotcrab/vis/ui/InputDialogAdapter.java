@@ -17,7 +17,6 @@
 package com.kotcrab.vis.ui;
 
 public class InputDialogAdapter implements InputDialogListener {
-
 	@Override
 	public void finished (String input) {
 

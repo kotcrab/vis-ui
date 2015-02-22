@@ -19,8 +19,8 @@ package com.kotcrab.vis.ui.util;
 import com.kotcrab.vis.ui.InputValidator;
 
 public class Validators {
-	public static final IntegerValidator integers = new IntegerValidator();
-	public static final FloatValidator floats = new FloatValidator();
+	public static final IntegerValidator INTEGERS = new IntegerValidator();
+	public static final FloatValidator FLOATS = new FloatValidator();
 
 	public static class IntegerValidator implements InputValidator {
 		@Override

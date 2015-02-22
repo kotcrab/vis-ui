@@ -26,8 +26,8 @@ import com.kotcrab.vis.ui.VisUI;
  * due to that this Image scales 25px grid image to whatever size it needed. It will look weird for smaller or bigger images.
  */
 public class AlphaImage extends Image {
-	private Drawable alphaBar = VisUI.getSkin().getDrawable("alpha-bar-25px");
-	private Drawable alphaBarShifted = VisUI.getSkin().getDrawable("alpha-bar-25px-shifted");
+	private static final Drawable ALPHA_BAR = VisUI.getSkin().getDrawable("alpha-bar-25px");
+	private static final Drawable ALPHA_BAR_SHIFTED = VisUI.getSkin().getDrawable("alpha-bar-25px-shifted");
 
 	private Drawable alphaDrawable;
 	private boolean shiftAlpha;
@@ -44,7 +44,7 @@ public class AlphaImage extends Image {
 	}
 
 	private void setAlphaDrawable () {
-		alphaDrawable = shiftAlpha ? alphaBarShifted : alphaBar;
+		alphaDrawable = shiftAlpha ? ALPHA_BAR_SHIFTED : ALPHA_BAR;
 	}
 
 	@Override

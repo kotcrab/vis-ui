@@ -116,7 +116,7 @@ public class GridRendererModule extends SceneModule {
 			VisTable sizeTable = new VisTable(true);
 
 			sizeTable.add(new VisLabel("Grid size: "));
-			sizeTable.add(gridSizeField = new VisValidableTextField(Validators.integers));
+			sizeTable.add(gridSizeField = new VisValidableTextField(Validators.INTEGERS));
 
 			prepareTable();
 			settingsTable.add(drawGridCheck = new VisCheckBox("Draw grid", config.drawGrid)).left();

@@ -27,8 +27,6 @@ import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
 
 public class VisTextButton extends TextButton implements Focusable {
-	// This class was copied from LibGDX, few lines were changed.
-
 	private VisTextButtonStyle style;
 
 	private boolean drawBorder;

@@ -134,7 +134,7 @@ public class BasicFormValidator {
 
 		@Override
 		public boolean validateInput (String input) {
-			setResult(Validators.integers.validateInput(input));
+			setResult(Validators.INTEGERS.validateInput(input));
 			return super.validateInput(input);
 		}
 	}
@@ -146,7 +146,7 @@ public class BasicFormValidator {
 
 		@Override
 		public boolean validateInput (String input) {
-			setResult(Validators.floats.validateInput(input));
+			setResult(Validators.FLOATS.validateInput(input));
 			return super.validateInput(input);
 		}
 	}

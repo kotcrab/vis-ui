@@ -23,7 +23,6 @@ import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.VisUI;
 
 public class VisSelectBox<T> extends SelectBox<T> {
-
 	public VisSelectBox (SelectBoxStyle style) {
 		super(style);
 		init();
