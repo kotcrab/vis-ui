@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.kotcrab.vis.ui.VisUI;
 
+/** @author Kotcrab */
 public class VisScrollPane extends ScrollPane {
 	public VisScrollPane (Actor widget, ScrollPaneStyle style) {
 		super(widget, style);

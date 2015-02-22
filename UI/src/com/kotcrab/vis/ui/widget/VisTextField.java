@@ -64,7 +64,7 @@ import com.kotcrab.vis.ui.VisUI;
  * implementation will bring up the default IME.
  * @author mzechner
  * @author Nathan Sweet
- * @author Pawel Pastuszak
+ * @author Kotcrab
  */
 public class VisTextField extends Widget implements Disableable, Focusable {
 	static protected final char ENTER_DESKTOP = '\r';

@@ -18,6 +18,7 @@ package com.kotcrab.vis.ui.util;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
+/** @author Kotcrab */
 public class TableUtils {
 	/** Sets default table spacing for vis skin */
 	public static void setSpaceDefaults (Table table) {

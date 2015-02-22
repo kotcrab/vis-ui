@@ -18,7 +18,7 @@ package com.kotcrab.vis.ui;
 
 /**
  * Manages focuses of VisUI components
- * @author Pawel Pastuszak
+ * @author Kotcrab
  */
 public class FocusManager {
 	private static Focusable focusedWidget;

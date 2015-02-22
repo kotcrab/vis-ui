@@ -44,7 +44,7 @@ import com.kotcrab.vis.ui.VisUI;
  * bar is 140, a relatively arbitrary size.
  * @author mzechner
  * @author Nathan Sweet
- * @author Pawel Pastuszak
+ * @author Kotcrab
  */
 public class VisProgressBar extends Widget implements Disableable {
 	private ProgressBarStyle style;
@@ -75,10 +75,10 @@ public class VisProgressBar extends Widget implements Disableable {
 	 * between individual values.
 	 * <p/>
 	 * E.g. min could be 4, max could be 10 and stepSize could be 0.2, giving you a total of 30 values, 4.0 4.2, 4.4 and so on.
-	 * @param min      the minimum value
-	 * @param max      the maximum value
+	 * @param min the minimum value
+	 * @param max the maximum value
 	 * @param stepSize the step size between values
-	 * @param style    the {@link ProgressBarStyle}
+	 * @param style the {@link ProgressBarStyle}
 	 */
 	public VisProgressBar (float min, float max, float stepSize, boolean vertical, ProgressBarStyle style) {
 		if (min > max) throw new IllegalArgumentException("max must be > min. min,max: " + min + ", " + max);

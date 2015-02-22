@@ -27,7 +27,10 @@ import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
 
-/** Colors palette used to display colors using all possible values of saturation and value, not intended to use outside ColorPicker */
+/**
+ * Colors palette used to display colors using all possible values of saturation and value, not intended to use outside ColorPicker
+ * @author Kotcrab
+ */
 public class Palette extends VisImage {
 	private static final Drawable CROSS = VisUI.getSkin().getDrawable("color-picker-cross");
 	private static final Drawable VERTICAL_SELECTOR = VisUI.getSkin().getDrawable("color-picker-selector-horizontal");

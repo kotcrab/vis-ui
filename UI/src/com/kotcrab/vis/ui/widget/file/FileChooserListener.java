@@ -19,6 +19,7 @@ package com.kotcrab.vis.ui.widget.file;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 
+/** @author Kotcrab */
 public interface FileChooserListener {
 	public void selected (Array<FileHandle> files);
 

@@ -27,7 +27,10 @@ import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
 
-/** Vertical channel bar used to display vertical hue bar, not intended to use outside ColorPicker */
+/**
+ * Vertical channel bar used to display vertical hue bar, not intended to use outside ColorPicker
+ * @author Kotcrab
+ */
 public class VerticalChannelBar extends VisImage {
 	private static final Drawable BAR_SELECTOR = VisUI.getSkin().getDrawable("color-picker-selector-vertical");
 

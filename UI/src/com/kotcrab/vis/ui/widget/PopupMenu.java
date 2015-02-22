@@ -25,7 +25,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
 
-/** Standard popup menu that can be displayed anywhere on stage */
+/**
+ * Standard popup menu that can be displayed anywhere on stage
+ * @author Kotcrab
+ */
 public class PopupMenu extends Table {
 	private PopupMenuStyle style;
 

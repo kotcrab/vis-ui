@@ -30,6 +30,7 @@ import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
 
+/** @author Kotcrab */
 public class VisImageButton extends Button implements Focusable {
 	private Image image;
 

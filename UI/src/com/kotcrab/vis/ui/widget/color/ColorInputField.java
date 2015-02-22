@@ -30,6 +30,7 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
 /**
  * Fields used to enter color numbers in color picker, verifies max allowed value
  * provides quick increment/decrement of current value by pressing [shift +] plus or minus on numpad
+ * @author Kotcrab
  */
 public class ColorInputField extends VisValidableTextField {
 	private int value;

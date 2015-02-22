@@ -43,7 +43,7 @@ import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
  * to add a label to the content table and buttons to the button table, but any widgets can be added. When a button is clicked,
  * {@link #result(Object)} is called and the dialog is removed from the stage.
  * @author Nathan Sweet
- * @author Pawel Pastuszak
+ * @author Kotcrab
  */
 public class VisDialog extends VisWindow {
 	Table contentTable, buttonTable;

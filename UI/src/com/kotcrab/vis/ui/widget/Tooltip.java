@@ -35,6 +35,7 @@ import com.kotcrab.vis.ui.VisUI;
 
 /**
  * Tooltips are widgets that appear bellow other widget after user hovers mouse pointer on that other widget.
+ * @author Kotcrab
  * @since 0.5.0
  */
 public class Tooltip extends VisTable {

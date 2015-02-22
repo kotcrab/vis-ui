@@ -18,6 +18,7 @@ package com.kotcrab.vis.ui.widget;
 
 import com.kotcrab.vis.ui.VisUI;
 
+/** @author Kotcrab */
 public class VisRadioButton extends VisCheckBox {
 	public VisRadioButton (String text) {
 		this(text, VisUI.getSkin().get("radio", VisCheckBoxStyle.class));

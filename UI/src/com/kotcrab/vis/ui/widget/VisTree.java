@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.VisUI;
 
+/** @author Kotcrab */
 public class VisTree extends Tree {
 	public VisTree (String styleName) {
 		super(VisUI.getSkin(), styleName);

@@ -34,6 +34,7 @@ import com.kotcrab.vis.ui.VisUI;
 /**
  * MenuItem displayed in {@link Menu} and {@link PopupMenu}. MenuItem contains text or text with icon.
  * Best icon size is 22px. MenuItem can also have hotkey text.
+ * @author Kotcrab
  */
 public class MenuItem extends Button {
 	private Image image;
@@ -167,7 +168,7 @@ public class MenuItem extends Button {
 	 * Set shortcuts text displayed in this menu item.
 	 * Displayed as modifier+keycode (eg. Ctrl+F5). This DOES NOT set actual hot key for this menu item, it only makes shortcut text visible in item.
 	 * @param modifier form {@link Keys}
-	 * @param keycode  form {@link Keys}
+	 * @param keycode form {@link Keys}
 	 */
 	public MenuItem setShortcut (int modifier, int keycode) {
 		return setShortcut(Keys.toString(modifier) + "+" + Keys.toString(keycode));

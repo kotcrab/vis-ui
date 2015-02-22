@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui;
 
+/** @author Kotcrab */
 public interface OptionDialogListener {
 	public void yes ();
 

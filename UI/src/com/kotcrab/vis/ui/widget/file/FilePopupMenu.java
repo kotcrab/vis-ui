@@ -30,6 +30,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 
+/** @author Kotcrab */
 public class FilePopupMenu extends PopupMenu {
 	private FileChooser chooser;
 	private FileChooserLocale locale;

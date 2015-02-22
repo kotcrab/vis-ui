@@ -40,7 +40,7 @@ import com.kotcrab.vis.ui.VisUI;
  * 140, a relatively arbitrary size.
  * @author mzechner
  * @author Nathan Sweet
- * @author Pawel Pastuszak
+ * @author Kotcrab
  */
 public class VisSlider extends VisProgressBar {
 	int draggingPointer = -1;
@@ -61,10 +61,10 @@ public class VisSlider extends VisProgressBar {
 	 * the height of either the slider {@link NinePatch} or slider handle {@link TextureRegion}. The min and max values determine
 	 * the range the values of this slider can take on, the stepSize parameter specifies the distance between individual values.
 	 * E.g. min could be 4, max could be 10 and stepSize could be 0.2, giving you a total of 30 values, 4.0 4.2, 4.4 and so on.
-	 * @param min      the minimum value
-	 * @param max      the maximum value
+	 * @param min the minimum value
+	 * @param max the maximum value
 	 * @param stepSize the step size between values
-	 * @param style    the {@link VisSliderStyle}
+	 * @param style the {@link VisSliderStyle}
 	 */
 	public VisSlider (float min, float max, float stepSize, boolean vertical, VisSliderStyle style) {
 		super(min, max, stepSize, vertical, style);

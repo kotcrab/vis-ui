@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.InputValidator;
 
+/** @author Kotcrab */
 public class VisValidableTextField extends VisTextField {
 	private Array<InputValidator> validators = new Array<InputValidator>();
 	private boolean validationEnabled = true;

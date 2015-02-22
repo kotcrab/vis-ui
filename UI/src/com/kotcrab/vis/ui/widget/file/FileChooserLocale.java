@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui.widget.file;
 
+/** @author Kotcrab */
 public class FileChooserLocale {
 	public String titleChooseFiles = "Choose file";
 	public String titleChooseDirectories = "Choose directory";

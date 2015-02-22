@@ -26,6 +26,7 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 
+/** @author Kotcrab */
 public class FileUtils {
 	public static final String OS = System.getProperty("os.name").toLowerCase();
 

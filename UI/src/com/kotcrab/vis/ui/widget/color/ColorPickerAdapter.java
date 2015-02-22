@@ -18,7 +18,10 @@ package com.kotcrab.vis.ui.widget.color;
 
 import com.badlogic.gdx.graphics.Color;
 
-/** Empty implementation of {@link ColorPickerListener} */
+/**
+ * Empty implementation of {@link ColorPickerListener}
+ * @author Kotcrab
+ */
 public class ColorPickerAdapter implements ColorPickerListener {
 	@Override
 	public void canceled () {

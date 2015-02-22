@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui;
 
+/** @author Kotcrab */
 public abstract class FormInputValidator implements InputValidator {
 	private String errorMsg;
 	private boolean result;

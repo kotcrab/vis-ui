@@ -23,6 +23,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 
+/** @author Kotcrab */
 public class FavoritesIO {
 	private static String favoritesPrefsName = "pl.kotcrab.vis.ui.widget.file.filechooser_favorites";
 	private static String keyName = "favorites";
@@ -30,16 +31,16 @@ public class FavoritesIO {
 	private Preferences prefs;
 	private Json json = new Json();
 
+	public FavoritesIO () {
+		prefs = Gdx.app.getPreferences(favoritesPrefsName);
+	}
+
 	public static String getFavoritesPrefsName () {
 		return favoritesPrefsName;
 	}
 
 	public static void setFavoritesPrefsName (String favoritesPrefsName) {
 		FavoritesIO.favoritesPrefsName = favoritesPrefsName;
-	}
-
-	public FavoritesIO () {
-		prefs = Gdx.app.getPreferences(favoritesPrefsName);
 	}
 
 	public Array<FileHandle> loadFavorites () {

@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui;
 
+/** @author Kotcrab */
 public interface InputValidator {
 	public boolean validateInput (String input);
 }

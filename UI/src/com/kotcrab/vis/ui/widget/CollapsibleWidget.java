@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 
 /**
  * Widget containing table that can be collapsed
+ * @author Kotcrab
  * @since 0.3.1
  */
 public class CollapsibleWidget extends WidgetGroup {

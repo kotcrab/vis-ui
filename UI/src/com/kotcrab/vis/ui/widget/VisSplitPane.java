@@ -40,7 +40,7 @@ import com.kotcrab.vis.ui.VisUI;
  * are sized depending on the splitpane's size and the {@link #setSplitAmount(float) split position}.
  * @author mzechner
  * @author Nathan Sweet
- * @author Pawel Pastuszak
+ * @author Kotcrab
  */
 public class VisSplitPane extends WidgetGroup {
 	VisSplitPaneStyle style;
@@ -61,7 +61,7 @@ public class VisSplitPane extends WidgetGroup {
 	private boolean mouseOnHandle;
 
 	/**
-	 * @param firstWidget  May be null.
+	 * @param firstWidget May be null.
 	 * @param secondWidget May be null.
 	 */
 	public VisSplitPane (Actor firstWidget, Actor secondWidget, boolean vertical) {
@@ -69,7 +69,7 @@ public class VisSplitPane extends WidgetGroup {
 	}
 
 	/**
-	 * @param firstWidget  May be null.
+	 * @param firstWidget May be null.
 	 * @param secondWidget May be null.
 	 */
 	public VisSplitPane (Actor firstWidget, Actor secondWidget, boolean vertical, String styleName) {
@@ -77,7 +77,7 @@ public class VisSplitPane extends WidgetGroup {
 	}
 
 	/**
-	 * @param firstWidget  May be null.
+	 * @param firstWidget May be null.
 	 * @param secondWidget May be null.
 	 */
 	public VisSplitPane (Actor firstWidget, Actor secondWidget, boolean vertical, VisSplitPaneStyle style) {
@@ -311,7 +311,7 @@ public class VisSplitPane extends WidgetGroup {
 	}
 
 	/**
-	 * @param firstWidget  May be null
+	 * @param firstWidget May be null
 	 * @param secondWidget May be null
 	 */
 	public void setWidgets (Actor firstWidget, Actor secondWidget) {

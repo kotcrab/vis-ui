@@ -24,6 +24,7 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 import java.io.File;
 
+/** @author Kotcrab */
 public class FormValidator extends BasicFormValidator {
 	public FormValidator (Button buttonToDisable, Label errorMsgLabel) {
 		super(buttonToDisable, errorMsgLabel);
@@ -41,8 +42,8 @@ public class FormValidator extends BasicFormValidator {
 
 	/**
 	 * @param errorIfRelativeEmpty if true field input will be valid if 'relativeTo' field is empty, usually used with notEmpty validator on 'relativeTo' to
-	 *                             avoid form errors. Settings this to true improves UX, error are not displayed until user types something in 'relativeTo'
-	 *                             field
+	 * avoid form errors. Settings this to true improves UX, error are not displayed until user types something in 'relativeTo'
+	 * field
 	 */
 	public void fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty) {
 		field.addValidator(new FileExistsValidator(relativeTo, errorMsg, false, errorIfRelativeEmpty));

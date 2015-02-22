@@ -27,7 +27,10 @@ import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
 
-/** Class used to display channel color bars in color picker, not intended to use outside ColorPicker */
+/**
+ * Class used to display channel color bars in color picker, not intended to use outside ColorPicker
+ * @author Kotcrab
+ */
 public class ChannelBar extends VisImage {
 	private static final Drawable BAR_SELECTOR = VisUI.getSkin().getDrawable("color-picker-bar-selector");
 

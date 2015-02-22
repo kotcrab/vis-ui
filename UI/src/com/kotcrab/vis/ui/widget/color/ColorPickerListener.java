@@ -18,7 +18,10 @@ package com.kotcrab.vis.ui.widget.color;
 
 import com.badlogic.gdx.graphics.Color;
 
-/** Listener for {@link ColorPicker} */
+/**
+ * Listener for {@link ColorPicker}
+ * @author Kotcrab
+ */
 public interface ColorPickerListener {
 	/** Called when color selection was canceled by user (either by clicking cancel or closing the window) */
 	public void canceled ();

@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.IntArray;
 
+/** @author Kotcrab */
 public class VisTextArea extends VisTextField {
 	/** Array storing lines breaks positions * */
 	IntArray linesBreak;

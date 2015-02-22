@@ -22,8 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 
 /**
- * Makes loading VisUI skin easier
- * @author Pawel Pastuszak
+ * Allows to easily load VisUI skin and change default title alignment
+ * @author Kotcrab
  */
 public class VisUI {
 	public static final String VERSION = "0.7.0";

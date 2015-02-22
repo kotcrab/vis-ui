@@ -18,6 +18,7 @@ package com.kotcrab.vis.ui.util;
 
 import com.kotcrab.vis.ui.InputValidator;
 
+/** @author Kotcrab */
 public class Validators {
 	public static final IntegerValidator INTEGERS = new IntegerValidator();
 	public static final FloatValidator FLOATS = new FloatValidator();

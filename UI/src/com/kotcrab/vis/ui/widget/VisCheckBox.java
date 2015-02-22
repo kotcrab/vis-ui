@@ -35,7 +35,7 @@ import com.kotcrab.vis.ui.VisUI;
 /**
  * A checkbox is a button that contains an image indicating the checked or unchecked state and a label.
  * @author Nathan Sweet
- * @author Pawel Pastuszak
+ * @author Kotcrab
  */
 @SuppressWarnings("rawtypes")
 public class VisCheckBox extends TextButton implements Focusable {
