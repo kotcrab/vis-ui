@@ -64,7 +64,7 @@ public class TestColorPicker extends VisWindow {
 		add(image).size(32).pad(3);
 
 		pack();
-		setPosition(800, 20);
+		setPosition(100, 123);
 	}
 
 	@Override

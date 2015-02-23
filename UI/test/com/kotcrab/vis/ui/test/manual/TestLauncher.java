@@ -79,7 +79,8 @@ class TestApplication extends ApplicationAdapter {
 		stage.addActor(new TestValidator());
 		stage.addActor(new TestVertical(USE_VIS_WIDGETS));
 		stage.addActor(new TestWindow(USE_VIS_WIDGETS));
-
+		stage.addActor(new TestBuilders());
+		
 //		FileChooser fileChooser = new FileChooser(FileChooser.Mode.OPEN);
 //		fileChooser.setMultiselectionEnabled(true);
 //		fileChooser.setSelectionMode(SelectionMode.FILES_AND_DIRECTORIES);

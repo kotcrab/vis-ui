@@ -34,7 +34,7 @@ public class TestValidator extends VisWindow {
 		add(textField);
 
 		pack();
-		setPosition(100, 150);
+		setPosition(100, 210);
 	}
 
 }
