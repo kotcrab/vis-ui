@@ -19,6 +19,7 @@ package com.kotcrab.vis.ui.building.utilities;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.ui.util.Nullables;
 
 /** Wraps a Scene2D widget, allowing to store cell data for delayed Table creation. Note that some filling data
  * (like expanding on X axis or alignment) might be overridden by some TableBuilders (like the
@@ -64,6 +65,22 @@ public class CellWidget<Widget extends Actor> {
 		return new CellWidgetBuilder<Widget>(widget);
 	}
 
+	/** @param widget will be immediately wrapped into a CellWidget with no specific settings.
+	 * @return wrapped widget. */
+	public static <Widget extends Actor> CellWidget<Widget> wrap(final Widget widget) {
+		return of(widget).wrap();
+	}
+
+	/** @param widgets will be converted to CellWidgets without any specific settings.
+	 * @return wrapped widgets. */
+	public static CellWidget<?>[] wrap(final Actor... widgets) {
+		final CellWidget<?>[] wrappedWidgets = new CellWidget<?>[widgets.length];
+		for (int index = 0; index < widgets.length; index++) {
+			wrappedWidgets[index] = CellWidget.of(widgets[index]).wrap();
+		}
+		return wrappedWidgets;
+	}
+
 	/** @return widget wrapped with the CellWidget object. */
 	public Widget getWidget() {
 		return widget;
@@ -89,7 +106,7 @@ public class CellWidget<Widget extends Actor> {
 	}
 
 	private void applyPadding(final Cell<?> cell, final Padding defaultWidgetPadding) {
-		final Padding appliedPadding = getOrElse(padding, defaultWidgetPadding);
+		final Padding appliedPadding = Nullables.getOrElse(padding, defaultWidgetPadding);
 		if (appliedPadding != null) {
 			if (useSpacing) {
 				appliedPadding.applySpacing(cell);
@@ -120,10 +137,6 @@ public class CellWidget<Widget extends Actor> {
 		}
 		cell.expand(expandX, expandY);
 		cell.fill(fillX, fillY);
-	}
-
-	private static Padding getOrElse (Padding padding, Padding defaultWidgetPadding) {
-		return padding == null ? defaultWidgetPadding : padding;
 	}
 
 	/** Allows to set the CellWidget's data. All setter methods return this for chaining.
