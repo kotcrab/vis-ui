@@ -247,7 +247,7 @@ public class MenuBarModule extends EditorModule {
 
 	public void setSceneButtonsListener (SceneMenuButtonsListener listener) {
 		sceneButtonsListener = listener;
-		sceneController.listenrChanged(listener);
+		sceneController.listenerChanged(listener);
 	}
 
 	@Override

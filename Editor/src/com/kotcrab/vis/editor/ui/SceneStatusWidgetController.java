@@ -31,7 +31,7 @@ public class SceneStatusWidgetController {
 		buttons = new Array<>();
 	}
 
-	public void listenrChanged (SceneMenuButtonsListener listener) {
+	public void listenerChanged (SceneMenuButtonsListener listener) {
 		if (listener == null)
 			loaded = false;
 		else
