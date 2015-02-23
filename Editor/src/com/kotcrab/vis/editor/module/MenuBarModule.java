@@ -82,6 +82,7 @@ public class MenuBarModule extends EditorModule {
 		});
 
 		createFileMenu();
+		createEditMenu();
 		createSceneMenu();
 		createHelpMenu();
 	}
@@ -133,7 +134,6 @@ public class MenuBarModule extends EditorModule {
 		Menu menu = new Menu("File");
 		menuBar.addMenu(menu);
 
-
 		menu.addItem(new MenuItem("New Project...", Assets.getIcon("new"), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
@@ -147,7 +147,6 @@ public class MenuBarModule extends EditorModule {
 				stage.addActor(chooser.fadeIn());
 			}
 		}));
-
 
 		menu.addItem(closeProject);
 
@@ -170,11 +169,30 @@ public class MenuBarModule extends EditorModule {
 		projectController.addButton(export);
 	}
 
+	private void createEditMenu () {
+		Menu menu = new Menu("Edit");
+		menuBar.addMenu(menu);
+
+		menu.addItem(new MenuItem("Undo", Assets.getIcon("undo"), new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				sceneButtonsListener.undo();
+			}
+		}));
+
+		menu.addItem(new MenuItem("Redo", Assets.getIcon("redo"), new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				sceneButtonsListener.redo();
+			}
+		}));
+	}
+
 	private void createSceneMenu () {
 		Menu menu = new Menu("Scene");
 		menuBar.addMenu(menu);
 
-		MenuItem newScene = new MenuItem("New Scene...", new ChangeListener() {
+		MenuItem newScene = new MenuItem("New Scene...", Assets.getIcon("new"), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
@@ -182,7 +200,6 @@ public class MenuBarModule extends EditorModule {
 				stage.addActor(new NewSceneDialog(fileAccess, sceneIO).fadeIn());
 			}
 		});
-
 
 		projectController.addButton(newScene);
 
@@ -199,7 +216,6 @@ public class MenuBarModule extends EditorModule {
 				sceneButtonsListener.resetCameraZoom();
 			}
 		});
-
 
 		MenuItem sceneSettings = new MenuItem("Scene Settings", new ChangeListener() {
 			@Override

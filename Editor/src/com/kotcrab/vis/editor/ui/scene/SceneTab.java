@@ -281,6 +281,16 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		cameraModule.resetZoom();
 	}
 
+	@Override
+	public void undo () {
+		undoModule.undo();
+	}
+
+	@Override
+	public void redo () {
+		undoModule.redo();
+	}
+
 	private class ContentTable extends VisTable {
 		public ContentTable () {
 			super(false);
