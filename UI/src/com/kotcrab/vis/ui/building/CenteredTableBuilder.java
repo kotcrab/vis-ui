@@ -21,34 +21,35 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.ui.building.utilities.Padding;
 
-/** Builds a table with the appended widgets, trying to keep them centered. Expands X axis for first and last
+/**
+ * Builds a table with the appended widgets, trying to keep them centered. Expands X axis for first and last
  * widget in each row and overrides their alignments to right and left, keeping the widgets centered. Each
  * table's row will have the same colspan. While useful, StandardTableBuilder might be more appropriate for
  * complex tables.
- *
- * @author MJ */
+ * @author MJ
+ */
 public class CenteredTableBuilder extends TableBuilder {
-	public CenteredTableBuilder() {
+	public CenteredTableBuilder () {
 		super();
 	}
 
 	/** @param defaultWidgetPadding will be applied to all added widgets if no specific padding is given. */
-	public CenteredTableBuilder(final Padding defaultWidgetPadding) {
+	public CenteredTableBuilder (final Padding defaultWidgetPadding) {
 		super(defaultWidgetPadding);
 	}
 
-	public CenteredTableBuilder(final int estimatedWidgetsAmount, final int estimatedRowsAmount) {
+	public CenteredTableBuilder (final int estimatedWidgetsAmount, final int estimatedRowsAmount) {
 		super(estimatedWidgetsAmount, estimatedRowsAmount);
 	}
 
 	/** @param defaultWidgetPadding will be applied to all added widgets if no specific padding is given. */
-	public CenteredTableBuilder(final int estimatedWidgetsAmount, final int estimatedRowsAmount,
-			final Padding defaultWidgetPadding) {
+	public CenteredTableBuilder (final int estimatedWidgetsAmount, final int estimatedRowsAmount,
+								 final Padding defaultWidgetPadding) {
 		super(estimatedWidgetsAmount, estimatedRowsAmount, defaultWidgetPadding);
 	}
 
 	@Override
-	protected void fillTable(final Table table) {
+	protected void fillTable (final Table table) {
 		final IntArray rowSizes = getRowSizes();
 		final int widgetsInRow = getLowestCommonMultiple(rowSizes);
 
@@ -73,18 +74,21 @@ public class CenteredTableBuilder extends TableBuilder {
 		}
 	}
 
-	/** When table is trying to keep widgets together and widget is not alone in the row (in which case it
+	/**
+	 * When table is trying to keep widgets together and widget is not alone in the row (in which case it
 	 * should be centered instead), it has to expand on X and be aligned right.
-	 *
 	 * @param rowSize current row size.
-	 * @return true if row size is bigger than 1. */
-	private boolean shouldExpand(final int rowSize) {
+	 * @return true if row size is bigger than 1.
+	 */
+	private boolean shouldExpand (final int rowSize) {
 		return rowSize != 1;
 	}
 
-	/** @return true if the widget is last. It is used to determine if the widget has to be left-aligned and
-	 *         expand on X axis. */
-	private boolean isLast(final int widgetIndex, final int rowSize, final int totalWidgetsInRow) {
+	/**
+	 * @return true if the widget is last. It is used to determine if the widget has to be left-aligned and
+	 * expand on X axis.
+	 */
+	private boolean isLast (final int widgetIndex, final int rowSize, final int totalWidgetsInRow) {
 		return shouldExpand(rowSize) && widgetIndex == totalWidgetsInRow - 1;
 	}
 }
