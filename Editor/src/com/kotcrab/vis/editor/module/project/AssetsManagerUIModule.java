@@ -387,23 +387,25 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		public FileItem (FileHandle file) {
 			super(VisUI.getSkin());
 			this.file = file;
-			VisLabel name = new VisLabel(file.name());
+			VisLabel name;
 
 			if (file.extension().equals("jpg") || file.extension().equals("png")) {
+				name = new VisLabel(file.nameWithoutExtension(), "small");
 				TextureRegion region = textureCache.getRegion(file);
 
 				Image img = new Image(region);
 				img.setScaling(Scaling.fit);
-				add(img).row();
+				add(img).expand().fill().row();
 
 				this.region = region;
 				isTexture = true;
-			}
+			} else
+				name = new VisLabel(file.name());
 
 			setBackground("menu-bg");
 			name.setWrap(true);
 			name.setAlignment(Align.center);
-			add(name).expand().fill();
+			add(name).expandX().fillX();
 
 			addListener();
 		}
