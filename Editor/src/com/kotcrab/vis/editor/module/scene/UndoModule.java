@@ -44,7 +44,6 @@ public class UndoModule extends SceneModule {
 		input.addListener(new UndoInputListener());
 	}
 
-
 	public void undo () {
 		if (undoList.size > 0) {
 			UndoableAction action = undoList.pop();

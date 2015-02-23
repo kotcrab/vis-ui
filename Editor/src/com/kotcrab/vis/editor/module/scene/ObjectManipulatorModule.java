@@ -272,17 +272,17 @@ public class ObjectManipulatorModule extends SceneModule {
 
 		public MoveAction (Object2d obj) {
 			this.obj = obj;
-			obj.writeStateTo(oldData);
+			oldData.saveFrom(obj.sprite);
 		}
 
 		@Override
 		public void execute () {
-			obj.readStateFrom(newData);
+			newData.loadTo(obj.sprite);
 		}
 
 		@Override
 		public void undo () {
-			obj.readStateFrom(oldData);
+			oldData.loadTo(obj.sprite);
 		}
 	}
 }

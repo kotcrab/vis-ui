@@ -30,6 +30,7 @@ public class EditorScene {
 	public int width;
 	public int height;
 	public SceneViewport viewport;
+
 	public Array<EditorSceneObject> objects = new Array<EditorSceneObject>();
 
 	public EditorScene (FileHandle file, SceneViewport viewport, int width, int height) {

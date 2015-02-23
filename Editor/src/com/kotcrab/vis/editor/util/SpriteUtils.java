@@ -17,13 +17,17 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.util;
 
-public abstract class EditorSceneObject {
-	public String id;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-	public abstract void getX();
-
-	public abstract void getY();
-
+public class SpriteUtils {
+	public static void setRegion (Sprite sprite, TextureRegion region) {
+		boolean flipX, flipY;
+		flipX = sprite.isFlipX();
+		flipY = sprite.isFlipY();
+		sprite.setRegion(region);
+		sprite.setFlip(flipX, flipY);
+	}
 }

@@ -55,6 +55,7 @@ import com.kotcrab.vis.editor.module.scene.ZIndexManipulator;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
+import com.kotcrab.vis.editor.util.SpriteUtils;
 import com.kotcrab.vis.ui.VisTable;
 
 public class SceneTab extends Tab implements DragAndDropTarget, EventListener, Disposable, SceneMenuButtonsListener {
@@ -240,7 +241,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 			for (EditorSceneObject object : scene.objects) {
 				if (object instanceof Object2d) {
 					Object2d object2d = (Object2d) object;
-					object2d.updateSpriteRegion(cacheModule.getRegion(object2d.regionRelativePath));
+					SpriteUtils.setRegion(object2d.sprite, cacheModule.getRegion(object2d.regionRelativePath));
 				}
 			}
 		}

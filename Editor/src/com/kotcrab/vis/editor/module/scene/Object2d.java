@@ -21,40 +21,24 @@ package com.kotcrab.vis.editor.module.scene;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.kotcrab.vis.runtime.data.SpriteData;
 
 public class Object2d extends EditorSceneObject {
 	public String regionRelativePath;
-	public transient Sprite sprite;
-
-	private SpriteData data;
+	public Sprite sprite;
 
 	public Object2d (String regionRelativePath, TextureRegion region, float x, float y) {
 		this.sprite = new Sprite(region);
 		this.regionRelativePath = regionRelativePath;
-		data = new SpriteData();
 		sprite.setPosition(x, y);
 	}
 
-	public void saveSpriteDataValuesToData () {
-		data.saveFrom(sprite);
+	@Override
+	public void getX () {
+
 	}
 
-	public void loadSpriteValuesFromData () {
-		data.loadTo(sprite);
-	}
+	@Override
+	public void getY () {
 
-	public void writeStateTo (SpriteData data) {
-		data.saveFrom(sprite);
-	}
-
-	public void readStateFrom (SpriteData data) {
-		data.loadTo(sprite);
-	}
-
-	public void updateSpriteRegion (TextureRegion newRegion) {
-		saveSpriteDataValuesToData();
-		sprite.setRegion(newRegion);
-		loadSpriteValuesFromData();
 	}
 }

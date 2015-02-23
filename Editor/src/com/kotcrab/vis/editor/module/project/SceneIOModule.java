@@ -26,11 +26,13 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
-import com.kotcrab.vis.editor.module.scene.Object2d;
 import com.kotcrab.vis.editor.module.scene.EditorSceneObject;
+import com.kotcrab.vis.editor.module.scene.Object2d;
+import com.kotcrab.vis.editor.ui.SpriteSerializer;
 import com.kotcrab.vis.editor.util.Log;
-import com.kotcrab.vis.runtime.scene.SceneViewport;
+import com.kotcrab.vis.editor.util.SpriteUtils;
 import com.kotcrab.vis.runtime.data.SpriteData;
+import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -57,6 +59,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(EditorScene.class);
 		kryo.register(SpriteData.class);
 		kryo.register(SceneViewport.class);
+		kryo.register(Sprite.class, new SpriteSerializer());
 	}
 
 	public EditorScene load (FileHandle file) {
@@ -79,14 +82,13 @@ public class SceneIOModule extends ProjectModule {
 		for (EditorSceneObject object : scene.objects) {
 			if (object instanceof Object2d) {
 				Object2d object2d = (Object2d) object;
-				object2d.sprite = new Sprite(cacheModule.getRegion(object2d.regionRelativePath));
-				object2d.loadSpriteValuesFromData();
+				SpriteUtils.setRegion(object2d.sprite, cacheModule.getRegion(object2d.regionRelativePath));
 			}
 		}
 	}
 
 	public boolean save (EditorScene scene) {
-		prepareSceneForSave(scene);
+		//if needed here prepare scene for save
 
 		try {
 			Output output = new Output(new FileOutputStream(getFileHandleForScene(scene).file()));
@@ -98,15 +100,6 @@ public class SceneIOModule extends ProjectModule {
 		}
 
 		return false;
-	}
-
-	private void prepareSceneForSave (EditorScene scene) {
-		for (EditorSceneObject object : scene.objects) {
-			if (object instanceof Object2d) {
-				Object2d object2d = (Object2d) object;
-				object2d.saveSpriteDataValuesToData();
-			}
-		}
 	}
 
 	public void create (FileHandle relativeScenePath, SceneViewport viewport, int width, int height) {
