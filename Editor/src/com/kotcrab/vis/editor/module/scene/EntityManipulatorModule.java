@@ -30,19 +30,18 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.ColorPickerModule;
-import com.kotcrab.vis.editor.ui.scene.ObjectProperties;
-import com.kotcrab.vis.runtime.data.SpriteData;
+import com.kotcrab.vis.editor.ui.scene.EntityProperties;
 
-public class ObjectManipulatorModule extends SceneModule {
+public class EntityManipulatorModule extends SceneModule {
 	private CameraModule camera;
 	private UndoModule undoModule;
 
 	private ShapeRenderer shapeRenderer;
 
-	private ObjectProperties objectProperties;
+	private EntityProperties entityProperties;
 
-	private Array<EditorSceneObject> objects;
-	private Array<Object2d> selectedObjects = new Array<>();
+	private Array<EditorEntity> entities;
+	private Array<EditorEntity> selectedEntities = new Array<>();
 
 	private float lastTouchX;
 	private float lastTouchY;
@@ -55,27 +54,27 @@ public class ObjectManipulatorModule extends SceneModule {
 
 	@Override
 	public void added () {
-		this.objects = scene.objects;
+		this.entities = scene.entities;
 
 		shapeRenderer = sceneContainer.get(RendererModule.class).getShapeRenderer();
 		camera = sceneContainer.get(CameraModule.class);
 		undoModule = sceneContainer.get(UndoModule.class);
 
 		ColorPickerModule pickerModule = container.get(ColorPickerModule.class);
-		objectProperties = new ObjectProperties(pickerModule.getPicker(), sceneTab);
+		entityProperties = new EntityProperties(pickerModule.getPicker(), sceneTab);
 	}
 
 	@Override
 	public void render (Batch batch) {
-		if (selectedObjects.size > 0) {
+		if (selectedEntities.size > 0) {
 			batch.end();
 
 			shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
 			shapeRenderer.setColor(Color.WHITE);
 			shapeRenderer.begin(ShapeType.Line);
 
-			for (Object2d object : selectedObjects) {
-				Rectangle bounds = object.sprite.getBoundingRectangle();
+			for (EditorEntity entity : selectedEntities) {
+				Rectangle bounds = entity.getBoundingRectangle();
 				shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
 			}
 
@@ -85,15 +84,15 @@ public class ObjectManipulatorModule extends SceneModule {
 		}
 	}
 
-	public ObjectProperties getObjectProperties () {
-		return objectProperties;
+	public EntityProperties getEntityProperties () {
+		return entityProperties;
 	}
 
-	private boolean isMouseInsideSelectedObjects (float x, float y) {
-		for (Object2d object : selectedObjects)
-			if (object.sprite.getBoundingRectangle().contains(x, y)) {
-				Object2d result = findObjectWithSmallestSurfaceArea(x, y);
-				if (result == object) return true;
+	private boolean isMouseInsideSelectedEntities (float x, float y) {
+		for (EditorEntity entity : selectedEntities)
+			if (entity.getBoundingRectangle().contains(x, y)) {
+				EditorEntity result = findEntityWithSmallestSurfaceArea(x, y);
+				if (result == entity) return true;
 			}
 
 		return false;
@@ -109,15 +108,15 @@ public class ObjectManipulatorModule extends SceneModule {
 			lastTouchX = x;
 			lastTouchY = y;
 
-			if (isMouseInsideSelectedObjects(x, y) == false) {
+			if (isMouseInsideSelectedEntities(x, y) == false) {
 				//multiple select made easy
-				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) selectedObjects.clear();
+				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) selectedEntities.clear();
 
-				Object2d result = findObjectWithSmallestSurfaceArea(x, y);
-				if (result != null && selectedObjects.contains(result, true) == false)
-					selectedObjects.add(result);
+				EditorEntity result = findEntityWithSmallestSurfaceArea(x, y);
+				if (result != null && selectedEntities.contains(result, true) == false)
+					selectedEntities.add(result);
 
-				objectProperties.setValuesToFields(selectedObjects);
+				entityProperties.setValuesToFields(selectedEntities);
 
 				selected = true;
 				return true;
@@ -133,23 +132,23 @@ public class ObjectManipulatorModule extends SceneModule {
 
 		if (dragged == false) {
 			moveActions.clear();
-			for (Object2d object : selectedObjects)
-				moveActions.add(new MoveAction(object));
+			for (EditorEntity entity : selectedEntities)
+				moveActions.add(new MoveAction(entity));
 		}
 
-		if (dragging && selectedObjects.size > 0) {
+		if (dragging && selectedEntities.size > 0) {
 			dragged = true;
 			float deltaX = (x - lastTouchX);
 			float deltaY = (y - lastTouchY);
 
-			for (Object2d object : selectedObjects)
-				object.sprite.translate(deltaX, deltaY);
+			for (EditorEntity entity : selectedEntities)
+				entity.setPosition(entity.getX() + deltaX, entity.getY() + deltaY);
 
 			lastTouchX = x;
 			lastTouchY = y;
 
 			sceneTab.setDirty(true);
-			objectProperties.updateValues();
+			entityProperties.updateValues();
 		}
 	}
 
@@ -159,16 +158,16 @@ public class ObjectManipulatorModule extends SceneModule {
 		y = camera.getInputY();
 
 		if (dragged == false && selected == false) {
-			Object2d result = findObjectWithSmallestSurfaceArea(x, y);
+			EditorEntity result = findEntityWithSmallestSurfaceArea(x, y);
 			if (result != null)
-				selectedObjects.removeValue(result, true);
+				selectedEntities.removeValue(result, true);
 
-			objectProperties.setValuesToFields(selectedObjects);
+			entityProperties.setValuesToFields(selectedEntities);
 		}
 
 		if (dragged) {
-			for (int i = 0; i < selectedObjects.size; i++) {
-				moveActions.get(i).newData.saveFrom(selectedObjects.get(i).sprite);
+			for (int i = 0; i < selectedEntities.size; i++) {
+				moveActions.get(i).newData.saveFrom(selectedEntities.get(i));
 			}
 
 			UndoableActionGroup group = new UndoableActionGroup();
@@ -191,9 +190,9 @@ public class ObjectManipulatorModule extends SceneModule {
 	@Override
 	public boolean keyDown (InputEvent event, int keycode) {
 		if (keycode == Keys.FORWARD_DEL) { //Delete
-			undoModule.execute(new ObjectsRemoved(selectedObjects));
-			selectedObjects.clear();
-			objectProperties.setValuesToFields(selectedObjects);
+			undoModule.execute(new EntityRemoved(selectedEntities));
+			selectedEntities.clear();
+			entityProperties.setValuesToFields(selectedEntities);
 
 			return true;
 		}
@@ -202,87 +201,96 @@ public class ObjectManipulatorModule extends SceneModule {
 	}
 
 	/**
-	 * Returns object with smallest surface area that contains point x,y.
+	 * Returns entity with smallest surface area that contains point x,y.
 	 * <p/>
-	 * When selecting objects, and few of them are overlapping, selecting object with smallest
+	 * When selecting entities, and few of them are overlapping, selecting entity with smallest
 	 * area gives better results than just selecting first one.
 	 */
-	private Object2d findObjectWithSmallestSurfaceArea (float x, float y) {
-		Object2d matchingObject = null;
+	private EditorEntity findEntityWithSmallestSurfaceArea (float x, float y) {
+		EditorEntity matchingEntity = null;
 		float lastSurfaceArea = Float.MAX_VALUE;
 
-		for (EditorSceneObject object : objects) {
+		for (EditorEntity entity : entities) {
+			if (entity.getBoundingRectangle().contains(x, y)) {
+				float currentSurfaceArea = entity.getWidth() * entity.getHeight();
 
-			if (object instanceof Object2d) {
-				Object2d object2d = (Object2d) object;
-
-				if (object2d.sprite.getBoundingRectangle().contains(x, y)) {
-					float currentSurfaceArea = object2d.sprite.getWidth() * object2d.sprite.getHeight();
-
-					if (currentSurfaceArea < lastSurfaceArea) {
-						matchingObject = object2d;
-						lastSurfaceArea = currentSurfaceArea;
-					}
+				if (currentSurfaceArea < lastSurfaceArea) {
+					matchingEntity = entity;
+					lastSurfaceArea = currentSurfaceArea;
 				}
 			}
 
 		}
 
-		return matchingObject;
+		return matchingEntity;
 	}
 
-	public Array<Object2d> getSelectedObjects () {
-		return selectedObjects;
+	public Array<EditorEntity> getSelectedEntities () {
+		return selectedEntities;
 	}
 
-	public void select (Object2d object) {
-		selectedObjects.clear();
-		selectedObjects.add(object);
-		objectProperties.setValuesToFields(selectedObjects);
+	public void select (EditorEntity entity) {
+		selectedEntities.clear();
+		selectedEntities.add(entity);
+		entityProperties.setValuesToFields(selectedEntities);
 	}
 
-	private class ObjectsRemoved implements UndoableAction {
+	private class EntityRemoved implements UndoableAction {
 		private Array<Integer> indexes;
-		private Array<Object2d> objects;
+		private Array<EditorEntity> entities;
 
-		public ObjectsRemoved (Array<Object2d> selectedObjects) {
-			indexes = new Array<>(selectedObjects.size);
-			objects = new Array<>(selectedObjects);
+		public EntityRemoved (Array<EditorEntity> selectedEntities) {
+			indexes = new Array<>(selectedEntities.size);
+			entities = new Array<>(selectedEntities);
 		}
 
 		@Override
 		public void execute () {
-			for (Object2d object2d : objects)
-				indexes.add(scene.objects.indexOf(object2d, true));
+			for (EditorEntity entity : entities)
+				indexes.add(scene.entities.indexOf(entity, true));
 
-			scene.objects.removeAll(objects, true);
+			scene.entities.removeAll(entities, true);
 		}
 
 		@Override
 		public void undo () {
-			for (int i = 0; i < objects.size; i++)
-				scene.objects.insert(indexes.get(i), objects.get(i));
+			for (int i = 0; i < entities.size; i++)
+				scene.entities.insert(indexes.get(i), entities.get(i));
 		}
 	}
 
 	private class MoveAction implements UndoableAction {
-		private SpriteData oldData = new SpriteData();
-		private SpriteData newData = new SpriteData();
-		private Object2d obj;
+		private EntityPositionData oldData = new EntityPositionData();
+		private EntityPositionData newData = new EntityPositionData();
+		private EditorEntity entity;
 
-		public MoveAction (Object2d obj) {
-			this.obj = obj;
-			oldData.saveFrom(obj.sprite);
+		public MoveAction (EditorEntity entity) {
+			this.entity = entity;
+			oldData.saveFrom(entity);
 		}
 
 		@Override
 		public void execute () {
-			newData.loadTo(obj.sprite);
+			newData.loadTo(entity);
 		}
 
 		@Override
 		public void undo () {
-			oldData.loadTo(obj.sprite);
+			oldData.loadTo(entity);
+		}
+	}
+
+	private class EntityPositionData {
+		public float x;
+		public float y;
+
+		public void saveFrom (EditorEntity entity) {
+			x = entity.getX();
+			y = entity.getY();
+		}
+
+		public void loadTo (EditorEntity entity) {
+			entity.setPosition(x, y);
 		}
 	}
 }

@@ -43,10 +43,10 @@ import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
-import com.kotcrab.vis.editor.module.scene.EditorSceneObject;
+import com.kotcrab.vis.editor.module.scene.EditorEntity;
 import com.kotcrab.vis.editor.module.scene.GridRendererModule;
-import com.kotcrab.vis.editor.module.scene.Object2d;
-import com.kotcrab.vis.editor.module.scene.ObjectManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.SpriteObject;
+import com.kotcrab.vis.editor.module.scene.EntityManipulatorModule;
 import com.kotcrab.vis.editor.module.scene.RendererModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
@@ -67,7 +67,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 	private TextureCacheModule cacheModule;
 	private SceneIOModule sceneIOModule;
-	private ObjectManipulatorModule objectManipulatorModule;
+	private EntityManipulatorModule entityManipulatorModule;
 
 	private SceneModuleContainer sceneMC;
 	private UndoModule undoModule;
@@ -97,7 +97,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 		sceneMC.add(undoModule = new UndoModule());
 		sceneMC.add(new ZIndexManipulator());
-		sceneMC.add(objectManipulatorModule = new ObjectManipulatorModule());
+		sceneMC.add(entityManipulatorModule = new EntityManipulatorModule());
 		sceneMC.init();
 
 		outline = new SceneOutline();
@@ -121,7 +121,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		leftColumn.add().fill().expand();
 
 		rightColumn.top();
-		rightColumn.add(sceneMC.get(ObjectManipulatorModule.class).getObjectProperties()).expandX().fillX();
+		rightColumn.add(sceneMC.get(EntityManipulatorModule.class).getEntityProperties()).expandX().fillX();
 		rightColumn.row();
 		rightColumn.add().fill().expand();
 
@@ -147,18 +147,18 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		float x = cameraModule.getInputX() - sprite.getWidth() / 2;
 		float y = cameraModule.getInputY() - sprite.getHeight() / 2;
 
-		final Object2d object = new Object2d(cacheModule.getRelativePath(region), region, x, y);
+		final SpriteObject object = new SpriteObject(cacheModule.getRelativePath(region), region, x, y);
 
 		undoModule.execute(new UndoableAction() {
 			@Override
 			public void execute () {
-				scene.objects.add(object);
-				objectManipulatorModule.select(object);
+				scene.entities.add(object);
+				entityManipulatorModule.select(object);
 			}
 
 			@Override
 			public void undo () {
-				scene.objects.removeValue(object, true);
+				scene.entities.removeValue(object, true);
 			}
 		});
 
@@ -238,10 +238,10 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		}
 
 		if (event instanceof TexturesReloadedEvent) {
-			for (EditorSceneObject object : scene.objects) {
-				if (object instanceof Object2d) {
-					Object2d object2d = (Object2d) object;
-					SpriteUtils.setRegion(object2d.sprite, cacheModule.getRegion(object2d.regionRelativePath));
+			for (EditorEntity object : scene.entities) {
+				if (object instanceof SpriteObject) {
+					SpriteObject spriteObject = (SpriteObject) object;
+					SpriteUtils.setRegion(spriteObject.sprite, cacheModule.getRegion(spriteObject.regionRelativePath));
 				}
 			}
 		}

@@ -26,8 +26,8 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
-import com.kotcrab.vis.editor.module.scene.EditorSceneObject;
-import com.kotcrab.vis.editor.module.scene.Object2d;
+import com.kotcrab.vis.editor.module.scene.EditorEntity;
+import com.kotcrab.vis.editor.module.scene.SpriteObject;
 import com.kotcrab.vis.editor.ui.SpriteSerializer;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.SpriteUtils;
@@ -56,9 +56,11 @@ public class SceneIOModule extends ProjectModule {
 
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
-		kryo.register(EditorScene.class);
-		kryo.register(SpriteData.class);
 		kryo.register(SceneViewport.class);
+		kryo.register(EditorScene.class);
+		kryo.register(EditorEntity.class);
+		kryo.register(SpriteObject.class);
+		kryo.register(SpriteData.class);
 		kryo.register(Sprite.class, new SpriteSerializer());
 	}
 
@@ -79,10 +81,10 @@ public class SceneIOModule extends ProjectModule {
 	}
 
 	private void prepareSceneAfterLoad (EditorScene scene) {
-		for (EditorSceneObject object : scene.objects) {
-			if (object instanceof Object2d) {
-				Object2d object2d = (Object2d) object;
-				SpriteUtils.setRegion(object2d.sprite, cacheModule.getRegion(object2d.regionRelativePath));
+		for (EditorEntity entity : scene.entities) {
+			if (entity instanceof SpriteObject) {
+				SpriteObject spriteObject = (SpriteObject) entity;
+				SpriteUtils.setRegion(spriteObject.sprite, cacheModule.getRegion(spriteObject.regionRelativePath));
 			}
 		}
 	}

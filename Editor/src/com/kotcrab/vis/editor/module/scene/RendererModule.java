@@ -34,8 +34,8 @@ public class RendererModule extends SceneModule {
 
 	@Override
 	public void render (Batch batch) {
-		for (EditorSceneObject obj : scene.objects) {
-			Object2d obj2d = (Object2d) obj;
+		for (EditorEntity obj : scene.entities) {
+			SpriteObject obj2d = (SpriteObject) obj;
 			obj2d.sprite.draw(batch);
 		}
 

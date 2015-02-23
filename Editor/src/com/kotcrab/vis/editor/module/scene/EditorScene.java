@@ -31,7 +31,7 @@ public class EditorScene {
 	public int height;
 	public SceneViewport viewport;
 
-	public Array<EditorSceneObject> objects = new Array<EditorSceneObject>();
+	public Array<EditorEntity> entities = new Array<EditorEntity>();
 
 	public EditorScene (FileHandle file, SceneViewport viewport, int width, int height) {
 		this.path = file.path();

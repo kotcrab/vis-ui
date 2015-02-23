@@ -25,61 +25,57 @@ import com.badlogic.gdx.utils.Array;
 
 public class ZIndexManipulator extends SceneModule {
 	private UndoModule undoModule;
-	private ObjectManipulatorModule objectManipulator;
+	private EntityManipulatorModule entityManipulator;
 
 	private UndoableActionGroup actionGroup;
 
 	@Override
 	public void init () {
 		undoModule = sceneContainer.get(UndoModule.class);
-		objectManipulator = sceneContainer.get(ObjectManipulatorModule.class);
+		entityManipulator = sceneContainer.get(EntityManipulatorModule.class);
 	}
 
-	private void moveSelectedObjects (boolean up) {
+	private void moveSelectedEntities (boolean up) {
 		actionGroup = new UndoableActionGroup();
 
-		Array<Object2d> selectedObjects = objectManipulator.getSelectedObjects();
+		Array<EditorEntity> selectedEntities = entityManipulator.getSelectedEntities();
 
-		for (Object2d object : selectedObjects) {
-			moveObject(object, getOverlappingObjects(object, up), up);
+		for (EditorEntity entity : selectedEntities) {
+			moveEntity(entity, getOverlappingEntities(entity, up), up);
 		}
 
 		actionGroup.finalizeGroup();
 		undoModule.add(actionGroup);
 	}
 
-	private void moveObject (Object2d object, Array<Object2d> overlappingObjects, boolean up) {
+	private void moveEntity (EditorEntity entity, Array<EditorEntity> overlappingEntities, boolean up) {
+		if (overlappingEntities.size > 0) {
+			int currentIndex = scene.entities.indexOf(entity, true);
+			int targetIndex = scene.entities.indexOf(overlappingEntities.first(), true);
 
-		if (overlappingObjects.size > 0) {
-			int currentIndex = scene.objects.indexOf(object, true);
-			int targetIndex = scene.objects.indexOf(overlappingObjects.first(), true);
-
-			for (Object2d obj : overlappingObjects) {
-				int sceneIndex = scene.objects.indexOf(obj, true);
+			for (EditorEntity overlappingEntity : overlappingEntities) {
+				int sceneIndex = scene.entities.indexOf(overlappingEntity, true);
 				if (up ? sceneIndex < targetIndex : sceneIndex > targetIndex)
 					targetIndex = sceneIndex;
 			}
 
-			actionGroup.execute(new ZIndexChangeAction(object, currentIndex, targetIndex));
+			actionGroup.execute(new ZIndexChangeAction(entity, currentIndex, targetIndex));
 		}
 	}
 
-	private Array<Object2d> getOverlappingObjects (Object2d object, boolean up) {
-		Array<Object2d> overlapping = new Array<>();
-		int objectIndex = scene.objects.indexOf(object, true);
+	private Array<EditorEntity> getOverlappingEntities (EditorEntity entity, boolean up) {
+		Array<EditorEntity> overlapping = new Array<>();
+		int entityIndex = scene.entities.indexOf(entity, true);
 
-		for (EditorSceneObject o : scene.objects) {
-			if (o instanceof Object2d) {
-				Object2d sceneObject = (Object2d) o;
-				int sceneObjectIndex = scene.objects.indexOf(sceneObject, true);
+		for (EditorEntity sceneEntity : scene.entities) {
+			int sceneEntityIndex = scene.entities.indexOf(sceneEntity, true);
 
-				if (object != sceneObject &&
-						object.sprite.getBoundingRectangle().overlaps(sceneObject.sprite.getBoundingRectangle())) {
+			if (entity != sceneEntity &&
+					entity.getBoundingRectangle().overlaps(sceneEntity.getBoundingRectangle())) {
 
-					if (up ? (objectIndex < sceneObjectIndex) : (objectIndex > sceneObjectIndex))
-						overlapping.add(sceneObject);
+				if (up ? (entityIndex < sceneEntityIndex) : (entityIndex > sceneEntityIndex))
+					overlapping.add(sceneEntity);
 
-				}
 			}
 		}
 
@@ -89,12 +85,12 @@ public class ZIndexManipulator extends SceneModule {
 	@Override
 	public boolean keyDown (InputEvent event, int keycode) {
 		if (keycode == Keys.PAGE_UP) {
-			moveSelectedObjects(true);
+			moveSelectedEntities(true);
 			return true;
 		}
 
 		if (keycode == Keys.PAGE_DOWN) {
-			moveSelectedObjects(false);
+			moveSelectedEntities(false);
 			return true;
 		}
 
@@ -102,26 +98,26 @@ public class ZIndexManipulator extends SceneModule {
 	}
 
 	private class ZIndexChangeAction implements UndoableAction {
-		private Object2d object;
+		private EditorEntity entity;
 		private int currentIndex;
 		private int targetIndex;
 
-		public ZIndexChangeAction (Object2d object, int currentIndex, int targetIndex) {
-			this.object = object;
+		public ZIndexChangeAction (EditorEntity entity, int currentIndex, int targetIndex) {
+			this.entity = entity;
 			this.currentIndex = currentIndex;
 			this.targetIndex = targetIndex;
 		}
 
 		@Override
 		public void execute () {
-			scene.objects.removeIndex(currentIndex);
-			scene.objects.insert(targetIndex, object);
+			scene.entities.removeIndex(currentIndex);
+			scene.entities.insert(targetIndex, entity);
 		}
 
 		@Override
 		public void undo () {
-			scene.objects.removeIndex(targetIndex);
-			scene.objects.insert(currentIndex, object);
+			scene.entities.removeIndex(targetIndex);
+			scene.entities.insert(currentIndex, entity);
 		}
 	}
 }

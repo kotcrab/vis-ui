@@ -23,7 +23,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -37,7 +36,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.module.scene.Object2d;
+import com.kotcrab.vis.editor.module.scene.EditorEntity;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.ui.InputValidator;
@@ -53,7 +52,7 @@ import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
 import org.lwjgl.input.Keyboard;
 
-public class ObjectProperties extends VisTable {
+public class EntityProperties extends VisTable {
 	private static final int FIELD_WIDTH = 70;
 
 	private VisValidableTextField idField;
@@ -69,7 +68,7 @@ public class ObjectProperties extends VisTable {
 
 	private ColorImage tint;
 
-	private Array<Object2d> objects;
+	private Array<EditorEntity> entities;
 
 	private ChangeListener sharedChangeListener;
 	private FieldFilter sharedFieldFilter;
@@ -78,7 +77,7 @@ public class ObjectProperties extends VisTable {
 
 	private ColorPickerListener pickerListener;
 
-	public ObjectProperties (final ColorPicker picker, final Tab parentTab) {
+	public EntityProperties (final ColorPicker picker, final Tab parentTab) {
 		super(true);
 		this.parentTab = parentTab;
 
@@ -100,8 +99,8 @@ public class ObjectProperties extends VisTable {
 		pickerListener = new ColorPickerAdapter() {
 			@Override
 			public void finished (Color newColor) {
-				for (Object2d object : objects)
-					object.sprite.setColor(newColor);
+				for (EditorEntity entity : entities)
+					entity.setColor(newColor);
 
 				parentTab.setDirty(true);
 				tint.setColor(newColor);
@@ -125,7 +124,6 @@ public class ObjectProperties extends VisTable {
 				getStage().addActor(picker.fadeIn());
 			}
 		});
-
 
 		VisTable idTable = new VisTable(true);
 
@@ -177,7 +175,7 @@ public class ObjectProperties extends VisTable {
 		propertiesTable.row();
 
 		top();
-		add(new VisLabel("Object Properties"));
+		add(new VisLabel("Entity Properties"));
 		row();
 		add(propertiesTable).fill().expand().padRight(0);
 
@@ -230,94 +228,94 @@ public class ObjectProperties extends VisTable {
 		});
 	}
 
-	public void setValuesToFields (Array<Object2d> objects) {
-		this.objects = objects;
+	public void setValuesToFields (Array<EditorEntity> entities) {
+		this.entities = entities;
 
-		if (objects.size == 0)
+		if (entities.size == 0)
 			setVisible(false);
-		else if (objects.size == 1) {
+		else if (entities.size == 1) {
 			setVisible(true);
 
-			Object2d obj = objects.get(0);
+			EditorEntity obj = entities.get(0);
 
 			if (obj.id == null)
 				idField.setText("");
 			else
 				idField.setText(obj.id);
 
-			xField.setText(floatToString(obj.sprite.getX()));
-			yField.setText(floatToString(obj.sprite.getY()));
-			xScaleField.setText(floatToString(obj.sprite.getScaleX()));
-			yScaleField.setText(floatToString(obj.sprite.getScaleY()));
-			xOriginField.setText(floatToString(obj.sprite.getOriginX()));
-			yOriginField.setText(floatToString(obj.sprite.getOriginY()));
-			rotationField.setText(floatToString(obj.sprite.getRotation()));
+			xField.setText(floatToString(obj.getX()));
+			yField.setText(floatToString(obj.getY()));
+			xScaleField.setText(floatToString(obj.getScaleX()));
+			yScaleField.setText(floatToString(obj.getScaleY()));
+			xOriginField.setText(floatToString(obj.getOriginX()));
+			yOriginField.setText(floatToString(obj.getOriginY()));
+			rotationField.setText(floatToString(obj.getRotation()));
 			tint.setUnknown(false);
-			tint.setColor(obj.sprite.getColor());
+			tint.setColor(obj.getColor());
 
-			xFlipCheck.setChecked(obj.sprite.isFlipX());
-			yFlipCheck.setChecked(obj.sprite.isFlipY());
+			xFlipCheck.setChecked(obj.isFlipX());
+			yFlipCheck.setChecked(obj.isFlipY());
 		} else {
 			setVisible(true);
 
-			idField.setText(getObjectsId());
-			xField.setText(getObjectsFieldValue(new ObjectValue() {
+			idField.setText(getEntitiesId());
+			xField.setText(getEntitiesFieldValue(new EntityValue() {
 				@Override
-				public float getValue (Object2d object) {
-					return object.sprite.getX();
+				public float getValue (EditorEntity entity) {
+					return entity.getX();
 				}
 			}));
-			yField.setText(getObjectsFieldValue(new ObjectValue() {
+			yField.setText(getEntitiesFieldValue(new EntityValue() {
 				@Override
-				public float getValue (Object2d object) {
-					return object.sprite.getY();
+				public float getValue (EditorEntity entity) {
+					return entity.getY();
 				}
 			}));
-			xScaleField.setText(getObjectsFieldValue(new ObjectValue() {
+			xScaleField.setText(getEntitiesFieldValue(new EntityValue() {
 				@Override
-				public float getValue (Object2d object) {
-					return object.sprite.getScaleX();
+				public float getValue (EditorEntity entity) {
+					return entity.getScaleX();
 				}
 			}));
-			yScaleField.setText(getObjectsFieldValue(new ObjectValue() {
+			yScaleField.setText(getEntitiesFieldValue(new EntityValue() {
 				@Override
-				public float getValue (Object2d object) {
-					return object.sprite.getScaleY();
+				public float getValue (EditorEntity entity) {
+					return entity.getScaleY();
 				}
 			}));
-			xOriginField.setText(getObjectsFieldValue(new ObjectValue() {
+			xOriginField.setText(getEntitiesFieldValue(new EntityValue() {
 				@Override
-				public float getValue (Object2d object) {
-					return object.sprite.getOriginX();
+				public float getValue (EditorEntity entity) {
+					return entity.getOriginX();
 				}
 			}));
-			yOriginField.setText(getObjectsFieldValue(new ObjectValue() {
+			yOriginField.setText(getEntitiesFieldValue(new EntityValue() {
 				@Override
-				public float getValue (Object2d object) {
-					return object.sprite.getOriginY();
+				public float getValue (EditorEntity entity) {
+					return entity.getOriginY();
 				}
 			}));
-			rotationField.setText(getObjectsFieldValue(new ObjectValue() {
+			rotationField.setText(getEntitiesFieldValue(new EntityValue() {
 				@Override
-				public float getValue (Object2d object) {
-					return object.sprite.getRotation();
+				public float getValue (EditorEntity entity) {
+					return entity.getRotation();
 				}
 			}));
-			setTintForObjects();
-			setXCheckForObjects();
-			setYCheckForObjects();
+			setTintForEntities();
+			setXCheckForEntities();
+			setYCheckForEntities();
 		}
 	}
 
-	private String getObjectsId () {
-		String firstId = objects.first().id;
+	private String getEntitiesId () {
+		String firstId = entities.first().id;
 		if (firstId == null) firstId = "";
 
-		for (Object2d object : objects) {
-			String objectId = object.id;
-			if (objectId == null) objectId = "";
+		for (EditorEntity entity : entities) {
+			String entityId = entity.id;
+			if (entityId == null) entityId = "";
 
-			if (firstId.equals(objectId) == false) {
+			if (firstId.equals(entityId) == false) {
 				return "<?>";
 			}
 		}
@@ -325,10 +323,10 @@ public class ObjectProperties extends VisTable {
 		return firstId;
 	}
 
-	private void setXCheckForObjects () {
-		boolean xFlip = objects.first().sprite.isFlipX();
-		for (Object2d object : objects) {
-			if (xFlip != object.sprite.isFlipX()) {
+	private void setXCheckForEntities () {
+		boolean xFlip = entities.first().isFlipX();
+		for (EditorEntity entity : entities) {
+			if (xFlip != entity.isFlipX()) {
 				tint.setUnknown(false);
 				return;
 			}
@@ -336,10 +334,10 @@ public class ObjectProperties extends VisTable {
 		xFlipCheck.setChecked(xFlip);
 	}
 
-	private void setYCheckForObjects () {
-		boolean yFlip = objects.first().sprite.isFlipY();
-		for (Object2d object : objects) {
-			if (yFlip != object.sprite.isFlipY()) {
+	private void setYCheckForEntities () {
+		boolean yFlip = entities.first().isFlipY();
+		for (EditorEntity entity : entities) {
+			if (yFlip != entity.isFlipY()) {
 				tint.setUnknown(false);
 				return;
 			}
@@ -347,10 +345,10 @@ public class ObjectProperties extends VisTable {
 		yFlipCheck.setChecked(yFlip);
 	}
 
-	private void setTintForObjects () {
-		Color firstColor = objects.first().sprite.getColor();
-		for (Object2d object : objects) {
-			if (firstColor.equals(object.sprite.getColor()) == false) {
+	private void setTintForEntities () {
+		Color firstColor = entities.first().getColor();
+		for (EditorEntity entity : entities) {
+			if (firstColor.equals(entity.getColor()) == false) {
 				tint.setUnknown(true);
 				return;
 			}
@@ -358,34 +356,33 @@ public class ObjectProperties extends VisTable {
 		tint.setColor(firstColor);
 	}
 
-	private String getObjectsFieldValue (ObjectValue objValue) {
-		float value = objValue.getValue(objects.first());
+	private String getEntitiesFieldValue (EntityValue objValue) {
+		float value = objValue.getValue(entities.first());
 
-		for (Object2d object : objects)
-			if (value != objValue.getValue(object)) return "?";
+		for (EditorEntity entity : entities)
+			if (value != objValue.getValue(entity)) return "?";
 
 		return floatToString(value);
 	}
 
 	private void setValuesToSprite () {
-		for (Object2d object : objects) {
-			Sprite sprite = object.sprite;
+		for (EditorEntity entity : entities) {
 
-			object.id = idField.getText().equals("") ? null : idField.getText();
-			sprite.setPosition(FieldUtils.getFloat(xField, sprite.getX()), FieldUtils.getFloat(yField, sprite.getY()));
-			sprite.setScale(FieldUtils.getFloat(xScaleField, sprite.getScaleX()), FieldUtils.getFloat(yScaleField, sprite.getScaleY()));
-			sprite.setOrigin(FieldUtils.getFloat(xOriginField, sprite.getOriginX()), FieldUtils.getFloat(yOriginField, sprite.getOriginY()));
-			sprite.setRotation(FieldUtils.getFloat(rotationField, sprite.getRotation()));
-			sprite.setFlip(xFlipCheck.isChecked(), yFlipCheck.isChecked());
+			entity.id = idField.getText().equals("") ? null : idField.getText();
+			entity.setPosition(FieldUtils.getFloat(xField, entity.getX()), FieldUtils.getFloat(yField, entity.getY()));
+			entity.setScale(FieldUtils.getFloat(xScaleField, entity.getScaleX()), FieldUtils.getFloat(yScaleField, entity.getScaleY()));
+			entity.setOrigin(FieldUtils.getFloat(xOriginField, entity.getOriginX()), FieldUtils.getFloat(yOriginField, entity.getOriginY()));
+			entity.setRotation(FieldUtils.getFloat(rotationField, entity.getRotation()));
+			entity.setFlip(xFlipCheck.isChecked(), yFlipCheck.isChecked());
 		}
 	}
 
 	public void updateValues () {
-		setValuesToFields(objects);
+		setValuesToFields(entities);
 	}
 
-	private interface ObjectValue {
-		public float getValue (Object2d object);
+	private interface EntityValue {
+		public float getValue (EditorEntity entity);
 	}
 
 	private class FieldValidator implements InputValidator {
@@ -422,7 +419,7 @@ public class ObjectProperties extends VisTable {
 		public InputField () {
 			addValidator(sharedFieldValidator);
 
-			//without disabling it, it would case to set old values from new object on switch
+			//without disabling it, it would case to set old values from new entities on switch
 			setProgrammaticChangeEvents(false);
 
 			addListener(sharedChangeListener);

@@ -27,9 +27,9 @@ import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
+import com.kotcrab.vis.editor.module.scene.EditorEntity;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
-import com.kotcrab.vis.editor.module.scene.EditorSceneObject;
-import com.kotcrab.vis.editor.module.scene.Object2d;
+import com.kotcrab.vis.editor.module.scene.SpriteObject;
 import com.kotcrab.vis.editor.ui.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.Log;
@@ -39,7 +39,6 @@ import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.data.SceneSpriteData;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
 import org.apache.commons.io.FileUtils;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -73,7 +72,7 @@ public class ExportModule extends ProjectModule {
 				exportLibGDX(quick);
 				break;
 			case Generic:
-				throw new NotImplementedException();
+				throw new UnsupportedOperationException("Not implemented yet");
 		}
 	}
 
@@ -195,9 +194,9 @@ public class ExportModule extends ProjectModule {
 					sceneData.height = editorScene.height;
 					sceneData.entities = new Array<>();
 
-					for (EditorSceneObject object : editorScene.objects) {
-						if (object instanceof Object2d) {
-							Object2d obj = (Object2d) object;
+					for (EditorEntity entity : editorScene.entities) {
+						if (entity instanceof SpriteObject) {
+							SpriteObject obj = (SpriteObject) entity;
 							Sprite s = obj.sprite;
 
 							SceneSpriteData data = new SceneSpriteData();
