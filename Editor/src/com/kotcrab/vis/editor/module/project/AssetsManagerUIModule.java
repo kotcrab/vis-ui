@@ -40,6 +40,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.TabsModule;
 import com.kotcrab.vis.editor.module.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
@@ -158,15 +159,15 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		contentTitleLabel = new VisLabel("Content");
 		searchTextField = new VisTextField();
 
-		VisImageButton exploreButton = new VisImageButton(Assets.getIcon("folder-open"), "Explore");
-		VisImageButton settingsButton = new VisImageButton(Assets.getIcon("settings-view"), "Change view");
-		VisImageButton importButton = new VisImageButton(Assets.getIcon("import"), "Import");
+		VisImageButton exploreButton = new VisImageButton(Assets.getIcon(Icons.FOLDER_OPEN), "Explore");
+		VisImageButton settingsButton = new VisImageButton(Assets.getIcon(Icons.SETTINGS_VIEW), "Change view");
+		VisImageButton importButton = new VisImageButton(Assets.getIcon(Icons.IMPORT), "Import");
 
 		toolbarTable.add(contentTitleLabel).expand().left().padLeft(3);
 		toolbarTable.add(exploreButton);
 		toolbarTable.add(settingsButton);
 		toolbarTable.add(importButton);
-		toolbarTable.add(new Image(Assets.getIcon("search"))).spaceRight(3);
+		toolbarTable.add(new Image(Assets.getIcon(Icons.SEARCH))).spaceRight(3);
 
 		toolbarTable.add(searchTextField).width(200);
 

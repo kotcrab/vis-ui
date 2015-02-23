@@ -37,8 +37,8 @@ public class Assets {
 		misc.dispose();
 	}
 
-	public static Drawable getIcon (String name) {
-		return new TextureRegionDrawable(icons.findRegion(name));
+	public static Drawable getIcon (Icons icon) {
+		return new TextureRegionDrawable(icons.findRegion(icon.getIconName()));
 	}
 
 	public static Drawable getMisc (String name) {

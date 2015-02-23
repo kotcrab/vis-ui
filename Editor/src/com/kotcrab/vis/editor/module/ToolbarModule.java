@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.MenuEvent;
@@ -38,7 +39,7 @@ public class ToolbarModule extends EditorModule implements EventListener {
 	public ToolbarModule () {
 		table = new VisTable(false);
 		table.setBackground(VisUI.getSkin().getDrawable("button"));
-		table.add(createButton("save", MenuEventType.FILE_SAVE));
+		table.add(createButton(Icons.SAVE, "Save", MenuEventType.FILE_SAVE));
 		table.add().expand().fill();
 	}
 
@@ -61,8 +62,8 @@ public class ToolbarModule extends EditorModule implements EventListener {
 		return table;
 	}
 
-	private VisImageButton createButton (String iconName, MenuEventType eventType) {
-		VisImageButton button = new VisImageButton(Assets.getIcon(iconName), "Save");
+	private VisImageButton createButton (Icons icon, String text, MenuEventType eventType) {
+		VisImageButton button = new VisImageButton(Assets.getIcon(icon), text);
 		button.addListener(new ToolbarButtonChangeListener(eventType));
 		return button;
 	}

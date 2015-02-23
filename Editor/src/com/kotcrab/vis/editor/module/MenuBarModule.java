@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
@@ -108,7 +109,7 @@ public class MenuBarModule extends EditorModule {
 			}
 		});
 
-		MenuItem settings = new MenuItem("Settings", Assets.getIcon("settings"), new ChangeListener() {
+		MenuItem settings = new MenuItem("Settings", Assets.getIcon(Icons.SETTINGS), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				editor.showSettingsWindow();
@@ -123,7 +124,7 @@ public class MenuBarModule extends EditorModule {
 			}
 		});
 
-		MenuItem export = new MenuItem("Export", Assets.getIcon("export"), new ChangeListener() {
+		MenuItem export = new MenuItem("Export", Assets.getIcon(Icons.EXPORT), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				ExportModule exportModule = projectContainer.get(ExportModule.class);
@@ -134,14 +135,14 @@ public class MenuBarModule extends EditorModule {
 		Menu menu = new Menu("File");
 		menuBar.addMenu(menu);
 
-		menu.addItem(new MenuItem("New Project...", Assets.getIcon("new"), new ChangeListener() {
+		menu.addItem(new MenuItem("New Project...", Assets.getIcon(Icons.NEW), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				stage.addActor(new NewProjectDialog(projectIOModule).fadeIn());
 			}
 		}));
 
-		menu.addItem(new MenuItem("Load Project...", Assets.getIcon("load"), new ChangeListener() {
+		menu.addItem(new MenuItem("Load Project...", Assets.getIcon(Icons.LOAD), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				stage.addActor(chooser.fadeIn());
@@ -157,7 +158,7 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(settings);
 		menu.addSeparator();
 
-		menu.addItem(new MenuItem("Exit", Assets.getIcon("exit"), new ChangeListener() {
+		menu.addItem(new MenuItem("Exit", Assets.getIcon(Icons.EXIT), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				editor.requestExit();
@@ -173,14 +174,14 @@ public class MenuBarModule extends EditorModule {
 		Menu menu = new Menu("Edit");
 		menuBar.addMenu(menu);
 
-		menu.addItem(new MenuItem("Undo", Assets.getIcon("undo"), new ChangeListener() {
+		menu.addItem(new MenuItem("Undo", Assets.getIcon(Icons.UNDO), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				sceneButtonsListener.undo();
 			}
 		}));
 
-		menu.addItem(new MenuItem("Redo", Assets.getIcon("redo"), new ChangeListener() {
+		menu.addItem(new MenuItem("Redo", Assets.getIcon(Icons.REDO), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				sceneButtonsListener.redo();
@@ -192,7 +193,7 @@ public class MenuBarModule extends EditorModule {
 		Menu menu = new Menu("Scene");
 		menuBar.addMenu(menu);
 
-		MenuItem newScene = new MenuItem("New Scene...", Assets.getIcon("new"), new ChangeListener() {
+		MenuItem newScene = new MenuItem("New Scene...", Assets.getIcon(Icons.NEW), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
@@ -239,14 +240,14 @@ public class MenuBarModule extends EditorModule {
 		Menu menu = new Menu("Help");
 		menuBar.addMenu(menu);
 
-		menu.addItem(new MenuItem("Web", Assets.getIcon("globe"), new ChangeListener() {
+		menu.addItem(new MenuItem("Web", Assets.getIcon(Icons.GLOBE), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				Gdx.net.openURI("http://vis.kotcrab.com");
 			}
 		}));
 
-		menu.addItem(new MenuItem("About", Assets.getIcon("info"), new ChangeListener() {
+		menu.addItem(new MenuItem("About", Assets.getIcon(Icons.INFO), new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				//TODO make better about
