@@ -21,7 +21,7 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.TabsModule;
-import com.kotcrab.vis.editor.module.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabbedPaneListener;

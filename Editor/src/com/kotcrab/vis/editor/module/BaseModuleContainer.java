@@ -41,7 +41,7 @@ public class BaseModuleContainer<T extends BaseModule> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <C> C get (Class<C> moduleClass) {
+	public <C extends BaseModule> C get (Class<C> moduleClass) {
 		for (int i = 0; i < modules.size; i++) {
 			BaseModule m = modules.get(i);
 			if (m.getClass() == moduleClass) return (C) m;

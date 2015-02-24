@@ -29,7 +29,6 @@ public class SpriteEntity extends Entity {
 
 	@Override
 	public void render (SpriteBatch batch) {
-		System.out.println("DRAWING: " + getId());
 		sprite.draw(batch);
 	}
 

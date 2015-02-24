@@ -19,10 +19,9 @@
 
 package com.kotcrab.vis.editor.util;
 
-import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
-import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
 
 import java.io.IOException;
 import java.nio.file.ClosedWatchServiceException;
@@ -32,6 +31,7 @@ import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
@@ -44,9 +44,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.Array;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
+import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
+import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 //https://github.com/syncany/syncany/blob/59cf87c72de4322c737f0073ce8a7ddd992fd898/syncany-lib/src/main/java/org/syncany/operations/watch/RecursiveWatcher.java
 
@@ -114,8 +115,20 @@ public class DirectoryWatcher {
 								Path dir = (Path)watchKey.watchable();
 								Path fullPath = dir.resolve(ev.context());
 
-								for (WatchListener listener : listeners)
-									listener.fileChanged(Gdx.files.absolute(fullPath.toFile().toString()));
+								if (ev.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
+									for (WatchListener listener : listeners)
+										listener.fileChanged(Gdx.files.absolute(fullPath.toFile().toString()));
+								}
+
+								if (ev.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
+									for (WatchListener listener : listeners)
+										listener.fileDeleted(Gdx.files.absolute(fullPath.toFile().toString()));
+								}
+
+								if (ev.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
+									for (WatchListener listener : listeners)
+										listener.fileCreated(Gdx.files.absolute(fullPath.toFile().toString()));
+								}
 							}
 
 							watchKey.reset();
@@ -232,5 +245,9 @@ public class DirectoryWatcher {
 
 	public interface WatchListener {
 		public void fileChanged (FileHandle file);
+
+		public void fileDeleted(FileHandle file);
+
+		public void fileCreated (FileHandle file);
 	}
 }

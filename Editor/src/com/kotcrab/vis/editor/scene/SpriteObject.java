@@ -17,7 +17,7 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.scene;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -32,6 +32,36 @@ public class SpriteObject extends EditorEntity {
 		this.sprite = new Sprite(region);
 		this.regionRelativePath = regionRelativePath;
 		sprite.setPosition(x, y);
+	}
+
+	@Override
+	public boolean isFlipSupported () {
+		return true;
+	}
+
+	@Override
+	public boolean isResizeSupported () {
+		return true;
+	}
+
+	@Override
+	public boolean isOriginSupported () {
+		return true;
+	}
+
+	@Override
+	public boolean isScaleSupported () {
+		return true;
+	}
+
+	@Override
+	public boolean isTintSupported () {
+		return true;
+	}
+
+	@Override
+	public boolean isRotationSupported () {
+		return true;
 	}
 
 	@Override
@@ -64,15 +94,12 @@ public class SpriteObject extends EditorEntity {
 		return sprite.getWidth();
 	}
 
-	@Override
-	public void setWidth (float width) {
-		sprite.setSize(width, sprite.getHeight());
-	}
 
 	@Override
 	public float getHeight () {
 		return sprite.getHeight();
 	}
+
 
 	@Override
 	public void setSize (float width, float height) {
@@ -80,29 +107,16 @@ public class SpriteObject extends EditorEntity {
 	}
 
 	@Override
-	public void setHeight (float height) {
-		sprite.setSize(sprite.getWidth(), height);
-	}
-
-	@Override
 	public float getOriginX () {
 		return sprite.getOriginX();
 	}
 
-	@Override
-	public void setOriginX (float x) {
-		sprite.setOrigin(x, sprite.getOriginY());
-	}
 
 	@Override
 	public float getOriginY () {
 		return sprite.getOriginY();
 	}
 
-	@Override
-	public void setOriginY (float y) {
-		sprite.setOrigin(sprite.getOriginX(), y);
-	}
 
 	@Override
 	public void setOrigin (float x, float y) {
@@ -114,20 +128,12 @@ public class SpriteObject extends EditorEntity {
 		return sprite.getScaleX();
 	}
 
-	@Override
-	public void setScaleX (float x) {
-		sprite.setScale(x, sprite.getScaleY());
-	}
 
 	@Override
 	public float getScaleY () {
 		return sprite.getScaleY();
 	}
 
-	@Override
-	public void setScaleY (float y) {
-		sprite.setScale(sprite.getScaleX(), y);
-	}
 
 	@Override
 	public void setScale (float x, float y) {
@@ -160,18 +166,8 @@ public class SpriteObject extends EditorEntity {
 	}
 
 	@Override
-	public void setFlipX (boolean x) {
-		sprite.setFlip(x, sprite.isFlipY());
-	}
-
-	@Override
 	public boolean isFlipY () {
 		return sprite.isFlipY();
-	}
-
-	@Override
-	public void setFlipY (boolean y) {
-		sprite.setFlip(sprite.isFlipX(), y);
 	}
 
 	@Override

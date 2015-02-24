@@ -42,7 +42,7 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.TabsModule;
-import com.kotcrab.vis.editor.module.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
@@ -359,6 +359,16 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 	public void fileChanged (FileHandle file) {
 		// TODO refresh tree
 		if (file.parent().equals(currentDirectory)) refreshRequested = true;
+	}
+
+	@Override
+	public void fileDeleted (FileHandle file) {
+
+	}
+
+	@Override
+	public void fileCreated (FileHandle file) {
+
 	}
 
 	@Override

@@ -30,6 +30,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.ColorPickerModule;
+import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.ui.scene.EntityProperties;
 
 public class EntityManipulatorModule extends SceneModule {

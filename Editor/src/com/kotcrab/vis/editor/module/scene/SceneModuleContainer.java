@@ -26,6 +26,7 @@ import com.kotcrab.vis.editor.module.BaseModuleContainer;
 import com.kotcrab.vis.editor.module.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 
 public class SceneModuleContainer extends BaseModuleContainer<SceneModule> {

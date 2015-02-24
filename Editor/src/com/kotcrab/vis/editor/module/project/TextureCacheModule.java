@@ -160,6 +160,16 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		}
 	}
 
+	@Override
+	public void fileDeleted (FileHandle file) {
+
+	}
+
+	@Override
+	public void fileCreated (FileHandle file) {
+
+	}
+
 	public TextureRegion getRegion (FileHandle file) {
 		return getRegion(resolvePath(file));
 	}
