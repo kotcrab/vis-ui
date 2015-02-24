@@ -235,6 +235,11 @@ public class EntityManipulatorModule extends SceneModule {
 		entityProperties.setValuesToFields(selectedEntities);
 	}
 
+	public void resetSelection () {
+		selectedEntities.clear();
+		entityProperties.setValuesToFields(selectedEntities);
+	}
+
 	private class EntityRemoved implements UndoableAction {
 		private Array<Integer> indexes;
 		private Array<EditorEntity> entities;

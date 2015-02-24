@@ -159,6 +159,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 			@Override
 			public void undo () {
 				scene.entities.removeValue(object, true);
+				entityManipulatorModule.resetSelection();
 			}
 		});
 
