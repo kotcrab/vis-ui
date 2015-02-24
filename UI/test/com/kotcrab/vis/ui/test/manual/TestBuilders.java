@@ -131,10 +131,11 @@ public class TestBuilders extends VisWindow {
 
 			builder.append(new VisLabel("title label"));
 			builder.row();
+
 			builder.append(new VisLabel("path"));
 			builder.append(rowLayout, CellWidget.builder().fillX(),
 					CellWidget.of(new VisTextField()).expandX().fillX().wrap(),
-					CellWidget.of(new VisTextButton("choose")).padding(new Padding(0,0)).wrap());
+					CellWidget.of(new VisTextButton("choose")).padding(new Padding(0, 0)).wrap());
 			builder.row();
 
 			builder.append(new VisLabel("name"));
@@ -150,6 +151,7 @@ public class TestBuilders extends VisWindow {
 				builder.append(new VisLabel("checkboxes"));
 				builder.append(rowLayout, getCheckBoxArray(5));
 				builder.row();
+				
 				builder.append(CellWidget.of(new Separator()).fillX().wrap());
 				builder.row();
 
@@ -179,13 +181,11 @@ public class TestBuilders extends VisWindow {
 		private VisCheckBox[] getCheckBoxArray (int count) {
 			VisCheckBox[] array = new VisCheckBox[count];
 
-			for (int i = 0; i < count; i++) {
+			for (int i = 0; i < count; i++)
 				array[i] = new VisCheckBox("check");
-			}
 
 			return array;
 		}
-
 	}
 
 	private class RowLayout implements ActorLayout {
@@ -204,9 +204,8 @@ public class TestBuilders extends VisWindow {
 		public Actor convertToActor (CellWidget<?>... widgets) {
 			OneRowTableBuilder builder = new OneRowTableBuilder(padding);
 
-			for ( CellWidget<?> widget : widgets) {
+			for (CellWidget<?> widget : widgets)
 				builder.append(widget);
-			}
 
 			return builder.build();
 		}
