@@ -50,7 +50,7 @@ com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 	default-horizontal: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled },
-	default-vertical: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled }
+	default-vertical: { background: slider-vertical, knob: slider-knob, disabledKnob: slider-knob-disabled }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: { font: default-font, fontColor: white },
@@ -90,7 +90,7 @@ com.kotcrab.vis.ui.widget.VisImageButton$VisImageButtonStyle: {
 },
 com.kotcrab.vis.ui.widget.VisSlider$VisSliderStyle: {
 	default-horizontal: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled, knobOver: slider-knob-over, knobDown: slider-knob-down },
-	default-vertical: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled, knobOver: slider-knob-over, knobDown: slider-knob-down }
+	default-vertical: { background: slider-vertical, knob: slider-knob, disabledKnob: slider-knob-disabled, knobOver: slider-knob-over, knobDown: slider-knob-down }
 },
 com.kotcrab.vis.ui.widget.VisCheckBox$VisCheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, checkboxOver: check-over-off, checkboxOnOver: check-over-on,

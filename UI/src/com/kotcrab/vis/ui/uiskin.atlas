@@ -174,7 +174,7 @@ color-picker-cross
   index: -1
 color-picker-selector-horizontal
   rotate: false
-  xy: 36, 67
+  xy: 195, 104
   size: 3, 1
   orig: 3, 1
   offset: 0, 0
@@ -211,7 +211,7 @@ default-pane
   index: -1
 default-pane-noborder
   rotate: false
-  xy: 195, 104
+  xy: 322, 207
   size: 1, 1
   split: 0, 0, 0, 0
   orig: 1, 1
@@ -277,14 +277,14 @@ icon-folder
   index: -1
 list-selection
   rotate: false
-  xy: 322, 207
+  xy: 259, 129
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 menu-bg
   rotate: false
-  xy: 259, 129
+  xy: 266, 147
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -402,42 +402,42 @@ scroll-knob-vertical
   index: -1
 select-box-list-bg
   rotate: false
-  xy: 266, 147
+  xy: 160, 95
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 window-bg
   rotate: false
-  xy: 266, 147
+  xy: 160, 95
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 selection
   rotate: false
-  xy: 160, 95
+  xy: 178, 102
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator
   rotate: false
-  xy: 178, 102
+  xy: 271, 155
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 tree-over
   rotate: false
-  xy: 178, 102
+  xy: 271, 155
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator-menu
   rotate: false
-  xy: 271, 155
+  xy: 279, 170
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -477,16 +477,23 @@ slider-knob-over
   orig: 11, 22
   offset: 0, 0
   index: -1
-splitpane
+slider-vertical
   rotate: false
   xy: 418, 231
   size: 4, 1
   orig: 4, 1
   offset: 0, 0
   index: -1
-splitpane-over
+splitpane
   rotate: false
   xy: 441, 233
+  size: 4, 1
+  orig: 4, 1
+  offset: 0, 0
+  index: -1
+splitpane-over
+  rotate: false
+  xy: 36, 67
   size: 4, 1
   orig: 4, 1
   offset: 0, 0
