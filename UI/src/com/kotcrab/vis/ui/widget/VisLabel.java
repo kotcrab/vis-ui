@@ -35,6 +35,10 @@ public class VisLabel extends Label {
 		super(text, VisUI.getSkin());
 	}
 
+	public VisLabel (CharSequence text, LabelStyle style) {
+		super(text, style);
+	}
+
 	public VisLabel (CharSequence text, String styleName) {
 		super(text, VisUI.getSkin(), styleName);
 	}
