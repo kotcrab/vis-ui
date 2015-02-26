@@ -104,10 +104,15 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	@Override
 	public void create () {
 		instance = this;
+
+		Log.debug("Starting loading");
+
 		Assets.load();
+
 		VisUI.load();
 		VisUI.setDefaultTitleAlign(Align.center);
 		FileChooser.setFavoritesPrefsName("com.kotcrab.vis.editor");
+		Log.debug("VisUI " + VisUI.VERSION + " loaded");
 
 		App.eventBus.register(this);
 
@@ -140,7 +145,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		//debug end
 
-		Log.info("Loading completed");
+		Log.debug("Loading completed");
 	}
 
 	private void createUI () {
