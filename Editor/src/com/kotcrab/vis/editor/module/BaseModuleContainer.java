@@ -20,6 +20,7 @@
 package com.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.util.Log;
 
 public class BaseModuleContainer<T extends BaseModule> {
 	protected Array<T> modules = new Array<>();
@@ -34,8 +35,15 @@ public class BaseModuleContainer<T extends BaseModule> {
 	public void init () {
 		if (initFinished) throw new IllegalStateException("ModuleContainer cannot be initialized twice!");
 
+		long start = System.currentTimeMillis();
+
 		for (int i = 0; i < modules.size; i++)
 			modules.get(i).init();
+
+		long end = System.currentTimeMillis();
+		long delta = end - start;
+
+		Log.debug(getClass().getSimpleName(), "Init took: " + delta + " ms");
 
 		initFinished = true;
 	}
