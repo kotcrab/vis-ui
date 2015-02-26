@@ -45,7 +45,7 @@ public class Log {
 	public static final int ERROR = 1;
 	public static final int FATAL = 0;
 
-	private static int logLevel = INFO;
+	private static int logLevel = DEBUG;
 	private static boolean debugInterrupted = false;
 
 	private static File logFile;
