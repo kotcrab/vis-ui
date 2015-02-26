@@ -53,37 +53,59 @@ import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
 import org.lwjgl.input.Keyboard;
 
 public class EntityProperties extends VisTable {
+	private static final int LABEL_WIDTH = 60;
+	private static final int AXIS_LABEL_WIDTH = 10;
 	private static final int FIELD_WIDTH = 70;
 
-	private VisValidableTextField idField;
-	private VisValidableTextField xField;
-	private VisValidableTextField yField;
-	private VisValidableTextField xScaleField;
-	private VisValidableTextField yScaleField;
-	private VisValidableTextField xOriginField;
-	private VisValidableTextField yOriginField;
-	private VisValidableTextField rotationField;
-	private VisCheckBox xFlipCheck;
-	private VisCheckBox yFlipCheck;
-
-	private ColorImage tint;
+	private Tab parentTab;
+	private ColorPicker picker;
 
 	private Array<EditorEntity> entities;
 
 	private ChangeListener sharedChangeListener;
 	private FieldFilter sharedFieldFilter;
 	private FieldValidator sharedFieldValidator;
-	private Tab parentTab;
 
 	private ColorPickerListener pickerListener;
+	private ColorImage tint;
+
+	//UI
+	private VisTable propertiesTable;
+
+	private VisTable idTable;
+
+	private VisTable positionTable;
+	private VisTable scaleTable;
+	private VisTable originTable;
+
+	private VisTable rotationTintTable;
+	private VisTable rotationTable;
+	private VisTable tintTable;
+
+	private VisTable flipTable;
+
+	private VisValidableTextField idField;
+	private InputField xField;
+	private InputField yField;
+	private InputField xScaleField;
+	private InputField yScaleField;
+	private InputField xOriginField;
+	private InputField yOriginField;
+	private InputField rotationField;
+	private VisCheckBox xFlipCheck;
+	private VisCheckBox yFlipCheck;
 
 	public EntityProperties (final ColorPicker picker, final Tab parentTab) {
 		super(true);
+		this.picker = picker;
 		this.parentTab = parentTab;
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
 		setVisible(false);
+
+		sharedFieldFilter = new FieldFilter();
+		sharedFieldValidator = new FieldValidator();
 
 		sharedChangeListener = new ChangeListener() {
 			@Override
@@ -92,9 +114,6 @@ public class EntityProperties extends VisTable {
 				parentTab.setDirty(true);
 			}
 		};
-
-		sharedFieldFilter = new FieldFilter();
-		sharedFieldValidator = new FieldValidator();
 
 		pickerListener = new ColorPickerAdapter() {
 			@Override
@@ -108,14 +127,61 @@ public class EntityProperties extends VisTable {
 			}
 		};
 
-		VisTable propertiesTable = new VisTable(true);
-		propertiesTable.top();
-		propertiesTable.columnDefaults(0).left();
+		createIdTable();
+		createPositionTable();
+		createScaleTable();
+		createOriginTable();
+		createRotationTintTable();
+		createFlipTable();
 
-		VisTable tintTable = new VisTable(true);
-		tintTable.add(new VisLabel("Tint"));
-		tintTable.add(tint = new ColorImage()).size(20);
+		createPropertiesTable();
 
+		top();
+		add(new VisLabel("Entity Properties")).row();
+		add(propertiesTable).fill().expand().padRight(0);
+
+		addListeners();
+
+		pack();
+	}
+
+	private void createIdTable () {
+		idTable = new VisTable(true);
+		idTable.add(new VisLabel("ID"));
+		idTable.add(idField = new VisValidableTextField()).expandX().fillX();
+		idField.setProgrammaticChangeEvents(false);
+		idField.addListener(sharedChangeListener);
+	}
+
+	private void createPositionTable () {
+		positionTable = new VisTable(true);
+		positionTable.add(new VisLabel("Position")).width(LABEL_WIDTH);
+		positionTable.add(new VisLabel("X")).width(AXIS_LABEL_WIDTH);
+		positionTable.add(xField = new InputField()).width(FIELD_WIDTH);
+		positionTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
+		positionTable.add(yField = new InputField()).width(FIELD_WIDTH);
+	}
+
+	private void createScaleTable () {
+		scaleTable = new VisTable(true);
+		scaleTable.add(new VisLabel("Scale")).width(LABEL_WIDTH);
+		scaleTable.add(new VisLabel("X")).width(AXIS_LABEL_WIDTH);
+		scaleTable.add(xScaleField = new InputField()).width(FIELD_WIDTH);
+		scaleTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
+		scaleTable.add(yScaleField = new InputField()).width(FIELD_WIDTH);
+	}
+
+	private void createOriginTable () {
+		originTable = new VisTable(true);
+		originTable.add(new VisLabel("Origin")).width(LABEL_WIDTH);
+		originTable.add(new VisLabel("X")).width(AXIS_LABEL_WIDTH);
+		originTable.add(xOriginField = new InputField()).width(FIELD_WIDTH);
+		originTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
+		originTable.add(yOriginField = new InputField()).width(FIELD_WIDTH);
+	}
+
+	private void createRotationTintTable () {
+		tint = new ColorImage();
 		tint.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
@@ -125,44 +191,23 @@ public class EntityProperties extends VisTable {
 			}
 		});
 
-		VisTable idTable = new VisTable(true);
+		tintTable = new VisTable(true);
+		tintTable.add(new VisLabel("Tint"));
+		tintTable.add(tint).size(20);
 
-		idTable.add(new VisLabel("ID"));
-		idTable.add(idField = new VisValidableTextField()).expandX().fillX();
-		idField.setProgrammaticChangeEvents(false);
-		idField.addListener(sharedChangeListener);
+		rotationTable = new VisTable(true);
+		rotationTable.add(new VisLabel("Rotation")).width(LABEL_WIDTH);
+		rotationTable.add(new VisLabel(" ")).width(AXIS_LABEL_WIDTH);
+		rotationTable.add(rotationField = new InputField()).width(FIELD_WIDTH);
 
-		propertiesTable.add(idTable).colspan(5).fillX();
-		propertiesTable.row();
+		rotationTintTable = new VisTable(true);
+		rotationTintTable.add(rotationTable);
+		rotationTintTable.add().expand().fill();
+		rotationTintTable.add(tintTable);
+	}
 
-		propertiesTable.add(new VisLabel("Position"));
-		propertiesTable.add(new VisLabel("X"));
-		propertiesTable.add(xField = new InputField()).width(FIELD_WIDTH);
-		propertiesTable.add(new VisLabel("Y"));
-		propertiesTable.add(yField = new InputField()).width(FIELD_WIDTH);
-		propertiesTable.row();
-
-		propertiesTable.add(new VisLabel("Scale"));
-		propertiesTable.add(new VisLabel("X"));
-		propertiesTable.add(xScaleField = new InputField()).width(FIELD_WIDTH);
-		propertiesTable.add(new VisLabel("Y"));
-		propertiesTable.add(yScaleField = new InputField()).width(FIELD_WIDTH);
-		propertiesTable.row();
-
-		propertiesTable.add(new VisLabel("Origin"));
-		propertiesTable.add(new VisLabel("X"));
-		propertiesTable.add(xOriginField = new InputField()).width(FIELD_WIDTH);
-		propertiesTable.add(new VisLabel("Y"));
-		propertiesTable.add(yOriginField = new InputField()).width(FIELD_WIDTH);
-		propertiesTable.row();
-
-		propertiesTable.add(new VisLabel("Rotation"));
-		propertiesTable.add(new VisLabel(" "));
-		propertiesTable.add(rotationField = new InputField()).width(FIELD_WIDTH);
-		propertiesTable.add(tintTable).colspan(2);
-		propertiesTable.row();
-
-		VisTable flipTable = new VisTable(true);
+	private void createFlipTable () {
+		flipTable = new VisTable(true);
 
 		flipTable.add(new VisLabel("Flip"));
 		flipTable.add(xFlipCheck = new VisCheckBox("X"));
@@ -170,16 +215,17 @@ public class EntityProperties extends VisTable {
 
 		xFlipCheck.addListener(sharedChangeListener);
 		yFlipCheck.addListener(sharedChangeListener);
+	}
 
-		propertiesTable.add(flipTable).colspan(5).right();
-		propertiesTable.row();
-
-		top();
-		add(new VisLabel("Entity Properties"));
-		row();
-		add(propertiesTable).fill().expand().padRight(0);
-
-		addListeners();
+	private void createPropertiesTable () {
+		propertiesTable = new VisTable(true);
+		propertiesTable.defaults().padRight(6);
+		propertiesTable.add(idTable).fillX().row();
+		propertiesTable.add(positionTable).row();
+		propertiesTable.add(scaleTable).row();
+		propertiesTable.add(originTable).row();
+		propertiesTable.add(rotationTintTable).fillX().row();
+		propertiesTable.add(flipTable).right();
 	}
 
 	private static String floatToString (float d) {
@@ -197,6 +243,7 @@ public class EntityProperties extends VisTable {
 		}
 	}
 
+
 	@Override
 	public void setVisible (boolean visible) {
 		super.setVisible(visible);
@@ -206,7 +253,7 @@ public class EntityProperties extends VisTable {
 	@Override
 	public float getPrefHeight () {
 		if (isVisible())
-			return 210;
+			return super.getPrefHeight() + 5;
 		else
 			return 0;
 	}
@@ -233,29 +280,7 @@ public class EntityProperties extends VisTable {
 
 		if (entities.size == 0)
 			setVisible(false);
-		else if (entities.size == 1) {
-			setVisible(true);
-
-			EditorEntity obj = entities.get(0);
-
-			if (obj.id == null)
-				idField.setText("");
-			else
-				idField.setText(obj.id);
-
-			xField.setText(floatToString(obj.getX()));
-			yField.setText(floatToString(obj.getY()));
-			xScaleField.setText(floatToString(obj.getScaleX()));
-			yScaleField.setText(floatToString(obj.getScaleY()));
-			xOriginField.setText(floatToString(obj.getOriginX()));
-			yOriginField.setText(floatToString(obj.getOriginY()));
-			rotationField.setText(floatToString(obj.getRotation()));
-			tint.setUnknown(false);
-			tint.setColor(obj.getColor());
-
-			xFlipCheck.setChecked(obj.isFlipX());
-			yFlipCheck.setChecked(obj.isFlipY());
-		} else {
+		else {
 			setVisible(true);
 
 			idField.setText(getEntitiesId());
@@ -271,6 +296,7 @@ public class EntityProperties extends VisTable {
 					return entity.getY();
 				}
 			}));
+
 			xScaleField.setText(getEntitiesFieldValue(new EntityValue() {
 				@Override
 				public float getValue (EditorEntity entity) {
@@ -283,6 +309,7 @@ public class EntityProperties extends VisTable {
 					return entity.getScaleY();
 				}
 			}));
+
 			xOriginField.setText(getEntitiesFieldValue(new EntityValue() {
 				@Override
 				public float getValue (EditorEntity entity) {
@@ -295,15 +322,17 @@ public class EntityProperties extends VisTable {
 					return entity.getOriginY();
 				}
 			}));
+
 			rotationField.setText(getEntitiesFieldValue(new EntityValue() {
 				@Override
 				public float getValue (EditorEntity entity) {
 					return entity.getRotation();
 				}
 			}));
+
 			setTintForEntities();
-			setXCheckForEntities();
-			setYCheckForEntities();
+			setFlipXCheckForEntities();
+			setFlipYCheckForEntities();
 		}
 	}
 
@@ -323,7 +352,7 @@ public class EntityProperties extends VisTable {
 		return firstId;
 	}
 
-	private void setXCheckForEntities () {
+	private void setFlipXCheckForEntities () {
 		boolean xFlip = entities.first().isFlipX();
 		for (EditorEntity entity : entities) {
 			if (xFlip != entity.isFlipX()) {
@@ -334,7 +363,7 @@ public class EntityProperties extends VisTable {
 		xFlipCheck.setChecked(xFlip);
 	}
 
-	private void setYCheckForEntities () {
+	private void setFlipYCheckForEntities () {
 		boolean yFlip = entities.first().isFlipY();
 		for (EditorEntity entity : entities) {
 			if (yFlip != entity.isFlipY()) {
@@ -385,7 +414,7 @@ public class EntityProperties extends VisTable {
 		public float getValue (EditorEntity entity);
 	}
 
-	private class FieldValidator implements InputValidator {
+	private static class FieldValidator implements InputValidator {
 		@Override
 		public boolean validateInput (String input) {
 			if (input.equals("?")) return true;
@@ -400,7 +429,7 @@ public class EntityProperties extends VisTable {
 		}
 	}
 
-	private class FieldFilter implements TextFieldFilter {
+	private static class FieldFilter implements TextFieldFilter {
 		@Override
 		public boolean acceptChar (VisTextField textField, char c) {
 			//if(textField.getCursorPosition() > 0 && Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) && c == '-') return false;
@@ -412,6 +441,40 @@ public class EntityProperties extends VisTable {
 			if (c == '?') return true;
 
 			return Character.isDigit(c);
+		}
+	}
+
+	private static class ColorImage extends Image {
+		private final Drawable alphaBar = Assets.getMisc("alpha-grid-20x20");
+		private final Drawable white = VisUI.getSkin().getDrawable("white");
+		private final Drawable questionMark = Assets.getIcon(Icons.QUESTION);
+
+		private boolean unknown;
+
+		public ColorImage () {
+			super();
+			setDrawable(white);
+		}
+
+		@Override
+		public void draw (Batch batch, float parentAlpha) {
+			batch.setColor(1, 1, 1, parentAlpha);
+
+			if (unknown)
+				questionMark.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
+			else {
+				alphaBar.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
+				super.draw(batch, parentAlpha);
+			}
+		}
+
+		public void setUnknown (boolean unknown) {
+			this.unknown = unknown;
+		}
+
+		@Override
+		public void setColor (Color color) {
+			super.setColor(color);
 		}
 	}
 
@@ -499,40 +562,6 @@ public class EntityProperties extends VisTable {
 					checkKeys();
 				}
 			}
-		}
-	}
-
-	public class ColorImage extends Image {
-		private final Drawable alphaBar = Assets.getMisc("alpha-grid-20x20");
-		private final Drawable white = VisUI.getSkin().getDrawable("white");
-		private final Drawable questionMark = Assets.getIcon(Icons.QUESTION);
-
-		private boolean unknown;
-
-		public ColorImage () {
-			super();
-			setDrawable(white);
-		}
-
-		@Override
-		public void draw (Batch batch, float parentAlpha) {
-			batch.setColor(1, 1, 1, parentAlpha);
-
-			if (unknown)
-				questionMark.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
-			else {
-				alphaBar.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
-				super.draw(batch, parentAlpha);
-			}
-		}
-
-		public void setUnknown (boolean unknown) {
-			this.unknown = unknown;
-		}
-
-		@Override
-		public void setColor (Color color) {
-			super.setColor(color);
 		}
 	}
 
