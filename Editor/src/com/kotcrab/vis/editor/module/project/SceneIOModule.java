@@ -20,18 +20,19 @@
 package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
-import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.SpriteObject;
+import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.SpriteSerializer;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.SpriteUtils;
-import com.kotcrab.vis.runtime.data.SpriteData;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 import java.io.FileInputStream;
@@ -42,25 +43,27 @@ import java.io.FileOutputStream;
 public class SceneIOModule extends ProjectModule {
 	private Kryo kryo;
 
-	private TextureCacheModule cacheModule;
 	private FileAccessModule fileAccessModule;
+	private TextureCacheModule textureCacheModule;
+	private FontCacheModule fontCacheModule;
 
 	private FileHandle visFolder;
 
 	@Override
 	public void init () {
-		cacheModule = projectContainer.get(TextureCacheModule.class);
 		fileAccessModule = projectContainer.get(FileAccessModule.class);
+		textureCacheModule = projectContainer.get(TextureCacheModule.class);
+		fontCacheModule = projectContainer.get(FontCacheModule.class);
 
 		visFolder = fileAccessModule.getVisFolder();
 
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
-		kryo.register(SceneViewport.class);
-		kryo.register(EditorScene.class);
-		kryo.register(EditorEntity.class);
-		kryo.register(SpriteObject.class);
-		kryo.register(SpriteData.class);
+//		kryo.register(SceneViewport.class);
+//		kryo.register(EditorScene.class);
+//		kryo.register(EditorEntity.class);
+//		kryo.register(SpriteObject.class);
+//		kryo.register(SpriteData.class);
 		kryo.register(Sprite.class, new SpriteSerializer());
 	}
 
@@ -68,7 +71,7 @@ public class SceneIOModule extends ProjectModule {
 		try {
 			Input input = new Input(new FileInputStream(file.file()));
 			EditorScene scene = kryo.readObject(input, EditorScene.class);
-			scene.path = fileAccessModule.relativizeToVisFolder(file.path());
+			scene.path = fileAccessModule.relativizeToVisFolder(file);
 			input.close();
 
 			prepareSceneAfterLoad(scene);
@@ -84,7 +87,13 @@ public class SceneIOModule extends ProjectModule {
 		for (EditorEntity entity : scene.entities) {
 			if (entity instanceof SpriteObject) {
 				SpriteObject spriteObject = (SpriteObject) entity;
-				SpriteUtils.setRegion(spriteObject.sprite, cacheModule.getRegion(spriteObject.regionRelativePath));
+				SpriteUtils.setRegion(spriteObject.sprite, textureCacheModule.getRegion(spriteObject.regionRelativePath));
+			}
+
+			if (entity instanceof TextObject) {
+				TextObject textObject = (TextObject) entity;
+				BitmapFont font = fontCacheModule.get(fileAccessModule.getVisFolder().child(textObject.getRelativeFontPath()), textObject.getFontSize());
+				textObject.afterDeserialize(font);
 			}
 		}
 	}

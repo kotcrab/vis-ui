@@ -53,6 +53,10 @@ public class FileAccessModule extends ProjectModule {
 		return moduleFolder;
 	}
 
+	public String relativizeToVisFolder (FileHandle file) {
+		return relativizeToVisFolder(file.path());
+	}
+
 	public String relativizeToVisFolder (String path) {
 		Path pathAbsolute = Paths.get(path);
 		Path pathBase = Paths.get(visFolder.path());

@@ -47,6 +47,7 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.TabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
@@ -299,9 +300,11 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 						public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 							Payload payload = new Payload();
 
+							String relativeFontPath = fileAccess.relativizeToVisFolder(item.file);
 							BitmapFont font = fontCache.get(item.file, FontCacheModule.DEFAULT_FONT_SIZE);
 
-							payload.setObject(font);
+							TextObject text = new TextObject(font, FontCacheModule.DEFAULT_TEXT, relativeFontPath, FontCacheModule.DEFAULT_FONT_SIZE);
+							payload.setObject(text);
 
 							LabelStyle style = new LabelStyle(font, Color.WHITE);
 							Label label = new VisLabel(FontCacheModule.DEFAULT_TEXT, style);
@@ -309,7 +312,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 
 							float invZoom = 1.0f / dropTargetTab.getCameraZoom();
 							label.setFontScale(invZoom);
-							dragAndDrop.setDragActorPosition(-label.getWidth() * invZoom / 2,  label.getHeight() / 2);
+							dragAndDrop.setDragActorPosition(-label.getWidth() * invZoom / 2, label.getHeight() / 2);
 
 							return payload;
 						}

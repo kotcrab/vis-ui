@@ -21,7 +21,6 @@ package com.kotcrab.vis.editor.ui.scene;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -39,7 +38,6 @@ import com.kotcrab.vis.editor.event.MenuEventType;
 import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.module.MenuBarModule;
 import com.kotcrab.vis.editor.module.StatusBarModule;
-import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
@@ -158,9 +156,8 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 			undoModule.execute(new EntityAddedAction(object));
 		}
 
-		if (payloadObject instanceof BitmapFont) {
-			BitmapFont font = (BitmapFont) payloadObject;
-			TextObject text = new TextObject(font, FontCacheModule.DEFAULT_TEXT);
+		if (payloadObject instanceof TextObject) {
+			TextObject text = (TextObject) payloadObject;
 			float x = cameraModule.getInputX() - text.getWidth() / 2;
 			float y = cameraModule.getInputY() - text.getHeight() / 2;
 			text.setPosition(x, y);

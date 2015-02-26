@@ -33,43 +33,36 @@ import com.badlogic.gdx.math.Rectangle;
  * @author Kotcrab
  */
 public class TextObject extends EditorEntity {
+	private String relativeFontPath;
+	private int fontSize;
+	private transient BitmapFontCache cache;
+
 	private float x = 0, y = 0;
 	private float originX = 0, originY = 0;
 	private float scaleX = 1, scaleY = 1;
 	private float rotation = 0;
-	private BitmapFontCache cache;
 	private TextBounds textBounds;
 	private Rectangle boundingRectangle;
-	private boolean autoSetOriginToCenter;
+	private boolean autoSetOriginToCenter = true;
 	private Matrix4 translationMatrix;
 	private CharSequence text;
 
-	public TextObject (BitmapFont bitmapFont) {
-		this(bitmapFont, null);
-	}
-
-	public TextObject (BitmapFont bitmapFont, String text) {
-		this(bitmapFont, text, 0, 0);
-	}
-
-	public TextObject (BitmapFont bitmapFont, String text, float x, float y) {
-		this(bitmapFont, text, x, y, false);
-	}
-
-	public TextObject (BitmapFont bitmapFont, String text, float x, float y, boolean autoSetOriginToCenter) {
-		this.autoSetOriginToCenter = autoSetOriginToCenter;
-		this.x = x;
-		this.y = y;
-		this.text =text;
+	public TextObject (BitmapFont bitmapFont, String text, String relativeFontPath, int fontSize) {
+		this.text = text;
+		this.relativeFontPath = relativeFontPath;
+		this.fontSize = fontSize;
 
 		translationMatrix = new Matrix4();
 		cache = new BitmapFontCache(bitmapFont);
-		if (text != null)
-			textBounds = cache.setText(text, 0, 0);
-		else
-			textBounds = cache.getBounds();
+		textBounds = cache.setText(text, 0, 0);
 		if (autoSetOriginToCenter == true) setOriginCenter();
 		translate();
+	}
+
+	/** Must be called after deserializaiton */
+	public void afterDeserialize (BitmapFont font) {
+		cache = new BitmapFontCache(font);
+		textBounds = cache.setText(text, 0, 0);
 	}
 
 	@Override
@@ -238,16 +231,23 @@ public class TextObject extends EditorEntity {
 	public void setColor (Color color) {
 		cache.clear();
 		cache.setColor(color);
-		cache.setText(text, 0,0);
+		cache.setText(text, 0, 0);
 	}
 
 	public void setColor (float r, float g, float b, float a) {
 		cache.setColor(new Color(r, g, b, a));
 	}
 
-
 	@Override
 	public Rectangle getBoundingRectangle () {
 		return boundingRectangle;
+	}
+
+	public String getRelativeFontPath () {
+		return relativeFontPath;
+	}
+
+	public int getFontSize () {
+		return fontSize;
 	}
 }

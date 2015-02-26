@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 public class SpriteObject extends EditorEntity {
+	//TODO to private
 	public String regionRelativePath;
 	public Sprite sprite;
 
