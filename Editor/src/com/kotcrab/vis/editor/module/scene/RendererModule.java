@@ -24,7 +24,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.kotcrab.vis.editor.scene.EditorEntity;
-import com.kotcrab.vis.editor.scene.SpriteObject;
 
 public class RendererModule extends SceneModule {
 	private ShapeRenderer shapeRenderer;
@@ -36,10 +35,8 @@ public class RendererModule extends SceneModule {
 
 	@Override
 	public void render (Batch batch) {
-		for (EditorEntity obj : scene.entities) {
-			SpriteObject obj2d = (SpriteObject) obj;
-			obj2d.sprite.draw(batch);
-		}
+		for (EditorEntity obj : scene.entities)
+			obj.render(batch);
 
 		batch.end();
 		shapeRenderer.setColor(Color.WHITE);

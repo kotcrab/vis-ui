@@ -21,6 +21,7 @@ package com.kotcrab.vis.editor.ui.scene;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -38,20 +39,22 @@ import com.kotcrab.vis.editor.event.MenuEventType;
 import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.module.MenuBarModule;
 import com.kotcrab.vis.editor.module.StatusBarModule;
+import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
-import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.EditorEntity;
-import com.kotcrab.vis.editor.module.scene.GridRendererModule;
-import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.module.scene.EntityManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.GridRendererModule;
 import com.kotcrab.vis.editor.module.scene.RendererModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.UndoableAction;
 import com.kotcrab.vis.editor.module.scene.ZIndexManipulator;
+import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.SpriteObject;
+import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
@@ -141,29 +144,29 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 	}
 
 	private void dropped (Payload payload) {
-		TextureRegion region = (TextureRegion) payload.getObject();
+		Object payloadObject = payload.getObject();
 
-		Sprite sprite = new Sprite(region);
-		float x = cameraModule.getInputX() - sprite.getWidth() / 2;
-		float y = cameraModule.getInputY() - sprite.getHeight() / 2;
+		if (payloadObject instanceof TextureRegion) {
+			TextureRegion region = (TextureRegion) payload.getObject();
 
-		final SpriteObject object = new SpriteObject(cacheModule.getRelativePath(region), region, x, y);
+			Sprite sprite = new Sprite(region);
+			float x = cameraModule.getInputX() - sprite.getWidth() / 2;
+			float y = cameraModule.getInputY() - sprite.getHeight() / 2;
 
-		undoModule.execute(new UndoableAction() {
-			@Override
-			public void execute () {
-				scene.entities.add(object);
-				entityManipulatorModule.select(object);
-			}
+			final SpriteObject object = new SpriteObject(cacheModule.getRelativePath(region), region, x, y);
 
-			@Override
-			public void undo () {
-				scene.entities.removeValue(object, true);
-				entityManipulatorModule.resetSelection();
-			}
-		});
+			undoModule.execute(new EntityAddedAction(object));
+		}
 
-		setDirty(true);
+		if (payloadObject instanceof BitmapFont) {
+			BitmapFont font = (BitmapFont) payloadObject;
+			TextObject text = new TextObject(font, FontCacheModule.DEFAULT_TEXT);
+			float x = cameraModule.getInputX() - text.getWidth() / 2;
+			float y = cameraModule.getInputY() - text.getHeight() / 2;
+			text.setPosition(x, y);
+
+			undoModule.execute(new EntityAddedAction(text));
+		}
 	}
 
 	private void resize () {
@@ -303,6 +306,28 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 			super.sizeChanged();
 			sceneMC.resize();
 			resize();
+		}
+	}
+
+	private class EntityAddedAction implements UndoableAction {
+		private EditorEntity entity;
+
+		public EntityAddedAction (EditorEntity entity) {
+			this.entity = entity;
+		}
+
+		@Override
+		public void execute () {
+			scene.entities.add(entity);
+			entityManipulatorModule.select(entity);
+			setDirty(true);
+		}
+
+		@Override
+		public void undo () {
+			scene.entities.removeValue(entity, true);
+			entityManipulatorModule.resetSelection();
+			setDirty(true);
 		}
 	}
 }

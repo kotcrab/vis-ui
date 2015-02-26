@@ -20,6 +20,7 @@
 package com.kotcrab.vis.editor.scene;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -32,6 +33,11 @@ public class SpriteObject extends EditorEntity {
 		this.sprite = new Sprite(region);
 		this.regionRelativePath = regionRelativePath;
 		sprite.setPosition(x, y);
+	}
+
+	@Override
+	public void render (Batch batch) {
+		sprite.draw(batch);
 	}
 
 	@Override

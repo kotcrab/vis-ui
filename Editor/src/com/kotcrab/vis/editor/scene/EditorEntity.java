@@ -20,6 +20,7 @@
 package com.kotcrab.vis.editor.scene;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 
 public abstract class EditorEntity {
@@ -39,12 +40,12 @@ public abstract class EditorEntity {
 		return false;
 	}
 
-	public float getWidth () {
-		return 0;
-	}
+	public abstract float getWidth ();
 
-	public float getHeight () {
-		return 0;
+	public abstract float getHeight ();
+
+	public void render (Batch batch) {
+
 	}
 
 	public void setSize (float width, float height) {

@@ -20,7 +20,9 @@
 package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -28,6 +30,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -75,6 +79,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 	private FileAccessModule fileAccess;
 	private AssetsWatcherModule assetsWatcher;
 	private TextureCacheModule textureCache;
+	private FontCacheModule fontCache;
 	private SceneIOModule sceneIO;
 	private SceneTabsModule sceneTabsModule;
 
@@ -116,6 +121,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		fileAccess = projectContainer.get(FileAccessModule.class);
 		assetsWatcher = projectContainer.get(AssetsWatcherModule.class);
 		textureCache = projectContainer.get(TextureCacheModule.class);
+		fontCache = projectContainer.get(FontCacheModule.class);
 		sceneIO = projectContainer.get(SceneIOModule.class);
 		sceneTabsModule = projectContainer.get(SceneTabsModule.class);
 
@@ -267,19 +273,43 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 			for (Actor actor : actors) {
 				final FileItem item = (FileItem) actor;
 
-				if (item.isTexture) {
+				if (item.type == FileType.TEXTURE) {
 					dragAndDrop.addSource(new Source(item) {
 						@Override
 						public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 							Payload payload = new Payload();
 
 							payload.setObject(item.region);
+
 							Image img = new Image(item.region);
+							payload.setDragActor(img);
+
 							float invZoom = 1.0f / dropTargetTab.getCameraZoom();
 							img.setScale(invZoom);
-							payload.setDragActor(img);
-							dragAndDrop.setDragActorPosition(-img.getWidth() * invZoom / 2, img.getHeight() - img.getHeight() * invZoom
-									/ 2);
+							dragAndDrop.setDragActorPosition(-img.getWidth() * invZoom / 2, img.getHeight() - img.getHeight() * invZoom / 2);
+
+							return payload;
+						}
+					});
+				}
+
+				if (item.type == FileType.FONT) {
+					dragAndDrop.addSource(new Source(item) {
+						@Override
+						public Payload dragStart (InputEvent event, float x, float y, int pointer) {
+							Payload payload = new Payload();
+
+							BitmapFont font = fontCache.get(item.file, FontCacheModule.DEFAULT_FONT_SIZE);
+
+							payload.setObject(font);
+
+							LabelStyle style = new LabelStyle(font, Color.WHITE);
+							Label label = new VisLabel(FontCacheModule.DEFAULT_TEXT, style);
+							payload.setDragActor(label);
+
+							float invZoom = 1.0f / dropTargetTab.getCameraZoom();
+							label.setFontScale(invZoom);
+							dragAndDrop.setDragActorPosition(-label.getWidth() * invZoom / 2,  label.getHeight() / 2);
 
 							return payload;
 						}
@@ -388,11 +418,15 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 	public void removedAllTabs () {
 	}
 
+	private enum FileType {
+		UNKNOWN, TEXTURE, FONT
+	}
+
 	private class FileItem extends Table {
 		private FileHandle file;
 
 		private TextureRegion region;
-		private boolean isTexture;
+		private FileType type;
 
 		public FileItem (FileHandle file) {
 			super(VisUI.getSkin());
@@ -408,9 +442,15 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 				add(img).expand().fill().row();
 
 				this.region = region;
-				isTexture = true;
-			} else
+				type = FileType.TEXTURE;
+			} else if (file.extension().equals("ttf")) {
+				add(new VisLabel("Font")).row();
 				name = new VisLabel(file.name());
+				type = FileType.FONT;
+			} else {
+				name = new VisLabel(file.name());
+				type = FileType.UNKNOWN;
+			}
 
 			setBackground("menu-bg");
 			name.setWrap(true);
