@@ -32,6 +32,7 @@ import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
+import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.ui.NewProjectDialog;
 import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
 import com.kotcrab.vis.editor.ui.SceneStatusWidgetController;
@@ -197,8 +198,9 @@ public class MenuBarModule extends EditorModule {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
+				SceneTabsModule sceneTabsModule = projectContainer.get(SceneTabsModule.class);
 				SceneIOModule sceneIO = projectContainer.get(SceneIOModule.class);
-				stage.addActor(new NewSceneDialog(fileAccess, sceneIO).fadeIn());
+				stage.addActor(new NewSceneDialog(fileAccess, sceneTabsModule, sceneIO).fadeIn());
 			}
 		});
 

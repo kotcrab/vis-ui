@@ -19,22 +19,26 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
-import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
-import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.module.project.SceneIOModule;
-import com.kotcrab.vis.runtime.scene.SceneViewport;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.OrderedMap;
+import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.event.StatusBarEvent;
+import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.editor.module.project.SceneIOModule;
+import com.kotcrab.vis.editor.module.project.SceneTabsModule;
+import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.ui.FormInputValidator;
 import com.kotcrab.vis.ui.FormValidator;
-import com.kotcrab.vis.ui.util.TableUtils;
+import com.kotcrab.vis.ui.OptionDialogAdapter;
 import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.util.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -57,18 +61,21 @@ public class NewSceneDialog extends VisWindow {
 	private VisTextButton createButton;
 
 	private SceneIOModule sceneIO;
+	private SceneTabsModule sceneTabsModule;
 
 	private FileHandle visFolder;
 
 	private OrderedMap<String, SceneViewport> viewportMap;
 
-	public NewSceneDialog (FileAccessModule fileAccess, SceneIOModule sceneIOModule) {
+	public NewSceneDialog (FileAccessModule fileAccess, SceneTabsModule sceneTabsModule, SceneIOModule sceneIOModule) {
 		super("New Scene");
 		addCloseButton();
 		closeOnEscape();
 		setModal(true);
 
-		sceneIO = sceneIOModule;
+		this.sceneIO = sceneIOModule;
+		this.sceneTabsModule = sceneTabsModule;
+
 		visFolder = fileAccess.getVisFolder();
 
 		viewportMap = new OrderedMap<>();
@@ -156,9 +163,18 @@ public class NewSceneDialog extends VisWindow {
 		createButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				FileHandle targetFile = Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".scene");
+				final FileHandle targetFile = Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".scene");
 				sceneIO.create(targetFile, viewportMap.get(viewportModeSelectBox.getSelected()), Integer.valueOf(widthField.getText()), Integer.valueOf(heightField.getText()));
 				App.eventBus.post(new StatusBarEvent("Scene created: " + targetFile.path().substring(1)));
+
+				DialogUtils.showOptionDialog(getStage(), "Message", "Open this new scene in editor?", OptionDialogType.YES_NO, new OptionDialogAdapter() {
+					@Override
+					public void yes () {
+						EditorScene scene = sceneIO.load(visFolder.child(targetFile.path()));
+						sceneTabsModule.open(scene);
+					}
+				});
+
 				fadeOut();
 			}
 		});

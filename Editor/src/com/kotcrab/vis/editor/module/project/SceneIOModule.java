@@ -21,7 +21,11 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -59,19 +63,18 @@ public class SceneIOModule extends ProjectModule {
 
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
-//		kryo.register(SceneViewport.class);
-//		kryo.register(EditorScene.class);
-//		kryo.register(EditorEntity.class);
-//		kryo.register(SpriteObject.class);
-//		kryo.register(SpriteData.class);
+		kryo.register(Array.class);
+		kryo.register(Rectangle.class);
+		kryo.register(TextBounds.class);
+		kryo.register(Matrix4.class);
 		kryo.register(Sprite.class, new SpriteSerializer());
 	}
 
-	public EditorScene load (FileHandle file) {
+	public EditorScene load (FileHandle fullPathFile) {
 		try {
-			Input input = new Input(new FileInputStream(file.file()));
+			Input input = new Input(new FileInputStream(fullPathFile.file()));
 			EditorScene scene = kryo.readObject(input, EditorScene.class);
-			scene.path = fileAccessModule.relativizeToVisFolder(file);
+			scene.path = fileAccessModule.relativizeToVisFolder(fullPathFile);
 			input.close();
 
 			prepareSceneAfterLoad(scene);

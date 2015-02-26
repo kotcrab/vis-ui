@@ -212,8 +212,10 @@ public class EntityManipulatorModule extends SceneModule {
 		float lastSurfaceArea = Float.MAX_VALUE;
 
 		for (EditorEntity entity : entities) {
-			if (entity.getBoundingRectangle().contains(x, y)) {
-				float currentSurfaceArea = entity.getWidth() * entity.getHeight();
+			Rectangle entityBoundingRectangle = entity.getBoundingRectangle();
+			if (entityBoundingRectangle.contains(x, y)) {
+
+				float currentSurfaceArea = entityBoundingRectangle.width * entityBoundingRectangle.height;
 
 				if (currentSurfaceArea < lastSurfaceArea) {
 					matchingEntity = entity;

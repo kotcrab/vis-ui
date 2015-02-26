@@ -71,11 +71,11 @@ public abstract class EditorEntity {
 	}
 
 	public float getScaleX () {
-		return 0;
+		return 1;
 	}
 
 	public float getScaleY () {
-		return 0;
+		return 1;
 	}
 
 	public void setScale (float x, float y) {
