@@ -30,12 +30,16 @@ public class FileAccessModule extends ProjectModule {
 	private FileHandle assetsFolder;
 	private FileHandle modulesFolder;
 
+	private FileHandle fontFolder;
+
 	@Override
 	public void init () {
 		FileHandle root = Gdx.files.absolute(project.root);
 		visFolder = root.child("vis");
 		assetsFolder = visFolder.child("assets");
 		modulesFolder = visFolder.child("modules");
+
+		fontFolder = assetsFolder.child("gfx").child("font");
 	}
 
 	public FileHandle getVisFolder () {
@@ -45,6 +49,14 @@ public class FileAccessModule extends ProjectModule {
 	/** Returns Vis assets folder */
 	public FileHandle getAssetsFolder () {
 		return assetsFolder;
+	}
+
+	public FileHandle getFontFolder () {
+		return fontFolder;
+	}
+
+	public String getFontFolderRelative () {
+		return relativizeToVisFolder(fontFolder);
 	}
 
 	public FileHandle getModuleFolder (String moduleName) {

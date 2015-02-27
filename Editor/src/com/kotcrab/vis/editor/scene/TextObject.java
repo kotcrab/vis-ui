@@ -104,6 +104,10 @@ public class TextObject extends EditorEntity {
 		textChanged();
 	}
 
+	public String getText () {
+		return text.toString();
+	}
+
 	public boolean isAutoSetOriginToCenter () {
 		return autoSetOriginToCenter;
 	}

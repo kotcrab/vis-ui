@@ -36,7 +36,9 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.ui.InputValidator;
@@ -44,6 +46,7 @@ import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
+import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
@@ -58,8 +61,9 @@ public class EntityProperties extends VisTable {
 	private static final int AXIS_LABEL_WIDTH = 10;
 	private static final int FIELD_WIDTH = 70;
 
-	private Tab parentTab;
+	private FileAccessModule fileAccessModule;
 	private ColorPicker picker;
+	private Tab parentTab;
 
 	private Array<EditorEntity> entities;
 
@@ -80,8 +84,10 @@ public class EntityProperties extends VisTable {
 	private VisTable originTable;
 	private VisTable rotationTable;
 	private VisTable tintTable;
-
 	private VisTable flipTable;
+
+	//tables for specific objects
+	private TextObjectTable textObjectTable;
 
 	private VisValidableTextField idField;
 	private InputField xField;
@@ -94,8 +100,9 @@ public class EntityProperties extends VisTable {
 	private VisCheckBox xFlipCheck;
 	private VisCheckBox yFlipCheck;
 
-	public EntityProperties (final ColorPicker picker, final Tab parentTab, Array<EditorEntity> selectedEntitiesList) {
+	public EntityProperties (FileAccessModule fileAccessModule, final ColorPicker picker, final Tab parentTab, Array<EditorEntity> selectedEntitiesList) {
 		super(true);
+		this.fileAccessModule = fileAccessModule;
 		this.picker = picker;
 		this.parentTab = parentTab;
 
@@ -134,6 +141,8 @@ public class EntityProperties extends VisTable {
 		createOriginTable();
 		createRotationTintTable();
 		createFlipTable();
+
+		textObjectTable = new TextObjectTable(entities);
 
 		propertiesTable = new VisTable(true);
 
@@ -176,6 +185,7 @@ public class EntityProperties extends VisTable {
 		positionTable.add(xField = new InputField()).width(FIELD_WIDTH);
 		positionTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
 		positionTable.add(yField = new InputField()).width(FIELD_WIDTH);
+		positionTable.add().expand().fill();
 	}
 
 	private void createScaleTable () {
@@ -185,6 +195,7 @@ public class EntityProperties extends VisTable {
 		scaleTable.add(xScaleField = new InputField()).width(FIELD_WIDTH);
 		scaleTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
 		scaleTable.add(yScaleField = new InputField()).width(FIELD_WIDTH);
+		scaleTable.add().expand().fill();
 	}
 
 	private void createOriginTable () {
@@ -194,6 +205,7 @@ public class EntityProperties extends VisTable {
 		originTable.add(xOriginField = new InputField()).width(FIELD_WIDTH);
 		originTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
 		originTable.add(yOriginField = new InputField()).width(FIELD_WIDTH);
+		originTable.add().expand().fill();
 	}
 
 	private void createRotationTintTable () {
@@ -237,13 +249,18 @@ public class EntityProperties extends VisTable {
 		rotationTintTable.add().expand().fill();
 		if (isTintSupportedForEntities()) rotationTintTable.add(tintTable);
 
-		propertiesTable.defaults().padRight(6);
-		propertiesTable.add(idTable).fillX().row();
+		propertiesTable.defaults().padRight(6).fillX();
+		propertiesTable.add(idTable).row();
 		propertiesTable.add(positionTable).row();
 		if (isScaleSupportedForEntities()) propertiesTable.add(scaleTable).row();
 		if (isOriginSupportedForEntities()) propertiesTable.add(originTable).row();
-		propertiesTable.add(rotationTintTable).fillX().row();
-		if (isFlipSupportedForEntities()) propertiesTable.add(flipTable).right();
+		propertiesTable.add(rotationTintTable).row();
+		if (isFlipSupportedForEntities()) propertiesTable.add(flipTable).right().fill(false).row();
+
+		if (textObjectTable.shouldDisplay()){
+			propertiesTable.addSeparator();
+			propertiesTable.add(textObjectTable).row();
+		}
 
 		invalidateHierarchy();
 	}
@@ -445,6 +462,8 @@ public class EntityProperties extends VisTable {
 				}
 			}));
 
+			textObjectTable.updateValues();
+
 			setTintForEntities();
 			setFlipXCheckForEntities();
 			setFlipYCheckForEntities();
@@ -516,6 +535,71 @@ public class EntityProperties extends VisTable {
 		@Override
 		public void setColor (Color color) {
 			super.setColor(color);
+		}
+	}
+
+	private class TextObjectTable extends VisTable {
+		private Array<EditorEntity> entities;
+
+		private VisTextField textField;
+		private VisLabel fontLabel;
+		private VisImageButton selectFontButton;
+		private InputField fontSizeInputField;
+
+		private boolean display;
+
+		public TextObjectTable (Array<EditorEntity> entities) {
+			super(true);
+			this.entities = entities;
+
+			fontLabel = new VisLabel();
+			fontLabel.setColor(Color.GRAY);
+			fontLabel.setEllipsis(true);
+			selectFontButton = new VisImageButton(Assets.getIcon(Icons.MORE));
+			fontSizeInputField = new InputField();
+
+			VisTable fontTable = new VisTable(true);
+			fontTable.add(new VisLabel("Font"));
+			fontTable.add(fontLabel);
+			fontTable.add(selectFontButton);
+			fontTable.add(new VisLabel("Size"));
+			fontTable.add(fontSizeInputField).width(40);
+			fontTable.add().expand().fill();
+
+
+			VisTable textTable = new VisTable(true);
+
+			textTable.add(new VisLabel("Text"));
+			textTable.add(textField = new VisTextField()).expandX().fillX();
+
+			defaults().left().expandX().fillX();
+			add(textTable);
+			row();
+			add(fontTable);
+		}
+
+		public boolean shouldDisplay () {
+			checkDisplay();
+			return display;
+		}
+
+		private void checkDisplay () {
+			for (EditorEntity entity : entities) {
+				if (entity instanceof TextObject == false) {
+					display = false;
+					return;
+				}
+			}
+
+			display = true;
+		}
+
+		public void updateValues () {
+			if (display) {
+				TextObject o = (TextObject) entities.get(0);
+				textField.setText(o.getText());
+				fontLabel.setText(o.getRelativeFontPath().substring(fileAccessModule.getFontFolderRelative().length() + 1));
+			}
 		}
 	}
 
@@ -605,5 +689,4 @@ public class EntityProperties extends VisTable {
 			}
 		}
 	}
-
 }

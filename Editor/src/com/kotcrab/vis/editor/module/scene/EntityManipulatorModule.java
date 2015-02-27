@@ -30,6 +30,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.ColorPickerModule;
+import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.ui.scene.EntityProperties;
 
@@ -62,7 +63,8 @@ public class EntityManipulatorModule extends SceneModule {
 		undoModule = sceneContainer.get(UndoModule.class);
 
 		ColorPickerModule pickerModule = container.get(ColorPickerModule.class);
-		entityProperties = new EntityProperties(pickerModule.getPicker(), sceneTab, selectedEntities);
+		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
+		entityProperties = new EntityProperties(fileAccess, pickerModule.getPicker(), sceneTab, selectedEntities);
 	}
 
 	@Override

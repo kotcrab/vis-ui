@@ -60,9 +60,16 @@ load
   orig: 22, 22
   offset: 0, 0
   index: -1
-new
+more
   rotate: false
   xy: 50, 26
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+new
+  rotate: false
+  xy: 50, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -76,7 +83,7 @@ question
   index: -1
 redo
   rotate: false
-  xy: 50, 2
+  xy: 326, 80
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -90,14 +97,14 @@ refresh-big
   index: -1
 save
   rotate: false
-  xy: 326, 80
+  xy: 350, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 search
   rotate: false
-  xy: 350, 104
+  xy: 74, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -111,21 +118,21 @@ search-big
   index: -1
 settings
   rotate: false
-  xy: 74, 26
+  xy: 74, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 settings-view
   rotate: false
-  xy: 74, 2
+  xy: 350, 80
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 undo
   rotate: false
-  xy: 350, 80
+  xy: 374, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0

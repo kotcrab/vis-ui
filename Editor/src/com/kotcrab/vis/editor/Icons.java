@@ -95,6 +95,11 @@ public enum Icons implements IconAsset {
 			return "question";
 		}
 	},
+	MORE {
+		public String getIconName () {
+			return "more";
+		}
+	},
 }
 
 interface IconAsset {
