@@ -42,6 +42,7 @@ import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextField;
@@ -77,8 +78,6 @@ public class EntityProperties extends VisTable {
 	private VisTable positionTable;
 	private VisTable scaleTable;
 	private VisTable originTable;
-
-	private VisTable rotationTintTable;
 	private VisTable rotationTable;
 	private VisTable tintTable;
 
@@ -95,7 +94,7 @@ public class EntityProperties extends VisTable {
 	private VisCheckBox xFlipCheck;
 	private VisCheckBox yFlipCheck;
 
-	public EntityProperties (final ColorPicker picker, final Tab parentTab) {
+	public EntityProperties (final ColorPicker picker, final Tab parentTab, Array<EditorEntity> selectedEntitiesList) {
 		super(true);
 		this.picker = picker;
 		this.parentTab = parentTab;
@@ -104,13 +103,15 @@ public class EntityProperties extends VisTable {
 		setTouchable(Touchable.enabled);
 		setVisible(false);
 
+		entities = selectedEntitiesList;
+
 		sharedFieldFilter = new FieldFilter();
 		sharedFieldValidator = new FieldValidator();
 
 		sharedChangeListener = new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				setValuesToSprite();
+				setValuesToEntity();
 				parentTab.setDirty(true);
 			}
 		};
@@ -134,7 +135,7 @@ public class EntityProperties extends VisTable {
 		createRotationTintTable();
 		createFlipTable();
 
-		createPropertiesTable();
+		propertiesTable = new VisTable(true);
 
 		top();
 		add(new VisLabel("Entity Properties")).row();
@@ -143,6 +144,21 @@ public class EntityProperties extends VisTable {
 		addListeners();
 
 		pack();
+	}
+
+	private static String floatToString (float d) {
+		//fk this function
+		if (d == (long) d) //if does not have decimal places
+			return String.format("%d", (long) d);
+		else {
+			//round to two decimal places
+			d = Math.round(d * 100);
+			d = d / 100;
+			String s = String.valueOf(d);
+
+			//remove trailing zeros if exists
+			return s.contains(".") ? s.replaceAll("0*$", "").replaceAll("\\.$", "") : s;
+		}
 	}
 
 	private void createIdTable () {
@@ -199,11 +215,6 @@ public class EntityProperties extends VisTable {
 		rotationTable.add(new VisLabel("Rotation")).width(LABEL_WIDTH);
 		rotationTable.add(new VisLabel(" ")).width(AXIS_LABEL_WIDTH);
 		rotationTable.add(rotationField = new InputField()).width(FIELD_WIDTH);
-
-		rotationTintTable = new VisTable(true);
-		rotationTintTable.add(rotationTable);
-		rotationTintTable.add().expand().fill();
-		rotationTintTable.add(tintTable);
 	}
 
 	private void createFlipTable () {
@@ -217,32 +228,25 @@ public class EntityProperties extends VisTable {
 		yFlipCheck.addListener(sharedChangeListener);
 	}
 
-	private void createPropertiesTable () {
-		propertiesTable = new VisTable(true);
+	private void rebuildPropertiesTable () {
+		propertiesTable.reset();
+		TableUtils.setSpaceDefaults(propertiesTable);
+
+		VisTable rotationTintTable = new VisTable(true);
+		if (isRotationSupportedForEntities()) rotationTintTable.add(rotationTable);
+		rotationTintTable.add().expand().fill();
+		if (isTintSupportedForEntities()) rotationTintTable.add(tintTable);
+
 		propertiesTable.defaults().padRight(6);
 		propertiesTable.add(idTable).fillX().row();
 		propertiesTable.add(positionTable).row();
-		propertiesTable.add(scaleTable).row();
-		propertiesTable.add(originTable).row();
+		if (isScaleSupportedForEntities()) propertiesTable.add(scaleTable).row();
+		if (isOriginSupportedForEntities()) propertiesTable.add(originTable).row();
 		propertiesTable.add(rotationTintTable).fillX().row();
-		propertiesTable.add(flipTable).right();
+		if (isFlipSupportedForEntities()) propertiesTable.add(flipTable).right();
+
+		invalidateHierarchy();
 	}
-
-	private static String floatToString (float d) {
-		//fk this function
-		if (d == (long) d) //if does not have decimal places
-			return String.format("%d", (long) d);
-		else {
-			//round to two decimal places
-			d = Math.round(d * 100);
-			d = d / 100;
-			String s = String.valueOf(d);
-
-			//remove trailing zeros if exists
-			return s.contains(".") ? s.replaceAll("0*$", "").replaceAll("\\.$", "") : s;
-		}
-	}
-
 
 	@Override
 	public void setVisible (boolean visible) {
@@ -275,65 +279,49 @@ public class EntityProperties extends VisTable {
 		});
 	}
 
-	public void setValuesToFields (Array<EditorEntity> entities) {
-		this.entities = entities;
+	public void selectedEntitiesChanged () {
+		rebuildPropertiesTable();
+		updateValues();
+	}
 
-		if (entities.size == 0)
-			setVisible(false);
-		else {
-			setVisible(true);
-
-			idField.setText(getEntitiesId());
-			xField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getX();
-				}
-			}));
-			yField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getY();
-				}
-			}));
-
-			xScaleField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getScaleX();
-				}
-			}));
-			yScaleField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getScaleY();
-				}
-			}));
-
-			xOriginField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getOriginX();
-				}
-			}));
-			yOriginField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getOriginY();
-				}
-			}));
-
-			rotationField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getRotation();
-				}
-			}));
-
-			setTintForEntities();
-			setFlipXCheckForEntities();
-			setFlipYCheckForEntities();
+	private boolean isScaleSupportedForEntities () {
+		for (EditorEntity entity : entities) {
+			if (entity.isScaleSupported() == false) return false;
 		}
+
+		return true;
+	}
+
+	private boolean isOriginSupportedForEntities () {
+		for (EditorEntity entity : entities) {
+			if (entity.isOriginSupported() == false) return false;
+		}
+
+		return true;
+	}
+
+	private boolean isRotationSupportedForEntities () {
+		for (EditorEntity entity : entities) {
+			if (entity.isRotationSupported() == false) return false;
+		}
+
+		return true;
+	}
+
+	private boolean isTintSupportedForEntities () {
+		for (EditorEntity entity : entities) {
+			if (entity.isTintSupported() == false) return false;
+		}
+
+		return true;
+	}
+
+	private boolean isFlipSupportedForEntities () {
+		for (EditorEntity entity : entities) {
+			if (entity.isFlipSupported() == false) return false;
+		}
+
+		return true;
 	}
 
 	private String getEntitiesId () {
@@ -394,7 +382,7 @@ public class EntityProperties extends VisTable {
 		return floatToString(value);
 	}
 
-	private void setValuesToSprite () {
+	private void setValuesToEntity () {
 		for (EditorEntity entity : entities) {
 
 			entity.id = idField.getText().equals("") ? null : idField.getText();
@@ -407,7 +395,60 @@ public class EntityProperties extends VisTable {
 	}
 
 	public void updateValues () {
-		setValuesToFields(entities);
+		if (entities.size == 0)
+			setVisible(false);
+		else {
+			setVisible(true);
+
+			idField.setText(getEntitiesId());
+			xField.setText(getEntitiesFieldValue(new EntityValue() {
+				@Override
+				public float getValue (EditorEntity entity) {
+					return entity.getX();
+				}
+			}));
+			yField.setText(getEntitiesFieldValue(new EntityValue() {
+				@Override
+				public float getValue (EditorEntity entity) {
+					return entity.getY();
+				}
+			}));
+			xScaleField.setText(getEntitiesFieldValue(new EntityValue() {
+				@Override
+				public float getValue (EditorEntity entity) {
+					return entity.getScaleX();
+				}
+			}));
+			yScaleField.setText(getEntitiesFieldValue(new EntityValue() {
+				@Override
+				public float getValue (EditorEntity entity) {
+					return entity.getScaleY();
+				}
+			}));
+			xOriginField.setText(getEntitiesFieldValue(new EntityValue() {
+				@Override
+				public float getValue (EditorEntity entity) {
+					return entity.getOriginX();
+				}
+			}));
+			yOriginField.setText(getEntitiesFieldValue(new EntityValue() {
+				@Override
+				public float getValue (EditorEntity entity) {
+					return entity.getOriginY();
+				}
+			}));
+
+			rotationField.setText(getEntitiesFieldValue(new EntityValue() {
+				@Override
+				public float getValue (EditorEntity entity) {
+					return entity.getRotation();
+				}
+			}));
+
+			setTintForEntities();
+			setFlipXCheckForEntities();
+			setFlipYCheckForEntities();
+		}
 	}
 
 	private interface EntityValue {
@@ -551,7 +592,7 @@ public class EntityProperties extends VisTable {
 					setText(floatToString(fieldValue));
 					InputField.this.setCursorPosition(lastPos);
 
-					setValuesToSprite();
+					setValuesToEntity();
 				} catch (NumberFormatException ex) {
 				}
 			}

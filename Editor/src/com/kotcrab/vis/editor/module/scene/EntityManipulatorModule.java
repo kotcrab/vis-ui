@@ -42,7 +42,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private EntityProperties entityProperties;
 
 	private Array<EditorEntity> entities;
-	private Array<EditorEntity> selectedEntities = new Array<>();
+	private final Array<EditorEntity> selectedEntities = new Array<>();
 
 	private float lastTouchX;
 	private float lastTouchY;
@@ -62,7 +62,7 @@ public class EntityManipulatorModule extends SceneModule {
 		undoModule = sceneContainer.get(UndoModule.class);
 
 		ColorPickerModule pickerModule = container.get(ColorPickerModule.class);
-		entityProperties = new EntityProperties(pickerModule.getPicker(), sceneTab);
+		entityProperties = new EntityProperties(pickerModule.getPicker(), sceneTab, selectedEntities);
 	}
 
 	@Override
@@ -117,7 +117,7 @@ public class EntityManipulatorModule extends SceneModule {
 				if (result != null && selectedEntities.contains(result, true) == false)
 					selectedEntities.add(result);
 
-				entityProperties.setValuesToFields(selectedEntities);
+				entityProperties.selectedEntitiesChanged();
 
 				selected = true;
 				return true;
@@ -163,7 +163,7 @@ public class EntityManipulatorModule extends SceneModule {
 			if (result != null)
 				selectedEntities.removeValue(result, true);
 
-			entityProperties.setValuesToFields(selectedEntities);
+			entityProperties.selectedEntitiesChanged();
 		}
 
 		if (dragged) {
@@ -193,7 +193,7 @@ public class EntityManipulatorModule extends SceneModule {
 		if (keycode == Keys.FORWARD_DEL) { //Delete
 			undoModule.execute(new EntityRemoved(selectedEntities));
 			selectedEntities.clear();
-			entityProperties.setValuesToFields(selectedEntities);
+			entityProperties.selectedEntitiesChanged();
 
 			return true;
 		}
@@ -235,12 +235,12 @@ public class EntityManipulatorModule extends SceneModule {
 	public void select (EditorEntity entity) {
 		selectedEntities.clear();
 		selectedEntities.add(entity);
-		entityProperties.setValuesToFields(selectedEntities);
+		entityProperties.selectedEntitiesChanged();
 	}
 
 	public void resetSelection () {
 		selectedEntities.clear();
-		entityProperties.setValuesToFields(selectedEntities);
+		entityProperties.selectedEntitiesChanged();
 	}
 
 	private class EntityRemoved implements UndoableAction {
