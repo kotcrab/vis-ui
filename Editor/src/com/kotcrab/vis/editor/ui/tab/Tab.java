@@ -97,6 +97,10 @@ public abstract class Tab {
 		}
 	}
 
+	public void dirty () {
+		setDirty(true);
+	}
+
 	public boolean save () {
 		checkSavable();
 

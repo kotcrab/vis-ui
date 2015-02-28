@@ -65,6 +65,7 @@ public class EntityProperties extends VisTable {
 	private FileAccessModule fileAccessModule;
 	private FontCacheModule fontCacheModule;
 	private ColorPicker picker;
+	private Tab parentTab;
 
 	private Array<EditorEntity> entities;
 
@@ -104,6 +105,7 @@ public class EntityProperties extends VisTable {
 		this.fileAccessModule = fileAccessModule;
 		this.fontCacheModule = fontCacheModule;
 		this.picker = picker;
+		this.parentTab = parentTab;
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
@@ -115,7 +117,7 @@ public class EntityProperties extends VisTable {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				setValuesToEntity();
-				parentTab.setDirty(true);
+				parentTab.dirty();
 			}
 		};
 
@@ -125,7 +127,7 @@ public class EntityProperties extends VisTable {
 				for (EditorEntity entity : entities)
 					entity.setColor(newColor);
 
-				parentTab.setDirty(true);
+				parentTab.dirty();
 				tint.setColor(newColor);
 				picker.setListener(null);
 			}
@@ -575,6 +577,7 @@ public class EntityProperties extends VisTable {
 						obj.setFont(fontCacheModule.get(file));
 					}
 
+					parentTab.dirty();
 					updateValues();
 				}
 			});

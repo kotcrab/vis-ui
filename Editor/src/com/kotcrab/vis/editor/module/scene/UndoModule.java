@@ -70,7 +70,7 @@ public class UndoModule extends SceneModule {
 	public void add (UndoableAction action) {
 		undoList.add(action);
 		redoList.clear();
-		sceneTab.setDirty(true);
+		sceneTab.dirty();
 	}
 
 	@Override

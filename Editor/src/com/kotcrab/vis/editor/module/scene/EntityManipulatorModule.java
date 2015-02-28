@@ -152,7 +152,7 @@ public class EntityManipulatorModule extends SceneModule {
 			lastTouchX = x;
 			lastTouchY = y;
 
-			sceneTab.setDirty(true);
+			sceneTab.dirty();
 			entityProperties.updateValues();
 		}
 	}
