@@ -23,9 +23,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 
-public abstract class EditorEntity {
-	private String id;
-
+public interface EditorEntity {
 	public abstract float getX ();
 
 	public abstract void setX (float x);
@@ -36,95 +34,55 @@ public abstract class EditorEntity {
 
 	public abstract void setPosition (float x, float y);
 
-	public boolean isResizeSupported () {
-		return false;
-	}
+	public boolean isResizeSupported ();
 
 	public abstract float getWidth ();
 
 	public abstract float getHeight ();
 
-	public void render (Batch batch) {
+	public void render (Batch batch);
 
-	}
+	public void setSize (float width, float height);
 
-	public void setSize (float width, float height) {
-	}
+	public boolean isOriginSupported ();
 
-	public boolean isOriginSupported () {
-		return false;
-	}
+	public float getOriginX ();
 
-	public float getOriginX () {
-		return 0;
-	}
+	public float getOriginY ();
 
-	public float getOriginY () {
-		return 0;
-	}
+	public void setOrigin (float x, float y);
 
-	public void setOrigin (float x, float y) {
-	}
+	public boolean isScaleSupported ();
 
-	public boolean isScaleSupported () {
-		return false;
-	}
+	public float getScaleX ();
 
-	public float getScaleX () {
-		return 1;
-	}
+	public float getScaleY ();
 
-	public float getScaleY () {
-		return 1;
-	}
+	public void setScale (float x, float y);
 
-	public void setScale (float x, float y) {
-	}
+	public boolean isTintSupported ();
 
-	public boolean isTintSupported () {
-		return false;
-	}
+	public Color getColor ();
 
-	public Color getColor () {
-		return null;
-	}
+	public void setColor (Color color);
 
-	public void setColor (Color color) {
-	}
+	public boolean isRotationSupported ();
 
-	public boolean isRotationSupported () {
-		return false;
-	}
+	public float getRotation ();
 
-	public float getRotation () {
-		return 0;
-	}
+	public void setRotation (float rotation);
 
-	public void setRotation (float rotation) {
-	}
+	public boolean isFlipSupported ();
 
-	public boolean isFlipSupported () {
-		return false;
-	}
+	public boolean isFlipX ();
 
-	public boolean isFlipX () {
-		return false;
-	}
+	public boolean isFlipY ();
 
-	public boolean isFlipY () {
-		return false;
-	}
-
-	public void setFlip (boolean x, boolean y) {
-	}
+	public void setFlip (boolean x, boolean y);
 
 	public abstract Rectangle getBoundingRectangle ();
 
-	public String getId () {
-		return id;
-	}
+	public String getId ();
 
-	public void setId (String id) {
-		this.id = id;
-	}
+	public void setId (String id);
 }

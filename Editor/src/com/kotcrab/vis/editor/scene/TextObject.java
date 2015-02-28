@@ -33,7 +33,7 @@ import com.kotcrab.vis.editor.module.project.EditorFont;
  * Text that you can scale, rotate, change color itp. Supports distance field fonts
  * @author Kotcrab
  */
-public class TextObject extends EditorEntity {
+public class TextObject extends EditorEntityBase {
 	private String relativeFontPath;
 	private int fontSize;
 	private transient EditorFont font;
