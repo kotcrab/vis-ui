@@ -19,6 +19,10 @@
 
 package com.kotcrab.vis.editor.util;
 
+import com.badlogic.gdx.Gdx;
+
+import java.util.concurrent.CountDownLatch;
+
 public abstract class AsyncTask {
 	private Thread thread;
 	private Runnable runnable;
@@ -58,6 +62,25 @@ public abstract class AsyncTask {
 
 	public abstract void execute ();
 
+	/** Executes runnable on OpenGL thread. This methods blocks until runnable finished executing */
+	protected void executeOnOpenGL (final Runnable runnable) {
+		final CountDownLatch latch = new CountDownLatch(1);
+
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run () {
+				runnable.run();
+				latch.countDown();
+			}
+		});
+
+		try {
+			latch.await();
+		} catch (InterruptedException e) {
+			Log.exception(e);
+		}
+	}
+
 	public int getProgressPercent () {
 		return progressPercent;
 	}
@@ -71,13 +94,13 @@ public abstract class AsyncTask {
 		this.runnable = runnable;
 	}
 
+	public String getMessage () {
+		return message;
+	}
+
 	public void setMessage (String message) {
 		this.message = message;
 		if (listener != null) listener.messageChanged(message);
-	}
-
-	public String getMessage () {
-		return message;
 	}
 
 	public void setListener (AsyncTaskListener listener) {
