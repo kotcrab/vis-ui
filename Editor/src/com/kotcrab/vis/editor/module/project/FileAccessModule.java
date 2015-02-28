@@ -39,7 +39,7 @@ public class FileAccessModule extends ProjectModule {
 		assetsFolder = visFolder.child("assets");
 		modulesFolder = visFolder.child("modules");
 
-		fontFolder = assetsFolder.child("gfx").child("font");
+		fontFolder = assetsFolder.child("font");
 	}
 
 	public FileHandle getVisFolder () {

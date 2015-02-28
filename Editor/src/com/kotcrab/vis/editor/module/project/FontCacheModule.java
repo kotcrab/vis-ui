@@ -47,8 +47,7 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 		fileAccess = projectContainer.get(FileAccessModule.class);
 		watcherModule = projectContainer.get(AssetsWatcherModule.class);
 
-		FileHandle assetsDirectory = fileAccess.getAssetsFolder();
-		fontDirectory = assetsDirectory.child("gfx").child("font");
+		fontDirectory = fileAccess.getFontFolder();
 
 		watcherModule.addListener(this);
 

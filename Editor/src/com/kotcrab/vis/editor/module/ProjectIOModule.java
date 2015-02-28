@@ -98,6 +98,10 @@ public class ProjectIOModule extends EditorModule {
 				visAssetsDir.mkdirs();
 
 				visAssetsDir.child("scene").mkdirs();
+				visAssetsDir.child("gfx").mkdirs();
+				visAssetsDir.child("font").mkdirs();
+				visAssetsDir.child("sound").mkdirs();
+				visAssetsDir.child("music").mkdirs();
 				visDir.child("modules").mkdirs();
 
 				setProgressPercent(33);
