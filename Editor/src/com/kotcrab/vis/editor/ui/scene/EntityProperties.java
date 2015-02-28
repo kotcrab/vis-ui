@@ -19,8 +19,6 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -32,8 +30,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
@@ -41,20 +37,20 @@ import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.util.FieldUtils;
-import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
+import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextField;
-import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
-import org.lwjgl.input.Keyboard;
+
+import java.util.ArrayList;
 
 public class EntityProperties extends VisTable {
 	private static final int LABEL_WIDTH = 60;
@@ -63,13 +59,10 @@ public class EntityProperties extends VisTable {
 
 	private FileAccessModule fileAccessModule;
 	private ColorPicker picker;
-	private Tab parentTab;
 
 	private Array<EditorEntity> entities;
 
 	private ChangeListener sharedChangeListener;
-	private FieldFilter sharedFieldFilter;
-	private FieldValidator sharedFieldValidator;
 
 	private ColorPickerListener pickerListener;
 	private ColorImage tint;
@@ -86,17 +79,17 @@ public class EntityProperties extends VisTable {
 	private VisTable tintTable;
 	private VisTable flipTable;
 
-	//tables for specific objects
-	private TextObjectTable textObjectTable;
+	private ArrayList<SpecificObjectTable> specificTables = new ArrayList<>();
+	private SpecificObjectTable activeSpecificTable;
 
 	private VisValidableTextField idField;
-	private InputField xField;
-	private InputField yField;
-	private InputField xScaleField;
-	private InputField yScaleField;
-	private InputField xOriginField;
-	private InputField yOriginField;
-	private InputField rotationField;
+	private NumberInputField xField;
+	private NumberInputField yField;
+	private NumberInputField xScaleField;
+	private NumberInputField yScaleField;
+	private NumberInputField xOriginField;
+	private NumberInputField yOriginField;
+	private NumberInputField rotationField;
 	private VisCheckBox xFlipCheck;
 	private VisCheckBox yFlipCheck;
 
@@ -104,16 +97,12 @@ public class EntityProperties extends VisTable {
 		super(true);
 		this.fileAccessModule = fileAccessModule;
 		this.picker = picker;
-		this.parentTab = parentTab;
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
 		setVisible(false);
 
 		entities = selectedEntitiesList;
-
-		sharedFieldFilter = new FieldFilter();
-		sharedFieldValidator = new FieldValidator();
 
 		sharedChangeListener = new ChangeListener() {
 			@Override
@@ -142,7 +131,7 @@ public class EntityProperties extends VisTable {
 		createRotationTintTable();
 		createFlipTable();
 
-		textObjectTable = new TextObjectTable(entities);
+		specificTables.add(new TextObjectTable());
 
 		propertiesTable = new VisTable(true);
 
@@ -153,21 +142,6 @@ public class EntityProperties extends VisTable {
 		addListeners();
 
 		pack();
-	}
-
-	private static String floatToString (float d) {
-		//fk this function
-		if (d == (long) d) //if does not have decimal places
-			return String.format("%d", (long) d);
-		else {
-			//round to two decimal places
-			d = Math.round(d * 100);
-			d = d / 100;
-			String s = String.valueOf(d);
-
-			//remove trailing zeros if exists
-			return s.contains(".") ? s.replaceAll("0*$", "").replaceAll("\\.$", "") : s;
-		}
 	}
 
 	private void createIdTable () {
@@ -182,9 +156,9 @@ public class EntityProperties extends VisTable {
 		positionTable = new VisTable(true);
 		positionTable.add(new VisLabel("Position")).width(LABEL_WIDTH);
 		positionTable.add(new VisLabel("X")).width(AXIS_LABEL_WIDTH);
-		positionTable.add(xField = new InputField()).width(FIELD_WIDTH);
+		positionTable.add(xField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
 		positionTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
-		positionTable.add(yField = new InputField()).width(FIELD_WIDTH);
+		positionTable.add(yField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
 		positionTable.add().expand().fill();
 	}
 
@@ -192,9 +166,9 @@ public class EntityProperties extends VisTable {
 		scaleTable = new VisTable(true);
 		scaleTable.add(new VisLabel("Scale")).width(LABEL_WIDTH);
 		scaleTable.add(new VisLabel("X")).width(AXIS_LABEL_WIDTH);
-		scaleTable.add(xScaleField = new InputField()).width(FIELD_WIDTH);
+		scaleTable.add(xScaleField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
 		scaleTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
-		scaleTable.add(yScaleField = new InputField()).width(FIELD_WIDTH);
+		scaleTable.add(yScaleField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
 		scaleTable.add().expand().fill();
 	}
 
@@ -202,9 +176,9 @@ public class EntityProperties extends VisTable {
 		originTable = new VisTable(true);
 		originTable.add(new VisLabel("Origin")).width(LABEL_WIDTH);
 		originTable.add(new VisLabel("X")).width(AXIS_LABEL_WIDTH);
-		originTable.add(xOriginField = new InputField()).width(FIELD_WIDTH);
+		originTable.add(xOriginField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
 		originTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
-		originTable.add(yOriginField = new InputField()).width(FIELD_WIDTH);
+		originTable.add(yOriginField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
 		originTable.add().expand().fill();
 	}
 
@@ -221,12 +195,12 @@ public class EntityProperties extends VisTable {
 
 		tintTable = new VisTable(true);
 		tintTable.add(new VisLabel("Tint"));
-		tintTable.add(tint).size(20);
+		tintTable.add(tint).size(20).padRight(10);
 
 		rotationTable = new VisTable(true);
 		rotationTable.add(new VisLabel("Rotation")).width(LABEL_WIDTH);
 		rotationTable.add(new VisLabel(" ")).width(AXIS_LABEL_WIDTH);
-		rotationTable.add(rotationField = new InputField()).width(FIELD_WIDTH);
+		rotationTable.add(rotationField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
 	}
 
 	private void createFlipTable () {
@@ -257,12 +231,26 @@ public class EntityProperties extends VisTable {
 		propertiesTable.add(rotationTintTable).row();
 		if (isFlipSupportedForEntities()) propertiesTable.add(flipTable).right().fill(false).row();
 
-		if (textObjectTable.shouldDisplay()){
-			propertiesTable.addSeparator();
-			propertiesTable.add(textObjectTable).row();
+		activeSpecificTable = null;
+		for (SpecificObjectTable table : specificTables) {
+			Class clazz = table.getObjectClass();
+
+			if (checkEntityList(clazz)) {
+				activeSpecificTable = table;
+				propertiesTable.addSeparator();
+				propertiesTable.add(table).row();
+				break;
+			}
 		}
 
 		invalidateHierarchy();
+	}
+
+	private boolean checkEntityList (Class clazz) {
+		for (EditorEntity entity : entities)
+			if (entity.getClass() != clazz) return false;
+
+		return true;
 	}
 
 	@Override
@@ -396,7 +384,7 @@ public class EntityProperties extends VisTable {
 		for (EditorEntity entity : entities)
 			if (value != objValue.getValue(entity)) return "?";
 
-		return floatToString(value);
+		return EntityPropertiesUtils.floatToString(value);
 	}
 
 	private void setValuesToEntity () {
@@ -462,7 +450,7 @@ public class EntityProperties extends VisTable {
 				}
 			}));
 
-			textObjectTable.updateValues();
+			if (activeSpecificTable != null) activeSpecificTable.updateValues(entities);
 
 			setTintForEntities();
 			setFlipXCheckForEntities();
@@ -472,36 +460,6 @@ public class EntityProperties extends VisTable {
 
 	private interface EntityValue {
 		public float getValue (EditorEntity entity);
-	}
-
-	private static class FieldValidator implements InputValidator {
-		@Override
-		public boolean validateInput (String input) {
-			if (input.equals("?")) return true;
-
-			try {
-				Float.parseFloat(input);
-				return true;
-			} catch (NumberFormatException ex) {
-			}
-
-			return false;
-		}
-	}
-
-	private static class FieldFilter implements TextFieldFilter {
-		@Override
-		public boolean acceptChar (VisTextField textField, char c) {
-			//if(textField.getCursorPosition() > 0 && Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) && c == '-') return false;
-			//if(textField.getCursorPosition() > 0 && c == '-') return false;
-			if (c == '.') return true;
-			if (c == '-') return true;
-			if (c == '+') return false;
-
-			if (c == '?') return true;
-
-			return Character.isDigit(c);
-		}
 	}
 
 	private static class ColorImage extends Image {
@@ -538,34 +496,40 @@ public class EntityProperties extends VisTable {
 		}
 	}
 
-	private class TextObjectTable extends VisTable {
-		private Array<EditorEntity> entities;
+	private abstract class SpecificObjectTable extends VisTable {
+		public SpecificObjectTable (boolean useVisDefaults) {
+			super(useVisDefaults);
+		}
 
+		public abstract Class<? extends EditorEntity> getObjectClass ();
+
+		public abstract void updateValues (Array<EditorEntity> entities);
+	}
+
+	private class TextObjectTable extends SpecificObjectTable {
 		private VisTextField textField;
 		private VisLabel fontLabel;
 		private VisImageButton selectFontButton;
-		private InputField fontSizeInputField;
+		private NumberInputField sizeInputField;
 
-		private boolean display;
-
-		public TextObjectTable (Array<EditorEntity> entities) {
+		public TextObjectTable () {
 			super(true);
-			this.entities = entities;
 
 			fontLabel = new VisLabel();
 			fontLabel.setColor(Color.GRAY);
 			fontLabel.setEllipsis(true);
 			selectFontButton = new VisImageButton(Assets.getIcon(Icons.MORE));
-			fontSizeInputField = new InputField();
+			sizeInputField = new NumberInputField(sharedChangeListener);
+
+			sizeInputField.addValidator(Validators.INTEGERS);
 
 			VisTable fontTable = new VisTable(true);
 			fontTable.add(new VisLabel("Font"));
 			fontTable.add(fontLabel);
 			fontTable.add(selectFontButton);
 			fontTable.add(new VisLabel("Size"));
-			fontTable.add(fontSizeInputField).width(40);
+			fontTable.add(sizeInputField).width(40);
 			fontTable.add().expand().fill();
-
 
 			VisTable textTable = new VisTable(true);
 
@@ -578,115 +542,52 @@ public class EntityProperties extends VisTable {
 			add(fontTable);
 		}
 
-		public boolean shouldDisplay () {
-			checkDisplay();
-			return display;
-		}
+		private String getTextFieldText (Array<EditorEntity> entities) {
+			TextObject textObj = (TextObject) EntityProperties.this.entities.get(0);
+			String firstText = textObj.getText();
 
-		private void checkDisplay () {
-			for (EditorEntity entity : entities) {
-				if (entity instanceof TextObject == false) {
-					display = false;
-					return;
-				}
+			for (EditorEntity entity : EntityProperties.this.entities) {
+				TextObject obj = (TextObject) entity;
+
+				if (obj.getText().equals(firstText) == false) return "<multiple values>";
 			}
 
-			display = true;
+			return firstText;
 		}
 
-		public void updateValues () {
-			if (display) {
-				TextObject o = (TextObject) entities.get(0);
-				textField.setText(o.getText());
-				fontLabel.setText(o.getRelativeFontPath().substring(fileAccessModule.getFontFolderRelative().length() + 1));
+		private String getFontLabelText (Array<EditorEntity> entities) {
+			String firstText = getFontTextForEntity(EntityProperties.this.entities.get(0));
+
+			for (EditorEntity entity : EntityProperties.this.entities) {
+				TextObject obj = (TextObject) entity;
+
+				if (getFontTextForEntity(obj).equals(firstText) == false) return "<?>";
 			}
+
+			return firstText;
 		}
-	}
 
-	private class InputField extends VisValidableTextField {
-		public InputField () {
-			addValidator(sharedFieldValidator);
-
-			//without disabling it, it would case to set old values from new entities on switch
-			setProgrammaticChangeEvents(false);
-
-			addListener(sharedChangeListener);
-			setTextFieldFilter(sharedFieldFilter);
+		private String getFontTextForEntity (EditorEntity entity) {
+			TextObject obj = (TextObject) entity;
+			return obj.getRelativeFontPath().substring(fileAccessModule.getFontFolderRelative().length() + 1);
 		}
 
 		@Override
-		protected InputListener createInputListener () {
-			return new InputFieldListener();
+		public Class<? extends EditorEntity> getObjectClass () {
+			return TextObject.class;
 		}
 
-		public class InputFieldListener extends TextFieldClickListener {
-			private TimerRepeatTask timerTask;
-			private boolean keyTypedReturnValue;
-
-			public InputFieldListener () {
-				timerTask = new TimerRepeatTask();
-			}
-
-			@Override
-			public boolean keyDown (InputEvent event, int keycode) {
-				return super.keyDown(event, keycode);
-			}
-
-			@Override
-			public boolean keyTyped (InputEvent event, char character) {
-				keyTypedReturnValue = false;
-
-				checkKeys();
-
-				if (character == '-' && InputField.this.getCursorPosition() > 0 && getText().startsWith("-") == false)
-					return keyTypedReturnValue;
-
-				if (character == '.' && getText().contains(".")) return keyTypedReturnValue;
-
-				parentTab.setDirty(true);
-
-				return (keyTypedReturnValue || super.keyTyped(event, character));
-			}
-
-			private void checkKeys () {
-				float delta = 0;
-				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) delta = 1;
-				if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) delta = 10;
-
-				if (delta != 0) {
-					//current workaround for https://github.com/libgdx/libgdx/pull/2592
-					if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) changeFieldValue(delta * -1);
-					if (Gdx.input.isKeyPressed(Keys.PLUS)) changeFieldValue(delta);
-
-					if (keyTypedReturnValue) {
-						timerTask.cancel();
-						Timer.schedule(timerTask, 0.1f);
-					}
-				}
-			}
-
-			private void changeFieldValue (float value) {
-				keyTypedReturnValue = true;
-
-				try {
-					float fieldValue = Float.parseFloat(getText());
-					fieldValue += value;
-
-					int lastPos = getCursorPosition();
-					setText(floatToString(fieldValue));
-					InputField.this.setCursorPosition(lastPos);
-
-					setValuesToEntity();
-				} catch (NumberFormatException ex) {
-				}
-			}
-
-			private class TimerRepeatTask extends Task {
+		@Override
+		public void updateValues (Array<EditorEntity> entities) {
+			textField.setText(getTextFieldText(entities));
+			fontLabel.setText(getFontLabelText(entities));
+			sizeInputField.setText(getEntitiesFieldValue(new EntityValue() {
 				@Override
-				public void run () {
-					checkKeys();
+				public float getValue (EditorEntity entity) {
+					return ((TextObject) entity).getFontSize();
 				}
-			}
+			}));
 		}
 	}
+
 }
