@@ -30,7 +30,7 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	/** Maximum recommenced font size, not enforced byt FontCacheModule */
 	public static final int MAX_FONT_SIZE = 300;
 	/** Minimum recommenced font size, not enforced byt FontCacheModule */
-	public static final float MIN_FONT_SIZE = 5;
+	public static final int MIN_FONT_SIZE = 5;
 
 	public static final int DEFAULT_FONT_SIZE = 20;
 	public static final String DEFAULT_TEXT = "Quick fox jumps over the lazy dog";
