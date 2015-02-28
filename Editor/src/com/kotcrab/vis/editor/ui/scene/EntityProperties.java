@@ -352,7 +352,7 @@ public class EntityProperties extends VisTable {
 		return firstId;
 	}
 
-	private void setFlipXCheckForEntities () {
+	private void setFlipXUICheckForEntities () {
 		boolean xFlip = entities.first().isFlipX();
 		for (EditorEntity entity : entities) {
 			if (xFlip != entity.isFlipX()) {
@@ -363,7 +363,7 @@ public class EntityProperties extends VisTable {
 		xFlipCheck.setChecked(xFlip);
 	}
 
-	private void setFlipYCheckForEntities () {
+	private void setFlipYUICheckForEntities () {
 		boolean yFlip = entities.first().isFlipY();
 		for (EditorEntity entity : entities) {
 			if (yFlip != entity.isFlipY()) {
@@ -374,7 +374,7 @@ public class EntityProperties extends VisTable {
 		yFlipCheck.setChecked(yFlip);
 	}
 
-	private void setTintForEntities () {
+	private void setTintUIForEntities () {
 		Color firstColor = entities.first().getColor();
 		for (EditorEntity entity : entities) {
 			if (firstColor.equals(entity.getColor()) == false) {
@@ -406,7 +406,7 @@ public class EntityProperties extends VisTable {
 
 		}
 
-		if (activeSpecificTable != null) activeSpecificTable.setValues(entities);
+		if (activeSpecificTable != null) activeSpecificTable.setValuesToEntities(entities);
 	}
 
 	public void updateValues () {
@@ -462,9 +462,9 @@ public class EntityProperties extends VisTable {
 
 			if (activeSpecificTable != null) activeSpecificTable.updateUIValues(entities);
 
-			setTintForEntities();
-			setFlipXCheckForEntities();
-			setFlipYCheckForEntities();
+			setTintUIForEntities();
+			setFlipXUICheckForEntities();
+			setFlipYUICheckForEntities();
 		}
 	}
 
@@ -515,7 +515,7 @@ public class EntityProperties extends VisTable {
 
 		public abstract void updateUIValues (Array<EditorEntity> entities);
 
-		public abstract void setValues (Array<EditorEntity> entities);
+		public abstract void setValuesToEntities (Array<EditorEntity> entities);
 	}
 
 	private class TextObjectTable extends SpecificObjectTable {
@@ -539,6 +539,7 @@ public class EntityProperties extends VisTable {
 			sizeInputField.addValidator(new LesserThanValidator(FontCacheModule.MAX_FONT_SIZE));
 			textField = new VisValidableTextField();
 			textField.addListener(sharedChangeListener);
+			textField.setProgrammaticChangeEvents(false);
 
 			VisTable fontTable = new VisTable(true);
 			fontTable.add(new VisLabel("Font"));
@@ -627,7 +628,7 @@ public class EntityProperties extends VisTable {
 		}
 
 		@Override
-		public void setValues (Array<EditorEntity> entities) {
+		public void setValuesToEntities (Array<EditorEntity> entities) {
 			for (EditorEntity entity : entities) {
 				TextObject obj = (TextObject) entity;
 
