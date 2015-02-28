@@ -28,40 +28,46 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 
 public class EditorFont implements Disposable {
-		private FileHandle file;
-		private FreeTypeFontGenerator generator;
-		private ObjectMap<Integer, BitmapFont> bitmapFonts = new ObjectMap<>();
+	private FileHandle file;
+	private String relativePath;
+	private FreeTypeFontGenerator generator;
+	private ObjectMap<Integer, BitmapFont> bitmapFonts = new ObjectMap<>();
 
-		public EditorFont (FileHandle file) {
-			this.file = file;
-			generator = new FreeTypeFontGenerator(file);
-			get(FontCacheModule.DEFAULT_FONT_SIZE);
+	public EditorFont (FileHandle file, String relativePath) {
+		this.file = file;
+		this.relativePath = relativePath;
+		generator = new FreeTypeFontGenerator(file);
+		get(FontCacheModule.DEFAULT_FONT_SIZE);
+	}
+
+	public BitmapFont get (int size) {
+		BitmapFont font = bitmapFonts.get(size);
+
+		if (font == null) {
+			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+			parameter.size = size;
+			parameter.minFilter = TextureFilter.Linear;
+			parameter.magFilter = TextureFilter.Linear;
+			font = generator.generateFont(parameter);
+			bitmapFonts.put(size, font);
 		}
 
-		public BitmapFont get (int size) {
-			BitmapFont font = bitmapFonts.get(size);
+		return font;
+	}
 
-			if (font == null) {
-				FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-				parameter.size = size;
-				parameter.minFilter = TextureFilter.Linear;
-				parameter.magFilter = TextureFilter.Linear;
-				font = generator.generateFont(parameter);
-				bitmapFonts.put(size, font);
-			}
+	@Override
+	public void dispose () {
+		for (BitmapFont font : bitmapFonts.values())
+			font.dispose();
 
-			return font;
-		}
-
-		@Override
-		public void dispose () {
-			for (BitmapFont font : bitmapFonts.values())
-				font.dispose();
-
-			generator.dispose();
-		}
+		generator.dispose();
+	}
 
 	public FileHandle getFile () {
 		return file;
+	}
+
+	public String getRelativePath () {
+		return relativePath;
 	}
 }

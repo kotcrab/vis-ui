@@ -49,10 +49,10 @@ public class TextObject extends EditorEntity {
 	private Matrix4 translationMatrix;
 	private CharSequence text;
 
-	public TextObject (EditorFont font, BitmapFont bitmapFont, String text, String relativeFontPath, int fontSize) {
+	public TextObject (EditorFont font, BitmapFont bitmapFont, String text, int fontSize) {
 		this.font = font;
 		this.text = text;
-		this.relativeFontPath = relativeFontPath;
+		this.relativeFontPath = font.getRelativePath();
 		this.fontSize = fontSize;
 
 		translationMatrix = new Matrix4();
@@ -258,18 +258,22 @@ public class TextObject extends EditorEntity {
 	}
 
 	public void setFontSize (int fontSize) {
-		if(this.fontSize != fontSize) {
+		if (this.fontSize != fontSize) {
 			this.fontSize = fontSize;
 			BitmapFont bmpFont = font.get(fontSize);
 			cache = new BitmapFontCache(bmpFont);
-			cache.setText(text, 0, 0);
+			textBounds = cache.setText(text, 0, 0);
+			textChanged();
 		}
 	}
 
 	public void setFont (EditorFont font) {
-		this.font = font;
-		BitmapFont bmpFont = font.get(fontSize);
-		cache = new BitmapFontCache(bmpFont);
-		textBounds = cache.setText(text, 0, 0);
+		if(this.font != font) {
+			this.font = font;
+			relativeFontPath = font.getRelativePath();
+			cache = new BitmapFontCache(font.get(fontSize));
+			textBounds = cache.setText(text, 0, 0);
+			textChanged();
+		}
 	}
 }

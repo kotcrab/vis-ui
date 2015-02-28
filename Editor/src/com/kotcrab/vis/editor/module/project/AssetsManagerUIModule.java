@@ -300,12 +300,11 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 						public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 							Payload payload = new Payload();
 
-							String relativeFontPath = fileAccess.relativizeToVisFolder(item.file);
 							int size = FontCacheModule.DEFAULT_FONT_SIZE;
 							EditorFont font = fontCache.get(item.file);
 							BitmapFont bmpFont = font.get(size);
 
-							TextObject text = new TextObject(font, bmpFont, FontCacheModule.DEFAULT_TEXT, relativeFontPath, size);
+							TextObject text = new TextObject(font, bmpFont, FontCacheModule.DEFAULT_TEXT, size);
 							payload.setObject(text);
 
 							LabelStyle style = new LabelStyle(bmpFont, Color.WHITE);

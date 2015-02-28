@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -36,12 +37,15 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.editor.ui.SelectFontDialog;
+import com.kotcrab.vis.editor.ui.SelectFontDialog.FontDialogListener;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.Validators;
+import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisImageButton;
@@ -59,6 +63,7 @@ public class EntityProperties extends VisTable {
 	private static final int FIELD_WIDTH = 70;
 
 	private FileAccessModule fileAccessModule;
+	private FontCacheModule fontCacheModule;
 	private ColorPicker picker;
 
 	private Array<EditorEntity> entities;
@@ -94,9 +99,10 @@ public class EntityProperties extends VisTable {
 	private VisCheckBox xFlipCheck;
 	private VisCheckBox yFlipCheck;
 
-	public EntityProperties (FileAccessModule fileAccessModule, final ColorPicker picker, final Tab parentTab, Array<EditorEntity> selectedEntitiesList) {
+	public EntityProperties (FileAccessModule fileAccessModule, FontCacheModule fontCacheModule, final ColorPicker picker, final Tab parentTab, Array<EditorEntity> selectedEntitiesList) {
 		super(true);
 		this.fileAccessModule = fileAccessModule;
+		this.fontCacheModule = fontCacheModule;
 		this.picker = picker;
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
@@ -513,6 +519,8 @@ public class EntityProperties extends VisTable {
 	}
 
 	private class TextObjectTable extends SpecificObjectTable {
+		private SelectFontDialog selectFontDialog;
+
 		private VisValidableTextField textField;
 		private VisLabel fontLabel;
 		private VisImageButton selectFontButton;
@@ -527,6 +535,7 @@ public class EntityProperties extends VisTable {
 			selectFontButton = new VisImageButton(Assets.getIcon(Icons.MORE));
 			sizeInputField = new NumberInputField(sharedChangeListener);
 			sizeInputField.addValidator(Validators.INTEGERS);
+			sizeInputField.addValidator(new GreaterThanValidator(FontCacheModule.MIN_FONT_SIZE));
 			sizeInputField.addValidator(new LesserThanValidator(FontCacheModule.MAX_FONT_SIZE));
 			textField = new VisValidableTextField();
 			textField.addListener(sharedChangeListener);
@@ -548,6 +557,26 @@ public class EntityProperties extends VisTable {
 			add(textTable);
 			row();
 			add(fontTable);
+
+			selectFontButton.addListener(new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent event, Actor actor) {
+					selectFontDialog.rebuild();
+					getStage().addActor(selectFontDialog.fadeIn());
+				}
+			});
+
+			selectFontDialog = new SelectFontDialog(fileAccessModule, new FontDialogListener() {
+				@Override
+				public void selected (FileHandle file) {
+					for (EditorEntity entity : entities) {
+						TextObject obj = (TextObject) entity;
+						obj.setFont(fontCacheModule.get(file));
+					}
+
+					updateValues();
+				}
+			});
 		}
 
 		private String getTextFieldText (Array<EditorEntity> entities) {

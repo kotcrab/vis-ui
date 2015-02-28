@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.ColorPickerModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.ui.scene.EntityProperties;
 
@@ -64,7 +65,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 		ColorPickerModule pickerModule = container.get(ColorPickerModule.class);
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
-		entityProperties = new EntityProperties(fileAccess, pickerModule.getPicker(), sceneTab, selectedEntities);
+		FontCacheModule fontCacheModule = projectContainer.get(FontCacheModule.class);
+		entityProperties = new EntityProperties(fileAccess, fontCacheModule, pickerModule.getPicker(), sceneTab, selectedEntities);
 	}
 
 	@Override

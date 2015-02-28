@@ -29,17 +29,22 @@ import com.kotcrab.vis.ui.util.DialogUtils;
 public class FontCacheModule extends ProjectModule implements WatchListener {
 	/** Maximum recommenced font size, not enforced byt FontCacheModule */
 	public static final int MAX_FONT_SIZE = 300;
+	/** Minimum recommenced font size, not enforced byt FontCacheModule */
+	public static final float MIN_FONT_SIZE = 5;
+
 	public static final int DEFAULT_FONT_SIZE = 20;
 	public static final String DEFAULT_TEXT = "Quick fox jumps over the lazy dog";
 
+	private FileAccessModule fileAccess;
 	private AssetsWatcherModule watcherModule;
+
 	private FileHandle fontDirectory;
 
 	private Array<EditorFont> fonts = new Array<>();
 
 	@Override
 	public void init () {
-		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
+		fileAccess = projectContainer.get(FileAccessModule.class);
 		watcherModule = projectContainer.get(AssetsWatcherModule.class);
 
 		FileHandle assetsDirectory = fileAccess.getAssetsFolder();
@@ -55,7 +60,7 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 
 		for (FileHandle file : files) {
 			if (file.extension().equals("ttf")) {
-				fonts.add(new EditorFont(file));
+				fonts.add(new EditorFont(file, fileAccess.relativizeToVisFolder(file)));
 			}
 		}
 	}
@@ -75,7 +80,7 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 			fonts.removeValue(existingFont, true);
 		}
 
-		fonts.add(new EditorFont(file));
+		fonts.add(new EditorFont(file, fileAccess.relativizeToVisFolder(file)));
 
 		//TODO: post font reloaded event
 	}
