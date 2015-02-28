@@ -354,9 +354,13 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		contentTree.clearChildren();
 
 		for (FileHandle contentRoot : assetsFolder.list(DirectoriesOnlyFileFilter.filter)) {
-			Node node = new Node(new FolderItem(contentRoot));
-			processFolder(node, contentRoot);
-			contentTree.add(node);
+
+			//hide empty dirs except 'gfx' and 'scene'
+			if(contentRoot.list().length != 0 || contentRoot.name().equals("gfx") || contentRoot.name().equals("scene")) {
+				Node node = new Node(new FolderItem(contentRoot));
+				processFolder(node, contentRoot);
+				contentTree.add(node);
+			}
 		}
 	}
 
