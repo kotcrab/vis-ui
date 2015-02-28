@@ -447,7 +447,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 				this.region = region;
 				type = FileType.TEXTURE;
 			} else if (file.extension().equals("ttf")) {
-				add(new VisLabel("Font")).row();
+				add(new VisLabel("TTF Font", Color.GRAY)).row();
 				name = new VisLabel(file.name());
 				type = FileType.FONT;
 			} else {
