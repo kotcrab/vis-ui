@@ -110,32 +110,35 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	private void reloadAtlas () {
-		TextureAtlas oldCache = null;
+		if (cacheFile.exists()) {
+			TextureAtlas oldCache = null;
 
-		if (cache != null) oldCache = cache;
+			if (cache != null) oldCache = cache;
 
-		cache = new TextureAtlas(cacheFile);
+			cache = new TextureAtlas(cacheFile);
 
-		for (Entry<String, TextureRegion> e : regions.entries()) {
-			String path = e.key;
-			TextureRegion region = e.value;
+			for (Entry<String, TextureRegion> e : regions.entries()) {
+				String path = e.key;
+				TextureRegion region = e.value;
 
-			TextureRegion newRegion = cache.findRegion(path);
+				TextureRegion newRegion = cache.findRegion(path);
 
-			if (newRegion == null)
-				region.setRegion(missingRegion);
-			else
-				region.setRegion(newRegion);
-		}
+				if (newRegion == null)
+					region.setRegion(missingRegion);
+				else
+					region.setRegion(newRegion);
+			}
 
-		disposeOldCacheLater(oldCache);
+			disposeOldCacheLater(oldCache);
 
-		App.eventBus.post(new TexturesReloadedEvent());
-		if (firstReload == false) {
-			//we don't want to display 'textures reloaded' right after editor startup
-			App.eventBus.post(new StatusBarEvent("Textures reloaded"));
-			firstReload = true;
-		}
+			App.eventBus.post(new TexturesReloadedEvent());
+			if (firstReload == false) {
+				//we don't want to display 'textures reloaded' right after editor startup / project loaded
+				App.eventBus.post(new StatusBarEvent("Textures reloaded"));
+				firstReload = true;
+			}
+		} else
+			Log.error("Texture cache not ready, probably they aren't any textures in project or packer failed");
 	}
 
 	private void disposeOldCacheLater (final TextureAtlas oldCache) {
@@ -149,7 +152,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	@Override
 	public void dispose () {
-		cache.dispose();
+		if (cache != null)
+			cache.dispose();
 		watcher.removeListener(this);
 	}
 
