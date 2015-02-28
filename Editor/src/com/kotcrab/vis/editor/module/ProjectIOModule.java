@@ -65,19 +65,6 @@ public class ProjectIOModule extends EditorModule {
 	}
 
 	private boolean loadProject (FileHandle file) throws EditorException {
-
-//		if (file.exists() == false) throw new EditorException("Project file does not exist!");
-//		Json json = new Json();
-//
-//		Project project = json.fromJson(Project.class, file);
-//		project.root = file.parent().parent().path();
-//
-//		Editor.instance.projectLoaded(project);
-//
-//		return true;
-//
-
-
 		if (file.exists() == false) throw new EditorException("Project file does not exist!");
 
 		try {
@@ -93,8 +80,6 @@ public class ProjectIOModule extends EditorModule {
 		}
 
 		return true;
-
-
 	}
 
 	public void create (final ProjectLibGDX project) {
