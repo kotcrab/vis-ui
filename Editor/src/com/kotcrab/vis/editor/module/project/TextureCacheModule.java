@@ -32,6 +32,7 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
+import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.texturepacker.TexturePacker;
 import com.kotcrab.vis.editor.util.texturepacker.TexturePacker.Settings;
 
@@ -79,7 +80,12 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 		watcher.addListener(this);
 
-		if (cacheFile.exists()) cache = new TextureAtlas(cacheFile);
+		try {
+			if (cacheFile.exists()) cache = new TextureAtlas(cacheFile);
+		} catch (Exception e) {
+			Log.error("Error while loading texture cache, texture cache will be regenerated");
+		}
+
 		updateCache();
 	}
 
