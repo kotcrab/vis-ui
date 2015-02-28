@@ -24,7 +24,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 
 public abstract class EditorEntity {
-	public String id;
+	private String id;
 
 	public abstract float getX ();
 
@@ -119,4 +119,12 @@ public abstract class EditorEntity {
 	}
 
 	public abstract Rectangle getBoundingRectangle ();
+
+	public String getId () {
+		return id;
+	}
+
+	public void setId (String id) {
+		this.id = id;
+	}
 }

@@ -339,11 +339,11 @@ public class EntityProperties extends VisTable {
 	}
 
 	private String getEntitiesId () {
-		String firstId = entities.first().id;
+		String firstId = entities.first().getId();
 		if (firstId == null) firstId = "";
 
 		for (EditorEntity entity : entities) {
-			String entityId = entity.id;
+			String entityId = entity.getId();
 			if (entityId == null) entityId = "";
 
 			if (firstId.equals(entityId) == false) {
@@ -399,7 +399,7 @@ public class EntityProperties extends VisTable {
 	private void setValuesToEntity () {
 		for (EditorEntity entity : entities) {
 
-			entity.id = idField.getText().equals("") ? null : idField.getText();
+			entity.setId(idField.getText().equals("") ? null : idField.getText());
 			entity.setPosition(FieldUtils.getFloat(xField, entity.getX()), FieldUtils.getFloat(yField, entity.getY()));
 			entity.setScale(FieldUtils.getFloat(xScaleField, entity.getScaleX()), FieldUtils.getFloat(yScaleField, entity.getScaleY()));
 			entity.setOrigin(FieldUtils.getFloat(xOriginField, entity.getOriginX()), FieldUtils.getFloat(yOriginField, entity.getOriginY()));

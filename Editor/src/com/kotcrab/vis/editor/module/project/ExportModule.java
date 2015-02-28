@@ -206,7 +206,7 @@ public class ExportModule extends ProjectModule {
 							SceneSpriteData data = new SceneSpriteData();
 							data.saveFrom(s);
 
-							data.id = obj.id;
+							data.id = obj.getId();
 							data.textureAtlas = "gfx/textures.atlas";
 							data.textureRegion = obj.getRegionRelativePath();
 

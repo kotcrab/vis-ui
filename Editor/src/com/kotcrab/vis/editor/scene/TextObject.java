@@ -62,7 +62,7 @@ public class TextObject extends EditorEntity {
 		translate();
 	}
 
-	/** Must be called after deserializaiton */
+	/** Must be called after editor deserializaiton */
 	public void afterDeserialize (EditorFont font) {
 		setFont(font);
 	}
