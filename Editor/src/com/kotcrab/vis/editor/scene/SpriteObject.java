@@ -26,9 +26,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 public class SpriteObject extends EditorEntity {
-	//TODO to private
-	public String regionRelativePath;
-	public Sprite sprite;
+	private String regionRelativePath;
+	private Sprite sprite;
 
 	public SpriteObject (String regionRelativePath, TextureRegion region, float x, float y) {
 		this.sprite = new Sprite(region);
@@ -185,5 +184,13 @@ public class SpriteObject extends EditorEntity {
 	@Override
 	public Rectangle getBoundingRectangle () {
 		return sprite.getBoundingRectangle();
+	}
+
+	public String getRegionRelativePath () {
+		return regionRelativePath;
+	}
+
+	public Sprite getSprite () {
+		return sprite;
 	}
 }

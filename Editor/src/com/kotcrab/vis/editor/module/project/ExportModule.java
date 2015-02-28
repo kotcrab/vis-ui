@@ -201,14 +201,14 @@ public class ExportModule extends ProjectModule {
 					for (EditorEntity entity : editorScene.entities) {
 						if (entity instanceof SpriteObject) {
 							SpriteObject obj = (SpriteObject) entity;
-							Sprite s = obj.sprite;
+							Sprite s = obj.getSprite();
 
 							SceneSpriteData data = new SceneSpriteData();
 							data.saveFrom(s);
 
 							data.id = obj.id;
 							data.textureAtlas = "gfx/textures.atlas";
-							data.textureRegion = obj.regionRelativePath;
+							data.textureRegion = obj.getRegionRelativePath();
 
 							sceneData.entities.add(data);
 							continue;

@@ -89,7 +89,7 @@ public class SceneIOModule extends ProjectModule {
 		for (EditorEntity entity : scene.entities) {
 			if (entity instanceof SpriteObject) {
 				SpriteObject spriteObject = (SpriteObject) entity;
-				SpriteUtils.setRegion(spriteObject.sprite, textureCacheModule.getRegion(spriteObject.regionRelativePath));
+				SpriteUtils.setRegion(spriteObject.getSprite(), textureCacheModule.getRegion(spriteObject.getRegionRelativePath()));
 			}
 
 			if (entity instanceof TextObject) {
