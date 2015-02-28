@@ -64,10 +64,7 @@ public class TextObject extends EditorEntity {
 
 	/** Must be called after deserializaiton */
 	public void afterDeserialize (EditorFont font) {
-		this.font = font;
-		BitmapFont bmpFont = font.get(fontSize);
-		cache = new BitmapFontCache(bmpFont);
-		textBounds = cache.setText(text, 0, 0);
+		setFont(font);
 	}
 
 	@Override
@@ -267,5 +264,12 @@ public class TextObject extends EditorEntity {
 			cache = new BitmapFontCache(bmpFont);
 			cache.setText(text, 0, 0);
 		}
+	}
+
+	public void setFont (EditorFont font) {
+		this.font = font;
+		BitmapFont bmpFont = font.get(fontSize);
+		cache = new BitmapFontCache(bmpFont);
+		textBounds = cache.setText(text, 0, 0);
 	}
 }
