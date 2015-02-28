@@ -44,15 +44,20 @@ public class EditorFont implements Disposable {
 		BitmapFont font = bitmapFonts.get(size);
 
 		if (font == null) {
-			FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-			parameter.size = size;
-			parameter.minFilter = TextureFilter.Linear;
-			parameter.magFilter = TextureFilter.Linear;
-			font = generator.generateFont(parameter);
+
+			font = generator.generateFont(getParameterForSize(size));
 			bitmapFonts.put(size, font);
 		}
 
 		return font;
+	}
+
+	private FreeTypeFontParameter getParameterForSize (int size) {
+		FreeTypeFontParameter parameter = new FreeTypeFontParameter();
+		parameter.size = size;
+		parameter.minFilter = TextureFilter.Linear;
+		parameter.magFilter = TextureFilter.Linear;
+		return parameter;
 	}
 
 	@Override
