@@ -69,8 +69,6 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
 
-// TODO smaller font for names
-
 @SuppressWarnings("rawtypes")
 public class AssetsManagerUIModule extends ProjectModule implements DirectoryWatcher.WatchListener, TabbedPaneListener {
 	private Stage stage;
