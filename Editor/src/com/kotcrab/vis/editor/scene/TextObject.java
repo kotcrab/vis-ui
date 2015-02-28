@@ -27,6 +27,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.kotcrab.vis.editor.module.project.EditorFont;
 
 /**
  * Text that you can scale, rotate, change color itp. Supports distance field fonts
@@ -35,6 +36,7 @@ import com.badlogic.gdx.math.Rectangle;
 public class TextObject extends EditorEntity {
 	private String relativeFontPath;
 	private int fontSize;
+	private transient EditorFont font;
 	private transient BitmapFontCache cache;
 
 	private float x = 0, y = 0;
@@ -47,7 +49,8 @@ public class TextObject extends EditorEntity {
 	private Matrix4 translationMatrix;
 	private CharSequence text;
 
-	public TextObject (BitmapFont bitmapFont, String text, String relativeFontPath, int fontSize) {
+	public TextObject (EditorFont font, BitmapFont bitmapFont, String text, String relativeFontPath, int fontSize) {
+		this.font = font;
 		this.text = text;
 		this.relativeFontPath = relativeFontPath;
 		this.fontSize = fontSize;
@@ -60,8 +63,10 @@ public class TextObject extends EditorEntity {
 	}
 
 	/** Must be called after deserializaiton */
-	public void afterDeserialize (BitmapFont font) {
-		cache = new BitmapFontCache(font);
+	public void afterDeserialize (EditorFont font) {
+		this.font = font;
+		BitmapFont bmpFont = font.get(fontSize);
+		cache = new BitmapFontCache(bmpFont);
 		textBounds = cache.setText(text, 0, 0);
 	}
 
@@ -98,14 +103,14 @@ public class TextObject extends EditorEntity {
 		boundingRectangle = polygon.getBoundingRectangle();
 	}
 
+	public String getText () {
+		return text.toString();
+	}
+
 	public void setText (CharSequence str) {
 		this.text = str;
 		textBounds = cache.setText(str, 0, 0);
 		textChanged();
-	}
-
-	public String getText () {
-		return text.toString();
 	}
 
 	public boolean isAutoSetOriginToCenter () {
@@ -253,5 +258,14 @@ public class TextObject extends EditorEntity {
 
 	public int getFontSize () {
 		return fontSize;
+	}
+
+	public void setFontSize (int fontSize) {
+		if(this.fontSize != fontSize) {
+			this.fontSize = fontSize;
+			BitmapFont bmpFont = font.get(fontSize);
+			cache = new BitmapFontCache(bmpFont);
+			cache.setText(text, 0, 0);
+		}
 	}
 }

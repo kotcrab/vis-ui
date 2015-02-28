@@ -20,18 +20,15 @@
 package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.ui.util.DialogUtils;
 
 public class FontCacheModule extends ProjectModule implements WatchListener {
+	/** Maximum recommenced font size, not enforced byt FontCacheModule */
+	public static final int MAX_FONT_SIZE = 300;
 	public static final int DEFAULT_FONT_SIZE = 20;
 	public static final String DEFAULT_TEXT = "Quick fox jumps over the lazy dog";
 
@@ -67,7 +64,7 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 		EditorFont existingFont = null;
 
 		for (EditorFont font : fonts) {
-			if (font.file.equals(file)) {
+			if (font.getFile().equals(file)) {
 				existingFont = font;
 				break;
 			}
@@ -104,47 +101,23 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	public void fileCreated (FileHandle file) {
 	}
 
+	public EditorFont get (FileHandle file) {
+		for (EditorFont font : fonts) {
+			if (font.getFile().equals(file))
+				return font;
+		}
+
+		throw new IllegalStateException("Font not found");
+	}
+
 	public BitmapFont get (FileHandle file, int size) {
 		for (EditorFont font : fonts) {
-			if (font.file.equals(file))
+			if (font.getFile().equals(file))
 				return font.get(size);
 		}
 
 		throw new IllegalStateException("Font not found");
 	}
 
-	private static class EditorFont implements Disposable {
-		private FileHandle file;
-		private FreeTypeFontGenerator generator;
-		private ObjectMap<Integer, BitmapFont> bitmapFonts = new ObjectMap<>();
 
-		public EditorFont (FileHandle file) {
-			this.file = file;
-			generator = new FreeTypeFontGenerator(file);
-			get(DEFAULT_FONT_SIZE);
-		}
-
-		public BitmapFont get (int size) {
-			BitmapFont font = bitmapFonts.get(size);
-
-			if (font == null) {
-				FreeTypeFontParameter parameter = new FreeTypeFontParameter();
-				parameter.size = size;
-				parameter.minFilter = TextureFilter.Linear;
-				parameter.magFilter = TextureFilter.Linear;
-				font = generator.generateFont(parameter);
-				bitmapFonts.put(size, font);
-			}
-
-			return font;
-		}
-
-		@Override
-		public void dispose () {
-			for (BitmapFont font : bitmapFonts.values())
-				font.dispose();
-
-			generator.dispose();
-		}
-	}
 }

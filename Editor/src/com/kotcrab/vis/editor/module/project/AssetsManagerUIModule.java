@@ -301,12 +301,14 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 							Payload payload = new Payload();
 
 							String relativeFontPath = fileAccess.relativizeToVisFolder(item.file);
-							BitmapFont font = fontCache.get(item.file, FontCacheModule.DEFAULT_FONT_SIZE);
+							int size = FontCacheModule.DEFAULT_FONT_SIZE;
+							EditorFont font = fontCache.get(item.file);
+							BitmapFont bmpFont = font.get(size);
 
-							TextObject text = new TextObject(font, FontCacheModule.DEFAULT_TEXT, relativeFontPath, FontCacheModule.DEFAULT_FONT_SIZE);
+							TextObject text = new TextObject(font, bmpFont, FontCacheModule.DEFAULT_TEXT, relativeFontPath, size);
 							payload.setObject(text);
 
-							LabelStyle style = new LabelStyle(font, Color.WHITE);
+							LabelStyle style = new LabelStyle(bmpFont, Color.WHITE);
 							Label label = new VisLabel(FontCacheModule.DEFAULT_TEXT, style);
 							payload.setDragActor(label);
 

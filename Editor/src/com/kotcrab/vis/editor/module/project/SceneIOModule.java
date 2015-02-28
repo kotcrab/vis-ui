@@ -20,7 +20,6 @@
 package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Matrix4;
@@ -95,7 +94,7 @@ public class SceneIOModule extends ProjectModule {
 
 			if (entity instanceof TextObject) {
 				TextObject textObject = (TextObject) entity;
-				BitmapFont font = fontCacheModule.get(fileAccessModule.getVisFolder().child(textObject.getRelativeFontPath()), textObject.getFontSize());
+				EditorFont font = fontCacheModule.get(fileAccessModule.getVisFolder().child(textObject.getRelativeFontPath()));
 				textObject.afterDeserialize(font);
 			}
 		}

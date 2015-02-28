@@ -33,6 +33,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tab.Tab;
@@ -41,10 +42,10 @@ import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.Validators;
+import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
@@ -396,7 +397,10 @@ public class EntityProperties extends VisTable {
 			entity.setOrigin(FieldUtils.getFloat(xOriginField, entity.getOriginX()), FieldUtils.getFloat(yOriginField, entity.getOriginY()));
 			entity.setRotation(FieldUtils.getFloat(rotationField, entity.getRotation()));
 			entity.setFlip(xFlipCheck.isChecked(), yFlipCheck.isChecked());
+
 		}
+
+		if (activeSpecificTable != null) activeSpecificTable.setValues(entities);
 	}
 
 	public void updateValues () {
@@ -450,7 +454,7 @@ public class EntityProperties extends VisTable {
 				}
 			}));
 
-			if (activeSpecificTable != null) activeSpecificTable.updateValues(entities);
+			if (activeSpecificTable != null) activeSpecificTable.updateUIValues(entities);
 
 			setTintForEntities();
 			setFlipXCheckForEntities();
@@ -496,18 +500,20 @@ public class EntityProperties extends VisTable {
 		}
 	}
 
-	private abstract class SpecificObjectTable extends VisTable {
+	private static abstract class SpecificObjectTable extends VisTable {
 		public SpecificObjectTable (boolean useVisDefaults) {
 			super(useVisDefaults);
 		}
 
 		public abstract Class<? extends EditorEntity> getObjectClass ();
 
-		public abstract void updateValues (Array<EditorEntity> entities);
+		public abstract void updateUIValues (Array<EditorEntity> entities);
+
+		public abstract void setValues (Array<EditorEntity> entities);
 	}
 
 	private class TextObjectTable extends SpecificObjectTable {
-		private VisTextField textField;
+		private VisValidableTextField textField;
 		private VisLabel fontLabel;
 		private VisImageButton selectFontButton;
 		private NumberInputField sizeInputField;
@@ -520,8 +526,10 @@ public class EntityProperties extends VisTable {
 			fontLabel.setEllipsis(true);
 			selectFontButton = new VisImageButton(Assets.getIcon(Icons.MORE));
 			sizeInputField = new NumberInputField(sharedChangeListener);
-
 			sizeInputField.addValidator(Validators.INTEGERS);
+			sizeInputField.addValidator(new LesserThanValidator(FontCacheModule.MAX_FONT_SIZE));
+			textField = new VisValidableTextField();
+			textField.addListener(sharedChangeListener);
 
 			VisTable fontTable = new VisTable(true);
 			fontTable.add(new VisLabel("Font"));
@@ -534,7 +542,7 @@ public class EntityProperties extends VisTable {
 			VisTable textTable = new VisTable(true);
 
 			textTable.add(new VisLabel("Text"));
-			textTable.add(textField = new VisTextField()).expandX().fillX();
+			textTable.add(textField).expandX().fillX();
 
 			defaults().left().expandX().fillX();
 			add(textTable);
@@ -543,10 +551,10 @@ public class EntityProperties extends VisTable {
 		}
 
 		private String getTextFieldText (Array<EditorEntity> entities) {
-			TextObject textObj = (TextObject) EntityProperties.this.entities.get(0);
+			TextObject textObj = (TextObject) entities.get(0);
 			String firstText = textObj.getText();
 
-			for (EditorEntity entity : EntityProperties.this.entities) {
+			for (EditorEntity entity : entities) {
 				TextObject obj = (TextObject) entity;
 
 				if (obj.getText().equals(firstText) == false) return "<multiple values>";
@@ -556,9 +564,9 @@ public class EntityProperties extends VisTable {
 		}
 
 		private String getFontLabelText (Array<EditorEntity> entities) {
-			String firstText = getFontTextForEntity(EntityProperties.this.entities.get(0));
+			String firstText = getFontTextForEntity(entities.get(0));
 
-			for (EditorEntity entity : EntityProperties.this.entities) {
+			for (EditorEntity entity : entities) {
 				TextObject obj = (TextObject) entity;
 
 				if (getFontTextForEntity(obj).equals(firstText) == false) return "<?>";
@@ -578,7 +586,7 @@ public class EntityProperties extends VisTable {
 		}
 
 		@Override
-		public void updateValues (Array<EditorEntity> entities) {
+		public void updateUIValues (Array<EditorEntity> entities) {
 			textField.setText(getTextFieldText(entities));
 			fontLabel.setText(getFontLabelText(entities));
 			sizeInputField.setText(getEntitiesFieldValue(new EntityValue() {
@@ -587,6 +595,16 @@ public class EntityProperties extends VisTable {
 					return ((TextObject) entity).getFontSize();
 				}
 			}));
+		}
+
+		@Override
+		public void setValues (Array<EditorEntity> entities) {
+			for (EditorEntity entity : entities) {
+				TextObject obj = (TextObject) entity;
+
+				obj.setText(textField.getText());
+				obj.setFontSize(FieldUtils.getInt(sizeInputField, obj.getFontSize()));
+			}
 		}
 	}
 

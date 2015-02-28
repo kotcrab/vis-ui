@@ -20,6 +20,7 @@
 package com.kotcrab.vis.editor.util;
 
 import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 public class FieldUtils {
 	public static float getFloat (VisTextField field, float valueIfError) {
@@ -31,6 +32,26 @@ public class FieldUtils {
 	}
 
 	public static int getInt (VisTextField field, int valueIfError) {
+		try {
+			return Integer.valueOf(field.getText());
+		} catch (NumberFormatException ex) {
+			return valueIfError;
+		}
+	}
+
+	public static float getFloat (VisValidableTextField field, float valueIfError) {
+		if (field.isInputValid() == false) return valueIfError;
+
+		try {
+			return Float.parseFloat(field.getText());
+		} catch (NumberFormatException ex) {
+			return valueIfError;
+		}
+	}
+
+	public static int getInt (VisValidableTextField field, int valueIfError) {
+		if (field.isInputValid() == false) return valueIfError;
+
 		try {
 			return Integer.valueOf(field.getText());
 		} catch (NumberFormatException ex) {
