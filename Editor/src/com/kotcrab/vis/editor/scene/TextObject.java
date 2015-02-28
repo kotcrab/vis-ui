@@ -270,10 +270,15 @@ public class TextObject extends EditorEntity {
 	public void setFont (EditorFont font) {
 		if(this.font != font) {
 			this.font = font;
+
 			relativeFontPath = font.getRelativePath();
 			cache = new BitmapFontCache(font.get(fontSize));
 			textBounds = cache.setText(text, 0, 0);
 			textChanged();
 		}
+	}
+
+	public EditorFont getFont () {
+		return font;
 	}
 }
