@@ -30,6 +30,7 @@ import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.SpriteObject;
+import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.Log;
@@ -45,8 +46,10 @@ import java.io.FileFilter;
 import java.io.IOException;
 
 public class ExportModule extends ProjectModule {
-	private SceneIOModule sceneIO;
 	private FileAccessModule fileAccess;
+	private SceneIOModule sceneIO;
+	private FontCacheModule fontCache;
+
 	private FileHandle visAssetsDir;
 
 	private Settings texturePackerSettings;
@@ -58,6 +61,8 @@ public class ExportModule extends ProjectModule {
 	public void init () {
 		fileAccess = projectContainer.get(FileAccessModule.class);
 		sceneIO = projectContainer.get(SceneIOModule.class);
+		fontCache = projectContainer.get(FontCacheModule.class);
+
 		visAssetsDir = fileAccess.getAssetsFolder();
 
 		texturePackerSettings = new Settings();
@@ -92,7 +97,6 @@ public class ExportModule extends ProjectModule {
 		ExportAsyncTask exportTask = new ExportAsyncTask();
 		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Exporting", exportTask).fadeIn());
 	}
-
 
 	private class ExportAsyncTask extends AsyncTask {
 		int step;
@@ -207,7 +211,14 @@ public class ExportModule extends ProjectModule {
 							data.textureRegion = obj.regionRelativePath;
 
 							sceneData.entities.add(data);
+							continue;
 						}
+
+						if (entity instanceof TextObject) {
+							continue;
+						}
+
+						Log.error("Ignoring unknown entity: " + entity.getClass());
 					}
 
 					json.toJson(sceneData, outDir.child(file.name()));
@@ -219,6 +230,5 @@ public class ExportModule extends ProjectModule {
 		}
 
 	}
-
 
 }
