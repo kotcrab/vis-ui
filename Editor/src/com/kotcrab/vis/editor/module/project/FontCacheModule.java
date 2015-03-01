@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Array;
@@ -102,7 +103,13 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	@Override
-	public void fileCreated (FileHandle file) {
+	public void fileCreated (final FileHandle file) {
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run () {
+				refreshFont(file);
+			}
+		});
 	}
 
 	public EditorFont get (FileHandle file) {

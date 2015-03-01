@@ -16,7 +16,7 @@
 
 package com.kotcrab.vis.runtime.entity;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class Entity {
 	private String id;
@@ -25,11 +25,15 @@ public class Entity {
 		this.id = id;
 	}
 
-	public void render (SpriteBatch batch) {
+	public void render (Batch batch) {
 
 	}
 
 	public String getId () {
 		return id;
+	}
+
+	public void setId (String id) {
+		this.id = id;
 	}
 }

@@ -23,23 +23,28 @@ import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.data.EntityData;
+import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.data.SceneSpriteData;
+import com.kotcrab.vis.runtime.data.TextData;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
+import com.kotcrab.vis.runtime.entity.TextEntity;
+import com.kotcrab.vis.runtime.font.FontProvider;
 
 public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.SceneParameter> {
 	private SceneData data;
 	private Scene scene;
 
+	private FontProvider fontProvider;
 
 	public SceneLoader () {
-		super(new InternalFileHandleResolver());
+		this(new InternalFileHandleResolver());
 	}
 
 	public SceneLoader (FileHandleResolver resolver) {
@@ -49,7 +54,13 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 	public static Json getJson () {
 		Json json = new Json();
 		json.addClassTag("SceneSpriteData", SceneSpriteData.class);
+		json.addClassTag("TextData", TextData.class);
 		return json;
+	}
+
+	public void enableFreeType (AssetManager manager, FontProvider fontProvider) {
+		this.fontProvider = fontProvider;
+		fontProvider.setLoaders(manager);
 	}
 
 	@Override
@@ -59,13 +70,15 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
 
-
 		for (EntityData entityData : data.entities) {
 			if (entityData instanceof SceneSpriteData) {
 				SceneSpriteData spriteData = (SceneSpriteData) entityData;
-
 				deps.add(new AssetDescriptor(spriteData.textureAtlas, TextureAtlas.class));
+			}
 
+			if (entityData instanceof TextData) {
+				TextData textData = (TextData) entityData;
+				fontProvider.load(deps, textData);
 			}
 		}
 
@@ -93,6 +106,16 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 
 				spriteData.loadTo(newSprite);
 				SpriteEntity entity = new SpriteEntity(entityData.id, newSprite);
+				entities.add(entity);
+			}
+
+			if (entityData instanceof TextData) {
+				TextData textData = (TextData) entityData;
+
+				BitmapFont font = manager.get(textData.arbitraryFontName, BitmapFont.class);
+
+				TextEntity entity = new TextEntity(font, textData.id, textData.relativeFontPath, textData.text, textData.fontSize);
+				textData.loadTo(entity);
 				entities.add(entity);
 			}
 		}

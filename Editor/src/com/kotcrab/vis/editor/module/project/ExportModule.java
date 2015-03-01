@@ -38,6 +38,7 @@ import com.kotcrab.vis.editor.util.texturepacker.TexturePacker;
 import com.kotcrab.vis.editor.util.texturepacker.TexturePacker.Settings;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.data.SceneSpriteData;
+import com.kotcrab.vis.runtime.data.TextData;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
 import org.apache.commons.io.FileUtils;
 
@@ -215,6 +216,12 @@ public class ExportModule extends ProjectModule {
 						}
 
 						if (entity instanceof TextObject) {
+							TextObject obj = (TextObject) entity;
+
+							TextData data = new TextData();
+							data.saveFrom(obj);
+
+							sceneData.entities.add(data);
 							continue;
 						}
 

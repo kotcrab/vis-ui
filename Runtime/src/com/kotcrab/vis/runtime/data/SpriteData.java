@@ -25,7 +25,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 /**
  * SpriteData used by both VisRuntime and VisEditor
  */
-public class SpriteData extends EntityData {
+public class SpriteData extends EntityData<Sprite> {
 	public float x, y;
 	public float width, height;
 	public float originX, originY;
@@ -34,6 +34,7 @@ public class SpriteData extends EntityData {
 	public Color tint = Color.WHITE;
 	public boolean flipX, flipY;
 
+	@Override
 	public void saveFrom (Sprite sprite) {
 		x = sprite.getX();
 		y = sprite.getY();
@@ -55,6 +56,7 @@ public class SpriteData extends EntityData {
 		flipY = sprite.isFlipY();
 	}
 
+	@Override
 	public void loadTo (Sprite sprite) {
 		sprite.setPosition(x, y);
 		sprite.setSize(width, height);

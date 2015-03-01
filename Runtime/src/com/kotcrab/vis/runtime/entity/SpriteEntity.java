@@ -16,8 +16,8 @@
 
 package com.kotcrab.vis.runtime.entity;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class SpriteEntity extends Entity {
 	private Sprite sprite;
@@ -28,7 +28,7 @@ public class SpriteEntity extends Entity {
 	}
 
 	@Override
-	public void render (SpriteBatch batch) {
+	public void render (Batch batch) {
 		sprite.draw(batch);
 	}
 

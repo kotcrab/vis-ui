@@ -19,103 +19,32 @@
 
 package com.kotcrab.vis.editor.scene;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Polygon;
-import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.module.project.EditorFont;
+import com.kotcrab.vis.runtime.entity.TextEntity;
 
 /**
  * Text that you can scale, rotate, change color itp. Supports distance field fonts
  * @author Kotcrab
  */
-public class TextObject extends EditorEntityBase {
-	private String relativeFontPath;
-	private int fontSize;
+public class TextObject extends TextEntity implements EditorEntity {
 	private transient EditorFont font;
-	private transient BitmapFontCache cache;
-
-	private float x = 0, y = 0;
-	private float originX = 0, originY = 0;
-	private float scaleX = 1, scaleY = 1;
-	private float rotation = 0;
-	private TextBounds textBounds;
-	private Rectangle boundingRectangle;
-	private boolean autoSetOriginToCenter = true;
-	private Matrix4 translationMatrix;
-	private CharSequence text;
 
 	public TextObject (EditorFont font, BitmapFont bitmapFont, String text, int fontSize) {
+		super(bitmapFont, null, font.getRelativePath(), text, fontSize);
 		this.font = font;
-		this.text = text;
-		this.relativeFontPath = font.getRelativePath();
-		this.fontSize = fontSize;
-
-		translationMatrix = new Matrix4();
-		cache = new BitmapFontCache(bitmapFont);
-		textBounds = cache.setText(text, 0, 0);
-		if (autoSetOriginToCenter == true) setOriginCenter();
-		translate();
 	}
 
 	/** Must be called after editor deserializaiton */
 	public void afterDeserialize (EditorFont font) {
 		setFont(font);
+		setColor(getColor()); //update cache color
 	}
 
 	@Override
-	public void render (Batch spriteBatch) {
-		Matrix4 oldMatrix = spriteBatch.getTransformMatrix().cpy();
-		spriteBatch.setTransformMatrix(translationMatrix);
-		cache.draw(spriteBatch);
-		spriteBatch.setTransformMatrix(oldMatrix);
-	}
+	public void setSize (float width, float height) {
 
-	private void translate () {
-		translationMatrix.idt();
-		translationMatrix.translate(x + originX, y + originY, 0);
-		translationMatrix.rotate(0, 0, 1, rotation);
-		translationMatrix.scale(scaleX, scaleY, 1);
-		translationMatrix.translate(-originX, -originY, 0);
-		translationMatrix.translate(0, textBounds.height, 0);
-		calculateBoundingRectangle();
-	}
-
-	private void textChanged () {
-		if (autoSetOriginToCenter == true) setOriginCenter();
-		translate();
-	}
-
-	private void calculateBoundingRectangle () {
-		Polygon polygon = new Polygon(new float[]{0, 0, textBounds.width, 0, textBounds.width, textBounds.height, 0,
-				textBounds.height});
-		polygon.setPosition(x, y);
-		polygon.setRotation(rotation);
-		polygon.setScale(scaleX, scaleY);
-		polygon.setOrigin(originX, originY);
-		boundingRectangle = polygon.getBoundingRectangle();
-	}
-
-	public String getText () {
-		return text.toString();
-	}
-
-	public void setText (CharSequence str) {
-		this.text = str;
-		textBounds = cache.setText(str, 0, 0);
-		textChanged();
-	}
-
-	public boolean isAutoSetOriginToCenter () {
-		return autoSetOriginToCenter;
-	}
-
-	public void setOriginCenter () {
-		setOrigin(textBounds.width / 2, -textBounds.height / 2);
 	}
 
 	@Override
@@ -138,123 +67,30 @@ public class TextObject extends EditorEntityBase {
 		return true;
 	}
 
-	@Override
-	public void setPosition (float x, float y) {
-		this.x = x;
-		this.y = y;
-		translate();
-	}
 
 	@Override
-	public float getWidth () {
-		return getBoundingRectangle().getWidth();
+	public boolean isResizeSupported () {
+		return false;
 	}
 
 	@Override
-	public float getHeight () {
-		return getBoundingRectangle().getHeight();
+	public boolean isFlipSupported () {
+		return false;
 	}
 
 	@Override
-	public float getX () {
-		return x;
+	public boolean isFlipX () {
+		return false;
 	}
 
 	@Override
-	public void setX (float x) {
-		this.x = x;
-		translate();
+	public boolean isFlipY () {
+		return false;
 	}
 
 	@Override
-	public float getY () {
-		return y;
-	}
+	public void setFlip (boolean x, boolean y) {
 
-	@Override
-	public void setY (float y) {
-		this.y = y;
-		translate();
-	}
-
-	@Override
-	public void setOrigin (float originX, float originY) {
-		this.originX = originX;
-		this.originY = originY;
-		translate();
-	}
-
-	@Override
-	public float getOriginX () {
-		return originX;
-	}
-
-	@Override
-	public float getOriginY () {
-		return originY;
-	}
-
-	@Override
-	public void setScale (float scaleX, float scaleY) {
-		this.scaleX = scaleX;
-		this.scaleY = scaleY;
-		translate();
-	}
-
-	public void setScale (float scaleXY) {
-		scaleX = scaleXY;
-		scaleY = scaleXY;
-		translate();
-	}
-
-	@Override
-	public float getScaleX () {
-		return scaleX;
-	}
-
-	@Override
-	public float getScaleY () {
-		return scaleY;
-	}
-
-	@Override
-	public float getRotation () {
-		return rotation;
-	}
-
-	@Override
-	public void setRotation (float rotation) {
-		this.rotation = rotation;
-		translate();
-	}
-
-	@Override
-	public Color getColor () {
-		return cache.getColor();
-	}
-
-	@Override
-	public void setColor (Color color) {
-		cache.clear();
-		cache.setColor(color);
-		cache.setText(text, 0, 0);
-	}
-
-	public void setColor (float r, float g, float b, float a) {
-		cache.setColor(new Color(r, g, b, a));
-	}
-
-	@Override
-	public Rectangle getBoundingRectangle () {
-		return boundingRectangle;
-	}
-
-	public String getRelativeFontPath () {
-		return relativeFontPath;
-	}
-
-	public int getFontSize () {
-		return fontSize;
 	}
 
 	public void setFontSize (int fontSize) {
@@ -262,6 +98,7 @@ public class TextObject extends EditorEntityBase {
 			this.fontSize = fontSize;
 			BitmapFont bmpFont = font.get(fontSize);
 			cache = new BitmapFontCache(bmpFont);
+			setColor(getColor());
 			textBounds = cache.setText(text, 0, 0);
 			textChanged();
 		}
@@ -273,12 +110,9 @@ public class TextObject extends EditorEntityBase {
 
 			relativeFontPath = font.getRelativePath();
 			cache = new BitmapFontCache(font.get(fontSize));
+			setColor(getColor());
 			textBounds = cache.setText(text, 0, 0);
 			textChanged();
 		}
-	}
-
-	public EditorFont getFont () {
-		return font;
 	}
 }

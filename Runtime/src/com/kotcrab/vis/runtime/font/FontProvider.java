@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.data;
+package com.kotcrab.vis.runtime.font;
 
-/** Base class for all entities data inside scene */
-public abstract class EntityData<T> {
-	public String id;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.data.TextData;
 
-	public abstract void saveFrom(T entity);
+public interface FontProvider {
+	public void load (Array<AssetDescriptor> dependencies, TextData data);
 
-	public abstract void loadTo(T entity);
+	public void setLoaders (AssetManager manager);
 }

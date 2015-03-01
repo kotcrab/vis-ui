@@ -545,14 +545,13 @@ public class EntityProperties extends VisTable {
 
 			VisTable fontTable = new VisTable(true);
 			fontTable.add(new VisLabel("Font"));
-			fontTable.add(fontLabel);
+			fontTable.add(fontLabel).width(100);
 			fontTable.add(selectFontButton);
 			fontTable.add(new VisLabel("Size"));
 			fontTable.add(sizeInputField).width(40);
 			fontTable.add().expand().fill();
 
 			VisTable textTable = new VisTable(true);
-
 			textTable.add(new VisLabel("Text"));
 			textTable.add(textField).expandX().fillX();
 
