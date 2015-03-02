@@ -17,7 +17,7 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.ui.scene;
+package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -29,7 +29,7 @@ import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.ui.VisUI;
 
-public class EntityPropertiesUtils {
+class Utils {
 	static String floatToString (float d) {
 		//fk this function
 		if (d == (long) d) //if does not have decimal places
@@ -83,6 +83,15 @@ public class EntityPropertiesUtils {
 		}
 
 		return true;
+	}
+
+	static String getEntitiesFieldValue (Array<EditorEntity> entities, EntityValue objValue) {
+		float value = objValue.getValue(entities.first());
+
+		for (EditorEntity entity : entities)
+			if (value != objValue.getValue(entity)) return "?";
+
+		return floatToString(value);
 	}
 
 	static String getEntitiesId (Array<EditorEntity> entities) {

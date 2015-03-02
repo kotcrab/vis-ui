@@ -33,7 +33,7 @@ import com.kotcrab.vis.editor.module.ColorPickerModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
-import com.kotcrab.vis.editor.ui.scene.EntityProperties;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 
 public class EntityManipulatorModule extends SceneModule {
 	private CameraModule camera;

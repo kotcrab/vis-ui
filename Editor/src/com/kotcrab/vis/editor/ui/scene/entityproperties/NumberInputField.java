@@ -17,7 +17,7 @@
 * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package com.kotcrab.vis.editor.ui.scene;
+package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -31,7 +31,9 @@ import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import org.lwjgl.input.Keyboard;
 
-public class NumberInputField extends VisValidableTextField {
+import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.*;
+
+class NumberInputField extends VisValidableTextField {
 
 	private static FieldFilter sharedFieldFilter = new FieldFilter();
 	private static FieldValidator sharedFieldValidator = new FieldValidator();
@@ -103,7 +105,7 @@ public class NumberInputField extends VisValidableTextField {
 				fieldValue += value;
 
 				int lastPos = getCursorPosition();
-				setText(EntityPropertiesUtils.floatToString(fieldValue));
+				setText(floatToString(fieldValue));
 				NumberInputField.this.setCursorPosition(lastPos);
 			} catch (NumberFormatException ex) {
 			}

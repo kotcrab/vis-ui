@@ -57,6 +57,10 @@ public class FileAccessModule extends ProjectModule {
 		return bmpFontFolder;
 	}
 
+	public String getBMPFontFolderRelative () {
+		return relativizeToVisFolder(bmpFontFolder);
+	}
+
 	public FileHandle getTTFFontFolder () {
 		return ttfFontFolder;
 	}
