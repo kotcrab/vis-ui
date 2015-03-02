@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.kotcrab.vis.editor.module.project.BMPEditorFont;
 import com.kotcrab.vis.editor.module.project.EditorFont;
+import com.kotcrab.vis.editor.module.project.TTFEditorFont;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 
 /**
@@ -95,6 +96,10 @@ public class TextObject extends TextEntity implements EditorEntity {
 	@Override
 	public void setFlip (boolean x, boolean y) {
 
+	}
+
+	public boolean isUsesTTF () {
+		return (font instanceof TTFEditorFont);
 	}
 
 	public void setFontSize (int fontSize) {

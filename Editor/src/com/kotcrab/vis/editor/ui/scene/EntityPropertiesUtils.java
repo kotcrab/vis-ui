@@ -19,8 +19,18 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.ui.VisUI;
+
 public class EntityPropertiesUtils {
-	public static String floatToString (float d) {
+	static String floatToString (float d) {
 		//fk this function
 		if (d == (long) d) //if does not have decimal places
 			return String.format("%d", (long) d);
@@ -32,6 +42,96 @@ public class EntityPropertiesUtils {
 
 			//remove trailing zeros if exists
 			return s.contains(".") ? s.replaceAll("0*$", "").replaceAll("\\.$", "") : s;
+		}
+	}
+
+	static boolean isScaleSupportedForEntities (Array<EditorEntity> entities) {
+		for (EditorEntity entity : entities) {
+			if (entity.isScaleSupported() == false) return false;
+		}
+
+		return true;
+	}
+
+	static boolean isOriginSupportedForEntities (Array<EditorEntity> entities) {
+		for (EditorEntity entity : entities) {
+			if (entity.isOriginSupported() == false) return false;
+		}
+
+		return true;
+	}
+
+	static boolean isRotationSupportedForEntities (Array<EditorEntity> entities) {
+		for (EditorEntity entity : entities) {
+			if (entity.isRotationSupported() == false) return false;
+		}
+
+		return true;
+	}
+
+	static boolean isTintSupportedForEntities (Array<EditorEntity> entities) {
+		for (EditorEntity entity : entities) {
+			if (entity.isTintSupported() == false) return false;
+		}
+
+		return true;
+	}
+
+	static boolean isFlipSupportedForEntities (Array<EditorEntity> entities) {
+		for (EditorEntity entity : entities) {
+			if (entity.isFlipSupported() == false) return false;
+		}
+
+		return true;
+	}
+
+	static String getEntitiesId (Array<EditorEntity> entities) {
+		String firstId = entities.first().getId();
+		if (firstId == null) firstId = "";
+
+		for (EditorEntity entity : entities) {
+			String entityId = entity.getId();
+			if (entityId == null) entityId = "";
+
+			if (firstId.equals(entityId) == false) {
+				return "<?>";
+			}
+		}
+
+		return firstId;
+	}
+
+	static class TintImage extends Image {
+		private final Drawable alphaBar = Assets.getMisc("alpha-grid-20x20");
+		private final Drawable white = VisUI.getSkin().getDrawable("white");
+		private final Drawable questionMark = Assets.getIcon(Icons.QUESTION);
+
+		private boolean unknown;
+
+		public TintImage () {
+			super();
+			setDrawable(white);
+		}
+
+		@Override
+		public void draw (Batch batch, float parentAlpha) {
+			batch.setColor(1, 1, 1, parentAlpha);
+
+			if (unknown)
+				questionMark.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
+			else {
+				alphaBar.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
+				super.draw(batch, parentAlpha);
+			}
+		}
+
+		public void setUnknown (boolean unknown) {
+			this.unknown = unknown;
+		}
+
+		@Override
+		public void setColor (Color color) {
+			super.setColor(color);
 		}
 	}
 }

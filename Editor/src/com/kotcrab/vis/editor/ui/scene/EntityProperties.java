@@ -21,15 +21,12 @@ package com.kotcrab.vis.editor.ui.scene;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
@@ -57,6 +54,15 @@ import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
 
 import java.util.ArrayList;
 
+import static com.kotcrab.vis.editor.ui.scene.EntityPropertiesUtils.TintImage;
+import static com.kotcrab.vis.editor.ui.scene.EntityPropertiesUtils.floatToString;
+import static com.kotcrab.vis.editor.ui.scene.EntityPropertiesUtils.getEntitiesId;
+import static com.kotcrab.vis.editor.ui.scene.EntityPropertiesUtils.isFlipSupportedForEntities;
+import static com.kotcrab.vis.editor.ui.scene.EntityPropertiesUtils.isOriginSupportedForEntities;
+import static com.kotcrab.vis.editor.ui.scene.EntityPropertiesUtils.isRotationSupportedForEntities;
+import static com.kotcrab.vis.editor.ui.scene.EntityPropertiesUtils.isScaleSupportedForEntities;
+import static com.kotcrab.vis.editor.ui.scene.EntityPropertiesUtils.isTintSupportedForEntities;
+
 public class EntityProperties extends VisTable {
 	private static final int LABEL_WIDTH = 60;
 	private static final int AXIS_LABEL_WIDTH = 10;
@@ -72,7 +78,7 @@ public class EntityProperties extends VisTable {
 	private ChangeListener sharedChangeListener;
 
 	private ColorPickerListener pickerListener;
-	private ColorImage tint;
+	private TintImage tint;
 
 	//UI
 	private VisTable propertiesTable;
@@ -192,7 +198,7 @@ public class EntityProperties extends VisTable {
 	}
 
 	private void createRotationTintTable () {
-		tint = new ColorImage();
+		tint = new TintImage();
 		tint.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
@@ -228,23 +234,21 @@ public class EntityProperties extends VisTable {
 		TableUtils.setSpaceDefaults(propertiesTable);
 
 		VisTable rotationTintTable = new VisTable(true);
-		if (isRotationSupportedForEntities()) rotationTintTable.add(rotationTable);
+		if (isRotationSupportedForEntities(entities)) rotationTintTable.add(rotationTable);
 		rotationTintTable.add().expand().fill();
-		if (isTintSupportedForEntities()) rotationTintTable.add(tintTable);
+		if (isTintSupportedForEntities(entities)) rotationTintTable.add(tintTable);
 
 		propertiesTable.defaults().padRight(6).fillX();
 		propertiesTable.add(idTable).row();
 		propertiesTable.add(positionTable).row();
-		if (isScaleSupportedForEntities()) propertiesTable.add(scaleTable).row();
-		if (isOriginSupportedForEntities()) propertiesTable.add(originTable).row();
+		if (isScaleSupportedForEntities(entities)) propertiesTable.add(scaleTable).row();
+		if (isOriginSupportedForEntities(entities)) propertiesTable.add(originTable).row();
 		propertiesTable.add(rotationTintTable).row();
-		if (isFlipSupportedForEntities()) propertiesTable.add(flipTable).right().fill(false).row();
+		if (isFlipSupportedForEntities(entities)) propertiesTable.add(flipTable).right().fill(false).row();
 
 		activeSpecificTable = null;
 		for (SpecificObjectTable table : specificTables) {
-			Class clazz = table.getObjectClass();
-
-			if (checkEntityList(clazz)) {
+			if (checkEntityList(table)) {
 				activeSpecificTable = table;
 				propertiesTable.addSeparator();
 				propertiesTable.add(table).row();
@@ -255,9 +259,9 @@ public class EntityProperties extends VisTable {
 		invalidateHierarchy();
 	}
 
-	private boolean checkEntityList (Class clazz) {
+	private boolean checkEntityList (SpecificObjectTable table) {
 		for (EditorEntity entity : entities)
-			if (entity.getClass() != clazz) return false;
+			if (table.isSupported(entity) == false) return false;
 
 		return true;
 	}
@@ -298,67 +302,11 @@ public class EntityProperties extends VisTable {
 		updateValues();
 	}
 
-	private boolean isScaleSupportedForEntities () {
-		for (EditorEntity entity : entities) {
-			if (entity.isScaleSupported() == false) return false;
-		}
-
-		return true;
-	}
-
-	private boolean isOriginSupportedForEntities () {
-		for (EditorEntity entity : entities) {
-			if (entity.isOriginSupported() == false) return false;
-		}
-
-		return true;
-	}
-
-	private boolean isRotationSupportedForEntities () {
-		for (EditorEntity entity : entities) {
-			if (entity.isRotationSupported() == false) return false;
-		}
-
-		return true;
-	}
-
-	private boolean isTintSupportedForEntities () {
-		for (EditorEntity entity : entities) {
-			if (entity.isTintSupported() == false) return false;
-		}
-
-		return true;
-	}
-
-	private boolean isFlipSupportedForEntities () {
-		for (EditorEntity entity : entities) {
-			if (entity.isFlipSupported() == false) return false;
-		}
-
-		return true;
-	}
-
-	private String getEntitiesId () {
-		String firstId = entities.first().getId();
-		if (firstId == null) firstId = "";
-
-		for (EditorEntity entity : entities) {
-			String entityId = entity.getId();
-			if (entityId == null) entityId = "";
-
-			if (firstId.equals(entityId) == false) {
-				return "<?>";
-			}
-		}
-
-		return firstId;
-	}
-
 	private void setFlipXUICheckForEntities () {
 		boolean xFlip = entities.first().isFlipX();
 		for (EditorEntity entity : entities) {
 			if (xFlip != entity.isFlipX()) {
-				tint.setUnknown(false);
+				xFlipCheck.setChecked(false);
 				return;
 			}
 		}
@@ -369,7 +317,7 @@ public class EntityProperties extends VisTable {
 		boolean yFlip = entities.first().isFlipY();
 		for (EditorEntity entity : entities) {
 			if (yFlip != entity.isFlipY()) {
-				tint.setUnknown(false);
+				yFlipCheck.setChecked(false);
 				return;
 			}
 		}
@@ -393,7 +341,7 @@ public class EntityProperties extends VisTable {
 		for (EditorEntity entity : entities)
 			if (value != objValue.getValue(entity)) return "?";
 
-		return EntityPropertiesUtils.floatToString(value);
+		return floatToString(value);
 	}
 
 	private void setValuesToEntity () {
@@ -417,7 +365,7 @@ public class EntityProperties extends VisTable {
 		else {
 			setVisible(true);
 
-			idField.setText(getEntitiesId());
+			idField.setText(getEntitiesId(entities));
 			xField.setText(getEntitiesFieldValue(new EntityValue() {
 				@Override
 				public float getValue (EditorEntity entity) {
@@ -474,46 +422,12 @@ public class EntityProperties extends VisTable {
 		public float getValue (EditorEntity entity);
 	}
 
-	private static class ColorImage extends Image {
-		private final Drawable alphaBar = Assets.getMisc("alpha-grid-20x20");
-		private final Drawable white = VisUI.getSkin().getDrawable("white");
-		private final Drawable questionMark = Assets.getIcon(Icons.QUESTION);
-
-		private boolean unknown;
-
-		public ColorImage () {
-			super();
-			setDrawable(white);
-		}
-
-		@Override
-		public void draw (Batch batch, float parentAlpha) {
-			batch.setColor(1, 1, 1, parentAlpha);
-
-			if (unknown)
-				questionMark.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
-			else {
-				alphaBar.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
-				super.draw(batch, parentAlpha);
-			}
-		}
-
-		public void setUnknown (boolean unknown) {
-			this.unknown = unknown;
-		}
-
-		@Override
-		public void setColor (Color color) {
-			super.setColor(color);
-		}
-	}
-
 	private static abstract class SpecificObjectTable extends VisTable {
 		public SpecificObjectTable (boolean useVisDefaults) {
 			super(useVisDefaults);
 		}
 
-		public abstract Class<? extends EditorEntity> getObjectClass ();
+		public abstract boolean isSupported (EditorEntity entity);
 
 		public abstract void updateUIValues (Array<EditorEntity> entities);
 
@@ -613,8 +527,10 @@ public class EntityProperties extends VisTable {
 		}
 
 		@Override
-		public Class<? extends EditorEntity> getObjectClass () {
-			return TextObject.class;
+		public boolean isSupported (EditorEntity entity) {
+			if(entity instanceof TextObject == false) return false;
+			TextObject obj = (TextObject) entity;
+			return obj.isUsesTTF();
 		}
 
 		@Override
