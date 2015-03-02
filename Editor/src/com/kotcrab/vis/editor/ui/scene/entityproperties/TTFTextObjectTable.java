@@ -26,13 +26,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.SelectFontDialog;
 import com.kotcrab.vis.editor.ui.SelectFontDialog.FontDialogListener;
-import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.util.Validators;
@@ -43,128 +41,126 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 class TTFTextObjectTable extends SpecificObjectTable {
-	private Array<EditorEntity> entities;
-	private FileAccessModule fileAccessModule;
-		
-		private SelectFontDialog selectFontDialog;
+	private EntityProperties properties;
 
-		private VisValidableTextField textField;
-		private VisLabel fontLabel;
-		private VisImageButton selectFontButton;
-		private NumberInputField sizeInputField;
+	private SelectFontDialog selectFontDialog;
 
-		public TTFTextObjectTable (final Array<EditorEntity> entities, FileAccessModule fileAccessModule, final FontCacheModule fontCacheModule, final Tab parentTab, final EntityProperties properties, ChangeListener sharedChangeListener) {
-			super(true);
-			this.entities = entities;
-			this.fileAccessModule = fileAccessModule;
+	private VisValidableTextField textField;
+	private VisLabel fontLabel;
+	private VisImageButton selectFontButton;
+	private NumberInputField sizeInputField;
 
-			fontLabel = new VisLabel();
-			fontLabel.setColor(Color.GRAY);
-			fontLabel.setEllipsis(true);
-			selectFontButton = new VisImageButton(Assets.getIcon(Icons.MORE));
-			sizeInputField = new NumberInputField(sharedChangeListener);
-			sizeInputField.addValidator(Validators.INTEGERS);
-			sizeInputField.addValidator(new GreaterThanValidator(FontCacheModule.MIN_FONT_SIZE));
-			sizeInputField.addValidator(new LesserThanValidator(FontCacheModule.MAX_FONT_SIZE));
-			textField = new VisValidableTextField();
-			textField.addListener(sharedChangeListener);
-			textField.setProgrammaticChangeEvents(false);
+	public TTFTextObjectTable (final EntityProperties properties) {
+		super(true);
+		this.properties = properties;
 
-			VisTable fontTable = new VisTable(true);
-			fontTable.add(new VisLabel("Font"));
-			fontTable.add(fontLabel).width(100);
-			fontTable.add(selectFontButton);
-			fontTable.add(new VisLabel("Size"));
-			fontTable.add(sizeInputField).width(40);
-			fontTable.add().expand().fill();
+		fontLabel = new VisLabel();
+		fontLabel.setColor(Color.GRAY);
+		fontLabel.setEllipsis(true);
+		selectFontButton = new VisImageButton(Assets.getIcon(Icons.MORE));
+		sizeInputField = new NumberInputField(properties.getSharedChangeListener());
+		sizeInputField.addValidator(Validators.INTEGERS);
+		sizeInputField.addValidator(new GreaterThanValidator(FontCacheModule.MIN_FONT_SIZE));
+		sizeInputField.addValidator(new LesserThanValidator(FontCacheModule.MAX_FONT_SIZE));
+		textField = new VisValidableTextField();
+		textField.addListener(properties.getSharedChangeListener());
+		textField.setProgrammaticChangeEvents(false);
 
-			VisTable textTable = new VisTable(true);
-			textTable.add(new VisLabel("Text"));
-			textTable.add(textField).expandX().fillX();
+		VisTable fontTable = new VisTable(true);
+		fontTable.add(new VisLabel("Font"));
+		fontTable.add(fontLabel).width(100);
+		fontTable.add(selectFontButton);
+		fontTable.add(new VisLabel("Size"));
+		fontTable.add(sizeInputField).width(40);
+		fontTable.add().expand().fill();
 
-			defaults().left().expandX().fillX();
-			add(textTable);
-			row();
-			add(fontTable);
+		VisTable textTable = new VisTable(true);
+		textTable.add(new VisLabel("Text"));
+		textTable.add(textField).expandX().fillX();
 
-			selectFontButton.addListener(new ChangeListener() {
-				@Override
-				public void changed (ChangeEvent event, Actor actor) {
-					selectFontDialog.rebuild();
-					getStage().addActor(selectFontDialog.fadeIn());
-				}
-			});
+		defaults().left().expandX().fillX();
+		add(textTable);
+		row();
+		add(fontTable);
 
-			selectFontDialog = new SelectFontDialog(fileAccessModule, new FontDialogListener() {
-				@Override
-				public void selected (FileHandle file) {
-					for (EditorEntity entity : entities) {
-						TextObject obj = (TextObject) entity;
-						obj.setFont(fontCacheModule.get(file));
-					}
-
-					parentTab.dirty();
-					properties.updateValues();
-				}
-			});
-		}
-
-		private String getTextFieldText (Array<EditorEntity> entities) {
-			TextObject textObj = (TextObject) entities.get(0);
-			String firstText = textObj.getText();
-
-			for (EditorEntity entity : entities) {
-				TextObject obj = (TextObject) entity;
-
-				if (obj.getText().equals(firstText) == false) return "<multiple values>";
+		selectFontButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				selectFontDialog.rebuild();
+				getStage().addActor(selectFontDialog.fadeIn());
 			}
+		});
 
-			return firstText;
-		}
+		selectFontDialog = new SelectFontDialog(properties.getFileAccessModule(), new FontDialogListener() {
+			@Override
+			public void selected (FileHandle file) {
+				for (EditorEntity entity : properties.getEntities()) {
+					TextObject obj = (TextObject) entity;
+					obj.setFont(properties.getFontCacheModule().get(file));
+				}
 
-		private String getFontLabelText (Array<EditorEntity> entities) {
-			String firstText = getFontTextForEntity(entities.get(0));
-
-			for (EditorEntity entity : entities) {
-				TextObject obj = (TextObject) entity;
-
-				if (getFontTextForEntity(obj).equals(firstText) == false) return "<?>";
+				properties.getParentTab().dirty();
+				properties.updateValues();
 			}
+		});
+	}
 
-			return firstText;
-		}
+	private String getTextFieldText (Array<EditorEntity> entities) {
+		TextObject textObj = (TextObject) entities.get(0);
+		String firstText = textObj.getText();
 
-		private String getFontTextForEntity (EditorEntity entity) {
+		for (EditorEntity entity : entities) {
 			TextObject obj = (TextObject) entity;
-			return obj.getRelativeFontPath().substring(fileAccessModule.getTTFFontFolderRelative().length() + 1);
+
+			if (obj.getText().equals(firstText) == false) return "<multiple values>";
 		}
 
-		@Override
-		public boolean isSupported (EditorEntity entity) {
-			if(entity instanceof TextObject == false) return false;
+		return firstText;
+	}
+
+	private String getFontLabelText (Array<EditorEntity> entities) {
+		String firstText = getFontTextForEntity(entities.get(0));
+
+		for (EditorEntity entity : entities) {
 			TextObject obj = (TextObject) entity;
-			return obj.isUsesTTF();
+
+			if (getFontTextForEntity(obj).equals(firstText) == false) return "<?>";
 		}
 
-		@Override
-		public void updateUIValues (Array<EditorEntity> entities) {
-			textField.setText(getTextFieldText(entities));
-			fontLabel.setText(getFontLabelText(entities));
-			sizeInputField.setText(Utils.getEntitiesFieldValue(entities, new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return ((TextObject) entity).getFontSize();
-				}
-			}));
-		}
+		return firstText;
+	}
 
-		@Override
-		public void setValuesToEntities (Array<EditorEntity> entities) {
-			for (EditorEntity entity : entities) {
-				TextObject obj = (TextObject) entity;
+	private String getFontTextForEntity (EditorEntity entity) {
+		TextObject obj = (TextObject) entity;
+		return obj.getRelativeFontPath().substring(properties.getFileAccessModule().getTTFFontFolderRelative().length() + 1);
+	}
 
-				obj.setText(textField.getText());
-				obj.setFontSize(FieldUtils.getInt(sizeInputField, obj.getFontSize()));
+	@Override
+	public boolean isSupported (EditorEntity entity) {
+		if (entity instanceof TextObject == false) return false;
+		TextObject obj = (TextObject) entity;
+		return obj.isUsesTTF();
+	}
+
+	@Override
+	public void updateUIValues (Array<EditorEntity> entities) {
+		textField.setText(getTextFieldText(entities));
+		fontLabel.setText(getFontLabelText(entities));
+		sizeInputField.setText(Utils.getEntitiesFieldValue(entities, new EntityValue() {
+			@Override
+			public float getValue (EditorEntity entity) {
+				return ((TextObject) entity).getFontSize();
 			}
+		}));
+	}
+
+	@Override
+	public void setValuesToEntities (Array<EditorEntity> entities) {
+		for (EditorEntity entity : entities) {
+			TextObject obj = (TextObject) entity;
+
+			obj.setText(textField.getText());
+			obj.setFontSize(FieldUtils.getInt(sizeInputField, obj.getFontSize()));
 		}
 	}
+}

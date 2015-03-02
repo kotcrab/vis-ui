@@ -135,8 +135,8 @@ public class EntityProperties extends VisTable {
 		createRotationTintTable();
 		createFlipTable();
 
-		specificTables.add(new TTFTextObjectTable(entities, fileAccessModule, fontCacheModule, parentTab, this, sharedChangeListener));
-		specificTables.add(new BMPTextObjectTable(fileAccessModule, sharedChangeListener));
+		specificTables.add(new TTFTextObjectTable(this));
+		specificTables.add(new BMPTextObjectTable(this));
 
 		propertiesTable = new VisTable(true);
 
@@ -290,6 +290,26 @@ public class EntityProperties extends VisTable {
 	public void selectedEntitiesChanged () {
 		rebuildPropertiesTable();
 		updateValues();
+	}
+
+	Array<EditorEntity> getEntities () {
+		return entities;
+	}
+
+	Tab getParentTab () {
+		return parentTab;
+	}
+
+	public ChangeListener getSharedChangeListener () {
+		return sharedChangeListener;
+	}
+
+	FileAccessModule getFileAccessModule () {
+		return fileAccessModule;
+	}
+
+	FontCacheModule getFontCacheModule () {
+		return fontCacheModule;
 	}
 
 	private void setFlipXUICheckForEntities () {

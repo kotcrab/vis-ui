@@ -20,11 +20,9 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.ui.VisTable;
@@ -32,23 +30,22 @@ import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
- class BMPTextObjectTable extends SpecificObjectTable {
-	private FileAccessModule fileAccessModule;
-
+class BMPTextObjectTable extends SpecificObjectTable {
 	private VisValidableTextField textField;
 	private VisLabel fontLabel;
 	private VisImageButton selectFontButton;
+	private EntityProperties properties;
 
-	public BMPTextObjectTable (FileAccessModule fileAccessModule, ChangeListener sharedChangeListener) {
+	public BMPTextObjectTable (EntityProperties properties) {
 		super(true);
-		this.fileAccessModule = fileAccessModule;
+		this.properties = properties;
 
 		fontLabel = new VisLabel();
 		fontLabel.setColor(Color.GRAY);
 		fontLabel.setEllipsis(true);
 		selectFontButton = new VisImageButton(Assets.getIcon(Icons.MORE));
 		textField = new VisValidableTextField();
-		textField.addListener(sharedChangeListener);
+		textField.addListener(properties.getSharedChangeListener());
 		textField.setProgrammaticChangeEvents(false);
 
 		VisTable fontTable = new VisTable(true);
@@ -94,7 +91,7 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 	private String getFontTextForEntity (EditorEntity entity) {
 		TextObject obj = (TextObject) entity;
-		return obj.getRelativeFontPath().substring(fileAccessModule.getBMPFontFolderRelative().length() + 1);
+		return obj.getRelativeFontPath().substring(properties.getFileAccessModule().getBMPFontFolderRelative().length() + 1);
 	}
 
 	@Override
