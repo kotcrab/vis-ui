@@ -27,6 +27,7 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.ui.util.DialogUtils;
 
+//TODO font reloading for bmp
 public class FontCacheModule extends ProjectModule implements WatchListener {
 	/** Maximum recommenced font size, not enforced byt FontCacheModule */
 	public static final int MAX_FONT_SIZE = 300;
@@ -58,11 +59,17 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	private void buildFonts () {
-		FileHandle[] files = ttfFontDirectory.list();
-
-		for (FileHandle file : files) {
+		FileHandle[] ttfFiles = ttfFontDirectory.list();
+		for (FileHandle file : ttfFiles) {
 			if (file.extension().equals("ttf")) {
 				fonts.add(new TTFEditorFont(file, fileAccess.relativizeToVisFolder(file)));
+			}
+		}
+
+		FileHandle[] bmpFiles = bmpFontDirectory.list();
+		for (FileHandle file : bmpFiles) {
+			if (file.extension().equals("fnt")) {
+				fonts.add(new BMPEditorFont(file, fileAccess.relativizeToVisFolder(file)));
 			}
 		}
 	}
@@ -106,12 +113,14 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 
 	@Override
 	public void fileCreated (final FileHandle file) {
-		Gdx.app.postRunnable(new Runnable() {
-			@Override
-			public void run () {
-				refreshFont(file);
-			}
-		});
+		if (file.extension().equals("ttf")) {
+			Gdx.app.postRunnable(new Runnable() {
+				@Override
+				public void run () {
+					refreshFont(file);
+				}
+			});
+		}
 	}
 
 	public EditorFont get (FileHandle file) {

@@ -292,7 +292,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 					});
 				}
 
-				if (item.type == FileType.FONT) {
+				if (item.type == FileType.TTF_FONT) {
 					dragAndDrop.addSource(new Source(item) {
 						@Override
 						public Payload dragStart (InputEvent event, float x, float y, int pointer) {
@@ -306,6 +306,37 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 							payload.setObject(text);
 
 							LabelStyle style = new LabelStyle(bmpFont, Color.WHITE);
+							Label label = new VisLabel(FontCacheModule.DEFAULT_TEXT, style);
+							payload.setDragActor(label);
+
+							float invZoom = 1.0f / dropTargetTab.getCameraZoom();
+							label.setFontScale(invZoom);
+							dragAndDrop.setDragActorPosition(-label.getWidth() * invZoom / 2, label.getHeight() / 2);
+
+							return payload;
+						}
+					});
+				}
+
+				if (item.type == FileType.BMP_FONT_FILE || item.type == FileType.BMP_FONT_TEXTURE) {
+					dragAndDrop.addSource(new Source(item) {
+						@Override
+						public Payload dragStart (InputEvent event, float x, float y, int pointer) {
+							Payload payload = new Payload();
+
+							FileHandle fontFile;
+
+							if (item.type == FileType.BMP_FONT_FILE)
+								fontFile = item.file;
+							else
+								fontFile = item.file.sibling(item.file.nameWithoutExtension() + ".ttf");
+
+							BMPEditorFont font = (BMPEditorFont) fontCache.get(fontFile);
+
+							TextObject text = new TextObject(font, FontCacheModule.DEFAULT_TEXT);
+							payload.setObject(text);
+
+							LabelStyle style = new LabelStyle(font.get(), Color.WHITE);
 							Label label = new VisLabel(FontCacheModule.DEFAULT_TEXT, style);
 							payload.setDragActor(label);
 
@@ -354,7 +385,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		for (FileHandle contentRoot : assetsFolder.list(DirectoriesOnlyFileFilter.filter)) {
 
 			//hide empty dirs except 'gfx' and 'scene'
-			if(contentRoot.list().length != 0 || contentRoot.name().equals("gfx") || contentRoot.name().equals("scene")) {
+			if (contentRoot.list().length != 0 || contentRoot.name().equals("gfx") || contentRoot.name().equals("scene")) {
 				Node node = new Node(new FolderItem(contentRoot));
 				processFolder(node, contentRoot);
 				contentTree.add(node);
@@ -425,7 +456,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 	}
 
 	private enum FileType {
-		UNKNOWN, TEXTURE, FONT
+		UNKNOWN, TEXTURE, TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE
 	}
 
 	private class FileItem extends Table {
@@ -439,7 +470,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 			this.file = file;
 			VisLabel name;
 
-			if (file.extension().equals("jpg") || file.extension().equals("png")) {
+			if (file.path().startsWith("/assets/gfx") && (file.extension().equals("jpg") || file.extension().equals("png"))) {
 				name = new VisLabel(file.nameWithoutExtension(), "small");
 				TextureRegion region = textureCache.getRegion(file);
 
@@ -451,10 +482,21 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 				type = FileType.TEXTURE;
 			} else if (file.extension().equals("ttf")) {
 				add(new VisLabel("TTF Font", Color.GRAY)).row();
-				name = new VisLabel(file.name());
-				type = FileType.FONT;
+				name = new VisLabel(file.nameWithoutExtension());
+				type = FileType.TTF_FONT;
+			} else if (file.extension().equals("fnt") && file.sibling(file.nameWithoutExtension() + ".png").exists()) {
+				add(new VisLabel("BMP Font", Color.GRAY)).row();
+				name = new VisLabel(file.nameWithoutExtension());
+				type = FileType.BMP_FONT_FILE;
+			} else if (file.extension().equals("png") && file.sibling(file.nameWithoutExtension() + ".fnt").exists()) {
+				VisLabel tagLabel = new VisLabel("BMP Font Texture", Color.GRAY);
+				tagLabel.setWrap(true);
+				tagLabel.setAlignment(Align.center);
+				add(tagLabel).expandX().fillX().row();
+				name = new VisLabel(file.nameWithoutExtension());
+				type = FileType.BMP_FONT_TEXTURE;
 			} else {
-				name = new VisLabel(file.name());
+				name = new VisLabel(file.nameWithoutExtension());
 				type = FileType.UNKNOWN;
 			}
 

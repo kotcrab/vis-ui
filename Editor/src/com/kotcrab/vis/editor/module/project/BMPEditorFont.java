@@ -38,7 +38,7 @@ public class BMPEditorFont extends EditorFont {
 
 	@Override
 	public BitmapFont get (int size) {
-		throw new UnsupportedOperationException();
+		return get();
 	}
 
 	@Override

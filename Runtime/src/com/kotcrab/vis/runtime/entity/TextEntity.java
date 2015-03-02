@@ -30,6 +30,9 @@ import com.badlogic.gdx.math.Rectangle;
  * @author Kotcrab
  */
 public class TextEntity extends Entity {
+	/** Value used for fontSize filed when BMP font is used */
+	public static final int BITMAP_FONT_SIZE = -1;
+
 	protected String relativeFontPath;
 	protected int fontSize;
 	protected transient BitmapFontCache cache;
@@ -44,6 +47,10 @@ public class TextEntity extends Entity {
 	private boolean autoSetOriginToCenter = true;
 	private Matrix4 translationMatrix;
 	protected CharSequence text;
+
+	public TextEntity (BitmapFont bitmapFont, String id, String relativeFontPath, String text) {
+		this(bitmapFont, id, relativeFontPath, text, BITMAP_FONT_SIZE);
+	}
 
 	public TextEntity (BitmapFont bitmapFont, String id, String relativeFontPath, String text, int fontSize) {
 		super(id);

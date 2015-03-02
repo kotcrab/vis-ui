@@ -21,6 +21,7 @@ package com.kotcrab.vis.editor.scene;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.kotcrab.vis.editor.module.project.BMPEditorFont;
 import com.kotcrab.vis.editor.module.project.EditorFont;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 
@@ -30,6 +31,10 @@ import com.kotcrab.vis.runtime.entity.TextEntity;
  */
 public class TextObject extends TextEntity implements EditorEntity {
 	private transient EditorFont font;
+
+	public TextObject (BMPEditorFont font, String text) {
+		this(font, font.get(), text, BITMAP_FONT_SIZE);
+	}
 
 	public TextObject (EditorFont font, BitmapFont bitmapFont, String text, int fontSize) {
 		super(bitmapFont, null, font.getRelativePath(), text, fontSize);
@@ -66,7 +71,6 @@ public class TextObject extends TextEntity implements EditorEntity {
 	public boolean isRotationSupported () {
 		return true;
 	}
-
 
 	@Override
 	public boolean isResizeSupported () {
@@ -105,7 +109,7 @@ public class TextObject extends TextEntity implements EditorEntity {
 	}
 
 	public void setFont (EditorFont font) {
-		if(this.font != font) {
+		if (this.font != font) {
 			this.font = font;
 
 			relativeFontPath = font.getRelativePath();
