@@ -19,79 +19,12 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.Assets;
-import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
-import com.kotcrab.vis.ui.VisTable;
-import com.kotcrab.vis.ui.widget.VisImageButton;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
-class BMPTextObjectTable extends SpecificObjectTable {
-	private VisValidableTextField textField;
-	private VisLabel fontLabel;
-	private VisImageButton selectFontButton;
-	private EntityProperties properties;
-
+class BMPTextObjectTable extends TextObjectTable {
 	public BMPTextObjectTable (EntityProperties properties) {
-		super(true);
-		this.properties = properties;
-
-		fontLabel = new VisLabel();
-		fontLabel.setColor(Color.GRAY);
-		fontLabel.setEllipsis(true);
-		selectFontButton = new VisImageButton(Assets.getIcon(Icons.MORE));
-		textField = new VisValidableTextField();
-		textField.addListener(properties.getSharedChangeListener());
-		textField.setProgrammaticChangeEvents(false);
-
-		VisTable fontTable = new VisTable(true);
-		fontTable.add(new VisLabel("Font"));
-		fontTable.add(fontLabel).width(100);
-		fontTable.add(selectFontButton);
-		fontTable.add().expand().fill();
-
-		VisTable textTable = new VisTable(true);
-		textTable.add(new VisLabel("Text"));
-		textTable.add(textField).expandX().fillX();
-
-		defaults().left().expandX().fillX();
-		add(textTable);
-		row();
-		add(fontTable);
-	}
-
-	private String getTextFieldText (Array<EditorEntity> entities) {
-		TextObject textObj = (TextObject) entities.get(0);
-		String firstText = textObj.getText();
-
-		for (EditorEntity entity : entities) {
-			TextObject obj = (TextObject) entity;
-
-			if (obj.getText().equals(firstText) == false) return "<multiple values>";
-		}
-
-		return firstText;
-	}
-
-	private String getFontLabelText (Array<EditorEntity> entities) {
-		String firstText = getFontTextForEntity(entities.get(0));
-
-		for (EditorEntity entity : entities) {
-			TextObject obj = (TextObject) entity;
-
-			if (getFontTextForEntity(obj).equals(firstText) == false) return "<?>";
-		}
-
-		return firstText;
-	}
-
-	private String getFontTextForEntity (EditorEntity entity) {
-		TextObject obj = (TextObject) entity;
-		return obj.getRelativeFontPath().substring(properties.getFileAccessModule().getBMPFontFolderRelative().length() + 1);
+		super(properties);
 	}
 
 	@Override
@@ -102,17 +35,17 @@ class BMPTextObjectTable extends SpecificObjectTable {
 	}
 
 	@Override
-	public void updateUIValues (Array<EditorEntity> entities) {
-		textField.setText(getTextFieldText(entities));
-		fontLabel.setText(getFontLabelText(entities));
+	protected int getRelativeFontFolderLength () {
+		return properties.getFileAccessModule().getBMPFontFolderRelative().length();
 	}
 
 	@Override
-	public void setValuesToEntities (Array<EditorEntity> entities) {
-		for (EditorEntity entity : entities) {
-			TextObject obj = (TextObject) entity;
+	public void updateUIValues () {
+		super.updateUIValues();
+	}
 
-			obj.setText(textField.getText());
-		}
+	@Override
+	public void setValuesToEntities () {
+		super.setValuesToEntities();
 	}
 }

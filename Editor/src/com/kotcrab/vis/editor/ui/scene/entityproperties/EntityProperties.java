@@ -361,7 +361,7 @@ public class EntityProperties extends VisTable {
 
 		}
 
-		if (activeSpecificTable != null) activeSpecificTable.setValuesToEntities(entities);
+		if (activeSpecificTable != null) activeSpecificTable.setValuesToEntities();
 	}
 
 	public void updateValues () {
@@ -415,7 +415,7 @@ public class EntityProperties extends VisTable {
 				}
 			}));
 
-			if (activeSpecificTable != null) activeSpecificTable.updateUIValues(entities);
+			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
 
 			setTintUIForEntities();
 			setFlipXUICheckForEntities();

@@ -19,18 +19,20 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
-import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.ui.VisTable;
 
 abstract class SpecificObjectTable extends VisTable {
-	public SpecificObjectTable (boolean useVisDefaults) {
+	protected EntityProperties properties;
+
+	public SpecificObjectTable (EntityProperties properties, boolean useVisDefaults) {
 		super(useVisDefaults);
+		this.properties = properties;
 	}
 
 	public abstract boolean isSupported (EditorEntity entity);
 
-	public abstract void updateUIValues (Array<EditorEntity> entities);
+	public abstract void updateUIValues ();
 
-	public abstract void setValuesToEntities (Array<EditorEntity> entities);
+	public abstract void setValuesToEntities ();
 }

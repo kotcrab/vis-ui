@@ -20,68 +20,36 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.Assets;
-import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.SelectFontDialog;
 import com.kotcrab.vis.editor.ui.SelectFontDialog.FontDialogListener;
 import com.kotcrab.vis.editor.util.FieldUtils;
-import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
-import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
-class TTFTextObjectTable extends SpecificObjectTable {
-	private EntityProperties properties;
-
+class TTFTextObjectTable extends TextObjectTable {
 	private SelectFontDialog selectFontDialog;
 
-	private VisValidableTextField textField;
-	private VisLabel fontLabel;
-	private VisImageButton selectFontButton;
 	private NumberInputField sizeInputField;
 
 	public TTFTextObjectTable (final EntityProperties properties) {
-		super(true);
-		this.properties = properties;
+		super(properties);
 
-		fontLabel = new VisLabel();
-		fontLabel.setColor(Color.GRAY);
-		fontLabel.setEllipsis(true);
-		selectFontButton = new VisImageButton(Assets.getIcon(Icons.MORE));
 		sizeInputField = new NumberInputField(properties.getSharedChangeListener());
 		sizeInputField.addValidator(Validators.INTEGERS);
 		sizeInputField.addValidator(new GreaterThanValidator(FontCacheModule.MIN_FONT_SIZE));
 		sizeInputField.addValidator(new LesserThanValidator(FontCacheModule.MAX_FONT_SIZE));
-		textField = new VisValidableTextField();
-		textField.addListener(properties.getSharedChangeListener());
-		textField.setProgrammaticChangeEvents(false);
 
-		VisTable fontTable = new VisTable(true);
-		fontTable.add(new VisLabel("Font"));
-		fontTable.add(fontLabel).width(100);
-		fontTable.add(selectFontButton);
-		fontTable.add(new VisLabel("Size"));
-		fontTable.add(sizeInputField).width(40);
-		fontTable.add().expand().fill();
-
-		VisTable textTable = new VisTable(true);
-		textTable.add(new VisLabel("Text"));
-		textTable.add(textField).expandX().fillX();
-
-		defaults().left().expandX().fillX();
-		add(textTable);
-		row();
-		add(fontTable);
+		fontPropertiesTable.add(new VisLabel("Size"));
+		fontPropertiesTable.add(sizeInputField).width(40);
+		fontPropertiesTable.add().expand().fill();
 
 		selectFontButton.addListener(new ChangeListener() {
 			@Override
@@ -105,34 +73,9 @@ class TTFTextObjectTable extends SpecificObjectTable {
 		});
 	}
 
-	private String getTextFieldText (Array<EditorEntity> entities) {
-		TextObject textObj = (TextObject) entities.get(0);
-		String firstText = textObj.getText();
-
-		for (EditorEntity entity : entities) {
-			TextObject obj = (TextObject) entity;
-
-			if (obj.getText().equals(firstText) == false) return "<multiple values>";
-		}
-
-		return firstText;
-	}
-
-	private String getFontLabelText (Array<EditorEntity> entities) {
-		String firstText = getFontTextForEntity(entities.get(0));
-
-		for (EditorEntity entity : entities) {
-			TextObject obj = (TextObject) entity;
-
-			if (getFontTextForEntity(obj).equals(firstText) == false) return "<?>";
-		}
-
-		return firstText;
-	}
-
-	private String getFontTextForEntity (EditorEntity entity) {
-		TextObject obj = (TextObject) entity;
-		return obj.getRelativeFontPath().substring(properties.getFileAccessModule().getTTFFontFolderRelative().length() + 1);
+	@Override
+	protected int getRelativeFontFolderLength () {
+		return properties.getFileAccessModule().getTTFFontFolderRelative().length();
 	}
 
 	@Override
@@ -143,9 +86,11 @@ class TTFTextObjectTable extends SpecificObjectTable {
 	}
 
 	@Override
-	public void updateUIValues (Array<EditorEntity> entities) {
-		textField.setText(getTextFieldText(entities));
-		fontLabel.setText(getFontLabelText(entities));
+	public void updateUIValues () {
+		super.updateUIValues();
+
+		Array<EditorEntity> entities = properties.getEntities();
+
 		sizeInputField.setText(Utils.getEntitiesFieldValue(entities, new EntityValue() {
 			@Override
 			public float getValue (EditorEntity entity) {
@@ -155,11 +100,12 @@ class TTFTextObjectTable extends SpecificObjectTable {
 	}
 
 	@Override
-	public void setValuesToEntities (Array<EditorEntity> entities) {
+	public void setValuesToEntities () {
+		super.setValuesToEntities();
+		Array<EditorEntity> entities = properties.getEntities();
 		for (EditorEntity entity : entities) {
 			TextObject obj = (TextObject) entity;
 
-			obj.setText(textField.getText());
 			obj.setFontSize(FieldUtils.getInt(sizeInputField, obj.getFontSize()));
 		}
 	}
