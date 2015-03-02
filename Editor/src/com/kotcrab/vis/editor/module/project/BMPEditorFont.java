@@ -21,26 +21,28 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.utils.Disposable;
 
-public abstract class EditorFont implements Disposable {
-	protected FileHandle file;
-	protected String relativePath;
 
-	public EditorFont (FileHandle file, String relativePath) {
-		this.file = file;
-		this.relativePath = relativePath;
+public class BMPEditorFont extends EditorFont {
+	private BitmapFont font;
+
+	public BMPEditorFont (FileHandle file, String relativePath) {
+		super(file, relativePath);
+		font = new BitmapFont(file);
 	}
 
-	public abstract BitmapFont get();
-
-	public abstract BitmapFont get (int size);
-
-	public FileHandle getFile () {
-		return file;
+	@Override
+	public BitmapFont get () {
+		return font;
 	}
 
-	public String getRelativePath () {
-		return relativePath;
+	@Override
+	public BitmapFont get (int size) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void dispose () {
+		font.dispose();
 	}
 }

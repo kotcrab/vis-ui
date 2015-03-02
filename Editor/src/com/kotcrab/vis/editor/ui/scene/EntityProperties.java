@@ -609,7 +609,7 @@ public class EntityProperties extends VisTable {
 
 		private String getFontTextForEntity (EditorEntity entity) {
 			TextObject obj = (TextObject) entity;
-			return obj.getRelativeFontPath().substring(fileAccessModule.getFontFolderRelative().length() + 1);
+			return obj.getRelativeFontPath().substring(fileAccessModule.getTTFFontFolderRelative().length() + 1);
 		}
 
 		@Override

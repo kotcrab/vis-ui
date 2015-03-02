@@ -39,7 +39,8 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	private FileAccessModule fileAccess;
 	private AssetsWatcherModule watcherModule;
 
-	private FileHandle fontDirectory;
+	private FileHandle bmpFontDirectory;
+	private FileHandle ttfFontDirectory;
 
 	private Array<EditorFont> fonts = new Array<>();
 
@@ -48,7 +49,8 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 		fileAccess = projectContainer.get(FileAccessModule.class);
 		watcherModule = projectContainer.get(AssetsWatcherModule.class);
 
-		fontDirectory = fileAccess.getFontFolder();
+		ttfFontDirectory = fileAccess.getTTFFontFolder();
+		bmpFontDirectory = fileAccess.getBMPFontFolder();
 
 		watcherModule.addListener(this);
 
@@ -56,11 +58,11 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	private void buildFonts () {
-		FileHandle[] files = fontDirectory.list();
+		FileHandle[] files = ttfFontDirectory.list();
 
 		for (FileHandle file : files) {
 			if (file.extension().equals("ttf")) {
-				fonts.add(new EditorFont(file, fileAccess.relativizeToVisFolder(file)));
+				fonts.add(new TTFEditorFont(file, fileAccess.relativizeToVisFolder(file)));
 			}
 		}
 	}
@@ -80,7 +82,7 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 			fonts.removeValue(existingFont, true);
 		}
 
-		fonts.add(new EditorFont(file, fileAccess.relativizeToVisFolder(file)));
+		fonts.add(new TTFEditorFont(file, fileAccess.relativizeToVisFolder(file)));
 
 		//TODO: post font reloaded event
 	}

@@ -39,7 +39,7 @@ import com.kotcrab.vis.editor.util.texturepacker.TexturePacker.Settings;
 public class TextureCacheModule extends ProjectModule implements WatchListener {
 	private AssetsWatcherModule watcher;
 
-	private String assetsPath;
+	private String gfxPath;
 	private String outPath;
 
 	private Settings settings;
@@ -76,7 +76,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		outPath = out.path();
 		cacheFile = out.child("cache.atlas");
 
-		assetsPath = fileAccess.getAssetsFolder().path();
+		gfxPath = fileAccess.getAssetsFolder().child("gfx").path();
 
 		watcher.addListener(this);
 
@@ -99,7 +99,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	private void performUpdate () {
-		TexturePacker.processIfModified(settings, assetsPath, outPath, "cache");
+		TexturePacker.processIfModified(settings, gfxPath, outPath, "cache");
 
 		Gdx.app.postRunnable(new Runnable() {
 			@Override
@@ -201,8 +201,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	private String resolvePath (FileHandle file) {
 		String path = file.path();
 
-		if (path.startsWith(assetsPath))
-			return path.substring(assetsPath.length() + 1, path.length() - file.extension().length() - 1);
+		if (path.startsWith(gfxPath))
+			return path.substring(gfxPath.length() + 1, path.length() - file.extension().length() - 1);
 		else
 			return path;
 	}

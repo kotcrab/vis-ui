@@ -30,7 +30,8 @@ public class FileAccessModule extends ProjectModule {
 	private FileHandle assetsFolder;
 	private FileHandle modulesFolder;
 
-	private FileHandle fontFolder;
+	private FileHandle ttfFontFolder;
+	private FileHandle bmpFontFolder;
 
 	@Override
 	public void init () {
@@ -39,7 +40,8 @@ public class FileAccessModule extends ProjectModule {
 		assetsFolder = visFolder.child("assets");
 		modulesFolder = visFolder.child("modules");
 
-		fontFolder = assetsFolder.child("font");
+		ttfFontFolder = assetsFolder.child("font");
+		bmpFontFolder = assetsFolder.child("bmpfont");
 	}
 
 	public FileHandle getVisFolder () {
@@ -51,12 +53,16 @@ public class FileAccessModule extends ProjectModule {
 		return assetsFolder;
 	}
 
-	public FileHandle getFontFolder () {
-		return fontFolder;
+	public FileHandle getBMPFontFolder () {
+		return bmpFontFolder;
 	}
 
-	public String getFontFolderRelative () {
-		return relativizeToVisFolder(fontFolder);
+	public FileHandle getTTFFontFolder () {
+		return ttfFontFolder;
+	}
+
+	public String getTTFFontFolderRelative () {
+		return relativizeToVisFolder(ttfFontFolder);
 	}
 
 	public FileHandle getModuleFolder (String moduleName) {

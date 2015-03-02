@@ -97,7 +97,7 @@ public class SelectFontDialog extends VisWindow {
 		fontList.clearItems();
 		fontsMap.clear();
 
-		buildFontList(fileAccessModule.getFontFolder());
+		buildFontList(fileAccessModule.getTTFFontFolder());
 	}
 
 	private void finishSelection () {
@@ -117,7 +117,7 @@ public class SelectFontDialog extends VisWindow {
 			if (file.isDirectory()) buildFontList(fontDirectory);
 
 			if (file.extension().equals("ttf"))
-				fontsMap.put(file.path().substring(fileAccessModule.getFontFolder().path().length() + 1), file);
+				fontsMap.put(file.path().substring(fileAccessModule.getTTFFontFolder().path().length() + 1), file);
 		}
 
 		fontList.setItems(fontsMap.keys().toArray());
