@@ -21,5 +21,8 @@
 		<exclude name="font/FreeTypeFontProvider.java" />
 	</source>
 
+    <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/runtime/bmp-font-df.frag" />
+    <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/runtime/bmp-font-df.vert" />
+
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.runtime.data" />
 </module>
