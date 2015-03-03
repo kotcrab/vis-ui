@@ -113,6 +113,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 
 		scene.setTextureAtlases(atlases);
 		scene.setEntities(entities);
+		scene.setAssetManager(manager);
 
 		for (EntityData entityData : data.entities) {
 			if (entityData instanceof SceneSpriteData) {
@@ -143,6 +144,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 			}
 		}
 
+		if(distanceFieldShaderLoaded)
+			scene.loadShader();
 	}
 
 	@Override

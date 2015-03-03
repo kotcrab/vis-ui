@@ -16,9 +16,13 @@
 
 package com.kotcrab.vis.runtime.scene;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -27,8 +31,12 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kotcrab.vis.runtime.entity.Entity;
+import com.kotcrab.vis.runtime.entity.TextEntity;
 
 public class Scene {
+	private AssetManager assetManager;
+	private ShaderProgram distanceFieldShader;
+
 	private OrthographicCamera camera;
 	private Viewport viewport;
 
@@ -80,15 +88,36 @@ public class Scene {
 	public void render (SpriteBatch batch) {
 		batch.setProjectionMatrix(camera.combined);
 
+		boolean shader = false;
+
 		batch.begin();
 
-		for (Entity e : entities)
+		for (Entity e : entities) {
+			//TODO optimize distance field check
+			if(e instanceof TextEntity && ((TextEntity) e).isDistanceFieldShaderEnabled()) {
+				shader = true;
+				batch.setShader(distanceFieldShader);
+			}
+
 			e.render(batch);
+
+			if(shader) batch.setShader(null);
+		}
 
 		batch.end();
 	}
 
 	public void resize (int width, int height) {
 		viewport.update(width, height);
+	}
+
+	/** Used by SceneLoader */
+	public void setAssetManager (AssetManager assetManager) {
+		this.assetManager = assetManager;
+	}
+
+	public void loadShader () {
+		//TODO better shader path
+		distanceFieldShader = (ShaderProgram) assetManager.get(new AssetDescriptor(Gdx.files.classpath("com/kotcrab/vis/runtime/bmp-font-df"), ShaderProgram.class));
 	}
 }

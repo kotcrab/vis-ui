@@ -74,5 +74,7 @@ public class TextData extends EntityData<TextEntity> {
 		//text.setFontSize(fontSize); //font size must be handled manually from SceneLoader because it is not a public property for TextEntity
 		text.setRelativeFontPathForSerialize(relativeFontPath);
 		text.setAutoSetOriginToCenter(autoSetOriginToCenter);
+
+		text.setDistanceFieldShaderEnabled(isUsesDistanceField);
 	}
 }

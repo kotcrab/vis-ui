@@ -18,6 +18,8 @@ package com.kotcrab.vis.runtime.font;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.data.TextData;
@@ -25,7 +27,12 @@ import com.kotcrab.vis.runtime.data.TextData;
 public class BmpFontProvider implements FontProvider {
 	@Override
 	public void load (Array<AssetDescriptor> dependencies, TextData data) {
-		dependencies.add(new AssetDescriptor(data.relativeFontPath, BitmapFont.class));
+		BitmapFontParameter params = new BitmapFontParameter();
+		params.genMipMaps = true;
+		params.minFilter = TextureFilter.MipMapLinearLinear;
+		params.magFilter = TextureFilter.Linear;
+
+		dependencies.add(new AssetDescriptor(data.relativeFontPath, BitmapFont.class, params));
 	}
 
 	@Override
