@@ -129,7 +129,7 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 				return font;
 		}
 
-		throw new IllegalStateException("Font not found");
+		throw new IllegalStateException("Font not found, file: " + file.path());
 	}
 
 	public BitmapFont get (FileHandle file, int size) {

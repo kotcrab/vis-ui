@@ -19,12 +19,23 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.ui.widget.Tooltip;
+import com.kotcrab.vis.ui.widget.VisCheckBox;
 
 class BMPTextObjectTable extends TextObjectTable {
+	private VisCheckBox distanceFieldCheck;
+
 	public BMPTextObjectTable (EntityProperties properties) {
 		super(properties);
+
+		distanceFieldCheck = new VisCheckBox("Use DF");
+		distanceFieldCheck.addListener(properties.getSharedChangeListener());
+		fontPropertiesTable.add(distanceFieldCheck);
+
+		new Tooltip(distanceFieldCheck, "Use distance field shader for this text");
 	}
 
 	@Override
@@ -42,10 +53,34 @@ class BMPTextObjectTable extends TextObjectTable {
 	@Override
 	public void updateUIValues () {
 		super.updateUIValues();
+		setCheckForEntities();
 	}
+
+	private void setCheckForEntities () {
+		Array<EditorEntity> entities = properties.getEntities();
+
+		boolean enabled = ((TextObject)entities.first()).isDistanceFieldShaderEnabled();
+		for (EditorEntity entity : entities) {
+			TextObject obj = (TextObject) entity;
+
+			if (enabled != obj.isDistanceFieldShaderEnabled()) {
+				distanceFieldCheck.setChecked(false);
+				return;
+			}
+		}
+		distanceFieldCheck.setChecked(enabled);
+	}
+
 
 	@Override
 	public void setValuesToEntities () {
 		super.setValuesToEntities();
+
+		Array<EditorEntity> entities = properties.getEntities();
+		for (EditorEntity entity : entities) {
+			TextObject obj = (TextObject) entity;
+
+			obj.setDistanceFieldShaderEnabled(distanceFieldCheck.isChecked());
+		}
 	}
 }

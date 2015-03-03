@@ -36,6 +36,7 @@ public class TextEntity extends Entity {
 	protected String relativeFontPath;
 	protected int fontSize;
 	protected transient BitmapFontCache cache;
+	protected boolean distanceFieldShaderEnabled;
 
 	private float x = 0, y = 0;
 	private float originX = 0, originY = 0;
@@ -224,5 +225,13 @@ public class TextEntity extends Entity {
 
 	public void setRelativeFontPathForSerialize (String relativeFontPathForSerialize) {
 		this.relativeFontPath = relativeFontPathForSerialize;
+	}
+
+	public boolean isDistanceFieldShaderEnabled () {
+		return distanceFieldShaderEnabled;
+	}
+
+	public void setDistanceFieldShaderEnabled (boolean distanceFieldShaderEnabled) {
+		this.distanceFieldShaderEnabled = distanceFieldShaderEnabled;
 	}
 }

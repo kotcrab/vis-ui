@@ -20,15 +20,21 @@
 package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class BMPEditorFont extends EditorFont {
 	private BitmapFont font;
 
 	public BMPEditorFont (FileHandle file, String relativePath) {
 		super(file, relativePath);
-		font = new BitmapFont(file);
+
+		Texture texture = new Texture(file.sibling(file.nameWithoutExtension() + ".png"), true);
+		texture.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.Linear);
+
+		font = new BitmapFont(file, new TextureRegion(texture), false);
 	}
 
 	@Override

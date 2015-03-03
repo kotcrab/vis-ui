@@ -329,7 +329,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 							if (item.type == FileType.BMP_FONT_FILE)
 								fontFile = item.file;
 							else
-								fontFile = item.file.sibling(item.file.nameWithoutExtension() + ".ttf");
+								fontFile = item.file.sibling(item.file.nameWithoutExtension() + ".fnt");
 
 							BMPEditorFont font = (BMPEditorFont) fontCache.get(fontFile);
 
