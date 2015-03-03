@@ -33,6 +33,9 @@ public class TextData extends EntityData<TextEntity> {
 	public int fontSize;
 	public boolean autoSetOriginToCenter;
 
+	public boolean isTrueType;
+	public boolean isUsesDistanceField;
+
 	@Override
 	public void saveFrom (TextEntity text) {
 		x = text.getX();
@@ -53,10 +56,10 @@ public class TextData extends EntityData<TextEntity> {
 		fontSize = text.getFontSize();
 		autoSetOriginToCenter = text.isAutoSetOriginToCenter();
 
-		//generate something like opensans.20
-		//arbitraryFontName = relativeFontPath.substring(0, relativeFontPath.lastIndexOf(".")).concat(String.valueOf(fontSize));
-
 		arbitraryFontName = String.valueOf(fontSize) + "." + relativeFontPath;
+
+		isTrueType = text.isTrueType();
+		isUsesDistanceField = text.isDistanceFieldShaderEnabled();
 	}
 
 	@Override

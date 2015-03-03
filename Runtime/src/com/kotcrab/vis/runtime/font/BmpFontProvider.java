@@ -14,15 +14,22 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.data;
+package com.kotcrab.vis.runtime.font;
 
-/** Base class for all entities data inside scene */
-public abstract class EntityData<T> {
-	public String id;
+import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.data.TextData;
 
-	/** Saves all values from this entity to instance of this class */
-	public abstract void saveFrom(T entity);
+public class BmpFontProvider implements FontProvider {
+	@Override
+	public void load (Array<AssetDescriptor> dependencies, TextData data) {
+		dependencies.add(new AssetDescriptor(data.relativeFontPath, BitmapFont.class));
+	}
 
-	/** Loads all possible values from this entity to instance of this class. If value can't be loaded it should be ignored.*/
-	public abstract void loadTo(T entity);
+	@Override
+	public void setLoaders (AssetManager manager) {
+
+	}
 }

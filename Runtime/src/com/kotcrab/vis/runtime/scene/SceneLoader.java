@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.runtime.scene;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
 import com.badlogic.gdx.assets.AssetManager;
@@ -26,6 +27,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.runtime.data.EntityData;
@@ -35,13 +37,16 @@ import com.kotcrab.vis.runtime.data.TextData;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
 import com.kotcrab.vis.runtime.entity.TextEntity;
+import com.kotcrab.vis.runtime.font.BmpFontProvider;
 import com.kotcrab.vis.runtime.font.FontProvider;
 
 public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.SceneParameter> {
 	private SceneData data;
 	private Scene scene;
 
-	private FontProvider fontProvider;
+	private boolean distanceFieldShaderLoaded;
+	private FontProvider bmpFontProvider;
+	private FontProvider ttfFontProvider;
 
 	public SceneLoader () {
 		this(new InternalFileHandleResolver());
@@ -49,6 +54,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 
 	public SceneLoader (FileHandleResolver resolver) {
 		super(resolver);
+		bmpFontProvider = new BmpFontProvider();
 	}
 
 	public static Json getJson () {
@@ -59,7 +65,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 	}
 
 	public void enableFreeType (AssetManager manager, FontProvider fontProvider) {
-		this.fontProvider = fontProvider;
+		this.ttfFontProvider = fontProvider;
 		fontProvider.setLoaders(manager);
 	}
 
@@ -78,11 +84,24 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 
 			if (entityData instanceof TextData) {
 				TextData textData = (TextData) entityData;
-				fontProvider.load(deps, textData);
+
+				if (textData.isTrueType)
+					ttfFontProvider.load(deps, textData);
+				else {
+					checkShader(deps);
+					bmpFontProvider.load(deps, textData);
+				}
 			}
 		}
 
 		return deps;
+	}
+
+	private void checkShader (Array<AssetDescriptor> deps) {
+		if(distanceFieldShaderLoaded == false)
+			deps.add(new AssetDescriptor(Gdx.files.classpath("com/kotcrab/vis/runtime/bmp-font-df"), ShaderProgram.class));
+
+		distanceFieldShaderLoaded = true;
 	}
 
 	@Override
@@ -112,7 +131,11 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 			if (entityData instanceof TextData) {
 				TextData textData = (TextData) entityData;
 
-				BitmapFont font = manager.get(textData.arbitraryFontName, BitmapFont.class);
+				BitmapFont font;
+				if (textData.isTrueType)
+					font = manager.get(textData.arbitraryFontName, BitmapFont.class);
+				else
+					font = manager.get(textData.relativeFontPath, BitmapFont.class);
 
 				TextEntity entity = new TextEntity(font, textData.id, textData.relativeFontPath, textData.text, textData.fontSize);
 				textData.loadTo(entity);

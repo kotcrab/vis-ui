@@ -82,7 +82,7 @@ class TTFTextObjectTable extends TextObjectTable {
 	public boolean isSupported (EditorEntity entity) {
 		if (entity instanceof TextObject == false) return false;
 		TextObject obj = (TextObject) entity;
-		return obj.isUsesTTF();
+		return obj.isTrueType();
 	}
 
 	@Override
