@@ -11,6 +11,7 @@
 -Skin Addition: VisSplitPane handleOver property
 -Added VisTree/Tree mouse over drawable
 -Added shift selection for FileChooser (key can be changed by chooser.setGroupMultiselectKey(...))
+-Tooltip is now kept within Stage border
 
 [0.6.1] [LibGDX 1.5.4]
 -Fixed FileChooser disappearing when removing favourite

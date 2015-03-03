@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -145,6 +146,7 @@ public class Tooltip extends VisTable {
 		@Override
 		public void run () {
 			target.getStage().addActor(fadeIn());
+			keepWithinStage();
 		}
 	}
 
@@ -178,6 +180,18 @@ public class Tooltip extends VisTable {
 				fadeOut();
 
 			return false;
+		}
+	}
+
+	void keepWithinStage () {
+		Stage stage = getStage();
+		if (getParent() == stage.getRoot()) {
+			float parentWidth = stage.getWidth();
+			float parentHeight = stage.getHeight();
+			if (getX() < 0) setX(0);
+			if (getRight() > parentWidth) setX(parentWidth - getWidth());
+			if (getY() < 0) setY(0);
+			if (getTop() > parentHeight) setY(parentHeight - getHeight());
 		}
 	}
 }
