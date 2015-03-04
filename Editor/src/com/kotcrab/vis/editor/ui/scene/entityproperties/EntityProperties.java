@@ -27,6 +27,12 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
+import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.event.Event;
+import com.kotcrab.vis.editor.event.EventListener;
+import com.kotcrab.vis.editor.event.RedoEvent;
+import com.kotcrab.vis.editor.event.UndoEvent;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
@@ -52,7 +58,7 @@ import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.isRotationS
 import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.isScaleSupportedForEntities;
 import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.isTintSupportedForEntities;
 
-public class EntityProperties extends VisTable {
+public class EntityProperties extends VisTable implements Disposable, EventListener {
 	private static final int LABEL_WIDTH = 60;
 	private static final int AXIS_LABEL_WIDTH = 10;
 	private static final int FIELD_WIDTH = 70;
@@ -147,6 +153,21 @@ public class EntityProperties extends VisTable {
 		addListeners();
 
 		pack();
+
+		App.eventBus.register(this);
+	}
+
+	@Override
+	public void dispose () {
+		App.eventBus.unregister(this);
+	}
+
+	@Override
+	public boolean onEvent (Event event) {
+		if (event instanceof UndoEvent || event instanceof RedoEvent)
+			updateValues();
+
+		return false;
 	}
 
 	private void createIdTable () {

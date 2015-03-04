@@ -89,6 +89,11 @@ public class EntityManipulatorModule extends SceneModule {
 		}
 	}
 
+	@Override
+	public void dispose () {
+		entityProperties.dispose();
+	}
+
 	public EntityProperties getEntityProperties () {
 		return entityProperties;
 	}
