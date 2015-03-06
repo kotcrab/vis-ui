@@ -50,7 +50,7 @@ public class SpriteData extends EntityData<SpriteEntity> {
 		scaleX = sprite.getScaleX();
 		scaleY = sprite.getScaleY();
 
-		tint = sprite.getColor();
+		tint = sprite.getColor().cpy();
 
 		flipX = sprite.isFlipX();
 		flipY = sprite.isFlipY();

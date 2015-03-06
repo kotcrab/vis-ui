@@ -49,7 +49,7 @@ public class TextData extends EntityData<TextEntity> {
 		scaleX = entity.getScaleX();
 		scaleY = entity.getScaleY();
 
-		tint = entity.getColor();
+		tint = entity.getColor().cpy();
 
 		text = entity.getText();
 		relativeFontPath = entity.getRelativeFontPath().replace("\\", "/");
