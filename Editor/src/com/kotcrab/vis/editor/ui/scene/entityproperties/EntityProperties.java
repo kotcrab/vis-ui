@@ -215,7 +215,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private void createIdTable () {
 		idTable = new VisTable(true);
 		idTable.add(new VisLabel("ID"));
-		idTable.add(idField = new VisValidableTextField()).expandX().fillX();
+		idTable.add(idField = new VisValidableTextField()).expandX().fillX().padRight(6);
 		idField.setProgrammaticChangeEvents(false);
 		idField.addListener(sharedChangeListener);
 	}
@@ -277,7 +277,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 		flipTable.add(new VisLabel("Flip"));
 		flipTable.add(xFlipCheck = new VisCheckBox("X"));
-		flipTable.add(yFlipCheck = new VisCheckBox("Y"));
+		flipTable.add(yFlipCheck = new VisCheckBox("Y")).padRight(10);
 
 		xFlipCheck.addListener(sharedCheckBoxChangeListener);
 		yFlipCheck.addListener(sharedCheckBoxChangeListener);
