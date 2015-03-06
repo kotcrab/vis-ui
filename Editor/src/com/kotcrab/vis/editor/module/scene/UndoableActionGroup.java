@@ -22,7 +22,7 @@ package com.kotcrab.vis.editor.module.scene;
 import com.badlogic.gdx.utils.Array;
 
 public class UndoableActionGroup implements UndoableAction {
-	private Array<UndoableAction> actions = new Array<>();
+	protected Array<UndoableAction> actions = new Array<>();
 
 	private boolean finalized;
 	private boolean reversed;
@@ -53,9 +53,12 @@ public class UndoableActionGroup implements UndoableAction {
 			a.undo();
 	}
 
-
 	public void finalizeGroup () {
 		finalized = true;
+	}
+
+	public int size () {
+		return actions.size;
 	}
 
 	public void add (UndoableAction action) {

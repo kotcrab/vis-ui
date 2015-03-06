@@ -16,11 +16,13 @@
 
 package com.kotcrab.vis.runtime.entity;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.Rectangle;
 
 public class SpriteEntity extends Entity {
-	private Sprite sprite;
+	protected Sprite sprite;
 
 	public SpriteEntity (String id, Sprite sprite) {
 		super(id);
@@ -32,7 +34,91 @@ public class SpriteEntity extends Entity {
 		sprite.draw(batch);
 	}
 
-	public Sprite getSprite () {
-		return sprite;
+	public float getX () {
+		return sprite.getX();
+	}
+
+	public void setX (float x) {
+		sprite.setX(x);
+	}
+
+	public float getY () {
+		return sprite.getY();
+	}
+
+	public void setY (float y) {
+		sprite.setY(y);
+	}
+
+	public void setPosition (float x, float y) {
+		sprite.setPosition(x, y);
+	}
+
+	public float getWidth () {
+		return sprite.getWidth();
+	}
+
+	public float getHeight () {
+		return sprite.getHeight();
+	}
+
+	public void setSize (float width, float height) {
+		sprite.setSize(width, height);
+	}
+
+	public float getOriginX () {
+		return sprite.getOriginX();
+	}
+
+	public float getOriginY () {
+		return sprite.getOriginY();
+	}
+
+	public void setOrigin (float x, float y) {
+		sprite.setOrigin(x, y);
+	}
+
+	public float getScaleX () {
+		return sprite.getScaleX();
+	}
+
+	public float getScaleY () {
+		return sprite.getScaleY();
+	}
+
+	public void setScale (float x, float y) {
+		sprite.setScale(x, y);
+	}
+
+	public Color getColor () {
+		return sprite.getColor();
+	}
+
+	public void setColor (Color color) {
+		sprite.setColor(color);
+	}
+
+	public float getRotation () {
+		return sprite.getRotation();
+	}
+
+	public void setRotation (float rotation) {
+		sprite.setRotation(rotation);
+	}
+
+	public boolean isFlipX () {
+		return sprite.isFlipX();
+	}
+
+	public boolean isFlipY () {
+		return sprite.isFlipY();
+	}
+
+	public void setFlip (boolean x, boolean y) {
+		sprite.setFlip(x, y);
+	}
+
+	public Rectangle getBoundingRectangle () {
+		return sprite.getBoundingRectangle();
 	}
 }

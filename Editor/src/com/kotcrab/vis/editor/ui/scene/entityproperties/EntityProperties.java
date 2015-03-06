@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
@@ -35,9 +36,16 @@ import com.kotcrab.vis.editor.event.RedoEvent;
 import com.kotcrab.vis.editor.event.UndoEvent;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
+import com.kotcrab.vis.editor.module.scene.UndoModule;
+import com.kotcrab.vis.editor.module.scene.UndoableAction;
+import com.kotcrab.vis.editor.module.scene.UndoableActionGroup;
 import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.SpriteObject;
+import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.util.FieldUtils;
+import com.kotcrab.vis.runtime.data.EntityData;
+import com.kotcrab.vis.runtime.data.SpriteData;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
@@ -47,8 +55,9 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 
 import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.TintImage;
 import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.getEntitiesId;
@@ -65,15 +74,20 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	private FileAccessModule fileAccessModule;
 	private FontCacheModule fontCacheModule;
+	private UndoModule undoModule;
+
 	private ColorPicker picker;
 	private Tab parentTab;
 
 	private Array<EditorEntity> entities;
 
 	private ChangeListener sharedChangeListener;
+	private FocusListener sharedFocusListener;
 
 	private ColorPickerListener pickerListener;
 	private TintImage tint;
+
+	private SnapshotUndoableActionGroup snapshots;
 
 	//UI
 	private VisTable propertiesTable;
@@ -87,7 +101,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private VisTable tintTable;
 	private VisTable flipTable;
 
-	private ArrayList<SpecificObjectTable> specificTables = new ArrayList<>();
+	private Array<SpecificObjectTable> specificTables = new Array<>();
 	private SpecificObjectTable activeSpecificTable;
 
 	private VisValidableTextField idField;
@@ -101,10 +115,12 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private VisCheckBox xFlipCheck;
 	private VisCheckBox yFlipCheck;
 
-	public EntityProperties (FileAccessModule fileAccessModule, FontCacheModule fontCacheModule, final ColorPicker picker, final Tab parentTab, Array<EditorEntity> selectedEntitiesList) {
+	public EntityProperties (FileAccessModule fileAccessModule, FontCacheModule fontCacheModule, final UndoModule undoModule, final ColorPicker picker, final Tab parentTab, final Array<EditorEntity> selectedEntitiesList) {
 		super(true);
 		this.fileAccessModule = fileAccessModule;
 		this.fontCacheModule = fontCacheModule;
+		this.undoModule = undoModule;
+
 		this.picker = picker;
 		this.parentTab = parentTab;
 
@@ -119,6 +135,25 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			public void changed (ChangeEvent event, Actor actor) {
 				setValuesToEntity();
 				parentTab.dirty();
+			}
+		};
+
+		sharedFocusListener = new FocusListener() {
+			@Override
+			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
+				if (focused) {
+					snapshots = new SnapshotUndoableActionGroup();
+
+					for (EditorEntity entity : selectedEntitiesList) {
+						snapshots.add(new SnapshotUndoableAction(entity));
+					}
+				} else {
+					snapshots.takeSecondSnapshot();
+					snapshots.dropUnchanged();
+					snapshots.finalizeGroup();
+					if (snapshots.size() > 0)
+						undoModule.add(snapshots);
+				}
 			}
 		};
 
@@ -178,13 +213,17 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		idField.addListener(sharedChangeListener);
 	}
 
+	NumberInputField createNewNumberField () {
+		return new NumberInputField(sharedFocusListener, sharedChangeListener);
+	}
+
 	private void createPositionTable () {
 		positionTable = new VisTable(true);
 		positionTable.add(new VisLabel("Position")).width(LABEL_WIDTH);
 		positionTable.add(new VisLabel("X")).width(AXIS_LABEL_WIDTH);
-		positionTable.add(xField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
+		positionTable.add(xField = createNewNumberField()).width(FIELD_WIDTH);
 		positionTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
-		positionTable.add(yField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
+		positionTable.add(yField = createNewNumberField()).width(FIELD_WIDTH);
 		positionTable.add().expand().fill();
 	}
 
@@ -192,9 +231,9 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		scaleTable = new VisTable(true);
 		scaleTable.add(new VisLabel("Scale")).width(LABEL_WIDTH);
 		scaleTable.add(new VisLabel("X")).width(AXIS_LABEL_WIDTH);
-		scaleTable.add(xScaleField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
+		scaleTable.add(xScaleField = createNewNumberField()).width(FIELD_WIDTH);
 		scaleTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
-		scaleTable.add(yScaleField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
+		scaleTable.add(yScaleField = createNewNumberField()).width(FIELD_WIDTH);
 		scaleTable.add().expand().fill();
 	}
 
@@ -202,9 +241,9 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		originTable = new VisTable(true);
 		originTable.add(new VisLabel("Origin")).width(LABEL_WIDTH);
 		originTable.add(new VisLabel("X")).width(AXIS_LABEL_WIDTH);
-		originTable.add(xOriginField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
+		originTable.add(xOriginField = createNewNumberField()).width(FIELD_WIDTH);
 		originTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
-		originTable.add(yOriginField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
+		originTable.add(yOriginField = createNewNumberField()).width(FIELD_WIDTH);
 		originTable.add().expand().fill();
 	}
 
@@ -226,7 +265,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		rotationTable = new VisTable(true);
 		rotationTable.add(new VisLabel("Rotation")).width(LABEL_WIDTH);
 		rotationTable.add(new VisLabel(" ")).width(AXIS_LABEL_WIDTH);
-		rotationTable.add(rotationField = new NumberInputField(sharedChangeListener)).width(FIELD_WIDTH);
+		rotationTable.add(rotationField = createNewNumberField()).width(FIELD_WIDTH);
 	}
 
 	private void createFlipTable () {
@@ -321,7 +360,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		return parentTab;
 	}
 
-	public ChangeListener getSharedChangeListener () {
+	ChangeListener getSharedChangeListener () {
 		return sharedChangeListener;
 	}
 
@@ -441,6 +480,66 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			setTintUIForEntities();
 			setFlipXUICheckForEntities();
 			setFlipYUICheckForEntities();
+		}
+	}
+
+	private static class SnapshotUndoableActionGroup extends UndoableActionGroup {
+
+		public void dropUnchanged () {
+			Iterator<UndoableAction> iterator = actions.iterator();
+
+			while (iterator.hasNext()) {
+				SnapshotUndoableAction action = (SnapshotUndoableAction) iterator.next();
+				if (action.isSnapshotsEquals()) iterator.remove();
+			}
+		}
+
+		public void takeSecondSnapshot () {
+			for (UndoableAction action : actions) {
+				SnapshotUndoableAction sAction = (SnapshotUndoableAction) action;
+				sAction.takeSecondSnapshot();
+			}
+		}
+	}
+
+	private static class SnapshotUndoableAction implements UndoableAction {
+		EditorEntity entity;
+		EntityData dataSnapshot;
+		EntityData dataSnapshot2;
+
+		public SnapshotUndoableAction (EditorEntity entity) {
+			this.entity = entity;
+			this.dataSnapshot = getDataForEntity(entity);
+			this.dataSnapshot2 = getDataForEntity(entity);
+
+			dataSnapshot.saveFrom(entity);
+		}
+
+		public void takeSecondSnapshot () {
+			dataSnapshot2.saveFrom(entity);
+		}
+
+		public boolean isSnapshotsEquals () {
+			return EqualsBuilder.reflectionEquals(dataSnapshot, dataSnapshot2, true);
+		}
+
+		@Override
+		public void execute () {
+			dataSnapshot.saveFrom(entity);
+			dataSnapshot2.loadTo(entity);
+		}
+
+		@Override
+		public void undo () {
+			dataSnapshot2.saveFrom(entity);
+			dataSnapshot.loadTo(entity);
+		}
+
+		private EntityData getDataForEntity (EditorEntity entity) {
+			if (entity instanceof SpriteObject) return new SpriteData();
+			if (entity instanceof TextObject) return new TextObjectData();
+
+			throw new UnsupportedOperationException("Cannot create snapshot entity data for entity class: " + entity.getClass());
 		}
 	}
 }

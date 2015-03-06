@@ -66,7 +66,7 @@ public class EntityManipulatorModule extends SceneModule {
 		ColorPickerModule pickerModule = container.get(ColorPickerModule.class);
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
 		FontCacheModule fontCacheModule = projectContainer.get(FontCacheModule.class);
-		entityProperties = new EntityProperties(fileAccess, fontCacheModule, pickerModule.getPicker(), sceneTab, selectedEntities);
+		entityProperties = new EntityProperties(fileAccess, fontCacheModule, undoModule, pickerModule.getPicker(), sceneTab, selectedEntities);
 	}
 
 	@Override

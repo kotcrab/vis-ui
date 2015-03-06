@@ -124,8 +124,9 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 
 				Sprite newSprite = new Sprite(atlas.findRegion(spriteData.textureRegion));
 
-				spriteData.loadTo(newSprite);
 				SpriteEntity entity = new SpriteEntity(entityData.id, newSprite);
+				spriteData.loadTo(entity);
+
 				entities.add(entity);
 			}
 

@@ -42,7 +42,7 @@ class TTFTextObjectTable extends TextObjectTable {
 	public TTFTextObjectTable (final EntityProperties properties) {
 		super(properties);
 
-		sizeInputField = new NumberInputField(properties.getSharedChangeListener());
+		sizeInputField = properties.createNewNumberField();
 		sizeInputField.addValidator(Validators.INTEGERS);
 		sizeInputField.addValidator(new GreaterThanValidator(FontCacheModule.MIN_FONT_SIZE));
 		sizeInputField.addValidator(new LesserThanValidator(FontCacheModule.MAX_FONT_SIZE));

@@ -20,12 +20,12 @@
 package com.kotcrab.vis.runtime.data;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.kotcrab.vis.runtime.entity.SpriteEntity;
 
 /**
  * SpriteData used by both VisRuntime and VisEditor
  */
-public class SpriteData extends EntityData<Sprite> {
+public class SpriteData extends EntityData<SpriteEntity> {
 	public float x, y;
 	public float width, height;
 	public float originX, originY;
@@ -35,7 +35,7 @@ public class SpriteData extends EntityData<Sprite> {
 	public boolean flipX, flipY;
 
 	@Override
-	public void saveFrom (Sprite sprite) {
+	public void saveFrom (SpriteEntity sprite) {
 		x = sprite.getX();
 		y = sprite.getY();
 
@@ -57,7 +57,7 @@ public class SpriteData extends EntityData<Sprite> {
 	}
 
 	@Override
-	public void loadTo (Sprite sprite) {
+	public void loadTo (SpriteEntity sprite) {
 		sprite.setPosition(x, y);
 		sprite.setSize(width, height);
 		sprite.setOrigin(originX, originY);

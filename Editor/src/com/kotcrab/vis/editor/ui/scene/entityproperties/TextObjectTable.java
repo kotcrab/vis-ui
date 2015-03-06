@@ -30,7 +30,7 @@ import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
-public abstract class TextObjectTable extends SpecificObjectTable {
+abstract class TextObjectTable extends SpecificObjectTable {
 	private VisValidableTextField textField;
 
 	private VisLabel fontLabel;

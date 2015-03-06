@@ -21,7 +21,6 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.editor.App;
@@ -202,10 +201,9 @@ public class ExportModule extends ProjectModule {
 					for (EditorEntity entity : editorScene.entities) {
 						if (entity instanceof SpriteObject) {
 							SpriteObject obj = (SpriteObject) entity;
-							Sprite s = obj.getSprite();
 
 							SceneSpriteData data = new SceneSpriteData();
-							data.saveFrom(s);
+							data.saveFrom(obj);
 
 							data.id = obj.getId();
 							data.textureAtlas = "gfx/textures.atlas";
