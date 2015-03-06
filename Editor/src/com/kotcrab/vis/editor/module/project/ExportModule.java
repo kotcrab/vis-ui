@@ -209,7 +209,7 @@ public class ExportModule extends ProjectModule {
 
 							data.id = obj.getId();
 							data.textureAtlas = "gfx/textures.atlas";
-							data.textureRegion = obj.getRegionRelativePath();
+							data.textureRegion = obj.getCacheRegionName();
 
 							sceneData.entities.add(data);
 							continue;

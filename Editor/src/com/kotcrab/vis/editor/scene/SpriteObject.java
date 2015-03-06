@@ -26,12 +26,12 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 public class SpriteObject extends EditorEntityBase {
-	private String regionRelativePath;
+	private String cacheRegionName;
 	private Sprite sprite;
 
-	public SpriteObject (String regionRelativePath, TextureRegion region, float x, float y) {
+	public SpriteObject (String cacheRegionName, TextureRegion region, float x, float y) {
 		this.sprite = new Sprite(region);
-		this.regionRelativePath = regionRelativePath;
+		this.cacheRegionName = cacheRegionName;
 		sprite.setPosition(x, y);
 	}
 
@@ -186,8 +186,8 @@ public class SpriteObject extends EditorEntityBase {
 		return sprite.getBoundingRectangle();
 	}
 
-	public String getRegionRelativePath () {
-		return regionRelativePath;
+	public String getCacheRegionName () {
+		return cacheRegionName;
 	}
 
 	public Sprite getSprite () {

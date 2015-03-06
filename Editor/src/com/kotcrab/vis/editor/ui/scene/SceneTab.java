@@ -242,7 +242,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 			for (EditorEntity object : scene.entities) {
 				if (object instanceof SpriteObject) {
 					SpriteObject spriteObject = (SpriteObject) object;
-					SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getRegionRelativePath()));
+					SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getCacheRegionName()));
 				}
 			}
 		}
