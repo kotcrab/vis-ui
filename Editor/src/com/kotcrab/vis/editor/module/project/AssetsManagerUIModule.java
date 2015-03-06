@@ -470,7 +470,30 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 			this.file = file;
 			VisLabel name;
 
-			if (file.path().startsWith("/assets/gfx") && (file.extension().equals("jpg") || file.extension().equals("png"))) {
+			if (file.extension().equals("ttf")) {
+				type = FileType.TTF_FONT;
+
+				add(new VisLabel("TTF Font", Color.GRAY)).row();
+				name = new VisLabel(file.nameWithoutExtension());
+
+			} else if (file.extension().equals("fnt") && file.sibling(file.nameWithoutExtension() + ".png").exists()) {
+				type = FileType.BMP_FONT_FILE;
+
+				add(new VisLabel("BMP Font", Color.GRAY)).row();
+				name = new VisLabel(file.nameWithoutExtension());
+
+			} else if (file.extension().equals("png") && file.sibling(file.nameWithoutExtension() + ".fnt").exists()) {
+				type = FileType.BMP_FONT_TEXTURE;
+
+				VisLabel tagLabel = new VisLabel("BMP Font Texture", Color.GRAY);
+				tagLabel.setWrap(true);
+				tagLabel.setAlignment(Align.center);
+				add(tagLabel).expandX().fillX().row();
+				name = new VisLabel(file.nameWithoutExtension());
+
+			} else if (file.extension().equals("jpg") || file.extension().equals("png")) {
+				type = FileType.TEXTURE;
+
 				name = new VisLabel(file.nameWithoutExtension(), "small");
 				TextureRegion region = textureCache.getRegion(file);
 
@@ -479,25 +502,10 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 				add(img).expand().fill().row();
 
 				this.region = region;
-				type = FileType.TEXTURE;
-			} else if (file.extension().equals("ttf")) {
-				add(new VisLabel("TTF Font", Color.GRAY)).row();
-				name = new VisLabel(file.nameWithoutExtension());
-				type = FileType.TTF_FONT;
-			} else if (file.extension().equals("fnt") && file.sibling(file.nameWithoutExtension() + ".png").exists()) {
-				add(new VisLabel("BMP Font", Color.GRAY)).row();
-				name = new VisLabel(file.nameWithoutExtension());
-				type = FileType.BMP_FONT_FILE;
-			} else if (file.extension().equals("png") && file.sibling(file.nameWithoutExtension() + ".fnt").exists()) {
-				VisLabel tagLabel = new VisLabel("BMP Font Texture", Color.GRAY);
-				tagLabel.setWrap(true);
-				tagLabel.setAlignment(Align.center);
-				add(tagLabel).expandX().fillX().row();
-				name = new VisLabel(file.nameWithoutExtension());
-				type = FileType.BMP_FONT_TEXTURE;
+
 			} else {
-				name = new VisLabel(file.nameWithoutExtension());
 				type = FileType.UNKNOWN;
+				name = new VisLabel(file.nameWithoutExtension());
 			}
 
 			setBackground("menu-bg");
