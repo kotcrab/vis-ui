@@ -82,11 +82,13 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private Array<EditorEntity> entities;
 
 	private ChangeListener sharedChangeListener;
+	private ChangeListener sharedCheckBoxChangeListener;
 	private FocusListener sharedFocusListener;
 
 	private ColorPickerListener pickerListener;
 	private TintImage tint;
 
+	private boolean snapshotInProgress;
 	private SnapshotUndoableActionGroup snapshots;
 
 	//UI
@@ -133,27 +135,31 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		sharedChangeListener = new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
+				if (actor instanceof VisCheckBox)
+					throw new IllegalStateException("SharedChangeListener cannot be used for checkboxes, use sharedCheckBoxChangeListener instead");
+
 				setValuesToEntity();
 				parentTab.dirty();
+			}
+		};
+
+		sharedCheckBoxChangeListener = new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				beginSnapshot();
+				setValuesToEntity();
+				parentTab.dirty();
+				endSnapshot();
 			}
 		};
 
 		sharedFocusListener = new FocusListener() {
 			@Override
 			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
-				if (focused) {
-					snapshots = new SnapshotUndoableActionGroup();
-
-					for (EditorEntity entity : selectedEntitiesList) {
-						snapshots.add(new SnapshotUndoableAction(entity));
-					}
-				} else {
-					snapshots.takeSecondSnapshot();
-					snapshots.dropUnchanged();
-					snapshots.finalizeGroup();
-					if (snapshots.size() > 0)
-						undoModule.add(snapshots);
-				}
+				if (focused)
+					beginSnapshot();
+				else
+					endSnapshot();
 			}
 		};
 
@@ -166,6 +172,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 				parentTab.dirty();
 				tint.setColor(newColor);
 				picker.setListener(null);
+				endSnapshot();
 			}
 		};
 
@@ -213,10 +220,6 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		idField.addListener(sharedChangeListener);
 	}
 
-	NumberInputField createNewNumberField () {
-		return new NumberInputField(sharedFocusListener, sharedChangeListener);
-	}
-
 	private void createPositionTable () {
 		positionTable = new VisTable(true);
 		positionTable.add(new VisLabel("Position")).width(LABEL_WIDTH);
@@ -252,6 +255,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		tint.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
+				beginSnapshot();
 				picker.setColor(tint.getColor());
 				picker.setListener(pickerListener);
 				getStage().addActor(picker.fadeIn());
@@ -275,8 +279,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		flipTable.add(xFlipCheck = new VisCheckBox("X"));
 		flipTable.add(yFlipCheck = new VisCheckBox("Y"));
 
-		xFlipCheck.addListener(sharedChangeListener);
-		yFlipCheck.addListener(sharedChangeListener);
+		xFlipCheck.addListener(sharedCheckBoxChangeListener);
+		yFlipCheck.addListener(sharedCheckBoxChangeListener);
 	}
 
 	private void rebuildPropertiesTable () {
@@ -311,7 +315,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	private boolean checkEntityList (SpecificObjectTable table) {
 		for (EditorEntity entity : entities)
-			if (table.isSupported(entity) == false) return false;
+			if (!table.isSupported(entity)) return false;
 
 		return true;
 	}
@@ -352,6 +356,37 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		updateValues();
 	}
 
+	void beginSnapshot () {
+		if (snapshotInProgress) endSnapshot();
+		snapshotInProgress = true;
+
+		snapshots = new SnapshotUndoableActionGroup();
+
+		for (EditorEntity entity : entities) {
+			snapshots.add(new SnapshotUndoableAction(entity));
+		}
+	}
+
+	void endSnapshot () {
+		if (!snapshotInProgress) return;
+		snapshotInProgress = false;
+
+		snapshots.takeSecondSnapshot();
+		snapshots.dropUnchanged();
+		snapshots.finalizeGroup();
+		if (snapshots.size() > 0)
+			undoModule.add(snapshots);
+	}
+
+	void dropSnapshot () {
+		snapshotInProgress = false;
+		snapshots = null;
+	}
+
+	NumberInputField createNewNumberField () {
+		return new NumberInputField(sharedFocusListener, sharedChangeListener);
+	}
+
 	Array<EditorEntity> getEntities () {
 		return entities;
 	}
@@ -362,6 +397,10 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	ChangeListener getSharedChangeListener () {
 		return sharedChangeListener;
+	}
+
+	public ChangeListener getSharedCheckBoxChangeListener () {
+		return sharedCheckBoxChangeListener;
 	}
 
 	FileAccessModule getFileAccessModule () {
@@ -397,7 +436,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private void setTintUIForEntities () {
 		Color firstColor = entities.first().getColor();
 		for (EditorEntity entity : entities) {
-			if (firstColor.equals(entity.getColor()) == false) {
+			if (!firstColor.equals(entity.getColor())) {
 				tint.setUnknown(true);
 				return;
 			}
@@ -539,7 +578,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			if (entity instanceof SpriteObject) return new SpriteData();
 			if (entity instanceof TextObject) return new TextObjectData();
 
-			throw new UnsupportedOperationException("Cannot create snapshot entity data for entity class: " + entity.getClass());
+			throw new UnsupportedOperationException("Cannot create snapshots entity data for entity class: " + entity.getClass());
 		}
 	}
 }

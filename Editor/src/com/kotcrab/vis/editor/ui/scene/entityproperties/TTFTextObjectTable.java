@@ -55,6 +55,7 @@ class TTFTextObjectTable extends TextObjectTable {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				selectFontDialog.rebuild();
+				properties.beginSnapshot();
 				getStage().addActor(selectFontDialog.fadeIn());
 			}
 		});
@@ -69,6 +70,7 @@ class TTFTextObjectTable extends TextObjectTable {
 
 				properties.getParentTab().dirty();
 				properties.updateValues();
+				properties.endSnapshot();
 			}
 		});
 	}

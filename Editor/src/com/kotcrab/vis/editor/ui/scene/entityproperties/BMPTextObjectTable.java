@@ -25,14 +25,16 @@ import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.ui.widget.Tooltip;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 
+//TODO font select
 class BMPTextObjectTable extends TextObjectTable {
 	private VisCheckBox distanceFieldCheck;
 
-	public BMPTextObjectTable (EntityProperties properties) {
+	public BMPTextObjectTable (final EntityProperties properties) {
 		super(properties);
 
 		distanceFieldCheck = new VisCheckBox("Use DF");
-		distanceFieldCheck.addListener(properties.getSharedChangeListener());
+		distanceFieldCheck.addListener(properties.getSharedCheckBoxChangeListener());
+
 		fontPropertiesTable.add(distanceFieldCheck);
 
 		new Tooltip(distanceFieldCheck, "Use distance field shader for this text");
@@ -40,7 +42,7 @@ class BMPTextObjectTable extends TextObjectTable {
 
 	@Override
 	public boolean isSupported (EditorEntity entity) {
-		if (entity instanceof TextObject == false) return false;
+		if (!(entity instanceof TextObject)) return false;
 		TextObject obj = (TextObject) entity;
 		return !obj.isTrueType();
 	}

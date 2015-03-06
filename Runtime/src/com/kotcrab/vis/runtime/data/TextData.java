@@ -52,6 +52,7 @@ public class TextData extends EntityData<TextEntity> {
 		tint = text.getColor();
 
 		this.text = text.getText();
+		//TODO remove assets
 		relativeFontPath = text.getRelativeFontPath().substring("assets/".length()).replace("\\", "/"); //removes assets folder from beginning of the path, runtime doesn't want it
 		fontSize = text.getFontSize();
 		autoSetOriginToCenter = text.isAutoSetOriginToCenter();
