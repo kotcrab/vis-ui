@@ -94,7 +94,7 @@ public class SceneIOModule extends ProjectModule {
 
 			if (entity instanceof TextObject) {
 				TextObject textObject = (TextObject) entity;
-				EditorFont font = fontCacheModule.get(fileAccessModule.getVisFolder().child(textObject.getRelativeFontPath()));
+				EditorFont font = fontCacheModule.get(fileAccessModule.getAssetsFolder().child(textObject.getRelativeFontPath()));
 				textObject.afterDeserialize(font);
 			}
 		}

@@ -58,7 +58,7 @@ public class FileAccessModule extends ProjectModule {
 	}
 
 	public String getBMPFontFolderRelative () {
-		return relativizeToVisFolder(bmpFontFolder);
+		return relativizeToAssetsFolder(bmpFontFolder);
 	}
 
 	public FileHandle getTTFFontFolder () {
@@ -66,7 +66,7 @@ public class FileAccessModule extends ProjectModule {
 	}
 
 	public String getTTFFontFolderRelative () {
-		return relativizeToVisFolder(ttfFontFolder);
+		return relativizeToAssetsFolder(ttfFontFolder);
 	}
 
 	public FileHandle getModuleFolder (String moduleName) {
@@ -79,9 +79,21 @@ public class FileAccessModule extends ProjectModule {
 		return relativizeToVisFolder(file.path());
 	}
 
-	public String relativizeToVisFolder (String path) {
-		Path pathAbsolute = Paths.get(path);
-		Path pathBase = Paths.get(visFolder.path());
+	public String relativizeToVisFolder (String absolutePath) {
+		return relativize(visFolder, absolutePath);
+	}
+
+	public String relativizeToAssetsFolder (FileHandle file) {
+		return relativizeToAssetsFolder(file.path());
+	}
+
+	public String relativizeToAssetsFolder (String absolutePath) {
+		return relativize(assetsFolder, absolutePath);
+	}
+
+	private String relativize (FileHandle base, String absolute) {
+		Path pathAbsolute = Paths.get(absolute);
+		Path pathBase = Paths.get(base.path());
 		Path pathRelative = pathBase.relativize(pathAbsolute);
 		return pathRelative.toString();
 	}

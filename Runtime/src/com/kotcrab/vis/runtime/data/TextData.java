@@ -37,30 +37,29 @@ public class TextData extends EntityData<TextEntity> {
 	public boolean isUsesDistanceField;
 
 	@Override
-	public void saveFrom (TextEntity text) {
-		x = text.getX();
-		y = text.getY();
+	public void saveFrom (TextEntity entity) {
+		x = entity.getX();
+		y = entity.getY();
 
-		originX = text.getOriginX();
-		originY = text.getOriginY();
+		originX = entity.getOriginX();
+		originY = entity.getOriginY();
 
-		rotation = text.getRotation();
+		rotation = entity.getRotation();
 
-		scaleX = text.getScaleX();
-		scaleY = text.getScaleY();
+		scaleX = entity.getScaleX();
+		scaleY = entity.getScaleY();
 
-		tint = text.getColor();
+		tint = entity.getColor();
 
-		this.text = text.getText();
-		//TODO remove assets
-		relativeFontPath = text.getRelativeFontPath().substring("assets/".length()).replace("\\", "/"); //removes assets folder from beginning of the path, runtime doesn't want it
-		fontSize = text.getFontSize();
-		autoSetOriginToCenter = text.isAutoSetOriginToCenter();
+		text = entity.getText();
+		relativeFontPath = entity.getRelativeFontPath().replace("\\", "/");
+		fontSize = entity.getFontSize();
+		autoSetOriginToCenter = entity.isAutoSetOriginToCenter();
 
 		arbitraryFontName = String.valueOf(fontSize) + "." + relativeFontPath;
 
-		isTrueType = text.isTrueType();
-		isUsesDistanceField = text.isDistanceFieldShaderEnabled();
+		isTrueType = entity.isTrueType();
+		isUsesDistanceField = entity.isDistanceFieldShaderEnabled();
 	}
 
 	@Override
