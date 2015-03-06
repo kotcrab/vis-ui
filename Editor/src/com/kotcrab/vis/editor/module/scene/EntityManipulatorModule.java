@@ -267,12 +267,16 @@ public class EntityManipulatorModule extends SceneModule {
 				indexes.add(scene.entities.indexOf(entity, true));
 
 			scene.entities.removeAll(entities, true);
+
+			resetSelection();
 		}
 
 		@Override
 		public void undo () {
 			for (int i = 0; i < entities.size; i++)
 				scene.entities.insert(indexes.get(i), entities.get(i));
+
+			resetSelection();
 		}
 	}
 
