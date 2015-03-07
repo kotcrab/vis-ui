@@ -413,7 +413,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 
 		for (FileHandle contentRoot : assetsFolder.list(DirectoriesOnlyFileFilter.filter)) {
 
-			//hide empty dirs except 'gfx' and 'scene' //TODO should it really hide them or just project create should not create them?
+			//hide empty dirs except 'gfx' and 'scene'
 			if (contentRoot.list().length != 0 || contentRoot.name().equals("gfx") || contentRoot.name().equals("scene")) {
 				Node node = new Node(new FolderItem(contentRoot));
 				processFolder(node, contentRoot);

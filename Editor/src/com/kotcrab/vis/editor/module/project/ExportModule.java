@@ -139,8 +139,8 @@ public class ExportModule extends ProjectModule {
 			int assetsDirCounter = visAssetsDir.list(new FileFilter() {
 				@Override
 				public boolean accept (File file) {
-					//exclude gfx and scene dir
-					return file.isDirectory() && !(file.getName().equals("gfx") || file.getName().equals("scene"));
+					//exclude gfx and scene dir, exclude empty folders
+					return file.isDirectory() && file.list().length > 0 && !(file.getName().equals("gfx") || file.getName().equals("scene"));
 				}
 			}).length;
 			steps += assetsDirCounter;
@@ -173,6 +173,7 @@ public class ExportModule extends ProjectModule {
 		private void copyAssets () {
 			for (FileHandle file : visAssetsDir.list()) {
 				if (file.isDirectory() == false) continue;
+				if (file.list().length == 0) continue;
 				if (file.name().equals("gfx") || file.name().equals("scene")) continue;
 
 				setMessage("Copying assets directory: " + file.name());
