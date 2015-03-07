@@ -58,7 +58,7 @@ public class EditorFrame extends JFrame {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
 		config.height = 720;
-		config.backgroundFPS = -1;
+		config.backgroundFPS = 0; //default is 60, when in background it takes a lot of cpu, maybe vsync causes it?
 
 		editor = new Editor(this);
 
