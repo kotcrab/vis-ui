@@ -108,7 +108,7 @@ public class Log {
 			if (f.getName().contains(fileNameYearMonth) == false) f.delete();
 
 		try {
-			logFile = new File(logDirectory, "viseditor-" + fileName + ".txt");
+			logFile = new File(logDirectory, "viseditor " + fileName + ".txt");
 			logFile.createNewFile();
 			logFileWriter = new PrintWriter(new FileWriter(logFile, true));
 		} catch (IOException e) {
