@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
@@ -41,6 +42,16 @@ class BMPTextObjectTable extends TextObjectTable {
 	}
 
 	@Override
+	protected String getFontExtension () {
+		return "fnt";
+	}
+
+	@Override
+	protected FileHandle getFontFolder () {
+ 		return properties.getFileAccessModule().getBMPFontFolder();
+	}
+
+	@Override
 	public boolean isSupported (EditorEntity entity) {
 		if (!(entity instanceof TextObject)) return false;
 		TextObject obj = (TextObject) entity;
@@ -48,7 +59,7 @@ class BMPTextObjectTable extends TextObjectTable {
 	}
 
 	@Override
-	protected int getRelativeFontFolderLength () {
+	int getRelativeFontFolderLength () {
 		return properties.getFileAccessModule().getBMPFontFolderRelative().length();
 	}
 

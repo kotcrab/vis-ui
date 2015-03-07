@@ -26,7 +26,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.util.TableUtils;
@@ -40,12 +39,14 @@ public class SelectFontDialog extends VisWindow {
 	private VisList<String> fontList = new VisList<>();;
 	ObjectMap<String, FileHandle> fontsMap = new ObjectMap<>();
 
-	private FileAccessModule fileAccessModule;
+	private final String extension;
+	private final FileHandle fontFolder;
 	private FontDialogListener listener;
 
-	public SelectFontDialog (FileAccessModule fileAccessModule, FontDialogListener listener) {
+	public SelectFontDialog ( String extension, FileHandle fontFolder, FontDialogListener listener) {
 		super("Select New Font");
-		this.fileAccessModule = fileAccessModule;
+		this.extension = extension;
+		this.fontFolder = fontFolder;
 		this.listener = listener;
 
 		setModal(true);
@@ -97,7 +98,7 @@ public class SelectFontDialog extends VisWindow {
 		fontList.clearItems();
 		fontsMap.clear();
 
-		buildFontList(fileAccessModule.getTTFFontFolder());
+		buildFontList(fontFolder);
 	}
 
 	private void finishSelection () {
@@ -116,8 +117,8 @@ public class SelectFontDialog extends VisWindow {
 		for (FileHandle file : fontDirectory.list()) {
 			if (file.isDirectory()) buildFontList(fontDirectory);
 
-			if (file.extension().equals("ttf"))
-				fontsMap.put(file.path().substring(fileAccessModule.getTTFFontFolder().path().length() + 1), file);
+			if (file.extension().equals(extension))
+				fontsMap.put(file.path().substring(fontFolder.path().length() + 1), file);
 		}
 
 		fontList.setItems(fontsMap.keys().toArray());

@@ -20,14 +20,10 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
-import com.kotcrab.vis.editor.ui.SelectFontDialog;
-import com.kotcrab.vis.editor.ui.SelectFontDialog.FontDialogListener;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
@@ -35,8 +31,6 @@ import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 class TTFTextObjectTable extends TextObjectTable {
-	private SelectFontDialog selectFontDialog;
-
 	private NumberInputField sizeInputField;
 
 	public TTFTextObjectTable (final EntityProperties properties) {
@@ -50,33 +44,20 @@ class TTFTextObjectTable extends TextObjectTable {
 		fontPropertiesTable.add(new VisLabel("Size"));
 		fontPropertiesTable.add(sizeInputField).width(40);
 		fontPropertiesTable.add().expand().fill();
-
-		selectFontButton.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				selectFontDialog.rebuild();
-				properties.beginSnapshot();
-				getStage().addActor(selectFontDialog.fadeIn());
-			}
-		});
-
-		selectFontDialog = new SelectFontDialog(properties.getFileAccessModule(), new FontDialogListener() {
-			@Override
-			public void selected (FileHandle file) {
-				for (EditorEntity entity : properties.getEntities()) {
-					TextObject obj = (TextObject) entity;
-					obj.setFont(properties.getFontCacheModule().get(file));
-				}
-
-				properties.getParentTab().dirty();
-				properties.updateValues();
-				properties.endSnapshot();
-			}
-		});
 	}
 
 	@Override
-	protected int getRelativeFontFolderLength () {
+	protected String getFontExtension () {
+		return "ttf";
+	}
+
+	@Override
+	protected FileHandle getFontFolder () {
+		return properties.getFileAccessModule().getTTFFontFolder();
+	}
+
+	@Override
+	int getRelativeFontFolderLength () {
 		return properties.getFileAccessModule().getTTFFontFolderRelative().length();
 	}
 

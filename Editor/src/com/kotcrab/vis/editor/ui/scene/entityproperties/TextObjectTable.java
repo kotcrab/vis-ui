@@ -19,18 +19,25 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.editor.ui.SelectFontDialog;
+import com.kotcrab.vis.editor.ui.SelectFontDialog.FontDialogListener;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 abstract class TextObjectTable extends SpecificObjectTable {
+	protected SelectFontDialog selectFontDialog;
+
 	private VisValidableTextField textField;
 
 	private VisLabel fontLabel;
@@ -38,7 +45,7 @@ abstract class TextObjectTable extends SpecificObjectTable {
 
 	protected VisTable fontPropertiesTable;
 
-	public TextObjectTable (EntityProperties properties) {
+	public TextObjectTable (final EntityProperties properties) {
 		super(properties, true);
 
 		textField = new VisValidableTextField();
@@ -59,13 +66,41 @@ abstract class TextObjectTable extends SpecificObjectTable {
 		fontPropertiesTable.add(fontLabel).width(100);
 		fontPropertiesTable.add(selectFontButton);
 
+		selectFontButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				selectFontDialog.rebuild();
+				properties.beginSnapshot();
+				getStage().addActor(selectFontDialog.fadeIn());
+			}
+		});
+
+		selectFontDialog = new SelectFontDialog(getFontExtension(), getFontFolder(), new FontDialogListener() {
+			@Override
+			public void selected (FileHandle file) {
+				for (EditorEntity entity : properties.getEntities()) {
+					TextObject obj = (TextObject) entity;
+					obj.setFont(properties.getFontCacheModule().get(file));
+				}
+
+				properties.getParentTab().dirty();
+				properties.updateValues();
+				properties.endSnapshot();
+			}
+		});
+
+
 		defaults().left();
 		add(textTable).expandX().fillX();
 		row();
 		add(fontPropertiesTable);
 	}
 
-	protected abstract int getRelativeFontFolderLength();
+	protected abstract String getFontExtension ();
+
+	protected abstract FileHandle getFontFolder ();
+
+	abstract int getRelativeFontFolderLength();
 
 	private String getTextFieldText (Array<EditorEntity> entities) {
 		TextObject textObj = (TextObject) entities.get(0);
@@ -114,4 +149,6 @@ abstract class TextObjectTable extends SpecificObjectTable {
 			obj.setText(textField.getText());
 		}
 	}
+
+
 }
