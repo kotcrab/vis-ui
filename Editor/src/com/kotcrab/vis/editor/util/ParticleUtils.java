@@ -27,18 +27,33 @@ import com.badlogic.gdx.math.Rectangle;
 import java.lang.reflect.Field;
 
 public class ParticleUtils {
-	public static Rectangle calculateBoundingRectangle (ParticleEffect effect, Rectangle bounds) {
+
+	//TODO add in settings: use additive mode for particles
+	public static Rectangle calculateBoundingRectangle (ParticleEffect effect, Rectangle bounds, boolean additive) {
 		Rectangle tempBounds = new Rectangle();
 
-		calculateBoundingRectangle(effect.getEmitters().get(0), bounds);
-		tempBounds.set(bounds);
+		if (additive == false) bounds.set(0, 0, 0, 0);
+		for (int i = 0; i < effect.getEmitters().size; i++) {
+			calculateBoundingRectangle(effect.getEmitters().get(i), tempBounds);
 
-		for (int i = 1; i < effect.getEmitters().size; i++) {
-			calculateBoundingRectangle(effect.getEmitters().get(0), tempBounds);
-			bounds.merge(tempBounds);
+			if (isZero(tempBounds) == false) {
+				if (isZero(bounds))
+					bounds.set(tempBounds);
+				else
+					bounds.merge(tempBounds);
+			}
 		}
 
 		return bounds;
+	}
+
+	private static void mergeNotEmpty (Rectangle mergeTarget, Rectangle rect) {
+		if (isZero(rect) == false)
+			mergeTarget.merge(rect);
+	}
+
+	private static boolean isZero (Rectangle rect) {
+		return (rect.x == 0 && rect.y == 0 && rect.width == 0 && rect.height == 0);
 	}
 
 	/**

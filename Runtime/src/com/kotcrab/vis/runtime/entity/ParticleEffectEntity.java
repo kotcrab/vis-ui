@@ -47,7 +47,6 @@ public class ParticleEffectEntity extends Entity implements Disposable {
 			effect.reset();
 	}
 
-
 	public float getX () {
 		return effect.getEmitters().get(0).getX();
 	}

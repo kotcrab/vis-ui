@@ -49,7 +49,25 @@ public class ParticleObject extends ParticleEffectEntity implements EditorEntity
 	@Override
 	public void render (Batch batch) {
 		super.render(batch);
-		ParticleUtils.calculateBoundingRectangle(effect, bounds);
+		ParticleUtils.calculateBoundingRectangle(effect, bounds, false);
+	}
+
+	@Override
+	public void setPosition (float x, float y) {
+		super.setPosition(x, y);
+		bounds.set(0, 0, 0, 0);
+	}
+
+	@Override
+	public void setY (float y) {
+		super.setY(y);
+		bounds.set(0, 0, 0, 0);
+	}
+
+	@Override
+	public void setX (float x) {
+		super.setX(x);
+		bounds.set(0, 0, 0, 0);
 	}
 
 	@Override
