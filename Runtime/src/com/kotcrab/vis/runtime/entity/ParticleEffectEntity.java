@@ -19,12 +19,10 @@ package com.kotcrab.vis.runtime.entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.utils.Disposable;
 
 public class ParticleEffectEntity extends Entity implements Disposable {
 	protected transient ParticleEffect effect;
-	protected transient ParticleEmitter emitter;
 
 	protected String effectRelativePath;
 	private boolean flipX, flipY;
@@ -35,43 +33,42 @@ public class ParticleEffectEntity extends Entity implements Disposable {
 		this.effectRelativePath = effectRelativePath;
 
 		this.effect = effect;
-		this.emitter = effect.getEmitters().first();
 
 		effect.start();
 	}
 
 	@Override
 	public void render (Batch batch) {
-		emitter.update(Gdx.graphics.getDeltaTime());
+		effect.update(Gdx.graphics.getDeltaTime());
 
-		emitter.draw(batch);
+		effect.draw(batch);
 
-		if (emitter.isComplete())
-			emitter.reset();
+		if (effect.isComplete())
+			effect.reset();
 	}
 
 
 	public float getX () {
-		return emitter.getX();
+		return effect.getEmitters().get(0).getX();
 	}
 
 	public void setX (float x) {
-		emitter.setPosition(x, getY());
-		emitter.reset();
+		effect.setPosition(x, getY());
+		effect.reset();
 	}
 
 	public float getY () {
-		return emitter.getY();
+		return effect.getEmitters().get(0).getY();
 	}
 
 	public void setY (float y) {
-		emitter.setPosition(getX(), y);
-		emitter.reset();
+		effect.setPosition(getX(), y);
+		effect.reset();
 	}
 
 	public void setPosition (float x, float y) {
-		emitter.setPosition(x, y);
-		emitter.reset();
+		effect.setPosition(x, y);
+		effect.reset();
 	}
 
 	public boolean isFlipX () {
@@ -85,7 +82,7 @@ public class ParticleEffectEntity extends Entity implements Disposable {
 	public void setFlip (boolean x, boolean y) {
 		flipX = x;
 		flipY = y;
-		emitter.setFlip(x, y);
+		effect.setFlip(x, y);
 	}
 
 	public String getRelativeEffectPath () {

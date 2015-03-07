@@ -36,21 +36,20 @@ public class ParticleObject extends ParticleEffectEntity implements EditorEntity
 		bounds = new Rectangle();
 	}
 
-	public void beforeSeriazlie () {
-		serializeX = emitter.getX();
-		serializeY = emitter.getY();
+	public void beforeSerialize () {
+		serializeX = getX();
+		serializeY = getY();
 	}
 
 	public void afterDeserialize (ParticleEffect effect) {
 		this.effect = effect;
-		this.emitter = effect.getEmitters().first();
 		effect.setPosition(serializeX, serializeY);
 	}
 
 	@Override
 	public void render (Batch batch) {
 		super.render(batch);
-		ParticleUtils.calculateBoundingRectangle(emitter, bounds);
+		ParticleUtils.calculateBoundingRectangle(effect, bounds);
 	}
 
 	@Override

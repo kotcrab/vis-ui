@@ -117,7 +117,7 @@ public class SceneIOModule extends ProjectModule {
 		for (EditorEntity entity : scene.entities) {
 			if (entity instanceof ParticleObject) {
 				ParticleObject particle = (ParticleObject) entity;
-				particle.beforeSeriazlie();
+				particle.beforeSerialize();
 			}
 		}
 

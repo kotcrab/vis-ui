@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor.util;
 
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter.Particle;
 import com.badlogic.gdx.math.Rectangle;
@@ -26,6 +27,20 @@ import com.badlogic.gdx.math.Rectangle;
 import java.lang.reflect.Field;
 
 public class ParticleUtils {
+	public static Rectangle calculateBoundingRectangle (ParticleEffect effect, Rectangle bounds) {
+		Rectangle tempBounds = new Rectangle();
+
+		calculateBoundingRectangle(effect.getEmitters().get(0), bounds);
+		tempBounds.set(bounds);
+
+		for (int i = 1; i < effect.getEmitters().size; i++) {
+			calculateBoundingRectangle(effect.getEmitters().get(0), tempBounds);
+			bounds.merge(tempBounds);
+		}
+
+		return bounds;
+	}
+
 	/**
 	 * Uses reflection (yep) to calculate current bounding rectangle for emitter. Should be uses instead of emitter.getBoundingBox() because
 	 * it often returns BoundingBox with Infinity as values making it useless.
