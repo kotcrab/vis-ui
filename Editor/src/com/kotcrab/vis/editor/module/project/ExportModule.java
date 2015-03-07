@@ -28,6 +28,7 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.AsyncTaskProgressDialog;
@@ -35,6 +36,7 @@ import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.texturepacker.TexturePacker;
 import com.kotcrab.vis.editor.util.texturepacker.TexturePacker.Settings;
+import com.kotcrab.vis.runtime.data.ParticleEffectData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.data.SceneSpriteData;
 import com.kotcrab.vis.runtime.data.TextData;
@@ -103,6 +105,9 @@ public class ExportModule extends ProjectModule {
 		int totalSteps;
 
 		FileHandle outAssetsDir;
+
+		/** Holds currently exported scene */
+		private EditorScene editorScene;
 
 		public ExportAsyncTask () {
 			super("ProjectExporter");
@@ -184,13 +189,21 @@ public class ExportModule extends ProjectModule {
 		private void exportScenes (ExportAsyncTask task, FileHandle sceneDir, FileHandle outDir) {
 			outDir.mkdirs();
 
-			for (FileHandle file : sceneDir.list()) {
+			editorScene = null;
+
+			for (final FileHandle file : sceneDir.list()) {
 				if (file.isDirectory()) exportScenes(task, file, outDir.child(file.name()));
 
 				if (file.extension().equals("scene")) {
 					task.setMessage("Exporting scene: " + file.name());
 
-					EditorScene editorScene = sceneIO.load(file);
+					executeOnOpenGL(new Runnable() {
+						@Override
+						public void run () {
+							editorScene = sceneIO.load(file);
+						}
+					});
+
 					SceneData sceneData = new SceneData();
 
 					sceneData.viewport = editorScene.viewport;
@@ -217,6 +230,16 @@ public class ExportModule extends ProjectModule {
 							TextObject obj = (TextObject) entity;
 
 							TextData data = new TextData();
+							data.saveFrom(obj);
+
+							sceneData.entities.add(data);
+							continue;
+						}
+
+						if (entity instanceof ParticleObject) {
+							ParticleObject obj = (ParticleObject) entity;
+
+							ParticleEffectData data = new ParticleEffectData();
 							data.saveFrom(obj);
 
 							sceneData.entities.add(data);

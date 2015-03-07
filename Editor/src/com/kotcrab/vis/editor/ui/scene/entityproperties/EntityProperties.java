@@ -46,7 +46,7 @@ import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.runtime.data.EntityData;
-import com.kotcrab.vis.runtime.data.ParticleEmitterData;
+import com.kotcrab.vis.runtime.data.ParticleEffectData;
 import com.kotcrab.vis.runtime.data.SpriteData;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
@@ -581,7 +581,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		private EntityData getDataForEntity (EditorEntity entity) {
 			if (entity instanceof SpriteObject) return new SpriteData();
 			if (entity instanceof TextObject) return new TextObjectData();
-			if (entity instanceof ParticleObject) return new ParticleEmitterData();
+			if (entity instanceof ParticleObject) return new ParticleEffectData();
 
 			throw new UnsupportedOperationException("Cannot create snapshots entity data for entity class: " + entity.getClass());
 		}

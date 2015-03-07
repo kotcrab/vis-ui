@@ -24,9 +24,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.util.ParticleUtils;
-import com.kotcrab.vis.runtime.entity.ParticleEmitterEntity;
+import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 
-public class ParticleObject extends ParticleEmitterEntity implements EditorEntity {
+public class ParticleObject extends ParticleEffectEntity implements EditorEntity {
 	private Rectangle bounds;
 
 	private float serializeX, serializeY;

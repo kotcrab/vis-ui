@@ -25,22 +25,26 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.runtime.data.EntityData;
+import com.kotcrab.vis.runtime.data.ParticleEffectData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.data.SceneSpriteData;
 import com.kotcrab.vis.runtime.data.TextData;
 import com.kotcrab.vis.runtime.entity.Entity;
+import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 import com.kotcrab.vis.runtime.font.BmpFontProvider;
 import com.kotcrab.vis.runtime.font.FontProvider;
+import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 
-public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.SceneParameter> {
+public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> {
 	private SceneData data;
 	private Scene scene;
 
@@ -70,13 +74,16 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 	}
 
 	@Override
-	public Array<AssetDescriptor> getDependencies (String fileName, FileHandle file, SceneLoader.SceneParameter parameter) {
+	public Array<AssetDescriptor> getDependencies (String fileName, FileHandle file, SceneParameter parameter) {
 		Json json = getJson();
 		data = json.fromJson(SceneData.class, file);
 
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
 
 		for (EntityData entityData : data.entities) {
+			//NOTE: when using 'relative path' form data, path must have \ as path separator, using / is not supported and will cause "Assets not loaded" exception
+			//slash replacing should be handled in EntityData
+
 			if (entityData instanceof SceneSpriteData) {
 				SceneSpriteData spriteData = (SceneSpriteData) entityData;
 				deps.add(new AssetDescriptor(spriteData.textureAtlas, TextureAtlas.class));
@@ -98,14 +105,14 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 	}
 
 	private void checkShader (Array<AssetDescriptor> deps) {
-		if(distanceFieldShaderLoaded == false)
+		if (distanceFieldShaderLoaded == false)
 			deps.add(new AssetDescriptor(Gdx.files.classpath("com/kotcrab/vis/runtime/bmp-font-df"), ShaderProgram.class));
 
 		distanceFieldShaderLoaded = true;
 	}
 
 	@Override
-	public void loadAsync (AssetManager manager, String fileName, FileHandle file, SceneLoader.SceneParameter parameter) {
+	public void loadAsync (AssetManager manager, String fileName, FileHandle file, SceneParameter parameter) {
 		scene = new Scene(data.viewport, data.width, data.height);
 
 		Array<TextureAtlas> atlases = new Array<TextureAtlas>();
@@ -143,9 +150,10 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 				textData.loadTo(entity);
 				entities.add(entity);
 			}
+
 		}
 
-		if(distanceFieldShaderLoaded)
+		if (distanceFieldShaderLoaded)
 			scene.loadShader();
 	}
 
@@ -153,6 +161,21 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneLoader.Scen
 	public Scene loadSync (AssetManager manager, String fileName, FileHandle file, SceneLoader.SceneParameter parameter) {
 		Scene scene = this.scene;
 		this.scene = null;
+
+		for (EntityData entityData : data.entities) {
+			if (entityData instanceof ParticleEffectData) {
+				ParticleEffectData particleData = (ParticleEffectData) entityData;
+
+				FileHandle effectFile = resolve(particleData.relativePath);
+				ParticleEffect emitter = new ParticleEffect();
+				emitter.load(effectFile, effectFile.parent());
+
+				ParticleEffectEntity entity = new ParticleEffectEntity(particleData.id, particleData.relativePath, emitter);
+				particleData.loadTo(entity);
+				scene.getEntities().add(entity);
+			}
+		}
+
 		return scene;
 	}
 

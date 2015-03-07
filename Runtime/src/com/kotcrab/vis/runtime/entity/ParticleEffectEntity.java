@@ -22,17 +22,18 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
 import com.badlogic.gdx.utils.Disposable;
 
-public class ParticleEmitterEntity extends Entity implements Disposable {
+public class ParticleEffectEntity extends Entity implements Disposable {
 	protected transient ParticleEffect effect;
 	protected transient ParticleEmitter emitter;
 
 	protected String effectRelativePath;
 	private boolean flipX, flipY;
 
-	public ParticleEmitterEntity (String id, String effectRelativePath, ParticleEffect effect) {
+	public ParticleEffectEntity (String id, String effectRelativePath, ParticleEffect effect) {
 		super(id);
 
 		this.effectRelativePath = effectRelativePath;
+
 		this.effect = effect;
 		this.emitter = effect.getEmitters().first();
 
