@@ -29,6 +29,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.module.ColorPickerModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
@@ -92,6 +93,13 @@ public class EntityManipulatorModule extends SceneModule {
 	@Override
 	public void dispose () {
 		entityProperties.dispose();
+
+		for (EditorEntity entity : entities) {
+			if (entity instanceof Disposable) {
+				Disposable disposable = (Disposable) entity;
+				disposable.dispose();
+			}
+		}
 	}
 
 	public EntityProperties getEntityProperties () {
@@ -207,6 +215,9 @@ public class EntityManipulatorModule extends SceneModule {
 			return true;
 		}
 
+		if (keycode == Keys.A && Gdx.input.isKeyPressed(Keys.CONTROL_LEFT))
+			selectAll();
+
 		return false;
 	}
 
@@ -244,6 +255,15 @@ public class EntityManipulatorModule extends SceneModule {
 	public void select (EditorEntity entity) {
 		selectedEntities.clear();
 		selectedEntities.add(entity);
+		entityProperties.selectedEntitiesChanged();
+	}
+
+	private void selectAll () {
+		for (EditorEntity entity : entities) {
+			if (selectedEntities.contains(entity, true) == false)
+				selectedEntities.add(entity);
+		}
+
 		entityProperties.selectedEntitiesChanged();
 	}
 
