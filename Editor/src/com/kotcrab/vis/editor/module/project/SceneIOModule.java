@@ -21,6 +21,7 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
@@ -31,6 +32,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.SpriteSerializer;
@@ -47,16 +49,20 @@ public class SceneIOModule extends ProjectModule {
 	private Kryo kryo;
 
 	private FileAccessModule fileAccessModule;
-	private TextureCacheModule textureCacheModule;
-	private FontCacheModule fontCacheModule;
+
+	private TextureCacheModule textureModule;
+	private FontCacheModule fontModule;
+	private ParticleCacheModule particleModule;
 
 	private FileHandle visFolder;
 
 	@Override
 	public void init () {
 		fileAccessModule = projectContainer.get(FileAccessModule.class);
-		textureCacheModule = projectContainer.get(TextureCacheModule.class);
-		fontCacheModule = projectContainer.get(FontCacheModule.class);
+
+		textureModule = projectContainer.get(TextureCacheModule.class);
+		fontModule = projectContainer.get(FontCacheModule.class);
+		particleModule = projectContainer.get(ParticleCacheModule.class);
 
 		visFolder = fileAccessModule.getVisFolder();
 
@@ -89,19 +95,31 @@ public class SceneIOModule extends ProjectModule {
 		for (EditorEntity entity : scene.entities) {
 			if (entity instanceof SpriteObject) {
 				SpriteObject spriteObject = (SpriteObject) entity;
-				SpriteUtils.setRegion(spriteObject.getSprite(), textureCacheModule.getRegion(spriteObject.getCacheRegionName()));
+				SpriteUtils.setRegion(spriteObject.getSprite(), textureModule.getRegion(spriteObject.getCacheRegionName()));
 			}
 
 			if (entity instanceof TextObject) {
 				TextObject textObject = (TextObject) entity;
-				EditorFont font = fontCacheModule.get(fileAccessModule.getAssetsFolder().child(textObject.getRelativeFontPath()));
+				EditorFont font = fontModule.get(fileAccessModule.getAssetsFolder().child(textObject.getRelativeFontPath()));
 				textObject.afterDeserialize(font);
+			}
+
+			if (entity instanceof ParticleObject) {
+				ParticleObject particle = (ParticleObject) entity;
+				ParticleEffect effect = particleModule.get(fileAccessModule.getAssetsFolder().child(particle.getRelativeEffectPath()));
+				particle.afterDeserialize(effect);
 			}
 		}
 	}
 
 	public boolean save (EditorScene scene) {
 		//if needed here prepare scene for save
+		for (EditorEntity entity : scene.entities) {
+			if (entity instanceof ParticleObject) {
+				ParticleObject particle = (ParticleObject) entity;
+				particle.beforeSeriazlie();
+			}
+		}
 
 		try {
 			Output output = new Output(new FileOutputStream(getFileHandleForScene(scene).file()));

@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -33,7 +34,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 
-public class Scene {
+public class Scene implements Disposable {
 	private AssetManager assetManager;
 	private ShaderProgram distanceFieldShader;
 
@@ -94,14 +95,14 @@ public class Scene {
 
 		for (Entity e : entities) {
 			//TODO optimize distance field check
-			if(e instanceof TextEntity && ((TextEntity) e).isDistanceFieldShaderEnabled()) {
+			if (e instanceof TextEntity && ((TextEntity) e).isDistanceFieldShaderEnabled()) {
 				shader = true;
 				batch.setShader(distanceFieldShader);
 			}
 
 			e.render(batch);
 
-			if(shader) batch.setShader(null);
+			if (shader) batch.setShader(null);
 		}
 
 		batch.end();
@@ -119,5 +120,15 @@ public class Scene {
 	public void loadShader () {
 		//TODO better shader path
 		distanceFieldShader = (ShaderProgram) assetManager.get(new AssetDescriptor(Gdx.files.classpath("com/kotcrab/vis/runtime/bmp-font-df"), ShaderProgram.class));
+	}
+
+	@Override
+	public void dispose () {
+		for (Entity entity : entities) {
+			if (entity instanceof Disposable) {
+				Disposable disposable = (Disposable) entity;
+				disposable.dispose();
+			}
+		}
 	}
 }

@@ -16,9 +16,26 @@
 
 package com.kotcrab.vis.runtime.data;
 
-/** Contains field that are only used and available in VisRuntime */
-//TODO put this in SpriteData if possible?
-public class SceneSpriteData extends SpriteData {
-	public String textureAtlas;
-	public String textureRegion;
+import com.kotcrab.vis.runtime.entity.ParticleEmitterEntity;
+
+public class ParticleEmitterData extends EntityData<ParticleEmitterEntity> {
+	public String relativePath;
+	public float x, y;
+	public boolean flipX, flipY;
+
+	@Override
+	public void saveFrom (ParticleEmitterEntity entity) {
+		relativePath = entity.getRelativeEffectPath();
+		x = entity.getX();
+		y = entity.getY();
+		flipX = entity.isFlipX();
+		flipY = entity.isFlipY();
+	}
+
+	@Override
+	public void loadTo (ParticleEmitterEntity entity) {
+		entity.setEffectRelativePath(relativePath);
+		entity.setPosition(x, y);
+		entity.setFlip(flipX, flipY);
+	}
 }

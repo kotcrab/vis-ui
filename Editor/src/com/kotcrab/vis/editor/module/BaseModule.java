@@ -21,6 +21,7 @@ package com.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.utils.Disposable;
 
+//TODO isService
 public abstract class BaseModule implements Disposable {
 	public void added () {
 	}

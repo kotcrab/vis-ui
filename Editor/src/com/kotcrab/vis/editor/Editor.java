@@ -46,6 +46,7 @@ import com.kotcrab.vis.editor.module.project.AssetsWatcherModule;
 import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
+import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectInfoTabModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
@@ -274,6 +275,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.add(new AssetsWatcherModule());
 		projectMC.add(new TextureCacheModule());
 		projectMC.add(new FontCacheModule());
+		projectMC.add(new ParticleCacheModule());
 		projectMC.add(new ExportModule());
 		projectMC.add(new SceneIOModule());
 		projectMC.add(new SceneMetadataModule());

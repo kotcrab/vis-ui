@@ -32,6 +32,7 @@ public class FileAccessModule extends ProjectModule {
 
 	private FileHandle ttfFontFolder;
 	private FileHandle bmpFontFolder;
+	private FileHandle particleFolder;
 
 	@Override
 	public void init () {
@@ -42,6 +43,7 @@ public class FileAccessModule extends ProjectModule {
 
 		ttfFontFolder = assetsFolder.child("font");
 		bmpFontFolder = assetsFolder.child("bmpfont");
+		particleFolder = assetsFolder.child("particle");
 	}
 
 	public FileHandle getVisFolder () {
@@ -51,6 +53,16 @@ public class FileAccessModule extends ProjectModule {
 	/** Returns Vis assets folder */
 	public FileHandle getAssetsFolder () {
 		return assetsFolder;
+	}
+
+	public FileHandle getModuleFolder (String moduleName) {
+		FileHandle moduleFolder = modulesFolder.child(moduleName);
+		if (modulesFolder.exists() == false) moduleFolder.mkdirs();
+		return moduleFolder;
+	}
+
+	public FileHandle getParticleFolder () {
+		return particleFolder;
 	}
 
 	public FileHandle getBMPFontFolder () {
@@ -67,12 +79,6 @@ public class FileAccessModule extends ProjectModule {
 
 	public String getTTFFontFolderRelative () {
 		return relativizeToAssetsFolder(ttfFontFolder);
-	}
-
-	public FileHandle getModuleFolder (String moduleName) {
-		FileHandle moduleFolder = modulesFolder.child(moduleName);
-		if (modulesFolder.exists() == false) moduleFolder.mkdirs();
-		return moduleFolder;
 	}
 
 	public String relativizeToVisFolder (FileHandle file) {

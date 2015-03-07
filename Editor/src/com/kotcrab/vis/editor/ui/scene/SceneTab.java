@@ -51,6 +51,7 @@ import com.kotcrab.vis.editor.module.scene.UndoableAction;
 import com.kotcrab.vis.editor.module.scene.ZIndexManipulator;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
@@ -163,6 +164,15 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 			text.setPosition(x, y);
 
 			undoModule.execute(new EntityAddedAction(text));
+		}
+
+		if (payloadObject instanceof ParticleObject) {
+			ParticleObject particle = (ParticleObject) payloadObject;
+			float x = cameraModule.getInputX() - particle.getWidth() / 2;
+			float y = cameraModule.getInputY() - particle.getHeight() / 2;
+			particle.setPosition(x, y);
+
+			undoModule.execute(new EntityAddedAction(particle));
 		}
 	}
 

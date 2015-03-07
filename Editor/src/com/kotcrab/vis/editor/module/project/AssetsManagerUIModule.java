@@ -47,6 +47,7 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.TabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
@@ -70,6 +71,8 @@ import java.io.FileFilter;
 import java.io.IOException;
 
 @SuppressWarnings("rawtypes")
+
+//TODO filter particle images and bitmap font images
 public class AssetsManagerUIModule extends ProjectModule implements DirectoryWatcher.WatchListener, TabbedPaneListener {
 	private Stage stage;
 
@@ -77,8 +80,11 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 
 	private FileAccessModule fileAccess;
 	private AssetsWatcherModule assetsWatcher;
+
 	private TextureCacheModule textureCache;
 	private FontCacheModule fontCache;
+	private ParticleCacheModule particleCache;
+
 	private SceneIOModule sceneIO;
 	private SceneTabsModule sceneTabsModule;
 
@@ -119,8 +125,11 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 
 		fileAccess = projectContainer.get(FileAccessModule.class);
 		assetsWatcher = projectContainer.get(AssetsWatcherModule.class);
+
 		textureCache = projectContainer.get(TextureCacheModule.class);
 		fontCache = projectContainer.get(FontCacheModule.class);
+		particleCache = projectContainer.get(ParticleCacheModule.class);
+
 		sceneIO = projectContainer.get(SceneIOModule.class);
 		sceneTabsModule = projectContainer.get(SceneTabsModule.class);
 
@@ -348,6 +357,26 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 						}
 					});
 				}
+
+				if (item.type == FileType.PARTICLE_EFFECT) {
+					dragAndDrop.addSource(new Source(item) {
+						@Override
+						public Payload dragStart (InputEvent event, float x, float y, int pointer) {
+							Payload payload = new Payload();
+
+							ParticleObject obj = new ParticleObject(fileAccess.relativizeToAssetsFolder(item.file), particleCache.get(item.file));
+							payload.setObject(obj);
+
+							Label label = new VisLabel("New Particle Effect \n (drop on scene to add)");
+							label.setAlignment(Align.center);
+							payload.setDragActor(label);
+
+							dragAndDrop.setDragActorPosition(-label.getWidth() / 2, label.getHeight() / 2);
+
+							return payload;
+						}
+					});
+				}
 			}
 
 			dragAndDrop.addTarget(dropTargetTab.getDropTarget());
@@ -384,7 +413,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 
 		for (FileHandle contentRoot : assetsFolder.list(DirectoriesOnlyFileFilter.filter)) {
 
-			//hide empty dirs except 'gfx' and 'scene'
+			//hide empty dirs except 'gfx' and 'scene' //TODO should it really hide them or just project create should not create them?
 			if (contentRoot.list().length != 0 || contentRoot.name().equals("gfx") || contentRoot.name().equals("scene")) {
 				Node node = new Node(new FolderItem(contentRoot));
 				processFolder(node, contentRoot);
@@ -456,7 +485,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 	}
 
 	private enum FileType {
-		UNKNOWN, TEXTURE, TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE
+		UNKNOWN, TEXTURE, TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE, PARTICLE_EFFECT
 	}
 
 	private class FileItem extends Table {
@@ -491,7 +520,16 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 				add(tagLabel).expandX().fillX().row();
 				name = new VisLabel(file.nameWithoutExtension());
 
-			} else if (file.extension().equals("jpg") || file.extension().equals("png")) {
+			} else if (file.extension().equals("p")) {
+				type = FileType.PARTICLE_EFFECT;
+
+				VisLabel tagLabel = new VisLabel("Particle Effect", Color.GRAY);
+				tagLabel.setWrap(true);
+				tagLabel.setAlignment(Align.center);
+				add(tagLabel).expandX().fillX().row();
+				name = new VisLabel(file.nameWithoutExtension());
+
+			} else if (fileAccess.relativizeToAssetsFolder(file).startsWith("gfx") && (file.extension().equals("jpg") || file.extension().equals("png"))) {
 				type = FileType.TEXTURE;
 
 				name = new VisLabel(file.nameWithoutExtension(), "small");
@@ -505,7 +543,7 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 
 			} else {
 				type = FileType.UNKNOWN;
-				name = new VisLabel(file.nameWithoutExtension());
+				name = new VisLabel(file.name());
 			}
 
 			setBackground("menu-bg");
