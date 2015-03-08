@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -69,7 +70,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 	private TextureCacheModule cacheModule;
 	private SceneIOModule sceneIOModule;
-	private EntityManipulatorModule entityManipulatorModule;
+	private EntityManipulatorModule entityManipulator;
 
 	private SceneModuleContainer sceneMC;
 	private UndoModule undoModule;
@@ -99,7 +100,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 		sceneMC.add(undoModule = new UndoModule());
 		sceneMC.add(new ZIndexManipulator());
-		sceneMC.add(entityManipulatorModule = new EntityManipulatorModule());
+		sceneMC.add(entityManipulator = new EntityManipulatorModule());
 		sceneMC.init();
 
 		outline = new SceneOutline();
@@ -182,6 +183,8 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 	@Override
 	public void render (Batch batch) {
+		statusBarModule.setInfoLabelText(getInfoLabelText());
+
 		Color oldColor = batch.getColor().cpy();
 		batch.setColor(1, 1, 1, 1);
 		batch.begin();
@@ -222,7 +225,6 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		super.onShow();
 		sceneMC.onShow();
 		menuBarModule.setSceneButtonsListener(this);
-		statusBarModule.setInfoLabelText("Scene: " + scene.width + " x " + scene.height);
 	}
 
 	@Override
@@ -302,6 +304,10 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		undoModule.redo();
 	}
 
+	public String getInfoLabelText () {
+		return "Entities: " + entityManipulator.getEntityCount() + " FPS: " + Gdx.graphics.getFramesPerSecond() + " Scene: " + scene.width + " x " + scene.height;
+	}
+
 	private class ContentTable extends VisTable {
 		public ContentTable () {
 			super(false);
@@ -326,14 +332,14 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		@Override
 		public void execute () {
 			scene.entities.add(entity);
-			entityManipulatorModule.select(entity);
+			entityManipulator.select(entity);
 			dirty();
 		}
 
 		@Override
 		public void undo () {
 			scene.entities.removeValue(entity, true);
-			entityManipulatorModule.resetSelection();
+			entityManipulator.resetSelection();
 			dirty();
 		}
 	}

@@ -248,6 +248,10 @@ public class EntityManipulatorModule extends SceneModule {
 		return matchingEntity;
 	}
 
+	public int getEntityCount () {
+		return entities.size;
+	}
+
 	public Array<EditorEntity> getSelectedEntities () {
 		return selectedEntities;
 	}
