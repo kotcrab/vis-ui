@@ -124,8 +124,7 @@ public class VisCheckBox extends TextButton implements Focusable {
 		image.setDrawable(checkbox);
 		super.draw(batch, parentAlpha);
 
-		if (drawBorder)
-			style.focusBorder.draw(batch, getX(), getY() + image.getY(), image.getWidth(), image.getHeight());
+		if (drawBorder && style.focusBorder != null) style.focusBorder.draw(batch, getX(), getY() + image.getY(), image.getWidth(), image.getHeight());
 	}
 
 	public Image getImage () {

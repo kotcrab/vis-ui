@@ -63,7 +63,7 @@ public class VisTextButton extends TextButton implements Focusable {
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		if (focusBorderEnabled && drawBorder) style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
+		if (focusBorderEnabled && drawBorder && style.focusBorder != null) style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
 
 	static public class VisTextButtonStyle extends TextButtonStyle {
