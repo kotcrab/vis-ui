@@ -71,10 +71,10 @@ public class AsyncTaskProgressDialog extends VisWindow {
 			}
 		});
 
-		task.start();
-
 		pack();
 		centerWindow();
+		
+		task.start();
 	}
 
 }
