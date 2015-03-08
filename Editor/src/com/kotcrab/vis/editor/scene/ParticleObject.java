@@ -29,6 +29,7 @@ import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 public class ParticleObject extends ParticleEffectEntity implements EditorEntity {
 	private Rectangle bounds;
 
+	/** Effect is not serialized so we have to save and store position here when serialized using Kryo */
 	private float serializeX, serializeY;
 
 	public ParticleObject (String relativePath, ParticleEffect effect) {
@@ -71,11 +72,6 @@ public class ParticleObject extends ParticleEffectEntity implements EditorEntity
 	}
 
 	@Override
-	public boolean isFlipSupported () {
-		return true;
-	}
-
-	@Override
 	public float getWidth () {
 		return bounds.width;
 	}
@@ -99,6 +95,11 @@ public class ParticleObject extends ParticleEffectEntity implements EditorEntity
 		} finally {
 			super.finalize();
 		}
+	}
+
+	@Override
+	public boolean isFlipSupported () {
+		return false;
 	}
 
 	@Override
@@ -180,6 +181,21 @@ public class ParticleObject extends ParticleEffectEntity implements EditorEntity
 
 	@Override
 	public void setRotation (float rotation) {
+
+	}
+
+	@Override
+	public boolean isFlipX () {
+		return false;
+	}
+
+	@Override
+	public boolean isFlipY () {
+		return false;
+	}
+
+	@Override
+	public void setFlip (boolean x, boolean y) {
 
 	}
 }

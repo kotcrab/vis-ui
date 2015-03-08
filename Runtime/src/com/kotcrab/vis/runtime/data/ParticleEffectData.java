@@ -21,21 +21,17 @@ import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 public class ParticleEffectData extends EntityData<ParticleEffectEntity> {
 	public String relativePath;
 	public float x, y;
-	public boolean flipX, flipY;
 
 	@Override
 	public void saveFrom (ParticleEffectEntity entity) {
 		relativePath = entity.getRelativeEffectPath().replace("\\", "/");
 		x = entity.getX();
 		y = entity.getY();
-		flipX = entity.isFlipX();
-		flipY = entity.isFlipY();
 	}
 
 	@Override
 	public void loadTo (ParticleEffectEntity entity) {
 		entity.setEffectRelativePath(relativePath);
 		entity.setPosition(x, y);
-		entity.setFlip(flipX, flipY);
 	}
 }

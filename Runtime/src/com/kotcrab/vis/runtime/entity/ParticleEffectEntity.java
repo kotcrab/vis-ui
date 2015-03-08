@@ -70,20 +70,6 @@ public class ParticleEffectEntity extends Entity implements Disposable {
 		effect.reset();
 	}
 
-	public boolean isFlipX () {
-		return flipX;
-	}
-
-	public boolean isFlipY () {
-		return flipY;
-	}
-
-	public void setFlip (boolean x, boolean y) {
-		flipX = x;
-		flipY = y;
-		effect.setFlip(x, y);
-	}
-
 	public String getRelativeEffectPath () {
 		return effectRelativePath;
 	}
