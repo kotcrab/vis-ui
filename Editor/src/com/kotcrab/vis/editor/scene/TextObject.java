@@ -48,11 +48,6 @@ public class TextObject extends TextEntity implements EditorEntity {
 	}
 
 	@Override
-	public void setSize (float width, float height) {
-
-	}
-
-	@Override
 	public boolean isOriginSupported () {
 		return true;
 	}
@@ -70,31 +65,6 @@ public class TextObject extends TextEntity implements EditorEntity {
 	@Override
 	public boolean isRotationSupported () {
 		return true;
-	}
-
-	@Override
-	public boolean isResizeSupported () {
-		return false;
-	}
-
-	@Override
-	public boolean isFlipSupported () {
-		return false;
-	}
-
-	@Override
-	public boolean isFlipX () {
-		return false;
-	}
-
-	@Override
-	public boolean isFlipY () {
-		return false;
-	}
-
-	@Override
-	public void setFlip (boolean x, boolean y) {
-
 	}
 
 	public void setFontSize (int fontSize) {

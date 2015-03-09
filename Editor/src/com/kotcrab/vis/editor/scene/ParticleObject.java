@@ -19,7 +19,6 @@
 
 package com.kotcrab.vis.editor.scene;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Rectangle;
@@ -96,107 +95,5 @@ public class ParticleObject extends ParticleEffectEntity implements EditorEntity
 		} finally {
 			super.finalize();
 		}
-	}
-
-	@Override
-	public boolean isFlipSupported () {
-		return false;
-	}
-
-	@Override
-	public boolean isResizeSupported () {
-		return false;
-	}
-
-	@Override
-	public boolean isOriginSupported () {
-		return false;
-	}
-
-	@Override
-	public boolean isScaleSupported () {
-		return false;
-	}
-
-	@Override
-	public boolean isTintSupported () {
-		return false;
-	}
-
-	@Override
-	public boolean isRotationSupported () {
-		return false;
-	}
-
-	// ===== UNUSED =====
-
-	@Override
-	public void setSize (float width, float height) {
-
-	}
-
-	@Override
-	public float getOriginX () {
-		return 0;
-	}
-
-	@Override
-	public float getOriginY () {
-		return 0;
-	}
-
-	@Override
-	public void setOrigin (float x, float y) {
-
-	}
-
-	@Override
-	public float getScaleX () {
-		return 0;
-	}
-
-	@Override
-	public float getScaleY () {
-		return 0;
-	}
-
-	@Override
-	public void setScale (float x, float y) {
-
-	}
-
-	@Override
-	public Color getColor () {
-		return null;
-	}
-
-	@Override
-	public void setColor (Color color) {
-
-	}
-
-	@Override
-	public float getRotation () {
-		return 0;
-	}
-
-	@Override
-	public void setRotation (float rotation) {
-
-	}
-
-	@Override
-	public boolean isFlipX () {
-		return false;
-	}
-
-	@Override
-	public boolean isFlipY () {
-		return false;
-	}
-
-	@Override
-	public void setFlip (boolean x, boolean y) {
-
 	}
 }

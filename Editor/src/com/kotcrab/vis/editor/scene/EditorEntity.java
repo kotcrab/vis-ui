@@ -24,67 +24,108 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 
 public interface EditorEntity {
-	abstract float getX ();
-
-	abstract void setX (float x);
-
-	abstract float getY ();
-
-	abstract void setY (float y);
-
-	abstract void setPosition (float x, float y);
-
-	boolean isResizeSupported ();
-
-	abstract float getWidth ();
-
-	abstract float getHeight ();
-
-	void render (Batch batch);
-
-	void setSize (float width, float height);
-
-	boolean isOriginSupported ();
-
-	float getOriginX ();
-
-	float getOriginY ();
-
-	void setOrigin (float x, float y);
-
-	boolean isScaleSupported ();
-
-	float getScaleX ();
-
-	float getScaleY ();
-
-	void setScale (float x, float y);
-
-	boolean isTintSupported ();
-
-	Color getColor ();
-
-	void setColor (Color color);
-
-	boolean isRotationSupported ();
-
-	float getRotation ();
-
-	void setRotation (float rotation);
-
-	boolean isFlipSupported ();
-
-	boolean isFlipX ();
-
-	boolean isFlipY ();
-
-	void setFlip (boolean x, boolean y);
-
-	abstract Rectangle getBoundingRectangle ();
 
 	String getId ();
 
 	void setId (String id);
+
+	float getX ();
+
+	void setX (float x);
+
+	float getY ();
+
+	void setY (float y);
+
+	void setPosition (float x, float y);
+
+	float getWidth ();
+
+	float getHeight ();
+
+	Rectangle getBoundingRectangle ();
+
+	void render (Batch batch);
+
+	default boolean isResizeSupported () {
+		return false;
+	}
+
+	default void setSize (float width, float height) {
+
+	}
+
+	default boolean isOriginSupported () {
+		return false;
+	}
+
+	default float getOriginX () {
+		return 0;
+	}
+
+	default float getOriginY () {
+		return 0;
+	}
+
+	default void setOrigin (float x, float y) {
+
+	}
+
+	default boolean isScaleSupported () {
+		return false;
+	}
+
+	default float getScaleX () {
+		return 0;
+	}
+
+	default float getScaleY () {
+		return 0;
+	}
+
+	default void setScale (float x, float y) {
+
+	}
+
+	default boolean isTintSupported () {
+		return false;
+	}
+
+	default Color getColor () {
+		return null;
+	}
+
+	default void setColor (Color color) {
+
+	}
+
+	default boolean isRotationSupported () {
+		return false;
+	}
+
+	default float getRotation () {
+		return 0;
+	}
+
+	default void setRotation (float rotation) {
+
+	}
+
+	default boolean isFlipSupported () {
+		return false;
+	}
+
+	default boolean isFlipX () {
+		return false;
+	}
+
+	default boolean isFlipY () {
+		return false;
+	}
+
+	default void setFlip (boolean x, boolean y) {
+
+	}
 
 	default void afterDeserialize () {
 
