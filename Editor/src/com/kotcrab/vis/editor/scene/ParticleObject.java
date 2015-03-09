@@ -37,6 +37,7 @@ public class ParticleObject extends ParticleEffectEntity implements EditorEntity
 		bounds = new Rectangle();
 	}
 
+	@Override
 	public void beforeSerialize () {
 		serializeX = getX();
 		serializeY = getY();

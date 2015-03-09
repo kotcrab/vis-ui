@@ -24,65 +24,73 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 
 public interface EditorEntity {
-	public abstract float getX ();
+	abstract float getX ();
 
-	public abstract void setX (float x);
+	abstract void setX (float x);
 
-	public abstract float getY ();
+	abstract float getY ();
 
-	public abstract void setY (float y);
+	abstract void setY (float y);
 
-	public abstract void setPosition (float x, float y);
+	abstract void setPosition (float x, float y);
 
-	public boolean isResizeSupported ();
+	boolean isResizeSupported ();
 
-	public abstract float getWidth ();
+	abstract float getWidth ();
 
-	public abstract float getHeight ();
+	abstract float getHeight ();
 
-	public void render (Batch batch);
+	void render (Batch batch);
 
-	public void setSize (float width, float height);
+	void setSize (float width, float height);
 
-	public boolean isOriginSupported ();
+	boolean isOriginSupported ();
 
-	public float getOriginX ();
+	float getOriginX ();
 
-	public float getOriginY ();
+	float getOriginY ();
 
-	public void setOrigin (float x, float y);
+	void setOrigin (float x, float y);
 
-	public boolean isScaleSupported ();
+	boolean isScaleSupported ();
 
-	public float getScaleX ();
+	float getScaleX ();
 
-	public float getScaleY ();
+	float getScaleY ();
 
-	public void setScale (float x, float y);
+	void setScale (float x, float y);
 
-	public boolean isTintSupported ();
+	boolean isTintSupported ();
 
-	public Color getColor ();
+	Color getColor ();
 
-	public void setColor (Color color);
+	void setColor (Color color);
 
-	public boolean isRotationSupported ();
+	boolean isRotationSupported ();
 
-	public float getRotation ();
+	float getRotation ();
 
-	public void setRotation (float rotation);
+	void setRotation (float rotation);
 
-	public boolean isFlipSupported ();
+	boolean isFlipSupported ();
 
-	public boolean isFlipX ();
+	boolean isFlipX ();
 
-	public boolean isFlipY ();
+	boolean isFlipY ();
 
-	public void setFlip (boolean x, boolean y);
+	void setFlip (boolean x, boolean y);
 
-	public abstract Rectangle getBoundingRectangle ();
+	abstract Rectangle getBoundingRectangle ();
 
-	public String getId ();
+	String getId ();
 
-	public void setId (String id);
+	void setId (String id);
+
+	default void afterDeserialize () {
+
+	}
+
+	default void beforeSerialize () {
+
+	}
 }

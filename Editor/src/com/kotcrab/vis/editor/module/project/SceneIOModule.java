@@ -109,16 +109,15 @@ public class SceneIOModule extends ProjectModule {
 				ParticleEffect effect = particleModule.get(fileAccessModule.getAssetsFolder().child(particle.getRelativeEffectPath()));
 				particle.afterDeserialize(effect);
 			}
+
+			entity.afterDeserialize();
 		}
 	}
 
 	public boolean save (EditorScene scene) {
 		//if needed here prepare scene for save
 		for (EditorEntity entity : scene.entities) {
-			if (entity instanceof ParticleObject) {
-				ParticleObject particle = (ParticleObject) entity;
-				particle.beforeSerialize();
-			}
+			entity.beforeSerialize();
 		}
 
 		try {
