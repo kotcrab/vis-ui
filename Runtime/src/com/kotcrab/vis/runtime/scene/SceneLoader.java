@@ -45,6 +45,8 @@ import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 
 public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> {
+	private static final FileHandle distanceFieldShader = Gdx.files.classpath("com/kotcrab/vis/runtime/bmp-font-df");
+
 	private SceneData data;
 	private Scene scene;
 
@@ -106,21 +108,17 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	private void checkShader (Array<AssetDescriptor> deps) {
 		if (distanceFieldShaderLoaded == false)
-			deps.add(new AssetDescriptor(Gdx.files.classpath("com/kotcrab/vis/runtime/bmp-font-df"), ShaderProgram.class));
+			deps.add(new AssetDescriptor(distanceFieldShader, ShaderProgram.class));
 
 		distanceFieldShaderLoaded = true;
 	}
 
 	@Override
 	public void loadAsync (AssetManager manager, String fileName, FileHandle file, SceneParameter parameter) {
-		scene = new Scene(data.viewport, data.width, data.height);
-
-		Array<TextureAtlas> atlases = new Array<TextureAtlas>();
 		Array<Entity> entities = new Array<Entity>();
+		Array<TextureAtlas> atlases = new Array<TextureAtlas>();
 
-		scene.setTextureAtlases(atlases);
-		scene.setEntities(entities);
-		scene.setAssetManager(manager);
+		scene = new Scene(entities, atlases, manager, data.viewport, data.width, data.height);
 
 		for (EntityData entityData : data.entities) {
 			if (entityData instanceof SceneSpriteData) {
@@ -154,7 +152,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		}
 
 		if (distanceFieldShaderLoaded)
-			scene.loadShader();
+			scene.getDistanceFieldShaderFromManager(distanceFieldShader);
 	}
 
 	@Override

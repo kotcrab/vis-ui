@@ -16,9 +16,9 @@
 
 package com.kotcrab.vis.runtime.scene;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -41,11 +41,14 @@ public class Scene implements Disposable {
 	private OrthographicCamera camera;
 	private Viewport viewport;
 
+	private Array<Entity> entities;
 	private Array<TextureAtlas> textureAtlases;
 
-	private Array<Entity> entities;
+	public Scene (Array<Entity> entities, Array<TextureAtlas> textureAtlases, AssetManager assetsManager, SceneViewport viewportType, int width, int height) {
+		this.entities = entities;
+		this.textureAtlases = textureAtlases;
+		this.assetManager = assetsManager;
 
-	public Scene (SceneViewport viewportType, int width, int height) {
 		camera = new OrthographicCamera(width, height);
 		camera.position.x = width / 2;
 		camera.position.y = height / 2;
@@ -70,20 +73,8 @@ public class Scene implements Disposable {
 		}
 	}
 
-	Array<TextureAtlas> getTextureAtlases () {
-		return textureAtlases;
-	}
-
-	void setTextureAtlases (Array<TextureAtlas> textureAtlases) {
-		this.textureAtlases = textureAtlases;
-	}
-
 	public Array<Entity> getEntities () {
 		return entities;
-	}
-
-	void setEntities (Array<Entity> entities) {
-		this.entities = entities;
 	}
 
 	public void render (SpriteBatch batch) {
@@ -94,7 +85,6 @@ public class Scene implements Disposable {
 		batch.begin();
 
 		for (Entity e : entities) {
-			//TODO optimize distance field check
 			if (e instanceof TextEntity && ((TextEntity) e).isDistanceFieldShaderEnabled()) {
 				shader = true;
 				batch.setShader(distanceFieldShader);
@@ -112,14 +102,8 @@ public class Scene implements Disposable {
 		viewport.update(width, height);
 	}
 
-	/** Used by SceneLoader */
-	public void setAssetManager (AssetManager assetManager) {
-		this.assetManager = assetManager;
-	}
-
-	public void loadShader () {
-		//TODO better shader path
-		distanceFieldShader = (ShaderProgram) assetManager.get(new AssetDescriptor(Gdx.files.classpath("com/kotcrab/vis/runtime/bmp-font-df"), ShaderProgram.class));
+	void getDistanceFieldShaderFromManager (FileHandle shader) {
+		distanceFieldShader = (ShaderProgram) assetManager.get(new AssetDescriptor(shader, ShaderProgram.class));
 	}
 
 	@Override
