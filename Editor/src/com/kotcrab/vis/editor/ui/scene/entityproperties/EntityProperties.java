@@ -299,7 +299,6 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		propertiesTable.add(positionTable).row();
 		if (isScaleSupportedForEntities(entities)) propertiesTable.add(scaleTable).row();
 		if (isOriginSupportedForEntities(entities)) propertiesTable.add(originTable).row();
-		//TODO row size
 		if (isRotationSupportedForEntities(entities) || isTintSupportedForEntities(entities))
 			propertiesTable.add(rotationTintTable).row();
 		if (isFlipSupportedForEntities(entities)) propertiesTable.add(flipTable).right().fill(false).row();
