@@ -26,6 +26,9 @@ import com.kotcrab.vis.runtime.entity.SpriteEntity;
  * SpriteData used by both VisRuntime and VisEditor
  */
 public class SpriteData extends EntityData<SpriteEntity> {
+	public String textureAtlas;
+	public String textureRegion;
+
 	public float x, y;
 	public float width, height;
 	public float originX, originY;

@@ -34,7 +34,7 @@ import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.data.ParticleEffectData;
 import com.kotcrab.vis.runtime.data.SceneData;
-import com.kotcrab.vis.runtime.data.SceneSpriteData;
+import com.kotcrab.vis.runtime.data.SpriteData;
 import com.kotcrab.vis.runtime.data.TextData;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
@@ -65,8 +65,10 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	public static Json getJson () {
 		Json json = new Json();
-		json.addClassTag("SceneSpriteData", SceneSpriteData.class);
+		json.addClassTag("SceneData", SceneData.class);
+		json.addClassTag("SpriteData", SpriteData.class);
 		json.addClassTag("TextData", TextData.class);
+		json.addClassTag("ParticleEffectData", ParticleEffectData.class);
 		return json;
 	}
 
@@ -86,8 +88,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 			//NOTE: when using 'relative path' form data, path must have / as path separator, using \ is not supported and will cause "Assets not loaded" exception
 			//slash replacing should be handled in EntityData
 
-			if (entityData instanceof SceneSpriteData) {
-				SceneSpriteData spriteData = (SceneSpriteData) entityData;
+			if (entityData instanceof SpriteData) {
+				SpriteData spriteData = (SpriteData) entityData;
 				deps.add(new AssetDescriptor(spriteData.textureAtlas, TextureAtlas.class));
 			}
 
@@ -121,8 +123,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		scene = new Scene(entities, atlases, manager, data.viewport, data.width, data.height);
 
 		for (EntityData entityData : data.entities) {
-			if (entityData instanceof SceneSpriteData) {
-				SceneSpriteData spriteData = (SceneSpriteData) entityData;
+			if (entityData instanceof SpriteData) {
+				SpriteData spriteData = (SpriteData) entityData;
 
 				TextureAtlas atlas = manager.get(spriteData.textureAtlas, TextureAtlas.class);
 				if (atlases.contains(atlas, true) == false) atlases.add(atlas);

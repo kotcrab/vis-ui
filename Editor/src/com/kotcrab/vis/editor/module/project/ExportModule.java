@@ -38,7 +38,7 @@ import com.kotcrab.vis.editor.util.texturepacker.TexturePacker;
 import com.kotcrab.vis.editor.util.texturepacker.TexturePacker.Settings;
 import com.kotcrab.vis.runtime.data.ParticleEffectData;
 import com.kotcrab.vis.runtime.data.SceneData;
-import com.kotcrab.vis.runtime.data.SceneSpriteData;
+import com.kotcrab.vis.runtime.data.SpriteData;
 import com.kotcrab.vis.runtime.data.TextData;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
 import org.apache.commons.io.FileUtils;
@@ -216,7 +216,7 @@ public class ExportModule extends ProjectModule {
 						if (entity instanceof SpriteObject) {
 							SpriteObject obj = (SpriteObject) entity;
 
-							SceneSpriteData data = new SceneSpriteData();
+							SpriteData data = new SpriteData();
 							data.saveFrom(obj);
 
 							data.id = obj.getId();
