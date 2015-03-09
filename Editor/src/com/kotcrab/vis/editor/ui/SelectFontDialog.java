@@ -36,14 +36,15 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 //TODO add scroll pane
 public class SelectFontDialog extends VisWindow {
 
-	private VisList<String> fontList = new VisList<>();;
-	ObjectMap<String, FileHandle> fontsMap = new ObjectMap<>();
-
 	private final String extension;
 	private final FileHandle fontFolder;
 	private FontDialogListener listener;
 
-	public SelectFontDialog ( String extension, FileHandle fontFolder, FontDialogListener listener) {
+	private ObjectMap<String, FileHandle> fontsMap = new ObjectMap<>();
+
+	private VisList<String> fontList;
+
+	public SelectFontDialog (String extension, FileHandle fontFolder, FontDialogListener listener) {
 		super("Select New Font");
 		this.extension = extension;
 		this.fontFolder = fontFolder;
@@ -53,7 +54,7 @@ public class SelectFontDialog extends VisWindow {
 		addCloseButton();
 		closeOnEscape();
 
-		rebuild();
+		fontList = new VisList<>();
 
 		VisTextButton cancelButton;
 		VisTextButton okButton;
@@ -89,16 +90,21 @@ public class SelectFontDialog extends VisWindow {
 			}
 		});
 
+		rebuildFontList();
+	}
+
+	private void packAndCenter () {
 		pack();
 		setSize(getWidth() + 50, getHeight());
 		centerWindow();
 	}
 
-	public void rebuild () {
+	public void rebuildFontList () {
 		fontList.clearItems();
 		fontsMap.clear();
 
 		buildFontList(fontFolder);
+		packAndCenter();
 	}
 
 	private void finishSelection () {

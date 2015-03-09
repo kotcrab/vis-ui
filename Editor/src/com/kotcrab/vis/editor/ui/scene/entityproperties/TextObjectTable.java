@@ -69,7 +69,7 @@ abstract class TextObjectTable extends SpecificObjectTable {
 		selectFontButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				selectFontDialog.rebuild();
+				selectFontDialog.rebuildFontList();
 				properties.beginSnapshot();
 				getStage().addActor(selectFontDialog.fadeIn());
 			}
