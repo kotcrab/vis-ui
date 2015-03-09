@@ -33,7 +33,6 @@ import com.kotcrab.vis.ui.widget.VisList;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
-//TODO add scroll pane
 public class SelectFontDialog extends VisWindow {
 
 	private final String extension;

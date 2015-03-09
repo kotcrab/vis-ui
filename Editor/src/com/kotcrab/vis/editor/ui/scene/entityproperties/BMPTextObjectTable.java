@@ -26,7 +26,6 @@ import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.ui.widget.Tooltip;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 
-//TODO font select
 class BMPTextObjectTable extends TextObjectTable {
 	private VisCheckBox distanceFieldCheck;
 
