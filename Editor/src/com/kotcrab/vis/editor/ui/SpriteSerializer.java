@@ -19,23 +19,6 @@
 
 package com.kotcrab.vis.editor.ui;
 
-//		kryo.register(Tile.class, new Serializer<Tile>() {
-//			public void write (Kryo kryo, Output output, Tile object) {
-//				output.writeInt(object.x);
-//				output.writeInt(object.y);
-//				kryo.writeClassAndObject(output, object);
-//			}
-//
-//			public Tile read (Kryo kryo, Input input, Class<Tile> type) {
-//				Tile tile = new Tile();
-//				kryo.reference(tile); // Only necessary if Kryo#setReferences is true AND Tile#something could reference this tile.
-//				tile.x = input.readInt();
-//				tile.y = input.readInt();
-//				tile.something = kryo.readClassAndObject(input);
-//				return tile;
-//			}
-//		});
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.esotericsoftware.kryo.Kryo;
