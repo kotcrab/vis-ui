@@ -39,7 +39,7 @@ public class ProjectInfoTab extends Tab {
 	}
 
 	@Override
-	public String getButtonText () {
+	public String getTabTitle () {
 		return "Project Info";
 	}
 

@@ -132,7 +132,7 @@ public class UnsavedResourcesDialog extends VisWindow {
 		for (Tab tab : allTabs) {
 			if (tab.isDirty()) {
 				unsavedTabs.add(tab);
-				names.add(tab.getButtonText());
+				names.add(tab.getTabTitle());
 				tabList.setItems(names);
 			}
 		}

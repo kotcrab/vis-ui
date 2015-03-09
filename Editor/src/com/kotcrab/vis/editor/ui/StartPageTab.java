@@ -30,7 +30,7 @@ public class StartPageTab extends Tab {
 	}
 
 	@Override
-	public String getButtonText () {
+	public String getTabTitle () {
 		return "Start Page";
 	}
 

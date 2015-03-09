@@ -155,7 +155,7 @@ public class TabbedPane {
 	}
 
 	public void updateTabTitle (Tab tab) {
-		String title = tab.getButtonText();
+		String title = tab.getTabTitle();
 		if (tab.isDirty()) title = "*" + title;
 
 		tabsButtonMap.get(tab).button.setText(title);
@@ -225,7 +225,7 @@ public class TabbedPane {
 
 		public TabButtonTable (final Tab tab) {
 			this.tab = tab;
-			button = new VisTextButton(tab.getButtonText(), "toggle");
+			button = new VisTextButton(tab.getTabTitle(), "toggle");
 			button.setFocusBorderEnabled(false);
 
 			closeButton = new VisImageButton("close");

@@ -42,7 +42,7 @@ public abstract class Tab {
 		this.closeableByUser = closeableByUser;
 	}
 
-	public abstract String getButtonText ();
+	public abstract String getTabTitle ();
 
 	public abstract TabViewMode getViewMode ();
 
