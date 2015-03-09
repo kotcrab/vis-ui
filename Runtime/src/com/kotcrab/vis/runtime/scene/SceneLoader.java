@@ -83,7 +83,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
 
 		for (EntityData entityData : data.entities) {
-			//NOTE: when using 'relative path' form data, path must have \ as path separator, using / is not supported and will cause "Assets not loaded" exception
+			//NOTE: when using 'relative path' form data, path must have / as path separator, using \ is not supported and will cause "Assets not loaded" exception
 			//slash replacing should be handled in EntityData
 
 			if (entityData instanceof SceneSpriteData) {
