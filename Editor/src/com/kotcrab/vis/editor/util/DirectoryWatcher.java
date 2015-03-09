@@ -51,18 +51,19 @@ import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
 
 //https://github.com/syncany/syncany/blob/59cf87c72de4322c737f0073ce8a7ddd992fd898/syncany-lib/src/main/java/org/syncany/operations/watch/RecursiveWatcher.java
 
-/** The recursive file watcher monitors a folder (and its sub-folders).
- *
- * <p>
+/**
+ * The recursive file watcher monitors a folder (and its sub-folders).
+ * <p/>
+ * <p/>
  * The class walks through the file tree and registers to a watch to every sub-folder. For new folders, a new watch is registered,
  * and stale watches are removed.
- *
- * <p>
+ * <p/>
+ * <p/>
  * When a file event occurs, a timer is started to wait for the file operations to settle. It is reset whenever a new event
  * occurs. When the timer times out, an event is thrown through the {@link WatchListener}.
- *
  * @author Philipp C. Heckel <philipp.heckel@gmail.com>
- * @author Pawel Pastuszak */
+ * @author Pawel Pastuszak
+ */
 @SuppressWarnings("unchecked")
 public class DirectoryWatcher {
 	private Path root;
@@ -92,12 +93,14 @@ public class DirectoryWatcher {
 		if (listener != null) listeners.add(listener);
 	}
 
-	/** Starts the watcher service and registers watches in all of the sub-folders of the given root folder.
-	 *
-	 * <p>
+	/**
+	 * Starts the watcher service and registers watches in all of the sub-folders of the given root folder.
+	 * <p/>
+	 * <p/>
 	 * <b>Important:</b> This method returns immediately, even though the watches might not be in place yet. For large file trees,
 	 * it might take several seconds until all directories are being monitored. For normal cases (1-100 folders), this should not
-	 * take longer than a few milliseconds. */
+	 * take longer than a few milliseconds.
+	 */
 	public void start () {
 		try {
 			watchService = FileSystems.getDefault().newWatchService();
@@ -111,23 +114,39 @@ public class DirectoryWatcher {
 							WatchKey watchKey = watchService.take();
 
 							for (WatchEvent<?> event : watchKey.pollEvents()) {
-								WatchEvent<Path> ev = (WatchEvent<Path>)event;
-								Path dir = (Path)watchKey.watchable();
+								WatchEvent<Path> ev = (WatchEvent<Path>) event;
+								Path dir = (Path) watchKey.watchable();
 								Path fullPath = dir.resolve(ev.context());
+								final FileHandle fileHandle = Gdx.files.absolute(fullPath.toFile().toString());
 
 								if (ev.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
-									for (WatchListener listener : listeners)
-										listener.fileChanged(Gdx.files.absolute(fullPath.toFile().toString()));
+									Gdx.app.postRunnable(new Runnable() {
+										@Override
+										public void run () {
+											for (WatchListener listener : listeners)
+												listener.fileChanged(fileHandle);
+										}
+									});
 								}
 
 								if (ev.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
-									for (WatchListener listener : listeners)
-										listener.fileDeleted(Gdx.files.absolute(fullPath.toFile().toString()));
+									Gdx.app.postRunnable(new Runnable() {
+										@Override
+										public void run () {
+											for (WatchListener listener : listeners)
+												listener.fileDeleted(fileHandle);
+										}
+									});
 								}
 
 								if (ev.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
-									for (WatchListener listener : listeners)
-										listener.fileCreated(Gdx.files.absolute(fullPath.toFile().toString()));
+									Gdx.app.postRunnable(new Runnable() {
+										@Override
+										public void run () {
+											for (WatchListener listener : listeners)
+												listener.fileCreated(fileHandle);
+										}
+									});
 								}
 							}
 
@@ -246,7 +265,7 @@ public class DirectoryWatcher {
 	public interface WatchListener {
 		public void fileChanged (FileHandle file);
 
-		public void fileDeleted(FileHandle file);
+		public void fileDeleted (FileHandle file);
 
 		public void fileCreated (FileHandle file);
 	}

@@ -21,7 +21,6 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -102,7 +101,6 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 	private VisLabel contentTitleLabel;
 
 	private int itemSize = 92;
-	private boolean refreshRequested;
 	private VisTextField searchTextField;
 	private FileHandle currentDirectory;
 
@@ -384,7 +382,6 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 	}
 
 	private void refreshFilesList () {
-		refreshRequested = false;
 		changeCurrentDirectory(currentDirectory);
 	}
 
@@ -451,20 +448,26 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		return actors;
 	}
 
+	private void refreshAllIfNeeded (FileHandle file) {
+		if (file.isDirectory()) rebuildFolderTree();
+		if (file.parent().equals(currentDirectory))
+			refreshFilesList();
+	}
+
 	@Override
 	public void fileChanged (FileHandle file) {
-		if(file.isDirectory()) rebuildFolderTree();
-		if (file.parent().equals(currentDirectory)) refreshRequested = true;
+		refreshAllIfNeeded(file);
 	}
 
 	@Override
 	public void fileDeleted (FileHandle file) {
-		if(file.isDirectory()) rebuildFolderTree();
+		//altthoug fileChanged covers 'delete' event, that event is sent before the actual file is deleted from disk,
+		//thus refreshing list at that moment would be pointless (the file is still on the disk)
+		refreshAllIfNeeded(file);
 	}
 
 	@Override
 	public void fileCreated (FileHandle file) {
-		if(file.isDirectory()) rebuildFolderTree();
 	}
 
 	@Override
@@ -593,12 +596,6 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		@Override
 		protected void sizeChanged () {
 			rebuildFilesList(getActorsList());
-		}
-
-		@Override
-		public void draw (Batch batch, float parentAlpha) {
-			super.draw(batch, parentAlpha);
-			if (refreshRequested) refreshFilesList();
 		}
 	}
 }
