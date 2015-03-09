@@ -166,7 +166,7 @@ public class ExportModule extends ProjectModule {
 
 		private void packageTextures () {
 			setMessage("Packaging textures");
-			TexturePacker.process(texturePackerSettings, visAssetsDir.path(), outAssetsDir.child("gfx").path(), "textures");
+			TexturePacker.process(texturePackerSettings, visAssetsDir.child("gfx").path(), outAssetsDir.child("gfx").path(), "textures");
 			nextStep();
 		}
 
