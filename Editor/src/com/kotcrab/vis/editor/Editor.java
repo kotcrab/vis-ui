@@ -59,10 +59,12 @@ import com.kotcrab.vis.editor.module.scene.InputModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EditorFrame;
 import com.kotcrab.vis.editor.ui.SettingsDialog;
+import com.kotcrab.vis.editor.ui.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.util.WindowListener;
 import com.kotcrab.vis.ui.OptionDialogAdapter;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
@@ -221,6 +223,28 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	public void requestExit () {
+		if (projectLoaded == false) {
+			showExitDialogIfNeeded();
+			return;
+		}
+
+		TabsModule tabsModule = editorMC.get(TabsModule.class);
+
+		if (tabsModule.getDirtyTabCount() > 0) {
+
+			getStage().addActor(new UnsavedResourcesDialog(tabsModule, new WindowListener() {
+				@Override
+				public void finished () {
+					showExitDialogIfNeeded();
+				}
+			}).fadeIn());
+
+		} else
+			showExitDialogIfNeeded();
+
+	}
+
+	private void showExitDialogIfNeeded () {
 		if (settings.isConfirmExit()) {
 			DialogUtils.OptionDialog dialog = DialogUtils.showOptionDialog(getStage(), "Confirm Exit", "Are you sure you want to exit VisEditor?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 				@Override

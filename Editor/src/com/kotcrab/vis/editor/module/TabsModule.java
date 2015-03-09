@@ -20,6 +20,7 @@
 package com.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.Event;
@@ -109,5 +110,20 @@ public class TabsModule extends EditorModule implements EventListener {
 		}
 
 		return false;
+	}
+
+	public Array<Tab> getTabs () {
+		return tabbedPane.getTabs();
+	}
+
+	public int getDirtyTabCount () {
+		Array<Tab> tabs = getTabs();
+
+		int count = 0;
+
+		for (Tab tab : tabs)
+			if (tab.isDirty()) count++;
+
+		return count;
 	}
 }

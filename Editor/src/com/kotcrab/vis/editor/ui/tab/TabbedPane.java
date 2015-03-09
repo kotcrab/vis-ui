@@ -211,6 +211,10 @@ public class TabbedPane {
 			listener.removedAllTabs();
 	}
 
+	public Array<Tab> getTabs () {
+		return tabs;
+	}
+
 	private class TabButtonTable extends VisTable {
 		public VisTextButton button;
 		public VisImageButton closeButton;
