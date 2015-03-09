@@ -54,7 +54,7 @@ public class Log {
 	private static SimpleDateFormat msgDateFormat = new SimpleDateFormat("[HH:mm]");
 
 	public static void init () {
-		System.setErr(new ErrorOutInterceptor(System.err));
+		System.setErr(new ErrorStreamInterceptor(System.err));
 
 		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 			@Override
@@ -197,22 +197,6 @@ public class Log {
 		return listeners.removeValue(listener, true);
 	}
 
-	public static int getLogLevel () {
-		return logLevel;
-	}
-
-	public static void setLogLevel (int logLevel) {
-		Log.logLevel = logLevel;
-	}
-
-	public static boolean isDebugInterrupted () {
-		return debugInterrupted;
-	}
-
-	public static void setDebugInterrupted (boolean debugInterrupted) {
-		Log.debugInterrupted = debugInterrupted;
-	}
-
 	private static void notifyLog (String msg) {
 		for (LoggerListener listener : listeners)
 			listener.log(msg);
@@ -233,8 +217,8 @@ public class Log {
 			listener.openGlCrash();
 	}
 
-	private static class ErrorOutInterceptor extends PrintStream {
-		public ErrorOutInterceptor (OutputStream out) {
+	private static class ErrorStreamInterceptor extends PrintStream {
+		public ErrorStreamInterceptor (OutputStream out) {
 			super(out, true);
 		}
 
