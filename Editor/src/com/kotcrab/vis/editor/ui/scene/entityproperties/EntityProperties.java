@@ -473,49 +473,13 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			setVisible(true);
 
 			idField.setText(getEntitiesId(entities));
-			xField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getX();
-				}
-			}));
-			yField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getY();
-				}
-			}));
-			xScaleField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getScaleX();
-				}
-			}));
-			yScaleField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getScaleY();
-				}
-			}));
-			xOriginField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getOriginX();
-				}
-			}));
-			yOriginField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getOriginY();
-				}
-			}));
-
-			rotationField.setText(getEntitiesFieldValue(new EntityValue() {
-				@Override
-				public float getValue (EditorEntity entity) {
-					return entity.getRotation();
-				}
-			}));
+			xField.setText(getEntitiesFieldValue(EditorEntity::getX));
+			yField.setText(getEntitiesFieldValue(EditorEntity::getY));
+			xScaleField.setText(getEntitiesFieldValue(EditorEntity::getScaleX));
+			yScaleField.setText(getEntitiesFieldValue(EditorEntity::getScaleY));
+			xOriginField.setText(getEntitiesFieldValue(EditorEntity::getOriginX));
+			yOriginField.setText(getEntitiesFieldValue(EditorEntity::getOriginY));
+			rotationField.setText(getEntitiesFieldValue(EditorEntity::getRotation));
 
 			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
 
