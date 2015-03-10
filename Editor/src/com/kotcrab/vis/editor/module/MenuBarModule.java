@@ -33,13 +33,14 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
+import com.kotcrab.vis.editor.ui.AboutDialog;
 import com.kotcrab.vis.editor.ui.NewProjectDialog;
 import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
 import com.kotcrab.vis.editor.ui.SceneStatusWidgetController;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
+import com.kotcrab.vis.editor.util.ButtonListener;
 import com.kotcrab.vis.editor.util.EditorException;
-import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
@@ -103,161 +104,66 @@ public class MenuBarModule extends EditorModule {
 	}
 
 	private void createFileMenu () {
-		MenuItem closeProject = new MenuItem("Close Project", new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				editor.requestProjectUnload();
-			}
-		});
-
-		MenuItem settings = new MenuItem("Settings", Assets.getIcon(Icons.SETTINGS), new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				editor.showSettingsWindow();
-			}
-		});
-
-		MenuItem quickExport = new MenuItem("Quick Export", new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				ExportModule exportModule = projectContainer.get(ExportModule.class);
-				exportModule.export(true);
-			}
-		});
-
-		MenuItem export = new MenuItem("Export", Assets.getIcon(Icons.EXPORT), new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				ExportModule exportModule = projectContainer.get(ExportModule.class);
-				exportModule.export(false);
-			}
-		});
-
 		Menu menu = new Menu("File");
 		menuBar.addMenu(menu);
 
-		menu.addItem(new MenuItem("New Project...", Assets.getIcon(Icons.NEW), new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				stage.addActor(new NewProjectDialog(projectIOModule).fadeIn());
-			}
-		}));
-
-		menu.addItem(new MenuItem("Load Project...", Assets.getIcon(Icons.LOAD), new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				stage.addActor(chooser.fadeIn());
-			}
-		}));
-
-		menu.addItem(closeProject);
+		menu.addItem(createMenuItem("New Project...", Icons.NEW, () -> stage.addActor(new NewProjectDialog(projectIOModule).fadeIn())));
+		menu.addItem(createMenuItem("Load Project...", Icons.LOAD, () -> stage.addActor(chooser.fadeIn())));
+		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Close Project", editor::requestProjectUnload));
 
 		menu.addSeparator();
-		menu.addItem(quickExport);
-		menu.addItem(export);
-		menu.addSeparator();
-		menu.addItem(settings);
-		menu.addSeparator();
 
-		menu.addItem(new MenuItem("Exit", Assets.getIcon(Icons.EXIT), new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				editor.requestExit();
-			}
+		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Export", Icons.EXPORT, () -> {
+			ExportModule exportModule = projectContainer.get(ExportModule.class);
+			exportModule.export(false);
 		}));
 
-		projectController.addButton(closeProject);
-		projectController.addButton(quickExport);
-		projectController.addButton(export);
+		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Quick Export", () -> {
+			ExportModule exportModule = projectContainer.get(ExportModule.class);
+			exportModule.export(true);
+		}));
+
+		menu.addSeparator();
+
+		menu.addItem(createMenuItem("Settings", Icons.SETTINGS, editor::showSettingsWindow));
+
+		menu.addSeparator();
+
+		menu.addItem(createMenuItem("Exit", Icons.EXIT, editor::requestExit));
 	}
 
 	private void createEditMenu () {
 		Menu menu = new Menu("Edit");
 		menuBar.addMenu(menu);
 
-		menu.addItem(new MenuItem("Undo", Assets.getIcon(Icons.UNDO), new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				sceneButtonsListener.undo();
-			}
-		}));
-
-		menu.addItem(new MenuItem("Redo", Assets.getIcon(Icons.REDO), new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				sceneButtonsListener.redo();
-			}
-		}));
+		menu.addItem(createMenuItem("Undo", Icons.UNDO, () -> sceneButtonsListener.undo()));
+		menu.addItem(createMenuItem("Redo", Icons.REDO, () -> sceneButtonsListener.redo()));
 	}
 
 	private void createSceneMenu () {
 		Menu menu = new Menu("Scene");
 		menuBar.addMenu(menu);
 
-		MenuItem newScene = new MenuItem("New Scene...", Assets.getIcon(Icons.NEW), new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
-				SceneTabsModule sceneTabsModule = projectContainer.get(SceneTabsModule.class);
-				SceneIOModule sceneIO = projectContainer.get(SceneIOModule.class);
-				stage.addActor(new NewSceneDialog(fileAccess, sceneTabsModule, sceneIO).fadeIn());
-			}
-		});
+		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "New Scene...", Icons.NEW, () -> {
+			FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
+			SceneTabsModule sceneTabsModule = projectContainer.get(SceneTabsModule.class);
+			SceneIOModule sceneIO = projectContainer.get(SceneIOModule.class);
+			stage.addActor(new NewSceneDialog(fileAccess, sceneTabsModule, sceneIO).fadeIn());
+		}));
 
-		projectController.addButton(newScene);
-
-		MenuItem resetCamera = new MenuItem("Reset Camera", new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				sceneButtonsListener.resetCamera();
-			}
-		});
-
-		MenuItem resetCameraZoom = new MenuItem("Reset Camera Zoom", new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				sceneButtonsListener.resetCameraZoom();
-			}
-		});
-
-		MenuItem sceneSettings = new MenuItem("Scene Settings", new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				sceneButtonsListener.showSceneSettings();
-			}
-		});
-
-		sceneController.addButton(resetCamera);
-		sceneController.addButton(resetCameraZoom);
-		sceneController.addButton(sceneSettings);
-
-		menu.addItem(newScene);
 		menu.addSeparator();
-		menu.addItem(resetCamera);
-		menu.addItem(resetCameraZoom);
-		menu.addItem(sceneSettings);
+
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera", () -> sceneButtonsListener.resetCamera()));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera Zoom", () -> sceneButtonsListener.resetCameraZoom()));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Scene Settings", () -> sceneButtonsListener.showSceneSettings()));
 	}
 
 	private void createHelpMenu () {
 		Menu menu = new Menu("Help");
 		menuBar.addMenu(menu);
 
-		menu.addItem(new MenuItem("Web", Assets.getIcon(Icons.GLOBE), new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				Gdx.net.openURI("http://vis.kotcrab.com");
-			}
-		}));
-
-		menu.addItem(new MenuItem("About", Assets.getIcon(Icons.INFO), new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				//TODO make better about
-				DialogUtils.showOKDialog(stage, "About", "VisEditor - game level editor " +
-						"\nLicensed under GPLv3 license, runtime licensed under Apache2 " +
-						"\nUsing VisUI " + VisUI.VERSION + "\nCopyright 2014-2015 Pawel Pastuszak");
-			}
-		}));
+		menu.addItem(createMenuItem("Web", Icons.GLOBE, () -> Gdx.net.openURI("http://vis.kotcrab.com")));
+		menu.addItem(createMenuItem("About", Icons.INFO, () -> stage.addActor(new AboutDialog().fadeIn())));
 	}
 
 	public Table getTable () {
@@ -272,5 +178,43 @@ public class MenuBarModule extends EditorModule {
 	@Override
 	public void dispose () {
 		projectController.dispose();
+	}
+
+	private MenuItem createMenuItem (String text, ButtonListener listener) {
+		return createMenuItem(ControllerPolicy.NONE, text, null, listener);
+	}
+
+	private MenuItem createMenuItem (String text, Icons icon, ButtonListener listener) {
+		return createMenuItem(ControllerPolicy.NONE, text, icon, listener);
+	}
+
+	private MenuItem createMenuItem (ControllerPolicy policy, String text, ButtonListener listener) {
+		return createMenuItem(policy, text, null, listener);
+	}
+
+	private MenuItem createMenuItem (ControllerPolicy policy, String text, Icons icon, ButtonListener listener) {
+		MenuItem item = new MenuItem(text, icon != null ? Assets.getIcon(icon) : null, new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				listener.clicked();
+			}
+		});
+
+		switch (policy) {
+			case PROJECT:
+				projectController.addButton(item);
+				break;
+			case SCENE:
+				sceneController.addButton(item);
+				break;
+			case NONE:
+				break;
+		}
+
+		return item;
+	}
+
+	private enum ControllerPolicy {
+		NONE, PROJECT, SCENE
 	}
 }
