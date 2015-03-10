@@ -55,7 +55,6 @@ public class FilePopupMenu extends PopupMenu {
 		delete.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
-				remove();
 				showDeleteDialog();
 			}
 		});
@@ -63,7 +62,6 @@ public class FilePopupMenu extends PopupMenu {
 		showInExplorer.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
-				remove();
 				try {
 					if (file.isDirectory())
 						Desktop.getDesktop().open(file.file());
@@ -78,7 +76,6 @@ public class FilePopupMenu extends PopupMenu {
 		addToFavorites.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
-				remove();
 				chooser.addFavorite(file);
 			}
 		});
@@ -86,7 +83,6 @@ public class FilePopupMenu extends PopupMenu {
 		removeFromFavorites.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
-				remove();
 				chooser.removeFavorite(file);
 			}
 		});
