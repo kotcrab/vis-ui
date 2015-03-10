@@ -65,4 +65,9 @@ public class SpriteSerializer extends Serializer<Sprite> {
 
 		return sprite;
 	}
+
+	@Override
+	public Sprite copy (Kryo kryo, Sprite original) {
+		return new Sprite(original);
+	}
 }
