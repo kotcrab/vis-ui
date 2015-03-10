@@ -43,8 +43,6 @@ import com.kotcrab.vis.runtime.data.TextData;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
 import org.apache.commons.io.FileUtils;
 
-import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 
 public class ExportModule extends ProjectModule {
@@ -137,12 +135,9 @@ public class ExportModule extends ProjectModule {
 			steps++; //clean old assets, new dirs
 			steps++; //package textures
 
-			int assetsDirCounter = visAssetsDir.list(new FileFilter() {
-				@Override
-				public boolean accept (File file) {
-					//exclude gfx and scene dir, exclude empty folders
-					return file.isDirectory() && file.list().length > 0 && !(file.getName().equals("gfx") || file.getName().equals("scene"));
-				}
+			int assetsDirCounter = visAssetsDir.list(file -> {
+				//exclude gfx and scene dir, exclude empty folders
+				return file.isDirectory() && file.list().length > 0 && !(file.getName().equals("gfx") || file.getName().equals("scene"));
 			}).length;
 			steps += assetsDirCounter;
 
@@ -199,12 +194,7 @@ public class ExportModule extends ProjectModule {
 				if (file.extension().equals("scene")) {
 					task.setMessage("Exporting scene: " + file.name());
 
-					executeOnOpenGL(new Runnable() {
-						@Override
-						public void run () {
-							editorScene = sceneIO.load(file);
-						}
-					});
+					executeOnOpenGL(() -> editorScene = sceneIO.load(file));
 
 					SceneData sceneData = new SceneData();
 

@@ -29,7 +29,6 @@ import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.SelectFontDialog;
-import com.kotcrab.vis.editor.ui.SelectFontDialog.FontDialogListener;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -75,18 +74,15 @@ abstract class TextObjectTable extends SpecificObjectTable {
 			}
 		});
 
-		selectFontDialog = new SelectFontDialog(getFontExtension(), getFontFolder(), new FontDialogListener() {
-			@Override
-			public void selected (FileHandle file) {
-				for (EditorEntity entity : properties.getEntities()) {
-					TextObject obj = (TextObject) entity;
-					obj.setFont(properties.getFontCacheModule().get(file));
-				}
-
-				properties.getParentTab().dirty();
-				properties.updateValues();
-				properties.endSnapshot();
+		selectFontDialog = new SelectFontDialog(getFontExtension(), getFontFolder(), file -> {
+			for (EditorEntity entity : properties.getEntities()) {
+				TextObject obj = (TextObject) entity;
+				obj.setFont(properties.getFontCacheModule().get(file));
 			}
+
+			properties.getParentTab().dirty();
+			properties.updateValues();
+			properties.endSnapshot();
 		});
 
 

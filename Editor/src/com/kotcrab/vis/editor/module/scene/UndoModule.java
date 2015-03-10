@@ -30,8 +30,6 @@ import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.event.UndoEvent;
 
 public class UndoModule extends SceneModule {
-	private InputModule input;
-
 	private Array<UndoableAction> undoList;
 	private Array<UndoableAction> redoList;
 
@@ -42,7 +40,7 @@ public class UndoModule extends SceneModule {
 		undoList = new Array<>();
 		redoList = new Array<>();
 
-		input = container.get(InputModule.class);
+		InputModule input = container.get(InputModule.class);
 		input.addListener(new UndoInputListener());
 	}
 
@@ -90,6 +88,7 @@ public class UndoModule extends SceneModule {
 	}
 
 	private class UndoInputListener extends InputListener {
+		@Override
 		public boolean keyDown (InputEvent event, int keycode) {
 			if (tabActive) {
 				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {

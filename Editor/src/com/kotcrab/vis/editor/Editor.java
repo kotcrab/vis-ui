@@ -64,7 +64,6 @@ import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.Log;
-import com.kotcrab.vis.editor.util.WindowListener;
 import com.kotcrab.vis.ui.OptionDialogAdapter;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
@@ -230,16 +229,9 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		TabsModule tabsModule = editorMC.get(TabsModule.class);
 
-		if (tabsModule.getDirtyTabCount() > 0) {
-
-			getStage().addActor(new UnsavedResourcesDialog(tabsModule, new WindowListener() {
-				@Override
-				public void finished () {
-					showExitDialogIfNeeded();
-				}
-			}).fadeIn());
-
-		} else
+		if (tabsModule.getDirtyTabCount() > 0)
+			getStage().addActor(new UnsavedResourcesDialog(tabsModule, this::showExitDialogIfNeeded).fadeIn());
+		else
 			showExitDialogIfNeeded();
 
 	}
@@ -319,12 +311,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private void switchProject (final Project project) {
 		requestProjectUnload();
 
-		Gdx.app.postRunnable(new Runnable() {
-			@Override
-			public void run () {
-				projectLoaded(project);
-			}
-		});
+		Gdx.app.postRunnable(() -> projectLoaded(project));
 	}
 
 	public void tabChanged (Tab tab) {

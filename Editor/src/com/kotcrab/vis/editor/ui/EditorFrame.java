@@ -81,12 +81,7 @@ public class EditorFrame extends JFrame {
 			e.printStackTrace();
 		}
 
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run () {
-				new EditorFrame().setVisible(true);
-			}
-		});
+		EventQueue.invokeLater(() -> new EditorFrame().setVisible(true));
 	}
 
 	/**

@@ -70,15 +70,12 @@ public abstract class ProcessingQueue<E> {
 	private void start () {
 		queue = new ArrayBlockingQueue<>(capacity);
 
-		processingThread = new Thread(new Runnable() {
-			@Override
-			public void run () {
-				while (running) {
-					try {
-						processQueueElement(queue.take());
-					} catch (Exception e) {
-						Log.exception(e);
-					}
+		processingThread = new Thread(() -> {
+			while (running) {
+				try {
+					processQueueElement(queue.take());
+				} catch (Exception e) {
+					Log.exception(e);
 				}
 			}
 		}, threadName);

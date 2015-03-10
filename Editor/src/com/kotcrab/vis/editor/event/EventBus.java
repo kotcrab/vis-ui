@@ -57,12 +57,7 @@ public class EventBus {
 	}
 
 	private void processEvent (final Event event) {
-		Gdx.app.postRunnable(new Runnable() {
-			@Override
-			public void run () {
-				postEvent(event);
-			}
-		});
+		Gdx.app.postRunnable(() -> postEvent(event));
 	}
 
 	private void postEvent (Event event) {

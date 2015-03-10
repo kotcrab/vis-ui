@@ -65,8 +65,6 @@ import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisTree;
 
 import java.awt.Desktop;
-import java.io.File;
-import java.io.FileFilter;
 import java.io.IOException;
 
 @SuppressWarnings("rawtypes")
@@ -243,13 +241,10 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		filesTable.top().left();
 		filesDisplayed = 0;
 
-		FileHandle[] files = directory.list(new FileFilter() {
-			@Override
-			public boolean accept (File file) {
-				if (searchTextField.getText().equals("")) return true;
+		FileHandle[] files = directory.list(file -> {
+			if (searchTextField.getText().equals("")) return true;
 
-				return file.getName().contains(searchTextField.getText());
-			}
+			return file.getName().contains(searchTextField.getText());
 		});
 
 		Array<Actor> actors = new Array<>(files.length);

@@ -91,23 +91,13 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	private void updateCache () {
-		new Thread(new Runnable() {
-			@Override
-			public void run () {
-				performUpdate();
-			}
-		}, "TextureCache").start();
+		new Thread(this::performUpdate, "TextureCache").start();
 	}
 
 	private void performUpdate () {
 		TexturePacker.processIfModified(settings, gfxPath, outPath, "cache");
 
-		Gdx.app.postRunnable(new Runnable() {
-			@Override
-			public void run () {
-				reloadAtlas();
-			}
-		});
+		Gdx.app.postRunnable(this::reloadAtlas);
 	}
 
 	private void reloadAtlas () {

@@ -74,12 +74,7 @@ class TTFTextObjectTable extends TextObjectTable {
 
 		Array<EditorEntity> entities = properties.getEntities();
 
-		sizeInputField.setText(Utils.getEntitiesFieldValue(entities, new EntityValue() {
-			@Override
-			public float getValue (EditorEntity entity) {
-				return ((TextObject) entity).getFontSize();
-			}
-		}));
+		sizeInputField.setText(Utils.getEntitiesFieldValue(entities, entity -> ((TextObject) entity).getFontSize()));
 	}
 
 	@Override

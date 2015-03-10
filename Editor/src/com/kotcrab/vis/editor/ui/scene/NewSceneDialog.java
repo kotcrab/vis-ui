@@ -79,9 +79,7 @@ public class NewSceneDialog extends VisWindow {
 		visFolder = fileAccess.getVisFolder();
 
 		viewportMap = new OrderedMap<>();
-		SceneViewport[] values = SceneViewport.values();
-		for (int i = 0; i < values.length; i++)
-			viewportMap.put(values[i].toListString(), values[i]);
+		for (SceneViewport value : SceneViewport.values()) viewportMap.put(value.toListString(), value);
 
 		createUI();
 		createListeners();

@@ -33,17 +33,14 @@ public abstract class AsyncTask {
 	private AsyncTaskListener listener;
 
 	public AsyncTask (String threadName) {
-		runnable = new Runnable() {
-			@Override
-			public void run () {
-				try {
-					execute();
-				} catch (Exception e) {
-					failed(e.getMessage(), e);
-				}
-
-				if (listener != null) listener.finished();
+		runnable = () -> {
+			try {
+				execute();
+			} catch (Exception e) {
+				failed(e.getMessage(), e);
 			}
+
+			if (listener != null) listener.finished();
 		};
 		thread = new Thread(runnable, threadName);
 	}
@@ -66,12 +63,9 @@ public abstract class AsyncTask {
 	protected void executeOnOpenGL (final Runnable runnable) {
 		final CountDownLatch latch = new CountDownLatch(1);
 
-		Gdx.app.postRunnable(new Runnable() {
-			@Override
-			public void run () {
-				runnable.run();
-				latch.countDown();
-			}
+		Gdx.app.postRunnable(() -> {
+			runnable.run();
+			latch.countDown();
 		});
 
 		try {

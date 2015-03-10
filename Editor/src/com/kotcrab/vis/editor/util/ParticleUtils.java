@@ -47,11 +47,6 @@ public class ParticleUtils {
 		return bounds;
 	}
 
-	private static void mergeNotEmpty (Rectangle mergeTarget, Rectangle rect) {
-		if (isZero(rect) == false)
-			mergeTarget.merge(rect);
-	}
-
 	private static boolean isZero (Rectangle rect) {
 		return (rect.x == 0 && rect.y == 0 && rect.width == 0 && rect.height == 0);
 	}

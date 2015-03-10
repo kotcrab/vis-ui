@@ -83,11 +83,11 @@ public class DirectoryWatcher {
 		this.root = root;
 
 		settleDelay = 1;
-		listeners = new Array<WatchListener>();
+		listeners = new Array<>();
 		running = new AtomicBoolean(false);
 		watchService = null;
 		watchThread = null;
-		watchPathKeyMap = new HashMap<Path, WatchKey>();
+		watchPathKeyMap = new HashMap<>();
 		timer = null;
 
 		if (listener != null) listeners.add(listener);
@@ -104,57 +104,45 @@ public class DirectoryWatcher {
 	public void start () {
 		try {
 			watchService = FileSystems.getDefault().newWatchService();
-			watchThread = new Thread(new Runnable() {
-				@Override
-				public void run () {
-					running.set(true);
-					walkTreeAndSetWatches();
-					while (running.get()) {
-						try {
-							WatchKey watchKey = watchService.take();
+			watchThread = new Thread(() -> {
+				running.set(true);
+				walkTreeAndSetWatches();
+				while (running.get()) {
+					try {
+						WatchKey watchKey = watchService.take();
 
-							for (WatchEvent<?> event : watchKey.pollEvents()) {
-								WatchEvent<Path> ev = (WatchEvent<Path>) event;
-								Path dir = (Path) watchKey.watchable();
-								Path fullPath = dir.resolve(ev.context());
-								final FileHandle fileHandle = Gdx.files.absolute(fullPath.toFile().toString());
+						for (WatchEvent<?> event : watchKey.pollEvents()) {
+							WatchEvent<Path> ev = (WatchEvent<Path>) event;
+							Path dir = (Path) watchKey.watchable();
+							Path fullPath = dir.resolve(ev.context());
+							final FileHandle fileHandle = Gdx.files.absolute(fullPath.toFile().toString());
 
-								if (ev.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
-									Gdx.app.postRunnable(new Runnable() {
-										@Override
-										public void run () {
-											for (WatchListener listener : listeners)
-												listener.fileChanged(fileHandle);
-										}
-									});
-								}
-
-								if (ev.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
-									Gdx.app.postRunnable(new Runnable() {
-										@Override
-										public void run () {
-											for (WatchListener listener : listeners)
-												listener.fileDeleted(fileHandle);
-										}
-									});
-								}
-
-								if (ev.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
-									Gdx.app.postRunnable(new Runnable() {
-										@Override
-										public void run () {
-											for (WatchListener listener : listeners)
-												listener.fileCreated(fileHandle);
-										}
-									});
-								}
+							if (ev.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
+								Gdx.app.postRunnable(() -> {
+									for (WatchListener listener : listeners)
+										listener.fileChanged(fileHandle);
+								});
 							}
 
-							watchKey.reset();
-							resetWaitSettlementTimer();
-						} catch (InterruptedException | ClosedWatchServiceException e) {
-							running.set(false);
+							if (ev.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
+								Gdx.app.postRunnable(() -> {
+									for (WatchListener listener : listeners)
+										listener.fileDeleted(fileHandle);
+								});
+							}
+
+							if (ev.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
+								Gdx.app.postRunnable(() -> {
+									for (WatchListener listener : listeners)
+										listener.fileCreated(fileHandle);
+								});
+							}
 						}
+
+						watchKey.reset();
+						resetWaitSettlementTimer();
+					} catch (InterruptedException | ClosedWatchServiceException e) {
+						running.set(false);
 					}
 				}
 			}, "Watcher");
@@ -221,8 +209,8 @@ public class DirectoryWatcher {
 	}
 
 	private synchronized void unregisterStaleWatches () {
-		Set<Path> paths = new HashSet<Path>(watchPathKeyMap.keySet());
-		Set<Path> stalePaths = new HashSet<Path>();
+		Set<Path> paths = new HashSet<>(watchPathKeyMap.keySet());
+		Set<Path> stalePaths = new HashSet<>();
 		for (Path path : paths) {
 			if (!Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
 				stalePaths.add(path);

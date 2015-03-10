@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.io.PrintWriter;
-import java.lang.Thread.UncaughtExceptionHandler;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -56,32 +55,29 @@ public class Log {
 	public static void init () {
 		System.setErr(new ErrorStreamInterceptor(System.err));
 
-		Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-			@Override
-			public void uncaughtException (Thread t, Throwable e) {
-				Log.exception(e);
-				Log.fatal("Uncaught exception occurred, error report will be send");
+		Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
+			Log.exception(e);
+			Log.fatal("Uncaught exception occurred, error report will be send");
 
-				logFileWriter.flush();
+			logFileWriter.flush();
 
-				boolean openGlCrash = false;
-				if (e.getMessage().contains("No OpenGL context found in the current thread.")) {
-					openGlCrash = true;
-					notifyOpenGlCrash();
-				}
+			boolean openGlCrash = false;
+			if (e.getMessage().contains("No OpenGL context found in the current thread.")) {
+				openGlCrash = true;
+				notifyOpenGlCrash();
+			}
 
-				try {
-					new CrashReporter(logFile).processReport();
-				} catch (IOException ex) {
-					ex.printStackTrace();
-				}
+			try {
+				new CrashReporter(logFile).processReport();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
 
-				if (openGlCrash) {
-					if (App.OPENGL_CRASH_BEFORE_EXIT_MESSAGE)
-						JOptionPane.showMessageDialog(null, "An unexpected error occurred and editor had to shutdown, please check log: " + logFile.getParent());
+			if (openGlCrash) {
+				if (App.OPENGL_CRASH_BEFORE_EXIT_MESSAGE)
+					JOptionPane.showMessageDialog(null, "An unexpected error occurred and editor had to shutdown, please check log: " + logFile.getParent());
 
-					System.exit(-1);
-				}
+				System.exit(-1);
 			}
 		});
 
