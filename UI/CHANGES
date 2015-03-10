@@ -5,6 +5,7 @@
 -API Addition: New FormValidators: integerNumber, floatNumber, valueLesserThan, valueGreaterThan
 -API Addition: VisTable.addSeparator (boolean vertical)
 -API Addition: constructor VisLabel (CharSequence text, LabelStyle style)
+-API Addition: constructor VisLabel (CharSequence text, int alignment)
 -API Addition: TableBuilder and its implementations: StandardTableBuilder, CenteredTableBuilder, GridTableBuilder, OneColumnTableBuilder, OneRowTableBuilder
 -Skin Change: Separator 'height' property is now called 'thickness'
 -Skin Change: Separator style now has 'vertical' property

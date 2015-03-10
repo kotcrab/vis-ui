@@ -31,6 +31,11 @@ public class VisLabel extends Label {
 		setColor(textColor);
 	}
 
+	public VisLabel (CharSequence text, int alignment) {
+		this(text);
+		setAlignment(alignment);
+	}
+
 	public VisLabel (CharSequence text) {
 		super(text, VisUI.getSkin());
 	}
@@ -50,4 +55,5 @@ public class VisLabel extends Label {
 	public VisLabel (CharSequence text, String fontName, String colorName) {
 		super(text, VisUI.getSkin(), fontName, colorName);
 	}
+
 }
