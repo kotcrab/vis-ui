@@ -99,6 +99,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	private Tab tab;
 
+	private boolean exitInProgress;
+
 	public Editor (EditorFrame frame) {
 		this.frame = frame;
 	}
@@ -222,6 +224,9 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	public void requestExit () {
+		if(exitInProgress) return;
+		exitInProgress = true;
+
 		if (projectLoaded == false) {
 			showExitDialogIfNeeded();
 			return;
@@ -233,7 +238,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			getStage().addActor(new UnsavedResourcesDialog(tabsModule, this::showExitDialogIfNeeded).fadeIn());
 		else
 			showExitDialogIfNeeded();
-
 	}
 
 	private void showExitDialogIfNeeded () {
@@ -242,6 +246,11 @@ public class Editor extends ApplicationAdapter implements EventListener {
 				@Override
 				public void yes () {
 					exit();
+				}
+
+				@Override
+				public void cancel () {
+					exitInProgress = false;
 				}
 			});
 
