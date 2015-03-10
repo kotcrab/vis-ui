@@ -18,10 +18,12 @@ package com.kotcrab.vis.ui.widget;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
 
@@ -33,24 +35,20 @@ public class PopupMenu extends Table {
 	private PopupMenuStyle style;
 
 	private Rectangle boundingRectangle;
+
 	private boolean autoRemove;
-
-	private InputListener autoRemoveListener = new InputListener() {
-		@Override
-		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-			if (contains(x, y) == false && autoRemove) {
-				remove();
-				return true;
-			}
-
-			return false;
-		}
-	};
+	private InputListener autoRemoveClickOutsideListener;
+	private ChangeListener sharedAutoRemoveChangeListener;
 
 	public PopupMenu () {
 		this(false, "default");
 	}
 
+	/**
+	 * @param autoRemove if true auto remove will be enabled. When auto remove is enabled and user clicks outside menu
+	 * it will be automatically removed from stage, menu will also be removed if user has clicked a MenuItem.
+	 * By default this function is disabled.
+	 */
 	public PopupMenu (boolean autoRemove) {
 		this(autoRemove, "default");
 	}
@@ -59,14 +57,41 @@ public class PopupMenu extends Table {
 		this(false, styleName);
 	}
 
+	/** @param autoRemove see {@link PopupMenu#PopupMenu(boolean)} */
 	public PopupMenu (boolean autoRemove, String styleName) {
 		this.autoRemove = autoRemove;
 		style = VisUI.getSkin().get(styleName, PopupMenuStyle.class);
+
+		if (autoRemove) createAutoRemoveListeners();
+	}
+
+	private void createAutoRemoveListeners () {
+		autoRemoveClickOutsideListener = new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if (autoRemove && contains(x, y) == false) {
+					remove();
+					return true;
+				}
+
+				return false;
+			}
+		};
+
+		sharedAutoRemoveChangeListener = new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				if (event.isStopped() == false)
+					remove();
+			}
+		};
 	}
 
 	public void addItem (MenuItem item) {
 		add(item).fillX().row();
 		pack();
+
+		if (autoRemove) item.addListener(sharedAutoRemoveChangeListener);
 	}
 
 	public void addSeparator () {
@@ -86,19 +111,6 @@ public class PopupMenu extends Table {
 		stage.addActor(this);
 	}
 
-	public boolean isAutoRemove () {
-		return autoRemove;
-	}
-
-	/**
-	 * Changes auto remove property, if true auto remove will be enabled. When auto remove is enabled and user click outside menu
-	 * it will be automatically removed from stage. By default this function is disabled. Please note that if user click on MenuItem and
-	 * auto remove is enabled then menu WON'T be removed, you have to do that manually from menu item listener.
-	 */
-	public void setAutoRemove (boolean autoRemove) {
-		this.autoRemove = autoRemove;
-	}
-
 	private boolean contains (float x, float y) {
 		return boundingRectangle.contains(x, y);
 	}
@@ -106,12 +118,12 @@ public class PopupMenu extends Table {
 	@Override
 	protected void setStage (Stage stage) {
 		super.setStage(stage);
-		if (stage != null) stage.addListener(autoRemoveListener);
+		if (stage != null) stage.addListener(autoRemoveClickOutsideListener);
 	}
 
 	@Override
 	public boolean remove () {
-		if (getStage() != null) getStage().removeListener(autoRemoveListener);
+		if (getStage() != null) getStage().removeListener(autoRemoveClickOutsideListener);
 		return super.remove();
 	}
 

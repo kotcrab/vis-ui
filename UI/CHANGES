@@ -2,6 +2,8 @@
 -API Change: Constructor Separator(boolean useMenuStyle) is now Separator(boolean vertical) use new Separator("menu") for menu styled separator
 -API Change: FileChooser locale removed field title. Added titleChooseFiles, titleChooseDirectories, titleChooseFilesAndDirectories
 -API Change: Validators.INTEGERS and Validators.FLOAT (was Validators.integers and Validators.floats)
+-API Change: Remove PopupMenu.isAutoRemove and PopupMenu.setAutoRemove, auto remove must now be enabled from PopupMenu constructor
+             Now, when auto remove is enabled and user has clicked MenuItem then PopupMenu will be removed from stage
 -API Addition: New FormValidators: integerNumber, floatNumber, valueLesserThan, valueGreaterThan
 -API Addition: VisTable.addSeparator (boolean vertical)
 -API Addition: constructor VisLabel (CharSequence text, LabelStyle style)
