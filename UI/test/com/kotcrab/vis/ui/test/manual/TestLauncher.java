@@ -71,6 +71,7 @@ class TestApplication extends ApplicationAdapter {
 
 		stage.addActor(new TestCollapsible());
 		if (Gdx.app.getType() != ApplicationType.WebGL) stage.addActor(new TestColorPicker());
+		if (Gdx.app.getType() == ApplicationType.Desktop) stage.addActor(new TestFileChooser());
 		stage.addActor(new TestDialogUtils());
 		stage.addActor(new TestFormValidator());
 		stage.addActor(new TestSplitPane(USE_VIS_WIDGETS));

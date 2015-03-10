@@ -36,7 +36,7 @@ public class TestCollapsible extends VisWindow {
 
 		addVisComponents();
 
-		setPosition(1000, 360);
+		setPosition(1000, 390);
 		pack();
 	}
 
