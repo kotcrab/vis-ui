@@ -69,7 +69,7 @@ public class PopupMenu extends Table {
 		autoRemoveClickOutsideListener = new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (autoRemove && contains(x, y) == false) {
+				if (contains(x, y) == false) {
 					remove();
 					return true;
 				}
@@ -118,12 +118,12 @@ public class PopupMenu extends Table {
 	@Override
 	protected void setStage (Stage stage) {
 		super.setStage(stage);
-		if (stage != null) stage.addListener(autoRemoveClickOutsideListener);
+		if (stage != null && autoRemove) stage.addListener(autoRemoveClickOutsideListener);
 	}
 
 	@Override
 	public boolean remove () {
-		if (getStage() != null) getStage().removeListener(autoRemoveClickOutsideListener);
+		if (getStage() != null && autoRemove) getStage().removeListener(autoRemoveClickOutsideListener);
 		return super.remove();
 	}
 
