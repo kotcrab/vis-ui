@@ -75,6 +75,10 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(Sprite.class, new SpriteSerializer());
 	}
 
+	public Kryo getKryo () {
+		return kryo;
+	}
+
 	public EditorScene load (FileHandle fullPathFile) {
 		try {
 			Input input = new Input(new FileInputStream(fullPathFile.file()));
@@ -116,9 +120,8 @@ public class SceneIOModule extends ProjectModule {
 
 	public boolean save (EditorScene scene) {
 		//if needed here prepare scene for save
-		for (EditorEntity entity : scene.entities) {
+		for (EditorEntity entity : scene.entities)
 			entity.beforeSerialize();
-		}
 
 		try {
 			Output output = new Output(new FileOutputStream(getFileHandleForScene(scene).file()));
