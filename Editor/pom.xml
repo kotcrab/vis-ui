@@ -12,8 +12,20 @@
         <jdk.version>1.8</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gdx.version>1.5.4</gdx.version>
+        <gdx.tools.version>1.5.5-SNAPSHOT</gdx.tools.version> <!-- we really need some features from latest tools snapshot, after 1.5.5 release this will be removed -->
         <visui.version>0.7.0-SNAPSHOT</visui.version>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>ossrh</id>
+            <name>ossrh</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
     <dependencies>
         <dependency>
@@ -46,6 +58,12 @@
             <artifactId>gdx-freetype-platform</artifactId>
             <version>${gdx.version}</version>
             <classifier>natives-desktop</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>com.badlogicgames.gdx</groupId>
+            <artifactId>gdx-tools</artifactId>
+            <version>${gdx.tools.version}</version>
         </dependency>
 
         <dependency>

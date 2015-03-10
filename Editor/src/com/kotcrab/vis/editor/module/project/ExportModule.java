@@ -21,6 +21,8 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.editor.App;
@@ -34,8 +36,6 @@ import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.Log;
-import com.kotcrab.vis.editor.util.texturepacker.TexturePacker;
-import com.kotcrab.vis.editor.util.texturepacker.TexturePacker.Settings;
 import com.kotcrab.vis.runtime.data.ParticleEffectData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.data.SpriteData;
@@ -69,6 +69,7 @@ public class ExportModule extends ProjectModule {
 
 		texturePackerSettings = new Settings();
 		texturePackerSettings.combineSubdirectories = true;
+		texturePackerSettings.silent = true;
 
 		json = SceneLoader.getJson();
 	}
