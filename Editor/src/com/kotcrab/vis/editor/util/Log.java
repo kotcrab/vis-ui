@@ -19,7 +19,6 @@
 
 package com.kotcrab.vis.editor.util;
 
-import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 
 import javax.swing.JOptionPane;
@@ -44,12 +43,12 @@ public class Log {
 	public static final int ERROR = 1;
 	public static final int FATAL = 0;
 
+	private static final boolean DEBUG_INTERRUPTED = false;
+
 	private static int logLevel = DEBUG;
-	private static boolean debugInterrupted = false;
 
 	private static File logFile;
 	private static PrintWriter logFileWriter;
-	private static Array<LoggerListener> listeners = new Array<>();
 	private static SimpleDateFormat msgDateFormat = new SimpleDateFormat("[HH:mm]");
 
 	public static void init () {
@@ -62,10 +61,8 @@ public class Log {
 			logFileWriter.flush();
 
 			boolean openGlCrash = false;
-			if (e.getMessage().contains("No OpenGL context found in the current thread.")) {
+			if (e.getMessage().contains("No OpenGL context found in the current thread."))
 				openGlCrash = true;
-				notifyOpenGlCrash();
-			}
 
 			try {
 				new CrashReporter(logFile).processReport();
@@ -163,54 +160,23 @@ public class Log {
 	private static void print (String msg) {
 		msg = getTimestamp() + msg;
 		logFileWriter.println(msg);
-		notifyLog(msg);
 		System.out.println(msg);
 	}
 
 	private static void printErr (String msg) {
 		msg = getTimestamp() + msg;
-		notifyError(msg);
 		System.err.println(msg);
 	}
 
 	public static void exception (Throwable e) {
-		if (e instanceof InterruptedException && debugInterrupted == false) return;
+		if (e instanceof InterruptedException && DEBUG_INTERRUPTED == false) return;
 
 		String stack = ExceptionUtils.getStackTrace(e);
 		fatal(stack);
-		notifyException(stack);
 	}
 
 	private static String getTimestamp () {
 		return msgDateFormat.format(new Date());
-	}
-
-	public static void addListener (LoggerListener listener) {
-		listeners.add(listener);
-	}
-
-	public static boolean removeListener (LoggerListener listener) {
-		return listeners.removeValue(listener, true);
-	}
-
-	private static void notifyLog (String msg) {
-		for (LoggerListener listener : listeners)
-			listener.log(msg);
-	}
-
-	private static void notifyError (String msg) {
-		for (LoggerListener listener : listeners)
-			listener.error(msg);
-	}
-
-	private static void notifyException (String stacktrace) {
-		for (LoggerListener listener : listeners)
-			listener.exception(stacktrace);
-	}
-
-	private static void notifyOpenGlCrash () {
-		for (LoggerListener listener : listeners)
-			listener.openGlCrash();
 	}
 
 	private static class ErrorStreamInterceptor extends PrintStream {
