@@ -64,6 +64,7 @@ import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.util.WindowListener;
 import com.kotcrab.vis.ui.OptionDialogAdapter;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
@@ -224,7 +225,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	public void requestExit () {
-		if(exitInProgress) return;
+		if (exitInProgress) return;
 		exitInProgress = true;
 
 		if (projectLoaded == false) {
@@ -235,7 +236,17 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		TabsModule tabsModule = editorMC.get(TabsModule.class);
 
 		if (tabsModule.getDirtyTabCount() > 0)
-			getStage().addActor(new UnsavedResourcesDialog(tabsModule, this::showExitDialogIfNeeded).fadeIn());
+			getStage().addActor(new UnsavedResourcesDialog(tabsModule, new WindowListener() {
+				@Override
+				public void finished () {
+					showExitDialogIfNeeded();
+				}
+
+				@Override
+				public void canceled () {
+					exitInProgress = false;
+				}
+			}).fadeIn());
 		else
 			showExitDialogIfNeeded();
 	}

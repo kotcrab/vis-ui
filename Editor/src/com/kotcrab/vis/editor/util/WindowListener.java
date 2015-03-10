@@ -20,5 +20,9 @@
 package com.kotcrab.vis.editor.util;
 
 public interface WindowListener {
-	public void finished();
+	public void finished ();
+
+	default void canceled () {
+
+	}
 }

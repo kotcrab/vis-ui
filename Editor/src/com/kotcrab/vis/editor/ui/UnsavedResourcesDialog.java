@@ -67,6 +67,7 @@ public class UnsavedResourcesDialog extends VisWindow {
 		cancelButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
+				listener.canceled();
 				fadeOut();
 			}
 		});
@@ -136,5 +137,10 @@ public class UnsavedResourcesDialog extends VisWindow {
 				tabList.setItems(names);
 			}
 		}
+	}
+
+	protected void close () {
+		super.close();
+		listener.canceled();
 	}
 }
