@@ -18,3 +18,17 @@ alpha-grid-32x32
   orig: 32, 32
   offset: 0, 0
   index: -1
+check-indeterminate
+  rotate: false
+  xy: 36, 42
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
+check-over-indeterminate
+  rotate: false
+  xy: 36, 26
+  size: 14, 14
+  orig: 14, 14
+  offset: 0, 0
+  index: -1
