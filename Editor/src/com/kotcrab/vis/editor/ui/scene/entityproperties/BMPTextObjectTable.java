@@ -23,16 +23,16 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.ui.widget.Tooltip;
-import com.kotcrab.vis.ui.widget.VisCheckBox;
 
 class BMPTextObjectTable extends TextObjectTable {
-	private VisCheckBox distanceFieldCheck;
+	private IndeterminateCheckbox distanceFieldCheck;
 
 	public BMPTextObjectTable (final EntityProperties properties) {
 		super(properties);
 
-		distanceFieldCheck = new VisCheckBox("Use DF");
+		distanceFieldCheck = new IndeterminateCheckbox("Use DF");
 		distanceFieldCheck.addListener(properties.getSharedCheckBoxChangeListener());
 
 		fontPropertiesTable.add(distanceFieldCheck);
@@ -76,7 +76,7 @@ class BMPTextObjectTable extends TextObjectTable {
 			TextObject obj = (TextObject) entity;
 
 			if (enabled != obj.isDistanceFieldShaderEnabled()) {
-				distanceFieldCheck.setChecked(false);
+				distanceFieldCheck.setIndeterminate(true);
 				return;
 			}
 		}

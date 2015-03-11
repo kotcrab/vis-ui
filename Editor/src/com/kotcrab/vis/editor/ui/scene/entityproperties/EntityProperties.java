@@ -43,6 +43,7 @@ import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.runtime.data.EntityData;
@@ -116,8 +117,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private NumberInputField xOriginField;
 	private NumberInputField yOriginField;
 	private NumberInputField rotationField;
-	private VisCheckBox xFlipCheck;
-	private VisCheckBox yFlipCheck;
+	private IndeterminateCheckbox xFlipCheck;
+	private IndeterminateCheckbox yFlipCheck;
 
 	public EntityProperties (FileAccessModule fileAccessModule, FontCacheModule fontCacheModule, final UndoModule undoModule, final ColorPicker picker, final Tab parentTab, final Array<EditorEntity> selectedEntitiesList) {
 		super(true);
@@ -148,10 +149,12 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		sharedCheckBoxChangeListener = new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				beginSnapshot();
-				setValuesToEntity();
-				parentTab.dirty();
-				endSnapshot();
+				if (event.isStopped() == false) {
+					beginSnapshot();
+					setValuesToEntity();
+					parentTab.dirty();
+					endSnapshot();
+				}
 			}
 		};
 
@@ -278,8 +281,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		flipTable = new VisTable(true);
 
 		flipTable.add(new VisLabel("Flip"));
-		flipTable.add(xFlipCheck = new VisCheckBox("X"));
-		flipTable.add(yFlipCheck = new VisCheckBox("Y")).padRight(10);
+		flipTable.add(xFlipCheck = new IndeterminateCheckbox("X"));
+		flipTable.add(yFlipCheck = new IndeterminateCheckbox("Y")).padRight(10);
 
 		xFlipCheck.addListener(sharedCheckBoxChangeListener);
 		yFlipCheck.addListener(sharedCheckBoxChangeListener);
@@ -418,7 +421,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		boolean xFlip = entities.first().isFlipX();
 		for (EditorEntity entity : entities) {
 			if (xFlip != entity.isFlipX()) {
-				xFlipCheck.setChecked(false);
+				xFlipCheck.setIndeterminate(true);
 				return;
 			}
 		}
@@ -430,7 +433,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		boolean yFlip = entities.first().isFlipY();
 		for (EditorEntity entity : entities) {
 			if (yFlip != entity.isFlipY()) {
-				yFlipCheck.setChecked(false);
+				yFlipCheck.setIndeterminate(true);
 				return;
 			}
 		}
@@ -456,23 +459,28 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	}
 
 	private void setValuesToEntity () {
-		for (EditorEntity entity : entities) {
+		for (int i = 0; i < entities.size; i++) {
+			EditorEntity entity = entities.get(i);
 
 			entity.setId(idField.getText().equals("") ? null : idField.getText());
-
 			entity.setPosition(FieldUtils.getFloat(xField, entity.getX()), FieldUtils.getFloat(yField, entity.getY()));
+
 			if (isScaleSupportedForEntities(entities))
-
 				entity.setScale(FieldUtils.getFloat(xScaleField, entity.getScaleX()), FieldUtils.getFloat(yScaleField, entity.getScaleY()));
-			if (isOriginSupportedForEntities(entities))
 
+			if (isOriginSupportedForEntities(entities))
 				entity.setOrigin(FieldUtils.getFloat(xOriginField, entity.getOriginX()), FieldUtils.getFloat(yOriginField, entity.getOriginY()));
+
 			if (isRotationSupportedForEntities(entities))
 				entity.setRotation(FieldUtils.getFloat(rotationField, entity.getRotation()));
 
-			if (isFlipSupportedForEntities(entities))
-				entity.setFlip(xFlipCheck.isChecked(), yFlipCheck.isChecked());
+			if (isFlipSupportedForEntities(entities)) {
+				if (xFlipCheck.isIndeterminate() == false)
+					entity.setFlip(xFlipCheck.isChecked(), entity.isFlipY());
 
+				if (yFlipCheck.isIndeterminate() == false)
+					entity.setFlip(entity.isFlipX(), yFlipCheck.isChecked());
+			}
 		}
 
 		if (activeSpecificTable != null) activeSpecificTable.setValuesToEntities();
