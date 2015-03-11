@@ -44,6 +44,7 @@ public class VisCheckBox extends TextButton implements Focusable {
 	private VisCheckBoxStyle style;
 
 	private boolean drawBorder;
+	private Drawable checkboxImage;
 
 	public VisCheckBox (String text) {
 		this(text, VisUI.getSkin().get(VisCheckBoxStyle.class));
@@ -95,36 +96,13 @@ public class VisCheckBox extends TextButton implements Focusable {
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
-		Drawable checkbox = null;
-		if (isDisabled()) {
-			if (isChecked())
-				checkbox = style.checkboxOnDisabled;
-			else
-				checkbox = style.checkboxOffDisabled;
-		}
+		Drawable checkbox = getCheckboxImage();
 
-		if (checkbox == null) {
-			if (isPressed())
-				if (isChecked())
-					checkbox = style.checkboxOnDown;
-				else
-					checkbox = style.checkboxOffDown;
-			else if (isChecked()) {
-				if (isOver())
-					checkbox = style.checkboxOnOver;
-				else
-					checkbox = style.checkboxOn;
-			} else {
-				if (isOver())
-					checkbox = style.checkboxOver;
-				else
-					checkbox = style.checkboxOff;
-			}
-		}
 		image.setDrawable(checkbox);
 		super.draw(batch, parentAlpha);
 
-		if (drawBorder && style.focusBorder != null) style.focusBorder.draw(batch, getX(), getY() + image.getY(), image.getWidth(), image.getHeight());
+		if (drawBorder && style.focusBorder != null)
+			style.focusBorder.draw(batch, getX(), getY() + image.getY(), image.getWidth(), image.getHeight());
 	}
 
 	public Image getImage () {
@@ -143,6 +121,33 @@ public class VisCheckBox extends TextButton implements Focusable {
 	@Override
 	public void focusGained () {
 		drawBorder = true;
+	}
+
+	protected Drawable getCheckboxImage () {
+		if (isDisabled()) {
+			if (isChecked())
+				return style.checkboxOnDisabled;
+			else
+				return style.checkboxOffDisabled;
+		}
+
+		if (isPressed())
+			if (isChecked())
+				return style.checkboxOnDown;
+			else
+				return style.checkboxOffDown;
+
+		if (isChecked()) {
+			if (isOver())
+				return style.checkboxOnOver;
+			else
+				return style.checkboxOn;
+		}
+
+		if (isOver())
+			return style.checkboxOver;
+		else
+			return style.checkboxOff;
 	}
 
 	static public class VisCheckBoxStyle extends CheckBoxStyle {
