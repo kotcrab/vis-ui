@@ -103,7 +103,7 @@ public class TabbedPane {
 		}
 
 		if (tab.isDirty()) {
-			DialogUtils.showOptionDialog(Editor.instance.getStage(), "Unsaved changes", "Do you want to save changes in this resource before closing it?",
+			DialogUtils.showOptionDialog(Editor.instance.getStage(), "Unsaved changes", "Save changes?",
 					OptionDialogType.YES_NO_CANCEL, new OptionDialogAdapter() {
 						@Override
 						public void yes () {
