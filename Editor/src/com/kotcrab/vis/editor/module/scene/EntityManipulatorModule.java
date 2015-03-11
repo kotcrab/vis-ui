@@ -61,7 +61,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private float lastTouchX, lastTouchY;
 
-	private boolean selected;
+	private boolean mouseInsideSelected;
 	private boolean cameraDragged;
 	private boolean dragging;
 	private boolean dragged;
@@ -229,12 +229,16 @@ public class EntityManipulatorModule extends SceneModule {
 					selectedEntities.add(result);
 
 				entityProperties.selectedEntitiesChanged();
-				selected = true;
+				mouseInsideSelected = true;
 				return true;
 			}
 		}
 
 		return false;
+	}
+
+	boolean isTouchDownMouseOnEntity () {
+		return isMouseInsideSelectedEntities(camera.getInputX(), camera.getInputY());
 	}
 
 	@Override
@@ -275,7 +279,7 @@ public class EntityManipulatorModule extends SceneModule {
 		x = camera.getInputX();
 		y = camera.getInputY();
 
-		if (button == Buttons.LEFT && dragged == false && selected == false) {
+		if (button == Buttons.LEFT && dragged == false && mouseInsideSelected == false) {
 			EditorEntity result = findEntityWithSmallestSurfaceArea(x, y);
 			if (result != null)
 				selectedEntities.removeValue(result, true);
@@ -284,14 +288,15 @@ public class EntityManipulatorModule extends SceneModule {
 		}
 
 		if (button == Buttons.RIGHT && cameraDragged == false) {
-			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) selectedEntities.clear();
+			if (isMouseInsideSelectedEntities(x, y) == false)
+				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) selectedEntities.clear();
 
 			EditorEntity result = findEntityWithSmallestSurfaceArea(x, y);
 			if (result != null && selectedEntities.contains(result, true) == false)
 				selectedEntities.add(result);
 
 			entityProperties.selectedEntitiesChanged();
-			selected = true;
+			mouseInsideSelected = true;
 
 			if (selectedEntities.size > 0) {
 				menuX = x;
@@ -318,7 +323,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 		lastTouchX = 0;
 		lastTouchY = 0;
-		selected = false;
+		mouseInsideSelected = false;
 		dragging = false;
 		dragged = false;
 		cameraDragged = false;
@@ -389,7 +394,7 @@ public class EntityManipulatorModule extends SceneModule {
 		entityProperties.selectedEntitiesChanged();
 	}
 
-	private void selectAppend (EditorEntity entity) {
+	void selectAppend (EditorEntity entity) {
 		if (entities.contains(entity, true) == false)
 			throw new IllegalArgumentException("Cannot select entity that isn't added to entity list");
 
