@@ -27,42 +27,61 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.module.ColorPickerModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
+import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
+import com.kotcrab.vis.editor.util.ButtonListener;
+import com.kotcrab.vis.ui.widget.MenuItem;
+import com.kotcrab.vis.ui.widget.PopupMenu;
 
 public class EntityManipulatorModule extends SceneModule {
 	private CameraModule camera;
 	private UndoModule undoModule;
+	private SceneIOModule sceneIOModule;
 
 	private ShapeRenderer shapeRenderer;
 
 	private EntityProperties entityProperties;
 
 	private Array<EditorEntity> entities;
+
+	//required for setting position of pasted elements
+	private float copyAttachX, copyAttachY;
+	private Array<EditorEntity> entitiesClipboard = new Array<>();
+
 	private final Array<EditorEntity> selectedEntities = new Array<>();
 
-	private float lastTouchX;
-	private float lastTouchY;
+	private float lastTouchX, lastTouchY;
 
 	private boolean selected;
+	private boolean cameraDragged;
 	private boolean dragging;
 	private boolean dragged;
 
 	private Array<MoveAction> moveActions = new Array<>();
 
+	private PopupMenu generalPopupMenu;
+	private PopupMenu entityPopupMenu;
+	private float menuX, menuY;
+
 	@Override
 	public void added () {
 		this.entities = scene.entities;
 
+		createPopupMenu();
+
 		shapeRenderer = sceneContainer.get(RendererModule.class).getShapeRenderer();
 		camera = sceneContainer.get(CameraModule.class);
 		undoModule = sceneContainer.get(UndoModule.class);
+		sceneIOModule = projectContainer.get(SceneIOModule.class);
 
 		ColorPickerModule pickerModule = container.get(ColorPickerModule.class);
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
@@ -102,16 +121,91 @@ public class EntityManipulatorModule extends SceneModule {
 		}
 	}
 
+	private void createPopupMenu () {
+		entityPopupMenu = new PopupMenu(true);
+		entityPopupMenu.addItem(createMenuItem("Cut", this::cut));
+		entityPopupMenu.addItem(createMenuItem("Copy", this::copy));
+		entityPopupMenu.addItem(createMenuItem("Paste", this::paste));
+		entityPopupMenu.addItem(createMenuItem("Remove", this::deleteSelectedEntities));
+		entityPopupMenu.addItem(createMenuItem("Select All", this::selectAll));
+
+		generalPopupMenu = new PopupMenu(true);
+		generalPopupMenu.addItem(createMenuItem("Paste", this::paste));
+		generalPopupMenu.addItem(createMenuItem("Select All", this::selectAll));
+	}
+
+	private void selectedEntitiesToClipboard () {
+		if (selectedEntities.size > 0) {
+			entitiesClipboard.clear();
+			entitiesClipboard.addAll(sceneIOModule.getKryo().copy(selectedEntities));
+
+			EditorEntity lastEntity = selectedEntities.peek();
+
+			if (entityPopupMenu.getParent() != null) { //is menu visible
+				copyAttachX = menuX - lastEntity.getX();
+				copyAttachY = menuY - lastEntity.getY();
+			} else {
+				copyAttachX = lastEntity.getWidth() / 2;
+				copyAttachY = lastEntity.getHeight() / 2;
+			}
+		}
+	}
+
+	private void cut () {
+		selectedEntitiesToClipboard();
+		deleteSelectedEntities();
+		sceneTab.dirty();
+	}
+
+	private void copy () {
+		selectedEntitiesToClipboard();
+	}
+
+	private void paste () {
+
+		if (entitiesClipboard.size > 0) {
+			float x = camera.getInputX();
+			float y = camera.getInputY();
+
+			EditorEntity baseEntity = entitiesClipboard.peek();
+			float xOffset = baseEntity.getX();
+			float yOffset = baseEntity.getY();
+
+			for (EditorEntity entity : entitiesClipboard) {
+				float px = x - copyAttachX + (entity.getX() - xOffset);
+				float py = y - copyAttachY + (entity.getY() - yOffset);
+
+				entity.setPosition(px, py);
+			}
+
+			undoModule.execute(new PastedAction(entitiesClipboard));
+
+			Array<EditorEntity> newClipboard = sceneIOModule.getKryo().copy(entitiesClipboard);
+			entitiesClipboard.clear();
+			entitiesClipboard.addAll(newClipboard);
+		}
+	}
+
+	private MenuItem createMenuItem (String text, ButtonListener listener) {
+		return new MenuItem(text, new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				listener.clicked();
+			}
+		});
+	}
+
 	public EntityProperties getEntityProperties () {
 		return entityProperties;
 	}
 
 	private boolean isMouseInsideSelectedEntities (float x, float y) {
-		for (EditorEntity entity : selectedEntities)
+		for (EditorEntity entity : selectedEntities) {
 			if (entity.getBoundingRectangle().contains(x, y)) {
 				EditorEntity result = findEntityWithSmallestSurfaceArea(x, y);
 				if (result == entity) return true;
 			}
+		}
 
 		return false;
 	}
@@ -135,39 +229,45 @@ public class EntityManipulatorModule extends SceneModule {
 					selectedEntities.add(result);
 
 				entityProperties.selectedEntitiesChanged();
-
 				selected = true;
 				return true;
 			}
 		}
+
 		return false;
 	}
 
 	@Override
 	public void touchDragged (InputEvent event, float x, float y, int pointer) {
-		x = camera.getInputX();
-		y = camera.getInputY();
+		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
+			x = camera.getInputX();
+			y = camera.getInputY();
 
-		if (dragged == false) {
-			moveActions.clear();
-			for (EditorEntity entity : selectedEntities)
-				moveActions.add(new MoveAction(entity));
+			if (dragged == false) {
+				moveActions.clear();
+				for (EditorEntity entity : selectedEntities)
+					moveActions.add(new MoveAction(entity));
+			}
+
+			if (dragging && selectedEntities.size > 0) {
+				dragged = true;
+				float deltaX = (x - lastTouchX);
+				float deltaY = (y - lastTouchY);
+
+				for (EditorEntity entity : selectedEntities)
+					entity.setPosition(entity.getX() + deltaX, entity.getY() + deltaY);
+
+				lastTouchX = x;
+				lastTouchY = y;
+
+				sceneTab.dirty();
+				entityProperties.updateValues();
+
+			}
 		}
 
-		if (dragging && selectedEntities.size > 0) {
-			dragged = true;
-			float deltaX = (x - lastTouchX);
-			float deltaY = (y - lastTouchY);
-
-			for (EditorEntity entity : selectedEntities)
-				entity.setPosition(entity.getX() + deltaX, entity.getY() + deltaY);
-
-			lastTouchX = x;
-			lastTouchY = y;
-
-			sceneTab.dirty();
-			entityProperties.updateValues();
-		}
+		if (Gdx.input.isButtonPressed(Buttons.RIGHT))
+			cameraDragged = true;
 	}
 
 	@Override
@@ -175,7 +275,7 @@ public class EntityManipulatorModule extends SceneModule {
 		x = camera.getInputX();
 		y = camera.getInputY();
 
-		if (dragged == false && selected == false) {
+		if (button == Buttons.LEFT && dragged == false && selected == false) {
 			EditorEntity result = findEntityWithSmallestSurfaceArea(x, y);
 			if (result != null)
 				selectedEntities.removeValue(result, true);
@@ -183,10 +283,28 @@ public class EntityManipulatorModule extends SceneModule {
 			entityProperties.selectedEntitiesChanged();
 		}
 
+		if (button == Buttons.RIGHT && cameraDragged == false) {
+			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) selectedEntities.clear();
+
+			EditorEntity result = findEntityWithSmallestSurfaceArea(x, y);
+			if (result != null && selectedEntities.contains(result, true) == false)
+				selectedEntities.add(result);
+
+			entityProperties.selectedEntitiesChanged();
+			selected = true;
+
+			if (selectedEntities.size > 0) {
+				menuX = x;
+				menuY = y;
+
+				entityPopupMenu.displayMenu(event.getStage(), event.getStageX(), event.getStageY());
+			} else
+				generalPopupMenu.displayMenu(event.getStage(), event.getStageX(), event.getStageY());
+		}
+
 		if (dragged) {
-			for (int i = 0; i < selectedEntities.size; i++) {
+			for (int i = 0; i < selectedEntities.size; i++)
 				moveActions.get(i).newData.saveFrom(selectedEntities.get(i));
-			}
 
 			UndoableActionGroup group = new UndoableActionGroup();
 
@@ -203,22 +321,28 @@ public class EntityManipulatorModule extends SceneModule {
 		selected = false;
 		dragging = false;
 		dragged = false;
+		cameraDragged = false;
 	}
 
 	@Override
 	public boolean keyDown (InputEvent event, int keycode) {
 		if (keycode == Keys.FORWARD_DEL) { //Delete
-			undoModule.execute(new EntityRemoved(selectedEntities));
-			selectedEntities.clear();
-			entityProperties.selectedEntitiesChanged();
-
+			deleteSelectedEntities();
 			return true;
 		}
 
-		if (keycode == Keys.A && Gdx.input.isKeyPressed(Keys.CONTROL_LEFT))
-			selectAll();
+		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.A) selectAll();
+		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.C) copy();
+		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.V) paste();
+		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.X) cut();
 
 		return false;
+	}
+
+	private void deleteSelectedEntities () {
+		undoModule.execute(new EntityRemoved(selectedEntities));
+		selectedEntities.clear();
+		entityProperties.selectedEntitiesChanged();
 	}
 
 	/**
@@ -257,9 +381,23 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	public void select (EditorEntity entity) {
+		if (entities.contains(entity, true) == false)
+			throw new IllegalArgumentException("Cannot select entity that isn't added to entity list");
+
 		selectedEntities.clear();
 		selectedEntities.add(entity);
 		entityProperties.selectedEntitiesChanged();
+	}
+
+	private void selectAppend (EditorEntity entity) {
+		if (entities.contains(entity, true) == false)
+			throw new IllegalArgumentException("Cannot select entity that isn't added to entity list");
+
+		if (selectedEntities.contains(entity, true) == false)
+			selectedEntities.add(entity);
+
+		entityProperties.selectedEntitiesChanged();
+
 	}
 
 	private void selectAll () {
@@ -274,6 +412,29 @@ public class EntityManipulatorModule extends SceneModule {
 	public void resetSelection () {
 		selectedEntities.clear();
 		entityProperties.selectedEntitiesChanged();
+	}
+
+	private class PastedAction implements UndoableAction {
+		private Array<EditorEntity> newEntities;
+
+		public PastedAction (Array<EditorEntity> newEntities) {
+			this.newEntities = new Array<>(newEntities);
+		}
+
+		@Override
+		public void execute () {
+			entities.addAll(newEntities);
+			resetSelection();
+			newEntities.forEach(EntityManipulatorModule.this::selectAppend);
+			sceneTab.dirty();
+		}
+
+		@Override
+		public void undo () {
+			scene.entities.removeAll(newEntities, true);
+			resetSelection();
+			sceneTab.dirty();
+		}
 	}
 
 	private class EntityRemoved implements UndoableAction {
