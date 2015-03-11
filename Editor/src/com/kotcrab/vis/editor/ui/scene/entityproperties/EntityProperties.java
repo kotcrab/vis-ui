@@ -444,6 +444,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 				return;
 			}
 		}
+		tint.setUnknown(false);
 		tint.setColor(firstColor);
 	}
 
