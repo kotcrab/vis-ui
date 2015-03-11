@@ -422,6 +422,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 				return;
 			}
 		}
+
 		xFlipCheck.setChecked(xFlip);
 	}
 
@@ -433,6 +434,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 				return;
 			}
 		}
+
 		yFlipCheck.setChecked(yFlip);
 	}
 
@@ -444,6 +446,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 				return;
 			}
 		}
+
 		tint.setUnknown(false);
 		tint.setColor(firstColor);
 	}
@@ -456,11 +459,19 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		for (EditorEntity entity : entities) {
 
 			entity.setId(idField.getText().equals("") ? null : idField.getText());
+
 			entity.setPosition(FieldUtils.getFloat(xField, entity.getX()), FieldUtils.getFloat(yField, entity.getY()));
-			entity.setScale(FieldUtils.getFloat(xScaleField, entity.getScaleX()), FieldUtils.getFloat(yScaleField, entity.getScaleY()));
-			entity.setOrigin(FieldUtils.getFloat(xOriginField, entity.getOriginX()), FieldUtils.getFloat(yOriginField, entity.getOriginY()));
-			entity.setRotation(FieldUtils.getFloat(rotationField, entity.getRotation()));
-			entity.setFlip(xFlipCheck.isChecked(), yFlipCheck.isChecked());
+			if (isScaleSupportedForEntities(entities))
+
+				entity.setScale(FieldUtils.getFloat(xScaleField, entity.getScaleX()), FieldUtils.getFloat(yScaleField, entity.getScaleY()));
+			if (isOriginSupportedForEntities(entities))
+
+				entity.setOrigin(FieldUtils.getFloat(xOriginField, entity.getOriginX()), FieldUtils.getFloat(yOriginField, entity.getOriginY()));
+			if (isRotationSupportedForEntities(entities))
+				entity.setRotation(FieldUtils.getFloat(rotationField, entity.getRotation()));
+
+			if (isFlipSupportedForEntities(entities))
+				entity.setFlip(xFlipCheck.isChecked(), yFlipCheck.isChecked());
 
 		}
 
