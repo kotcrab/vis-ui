@@ -45,7 +45,6 @@ import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.editor.module.scene.EntityManipulatorModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererModule;
-import com.kotcrab.vis.editor.module.scene.RectangularSelectionModule;
 import com.kotcrab.vis.editor.module.scene.RendererModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
@@ -103,7 +102,6 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		sceneMC.add(new ZIndexManipulator());
 
 		sceneMC.add(entityManipulator = new EntityManipulatorModule());
-		sceneMC.add(new RectangularSelectionModule());
 		sceneMC.init();
 
 		outline = new SceneOutline();

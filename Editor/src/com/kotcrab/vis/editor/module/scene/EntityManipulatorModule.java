@@ -61,6 +61,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private float lastTouchX, lastTouchY;
 
+	private RectangularSelection rectangularSelection;
+
 	private boolean mouseInsideSelected;
 	private boolean cameraDragged;
 	private boolean dragging;
@@ -87,12 +89,14 @@ public class EntityManipulatorModule extends SceneModule {
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
 		FontCacheModule fontCacheModule = projectContainer.get(FontCacheModule.class);
 		entityProperties = new EntityProperties(fileAccess, fontCacheModule, undoModule, pickerModule.getPicker(), sceneTab, selectedEntities);
+
+		rectangularSelection = new RectangularSelection(entities, this);
 	}
 
 	@Override
 	public void render (Batch batch) {
+		batch.end();
 		if (selectedEntities.size > 0) {
-			batch.end();
 
 			shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
 			shapeRenderer.setColor(Color.WHITE);
@@ -105,8 +109,11 @@ public class EntityManipulatorModule extends SceneModule {
 
 			shapeRenderer.end();
 
-			batch.begin();
 		}
+
+		rectangularSelection.render(shapeRenderer);
+
+		batch.begin();
 	}
 
 	@Override
@@ -210,6 +217,14 @@ public class EntityManipulatorModule extends SceneModule {
 		return false;
 	}
 
+	private boolean isMouseInsideEntities (float x, float y) {
+		for (EditorEntity entity : entities) {
+			if (entity.getBoundingRectangle().contains(x, y)) return true;
+		}
+
+		return false;
+	}
+
 	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 		x = camera.getInputX();
@@ -219,6 +234,11 @@ public class EntityManipulatorModule extends SceneModule {
 			dragging = true;
 			lastTouchX = x;
 			lastTouchY = y;
+
+			if (isMouseInsideEntities(x, y) == false) {
+				rectangularSelection.touchDown(x, y, button);
+				return true;
+			}
 
 			if (isMouseInsideSelectedEntities(x, y) == false) {
 				//multiple select made easy
@@ -237,10 +257,6 @@ public class EntityManipulatorModule extends SceneModule {
 		return false;
 	}
 
-	boolean isTouchDownMouseOnEntity () {
-		return isMouseInsideSelectedEntities(camera.getInputX(), camera.getInputY());
-	}
-
 	@Override
 	public void touchDragged (InputEvent event, float x, float y, int pointer) {
 		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
@@ -253,19 +269,22 @@ public class EntityManipulatorModule extends SceneModule {
 					moveActions.add(new MoveAction(entity));
 			}
 
-			if (dragging && selectedEntities.size > 0) {
-				dragged = true;
-				float deltaX = (x - lastTouchX);
-				float deltaY = (y - lastTouchY);
+			if(rectangularSelection.touchDragged(x, y) == false) {
 
-				for (EditorEntity entity : selectedEntities)
-					entity.setPosition(entity.getX() + deltaX, entity.getY() + deltaY);
+				if (dragging && selectedEntities.size > 0) {
+					dragged = true;
+					float deltaX = (x - lastTouchX);
+					float deltaY = (y - lastTouchY);
 
-				lastTouchX = x;
-				lastTouchY = y;
+					for (EditorEntity entity : selectedEntities)
+						entity.setPosition(entity.getX() + deltaX, entity.getY() + deltaY);
 
-				sceneTab.dirty();
-				entityProperties.updateValues();
+					lastTouchX = x;
+					lastTouchY = y;
+
+					sceneTab.dirty();
+					entityProperties.updateValues();
+				}
 
 			}
 		}
@@ -320,6 +339,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 			undoModule.add(group);
 		}
+
+		rectangularSelection.touchUp();
 
 		lastTouchX = 0;
 		lastTouchY = 0;

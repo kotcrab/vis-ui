@@ -21,41 +21,25 @@ package com.kotcrab.vis.editor.module.scene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 
-public class RectangularSelectionModule extends SceneModule {
-	private CameraModule cameraModule;
-	private EntityManipulatorModule entityManipulatorModule;
-
-	private ShapeRenderer shapeRenderer;
-
+public class RectangularSelection {
 	private Array<EditorEntity> entities;
+	private EntityManipulatorModule entityManipulatorModule;
 
 	private Rectangle currentRect = null;
 	private Rectangle rectToDraw = null;
-	private Rectangle previousRectDrawn = new Rectangle();
 
-	@Override
-	public void added () {
-		//must be added after EntityManipulatorModule
-		entityManipulatorModule = sceneContainer.get(EntityManipulatorModule.class);
+	public RectangularSelection (Array<EditorEntity> entities, EntityManipulatorModule entityManipulatorModule) {
+		this.entities = entities;
+		this.entityManipulatorModule = entityManipulatorModule;
 	}
 
-	@Override
-	public void init () {
-		this.entities = scene.entities;
-		cameraModule = sceneContainer.get(CameraModule.class);
-		shapeRenderer = sceneContainer.get(RendererModule.class).getShapeRenderer();
-	}
-
-	@Override
-	public void render (Batch batch) {
+	public void render (ShapeRenderer shapeRenderer) {
 		if (rectToDraw != null) {
 			Gdx.gl20.glEnable(GL20.GL_BLEND);
 
@@ -81,12 +65,8 @@ public class RectangularSelectionModule extends SceneModule {
 		matchingEntities.forEach(entityManipulatorModule::selectAppend);
 	}
 
-	@Override
-	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-		x = cameraModule.getInputX();
-		y = cameraModule.getInputY();
-
-		if (button == Buttons.LEFT && entityManipulatorModule.isTouchDownMouseOnEntity() == false ) {
+	public boolean touchDown (float x, float y, int button) {
+		if (button == Buttons.LEFT) {
 			currentRect = new Rectangle(x, y, 0, 0);
 			updateDrawableRect();
 			return true;
@@ -95,29 +75,21 @@ public class RectangularSelectionModule extends SceneModule {
 		return false;
 	}
 
-	@Override
-	public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-		x = cameraModule.getInputX();
-		y = cameraModule.getInputY();
-
-		if(rectToDraw != null) {
-			if (!Gdx.input.isButtonPressed(Buttons.LEFT)) {
-				findContainedComponents();
-				rectToDraw = null;
-			}
-		}
-	}
-
-	@Override
-	public void touchDragged (InputEvent event, float x, float y, int pointer) {
-		x = cameraModule.getInputX();
-		y = cameraModule.getInputY();
-
-		if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
+	public boolean touchDragged (float x, float y) {
+		if (currentRect != null) {
 			currentRect.setSize(x - currentRect.x, y - currentRect.y);
 			updateDrawableRect();
+			return true;
 		}
 
+		return false;
+	}
+
+	public void touchUp () {
+		if (rectToDraw != null) findContainedComponents();
+
+		rectToDraw = null;
+		currentRect = null;
 	}
 
 	private void updateDrawableRect () {
@@ -138,11 +110,10 @@ public class RectangularSelectionModule extends SceneModule {
 		}
 
 		// Update rectToDraw after saving old value.
-		if (rectToDraw != null) {
-			previousRectDrawn.set(rectToDraw.x, rectToDraw.y, rectToDraw.width, rectToDraw.height);
+		if (rectToDraw != null)
 			rectToDraw.set(x, y, width, height);
-		} else {
+		else
 			rectToDraw = new Rectangle(x, y, width, height);
-		}
+
 	}
 }
