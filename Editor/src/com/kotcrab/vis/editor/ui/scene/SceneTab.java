@@ -37,6 +37,7 @@ import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.MenuEvent;
 import com.kotcrab.vis.editor.event.MenuEventType;
 import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
+import com.kotcrab.vis.editor.event.UndoEvent;
 import com.kotcrab.vis.editor.module.MenuBarModule;
 import com.kotcrab.vis.editor.module.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
@@ -249,6 +250,11 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 
 				if (type == MenuEventType.FILE_SAVE)
 					save();
+			}
+
+			if (event instanceof UndoEvent) {
+				if (undoModule.getUndoSize() == 0)
+					setDirty(false);
 			}
 		}
 

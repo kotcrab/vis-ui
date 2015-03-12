@@ -77,6 +77,10 @@ public class UndoModule extends SceneModule {
 		sceneTab.dirty();
 	}
 
+	public int getUndoSize () {
+		return undoList.size;
+	}
+
 	@Override
 	public void onHide () {
 		tabActive = false;
