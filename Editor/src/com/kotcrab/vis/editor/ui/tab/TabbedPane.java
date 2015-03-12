@@ -20,6 +20,7 @@
 package com.kotcrab.vis.editor.ui.tab;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -245,7 +246,7 @@ public class TabbedPane {
 			closeButton.addListener(new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
-					TabbedPane.this.remove(tab, false);
+					closeTab();
 				}
 			});
 
@@ -253,6 +254,9 @@ public class TabbedPane {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int mouseButton) {
 					closeButtonStyle.up = buttonStyle.down;
+
+					if (mouseButton == Buttons.MIDDLE) closeTab();
+
 					return false;
 				}
 
@@ -285,7 +289,6 @@ public class TabbedPane {
 							if (table != null) table.deselect();
 						}
 
-
 						if (activeTab != null) activeTab.onHide();
 						activeTab = tab;
 						notifyListenersSwitched(tab);
@@ -295,6 +298,11 @@ public class TabbedPane {
 					}
 				}
 			});
+		}
+
+		private void closeTab () {
+			if (tab.isCloseableByUser())
+				TabbedPane.this.remove(tab, false);
 		}
 
 		public void select () {
