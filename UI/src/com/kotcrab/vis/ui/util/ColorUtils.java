@@ -30,7 +30,7 @@ public class ColorUtils {
 	 * @param s saturation 0-100
 	 * @param v value 0-100
 	 * @param alpha 0-1
-	 * @return RGB values in LibGDX Color class
+	 * @return RGB values in LibGDX {@link Color} class
 	 */
 	public static Color HSVtoRGB (float h, float s, float v, float alpha) {
 		Color c = HSVtoRGB(h, s, v);
@@ -43,7 +43,7 @@ public class ColorUtils {
 	 * @param h hue 0-360
 	 * @param s saturation 0-100
 	 * @param v value 0-100
-	 * @return RGB values in LibGDX Color class
+	 * @return RGB values in LibGDX {@link Color} class
 	 */
 	public static Color HSVtoRGB (float h, float s, float v) {
 		Color c = new Color(1, 1, 1, 1);
@@ -57,8 +57,9 @@ public class ColorUtils {
 	 * @param s saturation 0-100
 	 * @param v value 0-100
 	 * @param targetColor color that result will be stored in
+	 * @return targetColor
 	 */
-	public static void HSVtoRGB (float h, float s, float v, Color targetColor) {
+	public static Color HSVtoRGB (float h, float s, float v, Color targetColor) {
 		if (h == 360) h = 359;
 		int r, g, b;
 		int i;
@@ -107,14 +108,19 @@ public class ColorUtils {
 		}
 
 		targetColor.set(r / 255.0f, g / 255.0f, b / 255.0f, targetColor.a);
+		return targetColor;
 	}
 
-	/** @return 3 element int array with hue (0-360), saturation (0-100) and value (0-100) */
+	/**
+	 * Converts {@link Color} to HSV color system
+	 * @return 3 element int array with hue (0-360), saturation (0-100) and value (0-100)
+	 */
 	public static int[] RGBtoHSV (Color c) {
 		return RGBtoHSV(c.r, c.g, c.b);
 	}
 
 	/**
+	 * Converts RGB to HSV color system
 	 * @param r red 0-1
 	 * @param g green 0-1
 	 * @param b blue 0-1

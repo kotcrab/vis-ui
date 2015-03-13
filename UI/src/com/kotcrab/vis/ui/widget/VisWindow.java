@@ -38,8 +38,8 @@ public class VisWindow extends Window {
 		this(title, true);
 	}
 
-	public VisWindow (String title, boolean showBorder) {
-		super(title, VisUI.getSkin(), showBorder ? "default" : "noborder");
+	public VisWindow (String title, boolean showWindowBorder) {
+		super(title, VisUI.getSkin(), showWindowBorder ? "default" : "noborder");
 		setTitleAlignment(VisUI.getDefaultTitleAlign());
 	}
 
@@ -79,30 +79,38 @@ public class VisWindow extends Window {
 		if (parent != null) setPosition((parent.getWidth() - getWidth()) / 2, (parent.getHeight() - getHeight()) / 2);
 	}
 
+	/** Fade outs this window, when fade out animation is completed, window is removed from Stage */
 	public void fadeOut (float time) {
 		addAction(Actions.sequence(Actions.fadeOut(time, Interpolation.fade), Actions.removeActor()));
 	}
 
-	/** @return this window for the purpose of chaining methods eg. stage.addActor(new MyWindow(stage).fadeIn()); */
+	/** @return this window for the purpose of chaining methods eg. stage.addActor(new MyWindow(stage).fadeIn(0.3f)); */
 	public VisWindow fadeIn (float time) {
 		setColor(1, 1, 1, 0);
 		addAction(Actions.sequence(Actions.fadeIn(time, Interpolation.fade)));
 		return this;
 	}
 
+	/** Fade outs this window, when fade out animation is completed, window is removed from Stage */
 	public void fadeOut () {
 		fadeOut(FADE_TIME);
 	}
 
+	/** @return this window for the purpose of chaining methods eg. stage.addActor(new MyWindow(stage).fadeIn()); */
 	public VisWindow fadeIn () {
 		return fadeIn(FADE_TIME);
 	}
 
-	/** If close button was added using addCloseButton() then this function is called when that button has been pressed */
+	/**
+	 * Called by window when close button was pressed (added using {@link #addCloseButton()})
+	 * or escape key was pressed (for close on escape {@link #closeOnEscape()} have to be called).
+	 * Default close behaviour is to fade out window, this can be changed by overriding this function.
+	 */
 	protected void close () {
 		fadeOut();
 	}
 
+	/** Adds close button to window, next to window title. After pressing that button, {@link #close()} is called. */
 	public void addCloseButton () {
 		VisImageButton closeButton = new VisImageButton("close-window");
 		getButtonTable().add(closeButton).padRight(1).padBottom(1);
@@ -114,6 +122,7 @@ public class VisWindow extends Window {
 		});
 	}
 
+	/** Will make this window close when escape key was pressed. After pressing escape {@link #close()} is called. */
 	public void closeOnEscape () {
 		addListener(new InputListener() {
 			@Override

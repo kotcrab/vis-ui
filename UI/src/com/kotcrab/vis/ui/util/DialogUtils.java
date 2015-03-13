@@ -48,6 +48,7 @@ public class DialogUtils {
 	private static final int BUTTON_OK = 3;
 	private static final int BUTTON_DETAILS = 4;
 
+	/** Dialog with text and OK button */
 	public static void showOKDialog (Stage stage, String title, String text) {
 		VisDialog dialog = new VisDialog(title);
 		dialog.text(text);
@@ -57,12 +58,18 @@ public class DialogUtils {
 		stage.addActor(dialog.fadeIn());
 	}
 
-	/** @since 0.6.0 */
-	public static OptionDialog showOptionDialog (Stage stage, String title, String text, OptionDialogType type, final OptionDialogListener listener) {
+	/**
+	 * Dialog with text and buttons like Yes, No, Cancel
+	 * @return dialog for the purpose of changing buttons text
+	 * @see OptionDialog
+	 * @since 0.6.0
+	 */
+	public static OptionDialog showOptionDialog (Stage stage, String title, String text, OptionDialogType type, OptionDialogListener listener) {
 		return new OptionDialog(stage, title, text, type, listener);
 	}
 
 	/**
+	 * Dialog with text and text field for user input. Cannot be canceled.
 	 * @param fieldTitle may be null
 	 */
 	public static void showInputDialog (Stage stage, String title, String fieldTitle, InputDialogListener listener) {
@@ -70,6 +77,8 @@ public class DialogUtils {
 	}
 
 	/**
+	 * Dialog with text and text field for user input. Cannot be canceled.
+	 * @param validator used to validate user input, can be used to easily limit input to int etc. See {@link Validators} for premade validators
 	 * @param fieldTitle may be null
 	 */
 	public static void showInputDialog (Stage stage, String title, String fieldTitle, InputValidator validator, InputDialogListener listener) {
@@ -77,6 +86,8 @@ public class DialogUtils {
 	}
 
 	/**
+	 * Dialog with text and text field for user input.
+	 * @param cancelable if true dialog may be canceled
 	 * @param fieldTitle may be null
 	 */
 	public static void showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputDialogListener listener) {
@@ -84,16 +95,21 @@ public class DialogUtils {
 	}
 
 	/**
+	 * Dialog with text and text field for user input.
+	 * @param validator used to validate user input, can be used to easily limit input to int etc. See {@link Validators} for premade validators
+	 * @param cancelable if true dialog may be canceled
 	 * @param fieldTitle may be null
 	 */
 	public static void showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputValidator validator, InputDialogListener listener) {
 		new InputDialog(stage, title, fieldTitle, cancelable, validator, listener);
 	}
 
+	/** Dialog with title "Error" and provided text */
 	public static void showErrorDialog (Stage stage, String text) {
 		showErrorDialog(stage, text, (String) null);
 	}
 
+	/** Dialog with title "Error", provided text, and exception stacktrace available after pressing 'Details' button */
 	public static void showErrorDialog (Stage stage, String text, Exception exception) {
 		if (exception == null)
 			showErrorDialog(stage, text, (String) null);
@@ -101,6 +117,7 @@ public class DialogUtils {
 			showErrorDialog(stage, text, getStackTrace(exception));
 	}
 
+	/** Dialog with title "Error", provided text, and provided details available after pressing 'Details' button */
 	public static void showErrorDialog (Stage stage, String text, String details) {
 		ErrorDialog dialog = new ErrorDialog(text, details);
 		stage.addActor(dialog.fadeIn());
