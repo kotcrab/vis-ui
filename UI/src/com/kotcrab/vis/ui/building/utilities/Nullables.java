@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.util;
+package com.kotcrab.vis.ui.building.utilities;
 
 /**
  * Provides static utilities for nullable objects to avoid NullPointerExceptions. Java 6 compatible, although

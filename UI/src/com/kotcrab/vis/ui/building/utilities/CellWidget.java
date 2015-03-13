@@ -19,7 +19,6 @@ package com.kotcrab.vis.ui.building.utilities;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.kotcrab.vis.ui.util.Nullables;
 
 /**
  * Wraps a Scene2D widget, allowing to store cell data for delayed Table creation. Note that some filling data
