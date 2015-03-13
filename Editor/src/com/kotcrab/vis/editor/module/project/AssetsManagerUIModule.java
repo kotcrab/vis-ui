@@ -21,24 +21,17 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.Assets;
@@ -46,8 +39,6 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.TabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.ParticleObject;
-import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
@@ -67,20 +58,14 @@ import com.kotcrab.vis.ui.widget.VisTree;
 import java.awt.Desktop;
 import java.io.IOException;
 
-@SuppressWarnings("rawtypes")
-
 //TODO filter particle images and bitmap font images
 public class AssetsManagerUIModule extends ProjectModule implements DirectoryWatcher.WatchListener, TabbedPaneListener {
-	private Stage stage;
-
 	private TabsModule tabsModule;
 
 	private FileAccessModule fileAccess;
 	private AssetsWatcherModule assetsWatcher;
 
 	private TextureCacheModule textureCache;
-	private FontCacheModule fontCache;
-	private ParticleCacheModule particleCache;
 
 	private SceneIOModule sceneIO;
 	private SceneTabsModule sceneTabsModule;
@@ -102,17 +87,11 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 	private VisTextField searchTextField;
 	private FileHandle currentDirectory;
 
-	private DragAndDrop dragAndDrop;
-	private DragAndDropTarget dropTargetTab;
+	private AssetDragAndDrop assetDragAndDrop;
 
 	@Override
 	public void init () {
 		Editor editor = Editor.instance;
-		this.stage = editor.getStage();
-
-		dragAndDrop = new DragAndDrop();
-		dragAndDrop.setKeepWithinStage(false);
-		dragAndDrop.setDragTime(0);
 
 		VisTable editorTable = editor.getProjectContentTable();
 		editorTable.setBackground("window-bg");
@@ -123,11 +102,13 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 		assetsWatcher = projectContainer.get(AssetsWatcherModule.class);
 
 		textureCache = projectContainer.get(TextureCacheModule.class);
-		fontCache = projectContainer.get(FontCacheModule.class);
-		particleCache = projectContainer.get(ParticleCacheModule.class);
+		FontCacheModule fontCache = projectContainer.get(FontCacheModule.class);
+		ParticleCacheModule particleCache = projectContainer.get(ParticleCacheModule.class);
 
 		sceneIO = projectContainer.get(SceneIOModule.class);
 		sceneTabsModule = projectContainer.get(SceneTabsModule.class);
+
+		assetDragAndDrop = new AssetDragAndDrop(fontCache, particleCache, fileAccess);
 
 		visFolder = fileAccess.getVisFolder();
 		assetsFolder = fileAccess.getAssetsFolder();
@@ -259,121 +240,10 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 			}
 		}
 
-		rebuildDragAndDrop();
+		assetDragAndDrop.rebuild(getActorsList());
 
 		String currentPath = directory.path().substring(visFolder.path().length() + 1);
 		contentTitleLabel.setText("Content [" + currentPath + "]");
-	}
-
-	private void rebuildDragAndDrop () {
-		if (dropTargetTab != null) {
-			dragAndDrop.clear();
-
-			Array<Actor> actors = getActorsList();
-
-			for (Actor actor : actors) {
-				final FileItem item = (FileItem) actor;
-
-				if (item.type == FileType.TEXTURE) {
-					dragAndDrop.addSource(new Source(item) {
-						@Override
-						public Payload dragStart (InputEvent event, float x, float y, int pointer) {
-							Payload payload = new Payload();
-
-							payload.setObject(item.region);
-
-							Image img = new Image(item.region);
-							payload.setDragActor(img);
-
-							float invZoom = 1.0f / dropTargetTab.getCameraZoom();
-							img.setScale(invZoom);
-							dragAndDrop.setDragActorPosition(-img.getWidth() * invZoom / 2, img.getHeight() - img.getHeight() * invZoom / 2);
-
-							return payload;
-						}
-					});
-				}
-
-				if (item.type == FileType.TTF_FONT) {
-					dragAndDrop.addSource(new Source(item) {
-						@Override
-						public Payload dragStart (InputEvent event, float x, float y, int pointer) {
-							Payload payload = new Payload();
-
-							int size = FontCacheModule.DEFAULT_FONT_SIZE;
-							EditorFont font = fontCache.get(item.file);
-							BitmapFont bmpFont = font.get(size);
-
-							TextObject text = new TextObject(font, bmpFont, FontCacheModule.DEFAULT_TEXT, size);
-							payload.setObject(text);
-
-							LabelStyle style = new LabelStyle(bmpFont, Color.WHITE);
-							Label label = new VisLabel(FontCacheModule.DEFAULT_TEXT, style);
-							payload.setDragActor(label);
-
-							float invZoom = 1.0f / dropTargetTab.getCameraZoom();
-							label.setFontScale(invZoom);
-							dragAndDrop.setDragActorPosition(-label.getWidth() * invZoom / 2, label.getHeight() / 2);
-
-							return payload;
-						}
-					});
-				}
-
-				if (item.type == FileType.BMP_FONT_FILE || item.type == FileType.BMP_FONT_TEXTURE) {
-					dragAndDrop.addSource(new Source(item) {
-						@Override
-						public Payload dragStart (InputEvent event, float x, float y, int pointer) {
-							Payload payload = new Payload();
-
-							FileHandle fontFile;
-
-							if (item.type == FileType.BMP_FONT_FILE)
-								fontFile = item.file;
-							else
-								fontFile = item.file.sibling(item.file.nameWithoutExtension() + ".fnt");
-
-							BMPEditorFont font = (BMPEditorFont) fontCache.get(fontFile);
-
-							TextObject text = new TextObject(font, FontCacheModule.DEFAULT_TEXT);
-							payload.setObject(text);
-
-							LabelStyle style = new LabelStyle(font.get(), Color.WHITE);
-							Label label = new VisLabel(FontCacheModule.DEFAULT_TEXT, style);
-							payload.setDragActor(label);
-
-							float invZoom = 1.0f / dropTargetTab.getCameraZoom();
-							label.setFontScale(invZoom);
-							dragAndDrop.setDragActorPosition(-label.getWidth() * invZoom / 2, label.getHeight() / 2);
-
-							return payload;
-						}
-					});
-				}
-
-				if (item.type == FileType.PARTICLE_EFFECT) {
-					dragAndDrop.addSource(new Source(item) {
-						@Override
-						public Payload dragStart (InputEvent event, float x, float y, int pointer) {
-							Payload payload = new Payload();
-
-							ParticleObject obj = new ParticleObject(fileAccess.relativizeToAssetsFolder(item.file), particleCache.get(item.file));
-							payload.setObject(obj);
-
-							Label label = new VisLabel("New Particle Effect \n (drop on scene to add)");
-							label.setAlignment(Align.center);
-							payload.setDragActor(label);
-
-							dragAndDrop.setDragActorPosition(-label.getWidth() / 2, label.getHeight() / 2);
-
-							return payload;
-						}
-					});
-				}
-			}
-
-			dragAndDrop.addTarget(dropTargetTab.getDropTarget());
-		}
 	}
 
 	private void refreshFilesList () {
@@ -468,10 +338,10 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 	@Override
 	public void switchedTab (Tab tab) {
 		if (tab instanceof DragAndDropTarget) {
-			dropTargetTab = (DragAndDropTarget) tab;
-			rebuildDragAndDrop();
+			assetDragAndDrop.setDropTarget((DragAndDropTarget) tab);
+			assetDragAndDrop.rebuild(getActorsList());
 		} else
-			dragAndDrop.clear();
+			assetDragAndDrop.clear();
 	}
 
 	@Override
@@ -482,34 +352,52 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 	public void removedAllTabs () {
 	}
 
-	private enum FileType {
+	enum FileType {
 		UNKNOWN, TEXTURE, TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE, PARTICLE_EFFECT
 	}
 
-	private class FileItem extends Table {
-		private FileHandle file;
+	public class FileItem extends Table {
+		FileHandle file;
 
-		private TextureRegion region;
-		private FileType type;
+		TextureRegion region;
+		FileType type;
+
+		VisLabel name;
 
 		public FileItem (FileHandle file) {
 			super(VisUI.getSkin());
 			this.file = file;
-			VisLabel name;
 
+			createContent();
+
+			setBackground("menu-bg");
+			name.setWrap(true);
+			name.setAlignment(Align.center);
+			add(name).expandX().fillX();
+
+			addListener();
+		}
+
+		private void createContent () {
 			if (file.extension().equals("ttf")) {
 				type = FileType.TTF_FONT;
 
 				add(new VisLabel("TTF Font", Color.GRAY)).row();
 				name = new VisLabel(file.nameWithoutExtension());
 
-			} else if (file.extension().equals("fnt") && file.sibling(file.nameWithoutExtension() + ".png").exists()) {
+				return;
+			}
+
+			if (file.extension().equals("fnt") && file.sibling(file.nameWithoutExtension() + ".png").exists()) {
 				type = FileType.BMP_FONT_FILE;
 
 				add(new VisLabel("BMP Font", Color.GRAY)).row();
 				name = new VisLabel(file.nameWithoutExtension());
 
-			} else if (file.extension().equals("png") && file.sibling(file.nameWithoutExtension() + ".fnt").exists()) {
+				return;
+			}
+
+			if (file.extension().equals("png") && file.sibling(file.nameWithoutExtension() + ".fnt").exists()) {
 				type = FileType.BMP_FONT_TEXTURE;
 
 				VisLabel tagLabel = new VisLabel("BMP Font Texture", Color.GRAY);
@@ -518,7 +406,9 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 				add(tagLabel).expandX().fillX().row();
 				name = new VisLabel(file.nameWithoutExtension());
 
-			} else if (file.extension().equals("p")) {
+				return;
+			}
+			if (file.extension().equals("p")) {
 				type = FileType.PARTICLE_EFFECT;
 
 				VisLabel tagLabel = new VisLabel("Particle Effect", Color.GRAY);
@@ -527,7 +417,10 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 				add(tagLabel).expandX().fillX().row();
 				name = new VisLabel(file.nameWithoutExtension());
 
-			} else if (fileAccess.relativizeToAssetsFolder(file).startsWith("gfx") && (file.extension().equals("jpg") || file.extension().equals("png"))) {
+				return;
+			}
+
+			if (fileAccess.relativizeToAssetsFolder(file).startsWith("gfx") && (file.extension().equals("jpg") || file.extension().equals("png"))) {
 				type = FileType.TEXTURE;
 
 				name = new VisLabel(file.nameWithoutExtension(), "small");
@@ -539,17 +432,11 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 
 				this.region = region;
 
-			} else {
-				type = FileType.UNKNOWN;
-				name = new VisLabel(file.name());
+				return;
 			}
 
-			setBackground("menu-bg");
-			name.setWrap(true);
-			name.setAlignment(Align.center);
-			add(name).expandX().fillX();
-
-			addListener();
+			type = FileType.UNKNOWN;
+			name = new VisLabel(file.name());
 		}
 
 		private void addListener () {
@@ -584,8 +471,8 @@ public class AssetsManagerUIModule extends ProjectModule implements DirectoryWat
 	}
 
 	private class FilesItemsTable extends VisTable {
-		public FilesItemsTable (boolean setVisDefautls) {
-			super(setVisDefautls);
+		public FilesItemsTable (boolean setVisDefaults) {
+			super(setVisDefaults);
 		}
 
 		@Override
