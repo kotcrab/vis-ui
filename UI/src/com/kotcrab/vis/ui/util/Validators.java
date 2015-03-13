@@ -17,8 +17,13 @@
 package com.kotcrab.vis.ui.util;
 
 import com.kotcrab.vis.ui.InputValidator;
+import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
-/** @author Kotcrab */
+/**
+ * Provides premade validators that can be used with {@link VisValidableTextField} or {@link DialogUtils} when displaying
+ * input dialogs
+ * @author Kotcrab
+ */
 public class Validators {
 	public static final IntegerValidator INTEGERS = new IntegerValidator();
 	public static final FloatValidator FLOATS = new FloatValidator();
@@ -64,10 +69,7 @@ public class Validators {
 		public boolean validateInput (String input) {
 			try {
 				float value = Float.valueOf(input);
-				if (equals ? value <= lesserThan : value < lesserThan)
-					return true;
-				else
-					return false;
+				return equals ? value <= lesserThan : value < lesserThan;
 			} catch (NumberFormatException ex) {
 				return false;
 			}
@@ -91,10 +93,7 @@ public class Validators {
 		public boolean validateInput (String input) {
 			try {
 				float value = Float.valueOf(input);
-				if (equals ? value >= greaterThan : value > greaterThan)
-					return true;
-				else
-					return false;
+				return equals ? value >= greaterThan : value > greaterThan;
 			} catch (NumberFormatException ex) {
 				return false;
 			}
