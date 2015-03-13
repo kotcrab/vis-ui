@@ -22,8 +22,6 @@ package com.kotcrab.vis.editor.ui.scene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
@@ -49,13 +47,10 @@ import com.kotcrab.vis.editor.module.scene.GridRendererModule;
 import com.kotcrab.vis.editor.module.scene.RendererModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
-import com.kotcrab.vis.editor.module.scene.UndoableAction;
 import com.kotcrab.vis.editor.module.scene.ZIndexManipulator;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
-import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
@@ -133,7 +128,7 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		dropTarget = new Target(content) {
 			@Override
 			public void drop (Source source, Payload payload, float x, float y, int pointer) {
-				dropped(payload);
+				entityManipulator.processDropPayload(payload);
 			}
 
 			@Override
@@ -143,41 +138,6 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		};
 
 		App.eventBus.register(this);
-	}
-
-	private void dropped (Payload payload) {
-		//TODO move this to manipulator?
-		Object payloadObject = payload.getObject();
-
-		if (payloadObject instanceof TextureRegion) {
-			TextureRegion region = (TextureRegion) payload.getObject();
-
-			Sprite sprite = new Sprite(region);
-			float x = cameraModule.getInputX() - sprite.getWidth() / 2;
-			float y = cameraModule.getInputY() - sprite.getHeight() / 2;
-
-			final SpriteObject object = new SpriteObject(cacheModule.getRelativePath(region), region, x, y);
-
-			undoModule.execute(new EntityAddedAction(object));
-		}
-
-		if (payloadObject instanceof TextObject) {
-			TextObject text = (TextObject) payloadObject;
-			float x = cameraModule.getInputX() - text.getWidth() / 2;
-			float y = cameraModule.getInputY() - text.getHeight() / 2;
-			text.setPosition(x, y);
-
-			undoModule.execute(new EntityAddedAction(text));
-		}
-
-		if (payloadObject instanceof ParticleObject) {
-			ParticleObject particle = (ParticleObject) payloadObject;
-			float x = cameraModule.getInputX() - particle.getWidth() / 2;
-			float y = cameraModule.getInputY() - particle.getHeight() / 2;
-			particle.setPosition(x, y);
-
-			undoModule.execute(new EntityAddedAction(particle));
-		}
 	}
 
 	private void resize () {
@@ -330,25 +290,4 @@ public class SceneTab extends Tab implements DragAndDropTarget, EventListener, D
 		}
 	}
 
-	private class EntityAddedAction implements UndoableAction {
-		private EditorEntity entity;
-
-		public EntityAddedAction (EditorEntity entity) {
-			this.entity = entity;
-		}
-
-		@Override
-		public void execute () {
-			scene.entities.add(entity);
-			entityManipulator.select(entity);
-			dirty();
-		}
-
-		@Override
-		public void undo () {
-			scene.entities.removeValue(entity, true);
-			entityManipulator.resetSelection();
-			dirty();
-		}
-	}
 }

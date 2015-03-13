@@ -24,19 +24,26 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.module.ColorPickerModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
+import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.ParticleObject;
+import com.kotcrab.vis.editor.scene.SpriteObject;
+import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.ButtonListener;
 import com.kotcrab.vis.ui.widget.MenuItem;
@@ -46,6 +53,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private CameraModule camera;
 	private UndoModule undoModule;
 	private SceneIOModule sceneIOModule;
+	private TextureCacheModule cacheModule;
 
 	private ShapeRenderer shapeRenderer;
 
@@ -84,6 +92,7 @@ public class EntityManipulatorModule extends SceneModule {
 		camera = sceneContainer.get(CameraModule.class);
 		undoModule = sceneContainer.get(UndoModule.class);
 		sceneIOModule = projectContainer.get(SceneIOModule.class);
+		cacheModule = projectContainer.get(TextureCacheModule.class);
 
 		ColorPickerModule pickerModule = container.get(ColorPickerModule.class);
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
@@ -225,6 +234,40 @@ public class EntityManipulatorModule extends SceneModule {
 		return false;
 	}
 
+	public void processDropPayload (Payload payload) {
+		Object payloadObject = payload.getObject();
+
+		if (payloadObject instanceof TextureRegion) {
+			TextureRegion region = (TextureRegion) payload.getObject();
+
+			Sprite sprite = new Sprite(region);
+			float x = camera.getInputX() - sprite.getWidth() / 2;
+			float y = camera.getInputY() - sprite.getHeight() / 2;
+
+			final SpriteObject object = new SpriteObject(cacheModule.getRelativePath(region), region, x, y);
+
+			undoModule.execute(new EntityAddedAction(object));
+		}
+
+		if (payloadObject instanceof TextObject) {
+			TextObject text = (TextObject) payloadObject;
+			float x = camera.getInputX() - text.getWidth() / 2;
+			float y = camera.getInputY() - text.getHeight() / 2;
+			text.setPosition(x, y);
+
+			undoModule.execute(new EntityAddedAction(text));
+		}
+
+		if (payloadObject instanceof ParticleObject) {
+			ParticleObject particle = (ParticleObject) payloadObject;
+			float x = camera.getInputX() - particle.getWidth() / 2;
+			float y = camera.getInputY() - particle.getHeight() / 2;
+			particle.setPosition(x, y);
+
+			undoModule.execute(new EntityAddedAction(particle));
+		}
+	}
+
 	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 		x = camera.getInputX();
@@ -269,7 +312,7 @@ public class EntityManipulatorModule extends SceneModule {
 					moveActions.add(new MoveAction(entity));
 			}
 
-			if(rectangularSelection.touchDragged(x, y) == false) {
+			if (rectangularSelection.touchDragged(x, y) == false) {
 
 				if (dragging && selectedEntities.size > 0) {
 					dragged = true;
@@ -366,7 +409,7 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	private void deleteSelectedEntities () {
-		undoModule.execute(new EntityRemoved(selectedEntities));
+		undoModule.execute(new EntityRemovedAction(selectedEntities));
 		selectedEntities.clear();
 		entityProperties.selectedEntitiesChanged();
 	}
@@ -463,11 +506,33 @@ public class EntityManipulatorModule extends SceneModule {
 		}
 	}
 
-	private class EntityRemoved implements UndoableAction {
+	private class EntityAddedAction implements UndoableAction {
+		private EditorEntity entity;
+
+		public EntityAddedAction (EditorEntity entity) {
+			this.entity = entity;
+		}
+
+		@Override
+		public void execute () {
+			scene.entities.add(entity);
+			select(entity);
+			sceneTab.dirty();
+		}
+
+		@Override
+		public void undo () {
+			scene.entities.removeValue(entity, true);
+			resetSelection();
+			sceneTab.dirty();
+		}
+	}
+
+	private class EntityRemovedAction implements UndoableAction {
 		private Array<Integer> indexes;
 		private Array<EditorEntity> entities;
 
-		public EntityRemoved (Array<EditorEntity> selectedEntities) {
+		public EntityRemovedAction (Array<EditorEntity> selectedEntities) {
 			indexes = new Array<>(selectedEntities.size);
 			entities = new Array<>(selectedEntities);
 		}
