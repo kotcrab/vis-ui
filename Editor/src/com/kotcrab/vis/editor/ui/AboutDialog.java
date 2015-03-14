@@ -46,7 +46,7 @@ public class AboutDialog extends VisWindow {
 		contentTable.add(new VisLabel("VisEditor - game level editor")).row();
 		contentTable.add(new VisLabel("Copyright 2014-2015 Pawel Pastuszak")).row();
 		contentTable.add(new VisLabel("Licensed under GPLv3 license")).row();
-		contentTable.add(new VisLabel("Thanks to all contributors and supporters,\nalso thanks to you for using this software. <3", Align.center)).center().spaceTop(8).row();
+		contentTable.add(new VisLabel("Thanks to all contributors and supporters,\nand thanks to you for using this software. <3", Align.center)).center().spaceTop(8).row();
 
 		VisTextButton okButton;
 
