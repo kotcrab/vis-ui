@@ -1,4 +1,4 @@
-[0.7.0] [LibGDX 1.5.4] [Snapshot]
+[0.7.0] [LibGDX 1.5.5] [Snapshot]
 -API Change: Constructor Separator(boolean useMenuStyle) is now Separator(boolean vertical) use new Separator("menu") for menu styled separator
 -API Change: FileChooser locale removed field title. Added titleChooseFiles, titleChooseDirectories, titleChooseFilesAndDirectories
 -API Change: Validators.INTEGERS and Validators.FLOAT (was Validators.integers and Validators.floats)

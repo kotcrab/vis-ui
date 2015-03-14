@@ -34,7 +34,7 @@
 
     <properties>
         <arguments></arguments>
-        <gdx.version>1.5.4</gdx.version>
+        <gdx.version>1.5.5</gdx.version>
     </properties>
 
     <distributionManagement>
