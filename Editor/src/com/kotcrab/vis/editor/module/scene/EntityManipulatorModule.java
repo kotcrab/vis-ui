@@ -29,9 +29,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
@@ -45,8 +43,7 @@ import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
-import com.kotcrab.vis.editor.util.ButtonListener;
-import com.kotcrab.vis.ui.widget.MenuItem;
+import com.kotcrab.vis.editor.util.MenuUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 
 public class EntityManipulatorModule extends SceneModule {
@@ -138,16 +135,16 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	private void createPopupMenu () {
-		entityPopupMenu = new PopupMenu(true);
-		entityPopupMenu.addItem(createMenuItem("Cut", this::cut));
-		entityPopupMenu.addItem(createMenuItem("Copy", this::copy));
-		entityPopupMenu.addItem(createMenuItem("Paste", this::paste));
-		entityPopupMenu.addItem(createMenuItem("Remove", this::deleteSelectedEntities));
-		entityPopupMenu.addItem(createMenuItem("Select All", this::selectAll));
+		entityPopupMenu = new PopupMenu();
+		entityPopupMenu.addItem(MenuUtils.createMenuItem("Cut", this::cut));
+		entityPopupMenu.addItem(MenuUtils.createMenuItem("Copy", this::copy));
+		entityPopupMenu.addItem(MenuUtils.createMenuItem("Paste", this::paste));
+		entityPopupMenu.addItem(MenuUtils.createMenuItem("Remove", this::deleteSelectedEntities));
+		entityPopupMenu.addItem(MenuUtils.createMenuItem("Select All", this::selectAll));
 
-		generalPopupMenu = new PopupMenu(true);
-		generalPopupMenu.addItem(createMenuItem("Paste", this::paste));
-		generalPopupMenu.addItem(createMenuItem("Select All", this::selectAll));
+		generalPopupMenu = new PopupMenu();
+		generalPopupMenu.addItem(MenuUtils.createMenuItem("Paste", this::paste));
+		generalPopupMenu.addItem(MenuUtils.createMenuItem("Select All", this::selectAll));
 	}
 
 	private void selectedEntitiesToClipboard () {
@@ -200,15 +197,6 @@ public class EntityManipulatorModule extends SceneModule {
 			entitiesClipboard.clear();
 			entitiesClipboard.addAll(newClipboard);
 		}
-	}
-
-	private MenuItem createMenuItem (String text, ButtonListener listener) {
-		return new MenuItem(text, new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				listener.clicked();
-			}
-		});
 	}
 
 	public EntityProperties getEntityProperties () {
@@ -364,9 +352,9 @@ public class EntityManipulatorModule extends SceneModule {
 				menuX = x;
 				menuY = y;
 
-				entityPopupMenu.displayMenu(event.getStage(), event.getStageX(), event.getStageY());
+				entityPopupMenu.showMenu(event.getStage(), event.getStageX(), event.getStageY());
 			} else
-				generalPopupMenu.displayMenu(event.getStage(), event.getStageX(), event.getStageY());
+				generalPopupMenu.showMenu(event.getStage(), event.getStageX(), event.getStageY());
 		}
 
 		if (dragged) {

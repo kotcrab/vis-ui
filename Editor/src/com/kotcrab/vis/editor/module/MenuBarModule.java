@@ -21,11 +21,8 @@ package com.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.project.ExportModule;
@@ -41,6 +38,7 @@ import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
 import com.kotcrab.vis.editor.util.ButtonListener;
 import com.kotcrab.vis.editor.util.EditorException;
+import com.kotcrab.vis.editor.util.MenuUtils;
 import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
@@ -70,7 +68,7 @@ public class MenuBarModule extends EditorModule {
 		stage = editor.getStage();
 		projectContainer = moduleContainer;
 
-		menuBar = new MenuBar(stage);
+		menuBar = new MenuBar();
 
 		projectController = new ProjectStatusWidgetController();
 		sceneController = new SceneStatusWidgetController();
@@ -156,6 +154,8 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera", () -> sceneButtonsListener.resetCamera()));
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera Zoom", () -> sceneButtonsListener.resetCameraZoom()));
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Scene Settings", () -> sceneButtonsListener.showSceneSettings()));
+
+
 	}
 
 	private void createHelpMenu () {
@@ -180,10 +180,6 @@ public class MenuBarModule extends EditorModule {
 		projectController.dispose();
 	}
 
-	private MenuItem createMenuItem (String text, ButtonListener listener) {
-		return createMenuItem(ControllerPolicy.NONE, text, null, listener);
-	}
-
 	private MenuItem createMenuItem (String text, Icons icon, ButtonListener listener) {
 		return createMenuItem(ControllerPolicy.NONE, text, icon, listener);
 	}
@@ -193,12 +189,7 @@ public class MenuBarModule extends EditorModule {
 	}
 
 	private MenuItem createMenuItem (ControllerPolicy policy, String text, Icons icon, ButtonListener listener) {
-		MenuItem item = new MenuItem(text, icon != null ? Assets.getIcon(icon) : null, new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				listener.clicked();
-			}
-		});
+		MenuItem item = MenuUtils.createMenuItem(text, icon, listener);
 
 		switch (policy) {
 			case PROJECT:
