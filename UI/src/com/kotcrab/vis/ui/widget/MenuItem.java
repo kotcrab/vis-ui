@@ -108,6 +108,8 @@ public class MenuItem extends Button {
 		label.setAlignment(Align.left);
 		add(label).expand().fill();
 
+		shortcutLabelCell = add(new VisLabel("", "menuitem-shortcut")).padLeft(10).right();
+
 		subMenuIconCell = add(subMenuImage = new Image(style.subMenu)).padLeft(3).padRight(3).size(style.subMenu.getMinWidth(), style.subMenu.getMinHeight());
 		subMenuIconCell.setActor(null);
 
@@ -115,7 +117,7 @@ public class MenuItem extends Button {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				//makes submenu item not clickable
-				if(subMenu != null)
+				if (subMenu != null)
 					event.stop();
 			}
 		});
@@ -240,11 +242,7 @@ public class MenuItem extends Button {
 	 * @return this object for the purpose of chaining methods
 	 */
 	public MenuItem setShortcut (String text) {
-		if (shortcutLabelCell == null)
-			shortcutLabelCell = add(new VisLabel(text, "menuitem-shortcut")).padLeft(10).right();
-		else
-			shortcutLabelCell.getActor().setText(text);
-
+		shortcutLabelCell.getActor().setText(text);
 		return this;
 	}
 

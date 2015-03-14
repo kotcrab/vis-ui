@@ -33,6 +33,7 @@ import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
 import com.kotcrab.vis.ui.widget.MenuItem;
+import com.kotcrab.vis.ui.widget.PopupMenu;
 
 public class TestLauncher {
 
@@ -99,6 +100,16 @@ class TestApplication extends ApplicationAdapter {
 		fileMenu.addItem(new MenuItem("MenuItem #3").setShortcut(Keys.F2));
 		fileMenu.addItem(new MenuItem("MenuItem #4").setShortcut("Alt + F4"));
 
+		MenuItem subMenuItem = new MenuItem("SubMenu #1");
+		subMenuItem.setShortcut("Alt + Insert");
+		subMenuItem.setSubMenu(createSubMenu());
+		fileMenu.addItem(subMenuItem);
+
+		MenuItem subMenuItem2 = new MenuItem("SubMenu #2");
+		subMenuItem2.setSubMenu(createSubMenu());
+		fileMenu.addItem(subMenuItem2);
+
+
 		editMenu.addItem(new MenuItem("MenuItem #5"));
 		editMenu.addItem(new MenuItem("MenuItem #6"));
 		editMenu.addSeparator();
@@ -125,6 +136,16 @@ class TestApplication extends ApplicationAdapter {
 		menuBar.addMenu(editMenu);
 		menuBar.addMenu(windowMenu);
 		menuBar.addMenu(helpMenu);
+	}
+
+	private PopupMenu createSubMenu () {
+		PopupMenu menu = new PopupMenu();
+		menu.addItem(new MenuItem("SubMenuItem #1"));
+		menu.addItem(new MenuItem("SubMenuItem #2"));
+		menu.addSeparator();
+		menu.addItem(new MenuItem("SubMenuItem #3"));
+		menu.addItem(new MenuItem("SubMenuItem #4"));
+		return menu;
 	}
 
 	@Override
