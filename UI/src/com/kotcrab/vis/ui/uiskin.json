@@ -22,11 +22,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: { down: button-down, up: button, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey },
 	toggle: { down: button-down, up: button, checked: button-down, over: button-over, font: default-font, fontColor: white },
-	menu-bar: { down: button-down, up: button, over: button-down, font: default-font, fontColor: white },
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	default: { vScroll: scroll, vScrollKnob: scroll-knob-vertical, hScroll: scroll-horizontal, hScrollKnob: scroll-knob-horizontal, background: border},
-	list:    { vScroll: scroll, vScrollKnob: scroll-knob-vertical, hScroll: scroll-horizontal, hScrollKnob: scroll-knob-horizontal }
+	list: { vScroll: scroll, vScrollKnob: scroll-knob-vertical, hScroll: scroll-horizontal, hScrollKnob: scroll-knob-horizontal }
 },
 com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
 	default: {
@@ -78,9 +77,10 @@ com.kotcrab.vis.ui.widget.VisTextField$VisTextFieldStyle: {
 	font: default-font, fontColor: white, disabledFontColor: grey, cursor: cursor },
 },
 com.kotcrab.vis.ui.widget.VisTextButton$VisTextButtonStyle: {
-	default: { down: button-down, up: button, over: button-over, disabled: button, focusBorder: border, 
-	font: default-font, fontColor: white, disabledFontColor: grey },
+	default: { down: button-down, up: button, over: button-over, disabled: button, focusBorder: border,
+               font: default-font, fontColor: white, disabledFontColor: grey },
 	toggle: { down: button-down, up: button, checked: button-down, over: button-over, font: default-font, fontColor: white, focusBorder: border },
+    menu-bar: { down: button-down, up: button, over: button-down, font: default-font, fontColor: white },
 },
 com.kotcrab.vis.ui.widget.VisImageButton$VisImageButtonStyle: {
 	default: { down: button-down, up: button, over: button-over, disabled: button, focusBorder: border },
@@ -94,12 +94,12 @@ com.kotcrab.vis.ui.widget.VisSlider$VisSliderStyle: {
 },
 com.kotcrab.vis.ui.widget.VisCheckBox$VisCheckBoxStyle: {
 	default: { checkboxOn: check-on, checkboxOff: check-off, checkboxOver: check-over-off, checkboxOnOver: check-over-on,
-	checkboxOffDown: check-down, checkboxOnDown: check-down-on, checkboxOffDisabled: check-off, checkboxOnDisabled: check-on-disabled, 
-	focusBorder: border, font: default-font, fontColor: white, disabledFontColor: grey },
+               checkboxOffDown: check-down, checkboxOnDown: check-down-on, checkboxOffDisabled: check-off, checkboxOnDisabled: check-on-disabled,
+	           focusBorder: border, font: default-font, fontColor: white, disabledFontColor: grey },
 	
 	radio: { checkboxOn: radio-on, checkboxOff: radio-off, checkboxOver: radio-over-off, checkboxOnOver: radio-over-on,
-	checkboxOffDown: radio-down, checkboxOnDown: radio-down-on, checkboxOffDisabled: radio-off, checkboxOnDisabled: radio-on-disabled, 
-	focusBorder: border-circle, font: default-font, fontColor: white, disabledFontColor: grey }
+	         checkboxOffDown: radio-down, checkboxOnDown: radio-down-on, checkboxOffDisabled: radio-off, checkboxOnDisabled: radio-on-disabled,
+	         focusBorder: border-circle, font: default-font, fontColor: white, disabledFontColor: grey }
 },
 com.kotcrab.vis.ui.widget.PopupMenu$PopupMenuStyle: {
 	default: {background: button, border: border},
