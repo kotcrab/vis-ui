@@ -63,7 +63,7 @@ class TestApplication extends ApplicationAdapter {
 
 		Gdx.input.setInputProcessor(stage);
 
-		menuBar = new MenuBar(stage);
+		menuBar = new MenuBar();
 		root.add(menuBar.getTable()).expandX().fillX().row();
 		root.add().expand().fill();
 

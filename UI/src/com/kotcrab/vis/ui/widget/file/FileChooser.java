@@ -827,7 +827,7 @@ public class FileChooser extends VisWindow {
 				public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 					if (event.getButton() == Buttons.RIGHT) {
 						fileMenu.build(favorites, file);
-						fileMenu.displayMenu(getStage(), event.getStageX(), event.getStageY());
+						fileMenu.showMenu(getStage(), event.getStageX(), event.getStageY());
 					}
 				}
 			});
@@ -975,7 +975,7 @@ public class FileChooser extends VisWindow {
 				public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 					if (event.getButton() == Buttons.RIGHT) {
 						fileMenu.buildForFavorite(favorites, file);
-						fileMenu.displayMenu(getStage(), event.getStageX(), event.getStageY());
+						fileMenu.showMenu(getStage(), event.getStageX(), event.getStageY());
 					}
 				}
 			});

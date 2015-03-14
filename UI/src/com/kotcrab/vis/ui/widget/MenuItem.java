@@ -19,6 +19,11 @@ package com.kotcrab.vis.ui.widget;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -39,52 +44,57 @@ import com.kotcrab.vis.ui.VisUI;
 public class MenuItem extends Button {
 	private Image image;
 	private Label label;
-	private TextButtonStyle style;
+	private MenuItemStyle style;
 
 	private boolean generateDisabledImage = true;
 
 	private Cell<VisLabel> shortcutLabelCell;
 
+	private PopupMenu subMenu;
+	private InputListener subMenuListener;
+	private Image subMenuImage;
+	private Cell<Image> subMenuIconCell;
+
 	public MenuItem (String text) {
-		this(text, (Image) null, VisUI.getSkin().get(TextButtonStyle.class));
+		this(text, (Image) null, VisUI.getSkin().get(MenuItemStyle.class));
 	}
 
 	public MenuItem (String text, ChangeListener changeListener) {
-		this(text, (Image) null, VisUI.getSkin().get(TextButtonStyle.class));
+		this(text, (Image) null, VisUI.getSkin().get(MenuItemStyle.class));
 		addListener(changeListener);
 	}
 
 	public MenuItem (String text, Drawable drawable) {
-		this(text, drawable, VisUI.getSkin().get(TextButtonStyle.class));
+		this(text, drawable, VisUI.getSkin().get(MenuItemStyle.class));
 	}
 
 	public MenuItem (String text, Drawable drawable, ChangeListener changeListener) {
-		this(text, drawable, VisUI.getSkin().get(TextButtonStyle.class));
+		this(text, drawable, VisUI.getSkin().get(MenuItemStyle.class));
 		addListener(changeListener);
 	}
 
 	public MenuItem (String text, Image image) {
-		this(text, image, VisUI.getSkin().get(TextButtonStyle.class));
+		this(text, image, VisUI.getSkin().get(MenuItemStyle.class));
 	}
 
 	public MenuItem (String text, Image image, ChangeListener changeListener) {
-		this(text, image, VisUI.getSkin().get(TextButtonStyle.class));
+		this(text, image, VisUI.getSkin().get(MenuItemStyle.class));
 		addListener(changeListener);
 	}
 
 	// Base constructors
 
-	public MenuItem (String text, Image image, TextButtonStyle style) {
+	public MenuItem (String text, Image image, MenuItemStyle style) {
 		super(style);
 		init(text, image, style);
 	}
 
-	public MenuItem (String text, Drawable drawable, TextButtonStyle style) {
+	public MenuItem (String text, Drawable drawable, MenuItemStyle style) {
 		super(style);
 		init(text, new Image(drawable), style);
 	}
 
-	private void init (String text, Image image, TextButtonStyle style) {
+	private void init (String text, Image image, MenuItemStyle style) {
 		this.style = style;
 		this.image = image;
 		setSkin(VisUI.getSkin());
@@ -97,18 +107,63 @@ public class MenuItem extends Button {
 		label = new Label(text, new LabelStyle(style.font, style.fontColor));
 		label.setAlignment(Align.left);
 		add(label).expand().fill();
+
+		subMenuIconCell = add(subMenuImage = new Image(style.subMenu)).padLeft(3).padRight(3).size(style.subMenu.getMinWidth(), style.subMenu.getMinHeight());
+		subMenuIconCell.setActor(null);
+
+		addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				//makes submenu item not clickable
+				if(subMenu != null)
+					event.stop();
+			}
+		});
+	}
+
+	public void setSubMenu (final PopupMenu subMenu) {
+		if (this.subMenu != null) removeListener(subMenuListener);
+		this.subMenu = subMenu;
+
+		if (subMenu == null) {
+			subMenuIconCell.setActor(null);
+			return;
+		} else
+			subMenuIconCell.setActor(subMenuImage);
+
+		if (subMenuListener == null) {
+			subMenuListener = new InputListener() {
+				@Override
+				public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+					Stage stage = getStage();
+					Vector2 pos = localToStageCoordinates(new Vector2(0, 0));
+
+					subMenu.setPosition(pos.x + getWidth() - 1, pos.y - subMenu.getHeight() + getHeight());
+					if (subMenu.getY() < 0) {
+						subMenu.setY(subMenu.getY() + subMenu.getHeight() - getHeight());
+					}
+
+					stage.addActor(subMenu);
+
+					PopupMenu parent = (PopupMenu) getParent();
+					parent.setSubMenu(subMenu);
+				}
+			};
+		}
+
+		addListener(subMenuListener);
 	}
 
 	@Override
-	public TextButtonStyle getStyle () {
+	public MenuItemStyle getStyle () {
 		return style;
 	}
 
 	@Override
 	public void setStyle (ButtonStyle style) {
-		if (!(style instanceof TextButtonStyle)) throw new IllegalArgumentException("style must be a TextButtonStyle.");
+		if (!(style instanceof MenuItemStyle)) throw new IllegalArgumentException("style must be a MenuItemStyle.");
 		super.setStyle(style);
-		this.style = (TextButtonStyle) style;
+		this.style = (MenuItemStyle) style;
 		if (label != null) {
 			TextButtonStyle textButtonStyle = (TextButtonStyle) style;
 			LabelStyle labelStyle = label.getStyle();
@@ -215,5 +270,21 @@ public class MenuItem extends Button {
 
 	public void setText (CharSequence text) {
 		label.setText(text);
+	}
+
+	static public class MenuItemStyle extends TextButtonStyle {
+		public Drawable subMenu;
+
+		public MenuItemStyle () {
+		}
+
+		public MenuItemStyle (Drawable subMenu) {
+			this.subMenu = subMenu;
+		}
+
+		public MenuItemStyle (MenuItemStyle other) {
+			super(other);
+			this.subMenu = other.subMenu;
+		}
 	}
 }

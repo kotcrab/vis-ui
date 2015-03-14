@@ -114,4 +114,7 @@ com.kotcrab.vis.ui.widget.VisSplitPane$VisSplitPaneStyle: {
   default-vertical: { handle: splitpane-vertical, handleOver: splitpane-vertical-over },
   default-horizontal: { handle: splitpane, handleOver: splitpane-over }
 },
+com.kotcrab.vis.ui.widget.MenuItem$MenuItemStyle: {
+  default: { down: button-down, up: button, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey, subMenu: sub-menu },
+},
 }

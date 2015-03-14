@@ -16,8 +16,8 @@
 
 package com.kotcrab.vis.ui.widget;
 
+import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -28,47 +28,52 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
- * Standard popup menu that can be displayed anywhere on stage
+ * Standard popup menu that can be displayed anywhere on stage. Menu is automatically removed when user clicked outisde menu,
+ * or clicked menu item. For proper behaviour menu should be displayed in touhcUp event. If you want to display
+ * menu from touchDown you have to call event.stop() otherwise menu will by immediately closed. If you want to
+ * add right click menu to actor you can use getDefaultInputListener() to get premade listener.
  * @author Kotcrab
  */
 public class PopupMenu extends Table {
 	private PopupMenuStyle style;
 
-	private Rectangle boundingRectangle;
+	private InputListener stageListener;
+	private ChangeListener sharedMenuItemListener;
 
-	private boolean autoRemove;
-	private InputListener autoRemoveInputListener;
-	private ChangeListener sharedAutoRemoveChangeListener;
+	private InputListener defaultInputListener;
+
+	/** The current subMenu, set by MenuItem */
+	private PopupMenu subMenu;
 
 	public PopupMenu () {
-		this(false, "default");
-	}
-
-	/**
-	 * @param autoRemove if true auto remove will be enabled. When auto remove is enabled and user clicks outside menu
-	 * it will be automatically removed from stage, menu will also be removed if user has clicked a MenuItem.
-	 * By default this function is disabled.
-	 */
-	public PopupMenu (boolean autoRemove) {
-		this(autoRemove, "default");
+		this("default");
 	}
 
 	public PopupMenu (String styleName) {
-		this(false, styleName);
-	}
-
-	/** @param autoRemove see {@link PopupMenu#PopupMenu(boolean)} */
-	public PopupMenu (boolean autoRemove, String styleName) {
-		this.autoRemove = autoRemove;
+		super(VisUI.getSkin());
 		style = VisUI.getSkin().get(styleName, PopupMenuStyle.class);
-
-		if (autoRemove) createAutoRemoveListeners();
+		createListeners();
 	}
 
-	private void createAutoRemoveListeners () {
-		autoRemoveInputListener = new InputListener() {
+	private void createListeners () {
+		stageListener = new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if (menuStructureContains(x, y) == false) {
+					remove();
+					return true;
+				}
+
+				return true;
+			}
+
+			@Override
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				//handles situation where menuitem was clicked in subMenu
+				if (subMenu != null) removeIfNeeded(x, y);
+			}
+
+			private boolean removeIfNeeded (float x, float y) {
 				if (contains(x, y) == false) {
 					remove();
 					return true;
@@ -78,7 +83,7 @@ public class PopupMenu extends Table {
 			}
 		};
 
-		sharedAutoRemoveChangeListener = new ChangeListener() {
+		sharedMenuItemListener = new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				if (event.isStopped() == false)
@@ -91,11 +96,34 @@ public class PopupMenu extends Table {
 		add(item).fillX().row();
 		pack();
 
-		if (autoRemove) item.addListener(sharedAutoRemoveChangeListener);
+		item.addListener(sharedMenuItemListener);
 	}
 
 	public void addSeparator () {
 		add(new Separator("menu")).padTop(2).padBottom(2).fill().expand().row();
+	}
+
+	/**
+	 * Returns input listener that can be added to scene2d actor. When right mouse button is pressed on that actor,
+	 * menu will be displayed
+	 */
+	public InputListener getDefaultInputListener () {
+		if (defaultInputListener == null) {
+			defaultInputListener = new InputListener() {
+				@Override
+				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+					return true;
+				}
+
+				@Override
+				public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+					if (event.getButton() == Buttons.RIGHT)
+						showMenu(event.getStage(), event.getStageX(), event.getStageY());
+				}
+			};
+		}
+
+		return defaultInputListener;
 	}
 
 	@Override
@@ -105,32 +133,40 @@ public class PopupMenu extends Table {
 		if (style.border != null) style.border.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
 
-	public void displayMenu (Stage stage, float x, float y) {
+	public void showMenu (Stage stage, float x, float y) {
 		setPosition(x, y - getHeight());
 		if (stage.getHeight() - getY() > stage.getHeight()) setY(getY() + getHeight());
 		stage.addActor(this);
 	}
 
-	private boolean contains (float x, float y) {
-		return boundingRectangle.contains(x, y);
+	public boolean contains (float x, float y) {
+		return getX() <= x && getX() + getWidth()>= x && getY() <= y && getY() + getHeight() >= y;
+	}
+
+	public boolean menuStructureContains (float x, float y) {
+		if (contains(x, y)) return true;
+		if (subMenu != null) return subMenu.menuStructureContains(x, y);
+		return false;
+	}
+
+	/** Called by framework, when PopupMenu is added to MenuItem as submenu */
+	void setSubMenu (PopupMenu subMenu) {
+		if(this.subMenu == subMenu) return;
+		if(this.subMenu != null) this.subMenu.remove();
+		this.subMenu = subMenu;
 	}
 
 	@Override
 	protected void setStage (Stage stage) {
 		super.setStage(stage);
-		if (stage != null && autoRemove) stage.addListener(autoRemoveInputListener);
+		if (stage != null) stage.addListener(stageListener);
 	}
 
 	@Override
 	public boolean remove () {
-		if (getStage() != null && autoRemove) getStage().removeListener(autoRemoveInputListener);
+		if (getStage() != null) getStage().removeListener(stageListener);
+		if (subMenu != null) subMenu.remove();
 		return super.remove();
-	}
-
-	@Override
-	public void validate () {
-		super.validate();
-		boundingRectangle = new Rectangle(getX(), getY(), getWidth(), getHeight());
 	}
 
 	static public class PopupMenuStyle {

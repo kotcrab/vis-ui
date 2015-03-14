@@ -16,17 +16,10 @@
 
 package com.kotcrab.vis.ui.widget;
 
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
@@ -34,111 +27,77 @@ import com.kotcrab.vis.ui.VisUI;
  * @author Kotcrab
  */
 public class MenuBar {
-	private Array<MenuBarItem> menus;
-	private Stage stage;
-	private Skin skin;
-
 	private Table mainTable;
 	private Table menuItems;
 
-	private MenuBarItem currentMenu;
-	private boolean menuVisible = false;
+	private Menu currentMenu;
 
-	public MenuBar (Stage stage) {
-		this.skin = VisUI.getSkin();
-		this.stage = stage;
+	private Array<Menu> menus = new Array<Menu>();
 
-		menus = new Array<MenuBarItem>();
+	public MenuBar () {
+		Skin skin = VisUI.getSkin();
 
-		mainTable = new Table(skin) {
+		menuItems = new VisTable();
+
+		mainTable = new VisTable() {
 			@Override
 			protected void sizeChanged () {
 				super.sizeChanged();
 				closeMenu();
 			}
 		};
-		menuItems = new Table(skin);
 
+		mainTable.left();
 		mainTable.add(menuItems);
-		mainTable.add(new Image(skin.getRegion("menu-bg"))).expand().fill();
-
-		stage.addListener(new InputListener() {
-			@Override
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (currentMenu != null) {
-					if (menuVisible) {
-						Vector2 pos = currentMenu.menu.localToStageCoordinates(new Vector2(0, 0));
-						Rectangle rect = new Rectangle(pos.x, pos.y, currentMenu.menu.getWidth(), currentMenu.menu.getHeight());
-
-						if (rect.contains(x, y) == false) closeMenu();
-						return true;
-					} else
-						menuVisible = true;
-				}
-
-				return false;
-			}
-
-			@Override
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				if (menuVisible) closeMenu();
-			}
-
-		});
-	}
-
-	private void closeMenu () {
-		if (currentMenu != null) {
-			currentMenu.menu.remove();
-			currentMenu = null;
-			menuVisible = false;
-		}
+		mainTable.setBackground(skin.getDrawable("menu-bg"));
 	}
 
 	public void addMenu (Menu menu) {
-		menus.add(new MenuBarItem(menu));
+		menus.add(menu);
+		menu.setMenuBar(this);
+		menuItems.add(menu.getOpenButton());
 	}
 
-	private class MenuBarItem {
-		public Menu menu;
-		public TextButton menuOpenButton;
+	public boolean removeMenu (Menu menu) {
+		boolean removed = menus.removeValue(menu, true);
 
-		public MenuBarItem (Menu menu) {
-			this.menu = menu;
-			menuOpenButton = new TextButton(menu.getTitle(), skin, "menu-bar");
-			menuItems.add(menuOpenButton);
-
-			menuOpenButton.addListener(new InputListener() {
-				@Override
-				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-					closeMenu();
-					showMenu();
-					return false;
-				}
-
-				@Override
-				public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-					switchMenu();
-				}
-			});
+		if (removed) {
+			menu.setMenuBar(null);
+			menuItems.removeActor(menu.getOpenButton());
 		}
 
-		private void switchMenu () {
-			if (currentMenu != null && currentMenu != this) {
-				closeMenu();
-				showMenu();
-				menuVisible = true; // manually set that menu is visible because touch down event won't occur
-			}
-		}
+		return removed;
+	}
 
-		private void showMenu () {
-			Vector2 pos = menuOpenButton.localToStageCoordinates(new Vector2(0, 0));
-			menu.setPosition(pos.x, pos.y - menu.getHeight());
-			stage.addActor(menu);
-			currentMenu = this;
+	public void insertMenu (int index, Menu menu) {
+		menus.insert(index, menu);
+		menu.setMenuBar(this);
+		rebuild();
+	}
+
+	private void rebuild () {
+		menuItems.clear();
+		for (Menu menu : menus)
+			menuItems.add(menu.getOpenButton());
+	}
+
+	/** Closes currently open menu (if any). Used by framework and typically there is no need to call this manually */
+	public void closeMenu () {
+		if (currentMenu != null) {
+			currentMenu.remove();
+			currentMenu = null;
 		}
 	}
 
+	Menu getCurrentMenu () {
+		return currentMenu;
+	}
+
+	void setCurrentMenu (Menu currentMenu) {
+		this.currentMenu = currentMenu;
+	}
+
+	/** Returns table containing all menus that should be added to Stage, typically with expandX and fillX properties. */
 	public Table getTable () {
 		return mainTable;
 	}

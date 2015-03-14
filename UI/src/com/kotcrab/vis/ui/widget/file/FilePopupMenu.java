@@ -43,7 +43,6 @@ public class FilePopupMenu extends PopupMenu {
 	private MenuItem removeFromFavorites;
 
 	public FilePopupMenu (FileChooser fileChooser, FileChooserLocale loc) {
-		super(true);
 		this.chooser = fileChooser;
 		this.locale = loc;
 
