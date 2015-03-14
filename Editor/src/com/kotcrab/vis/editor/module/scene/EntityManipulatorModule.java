@@ -33,6 +33,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.ColorPickerModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
@@ -196,7 +198,8 @@ public class EntityManipulatorModule extends SceneModule {
 			Array<EditorEntity> newClipboard = sceneIOModule.getKryo().copy(entitiesClipboard);
 			entitiesClipboard.clear();
 			entitiesClipboard.addAll(newClipboard);
-		}
+		} else
+			App.eventBus.post(new StatusBarEvent("Clipboard is empty, nothing to paste!"));
 	}
 
 	public EntityProperties getEntityProperties () {
