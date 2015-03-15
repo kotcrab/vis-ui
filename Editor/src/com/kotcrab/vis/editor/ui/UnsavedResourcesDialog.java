@@ -139,6 +139,7 @@ public class UnsavedResourcesDialog extends VisWindow {
 		}
 	}
 
+	@Override
 	protected void close () {
 		super.close();
 		listener.canceled();
