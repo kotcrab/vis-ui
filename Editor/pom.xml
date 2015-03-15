@@ -66,6 +66,18 @@
         </dependency>
 
         <dependency>
+            <groupId>com.kotcrab.vis</groupId>
+            <artifactId>vis-ui</artifactId>
+            <version>${visui.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kotcrab.vis</groupId>
+            <artifactId>vis-runtime</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
             <version>3.0.0</version>
@@ -84,15 +96,15 @@
         </dependency>
 
         <dependency>
-            <groupId>com.kotcrab.vis</groupId>
-            <artifactId>vis-ui</artifactId>
-            <version>${visui.version}</version>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>4.1.0</version>
         </dependency>
 
         <dependency>
-            <groupId>com.kotcrab.vis</groupId>
-            <artifactId>vis-runtime</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>platform</artifactId>
+            <version>3.5.2</version>
         </dependency>
     </dependencies>
 
