@@ -21,8 +21,9 @@ package com.kotcrab.vis.editor.ui.tab;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Disposable;
 
-public abstract class Tab {
+public abstract class Tab implements Disposable {
 	private boolean activeTab;
 	private TabbedPane pane;
 
@@ -109,5 +110,10 @@ public abstract class Tab {
 
 	private void checkSavable () {
 		if (savable == false) throw new IllegalStateException("Tab is not savable!");
+	}
+
+	@Override
+	public void dispose () {
+
 	}
 }

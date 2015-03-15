@@ -127,6 +127,7 @@ public class TabbedPane {
 
 		if (success) {
 			tab.setPane(null);
+			tab.dispose();
 			notifyListenersRemoved(tab);
 
 			if (tabs.size == 0)

@@ -27,7 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
-import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.Event;
@@ -57,7 +56,7 @@ import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 import com.kotcrab.vis.editor.util.SpriteUtils;
 import com.kotcrab.vis.ui.VisTable;
 
-public class SceneTab extends Tab implements DragAndDropTarget, EventListener, Disposable, SceneMenuButtonsListener {
+public class SceneTab extends Tab implements DragAndDropTarget, EventListener, SceneMenuButtonsListener {
 	private Editor editor;
 	private EditorScene scene;
 
