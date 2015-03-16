@@ -72,7 +72,7 @@ public class App {
 				charset.set(null, null);
 				Log.warn(TAG, "Success, run with VM argument: -Dfile.encoding=UTF-8 to avoid this.");
 			} catch (Exception e) {
-				String charsetChangeFailed = "Failed! UTF-8 charset is not default for this system and attempt to change it failed, " +
+				String charsetChangeFailed = "UTF-8 charset is not default for this system and attempt to change it failed, " +
 						"cannot continue! Run with VM argument: -Dfile.encoding=UTF-8 to fix this.";
 				JOptionPane.showMessageDialog(null, charsetChangeFailed, "Fatal error", JOptionPane.ERROR_MESSAGE);
 				throw new IllegalStateException(charsetChangeFailed);
