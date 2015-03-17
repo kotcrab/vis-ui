@@ -30,6 +30,7 @@ public class FileAccessModule extends ProjectModule {
 	private FileHandle assetsFolder;
 	private FileHandle modulesFolder;
 
+	private FileHandle sceneFolder;
 	private FileHandle ttfFontFolder;
 	private FileHandle bmpFontFolder;
 	private FileHandle particleFolder;
@@ -41,6 +42,7 @@ public class FileAccessModule extends ProjectModule {
 		assetsFolder = visFolder.child("assets");
 		modulesFolder = visFolder.child("modules");
 
+		sceneFolder = assetsFolder.child("scene");
 		ttfFontFolder = assetsFolder.child("font");
 		bmpFontFolder = assetsFolder.child("bmpfont");
 		particleFolder = assetsFolder.child("particle");
@@ -59,6 +61,10 @@ public class FileAccessModule extends ProjectModule {
 		FileHandle moduleFolder = modulesFolder.child(moduleName);
 		if (modulesFolder.exists() == false) moduleFolder.mkdirs();
 		return moduleFolder;
+	}
+
+	public FileHandle getSceneFolder () {
+		return sceneFolder;
 	}
 
 	public FileHandle getParticleFolder () {
@@ -97,10 +103,14 @@ public class FileAccessModule extends ProjectModule {
 		return relativize(assetsFolder, absolutePath);
 	}
 
+	public String getTextureCacheRegionName (String assetsFolderRelativePath) {
+		return assetsFolderRelativePath.substring(assetsFolderRelativePath.indexOf('/') + 1, assetsFolderRelativePath.lastIndexOf("."));
+	}
+
 	private String relativize (FileHandle base, String absolute) {
 		Path pathAbsolute = Paths.get(absolute);
 		Path pathBase = Paths.get(base.path());
 		Path pathRelative = pathBase.relativize(pathAbsolute);
-		return pathRelative.toString();
+		return pathRelative.toString().replace("\\", "/");
 	}
 }

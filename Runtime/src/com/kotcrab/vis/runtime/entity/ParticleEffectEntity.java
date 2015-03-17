@@ -30,7 +30,7 @@ public class ParticleEffectEntity extends Entity implements Disposable {
 	public ParticleEffectEntity (String id, String effectRelativePath, ParticleEffect effect) {
 		super(id);
 
-		this.effectRelativePath = effectRelativePath;
+		this.effectRelativePath = effectRelativePath.replace("\\", "/");
 
 		this.effect = effect;
 

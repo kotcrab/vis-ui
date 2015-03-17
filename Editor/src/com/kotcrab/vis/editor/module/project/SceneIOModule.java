@@ -54,7 +54,7 @@ public class SceneIOModule extends ProjectModule {
 	private FontCacheModule fontModule;
 	private ParticleCacheModule particleModule;
 
-	private FileHandle visFolder;
+	private FileHandle assetsFolder;
 
 	@Override
 	public void init () {
@@ -64,7 +64,7 @@ public class SceneIOModule extends ProjectModule {
 		fontModule = projectContainer.get(FontCacheModule.class);
 		particleModule = projectContainer.get(ParticleCacheModule.class);
 
-		visFolder = fileAccessModule.getVisFolder();
+		assetsFolder = fileAccessModule.getAssetsFolder();
 
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
@@ -83,7 +83,7 @@ public class SceneIOModule extends ProjectModule {
 		try {
 			Input input = new Input(new FileInputStream(fullPathFile.file()));
 			EditorScene scene = kryo.readObject(input, EditorScene.class);
-			scene.path = fileAccessModule.relativizeToVisFolder(fullPathFile);
+			scene.path = fileAccessModule.relativizeToAssetsFolder(fullPathFile);
 			input.close();
 
 			prepareSceneAfterLoad(scene);
@@ -141,6 +141,6 @@ public class SceneIOModule extends ProjectModule {
 	}
 
 	public FileHandle getFileHandleForScene (EditorScene scene) {
-		return visFolder.child(scene.path);
+		return assetsFolder.child(scene.path);
 	}
 }

@@ -55,7 +55,7 @@ public class TextEntity extends Entity {
 
 	public TextEntity (BitmapFont bitmapFont, String id, String relativeFontPath, String text, int fontSize) {
 		super(id);
-		this.relativeFontPath = relativeFontPath;
+		this.relativeFontPath = relativeFontPath.replace("\\", "/");
 		this.text = text;
 		this.fontSize = fontSize;
 

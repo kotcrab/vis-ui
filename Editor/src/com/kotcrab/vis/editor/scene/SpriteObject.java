@@ -30,7 +30,7 @@ public class SpriteObject extends SpriteEntity implements EditorEntity {
 
 	public SpriteObject (String cacheRegionName, TextureRegion region, float x, float y) {
 		super(null, new Sprite(region));
-		this.cacheRegionName = cacheRegionName;
+		this.cacheRegionName = cacheRegionName.replace("\\", "/");
 		sprite.setPosition(x, y);
 	}
 
