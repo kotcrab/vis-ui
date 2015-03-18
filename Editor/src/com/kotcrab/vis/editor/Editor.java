@@ -83,8 +83,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private Stage stage;
 	private Table root;
 
-	private Table overlayContent;
-
 	// TODO move to module
 	private Table mainContentTable;
 	private Table tabContentTable;
@@ -139,10 +137,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		createUI();
 		createModuleContainers();
 		createModulesUI();
-
-		rootOverlay.bottom();
-		rootOverlay.add(overlayContent = new Table()).expand().fill().row();
-		rootOverlay.add().height(editorMC.get(StatusBarModule.class).getTable().getPrefHeight());
 
 		// debug section
 		try {
@@ -365,10 +359,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	public VisTable getProjectContentTable () {
 		return projectContentTable;
-	}
-
-	public Table getOverlayContent () {
-		return overlayContent;
 	}
 
 	public void showSettingsWindow () {

@@ -41,7 +41,6 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.TabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.ui.AssetsUsagesUI;
 import com.kotcrab.vis.editor.ui.DeleteDialog;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tab.Tab;
@@ -393,7 +392,6 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		private void showDeleteDialog (FileHandle file) {
 			getStage().addActor(new DeleteDialog(file, assetsUsageAnalyzer.canAnalyze(file), result -> {
 				if (result.safeDelete) {
-					new AssetsUsagesUI(Editor.instance.getOverlayContent(), assetsUsageAnalyzer.analyze(file));
 				} else
 					FileUtils.delete(file);
 			}));
