@@ -63,7 +63,7 @@ public class NewSceneDialog extends VisWindow {
 	private SceneIOModule sceneIO;
 	private SceneTabsModule sceneTabsModule;
 
-	private FileHandle visFolder;
+	private FileHandle assetsFolder;
 
 	private OrderedMap<String, SceneViewport> viewportMap;
 
@@ -76,7 +76,7 @@ public class NewSceneDialog extends VisWindow {
 		this.sceneIO = sceneIOModule;
 		this.sceneTabsModule = sceneTabsModule;
 
-		visFolder = fileAccess.getVisFolder();
+		assetsFolder = fileAccess.getAssetsFolder();
 
 		viewportMap = new OrderedMap<>();
 		for (SceneViewport value : SceneViewport.values()) viewportMap.put(value.toListString(), value);
@@ -91,7 +91,7 @@ public class NewSceneDialog extends VisWindow {
 
 	private void createUI () {
 		nameTextField = new VisValidableTextField();
-		pathTextField = new VisValidableTextField("/assets/scene/");
+		pathTextField = new VisValidableTextField("/scene/");
 		viewportModeSelectBox = new VisSelectBox<>();
 		viewportModeSelectBox.setItems(viewportMap.keys().toArray());
 
@@ -168,7 +168,7 @@ public class NewSceneDialog extends VisWindow {
 				DialogUtils.showOptionDialog(getStage(), "Message", "Open this new scene in editor?", OptionDialogType.YES_NO, new OptionDialogAdapter() {
 					@Override
 					public void yes () {
-						EditorScene scene = sceneIO.load(visFolder.child(targetFile.path()));
+						EditorScene scene = sceneIO.load(assetsFolder.child(targetFile.path()));
 						sceneTabsModule.open(scene);
 					}
 				});
@@ -188,12 +188,12 @@ public class NewSceneDialog extends VisWindow {
 		validator.valueGreaterThan(widthField, "Width must be greater than zero", 0);
 		validator.valueGreaterThan(heightField, "Height must be greater than zero", 0);
 
-		validator.fileExists(pathTextField, visFolder, "Path does not exist!");
+		validator.fileExists(pathTextField, assetsFolder, "Path does not exist!");
 
 		validator.custom(nameTextField, new FormInputValidator("That scene already exists!") {
 			@Override
 			public boolean validateInput (String input) {
-				FileHandle sceneFile = visFolder.child(pathTextField.getText()).child(input + ".scene");
+				FileHandle sceneFile = assetsFolder.child(pathTextField.getText()).child(input + ".scene");
 				setResult(!sceneFile.exists());
 
 				return super.validateInput(input);
