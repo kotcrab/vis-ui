@@ -31,7 +31,7 @@ public class AssetsUsagesUI  {
 		VisTable mainContentTable = new VisTable();
 		mainContentTable.setBackground(VisUI.getSkin().getDrawable("window-bg"));
 
-		VisSplitPane mainSplitPane = new OverlaySplitPane(mainContentTable);
+		VisSplitPane mainSplitPane = new VisSplitPane(new Table(), mainContentTable, true);
 		mainSplitPane.setSplitAmount(0.7f);
 
 		target.clear();
