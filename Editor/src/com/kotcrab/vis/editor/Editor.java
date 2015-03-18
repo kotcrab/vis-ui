@@ -41,7 +41,8 @@ import com.kotcrab.vis.editor.module.ProjectIOModule;
 import com.kotcrab.vis.editor.module.StatusBarModule;
 import com.kotcrab.vis.editor.module.TabsModule;
 import com.kotcrab.vis.editor.module.ToolbarModule;
-import com.kotcrab.vis.editor.module.project.AssetsManagerUIModule;
+import com.kotcrab.vis.editor.module.project.AssetsUIModule;
+import com.kotcrab.vis.editor.module.project.AssetsUsageAnalyzerModule;
 import com.kotcrab.vis.editor.module.project.AssetsWatcherModule;
 import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
@@ -81,6 +82,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	private Stage stage;
 	private Table root;
+
+	private Table overlayContent;
 
 	// TODO move to module
 	private Table mainContentTable;
@@ -126,14 +129,22 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		root = new Table();
 		root.setFillParent(true);
+
+		Table rootOverlay = new Table();
+		rootOverlay.setFillParent(true);
+
 		stage.addActor(root);
+		stage.addActor(rootOverlay);
 
 		createUI();
 		createModuleContainers();
 		createModulesUI();
 
-		// debug section
+		rootOverlay.bottom();
+		rootOverlay.add(overlayContent = new Table()).expand().fill().row();
+		rootOverlay.add().height(editorMC.get(StatusBarModule.class).getTable().getPrefHeight());
 
+		// debug section
 		try {
 			editorMC.get(ProjectIOModule.class).load((Gdx.files.absolute("F:\\Poligon\\Tester")));
 		} catch (EditorException e) {
@@ -145,9 +156,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
 			projectMC.get(SceneTabsModule.class).open(testScene);
 		}
-
-		//showSettingsWindow();
-
 		//debug end
 
 		Log.debug("Loading completed");
@@ -315,10 +323,11 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.add(new ExportModule());
 		projectMC.add(new SceneIOModule());
 		projectMC.add(new SceneMetadataModule());
+		projectMC.add(new AssetsUsageAnalyzerModule());
 
 		projectMC.add(new SceneTabsModule());
 		projectMC.add(new ProjectInfoTabModule());
-		projectMC.add(new AssetsManagerUIModule());
+		projectMC.add(new AssetsUIModule());
 
 		projectMC.init();
 
@@ -356,6 +365,10 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	public VisTable getProjectContentTable () {
 		return projectContentTable;
+	}
+
+	public Table getOverlayContent () {
+		return overlayContent;
 	}
 
 	public void showSettingsWindow () {

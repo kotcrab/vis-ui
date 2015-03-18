@@ -80,19 +80,26 @@ public class SceneIOModule extends ProjectModule {
 	}
 
 	public EditorScene load (FileHandle fullPathFile) {
+		EditorScene scene = deserializeScene(fullPathFile);
+
+		prepareSceneAfterLoad(scene);
+
+		return scene;
+	}
+
+	private EditorScene deserializeScene (FileHandle fullPathFile) {
 		try {
 			Input input = new Input(new FileInputStream(fullPathFile.file()));
 			EditorScene scene = kryo.readObject(input, EditorScene.class);
 			scene.path = fileAccessModule.relativizeToAssetsFolder(fullPathFile);
 			input.close();
 
-			prepareSceneAfterLoad(scene);
-
 			return scene;
 		} catch (FileNotFoundException e) {
 			Log.exception(e);
 		}
-		return null;
+
+		throw new IllegalStateException("There was an error during scene deserializing");
 	}
 
 	private void prepareSceneAfterLoad (EditorScene scene) {
@@ -119,7 +126,6 @@ public class SceneIOModule extends ProjectModule {
 	}
 
 	public boolean save (EditorScene scene) {
-		//if needed here prepare scene for save
 		for (EditorEntity entity : scene.entities)
 			entity.beforeSerialize();
 
