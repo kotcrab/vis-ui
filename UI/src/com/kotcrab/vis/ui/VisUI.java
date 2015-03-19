@@ -22,10 +22,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 
 /**
- * Allows to easily load VisUI skin and change default title alignment
+ * Allows to easily load VisUI skin and change default title alignment, contains static version field
  * @author Kotcrab
  */
 public class VisUI {
+	/** Current VisUI version, does not include SNAPSHOT even if this version is snapshot*/
 	public static final String VERSION = "0.7.0";
 
 	private static int defaultTitleAlign = Align.left;
