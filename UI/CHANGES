@@ -1,10 +1,10 @@
 [0.7.0] [LibGDX 1.5.5] [Snapshot]
--API Change: Constructor Separator(boolean useMenuStyle) is now Separator(boolean vertical) use new Separator("menu") for menu styled separator
--API Change: FileChooser locale removed field title. Added titleChooseFiles, titleChooseDirectories, titleChooseFilesAndDirectories
+-API Change: Constructor Separator(boolean useMenuStyle) is now Separator(boolean vertical). Use 'new Separator("menu")' for menu styled separator
+-API Change: FileChooserLocale: removed field 'title'. Added fields: 'titleChooseFiles', 'titleChooseDirectories', 'titleChooseFilesAndDirectories'
 -API Change: Validators.INTEGERS and Validators.FLOAT (was Validators.integers and Validators.floats)
--API Change: PopupMenu#displayMenu(...) is called now PopupMenu#showMenu(...)
+-API Change: PopupMenu#displayMenu renamed to showMenu
 -API Change: Removed PopupMenu boolean constructors, now auto remove is always enabled. Now when user has clicked MenuItem then PopupMenu will be removed from stage
--API Change: MenuBar(Stage) constructor does no logner takes Stage
+-API Change: MenuBar(Stage) constructor doesn't take Stage anymore
 -API Addition: MenuItem#setSubMenu(PopupMenu subMenu)
 -API Addition: MenuBar#addMenu(Menu menu) MenuBar#removeMenu(Menu menu) MenuBar#insertMenu(int index, Menu menu)
 -API Addition: MenuBar#closeMenu()
@@ -17,10 +17,10 @@
 -Skin Change: Separator style now has 'vertical' property
 -Skin Change: MenuItem now uses MenuItemStyle (was TextButtonStyle). MenuItemStyle extends TextButtonStyle and adds submenu icon.
 -Skin Addition: VisSplitPane handleOver property
--Added VisTree/Tree mouse over drawable
+-Added VisTree/Tree default mouse over drawable
 -Added shift selection for FileChooser (key can be changed by chooser.setGroupMultiselectKey(...))
 -Tooltip is now kept within Stage border
--Focus border is now optional for every widget using it
+-Focus border is now optional for every widget that was using it
 -Font support for Polish, German, Spanish, French, Greek and Russian characters
 
 [0.6.1] [LibGDX 1.5.4]
