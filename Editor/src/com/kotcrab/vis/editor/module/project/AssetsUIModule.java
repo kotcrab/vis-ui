@@ -512,9 +512,9 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 
 		public FolderItem (FileHandle file) {
 			this.file = file;
-			name = new VisLabel(file.name());
+			name = new VisLabel(file.name(), "small");
 			name.setEllipsis(true);
-			add(new Image(VisUI.getSkin().getDrawable("icon-folder"))).padTop(3);
+			add(new Image(VisUI.getSkin().getDrawable("icon-folder"))).size(20).padTop(3);
 			add(name).expand().fill().padRight(6);
 		}
 	}
