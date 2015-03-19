@@ -39,6 +39,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.module.QuickAccessModule;
 import com.kotcrab.vis.editor.module.TabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.DeleteDialog;
@@ -65,9 +66,11 @@ import java.awt.Desktop;
 import java.io.IOException;
 
 //TODO filter particle images and bitmap font images
+//TODO this probably shouldn't be a module, should extend tab and should be loaded when project is loaded
 public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.WatchListener, TabbedPaneListener {
 	private TabsModule tabsModule;
 	private SceneTabsModule sceneTabsModule;
+	private QuickAccessModule quickAccessModule;
 	private SceneIOModule sceneIO;
 	private FileAccessModule fileAccess;
 	private TextureCacheModule textureCache;
@@ -81,6 +84,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	private int filesDisplayed;
 	private int itemSize = 92;
 
+	private VisTable mainTable;
 	private VisTable treeTable;
 	private FilesItemsTable filesTable;
 	private VisTable toolbarTable;
@@ -107,6 +111,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	private void initModule () {
 		tabsModule = container.get(TabsModule.class);
 		sceneTabsModule = projectContainer.get(SceneTabsModule.class);
+		quickAccessModule = container.get(QuickAccessModule.class);
 		sceneIO = projectContainer.get(SceneIOModule.class);
 		fileAccess = projectContainer.get(FileAccessModule.class);
 		textureCache = projectContainer.get(TextureCacheModule.class);
@@ -142,10 +147,11 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		createToolbarTable();
 		createContentTree();
 
-		VisTable editorTable = editor.getProjectContentTable();
-		editorTable.setBackground("window-bg");
-		editorTable.clear();
-		editorTable.add(splitPane).expand().fill();
+		mainTable = new VisTable();
+		mainTable.setBackground("window-bg");
+		mainTable.add(splitPane).expand().fill();
+
+		quickAccessModule.addTab(new AssetsTab());
 
 		popupMenu = new AssetsPopupMenu();
 	}
@@ -516,6 +522,23 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 			name.setEllipsis(true);
 			add(new Image(VisUI.getSkin().getDrawable("icon-folder"))).size(20).padTop(3);
 			add(name).expand().fill().padRight(6);
+		}
+	}
+
+	private class AssetsTab extends Tab {
+		@Override
+		public String getTabTitle () {
+			return "Assets";
+		}
+
+		@Override
+		public Table getContentTable () {
+			return mainTable;
+		}
+
+		@Override
+		public boolean isCloseableByUser () {
+			return false;
 		}
 	}
 

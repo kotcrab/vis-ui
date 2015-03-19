@@ -20,9 +20,12 @@
 package com.kotcrab.vis.editor.ui.tab;
 
 public interface TabbedPaneListener {
-	public void switchedTab (Tab tab);
+	default void switchedTab (Tab tab) {
+	}
 
-	public void removedTab (Tab tab);
+	default void removedTab (Tab tab) {
+	}
 
-	public void removedAllTabs ();
+	default void removedAllTabs () {
+	}
 }

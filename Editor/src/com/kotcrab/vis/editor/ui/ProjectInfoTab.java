@@ -50,6 +50,6 @@ public class ProjectInfoTab extends MainContentTab {
 
 	@Override
 	public TabViewMode getViewMode () {
-		return TabViewMode.WITH_PROJECT_ASSETS_MANAGER;
+		return TabViewMode.SPLIT;
 	}
 }

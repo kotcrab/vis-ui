@@ -21,44 +21,39 @@ package com.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.Event;
-import com.kotcrab.vis.editor.event.EventListener;
-import com.kotcrab.vis.editor.event.ProjectStatusEvent;
-import com.kotcrab.vis.editor.ui.StartPageTab;
-import com.kotcrab.vis.editor.ui.tab.MainContentTab;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabbedPane;
+import com.kotcrab.vis.editor.ui.tab.TabbedPane.TabbedPaneStyle;
 import com.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 
-public class TabsModule extends EditorModule implements EventListener {
+public class QuickAccessModule extends EditorModule{
 	private TabbedPane tabbedPane;
 	private TabbedPaneListener listener;
 
-	private StartPageTab startPageTab;
-
-	public TabsModule (TabbedPaneListener listener) {
+	public QuickAccessModule (TabbedPaneListener listener) {
 		this.listener = listener;
 	}
 
 	@Override
 	public void init () {
-		tabbedPane = new TabbedPane(listener);
+		TabbedPaneStyle tabStyle = new TabbedPaneStyle(false);
+		tabStyle.buttonStyle = new VisTextButtonStyle(VisUI.getSkin().get("toggle", VisTextButtonStyle.class));
+		tabStyle.buttonStyle.font = VisUI.getSkin().getFont("small-font");
 
-		startPageTab = new StartPageTab();
-
-		tabbedPane.add(startPageTab);
+		tabbedPane = new TabbedPane(listener, tabStyle);
 	}
 
-	public void addTab (MainContentTab tab) {
+	public void addTab (Tab tab) {
 		tabbedPane.add(tab);
 	}
 
-	public void removeTab (MainContentTab tab) {
+	public void removeTab (Tab tab) {
 		tabbedPane.remove(tab);
 	}
 
-	public void switchTab (MainContentTab tab) {
+	public void switchTab (Tab tab) {
 		tabbedPane.switchTab(tab);
 	}
 
@@ -74,43 +69,7 @@ public class TabsModule extends EditorModule implements EventListener {
 		return tabbedPane.getTable();
 	}
 
-	@Override
-	public void added () {
-		App.eventBus.register(this);
-	}
-
-	@Override
-	public void dispose () {
-		App.eventBus.unregister(this);
-	}
-
-	@Override
-	public boolean onEvent (Event e) {
-		if (e instanceof ProjectStatusEvent) {
-			ProjectStatusEvent event = (ProjectStatusEvent) e;
-			if (event.status == ProjectStatusEvent.Status.Loaded)
-				tabbedPane.remove(startPageTab);
-			else {
-				tabbedPane.removeAll();
-				tabbedPane.add(startPageTab);
-			}
-		}
-
-		return false;
-	}
-
 	public Array<Tab> getTabs () {
 		return tabbedPane.getTabs();
-	}
-
-	public int getDirtyTabCount () {
-		Array<Tab> tabs = getTabs();
-
-		int count = 0;
-
-		for (Tab tab : tabs)
-			if (tab.isDirty()) count++;
-
-		return count;
 	}
 }

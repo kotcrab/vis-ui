@@ -19,6 +19,8 @@
 
 package com.kotcrab.vis.editor.ui.tab;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
+
 public abstract class MainContentTab extends Tab {
 	public MainContentTab () {
 	}
@@ -29,6 +31,10 @@ public abstract class MainContentTab extends Tab {
 
 	public MainContentTab (boolean savable, boolean closeableByUser) {
 		super(savable, closeableByUser);
+	}
+
+	public void render (Batch batch) {
+
 	}
 
 	public abstract TabViewMode getViewMode ();

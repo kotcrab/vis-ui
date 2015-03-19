@@ -20,5 +20,5 @@
 package com.kotcrab.vis.editor.ui.tab;
 
 public enum TabViewMode {
-	TAB_ONLY, WITH_PROJECT_ASSETS_MANAGER
+	TAB_ONLY, SPLIT
 }

@@ -179,7 +179,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	@Override
 	public TabViewMode getViewMode () {
-		return TabViewMode.WITH_PROJECT_ASSETS_MANAGER;
+		return TabViewMode.SPLIT;
 	}
 
 	@Override

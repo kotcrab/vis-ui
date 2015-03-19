@@ -82,7 +82,8 @@ public class TabbedPane {
 		mainTable.row();
 
 		// if height is not set bottomBar may sometimes disappear
-		if(style.bottomBar != null) mainTable.add(new Image(style.bottomBar)).expand().fill().height(style.bottomBar.getMinHeight());
+		if (style.bottomBar != null)
+			mainTable.add(new Image(style.bottomBar)).expand().fill().height(style.bottomBar.getMinHeight());
 	}
 
 	public void add (Tab tab) {
@@ -223,6 +224,23 @@ public class TabbedPane {
 		return tabs;
 	}
 
+	public static class TabbedPaneStyle {
+		public Drawable bottomBar;
+		public VisTextButtonStyle buttonStyle;
+
+		public TabbedPaneStyle (boolean useDefaults) {
+			if (useDefaults) {
+				bottomBar = VisUI.getSkin().getDrawable("list-selection");
+				this.buttonStyle = VisUI.getSkin().get("toggle", VisTextButtonStyle.class);
+			}
+		}
+
+		public TabbedPaneStyle (Drawable bottomBar, VisTextButtonStyle buttonStyle) {
+			this.bottomBar = bottomBar;
+			this.buttonStyle = buttonStyle;
+		}
+	}
+
 	private class TabButtonTable extends VisTable {
 		public VisTextButton button;
 		public VisImageButton closeButton;
@@ -319,23 +337,6 @@ public class TabbedPane {
 		public void deselect () {
 			closeButtonStyle.up = buttonStyle.up;
 			closeButtonStyle.over = buttonStyle.over;
-		}
-	}
-
-	public static class TabbedPaneStyle {
-		public Drawable bottomBar;
-		public VisTextButtonStyle buttonStyle;
-
-		public TabbedPaneStyle (boolean useDefaults) {
-			if(useDefaults) {
-				bottomBar = VisUI.getSkin().getDrawable("list-selection");
-				this.buttonStyle = VisUI.getSkin().get("toggle", VisTextButtonStyle.class);
-			}
-		}
-
-		public TabbedPaneStyle (Drawable bottomBar, VisTextButtonStyle buttonStyle) {
-			this.bottomBar = bottomBar;
-			this.buttonStyle = buttonStyle;
 		}
 	}
 }

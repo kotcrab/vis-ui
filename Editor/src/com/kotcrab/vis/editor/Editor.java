@@ -38,6 +38,7 @@ import com.kotcrab.vis.editor.module.EditorSettingsIOModule;
 import com.kotcrab.vis.editor.module.GeneralSettingsModule;
 import com.kotcrab.vis.editor.module.MenuBarModule;
 import com.kotcrab.vis.editor.module.ProjectIOModule;
+import com.kotcrab.vis.editor.module.QuickAccessModule;
 import com.kotcrab.vis.editor.module.StatusBarModule;
 import com.kotcrab.vis.editor.module.TabsModule;
 import com.kotcrab.vis.editor.module.ToolbarModule;
@@ -64,6 +65,7 @@ import com.kotcrab.vis.editor.ui.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.tab.MainContentTab;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
+import com.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.WindowListener;
@@ -72,7 +74,6 @@ import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.util.DialogUtils.OptionDialogType;
-import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 
@@ -87,7 +88,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	// TODO move to module
 	private Table mainContentTable;
 	private Table tabContentTable;
-	private VisTable projectContentTable;
+	private VisTable quickAccessContentTable;
 	private VisSplitPane splitPane;
 
 	private SettingsDialog settingsDialog;
@@ -100,9 +101,10 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	private boolean projectLoaded = false;
 
-	private Tab tab;
+	private MainContentTab tab;
 
 	private boolean exitInProgress;
+	private Tab quickAccessTab;
 
 	public Editor (EditorFrame frame) {
 		this.frame = frame;
@@ -159,11 +161,9 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private void createUI () {
 		mainContentTable = new Table();
 		tabContentTable = new Table();
-		projectContentTable = new VisTable(true);
+		quickAccessContentTable = new VisTable();
 		splitPane = new VisSplitPane(null, null, true);
 		splitPane.setSplitAmount(0.78f);
-
-		projectContentTable.add(new VisLabel("Project Content Manager has not been loaded yet"));
 
 		settingsDialog = new SettingsDialog();
 	}
@@ -177,7 +177,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		editorMC.add(new MenuBarModule(projectMC));
 		editorMC.add(new ToolbarModule());
-		editorMC.add(new TabsModule());
+		editorMC.add(new TabsModule(createTabsModuleListener()));
+		editorMC.add(new QuickAccessModule(createQuickAccessModuleListener()));
 		editorMC.add(new StatusBarModule());
 		editorMC.add(new EditorSettingsIOModule());
 		editorMC.add(new ColorPickerModule());
@@ -190,11 +191,40 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		settingsDialog.addAll(editorMC.getModules());
 	}
 
+	private TabbedPaneListener createTabsModuleListener () {
+		return new TabbedPaneListener() {
+			@Override
+			public void switchedTab (Tab tab) {
+				mainContentTabChanged((MainContentTab) tab);
+			}
+
+			@Override
+			public void removedAllTabs () {
+				mainContentTabChanged(null);
+			}
+		};
+	}
+
+	private TabbedPaneListener createQuickAccessModuleListener () {
+		return new TabbedPaneListener() {
+			@Override
+			public void switchedTab (Tab tab) {
+				quickAccessViewChanged(tab);
+			}
+
+			@Override
+			public void removedAllTabs () {
+				quickAccessViewChanged(null);
+			}
+		};
+	}
+
 	private void createModulesUI () {
 		root.add(editorMC.get(MenuBarModule.class).getTable()).fillX().expandX().row();
 		root.add(editorMC.get(ToolbarModule.class).getTable()).fillX().expandX().row();
 		root.add(editorMC.get(TabsModule.class).getTable()).fillX().expandX().row();
 		root.add(mainContentTable).expand().fill().row();
+		root.add(editorMC.get(QuickAccessModule.class).getTable()).fillX().expandX().row();
 		root.add(editorMC.get(StatusBarModule.class).getTable()).fillX().expandX().row();
 	}
 
@@ -338,31 +368,42 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		Gdx.app.postRunnable(() -> projectLoaded(project));
 	}
 
-	public void mainContentTabChanged (MainContentTab tab) {
+	public void showSettingsWindow () {
+		stage.addActor(settingsDialog.fadeIn());
+	}
+
+	private void mainContentTabChanged (MainContentTab tab) {
 		this.tab = tab;
 
 		tabContentTable.clear();
-		mainContentTable.clear();
-		splitPane.setWidgets(null, null);
 
-		if (tab != null) {
+		if (tab != null)
 			tabContentTable.add(tab.getContentTable()).expand().fill();
-			if (tab.getViewMode() == TabViewMode.TAB_ONLY)
-				mainContentTable.add(tabContentTable).expand().fill();
-			else {
-				splitPane.setWidgets(tabContentTable, projectContentTable);
-				mainContentTable.add(splitPane).expand().fill();
-			}
-		}
+
+		updateRootView();
 
 		inputModule.reattachListeners();
 	}
 
-	public VisTable getProjectContentTable () {
-		return projectContentTable;
+	private void quickAccessViewChanged (Tab tab) {
+		quickAccessTab = tab;
+		quickAccessContentTable.clear();
+
+		if (tab != null)
+			quickAccessContentTable.add(tab.getContentTable()).expand().fill();
+
+		updateRootView();
 	}
 
-	public void showSettingsWindow () {
-		stage.addActor(settingsDialog.fadeIn());
+	private void updateRootView () {
+		mainContentTable.clear();
+		splitPane.setWidgets(null, null);
+
+		if (tab != null && tab.getViewMode() == TabViewMode.TAB_ONLY || quickAccessTab == null)
+			mainContentTable.add(tabContentTable).expand().fill();
+		else {
+			splitPane.setWidgets(tabContentTable, quickAccessContentTable);
+			mainContentTable.add(splitPane).expand().fill();
+		}
 	}
 }

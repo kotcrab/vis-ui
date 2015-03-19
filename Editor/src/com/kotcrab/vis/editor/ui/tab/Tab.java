@@ -19,7 +19,6 @@
 
 package com.kotcrab.vis.editor.ui.tab;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Disposable;
 
@@ -45,13 +44,7 @@ public abstract class Tab implements Disposable {
 
 	public abstract String getTabTitle ();
 
-	public Table getContentTable () {
-		return null;
-	}
-
-	public void render (Batch batch) {
-
-	}
+	public abstract Table getContentTable ();
 
 	public void onShow () {
 		activeTab = true;
