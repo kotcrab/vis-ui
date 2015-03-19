@@ -233,6 +233,13 @@ default-select-selection
   orig: 3, 3
   offset: 0, 0
   index: -1
+font-medium
+  rotate: false
+  xy: 1, 126
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
 font-small
   rotate: false
   xy: 1, 126
