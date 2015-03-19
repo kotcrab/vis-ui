@@ -34,7 +34,7 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	public static final int MIN_FONT_SIZE = 5;
 
 	public static final int DEFAULT_FONT_SIZE = 20;
-	public static final String DEFAULT_TEXT = "Quick fox jumps over the lazy dog";
+	public static final String DEFAULT_TEXT = "Thq quick brown fox jumps over the lazy dog";
 
 	private FileAccessModule fileAccess;
 	private AssetsWatcherModule watcherModule;
