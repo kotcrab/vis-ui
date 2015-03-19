@@ -46,7 +46,7 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 
 public class TabbedPane {
-	private static final Drawable highlightBg = VisUI.getSkin().getDrawable("list-selection");
+	private TabbedPaneStyle style;
 
 	private VisTable tabsTable;
 	private VisTable mainTable;
@@ -60,6 +60,11 @@ public class TabbedPane {
 	private Array<TabbedPaneListener> listeners;
 
 	public TabbedPane (TabbedPaneListener listener) {
+		this(listener, new TabbedPaneStyle(true));
+	}
+
+	public TabbedPane (TabbedPaneListener listener, TabbedPaneStyle style) {
+		this.style = style;
 		listeners = new Array<>();
 		listeners.add(listener);
 
@@ -68,15 +73,16 @@ public class TabbedPane {
 		mainTable = new VisTable();
 		tabsTable = new VisTable();
 
+		mainTable.setBackground(VisUI.getSkin().getDrawable("menu-bg"));
+
 		tabs = new Array<>();
 		tabsButtonMap = new ObjectMap<>();
 
-		mainTable.add(tabsTable).padTop(2).left().expand();
+		mainTable.add(tabsTable).left().expand();
 		mainTable.row();
 
-		// if height is not set bottomBar may sometimes disappear for some reason
-		mainTable.add(new Image(highlightBg)).expand().fill().height(1);
-		mainTable.setBackground(VisUI.getSkin().getDrawable("menu-bg"));
+		// if height is not set bottomBar may sometimes disappear
+		if(style.bottomBar != null) mainTable.add(new Image(style.bottomBar)).expand().fill().height(style.bottomBar.getMinHeight());
 	}
 
 	public void add (Tab tab) {
@@ -227,7 +233,7 @@ public class TabbedPane {
 
 		public TabButtonTable (final Tab tab) {
 			this.tab = tab;
-			button = new VisTextButton(tab.getTabTitle(), "toggle");
+			button = new VisTextButton(tab.getTabTitle(), style.buttonStyle);
 			button.setFocusBorderEnabled(false);
 
 			closeButton = new VisImageButton("close");
@@ -313,6 +319,23 @@ public class TabbedPane {
 		public void deselect () {
 			closeButtonStyle.up = buttonStyle.up;
 			closeButtonStyle.over = buttonStyle.over;
+		}
+	}
+
+	public static class TabbedPaneStyle {
+		public Drawable bottomBar;
+		public VisTextButtonStyle buttonStyle;
+
+		public TabbedPaneStyle (boolean useDefaults) {
+			if(useDefaults) {
+				bottomBar = VisUI.getSkin().getDrawable("list-selection");
+				this.buttonStyle = VisUI.getSkin().get("toggle", VisTextButtonStyle.class);
+			}
+		}
+
+		public TabbedPaneStyle (Drawable bottomBar, VisTextButtonStyle buttonStyle) {
+			this.bottomBar = bottomBar;
+			this.buttonStyle = buttonStyle;
 		}
 	}
 }
