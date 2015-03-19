@@ -61,6 +61,7 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EditorFrame;
 import com.kotcrab.vis.editor.ui.SettingsDialog;
 import com.kotcrab.vis.editor.ui.UnsavedResourcesDialog;
+import com.kotcrab.vis.editor.ui.tab.MainContentTab;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 import com.kotcrab.vis.editor.util.EditorException;
@@ -337,7 +338,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		Gdx.app.postRunnable(() -> projectLoaded(project));
 	}
 
-	public void tabChanged (Tab tab) {
+	public void mainContentTabChanged (MainContentTab tab) {
 		this.tab = tab;
 
 		tabContentTable.clear();
