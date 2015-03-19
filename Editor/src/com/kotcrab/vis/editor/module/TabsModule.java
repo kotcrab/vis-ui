@@ -27,6 +27,7 @@ import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.ui.StartPageTab;
+import com.kotcrab.vis.editor.ui.tab.MainContentTab;
 import com.kotcrab.vis.editor.ui.tab.Tab;
 import com.kotcrab.vis.editor.ui.tab.TabbedPane;
 import com.kotcrab.vis.editor.ui.tab.TabbedPaneListener;
@@ -44,7 +45,7 @@ public class TabsModule extends EditorModule implements EventListener {
 		tabbedPane = new TabbedPane(new TabbedPaneListener() {
 			@Override
 			public void switchedTab (Tab tab) {
-				editor.tabChanged(tab);
+				editor.tabChanged((MainContentTab) tab);
 			}
 
 			@Override
@@ -63,15 +64,15 @@ public class TabsModule extends EditorModule implements EventListener {
 		tabbedPane.add(startPageTab);
 	}
 
-	public void addTab (Tab tab) {
+	public void addTab (MainContentTab tab) {
 		tabbedPane.add(tab);
 	}
 
-	public void removeTab (Tab tab) {
+	public void removeTab (MainContentTab tab) {
 		tabbedPane.remove(tab);
 	}
 
-	public void switchTab (Tab tab) {
+	public void switchTab (MainContentTab tab) {
 		tabbedPane.switchTab(tab);
 	}
 

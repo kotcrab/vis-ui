@@ -45,8 +45,6 @@ public abstract class Tab implements Disposable {
 
 	public abstract String getTabTitle ();
 
-	public abstract TabViewMode getViewMode ();
-
 	public Table getContentTable () {
 		return null;
 	}

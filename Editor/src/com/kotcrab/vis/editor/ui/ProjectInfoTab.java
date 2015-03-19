@@ -20,13 +20,13 @@
 package com.kotcrab.vis.editor.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.editor.module.project.Project;
+import com.kotcrab.vis.editor.ui.tab.MainContentTab;
+import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.editor.module.project.Project;
-import com.kotcrab.vis.editor.ui.tab.Tab;
-import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 
-public class ProjectInfoTab extends Tab {
+public class ProjectInfoTab extends MainContentTab {
 	private Table content;
 
 	public ProjectInfoTab (Project project) {

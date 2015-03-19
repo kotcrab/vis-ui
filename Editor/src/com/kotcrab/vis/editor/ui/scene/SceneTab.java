@@ -51,12 +51,12 @@ import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.ui.tab.DragAndDropTarget;
-import com.kotcrab.vis.editor.ui.tab.Tab;
+import com.kotcrab.vis.editor.ui.tab.MainContentTab;
 import com.kotcrab.vis.editor.ui.tab.TabViewMode;
 import com.kotcrab.vis.editor.util.SpriteUtils;
 import com.kotcrab.vis.ui.VisTable;
 
-public class SceneTab extends Tab implements DragAndDropTarget, EventListener, SceneMenuButtonsListener {
+public class SceneTab extends MainContentTab implements DragAndDropTarget, EventListener, SceneMenuButtonsListener {
 	private Editor editor;
 	private EditorScene scene;
 
