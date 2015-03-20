@@ -163,7 +163,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		tabContentTable = new Table();
 		quickAccessContentTable = new VisTable();
 		splitPane = new VisSplitPane(null, null, true);
-		splitPane.setSplitAmount(0.78f);
+		splitPane.setSplitAmount(0.77f);
 
 		settingsDialog = new SettingsDialog();
 	}
