@@ -43,6 +43,7 @@ public class QuickAccessModule extends EditorModule{
 		tabStyle.buttonStyle.font = VisUI.getSkin().getFont("small-font");
 
 		tabbedPane = new TabbedPane(listener, tabStyle);
+		tabbedPane.setAllowTabDeselect(true);
 	}
 
 	public void addTab (Tab tab) {

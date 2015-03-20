@@ -86,6 +86,13 @@ public class TabbedPane {
 			mainTable.add(new Image(style.bottomBar)).expand().fill().height(style.bottomBar.getMinHeight());
 	}
 
+	public void setAllowTabDeselect (boolean allowTabDeselect) {
+		if (allowTabDeselect)
+			group.setMinCheckCount(0);
+		else
+			group.setMinCheckCount(1);
+	}
+
 	public void add (Tab tab) {
 		tab.setPane(this);
 		tabs.add(tab);
@@ -320,6 +327,9 @@ public class TabbedPane {
 						tab.onShow();
 						closeButtonStyle.up = buttonStyle.down;
 						closeButtonStyle.over = null;
+					} else {
+						if (group.getChecked() == null)
+							notifyListenersSwitched(null);
 					}
 				}
 			});
