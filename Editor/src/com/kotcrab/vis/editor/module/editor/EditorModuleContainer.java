@@ -17,19 +17,14 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.project;
+package com.kotcrab.vis.editor.module.editor;
 
-import com.kotcrab.vis.editor.module.editor.EditorModule;
+import com.kotcrab.vis.editor.module.BaseModuleContainer;
 
-public abstract class ProjectModule extends EditorModule {
-	protected Project project;
-	protected ProjectModuleContainer projectContainer;
-
-	public void setProject (Project project) {
-		this.project = project;
-	}
-
-	public void setProjectModuleContainer (ProjectModuleContainer container) {
-		this.projectContainer = container;
+public class EditorModuleContainer extends BaseModuleContainer<EditorModule> {
+	@Override
+	public void add (EditorModule module) {
+		module.setContainer(this);
+		super.add(module);
 	}
 }

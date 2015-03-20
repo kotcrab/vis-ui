@@ -17,19 +17,12 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.project;
+package com.kotcrab.vis.editor.ui.tabbedpane;
 
-import com.kotcrab.vis.editor.module.editor.EditorModule;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 
-public abstract class ProjectModule extends EditorModule {
-	protected Project project;
-	protected ProjectModuleContainer projectContainer;
+public interface DragAndDropTarget {
+	public float getCameraZoom ();
 
-	public void setProject (Project project) {
-		this.project = project;
-	}
-
-	public void setProjectModuleContainer (ProjectModuleContainer container) {
-		this.projectContainer = container;
-	}
+	public Target getDropTarget ();
 }

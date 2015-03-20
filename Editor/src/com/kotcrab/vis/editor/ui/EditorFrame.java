@@ -86,7 +86,7 @@ public class EditorFrame extends JFrame {
 
 	/**
 	 * Performs editor exit, if editor is still running, this will cause to display "Do you really want to exit?" dialog in editor window.
-	 * If editor LibGDX thread died, for example. after uncaught GdxRuntimeException this will simply kill app.
+	 * If editor LibGDX thread died, for example after uncaught GdxRuntimeException this will simply kill app.
 	 */
 	private void performEditorExit () {
 		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();

@@ -22,8 +22,8 @@ package com.kotcrab.vis.editor.module.project;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
-import com.kotcrab.vis.editor.module.TabsModule;
-import com.kotcrab.vis.editor.ui.ProjectInfoTab;
+import com.kotcrab.vis.editor.module.editor.TabsModule;
+import com.kotcrab.vis.editor.ui.tab.ProjectInfoTab;
 
 public class ProjectInfoTabModule extends ProjectModule implements EventListener {
 	private TabsModule tabsModule;

@@ -35,7 +35,7 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
-import com.kotcrab.vis.editor.ui.SpriteSerializer;
+import com.kotcrab.vis.editor.util.SpriteSerializer;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.SpriteUtils;
 import com.kotcrab.vis.runtime.scene.SceneViewport;

@@ -22,7 +22,7 @@ package com.kotcrab.vis.editor.module.scene;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.module.EditorModule;
+import com.kotcrab.vis.editor.module.editor.EditorModule;
 
 /**
  * Allow to add InputListener that will send events from editor.

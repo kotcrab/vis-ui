@@ -17,19 +17,18 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.project;
+package com.kotcrab.vis.editor.module.editor;
 
-import com.kotcrab.vis.editor.module.editor.EditorModule;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-public abstract class ProjectModule extends EditorModule {
-	protected Project project;
-	protected ProjectModuleContainer projectContainer;
+/** Modules implementing this interface provide UI table that is displayed on Settings window. */
+public interface SettableModule {
+	/** @return table that will be displayed in settings window, this method must always return same table instance */
+	public Table getSettingsTable ();
 
-	public void setProject (Project project) {
-		this.project = project;
-	}
+	public String getSettingsName ();
 
-	public void setProjectModuleContainer (ProjectModuleContainer container) {
-		this.projectContainer = container;
-	}
+	public boolean settingsChanged ();
+
+	public void settingsApply ();
 }

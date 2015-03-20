@@ -17,19 +17,15 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.project;
+package com.kotcrab.vis.editor.ui.tabbedpane;
 
-import com.kotcrab.vis.editor.module.editor.EditorModule;
-
-public abstract class ProjectModule extends EditorModule {
-	protected Project project;
-	protected ProjectModuleContainer projectContainer;
-
-	public void setProject (Project project) {
-		this.project = project;
+public interface TabbedPaneListener {
+	default void switchedTab (Tab tab) {
 	}
 
-	public void setProjectModuleContainer (ProjectModuleContainer container) {
-		this.projectContainer = container;
+	default void removedTab (Tab tab) {
+	}
+
+	default void removedAllTabs () {
 	}
 }

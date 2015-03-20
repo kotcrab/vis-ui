@@ -17,19 +17,34 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.project;
+package com.kotcrab.vis.editor.ui.tab;
 
-import com.kotcrab.vis.editor.module.editor.EditorModule;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
+import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
+import com.kotcrab.vis.ui.widget.VisLabel;
 
-public abstract class ProjectModule extends EditorModule {
-	protected Project project;
-	protected ProjectModuleContainer projectContainer;
-
-	public void setProject (Project project) {
-		this.project = project;
+public class StartPageTab extends MainContentTab {
+	public StartPageTab () {
+		super(false, false);
 	}
 
-	public void setProjectModuleContainer (ProjectModuleContainer container) {
-		this.projectContainer = container;
+	@Override
+	public String getTabTitle () {
+		return "Start Page";
+	}
+
+	@Override
+	public Table getContentTable () {
+		Table content = new Table();
+		content.add(new VisLabel("Ohayou!"));
+		content.row();
+		content.add(new VisLabel("(here will be recent project list etc.)"));
+		return content;
+	}
+
+	@Override
+	public TabViewMode getViewMode () {
+		return TabViewMode.TAB_ONLY;
 	}
 }

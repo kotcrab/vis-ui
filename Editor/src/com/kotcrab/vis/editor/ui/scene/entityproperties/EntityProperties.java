@@ -44,7 +44,7 @@ import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
-import com.kotcrab.vis.editor.ui.tab.Tab;
+import com.kotcrab.vis.editor.ui.tabbedpane.Tab;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.data.ParticleEffectData;

@@ -23,7 +23,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.kotcrab.vis.editor.module.BaseModuleContainer;
-import com.kotcrab.vis.editor.module.EditorModuleContainer;
+import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.scene.EditorScene;

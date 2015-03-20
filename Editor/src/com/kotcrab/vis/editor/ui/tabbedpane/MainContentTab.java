@@ -17,19 +17,25 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.project;
+package com.kotcrab.vis.editor.ui.tabbedpane;
 
-import com.kotcrab.vis.editor.module.editor.EditorModule;
+import com.badlogic.gdx.graphics.g2d.Batch;
 
-public abstract class ProjectModule extends EditorModule {
-	protected Project project;
-	protected ProjectModuleContainer projectContainer;
-
-	public void setProject (Project project) {
-		this.project = project;
+public abstract class MainContentTab extends Tab {
+	public MainContentTab () {
 	}
 
-	public void setProjectModuleContainer (ProjectModuleContainer container) {
-		this.projectContainer = container;
+	public MainContentTab (boolean savable) {
+		super(savable);
 	}
+
+	public MainContentTab (boolean savable, boolean closeableByUser) {
+		super(savable, closeableByUser);
+	}
+
+	public void render (Batch batch) {
+
+	}
+
+	public abstract TabViewMode getViewMode ();
 }

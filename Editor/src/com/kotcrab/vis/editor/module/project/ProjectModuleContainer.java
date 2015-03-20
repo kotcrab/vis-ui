@@ -19,7 +19,7 @@
 
 package com.kotcrab.vis.editor.module.project;
 
-import com.kotcrab.vis.editor.module.EditorModuleContainer;
+import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.BaseModuleContainer;
 
 public class ProjectModuleContainer extends BaseModuleContainer<ProjectModule> {

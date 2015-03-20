@@ -17,19 +17,12 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.project;
+package com.kotcrab.vis.editor.ui;
 
-import com.kotcrab.vis.editor.module.editor.EditorModule;
+public interface WindowResultListener<T> {
+	void finished (T result);
 
-public abstract class ProjectModule extends EditorModule {
-	protected Project project;
-	protected ProjectModuleContainer projectContainer;
+	default void canceled () {
 
-	public void setProject (Project project) {
-		this.project = project;
-	}
-
-	public void setProjectModuleContainer (ProjectModuleContainer container) {
-		this.projectContainer = container;
 	}
 }

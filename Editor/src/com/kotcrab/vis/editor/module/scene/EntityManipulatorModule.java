@@ -35,7 +35,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
-import com.kotcrab.vis.editor.module.ColorPickerModule;
+import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;

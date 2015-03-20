@@ -17,19 +17,24 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.project;
+package com.kotcrab.vis.editor.module.editor;
 
-import com.kotcrab.vis.editor.module.editor.EditorModule;
+import com.kotcrab.vis.ui.widget.color.ColorPicker;
 
-public abstract class ProjectModule extends EditorModule {
-	protected Project project;
-	protected ProjectModuleContainer projectContainer;
+public class ColorPickerModule extends EditorModule {
+	private ColorPicker picker;
 
-	public void setProject (Project project) {
-		this.project = project;
+	@Override
+	public void init () {
+		picker = new ColorPicker();
 	}
 
-	public void setProjectModuleContainer (ProjectModuleContainer container) {
-		this.projectContainer = container;
+	@Override
+	public void dispose () {
+		picker.dispose();
+	}
+
+	public ColorPicker getPicker () {
+		return picker;
 	}
 }

@@ -23,7 +23,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.kotcrab.vis.editor.module.EditorSettingsModule;
+import com.kotcrab.vis.editor.module.editor.EditorSettingsModule;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.util.Validators;
