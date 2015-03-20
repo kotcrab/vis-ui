@@ -58,6 +58,7 @@ public class TabbedPane {
 	private Tab activeTab;
 
 	private Array<TabbedPaneListener> listeners;
+	private boolean allowTabDeselect;
 
 	public TabbedPane (TabbedPaneListener listener) {
 		this(listener, new TabbedPaneStyle(true));
@@ -87,6 +88,7 @@ public class TabbedPane {
 	}
 
 	public void setAllowTabDeselect (boolean allowTabDeselect) {
+		this.allowTabDeselect = allowTabDeselect;
 		if (allowTabDeselect)
 			group.setMinCheckCount(0);
 		else
@@ -190,7 +192,7 @@ public class TabbedPane {
 			tabsButtonMap.put(tab, buttonTable);
 			group.add(buttonTable.button); //this will change activeTab
 
-			if (tabs.size == 1) {
+			if (tabs.size == 1 && lastSelectedTab != null) {
 				buttonTable.select();
 				notifyListenersSwitched(tab);
 			}
@@ -319,17 +321,27 @@ public class TabbedPane {
 						if (activeTab != null) {
 							TabButtonTable table = tabsButtonMap.get(activeTab);
 							if (table != null) table.deselect();
+							activeTab.onHide();
 						}
 
-						if (activeTab != null) activeTab.onHide();
 						activeTab = tab;
 						notifyListenersSwitched(tab);
 						tab.onShow();
 						closeButtonStyle.up = buttonStyle.down;
 						closeButtonStyle.over = null;
 					} else {
-						if (group.getChecked() == null)
+
+						if (group.getChecked() == null) {
+
+							if (activeTab != null) {
+								TabButtonTable table = tabsButtonMap.get(activeTab);
+								if (table != null) table.deselect();
+								activeTab.onHide();
+							}
+
+							activeTab = null;
 							notifyListenersSwitched(null);
+						}
 					}
 				}
 			});
