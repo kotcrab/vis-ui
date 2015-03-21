@@ -39,7 +39,6 @@ public class SceneInputListener extends InputListener {
 
 	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-
 		//we don't want to steal text field focus, so if event occurred on it, do not change focus
 		if (event.getTarget() instanceof VisTextField == false)
 			Editor.instance.getStage().setKeyboardFocus(focusTarget);

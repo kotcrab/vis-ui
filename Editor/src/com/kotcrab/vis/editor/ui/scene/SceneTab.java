@@ -187,6 +187,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		super.onShow();
 		sceneMC.onShow();
 		menuBarModule.setSceneButtonsListener(this);
+		focusSelf();
 	}
 
 	@Override
@@ -273,6 +274,19 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	public String getInfoLabelText () {
 		return "Entities: " + entityManipulator.getEntityCount() + " FPS: " + Gdx.graphics.getFramesPerSecond() + " Scene: " + scene.width + " x " + scene.height;
+	}
+
+	public void selectEntity (EditorEntity entity) {
+		entityManipulator.select(entity);
+	}
+
+	public void centerCamera (EditorEntity entity) {
+		cameraModule.setPosition(entity.getX()  + entity.getWidth() / 2, entity.getY() + entity.getHeight() / 2);
+	}
+
+	public void focusSelf () {
+		Editor.instance.getStage().setKeyboardFocus(content);
+		Editor.instance.getStage().setScrollFocus(content);
 	}
 
 	private class ContentTable extends VisTable {

@@ -37,12 +37,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.Assets;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.dialog.DeleteDialog;
+import com.kotcrab.vis.editor.ui.tab.AssetsUsageTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.Tab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabbedPaneListener;
@@ -128,8 +128,6 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	}
 
 	private void initUI () {
-		Editor editor = Editor.instance;
-
 		treeTable = new VisTable(true);
 		toolbarTable = new VisTable(true);
 		filesTable = new FilesItemsTable(false);
@@ -398,6 +396,11 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		private void showDeleteDialog (FileHandle file) {
 			getStage().addActor(new DeleteDialog(file, assetsUsageAnalyzer.canAnalyze(file), result -> {
 				if (result.safeDelete) {
+					AssetsUsages usages = assetsUsageAnalyzer.analyze(file);
+					if (usages.count == 0)
+						FileUtils.delete(file);
+					else
+						quickAccessModule.addTab(new AssetsUsageTab(assetsUsageAnalyzer, sceneTabsModule, usages));
 				} else
 					FileUtils.delete(file);
 			}));

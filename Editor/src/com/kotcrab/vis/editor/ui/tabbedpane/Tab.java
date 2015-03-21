@@ -103,6 +103,10 @@ public abstract class Tab implements Disposable {
 		if (savable == false) throw new IllegalStateException("Tab is not savable!");
 	}
 
+	protected void removeFromTabPane () {
+		pane.remove(this);
+	}
+
 	@Override
 	public void dispose () {
 

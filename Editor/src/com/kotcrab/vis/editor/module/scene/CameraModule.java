@@ -176,4 +176,8 @@ public class CameraModule extends SceneModule {
 		camera.unproject(unprojectVec);
 		return unprojectVec.y;
 	}
+
+	public void setPosition (float x, float y) {
+		camera.position.set(x, y, 0);
+	}
 }

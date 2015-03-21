@@ -58,7 +58,7 @@ public class SceneTabsModule extends ProjectModule implements TabbedPaneListener
 			tabsModule.switchTab(oldTab);
 	}
 
-	private SceneTab getTabByScene (EditorScene scene) {
+	public SceneTab getTabByScene (EditorScene scene) {
 		for (SceneTab tab : loadedTabs)
 			if (tab.getScene().path.equals(scene.path)) return tab;
 
@@ -72,17 +72,13 @@ public class SceneTabsModule extends ProjectModule implements TabbedPaneListener
 		return null;
 	}
 
+	public void switchTab (SceneTab tab) {
+		tabsModule.switchTab(tab);
+	}
+
 	@Override
 	public void removedTab (Tab tab) {
 		if (tab instanceof SceneTab)
 			loadedTabs.removeValue((SceneTab) tab, true);
-	}
-
-	@Override
-	public void switchedTab (Tab tab) {
-	}
-
-	@Override
-	public void removedAllTabs () {
 	}
 }

@@ -28,9 +28,12 @@ import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.util.FileUtils;
 
+import java.util.Comparator;
 import java.util.Iterator;
 
 public class AssetsUsageAnalyzerModule extends ProjectModule {
+	public static final int USAGE_SEARCH_LIMIT = 100;
+
 	private FileAccessModule fileAccess;
 	private SceneTabsModule sceneTabsModule;
 	private SceneIOModule sceneIOModule;
@@ -61,6 +64,7 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 		Array<FileHandle> sceneFiles = getSceneFiles();
 
 		AssetsUsages usages = new AssetsUsages();
+		usages.file = file;
 
 		for (FileHandle sceneFile : sceneFiles) {
 			EditorScene scene = sceneTabsModule.getSceneByPath(fileAccess.relativizeToAssetsFolder(sceneFile.path()));
@@ -68,7 +72,6 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 				scene = sceneIOModule.load(sceneFile);
 
 			Array<EditorEntity> sceneUsagesList = new Array<>();
-			usages.list.put(scene, sceneUsagesList);
 
 			for (EditorEntity entity : scene.entities) {
 
@@ -94,11 +97,14 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 					}
 				}
 
-				if (usages.count == 100) {
+				if (usages.count == USAGE_SEARCH_LIMIT) {
 					usages.limitExceeded = true;
 					break;
 				}
 			}
+
+			if (sceneUsagesList.size > 0)
+				usages.list.put(scene, sceneUsagesList);
 		}
 
 		return usages;
@@ -119,6 +125,13 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 
 		while (it.hasNext())
 			if (it.next().extension().equals("scene") == false) it.remove();
+
+		files.sort(new Comparator<FileHandle>() {
+			@Override
+			public int compare (FileHandle o1, FileHandle o2) {
+				return o1.path().toLowerCase().compareTo(o2.path().toLowerCase());
+			}
+		});
 
 		return files;
 	}
