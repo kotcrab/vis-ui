@@ -92,6 +92,8 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	private VisLabel contentTitleLabel;
 	private VisTextField searchTextField;
 
+	private AssetsTab assetsTab;
+
 	private AssetDragAndDrop assetDragAndDrop;
 
 	private AssetsPopupMenu popupMenu;
@@ -149,7 +151,8 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		mainTable.setBackground("window-bg");
 		mainTable.add(splitPane).expand().fill();
 
-		quickAccessModule.addTab(new AssetsTab());
+		assetsTab = new AssetsTab();
+		quickAccessModule.addTab(assetsTab);
 
 		popupMenu = new AssetsPopupMenu();
 	}
@@ -158,6 +161,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	public void dispose () {
 		tabsModule.removeListener(this);
 		assetsWatcher.removeListener(this);
+		assetsTab.removeFromTabPane();
 	}
 
 	private void createToolbarTable () {
