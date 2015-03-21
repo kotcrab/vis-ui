@@ -60,6 +60,7 @@ import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule
 import com.kotcrab.vis.editor.module.scene.InputModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EditorFrame;
+import com.kotcrab.vis.editor.ui.WindowListener;
 import com.kotcrab.vis.editor.ui.dialog.SettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
@@ -68,7 +69,6 @@ import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabbedPaneListener;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.Log;
-import com.kotcrab.vis.editor.ui.WindowListener;
 import com.kotcrab.vis.ui.OptionDialogAdapter;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
@@ -374,6 +374,11 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	private void mainContentTabChanged (MainContentTab tab) {
 		this.tab = tab;
+
+		if (tab == null)
+			frame.setTitle("VisEditor");
+		else
+			frame.setTitle("VisEditor - " + tab.getTabTitle());
 
 		tabContentTable.clear();
 
