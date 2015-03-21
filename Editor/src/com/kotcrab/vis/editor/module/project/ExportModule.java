@@ -30,12 +30,14 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.MusicObject;
 import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.runtime.data.MusicData;
 import com.kotcrab.vis.runtime.data.ParticleEffectData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.data.SpriteData;
@@ -222,6 +224,7 @@ public class ExportModule extends ProjectModule {
 							TextObject obj = (TextObject) entity;
 
 							TextData data = new TextData();
+							data.id = obj.getId();
 							data.saveFrom(obj);
 
 							sceneData.entities.add(data);
@@ -232,6 +235,18 @@ public class ExportModule extends ProjectModule {
 							ParticleObject obj = (ParticleObject) entity;
 
 							ParticleEffectData data = new ParticleEffectData();
+							data.id = obj.getId();
+							data.saveFrom(obj);
+
+							sceneData.entities.add(data);
+							continue;
+						}
+
+						if (entity instanceof MusicObject) {
+							MusicObject obj = (MusicObject) entity;
+
+							MusicData data = new MusicData();
+							data.id = obj.getId();
 							data.saveFrom(obj);
 
 							sceneData.entities.add(data);

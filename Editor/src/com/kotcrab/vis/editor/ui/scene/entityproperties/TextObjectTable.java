@@ -34,6 +34,8 @@ import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
+import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.getCommonString;
+
 abstract class TextObjectTable extends SpecificObjectTable {
 	protected SelectFontDialog selectFontDialog;
 
@@ -85,7 +87,6 @@ abstract class TextObjectTable extends SpecificObjectTable {
 			properties.endSnapshot();
 		});
 
-
 		defaults().left();
 		add(textTable).expandX().fillX();
 		row();
@@ -96,32 +97,7 @@ abstract class TextObjectTable extends SpecificObjectTable {
 
 	protected abstract FileHandle getFontFolder ();
 
-	abstract int getRelativeFontFolderLength();
-
-	private String getTextFieldText (Array<EditorEntity> entities) {
-		TextObject textObj = (TextObject) entities.get(0);
-		String firstText = textObj.getText();
-
-		for (EditorEntity entity : entities) {
-			TextObject obj = (TextObject) entity;
-
-			if (obj.getText().equals(firstText) == false) return "<multiple values>";
-		}
-
-		return firstText;
-	}
-
-	private String getFontLabelText (Array<EditorEntity> entities) {
-		String firstText = getFontTextForEntity(entities.get(0));
-
-		for (EditorEntity entity : entities) {
-			TextObject obj = (TextObject) entity;
-
-			if (getFontTextForEntity(obj).equals(firstText) == false) return "<?>";
-		}
-
-		return firstText;
-	}
+	abstract int getRelativeFontFolderLength ();
 
 	private String getFontTextForEntity (EditorEntity entity) {
 		TextObject obj = (TextObject) entity;
@@ -132,8 +108,8 @@ abstract class TextObjectTable extends SpecificObjectTable {
 	public void updateUIValues () {
 		Array<EditorEntity> entities = properties.getEntities();
 
-		textField.setText(getTextFieldText(entities));
-		fontLabel.setText(getFontLabelText(entities));
+		textField.setText(getCommonString(entities, "<multiple values>", entity -> ((TextObject) entity).getText()));
+		fontLabel.setText(getCommonString(entities, "<?>", this::getFontTextForEntity));
 	}
 
 	@Override
@@ -145,6 +121,4 @@ abstract class TextObjectTable extends SpecificObjectTable {
 			obj.setText(textField.getText());
 		}
 	}
-
-
 }

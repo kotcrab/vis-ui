@@ -17,10 +17,15 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.editor.util;
 
-import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.kotcrab.vis.ui.VisTable;
 
-interface EntityValue {
-		public float getValue (EditorEntity entity);
+public class TableBuilder {
+	public static VisTable build (Actor... actors) {
+		VisTable table = new VisTable(true);
+		for (Actor actor : actors) table.add(actor);
+		return table;
 	}
+}

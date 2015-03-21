@@ -100,6 +100,16 @@ public enum Icons implements IconAsset {
 			return "more";
 		}
 	},
+	SOUND {
+		public String getIconName () {
+			return "sound";
+		}
+	},
+	MUSIC {
+		public String getIconName () {
+			return "music";
+		}
+	}
 }
 
 interface IconAsset {

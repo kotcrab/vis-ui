@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -34,6 +35,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.project.AssetsUIModule.FileItem;
 import com.kotcrab.vis.editor.module.project.AssetsUIModule.FileType;
+import com.kotcrab.vis.editor.scene.MusicObject;
 import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
@@ -161,6 +163,25 @@ public class AssetDragAndDrop {
 					payload.setObject(obj);
 
 					Label label = new VisLabel("New Particle Effect \n (drop on scene to add)");
+					label.setAlignment(Align.center);
+					payload.setDragActor(label);
+
+					dragAndDrop.setDragActorPosition(-label.getWidth() / 2, label.getHeight() / 2);
+
+					return payload;
+				}
+			});
+		}
+
+		if (item.type == FileType.MUSIC) {
+			dragAndDrop.addSource(new Source(item) {
+				@Override
+				public Payload dragStart (InputEvent event, float x, float y, int pointer) {
+					Payload payload = new Payload();
+
+					payload.setObject(new MusicObject(fileAccess.relativizeToAssetsFolder(item.file), Gdx.audio.newMusic(item.file)));
+
+					Label label = new VisLabel("New Music \n (drop on scene to add)");
 					label.setAlignment(Align.center);
 					payload.setDragActor(label);
 

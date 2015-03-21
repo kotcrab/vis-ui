@@ -73,8 +73,20 @@ public class Scene implements Disposable {
 		}
 	}
 
+	public void onAfterLoad () {
+		for (Entity entity : entities)
+			entity.onAfterLoad();
+	}
+
 	public Array<Entity> getEntities () {
 		return entities;
+	}
+
+	public Entity getById (String id) {
+		for (Entity entity : entities)
+			if (entity.getId() != null && entity.getId().equals(id)) return entity;
+
+		throw new IllegalStateException("Entity with id: " + id + " not found");
 	}
 
 	public void render (SpriteBatch batch) {

@@ -22,6 +22,7 @@ package com.kotcrab.vis.editor.util;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 
@@ -51,10 +52,21 @@ public class FileUtils {
 		return jnaFileUtils.hasTrash();
 	}
 
+	public static void browse (FileHandle dir) {
+		try {
+			if (dir.isDirectory())
+				Desktop.getDesktop().open(dir.file());
+			else
+				Desktop.getDesktop().open(dir.parent().file());
+		} catch (IOException e) {
+			Log.exception(e);
+		}
+	}
+
 	/**
 	 * Trashes file if possible, if not the file is just deleted
-	 * @see #hasTrash
 	 * @return if success, false otherwise
+	 * @see #hasTrash
 	 */
 	public static boolean delete (FileHandle file) {
 		try {

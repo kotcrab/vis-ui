@@ -41,6 +41,7 @@ import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.MusicObject;
 import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
@@ -226,9 +227,9 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	public void processDropPayload (Payload payload) {
-		Object payloadObject = payload.getObject();
+		EditorEntity obj = (EditorEntity) payload.getObject();
 
-		if (payloadObject instanceof TextureRegion) {
+		if (obj instanceof TextureRegion) {
 			TextureRegion region = (TextureRegion) payload.getObject();
 
 			Sprite sprite = new Sprite(region);
@@ -240,8 +241,8 @@ public class EntityManipulatorModule extends SceneModule {
 			undoModule.execute(new EntityAddedAction(object));
 		}
 
-		if (payloadObject instanceof TextObject) {
-			TextObject text = (TextObject) payloadObject;
+		if (obj instanceof TextObject) {
+			TextObject text = (TextObject) obj;
 			float x = camera.getInputX() - text.getWidth() / 2;
 			float y = camera.getInputY() - text.getHeight() / 2;
 			text.setPosition(x, y);
@@ -249,14 +250,15 @@ public class EntityManipulatorModule extends SceneModule {
 			undoModule.execute(new EntityAddedAction(text));
 		}
 
-		if (payloadObject instanceof ParticleObject) {
-			ParticleObject particle = (ParticleObject) payloadObject;
-			float x = camera.getInputX() - particle.getWidth() / 2;
-			float y = camera.getInputY() - particle.getHeight() / 2;
-			particle.setPosition(x, y);
+		if (obj instanceof ParticleObject || obj instanceof TextObject || obj instanceof MusicObject) {
+			float x = camera.getInputX() - obj.getWidth() / 2;
+			float y = camera.getInputY() - obj.getHeight() / 2;
+			obj.setPosition(x, y);
 
-			undoModule.execute(new EntityAddedAction(particle));
+			undoModule.execute(new EntityAddedAction(obj));
 		}
+
+
 	}
 
 	@Override

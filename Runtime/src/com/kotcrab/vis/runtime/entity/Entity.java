@@ -36,4 +36,8 @@ public class Entity {
 	public void setId (String id) {
 		this.id = id;
 	}
+
+	public void onAfterLoad () {
+
+	}
 }

@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -32,11 +33,12 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.MusicObject;
 import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
-import com.kotcrab.vis.editor.util.SpriteSerializer;
 import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.util.SpriteSerializer;
 import com.kotcrab.vis.editor.util.SpriteUtils;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
@@ -119,6 +121,11 @@ public class SceneIOModule extends ProjectModule {
 				ParticleObject particle = (ParticleObject) entity;
 				ParticleEffect effect = particleModule.get(fileAccessModule.getAssetsFolder().child(particle.getRelativeEffectPath()));
 				particle.afterDeserialize(effect);
+			}
+
+			if (entity instanceof MusicObject) {
+				MusicObject music = (MusicObject) entity;
+				music.afterDeserialize(Gdx.audio.newMusic(fileAccessModule.getAssetsFolder().child(music.getMusicPath())));
 			}
 
 			entity.afterDeserialize();

@@ -49,7 +49,6 @@ import com.kotcrab.vis.editor.ui.tabbedpane.TabbedPaneListener;
 import com.kotcrab.vis.editor.util.DirectoriesOnlyFileFilter;
 import com.kotcrab.vis.editor.util.DirectoryWatcher;
 import com.kotcrab.vis.editor.util.FileUtils;
-import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.MenuUtils;
 import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
@@ -61,9 +60,6 @@ import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisTree;
-
-import java.awt.Desktop;
-import java.io.IOException;
 
 //TODO filter particle images and bitmap font images
 //TODO this probably shouldn't be a module, should extend tab and should be loaded when project is loaded
@@ -183,14 +179,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		exploreButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				try {
-					if (currentDirectory.isDirectory())
-						Desktop.getDesktop().open(currentDirectory.file());
-					else
-						Desktop.getDesktop().open(currentDirectory.parent().file());
-				} catch (IOException e) {
-					Log.exception(e);
-				}
+				FileUtils.browse(currentDirectory);
 			}
 		});
 
@@ -319,6 +308,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 			sceneTabsModule.open(scene);
 			return;
 		}
+
 	}
 
 	private boolean isOpenSupported (String extension) {
@@ -375,7 +365,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	}
 
 	enum FileType {
-		UNKNOWN, TEXTURE, TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE, PARTICLE_EFFECT
+		UNKNOWN, TEXTURE, TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE, MUSIC, PARTICLE_EFFECT
 	}
 
 	private class AssetsPopupMenu extends PopupMenu {
@@ -436,7 +426,8 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		}
 
 		private void createContent () {
-			if (file.extension().equals("ttf")) {
+			String ext = file.extension();
+			if (ext.equals("ttf")) {
 				type = FileType.TTF_FONT;
 
 				add(new VisLabel("TTF Font", Color.GRAY)).row();
@@ -445,7 +436,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 				return;
 			}
 
-			if (file.extension().equals("fnt") && file.sibling(file.nameWithoutExtension() + ".png").exists()) {
+			if (ext.equals("fnt") && file.sibling(file.nameWithoutExtension() + ".png").exists()) {
 				type = FileType.BMP_FONT_FILE;
 
 				add(new VisLabel("BMP Font", Color.GRAY)).row();
@@ -454,7 +445,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 				return;
 			}
 
-			if (file.extension().equals("png") && file.sibling(file.nameWithoutExtension() + ".fnt").exists()) {
+			if (ext.equals("png") && file.sibling(file.nameWithoutExtension() + ".fnt").exists()) {
 				type = FileType.BMP_FONT_TEXTURE;
 
 				VisLabel tagLabel = new VisLabel("BMP Font Texture", Color.GRAY);
@@ -465,7 +456,8 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 
 				return;
 			}
-			if (file.extension().equals("p")) {
+
+			if (ext.equals("p")) {
 				type = FileType.PARTICLE_EFFECT;
 
 				VisLabel tagLabel = new VisLabel("Particle Effect", Color.GRAY);
@@ -477,7 +469,19 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 				return;
 			}
 
-			if (fileAccess.relativizeToAssetsFolder(file).startsWith("gfx") && (file.extension().equals("jpg") || file.extension().equals("png"))) {
+			if (fileAccess.relativizeToAssetsFolder(file).startsWith("music") && ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) {
+				type = FileType.MUSIC;
+
+				VisLabel tagLabel = new VisLabel(file.extension().toUpperCase() + " Music", Color.GRAY);
+				tagLabel.setWrap(true);
+				tagLabel.setAlignment(Align.center);
+				add(tagLabel).expandX().fillX().row();
+				name = new VisLabel(file.nameWithoutExtension());
+
+				return;
+			}
+
+			if (fileAccess.relativizeToAssetsFolder(file).startsWith("gfx") && (ext.equals("jpg") || ext.equals("png"))) {
 				type = FileType.TEXTURE;
 
 				name = new VisLabel(file.nameWithoutExtension(), "small");

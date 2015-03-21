@@ -27,6 +27,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.ui.VisUI;
 
 class Utils {
@@ -43,6 +44,54 @@ class Utils {
 			//remove trailing zeros if exists
 			return s.contains(".") ? s.replaceAll("0*$", "").replaceAll("\\.$", "") : s;
 		}
+	}
+
+	static String getEntitiesFieldFloatValue (Array<EditorEntity> entities, FloatValue objValue) {
+		float value = objValue.getFloat(entities.first());
+
+		for (EditorEntity entity : entities)
+			if (value != objValue.getFloat(entity)) return "?";
+
+		return floatToString(value);
+	}
+
+	static void setCheckBoxState (Array<EditorEntity> entities, IndeterminateCheckbox target, BooleanValue value) {
+		boolean enabled = value.getBoolean(entities.first());
+
+		for (EditorEntity entity : entities) {
+			if (enabled != value.getBoolean(entity)) {
+				target.setIndeterminate(true);
+				return;
+			}
+		}
+
+		target.setChecked(enabled);
+	}
+
+	static String getCommonString (Array<EditorEntity> entities, String ifNotCommon, StringValue value) {
+		String firstText = value.getString(entities.first());
+
+		for (EditorEntity entity : entities) {
+			if (value.getString(entity).equals(firstText) == false) return ifNotCommon;
+		}
+
+		return firstText;
+	}
+
+	static String getEntitiesId (Array<EditorEntity> entities) {
+		String firstId = entities.first().getId();
+		if (firstId == null) firstId = "";
+
+		for (EditorEntity entity : entities) {
+			String entityId = entity.getId();
+			if (entityId == null) entityId = "";
+
+			if (firstId.equals(entityId) == false) {
+				return "<?>";
+			}
+		}
+
+		return firstId;
 	}
 
 	static boolean isScaleSupportedForEntities (Array<EditorEntity> entities) {
@@ -83,31 +132,6 @@ class Utils {
 		}
 
 		return true;
-	}
-
-	static String getEntitiesFieldValue (Array<EditorEntity> entities, EntityValue objValue) {
-		float value = objValue.getValue(entities.first());
-
-		for (EditorEntity entity : entities)
-			if (value != objValue.getValue(entity)) return "?";
-
-		return floatToString(value);
-	}
-
-	static String getEntitiesId (Array<EditorEntity> entities) {
-		String firstId = entities.first().getId();
-		if (firstId == null) firstId = "";
-
-		for (EditorEntity entity : entities) {
-			String entityId = entity.getId();
-			if (entityId == null) entityId = "";
-
-			if (firstId.equals(entityId) == false) {
-				return "<?>";
-			}
-		}
-
-		return firstId;
 	}
 
 	static class TintImage extends Image {

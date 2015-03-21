@@ -23,6 +23,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -32,11 +33,13 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.runtime.data.EntityData;
+import com.kotcrab.vis.runtime.data.MusicData;
 import com.kotcrab.vis.runtime.data.ParticleEffectData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.data.SpriteData;
 import com.kotcrab.vis.runtime.data.TextData;
 import com.kotcrab.vis.runtime.entity.Entity;
+import com.kotcrab.vis.runtime.entity.MusicEntity;
 import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
 import com.kotcrab.vis.runtime.entity.TextEntity;
@@ -103,6 +106,11 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 					bmpFontProvider.load(deps, textData);
 				}
 			}
+
+			if (entityData instanceof MusicData) {
+				MusicData musicData = (MusicData) entityData;
+				deps.add(new AssetDescriptor(musicData.musicPath, Music.class));
+			}
 		}
 
 		return deps;
@@ -146,8 +154,16 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				else
 					font = manager.get(textData.relativeFontPath, BitmapFont.class);
 
+				//TODO refactor, id first
 				TextEntity entity = new TextEntity(font, textData.id, textData.relativeFontPath, textData.text, textData.fontSize);
 				textData.loadTo(entity);
+				entities.add(entity);
+			}
+
+			if (entityData instanceof MusicData) {
+				MusicData musicData = (MusicData) entityData;
+				MusicEntity entity = new MusicEntity(musicData.id, musicData.musicPath, Gdx.audio.newMusic(Gdx.files.internal(musicData.musicPath)));
+				musicData.loadTo(entity);
 				entities.add(entity);
 			}
 
@@ -175,6 +191,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				scene.getEntities().add(entity);
 			}
 		}
+
+		scene.onAfterLoad();
 
 		return scene;
 	}

@@ -40,6 +40,7 @@ import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.UndoableAction;
 import com.kotcrab.vis.editor.module.scene.UndoableActionGroup;
 import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.MusicObject;
 import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
@@ -47,6 +48,7 @@ import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.tabbedpane.Tab;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.runtime.data.EntityData;
+import com.kotcrab.vis.runtime.data.MusicData;
 import com.kotcrab.vis.runtime.data.ParticleEffectData;
 import com.kotcrab.vis.runtime.data.SpriteData;
 import com.kotcrab.vis.ui.VisTable;
@@ -69,6 +71,7 @@ import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.isOriginSup
 import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.isRotationSupportedForEntities;
 import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.isScaleSupportedForEntities;
 import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.isTintSupportedForEntities;
+import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.setCheckBoxState;
 
 public class EntityProperties extends VisTable implements Disposable, EventListener {
 	private static final int LABEL_WIDTH = 60;
@@ -190,6 +193,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 		specificTables.add(new TTFTextObjectTable(this));
 		specificTables.add(new BMPTextObjectTable(this));
+		specificTables.add(new MusicObjectTable(this));
 
 		propertiesTable = new VisTable(true);
 
@@ -417,30 +421,6 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		return fontCacheModule;
 	}
 
-	private void setFlipXUICheckForEntities () {
-		boolean xFlip = entities.first().isFlipX();
-		for (EditorEntity entity : entities) {
-			if (xFlip != entity.isFlipX()) {
-				xFlipCheck.setIndeterminate(true);
-				return;
-			}
-		}
-
-		xFlipCheck.setChecked(xFlip);
-	}
-
-	private void setFlipYUICheckForEntities () {
-		boolean yFlip = entities.first().isFlipY();
-		for (EditorEntity entity : entities) {
-			if (yFlip != entity.isFlipY()) {
-				yFlipCheck.setIndeterminate(true);
-				return;
-			}
-		}
-
-		yFlipCheck.setChecked(yFlip);
-	}
-
 	private void setTintUIForEntities () {
 		Color firstColor = entities.first().getColor();
 		for (EditorEntity entity : entities) {
@@ -454,8 +434,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		tint.setColor(firstColor);
 	}
 
-	private String getEntitiesFieldValue (EntityValue entityValue) {
-		return Utils.getEntitiesFieldValue(entities, entityValue);
+	private String getEntitiesFieldValue (FloatValue floatValue) {
+		return Utils.getEntitiesFieldFloatValue(entities, floatValue);
 	}
 
 	private void setValuesToEntity () {
@@ -504,8 +484,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
 
 			if (isTintSupportedForEntities(entities)) setTintUIForEntities();
-			setFlipXUICheckForEntities();
-			setFlipYUICheckForEntities();
+			setCheckBoxState(entities, xFlipCheck, EditorEntity::isFlipX);
+			setCheckBoxState(entities, yFlipCheck, EditorEntity::isFlipY);
 		}
 	}
 
@@ -565,6 +545,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			if (entity instanceof SpriteObject) return new SpriteData();
 			if (entity instanceof TextObject) return new TextObjectData();
 			if (entity instanceof ParticleObject) return new ParticleEffectData();
+			if (entity instanceof MusicObject) return new MusicData();
 
 			throw new UnsupportedOperationException("Cannot create snapshots entity data for entity class: " + entity.getClass());
 		}

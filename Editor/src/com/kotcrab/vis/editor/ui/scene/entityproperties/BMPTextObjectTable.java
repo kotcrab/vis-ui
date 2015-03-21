@@ -47,7 +47,7 @@ class BMPTextObjectTable extends TextObjectTable {
 
 	@Override
 	protected FileHandle getFontFolder () {
- 		return properties.getFileAccessModule().getBMPFontFolder();
+		return properties.getFileAccessModule().getBMPFontFolder();
 	}
 
 	@Override
@@ -65,24 +65,9 @@ class BMPTextObjectTable extends TextObjectTable {
 	@Override
 	public void updateUIValues () {
 		super.updateUIValues();
-		setCheckForEntities();
+
+		Utils.setCheckBoxState(properties.getEntities(), distanceFieldCheck, entity -> ((TextObject) entity).isDistanceFieldShaderEnabled());
 	}
-
-	private void setCheckForEntities () {
-		Array<EditorEntity> entities = properties.getEntities();
-
-		boolean enabled = ((TextObject)entities.first()).isDistanceFieldShaderEnabled();
-		for (EditorEntity entity : entities) {
-			TextObject obj = (TextObject) entity;
-
-			if (enabled != obj.isDistanceFieldShaderEnabled()) {
-				distanceFieldCheck.setIndeterminate(true);
-				return;
-			}
-		}
-		distanceFieldCheck.setChecked(enabled);
-	}
-
 
 	@Override
 	public void setValuesToEntities () {
@@ -92,7 +77,8 @@ class BMPTextObjectTable extends TextObjectTable {
 		for (EditorEntity entity : entities) {
 			TextObject obj = (TextObject) entity;
 
-			obj.setDistanceFieldShaderEnabled(distanceFieldCheck.isChecked());
+			if (distanceFieldCheck.isIndeterminate() == false)
+				obj.setDistanceFieldShaderEnabled(distanceFieldCheck.isChecked());
 		}
 	}
 }
