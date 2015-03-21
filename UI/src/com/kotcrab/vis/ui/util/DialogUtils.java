@@ -261,16 +261,16 @@ public class DialogUtils {
 
 			switch (type) {
 				case YES_NO:
-					button(noButton, BUTTON_NO);
 					button(yesButton, BUTTON_YES);
+					button(noButton, BUTTON_NO);
 					break;
 				case YES_CANCEL:
 					button(yesButton, BUTTON_YES);
 					button(cancelButton, BUTTON_CANCEL);
 					break;
 				case YES_NO_CANCEL:
-					button(noButton, BUTTON_NO);
 					button(yesButton, BUTTON_YES);
+					button(noButton, BUTTON_NO);
 					button(cancelButton, BUTTON_CANCEL);
 					break;
 			}
