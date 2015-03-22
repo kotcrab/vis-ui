@@ -25,7 +25,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.ui.tabbedpane.Tab;
 import com.kotcrab.vis.editor.ui.WindowListener;
-import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisList;
 import com.kotcrab.vis.ui.widget.VisTextButton;

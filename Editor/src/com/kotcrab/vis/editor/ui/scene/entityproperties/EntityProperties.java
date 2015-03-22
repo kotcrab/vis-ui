@@ -51,7 +51,7 @@ import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.data.MusicData;
 import com.kotcrab.vis.runtime.data.ParticleEffectData;
 import com.kotcrab.vis.runtime.data.SpriteData;
-import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisCheckBox;

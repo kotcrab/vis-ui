@@ -20,7 +20,7 @@
 package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisTable;
 
 public abstract class EditorSettingsModule<T> extends EditorModule implements SettableModule {
 	private String name;

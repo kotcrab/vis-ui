@@ -19,7 +19,7 @@ package com.kotcrab.vis.ui.test.manual;
 import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.ui.BasicFormValidator;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;

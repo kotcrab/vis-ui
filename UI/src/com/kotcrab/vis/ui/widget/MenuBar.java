@@ -19,7 +19,6 @@ package com.kotcrab.vis.ui.widget;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.ui.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 
 /**

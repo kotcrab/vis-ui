@@ -27,7 +27,7 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.ui.FormValidator;
 import com.kotcrab.vis.ui.OptionDialogAdapter;
-import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.util.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.TableUtils;

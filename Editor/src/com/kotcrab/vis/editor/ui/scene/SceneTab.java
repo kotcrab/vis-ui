@@ -54,7 +54,7 @@ import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.util.SpriteUtils;
-import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisTable;
 
 public class SceneTab extends MainContentTab implements DragAndDropTarget, EventListener, SceneMenuButtonsListener {
 	private Editor editor;

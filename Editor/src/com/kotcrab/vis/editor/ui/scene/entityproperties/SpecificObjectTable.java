@@ -20,7 +20,7 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.kotcrab.vis.editor.scene.EditorEntity;
-import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisTable;
 
 abstract class SpecificObjectTable extends VisTable {
 	protected EntityProperties properties;

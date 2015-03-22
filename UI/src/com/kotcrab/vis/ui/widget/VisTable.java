@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui;
+package com.kotcrab.vis.ui.widget;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.Separator;
 

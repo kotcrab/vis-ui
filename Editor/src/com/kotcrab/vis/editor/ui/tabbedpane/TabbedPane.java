@@ -36,7 +36,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.ui.OptionDialogAdapter;
-import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.util.DialogUtils.OptionDialogType;

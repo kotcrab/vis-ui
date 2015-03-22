@@ -20,7 +20,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.building.CenteredTableBuilder;
 import com.kotcrab.vis.ui.building.GridTableBuilder;
 import com.kotcrab.vis.ui.building.OneColumnTableBuilder;

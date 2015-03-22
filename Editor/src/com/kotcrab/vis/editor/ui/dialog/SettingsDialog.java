@@ -31,7 +31,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.BaseModule;
 import com.kotcrab.vis.editor.module.editor.SettableModule;
 import com.kotcrab.vis.editor.module.project.ProjectModule;
-import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.widget.*;
 

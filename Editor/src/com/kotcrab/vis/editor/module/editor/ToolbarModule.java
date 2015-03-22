@@ -29,7 +29,7 @@ import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.MenuEvent;
 import com.kotcrab.vis.editor.event.MenuEventType;
-import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 

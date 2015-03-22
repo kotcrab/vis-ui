@@ -50,7 +50,7 @@ import com.kotcrab.vis.editor.util.DirectoriesOnlyFileFilter;
 import com.kotcrab.vis.editor.util.DirectoryWatcher;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.MenuUtils;
-import com.kotcrab.vis.ui.VisTable;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.Separator;
