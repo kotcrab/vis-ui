@@ -132,6 +132,10 @@ public class VisDialog extends VisWindow {
 		return buttonTable;
 	}
 
+	public Table getButtonsTable () {
+		return buttonTable;
+	}
+
 	/** Adds a label to the content table. The dialog must have been constructed with a skin to use this method. */
 	public VisDialog text (String text) {
 		if (skin == null)

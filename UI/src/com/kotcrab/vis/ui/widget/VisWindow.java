@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.VisUI;
@@ -110,10 +111,26 @@ public class VisWindow extends Window {
 		fadeOut();
 	}
 
+	/**
+	 * Deprecated because this method for VisWindow and VisDialog returns completely different things (title table for VisWindow, and
+	 * buttons table for VisDialog) Since this method is from Window it cannot be removed and was deprecated to avoid confusion.
+	 * If you want to get title table from VisWindow use {@link #getTitleTable}
+	 * If you want to get buttons table form VisDialog use {@link VisDialog#getButtonsTable()}
+	 */
+	@Override
+	@Deprecated
+	public Table getButtonTable () {
+		return super.getButtonTable();
+	}
+
+	public Table getTitleTable () {
+		return super.getButtonTable();
+	}
+
 	/** Adds close button to window, next to window title. After pressing that button, {@link #close()} is called. */
 	public void addCloseButton () {
 		VisImageButton closeButton = new VisImageButton("close-window");
-		getButtonTable().add(closeButton).padRight(1).padBottom(1);
+		getTitleTable().add(closeButton).padRight(1).padBottom(1);
 		closeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
