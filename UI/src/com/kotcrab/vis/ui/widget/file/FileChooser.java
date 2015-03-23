@@ -32,13 +32,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.ui.widget.VisTable;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisDialog;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisWindow;
@@ -46,6 +47,26 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileFilter;
+import java.util.Locale;
+
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.CANCEL;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.DESKTOP;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.FILE_NAME;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.OPEN;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_CHOOSE_FILE;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_DIRECTORY_DOES_NOT_EXIST;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_FILENAME_INVALID;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_FILE_EXIST_OVERWRITE;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_MULTIPLE_FILE_EXIST_OVERWRITE;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_NO;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_OK;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_ONLY_DIRECTORIES;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_TITLE;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_YES;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.SAVE;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.TITLE_CHOOSE_DIRECTORIES;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.TITLE_CHOOSE_FILES;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.TITLE_CHOOSE_FILES_AND_DIRECTORIES;
 
 /**
  * Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called.
@@ -67,7 +88,7 @@ public class FileChooser extends VisWindow {
 	private FileHandle currentDirectory;
 
 	private FileChooserStyle style;
-	private FileChooserLocale locale;
+	private I18NBundle bundle;
 
 	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
 
@@ -100,10 +121,10 @@ public class FileChooser extends VisWindow {
 	public FileChooser (Mode mode) {
 		super("");
 
-		this.locale = new FileChooserLocale();
+		this.bundle = createDefaultBundle();
 		this.mode = mode;
 
-		setTitle(locale.titleChooseFiles);
+		setTitle(getText(TITLE_CHOOSE_FILES));
 
 		init();
 	}
@@ -111,23 +132,24 @@ public class FileChooser extends VisWindow {
 	public FileChooser (String title, Mode mode) {
 		super(title);
 		this.mode = mode;
-		this.locale = new FileChooserLocale();
+		this.bundle = createDefaultBundle();
 
 		init();
 	}
 
-	public FileChooser (FileChooserLocale locale, Mode mode) {
-		super(locale.titleChooseFiles);
+	public FileChooser (I18NBundle bundle, Mode mode) {
+		super("");
 		this.mode = mode;
-		this.locale = locale;
+		this.bundle = bundle;
+		setTitle(getText(TITLE_CHOOSE_FILES));
 
 		init();
 	}
 
-	public FileChooser (FileChooserLocale locale, String title, Mode mode) {
+	public FileChooser (I18NBundle bundle, String title, Mode mode) {
 		super(title);
 		this.mode = mode;
-		this.locale = locale;
+		this.bundle = bundle;
 
 		init();
 	}
@@ -142,6 +164,12 @@ public class FileChooser extends VisWindow {
 	 */
 	public static void setFavoritesPrefsName (String name) {
 		FavoritesIO.setFavoritesPrefsName(name);
+	}
+
+	private I18NBundle createDefaultBundle () {
+		FileHandle file = Gdx.files.classpath("com/kotcrab/vis/ui/i18n/FileChooser");
+		Locale locale = new Locale("en");
+		return I18NBundle.createBundle(file, locale);
 	}
 
 	private void init () {
@@ -161,7 +189,7 @@ public class FileChooser extends VisWindow {
 		createFileTextBox();
 		createBottomButtons();
 
-		fileMenu = new FilePopupMenu(this, locale);
+		fileMenu = new FilePopupMenu(this, bundle);
 
 		rebuildShortcutsList();
 
@@ -182,6 +210,10 @@ public class FileChooser extends VisWindow {
 				return false;
 			}
 		});
+	}
+
+	private String getText (FileChooserText text) {
+		return bundle.get(text.getName());
 	}
 
 	private void createToolbar () {
@@ -205,7 +237,7 @@ public class FileChooser extends VisWindow {
 					if (file.exists())
 						setDirectory(file);
 					else {
-						showDialog(locale.popupDirectoryDoesNotExist);
+						showDialog(getText(POPUP_DIRECTORY_DOES_NOT_EXIST));
 						currentPath.setText(currentDirectory.path());
 					}
 				}
@@ -257,7 +289,7 @@ public class FileChooser extends VisWindow {
 
 	private void createFileTextBox () {
 		VisTable table = new VisTable(true);
-		VisLabel nameLabel = new VisLabel(locale.fileName);
+		VisLabel nameLabel = new VisLabel(getText(FILE_NAME));
 		selectedFileTextField = new VisTextField();
 
 		table.add(nameLabel);
@@ -277,8 +309,8 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void createBottomButtons () {
-		VisTextButton cancelButton = new VisTextButton(locale.cancel);
-		VisTextButton confirmButton = new VisTextButton(mode == Mode.OPEN ? locale.open : locale.save);
+		VisTextButton cancelButton = new VisTextButton(getText(CANCEL));
+		VisTextButton confirmButton = new VisTextButton(mode == Mode.OPEN ? getText(OPEN) : getText(SAVE));
 
 		VisTable buttonTable = new VisTable(true);
 		buttonTable.defaults().minWidth(70).right();
@@ -320,7 +352,7 @@ public class FileChooser extends VisWindow {
 			if (selectionMode == SelectionMode.DIRECTORIES) {
 				FileHandle selected = selectedItems.get(0).file;
 				if (selected.isDirectory() == false) {
-					showDialog(locale.popupOnlyDirectoreis);
+					showDialog(getText(POPUP_ONLY_DIRECTORIES));
 					return;
 				}
 			}
@@ -331,7 +363,7 @@ public class FileChooser extends VisWindow {
 			notifyListnerAndCloseDialog(files);
 		} else {
 			if (selectionMode == SelectionMode.FILES)
-				showDialog(locale.popupChooseFile);
+				showDialog(getText(POPUP_CHOOSE_FILE));
 			else {
 				Array<FileHandle> files = new Array<FileHandle>();
 				files.add(currentDirectory);
@@ -382,7 +414,7 @@ public class FileChooser extends VisWindow {
 			FileHandle file = currentDirectory.child(fileName);
 
 			if (FileUtils.isValidFileName(fileName) == false) {
-				showDialog(locale.popupFilenameInvalid);
+				showDialog(getText(POPUP_FILENAME_INVALID));
 				return null;
 			}
 
@@ -400,25 +432,25 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void showDialog (String text) {
-		VisDialog dialog = new VisDialog(locale.popupTitle);
+		VisDialog dialog = new VisDialog(getText(POPUP_TITLE));
 		dialog.text(text);
-		dialog.button(locale.popupOK);
+		dialog.button(getText(POPUP_OK));
 		dialog.pack();
 		dialog.centerWindow();
 		getStage().addActor(dialog.fadeIn());
 	}
 
 	private void showOverwriteQuestion (Array<FileHandle> filesList) {
-		VisDialog dialog = new VisDialog(locale.popupTitle) {
+		VisDialog dialog = new VisDialog(getText(POPUP_TITLE)) {
 			@Override
 			@SuppressWarnings("unchecked")
 			protected void result (Object object) {
 				notifyListnerAndCloseDialog((Array<FileHandle>) object);
 			}
 		};
-		dialog.text(filesList.size == 1 ? locale.popupFileExistOverwrite : locale.popupMutipleFileExistOverwrite);
-		dialog.button(locale.popupNo, null);
-		dialog.button(locale.popupYes, filesList);
+		dialog.text(filesList.size == 1 ? getText(POPUP_FILE_EXIST_OVERWRITE) : getText(POPUP_MULTIPLE_FILE_EXIST_OVERWRITE));
+		dialog.button(getText(POPUP_NO), null);
+		dialog.button(getText(POPUP_YES), filesList);
 		dialog.pack();
 		dialog.centerWindow();
 		getStage().addActor(dialog.fadeIn());
@@ -432,7 +464,7 @@ public class FileChooser extends VisWindow {
 
 		// yes, getHomeDirectory returns path to desktop
 		File desktop = fileSystemView.getHomeDirectory();
-		shortcutsTable.add(new ShortcutItem(desktop, locale.desktop, style.iconFolder)).expand().fill().row();
+		shortcutsTable.add(new ShortcutItem(desktop, getText(DESKTOP), style.iconFolder)).expand().fill().row();
 		shortcutsTable.add(new ShortcutItem(new File(userHome), userName, style.iconFolder)).expand().fill().row();
 
 		shortcutsTable.addSeparator();
@@ -682,13 +714,13 @@ public class FileChooser extends VisWindow {
 
 		switch (selectionMode) {
 			case FILES:
-				setTitle(locale.titleChooseFiles);
+				setTitle(getText(TITLE_CHOOSE_FILES));
 				break;
 			case DIRECTORIES:
-				setTitle(locale.titleChooseDirectories);
+				setTitle(getText(TITLE_CHOOSE_DIRECTORIES));
 				break;
 			case FILES_AND_DIRECTORIES:
-				setTitle(locale.titleChooseFilesAndDirectories);
+				setTitle(getText(TITLE_CHOOSE_FILES_AND_DIRECTORIES));
 				break;
 		}
 	}
@@ -996,7 +1028,7 @@ public class FileChooser extends VisWindow {
 					if (getTapCount() == 1) {
 						File file = ShortcutItem.this.file;
 						if (file.exists() == false) {
-							showDialog(locale.popupDirectoryDoesNotExist);
+							showDialog(getText(POPUP_DIRECTORY_DOES_NOT_EXIST));
 							return;
 						}
 						if (file.isDirectory()) {

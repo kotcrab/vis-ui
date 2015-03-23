@@ -16,51 +16,76 @@
 
 package com.kotcrab.vis.ui.widget.file;
 
-/** @author Kotcrab */
-public class FileChooserLocale {
-	public String titleChooseFiles = "Choose file";
-	public String titleChooseDirectories = "Choose directory";
-	public String titleChooseFilesAndDirectories = "Choose directory or file";
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.I18NBundle;
+import com.kotcrab.vis.ui.i18n.BundleText;
 
-	public String cancel = "Cancel";
-	public String fileName = "File name:";
-	public String desktop = "Desktop";
+import java.util.Locale;
 
-	/** Used on confirm button when dialog is in OPEN mode */
-	public String open = "Open";
-	/** Used on confirm button when dialog is in SAVE mode */
-	public String save = "Save";
+enum FileChooserText implements BundleText {
+	// @formatter:off
+	TITLE_CHOOSE_FILES 					{public String getName () {return "titleChooseFiles";}},
+	TITLE_CHOOSE_DIRECTORIES			{public String getName () {return "titleChooseDirectories";}},
+	TITLE_CHOOSE_FILES_AND_DIRECTORIES	{public String getName () {return "titleChooseFilesAndDirectories";}},
 
-	public String popupTitle = "Message";
-	public String popupChooseFile = "You must choose a file!";
-	public String popupDirectoryDoesNotExist = "This directory does not exist!";
-	public String popupOnlyDirectoreis = "Only directories are allowed!";
-	public String popupFilenameInvalid = "File name is invalid!";
-	public String popupFileExistOverwrite = "This file already exist, do you want to overwrite it?";
-	public String popupMutipleFileExistOverwrite = "Those files already exist, do you want to overwrite them?";
-	public String popupYes = "Yes";
-	public String popupNo = "No";
-	public String popupOK = "OK";
+	CANCEL 								{public String getName () {return "cancel";}},
+	FILE_NAME 							{public String getName () {return "fileName";}},
+	DESKTOP 							{public String getName () {return "desktop";}},
 
-	public String contextMenuDelete = "Delete";
-	public String contextMenuShowInExplorer = "Show in Explorer";
-	public String contextMenuAddToFavorites = "Add To Favorites";
-	public String contextMenuRemoveFromFavorites = "Remove From Favorites";
-	public String contextMenuDeleteWarning = "This file will be deleted permanently? Are you sure?";
+	OPEN 								{public String getName () {return "open";}},
+	SAVE 								{public String getName () {return "save";}},
 
-	public FileChooserLocale () {
+	POPUP_TITLE 						{public String getName () {return "popupTitle";}},
+	POPUP_CHOOSE_FILE 					{public String getName () {return "popupChooseFile";}},
+	POPUP_DIRECTORY_DOES_NOT_EXIST 		{public String getName () {return "popupDirectoryDoesNotExist";}},
+	POPUP_ONLY_DIRECTORIES 				{public String getName () {return "popupOnlyDirectories";}},
+	POPUP_FILENAME_INVALID 				{public String getName () {return "popupFilenameInvalid";}},
+	POPUP_FILE_EXIST_OVERWRITE 			{public String getName () {return "popupFileExistOverwrite";}},
+	POPUP_MULTIPLE_FILE_EXIST_OVERWRITE {public String getName () {return "popupMultipleFileExistOverwrite";}},
+	POPUP_YES 							{public String getName () {return "popupYes";}},
+	POPUP_NO 							{public String getName () {return "popupNo";}},
+	POPUP_OK 							{public String getName () {return "popupOK";}},
+
+	CONTEXT_MENU_DELETE 				{public String getName () {return "contextMenuDelete";}},
+	CONTEXT_MENU_SHOW_IN_EXPLORER		{public String getName () {return "contextMenuShowInExplorer";}},
+	CONTEXT_MENU_ADD_TO_FAVORITES 		{public String getName () {return "contextMenuAddToFavorites";}},
+	CONTEXT_MENU_REMOVE_FROM_FAVORITES 	{public String getName () {return "contextMenuRemoveFromFavorites";}},
+	CONTEXT_MENU_DELETE_WARNING 		{public String getName () {return "contextMenuDeleteWarning";}};
+	// @formatter:on
+
+	@Override
+	public String get () {
+		throw new UnsupportedOperationException();
 	}
 
-	public FileChooserLocale (String title, String cancel, String open, String save) {
-		this(cancel, open, save);
-		this.titleChooseFiles = title;
-		this.titleChooseDirectories = title;
-		this.titleChooseFilesAndDirectories = title;
+	@Override
+	public String format () {
+		throw new UnsupportedOperationException();
 	}
 
-	public FileChooserLocale (String cancel, String open, String save) {
-		this.cancel = cancel;
-		this.open = open;
-		this.save = save;
+	@Override
+	public String format (Object... arguments) {
+		throw new UnsupportedOperationException();
 	}
 }
+
+/** @author Kotcrab */
+public class FileChooserLocale {
+	private I18NBundle bundle;
+
+	public FileChooserLocale () {
+		FileHandle file = Gdx.files.classpath("com/kotcrab/vis/ui/i18n/FileChooser");
+		Locale locale = new Locale("en");
+		bundle = I18NBundle.createBundle(file, locale);
+	}
+
+	public FileChooserLocale (I18NBundle bundle) {
+		this.bundle = bundle;
+	}
+
+	public String get (BundleText text) {
+		return bundle.get(text.getName());
+	}
+}
+

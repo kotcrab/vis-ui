@@ -6,6 +6,7 @@
 -API Change: Removed PopupMenu boolean constructors, now auto remove is always enabled. Now when user has clicked MenuItem then PopupMenu will be removed from stage
 -API Change: MenuBar(Stage) constructor doesn't take Stage anymore
 -API Change: Moving VisTable to com.kotcrab.vis.ui.widget package
+-API Change: FileChooserLocale removed, now using LibGDX's I18NBundle
 -API Addition: MenuItem#setSubMenu(PopupMenu subMenu)
 -API Addition: MenuBar#addMenu(Menu menu) MenuBar#removeMenu(Menu menu) MenuBar#insertMenu(int index, Menu menu)
 -API Addition: MenuBar#closeMenu()

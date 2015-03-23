@@ -22,6 +22,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisDialog;
@@ -30,10 +31,12 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
+
 /** @author Kotcrab */
 public class FilePopupMenu extends PopupMenu {
 	private FileChooser chooser;
-	private FileChooserLocale locale;
+	private I18NBundle bundle;
 
 	private FileHandle file;
 
@@ -42,14 +45,14 @@ public class FilePopupMenu extends PopupMenu {
 	private MenuItem addToFavorites;
 	private MenuItem removeFromFavorites;
 
-	public FilePopupMenu (FileChooser fileChooser, FileChooserLocale loc) {
+	public FilePopupMenu (FileChooser fileChooser, I18NBundle bundle) {
 		this.chooser = fileChooser;
-		this.locale = loc;
+		this.bundle = bundle;
 
-		delete = new MenuItem(locale.contextMenuDelete);
-		showInExplorer = new MenuItem(locale.contextMenuShowInExplorer);
-		addToFavorites = new MenuItem(locale.contextMenuAddToFavorites);
-		removeFromFavorites = new MenuItem(locale.contextMenuRemoveFromFavorites);
+		delete = new MenuItem(getText(CONTEXT_MENU_DELETE));
+		showInExplorer = new MenuItem(getText(CONTEXT_MENU_SHOW_IN_EXPLORER));
+		addToFavorites = new MenuItem(getText(CONTEXT_MENU_ADD_TO_FAVORITES));
+		removeFromFavorites = new MenuItem(getText(CONTEXT_MENU_REMOVE_FROM_FAVORITES));
 
 		delete.addListener(new ClickListener() {
 			@Override
@@ -89,7 +92,7 @@ public class FilePopupMenu extends PopupMenu {
 	}
 
 	private void showDeleteDialog () {
-		VisDialog dialog = new VisDialog(locale.popupTitle) {
+		VisDialog dialog = new VisDialog(getText(POPUP_TITLE)) {
 			@Override
 			protected void result (Object object) {
 				boolean delete = Boolean.parseBoolean(object.toString());
@@ -99,9 +102,9 @@ public class FilePopupMenu extends PopupMenu {
 				}
 			}
 		};
-		dialog.text(locale.contextMenuDeleteWarning);
-		dialog.button(locale.popupNo, false);
-		dialog.button(locale.popupYes, true);
+		dialog.text(getText(CONTEXT_MENU_DELETE_WARNING));
+		dialog.button(getText(POPUP_NO), false);
+		dialog.button(getText(POPUP_YES), true);
 		dialog.pack();
 		dialog.centerWindow();
 		chooser.getStage().addActor(dialog.fadeIn());
@@ -134,5 +137,9 @@ public class FilePopupMenu extends PopupMenu {
 		addItem(showInExplorer);
 
 		if (favorites.contains(this.file, false)) addItem(removeFromFavorites);
+	}
+
+	private String getText (FileChooserText text) {
+		return bundle.get(text.getName());
 	}
 }
