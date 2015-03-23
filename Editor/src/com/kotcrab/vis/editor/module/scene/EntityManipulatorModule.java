@@ -227,7 +227,7 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	public void processDropPayload (Payload payload) {
-		EditorEntity obj = (EditorEntity) payload.getObject();
+		Object obj = payload.getObject();
 
 		if (obj instanceof TextureRegion) {
 			TextureRegion region = (TextureRegion) payload.getObject();
@@ -251,14 +251,13 @@ public class EntityManipulatorModule extends SceneModule {
 		}
 
 		if (obj instanceof ParticleObject || obj instanceof TextObject || obj instanceof MusicObject) {
-			float x = camera.getInputX() - obj.getWidth() / 2;
-			float y = camera.getInputY() - obj.getHeight() / 2;
-			obj.setPosition(x, y);
+			EditorEntity entity = (EditorEntity) obj;
+			float x = camera.getInputX() - entity.getWidth() / 2;
+			float y = camera.getInputY() - entity.getHeight() / 2;
+			entity.setPosition(x, y);
 
-			undoModule.execute(new EntityAddedAction(obj));
+			undoModule.execute(new EntityAddedAction(entity));
 		}
-
-
 	}
 
 	@Override
