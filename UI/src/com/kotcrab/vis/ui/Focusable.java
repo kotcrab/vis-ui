@@ -17,7 +17,7 @@
 package com.kotcrab.vis.ui;
 
 /**
- * Implemented by objects that may acquire UI focus
+ * Implemented by objects that can acquire UI focus
  * @author Kotcrab
  */
 public interface Focusable {

@@ -25,7 +25,7 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import java.io.File;
 
 /** @author Kotcrab */
-public class FormValidator extends BasicFormValidator {
+public class FormValidator extends SimpleFormValidator {
 	public FormValidator (Button buttonToDisable, Label errorMsgLabel) {
 		super(buttonToDisable, errorMsgLabel);
 	}

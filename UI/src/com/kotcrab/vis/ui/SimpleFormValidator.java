@@ -27,19 +27,18 @@ import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 /**
- * BasicFormValidator is GWT compatible and does not provide fileExists methods, if you are not using GWT use
+ * SimpleFormValidator is GWT compatible and does not provide fileExists methods, if you are not using GWT use
  * {@link FormValidator}
  * @author Kotcrab
- * @see {@link FormValidator}
  */
-public class BasicFormValidator {
+public class SimpleFormValidator {
 	private ChangeSharedListener changeListener = new ChangeSharedListener();
 	private Array<VisValidableTextField> fields = new Array<VisValidableTextField>();
 
 	private Button button;
 	private Label errorMsgLabel;
 
-	public BasicFormValidator (Button buttonToDisable, Label errorMsgLabel) {
+	public SimpleFormValidator (Button buttonToDisable, Label errorMsgLabel) {
 		this.button = buttonToDisable;
 		this.errorMsgLabel = errorMsgLabel;
 	}

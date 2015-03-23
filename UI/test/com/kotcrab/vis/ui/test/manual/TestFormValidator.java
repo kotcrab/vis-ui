@@ -17,7 +17,7 @@
 package com.kotcrab.vis.ui.test.manual;
 
 import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.ui.BasicFormValidator;
+import com.kotcrab.vis.ui.SimpleFormValidator;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -56,8 +56,8 @@ public class TestFormValidator extends VisWindow {
 		row();
 		add(buttonTable).fill().expand().colspan(2).padBottom(3);
 
-		BasicFormValidator validator; //for GWT compatibility
-		validator = new BasicFormValidator(acceptButton, errorLabel);
+		SimpleFormValidator validator; //for GWT compatibility
+		validator = new SimpleFormValidator(acceptButton, errorLabel);
 		validator.notEmpty(firstNameField, "first name cannot be empty");
 		validator.notEmpty(lastNameField, "last name cannot be empty");
 
