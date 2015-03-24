@@ -16,14 +16,13 @@
 
 package com.kotcrab.vis.ui.widget.file;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.utils.I18NBundle;
 import com.kotcrab.vis.ui.i18n.BundleText;
 
-import java.util.Locale;
-
-enum FileChooserText implements BundleText {
+/**
+ * Contains texts for chooser access via I18NBundle, replaced FileChooserLocale
+ * @since 0.7.0
+ */
+public enum FileChooserText implements BundleText {
 	// @formatter:off
 	TITLE_CHOOSE_FILES 					{public String getName () {return "titleChooseFiles";}},
 	TITLE_CHOOSE_DIRECTORIES			{public String getName () {return "titleChooseDirectories";}},
@@ -69,23 +68,3 @@ enum FileChooserText implements BundleText {
 		throw new UnsupportedOperationException();
 	}
 }
-
-/** @author Kotcrab */
-public class FileChooserLocale {
-	private I18NBundle bundle;
-
-	public FileChooserLocale () {
-		FileHandle file = Gdx.files.classpath("com/kotcrab/vis/ui/i18n/FileChooser");
-		Locale locale = new Locale("en");
-		bundle = I18NBundle.createBundle(file, locale);
-	}
-
-	public FileChooserLocale (I18NBundle bundle) {
-		this.bundle = bundle;
-	}
-
-	public String get (BundleText text) {
-		return bundle.get(text.getName());
-	}
-}
-
