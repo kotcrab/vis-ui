@@ -70,7 +70,7 @@ public class App {
 				Field charset = Charset.class.getDeclaredField("defaultCharset");
 				charset.setAccessible(true);
 				charset.set(null, null);
-				Log.warn(TAG, "Success, run with VM argument: -Dfile.encoding=UTF-8 to avoid this.");
+				Log.warn(TAG, "Charset change successful, run with VM argument: -Dfile.encoding=UTF-8 to avoid this.");
 			} catch (Exception e) {
 				String charsetChangeFailed = "UTF-8 charset is not default for this system and attempt to change it failed, " +
 						"cannot continue! Run with VM argument: -Dfile.encoding=UTF-8 to fix this.";
