@@ -88,7 +88,7 @@ public class VisWindow extends Window {
 	/** @return this window for the purpose of chaining methods eg. stage.addActor(new MyWindow(stage).fadeIn(0.3f)); */
 	public VisWindow fadeIn (float time) {
 		setColor(1, 1, 1, 0);
-		addAction(Actions.sequence(Actions.fadeIn(time, Interpolation.fade)));
+		addAction(Actions.fadeIn(time, Interpolation.fade));
 		return this;
 	}
 
