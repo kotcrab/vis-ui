@@ -52,6 +52,8 @@ public class TestWindow extends VisWindow {
 		VisLabel labelWithTooltip = new VisLabel("label with tooltip");
 		new Tooltip(labelWithTooltip, "this label has a tooltip");
 
+		TableUtils.setSpaceDefaults(this);
+
 		VisTable labelTable = new VisTable(true);
 		labelTable.add(label);
 		labelTable.add(labelWithTooltip);
@@ -92,7 +94,6 @@ public class TestWindow extends VisWindow {
 		VisTable radioTable = new VisTable(true);
 		radioTable.add(normalRadio);
 		radioTable.add(disabledRadio);
-		radioTable.addSeparator(true);
 		radioTable.add(disabledCheckedRadio);
 
 		// ---
@@ -134,17 +135,18 @@ public class TestWindow extends VisWindow {
 		VisList<String> list = new VisList<String>();
 		list.setItems("item 1", "item 2", "item 3", "item 4");
 
-		listTable.add(new VisLabel("list: ")).top().spaceRight(10);
+		listTable.add(new VisLabel("list: "));
 		listTable.add(list);
 
 		// ---
 
-		VisTable selectBoxTable = new VisTable();
+		VisTable selectorsTable = new VisTable(true);
 		VisSelectBox<String> selectBox = new VisSelectBox<String>();
 		selectBox.setItems("item 1", "item 2", "item 3", "item 4");
 
-		selectBoxTable.add(new VisLabel("select box: ")).top().spaceRight(6);
-		selectBoxTable.add(selectBox);
+		selectorsTable.add(new VisLabel("select box: "));
+		selectorsTable.add(selectBox);
+		selectorsTable.add(new NumberSelector("number selector:", 0, 0, 100, 1)).row();
 
 		// ---
 
@@ -155,7 +157,7 @@ public class TestWindow extends VisWindow {
 		add(textfieldTable).row();
 		add(progressbarTable).row();
 		add(listTable).row();
-		add(selectBoxTable).row();
+		add(selectorsTable).row();
 	}
 
 	private void addNormalWidgets () {

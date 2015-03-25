@@ -117,4 +117,7 @@ com.kotcrab.vis.ui.widget.VisSplitPane$VisSplitPaneStyle: {
 com.kotcrab.vis.ui.widget.MenuItem$MenuItemStyle: {
     default: { down: button-down, up: button, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey, subMenu: sub-menu },
 },
+  com.kotcrab.vis.ui.widget.NumberSelector$NumberSelectorStyle: {
+  default: { down: select-down, up: select-up },
+},
 }
