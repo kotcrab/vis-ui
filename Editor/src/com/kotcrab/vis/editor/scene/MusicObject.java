@@ -29,29 +29,33 @@ import com.kotcrab.vis.runtime.entity.MusicEntity;
 
 public class MusicObject extends MusicEntity implements EditorEntity {
 	private float x, y;
-	private final TextureRegion icon;
+	private transient TextureRegion icon;
 	private Rectangle bounds;
-
-	private boolean serializedLooping;
-	private float serializedVolume = 1;
 
 	public MusicObject (String musicPath, Music music) {
 		super(null, musicPath, music);
 		this.icon = Assets.getIconRegion(Icons.MUSIC);
 
-		bounds = new Rectangle(0, 0, icon.getRegionWidth(), icon.getRegionHeight());
+		bounds = new Rectangle(x, y, icon.getRegionWidth(), icon.getRegionHeight());
 	}
 
-	@Override
-	public void beforeSerialize () {
-		serializedLooping = music.isLooping();
-		serializedVolume = music.getVolume();
+	public MusicObject (MusicObject other, Music newMusic) {
+		super(other.getId(), other.getMusicPath(), newMusic);
+
+		this.x = other.x;
+		this.y = other.y;
+		this.icon = other.icon;
+		this.bounds = new Rectangle();
+		calcBounds();
 	}
 
-	public void afterDeserialize (Music music) {
+	private void calcBounds () {
+		bounds.set(x, y, icon.getRegionWidth(), icon.getRegionHeight());
+	}
+
+	public void onDeserialize (Music music) {
+		this.icon = Assets.getIconRegion(Icons.MUSIC);
 		this.music = music;
-		music.setLooping(serializedLooping);
-		music.setVolume(serializedVolume);
 	}
 
 	@Override

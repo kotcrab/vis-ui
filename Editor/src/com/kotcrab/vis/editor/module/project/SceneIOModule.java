@@ -19,7 +19,6 @@
 
 package com.kotcrab.vis.editor.module.project;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -37,8 +36,9 @@ import com.kotcrab.vis.editor.scene.MusicObject;
 import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.editor.serializer.MusicObjectSerializer;
+import com.kotcrab.vis.editor.serializer.SpriteSerializer;
 import com.kotcrab.vis.editor.util.Log;
-import com.kotcrab.vis.editor.util.SpriteSerializer;
 import com.kotcrab.vis.editor.util.SpriteUtils;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
@@ -70,11 +70,13 @@ public class SceneIOModule extends ProjectModule {
 
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
-		kryo.register(Array.class);
-		kryo.register(Rectangle.class);
-		kryo.register(TextBounds.class);
-		kryo.register(Matrix4.class);
-		kryo.register(Sprite.class, new SpriteSerializer());
+		kryo.register(Array.class, 10);
+		kryo.register(Rectangle.class, 11);
+		kryo.register(TextBounds.class, 12);
+		kryo.register(Matrix4.class, 13);
+		kryo.register(Sprite.class, new SpriteSerializer(), 30);
+
+		kryo.register(MusicObject.class, new MusicObjectSerializer(kryo, fileAccessModule));
 	}
 
 	public Kryo getKryo () {
@@ -121,11 +123,6 @@ public class SceneIOModule extends ProjectModule {
 				ParticleObject particle = (ParticleObject) entity;
 				ParticleEffect effect = particleModule.get(fileAccessModule.getAssetsFolder().child(particle.getRelativeEffectPath()));
 				particle.afterDeserialize(effect);
-			}
-
-			if (entity instanceof MusicObject) {
-				MusicObject music = (MusicObject) entity;
-				music.afterDeserialize(Gdx.audio.newMusic(fileAccessModule.getAssetsFolder().child(music.getMusicPath())));
 			}
 
 			entity.afterDeserialize();

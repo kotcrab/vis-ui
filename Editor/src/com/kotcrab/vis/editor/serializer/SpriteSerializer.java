@@ -17,7 +17,7 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.serializer;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
