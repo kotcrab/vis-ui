@@ -157,7 +157,7 @@ public class TestWindow extends VisWindow {
 		add(textfieldTable).row();
 		add(progressbarTable).row();
 		add(listTable).row();
-		add(selectorsTable).row();
+		add(selectorsTable).padBottom(3).row();
 	}
 
 	private void addNormalWidgets () {
