@@ -58,7 +58,6 @@ public class TabbedPane {
 	private Tab activeTab;
 
 	private Array<TabbedPaneListener> listeners;
-	private boolean allowTabDeselect;
 
 	public TabbedPane (TabbedPaneListener listener) {
 		this(listener, new TabbedPaneStyle(true));
@@ -88,7 +87,6 @@ public class TabbedPane {
 	}
 
 	public void setAllowTabDeselect (boolean allowTabDeselect) {
-		this.allowTabDeselect = allowTabDeselect;
 		if (allowTabDeselect)
 			group.setMinCheckCount(0);
 		else
