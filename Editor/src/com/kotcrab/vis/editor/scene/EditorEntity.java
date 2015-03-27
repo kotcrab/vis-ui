@@ -127,14 +127,6 @@ public interface EditorEntity {
 
 	}
 
-	default void afterDeserialize () {
-
-	}
-
-	default void beforeSerialize () {
-
-	}
-
 	default String toPrettyString () {
 		if (getId() == null)
 			return getClass().getSimpleName() + " X: " + (int)getX() + " Y: " + (int)getY();

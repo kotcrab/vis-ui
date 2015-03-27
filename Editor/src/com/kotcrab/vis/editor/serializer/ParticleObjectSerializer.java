@@ -19,44 +19,46 @@
 
 package com.kotcrab.vis.editor.serializer;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.scene.MusicObject;
+import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
+import com.kotcrab.vis.editor.scene.ParticleObject;
 
-public class MusicObjectSerializer extends Serializer<MusicObject> {
+public class ParticleObjectSerializer extends Serializer<ParticleObject> {
 	private Serializer defaultSerializer;
 	private FileAccessModule fileAccess;
+	private ParticleCacheModule particleCache;
 
-	public MusicObjectSerializer (Kryo kryo, FileAccessModule fileAccess) {
+	public ParticleObjectSerializer (Kryo kryo, FileAccessModule fileAccess, ParticleCacheModule particleCache) {
 		this.fileAccess = fileAccess;
-		defaultSerializer = kryo.getSerializer(MusicObject.class);
+		this.particleCache = particleCache;
+
+		defaultSerializer = kryo.getSerializer(ParticleObject.class);
 	}
 
 	@Override
-	public void write (Kryo kryo, Output output, MusicObject musicObj) {
+	public void write (Kryo kryo, Output output, ParticleObject obj) {
 		kryo.setReferences(false);
 
-		kryo.writeObject(output, musicObj, defaultSerializer);
-		output.writeBoolean(musicObj.isLooping());
-		output.writeFloat(musicObj.getVolume());
+		kryo.writeObject(output, obj, defaultSerializer);
+		output.writeFloat(obj.getX());
+		output.writeFloat(obj.getY());
 
 		kryo.setReferences(true);
 	}
 
 	@Override
-	public MusicObject read (Kryo kryo, Input input, Class<MusicObject> type) {
+	public ParticleObject read (Kryo kryo, Input input, Class<ParticleObject> type) {
 		kryo.setReferences(false);
 
-		MusicObject obj = kryo.readObject(input, MusicObject.class, defaultSerializer);
+		ParticleObject obj = kryo.readObject(input, ParticleObject.class, defaultSerializer);
 
-		obj.onDeserialize(getNewMusicInstance(obj));
-		obj.setLooping(input.readBoolean());
-		obj.setVolume(input.readFloat());
+		ParticleEffect effect = getNewEffect(obj);
+		obj.onDeserialize(effect, input.readFloat(), input.readFloat());
 
 		kryo.setReferences(true);
 
@@ -64,11 +66,11 @@ public class MusicObjectSerializer extends Serializer<MusicObject> {
 	}
 
 	@Override
-	public MusicObject copy (Kryo kryo, MusicObject original) {
-		return new MusicObject(original, getNewMusicInstance(original));
+	public ParticleObject copy (Kryo kryo, ParticleObject original) {
+		return new ParticleObject(original, getNewEffect(original));
 	}
 
-	private Music getNewMusicInstance (MusicObject object) {
-		return Gdx.audio.newMusic(fileAccess.getAssetsFolder().child(object.getMusicPath()));
+	private ParticleEffect getNewEffect (ParticleObject obj) {
+		return particleCache.get(fileAccess.getAssetsFolder().child(obj.getRelativeEffectPath()));
 	}
 }

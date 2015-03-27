@@ -241,15 +241,6 @@ public class EntityManipulatorModule extends SceneModule {
 			undoModule.execute(new EntityAddedAction(object));
 		}
 
-		if (obj instanceof TextObject) {
-			TextObject text = (TextObject) obj;
-			float x = camera.getInputX() - text.getWidth() / 2;
-			float y = camera.getInputY() - text.getHeight() / 2;
-			text.setPosition(x, y);
-
-			undoModule.execute(new EntityAddedAction(text));
-		}
-
 		if (obj instanceof ParticleObject || obj instanceof TextObject || obj instanceof MusicObject) {
 			EditorEntity entity = (EditorEntity) obj;
 			float x = camera.getInputX() - entity.getWidth() / 2;

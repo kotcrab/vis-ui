@@ -26,7 +26,6 @@ import com.kotcrab.vis.runtime.entity.SpriteEntity;
 
 public class SpriteObject extends SpriteEntity implements EditorEntity {
 	private String cacheRegionName;
-	private boolean serializeFlipX, serializeFlipY;
 
 	public SpriteObject (String cacheRegionName, TextureRegion region, float x, float y) {
 		super(null, new Sprite(region));
@@ -34,15 +33,13 @@ public class SpriteObject extends SpriteEntity implements EditorEntity {
 		sprite.setPosition(x, y);
 	}
 
-	@Override
-	public void beforeSerialize () {
-		serializeFlipX = sprite.isFlipX();
-		serializeFlipY = sprite.isFlipY();
+	public SpriteObject (SpriteObject other, Sprite sprite) {
+		super(other.getId(), sprite);
+		this.cacheRegionName = other.cacheRegionName;
 	}
 
-	@Override
-	public void afterDeserialize () {
-		sprite.setFlip(serializeFlipX, serializeFlipY);
+	public void onDeserialize (TextureRegion region) {
+		this.sprite = new Sprite(region);
 	}
 
 	@Override

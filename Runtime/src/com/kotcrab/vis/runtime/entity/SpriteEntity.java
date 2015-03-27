@@ -22,7 +22,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
 public class SpriteEntity extends Entity {
-	protected Sprite sprite;
+	protected transient Sprite sprite;
 
 	public SpriteEntity (String id, Sprite sprite) {
 		super(id);

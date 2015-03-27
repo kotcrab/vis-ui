@@ -54,6 +54,7 @@ import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.util.SpriteUtils;
+import com.kotcrab.vis.ui.util.DialogUtils;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 public class SceneTab extends MainContentTab implements DragAndDropTarget, EventListener, SceneMenuButtonsListener {
@@ -236,7 +237,8 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 			setDirty(false);
 			sceneMC.save();
 			return true;
-		}
+		} else
+			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Unknown error encountered while saving resource");
 
 		return false;
 	}
@@ -281,7 +283,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	}
 
 	public void centerCamera (EditorEntity entity) {
-		cameraModule.setPosition(entity.getX()  + entity.getWidth() / 2, entity.getY() + entity.getHeight() / 2);
+		cameraModule.setPosition(entity.getX() + entity.getWidth() / 2, entity.getY() + entity.getHeight() / 2);
 	}
 
 	public void focusSelf () {

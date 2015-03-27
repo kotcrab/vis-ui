@@ -20,9 +20,8 @@
 package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -30,16 +29,18 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
-import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.MusicObject;
 import com.kotcrab.vis.editor.scene.ParticleObject;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.editor.serializer.ArraySerializer;
+import com.kotcrab.vis.editor.serializer.ColorSerializer;
 import com.kotcrab.vis.editor.serializer.MusicObjectSerializer;
-import com.kotcrab.vis.editor.serializer.SpriteSerializer;
+import com.kotcrab.vis.editor.serializer.ParticleObjectSerializer;
+import com.kotcrab.vis.editor.serializer.SpriteObjectSerializer;
+import com.kotcrab.vis.editor.serializer.TextObjectSerializer;
 import com.kotcrab.vis.editor.util.Log;
-import com.kotcrab.vis.editor.util.SpriteUtils;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 import java.io.FileInputStream;
@@ -52,31 +53,29 @@ public class SceneIOModule extends ProjectModule {
 
 	private FileAccessModule fileAccessModule;
 
-	private TextureCacheModule textureModule;
-	private FontCacheModule fontModule;
-	private ParticleCacheModule particleModule;
-
 	private FileHandle assetsFolder;
 
 	@Override
 	public void init () {
 		fileAccessModule = projectContainer.get(FileAccessModule.class);
-
-		textureModule = projectContainer.get(TextureCacheModule.class);
-		fontModule = projectContainer.get(FontCacheModule.class);
-		particleModule = projectContainer.get(ParticleCacheModule.class);
-
 		assetsFolder = fileAccessModule.getAssetsFolder();
+
+		TextureCacheModule textureCache = projectContainer.get(TextureCacheModule.class);
+		FontCacheModule fontCache = projectContainer.get(FontCacheModule.class);
+		ParticleCacheModule particleCache = projectContainer.get(ParticleCacheModule.class);
 
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
-		kryo.register(Array.class, 10);
+		kryo.register(Array.class, new ArraySerializer(), 10);
 		kryo.register(Rectangle.class, 11);
 		kryo.register(TextBounds.class, 12);
 		kryo.register(Matrix4.class, 13);
-		kryo.register(Sprite.class, new SpriteSerializer(), 30);
+		kryo.register(Color.class, new ColorSerializer(), 14);
 
-		kryo.register(MusicObject.class, new MusicObjectSerializer(kryo, fileAccessModule));
+		kryo.register(SpriteObject.class, new SpriteObjectSerializer(kryo, textureCache), 30);
+		kryo.register(MusicObject.class, new MusicObjectSerializer(kryo, fileAccessModule), 31);
+		kryo.register(ParticleObject.class, new ParticleObjectSerializer(kryo, fileAccessModule, particleCache), 32);
+		kryo.register(TextObject.class, new TextObjectSerializer(kryo, fileAccessModule, fontCache), 33);
 	}
 
 	public Kryo getKryo () {
@@ -84,14 +83,6 @@ public class SceneIOModule extends ProjectModule {
 	}
 
 	public EditorScene load (FileHandle fullPathFile) {
-		EditorScene scene = deserializeScene(fullPathFile);
-
-		prepareSceneAfterLoad(scene);
-
-		return scene;
-	}
-
-	private EditorScene deserializeScene (FileHandle fullPathFile) {
 		try {
 			Input input = new Input(new FileInputStream(fullPathFile.file()));
 			EditorScene scene = kryo.readObject(input, EditorScene.class);
@@ -106,33 +97,7 @@ public class SceneIOModule extends ProjectModule {
 		throw new IllegalStateException("There was an error during scene deserializing");
 	}
 
-	private void prepareSceneAfterLoad (EditorScene scene) {
-		for (EditorEntity entity : scene.entities) {
-			if (entity instanceof SpriteObject) {
-				SpriteObject spriteObject = (SpriteObject) entity;
-				SpriteUtils.setRegion(spriteObject.getSprite(), textureModule.getRegion(spriteObject.getCacheRegionName()));
-			}
-
-			if (entity instanceof TextObject) {
-				TextObject textObject = (TextObject) entity;
-				EditorFont font = fontModule.get(fileAccessModule.getAssetsFolder().child(textObject.getRelativeFontPath()));
-				textObject.afterDeserialize(font);
-			}
-
-			if (entity instanceof ParticleObject) {
-				ParticleObject particle = (ParticleObject) entity;
-				ParticleEffect effect = particleModule.get(fileAccessModule.getAssetsFolder().child(particle.getRelativeEffectPath()));
-				particle.afterDeserialize(effect);
-			}
-
-			entity.afterDeserialize();
-		}
-	}
-
 	public boolean save (EditorScene scene) {
-		for (EditorEntity entity : scene.entities)
-			entity.beforeSerialize();
-
 		try {
 			Output output = new Output(new FileOutputStream(getFileHandleForScene(scene).file()));
 			kryo.writeObject(output, scene);

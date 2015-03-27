@@ -28,23 +28,19 @@ import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 public class ParticleObject extends ParticleEffectEntity implements EditorEntity {
 	private Rectangle bounds;
 
-	/** Effect is not serialized so we have to save and store position here when serialized using Kryo */
-	private float serializeX, serializeY;
-
 	public ParticleObject (String relativePath, ParticleEffect effect) {
 		super(null, relativePath, effect);
 		bounds = new Rectangle();
 	}
 
-	@Override
-	public void beforeSerialize () {
-		serializeX = getX();
-		serializeY = getY();
+	public ParticleObject (ParticleObject other, ParticleEffect effect) {
+		super(other.getId(), other.getRelativeEffectPath(), effect);
+		bounds = new Rectangle();
 	}
 
-	public void afterDeserialize (ParticleEffect effect) {
+	public void onDeserialize (ParticleEffect effect, float x, float y) {
 		this.effect = effect;
-		effect.setPosition(serializeX, serializeY);
+		effect.setPosition(x, y);
 	}
 
 	@Override

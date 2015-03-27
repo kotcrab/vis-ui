@@ -19,56 +19,44 @@
 
 package com.kotcrab.vis.editor.serializer;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.scene.MusicObject;
+import com.kotcrab.vis.editor.module.project.FontCacheModule;
+import com.kotcrab.vis.editor.scene.TextObject;
 
-public class MusicObjectSerializer extends Serializer<MusicObject> {
+public class TextObjectSerializer extends Serializer<TextObject> {
 	private Serializer defaultSerializer;
 	private FileAccessModule fileAccess;
+	private final FontCacheModule fontCache;
 
-	public MusicObjectSerializer (Kryo kryo, FileAccessModule fileAccess) {
+	public TextObjectSerializer (Kryo kryo, FileAccessModule fileAccess, FontCacheModule fontCache) {
 		this.fileAccess = fileAccess;
-		defaultSerializer = kryo.getSerializer(MusicObject.class);
+		this.fontCache = fontCache;
+		defaultSerializer = kryo.getSerializer(TextObject.class);
 	}
 
 	@Override
-	public void write (Kryo kryo, Output output, MusicObject musicObj) {
+	public void write (Kryo kryo, Output output, TextObject textObject) {
 		kryo.setReferences(false);
-
-		kryo.writeObject(output, musicObj, defaultSerializer);
-		output.writeBoolean(musicObj.isLooping());
-		output.writeFloat(musicObj.getVolume());
-
+		kryo.writeObject(output, textObject, defaultSerializer);
 		kryo.setReferences(true);
 	}
 
 	@Override
-	public MusicObject read (Kryo kryo, Input input, Class<MusicObject> type) {
+	public TextObject read (Kryo kryo, Input input, Class<TextObject> type) {
 		kryo.setReferences(false);
-
-		MusicObject obj = kryo.readObject(input, MusicObject.class, defaultSerializer);
-
-		obj.onDeserialize(getNewMusicInstance(obj));
-		obj.setLooping(input.readBoolean());
-		obj.setVolume(input.readFloat());
-
+		TextObject obj = kryo.readObject(input, TextObject.class, defaultSerializer);
 		kryo.setReferences(true);
 
+		obj.onDeserialize(fontCache.get(fileAccess.getAssetsFolder().child(obj.getRelativeFontPath())));
 		return obj;
 	}
 
 	@Override
-	public MusicObject copy (Kryo kryo, MusicObject original) {
-		return new MusicObject(original, getNewMusicInstance(original));
-	}
-
-	private Music getNewMusicInstance (MusicObject object) {
-		return Gdx.audio.newMusic(fileAccess.getAssetsFolder().child(object.getMusicPath()));
+	public TextObject copy (Kryo kryo, TextObject original) {
+		return new TextObject(original);
 	}
 }

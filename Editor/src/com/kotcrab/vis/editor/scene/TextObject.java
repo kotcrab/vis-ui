@@ -41,8 +41,21 @@ public class TextObject extends TextEntity implements EditorEntity {
 		this.font = font;
 	}
 
-	/** Must be called after editor deserializaiton */
-	public void afterDeserialize (EditorFont font) {
+	public TextObject (TextObject other) {
+		super(other.cache.getFont(), other.getId(), other.getRelativeFontPath(), other.getText(), other.getFontSize());
+		this.font = other.font;
+
+		setAutoSetOriginToCenter(other.isAutoSetOriginToCenter());
+		setDistanceFieldShaderEnabled(other.isDistanceFieldShaderEnabled());
+		setX(other.getX());
+		setY(other.getY());
+		setOrigin(other.getOriginX(), other.getOriginY());
+		setScale(other.getScaleX(), other.getScaleY());
+		setRotation(other.getRotation());
+		setColor(other.getColor());
+	}
+
+	public void onDeserialize (EditorFont font) {
 		setFont(font);
 		setColor(getColor()); //update cache color
 	}
