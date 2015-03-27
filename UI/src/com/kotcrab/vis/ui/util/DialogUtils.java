@@ -27,10 +27,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.InputDialogListener;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.OptionDialogListener;
-import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.i18n.BundleText;
 import com.kotcrab.vis.ui.widget.VisDialog;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
@@ -52,7 +54,7 @@ public class DialogUtils {
 	public static void showOKDialog (Stage stage, String title, String text) {
 		VisDialog dialog = new VisDialog(title);
 		dialog.text(text);
-		dialog.button("OK").padBottom(3);
+		dialog.button(get(Text.OK)).padBottom(3);
 		dialog.pack();
 		dialog.centerWindow();
 		stage.addActor(dialog.fadeIn());
@@ -164,8 +166,8 @@ public class DialogUtils {
 			}
 
 			VisTable buttonsTable = new VisTable(true);
-			buttonsTable.add(cancelButton = new VisTextButton("Cancel"));
-			buttonsTable.add(okButton = new VisTextButton("OK"));
+			buttonsTable.add(cancelButton = new VisTextButton(get(Text.CANCEL)));
+			buttonsTable.add(okButton = new VisTextButton(get(Text.OK)));
 
 			VisTable fieldTable = new VisTable(true);
 
@@ -247,9 +249,9 @@ public class DialogUtils {
 	public static class OptionDialog extends VisDialog {
 		private OptionDialogListener listener;
 
-		private VisTextButton yesButton = new VisTextButton("Yes");
-		private VisTextButton noButton = new VisTextButton("No");
-		private VisTextButton cancelButton = new VisTextButton("Cancel");
+		private VisTextButton yesButton = new VisTextButton(get(Text.YES));
+		private VisTextButton noButton = new VisTextButton(get(Text.NO));
+		private VisTextButton cancelButton = new VisTextButton(get(Text.CANCEL));
 
 		public OptionDialog (Stage stage, String title, String text, OptionDialogType type, OptionDialogListener listener) {
 			super(title);
@@ -308,23 +310,23 @@ public class DialogUtils {
 		private Cell<?> detailsCell;
 
 		public ErrorDialog (String text, String stackTrace) {
-			super("Error");
+			super(get(Text.ERROR));
 
 			text(text);
 
 			if (stackTrace != null) {
-				final VisTextButton copyButton = new VisTextButton("Copy");
+				final VisTextButton copyButton = new VisTextButton(get(Text.COPY));
 				final VisLabel errorLabel = new VisLabel(stackTrace);
 
 				copyButton.addListener(new ChangeListener() {
 					@Override
 					public void changed (ChangeEvent event, Actor actor) {
 						Gdx.app.getClipboard().setContents((errorLabel.getText().toString()));
-						copyButton.setText("Copied");
+						copyButton.setText(get(Text.COPIED));
 					}
 				});
 
-				detailsTable.add(new VisLabel("Details:")).left().expand().padTop(6);
+				detailsTable.add(new VisLabel(get(Text.DETAILS_COLON))).left().expand().padTop(6);
 				detailsTable.add(copyButton);
 				detailsTable.row();
 
@@ -335,10 +337,10 @@ public class DialogUtils {
 				getContentTable().row();
 				detailsCell = getContentTable().add(detailsTable);
 				detailsCell.setActor(null);
-				button("Details", BUTTON_DETAILS);
+				button(get(Text.DETAILS), BUTTON_DETAILS);
 			}
 
-			button("OK", BUTTON_OK).padBottom(3);
+			button(get(Text.OK), BUTTON_OK).padBottom(3);
 			pack();
 			centerWindow();
 		}
@@ -353,6 +355,40 @@ public class DialogUtils {
 				centerWindow();
 				cancel();
 			}
+		}
+	}
+
+	private static String get (Text text) {
+		return VisUI.getDialogUtilsBundle().get(text.getName());
+	}
+
+	private enum Text implements BundleText {
+		// @formatter:off
+		YES 					{public String getName () {return "yes";}},
+		NO						{public String getName () {return "no";}},
+		CANCEL					{public String getName () {return "cancel";}},
+		OK 						{public String getName () {return "ok";}},
+		ERROR					{public String getName () {return "error";}},
+
+		DETAILS 				{public String getName () {return "details";}},
+		DETAILS_COLON			{public String getName () {return "detailsColon";}},
+		COPY 					{public String getName () {return "copy";}},
+		COPIED 					{public String getName () {return "copied";}};
+		// @formatter:on
+
+		@Override
+		public String get () {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public String format () {
+			throw new UnsupportedOperationException();
+		}
+
+		@Override
+		public String format (Object... arguments) {
+			throw new UnsupportedOperationException();
 		}
 	}
 

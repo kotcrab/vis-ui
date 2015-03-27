@@ -47,7 +47,6 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileFilter;
-import java.util.Locale;
 
 import static com.kotcrab.vis.ui.widget.file.FileChooserText.CANCEL;
 import static com.kotcrab.vis.ui.widget.file.FileChooserText.DESKTOP;
@@ -121,7 +120,7 @@ public class FileChooser extends VisWindow {
 	public FileChooser (Mode mode) {
 		super("");
 
-		this.bundle = createDefaultBundle();
+		this.bundle = VisUI.getFileChooserBundle();
 		this.mode = mode;
 
 		setTitle(getText(TITLE_CHOOSE_FILES));
@@ -132,7 +131,7 @@ public class FileChooser extends VisWindow {
 	public FileChooser (String title, Mode mode) {
 		super(title);
 		this.mode = mode;
-		this.bundle = createDefaultBundle();
+		this.bundle = VisUI.getFileChooserBundle();
 
 		init();
 	}
@@ -164,12 +163,6 @@ public class FileChooser extends VisWindow {
 	 */
 	public static void setFavoritesPrefsName (String name) {
 		FavoritesIO.setFavoritesPrefsName(name);
-	}
-
-	private I18NBundle createDefaultBundle () {
-		FileHandle file = Gdx.files.classpath("com/kotcrab/vis/ui/i18n/FileChooser");
-		Locale locale = new Locale("en");
-		return I18NBundle.createBundle(file, locale);
 	}
 
 	private void init () {
