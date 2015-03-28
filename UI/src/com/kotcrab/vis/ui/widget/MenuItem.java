@@ -121,22 +121,14 @@ public class MenuItem extends Button {
 					event.stop();
 			}
 		});
-	}
 
-	public void setSubMenu (final PopupMenu subMenu) {
-		if (this.subMenu != null) removeListener(subMenuListener);
-		this.subMenu = subMenu;
-
-		if (subMenu == null) {
-			subMenuIconCell.setActor(null);
-			return;
-		} else
-			subMenuIconCell.setActor(subMenuImage);
-
-		if (subMenuListener == null) {
-			subMenuListener = new InputListener() {
-				@Override
-				public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+		addListener(new InputListener() {
+			@Override
+			public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+				if (subMenu == null) {
+					PopupMenu parent = (PopupMenu) getParent();
+					parent.setSubMenu(null);
+				} else {
 					Stage stage = getStage();
 					Vector2 pos = localToStageCoordinates(new Vector2(0, 0));
 
@@ -150,10 +142,17 @@ public class MenuItem extends Button {
 					PopupMenu parent = (PopupMenu) getParent();
 					parent.setSubMenu(subMenu);
 				}
-			};
-		}
+			}
+		});
+	}
 
-		addListener(subMenuListener);
+	public void setSubMenu (final PopupMenu subMenu) {
+		this.subMenu = subMenu;
+
+		if (subMenu == null)
+			subMenuIconCell.setActor(null);
+		else
+			subMenuIconCell.setActor(subMenuImage);
 	}
 
 	@Override
