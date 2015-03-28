@@ -71,6 +71,17 @@ public class DialogUtils {
 	}
 
 	/**
+	 * Dialog with title, text and n amount of buttons. If you need dialog with only buttons like Yes, No, Cancel etc.
+	 * see {@link #showOptionDialog(Stage, String, String, OptionDialogType, OptionDialogListener)}
+	 * @since 0.7.0
+	 */
+	public static <T> ConfirmDialog<T> showConfirmDialog (Stage stage, String title, String text, String[] buttons, T[] returns, ConfirmDialogListener<T> listener) {
+		ConfirmDialog<T> dialog = new ConfirmDialog<T>(title, text, buttons, returns, listener);
+		stage.addActor(dialog.fadeIn());
+		return dialog;
+	}
+
+	/**
 	 * Dialog with text and text field for user input. Cannot be canceled.
 	 * @param fieldTitle may be null
 	 */
@@ -360,6 +371,30 @@ public class DialogUtils {
 
 	private static String get (Text text) {
 		return VisUI.getDialogUtilsBundle().get(text.getName());
+	}
+
+	/** @author Javier, Kotcrab */
+	public static class ConfirmDialog<T> extends VisDialog {
+		private ConfirmDialogListener<T> listener;
+
+		public ConfirmDialog (String title, String text, String[] buttons, T[] returns, ConfirmDialogListener<T> listener) {
+			super(title);
+			this.listener = listener;
+			text(text);
+
+			for (int i = 0; i < buttons.length; i++) {
+				button(buttons[i], returns[i]);
+			}
+
+			padBottom(3);
+			pack();
+			centerWindow();
+		}
+
+		@Override
+		protected void result (Object object) {
+			listener.result((T) object);
+		}
 	}
 
 	private enum Text implements BundleText {
