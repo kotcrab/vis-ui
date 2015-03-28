@@ -42,7 +42,7 @@ public class TestTextAreaAndScroll extends VisWindow {
 			addNormalWidgets();
 
 		setSize(180, 380);
-		setPosition(40, 280);
+		setPosition(28, 300);
 	}
 
 	private void addNormalWidgets () {

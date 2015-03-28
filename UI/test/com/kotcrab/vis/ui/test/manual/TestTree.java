@@ -40,7 +40,7 @@ public class TestTree extends VisWindow {
 			addNormalWidgets();
 
 		setSize(150, 380);
-		setPosition(800, 290);
+		setPosition(774, 303);
 	}
 
 	private void addNormalWidgets () {

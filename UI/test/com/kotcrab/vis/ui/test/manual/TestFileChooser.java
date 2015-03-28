@@ -42,7 +42,7 @@ public class TestFileChooser extends VisWindow {
 		add(show);
 
 		pack();
-		setPosition(1020, 320);
+		setPosition(1038, 66);
 	}
 
 

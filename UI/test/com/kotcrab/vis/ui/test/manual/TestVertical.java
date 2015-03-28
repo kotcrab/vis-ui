@@ -39,7 +39,7 @@ public class TestVertical extends VisWindow {
 			addNormalWidgets();
 
 		setSize(100, 200);
-		setPosition(1100, 100);
+		setPosition(1154, 20);
 	}
 
 	private void addNormalWidgets () {
