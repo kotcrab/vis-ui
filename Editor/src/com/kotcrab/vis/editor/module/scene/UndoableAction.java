@@ -22,5 +22,5 @@ package com.kotcrab.vis.editor.module.scene;
 public interface UndoableAction {
 	public void execute ();
 
-	public void undo();
+	public void undo ();
 }

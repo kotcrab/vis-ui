@@ -28,7 +28,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane.TabbedPaneStyle;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
-public class QuickAccessModule extends EditorModule{
+public class QuickAccessModule extends EditorModule {
 	private TabbedPane tabbedPane;
 	private TabbedPaneListener listener;
 

@@ -42,8 +42,8 @@ public abstract class ProcessingQueue<E> {
 	/**
 	 * Creates {@link ProcessingQueue}.
 	 * @param threadName name of processing thread that will be created
-	 * @param capacity   queue capacity, if queue is full, {@link ProcessingQueue#processLater(E element)} will block until there is space in
-	 *                   queue
+	 * @param capacity queue capacity, if queue is full, {@link ProcessingQueue#processLater(E element)} will block until there is space in
+	 * queue
 	 */
 	public ProcessingQueue (String threadName, int capacity) {
 		this.threadName = threadName;

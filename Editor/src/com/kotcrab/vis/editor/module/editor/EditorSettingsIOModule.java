@@ -67,7 +67,7 @@ public class EditorSettingsIOModule extends EditorModule {
 		}
 
 		try {
-			return  type.newInstance();
+			return type.newInstance();
 		} catch (InstantiationException | IllegalAccessException e) {
 			Log.exception(e);
 		}

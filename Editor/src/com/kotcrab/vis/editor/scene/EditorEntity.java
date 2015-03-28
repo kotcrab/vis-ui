@@ -129,8 +129,8 @@ public interface EditorEntity {
 
 	default String toPrettyString () {
 		if (getId() == null)
-			return getClass().getSimpleName() + " X: " + (int)getX() + " Y: " + (int)getY();
+			return getClass().getSimpleName() + " X: " + (int) getX() + " Y: " + (int) getY();
 		else
-			return getClass().getSimpleName() + " ID: " + getId() + " X: " + (int)getX() + " Y: " + (int)getY();
+			return getClass().getSimpleName() + " ID: " + getId() + " X: " + (int) getX() + " Y: " + (int) getY();
 	}
 }

@@ -31,7 +31,7 @@ public class MenuUtils {
 		return createMenuItem(text, null, listener);
 	}
 
-	public static MenuItem createMenuItem (	String text, Icons icon, ButtonListener listener) {
+	public static MenuItem createMenuItem (String text, Icons icon, ButtonListener listener) {
 		return new MenuItem(text, icon != null ? Assets.getIcon(icon) : null, new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {

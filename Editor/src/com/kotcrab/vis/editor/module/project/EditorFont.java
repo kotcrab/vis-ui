@@ -32,7 +32,7 @@ public abstract class EditorFont implements Disposable {
 		this.relativePath = relativePath;
 	}
 
-	public abstract BitmapFont get();
+	public abstract BitmapFont get ();
 
 	public abstract BitmapFont get (int size);
 

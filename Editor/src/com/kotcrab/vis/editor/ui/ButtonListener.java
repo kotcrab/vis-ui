@@ -26,5 +26,5 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
  * create own wrapper for ChangeListener
  */
 public interface ButtonListener {
-	public void clicked();
+	public void clicked ();
 }

@@ -71,8 +71,8 @@ class MusicObjectTable extends SpecificObjectTable {
 		for (EditorEntity entity : entities) {
 			MusicObject obj = (MusicObject) entity;
 
-			if(loopingCheck.isIndeterminate() == false) obj.setLooping(loopingCheck.isChecked());
-			if(playOnStartCheck.isIndeterminate() == false) obj.setPlayOnStart(playOnStartCheck.isChecked());
+			if (loopingCheck.isIndeterminate() == false) obj.setLooping(loopingCheck.isChecked());
+			if (playOnStartCheck.isIndeterminate() == false) obj.setPlayOnStart(playOnStartCheck.isChecked());
 		}
 	}
 }
