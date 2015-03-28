@@ -24,12 +24,12 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 public class TestValidator extends VisWindow {
 
 	public TestValidator () {
-		super("input validator (int number)");
+		super("input validator (float number)");
 
 		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
-		VisValidableTextField textField = new VisValidableTextField(Validators.INTEGERS);
+		VisValidableTextField textField = new VisValidableTextField(Validators.FLOATS);
 
 		add(textField);
 

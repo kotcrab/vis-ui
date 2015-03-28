@@ -47,7 +47,7 @@ public class TestLauncher {
 }
 
 class TestApplication extends ApplicationAdapter {
-	private static final int TESTS_VERSION = 1;
+	private static final int TESTS_VERSION = 2;
 	private static final boolean USE_VIS_WIDGETS = true;
 
 	private Stage stage;
@@ -82,11 +82,6 @@ class TestApplication extends ApplicationAdapter {
 		stage.addActor(new TestVertical(USE_VIS_WIDGETS));
 		stage.addActor(new TestWindow(USE_VIS_WIDGETS));
 		stage.addActor(new TestBuilders());
-		
-//		FileChooser fileChooser = new FileChooser(FileChooser.Mode.OPEN);
-//		fileChooser.setMultiselectionEnabled(true);
-//		fileChooser.setSelectionMode(SelectionMode.FILES_AND_DIRECTORIES);
-//		stage.addActor(fileChooser);
 	}
 
 	private void createMenus () {
@@ -109,7 +104,6 @@ class TestApplication extends ApplicationAdapter {
 		subMenuItem2.setSubMenu(createSubMenu());
 		fileMenu.addItem(subMenuItem2);
 
-
 		editMenu.addItem(new MenuItem("MenuItem #5"));
 		editMenu.addItem(new MenuItem("MenuItem #6"));
 		editMenu.addSeparator();
@@ -128,7 +122,7 @@ class TestApplication extends ApplicationAdapter {
 		helpMenu.addItem(new MenuItem("About", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				DialogUtils.showOKDialog(stage, "About", "Tests version: " + TESTS_VERSION + " \nVisUI version: " + VisUI.VERSION );
+				DialogUtils.showOKDialog(stage, "About", "Tests version: " + TESTS_VERSION + " \nVisUI version: " + VisUI.VERSION);
 			}
 		}));
 

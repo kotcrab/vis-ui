@@ -17,7 +17,7 @@
 package com.kotcrab.vis.ui.test.manual;
 
 import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.ui.util.SimpleFormValidator;
+import com.kotcrab.vis.ui.util.form.SimpleFormValidator;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -33,12 +33,14 @@ public class TestFormValidator extends VisWindow {
 		TableUtils.setSpacingDefaults(this);
 		defaults().padRight(1);
 		defaults().padLeft(1);
+		columnDefaults(0).left();
 
 		VisTextButton cancelButton = new VisTextButton("cancel");
 		VisTextButton acceptButton = new VisTextButton("accept");
 
 		VisValidableTextField firstNameField = new VisValidableTextField();
 		VisValidableTextField lastNameField = new VisValidableTextField();
+		VisValidableTextField age = new VisValidableTextField();
 
 		VisLabel errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);
@@ -54,14 +56,21 @@ public class TestFormValidator extends VisWindow {
 		add(new VisLabel("last name: "));
 		add(lastNameField).expand().fill();
 		row();
+		add(new VisLabel("age: "));
+		add(age).expand().fill();
+		row();
 		add(buttonTable).fill().expand().colspan(2).padBottom(3);
 
 		SimpleFormValidator validator; //for GWT compatibility
 		validator = new SimpleFormValidator(acceptButton, errorLabel);
 		validator.notEmpty(firstNameField, "first name cannot be empty");
 		validator.notEmpty(lastNameField, "last name cannot be empty");
+		validator.notEmpty(age, "age cannot be empty");
+		validator.integerNumber(age, "age must be a number");
+		validator.valueGreaterThan(age, "you must be at least 18 years old", 18, true);
 
 		pack();
+		setSize(getWidth() + 60, getHeight());
 		setPosition(700, 120);
 	}
 }
