@@ -1,4 +1,6 @@
-[0.7.0] [LibGDX 1.5.5] [Many breaking things] [Snapshot]
+[0.7.1] [LibGDX 1.5.5]
+
+[0.7.0] [LibGDX 1.5.5]
 * Renaming:
    Validators.integers renamed to Validators.INTEGERS
    Validators.floats renamed to Validators.FLOAT
