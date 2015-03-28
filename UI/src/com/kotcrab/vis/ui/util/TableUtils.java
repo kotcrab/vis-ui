@@ -25,7 +25,7 @@ import com.kotcrab.vis.ui.VisUI;
  */
 public class TableUtils {
 	/** Sets default table spacing for vis skin */
-	public static void setSpaceDefaults (Table table) {
+	public static void setSpacingDefaults (Table table) {
 		table.defaults().spaceBottom(VisUI.getDefaultSpacingBottom());
 		table.defaults().spaceRight(VisUI.getDefaultSpacingRight());
 	}

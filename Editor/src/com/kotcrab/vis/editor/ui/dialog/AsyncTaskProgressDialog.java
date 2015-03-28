@@ -34,7 +34,7 @@ public class AsyncTaskProgressDialog extends VisWindow {
 		super(title);
 		setModal(true);
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 
 		final VisLabel statusLabel = new VisLabel("Please wait...");
 		final VisProgressBar progressBar = new VisProgressBar(0, 100, 1, false);

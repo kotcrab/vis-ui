@@ -47,7 +47,7 @@ public class NewProjectDialog extends VisWindow {
 		addCloseButton();
 		closeOnEscape();
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 		defaults().left();
 		add(new VisLabel("Select project type:"));
 		row();

@@ -30,7 +30,7 @@ public class TestVertical extends VisWindow {
 	public TestVertical (boolean useVisWidgets) {
 		super("vertical");
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
 		if (useVisWidgets)

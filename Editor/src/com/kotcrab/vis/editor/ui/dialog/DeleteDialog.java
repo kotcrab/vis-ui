@@ -41,7 +41,7 @@ public class DeleteDialog extends VisWindow {
 		setModal(true);
 		addCloseButton();
 		closeOnEscape();
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 
 		defaults().left();
 

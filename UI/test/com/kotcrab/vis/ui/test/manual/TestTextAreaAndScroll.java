@@ -33,7 +33,7 @@ public class TestTextAreaAndScroll extends VisWindow {
 	public TestTextAreaAndScroll (boolean useVisWidgets) {
 		super("textarea / scrollpane");
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
 		if (useVisWidgets)

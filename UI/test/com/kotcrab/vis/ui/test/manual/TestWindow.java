@@ -35,7 +35,7 @@ public class TestWindow extends VisWindow {
 	public TestWindow (boolean useVisWidgets) {
 		super("test window");
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
 		if (useVisWidgets)
@@ -52,7 +52,7 @@ public class TestWindow extends VisWindow {
 		VisLabel labelWithTooltip = new VisLabel("label with tooltip");
 		new Tooltip(labelWithTooltip, "this label has a tooltip");
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 
 		VisTable labelTable = new VisTable(true);
 		labelTable.add(label);

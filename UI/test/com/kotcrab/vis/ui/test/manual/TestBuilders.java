@@ -44,7 +44,7 @@ public class TestBuilders extends VisWindow {
 	public TestBuilders () {
 		super("table builders");
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 
 		VisTextButton standardButton;
 		VisTextButton centeredButton;

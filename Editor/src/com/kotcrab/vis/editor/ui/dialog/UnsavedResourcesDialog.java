@@ -51,7 +51,7 @@ public class UnsavedResourcesDialog extends VisWindow {
 		VisTextButton discardButton;
 		final VisTextButton saveAllButton;
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 		defaults().left();
 
 		VisTable buttonsTable = new VisTable(true);

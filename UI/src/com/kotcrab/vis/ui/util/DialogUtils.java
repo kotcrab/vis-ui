@@ -157,7 +157,7 @@ public class DialogUtils {
 			super(title);
 			this.listener = listener;
 
-			TableUtils.setSpaceDefaults(this);
+			TableUtils.setSpacingDefaults(this);
 			setModal(true);
 
 			if (cancelable) {

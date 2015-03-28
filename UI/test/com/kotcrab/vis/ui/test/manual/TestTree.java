@@ -31,7 +31,7 @@ public class TestTree extends VisWindow {
 	public TestTree (boolean useVisWidgets) {
 		super("tree");
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
 		if (useVisWidgets)

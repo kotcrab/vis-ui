@@ -294,7 +294,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	private void rebuildPropertiesTable () {
 		propertiesTable.reset();
-		TableUtils.setSpaceDefaults(propertiesTable);
+		TableUtils.setSpacingDefaults(propertiesTable);
 
 		VisTable rotationTintTable = new VisTable(true);
 		if (isRotationSupportedForEntities(entities)) rotationTintTable.add(rotationTable);

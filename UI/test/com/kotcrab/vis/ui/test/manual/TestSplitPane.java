@@ -31,7 +31,7 @@ public class TestSplitPane extends VisWindow {
 	public TestSplitPane (boolean useVisWidgets) {
 		super("splitpane");
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
 		if (useVisWidgets)

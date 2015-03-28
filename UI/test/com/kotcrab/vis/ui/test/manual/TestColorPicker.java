@@ -58,7 +58,7 @@ public class TestColorPicker extends VisWindow {
 		picker.setColor(c);
 		image.setColor(c);
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 
 		add(showPickerButton);
 		add(image).size(32).pad(3);

@@ -31,7 +31,7 @@ public class TestDialogUtils extends VisWindow {
 	public TestDialogUtils () {
 		super("dialogutils");
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
 		VisTextButton showOKMsg = new VisTextButton("show ok popup");

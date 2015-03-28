@@ -58,7 +58,7 @@ public class SelectFontDialog extends VisWindow {
 		VisTextButton cancelButton;
 		VisTextButton okButton;
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 		defaults().left();
 
 		VisTable buttonsTable = new VisTable(true);

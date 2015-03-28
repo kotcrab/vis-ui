@@ -38,7 +38,7 @@ public class AboutDialog extends VisWindow {
 		setModal(true);
 		addCloseButton();
 		closeOnEscape();
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 
 		VisTable contentTable = new VisTable(false);
 		contentTable.defaults().expand().left();

@@ -85,7 +85,7 @@ public class SceneSettingsDialog extends VisWindow {
 		errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
 		row().padTop(4);

@@ -26,7 +26,7 @@ public class TestValidator extends VisWindow {
 	public TestValidator () {
 		super("input validator (int number)");
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
 		VisValidableTextField textField = new VisValidableTextField(Validators.INTEGERS);

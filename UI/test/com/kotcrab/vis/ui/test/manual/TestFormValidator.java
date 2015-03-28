@@ -30,7 +30,7 @@ public class TestFormValidator extends VisWindow {
 	public TestFormValidator () {
 		super("form validator");
 
-		TableUtils.setSpaceDefaults(this);
+		TableUtils.setSpacingDefaults(this);
 		defaults().padRight(1);
 		defaults().padLeft(1);
 
