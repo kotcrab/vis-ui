@@ -38,18 +38,19 @@ public class VisUI {
 	private static I18NBundle fileChooserBundle;
 	private static I18NBundle dialogUtilsBundle;
 
-	/** Loads default VisUI skin from library */
+	private static int defaultSpacingTop = 0;
+	private static int defaultSpacingBottom = 8;
+	private static int defaultSpacingRight = 6;
+	private static int defaultSpacingLeft = 0;
+
+	/** Loads default VisUI skin */
 	public static void load () {
 		load(Gdx.files.classpath("com/kotcrab/vis/ui/uiskin.json"));
 	}
 
-	/** Loads provided skin, skin must be compatible with default VisUI skin */
+	/** Loads skin from provided, skin must be compatible with default VisUI skin */
 	public static void load (FileHandle visSkinFile) {
 		skin = new Skin(visSkinFile);
-	}
-
-	public static Skin getSkin () {
-		return skin;
 	}
 
 	/** Unloads skin */
@@ -58,6 +59,10 @@ public class VisUI {
 			skin.dispose();
 			skin = null;
 		}
+	}
+
+	public static Skin getSkin () {
+		return skin;
 	}
 
 	/** @return int value from {@link Align} */
@@ -101,5 +106,37 @@ public class VisUI {
 
 	public static void setDialogUtilsBundle (I18NBundle dialogUtilsBundle) {
 		VisUI.dialogUtilsBundle = dialogUtilsBundle;
+	}
+
+	public static int getDefaultSpacingTop () {
+		return defaultSpacingTop;
+	}
+
+	public static void setDefaultSpacingTop (int defaultSpacingTop) {
+		VisUI.defaultSpacingTop = defaultSpacingTop;
+	}
+
+	public static int getDefaultSpacingBottom () {
+		return defaultSpacingBottom;
+	}
+
+	public static void setDefaultSpacingBottom (int defaultSpacingBottom) {
+		VisUI.defaultSpacingBottom = defaultSpacingBottom;
+	}
+
+	public static int getDefaultSpacingRight () {
+		return defaultSpacingRight;
+	}
+
+	public static void setDefaultSpacingRight (int defaultSpacingRight) {
+		VisUI.defaultSpacingRight = defaultSpacingRight;
+	}
+
+	public static int getDefaultSpacingLeft () {
+		return defaultSpacingLeft;
+	}
+
+	public static void setDefaultSpacingLeft (int defaultSpacingLeft) {
+		VisUI.defaultSpacingLeft = defaultSpacingLeft;
 	}
 }

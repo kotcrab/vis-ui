@@ -17,12 +17,16 @@
 package com.kotcrab.vis.ui.util;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.ui.VisUI;
 
-/** @author Kotcrab */
+/**
+ * Utilities for VisTable/Table
+ * @author Kotcrab
+ */
 public class TableUtils {
 	/** Sets default table spacing for vis skin */
 	public static void setSpaceDefaults (Table table) {
-		table.defaults().spaceBottom(8);
-		table.defaults().spaceRight(6);
+		table.defaults().spaceBottom(VisUI.getDefaultSpacingBottom());
+		table.defaults().spaceRight(VisUI.getDefaultSpacingRight());
 	}
 }
