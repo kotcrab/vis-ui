@@ -62,7 +62,7 @@ public class TestDialogUtils extends VisWindow {
 		add(firstRowTable).row();
 		add(secondRowTable).row();
 		add(thirdRowTable).row();
-		padBottom(1);
+		padBottom(3);
 
 		showOKMsg.addListener(new ChangeListener() {
 
@@ -135,7 +135,7 @@ public class TestDialogUtils extends VisWindow {
 			}
 		});
 
-		showInputDialog.addListener(new ChangeListener() {
+		showConfirmDialog.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				final int nothing = 1;

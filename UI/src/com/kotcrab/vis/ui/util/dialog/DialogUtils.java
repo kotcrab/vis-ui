@@ -60,7 +60,9 @@ public class DialogUtils {
 	 * @since 0.6.0
 	 */
 	public static OptionDialog showOptionDialog (Stage stage, String title, String text, OptionDialogType type, OptionDialogListener listener) {
-		return new OptionDialog(stage, title, text, type, listener);
+		OptionDialog dialog = new OptionDialog(title, text, type, listener);
+		stage.addActor(dialog.fadeIn());
+		return dialog;
 	}
 
 	/**
@@ -79,7 +81,8 @@ public class DialogUtils {
 	 * @param fieldTitle may be null
 	 */
 	public static void showInputDialog (Stage stage, String title, String fieldTitle, InputDialogListener listener) {
-		new InputDialog(stage, title, fieldTitle, true, null, listener);
+		InputDialog dialog = new InputDialog(title, fieldTitle, true, null, listener);
+		stage.addActor(dialog.fadeIn());
 	}
 
 	/**
@@ -88,7 +91,8 @@ public class DialogUtils {
 	 * @param fieldTitle may be null
 	 */
 	public static void showInputDialog (Stage stage, String title, String fieldTitle, InputValidator validator, InputDialogListener listener) {
-		new InputDialog(stage, title, fieldTitle, true, validator, listener);
+		InputDialog dialog = new InputDialog(title, fieldTitle, true, validator, listener);
+		stage.addActor(dialog.fadeIn());
 	}
 
 	/**
@@ -97,7 +101,8 @@ public class DialogUtils {
 	 * @param fieldTitle may be null
 	 */
 	public static void showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputDialogListener listener) {
-		new InputDialog(stage, title, fieldTitle, cancelable, null, listener);
+		InputDialog dialog = new InputDialog(title, fieldTitle, cancelable, null, listener);
+		stage.addActor(dialog.fadeIn());
 	}
 
 	/**
@@ -107,7 +112,8 @@ public class DialogUtils {
 	 * @param fieldTitle may be null
 	 */
 	public static void showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputValidator validator, InputDialogListener listener) {
-		new InputDialog(stage, title, fieldTitle, cancelable, validator, listener);
+		InputDialog dialog = new InputDialog(title, fieldTitle, cancelable, validator, listener);
+		stage.addActor(dialog.fadeIn());
 	}
 
 	/** Dialog with title "Error" and provided text */
@@ -157,7 +163,7 @@ public class DialogUtils {
 		private VisTextButton okButton;
 		private VisTextButton cancelButton;
 
-		public InputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputValidator validator, InputDialogListener listener) {
+		public InputDialog (String title, String fieldTitle, boolean cancelable, InputValidator validator, InputDialogListener listener) {
 			super(title);
 			this.listener = listener;
 
@@ -198,7 +204,6 @@ public class DialogUtils {
 			pack();
 			centerWindow();
 
-			stage.addActor(fadeIn());
 			field.focusField();
 		}
 
@@ -257,7 +262,7 @@ public class DialogUtils {
 		private VisTextButton noButton = new VisTextButton(get(Text.NO));
 		private VisTextButton cancelButton = new VisTextButton(get(Text.CANCEL));
 
-		public OptionDialog (Stage stage, String title, String text, OptionDialogType type, OptionDialogListener listener) {
+		public OptionDialog (String title, String text, OptionDialogType type, OptionDialogListener listener) {
 			super(title);
 
 			this.listener = listener;
@@ -283,7 +288,6 @@ public class DialogUtils {
 
 			pack();
 			centerWindow();
-			stage.addActor(fadeIn());
 		}
 
 		@Override

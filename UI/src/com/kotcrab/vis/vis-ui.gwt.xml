@@ -19,16 +19,20 @@
 <module>
 	<source path='ui'>
 		<exclude name="widget/file/*.java" />
-		<exclude name="FormValidator.java" />
+		<exclude name="util/form/FormValidator.java" />
 	</source>
 
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/uiskin.json" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/uiskin.atlas" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/uiskin.png" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/default.fnt" />
+	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/font-small.fnt" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/DialogUtils.properties" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/TabbedPane.properties" />
 
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.dialog" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.color" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.tabbedpane" />
 	<extend-configuration-property name="gdx.reflect.exclude" value="com.kotcrab.vis.ui.widget.file" />
 </module>
