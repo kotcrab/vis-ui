@@ -26,6 +26,7 @@
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/uiskin.atlas" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/uiskin.png" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/default.fnt" />
+	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/DialogUtils.properties" />
 
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget" />
 	<extend-configuration-property name="gdx.reflect.exclude" value="com.kotcrab.vis.ui.widget.file" />
