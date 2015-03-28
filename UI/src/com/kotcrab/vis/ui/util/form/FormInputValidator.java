@@ -35,7 +35,7 @@ public abstract class FormInputValidator implements InputValidator {
 		return result;
 	}
 
-	/** Should not be overridden by child class, use {@link #validate(String)}*/
+	/** Should not be overridden by child class, use {@link #validate(String)} */
 	@Override
 	public boolean validateInput (String input) {
 		result = validate(input);
@@ -48,5 +48,5 @@ public abstract class FormInputValidator implements InputValidator {
 	 * @param input that should be validated
 	 * @return if input is valid, false otherwise
 	 */
-	protected abstract boolean validate(String input);
+	protected abstract boolean validate (String input);
 }

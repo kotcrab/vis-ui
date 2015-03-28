@@ -21,18 +21,18 @@ public enum SceneViewport {
 
 	public String toListString () {
 		switch (this) {
-		case STRETCH:
-			return "Stretch Viewport";
-		case FIT:
-			return "Fit Viewport";
-		case FILL:
-			return "Fill Viewport";
-		case EXTEND:
-			return "Extend Viewport";
-		case SCREEN:
-			return "Screen Viewport";
-		default:
-			return super.toString();
+			case STRETCH:
+				return "Stretch Viewport";
+			case FIT:
+				return "Fit Viewport";
+			case FILL:
+				return "Fill Viewport";
+			case EXTEND:
+				return "Extend Viewport";
+			case SCREEN:
+				return "Screen Viewport";
+			default:
+				return super.toString();
 		}
 	}
 }

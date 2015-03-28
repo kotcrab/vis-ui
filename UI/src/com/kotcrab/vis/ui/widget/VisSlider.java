@@ -33,9 +33,9 @@ import com.kotcrab.vis.ui.VisUI;
 /**
  * A slider is a horizontal indicator that allows a user to set a value. The slider has a range (min, max) and a stepping between
  * each value the slider represents.
- * <p/>
+ * <p>
  * {@link ChangeEvent} is fired when the slider knob is moved. Canceling the event will move the knob to where it was previously.
- * <p/>
+ * <p>
  * The preferred height of a slider is determined by the larger of the knob and background. The preferred width of a slider is
  * 140, a relatively arbitrary size.
  * @author mzechner

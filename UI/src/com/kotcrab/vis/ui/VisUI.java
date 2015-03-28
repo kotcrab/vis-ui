@@ -89,8 +89,10 @@ public class VisUI {
 		return fileChooserBundle;
 	}
 
-	/** Changes bundle used by FileChooser, will not affect already created FileChoosers.
-	 * If set to null then {@link #getFileChooserBundle()} will return default bundle */
+	/**
+	 * Changes bundle used by FileChooser, will not affect already created FileChoosers.
+	 * If set to null then {@link #getFileChooserBundle()} will return default bundle
+	 */
 	public static void setFileChooserBundle (I18NBundle fileChooserBundle) {
 		VisUI.fileChooserBundle = fileChooserBundle;
 	}
@@ -105,8 +107,10 @@ public class VisUI {
 		return dialogUtilsBundle;
 	}
 
-	/** Changes bundle used by DialogUtils, will not affect already created dialogs.
-	 * If set to null then {@link #getDialogUtilsBundle()} will return default bundle */
+	/**
+	 * Changes bundle used by DialogUtils, will not affect already created dialogs.
+	 * If set to null then {@link #getDialogUtilsBundle()} will return default bundle
+	 */
 	public static void setDialogUtilsBundle (I18NBundle dialogUtilsBundle) {
 		VisUI.dialogUtilsBundle = dialogUtilsBundle;
 	}
@@ -121,8 +125,10 @@ public class VisUI {
 		return tabbedPaneBundle;
 	}
 
-	/** Changes bundle used by TabbedPane, will not affect already created TabbedPane.
-	 * If set to null then {@link #getTabbedPaneBundle()} will return default bundle */
+	/**
+	 * Changes bundle used by TabbedPane, will not affect already created TabbedPane.
+	 * If set to null then {@link #getTabbedPaneBundle()} will return default bundle
+	 */
 	public static void setTabbedPaneBundle (I18NBundle tabbedPaneBundle) {
 		VisUI.tabbedPaneBundle = tabbedPaneBundle;
 	}

@@ -22,12 +22,7 @@ package com.kotcrab.vis.editor.util;
 import com.kotcrab.vis.editor.App;
 
 import javax.swing.JOptionPane;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.PrintWriter;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

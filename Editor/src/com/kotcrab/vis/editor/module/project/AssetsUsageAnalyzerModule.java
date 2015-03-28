@@ -21,11 +21,7 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.scene.EditorEntity;
-import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.ParticleObject;
-import com.kotcrab.vis.editor.scene.SpriteObject;
-import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.util.FileUtils;
 
 import java.util.Comparator;

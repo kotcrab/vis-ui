@@ -17,13 +17,9 @@
 package com.kotcrab.vis.ui.test.manual;
 
 import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.ui.util.form.SimpleFormValidator;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisTextButton;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
-import com.kotcrab.vis.ui.widget.VisWindow;
+import com.kotcrab.vis.ui.util.form.SimpleFormValidator;
+import com.kotcrab.vis.ui.widget.*;
 
 public class TestFormValidator extends VisWindow {
 

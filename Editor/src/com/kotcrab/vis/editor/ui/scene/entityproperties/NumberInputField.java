@@ -32,7 +32,7 @@ import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import org.lwjgl.input.Keyboard;
 
-import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.*;
+import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.floatToString;
 
 class NumberInputField extends VisValidableTextField {
 

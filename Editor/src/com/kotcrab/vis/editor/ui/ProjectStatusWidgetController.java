@@ -19,14 +19,13 @@
 
 package com.kotcrab.vis.editor.ui;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
-
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 
 public class ProjectStatusWidgetController implements EventListener, Disposable {
 	private Array<Button> buttons;
@@ -45,7 +44,7 @@ public class ProjectStatusWidgetController implements EventListener, Disposable 
 	@Override
 	public boolean onEvent (Event e) {
 		if (e instanceof ProjectStatusEvent) {
-			ProjectStatusEvent event = (ProjectStatusEvent)e;
+			ProjectStatusEvent event = (ProjectStatusEvent) e;
 			if (event.status == ProjectStatusEvent.Status.Loaded)
 				loaded = true;
 			else

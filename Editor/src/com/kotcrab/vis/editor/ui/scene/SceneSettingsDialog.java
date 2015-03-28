@@ -25,18 +25,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
-import com.kotcrab.vis.ui.util.form.FormValidator;
-import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
-import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
-import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisSelectBox;
-import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
+import com.kotcrab.vis.ui.util.form.FormValidator;
+import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
-import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class SceneSettingsDialog extends VisWindow {
 	private SceneTab sceneTab;
@@ -51,7 +46,6 @@ public class SceneSettingsDialog extends VisWindow {
 
 	private VisTextButton cancelButton;
 	private VisTextButton saveButton;
-
 
 	private OrderedMap<String, SceneViewport> viewportMap;
 

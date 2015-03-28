@@ -22,10 +22,10 @@ package com.kotcrab.vis.editor.ui.dialog;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.module.editor.ProjectIOModule;
-import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.TableUtils;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
@@ -53,7 +53,7 @@ public class NewProjectDialog extends VisWindow {
 		row();
 
 		VisTable table = new VisTable(true);
-		table. add(genericButton = new VisTextButton("Generic"));
+		table.add(genericButton = new VisTextButton("Generic"));
 		table.add(libGDXButton = new VisTextButton("LibGDX"));
 		add(table);
 		row();

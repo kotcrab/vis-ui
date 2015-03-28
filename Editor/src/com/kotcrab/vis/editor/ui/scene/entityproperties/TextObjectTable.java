@@ -29,9 +29,9 @@ import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.scene.EditorEntity;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.dialog.SelectFontDialog;
-import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.getCommonString;

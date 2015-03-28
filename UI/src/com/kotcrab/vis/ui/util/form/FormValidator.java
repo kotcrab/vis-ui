@@ -27,8 +27,9 @@ import java.io.File;
 /**
  * Makes validating forms easier <br>
  * FromValidator is not gwt compatible, if you need that see {@link SimpleFormValidator}
- * @author Kotcrab */
- public class FormValidator extends SimpleFormValidator {
+ * @author Kotcrab
+ */
+public class FormValidator extends SimpleFormValidator {
 	public FormValidator (Button buttonToDisable, Label errorMsgLabel) {
 		super(buttonToDisable, errorMsgLabel);
 	}

@@ -77,7 +77,7 @@ public class Menu extends PopupMenu {
 
 	/** Called by MenuBar when this menu is added to it */
 	void setMenuBar (MenuBar menuBar) {
-		if(this.menuBar != null) throw new IllegalStateException("Menu was already added to MenuBar");
+		if (this.menuBar != null) throw new IllegalStateException("Menu was already added to MenuBar");
 		this.menuBar = menuBar;
 	}
 

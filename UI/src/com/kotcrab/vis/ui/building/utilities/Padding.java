@@ -22,11 +22,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 /**
  * A simple helper class that holds informations about padding on each side of an object. Static methods can
  * be used to quickly set padding or spacing of a cell or a table using this class' object.
- * <p/>
+ * <p>
  * When padding is set for a table, its cells will be separated from its borders by the given value. When
  * padding is set for a window, additionally to the table's padding effect, top padding will be a draggable
  * area, allowing to move the window.
- * <p/>
+ * <p>
  * When padding is set for a cell, it will be separated from other cells and table's border by the given
  * value. When spacing is set for a cell, it will be separated by at least as many pixels from other cells as
  * specified. If spacing or padding with the same values is used on every cell in a table, padding will

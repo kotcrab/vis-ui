@@ -26,9 +26,9 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
-import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisTable;
 
 public class StatusBarModule extends EditorModule implements EventListener {
 	public VisTable table;

@@ -31,7 +31,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.BaseModule;
 import com.kotcrab.vis.editor.module.editor.SettableModule;
 import com.kotcrab.vis.editor.module.project.ProjectModule;
-import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.*;
 
@@ -89,7 +88,7 @@ public class SettingsDialog extends VisWindow {
 			@Override
 			public boolean keyDown (InputEvent event, int keycode) {
 				if (keycode == Keys.ENTER) {
-					if(applySettingsIfPossible()) {
+					if (applySettingsIfPossible()) {
 						close();
 						return true;
 					}

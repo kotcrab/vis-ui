@@ -36,11 +36,7 @@ import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 
 public class ProjectIOModule extends EditorModule {

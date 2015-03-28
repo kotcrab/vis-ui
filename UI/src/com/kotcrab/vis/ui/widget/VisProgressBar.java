@@ -36,10 +36,10 @@ import com.kotcrab.vis.ui.VisUI;
  * A progress bar is a widget that visually displays the progress of some activity or a value within given range. The progress bar
  * has a range (min, max) and a stepping between each value it represents. The percentage of completeness typically starts out as
  * an empty progress bar and gradually becomes filled in as the task or variable value progresses.
- * <p/>
+ * <p>
  * {@link ChangeEvent} is fired when the progress bar knob is moved. Cancelling the event will move the knob to where it was
  * previously.
- * <p/>
+ * <p>
  * The preferred height of a progress bar is determined by the larger of the knob and background. The preferred width of progress
  * bar is 140, a relatively arbitrary size.
  * @author mzechner
@@ -73,7 +73,7 @@ public class VisProgressBar extends Widget implements Disableable {
 	 * maximum of the height of either the progress bar {@link NinePatch} or progress bar handle {@link TextureRegion}. The min and
 	 * max values determine the range the values of this progress bar can take on, the stepSize parameter specifies the distance
 	 * between individual values.
-	 * <p/>
+	 * <p>
 	 * E.g. min could be 4, max could be 10 and stepSize could be 0.2, giving you a total of 30 values, 4.0 4.2, 4.4 and so on.
 	 * @param min the minimum value
 	 * @param max the maximum value

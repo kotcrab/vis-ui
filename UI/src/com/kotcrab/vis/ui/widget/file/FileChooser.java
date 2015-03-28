@@ -34,38 +34,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.VisDialog;
-import com.kotcrab.vis.ui.widget.VisImageButton;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisScrollPane;
-import com.kotcrab.vis.ui.widget.VisSplitPane;
-import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisTextButton;
-import com.kotcrab.vis.ui.widget.VisTextField;
-import com.kotcrab.vis.ui.widget.VisWindow;
+import com.kotcrab.vis.ui.widget.*;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileFilter;
 
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.CANCEL;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.DESKTOP;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.FILE_NAME;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.OPEN;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_CHOOSE_FILE;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_DIRECTORY_DOES_NOT_EXIST;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_FILENAME_INVALID;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_FILE_EXIST_OVERWRITE;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_MULTIPLE_FILE_EXIST_OVERWRITE;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_NO;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_OK;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_ONLY_DIRECTORIES;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_TITLE;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.POPUP_YES;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.SAVE;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.TITLE_CHOOSE_DIRECTORIES;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.TITLE_CHOOSE_FILES;
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.TITLE_CHOOSE_FILES_AND_DIRECTORIES;
+import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
 
 /**
  * Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called.

@@ -35,7 +35,7 @@ import com.kotcrab.vis.ui.VisUI;
 /**
  * A container that contains two widgets and is divided either horizontally or vertically. The user may resize the widgets. The
  * child widgets are always sized to fill their half of the splitpane.
- * <p/>
+ * <p>
  * The preferred size of a splitpane is that of the child widgets and the size of the {@link SplitPaneStyle#handle}. The widgets
  * are sized depending on the splitpane's size and the {@link #setSplitAmount(float) split position}.
  * @author mzechner

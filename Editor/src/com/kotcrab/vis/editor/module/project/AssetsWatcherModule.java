@@ -19,9 +19,8 @@
 
 package com.kotcrab.vis.editor.module.project;
 
-import com.kotcrab.vis.editor.util.DirectoryWatcher;
-
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.util.DirectoryWatcher;
 
 public class AssetsWatcherModule extends ProjectModule {
 	private DirectoryWatcher watcher;

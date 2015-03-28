@@ -227,7 +227,6 @@ public class TextEntity extends Entity {
 		return fontSize != BITMAP_FONT_SIZE;
 	}
 
-
 	public void setRelativeFontPathForSerialize (String relativeFontPathForSerialize) {
 		this.relativeFontPath = relativeFontPathForSerialize;
 	}

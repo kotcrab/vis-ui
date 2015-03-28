@@ -28,7 +28,7 @@ public class BmpFontProvider implements FontProvider {
 	@Override
 	public void load (Array<AssetDescriptor> dependencies, TextData data) {
 		BitmapFontParameter params = new BitmapFontParameter();
-		if(data.isUsesDistanceField) {
+		if (data.isUsesDistanceField) {
 			params.genMipMaps = true;
 			params.minFilter = TextureFilter.MipMapLinearLinear;
 			params.magFilter = TextureFilter.Linear;

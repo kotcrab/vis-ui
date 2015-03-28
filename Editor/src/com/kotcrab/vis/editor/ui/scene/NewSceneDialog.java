@@ -32,19 +32,14 @@ import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
-import com.kotcrab.vis.ui.util.form.FormInputValidator;
-import com.kotcrab.vis.ui.util.form.FormValidator;
-import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
-import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
-import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisSelectBox;
-import com.kotcrab.vis.ui.widget.VisTextButton;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
+import com.kotcrab.vis.ui.util.form.FormInputValidator;
+import com.kotcrab.vis.ui.util.form.FormValidator;
+import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
-import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class NewSceneDialog extends VisWindow {
 	private VisValidableTextField nameTextField;

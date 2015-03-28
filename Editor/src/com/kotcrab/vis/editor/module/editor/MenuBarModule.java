@@ -25,18 +25,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.module.project.ExportModule;
-import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import com.kotcrab.vis.editor.module.project.SceneIOModule;
-import com.kotcrab.vis.editor.module.project.SceneTabsModule;
-import com.kotcrab.vis.editor.ui.dialog.AboutDialog;
-import com.kotcrab.vis.editor.ui.dialog.NewProjectDialog;
+import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.ui.ButtonListener;
 import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
 import com.kotcrab.vis.editor.ui.SceneStatusWidgetController;
+import com.kotcrab.vis.editor.ui.dialog.AboutDialog;
+import com.kotcrab.vis.editor.ui.dialog.NewProjectDialog;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
-import com.kotcrab.vis.editor.ui.ButtonListener;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.MenuUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
@@ -154,7 +150,6 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera", () -> sceneButtonsListener.resetCamera()));
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera Zoom", () -> sceneButtonsListener.resetCameraZoom()));
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Scene Settings", () -> sceneButtonsListener.showSceneSettings()));
-
 
 	}
 

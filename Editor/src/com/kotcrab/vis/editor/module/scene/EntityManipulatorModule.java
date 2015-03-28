@@ -40,11 +40,7 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
-import com.kotcrab.vis.editor.scene.EditorEntity;
-import com.kotcrab.vis.editor.scene.MusicObject;
-import com.kotcrab.vis.editor.scene.ParticleObject;
-import com.kotcrab.vis.editor.scene.SpriteObject;
-import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.MenuUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
@@ -399,7 +395,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 	/**
 	 * Returns entity with smallest surface area that contains point x,y.
-	 * <p/>
+	 * <p>
 	 * When selecting entities, and few of them are overlapping, selecting entity with smallest
 	 * area gives better results than just selecting first one.
 	 */

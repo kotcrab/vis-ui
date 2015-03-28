@@ -140,7 +140,7 @@ public class PopupMenu extends Table {
 	}
 
 	public boolean contains (float x, float y) {
-		return getX() <= x && getX() + getWidth()>= x && getY() <= y && getY() + getHeight() >= y;
+		return getX() <= x && getX() + getWidth() >= x && getY() <= y && getY() + getHeight() >= y;
 	}
 
 	public boolean menuStructureContains (float x, float y) {
@@ -151,8 +151,8 @@ public class PopupMenu extends Table {
 
 	/** Called by framework, when PopupMenu is added to MenuItem as submenu */
 	void setSubMenu (PopupMenu subMenu) {
-		if(this.subMenu == subMenu) return;
-		if(this.subMenu != null) this.subMenu.remove();
+		if (this.subMenu == subMenu) return;
+		if (this.subMenu != null) this.subMenu.remove();
 		this.subMenu = subMenu;
 	}
 

@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui.util.dialog;
 
+/** @author Kotcrab */
 public interface ConfirmDialogListener<T> {
-	void result(T result);
+	void result (T result);
 }

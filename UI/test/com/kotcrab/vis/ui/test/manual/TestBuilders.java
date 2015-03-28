@@ -20,24 +20,12 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.building.CenteredTableBuilder;
-import com.kotcrab.vis.ui.building.GridTableBuilder;
-import com.kotcrab.vis.ui.building.OneColumnTableBuilder;
-import com.kotcrab.vis.ui.building.OneRowTableBuilder;
-import com.kotcrab.vis.ui.building.StandardTableBuilder;
-import com.kotcrab.vis.ui.building.TableBuilder;
+import com.kotcrab.vis.ui.building.*;
 import com.kotcrab.vis.ui.building.utilities.CellWidget;
 import com.kotcrab.vis.ui.building.utilities.Padding;
 import com.kotcrab.vis.ui.building.utilities.layouts.ActorLayout;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.widget.Separator;
-import com.kotcrab.vis.ui.widget.VisCheckBox;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisSlider;
-import com.kotcrab.vis.ui.widget.VisTextButton;
-import com.kotcrab.vis.ui.widget.VisTextField;
-import com.kotcrab.vis.ui.widget.VisWindow;
+import com.kotcrab.vis.ui.widget.*;
 
 public class TestBuilders extends VisWindow {
 

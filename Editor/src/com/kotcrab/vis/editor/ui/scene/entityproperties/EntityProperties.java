@@ -39,11 +39,7 @@ import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.UndoableAction;
 import com.kotcrab.vis.editor.module.scene.UndoableActionGroup;
-import com.kotcrab.vis.editor.scene.EditorEntity;
-import com.kotcrab.vis.editor.scene.MusicObject;
-import com.kotcrab.vis.editor.scene.ParticleObject;
-import com.kotcrab.vis.editor.scene.SpriteObject;
-import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.runtime.data.EntityData;
@@ -64,14 +60,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.util.Iterator;
 
-import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.TintImage;
-import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.getEntitiesId;
-import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.isFlipSupportedForEntities;
-import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.isOriginSupportedForEntities;
-import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.isRotationSupportedForEntities;
-import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.isScaleSupportedForEntities;
-import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.isTintSupportedForEntities;
-import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.setCheckBoxState;
+import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.*;
 
 public class EntityProperties extends VisTable implements Disposable, EventListener {
 	private static final int LABEL_WIDTH = 60;

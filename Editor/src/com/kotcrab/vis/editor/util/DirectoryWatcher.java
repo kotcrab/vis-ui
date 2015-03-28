@@ -24,41 +24,23 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 
 import java.io.IOException;
-import java.nio.file.ClosedWatchServiceException;
-import java.nio.file.FileSystems;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_DELETE;
-import static java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY;
-import static java.nio.file.StandardWatchEventKinds.OVERFLOW;
+import static java.nio.file.StandardWatchEventKinds.*;
 
 //https://github.com/syncany/syncany/blob/59cf87c72de4322c737f0073ce8a7ddd992fd898/syncany-lib/src/main/java/org/syncany/operations/watch/RecursiveWatcher.java
 
 /**
  * The recursive file watcher monitors a folder (and its sub-folders).
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * The class walks through the file tree and registers to a watch to every sub-folder. For new folders, a new watch is registered,
  * and stale watches are removed.
- * <p/>
- * <p/>
+ * <p>
+ * <p>
  * When a file event occurs, a timer is started to wait for the file operations to settle. It is reset whenever a new event
  * occurs. When the timer times out, an event is thrown through the {@link WatchListener}.
  * @author Philipp C. Heckel <philipp.heckel@gmail.com>
@@ -95,8 +77,8 @@ public class DirectoryWatcher {
 
 	/**
 	 * Starts the watcher service and registers watches in all of the sub-folders of the given root folder.
-	 * <p/>
-	 * <p/>
+	 * <p>
+	 * <p>
 	 * <b>Important:</b> This method returns immediately, even though the watches might not be in place yet. For large file trees,
 	 * it might take several seconds until all directories are being monitored. For normal cases (1-100 folders), this should not
 	 * take longer than a few milliseconds.

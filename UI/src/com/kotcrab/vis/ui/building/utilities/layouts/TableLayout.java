@@ -25,7 +25,7 @@ import com.kotcrab.vis.ui.building.utilities.CellWidget;
 /**
  * Default ActorLayout implementations, using table builders that don't require row() calls to convert
  * multiple actors into one cell.
- * <p/>
+ * <p>
  * Beside VERTICAL and HORIZONTAL, there's also grid layout available. Since it's customizable, an instance of
  * grid table layout must be manually initiated using grid() method.
  * @author MJ
