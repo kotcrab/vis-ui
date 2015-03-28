@@ -28,6 +28,7 @@ public class Validators {
 	public static final IntegerValidator INTEGERS = new IntegerValidator();
 	public static final FloatValidator FLOATS = new FloatValidator();
 
+	/** Validates whether input is a integer number */
 	public static class IntegerValidator implements InputValidator {
 		@Override
 		public boolean validateInput (String input) {
@@ -40,6 +41,7 @@ public class Validators {
 		}
 	}
 
+	/** Validates whether input is a float number */
 	public static class FloatValidator implements InputValidator {
 		@Override
 		public boolean validateInput (String input) {
@@ -52,6 +54,7 @@ public class Validators {
 		}
 	}
 
+	/** Validates whether input is lesser (alternatively lesser or equal) than provided number */
 	public static class LesserThanValidator implements InputValidator {
 		private float lesserThan;
 		private boolean equals;
@@ -60,9 +63,9 @@ public class Validators {
 			this.lesserThan = lesserThan;
 		}
 
-		public LesserThanValidator (float lesserThan, boolean equals) {
+		public LesserThanValidator (float lesserThan, boolean inputCanBeEqual) {
 			this.lesserThan = lesserThan;
-			this.equals = equals;
+			this.equals = inputCanBeEqual;
 		}
 
 		@Override
@@ -76,6 +79,7 @@ public class Validators {
 		}
 	}
 
+	/** Validates whether input is geater (alternatively greater or equal) than provided number */
 	public static class GreaterThanValidator implements InputValidator {
 		private float greaterThan;
 		private boolean equals;
@@ -84,9 +88,9 @@ public class Validators {
 			this.greaterThan = greaterThan;
 		}
 
-		public GreaterThanValidator (float greaterThan, boolean equals) {
+		public GreaterThanValidator (float greaterThan, boolean inputCanBeEqual) {
 			this.greaterThan = greaterThan;
-			this.equals = equals;
+			this.equals = inputCanBeEqual;
 		}
 
 		@Override

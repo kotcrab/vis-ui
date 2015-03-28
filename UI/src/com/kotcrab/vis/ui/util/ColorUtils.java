@@ -20,12 +20,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 
 /**
- * Utilities for converting colors between HSV to RGB etc.
+ * Utilities for converting color systems
  * @author Kotcrab
+ * @since 0.6.0
  */
 public class ColorUtils {
 	/**
-	 * Converts HSV color system to RGB
+	 * Converts HSV to RGB
 	 * @param h hue 0-360
 	 * @param s saturation 0-100
 	 * @param v value 0-100

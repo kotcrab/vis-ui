@@ -16,9 +16,17 @@
 
 package com.kotcrab.vis.ui;
 
-/** @author Kotcrab */
+/**
+ * Used to get events from DialogUtils input dialog
+ * @author Kotcrab
+ */
 public interface InputDialogListener {
-	public void finished (String input);
+	/**
+	 * Called when input dialog has finished
+	 * @param input text entered by user
+	 */
+	void finished (String input);
 
-	public void canceled ();
+	/** Called when user canceled dialog or pressed 'close' button. Dialog must be cancelable for that */
+	void canceled ();
 }

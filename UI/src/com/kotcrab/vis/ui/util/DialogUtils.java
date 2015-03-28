@@ -39,7 +39,7 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 /**
- * Utilities for displaying various dialogs, equivalent of Swing JOptionPane
+ * Utilities for displaying various dialogs, equivalent of JOptionPane from Swing
  * @author Kotcrab
  */
 public class DialogUtils {

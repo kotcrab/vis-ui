@@ -24,8 +24,11 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 import java.io.File;
 
-/** @author Kotcrab */
-public class FormValidator extends SimpleFormValidator {
+/**
+ * Makes validating forms easier <br>
+ * FromValidator is not gwt compatible, if you need that see {@link SimpleFormValidator}
+ * @author Kotcrab */
+ public class FormValidator extends SimpleFormValidator {
 	public FormValidator (Button buttonToDisable, Label errorMsgLabel) {
 		super(buttonToDisable, errorMsgLabel);
 	}

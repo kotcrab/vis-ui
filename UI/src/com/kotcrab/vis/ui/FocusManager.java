@@ -17,7 +17,7 @@
 package com.kotcrab.vis.ui;
 
 /**
- * Manages focuses of VisUI components
+ * Manages focus of VisUI components
  * @author Kotcrab
  */
 public class FocusManager {

@@ -19,7 +19,7 @@ package com.kotcrab.vis.ui.widget.file;
 import com.kotcrab.vis.ui.i18n.BundleText;
 
 /**
- * Contains texts for chooser access via I18NBundle, replaced FileChooserLocale
+ * Contains texts for chooser access via I18NBundle
  * @since 0.7.0
  */
 public enum FileChooserText implements BundleText {

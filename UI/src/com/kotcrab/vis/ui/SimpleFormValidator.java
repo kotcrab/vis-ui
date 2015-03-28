@@ -27,6 +27,8 @@ import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 /**
+ * Makes validating forms easier <br>
+ *
  * SimpleFormValidator is GWT compatible and does not provide fileExists methods, if you are not using GWT use
  * {@link FormValidator}
  * @author Kotcrab

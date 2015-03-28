@@ -21,7 +21,7 @@ package com.kotcrab.vis.ui;
  * @author Kotcrab
  */
 public interface Focusable {
-	public void focusLost ();
+	void focusLost ();
 
-	public void focusGained ();
+	void focusGained ();
 }
