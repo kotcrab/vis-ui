@@ -45,7 +45,7 @@
    Font support for Polish, German, Spanish, French, Greek and Russian characters
    FormInputValidator now uses validate(String) instead of validateInput(String) for input validation, calling setResult is no longer required
     (for examples on how to use it see SimpleFormValidator)
-   Added ValidatorWrapper that allows standard validator to be used with Simple(FormValidator)#custom(...)
+   Added ValidatorWrapper that allows standard validator to be used with (Simple)FormValidator#custom(...)
    Added DialogUtils.showConfirmDialog(...)
    Added TabbedPane
 
