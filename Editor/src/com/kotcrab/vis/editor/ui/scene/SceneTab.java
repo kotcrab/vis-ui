@@ -233,6 +233,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	@Override
 	public boolean save () {
+		super.save();
 		if (sceneIOModule.save(scene)) {
 			setDirty(false);
 			sceneMC.save();

@@ -27,9 +27,9 @@ import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.ui.tab.StartPageTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
-import com.kotcrab.vis.editor.ui.tabbedpane.Tab;
-import com.kotcrab.vis.editor.ui.tabbedpane.TabbedPane;
-import com.kotcrab.vis.editor.ui.tabbedpane.TabbedPaneListener;
+import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
+import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane;
+import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
 public class TabsModule extends EditorModule implements EventListener {
 	private TabbedPane tabbedPane;
@@ -43,7 +43,8 @@ public class TabsModule extends EditorModule implements EventListener {
 
 	@Override
 	public void init () {
-		tabbedPane = new TabbedPane(listener);
+		tabbedPane = new TabbedPane();
+		tabbedPane.addListener(listener);
 
 		startPageTab = new StartPageTab();
 

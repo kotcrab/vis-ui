@@ -23,13 +23,13 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
-import com.kotcrab.vis.editor.ui.tabbedpane.Tab;
 import com.kotcrab.vis.editor.ui.WindowListener;
-import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisList;
+import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
+import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
 public class UnsavedResourcesDialog extends VisWindow {
 	private WindowListener listener;

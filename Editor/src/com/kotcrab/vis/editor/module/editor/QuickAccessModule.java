@@ -21,12 +21,12 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.ui.tabbedpane.Tab;
-import com.kotcrab.vis.editor.ui.tabbedpane.TabbedPane;
-import com.kotcrab.vis.editor.ui.tabbedpane.TabbedPane.TabbedPaneStyle;
-import com.kotcrab.vis.editor.ui.tabbedpane.TabbedPaneListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
+import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
+import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane;
+import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane.TabbedPaneStyle;
+import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
 public class QuickAccessModule extends EditorModule{
 	private TabbedPane tabbedPane;
@@ -38,11 +38,13 @@ public class QuickAccessModule extends EditorModule{
 
 	@Override
 	public void init () {
-		TabbedPaneStyle tabStyle = new TabbedPaneStyle(false);
+		TabbedPaneStyle tabStyle = new TabbedPaneStyle(VisUI.getSkin().get(TabbedPaneStyle.class));
 		tabStyle.buttonStyle = new VisTextButtonStyle(VisUI.getSkin().get("toggle", VisTextButtonStyle.class));
 		tabStyle.buttonStyle.font = VisUI.getSkin().getFont("small-font");
+		tabStyle.bottomBar = null;
 
-		tabbedPane = new TabbedPane(listener, tabStyle);
+		tabbedPane = new TabbedPane(tabStyle);
+		tabbedPane.addListener(listener);
 		tabbedPane.setAllowTabDeselect(true);
 	}
 

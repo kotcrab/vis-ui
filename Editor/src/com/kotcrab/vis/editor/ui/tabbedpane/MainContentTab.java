@@ -20,6 +20,7 @@
 package com.kotcrab.vis.editor.ui.tabbedpane;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
 public abstract class MainContentTab extends Tab {
 	public MainContentTab () {

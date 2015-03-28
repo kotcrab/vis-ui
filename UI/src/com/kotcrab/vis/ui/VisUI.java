@@ -37,6 +37,7 @@ public class VisUI {
 
 	private static I18NBundle fileChooserBundle;
 	private static I18NBundle dialogUtilsBundle;
+	private static I18NBundle tabbedPaneBundle;
 
 	private static int defaultSpacingTop = 0;
 	private static int defaultSpacingBottom = 8;
@@ -104,8 +105,26 @@ public class VisUI {
 		return dialogUtilsBundle;
 	}
 
+	/** Changes bundle used by DialogUtils, will not affect already created dialogs.
+	 * If set to null then {@link #getDialogUtilsBundle()} will return default bundle */
 	public static void setDialogUtilsBundle (I18NBundle dialogUtilsBundle) {
 		VisUI.dialogUtilsBundle = dialogUtilsBundle;
+	}
+
+	/** Returns I18N bundle used by TabbedPane, if current bundle is null, a default bundle is set and returned */
+	public static I18NBundle getTabbedPaneBundle () {
+		if (tabbedPaneBundle == null) {
+			FileHandle file = Gdx.files.classpath("com/kotcrab/vis/ui/i18n/TabbedPane");
+			tabbedPaneBundle = I18NBundle.createBundle(file, new Locale("en"));
+		}
+
+		return tabbedPaneBundle;
+	}
+
+	/** Changes bundle used by TabbedPane, will not affect already created TabbedPane.
+	 * If set to null then {@link #getTabbedPaneBundle()} will return default bundle */
+	public static void setTabbedPaneBundle (I18NBundle tabbedPaneBundle) {
+		VisUI.tabbedPaneBundle = tabbedPaneBundle;
 	}
 
 	public static int getDefaultSpacingTop () {

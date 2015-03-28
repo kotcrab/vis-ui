@@ -64,9 +64,7 @@ import com.kotcrab.vis.editor.ui.WindowListener;
 import com.kotcrab.vis.editor.ui.dialog.SettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
-import com.kotcrab.vis.editor.ui.tabbedpane.Tab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
-import com.kotcrab.vis.editor.ui.tabbedpane.TabbedPaneListener;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.ui.VisUI;
@@ -77,6 +75,9 @@ import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
+import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
+import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
+import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
 public class Editor extends ApplicationAdapter implements EventListener {
 	public static Editor instance;
@@ -193,7 +194,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	private TabbedPaneListener createTabsModuleListener () {
-		return new TabbedPaneListener() {
+		return new TabbedPaneAdapter() {
 			@Override
 			public void switchedTab (Tab tab) {
 				mainContentTabChanged((MainContentTab) tab);
@@ -207,7 +208,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	private TabbedPaneListener createQuickAccessModuleListener () {
-		return new TabbedPaneListener() {
+		return new TabbedPaneAdapter() {
 			@Override
 			public void switchedTab (Tab tab) {
 				quickAccessViewChanged(tab);
