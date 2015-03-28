@@ -153,10 +153,6 @@ public class FileChooser extends VisWindow {
 		init();
 	}
 
-	public static String getFavoritesPrefsName () {
-		return FavoritesIO.getFavoritesPrefsName();
-	}
-
 	/**
 	 * Sets file name that will be used to store favorites, if not changed default will be used that may be shared with other
 	 * programs, should be package name e.g. com.seriouscompay.seriousprogram

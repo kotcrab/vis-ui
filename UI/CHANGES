@@ -28,6 +28,7 @@
    API Change: FileChooserLocale removed, now using LibGDX's I18NBundle, see FileChooserText class
    API Change: VisWindow#getButtonTable deprecated, instead use VisWindow#getTitleTable
    API Change: VisDialog#getButtonTable deprecated, instead use VisDialog#getButtonsTable
+   API Change: Removed FileChooser.getFavoritesPrefsName()
 * Other API additions:
    Added New FormValidators: integerNumber, floatNumber, valueLesserThan, valueGreaterThan
    Added VisTable#addSeparator (boolean vertical)
