@@ -24,7 +24,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
-import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 
 //TODO font reloading for bmp
 public class FontCacheModule extends ProjectModule implements WatchListener {

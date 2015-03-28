@@ -17,6 +17,7 @@
 package com.kotcrab.vis.ui.util;
 
 import com.kotcrab.vis.ui.InputValidator;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 /**

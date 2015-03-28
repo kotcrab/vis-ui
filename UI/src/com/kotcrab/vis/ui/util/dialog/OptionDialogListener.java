@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui;
+package com.kotcrab.vis.ui.util.dialog;
 
 /**
- * Used to get events from DialogUtils input dialog
+ * Used to get events from DialogUtils option dialog
  * @author Kotcrab
  */
-public interface InputDialogListener {
-	/**
-	 * Called when input dialog has finished
-	 * @param input text entered by user
-	 */
-	void finished (String input);
+public interface OptionDialogListener {
+	/** Called when 'yes' button was pressed */
+	void yes ();
 
-	/** Called when user canceled dialog or pressed 'close' button. Dialog must be cancelable for that */
-	void canceled ();
+	/** Called when 'no' button was pressed */
+	void no ();
+
+	/** Called when 'cancel' button was pressed */
+	void cancel ();
 }

@@ -69,11 +69,11 @@ import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabbedPaneListener;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.Log;
-import com.kotcrab.vis.ui.OptionDialogAdapter;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.util.DialogUtils;
-import com.kotcrab.vis.ui.util.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 

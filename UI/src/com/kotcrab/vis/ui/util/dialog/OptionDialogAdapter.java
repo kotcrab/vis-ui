@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui;
+package com.kotcrab.vis.ui.util.dialog;
 
 /** @author Kotcrab */
-public class InputDialogAdapter implements InputDialogListener {
+public class OptionDialogAdapter implements OptionDialogListener {
 	@Override
-	public void finished (String input) {
+	public void yes () {
 
 	}
 
 	@Override
-	public void canceled () {
+	public void no () {
+
+	}
+
+	@Override
+	public void cancel () {
 
 	}
 }

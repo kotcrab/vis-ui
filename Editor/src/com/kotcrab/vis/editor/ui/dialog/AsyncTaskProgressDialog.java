@@ -24,7 +24,7 @@ import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.AsyncTaskListener;
 
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
 import com.kotcrab.vis.ui.widget.VisWindow;

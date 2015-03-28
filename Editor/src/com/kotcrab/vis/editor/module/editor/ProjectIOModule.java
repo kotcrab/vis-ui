@@ -34,7 +34,7 @@ import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.CopyFileVisitor;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.Log;
-import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 
 import java.io.File;
 import java.io.FileInputStream;

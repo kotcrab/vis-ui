@@ -39,7 +39,7 @@ import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
 import com.kotcrab.vis.editor.ui.ButtonListener;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.MenuUtils;
-import com.kotcrab.vis.ui.util.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
 import com.kotcrab.vis.ui.widget.MenuItem;
