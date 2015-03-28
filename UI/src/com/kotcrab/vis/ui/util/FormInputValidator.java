@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui;
+package com.kotcrab.vis.ui.util;
+
+import com.kotcrab.vis.ui.InputValidator;
 
 /** @author Kotcrab */
 public abstract class FormInputValidator implements InputValidator {

@@ -9,6 +9,7 @@
    DialogUtils moved to com.kotcrab.vis.ui.util.dialog package
    OptionDialogListener and OptionDialogAdapter moved to com.kotcrab.vis.ui.util.dialog package
    InputDialogListener and InputDialogAdapter moved to com.kotcrab.vis.ui.util.dialog package
+   FormValidator, SimpleFormValidator, FormInputValidator moved to com.kotcrab.vis.ui.util package
    BasicFormValidator renamed to SimpleFormValidator
    TableUtils.setSpaceDefaults renamed to TableUtils.setSpacingDefaults
 * Menu system changes:
