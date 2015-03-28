@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.util;
+package com.kotcrab.vis.ui.util.form;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
@@ -127,27 +127,24 @@ import java.io.File;
 		}
 
 		@Override
-		public boolean validateInput (String input) {
-			File f;
+		public boolean validate (String input) {
+			File file;
 
 			if (relativeTo != null) {
 				if (relativeTo.getText().length() == 0 && errorIfRelativeEmpty == false) {
-					setResult(true);
-					return super.validateInput(input);
+					return true;
 				}
 
-				f = new File(relativeTo.getText(), input);
+				file = new File(relativeTo.getText(), input);
 			} else if (relativeToFile != null)
-				f = new File(relativeToFile, input);
+				file = new File(relativeToFile, input);
 			else
-				f = new File(input);
+				file = new File(input);
 
 			if (existNot)
-				setResult(!f.exists());
+				return !file.exists();
 			else
-				setResult(f.exists());
-
-			return super.validateInput(input);
+				return file.exists();
 		}
 	}
 }

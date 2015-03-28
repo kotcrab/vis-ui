@@ -32,8 +32,8 @@ import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
-import com.kotcrab.vis.ui.util.FormInputValidator;
-import com.kotcrab.vis.ui.util.FormValidator;
+import com.kotcrab.vis.ui.util.form.FormInputValidator;
+import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
@@ -192,11 +192,9 @@ public class NewSceneDialog extends VisWindow {
 
 		validator.custom(nameTextField, new FormInputValidator("That scene already exists!") {
 			@Override
-			public boolean validateInput (String input) {
+			public boolean validate (String input) {
 				FileHandle sceneFile = assetsFolder.child(pathTextField.getText()).child(input + ".scene");
-				setResult(!sceneFile.exists());
-
-				return super.validateInput(input);
+				return !sceneFile.exists();
 			}
 		});
 	}

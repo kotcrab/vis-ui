@@ -25,7 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
-import com.kotcrab.vis.ui.util.FormValidator;
+import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;

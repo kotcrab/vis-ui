@@ -9,7 +9,7 @@
    DialogUtils moved to com.kotcrab.vis.ui.util.dialog package
    OptionDialogListener and OptionDialogAdapter moved to com.kotcrab.vis.ui.util.dialog package
    InputDialogListener and InputDialogAdapter moved to com.kotcrab.vis.ui.util.dialog package
-   FormValidator, SimpleFormValidator, FormInputValidator moved to com.kotcrab.vis.ui.util package
+   FormValidator, SimpleFormValidator, FormInputValidator moved to com.kotcrab.vis.ui.util.form package
    BasicFormValidator renamed to SimpleFormValidator
    TableUtils.setSpaceDefaults renamed to TableUtils.setSpacingDefaults
 * Menu system changes:
@@ -40,6 +40,9 @@
    Tooltip is now kept within Stage border
    Focus border is now optional for every widget that was using it
    Font support for Polish, German, Spanish, French, Greek and Russian characters
+   FormInputValidator now uses validate(String) instead of validateInput(String) for input validation, calling setResult is no longer required
+    (for examples on how to use it see SimpleFormValidator)
+   Added ValidatorWrapper that allows standard validator to be used with Simple(FormValidator)#custom(...)
 
 [0.6.1] [LibGDX 1.5.4]
 -Fixed FileChooser disappearing when removing favourite

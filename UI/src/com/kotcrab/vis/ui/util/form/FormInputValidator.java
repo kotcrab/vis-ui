@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.util;
+package com.kotcrab.vis.ui.util.form;
 
 import com.kotcrab.vis.ui.InputValidator;
 
@@ -31,16 +31,22 @@ public abstract class FormInputValidator implements InputValidator {
 		return errorMsg;
 	}
 
-	protected void setResult (boolean result) {
-		this.result = result;
-	}
-
-	protected boolean getResult () {
+	protected boolean getLastResult () {
 		return result;
 	}
 
+	/** Should not be overridden by child class, use {@link #validate(String)}*/
 	@Override
 	public boolean validateInput (String input) {
+		result = validate(input);
 		return result;
 	}
+
+	/**
+	 * Called by FormInputValidator when input should be validated, for proper validator working must be used instead of {@link #validateInput(String)}.
+	 * Last result of this function will be stored because it is required by FromValidator
+	 * @param input that should be validated
+	 * @return if input is valid, false otherwise
+	 */
+	protected abstract boolean validate(String input);
 }
