@@ -55,8 +55,6 @@ public class VisTable extends Table {
 	 * after separator (not before!)
 	 */
 	public Cell<Separator> addSeparator () {
-		Cell<Separator> cell = add(new Separator()).padTop(2).padBottom(2).fillX().expandX();
-		row();
-		return cell;
+		return addSeparator(false);
 	}
 }
