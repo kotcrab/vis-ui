@@ -48,6 +48,11 @@ public class NumberSelector extends VisTable {
 
 	private Array<NumberSelectorListener> listeners = new Array<NumberSelectorListener>();
 
+	/** Creates number selector with step set to 1 */
+	public NumberSelector (String name, int initialValue, int min, int max) {
+		this(name, initialValue, min, max, 1);
+	}
+
 	public NumberSelector (String name, int initialValue, int min, int max, int step) {
 		this("default", name, initialValue, min, max, step);
 	}
