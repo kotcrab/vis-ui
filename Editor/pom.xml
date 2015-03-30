@@ -12,7 +12,7 @@
         <jdk.version>1.8</jdk.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gdx.version>1.5.5</gdx.version>
-        <visui.version>0.7.0-SNAPSHOT</visui.version>
+        <visui.version>0.7.2-SNAPSHOT</visui.version>
     </properties>
 
     <repositories>
