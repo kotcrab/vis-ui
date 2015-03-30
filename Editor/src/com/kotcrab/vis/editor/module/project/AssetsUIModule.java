@@ -201,6 +201,9 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 				Node node = contentTree.getSelection().first();
 
 				if (node != null) {
+					searchTextField.setText("");
+					searchTextField.setInputValid(true);
+
 					FolderItem item = (FolderItem) node.getActor();
 					changeCurrentDirectory(item.file);
 				}
