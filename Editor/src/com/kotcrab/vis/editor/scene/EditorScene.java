@@ -22,9 +22,10 @@ package com.kotcrab.vis.editor.scene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
-public class EditorScene {
+public class EditorScene implements Disposable {
 	/** Scene file, path is relative to project vis folder */
 	public String path;
 	public int width;
@@ -42,5 +43,12 @@ public class EditorScene {
 
 	public FileHandle getFile () {
 		return Gdx.files.absolute(path);
+	}
+
+	@Override
+	public void dispose () {
+		for (EditorEntity entity : entities) {
+			entity.dispose();
+		}
 	}
 }

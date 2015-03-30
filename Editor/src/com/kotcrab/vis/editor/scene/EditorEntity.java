@@ -22,8 +22,9 @@ package com.kotcrab.vis.editor.scene;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Disposable;
 
-public interface EditorEntity {
+public interface EditorEntity extends Disposable {
 
 	String getId ();
 
@@ -132,5 +133,10 @@ public interface EditorEntity {
 			return getClass().getSimpleName() + " X: " + (int) getX() + " Y: " + (int) getY();
 		else
 			return getClass().getSimpleName() + " ID: " + getId() + " X: " + (int) getX() + " Y: " + (int) getY();
+	}
+
+	@Override
+	default void dispose () {
+
 	}
 }

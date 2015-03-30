@@ -18,8 +18,9 @@ package com.kotcrab.vis.runtime.entity;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
+import com.badlogic.gdx.utils.Disposable;
 
-public class MusicEntity extends Entity {
+public class MusicEntity extends Entity implements Disposable{
 	protected transient Music music;
 
 	private String musicPath;
@@ -99,5 +100,10 @@ public class MusicEntity extends Entity {
 
 	public void setMusicPath (String musicPath) {
 		this.musicPath = musicPath;
+	}
+
+	@Override
+	public void dispose () {
+		music.dispose();
 	}
 }
