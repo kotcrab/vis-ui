@@ -40,6 +40,11 @@ public class Menu extends PopupMenu {
 		openButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if(menuBar.getCurrentMenu() == Menu.this) {
+					menuBar.closeMenu();
+					return true;
+				}
+
 				switchMenu();
 				event.stop();
 				return true;

@@ -1,5 +1,6 @@
 [0.7.2] [LibGDX 1.5.5]
 -Added constructor NumberSelector (String name, int initialValue, int min, int max)
+-Fixed menu not closing after clicking it on MenuBar
 
 [0.7.1] [LibGDX 1.5.5]
 -Fixing GWT compatibility
