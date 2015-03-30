@@ -30,6 +30,7 @@ import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.util.Log;
 
 public class RendererModule extends SceneModule {
+	private CameraModule camera;
 	private ShapeRenderer shapeRenderer;
 	private ShaderProgram fontShader;
 
@@ -42,6 +43,11 @@ public class RendererModule extends SceneModule {
 			Log.fatal("Renderer", "FontShader compilation failed:\n" + fontShader.getLog());
 			throw new IllegalStateException("Shader compilation failed");
 		}
+	}
+
+	@Override
+	public void init () {
+		camera = sceneContainer.get(CameraModule.class);
 	}
 
 	@Override
@@ -62,6 +68,7 @@ public class RendererModule extends SceneModule {
 		}
 
 		batch.end();
+		shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
 		shapeRenderer.setColor(Color.WHITE);
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.rect(0, 0, scene.width, scene.height);
