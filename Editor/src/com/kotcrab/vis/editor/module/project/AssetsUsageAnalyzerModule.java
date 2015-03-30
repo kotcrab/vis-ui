@@ -24,7 +24,6 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.util.FileUtils;
 
-import java.util.Comparator;
 import java.util.Iterator;
 
 public class AssetsUsageAnalyzerModule extends ProjectModule {
@@ -46,16 +45,14 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 	}
 
 	public boolean canAnalyze (FileHandle file) {
-		if (file.extension().equals("scene")) return false;
-
-		return true;
+		return guessEntityType(fileAccess.relativizeToAssetsFolder(file)) != null;
 	}
 
 	public AssetsUsages analyze (FileHandle file) {
 		String path = fileAccess.relativizeToAssetsFolder(file.path());
 		Class clazz = guessEntityType(path);
 
-		if (clazz == null) return null;
+		if (clazz == null) throw new IllegalArgumentException("Cannot analyze usages of file: " + file.path());
 
 		Array<FileHandle> sceneFiles = getSceneFiles();
 
@@ -87,6 +84,11 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 						if (obj.getRelativeEffectPath().equals(path)) used = true;
 					}
 
+					else if (entity instanceof MusicObject) {
+						MusicObject obj = (MusicObject) entity;
+						if (obj.getRelativeMusicPath().equals(path)) used = true;
+					}
+
 					if (used) {
 						usages.count++;
 						sceneUsagesList.add(entity);
@@ -110,6 +112,7 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 		if (path.startsWith("gfx")) return SpriteObject.class;
 		if (path.startsWith("font") || path.startsWith("bmpfont")) return TextObject.class;
 		if (path.startsWith("particle")) return ParticleObject.class;
+		if (path.startsWith("music")) return MusicObject.class;
 
 		return null;
 	}
@@ -122,12 +125,7 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 		while (it.hasNext())
 			if (it.next().extension().equals("scene") == false) it.remove();
 
-		files.sort(new Comparator<FileHandle>() {
-			@Override
-			public int compare (FileHandle o1, FileHandle o2) {
-				return o1.path().toLowerCase().compareTo(o2.path().toLowerCase());
-			}
-		});
+		files.sort((o1, o2) -> o1.path().toLowerCase().compareTo(o2.path().toLowerCase()));
 
 		return files;
 	}

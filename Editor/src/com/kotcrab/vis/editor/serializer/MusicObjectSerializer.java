@@ -69,6 +69,6 @@ public class MusicObjectSerializer extends Serializer<MusicObject> {
 	}
 
 	private Music getNewMusicInstance (MusicObject object) {
-		return Gdx.audio.newMusic(fileAccess.getAssetsFolder().child(object.getMusicPath()));
+		return Gdx.audio.newMusic(fileAccess.getAssetsFolder().child(object.getRelativeMusicPath()));
 	}
 }

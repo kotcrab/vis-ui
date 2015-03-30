@@ -40,7 +40,7 @@ public class MusicObject extends MusicEntity implements EditorEntity {
 	}
 
 	public MusicObject (MusicObject other, Music newMusic) {
-		super(other.getId(), other.getMusicPath(), newMusic);
+		super(other.getId(), other.getRelativeMusicPath(), newMusic);
 
 		this.x = other.x;
 		this.y = other.y;

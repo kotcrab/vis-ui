@@ -94,7 +94,7 @@ public class MusicEntity extends Entity implements Disposable{
 		music.play();
 	}
 
-	public String getMusicPath () {
+	public String getRelativeMusicPath () {
 		return musicPath;
 	}
 

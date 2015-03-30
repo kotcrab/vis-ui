@@ -60,7 +60,7 @@ class MusicObjectTable extends SpecificObjectTable {
 	public void updateUIValues () {
 		Array<EditorEntity> entities = properties.getEntities();
 
-		label.setText(Utils.getCommonString(entities, "<?>", entity -> ((MusicObject) entity).getMusicPath()));
+		label.setText(Utils.getCommonString(entities, "<?>", entity -> ((MusicObject) entity).getRelativeMusicPath()));
 		setCheckBoxState(entities, loopingCheck, entity -> ((MusicObject) entity).isLooping());
 		setCheckBoxState(entities, playOnStartCheck, entity -> ((MusicObject) entity).isPlayOnStart());
 	}
