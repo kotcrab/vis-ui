@@ -34,6 +34,11 @@ public class ColorPickerModule extends EditorModule {
 		picker.dispose();
 	}
 
+	@Override
+	public void resize () {
+		picker.centerWindow();
+	}
+
 	public ColorPicker getPicker () {
 		return picker;
 	}
