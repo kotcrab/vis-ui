@@ -26,7 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.dialog.SelectFontDialog;
 import com.kotcrab.vis.ui.widget.VisImageButton;
@@ -77,7 +77,7 @@ abstract class TextObjectTable extends SpecificObjectTable {
 		});
 
 		selectFontDialog = new SelectFontDialog(getFontExtension(), getFontFolder(), file -> {
-			for (EditorEntity entity : properties.getEntities()) {
+			for (EditorObject entity : properties.getEntities()) {
 				TextObject obj = (TextObject) entity;
 				obj.setFont(properties.getFontCacheModule().get(file));
 			}
@@ -99,14 +99,14 @@ abstract class TextObjectTable extends SpecificObjectTable {
 
 	abstract int getRelativeFontFolderLength ();
 
-	private String getFontTextForEntity (EditorEntity entity) {
+	private String getFontTextForEntity (EditorObject entity) {
 		TextObject obj = (TextObject) entity;
-		return obj.getRelativeFontPath().substring(getRelativeFontFolderLength() + 1);
+		return obj.getAssetPath().substring(getRelativeFontFolderLength() + 1);
 	}
 
 	@Override
 	public void updateUIValues () {
-		Array<EditorEntity> entities = properties.getEntities();
+		Array<EditorObject> entities = properties.getEntities();
 
 		textField.setText(getCommonString(entities, "<multiple values>", entity -> ((TextObject) entity).getText()));
 		fontLabel.setText(getCommonString(entities, "<?>", this::getFontTextForEntity));
@@ -114,8 +114,8 @@ abstract class TextObjectTable extends SpecificObjectTable {
 
 	@Override
 	public void setValuesToEntities () {
-		Array<EditorEntity> entities = properties.getEntities();
-		for (EditorEntity entity : entities) {
+		Array<EditorObject> entities = properties.getEntities();
+		for (EditorObject entity : entities) {
 			TextObject obj = (TextObject) entity;
 
 			obj.setText(textField.getText());

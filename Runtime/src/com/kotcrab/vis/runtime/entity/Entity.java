@@ -17,8 +17,10 @@
 package com.kotcrab.vis.runtime.entity;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.kotcrab.vis.runtime.scene.VisAssetDescriptor;
 
 public class Entity {
+	private VisAssetDescriptor assetDescriptor;
 	private String id;
 
 	public Entity (String id) {
@@ -40,4 +42,23 @@ public class Entity {
 	public void onAfterLoad () {
 
 	}
+
+	/** @return relative path form {@link VisAssetDescriptor} */
+	public String getAssetPath () {
+		return assetDescriptor.getPath();
+	}
+
+	/** Changes current asset descriptor to {@link VisAssetDescriptor} with provided path */
+	public void setAssetPath (String relativePath) {
+		setAssetDescriptor(new VisAssetDescriptor(relativePath));
+	}
+
+	public VisAssetDescriptor getAssetDescriptor () {
+		return assetDescriptor;
+	}
+
+	public void setAssetDescriptor (VisAssetDescriptor assetDescriptor) {
+		this.assetDescriptor = assetDescriptor;
+	}
+
 }

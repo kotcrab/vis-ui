@@ -109,7 +109,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 			cache = new TextureAtlas(cacheFile);
 
 			for (Entry<String, TextureRegion> e : regions.entries()) {
-				String path = e.key;
+				String path = e.key.substring(4, e.key.length() - 4);
 				TextureRegion region = e.value;
 
 				TextureRegion newRegion = cache.findRegion(path);
@@ -171,15 +171,13 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	}
 
-	public TextureRegion getRegion (FileHandle file) {
-		return getRegion(resolvePath(file));
-	}
-
 	public TextureRegion getRegion (String relativePath) {
-		TextureRegion region = regions.get(relativePath);
+		String regionName = relativePath.substring(4, relativePath.length() - 4);
+
+		TextureRegion region = regions.get(regionName);
 
 		if (region == null) {
-			if (cache != null) region = cache.findRegion(relativePath);
+			if (cache != null) region = cache.findRegion(regionName);
 
 			if (region == null) region = new TextureRegion(loadingRegion);
 
@@ -187,23 +185,5 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		}
 
 		return region;
-	}
-
-	private String resolvePath (FileHandle file) {
-		String path = file.path();
-
-		if (path.startsWith(gfxPath))
-			return path.substring(gfxPath.length() + 1, path.length() - file.extension().length() - 1);
-		else
-			return path;
-	}
-
-	public String getRelativePath (TextureRegion region) {
-		for (Entry<String, TextureRegion> e : regions.entries()) {
-			if (e.value == region)
-				return e.key;
-		}
-
-		throw new IllegalStateException("Region not found in cache!");
 	}
 }

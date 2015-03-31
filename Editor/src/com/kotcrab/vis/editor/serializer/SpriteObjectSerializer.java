@@ -71,7 +71,7 @@ public class SpriteObjectSerializer extends Serializer<SpriteObject> {
 		kryo.setReferences(false);
 
 		SpriteObject obj = kryo.readObject(input, SpriteObject.class, defaultSerializer);
-		obj.onDeserialize(textureCache.getRegion(obj.getCacheRegionName()));
+		obj.onDeserialize(textureCache.getRegion(obj.getAssetPath()));
 
 		obj.setPosition(input.readFloat(), input.readFloat());
 		obj.setSize(input.readFloat(), input.readFloat());

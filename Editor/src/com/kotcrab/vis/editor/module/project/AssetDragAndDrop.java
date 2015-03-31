@@ -37,19 +37,22 @@ import com.kotcrab.vis.editor.module.project.AssetsUIModule.FileItem;
 import com.kotcrab.vis.editor.module.project.AssetsUIModule.FileType;
 import com.kotcrab.vis.editor.scene.MusicObject;
 import com.kotcrab.vis.editor.scene.ParticleObject;
+import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class AssetDragAndDrop {
+	private FileAccessModule fileAccess;
+	private TextureCacheModule textureCache;
 	private FontCacheModule fontCache;
 	private ParticleCacheModule particleCache;
-	private FileAccessModule fileAccess;
 
 	private DragAndDrop dragAndDrop;
 	private DragAndDropTarget dropTarget;
 
-	public AssetDragAndDrop (FontCacheModule fontCache, ParticleCacheModule particleCache, FileAccessModule fileAccess) {
+	public AssetDragAndDrop (FileAccessModule fileAccess, TextureCacheModule textureCache, FontCacheModule fontCache, ParticleCacheModule particleCache) {
+		this.textureCache = textureCache;
 		this.fontCache = fontCache;
 		this.particleCache = particleCache;
 		this.fileAccess = fileAccess;
@@ -81,8 +84,10 @@ public class AssetDragAndDrop {
 				@Override
 				public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 					Payload payload = new Payload();
+					String relativePath = fileAccess.relativizeToAssetsFolder(item.file);
 
-					payload.setObject(item.region);
+					SpriteObject object = new SpriteObject(relativePath, textureCache.getRegion(relativePath), 0,0);
+					payload.setObject(object);
 
 					Image img = new Image(item.region);
 					payload.setDragActor(img);

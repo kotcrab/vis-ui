@@ -26,7 +26,7 @@ public class MusicData extends EntityData<MusicEntity> {
 
 	@Override
 	public void saveFrom (MusicEntity entity) {
-		musicPath = entity.getRelativeMusicPath();
+		musicPath = entity.getAssetPath();
 		playOnStart = entity.isPlayOnStart();
 		volume = entity.getVolume();
 		looping = entity.isLooping();
@@ -34,7 +34,7 @@ public class MusicData extends EntityData<MusicEntity> {
 
 	@Override
 	public void loadTo (MusicEntity entity) {
-		entity.setMusicPath(musicPath);
+		entity.setAssetPath(musicPath);
 		entity.setPlayOnStart(playOnStart);
 		entity.setLooping(looping);
 		entity.setVolume(volume);

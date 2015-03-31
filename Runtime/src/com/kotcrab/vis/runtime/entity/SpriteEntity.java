@@ -24,9 +24,10 @@ import com.badlogic.gdx.math.Rectangle;
 public class SpriteEntity extends Entity {
 	protected transient Sprite sprite;
 
-	public SpriteEntity (String id, Sprite sprite) {
+	public SpriteEntity (String id, String texturePath, Sprite sprite) {
 		super(id);
 		this.sprite = sprite;
+		setAssetPath(texturePath);
 	}
 
 	@Override

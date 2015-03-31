@@ -114,7 +114,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		visFolder = fileAccess.getVisFolder();
 		assetsFolder = fileAccess.getAssetsFolder();
 
-		assetDragAndDrop = new AssetDragAndDrop(fontCache, particleCache, fileAccess);
+		assetDragAndDrop = new AssetDragAndDrop(fileAccess, textureCache, fontCache, particleCache);
 	}
 
 	private void initUI () {
@@ -422,6 +422,8 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 
 		private void createContent () {
 			String ext = file.extension();
+			String relativePath = fileAccess.relativizeToAssetsFolder(file);
+
 			if (ext.equals("ttf")) {
 				type = FileType.TTF_FONT;
 
@@ -464,7 +466,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 				return;
 			}
 
-			if (fileAccess.relativizeToAssetsFolder(file).startsWith("music") && ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) {
+			if (relativePath.startsWith("music") && ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) {
 				type = FileType.MUSIC;
 
 				VisLabel tagLabel = new VisLabel(file.extension().toUpperCase() + " Music", Color.GRAY);
@@ -476,11 +478,11 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 				return;
 			}
 
-			if (fileAccess.relativizeToAssetsFolder(file).startsWith("gfx") && (ext.equals("jpg") || ext.equals("png"))) {
+			if (relativePath.startsWith("gfx") && (ext.equals("jpg") || ext.equals("png"))) {
 				type = FileType.TEXTURE;
 
 				name = new VisLabel(file.nameWithoutExtension(), "small");
-				TextureRegion region = textureCache.getRegion(file);
+				TextureRegion region = textureCache.getRegion(relativePath);
 
 				Image img = new Image(region);
 				img.setScaling(Scaling.fit);

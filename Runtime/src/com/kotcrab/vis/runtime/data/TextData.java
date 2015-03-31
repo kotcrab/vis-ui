@@ -52,7 +52,7 @@ public class TextData extends EntityData<TextEntity> {
 		tint = entity.getColor().cpy();
 
 		text = entity.getText();
-		relativeFontPath = entity.getRelativeFontPath().replace("\\", "/");
+		relativeFontPath = entity.getAssetPath();
 		fontSize = entity.getFontSize();
 		autoSetOriginToCenter = entity.isAutoSetOriginToCenter();
 
@@ -72,7 +72,7 @@ public class TextData extends EntityData<TextEntity> {
 
 		text.setText(this.text);
 		//text.setFontSize(fontSize); //font size must be handled manually from SceneLoader because it is not a public property for TextEntity
-		text.setRelativeFontPathForSerialize(relativeFontPath);
+		text.setAssetPath(relativeFontPath);
 		text.setAutoSetOriginToCenter(autoSetOriginToCenter);
 
 		text.setDistanceFieldShaderEnabled(isUsesDistanceField);

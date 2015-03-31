@@ -26,7 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.ui.VisUI;
 
@@ -46,19 +46,19 @@ class Utils {
 		}
 	}
 
-	static String getEntitiesFieldFloatValue (Array<EditorEntity> entities, FloatValue objValue) {
+	static String getEntitiesFieldFloatValue (Array<EditorObject> entities, FloatValue objValue) {
 		float value = objValue.getFloat(entities.first());
 
-		for (EditorEntity entity : entities)
+		for (EditorObject entity : entities)
 			if (value != objValue.getFloat(entity)) return "?";
 
 		return floatToString(value);
 	}
 
-	static void setCheckBoxState (Array<EditorEntity> entities, IndeterminateCheckbox target, BooleanValue value) {
+	static void setCheckBoxState (Array<EditorObject> entities, IndeterminateCheckbox target, BooleanValue value) {
 		boolean enabled = value.getBoolean(entities.first());
 
-		for (EditorEntity entity : entities) {
+		for (EditorObject entity : entities) {
 			if (enabled != value.getBoolean(entity)) {
 				target.setIndeterminate(true);
 				return;
@@ -68,21 +68,21 @@ class Utils {
 		target.setChecked(enabled);
 	}
 
-	static String getCommonString (Array<EditorEntity> entities, String ifNotCommon, StringValue value) {
+	static String getCommonString (Array<EditorObject> entities, String ifNotCommon, StringValue value) {
 		String firstText = value.getString(entities.first());
 
-		for (EditorEntity entity : entities) {
+		for (EditorObject entity : entities) {
 			if (value.getString(entity).equals(firstText) == false) return ifNotCommon;
 		}
 
 		return firstText;
 	}
 
-	static String getEntitiesId (Array<EditorEntity> entities) {
+	static String getEntitiesId (Array<EditorObject> entities) {
 		String firstId = entities.first().getId();
 		if (firstId == null) firstId = "";
 
-		for (EditorEntity entity : entities) {
+		for (EditorObject entity : entities) {
 			String entityId = entity.getId();
 			if (entityId == null) entityId = "";
 
@@ -94,40 +94,40 @@ class Utils {
 		return firstId;
 	}
 
-	static boolean isScaleSupportedForEntities (Array<EditorEntity> entities) {
-		for (EditorEntity entity : entities) {
+	static boolean isScaleSupportedForEntities (Array<EditorObject> entities) {
+		for (EditorObject entity : entities) {
 			if (entity.isScaleSupported() == false) return false;
 		}
 
 		return true;
 	}
 
-	static boolean isOriginSupportedForEntities (Array<EditorEntity> entities) {
-		for (EditorEntity entity : entities) {
+	static boolean isOriginSupportedForEntities (Array<EditorObject> entities) {
+		for (EditorObject entity : entities) {
 			if (entity.isOriginSupported() == false) return false;
 		}
 
 		return true;
 	}
 
-	static boolean isRotationSupportedForEntities (Array<EditorEntity> entities) {
-		for (EditorEntity entity : entities) {
+	static boolean isRotationSupportedForEntities (Array<EditorObject> entities) {
+		for (EditorObject entity : entities) {
 			if (entity.isRotationSupported() == false) return false;
 		}
 
 		return true;
 	}
 
-	static boolean isTintSupportedForEntities (Array<EditorEntity> entities) {
-		for (EditorEntity entity : entities) {
+	static boolean isTintSupportedForEntities (Array<EditorObject> entities) {
+		for (EditorObject entity : entities) {
 			if (entity.isTintSupported() == false) return false;
 		}
 
 		return true;
 	}
 
-	static boolean isFlipSupportedForEntities (Array<EditorEntity> entities) {
-		for (EditorEntity entity : entities) {
+	static boolean isFlipSupportedForEntities (Array<EditorObject> entities) {
+		for (EditorObject entity : entities) {
 			if (entity.isFlipSupported() == false) return false;
 		}
 

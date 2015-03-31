@@ -22,12 +22,12 @@ package com.kotcrab.vis.editor.module.project;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
 
 public class AssetsUsages {
 	public FileHandle file;
 	public boolean limitExceeded;
 	public int count;
-	public ObjectMap<EditorScene, Array<EditorEntity>> list = new ObjectMap<>();
+	public ObjectMap<EditorScene, Array<EditorObject>> list = new ObjectMap<>();
 }

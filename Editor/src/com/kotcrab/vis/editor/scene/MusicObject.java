@@ -27,7 +27,7 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.entity.MusicEntity;
 
-public class MusicObject extends MusicEntity implements EditorEntity {
+public class MusicObject extends MusicEntity implements EditorObject {
 	private float x, y;
 	private transient TextureRegion icon;
 	private Rectangle bounds;
@@ -40,7 +40,7 @@ public class MusicObject extends MusicEntity implements EditorEntity {
 	}
 
 	public MusicObject (MusicObject other, Music newMusic) {
-		super(other.getId(), other.getRelativeMusicPath(), newMusic);
+		super(other.getId(), other.getAssetPath(), newMusic);
 
 		this.x = other.x;
 		this.y = other.y;

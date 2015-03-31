@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.data;
+package com.kotcrab.vis.runtime.scene;
 
-import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
+public class VisAssetDescriptor {
+	private String relativePath;
 
-public class ParticleEffectData extends EntityData<ParticleEffectEntity> {
-	public String relativePath;
-	public float x, y;
-
-	@Override
-	public void saveFrom (ParticleEffectEntity entity) {
-		relativePath = entity.getAssetPath();
-		x = entity.getX();
-		y = entity.getY();
+	public VisAssetDescriptor (String relativePath) {
+		this.relativePath = relativePath.replace("\\", "/");
 	}
 
-	@Override
-	public void loadTo (ParticleEffectEntity entity) {
-		entity.setAssetPath(relativePath);
-		entity.setPosition(x, y);
+	public String getPath () {
+		return relativePath;
 	}
 }

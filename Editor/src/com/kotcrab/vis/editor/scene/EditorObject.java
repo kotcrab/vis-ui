@@ -23,8 +23,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
+import com.kotcrab.vis.runtime.scene.VisAssetDescriptor;
 
-public interface EditorEntity extends Disposable {
+public interface EditorObject extends Disposable {
 
 	String getId ();
 
@@ -139,4 +140,8 @@ public interface EditorEntity extends Disposable {
 	default void dispose () {
 
 	}
+
+	VisAssetDescriptor getAssetDescriptor ();
+
+	String getAssetPath ();
 }

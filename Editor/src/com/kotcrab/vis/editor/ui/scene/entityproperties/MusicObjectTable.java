@@ -21,7 +21,7 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.MusicObject;
 import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.TableBuilder;
@@ -52,23 +52,23 @@ class MusicObjectTable extends SpecificObjectTable {
 	}
 
 	@Override
-	public boolean isSupported (EditorEntity entity) {
+	public boolean isSupported (EditorObject entity) {
 		return entity instanceof MusicObject;
 	}
 
 	@Override
 	public void updateUIValues () {
-		Array<EditorEntity> entities = properties.getEntities();
+		Array<EditorObject> entities = properties.getEntities();
 
-		label.setText(Utils.getCommonString(entities, "<?>", entity -> ((MusicObject) entity).getRelativeMusicPath()));
+		label.setText(Utils.getCommonString(entities, "<?>", entity -> ((MusicObject) entity).getAssetPath()));
 		setCheckBoxState(entities, loopingCheck, entity -> ((MusicObject) entity).isLooping());
 		setCheckBoxState(entities, playOnStartCheck, entity -> ((MusicObject) entity).isPlayOnStart());
 	}
 
 	@Override
 	public void setValuesToEntities () {
-		Array<EditorEntity> entities = properties.getEntities();
-		for (EditorEntity entity : entities) {
+		Array<EditorObject> entities = properties.getEntities();
+		for (EditorObject entity : entities) {
 			MusicObject obj = (MusicObject) entity;
 
 			if (loopingCheck.isIndeterminate() == false) obj.setLooping(loopingCheck.isChecked());

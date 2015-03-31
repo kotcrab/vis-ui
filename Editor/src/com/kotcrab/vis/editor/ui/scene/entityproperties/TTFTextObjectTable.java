@@ -22,7 +22,7 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
-import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.ui.util.Validators;
@@ -62,7 +62,7 @@ class TTFTextObjectTable extends TextObjectTable {
 	}
 
 	@Override
-	public boolean isSupported (EditorEntity entity) {
+	public boolean isSupported (EditorObject entity) {
 		if (entity instanceof TextObject == false) return false;
 		TextObject obj = (TextObject) entity;
 		return obj.isTrueType();
@@ -72,7 +72,7 @@ class TTFTextObjectTable extends TextObjectTable {
 	public void updateUIValues () {
 		super.updateUIValues();
 
-		Array<EditorEntity> entities = properties.getEntities();
+		Array<EditorObject> entities = properties.getEntities();
 
 		sizeInputField.setText(Utils.getEntitiesFieldFloatValue(entities, entity -> ((TextObject) entity).getFontSize()));
 	}
@@ -80,8 +80,8 @@ class TTFTextObjectTable extends TextObjectTable {
 	@Override
 	public void setValuesToEntities () {
 		super.setValuesToEntities();
-		Array<EditorEntity> entities = properties.getEntities();
-		for (EditorEntity entity : entities) {
+		Array<EditorObject> entities = properties.getEntities();
+		for (EditorObject entity : entities) {
 			TextObject obj = (TextObject) entity;
 
 			obj.setFontSize(FieldUtils.getInt(sizeInputField, obj.getFontSize()));

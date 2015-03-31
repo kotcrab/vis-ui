@@ -196,7 +196,7 @@ public class ExportModule extends ProjectModule {
 					sceneData.height = editorScene.height;
 					sceneData.entities = new Array<>();
 
-					for (EditorEntity entity : editorScene.entities) {
+					for (EditorObject entity : editorScene.entities) {
 						if (entity instanceof SpriteObject) {
 							SpriteObject obj = (SpriteObject) entity;
 
@@ -205,7 +205,7 @@ public class ExportModule extends ProjectModule {
 
 							data.id = obj.getId();
 							data.textureAtlas = "gfx/textures.atlas";
-							data.textureRegion = obj.getCacheRegionName();
+							data.texturePath = obj.getAssetPath();
 
 							sceneData.entities.add(data);
 							continue;

@@ -64,30 +64,15 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 			if (scene == null)
 				scene = sceneIOModule.load(sceneFile);
 
-			Array<EditorEntity> sceneUsagesList = new Array<>();
+			Array<EditorObject> sceneUsagesList = new Array<>();
 
-			for (EditorEntity entity : scene.entities) {
+			for (EditorObject entity : scene.entities) {
 
 				if (clazz.isInstance(entity)) {
 					boolean used = false;
 
-					if (entity instanceof SpriteObject) {
-						SpriteObject obj = (SpriteObject) entity;
-						if (obj.getCacheRegionName().equals(fileAccess.getTextureCacheRegionName(path))) used = true;
-
-					} else if (entity instanceof TextObject) {
-						TextObject obj = (TextObject) entity;
-						if (obj.getRelativeFontPath().equals(path)) used = true;
-
-					} else if (entity instanceof ParticleObject) {
-						ParticleObject obj = (ParticleObject) entity;
-						if (obj.getRelativeEffectPath().equals(path)) used = true;
-					}
-
-					else if (entity instanceof MusicObject) {
-						MusicObject obj = (MusicObject) entity;
-						if (obj.getRelativeMusicPath().equals(path)) used = true;
-					}
+					if (entity.getAssetDescriptor() != null)
+						if (entity.getAssetPath().equals(path)) used = true;
 
 					if (used) {
 						usages.count++;

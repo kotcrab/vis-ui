@@ -26,13 +26,13 @@ import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 public class EditorScene implements Disposable {
-	/** Scene file, path is relative to project vis folder */
+	/** Scene file, path is relative to project Vis folder */
 	public String path;
 	public int width;
 	public int height;
 	public SceneViewport viewport;
 
-	public Array<EditorEntity> entities = new Array<EditorEntity>();
+	public Array<EditorObject> entities = new Array<EditorObject>();
 
 	public EditorScene (FileHandle file, SceneViewport viewport, int width, int height) {
 		this.path = file.path();
@@ -47,7 +47,7 @@ public class EditorScene implements Disposable {
 
 	@Override
 	public void dispose () {
-		for (EditorEntity entity : entities) {
+		for (EditorObject entity : entities) {
 			entity.dispose();
 		}
 	}

@@ -30,9 +30,10 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.kotcrab.vis.editor.module.project.AssetsUsageAnalyzerModule;
 import com.kotcrab.vis.editor.module.project.AssetsUsages;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
-import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
+import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
@@ -134,7 +135,7 @@ public class AssetsUsageTab extends Tab {
 				DialogUtils.showOptionDialog(event.getStage(), "Delete", "Are you sure?", OptionDialogType.YES_NO, new OptionDialogAdapter() {
 					@Override
 					public void yes () {
-						usages.file.delete();
+						FileUtils.delete(usages.file);
 						removeFromTabPane();
 					}
 				});
@@ -151,12 +152,12 @@ public class AssetsUsageTab extends Tab {
 	}
 
 	private void processUsages () {
-		for (Entry<EditorScene, Array<EditorEntity>> entry : usages.list) {
+		for (Entry<EditorScene, Array<EditorObject>> entry : usages.list) {
 			Node node = new Node(new VisLabel(entry.key.path, "small"));
 			node.setExpanded(true);
 			tree.add(node);
 
-			for (EditorEntity entity : entry.value)
+			for (EditorObject entity : entry.value)
 				node.add(new Node(new UsageLabel(entry.key, entity)));
 		}
 	}
@@ -173,9 +174,9 @@ public class AssetsUsageTab extends Tab {
 
 	private static class UsageLabel extends VisLabel {
 		private final EditorScene scene;
-		private final EditorEntity entity;
+		private final EditorObject entity;
 
-		public UsageLabel (EditorScene scene, EditorEntity entity) {
+		public UsageLabel (EditorScene scene, EditorObject entity) {
 			super(entity.toPrettyString(), "small");
 			this.scene = scene;
 			this.entity = entity;
@@ -185,7 +186,7 @@ public class AssetsUsageTab extends Tab {
 			return scene;
 		}
 
-		public EditorEntity getEntity () {
+		public EditorObject getEntity () {
 			return entity;
 		}
 	}

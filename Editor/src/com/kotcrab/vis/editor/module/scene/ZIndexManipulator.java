@@ -22,7 +22,7 @@ package com.kotcrab.vis.editor.module.scene;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.EditorObject;
 
 public class ZIndexManipulator extends SceneModule {
 	private UndoModule undoModule;
@@ -39,9 +39,9 @@ public class ZIndexManipulator extends SceneModule {
 	private void moveSelectedEntities (boolean up) {
 		actionGroup = new UndoableActionGroup();
 
-		Array<EditorEntity> selectedEntities = entityManipulator.getSelectedEntities();
+		Array<EditorObject> selectedEntities = entityManipulator.getSelectedEntities();
 
-		for (EditorEntity entity : selectedEntities) {
+		for (EditorObject entity : selectedEntities) {
 			moveEntity(entity, getOverlappingEntities(entity, up), up);
 		}
 
@@ -49,12 +49,12 @@ public class ZIndexManipulator extends SceneModule {
 		undoModule.add(actionGroup);
 	}
 
-	private void moveEntity (EditorEntity entity, Array<EditorEntity> overlappingEntities, boolean up) {
+	private void moveEntity (EditorObject entity, Array<EditorObject> overlappingEntities, boolean up) {
 		if (overlappingEntities.size > 0) {
 			int currentIndex = scene.entities.indexOf(entity, true);
 			int targetIndex = scene.entities.indexOf(overlappingEntities.first(), true);
 
-			for (EditorEntity overlappingEntity : overlappingEntities) {
+			for (EditorObject overlappingEntity : overlappingEntities) {
 				int sceneIndex = scene.entities.indexOf(overlappingEntity, true);
 				if (up ? sceneIndex < targetIndex : sceneIndex > targetIndex)
 					targetIndex = sceneIndex;
@@ -64,11 +64,11 @@ public class ZIndexManipulator extends SceneModule {
 		}
 	}
 
-	private Array<EditorEntity> getOverlappingEntities (EditorEntity entity, boolean up) {
-		Array<EditorEntity> overlapping = new Array<>();
+	private Array<EditorObject> getOverlappingEntities (EditorObject entity, boolean up) {
+		Array<EditorObject> overlapping = new Array<>();
 		int entityIndex = scene.entities.indexOf(entity, true);
 
-		for (EditorEntity sceneEntity : scene.entities) {
+		for (EditorObject sceneEntity : scene.entities) {
 			int sceneEntityIndex = scene.entities.indexOf(sceneEntity, true);
 
 			if (entity != sceneEntity &&
@@ -99,11 +99,11 @@ public class ZIndexManipulator extends SceneModule {
 	}
 
 	private class ZIndexChangeAction implements UndoableAction {
-		private EditorEntity entity;
+		private EditorObject entity;
 		private int currentIndex;
 		private int targetIndex;
 
-		public ZIndexChangeAction (EditorEntity entity, int currentIndex, int targetIndex) {
+		public ZIndexChangeAction (EditorObject entity, int currentIndex, int targetIndex) {
 			this.entity = entity;
 			this.currentIndex = currentIndex;
 			this.targetIndex = targetIndex;

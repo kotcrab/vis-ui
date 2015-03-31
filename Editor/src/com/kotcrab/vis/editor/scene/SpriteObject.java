@@ -24,18 +24,14 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
 
-public class SpriteObject extends SpriteEntity implements EditorEntity {
-	private String cacheRegionName;
-
-	public SpriteObject (String cacheRegionName, TextureRegion region, float x, float y) {
-		super(null, new Sprite(region));
-		this.cacheRegionName = cacheRegionName.replace("\\", "/");
+public class SpriteObject extends SpriteEntity implements EditorObject {
+	public SpriteObject (String texturePath, TextureRegion region, float x, float y) {
+		super(null, texturePath, new Sprite(region));
 		sprite.setPosition(x, y);
 	}
 
 	public SpriteObject (SpriteObject other, Sprite sprite) {
-		super(other.getId(), sprite);
-		this.cacheRegionName = other.cacheRegionName;
+		super(other.getId(), other.getAssetPath(), sprite);
 	}
 
 	public void onDeserialize (TextureRegion region) {
@@ -75,10 +71,6 @@ public class SpriteObject extends SpriteEntity implements EditorEntity {
 	@Override
 	public boolean isRotationSupported () {
 		return true;
-	}
-
-	public String getCacheRegionName () {
-		return cacheRegionName;
 	}
 
 	public Sprite getSprite () {

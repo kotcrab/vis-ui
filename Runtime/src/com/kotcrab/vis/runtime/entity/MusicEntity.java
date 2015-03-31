@@ -23,13 +23,12 @@ import com.badlogic.gdx.utils.Disposable;
 public class MusicEntity extends Entity implements Disposable{
 	protected transient Music music;
 
-	private String musicPath;
 	private boolean playOnStart;
 
 	public MusicEntity (String id, String musicPath, Music music) {
 		super(id);
-		this.musicPath = musicPath;
 		this.music = music;
+		setAssetPath(musicPath);
 	}
 
 	@Override
@@ -92,14 +91,6 @@ public class MusicEntity extends Entity implements Disposable{
 
 	public void play () {
 		music.play();
-	}
-
-	public String getRelativeMusicPath () {
-		return musicPath;
-	}
-
-	public void setMusicPath (String musicPath) {
-		this.musicPath = musicPath;
 	}
 
 	@Override

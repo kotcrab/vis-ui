@@ -19,8 +19,8 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
-import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.EditorObject;
 
 interface BooleanValue {
-	boolean getBoolean (EditorEntity entity);
+	boolean getBoolean (EditorObject entity);
 }

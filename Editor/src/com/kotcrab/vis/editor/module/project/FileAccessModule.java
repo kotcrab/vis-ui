@@ -103,10 +103,6 @@ public class FileAccessModule extends ProjectModule {
 		return relativize(assetsFolder, absolutePath);
 	}
 
-	public String getTextureCacheRegionName (String assetsFolderRelativePath) {
-		return assetsFolderRelativePath.substring(assetsFolderRelativePath.indexOf('/') + 1, assetsFolderRelativePath.lastIndexOf("."));
-	}
-
 	private String relativize (FileHandle base, String absolute) {
 		Path pathAbsolute = Paths.get(absolute);
 		Path pathBase = Paths.get(base.path());

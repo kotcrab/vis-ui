@@ -71,6 +71,6 @@ public class ParticleObjectSerializer extends Serializer<ParticleObject> {
 	}
 
 	private ParticleEffect getNewEffect (ParticleObject obj) {
-		return particleCache.get(fileAccess.getAssetsFolder().child(obj.getRelativeEffectPath()));
+		return particleCache.get(fileAccess.getAssetsFolder().child(obj.getAssetPath()));
 	}
 }

@@ -19,8 +19,8 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
-import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.EditorObject;
 
 interface FloatValue {
-	float getFloat (EditorEntity entity);
+	float getFloat (EditorObject entity);
 }

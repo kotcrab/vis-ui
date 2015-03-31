@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.entity.SpriteEntity;
  */
 public class SpriteData extends EntityData<SpriteEntity> {
 	public String textureAtlas;
-	public String textureRegion;
+	public String texturePath;
 
 	public float x, y;
 	public float width, height;

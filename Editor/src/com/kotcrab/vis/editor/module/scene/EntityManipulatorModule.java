@@ -24,8 +24,6 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
@@ -40,7 +38,7 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
-import com.kotcrab.vis.editor.scene.*;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.MenuUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
@@ -55,13 +53,13 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private EntityProperties entityProperties;
 
-	private Array<EditorEntity> entities;
+	private Array<EditorObject> entities;
 
 	//required for setting position of pasted elements
 	private float copyAttachX, copyAttachY;
-	private Array<EditorEntity> entitiesClipboard = new Array<>();
+	private Array<EditorObject> entitiesClipboard = new Array<>();
 
-	private final Array<EditorEntity> selectedEntities = new Array<>();
+	private final Array<EditorObject> selectedEntities = new Array<>();
 
 	private float lastTouchX, lastTouchY;
 
@@ -107,7 +105,7 @@ public class EntityManipulatorModule extends SceneModule {
 			shapeRenderer.setColor(Color.WHITE);
 			shapeRenderer.begin(ShapeType.Line);
 
-			for (EditorEntity entity : selectedEntities) {
+			for (EditorObject entity : selectedEntities) {
 				Rectangle bounds = entity.getBoundingRectangle();
 				shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
 			}
@@ -125,7 +123,7 @@ public class EntityManipulatorModule extends SceneModule {
 	public void dispose () {
 		entityProperties.dispose();
 
-		for (EditorEntity entity : entities) {
+		for (EditorObject entity : entities) {
 			if (entity instanceof Disposable) {
 				Disposable disposable = (Disposable) entity;
 				disposable.dispose();
@@ -151,7 +149,7 @@ public class EntityManipulatorModule extends SceneModule {
 			entitiesClipboard.clear();
 			entitiesClipboard.addAll(sceneIOModule.getKryo().copy(selectedEntities));
 
-			EditorEntity lastEntity = selectedEntities.peek();
+			EditorObject lastEntity = selectedEntities.peek();
 
 			if (entityPopupMenu.getParent() != null) { //is menu visible
 				copyAttachX = menuX - lastEntity.getX();
@@ -179,11 +177,11 @@ public class EntityManipulatorModule extends SceneModule {
 			float x = camera.getInputX();
 			float y = camera.getInputY();
 
-			EditorEntity baseEntity = entitiesClipboard.peek();
+			EditorObject baseEntity = entitiesClipboard.peek();
 			float xOffset = baseEntity.getX();
 			float yOffset = baseEntity.getY();
 
-			for (EditorEntity entity : entitiesClipboard) {
+			for (EditorObject entity : entitiesClipboard) {
 				float px = x - copyAttachX + (entity.getX() - xOffset);
 				float py = y - copyAttachY + (entity.getY() - yOffset);
 
@@ -192,7 +190,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 			undoModule.execute(new PastedAction(entitiesClipboard));
 
-			Array<EditorEntity> newClipboard = sceneIOModule.getKryo().copy(entitiesClipboard);
+			Array<EditorObject> newClipboard = sceneIOModule.getKryo().copy(entitiesClipboard);
 			entitiesClipboard.clear();
 			entitiesClipboard.addAll(newClipboard);
 		} else
@@ -204,9 +202,9 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	private boolean isMouseInsideSelectedEntities (float x, float y) {
-		for (EditorEntity entity : selectedEntities) {
+		for (EditorObject entity : selectedEntities) {
 			if (entity.getBoundingRectangle().contains(x, y)) {
-				EditorEntity result = findEntityWithSmallestSurfaceArea(x, y);
+				EditorObject result = findEntityWithSmallestSurfaceArea(x, y);
 				if (result == entity) return true;
 			}
 		}
@@ -215,8 +213,8 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	private boolean isMouseInsideEntities (float x, float y) {
-		for (EditorEntity entity : entities) {
-			if (entity.getBoundingRectangle().contains(x, y)) return true;
+		for (EditorObject obj : entities) {
+			if (obj.getBoundingRectangle().contains(x, y)) return true;
 		}
 
 		return false;
@@ -225,20 +223,8 @@ public class EntityManipulatorModule extends SceneModule {
 	public void processDropPayload (Payload payload) {
 		Object obj = payload.getObject();
 
-		if (obj instanceof TextureRegion) {
-			TextureRegion region = (TextureRegion) payload.getObject();
-
-			Sprite sprite = new Sprite(region);
-			float x = camera.getInputX() - sprite.getWidth() / 2;
-			float y = camera.getInputY() - sprite.getHeight() / 2;
-
-			final SpriteObject object = new SpriteObject(cacheModule.getRelativePath(region), region, x, y);
-
-			undoModule.execute(new EntityAddedAction(object));
-		}
-
-		if (obj instanceof ParticleObject || obj instanceof TextObject || obj instanceof MusicObject) {
-			EditorEntity entity = (EditorEntity) obj;
+		if (obj instanceof EditorObject) {
+			EditorObject entity = (EditorObject) obj;
 			float x = camera.getInputX() - entity.getWidth() / 2;
 			float y = camera.getInputY() - entity.getHeight() / 2;
 			entity.setPosition(x, y);
@@ -266,7 +252,7 @@ public class EntityManipulatorModule extends SceneModule {
 				//multiple select made easy
 				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) selectedEntities.clear();
 
-				EditorEntity result = findEntityWithSmallestSurfaceArea(x, y);
+				EditorObject result = findEntityWithSmallestSurfaceArea(x, y);
 				if (result != null && selectedEntities.contains(result, true) == false)
 					selectedEntities.add(result);
 
@@ -287,7 +273,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 			if (dragged == false) {
 				moveActions.clear();
-				for (EditorEntity entity : selectedEntities)
+				for (EditorObject entity : selectedEntities)
 					moveActions.add(new MoveAction(entity));
 			}
 
@@ -298,7 +284,7 @@ public class EntityManipulatorModule extends SceneModule {
 					float deltaX = (x - lastTouchX);
 					float deltaY = (y - lastTouchY);
 
-					for (EditorEntity entity : selectedEntities)
+					for (EditorObject entity : selectedEntities)
 						entity.setPosition(entity.getX() + deltaX, entity.getY() + deltaY);
 
 					lastTouchX = x;
@@ -321,7 +307,7 @@ public class EntityManipulatorModule extends SceneModule {
 		y = camera.getInputY();
 
 		if (button == Buttons.LEFT && dragged == false && mouseInsideSelected == false) {
-			EditorEntity result = findEntityWithSmallestSurfaceArea(x, y);
+			EditorObject result = findEntityWithSmallestSurfaceArea(x, y);
 			if (result != null)
 				selectedEntities.removeValue(result, true);
 
@@ -332,7 +318,7 @@ public class EntityManipulatorModule extends SceneModule {
 			if (isMouseInsideSelectedEntities(x, y) == false)
 				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) selectedEntities.clear();
 
-			EditorEntity result = findEntityWithSmallestSurfaceArea(x, y);
+			EditorObject result = findEntityWithSmallestSurfaceArea(x, y);
 			if (result != null && selectedEntities.contains(result, true) == false)
 				selectedEntities.add(result);
 
@@ -399,11 +385,11 @@ public class EntityManipulatorModule extends SceneModule {
 	 * When selecting entities, and few of them are overlapping, selecting entity with smallest
 	 * area gives better results than just selecting first one.
 	 */
-	private EditorEntity findEntityWithSmallestSurfaceArea (float x, float y) {
-		EditorEntity matchingEntity = null;
+	private EditorObject findEntityWithSmallestSurfaceArea (float x, float y) {
+		EditorObject matchingEntity = null;
 		float lastSurfaceArea = Float.MAX_VALUE;
 
-		for (EditorEntity entity : entities) {
+		for (EditorObject entity : entities) {
 			Rectangle entityBoundingRectangle = entity.getBoundingRectangle();
 			if (entityBoundingRectangle.contains(x, y)) {
 
@@ -424,11 +410,11 @@ public class EntityManipulatorModule extends SceneModule {
 		return entities.size;
 	}
 
-	public Array<EditorEntity> getSelectedEntities () {
+	public Array<EditorObject> getSelectedEntities () {
 		return selectedEntities;
 	}
 
-	public void select (EditorEntity entity) {
+	public void select (EditorObject entity) {
 		if (entities.contains(entity, true) == false)
 			throw new IllegalArgumentException("Cannot select entity that isn't added to entity list");
 
@@ -437,7 +423,7 @@ public class EntityManipulatorModule extends SceneModule {
 		entityProperties.selectedEntitiesChanged();
 	}
 
-	void selectAppend (EditorEntity entity) {
+	void selectAppend (EditorObject entity) {
 		if (entities.contains(entity, true) == false)
 			throw new IllegalArgumentException("Cannot select entity that isn't added to entity list");
 
@@ -449,7 +435,7 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	private void selectAll () {
-		for (EditorEntity entity : entities) {
+		for (EditorObject entity : entities) {
 			if (selectedEntities.contains(entity, true) == false)
 				selectedEntities.add(entity);
 		}
@@ -463,9 +449,9 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	private class PastedAction implements UndoableAction {
-		private Array<EditorEntity> newEntities;
+		private Array<EditorObject> newEntities;
 
-		public PastedAction (Array<EditorEntity> newEntities) {
+		public PastedAction (Array<EditorObject> newEntities) {
 			this.newEntities = new Array<>(newEntities);
 		}
 
@@ -486,9 +472,9 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	private class EntityAddedAction implements UndoableAction {
-		private EditorEntity entity;
+		private EditorObject entity;
 
-		public EntityAddedAction (EditorEntity entity) {
+		public EntityAddedAction (EditorObject entity) {
 			this.entity = entity;
 		}
 
@@ -509,16 +495,16 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private class EntityRemovedAction implements UndoableAction {
 		private Array<Integer> indexes;
-		private Array<EditorEntity> entities;
+		private Array<EditorObject> entities;
 
-		public EntityRemovedAction (Array<EditorEntity> selectedEntities) {
+		public EntityRemovedAction (Array<EditorObject> selectedEntities) {
 			indexes = new Array<>(selectedEntities.size);
 			entities = new Array<>(selectedEntities);
 		}
 
 		@Override
 		public void execute () {
-			for (EditorEntity entity : entities)
+			for (EditorObject entity : entities)
 				indexes.add(scene.entities.indexOf(entity, true));
 
 			scene.entities.removeAll(entities, true);
@@ -538,9 +524,9 @@ public class EntityManipulatorModule extends SceneModule {
 	private class MoveAction implements UndoableAction {
 		private EntityPositionData oldData = new EntityPositionData();
 		private EntityPositionData newData = new EntityPositionData();
-		private EditorEntity entity;
+		private EditorObject entity;
 
-		public MoveAction (EditorEntity entity) {
+		public MoveAction (EditorObject entity) {
 			this.entity = entity;
 			oldData.saveFrom(entity);
 		}
@@ -560,12 +546,12 @@ public class EntityManipulatorModule extends SceneModule {
 		public float x;
 		public float y;
 
-		public void saveFrom (EditorEntity entity) {
+		public void saveFrom (EditorObject entity) {
 			x = entity.getX();
 			y = entity.getY();
 		}
 
-		public void loadTo (EditorEntity entity) {
+		public void loadTo (EditorObject entity) {
 			entity.setPosition(x, y);
 		}
 	}

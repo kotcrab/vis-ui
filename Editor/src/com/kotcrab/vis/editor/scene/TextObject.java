@@ -29,7 +29,7 @@ import com.kotcrab.vis.runtime.entity.TextEntity;
  * Text that you can scale, rotate, change color itp. Supports distance field fonts
  * @author Kotcrab
  */
-public class TextObject extends TextEntity implements EditorEntity {
+public class TextObject extends TextEntity implements EditorObject {
 	private transient EditorFont font;
 
 	public TextObject (BMPEditorFont font, String text) {
@@ -42,7 +42,7 @@ public class TextObject extends TextEntity implements EditorEntity {
 	}
 
 	public TextObject (TextObject other) {
-		super(other.cache.getFont(), other.getId(), other.getRelativeFontPath(), other.getText(), other.getFontSize());
+		super(other.cache.getFont(), other.getId(), other.getAssetPath(), other.getText(), other.getFontSize());
 		this.font = other.font;
 
 		setAutoSetOriginToCenter(other.isAutoSetOriginToCenter());
@@ -95,7 +95,7 @@ public class TextObject extends TextEntity implements EditorEntity {
 		if (this.font != font) {
 			this.font = font;
 
-			relativeFontPath = font.getRelativePath();
+			setAssetPath(font.getRelativePath());
 			cache = new BitmapFontCache(font.get(fontSize));
 			setColor(getColor());
 			textBounds = cache.setText(text, 0, 0);

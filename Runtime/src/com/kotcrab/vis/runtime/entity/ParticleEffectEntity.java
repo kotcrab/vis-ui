@@ -20,17 +20,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.utils.Disposable;
+import com.kotcrab.vis.runtime.scene.VisAssetDescriptor;
 
 public class ParticleEffectEntity extends Entity implements Disposable {
 	protected transient ParticleEffect effect;
 
-	protected String effectRelativePath;
-	private boolean flipX, flipY;
-
 	public ParticleEffectEntity (String id, String effectRelativePath, ParticleEffect effect) {
 		super(id);
 
-		this.effectRelativePath = effectRelativePath.replace("\\", "/");
+		setAssetDescriptor(new VisAssetDescriptor(effectRelativePath));
 
 		this.effect = effect;
 
@@ -68,14 +66,6 @@ public class ParticleEffectEntity extends Entity implements Disposable {
 	public void setPosition (float x, float y) {
 		effect.setPosition(x, y);
 		effect.reset();
-	}
-
-	public String getRelativeEffectPath () {
-		return effectRelativePath;
-	}
-
-	public void setEffectRelativePath (String effectRelativePath) {
-		this.effectRelativePath = effectRelativePath;
 	}
 
 	@Override

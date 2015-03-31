@@ -25,7 +25,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.util.ParticleUtils;
 import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 
-public class ParticleObject extends ParticleEffectEntity implements EditorEntity {
+public class ParticleObject extends ParticleEffectEntity implements EditorObject {
 	private Rectangle bounds;
 
 	public ParticleObject (String relativePath, ParticleEffect effect) {
@@ -34,7 +34,7 @@ public class ParticleObject extends ParticleEffectEntity implements EditorEntity
 	}
 
 	public ParticleObject (ParticleObject other, ParticleEffect effect) {
-		super(other.getId(), other.getRelativeEffectPath(), effect);
+		super(other.getId(), other.getAssetPath(), effect);
 		bounds = new Rectangle();
 	}
 

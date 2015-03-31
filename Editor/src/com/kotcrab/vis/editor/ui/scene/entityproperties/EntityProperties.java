@@ -74,7 +74,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private ColorPicker picker;
 	private Tab parentTab;
 
-	private Array<EditorEntity> entities;
+	private Array<EditorObject> entities;
 
 	private ChangeListener sharedChangeListener;
 	private ChangeListener sharedCheckBoxChangeListener;
@@ -112,7 +112,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private IndeterminateCheckbox xFlipCheck;
 	private IndeterminateCheckbox yFlipCheck;
 
-	public EntityProperties (FileAccessModule fileAccessModule, FontCacheModule fontCacheModule, final UndoModule undoModule, final ColorPicker picker, final Tab parentTab, final Array<EditorEntity> selectedEntitiesList) {
+	public EntityProperties (FileAccessModule fileAccessModule, FontCacheModule fontCacheModule, final UndoModule undoModule, final ColorPicker picker, final Tab parentTab, final Array<EditorObject> selectedEntitiesList) {
 		super(true);
 		this.fileAccessModule = fileAccessModule;
 		this.fontCacheModule = fontCacheModule;
@@ -163,7 +163,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		pickerListener = new ColorPickerAdapter() {
 			@Override
 			public void finished (Color newColor) {
-				for (EditorEntity entity : entities)
+				for (EditorObject entity : entities)
 					entity.setColor(newColor);
 
 				parentTab.dirty();
@@ -313,7 +313,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	}
 
 	private boolean checkEntityList (SpecificObjectTable table) {
-		for (EditorEntity entity : entities)
+		for (EditorObject entity : entities)
 			if (!table.isSupported(entity)) return false;
 
 		return true;
@@ -361,7 +361,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 		snapshots = new SnapshotUndoableActionGroup();
 
-		for (EditorEntity entity : entities) {
+		for (EditorObject entity : entities) {
 			snapshots.add(new SnapshotUndoableAction(entity));
 		}
 	}
@@ -386,7 +386,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		return new NumberInputField(sharedFocusListener, sharedChangeListener);
 	}
 
-	Array<EditorEntity> getEntities () {
+	Array<EditorObject> getEntities () {
 		return entities;
 	}
 
@@ -412,7 +412,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	private void setTintUIForEntities () {
 		Color firstColor = entities.first().getColor();
-		for (EditorEntity entity : entities) {
+		for (EditorObject entity : entities) {
 			if (!firstColor.equals(entity.getColor())) {
 				tint.setUnknown(true);
 				return;
@@ -429,7 +429,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	private void setValuesToEntity () {
 		for (int i = 0; i < entities.size; i++) {
-			EditorEntity entity = entities.get(i);
+			EditorObject entity = entities.get(i);
 
 			entity.setId(idField.getText().equals("") ? null : idField.getText());
 			entity.setPosition(FieldUtils.getFloat(xField, entity.getX()), FieldUtils.getFloat(yField, entity.getY()));
@@ -462,19 +462,19 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			setVisible(true);
 
 			idField.setText(getEntitiesId(entities));
-			xField.setText(getEntitiesFieldValue(EditorEntity::getX));
-			yField.setText(getEntitiesFieldValue(EditorEntity::getY));
-			xScaleField.setText(getEntitiesFieldValue(EditorEntity::getScaleX));
-			yScaleField.setText(getEntitiesFieldValue(EditorEntity::getScaleY));
-			xOriginField.setText(getEntitiesFieldValue(EditorEntity::getOriginX));
-			yOriginField.setText(getEntitiesFieldValue(EditorEntity::getOriginY));
-			rotationField.setText(getEntitiesFieldValue(EditorEntity::getRotation));
+			xField.setText(getEntitiesFieldValue(EditorObject::getX));
+			yField.setText(getEntitiesFieldValue(EditorObject::getY));
+			xScaleField.setText(getEntitiesFieldValue(EditorObject::getScaleX));
+			yScaleField.setText(getEntitiesFieldValue(EditorObject::getScaleY));
+			xOriginField.setText(getEntitiesFieldValue(EditorObject::getOriginX));
+			yOriginField.setText(getEntitiesFieldValue(EditorObject::getOriginY));
+			rotationField.setText(getEntitiesFieldValue(EditorObject::getRotation));
 
 			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
 
 			if (isTintSupportedForEntities(entities)) setTintUIForEntities();
-			setCheckBoxState(entities, xFlipCheck, EditorEntity::isFlipX);
-			setCheckBoxState(entities, yFlipCheck, EditorEntity::isFlipY);
+			setCheckBoxState(entities, xFlipCheck, EditorObject::isFlipX);
+			setCheckBoxState(entities, yFlipCheck, EditorObject::isFlipY);
 		}
 	}
 
@@ -498,11 +498,11 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	}
 
 	private static class SnapshotUndoableAction implements UndoableAction {
-		EditorEntity entity;
+		EditorObject entity;
 		EntityData dataSnapshot;
 		EntityData dataSnapshot2;
 
-		public SnapshotUndoableAction (EditorEntity entity) {
+		public SnapshotUndoableAction (EditorObject entity) {
 			this.entity = entity;
 			this.dataSnapshot = getDataForEntity(entity);
 			this.dataSnapshot2 = getDataForEntity(entity);
@@ -530,7 +530,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			dataSnapshot.loadTo(entity);
 		}
 
-		private EntityData getDataForEntity (EditorEntity entity) {
+		private EntityData getDataForEntity (EditorObject entity) {
 			if (entity instanceof SpriteObject) return new SpriteData();
 			if (entity instanceof TextObject) return new TextObjectData();
 			if (entity instanceof ParticleObject) return new ParticleEffectData();

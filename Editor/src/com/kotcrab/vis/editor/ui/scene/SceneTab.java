@@ -36,7 +36,7 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.*;
-import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
@@ -209,10 +209,10 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		}
 
 		if (event instanceof TexturesReloadedEvent) {
-			for (EditorEntity object : scene.entities) {
+			for (EditorObject object : scene.entities) {
 				if (object instanceof SpriteObject) {
 					SpriteObject spriteObject = (SpriteObject) object;
-					SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getCacheRegionName()));
+					SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getAssetPath()));
 				}
 			}
 		}
@@ -268,11 +268,11 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		return "Entities: " + entityManipulator.getEntityCount() + " FPS: " + Gdx.graphics.getFramesPerSecond() + " Scene: " + scene.width + " x " + scene.height;
 	}
 
-	public void selectEntity (EditorEntity entity) {
+	public void selectEntity (EditorObject entity) {
 		entityManipulator.select(entity);
 	}
 
-	public void centerCamera (EditorEntity entity) {
+	public void centerCamera (EditorObject entity) {
 		cameraModule.setPosition(entity.getX() + entity.getWidth() / 2, entity.getY() + entity.getHeight() / 2);
 	}
 

@@ -128,9 +128,9 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				TextureAtlas atlas = manager.get(spriteData.textureAtlas, TextureAtlas.class);
 				if (atlases.contains(atlas, true) == false) atlases.add(atlas);
 
-				Sprite newSprite = new Sprite(atlas.findRegion(spriteData.textureRegion));
+				Sprite newSprite = new Sprite(atlas.findRegion(spriteData.texturePath.substring(0, spriteData.texturePath.length() - 4)));
 
-				SpriteEntity entity = new SpriteEntity(entityData.id, newSprite);
+				SpriteEntity entity = new SpriteEntity(entityData.id, spriteData.texturePath, newSprite);
 				spriteData.loadTo(entity);
 
 				entities.add(entity);

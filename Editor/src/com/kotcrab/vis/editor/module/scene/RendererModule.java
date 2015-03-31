@@ -25,7 +25,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.kotcrab.vis.editor.scene.EditorEntity;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.util.Log;
 
@@ -54,7 +54,7 @@ public class RendererModule extends SceneModule {
 	public void render (Batch batch) {
 		boolean useShader;
 
-		for (EditorEntity entity : scene.entities) {
+		for (EditorObject entity : scene.entities) {
 			useShader = false;
 
 			if (entity instanceof TextObject) {

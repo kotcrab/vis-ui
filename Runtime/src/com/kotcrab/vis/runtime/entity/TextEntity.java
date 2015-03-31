@@ -33,7 +33,6 @@ public class TextEntity extends Entity {
 	/** Value used for fontSize filed when BMP font is used */
 	public static final int BITMAP_FONT_SIZE = -1;
 
-	protected String relativeFontPath;
 	protected int fontSize;
 	protected transient BitmapFontCache cache;
 	protected boolean distanceFieldShaderEnabled;
@@ -55,7 +54,7 @@ public class TextEntity extends Entity {
 
 	public TextEntity (BitmapFont bitmapFont, String id, String relativeFontPath, String text, int fontSize) {
 		super(id);
-		this.relativeFontPath = relativeFontPath.replace("\\", "/");
+		setAssetPath(relativeFontPath);
 		this.text = text;
 		this.fontSize = fontSize;
 
@@ -215,20 +214,12 @@ public class TextEntity extends Entity {
 		return boundingRectangle;
 	}
 
-	public String getRelativeFontPath () {
-		return relativeFontPath;
-	}
-
 	public int getFontSize () {
 		return fontSize;
 	}
 
 	public boolean isTrueType () {
 		return fontSize != BITMAP_FONT_SIZE;
-	}
-
-	public void setRelativeFontPathForSerialize (String relativeFontPathForSerialize) {
-		this.relativeFontPath = relativeFontPathForSerialize;
 	}
 
 	public boolean isDistanceFieldShaderEnabled () {

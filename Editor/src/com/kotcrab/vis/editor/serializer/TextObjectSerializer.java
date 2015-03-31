@@ -51,7 +51,7 @@ public class TextObjectSerializer extends Serializer<TextObject> {
 		TextObject obj = kryo.readObject(input, TextObject.class, defaultSerializer);
 		kryo.setReferences(true);
 
-		obj.onDeserialize(fontCache.get(fileAccess.getAssetsFolder().child(obj.getRelativeFontPath())));
+		obj.onDeserialize(fontCache.get(fileAccess.getAssetsFolder().child(obj.getAssetPath())));
 		return obj;
 	}
 
