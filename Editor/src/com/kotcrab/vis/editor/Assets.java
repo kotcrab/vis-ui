@@ -29,8 +29,8 @@ public class Assets {
 	public static TextureAtlas misc;
 
 	public static void load () {
-		icons = new TextureAtlas("icons.atlas");
-		misc = new TextureAtlas("misc.atlas");
+		icons = new TextureAtlas("gfx/icons.atlas");
+		misc = new TextureAtlas("gfx/misc.atlas");
 	}
 
 	public static void dispose () {
