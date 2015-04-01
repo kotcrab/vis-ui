@@ -29,6 +29,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
+import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.serializer.*;
 import com.kotcrab.vis.editor.util.Log;
@@ -102,7 +103,7 @@ public class SceneIOModule extends ProjectModule {
 	}
 
 	public void create (FileHandle relativeScenePath, SceneViewport viewport, int width, int height) {
-		EditorScene scene = new EditorScene(relativeScenePath, viewport, width, height);
+		EditorScene scene = new EditorScene(relativeScenePath, App.COMPATIBILITY_CODE, viewport, width, height);
 		save(scene);
 	}
 

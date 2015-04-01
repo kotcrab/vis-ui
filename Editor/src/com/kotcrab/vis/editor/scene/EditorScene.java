@@ -28,14 +28,17 @@ import com.kotcrab.vis.runtime.scene.SceneViewport;
 public class EditorScene implements Disposable {
 	/** Scene file, path is relative to project Vis folder */
 	public String path;
+	public int compatibilityCode;
 	public int width;
 	public int height;
 	public SceneViewport viewport;
 
+
 	public Array<EditorObject> entities = new Array<EditorObject>();
 
-	public EditorScene (FileHandle file, SceneViewport viewport, int width, int height) {
+	public EditorScene (FileHandle file, int compatibilityCode, SceneViewport viewport, int width, int height) {
 		this.path = file.path();
+		this.compatibilityCode = compatibilityCode;
 		this.viewport = viewport;
 		this.width = width;
 		this.height = height;

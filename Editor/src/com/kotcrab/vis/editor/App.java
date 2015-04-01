@@ -34,6 +34,7 @@ public class App {
 	public static final String TAG = "App";
 
 	public static final int VERSION_CODE = 2;
+	public static final int COMPATIBILITY_CODE = 2;
 	public static final String VERSION = "0.0.2-SNAPSHOT";
 
 	public static final boolean ERROR_REPORTS = false;

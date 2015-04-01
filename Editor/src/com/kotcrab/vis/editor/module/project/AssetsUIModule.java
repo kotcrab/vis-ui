@@ -383,7 +383,13 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		}
 
 		private void showDeleteDialog (FileHandle file) {
-			getStage().addActor(new DeleteDialog(file, assetsUsageAnalyzer.canAnalyze(file), result -> {
+			boolean canBeSafeDeleted = assetsUsageAnalyzer.canAnalyze(file);
+			getStage().addActor(new DeleteDialog(file, canBeSafeDeleted, result -> {
+				if (canBeSafeDeleted == false) {
+					FileUtils.delete(file);
+					return;
+				}
+
 				if (result.safeDelete) {
 					AssetsUsages usages = assetsUsageAnalyzer.analyze(file);
 					if (usages.count == 0)
