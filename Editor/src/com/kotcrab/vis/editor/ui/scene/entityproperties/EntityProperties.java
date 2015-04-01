@@ -424,7 +424,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	}
 
 	private String getEntitiesFieldValue (FloatValue floatValue) {
-		return Utils.getEntitiesFieldFloatValue(entities, floatValue);
+		return getEntitiesFieldFloatValue(entities, floatValue);
 	}
 
 	private void setValuesToEntity () {

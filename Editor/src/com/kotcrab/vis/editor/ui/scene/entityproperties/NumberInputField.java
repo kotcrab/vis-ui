@@ -30,24 +30,26 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
-import org.lwjgl.input.Keyboard;
 
 import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.floatToString;
 
 class NumberInputField extends VisValidableTextField {
-
 	private static FieldFilter sharedFieldFilter = new FieldFilter();
 	private static FieldValidator sharedFieldValidator = new FieldValidator();
+
+	private TimerRepeatTask repeatTask;
 
 	public NumberInputField (FocusListener sharedFocusListener, ChangeListener sharedChangeListener) {
 		addValidator(sharedFieldValidator);
 
-		//without disabling it, it would case to set old values from new entities on switch
+		//without disabling it, it would cause to set old values from new entities on switch
 		setProgrammaticChangeEvents(false);
 
 		addListener(sharedFocusListener);
 		addListener(sharedChangeListener);
 		setTextFieldFilter(sharedFieldFilter);
+
+		repeatTask = new TimerRepeatTask();
 	}
 
 	@Override
@@ -55,69 +57,72 @@ class NumberInputField extends VisValidableTextField {
 		return new InputFieldListener();
 	}
 
-	public class InputFieldListener extends TextFieldClickListener {
-		private TimerRepeatTask timerTask;
-		private boolean keyTypedReturnValue;
+	private void changeFieldValue (float value) {
+		try {
+			float fieldValue = Float.parseFloat(getText());
+			fieldValue += value;
 
-		public InputFieldListener () {
-			timerTask = new TimerRepeatTask();
+			int lastPos = getCursorPosition();
+			setText(floatToString(fieldValue));
+			NumberInputField.this.setCursorPosition(lastPos);
+		} catch (NumberFormatException ex) {
 		}
+	}
+
+	public class InputFieldListener extends TextFieldClickListener {
 
 		@Override
 		public boolean keyDown (InputEvent event, int keycode) {
-			return super.keyDown(event, keycode);
-		}
+			repeatTask.cancel();
 
-		@Override
-		public boolean keyTyped (InputEvent event, char character) {
-			keyTypedReturnValue = false;
-
-			checkKeys();
-
-			if (character == '-' && NumberInputField.this.getCursorPosition() > 0 && getText().startsWith("-") == false)
-				return keyTypedReturnValue;
-
-			if (character == '.' && getText().contains(".")) return keyTypedReturnValue;
-
-			return (keyTypedReturnValue || super.keyTyped(event, character));
-		}
-
-		private void checkKeys () {
-			float delta = 0;
+			int delta = 0;
 			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) delta = 1;
 			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) delta = 10;
 
 			if (delta != 0) {
-				//current workaround for https://github.com/libgdx/libgdx/pull/2592
-				if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) changeFieldValue(delta * -1);
-				if (Gdx.input.isKeyPressed(Keys.PLUS)) changeFieldValue(delta);
+				if (keycode == Keys.MINUS) {
+					changeFieldValue(delta * -1);
 
-				if (keyTypedReturnValue) {
-					timerTask.cancel();
-					Timer.schedule(timerTask, 0.1f);
+					if (repeatTask.isScheduled() == false || repeatTask.valueDelta != delta) {
+						repeatTask.valueDelta = delta * -1;
+						repeatTask.cancel();
+						Timer.schedule(repeatTask, 0.1f, 0.1f);
+						return false;
+					}
+
+					return false;
 				}
+				if (keycode == Keys.PLUS) {
+					changeFieldValue(delta);
+
+					if (repeatTask.isScheduled() == false || repeatTask.valueDelta != delta) {
+						repeatTask.valueDelta = delta;
+						repeatTask.cancel();
+						Timer.schedule(repeatTask, 0.1f, 0.1f);
+						return false;
+					}
+
+					return false;
+				}
+
 			}
+
+			return super.keyDown(event, keycode);
 		}
 
-		private void changeFieldValue (float value) {
-			keyTypedReturnValue = true;
-
-			try {
-				float fieldValue = Float.parseFloat(getText());
-				fieldValue += value;
-
-				int lastPos = getCursorPosition();
-				setText(floatToString(fieldValue));
-				NumberInputField.this.setCursorPosition(lastPos);
-			} catch (NumberFormatException ex) {
-			}
+		@Override
+		public boolean keyUp (InputEvent event, int keycode) {
+			repeatTask.cancel();
+			return super.keyUp(event, keycode);
 		}
+	}
 
-		private class TimerRepeatTask extends Task {
-			@Override
-			public void run () {
-				checkKeys();
-			}
+	private class TimerRepeatTask extends Task {
+		public int valueDelta;
+
+		@Override
+		public void run () {
+			changeFieldValue(valueDelta);
 		}
 	}
 
@@ -138,14 +143,12 @@ class NumberInputField extends VisValidableTextField {
 
 	private static class FieldFilter implements TextFieldFilter {
 		@Override
-		public boolean acceptChar (VisTextField textField, char c) {
-			//if(textField.getCursorPosition() > 0 && Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) && c == '-') return false;
-			//if(textField.getCursorPosition() > 0 && c == '-') return false;
-			if (c == '.') return true;
-			if (c == '-') return true;
-			if (c == '+') return false;
+		public boolean acceptChar (VisTextField field, char c) {
+			if (c == '-' && field.getCursorPosition() > 0 && field.getText().startsWith("-") == false) return false;
+			if (c == '.' && field.getText().contains(".")) return false;
 
-			if (c == '?') return true;
+			if (c == '.' || c == '-' || c == '?') return true;
+			if (c == '+') return false;
 
 			return Character.isDigit(c);
 		}
