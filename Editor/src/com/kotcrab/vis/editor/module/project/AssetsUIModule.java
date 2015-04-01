@@ -193,6 +193,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	private void createContentTree () {
 		contentTree = new VisTree();
 		contentTree.getSelection().setMultiple(false);
+		contentTree.getSelection().setRequired(true);
 		treeTable.add(createScrollPane(contentTree, false)).expand().fill();
 
 		contentTree.addListener(new ChangeListener() {
@@ -303,7 +304,6 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 			sceneTabsModule.open(scene);
 			return;
 		}
-
 	}
 
 	private boolean isOpenSupported (String extension) {
@@ -333,7 +333,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 
 	@Override
 	public void fileDeleted (FileHandle file) {
-		//altthoug fileChanged covers 'delete' event, that event is sent before the actual file is deleted from disk,
+		//although fileChanged covers 'delete' event, that event is sent before the actual file is deleted from disk,
 		//thus refreshing list at that moment would be pointless (the file is still on the disk)
 		refreshAllIfNeeded(file);
 	}
