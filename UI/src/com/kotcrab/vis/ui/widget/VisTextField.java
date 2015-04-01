@@ -77,7 +77,6 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	protected boolean writeEnters;
 	protected CharSequence displayText;
 	protected float textHeight, textOffset;
-	// This class was copied from LibGDX TextField, few lines were changed
 	VisTextFieldStyle style;
 	InputListener inputListener;
 	TextFieldListener listener;
