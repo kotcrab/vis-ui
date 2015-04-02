@@ -24,6 +24,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -65,6 +66,7 @@ class NumberInputField extends VisValidableTextField {
 			int lastPos = getCursorPosition();
 			setText(floatToString(fieldValue));
 			NumberInputField.this.setCursorPosition(lastPos);
+			fire(new ChangeEvent());
 		} catch (NumberFormatException ex) {
 		}
 	}

@@ -38,6 +38,7 @@ import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.ObjectGroup;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
@@ -49,6 +50,8 @@ import com.kotcrab.vis.ui.widget.VisTable;
 public class SceneTab extends MainContentTab implements DragAndDropTarget, EventListener, SceneMenuButtonsListener {
 	private Editor editor;
 	private EditorScene scene;
+
+	private boolean savedAtLeastOnce;
 
 	private MenuBarModule menuBarModule;
 	private StatusBarModule statusBarModule;
@@ -203,7 +206,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 			}
 
 			if (event instanceof UndoEvent) {
-				if (undoModule.getUndoSize() == 0)
+				if (undoModule.getUndoSize() == 0 && savedAtLeastOnce == false)
 					setDirty(false);
 			}
 		}
@@ -214,9 +217,14 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 					SpriteObject spriteObject = (SpriteObject) object;
 					SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getAssetPath()));
 				}
-			}
-		}
 
+				if (object instanceof ObjectGroup) {
+					ObjectGroup group = (ObjectGroup) object;
+					group.reloadTextures(cacheModule);
+				}
+			}
+
+		}
 		return false;
 	}
 
@@ -226,6 +234,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		if (sceneIOModule.save(scene)) {
 			setDirty(false);
 			sceneMC.save();
+			savedAtLeastOnce = true;
 			return true;
 		} else
 			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Unknown error encountered while saving resource");
@@ -262,6 +271,16 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	@Override
 	public void redo () {
 		undoModule.redo();
+	}
+
+	@Override
+	public void group () {
+		entityManipulator.groupSelection();
+	}
+
+	@Override
+	public void ungroup () {
+		entityManipulator.ungroupSelection();
 	}
 
 	public String getInfoLabelText () {

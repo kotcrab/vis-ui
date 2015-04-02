@@ -17,20 +17,22 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.ui.scene;
+package com.kotcrab.vis.editor.scene;
 
-public interface SceneMenuButtonsListener {
-	void showSceneSettings ();
+import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.data.EntityData;
+import com.kotcrab.vis.runtime.entity.Entity;
 
-	void resetCamera ();
+public class ObjectGroupData extends EntityData<ObjectGroup> {
+	public Array<Entity> entities;
 
-	void resetCameraZoom ();
+	@Override
+	public void saveFrom (ObjectGroup group) {
+		entities = group.getEntities();
+	}
 
-	void undo ();
-
-	void redo ();
-
-	void group ();
-
-	void ungroup ();
+	@Override
+	public void loadTo (ObjectGroup group) {
+		group.setEntities(entities);
+	}
 }

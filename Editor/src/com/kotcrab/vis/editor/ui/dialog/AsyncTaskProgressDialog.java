@@ -66,7 +66,7 @@ public class AsyncTaskProgressDialog extends VisWindow {
 
 			@Override
 			public void failed (String reason, Exception ex) {
-				DialogUtils.showErrorDialog(Editor.instance.getStage(), reason, ex);
+				DialogUtils.showErrorDialog(Editor.instance.getStage(), reason == null ? "Unkown error occurred" : reason, ex);
 			}
 		});
 

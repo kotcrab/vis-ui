@@ -42,10 +42,7 @@ import com.kotcrab.vis.editor.module.scene.UndoableActionGroup;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.FieldUtils;
-import com.kotcrab.vis.runtime.data.EntityData;
-import com.kotcrab.vis.runtime.data.MusicData;
-import com.kotcrab.vis.runtime.data.ParticleEffectData;
-import com.kotcrab.vis.runtime.data.SpriteData;
+import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
@@ -183,6 +180,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		specificTables.add(new TTFTextObjectTable(this));
 		specificTables.add(new BMPTextObjectTable(this));
 		specificTables.add(new MusicObjectTable(this));
+		specificTables.add(new ObjectGroupTable(this));
 
 		propertiesTable = new VisTable(true);
 
@@ -535,6 +533,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			if (entity instanceof TextObject) return new TextObjectData();
 			if (entity instanceof ParticleObject) return new ParticleEffectData();
 			if (entity instanceof MusicObject) return new MusicData();
+			if (entity instanceof SoundObject) return new SoundData();
+			if (entity instanceof ObjectGroup) return new ObjectGroupData();
 
 			throw new UnsupportedOperationException("Cannot create snapshots entity data for entity class: " + entity.getClass());
 		}

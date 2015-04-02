@@ -197,65 +197,8 @@ public class ExportModule extends ProjectModule {
 					sceneData.entities = new Array<>();
 
 					for (EditorObject entity : editorScene.entities) {
-						if (entity instanceof SpriteObject) {
-							SpriteObject obj = (SpriteObject) entity;
-
-							SpriteData data = new SpriteData();
-							data.saveFrom(obj);
-
-							data.id = obj.getId();
-							data.textureAtlas = "gfx/textures.atlas";
-							data.texturePath = obj.getAssetPath();
-
-							sceneData.entities.add(data);
-							continue;
-						}
-
-						if (entity instanceof TextObject) {
-							TextObject obj = (TextObject) entity;
-
-							TextData data = new TextData();
-							data.id = obj.getId();
-							data.saveFrom(obj);
-
-							sceneData.entities.add(data);
-							continue;
-						}
-
-						if (entity instanceof ParticleObject) {
-							ParticleObject obj = (ParticleObject) entity;
-
-							ParticleEffectData data = new ParticleEffectData();
-							data.id = obj.getId();
-							data.saveFrom(obj);
-
-							sceneData.entities.add(data);
-							continue;
-						}
-
-						if (entity instanceof MusicObject) {
-							MusicObject obj = (MusicObject) entity;
-
-							MusicData data = new MusicData();
-							data.id = obj.getId();
-							data.saveFrom(obj);
-
-							sceneData.entities.add(data);
-							continue;
-						}
-
-						if (entity instanceof SoundObject) {
-							SoundObject obj = (SoundObject) entity;
-
-							SoundData data = new SoundData();
-							data.id = obj.getId();
-							data.saveFrom(obj);
-
-							sceneData.entities.add(data);
-							continue;
-						}
-
-						Log.error("Ignoring unknown entity: " + entity.getClass());
+						if (exportEntity(sceneData.entities, entity) == false)
+							Log.error("Ignoring unknown entity: " + entity.getClass());
 					}
 
 					json.toJson(sceneData, outDir.child(file.name()));
@@ -264,6 +207,86 @@ public class ExportModule extends ProjectModule {
 				} else
 					Log.warn("Unknown file in 'scene' directory: " + file.path());
 			}
+		}
+
+		private boolean exportEntity (Array<EntityData> entities, EditorObject entity) {
+			if (entity instanceof SpriteObject) {
+				SpriteObject obj = (SpriteObject) entity;
+
+				SpriteData data = new SpriteData();
+				data.saveFrom(obj);
+
+				data.id = obj.getId();
+				data.textureAtlas = "gfx/textures.atlas";
+				data.texturePath = obj.getAssetPath();
+
+				entities.add(data);
+				return true;
+			}
+
+			if (entity instanceof TextObject) {
+				TextObject obj = (TextObject) entity;
+
+				TextData data = new TextData();
+				data.id = obj.getId();
+				data.saveFrom(obj);
+
+				entities.add(data);
+				return true;
+			}
+
+			if (entity instanceof ParticleObject) {
+				ParticleObject obj = (ParticleObject) entity;
+
+				ParticleEffectData data = new ParticleEffectData();
+				data.id = obj.getId();
+				data.saveFrom(obj);
+
+				entities.add(data);
+				return true;
+			}
+
+			if (entity instanceof MusicObject) {
+				MusicObject obj = (MusicObject) entity;
+
+				MusicData data = new MusicData();
+				data.id = obj.getId();
+				data.saveFrom(obj);
+
+				entities.add(data);
+				return true;
+			}
+
+			if (entity instanceof SoundObject) {
+				SoundObject obj = (SoundObject) entity;
+
+				SoundData data = new SoundData();
+				data.id = obj.getId();
+				data.saveFrom(obj);
+
+				entities.add(data);
+				return true;
+			}
+
+			if (entity instanceof ObjectGroup) {
+				ObjectGroup group = (ObjectGroup) entity;
+
+				if (group.isPreserveOnRuntime()) {
+					EntityGroupData data = new EntityGroupData(group.getId());
+
+					for (EditorObject object : group.getObjects())
+						exportEntity(data.entities, object);
+
+					entities.add(data);
+				} else {
+					for (EditorObject object : group.getObjects())
+						exportEntity(entities, object);
+				}
+
+				return true;
+			}
+
+			return false;
 		}
 
 	}

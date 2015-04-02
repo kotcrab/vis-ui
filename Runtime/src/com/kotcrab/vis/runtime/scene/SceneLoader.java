@@ -79,9 +79,17 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
 
-		for (EntityData entityData : data.entities) {
-			//NOTE: when using 'relative path' form data, path must have / as path separator, using \ is not supported and will cause "Assets not loaded" exception
-			//slash replacing should be handled in EntityData
+		loadDepsForEntities(deps, data.entities);
+
+		return deps;
+	}
+
+	private void loadDepsForEntities (Array<AssetDescriptor> deps, Array<EntityData> entities) {
+		for (EntityData entityData : entities) {
+			if (entityData instanceof EntityGroupData) {
+				EntityGroupData groupData = (EntityGroupData) entityData;
+				loadDepsForEntities(deps, groupData.entities);
+			}
 
 			if (entityData instanceof SpriteData) {
 				SpriteData spriteData = (SpriteData) entityData;
@@ -109,8 +117,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				deps.add(new AssetDescriptor(musicData.soundPath, Sound.class));
 			}
 		}
-
-		return deps;
 	}
 
 	private void checkShader (Array<AssetDescriptor> deps) {
@@ -127,7 +133,23 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 		scene = new Scene(entities, atlases, manager, data.viewport, data.width, data.height);
 
-		for (EntityData entityData : data.entities) {
+		loadEntitiesFromData(manager, atlases, data.entities, entities);
+
+		if (distanceFieldShaderLoaded)
+			scene.getDistanceFieldShaderFromManager(distanceFieldShader);
+	}
+
+	private void loadEntitiesFromData (AssetManager manager, Array<TextureAtlas> atlases, Array<EntityData> datas, Array<Entity> entities) {
+		for (EntityData entityData : datas) {
+			if (entityData instanceof EntityGroupData) {
+				EntityGroupData groupData = (EntityGroupData) entityData;
+
+				EntityGroup group = new EntityGroup(groupData.id);
+				loadEntitiesFromData(manager, atlases, groupData.entities, group.getEntities());
+				entities.add(group);
+				continue;
+			}
+
 			if (entityData instanceof SpriteData) {
 				SpriteData spriteData = (SpriteData) entityData;
 
@@ -140,6 +162,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				spriteData.loadTo(entity);
 
 				entities.add(entity);
+				continue;
 			}
 
 			if (entityData instanceof TextData) {
@@ -154,6 +177,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				TextEntity entity = new TextEntity(textData.id, font, textData.fontPath, textData.text, textData.fontSize);
 				textData.loadTo(entity);
 				entities.add(entity);
+				continue;
 			}
 
 			if (entityData instanceof MusicData) {
@@ -161,6 +185,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				MusicEntity entity = new MusicEntity(musicData.id, musicData.musicPath, manager.get(musicData.musicPath, Music.class));
 				musicData.loadTo(entity);
 				entities.add(entity);
+				continue;
 			}
 
 			if (entityData instanceof SoundData) {
@@ -169,11 +194,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				soundData.loadTo(entity);
 				entities.add(entity);
 			}
-
 		}
-
-		if (distanceFieldShaderLoaded)
-			scene.getDistanceFieldShaderFromManager(distanceFieldShader);
 	}
 
 	@Override

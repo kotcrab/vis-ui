@@ -28,26 +28,28 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
-import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.scene.ObjectGroup;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.MenuUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 
 public class EntityManipulatorModule extends SceneModule {
+	private Stage stage;
+
 	private CameraModule camera;
 	private UndoModule undoModule;
 	private SceneIOModule sceneIOModule;
-	private TextureCacheModule cacheModule;
 
 	private ShapeRenderer shapeRenderer;
 
@@ -77,7 +79,8 @@ public class EntityManipulatorModule extends SceneModule {
 	private float menuX, menuY;
 
 	@Override
-	public void added () {
+	public void init () {
+		stage = Editor.instance.getStage();
 		this.entities = scene.entities;
 
 		createPopupMenu();
@@ -86,10 +89,9 @@ public class EntityManipulatorModule extends SceneModule {
 		camera = sceneContainer.get(CameraModule.class);
 		undoModule = sceneContainer.get(UndoModule.class);
 		sceneIOModule = projectContainer.get(SceneIOModule.class);
-		cacheModule = projectContainer.get(TextureCacheModule.class);
 
-		ColorPickerModule pickerModule = container.get(ColorPickerModule.class);
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
+		ColorPickerModule pickerModule = container.get(ColorPickerModule.class);
 		FontCacheModule fontCacheModule = projectContainer.get(FontCacheModule.class);
 		entityProperties = new EntityProperties(fileAccess, fontCacheModule, undoModule, pickerModule.getPicker(), sceneTab, selectedEntities);
 
@@ -123,12 +125,8 @@ public class EntityManipulatorModule extends SceneModule {
 	public void dispose () {
 		entityProperties.dispose();
 
-		for (EditorObject entity : entities) {
-			if (entity instanceof Disposable) {
-				Disposable disposable = (Disposable) entity;
-				disposable.dispose();
-			}
-		}
+		for (EditorObject entity : entities)
+			entity.dispose();
 	}
 
 	private void createPopupMenu () {
@@ -188,7 +186,7 @@ public class EntityManipulatorModule extends SceneModule {
 				entity.setPosition(px, py);
 			}
 
-			undoModule.execute(new PastedAction(entitiesClipboard));
+			undoModule.execute(new EntitiesAddedAction(entitiesClipboard));
 
 			Array<EditorObject> newClipboard = sceneIOModule.getKryo().copy(entitiesClipboard);
 			entitiesClipboard.clear();
@@ -375,8 +373,6 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private void deleteSelectedEntities () {
 		undoModule.execute(new EntityRemovedAction(selectedEntities));
-		selectedEntities.clear();
-		entityProperties.selectedEntitiesChanged();
 	}
 
 	/**
@@ -448,10 +444,50 @@ public class EntityManipulatorModule extends SceneModule {
 		entityProperties.selectedEntitiesChanged();
 	}
 
-	private class PastedAction implements UndoableAction {
+	public void groupSelection () {
+		if (selectedEntities.size == 0) {
+			App.eventBus.post(new StatusBarEvent("Nothing to group!"));
+			return;
+		}
+
+		UndoableActionGroup actionGroup = new UndoableActionGroup();
+
+		ObjectGroup objGroup = new ObjectGroup();
+		objGroup.addEntities(selectedEntities);
+
+		actionGroup.execute(new EntityRemovedAction(selectedEntities));
+		actionGroup.execute(new EntityAddedAction(objGroup));
+		actionGroup.finalizeGroup();
+
+		undoModule.add(actionGroup);
+	}
+
+	public void ungroupSelection () {
+		if (selectedEntities.size == 0) {
+			App.eventBus.post(new StatusBarEvent("Nothing to ungroup!"));
+			return;
+		}
+
+		UndoableActionGroup actionGroup = new UndoableActionGroup();
+
+		for (EditorObject obj : selectedEntities) {
+			if (obj instanceof ObjectGroup) {
+				ObjectGroup group = (ObjectGroup) obj;
+
+				actionGroup.add(new EntityRemovedAction(group));
+				actionGroup.add(new EntitiesAddedAction(group.getObjects()));
+			}
+		}
+
+		actionGroup.finalizeGroup();
+
+		undoModule.execute(actionGroup);
+	}
+
+	private class EntitiesAddedAction implements UndoableAction {
 		private Array<EditorObject> newEntities;
 
-		public PastedAction (Array<EditorObject> newEntities) {
+		public EntitiesAddedAction (Array<EditorObject> newEntities) {
 			this.newEntities = new Array<>(newEntities);
 		}
 
@@ -500,6 +536,12 @@ public class EntityManipulatorModule extends SceneModule {
 		public EntityRemovedAction (Array<EditorObject> selectedEntities) {
 			indexes = new Array<>(selectedEntities.size);
 			entities = new Array<>(selectedEntities);
+		}
+
+		public EntityRemovedAction (EditorObject object) {
+			indexes = new Array<>(1);
+			entities = new Array<>(1);
+			entities.add(object);
 		}
 
 		@Override

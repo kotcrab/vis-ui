@@ -132,6 +132,9 @@ public class MenuBarModule extends EditorModule {
 
 		menu.addItem(createMenuItem("Undo", Icons.UNDO, () -> sceneButtonsListener.undo()));
 		menu.addItem(createMenuItem("Redo", Icons.REDO, () -> sceneButtonsListener.redo()));
+		menu.addSeparator();
+		menu.addItem(createMenuItem("Group", null, () -> sceneButtonsListener.group()));
+		menu.addItem(createMenuItem("Ungroup", null, () -> sceneButtonsListener.ungroup()));
 	}
 
 	private void createSceneMenu () {
