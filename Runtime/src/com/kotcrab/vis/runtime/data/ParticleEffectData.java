@@ -21,17 +21,20 @@ import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 public class ParticleEffectData extends EntityData<ParticleEffectEntity> {
 	public String relativePath;
 	public float x, y;
+	public boolean active;
 
 	@Override
 	public void saveFrom (ParticleEffectEntity entity) {
 		relativePath = entity.getAssetPath();
 		x = entity.getX();
 		y = entity.getY();
+		active = entity.isActive();
 	}
 
 	@Override
 	public void loadTo (ParticleEffectEntity entity) {
 		entity.setAssetPath(relativePath);
 		entity.setPosition(x, y);
+		entity.setActive(active);
 	}
 }

@@ -24,6 +24,7 @@ import com.kotcrab.vis.runtime.scene.VisAssetDescriptor;
 
 public class ParticleEffectEntity extends Entity implements Disposable {
 	protected transient ParticleEffect effect;
+	private boolean active = true;
 
 	public ParticleEffectEntity (String id, String effectRelativePath, ParticleEffect effect) {
 		super(id);
@@ -31,18 +32,17 @@ public class ParticleEffectEntity extends Entity implements Disposable {
 		setAssetDescriptor(new VisAssetDescriptor(effectRelativePath));
 
 		this.effect = effect;
-
-		effect.start();
 	}
 
 	@Override
 	public void render (Batch batch) {
-		effect.update(Gdx.graphics.getDeltaTime());
+		if (active)
+			effect.update(Gdx.graphics.getDeltaTime());
 
 		effect.draw(batch);
 
-		if (effect.isComplete())
-			effect.reset();
+		if (isComplete())
+			reset();
 	}
 
 	public float getX () {
@@ -51,7 +51,7 @@ public class ParticleEffectEntity extends Entity implements Disposable {
 
 	public void setX (float x) {
 		effect.setPosition(x, getY());
-		effect.reset();
+		reset();
 	}
 
 	public float getY () {
@@ -60,16 +60,32 @@ public class ParticleEffectEntity extends Entity implements Disposable {
 
 	public void setY (float y) {
 		effect.setPosition(getX(), y);
-		effect.reset();
+		reset();
 	}
 
 	public void setPosition (float x, float y) {
 		effect.setPosition(x, y);
-		effect.reset();
+		reset();
 	}
 
 	@Override
 	public void dispose () {
 		effect.dispose();
+	}
+
+	public void reset () {
+		effect.reset();
+	}
+
+	public boolean isComplete () {
+		return effect.isComplete();
+	}
+
+	public boolean isActive () {
+		return active;
+	}
+
+	public void setActive (boolean active) {
+		this.active = active;
 	}
 }

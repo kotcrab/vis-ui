@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor.scene;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Rectangle;
@@ -45,7 +46,13 @@ public class ParticleObject extends ParticleEffectEntity implements EditorObject
 
 	@Override
 	public void render (Batch batch) {
-		super.render(batch);
+		//effect is always active in editor
+		effect.update(Gdx.graphics.getDeltaTime());
+		effect.draw(batch);
+
+		if (isComplete())
+			reset();
+
 		ParticleUtils.calculateBoundingRectangle(effect, bounds, false);
 	}
 
