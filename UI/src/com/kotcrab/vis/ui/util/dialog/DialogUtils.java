@@ -145,6 +145,12 @@ public class DialogUtils {
 	private static String getStackTrace (Throwable throwable) {
 		StringBuilder builder = new StringBuilder();
 
+		String msg = throwable.getMessage();
+		if(msg != null) {
+			builder.append(msg);
+			builder.append("\n\n");
+		}
+
 		for (StackTraceElement element : throwable.getStackTrace()) {
 			builder.append(element);
 			builder.append("\n");
