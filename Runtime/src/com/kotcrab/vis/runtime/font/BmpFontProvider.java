@@ -34,7 +34,7 @@ public class BmpFontProvider implements FontProvider {
 			params.magFilter = TextureFilter.Linear;
 		}
 
-		dependencies.add(new AssetDescriptor(data.relativeFontPath, BitmapFont.class, params));
+		dependencies.add(new AssetDescriptor(data.fontPath, BitmapFont.class, params));
 	}
 
 	@Override

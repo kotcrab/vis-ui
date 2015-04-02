@@ -244,6 +244,17 @@ public class ExportModule extends ProjectModule {
 							continue;
 						}
 
+						if (entity instanceof SoundObject) {
+							SoundObject obj = (SoundObject) entity;
+
+							SoundData data = new SoundData();
+							data.id = obj.getId();
+							data.saveFrom(obj);
+
+							sceneData.entities.add(data);
+							continue;
+						}
+
 						Log.error("Ignoring unknown entity: " + entity.getClass());
 					}
 

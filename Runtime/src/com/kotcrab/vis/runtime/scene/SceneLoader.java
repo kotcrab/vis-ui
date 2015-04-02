@@ -24,6 +24,7 @@ import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -102,6 +103,11 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				MusicData musicData = (MusicData) entityData;
 				deps.add(new AssetDescriptor(musicData.musicPath, Music.class));
 			}
+
+			if (entityData instanceof SoundData) {
+				SoundData musicData = (SoundData) entityData;
+				deps.add(new AssetDescriptor(musicData.soundPath, Sound.class));
+			}
 		}
 
 		return deps;
@@ -128,7 +134,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				TextureAtlas atlas = manager.get(spriteData.textureAtlas, TextureAtlas.class);
 				if (atlases.contains(atlas, true) == false) atlases.add(atlas);
 
-				Sprite newSprite = new Sprite(atlas.findRegion(spriteData.texturePath.substring(0, spriteData.texturePath.length() - 4)));
+				Sprite newSprite = new Sprite(atlas.findRegion(spriteData.texturePath.substring(4, spriteData.texturePath.length() - 4)));
 
 				SpriteEntity entity = new SpriteEntity(entityData.id, spriteData.texturePath, newSprite);
 				spriteData.loadTo(entity);
@@ -143,18 +149,24 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				if (textData.isTrueType)
 					font = manager.get(textData.arbitraryFontName, BitmapFont.class);
 				else
-					font = manager.get(textData.relativeFontPath, BitmapFont.class);
+					font = manager.get(textData.fontPath, BitmapFont.class);
 
-				//TODO refactor, id first
-				TextEntity entity = new TextEntity(font, textData.id, textData.relativeFontPath, textData.text, textData.fontSize);
+				TextEntity entity = new TextEntity(textData.id, font, textData.fontPath, textData.text, textData.fontSize);
 				textData.loadTo(entity);
 				entities.add(entity);
 			}
 
 			if (entityData instanceof MusicData) {
 				MusicData musicData = (MusicData) entityData;
-				MusicEntity entity = new MusicEntity(musicData.id, musicData.musicPath, Gdx.audio.newMusic(Gdx.files.internal(musicData.musicPath)));
+				MusicEntity entity = new MusicEntity(musicData.id, musicData.musicPath, manager.get(musicData.musicPath, Music.class));
 				musicData.loadTo(entity);
+				entities.add(entity);
+			}
+
+			if (entityData instanceof SoundData) {
+				SoundData soundData = (SoundData) entityData;
+				SoundEntity entity = new SoundEntity(soundData.id, soundData.soundPath, manager.get(soundData.soundPath, Sound.class));
+				soundData.loadTo(entity);
 				entities.add(entity);
 			}
 

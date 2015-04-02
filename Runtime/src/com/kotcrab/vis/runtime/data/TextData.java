@@ -27,7 +27,7 @@ public class TextData extends EntityData<TextEntity> {
 	public Color tint = Color.WHITE;
 
 	public String text;
-	public String relativeFontPath;
+	public String fontPath;
 	/** Arbitrary font name used by assets manager to recognize different font sizes for single truetype font */
 	public String arbitraryFontName;
 	public int fontSize;
@@ -52,11 +52,11 @@ public class TextData extends EntityData<TextEntity> {
 		tint = entity.getColor().cpy();
 
 		text = entity.getText();
-		relativeFontPath = entity.getAssetPath();
+		fontPath = entity.getAssetPath();
 		fontSize = entity.getFontSize();
 		autoSetOriginToCenter = entity.isAutoSetOriginToCenter();
 
-		arbitraryFontName = String.valueOf(fontSize) + "." + relativeFontPath;
+		arbitraryFontName = String.valueOf(fontSize) + "." + fontPath;
 
 		isTrueType = entity.isTrueType();
 		isUsesDistanceField = entity.isDistanceFieldShaderEnabled();
@@ -72,7 +72,7 @@ public class TextData extends EntityData<TextEntity> {
 
 		text.setText(this.text);
 		//text.setFontSize(fontSize); //font size must be handled manually from SceneLoader because it is not a public property for TextEntity
-		text.setAssetPath(relativeFontPath);
+		text.setAssetPath(fontPath);
 		text.setAutoSetOriginToCenter(autoSetOriginToCenter);
 
 		text.setDistanceFieldShaderEnabled(isUsesDistanceField);

@@ -360,7 +360,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	}
 
 	enum FileType {
-		UNKNOWN, TEXTURE, TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE, MUSIC, PARTICLE_EFFECT
+		UNKNOWN, TEXTURE, TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE, MUSIC, SOUND, PARTICLE_EFFECT
 	}
 
 	private class AssetsPopupMenu extends PopupMenu {
@@ -431,56 +431,32 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 			String relativePath = fileAccess.relativizeToAssetsFolder(file);
 
 			if (ext.equals("ttf")) {
-				type = FileType.TTF_FONT;
-
-				add(new VisLabel("TTF Font", Color.GRAY)).row();
-				name = new VisLabel(file.nameWithoutExtension());
-
+				createDefaultView(FileType.TTF_FONT, "TTF Font", true);
 				return;
 			}
 
 			if (ext.equals("fnt") && file.sibling(file.nameWithoutExtension() + ".png").exists()) {
-				type = FileType.BMP_FONT_FILE;
-
-				add(new VisLabel("BMP Font", Color.GRAY)).row();
-				name = new VisLabel(file.nameWithoutExtension());
-
+				createDefaultView(FileType.BMP_FONT_FILE, "BMP Font", true);
 				return;
 			}
 
 			if (ext.equals("png") && file.sibling(file.nameWithoutExtension() + ".fnt").exists()) {
-				type = FileType.BMP_FONT_TEXTURE;
-
-				VisLabel tagLabel = new VisLabel("BMP Font Texture", Color.GRAY);
-				tagLabel.setWrap(true);
-				tagLabel.setAlignment(Align.center);
-				add(tagLabel).expandX().fillX().row();
-				name = new VisLabel(file.nameWithoutExtension());
-
+				createDefaultView(FileType.BMP_FONT_TEXTURE, "BMP Font Texture", true);
 				return;
 			}
 
 			if (ext.equals("p")) {
-				type = FileType.PARTICLE_EFFECT;
-
-				VisLabel tagLabel = new VisLabel("Particle Effect", Color.GRAY);
-				tagLabel.setWrap(true);
-				tagLabel.setAlignment(Align.center);
-				add(tagLabel).expandX().fillX().row();
-				name = new VisLabel(file.nameWithoutExtension());
-
+				createDefaultView(FileType.PARTICLE_EFFECT, "Particle Effect", true);
 				return;
 			}
 
-			if (relativePath.startsWith("music") && ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) {
-				type = FileType.MUSIC;
+			if (relativePath.startsWith("music") && (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3"))) {
+				createDefaultView(FileType.MUSIC, "Music");
+				return;
+			}
 
-				VisLabel tagLabel = new VisLabel(file.extension().toUpperCase() + " Music", Color.GRAY);
-				tagLabel.setWrap(true);
-				tagLabel.setAlignment(Align.center);
-				add(tagLabel).expandX().fillX().row();
-				name = new VisLabel(file.nameWithoutExtension());
-
+			if (relativePath.startsWith("sound") && (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3"))) {
+				createDefaultView(FileType.SOUND, "Sound");
 				return;
 			}
 
@@ -501,6 +477,20 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 
 			type = FileType.UNKNOWN;
 			name = new VisLabel(file.name());
+		}
+
+		private void createDefaultView (FileType type, String itemTypeName) {
+			createDefaultView(type, itemTypeName, false);
+		}
+
+		private void createDefaultView (FileType type, String itemTypeName, boolean hideExtension) {
+			this.type = type;
+
+			VisLabel tagLabel = new VisLabel((hideExtension ? "" : file.extension().toUpperCase() + " ") + itemTypeName, Color.GRAY);
+			tagLabel.setWrap(true);
+			tagLabel.setAlignment(Align.center);
+			add(tagLabel).expandX().fillX().row();
+			name = new VisLabel(file.nameWithoutExtension());
 		}
 
 		private void addListener () {

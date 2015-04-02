@@ -37,12 +37,12 @@ public class TextObject extends TextEntity implements EditorObject {
 	}
 
 	public TextObject (EditorFont font, BitmapFont bitmapFont, String text, int fontSize) {
-		super(bitmapFont, null, font.getRelativePath(), text, fontSize);
+		super(null, bitmapFont, font.getRelativePath(), text, fontSize);
 		this.font = font;
 	}
 
 	public TextObject (TextObject other) {
-		super(other.cache.getFont(), other.getId(), other.getAssetPath(), other.getText(), other.getFontSize());
+		super(other.getId(), other.cache.getFont(), other.getAssetPath(), other.getText(), other.getFontSize());
 		this.font = other.font;
 
 		setAutoSetOriginToCenter(other.isAutoSetOriginToCenter());

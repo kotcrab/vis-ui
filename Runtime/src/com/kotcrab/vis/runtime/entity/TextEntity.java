@@ -49,10 +49,10 @@ public class TextEntity extends Entity {
 	protected CharSequence text;
 
 	public TextEntity (BitmapFont bitmapFont, String id, String relativeFontPath, String text) {
-		this(bitmapFont, id, relativeFontPath, text, BITMAP_FONT_SIZE);
+		this(id, bitmapFont, relativeFontPath, text, BITMAP_FONT_SIZE);
 	}
 
-	public TextEntity (BitmapFont bitmapFont, String id, String relativeFontPath, String text, int fontSize) {
+	public TextEntity (String id, BitmapFont bitmapFont, String relativeFontPath, String text, int fontSize) {
 		super(id);
 		setAssetPath(relativeFontPath);
 		this.text = text;

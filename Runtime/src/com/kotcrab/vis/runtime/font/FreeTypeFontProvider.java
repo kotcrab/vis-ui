@@ -34,7 +34,7 @@ public class FreeTypeFontProvider implements FontProvider {
 	@Override
 	public void load (Array<AssetDescriptor> dependencies, TextData data) {
 		FreeTypeFontLoaderParameter params = new FreeTypeFontLoaderParameter();
-		params.fontFileName = data.relativeFontPath;
+		params.fontFileName = data.fontPath;
 		params.fontParameters.size = data.fontSize;
 
 		dependencies.add(new AssetDescriptor(data.arbitraryFontName, BitmapFont.class, params));

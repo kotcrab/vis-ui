@@ -28,18 +28,15 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.project.AssetsUIModule.FileItem;
 import com.kotcrab.vis.editor.module.project.AssetsUIModule.FileType;
-import com.kotcrab.vis.editor.scene.MusicObject;
-import com.kotcrab.vis.editor.scene.ParticleObject;
-import com.kotcrab.vis.editor.scene.SpriteObject;
-import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
+import com.kotcrab.vis.editor.util.VisDropSource;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class AssetDragAndDrop {
@@ -86,7 +83,7 @@ public class AssetDragAndDrop {
 					Payload payload = new Payload();
 					String relativePath = fileAccess.relativizeToAssetsFolder(item.file);
 
-					SpriteObject object = new SpriteObject(relativePath, textureCache.getRegion(relativePath), 0,0);
+					SpriteObject object = new SpriteObject(relativePath, textureCache.getRegion(relativePath), 0, 0);
 					payload.setObject(object);
 
 					Image img = new Image(item.region);
@@ -159,44 +156,19 @@ public class AssetDragAndDrop {
 		}
 
 		if (item.type == FileType.PARTICLE_EFFECT) {
-			dragAndDrop.addSource(new Source(item) {
-				@Override
-				public Payload dragStart (InputEvent event, float x, float y, int pointer) {
-					Payload payload = new Payload();
-
-					ParticleObject obj = new ParticleObject(fileAccess.relativizeToAssetsFolder(item.file), particleCache.get(item.file));
-					payload.setObject(obj);
-
-					Label label = new VisLabel("New Particle Effect \n (drop on scene to add)");
-					label.setAlignment(Align.center);
-					payload.setDragActor(label);
-
-					dragAndDrop.setDragActorPosition(-label.getWidth() / 2, label.getHeight() / 2);
-
-					return payload;
-				}
-			});
+			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Particle Effect \n (drop on scene to add)")
+					.setObjectProvider(() -> new ParticleObject(fileAccess.relativizeToAssetsFolder(item.file), particleCache.get(item.file))));
 		}
 
 		if (item.type == FileType.MUSIC) {
-			dragAndDrop.addSource(new Source(item) {
-				@Override
-				public Payload dragStart (InputEvent event, float x, float y, int pointer) {
-					Payload payload = new Payload();
-
-					payload.setObject(new MusicObject(fileAccess.relativizeToAssetsFolder(item.file), Gdx.audio.newMusic(item.file)));
-
-					Label label = new VisLabel("New Music \n (drop on scene to add)");
-					label.setAlignment(Align.center);
-					payload.setDragActor(label);
-
-					dragAndDrop.setDragActorPosition(-label.getWidth() / 2, label.getHeight() / 2);
-
-					return payload;
-				}
-			});
+			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Music \n (drop on scene to add)").disposeOnNullTarget()
+					.setObjectProvider(() -> new MusicObject(fileAccess.relativizeToAssetsFolder(item.file), Gdx.audio.newMusic(item.file))));
 		}
 
+		if (item.type == FileType.SOUND) {
+			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Sound \n (drop on scene to add)").disposeOnNullTarget()
+					.setObjectProvider(() -> new SoundObject(fileAccess.relativizeToAssetsFolder(item.file), Gdx.audio.newSound(item.file))));
+		}
 	}
 
 	public void clear () {
