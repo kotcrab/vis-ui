@@ -17,10 +17,13 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.module.physicseditor.list;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+/**
+ * @author Aurelien Ribon | http://www.aurelienribon.com
+ */
+public interface Changeable {
+	void addChangeListener (ChangeListener l);
 
-public interface EditorObjectProvider {
-	EditorObject newInstance ();
+	void removeChangeListener (ChangeListener l);
 }

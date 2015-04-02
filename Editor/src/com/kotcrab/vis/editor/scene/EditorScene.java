@@ -33,7 +33,6 @@ public class EditorScene implements Disposable {
 	public int height;
 	public SceneViewport viewport;
 
-
 	public Array<EditorObject> entities = new Array<EditorObject>();
 
 	public EditorScene (FileHandle file, int compatibilityCode, SceneViewport viewport, int width, int height) {

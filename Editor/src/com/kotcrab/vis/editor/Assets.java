@@ -42,11 +42,15 @@ public class Assets {
 		return new TextureRegionDrawable(getIconRegion(icon));
 	}
 
-	public static Drawable getMisc (String name) {
-		return new TextureRegionDrawable(misc.findRegion(name));
-	}
-
 	public static TextureRegion getIconRegion (Icons icon) {
 		return icons.findRegion(icon.getIconName());
+	}
+
+	public static Drawable getMisc (String name) {
+		return new TextureRegionDrawable(getMiscRegion(name));
+	}
+
+	public static TextureRegion getMiscRegion (String name) {
+		return misc.findRegion(name);
 	}
 }

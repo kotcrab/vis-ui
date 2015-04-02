@@ -19,8 +19,20 @@
 
 package com.kotcrab.vis.editor.util;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 
-public interface EditorObjectProvider {
-	EditorObject newInstance ();
+/** Stops parent actor from receiving child events */
+public class EventStopper extends InputListener {
+	@Override
+	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+		event.stop();
+		return true;
+	}
+
+	@Override
+	public boolean keyDown (InputEvent event, int keycode) {
+		event.stop();
+		return true;
+	}
 }

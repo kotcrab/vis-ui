@@ -22,7 +22,6 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -41,6 +40,7 @@ import com.kotcrab.vis.editor.module.scene.UndoableAction;
 import com.kotcrab.vis.editor.module.scene.UndoableActionGroup;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
+import com.kotcrab.vis.editor.util.EventStopper;
 import com.kotcrab.vis.editor.util.FieldUtils;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.ui.VisUI;
@@ -189,7 +189,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		add(new VisLabel("Entity Properties")).row();
 		add(propertiesTable).fill().expand().padRight(0);
 
-		addListeners();
+		addListener(new EventStopper());
 
 		pack();
 
@@ -330,23 +330,6 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			return super.getPrefHeight() + 5;
 		else
 			return 0;
-	}
-
-	private void addListeners () {
-		//stops touchDown and keyDown events from being received by parent
-		addListener(new InputListener() {
-			@Override
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				event.stop();
-				return true;
-			}
-
-			@Override
-			public boolean keyDown (InputEvent event, int keycode) {
-				event.stop();
-				return true;
-			}
-		});
 	}
 
 	public void selectedEntitiesChanged () {
@@ -540,4 +523,5 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			throw new UnsupportedOperationException("Cannot create snapshots entity data for entity class: " + entity.getClass());
 		}
 	}
+
 }

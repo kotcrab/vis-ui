@@ -17,10 +17,22 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.module.physicseditor.models;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.badlogic.gdx.math.Vector2;
 
-public interface EditorObjectProvider {
-	EditorObject newInstance ();
+/**
+ * @author Aurelien Ribon | http://www.aurelienribon.com/
+ */
+public class CircleModel {
+	public final Vector2 center = new Vector2();
+	public float radius;
+
+	public CircleModel () {
+	}
+
+	public CircleModel (Vector2 center, float radius) {
+		this.center.set(center);
+		this.radius = radius;
+	}
 }

@@ -22,7 +22,6 @@ package com.kotcrab.vis.editor.ui.scene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
@@ -30,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.*;
+import com.kotcrab.vis.editor.module.ContentTable;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
@@ -100,8 +100,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		leftColumn.top();
 		rightColumn.top();
 
-		content = new ContentTable();
-		content.setTouchable(Touchable.enabled);
+		content = new ContentTable(sceneMC);
 
 		content.add(leftColumn).width(300).fillY().expandY();
 		content.add().fill().expand();
@@ -130,10 +129,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		};
 
 		App.eventBus.register(this);
-	}
-
-	private void resize () {
-		sceneMC.resize();
 	}
 
 	@Override
@@ -298,20 +293,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	public void focusSelf () {
 		Editor.instance.getStage().setKeyboardFocus(content);
 		Editor.instance.getStage().setScrollFocus(content);
-	}
-
-	private class ContentTable extends VisTable {
-		public ContentTable () {
-			super(false);
-			addListener(new SceneInputListener(this, sceneMC));
-		}
-
-		@Override
-		protected void sizeChanged () {
-			super.sizeChanged();
-			sceneMC.resize();
-			resize();
-		}
 	}
 
 }

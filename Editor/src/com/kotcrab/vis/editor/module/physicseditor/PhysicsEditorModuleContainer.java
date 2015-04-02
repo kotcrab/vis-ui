@@ -17,7 +17,7 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.physicseditor;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -27,30 +27,27 @@ import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.ui.scene.SceneTab;
 
-public class SceneModuleContainer extends BaseModuleContainer<SceneModule> implements ModuleInput {
+//TODO very similar to SceneModuleContainer, create same parent for them or sth
+public class PhysicsEditorModuleContainer extends BaseModuleContainer<PhysicsEditorModule> implements ModuleInput {
 	private Project project;
 	private EditorModuleContainer editorModuleContainer;
 	private ProjectModuleContainer projectModuleContainer;
 
-	private SceneTab sceneTab;
-	private EditorScene scene;
+	private PhysicsEditorTab editorTab;
 
-	public SceneModuleContainer (ProjectModuleContainer projectModuleContainer, SceneTab sceneTab, EditorScene scene) {
+	public PhysicsEditorModuleContainer (ProjectModuleContainer projectModuleContainer, PhysicsEditorTab editorTab) {
 		this.editorModuleContainer = projectModuleContainer.getEditorContainer();
 		this.projectModuleContainer = projectModuleContainer;
-		this.sceneTab = sceneTab;
-		this.scene = scene;
+		this.editorTab = editorTab;
 	}
 
 	@Override
-	public void add (SceneModule module) {
+	public void add (PhysicsEditorModule module) {
 		module.setProject(projectModuleContainer.getProject());
 		module.setProjectModuleContainer(projectModuleContainer);
 		module.setContainer(editorModuleContainer);
-		module.setSceneObjects(this, sceneTab, scene);
+		module.setObjects(this, editorTab);
 
 		super.add(module);
 	}

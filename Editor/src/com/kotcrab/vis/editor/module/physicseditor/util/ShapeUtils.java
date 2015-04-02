@@ -17,10 +17,21 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.module.physicseditor.util;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.badlogic.gdx.math.Vector2;
+import com.kotcrab.vis.editor.module.physicseditor.models.RigidBodyModel;
+import com.kotcrab.vis.editor.module.physicseditor.models.ShapeModel;
 
-public interface EditorObjectProvider {
-	EditorObject newInstance ();
+/**
+ * @author Aurelien Ribon | http://www.aurelienribon.com/
+ */
+public class ShapeUtils {
+	public static ShapeModel getShape (RigidBodyModel model, Vector2 v) {
+		for (ShapeModel shape : model.getShapes()) {
+			if (shape.getVertices().contains(v)) return shape;
+		}
+
+		return null;
+	}
 }

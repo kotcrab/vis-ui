@@ -17,25 +17,21 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.physicseditor;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.project.ProjectModule;
-import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.ui.scene.SceneTab;
 
-public abstract class SceneModule extends ProjectModule implements ModuleInput {
-	protected EditorScene scene;
-	protected SceneTab sceneTab;
-	protected SceneModuleContainer sceneContainer;
+public abstract class PhysicsEditorModule extends ProjectModule implements ModuleInput {
+	protected PhysicsEditorModuleContainer physicsContainer;
+	protected PhysicsEditorTab editorTab;
 
-	public void setSceneObjects (SceneModuleContainer projectContainer, SceneTab sceneTab, EditorScene scene) {
-		this.sceneContainer = projectContainer;
-		this.sceneTab = sceneTab;
-		this.scene = scene;
+	public void setObjects (PhysicsEditorModuleContainer physicsContainer, PhysicsEditorTab editorTab) {
+		this.physicsContainer = physicsContainer;
+		this.editorTab = editorTab;
 	}
 
 	public void render (Batch batch) {
@@ -100,4 +96,5 @@ public abstract class SceneModule extends ProjectModule implements ModuleInput {
 	public boolean keyTyped (InputEvent event, char character) {
 		return false;
 	}
+
 }

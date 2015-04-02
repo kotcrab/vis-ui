@@ -1,33 +1,40 @@
 
 misc.png
-size: 64,64
+size: 128,128
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 alpha-grid-20x20
   rotate: false
-  xy: 2, 2
+  xy: 68, 96
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 alpha-grid-32x32
   rotate: false
-  xy: 2, 24
+  xy: 2, 18
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
+ball
+  rotate: false
+  xy: 2, 52
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
 check-indeterminate
   rotate: false
-  xy: 36, 42
+  xy: 2, 2
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 check-over-indeterminate
   rotate: false
-  xy: 36, 26
+  xy: 36, 36
   size: 14, 14
   orig: 14, 14
   offset: 0, 0

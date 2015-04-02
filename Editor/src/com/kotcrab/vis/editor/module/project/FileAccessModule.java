@@ -103,6 +103,10 @@ public class FileAccessModule extends ProjectModule {
 		return relativize(assetsFolder, absolutePath);
 	}
 
+	public String derelativizeFromAssetsFolder (String relativePath) {
+		return assetsFolder.child(relativePath).path();
+	}
+
 	private String relativize (FileHandle base, String absolute) {
 		Path pathAbsolute = Paths.get(absolute);
 		Path pathBase = Paths.get(base.path());

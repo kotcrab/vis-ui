@@ -33,6 +33,7 @@ import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.editor.*;
+import com.kotcrab.vis.editor.module.physicseditor.PhysicsEditorTab;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.InputModule;
@@ -133,6 +134,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
 			projectMC.get(SceneTabsModule.class).open(testScene);
 		}
+
+		editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
 		//debug end
 
 		Log.debug("Loading completed");
