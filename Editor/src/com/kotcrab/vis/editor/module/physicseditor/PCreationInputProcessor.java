@@ -37,10 +37,10 @@ import java.util.List;
 public class PCreationInputProcessor implements ModuleInput {
 	private PCameraModule cameraModule;
 	private final PRigidBodiesScreen screen;
-	private PSettings settings;
+	private PhysicsEditorSettings settings;
 	private boolean touchDown = false;
 
-	public PCreationInputProcessor (PCameraModule cameraModule, PRigidBodiesScreen screen, PSettings settings) {
+	public PCreationInputProcessor (PCameraModule cameraModule, PRigidBodiesScreen screen, PhysicsEditorSettings settings) {
 		this.cameraModule = cameraModule;
 		this.screen = screen;
 		this.settings = settings;

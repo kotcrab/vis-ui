@@ -19,22 +19,18 @@
 
 package com.kotcrab.vis.editor.module.physicseditor;
 
-import com.kotcrab.vis.editor.module.physicseditor.util.Clipper.Polygonizer;
-
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class PSettings extends PhysicsEditorModule {
-	public boolean isImageDrawn = true;
-	public boolean isShapeDrawn = true;
-	public boolean isPolygonDrawn = true;
-	public boolean isPhysicsDebugEnabled = false;
-	public boolean isSnapToGridEnabled = false;
-	public boolean isGridShown = false;
-	public float gridGap = 0.10f;
-	public Polygonizer polygonizer = Polygonizer.EWJORDAN;
-	public float autoTraceHullTolerance = 2.5f;
-	public int autoTraceAlphaTolerance = 128;
-	public boolean autoTraceMultiPartDetection = false;
-	public boolean autoTraceHoleDetection = false;
+public class PSettingsModule extends PhysicsEditorModule {
+	private PhysicsEditorSettings settings;
+
+	@Override
+	public void init () {
+		settings = new PhysicsEditorSettings();
+	}
+
+	public PhysicsEditorSettings getSettings () {
+		return settings;
+	}
 }

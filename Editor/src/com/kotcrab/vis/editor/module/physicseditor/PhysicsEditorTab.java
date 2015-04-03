@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.ContentTable;
+import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.physicseditor.models.RigidBodyModel;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
@@ -39,15 +40,22 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 public class PhysicsEditorTab extends MainContentTab {
 	private ContentTable content;
 
+	private QuickAccessModule quickAccess;
+
+	private ProjectModuleContainer projectMC;
 	private PhysicsEditorModuleContainer physicsMC;
 
 	public PhysicsEditorTab (ProjectModuleContainer projectMC) {
+		this.projectMC = projectMC;
 		physicsMC = new PhysicsEditorModuleContainer(projectMC, this);
-		physicsMC.add(new PSettings());
+		physicsMC.add(new PSettingsModule());
 		physicsMC.add(new PCameraModule());
 		physicsMC.add(new PRenderer());
 		physicsMC.add(new PRigidBodiesScreen());
 		physicsMC.init();
+
+		quickAccess = projectMC.getEditorContainer().get(QuickAccessModule.class);
+		quickAccess.addTab(new PhysicsSettingsTab());
 
 		PRigidBodiesScreen screen = physicsMC.get(PRigidBodiesScreen.class);
 		RigidBodyModel model = new RigidBodyModel();
@@ -68,6 +76,12 @@ public class PhysicsEditorTab extends MainContentTab {
 		content = new ContentTable(physicsMC);
 		content.add(table).expandX().fillX().row();
 		content.add().fill().expand();
+
+		createQuickAccessTab();
+	}
+
+	private void createQuickAccessTab () {
+
 	}
 
 	@Override
@@ -94,7 +108,7 @@ public class PhysicsEditorTab extends MainContentTab {
 
 	@Override
 	public TabViewMode getViewMode () {
-		return TabViewMode.TAB_ONLY;
+		return TabViewMode.SPLIT;
 	}
 
 	@Override

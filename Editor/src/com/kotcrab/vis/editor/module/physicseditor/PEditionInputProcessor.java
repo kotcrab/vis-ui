@@ -39,12 +39,12 @@ import java.util.List;
 public class PEditionInputProcessor implements ModuleInput {
 	private PCameraModule cameraModule;
 	private final PRigidBodiesScreen screen;
-	private PSettings settings;
+	private PhysicsEditorSettings settings;
 
 	private boolean touchDown = false;
 	private Vector2 draggedPoint;
 
-	public PEditionInputProcessor (PCameraModule cameraModule, PRigidBodiesScreen screen, PSettings settings) {
+	public PEditionInputProcessor (PCameraModule cameraModule, PRigidBodiesScreen screen, PhysicsEditorSettings settings) {
 		this.cameraModule = cameraModule;
 		this.screen = screen;
 		this.settings = settings;

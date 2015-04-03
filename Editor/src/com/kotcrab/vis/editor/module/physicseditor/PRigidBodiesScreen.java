@@ -57,7 +57,7 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 	private FileAccessModule fileAccess;
 	private PRenderer renderer;
 	private PCameraModule cameraModule;
-	private PSettings settings;
+	private PhysicsEditorSettings settings;
 
 	private final Box2DDebugRenderer debugRdr = new Box2DDebugRenderer();
 	private float timeAcc = 0;
@@ -101,7 +101,7 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 
 		renderer = physicsContainer.get(PRenderer.class);
 		cameraModule = physicsContainer.get(PCameraModule.class);
-		settings = physicsContainer.get(PSettings.class);
+		settings = physicsContainer.get(PSettingsModule.class).getSettings();
 
 		currentProcessor = new ModuleInput() {
 		}; //dummy processor if no body is selected

@@ -33,7 +33,7 @@ public class PCameraModule extends PhysicsEditorModule {
 
 	private Vector3 unprojectVec;
 
-	private PSettings settings;
+	private PhysicsEditorSettings settings;
 
 	@Override
 	public void added () {
@@ -51,7 +51,7 @@ public class PCameraModule extends PhysicsEditorModule {
 
 	@Override
 	public void init () {
-		settings = physicsContainer.get(PSettings.class);
+		settings = physicsContainer.get(PSettingsModule.class).getSettings();
 	}
 
 	@Override

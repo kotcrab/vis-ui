@@ -49,12 +49,12 @@ public class PRenderer extends PhysicsEditorModule {
 
 	private final ShapeRenderer drawer = new ShapeRenderer();
 	private PCameraModule camera;
-	private PSettings settings;
+	private PhysicsEditorSettings settings;
 
 	@Override
 	public void init () {
 		camera = physicsContainer.get(PCameraModule.class);
-		settings = physicsContainer.get(PSettings.class);
+		settings = physicsContainer.get(PSettingsModule.class).getSettings();
 	}
 
 	public void drawBallThrowPath (Vector2 p1, Vector2 p2) {
