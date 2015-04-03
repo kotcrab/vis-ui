@@ -26,6 +26,7 @@ import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
 public class PhysicsSettingsTab extends Tab {
+	private VisScrollPane scrollPane;
 	private VisTable contentTab;
 
 	public PhysicsSettingsTab () {
@@ -33,17 +34,20 @@ public class PhysicsSettingsTab extends Tab {
 
 		VisTable autoTraceTab = new VisTable(true);
 		autoTraceTab.defaults().left();
-		autoTraceTab.add("Autotrace").row();
+		autoTraceTab.add("Tracing").row();
 		VisSelectBox<String> polygonizerSelect = new VisSelectBox<>();
 		polygonizerSelect.setItems("Bayazit", "Ewjordan");
 
-		autoTraceTab.add(new VisLabel("Polygnozier"));
+		autoTraceTab.add(new VisLabel("Polygonizer"));
 		autoTraceTab.add(polygonizerSelect).row();
+		autoTraceTab.addSeparator().colspan(2);
+		autoTraceTab.add(new VisLabel("Autotracing")).colspan(2).row();
 		autoTraceTab.add(new VisLabel("Hull tolerance"));
 		autoTraceTab.add(new VisValidableTextField("2.5f")).row();
 		autoTraceTab.add(new VisLabel("Alpha tolerance"));
 		autoTraceTab.add(new VisValidableTextField("128")).row();
 		autoTraceTab.add(TableBuilder.build(new VisCheckBox("Multi part detection"), new VisCheckBox("Hole detection"))).colspan(2).row();
+		autoTraceTab.add(new VisTextButton("Autotrace")).colspan(2).row();
 
 		VisTable renderTab = new VisTable(true);
 		renderTab.defaults().left();
@@ -59,12 +63,17 @@ public class PhysicsSettingsTab extends Tab {
 		sectionsTable.addSeparator(true);
 		sectionsTable.add(autoTraceTab).pad(3).padTop(0);
 
+
 		contentTab = new VisTable(true);
 		contentTab.setBackground(VisUI.getSkin().getDrawable("window-bg"));
 
 		contentTab.add(new VisLabel("Physics Editor Settings", "small")).space(0).left().row();
 		contentTab.addSeparator().space(0);
 		contentTab.add(sectionsTable).left().fillY().expandY();
+
+		scrollPane = new VisScrollPane(contentTab);
+		scrollPane.setFlickScroll(false);
+		scrollPane.setFadeScrollBars(false);
 	}
 
 	@Override
@@ -74,6 +83,8 @@ public class PhysicsSettingsTab extends Tab {
 
 	@Override
 	public Table getContentTable () {
-		return contentTab;
+		Table table = new Table();
+		table.add(scrollPane).expand().fill();
+		return table;
 	}
 }
