@@ -35,7 +35,7 @@ public class TestWindow extends VisWindow {
 			addNormalWidgets();
 
 		pack();
-		setPosition(234, 331);
+		setPosition(234, 300);
 	}
 
 	private void addVisWidgets () {
@@ -141,6 +141,13 @@ public class TestWindow extends VisWindow {
 
 		// ---
 
+		VisTable linkTable = new VisTable(true);
+
+		linkTable.add(new VisLabel("link label:"));
+		linkTable.add(new LinkLabel("https://github.com/kotcrab/viseditor"));
+
+		// ---
+
 		add(labelTable).row();
 		add(buttonTable).row();
 		add(checkboxTable).row();
@@ -148,7 +155,8 @@ public class TestWindow extends VisWindow {
 		add(textfieldTable).row();
 		add(progressbarTable).row();
 		add(listTable).row();
-		add(selectorsTable).padBottom(3).row();
+		add(selectorsTable).row();
+		add(linkTable).padBottom(3).row();
 	}
 
 	private void addNormalWidgets () {

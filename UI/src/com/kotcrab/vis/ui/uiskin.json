@@ -11,6 +11,7 @@ com.badlogic.gdx.graphics.Color: {
 	grey: { a: 1, b: 0.32, g: 0.32, r: 0.32 },
 	menuitem-grey: { a: 1, b: 0.65, g: 0.65, r: 0.65 },
 	vis-blue: { a: 1, b: 0.886, g: 0.631, r: 0.105 },
+  	link-label: { a: 1, b: 0.886, g: 0.631, r: 0.105 },
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
 	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a: 0.45 } }
