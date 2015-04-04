@@ -19,15 +19,21 @@
 
 package com.kotcrab.vis.editor.module.physicseditor.models;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.physicseditor.list.ChangeListener;
 import com.kotcrab.vis.editor.module.physicseditor.list.Changeable;
+import com.kotcrab.vis.editor.module.physicseditor.models.ShapeModel.Type;
 import com.kotcrab.vis.editor.module.physicseditor.util.Clipper;
 import com.kotcrab.vis.editor.module.physicseditor.util.Clipper.Polygonizer;
+import com.kotcrab.vis.editor.module.physicseditor.util.PolygonUtils;
 import com.kotcrab.vis.runtime.entity.Entity;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -92,16 +98,27 @@ public class RigidBodyModel extends Entity implements Changeable {
 		polygons.clear();
 		circles.clear();
 
-		for (ShapeModel shape : shapes) {
+		Iterator<ShapeModel> iterator = shapes.iterator();
+		while (iterator.hasNext()) {
+			ShapeModel shape = iterator.next();
 			if (!shape.isClosed()) continue;
 
-			if (shape.getType() == ShapeModel.Type.POLYGON) {
+			if (shape.getType() == Type.POLYGON) {
 				Vector2[] vertices = shape.getVertices().toArray(new Vector2[0]);
 				Vector2[][] polys = Clipper.polygonize(polygonizer, vertices);
-				if (polys != null) for (Vector2[] poly : polys) polygons.add(new PolygonModel(poly));
+				if (polys != null) for (Vector2[] poly : polys) {
+
+					if (PolygonUtils.isDegenerate(poly)) {
+						App.eventBus.post(new StatusBarEvent("Shape polygon is degenerated, removing shape", Color.RED));
+						iterator.remove();
+						continue;
+					}
+
+					polygons.add(new PolygonModel(poly));
+				}
 
 			}
-			if (shape.getType() == ShapeModel.Type.CIRCLE) {
+			if (shape.getType() == Type.CIRCLE) {
 				Vector2 center = shape.getVertices().get(0);
 				float radius = Math.abs(shape.getVertices().get(1).cpy().sub(center).len());
 				circles.add(new CircleModel(center, radius));

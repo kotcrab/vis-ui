@@ -42,7 +42,6 @@ import com.kotcrab.vis.editor.module.physicseditor.models.CircleModel;
 import com.kotcrab.vis.editor.module.physicseditor.models.PolygonModel;
 import com.kotcrab.vis.editor.module.physicseditor.models.RigidBodyModel;
 import com.kotcrab.vis.editor.module.physicseditor.models.ShapeModel;
-import com.kotcrab.vis.editor.module.physicseditor.util.PolygonUtils;
 import com.kotcrab.vis.editor.module.physicseditor.util.ShapeUtils;
 import com.kotcrab.vis.editor.module.physicseditor.util.Tracer;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
@@ -424,8 +423,6 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 
 		for (PolygonModel polygon : model.getPolygons()) {
 			Vector2[] vs = polygon.vertices.toArray(new Vector2[0]);
-
-			if (PolygonUtils.getPolygonArea(vs) < 0.00001f) continue;
 
 			PolygonShape shape = new PolygonShape();
 			shape.set(vs);

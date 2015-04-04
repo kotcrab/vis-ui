@@ -45,4 +45,73 @@ public class PolygonUtils {
 	public static boolean isPolygonCCW (Vector2[] points) {
 		return getPolygonSignedArea(points) > 0;
 	}
+
+	private static final int MAX_VERTICIES = 8;
+	private static final float b2_linearSlop = 0.005f;
+
+	/**
+	 * Checks whether polygon vertices will make degenerated box2d polygon or not
+	 * @author Kotcrab
+	 */
+	public static boolean isDegenerate (Vector2[] vertices) {
+		//Apparently polgyon can be degenerated, so this code is copied form PolygonShape and b2PolygonShape.cpp to check whether polygon is degenerate or not
+
+		// PolygonShape#set(Vector2[] vertices)
+		float[] verts = new float[vertices.length * 2];
+		for (int i = 0, j = 0; i < vertices.length * 2; i += 2, j++) {
+			verts[i] = vertices[j].x;
+			verts[i + 1] = vertices[j].y;
+		}
+
+		return isDegenerate(verts, 0, verts.length);
+	}
+
+	private static boolean isDegenerate (float[] verts, int offset, int length) {
+		// b2PolygonShape::Set(const b2Vec2* vertices, int32 count)
+		int numVertices = length / 2;
+		Vector2[] verticesOut = new Vector2[numVertices];
+		for (int i = 0; i < numVertices; i++) {
+			verticesOut[i] = new Vector2(verts[(i << 1) + offset], verts[(i << 1) + offset + 1]);
+		}
+
+		return isDegenerate(verticesOut, numVertices);
+	}
+
+	private static boolean isDegenerate (Vector2[] verts, int count) {
+		// https://github.com/libgdx/libgdx/blob/master/extensions/gdx-box2d/gdx-box2d/jni/Box2D/Collision/Shapes/b2PolygonShape.cpp#L120-L161
+		int n = Math.min(count, MAX_VERTICIES);
+
+		Vector2[] ps = new Vector2[MAX_VERTICIES];
+		int tempCount = 0;
+
+		for (int i = 0; i < n; ++i) {
+			Vector2 v = verts[i];
+
+			boolean unique = true;
+
+			for (int j = 0; j < tempCount; ++j) {
+				if (distanceSquared(v, ps[j]) < 0.5f * b2_linearSlop) {
+					unique = false;
+					break;
+				}
+			}
+
+			if (unique) {
+				ps[tempCount++] = v;
+			}
+		}
+
+		n = tempCount;
+		if (n < 3) {
+			// Polygon is degenerate.
+			return true;
+		}
+
+		return false;
+	}
+
+	private static float distanceSquared (Vector2 a, Vector2 b) {
+		a.sub(b);
+		return a.dot(a);
+	}
 }
