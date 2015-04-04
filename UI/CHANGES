@@ -2,6 +2,7 @@
 -Added constructor NumberSelector (String name, int initialValue, int min, int max)
 -Fixed menu not closing after clicking it on MenuBar
 -Added LinkLabel
+-API Addition: VisUI.load(Skin)
 
 [0.7.1] [LibGDX 1.5.5]
 -Fixing GWT compatibility

@@ -54,6 +54,11 @@ public class VisUI {
 		skin = new Skin(visSkinFile);
 	}
 
+	/** Sets provided skin as default for every VisUI widget, skin must be compatible with default VisUI skin */
+	public static void load (Skin skin) {
+		VisUI.skin = skin;
+	}
+
 	/** Unloads skin */
 	public static void dispose () {
 		if (skin != null) {
