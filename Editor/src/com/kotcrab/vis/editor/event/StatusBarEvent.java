@@ -19,12 +19,20 @@
 
 package com.kotcrab.vis.editor.event;
 
+import com.badlogic.gdx.graphics.Color;
+
 public class StatusBarEvent implements Event {
 	public String text;
 	public int timeSeconds;
+	public Color color;
 
 	public StatusBarEvent (String text) {
 		this(text, 3);
+	}
+
+	public StatusBarEvent (String text, Color color) {
+		this(text, 3);
+		this.color = color;
 	}
 
 	public StatusBarEvent (String text, int timeSeconds) {

@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor.module.editor;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
@@ -40,6 +41,7 @@ public class StatusBarModule extends EditorModule implements EventListener {
 		@Override
 		public void run () {
 			statusLabel.setText("Ready");
+			statusLabel.setColor(Color.WHITE);
 		}
 	};
 
@@ -57,7 +59,12 @@ public class StatusBarModule extends EditorModule implements EventListener {
 	}
 
 	public void setText (String newText, int timeSeconds) {
+		setText(newText, Color.WHITE, timeSeconds);
+	}
+
+	public void setText (String newText, Color color, int timeSeconds) {
 		statusLabel.setText(newText);
+		statusLabel.setColor(color == null ? Color.WHITE : color);
 		timer.clear();
 		timer.scheduleTask(resetTask, timeSeconds);
 	}
@@ -84,7 +91,7 @@ public class StatusBarModule extends EditorModule implements EventListener {
 	public boolean onEvent (Event e) {
 		if (e instanceof StatusBarEvent) {
 			StatusBarEvent event = (StatusBarEvent) e;
-			setText(event.text, event.timeSeconds);
+			setText(event.text, event.color, event.timeSeconds);
 			return true;
 		}
 
