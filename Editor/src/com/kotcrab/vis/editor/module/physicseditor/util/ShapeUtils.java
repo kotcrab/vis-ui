@@ -29,7 +29,7 @@ import com.kotcrab.vis.editor.module.physicseditor.models.ShapeModel;
 public class ShapeUtils {
 	public static ShapeModel getShape (RigidBodyModel model, Vector2 v) {
 		for (ShapeModel shape : model.getShapes()) {
-			if (shape.getVertices().contains(v)) return shape;
+			if (shape.getVertices().contains(v, true)) return shape;
 		}
 
 		return null;

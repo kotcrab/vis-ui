@@ -17,7 +17,7 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.physicseditor;
+package com.kotcrab.vis.editor.module.physicseditor.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -25,22 +25,22 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.ModuleInput;
+import com.kotcrab.vis.editor.module.physicseditor.PCameraModule;
+import com.kotcrab.vis.editor.module.physicseditor.PRigidBodiesScreen;
+import com.kotcrab.vis.editor.module.physicseditor.PhysicsEditorSettings;
 import com.kotcrab.vis.editor.module.physicseditor.models.RigidBodyModel;
 import com.kotcrab.vis.editor.module.physicseditor.models.ShapeModel;
 
-import java.util.List;
-
-/**
- * @author Aurelien Ribon | http://www.aurelienribon.com/
- */
-public class PCreationInputProcessor implements ModuleInput {
+/** @author Aurelien Ribon, Kotcrab */
+public class CreationInputProcessor implements ModuleInput {
 	private PCameraModule cameraModule;
-	private final PRigidBodiesScreen screen;
+	private PRigidBodiesScreen screen;
 	private PhysicsEditorSettings settings;
 	private boolean touchDown = false;
 
-	public PCreationInputProcessor (PCameraModule cameraModule, PRigidBodiesScreen screen, PhysicsEditorSettings settings) {
+	public CreationInputProcessor (PCameraModule cameraModule, PRigidBodiesScreen screen, PhysicsEditorSettings settings) {
 		this.cameraModule = cameraModule;
 		this.screen = screen;
 		this.settings = settings;
@@ -54,8 +54,8 @@ public class PCreationInputProcessor implements ModuleInput {
 		RigidBodyModel model = screen.getSelectedModel();
 		if (model == null) return true;
 
-		List<ShapeModel> shapes = model.getShapes();
-		ShapeModel lastShape = shapes.isEmpty() ? null : shapes.get(shapes.size() - 1);
+		Array<ShapeModel> shapes = model.getShapes();
+		ShapeModel lastShape = shapes.size == 0 ? null : shapes.get(shapes.size - 1);
 
 		if (lastShape == null || lastShape.isClosed()) {
 			ShapeModel.Type type = Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) ? ShapeModel.Type.CIRCLE : ShapeModel.Type.POLYGON;
@@ -64,11 +64,11 @@ public class PCreationInputProcessor implements ModuleInput {
 			shapes.add(lastShape);
 
 		} else {
-			List<Vector2> vs = lastShape.getVertices();
+			Array<Vector2> vs = lastShape.getVertices();
 			Vector2 np = screen.nearestPoint;
 			ShapeModel.Type type = lastShape.getType();
 
-			if (type == ShapeModel.Type.POLYGON && vs.size() >= 3 && np == vs.get(0)) {
+			if (type == ShapeModel.Type.POLYGON && vs.size >= 3 && np == vs.get(0)) {
 				lastShape.close();
 				model.computePhysics(settings.polygonizer);
 				screen.buildBody();
@@ -106,14 +106,14 @@ public class PCreationInputProcessor implements ModuleInput {
 		screen.nearestPoint = null;
 		Vector2 p = cameraModule.screenToWorld(x, y);
 
-		List<ShapeModel> shapes = model.getShapes();
-		ShapeModel lastShape = shapes.isEmpty() ? null : shapes.get(shapes.size() - 1);
+		Array<ShapeModel> shapes = model.getShapes();
+		ShapeModel lastShape = shapes.size == 0 ? null : shapes.get(shapes.size - 1);
 
 		if (lastShape != null) {
-			List<Vector2> vs = lastShape.getVertices();
+			Array<Vector2> vs = lastShape.getVertices();
 			float zoom = cameraModule.getCamera().zoom;
 
-			if (!lastShape.isClosed() && vs.size() >= 3)
+			if (!lastShape.isClosed() && vs.size >= 3)
 				if (vs.get(0).dst(p) < 0.025f * zoom)
 					screen.nearestPoint = vs.get(0);
 		}
@@ -130,9 +130,9 @@ public class PCreationInputProcessor implements ModuleInput {
 			case Input.Keys.ESCAPE:
 				RigidBodyModel model = screen.getSelectedModel();
 				if (model == null) break;
-				if (model.getShapes().isEmpty()) break;
-				if (model.getShapes().get(model.getShapes().size() - 1).isClosed()) break;
-				model.getShapes().remove(model.getShapes().size() - 1);
+				if (model.getShapes().size == 0) break;
+				if (model.getShapes().get(model.getShapes().size - 1).isClosed()) break;
+				model.getShapes().removeIndex(model.getShapes().size - 1);
 				break;
 		}
 		return false;

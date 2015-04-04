@@ -43,6 +43,7 @@ import com.kotcrab.vis.editor.scene.SpriteObject;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
+import com.kotcrab.vis.editor.util.FocusUtils;
 import com.kotcrab.vis.editor.util.SpriteUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -291,8 +292,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	}
 
 	public void focusSelf () {
-		Editor.instance.getStage().setKeyboardFocus(content);
-		Editor.instance.getStage().setScrollFocus(content);
+		FocusUtils.focus(content);
 	}
 
 }

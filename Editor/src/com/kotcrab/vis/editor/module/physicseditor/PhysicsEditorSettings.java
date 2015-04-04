@@ -21,6 +21,10 @@ package com.kotcrab.vis.editor.module.physicseditor;
 
 import com.kotcrab.vis.editor.module.physicseditor.util.Clipper.Polygonizer;
 
+/**
+ * Contains all settings for physics editor
+ * @author Kotcrab
+ */
 public class PhysicsEditorSettings {
 	public boolean isImageDrawn = true;
 	public boolean isShapeDrawn = true;

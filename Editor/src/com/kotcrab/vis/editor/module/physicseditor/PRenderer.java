@@ -28,6 +28,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.physicseditor.models.PolygonModel;
 import com.kotcrab.vis.editor.module.physicseditor.models.RigidBodyModel;
 import com.kotcrab.vis.editor.module.physicseditor.models.ShapeModel;
@@ -156,29 +157,29 @@ public class PRenderer extends PhysicsEditorModule {
 		drawer.end();
 	}
 
-	private void drawShapes (List<ShapeModel> shapes, Vector2 nextPoint) {
+	private void drawShapes (Array<ShapeModel> shapes, Vector2 nextPoint) {
 		Gdx.gl.glLineWidth(2);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 
 		for (ShapeModel shape : shapes) {
-			List<Vector2> vs = shape.getVertices();
-			if (vs.isEmpty()) continue;
+			Array<Vector2> vs = shape.getVertices();
+			if (vs.size == 0) continue;
 
 			switch (shape.getType()) {
 				case POLYGON:
 					drawer.begin(ShapeRenderer.ShapeType.Line);
 					drawer.setColor(SHAPE_COLOR);
 
-					for (int i = 1; i < vs.size(); i++)
+					for (int i = 1; i < vs.size; i++)
 						drawer.line(vs.get(i).x, vs.get(i).y, vs.get(i - 1).x, vs.get(i - 1).y);
 
 					if (shape.isClosed()) {
 						drawer.setColor(SHAPE_COLOR);
-						drawer.line(vs.get(0).x, vs.get(0).y, vs.get(vs.size() - 1).x, vs.get(vs.size() - 1).y);
+						drawer.line(vs.get(0).x, vs.get(0).y, vs.get(vs.size - 1).x, vs.get(vs.size - 1).y);
 					} else {
 						drawer.setColor(SHAPE_LASTLINE_COLOR);
-						drawer.line(vs.get(vs.size() - 1).x, vs.get(vs.size() - 1).y, nextPoint.x, nextPoint.y);
+						drawer.line(vs.get(vs.size - 1).x, vs.get(vs.size - 1).y, nextPoint.x, nextPoint.y);
 					}
 
 					drawer.end();
@@ -209,7 +210,7 @@ public class PRenderer extends PhysicsEditorModule {
 		}
 	}
 
-	private void drawPoints (List<ShapeModel> shapes, List<Vector2> selectedPoints, Vector2 nearestPoint, Vector2 nextPoint) {
+	private void drawPoints (Array<ShapeModel> shapes, List<Vector2> selectedPoints, Vector2 nearestPoint, Vector2 nextPoint) {
 		Gdx.gl.glLineWidth(2);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -240,7 +241,7 @@ public class PRenderer extends PhysicsEditorModule {
 		}
 	}
 
-	private void drawPolygons (List<PolygonModel> polygons) {
+	private void drawPolygons (Array<PolygonModel> polygons) {
 		Gdx.gl.glLineWidth(2);
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);

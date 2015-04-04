@@ -17,7 +17,7 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.physicseditor;
+package com.kotcrab.vis.editor.module.physicseditor.input;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -25,7 +25,11 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.ModuleInput;
+import com.kotcrab.vis.editor.module.physicseditor.PCameraModule;
+import com.kotcrab.vis.editor.module.physicseditor.PRigidBodiesScreen;
+import com.kotcrab.vis.editor.module.physicseditor.PhysicsEditorSettings;
 import com.kotcrab.vis.editor.module.physicseditor.models.RigidBodyModel;
 import com.kotcrab.vis.editor.module.physicseditor.models.ShapeModel;
 
@@ -33,18 +37,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * @author Aurelien Ribon | http://www.aurelienribon.com/
- */
-public class PEditionInputProcessor implements ModuleInput {
+/** @author Aurelien Ribon, Kotcrab */
+public class EditionInputProcessor implements ModuleInput {
 	private PCameraModule cameraModule;
-	private final PRigidBodiesScreen screen;
+	private PRigidBodiesScreen screen;
 	private PhysicsEditorSettings settings;
 
 	private boolean touchDown = false;
 	private Vector2 draggedPoint;
 
-	public PEditionInputProcessor (PCameraModule cameraModule, PRigidBodiesScreen screen, PhysicsEditorSettings settings) {
+	public EditionInputProcessor (PCameraModule cameraModule, PRigidBodiesScreen screen, PhysicsEditorSettings settings) {
 		this.cameraModule = cameraModule;
 		this.screen = screen;
 		this.settings = settings;
@@ -73,8 +75,8 @@ public class PEditionInputProcessor implements ModuleInput {
 		return Collections.unmodifiableList(points);
 	}
 
-	private List<Vector2> getAllPoints () {
-		List<Vector2> points = new ArrayList<Vector2>();
+	private Array<Vector2> getAllPoints () {
+		Array<Vector2> points = new Array<>();
 		RigidBodyModel model = screen.getSelectedModel();
 
 		for (ShapeModel shape : model.getShapes()) {
@@ -82,7 +84,7 @@ public class PEditionInputProcessor implements ModuleInput {
 		}
 
 		points.add(model.getOrigin());
-		return Collections.unmodifiableList(points);
+		return new Array<>(points);
 	}
 
 	@Override

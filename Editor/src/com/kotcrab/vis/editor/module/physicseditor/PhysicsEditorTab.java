@@ -23,7 +23,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.ContentTable;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.physicseditor.models.RigidBodyModel;
@@ -32,21 +31,18 @@ import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.util.EventStopper;
+import com.kotcrab.vis.editor.util.FocusUtils;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 
 public class PhysicsEditorTab extends MainContentTab {
-	private ContentTable content;
-
-	private QuickAccessModule quickAccess;
-
-	private ProjectModuleContainer projectMC;
 	private PhysicsEditorModuleContainer physicsMC;
 
+	private ContentTable content;
+
 	public PhysicsEditorTab (ProjectModuleContainer projectMC) {
-		this.projectMC = projectMC;
 		physicsMC = new PhysicsEditorModuleContainer(projectMC, this);
 		physicsMC.add(new PSettingsModule());
 		physicsMC.add(new PCameraModule());
@@ -54,14 +50,16 @@ public class PhysicsEditorTab extends MainContentTab {
 		physicsMC.add(new PRigidBodiesScreen());
 		physicsMC.init();
 
-		quickAccess = projectMC.getEditorContainer().get(QuickAccessModule.class);
+		QuickAccessModule quickAccess = projectMC.getEditorContainer().get(QuickAccessModule.class);
 		quickAccess.addTab(new PhysicsSettingsTab());
 
+		//debug
 		PRigidBodiesScreen screen = physicsMC.get(PRigidBodiesScreen.class);
 		RigidBodyModel model = new RigidBodyModel();
 		String path = "gfx/plane/Planes/planeBlue1.png";
 		model.setRegion(projectMC.get(TextureCacheModule.class).getRegion(path), path);
 		screen.switchedSelection(model);
+		//debug end
 
 		content = new ContentTable(physicsMC);
 
@@ -76,12 +74,6 @@ public class PhysicsEditorTab extends MainContentTab {
 		content = new ContentTable(physicsMC);
 		content.add(table).expandX().fillX().row();
 		content.add().fill().expand();
-
-		createQuickAccessTab();
-	}
-
-	private void createQuickAccessTab () {
-
 	}
 
 	@Override
@@ -115,7 +107,7 @@ public class PhysicsEditorTab extends MainContentTab {
 	public void onShow () {
 		super.onShow();
 		physicsMC.onShow();
-		focusSelf();
+		FocusUtils.focus(content);
 	}
 
 	@Override
@@ -127,11 +119,6 @@ public class PhysicsEditorTab extends MainContentTab {
 	@Override
 	public void dispose () {
 		physicsMC.dispose();
-	}
-
-	public void focusSelf () {
-		Editor.instance.getStage().setKeyboardFocus(content);
-		Editor.instance.getStage().setScrollFocus(content);
 	}
 
 }

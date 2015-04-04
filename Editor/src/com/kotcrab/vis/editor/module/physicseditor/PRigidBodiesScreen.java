@@ -36,6 +36,9 @@ import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.module.ModuleInput;
+import com.kotcrab.vis.editor.module.physicseditor.input.CreationInputProcessor;
+import com.kotcrab.vis.editor.module.physicseditor.input.EditionInputProcessor;
+import com.kotcrab.vis.editor.module.physicseditor.input.TestInputProcessor;
 import com.kotcrab.vis.editor.module.physicseditor.list.ChangeListener;
 import com.kotcrab.vis.editor.module.physicseditor.list.ObservableList;
 import com.kotcrab.vis.editor.module.physicseditor.models.CircleModel;
@@ -104,9 +107,9 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 
 		currentProcessor = new ModuleInput() {
 		}; //dummy processor if no body is selected
-		creationInputProcessor = new PCreationInputProcessor(cameraModule, this, settings);
-		editionInputProcessor = new PEditionInputProcessor(cameraModule, this, settings);
-		testInputProcessor = new PTestInputProcessor(cameraModule, this);
+		creationInputProcessor = new CreationInputProcessor(cameraModule, this, settings);
+		editionInputProcessor = new EditionInputProcessor(cameraModule, this, settings);
+		testInputProcessor = new TestInputProcessor(cameraModule, this);
 
 		initializeModelChangeListener();
 		initializeSelectedPointsEvents();
@@ -170,28 +173,25 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 	}
 
 	private void initializeSelectedPointsEvents () {
-		selectedPoints.addListChangedListener(new ObservableList.ListChangeListener<Vector2>() {
-			@Override
-			public void changed (Object source, List<Vector2> added, List<Vector2> removed) {
-				RigidBodyModel model = selectedModel;
-				if (model == null) return;
+		selectedPoints.addListChangedListener((source, added, removed) -> {
+			RigidBodyModel model = selectedModel;
+			if (model == null) return;
 
-				List<Vector2> toAdd = new ArrayList<Vector2>();
+			List<Vector2> toAdd = new ArrayList<>();
 
-				for (Vector2 v : added) {
-					ShapeModel shape = ShapeUtils.getShape(model, v);
-					if (shape == null) continue;
+			for (Vector2 v : added) {
+				ShapeModel shape = ShapeUtils.getShape(model, v);
+				if (shape == null) continue;
 
-					if (shape.getType() == ShapeModel.Type.CIRCLE) {
-						List<Vector2> vs = shape.getVertices();
-						if (selectedPoints.contains(vs.get(0)) && !selectedPoints.contains(vs.get(1))) {
-							toAdd.add(vs.get(1));
-						}
+				if (shape.getType() == ShapeModel.Type.CIRCLE) {
+					Array<Vector2> vs = shape.getVertices();
+					if (selectedPoints.contains(vs.get(0)) && !selectedPoints.contains(vs.get(1))) {
+						toAdd.add(vs.get(1));
 					}
 				}
-
-				selectedPoints.addAll(toAdd);
 			}
+
+			selectedPoints.addAll(toAdd);
 		});
 	}
 
@@ -256,15 +256,15 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 		for (ShapeModel shape : selectedModel.getShapes()) {
 			if (shape.getType() != ShapeModel.Type.POLYGON) continue;
 
-			List<Vector2> vs = shape.getVertices();
+			Array<Vector2> vs = shape.getVertices();
 
-			for (int i = 0; i < vs.size(); i++) {
+			for (int i = 0; i < vs.size; i++) {
 				Vector2 p1 = vs.get(i);
-				Vector2 p2 = i != vs.size() - 1 ? vs.get(i + 1) : vs.get(0);
+				Vector2 p2 = i != vs.size - 1 ? vs.get(i + 1) : vs.get(0);
 
 				if (selectedPoints.contains(p1) && selectedPoints.contains(p2)) {
 					Vector2 p = new Vector2((p1.x + p2.x) / 2, (p1.y + p2.y) / 2);
-					vs.add(i + 1, p);
+					vs.insert(i + 1, p);
 					toAdd.add(p);
 				}
 			}
@@ -277,23 +277,23 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 	public void removeSelectedPoints () {
 		if (!isRemoveEnabled()) return;
 
-		List<ShapeModel> shapes = selectedModel.getShapes();
+		Array<ShapeModel> shapes = selectedModel.getShapes();
 
-		for (int i = shapes.size() - 1; i >= 0; i--) {
+		for (int i = shapes.size - 1; i >= 0; i--) {
 			ShapeModel shape = selectedModel.getShapes().get(i);
 
 			switch (shape.getType()) {
 				case POLYGON:
 					for (Vector2 p : selectedPoints) {
-						if (shape.getVertices().contains(p)) shape.getVertices().remove(p);
+						if (shape.getVertices().contains(p, true)) shape.getVertices().removeValue(p, true);
 					}
-					if (shape.getVertices().isEmpty()) shapes.remove(i);
+					if (shape.getVertices().size == 0) shapes.removeIndex(i);
 					break;
 
 				case CIRCLE:
 					for (Vector2 p : selectedPoints) {
-						if (shape.getVertices().contains(p)) {
-							shapes.remove(i);
+						if (shape.getVertices().contains(p, true)) {
+							shapes.removeIndex(i);
 							break;
 						}
 					}
@@ -387,7 +387,7 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 		for (Vector2[] polygon : polygons) {
 			if (polygon.length < 3) continue;
 			ShapeModel shape = new ShapeModel(ShapeModel.Type.POLYGON);
-			shape.getVertices().addAll(Arrays.asList(polygon));
+			shape.getVertices().addAll(polygon);
 			shape.close();
 			model.getShapes().add(shape);
 		}
@@ -414,7 +414,7 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 	private void createBody () {
 		RigidBodyModel model = selectedModel;
 		if (model == null) return;
-		if (model.getPolygons().isEmpty() && model.getCircles().isEmpty()) return;
+		if (model.getPolygons().size ==0 && model.getCircles().size == 0) return;
 
 		BodyDef bd = new BodyDef();
 		bd.type = BodyType.StaticBody;

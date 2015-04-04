@@ -27,6 +27,7 @@ import com.badlogic.gdx.utils.Array;
  * mostly "blind" C# conversion of the TextureConverter code from Farseer, I
  * even left the original german comments in place. Seems to work.
  */
+//TODO clean this up
 public class TextureConverter {
 	// User contribution from Sickbattery
 	// / <summary>

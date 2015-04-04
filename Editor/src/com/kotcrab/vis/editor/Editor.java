@@ -58,6 +58,8 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
+import java.io.File;
+
 public class Editor extends ApplicationAdapter implements EventListener {
 	public static Editor instance;
 
@@ -123,19 +125,23 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		createModulesUI();
 
 		// debug section
-		try {
-			editorMC.get(ProjectIOModule.class).load((Gdx.files.absolute("F:\\Poligon\\Tester")));
-		} catch (EditorException e) {
-			Log.exception(e);
-		}
+		// aka. the kinda smart way to ensure that debug will load only on my machine
+		// remove it later though...
+		if (new File("C:\\Users\\Kotcrab\\.viseditor\\debug.this").exists()) {
+			try {
+				editorMC.get(ProjectIOModule.class).load((Gdx.files.absolute("F:\\Poligon\\Tester")));
+			} catch (EditorException e) {
+				Log.exception(e);
+			}
 
-		FileHandle scene = Gdx.files.absolute("F:\\Poligon\\Tester\\vis\\assets\\scene\\test.scene");
-		if (scene.exists()) {
-			EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
-			projectMC.get(SceneTabsModule.class).open(testScene);
-		}
+			FileHandle scene = Gdx.files.absolute("F:\\Poligon\\Tester\\vis\\assets\\scene\\test.scene");
+			if (scene.exists()) {
+				EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
+				projectMC.get(SceneTabsModule.class).open(testScene);
+			}
 
-		editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
+			editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
+		}
 		//debug end
 
 		Log.debug("Loading completed");

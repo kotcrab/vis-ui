@@ -27,7 +27,6 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
 public class PhysicsSettingsTab extends Tab {
 	private VisScrollPane scrollPane;
-	private VisTable contentTab;
 
 	public PhysicsSettingsTab () {
 		super(false, false);
@@ -63,8 +62,7 @@ public class PhysicsSettingsTab extends Tab {
 		sectionsTable.addSeparator(true);
 		sectionsTable.add(autoTraceTab).pad(3).padTop(0);
 
-
-		contentTab = new VisTable(true);
+		VisTable contentTab = new VisTable(true);
 		contentTab.setBackground(VisUI.getSkin().getDrawable("window-bg"));
 
 		contentTab.add(new VisLabel("Physics Editor Settings", "small")).space(0).left().row();

@@ -29,6 +29,11 @@ import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 
 //TODO very similar to SceneModuleContainer, create same parent for them or sth
+
+/**
+ * Module container for modules making physics editor
+ * @author Kotcrab
+ */
 public class PhysicsEditorModuleContainer extends BaseModuleContainer<PhysicsEditorModule> implements ModuleInput {
 	private Project project;
 	private EditorModuleContainer editorModuleContainer;

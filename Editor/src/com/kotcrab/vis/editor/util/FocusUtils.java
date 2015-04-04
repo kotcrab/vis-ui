@@ -17,21 +17,14 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.physicseditor;
+package com.kotcrab.vis.editor.util;
 
-/**
- * @author Aurelien Ribon | http://www.aurelienribon.com/
- */
-public class PSettingsModule extends PhysicsEditorModule {
-	private PhysicsEditorSettings settings;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.kotcrab.vis.editor.Editor;
 
-	//TODO saving settings
-	@Override
-	public void init () {
-		settings = new PhysicsEditorSettings();
-	}
-
-	public PhysicsEditorSettings getSettings () {
-		return settings;
+public class FocusUtils {
+	public static void focus (Actor target) {
+		Editor.instance.getStage().setKeyboardFocus(target);
+		Editor.instance.getStage().setScrollFocus(target);
 	}
 }

@@ -22,6 +22,7 @@ package com.kotcrab.vis.editor.module.physicseditor.models;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.physicseditor.list.ChangeListener;
@@ -33,7 +34,6 @@ import com.kotcrab.vis.editor.module.physicseditor.util.PolygonUtils;
 import com.kotcrab.vis.runtime.entity.Entity;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -45,9 +45,10 @@ public class RigidBodyModel extends Entity implements Changeable {
 	public static final String PROP_PHYSICS = "physics";
 
 	private final Vector2 origin = new Vector2(0, 0);
-	private final List<ShapeModel> shapes = new ArrayList<ShapeModel>();
-	private final List<PolygonModel> polygons = new ArrayList<PolygonModel>();
-	private final List<CircleModel> circles = new ArrayList<CircleModel>();
+	private final Array<ShapeModel> shapes = new Array<>();
+	private final Array<ShapeModel> shapesToRemove = new Array<>();
+	private final Array<PolygonModel> polygons = new Array<>();
+	private final Array<CircleModel> circles = new Array<>();
 	private String name = "unamed";
 	public transient TextureRegion region;
 
@@ -59,15 +60,15 @@ public class RigidBodyModel extends Entity implements Changeable {
 		return origin;
 	}
 
-	public List<ShapeModel> getShapes () {
+	public Array<ShapeModel> getShapes () {
 		return shapes;
 	}
 
-	public List<PolygonModel> getPolygons () {
+	public Array<PolygonModel> getPolygons () {
 		return polygons;
 	}
 
-	public List<CircleModel> getCircles () {
+	public Array<CircleModel> getCircles () {
 		return circles;
 	}
 
@@ -98,19 +99,17 @@ public class RigidBodyModel extends Entity implements Changeable {
 		polygons.clear();
 		circles.clear();
 
-		Iterator<ShapeModel> iterator = shapes.iterator();
-		while (iterator.hasNext()) {
-			ShapeModel shape = iterator.next();
+		for (ShapeModel shape : shapes) {
 			if (!shape.isClosed()) continue;
 
 			if (shape.getType() == Type.POLYGON) {
-				Vector2[] vertices = shape.getVertices().toArray(new Vector2[0]);
+				Vector2[] vertices = shape.getVertices().toArray();
 				Vector2[][] polys = Clipper.polygonize(polygonizer, vertices);
 				if (polys != null) for (Vector2[] poly : polys) {
 
 					if (PolygonUtils.isDegenerate(poly)) {
 						App.eventBus.post(new StatusBarEvent("Shape polygon is degenerated, removing shape", Color.RED));
-						iterator.remove();
+						shapesToRemove.add(shape);
 						continue;
 					}
 
@@ -124,6 +123,9 @@ public class RigidBodyModel extends Entity implements Changeable {
 				circles.add(new CircleModel(center, radius));
 			}
 		}
+
+		shapes.removeAll(shapesToRemove, true);
+		shapesToRemove.clear();
 
 		firePropertyChanged(PROP_PHYSICS);
 	}

@@ -23,10 +23,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.physicseditor.util.earclipping.bayazit.BayazitDecomposer;
 import com.kotcrab.vis.editor.module.physicseditor.util.earclipping.ewjordan.EwjordanDecomposer;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -37,11 +34,8 @@ public class Clipper {
 	public static Vector2[][] polygonize (Polygonizer polygonizer, Vector2[] points) {
 		Vector2[][] polygons = null;
 
-		if (PolygonUtils.isPolygonCCW(points)) {
-			List<Vector2> vertices = Arrays.asList(points);
-			Collections.reverse(vertices);
-			points = vertices.toArray(new Vector2[0]);
-		}
+		if (PolygonUtils.isPolygonCCW(points))
+			ArrayUtils.reverse(points);
 
 		switch (polygonizer) {
 			case EWJORDAN:

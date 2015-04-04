@@ -25,6 +25,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.project.ProjectModule;
 
+/**
+ * Base class for all physics editor modules
+ * @author Kotcrab
+ */
 public abstract class PhysicsEditorModule extends ProjectModule implements ModuleInput {
 	protected PhysicsEditorModuleContainer physicsContainer;
 	protected PhysicsEditorTab editorTab;

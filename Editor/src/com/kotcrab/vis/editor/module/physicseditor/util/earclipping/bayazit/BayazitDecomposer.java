@@ -20,7 +20,7 @@
 package com.kotcrab.vis.editor.module.physicseditor.util.earclipping.bayazit;
 
 // Taken from BayazitDecomposer.cs (FarseerPhysics.Common.Decomposition.BayazitDecomposer)
-// at http://farseerphysics.codeplex.com
+// at http://farseerphysics.codeplex.com //TODO clean this
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
@@ -520,7 +520,7 @@ class SimplifyTools {
 		if (r >= 1.0)
 			return DistancePointPoint(p, B);
 	  /*
-       * (2) (Ay-Cy)(Bx-Ax)-(Ax-Cx)(By-Ay) s = -----------------------------
+	   * (2) (Ay-Cy)(Bx-Ax)-(Ax-Cx)(By-Ay) s = -----------------------------
        * Curve^2 Then the distance from C to Point = |s|*Curve.
        */
 		double s = ((A.y - p.y) * (B.x - A.x) - (A.x - p.x) * (B.y - A.y))

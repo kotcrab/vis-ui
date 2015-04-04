@@ -17,24 +17,24 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.physicseditor;
+package com.kotcrab.vis.editor.module.physicseditor.input;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.kotcrab.vis.editor.module.ModuleInput;
+import com.kotcrab.vis.editor.module.physicseditor.PCameraModule;
+import com.kotcrab.vis.editor.module.physicseditor.PRigidBodiesScreen;
 import com.kotcrab.vis.editor.module.physicseditor.models.RigidBodyModel;
 
-/**
- * @author Aurelien Ribon | http://www.aurelienribon.com/
- */
-public class PTestInputProcessor implements ModuleInput {
+/** @author Aurelien Ribon, Kotcrab */
+public class TestInputProcessor implements ModuleInput {
 	private PCameraModule cameraModule;
+	private PRigidBodiesScreen screen;
 
-	private final PRigidBodiesScreen screen;
 	private boolean touchDown = false;
 
-	public PTestInputProcessor (PCameraModule cameraModule, PRigidBodiesScreen screen) {
+	public TestInputProcessor (PCameraModule cameraModule, PRigidBodiesScreen screen) {
 		this.cameraModule = cameraModule;
 		this.screen = screen;
 	}

@@ -22,9 +22,12 @@ package com.kotcrab.vis.editor.module.physicseditor.util;
 import com.badlogic.gdx.math.Vector2;
 
 /**
- * @author Aurelien Ribon | http://www.aurelienribon.com/
+ * @author Aurelien Ribon, Kotcrab
  */
 public class PolygonUtils {
+	private static final int B2_MAX_VERTICES = 8;
+	private static final float B2_LINEAR_SLOP = 0.005f;
+
 	public static float getPolygonSignedArea (Vector2[] points) {
 		if (points.length < 3)
 			return 0;
@@ -46,51 +49,23 @@ public class PolygonUtils {
 		return getPolygonSignedArea(points) > 0;
 	}
 
-	private static final int MAX_VERTICIES = 8;
-	private static final float b2_linearSlop = 0.005f;
-
-	/**
-	 * Checks whether polygon vertices will make degenerated box2d polygon or not
-	 * @author Kotcrab
-	 */
+	/** Checks whether polygon vertices will make degenerated box2d polygon or not */
 	public static boolean isDegenerate (Vector2[] vertices) {
-		//Apparently polgyon can be degenerated, so this code is copied form PolygonShape and b2PolygonShape.cpp to check whether polygon is degenerate or not
+		// https://github.com/libgdx/libgdx/blob/master/extensions/gdx-box2d/gdx-box2d/jni/Box2D/Collision/Shapes/b2PolygonShape.cpp#L120-L226
+		// it's not like I understand what is going on here
 
-		// PolygonShape#set(Vector2[] vertices)
-		float[] verts = new float[vertices.length * 2];
-		for (int i = 0, j = 0; i < vertices.length * 2; i += 2, j++) {
-			verts[i] = vertices[j].x;
-			verts[i + 1] = vertices[j].y;
-		}
+		int count = vertices.length;
+		int n = Math.min(count, B2_MAX_VERTICES);
 
-		return isDegenerate(verts, 0, verts.length);
-	}
-
-	private static boolean isDegenerate (float[] verts, int offset, int length) {
-		// b2PolygonShape::Set(const b2Vec2* vertices, int32 count)
-		int numVertices = length / 2;
-		Vector2[] verticesOut = new Vector2[numVertices];
-		for (int i = 0; i < numVertices; i++) {
-			verticesOut[i] = new Vector2(verts[(i << 1) + offset], verts[(i << 1) + offset + 1]);
-		}
-
-		return isDegenerate(verticesOut, numVertices);
-	}
-
-	private static boolean isDegenerate (Vector2[] verts, int count) {
-		// https://github.com/libgdx/libgdx/blob/master/extensions/gdx-box2d/gdx-box2d/jni/Box2D/Collision/Shapes/b2PolygonShape.cpp#L120-L161
-		int n = Math.min(count, MAX_VERTICIES);
-
-		Vector2[] ps = new Vector2[MAX_VERTICIES];
+		// Perform welding and copy vertices into local buffer.
+		Vector2[] ps = new Vector2[B2_MAX_VERTICES];
 		int tempCount = 0;
-
 		for (int i = 0; i < n; ++i) {
-			Vector2 v = verts[i];
+			Vector2 v = vertices[i];
 
 			boolean unique = true;
-
 			for (int j = 0; j < tempCount; ++j) {
-				if (distanceSquared(v, ps[j]) < 0.5f * b2_linearSlop) {
+				if (distanceSquared(v, ps[j]) < 0.5f * B2_LINEAR_SLOP) {
 					unique = false;
 					break;
 				}
@@ -107,11 +82,66 @@ public class PolygonUtils {
 			return true;
 		}
 
+		// Create the convex hull using the Gift wrapping algorithm
+		// http://en.wikipedia.org/wiki/Gift_wrapping_algorithm
+
+		// Find the right most point on the hull
+		int i0 = 0;
+		float x0 = ps[0].x;
+		for (int i = 1; i < n; ++i) {
+			float x = ps[i].x;
+			if (x > x0 || (x == x0 && ps[i].y < ps[i0].y)) {
+				i0 = i;
+				x0 = x;
+			}
+		}
+
+		int hull[] = new int[B2_MAX_VERTICES];
+		int m = 0;
+		int ih = i0;
+
+		while (true) {
+			hull[m] = ih;
+
+			int ie = 0;
+			for (int j = 1; j < n; ++j) {
+				if (ie == ih) {
+					ie = j;
+					continue;
+				}
+
+				Vector2 r = ps[ie].cpy().sub(ps[hull[m]]);
+				Vector2 v = ps[j].cpy().sub(ps[hull[m]]);
+
+				float c =  r.crs(v);
+				if (c < 0.0f) {
+					ie = j;
+				}
+
+				// Collinearity check
+				if (c == 0.0f && v.len2() > r.len2()) {
+					ie = j;
+				}
+			}
+
+			++m;
+			ih = ie;
+
+			if (ie == i0) {
+				break;
+			}
+		}
+
+		if (m < 3) {
+			// Polygon is degenerate.
+			return true;
+		}
+
 		return false;
 	}
 
 	private static float distanceSquared (Vector2 a, Vector2 b) {
-		a.sub(b);
-		return a.dot(a);
+		Vector2 c = a.cpy().sub(b);
+		return c.dot(c);
 	}
 }
