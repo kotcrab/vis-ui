@@ -19,6 +19,7 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -54,6 +55,8 @@ public class GridRendererModule extends SceneModule {
 	public void render (Batch batch) {
 		if (settings.config.drawGrid) {
 			batch.end();
+
+			Gdx.gl.glLineWidth(1);
 
 			shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
 			shapeRenderer.begin(ShapeType.Line);
