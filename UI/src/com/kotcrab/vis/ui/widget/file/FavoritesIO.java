@@ -25,7 +25,8 @@ import com.badlogic.gdx.utils.Json;
 
 /** @author Kotcrab */
 public class FavoritesIO {
-	private static String favoritesPrefsName = "pl.kotcrab.vis.ui.widget.file.filechooser_favorites";
+	private static final String DEFAULT_FAVORITES_PREFS_NAME = "com.kotcrab.vis.ui.widget.file.filechooser_favorites";
+	private static String favoritesPrefsName = DEFAULT_FAVORITES_PREFS_NAME;
 	private static String keyName = "favorites";
 
 	private Preferences prefs;
@@ -54,6 +55,11 @@ public class FavoritesIO {
 	public void saveFavorites (Array<FileHandle> favorites) {
 		prefs.putString(keyName, json.toJson(new FavouriteData(favorites)));
 		prefs.flush();
+	}
+
+	public void checkIfUsingDefaultName () {
+		if(favoritesPrefsName.equals(DEFAULT_FAVORITES_PREFS_NAME))
+			Gdx.app.log("VisUI", "Warning, using default favorites preference name for file chooser! (see FileChooser.setFavoritesPrefsName(String))");
 	}
 
 	@SuppressWarnings("unused")

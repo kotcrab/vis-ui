@@ -28,6 +28,7 @@ public class TestFileChooser extends VisWindow {
 	public TestFileChooser () {
 		super("filechooser");
 
+		FileChooser.setFavoritesPrefsName("com.kotcrab.vis.ui.test.manual");
 		final FileChooser chooser = new FileChooser(Mode.OPEN);
 
 		VisTextButton show = new VisTextButton("show");

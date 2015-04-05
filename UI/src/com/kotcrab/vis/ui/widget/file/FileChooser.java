@@ -146,6 +146,7 @@ public class FileChooser extends VisWindow {
 		closeOnEscape();
 
 		favoritesIO = new FavoritesIO();
+		favoritesIO.checkIfUsingDefaultName();
 		favorites = favoritesIO.loadFavorites();
 
 		createToolbar();
