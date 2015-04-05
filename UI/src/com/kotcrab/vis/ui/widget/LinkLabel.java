@@ -23,64 +23,85 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.kotcrab.vis.ui.VisUI;
 
-/** @author Kotcrab */
+/**
+ * Simple LinkLabel allowing to create label with clickable link.
+ * Link can have custom text. By default clicking link will open it in default browser, this can be changed by settings label listener.
+ * @author Kotcrab
+ * @since 0.7.2
+ */
 public class LinkLabel extends VisLabel {
-
 	private static final String DEFAULT_COLOR_NAME = "link-label";
+
 	private LinkLabelListener listener;
+	private CharSequence url;
 
 	public LinkLabel (CharSequence text) {
 		super(text);
 		setColor(VisUI.getSkin().getColor(DEFAULT_COLOR_NAME));
-		init();
+		init(text);
+	}
+
+	public LinkLabel (CharSequence text, CharSequence url) {
+		super(text);
+		setColor(VisUI.getSkin().getColor(DEFAULT_COLOR_NAME));
+		init(url);
 	}
 
 	public LinkLabel (CharSequence text, int alignment) {
 		super(text, alignment);
 		setColor(VisUI.getSkin().getColor(DEFAULT_COLOR_NAME));
-		init();
+		init(text);
 	}
 
 	public LinkLabel (CharSequence text, Color textColor) {
 		super(text, textColor);
-		init();
+		init(text);
 	}
 
 	public LinkLabel (CharSequence text, LabelStyle style) {
 		super(text, style);
-		init();
+		init(text);
 	}
 
-	public LinkLabel (CharSequence text, String styleName) {
+	public LinkLabel (CharSequence text, CharSequence url, String styleName) {
 		super(text, styleName);
-		init();
+		init(url);
 	}
 
 	public LinkLabel (CharSequence text, String fontName, Color color) {
 		super(text, fontName, color);
-		init();
+		init(text);
 	}
 
 	public LinkLabel (CharSequence text, String fontName, String colorName) {
 		super(text, fontName, colorName);
-		init();
+		init(text);
 	}
 
-	private void init () {
+	private void init (CharSequence linkUrl) {
+		this.url = linkUrl;
 		addListener(new ClickListener(Buttons.LEFT) {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 
-				if(listener == null)
-					Gdx.net.openURI(getText().toString());
+				if (listener == null)
+					Gdx.net.openURI(url.toString());
 				else
-					listener.clicked(getText().toString());
+					listener.clicked(url.toString());
 			}
 		});
 	}
 
+	public CharSequence getUrl () {
+		return url;
+	}
+
+	public void setUrl (CharSequence url) {
+		this.url = url;
+	}
+
 	public interface LinkLabelListener {
-		void clicked (String link);
+		void clicked (String url);
 	}
 }

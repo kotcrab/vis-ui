@@ -142,9 +142,13 @@ public class TestWindow extends VisWindow {
 		// ---
 
 		VisTable linkTable = new VisTable(true);
-
 		linkTable.add(new VisLabel("link label:"));
-		linkTable.add(new LinkLabel("https://github.com/kotcrab/viseditor"));
+		linkTable.add(new LinkLabel("https://github.com/kotcrab/viseditor")).row();
+
+
+		VisTable linkTable2 = new VisTable(true);
+		linkTable2.add(new VisLabel("link label with custom text:"));
+		linkTable2.add(new LinkLabel("kotcrab blog", "http://kotcrab.com")).row();
 
 		// ---
 
@@ -156,7 +160,8 @@ public class TestWindow extends VisWindow {
 		add(progressbarTable).row();
 		add(listTable).row();
 		add(selectorsTable).row();
-		add(linkTable).padBottom(3).row();
+		add(linkTable).row();
+		add(linkTable2).padBottom(3).row();
 	}
 
 	private void addNormalWidgets () {
