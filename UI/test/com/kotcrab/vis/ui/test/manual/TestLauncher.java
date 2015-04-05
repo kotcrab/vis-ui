@@ -19,7 +19,6 @@ package com.kotcrab.vis.ui.test.manual;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
@@ -47,7 +46,7 @@ public class TestLauncher {
 }
 
 class TestApplication extends ApplicationAdapter {
-	private static final int TESTS_VERSION = 2;
+	private static final int TESTS_VERSION = 3;
 	private static final boolean USE_VIS_WIDGETS = true;
 
 	private Stage stage;
@@ -73,14 +72,14 @@ class TestApplication extends ApplicationAdapter {
 		stage.addActor(new TestCollapsible());
 		if (Gdx.app.getType() != ApplicationType.WebGL) stage.addActor(new TestColorPicker());
 		if (Gdx.app.getType() == ApplicationType.Desktop) stage.addActor(new TestFileChooser());
-		stage.addActor(new TestDialogUtils());
-		stage.addActor(new TestFormValidator());
+		stage.addActor(new TestWindow(USE_VIS_WIDGETS));
 		stage.addActor(new TestSplitPane(USE_VIS_WIDGETS));
 		stage.addActor(new TestTextAreaAndScroll(USE_VIS_WIDGETS));
 		stage.addActor(new TestTree(USE_VIS_WIDGETS));
-		stage.addActor(new TestValidator());
 		stage.addActor(new TestVertical(USE_VIS_WIDGETS));
-		stage.addActor(new TestWindow(USE_VIS_WIDGETS));
+		stage.addActor(new TestFormValidator());
+		stage.addActor(new TestDialogUtils());
+		stage.addActor(new TestValidator());
 		stage.addActor(new TestBuilders());
 	}
 
@@ -90,39 +89,54 @@ class TestApplication extends ApplicationAdapter {
 		Menu windowMenu = new Menu("Window");
 		Menu helpMenu = new Menu("Help");
 
-		fileMenu.addItem(new MenuItem("MenuItem #1"));
-		fileMenu.addItem(new MenuItem("MenuItem #2").setShortcut(Keys.F1));
-		fileMenu.addItem(new MenuItem("MenuItem #3").setShortcut(Keys.F2));
-		fileMenu.addItem(new MenuItem("MenuItem #4").setShortcut("Alt + F4"));
+		fileMenu.addItem(new MenuItem("menuitem #1"));
+		fileMenu.addItem(new MenuItem("menuitem #2").setShortcut("f1"));
+		fileMenu.addItem(new MenuItem("menuitem #3").setShortcut("f2"));
+		fileMenu.addItem(new MenuItem("menuitem #4").setShortcut("alt + f4"));
 
-		MenuItem subMenuItem = new MenuItem("SubMenu #1");
-		subMenuItem.setShortcut("Alt + Insert");
+		MenuItem subMenuItem = new MenuItem("subnenu #1");
+		subMenuItem.setShortcut("alt + insert");
 		subMenuItem.setSubMenu(createSubMenu());
 		fileMenu.addItem(subMenuItem);
 
-		MenuItem subMenuItem2 = new MenuItem("SubMenu #2");
+		MenuItem subMenuItem2 = new MenuItem("subnenu #2");
 		subMenuItem2.setSubMenu(createSubMenu());
 		fileMenu.addItem(subMenuItem2);
 
-		editMenu.addItem(new MenuItem("MenuItem #5"));
-		editMenu.addItem(new MenuItem("MenuItem #6"));
+		MenuItem subMenuItem3 = new MenuItem("submenu disabled");
+		subMenuItem3.setDisabled(true);
+		subMenuItem3.setSubMenu(createSubMenu());
+		fileMenu.addItem(subMenuItem3);
+
+		// ---
+
+		editMenu.addItem(new MenuItem("menuitem #5"));
+		editMenu.addItem(new MenuItem("menuitem #6"));
 		editMenu.addSeparator();
-		editMenu.addItem(new MenuItem("MenuItem #7"));
-		editMenu.addItem(new MenuItem("MenuItem #8"));
+		editMenu.addItem(new MenuItem("menuitem #7"));
+		editMenu.addItem(new MenuItem("menuitem #8"));
 
-		windowMenu.addItem(new MenuItem("MenuItem #9"));
-		windowMenu.addItem(new MenuItem("MenuItem #10"));
-		windowMenu.addItem(new MenuItem("MenuItem #11"));
+		MenuItem disabledItem = new MenuItem("disabled menuitem");
+		disabledItem.setDisabled(true);
+		MenuItem disabledItem2 = new MenuItem("disabled menuitem shortcut").setShortcut("alt + f4");
+		disabledItem2.setDisabled(true);
+
+		editMenu.addItem(disabledItem);
+		editMenu.addItem(disabledItem2);
+
+		windowMenu.addItem(new MenuItem("menuitem #9"));
+		windowMenu.addItem(new MenuItem("menuitem #10"));
+		windowMenu.addItem(new MenuItem("menuitem #11"));
 		windowMenu.addSeparator();
-		windowMenu.addItem(new MenuItem("MenuItem #12"));
+		windowMenu.addItem(new MenuItem("menuitem #12"));
 
-		helpMenu.addItem(new MenuItem("MenuItem #13"));
-		helpMenu.addItem(new MenuItem("MenuItem #14"));
+		helpMenu.addItem(new MenuItem("menuitem #13"));
+		helpMenu.addItem(new MenuItem("menuitem #14"));
 
-		helpMenu.addItem(new MenuItem("About", new ChangeListener() {
+		helpMenu.addItem(new MenuItem("about", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				DialogUtils.showOKDialog(stage, "About", "Tests version: " + TESTS_VERSION + " \nVisUI version: " + VisUI.VERSION);
+				DialogUtils.showOKDialog(stage, "about", "tests version: " + TESTS_VERSION + " \nvisui version: " + VisUI.VERSION);
 			}
 		}));
 
@@ -134,11 +148,11 @@ class TestApplication extends ApplicationAdapter {
 
 	private PopupMenu createSubMenu () {
 		PopupMenu menu = new PopupMenu();
-		menu.addItem(new MenuItem("SubMenuItem #1"));
-		menu.addItem(new MenuItem("SubMenuItem #2"));
+		menu.addItem(new MenuItem("Submenuitem #1"));
+		menu.addItem(new MenuItem("Submenuitem #2"));
 		menu.addSeparator();
-		menu.addItem(new MenuItem("SubMenuItem #3"));
-		menu.addItem(new MenuItem("SubMenuItem #4"));
+		menu.addItem(new MenuItem("Submenuitem #3"));
+		menu.addItem(new MenuItem("Submenuitem #4"));
 		return menu;
 	}
 

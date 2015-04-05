@@ -1,6 +1,7 @@
 [0.7.2] [LibGDX 1.5.5]
 -Added constructor NumberSelector (String name, int initialValue, int min, int max)
 -Fixed menu not closing after clicking it on MenuBar
+-Fixed submenu visible for disabled MenuItem
 -Added LinkLabel
 -New default favoritesPrefsName is com.kotcrab.vis.ui.widget.file.filechooser_favorites (was pl.kotcrab.vis.ui.widget.file.filechooser_favorites)
 -Now waring will be printed to console if using default favorites preference name (see FileChooser.setFavoritesPrefsName(String))

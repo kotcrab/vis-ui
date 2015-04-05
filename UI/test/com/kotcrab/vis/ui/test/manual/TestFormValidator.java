@@ -67,6 +67,6 @@ public class TestFormValidator extends VisWindow {
 
 		pack();
 		setSize(getWidth() + 60, getHeight());
-		setPosition(548, 122);
+		setPosition(548, 110);
 	}
 }

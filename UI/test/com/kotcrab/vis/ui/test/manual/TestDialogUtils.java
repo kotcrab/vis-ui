@@ -158,7 +158,7 @@ public class TestDialogUtils extends VisWindow {
 		});
 
 		pack();
-		setPosition(25, 156);
+		setPosition(25, 146);
 	}
 
 }

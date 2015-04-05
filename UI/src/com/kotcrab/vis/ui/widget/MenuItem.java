@@ -125,7 +125,8 @@ public class MenuItem extends Button {
 		addListener(new InputListener() {
 			@Override
 			public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-				if (subMenu == null) {
+				if (subMenu == null || isDisabled()) {
+					//hides last visible submenu (if any)
 					PopupMenu parent = (PopupMenu) getParent();
 					parent.setSubMenu(null);
 				} else {
