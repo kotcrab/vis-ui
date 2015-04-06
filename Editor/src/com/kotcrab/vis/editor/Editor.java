@@ -118,11 +118,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		root = new Table();
 		root.setFillParent(true);
 
-		Table rootOverlay = new Table();
-		rootOverlay.setFillParent(true);
-
 		stage.addActor(root);
-		stage.addActor(rootOverlay);
 
 		createUI();
 		createModuleContainers();
