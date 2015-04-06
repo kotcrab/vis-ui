@@ -24,13 +24,13 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.OrderedMap;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.ui.EnumSelectBox;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
@@ -48,7 +48,7 @@ public class NewSceneDialog extends VisWindow {
 	private VisValidableTextField widthField;
 	private VisValidableTextField heightField;
 
-	private VisSelectBox<String> viewportModeSelectBox;
+	private EnumSelectBox<SceneViewport> viewportModeSelectBox;
 
 	private VisLabel errorLabel;
 
@@ -59,8 +59,6 @@ public class NewSceneDialog extends VisWindow {
 	private SceneTabsModule sceneTabsModule;
 
 	private FileHandle assetsFolder;
-
-	private OrderedMap<String, SceneViewport> viewportMap;
 
 	public NewSceneDialog (FileAccessModule fileAccess, SceneTabsModule sceneTabsModule, SceneIOModule sceneIOModule) {
 		super("New Scene");
@@ -73,9 +71,6 @@ public class NewSceneDialog extends VisWindow {
 
 		assetsFolder = fileAccess.getAssetsFolder();
 
-		viewportMap = new OrderedMap<>();
-		for (SceneViewport value : SceneViewport.values()) viewportMap.put(value.toListString(), value);
-
 		createUI();
 		createListeners();
 		createValidators();
@@ -87,8 +82,7 @@ public class NewSceneDialog extends VisWindow {
 	private void createUI () {
 		nameTextField = new VisValidableTextField();
 		pathTextField = new VisValidableTextField("/scene/");
-		viewportModeSelectBox = new VisSelectBox<>();
-		viewportModeSelectBox.setItems(viewportMap.keys().toArray());
+		viewportModeSelectBox = new EnumSelectBox<>(SceneViewport.class);
 
 		errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);
@@ -157,7 +151,7 @@ public class NewSceneDialog extends VisWindow {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				final FileHandle targetFile = Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".scene");
-				sceneIO.create(targetFile, viewportMap.get(viewportModeSelectBox.getSelected()), Integer.valueOf(widthField.getText()), Integer.valueOf(heightField.getText()));
+				sceneIO.create(targetFile, viewportModeSelectBox.getSelectedEnum(), Integer.valueOf(widthField.getText()), Integer.valueOf(heightField.getText()));
 				App.eventBus.post(new StatusBarEvent("Scene created: " + targetFile.path().substring(1)));
 
 				DialogUtils.showOptionDialog(getStage(), "Message", "Open this new scene in editor?", OptionDialogType.YES_NO, new OptionDialogAdapter() {

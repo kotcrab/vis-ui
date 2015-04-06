@@ -16,23 +16,38 @@
 
 package com.kotcrab.vis.runtime.scene;
 
-public enum SceneViewport {
-	STRETCH, FIT, FILL, SCREEN, EXTEND;
+import com.kotcrab.vis.runtime.util.PrettyEnum;
 
-	public String toListString () {
-		switch (this) {
-			case STRETCH:
-				return "Stretch Viewport";
-			case FIT:
-				return "Fit Viewport";
-			case FILL:
-				return "Fill Viewport";
-			case EXTEND:
-				return "Extend Viewport";
-			case SCREEN:
-				return "Screen Viewport";
-			default:
-				return super.toString();
+public enum SceneViewport implements PrettyEnum {
+	STRETCH {
+		@Override
+		public String toPrettyString () {
+			return "Stretch Viewport";
 		}
+	}, FIT {
+		@Override
+		public String toPrettyString () {
+			return "Fit Viewport";
+		}
+	}, FILL {
+		@Override
+		public String toPrettyString () {
+			return "Fill Viewport";
+		}
+	}, SCREEN {
+		@Override
+		public String toPrettyString () {
+			return "Screen Viewport";
+		}
+	}, EXTEND {
+		@Override
+		public String toPrettyString () {
+			return "Extend Viewport";
+		}
+	};
+
+	@Override
+	public String toPrettyString () {
+		return toString();
 	}
 }

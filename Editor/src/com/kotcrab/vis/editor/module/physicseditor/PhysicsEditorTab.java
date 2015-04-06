@@ -40,9 +40,14 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 public class PhysicsEditorTab extends MainContentTab {
 	private PhysicsEditorModuleContainer physicsMC;
 
+	private QuickAccessModule quickAccess;
+
+	private PhysicsSettingsTab settingsTab;
 	private ContentTable content;
 
 	public PhysicsEditorTab (ProjectModuleContainer projectMC) {
+		quickAccess = projectMC.getEditorContainer().get(QuickAccessModule.class);
+
 		physicsMC = new PhysicsEditorModuleContainer(projectMC, this);
 		physicsMC.add(new PSettingsModule());
 		physicsMC.add(new PCameraModule());
@@ -50,8 +55,7 @@ public class PhysicsEditorTab extends MainContentTab {
 		physicsMC.add(new PRigidBodiesScreen());
 		physicsMC.init();
 
-		QuickAccessModule quickAccess = projectMC.getEditorContainer().get(QuickAccessModule.class);
-		quickAccess.addTab(new PhysicsSettingsTab());
+		settingsTab = new PhysicsSettingsTab(physicsMC.get(PSettingsModule.class).getSettings());
 
 		//debug
 		PRigidBodiesScreen screen = physicsMC.get(PRigidBodiesScreen.class);
@@ -108,17 +112,20 @@ public class PhysicsEditorTab extends MainContentTab {
 		super.onShow();
 		physicsMC.onShow();
 		FocusUtils.focus(content);
+		quickAccess.insertTab(quickAccess.getTabs().size, settingsTab);
 	}
 
 	@Override
 	public void onHide () {
 		super.onHide();
 		physicsMC.onHide();
+		quickAccess.removeTab(settingsTab);
 	}
 
 	@Override
 	public void dispose () {
 		physicsMC.dispose();
+		quickAccess.removeTab(settingsTab);
 	}
 
 }

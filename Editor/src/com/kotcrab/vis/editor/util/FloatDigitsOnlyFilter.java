@@ -17,38 +17,15 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.module.physicseditor.models;
+package com.kotcrab.vis.editor.util;
 
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
 
-/**
- * @author Aurelien Ribon | http://www.aurelienribon.com/
- */
-public class ShapeModel {
-	public enum Type {POLYGON, CIRCLE}
-
-	private final Array<Vector2> vertices = new Array<>();
-	private final Type type;
-	private boolean isClosed = false;
-
-	public ShapeModel (Type type) {
-		this.type = type;
-	}
-
-	public Array<Vector2> getVertices () {
-		return vertices;
-	}
-
-	public Type getType () {
-		return type;
-	}
-
-	public void close () {
-		isClosed = true;
-	}
-
-	public boolean isClosed () {
-		return isClosed;
+public class FloatDigitsOnlyFilter implements TextFieldFilter{
+	@Override
+	public boolean acceptChar (VisTextField textField, char c) {
+		if(c == '.') return true;
+		return Character.isDigit(c);
 	}
 }

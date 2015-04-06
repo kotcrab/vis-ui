@@ -40,6 +40,7 @@ import com.kotcrab.vis.editor.module.scene.InputModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EditorFrame;
 import com.kotcrab.vis.editor.ui.WindowListener;
+import com.kotcrab.vis.editor.ui.dialog.NewProjectDialog;
 import com.kotcrab.vis.editor.ui.dialog.SettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
@@ -54,6 +55,7 @@ import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
+import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
@@ -68,6 +70,14 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private Stage stage;
 	private Table root;
 
+	private EditorModuleContainer editorMC;
+	private ProjectModuleContainer projectMC;
+
+	private InputModule inputModule;
+	private ProjectIOModule projectIO;
+	private FileChooserModule fileChooser;
+	private GeneralSettingsModule settings;
+
 	// TODO move to module
 	private Table mainContentTable;
 	private Table tabContentTable;
@@ -75,12 +85,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private VisSplitPane splitPane;
 
 	private SettingsDialog settingsDialog;
-
-	private EditorModuleContainer editorMC;
-	private ProjectModuleContainer projectMC;
-
-	private InputModule inputModule;
-	private GeneralSettingsModule settings;
 
 	private boolean projectLoaded = false;
 
@@ -161,16 +165,17 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC = new EditorModuleContainer();
 		projectMC = new ProjectModuleContainer(editorMC);
 
-		editorMC.add(new ProjectIOModule());
+		editorMC.add(projectIO = new ProjectIOModule());
 		editorMC.add(inputModule = new InputModule(mainContentTable));
 
+		editorMC.add(new ColorPickerModule());
+		editorMC.add(fileChooser = new FileChooserModule());
 		editorMC.add(new MenuBarModule(projectMC));
 		editorMC.add(new ToolbarModule());
 		editorMC.add(new TabsModule(createTabsModuleListener()));
 		editorMC.add(new QuickAccessModule(createQuickAccessModuleListener()));
 		editorMC.add(new StatusBarModule());
 		editorMC.add(new EditorSettingsIOModule());
-		editorMC.add(new ColorPickerModule());
 
 		editorMC.add(settings = new GeneralSettingsModule());
 		editorMC.add(new GridSettingsModule());
@@ -312,6 +317,23 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		App.eventBus.post(new StatusBarEvent("Project unloaded"));
 		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded));
+	}
+
+	public void loadProjectDialog () {
+		fileChooser.pickFileOrDirectory(new FileChooserAdapter() {
+			@Override
+			public void selected (FileHandle file) {
+				try {
+					editorMC.get(ProjectIOModule.class).load(file);
+				} catch (EditorException e) {
+					DialogUtils.showErrorDialog(stage, e.getMessage(), e);
+				}
+			}
+		});
+	}
+
+	public void newProjectDialog () {
+		stage.addActor(new NewProjectDialog(projectIO).fadeIn());
 	}
 
 	public void projectLoaded (final Project project) {

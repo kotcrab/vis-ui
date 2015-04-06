@@ -23,13 +23,26 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.physicseditor.util.earclipping.bayazit.BayazitDecomposer;
 import com.kotcrab.vis.editor.module.physicseditor.util.earclipping.ewjordan.EwjordanDecomposer;
+import com.kotcrab.vis.runtime.util.PrettyEnum;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class Clipper {
-	public enum Polygonizer {EWJORDAN, BAYAZIT}
+	public enum Polygonizer implements PrettyEnum {
+		EWJORDAN {
+			@Override
+			public String toPrettyString () {
+				return "Ewjordan";
+			}
+		}, BAYAZIT {
+			@Override
+			public String toPrettyString () {
+				return "Bayazit";
+			}
+		}
+	}
 
 	public static Vector2[][] polygonize (Polygonizer polygonizer, Vector2[] points) {
 		Vector2[][] polygons = null;

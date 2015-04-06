@@ -60,7 +60,7 @@ public class SceneSettingsDialog extends VisWindow {
 		setModal(true);
 
 		viewportMap = new OrderedMap<>();
-		for (SceneViewport value : SceneViewport.values()) viewportMap.put(value.toListString(), value);
+		for (SceneViewport value : SceneViewport.values()) viewportMap.put(value.toPrettyString(), value);
 
 		createUI();
 		createListeners();

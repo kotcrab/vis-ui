@@ -119,7 +119,7 @@ public class EditorFrame extends JFrame {
 		return null;
 	}
 
-	public URL getResource (String path) {
+	private URL getResource (String path) {
 		return EditorFrame.class.getResource(path);
 	}
 }

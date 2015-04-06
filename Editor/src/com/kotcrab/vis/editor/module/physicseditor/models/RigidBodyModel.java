@@ -103,7 +103,7 @@ public class RigidBodyModel extends Entity implements Changeable {
 			if (!shape.isClosed()) continue;
 
 			if (shape.getType() == Type.POLYGON) {
-				Vector2[] vertices = shape.getVertices().toArray();
+				Vector2[] vertices = shape.getVertices().toArray(Vector2.class);
 				Vector2[][] polys = Clipper.polygonize(polygonizer, vertices);
 				if (polys != null) for (Vector2[] poly : polys) {
 

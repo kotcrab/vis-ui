@@ -101,6 +101,14 @@ public class LinkLabel extends VisLabel {
 		this.url = url;
 	}
 
+	public LinkLabelListener getListener () {
+		return listener;
+	}
+
+	public void setListener (LinkLabelListener listener) {
+		this.listener = listener;
+	}
+
 	public interface LinkLabelListener {
 		void clicked (String url);
 	}

@@ -60,6 +60,10 @@ public class QuickAccessModule extends EditorModule {
 		tabbedPane.switchTab(tab);
 	}
 
+	public void insertTab (int index, Tab tab) {
+		tabbedPane.insert(index, tab);
+	}
+
 	public void addListener (TabbedPaneListener listener) {
 		tabbedPane.addListener(listener);
 	}

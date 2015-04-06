@@ -20,7 +20,6 @@
 package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.Editor;
@@ -30,19 +29,12 @@ import com.kotcrab.vis.editor.ui.ButtonListener;
 import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
 import com.kotcrab.vis.editor.ui.SceneStatusWidgetController;
 import com.kotcrab.vis.editor.ui.dialog.AboutDialog;
-import com.kotcrab.vis.editor.ui.dialog.NewProjectDialog;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
-import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.MenuUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
 import com.kotcrab.vis.ui.widget.MenuItem;
-import com.kotcrab.vis.ui.widget.file.FileChooser;
-import com.kotcrab.vis.ui.widget.file.FileChooser.Mode;
-import com.kotcrab.vis.ui.widget.file.FileChooser.SelectionMode;
-import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 
 public class MenuBarModule extends EditorModule {
 	private ProjectModuleContainer projectContainer;
@@ -54,9 +46,6 @@ public class MenuBarModule extends EditorModule {
 	private ProjectStatusWidgetController projectController;
 	private SceneStatusWidgetController sceneController;
 
-	private FileChooser chooser;
-
-	private ProjectIOModule projectIOModule;
 	private SceneMenuButtonsListener sceneButtonsListener;
 
 	public MenuBarModule (ProjectModuleContainer moduleContainer) {
@@ -69,40 +58,18 @@ public class MenuBarModule extends EditorModule {
 		projectController = new ProjectStatusWidgetController();
 		sceneController = new SceneStatusWidgetController();
 
-		chooser = new FileChooser(Mode.OPEN);
-		chooser.setSelectionMode(SelectionMode.FILES_AND_DIRECTORIES);
-		chooser.setListener(new FileChooserAdapter() {
-			@Override
-			public void selected (FileHandle file) {
-				loadProject(file);
-			}
-		});
-
 		createFileMenu();
 		createEditMenu();
 		createSceneMenu();
 		createHelpMenu();
 	}
 
-	@Override
-	public void init () {
-		projectIOModule = container.get(ProjectIOModule.class);
-	}
-
-	private void loadProject (FileHandle file) {
-		try {
-			container.get(ProjectIOModule.class).load(file);
-		} catch (EditorException e) {
-			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
-		}
-	}
-
 	private void createFileMenu () {
 		Menu menu = new Menu("File");
 		menuBar.addMenu(menu);
 
-		menu.addItem(createMenuItem("New Project...", Icons.NEW, () -> stage.addActor(new NewProjectDialog(projectIOModule).fadeIn())));
-		menu.addItem(createMenuItem("Load Project...", Icons.LOAD, () -> stage.addActor(chooser.fadeIn())));
+		menu.addItem(createMenuItem("New Project...", Icons.NEW, editor::newProjectDialog));
+		menu.addItem(createMenuItem("Load Project...", Icons.LOAD, editor::loadProjectDialog));
 		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Close Project", editor::requestProjectUnload));
 
 		menu.addSeparator();
@@ -126,10 +93,12 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(createMenuItem("Exit", Icons.EXIT, editor::requestExit));
 	}
 
+	@SuppressWarnings("Convert2MethodRef")
 	private void createEditMenu () {
 		Menu menu = new Menu("Edit");
 		menuBar.addMenu(menu);
 
+		//DO NOT replace this with method reference!!!
 		menu.addItem(createMenuItem("Undo", Icons.UNDO, () -> sceneButtonsListener.undo()));
 		menu.addItem(createMenuItem("Redo", Icons.REDO, () -> sceneButtonsListener.redo()));
 		menu.addSeparator();
@@ -137,6 +106,7 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(createMenuItem("Ungroup", null, () -> sceneButtonsListener.ungroup()));
 	}
 
+	@SuppressWarnings("Convert2MethodRef")
 	private void createSceneMenu () {
 		Menu menu = new Menu("Scene");
 		menuBar.addMenu(menu);
@@ -150,6 +120,7 @@ public class MenuBarModule extends EditorModule {
 
 		menu.addSeparator();
 
+		//DO NOT replace this with method reference!!!
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera", () -> sceneButtonsListener.resetCamera()));
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera Zoom", () -> sceneButtonsListener.resetCameraZoom()));
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Scene Settings", () -> sceneButtonsListener.showSceneSettings()));
