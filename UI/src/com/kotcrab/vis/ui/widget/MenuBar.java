@@ -18,6 +18,8 @@ package com.kotcrab.vis.ui.widget;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 
@@ -26,6 +28,8 @@ import com.kotcrab.vis.ui.VisUI;
  * @author Kotcrab
  */
 public class MenuBar {
+	private static final Drawable BUTTTON_DEFAULT = VisUI.getSkin().getDrawable("button");
+
 	private Table mainTable;
 	private Table menuItems;
 
@@ -83,6 +87,7 @@ public class MenuBar {
 	/** Closes currently open menu (if any). Used by framework and typically there is no need to call this manually */
 	public void closeMenu () {
 		if (currentMenu != null) {
+			deselectButton(currentMenu.getOpenButton());
 			currentMenu.remove();
 			currentMenu = null;
 		}
@@ -92,12 +97,22 @@ public class MenuBar {
 		return currentMenu;
 	}
 
-	void setCurrentMenu (Menu currentMenu) {
-		this.currentMenu = currentMenu;
+	void setCurrentMenu (Menu newMenu) {
+		if (newMenu != null) selectButton(newMenu.getOpenButton());
+		if (currentMenu != null) deselectButton(currentMenu.getOpenButton());
+		currentMenu = newMenu;
 	}
 
 	/** Returns table containing all menus that should be added to Stage, typically with expandX and fillX properties. */
 	public Table getTable () {
 		return mainTable;
+	}
+
+	public void selectButton (TextButton button) {
+		button.getStyle().up = button.getStyle().over;
+	}
+
+	public void deselectButton (TextButton button) {
+		button.getStyle().up = BUTTTON_DEFAULT;
 	}
 }

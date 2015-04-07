@@ -21,6 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 
 /**
  * Menu used in MenuBar, it is a standard {@link PopupMenu} with tittle displayed in MenuBar
@@ -28,19 +30,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
  */
 public class Menu extends PopupMenu {
 	private MenuBar menuBar;
-	public TextButton openButton;
+	public VisTextButton openButton;
 
 	private String title;
 
 	public Menu (String title) {
 		this.title = title;
 
-		openButton = new VisTextButton(title, "menu-bar");
+		openButton = new VisTextButton(title, new VisTextButtonStyle(VisUI.getSkin().get("menu-bar", VisTextButtonStyle.class)));
 
 		openButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if(menuBar.getCurrentMenu() == Menu.this) {
+				if (menuBar.getCurrentMenu() == Menu.this) {
 					menuBar.closeMenu();
 					return true;
 				}
