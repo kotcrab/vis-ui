@@ -102,7 +102,8 @@ public class UnsavedResourcesDialog extends VisWindow {
 		add(buttonsTable).top();
 
 		pack();
-		setSize(getWidth() + 60, getHeight() + 30);
+		setHeight(getHeight() + 30);
+		if(getWidth() < 200) setWidth(200);
 		centerWindow();
 	}
 
@@ -120,7 +121,7 @@ public class UnsavedResourcesDialog extends VisWindow {
 	}
 
 	private void saveAll () {
-		for (Tab tab : allTabs)
+		for (Tab tab : unsavedTabs)
 			tab.save();
 	}
 
