@@ -83,6 +83,25 @@ public class Tooltip extends VisTable {
 		pack();
 
 		attach();
+
+		addListener(new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				toFront();
+				return true;
+			}
+
+			@Override
+			public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+				clearActions();
+				addAction(Actions.sequence(Actions.fadeIn(FADE_TIME, Interpolation.fade)));
+			}
+
+			@Override
+			public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+				fadeOut();
+			}
+		});
 	}
 
 	/**
@@ -99,7 +118,7 @@ public class Tooltip extends VisTable {
 	}
 
 	/**
-	 * Deatches tooltip form current target, does not change tooltip target meaning that this tooltip can be reatched to
+	 * Detaches tooltip form current target, does not change tooltip target meaning that this tooltip can be reatched to
 	 * same target by calling {@link Tooltip#attach()}
 	 */
 	public void detach () {
@@ -140,6 +159,7 @@ public class Tooltip extends VisTable {
 	}
 
 	private void keepWithinStage () {
+		//taken from Window
 		Stage stage = getStage();
 		Camera camera = stage.getCamera();
 		if (camera instanceof OrthographicCamera) {
@@ -174,26 +194,38 @@ public class Tooltip extends VisTable {
 
 	private class TooltipInputListener extends InputListener {
 		@Override
+		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+			Tooltip.this.toFront();
+			return true;
+		}
+
+		@Override
 		public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-			Vector2 targetPos = target.localToStageCoordinates(new Vector2());
+			if (pointer == -1) {
+				Vector2 targetPos = target.localToStageCoordinates(new Vector2());
 
-			setX(targetPos.x + (target.getWidth() - getWidth()) / 2);
+				setX(targetPos.x + (target.getWidth() - getWidth()) / 2);
 
-			float tooltipY = targetPos.y - getHeight() - 6;
-			float stageHeight = target.getStage().getHeight();
-			if (stageHeight - tooltipY > stageHeight) //is there enough space to display bellow widget
-				setY(targetPos.y + target.getHeight() + 6); //display above widget
-			else
-				setY(tooltipY); //display bellow
+				float tooltipY = targetPos.y - getHeight() - 6;
+				float stageHeight = target.getStage().getHeight();
 
-			displayTask.cancel();
-			Timer.schedule(displayTask, APPEAR_DELAY_TIME);
+				//is there enough space to display bellow widget
+				if (stageHeight - tooltipY > stageHeight)
+					setY(targetPos.y + target.getHeight() + 6); //display above widget
+				else
+					setY(tooltipY); //display bellow
+
+				displayTask.cancel();
+				Timer.schedule(displayTask, APPEAR_DELAY_TIME);
+			}
 		}
 
 		@Override
 		public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
-			displayTask.cancel();
-			fadeOut();
+			if (pointer == -1) {
+				displayTask.cancel();
+				fadeOut();
+			}
 		}
 
 		@Override
