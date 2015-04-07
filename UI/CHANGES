@@ -6,6 +6,7 @@
 -New default favoritesPrefsName is com.kotcrab.vis.ui.widget.file.filechooser_favorites (was pl.kotcrab.vis.ui.widget.file.filechooser_favorites)
 -Now waring will be printed to console if using default favorites preference name (see FileChooser.setFavoritesPrefsName(String))
 -API Addition: VisUI.load(Skin)
+-Added GridGroup
 
 [0.7.1] [LibGDX 1.5.5]
 -Fixing GWT compatibility

@@ -27,7 +27,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
@@ -49,6 +48,8 @@ import com.kotcrab.vis.editor.util.DirectoryWatcher;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.MenuUtils;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.layout.GridGroup;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
@@ -70,11 +71,10 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	private FileHandle currentDirectory;
 
 	private int filesDisplayed;
-	private int itemSize = 92;
 
 	private VisTable mainTable;
 	private VisTable treeTable;
-	private FilesItemsTable filesTable;
+	private GridGroup filesView;
 	private VisTable toolbarTable;
 	private VisTree contentTree;
 	private VisLabel contentTitleLabel;
@@ -120,14 +120,14 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	private void initUI () {
 		treeTable = new VisTable(true);
 		toolbarTable = new VisTable(true);
-		filesTable = new FilesItemsTable(false);
+		filesView = new GridGroup(92, 4);
 
 		VisTable contentsTable = new VisTable(false);
 		contentsTable.add(toolbarTable).expandX().fillX().pad(3).padBottom(0);
 		contentsTable.row();
 		contentsTable.add(new Separator()).padTop(3).expandX().fillX();
 		contentsTable.row();
-		contentsTable.add(createScrollPane(filesTable, true)).expand().fill();
+		contentsTable.add(createScrollPane(filesView, true)).expand().fill();
 
 		VisSplitPane splitPane = new VisSplitPane(treeTable, contentsTable, false);
 		splitPane.setSplitAmount(0.2f);
@@ -221,8 +221,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 
 	private void changeCurrentDirectory (FileHandle directory) {
 		this.currentDirectory = directory;
-		filesTable.clear();
-		filesTable.top().left();
+		filesView.clear();
 		filesDisplayed = 0;
 
 		FileHandle[] files = directory.list(file -> {
@@ -239,11 +238,12 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 				actors.add(item);
 				filesDisplayed++;
 
-				rebuildFilesList(actors);
+				for (int i = 0; i < actors.size; i++)
+					filesView.addActor(actors.get(i));
 			}
 		}
 
-		assetDragAndDrop.rebuild(getActorsList());
+		assetDragAndDrop.rebuild(filesView.getChildren());
 
 		String currentPath = directory.path().substring(visFolder.path().length() + 1);
 		contentTitleLabel.setText("Content [" + currentPath + "]");
@@ -251,26 +251,6 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 
 	private void refreshFilesList () {
 		changeCurrentDirectory(currentDirectory);
-	}
-
-	private void rebuildFilesList (Array<Actor> actors) {
-		filesTable.reset();
-		filesTable.top().left();
-		filesTable.defaults().pad(4);
-
-		float maxWidth = filesTable.getWidth();
-		float currentWidth = 0;
-		float padding = filesTable.defaults().getPadLeft() + filesTable.defaults().getPadRight();
-		float itemTotalSize = itemSize + padding + 2;
-
-		for (int i = 0; i < actors.size; i++) {
-			filesTable.add(actors.get(i)).size(itemSize);
-			currentWidth += itemTotalSize;
-			if (currentWidth + itemTotalSize >= maxWidth) {
-				currentWidth = 0;
-				filesTable.row();
-			}
-		}
 	}
 
 	private void rebuildFolderTree () {
@@ -310,16 +290,6 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		return extension.equals("scene");
 	}
 
-	private Array<Actor> getActorsList () {
-		Array<Cell> cells = filesTable.getCells();
-		Array<Actor> actors = new Array<>(cells.size);
-
-		for (Cell c : cells)
-			actors.add(c.getActor());
-
-		return actors;
-	}
-
 	private void refreshAllIfNeeded (FileHandle file) {
 		if (file.isDirectory()) rebuildFolderTree();
 		if (file.parent().equals(currentDirectory))
@@ -346,7 +316,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	public void switchedTab (Tab tab) {
 		if (tab instanceof DragAndDropTarget) {
 			assetDragAndDrop.setDropTarget((DragAndDropTarget) tab);
-			assetDragAndDrop.rebuild(getActorsList());
+			assetDragAndDrop.rebuild(filesView.getChildren());
 		} else
 			assetDragAndDrop.clear();
 	}
@@ -371,14 +341,10 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 				addItem(MenuUtils.createMenuItem("Open", () -> openFile(item.file)));
 			}
 
-			addItem(MenuUtils.createMenuItem("Copy", () -> {
-			}));
-			addItem(MenuUtils.createMenuItem("Paste", () -> {
-			}));
-			addItem(MenuUtils.createMenuItem("Move", () -> {
-			}));
-			addItem(MenuUtils.createMenuItem("Rename", () -> {
-			}));
+			addItem(MenuUtils.createMenuItem("Copy", () -> DialogUtils.showOKDialog(getStage(), "Message", "Not implemented yet!")));
+			addItem(MenuUtils.createMenuItem("Paste", () -> DialogUtils.showOKDialog(getStage(), "Message", "Not implemented yet!")));
+			addItem(MenuUtils.createMenuItem("Move", () -> DialogUtils.showOKDialog(getStage(), "Message", "Not implemented yet!")));
+			addItem(MenuUtils.createMenuItem("Rename", () -> DialogUtils.showOKDialog(getStage(), "Message", "Not implemented yet!")));
 			addItem(MenuUtils.createMenuItem("Delete", () -> showDeleteDialog(item.file)));
 		}
 
@@ -543,17 +509,6 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		@Override
 		public boolean isCloseableByUser () {
 			return false;
-		}
-	}
-
-	private class FilesItemsTable extends VisTable {
-		public FilesItemsTable (boolean setVisDefaults) {
-			super(setVisDefaults);
-		}
-
-		@Override
-		protected void sizeChanged () {
-			rebuildFilesList(getActorsList());
 		}
 	}
 }
