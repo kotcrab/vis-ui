@@ -44,6 +44,10 @@ public class EnumSelectBox<T extends Enum<T> & PrettyEnum> extends VisSelectBox<
 		setItems(enumMap.orderedKeys());
 	}
 
+	public void setSelectedEnum (T newEnum) {
+		setSelected(enumMap.findKey(newEnum, true));
+	}
+
 	public T getSelectedEnum () {
 		return enumMap.get(getSelected());
 	}

@@ -50,7 +50,10 @@ import com.kotcrab.vis.editor.module.physicseditor.util.Tracer;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
@@ -371,7 +374,7 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 		return true;
 	}
 
-	private void autoTrace () {
+	public void autoTrace () {
 		if (!isImageValid()) return;
 
 		RigidBodyModel model = selectedModel;
@@ -396,6 +399,10 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 		buildBody();
 	}
 
+	public void recomputePhysics () {
+		selectedModel.computePhysics(settings.polygonizer);
+	}
+
 	private void clearPoints () {
 		if (selectedModel == null) return;
 		selectedPoints.clear();
@@ -414,7 +421,7 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 	private void createBody () {
 		RigidBodyModel model = selectedModel;
 		if (model == null) return;
-		if (model.getPolygons().size ==0 && model.getCircles().size == 0) return;
+		if (model.getPolygons().size == 0 && model.getCircles().size == 0) return;
 
 		BodyDef bd = new BodyDef();
 		bd.type = BodyType.StaticBody;

@@ -55,7 +55,7 @@ public class PhysicsEditorTab extends MainContentTab {
 		physicsMC.add(new PRigidBodiesScreen());
 		physicsMC.init();
 
-		settingsTab = new PhysicsSettingsTab(physicsMC.get(PSettingsModule.class).getSettings());
+		settingsTab = new PhysicsSettingsTab(physicsMC.get(PRigidBodiesScreen.class), physicsMC.get(PSettingsModule.class).getSettings());
 
 		//debug
 		PRigidBodiesScreen screen = physicsMC.get(PRigidBodiesScreen.class);

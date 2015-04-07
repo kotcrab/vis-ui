@@ -24,21 +24,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.module.physicseditor.util.Clipper.Polygonizer;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
-import com.kotcrab.vis.editor.util.FieldUtils;
-import com.kotcrab.vis.editor.util.FloatDigitsOnlyFilter;
-import com.kotcrab.vis.editor.util.TableBuilder;
+import com.kotcrab.vis.editor.util.*;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.Validators;
+import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
+import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
 public class PhysicsSettingsTab extends Tab {
+	private PRigidBodiesScreen screen;
 	private PhysicsEditorSettings settings;
 
 	private VisScrollPane scrollPane;
 
-	public PhysicsSettingsTab (PhysicsEditorSettings settings) {
+	public PhysicsSettingsTab (PRigidBodiesScreen screen, PhysicsEditorSettings settings) {
 		super(false, false);
+		this.screen = screen;
 		this.settings = settings;
 
 		VisTable autoTraceTab = createAutoTracingTable();
@@ -64,25 +66,39 @@ public class PhysicsSettingsTab extends Tab {
 		scrollPane = new VisScrollPane(contentTab);
 		scrollPane.setFlickScroll(false);
 		scrollPane.setFadeScrollBars(false);
-
-		EnumSelectBox<Polygonizer> enumSelectBox = new EnumSelectBox<>(Polygonizer.class);
-		enumSelectBox.setListener(result -> System.out.println(result.toString()));
-		//enumList.getSelectedEnum();
-		sectionsTable.add(enumSelectBox);
-
 	}
 
 	private VisTable createAutoTracingTable () {
 		VisTable table = new VisTable(true);
 		table.defaults().left();
 
+		VisTextButton autoTraceButton = new VisTextButton("Autotrace");
+		autoTraceButton.addListener(new VisChangeListener((event, actor) -> screen.autoTrace()));
+
+		VisValidableTextField hullToleranceField = new VisValidableTextField(Validators.INTEGERS, new GreaterThanValidator(100, true), new LesserThanValidator(400, true));
+		hullToleranceField.setRestoreLastValid(true);
+		hullToleranceField.setText(String.valueOf((int) settings.autoTraceHullTolerance * 100));
+		hullToleranceField.setTextFieldFilter(new IntDigitsOnlyFilter());
+		hullToleranceField.addListener(new VisChangeListener(
+				(event, actor) -> settings.autoTraceHullTolerance = FieldUtils.getFloat(hullToleranceField, settings.autoTraceHullTolerance)));
+
+		VisValidableTextField alphaToleranceField = new VisValidableTextField(Validators.INTEGERS, new LesserThanValidator(255, true), new GreaterThanValidator(0, true));
+		alphaToleranceField.setRestoreLastValid(true);
+		alphaToleranceField.setText(String.valueOf(settings.autoTraceAlphaTolerance));
+		alphaToleranceField.setTextFieldFilter(new IntDigitsOnlyFilter());
+		alphaToleranceField.addListener(new VisChangeListener(
+				(event, actor) -> settings.autoTraceAlphaTolerance = FieldUtils.getInt(alphaToleranceField, settings.autoTraceAlphaTolerance)));
+
 		table.add(new VisLabel("Autotracing")).colspan(2).row();
 		table.add(new VisLabel("Hull tolerance"));
-		table.add(new VisValidableTextField("2.5f")).row();
+		table.add(hullToleranceField).row();
 		table.add(new VisLabel("Alpha tolerance"));
-		table.add(new VisValidableTextField("128")).row();
-		table.add(TableBuilder.build(new VisCheckBox("Multi part detection"), new VisCheckBox("Hole detection"))).colspan(2).row();
-		table.add(new VisTextButton("Autotrace")).colspan(2).row();
+		table.add(alphaToleranceField).row();
+		table.add(TableBuilder.build(
+				createCheckBox("Multi part detection", () -> settings.autoTraceMultiPartDetection, newValue -> settings.autoTraceMultiPartDetection = newValue),
+				createCheckBox("Hole detection", () -> settings.autoTraceHoleDetection, newValue -> settings.autoTraceHoleDetection = newValue))).colspan(2).row();
+
+		table.add(autoTraceButton).colspan(2).row();
 		return table;
 	}
 
@@ -90,11 +106,17 @@ public class PhysicsSettingsTab extends Tab {
 		VisTable table = new VisTable(true);
 		table.defaults().left();
 		table.add("Tracing").row();
-		VisSelectBox<String> polygonizerSelect = new VisSelectBox<>();
-		polygonizerSelect.setItems("Bayazit", "Ewjordan");
+
+		EnumSelectBox<Polygonizer> enumSelectBox = new EnumSelectBox<>(Polygonizer.class);
+		enumSelectBox.setSelectedEnum(settings.polygonizer);
+		enumSelectBox.setListener(result -> settings.polygonizer = result);
+
+		VisTextButton retraceButton = new VisTextButton("Retrace");
+		retraceButton.addListener(new VisChangeListener((event, actor) -> screen.recomputePhysics()));
 
 		table.add(new VisLabel("Polygonizer"));
-		table.add(polygonizerSelect).row();
+		table.add(enumSelectBox).row();
+		table.add(retraceButton);
 		return table;
 	}
 
@@ -104,14 +126,10 @@ public class PhysicsSettingsTab extends Tab {
 		table.add("Rendering").row();
 
 		VisValidableTextField gridGapField = new VisValidableTextField(Validators.FLOATS);
+		gridGapField.setRestoreLastValid(true);
 		gridGapField.setText(String.valueOf(settings.gridGap));
 		gridGapField.setTextFieldFilter(new FloatDigitsOnlyFilter());
-		gridGapField.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				settings.gridGap = FieldUtils.getFloat(gridGapField, settings.gridGap);
-			}
-		});
+		gridGapField.addListener(new VisChangeListener((event, actor) -> settings.gridGap = FieldUtils.getFloat(gridGapField, settings.gridGap)));
 
 		table.add(TableBuilder.build(
 				createCheckBox("Draw image", () -> settings.isImageDrawn, newValue -> settings.isImageDrawn = newValue),
