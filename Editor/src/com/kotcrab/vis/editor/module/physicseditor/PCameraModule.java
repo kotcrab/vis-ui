@@ -27,19 +27,21 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.kotcrab.vis.editor.util.CameraZoomController;
 
-//TODO make common class for cameramodule, see CameraModule
 public class PCameraModule extends PhysicsEditorModule {
+	private PhysicsEditorSettings settings;
+
 	private OrthographicCamera camera;
+	private CameraZoomController zoomController;
 
 	private Vector3 unprojectVec;
 
-	private PhysicsEditorSettings settings;
-
 	@Override
 	public void added () {
-		unprojectVec = new Vector3();
 		camera = new OrthographicCamera();
+		unprojectVec = new Vector3();
+		zoomController =new CameraZoomController(camera, unprojectVec);
 
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
@@ -68,27 +70,7 @@ public class PCameraModule extends PhysicsEditorModule {
 
 	@Override
 	public boolean scrolled (InputEvent event, float x, float y, int amount) {
-		float newZoom = 0;
-		camera.unproject(unprojectVec.set(x, y, 0));
-		float cursorX = unprojectVec.x;
-		float cursorY = unprojectVec.y;
-
-		if (amount == -1) { // zoom in
-			if (camera.zoom <= 0.3f) return false;
-			newZoom = camera.zoom - 0.1f * camera.zoom * 2;
-		}
-
-		if (amount == 1) { // zoom out
-			if (camera.zoom >= 10f) return false;
-			newZoom = camera.zoom + 0.1f * camera.zoom * 2;
-		}
-
-		// some complicated calculations, basically we want to zoom in/out where mouse pointer is
-		camera.position.x = cursorX + (newZoom / camera.zoom) * (camera.position.x - cursorX);
-		camera.position.y = cursorY + (newZoom / camera.zoom) * (camera.position.y - cursorY);
-		camera.zoom = newZoom;
-
-		return true;
+		return zoomController.zoomAroundPoint(x, y, amount);
 	}
 
 	@Override
