@@ -174,7 +174,7 @@ color-picker-cross
   index: -1
 color-picker-selector-horizontal
   rotate: false
-  xy: 64, 77
+  xy: 406, 475
   size: 3, 1
   orig: 3, 1
   offset: 0, 0
@@ -211,7 +211,7 @@ default-pane
   index: -1
 default-pane-noborder
   rotate: false
-  xy: 406, 475
+  xy: 177, 101
   size: 1, 1
   split: 0, 0, 0, 0
   orig: 1, 1
@@ -277,16 +277,24 @@ icon-folder
   index: -1
 list-selection
   rotate: false
-  xy: 177, 101
+  xy: 258, 397
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 menu-bg
   rotate: false
-  xy: 258, 397
+  xy: 267, 406
   size: 1, 1
   orig: 1, 1
+  offset: 0, 0
+  index: -1
+padded-list-selection
+  rotate: false
+  xy: 183, 103
+  size: 10, 1
+  split: 4, 4, 0, 1
+  orig: 10, 1
   offset: 0, 0
   index: -1
 progressbar
@@ -402,14 +410,14 @@ scroll-knob-vertical
   index: -1
 select-box-list-bg
   rotate: false
-  xy: 267, 406
+  xy: 271, 418
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 window-bg
   rotate: false
-  xy: 267, 406
+  xy: 271, 418
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -430,28 +438,28 @@ select-up
   index: -1
 selection
   rotate: false
-  xy: 271, 418
+  xy: 194, 103
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator
   rotate: false
-  xy: 204, 109
+  xy: 196, 104
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 tree-over
   rotate: false
-  xy: 204, 109
+  xy: 196, 104
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator-menu
   rotate: false
-  xy: 314, 458
+  xy: 204, 109
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -493,21 +501,21 @@ slider-knob-over
   index: -1
 slider-vertical
   rotate: false
-  xy: 183, 103
+  xy: 293, 452
   size: 4, 1
   orig: 4, 1
   offset: 0, 0
   index: -1
 splitpane
   rotate: false
-  xy: 293, 452
+  xy: 452, 489
   size: 4, 1
   orig: 4, 1
   offset: 0, 0
   index: -1
 splitpane-over
   rotate: false
-  xy: 452, 489
+  xy: 64, 77
   size: 4, 1
   orig: 4, 1
   offset: 0, 0

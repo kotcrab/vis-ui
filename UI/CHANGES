@@ -7,6 +7,7 @@
 -Now waring will be printed to console if using default favorites preference name (see FileChooser.setFavoritesPrefsName(String))
 -API Addition: VisUI.load(Skin)
 -Added GridGroup
+-Better padding on VisList/List item (default list style selection drawable now uses 'padded-list-selection.9')
 
 [0.7.1] [LibGDX 1.5.5]
 -Fixing GWT compatibility
