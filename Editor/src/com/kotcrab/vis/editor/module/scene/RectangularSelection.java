@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU General Public License
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.kotcrab.vis.editor.module.scene;
 
 import com.badlogic.gdx.Gdx;
