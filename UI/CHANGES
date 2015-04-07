@@ -1,9 +1,11 @@
 [0.7.2] [LibGDX 1.5.5]
 -API Addition: NumberSelector (String name, int initialValue, int min, int max)
 -API Addition: VisUI.load(Skin)
--API Addition GridGroup
--API Addition LinkLabel
--API Addition VisValidableTextField#setRestoreLastValid(boolean)
+-API Addition: GridGroup
+-API Addition: LinkLabel
+-API Addition: VisValidableTextField#setRestoreLastValid(boolean)
+-API Addition: VisTextButton (String, ChangeListener)
+-API Addition: VisTextButton (String, String, ChangeListener)
 -Fixed menu not closing after clicking it on MenuBar
 -Fixed submenu visible for disabled MenuItem
 -Better padding on VisList/List item (default list style selection drawable now uses 'padded-list-selection.9')

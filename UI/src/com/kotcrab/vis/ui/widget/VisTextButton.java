@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
@@ -41,6 +42,18 @@ public class VisTextButton extends TextButton implements Focusable {
 	public VisTextButton (String text) {
 		super(text, VisUI.getSkin().get(VisTextButtonStyle.class));
 		init();
+	}
+
+	public VisTextButton (String text, ChangeListener listener) {
+		super(text, VisUI.getSkin().get(VisTextButtonStyle.class));
+		init();
+		addListener(listener);
+	}
+
+	public VisTextButton (String text, String styleName, ChangeListener listener) {
+		super(text, VisUI.getSkin().get(styleName, VisTextButtonStyle.class));
+		init();
+		addListener(listener);
 	}
 
 	public VisTextButton (String text, VisTextButtonStyle buttonStyle) {
