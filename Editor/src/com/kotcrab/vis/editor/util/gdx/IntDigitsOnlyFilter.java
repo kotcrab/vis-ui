@@ -17,14 +17,14 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.gdx;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
 
-public class FocusUtils {
-	public static void focus (Actor target) {
-		Editor.instance.getStage().setKeyboardFocus(target);
-		Editor.instance.getStage().setScrollFocus(target);
+public class IntDigitsOnlyFilter implements TextFieldFilter{
+	@Override
+	public boolean acceptChar (VisTextField textField, char c) {
+		return Character.isDigit(c);
 	}
 }

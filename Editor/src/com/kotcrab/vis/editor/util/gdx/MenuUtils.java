@@ -17,24 +17,27 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.gdx;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.ui.ButtonListener;
+import com.kotcrab.vis.ui.widget.MenuItem;
 
-public class VisChangeListener extends ChangeListener {
-	private ChangedListener listener;
-
-	public VisChangeListener (ChangedListener listener) {
-		this.listener = listener;
+public class MenuUtils {
+	public static MenuItem createMenuItem (String text, ButtonListener listener) {
+		return createMenuItem(text, null, listener);
 	}
 
-	@Override
-	public void changed (ChangeEvent event, Actor actor) {
-		listener.changed(event, actor);
+	public static MenuItem createMenuItem (String text, Icons icon, ButtonListener listener) {
+		return new MenuItem(text, icon != null ? Assets.getIcon(icon) : null, new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				listener.clicked();
+			}
+		});
 	}
 
-	public interface ChangedListener {
-		void changed (ChangeEvent event, Actor actor);
-	}
 }

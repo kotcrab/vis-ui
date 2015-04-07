@@ -31,7 +31,7 @@ import com.kotcrab.vis.editor.ui.SceneStatusWidgetController;
 import com.kotcrab.vis.editor.ui.dialog.AboutDialog;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
-import com.kotcrab.vis.editor.util.MenuUtils;
+import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
 import com.kotcrab.vis.ui.widget.MenuItem;

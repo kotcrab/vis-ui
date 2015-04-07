@@ -46,7 +46,7 @@ import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.DirectoriesOnlyFileFilter;
 import com.kotcrab.vis.editor.util.DirectoryWatcher;
 import com.kotcrab.vis.editor.util.FileUtils;
-import com.kotcrab.vis.editor.util.MenuUtils;
+import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.layout.GridGroup;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;

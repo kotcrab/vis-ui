@@ -27,7 +27,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.kotcrab.vis.editor.module.project.SceneMetadataModule;
-import com.kotcrab.vis.editor.util.CameraZoomController;
+import com.kotcrab.vis.editor.util.gdx.CameraZoomController;
 
 public class CameraModule extends SceneModule {
 	private SceneMetadataModule metadataModule;

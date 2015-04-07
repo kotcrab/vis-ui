@@ -41,7 +41,7 @@ import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.ObjectGroup;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
-import com.kotcrab.vis.editor.util.MenuUtils;
+import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 
 public class EntityManipulatorModule extends SceneModule {

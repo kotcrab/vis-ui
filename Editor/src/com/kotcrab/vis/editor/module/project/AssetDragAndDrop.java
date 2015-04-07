@@ -36,7 +36,7 @@ import com.kotcrab.vis.editor.module.project.AssetsUIModule.FileItem;
 import com.kotcrab.vis.editor.module.project.AssetsUIModule.FileType;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
-import com.kotcrab.vis.editor.util.VisDropSource;
+import com.kotcrab.vis.editor.util.gdx.VisDropSource;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class AssetDragAndDrop {

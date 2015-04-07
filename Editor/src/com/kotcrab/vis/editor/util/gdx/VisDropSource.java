@@ -17,7 +17,7 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.gdx;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.util.EditorObjectProvider;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class VisDropSource extends Source {

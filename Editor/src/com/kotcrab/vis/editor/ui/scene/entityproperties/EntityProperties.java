@@ -41,7 +41,7 @@ import com.kotcrab.vis.editor.module.scene.UndoableActionGroup;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.EventStopper;
-import com.kotcrab.vis.editor.util.FieldUtils;
+import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;

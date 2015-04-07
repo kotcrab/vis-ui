@@ -17,14 +17,24 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.gdx;
 
-import com.kotcrab.vis.ui.widget.VisTextField;
-import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-public class IntDigitsOnlyFilter implements TextFieldFilter{
+public class VisChangeListener extends ChangeListener {
+	private ChangedListener listener;
+
+	public VisChangeListener (ChangedListener listener) {
+		this.listener = listener;
+	}
+
 	@Override
-	public boolean acceptChar (VisTextField textField, char c) {
-		return Character.isDigit(c);
+	public void changed (ChangeEvent event, Actor actor) {
+		listener.changed(event, actor);
+	}
+
+	public interface ChangedListener {
+		void changed (ChangeEvent event, Actor actor);
 	}
 }

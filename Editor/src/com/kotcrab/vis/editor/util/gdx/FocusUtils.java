@@ -17,15 +17,14 @@
  * along with VisEditor.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.gdx;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.editor.Editor;
 
-public class TableBuilder {
-	public static VisTable build (Actor... actors) {
-		VisTable table = new VisTable(true);
-		for (Actor actor : actors) table.add(actor);
-		return table;
+public class FocusUtils {
+	public static void focus (Actor target) {
+		Editor.instance.getStage().setKeyboardFocus(target);
+		Editor.instance.getStage().setScrollFocus(target);
 	}
 }
