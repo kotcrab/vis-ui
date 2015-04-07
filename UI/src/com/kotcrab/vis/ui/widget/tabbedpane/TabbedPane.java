@@ -208,10 +208,13 @@ public class TabbedPane {
 	 * @param tab that title will be updated
 	 */
 	public void updateTabTitle (Tab tab) {
+		tabsButtonMap.get(tab).button.setText(getTabTitle(tab));
+	}
+
+	private String getTabTitle (Tab tab) {
 		String title = tab.getTabTitle();
 		if (tab.isDirty()) title = "*" + title;
-
-		tabsButtonMap.get(tab).button.setText(title);
+		return title;
 	}
 
 	private void rebuildTabsTable () {
@@ -304,7 +307,7 @@ public class TabbedPane {
 
 		public TabButtonTable (final Tab tab) {
 			this.tab = tab;
-			button = new VisTextButton(tab.getTabTitle(), style.buttonStyle);
+			button = new VisTextButton(getTabTitle(tab), style.buttonStyle);
 			button.setFocusBorderEnabled(false);
 
 			closeButton = new VisImageButton("close");
