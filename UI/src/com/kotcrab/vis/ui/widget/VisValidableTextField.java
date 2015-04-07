@@ -16,10 +16,12 @@
 
 package com.kotcrab.vis.ui.widget;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.InputValidator;
 
@@ -28,6 +30,10 @@ public class VisValidableTextField extends VisTextField {
 	private Array<InputValidator> validators = new Array<InputValidator>();
 	private boolean validationEnabled = true;
 	private boolean programmaticChangeEvents = true;
+
+	private LastValidFocusListener restoreFocusListener;
+	private boolean restoreLastValid = false;
+	private String lastValid;
 
 	/**
 	 * If true, a ChangeListener has been added to a field, tracking this is required for firing change events,
@@ -57,6 +63,22 @@ public class VisValidableTextField extends VisTextField {
 			addValidator(validator);
 
 		init();
+	}
+
+	public VisValidableTextField (boolean restoreLastValid, InputValidator validator) {
+		super();
+		addValidator(validator);
+		init();
+		setRestoreLastValid(restoreLastValid);
+	}
+
+	public VisValidableTextField (boolean restoreLastValid, InputValidator... validators) {
+		super();
+		for (InputValidator validator : validators)
+			addValidator(validator);
+
+		init();
+		setRestoreLastValid(restoreLastValid);
 	}
 
 	private void init () {
@@ -92,12 +114,14 @@ public class VisValidableTextField extends VisTextField {
 		setInputValid(true);
 	}
 
+	@Override
 	public boolean addListener (EventListener listener) {
 		//see changeListenerAdded comment
 		if (listener instanceof ChangeListener) changeListenerAdded = true;
 		return super.addListener(listener);
 	}
 
+	@Override
 	public boolean removeListener (EventListener listener) {
 		//see changeListenerAdded comment
 		boolean result = super.removeListener(listener);
@@ -145,5 +169,41 @@ public class VisValidableTextField extends VisTextField {
 	 */
 	public void setProgrammaticChangeEvents (boolean programmaticChangeEvents) {
 		this.programmaticChangeEvents = programmaticChangeEvents;
+	}
+
+	public boolean isRestoreLastValid () {
+		return restoreLastValid;
+	}
+
+	/**
+	 * If true this field will automatically restore text before editon stared if it loses keyboard focus while field is in invalid text.
+	 * This can't be called while field is selected, doing so will result in IllegalStateException.
+	 */
+	public void setRestoreLastValid (boolean restoreLastValid) {
+		if(hasSelection) throw new IllegalStateException("Last valid text restore can't be changed while filed has selection");
+
+		this.restoreLastValid = restoreLastValid;
+
+		if (restoreLastValid) {
+			if (restoreFocusListener == null) restoreFocusListener = new LastValidFocusListener();
+
+			addListener(restoreFocusListener);
+		}
+		else
+			removeListener(restoreFocusListener);
+	}
+
+	private class LastValidFocusListener extends FocusListener {
+		@Override
+		public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
+			if (focused && restoreLastValid)
+				lastValid = getText();
+
+			if (focused == false && isInputValid() == false && restoreLastValid) {
+				//use super.setText to skip input validation and do not fire programmatic change event
+				VisValidableTextField.super.setText(lastValid);
+				setInputValid(true);
+			}
+		}
 	}
 }

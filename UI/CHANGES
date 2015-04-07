@@ -1,13 +1,14 @@
 [0.7.2] [LibGDX 1.5.5]
--Added constructor NumberSelector (String name, int initialValue, int min, int max)
+-API Addition: NumberSelector (String name, int initialValue, int min, int max)
+-API Addition: VisUI.load(Skin)
+-API Addition GridGroup
+-API Addition LinkLabel
+-API Addition VisValidableTextField#setRestoreLastValid(boolean)
 -Fixed menu not closing after clicking it on MenuBar
 -Fixed submenu visible for disabled MenuItem
--Added LinkLabel
+-Better padding on VisList/List item (default list style selection drawable now uses 'padded-list-selection.9')
 -New default favoritesPrefsName is com.kotcrab.vis.ui.widget.file.filechooser_favorites (was pl.kotcrab.vis.ui.widget.file.filechooser_favorites)
 -Now waring will be printed to console if using default favorites preference name (see FileChooser.setFavoritesPrefsName(String))
--API Addition: VisUI.load(Skin)
--Added GridGroup
--Better padding on VisList/List item (default list style selection drawable now uses 'padded-list-selection.9')
 
 [0.7.1] [LibGDX 1.5.5]
 -Fixing GWT compatibility
