@@ -29,10 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.*;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.ui.FocusManager;
@@ -88,8 +85,9 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	boolean cursorOn = true;
 	long lastBlink;
 	KeyRepeatTask keyRepeatTask = new KeyRepeatTask();
+	KeyTypedRepeatTask keyTypedRepeatTask = new KeyTypedRepeatTask();
 	float keyRepeatInitialTime = 0.4f;
-	float keyRepeatTime = 0.1f;
+	float keyRepeatTime = 0.05f;
 	private String messageText;
 	private Clipboard clipboard;
 	private float selectionX, selectionWidth;
@@ -129,6 +127,15 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		writeEnters = false;
 		addListener(inputListener = createInputListener());
 		addListener(clickListener = new ClickListener());
+		addListener(new FocusListener() {
+			@Override
+			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
+				if(focused == false) {
+					keyTypedRepeatTask.cancel();
+					keyRepeatTask.cancel();
+				}
+			}
+		});
 	}
 
 	protected InputListener createInputListener () {
@@ -819,6 +826,16 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		}
 	}
 
+	class KeyTypedRepeatTask extends Task {
+		char character;
+		int keycode;
+
+		@Override
+		public void run () {
+			inputListener.keyTyped(null, character);
+		}
+	}
+
 	/** Basic input listener for the text field */
 	public class TextFieldClickListener extends ClickListener {
 		@Override
@@ -980,10 +997,20 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			}
 		}
 
+		protected void scheduleKeyTypedRepeatTask (int keycode, char character) {
+			if (!keyTypedRepeatTask.isScheduled() || keyTypedRepeatTask.character != character) {
+				keyTypedRepeatTask.character = character;
+				keyTypedRepeatTask.keycode = keycode;
+				keyTypedRepeatTask.cancel();
+				Timer.schedule(keyTypedRepeatTask, keyRepeatInitialTime, keyRepeatTime);
+			}
+		}
+
 		@Override
 		public boolean keyUp (InputEvent event, int keycode) {
 			if (disabled) return false;
 			keyRepeatTask.cancel();
+			if (keyTypedRepeatTask.keycode == keycode) keyTypedRepeatTask.cancel();
 			return true;
 		}
 
@@ -1010,6 +1037,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 						if (backspace && cursor > 0) {
 							text = text.substring(0, cursor - 1) + text.substring(cursor--);
 							renderOffset = 0;
+							scheduleKeyTypedRepeatTask(event != null ? event.getKeyCode() : keyTypedRepeatTask.keycode, character);
 						}
 						if (delete && cursor < text.length()) {
 							text = text.substring(0, cursor) + text.substring(cursor + 1);
@@ -1024,7 +1052,9 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 						if (!withinMaxLength(text.length())) return true;
 						String insertion = isEnter ? "\n" : String.valueOf(character);
 						text = insert(cursor++, insertion, text);
+						scheduleKeyTypedRepeatTask(event != null ? event.getKeyCode() : keyTypedRepeatTask.keycode, character);
 					}
+
 					updateDisplayText();
 				}
 			}
