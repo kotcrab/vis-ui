@@ -23,7 +23,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
@@ -38,8 +37,8 @@ import com.kotcrab.vis.ui.VisUI;
  */
 public class Tooltip extends VisTable {
 	private static final Drawable BACKGROUND = VisUI.getSkin().getDrawable("tooltip-bg");
-	private static final float FADE_TIME = 0.3f;
-	private static final float APPEAR_DELAY_TIME = 0.6f;
+	public static final float DEFAULT_FADE_TIME = 0.3f;
+	public static final float DEFAULT_APPEAR_DELAY_TIME = 0.6f;
 
 	private Actor target;
 	private Actor content;
@@ -48,6 +47,9 @@ public class Tooltip extends VisTable {
 	private TooltipInputListener listener;
 
 	private DisplayTask displayTask;
+
+	private float fadeTime = DEFAULT_FADE_TIME;
+	private float appearDelayTime = DEFAULT_APPEAR_DELAY_TIME;
 
 	public Tooltip (Actor target, String text) {
 		super(true);
@@ -93,13 +95,16 @@ public class Tooltip extends VisTable {
 
 			@Override
 			public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-				clearActions();
-				addAction(Actions.sequence(Actions.fadeIn(FADE_TIME, Interpolation.fade)));
+				if (pointer == -1) {
+					clearActions();
+					addAction(Actions.sequence(Actions.fadeIn(fadeTime, Interpolation.fade)));
+				}
 			}
 
 			@Override
 			public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
-				fadeOut();
+				if (pointer == -1)
+					fadeOut();
 			}
 		});
 	}
@@ -133,14 +138,16 @@ public class Tooltip extends VisTable {
 	}
 
 	private void fadeOut () {
-		clearActions();
-		addAction(Actions.sequence(Actions.fadeOut(FADE_TIME, Interpolation.fade), Actions.removeActor()));
+		if (getActions().size == 0) {
+			clearActions();
+			addAction(Actions.sequence(Actions.fadeOut(fadeTime, Interpolation.fade), Actions.removeActor()));
+		}
 	}
 
-	private Table fadeIn () {
+	private VisTable fadeIn () {
 		clearActions();
 		setColor(1, 1, 1, 0);
-		addAction(Actions.sequence(Actions.fadeIn(FADE_TIME, Interpolation.fade)));
+		addAction(Actions.sequence(Actions.fadeIn(fadeTime, Interpolation.fade)));
 		return this;
 	}
 
@@ -156,6 +163,22 @@ public class Tooltip extends VisTable {
 	@Override
 	public void setPosition (float x, float y) {
 		super.setPosition((int) x, (int) y);
+	}
+
+	public float getAppearDelayTime () {
+		return appearDelayTime;
+	}
+
+	public void setAppearDelayTime (float appearDelayTime) {
+		this.appearDelayTime = appearDelayTime;
+	}
+
+	public float getFadeTime () {
+		return fadeTime;
+	}
+
+	public void setFadeTime (float fadeTime) {
+		this.fadeTime = fadeTime;
 	}
 
 	private void keepWithinStage () {
@@ -196,6 +219,7 @@ public class Tooltip extends VisTable {
 		@Override
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 			Tooltip.this.toFront();
+			fadeOut();
 			return true;
 		}
 
@@ -216,7 +240,7 @@ public class Tooltip extends VisTable {
 					setY(tooltipY); //display bellow
 
 				displayTask.cancel();
-				Timer.schedule(displayTask, APPEAR_DELAY_TIME);
+				Timer.schedule(displayTask, appearDelayTime);
 			}
 		}
 
