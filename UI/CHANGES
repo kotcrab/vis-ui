@@ -6,11 +6,14 @@
 -API Addition: VisValidableTextField#setRestoreLastValid(boolean)
 -API Addition: VisTextButton (String, ChangeListener)
 -API Addition: VisTextButton (String, String, ChangeListener)
+-API Addition CollapsibleWidget.setCollapsed (boolean collapse, boolean applyAnimation) to change collapse state without animation
 -Fixed menu not closing after clicking it on MenuBar
 -Fixed submenu visible for disabled MenuItem
+-Fixing some Tooltip problems, Tooltip now won't fade away when user has it mosue over it
 -Better padding on VisList/List item (default list style selection drawable now uses 'padded-list-selection.9')
 -New default favoritesPrefsName is com.kotcrab.vis.ui.widget.file.filechooser_favorites (was pl.kotcrab.vis.ui.widget.file.filechooser_favorites)
 -Now waring will be printed to console if using default favorites preference name (see FileChooser.setFavoritesPrefsName(String))
+-Improving text field (faster input while holding key)
 
 [0.7.1] [LibGDX 1.5.5]
 -Fixing GWT compatibility

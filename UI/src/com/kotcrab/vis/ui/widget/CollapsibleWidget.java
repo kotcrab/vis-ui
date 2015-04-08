@@ -49,37 +49,54 @@ public class CollapsibleWidget extends WidgetGroup {
 		addActor(table);
 	}
 
-	public void setCollapsed (boolean collapse) {
+	public void setCollapsed (boolean collapse, boolean withAnimation) {
 		this.collapsed = collapse;
 
 		actionRunning = true;
 
 		updateTouchable();
 
-		addAction(new Action() {
-			@Override
-			public boolean act (float delta) {
+		if (withAnimation) {
+			addAction(new Action() {
+				@Override
+				public boolean act (float delta) {
 
-				if (collapsed) {
-					currentHeight -= delta * 1000;
-					if (currentHeight <= 0) {
-						currentHeight = 0;
-						collapsed = true;
-						actionRunning = false;
+					if (collapsed) {
+						currentHeight -= delta * 1000;
+						if (currentHeight <= 0) {
+							currentHeight = 0;
+							collapsed = true;
+							actionRunning = false;
+						}
+					} else {
+						currentHeight += delta * 1000;
+						if (currentHeight > table.getPrefHeight()) {
+							currentHeight = table.getPrefHeight();
+							collapsed = false;
+							actionRunning = false;
+						}
 					}
-				} else {
-					currentHeight += delta * 1000;
-					if (currentHeight > table.getPrefHeight()) {
-						currentHeight = table.getPrefHeight();
-						collapsed = false;
-						actionRunning = false;
-					}
+
+					invalidateHierarchy();
+					return !actionRunning;
 				}
-
-				invalidateHierarchy();
-				return !actionRunning;
+			});
+		} else {
+			if (collapse) {
+				currentHeight = 0;
+				collapsed = true;
+			} else {
+				currentHeight = table.getPrefHeight();
+				collapsed = false;
 			}
-		});
+
+			actionRunning = false;
+			invalidateHierarchy();
+		}
+	}
+
+	public void setCollapsed (boolean collapse) {
+		setCollapsed(collapse, true);
 	}
 
 	private void updateTouchable () {
