@@ -20,7 +20,6 @@
 package com.kotcrab.vis.editor.module.physicseditor;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -36,6 +35,7 @@ import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.module.ModuleInput;
+import com.kotcrab.vis.editor.module.physicseditor.PModeController.Mode;
 import com.kotcrab.vis.editor.module.physicseditor.input.CreationInputProcessor;
 import com.kotcrab.vis.editor.module.physicseditor.input.EditionInputProcessor;
 import com.kotcrab.vis.editor.module.physicseditor.input.TestInputProcessor;
@@ -59,9 +59,12 @@ import java.util.Random;
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
 public class PRigidBodiesScreen extends PhysicsEditorModule implements EventListener {
+
 	private FileAccessModule fileAccess;
+
 	private PRenderer renderer;
 	private PCameraModule cameraModule;
+	private PModeController modeController;
 	private PhysicsEditorSettings settings;
 
 	private final Box2DDebugRenderer debugRdr = new Box2DDebugRenderer();
@@ -79,10 +82,6 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 	private ModuleInput testInputProcessor;
 	private ModuleInput currentProcessor;
 	private ChangeListener selectedModelChangeListener;
-
-	private enum Mode {CREATION, EDITION, TEST}
-
-	private Mode mode = null;
 
 	public final ObservableList<Vector2> selectedPoints = new ObservableList<Vector2>();
 	public Vector2 nextPoint;
@@ -106,10 +105,12 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 
 		renderer = physicsContainer.get(PRenderer.class);
 		cameraModule = physicsContainer.get(PCameraModule.class);
+		modeController = physicsContainer.get(PModeController.class);
 		settings = physicsContainer.get(PSettingsModule.class).getSettings();
 
+		//dummy processor if no body is selected
 		currentProcessor = new ModuleInput() {
-		}; //dummy processor if no body is selected
+		};
 		creationInputProcessor = new CreationInputProcessor(cameraModule, this, settings);
 		editionInputProcessor = new EditionInputProcessor(cameraModule, this, settings);
 		testInputProcessor = new TestInputProcessor(cameraModule, this);
@@ -118,6 +119,31 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 		initializeSelectedPointsEvents();
 
 		App.eventBus.register(this);
+
+		modeController.setListener(mode -> {
+			selectedPoints.clear();
+			nextPoint = null;
+			nearestPoint = null;
+
+			if (mode == null) {
+
+			} else {
+
+				switch (mode) {
+					case CREATION:
+						currentProcessor = creationInputProcessor;
+						break;
+
+					case EDITION:
+						currentProcessor = editionInputProcessor;
+						break;
+
+					case TEST:
+						currentProcessor = testInputProcessor;
+						break;
+				}
+			}
+		});
 	}
 
 	@Override
@@ -128,10 +154,6 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 	public RigidBodyModel getSelectedModel () {
 		return selectedModel;
 	}
-
-// -------------------------------------------------------------------------
-	// Init
-	// -------------------------------------------------------------------------
 
 	private void initializeModelChangeListener () {
 		selectedModelChangeListener = new ChangeListener() {
@@ -166,7 +188,7 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 	}
 
 	public void switchedSelection (RigidBodyModel model) {
-		setMode(model != null ? (mode == null ? Mode.CREATION : mode) : null);
+		modeController.setMode(model != null ? (modeController.getMode() == null ? Mode.CREATION : modeController.getMode()) : null);
 		resetWorld();
 
 		if (model != null) model.addChangeListener(selectedModelChangeListener);
@@ -306,40 +328,6 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 
 		selectedPoints.clear();
 		selectedModel.computePhysics(settings.polygonizer);
-	}
-
-	private void setMode (Mode mode) {
-		this.mode = mode;
-
-		selectedPoints.clear();
-		nextPoint = null;
-		nearestPoint = null;
-
-		if (mode == null) {
-
-		} else {
-
-			switch (mode) {
-				case CREATION:
-					currentProcessor = creationInputProcessor;
-					break;
-
-				case EDITION:
-					currentProcessor = editionInputProcessor;
-					break;
-
-				case TEST:
-					currentProcessor = testInputProcessor;
-					break;
-			}
-		}
-	}
-
-	public void setNextMode () {
-		Mode m = mode == Mode.CREATION
-				? Mode.EDITION : mode == Mode.EDITION
-				? Mode.TEST : Mode.CREATION;
-		setMode(m);
 	}
 
 	private boolean isInsertEnabled () {
@@ -558,13 +546,7 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 
 	@Override
 	public boolean keyDown (InputEvent event, int keycode) {
-		currentProcessor.keyDown(event, keycode);
-
-		if (selectedModel != null) {
-			if (keycode == Input.Keys.TAB) setNextMode();
-		}
-
-		return false;
+		return currentProcessor.keyDown(event, keycode);
 	}
 
 	@Override
@@ -576,4 +558,5 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 	public boolean keyTyped (InputEvent event, char character) {
 		return currentProcessor.keyTyped(event, character);
 	}
+
 }

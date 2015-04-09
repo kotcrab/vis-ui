@@ -21,7 +21,6 @@ package com.kotcrab.vis.editor.module.physicseditor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.module.ContentTable;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
@@ -30,12 +29,7 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
-import com.kotcrab.vis.editor.util.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.FocusUtils;
-import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisTextButton;
 
 public class PhysicsEditorTab extends MainContentTab {
 	private PhysicsEditorModuleContainer physicsMC;
@@ -53,6 +47,7 @@ public class PhysicsEditorTab extends MainContentTab {
 		physicsMC.add(new PCameraModule());
 		physicsMC.add(new PRenderer());
 		physicsMC.add(new PRigidBodiesScreen());
+		physicsMC.add(new PModeController());
 		physicsMC.init();
 
 		settingsTab = new PhysicsSettingsTab(physicsMC.get(PRigidBodiesScreen.class), physicsMC.get(PSettingsModule.class).getSettings());
@@ -67,16 +62,8 @@ public class PhysicsEditorTab extends MainContentTab {
 
 		content = new ContentTable(physicsMC);
 
-		VisTable table = new VisTable(true);
-		table.setTouchable(Touchable.enabled);
-		table.setBackground(VisUI.getSkin().getDrawable("window-bg"));
-		table.left();
-		table.padTop(1);
-		table.add(new VisLabel("Mode: "), new VisTextButton("Create"), new VisTextButton("Edit"), new VisTextButton("Test"));
-		table.addListener(new EventStopper());
-
 		content = new ContentTable(physicsMC);
-		content.add(table).expandX().fillX().row();
+		content.add(physicsMC.get(PModeController.class).getControllerTable()).expandX().fillX().row();
 		content.add().fill().expand();
 	}
 
