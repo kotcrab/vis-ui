@@ -6,8 +6,8 @@
     <version>0.7.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>VisUI</name>
-    <description>Flat UI skin for LibGDX scene2d.ui</description>
-    <url>https://github.com/kotcrab/VisEditor</url>
+    <description>Flat design skin for scene2d.ui and UI toolkit</description>
+    <url>https://github.com/kotcrab/VisEditor/wiki/VisUI</url>
 
     <licenses>
         <license>
@@ -18,8 +18,8 @@
 
     <properties>
         <gdx.version>1.5.5</gdx.version>
-        <arguments></arguments>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <arguments></arguments>
     </properties>
 
     <developers>
@@ -78,7 +78,6 @@
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>

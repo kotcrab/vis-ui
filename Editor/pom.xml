@@ -1,32 +1,32 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.kotcrab.vis</groupId>
     <artifactId>vis-editor</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <name>VisEditor</name>
     <description>Scene Editor for LibGDX</description>
     <url>https://github.com/kotcrab/VisEditor</url>
 
+    <parent>
+        <groupId>com.kotcrab.vis</groupId>
+        <artifactId>vis-parent</artifactId>
+        <version>0.0.2-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <properties>
         <jdk.version>1.8</jdk.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gdx.version>1.5.5</gdx.version>
         <visui.version>0.7.2-SNAPSHOT</visui.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>ossrh</id>
-            <name>ossrh</name>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>editor-plugin-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>com.badlogicgames.gdx</groupId>
             <artifactId>gdx</artifactId>
@@ -138,16 +138,8 @@
         </resources>
 
         <plugins>
-            <plugin> <!-- Compiler -->
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
 
-            <plugin> <!-- Jar package -->
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>2.6</version>
@@ -162,7 +154,7 @@
                 </configuration>
             </plugin>
 
-            <plugin> <!-- Copies dependencies -->
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>2.10</version>
