@@ -148,9 +148,12 @@ public class TestDialogUtils extends VisWindow {
 						new ConfirmDialogListener<Integer>() {
 							@Override
 							public void result (Integer result) {
-								if(result == nothing) DialogUtils.showOKDialog(getStage(), "result", "pressed: nothing");
-								if(result == everything) DialogUtils.showOKDialog(getStage(), "result", "pressed: everything");
-								if(result == something) DialogUtils.showOKDialog(getStage(), "result", "pressed: something");
+								if (result == nothing)
+									DialogUtils.showOKDialog(getStage(), "result", "pressed: nothing");
+								if (result == everything)
+									DialogUtils.showOKDialog(getStage(), "result", "pressed: everything");
+								if (result == something)
+									DialogUtils.showOKDialog(getStage(), "result", "pressed: something");
 
 							}
 						});

@@ -139,7 +139,7 @@ public class TestBuilders extends VisWindow {
 				builder.append(new VisLabel("checkboxes"));
 				builder.append(rowLayout, getCheckBoxArray(5));
 				builder.row();
-				
+
 				builder.append(CellWidget.of(new Separator()).fillX().wrap());
 				builder.row();
 

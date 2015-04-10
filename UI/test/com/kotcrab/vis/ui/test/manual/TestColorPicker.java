@@ -45,7 +45,6 @@ public class TestColorPicker extends VisWindow {
 			}
 		});
 
-
 		VisTextButton showPickerButton = new VisTextButton("show color picker");
 		showPickerButton.addListener(new ChangeListener() {
 			@Override

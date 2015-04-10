@@ -146,7 +146,7 @@ public class DialogUtils {
 		StringBuilder builder = new StringBuilder();
 
 		String msg = throwable.getMessage();
-		if(msg != null) {
+		if (msg != null) {
 			builder.append(msg);
 			builder.append("\n\n");
 		}

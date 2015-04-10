@@ -130,7 +130,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		addListener(new FocusListener() {
 			@Override
 			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
-				if(focused == false) {
+				if (focused == false) {
 					keyTypedRepeatTask.cancel();
 					keyRepeatTask.cancel();
 				}

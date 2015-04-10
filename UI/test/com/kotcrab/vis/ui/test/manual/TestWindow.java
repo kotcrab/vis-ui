@@ -145,7 +145,6 @@ public class TestWindow extends VisWindow {
 		linkTable.add(new VisLabel("link label:"));
 		linkTable.add(new LinkLabel("https://github.com/kotcrab/viseditor")).row();
 
-
 		VisTable linkTable2 = new VisTable(true);
 		linkTable2.add(new VisLabel("link label with custom text:"));
 		linkTable2.add(new LinkLabel("kotcrab blog", "http://kotcrab.com")).row();

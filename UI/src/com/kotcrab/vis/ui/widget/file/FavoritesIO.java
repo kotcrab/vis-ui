@@ -58,7 +58,7 @@ public class FavoritesIO {
 	}
 
 	public void checkIfUsingDefaultName () {
-		if(favoritesPrefsName.equals(DEFAULT_FAVORITES_PREFS_NAME))
+		if (favoritesPrefsName.equals(DEFAULT_FAVORITES_PREFS_NAME))
 			Gdx.app.log("VisUI", "Warning, using default favorites preference name for file chooser! (see FileChooser.setFavoritesPrefsName(String))");
 	}
 

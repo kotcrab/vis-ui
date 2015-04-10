@@ -180,7 +180,8 @@ public class VisValidableTextField extends VisTextField {
 	 * This can't be called while field is selected, doing so will result in IllegalStateException.
 	 */
 	public void setRestoreLastValid (boolean restoreLastValid) {
-		if(hasSelection) throw new IllegalStateException("Last valid text restore can't be changed while filed has selection");
+		if (hasSelection)
+			throw new IllegalStateException("Last valid text restore can't be changed while filed has selection");
 
 		this.restoreLastValid = restoreLastValid;
 
@@ -188,8 +189,7 @@ public class VisValidableTextField extends VisTextField {
 			if (restoreFocusListener == null) restoreFocusListener = new LastValidFocusListener();
 
 			addListener(restoreFocusListener);
-		}
-		else
+		} else
 			removeListener(restoreFocusListener);
 	}
 
