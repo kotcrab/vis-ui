@@ -23,7 +23,13 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>editor-plugin-api</artifactId>
+            <artifactId>vis-editor-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>vis-editor-spine</artifactId>
             <version>${project.version}</version>
         </dependency>
 
