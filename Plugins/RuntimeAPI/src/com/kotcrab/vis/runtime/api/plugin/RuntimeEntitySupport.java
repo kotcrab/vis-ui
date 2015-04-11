@@ -7,6 +7,8 @@ import com.kotcrab.vis.runtime.api.data.EntityData;
 import com.kotcrab.vis.runtime.api.entity.Entity;
 
 public interface RuntimeEntitySupport<ED extends EntityData, E extends Entity> {
+	void setLoaders (AssetManager manager);
+
 	Class<E> getEntityClass ();
 
 	void resolveDependencies (Array<AssetDescriptor> deps, ED entityData);

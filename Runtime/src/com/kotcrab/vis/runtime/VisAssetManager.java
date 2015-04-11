@@ -18,31 +18,34 @@ package com.kotcrab.vis.runtime;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.kotcrab.vis.runtime.api.plugin.RuntimeEntitySupport;
 import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.scene.Scene;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
 import com.kotcrab.vis.runtime.scene.ShaderLoader;
 
 public class VisAssetManager extends AssetManager {
+	private SceneLoader sceneLoader;
+
 	public VisAssetManager () {
+		this(new InternalFileHandleResolver());
 	}
 
 	public VisAssetManager (FileHandleResolver resolver) {
 		super(resolver);
-	}
-
-	public void setVisLoaders () {
-		setVisLoaders(null);
-	}
-
-	public void setVisLoaders (FontProvider freeTypeFontProvider) {
-		SceneLoader sceneLoader = new SceneLoader();
-
-		if (freeTypeFontProvider != null) sceneLoader.enableFreeType(this, freeTypeFontProvider);
-
+		sceneLoader = new SceneLoader();
 		setLoader(Scene.class, sceneLoader);
 		setLoader(ShaderProgram.class, new ShaderLoader());
+	}
+
+	public void enableFreeType (FontProvider freeTypeFontProvider) {
+		if (freeTypeFontProvider != null) sceneLoader.enableFreeType(this, freeTypeFontProvider);
+	}
+
+	public void registerSupport (RuntimeEntitySupport support) {
+		sceneLoader.registerSupport(this, support);
 	}
 
 	public Scene loadSceneNow (String scenePath) {

@@ -73,8 +73,9 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		return json;
 	}
 
-	public void registerSupport (RuntimeEntitySupport support) {
+	public void registerSupport (AssetManager manager, RuntimeEntitySupport support) {
 		supportMap.put(support.getEntityClass(), support);
+		support.setLoaders(manager);
 	}
 
 	public void enableFreeType (AssetManager manager, FontProvider fontProvider) {
