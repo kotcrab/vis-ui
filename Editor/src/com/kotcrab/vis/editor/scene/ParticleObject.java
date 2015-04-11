@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Rectangle;
+import com.kotcrab.vis.editor.api.scene.EditorObject;
 import com.kotcrab.vis.editor.util.gdx.ParticleUtils;
 import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 

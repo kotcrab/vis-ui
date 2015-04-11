@@ -17,12 +17,13 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.api.scene.EditorObject;
+import com.kotcrab.vis.editor.api.ui.SpecificObjectTable;
 import com.kotcrab.vis.editor.scene.ObjectGroup;
-import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
+import com.kotcrab.vis.editor.api.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.ui.widget.Tooltip;
 
-import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.setCheckBoxState;
+import static com.kotcrab.vis.editor.api.utils.EntityUtils.setCommonCheckBoxState;
 
 class ObjectGroupTable extends SpecificObjectTable {
 	private IndeterminateCheckbox preserveCheck;
@@ -49,7 +50,7 @@ class ObjectGroupTable extends SpecificObjectTable {
 	public void updateUIValues () {
 		Array<EditorObject> entities = properties.getEntities();
 
-		setCheckBoxState(entities, preserveCheck, entity -> ((ObjectGroup) entity).isPreserveOnRuntime());
+		setCommonCheckBoxState(entities, preserveCheck, entity -> ((ObjectGroup) entity).isPreserveOnRuntime());
 	}
 
 	@Override

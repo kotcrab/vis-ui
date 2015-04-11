@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.data;
+package com.kotcrab.vis.runtime.api.data;
 
-import com.kotcrab.vis.runtime.api.data.EntityData;
-import com.kotcrab.vis.runtime.entity.SoundEntity;
+/** Base class for all entities data inside scene */
+public abstract class EntityData<T> {
+	public String id;
 
-public class SoundData extends EntityData<SoundEntity> {
-	public String soundPath;
+	/** Saves all values from this entity to instance of this class */
+	public abstract void saveFrom (T entity);
 
-	@Override
-	public void saveFrom (SoundEntity entity) {
-		soundPath = entity.getAssetPath();
-	}
-
-	@Override
-	public void loadTo (SoundEntity entity) {
-		entity.setAssetPath(soundPath);
-	}
+	/** Loads all possible values from this entity to instance of this class. If value can't be loaded it should be ignored. */
+	public abstract void loadTo (T entity);
 }

@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.runtime.data;
 
+import com.kotcrab.vis.runtime.api.data.EntityData;
 import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 
 public class ParticleEffectData extends EntityData<ParticleEffectEntity> {

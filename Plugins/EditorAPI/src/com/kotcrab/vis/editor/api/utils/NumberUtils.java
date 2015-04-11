@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.editor.api.utils;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+public class NumberUtils {
+	/** @return float with 2 decimal places precision */
+	public static String floatToString (float d) {
+		//fk this function
+		if (d == (long) d) //if does not have decimal places
+			return String.format("%d", (long) d);
+		else {
+			//round to two decimal places
+			d = Math.round(d * 100);
+			d = d / 100;
+			String s = String.valueOf(d);
 
-interface StringValue {
-	String getString (EditorObject entity);
+			//remove trailing zeros if exists
+			return s.contains(".") ? s.replaceAll("0*$", "").replaceAll("\\.$", "") : s;
+		}
+	}
 }

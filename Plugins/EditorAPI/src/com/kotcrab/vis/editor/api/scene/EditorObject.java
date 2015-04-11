@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.scene;
+package com.kotcrab.vis.editor.api.scene;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
-import com.kotcrab.vis.runtime.scene.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.api.scene.VisAssetDescriptor;
 
 public interface EditorObject extends Disposable {
 

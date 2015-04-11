@@ -17,6 +17,7 @@
 package com.kotcrab.vis.runtime.data;
 
 import com.badlogic.gdx.graphics.Color;
+import com.kotcrab.vis.runtime.api.data.EntityData;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
 
 /**

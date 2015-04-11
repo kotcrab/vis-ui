@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.scene;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.kotcrab.vis.editor.api.scene.EditorObject;
 import com.kotcrab.vis.editor.module.project.BMPEditorFont;
 import com.kotcrab.vis.editor.module.project.EditorFont;
 import com.kotcrab.vis.runtime.entity.TextEntity;

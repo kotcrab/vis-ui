@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.editor.api.ui;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.api.scene.EditorObject;
+import com.kotcrab.vis.ui.widget.VisTable;
 
-interface FloatValue {
-	float getFloat (EditorObject entity);
+public abstract class SpecificObjectTable<T extends IEntityProperties> extends VisTable {
+	protected T properties;
+
+	public SpecificObjectTable (T properties, boolean useVisDefaults) {
+		super(useVisDefaults);
+		this.properties = properties;
+	}
+
+	public abstract boolean isSupported (EditorObject entity);
+
+	public abstract void updateUIValues ();
+
+	public abstract void setValuesToEntities ();
 }

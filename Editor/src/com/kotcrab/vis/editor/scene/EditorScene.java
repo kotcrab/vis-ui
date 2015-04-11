@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.kotcrab.vis.editor.api.scene.EditorObject;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 public class EditorScene implements Disposable {

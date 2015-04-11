@@ -27,7 +27,7 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.api.Assets;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;

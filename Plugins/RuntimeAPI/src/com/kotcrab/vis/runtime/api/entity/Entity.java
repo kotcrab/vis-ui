@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.entity;
+package com.kotcrab.vis.runtime.api.entity;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.kotcrab.vis.runtime.scene.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.api.scene.VisAssetDescriptor;
 
 public class Entity {
 	private VisAssetDescriptor assetDescriptor;

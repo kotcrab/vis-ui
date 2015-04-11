@@ -16,7 +16,7 @@
 
 package com.kotcrab.vis.editor.util;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.api.scene.EditorObject;
 
 public interface EditorObjectProvider {
 	EditorObject newInstance ();

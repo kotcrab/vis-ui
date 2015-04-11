@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.editor.api.utils;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.api.scene.EditorObject;
 
-interface BooleanValue {
-	boolean getBoolean (EditorObject entity);
+public interface StringValue {
+	String getString (EditorObject entity);
 }

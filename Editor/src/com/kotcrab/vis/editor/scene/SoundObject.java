@@ -20,8 +20,9 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.editor.Assets;
-import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.api.Assets;
+import com.kotcrab.vis.editor.api.Icons;
+import com.kotcrab.vis.editor.api.scene.EditorObject;
 import com.kotcrab.vis.runtime.entity.SoundEntity;
 
 public class SoundObject extends SoundEntity implements EditorObject {

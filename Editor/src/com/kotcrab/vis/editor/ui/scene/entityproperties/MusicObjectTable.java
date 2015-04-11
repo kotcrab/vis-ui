@@ -18,13 +18,15 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.api.scene.EditorObject;
+import com.kotcrab.vis.editor.api.ui.SpecificObjectTable;
+import com.kotcrab.vis.editor.api.utils.EntityUtils;
 import com.kotcrab.vis.editor.scene.MusicObject;
-import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
+import com.kotcrab.vis.editor.api.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
-import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.setCheckBoxState;
+import static com.kotcrab.vis.editor.api.utils.EntityUtils.setCommonCheckBoxState;
 
 class MusicObjectTable extends SpecificObjectTable {
 	private VisLabel label;
@@ -57,9 +59,9 @@ class MusicObjectTable extends SpecificObjectTable {
 	public void updateUIValues () {
 		Array<EditorObject> entities = properties.getEntities();
 
-		label.setText(Utils.getCommonString(entities, "<?>", entity -> ((MusicObject) entity).getAssetPath()));
-		setCheckBoxState(entities, loopingCheck, entity -> ((MusicObject) entity).isLooping());
-		setCheckBoxState(entities, playOnStartCheck, entity -> ((MusicObject) entity).isPlayOnStart());
+		label.setText(EntityUtils.getCommonString(entities, "<?>", entity -> ((MusicObject) entity).getAssetPath()));
+		setCommonCheckBoxState(entities, loopingCheck, entity -> ((MusicObject) entity).isLooping());
+		setCommonCheckBoxState(entities, playOnStartCheck, entity -> ((MusicObject) entity).isPlayOnStart());
 	}
 
 	@Override

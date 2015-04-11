@@ -14,22 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.runtime.api.scene;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
-import com.kotcrab.vis.ui.widget.VisTable;
+public class VisAssetDescriptor {
+	private String relativePath;
 
-abstract class SpecificObjectTable extends VisTable {
-	protected EntityProperties properties;
-
-	public SpecificObjectTable (EntityProperties properties, boolean useVisDefaults) {
-		super(useVisDefaults);
-		this.properties = properties;
+	public VisAssetDescriptor (String relativePath) {
+		this.relativePath = relativePath.replace("\\", "/");
 	}
 
-	public abstract boolean isSupported (EditorObject entity);
-
-	public abstract void updateUIValues ();
-
-	public abstract void setValuesToEntities ();
+	public String getPath () {
+		return relativePath;
+	}
 }

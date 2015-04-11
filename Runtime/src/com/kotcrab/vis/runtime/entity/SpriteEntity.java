@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import com.kotcrab.vis.runtime.api.entity.Entity;
 
 public class SpriteEntity extends Entity {
 	protected transient Sprite sprite;

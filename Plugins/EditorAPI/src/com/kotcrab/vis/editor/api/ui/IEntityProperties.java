@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.scene;
+package com.kotcrab.vis.editor.api.ui;
 
-public class VisAssetDescriptor {
-	private String relativePath;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.api.scene.EditorObject;
 
-	public VisAssetDescriptor (String relativePath) {
-		this.relativePath = relativePath.replace("\\", "/");
-	}
+public interface IEntityProperties {
+	NumberInputField createNewNumberField ();
 
-	public String getPath () {
-		return relativePath;
-	}
+	Array<EditorObject> getEntities ();
+
+	ChangeListener getSharedChangeListener ();
+
+	ChangeListener getSharedCheckBoxChangeListener ();
 }

@@ -26,6 +26,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.api.scene.EditorObject;
+import com.kotcrab.vis.editor.api.ui.IEntityProperties;
+import com.kotcrab.vis.editor.api.ui.IndeterminateCheckbox;
+import com.kotcrab.vis.editor.api.ui.NumberInputField;
+import com.kotcrab.vis.editor.api.ui.SpecificObjectTable;
+import com.kotcrab.vis.editor.api.utils.EntityUtils;
+import com.kotcrab.vis.editor.api.utils.FloatValue;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.RedoEvent;
@@ -36,10 +43,13 @@ import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.UndoableAction;
 import com.kotcrab.vis.editor.module.scene.UndoableActionGroup;
 import com.kotcrab.vis.editor.scene.*;
-import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
-import com.kotcrab.vis.runtime.data.*;
+import com.kotcrab.vis.runtime.api.data.EntityData;
+import com.kotcrab.vis.runtime.data.MusicData;
+import com.kotcrab.vis.runtime.data.ParticleEffectData;
+import com.kotcrab.vis.runtime.data.SoundData;
+import com.kotcrab.vis.runtime.data.SpriteData;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
@@ -54,9 +64,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.util.Iterator;
 
-import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.*;
-
-public class EntityProperties extends VisTable implements Disposable, EventListener {
+public class EntityProperties extends VisTable implements Disposable, EventListener, IEntityProperties {
 	private static final int LABEL_WIDTH = 60;
 	private static final int AXIS_LABEL_WIDTH = 10;
 	private static final int FIELD_WIDTH = 70;
@@ -282,18 +290,18 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		TableUtils.setSpacingDefaults(propertiesTable);
 
 		VisTable rotationTintTable = new VisTable(true);
-		if (isRotationSupportedForEntities(entities)) rotationTintTable.add(rotationTable);
+		if (EntityUtils.isRotationSupportedForEntities(entities)) rotationTintTable.add(rotationTable);
 		rotationTintTable.add().expand().fill();
-		if (isTintSupportedForEntities(entities)) rotationTintTable.add(tintTable);
+		if (EntityUtils.isTintSupportedForEntities(entities)) rotationTintTable.add(tintTable);
 
 		propertiesTable.defaults().padRight(6).fillX();
 		propertiesTable.add(idTable).row();
 		propertiesTable.add(positionTable).row();
-		if (isScaleSupportedForEntities(entities)) propertiesTable.add(scaleTable).row();
-		if (isOriginSupportedForEntities(entities)) propertiesTable.add(originTable).row();
-		if (isRotationSupportedForEntities(entities) || isTintSupportedForEntities(entities))
+		if (EntityUtils.isScaleSupportedForEntities(entities)) propertiesTable.add(scaleTable).row();
+		if (EntityUtils.isOriginSupportedForEntities(entities)) propertiesTable.add(originTable).row();
+		if (EntityUtils.isRotationSupportedForEntities(entities) || EntityUtils.isTintSupportedForEntities(entities))
 			propertiesTable.add(rotationTintTable).row();
-		if (isFlipSupportedForEntities(entities)) propertiesTable.add(flipTable).right().fill(false).row();
+		if (EntityUtils.isFlipSupportedForEntities(entities)) propertiesTable.add(flipTable).right().fill(false).row();
 
 		activeSpecificTable = null;
 		for (SpecificObjectTable table : specificTables) {
@@ -356,29 +364,28 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			undoModule.add(snapshots);
 	}
 
-	void dropSnapshot () {
-		snapshotInProgress = false;
-		snapshots = null;
-	}
-
-	NumberInputField createNewNumberField () {
+	@Override
+	public NumberInputField createNewNumberField () {
 		return new NumberInputField(sharedFocusListener, sharedChangeListener);
 	}
 
-	Array<EditorObject> getEntities () {
+	@Override
+	public Array<EditorObject> getEntities () {
 		return entities;
+	}
+
+	@Override
+	public ChangeListener getSharedChangeListener () {
+		return sharedChangeListener;
+	}
+
+	@Override
+	public ChangeListener getSharedCheckBoxChangeListener () {
+		return sharedCheckBoxChangeListener;
 	}
 
 	Tab getParentTab () {
 		return parentTab;
-	}
-
-	ChangeListener getSharedChangeListener () {
-		return sharedChangeListener;
-	}
-
-	public ChangeListener getSharedCheckBoxChangeListener () {
-		return sharedCheckBoxChangeListener;
 	}
 
 	FileAccessModule getFileAccessModule () {
@@ -403,7 +410,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	}
 
 	private String getEntitiesFieldValue (FloatValue floatValue) {
-		return getEntitiesFieldFloatValue(entities, floatValue);
+		return EntityUtils.getEntitiesCommonFloatValue(entities, floatValue);
 	}
 
 	private void setValuesToEntity () {
@@ -413,16 +420,16 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			entity.setId(idField.getText().equals("") ? null : idField.getText());
 			entity.setPosition(FieldUtils.getFloat(xField, entity.getX()), FieldUtils.getFloat(yField, entity.getY()));
 
-			if (isScaleSupportedForEntities(entities))
+			if (EntityUtils.isScaleSupportedForEntities(entities))
 				entity.setScale(FieldUtils.getFloat(xScaleField, entity.getScaleX()), FieldUtils.getFloat(yScaleField, entity.getScaleY()));
 
-			if (isOriginSupportedForEntities(entities))
+			if (EntityUtils.isOriginSupportedForEntities(entities))
 				entity.setOrigin(FieldUtils.getFloat(xOriginField, entity.getOriginX()), FieldUtils.getFloat(yOriginField, entity.getOriginY()));
 
-			if (isRotationSupportedForEntities(entities))
+			if (EntityUtils.isRotationSupportedForEntities(entities))
 				entity.setRotation(FieldUtils.getFloat(rotationField, entity.getRotation()));
 
-			if (isFlipSupportedForEntities(entities)) {
+			if (EntityUtils.isFlipSupportedForEntities(entities)) {
 				if (xFlipCheck.isIndeterminate() == false)
 					entity.setFlip(xFlipCheck.isChecked(), entity.isFlipY());
 
@@ -440,7 +447,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		else {
 			setVisible(true);
 
-			idField.setText(getEntitiesId(entities));
+			idField.setText(EntityUtils.getCommonId(entities));
 			xField.setText(getEntitiesFieldValue(EditorObject::getX));
 			yField.setText(getEntitiesFieldValue(EditorObject::getY));
 			xScaleField.setText(getEntitiesFieldValue(EditorObject::getScaleX));
@@ -451,9 +458,9 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
 
-			if (isTintSupportedForEntities(entities)) setTintUIForEntities();
-			setCheckBoxState(entities, xFlipCheck, EditorObject::isFlipX);
-			setCheckBoxState(entities, yFlipCheck, EditorObject::isFlipY);
+			if (EntityUtils.isTintSupportedForEntities(entities)) setTintUIForEntities();
+			EntityUtils.setCommonCheckBoxState(entities, xFlipCheck, EditorObject::isFlipX);
+			EntityUtils.setCommonCheckBoxState(entities, yFlipCheck, EditorObject::isFlipY);
 		}
 	}
 

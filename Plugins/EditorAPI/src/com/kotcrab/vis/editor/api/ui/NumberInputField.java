@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.editor.api.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -29,9 +29,9 @@ import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
-import static com.kotcrab.vis.editor.ui.scene.entityproperties.Utils.floatToString;
+import static com.kotcrab.vis.editor.api.utils.NumberUtils.floatToString;
 
-class NumberInputField extends VisValidableTextField {
+public class NumberInputField extends VisValidableTextField {
 	private static FieldFilter sharedFieldFilter = new FieldFilter();
 	private static FieldValidator sharedFieldValidator = new FieldValidator();
 

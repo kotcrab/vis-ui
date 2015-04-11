@@ -17,6 +17,7 @@
 package com.kotcrab.vis.runtime.entity;
 
 import com.badlogic.gdx.audio.Sound;
+import com.kotcrab.vis.runtime.api.entity.Entity;
 
 public class SoundEntity extends Entity {
 	protected transient Sound sound;

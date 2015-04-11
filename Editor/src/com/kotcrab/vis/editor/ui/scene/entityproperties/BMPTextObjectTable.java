@@ -18,9 +18,10 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.api.scene.EditorObject;
+import com.kotcrab.vis.editor.api.utils.EntityUtils;
 import com.kotcrab.vis.editor.scene.TextObject;
-import com.kotcrab.vis.editor.ui.IndeterminateCheckbox;
+import com.kotcrab.vis.editor.api.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.ui.widget.Tooltip;
 
 class BMPTextObjectTable extends TextObjectTable {
@@ -63,7 +64,7 @@ class BMPTextObjectTable extends TextObjectTable {
 	public void updateUIValues () {
 		super.updateUIValues();
 
-		Utils.setCheckBoxState(properties.getEntities(), distanceFieldCheck, entity -> ((TextObject) entity).isDistanceFieldShaderEnabled());
+		EntityUtils.setCommonCheckBoxState(properties.getEntities(), distanceFieldCheck, entity -> ((TextObject) entity).isDistanceFieldShaderEnabled());
 	}
 
 	@Override

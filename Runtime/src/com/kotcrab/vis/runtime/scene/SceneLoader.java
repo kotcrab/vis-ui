@@ -33,6 +33,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.kotcrab.vis.runtime.api.data.EntityData;
+import com.kotcrab.vis.runtime.api.entity.Entity;
+import com.kotcrab.vis.runtime.api.plugin.RuntimeEntitySupport;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.*;
 import com.kotcrab.vis.runtime.font.BmpFontProvider;
@@ -48,6 +52,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	private boolean distanceFieldShaderLoaded;
 	private FontProvider bmpFontProvider;
 	private FontProvider ttfFontProvider;
+
+	private ObjectMap<Class, RuntimeEntitySupport> supportMap = new ObjectMap<Class, RuntimeEntitySupport>();
 
 	public SceneLoader () {
 		this(new InternalFileHandleResolver());
@@ -65,6 +71,10 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		json.addClassTag("TextData", TextData.class);
 		json.addClassTag("ParticleEffectData", ParticleEffectData.class);
 		return json;
+	}
+
+	public void registerSupport (RuntimeEntitySupport support) {
+		supportMap.put(support.getEntityClass(), support);
 	}
 
 	public void enableFreeType (AssetManager manager, FontProvider fontProvider) {
@@ -116,6 +126,13 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				SoundData musicData = (SoundData) entityData;
 				deps.add(new AssetDescriptor(musicData.soundPath, Sound.class));
 			}
+
+			RuntimeEntitySupport support = supportMap.get(entityData.getClass());
+
+			if (support == null)
+				throw new IllegalStateException("Missing support for entity class: " + entityData.getClass());
+
+			support.resolveDependencies(deps, entityData);
 		}
 	}
 
@@ -194,6 +211,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				soundData.loadTo(entity);
 				entities.add(entity);
 			}
+
+			entities.add(supportMap.get(entityData.getClass()).getInstanceFromData(manager, entityData));
 		}
 	}
 

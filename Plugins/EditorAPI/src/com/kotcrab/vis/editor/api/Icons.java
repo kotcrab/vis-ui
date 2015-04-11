@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor;
+package com.kotcrab.vis.editor.api;
 
 public enum Icons implements IconAsset {
 	NEW {
@@ -110,5 +110,5 @@ public enum Icons implements IconAsset {
 }
 
 interface IconAsset {
-	public String getIconName ();
+	String getIconName ();
 }

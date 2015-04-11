@@ -17,7 +17,6 @@
     <properties>
         <jdk.version>1.8</jdk.version>
         <gdx.version>1.5.5</gdx.version>
-        <visui.version>0.7.2-SNAPSHOT</visui.version>
     </properties>
 
     <dependencies>
@@ -34,21 +33,29 @@
         </dependency>
 
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>vis-runtime</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>vis-ui</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.badlogicgames.gdx</groupId>
             <artifactId>gdx</artifactId>
-            <version>${gdx.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.badlogicgames.gdx</groupId>
             <artifactId>gdx-backend-lwjgl</artifactId>
-            <version>${gdx.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.badlogicgames.gdx</groupId>
             <artifactId>gdx-platform</artifactId>
-            <version>${gdx.version}</version>
             <classifier>natives-desktop</classifier>
         </dependency>
 
@@ -85,21 +92,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.kotcrab.vis</groupId>
-            <artifactId>vis-ui</artifactId>
-            <version>${visui.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.kotcrab.vis</groupId>
-            <artifactId>vis-runtime</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
-            <version>3.0.0</version>
         </dependency>
 
         <dependency>
@@ -179,6 +173,15 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <configuration>
+                    <mainClass>com.kotcrab.vis.editor.ui.EditorFrame</mainClass>
+                </configuration>
             </plugin>
 
         </plugins>
