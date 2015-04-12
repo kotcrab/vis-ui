@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.api.ui;
+package com.kotcrab.vis.editor.util;
 
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.api.scene.EditorObject;
+import com.kotcrab.vis.editor.scene.EditorObject;
 
-public interface IEntityProperties {
-	NumberInputField createNewNumberField ();
-
-	Array<EditorObject> getEntities ();
-
-	ChangeListener getSharedChangeListener ();
-
-	ChangeListener getSharedCheckBoxChangeListener ();
+public interface BooleanValue {
+	boolean getBoolean (EditorObject entity);
 }

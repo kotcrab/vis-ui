@@ -17,7 +17,6 @@
 package com.kotcrab.vis.runtime.data;
 
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.api.data.EntityData;
 import com.kotcrab.vis.runtime.entity.EntityGroup;
 
 public class EntityGroupData extends EntityData<EntityGroup> {

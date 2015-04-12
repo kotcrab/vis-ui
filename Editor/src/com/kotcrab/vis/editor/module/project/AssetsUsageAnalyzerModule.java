@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.api.scene.EditorObject;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.util.FileUtils;
 

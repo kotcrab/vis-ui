@@ -25,7 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.api.scene.EditorObject;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.module.ContentTable;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;

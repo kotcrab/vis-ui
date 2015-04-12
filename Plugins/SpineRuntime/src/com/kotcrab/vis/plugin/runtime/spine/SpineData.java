@@ -1,7 +1,7 @@
 package com.kotcrab.vis.plugin.runtime.spine;
 
 import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.runtime.api.data.EntityData;
+import com.kotcrab.vis.runtime.data.EntityData;
 
 public class SpineData extends EntityData<SpineEntity> {
 	public String skeletonPath;

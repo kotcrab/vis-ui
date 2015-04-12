@@ -30,9 +30,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.api.scene.EditorObject;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
+import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
@@ -87,10 +88,11 @@ public class EntityManipulatorModule extends SceneModule {
 		undoModule = sceneContainer.get(UndoModule.class);
 		sceneIOModule = projectContainer.get(SceneIOModule.class);
 
+		ObjectSupportModule supportManager = container.get(ObjectSupportModule.class);
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
 		ColorPickerModule pickerModule = container.get(ColorPickerModule.class);
 		FontCacheModule fontCacheModule = projectContainer.get(FontCacheModule.class);
-		entityProperties = new EntityProperties(fileAccess, fontCacheModule, undoModule, pickerModule.getPicker(), sceneTab, selectedEntities);
+		entityProperties = new EntityProperties(supportManager, fileAccess, fontCacheModule, undoModule, pickerModule.getPicker(), sceneTab, selectedEntities);
 
 		rectangularSelection = new RectangularSelection(entities, this);
 	}
@@ -393,7 +395,6 @@ public class EntityManipulatorModule extends SceneModule {
 					lastSurfaceArea = currentSurfaceArea;
 				}
 			}
-
 		}
 
 		return matchingEntity;

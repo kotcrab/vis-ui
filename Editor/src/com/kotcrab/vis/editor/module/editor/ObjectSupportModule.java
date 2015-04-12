@@ -14,16 +14,23 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.api.scene;
+package com.kotcrab.vis.editor.module.editor;
 
-public class VisAssetDescriptor {
-	private String relativePath;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.kotcrab.vis.editor.plugin.ObjectSupport;
 
-	public VisAssetDescriptor (String relativePath) {
-		this.relativePath = relativePath.replace("\\", "/");
+public class ObjectSupportModule extends EditorModule {
+	private ObjectMap<Class, ObjectSupport> supportMap = new ObjectMap<>();
+
+	public void register (ObjectSupport support) {
+		supportMap.put(support.getObjectClass(), support);
 	}
 
-	public String getPath () {
-		return relativePath;
+	public ObjectSupport get (Class key) {
+		return supportMap.get(key);
+	}
+
+	public ObjectMap<Class, ObjectSupport> getSupports () {
+		return supportMap;
 	}
 }

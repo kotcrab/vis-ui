@@ -166,6 +166,10 @@ public class AssetDragAndDrop {
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Sound \n (drop on scene to add)").disposeOnNullTarget()
 					.setObjectProvider(() -> new SoundObject(fileAccess.relativizeToAssetsFolder(item.file), Gdx.audio.newSound(item.file))));
 		}
+
+		if (item.type == FileType.NON_STANDARD) {
+			dragAndDrop.addSource(item.support.createSource(dragAndDrop, item.file));
+		}
 	}
 
 	public void clear () {

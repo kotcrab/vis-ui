@@ -24,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.kotcrab.vis.editor.api.Assets;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
@@ -162,6 +161,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(projectIO = new ProjectIOModule());
 		editorMC.add(inputModule = new InputModule(mainContentTable));
 
+		editorMC.add(new ObjectSupportModule());
 		editorMC.add(new ColorPickerModule());
 		editorMC.add(fileChooser = new FileChooserModule());
 		editorMC.add(new MenuBarModule(projectMC));

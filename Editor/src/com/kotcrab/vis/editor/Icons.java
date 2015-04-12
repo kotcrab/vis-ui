@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.api;
+package com.kotcrab.vis.editor;
 
 public enum Icons implements IconAsset {
 	NEW {

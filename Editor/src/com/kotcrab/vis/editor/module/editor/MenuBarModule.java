@@ -20,7 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.api.Icons;
+import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.ui.ButtonListener;
 import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;

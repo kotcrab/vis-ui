@@ -18,15 +18,13 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.api.scene.EditorObject;
-import com.kotcrab.vis.editor.api.ui.SpecificObjectTable;
-import com.kotcrab.vis.editor.api.utils.EntityUtils;
+import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.editor.scene.MusicObject;
-import com.kotcrab.vis.editor.api.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
-import static com.kotcrab.vis.editor.api.utils.EntityUtils.setCommonCheckBoxState;
+import static com.kotcrab.vis.editor.util.EntityUtils.setCommonCheckBoxState;
 
 class MusicObjectTable extends SpecificObjectTable {
 	private VisLabel label;

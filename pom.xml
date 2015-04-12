@@ -74,8 +74,6 @@
         <module>UI</module>
         <module>Runtime</module>
         <module>Editor</module>
-        <module>Plugins/RuntimeAPI</module>
-        <module>Plugins/EditorAPI</module>
         <module>Plugins/SpineRuntime</module>
         <module>Plugins/Spine</module>
     </modules>

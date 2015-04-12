@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.api.ui;
+package com.kotcrab.vis.editor.util;
 
-import com.kotcrab.vis.editor.api.scene.EditorObject;
-import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.editor.scene.EditorObject;
 
-public abstract class SpecificObjectTable<T extends IEntityProperties> extends VisTable {
-	protected T properties;
-
-	public SpecificObjectTable (T properties, boolean useVisDefaults) {
-		super(useVisDefaults);
-		this.properties = properties;
-	}
-
-	public abstract boolean isSupported (EditorObject entity);
-
-	public abstract void updateUIValues ();
-
-	public abstract void setValuesToEntities ();
+public interface StringValue {
+	String getString (EditorObject entity);
 }

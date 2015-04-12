@@ -21,8 +21,13 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>vis-runtime-api</artifactId>
+            <artifactId>vis-runtime</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.badlogicgames.gdx</groupId>
+            <artifactId>gdx</artifactId>
         </dependency>
     </dependencies>
 </project>

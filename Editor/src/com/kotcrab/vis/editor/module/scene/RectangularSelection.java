@@ -23,7 +23,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.api.scene.EditorObject;
+import com.kotcrab.vis.editor.scene.EditorObject;
 
 public class RectangularSelection {
 	private Array<EditorObject> entities;

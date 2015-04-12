@@ -18,10 +18,9 @@ package com.kotcrab.vis.editor.scene;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.api.scene.EditorObject;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.util.gdx.SpriteUtils;
-import com.kotcrab.vis.runtime.api.entity.Entity;
+import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.entity.EntityGroup;
 
 public class ObjectGroup extends EntityGroup implements EditorObject {

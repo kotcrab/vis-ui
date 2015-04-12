@@ -17,13 +17,11 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.api.scene.EditorObject;
-import com.kotcrab.vis.editor.api.ui.SpecificObjectTable;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.ParticleObject;
-import com.kotcrab.vis.editor.api.ui.IndeterminateCheckbox;
 import com.kotcrab.vis.ui.widget.Tooltip;
 
-import static com.kotcrab.vis.editor.api.utils.EntityUtils.setCommonCheckBoxState;
+import static com.kotcrab.vis.editor.util.EntityUtils.setCommonCheckBoxState;
 
 class ParticleEffectTable extends SpecificObjectTable {
 	private IndeterminateCheckbox activeCheck;

@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.api.data;
+package com.kotcrab.vis.editor.util;
 
-/** Base class for all entities data inside scene */
-public abstract class EntityData<T> {
-	public String id;
+import com.kotcrab.vis.editor.scene.EditorObject;
 
-	/** Saves all values from this entity to instance of this class */
-	public abstract void saveFrom (T entity);
-
-	/** Loads all possible values from this entity to instance of this class. If value can't be loaded it should be ignored. */
-	public abstract void loadTo (T entity);
+public interface FloatValue {
+	float getFloat (EditorObject entity);
 }

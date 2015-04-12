@@ -18,8 +18,7 @@ package com.kotcrab.vis.runtime.entity;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.api.entity.Entity;
-import com.kotcrab.vis.runtime.api.scene.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.scene.VisAssetDescriptor;
 
 public class EntityGroup extends Entity {
 	protected Array<Entity> entities = new Array<Entity>();

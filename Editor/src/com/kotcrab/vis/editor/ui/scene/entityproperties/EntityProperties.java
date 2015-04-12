@@ -26,17 +26,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.api.scene.EditorObject;
-import com.kotcrab.vis.editor.api.ui.IEntityProperties;
-import com.kotcrab.vis.editor.api.ui.IndeterminateCheckbox;
-import com.kotcrab.vis.editor.api.ui.NumberInputField;
-import com.kotcrab.vis.editor.api.ui.SpecificObjectTable;
-import com.kotcrab.vis.editor.api.utils.EntityUtils;
-import com.kotcrab.vis.editor.api.utils.FloatValue;
+import com.kotcrab.vis.editor.plugin.ObjectSupport;
+import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.util.EntityUtils;
+import com.kotcrab.vis.editor.util.FloatValue;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.RedoEvent;
 import com.kotcrab.vis.editor.event.UndoEvent;
+import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
@@ -45,7 +43,7 @@ import com.kotcrab.vis.editor.module.scene.UndoableActionGroup;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.util.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
-import com.kotcrab.vis.runtime.api.data.EntityData;
+import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.data.MusicData;
 import com.kotcrab.vis.runtime.data.ParticleEffectData;
 import com.kotcrab.vis.runtime.data.SoundData;
@@ -64,10 +62,12 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.util.Iterator;
 
-public class EntityProperties extends VisTable implements Disposable, EventListener, IEntityProperties {
+public class EntityProperties extends VisTable implements Disposable, EventListener {
 	private static final int LABEL_WIDTH = 60;
 	private static final int AXIS_LABEL_WIDTH = 10;
 	private static final int FIELD_WIDTH = 70;
+
+	private ObjectSupportModule supportModule;
 
 	private FileAccessModule fileAccessModule;
 	private FontCacheModule fontCacheModule;
@@ -114,8 +114,10 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private IndeterminateCheckbox xFlipCheck;
 	private IndeterminateCheckbox yFlipCheck;
 
-	public EntityProperties (FileAccessModule fileAccessModule, FontCacheModule fontCacheModule, final UndoModule undoModule, final ColorPicker picker, final Tab parentTab, final Array<EditorObject> selectedEntitiesList) {
+	public EntityProperties (ObjectSupportModule supportModule, FileAccessModule fileAccessModule, FontCacheModule fontCacheModule,
+							 final UndoModule undoModule, final ColorPicker picker, final Tab parentTab, final Array<EditorObject> selectedEntitiesList) {
 		super(true);
+		this.supportModule = supportModule;
 		this.fileAccessModule = fileAccessModule;
 		this.fontCacheModule = fontCacheModule;
 		this.undoModule = undoModule;
@@ -364,22 +366,18 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			undoModule.add(snapshots);
 	}
 
-	@Override
 	public NumberInputField createNewNumberField () {
 		return new NumberInputField(sharedFocusListener, sharedChangeListener);
 	}
 
-	@Override
 	public Array<EditorObject> getEntities () {
 		return entities;
 	}
 
-	@Override
 	public ChangeListener getSharedChangeListener () {
 		return sharedChangeListener;
 	}
 
-	@Override
 	public ChangeListener getSharedCheckBoxChangeListener () {
 		return sharedCheckBoxChangeListener;
 	}
@@ -483,7 +481,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		}
 	}
 
-	private static class SnapshotUndoableAction implements UndoableAction {
+	private class SnapshotUndoableAction implements UndoableAction {
 		EditorObject entity;
 		EntityData dataSnapshot;
 		EntityData dataSnapshot2;
@@ -523,6 +521,9 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			if (entity instanceof MusicObject) return new MusicData();
 			if (entity instanceof SoundObject) return new SoundData();
 			if (entity instanceof ObjectGroup) return new ObjectGroupData();
+
+			ObjectSupport support = supportModule.get(entity.getClass());
+			if (support != null) return support.getEmptyData();
 
 			throw new UnsupportedOperationException("Cannot create snapshots entity data for entity class: " + entity.getClass());
 		}

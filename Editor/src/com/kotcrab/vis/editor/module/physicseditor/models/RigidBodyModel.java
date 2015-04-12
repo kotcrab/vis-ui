@@ -28,7 +28,7 @@ import com.kotcrab.vis.editor.module.physicseditor.models.ShapeModel.Type;
 import com.kotcrab.vis.editor.module.physicseditor.util.Clipper;
 import com.kotcrab.vis.editor.module.physicseditor.util.Clipper.Polygonizer;
 import com.kotcrab.vis.editor.module.physicseditor.util.PolygonUtils;
-import com.kotcrab.vis.runtime.api.entity.Entity;
+import com.kotcrab.vis.runtime.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;

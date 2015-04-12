@@ -19,7 +19,6 @@ package com.kotcrab.vis.runtime.entity;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.badlogic.gdx.utils.Disposable;
-import com.kotcrab.vis.runtime.api.entity.Entity;
 
 public class MusicEntity extends Entity implements Disposable{
 	protected transient Music music;

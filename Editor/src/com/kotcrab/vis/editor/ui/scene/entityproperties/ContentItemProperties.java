@@ -14,20 +14,9 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.data;
+package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
-import com.kotcrab.vis.runtime.entity.SoundEntity;
-
-public class SoundData extends EntityData<SoundEntity> {
-	public String soundPath;
-
-	@Override
-	public void saveFrom (SoundEntity entity) {
-		soundPath = entity.getAssetPath();
-	}
-
-	@Override
-	public void loadTo (SoundEntity entity) {
-		entity.setAssetPath(soundPath);
-	}
+public class ContentItemProperties {
+	public String title;
+	public boolean hideExtension;
 }

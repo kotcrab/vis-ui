@@ -32,8 +32,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
-import com.kotcrab.vis.editor.api.Assets;
-import com.kotcrab.vis.editor.api.Icons;
+import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.plugin.ObjectSupport;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.ContentItemProperties;
+import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
@@ -55,8 +58,10 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 //TODO this probably shouldn't be a module, should extend tab and should be loaded when project is loaded
 public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.WatchListener, TabbedPaneListener {
 	private TabsModule tabsModule;
-	private SceneTabsModule sceneTabsModule;
 	private QuickAccessModule quickAccessModule;
+	private ObjectSupportModule supportModule;
+
+	private SceneTabsModule sceneTabsModule;
 	private SceneIOModule sceneIO;
 	private FileAccessModule fileAccess;
 	private TextureCacheModule textureCache;
@@ -97,8 +102,10 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 
 	private void initModule () {
 		tabsModule = container.get(TabsModule.class);
-		sceneTabsModule = projectContainer.get(SceneTabsModule.class);
 		quickAccessModule = container.get(QuickAccessModule.class);
+		supportModule = container.get(ObjectSupportModule.class);
+
+		sceneTabsModule = projectContainer.get(SceneTabsModule.class);
 		sceneIO = projectContainer.get(SceneIOModule.class);
 		fileAccess = projectContainer.get(FileAccessModule.class);
 		textureCache = projectContainer.get(TextureCacheModule.class);
@@ -327,7 +334,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	}
 
 	enum FileType {
-		UNKNOWN, TEXTURE, TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE, MUSIC, SOUND, PARTICLE_EFFECT
+		UNKNOWN, TEXTURE, TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE, MUSIC, SOUND, PARTICLE_EFFECT, NON_STANDARD
 	}
 
 	private class AssetsPopupMenu extends PopupMenu {
@@ -373,6 +380,8 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 
 		VisLabel name;
 
+		ObjectSupport support;
+
 		public FileItem (FileHandle file) {
 			super(VisUI.getSkin());
 			this.file = file;
@@ -392,6 +401,21 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		private void createContent () {
 			String ext = file.extension();
 			String relativePath = fileAccess.relativizeToAssetsFolder(file);
+
+			if (relativePath.startsWith("gfx") && (ext.equals("jpg") || ext.equals("png"))) {
+				type = FileType.TEXTURE;
+
+				name = new VisLabel(file.nameWithoutExtension(), "small");
+				TextureRegion region = textureCache.getRegion(relativePath);
+
+				Image img = new Image(region);
+				img.setScaling(Scaling.fit);
+				add(img).expand().fill().row();
+
+				this.region = region;
+
+				return;
+			}
 
 			if (ext.equals("ttf")) {
 				createDefaultView(FileType.TTF_FONT, "TTF Font", true);
@@ -423,23 +447,23 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 				return;
 			}
 
-			if (relativePath.startsWith("gfx") && (ext.equals("jpg") || ext.equals("png"))) {
-				type = FileType.TEXTURE;
-
-				name = new VisLabel(file.nameWithoutExtension(), "small");
-				TextureRegion region = textureCache.getRegion(relativePath);
-
-				Image img = new Image(region);
-				img.setScaling(Scaling.fit);
-				add(img).expand().fill().row();
-
-				this.region = region;
-
+			support = findSupportForDirectory(ext, relativePath);
+			if (support != null) {
+				type = FileType.NON_STANDARD;
+				ContentItemProperties item = support.getContentItemProperties();
+				createDefaultView(FileType.SOUND, item.title, item.hideExtension);
 				return;
 			}
 
 			type = FileType.UNKNOWN;
 			name = new VisLabel(file.name());
+		}
+
+		private ObjectSupport findSupportForDirectory (String ext, String relativePath) {
+			for (ObjectSupport support : supportModule.getSupports().values())
+				if (support.isSupportedDirecotry(ext, relativePath)) return support;
+
+			return null;
 		}
 
 		private void createDefaultView (FileType type, String itemTypeName) {

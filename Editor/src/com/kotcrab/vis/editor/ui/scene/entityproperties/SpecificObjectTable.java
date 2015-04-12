@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.api.utils;
+package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
-public class NumberUtils {
-	/** @return float with 2 decimal places precision */
-	public static String floatToString (float d) {
-		//fk this function
-		if (d == (long) d) //if does not have decimal places
-			return String.format("%d", (long) d);
-		else {
-			//round to two decimal places
-			d = Math.round(d * 100);
-			d = d / 100;
-			String s = String.valueOf(d);
+import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.ui.widget.VisTable;
 
-			//remove trailing zeros if exists
-			return s.contains(".") ? s.replaceAll("0*$", "").replaceAll("\\.$", "") : s;
-		}
+public abstract class SpecificObjectTable extends VisTable {
+	protected EntityProperties properties;
+
+	public SpecificObjectTable (EntityProperties properties, boolean useVisDefaults) {
+		super(useVisDefaults);
+		this.properties = properties;
 	}
+
+	public abstract boolean isSupported (EditorObject entity);
+
+	public abstract void updateUIValues ();
+
+	public abstract void setValuesToEntities ();
 }

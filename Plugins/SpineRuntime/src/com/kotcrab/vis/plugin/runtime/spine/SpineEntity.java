@@ -2,11 +2,12 @@ package com.kotcrab.vis.plugin.runtime.spine;
 
 import com.badlogic.gdx.graphics.Color;
 import com.esotericsoftware.spine.Skeleton;
-import com.kotcrab.vis.runtime.api.entity.Entity;
+import com.kotcrab.vis.runtime.entity.Entity;
 
 public class SpineEntity extends Entity{
 	private String atlasPath;
-	private Skeleton skeleton;
+
+	protected Skeleton skeleton;
 
 	public SpineEntity (String id, String atlasPath, String skeletonPath, Skeleton skeleton) {
 		super(id);

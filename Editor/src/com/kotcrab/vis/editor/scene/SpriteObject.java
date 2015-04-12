@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.scene;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.kotcrab.vis.editor.api.scene.EditorObject;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
 
 public class SpriteObject extends SpriteEntity implements EditorObject {

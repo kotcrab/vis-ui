@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.runtime.data;
 
-import com.kotcrab.vis.runtime.api.data.EntityData;
 import com.kotcrab.vis.runtime.entity.MusicEntity;
 
 public class MusicData extends EntityData<MusicEntity> {

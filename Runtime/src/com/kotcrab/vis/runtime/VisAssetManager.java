@@ -20,7 +20,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.kotcrab.vis.runtime.api.plugin.RuntimeEntitySupport;
+import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.scene.Scene;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
@@ -44,7 +44,7 @@ public class VisAssetManager extends AssetManager {
 		if (freeTypeFontProvider != null) sceneLoader.enableFreeType(this, freeTypeFontProvider);
 	}
 
-	public void registerSupport (RuntimeEntitySupport support) {
+	public void registerSupport (EntitySupport support) {
 		sceneLoader.registerSupport(this, support);
 	}
 

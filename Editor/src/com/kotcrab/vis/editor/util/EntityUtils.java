@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.api.utils;
+package com.kotcrab.vis.editor.util;
 
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.api.scene.EditorObject;
-import com.kotcrab.vis.editor.api.ui.IndeterminateCheckbox;
+import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 
 public class EntityUtils {
 	public static String getEntitiesCommonFloatValue (Array<EditorObject> entities, FloatValue objValue) {

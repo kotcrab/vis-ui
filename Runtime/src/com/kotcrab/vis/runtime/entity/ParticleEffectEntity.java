@@ -20,8 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.utils.Disposable;
-import com.kotcrab.vis.runtime.api.entity.Entity;
-import com.kotcrab.vis.runtime.api.scene.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.scene.VisAssetDescriptor;
 
 public class ParticleEffectEntity extends Entity implements Disposable {
 	protected transient ParticleEffect effect;

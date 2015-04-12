@@ -21,10 +21,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.api.Assets;
-import com.kotcrab.vis.editor.api.Icons;
-import com.kotcrab.vis.editor.api.scene.EditorObject;
-import com.kotcrab.vis.editor.api.ui.SpecificObjectTable;
+import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.dialog.SelectFontDialog;
 import com.kotcrab.vis.ui.widget.VisImageButton;
@@ -32,9 +31,9 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
-import static com.kotcrab.vis.editor.api.utils.EntityUtils.getCommonString;
+import static com.kotcrab.vis.editor.util.EntityUtils.getCommonString;
 
-abstract class TextObjectTable extends SpecificObjectTable<EntityProperties> {
+abstract class TextObjectTable extends SpecificObjectTable {
 	protected SelectFontDialog selectFontDialog;
 
 	private VisValidableTextField textField;

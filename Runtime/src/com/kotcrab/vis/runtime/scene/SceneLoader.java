@@ -34,9 +34,9 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.runtime.api.data.EntityData;
-import com.kotcrab.vis.runtime.api.entity.Entity;
-import com.kotcrab.vis.runtime.api.plugin.RuntimeEntitySupport;
+import com.kotcrab.vis.runtime.data.EntityData;
+import com.kotcrab.vis.runtime.entity.Entity;
+import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.*;
 import com.kotcrab.vis.runtime.font.BmpFontProvider;
@@ -53,7 +53,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	private FontProvider bmpFontProvider;
 	private FontProvider ttfFontProvider;
 
-	private ObjectMap<Class, RuntimeEntitySupport> supportMap = new ObjectMap<Class, RuntimeEntitySupport>();
+	private ObjectMap<Class, EntitySupport> supportMap = new ObjectMap<Class, EntitySupport>();
 
 	public SceneLoader () {
 		this(new InternalFileHandleResolver());
@@ -73,7 +73,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		return json;
 	}
 
-	public void registerSupport (AssetManager manager, RuntimeEntitySupport support) {
+	public void registerSupport (AssetManager manager, EntitySupport support) {
 		supportMap.put(support.getEntityClass(), support);
 		support.setLoaders(manager);
 	}
@@ -128,7 +128,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				deps.add(new AssetDescriptor(musicData.soundPath, Sound.class));
 			}
 
-			RuntimeEntitySupport support = supportMap.get(entityData.getClass());
+			EntitySupport support = supportMap.get(entityData.getClass());
 
 			if (support == null)
 				throw new IllegalStateException("Missing support for entity class: " + entityData.getClass());

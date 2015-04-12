@@ -20,8 +20,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.kotcrab.vis.editor.api.Assets;
-import com.kotcrab.vis.editor.api.Icons;
+import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.ui.VisUI;
 
 class TintImage extends Image {

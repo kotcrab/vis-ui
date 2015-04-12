@@ -6,9 +6,9 @@ import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.SkeletonData;
 import com.kotcrab.vis.plugin.runtime.spine.SkeletonDataLoader.SkeletonDataLoaderParameter;
-import com.kotcrab.vis.runtime.api.plugin.RuntimeEntitySupport;
+import com.kotcrab.vis.runtime.plugin.EntitySupport;
 
-public class SpineRuntimeSupport implements RuntimeEntitySupport<SpineData, SpineEntity> {
+public class SpineSupport implements EntitySupport<SpineData, SpineEntity> {
 	@Override
 	public void setLoaders (AssetManager manager) {
 		manager.setLoader(SkeletonData.class, new SkeletonDataLoader());

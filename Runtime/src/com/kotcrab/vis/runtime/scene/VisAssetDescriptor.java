@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.api.utils;
+package com.kotcrab.vis.runtime.scene;
 
-import com.kotcrab.vis.editor.api.scene.EditorObject;
+public class VisAssetDescriptor {
+	private String relativePath;
 
-public interface StringValue {
-	String getString (EditorObject entity);
+	public VisAssetDescriptor (String relativePath) {
+		this.relativePath = relativePath.replace("\\", "/");
+	}
+
+	public String getPath () {
+		return relativePath;
+	}
 }
