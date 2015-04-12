@@ -28,20 +28,8 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>vis-runtime</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>${project.groupId}</groupId>
             <artifactId>vis-runtime-spine</artifactId>
             <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.badlogicgames.gdx</groupId>
-            <artifactId>gdx</artifactId>
         </dependency>
     </dependencies>
 </project>

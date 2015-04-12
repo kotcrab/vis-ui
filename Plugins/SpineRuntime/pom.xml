@@ -23,11 +23,13 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>vis-runtime</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.badlogicgames.gdx</groupId>
             <artifactId>gdx</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
