@@ -17,37 +17,31 @@
 package com.kotcrab.vis.editor.serializer;
 
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.scene.TextObject;
 
-public class TextObjectSerializer extends Serializer<TextObject> {
-	private Serializer defaultSerializer;
+public class TextObjectSerializer extends CompatibleFieldSerializer<TextObject> {
 	private FileAccessModule fileAccess;
 	private final FontCacheModule fontCache;
 
 	public TextObjectSerializer (Kryo kryo, FileAccessModule fileAccess, FontCacheModule fontCache) {
+		super(kryo, TextObject.class);
 		this.fileAccess = fileAccess;
 		this.fontCache = fontCache;
-		defaultSerializer = kryo.getSerializer(TextObject.class);
 	}
 
 	@Override
 	public void write (Kryo kryo, Output output, TextObject textObject) {
-		kryo.setReferences(false);
-		kryo.writeObject(output, textObject, defaultSerializer);
-		kryo.setReferences(true);
+		super.write(kryo, output, textObject);
 	}
 
 	@Override
 	public TextObject read (Kryo kryo, Input input, Class<TextObject> type) {
-		kryo.setReferences(false);
-		TextObject obj = kryo.readObject(input, TextObject.class, defaultSerializer);
-		kryo.setReferences(true);
-
+		TextObject obj = super.read(kryo, input, type);
 		obj.onDeserialize(fontCache.get(fileAccess.getAssetsFolder().child(obj.getAssetPath())));
 		return obj;
 	}

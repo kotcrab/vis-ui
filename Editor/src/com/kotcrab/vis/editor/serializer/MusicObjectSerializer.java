@@ -19,43 +19,35 @@ package com.kotcrab.vis.editor.serializer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.scene.MusicObject;
 
-public class MusicObjectSerializer extends Serializer<MusicObject> {
-	private Serializer defaultSerializer;
+public class MusicObjectSerializer extends CompatibleFieldSerializer<MusicObject> {
 	private FileAccessModule fileAccess;
 
 	public MusicObjectSerializer (Kryo kryo, FileAccessModule fileAccess) {
+		super(kryo, MusicObject.class);
 		this.fileAccess = fileAccess;
-		defaultSerializer = kryo.getSerializer(MusicObject.class);
 	}
 
 	@Override
 	public void write (Kryo kryo, Output output, MusicObject musicObj) {
-		kryo.setReferences(false);
+		super.write(kryo, output, musicObj);
 
-		kryo.writeObject(output, musicObj, defaultSerializer);
 		output.writeBoolean(musicObj.isLooping());
 		output.writeFloat(musicObj.getVolume());
-
-		kryo.setReferences(true);
 	}
 
 	@Override
 	public MusicObject read (Kryo kryo, Input input, Class<MusicObject> type) {
-		kryo.setReferences(false);
-
-		MusicObject obj = kryo.readObject(input, MusicObject.class, defaultSerializer);
+		MusicObject obj = super.read(kryo, input, type);
 
 		obj.onDeserialize(getNewMusicInstance(obj));
 		obj.setLooping(input.readBoolean());
 		obj.setVolume(input.readFloat());
-
-		kryo.setReferences(true);
 
 		return obj;
 	}

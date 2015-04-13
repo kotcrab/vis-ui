@@ -18,46 +18,36 @@ package com.kotcrab.vis.editor.serializer;
 
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.editor.scene.ParticleObject;
 
-public class ParticleObjectSerializer extends Serializer<ParticleObject> {
-	private Serializer defaultSerializer;
+public class ParticleObjectSerializer extends CompatibleFieldSerializer<ParticleObject> {
 	private FileAccessModule fileAccess;
 	private ParticleCacheModule particleCache;
 
 	public ParticleObjectSerializer (Kryo kryo, FileAccessModule fileAccess, ParticleCacheModule particleCache) {
+		super(kryo, ParticleObject.class);
 		this.fileAccess = fileAccess;
 		this.particleCache = particleCache;
-
-		defaultSerializer = kryo.getSerializer(ParticleObject.class);
 	}
 
 	@Override
 	public void write (Kryo kryo, Output output, ParticleObject obj) {
-		kryo.setReferences(false);
-
-		kryo.writeObject(output, obj, defaultSerializer);
+		super.write(kryo, output, obj);
 		output.writeFloat(obj.getX());
 		output.writeFloat(obj.getY());
-
-		kryo.setReferences(true);
 	}
 
 	@Override
 	public ParticleObject read (Kryo kryo, Input input, Class<ParticleObject> type) {
-		kryo.setReferences(false);
-
-		ParticleObject obj = kryo.readObject(input, ParticleObject.class, defaultSerializer);
+		ParticleObject obj = super.read(kryo, input, type);
 
 		ParticleEffect effect = getNewEffect(obj);
 		obj.onDeserialize(effect, input.readFloat(), input.readFloat());
-
-		kryo.setReferences(true);
 
 		return obj;
 	}

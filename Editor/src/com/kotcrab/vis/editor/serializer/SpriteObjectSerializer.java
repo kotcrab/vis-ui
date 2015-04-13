@@ -19,27 +19,23 @@ package com.kotcrab.vis.editor.serializer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 
-public class SpriteObjectSerializer extends Serializer<SpriteObject> {
-	private Serializer defaultSerializer;
+public class SpriteObjectSerializer extends CompatibleFieldSerializer<SpriteObject> {
 	private TextureCacheModule textureCache;
 
 	public SpriteObjectSerializer (Kryo kryo, TextureCacheModule textureCache) {
+		super(kryo, SpriteObject.class);
 		this.textureCache = textureCache;
-
-		defaultSerializer = kryo.getSerializer(SpriteObject.class);
 	}
 
 	@Override
 	public void write (Kryo kryo, Output output, SpriteObject obj) {
-		kryo.setReferences(false);
-
-		kryo.writeObject(output, obj, defaultSerializer);
+		super.write(kryo, output, obj);
 
 		output.writeFloat(obj.getX());
 		output.writeFloat(obj.getY());
@@ -59,15 +55,11 @@ public class SpriteObjectSerializer extends Serializer<SpriteObject> {
 
 		output.writeBoolean(obj.isFlipX());
 		output.writeBoolean(obj.isFlipY());
-
-		kryo.setReferences(true);
 	}
 
 	@Override
 	public SpriteObject read (Kryo kryo, Input input, Class<SpriteObject> type) {
-		kryo.setReferences(false);
-
-		SpriteObject obj = kryo.readObject(input, SpriteObject.class, defaultSerializer);
+		SpriteObject obj = super.read(kryo, input, type);
 		obj.onDeserialize(textureCache.getRegion(obj.getAssetPath()));
 
 		obj.setPosition(input.readFloat(), input.readFloat());
@@ -78,8 +70,6 @@ public class SpriteObjectSerializer extends Serializer<SpriteObject> {
 		obj.setColor(kryo.readObject(input, Color.class));
 		obj.setFlip(input.readBoolean(), input.readBoolean());
 
-		kryo.setReferences(true);
-
 		return obj;
 	}
 
@@ -87,5 +77,4 @@ public class SpriteObjectSerializer extends Serializer<SpriteObject> {
 	public SpriteObject copy (Kryo kryo, SpriteObject original) {
 		return new SpriteObject(original, new Sprite(original.getSprite()));
 	}
-
 }

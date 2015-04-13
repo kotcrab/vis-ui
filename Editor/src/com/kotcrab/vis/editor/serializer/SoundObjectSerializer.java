@@ -19,34 +19,29 @@ package com.kotcrab.vis.editor.serializer;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.scene.SoundObject;
 
-public class SoundObjectSerializer extends Serializer<SoundObject> {
-	private Serializer defaultSerializer;
+public class SoundObjectSerializer extends CompatibleFieldSerializer<SoundObject> {
 	private FileAccessModule fileAccess;
 
 	public SoundObjectSerializer (Kryo kryo, FileAccessModule fileAccess) {
+		super(kryo, SoundObject.class);
 		this.fileAccess = fileAccess;
-		defaultSerializer = kryo.getSerializer(SoundObject.class);
 	}
 
 	@Override
 	public void write (Kryo kryo, Output output, SoundObject musicObj) {
-		kryo.setReferences(false);
-		kryo.writeObject(output, musicObj, defaultSerializer);
-		kryo.setReferences(true);
+		super.write(kryo, output, musicObj);
 	}
 
 	@Override
 	public SoundObject read (Kryo kryo, Input input, Class<SoundObject> type) {
-		kryo.setReferences(false);
-		SoundObject obj = kryo.readObject(input, SoundObject.class, defaultSerializer);
+		SoundObject obj = super.read(kryo, input, type);
 		obj.onDeserialize(getNewSoundInstance(obj));
-		kryo.setReferences(true);
 		return obj;
 	}
 
