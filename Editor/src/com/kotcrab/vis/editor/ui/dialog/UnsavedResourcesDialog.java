@@ -113,13 +113,17 @@ public class UnsavedResourcesDialog extends VisWindow {
 		unsavedTabs.get(index).save();
 		rebuildUnsavedResourcesList();
 
-		if (tabList.getItems().size == 0)
+		if (tabList.getItems().size == 0) {
 			listener.finished();
+			fadeOut();
+		}
 	}
 
 	private void saveAll () {
 		for (Tab tab : unsavedTabs)
 			tab.save();
+
+		fadeOut();
 	}
 
 	private void rebuildUnsavedResourcesList () {
