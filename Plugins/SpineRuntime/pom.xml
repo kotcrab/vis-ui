@@ -18,6 +18,13 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <licenses>
+        <license>
+            <name>Spine Runtimes Software License</name>
+            <url>https://github.com/EsotericSoftware/spine-runtimes/blob/master/LICENSE</url>
+        </license>
+    </licenses>
+
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
