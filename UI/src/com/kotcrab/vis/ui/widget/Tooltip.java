@@ -138,10 +138,8 @@ public class Tooltip extends VisTable {
 	}
 
 	private void fadeOut () {
-		if (getActions().size == 0) {
-			clearActions();
-			addAction(Actions.sequence(Actions.fadeOut(fadeTime, Interpolation.fade), Actions.removeActor()));
-		}
+		clearActions();
+		addAction(Actions.sequence(Actions.fadeOut(fadeTime, Interpolation.fade), Actions.removeActor()));
 	}
 
 	private VisTable fadeIn () {
