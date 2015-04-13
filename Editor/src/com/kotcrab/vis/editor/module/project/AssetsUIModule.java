@@ -59,8 +59,8 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.WatchListener, TabbedPaneListener {
 	private TabsModule tabsModule;
 	private QuickAccessModule quickAccessModule;
-	private ObjectSupportModule supportModule;
 
+	private ObjectSupportModule supportModule;
 	private SceneTabsModule sceneTabsModule;
 	private SceneIOModule sceneIO;
 	private FileAccessModule fileAccess;
@@ -103,8 +103,8 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	private void initModule () {
 		tabsModule = container.get(TabsModule.class);
 		quickAccessModule = container.get(QuickAccessModule.class);
-		supportModule = container.get(ObjectSupportModule.class);
 
+		supportModule = projectContainer.get(ObjectSupportModule.class);
 		sceneTabsModule = projectContainer.get(SceneTabsModule.class);
 		sceneIO = projectContainer.get(SceneIOModule.class);
 		fileAccess = projectContainer.get(FileAccessModule.class);
@@ -460,8 +460,8 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		}
 
 		private ObjectSupport findSupportForDirectory (String ext, String relativePath) {
-			for (ObjectSupport support : supportModule.getSupports().values())
-				if (support.isSupportedDirecotry(ext, relativePath)) return support;
+			for (ObjectSupport support : supportModule.getSupports())
+				if (support.isSupportedDirectory(ext, relativePath)) return support;
 
 			return null;
 		}

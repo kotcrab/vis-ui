@@ -168,7 +168,7 @@ public class AssetDragAndDrop {
 		}
 
 		if (item.type == FileType.NON_STANDARD) {
-			dragAndDrop.addSource(item.support.createSource(dragAndDrop, item.file));
+			dragAndDrop.addSource(item.support.createDropSource(dragAndDrop, item.file));
 		}
 	}
 

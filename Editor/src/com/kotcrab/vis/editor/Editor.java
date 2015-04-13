@@ -30,7 +30,6 @@ import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.editor.*;
-import com.kotcrab.vis.editor.module.physicseditor.PhysicsEditorTab;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.InputModule;
@@ -137,7 +136,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 				projectMC.get(SceneTabsModule.class).open(testScene);
 			}
 
-			editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
+			//editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
 		}
 		//debug end
 
@@ -161,7 +160,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(projectIO = new ProjectIOModule());
 		editorMC.add(inputModule = new InputModule(mainContentTable));
 
-		editorMC.add(new ObjectSupportModule());
 		editorMC.add(new ColorPickerModule());
 		editorMC.add(fileChooser = new FileChooserModule());
 		editorMC.add(new MenuBarModule(projectMC));
@@ -350,6 +348,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.add(new TextureCacheModule());
 		projectMC.add(new FontCacheModule());
 		projectMC.add(new ParticleCacheModule());
+		projectMC.add(new ObjectSupportModule());
 		projectMC.add(new ExportModule());
 		projectMC.add(new SceneIOModule());
 		projectMC.add(new SceneMetadataModule());

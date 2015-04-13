@@ -24,23 +24,23 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
+import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
+import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.Log;
-import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.data.*;
+import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
 
 public class ExportModule extends ProjectModule {
-	private FileAccessModule fileAccess;
 	private SceneIOModule sceneIO;
-	private FontCacheModule fontCache;
+	private ObjectSupportModule supportModule;
 
 	private FileHandle visAssetsDir;
 
@@ -51,9 +51,8 @@ public class ExportModule extends ProjectModule {
 
 	@Override
 	public void init () {
-		fileAccess = projectContainer.get(FileAccessModule.class);
+		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
 		sceneIO = projectContainer.get(SceneIOModule.class);
-		fontCache = projectContainer.get(FontCacheModule.class);
 
 		visAssetsDir = fileAccess.getAssetsFolder();
 
@@ -282,6 +281,13 @@ public class ExportModule extends ProjectModule {
 						exportEntity(entities, object);
 				}
 
+				return true;
+			}
+
+			ObjectSupport support = supportModule.get(entity.getClass());
+
+			if (support != null) {
+				support.export(ExportModule.this, entities, (Entity) entity);
 				return true;
 			}
 

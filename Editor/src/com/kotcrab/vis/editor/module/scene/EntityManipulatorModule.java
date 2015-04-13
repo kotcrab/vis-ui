@@ -25,26 +25,22 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.ObjectGroup;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 
 public class EntityManipulatorModule extends SceneModule {
-	private Stage stage;
-
 	private CameraModule camera;
 	private UndoModule undoModule;
 	private SceneIOModule sceneIOModule;
@@ -78,7 +74,6 @@ public class EntityManipulatorModule extends SceneModule {
 
 	@Override
 	public void init () {
-		stage = Editor.instance.getStage();
 		this.entities = scene.entities;
 
 		createPopupMenu();
@@ -88,13 +83,18 @@ public class EntityManipulatorModule extends SceneModule {
 		undoModule = sceneContainer.get(UndoModule.class);
 		sceneIOModule = projectContainer.get(SceneIOModule.class);
 
-		ObjectSupportModule supportManager = container.get(ObjectSupportModule.class);
+		ObjectSupportModule supportManager = projectContainer.get(ObjectSupportModule.class);
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
 		ColorPickerModule pickerModule = container.get(ColorPickerModule.class);
 		FontCacheModule fontCacheModule = projectContainer.get(FontCacheModule.class);
 		entityProperties = new EntityProperties(supportManager, fileAccess, fontCacheModule, undoModule, pickerModule.getPicker(), sceneTab, selectedEntities);
 
 		rectangularSelection = new RectangularSelection(entities, this);
+	}
+
+	@Override
+	public void postInit () {
+		entityProperties.loadSupportsSpecificTables(projectContainer.get(ObjectSupportModule.class));
 	}
 
 	@Override

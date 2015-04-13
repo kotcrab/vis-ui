@@ -49,9 +49,13 @@ public class FileAccessModule extends ProjectModule {
 		return visFolder;
 	}
 
-	/** Returns Vis assets folder */
+	/** @return assets folder inside vis directory */
 	public FileHandle getAssetsFolder () {
 		return assetsFolder;
+	}
+
+	public FileHandle getModuleFolder () {
+		return modulesFolder;
 	}
 
 	public FileHandle getModuleFolder (String moduleName) {

@@ -25,6 +25,10 @@ public abstract class BaseModule implements Disposable {
 	public void init () {
 	}
 
+	public void postInit () {
+
+	}
+
 	public void resize () {
 	}
 

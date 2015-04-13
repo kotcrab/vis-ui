@@ -3,25 +3,44 @@ package com.kotcrab.vis.editor.plugin;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
+import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Serializer;
+import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.ContentItemProperties;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.SpecificObjectTable;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.entity.Entity;
 
-public interface ObjectSupport<ED extends EntityData, E extends Entity & EditorObject> {
-	Class<E> getObjectClass ();
+public abstract class ObjectSupport<ED extends EntityData, E extends Entity & EditorObject> {
+	private int id = -1;
 
-	ED getEmptyData ();
+	public abstract Class<E> getObjectClass ();
 
-	boolean isSupportedDirecotry(String extension, String relativePath);
+	public abstract ED getEmptyData ();
 
-	ContentItemProperties getContentItemProperties ();
+	public abstract boolean isSupportedDirectory (String extension, String relativePath);
 
-	Source createSource(DragAndDrop dragAndDrop, FileHandle file);
+	public abstract ContentItemProperties getContentItemProperties ();
 
-	Serializer<E> getSerializer ();
+	public abstract Source createDropSource (DragAndDrop dragAndDrop, FileHandle file);
 
-	SpecificObjectTable getObjectTable();
+	public abstract Serializer<E> getSerializer ();
+
+	public abstract SpecificObjectTable getObjectTable ();
+
+	public abstract void export (ExportModule module, Array<EntityData> entities, E entity);
+
+	public abstract boolean canAnalyze(FileHandle file, String relativePath);
+
+	public void assignId (int id) {
+		if (this.id != -1) throw new IllegalStateException("Id was already assigned to this support!");
+		this.id = id;
+	}
+
+	public int getId () {
+		if (id == -1) throw new IllegalStateException("Id wasn't assigned yet for this support!");
+		return id;
+	}
+
 }

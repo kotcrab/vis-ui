@@ -37,6 +37,9 @@ public class BaseModuleContainer<T extends BaseModule> {
 		for (int i = 0; i < modules.size; i++)
 			modules.get(i).init();
 
+		for (int i = 0; i < modules.size; i++)
+			modules.get(i).postInit();
+
 		long end = System.currentTimeMillis();
 		long delta = end - start;
 

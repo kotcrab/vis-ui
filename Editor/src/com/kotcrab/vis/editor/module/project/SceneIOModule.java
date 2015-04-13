@@ -27,6 +27,8 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
+import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.serializer.*;
 import com.kotcrab.vis.editor.util.Log;
@@ -55,6 +57,13 @@ public class SceneIOModule extends ProjectModule {
 
 		kryo = new Kryo();
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
+
+		//id config:
+		//0-8 kryo primitives
+		//10-29 custom base types
+		//30-60 entities support
+		//60-100 plugins
+
 		kryo.register(Array.class, new ArraySerializer(), 10);
 		kryo.register(Rectangle.class, 11);
 		kryo.register(TextBounds.class, 12);
@@ -66,6 +75,14 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(SoundObject.class, new SoundObjectSerializer(kryo, fileAccessModule), 32);
 		kryo.register(ParticleObject.class, new ParticleObjectSerializer(kryo, fileAccessModule, particleCache), 33);
 		kryo.register(TextObject.class, new TextObjectSerializer(kryo, fileAccessModule, fontCache), 34);
+	}
+
+	@Override
+	public void postInit () {
+		ObjectSupportModule supportModule = projectContainer.get(ObjectSupportModule.class);
+
+		for (ObjectSupport support : supportModule.getSupports())
+			kryo.register(support.getObjectClass(), support.getSerializer(), support.getId());
 	}
 
 	public Kryo getKryo () {
