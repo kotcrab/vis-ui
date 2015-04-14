@@ -55,6 +55,13 @@ public class GridGroup extends WidgetGroup {
 		prefWidth = getWidth();
 		prefHeight = 0;
 		sizeInvalid = false;
+
+		if (getChildren().size == 0) {
+			prefWidth = 0;
+			prefHeight = 0;
+			return;
+		}
+
 		float width = getWidth();
 
 		float maxHeight = 0;
