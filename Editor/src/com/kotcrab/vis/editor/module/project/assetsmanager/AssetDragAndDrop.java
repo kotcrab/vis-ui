@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project;
+package com.kotcrab.vis.editor.module.project.assetsmanager;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -29,8 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.module.project.AssetsUIModule.FileItem;
-import com.kotcrab.vis.editor.module.project.AssetsUIModule.FileType;
+import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.FileUtils;
@@ -74,17 +73,17 @@ public class AssetDragAndDrop {
 	}
 
 	private void addSource (FileItem item) {
-		if (item.type == FileType.TEXTURE) {
+		if (item.getType() == FileType.TEXTURE) {
 			dragAndDrop.addSource(new Source(item) {
 				@Override
 				public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 					Payload payload = new Payload();
-					String relativePath = fileAccess.relativizeToAssetsFolder(item.file);
+					String relativePath = fileAccess.relativizeToAssetsFolder(item.getFile());
 
 					SpriteObject object = new SpriteObject(relativePath, textureCache.getRegion(relativePath), 0, 0);
 					payload.setObject(object);
 
-					Image img = new Image(item.region);
+					Image img = new Image(item.getRegion());
 					payload.setDragActor(img);
 
 					float invZoom = 1.0f / dropTarget.getCameraZoom();
@@ -96,14 +95,14 @@ public class AssetDragAndDrop {
 			});
 		}
 
-		if (item.type == FileType.TTF_FONT) {
+		if (item.getType() == FileType.TTF_FONT) {
 			dragAndDrop.addSource(new Source(item) {
 				@Override
 				public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 					Payload payload = new Payload();
 
 					int size = FontCacheModule.DEFAULT_FONT_SIZE;
-					EditorFont font = fontCache.get(item.file);
+					EditorFont font = fontCache.get(item.getFile());
 					BitmapFont bmpFont = font.get(size);
 
 					TextObject text = new TextObject(font, bmpFont, FontCacheModule.DEFAULT_TEXT, size);
@@ -122,7 +121,7 @@ public class AssetDragAndDrop {
 			});
 		}
 
-		if (item.type == FileType.BMP_FONT_FILE || item.type == FileType.BMP_FONT_TEXTURE) {
+		if (item.getType() == FileType.BMP_FONT_FILE || item.getType() == FileType.BMP_FONT_TEXTURE) {
 			dragAndDrop.addSource(new Source(item) {
 				@Override
 				public Payload dragStart (InputEvent event, float x, float y, int pointer) {
@@ -130,10 +129,10 @@ public class AssetDragAndDrop {
 
 					FileHandle fontFile;
 
-					if (item.type == FileType.BMP_FONT_FILE)
-						fontFile = item.file;
+					if (item.getType() == FileType.BMP_FONT_FILE)
+						fontFile = item.getFile();
 					else
-						fontFile = FileUtils.sibling(item.file, "fnt");
+						fontFile = FileUtils.sibling(item.getFile(), "fnt");
 
 					BMPEditorFont font = (BMPEditorFont) fontCache.get(fontFile);
 
@@ -153,23 +152,23 @@ public class AssetDragAndDrop {
 			});
 		}
 
-		if (item.type == FileType.PARTICLE_EFFECT) {
+		if (item.getType() == FileType.PARTICLE_EFFECT) {
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Particle Effect \n (drop on scene to add)")
-					.setObjectProvider(() -> new ParticleObject(fileAccess.relativizeToAssetsFolder(item.file), particleCache.get(item.file))));
+					.setObjectProvider(() -> new ParticleObject(fileAccess.relativizeToAssetsFolder(item.getFile()), particleCache.get(item.getFile()))));
 		}
 
-		if (item.type == FileType.MUSIC) {
+		if (item.getType() == FileType.MUSIC) {
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Music \n (drop on scene to add)").disposeOnNullTarget()
-					.setObjectProvider(() -> new MusicObject(fileAccess.relativizeToAssetsFolder(item.file), Gdx.audio.newMusic(item.file))));
+					.setObjectProvider(() -> new MusicObject(fileAccess.relativizeToAssetsFolder(item.getFile()), Gdx.audio.newMusic(item.getFile()))));
 		}
 
-		if (item.type == FileType.SOUND) {
+		if (item.getType() == FileType.SOUND) {
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Sound \n (drop on scene to add)").disposeOnNullTarget()
-					.setObjectProvider(() -> new SoundObject(fileAccess.relativizeToAssetsFolder(item.file), Gdx.audio.newSound(item.file))));
+					.setObjectProvider(() -> new SoundObject(fileAccess.relativizeToAssetsFolder(item.getFile()), Gdx.audio.newSound(item.getFile()))));
 		}
 
-		if (item.type == FileType.NON_STANDARD) {
-			dragAndDrop.addSource(item.support.createDropSource(dragAndDrop, item.file));
+		if (item.getType() == FileType.NON_STANDARD) {
+			dragAndDrop.addSource(item.getSupport().createDropSource(dragAndDrop, item.getFile()));
 		}
 	}
 

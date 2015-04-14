@@ -31,6 +31,7 @@ import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.InputModule;
 import com.kotcrab.vis.editor.scene.EditorScene;

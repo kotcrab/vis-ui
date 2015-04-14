@@ -14,29 +14,23 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.tab;
+package com.kotcrab.vis.editor.module.project.assetsmanager;
 
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisLabel;
 
-public class TextureAtlasViewTab extends Tab {
-	private TextureAtlas atlas;
-	private String name;
+public class FolderItem extends Table {
+	public FileHandle file;
+	private VisLabel name;
 
-	public TextureAtlasViewTab (TextureAtlas atlas, String name) {
-		super(false, true);
-		this.atlas = atlas;
-		this.name = name;
-	}
-
-	@Override
-	public String getTabTitle () {
-		return name;
-	}
-
-	@Override
-	public Table getContentTable () {
-		return null;
+	public FolderItem (FileHandle file) {
+		this.file = file;
+		name = new VisLabel(file.name(), "small");
+		name.setEllipsis(true);
+		add(new Image(VisUI.getSkin().getDrawable("icon-folder"))).size(20).padTop(3);
+		add(name).expand().fill().padRight(6);
 	}
 }
