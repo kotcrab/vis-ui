@@ -230,10 +230,13 @@ public class DirectoryWatcher {
 	}
 
 	public interface WatchListener {
-		public void fileChanged (FileHandle file);
+		default void fileChanged (FileHandle file) {
+		}
 
-		public void fileDeleted (FileHandle file);
+		default void fileDeleted (FileHandle file) {
+		}
 
-		public void fileCreated (FileHandle file);
+		default void fileCreated (FileHandle file) {
+		}
 	}
 }

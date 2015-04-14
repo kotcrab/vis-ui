@@ -78,4 +78,17 @@ public class FileUtils {
 			return false;
 		}
 	}
+
+	/**
+	 * Checks whether sibling with extension exists for provided file. Eg .in directory there are 2 files: game.atlas and game.png, calling
+	 * siblingExists(Gdx.files.internal("game.atlas"), "png") would return true.
+	 */
+	public static boolean siblingExists (FileHandle file, String siblingExtension) {
+		return sibling(file, siblingExtension).exists();
+	}
+
+	/** Returns sibling file with provided extension eg. sibling(Gdx.files.internal("game.atlas"), "png") would return Gdx.files.internal("game.png") */
+	public static FileHandle sibling (FileHandle file, String siblingExtension) {
+		return file.sibling(file.nameWithoutExtension() + "." + siblingExtension);
+	}
 }

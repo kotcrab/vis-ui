@@ -30,22 +30,24 @@ import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.plugin.ObjectSupport;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.ContentItemProperties;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
+import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.ui.SearchField;
 import com.kotcrab.vis.editor.ui.dialog.DeleteDialog;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.ContentItemProperties;
 import com.kotcrab.vis.editor.ui.tab.AssetsUsageTab;
+import com.kotcrab.vis.editor.ui.tab.TextureAtlasViewTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.DirectoriesOnlyFileFilter;
-import com.kotcrab.vis.editor.util.DirectoryWatcher;
+import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
+import com.kotcrab.vis.editor.util.ProjectPathUtils;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.layout.GridGroup;
@@ -54,9 +56,8 @@ import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
-//TODO filter particle images and bitmap font images
 //TODO this probably shouldn't be a module, should extend tab and should be loaded when project is loaded
-public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.WatchListener, TabbedPaneListener {
+public class AssetsUIModule extends ProjectModule implements WatchListener, TabbedPaneListener {
 	private TabsModule tabsModule;
 	private QuickAccessModule quickAccessModule;
 
@@ -80,7 +81,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	private VisTable toolbarTable;
 	private VisTree contentTree;
 	private VisLabel contentTitleLabel;
-	private VisTextField searchTextField;
+	private SearchField searchField;
 
 	private AssetsTab assetsTab;
 
@@ -158,7 +159,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 
 	private void createToolbarTable () {
 		contentTitleLabel = new VisLabel("Content");
-		searchTextField = new VisTextField();
+		searchField = new SearchField();
 
 		VisImageButton exploreButton = new VisImageButton(Assets.getIcon(Icons.FOLDER_OPEN), "Explore");
 		VisImageButton settingsButton = new VisImageButton(Assets.getIcon(Icons.SETTINGS_VIEW), "Change view");
@@ -168,9 +169,7 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		toolbarTable.add(exploreButton);
 		toolbarTable.add(settingsButton);
 		toolbarTable.add(importButton);
-		toolbarTable.add(new Image(Assets.getIcon(Icons.SEARCH))).spaceRight(3);
-
-		toolbarTable.add(searchTextField).width(200);
+		toolbarTable.add(searchField);
 
 		exploreButton.addListener(new ChangeListener() {
 			@Override
@@ -179,15 +178,15 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 			}
 		});
 
-		searchTextField.addListener(new InputListener() {
+		searchField.addListener(new InputListener() {
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
 				refreshFilesList();
 
 				if (filesDisplayed == 0)
-					searchTextField.setInputValid(false);
+					searchField.setInputValid(false);
 				else
-					searchTextField.setInputValid(true);
+					searchField.setInputValid(true);
 
 				return false;
 			}
@@ -206,8 +205,8 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 				Node node = contentTree.getSelection().first();
 
 				if (node != null) {
-					searchTextField.setText("");
-					searchTextField.setInputValid(true);
+					searchField.setText("");
+					searchField.setInputValid(true);
 
 					FolderItem item = (FolderItem) node.getActor();
 					changeCurrentDirectory(item.file);
@@ -229,21 +228,22 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 		filesDisplayed = 0;
 
 		FileHandle[] files = directory.list(file -> {
-			if (searchTextField.getText().equals("")) return true;
+			if (searchField.getText().equals("")) return true;
 
-			return file.getName().contains(searchTextField.getText());
+			return file.getName().contains(searchField.getText());
 		});
-
-		Array<Actor> actors = new Array<>(files.length);
 
 		for (FileHandle file : files) {
 			if (file.isDirectory() == false) {
-				final FileItem item = new FileItem(file);
-				actors.add(item);
-				filesDisplayed++;
+				String relativePath = fileAccess.relativizeToAssetsFolder(file);
+				String ext = file.extension();
 
-				for (int i = 0; i < actors.size; i++)
-					filesView.addActor(actors.get(i));
+				//TODO filter particle images and bitmap font images
+
+				if (relativePath.startsWith("atlas") && (ext.equals("png") || ext.equals("jpg"))) continue;
+
+				filesView.addActor(new FileItem(file));
+				filesDisplayed++;
 			}
 		}
 
@@ -288,6 +288,11 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 			sceneTabsModule.open(scene);
 			return;
 		}
+
+		if (file.extension().equals("atlas")) {
+			quickAccessModule.addTab(new TextureAtlasViewTab(textureCache.getAtlas(fileAccess.relativizeToAssetsFolder(file)), file.name()));
+			return;
+		}
 	}
 
 	private boolean isOpenSupported (String extension) {
@@ -313,10 +318,6 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	}
 
 	@Override
-	public void fileCreated (FileHandle file) {
-	}
-
-	@Override
 	public void switchedTab (Tab tab) {
 		if (tab instanceof DragAndDropTarget) {
 			assetDragAndDrop.setDropTarget((DragAndDropTarget) tab);
@@ -334,16 +335,15 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 	}
 
 	enum FileType {
-		UNKNOWN, TEXTURE, TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE, MUSIC, SOUND, PARTICLE_EFFECT, NON_STANDARD
+		UNKNOWN, TEXTURE, TEXTURE_ATLAS, TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE, MUSIC, SOUND, PARTICLE_EFFECT, NON_STANDARD
 	}
 
 	private class AssetsPopupMenu extends PopupMenu {
 		void build (FileItem item) {
 			clearChildren();
 
-			if (isOpenSupported(item.file.extension())) {
+			if (isOpenSupported(item.file.extension()))
 				addItem(MenuUtils.createMenuItem("Open", () -> openFile(item.file)));
-			}
 
 			addItem(MenuUtils.createMenuItem("Copy", () -> DialogUtils.showOKDialog(getStage(), "Message", "Not implemented yet!")));
 			addItem(MenuUtils.createMenuItem("Paste", () -> DialogUtils.showOKDialog(getStage(), "Message", "Not implemented yet!")));
@@ -402,8 +402,11 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 			String ext = file.extension();
 			String relativePath = fileAccess.relativizeToAssetsFolder(file);
 
-			if (relativePath.startsWith("gfx") && (ext.equals("jpg") || ext.equals("png"))) {
-				type = FileType.TEXTURE;
+			boolean texture = ProjectPathUtils.isTexture(relativePath, ext);
+			boolean atlas = ProjectPathUtils.isTextureAtlas(file, relativePath);
+
+			if (texture || atlas) {
+				type = texture ? FileType.TEXTURE : FileType.TEXTURE_ATLAS;
 
 				name = new VisLabel(file.nameWithoutExtension(), "small");
 				TextureRegion region = textureCache.getRegion(relativePath);
@@ -422,12 +425,12 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 				return;
 			}
 
-			if (ext.equals("fnt") && file.sibling(file.nameWithoutExtension() + ".png").exists()) {
+			if (ext.equals("fnt") && FileUtils.siblingExists(file, "png")) {
 				createDefaultView(FileType.BMP_FONT_FILE, "BMP Font", true);
 				return;
 			}
 
-			if (ext.equals("png") && file.sibling(file.nameWithoutExtension() + ".fnt").exists()) {
+			if (ext.equals("png") && FileUtils.siblingExists(file, "fnt")) {
 				createDefaultView(FileType.BMP_FONT_TEXTURE, "BMP Font Texture", true);
 				return;
 			}
@@ -498,12 +501,11 @@ public class AssetsUIModule extends ProjectModule implements DirectoryWatcher.Wa
 
 					if (getTapCount() == 2) openFile(file);
 				}
-
 			});
 		}
 	}
 
-	private class FolderItem extends Table {
+	private static class FolderItem extends Table {
 		public FileHandle file;
 		private VisLabel name;
 

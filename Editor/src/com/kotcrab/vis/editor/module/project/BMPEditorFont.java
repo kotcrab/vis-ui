@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.kotcrab.vis.editor.util.FileUtils;
 
 public class BMPEditorFont extends EditorFont {
 	private BitmapFont font;
@@ -28,7 +29,7 @@ public class BMPEditorFont extends EditorFont {
 	public BMPEditorFont (FileHandle file, String relativePath) {
 		super(file, relativePath);
 
-		Texture texture = new Texture(file.sibling(file.nameWithoutExtension() + ".png"), true);
+		Texture texture = new Texture(FileUtils.sibling(file, "png"), true);
 		texture.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.Linear);
 
 		font = new BitmapFont(file, new TextureRegion(texture), false);

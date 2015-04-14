@@ -32,35 +32,37 @@ import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.util.ProjectPathUtils;
 
 public class TextureCacheModule extends ProjectModule implements WatchListener {
+	private FileAccessModule fileAccess;
 	private AssetsWatcherModule watcher;
 
 	private String gfxPath;
-	private String outPath;
+	private String cachePath;
 
 	private Settings settings;
-
-	private ObjectMap<String, TextureRegion> regions;
 
 	private TextureRegion loadingRegion;
 	private TextureRegion missingRegion;
 
+	private ObjectMap<String, TextureRegion> regions = new ObjectMap<>();
+
 	private FileHandle cacheFile;
+	private FileHandle atlasesFolder;
 	private TextureAtlas cache;
 
-	private Timer waitTimer;
+	private ObjectMap<String, TextureAtlas> atlases = new ObjectMap<>();
+
+	private Timer cacheWaitTimer = new Timer();
+	private Timer atlasWaitTimer = new Timer();
 
 	private boolean firstReload = true;
 
 	@Override
 	public void init () {
-		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
+		fileAccess = projectContainer.get(FileAccessModule.class);
 		watcher = projectContainer.get(AssetsWatcherModule.class);
-
-		regions = new ObjectMap<>();
-
-		waitTimer = new Timer();
 
 		settings = new Settings();
 		settings.combineSubdirectories = true;
@@ -71,15 +73,24 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		missingRegion = Assets.icons.findRegion("file-question-big");
 
 		FileHandle out = fileAccess.getModuleFolder(".textureCache");
-		outPath = out.path();
+		cachePath = out.path();
 		cacheFile = out.child("cache.atlas");
 
 		gfxPath = fileAccess.getAssetsFolder().child("gfx").path();
+		atlasesFolder = fileAccess.getAssetsFolder().child("atlas");
 
 		watcher.addListener(this);
 
 		try {
 			if (cacheFile.exists()) cache = new TextureAtlas(cacheFile);
+
+			if (atlasesFolder.exists()) {
+				FileHandle[] files = atlasesFolder.list();
+
+				for (FileHandle file : files)
+					if (file.extension().equals("atlas"))
+						updateAtlas(file);
+			}
 		} catch (Exception e) {
 			Log.error("Error while loading texture cache, texture cache will be regenerated");
 		}
@@ -88,16 +99,16 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	private void updateCache () {
-		new Thread(this::performUpdate, "TextureCache").start();
+		new Thread(this::packageAndReloadCache, "TextureCache").start();
 	}
 
-	private void performUpdate () {
-		TexturePacker.processIfModified(settings, gfxPath, outPath, "cache");
+	private void packageAndReloadCache () {
+		TexturePacker.processIfModified(settings, gfxPath, cachePath, "cache");
 
-		Gdx.app.postRunnable(this::reloadAtlas);
+		Gdx.app.postRunnable(this::reloadCache);
 	}
 
-	private void reloadAtlas () {
+	private void reloadCache () {
 		if (cacheFile.exists()) {
 			TextureAtlas oldCache = null;
 
@@ -117,7 +128,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 					region.setRegion(newRegion);
 			}
 
-			disposeOldCacheLater(oldCache);
+			disposeCacheLater(oldCache);
 
 			App.eventBus.post(new TexturesReloadedEvent());
 			if (firstReload == false) {
@@ -129,7 +140,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 			Log.error("Texture cache not ready, probably they aren't any textures in project or packer failed");
 	}
 
-	private void disposeOldCacheLater (final TextureAtlas oldCache) {
+	private void disposeCacheLater (final TextureAtlas oldCache) {
 		Timer.instance().scheduleTask(new Task() {
 			@Override
 			public void run () {
@@ -138,49 +149,86 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		}, 0.5f);
 	}
 
+	private void updateAtlas (FileHandle file) {
+		String relativePath = fileAccess.relativizeToAssetsFolder(file);
+
+		TextureAtlas atlas = atlases.get(relativePath);
+		if (atlas != null) {
+			atlases.remove(relativePath);
+			atlas.dispose();
+		}
+
+		if (file.exists()) {
+			atlases.put(relativePath, new TextureAtlas(file));
+			App.eventBus.post(new TexturesReloadedEvent());
+		}
+	}
+
 	@Override
 	public void dispose () {
 		if (cache != null)
 			cache.dispose();
+
+		for (TextureAtlas atlas : atlases.values())
+			atlas.dispose();
+
 		watcher.removeListener(this);
 	}
 
 	@Override
 	public void fileChanged (FileHandle file) {
-		if (file.extension().equals("jpg") || file.extension().equals("png")) {
-			waitTimer.clear();
-			waitTimer.scheduleTask(new Task() {
+		String relativePath = fileAccess.relativizeToAssetsFolder(file);
+
+		if (ProjectPathUtils.isTexture(relativePath, file.extension())) {
+			cacheWaitTimer.clear();
+			cacheWaitTimer.scheduleTask(new Task() {
 				@Override
 				public void run () {
 					updateCache();
 				}
 			}, 0.5f);
 		}
-	}
 
-	@Override
-	public void fileDeleted (FileHandle file) {
-
-	}
-
-	@Override
-	public void fileCreated (FileHandle file) {
-
+		if (ProjectPathUtils.isTextureAtlas(file, relativePath)) {
+			atlasWaitTimer.clear();
+			cacheWaitTimer.scheduleTask(new Task() {
+				@Override
+				public void run () {
+					updateAtlas(file);
+				}
+			}, 0.5f);
+		}
 	}
 
 	public TextureRegion getRegion (String relativePath) {
-		String regionName = relativePath.substring(4, relativePath.length() - 4);
+		if (relativePath.startsWith("gfx")) {
 
-		TextureRegion region = regions.get(regionName);
+			String regionName = relativePath.substring(4, relativePath.length() - 4);
 
-		if (region == null) {
-			if (cache != null) region = cache.findRegion(regionName);
+			TextureRegion region = regions.get(regionName);
 
-			if (region == null) region = new TextureRegion(loadingRegion);
+			if (region == null) {
+				if (cache != null) region = cache.findRegion(regionName);
 
-			regions.put(relativePath, region);
+				if (region == null) region = new TextureRegion(loadingRegion);
+
+				regions.put(relativePath, region);
+			}
+
+			return region;
 		}
 
-		return region;
+		if (relativePath.startsWith("atlas")) {
+			TextureAtlas atlas = atlases.get(relativePath);
+
+			if (atlas == null) return missingRegion;
+			return new TextureRegion(atlas.getTextures().first());
+		}
+
+		throw new IllegalStateException("Invalid texture path!");
+	}
+
+	public TextureAtlas getAtlas (String relativePath) {
+		return atlases.get(relativePath);
 	}
 }
