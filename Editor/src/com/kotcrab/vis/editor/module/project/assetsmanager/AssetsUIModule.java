@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.module.project.assetsmanager;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -25,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
@@ -44,6 +46,7 @@ import com.kotcrab.vis.ui.layout.GridGroup;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
+import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
 public class AssetsUIModule extends ProjectModule implements WatchListener, TabbedPaneListener {
@@ -78,6 +81,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 
 	private AssetsPopupMenu popupMenu;
 
+	private ObjectMap<FileHandle, TextureAtlasViewTab> atlasViews = new ObjectMap<>();
+
 	@Override
 	public void init () {
 		initModule();
@@ -109,6 +114,14 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 		assetsFolder = fileAccess.getAssetsFolder();
 
 		assetDragAndDrop = new AssetDragAndDrop(fileAccess, textureCache, fontCache, particleCache);
+
+		quickAccessModule.addListener(new TabbedPaneAdapter() {
+			@Override
+			public void removedTab (Tab tab) {
+				FileHandle atlasTabFile = atlasViews.findKey(tab, true);
+				if (atlasTabFile != null) atlasViews.remove(atlasTabFile);
+			}
+		});
 	}
 
 	private void initUI () {
@@ -235,7 +248,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 			}
 		}
 
-		assetDragAndDrop.rebuild(filesView.getChildren());
+		assetDragAndDrop.rebuild(filesView.getChildren(), atlasViews.values());
 
 		String currentPath = directory.path().substring(visFolder.path().length() + 1);
 		contentTitleLabel.setText("Content [" + currentPath + "]");
@@ -278,7 +291,19 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 		}
 
 		if (file.extension().equals("atlas")) {
-			quickAccessModule.addTab(new TextureAtlasViewTab(textureCache.getAtlas(fileAccess.relativizeToAssetsFolder(file)), file.name()));
+			TextureAtlasViewTab tab = atlasViews.get(file);
+
+			if (tab == null) {
+				String relativePath = fileAccess.relativizeToAssetsFolder(file);
+				TextureAtlas atlas = textureCache.getAtlas(relativePath);
+				tab = new TextureAtlasViewTab(relativePath, atlas, file.name());
+				quickAccessModule.addTab(tab);
+				atlasViews.put(file, tab);
+			} else
+				quickAccessModule.switchTab(tab);
+
+			assetDragAndDrop.addSources(tab.getItems());
+
 			return;
 		}
 	}
@@ -309,7 +334,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 	public void switchedTab (Tab tab) {
 		if (tab instanceof DragAndDropTarget) {
 			assetDragAndDrop.setDropTarget((DragAndDropTarget) tab);
-			assetDragAndDrop.rebuild(filesView.getChildren());
+			assetDragAndDrop.rebuild(filesView.getChildren(), atlasViews.values());
 		} else
 			assetDragAndDrop.clear();
 	}
@@ -321,8 +346,6 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 	@Override
 	public void removedAllTabs () {
 	}
-
-
 
 	private class AssetsPopupMenu extends PopupMenu {
 		void build (FileItem item) {
@@ -382,8 +405,6 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 
 		return fileItem;
 	}
-
-
 
 	private class AssetsTab extends Tab {
 		@Override

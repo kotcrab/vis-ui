@@ -19,8 +19,12 @@ package com.kotcrab.vis.editor.ui;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 public class SearchField extends VisTable {
 	private VisTextField searchTextField;
@@ -28,9 +32,17 @@ public class SearchField extends VisTable {
 	public SearchField () {
 		super(true);
 
-		searchTextField = new VisTextField();
+		searchTextField = new VisValidableTextField();
 		add(new Image(Assets.getIcon(Icons.SEARCH))).spaceRight(3);
-		add(searchTextField).width(200);
+		add(searchTextField).width(200).spaceRight(0);
+
+		VisImageButton clearButton = new VisImageButton(VisUI.getSkin().getDrawable("icon-close"));
+		add(clearButton).space(0);
+
+		clearButton.addListener(new VisChangeListener((event, actor) -> {
+			searchTextField.setText("");
+			searchTextField.setInputValid(true);
+		}));
 	}
 
 	public void setText (String str) {

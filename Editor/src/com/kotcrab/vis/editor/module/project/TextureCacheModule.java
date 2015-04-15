@@ -219,10 +219,19 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		}
 
 		if (relativePath.startsWith("atlas")) {
-			TextureAtlas atlas = atlases.get(relativePath);
+			if (relativePath.endsWith(".atlas")) {
+				TextureAtlas atlas = atlases.get(relativePath);
 
-			if (atlas == null) return missingRegion;
-			return new TextureRegion(atlas.getTextures().first());
+				if (atlas == null) return missingRegion;
+				return new TextureRegion(atlas.getTextures().first());
+			} else {
+				String[] paths = relativePath.split("\\*", 2);
+
+				TextureAtlas atlas = atlases.get(paths[0]);
+				TextureRegion region = atlas.findRegion(paths[1]);
+				if (region == null) return missingRegion;
+				return region;
+			}
 		}
 
 		throw new IllegalStateException("Invalid texture path!");

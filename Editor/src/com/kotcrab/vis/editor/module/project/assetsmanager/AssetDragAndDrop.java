@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
@@ -61,7 +62,7 @@ public class AssetDragAndDrop {
 
 	}
 
-	public void rebuild (Array<Actor> actors) {
+	public void rebuild (Array<Actor> actors, Values<TextureAtlasViewTab> atlasesViews) {
 		if (dropTarget != null) {
 			dragAndDrop.clear();
 
@@ -70,6 +71,39 @@ public class AssetDragAndDrop {
 
 			dragAndDrop.addTarget(dropTarget.getDropTarget());
 		}
+
+		for (TextureAtlasViewTab view : atlasesViews) {
+			Array<AtlasItem> items = view.getItems();
+
+			for (AtlasItem item : items)
+				addSource(item);
+		}
+	}
+
+	public void addSources (Array<AtlasItem> items) {
+		for(AtlasItem item : items)
+			addSource(item);
+	}
+
+	private void addSource (AtlasItem item) {
+		dragAndDrop.addSource(new Source(item) {
+			@Override
+			public Payload dragStart (InputEvent event, float x, float y, int pointer) {
+				Payload payload = new Payload();
+
+				SpriteObject object = new SpriteObject(item.getCombinedPath(), textureCache.getRegion(item.getCombinedPath()), 0, 0);
+				payload.setObject(object);
+
+				Image img = new Image(item.getRegion());
+				payload.setDragActor(img);
+
+				float invZoom = 1.0f / dropTarget.getCameraZoom();
+				img.setScale(invZoom);
+				dragAndDrop.setDragActorPosition(-img.getWidth() * invZoom / 2, img.getHeight() - img.getHeight() * invZoom / 2);
+
+				return payload;
+			}
+		});
 	}
 
 	private void addSource (FileItem item) {

@@ -50,11 +50,14 @@ public class FileItem extends Table {
 
 	public FileItem (FileAccessModule fileAccess, ObjectSupportModule supportModule, TextureCacheModule textureCache, FileHandle file) {
 		super(VisUI.getSkin());
-		this.fileAccess = fileAccess;
 		this.supportModule = supportModule;
 		this.textureCache = textureCache;
+		this.fileAccess = fileAccess;
 		this.file = file;
+		init();
+	}
 
+	private void init () {
 		setTouchable(Touchable.enabled);
 
 		createContent();
