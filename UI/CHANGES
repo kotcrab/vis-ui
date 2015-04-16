@@ -1,3 +1,5 @@
+[0.7.3] [LibGDX 1.5.5]
+
 [0.7.2] [LibGDX 1.5.5]
 -API Addition: NumberSelector (String name, int initialValue, int min, int max)
 -API Addition: VisUI.load(Skin)
