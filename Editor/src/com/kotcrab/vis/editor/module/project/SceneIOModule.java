@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -66,9 +65,8 @@ public class SceneIOModule extends ProjectModule {
 
 		kryo.register(Array.class, new ArraySerializer(), 10);
 		kryo.register(Rectangle.class, 11);
-		kryo.register(TextBounds.class, 12);
-		kryo.register(Matrix4.class, 13);
-		kryo.register(Color.class, new ColorSerializer(), 14);
+		kryo.register(Matrix4.class, 12);
+		kryo.register(Color.class, new ColorSerializer(), 13);
 
 		kryo.register(SpriteObject.class, new SpriteObjectSerializer(kryo, textureCache), 30);
 		kryo.register(MusicObject.class, new MusicObjectSerializer(kryo, fileAccessModule), 31);

@@ -95,7 +95,7 @@ public class FileChooser extends VisWindow {
 		this.bundle = VisUI.getFileChooserBundle();
 		this.mode = mode;
 
-		setTitle(getText(TITLE_CHOOSE_FILES));
+		getTitleLabel().setText(getText(TITLE_CHOOSE_FILES));
 
 		init();
 	}
@@ -112,7 +112,7 @@ public class FileChooser extends VisWindow {
 		super("");
 		this.mode = mode;
 		this.bundle = bundle;
-		setTitle(getText(TITLE_CHOOSE_FILES));
+		getTitleLabel().setText(getText(TITLE_CHOOSE_FILES));
 
 		init();
 	}
@@ -676,13 +676,13 @@ public class FileChooser extends VisWindow {
 
 		switch (selectionMode) {
 			case FILES:
-				setTitle(getText(TITLE_CHOOSE_FILES));
+				getTitleLabel().setText(getText(TITLE_CHOOSE_FILES));
 				break;
 			case DIRECTORIES:
-				setTitle(getText(TITLE_CHOOSE_DIRECTORIES));
+				getTitleLabel().setText(getText(TITLE_CHOOSE_DIRECTORIES));
 				break;
 			case FILES_AND_DIRECTORIES:
-				setTitle(getText(TITLE_CHOOSE_FILES_AND_DIRECTORIES));
+				getTitleLabel().setText(getText(TITLE_CHOOSE_FILES_AND_DIRECTORIES));
 				break;
 		}
 	}

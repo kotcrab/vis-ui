@@ -17,16 +17,17 @@
 package com.kotcrab.vis.ui.widget;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.BitmapFontData;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout.GlyphRun;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
@@ -58,48 +59,57 @@ import java.lang.StringBuilder;
  * @author Kotcrab
  */
 public class VisTextField extends Widget implements Disableable, Focusable {
+	static private final char BACKSPACE = 8;
 	static protected final char ENTER_DESKTOP = '\r';
 	static protected final char ENTER_ANDROID = '\n';
-	static private final char BACKSPACE = 8;
 	static private final char TAB = '\t';
 	static private final char DELETE = 127;
 	static private final char BULLET = 8226;
+
 	static private final Vector2 tmp1 = new Vector2();
 	static private final Vector2 tmp2 = new Vector2();
 	static private final Vector2 tmp3 = new Vector2();
-	protected final FloatArray glyphAdvances = new FloatArray(), glyphPositions = new FloatArray();
+
+	static public float keyRepeatInitialTime = 0.4f;
+	static public float keyRepeatTime = 0.05f;
+
 	protected String text;
 	protected int cursor, selectionStart;
 	protected boolean hasSelection;
 	protected boolean writeEnters;
+	protected final GlyphLayout layout = new GlyphLayout();
+	protected final FloatArray glyphPositions = new FloatArray();
+
+	private String messageText;
 	protected CharSequence displayText;
-	protected float textHeight, textOffset;
-	VisTextFieldStyle style;
+	private Clipboard clipboard;
 	InputListener inputListener;
 	TextFieldListener listener;
 	TextFieldFilter filter;
 	OnscreenKeyboard keyboard = new DefaultOnscreenKeyboard();
-	boolean focusTraversal = true, onlyFontChars = true, disabled, rightAligned;
-	boolean passwordMode;
-	float renderOffset;
-	boolean cursorOn = true;
-	long lastBlink;
-	KeyRepeatTask keyRepeatTask = new KeyRepeatTask();
-	KeyTypedRepeatTask keyTypedRepeatTask = new KeyTypedRepeatTask();
-	float keyRepeatInitialTime = 0.4f;
-	float keyRepeatTime = 0.05f;
-	private String messageText;
-	private Clipboard clipboard;
+	boolean focusTraversal = true, onlyFontChars = true, disabled;
+	private int textHAlign = Align.left;
 	private float selectionX, selectionWidth;
+
+	boolean passwordMode;
 	private StringBuilder passwordBuffer;
 	private char passwordCharacter = BULLET;
+
+	protected float textHeight, textOffset;
+	float renderOffset;
 	private int visibleTextStart, visibleTextEnd;
 	private int maxLength = 0;
+
 	private float blinkTime = 0.32f;
+	boolean cursorOn = true;
+	long lastBlink;
+
+	KeyRepeatTask keyRepeatTask = new KeyRepeatTask();
+
+	// vis fields
+	VisTextFieldStyle style;
+	KeyTypedRepeatTask keyTypedRepeatTask = new KeyTypedRepeatTask();
 	private ClickListener clickListener;
-
-	// --
-
 	private boolean drawBorder;
 	private boolean inputValid = true;
 
@@ -219,8 +229,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 	protected void calculateOffsets () {
 		float visibleWidth = getWidth();
-		if (style.background != null)
-			visibleWidth -= style.background.getLeftWidth() + style.background.getRightWidth();
+		if (style.background != null) visibleWidth -= style.background.getLeftWidth() + style.background.getRightWidth();
 
 		// Check if the cursor has gone out the left or right side of the visible area and adjust renderoffset.
 		float position = glyphPositions.get(cursor);
@@ -267,8 +276,9 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			selectionWidth = maxX - minX;
 		}
 
-		if (rightAligned) {
+		if (textHAlign == Align.center || textHAlign == Align.right) {
 			textOffset = visibleWidth - (glyphPositions[visibleTextEnd] - startPos);
+			if (textHAlign == Align.center) textOffset = Math.round(textOffset * 0.5f);
 			if (hasSelection) selectionX += textOffset;
 		}
 	}
@@ -358,7 +368,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	}
 
 	protected void drawText (Batch batch, BitmapFont font, float x, float y) {
-		font.draw(batch, displayText, x + textOffset, y, visibleTextStart, visibleTextEnd);
+		font.draw(batch, displayText, x + textOffset, y, visibleTextStart, visibleTextEnd, 0, Align.left, false);
 	}
 
 	protected void drawCursor (Drawable cursorPatch, Batch batch, BitmapFont font, float x, float y) {
@@ -368,19 +378,20 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 	void updateDisplayText () {
 		BitmapFont font = style.font;
+		BitmapFontData data = font.getData();
 		String text = this.text;
 		int textLength = text.length();
 
 		StringBuilder buffer = new StringBuilder();
 		for (int i = 0; i < textLength; i++) {
 			char c = text.charAt(i);
-			buffer.append(font.containsCharacter(c) ? c : ' ');
+			buffer.append(data.hasGlyph(c) ? c : ' ');
 		}
 		String newDisplayText = buffer.toString();
 
-		if (passwordMode && font.containsCharacter(passwordCharacter)) {
+		if (passwordMode && data.hasGlyph(passwordCharacter)) {
 			if (passwordBuffer == null) passwordBuffer = new StringBuilder(newDisplayText.length());
-			if (passwordBuffer.length() > textLength) //
+			if (passwordBuffer.length() > textLength)
 				passwordBuffer.setLength(textLength);
 			else {
 				for (int i = passwordBuffer.length(); i < textLength; i++)
@@ -389,10 +400,22 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			displayText = passwordBuffer;
 		} else
 			displayText = newDisplayText;
-		font.computeGlyphAdvancesAndPositions(displayText, glyphAdvances, glyphPositions);
+
+		layout.setText(font, displayText);
+		glyphPositions.clear();
+		float x = 0;
+		if (layout.runs.size > 0) {
+			GlyphRun run = layout.runs.first();
+			FloatArray xAdvances = run.xAdvances;
+			for (int i = 0, n = xAdvances.size; i < n; i++) {
+				glyphPositions.add(x);
+				x += xAdvances.get(i);
+			}
+		}
+		glyphPositions.add(x);
+
 		if (selectionStart > newDisplayText.length()) selectionStart = textLength;
 	}
-
 	private void blink () {
 		long time = TimeUtils.nanoTime();
 		if ((time - lastBlink) / 1000000000.0f > blinkTime) {
@@ -421,18 +444,19 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 	/** Pastes the content of the {@link Clipboard} implementation set on this Textfield to this TextField. */
 	void paste () {
-		paste(clipboard.getContents(), true);
+		paste(clipboard.getContents());
 	}
 
-	void paste (String content, boolean onlyFontChars) {
+	void paste (String content) {
 		if (content == null) return;
 		StringBuilder buffer = new StringBuilder();
 		int textLength = text.length();
+		BitmapFontData data = style.font.getData();
 		for (int i = 0, n = content.length(); i < n; i++) {
 			if (!withinMaxLength(textLength + buffer.length())) break;
 			char c = content.charAt(i);
 			if (!(writeEnters && (c == ENTER_ANDROID || c == ENTER_DESKTOP))) {
-				if (onlyFontChars && !style.font.containsCharacter(c)) continue;
+				if (onlyFontChars && !data.hasGlyph(c)) continue;
 				if (filter != null && !filter.acceptChar(this, c)) continue;
 			}
 			buffer.append(c);
@@ -586,7 +610,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 		clearSelection();
 		text = "";
-		paste(str, onlyFontChars);
+		paste(str);
 		cursor = 0;
 	}
 
@@ -664,10 +688,6 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 					style.background.getMinHeight());
 		}
 		return prefHeight;
-	}
-
-	public void setRightAligned (boolean rightAligned) {
-		this.rightAligned = rightAligned;
 	}
 
 	public boolean isPasswordMode () {
@@ -753,50 +773,6 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		this.inputValid = inputValid;
 	}
 
-	/**
-	 * Interface for listening to typed characters.
-	 * @author mzechner
-	 */
-	static public interface TextFieldListener {
-		public void keyTyped (VisTextField textField, char c);
-	}
-
-	/**
-	 * Interface for filtering characters entered into the text field.
-	 * @author mzechner
-	 */
-	static public interface TextFieldFilter {
-		public boolean acceptChar (VisTextField textField, char c);
-
-		static public class DigitsOnlyFilter implements TextFieldFilter {
-			@Override
-			public boolean acceptChar (VisTextField textField, char c) {
-				return Character.isDigit(c);
-			}
-
-		}
-	}
-
-	/**
-	 * An interface for onscreen keyboards. Can invoke the default keyboard or render your own keyboard!
-	 * @author mzechner
-	 */
-	static public interface OnscreenKeyboard {
-		public void show (boolean visible);
-	}
-
-	/**
-	 * The default {@link OnscreenKeyboard} used by all {@link TextField} instances. Just uses
-	 * {@link Input#setOnscreenKeyboardVisible(boolean)} as appropriate. Might overlap your actual rendering, so use with care!
-	 * @author mzechner
-	 */
-	static public class DefaultOnscreenKeyboard implements OnscreenKeyboard {
-		@Override
-		public void show (boolean visible) {
-			Gdx.input.setOnscreenKeyboardVisible(visible);
-		}
-	}
-
 	static public class VisTextFieldStyle extends TextFieldStyle {
 		public Drawable focusBorder;
 		public Drawable errorBorder;
@@ -816,6 +792,27 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			this.backgroundOver = style.backgroundOver;
 		}
 	}
+
+	/** Interface for listening to typed characters.
+	 * @author mzechner */
+	static public interface TextFieldListener {
+		public void keyTyped (VisTextField textField, char c);
+	}
+
+	/** Interface for filtering characters entered into the text field.
+	 * @author mzechner */
+	static public interface TextFieldFilter {
+		public boolean acceptChar (VisTextField textField, char c);
+
+		static public class DigitsOnlyFilter implements TextFieldFilter {
+			@Override
+			public boolean acceptChar (VisTextField textField, char c) {
+				return Character.isDigit(c);
+			}
+
+		}
+	}
+
 
 	class KeyRepeatTask extends Task {
 		int keycode;
@@ -1027,7 +1024,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			} else {
 				boolean delete = character == DELETE;
 				boolean backspace = character == BACKSPACE;
-				boolean add = style.font.containsCharacter(character)
+				boolean add = (!onlyFontChars || style.font.getData().hasGlyph(character))
 						|| (writeEnters && (character == ENTER_ANDROID || character == ENTER_DESKTOP));
 				boolean remove = backspace || delete;
 				if (add || remove) {

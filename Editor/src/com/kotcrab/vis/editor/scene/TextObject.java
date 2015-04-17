@@ -82,8 +82,7 @@ public class TextObject extends TextEntity implements EditorObject {
 			this.fontSize = fontSize;
 			BitmapFont bmpFont = font.get(fontSize);
 			cache = new BitmapFontCache(bmpFont);
-			setColor(getColor());
-			textBounds = cache.setText(text, 0, 0);
+			setText(text);
 			textChanged();
 		}
 	}
@@ -94,8 +93,7 @@ public class TextObject extends TextEntity implements EditorObject {
 
 			setAssetPath(font.getRelativePath());
 			cache = new BitmapFontCache(font.get(fontSize));
-			setColor(getColor());
-			textBounds = cache.setText(text, 0, 0);
+			setText(text);
 			textChanged();
 		}
 	}

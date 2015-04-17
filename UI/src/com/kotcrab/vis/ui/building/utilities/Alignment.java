@@ -16,9 +16,8 @@
 
 package com.kotcrab.vis.ui.building.utilities;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont.HAlignment;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
+import com.badlogic.gdx.utils.Align;
 
 /**
  * LibGDX alignments are simple integers and it's rather easy to make a mistake while using the align methods.
@@ -73,16 +72,6 @@ public enum Alignment {
 	/** @return true for CENTER. */
 	public boolean isCentered () {
 		return alignment == Align.center;
-	}
-
-	/** @return alignment converted to bitmap font utility HAlignment. */
-	public HAlignment toHorizontalAlignment () {
-		if (isAlignedWithLeft()) {
-			return HAlignment.LEFT;
-		} else if (isAlignedWithRight()) {
-			return HAlignment.RIGHT;
-		}
-		return HAlignment.CENTER;
 	}
 
 	/**

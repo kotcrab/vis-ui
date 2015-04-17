@@ -25,7 +25,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -66,7 +65,7 @@ public class VisDialog extends VisWindow {
 
 	private void initialize () {
 		setModal(true);
-		setTitleAlignment(Align.center);
+		getTitleLabel().setAlignment(VisUI.getDefaultTitleAlign());
 
 		defaults().space(6);
 		add(contentTable = new Table(skin)).expand().fill();
@@ -121,11 +120,6 @@ public class VisDialog extends VisWindow {
 
 	public Table getContentTable () {
 		return contentTable;
-	}
-
-	@Override
-	public Table getButtonTable () {
-		return buttonTable;
 	}
 
 	public Table getButtonsTable () {

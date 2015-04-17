@@ -34,13 +34,11 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.runtime.data.EntityData;
-import com.kotcrab.vis.runtime.entity.Entity;
-import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.*;
 import com.kotcrab.vis.runtime.font.BmpFontProvider;
 import com.kotcrab.vis.runtime.font.FontProvider;
+import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 
 public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> {
@@ -100,11 +98,13 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 			if (entityData instanceof EntityGroupData) {
 				EntityGroupData groupData = (EntityGroupData) entityData;
 				loadDepsForEntities(deps, groupData.entities);
+				continue;
 			}
 
 			if (entityData instanceof SpriteData) {
 				SpriteData spriteData = (SpriteData) entityData;
 				deps.add(new AssetDescriptor(spriteData.textureAtlas, TextureAtlas.class));
+				continue;
 			}
 
 			if (entityData instanceof TextData) {
@@ -116,17 +116,24 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 					checkShader(deps);
 					bmpFontProvider.load(deps, textData);
 				}
+
+				continue;
 			}
 
 			if (entityData instanceof MusicData) {
 				MusicData musicData = (MusicData) entityData;
 				deps.add(new AssetDescriptor(musicData.musicPath, Music.class));
+				continue;
 			}
 
 			if (entityData instanceof SoundData) {
 				SoundData musicData = (SoundData) entityData;
 				deps.add(new AssetDescriptor(musicData.soundPath, Sound.class));
+				continue;
 			}
+
+			if (entityData instanceof ParticleEffectData)
+				continue;
 
 			EntitySupport support = supportMap.get(entityData.getClass());
 
@@ -174,12 +181,15 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				TextureAtlas atlas = manager.get(spriteData.textureAtlas, TextureAtlas.class);
 				if (atlases.contains(atlas, true) == false) atlases.add(atlas);
 
-				Sprite newSprite = new Sprite(atlas.findRegion(spriteData.texturePath.substring(4, spriteData.texturePath.length() - 4)));
+				String path = spriteData.texturePath;
+				if(path.startsWith("gfx/")) path = path.substring(path.indexOf('/') + 1, path.lastIndexOf('.'));
+				Sprite newSprite = new Sprite(atlas.findRegion(path));
 
 				SpriteEntity entity = new SpriteEntity(entityData.id, spriteData.texturePath, newSprite);
 				spriteData.loadTo(entity);
 
 				entities.add(entity);
+				System.out.println("f");
 				continue;
 			}
 
@@ -211,9 +221,11 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				SoundEntity entity = new SoundEntity(soundData.id, soundData.soundPath, manager.get(soundData.soundPath, Sound.class));
 				soundData.loadTo(entity);
 				entities.add(entity);
+				continue;
 			}
 
-			entities.add(supportMap.get(entityData.getClass()).getInstanceFromData(manager, entityData));
+			EntitySupport support = supportMap.get(entityData.getClass());
+			if(support != null) entities.add(supportMap.get(entityData.getClass()).getInstanceFromData(manager, entityData));
 		}
 	}
 

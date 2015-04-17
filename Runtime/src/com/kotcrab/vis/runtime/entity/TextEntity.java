@@ -19,8 +19,8 @@ package com.kotcrab.vis.runtime.entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.TextBounds;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
@@ -32,17 +32,18 @@ import com.badlogic.gdx.math.Rectangle;
 public class TextEntity extends Entity {
 	/** Value used for fontSize filed when BMP font is used */
 	public static final int BITMAP_FONT_SIZE = -1;
+	private static final Matrix4 idtMatrix = new Matrix4();
 
 	protected int fontSize;
 	protected transient BitmapFontCache cache;
 	protected boolean distanceFieldShaderEnabled;
+	private transient GlyphLayout textLayout;
 
 	private float x = 0, y = 0;
 	private float originX = 0, originY = 0;
 	private float scaleX = 1, scaleY = 1;
 	private float rotation = 0;
 	private Color color = Color.WHITE;
-	protected TextBounds textBounds;
 	private Rectangle boundingRectangle;
 	private boolean autoSetOriginToCenter = true;
 	private Matrix4 translationMatrix;
@@ -58,19 +59,19 @@ public class TextEntity extends Entity {
 		this.text = text;
 		this.fontSize = fontSize;
 
-		translationMatrix = new Matrix4();
 		cache = new BitmapFontCache(bitmapFont);
-		textBounds = cache.setText(text, 0, 0);
+		translationMatrix = new Matrix4();
+		textLayout = new GlyphLayout(bitmapFont, text);
 		if (autoSetOriginToCenter == true) setOriginCenter();
 		translate();
 	}
 
 	@Override
 	public void render (Batch spriteBatch) {
-		Matrix4 oldMatrix = spriteBatch.getTransformMatrix().cpy();
 		spriteBatch.setTransformMatrix(translationMatrix);
 		cache.draw(spriteBatch);
-		spriteBatch.setTransformMatrix(oldMatrix);
+		spriteBatch.flush();
+		spriteBatch.setTransformMatrix(idtMatrix);
 	}
 
 	private void translate () {
@@ -79,7 +80,7 @@ public class TextEntity extends Entity {
 		translationMatrix.rotate(0, 0, 1, rotation);
 		translationMatrix.scale(scaleX, scaleY, 1);
 		translationMatrix.translate(-originX, -originY, 0);
-		translationMatrix.translate(0, textBounds.height, 0);
+		translationMatrix.translate(0, textLayout.height, 0);
 		calculateBoundingRectangle();
 	}
 
@@ -89,8 +90,7 @@ public class TextEntity extends Entity {
 	}
 
 	private void calculateBoundingRectangle () {
-		Polygon polygon = new Polygon(new float[]{0, 0, textBounds.width, 0, textBounds.width, textBounds.height, 0,
-				textBounds.height});
+		Polygon polygon = new Polygon(new float[]{0, 0, textLayout.width, 0, textLayout.width, textLayout.height, 0, textLayout.height});
 		polygon.setPosition(x, y);
 		polygon.setRotation(rotation);
 		polygon.setScale(scaleX, scaleY);
@@ -105,7 +105,8 @@ public class TextEntity extends Entity {
 	public void setText (CharSequence str) {
 		this.text = str;
 		cache.clear();
-		textBounds = cache.setText(str, 0, 0);
+		textLayout = cache.setText(str,0,0);
+		cache.setColor(color);
 		textChanged();
 	}
 
@@ -118,7 +119,7 @@ public class TextEntity extends Entity {
 	}
 
 	public void setOriginCenter () {
-		setOrigin(textBounds.width / 2, -textBounds.height / 2);
+		setOrigin(textLayout.width / 2, -textLayout.height / 2);
 	}
 
 	public void setPosition (float x, float y) {
@@ -203,7 +204,7 @@ public class TextEntity extends Entity {
 	public void setColor (Color color) {
 		this.color = color;
 		cache.setColor(color);
-		cache.setText(text, 0, 0);
+		setText(text);
 	}
 
 	public void setColor (float r, float g, float b, float a) {

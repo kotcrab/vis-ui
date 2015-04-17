@@ -215,8 +215,17 @@ public class ExportModule extends ProjectModule {
 				data.saveFrom(obj);
 
 				data.id = obj.getId();
-				data.textureAtlas = "gfx/textures.atlas";
-				data.texturePath = obj.getAssetPath();
+
+				String path = obj.getAssetPath();
+
+				if (path.contains("*")) {
+					String[] pathParts = path.split("\\*", 2);
+					data.textureAtlas = pathParts[0];
+					data.texturePath = pathParts[1];
+				} else {
+					data.textureAtlas = "gfx/textures.atlas";
+					data.texturePath = obj.getAssetPath();
+				}
 
 				entities.add(data);
 				return true;
