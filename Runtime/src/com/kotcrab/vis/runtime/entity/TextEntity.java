@@ -61,7 +61,8 @@ public class TextEntity extends Entity {
 
 		cache = new BitmapFontCache(bitmapFont);
 		translationMatrix = new Matrix4();
-		textLayout = new GlyphLayout(bitmapFont, text);
+		textLayout = new GlyphLayout();
+		setText(text);
 		if (autoSetOriginToCenter == true) setOriginCenter();
 		translate();
 	}
