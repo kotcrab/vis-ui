@@ -122,9 +122,8 @@ public class FileItem extends Table {
 
 		support = findSupportForDirectory(ext, relativePath);
 		if (support != null) {
-			type = FileType.NON_STANDARD;
 			ContentItemProperties item = support.getContentItemProperties();
-			createDefaultView(FileType.SOUND, item.title, item.hideExtension);
+			createDefaultView(FileType.NON_STANDARD, item.title, item.hideExtension);
 			return;
 		}
 

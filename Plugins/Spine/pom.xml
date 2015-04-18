@@ -16,6 +16,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <plugin.class>com.kotcrab.vis.plugin.spine.EditorSpineSupport</plugin.class>
+        <plugin.provider>Kotcrab</plugin.provider>
+        <plugin.dependencies>vis-runtime-spine</plugin.dependencies>
     </properties>
 
     <licenses>
@@ -24,6 +27,28 @@
             <url>https://github.com/EsotericSoftware/spine-runtimes/blob/master/LICENSE</url>
         </license>
     </licenses>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.6</version>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Plugin-Id>${project.artifactId}</Plugin-Id>
+                            <Plugin-Class>${plugin.class}</Plugin-Class>
+                            <Plugin-Version>${project.version}</Plugin-Version>
+                            <Plugin-Provider>${plugin.provider}</Plugin-Provider>
+                            <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
+                        </manifestEntries>
+                    </archive>
+                    <outputDirectory>../../Editor/target/plugins/</outputDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <dependencies>
         <dependency>

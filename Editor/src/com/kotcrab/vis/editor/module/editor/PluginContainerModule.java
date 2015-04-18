@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.editor.module.editor;
 
-public class ContentItemProperties {
-	public String title;
-	public boolean hideExtension;
+import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.plugin.ObjectSupport;
 
-	public ContentItemProperties (String title) {
-		this.title = title;
+/** Holds plugins loaded by {@link PluginLoaderModule}. Others modules (even from different containers like 'project' or 'scene') then can access them. */
+public class PluginContainerModule extends EditorModule {
+	private Array<ObjectSupport> supports = new Array<>();
+
+	public void addSupport (ObjectSupport support) {
+		supports.add(support);
 	}
 
-	public ContentItemProperties (String title, boolean hideExtension) {
-		this.title = title;
-		this.hideExtension = hideExtension;
+	public Array<ObjectSupport> getObjectSupports () {
+		return supports;
 	}
 }

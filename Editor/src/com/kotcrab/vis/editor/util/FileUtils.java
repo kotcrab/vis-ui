@@ -22,6 +22,8 @@ import com.badlogic.gdx.utils.Array;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FileUtils {
 	private static com.sun.jna.platform.FileUtils jnaFileUtils;
@@ -90,5 +92,12 @@ public class FileUtils {
 	/** Returns sibling file with provided extension eg. sibling(Gdx.files.internal("game.atlas"), "png") would return Gdx.files.internal("game.png") */
 	public static FileHandle sibling (FileHandle file, String siblingExtension) {
 		return file.sibling(file.nameWithoutExtension() + "." + siblingExtension);
+	}
+
+	public static String relativize (FileHandle base, String absolute) {
+		Path pathAbsolute = Paths.get(absolute);
+		Path pathBase = Paths.get(base.path());
+		Path pathRelative = pathBase.relativize(pathAbsolute);
+		return pathRelative.toString().replace("\\", "/");
 	}
 }

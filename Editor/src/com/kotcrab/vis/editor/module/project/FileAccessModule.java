@@ -18,9 +18,7 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import com.kotcrab.vis.editor.util.FileUtils;
 
 public class FileAccessModule extends ProjectModule {
 	private FileHandle visFolder;
@@ -93,7 +91,7 @@ public class FileAccessModule extends ProjectModule {
 	}
 
 	public String relativizeToVisFolder (String absolutePath) {
-		return relativize(visFolder, absolutePath);
+		return FileUtils.relativize(visFolder, absolutePath);
 	}
 
 	public String relativizeToAssetsFolder (FileHandle file) {
@@ -101,17 +99,10 @@ public class FileAccessModule extends ProjectModule {
 	}
 
 	public String relativizeToAssetsFolder (String absolutePath) {
-		return relativize(assetsFolder, absolutePath);
+		return FileUtils.relativize(assetsFolder, absolutePath);
 	}
 
 	public String derelativizeFromAssetsFolder (String relativePath) {
 		return assetsFolder.child(relativePath).path();
-	}
-
-	private String relativize (FileHandle base, String absolute) {
-		Path pathAbsolute = Paths.get(absolute);
-		Path pathBase = Paths.get(base.path());
-		Path pathRelative = pathBase.relativize(pathAbsolute);
-		return pathRelative.toString().replace("\\", "/");
 	}
 }

@@ -1,4 +1,4 @@
-package com.kotcrab.vis.plugin.runtime.spine;
+package com.kotcrab.vis.plugin.spine.runtime;
 
 import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.runtime.data.EntityData;

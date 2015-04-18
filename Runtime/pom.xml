@@ -16,7 +16,7 @@
     <url>https://github.com/kotcrab/VisEditor</url>
 
     <properties>
-        <arguments></arguments>
+        <arguments/>
     </properties>
 
     <distributionManagement>

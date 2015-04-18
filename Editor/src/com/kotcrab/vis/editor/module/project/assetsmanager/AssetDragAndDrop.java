@@ -202,7 +202,7 @@ public class AssetDragAndDrop {
 		}
 
 		if (item.getType() == FileType.NON_STANDARD) {
-			dragAndDrop.addSource(item.getSupport().createDropSource(dragAndDrop, item.getFile()));
+			dragAndDrop.addSource(item.getSupport().createDropSource(dragAndDrop, item));
 		}
 	}
 

@@ -464,7 +464,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	public void loadSupportsSpecificTables (ObjectSupportModule supportModule) {
 		for(ObjectSupport support : supportModule.getSupports())
-			specificTables.add(support.getObjectTable());
+			specificTables.add(support.getUIPropertyTable());
 	}
 
 	private static class SnapshotUndoableActionGroup extends UndoableActionGroup {

@@ -1,11 +1,11 @@
-package com.kotcrab.vis.plugin.runtime.spine;
+package com.kotcrab.vis.plugin.spine.runtime;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.SkeletonData;
-import com.kotcrab.vis.plugin.runtime.spine.SkeletonDataLoader.SkeletonDataLoaderParameter;
+import com.kotcrab.vis.plugin.spine.runtime.SkeletonDataLoader.SkeletonDataLoaderParameter;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 
 public class SpineSupport implements EntitySupport<SpineData, SpineEntity> {

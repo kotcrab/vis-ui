@@ -14,18 +14,23 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.plugin.spine;
 
-public class ContentItemProperties {
-	public String title;
-	public boolean hideExtension;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.Serializer;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
 
-	public ContentItemProperties (String title) {
-		this.title = title;
+public class SpineSerializer extends Serializer<SpineObject> {
+
+	@Override
+	public void write (Kryo kryo, Output output, SpineObject object) {
+
 	}
 
-	public ContentItemProperties (String title, boolean hideExtension) {
-		this.title = title;
-		this.hideExtension = hideExtension;
+	@Override
+	public SpineObject read (Kryo kryo, Input input, Class<SpineObject> type) {
+		return null;
 	}
 }
+

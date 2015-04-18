@@ -16,6 +16,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <plugin.class>com.kotcrab.vis.plugin.spine.runtime.SpineSupport</plugin.class>
+        <plugin.provider>Kotcrab</plugin.provider>
+        <plugin.dependencies/>
     </properties>
 
     <licenses>
@@ -39,4 +42,31 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>editor-plugin-jar</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-jar-plugin</artifactId>
+                        <version>2.6</version>
+                        <configuration>
+                            <archive>
+                                <manifestEntries>
+                                    <Plugin-Id>${project.artifactId}</Plugin-Id>
+                                    <Plugin-Class>${plugin.class}</Plugin-Class>
+                                    <Plugin-Version>${project.version}</Plugin-Version>
+                                    <Plugin-Provider>${plugin.provider}</Plugin-Provider>
+                                    <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
+                                </manifestEntries>
+                            </archive>
+                            <outputDirectory>../../Editor/target/plugins/</outputDirectory>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.SkeletonBounds;
 import com.kotcrab.vis.editor.scene.EditorObject;
-import com.kotcrab.vis.plugin.runtime.spine.SpineEntity;
+import com.kotcrab.vis.plugin.spine.runtime.SpineEntity;
 
 public class SpineObject extends SpineEntity implements EditorObject {
 	private SkeletonBounds bounds;

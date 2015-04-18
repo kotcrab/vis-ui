@@ -42,6 +42,11 @@ public class ObjectSupportModule extends ProjectModule {
 			descriptors = json.fromJson(new Array<SupportDescriptor>().getClass(), descriptorFile);
 		} else
 			descriptors = new Array<>();
+
+		PluginContainerModule pluginContainer = container.get(PluginContainerModule.class);
+		Array<ObjectSupport> supports = pluginContainer.getObjectSupports();
+		for (ObjectSupport support : supports)
+			register(support);
 	}
 
 	@Override
@@ -107,6 +112,9 @@ public class ObjectSupportModule extends ProjectModule {
 	public static class SupportDescriptor {
 		public String clazzName;
 		public int id;
+
+		public SupportDescriptor () {
+		}
 
 		public SupportDescriptor (String clazzName, int id) {
 			this.clazzName = clazzName;

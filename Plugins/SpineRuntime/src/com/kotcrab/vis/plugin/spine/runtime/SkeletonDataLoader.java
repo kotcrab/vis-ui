@@ -1,4 +1,4 @@
-package com.kotcrab.vis.plugin.runtime.spine;
+package com.kotcrab.vis.plugin.spine.runtime;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
@@ -12,7 +12,7 @@ import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.spine.SkeletonBinary;
 import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonJson;
-import com.kotcrab.vis.plugin.runtime.spine.SkeletonDataLoader.SkeletonDataLoaderParameter;
+import com.kotcrab.vis.plugin.spine.runtime.SkeletonDataLoader.SkeletonDataLoaderParameter;
 
 /**
  * AssetLoader for {@link SkeletonData} instances.
