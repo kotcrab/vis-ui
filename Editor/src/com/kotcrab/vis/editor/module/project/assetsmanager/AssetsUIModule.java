@@ -161,7 +161,16 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 
 	private void createToolbarTable () {
 		contentTitleLabel = new VisLabel("Content");
-		searchField = new SearchField();
+		searchField = new SearchField(newText -> {
+			if(currentDirectory == null) return true;
+
+			refreshFilesList();
+
+			if (filesDisplayed == 0)
+				return false;
+			else
+				return true;
+		});
 
 		VisImageButton exploreButton = new VisImageButton(Assets.getIcon(Icons.FOLDER_OPEN), "Explore");
 		VisImageButton settingsButton = new VisImageButton(Assets.getIcon(Icons.SETTINGS_VIEW), "Change view");
@@ -179,20 +188,6 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 				FileUtils.browse(currentDirectory);
 			}
 		});
-
-		searchField.addListener(new InputListener() {
-			@Override
-			public boolean keyTyped (InputEvent event, char character) {
-				refreshFilesList();
-
-				if (filesDisplayed == 0)
-					searchField.setInputValid(false);
-				else
-					searchField.setInputValid(true);
-
-				return false;
-			}
-		});
 	}
 
 	private void createContentTree () {
@@ -207,8 +202,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 				Node node = contentTree.getSelection().first();
 
 				if (node != null) {
-					searchField.setText("");
-					searchField.setInputValid(true);
+					searchField.clearSearch();
 
 					FolderItem item = (FolderItem) node.getActor();
 					changeCurrentDirectory(item.file);

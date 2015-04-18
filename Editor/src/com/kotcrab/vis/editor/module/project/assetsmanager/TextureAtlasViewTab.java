@@ -18,8 +18,6 @@ package com.kotcrab.vis.editor.module.project.assetsmanager;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.ui.SearchField;
@@ -30,35 +28,36 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
 public class TextureAtlasViewTab extends Tab {
-	private TextureAtlas atlas;
 	private String name;
 
 	private VisTable contentTable;
 	private Array<AtlasItem> items = new Array<>();
-	private final GridGroup filesView;
-	private final SearchField searchField;
+	private GridGroup filesView;
 
 	public TextureAtlasViewTab (String relativeAtlasPath, TextureAtlas atlas, String name) {
 		super(false, true);
-		this.atlas = atlas;
 		this.name = name;
 
-		searchField = new SearchField();
+		filesView = new GridGroup(92, 4);
 
-		searchField.addListener(new InputListener() {
-			@Override
-			public boolean keyTyped (InputEvent event, char character) {
-				refreshSearch();
-				return true;
+		SearchField searchField = new SearchField(newText -> {
+			filesView.clear();
+
+			for (AtlasItem item : items) {
+				if (item.getRegion().name.contains(newText))
+					filesView.addActor(item);
 			}
+
+			if (filesView.getChildren().size == 0)
+				return false;
+			else
+				return true;
 		});
 
 		VisTable topTable = new VisTable(true);
 		topTable.add(name);
 		topTable.add().expand().fill();
 		topTable.add(searchField).right().row();
-
-		filesView = new GridGroup(92, 4);
 
 		VisScrollPane scrollPane = new VisScrollPane(filesView);
 		scrollPane.setFlickScroll(false);
@@ -77,20 +76,6 @@ public class TextureAtlasViewTab extends Tab {
 			items.add(item);
 			filesView.addActor(item);
 		}
-	}
-
-	private void refreshSearch () {
-		filesView.clear();
-
-		for (AtlasItem item : items) {
-			if (item.getRegion().name.contains(searchField.getText()))
-				filesView.addActor(item);
-		}
-
-		if (filesView.getChildren().size == 0)
-			searchField.setInputValid(false);
-		else
-			searchField.setInputValid(true);
 	}
 
 	public Array<AtlasItem> getItems () {

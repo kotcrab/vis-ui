@@ -16,6 +16,8 @@
 
 package com.kotcrab.vis.editor.ui;
 
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
@@ -23,41 +25,47 @@ import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 public class SearchField extends VisTable {
-	private VisTextField searchTextField;
+	private SearchFieldListener listener;
+	private VisValidableTextField searchField;
 
-	public SearchField () {
-		super(true);
-
-		searchTextField = new VisValidableTextField();
-		add(new Image(Assets.getIcon(Icons.SEARCH))).spaceRight(3);
-		add(searchTextField).width(200).spaceRight(0);
+	public SearchField (SearchFieldListener listener) {
+		super(false);
+		this.listener = listener;
+		this.searchField = new VisValidableTextField();
 
 		VisImageButton clearButton = new VisImageButton(VisUI.getSkin().getDrawable("icon-close"));
-		add(clearButton).space(0);
+
+		add(new Image(Assets.getIcon(Icons.SEARCH))).spaceRight(3);
+		add(searchField).width(200);
+		add(clearButton);
 
 		clearButton.addListener(new VisChangeListener((event, actor) -> {
-			searchTextField.setText("");
-			searchTextField.setInputValid(true);
+			clearSearch();
 		}));
-	}
 
-	public void setText (String str) {
-		searchTextField.setText(str);
+		searchField.addListener(new InputListener() {
+			@Override
+			public boolean keyTyped (InputEvent event, char character) {
+				boolean result = listener.searchTextChanged(searchField.getText());
+				searchField.setInputValid(result);
+				return true;
+			}
+		});
 	}
 
 	public String getText () {
-		return searchTextField.getText();
+		return searchField.getText();
 	}
 
-	public boolean isInputValid () {
-		return searchTextField.isInputValid();
+	public void clearSearch () {
+		searchField.setText("");
+		searchField.setInputValid(listener.searchTextChanged(""));
 	}
 
-	public void setInputValid (boolean inputValid) {
-		searchTextField.setInputValid(inputValid);
+	public interface SearchFieldListener {
+		boolean searchTextChanged (String newText);
 	}
 }
