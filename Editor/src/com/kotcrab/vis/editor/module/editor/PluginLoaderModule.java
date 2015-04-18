@@ -23,6 +23,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.plugin.ContainerExtension;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.plugin.PluginDescriptor;
+import com.kotcrab.vis.editor.util.ChildFirstURLClassLoader;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
@@ -114,6 +115,8 @@ public class PluginLoaderModule extends EditorModule {
 
 			loadPossiblePlugins(orderedDescriptors);
 
+			if (descriptors.size() == 0) break;
+
 			if (loadedPlugins == orderedDescriptors.size()) {
 				Log.fatal("Failed to resolve load order of plugins! Unresolved plugins:");
 				for (PluginDescriptor descriptor : descriptors)
@@ -121,8 +124,6 @@ public class PluginLoaderModule extends EditorModule {
 
 				throw new IllegalStateException("Failed to resolve load order of plugins!");
 			}
-
-			if (descriptors.size() == 0) break;
 		}
 
 		descriptors = orderedDescriptors;
@@ -163,7 +164,7 @@ public class PluginLoaderModule extends EditorModule {
 		for (int i = 0; i < urls.length; i++)
 			urls[i] = new URL("jar:file:" + descriptors.get(i).file.path() + "!/");
 
-		classLoader = URLClassLoader.newInstance(urls, ClassLoader.getSystemClassLoader());
+		classLoader = ChildFirstURLClassLoader.newInstance(urls, Thread.currentThread().getContextClassLoader());
 
 		for (PluginDescriptor descriptor : descriptors) {
 			Log.debug(TAG, "Loading: " + descriptor.id);
