@@ -25,15 +25,15 @@ public class PluginDescriptor {
 	public static final String PLUGIN_ID = "Plugin-Id";
 	public static final String PLUGIN_PROVIDER = "Plugin-Provider";
 	public static final String PLUGIN_VERSION = "Plugin-Version";
-	public static final String PLUGIN_CLASS = "Plugin-Class";
 	public static final String PLUGIN_DEPENDENCIES = "Plugin-Dependencies";
 
 	public FileHandle file;
 	public String id;
 	public String provider;
 	public String version;
-	public String clazz;
 	public Array<String> deps = new Array<>();
+
+	public Array<Class> pluginClasses = new Array<>();
 
 	public PluginDescriptor (FileHandle file, Manifest mf) {
 		this.file = file;
@@ -41,7 +41,6 @@ public class PluginDescriptor {
 		id = mf.getMainAttributes().getValue(PLUGIN_ID);
 		provider = mf.getMainAttributes().getValue(PLUGIN_PROVIDER);
 		version = mf.getMainAttributes().getValue(PLUGIN_VERSION);
-		clazz = mf.getMainAttributes().getValue(PLUGIN_CLASS);
 		String depString = mf.getMainAttributes().getValue(PLUGIN_DEPENDENCIES);
 		if (depString.equals("") == false) deps.addAll(depString.split(" "));
 	}

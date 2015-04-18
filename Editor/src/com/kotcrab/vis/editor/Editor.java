@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
@@ -34,6 +35,7 @@ import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.InputModule;
+import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EditorFrame;
 import com.kotcrab.vis.editor.ui.WindowListener;
@@ -73,6 +75,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private InputModule inputModule;
 	private ProjectIOModule projectIO;
 	private FileChooserModule fileChooser;
+	private PluginContainerModule pluginContainer;
 	private GeneralSettingsModule settings;
 
 	// TODO move to module
@@ -162,7 +165,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(inputModule = new InputModule(mainContentTable));
 
 		editorMC.add(new PluginLoaderModule());
-		editorMC.add(new PluginContainerModule());
+		editorMC.add(pluginContainer = new PluginContainerModule());
 		editorMC.add(new ColorPickerModule());
 		editorMC.add(fileChooser = new FileChooserModule());
 		editorMC.add(new MenuBarModule(projectMC));
@@ -176,6 +179,9 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(new GridSettingsModule());
 
 		editorMC.init();
+
+		Array<EditorModule> modules = pluginContainer.getContainersExtensions(EditorModule.class, ExtensionScope.EDITOR);
+		editorMC.addAll(modules);
 
 		settingsDialog.addAll(editorMC.getModules());
 	}
@@ -360,6 +366,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.add(new SceneTabsModule());
 		projectMC.add(new ProjectInfoTabModule());
 		projectMC.add(new AssetsUIModule());
+		projectMC.addAll(pluginContainer.getContainersExtensions(ProjectModule.class, ExtensionScope.PROJECT));
 
 		projectMC.init();
 

@@ -8,11 +8,13 @@ import com.esotericsoftware.kryo.Serializer;
 import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
+import com.kotcrab.vis.runtime.plugin.VisPlugin;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.ContentItemProperties;
 import com.kotcrab.vis.editor.util.gdx.VisDropSource;
 import com.kotcrab.vis.plugin.spine.runtime.SpineData;
 import com.kotcrab.vis.runtime.data.EntityData;
 
+@VisPlugin
 public class EditorSpineSupport extends ObjectSupport<SpineData, SpineObject> {
 	@Override
 	public Class<SpineObject> getObjectClass () {

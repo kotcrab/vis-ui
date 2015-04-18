@@ -17,17 +17,34 @@
 package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.BaseModule;
+import com.kotcrab.vis.editor.plugin.ContainerExtension;
+import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 
 /** Holds plugins loaded by {@link PluginLoaderModule}. Others modules (even from different containers like 'project' or 'scene') then can access them. */
 public class PluginContainerModule extends EditorModule {
 	private Array<ObjectSupport> supports = new Array<>();
+	private Array<ContainerExtension<?>> extensions = new Array<>();
 
 	public void addSupport (ObjectSupport support) {
 		supports.add(support);
 	}
 
+	public void addContainerExtension (ContainerExtension extension) {
+		extensions.add(extension);
+	}
+
 	public Array<ObjectSupport> getObjectSupports () {
 		return supports;
+	}
+
+	public <T extends BaseModule> Array<T> getContainersExtensions (Class<T> baseModuleType, ExtensionScope scope) {
+		Array<T> modules = new Array<>();
+
+		for (ContainerExtension extension : extensions)
+			if (extension.getScope() == scope) modules.add((T) extension.getModule());
+
+		return modules;
 	}
 }

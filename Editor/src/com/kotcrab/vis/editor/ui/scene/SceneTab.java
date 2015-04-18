@@ -25,15 +25,17 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.module.ContentTable;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;
+import com.kotcrab.vis.editor.module.editor.PluginContainerModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.*;
+import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.ObjectGroup;
 import com.kotcrab.vis.editor.scene.SpriteObject;
@@ -49,13 +51,13 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	private Editor editor;
 	private EditorScene scene;
 
-	private boolean savedAtLeastOnce;
-
+	private PluginContainerModule pluginContainer;
 	private MenuBarModule menuBarModule;
 	private StatusBarModule statusBarModule;
 
 	private TextureCacheModule cacheModule;
 	private SceneIOModule sceneIOModule;
+
 	private EntityManipulatorModule entityManipulator;
 
 	private SceneModuleContainer sceneMC;
@@ -65,6 +67,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	private ContentTable content;
 
 	private SceneOutline outline;
+	private boolean savedAtLeastOnce;
 
 	private Target dropTarget;
 
@@ -73,6 +76,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		editor = Editor.instance;
 		this.scene = scene;
 
+		pluginContainer = projectMC.getEditorContainer().get(PluginContainerModule.class);
 		menuBarModule = projectMC.getEditorContainer().get(MenuBarModule.class);
 		statusBarModule = projectMC.getEditorContainer().get(StatusBarModule.class);
 
@@ -88,6 +92,8 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		sceneMC.add(new ZIndexManipulator());
 
 		sceneMC.add(entityManipulator = new EntityManipulatorModule());
+		sceneMC.addAll(pluginContainer.getContainersExtensions(SceneModule.class, ExtensionScope.SCENE));
+
 		sceneMC.init();
 
 		outline = new SceneOutline();

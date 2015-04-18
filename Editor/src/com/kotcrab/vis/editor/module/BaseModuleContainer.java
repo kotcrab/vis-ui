@@ -26,7 +26,15 @@ public class BaseModuleContainer<T extends BaseModule> {
 	public void add (T module) {
 		modules.add(module);
 		module.added();
-		if (initFinished) module.init();
+		if (initFinished) {
+			module.init();
+			module.postInit();
+		}
+	}
+
+	public void addAll (Array<T> modules) {
+		for (T module : modules)
+			add(module);
 	}
 
 	public void init () {

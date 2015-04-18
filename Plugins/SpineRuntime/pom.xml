@@ -16,7 +16,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <plugin.class>com.kotcrab.vis.plugin.spine.runtime.SpineSupport</plugin.class>
         <plugin.provider>Kotcrab</plugin.provider>
         <plugin.dependencies/>
     </properties>
@@ -56,7 +55,6 @@
                             <archive>
                                 <manifestEntries>
                                     <Plugin-Id>${project.artifactId}</Plugin-Id>
-                                    <Plugin-Class>${plugin.class}</Plugin-Class>
                                     <Plugin-Version>${project.version}</Plugin-Version>
                                     <Plugin-Provider>${plugin.provider}</Plugin-Provider>
                                     <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>

@@ -7,7 +7,9 @@ import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.SkeletonData;
 import com.kotcrab.vis.plugin.spine.runtime.SkeletonDataLoader.SkeletonDataLoaderParameter;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
+import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
+@VisPlugin
 public class SpineSupport implements EntitySupport<SpineData, SpineEntity> {
 	@Override
 	public void setLoaders (AssetManager manager) {

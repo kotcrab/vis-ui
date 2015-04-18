@@ -20,11 +20,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.plugin.ContainerExtension;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.plugin.PluginDescriptor;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
+import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -167,36 +169,46 @@ public class PluginLoaderModule extends EditorModule {
 			Log.debug(TAG, "Loading: " + descriptor.id);
 
 			JarFile jarFile = new JarFile(descriptor.file.path());
-			loadJarClasses(classLoader, jarFile.entries());
+			loadJarClasses(classLoader, descriptor, jarFile.entries());
 		}
 	}
 
-	private void loadJarClasses (URLClassLoader classLoader, Enumeration<JarEntry> entries) throws ClassNotFoundException {
+	private void loadJarClasses (URLClassLoader classLoader, PluginDescriptor descriptor, Enumeration<JarEntry> entries) throws ClassNotFoundException {
 		while (entries.hasMoreElements()) {
 			JarEntry entry = entries.nextElement();
 			if (entry.isDirectory() || entry.getName().endsWith(".class") == false) continue;
 
 			String className = entry.getName().substring(0, entry.getName().length() - ".class".length());
 			className = className.replace('/', '.');
-			classLoader.loadClass(className);
+			Class<?> clazz = classLoader.loadClass(className);
+
+			if (clazz.getAnnotation(VisPlugin.class) != null)
+				descriptor.pluginClasses.add(clazz);
 		}
 	}
 
 	private void loadMainPluginsClasses () throws ReflectiveOperationException {
 		for (PluginDescriptor descriptor : descriptors) {
-			Class<?> clazz = Class.forName(descriptor.clazz, true, classLoader);
-			Constructor<?> cons = clazz.getConstructor();
-			Object object = cons.newInstance();
 
-			if (object instanceof ObjectSupport) {
-				pluginContainer.addSupport((ObjectSupport) object);
-				continue;
+			for (Class<?> clazz : descriptor.pluginClasses) {
+				Constructor<?> cons = clazz.getConstructor();
+				Object object = cons.newInstance();
+
+				if (object instanceof ObjectSupport) {
+					pluginContainer.addSupport((ObjectSupport) object);
+					continue;
+				}
+
+				if (object instanceof ContainerExtension) {
+					pluginContainer.addContainerExtension((ContainerExtension) object);
+					continue;
+				}
+
+				if (object instanceof EntitySupport)
+					continue;
+
+				Log.warn("Plugin '" + descriptor.id + "' was successfully loaded but it's plugin class '" + clazz.getSimpleName() + "' object wasn't recognized.");
 			}
-
-			if (object instanceof EntitySupport)
-				continue;
-
-			Log.warn("Plugin '" + descriptor.id + "' was successfully loaded but it's main class object wasn't recognized.");
 		}
 	}
 

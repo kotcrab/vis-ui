@@ -20,23 +20,27 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.module.ContentTable;
+import com.kotcrab.vis.editor.module.editor.PluginContainerModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.physicseditor.models.RigidBodyModel;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
+import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.util.gdx.FocusUtils;
 
 public class PhysicsEditorTab extends MainContentTab {
-	private PhysicsEditorModuleContainer physicsMC;
-
+	private PluginContainerModule pluginContainer;
 	private QuickAccessModule quickAccess;
+
+	private PhysicsEditorModuleContainer physicsMC;
 
 	private PhysicsSettingsTab settingsTab;
 	private ContentTable content;
 
 	public PhysicsEditorTab (ProjectModuleContainer projectMC) {
+		pluginContainer = projectMC.getEditorContainer().get(PluginContainerModule.class);
 		quickAccess = projectMC.getEditorContainer().get(QuickAccessModule.class);
 
 		physicsMC = new PhysicsEditorModuleContainer(projectMC, this);
@@ -45,6 +49,8 @@ public class PhysicsEditorTab extends MainContentTab {
 		physicsMC.add(new PRenderer());
 		physicsMC.add(new PRigidBodiesScreen());
 		physicsMC.add(new PModeController());
+		physicsMC.addAll(pluginContainer.getContainersExtensions(PhysicsEditorModule.class, ExtensionScope.PHYSICS_EDITOR));
+
 		physicsMC.init();
 
 		settingsTab = new PhysicsSettingsTab(physicsMC.get(PRigidBodiesScreen.class), physicsMC.get(PSettingsModule.class).getSettings());
