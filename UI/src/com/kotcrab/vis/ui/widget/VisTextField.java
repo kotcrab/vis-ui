@@ -723,7 +723,11 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	@Override
 	public void setDisabled (boolean disabled) {
 		this.disabled = disabled;
-		if (disabled) FocusManager.getFocus();
+		if (disabled) {
+			FocusManager.getFocus();
+			keyRepeatTask.cancel();
+			keyTypedRepeatTask.cancel();
+		}
 	}
 
 	protected void moveCursor (boolean forward, boolean jump) {
