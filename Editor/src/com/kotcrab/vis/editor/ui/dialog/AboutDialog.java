@@ -40,13 +40,9 @@ public class AboutDialog extends VisWindow {
 		VisTable contentTable = new VisTable(false);
 		contentTable.defaults().expand().left();
 
-		contentTable.add(new VisLabel("VisEditor - game level editor")).row();
-		contentTable.add(new VisLabel("Copyright 2014-2015 Pawel Pastuszak")).row();
-		contentTable.add(new VisLabel("Licensed under GPLv3 license")).row();
-		contentTable.add().spaceBottom(8).row();
-		contentTable.add(new VisLabel("Physics editor based on Aurelien Ribon's Physics Body Editor\n(licensed under Apache2 license)")).row();
-
-		contentTable.add(new VisLabel("Thanks to all contributors and supporters,\nand thanks to you for using this software. <3", Align.center)).center().spaceTop(8).row();
+		contentTable.add(new VisLabel("VisEditor - game level editor\nCopyright 2014-2015 Pawel Pastuszak\nLicensed under Apache2 license")).spaceBottom(8).row();
+		contentTable.add(new VisLabel("Physics editor based on Aurelien Ribon's Physics Body Editor\n(licensed under Apache2 license)")).spaceBottom(8).row();
+		contentTable.add(new VisLabel("Thanks to all contributors and supporters,\nand thanks to you for using this software. <3", Align.center)).center().row();
 
 		VisTextButton okButton;
 
