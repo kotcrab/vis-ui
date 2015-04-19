@@ -70,6 +70,7 @@ public class ObjectSupportModule extends ProjectModule {
 		}
 
 		support.assignId(desc.id);
+		support.bindModules(projectContainer);
 	}
 
 	private SupportDescriptor getDescriptorBySupport (ObjectSupport support) {

@@ -26,10 +26,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.plugin.ObjectSupport;
-import com.kotcrab.vis.editor.scene.EditorObject;
-import com.kotcrab.vis.editor.util.EntityUtils;
-import com.kotcrab.vis.editor.util.FloatValue;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.RedoEvent;
@@ -40,14 +36,13 @@ import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.UndoableAction;
 import com.kotcrab.vis.editor.module.scene.UndoableActionGroup;
+import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.*;
+import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.editor.util.EventStopper;
+import com.kotcrab.vis.editor.util.FloatValue;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
-import com.kotcrab.vis.runtime.data.EntityData;
-import com.kotcrab.vis.runtime.data.MusicData;
-import com.kotcrab.vis.runtime.data.ParticleEffectData;
-import com.kotcrab.vis.runtime.data.SoundData;
-import com.kotcrab.vis.runtime.data.SpriteData;
+import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
@@ -463,8 +458,10 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	}
 
 	public void loadSupportsSpecificTables (ObjectSupportModule supportModule) {
-		for(ObjectSupport support : supportModule.getSupports())
-			specificTables.add(support.getUIPropertyTable());
+		for (ObjectSupport support : supportModule.getSupports()) {
+			SpecificObjectTable specificObjectTable = support.getUIPropertyTable();
+			if (specificObjectTable != null) specificTables.add(specificObjectTable);
+		}
 	}
 
 	private static class SnapshotUndoableActionGroup extends UndoableActionGroup {

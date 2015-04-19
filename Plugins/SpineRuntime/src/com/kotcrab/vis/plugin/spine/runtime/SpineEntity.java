@@ -1,18 +1,37 @@
 package com.kotcrab.vis.plugin.spine.runtime;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.esotericsoftware.spine.Skeleton;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.esotericsoftware.spine.*;
 import com.kotcrab.vis.runtime.entity.Entity;
 
 public class SpineEntity extends Entity{
 	private String atlasPath;
 
 	protected Skeleton skeleton;
+	protected AnimationState state;
+	private SkeletonRenderer renderer;
 
-	public SpineEntity (String id, String atlasPath, String skeletonPath, Skeleton skeleton) {
+	public SpineEntity (String id, String atlasPath, String skeletonPath, SkeletonData skeletonData) {
 		super(id);
 		this.atlasPath = atlasPath;
 		setAssetPath(skeletonPath);
+
+		skeleton = new Skeleton(skeletonData);
+
+		AnimationStateData stateData = new AnimationStateData(skeletonData);
+		state = new AnimationState(stateData);
+
+		renderer = new SkeletonRenderer();
+	}
+
+	@Override
+	public void render (Batch batch) {
+		state.update(Gdx.graphics.getDeltaTime());
+		state.apply(skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
+		skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
+		renderer.draw(batch, skeleton); // Draw the skeleton images.
 	}
 
 	public String getAtlasPath () {
@@ -69,5 +88,9 @@ public class SpineEntity extends Entity{
 
 	public Color getColor () {
 		return skeleton.getColor();
+	}
+
+	public Skeleton getSkeleton () {
+		return skeleton;
 	}
 }

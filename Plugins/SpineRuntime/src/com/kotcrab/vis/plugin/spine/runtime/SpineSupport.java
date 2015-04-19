@@ -3,7 +3,6 @@ package com.kotcrab.vis.plugin.spine.runtime;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.SkeletonData;
 import com.kotcrab.vis.plugin.spine.runtime.SkeletonDataLoader.SkeletonDataLoaderParameter;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
@@ -30,7 +29,7 @@ public class SpineSupport implements EntitySupport<SpineData, SpineEntity> {
 	@Override
 	public SpineEntity getInstanceFromData (AssetManager manager, SpineData data) {
 		SkeletonData skeletonData = manager.get(data.skeletonPath, SkeletonData.class);
-		SpineEntity entity = new SpineEntity(data.id, data.atlasPath, data.skeletonPath, new Skeleton(skeletonData));
+		SpineEntity entity = new SpineEntity(data.id, data.atlasPath, data.skeletonPath, skeletonData);
 		data.loadTo(entity);
 		return entity;
 	}
