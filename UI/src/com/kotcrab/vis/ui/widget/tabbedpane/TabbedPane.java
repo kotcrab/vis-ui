@@ -125,9 +125,9 @@ public class TabbedPane {
 	}
 
 	/**
-	 * Removes tab from pane, if tab is dirty this will cause to display "Unsaved changes" dialog!
+	 * Removes tab from pane, if tab is dirty this won't cause to display "Unsaved changes" dialog!
 	 * @param tab to be removed
-	 * @return true if tab was removed, false if that tab wasn't added to this pane or "Unsaved changes" dialog was started
+	 * @return true if tab was removed, false if that tab wasn't added to this pane
 	 */
 	public boolean remove (Tab tab) {
 		return remove(tab, true);
