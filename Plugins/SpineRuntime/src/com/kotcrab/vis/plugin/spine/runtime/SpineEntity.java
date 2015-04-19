@@ -6,18 +6,33 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.esotericsoftware.spine.*;
 import com.kotcrab.vis.runtime.entity.Entity;
 
-public class SpineEntity extends Entity{
-	private String atlasPath;
+public class SpineEntity extends Entity {
+	protected String atlasPath;
 
-	protected Skeleton skeleton;
-	protected AnimationState state;
-	private SkeletonRenderer renderer;
+	protected transient Skeleton skeleton;
+	protected transient AnimationState state;
+	private transient SkeletonRenderer renderer; //TODO shared renderer
 
 	public SpineEntity (String id, String atlasPath, String skeletonPath, SkeletonData skeletonData) {
 		super(id);
 		this.atlasPath = atlasPath;
 		setAssetPath(skeletonPath);
 
+		init(skeletonData);
+	}
+
+	public SpineEntity (SpineEntity original) {
+		super(original.getId());
+		this.atlasPath = original.atlasPath;
+		setAssetPath(original.getAssetPath());
+		init(original.getSkeleton().getData());
+	}
+
+	public void onDeserialize (SkeletonData skeletonData) {
+		init(skeletonData);
+	}
+
+	protected void init (SkeletonData skeletonData) {
 		skeleton = new Skeleton(skeletonData);
 
 		AnimationStateData stateData = new AnimationStateData(skeletonData);

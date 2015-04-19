@@ -357,7 +357,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.add(new TextureCacheModule());
 		projectMC.add(new FontCacheModule());
 		projectMC.add(new ParticleCacheModule());
-		projectMC.add(new ObjectSupportModule());
 		projectMC.add(new ExportModule());
 		projectMC.add(new SceneIOModule());
 		projectMC.add(new SceneMetadataModule());
@@ -366,6 +365,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.add(new SceneTabsModule());
 		projectMC.add(new ProjectInfoTabModule());
 		projectMC.add(new AssetsUIModule());
+		projectMC.add(new ObjectSupportModule());
 		projectMC.addAll(pluginContainer.getContainersExtensions(ProjectModule.class, ExtensionScope.PROJECT));
 
 		projectMC.init();

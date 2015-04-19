@@ -16,21 +16,45 @@
 
 package com.kotcrab.vis.plugin.spine;
 
+import com.badlogic.gdx.graphics.Color;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 
-public class SpineSerializer extends Serializer<SpineObject> {
+public class SpineSerializer extends CompatibleFieldSerializer<SpineObject> {
+	private SpineCacheModule spineCache;
+
+	public SpineSerializer (Kryo kryo, SpineCacheModule spineCache) {
+		super(kryo, SpineObject.class);
+		this.spineCache = spineCache;
+	}
 
 	@Override
 	public void write (Kryo kryo, Output output, SpineObject object) {
+		super.write(kryo, output, object);
+		output.writeFloat(object.getX());
+		output.writeFloat(object.getY());
 
+		output.writeBoolean(object.isFlipX());
+		output.writeBoolean(object.isFlipY());
+
+		kryo.writeObject(output, object.getColor());
 	}
 
 	@Override
 	public SpineObject read (Kryo kryo, Input input, Class<SpineObject> type) {
-		return null;
+		SpineObject object = super.read(kryo, input, type);
+		object.onDeserialize(spineCache.get(object.getAtlasPath(), object.getAssetPath()));
+		object.setPosition(input.readFloat(), input.readFloat());
+		object.setFlip(input.readBoolean(), input.readBoolean());
+		object.setColor(kryo.readObject(input, Color.class));
+		return object;
+	}
+
+	@Override
+	public SpineObject copy (Kryo kryo, SpineObject original) {
+		return new SpineObject(original);
 	}
 }
 

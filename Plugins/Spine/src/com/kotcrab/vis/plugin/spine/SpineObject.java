@@ -16,6 +16,16 @@ public class SpineObject extends SpineEntity implements EditorObject {
 		bounds = new Rectangle();
 	}
 
+	public SpineObject (SpineObject original) {
+		super(original);
+		this.bounds = original.bounds;
+	}
+
+	@Override
+	public boolean isFlipSupported () {
+		return true;
+	}
+
 	@Override
 	public float getWidth () {
 		return bounds.width;
@@ -41,7 +51,8 @@ public class SpineObject extends SpineEntity implements EditorObject {
 			if (attachment == null) continue;
 
 			float[] vertices = null;
-			if (attachment instanceof BoundingBoxAttachment) vertices = ((BoundingBoxAttachment) attachment).getVertices();
+			if (attachment instanceof BoundingBoxAttachment)
+				vertices = ((BoundingBoxAttachment) attachment).getVertices();
 			if (attachment instanceof RegionAttachment)
 				vertices = ((RegionAttachment) attachment).getWorldVertices();
 			if (attachment instanceof SkinnedMeshAttachment)

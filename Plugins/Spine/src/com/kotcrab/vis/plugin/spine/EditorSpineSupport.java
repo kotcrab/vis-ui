@@ -6,7 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Serializer;
 import com.kotcrab.vis.editor.module.project.ExportModule;
+import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.ContentItemProperties;
@@ -19,16 +21,17 @@ import com.kotcrab.vis.runtime.plugin.VisPlugin;
 @VisPlugin
 public class EditorSpineSupport extends ObjectSupport<SpineData, SpineObject> {
 	private SpineCacheModule spineCache;
+	private FileAccessModule fileAccess;
 
 	private SpineSerializer serializer;
 
-	public EditorSpineSupport () {
-		serializer = new SpineSerializer();
-	}
-
 	@Override
 	public void bindModules (ProjectModuleContainer projectMC) {
+		SceneIOModule sceneIOModule = projectMC.get(SceneIOModule.class);
 		spineCache = projectMC.get(SpineCacheModule.class);
+		fileAccess = projectMC.get(FileAccessModule.class);
+
+		serializer = new SpineSerializer(sceneIOModule.getKryo(), spineCache);
 	}
 
 	@Override
@@ -62,7 +65,8 @@ public class EditorSpineSupport extends ObjectSupport<SpineData, SpineObject> {
 		return new VisDropSource(dragAndDrop, item).defaultView("New Spine Animation \n (drop on scene to add)").disposeOnNullTarget()
 				.setObjectProvider(() -> {
 					FileHandle atlasFile = FileUtils.sibling(item.getFile(), "atlas");
-					return new SpineObject(atlasFile.path(), item.getFile().path(), spineCache.get(atlasFile, item.getFile()));
+					return new SpineObject(fileAccess.relativizeToAssetsFolder(atlasFile.path()), fileAccess.relativizeToAssetsFolder(item.getFile().path()),
+							spineCache.get(atlasFile, item.getFile()));
 				});
 	}
 
@@ -76,8 +80,4 @@ public class EditorSpineSupport extends ObjectSupport<SpineData, SpineObject> {
 
 	}
 
-	@Override
-	public boolean canAnalyze (FileHandle file, String relativePath) {
-		return false;
-	}
 }
