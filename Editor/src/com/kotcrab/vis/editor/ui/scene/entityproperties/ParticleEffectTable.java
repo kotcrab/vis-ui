@@ -26,8 +26,8 @@ import static com.kotcrab.vis.editor.util.EntityUtils.setCommonCheckBoxState;
 class ParticleEffectTable extends SpecificObjectTable {
 	private IndeterminateCheckbox activeCheck;
 
-	public ParticleEffectTable (EntityProperties properties) {
-		super(properties, true);
+	@Override
+	protected void init () {
 		activeCheck = new IndeterminateCheckbox("Active on start");
 		new Tooltip(activeCheck, "Controls whether to automatically start this effect on runtime.\nIn editor, particle effect are always active");
 

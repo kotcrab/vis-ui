@@ -26,9 +26,9 @@ import com.kotcrab.vis.ui.widget.Tooltip;
 class BMPTextObjectTable extends TextObjectTable {
 	private IndeterminateCheckbox distanceFieldCheck;
 
-	public BMPTextObjectTable (final EntityProperties properties) {
-		super(properties);
-
+	@Override
+	protected void init () {
+		super.init();
 		distanceFieldCheck = new IndeterminateCheckbox("Use DF");
 		distanceFieldCheck.addListener(properties.getSharedCheckBoxChangeListener());
 

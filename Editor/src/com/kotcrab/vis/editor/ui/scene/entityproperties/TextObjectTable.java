@@ -43,9 +43,8 @@ abstract class TextObjectTable extends SpecificObjectTable {
 
 	protected VisTable fontPropertiesTable;
 
-	public TextObjectTable (final EntityProperties properties) {
-		super(properties, true);
-
+	@Override
+	protected void init () {
 		textField = new VisValidableTextField();
 		textField.addListener(properties.getSharedChangeListener());
 		textField.setProgrammaticChangeEvents(false);

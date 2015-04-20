@@ -22,9 +22,20 @@ import com.kotcrab.vis.ui.widget.VisTable;
 public abstract class SpecificObjectTable extends VisTable {
 	protected EntityProperties properties;
 
-	public SpecificObjectTable (EntityProperties properties, boolean useVisDefaults) {
+	public SpecificObjectTable () {
+		this(true);
+	}
+
+	public SpecificObjectTable (boolean useVisDefaults) {
 		super(useVisDefaults);
+	}
+
+	protected abstract void init ();
+
+	public void setProperties (EntityProperties properties) {
+		if (this.properties != null) throw new IllegalArgumentException("Properties already assigned!");
 		this.properties = properties;
+		init();
 	}
 
 	public abstract boolean isSupported (EditorObject entity);

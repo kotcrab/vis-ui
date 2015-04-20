@@ -19,8 +19,8 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorObject;
-import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.editor.scene.MusicObject;
+import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
@@ -31,8 +31,8 @@ class MusicObjectTable extends SpecificObjectTable {
 	private IndeterminateCheckbox loopingCheck;
 	private IndeterminateCheckbox playOnStartCheck;
 
-	public MusicObjectTable (EntityProperties properties) {
-		super(properties, true);
+	@Override
+	protected void init () {
 		loopingCheck = new IndeterminateCheckbox("Loop");
 		playOnStartCheck = new IndeterminateCheckbox("Play on start");
 

@@ -19,15 +19,14 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.ObjectGroup;
+import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.ui.widget.Tooltip;
-
-import static com.kotcrab.vis.editor.util.EntityUtils.setCommonCheckBoxState;
 
 class ObjectGroupTable extends SpecificObjectTable {
 	private IndeterminateCheckbox preserveCheck;
 
-	public ObjectGroupTable (EntityProperties properties) {
-		super(properties, true);
+	@Override
+	protected void init () {
 		preserveCheck = new IndeterminateCheckbox("Preserve on runtime");
 		new Tooltip(preserveCheck, "Controls whether to preserve this group on runtime.\nIf enabled it will be possible to get this group by ID");
 
@@ -48,7 +47,7 @@ class ObjectGroupTable extends SpecificObjectTable {
 	public void updateUIValues () {
 		Array<EditorObject> entities = properties.getEntities();
 
-		setCommonCheckBoxState(entities, preserveCheck, entity -> ((ObjectGroup) entity).isPreserveOnRuntime());
+		EntityUtils.setCommonCheckBoxState(entities, preserveCheck, entity -> ((ObjectGroup) entity).isPreserveOnRuntime());
 	}
 
 	@Override

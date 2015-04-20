@@ -12,6 +12,7 @@ import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.ContentItemProperties;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.SpecificObjectTable;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.VisDropSource;
 import com.kotcrab.vis.plugin.spine.runtime.SpineData;
@@ -19,11 +20,13 @@ import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
 @VisPlugin
-public class EditorSpineSupport extends ObjectSupport<SpineData, SpineObject> {
+public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 	private SpineCacheModule spineCache;
 	private FileAccessModule fileAccess;
 
 	private SpineSerializer serializer;
+
+	private SpineObjectTable spineTable;
 
 	@Override
 	public void bindModules (ProjectModuleContainer projectMC) {
@@ -32,6 +35,12 @@ public class EditorSpineSupport extends ObjectSupport<SpineData, SpineObject> {
 		fileAccess = projectMC.get(FileAccessModule.class);
 
 		serializer = new SpineSerializer(sceneIOModule.getKryo(), spineCache);
+		spineTable = new SpineObjectTable();
+	}
+
+	@Override
+	public SpecificObjectTable getUIPropertyTable () {
+		return spineTable;
 	}
 
 	@Override

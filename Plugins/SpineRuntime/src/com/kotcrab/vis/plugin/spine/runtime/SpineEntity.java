@@ -10,8 +10,12 @@ public class SpineEntity extends Entity {
 	protected String atlasPath;
 
 	protected transient Skeleton skeleton;
+	protected transient AnimationStateData stateData;
 	protected transient AnimationState state;
 	private transient SkeletonRenderer renderer; //TODO shared renderer
+
+	private boolean playOnStart;
+	private String defaultAnimation;
 
 	public SpineEntity (String id, String atlasPath, String skeletonPath, SkeletonData skeletonData) {
 		super(id);
@@ -28,17 +32,19 @@ public class SpineEntity extends Entity {
 		init(original.getSkeleton().getData());
 	}
 
-	public void onDeserialize (SkeletonData skeletonData) {
-		init(skeletonData);
-	}
-
 	protected void init (SkeletonData skeletonData) {
 		skeleton = new Skeleton(skeletonData);
 
-		AnimationStateData stateData = new AnimationStateData(skeletonData);
+		stateData = new AnimationStateData(skeletonData);
 		state = new AnimationState(stateData);
 
 		renderer = new SkeletonRenderer();
+
+		if (defaultAnimation == null)
+			defaultAnimation = skeleton.getData().getAnimations().get(0).getName();
+
+		if(playOnStart)
+			state.setAnimation(0, defaultAnimation, true);
 	}
 
 	@Override
@@ -107,5 +113,21 @@ public class SpineEntity extends Entity {
 
 	public Skeleton getSkeleton () {
 		return skeleton;
+	}
+
+	public String getDefaultAnimation () {
+		return defaultAnimation;
+	}
+
+	public void setDefaultAnimation (String defaultAnimation) {
+		this.defaultAnimation = defaultAnimation;
+	}
+
+	public boolean isPlayOnStart () {
+		return playOnStart;
+	}
+
+	public void setPlayOnStart (boolean playOnStart) {
+		this.playOnStart = playOnStart;
 	}
 }

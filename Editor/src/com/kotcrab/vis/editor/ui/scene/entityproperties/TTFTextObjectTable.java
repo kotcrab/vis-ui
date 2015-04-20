@@ -18,10 +18,10 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.scene.EditorObject;
-import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
@@ -31,9 +31,9 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 class TTFTextObjectTable extends TextObjectTable {
 	private NumberInputField sizeInputField;
 
-	public TTFTextObjectTable (final EntityProperties properties) {
-		super(properties);
-
+	@Override
+	protected void init () {
+		super.init();
 		sizeInputField = properties.createNewNumberField();
 		sizeInputField.addValidator(Validators.INTEGERS);
 		sizeInputField.addValidator(new GreaterThanValidator(FontCacheModule.MIN_FONT_SIZE));

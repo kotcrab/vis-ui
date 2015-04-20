@@ -179,11 +179,11 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		createRotationTintTable();
 		createFlipTable();
 
-		specificTables.add(new TTFTextObjectTable(this));
-		specificTables.add(new BMPTextObjectTable(this));
-		specificTables.add(new MusicObjectTable(this));
-		specificTables.add(new ObjectGroupTable(this));
-		specificTables.add(new ParticleEffectTable(this));
+		registerSpecificTable(new TTFTextObjectTable());
+		registerSpecificTable(new BMPTextObjectTable());
+		registerSpecificTable(new MusicObjectTable());
+		registerSpecificTable(new ObjectGroupTable());
+		registerSpecificTable(new ParticleEffectTable());
 
 		propertiesTable = new VisTable(true);
 
@@ -296,15 +296,14 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		propertiesTable.add(positionTable).row();
 		if (EntityUtils.isScaleSupportedForEntities(entities)) propertiesTable.add(scaleTable).row();
 		if (EntityUtils.isOriginSupportedForEntities(entities)) propertiesTable.add(originTable).row();
-		if (EntityUtils.isRotationSupportedForEntities(entities) || EntityUtils.isTintSupportedForEntities(entities))
-			propertiesTable.add(rotationTintTable).row();
-		if (EntityUtils.isFlipSupportedForEntities(entities)) propertiesTable.add(flipTable).right().fill(false).row();
+		if (EntityUtils.isRotationSupportedForEntities(entities) || EntityUtils.isTintSupportedForEntities(entities)) propertiesTable.add(rotationTintTable).row();
+		if (EntityUtils.isFlipSupportedForEntities(entities)) propertiesTable.add(flipTable).right().fill(false).spaceBottom(2).row();
 
 		activeSpecificTable = null;
 		for (SpecificObjectTable table : specificTables) {
 			if (checkEntityList(table)) {
 				activeSpecificTable = table;
-				propertiesTable.addSeparator();
+				propertiesTable.addSeparator().space(0);
 				propertiesTable.add(table).row();
 				break;
 			}
@@ -460,12 +459,16 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	public void loadSupportsSpecificTables (ObjectSupportModule supportModule) {
 		for (ObjectSupport support : supportModule.getSupports()) {
 			SpecificObjectTable specificObjectTable = support.getUIPropertyTable();
-			if (specificObjectTable != null) specificTables.add(specificObjectTable);
+			if (specificObjectTable != null) registerSpecificTable(specificObjectTable);
 		}
 	}
 
-	private static class SnapshotUndoableActionGroup extends UndoableActionGroup {
+	private void registerSpecificTable (SpecificObjectTable specificObjectTable) {
+		specificTables.add(specificObjectTable);
+		specificObjectTable.setProperties(this);
+	}
 
+	private static class SnapshotUndoableActionGroup extends UndoableActionGroup {
 		public void dropUnchanged () {
 			Iterator<UndoableAction> iterator = actions.iterator();
 
