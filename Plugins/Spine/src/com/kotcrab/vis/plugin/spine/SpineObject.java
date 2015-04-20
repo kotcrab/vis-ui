@@ -28,6 +28,11 @@ public class SpineObject extends SpineEntity implements EditorObject {
 	}
 
 	@Override
+	public boolean isTintSupported () {
+		return true;
+	}
+
+	@Override
 	public float getWidth () {
 		return bounds.width;
 	}
