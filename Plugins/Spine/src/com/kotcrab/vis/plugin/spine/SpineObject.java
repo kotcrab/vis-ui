@@ -9,6 +9,7 @@ import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.plugin.spine.runtime.SpineEntity;
 
 public class SpineObject extends SpineEntity implements EditorObject {
+	private boolean previewInEditor = false;
 	private Rectangle bounds;
 
 	public SpineObject (String atlasPath, String skeletonPath, SkeletonData skeletonData) {
@@ -36,10 +37,37 @@ public class SpineObject extends SpineEntity implements EditorObject {
 		return bounds.height;
 	}
 
+	private void updateAnimation () {
+		state.clearTrack(0);
+		skeleton.setToSetupPose();
+
+		if (previewInEditor)
+			state.setAnimation(0, getDefaultAnimation(), true);
+	}
+
+	public boolean isPreviewInEditor () {
+		return previewInEditor;
+	}
+
+	public void setPreviewInEditor (boolean previewInEditor) {
+		this.previewInEditor = previewInEditor;
+		updateAnimation();
+	}
+
+	@Override
+	public void setDefaultAnimation (String defaultAnimation) {
+		super.setDefaultAnimation(defaultAnimation);
+		updateAnimation();
+	}
+
 	@Override
 	public Rectangle getBoundingRectangle () {
 		computeBoundingRectangle();
 		return bounds;
+	}
+
+	public void onDeserialize (SkeletonData skeletonData) {
+		init(skeletonData);
 	}
 
 	private void computeBoundingRectangle () {

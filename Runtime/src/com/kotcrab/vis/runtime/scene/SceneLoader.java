@@ -189,7 +189,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				spriteData.loadTo(entity);
 
 				entities.add(entity);
-				System.out.println("f");
 				continue;
 			}
 
