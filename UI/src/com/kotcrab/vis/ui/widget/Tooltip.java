@@ -63,6 +63,20 @@ public class Tooltip extends VisTable {
 		init(target, content);
 	}
 
+	/** Creates new Tooltip without setting tooltip target */
+	public Tooltip (String text) {
+		super(true);
+		VisLabel label = new VisLabel(text);
+		label.setAlignment(Align.center);
+		init(null, label);
+	}
+
+	/** Creates new Tooltip without setting tooltip target */
+	public Tooltip (Actor content) {
+		super(true);
+		init(null, content);
+	}
+
 	/**
 	 * Remove any attached tooltip from target actor
 	 * @param target that tooltips will be removed
@@ -84,7 +98,7 @@ public class Tooltip extends VisTable {
 		contentCell = add(content).padLeft(3).padRight(3).padBottom(2);
 		pack();
 
-		attach();
+		if (target != null) attach();
 
 		addListener(new InputListener() {
 			@Override
@@ -114,6 +128,7 @@ public class Tooltip extends VisTable {
 	 * calling target.clearListeners() )
 	 */
 	public void attach () {
+		if (target == null) return;
 		Array<EventListener> listeners = target.getListeners();
 		for (EventListener listener : listeners)
 			if (listener instanceof TooltipInputListener)
@@ -127,6 +142,7 @@ public class Tooltip extends VisTable {
 	 * same target by calling {@link Tooltip#attach()}
 	 */
 	public void detach () {
+		if (target == null) return;
 		target.removeListener(listener);
 	}
 
