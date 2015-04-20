@@ -62,7 +62,7 @@ load
   index: -1
 more
   rotate: false
-  xy: 416, 62
+  xy: 440, 86
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -140,6 +140,13 @@ sound
 undo
   rotate: false
   xy: 74, 2
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+warning
+  rotate: false
+  xy: 416, 56
   size: 22, 22
   orig: 22, 22
   offset: 0, 0

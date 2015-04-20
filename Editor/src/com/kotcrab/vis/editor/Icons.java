@@ -106,6 +106,11 @@ public enum Icons implements IconAsset {
 		public String getIconName () {
 			return "music";
 		}
+	},
+	WARNING {
+		public String getIconName () {
+			return "warning";
+		}
 	}
 }
 
