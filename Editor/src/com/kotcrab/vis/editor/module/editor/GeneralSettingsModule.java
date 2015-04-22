@@ -27,11 +27,6 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 	}
 
 	@Override
-	public boolean settingsChanged () {
-		return true;
-	}
-
-	@Override
 	public void buildTable () {
 		prepareTable();
 		settingsTable.add(confirmExitCheck = new VisCheckBox("Confirm exit", config.confirmExit)).left();

@@ -37,6 +37,11 @@ public abstract class EditorSettingsModule<T> extends EditorModule implements Se
 	}
 
 	@Override
+	public boolean settingsChanged () {
+		return true;
+	}
+
+	@Override
 	public String getSettingsName () {
 		return name;
 	}
