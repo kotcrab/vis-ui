@@ -170,6 +170,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(fileChooser = new FileChooserModule());
 		editorMC.add(new MenuBarModule(projectMC));
 		editorMC.add(new ToolbarModule());
+		editorMC.add(new ToastModule());
 		editorMC.add(new TabsModule(createTabsModuleListener()));
 		editorMC.add(new QuickAccessModule(createQuickAccessModuleListener()));
 		editorMC.add(new StatusBarModule());
