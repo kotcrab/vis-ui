@@ -99,7 +99,7 @@ public class SceneIOModule extends ProjectModule {
 			Log.exception(e);
 		}
 
-		throw new IllegalStateException("There was an error during scene deserializing");
+		throw new IllegalStateException("There was an unknown error during scene loading");
 	}
 
 	public boolean save (EditorScene scene) {

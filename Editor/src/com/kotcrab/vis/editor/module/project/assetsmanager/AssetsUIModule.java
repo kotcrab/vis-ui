@@ -22,12 +22,15 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.esotericsoftware.kryo.KryoException;
 import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
@@ -41,6 +44,7 @@ import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.DirectoriesOnlyFileFilter;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
+import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.layout.GridGroup;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
@@ -50,6 +54,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
 public class AssetsUIModule extends ProjectModule implements WatchListener, TabbedPaneListener {
+
 	private TabsModule tabsModule;
 	private QuickAccessModule quickAccessModule;
 
@@ -75,16 +80,18 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 	private VisLabel contentTitleLabel;
 	private SearchField searchField;
 
+	private Stage stage;
+
 	private AssetsTab assetsTab;
-
 	private AssetDragAndDrop assetDragAndDrop;
-
 	private AssetsPopupMenu popupMenu;
 
 	private ObjectMap<FileHandle, TextureAtlasViewTab> atlasViews = new ObjectMap<>();
 
 	@Override
 	public void init () {
+		stage = Editor.instance.getStage();
+
 		initModule();
 		initUI();
 
@@ -162,7 +169,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 	private void createToolbarTable () {
 		contentTitleLabel = new VisLabel("Content");
 		searchField = new SearchField(newText -> {
-			if(currentDirectory == null) return true;
+			if (currentDirectory == null) return true;
 
 			refreshFilesList();
 
@@ -279,8 +286,14 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 
 	private void openFile (FileHandle file) {
 		if (file.extension().equals("scene")) {
-			EditorScene scene = sceneIO.load(file);
-			sceneTabsModule.open(scene);
+			try {
+				EditorScene scene = sceneIO.load(file);
+				sceneTabsModule.open(scene);
+			} catch (KryoException e) {
+				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file or missing required plugin.", e);
+				Log.exception(e);
+			}
+
 			return;
 		}
 
@@ -348,16 +361,16 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 			if (isOpenSupported(item.getFile().extension()))
 				addItem(MenuUtils.createMenuItem("Open", () -> openFile(item.getFile())));
 
-			addItem(MenuUtils.createMenuItem("Copy", () -> DialogUtils.showOKDialog(getStage(), "Message", "Not implemented yet!")));
-			addItem(MenuUtils.createMenuItem("Paste", () -> DialogUtils.showOKDialog(getStage(), "Message", "Not implemented yet!")));
-			addItem(MenuUtils.createMenuItem("Move", () -> DialogUtils.showOKDialog(getStage(), "Message", "Not implemented yet!")));
-			addItem(MenuUtils.createMenuItem("Rename", () -> DialogUtils.showOKDialog(getStage(), "Message", "Not implemented yet!")));
+			addItem(MenuUtils.createMenuItem("Copy", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
+			addItem(MenuUtils.createMenuItem("Paste", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
+			addItem(MenuUtils.createMenuItem("Move", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
+			addItem(MenuUtils.createMenuItem("Rename", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
 			addItem(MenuUtils.createMenuItem("Delete", () -> showDeleteDialog(item.getFile())));
 		}
 
 		private void showDeleteDialog (FileHandle file) {
 			boolean canBeSafeDeleted = assetsUsageAnalyzer.canAnalyze(file);
-			getStage().addActor(new DeleteDialog(file, canBeSafeDeleted, result -> {
+			stage.addActor(new DeleteDialog(file, canBeSafeDeleted, result -> {
 				if (canBeSafeDeleted == false) {
 					FileUtils.delete(file);
 					return;
