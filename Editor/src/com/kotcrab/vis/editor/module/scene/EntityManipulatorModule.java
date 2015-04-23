@@ -554,8 +554,14 @@ public class EntityManipulatorModule extends SceneModule {
 
 		@Override
 		public void undo () {
-			for (int i = 0; i < entities.size; i++)
-				scene.entities.insert(indexes.get(i), entities.get(i));
+			for (int i = 0; i < entities.size; i++) {
+				int index = indexes.get(i);
+
+				if (index > scene.entities.size)
+					scene.entities.add(entities.get(i));
+				else
+					scene.entities.insert(indexes.get(i), entities.get(i));
+			}
 
 			resetSelection();
 		}

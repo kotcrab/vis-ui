@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.lang.reflect.Constructor;
 
 public class EditorSettingsIOModule extends EditorModule {
 	private Kryo kryo;
@@ -64,8 +65,9 @@ public class EditorSettingsIOModule extends EditorModule {
 		}
 
 		try {
-			return type.newInstance();
-		} catch (InstantiationException | IllegalAccessException e) {
+			Constructor<T> cos = type.getConstructor();
+			return cos.newInstance();
+		} catch (ReflectiveOperationException e) {
 			Log.exception(e);
 		}
 
