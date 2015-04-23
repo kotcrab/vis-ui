@@ -34,6 +34,7 @@ public class ParticleObject extends ParticleEffectEntity implements EditorObject
 	public ParticleObject (ParticleObject other, ParticleEffect effect) {
 		super(other.getId(), other.getAssetPath(), effect);
 		bounds = new Rectangle();
+		setPosition(other.getX(), other.getY());
 	}
 
 	public void onDeserialize (ParticleEffect effect, float x, float y) {
