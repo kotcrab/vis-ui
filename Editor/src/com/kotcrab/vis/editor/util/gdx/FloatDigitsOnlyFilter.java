@@ -19,10 +19,10 @@ package com.kotcrab.vis.editor.util.gdx;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
 
-public class FloatDigitsOnlyFilter implements TextFieldFilter{
+public class FloatDigitsOnlyFilter implements TextFieldFilter {
 	@Override
 	public boolean acceptChar (VisTextField textField, char c) {
-		if(c == '.') return true;
+		if (c == '.') return true;
 		return Character.isDigit(c);
 	}
 }

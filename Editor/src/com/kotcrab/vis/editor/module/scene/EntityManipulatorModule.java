@@ -55,11 +55,10 @@ public class EntityManipulatorModule extends SceneModule {
 	private float copyAttachX, copyAttachY;
 	private Array<EditorObject> entitiesClipboard = new Array<>();
 
+	private RectangularSelection rectangularSelection;
 	private final Array<EditorObject> selectedEntities = new Array<>();
 
 	private float lastTouchX, lastTouchY;
-
-	private RectangularSelection rectangularSelection;
 
 	private boolean mouseInsideSelected;
 	private boolean cameraDragged;
@@ -169,7 +168,6 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	private void paste () {
-
 		if (entitiesClipboard.size > 0) {
 			float x = camera.getInputX();
 			float y = camera.getInputY();
@@ -556,11 +554,12 @@ public class EntityManipulatorModule extends SceneModule {
 		public void undo () {
 			for (int i = 0; i < entities.size; i++) {
 				int index = indexes.get(i);
+				EditorObject obj = entities.get(i);
 
 				if (index > scene.entities.size)
-					scene.entities.add(entities.get(i));
+					scene.entities.add(obj);
 				else
-					scene.entities.insert(indexes.get(i), entities.get(i));
+					scene.entities.insert(index, obj);
 			}
 
 			resetSelection();

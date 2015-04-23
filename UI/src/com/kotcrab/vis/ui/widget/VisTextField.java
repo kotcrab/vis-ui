@@ -27,7 +27,9 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout.GlyphRun;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.*;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.DefaultOnscreenKeyboard;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.OnscreenKeyboard;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
@@ -229,7 +231,8 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 	protected void calculateOffsets () {
 		float visibleWidth = getWidth();
-		if (style.background != null) visibleWidth -= style.background.getLeftWidth() + style.background.getRightWidth();
+		if (style.background != null)
+			visibleWidth -= style.background.getLeftWidth() + style.background.getRightWidth();
 
 		// Check if the cursor has gone out the left or right side of the visible area and adjust renderoffset.
 		float position = glyphPositions.get(cursor);
@@ -416,6 +419,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 		if (selectionStart > newDisplayText.length()) selectionStart = textLength;
 	}
+
 	private void blink () {
 		long time = TimeUtils.nanoTime();
 		if ((time - lastBlink) / 1000000000.0f > blinkTime) {
@@ -797,14 +801,18 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		}
 	}
 
-	/** Interface for listening to typed characters.
-	 * @author mzechner */
+	/**
+	 * Interface for listening to typed characters.
+	 * @author mzechner
+	 */
 	static public interface TextFieldListener {
 		public void keyTyped (VisTextField textField, char c);
 	}
 
-	/** Interface for filtering characters entered into the text field.
-	 * @author mzechner */
+	/**
+	 * Interface for filtering characters entered into the text field.
+	 * @author mzechner
+	 */
 	static public interface TextFieldFilter {
 		public boolean acceptChar (VisTextField textField, char c);
 
@@ -816,7 +824,6 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 		}
 	}
-
 
 	class KeyRepeatTask extends Task {
 		int keycode;

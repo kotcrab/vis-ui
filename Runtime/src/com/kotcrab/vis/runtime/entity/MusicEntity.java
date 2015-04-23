@@ -20,7 +20,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.badlogic.gdx.utils.Disposable;
 
-public class MusicEntity extends Entity implements Disposable{
+public class MusicEntity extends Entity implements Disposable {
 	protected transient Music music;
 
 	private boolean playOnStart;

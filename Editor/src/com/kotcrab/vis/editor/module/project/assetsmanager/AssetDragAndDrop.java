@@ -81,7 +81,7 @@ public class AssetDragAndDrop {
 	}
 
 	public void addSources (Array<AtlasItem> items) {
-		for(AtlasItem item : items)
+		for (AtlasItem item : items)
 			addSource(item);
 	}
 

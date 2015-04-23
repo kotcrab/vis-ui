@@ -37,17 +37,17 @@ public class FileChooserModule extends EditorModule {
 		chooser.setListener(new FileChooserListener() {
 			@Override
 			public void selected (Array<FileHandle> files) {
-				if(listener != null) listener.selected(files);
+				if (listener != null) listener.selected(files);
 			}
 
 			@Override
 			public void selected (FileHandle file) {
-				if(listener != null) listener.selected(file);
+				if (listener != null) listener.selected(file);
 			}
 
 			@Override
 			public void canceled () {
-				if(listener != null) listener.canceled();
+				if (listener != null) listener.canceled();
 			}
 		});
 	}

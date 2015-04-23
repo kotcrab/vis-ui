@@ -27,37 +27,35 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.kotcrab.vis.plugin.spine.runtime;
+package com.kotcrab.vis.plugin.spine.notif;
 
-import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.runtime.data.EntityData;
+import com.kotcrab.vis.editor.module.editor.EditorModule;
+import com.kotcrab.vis.editor.module.editor.ToastModule;
+import com.kotcrab.vis.editor.plugin.ContainerExtension;
+import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
-public class SpineData extends EntityData<SpineEntity> {
-	public String skeletonPath;
-	public String atlasPath;
-	public float x, y;
-	public boolean flipX, flipY;
-	public Color color;
-
-	public float scale;
-
+@VisPlugin
+public class SpinesNotifierExtension implements ContainerExtension<EditorModule> {
 	@Override
-	public void saveFrom (SpineEntity entity) {
-		id = entity.getId();
-		skeletonPath = entity.getAssetPath();
-		atlasPath = entity.getAtlasPath();
-		x = entity.getX();
-		y = entity.getY();
-		flipX = entity.isFlipX();
-		flipY = entity.isFlipY();
+	public EditorModule getModule () {
+		return new SpineNotifier();
 	}
 
 	@Override
-	public void loadTo (SpineEntity entity) {
-		entity.setId(id);
-		entity.setAssetPath(skeletonPath);
-		entity.setAtlasPath(atlasPath);
-		entity.setPosition(x, y);
-		entity.setFlip(flipX, flipY);
+	public ExtensionScope getScope () {
+		return ExtensionScope.EDITOR;
+	}
+}
+
+class SpineNotifier extends EditorModule {
+	private ToastModule toastModule;
+
+	@Override
+	public void init () {
+		toastModule = container.get(ToastModule.class);
+	}
+
+	@Override
+	public void dispose () {
 	}
 }

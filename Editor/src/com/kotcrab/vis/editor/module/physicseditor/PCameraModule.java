@@ -38,7 +38,7 @@ public class PCameraModule extends PhysicsEditorModule {
 	public void added () {
 		camera = new OrthographicCamera();
 		unprojectVec = new Vector3();
-		zoomController =new CameraZoomController(camera, unprojectVec);
+		zoomController = new CameraZoomController(camera, unprojectVec);
 
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();

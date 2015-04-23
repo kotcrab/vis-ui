@@ -106,7 +106,7 @@ public class TextEntity extends Entity {
 	public void setText (CharSequence str) {
 		this.text = str;
 		cache.clear();
-		textLayout = cache.setText(str,0,0);
+		textLayout = cache.setText(str, 0, 0);
 		cache.setColor(color);
 		textChanged();
 	}

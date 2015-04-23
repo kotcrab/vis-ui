@@ -110,7 +110,7 @@ public class PolygonUtils {
 				Vector2 r = ps[ie].cpy().sub(ps[hull[m]]);
 				Vector2 v = ps[j].cpy().sub(ps[hull[m]]);
 
-				float c =  r.crs(v);
+				float c = r.crs(v);
 				if (c < 0.0f) {
 					ie = j;
 				}

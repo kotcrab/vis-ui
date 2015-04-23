@@ -1,10 +1,9 @@
-/******************************************************************************
+/*
  * Spine Runtimes Software License
  * Version 2.1
- * 
  * Copyright (c) 2013, Esoteric Software
  * All rights reserved.
- * 
+ *
  * You are granted a perpetual, non-exclusive, non-sublicensable and
  * non-transferable license to install, execute and perform the Spine Runtimes
  * Software (the "Software") solely for internal use. Without the written
@@ -15,7 +14,7 @@
  * trademark, patent or other intellectual property or proprietary rights
  * notices on or in the Software, including any copy thereof. Redistributions
  * in binary or source form must include this license and terms.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
@@ -26,16 +25,15 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+ */
 
 package com.esotericsoftware.spine;
-
-import com.esotericsoftware.spine.attachments.Attachment;
-import com.esotericsoftware.spine.attachments.BoundingBoxAttachment;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.Pool;
+import com.esotericsoftware.spine.attachments.Attachment;
+import com.esotericsoftware.spine.attachments.BoundingBoxAttachment;
 
 public class SkeletonBounds {
 	private float minX, minY, maxX, maxY;
@@ -61,7 +59,7 @@ public class SkeletonBounds {
 			Slot slot = slots.get(i);
 			Attachment attachment = slot.attachment;
 			if (attachment instanceof BoundingBoxAttachment) {
-				BoundingBoxAttachment boundingBox = (BoundingBoxAttachment)attachment;
+				BoundingBoxAttachment boundingBox = (BoundingBoxAttachment) attachment;
 				boundingBoxes.add(boundingBox);
 
 				FloatArray polygon = polygonPool.obtain();
@@ -181,7 +179,8 @@ public class SkeletonBounds {
 			float x = (det1 * width34 - width12 * det2) / det3;
 			if (((x >= x3 && x <= x4) || (x >= x4 && x <= x3)) && ((x >= x1 && x <= x2) || (x >= x2 && x <= x1))) {
 				float y = (det1 * height34 - height12 * det2) / det3;
-				if (((y >= y3 && y <= y4) || (y >= y4 && y <= y3)) && ((y >= y1 && y <= y2) || (y >= y2 && y <= y1))) return true;
+				if (((y >= y3 && y <= y4) || (y >= y4 && y <= y3)) && ((y >= y1 && y <= y2) || (y >= y2 && y <= y1)))
+					return true;
 			}
 			x3 = x4;
 			y3 = y4;

@@ -123,7 +123,7 @@ public class FileItem extends Table {
 		support = findSupportForDirectory(ext, relativePath);
 		if (support != null) {
 			ContentItemProperties item = support.getContentItemProperties(relativePath, ext);
-			if(item != null) {
+			if (item != null) {
 				createDefaultView(FileType.NON_STANDARD, item.title, item.hideExtension);
 				return;
 			}

@@ -1,10 +1,9 @@
-/******************************************************************************
+/*
  * Spine Runtimes Software License
  * Version 2.1
- * 
  * Copyright (c) 2013, Esoteric Software
  * All rights reserved.
- * 
+ *
  * You are granted a perpetual, non-exclusive, non-sublicensable and
  * non-transferable license to install, execute and perform the Spine Runtimes
  * Software (the "Software") solely for internal use. Without the written
@@ -15,7 +14,7 @@
  * trademark, patent or other intellectual property or proprietary rights
  * notices on or in the Software, including any copy thereof. Redistributions
  * in binary or source form must include this license and terms.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
@@ -26,40 +25,16 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+ */
 
 package com.esotericsoftware.spine;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.FloatArray;
-import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.SerializationException;
-import com.esotericsoftware.spine.Animation.AttachmentTimeline;
-import com.esotericsoftware.spine.Animation.ColorTimeline;
-import com.esotericsoftware.spine.Animation.CurveTimeline;
-import com.esotericsoftware.spine.Animation.DrawOrderTimeline;
-import com.esotericsoftware.spine.Animation.EventTimeline;
-import com.esotericsoftware.spine.Animation.FfdTimeline;
-import com.esotericsoftware.spine.Animation.FlipXTimeline;
-import com.esotericsoftware.spine.Animation.FlipYTimeline;
-import com.esotericsoftware.spine.Animation.IkConstraintTimeline;
-import com.esotericsoftware.spine.Animation.RotateTimeline;
-import com.esotericsoftware.spine.Animation.ScaleTimeline;
-import com.esotericsoftware.spine.Animation.Timeline;
-import com.esotericsoftware.spine.Animation.TranslateTimeline;
-import com.esotericsoftware.spine.attachments.AtlasAttachmentLoader;
-import com.esotericsoftware.spine.attachments.Attachment;
-import com.esotericsoftware.spine.attachments.AttachmentLoader;
-import com.esotericsoftware.spine.attachments.AttachmentType;
-import com.esotericsoftware.spine.attachments.BoundingBoxAttachment;
-import com.esotericsoftware.spine.attachments.MeshAttachment;
-import com.esotericsoftware.spine.attachments.RegionAttachment;
-import com.esotericsoftware.spine.attachments.SkinnedMeshAttachment;
+import com.badlogic.gdx.utils.*;
+import com.esotericsoftware.spine.Animation.*;
+import com.esotericsoftware.spine.attachments.*;
 
 public class SkeletonJson {
 	private final AttachmentLoader attachmentLoader;
@@ -141,7 +116,8 @@ public class SkeletonJson {
 
 			String targetName = ikMap.getString("target");
 			ikConstraintData.target = skeletonData.findBone(targetName);
-			if (ikConstraintData.target == null) throw new SerializationException("Target bone not found: " + targetName);
+			if (ikConstraintData.target == null)
+				throw new SerializationException("Target bone not found: " + targetName);
 
 			ikConstraintData.bendDirection = ikMap.getBoolean("bendPositive", true) ? 1 : -1;
 			ikConstraintData.mix = ikMap.getFloat("mix", 1);
@@ -208,92 +184,92 @@ public class SkeletonJson {
 		String path = map.getString("path", name);
 
 		switch (AttachmentType.valueOf(map.getString("type", AttachmentType.region.name()))) {
-		case region: {
-			RegionAttachment region = attachmentLoader.newRegionAttachment(skin, name, path);
-			if (region == null) return null;
-			region.setPath(path);
-			region.setX(map.getFloat("x", 0) * scale);
-			region.setY(map.getFloat("y", 0) * scale);
-			region.setScaleX(map.getFloat("scaleX", 1));
-			region.setScaleY(map.getFloat("scaleY", 1));
-			region.setRotation(map.getFloat("rotation", 0));
-			region.setWidth(map.getFloat("width") * scale);
-			region.setHeight(map.getFloat("height") * scale);
+			case region: {
+				RegionAttachment region = attachmentLoader.newRegionAttachment(skin, name, path);
+				if (region == null) return null;
+				region.setPath(path);
+				region.setX(map.getFloat("x", 0) * scale);
+				region.setY(map.getFloat("y", 0) * scale);
+				region.setScaleX(map.getFloat("scaleX", 1));
+				region.setScaleY(map.getFloat("scaleY", 1));
+				region.setRotation(map.getFloat("rotation", 0));
+				region.setWidth(map.getFloat("width") * scale);
+				region.setHeight(map.getFloat("height") * scale);
 
-			String color = map.getString("color", null);
-			if (color != null) region.getColor().set(Color.valueOf(color));
+				String color = map.getString("color", null);
+				if (color != null) region.getColor().set(Color.valueOf(color));
 
-			region.updateOffset();
-			return region;
-		}
-		case boundingbox: {
-			BoundingBoxAttachment box = attachmentLoader.newBoundingBoxAttachment(skin, name);
-			if (box == null) return null;
-			float[] vertices = map.require("vertices").asFloatArray();
-			if (scale != 1) {
-				for (int i = 0, n = vertices.length; i < n; i++)
-					vertices[i] *= scale;
+				region.updateOffset();
+				return region;
 			}
-			box.setVertices(vertices);
-			return box;
-		}
-		case mesh: {
-			MeshAttachment mesh = attachmentLoader.newMeshAttachment(skin, name, path);
-			if (mesh == null) return null;
-			mesh.setPath(path);
-			float[] vertices = map.require("vertices").asFloatArray();
-			if (scale != 1) {
-				for (int i = 0, n = vertices.length; i < n; i++)
-					vertices[i] *= scale;
-			}
-			mesh.setVertices(vertices);
-			mesh.setTriangles(map.require("triangles").asShortArray());
-			mesh.setRegionUVs(map.require("uvs").asFloatArray());
-			mesh.updateUVs();
-
-			String color = map.getString("color", null);
-			if (color != null) mesh.getColor().set(Color.valueOf(color));
-
-			if (map.has("hull")) mesh.setHullLength(map.require("hull").asInt() * 2);
-			if (map.has("edges")) mesh.setEdges(map.require("edges").asIntArray());
-			mesh.setWidth(map.getFloat("width", 0) * scale);
-			mesh.setHeight(map.getFloat("height", 0) * scale);
-			return mesh;
-		}
-		case skinnedmesh: {
-			SkinnedMeshAttachment mesh = attachmentLoader.newSkinnedMeshAttachment(skin, name, path);
-			if (mesh == null) return null;
-			mesh.setPath(path);
-			float[] uvs = map.require("uvs").asFloatArray();
-			float[] vertices = map.require("vertices").asFloatArray();
-			FloatArray weights = new FloatArray(uvs.length * 3 * 3);
-			IntArray bones = new IntArray(uvs.length * 3);
-			for (int i = 0, n = vertices.length; i < n;) {
-				int boneCount = (int)vertices[i++];
-				bones.add(boneCount);
-				for (int nn = i + boneCount * 4; i < nn;) {
-					bones.add((int)vertices[i]);
-					weights.add(vertices[i + 1] * scale);
-					weights.add(vertices[i + 2] * scale);
-					weights.add(vertices[i + 3]);
-					i += 4;
+			case boundingbox: {
+				BoundingBoxAttachment box = attachmentLoader.newBoundingBoxAttachment(skin, name);
+				if (box == null) return null;
+				float[] vertices = map.require("vertices").asFloatArray();
+				if (scale != 1) {
+					for (int i = 0, n = vertices.length; i < n; i++)
+						vertices[i] *= scale;
 				}
+				box.setVertices(vertices);
+				return box;
 			}
-			mesh.setBones(bones.toArray());
-			mesh.setWeights(weights.toArray());
-			mesh.setTriangles(map.require("triangles").asShortArray());
-			mesh.setRegionUVs(uvs);
-			mesh.updateUVs();
+			case mesh: {
+				MeshAttachment mesh = attachmentLoader.newMeshAttachment(skin, name, path);
+				if (mesh == null) return null;
+				mesh.setPath(path);
+				float[] vertices = map.require("vertices").asFloatArray();
+				if (scale != 1) {
+					for (int i = 0, n = vertices.length; i < n; i++)
+						vertices[i] *= scale;
+				}
+				mesh.setVertices(vertices);
+				mesh.setTriangles(map.require("triangles").asShortArray());
+				mesh.setRegionUVs(map.require("uvs").asFloatArray());
+				mesh.updateUVs();
 
-			String color = map.getString("color", null);
-			if (color != null) mesh.getColor().set(Color.valueOf(color));
+				String color = map.getString("color", null);
+				if (color != null) mesh.getColor().set(Color.valueOf(color));
 
-			if (map.has("hull")) mesh.setHullLength(map.require("hull").asInt() * 2);
-			if (map.has("edges")) mesh.setEdges(map.require("edges").asIntArray());
-			mesh.setWidth(map.getFloat("width", 0) * scale);
-			mesh.setHeight(map.getFloat("height", 0) * scale);
-			return mesh;
-		}
+				if (map.has("hull")) mesh.setHullLength(map.require("hull").asInt() * 2);
+				if (map.has("edges")) mesh.setEdges(map.require("edges").asIntArray());
+				mesh.setWidth(map.getFloat("width", 0) * scale);
+				mesh.setHeight(map.getFloat("height", 0) * scale);
+				return mesh;
+			}
+			case skinnedmesh: {
+				SkinnedMeshAttachment mesh = attachmentLoader.newSkinnedMeshAttachment(skin, name, path);
+				if (mesh == null) return null;
+				mesh.setPath(path);
+				float[] uvs = map.require("uvs").asFloatArray();
+				float[] vertices = map.require("vertices").asFloatArray();
+				FloatArray weights = new FloatArray(uvs.length * 3 * 3);
+				IntArray bones = new IntArray(uvs.length * 3);
+				for (int i = 0, n = vertices.length; i < n; ) {
+					int boneCount = (int) vertices[i++];
+					bones.add(boneCount);
+					for (int nn = i + boneCount * 4; i < nn; ) {
+						bones.add((int) vertices[i]);
+						weights.add(vertices[i + 1] * scale);
+						weights.add(vertices[i + 2] * scale);
+						weights.add(vertices[i + 3]);
+						i += 4;
+					}
+				}
+				mesh.setBones(bones.toArray());
+				mesh.setWeights(weights.toArray());
+				mesh.setTriangles(map.require("triangles").asShortArray());
+				mesh.setRegionUVs(uvs);
+				mesh.updateUVs();
+
+				String color = map.getString("color", null);
+				if (color != null) mesh.getColor().set(Color.valueOf(color));
+
+				if (map.has("hull")) mesh.setHullLength(map.require("hull").asInt() * 2);
+				if (map.has("edges")) mesh.setEdges(map.require("edges").asIntArray());
+				mesh.setWidth(map.getFloat("width", 0) * scale);
+				mesh.setHeight(map.getFloat("height", 0) * scale);
+				return mesh;
+			}
 		}
 
 		// RegionSequenceAttachment regionSequenceAttachment = (RegionSequenceAttachment)attachment;
@@ -415,7 +391,7 @@ public class SkeletonJson {
 			int frameIndex = 0;
 			for (JsonValue valueMap = ikMap.child; valueMap != null; valueMap = valueMap.next) {
 				timeline.setFrame(frameIndex, valueMap.getFloat("time"), valueMap.getFloat("mix"),
-					valueMap.getBoolean("bendPositive") ? 1 : -1);
+						valueMap.getBoolean("bendPositive") ? 1 : -1);
 				readCurve(timeline, frameIndex, valueMap);
 				frameIndex++;
 			}
@@ -433,15 +409,16 @@ public class SkeletonJson {
 				for (JsonValue meshMap = slotMap.child; meshMap != null; meshMap = meshMap.next) {
 					FfdTimeline timeline = new FfdTimeline(meshMap.size);
 					Attachment attachment = skin.getAttachment(slotIndex, meshMap.name);
-					if (attachment == null) throw new SerializationException("FFD attachment not found: " + meshMap.name);
+					if (attachment == null)
+						throw new SerializationException("FFD attachment not found: " + meshMap.name);
 					timeline.slotIndex = slotIndex;
 					timeline.attachment = attachment;
 
 					int vertexCount;
 					if (attachment instanceof MeshAttachment)
-						vertexCount = ((MeshAttachment)attachment).getVertices().length;
+						vertexCount = ((MeshAttachment) attachment).getVertices().length;
 					else
-						vertexCount = ((SkinnedMeshAttachment)attachment).getWeights().length / 3 * 2;
+						vertexCount = ((SkinnedMeshAttachment) attachment).getWeights().length / 3 * 2;
 
 					int frameIndex = 0;
 					for (JsonValue valueMap = meshMap.child; valueMap != null; valueMap = valueMap.next) {
@@ -449,7 +426,7 @@ public class SkeletonJson {
 						JsonValue verticesValue = valueMap.get("vertices");
 						if (verticesValue == null) {
 							if (attachment instanceof MeshAttachment)
-								vertices = ((MeshAttachment)attachment).getVertices();
+								vertices = ((MeshAttachment) attachment).getVertices();
 							else
 								vertices = new float[vertexCount];
 						} else {
@@ -461,7 +438,7 @@ public class SkeletonJson {
 									vertices[i] *= scale;
 							}
 							if (attachment instanceof MeshAttachment) {
-								float[] meshVertices = ((MeshAttachment)attachment).getVertices();
+								float[] meshVertices = ((MeshAttachment) attachment).getVertices();
 								for (int i = 0; i < vertexCount; i++)
 									vertices[i] += meshVertices[i];
 							}
@@ -495,7 +472,8 @@ public class SkeletonJson {
 					int originalIndex = 0, unchangedIndex = 0;
 					for (JsonValue offsetMap = offsets.child; offsetMap != null; offsetMap = offsetMap.next) {
 						int slotIndex = skeletonData.findSlotIndex(offsetMap.getString("slot"));
-						if (slotIndex == -1) throw new SerializationException("Slot not found: " + offsetMap.getString("slot"));
+						if (slotIndex == -1)
+							throw new SerializationException("Slot not found: " + offsetMap.getString("slot"));
 						// Collect unchanged items.
 						while (originalIndex != slotIndex)
 							unchanged[unchangedIndex++] = originalIndex++;
@@ -522,7 +500,8 @@ public class SkeletonJson {
 			int frameIndex = 0;
 			for (JsonValue eventMap = eventsMap.child; eventMap != null; eventMap = eventMap.next) {
 				EventData eventData = skeletonData.findEvent(eventMap.getString("name"));
-				if (eventData == null) throw new SerializationException("Event not found: " + eventMap.getString("name"));
+				if (eventData == null)
+					throw new SerializationException("Event not found: " + eventMap.getString("name"));
 				Event event = new Event(eventData);
 				event.intValue = eventMap.getInt("int", eventData.getInt());
 				event.floatValue = eventMap.getFloat("float", eventData.getFloat());

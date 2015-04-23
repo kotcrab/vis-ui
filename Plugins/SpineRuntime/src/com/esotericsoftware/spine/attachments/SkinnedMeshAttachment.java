@@ -1,10 +1,9 @@
-/******************************************************************************
+/*
  * Spine Runtimes Software License
  * Version 2.1
- * 
  * Copyright (c) 2013, Esoteric Software
  * All rights reserved.
- * 
+ *
  * You are granted a perpetual, non-exclusive, non-sublicensable and
  * non-transferable license to install, execute and perform the Spine Runtimes
  * Software (the "Software") solely for internal use. Without the written
@@ -15,7 +14,7 @@
  * trademark, patent or other intellectual property or proprietary rights
  * notices on or in the Software, including any copy thereof. Redistributions
  * in binary or source form must include this license and terms.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
@@ -26,19 +25,18 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+ */
 
 package com.esotericsoftware.spine.attachments;
-
-import com.esotericsoftware.spine.Bone;
-import com.esotericsoftware.spine.Skeleton;
-import com.esotericsoftware.spine.Slot;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.NumberUtils;
+import com.esotericsoftware.spine.Bone;
+import com.esotericsoftware.spine.Skeleton;
+import com.esotericsoftware.spine.Slot;
 
 /** Attachment that displays a texture region. */
 public class SkinnedMeshAttachment extends Attachment {
@@ -73,7 +71,8 @@ public class SkinnedMeshAttachment extends Attachment {
 		float[] regionUVs = this.regionUVs;
 		int verticesLength = regionUVs.length;
 		int worldVerticesLength = verticesLength / 2 * 5;
-		if (worldVertices == null || worldVertices.length != worldVerticesLength) worldVertices = new float[worldVerticesLength];
+		if (worldVertices == null || worldVertices.length != worldVerticesLength)
+			worldVertices = new float[worldVerticesLength];
 
 		float u, v, width, height;
 		if (region == null) {
@@ -85,7 +84,7 @@ public class SkinnedMeshAttachment extends Attachment {
 			width = region.getU2() - u;
 			height = region.getV2() - v;
 		}
-		if (region instanceof AtlasRegion && ((AtlasRegion)region).rotate) {
+		if (region instanceof AtlasRegion && ((AtlasRegion) region).rotate) {
 			for (int i = 0, w = 3; i < verticesLength; i += 2, w += 5) {
 				worldVertices[w] = u + regionUVs[i + 1] * width;
 				worldVertices[w + 1] = v + height - regionUVs[i] * height;
@@ -106,10 +105,10 @@ public class SkinnedMeshAttachment extends Attachment {
 		float a = skeletonColor.a * meshColor.a * regionColor.a * 255;
 		float multiplier = premultipliedAlpha ? a : 255;
 		float color = NumberUtils.intToFloatColor( //
-			((int)a << 24) //
-				| ((int)(skeletonColor.b * meshColor.b * regionColor.b * multiplier) << 16) //
-				| ((int)(skeletonColor.g * meshColor.g * regionColor.g * multiplier) << 8) //
-				| (int)(skeletonColor.r * meshColor.r * regionColor.r * multiplier));
+				((int) a << 24) //
+						| ((int) (skeletonColor.b * meshColor.b * regionColor.b * multiplier) << 16) //
+						| ((int) (skeletonColor.g * meshColor.g * regionColor.g * multiplier) << 8) //
+						| (int) (skeletonColor.r * meshColor.r * regionColor.r * multiplier));
 
 		float[] worldVertices = this.worldVertices;
 		float x = skeleton.getX(), y = skeleton.getY();
@@ -123,7 +122,7 @@ public class SkinnedMeshAttachment extends Attachment {
 				float wx = 0, wy = 0;
 				int nn = bones[v++] + v;
 				for (; v < nn; v++, b += 3) {
-					Bone bone = (Bone)skeletonBones[bones[v]];
+					Bone bone = (Bone) skeletonBones[bones[v]];
 					float vx = weights[b], vy = weights[b + 1], weight = weights[b + 2];
 					wx += (vx * bone.getM00() + vy * bone.getM01() + bone.getWorldX()) * weight;
 					wy += (vx * bone.getM10() + vy * bone.getM11() + bone.getWorldY()) * weight;
@@ -138,7 +137,7 @@ public class SkinnedMeshAttachment extends Attachment {
 				float wx = 0, wy = 0;
 				int nn = bones[v++] + v;
 				for (; v < nn; v++, b += 3, f += 2) {
-					Bone bone = (Bone)skeletonBones[bones[v]];
+					Bone bone = (Bone) skeletonBones[bones[v]];
 					float vx = weights[b] + ffd[f], vy = weights[b + 1] + ffd[f + 1], weight = weights[b + 2];
 					wx += (vx * bone.getM00() + vy * bone.getM01() + bone.getWorldX()) * weight;
 					wy += (vx * bone.getM10() + vy * bone.getM11() + bone.getWorldY()) * weight;

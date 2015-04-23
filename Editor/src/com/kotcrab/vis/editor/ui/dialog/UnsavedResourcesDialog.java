@@ -100,7 +100,7 @@ public class UnsavedResourcesDialog extends VisWindow {
 
 		pack();
 		setHeight(getHeight() + 30);
-		if(getWidth() < 200) setWidth(200);
+		if (getWidth() < 200) setWidth(200);
 		centerWindow();
 	}
 

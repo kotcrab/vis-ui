@@ -1,10 +1,38 @@
+/*
+ * Spine Runtimes Software License
+ * Version 2.1
+ * Copyright (c) 2013, Esoteric Software
+ * All rights reserved.
+ *
+ * You are granted a perpetual, non-exclusive, non-sublicensable and
+ * non-transferable license to install, execute and perform the Spine Runtimes
+ * Software (the "Software") solely for internal use. Without the written
+ * permission of Esoteric Software (typically granted by licensing Spine), you
+ * may not (a) modify, translate, adapt or otherwise create derivative works,
+ * improvements of the Software or develop new applications using the Software
+ * or (b) remove, delete, alter or obscure any trademarks or any copyright,
+ * trademark, patent or other intellectual property or proprietary rights
+ * notices on or in the Software, including any copy thereof. Redistributions
+ * in binary or source form must include this license and terms.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
+ * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ * EVENT SHALL ESOTERIC SOFTARE BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ * SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 package com.esotericsoftware.spine;
 
-import static com.badlogic.gdx.math.MathUtils.*;
-
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+
+import static com.badlogic.gdx.math.MathUtils.*;
 
 public class IkConstraint {
 	static private final Vector2 temp = new Vector2();
@@ -41,12 +69,12 @@ public class IkConstraint {
 		Bone target = this.target;
 		Array<Bone> bones = this.bones;
 		switch (bones.size) {
-		case 1:
-			apply(bones.first(), target.worldX, target.worldY, mix);
-			break;
-		case 2:
-			apply(bones.first(), bones.get(1), target.worldX, target.worldY, bendDirection, mix);
-			break;
+			case 1:
+				apply(bones.first(), target.worldX, target.worldY, mix);
+				break;
+			case 2:
+				apply(bones.first(), bones.get(1), target.worldX, target.worldY, bendDirection, mix);
+				break;
 		}
 	}
 
@@ -86,18 +114,22 @@ public class IkConstraint {
 		return data.name;
 	}
 
-	/** Adjusts the bone rotation so the tip is as close to the target position as possible. The target is specified in the world
-	 * coordinate system. */
+	/**
+	 * Adjusts the bone rotation so the tip is as close to the target position as possible. The target is specified in the world
+	 * coordinate system.
+	 */
 	static public void apply (Bone bone, float targetX, float targetY, float alpha) {
 		float parentRotation = (!bone.data.inheritRotation || bone.parent == null) ? 0 : bone.parent.worldRotation;
 		float rotation = bone.rotation;
-		float rotationIK = (float)Math.atan2(targetY - bone.worldY, targetX - bone.worldX) * radDeg - parentRotation;
+		float rotationIK = (float) Math.atan2(targetY - bone.worldY, targetX - bone.worldX) * radDeg - parentRotation;
 		bone.rotationIK = rotation + (rotationIK - rotation) * alpha;
 	}
 
-	/** Adjusts the parent and child bone rotations so the tip of the child is as close to the target position as possible. The
+	/**
+	 * Adjusts the parent and child bone rotations so the tip of the child is as close to the target position as possible. The
 	 * target is specified in the world coordinate system.
-	 * @param child Any descendant bone of the parent. */
+	 * @param child Any descendant bone of the parent.
+	 */
 	static public void apply (Bone parent, Bone child, float targetX, float targetY, int bendDirection, float alpha) {
 		float childRotation = child.rotation, parentRotation = parent.rotation;
 		if (alpha == 0) {
@@ -120,19 +152,19 @@ public class IkConstraint {
 		else
 			parent.worldToLocal(child.parent.localToWorld(position.set(child.x, child.y)));
 		float childX = position.x * parent.worldScaleX, childY = position.y * parent.worldScaleY;
-		float offset = (float)Math.atan2(childY, childX);
-		float len1 = (float)Math.sqrt(childX * childX + childY * childY), len2 = child.data.length * child.worldScaleX;
+		float offset = (float) Math.atan2(childY, childX);
+		float len1 = (float) Math.sqrt(childX * childX + childY * childY), len2 = child.data.length * child.worldScaleX;
 		// Based on code by Ryan Juckett with permission: Copyright (c) 2008-2009 Ryan Juckett, http://www.ryanjuckett.com/
 		float cosDenom = 2 * len1 * len2;
 		if (cosDenom < 0.0001f) {
-			child.rotationIK = childRotation + ((float)Math.atan2(targetY, targetX) * radDeg - parentRotation - childRotation)
-				* alpha;
+			child.rotationIK = childRotation + ((float) Math.atan2(targetY, targetX) * radDeg - parentRotation - childRotation)
+					* alpha;
 			return;
 		}
 		float cos = clamp((targetX * targetX + targetY * targetY - len1 * len1 - len2 * len2) / cosDenom, -1, 1);
-		float childAngle = (float)Math.acos(cos) * bendDirection;
+		float childAngle = (float) Math.acos(cos) * bendDirection;
 		float adjacent = len1 + len2 * cos, opposite = len2 * sin(childAngle);
-		float parentAngle = (float)Math.atan2(targetY * adjacent - targetX * opposite, targetX * adjacent + targetY * opposite);
+		float parentAngle = (float) Math.atan2(targetY * adjacent - targetX * opposite, targetX * adjacent + targetY * opposite);
 		float rotation = (parentAngle - offset) * radDeg - parentRotation;
 		if (rotation > 180)
 			rotation -= 360;

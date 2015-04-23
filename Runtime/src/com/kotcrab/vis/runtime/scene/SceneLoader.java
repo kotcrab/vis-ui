@@ -182,7 +182,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				if (atlases.contains(atlas, true) == false) atlases.add(atlas);
 
 				String path = spriteData.texturePath;
-				if(path.startsWith("gfx/")) path = path.substring(path.indexOf('/') + 1, path.lastIndexOf('.'));
+				if (path.startsWith("gfx/")) path = path.substring(path.indexOf('/') + 1, path.lastIndexOf('.'));
 				Sprite newSprite = new Sprite(atlas.findRegion(path));
 
 				SpriteEntity entity = new SpriteEntity(entityData.id, spriteData.texturePath, newSprite);
@@ -224,7 +224,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 			}
 
 			EntitySupport support = supportMap.get(entityData.getClass());
-			if(support != null) entities.add(supportMap.get(entityData.getClass()).getInstanceFromData(manager, entityData));
+			if (support != null)
+				entities.add(supportMap.get(entityData.getClass()).getInstanceFromData(manager, entityData));
 		}
 	}
 

@@ -108,6 +108,7 @@
         <module>Editor</module>
         <module>Plugins/SpineRuntime</module>
         <module>Plugins/Spine</module>
+        <module>Plugins/SpineNotifier</module>
     </modules>
 
     <build>

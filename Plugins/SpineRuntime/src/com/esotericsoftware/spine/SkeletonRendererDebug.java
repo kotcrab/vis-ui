@@ -1,10 +1,9 @@
-/******************************************************************************
+/*
  * Spine Runtimes Software License
  * Version 2.1
- * 
  * Copyright (c) 2013, Esoteric Software
  * All rights reserved.
- * 
+ *
  * You are granted a perpetual, non-exclusive, non-sublicensable and
  * non-transferable license to install, execute and perform the Spine Runtimes
  * Software (the "Software") solely for internal use. Without the written
@@ -15,7 +14,7 @@
  * trademark, patent or other intellectual property or proprietary rights
  * notices on or in the Software, including any copy thereof. Redistributions
  * in binary or source form must include this license and terms.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
@@ -26,16 +25,9 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+ */
 
 package com.esotericsoftware.spine;
-
-import com.esotericsoftware.spine.attachments.Attachment;
-import com.esotericsoftware.spine.attachments.MeshAttachment;
-import com.esotericsoftware.spine.attachments.RegionAttachment;
-import com.esotericsoftware.spine.attachments.SkinnedMeshAttachment;
-
-import static com.badlogic.gdx.graphics.g2d.Batch.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -44,6 +36,12 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.FloatArray;
+import com.esotericsoftware.spine.attachments.Attachment;
+import com.esotericsoftware.spine.attachments.MeshAttachment;
+import com.esotericsoftware.spine.attachments.RegionAttachment;
+import com.esotericsoftware.spine.attachments.SkinnedMeshAttachment;
+
+import static com.badlogic.gdx.graphics.g2d.Batch.*;
 
 public class SkeletonRendererDebug {
 	static private final Color boneLineColor = Color.RED;
@@ -103,7 +101,7 @@ public class SkeletonRendererDebug {
 				Slot slot = slots.get(i);
 				Attachment attachment = slot.attachment;
 				if (attachment instanceof RegionAttachment) {
-					RegionAttachment regionAttachment = (RegionAttachment)attachment;
+					RegionAttachment regionAttachment = (RegionAttachment) attachment;
 					regionAttachment.updateWorldVertices(slot, false);
 					float[] vertices = regionAttachment.getWorldVertices();
 					shapes.line(vertices[X1], vertices[Y1], vertices[X2], vertices[Y2]);
@@ -123,13 +121,13 @@ public class SkeletonRendererDebug {
 				short[] triangles = null;
 				int hullLength = 0;
 				if (attachment instanceof MeshAttachment) {
-					MeshAttachment mesh = (MeshAttachment)attachment;
+					MeshAttachment mesh = (MeshAttachment) attachment;
 					mesh.updateWorldVertices(slot, false);
 					vertices = mesh.getWorldVertices();
 					triangles = mesh.getTriangles();
 					hullLength = mesh.getHullLength();
 				} else if (attachment instanceof SkinnedMeshAttachment) {
-					SkinnedMeshAttachment mesh = (SkinnedMeshAttachment)attachment;
+					SkinnedMeshAttachment mesh = (SkinnedMeshAttachment) attachment;
 					mesh.updateWorldVertices(slot, false);
 					vertices = mesh.getWorldVertices();
 					triangles = mesh.getTriangles();
@@ -141,9 +139,9 @@ public class SkeletonRendererDebug {
 					for (int ii = 0, nn = triangles.length; ii < nn; ii += 3) {
 						int v1 = triangles[ii] * 5, v2 = triangles[ii + 1] * 5, v3 = triangles[ii + 2] * 5;
 						shapes.triangle(vertices[v1], vertices[v1 + 1], //
-							vertices[v2], vertices[v2 + 1], //
-							vertices[v3], vertices[v3 + 1] //
-							);
+								vertices[v2], vertices[v2 + 1], //
+								vertices[v3], vertices[v3 + 1] //
+						);
 					}
 				}
 				if (drawMeshHull && hullLength > 0) {

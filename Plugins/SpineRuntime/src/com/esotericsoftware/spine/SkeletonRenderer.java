@@ -1,10 +1,9 @@
-/******************************************************************************
+/*
  * Spine Runtimes Software License
  * Version 2.1
- * 
  * Copyright (c) 2013, Esoteric Software
  * All rights reserved.
- * 
+ *
  * You are granted a perpetual, non-exclusive, non-sublicensable and
  * non-transferable license to install, execute and perform the Spine Runtimes
  * Software (the "Software") solely for internal use. Without the written
@@ -15,7 +14,7 @@
  * trademark, patent or other intellectual property or proprietary rights
  * notices on or in the Software, including any copy thereof. Redistributions
  * in binary or source form must include this license and terms.
- * 
+ *
  * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
@@ -26,7 +25,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *****************************************************************************/
+ */
 
 package com.esotericsoftware.spine;
 
@@ -34,11 +33,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch;
 import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.spine.attachments.Attachment;
-import com.esotericsoftware.spine.attachments.MeshAttachment;
-import com.esotericsoftware.spine.attachments.RegionAttachment;
-import com.esotericsoftware.spine.attachments.SkeletonAttachment;
-import com.esotericsoftware.spine.attachments.SkinnedMeshAttachment;
+import com.esotericsoftware.spine.attachments.*;
 
 public class SkeletonRenderer {
 	static private final short[] quadTriangles = {0, 1, 2, 2, 3, 0};
@@ -58,28 +53,28 @@ public class SkeletonRenderer {
 			Attachment attachment = slot.attachment;
 			Texture texture = null;
 			if (attachment instanceof RegionAttachment) {
-				RegionAttachment region = (RegionAttachment)attachment;
+				RegionAttachment region = (RegionAttachment) attachment;
 				region.updateWorldVertices(slot, premultipliedAlpha);
 				vertices = region.getWorldVertices();
 				triangles = quadTriangles;
 				texture = region.getRegion().getTexture();
 
 			} else if (attachment instanceof MeshAttachment) {
-				MeshAttachment mesh = (MeshAttachment)attachment;
+				MeshAttachment mesh = (MeshAttachment) attachment;
 				mesh.updateWorldVertices(slot, premultipliedAlpha);
 				vertices = mesh.getWorldVertices();
 				triangles = mesh.getTriangles();
 				texture = mesh.getRegion().getTexture();
 
 			} else if (attachment instanceof SkinnedMeshAttachment) {
-				SkinnedMeshAttachment mesh = (SkinnedMeshAttachment)attachment;
+				SkinnedMeshAttachment mesh = (SkinnedMeshAttachment) attachment;
 				mesh.updateWorldVertices(slot, premultipliedAlpha);
 				vertices = mesh.getWorldVertices();
 				triangles = mesh.getTriangles();
 				texture = mesh.getRegion().getTexture();
 
 			} else if (attachment instanceof SkeletonAttachment) {
-				Skeleton attachmentSkeleton = ((SkeletonAttachment)attachment).getSkeleton();
+				Skeleton attachmentSkeleton = ((SkeletonAttachment) attachment).getSkeleton();
 				if (attachmentSkeleton == null) continue;
 				Bone bone = slot.getBone();
 				Bone rootBone = attachmentSkeleton.getRootBone();
@@ -120,7 +115,7 @@ public class SkeletonRenderer {
 			Slot slot = drawOrder.get(i);
 			Attachment attachment = slot.attachment;
 			if (attachment instanceof RegionAttachment) {
-				RegionAttachment regionAttachment = (RegionAttachment)attachment;
+				RegionAttachment regionAttachment = (RegionAttachment) attachment;
 				regionAttachment.updateWorldVertices(slot, premultipliedAlpha);
 				float[] vertices = regionAttachment.getWorldVertices();
 				BlendMode slotBlendMode = slot.data.getBlendMode();
@@ -134,7 +129,7 @@ public class SkeletonRenderer {
 				throw new RuntimeException("PolygonSpriteBatch is required to render meshes.");
 
 			} else if (attachment instanceof SkeletonAttachment) {
-				Skeleton attachmentSkeleton = ((SkeletonAttachment)attachment).getSkeleton();
+				Skeleton attachmentSkeleton = ((SkeletonAttachment) attachment).getSkeleton();
 				if (attachmentSkeleton == null) continue;
 				Bone bone = slot.getBone();
 				Bone rootBone = attachmentSkeleton.getRootBone();
