@@ -16,37 +16,37 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.kotcrab.vis.editor.module.editor.EditorModule;
+import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
+import com.kotcrab.vis.editor.util.gdx.VisGroup;
 
 /**
- * Allow to add InputListener that will send events from editor.
- * If some Window added to stage has focus then events won't be send
+ * Allow to add ModalInputListener that will send events from editor.
+ * If some other modal window will be added to stage, input listener won't receive inputs.
+ * Useful for implementing keyboard shortcuts like Ctrl+Z etc.
+ * @see GlobalInputModule
  */
 public class InputModule extends EditorModule {
-	private Array<InputListener> listeners = new Array<>();
+	private Stage stage;
+	private VisGroup stageRoot;
 
-	private Table table;
-
-	public InputModule (Table table) {
-		this.table = table;
+	public InputModule (Stage stage, VisGroup stageRoot) {
+		this.stage = stage;
+		this.stageRoot = stageRoot;
 	}
 
-	public void reattachListeners () {
-		for (InputListener listener : listeners) {
-			table.addListener(listener);
-		}
+	public void addListener (ModalInputListener listener) {
+		listener.setInputModule(this);
+		stage.addListener(listener);
 	}
 
-	public void addListener (InputListener listener) {
-		listeners.add(listener);
-		table.addListener(listener);
+	public boolean removeListener (ModalInputListener listener) {
+		listener.setInputModule(null);
+		return stage.removeListener(listener);
 	}
 
-	public boolean removeListener (InputListener listener) {
-		listeners.removeValue(listener, true);
-		return table.removeListener(listener);
+	public boolean isAnyWindowModal () {
+		return stageRoot.isAnyWindowModal();
 	}
 }

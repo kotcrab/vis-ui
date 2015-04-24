@@ -19,12 +19,12 @@ package com.kotcrab.vis.editor.module.scene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.RedoEvent;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.event.UndoEvent;
+import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
 
 public class UndoModule extends SceneModule {
 	private Array<UndoableAction> undoList;
@@ -88,7 +88,7 @@ public class UndoModule extends SceneModule {
 		tabActive = true;
 	}
 
-	private class UndoInputListener extends InputListener {
+	private class UndoInputListener extends ModalInputListener {
 		@Override
 		public boolean keyDown (InputEvent event, int keycode) {
 			if (tabActive) {

@@ -25,19 +25,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.esotericsoftware.kryo.KryoException;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.editor.*;
+import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
+import com.kotcrab.vis.editor.module.scene.GlobalInputModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.InputModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EditorFrame;
+import com.kotcrab.vis.editor.util.gdx.VisGroup;
 import com.kotcrab.vis.editor.ui.WindowListener;
 import com.kotcrab.vis.editor.ui.dialog.NewProjectDialog;
 import com.kotcrab.vis.editor.ui.dialog.SettingsDialog;
@@ -60,6 +64,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
 import java.io.File;
+import java.lang.reflect.Field;
 
 public class Editor extends ApplicationAdapter implements EventListener {
 	public static Editor instance;
@@ -67,7 +72,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private EditorFrame frame;
 
 	private Stage stage;
-	private Table root;
+	private VisGroup stageRoot;
+	private Table uiRoot;
 
 	private EditorModuleContainer editorMC;
 	private ProjectModuleContainer projectMC;
@@ -112,13 +118,13 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		App.eventBus.register(this);
 
-		stage = new Stage(new ScreenViewport());
+		stage = createStage();
 		Gdx.input.setInputProcessor(stage);
 
-		root = new Table();
-		root.setFillParent(true);
+		uiRoot = new Table();
+		uiRoot.setFillParent(true);
 
-		stage.addActor(root);
+		stage.addActor(uiRoot);
 
 		createUI();
 		createModuleContainers();
@@ -135,9 +141,15 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			}
 
 			FileHandle scene = Gdx.files.absolute("F:\\Poligon\\Tester\\vis\\assets\\scene\\test.scene");
-			if (scene.exists()) {
-				EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
-				projectMC.get(SceneTabsModule.class).open(testScene);
+
+			try {
+				if (scene.exists()) {
+					EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
+					projectMC.get(SceneTabsModule.class).open(testScene);
+				}
+			} catch (KryoException e) {
+				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
+				Log.exception(e);
 			}
 
 			//editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
@@ -145,6 +157,23 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		//debug end
 
 		Log.debug("Loading completed");
+	}
+
+	private Stage createStage () {
+		Stage stage = new Stage(new ScreenViewport());
+
+		//the stage root is final field, by default group does not support actor changed events and we need that
+		//here we just set our custom group to get those events
+		try {
+			stageRoot = new VisGroup(stage);
+			Field field = stage.getClass().getDeclaredField("root");
+			field.setAccessible(true);
+			field.set(stage, stageRoot);
+		} catch (ReflectiveOperationException e) {
+			Log.exception(e);
+		}
+
+		return stage;
 	}
 
 	private void createUI () {
@@ -162,7 +191,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC = new ProjectModuleContainer(editorMC);
 
 		editorMC.add(projectIO = new ProjectIOModule());
-		editorMC.add(inputModule = new InputModule(mainContentTable));
+		editorMC.add(inputModule = new InputModule(stage, stageRoot));
+		editorMC.add(new GlobalInputModule());
 
 		editorMC.add(new PluginLoaderModule());
 		editorMC.add(pluginContainer = new PluginContainerModule());
@@ -217,12 +247,12 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	private void createModulesUI () {
-		root.add(editorMC.get(MenuBarModule.class).getTable()).fillX().expandX().row();
-		root.add(editorMC.get(ToolbarModule.class).getTable()).fillX().expandX().row();
-		root.add(editorMC.get(TabsModule.class).getTable()).fillX().expandX().row();
-		root.add(mainContentTable).expand().fill().row();
-		root.add(editorMC.get(QuickAccessModule.class).getTable()).fillX().expandX().row();
-		root.add(editorMC.get(StatusBarModule.class).getTable()).fillX().expandX().row();
+		uiRoot.add(editorMC.get(MenuBarModule.class).getTable()).fillX().expandX().row();
+		uiRoot.add(editorMC.get(ToolbarModule.class).getTable()).fillX().expandX().row();
+		uiRoot.add(editorMC.get(TabsModule.class).getTable()).fillX().expandX().row();
+		uiRoot.add(mainContentTable).expand().fill().row();
+		uiRoot.add(editorMC.get(QuickAccessModule.class).getTable()).fillX().expandX().row();
+		uiRoot.add(editorMC.get(StatusBarModule.class).getTable()).fillX().expandX().row();
 	}
 
 	@Override
@@ -304,6 +334,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		Gdx.app.exit();
 	}
 
+	//TODO minimize usage of this method or remove it completly
 	public Stage getStage () {
 		return stage;
 	}
@@ -402,8 +433,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			tabContentTable.add(tab.getContentTable()).expand().fill();
 
 		updateRootView();
-
-		inputModule.reattachListeners();
 	}
 
 	private void quickAccessViewChanged (Tab tab) {

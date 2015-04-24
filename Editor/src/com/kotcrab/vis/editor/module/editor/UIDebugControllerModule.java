@@ -23,10 +23,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
-import com.kotcrab.vis.editor.module.scene.InputModule;
+import com.kotcrab.vis.editor.module.scene.GlobalInputModule;
 
 public class UIDebugControllerModule extends EditorModule {
-	private InputModule inputModule;
+	private GlobalInputModule inputModule;
 	private Stage stage;
 	private boolean debugEnabled;
 
@@ -52,7 +52,7 @@ public class UIDebugControllerModule extends EditorModule {
 	@Override
 	public void init () {
 		stage = Editor.instance.getStage();
-		inputModule = container.get(InputModule.class);
+		inputModule = container.get(GlobalInputModule.class);
 		inputModule.addListener(inputListener);
 	}
 
