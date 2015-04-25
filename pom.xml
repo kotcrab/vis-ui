@@ -78,7 +78,7 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>vis-ui</artifactId>
-                <version>0.7.3-SNAPSHOT</version>
+                <version>0.7.4-SNAPSHOT</version>
             </dependency>
 
             <dependency>
