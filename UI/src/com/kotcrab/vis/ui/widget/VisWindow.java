@@ -106,16 +106,22 @@ public class VisWindow extends Window {
 		fadeOut();
 	}
 
-	/** Adds close button to window, next to window title. After pressing that button, {@link #close()} is called. */
+	/**
+	 * Adds close button to window, next to window title. After pressing that button, {@link #close()} is called. If nothing
+	 * else was added to title table, the title will be automatically centered.
+	 */
 	public void addCloseButton () {
 		VisImageButton closeButton = new VisImageButton("close-window");
-		getTitleTable().add(closeButton).padRight(1).padBottom(1);
+		getTitleTable().add(closeButton).padRight(-getPadRight() + 0.7f);
 		closeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				close();
 			}
 		});
+
+		if (getTitleTable().getChildren().size == 2)
+			getTitleTable().getCell(getTitleLabel()).padLeft(closeButton.getWidth() * 2);
 	}
 
 	/** Will make this window close when escape key was pressed. After pressing escape {@link #close()} is called. */
