@@ -12,12 +12,10 @@
 
     <artifactId>vis-runtime-spine</artifactId>
     <packaging>jar</packaging>
-    <name>Runtime Spine Integration</name>
+    <name>VisRuntime Spine Integration</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <plugin.provider>Kotcrab</plugin.provider>
-        <plugin.dependencies/>
     </properties>
 
     <licenses>
@@ -52,15 +50,8 @@
                         <artifactId>maven-jar-plugin</artifactId>
                         <version>2.6</version>
                         <configuration>
-                            <archive>
-                                <manifestEntries>
-                                    <Plugin-Id>${project.artifactId}</Plugin-Id>
-                                    <Plugin-Version>${project.version}</Plugin-Version>
-                                    <Plugin-Provider>${plugin.provider}</Plugin-Provider>
-                                    <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
-                                </manifestEntries>
-                            </archive>
-                            <outputDirectory>../../Editor/target/plugins/</outputDirectory>
+                            <outputDirectory>../../Editor/target/plugins/spine/lib</outputDirectory>
+                            <finalName>${project.artifactId}</finalName>
                         </configuration>
                     </plugin>
                 </plugins>

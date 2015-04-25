@@ -22,10 +22,12 @@ import com.kotcrab.vis.editor.util.Log;
 import javax.swing.JOptionPane;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.util.List;
 
 public class App {
 	public static final String TAG = "App";
@@ -94,5 +96,46 @@ public class App {
 		}
 
 		throw new IllegalStateException("Failed to get jar path, cannot continue!");
+	}
+
+	public static void startNewInstance () {
+		try {
+			String java = System.getProperty("java.home") + "/bin/java";
+
+			List<String> vmArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
+			StringBuilder vmArgsOneLine = new StringBuilder();
+			for (String arg : vmArguments) {
+				if (arg.contains("-agentlib") == false)
+					vmArgsOneLine.append(arg).append(" ");
+			}
+
+			final StringBuffer cmd = new StringBuffer("\"" + java + "\" " + vmArgsOneLine);
+
+			String[] mainCommand = System.getProperty("sun.java.command").split(" ");
+
+			if (mainCommand[0].endsWith(".jar"))
+				cmd.append("-jar " + new File(mainCommand[0]).getPath());
+			else
+				cmd.append("-cp \"" + System.getProperty("java.class.path") + "\" " + mainCommand[0]);
+
+			for (int i = 1; i < mainCommand.length; i++) {
+				cmd.append(" ");
+				cmd.append(mainCommand[i]);
+			}
+
+			//if launching from idea, not in debug mode
+			String ideaLauncher = "-Didea.launcher.bin.path=";
+			int ideaLauncherStart = cmd.indexOf(ideaLauncher);
+			if (ideaLauncherStart != -1) {
+				cmd.insert(ideaLauncherStart + ideaLauncher.length(), "\"");
+				cmd.insert(cmd.indexOf("-cp ", ideaLauncherStart) - 1, "\"");
+			}
+
+			System.out.println(cmd);
+
+			Runtime.getRuntime().exec(cmd.toString());
+		} catch (Exception e) {
+			Log.exception(e);
+		}
 	}
 }

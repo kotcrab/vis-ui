@@ -24,9 +24,7 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.util.Log;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.*;
 import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.EventQueue;
@@ -34,13 +32,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Set;
 
 public class EditorFrame extends JFrame {
 	private Editor editor;
 
-	public EditorFrame () {
+	public EditorFrame (SplashController splashController) {
 		setTitle("VisEditor");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -67,6 +66,7 @@ public class EditorFrame extends JFrame {
 
 		pack();
 		setLocationRelativeTo(null);
+		splashController.shouldClose = true;
 	}
 
 	public static void main (String[] args) {
@@ -78,7 +78,15 @@ public class EditorFrame extends JFrame {
 			e.printStackTrace();
 		}
 
-		EventQueue.invokeLater(() -> new EditorFrame().setVisible(true));
+		SplashController splashController = new SplashController();
+
+		try {
+			EventQueue.invokeAndWait(() -> new Splash(splashController).setVisible(true));
+		} catch (InterruptedException | InvocationTargetException e) {
+			Log.exception(e);
+		}
+
+		EventQueue.invokeLater(() -> new EditorFrame(splashController).setVisible(true));
 	}
 
 	/**
@@ -106,17 +114,44 @@ public class EditorFrame extends JFrame {
 		Gdx.app.exit();
 	}
 
-	private BufferedImage loadImage (String path) {
+	private static BufferedImage loadImage (String path) {
 		try {
 			return ImageIO.read(getResource(path));
 		} catch (IOException e) {
 			Log.exception(e);
 		}
 
-		return null;
+		throw new IllegalStateException("Failed to load image: " + path);
 	}
 
-	private URL getResource (String path) {
+	private static URL getResource (String path) {
 		return EditorFrame.class.getResource(path);
+	}
+
+	private static class SplashController {
+		boolean shouldClose = false;
+	}
+
+	private static class Splash extends JWindow {
+		public Splash (SplashController controller) {
+			getContentPane().add(new JLabel(new ImageIcon(loadImage("/com/kotcrab/vis/editor/splash.png"))), BorderLayout.CENTER);
+			pack();
+			setLocationRelativeTo(null);
+
+			new Thread(() -> {
+				while (true) {
+					if (controller.shouldClose) {
+						dispose();
+						break;
+					}
+
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						Log.exception(e);
+					}
+				}
+			}, "Splash").start();
+		}
 	}
 }

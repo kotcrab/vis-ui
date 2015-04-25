@@ -21,8 +21,18 @@ import com.kotcrab.vis.ui.widget.VisTable;
 
 public class TableBuilder {
 	public static VisTable build (Actor... actors) {
-		VisTable table = new VisTable(true);
-		for (Actor actor : actors) table.add(actor);
-		return table;
+		return build(new VisTable(true), actors);
 	}
+
+	public static VisTable build (int verticalSpacing, Actor... actors) {
+		VisTable table = new VisTable(true);
+		table.defaults().spaceRight(verticalSpacing);
+		return build(table, actors);
+	}
+
+	public static VisTable build (VisTable target, Actor... actors) {
+		for (Actor actor : actors) target.add(actor);
+		return target;
+	}
+
 }

@@ -29,39 +29,51 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.kotcrab.vis.plugin.spine.runtime;
+package com.kotcrab.vis.plugin.spine.notif;
 
-import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.spine.SkeletonData;
-import com.kotcrab.vis.plugin.spine.runtime.SkeletonDataLoader.SkeletonDataLoaderParameter;
-import com.kotcrab.vis.runtime.plugin.EntitySupport;
-import com.kotcrab.vis.runtime.plugin.VisPlugin;
+import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.module.editor.ToastModule.ToastTable;
+import com.kotcrab.vis.editor.util.gdx.TableBuilder;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialog;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
+import com.kotcrab.vis.ui.widget.LinkLabel;
 
-@VisPlugin
-public class SpineSupport implements EntitySupport<SpineData, SpineEntity> {
-	@Override
-	public void setLoaders (AssetManager manager) {
-		manager.setLoader(SkeletonData.class, new SkeletonDataLoader());
-	}
+public class SpinePluginAvailableToast extends ToastTable {
+	public SpinePluginAvailableToast (SpineNotifier spineNotifier) {
+		LinkLabel ignoreForever = new LinkLabel("Don't show again");
+		LinkLabel ignore = new LinkLabel("Later");
+		LinkLabel enable = new LinkLabel("Enable");
 
-	@Override
-	public Class<SpineEntity> getEntityClass () {
-		return SpineEntity.class;
-	}
+		content.add("Spine integration plugin can be enabled!").row();
+		content.add(TableBuilder.build(12, ignoreForever, ignore, enable)).right();
 
-	@Override
-	public void resolveDependencies (Array<AssetDescriptor> deps, SpineData entityData) {
-		SkeletonDataLoaderParameter parameter = new SkeletonDataLoaderParameter(entityData.atlasPath, entityData.scale);
-		deps.add(new AssetDescriptor(entityData.skeletonPath, SkeletonData.class));
-	}
+		ignoreForever.setListener(url -> {
+			spineNotifier.ignoreForever();
+			fadeOut();
+		});
 
-	@Override
-	public SpineEntity getInstanceFromData (AssetManager manager, SpineData data) {
-		SkeletonData skeletonData = manager.get(data.skeletonPath, SkeletonData.class);
-		SpineEntity entity = new SpineEntity(data.id, data.atlasPath, data.skeletonPath, skeletonData);
-		data.loadTo(entity);
-		return entity;
+		ignore.setListener(url -> fadeOut());
+
+		enable.setListener(url -> {
+			Editor.instance.getStage().addActor(new LicenseDialog(() -> {
+				spineNotifier.enableSpinePlugin();
+				OptionDialog optionDialog = DialogUtils.showOptionDialog(Editor.instance.getStage(), "Restart?",
+						"Editor restart is required to apply changes", OptionDialogType.YES_NO, new OptionDialogAdapter() {
+					@Override
+					public void yes () {
+						Editor.instance.requestExit(true);
+					}
+				});
+
+				optionDialog.setNoButtonText("Later");
+				optionDialog.setYesButtonText("Restart");
+			}).fadeIn());
+
+			fadeOut();
+		});
+
+		pack();
 	}
 }

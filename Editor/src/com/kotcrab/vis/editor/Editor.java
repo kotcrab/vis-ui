@@ -25,7 +25,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.esotericsoftware.kryo.KryoException;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
@@ -39,9 +38,7 @@ import com.kotcrab.vis.editor.module.scene.GlobalInputModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.InputModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
-import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EditorFrame;
-import com.kotcrab.vis.editor.util.gdx.VisGroup;
 import com.kotcrab.vis.editor.ui.WindowListener;
 import com.kotcrab.vis.editor.ui.dialog.NewProjectDialog;
 import com.kotcrab.vis.editor.ui.dialog.SettingsDialog;
@@ -50,6 +47,7 @@ import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.util.gdx.VisGroup;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialog;
@@ -142,15 +140,15 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 			FileHandle scene = Gdx.files.absolute("F:\\Poligon\\Tester\\vis\\assets\\scene\\test.scene");
 
-			try {
-				if (scene.exists()) {
-					EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
-					projectMC.get(SceneTabsModule.class).open(testScene);
-				}
-			} catch (KryoException e) {
-				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
-				Log.exception(e);
-			}
+//			try {
+//				if (scene.exists()) {
+//					EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
+//					projectMC.get(SceneTabsModule.class).open(testScene);
+//				}
+//			} catch (KryoException e) {
+//				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
+//				Log.exception(e);
+//			}
 
 			//editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
 		}
@@ -196,6 +194,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		editorMC.add(new PluginLoaderModule());
 		editorMC.add(pluginContainer = new PluginContainerModule());
+		editorMC.add(new PluginFilesAccessModule());
 		editorMC.add(new ColorPickerModule());
 		editorMC.add(fileChooser = new FileChooserModule());
 		editorMC.add(new MenuBarModule(projectMC));
@@ -208,6 +207,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(new EditorSettingsIOModule());
 
 		editorMC.add(settings = new GeneralSettingsModule());
+		editorMC.add(new PluginSettingsModule());
 		editorMC.add(new GridSettingsModule());
 
 		editorMC.init();
@@ -285,11 +285,15 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	public void requestExit () {
+		requestExit(false);
+	}
+
+	public void requestExit (boolean restartAfterExit) {
 		if (exitInProgress) return;
 		exitInProgress = true;
 
 		if (projectLoaded == false) {
-			showExitDialogIfNeeded();
+			showExitDialogIfNeeded(restartAfterExit);
 			return;
 		}
 
@@ -299,7 +303,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			getStage().addActor(new UnsavedResourcesDialog(tabsModule, new WindowListener() {
 				@Override
 				public void finished () {
-					showExitDialogIfNeeded();
+					showExitDialogIfNeeded(restartAfterExit);
 				}
 
 				@Override
@@ -308,15 +312,15 @@ public class Editor extends ApplicationAdapter implements EventListener {
 				}
 			}).fadeIn());
 		else
-			showExitDialogIfNeeded();
+			showExitDialogIfNeeded(restartAfterExit);
 	}
 
-	private void showExitDialogIfNeeded () {
+	private void showExitDialogIfNeeded (boolean restartAfterExit) {
 		if (settings.isConfirmExit()) {
 			OptionDialog dialog = DialogUtils.showOptionDialog(getStage(), "Confirm Exit", "Are you sure you want to exit VisEditor?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 				@Override
 				public void yes () {
-					exit();
+					exit(restartAfterExit);
 				}
 
 				@Override
@@ -327,10 +331,12 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 			dialog.setYesButtonText("Exit");
 		} else
-			exit();
+			exit(restartAfterExit);
 	}
 
-	private void exit () {
+	private void exit (boolean restartAfterExit) {
+		if (restartAfterExit) App.startNewInstance();
+
 		Gdx.app.exit();
 	}
 

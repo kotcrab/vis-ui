@@ -56,6 +56,7 @@ public abstract class EditorSettingsModule<T> extends EditorModule implements Se
 
 	@Override
 	public Table getSettingsTable () {
+		onShow();
 		return settingsTable;
 	}
 
@@ -70,7 +71,11 @@ public abstract class EditorSettingsModule<T> extends EditorModule implements Se
 		settingsTable.defaults().expandX().left();
 	}
 
-	public abstract void buildTable ();
+	protected void onShow () {
 
-	public abstract void loadConfigToTable ();
+	}
+
+	protected abstract void buildTable ();
+
+	protected abstract void loadConfigToTable ();
 }

@@ -156,7 +156,6 @@ public class Log {
 	}
 
 	private static void printErr (String msg) {
-
 		msg = getTimestamp() + msg;
 		System.err.println(msg);
 	}

@@ -37,12 +37,15 @@
                     <archive>
                         <manifestEntries>
                             <Plugin-Id>${project.artifactId}</Plugin-Id>
+                            <Plugin-Name>${project.name}</Plugin-Name>
+                            <Plugin-Description>Spine integration for VisEditor</Plugin-Description>
+                            <Plugin-Provider>Kotcrab</Plugin-Provider>
                             <Plugin-Version>${project.version}</Plugin-Version>
-                            <Plugin-Provider>${plugin.provider}</Plugin-Provider>
-                            <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
+                            <Plugin-Compatibility>2</Plugin-Compatibility>
                         </manifestEntries>
                     </archive>
-                    <outputDirectory>../../Editor/target/plugins/</outputDirectory>
+                    <outputDirectory>../../Editor/target/plugins/spine/</outputDirectory>
+                    <finalName>${project.artifactId}</finalName>
                 </configuration>
             </plugin>
         </plugins>
@@ -60,6 +63,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>vis-runtime-spine</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

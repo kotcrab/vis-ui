@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.plugin;
 
-public class EditorRuntimeException extends RuntimeException {
-	public EditorRuntimeException (String message) {
-		super(message);
-	}
+import com.badlogic.gdx.files.FileHandle;
 
-	public EditorRuntimeException (Throwable cause) {
-		super(cause);
-	}
+public class FailedPluginDescriptor {
+	public FileHandle file;
+	public Throwable exception;
 
-	public EditorRuntimeException (String message, Throwable cause) {
-		super(message, cause);
+	public FailedPluginDescriptor (FileHandle file, Throwable cause) {
+		this.file = file;
+		this.exception = cause;
 	}
 }

@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.module.editor;
 
-public class EditorRuntimeException extends RuntimeException {
-	public EditorRuntimeException (String message) {
-		super(message);
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.App;
+
+public class PluginFilesAccessModule extends EditorModule {
+	private FileHandle pluginFolder;
+
+	@Override
+	public void init () {
+		pluginFolder = Gdx.files.absolute(App.APP_FOLDER_PATH).child("plugins");
+		pluginFolder.mkdirs();
 	}
 
-	public EditorRuntimeException (Throwable cause) {
-		super(cause);
-	}
-
-	public EditorRuntimeException (String message, Throwable cause) {
-		super(message, cause);
+	public FileHandle getPluginFolder (String pluginName) {
+		FileHandle folder = pluginFolder.child(pluginName);
+		folder.mkdirs();
+		return folder;
 	}
 }

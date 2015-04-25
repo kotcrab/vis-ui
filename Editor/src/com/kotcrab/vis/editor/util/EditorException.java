@@ -20,4 +20,12 @@ public class EditorException extends Exception {
 	public EditorException (String message) {
 		super(message);
 	}
+
+	public EditorException (Throwable cause) {
+		super(cause);
+	}
+
+	public EditorException (String message, Throwable cause) {
+		super(message, cause);
+	}
 }

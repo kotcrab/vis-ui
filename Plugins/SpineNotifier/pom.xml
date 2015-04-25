@@ -16,11 +16,21 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <plugin.provider>Kotcrab</plugin.provider>
-        <plugin.dependencies/>
     </properties>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -30,12 +40,14 @@
                     <archive>
                         <manifestEntries>
                             <Plugin-Id>${project.artifactId}</Plugin-Id>
+                            <Plugin-Name>${project.name}</Plugin-Name>
+                            <Plugin-Description>Notifies if Spine integration plugin may be enabled</Plugin-Description>
+                            <Plugin-Provider>Kotcrab</Plugin-Provider>
                             <Plugin-Version>${project.version}</Plugin-Version>
-                            <Plugin-Provider>${plugin.provider}</Plugin-Provider>
-                            <Plugin-Dependencies>${plugin.dependencies}</Plugin-Dependencies>
+                            <Plugin-Compatibility>2</Plugin-Compatibility>
                         </manifestEntries>
                     </archive>
-                    <outputDirectory>../../Editor/target/plugins/</outputDirectory>
+                    <outputDirectory>../../Editor/target/plugins/spine-notifier</outputDirectory>
                     <finalName>${project.artifactId}</finalName>
                 </configuration>
             </plugin>

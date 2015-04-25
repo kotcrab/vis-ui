@@ -44,12 +44,21 @@ public class ToastModule extends EditorModule {
 		stage = Editor.instance.getStage();
 	}
 
+	@Override
+	public void resize () {
+		updateToastsPositions();
+	}
+
 	public void show (String text) {
 		show(text, UNTIL_CLOSED);
 	}
 
 	public void show (Table table) {
 		show(table, UNTIL_CLOSED);
+	}
+
+	public void show (ToastTable toastTable) {
+		show(toastTable, UNTIL_CLOSED);
 	}
 
 	public void show (String text, int timeSec) {
@@ -59,14 +68,18 @@ public class ToastModule extends EditorModule {
 	}
 
 	public void show (Table table, int timeSec) {
-		ToastTable msgTable = new ToastTable(table, timeSec);
-		toasts.add(msgTable);
-		stage.addActor(msgTable);
+		show(new ToastTable(table, timeSec));
+	}
+
+	public void show (ToastTable toastTable, int timeSec) {
+		toastTable.setToastModule(this);
+		toasts.add(toastTable);
+		stage.addActor(toastTable);
 		updateToastsPositions();
 	}
 
-	@Override
-	public void resize () {
+	private void remove (ToastTable toastTable) {
+		toasts.removeValue(toastTable, true);
 		updateToastsPositions();
 	}
 
@@ -77,17 +90,24 @@ public class ToastModule extends EditorModule {
 			table.setPosition(stage.getWidth() - table.getWidth() - SCREEN_PADDING, y - table.getHeight());
 			y = y - table.getHeight() - MESSAGE_PADDING;
 		}
-
 	}
 
-	private class ToastTable extends Table {
-		public ToastTable (Table table, int timeSec) {
+	public static class ToastTable extends Table {
+		private ToastModule toastModule;
+		protected final Table content;
+
+		public ToastTable () {
+			this(new VisTable(), UNTIL_CLOSED);
+		}
+
+		public ToastTable (Table content, int timeSec) {
+			this.content = content;
 			setBackground(VisUI.getSkin().getDrawable("tooltip-bg"));
 
 			VisImageButton closeButton = new VisImageButton("close");
 			closeButton.addListener(new VisChangeListener((event, actor) -> fadeOut()));
 
-			add(table).pad(3).fill().expand();
+			add(content).pad(3).fill().expand();
 			add(closeButton).top();
 
 			if (timeSec > 0) {
@@ -99,25 +119,28 @@ public class ToastModule extends EditorModule {
 				}, timeSec);
 			}
 
-			fadeIn();
 			pack();
+			fadeIn();
 		}
 
-		private void fadeOut () {
+		protected void fadeOut () {
 			addAction(Actions.sequence(Actions.fadeOut(VisWindow.FADE_TIME, Interpolation.fade), new Action() {
 				@Override
 				public boolean act (float delta) {
-					toasts.removeValue(ToastTable.this, true);
-					updateToastsPositions();
+					toastModule.remove(ToastTable.this);
 					return true;
 				}
 			}, Actions.removeActor()));
 		}
 
-		private Table fadeIn () {
+		protected Table fadeIn () {
 			setColor(1, 1, 1, 0);
 			addAction(Actions.fadeIn(VisWindow.FADE_TIME, Interpolation.fade));
 			return this;
+		}
+
+		void setToastModule (ToastModule toastModule) {
+			this.toastModule = toastModule;
 		}
 	}
 }

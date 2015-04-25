@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.ui.toast;
 
-public class EditorRuntimeException extends RuntimeException {
-	public EditorRuntimeException (String message) {
-		super(message);
-	}
+import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.ui.dialog.ExceptionDialog;
+import com.kotcrab.vis.ui.widget.LinkLabel;
+import com.kotcrab.vis.ui.widget.VisTable;
 
-	public EditorRuntimeException (Throwable cause) {
-		super(cause);
-	}
+public class ExceptionToast extends VisTable {
+	public ExceptionToast (String text, Throwable cause) {
 
-	public EditorRuntimeException (String message, Throwable cause) {
-		super(message, cause);
+		LinkLabel label = new LinkLabel("Details");
+		label.setListener(url -> Editor.instance.getStage().addActor(new ExceptionDialog(text, cause).fadeIn()));
+
+		add(text).expand().fill().row();
+		add(label).right();
 	}
 }
