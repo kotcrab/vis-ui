@@ -72,6 +72,10 @@ public class EditorFrame extends JFrame {
 	public static void main (String[] args) {
 		App.init();
 
+		boolean showSplash = true;
+
+		if (args.length == 1 && args[0].equals("--no-splash")) showSplash = false;
+
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
@@ -80,10 +84,12 @@ public class EditorFrame extends JFrame {
 
 		SplashController splashController = new SplashController();
 
-		try {
-			EventQueue.invokeAndWait(() -> new Splash(splashController).setVisible(true));
-		} catch (InterruptedException | InvocationTargetException e) {
-			Log.exception(e);
+		if (showSplash) {
+			try {
+				EventQueue.invokeAndWait(() -> new Splash(splashController).setVisible(true));
+			} catch (InterruptedException | InvocationTargetException e) {
+				Log.exception(e);
+			}
 		}
 
 		EventQueue.invokeLater(() -> new EditorFrame(splashController).setVisible(true));
