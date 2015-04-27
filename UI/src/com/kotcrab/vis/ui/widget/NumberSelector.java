@@ -189,6 +189,13 @@ public class NumberSelector extends VisTable {
 		else
 			valueChanged(); //will restore old vlaue
 	}
+	
+	public void setValue(int value) {
+		if (value >= min && value <= max) {
+			this.current = value;
+			valueChanged();	
+		}
+	}
 
 	public void increment () {
 		if (current + step > max)
