@@ -208,6 +208,15 @@ public class NumberSelector extends VisTable {
 		valueChanged();
 	}
 
+	public void setValue (int newValue) {
+		if (newValue > max) current = max;
+		else if (newValue < min) current = min;
+		else
+			current = newValue;
+
+		valueChanged();
+	}
+
 	public int getValue () {
 		return current;
 	}
