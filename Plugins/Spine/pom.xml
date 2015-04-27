@@ -28,6 +28,15 @@
     </licenses>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${basedir}</directory>
+                <includes>
+                    <include>LICENSE.txt</include>
+                </includes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -42,6 +51,7 @@
                             <Plugin-Provider>Kotcrab</Plugin-Provider>
                             <Plugin-Version>${project.version}</Plugin-Version>
                             <Plugin-Compatibility>2</Plugin-Compatibility>
+                            <Plugin-License>LICENSE.txt</Plugin-License>
                         </manifestEntries>
                     </archive>
                     <outputDirectory>../../Editor/target/plugins/spine/</outputDirectory>

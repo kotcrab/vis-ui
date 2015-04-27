@@ -340,6 +340,19 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		Gdx.app.exit();
 	}
 
+	public void showRestartDialog () {
+		OptionDialog optionDialog = DialogUtils.showOptionDialog(Editor.instance.getStage(), "Restart?",
+				"Editor restart is required to apply changes", OptionDialogType.YES_NO, new OptionDialogAdapter() {
+					@Override
+					public void yes () {
+						Editor.instance.requestExit(true);
+					}
+				});
+
+		optionDialog.setNoButtonText("Later");
+		optionDialog.setYesButtonText("Restart");
+	}
+
 	//TODO minimize usage of this method or remove it completly
 	public Stage getStage () {
 		return stage;

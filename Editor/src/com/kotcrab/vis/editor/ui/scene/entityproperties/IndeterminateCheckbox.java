@@ -16,12 +16,9 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.util.gdx.ButtonUtils;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 
 public class IndeterminateCheckbox extends VisCheckBox {
@@ -52,23 +49,7 @@ public class IndeterminateCheckbox extends VisCheckBox {
 	}
 
 	private void init () {
-		//smuggling our listener as first so we can detect and disable programmatic change listeners
-		getListeners().insert(0, new ClickListener() {
-			@Override
-			public void clicked (InputEvent event, float x, float y) {
-				allowEvent = true;
-			}
-		});
-
-		addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				if (allowEvent == false)
-					event.stop();
-
-				allowEvent = false;
-			}
-		});
+		ButtonUtils.disableProgrammaticEvents(this);
 	}
 
 	public boolean isIndeterminate () {

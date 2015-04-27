@@ -33,11 +33,10 @@ package com.kotcrab.vis.plugin.spine.notif;
 
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.editor.ToastModule.ToastTable;
+import com.kotcrab.vis.editor.plugin.PluginFileHandle;
+import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
+import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialog;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
-import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 
 public class SpinePluginAvailableToast extends ToastTable {
@@ -57,18 +56,12 @@ public class SpinePluginAvailableToast extends ToastTable {
 		ignore.setListener(url -> fadeOut());
 
 		enable.setListener(url -> {
-			Editor.instance.getStage().addActor(new LicenseDialog(() -> {
-				spineNotifier.enableSpinePlugin();
-				OptionDialog optionDialog = DialogUtils.showOptionDialog(Editor.instance.getStage(), "Restart?",
-						"Editor restart is required to apply changes", OptionDialogType.YES_NO, new OptionDialogAdapter() {
-					@Override
-					public void yes () {
-						Editor.instance.requestExit(true);
-					}
-				});
-
-				optionDialog.setNoButtonText("Later");
-				optionDialog.setYesButtonText("Restart");
+			Editor.instance.getStage().addActor(new LicenseDialog(new PluginFileHandle(LicenseDialog.class, "LICENSE").readString(), new LicenseDialogListener() {
+				@Override
+				public void licenseAccepted () {
+					spineNotifier.enableSpinePlugin();
+					Editor.instance.showRestartDialog();
+				}
 			}).fadeIn());
 
 			fadeOut();

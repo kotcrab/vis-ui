@@ -18,8 +18,13 @@ package com.kotcrab.vis.editor.plugin;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.StreamUtils;
 import com.kotcrab.vis.editor.util.EditorException;
 
+import java.io.IOException;
+import java.util.jar.Attributes;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
 public class PluginDescriptor {
@@ -29,6 +34,7 @@ public class PluginDescriptor {
 	public static final String PLUGIN_PROVIDER = "Plugin-Provider";
 	public static final String PLUGIN_VERSION = "Plugin-Version";
 	public static final String PLUGIN_COMPATIBILITY = "Plugin-Compatibility";
+	public static final String PLUGIN_LICENSE = "Plugin-License";
 
 	public FileHandle file;
 	public String folderName;
@@ -40,28 +46,44 @@ public class PluginDescriptor {
 	public String version;
 	public int compatibility;
 
+	/* Optional */
+	public String license;
+
 	public Array<Class> pluginClasses = new Array<>();
 	public Array<FileHandle> libs = new Array<>();
 
-	public PluginDescriptor (FileHandle file, Manifest mf) throws EditorException {
+	public PluginDescriptor (FileHandle file, Manifest manifest) throws EditorException {
 		this.file = file;
 		folderName = file.parent().name();
 		libs.addAll(file.parent().child("lib").list());
 
-		id = mf.getMainAttributes().getValue(PLUGIN_ID);
-		name = mf.getMainAttributes().getValue(PLUGIN_NAME);
-		description = mf.getMainAttributes().getValue(PLUGIN_DESCRIPTION);
-		provider = mf.getMainAttributes().getValue(PLUGIN_PROVIDER);
-		version = mf.getMainAttributes().getValue(PLUGIN_VERSION);
-		String comp = mf.getMainAttributes().getValue(PLUGIN_COMPATIBILITY);
+		Attributes attributes = manifest.getMainAttributes();
+
+		id = attributes.getValue(PLUGIN_ID);
+		name = attributes.getValue(PLUGIN_NAME);
+		description = attributes.getValue(PLUGIN_DESCRIPTION);
+		provider = attributes.getValue(PLUGIN_PROVIDER);
+		version = attributes.getValue(PLUGIN_VERSION);
+		String comp = attributes.getValue(PLUGIN_COMPATIBILITY);
+		String licenseFile = attributes.getValue(PLUGIN_LICENSE);
 
 		if (id == null || name == null || description == null || provider == null || version == null || comp == null)
 			throw new EditorException("Missing one of required field in plugin manifest, plugin: " + file.extension());
 
 		try {
 			compatibility = Integer.valueOf(comp);
-		} catch (NumberFormatException ex) {
-			throw new EditorException("Failed to parse compatibility code, value must be integer!", ex);
+		} catch (NumberFormatException e) {
+			throw new EditorException("Failed to parse compatibility code, value must be integer!", e);
+		}
+
+		if (licenseFile != null) {
+			try {
+				JarFile jar = new JarFile(file.file());
+				JarEntry licenseEntry = jar.getJarEntry(licenseFile);
+				license = StreamUtils.copyStreamToString(jar.getInputStream(licenseEntry));
+			} catch (IOException e) {
+				throw new EditorException("Failed to read license file for plugin: " + file.extension(), e);
+			}
 		}
 	}
 }

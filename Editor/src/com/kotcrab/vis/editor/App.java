@@ -98,7 +98,7 @@ public class App {
 		throw new IllegalStateException("Failed to get jar path, cannot continue!");
 	}
 
-	public static void startNewInstance () {
+	static void startNewInstance () {
 		try {
 			String java = System.getProperty("java.home") + "/bin/java";
 
@@ -109,7 +109,7 @@ public class App {
 					vmArgsOneLine.append(arg).append(" ");
 			}
 
-			final StringBuffer cmd = new StringBuffer("\"" + java + "\" " + vmArgsOneLine);
+			final StringBuilder cmd = new StringBuilder("\"" + java + "\" " + vmArgsOneLine);
 
 			String[] mainCommand = System.getProperty("sun.java.command").split(" ");
 
@@ -130,8 +130,6 @@ public class App {
 				cmd.insert(ideaLauncherStart + ideaLauncher.length(), "\"");
 				cmd.insert(cmd.indexOf("-cp ", ideaLauncherStart) - 1, "\"");
 			}
-
-			System.out.println(cmd);
 
 			Runtime.getRuntime().exec(cmd.toString());
 		} catch (Exception e) {

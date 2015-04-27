@@ -21,16 +21,20 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.plugin.ContainerExtension;
 import com.kotcrab.vis.editor.plugin.FailedPluginDescriptor;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.plugin.PluginDescriptor;
+import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
+import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
 import com.kotcrab.vis.editor.ui.toast.ExceptionToast;
 import com.kotcrab.vis.editor.ui.toast.LoadingPluginsFailedToast;
 import com.kotcrab.vis.editor.util.ChildFirstURLClassLoader;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.util.gdx.ButtonUtils;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
@@ -42,7 +46,6 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
@@ -59,8 +62,8 @@ public class PluginLoaderModule extends EditorModule {
 	private ToastModule toastModule;
 
 	//we need nested iterators, Array can't provide that
-	private ArrayList<PluginDescriptor> allPlugins = new ArrayList<>();
-	private ArrayList<PluginDescriptor> pluginsToLoad;
+	private Array<PluginDescriptor> allPlugins = new Array<>();
+	private Array<PluginDescriptor> pluginsToLoad;
 
 	private Array<FailedPluginDescriptor> failedPlugins = new Array<>();
 
@@ -123,7 +126,7 @@ public class PluginLoaderModule extends EditorModule {
 	}
 
 	private void verifyPlugins () {
-		pluginsToLoad = new ArrayList<>(allPlugins);
+		pluginsToLoad = new Array<>(allPlugins);
 
 		Iterator<PluginDescriptor> it = pluginsToLoad.iterator();
 		while (it.hasNext()) {
@@ -196,7 +199,7 @@ public class PluginLoaderModule extends EditorModule {
 		}
 	}
 
-	private ArrayList<PluginDescriptor> getAllPlugins () {
+	private Array<PluginDescriptor> getAllPlugins () {
 		return allPlugins;
 	}
 
@@ -247,9 +250,30 @@ public class PluginLoaderModule extends EditorModule {
 
 			for (PluginDescriptor descriptor : loader.getAllPlugins()) {
 				VisCheckBox checkBox = new VisCheckBox(descriptor.folderName);
+				ButtonUtils.disableProgrammaticEvents(checkBox);
 
 				pluginsTable.add(checkBox).row();
 				pluginsCheckBoxes.put(descriptor.folderName, checkBox);
+
+				if (descriptor.license != null) {
+					checkBox.addListener(new VisChangeListener((event, actor) -> {
+						if (checkBox.isChecked() && event.isStopped() == false) {
+							checkBox.setChecked(false);
+							
+							Editor.instance.getStage().addActor(new LicenseDialog(descriptor.license, new LicenseDialogListener() {
+								@Override
+								public void licenseDeclined () {
+									checkBox.setChecked(false);
+								}
+
+								@Override
+								public void licenseAccepted () {
+									checkBox.setChecked(true);
+								}
+							}));
+						}
+					}));
+				}
 			}
 
 			Iterator<String> it = config.pluginsIdsToLoad.iterator();
@@ -263,11 +287,6 @@ public class PluginLoaderModule extends EditorModule {
 
 				pluginsCheckBoxes.get(plugin).setChecked(true);
 			}
-		}
-
-		@Override
-		public void loadConfigToTable () {
-
 		}
 
 		@Override
@@ -287,6 +306,10 @@ public class PluginLoaderModule extends EditorModule {
 			config.pluginsIdsToLoad.add(folderName);
 			settingsSave();
 		}
+
+		@Override
+		public void loadConfigToTable () {
+		} //unused, we load config in onShow
 	}
 
 	public static class PluginsConfig {
