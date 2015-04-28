@@ -15,6 +15,8 @@ Mac OS X: `~/Library/Preferences/.IdeaIC14/codestyles/`
 Linux: `~/.IdeaIC14/config/codeStyles/`  
 Windows: `<User home>\.IdeaIC14\config\codeStyles\`
 
+`.IdeaIC14` directory may be named different depending on your IDEA version
+
 #### Code Style
 Please follow [libGDX code style](https://github.com/libgdx/libgdx/blob/master/CONTRIBUTING.md#code-style).
 
