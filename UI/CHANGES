@@ -1,13 +1,15 @@
+[0.7.5] [LibGDX 1.5.6] [Snapshot]
+
 [0.7.4] [LibGDX 1.5.6]
 -API Addition: NumberSelector#setValue(int)
 -After adding close button to VisWindow, title label will be automatically centered if noting else was added to title table
 
-[0.7.3] [LibGDX 1.5.6]
+[0.7.3] [LibGDX 1.5.6] [POM invalid, don't use]
 -Updating to LibGDX 1.5.6
 -Fixed input bug in VisTextField
 -Tooltip now can be created without setting target
 
-[0.7.2] [LibGDX 1.5.5]
+[0.7.2] [LibGDX 1.5.5] [POM invalid, don't use]
 -API Addition: NumberSelector (String name, int initialValue, int min, int max)
 -API Addition: VisUI.load(Skin)
 -API Addition: GridGroup
