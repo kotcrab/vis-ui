@@ -90,6 +90,12 @@ com.kotcrab.vis.ui.widget.VisImageButton$VisImageButtonStyle: {
     close-window: { down: button-red, up: button-window-bg, over: button-over, imageUp: icon-close}
     close: { down: button-red, up: button, over: button-over, imageUp: icon-close}
 },
+com.kotcrab.vis.ui.widget.VisImageTextButton$VisImageTextButtonStyle: {
+  default: { down: button-down, up: button, over: button-over, disabled: button, focusBorder: border,
+             font: default-font, fontColor: white, disabledFontColor: grey },
+  default-noborder: { down: button-down, up: button, over: button-over, disabled: button,
+	                  font: default-font, fontColor: white, disabledFontColor: grey },
+},
 com.kotcrab.vis.ui.widget.VisSlider$VisSliderStyle: {
 	default-horizontal: { background: slider, knob: slider-knob, disabledKnob: slider-knob-disabled, knobOver: slider-knob-over, knobDown: slider-knob-down },
 	default-vertical: { background: slider-vertical, knob: slider-knob, disabledKnob: slider-knob-disabled, knobOver: slider-knob-over, knobDown: slider-knob-down }
