@@ -104,6 +104,7 @@
 
     <modules>
         <module>UI</module>
+        <module>Common</module>
         <module>Runtime</module>
         <module>Launcher</module>
         <module>Editor</module>

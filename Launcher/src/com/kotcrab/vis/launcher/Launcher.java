@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.kotcrab.vis.common.utils.VisChangeListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisImageTextButton;
@@ -44,7 +45,7 @@ public class Launcher extends ApplicationAdapter {
 
 		root.top();
 		root.add(leftTable).width(128).fill();
-		root.addSeparator(true);
+		root.addSeparator(true).pad(0);
 		root.add(rightTable).expand().fill();
 
 		VisTable sectionsTable = createSectionsTable();
@@ -57,6 +58,7 @@ public class Launcher extends ApplicationAdapter {
 		leftTable.addSeparator().pad(0).spaceBottom(0).row();
 		leftTable.add(sectionsTable).row();
 		leftTable.add().expand().fill().row();
+		leftTable.addSeparator().pad(0);
 		leftTable.add(launchButton).height(60);
 
 		VisTable sectionContentTable = new VisTable();
@@ -76,9 +78,17 @@ public class Launcher extends ApplicationAdapter {
 	private VisTable createSocialTable () {
 		VisTable table = new VisTable(true);
 
-		table.add(new VisImageButton(Assets.getIcon(Icons.GLOBE)));
-		table.add(new VisImageButton(Assets.getIcon(Icons.TWITTER)));
-		table.add(new VisImageButton(Assets.getIcon(Icons.GITHUB)));
+		VisImageButton www = new VisImageButton(Assets.getIcon(Icons.GLOBE));
+		VisImageButton twitter = new VisImageButton(Assets.getIcon(Icons.TWITTER));
+		VisImageButton github = new VisImageButton(Assets.getIcon(Icons.GITHUB));
+
+		www.addListener(new VisChangeListener((event, actor) -> Gdx.net.openURI("http://vis.kotcrab.com")));
+		twitter.addListener(new VisChangeListener((event, actor) -> Gdx.net.openURI("https://twitter.com/kotcrab")));
+		github.addListener(new VisChangeListener((event, actor) -> Gdx.net.openURI("https://github.com/kotcrab/VisEditor")));
+
+		table.add(www);
+		table.add(twitter);
+		table.add(github);
 		return table;
 	}
 

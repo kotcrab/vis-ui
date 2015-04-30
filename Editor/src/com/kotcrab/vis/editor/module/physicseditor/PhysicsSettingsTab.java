@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.module.physicseditor;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.common.utils.VisChangeListener;
 import com.kotcrab.vis.editor.module.physicseditor.util.Clipper.Polygonizer;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
 import com.kotcrab.vis.editor.util.gdx.*;
