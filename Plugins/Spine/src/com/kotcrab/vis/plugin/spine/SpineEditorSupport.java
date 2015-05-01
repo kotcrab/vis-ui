@@ -57,8 +57,6 @@ public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 
 	private SpineSerializer serializer;
 
-	private SpineObjectTable spineTable;
-
 	@Override
 	public void bindModules (ProjectModuleContainer projectMC) {
 		SceneIOModule sceneIOModule = projectMC.get(SceneIOModule.class);
@@ -66,12 +64,11 @@ public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 		fileAccess = projectMC.get(FileAccessModule.class);
 
 		serializer = new SpineSerializer(sceneIOModule.getKryo(), spineCache);
-		spineTable = new SpineObjectTable();
 	}
 
 	@Override
 	public SpecificObjectTable getUIPropertyTable () {
-		return spineTable;
+		return new SpineObjectTable();
 	}
 
 	@Override

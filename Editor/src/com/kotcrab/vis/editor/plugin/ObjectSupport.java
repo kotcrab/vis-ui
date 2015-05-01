@@ -51,6 +51,10 @@ public abstract class ObjectSupport<ED extends EntityData, E extends Entity & Ed
 
 	public abstract void export (ExportModule module, Array<EntityData> entities, E entity);
 
+	/**
+	 * @return instance of specific object table or null if this object does not have any special properites. This must return
+	 * new instance every time this method is called.
+	 */
 	public SpecificObjectTable getUIPropertyTable () {
 		return null;
 	}
