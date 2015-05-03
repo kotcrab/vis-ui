@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.common.utils.VisChangeListener;
+import com.kotcrab.vis.launcher.api.APIClient;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisImageTextButton;
@@ -17,15 +18,20 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 
 public class Launcher extends ApplicationAdapter {
+	private APIClient apiClient;
+
 	private Stage stage;
 	private VisTable root;
 
 	@Override
 	public void create () {
+		apiClient = new APIClient();
+
 		Assets.load();
 		VisUI.load();
 		VisUI.setDefaultTitleAlign(Align.center);
 		FileChooser.setFavoritesPrefsName("com.kotcrab.vis.editor");
+
 
 		root = new VisTable();
 		root.setFillParent(true);
