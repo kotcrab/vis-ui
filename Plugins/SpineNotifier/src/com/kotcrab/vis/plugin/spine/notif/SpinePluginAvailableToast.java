@@ -56,7 +56,7 @@ public class SpinePluginAvailableToast extends ToastTable {
 		ignore.setListener(url -> fadeOut());
 
 		enable.setListener(url -> {
-			Editor.instance.getStage().addActor(new LicenseDialog(new PluginFileHandle(LicenseDialog.class, "LICENSE").readString(), new LicenseDialogListener() {
+			Editor.instance.getStage().addActor(new LicenseDialog(new PluginFileHandle(SpinePluginAvailableToast.class, "LICENSE").readString(), new LicenseDialogListener() {
 				@Override
 				public void licenseAccepted () {
 					spineNotifier.enableSpinePlugin();
