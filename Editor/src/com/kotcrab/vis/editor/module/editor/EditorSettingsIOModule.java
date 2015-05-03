@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.module.editor;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.util.Log;
 
@@ -35,6 +36,7 @@ public class EditorSettingsIOModule extends EditorModule {
 	@Override
 	public void init () {
 		kryo = new Kryo();
+		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 		settingsDirectory = new File(App.APP_FOLDER_PATH, "settings");
 		settingsDirectory.mkdir();
 	}
