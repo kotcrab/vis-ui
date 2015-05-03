@@ -284,11 +284,25 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		Log.dispose();
 	}
 
+	public void showRestartDialog () {
+		OptionDialog optionDialog = DialogUtils.showOptionDialog(Editor.instance.getStage(), "Restart?",
+				"Editor restart is required to apply changes", OptionDialogType.YES_NO, new OptionDialogAdapter() {
+					@Override
+					public void yes () {
+						Editor.instance.requestExit(true);
+					}
+				});
+
+		optionDialog.setNoButtonText("Later");
+		optionDialog.setYesButtonText("Restart");
+	}
+
 	public void requestExit () {
 		requestExit(false);
 	}
 
-	public void requestExit (boolean restartAfterExit) {
+	/** @see #showRestartDialog() */
+	private void requestExit (boolean restartAfterExit) {
 		if (exitInProgress) return;
 		exitInProgress = true;
 
@@ -316,6 +330,9 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	private void showExitDialogIfNeeded (boolean restartAfterExit) {
+		//the "Do you want to restart" dialog was already displayed and user accepted so no need to display exit dialog even if it is enabled
+		if(restartAfterExit) exit(restartAfterExit);
+
 		if (settings.isConfirmExit()) {
 			OptionDialog dialog = DialogUtils.showOptionDialog(getStage(), "Confirm Exit", "Are you sure you want to exit VisEditor?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 				@Override
@@ -338,19 +355,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		if (restartAfterExit) App.startNewInstance();
 
 		Gdx.app.exit();
-	}
-
-	public void showRestartDialog () {
-		OptionDialog optionDialog = DialogUtils.showOptionDialog(Editor.instance.getStage(), "Restart?",
-				"Editor restart is required to apply changes", OptionDialogType.YES_NO, new OptionDialogAdapter() {
-					@Override
-					public void yes () {
-						Editor.instance.requestExit(true);
-					}
-				});
-
-		optionDialog.setNoButtonText("Later");
-		optionDialog.setYesButtonText("Restart");
 	}
 
 	//TODO minimize usage of this method or remove it completly
