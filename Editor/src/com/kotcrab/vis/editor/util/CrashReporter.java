@@ -21,17 +21,15 @@ import com.kotcrab.vis.editor.App;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
 public class CrashReporter {
 	private static final String TAG = "CrashReporter";
-	private static final String PATH = "http://apps.kotcrab.com/vis/crash/report.php";
-	public static boolean reportSent;
+	public static boolean reportSaved;
 
 	private StringBuilder crashReport;
 	private File logFile;
@@ -49,31 +47,9 @@ public class CrashReporter {
 	}
 
 	public void processReport () throws IOException {
-		//don't send multiple reports from one instance of application
-		if (reportSent) return;
-		reportSent = true;
-
-		if (App.ERROR_REPORTS) {
-			Log.info(TAG, "Sending crash report");
-			HttpURLConnection connection = (HttpURLConnection) new URL(PATH + "?filename=" + logFile.getName()).openConnection();
-			connection.setDoOutput(true);
-			connection.setRequestMethod("POST");
-			OutputStream os = connection.getOutputStream();
-
-			os.write(report.getBytes());
-			os.flush();
-			os.close();
-
-			BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
-			String s;
-			while ((s = in.readLine()) != null)
-				Log.debug(TAG, "Server response: " + s);
-			in.close();
-
-			Log.info(TAG, "Crash report sent");
-		} else
-			Log.warn(TAG, "Sending report is disabled");
+		//don't save multiple reports from one instance of application
+		if (reportSaved) return;
+		reportSaved = true;
 
 		File crashReportFile = new File(logFile.getParent(), "viseditor-crash " + new SimpleDateFormat("yy-MM-dd HH-mm-ss").format(new Date()) + ".txt");
 		FileUtils.writeStringToFile(crashReportFile, report);

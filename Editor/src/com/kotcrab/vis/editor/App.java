@@ -36,7 +36,6 @@ public class App {
 	public static final int COMPATIBILITY_CODE = 2;
 	public static final String VERSION = "0.0.2-SNAPSHOT";
 
-	public static final boolean ERROR_REPORTS = false;
 	public static final boolean OPENGL_CRASH_BEFORE_EXIT_MESSAGE = true;
 	public static final boolean SNAPSHOT = VERSION.contains("SNAPSHOT");
 
@@ -55,9 +54,6 @@ public class App {
 		checkCharset();
 
 		eventBus = new EventBus();
-
-		if (ERROR_REPORTS == false)
-			Log.warn(TAG, "Error reports are disabled!");
 	}
 
 	/** Checks if proper charset is set, if not tries to change it, if that fails method will throw IllegalStateException */
