@@ -16,16 +16,14 @@
 
 package com.kotcrab.vis.editor;
 
+import com.kotcrab.vis.common.utils.JarUtils;
 import com.kotcrab.vis.editor.event.EventBus;
 import com.kotcrab.vis.editor.util.Log;
 
 import javax.swing.JOptionPane;
 import java.io.File;
-import java.io.UnsupportedEncodingException;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -39,7 +37,7 @@ public class App {
 	public static final boolean OPENGL_CRASH_BEFORE_EXIT_MESSAGE = true;
 	public static final boolean SNAPSHOT = VERSION.contains("SNAPSHOT");
 
-	public static final String JAR_FOLDER_PATH = getJarPath();
+	private static String JAR_FOLDER_PATH = JarUtils.getJarPath(App.class);
 
 	private static final String USER_HOME_PATH = System.getProperty("user.home") + File.separator;
 	public static final String APP_FOLDER_PATH = USER_HOME_PATH + ".viseditor" + File.separator;
@@ -74,24 +72,6 @@ public class App {
 				throw new IllegalStateException(charsetChangeFailed);
 			}
 		}
-	}
-
-	public static String getJarPath () {
-		try {
-			URL url = App.class.getProtectionDomain().getCodeSource().getLocation();
-			String path = URLDecoder.decode(url.getFile(), "UTF-8");
-			path = path.substring(1, path.lastIndexOf('/')); // remove jar name from path
-
-			if (path.endsWith("Editor/target/classes")) //launched from ide, remove classes from path
-				path = path.substring(0, path.length() - "/classes".length());
-
-			path = path.replace("/", File.separator);
-			return path + File.separator;
-		} catch (UnsupportedEncodingException e) {
-			Log.exception(e);
-		}
-
-		throw new IllegalStateException("Failed to get jar path, cannot continue!");
 	}
 
 	static void startNewInstance () {
@@ -131,5 +111,9 @@ public class App {
 		} catch (Exception e) {
 			Log.exception(e);
 		}
+	}
+
+	public static String getJarFolderPath () {
+		return JAR_FOLDER_PATH;
 	}
 }

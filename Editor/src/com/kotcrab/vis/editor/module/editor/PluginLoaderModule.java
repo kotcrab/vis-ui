@@ -55,7 +55,7 @@ import java.util.jar.Manifest;
 
 public class PluginLoaderModule extends EditorModule {
 	private static final String TAG = "PluginLoader";
-	private static final String PLUGINS_FOLDER_PATH = App.JAR_FOLDER_PATH + File.separator + "plugins";
+	private static final String PLUGINS_FOLDER_PATH = App.getJarFolderPath() + File.separator + "plugins";
 
 	private PluginContainerModule pluginContainer;
 	private PluginSettingsModule settings;
