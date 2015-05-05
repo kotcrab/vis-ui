@@ -26,7 +26,6 @@ import com.kotcrab.vis.editor.module.project.ProjectModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 
 public class ObjectSupportModule extends ProjectModule {
-
 	private ObjectMap<Class, ObjectSupport> supportMap = new ObjectMap<>();
 	private Array<SupportDescriptor> descriptors;
 
@@ -52,6 +51,9 @@ public class ObjectSupportModule extends ProjectModule {
 	@Override
 	public void dispose () {
 		saveDescriptors();
+
+		for (ObjectSupport support : supportMap.values())
+			support.releaseId();
 	}
 
 	private void saveDescriptors () {

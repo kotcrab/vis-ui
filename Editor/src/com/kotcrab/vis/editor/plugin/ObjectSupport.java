@@ -73,4 +73,7 @@ public abstract class ObjectSupport<ED extends EntityData, E extends Entity & Ed
 		return id;
 	}
 
+	public void releaseId () {
+		id = -1;
+	}
 }
