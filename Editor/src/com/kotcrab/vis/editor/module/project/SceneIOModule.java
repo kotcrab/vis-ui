@@ -22,6 +22,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
@@ -32,6 +33,7 @@ import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.serializer.*;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
+import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -55,6 +57,7 @@ public class SceneIOModule extends ProjectModule {
 		ParticleCacheModule particleCache = projectContainer.get(ParticleCacheModule.class);
 
 		kryo = new Kryo();
+		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 
 		//id config:

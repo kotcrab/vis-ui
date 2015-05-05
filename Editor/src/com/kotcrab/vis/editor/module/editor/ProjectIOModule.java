@@ -18,20 +18,25 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectLibGDX;
+import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.CopyFileVisitor;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -43,6 +48,9 @@ public class ProjectIOModule extends EditorModule {
 	@Override
 	public void init () {
 		kryo = new Kryo();
+		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
+		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
+		kryo.register(Array.class, new ArraySerializer(), 10);
 	}
 
 	public boolean load (FileHandle projectRoot) throws EditorException {

@@ -16,12 +16,16 @@
 
 package com.kotcrab.vis.editor.module.editor;
 
+import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.util.Log;
+import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -36,7 +40,10 @@ public class EditorSettingsIOModule extends EditorModule {
 	@Override
 	public void init () {
 		kryo = new Kryo();
+		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
+		kryo.register(Array.class, new ArraySerializer(), 10);
+
 		settingsDirectory = new File(App.APP_FOLDER_PATH, "settings");
 		settingsDirectory.mkdir();
 	}
