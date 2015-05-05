@@ -65,6 +65,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		watcher = projectContainer.get(AssetsWatcherModule.class);
 
 		settings = new Settings();
+		settings.maxWidth = 4096;
+		settings.maxHeight = 4096;
 		settings.combineSubdirectories = true;
 		settings.silent = true;
 		settings.fast = true;
