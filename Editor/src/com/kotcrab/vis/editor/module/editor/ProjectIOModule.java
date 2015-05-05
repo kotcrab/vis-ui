@@ -133,12 +133,14 @@ public class ProjectIOModule extends EditorModule {
 				setProgressPercent(100);
 				App.eventBus.post(new StatusBarEvent("Project created!"));
 
-				try {
-					load(projectFile);
-				} catch (EditorException e) {
-					DialogUtils.showErrorDialog(Editor.instance.getStage(), "Error occurred while loading project", e);
-					Log.exception(e);
-				}
+				executeOnOpenGL(() -> {
+					try {
+						load(projectFile);
+					} catch (EditorException e) {
+						DialogUtils.showErrorDialog(Editor.instance.getStage(), "Error occurred while loading project", e);
+						Log.exception(e);
+					}
+				});
 			}
 		};
 
