@@ -6,7 +6,7 @@ public class VersionSet {
 	Array<Release> versions;
 
 	public enum ReleaseType {
-		BETA, RELESAE
+		BETA, RELEASE
 	}
 
 	public static class Release {

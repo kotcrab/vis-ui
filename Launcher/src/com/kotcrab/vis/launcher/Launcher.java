@@ -8,30 +8,46 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.kotcrab.vis.common.utils.VisChangeListener;
-import com.kotcrab.vis.launcher.api.APIClient;
+import com.kotcrab.vis.launcher.api.APIClient.SetCallback;
+import com.kotcrab.vis.launcher.api.*;
+import com.kotcrab.vis.launcher.ui.NewsSection;
+import com.kotcrab.vis.launcher.ui.SocialTable;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisImageTextButton;
+import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 
 public class Launcher extends ApplicationAdapter {
-	private APIClient apiClient;
+	private FileAccess fileAccess;
+	private DataCache dataCache;
 
 	private Stage stage;
 	private VisTable root;
 
 	@Override
 	public void create () {
-		apiClient = new APIClient();
-
 		Assets.load();
 		VisUI.load();
 		VisUI.setDefaultTitleAlign(Align.center);
 		FileChooser.setFavoritesPrefsName("com.kotcrab.vis.editor");
 
+		fileAccess = new FileAccess();
+		dataCache = new DataCache(fileAccess);
+
+		NewsSection newsSection = new NewsSection();
+		dataCache.setNewsCallback(newsSection);
+
+		//dummy callbacks for now
+		dataCache.setContentCallback(new SetCallback<ContentSet>() {
+		});
+		dataCache.setGdxCallback(new SetCallback<GdxReleaseSet>() {
+		});
+		dataCache.setVersionCallback(new SetCallback<VersionSet>() {
+		});
+
+		dataCache.init();
 
 		root = new VisTable();
 		root.setFillParent(true);
@@ -67,35 +83,19 @@ public class Launcher extends ApplicationAdapter {
 		leftTable.addSeparator().pad(0);
 		leftTable.add(launchButton).height(60);
 
-		VisTable sectionContentTable = new VisTable();
-		sectionContentTable.top().left();
-		sectionContentTable.defaults().left();
 
-		sectionContentTable.add("News").padBottom(6).row();
-		sectionContentTable.add("VisUI 0.7.4 released!\nIt does many amazing things. Now with free lorem ipsum").row();
+		VisTable sectionContentTable = new VisTable();
+		sectionContentTable.add(newsSection).expand().fill();
+
+		VisScrollPane scrollPane = new VisScrollPane(sectionContentTable);
+		scrollPane.setScrollingDisabled(true, false);
+		scrollPane.setFadeScrollBars(false);
 
 		rightTable.pad(5);
 		rightTable.add("VisLauncher - Start");
-		rightTable.add(createSocialTable()).expandX().right().row();
+		rightTable.add(new SocialTable()).expandX().right().row();
 		rightTable.addSeparator().colspan(2).padTop(6);
-		rightTable.add(sectionContentTable).colspan(2).expand().fill();
-	}
-
-	private VisTable createSocialTable () {
-		VisTable table = new VisTable(true);
-
-		VisImageButton www = new VisImageButton(Assets.getIcon(Icons.GLOBE));
-		VisImageButton twitter = new VisImageButton(Assets.getIcon(Icons.TWITTER));
-		VisImageButton github = new VisImageButton(Assets.getIcon(Icons.GITHUB));
-
-		www.addListener(new VisChangeListener((event, actor) -> Gdx.net.openURI("http://vis.kotcrab.com")));
-		twitter.addListener(new VisChangeListener((event, actor) -> Gdx.net.openURI("https://twitter.com/kotcrab")));
-		github.addListener(new VisChangeListener((event, actor) -> Gdx.net.openURI("https://github.com/kotcrab/VisEditor")));
-
-		table.add(www);
-		table.add(twitter);
-		table.add(github);
-		return table;
+		rightTable.add(scrollPane).colspan(2).expand().fill();
 	}
 
 	private VisTable createSectionsTable () {
