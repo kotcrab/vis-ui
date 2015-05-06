@@ -19,7 +19,9 @@ package com.kotcrab.vis.editor.module;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.util.Log;
 
-public class BaseModuleContainer<T extends BaseModule> {
+import java.lang.reflect.Field;
+
+public abstract class BaseModuleContainer<T extends BaseModule> {
 	protected Array<T> modules = new Array<>();
 	private boolean initFinished = false;
 
@@ -42,6 +44,8 @@ public class BaseModuleContainer<T extends BaseModule> {
 
 		long start = System.currentTimeMillis();
 
+		injectModules();
+
 		for (int i = 0; i < modules.size; i++)
 			modules.get(i).init();
 
@@ -56,14 +60,40 @@ public class BaseModuleContainer<T extends BaseModule> {
 		initFinished = true;
 	}
 
-	@SuppressWarnings("unchecked")
+	private void injectModules () {
+		try {
+			for (T module : modules) {
+				for (Field field : module.getClass().getDeclaredFields()) {
+					if (field.isAnnotationPresent(InjectModule.class)) {
+						field.setAccessible(true);
+						field.set(module, findInHierarchy(field.getType().asSubclass(BaseModule.class)));
+					}
+				}
+			}
+		} catch (ReflectiveOperationException e) {
+			Log.exception(e);
+		}
+	}
+
+	public <C extends BaseModule> C findInHierarchy (Class<C> moduleClass) {
+		return get(moduleClass);
+	}
+
 	public <C extends BaseModule> C get (Class<C> moduleClass) {
+		C module = getOrNull(moduleClass);
+		if (module != null) return module;
+
+		throw new IllegalStateException("Failed to get module: '" + moduleClass + "' from ModuleContainer, module not found!");
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <C extends BaseModule> C getOrNull (Class<C> moduleClass) {
 		for (int i = 0; i < modules.size; i++) {
 			BaseModule m = modules.get(i);
 			if (m.getClass() == moduleClass) return (C) m;
 		}
 
-		throw new IllegalStateException("Failed to get module: '" + moduleClass + "' from ModuleContainer, module not found!");
+		return null;
 	}
 
 	public Array<T> getModules () {

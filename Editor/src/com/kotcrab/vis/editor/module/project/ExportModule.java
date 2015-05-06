@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.*;
@@ -39,8 +40,8 @@ import org.apache.commons.io.FileUtils;
 import java.io.IOException;
 
 public class ExportModule extends ProjectModule {
-	private SceneIOModule sceneIO;
-	private ObjectSupportModule supportModule;
+	@InjectModule private SceneIOModule sceneIO;
+	@InjectModule private ObjectSupportModule supportModule;
 
 	private FileHandle visAssetsDir;
 
@@ -52,7 +53,6 @@ public class ExportModule extends ProjectModule {
 	@Override
 	public void init () {
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
-		sceneIO = projectContainer.get(SceneIOModule.class);
 
 		visAssetsDir = fileAccess.getAssetsFolder();
 

@@ -29,7 +29,6 @@ import java.util.Set;
 
 public class CrashReporter {
 	private static final String TAG = "CrashReporter";
-	public static boolean reportSaved;
 
 	private StringBuilder crashReport;
 	private File logFile;
@@ -47,10 +46,6 @@ public class CrashReporter {
 	}
 
 	public void processReport () throws IOException {
-		//don't save multiple reports from one instance of application
-		if (reportSaved) return;
-		reportSaved = true;
-
 		File crashReportFile = new File(logFile.getParent(), "viseditor-crash " + new SimpleDateFormat("yy-MM-dd HH-mm-ss").format(new Date()) + ".txt");
 		FileUtils.writeStringToFile(crashReportFile, report);
 		Log.info(TAG, "Crash saved to file: " + crashReportFile.getAbsolutePath());

@@ -19,19 +19,14 @@ package com.kotcrab.vis.editor.module.scene;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.scene.EditorObject;
 
-public class ZIndexManipulator extends SceneModule {
-	private UndoModule undoModule;
-	private EntityManipulatorModule entityManipulator;
+public class ZIndexManipulatorModule extends SceneModule {
+	@InjectModule private UndoModule undoModule;
+	@InjectModule private EntityManipulatorModule entityManipulator;
 
 	private UndoableActionGroup actionGroup;
-
-	@Override
-	public void init () {
-		undoModule = sceneContainer.get(UndoModule.class);
-		entityManipulator = sceneContainer.get(EntityManipulatorModule.class);
-	}
 
 	private void moveSelectedEntities (boolean up) {
 		actionGroup = new UndoableActionGroup();

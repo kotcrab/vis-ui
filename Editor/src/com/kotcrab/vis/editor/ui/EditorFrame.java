@@ -22,6 +22,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.util.ThreadUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -117,6 +118,16 @@ public class EditorFrame extends JFrame {
 	@Override
 	public void dispose () {
 		super.dispose();
+
+		//make sure that application will exit eventually
+		Thread exitThread = new Thread(() -> {
+			ThreadUtils.sleep(1000);
+			System.exit(-2);
+		}, "Force Exit");
+
+		exitThread.setDaemon(true);
+		exitThread.start();
+
 		Gdx.app.exit();
 	}
 

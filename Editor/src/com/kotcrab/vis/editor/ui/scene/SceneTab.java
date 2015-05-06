@@ -89,7 +89,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		sceneMC.add(new RendererModule());
 
 		sceneMC.add(undoModule = new UndoModule());
-		sceneMC.add(new ZIndexManipulator());
+		sceneMC.add(new ZIndexManipulatorModule());
 
 		sceneMC.add(entityManipulator = new EntityManipulatorModule());
 		sceneMC.addAll(pluginContainer.getContainersExtensions(SceneModule.class, ExtensionScope.SCENE));

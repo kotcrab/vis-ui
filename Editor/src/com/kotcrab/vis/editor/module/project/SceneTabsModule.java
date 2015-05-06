@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
@@ -24,13 +25,12 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
 public class SceneTabsModule extends ProjectModule implements TabbedPaneListener {
-	private TabsModule tabsModule;
+	@InjectModule private TabsModule tabsModule;
 
 	private Array<SceneTab> loadedTabs;
 
 	@Override
 	public void init () {
-		tabsModule = container.get(TabsModule.class);
 		tabsModule.addListener(this);
 		loadedTabs = new Array<>();
 	}

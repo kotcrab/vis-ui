@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsModule;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.ui.util.Validators;
@@ -31,20 +32,15 @@ import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 public class GridRendererModule extends SceneModule {
-	private CameraModule camera;
-	private RendererModule renderer;
+	@InjectModule private CameraModule camera;
+	@InjectModule private RendererModule renderer;
 
 	private ShapeRenderer shapeRenderer;
 
-	private GridSettingsModule settings;
+	@InjectModule private GridSettingsModule settings;
 
 	@Override
 	public void init () {
-		renderer = sceneContainer.get(RendererModule.class);
-		camera = sceneContainer.get(CameraModule.class);
-
-		settings = container.get(GridSettingsModule.class);
-
 		shapeRenderer = renderer.getShapeRenderer();
 	}
 

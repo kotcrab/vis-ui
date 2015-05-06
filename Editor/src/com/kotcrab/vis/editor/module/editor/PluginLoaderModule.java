@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension;
 import com.kotcrab.vis.editor.plugin.FailedPluginDescriptor;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
@@ -57,22 +58,15 @@ public class PluginLoaderModule extends EditorModule {
 	private static final String TAG = "PluginLoader";
 	private static final String PLUGINS_FOLDER_PATH = App.getJarFolderPath() + File.separator + "plugins";
 
-	private PluginContainerModule pluginContainer;
-	private PluginSettingsModule settings;
-	private ToastModule toastModule;
+	@InjectModule private PluginContainerModule pluginContainer;
+	@InjectModule private PluginSettingsModule settings;
+	@InjectModule private ToastModule toastModule;
 
 	//we need nested iterators, Array can't provide that
 	private Array<PluginDescriptor> allPlugins = new Array<>();
 	private Array<PluginDescriptor> pluginsToLoad;
 
 	private Array<FailedPluginDescriptor> failedPlugins = new Array<>();
-
-	@Override
-	public void init () {
-		pluginContainer = container.get(PluginContainerModule.class);
-		settings = container.get(PluginSettingsModule.class);
-		toastModule = container.get(ToastModule.class);
-	}
 
 	@Override
 	public void postInit () {

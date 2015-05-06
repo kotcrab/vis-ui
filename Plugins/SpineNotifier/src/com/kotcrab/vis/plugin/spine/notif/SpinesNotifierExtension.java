@@ -34,6 +34,7 @@ package com.kotcrab.vis.plugin.spine.notif;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.EditorModule;
 import com.kotcrab.vis.editor.module.editor.PluginFilesAccessModule;
 import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsModule;
@@ -55,7 +56,7 @@ public class SpinesNotifierExtension implements ContainerExtension<EditorModule>
 }
 
 class SpineNotifier extends EditorModule {
-	private PluginSettingsModule pluginSettings;
+	@InjectModule private PluginSettingsModule pluginSettings;
 
 	private Json json;
 	private FileHandle settingsFile;
@@ -63,7 +64,6 @@ class SpineNotifier extends EditorModule {
 
 	@Override
 	public void init () {
-		pluginSettings = container.get(PluginSettingsModule.class);
 		ToastModule toastModule = container.get(ToastModule.class);
 		PluginFilesAccessModule filesAccess = container.get(PluginFilesAccessModule.class);
 

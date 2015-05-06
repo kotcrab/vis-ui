@@ -30,13 +30,14 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.ProjectPathUtils;
 
 public class TextureCacheModule extends ProjectModule implements WatchListener {
-	private FileAccessModule fileAccess;
-	private AssetsWatcherModule watcher;
+	@InjectModule private FileAccessModule fileAccess;
+	@InjectModule private AssetsWatcherModule watcher;
 
 	private String gfxPath;
 	private String cachePath;
@@ -61,9 +62,6 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	@Override
 	public void init () {
-		fileAccess = projectContainer.get(FileAccessModule.class);
-		watcher = projectContainer.get(AssetsWatcherModule.class);
-
 		settings = new Settings();
 		settings.maxWidth = 4096;
 		settings.maxHeight = 4096;

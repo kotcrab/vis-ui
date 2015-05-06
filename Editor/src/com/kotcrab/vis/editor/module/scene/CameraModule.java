@@ -23,11 +23,12 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.SceneMetadataModule;
 import com.kotcrab.vis.editor.util.gdx.CameraZoomController;
 
 public class CameraModule extends SceneModule {
-	private SceneMetadataModule metadataModule;
+	@InjectModule private SceneMetadataModule metadataModule;
 	private SceneMetadata metadata;
 
 	private OrthographicCamera camera;
@@ -40,8 +41,10 @@ public class CameraModule extends SceneModule {
 		unprojectVec = new Vector3();
 		camera = new OrthographicCamera();
 		zoomController = new CameraZoomController(camera, unprojectVec);
+	}
 
-		metadataModule = projectContainer.get(SceneMetadataModule.class);
+	@Override
+	public void init () {
 		metadata = metadataModule.getMap().get(scene.path);
 
 		if (metadata == null) {

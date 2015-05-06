@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
@@ -41,9 +42,9 @@ import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 
 public class EntityManipulatorModule extends SceneModule {
-	private CameraModule camera;
-	private UndoModule undoModule;
-	private SceneIOModule sceneIOModule;
+	@InjectModule private CameraModule camera;
+	@InjectModule private UndoModule undoModule;
+	@InjectModule private SceneIOModule sceneIOModule;
 
 	private ShapeRenderer shapeRenderer;
 
@@ -78,9 +79,6 @@ public class EntityManipulatorModule extends SceneModule {
 		createPopupMenu();
 
 		shapeRenderer = sceneContainer.get(RendererModule.class).getShapeRenderer();
-		camera = sceneContainer.get(CameraModule.class);
-		undoModule = sceneContainer.get(UndoModule.class);
-		sceneIOModule = projectContainer.get(SceneIOModule.class);
 
 		ObjectSupportModule supportManager = projectContainer.get(ObjectSupportModule.class);
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);

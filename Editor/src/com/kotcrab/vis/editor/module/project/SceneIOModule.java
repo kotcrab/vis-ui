@@ -27,6 +27,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.*;
@@ -43,13 +44,12 @@ import java.io.FileOutputStream;
 public class SceneIOModule extends ProjectModule {
 	private Kryo kryo;
 
-	private FileAccessModule fileAccessModule;
+	@InjectModule private FileAccessModule fileAccessModule;
 
 	private FileHandle assetsFolder;
 
 	@Override
 	public void init () {
-		fileAccessModule = projectContainer.get(FileAccessModule.class);
 		assetsFolder = fileAccessModule.getAssetsFolder();
 
 		TextureCacheModule textureCache = projectContainer.get(TextureCacheModule.class);

@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.module.physicseditor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.kotcrab.vis.editor.module.BaseModule;
 import com.kotcrab.vis.editor.module.BaseModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
@@ -52,6 +53,14 @@ public class PhysicsEditorModuleContainer extends BaseModuleContainer<PhysicsEdi
 		module.setObjects(this, editorTab);
 
 		super.add(module);
+	}
+
+	@Override
+	public <C extends BaseModule> C findInHierarchy (Class<C> moduleClass) {
+		C module = getOrNull(moduleClass);
+		if (module != null) return module;
+
+		return projectModuleContainer.findInHierarchy(moduleClass);
 	}
 
 	public Project getProject () {

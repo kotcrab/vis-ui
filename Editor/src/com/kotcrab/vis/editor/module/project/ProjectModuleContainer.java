@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.kotcrab.vis.editor.module.BaseModule;
 import com.kotcrab.vis.editor.module.BaseModuleContainer;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 
@@ -42,6 +43,14 @@ public class ProjectModuleContainer extends BaseModuleContainer<ProjectModule> {
 		if (getModuleCounter() > 0)
 			throw new IllegalStateException("Project can't be changed while modules are loaded!");
 		this.project = project;
+	}
+
+	@Override
+	public <C extends BaseModule> C findInHierarchy (Class<C> moduleClass) {
+		C module = getOrNull(moduleClass);
+		if (module != null) return module;
+
+		return editorMC.findInHierarchy(moduleClass);
 	}
 
 	public Project getProject () {

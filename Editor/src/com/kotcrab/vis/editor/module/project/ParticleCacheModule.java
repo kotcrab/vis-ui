@@ -18,20 +18,18 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 
 //TODO support dynamic refreshing
 public class ParticleCacheModule extends ProjectModule implements WatchListener {
-	private FileAccessModule fileAccess;
-	private AssetsWatcherModule watcherModule;
+	@InjectModule private FileAccessModule fileAccess;
+	@InjectModule private AssetsWatcherModule watcherModule;
 
 	private FileHandle particleDirectory;
 
 	@Override
 	public void init () {
-		fileAccess = projectContainer.get(FileAccessModule.class);
-		watcherModule = projectContainer.get(AssetsWatcherModule.class);
-
 		particleDirectory = fileAccess.getParticleFolder();
 
 		watcherModule.addListener(this);

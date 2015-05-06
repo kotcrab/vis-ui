@@ -32,6 +32,7 @@ import com.esotericsoftware.kryo.KryoException;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
@@ -54,17 +55,16 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
 public class AssetsUIModule extends ProjectModule implements WatchListener, TabbedPaneListener {
+	@InjectModule private TabsModule tabsModule;
+	@InjectModule private QuickAccessModule quickAccessModule;
 
-	private TabsModule tabsModule;
-	private QuickAccessModule quickAccessModule;
-
-	private ObjectSupportModule supportModule;
-	private SceneTabsModule sceneTabsModule;
-	private SceneIOModule sceneIO;
-	private FileAccessModule fileAccess;
-	private TextureCacheModule textureCache;
-	private AssetsWatcherModule assetsWatcher;
-	private AssetsUsageAnalyzerModule assetsUsageAnalyzer;
+	@InjectModule private ObjectSupportModule supportModule;
+	@InjectModule private SceneTabsModule sceneTabsModule;
+	@InjectModule private SceneIOModule sceneIO;
+	@InjectModule private FileAccessModule fileAccess;
+	@InjectModule private TextureCacheModule textureCache;
+	@InjectModule private AssetsWatcherModule assetsWatcher;
+	@InjectModule private AssetsUsageAnalyzerModule assetsUsageAnalyzer;
 
 	private FileHandle visFolder;
 	private FileHandle assetsFolder;
@@ -103,17 +103,6 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 	}
 
 	private void initModule () {
-		tabsModule = container.get(TabsModule.class);
-		quickAccessModule = container.get(QuickAccessModule.class);
-
-		supportModule = projectContainer.get(ObjectSupportModule.class);
-		sceneTabsModule = projectContainer.get(SceneTabsModule.class);
-		sceneIO = projectContainer.get(SceneIOModule.class);
-		fileAccess = projectContainer.get(FileAccessModule.class);
-		textureCache = projectContainer.get(TextureCacheModule.class);
-		assetsWatcher = projectContainer.get(AssetsWatcherModule.class);
-		assetsUsageAnalyzer = projectContainer.get(AssetsUsageAnalyzerModule.class);
-
 		FontCacheModule fontCache = projectContainer.get(FontCacheModule.class);
 		ParticleCacheModule particleCache = projectContainer.get(ParticleCacheModule.class);
 
