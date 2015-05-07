@@ -29,6 +29,7 @@ public abstract class BaseModuleContainer<T extends BaseModule> {
 		modules.add(module);
 		module.added();
 		if (initFinished) {
+			injectModules(module);
 			module.init();
 			module.postInit();
 		}
@@ -44,7 +45,7 @@ public abstract class BaseModuleContainer<T extends BaseModule> {
 
 		long start = System.currentTimeMillis();
 
-		injectModules();
+		injectAllModules();
 
 		for (int i = 0; i < modules.size; i++)
 			modules.get(i).init();
@@ -60,14 +61,17 @@ public abstract class BaseModuleContainer<T extends BaseModule> {
 		initFinished = true;
 	}
 
-	private void injectModules () {
+	private void injectAllModules () {
+		for (T module : modules)
+			injectModules(module);
+	}
+
+	private void injectModules (T module) {
 		try {
-			for (T module : modules) {
-				for (Field field : module.getClass().getDeclaredFields()) {
-					if (field.isAnnotationPresent(InjectModule.class)) {
-						field.setAccessible(true);
-						field.set(module, findInHierarchy(field.getType().asSubclass(BaseModule.class)));
-					}
+			for (Field field : module.getClass().getDeclaredFields()) {
+				if (field.isAnnotationPresent(InjectModule.class)) {
+					field.setAccessible(true);
+					field.set(module, findInHierarchy(field.getType().asSubclass(BaseModule.class)));
 				}
 			}
 		} catch (ReflectiveOperationException e) {
