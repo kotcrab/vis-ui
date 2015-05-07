@@ -139,15 +139,6 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		writeEnters = false;
 		addListener(inputListener = createInputListener());
 		addListener(clickListener = new ClickListener());
-		addListener(new FocusListener() {
-			@Override
-			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
-				if (focused == false) {
-					keyTypedRepeatTask.cancel();
-					keyRepeatTask.cancel();
-				}
-			}
-		});
 	}
 
 	protected InputListener createInputListener () {
@@ -290,6 +281,10 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	public void draw (Batch batch, float parentAlpha) {
 		Stage stage = getStage();
 		boolean focused = stage != null && stage.getKeyboardFocus() == this;
+		if (!focused) {
+			keyTypedRepeatTask.cancel();
+			keyRepeatTask.cancel();
+		}
 
 		final BitmapFont font = style.font;
 		final Color fontColor = (disabled && style.disabledFontColor != null) ? style.disabledFontColor
