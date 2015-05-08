@@ -4,12 +4,16 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.launcher.api.APIClient.SetCallback;
-import com.kotcrab.vis.launcher.api.*;
+import com.kotcrab.vis.launcher.api.ContentSet;
+import com.kotcrab.vis.launcher.api.DataCache;
+import com.kotcrab.vis.launcher.api.GdxReleaseSet;
+import com.kotcrab.vis.launcher.api.VersionSet;
 import com.kotcrab.vis.launcher.ui.NewsSection;
 import com.kotcrab.vis.launcher.ui.SocialTable;
 import com.kotcrab.vis.ui.VisUI;
@@ -101,10 +105,16 @@ public class Launcher extends ApplicationAdapter {
 	private VisTable createSectionsTable () {
 		VisTable table = new VisTable(false);
 
-		VisImageTextButton startButton = createSectionButton("Start", "default-noborder", Assets.getIcon(Icons.HOME));
-		VisImageTextButton editorButton = createSectionButton("Editor", "default-noborder", Assets.getIcon(Icons.VIS_ICON));
-		VisImageTextButton toolsButton = createSectionButton("Tools", "default-noborder", Assets.getIcon(Icons.TOOLS));
-		VisImageTextButton contentButton = createSectionButton("Content", "default-noborder", Assets.getIcon(Icons.CONTENT));
+		VisImageTextButton startButton = createSectionButton("Start", "toggle-noborder", Assets.getIcon(Icons.HOME));
+		VisImageTextButton editorButton = createSectionButton("Editor", "toggle-noborder", Assets.getIcon(Icons.VIS_ICON));
+		VisImageTextButton toolsButton = createSectionButton("Tools", "toggle-noborder", Assets.getIcon(Icons.TOOLS));
+		VisImageTextButton contentButton = createSectionButton("Content", "toggle-noborder", Assets.getIcon(Icons.CONTENT));
+
+		ButtonGroup<VisImageTextButton> group = new ButtonGroup<>();
+		group.add(startButton);
+		group.add(editorButton);
+		group.add(toolsButton);
+		group.add(contentButton);
 
 		table.defaults().expandX().fillX();
 		table.add(startButton).row();
