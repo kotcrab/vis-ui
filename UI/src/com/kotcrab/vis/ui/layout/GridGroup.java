@@ -40,15 +40,18 @@ public class GridGroup extends WidgetGroup {
 
 	public GridGroup (int itemSize) {
 		this.itemSize = itemSize;
+		setTouchable(Touchable.childrenOnly);
 	}
 
 	public GridGroup (float spacing) {
 		this.spacing = spacing;
+		setTouchable(Touchable.childrenOnly);
 	}
 
 	public GridGroup (int itemSize, float spacing) {
 		this.spacing = spacing;
 		this.itemSize = itemSize;
+		setTouchable(Touchable.childrenOnly);
 	}
 
 	private void computeSize () {
