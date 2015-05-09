@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.editor.scene;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
@@ -33,11 +32,6 @@ public class SpriteObject extends SpriteEntity implements EditorObject {
 
 	public void onDeserialize (TextureRegion region) {
 		this.sprite = new Sprite(region);
-	}
-
-	@Override
-	public void render (Batch batch) {
-		sprite.draw(batch);
 	}
 
 	@Override
