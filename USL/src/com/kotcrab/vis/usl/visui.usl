@@ -125,7 +125,7 @@ package com.kotcrab.vis.ui.widget {
 	}
 	
 	#VisCheckBox$VisCheckBoxStyle extends CheckBoxStyle: {
-		default inherits .focus-border-circle: { checkboxOver: check-over-off, checkboxOnOver: check-over-on checkboxOffDown: check-down, checkboxOnDown: check-down-on, 
+		default inherits .focus-border: { checkboxOver: check-over-off, checkboxOnOver: check-over-on checkboxOffDown: check-down, checkboxOnDown: check-down-on,
 												checkboxOffDisabled: check-off, checkboxOnDisabled: check-on-disabled }
 		radio inherits .focus-border-circle: { checkboxOver: radio-over-off, checkboxOnOver: radio-over-on, checkboxOffDown: radio-down, checkboxOnDown: radio-down-on, 
 												checkboxOffDisabled: radio-off, checkboxOnDisabled: radio-on-disabled }
