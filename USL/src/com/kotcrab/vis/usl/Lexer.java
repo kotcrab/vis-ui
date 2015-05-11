@@ -66,7 +66,7 @@ public class Lexer {
 			} else if (checkIdentifierDef(usl, i)) { // identifier: someName: content
 				i = lexIdentifier(ctx, usl, i);
 			} else {
-				Utils.throwException("Unrecognized token '" + usl.substring(i, usl.indexOf(" ", i)) + "'", usl, i);
+				Utils.throwException("Unrecognized symbol '" + usl.substring(i, usl.indexOf(" ", i)) + "'", usl, i);
 			}
 		}
 	}
@@ -101,21 +101,19 @@ public class Lexer {
 	private static int lexIdentifierContent (LexerContext ctx, String usl, int i) {
 		int commaIndex = usl.indexOf(',', i);
 		int curlyIndex = usl.indexOf('}', i);
-		//int spaceIndex = usl.indexOf(' ', i);
 
 		if (commaIndex == -1) commaIndex = Integer.MAX_VALUE;
 		if (curlyIndex == -1) curlyIndex = Integer.MAX_VALUE;
-		//if (spaceIndex == -1) spaceIndex = Integer.MAX_VALUE;
 
-		//int end = Math.min(commaIndex, Math.min(curlyIndex, spaceIndex));
 		int end = Math.min(commaIndex, curlyIndex);
 		if (end == -1) Utils.throwException("Identifier content end could not be found", usl, i);
 
 		String content = usl.substring(i, end);
-		content.replace(" ", "");
+		int origLength = content.length();
+		if (content.endsWith(" ")) content = content.substring(0, content.length() - 1);
 		ctx.tokens.add(new Token(usl, i, Type.IDENTIFIER_CONTENT, content));
 
-		i = i + content.length();
+		i = i + origLength;
 		if (usl.charAt(i) == ',') i++;
 		return i;
 	}

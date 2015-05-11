@@ -1,8 +1,11 @@
 package com.kotcrab.vis.usl;
 
 import com.kotcrab.vis.usl.Token.Type;
+import com.kotcrab.vis.usl.lang.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class Parser {
 	private StringBuilder out;
@@ -10,69 +13,199 @@ public class Parser {
 	private int i = 0;
 
 	private String currentPackage;
-	private int packageEnd;
+	private StyleBlock currentStyleBlock;
+	private int currentPackageEnd;
+	private int currentStyleBlockEnd;
 
-	private String currentStyleBlock;
+	private ArrayList<StyleBlock> styleBlocks = new ArrayList<StyleBlock>();
+	private ArrayList<StyleIdentifier> globalStyles = new ArrayList<StyleIdentifier>();
+
+	private Stack<GroupIdentifier> identifiers = new Stack<GroupIdentifier>();
 
 	public String getJson (List<Token> tokens) {
 		out = new StringBuilder();
 		this.tokens = tokens;
 
-		writeBegin();
-
 		for (; i < tokens.size(); ) {
 			Token t = tokens.get(i);
 			//System.out.println(t.type + " " + (t.content == null ? "" : t.content));
 
-			if (t.type == Type.STYLE_BLOCK) {
-
-			}
-
 			if (t.type == Type.PACKAGE) {
 				if (currentPackage != null) Utils.throwException("Packages cannot be nested", t);
+				if (t.content.endsWith(".")) Utils.throwException("Package name cannot end with dot", t);
 				currentPackage = t.content;
 				i++;
-				findPackageEnd();
-				i++;
+				currentPackageEnd = findBlockEnd();
+				continue;
 			}
 
-			if (t.type == Type.LCURL) {
-				writeLeftCurl();
-				writeNewLine();
+			if (t.type == Type.STYLE_BLOCK) {
+				if (currentStyleBlock != null) Utils.throwException("Style cannot be nested", t);
+				currentStyleBlock = new StyleBlock();
+				styleBlocks.add(currentStyleBlock);
 				i++;
+				currentStyleBlockEnd = findBlockEnd();
+
+				if (currentPackage != null)
+					currentStyleBlock.fullName = currentPackage + "." + t.content;
+				else
+					currentStyleBlock.fullName = t.content;
+
+				continue;
+			}
+
+			if (t.type == Type.STYLE_BLOCK_EXTENDS) {
+				if (currentStyleBlock == null)
+					Utils.throwException("Unexpected extends", t);
+				if (currentStyleBlock.extendsStyle != null)
+					Utils.throwException("Style block can only extend one style", t);
+
+				currentStyleBlock.extendsStyle = findMatchingStyle(t, t.content);
+
+				i++;
+				continue;
+			}
+
+			if (t.type == Type.GLOBAL_STYLE) {
+				StyleIdentifier globalId = new StyleIdentifier();
+				globalId.name = "." + t.content;
+				globalStyles.add(globalId);
+				identifiers.push(globalId);
+				i++;
+				continue;
+			}
+
+			if (t.type == Type.IDENTIFIER) {
+				if (identifiers.size() == 0) {
+					StyleIdentifier id = new StyleIdentifier();
+					if (peekPrev().type == Type.META_STYLE) id.metaStyle = true;
+					id.name = t.content;
+
+					currentStyleBlock.styles.add(id);
+					identifiers.push(id);
+					i++;
+					continue;
+				} else {
+
+					if (peekNext().type == Type.IDENTIFIER_CONTENT) {
+						identifiers.peek().content.add(new BasicIdentifier(t.content, peekNext().content));
+						i += 2;
+						continue;
+					}
+
+					if (peekNext().type == Type.INHERITS || peekNext().type == Type.LCURL) {
+						GroupIdentifier id = new GroupIdentifier();
+						identifiers.push(id);
+
+						id.name = t.content;
+
+						i++;
+						continue;
+					}
+
+				}
+			}
+
+			if (t.type == Type.INHERITS || t.type == Type.IDENTIFIER_CONTENT || t.type == Type.LCURL || t.type == Type.META_STYLE) {
+				i++;
+				continue;
+			}
+
+			if (t.type == Type.INHERITS_NAME) {
+				identifiers.peek().inherits.add(t.content);
+				i++;
+				continue;
 			}
 
 			if (t.type == Type.RCURL) {
-				if (i != packageEnd) {
-					writeRightCurl();
-					writeNewLine();
+				if (i == currentPackageEnd) {
+					currentPackage = null;
+					currentPackageEnd = -1;
+				} else if (i == currentStyleBlockEnd) {
+					currentStyleBlock = null;
+					currentStyleBlockEnd = -1;
+
+				} else {
+					identifiers.pop();
 				}
 
 				i++;
+				continue;
 			}
 
-			Utils.throwException("Parser failed, invalid token", t);
+			Utils.throwException("Parser failed, invalid token: " + t.type, t);
 		}
+
+		postCheck();
+
+		writeBegin();
 
 		writeEnd();
 
 		return out.toString();
 	}
 
-	private void findPackageEnd () {
+	private StyleBlock findMatchingStyle (Token t, String name) {
+		StyleBlock match = null;
+
+		//search for literal match
+		for (StyleBlock block : styleBlocks) {
+			if (block.fullName.equals(name)) {
+				match = block;
+				break;
+			}
+		}
+
+		//search for last $ match
+		for (StyleBlock block : styleBlocks) {
+			String parts[] = block.fullName.split("\\$");
+			if (parts.length == 2 && parts[1].equals(name)) {
+				match = block;
+				break;
+			}
+		}
+
+		//search for last . match
+		for (StyleBlock block : styleBlocks) {
+			String parts[] = block.fullName.split("\\.");
+			if (parts.length == 2 && parts[1].equals(name)) {
+				match = block;
+				break;
+			}
+		}
+
+		if (match == currentStyleBlock) Utils.throwException("Style block cannot extend itself", t);
+		if (match == null) Utils.throwException("Style block extends unknown undefined style: " + name, t);
+
+		return match;
+	}
+
+	private int findBlockEnd () {
 		int curliesLevel = 0;
 
-		for (int j = i; j < tokens.size(); j++) {
+		int firstLCurl = -1;
+
+		for (firstLCurl = i; firstLCurl < tokens.size(); firstLCurl++) {
+			Token t = tokens.get(firstLCurl);
+			if (t.type == Type.LCURL) break;
+		}
+
+		for (int j = firstLCurl; j < tokens.size(); j++) {
 			Token t = tokens.get(j);
 
 			if (t.type == Type.LCURL) curliesLevel++;
 			if (t.type == Type.RCURL) curliesLevel--;
 
-			if (curliesLevel == 0) {
-				packageEnd = j;
-				break;
-			}
+			if (curliesLevel == 0)
+				return j;
 		}
+
+		Utils.throwException("Parser failed, end of block not found", tokens.get(i));
+		return -1;
+	}
+
+	private void write (String s) {
+		out.append(s);
 	}
 
 	private void writeBegin () {
@@ -97,10 +230,60 @@ public class Parser {
 		out.append('\n');
 	}
 
+	private Token peekPrev () {
+		return tokens.get(i - 1);
+	}
+
 	private Token peekNext () {
 		if (i + 1 > tokens.size())
 			Utils.throwException("Unexpected EOF", tokens.get(i));
 
 		return tokens.get(i + 1);
+	}
+
+	private void postCheck () {
+		if (identifiers.size() > 0) System.out.println("Post check warning: identifier stack not empty after parsing");
+
+		for (StyleIdentifier id : globalStyles)
+			postCheckStyleId(id);
+
+		for (StyleBlock block : styleBlocks) {
+			for (StyleIdentifier id : block.styles)
+				postCheckStyleId(id);
+		}
+	}
+
+	private void postCheckStyleId (StyleIdentifier styleId) {
+		if (styleId.name.contains(" ")) throwContainsSpaceException(styleId);
+
+		for (Identifier id : styleId.content)
+			postCheckId(id);
+	}
+
+	private void postCheckId (Identifier id) {
+		if (id instanceof BasicIdentifier) {
+			BasicIdentifier bid = (BasicIdentifier) id;
+			if (bid.name.contains(" ") || bid.content.contains(" ")) throwContainsSpaceException(bid);
+		}
+
+		if (id instanceof GroupIdentifier) {
+			GroupIdentifier gid = (GroupIdentifier) id;
+			if (gid.name.contains(" ")) throwContainsSpaceException(gid);
+
+			for (Identifier gidId : gid.content)
+				postCheckId(gidId);
+		}
+	}
+
+	private void throwContainsSpaceException (BasicIdentifier id) {
+		throw new USLException("Identifier contains illegal space in name or content. Name: '" + id.name + "', content: '" + id.content + "'");
+	}
+
+	private void throwContainsSpaceException (GroupIdentifier groupId) {
+		String content = null;
+		for (Identifier id : groupId.content) {
+			content += id.name + ":..., ";
+		}
+		throw new USLException("Identifier contains illegal space in name or content. Name: '" + groupId.name + "', content: '" + content + "'");
 	}
 }

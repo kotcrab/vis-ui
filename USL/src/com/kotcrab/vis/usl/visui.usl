@@ -2,8 +2,8 @@
 //This file is kept here so it is easier to include and expand it in other USL files (include <visui>)
 
 #com.badlogic.gdx.BitmapFont: {
-		default-font: { file: default.fnt }
-		small-font: { file: font-small.fnt }
+	default-font: { file: default.fnt }
+	small-font: { file: font-small.fnt }
 }
 
 #com.badlogic.gdx.graphics.Color: {
@@ -19,6 +19,8 @@
 }
 
 .font: { font: default-font, fontColor: white, disabledFontColor: grey }
+.focus-border: { focusBorder: border }
+.focus-border-circle: { focusBorder: border-circle }
 
 package com.badlogic.gdx.scenes.scene2d.ui {
 	#Skin$TintedDrawable: {
@@ -91,9 +93,6 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 }
 
 package com.kotcrab.vis.ui.widget {
-	.focus-border: { focusBorder: border }
-	.focus-border-circle: { focusBorder: border-circle }
-
 	#VisTextField$VisTextFieldStyle: {
 		default inherits .focus-border, .font: { selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor }
 	}
@@ -125,7 +124,7 @@ package com.kotcrab.vis.ui.widget {
 	}
 	
 	#VisCheckBox$VisCheckBoxStyle extends CheckBoxStyle: {
-		default inherits .focus-border: { checkboxOver: check-over-off, checkboxOnOver: check-over-on checkboxOffDown: check-down, checkboxOnDown: check-down-on,
+		default inherits .focus-border: { checkboxOver: check-over-off, checkboxOnOver: check-over-on, checkboxOffDown: check-down, checkboxOnDown: check-down-on,
 												checkboxOffDisabled: check-off, checkboxOnDisabled: check-on-disabled }
 		radio inherits .focus-border-circle: { checkboxOver: radio-over-off, checkboxOnOver: radio-over-on, checkboxOffDown: radio-down, checkboxOnDown: radio-down-on, 
 												checkboxOffDisabled: radio-off, checkboxOnDisabled: radio-on-disabled }
@@ -152,7 +151,7 @@ package com.kotcrab.vis.ui.widget {
 	}
 	
 	#NumberSelector$NumberSelectorStyle: {
-		default: { down: select-down , up: select-up }
+		default: { down: select-down, up: select-up }
 	}
 	
 	#TabbedPane$TabbedPaneStyle: {
