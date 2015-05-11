@@ -6,7 +6,7 @@ import org.junit.Test;
 public class USLParserTest {
 	@Test
 	public void testUSLParser () throws Exception {
-		USL.parse("include <gdx>");
+		//USL.parse("include <gdx>");
 		USL.parse("include <visui>");
 	}
 }
