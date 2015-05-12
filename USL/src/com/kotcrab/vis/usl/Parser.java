@@ -18,6 +18,7 @@ public class Parser {
 	private int currentStyleBlockEnd;
 
 	private ArrayList<StyleBlock> styleBlocks = new ArrayList<StyleBlock>();
+	private ArrayList<StyleBlock> styleBlocksOverride = new ArrayList<StyleBlock>();
 	private ArrayList<StyleIdentifier> globalStyles = new ArrayList<StyleIdentifier>();
 
 	private Stack<GroupIdentifier> identifiers = new Stack<GroupIdentifier>();
@@ -51,6 +52,17 @@ public class Parser {
 				else
 					currentStyleBlock.fullName = t.content;
 
+				continue;
+			}
+
+			if (t.type == Type.STYLE_BLOCK_OVERRIDE) {
+				if (currentStyleBlock != null) Utils.throwException("Style cannot be nested", t);
+				currentStyleBlock = new StyleBlock();
+				styleBlocksOverride.add(currentStyleBlock);
+				i++;
+				currentStyleBlockEnd = findBlockEnd();
+
+				currentStyleBlock.fullName = findMatchingStyle(t, t.content).fullName;
 				continue;
 			}
 
@@ -95,6 +107,7 @@ public class Parser {
 
 					if (peekNext().type == Type.INHERITS || peekNext().type == Type.LCURL) {
 						GroupIdentifier id = new GroupIdentifier();
+						identifiers.peek().content.add(id);
 						identifiers.push(id);
 
 						id.name = t.content;
@@ -138,21 +151,17 @@ public class Parser {
 
 		postCheck();
 
-		writeBegin();
-
-		writeEnd();
-
-		return out.toString();
+		ArrayList<StyleBlock> mergedStyleBlocks = new StyleMerger(globalStyles, styleBlocks, styleBlocksOverride).merge();
+		return new USLJsonWriter(mergedStyleBlocks).getJson();
 	}
 
 	private StyleBlock findMatchingStyle (Token t, String name) {
-		StyleBlock match = null;
+		ArrayList<StyleBlock> matches = new ArrayList<StyleBlock>();
 
 		//search for literal match
 		for (StyleBlock block : styleBlocks) {
 			if (block.fullName.equals(name)) {
-				match = block;
-				break;
+				matches.add(block);
 			}
 		}
 
@@ -160,8 +169,7 @@ public class Parser {
 		for (StyleBlock block : styleBlocks) {
 			String parts[] = block.fullName.split("\\$");
 			if (parts.length == 2 && parts[1].equals(name)) {
-				match = block;
-				break;
+				matches.add(block);
 			}
 		}
 
@@ -169,13 +177,18 @@ public class Parser {
 		for (StyleBlock block : styleBlocks) {
 			String parts[] = block.fullName.split("\\.");
 			if (parts.length == 2 && parts[1].equals(name)) {
-				match = block;
-				break;
+				matches.add(block);
 			}
 		}
 
+		if (matches.size() == 0) Utils.throwException("Style block extends unknown undefined style: " + name, t);
+
+		StyleBlock match = matches.get(0);
+
+		if (matches.size() > 1)
+			System.out.println("Warn: multiples matches found for name: '" + name + "', using: " + match.fullName);
+
 		if (match == currentStyleBlock) Utils.throwException("Style block cannot extend itself", t);
-		if (match == null) Utils.throwException("Style block extends unknown undefined style: " + name, t);
 
 		return match;
 	}
@@ -183,7 +196,7 @@ public class Parser {
 	private int findBlockEnd () {
 		int curliesLevel = 0;
 
-		int firstLCurl = -1;
+		int firstLCurl;
 
 		for (firstLCurl = i; firstLCurl < tokens.size(); firstLCurl++) {
 			Token t = tokens.get(firstLCurl);
@@ -202,32 +215,6 @@ public class Parser {
 
 		Utils.throwException("Parser failed, end of block not found", tokens.get(i));
 		return -1;
-	}
-
-	private void write (String s) {
-		out.append(s);
-	}
-
-	private void writeBegin () {
-		out.append('{');
-		out.append('\n');
-	}
-
-	private void writeEnd () {
-		out.append('\n');
-		out.append('}');
-	}
-
-	private void writeLeftCurl () {
-		out.append('{');
-	}
-
-	private void writeRightCurl () {
-		out.append('}');
-	}
-
-	private void writeNewLine () {
-		out.append('\n');
 	}
 
 	private Token peekPrev () {

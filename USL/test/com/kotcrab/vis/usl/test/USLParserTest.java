@@ -5,8 +5,22 @@ import org.junit.Test;
 
 public class USLParserTest {
 	@Test
-	public void testUSLParser () throws Exception {
+	public void testGdxUslParser () throws Exception {
 		USL.parse("include <gdx>");
+	}
+
+	@Test
+	public void testVisUslParser () throws Exception {
 		USL.parse("include <visui>");
+	}
+
+	@Test
+	public void testVisCustomUslParser () throws Exception {
+		String res = USL.parse("include <visui> " +
+				"^VisTextButtonStyle: {\n" +
+				"custom inherits default: { over: button-down }\n" +
+				"}");
+
+		System.out.println(res);
 	}
 }

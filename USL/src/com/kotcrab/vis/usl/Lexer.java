@@ -36,6 +36,9 @@ public class Lexer {
 			} else if (ch == '#') { //block style definition
 				i = lexStyleBlock(ctx, usl, i + 1);
 
+			} else if (ch == '^') { //block style override block definition
+				i = lexStyleBlockOverride(ctx, usl, i + 1);
+
 			} else if (ch == '.') { //global block style definition
 				if (globalStyleRegex.matcher(usl.substring(i)).matches() == false)
 					Utils.throwException("Unexpected '.' or invalid global style block declaration", usl, i);
@@ -175,9 +178,25 @@ public class Lexer {
 
 			ctx.tokens.add(new Token(usl, i, Type.STYLE_BLOCK, parts[0]));
 			ctx.tokens.add(new Token(usl, i, Type.STYLE_BLOCK_EXTENDS, parts[2]));
-		} else {
+		} else
 			ctx.tokens.add(new Token(usl, i, Type.STYLE_BLOCK, blockDef));
-		}
+
+		return blockDefEnd + 1; //+1 for : at the end of style definition
+	}
+
+	private static int lexStyleBlockOverride (LexerContext ctx, String usl, int i) {
+		int blockDefEnd = usl.indexOf(":", i);
+		if (blockDefEnd == -1) Utils.throwException("Expected block definition end", usl, i);
+
+		String blockDef = usl.substring(i, blockDefEnd);
+
+		if (blockDef.contains(" ")) {
+			if (blockDef.contains("extends"))
+				Utils.throwException("Override style block cannot extend other style", usl, i);
+			else
+				Utils.throwException("Invalid block definition", usl, i);
+		} else
+			ctx.tokens.add(new Token(usl, i, Type.STYLE_BLOCK_OVERRIDE, blockDef));
 
 		return blockDefEnd + 1; //+1 for : at the end of style definition
 	}

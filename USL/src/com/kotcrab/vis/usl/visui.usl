@@ -43,7 +43,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	}
 	
 	#SelectBox$SelectBoxStyle: {
-		default inherits font: {
+		default inherits .font: {
 			background: default-select,
 		 	scrollStyle: default,
 			listStyle: { font: default-font, selection: list-selection, background: select-box-list-bg }
