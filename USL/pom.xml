@@ -87,6 +87,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.kotcrab.vis.usl.Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
                 <version>2.6</version>
             </plugin>
             <plugin>

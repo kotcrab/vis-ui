@@ -226,7 +226,8 @@ public class Lexer {
 			String path = usl.substring(i + 1, includeEnd);
 			File file = new File(path);
 
-			if (file.exists() == false) Utils.throwException("Include file does not exist", usl, i);
+			if (file.exists() == false)
+				Utils.throwException("Include file does not exist, file: " + file.getAbsolutePath(), usl, i);
 			lexUsl(ctx, Utils.readFile(file));
 			return includeEnd + 1;
 		} else
