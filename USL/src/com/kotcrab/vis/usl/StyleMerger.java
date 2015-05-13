@@ -1,5 +1,6 @@
 package com.kotcrab.vis.usl;
 
+import com.kotcrab.vis.usl.lang.GroupIdentifier;
 import com.kotcrab.vis.usl.lang.Identifier;
 import com.kotcrab.vis.usl.lang.StyleBlock;
 import com.kotcrab.vis.usl.lang.StyleIdentifier;
@@ -28,7 +29,7 @@ public class StyleMerger {
 			//merge inner styles
 			for (StyleIdentifier baseStyle : block.styles) {
 				for (String inherit : baseStyle.inherits) {
-					if(inherit.startsWith(".")) continue; //global styles was already merged at this point
+					if (inherit.startsWith(".")) continue; //global styles was already merged at this point
 					StyleIdentifier styleToBeMerged = findStyle(block.styles, inherit);
 
 					if (styleToBeMerged == null)
@@ -60,6 +61,7 @@ public class StyleMerger {
 	private void mergeGlobalStyles () {
 		for (StyleBlock block : styleBlocks) {
 			for (StyleIdentifier style : block.styles) {
+				mergeGlobalStyles(block.fullName, style.inherits, style.content);
 				for (String inherit : style.inherits) {
 					if (inherit.startsWith(".")) {
 						StyleIdentifier styleToInherit = findStyle(globalStyles, inherit);
@@ -75,6 +77,38 @@ public class StyleMerger {
 				}
 			}
 		}
+
+		for (StyleBlock block : styleBlocks) {
+			for (StyleIdentifier style : block.styles) {
+				mergeGlobalStylesForIds(block.fullName, style.content);
+			}
+		}
+	}
+
+	private void mergeGlobalStylesForIds (String blockName, ArrayList<Identifier> content) {
+		for (Identifier id : content) {
+			if (id instanceof GroupIdentifier) {
+				GroupIdentifier gid = (GroupIdentifier) id;
+				mergeGlobalStyles(blockName, gid.inherits, gid.content);
+				mergeGlobalStylesForIds(blockName, gid.content);
+			}
+		}
+	}
+
+	private void mergeGlobalStyles (String blockName, ArrayList<String> inherits, ArrayList<Identifier> content) {
+		for (String inherit : inherits) {
+			if (inherit.startsWith(".")) {
+				StyleIdentifier styleToInherit = findStyle(globalStyles, inherit);
+
+				if (styleToInherit == null)
+					throw new USLException("Style to inherit: '" + inherit + "' not found, block: " + blockName);
+
+				for (Identifier id : styleToInherit.content) {
+					if (findIdentifier(content, id.name) == null)
+						content.add(id);
+				}
+			}
+		}
 	}
 
 	private void mergeBlocksExtends (StyleBlock mergeTarget, StyleBlock blockToMerge) {
@@ -86,7 +120,7 @@ public class StyleMerger {
 			if (mergeTargetStyle != null)
 				mergeStyles(styleToBeMerged, mergeTargetStyle);
 			else
-				mergeTarget.styles.add(styleToBeMerged);
+				mergeTarget.styles.add(new StyleIdentifier(styleToBeMerged));
 		}
 	}
 
@@ -99,8 +133,8 @@ public class StyleMerger {
 
 	private void mergeStylesContent (StyleIdentifier styleToBeMerged, StyleIdentifier mergeTargetStyle) {
 		for (Identifier id : styleToBeMerged.content) {
-			if (findIdentifier(mergeTargetStyle.content, id.name) != null) mergeTargetStyle.content.remove(id);
-			mergeTargetStyle.content.add(id);
+			if (findIdentifier(mergeTargetStyle.content, id.name) == null) //mergeTargetStyle.content.remove(id);
+				mergeTargetStyle.content.add(id);
 		}
 	}
 

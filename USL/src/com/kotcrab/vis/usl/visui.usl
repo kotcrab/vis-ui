@@ -1,7 +1,7 @@
 //VisUI style
 //This file is kept here so it is easier to include and expand it in other USL files (include <visui>)
 
-#com.badlogic.gdx.BitmapFont: {
+#com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	default-font: { file: default.fnt }
 	small-font: { file: font-small.fnt }
 }
@@ -100,7 +100,7 @@ package com.kotcrab.vis.ui.widget {
 	#VisTextButton$VisTextButtonStyle extends TextButtonStyle: {
 		default inherits .focus-border: {}
 		toggle inherits .focus-border: {}
-		menu-bar inherits default, .font: { over: button-down }
+		menu-bar inherits default, .font: { over: button-down, focusBorder: NULL }
 	}
 	
 	#VisImageButton$VisImageButtonStyle: {
@@ -154,7 +154,7 @@ package com.kotcrab.vis.ui.widget {
 		default: { down: select-down, up: select-up }
 	}
 	
-	#TabbedPane$TabbedPaneStyle: {
+	#tabbedpane.TabbedPane$TabbedPaneStyle: {
 		default: { background: menu-bg, bottomBar: list-selection,
 					buttonStyle inherits .font: { down: button-down, up: button, checked: button-down, over: button-over } }
 	}

@@ -1,0 +1,4 @@
+//The VisUI skin is kept inside USL project for easier including and extending in other files, this is just a dummy file to tell USL to use
+//default VisUI skin.
+
+include <visui>

@@ -53,12 +53,12 @@ public class USLJsonWriter {
 			if (id instanceof BasicIdentifier) {
 				BasicIdentifier bid = (BasicIdentifier) id;
 				if(bid.content.equals("NULL")) continue;
-				out.append("\t").append(bid.name).append(": ").append(bid.content);
+				out.append(bid.name).append(": ").append(bid.content);
 			}
 
 			if (id instanceof GroupIdentifier) {
 				GroupIdentifier gid = (GroupIdentifier) id;
-				out.append(gid.name).append(" {");
+				out.append(gid.name).append(": {");
 				writeIdentifiers(gid.content);
 				out.append("}");
 			}

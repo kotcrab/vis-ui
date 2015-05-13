@@ -12,8 +12,8 @@ public class Main {
 			System.exit(-2);
 		}
 
-		File input = new File(args[1]);
-		File output = new File(args[2]);
+		File input = new File(args[0]);
+		File output = new File(args[1]);
 
 		if (input.exists() == false) {
 			System.out.println("Input file does not exist");
@@ -26,7 +26,7 @@ public class Main {
 			if (output.exists() == false)
 				output.createNewFile();
 
-			PrintStream out = new PrintStream(new FileOutputStream("filename.txt"));
+			PrintStream out = new PrintStream(new FileOutputStream(output));
 			out.print(usl);
 			out.close();
 		} catch (IOException e) {
