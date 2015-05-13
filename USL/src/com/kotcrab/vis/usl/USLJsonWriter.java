@@ -28,7 +28,7 @@ public class USLJsonWriter {
 
 				out.append("\t").append(style.name).append(": {");
 				writeIdentifiers(style.content);
-				out.append("}");
+				out.append(" }");
 
 				if (j == styles.size() - 1)
 					out.append("\n");

@@ -22,6 +22,9 @@ public class StyleMerger {
 		mergeGlobalStyles();
 
 		for (StyleBlock block : styleBlocks) {
+			//merge 'style a extends style b'
+			if (block.extendsStyle != null) mergeBlocksExtends(block, block.extendsStyle);
+
 			//merge inner styles
 			for (StyleIdentifier baseStyle : block.styles) {
 				for (String inherit : baseStyle.inherits) {
@@ -34,9 +37,6 @@ public class StyleMerger {
 					mergeStylesContent(styleToBeMerged, baseStyle);
 				}
 			}
-
-			//merge 'style a extends style b'
-			if (block.extendsStyle != null) mergeBlocksExtends(block, block.extendsStyle);
 		}
 
 		return styleBlocks;
@@ -97,8 +97,8 @@ public class StyleMerger {
 		mergeStylesContent(styleToBeMerge, mergeTargetStyle);
 	}
 
-	private void mergeStylesContent (StyleIdentifier styleToBeMerge, StyleIdentifier mergeTargetStyle) {
-		for (Identifier id : styleToBeMerge.content) {
+	private void mergeStylesContent (StyleIdentifier styleToBeMerged, StyleIdentifier mergeTargetStyle) {
+		for (Identifier id : styleToBeMerged.content) {
 			if (findIdentifier(mergeTargetStyle.content, id.name) != null) mergeTargetStyle.content.remove(id);
 			mergeTargetStyle.content.add(id);
 		}
