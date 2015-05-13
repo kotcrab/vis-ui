@@ -67,7 +67,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	}
 	
 	#Slider$SliderStyle: {
-		-base: { knob: slider-knob, disabledKnob: slider-knob-disabled} //-stylename -> style that can be inherited by others but won't be included in final json
+		-base: { knob: slider-knob, disabledKnob: slider-knob-disabled}
 		default-horizontal inherits base: { background: slider }
 		default-vertical inherits base: { background: slider-vertical }
 	}
