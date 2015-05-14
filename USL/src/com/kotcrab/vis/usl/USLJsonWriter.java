@@ -64,7 +64,7 @@ public class USLJsonWriter {
 			}
 
 			if (i != content.size() - 1)
-				out.append(",");
+				out.append(", ");
 		}
 	}
 }

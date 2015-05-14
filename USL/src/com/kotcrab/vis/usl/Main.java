@@ -29,6 +29,7 @@ public class Main {
 			PrintStream out = new PrintStream(new FileOutputStream(output));
 			out.print(usl);
 			out.close();
+			System.out.println("Done.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
