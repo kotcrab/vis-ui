@@ -96,11 +96,11 @@ public class MenuBarModule extends EditorModule {
 		menuBar.addMenu(menu);
 
 		//DO NOT replace this with method reference!!!
-		menu.addItem(createMenuItem("Undo", Icons.UNDO, () -> sceneButtonsListener.undo()));
-		menu.addItem(createMenuItem("Redo", Icons.REDO, () -> sceneButtonsListener.redo()));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Undo", Icons.UNDO, () -> sceneButtonsListener.undo()));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Redo", Icons.REDO, () -> sceneButtonsListener.redo()));
 		menu.addSeparator();
-		menu.addItem(createMenuItem("Group", null, () -> sceneButtonsListener.group()));
-		menu.addItem(createMenuItem("Ungroup", null, () -> sceneButtonsListener.ungroup()));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Group", null, () -> sceneButtonsListener.group()));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Ungroup", null, () -> sceneButtonsListener.ungroup()));
 	}
 
 	@SuppressWarnings("Convert2MethodRef")
