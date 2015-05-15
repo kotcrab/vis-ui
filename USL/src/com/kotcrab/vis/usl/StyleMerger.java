@@ -50,8 +50,10 @@ public class StyleMerger {
 			for (StyleIdentifier styleToBeMerged : overrider.styles) {
 				StyleIdentifier mergeTargetStyle = findStyle(mergeTarget.styles, styleToBeMerged.name);
 
-				if (mergeTargetStyle != null)
+				if (mergeTargetStyle != null) {
+					System.out.println("Warn: overriding existing super style inside block: '" + overrider.fullName + "', style: '" + mergeTargetStyle.name + "'");
 					mergeTarget.styles.remove(mergeTargetStyle);
+				}
 
 				mergeTarget.styles.add(styleToBeMerged);
 			}
