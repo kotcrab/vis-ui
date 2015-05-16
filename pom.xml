@@ -131,7 +131,6 @@
         <module>UILml</module>
         <module>USL</module>
         <module>Runtime</module>
-        <module>Launcher</module>
         <module>Editor</module>
         <module>Plugins/SpineRuntime</module>
         <module>Plugins/Spine</module>

@@ -1,10 +1,26 @@
-package com.kotcrab.vis.launcher.api;
+/*
+ * Copyright 2014-2015 See AUTHORS file.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
+package com.kotcrab.vis.editor.siteapi;
+
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
-import com.kotcrab.vis.launcher.FileAccess;
-import com.kotcrab.vis.launcher.api.APIClient.SetCallback;
+import com.kotcrab.vis.editor.siteapi.APIClient.SetCallback;
 
 public class DataCache {
 	private APIClient apiClient;
@@ -28,10 +44,10 @@ public class DataCache {
 
 	private boolean refreshInProgress;
 
-	public DataCache (FileAccess fileAccess) {
+	public DataCache () {
 		apiClient = new APIClient();
 
-		FileHandle apiCache = fileAccess.getCacheFolder().child("api");
+		FileHandle apiCache = Gdx.files.absolute(".");
 		apiCache.mkdirs();
 
 		contentCacheFile = apiCache.child("content.json");

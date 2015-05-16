@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.common.utils;
+package com.kotcrab.vis.editor.siteapi;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
 
-public class VisChangeListener extends ChangeListener {
-	private ChangedListener listener;
+public class GdxReleaseSet {
+	Array<GdxRelease> gdx;
 
-	public VisChangeListener (ChangedListener listener) {
-		this.listener = listener;
-	}
-
-	@Override
-	public void changed (ChangeEvent event, Actor actor) {
-		listener.changed(event, actor);
-	}
-
-	public interface ChangedListener {
-		void changed (ChangeEvent event, Actor actor);
+	public static class GdxRelease {
+		String version;
+		String path;
 	}
 }
