@@ -16,8 +16,8 @@
 
 package com.kotcrab.vis.editor;
 
-import com.kotcrab.vis.common.utils.JarUtils;
 import com.kotcrab.vis.editor.event.EventBus;
+import com.kotcrab.vis.editor.util.JarUtils;
 import com.kotcrab.vis.editor.util.Log;
 
 import javax.swing.JOptionPane;

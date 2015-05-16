@@ -27,8 +27,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>vis-common</artifactId>
-            <version>${project.version}</version>
+            <artifactId>vis-ui</artifactId>
         </dependency>
 
         <dependency>

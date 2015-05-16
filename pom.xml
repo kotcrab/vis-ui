@@ -130,7 +130,6 @@
         <module>UI</module>
         <module>UILml</module>
         <module>USL</module>
-        <module>Common</module>
         <module>Runtime</module>
         <module>Launcher</module>
         <module>Editor</module>
