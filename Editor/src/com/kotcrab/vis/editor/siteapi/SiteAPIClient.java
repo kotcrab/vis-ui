@@ -23,38 +23,33 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-public class APIClient {
+public class SiteAPIClient {
 	private static final String API_PATH = "http://apps.kotcrab.com/vis/v1/";
 
 	private static final String CONTENT = API_PATH + "content.json";
-	private static final String NEWS = API_PATH + "news.json";
 	private static final String GDX = API_PATH + "gdx.json";
 	private static final String VERSION = API_PATH + "version.json";
 
 	private Json json;
 
-	public APIClient () {
+	public SiteAPIClient () {
 		json = new Json();
 		json.setIgnoreUnknownFields(true);
 	}
 
-	public void readContent (SetCallback<ContentSet> callback) {
+	public void readContent (SiteAPICallback<ContentSet> callback) {
 		read(callback, ContentSet.class, CONTENT);
 	}
 
-	public void readNews (SetCallback<NewsSet> callback) {
-		read(callback, NewsSet.class, NEWS);
-	}
-
-	public void readGdx (SetCallback<GdxReleaseSet> callback) {
+	public void readGdx (SiteAPICallback<GdxReleaseSet> callback) {
 		read(callback, GdxReleaseSet.class, GDX);
 	}
 
-	public void readVersion (SetCallback<VersionSet> callback) {
+	public void readVersion (SiteAPICallback<VersionSet> callback) {
 		read(callback, VersionSet.class, VERSION);
 	}
 
-	private <T> void read (SetCallback<T> callback, Class<T> clazz, String url) {
+	private <T> void read (SiteAPICallback<T> callback, Class<T> clazz, String url) {
 		try {
 			callback.reload(json.fromJson(clazz, readFromUrl(url)));
 		} catch (IOException e) {
@@ -72,7 +67,7 @@ public class APIClient {
 		}
 	}
 
-	public interface SetCallback<T> {
+	public interface SiteAPICallback<T> {
 		default void failed (Throwable cause) {
 
 		}
