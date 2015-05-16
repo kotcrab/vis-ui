@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.plugin.FailedPluginDescriptor;
 import com.kotcrab.vis.editor.ui.dialog.ExceptionDialog;
-import com.kotcrab.vis.editor.util.VisChangeListener;
+import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
 

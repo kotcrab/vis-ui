@@ -16,22 +16,24 @@
 
 package com.kotcrab.vis.editor.module.project.assetsmanager;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.KryoException;
+import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
@@ -39,22 +41,21 @@ import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.SearchField;
+import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DeleteDialog;
 import com.kotcrab.vis.editor.ui.tab.AssetsUsageTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
-import com.kotcrab.vis.editor.util.DirectoriesOnlyFileFilter;
+import com.kotcrab.vis.editor.util.*;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
-import com.kotcrab.vis.editor.util.FileUtils;
-import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
+import com.kotcrab.vis.editor.util.gdx.VisTabbedPaneListener;
 import com.kotcrab.vis.ui.layout.GridGroup;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
-import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
-public class AssetsUIModule extends ProjectModule implements WatchListener, TabbedPaneListener {
+public class AssetsUIModule extends ProjectModule implements WatchListener, VisTabbedPaneListener {
 	@InjectModule private TabsModule tabsModule;
 	@InjectModule private QuickAccessModule quickAccessModule;
 
@@ -87,6 +88,9 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 	private AssetsPopupMenu popupMenu;
 
 	private ObjectMap<FileHandle, TextureAtlasViewTab> atlasViews = new ObjectMap<>();
+
+	private Array<FileItem> filesClipboard = new Array<>();
+	private Array<FileItem> selectedFiles = new Array<>();
 
 	@Override
 	public void init () {
@@ -146,6 +150,17 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 		quickAccessModule.addTab(assetsTab);
 
 		popupMenu = new AssetsPopupMenu();
+		filesView.setTouchable(Touchable.enabled);
+		filesView.addListener(popupMenu.getDefaultInputListener());
+		filesView.addListener(new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if (event.getTarget() == filesView)
+					popupMenu.build(null);
+
+				return false;
+			}
+		});
 	}
 
 	@Override
@@ -215,8 +230,9 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 	}
 
 	private void changeCurrentDirectory (FileHandle directory) {
+		clearSelection();
 		this.currentDirectory = directory;
-		filesView.clear();
+		filesView.clearChildren();
 		filesDisplayed = 0;
 
 		FileHandle[] files = directory.list(file -> {
@@ -335,26 +351,38 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 			assetDragAndDrop.clear();
 	}
 
-	@Override
-	public void removedTab (Tab tab) {
-	}
-
-	@Override
-	public void removedAllTabs () {
-	}
-
 	private class AssetsPopupMenu extends PopupMenu {
 		void build (FileItem item) {
 			clearChildren();
 
-			if (isOpenSupported(item.getFile().extension()))
-				addItem(MenuUtils.createMenuItem("Open", () -> openFile(item.getFile())));
+			if (item == null) {
+				addItem(MenuUtils.createMenuItem("Paste", () -> clipboardPasteFiles()));
+			} else {
 
-			addItem(MenuUtils.createMenuItem("Copy", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
-			addItem(MenuUtils.createMenuItem("Paste", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
-			addItem(MenuUtils.createMenuItem("Move", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
-			addItem(MenuUtils.createMenuItem("Rename", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
-			addItem(MenuUtils.createMenuItem("Delete", () -> showDeleteDialog(item.getFile())));
+				if (isOpenSupported(item.getFile().extension())) {
+					addItem(MenuUtils.createMenuItem("Open", () -> openFile(item.getFile())));
+					addSeparator();
+				}
+
+				if (assetsUsageAnalyzer.canAnalyze(item.getFile())) {
+					addItem(MenuUtils.createMenuItem("Find Usages", () -> analyzeUsages(item.getFile())));
+					addSeparator();
+				}
+
+				addItem(MenuUtils.createMenuItem("Copy", () -> clipboardCopyFiles()));
+				addItem(MenuUtils.createMenuItem("Paste", () -> clipboardPasteFiles()));
+				addItem(MenuUtils.createMenuItem("Move", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
+				addItem(MenuUtils.createMenuItem("Rename", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
+				addItem(MenuUtils.createMenuItem("Delete", () -> showDeleteDialog(item.getFile())));
+			}
+		}
+
+		private void analyzeUsages (FileHandle file) {
+			AssetsUsages usages = assetsUsageAnalyzer.analyze(file);
+			if (usages.count == 0)
+				App.eventBus.post(new StatusBarEvent("No usages found"));
+			else
+				quickAccessModule.addTab(new AssetsUsageTab(assetsUsageAnalyzer, sceneTabsModule, usages));
 		}
 
 		private void showDeleteDialog (FileHandle file) {
@@ -377,29 +405,93 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Tabb
 		}
 	}
 
+	private void clipboardCopyFiles () {
+		filesClipboard.clear();
+		filesClipboard.addAll(selectedFiles);
+	}
+
+	private void clipboardPasteFiles () {
+		if (filesClipboard.size == 0) {
+			App.eventBus.post(new StatusBarEvent("Nothing to paste"));
+			return;
+		}
+
+		if (filesClipboard.get(0).getFile().parent().equals(currentDirectory)) {
+			App.eventBus.post(new StatusBarEvent("Paste destination is the same as source directory"));
+			return;
+		}
+
+		Array<FileHandle> targetContents = new Array<>(currentDirectory.list());
+		Array<CopyFileTaskDescriptor> tasks = new Array<>();
+
+		for (FileItem item : filesClipboard) {
+			boolean overwrites = doesFileExists(targetContents, item.getFile().name());
+			tasks.add(new CopyFileTaskDescriptor(item.getFile(), currentDirectory, overwrites));
+		}
+
+		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Copying files", new CopyFilesAsyncTask(tasks)).fadeIn());
+	}
+
+	private boolean doesFileExists (Array<FileHandle> files, String name) {
+		for (FileHandle file : files) {
+			if (file.name().equals(name)) return true;
+		}
+
+		return false;
+	}
+
 	private FileItem createFileItem (FileHandle file) {
 		FileItem fileItem = new FileItem(fileAccess, supportModule, textureCache, file);
 
 		fileItem.addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (button == Buttons.RIGHT) popupMenu.build(fileItem);
+				if (button == Buttons.RIGHT) {
+					selectItem(fileItem, true);
+					popupMenu.build(fileItem);
+				}
+
 				return false;
 			}
 		});
-
-		fileItem.addListener(popupMenu.getDefaultInputListener());
 
 		fileItem.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 
+				selectItem(fileItem, false);
 				if (getTapCount() == 2) openFile(file);
 			}
 		});
 
 		return fileItem;
+	}
+
+	private void clearSelection () {
+		for (FileItem item : selectedFiles)
+			item.setSelected(false);
+		selectedFiles.clear();
+	}
+
+	private void selectItem (FileItem fileItem, boolean rightClick) {
+		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) {
+			if (rightClick) {
+				if (selectedFiles.contains(fileItem, true) == false)
+					clearSelection();
+			} else
+				clearSelection();
+		}
+
+		boolean contains = selectedFiles.contains(fileItem, true);
+
+		if (contains && rightClick == false) {
+			selectedFiles.removeValue(fileItem, true);
+			fileItem.setSelected(false);
+		} else {
+			if (contains == false) selectedFiles.add(fileItem);
+			fileItem.setSelected(true);
+		}
 	}
 
 	private class AssetsTab extends Tab {

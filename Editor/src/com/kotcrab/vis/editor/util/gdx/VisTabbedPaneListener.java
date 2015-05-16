@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.gdx;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
+import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
-public class VisChangeListener extends ChangeListener {
-	private ChangedListener listener;
+public interface VisTabbedPaneListener extends TabbedPaneListener {
+	@Override
+	default void switchedTab (Tab tab) {
 
-	public VisChangeListener (ChangedListener listener) {
-		this.listener = listener;
 	}
 
 	@Override
-	public void changed (ChangeEvent event, Actor actor) {
-		listener.changed(event, actor);
+	default void removedTab (Tab tab) {
+
 	}
 
-	public interface ChangedListener {
-		void changed (ChangeEvent event, Actor actor);
+	@Override
+	default void removedAllTabs () {
+
 	}
 }

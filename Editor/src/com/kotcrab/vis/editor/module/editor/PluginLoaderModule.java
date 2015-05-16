@@ -33,6 +33,7 @@ import com.kotcrab.vis.editor.ui.toast.ExceptionToast;
 import com.kotcrab.vis.editor.ui.toast.LoadingPluginsFailedToast;
 import com.kotcrab.vis.editor.util.*;
 import com.kotcrab.vis.editor.util.gdx.ButtonUtils;
+import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 import com.kotcrab.vis.ui.widget.*;

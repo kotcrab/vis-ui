@@ -21,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.module.physicseditor.util.Clipper.Polygonizer;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
-import com.kotcrab.vis.editor.util.VisChangeListener;
+import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.gdx.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.editor.util.gdx.IntDigitsOnlyFilter;

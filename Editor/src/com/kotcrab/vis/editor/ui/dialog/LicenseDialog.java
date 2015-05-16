@@ -17,7 +17,7 @@
 package com.kotcrab.vis.editor.ui.dialog;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.kotcrab.vis.editor.util.VisChangeListener;
+import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
 import com.kotcrab.vis.ui.widget.*;
 

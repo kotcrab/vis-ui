@@ -25,7 +25,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.util.VisChangeListener;
+import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTable;

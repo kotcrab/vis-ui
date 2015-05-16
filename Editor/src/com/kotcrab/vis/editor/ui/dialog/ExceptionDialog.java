@@ -20,7 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.util.ExceptionUtils;
-import com.kotcrab.vis.editor.util.VisChangeListener;
+import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.widget.*;
 
 public class ExceptionDialog extends VisWindow {

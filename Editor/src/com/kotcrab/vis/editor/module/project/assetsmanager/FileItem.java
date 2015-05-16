@@ -154,6 +154,13 @@ public class FileItem extends Table {
 		name = new VisLabel(file.nameWithoutExtension());
 	}
 
+	public void setSelected (boolean selected) {
+		if (selected)
+			setBackground("selection");
+		else
+			setBackground("menu-bg");
+	}
+
 	public FileHandle getFile () {
 		return file;
 	}
