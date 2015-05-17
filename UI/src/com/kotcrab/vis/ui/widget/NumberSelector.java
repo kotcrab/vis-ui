@@ -30,10 +30,8 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 
-/**
- * @author Javier, Kotcrab
- * @since 0.7.0
- */
+/** @author Javier, Kotcrab
+ * @since 0.7.0 */
 public class NumberSelector extends VisTable {
 	private VisValidableTextField text;
 
@@ -91,8 +89,12 @@ public class NumberSelector extends VisTable {
 		buttonsTable.add(up).height(24 / 2).row();
 		buttonsTable.add(down).height(24 / 2);
 
-		add(name);
-		add(text).fillX().expandX().height(24).padLeft(6).padRight(1);
+		int padAmnt = 0;
+		if (name != null && name.length() != 0) {
+			add(name);
+			padAmnt = 6;
+		}
+		add(text).fillX().expandX().height(24).padLeft(padAmnt).padRight(1);
 		add(buttonsTable).width(12);
 
 		up.addListener(new ChangeListener() {
@@ -187,7 +189,7 @@ public class NumberSelector extends VisTable {
 		if (checkInput(text.getText()))
 			current = Integer.parseInt(text.getText());
 		else
-			valueChanged(); //will restore old vlaue
+			valueChanged(); // will restore old vlaue
 	}
 
 	public void increment () {
@@ -209,8 +211,10 @@ public class NumberSelector extends VisTable {
 	}
 
 	public void setValue (int newValue) {
-		if (newValue > max) current = max;
-		else if (newValue < min) current = min;
+		if (newValue > max)
+			current = max;
+		else if (newValue < min)
+			current = min;
 		else
 			current = newValue;
 
