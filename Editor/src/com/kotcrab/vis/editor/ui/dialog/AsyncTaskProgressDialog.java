@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.ui.dialog;
 
+import com.badlogic.gdx.Gdx;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.AsyncTaskListener;
@@ -43,12 +44,12 @@ public class AsyncTaskProgressDialog extends VisWindow {
 		task.setListener(new AsyncTaskListener() {
 			@Override
 			public void progressChanged (int newProgressPercent) {
-				progressBar.setValue(newProgressPercent);
+				Gdx.app.postRunnable(() -> progressBar.setValue(newProgressPercent));
 			}
 
 			@Override
 			public void messageChanged (String newMsg) {
-				statusLabel.setText(newMsg);
+				Gdx.app.postRunnable(() -> statusLabel.setText(newMsg));
 			}
 
 			@Override
