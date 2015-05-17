@@ -224,6 +224,14 @@ public class NumberSelector extends VisTable {
 	public int getValue () {
 		return current;
 	}
+	
+	public void setMin(int min) {
+		this.min = min;
+	}
+	
+	public void setMax(int max) {
+		this.max = max;
+	}
 
 	private boolean checkInput (String input) {
 		try {
