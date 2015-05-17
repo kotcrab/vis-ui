@@ -251,6 +251,13 @@ public class TabbedPane {
 	public boolean removeListener (TabbedPaneListener listener) {
 		return listeners.removeValue(listener, true);
 	}
+	
+	/** @return The active tab, or null if no tab is selected. */
+	public Tab getActiveTab () {
+		for (Tab tab : tabs)
+			if (tab.isActiveTab()) return tab;
+		return null;
+	}
 
 	private void notifyListenersSwitched (Tab tab) {
 		for (TabbedPaneListener listener : listeners)
