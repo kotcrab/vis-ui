@@ -30,21 +30,23 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 
-/** @author Javier, Kotcrab
- * @since 0.7.0 */
+/**
+ * @author Javier, Kotcrab
+ * @since 0.7.0
+ */
 public class NumberSelector extends VisTable {
-	private VisValidableTextField text;
+	private Array<NumberSelectorListener> listeners = new Array<NumberSelectorListener>();
 
-	private int max;
-	private int min;
-	private int step;
-	private int current;
+	private VisValidableTextField valueText;
 
 	private ButtonRepeatTask buttonRepeatTask = new ButtonRepeatTask();
 	private float buttonRepeatInitialTime = 0.4f;
 	private float buttonRepeatTime = 0.1f;
 
-	private Array<NumberSelectorListener> listeners = new Array<NumberSelectorListener>();
+	private int max;
+	private int min;
+	private int step;
+	private int current;
 
 	/** Creates number selector with step set to 1 */
 	public NumberSelector (String name, int initialValue, int min, int max) {
@@ -65,42 +67,44 @@ public class NumberSelector extends VisTable {
 		this.min = min;
 		this.step = step;
 
-		VisTable buttonsTable = new VisTable();
-		VisImageButton up = new VisImageButton(style.up);
-		VisImageButton down = new VisImageButton(style.down);
 
-		text = new VisValidableTextField(Validators.INTEGERS) {
+		valueText = new VisValidableTextField(Validators.INTEGERS) {
 			@Override
 			public float getPrefWidth () {
 				return 40;
 			}
 		};
 
-		text.setProgrammaticChangeEvents(false);
-		text.setTextFieldFilter(new DigitsOnlyFilter());
-		text.setText(String.valueOf(current));
-		text.addValidator(new InputValidator() {
+		valueText.setProgrammaticChangeEvents(false);
+		valueText.setTextFieldFilter(new DigitsOnlyFilter());
+		valueText.setText(String.valueOf(current));
+		valueText.addValidator(new InputValidator() {
 			@Override
 			public boolean validateInput (String input) {
 				return checkInput(input);
 			}
 		});
 
-		buttonsTable.add(up).height(24 / 2).row();
-		buttonsTable.add(down).height(24 / 2);
+		VisTable buttonsTable = new VisTable();
+		VisImageButton up = new VisImageButton(style.up);
+		VisImageButton down = new VisImageButton(style.down);
 
-		int padAmnt = 0;
+		buttonsTable.add(up).height(12).row();
+		buttonsTable.add(down).height(12);
+
+		int padding = 0;
 		if (name != null && name.length() != 0) {
 			add(name);
-			padAmnt = 6;
+			padding = 6;
 		}
-		add(text).fillX().expandX().height(24).padLeft(padAmnt).padRight(1);
+
+		add(valueText).fillX().expandX().height(24).padLeft(padding).padRight(1);
 		add(buttonsTable).width(12);
 
 		up.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				getStage().setScrollFocus(text);
+				getStage().setScrollFocus(valueText);
 				increment();
 			}
 		});
@@ -108,7 +112,7 @@ public class NumberSelector extends VisTable {
 		down.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				getStage().setScrollFocus(text);
+				getStage().setScrollFocus(valueText);
 				decrement();
 			}
 		});
@@ -149,14 +153,14 @@ public class NumberSelector extends VisTable {
 			}
 		});
 
-		text.addListener(new ChangeListener() {
+		valueText.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				textChanged();
 			}
 		});
 
-		text.addListener(new FocusListener() {
+		valueText.addListener(new FocusListener() {
 			@Override
 			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
 				valueChanged();
@@ -164,10 +168,10 @@ public class NumberSelector extends VisTable {
 			}
 		});
 
-		text.addListener(new InputListener() {
+		valueText.addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				getStage().setScrollFocus(text);
+				getStage().setScrollFocus(valueText);
 				return true;
 			}
 
@@ -184,12 +188,12 @@ public class NumberSelector extends VisTable {
 	}
 
 	private void textChanged () {
-		if (text.getText().equals("")) return;
+		if (valueText.getText().equals("")) return;
 
-		if (checkInput(text.getText()))
-			current = Integer.parseInt(text.getText());
+		if (checkInput(valueText.getText()))
+			current = Integer.parseInt(valueText.getText());
 		else
-			valueChanged(); // will restore old vlaue
+			valueChanged(); // will restore old value
 	}
 
 	public void increment () {
@@ -224,13 +228,41 @@ public class NumberSelector extends VisTable {
 	public int getValue () {
 		return current;
 	}
-	
-	public void setMin(int min) {
-		this.min = min;
+
+	public int getMin () {
+		return min;
 	}
-	
-	public void setMax(int max) {
+
+	/** Sets min value, if current is lesser than min, the current value is set to min value */
+	public void setMin (int min) {
+		this.min = min;
+
+		if (current < min) {
+			current = min;
+			valueChanged();
+		}
+	}
+
+	public int getMax () {
+		return max;
+	}
+
+	/** Sets max value, if current is greater than max, the current value is set to max value */
+	public void setMax (int max) {
 		this.max = max;
+
+		if (current > max) {
+			current = max;
+			valueChanged();
+		}
+	}
+
+	public int getStep () {
+		return step;
+	}
+
+	public void setStep (int step) {
+		this.step = step;
 	}
 
 	private boolean checkInput (String input) {
@@ -243,9 +275,9 @@ public class NumberSelector extends VisTable {
 	}
 
 	private void valueChanged () {
-		int pos = text.getCursorPosition();
-		text.setText(String.valueOf(current));
-		text.setCursorPosition(pos);
+		int pos = valueText.getCursorPosition();
+		valueText.setText(String.valueOf(current));
+		valueText.setCursorPosition(pos);
 
 		for (NumberSelectorListener listener : listeners)
 			listener.changed(current);
