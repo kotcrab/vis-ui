@@ -665,6 +665,7 @@ public class FileChooser extends VisWindow {
 
 	public void setFileFilter (FileFilter fileFilter) {
 		this.fileFilter = fileFilter;
+		rebuildFileList();
 	}
 
 	public SelectionMode getSelectionMode () {
