@@ -1,4 +1,6 @@
 [0.7.7] [LibGDX 1.6.0] [Snapshot]
+-API Addition: various getters and setters in NumberSelector
+-Fixed small gap with empty title in NumberSelector
 
 [0.7.6] [LibGDX 1.6.0]
 -Updating to LibGDX 1.6.0
