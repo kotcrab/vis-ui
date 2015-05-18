@@ -3,6 +3,7 @@
 -API Addition: TabbedPane#getActiveTab
 -Fixed small gap with empty title in NumberSelector
 -Fixed issue where FileChooser file list wasn't rebuilt after setting new file filter
+-Fixed issue where NumberSelector won't allow to enter value if min is greater than 0 (related to #7)
 
 [0.7.6] [LibGDX 1.6.0]
 -Updating to LibGDX 1.6.0

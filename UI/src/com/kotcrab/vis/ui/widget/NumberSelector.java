@@ -41,7 +41,7 @@ public class NumberSelector extends VisTable {
 
 	private ButtonRepeatTask buttonRepeatTask = new ButtonRepeatTask();
 	private float buttonRepeatInitialTime = 0.4f;
-	private float buttonRepeatTime = 0.1f;
+	private float buttonRepeatTime = 0.08f;
 
 	private int max;
 	private int min;
@@ -66,7 +66,6 @@ public class NumberSelector extends VisTable {
 		this.max = max;
 		this.min = min;
 		this.step = step;
-
 
 		valueText = new VisValidableTextField(Validators.INTEGERS) {
 			@Override
@@ -163,8 +162,10 @@ public class NumberSelector extends VisTable {
 		valueText.addListener(new FocusListener() {
 			@Override
 			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
-				valueChanged();
-				getStage().setScrollFocus(null);
+				if (focused == false) {
+					valueChanged();
+					getStage().setScrollFocus(null);
+				}
 			}
 		});
 
@@ -188,12 +189,10 @@ public class NumberSelector extends VisTable {
 	}
 
 	private void textChanged () {
-		if (valueText.getText().equals("")) return;
-
-		if (checkInput(valueText.getText()))
+		if (valueText.getText().equals(""))
+			current = min;
+		else if (checkInput(valueText.getText()))
 			current = Integer.parseInt(valueText.getText());
-		else
-			valueChanged(); // will restore old value
 	}
 
 	public void increment () {

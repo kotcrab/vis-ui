@@ -137,7 +137,8 @@ public class TestWindow extends VisWindow {
 
 		selectorsTable.add(new VisLabel("select box: "));
 		selectorsTable.add(selectBox);
-		selectorsTable.add(new NumberSelector("number selector:", 0, 0, 100, 1)).row();
+		selectorsTable.add(new NumberSelector("number selector:", 0, 0, 100, 1));
+		selectorsTable.add(new NumberSelector(null, 15, 10, 30, 1)).row();
 
 		// ---
 
