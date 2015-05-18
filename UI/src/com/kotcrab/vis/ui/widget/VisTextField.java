@@ -1028,6 +1028,12 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		public boolean keyTyped (InputEvent event, char character) {
 			if (disabled) return false;
 
+			//issue #9, infinite key repeat bug on Android because keyUp is called before keyTyped and task is cancelled too early
+			if (keyTypedRepeatTask.isScheduled() && Gdx.input.isKeyPressed(keyTypedRepeatTask.keycode) == false) {
+				keyTypedRepeatTask.cancel();
+				return false;
+			}
+
 			// Disallow "typing" most ASCII control characters, which would show up as a space when onlyFontChars is true.
 			switch (character) {
 				case BACKSPACE:
