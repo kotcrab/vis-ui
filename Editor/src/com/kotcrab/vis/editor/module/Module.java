@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.utils.Disposable;
 
-public abstract class BaseModule implements Disposable {
+public abstract class Module implements Disposable {
 	public void added () {
 	}
 

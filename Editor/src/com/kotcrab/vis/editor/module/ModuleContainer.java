@@ -21,7 +21,7 @@ import com.kotcrab.vis.editor.util.Log;
 
 import java.lang.reflect.Field;
 
-public abstract class BaseModuleContainer<T extends BaseModule> implements ModuleInjector{
+public abstract class ModuleContainer<T extends Module> implements ModuleInjector{
 	protected Array<T> modules = new Array<>();
 	private boolean initFinished = false;
 
@@ -71,7 +71,7 @@ public abstract class BaseModuleContainer<T extends BaseModule> implements Modul
 			for (Field field : module.getClass().getDeclaredFields()) {
 				if (field.isAnnotationPresent(InjectModule.class)) {
 					field.setAccessible(true);
-					field.set(module, findInHierarchy(field.getType().asSubclass(BaseModule.class)));
+					field.set(module, findInHierarchy(field.getType().asSubclass(Module.class)));
 				}
 			}
 		} catch (ReflectiveOperationException e) {
@@ -79,11 +79,11 @@ public abstract class BaseModuleContainer<T extends BaseModule> implements Modul
 		}
 	}
 
-	public <C extends BaseModule> C findInHierarchy (Class<C> moduleClass) {
+	public <C extends Module> C findInHierarchy (Class<C> moduleClass) {
 		return get(moduleClass);
 	}
 
-	public <C extends BaseModule> C get (Class<C> moduleClass) {
+	public <C extends Module> C get (Class<C> moduleClass) {
 		C module = getOrNull(moduleClass);
 		if (module != null) return module;
 
@@ -91,9 +91,9 @@ public abstract class BaseModuleContainer<T extends BaseModule> implements Modul
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <C extends BaseModule> C getOrNull (Class<C> moduleClass) {
+	protected <C extends Module> C getOrNull (Class<C> moduleClass) {
 		for (int i = 0; i < modules.size; i++) {
-			BaseModule m = modules.get(i);
+			Module m = modules.get(i);
 			if (m.getClass() == moduleClass) return (C) m;
 		}
 

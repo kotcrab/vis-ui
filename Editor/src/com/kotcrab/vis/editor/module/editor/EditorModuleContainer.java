@@ -16,9 +16,9 @@
 
 package com.kotcrab.vis.editor.module.editor;
 
-import com.kotcrab.vis.editor.module.BaseModuleContainer;
+import com.kotcrab.vis.editor.module.ModuleContainer;
 
-public class EditorModuleContainer extends BaseModuleContainer<EditorModule> {
+public class EditorModuleContainer extends ModuleContainer<EditorModule> {
 	@Override
 	public void add (EditorModule module) {
 		module.setContainer(this);

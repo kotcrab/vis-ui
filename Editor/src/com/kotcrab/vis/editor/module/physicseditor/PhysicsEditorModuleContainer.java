@@ -19,8 +19,8 @@ package com.kotcrab.vis.editor.module.physicseditor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.kotcrab.vis.editor.module.BaseModule;
-import com.kotcrab.vis.editor.module.BaseModuleContainer;
+import com.kotcrab.vis.editor.module.Module;
+import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.project.Project;
@@ -32,7 +32,7 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
  * Module container for modules making physics editor
  * @author Kotcrab
  */
-public class PhysicsEditorModuleContainer extends BaseModuleContainer<PhysicsEditorModule> implements ModuleInput {
+public class PhysicsEditorModuleContainer extends ModuleContainer<PhysicsEditorModule> implements ModuleInput {
 	private Project project;
 	private EditorModuleContainer editorModuleContainer;
 	private ProjectModuleContainer projectModuleContainer;
@@ -56,7 +56,7 @@ public class PhysicsEditorModuleContainer extends BaseModuleContainer<PhysicsEdi
 	}
 
 	@Override
-	public <C extends BaseModule> C findInHierarchy (Class<C> moduleClass) {
+	public <C extends Module> C findInHierarchy (Class<C> moduleClass) {
 		C module = getOrNull(moduleClass);
 		if (module != null) return module;
 

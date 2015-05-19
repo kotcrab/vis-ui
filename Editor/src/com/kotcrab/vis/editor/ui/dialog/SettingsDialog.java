@@ -25,7 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.module.BaseModule;
+import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.editor.SettableModule;
 import com.kotcrab.vis.editor.module.project.ProjectModule;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
@@ -170,15 +170,15 @@ public class SettingsDialog extends VisWindow {
 		modulesMap.remove(module);
 	}
 
-	public void addAll (Array<? extends BaseModule> modules) {
-		for (BaseModule module : modules) {
+	public void addAll (Array<? extends Module> modules) {
+		for (Module module : modules) {
 			if (module instanceof SettableModule)
 				add((SettableModule) module);
 		}
 	}
 
 	public void removeAll (Array<ProjectModule> modules) {
-		for (BaseModule module : modules) {
+		for (Module module : modules) {
 			if (module instanceof SettableModule)
 				remove((SettableModule) module);
 		}

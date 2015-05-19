@@ -16,13 +16,13 @@
 
 package com.kotcrab.vis.editor.plugin;
 
-import com.kotcrab.vis.editor.module.BaseModule;
+import com.kotcrab.vis.editor.module.Module;
 
 /**
  * Interface allowing to inject custom modules into VisEditor modules containers
  * @param <T> type of base module depending on container that you want to inject your module into
  */
-public interface ContainerExtension<T extends BaseModule> {
+public interface ContainerExtension<T extends Module> {
 	enum ExtensionScope {EDITOR, PROJECT, SCENE, PHYSICS_EDITOR}
 
 	T getModule ();

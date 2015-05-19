@@ -19,8 +19,8 @@ package com.kotcrab.vis.editor.module.scene;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.kotcrab.vis.editor.module.BaseModule;
-import com.kotcrab.vis.editor.module.BaseModuleContainer;
+import com.kotcrab.vis.editor.module.Module;
+import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.project.Project;
@@ -28,7 +28,7 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 
-public class SceneModuleContainer extends BaseModuleContainer<SceneModule> implements ModuleInput {
+public class SceneModuleContainer extends ModuleContainer<SceneModule> implements ModuleInput {
 	private Project project;
 	private EditorModuleContainer editorModuleContainer;
 	private ProjectModuleContainer projectModuleContainer;
@@ -54,7 +54,7 @@ public class SceneModuleContainer extends BaseModuleContainer<SceneModule> imple
 	}
 
 	@Override
-	public <C extends BaseModule> C findInHierarchy (Class<C> moduleClass) {
+	public <C extends Module> C findInHierarchy (Class<C> moduleClass) {
 		C module = getOrNull(moduleClass);
 		if (module != null) return module;
 

@@ -17,7 +17,7 @@
 package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.module.BaseModule;
+import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.plugin.ContainerExtension;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
@@ -39,7 +39,7 @@ public class PluginContainerModule extends EditorModule {
 		return supports;
 	}
 
-	public <T extends BaseModule> Array<T> getContainersExtensions (Class<T> baseModuleType, ExtensionScope scope) {
+	public <T extends Module> Array<T> getContainersExtensions (Class<T> baseModuleType, ExtensionScope scope) {
 		Array<T> modules = new Array<>();
 
 		for (ContainerExtension extension : extensions)

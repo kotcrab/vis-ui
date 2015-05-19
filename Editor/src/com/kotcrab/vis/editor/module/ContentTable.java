@@ -20,9 +20,9 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 public class ContentTable extends VisTable {
-	private BaseModuleContainer container;
+	private ModuleContainer container;
 
-	public <T extends BaseModuleContainer & ModuleInput> ContentTable (T container) {
+	public <T extends ModuleContainer & ModuleInput> ContentTable (T container) {
 		super(false);
 		this.container = container;
 		setTouchable(Touchable.enabled);

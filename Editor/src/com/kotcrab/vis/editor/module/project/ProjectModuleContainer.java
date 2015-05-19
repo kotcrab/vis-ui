@@ -16,11 +16,11 @@
 
 package com.kotcrab.vis.editor.module.project;
 
-import com.kotcrab.vis.editor.module.BaseModule;
-import com.kotcrab.vis.editor.module.BaseModuleContainer;
+import com.kotcrab.vis.editor.module.Module;
+import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 
-public class ProjectModuleContainer extends BaseModuleContainer<ProjectModule> {
+public class ProjectModuleContainer extends ModuleContainer<ProjectModule> {
 	private EditorModuleContainer editorMC;
 	private Project project;
 
@@ -46,7 +46,7 @@ public class ProjectModuleContainer extends BaseModuleContainer<ProjectModule> {
 	}
 
 	@Override
-	public <C extends BaseModule> C findInHierarchy (Class<C> moduleClass) {
+	public <C extends Module> C findInHierarchy (Class<C> moduleClass) {
 		C module = getOrNull(moduleClass);
 		if (module != null) return module;
 
