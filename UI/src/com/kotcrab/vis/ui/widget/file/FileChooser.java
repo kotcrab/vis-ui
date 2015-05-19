@@ -207,9 +207,24 @@ public class FileChooser extends VisWindow {
 			}
 		});
 
+		VisImageButton folderParentButton = new VisImageButton(style.iconFolderParent);
+		folderParentButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				FileHandle parent = currentDirectory.parent();
+
+				//if current directory is drive root (eg. "C:/") navigating to parent
+				//would navigate to "/" which would work but it is bad for UX
+				if (FileUtils.isWindows() && currentDirectory.path().endsWith(":/")) return;
+
+				setDirectory(parent);
+			}
+		});
+
 		toolbarTable.add(backButton);
 		toolbarTable.add(forwardButton);
 		toolbarTable.add(currentPath).expand().fill();
+		toolbarTable.add(folderParentButton);
 
 		backButton.addListener(new ChangeListener() {
 			@Override
@@ -322,14 +337,14 @@ public class FileChooser extends VisWindow {
 
 		if (selectedItems.size > 0 || mode == Mode.SAVE) {
 			Array<FileHandle> files = getFileListFromSelected();
-			notifyListnerAndCloseDialog(files);
+			notifyListenerAndCloseDialog(files);
 		} else {
 			if (selectionMode == SelectionMode.FILES)
 				showDialog(getText(POPUP_CHOOSE_FILE));
 			else {
 				Array<FileHandle> files = new Array<FileHandle>();
 				files.add(currentDirectory);
-				notifyListnerAndCloseDialog(files);
+				notifyListenerAndCloseDialog(files);
 			}
 		}
 	}
@@ -340,7 +355,7 @@ public class FileChooser extends VisWindow {
 		super.close();
 	}
 
-	private void notifyListnerAndCloseDialog (Array<FileHandle> files) {
+	private void notifyListenerAndCloseDialog (Array<FileHandle> files) {
 		if (files == null) return;
 
 		listener.selected(files);
@@ -407,7 +422,7 @@ public class FileChooser extends VisWindow {
 			@Override
 			@SuppressWarnings("unchecked")
 			protected void result (Object object) {
-				notifyListnerAndCloseDialog((Array<FileHandle>) object);
+				notifyListenerAndCloseDialog((Array<FileHandle>) object);
 			}
 		};
 		dialog.text(filesList.size == 1 ? getText(POPUP_FILE_EXIST_OVERWRITE) : getText(POPUP_MULTIPLE_FILE_EXIST_OVERWRITE));
@@ -745,12 +760,14 @@ public class FileChooser extends VisWindow {
 		public Drawable iconArrowLeft;
 		public Drawable iconArrowRight;
 		public Drawable iconFolder;
+		public Drawable iconFolderParent;
 		public Drawable iconDrive;
 
 		public FileChooserStyle () {
 			iconArrowLeft = VisUI.getSkin().getDrawable("icon-arrow-left");
 			iconArrowRight = VisUI.getSkin().getDrawable("icon-arrow-right");
 			iconFolder = VisUI.getSkin().getDrawable("icon-folder");
+			iconFolderParent = VisUI.getSkin().getDrawable("icon-folder-parent");
 			iconDrive = VisUI.getSkin().getDrawable("icon-drive");
 		}
 	}

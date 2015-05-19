@@ -1,6 +1,7 @@
 [0.7.7] [LibGDX 1.6.0] [Snapshot]
 -API Addition: various getters and setters in NumberSelector
 -API Addition: TabbedPane#getActiveTab
+-Added 'navigate to parent directory' button in FileChooser
 -Fixed infinite key repeat bug on Android in VisTextField (issue #9)
 -Fixed small gap with empty title in NumberSelector
 -Fixed issue where FileChooser file list wasn't rebuilt after setting new file filter
