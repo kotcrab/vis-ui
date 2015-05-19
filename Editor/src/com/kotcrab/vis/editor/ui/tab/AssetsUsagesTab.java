@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.ui.tab;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -24,6 +25,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
+import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.project.AssetsUsageAnalyzerModule;
 import com.kotcrab.vis.editor.module.project.AssetsUsages;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
@@ -37,33 +41,33 @@ import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
-public class AssetsUsageTab extends Tab {
-	private AssetsUsageAnalyzerModule usageAnalyzer;
-	private final SceneTabsModule sceneTabs;
+public class AssetsUsagesTab extends Tab {
+	@InjectModule private AssetsUsageAnalyzerModule usageAnalyzer;
+	@InjectModule private SceneTabsModule sceneTabs;
+	@InjectModule private QuickAccessModule quickAccess;
+
 	private AssetsUsages usages;
 
 	private VisTable mainTable;
-	private VisTable scrollPaneTable;
+	private VisTable usagesTable;
 	private VisTree tree;
 	private VisTable buttonTable;
-	private VisScrollPane scrollPane;
 
-	public AssetsUsageTab (AssetsUsageAnalyzerModule usageAnalyzer, SceneTabsModule sceneTabs, AssetsUsages usages) {
+	public AssetsUsagesTab (ModuleInjector injector, AssetsUsages usages, boolean showDeleteButton) {
 		super(false, true);
-		this.usageAnalyzer = usageAnalyzer;
-		this.sceneTabs = sceneTabs;
+		injector.injectModules(this);
 		this.usages = usages;
 
-		createButtonTable();
+		createButtonTable(showDeleteButton);
 
 		mainTable = new VisTable();
 		mainTable.setBackground("window-bg");
 		mainTable.defaults().left();
 		tree = new VisTree();
 
-		scrollPaneTable = new VisTable();
+		usagesTable = new VisTable();
 
-		scrollPane = new VisScrollPane(scrollPaneTable);
+		VisScrollPane scrollPane = new VisScrollPane(usagesTable);
 		scrollPane.setFadeScrollBars(false);
 
 		mainTable.row();
@@ -103,27 +107,24 @@ public class AssetsUsageTab extends Tab {
 	}
 
 	private void rebuildUsagesTable () {
-		scrollPaneTable.clear();
-		scrollPaneTable.defaults().left().top();
+		usagesTable.clear();
+		usagesTable.defaults().left().top();
 		tree.clearChildren();
 
-		if (usages.limitExceeded)
-			scrollPaneTable.add(new VisLabel("More than " + AssetsUsageAnalyzerModule.USAGE_SEARCH_LIMIT + " usages found for " + usages.file.name(), "small"));
-		else
-			scrollPaneTable.add(new VisLabel("Found " + usages.count + " usages for " + usages.file.name(), "small"));
+		usagesTable.add(new VisLabel(usages.toPrettyString(), "small"));
 
-		scrollPaneTable.row();
-		scrollPaneTable.add(tree).expand().fill();
+		usagesTable.row();
+		usagesTable.add(tree).expand().fill();
 
 		processUsages();
 	}
 
-	private void createButtonTable () {
+	private void createButtonTable (boolean showDeleteButton) {
 		VisTextButton deleteButton = new VisTextButton("Delete");
 		VisTextButton reanalyzeButton = new VisTextButton("Reanalyze");
 
 		buttonTable = new VisTable(true);
-		buttonTable.add(deleteButton);
+		if (showDeleteButton) buttonTable.add(deleteButton);
 		buttonTable.add(reanalyzeButton);
 
 		deleteButton.addListener(new ChangeListener() {
@@ -133,7 +134,7 @@ public class AssetsUsageTab extends Tab {
 					@Override
 					public void yes () {
 						FileUtils.delete(usages.file);
-						removeFromTabPane();
+						quickAccess.closeAllUsagesTabForFile(usages.file);
 					}
 				});
 			}
@@ -157,6 +158,10 @@ public class AssetsUsageTab extends Tab {
 			for (EditorObject entity : entry.value)
 				node.add(new Node(new UsageLabel(entry.key, entity)));
 		}
+	}
+
+	public FileHandle getUsageFile () {
+		return usages.file;
 	}
 
 	@Override

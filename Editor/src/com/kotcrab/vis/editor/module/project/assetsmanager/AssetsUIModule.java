@@ -43,7 +43,8 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.SearchField;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DeleteDialog;
-import com.kotcrab.vis.editor.ui.tab.AssetsUsageTab;
+import com.kotcrab.vis.editor.ui.tab.AssetsUsagesTab;
+import com.kotcrab.vis.editor.ui.tab.DeleteMultipleFilesTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.*;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
@@ -59,13 +60,16 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	@InjectModule private TabsModule tabsModule;
 	@InjectModule private QuickAccessModule quickAccessModule;
 
+	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private ObjectSupportModule supportModule;
 	@InjectModule private SceneTabsModule sceneTabsModule;
 	@InjectModule private SceneIOModule sceneIO;
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private AssetsWatcherModule assetsWatcher;
 	@InjectModule private AssetsUsageAnalyzerModule assetsUsageAnalyzer;
+
+	@InjectModule private TextureCacheModule textureCache;
+	@InjectModule private FontCacheModule fontCache;
+	@InjectModule private ParticleCacheModule particleCache;
 
 	private FileHandle visFolder;
 	private FileHandle assetsFolder;
@@ -107,9 +111,6 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	}
 
 	private void initModule () {
-		FontCacheModule fontCache = projectContainer.get(FontCacheModule.class);
-		ParticleCacheModule particleCache = projectContainer.get(ParticleCacheModule.class);
-
 		visFolder = fileAccess.getVisFolder();
 		assetsFolder = fileAccess.getAssetsFolder();
 
@@ -177,10 +178,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 			refreshFilesList();
 
-			if (filesDisplayed == 0)
-				return false;
-			else
-				return true;
+			return filesDisplayed != 0;
 		});
 
 		VisImageButton exploreButton = new VisImageButton(Assets.getIcon(Icons.FOLDER_OPEN), "Explore");
@@ -352,11 +350,13 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	}
 
 	private class AssetsPopupMenu extends PopupMenu {
+		@SuppressWarnings("Convert2MethodRef")
 		void build (FileItem item) {
 			clearChildren();
 
 			if (item == null) {
 				addItem(MenuUtils.createMenuItem("Paste", () -> clipboardPasteFiles()));
+				addItem(MenuUtils.createMenuItem("Delete", () -> deleteSelectedFiles()));
 			} else {
 
 				if (isOpenSupported(item.getFile().extension())) {
@@ -373,7 +373,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 				addItem(MenuUtils.createMenuItem("Paste", () -> clipboardPasteFiles()));
 				addItem(MenuUtils.createMenuItem("Move", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
 				addItem(MenuUtils.createMenuItem("Rename", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
-				addItem(MenuUtils.createMenuItem("Delete", () -> showDeleteDialog(item.getFile())));
+				addItem(MenuUtils.createMenuItem("Delete", () -> deleteSelectedFiles()));
 			}
 		}
 
@@ -382,27 +382,39 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			if (usages.count == 0)
 				App.eventBus.post(new StatusBarEvent("No usages found"));
 			else
-				quickAccessModule.addTab(new AssetsUsageTab(assetsUsageAnalyzer, sceneTabsModule, usages));
+				quickAccessModule.addTab(new AssetsUsagesTab(projectContainer, usages, false));
+		}
+	}
+
+	private void deleteSelectedFiles () {
+		if (selectedFiles.size == 0) {
+			App.eventBus.post(new StatusBarEvent("Nothing to delete"));
+			return;
 		}
 
-		private void showDeleteDialog (FileHandle file) {
-			boolean canBeSafeDeleted = assetsUsageAnalyzer.canAnalyze(file);
-			stage.addActor(new DeleteDialog(file, canBeSafeDeleted, result -> {
-				if (canBeSafeDeleted == false) {
-					FileUtils.delete(file);
-					return;
-				}
+		if (selectedFiles.size == 1)
+			showFileDeleteDialog(selectedFiles.get(0).getFile());
+		else
+			quickAccessModule.addTab(new DeleteMultipleFilesTab(projectContainer, selectedFiles));
+	}
 
-				if (result.safeDelete) {
-					AssetsUsages usages = assetsUsageAnalyzer.analyze(file);
-					if (usages.count == 0)
-						FileUtils.delete(file);
-					else
-						quickAccessModule.addTab(new AssetsUsageTab(assetsUsageAnalyzer, sceneTabsModule, usages));
-				} else
+	private void showFileDeleteDialog (FileHandle file) {
+		boolean canBeSafeDeleted = assetsUsageAnalyzer.canAnalyze(file);
+		stage.addActor(new DeleteDialog(file, canBeSafeDeleted, result -> {
+			if (canBeSafeDeleted == false) {
+				FileUtils.delete(file);
+				return;
+			}
+
+			if (result.safeDelete) {
+				AssetsUsages usages = assetsUsageAnalyzer.analyze(file);
+				if (usages.count == 0)
 					FileUtils.delete(file);
-			}));
-		}
+				else
+					quickAccessModule.addTab(new AssetsUsagesTab(projectContainer, usages, true));
+			} else
+				FileUtils.delete(file);
+		}));
 	}
 
 	private void clipboardCopyFiles () {

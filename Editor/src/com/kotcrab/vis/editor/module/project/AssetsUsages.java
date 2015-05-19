@@ -27,4 +27,11 @@ public class AssetsUsages {
 	public boolean limitExceeded;
 	public int count;
 	public ObjectMap<EditorScene, Array<EditorObject>> list = new ObjectMap<>();
+
+	public String toPrettyString () {
+		if (limitExceeded)
+			return "More than " + AssetsUsageAnalyzerModule.USAGE_SEARCH_LIMIT + " usages found for " + file.name();
+		else
+			return "Found " + count + " " + (count == 1 ? "usage" : "usages") + " for " + file.name();
+	}
 }

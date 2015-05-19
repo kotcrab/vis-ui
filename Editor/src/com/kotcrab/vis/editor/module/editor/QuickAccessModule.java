@@ -16,8 +16,10 @@
 
 package com.kotcrab.vis.editor.module.editor;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.ui.tab.AssetsUsagesTab;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
@@ -43,6 +45,38 @@ public class QuickAccessModule extends EditorModule {
 		tabbedPane = new TabbedPane(tabStyle);
 		tabbedPane.addListener(listener);
 		tabbedPane.setAllowTabDeselect(true);
+	}
+
+	public Tab getAssetsUsagesTabForFile (FileHandle file) {
+		Array<Tab> tabs = tabbedPane.getTabs();
+
+		for (Tab tab : tabs) {
+			if (tab instanceof AssetsUsagesTab) {
+				AssetsUsagesTab usagesTab = (AssetsUsagesTab) tab;
+
+				if (usagesTab.getUsageFile().equals(file))
+					return tab;
+			}
+		}
+
+		return null;
+	}
+
+	public void closeAllUsagesTabForFile (FileHandle file) {
+		Array<Tab> tabs = tabbedPane.getTabs();
+		Array<Tab> tabsToClose = new Array<>();
+
+		for (Tab tab : tabs) {
+			if (tab instanceof AssetsUsagesTab) {
+				AssetsUsagesTab usagesTab = (AssetsUsagesTab) tab;
+
+				if (usagesTab.getUsageFile().equals(file))
+					tabsToClose.add(tab);
+			}
+		}
+
+		for (Tab tab : tabsToClose)
+			removeTab(tab);
 	}
 
 	public void addTab (Tab tab) {

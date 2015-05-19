@@ -21,7 +21,7 @@ import com.kotcrab.vis.editor.util.Log;
 
 import java.lang.reflect.Field;
 
-public abstract class BaseModuleContainer<T extends BaseModule> {
+public abstract class BaseModuleContainer<T extends BaseModule> implements ModuleInjector{
 	protected Array<T> modules = new Array<>();
 	private boolean initFinished = false;
 
@@ -66,7 +66,7 @@ public abstract class BaseModuleContainer<T extends BaseModule> {
 			injectModules(module);
 	}
 
-	private void injectModules (T module) {
+	public void injectModules (Object module) {
 		try {
 			for (Field field : module.getClass().getDeclaredFields()) {
 				if (field.isAnnotationPresent(InjectModule.class)) {
