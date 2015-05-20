@@ -48,7 +48,7 @@ public class Log {
 
 		Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
 			Log.exception(e);
-			Log.fatal("Uncaught exception occurred, error report will be send");
+			Log.fatal("Uncaught exception occurred, error report will be saved");
 
 			logFileWriter.flush();
 
