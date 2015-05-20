@@ -1,12 +1,14 @@
-We are glad that you would like to contribute to the Vis Project. Here are some guidelines that you should follow when making you contributions.
+We are glad that you would like to contribute to the Vis Project. Here are some guidelines that you should follow when making your contributions.
 
 #### Git commits messages
 * Use sentence case ("Added feature" not "added feature")
-* Don't use dots, exclamation or question marks at the end of commit message.
+* Don't use dots, exclamation or question marks at the end of commit message
 
 #### Code Formatter
-We require you to use code formatter when making your pull request. Code formatter for IntelliJ IDEA can be found in root directory of this repository. If you are using Eclipse then
-you must use [libGDX Eclipse formatter](https://github.com/kotcrab/libgdx/blob/master/eclipse-formatter.xml).
+We require you to use code formatter when making pull requests. Code formatter for IntelliJ IDEA can be found in root directory of this repository. If you are using Eclipse then
+you must use [libGDX Eclipse formatter](https://github.com/kotcrab/libgdx/blob/master/eclipse-formatter.xml). 
+
+Remember to don't use formatter on existing code, it may change other irrelevant source code and if you decide to make pull request later it will be harder to review. It applies especially do Eclipse formatter which isn't fully compatible with the IntelliJ IDEA formatter, used mainly in this repository.
 
 To install formatter in Eclipse simply import xml file from settings window.
 
