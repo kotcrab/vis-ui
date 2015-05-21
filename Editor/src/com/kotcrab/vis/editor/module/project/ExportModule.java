@@ -40,7 +40,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.IOException;
 
 public class ExportModule extends ProjectModule {
-	@InjectModule private SceneIOModule sceneIO;
+	@InjectModule private SceneCacheModule sceneCache;
 	@InjectModule private ObjectSupportModule supportModule;
 
 	private FileHandle visAssetsDir;
@@ -185,7 +185,7 @@ public class ExportModule extends ProjectModule {
 				if (file.extension().equals("scene")) {
 					task.setMessage("Exporting scene: " + file.name());
 
-					executeOnOpenGL(() -> editorScene = sceneIO.load(file));
+					executeOnOpenGL(() -> editorScene = sceneCache.get(file));
 
 					SceneData sceneData = new SceneData();
 

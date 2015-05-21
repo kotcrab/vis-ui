@@ -21,7 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.module.project.ExportModule;
+import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.ui.ButtonListener;
 import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
 import com.kotcrab.vis.editor.ui.SceneStatusWidgetController;
@@ -68,23 +69,13 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(createMenuItem("New Project...", Icons.NEW, editor::newProjectDialog));
 		menu.addItem(createMenuItem("Load Project...", Icons.LOAD, editor::loadProjectDialog));
 		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Close Project", editor::requestProjectUnload));
-
 		menu.addSeparator();
 
-		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Export", Icons.EXPORT, () -> {
-			ExportModule exportModule = projectContainer.get(ExportModule.class);
-			exportModule.export(false);
-		}));
-
-		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Quick Export", () -> {
-			ExportModule exportModule = projectContainer.get(ExportModule.class);
-			exportModule.export(true);
-		}));
-
+		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Export", Icons.EXPORT, () -> projectContainer.get(ExportModule.class).export(false)));
+		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Quick Export", () -> projectContainer.get(ExportModule.class).export(true)));
 		menu.addSeparator();
 
 		menu.addItem(createMenuItem("Settings", Icons.SETTINGS, editor::showSettingsWindow));
-
 		menu.addSeparator();
 
 		menu.addItem(createMenuItem("Exit", Icons.EXIT, editor::requestExit));
@@ -108,12 +99,7 @@ public class MenuBarModule extends EditorModule {
 		Menu menu = new Menu("Scene");
 		menuBar.addMenu(menu);
 
-		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "New Scene...", Icons.NEW, () -> {
-			FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
-			SceneTabsModule sceneTabsModule = projectContainer.get(SceneTabsModule.class);
-			SceneIOModule sceneIO = projectContainer.get(SceneIOModule.class);
-			stage.addActor(new NewSceneDialog(fileAccess, sceneTabsModule, sceneIO).fadeIn());
-		}));
+		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "New Scene...", Icons.NEW, () -> stage.addActor(new NewSceneDialog(projectContainer).fadeIn())));
 
 		menu.addSeparator();
 
@@ -132,13 +118,13 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(createMenuItem("About", Icons.INFO, () -> stage.addActor(new AboutDialog().fadeIn())));
 	}
 
-	public Table getTable () {
-		return menuBar.getTable();
-	}
-
 	public void setSceneButtonsListener (SceneMenuButtonsListener listener) {
 		sceneButtonsListener = listener;
 		sceneController.listenerChanged(listener);
+	}
+
+	public Table getTable () {
+		return menuBar.getTable();
 	}
 
 	@Override

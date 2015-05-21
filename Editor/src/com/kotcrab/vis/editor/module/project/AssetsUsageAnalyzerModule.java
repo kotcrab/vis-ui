@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.EditorObject;
@@ -29,20 +30,15 @@ import java.util.Iterator;
 public class AssetsUsageAnalyzerModule extends ProjectModule {
 	public static final int USAGE_SEARCH_LIMIT = 100;
 
-	private FileAccessModule fileAccess;
-	private ObjectSupportModule supportModule;
-	private SceneTabsModule sceneTabsModule;
-	private SceneIOModule sceneIOModule;
+	@InjectModule private FileAccessModule fileAccess;
+	@InjectModule private ObjectSupportModule supportModule;
+	@InjectModule private SceneTabsModule sceneTabsModule;
+	@InjectModule private SceneCacheModule sceneCache;
 
 	private FileHandle sceneDir;
 
 	@Override
 	public void init () {
-		fileAccess = projectContainer.get(FileAccessModule.class);
-		supportModule = projectContainer.get(ObjectSupportModule.class);
-		sceneTabsModule = projectContainer.get(SceneTabsModule.class);
-		sceneIOModule = projectContainer.get(SceneIOModule.class);
-
 		sceneDir = fileAccess.getSceneFolder();
 	}
 
@@ -68,9 +64,7 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 		usages.file = file;
 
 		for (FileHandle sceneFile : sceneFiles) {
-			EditorScene scene = sceneTabsModule.getSceneByPath(fileAccess.relativizeToAssetsFolder(sceneFile.path()));
-			if (scene == null)
-				scene = sceneIOModule.load(sceneFile);
+			EditorScene	scene = sceneCache.get(sceneFile);
 
 			Array<EditorObject> sceneUsagesList = new Array<>();
 

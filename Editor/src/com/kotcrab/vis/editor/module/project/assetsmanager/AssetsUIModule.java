@@ -63,7 +63,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private ObjectSupportModule supportModule;
 	@InjectModule private SceneTabsModule sceneTabsModule;
-	@InjectModule private SceneIOModule sceneIO;
+	@InjectModule private SceneCacheModule sceneCache;
 	@InjectModule private AssetsWatcherModule assetsWatcher;
 	@InjectModule private AssetsUsageAnalyzerModule assetsUsageAnalyzer;
 
@@ -290,7 +290,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private void openFile (FileHandle file) {
 		if (file.extension().equals("scene")) {
 			try {
-				EditorScene scene = sceneIO.load(file);
+				EditorScene scene = sceneCache.get(file);
 				sceneTabsModule.open(scene);
 			} catch (KryoException e) {
 				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file or missing required plugin.", e);

@@ -23,7 +23,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
+import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.editor.module.project.SceneCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
@@ -39,6 +42,11 @@ import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 
 public class NewSceneDialog extends VisWindow {
+	@InjectModule private FileAccessModule fileAccess;
+	@InjectModule private SceneIOModule sceneIO;
+	@InjectModule private SceneCacheModule sceneCache;
+	@InjectModule private SceneTabsModule sceneTabsModule;
+
 	private VisValidableTextField nameTextField;
 	private VisValidableTextField pathTextField;
 
@@ -52,19 +60,14 @@ public class NewSceneDialog extends VisWindow {
 	private VisTextButton cancelButton;
 	private VisTextButton createButton;
 
-	private SceneIOModule sceneIO;
-	private SceneTabsModule sceneTabsModule;
-
 	private FileHandle assetsFolder;
 
-	public NewSceneDialog (FileAccessModule fileAccess, SceneTabsModule sceneTabsModule, SceneIOModule sceneIOModule) {
+	public NewSceneDialog (ModuleInjector injector) {
 		super("New Scene");
+		injector.injectModules(this);
 		addCloseButton();
 		closeOnEscape();
 		setModal(true);
-
-		this.sceneIO = sceneIOModule;
-		this.sceneTabsModule = sceneTabsModule;
 
 		assetsFolder = fileAccess.getAssetsFolder();
 
@@ -154,7 +157,7 @@ public class NewSceneDialog extends VisWindow {
 				DialogUtils.showOptionDialog(getStage(), "Message", "Open this new scene in editor?", OptionDialogType.YES_NO, new OptionDialogAdapter() {
 					@Override
 					public void yes () {
-						EditorScene scene = sceneIO.load(assetsFolder.child(targetFile.path()));
+						EditorScene scene = sceneCache.get(assetsFolder.child(targetFile.path()));
 						sceneTabsModule.open(scene);
 					}
 				});
