@@ -472,12 +472,14 @@ public class FileChooser extends VisWindow {
 
 		for (int i = 0; i < roots.length; i++) {
 			File root = roots[i];
-			ShortcutItem item = null;
+			ShortcutItem item;
 
 			if (mode == Mode.OPEN ? root.canRead() : root.canWrite()) {
 				String displayName = fileSystemView.getSystemDisplayName(root);
 
-				if (displayName != null && displayName.equals("") == false)
+				if (displayName != null && displayName.equals("/"))
+					item = new ShortcutItem(root, getText(FileChooserText.COMPUTER), style.iconDrive);
+				else if (displayName != null && displayName.equals("") == false)
 					item = new ShortcutItem(root, displayName, style.iconDrive);
 				else
 					item = new ShortcutItem(root, root.toString(), style.iconDrive);

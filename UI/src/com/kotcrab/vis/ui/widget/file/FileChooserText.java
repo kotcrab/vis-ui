@@ -31,6 +31,7 @@ public enum FileChooserText implements BundleText {
 	CANCEL 								{public String getName () {return "cancel";}},
 	FILE_NAME 							{public String getName () {return "fileName";}},
 	DESKTOP 							{public String getName () {return "desktop";}},
+	COMPUTER 							{public String getName () {return "computer";}},
 
 	OPEN 								{public String getName () {return "open";}},
 	SAVE 								{public String getName () {return "save";}},
