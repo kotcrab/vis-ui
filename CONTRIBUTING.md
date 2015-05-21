@@ -1,5 +1,7 @@
 We are glad that you would like to contribute to the Vis Project. Here are some guidelines that you should follow when making your contributions.
 
+Start by forking this repository, then learn [how to run Vis Projects from source code](https://github.com/kotcrab/VisEditor/wiki/Building-Vis-From-Source).
+
 #### Git commits messages
 * Use sentence case ("Added feature" not "added feature")
 * Don't use dots, exclamation or question marks at the end of commit message
