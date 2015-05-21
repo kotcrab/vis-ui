@@ -31,7 +31,7 @@ import com.kotcrab.vis.ui.building.utilities.CellWidget;
  * @author MJ
  */
 public enum TableLayout implements ActorLayout {
-	/** Converts passed wigdets into a single column. */
+	/** Converts passed widgets into a single column. */
 	VERTICAL {
 		@Override
 		public Actor convertToActor (final CellWidget<?>... widgets) {

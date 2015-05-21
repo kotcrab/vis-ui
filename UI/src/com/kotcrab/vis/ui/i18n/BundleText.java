@@ -23,14 +23,14 @@ package com.kotcrab.vis.ui.i18n;
 public interface BundleText {
 
 	/** @return name of the bundle text in the bundle file. */
-	public String getName ();
+	String getName ();
 
 	/** @return text's unformatted message as it appears in the bundle. */
-	public String get ();
+	String get ();
 
 	/** @return text's formatted message without any arguments. */
-	public String format ();
+	String format ();
 
 	/** @return text's formatted message with the passes arguments filling bundle placeholders. */
-	public String format (Object... arguments);
+	String format (Object... arguments);
 }

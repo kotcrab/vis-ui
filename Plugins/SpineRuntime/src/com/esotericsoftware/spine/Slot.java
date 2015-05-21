@@ -90,8 +90,10 @@ public class Slot {
 		return attachment;
 	}
 
-	/** Sets the attachment, resets {@link #getAttachmentTime()}, and clears {@link #getAttachmentVertices()}.
-	 * @param attachment May be null. */
+	/**
+	 * Sets the attachment, resets {@link #getAttachmentTime()}, and clears {@link #getAttachmentVertices()}.
+	 * @param attachment May be null.
+	 */
 	public void setAttachment (Attachment attachment) {
 		if (this.attachment == attachment) return;
 		this.attachment = attachment;

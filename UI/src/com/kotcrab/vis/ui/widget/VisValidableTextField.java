@@ -176,7 +176,7 @@ public class VisValidableTextField extends VisTextField {
 	}
 
 	/**
-	 * If true this field will automatically restore text before editon stared if it loses keyboard focus while field is in invalid text.
+	 * If true this field will automatically restore text before edition stared if it loses keyboard focus while field is in invalid text.
 	 * This can't be called while field is selected, doing so will result in IllegalStateException.
 	 */
 	public void setRestoreLastValid (boolean restoreLastValid) {

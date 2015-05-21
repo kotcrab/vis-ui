@@ -52,7 +52,7 @@ public class USLJsonWriter {
 			Identifier id = content.get(i);
 			if (id instanceof BasicIdentifier) {
 				BasicIdentifier bid = (BasicIdentifier) id;
-				if(bid.content.equals("NULL")) continue;
+				if (bid.content.equals("NULL")) continue;
 				out.append(bid.name).append(": ").append(bid.content);
 			}
 

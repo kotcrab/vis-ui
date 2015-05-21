@@ -68,8 +68,10 @@ public class Bone {
 		setToSetupPose();
 	}
 
-	/** Copy constructor.
-	 * @param parent May be null. */
+	/**
+	 * Copy constructor.
+	 * @param parent May be null.
+	 */
 	public Bone (Bone bone, Skeleton skeleton, Bone parent) {
 		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
 		this.skeleton = skeleton;

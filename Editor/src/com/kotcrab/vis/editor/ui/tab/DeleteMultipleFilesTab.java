@@ -105,11 +105,10 @@ public class DeleteMultipleFilesTab extends Tab {
 	private void openSpecificUsagesTab (AssetsUsages usages) {
 		Tab tab = quickAccess.getAssetsUsagesTabForFile(usages.file);
 
-		if(tab == null) {
+		if (tab == null) {
 			tab = new AssetsUsagesTab(injector, usages, false);
 			quickAccess.addTab(tab);
-		}
-		else
+		} else
 			quickAccess.switchTab(tab);
 	}
 

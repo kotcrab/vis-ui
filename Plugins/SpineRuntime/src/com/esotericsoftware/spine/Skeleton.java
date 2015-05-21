@@ -278,18 +278,22 @@ public class Skeleton {
 		return skin;
 	}
 
-	/** Sets a skin by name.
-	 * @see #setSkin(Skin) */
+	/**
+	 * Sets a skin by name.
+	 * @see #setSkin(Skin)
+	 */
 	public void setSkin (String skinName) {
 		Skin skin = data.findSkin(skinName);
 		if (skin == null) throw new IllegalArgumentException("Skin not found: " + skinName);
 		setSkin(skin);
 	}
 
-	/** Sets the skin used to look up attachments before looking in the {@link SkeletonData#getDefaultSkin() default skin}.
+	/**
+	 * Sets the skin used to look up attachments before looking in the {@link SkeletonData#getDefaultSkin() default skin}.
 	 * Attachments from the new skin are attached if the corresponding attachment from the old skin was attached. If there was no
 	 * old skin, each slot's setup mode attachment is attached from the new skin.
-	 * @param newSkin May be null. */
+	 * @param newSkin May be null.
+	 */
 	public void setSkin (Skin newSkin) {
 		if (newSkin != null) {
 			if (skin != null)
@@ -360,9 +364,11 @@ public class Skeleton {
 		return null;
 	}
 
-	/** Returns the axis aligned bounding box (AABB) of the region, mesh, and skinned mesh attachments for the current pose.
+	/**
+	 * Returns the axis aligned bounding box (AABB) of the region, mesh, and skinned mesh attachments for the current pose.
 	 * @param offset The distance from the skeleton origin to the bottom left corner of the AABB.
-	 * @param size The width and height of the AABB. */
+	 * @param size The width and height of the AABB.
+	 */
 	public void getBounds (Vector2 offset, Vector2 size) {
 		Array<Slot> drawOrder = this.drawOrder;
 		float minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;

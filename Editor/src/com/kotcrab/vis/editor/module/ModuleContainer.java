@@ -21,7 +21,7 @@ import com.kotcrab.vis.editor.util.Log;
 
 import java.lang.reflect.Field;
 
-public abstract class ModuleContainer<T extends Module> implements ModuleInjector{
+public abstract class ModuleContainer<T extends Module> implements ModuleInjector {
 	protected Array<T> modules = new Array<>();
 	private boolean initFinished = false;
 

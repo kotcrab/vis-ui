@@ -20,7 +20,7 @@ public class Token {
 		this.content = content;
 	}
 
-	public enum Type{
+	public enum Type {
 		LCURL, RCURL, // { }
 		STYLE_BLOCK, STYLE_BLOCK_EXTENDS,
 		STYLE_BLOCK_OVERRIDE,

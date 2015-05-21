@@ -17,9 +17,11 @@
 package com.kotcrab.vis.editor.util;
 
 public class ThreadUtils {
-	/** Thread that executed this method will sleep for the specific number of milliseconds. If happen InterruptedException will be
+	/**
+	 * Thread that executed this method will sleep for the specific number of milliseconds. If happen InterruptedException will be
 	 * logged using {@link Log} class.
-	 * @param millis length of time to sleep in milliseconds */
+	 * @param millis length of time to sleep in milliseconds
+	 */
 	public static void sleep (long millis) {
 		try {
 			Thread.sleep(millis);

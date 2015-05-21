@@ -231,8 +231,10 @@ public class AnimationStatePR {
 		return addAnimation(trackIndex, animation, loop, delay);
 	}
 
-	/** Adds an animation to be played delay seconds after the current or last queued animation.
-	 * @param delay May be <= 0 to use duration of previous animation minus any mix duration plus the negative delay. */
+	/**
+	 * Adds an animation to be played delay seconds after the current or last queued animation.
+	 * @param delay May be <= 0 to use duration of previous animation minus any mix duration plus the negative delay.
+	 */
 	public TrackEntry addAnimation (int trackIndex, Animation animation, boolean loop, float delay) {
 		TrackEntry entry = Pools.obtain(TrackEntry.class);
 		entry.animation = animation;
@@ -406,8 +408,10 @@ public class AnimationStatePR {
 		/** Invoked when the current animation triggers an event. */
 		public void event (int trackIndex, Event event);
 
-		/** Invoked when the current animation has completed.
-		 * @param loopCount The number of times the animation reached the end. */
+		/**
+		 * Invoked when the current animation has completed.
+		 * @param loopCount The number of times the animation reached the end.
+		 */
 		public void complete (int trackIndex, int loopCount);
 
 		/** Invoked just after the current animation is set. */

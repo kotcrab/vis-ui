@@ -63,9 +63,11 @@ public class Animation {
 		this.duration = duration;
 	}
 
-	/** Poses the skeleton at the specified time for this animation.
+	/**
+	 * Poses the skeleton at the specified time for this animation.
 	 * @param lastTime The last time the animation was applied.
-	 * @param events Any triggered events are added. */
+	 * @param events Any triggered events are added.
+	 */
 	public void apply (Skeleton skeleton, float lastTime, float time, boolean loop, Array<Event> events) {
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 
@@ -79,10 +81,12 @@ public class Animation {
 			timelines.get(i).apply(skeleton, lastTime, time, events, 1);
 	}
 
-	/** Poses the skeleton at the specified time for this animation mixed with the current pose.
+	/**
+	 * Poses the skeleton at the specified time for this animation mixed with the current pose.
 	 * @param lastTime The last time the animation was applied.
 	 * @param events Any triggered events are added.
-	 * @param alpha The amount of this animation that affects the current pose. */
+	 * @param alpha The amount of this animation that affects the current pose.
+	 */
 	public void mix (Skeleton skeleton, float lastTime, float time, boolean loop, Array<Event> events, float alpha) {
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 
@@ -104,8 +108,10 @@ public class Animation {
 		return name;
 	}
 
-	/** @param target After the first and before the last value.
-	 * @return index of first value greater than the target. */
+	/**
+	 * @param target After the first and before the last value.
+	 * @return index of first value greater than the target.
+	 */
 	static int binarySearch (float[] values, float target, int step) {
 		int low = 0;
 		int high = values.length / step - 2;
@@ -121,8 +127,10 @@ public class Animation {
 		}
 	}
 
-	/** @param target After the first and before the last value.
-	 * @return index of first value greater than the target. */
+	/**
+	 * @param target After the first and before the last value.
+	 * @return index of first value greater than the target.
+	 */
 	static int binarySearch (float[] values, float target) {
 		int low = 0;
 		int high = values.length - 2;
@@ -145,8 +153,10 @@ public class Animation {
 	}
 
 	static public interface Timeline {
-		/** Sets the value(s) for the specified time.
-		 * @param events May be null to not collect fired events. */
+		/**
+		 * Sets the value(s) for the specified time.
+		 * @param events May be null to not collect fired events.
+		 */
 		public void apply (Skeleton skeleton, float lastTime, float time, Array<Event> events, float alpha);
 	}
 
@@ -183,9 +193,11 @@ public class Animation {
 			return BEZIER;
 		}
 
-		/** Sets the control handle positions for an interpolation bezier curve used to transition from this keyframe to the next.
+		/**
+		 * Sets the control handle positions for an interpolation bezier curve used to transition from this keyframe to the next.
 		 * cx1 and cx2 are from 0 to 1, representing the percent of time between the two keyframes. cy1 and cy2 are the percent of
-		 * the difference between the keyframe's values. */
+		 * the difference between the keyframe's values.
+		 */
 		public void setCurve (int frameIndex, float cx1, float cy1, float cx2, float cy2) {
 			float subdiv1 = 1f / BEZIER_SEGMENTS, subdiv2 = subdiv1 * subdiv1, subdiv3 = subdiv2 * subdiv1;
 			float pre1 = 3 * subdiv1, pre2 = 3 * subdiv2, pre4 = 6 * subdiv2, pre5 = 6 * subdiv3;
@@ -598,8 +610,10 @@ public class Animation {
 			return drawOrders;
 		}
 
-		/** Sets the time of the specified keyframe.
-		 * @param drawOrder May be null to use bind pose draw order. */
+		/**
+		 * Sets the time of the specified keyframe.
+		 * @param drawOrder May be null to use bind pose draw order.
+		 */
 		public void setFrame (int frameIndex, float time, int[] drawOrder) {
 			frames[frameIndex] = time;
 			drawOrders[frameIndex] = drawOrder;

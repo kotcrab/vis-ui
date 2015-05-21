@@ -31,7 +31,10 @@ import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
 import com.kotcrab.vis.editor.ui.toast.ExceptionToast;
 import com.kotcrab.vis.editor.ui.toast.LoadingPluginsFailedToast;
-import com.kotcrab.vis.editor.util.*;
+import com.kotcrab.vis.editor.util.ChildFirstURLClassLoader;
+import com.kotcrab.vis.editor.util.EditorException;
+import com.kotcrab.vis.editor.util.FileUtils;
+import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.gdx.ButtonUtils;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
@@ -250,7 +253,7 @@ public class PluginLoaderModule extends EditorModule {
 					checkBox.addListener(new VisChangeListener((event, actor) -> {
 						if (checkBox.isChecked() && event.isStopped() == false) {
 							checkBox.setChecked(false);
-							
+
 							Editor.instance.getStage().addActor(new LicenseDialog(descriptor.license, new LicenseDialogListener() {
 								@Override
 								public void licenseDeclined () {

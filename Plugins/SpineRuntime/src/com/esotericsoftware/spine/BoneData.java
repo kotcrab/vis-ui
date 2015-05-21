@@ -53,8 +53,10 @@ public class BoneData {
 		this.parent = parent;
 	}
 
-	/** Copy constructor.
-	 * @param parent May be null. */
+	/**
+	 * Copy constructor.
+	 * @param parent May be null.
+	 */
 	public BoneData (BoneData bone, BoneData parent) {
 		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
 		this.parent = parent;

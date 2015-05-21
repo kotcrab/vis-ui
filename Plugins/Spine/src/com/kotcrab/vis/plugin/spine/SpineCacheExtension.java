@@ -59,7 +59,7 @@ public class SpineCacheExtension implements ContainerExtension<ProjectModule> {
 
 //TODO support dynamic refreshing
 class SpineCacheModule extends ProjectModule {
-	@InjectModule  private FileAccessModule fileAccess;
+	@InjectModule private FileAccessModule fileAccess;
 
 	private ObjectMap<FileHandle, TextureAtlas> atlases = new ObjectMap<>();
 	private ObjectMap<FileHandle, SkeletonData> skeletonsData = new ObjectMap<>();

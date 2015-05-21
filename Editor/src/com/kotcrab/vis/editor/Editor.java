@@ -331,7 +331,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	private void showExitDialogIfNeeded (boolean restartAfterExit) {
 		//the "Do you want to restart" dialog was already displayed and user accepted so no need to display exit dialog even if it is enabled
-		if(restartAfterExit) exit(restartAfterExit);
+		if (restartAfterExit) exit(restartAfterExit);
 
 		if (settings.isConfirmExit()) {
 			OptionDialog dialog = DialogUtils.showOptionDialog(getStage(), "Confirm Exit", "Are you sure you want to exit VisEditor?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {

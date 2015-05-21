@@ -128,8 +128,10 @@ public class SkeletonBounds {
 		return minX < bounds.maxX && maxX > bounds.minX && minY < bounds.maxY && maxY > bounds.minY;
 	}
 
-	/** Returns the first bounding box attachment that contains the point, or null. When doing many checks, it is usually more
-	 * efficient to only call this method if {@link #aabbContainsPoint(float, float)} returns true. */
+	/**
+	 * Returns the first bounding box attachment that contains the point, or null. When doing many checks, it is usually more
+	 * efficient to only call this method if {@link #aabbContainsPoint(float, float)} returns true.
+	 */
 	public BoundingBoxAttachment containsPoint (float x, float y) {
 		Array<FloatArray> polygons = this.polygons;
 		for (int i = 0, n = polygons.size; i < n; i++)
@@ -156,8 +158,10 @@ public class SkeletonBounds {
 		return inside;
 	}
 
-	/** Returns the first bounding box attachment that contains the line segment, or null. When doing many checks, it is usually
-	 * more efficient to only call this method if {@link #aabbIntersectsSegment(float, float, float, float)} returns true. */
+	/**
+	 * Returns the first bounding box attachment that contains the line segment, or null. When doing many checks, it is usually
+	 * more efficient to only call this method if {@link #aabbIntersectsSegment(float, float, float, float)} returns true.
+	 */
 	public BoundingBoxAttachment intersectsSegment (float x1, float y1, float x2, float y2) {
 		Array<FloatArray> polygons = this.polygons;
 		for (int i = 0, n = polygons.size; i < n; i++)

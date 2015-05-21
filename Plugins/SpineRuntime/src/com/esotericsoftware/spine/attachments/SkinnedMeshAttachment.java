@@ -168,8 +168,10 @@ public class SkinnedMeshAttachment extends Attachment {
 		return weights;
 	}
 
-	/** For each bone affecting the vertex, the vertex position in the bone's coordinate system and the weight for the bone's
-	 * influence. Ie: x, y, weight, ... */
+	/**
+	 * For each bone affecting the vertex, the vertex position in the bone's coordinate system and the weight for the bone's
+	 * influence. Ie: x, y, weight, ...
+	 */
 	public void setWeights (float[] weights) {
 		this.weights = weights;
 	}

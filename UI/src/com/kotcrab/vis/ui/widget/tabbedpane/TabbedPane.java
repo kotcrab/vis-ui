@@ -244,7 +244,7 @@ public class TabbedPane {
 		return mainTable;
 	}
 
-	/** @return active tab or null if no tab is selected.*/
+	/** @return active tab or null if no tab is selected. */
 	public Tab getActiveTab () {
 		return activeTab;
 	}

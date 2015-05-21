@@ -17,5 +17,5 @@
 package com.kotcrab.vis.editor.module;
 
 public interface ModuleInjector {
-	public void injectModules(Object o);
+	public void injectModules (Object o);
 }
