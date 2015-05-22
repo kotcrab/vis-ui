@@ -115,7 +115,7 @@ public class FilePopupMenu extends PopupMenu {
 	public void build (Array<FileHandle> favorites, FileHandle file) {
 		this.file = file;
 
-		clear();
+		clearChildren();
 
 		if (file.type() == FileType.Absolute || file.type() == FileType.External) addItem(delete);
 
@@ -134,7 +134,7 @@ public class FilePopupMenu extends PopupMenu {
 	public void buildForFavorite (Array<FileHandle> favorites, File file) {
 		this.file = Gdx.files.absolute(file.getAbsolutePath());
 
-		clear();
+		clearChildren();
 
 		addItem(showInExplorer);
 

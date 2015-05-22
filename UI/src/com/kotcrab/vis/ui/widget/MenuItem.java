@@ -51,7 +51,6 @@ public class MenuItem extends Button {
 	private Cell<VisLabel> shortcutLabelCell;
 
 	private PopupMenu subMenu;
-	private InputListener subMenuListener;
 	private Image subMenuImage;
 	private Cell<Image> subMenuIconCell;
 
