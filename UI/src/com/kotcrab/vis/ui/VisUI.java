@@ -38,6 +38,7 @@ public class VisUI {
 	private static I18NBundle fileChooserBundle;
 	private static I18NBundle dialogUtilsBundle;
 	private static I18NBundle tabbedPaneBundle;
+	private static I18NBundle colorPickerBundle;
 
 	private static int defaultSpacingTop = 0;
 	private static int defaultSpacingBottom = 8;
@@ -137,6 +138,24 @@ public class VisUI {
 	 */
 	public static void setTabbedPaneBundle (I18NBundle tabbedPaneBundle) {
 		VisUI.tabbedPaneBundle = tabbedPaneBundle;
+	}
+
+	/** Returns I18N bundle used by ColorPicker, if current bundle is null, a default bundle is set and returned */
+	public static I18NBundle getColorPickerBundle () {
+		if (colorPickerBundle == null) {
+			FileHandle file = Gdx.files.classpath("com/kotcrab/vis/ui/i18n/ColorPicker");
+			colorPickerBundle = I18NBundle.createBundle(file, new Locale("en"));
+		}
+
+		return colorPickerBundle;
+	}
+
+	/**
+	 * Changes bundle used by ColorPicker, will not affect already created pickers.
+	 * If set to null then {@link #getColorPickerBundle()} will return default bundle
+	 */
+	public static void setColorPickerBundle (I18NBundle colorPickerBundle) {
+		VisUI.colorPickerBundle = colorPickerBundle;
 	}
 
 	public static int getDefaultSpacingTop () {

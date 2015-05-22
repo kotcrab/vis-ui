@@ -25,11 +25,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ColorUtils;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
 import com.kotcrab.vis.ui.widget.color.ColorChannelWidget.ColorChannelWidgetListener;
+
+import static com.kotcrab.vis.ui.widget.color.ColorPickerText.*;
 
 /**
  * Color Picker widget, allows user to select color. ColorPicker is heavy widget and should be reused whenever possible.
@@ -47,6 +50,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 	static final float VERTICAL_BAR_WIDTH = 15;
 
 	private ColorPickerStyle style;
+	private I18NBundle bundle;
 
 	private ColorPickerListener listener;
 
@@ -82,7 +86,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 	private Image newColor;
 
 	public ColorPicker () {
-		this("Color Picker");
+		this((String) null);
 	}
 
 	public ColorPicker (String title) {
@@ -94,13 +98,16 @@ public class ColorPicker extends VisWindow implements Disposable {
 	}
 
 	public ColorPicker (ColorPickerListener listener) {
-		this("default", "Color Picker", listener);
+		this("default", null, listener);
 	}
 
 	public ColorPicker (String styleName, String title, ColorPickerListener listener) {
-		super(title);
-		style = VisUI.getSkin().get(styleName, ColorPickerStyle.class);
+		super(title != null ? title : "");
 		this.listener = listener;
+		this.style = VisUI.getSkin().get(styleName, ColorPickerStyle.class);
+		this.bundle = VisUI.getColorPickerBundle();
+
+		if (title == null) getTitleLabel().setText(getText(TITLE));
 
 		setModal(true);
 		setMovable(true);
@@ -156,10 +163,10 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 	private VisTable createColorsPreviewTable () {
 		VisTable table = new VisTable(false);
-		table.add(new VisLabel("Old")).spaceRight(3);
+		table.add(new VisLabel(getText(OLD))).spaceRight(3);
 		table.add(currentColor = new AlphaImage(style)).height(25).expandX().fillX();
 		table.row();
-		table.add(new VisLabel("New")).spaceRight(3);
+		table.add(new VisLabel(getText(NEW))).spaceRight(3);
 		table.add(newColor = new AlphaImage(style, true)).height(25).expandX().fillX();
 
 		currentColor.setColor(color);
@@ -170,7 +177,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 	private VisTable createHexTable () {
 		VisTable table = new VisTable(true);
-		table.add(new VisLabel("Hex"));
+		table.add(new VisLabel(getText(HEX)));
 		table.add(hexField = new VisValidableTextField("00000000")).width(HEX_FIELD_WIDTH);
 		table.row();
 
@@ -196,9 +203,9 @@ public class ColorPicker extends VisWindow implements Disposable {
 	private VisTable createButtons () {
 		VisTable table = new VisTable(true);
 		table.defaults().right();
-		table.add(restoreButton = new VisTextButton("Restore"));
-		table.add(okButton = new VisTextButton("OK"));
-		table.add(cancelButton = new VisTextButton("Cancel"));
+		table.add(restoreButton = new VisTextButton(getText(RESTORE)));
+		table.add(okButton = new VisTextButton(getText(OK)));
+		table.add(cancelButton = new VisTextButton(getText(CANCEL)));
 		return table;
 	}
 
@@ -430,6 +437,10 @@ public class ColorPicker extends VisWindow implements Disposable {
 		color = new Color(c);
 		updateFieldsFromColor();
 		updatePixmaps();
+	}
+
+	private String getText (ColorPickerText text) {
+		return bundle.get(text.getName());
 	}
 
 	@Override
