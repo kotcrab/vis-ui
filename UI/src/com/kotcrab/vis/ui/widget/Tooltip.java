@@ -36,9 +36,10 @@ import com.kotcrab.vis.ui.VisUI;
  * @since 0.5.0
  */
 public class Tooltip extends VisTable {
-	private static final Drawable BACKGROUND = VisUI.getSkin().getDrawable("tooltip-bg");
 	public static final float DEFAULT_FADE_TIME = 0.3f;
 	public static final float DEFAULT_APPEAR_DELAY_TIME = 0.6f;
+
+	private TooltipStyle style;
 
 	private Actor target;
 	private Actor content;
@@ -52,29 +53,42 @@ public class Tooltip extends VisTable {
 	private float appearDelayTime = DEFAULT_APPEAR_DELAY_TIME;
 
 	public Tooltip (Actor target, String text) {
-		super(true);
-		VisLabel label = new VisLabel(text);
-		label.setAlignment(Align.center);
-		init(target, label);
+		this("default", target, text);
 	}
 
 	public Tooltip (Actor target, Actor content) {
+		this("default", target, content);
+	}
+
+	public Tooltip (String styleName, Actor target, String text) {
 		super(true);
-		init(target, content);
+
+		VisLabel label = new VisLabel(text);
+		label.setAlignment(Align.center);
+		init(styleName, target, label);
+	}
+
+	public Tooltip (String styleName, Actor target, Actor content) {
+		super(true);
+
+		init(styleName, target, content);
 	}
 
 	/** Creates new Tooltip without setting tooltip target */
 	public Tooltip (String text) {
 		super(true);
+		style = VisUI.getSkin().get(TooltipStyle.class);
+
 		VisLabel label = new VisLabel(text);
 		label.setAlignment(Align.center);
-		init(null, label);
+		init("default", null, label);
 	}
 
 	/** Creates new Tooltip without setting tooltip target */
 	public Tooltip (Actor content) {
 		super(true);
-		init(null, content);
+
+		init("default", null, content);
 	}
 
 	/**
@@ -87,13 +101,15 @@ public class Tooltip extends VisTable {
 			if (listener instanceof TooltipInputListener) target.removeListener(listener);
 	}
 
-	private void init (Actor target, Actor content) {
+	private void init (String styleName, Actor target, Actor content) {
 		this.target = target;
 		this.content = content;
 		this.listener = new TooltipInputListener();
 		this.displayTask = new DisplayTask();
 
-		setBackground(BACKGROUND);
+		style = VisUI.getSkin().get(styleName, TooltipStyle.class);
+
+		setBackground(style.background);
 
 		contentCell = add(content).padLeft(3).padRight(3).padBottom(2);
 		pack();
@@ -272,6 +288,17 @@ public class Tooltip extends VisTable {
 				fadeOut();
 
 			return false;
+		}
+	}
+
+	public static class TooltipStyle {
+		public Drawable background;
+
+		public TooltipStyle () {
+		}
+
+		public TooltipStyle (Drawable background) {
+			this.background = background;
 		}
 	}
 }

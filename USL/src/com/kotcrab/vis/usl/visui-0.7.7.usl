@@ -153,7 +153,11 @@ package com.kotcrab.vis.ui.widget {
 	#NumberSelector$NumberSelectorStyle: {
 		default: { down: select-down, up: select-up }
 	}
-	
+
+	#Tooltip$TooltipStyle: {
+	    default: { background: tooltip-bg }
+	}
+
 	#tabbedpane.TabbedPane$TabbedPaneStyle: {
 		default: { background: menu-bg, bottomBar: list-selection,
 					buttonStyle inherits .font: { down: button-down, up: button, checked: button-down, over: button-over } }
