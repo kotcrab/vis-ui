@@ -67,6 +67,11 @@ public class VisImageButton extends Button implements Focusable {
 		init();
 	}
 
+	public VisImageButton (VisImageButtonStyle style) {
+		super(style);
+		init();
+	}
+
 	private void init () {
 		image = new Image();
 		image.setScaling(Scaling.fit);

@@ -134,7 +134,17 @@ package com.kotcrab.vis.ui.widget {
 		noborder: {background: button}
 		default inherits noborder: {background: button, border: border}
 	}
-	
+
+    #Menu$MenuStyle extends PopupMenuStyle: {
+        -base: { openButtonStyleName: "menu-bar" }
+        default inherits base: {}
+        noborder inherits base: {}
+    }
+
+    #MenuBar$MenuBarStyle: {
+        default: { background: menu-bg }
+    }
+
 	#Separator$SeparatorStyle: {
 		default: {background: separator, thickness: 4}
 		vertical inherits default: {vertical: true}

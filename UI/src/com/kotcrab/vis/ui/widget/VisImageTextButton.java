@@ -68,6 +68,11 @@ public class VisImageTextButton extends Button implements Focusable {
 		init(text);
 	}
 
+	public VisImageTextButton (String text, VisImageTextButtonStyle style) {
+		super(style);
+		init(text);
+	}
+
 	private void init (String text) {
 		defaults().space(3);
 

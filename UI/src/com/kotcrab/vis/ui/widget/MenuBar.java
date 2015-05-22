@@ -16,9 +16,7 @@
 
 package com.kotcrab.vis.ui.widget;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
@@ -28,8 +26,6 @@ import com.kotcrab.vis.ui.VisUI;
  * @author Kotcrab
  */
 public class MenuBar {
-	private static final Drawable BUTTON_DEFAULT = VisUI.getSkin().getDrawable("button");
-
 	private Table mainTable;
 	private Table menuItems;
 
@@ -38,8 +34,14 @@ public class MenuBar {
 	private Array<Menu> menus = new Array<Menu>();
 
 	public MenuBar () {
-		Skin skin = VisUI.getSkin();
+		this("default");
+	}
 
+	public MenuBar (String styleName) {
+		this(VisUI.getSkin().get(styleName, MenuBarStyle.class));
+	}
+
+	public MenuBar (MenuBarStyle style) {
 		menuItems = new VisTable();
 
 		mainTable = new VisTable() {
@@ -52,7 +54,7 @@ public class MenuBar {
 
 		mainTable.left();
 		mainTable.add(menuItems);
-		mainTable.setBackground(skin.getDrawable("menu-bg"));
+		mainTable.setBackground(style.background);
 	}
 
 	public void addMenu (Menu menu) {
@@ -87,7 +89,7 @@ public class MenuBar {
 	/** Closes currently opened menu (if any). Used by framework and typically there is no need to call this manually */
 	public void closeMenu () {
 		if (currentMenu != null) {
-			deselectButton(currentMenu.getOpenButton());
+			currentMenu.deselectButton();
 			currentMenu.remove();
 			currentMenu = null;
 		}
@@ -98,8 +100,8 @@ public class MenuBar {
 	}
 
 	void setCurrentMenu (Menu newMenu) {
-		if (newMenu != null) selectButton(newMenu.getOpenButton());
-		if (currentMenu != null) deselectButton(currentMenu.getOpenButton());
+		if (newMenu != null) newMenu.selectButton();
+		if (currentMenu != null) currentMenu.deselectButton();
 		currentMenu = newMenu;
 	}
 
@@ -108,11 +110,14 @@ public class MenuBar {
 		return mainTable;
 	}
 
-	void selectButton (TextButton button) {
-		button.getStyle().up = button.getStyle().over;
-	}
+	public static class MenuBarStyle {
+		public Drawable background;
 
-	void deselectButton (TextButton button) {
-		button.getStyle().up = BUTTON_DEFAULT;
+		public MenuBarStyle () {
+		}
+
+		public MenuBarStyle (Drawable background) {
+			this.background = background;
+		}
 	}
 }

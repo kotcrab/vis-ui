@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 
@@ -30,14 +31,26 @@ import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
  */
 public class Menu extends PopupMenu {
 	private MenuBar menuBar;
+
 	public VisTextButton openButton;
+	public Drawable buttonDefault;
 
 	private String title;
 
 	public Menu (String title) {
+		this(title, "default");
+	}
+
+	public Menu (String title, String styleName) {
+		this(title, VisUI.getSkin().get(styleName, MenuStyle.class));
+	}
+
+	public Menu (String title, MenuStyle style) {
+		super(style);
 		this.title = title;
 
-		openButton = new VisTextButton(title, new VisTextButtonStyle(VisUI.getSkin().get("menu-bar", VisTextButtonStyle.class)));
+		openButton = new VisTextButton(title, new VisTextButtonStyle(VisUI.getSkin().get(style.openButtonStyleName, VisTextButtonStyle.class)));
+		buttonDefault = openButton.getStyle().up;
 
 		openButton.addListener(new InputListener() {
 			@Override
@@ -90,5 +103,25 @@ public class Menu extends PopupMenu {
 
 	TextButton getOpenButton () {
 		return openButton;
+	}
+
+	void selectButton () {
+		openButton.getStyle().up = openButton.getStyle().over;
+	}
+
+	void deselectButton () {
+		openButton.getStyle().up = buttonDefault;
+	}
+
+	public static class MenuStyle extends PopupMenuStyle {
+		public String openButtonStyleName;
+
+		public MenuStyle () {
+		}
+
+		public MenuStyle (Drawable background, Drawable border, String openButtonStyleName) {
+			super(background, border);
+			this.openButtonStyleName = openButtonStyleName;
+		}
 	}
 }

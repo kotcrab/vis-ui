@@ -68,6 +68,7 @@ public class VisUI {
 	}
 
 	public static Skin getSkin () {
+		if (skin == null) throw new IllegalStateException("VisUI not loaded!");
 		return skin;
 	}
 

@@ -65,13 +65,13 @@ public class Tooltip extends VisTable {
 
 		VisLabel label = new VisLabel(text);
 		label.setAlignment(Align.center);
-		init(styleName, target, label);
+		init(VisUI.getSkin().get(styleName, TooltipStyle.class), target, label);
 	}
 
 	public Tooltip (String styleName, Actor target, Actor content) {
 		super(true);
 
-		init(styleName, target, content);
+		init(VisUI.getSkin().get(styleName, TooltipStyle.class), target, content);
 	}
 
 	/** Creates new Tooltip without setting tooltip target */
@@ -81,14 +81,18 @@ public class Tooltip extends VisTable {
 
 		VisLabel label = new VisLabel(text);
 		label.setAlignment(Align.center);
-		init("default", null, label);
+		init(VisUI.getSkin().get("default", TooltipStyle.class), null, label);
 	}
 
 	/** Creates new Tooltip without setting tooltip target */
 	public Tooltip (Actor content) {
 		super(true);
+		init(VisUI.getSkin().get("default", TooltipStyle.class), null, content);
+	}
 
-		init("default", null, content);
+	public Tooltip (Actor target, Actor content, TooltipStyle style) {
+		super(true);
+		init(style, target, content);
 	}
 
 	/**
@@ -101,13 +105,12 @@ public class Tooltip extends VisTable {
 			if (listener instanceof TooltipInputListener) target.removeListener(listener);
 	}
 
-	private void init (String styleName, Actor target, Actor content) {
+	private void init (TooltipStyle style, Actor target, Actor content) {
 		this.target = target;
 		this.content = content;
 		this.listener = new TooltipInputListener();
 		this.displayTask = new DisplayTask();
-
-		style = VisUI.getSkin().get(styleName, TooltipStyle.class);
+		this.style = style;
 
 		setBackground(style.background);
 
