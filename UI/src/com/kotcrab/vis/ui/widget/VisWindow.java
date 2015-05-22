@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.VisUI;
 
 /** @author Kotcrab */
@@ -108,7 +109,7 @@ public class VisWindow extends Window {
 
 	/**
 	 * Adds close button to window, next to window title. After pressing that button, {@link #close()} is called. If nothing
-	 * else was added to title table, the title will be automatically centered.
+	 * else was added to title table, and current title alignment is center then the title will be automatically centered.
 	 */
 	public void addCloseButton () {
 		VisImageButton closeButton = new VisImageButton("close-window");
@@ -120,7 +121,8 @@ public class VisWindow extends Window {
 			}
 		});
 
-		if (getTitleTable().getChildren().size == 2)
+		//TODO label.getAligment does not exist, fix this after making PR
+		if (VisUI.getDefaultTitleAlign() == Align.center && getTitleTable().getChildren().size == 2)
 			getTitleTable().getCell(getTitleLabel()).padLeft(closeButton.getWidth() * 2);
 	}
 
