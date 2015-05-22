@@ -22,9 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Pools;
-import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
 
 /**
@@ -32,15 +30,17 @@ import com.kotcrab.vis.ui.widget.VisImage;
  * @author Kotcrab
  */
 public class ChannelBar extends VisImage {
-	private static final Drawable BAR_SELECTOR = VisUI.getSkin().getDrawable("color-picker-bar-selector");
+	protected ColorPickerStyle style;
 
 	private int maxValue;
 	private int value;
 	private float selectorX;
 
-	public ChannelBar (Texture texture, int value, final int maxValue, ChangeListener listener) {
+	public ChannelBar (ColorPickerStyle style, Texture texture, int value, final int maxValue, ChangeListener listener) {
 		super(texture);
+		this.style = style;
 		this.maxValue = maxValue;
+
 		setValue(value);
 		addListener(listener);
 
@@ -61,7 +61,7 @@ public class ChannelBar extends VisImage {
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		BAR_SELECTOR.draw(batch, getX() + selectorX - BAR_SELECTOR.getMinWidth() / 2, getY() - 2, BAR_SELECTOR.getMinWidth(), BAR_SELECTOR.getMinHeight());
+		style.barSelector.draw(batch, getX() + selectorX - style.barSelector.getMinWidth() / 2, getY() - 2, style.barSelector.getMinWidth(), style.barSelector.getMinHeight());
 	}
 
 	public void setValue (int newValue) {

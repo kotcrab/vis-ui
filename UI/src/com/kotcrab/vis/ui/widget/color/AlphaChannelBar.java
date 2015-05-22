@@ -19,23 +19,19 @@ package com.kotcrab.vis.ui.widget.color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.kotcrab.vis.ui.VisUI;
 
 /**
  * Channel bar intended for alpha channel, renders alpha grid bellow channel texture. Not intended to use outside ColorPicker
  * @author Kotcrab
  */
 public class AlphaChannelBar extends ChannelBar {
-	private static Drawable ALPHA_BAR = VisUI.getSkin().getDrawable("alpha-bar-10px");
-
-	public AlphaChannelBar (Texture texture, int value, int maxValue, ChangeListener listener) {
-		super(texture, value, maxValue, listener);
+	public AlphaChannelBar (ColorPickerStyle style, Texture texture, int value, int maxValue, ChangeListener listener) {
+		super(style, texture, value, maxValue, listener);
 	}
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
-		ALPHA_BAR.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
+		style.alphaBar10px.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
 		super.draw(batch, parentAlpha);
 	}
 }

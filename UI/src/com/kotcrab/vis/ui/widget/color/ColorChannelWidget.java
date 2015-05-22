@@ -31,6 +31,7 @@ import com.kotcrab.vis.ui.widget.color.ColorInputField.ColorInputFieldListener;
  * @author Kotcrab
  */
 public class ColorChannelWidget extends VisTable implements Disposable {
+	private ColorPickerStyle style;
 	private int value;
 	private int maxValue;
 	private ColorChannelWidgetListener drawer;
@@ -44,13 +45,14 @@ public class ColorChannelWidget extends VisTable implements Disposable {
 
 	private ChangeListener barListener;
 
-	public ColorChannelWidget (String label, int maxValue, final ColorChannelWidgetListener drawer) {
-		this(label, maxValue, false, drawer);
+	public ColorChannelWidget (ColorPickerStyle style, String label, int maxValue, final ColorChannelWidgetListener drawer) {
+		this(style, label, maxValue, false, drawer);
 	}
 
-	public ColorChannelWidget (String label, int maxValue, boolean useAlpha, final ColorChannelWidgetListener drawer) {
+	public ColorChannelWidget (ColorPickerStyle style, String label, int maxValue, boolean useAlpha, final ColorChannelWidgetListener drawer) {
 		super(true);
 
+		this.style = style;
 		this.value = 0;
 		this.maxValue = maxValue;
 		this.drawer = drawer;
@@ -108,9 +110,9 @@ public class ColorChannelWidget extends VisTable implements Disposable {
 
 	private ChannelBar createBarImage () {
 		if (useAlpha)
-			return new AlphaChannelBar(texture, value, maxValue, barListener);
+			return new AlphaChannelBar(style, texture, value, maxValue, barListener);
 		else
-			return new ChannelBar(texture, value, maxValue, barListener);
+			return new ChannelBar(style, texture, value, maxValue, barListener);
 	}
 
 	public boolean isInputValid () {
@@ -118,8 +120,8 @@ public class ColorChannelWidget extends VisTable implements Disposable {
 	}
 
 	interface ColorChannelWidgetListener {
-		public void updateFields ();
+		void updateFields ();
 
-		public void draw (Pixmap pixmap);
+		void draw (Pixmap pixmap);
 	}
 }

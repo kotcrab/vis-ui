@@ -22,9 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Pools;
-import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
 
 /**
@@ -32,17 +30,15 @@ import com.kotcrab.vis.ui.widget.VisImage;
  * @author Kotcrab
  */
 public class Palette extends VisImage {
-	private static final Drawable CROSS = VisUI.getSkin().getDrawable("color-picker-cross");
-	private static final Drawable VERTICAL_SELECTOR = VisUI.getSkin().getDrawable("color-picker-selector-horizontal");
-	private static final Drawable HORIZONTAL_SELECTOR = VisUI.getSkin().getDrawable("color-picker-selector-vertical");
-
+	private ColorPickerStyle style;
 	private int x, y;
 	private int maxValue;
 	private float selectorX;
 	private float selectorY;
 
-	public Palette (Texture texture, int x, int y, final int maxValue, ChangeListener listener) {
+	public Palette (ColorPickerStyle style, Texture texture, int x, int y, final int maxValue, ChangeListener listener) {
 		super(texture);
+		this.style = style;
 		this.maxValue = maxValue;
 		setValue(x, y);
 		addListener(listener);
@@ -64,9 +60,10 @@ public class Palette extends VisImage {
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		HORIZONTAL_SELECTOR.draw(batch, getX(), getY() + selectorY - HORIZONTAL_SELECTOR.getMinHeight() / 2 + 0.1f, getImageWidth(), HORIZONTAL_SELECTOR.getMinHeight());
-		VERTICAL_SELECTOR.draw(batch, getX() + selectorX - VERTICAL_SELECTOR.getMinWidth() / 2 + 0.1f, getY(), VERTICAL_SELECTOR.getMinWidth(), getImageHeight());
-		CROSS.draw(batch, getX() + selectorX - CROSS.getMinWidth() / 2 + 0.1f, getY() + selectorY - CROSS.getMinHeight() / 2 + 0.1f, CROSS.getMinWidth(), CROSS.getMinHeight());
+		style.verticalSelector.draw(batch, getX(), getY() + selectorY - style.verticalSelector.getMinHeight() / 2 + 0.1f, getImageWidth(), style.verticalSelector.getMinHeight());
+		style.horizontalSelector.draw(batch, getX() + selectorX - style.horizontalSelector.getMinWidth() / 2 + 0.1f, getY(), style.horizontalSelector.getMinWidth(), getImageHeight());
+		style.cross.draw(batch, getX() + selectorX - style.cross.getMinWidth() / 2 + 0.1f, getY() + selectorY - style.cross.getMinHeight() / 2 + 0.1f,
+				style.cross.getMinWidth(), style.cross.getMinHeight());
 	}
 
 	public void setValue (int v, int s) {

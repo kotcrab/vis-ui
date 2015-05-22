@@ -24,7 +24,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ColorUtils;
@@ -39,8 +38,6 @@ import com.kotcrab.vis.ui.widget.color.ColorChannelWidget.ColorChannelWidgetList
  * @since 0.6.0
  */
 public class ColorPicker extends VisWindow implements Disposable {
-	private static final Drawable WHITE = VisUI.getSkin().getDrawable("white");
-
 	static final int FIELD_WIDTH = 50;
 	static final int HEX_FIELD_WIDTH = 95;
 
@@ -48,6 +45,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 	static final int BAR_WIDTH = 130;
 	static final int BAR_HEIGHT = 11;
 	static final float VERTICAL_BAR_WIDTH = 15;
+
+	private ColorPickerStyle style;
 
 	private ColorPickerListener listener;
 
@@ -87,15 +86,20 @@ public class ColorPicker extends VisWindow implements Disposable {
 	}
 
 	public ColorPicker (String title) {
-		this(title, null);
-	}
-
-	public ColorPicker (ColorPickerListener listener) {
-		this("Color Picker", listener);
+		this("default", title, null);
 	}
 
 	public ColorPicker (String title, ColorPickerListener listener) {
+		this("default", title, listener);
+	}
+
+	public ColorPicker (ColorPickerListener listener) {
+		this("default", "Color Picker", listener);
+	}
+
+	public ColorPicker (String styleName, String title, ColorPickerListener listener) {
 		super(title);
+		style = VisUI.getSkin().get(styleName, ColorPickerStyle.class);
 		this.listener = listener;
 
 		setModal(true);
@@ -153,10 +157,10 @@ public class ColorPicker extends VisWindow implements Disposable {
 	private VisTable createColorsPreviewTable () {
 		VisTable table = new VisTable(false);
 		table.add(new VisLabel("Old")).spaceRight(3);
-		table.add(currentColor = new AlphaImage(WHITE)).height(25).expandX().fillX();
+		table.add(currentColor = new AlphaImage(style)).height(25).expandX().fillX();
 		table.row();
 		table.add(new VisLabel("New")).spaceRight(3);
-		table.add(newColor = new AlphaImage(WHITE, true)).height(25).expandX().fillX();
+		table.add(newColor = new AlphaImage(style, true)).height(25).expandX().fillX();
 
 		currentColor.setColor(color);
 		newColor.setColor(color);
@@ -211,7 +215,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 		barTexture = new Texture(barPixmap);
 
-		palette = new Palette(paletteTexture, 0, 0, 100, new ChangeListener() {
+		palette = new Palette(style, paletteTexture, 0, 0, 100, new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				//S ans V are flipped because the plate is flipped as well!
@@ -223,7 +227,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 			}
 		});
 
-		verticalBar = new VerticalChannelBar(barTexture, 0, 360, new ChangeListener() {
+		verticalBar = new VerticalChannelBar(style, barTexture, 0, 360, new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				hBar.setValue(verticalBar.getValue());
@@ -232,7 +236,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 			}
 		});
 
-		hBar = new ColorChannelWidget("H", 360, new ColorChannelWidgetListener() {
+		hBar = new ColorChannelWidget(style, "H", 360, new ColorChannelWidgetListener() {
 			@Override
 			public void updateFields () {
 				verticalBar.setValue(hBar.getValue());
@@ -249,7 +253,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 			}
 		});
 
-		sBar = new ColorChannelWidget("S", 100, new ColorChannelWidgetListener() {
+		sBar = new ColorChannelWidget(style, "S", 100, new ColorChannelWidgetListener() {
 			@Override
 			public void updateFields () {
 				palette.setValue(vBar.getValue(), sBar.getValue());
@@ -266,7 +270,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 			}
 		});
 
-		vBar = new ColorChannelWidget("V", 100, new ColorChannelWidgetListener() {
+		vBar = new ColorChannelWidget(style, "V", 100, new ColorChannelWidgetListener() {
 			@Override
 			public void updateFields () {
 				palette.setValue(vBar.getValue(), sBar.getValue());
@@ -284,7 +288,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 			}
 		});
 
-		rBar = new ColorChannelWidget("R", 255, new ColorChannelWidgetListener() {
+		rBar = new ColorChannelWidget(style, "R", 255, new ColorChannelWidgetListener() {
 			@Override
 			public void updateFields () {
 				updateRGBValuesFromFields();
@@ -300,7 +304,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 			}
 		});
 
-		gBar = new ColorChannelWidget("G", 255, new ColorChannelWidgetListener() {
+		gBar = new ColorChannelWidget(style, "G", 255, new ColorChannelWidgetListener() {
 			@Override
 			public void updateFields () {
 				updateRGBValuesFromFields();
@@ -316,7 +320,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 			}
 		});
 
-		bBar = new ColorChannelWidget("B", 255, new ColorChannelWidgetListener() {
+		bBar = new ColorChannelWidget(style, "B", 255, new ColorChannelWidgetListener() {
 			@Override
 			public void updateFields () {
 				updateRGBValuesFromFields();
@@ -333,7 +337,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 			}
 		});
 
-		aBar = new ColorChannelWidget("A", 255, true, new ColorChannelWidgetListener() {
+		aBar = new ColorChannelWidget(style, "A", 255, true, new ColorChannelWidgetListener() {
 			@Override
 			public void updateFields () {
 				if (aBar.isInputValid()) color.a = aBar.getValue() / 255.0f;

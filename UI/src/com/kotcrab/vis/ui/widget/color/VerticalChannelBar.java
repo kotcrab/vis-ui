@@ -22,9 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Pools;
-import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImage;
 
 /**
@@ -32,14 +30,14 @@ import com.kotcrab.vis.ui.widget.VisImage;
  * @author Kotcrab
  */
 public class VerticalChannelBar extends VisImage {
-	private static final Drawable BAR_SELECTOR = VisUI.getSkin().getDrawable("color-picker-selector-vertical");
-
+	private ColorPickerStyle style;
 	private int maxValue;
 	private float selectorY;
 	private int value;
 
-	public VerticalChannelBar (Texture texture, int value, final int maxValue, ChangeListener listener) {
+	public VerticalChannelBar (ColorPickerStyle style, Texture texture, int value, final int maxValue, ChangeListener listener) {
 		super(texture);
+		this.style = style;
 		this.maxValue = maxValue;
 		setValue(value);
 		addListener(listener);
@@ -61,7 +59,7 @@ public class VerticalChannelBar extends VisImage {
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		BAR_SELECTOR.draw(batch, getX(), getY() + getImageY() + selectorY - 2.5f, getImageWidth(), BAR_SELECTOR.getMinHeight());
+		style.verticalSelector.draw(batch, getX(), getY() + getImageY() + selectorY - 2.5f, getImageWidth(), style.verticalSelector.getMinHeight());
 	}
 
 	public void setValue (int newValue) {

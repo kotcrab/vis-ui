@@ -19,7 +19,6 @@ package com.kotcrab.vis.ui.widget.color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.kotcrab.vis.ui.VisUI;
 
 /**
  * Image that displays alpha grid as background, used by ColorPicker to display selected colors, should not be used outside Picker
@@ -27,25 +26,25 @@ import com.kotcrab.vis.ui.VisUI;
  * @author Kotcrab
  */
 public class AlphaImage extends Image {
-	private static final Drawable ALPHA_BAR = VisUI.getSkin().getDrawable("alpha-bar-25px");
-	private static final Drawable ALPHA_BAR_SHIFTED = VisUI.getSkin().getDrawable("alpha-bar-25px-shifted");
-
+	private ColorPickerStyle style;
 	private Drawable alphaDrawable;
 	private boolean shiftAlpha;
 
-	public AlphaImage (Drawable imageUp) {
-		super(imageUp);
+	public AlphaImage (ColorPickerStyle style) {
+		super(style.white);
+		this.style = style;
 		setAlphaDrawable();
 	}
 
-	public AlphaImage (Drawable imageUp, boolean shiftAlpha) {
-		super(imageUp);
+	public AlphaImage (ColorPickerStyle style, boolean shiftAlpha) {
+		super(style.white);
+		this.style = style;
 		this.shiftAlpha = shiftAlpha;
 		setAlphaDrawable();
 	}
 
 	private void setAlphaDrawable () {
-		alphaDrawable = shiftAlpha ? ALPHA_BAR_SHIFTED : ALPHA_BAR;
+		alphaDrawable = shiftAlpha ? style.alphaBar25pxShifted : style.alphaBar25px;
 	}
 
 	@Override
