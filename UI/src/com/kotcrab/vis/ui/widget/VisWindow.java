@@ -65,9 +65,13 @@ public class VisWindow extends Window {
 	protected void setStage (Stage stage) {
 		super.setStage(stage);
 
-		if (centerOnAdd) {
-			centerOnAdd = false;
-			moveToCenter();
+		if(stage != null) {
+			stage.setKeyboardFocus(this); //issue #10, newly created window does not acquire keyboard focus
+
+			if (centerOnAdd) {
+				centerOnAdd = false;
+				moveToCenter();
+			}
 		}
 	}
 

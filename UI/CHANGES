@@ -6,7 +6,8 @@
 -Fixed infinite key repeat bug on Android in VisTextField (issue #9)
 -Fixed small gap with empty title in NumberSelector
 -Fixed issue where FileChooser file list wasn't rebuilt after setting new file filter
--Fixed issue where NumberSelector won't allow to enter value if min is greater than 0 (related to #7)
+-Fixed issue where NumberSelector won't allow to enter value if min is greater than 0 (related to issue #7)
+-Fixed closeOnEscape() with multiple windows (windows were closed in improper order) (issue #10)
 -Fixed invalid title align in VisWindow after adding close button when title align is not set to center
 -FileChooser now displays "Computer" instead of "/" in partitions list (also added 'computer' entry in FileChooser I18N file)
 
