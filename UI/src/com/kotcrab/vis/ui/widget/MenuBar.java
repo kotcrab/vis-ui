@@ -28,7 +28,7 @@ import com.kotcrab.vis.ui.VisUI;
  * @author Kotcrab
  */
 public class MenuBar {
-	private static final Drawable BUTTTON_DEFAULT = VisUI.getSkin().getDrawable("button");
+	private static final Drawable BUTTON_DEFAULT = VisUI.getSkin().getDrawable("button");
 
 	private Table mainTable;
 	private Table menuItems;
@@ -84,7 +84,7 @@ public class MenuBar {
 			menuItems.add(menu.getOpenButton());
 	}
 
-	/** Closes currently open menu (if any). Used by framework and typically there is no need to call this manually */
+	/** Closes currently opened menu (if any). Used by framework and typically there is no need to call this manually */
 	public void closeMenu () {
 		if (currentMenu != null) {
 			deselectButton(currentMenu.getOpenButton());
@@ -108,11 +108,11 @@ public class MenuBar {
 		return mainTable;
 	}
 
-	public void selectButton (TextButton button) {
+	void selectButton (TextButton button) {
 		button.getStyle().up = button.getStyle().over;
 	}
 
-	public void deselectButton (TextButton button) {
-		button.getStyle().up = BUTTTON_DEFAULT;
+	void deselectButton (TextButton button) {
+		button.getStyle().up = BUTTON_DEFAULT;
 	}
 }
