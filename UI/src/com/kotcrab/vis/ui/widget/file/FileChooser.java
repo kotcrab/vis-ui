@@ -46,8 +46,6 @@ import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
  * @since 0.1.0
  */
 public class FileChooser extends VisWindow {
-	private static final Drawable HIGHLIGHT = VisUI.getSkin().getDrawable("list-selection");
-
 	private Mode mode;
 	private SelectionMode selectionMode = SelectionMode.FILES;
 	private boolean multiselectionEnabled = false;
@@ -97,13 +95,21 @@ public class FileChooser extends VisWindow {
 
 		getTitleLabel().setText(getText(TITLE_CHOOSE_FILES));
 
+		style = VisUI.getSkin().get(FileChooserStyle.class);
+
 		init();
 	}
 
 	public FileChooser (String title, Mode mode) {
+		this("default", title, mode);
+	}
+
+	public FileChooser (String styleName, String title, Mode mode) {
 		super(title);
 		this.mode = mode;
 		this.bundle = VisUI.getFileChooserBundle();
+
+		style = VisUI.getSkin().get(styleName, FileChooserStyle.class);
 
 		init();
 	}
@@ -114,6 +120,8 @@ public class FileChooser extends VisWindow {
 		this.bundle = bundle;
 		getTitleLabel().setText(getText(TITLE_CHOOSE_FILES));
 
+		style = VisUI.getSkin().get(FileChooserStyle.class);
+
 		init();
 	}
 
@@ -121,6 +129,8 @@ public class FileChooser extends VisWindow {
 		super(title);
 		this.mode = mode;
 		this.bundle = bundle;
+
+		style = VisUI.getSkin().get(FileChooserStyle.class);
 
 		init();
 	}
@@ -134,8 +144,6 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void init () {
-		style = new FileChooserStyle();
-
 		setModal(true);
 		setResizable(true);
 		setMovable(true);
@@ -151,7 +159,7 @@ public class FileChooser extends VisWindow {
 		createFileTextBox();
 		createBottomButtons();
 
-		fileMenu = new FilePopupMenu(this, bundle);
+		fileMenu = new FilePopupMenu(style.popupMenuStyleName, this, bundle);
 
 		rebuildShortcutsList();
 
@@ -754,26 +762,6 @@ public class FileChooser extends VisWindow {
 		FILES, DIRECTORIES, FILES_AND_DIRECTORIES
 	}
 
-	/**
-	 * File chooser style cannot be defined in uiskin.json because on GWT this class does not exist and Skin would fail
-	 * on serializing it.
-	 */
-	static public class FileChooserStyle {
-		public Drawable iconArrowLeft;
-		public Drawable iconArrowRight;
-		public Drawable iconFolder;
-		public Drawable iconFolderParent;
-		public Drawable iconDrive;
-
-		public FileChooserStyle () {
-			iconArrowLeft = VisUI.getSkin().getDrawable("icon-arrow-left");
-			iconArrowRight = VisUI.getSkin().getDrawable("icon-arrow-right");
-			iconFolder = VisUI.getSkin().getDrawable("icon-folder");
-			iconFolderParent = VisUI.getSkin().getDrawable("icon-folder-parent");
-			iconDrive = VisUI.getSkin().getDrawable("icon-drive");
-		}
-	}
-
 	private class DefaultFileFilter implements FileFilter {
 		@Override
 		public boolean accept (File f) {
@@ -928,7 +916,7 @@ public class FileChooser extends VisWindow {
 				return false;
 			}
 
-			setBackground(HIGHLIGHT);
+			setBackground(style.highlight);
 			if (selectedItems.contains(this, true) == false) selectedItems.add(this);
 			return true;
 		}
@@ -1026,7 +1014,7 @@ public class FileChooser extends VisWindow {
 		private void select () {
 			if (selectedShortcut != null) selectedShortcut.deselect();
 			selectedShortcut = ShortcutItem.this;
-			setBackground(HIGHLIGHT);
+			setBackground(style.highlight);
 		}
 
 		private void deselect () {

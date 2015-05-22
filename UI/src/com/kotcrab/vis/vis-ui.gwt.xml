@@ -18,7 +18,13 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit trunk//EN" "http://google-web-toolkit.googlecode.com/svn/trunk/distro-source/core/src/gwt-module.dtd">
 <module>
 	<source path='ui'>
-		<exclude name="widget/file/*.java" />
+		<exclude name="widget/file/FavoritesIO.java" />
+		<exclude name="widget/file/FileChooser.java" />
+		<exclude name="widget/file/FileChooserAdapter.java" />
+		<exclude name="widget/file/FileChooserListener.java" />
+		<exclude name="widget/file/FileChooserText.java" />
+		<exclude name="widget/file/FilePopupMenu.java" />
+		<exclude name="widget/file/FileUtils.java" />
 		<exclude name="util/form/FormValidator.java" />
 	</source>
 
@@ -34,5 +40,7 @@
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.dialog" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.color" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.tabbedpane" />
+
 	<extend-configuration-property name="gdx.reflect.exclude" value="com.kotcrab.vis.ui.widget.file" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.file.FileChooserStyle" />
 </module>

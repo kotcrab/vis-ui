@@ -33,7 +33,9 @@ import java.io.IOException;
 
 import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
 
-/** @author Kotcrab */
+/**
+ * @author Kotcrab
+ */
 public class FilePopupMenu extends PopupMenu {
 	private FileChooser chooser;
 	private I18NBundle bundle;
@@ -45,7 +47,8 @@ public class FilePopupMenu extends PopupMenu {
 	private MenuItem addToFavorites;
 	private MenuItem removeFromFavorites;
 
-	public FilePopupMenu (FileChooser fileChooser, I18NBundle bundle) {
+	public FilePopupMenu (String styleName, FileChooser fileChooser, I18NBundle bundle) {
+		super(styleName);
 		this.chooser = fileChooser;
 		this.bundle = bundle;
 
@@ -88,7 +91,6 @@ public class FilePopupMenu extends PopupMenu {
 				chooser.removeFavorite(file);
 			}
 		});
-
 	}
 
 	private void showDeleteDialog () {

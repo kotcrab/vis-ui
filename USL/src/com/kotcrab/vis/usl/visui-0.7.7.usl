@@ -158,4 +158,9 @@ package com.kotcrab.vis.ui.widget {
 		default: { background: menu-bg, bottomBar: list-selection,
 					buttonStyle inherits .font: { down: button-down, up: button, checked: button-down, over: button-over } }
 	}
+
+	#file.FileChooserStyle: {
+	    default: { highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right,
+	                iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconDrive: icon-drive }
+	}
 }

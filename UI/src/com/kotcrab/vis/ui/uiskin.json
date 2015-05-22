@@ -121,6 +121,9 @@ com.kotcrab.vis.ui.widget.NumberSelector$NumberSelectorStyle: {
 },
 com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane$TabbedPaneStyle: {
 	default: {background: menu-bg, bottomBar: list-selection, buttonStyle: {down: button-down, up: button, checked: button-down, over: button-over, font: default-font, fontColor: white, disabledFontColor: grey} }
+},
+com.kotcrab.vis.ui.widget.file.FileChooserStyle: {
+	default: {highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right, iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconDrive: icon-drive }
 }
 
 }

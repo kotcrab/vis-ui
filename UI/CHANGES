@@ -10,6 +10,7 @@
 -Fixed closeOnEscape() with multiple windows (windows were closed in improper order) (issue #10)
 -Fixed invalid title align in VisWindow after adding close button when title align is not set to center
 -FileChooser now displays "Computer" instead of "/" in partitions list (also added 'computer' entry in FileChooser I18N file)
+-FileChooser now can use styles defined in skin file
 
 [0.7.6] [LibGDX 1.6.0]
 -Updating to LibGDX 1.6.0
