@@ -26,7 +26,6 @@ public class IndeterminateCheckbox extends VisCheckBox {
 	private static final Drawable INDETERMINATE_OVER = Assets.getMisc("check-over-indeterminate");
 
 	private boolean indeterminate;
-	private boolean allowEvent;
 
 	public IndeterminateCheckbox (String text) {
 		super(text);
