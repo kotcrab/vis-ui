@@ -245,6 +245,12 @@ public class MenuItem extends Button {
 		return this;
 	}
 
+	@Override
+	protected void setStage (Stage stage) {
+		super.setStage(stage);
+		label.invalidate(); //fixes issue with disappearing menu item after holding right mouse button and dragging down while opening menu
+	}
+
 	public Image getImage () {
 		return image;
 	}

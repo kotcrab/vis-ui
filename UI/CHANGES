@@ -12,6 +12,7 @@
 -Fixed issue where NumberSelector won't allow to enter value if min is greater than 0 (related to issue #7)
 -Fixed closeOnEscape() with multiple windows (windows were closed in improper order) (issue #10)
 -Fixed invalid title align in VisWindow after adding close button when title align is not set to center
+-Fixed issue with disappearing MenuItem after opening PopupMenu while holding right mouse button and dragging down
 -FileChooser, ColorPicker, Tooltip, Menu and MenuBar now can use styles defined in skin file
 -ColorPicker now supports I18N (added VisUI.setColorPickerBundle(I18NBundle))
 
