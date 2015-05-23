@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -30,12 +31,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.*;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileFilter;
+import java.util.Arrays;
 
 import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
 
@@ -46,31 +49,39 @@ import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
  * @since 0.1.0
  */
 public class FileChooser extends VisWindow {
+	private static final long FILE_ROOTS_CHECK_DELAY_MILLIS = 2000;
+
 	private Mode mode;
 	private SelectionMode selectionMode = SelectionMode.FILES;
-	private boolean multiselectionEnabled = false;
 	private FileChooserListener listener;
+	private FileFilter fileFilter = new DefaultFileFilter();
+
+	private boolean multiselectionEnabled = false;
 	private int groupMultiselectKey = Keys.SHIFT_LEFT;
 	private int multiselectKey = Keys.CONTROL_LEFT;
 
-	private FileFilter fileFilter = new DefaultFileFilter();
+	private FavoritesIO favoritesIO;
+	private Array<FileHandle> favorites;
+
 	private FileHandle currentDirectory;
-
-	private FileChooserStyle style;
-	private I18NBundle bundle;
-
-	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
-
 	private Array<FileItem> selectedItems = new Array<FileItem>();
 	private ShortcutItem selectedShortcut;
 
 	private Array<FileHandle> history = new Array<FileHandle>();
 	private Array<FileHandle> historyForward = new Array<FileHandle>();
 
-	private FavoritesIO favoritesIO;
-	private Array<FileHandle> favorites;
-
+	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
+	private ObjectMap<File, String> fileRootsSystemNameCache = new ObjectMap<File, String>();
 	private Array<ShortcutItem> fileRootsCache = new Array<ShortcutItem>();
+
+	private boolean poolingDirectoriesEnabled = true;
+	private Thread fileWatcherThread;
+	private boolean shortcutsListRebuildScheduled;
+	private boolean filesListRebuildScheduled;
+
+	//UI
+	private FileChooserStyle style;
+	private I18NBundle bundle;
 
 	private VisTable fileTable;
 	private VisScrollPane fileScrollPane;
@@ -471,6 +482,7 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void rebuildShortcutsList () {
+		shortcutsListRebuildScheduled = false;
 		rebuildShortcutsList(true);
 	}
 
@@ -479,12 +491,19 @@ public class FileChooser extends VisWindow {
 
 		File[] roots = File.listRoots();
 
-		for (int i = 0; i < roots.length; i++) {
-			File root = roots[i];
+		for (File root : roots) {
 			ShortcutItem item;
 
 			if (mode == Mode.OPEN ? root.canRead() : root.canWrite()) {
-				String displayName = fileSystemView.getSystemDisplayName(root);
+				String displayName;
+
+				//call to fileSystemView is very slow, so we cache the system drives names
+				if (fileRootsSystemNameCache.containsKey(root))
+					displayName = fileRootsSystemNameCache.get(root);
+				else {
+					displayName = fileSystemView.getSystemDisplayName(root);
+					fileRootsSystemNameCache.put(root, displayName);
+				}
 
 				if (displayName != null && displayName.equals("/"))
 					item = new ShortcutItem(root, getText(FileChooserText.COMPUTER), style.iconDrive);
@@ -499,6 +518,7 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void rebuildFileList () {
+		filesListRebuildScheduled = false;
 		deselectAll();
 
 		fileTable.clear();
@@ -743,10 +763,87 @@ public class FileChooser extends VisWindow {
 		if (listener == null) listener = new FileChooserAdapter();
 	}
 
+	/**
+	 * If false file chooser won't pool direcotires for changes, adding new files or connecting new drive won't refresh file list.
+	 * This must be called when file chooser is not added to Stage
+	 */
+	public void setPoolingDirectoriesEnabled (boolean poolingDirectoriesEnabled) {
+		if (getStage() != null)
+			throw new IllegalStateException("Pooling setting cannot be changed when file chooser is added to Stage!");
+		
+		this.poolingDirectoriesEnabled = poolingDirectoriesEnabled;
+	}
+
+	@Override
+	public void draw (Batch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+
+		if (shortcutsListRebuildScheduled) rebuildShortcutsList();
+		if (filesListRebuildScheduled) rebuildFileList();
+	}
+
 	@Override
 	protected void setStage (Stage stage) {
 		super.setStage(stage);
 		deselectAll();
+
+		if (poolingDirectoriesEnabled) {
+			if (stage != null)
+				startFileWatcher();
+			else
+				stopFileWatcher();
+		}
+	}
+
+	private void startFileWatcher () {
+		if (fileWatcherThread != null)
+			throw new IllegalStateException("FileRootsWatcher thread already running");
+
+		fileWatcherThread = new Thread(new Runnable() {
+			File[] lastRoots;
+
+			FileHandle lastCurrentDirectory;
+			FileHandle[] lastCurrentDirectoryFiles;
+
+			@Override
+			public void run () {
+				lastRoots = File.listRoots();
+
+				lastCurrentDirectory = currentDirectory;
+				lastCurrentDirectoryFiles = currentDirectory.list();
+
+				while (fileWatcherThread != null) {
+					File[] roots = File.listRoots();
+					if (roots.length != lastRoots.length || Arrays.equals(lastRoots, roots) == false)
+						shortcutsListRebuildScheduled = true;
+					lastRoots = roots;
+
+					//if current directory changed during pools then our lastCurrentDirectoryFiles list is outdated and we shouldn't schedule files list rebuild
+					if (lastCurrentDirectory.equals(currentDirectory) == true) {
+						FileHandle[] currentDirectoryFiles = currentDirectory.list();
+						if (lastCurrentDirectoryFiles.length != currentDirectoryFiles.length || Arrays.equals(lastCurrentDirectoryFiles, currentDirectoryFiles) == false)
+							filesListRebuildScheduled = true;
+						lastCurrentDirectoryFiles = currentDirectoryFiles;
+					} else
+						lastCurrentDirectoryFiles = currentDirectory.list(); //if list is outdated, refresh it
+
+					lastCurrentDirectory = currentDirectory;
+
+					try {
+						Thread.sleep(FILE_ROOTS_CHECK_DELAY_MILLIS);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		});
+
+		fileWatcherThread.start();
+	}
+
+	private void stopFileWatcher () {
+		if (fileWatcherThread == null) throw new IllegalStateException("FileRootsWatcher thread not running");
+		fileWatcherThread = null;
 	}
 
 	public enum Mode {OPEN, SAVE}
