@@ -5,6 +5,7 @@
 -API Change: Menu#selectButton(TextButton) and deselectButton(TextButton) no longer public, they wasn't part of public API
 -Added 'navigate to parent directory' button in FileChooser
 -FileChooser now displays "Computer" instead of "/" in partitions list (also added 'computer' entry in FileChooser I18N file)
+-FileChooser improved history (back and forward button)
 -Added some constructors that allows to use widgets without depending on VisUI.getSkin()
 -Fixed infinite key repeat bug on Android in VisTextField ( https://github.com/kotcrab/VisEditor/issues/9 )
 -Fixed small gap with empty title in NumberSelector

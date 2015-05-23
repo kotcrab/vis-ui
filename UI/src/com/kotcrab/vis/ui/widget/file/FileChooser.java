@@ -64,8 +64,8 @@ public class FileChooser extends VisWindow {
 	private Array<FileItem> selectedItems = new Array<FileItem>();
 	private ShortcutItem selectedShortcut;
 
-	private Array<FileHandle> history;
-	private int historyIndex = 0;
+	private Array<FileHandle> history = new Array<FileHandle>();
+	private Array<FileHandle> historyForward = new Array<FileHandle>();
 
 	private FavoritesIO favoritesIO;
 	private Array<FileHandle> favorites;
@@ -163,7 +163,7 @@ public class FileChooser extends VisWindow {
 
 		rebuildShortcutsList();
 
-		setDirectory(System.getProperty("user.home"));
+		setDirectory(Gdx.files.absolute(System.getProperty("user.home")), HistoryPolicy.IGNORE);
 		setSize(500, 600);
 		centerWindow();
 
@@ -192,10 +192,11 @@ public class FileChooser extends VisWindow {
 		add(toolbarTable).fillX().expandX().pad(3).padRight(2);
 
 		backButton = new VisImageButton(style.iconArrowLeft);
-		forwardButton = new VisImageButton(style.iconArrowRight);
-		forwardButton.setDisabled(true);
-		forwardButton.setGenerateDisabledImage(true);
 		backButton.setGenerateDisabledImage(true);
+		backButton.setDisabled(true);
+		forwardButton = new VisImageButton(style.iconArrowRight);
+		forwardButton.setGenerateDisabledImage(true);
+		forwardButton.setDisabled(true);
 
 		currentPath = new VisTextField();
 
@@ -205,7 +206,7 @@ public class FileChooser extends VisWindow {
 				if (keycode == Keys.ENTER) {
 					FileHandle file = Gdx.files.absolute(currentPath.getText());
 					if (file.exists())
-						setDirectory(file);
+						setDirectory(file, HistoryPolicy.ADD);
 					else {
 						showDialog(getText(POPUP_DIRECTORY_DOES_NOT_EXIST));
 						currentPath.setText(currentDirectory.path());
@@ -225,7 +226,7 @@ public class FileChooser extends VisWindow {
 				//would navigate to "/" which would work but it is bad for UX
 				if (FileUtils.isWindows() && currentDirectory.path().endsWith(":/")) return;
 
-				setDirectory(parent);
+				setDirectory(parent, HistoryPolicy.ADD);
 			}
 		});
 
@@ -327,7 +328,7 @@ public class FileChooser extends VisWindow {
 			if (selectionMode == SelectionMode.FILES) {
 				FileHandle selected = selectedItems.get(0).file;
 				if (selected.isDirectory()) {
-					setDirectory(selected);
+					setDirectory(selected, HistoryPolicy.ADD);
 					return;
 				}
 			}
@@ -604,52 +605,38 @@ public class FileChooser extends VisWindow {
 		}
 	}
 
-	private void historyBuild () {
-		Array<FileHandle> fileTree = new Array<FileHandle>();
-		fileTree.add(currentDirectory);
-		FileHandle next = currentDirectory;
+	private void historyClear () {
+		history.clear();
+		historyForward.clear();
+		forwardButton.setDisabled(true);
+		backButton.setDisabled(true);
+	}
 
-		while (true) {
-			FileHandle parent = next.parent();
-			if (next.file().getParent() == null) break;
-			next = parent;
-
-			fileTree.add(parent);
-		}
-
-		fileTree.reverse();
-		history = fileTree;
-		historyIndex = fileTree.size - 1;
-
-		if (historyIndex == 0)
-			backButton.setDisabled(true);
-		else
-			backButton.setDisabled(false);
-
+	private void historyAdd () {
+		history.add(currentDirectory);
+		historyForward.clear();
+		backButton.setDisabled(false);
 		forwardButton.setDisabled(true);
 	}
 
-	private void historyAdd (FileHandle file) {
-		history.add(file);
-		historyIndex++;
-		backButton.setDisabled(false);
-	}
-
 	private void historyBack () {
-		if (historyIndex > 0) {
-			historyIndex--;
-			setDirectory(history.get(historyIndex), false);
-			forwardButton.setDisabled(false);
-		}
+		FileHandle dir = history.pop();
+		historyForward.add(currentDirectory);
+		setDirectory(dir, HistoryPolicy.IGNORE);
 
-		if (historyIndex == 0) backButton.setDisabled(true);
+		if (history.size == 0)
+			backButton.setDisabled(true);
+
+		forwardButton.setDisabled(false);
 	}
 
 	private void historyForward () {
-		historyIndex++;
-		setDirectory(history.get(historyIndex), false);
+		FileHandle dir = historyForward.pop();
+		history.add(currentDirectory);
+		setDirectory(dir, HistoryPolicy.IGNORE);
 
-		if (historyIndex == history.size - 1) forwardButton.setDisabled(true);
+		if (historyForward.size == 0)
+			forwardButton.setDisabled(true);
 
 		backButton.setDisabled(false);
 	}
@@ -663,25 +650,29 @@ public class FileChooser extends VisWindow {
 	}
 
 	public void setDirectory (String directory) {
-		setDirectory(Gdx.files.absolute(directory));
+		setDirectory(Gdx.files.absolute(directory), HistoryPolicy.CLEAR);
 	}
 
 	public void setDirectory (File directory) {
-		setDirectory(Gdx.files.absolute(directory.getAbsolutePath()));
+		setDirectory(Gdx.files.absolute(directory.getAbsolutePath()), HistoryPolicy.CLEAR);
 	}
 
 	public void setDirectory (FileHandle directory) {
-		setDirectory(directory, true);
+		setDirectory(directory, HistoryPolicy.CLEAR);
 	}
 
-	private void setDirectory (FileHandle directory, boolean rebuildHistory) {
+	public void setDirectory (FileHandle directory, HistoryPolicy historyPolicy) {
+		if (directory.equals(currentDirectory)) return;
 		if (directory.exists() == false) throw new IllegalStateException("Provided directory does not exist!");
 		if (directory.isDirectory() == false)
-			throw new IllegalStateException("Provided directory path is a file, not directory!");
+			throw new IllegalStateException("Provided path is a file, not directory!");
+
+		if (historyPolicy == HistoryPolicy.ADD) historyAdd();
 
 		currentDirectory = directory;
 		rebuildFileList();
-		if (rebuildHistory) historyBuild();
+
+		if (historyPolicy == HistoryPolicy.CLEAR) historyClear();
 	}
 
 	public FileFilter getFileFilter () {
@@ -697,6 +688,10 @@ public class FileChooser extends VisWindow {
 		return selectionMode;
 	}
 
+	/**
+	 * Changes selection mode, also updates the title of this file chooser to match current selection mode
+	 * (eg. Choose file, Choose directory etc.)
+	 */
 	public void setSelectionMode (SelectionMode selectionMode) {
 		this.selectionMode = selectionMode;
 
@@ -754,13 +749,11 @@ public class FileChooser extends VisWindow {
 		deselectAll();
 	}
 
-	public enum Mode {
-		OPEN, SAVE
-	}
+	public enum Mode {OPEN, SAVE}
 
-	public enum SelectionMode {
-		FILES, DIRECTORIES, FILES_AND_DIRECTORIES
-	}
+	public enum SelectionMode {FILES, DIRECTORIES, FILES_AND_DIRECTORIES}
+
+	public enum HistoryPolicy {ADD, CLEAR, IGNORE}
 
 	private class DefaultFileFilter implements FileFilter {
 		@Override
@@ -865,8 +858,7 @@ public class FileChooser extends VisWindow {
 					if (getTapCount() == 2 && selectedItems.contains(FileItem.this, true)) {
 						FileHandle file = FileItem.this.file;
 						if (file.isDirectory()) {
-							historyAdd(file);
-							setDirectory(file);
+							setDirectory(file, HistoryPolicy.ADD);
 						} else
 							selectionFinished();
 					}
@@ -1002,8 +994,9 @@ public class FileChooser extends VisWindow {
 							showDialog(getText(POPUP_DIRECTORY_DOES_NOT_EXIST));
 							return;
 						}
+
 						if (file.isDirectory()) {
-							setDirectory(file.getAbsolutePath());
+							setDirectory(Gdx.files.absolute(file.getAbsolutePath()), HistoryPolicy.ADD);
 							getStage().setScrollFocus(fileScrollPane);
 						}
 					}
