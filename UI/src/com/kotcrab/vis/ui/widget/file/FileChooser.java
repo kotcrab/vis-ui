@@ -362,6 +362,8 @@ public class FileChooser extends VisWindow {
 			if (selectionMode == SelectionMode.FILES)
 				showDialog(getText(POPUP_CHOOSE_FILE));
 			else {
+				//this part is executed when nothing is selected but selection mode is `files` or `files and directories`
+				//it is perfectly valid, nothing is selected so that means the `current directory` have to be selected and passed to listener
 				Array<FileHandle> files = new Array<FileHandle>();
 				files.add(currentDirectory);
 				notifyListenerAndCloseDialog(files);
@@ -377,6 +379,15 @@ public class FileChooser extends VisWindow {
 
 	private void notifyListenerAndCloseDialog (Array<FileHandle> files) {
 		if (files == null) return;
+
+		if (mode == Mode.OPEN) {
+			for (FileHandle file : files) {
+				if (file.exists() == false) {
+					showDialog(getText(POPUP_SELECTED_FILE_DOES_NOT_EXIST));
+					return;
+				}
+			}
+		}
 
 		listener.selected(files);
 		listener.selected(files.get(0));
@@ -770,7 +781,7 @@ public class FileChooser extends VisWindow {
 	public void setWatchingFilesEnabled (boolean watchingFilesEnabled) {
 		if (getStage() != null)
 			throw new IllegalStateException("Pooling setting cannot be changed when file chooser is added to Stage!");
-		
+
 		this.watchingFilesEnabled = watchingFilesEnabled;
 	}
 

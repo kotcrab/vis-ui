@@ -24,34 +24,35 @@ import com.kotcrab.vis.ui.i18n.BundleText;
  */
 public enum FileChooserText implements BundleText {
 	// @formatter:off
-	TITLE_CHOOSE_FILES 					{public String getName () {return "titleChooseFiles";}},
+	TITLE_CHOOSE_FILES					{public String getName () {return "titleChooseFiles";}},
 	TITLE_CHOOSE_DIRECTORIES			{public String getName () {return "titleChooseDirectories";}},
 	TITLE_CHOOSE_FILES_AND_DIRECTORIES	{public String getName () {return "titleChooseFilesAndDirectories";}},
 
-	CANCEL 								{public String getName () {return "cancel";}},
-	FILE_NAME 							{public String getName () {return "fileName";}},
-	DESKTOP 							{public String getName () {return "desktop";}},
-	COMPUTER 							{public String getName () {return "computer";}},
+	CANCEL								{public String getName () {return "cancel";}},
+	FILE_NAME							{public String getName () {return "fileName";}},
+	DESKTOP								{public String getName () {return "desktop";}},
+	COMPUTER							{public String getName () {return "computer";}},
 
-	OPEN 								{public String getName () {return "open";}},
-	SAVE 								{public String getName () {return "save";}},
+	OPEN								{public String getName () {return "open";}},
+	SAVE								{public String getName () {return "save";}},
 
-	POPUP_TITLE 						{public String getName () {return "popupTitle";}},
-	POPUP_CHOOSE_FILE 					{public String getName () {return "popupChooseFile";}},
-	POPUP_DIRECTORY_DOES_NOT_EXIST 		{public String getName () {return "popupDirectoryDoesNotExist";}},
-	POPUP_ONLY_DIRECTORIES 				{public String getName () {return "popupOnlyDirectories";}},
-	POPUP_FILENAME_INVALID 				{public String getName () {return "popupFilenameInvalid";}},
-	POPUP_FILE_EXIST_OVERWRITE 			{public String getName () {return "popupFileExistOverwrite";}},
+	POPUP_TITLE							{public String getName () {return "popupTitle";}},
+	POPUP_CHOOSE_FILE					{public String getName () {return "popupChooseFile";}},
+	POPUP_SELECTED_FILE_DOES_NOT_EXIST	{public String getName () {return "popupSelectedFileDoesNotExist";}},
+	POPUP_DIRECTORY_DOES_NOT_EXIST		{public String getName () {return "popupDirectoryDoesNotExist";}},
+	POPUP_ONLY_DIRECTORIES				{public String getName () {return "popupOnlyDirectories";}},
+	POPUP_FILENAME_INVALID				{public String getName () {return "popupFilenameInvalid";}},
+	POPUP_FILE_EXIST_OVERWRITE			{public String getName () {return "popupFileExistOverwrite";}},
 	POPUP_MULTIPLE_FILE_EXIST_OVERWRITE {public String getName () {return "popupMultipleFileExistOverwrite";}},
-	POPUP_YES 							{public String getName () {return "popupYes";}},
-	POPUP_NO 							{public String getName () {return "popupNo";}},
-	POPUP_OK 							{public String getName () {return "popupOK";}},
+	POPUP_YES							{public String getName () {return "popupYes";}},
+	POPUP_NO							{public String getName () {return "popupNo";}},
+	POPUP_OK							{public String getName () {return "popupOK";}},
 
-	CONTEXT_MENU_DELETE 				{public String getName () {return "contextMenuDelete";}},
+	CONTEXT_MENU_DELETE					{public String getName () {return "contextMenuDelete";}},
 	CONTEXT_MENU_SHOW_IN_EXPLORER		{public String getName () {return "contextMenuShowInExplorer";}},
-	CONTEXT_MENU_ADD_TO_FAVORITES 		{public String getName () {return "contextMenuAddToFavorites";}},
-	CONTEXT_MENU_REMOVE_FROM_FAVORITES 	{public String getName () {return "contextMenuRemoveFromFavorites";}},
-	CONTEXT_MENU_DELETE_WARNING 		{public String getName () {return "contextMenuDeleteWarning";}};
+	CONTEXT_MENU_ADD_TO_FAVORITES		{public String getName () {return "contextMenuAddToFavorites";}},
+	CONTEXT_MENU_REMOVE_FROM_FAVORITES	{public String getName () {return "contextMenuRemoveFromFavorites";}},
+	CONTEXT_MENU_DELETE_WARNING			{public String getName () {return "contextMenuDeleteWarning";}};
 	// @formatter:on
 
 	@Override

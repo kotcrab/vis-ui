@@ -8,6 +8,7 @@
 -FileChooser: improved history (back and forward button)
 -FileChooser now can will automatically updates drives list after connecting/removing drive, usb stick etc.
 -FileChooser now will refresh files list after some files were changed in current directory
+-FileChooser I18N: added text: popupSelectedFileDoesNotExist
 -Added some constructors that allows to use widgets without depending on VisUI.getSkin()
 -Fixed infinite key repeat bug on Android in VisTextField ( https://github.com/kotcrab/VisEditor/issues/9 )
 -Fixed small gap with empty title in NumberSelector
