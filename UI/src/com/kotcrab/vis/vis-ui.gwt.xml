@@ -33,7 +33,9 @@
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/uiskin.png" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/default.fnt" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/font-small.fnt" />
+	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/ColorPicker.properties" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/DialogUtils.properties" />
+	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/FileChooser.properties" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/TabbedPane.properties" />
 
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget" />
