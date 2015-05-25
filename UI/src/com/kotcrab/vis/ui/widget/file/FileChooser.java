@@ -33,6 +33,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
 
 import javax.swing.filechooser.FileSystemView;
@@ -440,28 +443,17 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void showDialog (String text) {
-		VisDialog dialog = new VisDialog(getText(POPUP_TITLE));
-		dialog.text(text);
-		dialog.button(getText(POPUP_OK));
-		dialog.pack();
-		dialog.centerWindow();
-		getStage().addActor(dialog.fadeIn());
+		DialogUtils.showOKDialog(getStage(), getText(POPUP_TITLE), text);
 	}
 
-	private void showOverwriteQuestion (Array<FileHandle> filesList) {
-		VisDialog dialog = new VisDialog(getText(POPUP_TITLE)) {
+	private void showOverwriteQuestion (final Array<FileHandle> filesList) {
+		String text = filesList.size == 1 ? getText(POPUP_FILE_EXIST_OVERWRITE) : getText(POPUP_MULTIPLE_FILE_EXIST_OVERWRITE);
+		DialogUtils.showOptionDialog(getStage(), getText(POPUP_TITLE), text, OptionDialogType.YES_NO, new OptionDialogAdapter(){
 			@Override
-			@SuppressWarnings("unchecked")
-			protected void result (Object object) {
-				notifyListenerAndCloseDialog((Array<FileHandle>) object);
+			public void yes () {
+				notifyListenerAndCloseDialog(filesList);
 			}
-		};
-		dialog.text(filesList.size == 1 ? getText(POPUP_FILE_EXIST_OVERWRITE) : getText(POPUP_MULTIPLE_FILE_EXIST_OVERWRITE));
-		dialog.button(getText(POPUP_NO), null);
-		dialog.button(getText(POPUP_YES), filesList);
-		dialog.pack();
-		dialog.centerWindow();
-		getStage().addActor(dialog.fadeIn());
+		});
 	}
 
 	private void rebuildShortcutsList (boolean rebuildRootCache) {

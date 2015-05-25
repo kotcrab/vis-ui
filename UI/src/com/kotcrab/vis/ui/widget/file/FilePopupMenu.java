@@ -23,9 +23,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
-import com.kotcrab.vis.ui.widget.VisDialog;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -60,7 +62,13 @@ public class FilePopupMenu extends PopupMenu {
 		delete.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
-				showDeleteDialog();
+				DialogUtils.showOptionDialog(getStage(), getText(POPUP_TITLE), getText(CONTEXT_MENU_DELETE_WARNING), OptionDialogType.YES_NO, new OptionDialogAdapter() {
+					@Override
+					public void yes () {
+						file.delete();
+						chooser.refresh();
+					}
+				});
 			}
 		});
 
@@ -91,25 +99,6 @@ public class FilePopupMenu extends PopupMenu {
 				chooser.removeFavorite(file);
 			}
 		});
-	}
-
-	private void showDeleteDialog () {
-		VisDialog dialog = new VisDialog(getText(POPUP_TITLE)) {
-			@Override
-			protected void result (Object object) {
-				boolean delete = Boolean.parseBoolean(object.toString());
-				if (delete) {
-					file.delete();
-					chooser.refresh();
-				}
-			}
-		};
-		dialog.text(getText(CONTEXT_MENU_DELETE_WARNING));
-		dialog.button(getText(POPUP_NO), false);
-		dialog.button(getText(POPUP_YES), true);
-		dialog.pack();
-		dialog.centerWindow();
-		chooser.getStage().addActor(dialog.fadeIn());
 	}
 
 	public void build (Array<FileHandle> favorites, FileHandle file) {

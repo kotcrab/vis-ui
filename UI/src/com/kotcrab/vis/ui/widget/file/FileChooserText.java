@@ -44,9 +44,6 @@ public enum FileChooserText implements BundleText {
 	POPUP_FILENAME_INVALID				{public String getName () {return "popupFilenameInvalid";}},
 	POPUP_FILE_EXIST_OVERWRITE			{public String getName () {return "popupFileExistOverwrite";}},
 	POPUP_MULTIPLE_FILE_EXIST_OVERWRITE {public String getName () {return "popupMultipleFileExistOverwrite";}},
-	POPUP_YES							{public String getName () {return "popupYes";}},
-	POPUP_NO							{public String getName () {return "popupNo";}},
-	POPUP_OK							{public String getName () {return "popupOK";}},
 
 	CONTEXT_MENU_DELETE					{public String getName () {return "contextMenuDelete";}},
 	CONTEXT_MENU_SHOW_IN_EXPLORER		{public String getName () {return "contextMenuShowInExplorer";}},
