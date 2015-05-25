@@ -49,7 +49,7 @@ import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
  * @since 0.1.0
  */
 public class FileChooser extends VisWindow {
-	private static final long FILE_ROOTS_CHECK_DELAY_MILLIS = 2000;
+	private static final long FILE_WATCHER_CHECK_DELAY_MILLIS = 2000;
 
 	private Mode mode;
 	private SelectionMode selectionMode = SelectionMode.FILES;
@@ -74,7 +74,7 @@ public class FileChooser extends VisWindow {
 	private ObjectMap<File, String> fileRootsSystemNameCache = new ObjectMap<File, String>();
 	private Array<ShortcutItem> fileRootsCache = new Array<ShortcutItem>();
 
-	private boolean poolingDirectoriesEnabled = true;
+	private boolean watchingFilesEnabled = true;
 	private Thread fileWatcherThread;
 	private boolean shortcutsListRebuildScheduled;
 	private boolean filesListRebuildScheduled;
@@ -764,14 +764,14 @@ public class FileChooser extends VisWindow {
 	}
 
 	/**
-	 * If false file chooser won't pool direcotires for changes, adding new files or connecting new drive won't refresh file list.
+	 * If false file chooser won't pool directories for changes, adding new files or connecting new drive won't refresh file list.
 	 * This must be called when file chooser is not added to Stage
 	 */
-	public void setPoolingDirectoriesEnabled (boolean poolingDirectoriesEnabled) {
+	public void setWatchingFilesEnabled (boolean watchingFilesEnabled) {
 		if (getStage() != null)
 			throw new IllegalStateException("Pooling setting cannot be changed when file chooser is added to Stage!");
 		
-		this.poolingDirectoriesEnabled = poolingDirectoriesEnabled;
+		this.watchingFilesEnabled = watchingFilesEnabled;
 	}
 
 	@Override
@@ -787,7 +787,7 @@ public class FileChooser extends VisWindow {
 		super.setStage(stage);
 		deselectAll();
 
-		if (poolingDirectoriesEnabled) {
+		if (watchingFilesEnabled) {
 			if (stage != null)
 				startFileWatcher();
 			else
@@ -797,52 +797,57 @@ public class FileChooser extends VisWindow {
 
 	private void startFileWatcher () {
 		if (fileWatcherThread != null)
-			throw new IllegalStateException("FileRootsWatcher thread already running");
+			throw new IllegalStateException("FileWatcheThread already running");
 
 		fileWatcherThread = new Thread(new Runnable() {
 			File[] lastRoots;
 
 			FileHandle lastCurrentDirectory;
-			FileHandle[] lastCurrentDirectoryFiles;
+			FileHandle[] lastCurrentFiles;
 
 			@Override
 			public void run () {
 				lastRoots = File.listRoots();
 
 				lastCurrentDirectory = currentDirectory;
-				lastCurrentDirectoryFiles = currentDirectory.list();
+				lastCurrentFiles = currentDirectory.list();
 
 				while (fileWatcherThread != null) {
 					File[] roots = File.listRoots();
+
 					if (roots.length != lastRoots.length || Arrays.equals(lastRoots, roots) == false)
 						shortcutsListRebuildScheduled = true;
+
 					lastRoots = roots;
 
 					//if current directory changed during pools then our lastCurrentDirectoryFiles list is outdated and we shouldn't schedule files list rebuild
 					if (lastCurrentDirectory.equals(currentDirectory) == true) {
-						FileHandle[] currentDirectoryFiles = currentDirectory.list();
-						if (lastCurrentDirectoryFiles.length != currentDirectoryFiles.length || Arrays.equals(lastCurrentDirectoryFiles, currentDirectoryFiles) == false)
+						FileHandle[] currentFiles = currentDirectory.list();
+
+						if (lastCurrentFiles.length != currentFiles.length || Arrays.equals(lastCurrentFiles, currentFiles) == false)
 							filesListRebuildScheduled = true;
-						lastCurrentDirectoryFiles = currentDirectoryFiles;
+
+						lastCurrentFiles = currentFiles;
 					} else
-						lastCurrentDirectoryFiles = currentDirectory.list(); //if list is outdated, refresh it
+						lastCurrentFiles = currentDirectory.list(); //if list is outdated, refresh it
 
 					lastCurrentDirectory = currentDirectory;
 
 					try {
-						Thread.sleep(FILE_ROOTS_CHECK_DELAY_MILLIS);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
+						Thread.sleep(FILE_WATCHER_CHECK_DELAY_MILLIS);
+					} catch (InterruptedException ignored) {
 					}
 				}
 			}
-		});
+		}, "FileWatcherThread");
 
+		fileWatcherThread.setDaemon(true);
 		fileWatcherThread.start();
 	}
 
 	private void stopFileWatcher () {
-		if (fileWatcherThread == null) throw new IllegalStateException("FileRootsWatcher thread not running");
+		if (fileWatcherThread == null) throw new IllegalStateException("FileWatcherThread not running");
+		fileWatcherThread.interrupt();
 		fileWatcherThread = null;
 	}
 
