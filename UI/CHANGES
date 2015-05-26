@@ -1,4 +1,6 @@
-[0.7.7] [LibGDX 1.6.1] [Snapshot]
+[0.8.0] [LibGDX 1.6.1] [Snapshot]
+
+[0.7.7] [LibGDX 1.6.1]
 -uiskin.json is now generated from USL (see USL page on GitHub Wiki, if you are not writing custom VisUI skins this does not affect you)
 -API Addition: various getters and setters in NumberSelector
 -API Addition: TabbedPane#getActiveTab
