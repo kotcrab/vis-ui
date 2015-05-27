@@ -17,12 +17,11 @@
 package com.kotcrab.vis.runtime.data;
 
 import com.badlogic.gdx.graphics.Color;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
 
-/**
- * SpriteData used by both VisRuntime and VisEditor
- */
 public class SpriteData extends EntityData<SpriteEntity> {
+	public VisAssetDescriptor assetDescriptor;
 	public String textureAtlas;
 	public String texturePath;
 
@@ -36,6 +35,8 @@ public class SpriteData extends EntityData<SpriteEntity> {
 
 	@Override
 	public void saveFrom (SpriteEntity sprite) {
+		assetDescriptor = sprite.getAssetDescriptor();
+
 		x = sprite.getX();
 		y = sprite.getY();
 
@@ -58,6 +59,7 @@ public class SpriteData extends EntityData<SpriteEntity> {
 
 	@Override
 	public void loadTo (SpriteEntity sprite) {
+		sprite.setAssetDescriptor(assetDescriptor);
 		sprite.setPosition(x, y);
 		sprite.setSize(width, height);
 		sprite.setOrigin(originX, originY);

@@ -22,6 +22,9 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
+import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 
 //TODO font reloading for bmp
@@ -110,6 +113,15 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 		if (file.extension().equals("ttf")) refreshFont(file);
 	}
 
+	public EditorFont get (VisAssetDescriptor assetDescriptor) {
+		if (assetDescriptor instanceof PathAsset == false)
+			throw new UnsupportedAssetDescriptorException(assetDescriptor);
+
+		PathAsset path = (PathAsset) assetDescriptor;
+		return get(fileAccess.getAssetsFolder().child(path.getPath()));
+	}
+
+	@Deprecated
 	public EditorFont get (FileHandle file) {
 		for (EditorFont font : fonts) {
 			if (font.getFile().equals(file))

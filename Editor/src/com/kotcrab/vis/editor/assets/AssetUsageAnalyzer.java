@@ -14,28 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.data;
+package com.kotcrab.vis.editor.assets;
 
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 
-public class ParticleEffectData extends EntityData<ParticleEffectEntity> {
-	public VisAssetDescriptor assetDescriptor;
-	public float x, y;
-	public boolean active;
+public interface AssetUsageAnalyzer {
+	boolean canAnalyze (VisAssetDescriptor descriptor, String relativePath);
 
-	@Override
-	public void saveFrom (ParticleEffectEntity entity) {
-		assetDescriptor = entity.getAssetDescriptor();
-		x = entity.getX();
-		y = entity.getY();
-		active = entity.isActive();
-	}
-
-	@Override
-	public void loadTo (ParticleEffectEntity entity) {
-		entity.setAssetDescriptor(assetDescriptor);
-		entity.setPosition(x, y);
-		entity.setActive(active);
-	}
+	boolean isUsed (String relativePath, EditorObject entity, VisAssetDescriptor assetDescriptor);
 }

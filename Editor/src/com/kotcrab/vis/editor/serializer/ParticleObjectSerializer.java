@@ -58,6 +58,6 @@ public class ParticleObjectSerializer extends CompatibleFieldSerializer<Particle
 	}
 
 	private ParticleEffect getNewEffect (ParticleObject obj) {
-		return particleCache.get(fileAccess.getAssetsFolder().child(obj.getAssetPath()));
+		return particleCache.get(obj.getAssetDescriptor());
 	}
 }

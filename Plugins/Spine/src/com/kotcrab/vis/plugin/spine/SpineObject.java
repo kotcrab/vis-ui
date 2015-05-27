@@ -37,20 +37,23 @@ import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.Slot;
 import com.esotericsoftware.spine.attachments.*;
 import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.SpineEntity;
 
 public class SpineObject extends SpineEntity implements EditorObject {
-	private boolean previewInEditor = false;
+	private boolean previewInEditor;
 	private Rectangle bounds;
 
 	public SpineObject (String atlasPath, String skeletonPath, SkeletonData skeletonData) {
-		super(null, atlasPath, skeletonPath, skeletonData);
+		super(null, new SpineAssetDescriptor(atlasPath, skeletonPath), skeletonData);
 		bounds = new Rectangle();
 	}
 
 	public SpineObject (SpineObject original) {
 		super(original);
+		this.previewInEditor = original.previewInEditor;
 		this.bounds = original.bounds;
+		updateAnimation();
 	}
 
 	@Override
@@ -104,6 +107,7 @@ public class SpineObject extends SpineEntity implements EditorObject {
 
 	public void onDeserialize (SkeletonData skeletonData) {
 		init(skeletonData);
+		updateAnimation();
 	}
 
 	private void computeBoundingRectangle () {

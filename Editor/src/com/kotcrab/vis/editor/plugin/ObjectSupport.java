@@ -16,11 +16,11 @@
 
 package com.kotcrab.vis.editor.plugin;
 
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Serializer;
+import com.kotcrab.vis.editor.assets.AssetUsageAnalyzer;
 import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
@@ -59,8 +59,8 @@ public abstract class ObjectSupport<ED extends EntityData, E extends Entity & Ed
 		return null;
 	}
 
-	public boolean canAnalyze (FileHandle file, String relativePath) {
-		return false;
+	public AssetUsageAnalyzer getAssetsUsageAanalyzer () {
+		return null;
 	}
 
 	public void assignId (int id) {

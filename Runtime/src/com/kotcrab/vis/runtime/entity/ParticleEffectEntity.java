@@ -20,16 +20,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.utils.Disposable;
-import com.kotcrab.vis.runtime.scene.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 public class ParticleEffectEntity extends Entity implements Disposable {
 	protected transient ParticleEffect effect;
 	private boolean active = true;
 
-	public ParticleEffectEntity (String id, String effectRelativePath, ParticleEffect effect) {
+	public ParticleEffectEntity (String id, VisAssetDescriptor assetDescriptor, ParticleEffect effect) {
 		super(id);
 
-		setAssetDescriptor(new VisAssetDescriptor(effectRelativePath));
+		setAssetDescriptor(assetDescriptor);
 
 		this.effect = effect;
 	}
@@ -43,6 +44,11 @@ public class ParticleEffectEntity extends Entity implements Disposable {
 
 		if (isComplete())
 			reset();
+	}
+
+	@Override
+	protected boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+		return assetDescriptor instanceof PathAsset;
 	}
 
 	public float getX () {

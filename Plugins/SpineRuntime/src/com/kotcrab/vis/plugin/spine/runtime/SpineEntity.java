@@ -35,11 +35,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.esotericsoftware.spine.*;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.Entity;
 
 public class SpineEntity extends Entity {
-	protected String atlasPath;
-
 	protected transient Skeleton skeleton;
 	protected transient AnimationStateData stateData;
 	protected transient AnimationState state;
@@ -48,18 +47,16 @@ public class SpineEntity extends Entity {
 	private boolean playOnStart;
 	private String defaultAnimation;
 
-	public SpineEntity (String id, String atlasPath, String skeletonPath, SkeletonData skeletonData) {
+	public SpineEntity (String id, VisAssetDescriptor assetDescriptor, SkeletonData skeletonData) {
 		super(id);
-		this.atlasPath = atlasPath;
-		setAssetPath(skeletonPath);
+		setAssetDescriptor(assetDescriptor);
 
 		init(skeletonData);
 	}
 
 	public SpineEntity (SpineEntity original) {
 		super(original.getId());
-		this.atlasPath = original.atlasPath;
-		setAssetPath(original.getAssetPath());
+		setAssetDescriptor(original.getAssetDescriptor());
 		init(original.getSkeleton().getData());
 	}
 
@@ -86,12 +83,9 @@ public class SpineEntity extends Entity {
 		renderer.draw(batch, skeleton); // Draw the skeleton images.
 	}
 
-	public String getAtlasPath () {
-		return atlasPath;
-	}
-
-	public void setAtlasPath (String atlasPath) {
-		this.atlasPath = atlasPath;
+	@Override
+	protected boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+		return assetDescriptor instanceof SpineAssetDescriptor;
 	}
 
 	public float getX () {

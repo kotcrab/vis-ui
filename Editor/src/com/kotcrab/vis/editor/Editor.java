@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.esotericsoftware.kryo.KryoException;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
@@ -38,6 +39,7 @@ import com.kotcrab.vis.editor.module.scene.GlobalInputModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.InputModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
+import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EditorFrame;
 import com.kotcrab.vis.editor.ui.WindowListener;
 import com.kotcrab.vis.editor.ui.dialog.NewProjectDialog;
@@ -140,15 +142,15 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 			FileHandle scene = Gdx.files.absolute("F:\\Poligon\\Tester\\vis\\assets\\scene\\test.scene");
 
-//			try {
-//				if (scene.exists()) {
-//					EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
-//					projectMC.get(SceneTabsModule.class).open(testScene);
-//				}
-//			} catch (KryoException e) {
-//				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
-//				Log.exception(e);
-//			}
+			try {
+				if (scene.exists()) {
+					EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
+					projectMC.get(SceneTabsModule.class).open(testScene);
+				}
+			} catch (KryoException e) {
+				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
+				Log.exception(e);
+			}
 
 			//editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
 		}

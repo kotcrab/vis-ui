@@ -14,21 +14,17 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.data;
+package com.kotcrab.vis.runtime.assets;
 
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.entity.SoundEntity;
+public class PathAsset implements VisAssetDescriptor {
+	private String relativePath;
 
-public class SoundData extends EntityData<SoundEntity> {
-	public VisAssetDescriptor assetDescriptor;
-
-	@Override
-	public void saveFrom (SoundEntity entity) {
-		assetDescriptor = entity.getAssetDescriptor();
+	public PathAsset (String relativePath) {
+		this.relativePath = relativePath.replace("\\", "/");
 	}
 
-	@Override
-	public void loadTo (SoundEntity entity) {
-		entity.setAssetDescriptor(assetDescriptor);
+	public String getPath () {
+		return relativePath;
 	}
+
 }

@@ -34,6 +34,9 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.ProjectPathUtils;
+import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 public class TextureCacheModule extends ProjectModule implements WatchListener {
 	@InjectModule private FileAccessModule fileAccess;
@@ -200,6 +203,15 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		}
 	}
 
+	public TextureRegion getRegion (VisAssetDescriptor assetDescriptor) {
+		if (assetDescriptor instanceof PathAsset == false)
+			throw new UnsupportedAssetDescriptorException(assetDescriptor);
+
+		PathAsset path = (PathAsset) assetDescriptor;
+		return getRegion(path.getPath());
+	}
+
+	@Deprecated
 	public TextureRegion getRegion (String relativePath) {
 		if (relativePath.startsWith("gfx")) {
 

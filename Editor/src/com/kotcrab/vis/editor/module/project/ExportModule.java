@@ -32,6 +32,7 @@ import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
@@ -216,7 +217,8 @@ public class ExportModule extends ProjectModule {
 
 				data.id = obj.getId();
 
-				String path = obj.getAssetPath();
+				PathAsset pathAsset = (PathAsset) obj.getAssetDescriptor(); //FIXME
+				String path = pathAsset.getPath();
 
 				if (path.contains("*")) {
 					String[] pathParts = path.split("\\*", 2);
@@ -224,7 +226,7 @@ public class ExportModule extends ProjectModule {
 					data.texturePath = pathParts[1];
 				} else {
 					data.textureAtlas = "gfx/textures.atlas";
-					data.texturePath = obj.getAssetPath();
+					data.texturePath = path;
 				}
 
 				entities.add(data);

@@ -17,14 +17,16 @@
 package com.kotcrab.vis.runtime.entity;
 
 import com.badlogic.gdx.audio.Sound;
+import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 public class SoundEntity extends Entity {
 	protected transient Sound sound;
 
-	public SoundEntity (String id, String soundPath, Sound sound) {
+	public SoundEntity (String id, VisAssetDescriptor assetDescriptor, Sound sound) {
 		super(id);
 		this.sound = sound;
-		setAssetPath(soundPath);
+		setAssetDescriptor(assetDescriptor);
 	}
 
 	public Sound getSound () {
@@ -65,5 +67,10 @@ public class SoundEntity extends Entity {
 
 	public void resume () {
 		sound.resume();
+	}
+
+	@Override
+	protected boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+		return assetDescriptor instanceof PathAsset;
 	}
 }

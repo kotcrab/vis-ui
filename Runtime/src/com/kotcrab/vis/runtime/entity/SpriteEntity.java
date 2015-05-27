@@ -20,19 +20,26 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 public class SpriteEntity extends Entity {
 	protected transient Sprite sprite;
 
-	public SpriteEntity (String id, String texturePath, Sprite sprite) {
+	public SpriteEntity (String id, VisAssetDescriptor assetDescriptor, Sprite sprite) {
 		super(id);
 		this.sprite = sprite;
-		setAssetPath(texturePath);
+		setAssetDescriptor(assetDescriptor); //TODO refactor for atlas support
 	}
 
 	@Override
 	public void render (Batch batch) {
 		sprite.draw(batch);
+	}
+
+	@Override
+	protected boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+		return assetDescriptor instanceof PathAsset;
 	}
 
 	public float getX () {

@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.kotcrab.vis.editor.module.project.BMPEditorFont;
 import com.kotcrab.vis.editor.module.project.EditorFont;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 
 /**
@@ -34,12 +35,12 @@ public class TextObject extends TextEntity implements EditorObject {
 	}
 
 	public TextObject (EditorFont font, BitmapFont bitmapFont, String text, int fontSize) {
-		super(null, bitmapFont, font.getRelativePath(), text, fontSize);
+		super(null, bitmapFont, new PathAsset(font.getRelativePath()), text, fontSize);
 		this.font = font;
 	}
 
 	public TextObject (TextObject other) {
-		super(other.getId(), other.cache.getFont(), other.getAssetPath(), other.getText(), other.getFontSize());
+		super(other.getId(), other.cache.getFont(), other.getAssetDescriptor(), other.getText(), other.getFontSize());
 		this.font = other.font;
 
 		setAutoSetOriginToCenter(other.isAutoSetOriginToCenter());
@@ -55,6 +56,10 @@ public class TextObject extends TextEntity implements EditorObject {
 	public void onDeserialize (EditorFont font) {
 		setFont(font);
 		setColor(getColor()); //update cache color
+	}
+
+	public String getAssetPath () {
+		return ((PathAsset) getAssetDescriptor()).getPath();
 	}
 
 	@Override
@@ -91,7 +96,7 @@ public class TextObject extends TextEntity implements EditorObject {
 		if (this.font != font) {
 			this.font = font;
 
-			setAssetPath(font.getRelativePath());
+			setAssetDescriptor(new PathAsset(font.getRelativePath()));
 			cache = new BitmapFontCache(font.get(fontSize));
 			setText(text);
 			textChanged();

@@ -20,6 +20,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
+import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 //TODO support dynamic refreshing
 public class ParticleCacheModule extends ProjectModule implements WatchListener {
@@ -35,6 +38,15 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 		watcherModule.addListener(this);
 	}
 
+	public ParticleEffect get (VisAssetDescriptor assetDescriptor) {
+		if (assetDescriptor instanceof PathAsset == false)
+			throw new UnsupportedAssetDescriptorException(assetDescriptor);
+
+		PathAsset path = (PathAsset) assetDescriptor;
+		return get(fileAccess.getAssetsFolder().child(path.getPath()));
+	}
+
+	@Deprecated
 	public ParticleEffect get (FileHandle file) {
 		ParticleEffect effect = new ParticleEffect();
 		effect.load(file, file.parent());

@@ -18,8 +18,12 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.util.FileUtils;
 
+import java.util.Iterator;
+
+/** Provides FileHandle access to various Vis Project directories and files, contains method for path (de)relativize */
 public class FileAccessModule extends ProjectModule {
 	private FileHandle visFolder;
 	private FileHandle assetsFolder;
@@ -41,6 +45,19 @@ public class FileAccessModule extends ProjectModule {
 		ttfFontFolder = assetsFolder.child("font");
 		bmpFontFolder = assetsFolder.child("bmpfont");
 		particleFolder = assetsFolder.child("particle");
+	}
+
+	public Array<FileHandle> getSceneFiles () {
+		Array<FileHandle> files = FileUtils.listRecursive(getSceneFolder());
+
+		Iterator<FileHandle> it = files.iterator();
+
+		while (it.hasNext())
+			if (it.next().extension().equals("scene") == false) it.remove();
+
+		files.sort((o1, o2) -> o1.path().toLowerCase().compareTo(o2.path().toLowerCase()));
+
+		return files;
 	}
 
 	public FileHandle getVisFolder () {

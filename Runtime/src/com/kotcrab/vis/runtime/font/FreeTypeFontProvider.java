@@ -26,15 +26,17 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.data.TextData;
 
 public class FreeTypeFontProvider implements FontProvider {
-	private AssetManager assetManager;
-
 	@Override
 	public void load (Array<AssetDescriptor> dependencies, TextData data) {
 		FreeTypeFontLoaderParameter params = new FreeTypeFontLoaderParameter();
-		params.fontFileName = data.fontPath;
+
+		PathAsset pathAsset = (PathAsset) data.assetDescriptor;
+
+		params.fontFileName = pathAsset.getPath();
 		params.fontParameters.size = data.fontSize;
 
 		dependencies.add(new AssetDescriptor(data.arbitraryFontName, BitmapFont.class, params));
@@ -42,8 +44,6 @@ public class FreeTypeFontProvider implements FontProvider {
 
 	@Override
 	public void setLoaders (AssetManager assetManager) {
-		this.assetManager = assetManager;
-
 		FileHandleResolver resolver = new InternalFileHandleResolver();
 		assetManager.setLoader(FreeTypeFontGenerator.class, new FreeTypeFontGeneratorLoader(resolver));
 		assetManager.setLoader(BitmapFont.class, ".ttf", new FreetypeFontLoader(resolver));

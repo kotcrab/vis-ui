@@ -24,6 +24,9 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.scene.SoundObject;
+import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 public class SoundObjectSerializer extends CompatibleFieldSerializer<SoundObject> {
 	private FileAccessModule fileAccess;
@@ -50,7 +53,10 @@ public class SoundObjectSerializer extends CompatibleFieldSerializer<SoundObject
 		return new SoundObject(original, getNewSoundInstance(original));
 	}
 
-	private Sound getNewSoundInstance (SoundObject object) {
-		return Gdx.audio.newSound(fileAccess.getAssetsFolder().child(object.getAssetPath()));
+	private Sound getNewSoundInstance (SoundObject obj) {
+		VisAssetDescriptor descriptor = obj.getAssetDescriptor();
+		if(descriptor instanceof PathAsset == false) throw new UnsupportedAssetDescriptorException(descriptor);
+		PathAsset path = (PathAsset) descriptor;
+		return Gdx.audio.newSound(fileAccess.getAssetsFolder().child(path.getPath()));
 	}
 }

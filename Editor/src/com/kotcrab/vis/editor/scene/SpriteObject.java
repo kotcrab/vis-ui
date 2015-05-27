@@ -18,16 +18,17 @@ package com.kotcrab.vis.editor.scene;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
 
 public class SpriteObject extends SpriteEntity implements EditorObject {
 	public SpriteObject (String texturePath, TextureRegion region, float x, float y) {
-		super(null, texturePath, new Sprite(region));
+		super(null, new PathAsset(texturePath), new Sprite(region));
 		sprite.setPosition(x, y);
 	}
 
 	public SpriteObject (SpriteObject other, Sprite sprite) {
-		super(other.getId(), other.getAssetPath(), sprite);
+		super(other.getId(), other.getAssetDescriptor(), sprite);
 	}
 
 	public void onDeserialize (TextureRegion region) {

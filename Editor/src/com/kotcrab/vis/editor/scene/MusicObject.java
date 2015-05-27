@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.entity.MusicEntity;
 
 public class MusicObject extends MusicEntity implements EditorObject {
@@ -30,14 +31,14 @@ public class MusicObject extends MusicEntity implements EditorObject {
 	private Rectangle bounds;
 
 	public MusicObject (String musicPath, Music music) {
-		super(null, musicPath, music);
+		super(null, new PathAsset(musicPath), music);
 		this.icon = Assets.getIconRegion(Icons.MUSIC);
 
 		bounds = new Rectangle(x, y, icon.getRegionWidth(), icon.getRegionHeight());
 	}
 
 	public MusicObject (MusicObject other, Music newMusic) {
-		super(other.getId(), other.getAssetPath(), newMusic);
+		super(other.getId(), other.getAssetDescriptor(), newMusic);
 
 		this.x = other.x;
 		this.y = other.y;
@@ -53,6 +54,10 @@ public class MusicObject extends MusicEntity implements EditorObject {
 	public void onDeserialize (Music music) {
 		this.icon = Assets.getIconRegion(Icons.MUSIC);
 		this.music = music;
+	}
+
+	public String getAssetPath () {
+		return ((PathAsset) getAssetDescriptor()).getPath();
 	}
 
 	@Override

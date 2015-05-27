@@ -60,7 +60,7 @@ public class SpriteObjectSerializer extends CompatibleFieldSerializer<SpriteObje
 	@Override
 	public SpriteObject read (Kryo kryo, Input input, Class<SpriteObject> type) {
 		SpriteObject obj = super.read(kryo, input, type);
-		obj.onDeserialize(textureCache.getRegion(obj.getAssetPath()));
+		obj.onDeserialize(textureCache.getRegion(obj.getAssetDescriptor()));
 
 		obj.setPosition(input.readFloat(), input.readFloat());
 		obj.setSize(input.readFloat(), input.readFloat());

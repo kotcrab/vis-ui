@@ -42,7 +42,7 @@ public class TextObjectSerializer extends CompatibleFieldSerializer<TextObject> 
 	@Override
 	public TextObject read (Kryo kryo, Input input, Class<TextObject> type) {
 		TextObject obj = super.read(kryo, input, type);
-		obj.onDeserialize(fontCache.get(fileAccess.getAssetsFolder().child(obj.getAssetPath())));
+		obj.onDeserialize(fontCache.get(obj.getAssetDescriptor()));
 		return obj;
 	}
 

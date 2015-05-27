@@ -214,7 +214,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 			for (EditorObject object : scene.entities) {
 				if (object instanceof SpriteObject) {
 					SpriteObject spriteObject = (SpriteObject) object;
-					SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getAssetPath()));
+					SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getAssetDescriptor()));
 				}
 
 				if (object instanceof ObjectGroup) {

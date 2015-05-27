@@ -28,6 +28,8 @@ import com.kotcrab.vis.editor.module.physicseditor.models.ShapeModel.Type;
 import com.kotcrab.vis.editor.module.physicseditor.util.Clipper;
 import com.kotcrab.vis.editor.module.physicseditor.util.Clipper.Polygonizer;
 import com.kotcrab.vis.editor.module.physicseditor.util.PolygonUtils;
+import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.Entity;
 
 import java.util.ArrayList;
@@ -146,6 +148,11 @@ public class RigidBodyModel extends Entity implements Changeable {
 
 	public void setRegion (TextureRegion region, String path) {
 		this.region = region;
-		setAssetPath(path);
+		setAssetDescriptor(new PathAsset(path));
+	}
+
+	@Override
+	protected boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+		return assetDescriptor instanceof PathAsset;
 	}
 }

@@ -42,6 +42,7 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension;
+import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
 @VisPlugin
@@ -63,6 +64,10 @@ class SpineCacheModule extends ProjectModule {
 
 	private ObjectMap<FileHandle, TextureAtlas> atlases = new ObjectMap<>();
 	private ObjectMap<FileHandle, SkeletonData> skeletonsData = new ObjectMap<>();
+
+	public SkeletonData get (SpineAssetDescriptor assetDescriptor) {
+		return get(assetDescriptor.getAtlasPath(), assetDescriptor.getSkeletonPath());
+	}
 
 	public SkeletonData get (String relativeAtlasPath, String relativeSkeletonPath) {
 		return get(Gdx.files.absolute(fileAccess.derelativizeFromAssetsFolder(relativeAtlasPath)),

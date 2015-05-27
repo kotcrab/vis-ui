@@ -17,6 +17,8 @@
 package com.kotcrab.vis.runtime.data;
 
 import com.badlogic.gdx.graphics.Color;
+import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 
 public class TextData extends EntityData<TextEntity> {
@@ -27,7 +29,7 @@ public class TextData extends EntityData<TextEntity> {
 	public Color tint = Color.WHITE;
 
 	public String text;
-	public String fontPath;
+	public VisAssetDescriptor assetDescriptor;
 	/** Arbitrary font name used by assets manager to recognize different font sizes for single truetype font */
 	public String arbitraryFontName;
 	public int fontSize;
@@ -52,11 +54,12 @@ public class TextData extends EntityData<TextEntity> {
 		tint = entity.getColor().cpy();
 
 		text = entity.getText();
-		fontPath = entity.getAssetPath();
+		assetDescriptor = entity.getAssetDescriptor();
 		fontSize = entity.getFontSize();
 		autoSetOriginToCenter = entity.isAutoSetOriginToCenter();
 
-		arbitraryFontName = String.valueOf(fontSize) + "." + fontPath;
+		PathAsset asset = (PathAsset) entity.getAssetDescriptor();
+		arbitraryFontName = String.valueOf(fontSize) + "." + asset.getPath();
 
 		isTrueType = entity.isTrueType();
 		isUsesDistanceField = entity.isDistanceFieldShaderEnabled();
@@ -72,7 +75,7 @@ public class TextData extends EntityData<TextEntity> {
 
 		text.setText(this.text);
 		//text.setFontSize(fontSize); //font size must be handled manually from SceneLoader because it is not a public property for TextEntity
-		text.setAssetPath(fontPath);
+		text.setAssetDescriptor(assetDescriptor);
 		text.setAutoSetOriginToCenter(autoSetOriginToCenter);
 
 		text.setDistanceFieldShaderEnabled(isUsesDistanceField);

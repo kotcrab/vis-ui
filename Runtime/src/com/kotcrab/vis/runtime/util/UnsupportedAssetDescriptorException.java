@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.scene;
+package com.kotcrab.vis.runtime.util;
 
-public class VisAssetDescriptor {
-	private String relativePath;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-	public VisAssetDescriptor (String relativePath) {
-		this.relativePath = relativePath.replace("\\", "/");
-	}
-
-	public String getPath () {
-		return relativePath;
+public class UnsupportedAssetDescriptorException extends RuntimeException {
+	public UnsupportedAssetDescriptorException (VisAssetDescriptor unsupportedDescriptor) {
+		super("Asset descriptor type '" + unsupportedDescriptor.getClass().getSimpleName() + "' is not supported for this operation");
 	}
 }

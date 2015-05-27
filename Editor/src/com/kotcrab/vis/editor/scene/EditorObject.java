@@ -20,7 +20,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
-import com.kotcrab.vis.runtime.scene.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 public interface EditorObject extends Disposable {
 
@@ -139,6 +139,4 @@ public interface EditorObject extends Disposable {
 	}
 
 	VisAssetDescriptor getAssetDescriptor ();
-
-	String getAssetPath ();
 }

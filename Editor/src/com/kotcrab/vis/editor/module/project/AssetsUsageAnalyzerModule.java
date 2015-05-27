@@ -18,15 +18,15 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.assets.AssetUsageAnalyzer;
+import com.kotcrab.vis.editor.assets.BasicAssetUsageAnalyzer;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.util.FileUtils;
 
-import java.util.Iterator;
-
+//FIXME
 public class AssetsUsageAnalyzerModule extends ProjectModule {
 	public static final int USAGE_SEARCH_LIMIT = 100;
 
@@ -35,22 +35,23 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 	@InjectModule private SceneTabsModule sceneTabsModule;
 	@InjectModule private SceneCacheModule sceneCache;
 
-	private FileHandle sceneDir;
+	private Array<AssetUsageAnalyzer> analyzers = new Array<>();
 
 	@Override
 	public void init () {
-		sceneDir = fileAccess.getSceneFolder();
+		analyzers.add(new BasicAssetUsageAnalyzer());
 	}
 
 	public boolean canAnalyze (FileHandle file) {
 		String path = fileAccess.relativizeToAssetsFolder(file);
-		if (path.startsWith("gfx")) return true;
-		if (path.startsWith("font") || path.startsWith("bmpfont")) return true;
-		if (path.startsWith("particle")) return true;
-		if (path.startsWith("music")) return true;
 
-		for (ObjectSupport support : supportModule.getSupports())
-			if (support.canAnalyze(file, path)) return true;
+		for (AssetUsageAnalyzer analyzer : analyzers) {
+			//if (analyzer.canAnalyze(path)) return true;
+		}
+
+		for (ObjectSupport support : supportModule.getSupports()) {
+			//if(support.getAssetsUsageAanalyzer() != null && support.getAssetsUsageAanalyzer().canAnalyze(path)) return true;
+		}
 
 		return false;
 	}
@@ -58,21 +59,22 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 	public AssetsUsages analyze (FileHandle file) {
 		String path = fileAccess.relativizeToAssetsFolder(file.path());
 
-		Array<FileHandle> sceneFiles = getSceneFiles();
+		Array<FileHandle> sceneFiles = fileAccess.getSceneFiles();
 
 		AssetsUsages usages = new AssetsUsages();
 		usages.file = file;
 
 		for (FileHandle sceneFile : sceneFiles) {
-			EditorScene	scene = sceneCache.get(sceneFile);
+			EditorScene scene = sceneCache.get(sceneFile);
 
 			Array<EditorObject> sceneUsagesList = new Array<>();
 
 			for (EditorObject entity : scene.entities) {
 				boolean used = false;
 
+				//AssetsUsageAnalyzer analyzer = findAnalyzer();
 				if (entity.getAssetDescriptor() != null)
-					if (entity.getAssetPath().equals(path)) used = true;
+					if (entity.getAssetDescriptor().equals(path)) used = true;
 
 				if (used) {
 					usages.count++;
@@ -91,18 +93,4 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 
 		return usages;
 	}
-
-	public Array<FileHandle> getSceneFiles () {
-		Array<FileHandle> files = FileUtils.listRecursive(sceneDir);
-
-		Iterator<FileHandle> it = files.iterator();
-
-		while (it.hasNext())
-			if (it.next().extension().equals("scene") == false) it.remove();
-
-		files.sort((o1, o2) -> o1.path().toLowerCase().compareTo(o2.path().toLowerCase()));
-
-		return files;
-	}
-
 }

@@ -31,32 +31,22 @@
 
 package com.kotcrab.vis.plugin.spine.runtime;
 
-import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.runtime.data.EntityData;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-public class SpineData extends EntityData<SpineEntity> {
-	public SpineAssetDescriptor assetDescriptor;
-	public float x, y;
-	public boolean flipX, flipY;
-	public Color color;
+public class SpineAssetDescriptor implements VisAssetDescriptor {
+	private String atlasPath;
+	private String skeletonPath;
 
-	public float scale;
-
-	@Override
-	public void saveFrom (SpineEntity entity) {
-		id = entity.getId();
-		assetDescriptor = (SpineAssetDescriptor) entity.getAssetDescriptor();
-		x = entity.getX();
-		y = entity.getY();
-		flipX = entity.isFlipX();
-		flipY = entity.isFlipY();
+	public SpineAssetDescriptor (String atlasPath, String skeletonPath) {
+		this.atlasPath = atlasPath;
+		this.skeletonPath = skeletonPath;
 	}
 
-	@Override
-	public void loadTo (SpineEntity entity) {
-		entity.setId(id);
-		entity.setAssetDescriptor(assetDescriptor);
-		entity.setPosition(x, y);
-		entity.setFlip(flipX, flipY);
+	public String getAtlasPath () {
+		return atlasPath;
+	}
+
+	public String getSkeletonPath () {
+		return skeletonPath;
 	}
 }

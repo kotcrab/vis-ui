@@ -154,7 +154,7 @@ public class ObjectGroup extends EntityGroup implements EditorObject {
 
 			if (entity instanceof SpriteObject) {
 				SpriteObject spriteObject = (SpriteObject) entity;
-				SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getAssetPath()));
+				SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getAssetDescriptor()));
 			}
 		}
 	}

@@ -14,30 +14,22 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.data;
+package com.kotcrab.vis.editor.assets;
 
+import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.entity.MusicEntity;
 
-public class MusicData extends EntityData<MusicEntity> {
-	public VisAssetDescriptor assetDescriptor;
-	public boolean playOnStart;
-	public boolean looping;
-	public float volume;
-
+public class BasicAssetUsageAnalyzer implements AssetUsageAnalyzer {
 	@Override
-	public void saveFrom (MusicEntity entity) {
-		assetDescriptor = entity.getAssetDescriptor();
-		playOnStart = entity.isPlayOnStart();
-		volume = entity.getVolume();
-		looping = entity.isLooping();
+	public boolean canAnalyze (VisAssetDescriptor descriptor, String relativePath) {
+		if (relativePath.startsWith("gfx")) return true;
+		if (relativePath.startsWith("font") || relativePath.startsWith("bmpfont")) return true;
+		if (relativePath.startsWith("particle")) return true;
+		return relativePath.startsWith("music");
 	}
 
 	@Override
-	public void loadTo (MusicEntity entity) {
-		entity.setAssetDescriptor(assetDescriptor);
-		entity.setPlayOnStart(playOnStart);
-		entity.setLooping(looping);
-		entity.setVolume(volume);
+	public boolean isUsed (String relativePath, EditorObject entity, VisAssetDescriptor assetDescriptor) {
+		return entity.getAssetDescriptor().equals(relativePath);
 	}
 }

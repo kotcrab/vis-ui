@@ -22,6 +22,7 @@ import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.data.TextData;
 
 public class BmpFontProvider implements FontProvider {
@@ -34,7 +35,9 @@ public class BmpFontProvider implements FontProvider {
 			params.magFilter = TextureFilter.Linear;
 		}
 
-		dependencies.add(new AssetDescriptor(data.fontPath, BitmapFont.class, params));
+		PathAsset pathAsset = (PathAsset) data.assetDescriptor;
+
+		dependencies.add(new AssetDescriptor(pathAsset.getPath(), BitmapFont.class, params));
 	}
 
 	@Override

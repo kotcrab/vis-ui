@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.entity.SoundEntity;
 
 public class SoundObject extends SoundEntity implements EditorObject {
@@ -30,14 +31,14 @@ public class SoundObject extends SoundEntity implements EditorObject {
 	private Rectangle bounds;
 
 	public SoundObject (String soundPath, Sound sound) {
-		super(null, soundPath, sound);
+		super(null, new PathAsset(soundPath), sound);
 		this.icon = Assets.getIconRegion(Icons.SOUND);
 
 		bounds = new Rectangle(x, y, icon.getRegionWidth(), icon.getRegionHeight());
 	}
 
 	public SoundObject (SoundObject other, Sound newSound) {
-		super(other.getId(), other.getAssetPath(), newSound);
+		super(other.getId(), other.getAssetDescriptor(), newSound);
 
 		this.x = other.x;
 		this.y = other.y;

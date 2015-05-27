@@ -57,6 +57,7 @@ public class SceneIOModule extends ProjectModule {
 		ParticleCacheModule particleCache = projectContainer.get(ParticleCacheModule.class);
 
 		kryo = new Kryo();
+		kryo.setClassLoader(Thread.currentThread().getContextClassLoader());
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 

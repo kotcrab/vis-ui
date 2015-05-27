@@ -21,18 +21,19 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.util.gdx.ParticleUtils;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 
 public class ParticleObject extends ParticleEffectEntity implements EditorObject {
 	private Rectangle bounds;
 
 	public ParticleObject (String relativePath, ParticleEffect effect) {
-		super(null, relativePath, effect);
+		super(null, new PathAsset(relativePath), effect);
 		bounds = new Rectangle();
 	}
 
 	public ParticleObject (ParticleObject other, ParticleEffect effect) {
-		super(other.getId(), other.getAssetPath(), effect);
+		super(other.getId(), other.getAssetDescriptor(), effect);
 		bounds = new Rectangle();
 		setPosition(other.getX(), other.getY());
 	}

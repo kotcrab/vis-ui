@@ -46,6 +46,7 @@ import com.kotcrab.vis.editor.module.physicseditor.models.ShapeModel;
 import com.kotcrab.vis.editor.module.physicseditor.util.ShapeUtils;
 import com.kotcrab.vis.editor.module.physicseditor.util.Tracer;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -356,7 +357,7 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 	private boolean isImageValid () {
 		RigidBodyModel model = selectedModel;
 		if (model == null) return false;
-		if (model.getAssetPath() == null) return false;
+		if (model.getAssetDescriptor() == null) return false;
 		return true;
 	}
 
@@ -364,7 +365,8 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 		if (!isImageValid()) return;
 
 		RigidBodyModel model = selectedModel;
-		File file = new File(fileAccess.derelativizeFromAssetsFolder(model.getAssetPath()));
+		PathAsset path = (PathAsset) model.getAssetDescriptor();
+		File file = new File(fileAccess.derelativizeFromAssetsFolder(path.getPath()));
 		Vector2[][] polygons = Tracer.trace(file.getPath(),
 				settings.autoTraceHullTolerance,
 				settings.autoTraceAlphaTolerance,

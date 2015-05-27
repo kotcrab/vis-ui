@@ -34,6 +34,8 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.*;
 import com.kotcrab.vis.runtime.font.BmpFontProvider;
@@ -122,13 +124,15 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 			if (entityData instanceof MusicData) {
 				MusicData musicData = (MusicData) entityData;
-				deps.add(new AssetDescriptor(musicData.musicPath, Music.class));
+				PathAsset path = (PathAsset) musicData.assetDescriptor;
+				deps.add(new AssetDescriptor(path.getPath(), Music.class));
 				continue;
 			}
 
 			if (entityData instanceof SoundData) {
 				SoundData musicData = (SoundData) entityData;
-				deps.add(new AssetDescriptor(musicData.soundPath, Sound.class));
+				PathAsset path = (PathAsset) musicData.assetDescriptor;
+				deps.add(new AssetDescriptor(path.getPath(), Sound.class));
 				continue;
 			}
 
@@ -185,7 +189,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				if (path.startsWith("gfx/")) path = path.substring(path.indexOf('/') + 1, path.lastIndexOf('.'));
 				Sprite newSprite = new Sprite(atlas.findRegion(path));
 
-				SpriteEntity entity = new SpriteEntity(entityData.id, spriteData.texturePath, newSprite);
+				SpriteEntity entity = new SpriteEntity(entityData.id, spriteData.assetDescriptor, newSprite);
 				spriteData.loadTo(entity);
 
 				entities.add(entity);
@@ -196,12 +200,14 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				TextData textData = (TextData) entityData;
 
 				BitmapFont font;
+
 				if (textData.isTrueType)
 					font = manager.get(textData.arbitraryFontName, BitmapFont.class);
-				else
-					font = manager.get(textData.fontPath, BitmapFont.class);
+				else {
+					font = resolveAsset(manager, textData.assetDescriptor, BitmapFont.class);
+				}
 
-				TextEntity entity = new TextEntity(textData.id, font, textData.fontPath, textData.text, textData.fontSize);
+				TextEntity entity = new TextEntity(textData.id, font, textData.assetDescriptor, textData.text, textData.fontSize);
 				textData.loadTo(entity);
 				entities.add(entity);
 				continue;
@@ -209,7 +215,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 			if (entityData instanceof MusicData) {
 				MusicData musicData = (MusicData) entityData;
-				MusicEntity entity = new MusicEntity(musicData.id, musicData.musicPath, manager.get(musicData.musicPath, Music.class));
+				MusicEntity entity = new MusicEntity(musicData.id, musicData.assetDescriptor, resolveAsset(manager, musicData.assetDescriptor, Music.class));
 				musicData.loadTo(entity);
 				entities.add(entity);
 				continue;
@@ -217,7 +223,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 			if (entityData instanceof SoundData) {
 				SoundData soundData = (SoundData) entityData;
-				SoundEntity entity = new SoundEntity(soundData.id, soundData.soundPath, manager.get(soundData.soundPath, Sound.class));
+				SoundEntity entity = new SoundEntity(soundData.id, soundData.assetDescriptor, resolveAsset(manager, soundData.assetDescriptor, Sound.class));
 				soundData.loadTo(entity);
 				entities.add(entity);
 				continue;
@@ -237,12 +243,13 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		for (EntityData entityData : data.entities) {
 			if (entityData instanceof ParticleEffectData) {
 				ParticleEffectData particleData = (ParticleEffectData) entityData;
+				PathAsset path = (PathAsset) particleData.assetDescriptor;
 
-				FileHandle effectFile = resolve(particleData.relativePath);
+				FileHandle effectFile = resolve(path.getPath());
 				ParticleEffect emitter = new ParticleEffect();
 				emitter.load(effectFile, effectFile.parent());
 
-				ParticleEffectEntity entity = new ParticleEffectEntity(particleData.id, particleData.relativePath, emitter);
+				ParticleEffectEntity entity = new ParticleEffectEntity(particleData.id, particleData.assetDescriptor, emitter);
 				particleData.loadTo(entity);
 				scene.getEntities().add(entity);
 			}
@@ -251,6 +258,14 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		scene.onAfterLoad();
 
 		return scene;
+	}
+
+	private <T> T resolveAsset (AssetManager manager, VisAssetDescriptor assetDescriptor, Class<? extends T> clazz) {
+		if (assetDescriptor instanceof PathAsset == false)
+			throw new UnsupportedOperationException("Cannot resolve path for asset descriptor: " + assetDescriptor);
+
+		PathAsset path = (PathAsset) assetDescriptor;
+		return manager.get(path.getPath(), clazz);
 	}
 
 	static public class SceneParameter extends AssetLoaderParameters<Scene> {
