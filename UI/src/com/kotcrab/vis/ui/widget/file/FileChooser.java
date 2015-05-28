@@ -31,14 +31,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.file.internal.FileChooserService;
+import com.kotcrab.vis.ui.widget.file.internal.FileChooserService.RootNameListener;
 
-import javax.swing.filechooser.FileSystemView;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
@@ -47,7 +47,7 @@ import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
 
 /**
  * Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called.
- * FileChooser is heavy widget and should be reused whenever possible.
+ * FileChooser is heavy widget and should be reused whenever possible. Chooser is platform dependent and can be only used on desktop
  * @author Kotcrab
  * @since 0.1.0
  */
@@ -73,8 +73,7 @@ public class FileChooser extends VisWindow {
 	private Array<FileHandle> history = new Array<FileHandle>();
 	private Array<FileHandle> historyForward = new Array<FileHandle>();
 
-	private FileSystemView fileSystemView = FileSystemView.getFileSystemView();
-	private ObjectMap<File, String> fileRootsSystemNameCache = new ObjectMap<File, String>();
+	private FileChooserService chooserService = FileChooserService.getInstance();
 	private Array<ShortcutItem> fileRootsCache = new Array<ShortcutItem>();
 
 	private boolean watchingFilesEnabled = true;
@@ -448,7 +447,7 @@ public class FileChooser extends VisWindow {
 
 	private void showOverwriteQuestion (final Array<FileHandle> filesList) {
 		String text = filesList.size == 1 ? getText(POPUP_FILE_EXIST_OVERWRITE) : getText(POPUP_MULTIPLE_FILE_EXIST_OVERWRITE);
-		DialogUtils.showOptionDialog(getStage(), getText(POPUP_TITLE), text, OptionDialogType.YES_NO, new OptionDialogAdapter(){
+		DialogUtils.showOptionDialog(getStage(), getText(POPUP_TITLE), text, OptionDialogType.YES_NO, new OptionDialogAdapter() {
 			@Override
 			public void yes () {
 				notifyListenerAndCloseDialog(filesList);
@@ -462,8 +461,7 @@ public class FileChooser extends VisWindow {
 		String userHome = System.getProperty("user.home");
 		String userName = System.getProperty("user.name");
 
-		// yes, getHomeDirectory returns path to desktop
-		File desktop = fileSystemView.getHomeDirectory();
+		File desktop = chooserService.getDesktopDirectory();
 		shortcutsTable.add(new ShortcutItem(desktop, getText(DESKTOP), style.iconFolder)).expand().fill().row();
 		shortcutsTable.add(new ShortcutItem(new File(userHome), userName, style.iconFolder)).expand().fill().row();
 
@@ -494,26 +492,19 @@ public class FileChooser extends VisWindow {
 
 		File[] roots = File.listRoots();
 
-		for (File root : roots) {
-			ShortcutItem item;
-
+		for (final File root : roots) {
 			if (mode == Mode.OPEN ? root.canRead() : root.canWrite()) {
-				String displayName;
+				final ShortcutItem item = new ShortcutItem(root, root.toString(), style.iconDrive);
 
-				//call to fileSystemView is very slow, so we cache the system drives names
-				if (fileRootsSystemNameCache.containsKey(root))
-					displayName = fileRootsSystemNameCache.get(root);
-				else {
-					displayName = fileSystemView.getSystemDisplayName(root);
-					fileRootsSystemNameCache.put(root, displayName);
-				}
-
-				if (displayName != null && displayName.equals("/"))
-					item = new ShortcutItem(root, getText(FileChooserText.COMPUTER), style.iconDrive);
-				else if (displayName != null && displayName.equals("") == false)
-					item = new ShortcutItem(root, displayName, style.iconDrive);
-				else
-					item = new ShortcutItem(root, root.toString(), style.iconDrive);
+				chooserService.addListener(root, new RootNameListener() {
+					@Override
+					public void setName (String newName) {
+						if (newName.equals("/"))
+							item.setLabelText(getText(FileChooserText.COMPUTER));
+						else
+							item.setLabelText(newName);
+					}
+				});
 
 				fileRootsCache.add(item);
 			}
@@ -1107,6 +1098,10 @@ public class FileChooser extends VisWindow {
 					}
 				}
 			});
+		}
+
+		public void setLabelText (String text) {
+			name.setText(text);
 		}
 
 		private void select () {
