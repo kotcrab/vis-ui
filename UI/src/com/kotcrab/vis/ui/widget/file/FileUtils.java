@@ -28,7 +28,10 @@ import java.util.Comparator;
 
 /** @author Kotcrab */
 public class FileUtils {
-	public static final String OS = System.getProperty("os.name").toLowerCase();
+	private static final String OS = System.getProperty("os.name").toLowerCase();
+	private static final boolean windows = OS.contains("win");
+	private static final boolean mac = OS.contains("mac");
+	private static final boolean unix = OS.contains("nix") || OS.contains("nux") || OS.contains("aix");
 
 	private static final String[] UNITS = new String[]{"B", "KB", "MB", "GB", "TB", "EB"};
 
@@ -73,15 +76,15 @@ public class FileUtils {
 	}
 
 	public static boolean isWindows () {
-		return (OS.contains("win"));
+		return windows;
 	}
 
 	public static boolean isMac () {
-		return (OS.contains("mac"));
+		return mac;
 	}
 
 	public static boolean isUnix () {
-		return (OS.contains("nix") || OS.contains("nux") || OS.contains("aix"));
+		return unix;
 	}
 
 	public static FileHandle toFileHandle (File file) {

@@ -36,8 +36,8 @@ import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
-import com.kotcrab.vis.ui.widget.file.internal.FileChooserService;
-import com.kotcrab.vis.ui.widget.file.internal.FileChooserService.RootNameListener;
+import com.kotcrab.vis.ui.widget.file.internal.FileChooserWinService;
+import com.kotcrab.vis.ui.widget.file.internal.FileChooserWinService.RootNameListener;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -73,7 +73,7 @@ public class FileChooser extends VisWindow {
 	private Array<FileHandle> history = new Array<FileHandle>();
 	private Array<FileHandle> historyForward = new Array<FileHandle>();
 
-	private FileChooserService chooserService = FileChooserService.getInstance();
+	private FileChooserWinService chooserWinService = FileChooserWinService.getInstance();
 	private Array<ShortcutItem> fileRootsCache = new Array<ShortcutItem>();
 
 	private boolean watchingFilesEnabled = true;
@@ -461,9 +461,9 @@ public class FileChooser extends VisWindow {
 
 		String userHome = System.getProperty("user.home");
 		String userName = System.getProperty("user.name");
+		File userDesktop = new File(userHome + "/Desktop");
 
-		File desktop = chooserService.getDesktopDirectory();
-		shortcutsTable.add(new ShortcutItem(desktop, getText(DESKTOP), style.iconFolder)).expand().fill().row();
+		if(userDesktop.exists()) shortcutsTable.add(new ShortcutItem(userDesktop, getText(DESKTOP), style.iconFolder)).expand().fill().row();
 		shortcutsTable.add(new ShortcutItem(new File(userHome), userName, style.iconFolder)).expand().fill().row();
 
 		shortcutsTable.addSeparator();
@@ -495,17 +495,21 @@ public class FileChooser extends VisWindow {
 
 		for (final File root : roots) {
 			if (mode == Mode.OPEN ? root.canRead() : root.canWrite()) {
-				final ShortcutItem item = new ShortcutItem(root, root.toString(), style.iconDrive);
+				String initialName = root.toString();
 
-				chooserService.addListener(root, new RootNameListener() {
-					@Override
-					public void setName (String newName) {
-						if (newName.equals("/"))
-							item.setLabelText(getText(FileChooserText.COMPUTER));
-						else
+				if(initialName.equals("/"))
+					initialName = getText(FileChooserText.COMPUTER);
+
+				final ShortcutItem item = new ShortcutItem(root, initialName, style.iconDrive);
+
+				if(FileUtils.isWindows()) {
+					chooserWinService.addListener(root, new RootNameListener() {
+						@Override
+						public void setName (String newName) {
 							item.setLabelText(newName);
-					}
-				});
+						}
+					});
+				}
 
 				fileRootsCache.add(item);
 			}

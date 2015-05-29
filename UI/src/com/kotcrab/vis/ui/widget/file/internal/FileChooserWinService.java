@@ -30,24 +30,23 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class FileChooserService {
-	private static FileChooserService instance;
+public class FileChooserWinService {
+	private static FileChooserWinService instance;
 
-	private File desktopDirectory;
 	private ObjectMap<File, String> nameCache = new ObjectMap<File, String>();
 
 	private Map<File, ListenerSet> listeners = new HashMap<File, ListenerSet>();
 
-	public static synchronized FileChooserService getInstance () {
+	public static synchronized FileChooserWinService getInstance () {
+		if(FileUtils.isWindows() == false) return null;
+
 		if (instance == null)
-			instance = new FileChooserService();
+			instance = new FileChooserWinService();
 
 		return instance;
 	}
 
-	protected FileChooserService () {
-		desktopDirectory = getDesktop();
-
+	protected FileChooserWinService () {
 		ExecutorService pool = Executors.newFixedThreadPool(3, new ThreadFactory() {
 			final AtomicLong count = new AtomicLong(0);
 
@@ -102,19 +101,6 @@ public class FileChooserService {
 		}
 
 		set.add(listener);
-	}
-
-	public File getDesktopDirectory () {
-		return desktopDirectory;
-	}
-
-	private File getDesktop () {
-		if (FileUtils.isWindows()) {
-			File[] roots = (File[]) ShellFolder.get("roots");
-			return (roots.length == 0) ? null : roots[0];
-		} else
-			return new File(System.getProperty("user.home"));
-
 	}
 
 	private String getSystemDisplayName (File f) {
