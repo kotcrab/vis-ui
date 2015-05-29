@@ -97,6 +97,7 @@ public class FileChooser extends VisWindow {
 	private VisImageButton forwardButton;
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextField;
+	private VisTextButton confirmButton;
 
 	private FilePopupMenu fileMenu;
 
@@ -309,7 +310,7 @@ public class FileChooser extends VisWindow {
 
 	private void createBottomButtons () {
 		VisTextButton cancelButton = new VisTextButton(getText(CANCEL));
-		VisTextButton confirmButton = new VisTextButton(mode == Mode.OPEN ? getText(OPEN) : getText(SAVE));
+		confirmButton = new VisTextButton(mode == Mode.OPEN ? getText(OPEN) : getText(SAVE));
 
 		VisTable buttonTable = new VisTable(true);
 		buttonTable.defaults().minWidth(70).right();
@@ -661,6 +662,7 @@ public class FileChooser extends VisWindow {
 
 	public void setMode (Mode mode) {
 		this.mode = mode;
+		confirmButton.setText(mode == Mode.OPEN ? getText(OPEN) : getText(SAVE));
 	}
 
 	public void setDirectory (String directory) {
