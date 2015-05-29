@@ -16,7 +16,7 @@ To install formatter in Eclipse simply import xml file from settings window.
 
 To install formatter in IntelliJ IDEA copy xml to config directory, restart IDE, then select formatter from settings.  
 Mac OS X: `~/Library/Preferences/.IdeaIC14/codestyles/`  
-Linux: `~/.IdeaIC14/config/codeStyles/`  
+Linux: `~/.IdeaIC14/config/codestyles/`  
 Windows: `<User home>\.IdeaIC14\config\codeStyles\`
 
 `.IdeaIC14` directory may be named different depending on your IDEA version
