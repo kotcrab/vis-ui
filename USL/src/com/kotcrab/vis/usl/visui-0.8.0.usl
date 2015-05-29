@@ -1,4 +1,4 @@
-//VisUI 0.7.7 style
+//VisUI 0.8.0 style (latest)
 //This file is kept here so it is easier to include and expand it in other USL files (include <visui>)
 
 #com.badlogic.gdx.graphics.g2d.BitmapFont: {
