@@ -60,7 +60,7 @@ public class SpineSupport implements EntitySupport<SpineData, SpineEntity> {
 	@Override
 	public SpineEntity getInstanceFromData (AssetManager manager, SpineData data) {
 		SkeletonData skeletonData = manager.get(data.assetDescriptor.getSkeletonPath(), SkeletonData.class);
-		SpineEntity entity = new SpineEntity(data.id, data.assetDescriptor, skeletonData);
+		SpineEntity entity = new SpineEntity(data.id, skeletonData);
 		data.loadTo(entity);
 		return entity;
 	}

@@ -20,6 +20,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.util.gdx.SpriteUtils;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.entity.EntityGroup;
 
@@ -157,5 +158,20 @@ public class ObjectGroup extends EntityGroup implements EditorObject {
 				SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getAssetDescriptor()));
 			}
 		}
+	}
+
+	@Override
+	public VisAssetDescriptor getAssetDescriptor () {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setAssetDescriptor (VisAssetDescriptor assetDescriptor) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+		return false;
 	}
 }

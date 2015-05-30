@@ -189,7 +189,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				if (path.startsWith("gfx/")) path = path.substring(path.indexOf('/') + 1, path.lastIndexOf('.'));
 				Sprite newSprite = new Sprite(atlas.findRegion(path));
 
-				SpriteEntity entity = new SpriteEntity(entityData.id, spriteData.assetDescriptor, newSprite);
+				SpriteEntity entity = new SpriteEntity(entityData.id, newSprite);
 				spriteData.loadTo(entity);
 
 				entities.add(entity);
@@ -207,7 +207,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 					font = resolveAsset(manager, textData.assetDescriptor, BitmapFont.class);
 				}
 
-				TextEntity entity = new TextEntity(textData.id, font, textData.assetDescriptor, textData.text, textData.fontSize);
+				TextEntity entity = new TextEntity(textData.id, font, textData.text, textData.fontSize);
 				textData.loadTo(entity);
 				entities.add(entity);
 				continue;
@@ -215,7 +215,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 			if (entityData instanceof MusicData) {
 				MusicData musicData = (MusicData) entityData;
-				MusicEntity entity = new MusicEntity(musicData.id, musicData.assetDescriptor, resolveAsset(manager, musicData.assetDescriptor, Music.class));
+				MusicEntity entity = new MusicEntity(musicData.id, resolveAsset(manager, musicData.assetDescriptor, Music.class));
 				musicData.loadTo(entity);
 				entities.add(entity);
 				continue;
@@ -223,7 +223,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 			if (entityData instanceof SoundData) {
 				SoundData soundData = (SoundData) entityData;
-				SoundEntity entity = new SoundEntity(soundData.id, soundData.assetDescriptor, resolveAsset(manager, soundData.assetDescriptor, Sound.class));
+				SoundEntity entity = new SoundEntity(soundData.id, resolveAsset(manager, soundData.assetDescriptor, Sound.class));
 				soundData.loadTo(entity);
 				entities.add(entity);
 				continue;
@@ -249,7 +249,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				ParticleEffect emitter = new ParticleEffect();
 				emitter.load(effectFile, effectFile.parent());
 
-				ParticleEffectEntity entity = new ParticleEffectEntity(particleData.id, particleData.assetDescriptor, emitter);
+				ParticleEffectEntity entity = new ParticleEffectEntity(particleData.id, emitter);
 				particleData.loadTo(entity);
 				scene.getEntities().add(entity);
 			}

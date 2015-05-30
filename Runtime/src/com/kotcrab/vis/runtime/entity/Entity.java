@@ -17,11 +17,8 @@
 package com.kotcrab.vis.runtime.entity;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 public abstract class Entity {
-	private VisAssetDescriptor assetDescriptor;
 	private String id;
 
 	public Entity (String id) {
@@ -43,15 +40,4 @@ public abstract class Entity {
 	public void onAfterLoad () {
 
 	}
-
-	public VisAssetDescriptor getAssetDescriptor () {
-		return assetDescriptor;
-	}
-
-	public void setAssetDescriptor (VisAssetDescriptor assetDescriptor) {
-		if (isAssetsDescriptorSupported(assetDescriptor) == false) throw new UnsupportedAssetDescriptorException(assetDescriptor);
-		this.assetDescriptor = assetDescriptor;
-	}
-
-	protected abstract boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor);
 }

@@ -16,13 +16,22 @@
 
 package com.kotcrab.vis.runtime.data;
 
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.entity.Entity;
+
 /** Base class for all entities data inside scene */
-public abstract class EntityData<T> {
+public abstract class EntityData<T extends Entity> {
 	public String id;
+	public VisAssetDescriptor assetDescriptor;
 
 	/** Saves all values from this entity to instance of this class */
-	public abstract void saveFrom (T entity);
+	public void saveFrom (T entity, VisAssetDescriptor assetDescriptor) {
+		this.id = entity.getId();
+		this.assetDescriptor = assetDescriptor;
+	}
 
 	/** Loads all possible values from this entity to instance of this class. If value can't be loaded it should be ignored. */
-	public abstract void loadTo (T entity);
+	public void loadTo (T entity) {
+		entity.setId(id);
+	}
 }

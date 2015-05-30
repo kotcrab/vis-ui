@@ -23,23 +23,27 @@ import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.SoundEntity;
 
 public class SoundObject extends SoundEntity implements EditorObject {
+	private VisAssetDescriptor assetDescriptor;
 	private float x, y;
 	private transient TextureRegion icon;
 	private Rectangle bounds;
 
 	public SoundObject (String soundPath, Sound sound) {
-		super(null, new PathAsset(soundPath), sound);
+		super(null, sound);
+		setAssetDescriptor(new PathAsset(soundPath));
 		this.icon = Assets.getIconRegion(Icons.SOUND);
 
 		bounds = new Rectangle(x, y, icon.getRegionWidth(), icon.getRegionHeight());
 	}
 
 	public SoundObject (SoundObject other, Sound newSound) {
-		super(other.getId(), other.getAssetDescriptor(), newSound);
+		super(other.getId(), newSound);
 
+		this.assetDescriptor = other.assetDescriptor;
 		this.x = other.x;
 		this.y = other.y;
 		this.icon = other.icon;
@@ -103,5 +107,21 @@ public class SoundObject extends SoundEntity implements EditorObject {
 	@Override
 	public Rectangle getBoundingRectangle () {
 		return bounds;
+	}
+
+	@Override
+	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+		return assetDescriptor instanceof PathAsset;
+	}
+
+	@Override
+	public VisAssetDescriptor getAssetDescriptor () {
+		return assetDescriptor;
+	}
+
+	@Override
+	public void setAssetDescriptor (VisAssetDescriptor assetDescriptor) {
+		checkAssetDescriptor(assetDescriptor);
+		this.assetDescriptor = assetDescriptor;
 	}
 }

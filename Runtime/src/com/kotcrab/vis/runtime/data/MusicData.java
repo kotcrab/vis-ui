@@ -20,14 +20,13 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.MusicEntity;
 
 public class MusicData extends EntityData<MusicEntity> {
-	public VisAssetDescriptor assetDescriptor;
 	public boolean playOnStart;
 	public boolean looping;
 	public float volume;
 
 	@Override
-	public void saveFrom (MusicEntity entity) {
-		assetDescriptor = entity.getAssetDescriptor();
+	public void saveFrom (MusicEntity entity, VisAssetDescriptor assetDescriptor) {
+		super.saveFrom(entity, assetDescriptor);
 		playOnStart = entity.isPlayOnStart();
 		volume = entity.getVolume();
 		looping = entity.isLooping();
@@ -35,7 +34,7 @@ public class MusicData extends EntityData<MusicEntity> {
 
 	@Override
 	public void loadTo (MusicEntity entity) {
-		entity.setAssetDescriptor(assetDescriptor);
+		super.loadTo(entity);
 		entity.setPlayOnStart(playOnStart);
 		entity.setLooping(looping);
 		entity.setVolume(volume);

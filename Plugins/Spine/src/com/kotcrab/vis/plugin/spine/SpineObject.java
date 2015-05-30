@@ -39,21 +39,41 @@ import com.esotericsoftware.spine.attachments.*;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.SpineEntity;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 public class SpineObject extends SpineEntity implements EditorObject {
+	private VisAssetDescriptor assetDescriptor;
 	private boolean previewInEditor;
 	private Rectangle bounds;
 
 	public SpineObject (String atlasPath, String skeletonPath, SkeletonData skeletonData) {
-		super(null, new SpineAssetDescriptor(atlasPath, skeletonPath), skeletonData);
+		super(null, skeletonData);
 		bounds = new Rectangle();
+		setAssetDescriptor(new SpineAssetDescriptor(atlasPath, skeletonPath));
 	}
 
 	public SpineObject (SpineObject original) {
 		super(original);
 		this.previewInEditor = original.previewInEditor;
 		this.bounds = original.bounds;
+		this.assetDescriptor = original.assetDescriptor;
 		updateAnimation();
+	}
+
+	@Override
+	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+		return assetDescriptor instanceof SpineAssetDescriptor;
+	}
+
+	@Override
+	public VisAssetDescriptor getAssetDescriptor () {
+		return assetDescriptor;
+	}
+
+	@Override
+	public void setAssetDescriptor (VisAssetDescriptor assetDescriptor) {
+		checkAssetDescriptor(assetDescriptor);
+		this.assetDescriptor = assetDescriptor;
 	}
 
 	@Override

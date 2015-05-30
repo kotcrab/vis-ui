@@ -23,27 +23,31 @@ import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.MusicEntity;
 
 public class MusicObject extends MusicEntity implements EditorObject {
+	private VisAssetDescriptor assetDescriptor;
 	private float x, y;
 	private transient TextureRegion icon;
 	private Rectangle bounds;
 
 	public MusicObject (String musicPath, Music music) {
-		super(null, new PathAsset(musicPath), music);
+		super(null, music);
 		this.icon = Assets.getIconRegion(Icons.MUSIC);
 
 		bounds = new Rectangle(x, y, icon.getRegionWidth(), icon.getRegionHeight());
+		setAssetDescriptor(new PathAsset(musicPath));
 	}
 
 	public MusicObject (MusicObject other, Music newMusic) {
-		super(other.getId(), other.getAssetDescriptor(), newMusic);
+		super(other.getId(), newMusic);
 
 		this.x = other.x;
 		this.y = other.y;
 		this.icon = other.icon;
 		this.bounds = new Rectangle();
+		this.assetDescriptor = other.assetDescriptor;
 		calcBounds();
 	}
 
@@ -107,5 +111,21 @@ public class MusicObject extends MusicEntity implements EditorObject {
 	@Override
 	public Rectangle getBoundingRectangle () {
 		return bounds;
+	}
+
+	@Override
+	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+		return assetDescriptor instanceof PathAsset;
+	}
+
+	@Override
+	public VisAssetDescriptor getAssetDescriptor () {
+		return assetDescriptor;
+	}
+
+	@Override
+	public void setAssetDescriptor (VisAssetDescriptor assetDescriptor) {
+		checkAssetDescriptor(assetDescriptor);
+		this.assetDescriptor = assetDescriptor;
 	}
 }

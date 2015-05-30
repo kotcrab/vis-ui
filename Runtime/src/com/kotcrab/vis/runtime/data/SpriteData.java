@@ -21,7 +21,6 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
 
 public class SpriteData extends EntityData<SpriteEntity> {
-	public VisAssetDescriptor assetDescriptor;
 	public String textureAtlas;
 	public String texturePath;
 
@@ -34,9 +33,8 @@ public class SpriteData extends EntityData<SpriteEntity> {
 	public boolean flipX, flipY;
 
 	@Override
-	public void saveFrom (SpriteEntity sprite) {
-		assetDescriptor = sprite.getAssetDescriptor();
-
+	public void saveFrom (SpriteEntity sprite, VisAssetDescriptor assetDescriptor) {
+		super.saveFrom(sprite, assetDescriptor);
 		x = sprite.getX();
 		y = sprite.getY();
 
@@ -59,7 +57,6 @@ public class SpriteData extends EntityData<SpriteEntity> {
 
 	@Override
 	public void loadTo (SpriteEntity sprite) {
-		sprite.setAssetDescriptor(assetDescriptor);
 		sprite.setPosition(x, y);
 		sprite.setSize(width, height);
 		sprite.setOrigin(originX, originY);

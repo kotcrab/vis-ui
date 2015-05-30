@@ -19,29 +19,21 @@ package com.kotcrab.vis.runtime.entity;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.badlogic.gdx.utils.Disposable;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 public class MusicEntity extends Entity implements Disposable {
 	protected transient Music music;
 
 	private boolean playOnStart;
 
-	public MusicEntity (String id, VisAssetDescriptor assetDescriptor, Music music) {
+	public MusicEntity (String id, Music music) {
 		super(id);
 		this.music = music;
-		setAssetDescriptor(assetDescriptor);
 	}
 
 	@Override
 	public void onAfterLoad () {
 		if (playOnStart)
 			play();
-	}
-
-	@Override
-	protected boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
-		return assetDescriptor instanceof PathAsset;
 	}
 
 	public boolean isPlayOnStart () {

@@ -20,13 +20,12 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 
 public class ParticleEffectData extends EntityData<ParticleEffectEntity> {
-	public VisAssetDescriptor assetDescriptor;
 	public float x, y;
 	public boolean active;
 
 	@Override
-	public void saveFrom (ParticleEffectEntity entity) {
-		assetDescriptor = entity.getAssetDescriptor();
+	public void saveFrom (ParticleEffectEntity entity, VisAssetDescriptor assetDescriptor) {
+		super.saveFrom(entity, assetDescriptor);
 		x = entity.getX();
 		y = entity.getY();
 		active = entity.isActive();
@@ -34,7 +33,7 @@ public class ParticleEffectData extends EntityData<ParticleEffectEntity> {
 
 	@Override
 	public void loadTo (ParticleEffectEntity entity) {
-		entity.setAssetDescriptor(assetDescriptor);
+		super.loadTo(entity);
 		entity.setPosition(x, y);
 		entity.setActive(active);
 	}

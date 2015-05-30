@@ -39,7 +39,8 @@ public class TextData extends EntityData<TextEntity> {
 	public boolean isUsesDistanceField;
 
 	@Override
-	public void saveFrom (TextEntity entity) {
+	public void saveFrom (TextEntity entity, VisAssetDescriptor assetDescriptor) {
+		super.saveFrom(entity, assetDescriptor);
 		x = entity.getX();
 		y = entity.getY();
 
@@ -54,11 +55,10 @@ public class TextData extends EntityData<TextEntity> {
 		tint = entity.getColor().cpy();
 
 		text = entity.getText();
-		assetDescriptor = entity.getAssetDescriptor();
 		fontSize = entity.getFontSize();
 		autoSetOriginToCenter = entity.isAutoSetOriginToCenter();
 
-		PathAsset asset = (PathAsset) entity.getAssetDescriptor();
+		PathAsset asset = (PathAsset) assetDescriptor;
 		arbitraryFontName = String.valueOf(fontSize) + "." + asset.getPath();
 
 		isTrueType = entity.isTrueType();
@@ -75,7 +75,6 @@ public class TextData extends EntityData<TextEntity> {
 
 		text.setText(this.text);
 		//text.setFontSize(fontSize); //font size must be handled manually from SceneLoader because it is not a public property for TextEntity
-		text.setAssetDescriptor(assetDescriptor);
 		text.setAutoSetOriginToCenter(autoSetOriginToCenter);
 
 		text.setDistanceFieldShaderEnabled(isUsesDistanceField);

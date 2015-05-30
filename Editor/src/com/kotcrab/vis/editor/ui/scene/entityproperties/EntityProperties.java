@@ -43,6 +43,7 @@ import com.kotcrab.vis.editor.util.FloatValue;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.runtime.data.*;
+import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
@@ -488,6 +489,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		}
 	}
 
+	//introducing the most unsafe class ever
 	private class SnapshotUndoableAction implements UndoableAction {
 		EditorObject entity;
 		EntityData dataSnapshot;
@@ -498,11 +500,11 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			this.dataSnapshot = getDataForEntity(entity);
 			this.dataSnapshot2 = getDataForEntity(entity);
 
-			dataSnapshot.saveFrom(entity);
+			dataSnapshot.saveFrom((Entity) entity, entity.getAssetDescriptor());
 		}
 
 		public void takeSecondSnapshot () {
-			dataSnapshot2.saveFrom(entity);
+			dataSnapshot2.saveFrom((Entity) entity, entity.getAssetDescriptor());
 		}
 
 		public boolean isSnapshotsEquals () {
@@ -511,20 +513,20 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 		@Override
 		public void execute () {
-			dataSnapshot.saveFrom(entity);
-			dataSnapshot2.loadTo(entity);
+			dataSnapshot.saveFrom((Entity) entity, entity.getAssetDescriptor());
+			dataSnapshot2.loadTo((Entity) entity);
 		}
 
 		@Override
 		public void undo () {
-			dataSnapshot2.saveFrom(entity);
-			dataSnapshot.loadTo(entity);
+			dataSnapshot2.saveFrom((Entity) entity, entity.getAssetDescriptor());
+			dataSnapshot.loadTo((Entity) entity);
 		}
 
 		private EntityData getDataForEntity (EditorObject entity) {
 			if (entity instanceof SpriteObject) return new SpriteData();
 			if (entity instanceof TextObject) return new TextObjectData();
-			if (entity instanceof ParticleObject) return new ParticleEffectData();
+			if (entity instanceof ParticleEffectObject) return new ParticleEffectData();
 			if (entity instanceof MusicObject) return new MusicData();
 			if (entity instanceof SoundObject) return new SoundData();
 			if (entity instanceof ObjectGroup) return new ObjectGroupData();

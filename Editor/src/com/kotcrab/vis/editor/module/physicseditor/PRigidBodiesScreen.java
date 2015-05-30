@@ -44,11 +44,8 @@ import com.kotcrab.vis.editor.module.physicseditor.models.PolygonModel;
 import com.kotcrab.vis.editor.module.physicseditor.models.RigidBodyModel;
 import com.kotcrab.vis.editor.module.physicseditor.models.ShapeModel;
 import com.kotcrab.vis.editor.module.physicseditor.util.ShapeUtils;
-import com.kotcrab.vis.editor.module.physicseditor.util.Tracer;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.runtime.assets.PathAsset;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -357,7 +354,7 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 	private boolean isImageValid () {
 		RigidBodyModel model = selectedModel;
 		if (model == null) return false;
-		if (model.getAssetDescriptor() == null) return false;
+		//if (model.getAssetDescriptor() == null) return false;
 		return true;
 	}
 
@@ -365,23 +362,23 @@ public class PRigidBodiesScreen extends PhysicsEditorModule implements EventList
 		if (!isImageValid()) return;
 
 		RigidBodyModel model = selectedModel;
-		PathAsset path = (PathAsset) model.getAssetDescriptor();
-		File file = new File(fileAccess.derelativizeFromAssetsFolder(path.getPath()));
-		Vector2[][] polygons = Tracer.trace(file.getPath(),
-				settings.autoTraceHullTolerance,
-				settings.autoTraceAlphaTolerance,
-				settings.autoTraceMultiPartDetection,
-				settings.autoTraceHoleDetection);
+		//PathAsset path = (PathAsset) model.getAssetDescriptor(); //FIXME physics editor resource loading
+		//File file = new File(fileAccess.derelativizeFromAssetsFolder(path.getPath()));
+//		Vector2[][] polygons = Tracer.trace(file.getPath(),
+//				settings.autoTraceHullTolerance,
+//				settings.autoTraceAlphaTolerance,
+//				settings.autoTraceMultiPartDetection,
+//				settings.autoTraceHoleDetection);
 
-		if (polygons == null) return;
-
-		for (Vector2[] polygon : polygons) {
-			if (polygon.length < 3) continue;
-			ShapeModel shape = new ShapeModel(ShapeModel.Type.POLYGON);
-			shape.getVertices().addAll(polygon);
-			shape.close();
-			model.getShapes().add(shape);
-		}
+//		if (polygons == null) return;
+//
+//		for (Vector2[] polygon : polygons) {
+//			if (polygon.length < 3) continue;
+//			ShapeModel shape = new ShapeModel(ShapeModel.Type.POLYGON);
+//			shape.getVertices().addAll(polygon);
+//			shape.close();
+//			model.getShapes().add(shape);
+//		}
 
 		model.computePhysics(settings.polygonizer);
 		buildBody();

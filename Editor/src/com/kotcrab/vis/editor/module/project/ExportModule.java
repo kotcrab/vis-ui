@@ -213,7 +213,7 @@ public class ExportModule extends ProjectModule {
 				SpriteObject obj = (SpriteObject) entity;
 
 				SpriteData data = new SpriteData();
-				data.saveFrom(obj);
+				data.saveFrom(obj, obj.getAssetDescriptor());
 
 				data.id = obj.getId();
 
@@ -238,18 +238,18 @@ public class ExportModule extends ProjectModule {
 
 				TextData data = new TextData();
 				data.id = obj.getId();
-				data.saveFrom(obj);
+				data.saveFrom(obj, obj.getAssetDescriptor());
 
 				entities.add(data);
 				return true;
 			}
 
-			if (entity instanceof ParticleObject) {
-				ParticleObject obj = (ParticleObject) entity;
+			if (entity instanceof ParticleEffectObject) {
+				ParticleEffectObject obj = (ParticleEffectObject) entity;
 
 				ParticleEffectData data = new ParticleEffectData();
 				data.id = obj.getId();
-				data.saveFrom(obj);
+				data.saveFrom(obj, obj.getAssetDescriptor());
 
 				entities.add(data);
 				return true;
@@ -260,7 +260,7 @@ public class ExportModule extends ProjectModule {
 
 				MusicData data = new MusicData();
 				data.id = obj.getId();
-				data.saveFrom(obj);
+				data.saveFrom(obj, obj.getAssetDescriptor());
 
 				entities.add(data);
 				return true;
@@ -271,7 +271,7 @@ public class ExportModule extends ProjectModule {
 
 				SoundData data = new SoundData();
 				data.id = obj.getId();
-				data.saveFrom(obj);
+				data.saveFrom(obj, obj.getAssetDescriptor());
 
 				entities.add(data);
 				return true;

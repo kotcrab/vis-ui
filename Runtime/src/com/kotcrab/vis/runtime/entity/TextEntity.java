@@ -24,8 +24,6 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /**
  * Text that you can scale, rotate, change color itp. Supports distance field fonts
@@ -51,13 +49,12 @@ public class TextEntity extends Entity {
 	private Matrix4 translationMatrix;
 	protected CharSequence text;
 
-	public TextEntity (BitmapFont bitmapFont, String id, VisAssetDescriptor assetDescriptor, String text) {
-		this(id, bitmapFont, assetDescriptor, text, BITMAP_FONT_SIZE);
+	public TextEntity (BitmapFont bitmapFont, String id, String text) {
+		this(id, bitmapFont, text, BITMAP_FONT_SIZE);
 	}
 
-	public TextEntity (String id, BitmapFont bitmapFont, VisAssetDescriptor assetDescriptor, String text, int fontSize) {
+	public TextEntity (String id, BitmapFont bitmapFont, String text, int fontSize) {
 		super(id);
-		setAssetDescriptor(assetDescriptor);
 		this.text = text;
 		this.fontSize = fontSize;
 
@@ -75,11 +72,6 @@ public class TextEntity extends Entity {
 		cache.draw(spriteBatch);
 		spriteBatch.flush();
 		spriteBatch.setTransformMatrix(idtMatrix);
-	}
-
-	@Override
-	protected boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
-		return assetDescriptor instanceof PathAsset;
 	}
 
 	private void translate () {

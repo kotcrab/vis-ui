@@ -17,6 +17,7 @@
 package com.kotcrab.vis.runtime.data;
 
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.EntityGroup;
 
 public class EntityGroupData extends EntityData<EntityGroup> {
@@ -30,7 +31,7 @@ public class EntityGroupData extends EntityData<EntityGroup> {
 	}
 
 	@Override
-	public void saveFrom (EntityGroup entity) {
+	public void saveFrom (EntityGroup entity, VisAssetDescriptor assetDescriptor) {
 		throw new UnsupportedOperationException();
 	}
 

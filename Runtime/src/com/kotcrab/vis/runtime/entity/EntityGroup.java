@@ -18,7 +18,6 @@ package com.kotcrab.vis.runtime.entity;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 public class EntityGroup extends Entity {
 	protected Array<Entity> entities = new Array<Entity>();
@@ -31,21 +30,6 @@ public class EntityGroup extends Entity {
 	public void render (Batch batch) {
 		for (Entity entity : entities)
 			entity.render(batch);
-	}
-
-	@Override
-	public VisAssetDescriptor getAssetDescriptor () {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void setAssetDescriptor (VisAssetDescriptor assetDescriptor) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	protected boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
-		return false;
 	}
 
 	public void addEntity (Entity entity) {

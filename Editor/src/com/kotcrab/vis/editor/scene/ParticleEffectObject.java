@@ -22,18 +22,22 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.util.gdx.ParticleUtils;
 import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 
-public class ParticleObject extends ParticleEffectEntity implements EditorObject {
+public class ParticleEffectObject extends ParticleEffectEntity implements EditorObject {
+	private VisAssetDescriptor assetDescriptor;
 	private Rectangle bounds;
 
-	public ParticleObject (String relativePath, ParticleEffect effect) {
-		super(null, new PathAsset(relativePath), effect);
+	public ParticleEffectObject (String relativePath, ParticleEffect effect) {
+		super(null, effect);
+		setAssetDescriptor(new PathAsset(relativePath));
 		bounds = new Rectangle();
 	}
 
-	public ParticleObject (ParticleObject other, ParticleEffect effect) {
-		super(other.getId(), other.getAssetDescriptor(), effect);
+	public ParticleEffectObject (ParticleEffectObject other, ParticleEffect effect) {
+		super(other.getId(), effect);
+		this.assetDescriptor = other.assetDescriptor;
 		bounds = new Rectangle();
 		setPosition(other.getX(), other.getY());
 	}
@@ -97,5 +101,21 @@ public class ParticleObject extends ParticleEffectEntity implements EditorObject
 		} finally {
 			super.finalize();
 		}
+	}
+
+	@Override
+	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+		return assetDescriptor instanceof PathAsset;
+	}
+
+	@Override
+	public VisAssetDescriptor getAssetDescriptor () {
+		return assetDescriptor;
+	}
+
+	@Override
+	public void setAssetDescriptor (VisAssetDescriptor assetDescriptor) {
+		checkAssetDescriptor(assetDescriptor);
+		this.assetDescriptor = assetDescriptor;
 	}
 }

@@ -21,9 +21,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 public interface EditorObject extends Disposable {
-
 	String getId ();
 
 	void setId (String id);
@@ -139,4 +139,13 @@ public interface EditorObject extends Disposable {
 	}
 
 	VisAssetDescriptor getAssetDescriptor ();
+
+	void setAssetDescriptor (VisAssetDescriptor assetDescriptor);
+
+	default void checkAssetDescriptor (VisAssetDescriptor assetDescriptor) {
+		if (isAssetsDescriptorSupported(assetDescriptor) == false)
+			throw new UnsupportedAssetDescriptorException(assetDescriptor);
+	}
+
+	boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor);
 }

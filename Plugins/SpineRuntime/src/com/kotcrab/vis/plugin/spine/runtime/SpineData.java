@@ -32,6 +32,7 @@
 package com.kotcrab.vis.plugin.spine.runtime;
 
 import com.badlogic.gdx.graphics.Color;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.data.EntityData;
 
 public class SpineData extends EntityData<SpineEntity> {
@@ -43,9 +44,9 @@ public class SpineData extends EntityData<SpineEntity> {
 	public float scale;
 
 	@Override
-	public void saveFrom (SpineEntity entity) {
+	public void saveFrom (SpineEntity entity, VisAssetDescriptor assetDescriptor) {
+		super.saveFrom(entity, assetDescriptor);
 		id = entity.getId();
-		assetDescriptor = (SpineAssetDescriptor) entity.getAssetDescriptor();
 		x = entity.getX();
 		y = entity.getY();
 		flipX = entity.isFlipX();
@@ -55,7 +56,6 @@ public class SpineData extends EntityData<SpineEntity> {
 	@Override
 	public void loadTo (SpineEntity entity) {
 		entity.setId(id);
-		entity.setAssetDescriptor(assetDescriptor);
 		entity.setPosition(x, y);
 		entity.setFlip(flipX, flipY);
 	}

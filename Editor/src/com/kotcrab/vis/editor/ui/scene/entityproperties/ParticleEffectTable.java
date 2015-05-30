@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorObject;
-import com.kotcrab.vis.editor.scene.ParticleObject;
+import com.kotcrab.vis.editor.scene.ParticleEffectObject;
 import com.kotcrab.vis.ui.widget.Tooltip;
 
 import static com.kotcrab.vis.editor.util.EntityUtils.setCommonCheckBoxState;
@@ -41,21 +41,21 @@ class ParticleEffectTable extends SpecificObjectTable {
 
 	@Override
 	public boolean isSupported (EditorObject entity) {
-		return entity instanceof ParticleObject;
+		return entity instanceof ParticleEffectObject;
 	}
 
 	@Override
 	public void updateUIValues () {
 		Array<EditorObject> entities = properties.getEntities();
 
-		setCommonCheckBoxState(entities, activeCheck, entity -> ((ParticleObject) entity).isActive());
+		setCommonCheckBoxState(entities, activeCheck, entity -> ((ParticleEffectObject) entity).isActive());
 	}
 
 	@Override
 	public void setValuesToEntities () {
 		Array<EditorObject> entities = properties.getEntities();
 		for (EditorObject entity : entities) {
-			ParticleObject obj = (ParticleObject) entity;
+			ParticleEffectObject obj = (ParticleEffectObject) entity;
 
 			if (activeCheck.isIndeterminate() == false) obj.setActive(activeCheck.isChecked());
 		}

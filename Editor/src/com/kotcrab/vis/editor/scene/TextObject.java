@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.kotcrab.vis.editor.module.project.BMPEditorFont;
 import com.kotcrab.vis.editor.module.project.EditorFont;
 import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 
 /**
@@ -28,6 +29,7 @@ import com.kotcrab.vis.runtime.entity.TextEntity;
  * @author Kotcrab
  */
 public class TextObject extends TextEntity implements EditorObject {
+	private VisAssetDescriptor assetDescriptor;
 	private transient EditorFont font;
 
 	public TextObject (BMPEditorFont font, String text) {
@@ -35,12 +37,14 @@ public class TextObject extends TextEntity implements EditorObject {
 	}
 
 	public TextObject (EditorFont font, BitmapFont bitmapFont, String text, int fontSize) {
-		super(null, bitmapFont, new PathAsset(font.getRelativePath()), text, fontSize);
+		super(null, bitmapFont, text, fontSize);
+		setAssetDescriptor(new PathAsset(font.getRelativePath()));
 		this.font = font;
 	}
 
 	public TextObject (TextObject other) {
-		super(other.getId(), other.cache.getFont(), other.getAssetDescriptor(), other.getText(), other.getFontSize());
+		super(other.getId(), other.cache.getFont(), other.getText(), other.getFontSize());
+		this.assetDescriptor = other.assetDescriptor;
 		this.font = other.font;
 
 		setAutoSetOriginToCenter(other.isAutoSetOriginToCenter());
@@ -101,5 +105,21 @@ public class TextObject extends TextEntity implements EditorObject {
 			setText(text);
 			textChanged();
 		}
+	}
+
+	@Override
+	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+		return assetDescriptor instanceof PathAsset;
+	}
+
+	@Override
+	public VisAssetDescriptor getAssetDescriptor () {
+		return assetDescriptor;
+	}
+
+	@Override
+	public void setAssetDescriptor (VisAssetDescriptor assetDescriptor) {
+		checkAssetDescriptor(assetDescriptor);
+		this.assetDescriptor = assetDescriptor;
 	}
 }

@@ -35,7 +35,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.esotericsoftware.spine.*;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.Entity;
 
 public class SpineEntity extends Entity {
@@ -47,16 +46,14 @@ public class SpineEntity extends Entity {
 	private boolean playOnStart;
 	private String defaultAnimation;
 
-	public SpineEntity (String id, VisAssetDescriptor assetDescriptor, SkeletonData skeletonData) {
+	public SpineEntity (String id, SkeletonData skeletonData) {
 		super(id);
-		setAssetDescriptor(assetDescriptor);
 
 		init(skeletonData);
 	}
 
 	public SpineEntity (SpineEntity original) {
 		super(original.getId());
-		setAssetDescriptor(original.getAssetDescriptor());
 		init(original.getSkeleton().getData());
 	}
 
@@ -81,11 +78,6 @@ public class SpineEntity extends Entity {
 		state.apply(skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 		skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
 		renderer.draw(batch, skeleton); // Draw the skeleton images.
-	}
-
-	@Override
-	protected boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
-		return assetDescriptor instanceof SpineAssetDescriptor;
 	}
 
 	public float getX () {
