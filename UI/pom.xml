@@ -149,6 +149,33 @@
 
     <profiles>
         <profile>
+            <id>jenkins</id><!-- Jenkins should only build -SNAPSHOTs -->
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-enforcer-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>enforce</goal>
+                                </goals>
+                                <configuration>
+                                    <rules>
+                                        <evaluateBeanshell>
+                                            <condition>"${project.version}".endsWith("-SNAPSHOT")</condition>
+                                            <message>Jenkins should only build -SNAPSHOT versions</message>
+                                        </evaluateBeanshell>
+                                    </rules>
+                                    <fail>true</fail>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
             <id>release</id>
             <activation>
                 <property>
