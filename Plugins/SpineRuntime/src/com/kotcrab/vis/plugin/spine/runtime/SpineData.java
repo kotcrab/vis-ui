@@ -55,7 +55,7 @@ public class SpineData extends EntityData<SpineEntity> {
 
 	@Override
 	public void loadTo (SpineEntity entity) {
-		entity.setId(id);
+		super.loadTo(entity);
 		entity.setPosition(x, y);
 		entity.setFlip(flipX, flipY);
 	}

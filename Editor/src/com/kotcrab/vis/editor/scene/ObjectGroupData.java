@@ -32,6 +32,7 @@ public class ObjectGroupData extends EntityData<ObjectGroup> {
 
 	@Override
 	public void loadTo (ObjectGroup group) {
+		super.loadTo(group);
 		group.setEntities(entities);
 	}
 }

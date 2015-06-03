@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.runtime.data;
 
+import com.kotcrab.annotation.CallSuper;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.Entity;
 
@@ -24,6 +25,7 @@ public abstract class EntityData<T extends Entity> {
 	public String id;
 	public VisAssetDescriptor assetDescriptor;
 
+	@CallSuper
 	/** Saves all values from this entity to instance of this class */
 	public void saveFrom (T entity, VisAssetDescriptor assetDescriptor) {
 		this.id = entity.getId();
@@ -31,6 +33,7 @@ public abstract class EntityData<T extends Entity> {
 	}
 
 	/** Loads all possible values from this entity to instance of this class. If value can't be loaded it should be ignored. */
+	@CallSuper
 	public void loadTo (T entity) {
 		entity.setId(id);
 	}
