@@ -12,9 +12,9 @@
     <url>https://github.com/kotcrab/VisEditor/wiki/VisUI</url>
 
     <scm>
-        <connection>scm:git:git@github.com:kotcrab/VisSceneEditor.git</connection>
-        <developerConnection>scm:git:git@github.com:kotcrab/VisSceneEditor.git</developerConnection>
-        <url>git@github.com:kotcrab/VisSceneEditor.git</url>
+        <connection>scm:git:git@github.com:kotcrab/VisEditor.git</connection>
+        <developerConnection>scm:git:git@github.com:kotcrab/VisEditor.git</developerConnection>
+        <url>git@github.com:kotcrab/VisEditor.git</url>
     </scm>
 
     <properties>
@@ -56,30 +56,30 @@
         <dependency>
             <groupId>com.badlogicgames.gdx</groupId>
             <artifactId>gdx</artifactId>
-            <scope>provided</scope>
             <version>${gdx.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.badlogicgames.gdx</groupId>
             <artifactId>gdx-backend-lwjgl</artifactId>
-            <scope>test</scope>
             <version>${gdx.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.badlogicgames.gdx</groupId>
             <artifactId>gdx-platform</artifactId>
             <classifier>natives-desktop</classifier>
-            <scope>test</scope>
             <version>${gdx.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
             <version>4.12</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
