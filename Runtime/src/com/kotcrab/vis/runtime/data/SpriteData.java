@@ -57,6 +57,7 @@ public class SpriteData extends EntityData<SpriteEntity> {
 
 	@Override
 	public void loadTo (SpriteEntity sprite) {
+		super.loadTo(sprite);
 		sprite.setPosition(x, y);
 		sprite.setSize(width, height);
 		sprite.setOrigin(originX, originY);

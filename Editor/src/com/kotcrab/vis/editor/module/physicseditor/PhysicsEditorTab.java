@@ -29,6 +29,7 @@ import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.util.gdx.FocusUtils;
+import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 
 public class PhysicsEditorTab extends MainContentTab {
 	private PluginContainerModule pluginContainer;
@@ -59,7 +60,7 @@ public class PhysicsEditorTab extends MainContentTab {
 		PRigidBodiesScreen screen = physicsMC.get(PRigidBodiesScreen.class);
 		RigidBodyModel model = new RigidBodyModel();
 		String path = "gfx/plane/Planes/planeBlue1.png";
-		model.setRegion(projectMC.get(TextureCacheModule.class).getRegion(path), path);
+		model.setRegion(projectMC.get(TextureCacheModule.class).getRegion(new TextureRegionAsset(path)), path);
 		screen.switchedSelection(model);
 		//debug end
 

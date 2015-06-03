@@ -16,15 +16,8 @@
 
 package com.kotcrab.vis.runtime.assets;
 
-public class PathAsset implements VisAssetDescriptor {
-	private final String relativePath;
-
-	public PathAsset (String relativePath) {
-		this.relativePath = relativePath.replace("\\", "/");
+public class TextureRegionAsset extends PathAsset implements TextureAssetDescriptor {
+	public TextureRegionAsset (String relativePath) {
+		super(relativePath);
 	}
-
-	public String getPath () {
-		return relativePath;
-	}
-
 }

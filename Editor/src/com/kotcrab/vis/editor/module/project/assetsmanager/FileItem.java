@@ -24,6 +24,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
@@ -31,14 +33,16 @@ import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.ContentItemProperties;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.ProjectPathUtils;
+import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
+import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 //TODO refactor
 public class FileItem extends Table {
-	private FileAccessModule fileAccess;
-	private ObjectSupportModule supportModule;
-	private TextureCacheModule textureCache;
+	@InjectModule private FileAccessModule fileAccess;
+	@InjectModule private ObjectSupportModule supportModule;
+	@InjectModule private TextureCacheModule textureCache;
 	private FileHandle file;
 
 	private TextureRegion region;
@@ -48,11 +52,9 @@ public class FileItem extends Table {
 
 	private ObjectSupport support;
 
-	public FileItem (FileAccessModule fileAccess, ObjectSupportModule supportModule, TextureCacheModule textureCache, FileHandle file) {
+	public FileItem (ModuleInjector injector, FileHandle file) {
 		super(VisUI.getSkin());
-		this.supportModule = supportModule;
-		this.textureCache = textureCache;
-		this.fileAccess = fileAccess;
+		injector.injectModules(this);
 		this.file = file;
 		init();
 	}
@@ -79,7 +81,12 @@ public class FileItem extends Table {
 			type = texture ? FileType.TEXTURE : FileType.TEXTURE_ATLAS;
 
 			name = new VisLabel(file.nameWithoutExtension(), "small");
-			TextureRegion region = textureCache.getRegion(relativePath);
+			TextureRegion region;
+
+			if (atlas)
+				region = textureCache.getRegion(new AtlasRegionAsset(relativePath, null));
+			else
+				region = textureCache.getRegion(new TextureRegionAsset(relativePath));
 
 			Image img = new Image(region);
 			img.setScaling(Scaling.fit);

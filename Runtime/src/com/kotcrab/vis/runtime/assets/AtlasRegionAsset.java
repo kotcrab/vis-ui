@@ -16,15 +16,18 @@
 
 package com.kotcrab.vis.runtime.assets;
 
-public class PathAsset implements VisAssetDescriptor {
-	private final String relativePath;
+public class AtlasRegionAsset extends PathAsset implements TextureAssetDescriptor {
+	private final String regionName;
 
-	public PathAsset (String relativePath) {
-		this.relativePath = relativePath.replace("\\", "/");
+	/**
+	 * @param regionName name of region from atlas, if null the first texture of atlas itself would be used
+	 */
+	public AtlasRegionAsset (String relativePath, String regionName) {
+		super(relativePath);
+		this.regionName = regionName;
 	}
 
-	public String getPath () {
-		return relativePath;
+	public String getRegionName () {
+		return regionName;
 	}
-
 }

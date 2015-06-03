@@ -34,8 +34,7 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.ProjectPathUtils;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 public class TextureCacheModule extends ProjectModule implements WatchListener {
@@ -203,50 +202,41 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		}
 	}
 
-	public TextureRegion getRegion (VisAssetDescriptor assetDescriptor) {
-		if (assetDescriptor instanceof PathAsset == false)
-			throw new UnsupportedAssetDescriptorException(assetDescriptor);
+	public TextureRegion getRegion (VisAssetDescriptor descriptor) {
+		if (descriptor instanceof TextureRegionAsset) return getCachedGfxRegion((TextureRegionAsset) descriptor);
+		if (descriptor instanceof AtlasRegionAsset) return getAtlasRegion((AtlasRegionAsset) descriptor);
 
-		PathAsset path = (PathAsset) assetDescriptor;
-		return getRegion(path.getPath());
+		throw new UnsupportedAssetDescriptorException(descriptor);
 	}
 
-	@Deprecated
-	public TextureRegion getRegion (String relativePath) {
-		if (relativePath.startsWith("gfx")) {
+	private TextureRegion getCachedGfxRegion (TextureRegionAsset asset) {
+		String relativePath = asset.getPath();
+		String regionName = relativePath.substring(4, relativePath.length() - 4);
 
-			String regionName = relativePath.substring(4, relativePath.length() - 4);
+		TextureRegion region = regions.get(regionName);
 
-			TextureRegion region = regions.get(regionName);
+		if (region == null) {
+			if (cache != null) region = cache.findRegion(regionName);
+			if (region == null) region = new TextureRegion(loadingRegion);
+			regions.put(relativePath, region);
+		}
 
-			if (region == null) {
-				if (cache != null) region = cache.findRegion(regionName);
+		return region;
+	}
 
-				if (region == null) region = new TextureRegion(loadingRegion);
+	private TextureRegion getAtlasRegion (AtlasRegionAsset asset) {
+		String relativePath = asset.getPath();
 
-				regions.put(relativePath, region);
-			}
+		TextureAtlas atlas = atlases.get(relativePath);
+		if (atlas == null) return missingRegion;
 
+		if (asset.getRegionName() == null) {
+			return new TextureRegion(atlas.getTextures().first());
+		} else {
+			TextureRegion region = atlas.findRegion(asset.getRegionName());
+			if (region == null) return missingRegion;
 			return region;
 		}
-
-		if (relativePath.startsWith("atlas")) {
-			if (relativePath.endsWith(".atlas")) {
-				TextureAtlas atlas = atlases.get(relativePath);
-
-				if (atlas == null) return missingRegion;
-				return new TextureRegion(atlas.getTextures().first());
-			} else {
-				String[] paths = relativePath.split("\\*", 2);
-
-				TextureAtlas atlas = atlases.get(paths[0]);
-				TextureRegion region = atlas.findRegion(paths[1]);
-				if (region == null) return missingRegion;
-				return region;
-			}
-		}
-
-		throw new IllegalStateException("Invalid texture path!");
 	}
 
 	public TextureAtlas getAtlas (String relativePath) {

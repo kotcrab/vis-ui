@@ -22,10 +22,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class AtlasItem extends Table {
+	private AtlasRegionAsset assetDescriptor;
 	private String relativeAtlasPath;
 	private AtlasRegion region;
 
@@ -33,6 +35,8 @@ public class AtlasItem extends Table {
 		super(VisUI.getSkin());
 		this.relativeAtlasPath = relativeAtlasPath;
 		this.region = region;
+
+		assetDescriptor = new AtlasRegionAsset(relativeAtlasPath, region.name);
 
 		setTouchable(Touchable.enabled);
 		setBackground("menu-bg");
@@ -47,8 +51,8 @@ public class AtlasItem extends Table {
 		add(name).expandX().fillX();
 	}
 
-	public String getCombinedPath () {
-		return relativeAtlasPath + "*" + region.name;
+	public AtlasRegionAsset getAtlasAsset () {
+		return assetDescriptor;
 	}
 
 	public AtlasRegion getRegion () {

@@ -30,27 +30,27 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Values;
+import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.VisDropSource;
+import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class AssetDragAndDrop {
-	private FileAccessModule fileAccess;
-	private TextureCacheModule textureCache;
-	private FontCacheModule fontCache;
-	private ParticleCacheModule particleCache;
+	@InjectModule private FileAccessModule fileAccess;
+	@InjectModule private TextureCacheModule textureCache;
+	@InjectModule private FontCacheModule fontCache;
+	@InjectModule private ParticleCacheModule particleCache;
 
 	private DragAndDrop dragAndDrop;
 	private DragAndDropTarget dropTarget;
 
-	public AssetDragAndDrop (FileAccessModule fileAccess, TextureCacheModule textureCache, FontCacheModule fontCache, ParticleCacheModule particleCache) {
-		this.textureCache = textureCache;
-		this.fontCache = fontCache;
-		this.particleCache = particleCache;
-		this.fileAccess = fileAccess;
+	public AssetDragAndDrop (ModuleInjector injector) {
+		injector.injectModules(this);
 
 		dragAndDrop = new DragAndDrop();
 		dragAndDrop.setKeepWithinStage(false);
@@ -91,7 +91,9 @@ public class AssetDragAndDrop {
 			public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 				Payload payload = new Payload();
 
-				SpriteObject object = new SpriteObject(item.getCombinedPath(), textureCache.getRegion(item.getCombinedPath()), 0, 0);
+
+
+				SpriteObject object = new SpriteObject(item.getAtlasAsset(), textureCache.getRegion(item.getAtlasAsset()), 0, 0);
 				payload.setObject(object);
 
 				Image img = new Image(item.getRegion());
@@ -114,7 +116,9 @@ public class AssetDragAndDrop {
 					Payload payload = new Payload();
 					String relativePath = fileAccess.relativizeToAssetsFolder(item.getFile());
 
-					SpriteObject object = new SpriteObject(relativePath, textureCache.getRegion(relativePath), 0, 0);
+					TextureRegionAsset asset = new TextureRegionAsset(relativePath);
+
+					SpriteObject object = new SpriteObject(asset, textureCache.getRegion(asset), 0, 0);
 					payload.setObject(object);
 
 					Image img = new Image(item.getRegion());

@@ -19,15 +19,16 @@ package com.kotcrab.vis.editor.scene;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.TextureAssetDescriptor;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
 
 public class SpriteObject extends SpriteEntity implements EditorObject {
 	private VisAssetDescriptor assetDescriptor;
 
-	public SpriteObject (String texturePath, TextureRegion region, float x, float y) {
+	public SpriteObject (TextureAssetDescriptor assetDescriptor, TextureRegion region, float x, float y) {
 		super(null, new Sprite(region));
-		setAssetDescriptor(new PathAsset(texturePath)); //TODO refactor for atlas support
+		setAssetDescriptor(assetDescriptor);
 		sprite.setPosition(x, y);
 	}
 
@@ -76,7 +77,7 @@ public class SpriteObject extends SpriteEntity implements EditorObject {
 
 	@Override
 	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
-		return assetDescriptor instanceof PathAsset;
+		return assetDescriptor instanceof TextureAssetDescriptor;
 	}
 
 	@Override

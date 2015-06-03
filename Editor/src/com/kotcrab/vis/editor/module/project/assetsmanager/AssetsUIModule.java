@@ -114,7 +114,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		visFolder = fileAccess.getVisFolder();
 		assetsFolder = fileAccess.getAssetsFolder();
 
-		assetDragAndDrop = new AssetDragAndDrop(fileAccess, textureCache, fontCache, particleCache);
+		assetDragAndDrop = new AssetDragAndDrop(projectContainer);
 
 		quickAccessModule.addListener(new TabbedPaneAdapter() {
 			@Override
@@ -453,7 +453,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	}
 
 	private FileItem createFileItem (FileHandle file) {
-		FileItem fileItem = new FileItem(fileAccess, supportModule, textureCache, file);
+		FileItem fileItem = new FileItem(projectContainer, file);
 
 		fileItem.addListener(new InputListener() {
 			@Override
