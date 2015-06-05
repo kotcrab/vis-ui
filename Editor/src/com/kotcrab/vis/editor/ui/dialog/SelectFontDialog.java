@@ -117,7 +117,7 @@ public class SelectFontDialog extends VisWindow {
 
 	private void buildFontList (FileHandle fontDirectory) {
 		for (FileHandle file : fontDirectory.list()) {
-			if (file.isDirectory()) buildFontList(fontDirectory);
+			if (file.isDirectory()) buildFontList(file);
 
 			if (file.extension().equals(extension))
 				fontsMap.put(file.path().substring(fontFolder.path().length() + 1), file);
