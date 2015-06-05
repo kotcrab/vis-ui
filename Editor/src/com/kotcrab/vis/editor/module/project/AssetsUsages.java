@@ -34,7 +34,7 @@ public class AssetsUsages {
 
 	public String toPrettyString () {
 		if (limitExceeded)
-			return "More than " + AssetsUsageAnalyzerModule.USAGE_SEARCH_LIMIT + " usages found for " + file.name();
+			return "More than " + AssetsAnalyzerModule.USAGE_SEARCH_LIMIT + " usages found for " + file.name();
 		else
 			return "Found " + count + " " + (count == 1 ? "usage" : "usages") + " for " + file.name();
 	}

@@ -24,19 +24,20 @@ import com.kotcrab.vis.editor.assets.PathDescriptorProvider;
 import com.kotcrab.vis.editor.assets.TextureDescriptorProvider;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
+import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-//FIXME
-public class AssetsUsageAnalyzerModule extends ProjectModule {
+public class AssetsAnalyzerModule extends ProjectModule {
 	public static final int USAGE_SEARCH_LIMIT = 100;
 
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private ObjectSupportModule supportModule;
 	@InjectModule private SceneTabsModule sceneTabsModule;
 	@InjectModule private SceneCacheModule sceneCache;
+	@InjectModule private TabsModule tabsModule;
 
 	private Array<AssetDescriptorProvider> providers = new Array<>();
 
@@ -103,5 +104,44 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 		}
 
 		return usages;
+	}
+
+	//TODO add support for plugin manipulators
+	public void replacePaths (String oldRelativePath, FileHandle newRelativePath) {
+
+//		if (tabsModule.getDirtyTabCount() > 0)
+//			Editor.instance.getStage().addActor(new UnsavedResourcesDialog(tabsModule, new WindowListener() {
+//				@Override
+//				public void finished () {
+//					doReplace(oldRelativePath, newRelativePath);
+//				}
+//
+//			}).fadeIn());
+//		else
+//			doReplace(oldRelativePath, newRelativePath);
+
+//		Array<FileHandle> sceneFiles = fileAccess.getSceneFiles();
+//
+//		for (FileHandle sceneFile : sceneFiles) {
+//			EditorScene scene = sceneCache.get(sceneFile);
+//
+//			Array<EditorObject> sceneUsagesList = new Array<>();
+//
+//			for (EditorObject entity : scene.entities) {
+//				boolean used = false;
+//
+//				if (entity.getAssetDescriptor() != null) {
+//
+//					if(entity.getAssetDescriptor().getClass() == VisAssetDescriptor.class)
+//					{
+//
+//					}
+//					else
+//					{
+//
+//					}
+//				}
+//			}
+//		}
 	}
 }

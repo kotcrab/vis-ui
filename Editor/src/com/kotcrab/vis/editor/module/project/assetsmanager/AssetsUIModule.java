@@ -65,7 +65,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	@InjectModule private SceneTabsModule sceneTabsModule;
 	@InjectModule private SceneCacheModule sceneCache;
 	@InjectModule private AssetsWatcherModule assetsWatcher;
-	@InjectModule private AssetsUsageAnalyzerModule assetsUsageAnalyzer;
+	@InjectModule private AssetsAnalyzerModule assetsUsageAnalyzer;
 
 	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private FontCacheModule fontCache;

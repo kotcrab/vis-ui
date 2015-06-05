@@ -28,7 +28,7 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
-import com.kotcrab.vis.editor.module.project.AssetsUsageAnalyzerModule;
+import com.kotcrab.vis.editor.module.project.AssetsAnalyzerModule;
 import com.kotcrab.vis.editor.module.project.AssetsUsages;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.scene.EditorObject;
@@ -42,7 +42,7 @@ import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
 public class AssetsUsagesTab extends Tab {
-	@InjectModule private AssetsUsageAnalyzerModule usageAnalyzer;
+	@InjectModule private AssetsAnalyzerModule usageAnalyzer;
 	@InjectModule private SceneTabsModule sceneTabs;
 	@InjectModule private QuickAccessModule quickAccess;
 

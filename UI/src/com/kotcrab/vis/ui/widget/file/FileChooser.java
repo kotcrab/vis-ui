@@ -102,6 +102,10 @@ public class FileChooser extends VisWindow {
 	private FilePopupMenu fileMenu;
 
 	public FileChooser (Mode mode) {
+		this((FileHandle) null, mode);
+	}
+
+	public FileChooser (FileHandle directory, Mode mode) {
 		super("");
 
 		this.bundle = VisUI.getFileChooserBundle();
@@ -111,7 +115,7 @@ public class FileChooser extends VisWindow {
 
 		style = VisUI.getSkin().get(FileChooserStyle.class);
 
-		init();
+		init(directory);
 	}
 
 	public FileChooser (String title, Mode mode) {
@@ -125,7 +129,7 @@ public class FileChooser extends VisWindow {
 
 		style = VisUI.getSkin().get(styleName, FileChooserStyle.class);
 
-		init();
+		init(null);
 	}
 
 	public FileChooser (I18NBundle bundle, Mode mode) {
@@ -136,7 +140,7 @@ public class FileChooser extends VisWindow {
 
 		style = VisUI.getSkin().get(FileChooserStyle.class);
 
-		init();
+		init(null);
 	}
 
 	public FileChooser (I18NBundle bundle, String title, Mode mode) {
@@ -146,7 +150,7 @@ public class FileChooser extends VisWindow {
 
 		style = VisUI.getSkin().get(FileChooserStyle.class);
 
-		init();
+		init(null);
 	}
 
 	/**
@@ -157,7 +161,7 @@ public class FileChooser extends VisWindow {
 		FavoritesIO.setFavoritesPrefsName(name);
 	}
 
-	private void init () {
+	private void init (FileHandle directory) {
 		setModal(true);
 		setResizable(true);
 		setMovable(true);
@@ -177,7 +181,11 @@ public class FileChooser extends VisWindow {
 
 		rebuildShortcutsList();
 
-		setDirectory(Gdx.files.absolute(System.getProperty("user.home")), HistoryPolicy.IGNORE);
+		if (directory == null)
+			setDirectory(Gdx.files.absolute(System.getProperty("user.home")), HistoryPolicy.IGNORE);
+		else
+			setDirectory(directory, HistoryPolicy.IGNORE);
+
 		setSize(500, 600);
 		centerWindow();
 
@@ -463,7 +471,8 @@ public class FileChooser extends VisWindow {
 		String userName = System.getProperty("user.name");
 		File userDesktop = new File(userHome + "/Desktop");
 
-		if(userDesktop.exists()) shortcutsTable.add(new ShortcutItem(userDesktop, getText(DESKTOP), style.iconFolder)).expand().fill().row();
+		if (userDesktop.exists())
+			shortcutsTable.add(new ShortcutItem(userDesktop, getText(DESKTOP), style.iconFolder)).expand().fill().row();
 		shortcutsTable.add(new ShortcutItem(new File(userHome), userName, style.iconFolder)).expand().fill().row();
 
 		shortcutsTable.addSeparator();
@@ -497,12 +506,12 @@ public class FileChooser extends VisWindow {
 			if (mode == Mode.OPEN ? root.canRead() : root.canWrite()) {
 				String initialName = root.toString();
 
-				if(initialName.equals("/"))
+				if (initialName.equals("/"))
 					initialName = getText(FileChooserText.COMPUTER);
 
 				final ShortcutItem item = new ShortcutItem(root, initialName, style.iconDrive);
 
-				if(FileUtils.isWindows()) {
+				if (FileUtils.isWindows()) {
 					chooserWinService.addListener(root, new RootNameListener() {
 						@Override
 						public void setName (String newName) {
