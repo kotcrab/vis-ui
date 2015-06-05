@@ -36,6 +36,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Serializer;
+import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
@@ -56,6 +57,8 @@ public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 	private FileAccessModule fileAccess;
 
 	private SpineSerializer serializer;
+
+	private SpineAssetDescriptorProvider descriptorProvider = new SpineAssetDescriptorProvider();
 
 	@Override
 	public void bindModules (ProjectModuleContainer projectMC) {
@@ -84,6 +87,11 @@ public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 	@Override
 	public boolean isSupportedDirectory (String extension, String relativePath) {
 		return relativePath.startsWith("spine/");
+	}
+
+	@Override
+	public AssetDescriptorProvider getAssetDescriptorProvider () {
+		return descriptorProvider;
 	}
 
 	@Override
@@ -116,5 +124,4 @@ public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 	public void export (ExportModule module, Array<EntityData> entities, SpineObject entity) {
 
 	}
-
 }

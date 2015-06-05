@@ -16,20 +16,21 @@
 
 package com.kotcrab.vis.editor.assets;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.util.FileUtils;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-public class BasicAssetUsageAnalyzer implements AssetUsageAnalyzer {
+public class BmpFontDescriptorProvider implements AssetDescriptorProvider {
 	@Override
-	public boolean canAnalyze (VisAssetDescriptor descriptor, String relativePath) {
-		if (relativePath.startsWith("gfx")) return true;
-		if (relativePath.startsWith("font") || relativePath.startsWith("bmpfont")) return true;
-		if (relativePath.startsWith("particle")) return true;
-		return relativePath.startsWith("music");
-	}
+	public VisAssetDescriptor provide (FileHandle file, String relativePath) {
+		if (relativePath.startsWith("bmpfont") == false) return null;
 
-	@Override
-	public boolean isUsed (String relativePath, EditorObject entity, VisAssetDescriptor assetDescriptor) {
-		return entity.getAssetDescriptor().equals(relativePath);
+		if (relativePath.endsWith("fnt"))
+			return new PathAsset(relativePath);
+		else if (relativePath.endsWith("png"))
+			return new PathAsset(FileUtils.replaceExtension(relativePath, "fnt"));
+		else
+			return null;
 	}
 }

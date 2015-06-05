@@ -67,6 +67,7 @@ public class TextData extends EntityData<TextEntity> {
 
 	@Override
 	public void loadTo (TextEntity text) {
+		super.loadTo(text);
 		text.setPosition(x, y);
 		text.setOrigin(originX, originY);
 		text.setRotation(rotation);

@@ -97,22 +97,22 @@ public class FileItem extends Table {
 			return;
 		}
 
-		if (ext.equals("ttf")) {
+		if (relativePath.startsWith("font") && ext.equals("ttf")) {
 			createDefaultView(FileType.TTF_FONT, "TTF Font", true);
 			return;
 		}
 
-		if (ext.equals("fnt") && FileUtils.siblingExists(file, "png")) {
+		if (relativePath.startsWith("bmpfont") && ext.equals("fnt") && FileUtils.siblingExists(file, "png")) {
 			createDefaultView(FileType.BMP_FONT_FILE, "BMP Font", true);
 			return;
 		}
 
-		if (ext.equals("png") && FileUtils.siblingExists(file, "fnt")) {
+		if (relativePath.startsWith("bmpfont") && ext.equals("png") && FileUtils.siblingExists(file, "fnt")) {
 			createDefaultView(FileType.BMP_FONT_TEXTURE, "BMP Font Texture", true);
 			return;
 		}
 
-		if (ext.equals("p")) {
+		if (relativePath.startsWith("particle") && ext.equals("p")) {
 			createDefaultView(FileType.PARTICLE_EFFECT, "Particle Effect", true);
 			return;
 		}

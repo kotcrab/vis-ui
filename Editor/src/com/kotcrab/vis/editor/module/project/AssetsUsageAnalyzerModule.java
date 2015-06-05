@@ -18,13 +18,16 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.assets.AssetUsageAnalyzer;
-import com.kotcrab.vis.editor.assets.BasicAssetUsageAnalyzer;
+import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
+import com.kotcrab.vis.editor.assets.BmpFontDescriptorProvider;
+import com.kotcrab.vis.editor.assets.PathDescriptorProvider;
+import com.kotcrab.vis.editor.assets.TextureDescriptorProvider;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 //FIXME
 public class AssetsUsageAnalyzerModule extends ProjectModule {
@@ -35,36 +38,44 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 	@InjectModule private SceneTabsModule sceneTabsModule;
 	@InjectModule private SceneCacheModule sceneCache;
 
-	private Array<AssetUsageAnalyzer> analyzers = new Array<>();
+	private Array<AssetDescriptorProvider> providers = new Array<>();
 
 	@Override
 	public void init () {
-		analyzers.add(new BasicAssetUsageAnalyzer());
+		providers.add(new PathDescriptorProvider());
+		providers.add(new TextureDescriptorProvider());
+		providers.add(new BmpFontDescriptorProvider());
 	}
 
 	public boolean canAnalyze (FileHandle file) {
 		String path = fileAccess.relativizeToAssetsFolder(file);
+		return provideDescriptor(file, path) != null;
+	}
 
-		for (AssetUsageAnalyzer analyzer : analyzers) {
-			//if (analyzer.canAnalyze(path)) return true;
+	private VisAssetDescriptor provideDescriptor (FileHandle file, String relativePath) {
+		for (AssetDescriptorProvider provider : providers) {
+			VisAssetDescriptor desc = provider.provide(file, relativePath);
+			if (desc != null) return desc;
 		}
 
 		for (ObjectSupport support : supportModule.getSupports()) {
-			//if(support.getAssetsUsageAanalyzer() != null && support.getAssetsUsageAanalyzer().canAnalyze(path)) return true;
+			AssetDescriptorProvider provider = support.getAssetDescriptorProvider();
+
+			if (provider != null) {
+				VisAssetDescriptor desc = provider.provide(file, relativePath);
+				if (desc != null) return desc;
+			}
 		}
 
-		return false;
+		return null;
 	}
 
 	public AssetsUsages analyze (FileHandle file) {
 		String path = fileAccess.relativizeToAssetsFolder(file.path());
 
-		Array<FileHandle> sceneFiles = fileAccess.getSceneFiles();
+		AssetsUsages usages = new AssetsUsages(file);
 
-		AssetsUsages usages = new AssetsUsages();
-		usages.file = file;
-
-		for (FileHandle sceneFile : sceneFiles) {
+		for (FileHandle sceneFile : fileAccess.getSceneFiles()) {
 			EditorScene scene = sceneCache.get(sceneFile);
 
 			Array<EditorObject> sceneUsagesList = new Array<>();
@@ -72,9 +83,9 @@ public class AssetsUsageAnalyzerModule extends ProjectModule {
 			for (EditorObject entity : scene.entities) {
 				boolean used = false;
 
-				//AssetsUsageAnalyzer analyzer = findAnalyzer();
-				if (entity.getAssetDescriptor() != null)
-					if (entity.getAssetDescriptor().equals(path)) used = true;
+				if (entity.getAssetDescriptor() != null) {
+					if (entity.getAssetDescriptor().compare(provideDescriptor(file, path))) used = true;
+				}
 
 				if (used) {
 					usages.count++;

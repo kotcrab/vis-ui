@@ -17,7 +17,7 @@
 package com.kotcrab.vis.runtime.assets;
 
 public class AtlasRegionAsset extends PathAsset implements TextureAssetDescriptor {
-	private final String regionName;
+	private final String regionName; //ignored in descriptor compassion
 
 	/**
 	 * @param regionName name of region from atlas, if null the first texture of atlas itself would be used

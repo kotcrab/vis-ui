@@ -94,6 +94,13 @@ public class FileUtils {
 		return file.sibling(file.nameWithoutExtension() + "." + siblingExtension);
 	}
 
+	/** Replace path extension eg. replaceExtension("/gfx/game.atlas", "png") would return "/gfx/game.png" */
+	public static String replaceExtension (String path, String newExtension) {
+		StringBuilder builder = new StringBuilder(path);
+		builder.replace(path.lastIndexOf('.'), path.length(), '.' + newExtension);
+		return builder.toString();
+	}
+
 	public static String relativize (FileHandle base, String absolute) {
 		Path pathAbsolute = Paths.get(absolute);
 		Path pathBase = Paths.get(base.path());

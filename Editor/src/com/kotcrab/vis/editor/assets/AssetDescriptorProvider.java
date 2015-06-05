@@ -14,22 +14,12 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.assets;
+package com.kotcrab.vis.editor.assets;
 
-public class PathAsset implements VisAssetDescriptor {
-	private final String relativePath;
+import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-	public PathAsset (String relativePath) {
-		this.relativePath = relativePath.replace("\\", "/");
-	}
-
-	public String getPath () {
-		return relativePath;
-	}
-
-	@Override
-	public boolean compare (VisAssetDescriptor asset) {
-		if (asset instanceof PathAsset == false) return false;
-		return relativePath.equals(((PathAsset) asset).getPath());
-	}
+public interface AssetDescriptorProvider {
+	/** Provides asset descriptor for given path or null if this provider can't provide descriptor for given path */
+	VisAssetDescriptor provide (FileHandle file, String relativePath);
 }

@@ -144,7 +144,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 			try {
 				if (scene.exists()) {
-					EditorScene testScene = projectMC.get(SceneIOModule.class).load(scene);
+					EditorScene testScene = projectMC.get(SceneCacheModule.class).get(scene);
 					projectMC.get(SceneTabsModule.class).open(testScene);
 				}
 			} catch (KryoException e) {

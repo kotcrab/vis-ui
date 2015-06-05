@@ -29,32 +29,36 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.kotcrab.vis.plugin.spine.runtime;
+package com.kotcrab.vis.plugin.spine;
 
+import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
+import com.kotcrab.vis.editor.util.FileUtils;
+import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-public class SpineAssetDescriptor implements VisAssetDescriptor {
-	private String atlasPath;
-	private String skeletonPath;
-
-	public SpineAssetDescriptor (String atlasPath, String skeletonPath) {
-		this.atlasPath = atlasPath;
-		this.skeletonPath = skeletonPath;
-	}
-
-	public String getAtlasPath () {
-		return atlasPath;
-	}
-
-	public String getSkeletonPath () {
-		return skeletonPath;
-	}
-
+public class SpineAssetDescriptorProvider implements AssetDescriptorProvider {
 	@Override
-	public boolean compare (VisAssetDescriptor asset) {
-		if (asset instanceof SpineAssetDescriptor == false) return false;
-		SpineAssetDescriptor desc = (SpineAssetDescriptor) asset;
-		if (atlasPath.equals(desc.atlasPath) == false) return false;
-		return skeletonPath.equals(desc.skeletonPath);
+	public VisAssetDescriptor provide (FileHandle file, String relativePath) {
+		if(relativePath.startsWith("spine") == false) return null;
+
+		if (relativePath.endsWith("atlas")) {
+			String skelPath = findSkelPath(file, relativePath);
+			if (skelPath == null) return null; //skeleton does not exist
+			return new SpineAssetDescriptor(relativePath, skelPath);
+		}
+
+		if (relativePath.endsWith("skel") || relativePath.endsWith("json")) {
+			if (FileUtils.siblingExists(file, "atlas"))
+				return new SpineAssetDescriptor(FileUtils.replaceExtension(relativePath, "atlas"), relativePath);
+		}
+
+		return null;
+	}
+
+	private String findSkelPath (FileHandle file, String relativePath) {
+		if (FileUtils.siblingExists(file, "json")) return FileUtils.replaceExtension(relativePath, "json");
+		if (FileUtils.siblingExists(file, "skel")) return FileUtils.replaceExtension(relativePath, "skel");
+		return null;
 	}
 }

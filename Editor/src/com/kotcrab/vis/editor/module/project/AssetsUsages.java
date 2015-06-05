@@ -28,6 +28,10 @@ public class AssetsUsages {
 	public int count;
 	public ObjectMap<EditorScene, Array<EditorObject>> list = new ObjectMap<>();
 
+	public AssetsUsages (FileHandle file) {
+		this.file = file;
+	}
+
 	public String toPrettyString () {
 		if (limitExceeded)
 			return "More than " + AssetsUsageAnalyzerModule.USAGE_SEARCH_LIMIT + " usages found for " + file.name();

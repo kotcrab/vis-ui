@@ -16,11 +16,18 @@
 
 package com.kotcrab.vis.editor.assets;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
+import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-public interface AssetUsageAnalyzer {
-	boolean canAnalyze (VisAssetDescriptor descriptor, String relativePath);
+public class TextureDescriptorProvider implements AssetDescriptorProvider {
+	@Override
+	public VisAssetDescriptor provide (FileHandle file, String relativePath) {
+		if (relativePath.startsWith("gfx")) return new TextureRegionAsset(relativePath);
+		if (relativePath.startsWith("atlas"))
+			return new AtlasRegionAsset(relativePath, null); //usage analyzer ignores region name
 
-	boolean isUsed (String relativePath, EditorObject entity, VisAssetDescriptor assetDescriptor);
+		return null;
+	}
 }

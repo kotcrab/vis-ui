@@ -20,7 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Serializer;
-import com.kotcrab.vis.editor.assets.AssetUsageAnalyzer;
+import com.kotcrab.annotation.CallSuper;
+import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
@@ -59,20 +60,23 @@ public abstract class ObjectSupport<ED extends EntityData, E extends Entity & Ed
 		return null;
 	}
 
-	public AssetUsageAnalyzer getAssetsUsageAanalyzer () {
+	public AssetDescriptorProvider getAssetDescriptorProvider () {
 		return null;
 	}
 
+	@CallSuper
 	public void assignId (int id) {
 		if (this.id != -1) throw new IllegalStateException("Id was already assigned to this support!");
 		this.id = id;
 	}
 
+	@CallSuper
 	public int getId () {
 		if (id == -1) throw new IllegalStateException("Id wasn't assigned yet for this support!");
 		return id;
 	}
 
+	@CallSuper
 	public void releaseId () {
 		id = -1;
 	}
