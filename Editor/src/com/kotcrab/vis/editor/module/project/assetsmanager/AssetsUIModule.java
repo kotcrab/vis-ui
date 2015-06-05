@@ -65,7 +65,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	@InjectModule private SceneTabsModule sceneTabsModule;
 	@InjectModule private SceneCacheModule sceneCache;
 	@InjectModule private AssetsWatcherModule assetsWatcher;
-	@InjectModule private AssetsAnalyzerModule assetsUsageAnalyzer;
+	@InjectModule private AssetsAnalyzerModule assetsAnalyzer;
 
 	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private FontCacheModule fontCache;
@@ -364,7 +364,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 					addSeparator();
 				}
 
-				if (assetsUsageAnalyzer.canAnalyze(item.getFile())) {
+				//TODO cache canAnalyze and isSafeFileMoveSupported results too speed up opening menus
+				if (assetsAnalyzer.canAnalyzeUsages(item.getFile())) {
 					addItem(MenuUtils.createMenuItem("Find Usages", () -> analyzeUsages(item.getFile())));
 					addSeparator();
 				}
@@ -378,7 +379,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		}
 
 		private void analyzeUsages (FileHandle file) {
-			AssetsUsages usages = assetsUsageAnalyzer.analyze(file);
+			AssetsUsages usages = assetsAnalyzer.analyzeUsages(file);
 			if (usages.count == 0)
 				App.eventBus.post(new StatusBarEvent("No usages found"));
 			else
@@ -399,7 +400,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	}
 
 	private void showFileDeleteDialog (FileHandle file) {
-		boolean canBeSafeDeleted = assetsUsageAnalyzer.canAnalyze(file);
+		boolean canBeSafeDeleted = assetsAnalyzer.canAnalyzeUsages(file);
 		stage.addActor(new DeleteDialog(file, canBeSafeDeleted, result -> {
 			if (canBeSafeDeleted == false) {
 				FileUtils.delete(file);
@@ -407,7 +408,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			}
 
 			if (result.safeDelete) {
-				AssetsUsages usages = assetsUsageAnalyzer.analyze(file);
+				AssetsUsages usages = assetsAnalyzer.analyzeUsages(file);
 				if (usages.count == 0)
 					FileUtils.delete(file);
 				else

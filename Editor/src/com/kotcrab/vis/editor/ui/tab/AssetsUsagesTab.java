@@ -143,7 +143,7 @@ public class AssetsUsagesTab extends Tab {
 		reanalyzeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				usages = usageAnalyzer.analyze(usages.file);
+				usages = usageAnalyzer.analyzeUsages(usages.file);
 				rebuildUsagesTable();
 			}
 		});

@@ -81,13 +81,13 @@ public class DeleteMultipleFilesTab extends Tab {
 		for (FileItem item : items) {
 
 			FileHandle file = item.getFile();
-			boolean canAnalyze = usageAnalyzer.canAnalyze(file);
+			boolean canAnalyze = usageAnalyzer.canAnalyzeUsages(file);
 
 			if (canAnalyze == false) {
 				usagesTable.add(new VisLabel("Can't analyze usages for: '" + file.name() + "'"));
 				usagesTable.row();
 			} else {
-				AssetsUsages usages = usageAnalyzer.analyze(file);
+				AssetsUsages usages = usageAnalyzer.analyzeUsages(file);
 				usagesTable.add(new VisLabel(usages.toPrettyString()));
 
 				if (usages.count > 0) {

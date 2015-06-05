@@ -48,8 +48,9 @@ public class AssetsAnalyzerModule extends ProjectModule {
 		providers.add(new BmpFontDescriptorProvider());
 	}
 
-	public boolean canAnalyze (FileHandle file) {
+	public boolean canAnalyzeUsages (FileHandle file) {
 		String path = fileAccess.relativizeToAssetsFolder(file);
+
 		return provideDescriptor(file, path) != null;
 	}
 
@@ -71,7 +72,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 		return null;
 	}
 
-	public AssetsUsages analyze (FileHandle file) {
+	public AssetsUsages analyzeUsages (FileHandle file) {
 		String path = fileAccess.relativizeToAssetsFolder(file.path());
 
 		AssetsUsages usages = new AssetsUsages(file);
