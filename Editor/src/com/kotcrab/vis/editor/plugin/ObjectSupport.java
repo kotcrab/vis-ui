@@ -28,7 +28,7 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.ContentItemProperties;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.SpecificObjectTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificObjectTable;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.entity.Entity;
 

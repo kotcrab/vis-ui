@@ -40,7 +40,7 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.SpecificObjectTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificObjectTable;
 import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
 import com.kotcrab.vis.ui.widget.Tooltip;

@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.ParticleEffectObject;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.ui.widget.Tooltip;
 
 import static com.kotcrab.vis.editor.util.EntityUtils.setCommonCheckBoxState;
 
-class ParticleEffectTable extends SpecificObjectTable {
+public class ParticleEffectTable extends SpecificObjectTable {
 	private IndeterminateCheckbox activeCheck;
 
 	@Override

@@ -44,7 +44,7 @@ import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.ContentItemProperties;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.SpecificObjectTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificObjectTable;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.VisDropSource;
 import com.kotcrab.vis.plugin.spine.runtime.SpineData;

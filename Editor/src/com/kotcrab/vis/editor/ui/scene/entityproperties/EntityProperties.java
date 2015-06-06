@@ -38,6 +38,7 @@ import com.kotcrab.vis.editor.module.scene.UndoableAction;
 import com.kotcrab.vis.editor.module.scene.UndoableActionGroup;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.*;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.*;
 import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.editor.util.FloatValue;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
@@ -341,7 +342,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		updateValues();
 	}
 
-	void beginSnapshot () {
+	public void beginSnapshot () {
 		if (snapshotInProgress) endSnapshot();
 		snapshotInProgress = true;
 
@@ -352,7 +353,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		}
 	}
 
-	void endSnapshot () {
+	public void endSnapshot () {
 		if (!snapshotInProgress) return;
 		snapshotInProgress = false;
 
@@ -379,15 +380,15 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		return sharedCheckBoxChangeListener;
 	}
 
-	Tab getParentTab () {
+	public Tab getParentTab () {
 		return parentTab;
 	}
 
-	FileAccessModule getFileAccessModule () {
+	public FileAccessModule getFileAccessModule () {
 		return fileAccessModule;
 	}
 
-	FontCacheModule getFontCacheModule () {
+	public FontCacheModule getFontCacheModule () {
 		return fontCacheModule;
 	}
 

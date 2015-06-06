@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 public abstract class SpecificObjectTable extends VisTable {

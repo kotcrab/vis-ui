@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.runtime.data.TextData;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 
-class TextObjectData extends TextData {
+public class TextObjectData extends TextData {
 	@Override
 	public void loadTo (TextEntity text) {
 		super.loadTo(text);

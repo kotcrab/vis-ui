@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.ObjectGroup;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.ui.widget.Tooltip;
 
-class ObjectGroupTable extends SpecificObjectTable {
+public class ObjectGroupTable extends SpecificObjectTable {
 	private IndeterminateCheckbox preserveCheck;
 
 	@Override
