@@ -106,7 +106,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 		content.add(leftColumn).width(300).fillY().expandY();
 		content.add().fill().expand();
-		content.add(rightColumn).width(245).fillY().expandY();
+		content.add(rightColumn).width(260).fillY().expandY();
 
 		leftColumn.top();
 		//leftColumn.add(outline).height(300).fillX().expandX();

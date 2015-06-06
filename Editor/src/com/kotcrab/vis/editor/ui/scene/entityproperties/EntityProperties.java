@@ -47,10 +47,7 @@ import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.widget.VisCheckBox;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
@@ -192,7 +189,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 		top();
 		add(new VisLabel("Entity Properties")).row();
-		add(propertiesTable).fill().expand().padRight(0);
+		add(propertiesTable).fill().expand().padLeft(3).padRight(3);
 
 		addListener(new EventStopper());
 
@@ -217,7 +214,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private void createIdTable () {
 		idTable = new VisTable(true);
 		idTable.add(new VisLabel("ID"));
-		idTable.add(idField = new VisValidableTextField()).expandX().fillX().padRight(6);
+		idTable.add(idField = new VisValidableTextField()).expandX().fillX();
 		idField.setProgrammaticChangeEvents(false);
 		idField.addListener(sharedChangeListener);
 	}
@@ -229,7 +226,6 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		positionTable.add(xField = createNewNumberField()).width(FIELD_WIDTH);
 		positionTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
 		positionTable.add(yField = createNewNumberField()).width(FIELD_WIDTH);
-		positionTable.add().expand().fill();
 	}
 
 	private void createScaleTable () {
@@ -239,7 +235,6 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		scaleTable.add(xScaleField = createNewNumberField()).width(FIELD_WIDTH);
 		scaleTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
 		scaleTable.add(yScaleField = createNewNumberField()).width(FIELD_WIDTH);
-		scaleTable.add().expand().fill();
 	}
 
 	private void createOriginTable () {
@@ -249,7 +244,6 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		originTable.add(xOriginField = createNewNumberField()).width(FIELD_WIDTH);
 		originTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
 		originTable.add(yOriginField = createNewNumberField()).width(FIELD_WIDTH);
-		originTable.add().expand().fill();
 	}
 
 	private void createRotationTintTable () {
@@ -266,7 +260,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 		tintTable = new VisTable(true);
 		tintTable.add(new VisLabel("Tint"));
-		tintTable.add(tint).size(20).padRight(10);
+		tintTable.add(tint).size(20);
 
 		rotationTable = new VisTable(true);
 		rotationTable.add(new VisLabel("Rotation")).width(LABEL_WIDTH);
@@ -279,7 +273,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 		flipTable.add(new VisLabel("Flip"));
 		flipTable.add(xFlipCheck = new IndeterminateCheckbox("X"));
-		flipTable.add(yFlipCheck = new IndeterminateCheckbox("Y")).padRight(10);
+		flipTable.add(yFlipCheck = new IndeterminateCheckbox("Y"));
 
 		xFlipCheck.addListener(sharedCheckBoxChangeListener);
 		yFlipCheck.addListener(sharedCheckBoxChangeListener);
@@ -294,7 +288,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		rotationTintTable.add().expand().fill();
 		if (EntityUtils.isTintSupportedForEntities(entities)) rotationTintTable.add(tintTable);
 
-		propertiesTable.defaults().padRight(6).fillX();
+		propertiesTable.defaults().padRight(0).fillX();
 		propertiesTable.add(idTable).row();
 		propertiesTable.add(positionTable).row();
 		if (EntityUtils.isScaleSupportedForEntities(entities)) propertiesTable.add(scaleTable).row();
@@ -308,7 +302,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		for (SpecificObjectTable table : specificTables) {
 			if (checkEntityList(table)) {
 				activeSpecificTable = table;
-				propertiesTable.addSeparator().space(0);
+				propertiesTable.add(new Separator()).fillX().row();
 				propertiesTable.add(table).row();
 				break;
 			}
