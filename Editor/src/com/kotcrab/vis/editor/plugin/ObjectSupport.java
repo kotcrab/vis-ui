@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Serializer;
 import com.kotcrab.annotation.CallSuper;
 import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
+import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
 import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
@@ -61,6 +62,10 @@ public abstract class ObjectSupport<ED extends EntityData, E extends Entity & Ed
 	}
 
 	public AssetDescriptorProvider getAssetDescriptorProvider () {
+		return null;
+	}
+
+	public AssetTransactionGenerator getAssetTransactionGenerator () {
 		return null;
 	}
 

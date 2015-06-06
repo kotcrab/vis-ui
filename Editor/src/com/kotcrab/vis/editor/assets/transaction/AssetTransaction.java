@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.assets.transaction;
 
-public interface UndoableAction {
-	void execute ();
+import com.kotcrab.vis.editor.module.scene.UndoableAction;
+import com.kotcrab.vis.editor.module.scene.UndoableActionGroup;
 
-	void undo ();
+public class AssetTransaction extends UndoableActionGroup {
+	@Override
+	public void execute (UndoableAction action) {
+		throw new UnsupportedOperationException("execute (UndoableAction) not supported for AssetTransaction use: add (UndoableAction) instead!");
+	}
 }

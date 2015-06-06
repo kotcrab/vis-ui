@@ -14,10 +14,27 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.assets.transaction;
 
-public interface UndoableAction {
-	void execute ();
+import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.module.scene.UndoableAction;
 
-	void undo ();
+public class MoveFileAction implements UndoableAction {
+	private final FileHandle source;
+	private final FileHandle target;
+
+	public MoveFileAction (FileHandle source, FileHandle target) {
+		this.source = source;
+		this.target = target;
+	}
+
+	@Override
+	public void execute () {
+		source.moveTo(target);
+	}
+
+	@Override
+	public void undo () {
+		target.moveTo(source);
+	}
 }

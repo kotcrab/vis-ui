@@ -42,6 +42,7 @@ import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EditorFrame;
 import com.kotcrab.vis.editor.ui.WindowListener;
+import com.kotcrab.vis.editor.ui.dialog.EnterPathDialog;
 import com.kotcrab.vis.editor.ui.dialog.NewProjectDialog;
 import com.kotcrab.vis.editor.ui.dialog.SettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
@@ -315,7 +316,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		TabsModule tabsModule = editorMC.get(TabsModule.class);
 
-		if (tabsModule.getDirtyTabCount() > 0)
+		if (tabsModule.getDirtyTabCount() > 0) {
 			getStage().addActor(new UnsavedResourcesDialog(tabsModule, new WindowListener() {
 				@Override
 				public void finished () {
@@ -327,7 +328,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 					exitInProgress = false;
 				}
 			}).fadeIn());
-		else
+		} else
 			showExitDialogIfNeeded(restartAfterExit);
 	}
 

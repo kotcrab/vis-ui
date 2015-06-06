@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.ui.tab;
 
-public interface UndoableAction {
-	void execute ();
+import com.kotcrab.vis.editor.module.editor.TabsModule;
+import com.kotcrab.vis.editor.module.project.AssetsAnalyzerModule;
 
-	void undo ();
+/** Must be implemented by Tabs that must be closed when assets resources are being moved/updated by {@link AssetsAnalyzerModule} */
+public interface CloseTabWhenMovingResources {
+	/**
+	 * Called when tab should recreate self. Note that at this point tab will be already removed and disposed
+	 * so you must create new tab instance and it to {@link TabsModule}
+	 */
+	void reopenSelfAfterAssetsUpdated ();
 }

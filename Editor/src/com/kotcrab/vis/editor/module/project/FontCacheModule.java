@@ -103,9 +103,10 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 
 	@Override
 	public void fileDeleted (FileHandle file) {
-		if (file.extension().equals("ttf")) {
-			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Font " + file.name() + " unexpectedly removed, please restore font file and press OK");
-		}
+		//FIXME: this is also displayed when doing asset transaction so it's disabled for now
+//		if (file.extension().equals("ttf")) {
+//			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Font " + file.name() + " unexpectedly removed, please restore font file and press OK");
+//		}
 	}
 
 	@Override

@@ -14,10 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.assets.transaction;
 
-public interface UndoableAction {
-	void execute ();
+import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-	void undo ();
+public interface AssetTransactionGenerator {
+	boolean isSupported(VisAssetDescriptor descriptor);
+
+	AssetTransaction analyze (ModuleInjector injector, VisAssetDescriptor descriptor, FileHandle source, FileHandle target, String relativeTargetPath);
 }

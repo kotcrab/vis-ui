@@ -43,6 +43,7 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.SearchField;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DeleteDialog;
+import com.kotcrab.vis.editor.ui.dialog.EnterPathDialog;
 import com.kotcrab.vis.editor.ui.tab.AssetsUsagesTab;
 import com.kotcrab.vis.editor.ui.tab.DeleteMultipleFilesTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
@@ -187,8 +188,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 		toolbarTable.add(contentTitleLabel).expand().left().padLeft(3);
 		toolbarTable.add(exploreButton);
-		toolbarTable.add(settingsButton);
-		toolbarTable.add(importButton);
+		//toolbarTable.add(settingsButton); //FIXME buttons
+		//toolbarTable.add(importButton);
 		toolbarTable.add(searchField);
 
 		exploreButton.addListener(new ChangeListener() {
@@ -372,10 +373,24 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 				addItem(MenuUtils.createMenuItem("Copy", () -> clipboardCopyFiles()));
 				addItem(MenuUtils.createMenuItem("Paste", () -> clipboardPasteFiles()));
-				addItem(MenuUtils.createMenuItem("Move", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
-				addItem(MenuUtils.createMenuItem("Rename", () -> DialogUtils.showOKDialog(stage, "Message", "Not implemented yet!")));
+
+				if(assetsAnalyzer.isSafeFileMoveSupported(item.getFile())) {
+					addItem(MenuUtils.createMenuItem("Move", () -> moveFiles(item.getFile())));
+					addItem(MenuUtils.createMenuItem("Rename", () -> moveFiles(item.getFile())));
+				}
+
 				addItem(MenuUtils.createMenuItem("Delete", () -> deleteSelectedFiles()));
 			}
+		}
+
+		private void moveFiles (FileHandle file) {
+			String relativePath = fileAccess.relativizeToAssetsFolder(file);
+			String root = relativePath.substring(0, relativePath.indexOf('/') + 1);
+
+			getStage().addActor(new EnterPathDialog(file, root, relativePath.substring(root.length()), result -> {
+				FileHandle target = Gdx.files.absolute(fileAccess.derelativizeFromAssetsFolder(result.relativePath));
+				assetsAnalyzer.moveFileSafely(file, target);
+			}));
 		}
 
 		private void analyzeUsages (FileHandle file) {

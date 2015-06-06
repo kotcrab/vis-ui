@@ -52,11 +52,11 @@ public class TabsModule extends EditorModule implements EventListener {
 		tabbedPane.add(tab);
 	}
 
-	public void removeTab (MainContentTab tab) {
-		tabbedPane.remove(tab);
+	public boolean removeTab (Tab tab) {
+		return tabbedPane.remove(tab);
 	}
 
-	public void switchTab (MainContentTab tab) {
+	public void switchTab (Tab tab) {
 		tabbedPane.switchTab(tab);
 	}
 
@@ -106,8 +106,9 @@ public class TabsModule extends EditorModule implements EventListener {
 
 		int count = 0;
 
-		for (Tab tab : tabs)
+		for (Tab tab : tabs) {
 			if (tab.isDirty()) count++;
+		}
 
 		return count;
 	}

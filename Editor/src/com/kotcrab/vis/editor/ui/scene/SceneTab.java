@@ -27,11 +27,13 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.module.ContentTable;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;
 import com.kotcrab.vis.editor.module.editor.PluginContainerModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
+import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
@@ -39,6 +41,7 @@ import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.ObjectGroup;
 import com.kotcrab.vis.editor.scene.SpriteObject;
+import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
@@ -47,16 +50,16 @@ import com.kotcrab.vis.editor.util.gdx.SpriteUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.VisTable;
 
-public class SceneTab extends MainContentTab implements DragAndDropTarget, EventListener, SceneMenuButtonsListener {
+public class SceneTab extends MainContentTab implements DragAndDropTarget, EventListener, SceneMenuButtonsListener, CloseTabWhenMovingResources {
 	private Editor editor;
 	private EditorScene scene;
 
-	private PluginContainerModule pluginContainer;
-	private MenuBarModule menuBarModule;
-	private StatusBarModule statusBarModule;
-
-	private TextureCacheModule cacheModule;
-	private SceneIOModule sceneIOModule;
+	@InjectModule private PluginContainerModule pluginContainer;
+	@InjectModule private MenuBarModule menuBarModule;
+	@InjectModule private StatusBarModule statusBarModule;
+	@InjectModule private TextureCacheModule cacheModule;
+	@InjectModule private SceneTabsModule sceneTabs;
+	@InjectModule private SceneIOModule sceneIOModule;
 
 	private EntityManipulatorModule entityManipulator;
 
@@ -76,12 +79,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		editor = Editor.instance;
 		this.scene = scene;
 
-		pluginContainer = projectMC.getEditorContainer().get(PluginContainerModule.class);
-		menuBarModule = projectMC.getEditorContainer().get(MenuBarModule.class);
-		statusBarModule = projectMC.getEditorContainer().get(StatusBarModule.class);
-
-		cacheModule = projectMC.get(TextureCacheModule.class);
-		sceneIOModule = projectMC.get(SceneIOModule.class);
+		projectMC.injectModules(this);
 
 		sceneMC = new SceneModuleContainer(projectMC, this, scene);
 		sceneMC.add(cameraModule = new CameraModule());
@@ -298,4 +296,9 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		FocusUtils.focus(content);
 	}
 
+	@Override
+	public void reopenSelfAfterAssetsUpdated () {
+		save();
+		sceneTabs.open(scene);
+	}
 }
