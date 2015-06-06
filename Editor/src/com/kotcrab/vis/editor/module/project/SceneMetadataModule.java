@@ -19,10 +19,14 @@ package com.kotcrab.vis.editor.module.project;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ObjectMap.Keys;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.scene.SceneMetadata;
 
 public class SceneMetadataModule extends ProjectModule {
-	private FileHandle configFile;
+	@InjectModule FileAccessModule fileAccess;
+
+	private FileHandle metadataFile;
 
 	private Json json;
 
@@ -35,13 +39,22 @@ public class SceneMetadataModule extends ProjectModule {
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
 
 		FileHandle moduleFolder = fileAccess.getModuleFolder(".metadata");
-		configFile = moduleFolder.child("sceneMetadata");
+		metadataFile = moduleFolder.child("sceneMetadata");
 
-		if (configFile.exists())
-			metadata = json.fromJson(SceneMetadataList.class, configFile);
+		if (metadataFile.exists())
+			metadata = json.fromJson(SceneMetadataList.class, metadataFile);
 		else {
 			metadata = new SceneMetadataList();
 			metadata.map = new ObjectMap<>();
+		}
+
+		//clear not existent scenes
+		Keys<String> it = metadata.map.keys().iterator();
+		while (it.hasNext()) {
+			String path = it.next();
+
+			if(fileAccess.getAssetsFolder().child(path).exists() == false)
+				it.remove();
 		}
 	}
 
@@ -55,7 +68,7 @@ public class SceneMetadataModule extends ProjectModule {
 	}
 
 	public void save () {
-		json.toJson(metadata, configFile);
+		json.toJson(metadata, metadataFile);
 	}
 
 	public static class SceneMetadataList {
