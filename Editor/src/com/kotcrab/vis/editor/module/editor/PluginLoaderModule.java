@@ -68,6 +68,8 @@ public class PluginLoaderModule extends EditorModule {
 
 	private Array<FailedPluginDescriptor> failedPlugins = new Array<>();
 
+	private String currentlyLoadingPlugin; //name of plugin that is loaded, used to throw exception if plugin loading failed
+
 	@Override
 	public void postInit () {
 		FileHandle pluginsFolder = Gdx.files.absolute(PLUGINS_FOLDER_PATH);
@@ -78,9 +80,9 @@ public class PluginLoaderModule extends EditorModule {
 			verifyPlugins();
 			loadPluginsJars();
 			loadMainPluginsClasses();
-		} catch (IOException | ReflectiveOperationException e) {
+		} catch (IOException | ReflectiveOperationException | LinkageError e) {
 			Log.exception(e);
-			toastModule.show(new ExceptionToast("Plugin loading failed!", e));
+			toastModule.show(new ExceptionToast("Plugin loading failed! (" + currentlyLoadingPlugin + ")", e));
 		}
 
 		if (failedPlugins.size > 0)
@@ -148,6 +150,7 @@ public class PluginLoaderModule extends EditorModule {
 
 		for (PluginDescriptor descriptor : pluginsToLoad) {
 			Log.debug(TAG, "Loading: " + descriptor.folderName);
+			currentlyLoadingPlugin = descriptor.folderName;
 
 			JarFile jarFile = new JarFile(descriptor.file.path());
 			loadJarClasses(classLoader, descriptor, jarFile.entries());
