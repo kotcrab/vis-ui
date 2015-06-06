@@ -72,7 +72,7 @@ public class MenuBarModule extends EditorModule {
 		menu.addSeparator();
 
 		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Export", Icons.EXPORT, () -> projectContainer.get(ExportModule.class).export(false)));
-		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Quick Export", () -> projectContainer.get(ExportModule.class).export(true)));
+		//menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Quick Export", () -> projectContainer.get(ExportModule.class).export(true))); //TODO quick export
 		menu.addSeparator();
 
 		menu.addItem(createMenuItem("Settings", Icons.SETTINGS, editor::showSettingsWindow));
