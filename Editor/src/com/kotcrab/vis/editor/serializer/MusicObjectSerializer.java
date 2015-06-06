@@ -16,24 +16,21 @@
 
 package com.kotcrab.vis.editor.serializer;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Music;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
+import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.scene.MusicObject;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 public class MusicObjectSerializer extends CompatibleFieldSerializer<MusicObject> {
-	private FileAccessModule fileAccess;
+	@InjectModule private FileAccessModule fileAccess;
 
-	public MusicObjectSerializer (Kryo kryo, FileAccessModule fileAccess) {
+	public MusicObjectSerializer (Kryo kryo, ModuleInjector injector) {
 		super(kryo, MusicObject.class);
-		this.fileAccess = fileAccess;
+		injector.injectModules(this);
 	}
 
 	@Override
@@ -48,7 +45,7 @@ public class MusicObjectSerializer extends CompatibleFieldSerializer<MusicObject
 	public MusicObject read (Kryo kryo, Input input, Class<MusicObject> type) {
 		MusicObject obj = super.read(kryo, input, type);
 
-		obj.onDeserialize(getNewMusicInstance(obj));
+		obj.onDeserialize();
 		obj.setLooping(input.readBoolean());
 		obj.setVolume(input.readFloat());
 
@@ -57,13 +54,6 @@ public class MusicObjectSerializer extends CompatibleFieldSerializer<MusicObject
 
 	@Override
 	public MusicObject copy (Kryo kryo, MusicObject original) {
-		return new MusicObject(original, getNewMusicInstance(original));
-	}
-
-	private Music getNewMusicInstance (MusicObject obj) {
-		VisAssetDescriptor descriptor = obj.getAssetDescriptor();
-		if(descriptor instanceof PathAsset == false) throw new UnsupportedAssetDescriptorException(descriptor);
-		PathAsset path = (PathAsset) descriptor;
-		return Gdx.audio.newMusic(fileAccess.getAssetsFolder().child(path.getPath()));
+		return new MusicObject(original);
 	}
 }

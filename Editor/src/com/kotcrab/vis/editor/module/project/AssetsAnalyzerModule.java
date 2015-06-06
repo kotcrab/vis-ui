@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
@@ -51,7 +52,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 	private Array<AssetDescriptorProvider> providers = new Array<>();
 	private Array<AssetTransactionGenerator> transactionsGens = new Array<>();
 
-	private boolean assetTransactionInProgress = false;
+	private FileHandle transactionBackupRoot;
 
 	@Override
 	public void init () {
@@ -60,6 +61,8 @@ public class AssetsAnalyzerModule extends ProjectModule {
 		providers.add(new BmpFontDescriptorProvider());
 
 		transactionsGens.add(new BaseAssetTransactionGenerator());
+
+		transactionBackupRoot = fileAccess.getModuleFolder(".transactionBackup");
 	}
 
 	public boolean canAnalyzeUsages (FileHandle file) {
@@ -84,6 +87,13 @@ public class AssetsAnalyzerModule extends ProjectModule {
 		}
 
 		return null;
+	}
+
+	@Override
+	public void dispose () {
+		for (FileHandle file : transactionBackupRoot.list()) {
+			file.deleteDirectory();
+		}
 	}
 
 	public AssetsUsages analyzeUsages (FileHandle file) {
@@ -144,7 +154,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 	}
 
 	public void moveFileSafely (FileHandle source, FileHandle target) {
-		toastModule.show("Some tabs must be closed before refactoring", 3);
+		toastModule.show("Some tabs must be reopened during refactoring", 3);
 
 		if (tabsModule.getDirtyTabCount() > 0) {
 			Editor.instance.getStage().addActor(new UnsavedResourcesDialog(tabsModule, () -> doFileMoving(source, target)).fadeIn());
@@ -167,13 +177,25 @@ public class AssetsAnalyzerModule extends ProjectModule {
 
 		String path = fileAccess.relativizeToAssetsFolder(source);
 		AssetTransactionGenerator gen = getTransactionGen(source, path);
-
 		if (gen == null) throw new UnsupportedOperationException("Source file cannot be moved safely");
+		gen.setTransactionStorage(getNewTransactionBackup());
 		AssetTransaction transaction = gen.analyze(projectContainer, provideDescriptor(source, path), source, target, fileAccess.relativizeToAssetsFolder(target));
 
 		transaction.execute(); //TODO support for transaction execute undo
 
 		for (CloseTabWhenMovingResources tab : tabsToReOpen)
 			tab.reopenSelfAfterAssetsUpdated();
+	}
+
+	public FileHandle getNewTransactionBackup () {
+		FileHandle dir;
+
+		do {
+			dir = transactionBackupRoot.child("transaction-" + MathUtils.random(1000000000));
+		} while (dir.exists());
+
+		dir.mkdirs();
+
+		return dir;
 	}
 }

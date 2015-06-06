@@ -16,37 +16,38 @@
 
 package com.kotcrab.vis.editor.scene;
 
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.util.DummyMusic;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.MusicEntity;
 
 public class MusicObject extends MusicEntity implements EditorObject {
-	private VisAssetDescriptor assetDescriptor;
-	private float x, y;
 	private transient TextureRegion icon;
-	private Rectangle bounds;
 
-	public MusicObject (String musicPath, Music music) {
-		super(null, music);
+	private VisAssetDescriptor assetDescriptor;
+	private Rectangle bounds;
+	private float x, y;
+
+	public MusicObject (PathAsset musicPath) {
+		super(null, new DummyMusic());
+		this.assetDescriptor = musicPath;
 		this.icon = Assets.getIconRegion(Icons.MUSIC);
 
 		bounds = new Rectangle(x, y, icon.getRegionWidth(), icon.getRegionHeight());
-		setAssetDescriptor(new PathAsset(musicPath));
 	}
 
-	public MusicObject (MusicObject other, Music newMusic) {
-		super(other.getId(), newMusic);
+	public MusicObject (MusicObject other) {
+		super(other.getId(), new DummyMusic());
 
 		this.x = other.x;
 		this.y = other.y;
 		this.icon = other.icon;
-		this.bounds = new Rectangle();
+		this.bounds = new Rectangle(other.bounds);
 		this.assetDescriptor = other.assetDescriptor;
 		calcBounds();
 	}
@@ -55,9 +56,9 @@ public class MusicObject extends MusicEntity implements EditorObject {
 		bounds.set(x, y, icon.getRegionWidth(), icon.getRegionHeight());
 	}
 
-	public void onDeserialize (Music music) {
+	public void onDeserialize () {
+		this.music = new DummyMusic();
 		this.icon = Assets.getIconRegion(Icons.MUSIC);
-		this.music = music;
 	}
 
 	public String getAssetPath () {

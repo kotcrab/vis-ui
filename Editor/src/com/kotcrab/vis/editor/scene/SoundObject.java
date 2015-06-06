@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.editor.scene;
 
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -27,27 +26,28 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.SoundEntity;
 
 public class SoundObject extends SoundEntity implements EditorObject {
-	private VisAssetDescriptor assetDescriptor;
-	private float x, y;
 	private transient TextureRegion icon;
-	private Rectangle bounds;
 
-	public SoundObject (String soundPath, Sound sound) {
-		super(null, sound);
-		setAssetDescriptor(new PathAsset(soundPath));
+	private VisAssetDescriptor assetDescriptor;
+	private Rectangle bounds;
+	private float x, y;
+
+	public SoundObject (PathAsset soundPath) {
+		super(null, null);
+		setAssetDescriptor(soundPath);
 		this.icon = Assets.getIconRegion(Icons.SOUND);
 
 		bounds = new Rectangle(x, y, icon.getRegionWidth(), icon.getRegionHeight());
 	}
 
-	public SoundObject (SoundObject other, Sound newSound) {
-		super(other.getId(), newSound);
+	public SoundObject (SoundObject other) {
+		super(other.getId(), null);
 
 		this.assetDescriptor = other.assetDescriptor;
 		this.x = other.x;
 		this.y = other.y;
 		this.icon = other.icon;
-		this.bounds = new Rectangle();
+		this.bounds = new Rectangle(other.bounds);
 		calcBounds();
 	}
 
@@ -55,9 +55,8 @@ public class SoundObject extends SoundEntity implements EditorObject {
 		bounds.set(x, y, icon.getRegionWidth(), icon.getRegionHeight());
 	}
 
-	public void onDeserialize (Sound sound) {
+	public void onDeserialize () {
 		this.icon = Assets.getIconRegion(Icons.SOUND);
-		this.sound = sound;
 	}
 
 	@Override

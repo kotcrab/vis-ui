@@ -22,6 +22,13 @@ import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 public class BaseAssetTransactionGenerator implements AssetTransactionGenerator {
+	private FileHandle transactionStorage;
+
+	@Override
+	public void setTransactionStorage (FileHandle transactionStorage) {
+		this.transactionStorage = transactionStorage;
+	}
+
 	@Override
 	public boolean isSupported (VisAssetDescriptor descriptor) {
 		if (descriptor instanceof PathAsset == false) return false;
@@ -37,8 +44,9 @@ public class BaseAssetTransactionGenerator implements AssetTransactionGenerator 
 	public AssetTransaction analyze (ModuleInjector injector, VisAssetDescriptor descriptor, FileHandle source, FileHandle target, String relativeTargetPath) {
 		AssetTransaction transaction = new AssetTransaction();
 
-		transaction.add(new MoveFileAction(source, target));
+		transaction.add(new CopyFileAction(source, target));
 		transaction.add(new UpdateReferencesAction(injector, descriptor, new PathAsset(relativeTargetPath)));
+		transaction.add(new DeleteFileAction(source, transactionStorage));
 		transaction.finalizeGroup();
 
 		return transaction;

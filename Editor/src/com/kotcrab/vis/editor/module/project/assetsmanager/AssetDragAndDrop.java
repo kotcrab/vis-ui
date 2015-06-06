@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.editor.module.project.assetsmanager;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -37,6 +36,7 @@ import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.VisDropSource;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
@@ -90,8 +90,6 @@ public class AssetDragAndDrop {
 			@Override
 			public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 				Payload payload = new Payload();
-
-
 
 				SpriteObject object = new SpriteObject(item.getAtlasAsset(), textureCache.getRegion(item.getAtlasAsset()), 0, 0);
 				payload.setObject(object);
@@ -197,12 +195,12 @@ public class AssetDragAndDrop {
 
 		if (item.getType() == FileType.MUSIC) {
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Music \n (drop on scene to add)").disposeOnNullTarget()
-					.setObjectProvider(() -> new MusicObject(fileAccess.relativizeToAssetsFolder(item.getFile()), Gdx.audio.newMusic(item.getFile()))));
+					.setObjectProvider(() -> new MusicObject(new PathAsset(fileAccess.relativizeToAssetsFolder(item.getFile())))));
 		}
 
 		if (item.getType() == FileType.SOUND) {
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Sound \n (drop on scene to add)").disposeOnNullTarget()
-					.setObjectProvider(() -> new SoundObject(fileAccess.relativizeToAssetsFolder(item.getFile()), Gdx.audio.newSound(item.getFile()))));
+					.setObjectProvider(() -> new SoundObject(new PathAsset(fileAccess.relativizeToAssetsFolder(item.getFile())))));
 		}
 
 		if (item.getType() == FileType.NON_STANDARD) {

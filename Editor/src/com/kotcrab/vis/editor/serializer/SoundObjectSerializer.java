@@ -16,24 +16,21 @@
 
 package com.kotcrab.vis.editor.serializer;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
+import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.scene.SoundObject;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 public class SoundObjectSerializer extends CompatibleFieldSerializer<SoundObject> {
-	private FileAccessModule fileAccess;
+	@InjectModule private FileAccessModule fileAccess;
 
-	public SoundObjectSerializer (Kryo kryo, FileAccessModule fileAccess) {
+	public SoundObjectSerializer (Kryo kryo, ModuleInjector injector) {
 		super(kryo, SoundObject.class);
-		this.fileAccess = fileAccess;
+		injector.injectModules(this);
 	}
 
 	@Override
@@ -44,19 +41,12 @@ public class SoundObjectSerializer extends CompatibleFieldSerializer<SoundObject
 	@Override
 	public SoundObject read (Kryo kryo, Input input, Class<SoundObject> type) {
 		SoundObject obj = super.read(kryo, input, type);
-		obj.onDeserialize(getNewSoundInstance(obj));
+		obj.onDeserialize();
 		return obj;
 	}
 
 	@Override
 	public SoundObject copy (Kryo kryo, SoundObject original) {
-		return new SoundObject(original, getNewSoundInstance(original));
-	}
-
-	private Sound getNewSoundInstance (SoundObject obj) {
-		VisAssetDescriptor descriptor = obj.getAssetDescriptor();
-		if(descriptor instanceof PathAsset == false) throw new UnsupportedAssetDescriptorException(descriptor);
-		PathAsset path = (PathAsset) descriptor;
-		return Gdx.audio.newSound(fileAccess.getAssetsFolder().child(path.getPath()));
+		return new SoundObject(original);
 	}
 }

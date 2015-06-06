@@ -19,22 +19,25 @@ package com.kotcrab.vis.editor.assets.transaction;
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.module.scene.UndoableAction;
 
-public class MoveFileAction implements UndoableAction {
-	private final FileHandle source;
-	private final FileHandle target;
+public class DeleteFileAction implements UndoableAction {
+	private final FileHandle transactionStorage;
 
-	public MoveFileAction (FileHandle source, FileHandle target) {
+	private FileHandle source;
+	private FileHandle backup;
+
+	public DeleteFileAction (FileHandle source, FileHandle transactionStorage) {
 		this.source = source;
-		this.target = target;
+		this.transactionStorage = transactionStorage;
+		this.backup = transactionStorage.child(source.name());
 	}
 
 	@Override
 	public void execute () {
-		source.moveTo(target);
+		source.moveTo(backup);
 	}
 
 	@Override
 	public void undo () {
-		target.moveTo(source);
+		backup.copyTo(source);
 	}
 }

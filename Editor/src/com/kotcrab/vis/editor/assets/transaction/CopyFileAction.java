@@ -17,13 +17,24 @@
 package com.kotcrab.vis.editor.assets.transaction;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.editor.module.scene.UndoableAction;
 
-public interface AssetTransactionGenerator {
-	void setTransactionStorage (FileHandle backupDirectory);
+public class CopyFileAction implements UndoableAction {
+	private final FileHandle source;
+	private final FileHandle target;
 
-	boolean isSupported(VisAssetDescriptor descriptor);
+	public CopyFileAction (FileHandle source, FileHandle target) {
+		this.source = source;
+		this.target = target;
+	}
 
-	AssetTransaction analyze (ModuleInjector injector, VisAssetDescriptor descriptor, FileHandle source, FileHandle target, String relativeTargetPath);
+	@Override
+	public void execute () {
+		source.copyTo(target);
+	}
+
+	@Override
+	public void undo () {
+		target.copyTo(source);
+	}
 }

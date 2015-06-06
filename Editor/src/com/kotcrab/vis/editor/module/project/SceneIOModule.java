@@ -73,8 +73,8 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(Color.class, new ColorSerializer(), 13);
 
 		kryo.register(SpriteObject.class, new SpriteObjectSerializer(kryo, textureCache), 30);
-		kryo.register(MusicObject.class, new MusicObjectSerializer(kryo, fileAccessModule), 31);
-		kryo.register(SoundObject.class, new SoundObjectSerializer(kryo, fileAccessModule), 32);
+		kryo.register(MusicObject.class, new MusicObjectSerializer(kryo, projectContainer), 31);
+		kryo.register(SoundObject.class, new SoundObjectSerializer(kryo, projectContainer), 32);
 		kryo.register(ParticleEffectObject.class, new ParticleObjectSerializer(kryo, fileAccessModule, particleCache), 33);
 		kryo.register(TextObject.class, new TextObjectSerializer(kryo, fileAccessModule, fontCache), 34);
 	}
