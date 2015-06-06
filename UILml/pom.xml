@@ -4,7 +4,7 @@
 
     <groupId>com.kotcrab.vis</groupId>
     <artifactId>vis-ui-lml</artifactId>
-    <version>0.7.5-SNAPSHOT</version>
+    <version>0.8.0-SNAPSHOT</version>
 
     <packaging>jar</packaging>
     <name>VisUILml</name>
@@ -19,7 +19,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <gdx.version>1.6.1</gdx.version>
+        <gdx.version>1.6.2</gdx.version>
         <arguments/>
     </properties>
 

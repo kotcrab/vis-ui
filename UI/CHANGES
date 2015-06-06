@@ -1,4 +1,4 @@
-[0.8.0] [LibGDX 1.6.1] [Snapshot]
+[0.8.0] [LibGDX 1.6.2] [Snapshot]
 -Optimized FileChooser ( https://github.com/kotcrab/VisEditor/issues/11 )
 -Fixed issue when FileChooser confirm button text wasn't updated after changing mode ( https://github.com/kotcrab/VisEditor/pull/14 )
 

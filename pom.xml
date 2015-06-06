@@ -19,7 +19,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <gdx.version>1.6.1</gdx.version>
+        <gdx.version>1.6.2</gdx.version>
+        <visui.version>0.8.0-SNAPSHOT</visui.version>
     </properties>
 
     <dependencies>
@@ -86,7 +87,7 @@
             <dependency>
                 <groupId>${project.groupId}</groupId>
                 <artifactId>vis-ui</artifactId>
-                <version>0.7.7-SNAPSHOT</version>
+                <version>${visui.version}</version>
             </dependency>
 
             <dependency>
