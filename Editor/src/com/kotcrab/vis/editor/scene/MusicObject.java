@@ -61,10 +61,6 @@ public class MusicObject extends MusicEntity implements EditorObject {
 		this.icon = Assets.getIconRegion(Icons.MUSIC);
 	}
 
-	public String getAssetPath () {
-		return ((PathAsset) getAssetDescriptor()).getPath();
-	}
-
 	@Override
 	public void render (Batch batch) {
 		batch.draw(icon, x, y);

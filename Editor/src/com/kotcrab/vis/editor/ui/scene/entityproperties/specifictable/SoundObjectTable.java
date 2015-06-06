@@ -19,40 +19,28 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorObject;
-import com.kotcrab.vis.editor.scene.MusicObject;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
+import com.kotcrab.vis.editor.scene.SoundObject;
 import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
-import static com.kotcrab.vis.editor.util.EntityUtils.setCommonCheckBoxState;
-
-public class MusicObjectTable extends SpecificObjectTable {
+public class SoundObjectTable extends SpecificObjectTable {
 	private VisLabel label;
-	private IndeterminateCheckbox loopingCheck;
-	private IndeterminateCheckbox playOnStartCheck;
 
 	@Override
 	protected void init () {
-		loopingCheck = new IndeterminateCheckbox("Loop");
-		playOnStartCheck = new IndeterminateCheckbox("Play on start");
-
-		loopingCheck.addListener(properties.getSharedCheckBoxChangeListener());
-		playOnStartCheck.addListener(properties.getSharedCheckBoxChangeListener());
-
 		label = new VisLabel();
 		label.setColor(Color.GRAY);
 
 		left();
 		defaults().left();
-		add(TableBuilder.build(new VisLabel("Music:"), label)).row();
-		add(TableBuilder.build(loopingCheck, playOnStartCheck));
+		add(TableBuilder.build(new VisLabel("Sound:"), label)).row();
 	}
 
 	@Override
 	public boolean isSupported (EditorObject entity) {
-		return entity instanceof MusicObject;
+		return entity instanceof SoundObject;
 	}
 
 	@Override
@@ -60,18 +48,10 @@ public class MusicObjectTable extends SpecificObjectTable {
 		Array<EditorObject> entities = properties.getEntities();
 
 		label.setText(EntityUtils.getCommonString(entities, "<?>", entity -> ((PathAsset) entity.getAssetDescriptor()).getPath()));
-		setCommonCheckBoxState(entities, loopingCheck, entity -> ((MusicObject) entity).isLooping());
-		setCommonCheckBoxState(entities, playOnStartCheck, entity -> ((MusicObject) entity).isPlayOnStart());
 	}
 
 	@Override
 	public void setValuesToEntities () {
-		Array<EditorObject> entities = properties.getEntities();
-		for (EditorObject entity : entities) {
-			MusicObject obj = (MusicObject) entity;
 
-			if (loopingCheck.isIndeterminate() == false) obj.setLooping(loopingCheck.isChecked());
-			if (playOnStartCheck.isIndeterminate() == false) obj.setPlayOnStart(playOnStartCheck.isChecked());
-		}
 	}
 }

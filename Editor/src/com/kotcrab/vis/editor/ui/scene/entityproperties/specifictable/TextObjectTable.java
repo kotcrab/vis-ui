@@ -26,6 +26,7 @@ import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.dialog.SelectFontDialog;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -96,8 +97,7 @@ public abstract class TextObjectTable extends SpecificObjectTable {
 	abstract int getRelativeFontFolderLength ();
 
 	private String getFontTextForEntity (EditorObject entity) {
-		TextObject obj = (TextObject) entity;
-		return obj.getAssetPath().substring(getRelativeFontFolderLength() + 1);
+		return ((PathAsset) entity.getAssetDescriptor()).getPath().substring(getRelativeFontFolderLength() + 1);
 	}
 
 	@Override

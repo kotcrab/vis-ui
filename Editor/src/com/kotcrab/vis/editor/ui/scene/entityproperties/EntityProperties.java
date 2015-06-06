@@ -184,6 +184,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		registerSpecificTable(new TTFTextObjectTable());
 		registerSpecificTable(new BMPTextObjectTable());
 		registerSpecificTable(new MusicObjectTable());
+		registerSpecificTable(new SoundObjectTable());
 		registerSpecificTable(new ObjectGroupTable());
 		registerSpecificTable(new ParticleEffectTable());
 

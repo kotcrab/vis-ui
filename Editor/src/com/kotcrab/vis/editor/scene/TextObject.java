@@ -62,10 +62,6 @@ public class TextObject extends TextEntity implements EditorObject {
 		setColor(getColor()); //update cache color
 	}
 
-	public String getAssetPath () {
-		return ((PathAsset) getAssetDescriptor()).getPath();
-	}
-
 	@Override
 	public boolean isOriginSupported () {
 		return true;
