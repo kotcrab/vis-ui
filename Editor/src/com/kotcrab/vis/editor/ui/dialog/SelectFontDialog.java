@@ -91,7 +91,7 @@ public class SelectFontDialog extends VisWindow {
 
 	private void packAndCenter () {
 		pack();
-		setSize(getWidth() + 50, getHeight());
+		setSize(getWidth() + 80, getHeight());
 		centerWindow();
 	}
 
