@@ -23,7 +23,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 public class FolderItem extends Table {
-	public FileHandle file;
+	private FileHandle file;
 	private VisLabel name;
 
 	public FolderItem (FileHandle file) {
@@ -32,5 +32,9 @@ public class FolderItem extends Table {
 		name.setEllipsis(true);
 		add(new Image(VisUI.getSkin().getDrawable("icon-folder"))).size(20).padTop(3);
 		add(name).expand().fill().padRight(6);
+	}
+
+	public FileHandle getFile () {
+		return file;
 	}
 }

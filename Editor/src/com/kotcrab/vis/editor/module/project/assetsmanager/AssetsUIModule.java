@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.KryoException;
 import com.kotcrab.vis.editor.App;
@@ -76,6 +77,10 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private FileHandle assetsFolder;
 	private FileHandle currentDirectory;
 
+	private Json json;
+	private FileHandle metadataFile;
+	private AssetsUIModuleMetadata metadata;
+
 	private int filesDisplayed;
 
 	private VisTable mainTable;
@@ -109,6 +114,37 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 		tabsModule.addListener(this);
 		assetsWatcher.addListener(this);
+
+		json = new Json();
+		metadataFile = fileAccess.getModuleFolder(".metadata").child("assetsUIMetadata");
+
+		if (metadataFile.exists())
+			metadata = json.fromJson(AssetsUIModuleMetadata.class, metadataFile);
+		else
+			metadata = new AssetsUIModuleMetadata();
+
+		if (metadata.lastDirectory != null) {
+			FileHandle dir = Gdx.files.absolute(metadata.lastDirectory);
+			changeCurrentDirectory(dir);
+			highlightCurrentDir(contentTree.getNodes());
+		}
+	}
+
+	private boolean highlightCurrentDir (Array<Node> nodes) {
+		for (Node n : nodes) {
+			if (n.getActor() instanceof FolderItem && ((FolderItem) n.getActor()).getFile().equals(currentDirectory)) {
+				contentTree.getSelection().choose(n);
+				return true;
+			}
+
+			if (n.getChildren().size > 0) {
+				n.setExpanded(true);
+				if (highlightCurrentDir(n.getChildren())) return true;
+				n.setExpanded(false);
+			}
+		}
+
+		return false;
 	}
 
 	private void initModule () {
@@ -170,12 +206,15 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		tabsModule.removeListener(this);
 		assetsWatcher.removeListener(this);
 		assetsTab.removeFromTabPane();
+
+		json.toJson(metadata, metadataFile);
 	}
 
 	private void createToolbarTable () {
 		contentTitleLabel = new VisLabel("Content");
 		searchField = new SearchField(newText -> {
 			if (currentDirectory == null) return true;
+			if (currentDirectory.list().length == 0 && searchField.getText().length() == 0) return true;
 
 			refreshFilesList();
 
@@ -215,7 +254,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 					searchField.clearSearch();
 
 					FolderItem item = (FolderItem) node.getActor();
-					changeCurrentDirectory(item.file);
+					changeCurrentDirectory(item.getFile());
 				}
 			}
 		});
@@ -231,6 +270,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private void changeCurrentDirectory (FileHandle directory) {
 		clearSelection();
 		this.currentDirectory = directory;
+		if (metadata != null) metadata.lastDirectory = directory.path();
 		filesView.clearChildren();
 		filesDisplayed = 0;
 
@@ -374,7 +414,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 				addItem(MenuUtils.createMenuItem("Copy", () -> clipboardCopyFiles()));
 				addItem(MenuUtils.createMenuItem("Paste", () -> clipboardPasteFiles()));
 
-				if(assetsAnalyzer.isSafeFileMoveSupported(item.getFile())) {
+				if (assetsAnalyzer.isSafeFileMoveSupported(item.getFile())) {
 					addItem(MenuUtils.createMenuItem("Move", () -> moveFiles(item.getFile())));
 					addItem(MenuUtils.createMenuItem("Rename", () -> moveFiles(item.getFile())));
 				}
@@ -537,5 +577,9 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		public boolean isCloseableByUser () {
 			return false;
 		}
+	}
+
+	private static class AssetsUIModuleMetadata {
+		public String lastDirectory;
 	}
 }
