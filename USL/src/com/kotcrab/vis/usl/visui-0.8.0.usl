@@ -29,11 +29,13 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 
 	#Button$ButtonStyle: {
 		default: { down: button-down, up: button }
+		blue: { down: button-blue-down, up: button-blue }
 		toggle inherits default: { checked: button-down }
 	}
 	
 	#TextButton$TextButtonStyle extends ButtonStyle: {
 		default inherits .font: { over: button-over, disabled: button }
+		blue inherits .font: { over: button-blue-over, disabled: button }
 		toggle inherits default, .font: {}
 	}
 	
@@ -100,11 +102,13 @@ package com.kotcrab.vis.ui.widget {
 	#VisTextButton$VisTextButtonStyle extends TextButtonStyle: {
 		default inherits .focus-border: {}
 		toggle inherits .focus-border: {}
+		blue inherits .focus-border: {}
 		menu-bar inherits default, .font: { over: button-down, focusBorder: NULL }
 	}
 	
 	#VisImageButton$VisImageButtonStyle: {
-		default inherits .focus-border: { down: button-down, up: button, over: button-over, disabled: button}
+		default inherits .focus-border: { down: button-down, up: button, over: button-over, disabled: button }
+		blue inherits .focus-border: { down: button-blue-down, up: button-blue, over: button-blue-over, disabled: button-blue }
 		toggle inherits default, .focus-border: { checked: button-down }
 		close: { down: button-red, up: button, over: button-over, imageUp: icon-close }
 		close-window inherits close: { up: button-window-bg }
