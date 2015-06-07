@@ -21,13 +21,14 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.ui.SearchField;
+import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.layout.GridGroup;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
-public class TextureAtlasViewTab extends Tab {
+public class TextureAtlasViewTab extends Tab implements CloseTabWhenMovingResources {
 	private String name;
 
 	private VisTable contentTable;
@@ -90,5 +91,10 @@ public class TextureAtlasViewTab extends Tab {
 	@Override
 	public Table getContentTable () {
 		return contentTable;
+	}
+
+	@Override
+	public void reopenSelfAfterAssetsUpdated () {
+		//TODO reopen self
 	}
 }

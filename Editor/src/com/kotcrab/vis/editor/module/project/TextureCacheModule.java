@@ -28,13 +28,16 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.event.AtlasReloadedEvent;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.ProjectPathUtils;
-import com.kotcrab.vis.runtime.assets.*;
+import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
+import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 public class TextureCacheModule extends ProjectModule implements WatchListener {
@@ -85,7 +88,11 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 		try {
 			if (cacheFile.exists()) cache = new TextureAtlas(cacheFile);
+		} catch (Exception e) {
+			Log.error("Error while loading texture cache, texture cache will be regenerated");
+		}
 
+		try {
 			if (atlasesFolder.exists()) {
 				FileHandle[] files = atlasesFolder.list();
 
@@ -94,7 +101,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 						updateAtlas(file);
 			}
 		} catch (Exception e) {
-			Log.error("Error while loading texture cache, texture cache will be regenerated");
+			Log.error("Error encountered while loading one of atlases");
+			e.printStackTrace();
 		}
 
 		updateCache();
@@ -105,7 +113,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	private void packageAndReloadCache () {
-		TexturePacker.processIfModified(settings, gfxPath, cachePath, "cache");
+		TexturePacker.process(settings, gfxPath, cachePath, "cache");
 
 		Gdx.app.postRunnable(this::reloadCache);
 	}
@@ -163,6 +171,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		if (file.exists()) {
 			atlases.put(relativePath, new TextureAtlas(file));
 			App.eventBus.post(new TexturesReloadedEvent());
+			App.eventBus.post(new AtlasReloadedEvent());
 		}
 	}
 

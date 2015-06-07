@@ -34,6 +34,9 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.event.AtlasReloadedEvent;
+import com.kotcrab.vis.editor.event.Event;
+import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
@@ -58,7 +61,7 @@ import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 
-public class AssetsUIModule extends ProjectModule implements WatchListener, VisTabbedPaneListener {
+public class AssetsUIModule extends ProjectModule implements WatchListener, EventListener, VisTabbedPaneListener {
 	@InjectModule private TabsModule tabsModule;
 	@InjectModule private QuickAccessModule quickAccessModule;
 
@@ -105,6 +108,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	@Override
 	public void init () {
 		stage = Editor.instance.getStage();
+		App.eventBus.register(this);
 
 		initModule();
 		initUI();
@@ -203,6 +207,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 	@Override
 	public void dispose () {
+		App.eventBus.unregister(this);
 		tabsModule.removeListener(this);
 		assetsWatcher.removeListener(this);
 		assetsTab.removeFromTabPane();
@@ -347,9 +352,14 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			if (tab == null) {
 				String relativePath = fileAccess.relativizeToAssetsFolder(file);
 				TextureAtlas atlas = textureCache.getAtlas(relativePath);
-				tab = new TextureAtlasViewTab(relativePath, atlas, file.name());
-				quickAccessModule.addTab(tab);
-				atlasViews.put(file, tab);
+				if (atlas != null) {
+					tab = new TextureAtlasViewTab(relativePath, atlas, file.name());
+					quickAccessModule.addTab(tab);
+					atlasViews.put(file, tab);
+				} else {
+					DialogUtils.showErrorDialog(Editor.instance.getStage(), "Unknown error encountered during atlas loading");
+					return;
+				}
 			} else
 				quickAccessModule.switchTab(tab);
 
@@ -388,6 +398,16 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			assetDragAndDrop.rebuild(filesView.getChildren(), atlasViews.values());
 		} else
 			assetDragAndDrop.clear();
+	}
+
+	@Override
+	public boolean onEvent (Event event) {
+		if (event instanceof AtlasReloadedEvent) {
+			String path = fileAccess.relativizeToAssetsFolder(currentDirectory);
+			if (path.startsWith("atlas")) refreshFilesList();
+		}
+
+		return false;
 	}
 
 	private class AssetsPopupMenu extends PopupMenu {

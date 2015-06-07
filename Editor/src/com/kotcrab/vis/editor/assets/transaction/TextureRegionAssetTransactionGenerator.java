@@ -21,10 +21,10 @@ import com.kotcrab.vis.editor.assets.transaction.action.CopyFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.DeleteFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.UpdateReferencesAction;
 import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-public class BaseAssetTransactionGenerator implements AssetTransactionGenerator {
+public class TextureRegionAssetTransactionGenerator implements AssetTransactionGenerator {
 	private FileHandle transactionStorage;
 
 	@Override
@@ -34,13 +34,7 @@ public class BaseAssetTransactionGenerator implements AssetTransactionGenerator 
 
 	@Override
 	public boolean isSupported (VisAssetDescriptor descriptor) {
-		if (descriptor instanceof PathAsset == false) return false;
-
-		PathAsset pathAsset = (PathAsset) descriptor;
-		String path = pathAsset.getPath();
-		if (path.startsWith("font") || path.startsWith("music") || path.startsWith("sound")) return true;
-
-		return false;
+		return descriptor instanceof TextureRegionAsset;
 	}
 
 	@Override
@@ -48,7 +42,7 @@ public class BaseAssetTransactionGenerator implements AssetTransactionGenerator 
 		AssetTransaction transaction = new AssetTransaction();
 
 		transaction.add(new CopyFileAction(source, target));
-		transaction.add(new UpdateReferencesAction(injector, descriptor, new PathAsset(relativeTargetPath)));
+		transaction.add(new UpdateReferencesAction(injector, descriptor, new TextureRegionAsset(relativeTargetPath)));
 		transaction.add(new DeleteFileAction(source, transactionStorage));
 		transaction.finalizeGroup();
 

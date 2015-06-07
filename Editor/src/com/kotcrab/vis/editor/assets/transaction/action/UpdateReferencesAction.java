@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.assets.transaction;
+package com.kotcrab.vis.editor.assets.transaction.action;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.module.InjectModule;

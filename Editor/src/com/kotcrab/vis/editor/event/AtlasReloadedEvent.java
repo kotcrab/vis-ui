@@ -14,27 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.assets.transaction;
+package com.kotcrab.vis.editor.event;
 
-import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.editor.module.scene.UndoableAction;
-
-public class CopyFileAction implements UndoableAction {
-	private final FileHandle source;
-	private final FileHandle target;
-
-	public CopyFileAction (FileHandle source, FileHandle target) {
-		this.source = source;
-		this.target = target;
-	}
-
-	@Override
-	public void execute () {
-		source.copyTo(target);
-	}
-
-	@Override
-	public void undo () {
-		target.copyTo(source);
-	}
+public class AtlasReloadedEvent implements Event {
 }

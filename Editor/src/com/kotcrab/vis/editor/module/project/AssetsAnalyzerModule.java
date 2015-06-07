@@ -24,11 +24,10 @@ import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.assets.BmpFontDescriptorProvider;
 import com.kotcrab.vis.editor.assets.PathDescriptorProvider;
 import com.kotcrab.vis.editor.assets.TextureDescriptorProvider;
-import com.kotcrab.vis.editor.assets.transaction.AssetTransaction;
-import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
-import com.kotcrab.vis.editor.assets.transaction.BaseAssetTransactionGenerator;
+import com.kotcrab.vis.editor.assets.transaction.*;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
+import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
@@ -38,6 +37,7 @@ import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
 public class AssetsAnalyzerModule extends ProjectModule {
@@ -48,6 +48,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 	@InjectModule private ObjectSupportModule supportModule;
 	@InjectModule private TabsModule tabsModule;
 	@InjectModule private SceneTabsModule sceneTabsModule;
+	@InjectModule private QuickAccessModule quickAccessModule;
 	@InjectModule private SceneCacheModule sceneCache;
 
 	private Array<AssetDescriptorProvider> providers = new Array<>();
@@ -62,6 +63,8 @@ public class AssetsAnalyzerModule extends ProjectModule {
 		providers.add(new BmpFontDescriptorProvider());
 
 		transactionsGens.add(new BaseAssetTransactionGenerator());
+		transactionsGens.add(new TextureRegionAssetTransactionGenerator());
+		transactionsGens.add(new AtlasRegionAssetTransactionGenerator());
 
 		transactionBackupRoot = fileAccess.getModuleFolder(".transactionBackup");
 	}
@@ -178,13 +181,29 @@ public class AssetsAnalyzerModule extends ProjectModule {
 			}
 		}
 
+		//TODO support tabs with savable property
+		Array<Tab> quickTabs = quickAccessModule.getTabs();
+		for (int i = 0; i < quickTabs.size; i++) {
+			Tab tab = quickTabs.get(i);
+			if (tab instanceof CloseTabWhenMovingResources)
+				quickAccessModule.removeTab(tab);
+		}
+
 		String path = fileAccess.relativizeToAssetsFolder(source);
 		AssetTransactionGenerator gen = getTransactionGen(source, path);
 		if (gen == null) throw new UnsupportedOperationException("Source file cannot be moved safely");
 		gen.setTransactionStorage(getNewTransactionBackup());
-		AssetTransaction transaction = gen.analyze(projectContainer, provideDescriptor(source, path), source, target, fileAccess.relativizeToAssetsFolder(target));
 
-		transaction.execute(); //TODO support for transaction execute undo
+		AssetTransaction transaction = null;
+
+		try {
+			transaction = gen.analyze(projectContainer, provideDescriptor(source, path), source, target, fileAccess.relativizeToAssetsFolder(target));
+		} catch (AssetTransactionException e) {
+			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Error occurred during asset transaction preparation, nothing was changed.", e);
+		}
+
+		//TODO support for transaction execute undo
+		if (transaction != null) transaction.execute();
 
 		for (CloseTabWhenMovingResources tab : tabsToReOpen)
 			tab.reopenSelfAfterAssetsUpdated();
