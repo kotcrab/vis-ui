@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.data.TextData;
 
 public interface FontProvider {
-	public void load (Array<AssetDescriptor> dependencies, TextData data);
+	void load (Array<AssetDescriptor> dependencies, TextData data);
 
-	public void setLoaders (AssetManager manager);
+	void setLoaders (AssetManager manager);
 }

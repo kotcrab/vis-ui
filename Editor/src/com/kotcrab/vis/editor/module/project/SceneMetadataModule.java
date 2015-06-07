@@ -53,7 +53,7 @@ public class SceneMetadataModule extends ProjectModule {
 		while (it.hasNext()) {
 			String path = it.next();
 
-			if(fileAccess.getAssetsFolder().child(path).exists() == false)
+			if (fileAccess.getAssetsFolder().child(path).exists() == false)
 				it.remove();
 		}
 	}

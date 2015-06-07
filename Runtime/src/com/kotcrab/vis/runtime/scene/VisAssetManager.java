@@ -22,9 +22,6 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
-import com.kotcrab.vis.runtime.scene.Scene;
-import com.kotcrab.vis.runtime.scene.SceneLoader;
-import com.kotcrab.vis.runtime.scene.ShaderLoader;
 
 public class VisAssetManager extends AssetManager {
 	private SceneLoader sceneLoader;

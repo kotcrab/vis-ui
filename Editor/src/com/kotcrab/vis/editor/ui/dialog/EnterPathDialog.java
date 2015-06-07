@@ -38,7 +38,7 @@ public class EnterPathDialog extends VisWindow {
 		super("Enter new path");
 		this.listener = listener;
 
-		if(parent.endsWith("/") == false) parent += "/";
+		if (parent.endsWith("/") == false) parent += "/";
 
 		setModal(true);
 		addCloseButton();

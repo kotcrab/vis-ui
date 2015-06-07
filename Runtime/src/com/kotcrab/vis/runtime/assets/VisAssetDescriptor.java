@@ -17,5 +17,5 @@
 package com.kotcrab.vis.runtime.assets;
 
 public interface VisAssetDescriptor {
-	boolean compare(VisAssetDescriptor asset);
+	boolean compare (VisAssetDescriptor asset);
 }

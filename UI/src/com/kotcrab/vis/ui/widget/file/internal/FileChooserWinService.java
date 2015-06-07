@@ -38,7 +38,7 @@ public class FileChooserWinService {
 	private Map<File, ListenerSet> listeners = new HashMap<File, ListenerSet>();
 
 	public static synchronized FileChooserWinService getInstance () {
-		if(FileUtils.isWindows() == false) return null;
+		if (FileUtils.isWindows() == false) return null;
 
 		if (instance == null)
 			instance = new FileChooserWinService();

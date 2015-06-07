@@ -31,7 +31,8 @@ public class EntityGroupData extends EntityData<EntityGroup> {
 		this.id = id;
 	}
 
-	@Override @OverrideCallSuper
+	@Override
+	@OverrideCallSuper
 	public void saveFrom (EntityGroup entity, VisAssetDescriptor assetDescriptor) {
 		throw new UnsupportedOperationException();
 	}

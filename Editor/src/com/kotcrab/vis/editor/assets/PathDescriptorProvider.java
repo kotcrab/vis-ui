@@ -28,8 +28,8 @@ public class PathDescriptorProvider implements AssetDescriptorProvider {
 	}
 
 	private boolean checkIfSupported (String path) {
-		if(path.startsWith("font") || path.startsWith("music") || path.startsWith("sound")) return true;
-		if(path.startsWith("particle") && path.endsWith(".p")) return true;
+		if (path.startsWith("font") || path.startsWith("music") || path.startsWith("sound")) return true;
+		if (path.startsWith("particle") && path.endsWith(".p")) return true;
 		return false;
 	}
 }

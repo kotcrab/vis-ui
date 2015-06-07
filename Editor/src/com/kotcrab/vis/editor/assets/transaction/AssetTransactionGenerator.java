@@ -23,7 +23,7 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 public interface AssetTransactionGenerator {
 	void setTransactionStorage (FileHandle backupDirectory);
 
-	boolean isSupported(VisAssetDescriptor descriptor);
+	boolean isSupported (VisAssetDescriptor descriptor);
 
 	AssetTransaction analyze (ModuleInjector injector, VisAssetDescriptor descriptor, FileHandle source, FileHandle target, String relativeTargetPath);
 }

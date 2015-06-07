@@ -462,7 +462,7 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	private void selectAll () {
-		if(scene.activeLayer.locked == true) return;
+		if (scene.activeLayer.locked == true) return;
 		for (EditorObject entity : scene.activeLayer.entities) {
 			if (selectedEntities.contains(entity, true) == false)
 				selectedEntities.add(entity);

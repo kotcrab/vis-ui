@@ -40,7 +40,7 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 public class SpineAssetDescriptorProvider implements AssetDescriptorProvider {
 	@Override
 	public VisAssetDescriptor provide (FileHandle file, String relativePath) {
-		if(relativePath.startsWith("spine") == false) return null;
+		if (relativePath.startsWith("spine") == false) return null;
 
 		if (relativePath.endsWith("atlas")) {
 			String skelPath = findSkelPath(file, relativePath);
