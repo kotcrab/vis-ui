@@ -65,6 +65,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 		transactionsGens.add(new BaseAssetTransactionGenerator());
 		transactionsGens.add(new TextureRegionAssetTransactionGenerator());
 		transactionsGens.add(new AtlasRegionAssetTransactionGenerator());
+		transactionsGens.add(new BmpFontAssetTransactionGenerator());
 
 		transactionBackupRoot = fileAccess.getModuleFolder(".transactionBackup");
 	}

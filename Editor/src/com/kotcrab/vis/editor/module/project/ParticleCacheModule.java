@@ -26,7 +26,6 @@ import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
-//TODO support dynamic refreshing
 public class ParticleCacheModule extends ProjectModule implements WatchListener {
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private AssetsWatcherModule watcherModule;
