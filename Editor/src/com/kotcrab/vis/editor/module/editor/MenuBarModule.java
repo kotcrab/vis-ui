@@ -59,6 +59,7 @@ public class MenuBarModule extends EditorModule {
 		createFileMenu();
 		createEditMenu();
 		createSceneMenu();
+		//createToolsMenu();
 		createHelpMenu();
 	}
 
@@ -107,6 +108,16 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera", () -> sceneButtonsListener.resetCamera()));
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera Zoom", () -> sceneButtonsListener.resetCameraZoom()));
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Scene Settings", () -> sceneButtonsListener.showSceneSettings()));
+
+	}
+
+	private void createToolsMenu () {
+		Menu menu = new Menu("Tools");
+		menuBar.addMenu(menu);
+
+		menu.addItem(createMenuItem("Hiero", null, () -> System.out.println("not yet")));
+		menu.addItem(createMenuItem("Particle Editor", null, () -> System.out.println("not yet")));
+		menu.addSeparator();
 
 	}
 
