@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.scene.Layer;
 
 public class ZIndexManipulatorModule extends SceneModule {
 	@InjectModule private UndoModule undoModule;
@@ -43,25 +44,25 @@ public class ZIndexManipulatorModule extends SceneModule {
 
 	private void moveEntity (EditorObject entity, Array<EditorObject> overlappingEntities, boolean up) {
 		if (overlappingEntities.size > 0) {
-			int currentIndex = scene.entities.indexOf(entity, true);
-			int targetIndex = scene.entities.indexOf(overlappingEntities.first(), true);
+			int currentIndex = scene.activeLayer.entities.indexOf(entity, true);
+			int targetIndex = scene.activeLayer.entities.indexOf(overlappingEntities.first(), true);
 
 			for (EditorObject overlappingEntity : overlappingEntities) {
-				int sceneIndex = scene.entities.indexOf(overlappingEntity, true);
+				int sceneIndex = scene.activeLayer.entities.indexOf(overlappingEntity, true);
 				if (up ? sceneIndex < targetIndex : sceneIndex > targetIndex)
 					targetIndex = sceneIndex;
 			}
 
-			actionGroup.execute(new ZIndexChangeAction(entity, currentIndex, targetIndex));
+			actionGroup.execute(new ZIndexChangeAction(scene.activeLayer, entity, currentIndex, targetIndex));
 		}
 	}
 
 	private Array<EditorObject> getOverlappingEntities (EditorObject entity, boolean up) {
 		Array<EditorObject> overlapping = new Array<>();
-		int entityIndex = scene.entities.indexOf(entity, true);
+		int entityIndex = scene.activeLayer.entities.indexOf(entity, true);
 
-		for (EditorObject sceneEntity : scene.entities) {
-			int sceneEntityIndex = scene.entities.indexOf(sceneEntity, true);
+		for (EditorObject sceneEntity : scene.activeLayer.entities) {
+			int sceneEntityIndex = scene.activeLayer.entities.indexOf(sceneEntity, true);
 
 			if (entity != sceneEntity &&
 					entity.getBoundingRectangle().overlaps(sceneEntity.getBoundingRectangle())) {
@@ -91,11 +92,13 @@ public class ZIndexManipulatorModule extends SceneModule {
 	}
 
 	private class ZIndexChangeAction implements UndoableAction {
+		private Layer layer;
 		private EditorObject entity;
 		private int currentIndex;
 		private int targetIndex;
 
-		public ZIndexChangeAction (EditorObject entity, int currentIndex, int targetIndex) {
+		public ZIndexChangeAction (Layer layer, EditorObject entity, int currentIndex, int targetIndex) {
+			this.layer = layer;
 			this.entity = entity;
 			this.currentIndex = currentIndex;
 			this.targetIndex = targetIndex;
@@ -103,14 +106,14 @@ public class ZIndexManipulatorModule extends SceneModule {
 
 		@Override
 		public void execute () {
-			scene.entities.removeIndex(currentIndex);
-			scene.entities.insert(targetIndex, entity);
+			layer.entities.removeIndex(currentIndex);
+			layer.entities.insert(targetIndex, entity);
 		}
 
 		@Override
 		public void undo () {
-			scene.entities.removeIndex(targetIndex);
-			scene.entities.insert(currentIndex, entity);
+			layer.entities.removeIndex(targetIndex);
+			layer.entities.insert(currentIndex, entity);
 		}
 	}
 }

@@ -30,7 +30,8 @@ public class EditorScene implements Disposable {
 	public int height;
 	public SceneViewport viewport;
 
-	public Array<EditorObject> entities = new Array<EditorObject>();
+	public Array<Layer> layers = new Array<>();
+	public transient Layer activeLayer;
 
 	public EditorScene (FileHandle file, int compatibilityCode, SceneViewport viewport, int width, int height) {
 		this.path = file.path();
@@ -38,16 +39,25 @@ public class EditorScene implements Disposable {
 		this.viewport = viewport;
 		this.width = width;
 		this.height = height;
+
+		layers.add(new Layer("Background"));
 	}
 
 	public FileHandle getFile () {
 		return Gdx.files.absolute(path);
 	}
 
+	public Layer getLayerByName (String name) {
+		for (Layer layer : layers) {
+			if (layer.name.equals(name)) return layer;
+		}
+
+		return null;
+	}
+
 	@Override
 	public void dispose () {
-		for (EditorObject entity : entities) {
-			entity.dispose();
-		}
+		for (Layer layer : layers)
+			layer.dispose();
 	}
 }

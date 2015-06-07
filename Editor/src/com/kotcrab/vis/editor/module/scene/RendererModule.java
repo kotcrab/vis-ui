@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.util.Log;
 
@@ -51,17 +52,22 @@ public class RendererModule extends SceneModule {
 	public void render (Batch batch) {
 		boolean useShader;
 
-		for (EditorObject entity : scene.entities) {
-			useShader = false;
+		for (int i = scene.layers.size - 1; i >= 0; i--) {
+			Layer layer = scene.layers.get(i);
+			if (layer.visible == false) continue;
 
-			if (entity instanceof TextObject) {
-				TextObject obj = (TextObject) entity;
-				if (obj.isDistanceFieldShaderEnabled()) useShader = true;
+			for (EditorObject entity : layer.entities) {
+				useShader = false;
+
+				if (entity instanceof TextObject) {
+					TextObject obj = (TextObject) entity;
+					if (obj.isDistanceFieldShaderEnabled()) useShader = true;
+				}
+
+				if (useShader) batch.setShader(fontShader);
+				entity.render(batch);
+				if (useShader) batch.setShader(null);
 			}
-
-			if (useShader) batch.setShader(fontShader);
-			entity.render(batch);
-			if (useShader) batch.setShader(null);
 		}
 
 		batch.end();

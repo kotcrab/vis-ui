@@ -37,10 +37,7 @@ import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
-import com.kotcrab.vis.editor.scene.EditorObject;
-import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.ObjectGroup;
-import com.kotcrab.vis.editor.scene.SpriteObject;
+import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
@@ -114,9 +111,11 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		leftColumn.add().fill().expand();
 
 		rightColumn.top();
-		rightColumn.add(sceneMC.get(EntityManipulatorModule.class).getEntityProperties()).expandX().fillX();
-		rightColumn.row();
-		rightColumn.add().fill().expand();
+		rightColumn.add(sceneMC.get(EntityManipulatorModule.class).getEntityProperties()).expandX().fillX().row();
+		rightColumn.add().fill().expand().row();
+		rightColumn.add(sceneMC.get(EntityManipulatorModule.class).getLayersDialog()).expandX().fillX();
+//		rightColumn.row();
+//		rightColumn.add().fill().expand();
 
 		dropTarget = new Target(content) {
 			@Override
@@ -209,18 +208,19 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		}
 
 		if (event instanceof TexturesReloadedEvent) {
-			for (EditorObject object : scene.entities) {
-				if (object instanceof SpriteObject) {
-					SpriteObject spriteObject = (SpriteObject) object;
-					SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getAssetDescriptor()));
-				}
+			for (Layer layer : scene.layers) {
+				for (EditorObject object : layer.entities) {
+					if (object instanceof SpriteObject) {
+						SpriteObject spriteObject = (SpriteObject) object;
+						SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getAssetDescriptor()));
+					}
 
-				if (object instanceof ObjectGroup) {
-					ObjectGroup group = (ObjectGroup) object;
-					group.reloadTextures(cacheModule);
+					if (object instanceof ObjectGroup) {
+						ObjectGroup group = (ObjectGroup) object;
+						group.reloadTextures(cacheModule);
+					}
 				}
 			}
-
 		}
 		return false;
 	}
@@ -281,7 +281,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	}
 
 	public String getInfoLabelText () {
-		return "Entities: " + entityManipulator.getEntityCount() + " FPS: " + Gdx.graphics.getFramesPerSecond() + " Scene: " + scene.width + " x " + scene.height;
+		return "Entities: " + entityManipulator.getTotalEntityCount() + " FPS: " + Gdx.graphics.getFramesPerSecond() + " Scene: " + scene.width + " x " + scene.height;
 	}
 
 	public void selectEntity (EditorObject entity) {

@@ -24,6 +24,7 @@ import com.kotcrab.vis.editor.module.project.SceneCacheModule;
 import com.kotcrab.vis.editor.module.scene.UndoableAction;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 public class UpdateReferencesAction implements UndoableAction {
@@ -44,8 +45,10 @@ public class UpdateReferencesAction implements UndoableAction {
 		for (FileHandle sceneFile : fileAccess.getSceneFiles()) {
 			EditorScene scene = sceneCache.get(sceneFile);
 
-			for (EditorObject entity : scene.entities) {
-				if (entity.getAssetDescriptor().compare(source)) entity.setAssetDescriptor(target);
+			for (Layer layer : scene.layers) {
+				for (EditorObject entity : layer.entities) {
+					if (entity.getAssetDescriptor().compare(source)) entity.setAssetDescriptor(target);
+				}
 			}
 		}
 	}
@@ -55,8 +58,10 @@ public class UpdateReferencesAction implements UndoableAction {
 		for (FileHandle sceneFile : fileAccess.getSceneFiles()) {
 			EditorScene scene = sceneCache.get(sceneFile);
 
-			for (EditorObject entity : scene.entities) {
-				if (entity.getAssetDescriptor().compare(target)) entity.setAssetDescriptor(source);
+			for (Layer layer : scene.layers) {
+				for (EditorObject entity : layer.entities) {
+					if (entity.getAssetDescriptor().compare(target)) entity.setAssetDescriptor(source);
+				}
 			}
 		}
 	}

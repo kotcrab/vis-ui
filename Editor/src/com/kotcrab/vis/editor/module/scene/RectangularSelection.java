@@ -24,16 +24,17 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.scene.EditorScene;
 
 public class RectangularSelection {
-	private Array<EditorObject> entities;
+	private EditorScene scene;
 	private EntityManipulatorModule entityManipulatorModule;
 
 	private Rectangle currentRect = null;
 	private Rectangle rectToDraw = null;
 
-	public RectangularSelection (Array<EditorObject> entities, EntityManipulatorModule entityManipulatorModule) {
-		this.entities = entities;
+	public RectangularSelection (EditorScene scene, EntityManipulatorModule entityManipulatorModule) {
+		this.scene = scene;
 		this.entityManipulatorModule = entityManipulatorModule;
 	}
 
@@ -56,7 +57,7 @@ public class RectangularSelection {
 	public void findContainedComponents () {
 		Array<EditorObject> matchingEntities = new Array<>();
 
-		for (EditorObject entity : entities)
+		for (EditorObject entity : scene.activeLayer.entities)
 			if (rectToDraw.contains(entity.getBoundingRectangle())) matchingEntities.add(entity);
 
 		entityManipulatorModule.resetSelection();

@@ -14,18 +14,30 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.data;
+package com.kotcrab.vis.editor.scene;
 
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.LayerData;
-import com.kotcrab.vis.runtime.scene.Scene;
-import com.kotcrab.vis.runtime.scene.SceneLoader;
-import com.kotcrab.vis.runtime.scene.SceneViewport;
+import com.badlogic.gdx.utils.Disposable;
 
-/** Scene data, used to build {@link Scene} by {@link SceneLoader} */
-public class SceneData {
-	public SceneViewport viewport;
-	public int width;
-	public int height;
-	public Array<LayerData> layers = new Array<LayerData>();
+public class Layer implements Disposable {
+	public String name;
+	public boolean locked = false;
+	public boolean visible = true;
+	public Array<EditorObject> entities = new Array<EditorObject>();
+
+	public Layer (String name) {
+		this.name = name;
+	}
+
+	@Override
+	public void dispose () {
+		for (EditorObject entity : entities) {
+			entity.dispose();
+		}
+	}
+
+	@Override
+	public String toString () {
+		return name;
+	}
 }

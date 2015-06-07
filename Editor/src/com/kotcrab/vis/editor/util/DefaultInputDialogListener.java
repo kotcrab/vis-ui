@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.data;
+package com.kotcrab.vis.editor.util;
 
-import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.LayerData;
-import com.kotcrab.vis.runtime.scene.Scene;
-import com.kotcrab.vis.runtime.scene.SceneLoader;
-import com.kotcrab.vis.runtime.scene.SceneViewport;
+import com.kotcrab.vis.ui.util.dialog.InputDialogListener;
 
-/** Scene data, used to build {@link Scene} by {@link SceneLoader} */
-public class SceneData {
-	public SceneViewport viewport;
-	public int width;
-	public int height;
-	public Array<LayerData> layers = new Array<LayerData>();
+public interface DefaultInputDialogListener extends InputDialogListener {
+	@Override
+	void finished (String input);
+
+	@Override
+	default void canceled () {
+
+	}
 }

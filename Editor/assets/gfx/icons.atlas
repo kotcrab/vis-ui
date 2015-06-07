@@ -18,6 +18,20 @@ export
   orig: 22, 22
   offset: 0, 0
   index: -1
+eye
+  rotate: false
+  xy: 392, 104
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+eye-disabled
+  rotate: false
+  xy: 26, 26
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
 file-question-big
   rotate: false
   xy: 2, 50
@@ -27,47 +41,82 @@ file-question-big
   index: -1
 folder-open
   rotate: false
-  xy: 392, 104
+  xy: 26, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 globe
   rotate: false
-  xy: 26, 26
+  xy: 392, 80
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 import
   rotate: false
-  xy: 26, 2
+  xy: 416, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 info
   rotate: false
-  xy: 392, 80
+  xy: 50, 26
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+layer-add
+  rotate: false
+  xy: 50, 2
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+layer-down
+  rotate: false
+  xy: 392, 56
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+layer-remove
+  rotate: false
+  xy: 416, 80
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+layer-up
+  rotate: false
+  xy: 440, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 load
   rotate: false
-  xy: 416, 104
+  xy: 74, 26
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+locked
+  rotate: false
+  xy: 74, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 more
   rotate: false
-  xy: 440, 86
+  xy: 122, 32
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
   index: -1
-music
+music-big
   rotate: false
   xy: 80, 50
   size: 76, 76
@@ -76,12 +125,12 @@ music
   index: -1
 new
   rotate: false
-  xy: 50, 26
+  xy: 416, 56
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
-question
+question-big
   rotate: false
   xy: 158, 50
   size: 76, 76
@@ -90,7 +139,7 @@ question
   index: -1
 redo
   rotate: false
-  xy: 50, 2
+  xy: 440, 80
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -104,33 +153,33 @@ refresh-big
   index: -1
 save
   rotate: false
-  xy: 392, 56
+  xy: 464, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 search
   rotate: false
-  xy: 416, 80
+  xy: 488, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 settings
   rotate: false
-  xy: 440, 104
+  xy: 98, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 settings-view
   rotate: false
-  xy: 74, 26
+  xy: 98, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
-sound
+sound-big
   rotate: false
   xy: 314, 50
   size: 76, 76
@@ -139,14 +188,21 @@ sound
   index: -1
 undo
   rotate: false
-  xy: 74, 2
+  xy: 440, 56
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+unlocked
+  rotate: false
+  xy: 464, 80
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 warning
   rotate: false
-  xy: 416, 56
+  xy: 488, 80
   size: 22, 22
   orig: 22, 22
   offset: 0, 0

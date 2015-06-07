@@ -34,6 +34,7 @@ import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
@@ -106,21 +107,23 @@ public class AssetsAnalyzerModule extends ProjectModule {
 
 			Array<EditorObject> sceneUsagesList = new Array<>();
 
-			for (EditorObject entity : scene.entities) {
-				boolean used = false;
+			for (Layer layer : scene.layers) {
+				for (EditorObject entity : layer.entities) {
+					boolean used = false;
 
-				if (entity.getAssetDescriptor() != null) {
-					if (entity.getAssetDescriptor().compare(provideDescriptor(file, path))) used = true;
-				}
+					if (entity.getAssetDescriptor() != null) {
+						if (entity.getAssetDescriptor().compare(provideDescriptor(file, path))) used = true;
+					}
 
-				if (used) {
-					usages.count++;
-					sceneUsagesList.add(entity);
-				}
+					if (used) {
+						usages.count++;
+						sceneUsagesList.add(entity);
+					}
 
-				if (usages.count == USAGE_SEARCH_LIMIT) {
-					usages.limitExceeded = true;
-					break;
+					if (usages.count == USAGE_SEARCH_LIMIT) {
+						usages.limitExceeded = true;
+						break;
+					}
 				}
 			}
 

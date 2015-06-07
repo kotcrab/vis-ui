@@ -17,101 +17,35 @@
 package com.kotcrab.vis.editor;
 
 public enum Icons implements IconAsset {
-	NEW {
-		public String getIconName () {
-			return "new";
-		}
-	},
-	UNDO {
-		public String getIconName () {
-			return "undo";
-		}
-	},
-	REDO {
-		public String getIconName () {
-			return "redo";
-		}
-	},
-	SETTINGS {
-		public String getIconName () {
-			return "settings";
-		}
-	},
-	SETTINGS_VIEW {
-		public String getIconName () {
-			return "settings-view";
-		}
-	},
-	EXPORT {
-		public String getIconName () {
-			return "export";
-		}
-	},
-	IMPORT {
-		public String getIconName () {
-			return "import";
-		}
-	},
-	LOAD {
-		public String getIconName () {
-			return "load";
-		}
-	},
-	SAVE {
-		public String getIconName () {
-			return "save";
-		}
-	},
-	GLOBE {
-		public String getIconName () {
-			return "globe";
-		}
-	},
-	INFO {
-		public String getIconName () {
-			return "info";
-		}
-	},
-	EXIT {
-		public String getIconName () {
-			return "exit";
-		}
-	},
-	FOLDER_OPEN {
-		public String getIconName () {
-			return "folder-open";
-		}
-	},
-	SEARCH {
-		public String getIconName () {
-			return "search";
-		}
-	},
-	QUESTION {
-		public String getIconName () {
-			return "question";
-		}
-	},
-	MORE {
-		public String getIconName () {
-			return "more";
-		}
-	},
-	SOUND {
-		public String getIconName () {
-			return "sound";
-		}
-	},
-	MUSIC {
-		public String getIconName () {
-			return "music";
-		}
-	},
-	WARNING {
-		public String getIconName () {
-			return "warning";
-		}
-	}
+	// @formatter:off
+	NEW { public String getIconName () { return "new"; } },
+	UNDO { public String getIconName () { return "undo"; } },
+	REDO { public String getIconName () { return "redo"; } },
+	SETTINGS { public String getIconName () { return "settings"; } },
+	SETTINGS_VIEW { public String getIconName () { return "settings-view"; } },
+	EXPORT { public String getIconName () { return "export"; } },
+	IMPORT { public String getIconName () { return "import"; } },
+	LOAD { public String getIconName () { return "load"; } },
+	SAVE { public String getIconName () { return "save"; } },
+	GLOBE { public String getIconName () { return "globe"; } },
+	INFO { public String getIconName () { return "info"; } },
+	EXIT { public String getIconName () { return "exit"; } },
+	FOLDER_OPEN { public String getIconName () { return "folder-open"; } },
+	SEARCH { public String getIconName () { return "search"; } },
+	QUESTION { public String getIconName () { return "question-big"; } },
+	MORE { public String getIconName () { return "more"; } },
+	SOUND { public String getIconName () { return "sound-big"; } },
+	MUSIC { public String getIconName () { return "music-big"; } },
+	WARNING { public String getIconName () { return "warning"; } },
+	LAYER_ADD { public String getIconName () { return "layer-add"; } },
+	LAYER_REMOVE { public String getIconName () { return "layer-remove"; } },
+	LAYER_UP { public String getIconName () { return "layer-up"; } },
+	LAYER_DOWN { public String getIconName () { return "layer-down"; } },
+	EYE { public String getIconName () { return "eye"; } },
+	EYE_DISABLED { public String getIconName () { return "eye-disabled"; } },
+	LOCKED { public String getIconName () { return "locked"; } },
+	UNLOCKED { public String getIconName () { return "unlocked"; } },
+	// @formatter:on
 }
 
 interface IconAsset {

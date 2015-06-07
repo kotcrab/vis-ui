@@ -32,6 +32,7 @@ import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.runtime.LayerData;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.Entity;
@@ -193,11 +194,15 @@ public class ExportModule extends ProjectModule {
 					sceneData.viewport = editorScene.viewport;
 					sceneData.width = editorScene.width;
 					sceneData.height = editorScene.height;
-					sceneData.entities = new Array<>();
 
-					for (EditorObject entity : editorScene.entities) {
-						if (exportEntity(sceneData.entities, entity) == false)
-							Log.error("Ignoring unknown entity: " + entity.getClass());
+					for (Layer layer : editorScene.layers) {
+						LayerData layerData = new LayerData(layer.name);
+						sceneData.layers.add(layerData);
+
+						for (EditorObject entity : layer.entities) {
+							if (exportEntity(layerData.entities, entity) == false)
+								Log.error("Ignoring unknown entity: " + entity.getClass());
+						}
 					}
 
 					json.toJson(sceneData, outDir.child(file.name()));

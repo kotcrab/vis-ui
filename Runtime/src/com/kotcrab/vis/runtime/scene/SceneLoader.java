@@ -34,6 +34,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.kotcrab.vis.runtime.LayerData;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.data.*;
@@ -90,7 +91,9 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
 
-		loadDepsForEntities(deps, data.entities);
+		for (LayerData layer : data.layers) {
+			loadDepsForEntities(deps, layer.entities);
+		}
 
 		return deps;
 	}
@@ -162,7 +165,9 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 		scene = new Scene(entities, atlases, manager, data.viewport, data.width, data.height);
 
-		loadEntitiesFromData(manager, atlases, data.entities, entities);
+		for (LayerData layer : data.layers) {
+			loadEntitiesFromData(manager, atlases, layer.entities, entities);
+		}
 
 		if (distanceFieldShaderLoaded)
 			scene.getDistanceFieldShaderFromManager(distanceFieldShader);
@@ -240,18 +245,20 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		Scene scene = this.scene;
 		this.scene = null;
 
-		for (EntityData entityData : data.entities) {
-			if (entityData instanceof ParticleEffectData) {
-				ParticleEffectData particleData = (ParticleEffectData) entityData;
-				PathAsset path = (PathAsset) particleData.assetDescriptor;
+		for (LayerData layer : data.layers) {
+			for (EntityData entityData : layer.entities) {
+				if (entityData instanceof ParticleEffectData) {
+					ParticleEffectData particleData = (ParticleEffectData) entityData;
+					PathAsset path = (PathAsset) particleData.assetDescriptor;
 
-				FileHandle effectFile = resolve(path.getPath());
-				ParticleEffect emitter = new ParticleEffect();
-				emitter.load(effectFile, effectFile.parent());
+					FileHandle effectFile = resolve(path.getPath());
+					ParticleEffect emitter = new ParticleEffect();
+					emitter.load(effectFile, effectFile.parent());
 
-				ParticleEffectEntity entity = new ParticleEffectEntity(particleData.id, emitter);
-				particleData.loadTo(entity);
-				scene.getEntities().add(entity);
+					ParticleEffectEntity entity = new ParticleEffectEntity(particleData.id, emitter);
+					particleData.loadTo(entity);
+					scene.getEntities().add(entity);
+				}
 			}
 		}
 
