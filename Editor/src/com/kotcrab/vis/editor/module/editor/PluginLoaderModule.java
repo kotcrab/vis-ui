@@ -29,6 +29,7 @@ import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.plugin.PluginDescriptor;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
+import com.kotcrab.vis.editor.ui.dialog.PluginDetailsDialog;
 import com.kotcrab.vis.editor.ui.toast.ExceptionToast;
 import com.kotcrab.vis.editor.ui.toast.LoadingPluginsFailedToast;
 import com.kotcrab.vis.editor.util.ChildFirstURLClassLoader;
@@ -96,7 +97,7 @@ public class PluginLoaderModule extends EditorModule {
 			if (files.length > 1 || files.length == 0) {
 				Log.error(TAG, "Failed (invalid directory structure): " + folder.name());
 				failedPlugins.add(new FailedPluginDescriptor(folder,
-						new IllegalStateException("Plugin directory must contain only one jar (requried libs must be stored in 'lib' subdirectory")));
+						new IllegalStateException("Plugin directory must contain only one jar (required libs must be stored in 'lib' subdirectory")));
 				continue;
 			}
 
@@ -149,7 +150,11 @@ public class PluginLoaderModule extends EditorModule {
 		Thread.currentThread().setContextClassLoader(classLoader);
 
 		for (PluginDescriptor descriptor : pluginsToLoad) {
-			Log.debug(TAG, "Loading: " + descriptor.folderName);
+			if (descriptor.compatibility != App.COMPATIBILITY_CODE)
+				Log.warn(TAG, "Loading: " + descriptor.folderName + " (compatibility code mismatch! Will try to load anyway!)");
+			else
+				Log.debug(TAG, "Loading: " + descriptor.folderName);
+
 			currentlyLoadingPlugin = descriptor.folderName;
 
 			JarFile jarFile = new JarFile(descriptor.file.path());
@@ -249,7 +254,12 @@ public class PluginLoaderModule extends EditorModule {
 				VisCheckBox checkBox = new VisCheckBox(descriptor.folderName);
 				ButtonUtils.disableProgrammaticEvents(checkBox);
 
-				pluginsTable.add(checkBox).row();
+				LinkLabel detailsLabel = new LinkLabel("Details");
+				detailsLabel.setListener(url -> Editor.instance.getStage().addActor(new PluginDetailsDialog(descriptor).fadeIn()));
+
+				pluginsTable.add(checkBox);
+				pluginsTable.add().expandX().fillX();
+				pluginsTable.add(detailsLabel).padRight(3).row();
 				pluginsCheckBoxes.put(descriptor.folderName, checkBox);
 
 				if (descriptor.license != null) {
