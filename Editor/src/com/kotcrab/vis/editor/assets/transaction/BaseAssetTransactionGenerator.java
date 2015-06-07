@@ -38,7 +38,7 @@ public class BaseAssetTransactionGenerator implements AssetTransactionGenerator 
 
 		PathAsset pathAsset = (PathAsset) descriptor;
 		String path = pathAsset.getPath();
-		if (path.startsWith("font") || path.startsWith("music") || path.startsWith("sound")) return true;
+		if (path.startsWith("font") || path.startsWith("music") || path.startsWith("sound") || path.startsWith("particle")) return true;
 
 		return false;
 	}

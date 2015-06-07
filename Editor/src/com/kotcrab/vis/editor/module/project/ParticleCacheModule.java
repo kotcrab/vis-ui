@@ -18,6 +18,8 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.event.ParticleReloadedEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.runtime.assets.PathAsset;
@@ -29,12 +31,8 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private AssetsWatcherModule watcherModule;
 
-	private FileHandle particleDirectory;
-
 	@Override
 	public void init () {
-		particleDirectory = fileAccess.getParticleFolder();
-
 		watcherModule.addListener(this);
 	}
 
@@ -46,8 +44,7 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 		return get(fileAccess.getAssetsFolder().child(path.getPath()));
 	}
 
-	@Deprecated
-	public ParticleEffect get (FileHandle file) {
+	private ParticleEffect get (FileHandle file) {
 		ParticleEffect effect = new ParticleEffect();
 		effect.load(file, file.parent());
 		return effect;
@@ -60,6 +57,7 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 
 	@Override
 	public void fileChanged (FileHandle file) {
+		App.eventBus.post(new ParticleReloadedEvent());
 	}
 
 	@Override
@@ -67,6 +65,6 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 	}
 
 	@Override
-	public void fileCreated (final FileHandle file) {
+	public void fileCreated (FileHandle file) {
 	}
 }

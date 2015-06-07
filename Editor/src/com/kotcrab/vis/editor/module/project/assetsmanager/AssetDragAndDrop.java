@@ -190,7 +190,10 @@ public class AssetDragAndDrop {
 
 		if (item.getType() == FileType.PARTICLE_EFFECT) {
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Particle Effect \n (drop on scene to add)")
-					.setObjectProvider(() -> new ParticleEffectObject(fileAccess.relativizeToAssetsFolder(item.getFile()), particleCache.get(item.getFile()))));
+					.setObjectProvider(() -> {
+						PathAsset asset = new PathAsset(fileAccess.relativizeToAssetsFolder(item.getFile()));
+						return new ParticleEffectObject(asset, particleCache.get(asset));
+					}));
 		}
 
 		if (item.getType() == FileType.MUSIC) {

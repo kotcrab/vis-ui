@@ -29,9 +29,9 @@ public class ParticleEffectObject extends ParticleEffectEntity implements Editor
 	private VisAssetDescriptor assetDescriptor;
 	private Rectangle bounds;
 
-	public ParticleEffectObject (String relativePath, ParticleEffect effect) {
+	public ParticleEffectObject (PathAsset asset, ParticleEffect effect) {
 		super(null, effect);
-		setAssetDescriptor(new PathAsset(relativePath));
+		setAssetDescriptor(asset);
 		bounds = new Rectangle();
 	}
 
@@ -117,5 +117,13 @@ public class ParticleEffectObject extends ParticleEffectEntity implements Editor
 	public void setAssetDescriptor (VisAssetDescriptor assetDescriptor) {
 		checkAssetDescriptor(assetDescriptor);
 		this.assetDescriptor = assetDescriptor;
+	}
+
+	public void setEffect (ParticleEffect effect) {
+		dispose();
+		float x = getX();
+		float y = getY();
+		this.effect = effect;
+		effect.setPosition(x, y);
 	}
 }

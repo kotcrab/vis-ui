@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
+import com.kotcrab.vis.editor.event.ParticleReloadedEvent;
 import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.scene.*;
@@ -28,6 +29,7 @@ import com.kotcrab.vis.editor.util.gdx.SpriteUtils;
 
 public class SceneCacheModule extends ProjectModule implements EventListener {
 	@InjectModule private TextureCacheModule textureCache;
+	@InjectModule private ParticleCacheModule particleCache;
 	@InjectModule private SceneIOModule sceneIO;
 
 	private ObjectMap<FileHandle, EditorScene> scenes = new ObjectMap<>();
@@ -67,6 +69,19 @@ public class SceneCacheModule extends ProjectModule implements EventListener {
 						if (object instanceof ObjectGroup) {
 							ObjectGroup group = (ObjectGroup) object;
 							group.reloadTextures(textureCache);
+						}
+					}
+				}
+			}
+		}
+
+		if (event instanceof ParticleReloadedEvent) {
+			for (EditorScene scene : scenes.values()) {
+				for (Layer layer : scene.layers) {
+					for (EditorObject object : layer.entities) {
+						if (object instanceof ParticleEffectObject) {
+							ParticleEffectObject particleObject = (ParticleEffectObject) object;
+							particleObject.setEffect(particleCache.get(particleObject.getAssetDescriptor()));
 						}
 					}
 				}
