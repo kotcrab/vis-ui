@@ -17,10 +17,9 @@
 package com.kotcrab.vis.editor.ui.dialog;
 
 import com.badlogic.gdx.Version;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -50,13 +49,7 @@ public class AboutDialog extends VisWindow {
 		add(new VisLabel("VisEditor " + App.VERSION + ", VisUI " + VisUI.VERSION + ", LibGDX " + Version.VERSION)).expandX().fillX();
 		add(okButton = new VisTextButton("OK")).right();
 
-		okButton.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				fadeOut();
-			}
-		});
-
+		okButton.addListener(new VisChangeListener((event, actor) -> fadeOut()));
 		pack();
 		setSize(getWidth(), getHeight());
 		centerWindow();
