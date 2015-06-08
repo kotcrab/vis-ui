@@ -93,7 +93,14 @@ public class EditorFrame extends JFrame {
 			}
 		}
 
-		EventQueue.invokeLater(() -> new EditorFrame(splashController).setVisible(true));
+		EventQueue.invokeLater(() -> {
+			try {
+				new EditorFrame(splashController).setVisible(true);
+			} catch (Exception e) {
+				splashController.fatalExceptionOccurred = true;
+				throw e;
+			}
+		});
 	}
 
 	/**
@@ -147,6 +154,7 @@ public class EditorFrame extends JFrame {
 
 	private static class SplashController {
 		boolean shouldClose = false;
+		boolean fatalExceptionOccurred;
 	}
 
 	private static class Splash extends JWindow {
@@ -160,6 +168,12 @@ public class EditorFrame extends JFrame {
 					if (controller.shouldClose) {
 						dispose();
 						break;
+					}
+
+					if (controller.fatalExceptionOccurred) {
+						Log.fatal("Initialization error");
+						JOptionPane.showMessageDialog(null, "An error occurred during editor initialization, please check log: " + Log.getLogStoragePath());
+						System.exit(-1);
 					}
 
 					try {

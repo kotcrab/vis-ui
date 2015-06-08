@@ -53,7 +53,7 @@ public class Log {
 			logFileWriter.flush();
 
 			boolean openGlCrash = false;
-			if (e.getMessage().contains("No OpenGL context found in the current thread."))
+			if (e.getMessage() != null && e.getMessage().contains("No OpenGL context found in the current thread."))
 				openGlCrash = true;
 
 			try {
@@ -103,6 +103,10 @@ public class Log {
 		logFileWriter.println();
 		info("VisEditor " + App.VERSION);
 		info("Started: " + fileName);
+	}
+
+	public static String getLogStoragePath () {
+		return logFile.getParent();
 	}
 
 	// Standard log
