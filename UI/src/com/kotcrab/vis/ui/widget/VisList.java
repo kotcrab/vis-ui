@@ -22,7 +22,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.VisUI;
 
-/** @author Kotcrab */
+/**
+ * @author Kotcrab
+ * @see List
+ */
 public class VisList<T> extends List<T> {
 
 	public VisList () {

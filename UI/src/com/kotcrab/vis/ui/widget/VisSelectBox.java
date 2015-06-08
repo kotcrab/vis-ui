@@ -22,7 +22,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.VisUI;
 
-/** @author Kotcrab */
+/**
+ * @author Kotcrab
+ * @see SelectBox
+ */
 public class VisSelectBox<T> extends SelectBox<T> {
 	public VisSelectBox (SelectBoxStyle style) {
 		super(style);

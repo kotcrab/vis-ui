@@ -24,8 +24,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.InputValidator;
+import com.kotcrab.vis.ui.util.Validators;
 
-/** @author Kotcrab */
+/**
+ * Text field that input can be validated by custom input validators
+ * @author Kotcrab
+ * @see Validators
+ * @see InputValidator
+ */
 public class VisValidableTextField extends VisTextField {
 	private Array<InputValidator> validators = new Array<InputValidator>();
 	private boolean validationEnabled = true;

@@ -28,10 +28,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
- * Standard popup menu that can be displayed anywhere on stage. Menu is automatically removed when user clicked outisde menu,
+ * Standard popup menu that can be displayed anywhere on stage. Menu is automatically removed when user clicked outside menu,
  * or clicked menu item. For proper behaviour menu should be displayed in touchUp event. If you want to display
- * menu from touchDown you have to call event.stop() otherwise menu will by immediately closed. If you want to
- * add right click menu to actor you can use getDefaultInputListener() to get premade listener.
+ * menu from touchDown you have to call event.stop() otherwise menu will by immediately closed.
+ * <p>
+ * If you want to add right click menu to actor you can use getDefaultInputListener() to get premade listener.
  * @author Kotcrab
  */
 public class PopupMenu extends Table {

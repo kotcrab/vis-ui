@@ -20,7 +20,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.kotcrab.vis.ui.VisUI;
 
-/** @author Kotcrab */
+/**
+ * @author Kotcrab
+ * @see Label
+ */
 public class VisLabel extends Label {
 	public VisLabel () {
 		super("", VisUI.getSkin());

@@ -17,7 +17,7 @@
 package com.kotcrab.vis.ui.util.dialog;
 
 /**
- * Used to get events from DialogUtils input dialog
+ * Used to get events from {@link DialogUtils} input dialog
  * @author Kotcrab
  */
 public interface InputDialogListener {

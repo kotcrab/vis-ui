@@ -21,7 +21,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 
-/** @author Kotcrab */
+/**
+ * @author Kotcrab
+ * @see Table
+ */
 public class VisTable extends Table {
 	public VisTable () {
 		super(VisUI.getSkin());

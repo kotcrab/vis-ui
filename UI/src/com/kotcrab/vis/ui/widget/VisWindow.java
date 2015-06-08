@@ -25,7 +25,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.VisUI;
 
-/** @author Kotcrab */
+/**
+ * Extends functionality of standard scene2d.ui {@link Window}
+ * @author Kotcrab
+ * @see Window
+ */
 public class VisWindow extends Window {
 	public static float FADE_TIME = 0.3f;
 
