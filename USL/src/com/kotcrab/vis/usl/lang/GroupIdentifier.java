@@ -4,6 +4,7 @@ import com.kotcrab.vis.usl.CollectionUtils;
 
 import java.util.ArrayList;
 
+/** Represents group identifier of USL lang */
 public class GroupIdentifier extends Identifier {
 	public ArrayList<String> inherits = new ArrayList<String>();
 	public ArrayList<Identifier> content = new ArrayList<Identifier>();

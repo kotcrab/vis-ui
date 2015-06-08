@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+/** Converts stream of tokens created by {@link Lexer} into json string. */
 public class Parser {
 	private StringBuilder out;
 	private List<Token> tokens;

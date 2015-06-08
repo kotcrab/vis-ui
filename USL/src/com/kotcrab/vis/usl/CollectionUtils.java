@@ -2,6 +2,7 @@ package com.kotcrab.vis.usl;
 
 import java.util.*;
 
+/** CollectionUtils copied from Apache Commons */
 public class CollectionUtils {
 
 	/**

@@ -1,5 +1,6 @@
 package com.kotcrab.vis.usl.lang;
 
+/** Represents single identifier of USL lang, similar to json: "name: value" */
 public class BasicIdentifier extends Identifier {
 	public String content;
 

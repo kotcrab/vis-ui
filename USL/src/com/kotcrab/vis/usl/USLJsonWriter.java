@@ -4,6 +4,7 @@ import com.kotcrab.vis.usl.lang.*;
 
 import java.util.ArrayList;
 
+/** Converts list of blocks created by {@link Parser} into json string */
 public class USLJsonWriter {
 	private ArrayList<StyleBlock> styleBlocks;
 

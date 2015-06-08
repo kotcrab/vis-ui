@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
+/** Various utilises */
 public class Utils {
 	static String readFile (File file) {
 		try {

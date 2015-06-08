@@ -2,6 +2,7 @@ package com.kotcrab.vis.usl;
 
 import java.io.File;
 
+/** Allows to use USL from code */
 public class USL {
 	public static String parse (File uslFile) {
 		return parse(uslFile.getParentFile(), Utils.readFile(uslFile));

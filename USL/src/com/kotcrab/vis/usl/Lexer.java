@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+/** USL Lexer that turns USL file intro stream of tokens */
 public class Lexer {
 	private static final String INCLUDE = "include";
 	private static final String EXTENDS = "extends";

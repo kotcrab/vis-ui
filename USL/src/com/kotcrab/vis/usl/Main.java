@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+/** Main class of ULS, allowing to use it from command line */
 public class Main {
 	public static void main (String[] args) {
 		if (args.length < 2) {

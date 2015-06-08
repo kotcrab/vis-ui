@@ -1,5 +1,6 @@
 package com.kotcrab.vis.usl.lang;
 
+/** Represents style identifier of USL lang */
 public class StyleIdentifier extends GroupIdentifier {
 	public boolean metaStyle;
 

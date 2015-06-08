@@ -7,6 +7,7 @@ import com.kotcrab.vis.usl.lang.StyleIdentifier;
 
 import java.util.ArrayList;
 
+/** Performs styles mering during USL parsing. */
 public class StyleMerger {
 	private ArrayList<StyleIdentifier> globalStyles;
 	private ArrayList<StyleBlock> styleBlocks;

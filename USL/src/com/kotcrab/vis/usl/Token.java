@@ -1,5 +1,6 @@
 package com.kotcrab.vis.usl;
 
+/** Single token of USL file */
 public class Token {
 	public String usl;
 	public int i;
