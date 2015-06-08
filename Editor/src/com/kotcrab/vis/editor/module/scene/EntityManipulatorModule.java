@@ -444,9 +444,14 @@ public class EntityManipulatorModule extends SceneModule {
 		entityProperties.selectedEntitiesChanged();
 	}
 
-	public void switchLayer (Layer layer) {
-		scene.activeLayer = layer;
-		resetSelection();
+	public boolean switchLayer (Layer layer) {
+		if (scene.activeLayer != layer) {
+			scene.activeLayer = layer;
+			resetSelection();
+			return true;
+		}
+
+		return false;
 	}
 
 	public void sceneDirty () {
