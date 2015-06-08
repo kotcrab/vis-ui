@@ -22,6 +22,7 @@ import com.kotcrab.vis.ui.InputValidator;
 public abstract class FormInputValidator implements InputValidator {
 	private String errorMsg;
 	private boolean result;
+	private boolean hideErrorOnEmptyInput = false;
 
 	public FormInputValidator (String errorMsg) {
 		this.errorMsg = errorMsg;
@@ -40,6 +41,15 @@ public abstract class FormInputValidator implements InputValidator {
 	public boolean validateInput (String input) {
 		result = validate(input);
 		return result;
+	}
+
+	public FormInputValidator hideErrorOnEmptyInput () {
+		hideErrorOnEmptyInput = true;
+		return this;
+	}
+
+	public boolean isHideErrorOnEmptyInput () {
+		return hideErrorOnEmptyInput;
 	}
 
 	/**

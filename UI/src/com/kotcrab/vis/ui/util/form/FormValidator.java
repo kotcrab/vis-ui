@@ -34,14 +34,18 @@ public class FormValidator extends SimpleFormValidator {
 		super(buttonToDisable, errorMsgLabel);
 	}
 
-	public void fileExists (VisValidableTextField field, String errorMsg) {
-		field.addValidator(new FileExistsValidator(errorMsg));
+	public FormInputValidator fileExists (VisValidableTextField field, String errorMsg) {
+		FileExistsValidator validator = new FileExistsValidator(errorMsg);
+		field.addValidator(validator);
 		add(field);
+		return validator;
 	}
 
-	public void fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg) {
-		field.addValidator(new FileExistsValidator(relativeTo, errorMsg));
+	public FormInputValidator fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg) {
+		FileExistsValidator validator = new FileExistsValidator(relativeTo, errorMsg);
+		field.addValidator(validator);
 		add(field);
+		return validator;
 	}
 
 	/**
@@ -49,39 +53,58 @@ public class FormValidator extends SimpleFormValidator {
 	 * avoid form errors. Settings this to true improves UX, error are not displayed until user types something in 'relativeTo'
 	 * field
 	 */
-	public void fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty) {
-		field.addValidator(new FileExistsValidator(relativeTo, errorMsg, false, errorIfRelativeEmpty));
+	public FormInputValidator fileExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty) {
+		FileExistsValidator validator = new FileExistsValidator(relativeTo, errorMsg, false, errorIfRelativeEmpty);
+		field.addValidator(validator);
 		add(field);
+		return validator;
 	}
 
-	public void fileExists (VisValidableTextField field, File relativeTo, String errorMsg) {
-		field.addValidator(new FileExistsValidator(relativeTo, errorMsg));
+	public FormInputValidator fileExists (VisValidableTextField field, File relativeTo, String errorMsg) {
+		FileExistsValidator validator = new FileExistsValidator(relativeTo, errorMsg);
+		field.addValidator(validator);
 		add(field);
+		return validator;
 	}
 
-	public void fileExists (VisValidableTextField field, FileHandle relativeTo, String errorMsg) {
-		field.addValidator(new FileExistsValidator(relativeTo.file(), errorMsg));
+	public FormInputValidator fileExists (VisValidableTextField field, FileHandle relativeTo, String errorMsg) {
+		FileExistsValidator validator = new FileExistsValidator(relativeTo.file(), errorMsg);
+		field.addValidator(validator);
 		add(field);
+		return validator;
+
 	}
 
-	public void fileNotExists (VisValidableTextField field, String errorMsg) {
-		field.addValidator(new FileExistsValidator(errorMsg, true));
+	public FormInputValidator fileNotExists (VisValidableTextField field, String errorMsg) {
+		FileExistsValidator validator = new FileExistsValidator(errorMsg, true);
+		field.addValidator(validator);
 		add(field);
+		return validator;
+
 	}
 
-	public void fileNotExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg) {
-		field.addValidator(new FileExistsValidator(relativeTo, errorMsg, true));
+	public FormInputValidator fileNotExists (VisValidableTextField field, VisTextField relativeTo, String errorMsg) {
+		FileExistsValidator validator = new FileExistsValidator(relativeTo, errorMsg, true);
+		field.addValidator(validator);
 		add(field);
+		return validator;
+
 	}
 
-	public void fileNotExists (VisValidableTextField field, File relativeTo, String errorMsg) {
-		field.addValidator(new FileExistsValidator(relativeTo, errorMsg, true));
+	public FormInputValidator fileNotExists (VisValidableTextField field, File relativeTo, String errorMsg) {
+		FileExistsValidator validator = new FileExistsValidator(relativeTo, errorMsg, true);
+		field.addValidator(validator);
 		add(field);
+		return validator;
+
 	}
 
-	public void fileNotExists (VisValidableTextField field, FileHandle relativeTo, String errorMsg) {
-		field.addValidator(new FileExistsValidator(relativeTo.file(), errorMsg, true));
+	public FormInputValidator fileNotExists (VisValidableTextField field, FileHandle relativeTo, String errorMsg) {
+		FileExistsValidator validator = new FileExistsValidator(relativeTo.file(), errorMsg, true);
+		field.addValidator(validator);
 		add(field);
+		return validator;
+
 	}
 
 	public static class FileExistsValidator extends FormInputValidator {

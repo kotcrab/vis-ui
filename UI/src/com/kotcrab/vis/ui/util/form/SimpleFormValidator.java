@@ -41,47 +41,60 @@ public class SimpleFormValidator {
 	private Button button;
 	private Label errorMsgLabel;
 
+	private boolean hideErrorOnEmptyInput;
+
 	public SimpleFormValidator (Button buttonToDisable, Label errorMsgLabel) {
 		this.button = buttonToDisable;
 		this.errorMsgLabel = errorMsgLabel;
 	}
 
-	public void notEmpty (VisValidableTextField field, String errorMsg) {
-		field.addValidator(new EmptyInputValidator(errorMsg));
+	public FormInputValidator notEmpty (VisValidableTextField field, String errorMsg) {
+		EmptyInputValidator validator = new EmptyInputValidator(errorMsg);
+		field.addValidator(validator);
 		add(field);
+		return validator;
 	}
 
-	public void integerNumber (VisValidableTextField field, String errorMsg) {
-		field.addValidator(new ValidatorWrapper(errorMsg, Validators.INTEGERS));
+	public FormInputValidator integerNumber (VisValidableTextField field, String errorMsg) {
+		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, Validators.INTEGERS);
+		field.addValidator(wrapper);
 		add(field);
+		return wrapper;
 	}
 
-	public void floatNumber (VisValidableTextField field, String errorMsg) {
-		field.addValidator(new ValidatorWrapper(errorMsg, Validators.FLOATS));
+	public FormInputValidator floatNumber (VisValidableTextField field, String errorMsg) {
+		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, Validators.FLOATS);
+		field.addValidator(wrapper);
 		add(field);
+		return wrapper;
 	}
 
-	public void valueGreaterThan (VisValidableTextField field, String errorMsg, float value) {
-		valueGreaterThan(field, errorMsg, value, false);
+	public FormInputValidator valueGreaterThan (VisValidableTextField field, String errorMsg, float value) {
+		return valueGreaterThan(field, errorMsg, value, false);
 	}
 
-	public void valueLesserThan (VisValidableTextField field, String errorMsg, float value) {
-		valueLesserThan(field, errorMsg, value, false);
+	public FormInputValidator valueLesserThan (VisValidableTextField field, String errorMsg, float value) {
+		return valueLesserThan(field, errorMsg, value, false);
 	}
 
-	public void valueGreaterThan (VisValidableTextField field, String errorMsg, float value, boolean equals) {
-		field.addValidator(new ValidatorWrapper(errorMsg, new GreaterThanValidator(value, equals)));
+	public FormInputValidator valueGreaterThan (VisValidableTextField field, String errorMsg, float value, boolean equals) {
+		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, new GreaterThanValidator(value, equals));
+		field.addValidator(wrapper);
 		add(field);
+		return wrapper;
 	}
 
-	public void valueLesserThan (VisValidableTextField field, String errorMsg, float value, boolean equals) {
-		field.addValidator(new ValidatorWrapper(errorMsg, new LesserThanValidator(value, equals)));
+	public FormInputValidator valueLesserThan (VisValidableTextField field, String errorMsg, float value, boolean equals) {
+		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, new LesserThanValidator(value, equals));
+		field.addValidator(wrapper);
 		add(field);
+		return wrapper;
 	}
 
-	public void custom (VisValidableTextField field, FormInputValidator customValidator) {
+	public FormInputValidator custom (VisValidableTextField field, FormInputValidator customValidator) {
 		field.addValidator(customValidator);
 		add(field);
+		return customValidator;
 	}
 
 	protected void add (VisValidableTextField field) {
@@ -105,7 +118,9 @@ public class SimpleFormValidator {
 					FormInputValidator validator = (FormInputValidator) v;
 
 					if (validator.getLastResult() == false) {
-						errorMsgLabel.setText(validator.getErrorMsg());
+						if (!(validator.isHideErrorOnEmptyInput() && field.getText().equals("")))
+							errorMsgLabel.setText(validator.getErrorMsg());
+
 						button.setDisabled(true);
 						break;
 					}
