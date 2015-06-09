@@ -28,7 +28,8 @@ import java.util.Date;
  * @author Pawel Pastuszak
  */
 public class Log {
-	public static final int OFF = 5;
+	public static final int OFF = 6;
+	public static final int TRACE = 5;
 	public static final int DEBUG = 4;
 	public static final int INFO = 3;
 	public static final int WARN = 2;
@@ -111,6 +112,10 @@ public class Log {
 
 	// Standard log
 
+	public static void trace (String msg) {
+		if (logLevel >= TRACE) print("[Trace] " + msg);
+	}
+
 	public static void debug (String msg) {
 		if (logLevel >= DEBUG) print("[Debug] " + msg);
 	}
@@ -132,6 +137,10 @@ public class Log {
 	}
 
 	//Log with tag
+
+	public static void trace (String tag, String msg) {
+		if (logLevel >= TRACE) print("[Trace][" + tag + "] " + msg);
+	}
 
 	public static void debug (String tag, String msg) {
 		if (logLevel >= DEBUG) print("[Debug][" + tag + "] " + msg);

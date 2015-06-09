@@ -47,11 +47,17 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 
 		injectAllModules();
 
-		for (int i = 0; i < modules.size; i++)
-			modules.get(i).init();
+		for (int i = 0; i < modules.size; i++) {
+			Module m = modules.get(i);
+			Log.trace("ModuleContainer", "Init: " + m.getClass().getSimpleName());
+			m.init();
+		}
 
-		for (int i = 0; i < modules.size; i++)
-			modules.get(i).postInit();
+		for (int i = 0; i < modules.size; i++) {
+			Module m = modules.get(i);
+			Log.trace("ModuleContainer", "Post init: " + m.getClass().getSimpleName());
+			m.postInit();
+		}
 
 		long end = System.currentTimeMillis();
 		long delta = end - start;
