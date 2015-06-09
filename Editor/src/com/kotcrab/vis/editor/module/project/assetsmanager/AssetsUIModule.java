@@ -66,7 +66,6 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Even
 	@InjectModule private QuickAccessModule quickAccessModule;
 
 	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private ObjectSupportModule supportModule;
 	@InjectModule private SceneTabsModule sceneTabsModule;
 	@InjectModule private SceneCacheModule sceneCache;
 	@InjectModule private AssetsWatcherModule assetsWatcher;

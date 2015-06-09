@@ -19,7 +19,7 @@ package com.kotcrab.vis.editor.ui.tabbedpane;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 
 public interface DragAndDropTarget {
-	public float getCameraZoom ();
+	float getCameraZoom ();
 
-	public Target getDropTarget ();
+	Target getDropTarget ();
 }
