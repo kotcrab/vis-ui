@@ -195,8 +195,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(new GlobalInputModule());
 
 		editorMC.add(new PluginLoaderModule());
-		editorMC.add(new SiteAPIModule());
 		editorMC.add(pluginContainer = new PluginContainerModule());
+		editorMC.add(new SiteAPIModule());
 		editorMC.add(new PluginFilesAccessModule());
 		editorMC.add(new ColorPickerModule());
 		editorMC.add(fileChooser = new FileChooserModule());
@@ -416,16 +416,16 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.add(new TextureCacheModule());
 		projectMC.add(new FontCacheModule());
 		projectMC.add(new ParticleCacheModule());
-		projectMC.add(new ExportModule());
-		projectMC.add(new SceneIOModule());
 		projectMC.add(new SceneCacheModule());
+		projectMC.add(new SceneIOModule());
+		projectMC.add(new ObjectSupportModule());
 		projectMC.add(new SceneMetadataModule());
 		projectMC.add(new AssetsAnalyzerModule());
 
+		projectMC.add(new ExportModule());
 		projectMC.add(new SceneTabsModule());
 		projectMC.add(new ProjectInfoTabModule());
 		projectMC.add(new AssetsUIModule());
-		projectMC.add(new ObjectSupportModule());
 		projectMC.addAll(pluginContainer.getContainersExtensions(ProjectModule.class, ExtensionScope.PROJECT));
 
 		projectMC.init();
