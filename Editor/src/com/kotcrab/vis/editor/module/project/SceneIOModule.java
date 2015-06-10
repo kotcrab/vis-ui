@@ -28,7 +28,6 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.module.InjectModule;
-import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.serializer.*;

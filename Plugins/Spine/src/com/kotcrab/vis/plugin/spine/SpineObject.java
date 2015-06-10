@@ -31,9 +31,11 @@
 
 package com.kotcrab.vis.plugin.spine;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.spine.SkeletonData;
+import com.esotericsoftware.spine.SkeletonRenderer;
 import com.esotericsoftware.spine.Slot;
 import com.esotericsoftware.spine.attachments.*;
 import com.kotcrab.vis.editor.scene.EditorObject;
@@ -46,17 +48,19 @@ public class SpineObject extends SpineEntity implements EditorObject {
 	private boolean previewInEditor;
 	private Rectangle bounds;
 
-	public SpineObject (String atlasPath, String skeletonPath, SkeletonData skeletonData) {
-		super(null, skeletonData);
+	public SpineObject (String atlasPath, String skeletonPath, SkeletonData skeletonData, SkeletonRenderer renderer) {
+		super(null, skeletonData, renderer);
 		bounds = new Rectangle();
 		setAssetDescriptor(new SpineAssetDescriptor(atlasPath, skeletonPath));
 	}
 
-	public SpineObject (SpineObject original) {
-		super(original);
-		this.previewInEditor = original.previewInEditor;
-		this.bounds = original.bounds;
-		this.assetDescriptor = original.assetDescriptor;
+	public SpineObject (SpineObject other) {
+		super(other.getId(), other.getSkeleton().getData(), other.renderer);
+		this.playOnStart = other.playOnStart;
+		this.defaultAnimation = other.defaultAnimation;
+		this.previewInEditor = other.previewInEditor;
+		this.bounds = other.bounds;
+		this.assetDescriptor = other.assetDescriptor;
 		updateAnimation();
 	}
 
@@ -74,6 +78,12 @@ public class SpineObject extends SpineEntity implements EditorObject {
 	public void setAssetDescriptor (VisAssetDescriptor assetDescriptor) {
 		checkAssetDescriptor(assetDescriptor);
 		this.assetDescriptor = assetDescriptor;
+	}
+
+	@Override
+	public void render (Batch batch) {
+		super.render(batch);
+		System.out.println(bounds);
 	}
 
 	@Override

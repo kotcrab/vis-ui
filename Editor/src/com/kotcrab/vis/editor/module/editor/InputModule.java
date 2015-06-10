@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.kotcrab.vis.editor.module.editor.EditorModule;
 import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
 import com.kotcrab.vis.editor.util.gdx.VisGroup;
 

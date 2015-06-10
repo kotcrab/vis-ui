@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.editor;
+package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Values;
-import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.module.project.ProjectModule;
+import com.kotcrab.vis.editor.module.editor.PluginContainerModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 
 public class ObjectSupportModule extends ProjectModule {

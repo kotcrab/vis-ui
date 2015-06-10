@@ -24,6 +24,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.RedoEvent;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.event.UndoEvent;
+import com.kotcrab.vis.editor.module.editor.InputModule;
 import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
 
 public class UndoModule extends SceneModule {

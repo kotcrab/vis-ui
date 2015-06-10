@@ -26,7 +26,6 @@ import com.kotcrab.vis.editor.assets.PathDescriptorProvider;
 import com.kotcrab.vis.editor.assets.TextureDescriptorProvider;
 import com.kotcrab.vis.editor.assets.transaction.*;
 import com.kotcrab.vis.editor.module.InjectModule;
-import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;

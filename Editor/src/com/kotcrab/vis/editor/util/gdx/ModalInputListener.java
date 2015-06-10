@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.util.gdx;
 
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.kotcrab.vis.editor.module.scene.InputModule;
+import com.kotcrab.vis.editor.module.editor.InputModule;
 
 public abstract class ModalInputListener extends InputListener {
 	private InputModule inputModule;

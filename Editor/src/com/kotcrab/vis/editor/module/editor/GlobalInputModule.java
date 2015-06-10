@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.module.editor.EditorModule;
 
 /**
  * Allow to add InputListener that will send events from entire editor, ignoring modality of windows etc. Event will

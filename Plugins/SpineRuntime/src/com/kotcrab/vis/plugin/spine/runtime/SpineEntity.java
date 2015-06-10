@@ -41,20 +41,15 @@ public class SpineEntity extends Entity {
 	protected transient Skeleton skeleton;
 	protected transient AnimationStateData stateData;
 	protected transient AnimationState state;
-	private transient SkeletonRenderer renderer; //TODO shared renderer
+	protected transient SkeletonRenderer renderer;
 
-	private boolean playOnStart;
-	private String defaultAnimation;
+	protected boolean playOnStart;
+	protected String defaultAnimation;
 
-	public SpineEntity (String id, SkeletonData skeletonData) {
+	public SpineEntity (String id, SkeletonData skeletonData, SkeletonRenderer renderer) {
 		super(id);
-
+		this.renderer = renderer;
 		init(skeletonData);
-	}
-
-	public SpineEntity (SpineEntity original) {
-		super(original.getId());
-		init(original.getSkeleton().getData());
 	}
 
 	protected void init (SkeletonData skeletonData) {
@@ -62,8 +57,6 @@ public class SpineEntity extends Entity {
 
 		stateData = new AnimationStateData(skeletonData);
 		state = new AnimationState(stateData);
-
-		renderer = new SkeletonRenderer();
 
 		if (defaultAnimation == null)
 			defaultAnimation = skeleton.getData().getAnimations().get(0).getName();

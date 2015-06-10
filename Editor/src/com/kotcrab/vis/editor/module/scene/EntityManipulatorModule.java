@@ -31,7 +31,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
-import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
+import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;

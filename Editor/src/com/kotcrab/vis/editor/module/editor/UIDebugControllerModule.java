@@ -24,7 +24,6 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
-import com.kotcrab.vis.editor.module.scene.GlobalInputModule;
 
 public class UIDebugControllerModule extends EditorModule {
 	@InjectModule private GlobalInputModule inputModule;

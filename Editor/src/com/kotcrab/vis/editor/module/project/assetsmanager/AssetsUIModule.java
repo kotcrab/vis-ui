@@ -39,7 +39,6 @@ import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
-import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.project.*;

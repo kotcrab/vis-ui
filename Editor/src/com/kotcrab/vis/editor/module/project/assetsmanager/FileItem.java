@@ -26,7 +26,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.editor.module.editor.ObjectSupportModule;
+import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;

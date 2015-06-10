@@ -36,6 +36,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Serializer;
+import com.esotericsoftware.spine.SkeletonRenderer;
 import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
@@ -58,6 +59,8 @@ public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 
 	private SpineSerializer serializer;
 
+	private SkeletonRenderer renderer;
+
 	private SpineAssetDescriptorProvider descriptorProvider = new SpineAssetDescriptorProvider();
 
 	@Override
@@ -67,6 +70,8 @@ public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 		fileAccess = projectMC.get(FileAccessModule.class);
 
 		serializer = new SpineSerializer(sceneIOModule.getKryo(), spineCache);
+
+		renderer = new SkeletonRenderer();
 	}
 
 	@Override
@@ -111,7 +116,7 @@ public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 				.setObjectProvider(() -> {
 					FileHandle atlasFile = FileUtils.sibling(item.getFile(), "atlas");
 					return new SpineObject(fileAccess.relativizeToAssetsFolder(atlasFile.path()), fileAccess.relativizeToAssetsFolder(item.getFile().path()),
-							spineCache.get(atlasFile, item.getFile()));
+							spineCache.get(atlasFile, item.getFile()), renderer);
 				});
 	}
 
