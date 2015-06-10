@@ -30,9 +30,9 @@ import com.kotcrab.vis.editor.event.Event;
 import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.event.RedoEvent;
 import com.kotcrab.vis.editor.event.UndoEvent;
-import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
+import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.UndoableAction;
 import com.kotcrab.vis.editor.module.scene.UndoableActionGroup;
@@ -42,6 +42,7 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.*;
 import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.editor.util.FloatValue;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
+import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.ui.VisUI;
@@ -404,31 +405,31 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	}
 
 	private void setValuesToEntity () {
-//		for (int i = 0; i < entities.size; i++) {
-//			EditorObject entity = entities.get(i);
-//
-//			entity.setId(idField.getText().equals("") ? null : idField.getText());
-//			entity.setPosition(FieldUtils.getFloat(xField, entity.getX()), FieldUtils.getFloat(yField, entity.getY()));
-//
-//			if (EntityUtils.isScaleSupportedForEntities(entities))
-//				entity.setScale(FieldUtils.getFloat(xScaleField, entity.getScaleX()), FieldUtils.getFloat(yScaleField, entity.getScaleY()));
-//
-//			if (EntityUtils.isOriginSupportedForEntities(entities))
-//				entity.setOrigin(FieldUtils.getFloat(xOriginField, entity.getOriginX()), FieldUtils.getFloat(yOriginField, entity.getOriginY()));
-//
-//			if (EntityUtils.isRotationSupportedForEntities(entities))
-//				entity.setRotation(FieldUtils.getFloat(rotationField, entity.getRotation()));
-//
-//			if (EntityUtils.isFlipSupportedForEntities(entities)) {
-//				if (xFlipCheck.isIndeterminate() == false)
-//					entity.setFlip(xFlipCheck.isChecked(), entity.isFlipY());
-//
-//				if (yFlipCheck.isIndeterminate() == false)
-//					entity.setFlip(entity.isFlipX(), yFlipCheck.isChecked());
-//			}
-//		}
-//
-//		if (activeSpecificTable != null) activeSpecificTable.setValuesToEntities();
+		for (int i = 0; i < entities.size; i++) {
+			EditorObject entity = entities.get(i);
+
+			entity.setId(idField.getText().equals("") ? null : idField.getText());
+			entity.setPosition(FieldUtils.getFloat(xField, entity.getX()), FieldUtils.getFloat(yField, entity.getY()));
+
+			if (EntityUtils.isScaleSupportedForEntities(entities))
+				entity.setScale(FieldUtils.getFloat(xScaleField, entity.getScaleX()), FieldUtils.getFloat(yScaleField, entity.getScaleY()));
+
+			if (EntityUtils.isOriginSupportedForEntities(entities))
+				entity.setOrigin(FieldUtils.getFloat(xOriginField, entity.getOriginX()), FieldUtils.getFloat(yOriginField, entity.getOriginY()));
+
+			if (EntityUtils.isRotationSupportedForEntities(entities))
+				entity.setRotation(FieldUtils.getFloat(rotationField, entity.getRotation()));
+
+			if (EntityUtils.isFlipSupportedForEntities(entities)) {
+				if (xFlipCheck.isIndeterminate() == false)
+					entity.setFlip(xFlipCheck.isChecked(), entity.isFlipY());
+
+				if (yFlipCheck.isIndeterminate() == false)
+					entity.setFlip(entity.isFlipX(), yFlipCheck.isChecked());
+			}
+		}
+
+		if (activeSpecificTable != null) activeSpecificTable.setValuesToEntities();
 	}
 
 	public void updateValues () {
