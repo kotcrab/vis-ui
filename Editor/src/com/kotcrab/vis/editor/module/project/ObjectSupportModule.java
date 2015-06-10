@@ -23,23 +23,29 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.kotcrab.vis.editor.module.editor.PluginContainerModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
+import com.kotcrab.vis.editor.util.Log;
 
 public class ObjectSupportModule extends ProjectModule {
 	private ObjectMap<Class, ObjectSupport> supportMap = new ObjectMap<>();
 	private Array<SupportDescriptor> descriptors;
 
-	private Json json = new Json();
+	private Json json;
 	private FileHandle descriptorFile;
 
 	@Override
 	public void init () {
+		json = new Json();
+		json.addClassTag("SupportDescriptor", SupportDescriptor.class);
+
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
 		descriptorFile = fileAccess.getModuleFolder().child("supportDescriptor.json");
 
 		if (descriptorFile.exists()) {
 			descriptors = json.fromJson(new Array<SupportDescriptor>().getClass(), descriptorFile);
-		} else
+		} else {
+			Log.info("ObjectSupportModule", "Support descriptor file does not exist, will be recreated");
 			descriptors = new Array<>();
+		}
 
 		PluginContainerModule pluginContainer = container.get(PluginContainerModule.class);
 		Array<ObjectSupport> supports = pluginContainer.getObjectSupports();
