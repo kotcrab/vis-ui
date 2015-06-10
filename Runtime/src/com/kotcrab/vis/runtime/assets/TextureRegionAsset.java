@@ -17,6 +17,9 @@
 package com.kotcrab.vis.runtime.assets;
 
 public class TextureRegionAsset extends PathAsset implements TextureAssetDescriptor {
+	public TextureRegionAsset () {
+	}
+
 	public TextureRegionAsset (String relativePath) {
 		super(relativePath);
 	}

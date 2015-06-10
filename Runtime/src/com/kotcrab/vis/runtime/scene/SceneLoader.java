@@ -35,7 +35,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.runtime.LayerData;
+import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.*;
@@ -43,6 +45,7 @@ import com.kotcrab.vis.runtime.font.BmpFontProvider;
 import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
+import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> {
 	private static final FileHandle distanceFieldShader = Gdx.files.classpath("com/kotcrab/vis/runtime/bmp-font-df");
@@ -71,6 +74,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		json.addClassTag("SpriteData", SpriteData.class);
 		json.addClassTag("TextData", TextData.class);
 		json.addClassTag("ParticleEffectData", ParticleEffectData.class);
+		json.addClassTag("AtlasRegionAsset", AtlasRegionAsset.class);
+		json.addClassTag("TextureRegionAsset", TextureRegionAsset.class);
 		return json;
 	}
 
@@ -108,7 +113,20 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 			if (entityData instanceof SpriteData) {
 				SpriteData spriteData = (SpriteData) entityData;
-				deps.add(new AssetDescriptor(spriteData.textureAtlas, TextureAtlas.class));
+				VisAssetDescriptor asset = spriteData.assetDescriptor;
+
+				if (asset instanceof TextureRegionAsset) {
+					TextureRegionAsset regionAsset = (TextureRegionAsset) asset;
+					deps.add(new AssetDescriptor("gfx/textures.atlas", TextureAtlas.class));
+
+				} else if (asset instanceof AtlasRegionAsset) {
+					AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
+					deps.add(new AssetDescriptor(((PathAsset) spriteData.assetDescriptor).getPath(), TextureAtlas.class));
+
+				} else {
+					throw new UnsupportedAssetDescriptorException(asset);
+				}
+
 				continue;
 			}
 
@@ -187,14 +205,29 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 			if (entityData instanceof SpriteData) {
 				SpriteData spriteData = (SpriteData) entityData;
 
-				TextureAtlas atlas = manager.get(spriteData.textureAtlas, TextureAtlas.class);
+				VisAssetDescriptor asset = spriteData.assetDescriptor;
+
+				String atlasPath;
+				String atlasRegion;
+
+				if (asset instanceof TextureRegionAsset) {
+					TextureRegionAsset regionAsset = (TextureRegionAsset) asset;
+					atlasPath = "gfx/textures.atlas";
+					atlasRegion = regionAsset.getPath().substring(4, regionAsset.getPath().length() - 4); //remove gfx/ and file extension
+
+				} else if (asset instanceof AtlasRegionAsset) {
+					AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
+					atlasPath = regionAsset.getPath();
+					atlasRegion = regionAsset.getRegionName();
+
+				} else {
+					throw new UnsupportedAssetDescriptorException(asset);
+				}
+
+				TextureAtlas atlas = manager.get(atlasPath, TextureAtlas.class);
 				if (atlases.contains(atlas, true) == false) atlases.add(atlas);
 
-				String path = spriteData.texturePath;
-				if (path.startsWith("gfx/")) path = path.substring(path.indexOf('/') + 1, path.lastIndexOf('.'));
-				Sprite newSprite = new Sprite(atlas.findRegion(path));
-
-				SpriteEntity entity = new SpriteEntity(entityData.id, newSprite);
+				SpriteEntity entity = new SpriteEntity(entityData.id, new Sprite(atlas.findRegion(atlasRegion)));
 				spriteData.loadTo(entity);
 
 				entities.add(entity);

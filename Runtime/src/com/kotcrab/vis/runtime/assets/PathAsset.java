@@ -17,7 +17,10 @@
 package com.kotcrab.vis.runtime.assets;
 
 public class PathAsset implements VisAssetDescriptor {
-	private final String relativePath;
+	private String relativePath;
+
+	public PathAsset () {
+	}
 
 	public PathAsset (String relativePath) {
 		this.relativePath = relativePath.replace("\\", "/");

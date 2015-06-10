@@ -32,7 +32,6 @@ import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.runtime.LayerData;
-import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
@@ -194,7 +193,8 @@ public class ExportModule extends ProjectModule {
 					sceneData.width = editorScene.width;
 					sceneData.height = editorScene.height;
 
-					for (Layer layer : editorScene.layers) {
+					for (int i = 0; i < editorScene.layers.size; i++) {
+						Layer layer = editorScene.layers.get(i);
 						LayerData layerData = new LayerData(layer.name);
 						sceneData.layers.add(layerData);
 
@@ -218,21 +218,6 @@ public class ExportModule extends ProjectModule {
 
 				SpriteData data = new SpriteData();
 				data.saveFrom(obj, obj.getAssetDescriptor());
-
-				data.id = obj.getId();
-
-				PathAsset pathAsset = (PathAsset) obj.getAssetDescriptor(); //FIXME
-				String path = pathAsset.getPath();
-
-				if (path.contains("*")) {
-					String[] pathParts = path.split("\\*", 2);
-					data.textureAtlas = pathParts[0];
-					data.texturePath = pathParts[1];
-				} else {
-					data.textureAtlas = "gfx/textures.atlas";
-					data.texturePath = path;
-				}
-
 				entities.add(data);
 				return true;
 			}
