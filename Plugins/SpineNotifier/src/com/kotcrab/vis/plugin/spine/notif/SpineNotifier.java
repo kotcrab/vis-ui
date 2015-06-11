@@ -40,7 +40,9 @@ import com.kotcrab.vis.editor.module.editor.PluginFilesAccessModule;
 import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension;
+import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
+@VisPlugin
 public class SpineNotifier extends EditorModule implements ContainerExtension<EditorModule> {
 	@InjectModule private PluginSettingsModule pluginSettings;
 
