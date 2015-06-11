@@ -35,9 +35,7 @@ import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
-import com.kotcrab.vis.editor.module.editor.GlobalInputModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule;
-import com.kotcrab.vis.editor.module.editor.InputModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EditorFrame;
@@ -334,13 +332,16 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	private void showExitDialogIfNeeded (boolean restartAfterExit) {
 		//the "Do you want to restart" dialog was already displayed and user accepted so no need to display exit dialog even if it is enabled
-		if (restartAfterExit) exit(restartAfterExit);
+		if (restartAfterExit) {
+			exit(true);
+			return;
+		}
 
 		if (settings.isConfirmExit()) {
 			OptionDialog dialog = DialogUtils.showOptionDialog(getStage(), "Confirm Exit", "Are you sure you want to exit VisEditor?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 				@Override
 				public void yes () {
-					exit(restartAfterExit);
+					exit(false);
 				}
 
 				@Override
@@ -351,7 +352,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 			dialog.setYesButtonText("Exit");
 		} else
-			exit(restartAfterExit);
+			exit(false);
 	}
 
 	private void exit (boolean restartAfterExit) {
