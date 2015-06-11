@@ -16,8 +16,10 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
+
 public class ProjectLibGDX extends Project {
-	public String source;
+	@Tag(10) public String source;
 
 	public ProjectLibGDX () {
 		super(Type.LibGDX);

@@ -23,7 +23,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
+import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
@@ -49,7 +49,7 @@ public class ProjectIOModule extends EditorModule {
 	public void init () {
 		kryo = new Kryo();
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
-		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
+		kryo.setDefaultSerializer(TaggedFieldSerializer.class);
 		kryo.register(Array.class, new ArraySerializer(), 10);
 	}
 

@@ -16,13 +16,15 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
+
 public class Project {
-	public Type type;
+	@Tag(0) public Type type;
 
 	/** Root of project, for LibGDX type this is root of Gradle folder, for generic this is same as assets folder */
-	public String root;
+	@Tag(1) public String root;
 	/** Assets export directory, for LibGDX this is usually gradle_root/android/assets, for generic this is directory provided by user */
-	public String assets;
+	@Tag(2) public String assets;
 
 	public Project (Type type) {
 		this.type = type;
