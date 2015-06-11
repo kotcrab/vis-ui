@@ -20,7 +20,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.module.ContentTable;
-import com.kotcrab.vis.editor.module.editor.PluginContainerModule;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.physicseditor.models.RigidBodyModel;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
@@ -32,7 +32,7 @@ import com.kotcrab.vis.editor.util.gdx.FocusUtils;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 
 public class PhysicsEditorTab extends MainContentTab {
-	private PluginContainerModule pluginContainer;
+	private ExtensionStorageModule pluginContainer;
 	private QuickAccessModule quickAccess;
 
 	private PhysicsEditorModuleContainer physicsMC;
@@ -41,7 +41,7 @@ public class PhysicsEditorTab extends MainContentTab {
 	private ContentTable content;
 
 	public PhysicsEditorTab (ProjectModuleContainer projectMC) {
-		pluginContainer = projectMC.getEditorContainer().get(PluginContainerModule.class);
+		pluginContainer = projectMC.getEditorContainer().get(ExtensionStorageModule.class);
 		quickAccess = projectMC.getEditorContainer().get(QuickAccessModule.class);
 
 		physicsMC = new PhysicsEditorModuleContainer(projectMC, this);

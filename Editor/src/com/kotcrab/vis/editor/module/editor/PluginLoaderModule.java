@@ -60,7 +60,7 @@ public class PluginLoaderModule extends EditorModule {
 	private static final String TAG = "PluginLoader";
 	private static final String PLUGINS_FOLDER_PATH = App.getJarFolderPath() + File.separator + "plugins";
 
-	@InjectModule private PluginContainerModule pluginContainer;
+	@InjectModule private ExtensionStorageModule pluginContainer;
 	@InjectModule private PluginSettingsModule settings;
 	@InjectModule private ToastModule toastModule;
 
@@ -185,7 +185,7 @@ public class PluginLoaderModule extends EditorModule {
 				Object object = cons.newInstance();
 
 				if (object instanceof ObjectSupport) {
-					pluginContainer.addSupport((ObjectSupport) object);
+					pluginContainer.addObjectSupport((ObjectSupport) object);
 					continue;
 				}
 

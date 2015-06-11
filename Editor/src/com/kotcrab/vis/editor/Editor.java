@@ -79,7 +79,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private InputModule inputModule;
 	private ProjectIOModule projectIO;
 	private FileChooserModule fileChooser;
-	private PluginContainerModule pluginContainer;
+	private ExtensionStorageModule pluginContainer;
 	private GeneralSettingsModule settings;
 
 	// TODO move to module
@@ -193,7 +193,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(new GlobalInputModule());
 
 		editorMC.add(new PluginLoaderModule());
-		editorMC.add(pluginContainer = new PluginContainerModule());
+		editorMC.add(pluginContainer = new ExtensionStorageModule());
 		editorMC.add(new SiteAPIModule());
 		editorMC.add(new PluginFilesAccessModule());
 		editorMC.add(new ColorPickerModule());

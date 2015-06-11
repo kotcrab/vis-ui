@@ -23,26 +23,26 @@ import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 
 /** Holds plugins loaded by {@link PluginLoaderModule}. Others modules (even from different containers like 'project' or 'scene') then can access them. */
-public class PluginContainerModule extends EditorModule {
-	private Array<ObjectSupport> supports = new Array<>();
-	private Array<ContainerExtension<?>> extensions = new Array<>();
+public class ExtensionStorageModule extends EditorModule {
+	private Array<ObjectSupport> objectSupports = new Array<>();
+	private Array<ContainerExtension<?>> containerExtensions = new Array<>();
 
-	public void addSupport (ObjectSupport support) {
-		supports.add(support);
+	public void addObjectSupport (ObjectSupport support) {
+		objectSupports.add(support);
 	}
 
 	public void addContainerExtension (ContainerExtension extension) {
-		extensions.add(extension);
+		containerExtensions.add(extension);
 	}
 
 	public Array<ObjectSupport> getObjectSupports () {
-		return supports;
+		return objectSupports;
 	}
 
 	public <T extends Module> Array<T> getContainersExtensions (Class<T> baseModuleType, ExtensionScope scope) {
 		Array<T> modules = new Array<>();
 
-		for (ContainerExtension extension : extensions)
+		for (ContainerExtension extension : containerExtensions)
 			if (extension.getScope() == scope) modules.add((T) extension);
 
 		return modules;

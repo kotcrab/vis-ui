@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Values;
-import com.kotcrab.vis.editor.module.editor.PluginContainerModule;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.util.Log;
 
@@ -47,7 +47,7 @@ public class ObjectSupportModule extends ProjectModule {
 			descriptors = new Array<>();
 		}
 
-		PluginContainerModule pluginContainer = container.get(PluginContainerModule.class);
+		ExtensionStorageModule pluginContainer = container.get(ExtensionStorageModule.class);
 		Array<ObjectSupport> supports = pluginContainer.getObjectSupports();
 		for (ObjectSupport support : supports)
 			register(support);

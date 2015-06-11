@@ -29,7 +29,7 @@ import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.module.ContentTable;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;
-import com.kotcrab.vis.editor.module.editor.PluginContainerModule;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
@@ -50,7 +50,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	private Editor editor;
 	private EditorScene scene;
 
-	@InjectModule private PluginContainerModule pluginContainer;
+	@InjectModule private ExtensionStorageModule pluginContainer;
 	@InjectModule private MenuBarModule menuBarModule;
 	@InjectModule private StatusBarModule statusBarModule;
 	@InjectModule private SceneTabsModule sceneTabs;
