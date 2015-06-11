@@ -36,10 +36,15 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 public class SpineAssetDescriptor implements VisAssetDescriptor {
 	private String atlasPath;
 	private String skeletonPath;
+	private float scale; //ignored in compare
 
-	public SpineAssetDescriptor (String atlasPath, String skeletonPath) {
+	public SpineAssetDescriptor () {
+	}
+
+	public SpineAssetDescriptor (String atlasPath, String skeletonPath, float scale) {
 		this.atlasPath = atlasPath;
 		this.skeletonPath = skeletonPath;
+		this.scale = scale;
 	}
 
 	public String getAtlasPath () {
@@ -56,5 +61,9 @@ public class SpineAssetDescriptor implements VisAssetDescriptor {
 		SpineAssetDescriptor desc = (SpineAssetDescriptor) asset;
 		if (atlasPath.equals(desc.atlasPath) == false) return false;
 		return skeletonPath.equals(desc.skeletonPath);
+	}
+
+	public float getScale () {
+		return scale;
 	}
 }

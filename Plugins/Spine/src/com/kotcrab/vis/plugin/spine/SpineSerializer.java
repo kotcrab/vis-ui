@@ -36,14 +36,16 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
-import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
+import com.esotericsoftware.spine.SkeletonRenderer;
 
 public class SpineSerializer extends CompatibleFieldSerializer<SpineObject> {
 	private SpineCacheModule spineCache;
+	private SkeletonRenderer renderer;
 
-	public SpineSerializer (Kryo kryo, SpineCacheModule spineCache) {
+	public SpineSerializer (Kryo kryo, SpineCacheModule spineCache, SkeletonRenderer renderer) {
 		super(kryo, SpineObject.class);
 		this.spineCache = spineCache;
+		this.renderer = renderer;
 	}
 
 	@Override
@@ -61,7 +63,7 @@ public class SpineSerializer extends CompatibleFieldSerializer<SpineObject> {
 	@Override
 	public SpineObject read (Kryo kryo, Input input, Class<SpineObject> type) {
 		SpineObject object = super.read(kryo, input, type);
-		object.onDeserialize(spineCache.get((SpineAssetDescriptor) object.getAssetDescriptor()));
+		object.onDeserialize(spineCache.get(object.getAssetDescriptor()), renderer, spineCache);
 		object.setPosition(input.readFloat(), input.readFloat());
 		object.setFlip(input.readBoolean(), input.readBoolean());
 		object.setColor(kryo.readObject(input, Color.class));

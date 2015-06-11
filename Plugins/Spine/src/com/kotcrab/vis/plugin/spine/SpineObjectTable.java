@@ -39,13 +39,18 @@ import com.esotericsoftware.spine.Animation;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificObjectTable;
 import com.kotcrab.vis.editor.util.EntityUtils;
+import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
+import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.widget.Tooltip;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
+import com.kotcrab.vis.ui.widget.VisTable;
 
 import java.util.HashSet;
 
@@ -53,8 +58,10 @@ public class SpineObjectTable extends SpecificObjectTable {
 	private static final String NO_COMMON_ANIMATION = "<?>";
 
 	private IndeterminateCheckbox playAnimationOnStart;
-	private IndeterminateCheckbox preivew;
+	private IndeterminateCheckbox preview;
 	private VisSelectBox<String> animSelectBox;
+
+	private NumberInputField scaleField;
 
 	private Image warningImage;
 	private Tooltip onlyCommonAnimationTooltip;
@@ -62,11 +69,18 @@ public class SpineObjectTable extends SpecificObjectTable {
 
 	@Override
 	protected void init () {
-		preivew = new IndeterminateCheckbox("Preview in editor");
+		preview = new IndeterminateCheckbox("Preview in editor");
 		playAnimationOnStart = new IndeterminateCheckbox("Play animation on start");
 
-		preivew.addListener(properties.getSharedCheckBoxChangeListener());
+		preview.addListener(properties.getSharedCheckBoxChangeListener());
 		playAnimationOnStart.addListener(properties.getSharedCheckBoxChangeListener());
+
+		scaleField = new NumberInputField(properties.getSharedFocusListener(), properties.getSharedChangeListener());
+		scaleField.addValidator(new GreaterThanValidator(0));
+
+		VisTable scaleTable = new VisTable(true);
+		scaleTable.add("Scale:");
+		scaleTable.add(scaleField).width(EntityProperties.FIELD_WIDTH);
 
 		animSelectBox = new VisSelectBox<>();
 		animSelectBox.setItems("<none>");
@@ -88,9 +102,10 @@ public class SpineObjectTable extends SpecificObjectTable {
 		padLeft(3);
 		left();
 		defaults().left();
-		add(preivew).spaceBottom(0).row();
+		add(preview).spaceBottom(0).row();
 		add(playAnimationOnStart).spaceBottom(2).row();
-		add(TableBuilder.build(new VisLabel("Animation:"), animSelectBox, warningImage)).padBottom(3);
+		add(TableBuilder.build(new VisLabel("Animation:"), animSelectBox, warningImage)).row();
+		add(scaleTable);
 	}
 
 	@Override
@@ -105,7 +120,7 @@ public class SpineObjectTable extends SpecificObjectTable {
 
 		Array<EditorObject> entities = properties.getEntities();
 
-		EntityUtils.setCommonCheckBoxState(entities, preivew, entity -> ((SpineObject) entity).isPreviewInEditor());
+		EntityUtils.setCommonCheckBoxState(entities, preview, entity -> ((SpineObject) entity).isPreviewInEditor());
 		EntityUtils.setCommonCheckBoxState(entities, playAnimationOnStart, entity -> ((SpineObject) entity).isPlayOnStart());
 
 		createCommonAnimationsList();
@@ -117,6 +132,8 @@ public class SpineObjectTable extends SpecificObjectTable {
 			animSelectBox.setSelected(NO_COMMON_ANIMATION);
 		} else
 			animSelectBox.setSelected(commonAnimation);
+
+		scaleField.setText(EntityUtils.getEntitiesCommonFloatValue(entities, entity -> ((SpineObject) entity).getScale()));
 	}
 
 	private void createCommonAnimationsList () {
@@ -170,7 +187,9 @@ public class SpineObjectTable extends SpecificObjectTable {
 				obj.setDefaultAnimation(animSelectBox.getSelection().first());
 
 			if (playAnimationOnStart.isIndeterminate() == false) obj.setPlayOnStart(playAnimationOnStart.isChecked());
-			if (preivew.isIndeterminate() == false) obj.setPreviewInEditor(preivew.isChecked());
+			if (preview.isIndeterminate() == false) obj.setPreviewInEditor(preview.isChecked());
+
+			obj.setScale(FieldUtils.getFloat(scaleField, obj.getScale()));
 		}
 	}
 }

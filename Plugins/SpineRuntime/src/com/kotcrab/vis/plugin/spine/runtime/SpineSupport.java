@@ -54,19 +54,21 @@ public class SpineSupport implements EntitySupport<SpineData, SpineEntity> {
 	}
 
 	@Override
-	public Class<SpineEntity> getEntityClass () {
-		return SpineEntity.class;
+	public Class<SpineData> getEntityDataClass () {
+		return SpineData.class;
 	}
 
 	@Override
 	public void resolveDependencies (Array<AssetDescriptor> deps, SpineData entityData) {
-		SkeletonDataLoaderParameter parameter = new SkeletonDataLoaderParameter(entityData.assetDescriptor.getAtlasPath(), entityData.scale);
-		deps.add(new AssetDescriptor(entityData.assetDescriptor.getAtlasPath(), SkeletonData.class));
+		SpineAssetDescriptor asset = (SpineAssetDescriptor) entityData.assetDescriptor;
+		SkeletonDataLoaderParameter parameter = new SkeletonDataLoaderParameter(asset.getAtlasPath(), asset.getScale());
+		deps.add(new AssetDescriptor(asset.getSkeletonPath(), SkeletonData.class, parameter));
 	}
 
 	@Override
 	public SpineEntity getInstanceFromData (AssetManager manager, SpineData data) {
-		SkeletonData skeletonData = manager.get(data.assetDescriptor.getSkeletonPath(), SkeletonData.class);
+		SpineAssetDescriptor asset = (SpineAssetDescriptor) data.assetDescriptor;
+		SkeletonData skeletonData = manager.get(asset.getSkeletonPath(), SkeletonData.class);
 		SpineEntity entity = new SpineEntity(data.id, skeletonData, skeletonRenderer);
 		data.loadTo(entity);
 		return entity;

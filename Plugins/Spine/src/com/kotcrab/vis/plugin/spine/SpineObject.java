@@ -31,6 +31,7 @@
 
 package com.kotcrab.vis.plugin.spine;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -44,23 +45,36 @@ import com.kotcrab.vis.plugin.spine.runtime.SpineEntity;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 public class SpineObject extends SpineEntity implements EditorObject {
+	private transient boolean boundsRequested;
+	private transient SpineCacheModule spineCache;
+
 	private VisAssetDescriptor assetDescriptor;
 	private boolean previewInEditor;
 	private Rectangle bounds;
 
-	public SpineObject (String atlasPath, String skeletonPath, SkeletonData skeletonData, SkeletonRenderer renderer) {
+	public SpineObject (SpineAssetDescriptor asset, SkeletonData skeletonData, SkeletonRenderer renderer, SpineCacheModule spineCache) {
 		super(null, skeletonData, renderer);
+		this.spineCache = spineCache;
+
 		bounds = new Rectangle();
-		setAssetDescriptor(new SpineAssetDescriptor(atlasPath, skeletonPath));
+		setAssetDescriptor(asset);
 	}
 
 	public SpineObject (SpineObject other) {
 		super(other.getId(), other.getSkeleton().getData(), other.renderer);
+		this.spineCache = other.spineCache;
 		this.playOnStart = other.playOnStart;
 		this.defaultAnimation = other.defaultAnimation;
 		this.previewInEditor = other.previewInEditor;
 		this.bounds = other.bounds;
 		this.assetDescriptor = other.assetDescriptor;
+		updateAnimation();
+	}
+
+	public void onDeserialize (SkeletonData skeletonData, SkeletonRenderer renderer, SpineCacheModule spineCache) {
+		this.renderer = renderer;
+		this.spineCache = spineCache;
+		init(skeletonData);
 		updateAnimation();
 	}
 
@@ -81,12 +95,6 @@ public class SpineObject extends SpineEntity implements EditorObject {
 	}
 
 	@Override
-	public void render (Batch batch) {
-		super.render(batch);
-		System.out.println(bounds);
-	}
-
-	@Override
 	public boolean isFlipSupported () {
 		return true;
 	}
@@ -104,6 +112,26 @@ public class SpineObject extends SpineEntity implements EditorObject {
 	@Override
 	public float getHeight () {
 		return bounds.height;
+	}
+
+	public float getScale () {
+		return ((SpineAssetDescriptor) assetDescriptor).getScale();
+	}
+
+	public void setScale (float scale) {
+		SpineAssetDescriptor old = (SpineAssetDescriptor) assetDescriptor;
+		setAssetDescriptor(new SpineAssetDescriptor(old.getAtlasPath(), old.getSkeletonPath(), scale));
+
+		float x = getX(), y = getY();
+		boolean flipX = isFlipX(), flipY = isFlipY();
+		Color color = getColor();
+
+		init(spineCache.get(assetDescriptor));
+		updateAnimation();
+
+		setPosition(x, y);
+		setFlip(flipX, flipY);
+		setColor(color);
 	}
 
 	private void updateAnimation () {
@@ -130,14 +158,19 @@ public class SpineObject extends SpineEntity implements EditorObject {
 	}
 
 	@Override
-	public Rectangle getBoundingRectangle () {
-		computeBoundingRectangle();
-		return bounds;
+	public void render (Batch batch) {
+		super.render(batch);
+
+		if (boundsRequested == true) {
+			computeBoundingRectangle();
+			boundsRequested = false;
+		}
 	}
 
-	public void onDeserialize (SkeletonData skeletonData) {
-		init(skeletonData);
-		updateAnimation();
+	@Override
+	public Rectangle getBoundingRectangle () {
+		boundsRequested = true;
+		return bounds;
 	}
 
 	private void computeBoundingRectangle () {

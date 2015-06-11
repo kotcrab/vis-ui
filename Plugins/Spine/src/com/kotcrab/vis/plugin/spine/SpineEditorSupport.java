@@ -48,6 +48,7 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.ContentItemProperties;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificObjectTable;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.VisDropSource;
+import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.SpineData;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
@@ -68,10 +69,9 @@ public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 		SceneIOModule sceneIOModule = projectMC.get(SceneIOModule.class);
 		spineCache = projectMC.get(SpineCacheModule.class);
 		fileAccess = projectMC.get(FileAccessModule.class);
-
-		serializer = new SpineSerializer(sceneIOModule.getKryo(), spineCache);
-
 		renderer = new SkeletonRenderer();
+
+		serializer = new SpineSerializer(sceneIOModule.getKryo(), spineCache, renderer);
 	}
 
 	@Override
@@ -115,8 +115,14 @@ public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 		return new VisDropSource(dragAndDrop, item).defaultView("New Spine Animation \n (drop on scene to add)").disposeOnNullTarget()
 				.setObjectProvider(() -> {
 					FileHandle atlasFile = FileUtils.sibling(item.getFile(), "atlas");
-					return new SpineObject(fileAccess.relativizeToAssetsFolder(atlasFile.path()), fileAccess.relativizeToAssetsFolder(item.getFile().path()),
-							spineCache.get(atlasFile, item.getFile()), renderer);
+					FileHandle skeletonFile = item.getFile();
+
+					String atlasPath = fileAccess.relativizeToAssetsFolder(atlasFile);
+					String skeletonPath = fileAccess.relativizeToAssetsFolder(skeletonFile);
+
+					SpineAssetDescriptor asset = new SpineAssetDescriptor(atlasPath, skeletonPath, 1);
+
+					return new SpineObject(asset, spineCache.get(asset), renderer, spineCache);
 				});
 	}
 
@@ -127,6 +133,8 @@ public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 
 	@Override
 	public void export (ExportModule module, Array<EntityData> entities, SpineObject entity) {
-
+		SpineData data = new SpineData();
+		data.saveFrom(entity, entity.getAssetDescriptor());
+		entities.add(data);
 	}
 }

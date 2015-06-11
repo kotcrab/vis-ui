@@ -22,10 +22,10 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.entity.Entity;
 
-public interface EntitySupport<ED extends EntityData, E extends Entity> {
+public interface EntitySupport<ED extends EntityData<E>, E extends Entity> {
 	void setLoaders (AssetManager manager);
 
-	Class<E> getEntityClass ();
+	Class<ED> getEntityDataClass ();
 
 	void resolveDependencies (Array<AssetDescriptor> deps, ED entityData);
 

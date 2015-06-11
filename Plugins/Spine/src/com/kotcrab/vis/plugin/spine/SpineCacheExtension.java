@@ -43,7 +43,9 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
+import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 @VisPlugin
 public class SpineCacheExtension implements ContainerExtension<ProjectModule> {
@@ -63,35 +65,30 @@ class SpineCacheModule extends ProjectModule {
 	@InjectModule private FileAccessModule fileAccess;
 
 	private ObjectMap<FileHandle, TextureAtlas> atlases = new ObjectMap<>();
-	private ObjectMap<FileHandle, SkeletonData> skeletonsData = new ObjectMap<>();
+	private ObjectMap<FileHandle, SkeletonCache> skeletonsData = new ObjectMap<>();
 
-	public SkeletonData get (SpineAssetDescriptor assetDescriptor) {
-		return get(assetDescriptor.getAtlasPath(), assetDescriptor.getSkeletonPath());
+	public SkeletonData get (VisAssetDescriptor asset) {
+		if (asset instanceof SpineAssetDescriptor == false) throw new UnsupportedAssetDescriptorException(asset);
+		SpineAssetDescriptor spineAsset = (SpineAssetDescriptor) asset;
+		return get(spineAsset.getAtlasPath(), spineAsset.getSkeletonPath(), spineAsset.getScale());
 	}
 
-	public SkeletonData get (String relativeAtlasPath, String relativeSkeletonPath) {
-		return get(Gdx.files.absolute(fileAccess.derelativizeFromAssetsFolder(relativeAtlasPath)),
-				Gdx.files.absolute(fileAccess.derelativizeFromAssetsFolder(relativeSkeletonPath)));
+	private SkeletonData get (String relativeAtlasPath, String relativeSkeletonPath, float scale) {
+		return get(
+				Gdx.files.absolute(fileAccess.derelativizeFromAssetsFolder(relativeAtlasPath)),
+				Gdx.files.absolute(fileAccess.derelativizeFromAssetsFolder(relativeSkeletonPath)),
+				scale);
 	}
 
-	public SkeletonData get (FileHandle atlasFile, FileHandle skeletonFile) {
-		SkeletonData data = skeletonsData.get(skeletonFile);
+	private SkeletonData get (FileHandle atlasFile, FileHandle skeletonFile, float scale) {
+		SkeletonCache cache = skeletonsData.get(skeletonFile);
 
-		if (data == null) {
-			if (skeletonFile.extension().equals("json")) {
-				SkeletonJson json = new SkeletonJson(getAtlas(atlasFile));
-				data = json.readSkeletonData(skeletonFile);
-				skeletonsData.put(skeletonFile, data);
-			}
-
-			if (skeletonFile.extension().equals("skel")) {
-				SkeletonBinary binary = new SkeletonBinary(getAtlas(atlasFile));
-				data = binary.readSkeletonData(skeletonFile);
-				skeletonsData.put(skeletonFile, data);
-			}
+		if (cache == null) {
+			cache = new SkeletonCache();
+			skeletonsData.put(skeletonFile, cache);
 		}
 
-		return data;
+		return cache.getData(atlasFile, skeletonFile, scale);
 	}
 
 	private TextureAtlas getAtlas (FileHandle atlasFile) {
@@ -109,5 +106,30 @@ class SpineCacheModule extends ProjectModule {
 	public void dispose () {
 		for (TextureAtlas atlas : atlases.values())
 			atlas.dispose();
+	}
+
+	private class SkeletonCache {
+		public ObjectMap<Float, SkeletonData> sizeMaps = new ObjectMap<>();
+
+		public SkeletonData getData (FileHandle atlasFile, FileHandle skeletonFile, float scale) {
+			SkeletonData data = sizeMaps.get(scale);
+			if (data == null) {
+				if (skeletonFile.extension().equals("json")) {
+					SkeletonJson json = new SkeletonJson(getAtlas(atlasFile));
+					json.setScale(scale);
+					data = json.readSkeletonData(skeletonFile);
+					sizeMaps.put(scale, data);
+				}
+
+				if (skeletonFile.extension().equals("skel")) {
+					SkeletonBinary binary = new SkeletonBinary(getAtlas(atlasFile));
+					binary.setScale(scale);
+					data = binary.readSkeletonData(skeletonFile);
+					sizeMaps.put(scale, data);
+				}
+			}
+
+			return data;
+		}
 	}
 }

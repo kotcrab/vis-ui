@@ -57,9 +57,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import java.util.Iterator;
 
 public class EntityProperties extends VisTable implements Disposable, EventListener {
-	private static final int LABEL_WIDTH = 60;
-	private static final int AXIS_LABEL_WIDTH = 10;
-	private static final int FIELD_WIDTH = 70;
+	public static final int LABEL_WIDTH = 60;
+	public static final int AXIS_LABEL_WIDTH = 10;
+	public static final int FIELD_WIDTH = 70;
 
 	private ObjectSupportModule supportModule;
 
@@ -373,6 +373,10 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	public ChangeListener getSharedCheckBoxChangeListener () {
 		return sharedCheckBoxChangeListener;
+	}
+
+	public FocusListener getSharedFocusListener () {
+		return sharedFocusListener;
 	}
 
 	public Tab getParentTab () {

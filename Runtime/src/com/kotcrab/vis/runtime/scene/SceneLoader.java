@@ -80,7 +80,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	}
 
 	public void registerSupport (AssetManager manager, EntitySupport support) {
-		supportMap.put(support.getEntityClass(), support);
+		supportMap.put(support.getEntityDataClass(), support);
 		support.setLoaders(manager);
 	}
 

@@ -198,7 +198,9 @@ public class ExportModule extends ProjectModule {
 						LayerData layerData = new LayerData(layer.name);
 						sceneData.layers.add(layerData);
 
-						for (EditorObject entity : layer.entities) {
+						for (int j = 0; j < layer.entities.size; j++) {
+							EditorObject entity = layer.entities.get(j);
+
 							if (exportEntity(layerData.entities, entity) == false)
 								Log.error("Ignoring unknown entity: " + entity.getClass());
 						}

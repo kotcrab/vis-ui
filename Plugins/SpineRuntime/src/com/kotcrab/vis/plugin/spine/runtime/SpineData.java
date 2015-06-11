@@ -36,21 +36,24 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.data.EntityData;
 
 public class SpineData extends EntityData<SpineEntity> {
-	public SpineAssetDescriptor assetDescriptor;
 	public float x, y;
 	public boolean flipX, flipY;
 	public Color color;
 
-	public float scale;
+	public boolean playOnStart;
+	public String defaultAnimation;
 
 	@Override
 	public void saveFrom (SpineEntity entity, VisAssetDescriptor assetDescriptor) {
 		super.saveFrom(entity, assetDescriptor);
-		id = entity.getId();
 		x = entity.getX();
 		y = entity.getY();
+
 		flipX = entity.isFlipX();
 		flipY = entity.isFlipY();
+
+		playOnStart = entity.isPlayOnStart();
+		defaultAnimation = entity.getDefaultAnimation();
 	}
 
 	@Override
@@ -58,5 +61,8 @@ public class SpineData extends EntityData<SpineEntity> {
 		super.loadTo(entity);
 		entity.setPosition(x, y);
 		entity.setFlip(flipX, flipY);
+
+		entity.setPlayOnStart(playOnStart);
+		entity.setDefaultAnimation(defaultAnimation);
 	}
 }

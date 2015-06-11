@@ -66,6 +66,12 @@ public class SpineEntity extends Entity {
 	}
 
 	@Override
+	public void onAfterLoad () {
+		if (playOnStart)
+			state.setAnimation(0, defaultAnimation, true);
+	}
+
+	@Override
 	public void render (Batch batch) {
 		state.update(Gdx.graphics.getDeltaTime());
 		state.apply(skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
