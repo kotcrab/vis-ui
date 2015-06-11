@@ -43,7 +43,7 @@ public class PluginContainerModule extends EditorModule {
 		Array<T> modules = new Array<>();
 
 		for (ContainerExtension extension : extensions)
-			if (extension.getScope() == scope) modules.add((T) extension.getModule());
+			if (extension.getScope() == scope) modules.add((T) extension);
 
 		return modules;
 	}

@@ -47,21 +47,9 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
-@VisPlugin
-public class SpineCacheExtension implements ContainerExtension<ProjectModule> {
-	@Override
-	public ProjectModule getModule () {
-		return new SpineCacheModule();
-	}
-
-	@Override
-	public ExtensionScope getScope () {
-		return ExtensionScope.PROJECT;
-	}
-}
-
 //TODO support dynamic refreshing
-class SpineCacheModule extends ProjectModule {
+@VisPlugin
+public class SpineCacheModule extends ProjectModule implements ContainerExtension<ProjectModule> {
 	@InjectModule private FileAccessModule fileAccess;
 
 	private ObjectMap<FileHandle, TextureAtlas> atlases = new ObjectMap<>();
@@ -106,6 +94,11 @@ class SpineCacheModule extends ProjectModule {
 	public void dispose () {
 		for (TextureAtlas atlas : atlases.values())
 			atlas.dispose();
+	}
+
+	@Override
+	public ExtensionScope getScope () {
+		return ExtensionScope.PROJECT;
 	}
 
 	private class SkeletonCache {

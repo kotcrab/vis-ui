@@ -40,22 +40,8 @@ import com.kotcrab.vis.editor.module.editor.PluginFilesAccessModule;
 import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension;
-import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
-@VisPlugin
-public class SpinesNotifierExtension implements ContainerExtension<EditorModule> {
-	@Override
-	public EditorModule getModule () {
-		return new SpineNotifier();
-	}
-
-	@Override
-	public ExtensionScope getScope () {
-		return ExtensionScope.EDITOR;
-	}
-}
-
-class SpineNotifier extends EditorModule {
+public class SpineNotifier extends EditorModule implements ContainerExtension<EditorModule> {
 	@InjectModule private PluginSettingsModule pluginSettings;
 
 	private Json json;
@@ -95,6 +81,11 @@ class SpineNotifier extends EditorModule {
 
 	public void enableSpinePlugin () {
 		pluginSettings.enablePlugin("spine");
+	}
+
+	@Override
+	public ExtensionScope getScope () {
+		return ExtensionScope.EDITOR;
 	}
 
 	public static class Settings {

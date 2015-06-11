@@ -25,7 +25,5 @@ import com.kotcrab.vis.editor.module.Module;
 public interface ContainerExtension<T extends Module> {
 	enum ExtensionScope {EDITOR, PROJECT, SCENE, PHYSICS_EDITOR}
 
-	T getModule ();
-
 	ExtensionScope getScope ();
 }
