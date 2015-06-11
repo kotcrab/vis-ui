@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.module.editor;
 
+import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.module.editor.GeneralSettingsModule.GeneralConfig;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 
@@ -48,6 +49,6 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 	}
 
 	public static class GeneralConfig {
-		private boolean confirmExit = true;
+		@Tag(0) boolean confirmExit = true;
 	}
 }

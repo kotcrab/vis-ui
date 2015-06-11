@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.InjectModule;
@@ -320,7 +321,7 @@ public class PluginLoaderModule extends EditorModule {
 	}
 
 	public static class PluginsConfig {
-		private Array<String> pluginsIdsToLoad = new Array<>();
+		@Tag(0) private Array<String> pluginsIdsToLoad = new Array<>();
 
 		//this constructor will be called if save file does not exist
 		public PluginsConfig () {

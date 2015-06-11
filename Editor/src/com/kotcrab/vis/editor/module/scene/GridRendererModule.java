@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsModule;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
@@ -139,7 +140,7 @@ public class GridRendererModule extends SceneModule {
 	}
 
 	public static class GridConfig {
-		public boolean drawGrid = true;
-		public int gridSize = 256;
+		@Tag(0) public boolean drawGrid = true;
+		@Tag(1) public int gridSize = 256;
 	}
 }
