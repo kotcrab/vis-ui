@@ -26,6 +26,8 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.scene.MusicObject;
 
 public class MusicObjectSerializer extends CompatibleFieldSerializer<MusicObject> {
+	private static final int VERSION_CODE = 1;
+
 	@InjectModule private FileAccessModule fileAccess;
 
 	public MusicObjectSerializer (Kryo kryo, ModuleInjector injector) {
@@ -37,6 +39,8 @@ public class MusicObjectSerializer extends CompatibleFieldSerializer<MusicObject
 	public void write (Kryo kryo, Output output, MusicObject musicObj) {
 		super.write(kryo, output, musicObj);
 
+		output.writeInt(VERSION_CODE);
+
 		output.writeBoolean(musicObj.isLooping());
 		output.writeFloat(musicObj.getVolume());
 	}
@@ -44,6 +48,8 @@ public class MusicObjectSerializer extends CompatibleFieldSerializer<MusicObject
 	@Override
 	public MusicObject read (Kryo kryo, Input input, Class<MusicObject> type) {
 		MusicObject obj = super.read(kryo, input, type);
+
+		input.readInt(); //version code
 
 		obj.onDeserialize();
 		obj.setLooping(input.readBoolean());

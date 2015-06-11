@@ -39,6 +39,8 @@ import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.esotericsoftware.spine.SkeletonRenderer;
 
 public class SpineSerializer extends CompatibleFieldSerializer<SpineObject> {
+	private static final int VERSION_CODE = 1;
+
 	private SpineCacheModule spineCache;
 	private SkeletonRenderer renderer;
 
@@ -51,6 +53,9 @@ public class SpineSerializer extends CompatibleFieldSerializer<SpineObject> {
 	@Override
 	public void write (Kryo kryo, Output output, SpineObject object) {
 		super.write(kryo, output, object);
+
+		output.writeInt(VERSION_CODE);
+
 		output.writeFloat(object.getX());
 		output.writeFloat(object.getY());
 
@@ -63,6 +68,9 @@ public class SpineSerializer extends CompatibleFieldSerializer<SpineObject> {
 	@Override
 	public SpineObject read (Kryo kryo, Input input, Class<SpineObject> type) {
 		SpineObject object = super.read(kryo, input, type);
+
+		input.readInt(); //version code
+
 		object.onDeserialize(spineCache.get(object.getAssetDescriptor()), renderer, spineCache);
 		object.setPosition(input.readFloat(), input.readFloat());
 		object.setFlip(input.readBoolean(), input.readBoolean());

@@ -20,40 +20,28 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
-import com.kotcrab.vis.editor.module.InjectModule;
-import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.scene.SoundObject;
+import com.kotcrab.vis.editor.scene.EditorScene;
 
-public class SoundObjectSerializer extends CompatibleFieldSerializer<SoundObject> {
+public class EditorSceneSerializer extends CompatibleFieldSerializer<EditorScene> {
 	private static final int VERSION_CODE = 1;
 
-	@InjectModule private FileAccessModule fileAccess;
-
-	public SoundObjectSerializer (Kryo kryo, ModuleInjector injector) {
-		super(kryo, SoundObject.class);
-		injector.injectModules(this);
+	public EditorSceneSerializer (Kryo kryo) {
+		super(kryo, EditorScene.class);
 	}
 
 	@Override
-	public void write (Kryo kryo, Output output, SoundObject musicObj) {
-		super.write(kryo, output, musicObj);
+	public void write (Kryo kryo, Output output, EditorScene scene) {
+		super.write(kryo, output, scene);
 
 		output.writeInt(VERSION_CODE);
 	}
 
 	@Override
-	public SoundObject read (Kryo kryo, Input input, Class<SoundObject> type) {
-		SoundObject obj = super.read(kryo, input, type);
+	public EditorScene read (Kryo kryo, Input input, Class<EditorScene> sceneClass) {
+		EditorScene obj = super.read(kryo, input, sceneClass);
 
 		input.readInt(); //version code
 
-		obj.onDeserialize();
 		return obj;
-	}
-
-	@Override
-	public SoundObject copy (Kryo kryo, SoundObject original) {
-		return new SoundObject(original);
 	}
 }

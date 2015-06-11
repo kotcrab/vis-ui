@@ -32,6 +32,9 @@ import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.serializer.*;
 import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
+import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
@@ -41,6 +44,9 @@ import java.io.FileOutputStream;
 
 @SuppressWarnings("rawtypes")
 public class SceneIOModule extends ProjectModule {
+	public static final int KRYO_PLUGINS_RESERVED_ID_BEGIN = 401;
+	public static final int KRYO_PLUGINS_RESERVED_ID_END = 600;
+
 	private Kryo kryo;
 
 	@InjectModule private FileAccessModule fileAccessModule;
@@ -60,22 +66,34 @@ public class SceneIOModule extends ProjectModule {
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 
-		//id config:
+		//id configuration:
 		//0-8 kryo primitives
-		//10-29 custom base types
-		//30-60 entities support
-		//60-100 plugins
+		//10-200 custom base types (sub categories don't have to be strictly enforced)
+		//	10-30 libs classes
+		//	31-60 vis classes
+		//	61-100 assets descriptors
+		//	101-200 reserved for future use
+		//201-400 entities support
+		//401-600 plugins
 
 		kryo.register(Array.class, new ArraySerializer(), 10);
 		kryo.register(Rectangle.class, 11);
 		kryo.register(Matrix4.class, 12);
 		kryo.register(Color.class, new ColorSerializer(), 13);
 
-		kryo.register(SpriteObject.class, new SpriteObjectSerializer(kryo, textureCache), 30);
-		kryo.register(MusicObject.class, new MusicObjectSerializer(kryo, projectContainer), 31);
-		kryo.register(SoundObject.class, new SoundObjectSerializer(kryo, projectContainer), 32);
-		kryo.register(ParticleEffectObject.class, new ParticleObjectSerializer(kryo, fileAccessModule, particleCache), 33);
-		kryo.register(TextObject.class, new TextObjectSerializer(kryo, fileAccessModule, fontCache), 34);
+		kryo.register(EditorScene.class, new EditorSceneSerializer(kryo), 31);
+		kryo.register(Layer.class, 32);
+		kryo.register(SceneViewport.class, 33);
+
+		kryo.register(PathAsset.class, 61);
+		kryo.register(TextureRegionAsset.class, 62);
+		kryo.register(AtlasRegionAsset.class, 63);
+
+		kryo.register(SpriteObject.class, new SpriteObjectSerializer(kryo, textureCache), 201);
+		kryo.register(MusicObject.class, new MusicObjectSerializer(kryo, projectContainer), 202);
+		kryo.register(SoundObject.class, new SoundObjectSerializer(kryo, projectContainer), 203);
+		kryo.register(ParticleEffectObject.class, new ParticleObjectSerializer(kryo, fileAccessModule, particleCache), 204);
+		kryo.register(TextObject.class, new TextObjectSerializer(kryo, fileAccessModule, fontCache), 205);
 	}
 
 	@Override

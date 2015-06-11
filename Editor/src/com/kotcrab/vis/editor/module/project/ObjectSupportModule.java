@@ -102,9 +102,9 @@ public class ObjectSupportModule extends ProjectModule {
 	}
 
 	private int getFreeId () {
-		int startId = 60; //plugins can use id 60-100
+		int startId = SceneIOModule.KRYO_PLUGINS_RESERVED_ID_BEGIN;
 
-		for (int i = startId; i < 100; i++)
+		for (int i = startId; i < SceneIOModule.KRYO_PLUGINS_RESERVED_ID_END; i++)
 			if (isIdUsed(i) == false) return i;
 
 		throw new IllegalStateException("Free id for object support does not exist");

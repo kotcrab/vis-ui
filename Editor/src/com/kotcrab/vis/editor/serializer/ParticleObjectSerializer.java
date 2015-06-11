@@ -26,6 +26,8 @@ import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.editor.scene.ParticleEffectObject;
 
 public class ParticleObjectSerializer extends CompatibleFieldSerializer<ParticleEffectObject> {
+	private static final int VERSION_CODE = 1;
+
 	private FileAccessModule fileAccess;
 	private ParticleCacheModule particleCache;
 
@@ -38,6 +40,9 @@ public class ParticleObjectSerializer extends CompatibleFieldSerializer<Particle
 	@Override
 	public void write (Kryo kryo, Output output, ParticleEffectObject obj) {
 		super.write(kryo, output, obj);
+
+		output.writeInt(VERSION_CODE);
+
 		output.writeFloat(obj.getX());
 		output.writeFloat(obj.getY());
 	}
@@ -45,6 +50,8 @@ public class ParticleObjectSerializer extends CompatibleFieldSerializer<Particle
 	@Override
 	public ParticleEffectObject read (Kryo kryo, Input input, Class<ParticleEffectObject> type) {
 		ParticleEffectObject obj = super.read(kryo, input, type);
+
+		input.readInt(); //version code
 
 		ParticleEffect effect = getNewEffect(obj);
 		obj.onDeserialize(effect, input.readFloat(), input.readFloat());

@@ -25,6 +25,8 @@ import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.scene.TextObject;
 
 public class TextObjectSerializer extends CompatibleFieldSerializer<TextObject> {
+	private static final int VERSION_CODE = 1;
+
 	private FileAccessModule fileAccess;
 	private final FontCacheModule fontCache;
 
@@ -37,12 +39,18 @@ public class TextObjectSerializer extends CompatibleFieldSerializer<TextObject> 
 	@Override
 	public void write (Kryo kryo, Output output, TextObject textObject) {
 		super.write(kryo, output, textObject);
+
+		output.writeInt(VERSION_CODE);
 	}
 
 	@Override
 	public TextObject read (Kryo kryo, Input input, Class<TextObject> type) {
 		TextObject obj = super.read(kryo, input, type);
+
+		input.readInt(); //version code
+
 		obj.onDeserialize(fontCache.get(obj.getAssetDescriptor()));
+
 		return obj;
 	}
 

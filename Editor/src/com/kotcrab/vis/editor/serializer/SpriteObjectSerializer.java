@@ -26,6 +26,8 @@ import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 
 public class SpriteObjectSerializer extends CompatibleFieldSerializer<SpriteObject> {
+	private static final int VERSION_CODE = 1;
+
 	private TextureCacheModule textureCache;
 
 	public SpriteObjectSerializer (Kryo kryo, TextureCacheModule textureCache) {
@@ -36,6 +38,8 @@ public class SpriteObjectSerializer extends CompatibleFieldSerializer<SpriteObje
 	@Override
 	public void write (Kryo kryo, Output output, SpriteObject obj) {
 		super.write(kryo, output, obj);
+
+		output.writeInt(VERSION_CODE);
 
 		output.writeFloat(obj.getX());
 		output.writeFloat(obj.getY());
@@ -60,6 +64,9 @@ public class SpriteObjectSerializer extends CompatibleFieldSerializer<SpriteObje
 	@Override
 	public SpriteObject read (Kryo kryo, Input input, Class<SpriteObject> type) {
 		SpriteObject obj = super.read(kryo, input, type);
+
+		input.readInt(); //version code
+
 		obj.onDeserialize(textureCache.getRegion(obj.getAssetDescriptor()));
 
 		obj.setPosition(input.readFloat(), input.readFloat());
