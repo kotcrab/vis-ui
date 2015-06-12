@@ -20,6 +20,7 @@
 
 .font: { font: default-font, fontColor: white, disabledFontColor: grey }
 .focus-border: { focusBorder: border }
+.focus-border-dark-blue: { focusBorder: border-dark-blue }
 .focus-border-circle: { focusBorder: border-circle }
 
 package com.badlogic.gdx.scenes.scene2d.ui {
@@ -102,13 +103,13 @@ package com.kotcrab.vis.ui.widget {
 	#VisTextButton$VisTextButtonStyle extends TextButtonStyle: {
 		default inherits .focus-border: {}
 		toggle inherits .focus-border: {}
-		blue inherits .focus-border: {}
+		blue inherits .focus-border-dark-blue: {}
 		menu-bar inherits default, .font: { over: button-down, focusBorder: NULL }
 	}
 	
 	#VisImageButton$VisImageButtonStyle: {
 		default inherits .focus-border: { down: button-down, up: button, over: button-over, disabled: button }
-		blue inherits .focus-border: { down: button-blue-down, up: button-blue, over: button-blue-over, disabled: button-blue }
+		blue inherits .focus-border-dark-blue: { down: button-blue-down, up: button-blue, over: button-blue-over, disabled: button-blue }
 		toggle inherits default, .focus-border: { checked: button-down }
 		close: { down: button-red, up: button, over: button-over, imageUp: icon-close }
 		close-window inherits close: { up: button-window-bg }
@@ -117,6 +118,7 @@ package com.kotcrab.vis.ui.widget {
 	#VisImageTextButton$VisImageTextButtonStyle extends VisTextButtonStyle: {
 		default: { }
 		toggle: { }
+		blue: { }
 		default-noborder inherits default: { focusBorder: NULL }
 		toggle-noborder inherits toggle: { focusBorder: NULL }
 	}

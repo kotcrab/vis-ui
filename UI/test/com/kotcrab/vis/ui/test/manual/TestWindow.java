@@ -51,12 +51,14 @@ public class TestWindow extends VisWindow {
 		// ---
 
 		VisTextButton normalButton = new VisTextButton("button");
+		VisTextButton normalBlueButton = new VisTextButton("button blue", "blue");
 		VisTextButton disabledButton = new VisTextButton("disabled");
 		VisTextButton toggleButton = new VisTextButton("toggle", "toggle");
 		disabledButton.setDisabled(true);
 
 		VisTable buttonTable = new VisTable(true);
 		buttonTable.add(normalButton);
+		buttonTable.add(normalBlueButton);
 		buttonTable.add(disabledButton);
 		buttonTable.add(toggleButton);
 
