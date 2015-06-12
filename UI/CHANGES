@@ -1,6 +1,9 @@
 [0.8.0] [LibGDX 1.6.2] [Snapshot]
+-API Addition: Tooltip (Actor target, String text, int textAlign)
+-API Addition: Tooltip (String styleName, Actor target, String text, int textAlign)
 -Optimized FileChooser ( https://github.com/kotcrab/VisEditor/issues/11 )
 -Fixed issue when FileChooser confirm button text wasn't updated after changing mode ( https://github.com/kotcrab/VisEditor/pull/14 )
+
 
 [0.7.7] [LibGDX 1.6.1]
 -uiskin.json is now generated from USL (see USL page on GitHub Wiki, if you are not writing custom VisUI skins this does not affect you)

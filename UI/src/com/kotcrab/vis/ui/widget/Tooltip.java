@@ -39,8 +39,6 @@ public class Tooltip extends VisTable {
 	public static final float DEFAULT_FADE_TIME = 0.3f;
 	public static final float DEFAULT_APPEAR_DELAY_TIME = 0.6f;
 
-	private TooltipStyle style;
-
 	private Actor target;
 	private Actor content;
 	private Cell<Actor> contentCell;
@@ -52,42 +50,45 @@ public class Tooltip extends VisTable {
 	private float fadeTime = DEFAULT_FADE_TIME;
 	private float appearDelayTime = DEFAULT_APPEAR_DELAY_TIME;
 
-	public Tooltip (Actor target, String text) {
-		this("default", target, text);
+	/** Creates new Tooltip without setting tooltip target */
+	public Tooltip (String text) {
+		this("default", null, text, Align.center);
 	}
 
-	public Tooltip (Actor target, Actor content) {
-		this("default", target, content);
+	public Tooltip (Actor target, String text) {
+		this("default", target, text, Align.center);
+	}
+
+	public Tooltip (Actor target, String text, int textAlign) {
+		this("default", target, text, textAlign);
 	}
 
 	public Tooltip (String styleName, Actor target, String text) {
+		this(styleName, target, text, Align.center);
+	}
+
+	public Tooltip (String styleName, Actor target, String text, int textAlign) {
 		super(true);
 
 		VisLabel label = new VisLabel(text);
-		label.setAlignment(Align.center);
+		label.setAlignment(textAlign);
 		init(VisUI.getSkin().get(styleName, TooltipStyle.class), target, label);
-	}
-
-	public Tooltip (String styleName, Actor target, Actor content) {
-		super(true);
-
-		init(VisUI.getSkin().get(styleName, TooltipStyle.class), target, content);
-	}
-
-	/** Creates new Tooltip without setting tooltip target */
-	public Tooltip (String text) {
-		super(true);
-		style = VisUI.getSkin().get(TooltipStyle.class);
-
-		VisLabel label = new VisLabel(text);
-		label.setAlignment(Align.center);
-		init(VisUI.getSkin().get("default", TooltipStyle.class), null, label);
 	}
 
 	/** Creates new Tooltip without setting tooltip target */
 	public Tooltip (Actor content) {
 		super(true);
 		init(VisUI.getSkin().get("default", TooltipStyle.class), null, content);
+	}
+
+	public Tooltip (Actor target, Actor content) {
+		this("default", target, content);
+	}
+
+	public Tooltip (String styleName, Actor target, Actor content) {
+		super(true);
+
+		init(VisUI.getSkin().get(styleName, TooltipStyle.class), target, content);
 	}
 
 	public Tooltip (Actor target, Actor content, TooltipStyle style) {
@@ -110,7 +111,6 @@ public class Tooltip extends VisTable {
 		this.content = content;
 		this.listener = new TooltipInputListener();
 		this.displayTask = new DisplayTask();
-		this.style = style;
 
 		setBackground(style.background);
 
