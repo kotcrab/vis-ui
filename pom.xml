@@ -6,7 +6,7 @@
 
     <groupId>com.kotcrab.vis</groupId>
     <artifactId>vis-parent</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
 
     <name>VisParent</name>
     <url>https://github.com/kotcrab/VisEditor</url>
@@ -33,6 +33,18 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>vis-runtime</artifactId>
+                <version>${build.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>${project.groupId}</groupId>
+                <artifactId>vis-ui</artifactId>
+                <version>${visui.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.badlogicgames.gdx</groupId>
                 <artifactId>gdx</artifactId>
@@ -82,12 +94,6 @@
                 <artifactId>gdx-box2d-platform</artifactId>
                 <version>${gdx.version}</version>
                 <classifier>natives-desktop</classifier>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>vis-ui</artifactId>
-                <version>${visui.version}</version>
             </dependency>
 
             <dependency>
