@@ -11,7 +11,7 @@
         <groupId>com.kotcrab.vis</groupId>
         <artifactId>vis-parent</artifactId>
         <version>0.1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../Parent/pom.xml</relativePath>
     </parent>
 
     <properties>
