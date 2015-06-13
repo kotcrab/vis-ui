@@ -16,6 +16,7 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
+        <build.ci.timestamp>unknown, not built using CI</build.ci.timestamp>
     </properties>
 
     <dependencies>
@@ -126,6 +127,9 @@
                             <classpathPrefix>lib/</classpathPrefix>
                             <mainClass>com.kotcrab.vis.editor.ui.EditorFrame</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <Build-Timestamp>${build.ci.timestamp}</Build-Timestamp>
+                        </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>

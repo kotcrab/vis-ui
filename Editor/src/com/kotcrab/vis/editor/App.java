@@ -22,10 +22,14 @@ import com.kotcrab.vis.editor.util.Log;
 
 import javax.swing.JOptionPane;
 import java.io.File;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 public class App {
 	public static final String TAG = "App";
@@ -33,6 +37,8 @@ public class App {
 	public static final int VERSION_CODE = 2;
 	public static final int COMPATIBILITY_CODE = 2;
 	public static final String VERSION = "0.0.2-SNAPSHOT";
+
+	public static String buildTimestamp;
 
 	public static final boolean OPENGL_CRASH_BEFORE_EXIT_MESSAGE = true;
 	public static final boolean SNAPSHOT = VERSION.contains("SNAPSHOT");
@@ -52,6 +58,32 @@ public class App {
 		checkCharset();
 
 		eventBus = new EventBus();
+
+		try {
+			buildTimestamp = readTimestamp();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if (buildTimestamp == null)
+			buildTimestamp = "unknown, not built using CI";
+
+		Log.info("Build: " + App.buildTimestamp);
+	}
+
+	private static String readTimestamp () throws IOException {
+		Class clazz = App.class;
+		String className = clazz.getSimpleName() + ".class";
+		String classPath = clazz.getResource(className).toString();
+		if (!classPath.startsWith("jar")) {
+			// Class not from JAR
+			return null;
+		}
+		String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) +
+				"/META-INF/MANIFEST.MF";
+		Manifest manifest = new Manifest(new URL(manifestPath).openStream());
+		Attributes attr = manifest.getMainAttributes();
+		return attr.getValue("Build-Timestamp");
 	}
 
 	/** Checks if proper charset is set, if not tries to change it, if that fails method will throw IllegalStateException */
