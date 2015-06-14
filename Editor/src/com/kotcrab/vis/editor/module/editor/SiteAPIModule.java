@@ -21,11 +21,11 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.siteapi.ContentSet;
-import com.kotcrab.vis.editor.siteapi.GdxReleaseSet;
-import com.kotcrab.vis.editor.siteapi.SiteAPIClient;
-import com.kotcrab.vis.editor.siteapi.SiteAPIClient.SiteAPICallback;
-import com.kotcrab.vis.editor.siteapi.VersionSet;
+import com.kotcrab.vis.editor.webapi.ContentSet;
+import com.kotcrab.vis.editor.webapi.GdxReleaseSet;
+import com.kotcrab.vis.editor.webapi.SiteAPIClient;
+import com.kotcrab.vis.editor.webapi.SiteAPIClient.SiteAPICallback;
+import com.kotcrab.vis.editor.webapi.VersionSet;
 
 public class SiteAPIModule extends EditorModule {
 	private SiteAPIClient siteApiClient;

@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.siteapi;
+package com.kotcrab.vis.editor.webapi;
 
 import com.badlogic.gdx.utils.Array;
 
-public class VersionSet {
-	Array<Release> versions;
+public class ContentSet {
+	Array<Content> content = new Array<>();
 
-	public enum ReleaseType {
-		BETA, RELEASE
-	}
-
-	public static class Release {
+	public static class Content {
 		String title;
+		String description;
+		String version;
+		String compatibility;
 		String path;
-		ReleaseType type;
 	}
 }

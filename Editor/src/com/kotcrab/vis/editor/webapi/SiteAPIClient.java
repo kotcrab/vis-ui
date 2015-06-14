@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.siteapi;
+package com.kotcrab.vis.editor.webapi;
 
 import com.badlogic.gdx.utils.Json;
 import org.apache.commons.io.IOUtils;
