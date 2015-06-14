@@ -36,7 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WebAPIModule extends EditorModule {
-	private static final Pattern BUILD_TIMESTAMP_PATERN = Pattern.compile("[0-9].*-[0-9]");
+	private static final Pattern BUILD_TIMESTAMP_PATERN = Pattern.compile("[0-9]{6}.*-[0-9]");
 
 	private SiteAPIClient siteApiClient;
 
