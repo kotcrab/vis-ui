@@ -38,6 +38,7 @@ public class App {
 	public static final int COMPATIBILITY_CODE = 2;
 	public static final String VERSION = "0.1.0-SNAPSHOT";
 
+	public static boolean buildTimestampValid = false;
 	public static String buildTimestamp;
 
 	public static final boolean OPENGL_CRASH_BEFORE_EXIT_MESSAGE = true;
@@ -47,6 +48,8 @@ public class App {
 
 	private static final String USER_HOME_PATH = System.getProperty("user.home") + File.separator;
 	public static final String APP_FOLDER_PATH = USER_HOME_PATH + ".viseditor" + File.separator;
+
+	private static final String GDX_RELEASE_ZIP = "http://libgdx.badlogicgames.com/releases/libgdx-1.5.6.zip";
 
 	public static EventBus eventBus;
 
@@ -67,6 +70,8 @@ public class App {
 
 		if (buildTimestamp == null)
 			buildTimestamp = "unknown, not built using CI";
+		else
+			buildTimestampValid = true;
 
 		Log.info("Build: " + App.buildTimestamp);
 	}

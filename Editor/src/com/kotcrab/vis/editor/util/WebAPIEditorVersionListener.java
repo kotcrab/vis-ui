@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.webapi;
+package com.kotcrab.vis.editor.util;
 
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.webapi.EditorBuild;
 
-public class GdxReleaseSet {
-	Array<GdxRelease> gdx;
+public interface WebAPIEditorVersionListener {
+		void result (Array<EditorBuild> builds);
 
-	public static class GdxRelease {
-		String version;
-		String path;
+		void failed (Exception e);
 	}
-}

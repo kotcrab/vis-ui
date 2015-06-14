@@ -30,9 +30,11 @@ import com.kotcrab.vis.editor.ui.dialog.AboutDialog;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
+import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
 import com.kotcrab.vis.ui.widget.MenuItem;
+import com.kotcrab.vis.ui.widget.VisTable;
 
 public class MenuBarModule extends EditorModule {
 	private ProjectModuleContainer projectContainer;
@@ -41,10 +43,14 @@ public class MenuBarModule extends EditorModule {
 	private Stage stage;
 	private MenuBar menuBar;
 
+	private VisTable container;
+
 	private ProjectStatusWidgetController projectController;
 	private SceneStatusWidgetController sceneController;
 
 	private SceneMenuButtonsListener sceneButtonsListener;
+
+	private VisTable updateInfoTable;
 
 	public MenuBarModule (ProjectModuleContainer moduleContainer) {
 		editor = Editor.instance;
@@ -52,6 +58,8 @@ public class MenuBarModule extends EditorModule {
 		projectContainer = moduleContainer;
 
 		menuBar = new MenuBar();
+
+		updateInfoTable = new VisTable();
 
 		projectController = new ProjectStatusWidgetController();
 		sceneController = new SceneStatusWidgetController();
@@ -61,6 +69,13 @@ public class MenuBarModule extends EditorModule {
 		createSceneMenu();
 		//createToolsMenu();
 		createHelpMenu();
+
+		container = new VisTable(true);
+		container.setBackground(VisUI.getSkin().getDrawable("menu-bg"));
+
+		container.add(menuBar.getTable());
+		container.add().expand().fill();
+		container.add(updateInfoTable).expand().fill();
 	}
 
 	private void createFileMenu () {
@@ -135,7 +150,7 @@ public class MenuBarModule extends EditorModule {
 	}
 
 	public Table getTable () {
-		return menuBar.getTable();
+		return container;
 	}
 
 	@Override
@@ -166,6 +181,12 @@ public class MenuBarModule extends EditorModule {
 		}
 
 		return item;
+	}
+
+	public void setUpdateInfoTableContent (VisTable content) {
+		updateInfoTable.clear();
+		if (content != null)
+			updateInfoTable.add(content).right().expand().padRight(5);
 	}
 
 	private enum ControllerPolicy {

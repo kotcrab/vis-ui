@@ -131,6 +131,12 @@
                 <artifactId>platform</artifactId>
                 <version>3.5.2</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.jsoup</groupId>
+                <artifactId>jsoup</artifactId>
+                <version>1.8.2</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

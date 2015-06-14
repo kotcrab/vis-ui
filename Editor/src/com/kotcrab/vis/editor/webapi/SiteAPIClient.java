@@ -27,8 +27,6 @@ public class SiteAPIClient {
 	private static final String API_PATH = "http://apps.kotcrab.com/vis/v1/";
 
 	private static final String CONTENT = API_PATH + "content.json";
-	private static final String GDX = API_PATH + "gdx.json";
-	private static final String VERSION = API_PATH + "version.json";
 
 	private Json json;
 
@@ -39,14 +37,6 @@ public class SiteAPIClient {
 
 	public void readContent (SiteAPICallback<ContentSet> callback) {
 		read(callback, ContentSet.class, CONTENT);
-	}
-
-	public void readGdx (SiteAPICallback<GdxReleaseSet> callback) {
-		read(callback, GdxReleaseSet.class, GDX);
-	}
-
-	public void readVersion (SiteAPICallback<VersionSet> callback) {
-		read(callback, VersionSet.class, VERSION);
 	}
 
 	private <T> void read (SiteAPICallback<T> callback, Class<T> clazz, String url) {

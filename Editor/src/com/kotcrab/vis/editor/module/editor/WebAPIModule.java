@@ -18,27 +18,33 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.util.WebAPIEditorVersionListener;
 import com.kotcrab.vis.editor.webapi.ContentSet;
-import com.kotcrab.vis.editor.webapi.GdxReleaseSet;
+import com.kotcrab.vis.editor.webapi.EditorBuild;
 import com.kotcrab.vis.editor.webapi.SiteAPIClient;
 import com.kotcrab.vis.editor.webapi.SiteAPIClient.SiteAPICallback;
-import com.kotcrab.vis.editor.webapi.VersionSet;
+import com.kotcrab.vis.editor.webapi.UpdateChannelType;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
-public class SiteAPIModule extends EditorModule {
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class WebAPIModule extends EditorModule {
+	private static final Pattern BUILD_TIMESTAMP_PATERN = Pattern.compile("[0-9].*-[0-9]");
+
 	private SiteAPIClient siteApiClient;
 
 	private Json json;
 
 	private ContentSet content;
-	private GdxReleaseSet gdx;
-	private VersionSet version;
 
 	private FileHandle contentCacheFile;
-	private FileHandle gdxCacheFile;
-	private FileHandle versionCacheFile;
 
 	private boolean refreshInProgress;
 
@@ -50,12 +56,8 @@ public class SiteAPIModule extends EditorModule {
 		apiCache.mkdirs();
 
 		contentCacheFile = apiCache.child("content.json");
-		gdxCacheFile = apiCache.child("gdx.json");
-		versionCacheFile = apiCache.child("version.json");
 
 		content = new ContentSet();
-		gdx = new GdxReleaseSet();
-		version = new VersionSet();
 
 		json = new Json();
 		json.setIgnoreUnknownFields(true);
@@ -64,18 +66,6 @@ public class SiteAPIModule extends EditorModule {
 			if (contentCacheFile.exists())
 				content = json.fromJson(ContentSet.class, contentCacheFile);
 		} catch (SerializationException ignored) { //no big deal if cache can't be loaded
-		}
-
-		try {
-			if (gdxCacheFile.exists())
-				gdx = json.fromJson(GdxReleaseSet.class, gdxCacheFile);
-		} catch (SerializationException ignored) {
-		}
-
-		try {
-			if (versionCacheFile.exists())
-				version = json.fromJson(VersionSet.class, versionCacheFile);
-		} catch (SerializationException ignored) {
 		}
 
 		refresh();
@@ -95,23 +85,33 @@ public class SiteAPIModule extends EditorModule {
 				}
 			});
 
-			siteApiClient.readGdx(new SiteAPICallback<GdxReleaseSet>() {
-				@Override
-				public void reload (GdxReleaseSet set) {
-					gdx = set;
-					json.toJson(gdx, gdxCacheFile);
-				}
-			});
-
-			siteApiClient.readVersion(new SiteAPICallback<VersionSet>() {
-				@Override
-				public void reload (VersionSet set) {
-					version = set;
-					json.toJson(version, versionCacheFile);
-				}
-			});
-
 			refreshInProgress = false;
 		}, "VisAPIClient").start();
+	}
+
+	public void getReleases (UpdateChannelType updateChannel, WebAPIEditorVersionListener listener) {
+		new Thread(() -> {
+			try {
+				Document doc = null;
+				doc = Jsoup.connect(updateChannel.getStorageURL()).get();
+				Elements links = doc.select("a[href]");
+
+				Array<EditorBuild> builds = new Array<>();
+
+				for (int i = 1; i < links.size(); i++) { //first link is ../ so we skip it
+					String url = links.get(i).absUrl("href");
+					Matcher matcher = BUILD_TIMESTAMP_PATERN.matcher(url);
+					matcher.find();
+					String timestamp = matcher.group();
+
+					builds.add(new EditorBuild(timestamp, url));
+				}
+
+				listener.result(builds);
+			} catch (Exception e) {
+				e.printStackTrace();
+				listener.failed(e);
+			}
+		}, "VisWebReleaseListGetter").start();
 	}
 }

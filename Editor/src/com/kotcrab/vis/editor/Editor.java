@@ -194,9 +194,10 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		editorMC.add(new PluginLoaderModule());
 		editorMC.add(pluginContainer = new ExtensionStorageModule());
-		editorMC.add(new SiteAPIModule());
+		editorMC.add(new WebAPIModule());
 		editorMC.add(new PluginFilesAccessModule());
 		editorMC.add(new ColorPickerModule());
+		editorMC.add(new UpdateCheckerModule());
 		editorMC.add(fileChooser = new FileChooserModule());
 		editorMC.add(new MenuBarModule(projectMC));
 		editorMC.add(new ToolbarModule());
