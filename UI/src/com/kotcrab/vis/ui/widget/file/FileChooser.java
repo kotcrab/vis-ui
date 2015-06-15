@@ -511,14 +511,7 @@ public class FileChooser extends VisWindow {
 
 				final ShortcutItem item = new ShortcutItem(root, initialName, style.iconDrive);
 
-				if (FileUtils.isWindows()) {
-					chooserWinService.addListener(root, new RootNameListener() {
-						@Override
-						public void setName (String newName) {
-							item.setLabelText(newName);
-						}
-					});
-				}
+				if (FileUtils.isWindows()) chooserWinService.addListener(root, item);
 
 				fileRootsCache.add(item);
 			}
@@ -1035,7 +1028,7 @@ public class FileChooser extends VisWindow {
 
 	}
 
-	private class ShortcutItem extends Table {
+	private class ShortcutItem extends Table implements RootNameListener {
 		public File file;
 		private VisLabel name;
 
@@ -1129,6 +1122,10 @@ public class FileChooser extends VisWindow {
 			setBackground((Drawable) null);
 		}
 
+		@Override
+		public void setRootName (String newName) {
+			setLabelText(newName);
+		}
 	}
 
 }

@@ -89,7 +89,7 @@ public class FileChooserWinService {
 	public void addListener (File root, RootNameListener listener) {
 		String cachedName = nameCache.get(root);
 		if (cachedName != null) {
-			listener.setName(cachedName);
+			listener.setRootName(cachedName);
 			return;
 		}
 
@@ -120,7 +120,7 @@ public class FileChooserWinService {
 	}
 
 	public interface RootNameListener {
-		void setName (String newName);
+		void setRootName (String newName);
 	}
 
 	private static class ListenerSet {
@@ -141,7 +141,7 @@ public class FileChooserWinService {
 					continue;
 				}
 
-				listener.setName(newName);
+				listener.setRootName(newName);
 			}
 		}
 	}
