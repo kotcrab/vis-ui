@@ -57,11 +57,43 @@ public class FileChooserModule extends EditorModule {
 		chooser.centerWindow();
 	}
 
+	public void pickFile (FileChooserAdapter listener) {
+		pick(listener, SelectionMode.FILES);
+	}
+
+	public void pickDirectory (FileChooserAdapter listener) {
+		pick(listener, SelectionMode.DIRECTORIES);
+	}
+
 	public void pickFileOrDirectory (FileChooserAdapter listener) {
+		pick(listener, SelectionMode.FILES_AND_DIRECTORIES);
+	}
+
+	private void pick (FileChooserAdapter listener, SelectionMode mode) {
 		this.listener = listener;
 
 		chooser.setMode(Mode.OPEN);
-		chooser.setSelectionMode(SelectionMode.FILES_AND_DIRECTORIES);
+		chooser.setSelectionMode(mode);
+		Editor.instance.getStage().addActor(chooser.fadeIn());
+	}
+
+	public void saveFile (FileChooserAdapter listener) {
+		pick(listener, SelectionMode.FILES);
+	}
+
+	public void saveDirectory (FileChooserAdapter listener) {
+		pick(listener, SelectionMode.DIRECTORIES);
+	}
+
+	public void saveFileOrDirectory (FileChooserAdapter listener) {
+		pick(listener, SelectionMode.FILES_AND_DIRECTORIES);
+	}
+
+	private void save (FileChooserAdapter listener, SelectionMode mode) {
+		this.listener = listener;
+
+		chooser.setMode(Mode.SAVE);
+		chooser.setSelectionMode(mode);
 		Editor.instance.getStage().addActor(chooser.fadeIn());
 	}
 }
