@@ -3,6 +3,9 @@
 -API Addition: Tooltip (String styleName, Actor target, String text, int textAlign)
 -API Addition: FormInputValidator#hideErrorOnEmptyInput (can be used with FromValidator to don't display error
                message if field is empty, field will be still marked with red border and accept button will be disabled)
+-API Addition: FormValidator#directory(...)
+-API Addition: FormValidator#directoryEmpty(...)
+-API Addition: FormValidator#directoryNotEmpty(...)
 -Optimized FileChooser ( https://github.com/kotcrab/VisEditor/issues/11 )
 -Fixed issue when FileChooser confirm button text wasn't updated after changing mode ( https://github.com/kotcrab/VisEditor/pull/14 )
 -Fixed issue when FileChooser would crash on file delete dialog

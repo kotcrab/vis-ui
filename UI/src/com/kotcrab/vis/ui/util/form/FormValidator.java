@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui.util.form;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -104,7 +105,58 @@ public class FormValidator extends SimpleFormValidator {
 		field.addValidator(validator);
 		add(field);
 		return validator;
+	}
 
+	public FormInputValidator directory (VisValidableTextField field, String errorMsg) {
+		DirectoryValidator validator = new DirectoryValidator(errorMsg);
+		field.addValidator(validator);
+		add(field);
+		return validator;
+	}
+
+	public FormInputValidator directoryEmpty (VisValidableTextField field, String errorMsg) {
+		DirectoryContentValidator validator = new DirectoryContentValidator(errorMsg, true);
+		field.addValidator(validator);
+		add(field);
+		return validator;
+	}
+
+	public FormInputValidator directoryNotEmpty (VisValidableTextField field, String errorMsg) {
+		DirectoryContentValidator validator = new DirectoryContentValidator(errorMsg, false);
+		field.addValidator(validator);
+		add(field);
+		return validator;
+	}
+
+	public static class DirectoryValidator extends FormInputValidator {
+		public DirectoryValidator (String errorMsg) {
+			super(errorMsg);
+		}
+
+		@Override
+		protected boolean validate (String input) {
+			FileHandle file = Gdx.files.absolute(input);
+			return file.exists() || file.isDirectory();
+		}
+	}
+
+	public static class DirectoryContentValidator extends FormInputValidator {
+		private final boolean mustBeEmpty;
+
+		public DirectoryContentValidator (String errorMsg, boolean mustBeEmpty) {
+			super(errorMsg);
+			this.mustBeEmpty = mustBeEmpty;
+		}
+
+		@Override
+		protected boolean validate (String input) {
+			FileHandle file = Gdx.files.absolute(input);
+			if (file.exists() == false || file.isDirectory() == false) return false;
+			if (mustBeEmpty)
+				return file.list().length == 0;
+			else
+				return file.list().length != 0;
+		}
 	}
 
 	public static class FileExistsValidator extends FormInputValidator {
