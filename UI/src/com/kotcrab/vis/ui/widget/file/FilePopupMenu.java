@@ -49,7 +49,7 @@ public class FilePopupMenu extends PopupMenu {
 	private MenuItem addToFavorites;
 	private MenuItem removeFromFavorites;
 
-	public FilePopupMenu (String styleName, FileChooser fileChooser, I18NBundle bundle) {
+	public FilePopupMenu (String styleName, final FileChooser fileChooser, I18NBundle bundle) {
 		super(styleName);
 		this.chooser = fileChooser;
 		this.bundle = bundle;
@@ -62,7 +62,7 @@ public class FilePopupMenu extends PopupMenu {
 		delete.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
-				DialogUtils.showOptionDialog(getStage(), getText(POPUP_TITLE), getText(CONTEXT_MENU_DELETE_WARNING), OptionDialogType.YES_NO, new OptionDialogAdapter() {
+				DialogUtils.showOptionDialog(fileChooser.getStage(), getText(POPUP_TITLE), getText(CONTEXT_MENU_DELETE_WARNING), OptionDialogType.YES_NO, new OptionDialogAdapter() {
 					@Override
 					public void yes () {
 						file.delete();
