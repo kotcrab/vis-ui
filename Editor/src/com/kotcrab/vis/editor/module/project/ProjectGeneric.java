@@ -16,8 +16,38 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
+
 public class ProjectGeneric extends Project {
-	public ProjectGeneric () {
-		super(Type.Generic);
+	/** absolute path */
+	@Tag(0) private String visDirectory;
+	/** absolute path */
+	@Tag(1) private String assetsOutput;
+
+	public ProjectGeneric (String visDirectory, String assetsOutput) {
+		this.visDirectory = visDirectory;
+		this.assetsOutput = assetsOutput;
+	}
+
+	@Override
+	public void updateRoot (FileHandle projectDataFile) {
+		this.visDirectory = projectDataFile.parent().path();
+	}
+
+	@Override
+	public String verifyIfCorrect () {
+		return null;
+	}
+
+	@Override
+	public FileHandle getVisDirectory () {
+		return Gdx.files.absolute(visDirectory);
+	}
+
+	@Override
+	public FileHandle getAssetOutputDirectory () {
+		return Gdx.files.absolute(assetsOutput);
 	}
 }

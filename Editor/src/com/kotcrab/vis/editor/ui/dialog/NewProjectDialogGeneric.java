@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.module.editor.FileChooserModule;
 import com.kotcrab.vis.editor.module.editor.ProjectIOModule;
-import com.kotcrab.vis.editor.module.project.ProjectLibGDX;
+import com.kotcrab.vis.editor.module.project.ProjectGeneric;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.form.FormValidator;
@@ -32,12 +32,12 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 
-public class NewProjectDialogLibGDX extends VisTable {
+public class NewProjectDialogGeneric extends VisTable {
 	private VisValidableTextField projectRoot;
-	private VisValidableTextField sourceLoc;
-	private VisValidableTextField assetsLoc;
+	private VisValidableTextField outputDirectory;
 
 	private VisTextButton chooseRootButton;
+	private VisTextButton chooseOutputButton;
 
 	private VisLabel errorLabel;
 
@@ -48,7 +48,7 @@ public class NewProjectDialogLibGDX extends VisTable {
 	private FileChooserModule fileChooserModule;
 	private ProjectIOModule projectIO;
 
-	public NewProjectDialogLibGDX (NewProjectDialog dialog, FileChooserModule fileChooserModule, ProjectIOModule projectIO) {
+	public NewProjectDialogGeneric (NewProjectDialog dialog, FileChooserModule fileChooserModule, ProjectIOModule projectIO) {
 		this.dialog = dialog;
 		this.fileChooserModule = fileChooserModule;
 		this.projectIO = projectIO;
@@ -60,16 +60,16 @@ public class NewProjectDialogLibGDX extends VisTable {
 
 	private void createUI () {
 		projectRoot = new VisValidableTextField("");
+		outputDirectory = new VisValidableTextField("");
 		chooseRootButton = new VisTextButton("Choose...");
-		sourceLoc = new VisValidableTextField("/core/src");
-		assetsLoc = new VisValidableTextField("/android/assets");
+		chooseOutputButton = new VisTextButton("Choose...");
 
 		errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);
 
 		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
-		columnDefaults(1).width(300);
+		columnDefaults(1).expandX().fillX();
 
 		row().padTop(4);
 		add(new VisLabel("Project root"));
@@ -77,12 +77,9 @@ public class NewProjectDialogLibGDX extends VisTable {
 		add(chooseRootButton);
 		row();
 
-		add(new VisLabel("Source folder"));
-		add(sourceLoc).fill();
-		row();
-
-		add(new VisLabel("Assets folder"));
-		add(assetsLoc).fill();
+		add(new VisLabel("Output folder"));
+		add(outputDirectory);
+		add(chooseOutputButton);
 		row();
 
 		VisTable buttonTable = new VisTable(true);
@@ -112,6 +109,18 @@ public class NewProjectDialogLibGDX extends VisTable {
 			}
 		});
 
+		chooseOutputButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				fileChooserModule.pickFileOrDirectory(new FileChooserAdapter() {
+					@Override
+					public void selected (FileHandle file) {
+						outputDirectory.setText(file.file().getAbsolutePath());
+					}
+				});
+			}
+		});
+
 		cancelButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
@@ -131,20 +140,19 @@ public class NewProjectDialogLibGDX extends VisTable {
 		FormValidator validator = new FormValidator(createButton, errorLabel);
 
 		validator.notEmpty(projectRoot, "Project root path cannot be empty!");
-		validator.notEmpty(sourceLoc, "Source location cannot be empty!");
-		validator.notEmpty(assetsLoc, "Assets location cannot be empty!");
+		validator.notEmpty(outputDirectory, "Output folder field cannot be empty!");
 
-		validator.fileExists(projectRoot, "Project folder does not exist!");
-		validator.fileExists(sourceLoc, projectRoot, "Source folder does not exist!", false);
-		validator.fileExists(assetsLoc, projectRoot, "Assets folder does not exist!", false);
+		validator.directory(projectRoot, "Project folder is not a directory!");
+		validator.directory(outputDirectory, "Output folder is not a directory!");
+		validator.directoryEmpty(outputDirectory, "Output directory must be empty!");
 	}
 
 	private void createProject () {
-		ProjectLibGDX project = new ProjectLibGDX(projectRoot.getText(), sourceLoc.getText(), assetsLoc.getText());
+		ProjectGeneric project = new ProjectGeneric(projectRoot.getText(), outputDirectory.getText());
 
 		String error = project.verifyIfCorrect();
 		if (error == null) {
-			projectIO.createLibGDXProject(project);
+			projectIO.createGenericProject(project);
 			dialog.fadeOut();
 		} else
 			DialogUtils.showErrorDialog(getStage(), error);

@@ -395,7 +395,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	public void newProjectDialog () {
-		stage.addActor(new NewProjectDialog(projectIO).fadeIn());
+		stage.addActor(new NewProjectDialog(fileChooser, projectIO).fadeIn());
 	}
 
 	public void projectLoaded (final Project project) {

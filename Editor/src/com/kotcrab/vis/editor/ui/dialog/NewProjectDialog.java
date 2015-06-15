@@ -16,73 +16,66 @@
 
 package com.kotcrab.vis.editor.ui.dialog;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.editor.module.editor.FileChooserModule;
 import com.kotcrab.vis.editor.module.editor.ProjectIOModule;
+import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisTextButton;
-import com.kotcrab.vis.ui.widget.VisWindow;
+import com.kotcrab.vis.ui.widget.*;
 
 public class NewProjectDialog extends VisWindow {
-	private ProjectIOModule projectIO;
+	private static final String LIBGDX = "LibGDX";
+	private static final String GENERIC = "Generic";
 
-	private VisTextButton libGDXButton;
-	private VisTextButton genericButton;
-	private VisTextButton cancelButton;
+	private Table containerTable;
 
-	private NewProjectDialogLibGDX libGDXDialog;
+	private NewProjectDialogLibGDX libgdxDialog;
+	private NewProjectDialogGeneric genericDialog;
 
-	public NewProjectDialog (ProjectIOModule projectIO) {
+	public NewProjectDialog (FileChooserModule fileChooserModule, ProjectIOModule projectIO) {
 		super("New Project");
+
+		TableUtils.setSpacingDefaults(this);
 		setModal(true);
-
-		this.projectIO = projectIO;
-
 		addCloseButton();
 		closeOnEscape();
 
-		TableUtils.setSpacingDefaults(this);
-		defaults().left();
-		add(new VisLabel("Select project type:"));
-		row();
+		containerTable = new Table();
 
-		VisTable table = new VisTable(true);
-		table.add(genericButton = new VisTextButton("Generic"));
-		table.add(libGDXButton = new VisTextButton("LibGDX"));
-		add(table);
-		row();
+		VisList<String> projectTypeList = new VisList<>();
+		projectTypeList.setItems(LIBGDX, GENERIC);
 
-		add(cancelButton = new VisTextButton("Cancel")).right();
+		libgdxDialog = new NewProjectDialogLibGDX(this, fileChooserModule, projectIO);
+		genericDialog = new NewProjectDialogGeneric(this, fileChooserModule, projectIO);
 
-		libGDXDialog = new NewProjectDialogLibGDX(projectIO);
+		containerTable.top();
+		containerTable.add(libgdxDialog).fillX().expandX();
 
-		cancelButton.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				fadeOut();
+		VisTable projectTypeTable = new VisTable();
+		projectTypeTable.defaults().left();
+		projectTypeTable.add(new VisLabel("Project Type")).row();
+		projectTypeTable.addSeparator();
+		projectTypeTable.add(projectTypeList).expandX().fillX();
+
+		add(projectTypeTable).top().minWidth(150);
+		add(new Separator(true)).fillY().expandY().padTop(2).padBottom(2);
+		add(containerTable).expand().fill().minWidth(300);
+
+		projectTypeList.addListener(new VisChangeListener((event, actor) -> {
+			if (projectTypeList.getSelected().equals(LIBGDX)) {
+				containerTable.clear();
+				containerTable.top();
+				containerTable.add(libgdxDialog).fillX().expandX();
 			}
-		});
 
-		genericButton.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				DialogUtils.showOKDialog(getStage(), "Message", "Not implemented yet");
+			if (projectTypeList.getSelected().equals(GENERIC)) {
+				containerTable.clear();
+				containerTable.top();
+				containerTable.add(genericDialog).fillX().expandX();
 			}
-		});
-
-		libGDXButton.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				getStage().addActor(libGDXDialog.fadeIn());
-				fadeOut();
-			}
-		});
+		}));
 
 		pack();
 		centerWindow();
 	}
-
 }

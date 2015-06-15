@@ -16,19 +16,19 @@
 
 package com.kotcrab.vis.editor.module.project;
 
-import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
+import com.badlogic.gdx.files.FileHandle;
 
-public class Project {
-	@Tag(0) public Type type;
+public abstract class Project {
+	/** Called after loading when project should update it's root */
+	public abstract void updateRoot (FileHandle projectDataFile);
 
-	/** Root of project, for LibGDX type this is root of Gradle folder, for generic this is same as assets folder */
-	@Tag(1) public String root;
-	/** Assets export directory, for LibGDX this is usually gradle_root/android/assets, for generic this is directory provided by user */
-	@Tag(2) public String assets;
+	/**
+	 * Called during project creation
+	 * @return error message if some error was found or null if project is valid
+	 */
+	public abstract String verifyIfCorrect ();
 
-	public Project (Type type) {
-		this.type = type;
-	}
+	public abstract FileHandle getVisDirectory ();
 
-	public enum Type {LibGDX, Generic}
+	public abstract FileHandle getAssetOutputDirectory ();
 }

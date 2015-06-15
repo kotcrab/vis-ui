@@ -30,9 +30,9 @@ public class ProjectInfoTab extends MainContentTab {
 		super(false, false);
 		content = new VisTable(true);
 
-		content.add(new VisLabel("Some project info:"));
-		content.row();
-		content.add(new VisLabel("Root: " + project.root));
+		content.add(new VisLabel("Project loaded, in the feature here will be quick access to recently used files etc.")).row();
+		content.add(new VisLabel("To create new scene use Scene -> New Scene...")).row();
+		content.add(new VisLabel("To load scene navigate to scene directory in Assets Browser bellow and double click it")).row();
 	}
 
 	@Override

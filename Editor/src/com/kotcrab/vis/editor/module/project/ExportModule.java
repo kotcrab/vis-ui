@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.editor.module.project;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
@@ -63,17 +62,7 @@ public class ExportModule extends ProjectModule {
 		json = SceneLoader.getJson();
 	}
 
-	public void export (boolean quick) {
-		switch (project.type) {
-			case LibGDX:
-				exportLibGDX(quick);
-				break;
-			case Generic:
-				throw new UnsupportedOperationException("Not implemented yet");
-		}
-	}
-
-	private void exportLibGDX (boolean quick) {
+	public void export (boolean quick) { //TODO do quick export
 		if (firstExportDone == false && quick)
 			Log.info("Requested quick export but normal export hasn't been done since editor launch, performing normal export.");
 
@@ -86,6 +75,15 @@ public class ExportModule extends ProjectModule {
 	}
 
 	private void doExport () {
+		if (project instanceof ProjectLibGDX || project instanceof ProjectGeneric) {
+			exportProject();
+			return;
+		}
+
+		throw new UnsupportedOperationException("Not supported project type: " + project.getClass());
+	}
+
+	private void exportProject () {
 		ExportAsyncTask exportTask = new ExportAsyncTask();
 		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Exporting", exportTask).fadeIn());
 	}
@@ -141,7 +139,7 @@ public class ExportModule extends ProjectModule {
 
 		private void cleanOldAssets () {
 			setMessage("Cleaning old assets");
-			outAssetsDir = Gdx.files.absolute(project.root + project.assets);
+			outAssetsDir = project.getAssetOutputDirectory();
 
 			outAssetsDir.deleteDirectory();
 			outAssetsDir.mkdirs();
@@ -297,5 +295,4 @@ public class ExportModule extends ProjectModule {
 		}
 
 	}
-
 }

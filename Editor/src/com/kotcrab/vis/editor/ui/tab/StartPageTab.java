@@ -47,7 +47,7 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 		loadProjectLinkLabel.setListener(this);
 
 		VisTable content = new VisTable(false);
-		content.add("Ohayou!").row();
+		content.add("Welcome!").row();
 		content.add(new VisLabel("(here will be recent project list etc.)", "small")).spaceBottom(8).row();
 		content.add("Start doing something!").row();
 		content.add(newProjectLinkLabel).row();

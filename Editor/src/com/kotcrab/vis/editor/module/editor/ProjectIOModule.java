@@ -28,6 +28,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.project.Project;
+import com.kotcrab.vis.editor.module.project.ProjectGeneric;
 import com.kotcrab.vis.editor.module.project.ProjectLibGDX;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
@@ -38,7 +39,10 @@ import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
 
 public class ProjectIOModule extends EditorModule {
@@ -51,6 +55,8 @@ public class ProjectIOModule extends EditorModule {
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 		kryo.setDefaultSerializer(TaggedFieldSerializer.class);
 		kryo.register(Array.class, new ArraySerializer(), 10);
+		kryo.register(ProjectLibGDX.class, 11);
+		kryo.register(ProjectGeneric.class, 12);
 	}
 
 	public boolean load (FileHandle projectRoot) throws EditorException {
@@ -58,22 +64,23 @@ public class ProjectIOModule extends EditorModule {
 		if (projectRoot.name().equals(PROJECT_FILE)) return loadProject(projectRoot);
 		if (projectRoot.name().equals("vis") && projectRoot.isDirectory())
 			return loadProject(projectRoot.child(PROJECT_FILE));
+		if(projectRoot.child(PROJECT_FILE).exists()) return loadProject(projectRoot.child(PROJECT_FILE));
 
 		FileHandle visFolder = projectRoot.child("vis");
-		if (visFolder.exists()) return loadProject(visFolder.child(PROJECT_FILE));
+		if (visFolder.child(PROJECT_FILE).exists()) return loadProject(visFolder.child(PROJECT_FILE));
 
 		throw new EditorException("Selected folder is not a Vis project!");
 	}
 
-	private boolean loadProject (FileHandle file) throws EditorException {
-		if (file.exists() == false) throw new EditorException("Project file does not exist!");
+	private boolean loadProject (FileHandle dataFile) throws EditorException {
+		if (dataFile.exists() == false) throw new EditorException("Project file does not exist!");
 
 		try {
-			Input input = new Input(new FileInputStream(file.file()));
+			Input input = new Input(new FileInputStream(dataFile.file()));
 			Project project = (Project) kryo.readClassAndObject(input);
 			input.close();
 
-			project.root = file.parent().parent().path();
+			project.updateRoot(dataFile);
 
 			Editor.instance.projectLoaded(project);
 		} catch (FileNotFoundException e) {
@@ -83,28 +90,22 @@ public class ProjectIOModule extends EditorModule {
 		return true;
 	}
 
-	public void create (final ProjectLibGDX project) {
+	public void createLibGDXProject (final ProjectLibGDX project) {
 		AsyncTask task = new AsyncTask("ProjectCreator") {
 
 			@Override
 			public void execute () {
 				setMessage("Creating directory structure...");
 
-				FileHandle projectRoot = Gdx.files.absolute(project.root);
-				FileHandle standardAssetsDir = projectRoot.child(project.assets);
+				FileHandle projectRoot = Gdx.files.absolute(project.getRoot());
+				FileHandle standardAssetsDir = project.getAssetOutputDirectory();
 				FileHandle visDir = projectRoot.child("vis");
 				FileHandle visAssetsDir = visDir.child("assets");
 
 				visDir.mkdirs();
 				visAssetsDir.mkdirs();
 
-				visAssetsDir.child("scene").mkdirs();
-				visAssetsDir.child("gfx").mkdirs();
-				visAssetsDir.child("font").mkdirs();
-				visAssetsDir.child("bmpfont").mkdirs();
-				visAssetsDir.child("sound").mkdirs();
-				visAssetsDir.child("music").mkdirs();
-				visAssetsDir.child("particle").mkdirs();
+				createStandardAssetsDirs(visAssetsDir);
 				visDir.child("modules").mkdirs();
 
 				setProgressPercent(33);
@@ -121,35 +122,76 @@ public class ProjectIOModule extends EditorModule {
 				setMessage("Saving project files...");
 
 				FileHandle projectFile = visDir.child(PROJECT_FILE);
-
-				try {
-					Output output = new Output(new FileOutputStream(projectFile.file()));
-					kryo.writeClassAndObject(output, project);
-					output.close();
-				} catch (FileNotFoundException e) {
-					Log.exception(e);
-				}
+				saveProjectFile(project, projectFile);
 
 				setProgressPercent(100);
 				App.eventBus.post(new StatusBarEvent("Project created!"));
 
-				executeOnOpenGL(() -> {
-					try {
-						load(projectFile);
-					} catch (EditorException e) {
-						DialogUtils.showErrorDialog(Editor.instance.getStage(), "Error occurred while loading project", e);
-						Log.exception(e);
-					}
-				});
+				executeOnOpenGL(() -> loadNewGeneratedProject(projectFile));
 			}
 		};
 
 		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Creating project...", task).fadeIn());
 	}
 
-	public String verify (Project project) {
-		File visDir = new File(project.root, "vis");
-		if (visDir.exists()) return "This folder is already a VisEditor project. Use File->Load Project.";
-		return null;
+	public void createGenericProject (ProjectGeneric project) {
+		AsyncTask task = new AsyncTask("ProjectCreator") {
+
+			@Override
+			public void execute () {
+				setMessage("Creating directory structure...");
+
+				FileHandle visDir = project.getVisDirectory();
+				FileHandle visAssetsDir = visDir.child("assets");
+
+				visDir.mkdirs();
+				visAssetsDir.mkdirs();
+
+				createStandardAssetsDirs(visAssetsDir);
+				visDir.child("modules").mkdirs();
+
+				setProgressPercent(50);
+				setMessage("Saving project files...");
+
+				FileHandle projectFile = visDir.child(PROJECT_FILE);
+				saveProjectFile(project, projectFile);
+
+				setProgressPercent(100);
+				App.eventBus.post(new StatusBarEvent("Project created!"));
+
+				executeOnOpenGL(() -> loadNewGeneratedProject(projectFile));
+			}
+		};
+
+		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Creating project...", task).fadeIn());
+	}
+
+	private void saveProjectFile (Project project, FileHandle projectFile) {
+		try {
+			Output output = new Output(new FileOutputStream(projectFile.file()));
+			kryo.writeClassAndObject(output, project);
+			output.close();
+		} catch (FileNotFoundException e) {
+			Log.exception(e);
+		}
+	}
+
+	private void loadNewGeneratedProject (FileHandle projectFile) {
+		try {
+			load(projectFile);
+		} catch (EditorException e) {
+			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Error occurred while loading project", e);
+			Log.exception(e);
+		}
+	}
+
+	private void createStandardAssetsDirs (FileHandle visAssetsDir) {
+		visAssetsDir.child("scene").mkdirs();
+		visAssetsDir.child("gfx").mkdirs();
+		visAssetsDir.child("font").mkdirs();
+		visAssetsDir.child("bmpfont").mkdirs();
+		visAssetsDir.child("sound").mkdirs();
+		visAssetsDir.child("music").mkdirs();
+		visAssetsDir.child("particle").mkdirs();
 	}
 }
