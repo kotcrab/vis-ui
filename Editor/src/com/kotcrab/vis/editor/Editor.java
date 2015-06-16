@@ -151,7 +151,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
 				Log.exception(e);
 			}
-			
+
 			editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
 		}
 

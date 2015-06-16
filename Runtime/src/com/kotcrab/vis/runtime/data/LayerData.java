@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime;
+package com.kotcrab.vis.runtime.data;
 
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.data.EntityData;
 
 public class LayerData {
 	public String name;

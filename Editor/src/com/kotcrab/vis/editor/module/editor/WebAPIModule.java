@@ -26,8 +26,8 @@ import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.WebAPIEditorVersionListener;
 import com.kotcrab.vis.editor.webapi.ContentSet;
 import com.kotcrab.vis.editor.webapi.EditorBuild;
-import com.kotcrab.vis.editor.webapi.SiteAPIClient;
-import com.kotcrab.vis.editor.webapi.SiteAPIClient.SiteAPICallback;
+import com.kotcrab.vis.editor.webapi.WebAPIClient;
+import com.kotcrab.vis.editor.webapi.WebAPIClient.SiteAPICallback;
 import com.kotcrab.vis.editor.webapi.UpdateChannelType;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 public class WebAPIModule extends EditorModule {
 	private static final Pattern BUILD_TIMESTAMP_PATERN = Pattern.compile("[0-9]{6}.*-[0-9]");
 
-	private SiteAPIClient siteApiClient;
+	private WebAPIClient webApiClient;
 
 	private Json json;
 
@@ -51,7 +51,7 @@ public class WebAPIModule extends EditorModule {
 
 	@Override
 	public void init () {
-		siteApiClient = new SiteAPIClient();
+		webApiClient = new WebAPIClient();
 
 		FileHandle apiCache = Gdx.files.absolute(App.CACHE_FOLDER_PATH).child("api");
 		apiCache.mkdirs();
@@ -78,7 +78,7 @@ public class WebAPIModule extends EditorModule {
 		new Thread(() -> {
 			refreshInProgress = true;
 
-			siteApiClient.readContent(new SiteAPICallback<ContentSet>() {
+			webApiClient.readContent(new SiteAPICallback<ContentSet>() {
 				@Override
 				public void reload (ContentSet set) {
 					content = set;

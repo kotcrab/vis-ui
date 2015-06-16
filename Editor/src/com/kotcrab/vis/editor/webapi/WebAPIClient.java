@@ -23,14 +23,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-public class SiteAPIClient {
+public class WebAPIClient {
 	private static final String API_PATH = "http://apps.kotcrab.com/vis/v1/";
 
 	private static final String CONTENT = API_PATH + "content.json";
 
 	private Json json;
 
-	public SiteAPIClient () {
+	public WebAPIClient () {
 		json = new Json();
 		json.setIgnoreUnknownFields(true);
 	}

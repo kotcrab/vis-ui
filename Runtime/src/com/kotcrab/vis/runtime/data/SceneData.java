@@ -17,7 +17,6 @@
 package com.kotcrab.vis.runtime.data;
 
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.LayerData;
 import com.kotcrab.vis.runtime.scene.Scene;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
