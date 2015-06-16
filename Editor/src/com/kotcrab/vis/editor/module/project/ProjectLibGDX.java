@@ -55,6 +55,11 @@ public class ProjectLibGDX extends Project {
 		return Gdx.files.absolute(root + assetsOutput);
 	}
 
+	@Override
+	public String getRecentProjectDisplayName () {
+		return Gdx.files.absolute(root).name();
+	}
+
 	public String getRoot () {
 		return root;
 	}

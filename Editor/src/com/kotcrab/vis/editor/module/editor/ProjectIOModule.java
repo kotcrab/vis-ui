@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
@@ -46,7 +47,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class ProjectIOModule extends EditorModule {
-	private static final String PROJECT_FILE = "project.data";
+	public static final String PROJECT_FILE = "project.data";
+
 	private Kryo kryo;
 
 	@Override
@@ -59,12 +61,22 @@ public class ProjectIOModule extends EditorModule {
 		kryo.register(ProjectGeneric.class, 12);
 	}
 
+	public boolean loadHandleError (Stage stage, FileHandle projectRoot) {
+		try {
+			return load(projectRoot);
+		} catch (EditorException e) {
+			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
+		}
+
+		return false;
+	}
+
 	public boolean load (FileHandle projectRoot) throws EditorException {
 		if (projectRoot.exists() == false) throw new EditorException("Selected folder does not exist!");
 		if (projectRoot.name().equals(PROJECT_FILE)) return loadProject(projectRoot);
 		if (projectRoot.name().equals("vis") && projectRoot.isDirectory())
 			return loadProject(projectRoot.child(PROJECT_FILE));
-		if(projectRoot.child(PROJECT_FILE).exists()) return loadProject(projectRoot.child(PROJECT_FILE));
+		if (projectRoot.child(PROJECT_FILE).exists()) return loadProject(projectRoot.child(PROJECT_FILE));
 
 		FileHandle visFolder = projectRoot.child("vis");
 		if (visFolder.child(PROJECT_FILE).exists()) return loadProject(visFolder.child(PROJECT_FILE));

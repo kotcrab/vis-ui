@@ -31,4 +31,6 @@ public abstract class Project {
 	public abstract FileHandle getVisDirectory ();
 
 	public abstract FileHandle getAssetOutputDirectory ();
+
+	public abstract String getRecentProjectDisplayName();
 }

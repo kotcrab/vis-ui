@@ -16,10 +16,16 @@
 
 package com.kotcrab.vis.editor.ui.tab;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.module.editor.ProjectIOModule;
+import com.kotcrab.vis.editor.module.editor.RecentProjectModule;
+import com.kotcrab.vis.editor.module.editor.RecentProjectModule.RecentProjectEntry;
 import com.kotcrab.vis.editor.module.editor.VisTwitterReader;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
@@ -29,10 +35,12 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 public class StartPageTab extends MainContentTab implements LinkLabelListener {
-	private static final String NEW_PROJECT_LINK = "NEW_PROJECT";
-	private static final String LOAD_PROJECT_LINK = "LOAD_PROJECT";
+	private static final String NEW_PROJECT_LINK = "\\*NEW_PROJECT";
+	private static final String LOAD_PROJECT_LINK = "\\*LOAD_PROJECT";
 
 	@InjectModule VisTwitterReader twitterReader;
+	@InjectModule RecentProjectModule recentProjectsModule;
+	@InjectModule ProjectIOModule projectIOModule;
 
 	public StartPageTab (ModuleInjector injector) {
 		super(false, false);
@@ -52,12 +60,28 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 		newProjectLinkLabel.setListener(this);
 		loadProjectLinkLabel.setListener(this);
 
+		VisTable quickAccessTable = new VisTable(false);
+		quickAccessTable.add("Start doing something!").row();
+		quickAccessTable.add(newProjectLinkLabel).row();
+		quickAccessTable.add(loadProjectLinkLabel).row();
+
+		VisTable recentProjectsTable = new VisTable(false);
+		recentProjectsTable.add("Recent projects").row();
+
+		Array<RecentProjectEntry> recentProjects = recentProjectsModule.getRecentProjects();
+		if (recentProjects.size == 0)
+			recentProjectsTable.add(new VisLabel("No recently opened projects", Color.GRAY));
+
+		for (RecentProjectEntry entry : recentProjects) {
+			LinkLabel label = new LinkLabel(entry.name, entry.projectPath);
+			label.setListener(this);
+			recentProjectsTable.add(label).row();
+		}
+
 		VisTable leftSide = new VisTable(false);
-		leftSide.add("Welcome!").row();
-		leftSide.add(new VisLabel("(here will be recent project list etc.)", "small")).spaceBottom(8).row();
-		leftSide.add("Start doing something!").row();
-		leftSide.add(newProjectLinkLabel).row();
-		leftSide.add(loadProjectLinkLabel).row();
+		leftSide.add("Welcome to VisEditor!").colspan(2).spaceBottom(8).row();
+		leftSide.add(quickAccessTable).spaceRight(24);
+		leftSide.add(recentProjectsTable).top();
 
 		VisTable content = new VisTable(false);
 		content.add(leftSide).expand();
@@ -74,7 +98,16 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 
 	@Override
 	public void clicked (String url) {
-		if (url.equals(NEW_PROJECT_LINK)) Editor.instance.newProjectDialog();
-		if (url.equals(LOAD_PROJECT_LINK)) Editor.instance.loadProjectDialog();
+		switch (url) {
+			case NEW_PROJECT_LINK:
+				Editor.instance.newProjectDialog();
+				break;
+			case LOAD_PROJECT_LINK:
+				Editor.instance.loadProjectDialog();
+				break;
+			default:
+				projectIOModule.loadHandleError(Editor.instance.getStage(), Gdx.files.absolute(url));
+				break;
+		}
 	}
 }

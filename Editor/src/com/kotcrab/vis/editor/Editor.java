@@ -33,6 +33,7 @@ import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsModule;
+import com.kotcrab.vis.editor.module.physicseditor.PhysicsEditorTab;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule;
@@ -150,8 +151,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
 				Log.exception(e);
 			}
-
-			//editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
+			
+			editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
 		}
 
 		//debug end
@@ -198,6 +199,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(pluginContainer = new ExtensionStorageModule());
 		editorMC.add(new VisTwitterReader());
 		editorMC.add(new WebAPIModule());
+		editorMC.add(new RecentProjectModule());
 		editorMC.add(new PluginFilesAccessModule());
 		editorMC.add(new ColorPickerModule());
 		editorMC.add(new UpdateCheckerModule());
@@ -381,18 +383,14 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		settingsDialog.removeAll(projectMC.getModules());
 
 		App.eventBus.post(new StatusBarEvent("Project unloaded"));
-		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded));
+		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded, projectMC.getProject()));
 	}
 
 	public void loadProjectDialog () {
 		fileChooser.pickFileOrDirectory(new FileChooserAdapter() {
 			@Override
 			public void selected (FileHandle file) {
-				try {
-					editorMC.get(ProjectIOModule.class).load(file);
-				} catch (EditorException e) {
-					DialogUtils.showErrorDialog(stage, e.getMessage(), e);
-				}
+				editorMC.get(ProjectIOModule.class).loadHandleError(getStage(), file);
 			}
 		});
 	}
@@ -438,7 +436,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		settingsDialog.addAll(projectMC.getModules());
 
 		App.eventBus.post(new StatusBarEvent("Project loaded"));
-		App.eventBus.post(new ProjectStatusEvent(Status.Loaded));
+		App.eventBus.post(new ProjectStatusEvent(Status.Loaded, project));
 	}
 
 	private void switchProject (final Project project) {

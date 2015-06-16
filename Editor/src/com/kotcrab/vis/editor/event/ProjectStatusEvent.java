@@ -16,14 +16,18 @@
 
 package com.kotcrab.vis.editor.event;
 
+import com.kotcrab.vis.editor.module.project.Project;
+
 public class ProjectStatusEvent implements Event {
 	public enum Status {
 		Loaded, Unloaded
 	}
 
 	public Status status;
+	public Project project;
 
-	public ProjectStatusEvent (Status status) {
+	public ProjectStatusEvent (Status status, Project project) {
 		this.status = status;
+		this.project = project;
 	}
 }

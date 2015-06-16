@@ -50,4 +50,9 @@ public class ProjectGeneric extends Project {
 	public FileHandle getAssetOutputDirectory () {
 		return Gdx.files.absolute(assetsOutput);
 	}
+
+	@Override
+	public String getRecentProjectDisplayName () {
+		return Gdx.files.absolute(visDirectory).name();
+	}
 }
