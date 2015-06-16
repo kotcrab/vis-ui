@@ -18,6 +18,9 @@ package com.kotcrab.vis.editor.ui.tab;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.module.editor.VisTwitterReader;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.ui.widget.LinkLabel;
@@ -29,8 +32,11 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 	private static final String NEW_PROJECT_LINK = "NEW_PROJECT";
 	private static final String LOAD_PROJECT_LINK = "LOAD_PROJECT";
 
-	public StartPageTab () {
+	@InjectModule VisTwitterReader twitterReader;
+
+	public StartPageTab (ModuleInjector injector) {
 		super(false, false);
+		injector.injectModules(this);
 	}
 
 	@Override
@@ -46,12 +52,17 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 		newProjectLinkLabel.setListener(this);
 		loadProjectLinkLabel.setListener(this);
 
+		VisTable leftSide = new VisTable(false);
+		leftSide.add("Welcome!").row();
+		leftSide.add(new VisLabel("(here will be recent project list etc.)", "small")).spaceBottom(8).row();
+		leftSide.add("Start doing something!").row();
+		leftSide.add(newProjectLinkLabel).row();
+		leftSide.add(loadProjectLinkLabel).row();
+
 		VisTable content = new VisTable(false);
-		content.add("Welcome!").row();
-		content.add(new VisLabel("(here will be recent project list etc.)", "small")).spaceBottom(8).row();
-		content.add("Start doing something!").row();
-		content.add(newProjectLinkLabel).row();
-		content.add(loadProjectLinkLabel).row();
+		content.add(leftSide).expand();
+		content.addSeparator(true);
+		content.add(twitterReader.getTable()).fillY().expandY().pad(3).width(400).right();
 
 		return content;
 	}

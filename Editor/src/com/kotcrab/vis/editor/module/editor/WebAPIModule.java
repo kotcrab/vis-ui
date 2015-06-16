@@ -53,7 +53,7 @@ public class WebAPIModule extends EditorModule {
 	public void init () {
 		siteApiClient = new SiteAPIClient();
 
-		FileHandle apiCache = Gdx.files.absolute(App.APP_FOLDER_PATH).child("cache").child("api");
+		FileHandle apiCache = Gdx.files.absolute(App.CACHE_FOLDER_PATH).child("api");
 		apiCache.mkdirs();
 
 		contentCacheFile = apiCache.child("content.json");

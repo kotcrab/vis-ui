@@ -131,6 +131,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		// debug section
 		// aka. the kinda smart way to ensure that debug will load only on my machine
 		// remove it later though...
+
 		if (new File("C:\\Users\\Kotcrab\\.viseditor\\debug.this").exists()) {
 			try {
 				editorMC.get(ProjectIOModule.class).load((Gdx.files.absolute("F:\\Poligon\\Tester")));
@@ -152,6 +153,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 			//editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
 		}
+
 		//debug end
 
 		Log.debug("Loading completed");
@@ -194,6 +196,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		editorMC.add(new PluginLoaderModule());
 		editorMC.add(pluginContainer = new ExtensionStorageModule());
+		editorMC.add(new VisTwitterReader());
 		editorMC.add(new WebAPIModule());
 		editorMC.add(new PluginFilesAccessModule());
 		editorMC.add(new ColorPickerModule());

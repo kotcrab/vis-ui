@@ -48,6 +48,7 @@ public class App {
 
 	private static final String USER_HOME_PATH = System.getProperty("user.home") + File.separator;
 	public static final String APP_FOLDER_PATH = USER_HOME_PATH + ".viseditor" + File.separator;
+	public static final String CACHE_FOLDER_PATH = APP_FOLDER_PATH + "cache" + File.separator;
 
 	private static final String GDX_RELEASE_ZIP = "http://libgdx.badlogicgames.com/releases/libgdx-1.5.6.zip";
 

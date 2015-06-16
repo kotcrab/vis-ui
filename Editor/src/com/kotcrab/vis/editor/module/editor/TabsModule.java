@@ -43,7 +43,7 @@ public class TabsModule extends EditorModule implements EventListener {
 		tabbedPane = new TabbedPane();
 		tabbedPane.addListener(listener);
 
-		startPageTab = new StartPageTab();
+		startPageTab = new StartPageTab(container);
 
 		tabbedPane.add(startPageTab);
 	}
