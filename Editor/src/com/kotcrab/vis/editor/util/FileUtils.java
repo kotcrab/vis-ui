@@ -76,7 +76,7 @@ public class FileUtils {
 
 			return true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 			return false;
 		}
 	}

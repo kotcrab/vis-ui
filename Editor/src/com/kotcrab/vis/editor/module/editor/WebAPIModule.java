@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.WebAPIEditorVersionListener;
 import com.kotcrab.vis.editor.webapi.ContentSet;
 import com.kotcrab.vis.editor.webapi.EditorBuild;
@@ -109,7 +110,7 @@ public class WebAPIModule extends EditorModule {
 
 				listener.result(builds);
 			} catch (Exception e) {
-				e.printStackTrace();
+				Log.exception(e);
 				listener.failed(e);
 			}
 		}, "VisWebReleaseListGetter").start();

@@ -65,7 +65,7 @@ public class App {
 		try {
 			buildTimestamp = readTimestamp();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 
 		if (buildTimestamp == null)

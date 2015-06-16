@@ -25,6 +25,7 @@ import com.kotcrab.vis.editor.assets.transaction.action.DeleteFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.UpdateReferencesAction;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.UndoableAction;
+import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
@@ -109,7 +110,7 @@ public class BmpFontAssetTransactionGenerator implements AssetTransactionGenerat
 					fileOut.write(output.getBytes());
 					fileOut.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					Log.exception(e);
 				}
 
 			}

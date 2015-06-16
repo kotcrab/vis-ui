@@ -80,7 +80,7 @@ public class EditorFrame extends JFrame {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (ClassNotFoundException | InstantiationException | UnsupportedLookAndFeelException | IllegalAccessException e) {
-			e.printStackTrace();
+			Log.exception(e);
 		}
 
 		SplashController splashController = new SplashController();

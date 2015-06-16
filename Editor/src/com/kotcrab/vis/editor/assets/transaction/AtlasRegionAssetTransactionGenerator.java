@@ -25,6 +25,7 @@ import com.kotcrab.vis.editor.assets.transaction.action.DeleteFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.UpdateAtlasAssetReferencesAction;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.UndoableAction;
+import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
@@ -101,7 +102,7 @@ public class AtlasRegionAssetTransactionGenerator implements AssetTransactionGen
 					fileOut.write(output.getBytes());
 					fileOut.close();
 				} catch (IOException e) {
-					e.printStackTrace();
+					Log.exception(e);
 				}
 
 			}

@@ -102,7 +102,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 			}
 		} catch (Exception e) {
 			Log.error("Error encountered while loading one of atlases");
-			e.printStackTrace();
+			Log.exception(e);
 		}
 
 		updateCache();
