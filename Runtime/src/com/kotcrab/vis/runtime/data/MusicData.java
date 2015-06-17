@@ -19,6 +19,10 @@ package com.kotcrab.vis.runtime.data;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.MusicEntity;
 
+/**
+ * Data class for {@link MusicEntity}
+ * @author Kotcrab
+ */
 public class MusicData extends EntityData<MusicEntity> {
 	public boolean playOnStart;
 	public boolean looping;

@@ -21,6 +21,10 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
+/**
+ * Sprite entity
+ * @author Kotcrab
+ */
 public class SpriteEntity extends Entity {
 	protected transient Sprite sprite;
 

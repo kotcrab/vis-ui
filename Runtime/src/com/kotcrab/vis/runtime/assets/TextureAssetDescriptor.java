@@ -16,5 +16,11 @@
 
 package com.kotcrab.vis.runtime.assets;
 
+/**
+ * Descriptors implementing this interface must reference some texture type asset for exmaple TextureRegion form TextureAtlas
+ * @see AtlasRegionAsset
+ * @see TextureRegionAsset
+ * @author Kotcrab
+ */
 public interface TextureAssetDescriptor extends VisAssetDescriptor {
 }

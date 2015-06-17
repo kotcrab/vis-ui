@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.runtime.scene;
 
+import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
@@ -29,6 +30,10 @@ import com.badlogic.gdx.utils.viewport.*;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 
+/**
+ * Base class of VisRuntime scene system. Scene are typically constructed using {@link VisAssetManager} with {@link SceneLoader}
+ * @author Kotcrab
+ */
 public class Scene implements Disposable {
 	private AssetManager assetManager;
 	private ShaderProgram distanceFieldShader;
@@ -39,6 +44,7 @@ public class Scene implements Disposable {
 	private Array<Entity> entities;
 	private Array<TextureAtlas> textureAtlases;
 
+	/** Used by framework, not indented for external use */
 	public Scene (Array<Entity> entities, Array<TextureAtlas> textureAtlases, AssetManager assetsManager, SceneViewport viewportType, int width, int height) {
 		this.entities = entities;
 		this.textureAtlases = textureAtlases;
@@ -68,15 +74,18 @@ public class Scene implements Disposable {
 		}
 	}
 
+	/** Called by framework after scene has been loaded. */
 	public void onAfterLoad () {
 		for (Entity entity : entities)
 			entity.onAfterLoad();
 	}
 
+	/** @return this scene entities list */
 	public Array<Entity> getEntities () {
 		return entities;
 	}
 
+	/** Entity with provided id or null */
 	public Entity getById (String id) {
 		for (Entity entity : entities)
 			if (entity.getId() != null && entity.getId().equals(id)) return entity;
@@ -84,6 +93,16 @@ public class Scene implements Disposable {
 		return null;
 	}
 
+	/**
+	 * Allows to get multiple entities with same id.
+	 * @param targetArray array to found entities will be added
+	 */
+	public void getMultipleById (Array<Entity> targetArray, String id) {
+		for (Entity entity : entities)
+			if (entity.getId() != null && entity.getId().equals(id)) targetArray.add(entity);
+	}
+
+	/** Renders entire scene. Typically called from {@link ApplicationListener#render()} */
 	public void render (SpriteBatch batch) {
 		batch.setProjectionMatrix(camera.combined);
 
@@ -105,6 +124,7 @@ public class Scene implements Disposable {
 		batch.end();
 	}
 
+	/** Must by called when screen was resized. Typically called from {@link ApplicationListener#resize(int, int)} */
 	public void resize (int width, int height) {
 		viewport.update(width, height);
 	}

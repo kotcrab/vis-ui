@@ -21,8 +21,14 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.kotcrab.vis.runtime.font.FontProvider;
+import com.kotcrab.vis.runtime.font.FreeTypeFontProvider;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 
+/**
+ * Simplified {@link AssetManager} for VisRuntime. Automatically sets AssetManger required loaders, and allows to
+ * enable FreeType support or load custom entity supports in easier way.
+ * @author Kotcrab
+ */
 public class VisAssetManager extends AssetManager {
 	private SceneLoader sceneLoader;
 
@@ -37,14 +43,23 @@ public class VisAssetManager extends AssetManager {
 		setLoader(ShaderProgram.class, new ShaderLoader());
 	}
 
+	/**
+	 * Allows to enable FreeType support.
+	 * @param freeTypeFontProvider must be instance of {@link FreeTypeFontProvider}. Note that this parameter is not checked!
+	 */
 	public void enableFreeType (FontProvider freeTypeFontProvider) {
 		if (freeTypeFontProvider != null) sceneLoader.enableFreeType(this, freeTypeFontProvider);
 	}
 
+	/**
+	 * Allows to register custom entity supports
+	 * @param support instance of {@link EntitySupport} that will support your custom entity
+	 */
 	public void registerSupport (EntitySupport support) {
 		sceneLoader.registerSupport(this, support);
 	}
 
+	/** Quickest and easiest way to load scene. This method will block until entire scene is loaded. */
 	public Scene loadSceneNow (String scenePath) {
 		load(scenePath, Scene.class);
 		finishLoading();

@@ -47,6 +47,10 @@ import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
+/**
+ * Scene loader for {@link AssetManager}. Allow to load entire scene file with all required dependencies such as textures, sounds etc.
+ * @author Kotcrab
+ */
 public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> {
 	private static final FileHandle distanceFieldShader = Gdx.files.classpath("com/kotcrab/vis/runtime/bmp-font-df");
 

@@ -21,6 +21,10 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.utils.Disposable;
 
+/**
+ * Particle effect entity
+ * @author Kotcrab
+ */
 public class ParticleEffectEntity extends Entity implements Disposable {
 	protected transient ParticleEffect effect;
 	private boolean active = true;

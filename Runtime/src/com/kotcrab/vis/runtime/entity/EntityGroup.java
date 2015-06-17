@@ -19,6 +19,10 @@ package com.kotcrab.vis.runtime.entity;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * Entity group contains multiple entities.
+ * @author Kotcrab
+ */
 public class EntityGroup extends Entity {
 	protected Array<Entity> entities = new Array<Entity>();
 

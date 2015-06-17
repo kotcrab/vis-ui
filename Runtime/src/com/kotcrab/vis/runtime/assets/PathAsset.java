@@ -16,6 +16,10 @@
 
 package com.kotcrab.vis.runtime.assets;
 
+/**
+ * References assets only by its path, for example used to reference music, sound or particles.
+ * @author Kotcrab
+ */
 public class PathAsset implements VisAssetDescriptor {
 	private String relativePath;
 

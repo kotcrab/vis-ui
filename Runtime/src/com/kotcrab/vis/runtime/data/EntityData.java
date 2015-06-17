@@ -20,7 +20,11 @@ import com.kotcrab.annotation.CallSuper;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.Entity;
 
-/** Base class for all entities data inside scene */
+/**
+ * Base class for all entities data inside scene. Subclasses of this class are directly serialized into
+ * JSON file during scene exporting in VisEditor.
+ * @author Kotcrab
+ */
 public abstract class EntityData<T extends Entity> {
 	public String id;
 	public VisAssetDescriptor assetDescriptor;
@@ -32,7 +36,10 @@ public abstract class EntityData<T extends Entity> {
 		this.assetDescriptor = assetDescriptor;
 	}
 
-	/** Loads all possible values from this entity to instance of this class. If value can't be loaded it should be ignored. */
+	/**
+	 * Loads all possible values from this entity to instance of this class. If value can't be loaded it should
+	 * be ignored, in such cases it is typically handled by VisEditor serializer.
+	 */
 	@CallSuper
 	public void loadTo (T entity) {
 		entity.setId(id);

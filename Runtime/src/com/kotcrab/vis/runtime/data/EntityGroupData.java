@@ -21,6 +21,10 @@ import com.kotcrab.annotation.OverrideCallSuper;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.EntityGroup;
 
+/**
+ * Data class for {@link EntityGroup}
+ * @author Kotcrab
+ */
 public class EntityGroupData extends EntityData<EntityGroup> {
 	public Array<EntityData> entities = new Array<EntityData>();
 

@@ -16,7 +16,10 @@
 
 package com.kotcrab.vis.runtime.util;
 
-/** Implemented by enums that can be showed in lists, provides a method to get enum name that shoud be displayed in that list */
+/**
+ * Implemented by enums that can be showed in lists, provides a method to get enum name that should be displayed in that list
+ * @author Kotcrab
+ */
 public interface PrettyEnum {
 	String toPrettyString ();
 }

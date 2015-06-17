@@ -16,15 +16,17 @@
 
 package com.kotcrab.vis.runtime.assets;
 
+/**
+ * References single region from TextureAtlas. RegionName is ignored during assets comparison.
+ * @author Kotcrab
+ */
 public class AtlasRegionAsset extends PathAsset implements TextureAssetDescriptor {
 	private String regionName; //ignored in descriptor compassion
 
 	public AtlasRegionAsset () {
 	}
 
-	/**
-	 * @param regionName name of region from atlas, if null the first texture of atlas itself would be used
-	 */
+	/** @param regionName name of region from atlas, if null the first texture of atlas itself would be used */
 	public AtlasRegionAsset (String relativePath, String regionName) {
 		super(relativePath);
 		this.regionName = regionName;

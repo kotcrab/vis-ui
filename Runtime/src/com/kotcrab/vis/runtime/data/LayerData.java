@@ -17,7 +17,13 @@
 package com.kotcrab.vis.runtime.data;
 
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.entity.EntityGroup;
 
+/**
+ * Data class for Layer. Does not extend {@link EntityData} because layer is not an entity.
+ * @see EntityGroup
+ * @author Kotcrab
+ */
 public class LayerData {
 	public String name;
 	public Array<EntityData> entities = new Array<EntityData>();

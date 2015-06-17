@@ -25,6 +25,10 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.data.TextData;
 
+/**
+ * Bitmap font provide, allow to load distance field fonts. Enabled by default.
+ * @author Kotcrab
+ */
 public class BmpFontProvider implements FontProvider {
 	@Override
 	public void load (Array<AssetDescriptor> dependencies, TextData data) {

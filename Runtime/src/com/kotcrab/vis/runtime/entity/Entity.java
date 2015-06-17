@@ -18,6 +18,10 @@ package com.kotcrab.vis.runtime.entity;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 
+/**
+ * Base class for all entities.
+ * @author Kotcrab
+ */
 public abstract class Entity {
 	private String id;
 
@@ -25,6 +29,7 @@ public abstract class Entity {
 		this.id = id;
 	}
 
+	/** Called when entity should update and render self */
 	public void render (Batch batch) {
 
 	}
@@ -37,6 +42,7 @@ public abstract class Entity {
 		this.id = id;
 	}
 
+	/** Called after scene finished loading */
 	public void onAfterLoad () {
 
 	}

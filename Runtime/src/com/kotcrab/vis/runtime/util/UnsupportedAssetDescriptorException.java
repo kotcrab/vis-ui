@@ -18,6 +18,10 @@ package com.kotcrab.vis.runtime.util;
 
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
+/**
+ * Throw when Entity tries to use or access asset descriptor that is unsupported for current operation
+ * @author Kotcrab
+ */
 public class UnsupportedAssetDescriptorException extends RuntimeException {
 	public UnsupportedAssetDescriptorException (VisAssetDescriptor unsupportedDescriptor) {
 		super("Asset descriptor type '" + unsupportedDescriptor.getClass().getSimpleName() + "' is not supported for this operation");

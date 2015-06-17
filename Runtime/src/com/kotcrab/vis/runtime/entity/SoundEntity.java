@@ -18,6 +18,10 @@ package com.kotcrab.vis.runtime.entity;
 
 import com.badlogic.gdx.audio.Sound;
 
+/**
+ * Sound entity. Multiple same sound effects can be played from single entity.
+ * @author Kotcrab
+ */
 public class SoundEntity extends Entity {
 	protected transient Sound sound;
 

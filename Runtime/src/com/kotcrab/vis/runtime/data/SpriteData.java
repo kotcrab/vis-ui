@@ -20,6 +20,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
 
+/**
+ * Data class for {@link SpriteEntity}
+ */
 public class SpriteData extends EntityData<SpriteEntity> {
 	public float x, y;
 	public float width, height;

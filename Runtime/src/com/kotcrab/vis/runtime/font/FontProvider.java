@@ -21,8 +21,17 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.data.TextData;
 
+/**
+ * Generic font provider interface. This allow to abstract loading FreeType fonts which may not be available if user don't
+ * have FreeType dependency in his project.
+ * @author Kotcrab
+ * @see BmpFontProvider
+ * @see FreeTypeFontProvider
+ */
 public interface FontProvider {
+	/** Called when font provider should check TextData and add required font dependency into dependencies list. */
 	void load (Array<AssetDescriptor> dependencies, TextData data);
 
+	/** Called when FontProvider should add all required loaders into {@link AssetManager} */
 	void setLoaders (AssetManager manager);
 }

@@ -19,6 +19,10 @@ package com.kotcrab.vis.runtime.data;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 
+/**
+ * Data class for {@link ParticleEffectEntity}
+ * @author Kotcrab
+ */
 public class ParticleEffectData extends EntityData<ParticleEffectEntity> {
 	public float x, y;
 	public boolean active;

@@ -29,6 +29,10 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.data.TextData;
 
+/**
+ * FreeType font provider. This is not enabled by default because FreeType dependencies may not be available is user doesn't add them.
+ * To enable FreeType fonts you must call: {@code visAssetManger.enableFreeType(new FreeTypeFontProvider());}
+ */
 public class FreeTypeFontProvider implements FontProvider {
 	@Override
 	public void load (Array<AssetDescriptor> dependencies, TextData data) {

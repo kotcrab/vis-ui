@@ -21,6 +21,10 @@ import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 
+/**
+ * Data class for {@link TextEntity}
+ * @author Kotcrab
+ */
 public class TextData extends EntityData<TextEntity> {
 	public float x, y;
 	public float originX, originY;

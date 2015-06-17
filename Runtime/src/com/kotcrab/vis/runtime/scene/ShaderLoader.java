@@ -28,6 +28,11 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.scene.ShaderLoader.ShaderProgramParameter;
 
+/**
+ * Shader loader for {@link AssetManager}. Expects that fragment shader file ends with .frag and vertex shader file name
+ * ends with .vert
+ * @author Kotcrab
+ */
 public class ShaderLoader extends AsynchronousAssetLoader<ShaderProgram, ShaderProgramParameter> {
 	public ShaderLoader () {
 		this(new InternalFileHandleResolver());
@@ -53,7 +58,7 @@ public class ShaderLoader extends AsynchronousAssetLoader<ShaderProgram, ShaderP
 
 		ShaderProgram shader = new ShaderProgram(vert, frag);
 		if (!shader.isCompiled())
-			Gdx.app.error("ShaderLoader", "compilation failed:\n" + shader.getLog());
+			Gdx.app.error("ShaderLoader", "Shader compilation failed:\n" + shader.getLog());
 
 		return shader;
 	}

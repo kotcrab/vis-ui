@@ -22,12 +22,25 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.entity.Entity;
 
+/**
+ * Interface for plugins that provide additional runtime entities support
+ * @param <ED> custom entity data type (see {@link EntityData})
+ * @param <E> custom entity type (see {@link Entity})
+ * @author Kotcrab
+ */
 public interface EntitySupport<ED extends EntityData<E>, E extends Entity> {
+	/** Called when entity support should add it's lodaer into AssetsManager */
 	void setLoaders (AssetManager manager);
 
+	/** @return custom entity data class */
 	Class<ED> getEntityDataClass ();
 
+	/** Called when EntitySupport should resolve required dependencies for Entity and add them into dependency list */
 	void resolveDependencies (Array<AssetDescriptor> deps, ED entityData);
 
+	/**
+	 * Called when EntitySupport should construct new entity instance from data and dependencies from asset manager
+	 * (dependencies was loaded in {@link #resolveDependencies(Array, EntityData)})
+	 */
 	E getInstanceFromData (AssetManager manager, ED data);
 }
