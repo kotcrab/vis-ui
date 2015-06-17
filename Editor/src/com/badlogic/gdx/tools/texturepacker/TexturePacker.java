@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +26,11 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
+import javax.imageio.IIOImage;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.stream.ImageOutputStream;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -36,12 +41,6 @@ import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-
-import javax.imageio.IIOImage;
-import javax.imageio.ImageIO;
-import javax.imageio.ImageWriteParam;
-import javax.imageio.ImageWriter;
-import javax.imageio.stream.ImageOutputStream;
 
 /** @author Nathan Sweet */
 public class TexturePacker {
@@ -154,9 +153,10 @@ public class TexturePacker {
 			page.imageName = outputFile.getName();
 
 			BufferedImage canvas = new BufferedImage(width, height, getBufferedImageType(settings.format));
-			Graphics2D g = (Graphics2D)canvas.getGraphics();
+			Graphics2D g = (Graphics2D) canvas.getGraphics();
 
-			if (!settings.silent) System.out.println("Writing " + canvas.getWidth() + "x" + canvas.getHeight() + ": " + outputFile);
+			if (!settings.silent)
+				System.out.println("Writing " + canvas.getWidth() + "x" + canvas.getHeight() + ": " + outputFile);
 
 			for (Rect rect : page.outputRects) {
 				BufferedImage image = rect.getImage(imageProcessor);
@@ -219,7 +219,7 @@ public class TexturePacker {
 
 			if (settings.bleed && !settings.premultiplyAlpha && !settings.outputFormat.equalsIgnoreCase("jpg")) {
 				canvas = new ColorBleedEffect().processImage(canvas, 2);
-				g = (Graphics2D)canvas.getGraphics();
+				g = (Graphics2D) canvas.getGraphics();
 			}
 
 			if (settings.debug) {
@@ -289,7 +289,7 @@ public class TexturePacker {
 					for (Region region : textureAtlasData.getRegions()) {
 						if (region.name.equals(rectName)) {
 							throw new GdxRuntimeException("A region with the name \"" + rectName + "\" has already been packed: "
-								+ rect.name);
+									+ rect.name);
 						}
 					}
 				}
@@ -325,7 +325,7 @@ public class TexturePacker {
 		writer.write("  size: " + rect.regionWidth + ", " + rect.regionHeight + "\n");
 		if (rect.splits != null) {
 			writer.write("  split: " //
-				+ rect.splits[0] + ", " + rect.splits[1] + ", " + rect.splits[2] + ", " + rect.splits[3] + "\n");
+					+ rect.splits[0] + ", " + rect.splits[1] + ", " + rect.splits[2] + ", " + rect.splits[3] + "\n");
 		}
 		if (rect.pads != null) {
 			if (rect.splits == null) writer.write("  split: 0, 0, 0, 0\n");
@@ -345,16 +345,16 @@ public class TexturePacker {
 
 	private int getBufferedImageType (Format format) {
 		switch (settings.format) {
-		case RGBA8888:
-		case RGBA4444:
-			return BufferedImage.TYPE_INT_ARGB;
-		case RGB565:
-		case RGB888:
-			return BufferedImage.TYPE_INT_RGB;
-		case Alpha:
-			return BufferedImage.TYPE_BYTE_GRAY;
-		default:
-			throw new RuntimeException("Unsupported format: " + settings.format);
+			case RGBA8888:
+			case RGBA4444:
+				return BufferedImage.TYPE_INT_ARGB;
+			case RGB565:
+			case RGB888:
+				return BufferedImage.TYPE_INT_RGB;
+			case Alpha:
+				return BufferedImage.TYPE_BYTE_GRAY;
+			default:
+				throw new RuntimeException("Unsupported format: " + settings.format);
 		}
 	}
 
@@ -418,7 +418,7 @@ public class TexturePacker {
 
 		Rect (BufferedImage source, int left, int top, int newWidth, int newHeight, boolean isPatch) {
 			image = new BufferedImage(source.getColorModel(), source.getRaster().createWritableChild(left, top, newWidth, newHeight,
-				0, 0, null), source.getColorModel().isAlphaPremultiplied(), null);
+					0, 0, null), source.getColorModel().isAlphaPremultiplied(), null);
 			offsetX = left;
 			offsetY = top;
 			regionWidth = newWidth;
@@ -491,7 +491,7 @@ public class TexturePacker {
 			if (this == obj) return true;
 			if (obj == null) return false;
 			if (getClass() != obj.getClass()) return false;
-			Rect other = (Rect)obj;
+			Rect other = (Rect) obj;
 			if (name == null) {
 				if (other.name != null) return false;
 			} else if (!name.equals(other.name)) return false;
@@ -591,8 +591,8 @@ public class TexturePacker {
 				// Otherwise if scale != 1 or multiple scales, use subdirectory.
 				float scaleValue = scale[scaleIndex];
 				if (scale.length != 1) {
-					packFileName = (scaleValue == (int)scaleValue ? Integer.toString((int)scaleValue) : Float.toString(scaleValue))
-						+ "/" + packFileName;
+					packFileName = (scaleValue == (int) scaleValue ? Integer.toString((int) scaleValue) : Float.toString(scaleValue))
+							+ "/" + packFileName;
 				}
 			}
 			return packFileName;
@@ -661,7 +661,7 @@ public class TexturePacker {
 
 	static public void processIfModified (Settings settings, String input, String output, String packFileName) {
 		if (isModified(input, output, packFileName, settings)) {
-			 process(settings, input, output, packFileName);
+			process(settings, input, output, packFileName);
 		}
 	}
 
@@ -679,16 +679,16 @@ public class TexturePacker {
 		String input = null, output = null, packFileName = "pack.atlas";
 
 		switch (args.length) {
-		case 3:
-			packFileName = args[2];
-		case 2:
-			output = args[1];
-		case 1:
-			input = args[0];
-			break;
-		default:
-			System.out.println("Usage: inputDir [outputDir] [packFileName]");
-			System.exit(0);
+			case 3:
+				packFileName = args[2];
+			case 2:
+				output = args[1];
+			case 1:
+				input = args[0];
+				break;
+			default:
+				System.out.println("Usage: inputDir [outputDir] [packFileName]");
+				System.exit(0);
 		}
 
 		if (output == null) {

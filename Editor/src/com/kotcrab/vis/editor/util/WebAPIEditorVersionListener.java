@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.webapi.EditorBuild;
 
 public interface WebAPIEditorVersionListener {
-		void result (Array<EditorBuild> builds);
+	void result (Array<EditorBuild> builds);
 
-		void failed (Exception e);
-	}
+	void failed (Exception e);
+}

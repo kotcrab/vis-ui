@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -38,7 +38,8 @@ public class MaxRectsPacker implements Packer {
 
 	public MaxRectsPacker (Settings settings) {
 		this.settings = settings;
-		if (settings.minWidth > settings.maxWidth) throw new RuntimeException("Page min width cannot be higher than max width.");
+		if (settings.minWidth > settings.maxWidth)
+			throw new RuntimeException("Page min width cannot be higher than max width.");
 		if (settings.minHeight > settings.maxHeight)
 			throw new RuntimeException("Page min height cannot be higher than max height.");
 	}
@@ -94,18 +95,18 @@ public class MaxRectsPacker implements Packer {
 			minHeight = Math.min(minHeight, rect.height);
 			if (settings.rotation) {
 				if ((rect.width > settings.maxWidth || rect.height > settings.maxHeight)
-					&& (rect.width > settings.maxHeight || rect.height > settings.maxWidth)) {
+						&& (rect.width > settings.maxHeight || rect.height > settings.maxWidth)) {
 					throw new RuntimeException("Image does not fit with max page size " + settings.maxWidth + "x" + settings.maxHeight
-						+ " and padding " + settings.paddingX + "," + settings.paddingY + ": " + rect);
+							+ " and padding " + settings.paddingX + "," + settings.paddingY + ": " + rect);
 				}
 			} else {
 				if (rect.width > settings.maxWidth) {
 					throw new RuntimeException("Image does not fit with max page width " + settings.maxWidth + " and paddingX "
-						+ settings.paddingX + ": " + rect);
+							+ settings.paddingX + ": " + rect);
 				}
 				if (rect.height > settings.maxHeight && (!settings.rotation || rect.width > settings.maxHeight)) {
 					throw new RuntimeException("Image does not fit in max page height " + settings.maxHeight + " and paddingY "
-						+ settings.paddingY + ": " + rect);
+							+ settings.paddingY + ": " + rect);
 				}
 			}
 		}
@@ -132,7 +133,8 @@ public class MaxRectsPacker implements Packer {
 			}
 			if (!settings.silent) System.out.println();
 			// Rects don't fit on one page. Fill a whole page and return.
-			if (bestResult == null) bestResult = packAtSize(false, maxSize - edgePaddingX, maxSize - edgePaddingY, inputRects);
+			if (bestResult == null)
+				bestResult = packAtSize(false, maxSize - edgePaddingX, maxSize - edgePaddingY, inputRects);
 			sort.sort(bestResult.outputRects, rectComparator);
 			bestResult.width = Math.max(bestResult.width, bestResult.height);
 			bestResult.height = Math.max(bestResult.width, bestResult.height);
@@ -210,15 +212,15 @@ public class MaxRectsPacker implements Packer {
 		public BinarySearch (int min, int max, int fuzziness, boolean pot) {
 			this.pot = pot;
 			this.fuzziness = pot ? 0 : fuzziness;
-			this.min = pot ? (int)(Math.log(MathUtils.nextPowerOfTwo(min)) / Math.log(2)) : min;
-			this.max = pot ? (int)(Math.log(MathUtils.nextPowerOfTwo(max)) / Math.log(2)) : max;
+			this.min = pot ? (int) (Math.log(MathUtils.nextPowerOfTwo(min)) / Math.log(2)) : min;
+			this.max = pot ? (int) (Math.log(MathUtils.nextPowerOfTwo(max)) / Math.log(2)) : max;
 		}
 
 		public int reset () {
 			low = min;
 			high = max;
 			current = (low + high) >>> 1;
-			return pot ? (int)Math.pow(2, current) : current;
+			return pot ? (int) Math.pow(2, current) : current;
 		}
 
 		public int next (boolean result) {
@@ -229,7 +231,7 @@ public class MaxRectsPacker implements Packer {
 				high = current - 1;
 			current = (low + high) >>> 1;
 			if (Math.abs(low - high) < fuzziness) return -1;
-			return pot ? (int)Math.pow(2, current) : current;
+			return pot ? (int) Math.pow(2, current) : current;
 		}
 	}
 
@@ -362,22 +364,22 @@ public class MaxRectsPacker implements Packer {
 
 			Rect newNode = null;
 			switch (method) {
-			case BestShortSideFit:
-				newNode = findPositionForNewNodeBestShortSideFit(width, height, rotatedWidth, rotatedHeight, rotate);
-				break;
-			case BottomLeftRule:
-				newNode = findPositionForNewNodeBottomLeft(width, height, rotatedWidth, rotatedHeight, rotate);
-				break;
-			case ContactPointRule:
-				newNode = findPositionForNewNodeContactPoint(width, height, rotatedWidth, rotatedHeight, rotate);
-				newNode.score1 = -newNode.score1; // Reverse since we are minimizing, but for contact point score bigger is better.
-				break;
-			case BestLongSideFit:
-				newNode = findPositionForNewNodeBestLongSideFit(width, height, rotatedWidth, rotatedHeight, rotate);
-				break;
-			case BestAreaFit:
-				newNode = findPositionForNewNodeBestAreaFit(width, height, rotatedWidth, rotatedHeight, rotate);
-				break;
+				case BestShortSideFit:
+					newNode = findPositionForNewNodeBestShortSideFit(width, height, rotatedWidth, rotatedHeight, rotate);
+					break;
+				case BottomLeftRule:
+					newNode = findPositionForNewNodeBottomLeft(width, height, rotatedWidth, rotatedHeight, rotate);
+					break;
+				case ContactPointRule:
+					newNode = findPositionForNewNodeContactPoint(width, height, rotatedWidth, rotatedHeight, rotate);
+					newNode.score1 = -newNode.score1; // Reverse since we are minimizing, but for contact point score bigger is better.
+					break;
+				case BestLongSideFit:
+					newNode = findPositionForNewNodeBestLongSideFit(width, height, rotatedWidth, rotatedHeight, rotate);
+					break;
+				case BestAreaFit:
+					newNode = findPositionForNewNodeBestAreaFit(width, height, rotatedWidth, rotatedHeight, rotate);
+					break;
 			}
 
 			// Cannot fit the current rectangle.
@@ -394,7 +396,7 @@ public class MaxRectsPacker implements Packer {
 			int usedSurfaceArea = 0;
 			for (int i = 0; i < usedRectangles.size; i++)
 				usedSurfaceArea += usedRectangles.get(i).width * usedRectangles.get(i).height;
-			return (float)usedSurfaceArea / (binWidth * binHeight);
+			return (float) usedSurfaceArea / (binWidth * binHeight);
 		}
 
 		private Rect findPositionForNewNodeBottomLeft (int width, int height, int rotatedWidth, int rotatedHeight, boolean rotate) {
@@ -433,7 +435,7 @@ public class MaxRectsPacker implements Packer {
 		}
 
 		private Rect findPositionForNewNodeBestShortSideFit (int width, int height, int rotatedWidth, int rotatedHeight,
-			boolean rotate) {
+															 boolean rotate) {
 			Rect bestNode = new Rect();
 			bestNode.score1 = Integer.MAX_VALUE;
 
@@ -463,7 +465,7 @@ public class MaxRectsPacker implements Packer {
 					int flippedLongSideFit = Math.max(flippedLeftoverHoriz, flippedLeftoverVert);
 
 					if (flippedShortSideFit < bestNode.score1
-						|| (flippedShortSideFit == bestNode.score1 && flippedLongSideFit < bestNode.score2)) {
+							|| (flippedShortSideFit == bestNode.score1 && flippedLongSideFit < bestNode.score2)) {
 						bestNode.x = freeRectangles.get(i).x;
 						bestNode.y = freeRectangles.get(i).y;
 						bestNode.width = rotatedWidth;
@@ -479,7 +481,7 @@ public class MaxRectsPacker implements Packer {
 		}
 
 		private Rect findPositionForNewNodeBestLongSideFit (int width, int height, int rotatedWidth, int rotatedHeight,
-			boolean rotate) {
+															boolean rotate) {
 			Rect bestNode = new Rect();
 
 			bestNode.score2 = Integer.MAX_VALUE;
@@ -582,10 +584,10 @@ public class MaxRectsPacker implements Packer {
 			for (int i = 0; i < usedRectangles.size; i++) {
 				if (usedRectangles.get(i).x == x + width || usedRectangles.get(i).x + usedRectangles.get(i).width == x)
 					score += commonIntervalLength(usedRectangles.get(i).y, usedRectangles.get(i).y + usedRectangles.get(i).height, y,
-						y + height);
+							y + height);
 				if (usedRectangles.get(i).y == y + height || usedRectangles.get(i).y + usedRectangles.get(i).height == y)
 					score += commonIntervalLength(usedRectangles.get(i).x, usedRectangles.get(i).x + usedRectangles.get(i).width, x, x
-						+ width);
+							+ width);
 			}
 			return score;
 		}
@@ -627,7 +629,8 @@ public class MaxRectsPacker implements Packer {
 		private boolean splitFreeNode (Rect freeNode, Rect usedNode) {
 			// Test with SAT if the rectangles even intersect.
 			if (usedNode.x >= freeNode.x + freeNode.width || usedNode.x + usedNode.width <= freeNode.x
-				|| usedNode.y >= freeNode.y + freeNode.height || usedNode.y + usedNode.height <= freeNode.y) return false;
+					|| usedNode.y >= freeNode.y + freeNode.height || usedNode.y + usedNode.height <= freeNode.y)
+				return false;
 
 			if (usedNode.x < freeNode.x + freeNode.width && usedNode.x + usedNode.width > freeNode.x) {
 				// New node at the top side of the used node.
@@ -710,7 +713,9 @@ public class MaxRectsPacker implements Packer {
 		BottomLeftRule,
 		// CP: Choosest the placement where the rectangle touches other rects as much as possible.
 		ContactPointRule
-	};
+	}
+
+	;
 
 	class RectComparator implements Comparator<Rect> {
 		public int compare (Rect o1, Rect o2) {

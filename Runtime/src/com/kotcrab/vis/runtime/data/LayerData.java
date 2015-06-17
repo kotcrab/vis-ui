@@ -21,8 +21,8 @@ import com.kotcrab.vis.runtime.entity.EntityGroup;
 
 /**
  * Data class for Layer. Does not extend {@link EntityData} because layer is not an entity.
- * @see EntityGroup
  * @author Kotcrab
+ * @see EntityGroup
  */
 public class LayerData {
 	public String name;

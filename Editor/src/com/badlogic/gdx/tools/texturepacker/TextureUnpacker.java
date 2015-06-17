@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Page;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Region;
 
+import javax.imageio.ImageIO;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
@@ -28,8 +29,6 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
-import javax.imageio.ImageIO;
 
 /** Unpacks a texture atlas into individual image files.
  * @author Geert Konijnendijk
@@ -88,7 +87,7 @@ public class TextureUnpacker {
 			}
 			for (Region region : atlas.getRegions()) {
 				System.out.println(String.format("Processing image for %s: x[%s] y[%s] w[%s] h[%s], rotate[%s]", region.name,
-					region.left, region.top, region.width, region.height, region.rotate));
+						region.left, region.top, region.width, region.height, region.rotate));
 
 				// check if the page this region is in is currently loaded in a Buffered Image
 				if (region.page == page) {
@@ -105,7 +104,7 @@ public class TextureUnpacker {
 					}
 
 					// check if the parent directories of this image file exist and create them if not
-					File imgOutput = new File(outputDirFile, String.format("%s.%s", region.index == -1?region.name:region.name + "_" + region.index, extension));
+					File imgOutput = new File(outputDirFile, String.format("%s.%s", region.index == -1 ? region.name : region.name + "_" + region.index, extension));
 					File imgDir = imgOutput.getParentFile();
 					if (!imgDir.exists()) {
 						System.out.println(String.format("Creating directory: %s", imgDir.getPath()));
@@ -149,7 +148,7 @@ public class TextureUnpacker {
 		// draw the image to a bigger one if padding is needed
 		if (padding > 0) {
 			BufferedImage paddedImage = new BufferedImage(splitImage.getWidth() + padding * 2, splitImage.getHeight() + padding * 2,
-				page.getType());
+					page.getType());
 			Graphics2D g2 = paddedImage.createGraphics();
 			g2.drawImage(splitImage, padding, padding, null);
 			g2.dispose();
@@ -200,15 +199,15 @@ public class TextureUnpacker {
 
 		// parse the arguments and display the help text if there is a problem with the command line arguments
 		switch (unpacker.parseArguments(args)) {
-		case 0:
-			System.out.println(HELP);
-			return;
-		case 3:
-			outputDir = args[2];
-		case 2:
-			imageDir = args[1];
-		case 1:
-			atlasFile = args[0];
+			case 0:
+				System.out.println(HELP);
+				return;
+			case 3:
+				outputDir = args[2];
+			case 2:
+				imageDir = args[1];
+			case 1:
+				atlasFile = args[0];
 		}
 
 		File atlasFileHandle = new File(atlasFile);

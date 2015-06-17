@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,8 +15,6 @@
  ******************************************************************************/
 
 package com.badlogic.gdx.tools.texturepacker;
-
-import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -30,6 +28,8 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker.Page;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Rect;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.Array;
+
+import java.util.Random;
 
 /** @author Nathan Sweet */
 public class TexturePackerTest extends ApplicationAdapter {
@@ -86,7 +86,7 @@ public class TexturePackerTest extends ApplicationAdapter {
 			for (int i = 0; i < page.outputRects.size; i++) {
 				Rect rect = page.outputRects.get(i);
 				renderer.rect(x + rect.x + settings.paddingX, y + rect.y + settings.paddingY, rect.width - settings.paddingX,
-					rect.height - settings.paddingY);
+						rect.height - settings.paddingY);
 			}
 			renderer.end();
 			renderer.setColor(Color.RED);
@@ -94,7 +94,7 @@ public class TexturePackerTest extends ApplicationAdapter {
 			for (int i = 0; i < page.outputRects.size; i++) {
 				Rect rect = page.outputRects.get(i);
 				renderer.rect(x + rect.x + settings.paddingX, y + rect.y + settings.paddingY, rect.width - settings.paddingX,
-					rect.height - settings.paddingY);
+						rect.height - settings.paddingY);
 			}
 			renderer.setColor(Color.GREEN);
 			renderer.rect(x, y, page.width + settings.paddingX * 2, page.height + settings.paddingY * 2);

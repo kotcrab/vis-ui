@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -114,9 +114,10 @@ public class FileProcessor {
 	 * @param outputRoot May be null if there is no output from processing the files.
 	 * @return the processed files added with {@link #addProcessedFile(Entry)}. */
 	public ArrayList<Entry> process (File inputFile, File outputRoot) throws Exception {
-		if (!inputFile.exists()) throw new IllegalArgumentException("Input file does not exist: " + inputFile.getAbsolutePath());
+		if (!inputFile.exists())
+			throw new IllegalArgumentException("Input file does not exist: " + inputFile.getAbsolutePath());
 		if (inputFile.isFile())
-			return process(new File[] {inputFile}, outputRoot);
+			return process(new File[]{inputFile}, outputRoot);
 		else
 			return process(inputFile.listFiles(), outputRoot);
 	}
@@ -172,7 +173,7 @@ public class FileProcessor {
 	}
 
 	private void process (File[] files, File outputRoot, File outputDir, LinkedHashMap<File, ArrayList<Entry>> dirToEntries,
-		int depth) {
+						  int depth) {
 		// Store empty entries for every directory.
 		for (File file : files) {
 			File dir = file.getParentFile();

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
- * 
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
- *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -75,7 +75,8 @@ public class ImageProcessor {
 
 		// Strip root dir off front of image path.
 		if (rootPath != null) {
-			if (!name.startsWith(rootPath)) throw new RuntimeException("Path '" + name + "' does not start with root: " + rootPath);
+			if (!name.startsWith(rootPath))
+				throw new RuntimeException("Path '" + name + "' does not start with root: " + rootPath);
 			name = name.substring(rootPath.length());
 		}
 
@@ -93,7 +94,7 @@ public class ImageProcessor {
 		Rect rect = processImage(image, name);
 
 		if (rect == null) {
-			if(!settings.silent) System.out.println("Ignoring blank input image: " + name);
+			if (!settings.silent) System.out.println("Ignoring blank input image: " + name);
 			return null;
 		}
 
@@ -162,7 +163,7 @@ public class ImageProcessor {
 			if (scale < 1) {
 				newImage.getGraphics().drawImage(image.getScaledInstance(width, height, Image.SCALE_AREA_AVERAGING), 0, 0, null);
 			} else {
-				Graphics2D g = (Graphics2D)newImage.getGraphics();
+				Graphics2D g = (Graphics2D) newImage.getGraphics();
 				g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 				g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 				g.drawImage(image, 0, 0, width, height, null);
@@ -216,7 +217,7 @@ public class ImageProcessor {
 				top++;
 			}
 			outer:
-			for (int y = source.getHeight(); --y >= top;) {
+			for (int y = source.getHeight(); --y >= top; ) {
 				for (int x = 0; x < source.getWidth(); x++) {
 					alphaRaster.getDataElements(x, y, a);
 					int alpha = a[0];
@@ -240,7 +241,7 @@ public class ImageProcessor {
 				left++;
 			}
 			outer:
-			for (int x = source.getWidth(); --x >= left;) {
+			for (int x = source.getWidth(); --x >= left; ) {
 				for (int y = top; y < bottom; y++) {
 					alphaRaster.getDataElements(x, y, a);
 					int alpha = a[0];
@@ -263,7 +264,7 @@ public class ImageProcessor {
 
 	static private String splitError (int x, int y, int[] rgba, String name) {
 		throw new RuntimeException("Invalid " + name + " ninepatch split pixel at " + x + ", " + y + ", rgba: " + rgba[0] + ", "
-			+ rgba[1] + ", " + rgba[2] + ", " + rgba[3]);
+				+ rgba[1] + ", " + rgba[2] + ", " + rgba[3]);
 	}
 
 	/** Returns the splits, or null if the image had no splits or the splits were only a single region. Splits are an int[4] that
@@ -300,13 +301,13 @@ public class ImageProcessor {
 		}
 
 		if (scale != 1) {
-			startX = (int)Math.round(startX * scale);
-			endX = (int)Math.round(endX * scale);
-			startY = (int)Math.round(startY * scale);
-			endY = (int)Math.round(endY * scale);
+			startX = (int) Math.round(startX * scale);
+			endX = (int) Math.round(endX * scale);
+			startY = (int) Math.round(startY * scale);
+			endY = (int) Math.round(endY * scale);
 		}
 
-		return new int[] {startX, endX, startY, endY};
+		return new int[]{startX, endX, startY, endY};
 	}
 
 	/** Returns the pads, or null if the image had no pads or the pads match the splits. Pads are an int[4] that has left, right,
@@ -362,13 +363,13 @@ public class ImageProcessor {
 		}
 
 		if (scale != 1) {
-			startX = (int)Math.round(startX * scale);
-			endX = (int)Math.round(endX * scale);
-			startY = (int)Math.round(startY * scale);
-			endY = (int)Math.round(endY * scale);
+			startX = (int) Math.round(startX * scale);
+			endX = (int) Math.round(endX * scale);
+			startY = (int) Math.round(startY * scale);
+			endY = (int) Math.round(endY * scale);
 		}
 
-		int[] pads = new int[] {startX, endX, startY, endY};
+		int[] pads = new int[]{startX, endX, startY, endY};
 
 		if (splits != null && Arrays.equals(pads, splits)) {
 			return null;
@@ -399,7 +400,8 @@ public class ImageProcessor {
 			raster.getPixel(x, y, rgba);
 			if (rgba[3] == breakA) return next;
 
-			if (!startPoint && (rgba[0] != 0 || rgba[1] != 0 || rgba[2] != 0 || rgba[3] != 255)) splitError(x, y, rgba, name);
+			if (!startPoint && (rgba[0] != 0 || rgba[1] != 0 || rgba[2] != 0 || rgba[3] != 255))
+				splitError(x, y, rgba, name);
 
 			next++;
 		}
@@ -438,9 +440,9 @@ public class ImageProcessor {
 	}
 
 	static private void hash (MessageDigest digest, int value) {
-		digest.update((byte)(value >> 24));
-		digest.update((byte)(value >> 16));
-		digest.update((byte)(value >> 8));
-		digest.update((byte)value);
+		digest.update((byte) (value >> 24));
+		digest.update((byte) (value >> 16));
+		digest.update((byte) (value >> 8));
+		digest.update((byte) value);
 	}
 }
