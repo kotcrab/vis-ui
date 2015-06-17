@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.scene;
+package com.kotcrab.vis.runtime.util;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
@@ -26,7 +26,7 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.scene.ShaderLoader.ShaderProgramParameter;
+import com.kotcrab.vis.runtime.util.ShaderLoader.ShaderProgramParameter;
 
 /**
  * Shader loader for {@link AssetManager}. Expects that fragment shader file ends with .frag and vertex shader file name

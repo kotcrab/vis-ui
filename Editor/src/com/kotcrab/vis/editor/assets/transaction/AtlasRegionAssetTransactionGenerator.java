@@ -109,7 +109,7 @@ public class AtlasRegionAssetTransactionGenerator implements AssetTransactionGen
 
 			@Override
 			public void undo () {
-				//do nothing, will will deleted when CopyFileAction will be undone
+				//do nothing, file will deleted when CopyFileAction will be undone
 			}
 		});
 

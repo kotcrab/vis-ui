@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.font.FreeTypeFontProvider;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
+import com.kotcrab.vis.runtime.util.ShaderLoader;
 
 /**
  * Simplified {@link AssetManager} for VisRuntime. Automatically sets AssetManger required loaders, and allows to
