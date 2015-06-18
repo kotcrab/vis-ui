@@ -157,20 +157,24 @@ public class MenuBarModule extends EditorModule {
 		return container;
 	}
 
+	public MenuBar getMenuBar () {
+		return menuBar;
+	}
+
 	@Override
 	public void dispose () {
 		projectController.dispose();
 	}
 
-	private MenuItem createMenuItem (String text, Icons icon, ButtonListener listener) {
+	public MenuItem createMenuItem (String text, Icons icon, ButtonListener listener) {
 		return createMenuItem(ControllerPolicy.NONE, text, icon, listener);
 	}
 
-	private MenuItem createMenuItem (ControllerPolicy policy, String text, ButtonListener listener) {
+	public MenuItem createMenuItem (ControllerPolicy policy, String text, ButtonListener listener) {
 		return createMenuItem(policy, text, null, listener);
 	}
 
-	private MenuItem createMenuItem (ControllerPolicy policy, String text, Icons icon, ButtonListener listener) {
+	public MenuItem createMenuItem (ControllerPolicy policy, String text, Icons icon, ButtonListener listener) {
 		MenuItem item = MenuUtils.createMenuItem(text, icon, listener);
 
 		switch (policy) {

@@ -47,4 +47,8 @@ public class SceneStatusWidgetController {
 		buttons.add(button);
 		button.setDisabled(!loaded);
 	}
+
+	public boolean removeButton (Button button) {
+		return buttons.removeValue(button, true);
+	}
 }

@@ -20,9 +20,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
-import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 
 public class ProjectStatusWidgetController implements EventListener, Disposable {
 	private Array<Button> buttons;
@@ -63,5 +63,9 @@ public class ProjectStatusWidgetController implements EventListener, Disposable 
 		buttons.add(button);
 
 		button.setDisabled(!loaded);
+	}
+
+	public boolean removeButton (Button button) {
+		return buttons.removeValue(button, true);
 	}
 }
