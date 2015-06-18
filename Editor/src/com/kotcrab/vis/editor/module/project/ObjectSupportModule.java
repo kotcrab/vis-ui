@@ -23,7 +23,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
-import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.Log;
 
 /**
  * Manages {@link ObjectSupport} loaded from plugins. Assigns and saves their ID for future use with Kryo serializer.

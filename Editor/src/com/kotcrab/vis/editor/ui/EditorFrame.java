@@ -21,7 +21,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.util.ThreadUtils;
 
 import javax.imageio.ImageIO;

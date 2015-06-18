@@ -29,7 +29,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.ui.tab.StartPageTab;
-import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.util.URLUtils;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.VisLabel;

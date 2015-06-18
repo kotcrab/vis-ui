@@ -20,8 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.Event;
-import com.kotcrab.vis.editor.event.EventListener;
+import com.kotcrab.vis.editor.event.bus.Event;
+import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 
 public class ProjectStatusWidgetController implements EventListener, Disposable {

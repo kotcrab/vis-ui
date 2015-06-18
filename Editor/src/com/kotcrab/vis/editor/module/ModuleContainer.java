@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
-import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.Log;
 
 import java.lang.reflect.Field;
 

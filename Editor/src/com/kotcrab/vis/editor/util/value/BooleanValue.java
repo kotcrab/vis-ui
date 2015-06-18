@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.event;
+package com.kotcrab.vis.editor.util.value;
 
-/**
- * EventListener for {@link EventBus}
- * @author Kotcrab
- */
-public interface EventListener {
-	/**
-	 * Called when this listener should handle event
-	 * @return if true this event will be handle and other listeners won't receive it.
-	 * Most of the time you don't want to handle event, return true only in special use cases.
-	 */
-	boolean onEvent (Event event);
+import com.kotcrab.vis.editor.scene.EditorObject;
+
+public interface BooleanValue {
+	boolean getBoolean (EditorObject entity);
 }

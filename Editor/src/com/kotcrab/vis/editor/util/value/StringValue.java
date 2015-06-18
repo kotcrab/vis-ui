@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.value;
 
 import com.kotcrab.vis.editor.scene.EditorObject;
 

@@ -24,8 +24,8 @@ import com.kotcrab.vis.editor.assets.transaction.action.CopyFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.DeleteFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.UpdateAtlasAssetReferencesAction;
 import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.editor.module.scene.UndoableAction;
-import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.util.UndoableAction;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 

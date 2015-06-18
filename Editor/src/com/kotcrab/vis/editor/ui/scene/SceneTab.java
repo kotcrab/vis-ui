@@ -26,6 +26,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.*;
+import com.kotcrab.vis.editor.event.bus.Event;
+import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.ContentTable;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
@@ -192,10 +194,10 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	@Override
 	public boolean onEvent (Event event) {
 		if (isActiveTab()) {
-			if (event instanceof MenuEvent) {
-				MenuEventType type = ((MenuEvent) event).type;
+			if (event instanceof ToolbarEvent) {
+				ToolbarEventType type = ((ToolbarEvent) event).type;
 
-				if (type == MenuEventType.FILE_SAVE)
+				if (type == ToolbarEventType.FILE_SAVE)
 					save();
 			}
 

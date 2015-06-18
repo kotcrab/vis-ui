@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.event;
 
-/**
- * Interface for actions that can be undone.
- * @author Kotcrab
- */
-public interface UndoableAction {
-	void execute ();
+import com.kotcrab.vis.editor.event.bus.Event;
 
-	void undo ();
+public class ToolbarEvent implements Event {
+	public ToolbarEventType type;
+
+	public ToolbarEvent (ToolbarEventType type) {
+		this.type = type;
+	}
 }

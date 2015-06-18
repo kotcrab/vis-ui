@@ -40,6 +40,8 @@ import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.scene.ObjectGroup;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
+import com.kotcrab.vis.editor.util.UndoableAction;
+import com.kotcrab.vis.editor.util.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 

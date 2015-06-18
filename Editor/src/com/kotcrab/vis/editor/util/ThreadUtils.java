@@ -16,6 +16,8 @@
 
 package com.kotcrab.vis.editor.util;
 
+import com.kotcrab.vis.editor.Log;
+
 public class ThreadUtils {
 	/**
 	 * Thread that executed this method will sleep for the specific number of milliseconds. If happen InterruptedException will be

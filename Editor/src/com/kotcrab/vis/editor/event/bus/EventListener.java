@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.event;
-
-import com.kotcrab.vis.editor.App;
+package com.kotcrab.vis.editor.event.bus;
 
 /**
- * Base class for all VisEditor events
+ * EventListener for {@link EventBus}
  * @author Kotcrab
- * @see EventBus
- * @see App#eventBus
  */
-public interface Event {
+public interface EventListener {
+	/**
+	 * Called when this listener should handle event
+	 * @return if true this event will be handle and other listeners won't receive it.
+	 * Most of the time you don't want to handle event, return true only in special use cases.
+	 */
+	boolean onEvent (Event event);
 }

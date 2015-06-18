@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.util;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.ui.util.dialog.ConfirmDialogListener;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 

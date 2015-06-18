@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.event;
+package com.kotcrab.vis.editor.event.bus;
 
 import com.badlogic.gdx.Gdx;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.util.ProcessingQueue;
 
 import java.util.ArrayList;

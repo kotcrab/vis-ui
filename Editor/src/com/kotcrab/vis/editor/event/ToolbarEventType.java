@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.event;
 
-import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.webapi.EditorBuild;
-
-public interface WebAPIEditorVersionListener {
-	void result (Array<EditorBuild> builds);
-
-	void failed (Exception e);
+public enum ToolbarEventType {
+	FILE_SAVE
 }

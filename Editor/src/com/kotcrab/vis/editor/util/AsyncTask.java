@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.util;
 
 import com.badlogic.gdx.Gdx;
+import com.kotcrab.vis.editor.Log;
 
 import java.util.concurrent.CountDownLatch;
 

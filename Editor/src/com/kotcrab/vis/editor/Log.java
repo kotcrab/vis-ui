@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor;
 
-import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.util.CrashReporter;
+import com.kotcrab.vis.editor.util.ExceptionUtils;
 
 import javax.swing.JOptionPane;
 import java.io.*;

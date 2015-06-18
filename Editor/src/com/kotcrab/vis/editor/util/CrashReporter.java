@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.util;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.Log;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.input.ReversedLinesFileReader;
 

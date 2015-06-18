@@ -14,10 +14,15 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.event.bus;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.App;
 
-public interface BooleanValue {
-	boolean getBoolean (EditorObject entity);
+/**
+ * Base class for all VisEditor events
+ * @author Kotcrab
+ * @see EventBus
+ * @see App#eventBus
+ */
+public interface Event {
 }

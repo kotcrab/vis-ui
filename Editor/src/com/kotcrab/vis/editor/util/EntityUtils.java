@@ -19,6 +19,9 @@ package com.kotcrab.vis.editor.util;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
+import com.kotcrab.vis.editor.util.value.BooleanValue;
+import com.kotcrab.vis.editor.util.value.FloatValue;
+import com.kotcrab.vis.editor.util.value.StringValue;
 
 public class EntityUtils {
 	public static String getEntitiesCommonFloatValue (Array<EditorObject> entities, FloatValue objValue) {

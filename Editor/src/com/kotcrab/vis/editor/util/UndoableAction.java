@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.event;
+package com.kotcrab.vis.editor.util;
 
-public class MenuEvent implements Event {
-	public MenuEventType type;
+/**
+ * Interface for actions that can be undone.
+ * @author Kotcrab
+ */
+public interface UndoableAction {
+	void execute ();
 
-	public MenuEvent (MenuEventType type) {
-		this.type = type;
-	}
+	void undo ();
 }

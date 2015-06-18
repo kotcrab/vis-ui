@@ -36,7 +36,7 @@ import com.kotcrab.vis.editor.ui.toast.LoadingPluginsFailedToast;
 import com.kotcrab.vis.editor.util.ChildFirstURLClassLoader;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.FileUtils;
-import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.util.gdx.ButtonUtils;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;

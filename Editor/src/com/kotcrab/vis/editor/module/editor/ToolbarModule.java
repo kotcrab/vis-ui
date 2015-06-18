@@ -22,10 +22,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.event.Event;
-import com.kotcrab.vis.editor.event.EventListener;
-import com.kotcrab.vis.editor.event.MenuEvent;
-import com.kotcrab.vis.editor.event.MenuEventType;
+import com.kotcrab.vis.editor.event.bus.Event;
+import com.kotcrab.vis.editor.event.bus.EventListener;
+import com.kotcrab.vis.editor.event.ToolbarEvent;
+import com.kotcrab.vis.editor.event.ToolbarEventType;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -40,7 +40,7 @@ public class ToolbarModule extends EditorModule implements EventListener {
 	public ToolbarModule () {
 		table = new VisTable(false);
 		table.setBackground(VisUI.getSkin().getDrawable("button"));
-		table.add(createButton(Icons.SAVE, "Save", MenuEventType.FILE_SAVE));
+		table.add(createButton(Icons.SAVE, "Save", ToolbarEventType.FILE_SAVE));
 		table.add().expand().fill();
 	}
 
@@ -63,22 +63,22 @@ public class ToolbarModule extends EditorModule implements EventListener {
 		return table;
 	}
 
-	private VisImageButton createButton (Icons icon, String text, MenuEventType eventType) {
+	private VisImageButton createButton (Icons icon, String text, ToolbarEventType eventType) {
 		VisImageButton button = new VisImageButton(Assets.getIcon(icon), text);
 		button.addListener(new ToolbarButtonChangeListener(eventType));
 		return button;
 	}
 
 	private class ToolbarButtonChangeListener extends ChangeListener {
-		private MenuEventType type;
+		private ToolbarEventType type;
 
-		public ToolbarButtonChangeListener (MenuEventType eventType) {
+		public ToolbarButtonChangeListener (ToolbarEventType eventType) {
 			this.type = eventType;
 		}
 
 		@Override
 		public void changed (ChangeEvent event, Actor actor) {
-			App.eventBus.post(new MenuEvent(type));
+			App.eventBus.post(new ToolbarEvent(type));
 		}
 	}
 }

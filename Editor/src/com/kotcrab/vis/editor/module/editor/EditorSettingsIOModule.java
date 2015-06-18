@@ -24,7 +24,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
-import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.Log;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.File;

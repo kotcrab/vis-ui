@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.event;
 
+import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.module.project.Project;
 
 /**

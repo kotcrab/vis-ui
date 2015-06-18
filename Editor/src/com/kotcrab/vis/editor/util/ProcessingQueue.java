@@ -16,6 +16,8 @@
 
 package com.kotcrab.vis.editor.util;
 
+import com.kotcrab.vis.editor.Log;
+
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**

@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.event;
 
 import com.badlogic.gdx.graphics.Color;
+import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 
 /**

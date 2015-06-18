@@ -29,7 +29,7 @@ import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
-import com.kotcrab.vis.editor.util.Log;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
