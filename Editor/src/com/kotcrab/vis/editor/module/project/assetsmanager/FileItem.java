@@ -39,6 +39,11 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 //TODO refactor
+
+/**
+ * Displays single item inside assets manager.
+ * @author Kotcrab
+ */
 public class FileItem extends Table {
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private ObjectSupportModule supportModule;

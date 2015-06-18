@@ -20,6 +20,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.App;
 
+/**
+ * Utility module for plugins allowing them to access their folder when plugins can save settings and other files.
+ * @author Kotcrab
+ */
 public class PluginFilesAccessModule extends EditorModule {
 	private FileHandle pluginFolder;
 

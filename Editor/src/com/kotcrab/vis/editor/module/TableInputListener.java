@@ -24,7 +24,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.ui.widget.VisTextField;
 
-/** Listens for events from target table and passes them to provided {@link ModuleInput} */
+/**
+ * Listens for events from target table and passes them to provided {@link ModuleInput}
+ * @author Kotcrab
+ */
 public class TableInputListener extends InputListener {
 	private Table focusTarget;
 	private ModuleInput inputProcessor;

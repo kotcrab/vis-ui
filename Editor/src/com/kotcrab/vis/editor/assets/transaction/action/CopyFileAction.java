@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.assets.transaction.action;
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.module.scene.UndoableAction;
 
+/**
+ * Undoable action for copying file
+ * @author Kotcrab
+ */
 public class CopyFileAction implements UndoableAction {
 	private final FileHandle source;
 	private final FileHandle target;

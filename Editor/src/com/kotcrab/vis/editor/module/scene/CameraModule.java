@@ -27,6 +27,10 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.SceneMetadataModule;
 import com.kotcrab.vis.editor.util.gdx.CameraZoomController;
 
+/**
+ * Manages scene camera
+ * @author Kotcrab
+ */
 public class CameraModule extends SceneModule {
 	@InjectModule private SceneMetadataModule metadataModule;
 	private SceneMetadata metadata;

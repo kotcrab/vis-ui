@@ -23,6 +23,10 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
 import com.badlogic.gdx.utils.ObjectMap;
 
+/**
+ * TTF font provider
+ * @author Kotcrab
+ */
 public class TTFEditorFont extends EditorFont {
 	private FreeTypeFontGenerator generator;
 	private ObjectMap<Integer, BitmapFont> bitmapFonts = new ObjectMap<>();

@@ -32,6 +32,10 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
+/**
+ * Renders scene grid
+ * @author Kotcrab
+ */
 public class GridRendererModule extends SceneModule {
 	@InjectModule private CameraModule camera;
 	@InjectModule private RendererModule renderer;

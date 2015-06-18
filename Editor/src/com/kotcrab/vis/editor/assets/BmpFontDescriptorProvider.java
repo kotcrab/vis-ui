@@ -21,6 +21,10 @@ import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
+/**
+ * Descriptor provider for bitmap fonts
+ * @author Kotcrab
+ */
 public class BmpFontDescriptorProvider implements AssetDescriptorProvider {
 	@Override
 	public VisAssetDescriptor provide (FileHandle file, String relativePath) {

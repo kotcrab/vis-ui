@@ -25,8 +25,13 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 
+/**
+ * Module controlling UI debug mode which can be enabled by pressing F12 key.
+ * @author Kotcrab
+ */
 public class UIDebugControllerModule extends EditorModule {
 	@InjectModule private GlobalInputModule inputModule;
+
 	private Stage stage;
 	private boolean debugEnabled;
 

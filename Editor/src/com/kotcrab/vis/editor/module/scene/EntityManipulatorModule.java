@@ -43,6 +43,11 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 
+/**
+ * Entity manipulator module, allows to move entities on scene. Providers right click menu, rectangular selection
+ * and properties window. Supports undo and redo.
+ * @author Kotcrab
+ */
 public class EntityManipulatorModule extends SceneModule {
 	@InjectModule private CameraModule camera;
 	@InjectModule private UndoModule undoModule;

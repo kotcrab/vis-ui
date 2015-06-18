@@ -28,6 +28,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
+import com.kotcrab.vis.editor.ui.tab.StartPageTab;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.URLUtils;
 import com.kotcrab.vis.ui.widget.LinkLabel;
@@ -47,6 +48,10 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
+/**
+ * VisEditor twitter timeline reader. This module provides UI widget wich is displayed in {@link StartPageTab}
+ * @author Kotcrab
+ */
 public class VisTwitterReader extends EditorModule {
 	private static final String URL = "https://twitter.com/viseditor";
 

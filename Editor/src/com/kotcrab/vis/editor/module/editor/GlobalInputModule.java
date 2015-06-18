@@ -21,8 +21,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.kotcrab.vis.editor.Editor;
 
 /**
- * Allow to add InputListener that will send events from entire editor, ignoring modality of windows etc. Event will
- * be always passes to listeners.
+ * Allow to add InputListener that will send input events from entire editor, ignoring modality of windows etc. Event will
+ * be always passed to listeners.
+ * @author Kotcrab
  * @see InputModule
  */
 public class GlobalInputModule extends EditorModule {

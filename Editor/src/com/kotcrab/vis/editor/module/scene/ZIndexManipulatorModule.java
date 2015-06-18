@@ -23,6 +23,10 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.Layer;
 
+/**
+ * Allows to change entities z index. Z index in VisEditor is virtual and it is achieved by changing entities positions in entity list.
+ * @author Kotcrab
+ */
 public class ZIndexManipulatorModule extends SceneModule {
 	@InjectModule private UndoModule undoModule;
 	@InjectModule private EntityManipulatorModule entityManipulator;

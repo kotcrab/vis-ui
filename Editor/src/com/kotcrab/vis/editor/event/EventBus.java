@@ -17,11 +17,17 @@
 package com.kotcrab.vis.editor.event;
 
 import com.badlogic.gdx.Gdx;
+import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.util.Log;
 import com.kotcrab.vis.editor.util.ProcessingQueue;
 
 import java.util.ArrayList;
 
+/**
+ * Handles distributing {@link Event}s for all registered listeners. All events are handled on OpenGL thread.
+ * @author Kotcrab
+ * @see App#eventBus
+ */
 public class EventBus {
 	private ArrayList<EventListener> listeners;
 	private ProcessingQueue<Event> queue;

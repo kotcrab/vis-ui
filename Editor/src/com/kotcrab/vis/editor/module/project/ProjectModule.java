@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.kotcrab.vis.editor.module.editor.EditorModule;
 
+/**
+ * Base class for all project scope modules
+ * @author Kotcrab
+ */
 public abstract class ProjectModule extends EditorModule {
 	protected Project project;
 	protected ProjectModuleContainer projectContainer;

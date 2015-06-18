@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.module.scene;
 
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * Allows to chain multiple {@link UndoableAction} into single group.
+ * @author Kotcrab
+ */
 public class UndoableActionGroup implements UndoableAction {
 	protected Array<UndoableAction> actions = new Array<>();
 

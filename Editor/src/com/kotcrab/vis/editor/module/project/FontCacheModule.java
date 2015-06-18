@@ -26,6 +26,11 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 //TODO font reloading for bmp
+
+/**
+ * Allows to get loaded fonts from project asset directory. TTF fonts can be reloaded automatically.
+ * @author Kotcrab
+ */
 public class FontCacheModule extends ProjectModule implements WatchListener {
 	/** Maximum recommenced font size, not enforced byt FontCacheModule */
 	public static final int MAX_FONT_SIZE = 300;

@@ -22,6 +22,10 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
 
+/**
+ * Created by {@link AssetsAnalyzerModule}, holds found assets usages.
+ * @author Kotcrab
+ */
 public class AssetsUsages {
 	public FileHandle file;
 	public boolean limitExceeded;

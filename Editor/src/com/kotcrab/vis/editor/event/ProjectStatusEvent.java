@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.event;
 
 import com.kotcrab.vis.editor.module.project.Project;
 
+/**
+ * Posted when project was loaded or unloaded
+ * @author Kotcrab
+ */
 public class ProjectStatusEvent implements Event {
 	public enum Status {
 		Loaded, Unloaded

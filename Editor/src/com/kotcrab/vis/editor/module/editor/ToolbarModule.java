@@ -30,6 +30,10 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+/**
+ * VisEditor toolbar UI widget.
+ * @author Kotcrab
+ */
 public class ToolbarModule extends EditorModule implements EventListener {
 	public VisTable table;
 

@@ -33,7 +33,6 @@ import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsModule;
-import com.kotcrab.vis.editor.module.physicseditor.PhysicsEditorTab;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule;
@@ -65,6 +64,10 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 import java.io.File;
 import java.lang.reflect.Field;
 
+/**
+ * VisEditor main ApplicationAdapter class. The main() method is located in {@link EditorFrame}
+ * @author Kotcrab
+ */
 public class Editor extends ApplicationAdapter implements EventListener {
 	public static Editor instance;
 
@@ -152,7 +155,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 				Log.exception(e);
 			}
 
-			editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
+//			editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
 		}
 
 		//debug end

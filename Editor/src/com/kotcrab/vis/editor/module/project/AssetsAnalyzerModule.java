@@ -39,6 +39,12 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
+/**
+ * Allows to analyze usages of file asset and performs asset transaction (moving or renaming asset file).
+ * Not all assets type all supported, plugins can add custom {@link AssetDescriptorProvider} and
+ * {@link AssetTransactionGenerator} to extend supported types.
+ * @author Kotcrab
+ */
 public class AssetsAnalyzerModule extends ProjectModule {
 	public static final int USAGE_SEARCH_LIMIT = 100;
 

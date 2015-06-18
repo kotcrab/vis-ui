@@ -60,6 +60,10 @@ import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 
+/**
+ * Provides UI module for managing assets.
+ * @author Kotcrab
+ */
 public class AssetsUIModule extends ProjectModule implements WatchListener, EventListener, VisTabbedPaneListener {
 	@InjectModule private TabsModule tabsModule;
 	@InjectModule private QuickAccessModule quickAccessModule;

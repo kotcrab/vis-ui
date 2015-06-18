@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.utils.Disposable;
 
+/**
+ * Base class for all VisEditor modules.
+ * @author Kotcrab
+ */
 public abstract class Module implements Disposable {
 	public void added () {
 	}

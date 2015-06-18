@@ -28,6 +28,10 @@ import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+/**
+ * VisEditor general settings module
+ * @author Kotcrab
+ */
 public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 	private VisCheckBox confirmExitCheck;
 	private VisCheckBox checkForUpdatesCheck;

@@ -40,6 +40,12 @@ import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
+/**
+ * Allows to get loaded textures from project 'gfx' assets directory and allows to get loaded atlases from project 'atlas' asset directory.
+ * Live reloading is fully supported, however it requires listening for {@link TexturesReloadedEvent} and {@link AtlasReloadedEvent} and manually updating
+ * textures.
+ * @author Kotcrab
+ */
 public class TextureCacheModule extends ProjectModule implements WatchListener {
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private AssetsWatcherModule watcher;

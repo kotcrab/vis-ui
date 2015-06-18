@@ -16,5 +16,11 @@
 
 package com.kotcrab.vis.editor.event;
 
+import com.kotcrab.vis.editor.module.project.TextureCacheModule;
+
+/**
+ * Posted when {@link TextureCacheModule} has finished reloading texture atlases cache
+ * @author Kotcrab
+ */
 public class AtlasReloadedEvent implements Event {
 }

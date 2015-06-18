@@ -27,6 +27,10 @@ import com.kotcrab.vis.editor.event.UndoEvent;
 import com.kotcrab.vis.editor.module.editor.InputModule;
 import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
 
+/**
+ * Manages undoable actions and provides ctrl+z + ctrl+y key shortcuts.
+ * @author Kotcrab
+ */
 public class UndoModule extends SceneModule {
 	private Array<UndoableAction> undoList;
 	private Array<UndoableAction> redoList;

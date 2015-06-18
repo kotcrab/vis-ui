@@ -24,6 +24,7 @@ import com.kotcrab.vis.editor.util.gdx.VisGroup;
  * Allow to add ModalInputListener that will send events from editor.
  * If some other modal window will be added to stage, input listener won't receive inputs.
  * Useful for implementing keyboard shortcuts like Ctrl+Z etc.
+ * @author Kotcrab
  * @see GlobalInputModule
  */
 public class InputModule extends EditorModule {

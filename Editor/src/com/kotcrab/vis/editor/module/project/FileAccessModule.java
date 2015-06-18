@@ -22,7 +22,10 @@ import com.kotcrab.vis.editor.util.FileUtils;
 
 import java.util.Iterator;
 
-/** Provides FileHandle access to various Vis Project directories and files, contains method for path (de)relativize */
+/**
+ * Provides FileHandle access to various Vis Project directories and files, contains method for path (de)relativize
+ * @author Kotcrab
+ */
 public class FileAccessModule extends ProjectModule {
 	private FileHandle visFolder;
 	private FileHandle assetsFolder;

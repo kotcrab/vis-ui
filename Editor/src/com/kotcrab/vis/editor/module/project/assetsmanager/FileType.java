@@ -16,6 +16,10 @@
 
 package com.kotcrab.vis.editor.module.project.assetsmanager;
 
+/**
+ * Possible file types in ui manager
+ * @author Kotcrab
+ */
 public enum FileType {
 	UNKNOWN, NON_STANDARD,
 	TEXTURE, TEXTURE_ATLAS,

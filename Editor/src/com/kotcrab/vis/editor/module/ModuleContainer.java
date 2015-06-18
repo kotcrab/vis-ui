@@ -17,10 +17,17 @@
 package com.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 import com.kotcrab.vis.editor.util.Log;
 
 import java.lang.reflect.Field;
 
+/**
+ * Base container class. Module container holds all loaded {@link Module}s and allows other modules to access them.
+ * @param <T> type of module that this container will be used for
+ * @see EditorModuleContainer
+ * @author Kotcrab
+ */
 public abstract class ModuleContainer<T extends Module> implements ModuleInjector {
 	protected Array<T> modules = new Array<>();
 	private boolean initFinished = false;

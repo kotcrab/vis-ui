@@ -26,6 +26,10 @@ import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
+/**
+ * Displays single region from texture atlas
+ * @author Kotcrab
+ */
 public class AtlasItem extends Table {
 	private AtlasRegionAsset assetDescriptor;
 	private String relativeAtlasPath;

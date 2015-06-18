@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 
+/**
+ * Provides shared instance of {@link ColorPicker}
+ * @author Kotcrab
+ */
 public class ColorPickerModule extends EditorModule {
 	private ColorPicker picker;
 

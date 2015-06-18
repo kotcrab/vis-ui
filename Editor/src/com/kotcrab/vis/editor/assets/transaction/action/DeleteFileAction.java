@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.assets.transaction.action;
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.module.scene.UndoableAction;
 
+/**
+ * Undoable action for deleting file. Requires providing transaction storage that deleted file will be stored in case it needs to be restored.
+ * @author Kotcrab
+ */
 public class DeleteFileAction implements UndoableAction {
 	private final FileHandle transactionStorage;
 

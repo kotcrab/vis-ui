@@ -24,6 +24,10 @@ import com.kotcrab.vis.editor.module.project.ProjectModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 
+/**
+ * Base class for all scene scope modules.
+ * @author Kotcrab
+ */
 public abstract class SceneModule extends ProjectModule implements ModuleInput {
 	protected EditorScene scene;
 	protected SceneTab sceneTab;

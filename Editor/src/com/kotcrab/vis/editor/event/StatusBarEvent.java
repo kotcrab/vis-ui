@@ -17,7 +17,14 @@
 package com.kotcrab.vis.editor.event;
 
 import com.badlogic.gdx.graphics.Color;
+import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 
+/**
+ * This event can be posted to change status bar text. This is deprecated class,
+ * {@link StatusBarModule} methods should be used directly. This will be removed in future versions.
+ * @author Kotcrab
+ */
+@Deprecated
 public class StatusBarEvent implements Event {
 	public String text;
 	public int timeSeconds;

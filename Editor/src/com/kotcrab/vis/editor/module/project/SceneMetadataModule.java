@@ -23,6 +23,10 @@ import com.badlogic.gdx.utils.ObjectMap.Keys;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.scene.SceneMetadata;
 
+/**
+ * Providers and manages scene metadata (last camera position and zoom)
+ * @author Kotcrab
+ */
 public class SceneMetadataModule extends ProjectModule {
 	@InjectModule FileAccessModule fileAccess;
 
@@ -48,7 +52,7 @@ public class SceneMetadataModule extends ProjectModule {
 			metadata.map = new ObjectMap<>();
 		}
 
-		//clear not existent scenes
+		//clear no longer existing scenes
 		Keys<String> it = metadata.map.keys().iterator();
 		while (it.hasNext()) {
 			String path = it.next();

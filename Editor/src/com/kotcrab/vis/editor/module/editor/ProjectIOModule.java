@@ -46,6 +46,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 
+/**
+ * Module allowing to perform IO operation with projects
+ * @author Kotcrab
+ */
 public class ProjectIOModule extends EditorModule {
 	public static final String PROJECT_FILE = "project.data";
 

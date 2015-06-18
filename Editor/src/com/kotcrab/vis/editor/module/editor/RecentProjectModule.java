@@ -32,6 +32,10 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Iterator;
 
+/**
+ * Creates and provides list of recently used projects
+ * @author Kotcrab
+ */
 public class RecentProjectModule extends EditorModule implements EventListener {
 	private Json json = new Json();
 

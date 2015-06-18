@@ -27,6 +27,11 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane.TabbedPaneStyle;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
+/**
+ * Quick access bar is located at the bottom of VisEditor screen, this is tabbed pane with assets manager, asests usages etc.
+ * Plugins can add custom tabs here.
+ * @author Kotcrab
+ */
 public class QuickAccessModule extends EditorModule {
 	private TabbedPane tabbedPane;
 	private TabbedPaneListener listener;

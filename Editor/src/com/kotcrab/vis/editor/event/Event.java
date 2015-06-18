@@ -16,5 +16,13 @@
 
 package com.kotcrab.vis.editor.event;
 
+import com.kotcrab.vis.editor.App;
+
+/**
+ * Base class for all VisEditor events
+ * @author Kotcrab
+ * @see EventBus
+ * @see App#eventBus
+ */
 public interface Event {
 }

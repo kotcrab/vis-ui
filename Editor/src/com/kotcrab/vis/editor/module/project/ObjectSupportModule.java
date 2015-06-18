@@ -25,6 +25,10 @@ import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.util.Log;
 
+/**
+ * Manages {@link ObjectSupport} loaded from plugins. Assigns and saves their ID for future use with Kryo serializer.
+ * @author Kotcrab
+ */
 public class ObjectSupportModule extends ProjectModule {
 	private ObjectMap<Class, ObjectSupport> supportMap = new ObjectMap<>();
 	private Array<SupportDescriptor> descriptors;

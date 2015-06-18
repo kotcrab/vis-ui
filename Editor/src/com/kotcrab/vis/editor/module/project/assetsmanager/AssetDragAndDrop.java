@@ -40,6 +40,10 @@ import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
+/**
+ * Assets manager drag and drop helper class.
+ * @author Kotcrab
+ */
 public class AssetDragAndDrop {
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private TextureCacheModule textureCache;

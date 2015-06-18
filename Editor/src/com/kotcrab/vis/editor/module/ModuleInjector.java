@@ -16,6 +16,14 @@
 
 package com.kotcrab.vis.editor.module;
 
+/**
+ * Allows to injects modules in object from some {@link ModuleContainer}. Class fields must be annotated with {@link InjectModule}
+ * annotation. For subclasses of {@link Module} module injection is done automatically when module is loaded into {@link ModuleContainer}.
+ * For other classes you must pass them ModuleInjector and they must call {@link ModuleInjector#injectModules(Object)}
+ * @author Kotcrab
+ * @see InjectModule
+ */
 public interface ModuleInjector {
-	public void injectModules (Object o);
+	/** Injects modules into given object */
+	void injectModules (Object target);
 }

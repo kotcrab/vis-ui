@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.module.project;
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.util.DirectoryWatcher;
 
+/**
+ * Allow to add listener that will notify about changes in files in project asset directory
+ * @author Kotcrab
+ */
 public class AssetsWatcherModule extends ProjectModule {
 	private DirectoryWatcher watcher;
 

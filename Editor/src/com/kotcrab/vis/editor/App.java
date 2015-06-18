@@ -31,6 +31,10 @@ import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+/**
+ * Provides VisEditor init methods, version fields, basic app data folders path.
+ * @author Kotcrab
+ */
 public class App {
 	public static final String TAG = "App";
 
@@ -52,6 +56,7 @@ public class App {
 
 	private static final String GDX_RELEASE_ZIP = "http://libgdx.badlogicgames.com/releases/libgdx-1.5.6.zip";
 
+	/** VisEditor common event bus */
 	public static EventBus eventBus;
 
 	public static void init () {

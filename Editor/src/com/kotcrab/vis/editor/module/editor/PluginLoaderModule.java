@@ -64,7 +64,6 @@ public class PluginLoaderModule extends EditorModule {
 	@InjectModule private PluginSettingsModule settings;
 	@InjectModule private ToastModule toastModule;
 
-	//we need nested iterators, Array can't provide that
 	private Array<PluginDescriptor> allPlugins = new Array<>();
 	private Array<PluginDescriptor> pluginsToLoad;
 

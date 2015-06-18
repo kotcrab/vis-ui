@@ -19,7 +19,13 @@ package com.kotcrab.vis.editor.module.project;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Disposable;
+import com.kotcrab.vis.editor.scene.TextObject;
 
+/**
+ * Generic interface for VisEditor font providers used in {@link TextObject}.
+ * @see BMPEditorFont
+ * @see TTFEditorFont
+ */
 public abstract class EditorFont implements Disposable {
 	protected FileHandle file;
 	protected String relativePath;

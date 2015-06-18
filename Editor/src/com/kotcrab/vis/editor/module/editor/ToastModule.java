@@ -31,6 +31,11 @@ import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
+/**
+ * Module for displaying toast messages at upper right corner of VisEditor screen. Toasts can be closed by users or they
+ * can automatically disappear after a period of time.
+ * @author Kotcrab
+ */
 public class ToastModule extends EditorModule {
 	private static final int SCREEN_PADDING = 20;
 	private static final int MESSAGE_PADDING = 5;

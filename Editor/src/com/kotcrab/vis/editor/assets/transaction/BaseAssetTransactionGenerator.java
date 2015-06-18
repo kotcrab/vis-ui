@@ -24,6 +24,11 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
+/**
+ * Basic {@link AssetTransactionGenerator} that can generate asset transaction for {@link PathAsset} of
+ * TrueType fonts, music, sounds, and particles
+ * @author Kotcrab
+ */
 public class BaseAssetTransactionGenerator implements AssetTransactionGenerator {
 	private FileHandle transactionStorage;
 

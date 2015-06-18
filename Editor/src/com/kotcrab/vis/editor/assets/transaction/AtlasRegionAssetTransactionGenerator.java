@@ -34,6 +34,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
+/** Asset transaction generator for {@link AtlasRegionAsset} */
 public class AtlasRegionAssetTransactionGenerator implements AssetTransactionGenerator {
 	private FileHandle transactionStorage;
 

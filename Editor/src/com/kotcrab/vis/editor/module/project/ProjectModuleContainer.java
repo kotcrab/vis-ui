@@ -20,6 +20,10 @@ import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 
+/**
+ * Modules container for project scope modules
+ * @author Kotcrab
+ */
 public class ProjectModuleContainer extends ModuleContainer<ProjectModule> {
 	private EditorModuleContainer editorMC;
 	private Project project;

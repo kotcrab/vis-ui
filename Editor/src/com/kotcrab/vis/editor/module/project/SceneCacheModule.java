@@ -27,6 +27,10 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.util.gdx.SpriteUtils;
 
+/**
+ * Caches loaded scenes, so only one instance of each scene is loaded in editor.
+ * @author Kotcrab
+ */
 public class SceneCacheModule extends ProjectModule implements EventListener {
 	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private ParticleCacheModule particleCache;

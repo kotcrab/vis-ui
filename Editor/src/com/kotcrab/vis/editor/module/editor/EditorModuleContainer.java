@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.kotcrab.vis.editor.module.ModuleContainer;
 
+/** Editor scope module container for all {@link EditorModule}s */
 public class EditorModuleContainer extends ModuleContainer<EditorModule> {
 	@Override
 	public void add (EditorModule module) {

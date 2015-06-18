@@ -36,6 +36,10 @@ import com.kotcrab.vis.ui.widget.MenuBar;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+/**
+ * VisEditor menu bar UI component.
+ * @author Kotcrab
+ */
 public class MenuBarModule extends EditorModule {
 	private ProjectModuleContainer projectContainer;
 	private Editor editor;

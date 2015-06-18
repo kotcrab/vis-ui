@@ -24,6 +24,10 @@ import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
+/**
+ * Module for managing {@link SceneTab}. Ensures that only one tab is created for each tab.
+ * @author Kotcrab
+ */
 public class SceneTabsModule extends ProjectModule implements TabbedPaneListener {
 	@InjectModule private TabsModule tabsModule;
 

@@ -16,6 +16,11 @@
 
 package com.kotcrab.vis.editor;
 
+/**
+ * VisEditor built-in icons enum
+ * @author Kotcrab
+ * @see Assets#getIcon(Icons)
+ */
 public enum Icons implements IconAsset {
 	// @formatter:off
 	NEW { public String getIconName () { return "new"; } },

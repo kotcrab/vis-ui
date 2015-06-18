@@ -18,7 +18,11 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
-/** Modules implementing this interface provide UI table that is displayed on Settings window. */
+/**
+ * Modules implementing this interface provide UI table that is displayed on Settings window.
+ * See {@link EditorSettingsModule} for default implementation.
+ * @author Kotcrab
+ */
 public interface SettableModule {
 	/** @return table that will be displayed in settings window, this method must always return same table instance */
 	Table getSettingsTable ();

@@ -26,6 +26,10 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
 
+/**
+ * Allows to select entities using rectangular selection
+ * @author Kotcrab
+ */
 public class RectangularSelection {
 	private EditorScene scene;
 	private EntityManipulatorModule entityManipulatorModule;

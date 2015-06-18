@@ -26,6 +26,10 @@ import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
+/**
+ * Allows to get loaded particles from project asset directory.
+ * @author Kotcrab
+ */
 public class ParticleCacheModule extends ProjectModule implements WatchListener {
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private AssetsWatcherModule watcherModule;

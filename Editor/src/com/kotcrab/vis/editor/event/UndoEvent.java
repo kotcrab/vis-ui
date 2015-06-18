@@ -16,5 +16,11 @@
 
 package com.kotcrab.vis.editor.event;
 
+import com.kotcrab.vis.editor.module.scene.UndoModule;
+
+/**
+ * Posted when undo was performed by {@link UndoModule}
+ * @author Kotcrab
+ */
 public class UndoEvent implements Event {
 }

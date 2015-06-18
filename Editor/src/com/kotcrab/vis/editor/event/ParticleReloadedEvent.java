@@ -16,5 +16,11 @@
 
 package com.kotcrab.vis.editor.event;
 
+import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
+
+/**
+ * Posted when particles effects was reloaded by {@link ParticleCacheModule}
+ * @author Kotcrab
+ */
 public class ParticleReloadedEvent implements Event {
 }

@@ -24,6 +24,10 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
+/**
+ * Transaction generator for {@link TextureRegionAsset}
+ * @author Kotcrab
+ */
 public class TextureRegionAssetTransactionGenerator implements AssetTransactionGenerator {
 	private FileHandle transactionStorage;
 

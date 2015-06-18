@@ -20,6 +20,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 
+/**
+ * Generic editor project, that does not really on any game framework.
+ * @author Kotcrab
+ */
 public class ProjectGeneric extends Project {
 	/** absolute path */
 	@Tag(0) private String visDirectory;

@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.module;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 
+/**
+ * Interface for classes that accepts input events from {@link ModuleContainer}
+ * @author Kotcrab
+ */
 public interface ModuleInput {
 	default boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 		return false;

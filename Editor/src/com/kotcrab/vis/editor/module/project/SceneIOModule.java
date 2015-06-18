@@ -42,6 +42,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
+/**
+ * Allows to load VisEditor scenes. This API should not be used directly. See {@link SceneCacheModule}
+ * @author Kotcrab
+ * @see SceneCacheModule
+ */
 @SuppressWarnings("rawtypes")
 public class SceneIOModule extends ProjectModule {
 	public static final int KRYO_PLUGINS_RESERVED_ID_BEGIN = 401;

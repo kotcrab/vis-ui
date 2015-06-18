@@ -21,6 +21,10 @@ import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
+/**
+ * Descriptor provider for texture type assets, supports both gfx textures and atlases
+ * @author Kotcrab
+ */
 public class TextureDescriptorProvider implements AssetDescriptorProvider {
 	@Override
 	public VisAssetDescriptor provide (FileHandle file, String relativePath) {

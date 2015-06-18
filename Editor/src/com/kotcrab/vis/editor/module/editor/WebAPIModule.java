@@ -36,8 +36,12 @@ import org.jsoup.select.Elements;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Module for accessing apps.kotcrab.com web api.
+ * @author Kotcrab
+ */
 public class WebAPIModule extends EditorModule {
-	private static final Pattern BUILD_TIMESTAMP_PATERN = Pattern.compile("[0-9]{6}.*-[0-9]");
+	private static final Pattern BUILD_TIMESTAMP_PATTERN = Pattern.compile("[0-9]{6}.*-[0-9]");
 
 	private WebAPIClient webApiClient;
 
@@ -101,7 +105,7 @@ public class WebAPIModule extends EditorModule {
 
 				for (int i = 1; i < links.size(); i++) { //first link is ../ so we skip it
 					String url = links.get(i).absUrl("href");
-					Matcher matcher = BUILD_TIMESTAMP_PATERN.matcher(url);
+					Matcher matcher = BUILD_TIMESTAMP_PATTERN.matcher(url);
 					matcher.find();
 					String timestamp = matcher.group();
 

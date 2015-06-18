@@ -28,6 +28,10 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
+/**
+ * Module for accessing VisEditor main tabbed pane.
+ * @author Kotcrab
+ */
 public class TabsModule extends EditorModule implements EventListener {
 	private TabbedPane tabbedPane;
 	private TabbedPaneListener listener;

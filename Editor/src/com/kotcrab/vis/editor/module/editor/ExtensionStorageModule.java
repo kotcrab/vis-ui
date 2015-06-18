@@ -22,7 +22,10 @@ import com.kotcrab.vis.editor.plugin.ContainerExtension;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 
-/** Holds plugins loaded by {@link PluginLoaderModule}. Others modules (even from different containers like 'project' or 'scene') then can access them. */
+/**
+ * Holds plugins loaded by {@link PluginLoaderModule}. Others modules (even from different containers like 'project' or 'scene') then can access them.
+ * @author Kotcrab
+ */
 public class ExtensionStorageModule extends EditorModule {
 	private Array<ObjectSupport> objectSupports = new Array<>();
 	private Array<ContainerExtension<?>> containerExtensions = new Array<>();

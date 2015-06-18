@@ -16,5 +16,11 @@
 
 package com.kotcrab.vis.editor.event;
 
+import com.kotcrab.vis.editor.module.project.TextureCacheModule;
+
+/**
+ * Posted by {@link TextureCacheModule} when texture cache atlas of 'gfx' folder was reloaded.
+ * @author Kotcrab
+ */
 public class TexturesReloadedEvent implements Event {
 }

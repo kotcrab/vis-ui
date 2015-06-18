@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.kotcrab.vis.editor.module.Module;
 
+/**
+ * Base classes for all modules with scope 'editor'
+ * @author Kotcrab
+ */
 public class EditorModule extends Module {
 	protected EditorModuleContainer container;
 

@@ -26,7 +26,13 @@ import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
+/**
+ * Undoable action for updating assets references in Entities that uses {@link AtlasRegionAsset} as their {@link VisAssetDescriptor}
+ * @see UpdateReferencesAction
+ * @author Kotcrab
+ */
 public class UpdateAtlasAssetReferencesAction implements UndoableAction {
 	@InjectModule private SceneCacheModule sceneCache;
 	@InjectModule private FileAccessModule fileAccess;

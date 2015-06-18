@@ -22,6 +22,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
+/**
+ * Displays single folder in assets manager folders tree
+ * @author Kotcrab
+ */
 public class FolderItem extends Table {
 	private FileHandle file;
 	private VisLabel name;

@@ -20,6 +20,10 @@ import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
+/**
+ * Basic descriptor provider for {@link PathAsset}, supporting TrueType fonts, music, sound and particles
+ * @author Kotcrab
+ */
 public class PathDescriptorProvider implements AssetDescriptorProvider {
 	@Override
 	public VisAssetDescriptor provide (FileHandle file, String relativePath) {

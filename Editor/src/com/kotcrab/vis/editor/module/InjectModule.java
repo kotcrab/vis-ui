@@ -21,6 +21,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation used to inject modules from {@link ModuleContainer}s in subclasses of {@link Module}. Can be also used outside
+ * {@link Module} but it requires passing {@link ModuleInjector} to class.
+ * @author Kotcrab
+ */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface InjectModule {

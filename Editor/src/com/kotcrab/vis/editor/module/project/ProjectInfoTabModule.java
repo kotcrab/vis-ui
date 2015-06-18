@@ -16,14 +16,15 @@
 
 package com.kotcrab.vis.editor.module.project;
 
-import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.Event;
-import com.kotcrab.vis.editor.event.EventListener;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.ui.tab.ProjectInfoTab;
 
-public class ProjectInfoTabModule extends ProjectModule implements EventListener {
+/**
+ * When project is loaded it creates and displays {@link ProjectInfoTab}
+ * @author Kotcrab
+ */
+public class ProjectInfoTabModule extends ProjectModule {
 	@InjectModule private TabsModule tabsModule;
 
 	private ProjectInfoTab tab;
@@ -35,18 +36,7 @@ public class ProjectInfoTabModule extends ProjectModule implements EventListener
 	}
 
 	@Override
-	public void added () {
-		App.eventBus.register(this);
-	}
-
-	@Override
 	public void dispose () {
-		App.eventBus.unregister(this);
 		tabsModule.removeTab(tab);
-	}
-
-	@Override
-	public boolean onEvent (Event e) {
-		return false;
 	}
 }

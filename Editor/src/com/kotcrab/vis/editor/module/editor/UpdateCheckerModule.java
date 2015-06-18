@@ -28,6 +28,9 @@ import com.kotcrab.vis.editor.webapi.UpdateChannelType;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+/**
+ * Update checker module that checks one of three update channels: stable, beta and cutting edge.
+ */
 public class UpdateCheckerModule extends EditorModule {
 	private static final String TAG = "UpdateChecker";
 

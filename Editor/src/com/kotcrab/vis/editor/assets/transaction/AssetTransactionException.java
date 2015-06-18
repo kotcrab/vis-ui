@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.assets.transaction;
 
 import com.kotcrab.vis.editor.util.EditorRuntimeException;
 
+/** Generic exception thrown during assets transaction error */
 public class AssetTransactionException extends EditorRuntimeException {
 	public AssetTransactionException (String message) {
 		super(message);

@@ -33,6 +33,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Constructor;
 
+/**
+ * Provides common IO for saving editor scope settings. This is typically not used directly, it should be used by using
+ * subclassing {@link EditorSettingsModule}
+ * @author Kotcrab
+ */
 public class EditorSettingsIOModule extends EditorModule {
 	private Kryo kryo;
 	private File settingsDirectory;

@@ -37,6 +37,10 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
 
+/**
+ * Allows to export project
+ * @author Kotcrab
+ */
 public class ExportModule extends ProjectModule {
 	@InjectModule private SceneCacheModule sceneCache;
 	@InjectModule private ObjectSupportModule supportModule;

@@ -20,6 +20,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 
+/**
+ * LibGDX based project type, only supports Gradle based projects. In the future this project will support more LibGDX
+ * based features such as launching from editor.
+ * @author Kotcrab
+ */
 public class ProjectLibGDX extends Project {
 	/** Gradle root */
 	@Tag(0) private String root;

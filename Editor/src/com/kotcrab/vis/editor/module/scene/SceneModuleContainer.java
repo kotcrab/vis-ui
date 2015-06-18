@@ -28,6 +28,10 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 
+/**
+ * Module container for scene scope modules.
+ * @author Kotcrab
+ */
 public class SceneModuleContainer extends ModuleContainer<SceneModule> implements ModuleInput {
 	private Project project;
 	private EditorModuleContainer editorModuleContainer;

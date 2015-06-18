@@ -16,6 +16,12 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
+import com.kotcrab.vis.editor.module.project.SceneMetadataModule;
+
+/**
+ * Holds single scene metadata. Managed by {@link SceneMetadataModule}
+ * @author Kotcrab
+ */
 public class SceneMetadata {
 	public float lastCameraX;
 	public float lastCameraY;

@@ -23,6 +23,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.editor.util.FileUtils;
 
+/**
+ * Bitmap font provider
+ * @author Kotcrab
+ */
 public class BMPEditorFont extends EditorFont {
 	private BitmapFont font;
 

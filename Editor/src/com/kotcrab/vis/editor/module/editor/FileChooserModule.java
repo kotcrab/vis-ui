@@ -25,6 +25,10 @@ import com.kotcrab.vis.ui.widget.file.FileChooser.SelectionMode;
 import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 import com.kotcrab.vis.ui.widget.file.FileChooserListener;
 
+/**
+ * Provides shared file chooser instance
+ * @author Kotcrab
+ */
 public class FileChooserModule extends EditorModule {
 	private FileChooser chooser;
 

@@ -27,6 +27,10 @@ import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.util.Log;
 
+/**
+ * Render scene
+ * @author Kotcrab
+ */
 public class RendererModule extends SceneModule {
 	private CameraModule camera;
 	private ShapeRenderer shapeRenderer;

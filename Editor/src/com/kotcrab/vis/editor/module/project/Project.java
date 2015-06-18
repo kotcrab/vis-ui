@@ -18,6 +18,12 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 
+/**
+ * Abstract class for VisEditor projects.
+ * @author Kotcrab
+ * @see ProjectLibGDX
+ * @see ProjectGeneric
+ */
 public abstract class Project {
 	/** Called after loading when project should update it's root */
 	public abstract void updateRoot (FileHandle projectDataFile);

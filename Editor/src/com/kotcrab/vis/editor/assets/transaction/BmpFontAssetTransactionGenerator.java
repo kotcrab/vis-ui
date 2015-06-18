@@ -34,6 +34,11 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 
+/**
+ * Asset transaction generator for bitmap font files. Those files cannot be handled by {@link BaseAssetTransactionGenerator}
+ * because .fnt requires modifying after moving files.
+ * @author Kotcrab
+ */
 public class BmpFontAssetTransactionGenerator implements AssetTransactionGenerator {
 	private FileHandle transactionStorage;
 

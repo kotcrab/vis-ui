@@ -28,6 +28,10 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+/**
+ * Provides UI widget with status bar that is displayed at the bottom of VisEditor screen
+ * @author Kotcrab
+ */
 public class StatusBarModule extends EditorModule implements EventListener {
 	public VisTable table;
 	public VisLabel statusLabel;

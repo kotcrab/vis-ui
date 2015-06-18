@@ -17,8 +17,14 @@
 package com.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.kotcrab.vis.editor.module.physicseditor.PhysicsEditorModuleContainer;
+import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+/**
+ * UI widget for {@link ModuleContainer} that accepts user input such as {@link SceneModuleContainer} or {@link PhysicsEditorModuleContainer}
+ * @author Kotcrab
+ */
 public class ContentTable extends VisTable {
 	private ModuleContainer container;
 

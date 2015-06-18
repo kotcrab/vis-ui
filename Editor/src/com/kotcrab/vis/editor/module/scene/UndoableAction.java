@@ -16,6 +16,10 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
+/**
+ * Interface for actions that can be undone.
+ * @author Kotcrab
+ */
 public interface UndoableAction {
 	void execute ();
 

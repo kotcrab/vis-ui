@@ -28,6 +28,10 @@ import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
+/**
+ * Tab used to display all regions from single texture atlas
+ * @author Kotcrab
+ */
 public class TextureAtlasViewTab extends Tab implements CloseTabWhenMovingResources {
 	private String name;
 
