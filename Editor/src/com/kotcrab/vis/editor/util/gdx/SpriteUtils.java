@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.util.gdx;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+/**
+ * Sprite related utils.
+ * @author Kotcrab
+ */
 public class SpriteUtils {
 	public static void setRegion (Sprite sprite, TextureRegion region) {
 		boolean flipX, flipY;

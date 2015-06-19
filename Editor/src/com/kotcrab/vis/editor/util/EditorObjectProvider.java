@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.util;
 
 import com.kotcrab.vis.editor.scene.EditorObject;
 
+/**
+ * Interface implemented if something can provide {@link EditorObject}
+ * @author Kotcrab
+ */
 public interface EditorObjectProvider {
 	EditorObject newInstance ();
 }

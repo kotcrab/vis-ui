@@ -16,14 +16,18 @@
 
 package com.kotcrab.vis.editor.util;
 
+/**
+ * Listener for {@link AsyncTaskListener}
+ * @author Kotcrab
+ */
 public interface AsyncTaskListener {
-	public void messageChanged (String newMsg);
+	void messageChanged (String newMsg);
 
-	public void progressChanged (int newProgressPercent);
+	void progressChanged (int newProgressPercent);
 
-	public void finished ();
+	void finished ();
 
-	public void failed (String reason);
+	void failed (String reason);
 
-	public void failed (String reason, Exception ex);
+	void failed (String reason, Exception ex);
 }

@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.util;
 
 import com.badlogic.gdx.files.FileHandle;
 
+/**
+ * Descriptor for {@link CopyFilesAsyncTask}
+ * @author Kotcrab
+ */
 public class CopyFileTaskDescriptor {
 	public FileHandle file;
 	public FileHandle target;

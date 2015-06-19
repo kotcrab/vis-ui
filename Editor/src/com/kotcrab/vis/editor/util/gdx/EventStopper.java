@@ -19,7 +19,10 @@ package com.kotcrab.vis.editor.util.gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 
-/** Stops parent actor from receiving child events */
+/**
+ * Stops parent actor from receiving child events
+ * @author Kotcrab
+ */
 public class EventStopper extends InputListener {
 	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {

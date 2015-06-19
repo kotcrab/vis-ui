@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.util.gdx;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
+/**
+ * {@link VisTextField}/{@link VisValidableTextField} related utils.
+ * @author Kotcrab
+ */
 public class FieldUtils {
 	public static float getFloat (VisTextField field, float valueIfError) {
 		try {

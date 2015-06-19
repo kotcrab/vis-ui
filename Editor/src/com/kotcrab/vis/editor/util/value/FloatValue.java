@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.util.value;
 
 import com.kotcrab.vis.editor.scene.EditorObject;
 
+/**
+ * Used when you need to get multiple float values from {@link EditorObject}s
+ * @author Kotcrab
+ */
 public interface FloatValue {
 	float getFloat (EditorObject entity);
 }

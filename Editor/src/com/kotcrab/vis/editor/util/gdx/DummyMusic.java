@@ -18,7 +18,10 @@ package com.kotcrab.vis.editor.util.gdx;
 
 import com.badlogic.gdx.audio.Music;
 
-/** Dummy music used to avoid loading actual file but still provide option to store music properties */
+/**
+ * Dummy music used to avoid loading actual file but still provide option to store music properties
+ * @author Kotcrab
+ */
 public class DummyMusic implements Music {
 	private boolean playing;
 	private boolean looping;

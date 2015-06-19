@@ -18,9 +18,16 @@ package com.kotcrab.vis.editor.util;
 
 import com.badlogic.gdx.Gdx;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * Task that can be executed on another thread.
+ * @author Kotcrab
+ * @see AsyncTaskProgressDialog
+ * @see AsyncTaskListener
+ */
 public abstract class AsyncTask {
 	private Thread thread;
 	private Runnable runnable;

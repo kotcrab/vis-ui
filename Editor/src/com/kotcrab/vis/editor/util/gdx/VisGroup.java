@@ -22,6 +22,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * Special VisGroup allow use to detect when modal input was added or removed. This allow use to create input
+ * listener that respect window modality. This must be set as {@link Stage#root} group but that field is private final
+ * so reflection must be used for that.
+ * @see ModalInputListener
+ */
 public class VisGroup extends Group {
 	private Array<Window> modalWindows = new Array<>();
 

@@ -16,6 +16,10 @@
 
 package com.kotcrab.vis.editor.util;
 
+/**
+ * Number related utils.
+ * @author Kotcrab
+ */
 public class NumberUtils {
 	/** @return float with 2 decimal places precision */
 	public static String floatToString (float d) {

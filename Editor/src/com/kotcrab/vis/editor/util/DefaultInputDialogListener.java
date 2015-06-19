@@ -18,6 +18,9 @@ package com.kotcrab.vis.editor.util;
 
 import com.kotcrab.vis.ui.util.dialog.InputDialogListener;
 
+/**
+ * Java8 default implementation of {@link InputDialogListener}
+ */
 public interface DefaultInputDialogListener extends InputDialogListener {
 	@Override
 	void finished (String input);

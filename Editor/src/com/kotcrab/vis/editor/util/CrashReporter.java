@@ -28,6 +28,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Set;
 
+/**
+ * Saves VisEditor crashes to file.
+ * @author Kotcrab
+ */
 public class CrashReporter {
 	private static final String TAG = "CrashReporter";
 

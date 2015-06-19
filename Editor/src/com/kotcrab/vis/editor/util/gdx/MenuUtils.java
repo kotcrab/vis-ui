@@ -23,6 +23,10 @@ import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.ui.ButtonListener;
 import com.kotcrab.vis.ui.widget.MenuItem;
 
+/**
+ * {@link MenuItem}/menus related utils
+ * @author Kotcrab
+ */
 public class MenuUtils {
 	public static MenuItem createMenuItem (String text, ButtonListener listener) {
 		return createMenuItem(text, null, listener);

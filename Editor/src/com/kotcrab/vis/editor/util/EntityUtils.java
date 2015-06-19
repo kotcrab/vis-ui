@@ -22,7 +22,12 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.value.BooleanValue;
 import com.kotcrab.vis.editor.util.value.FloatValue;
 import com.kotcrab.vis.editor.util.value.StringValue;
+import com.kotcrab.vis.runtime.entity.Entity;
 
+/**
+ * {@link Entity} and {@link EditorObject} related utils.
+ * @author Kotcrab
+ */
 public class EntityUtils {
 	public static String getEntitiesCommonFloatValue (Array<EditorObject> entities, FloatValue objValue) {
 		float value = objValue.getFloat(entities.first());

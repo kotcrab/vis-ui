@@ -26,6 +26,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * File related utils.
+ * @author Kotcrab
+ */
 public class FileUtils {
 	private static com.sun.jna.platform.FileUtils jnaFileUtils;
 

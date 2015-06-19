@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.util;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+/**
+ * Exception related uitls
+ * @author Kotcrab
+ */
 public class ExceptionUtils {
 	public static String getStackTrace (Throwable throwable) {
 		StringWriter sw = new StringWriter();

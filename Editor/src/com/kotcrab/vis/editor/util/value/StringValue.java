@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.util.value;
 
 import com.kotcrab.vis.editor.scene.EditorObject;
 
+/**
+ * Used when you need to get multiple string values from {@link EditorObject}s
+ * @author Kotcrab
+ */
 public interface StringValue {
 	String getString (EditorObject entity);
 }

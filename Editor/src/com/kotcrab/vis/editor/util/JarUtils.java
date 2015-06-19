@@ -21,6 +21,10 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
 
+/**
+ * Jar releated utils.
+ * @author Kotcrab
+ */
 public class JarUtils {
 	public static String getJarPath (Class<?> caller) {
 		try {

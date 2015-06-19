@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.util.gdx;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
 
+/**
+ * {@link TextFieldFilter} that only allows digits for float values.
+ * @author Kotcrab
+ */
 public class FloatDigitsOnlyFilter implements TextFieldFilter {
 	@Override
 	public boolean acceptChar (VisTextField textField, char c) {

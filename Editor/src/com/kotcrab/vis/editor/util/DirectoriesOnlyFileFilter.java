@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.util;
 import java.io.File;
 import java.io.FileFilter;
 
+/**
+ * Directory filter which only shows directories
+ * @author Kotcrab
+ */
 public class DirectoriesOnlyFileFilter implements FileFilter {
 	public static final DirectoriesOnlyFileFilter filter = new DirectoriesOnlyFileFilter();
 

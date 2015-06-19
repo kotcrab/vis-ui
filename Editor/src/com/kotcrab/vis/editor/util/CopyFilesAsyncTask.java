@@ -24,6 +24,10 @@ import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * Async task for copying multiple files.
+ * @author Kotcrab
+ */
 public class CopyFilesAsyncTask extends AsyncTask implements ConfirmDialogListener<Integer> {
 	private Array<CopyFileTaskDescriptor> tasks;
 

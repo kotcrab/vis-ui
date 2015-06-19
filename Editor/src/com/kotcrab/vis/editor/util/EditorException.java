@@ -16,6 +16,10 @@
 
 package com.kotcrab.vis.editor.util;
 
+/**
+ * Generic VisEditor checked exception
+ * @author Kotcrab
+ */
 public class EditorException extends Exception {
 	public EditorException (String message) {
 		super(message);

@@ -22,6 +22,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
+/**
+ * Allows to disable programmatic change evenets. To be removed on next LibGDX release.
+ * @author Kotcrab
+ */
 public class ButtonUtils {
 	/**
 	 * Allows to disable programmatic events on button. This uses workaround and should be removed

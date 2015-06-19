@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.util.gdx;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
+/**
+ * Java8 default implementation of {@link TabbedPaneListener} Aka. TabbedPaneAdapter
+ * @author Kotcrab
+ */
 public interface VisTabbedPaneListener extends TabbedPaneListener {
 	@Override
 	default void switchedTab (Tab tab) {

@@ -20,13 +20,17 @@ import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.kotcrab.vis.editor.module.editor.InputModule;
 
+/**
+ * Used to get input events but with respecting window modality.
+ * @author Kotcrab
+ */
 public abstract class ModalInputListener extends InputListener {
 	private InputModule inputModule;
 
 	@Override
 	public boolean handle (Event e) {
 		if (inputModule == null)
-			throw new IllegalStateException("Tried to use ModalInputListenre without adding it via InputModule!");
+			throw new IllegalStateException("Tried to use ModalInputListener without adding it via InputModule!");
 
 		if (inputModule.isAnyWindowModal())
 			return false;

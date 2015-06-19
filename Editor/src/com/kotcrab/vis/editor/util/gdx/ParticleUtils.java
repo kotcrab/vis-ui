@@ -23,6 +23,10 @@ import com.badlogic.gdx.math.Rectangle;
 
 import java.lang.reflect.Field;
 
+/**
+ * Particle system related utils
+ * @author Kotcrab
+ */
 public class ParticleUtils {
 
 	//TODO add in settings: use additive mode for particles

@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.util.gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+/**
+ * Table in tables simplified
+ * @author Kotcrab
+ */
 public class TableBuilder {
 	public static VisTable build (Actor... actors) {
 		return build(new VisTable(true), actors);

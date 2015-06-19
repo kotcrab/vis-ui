@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.util;
 
 import com.badlogic.gdx.files.FileHandle;
 
+/**
+ * Project paths releated utils
+ * @author Kotcrab
+ */
 public class ProjectPathUtils {
 	public static boolean isTexture (String relativePath, String ext) {
 		return relativePath.startsWith("gfx") && (ext.equals("jpg") || ext.equals("png"));

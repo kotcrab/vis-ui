@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * URL related utils.
+ * @author Kotcrab
+ */
 public class URLUtils {
 	private static final Pattern urlPattern = Pattern.compile(
 			"(?:^|[\\W])((ht|f)tp(s?):\\/\\/|www\\.)"

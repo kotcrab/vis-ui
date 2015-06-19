@@ -24,10 +24,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.badlogic.gdx.utils.Align;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.util.EditorObjectProvider;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
+/**
+ * Simplified creation of {@link DragAndDrop} source for {@link AssetsUIModule}
+ * @author Kotcrab
+ */
 public class VisDropSource extends Source {
 	private final DragAndDrop dragAndDrop;
 	private EditorObject object;

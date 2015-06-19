@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.util.gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+/**
+ * Allow to use standard scene2d.ui {@link ChangeListener} with lambdas.
+ * @author Kotcrab
+ */
 public class VisChangeListener extends ChangeListener {
 	private ChangedListener listener;
 

@@ -21,6 +21,10 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.kotcrab.vis.editor.module.ModuleInput;
 
+/**
+ * Camera controller that supports zooming around point.
+ * @author Kotcrab
+ */
 public class CameraZoomController {
 	private Vector3 unprojectVec;
 	private final OrthographicCamera camera;
