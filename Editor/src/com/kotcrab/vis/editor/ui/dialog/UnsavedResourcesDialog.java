@@ -28,6 +28,10 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
+/**
+ * Dialog displayed before closing multiple savable resources
+ * @author Kotcrab
+ */
 public class UnsavedResourcesDialog extends VisWindow {
 	private WindowListener listener;
 

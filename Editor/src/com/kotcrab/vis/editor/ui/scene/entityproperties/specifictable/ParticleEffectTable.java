@@ -24,6 +24,10 @@ import com.kotcrab.vis.ui.widget.Tooltip;
 
 import static com.kotcrab.vis.editor.util.EntityUtils.setCommonCheckBoxState;
 
+/**
+ * Specific table for {@link ParticleEffectObject}
+ * @author Kotcrab
+ */
 public class ParticleEffectTable extends SpecificObjectTable {
 	private IndeterminateCheckbox activeCheck;
 

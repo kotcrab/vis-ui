@@ -17,10 +17,16 @@
 package com.kotcrab.vis.editor.ui.toast;
 
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.ui.dialog.ExceptionDialog;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+/**
+ * Used to display information about exception as toast.
+ * @author Kotcrab
+ * @see ToastModule
+ */
 public class ExceptionToast extends VisTable {
 	public ExceptionToast (String text, Throwable cause) {
 

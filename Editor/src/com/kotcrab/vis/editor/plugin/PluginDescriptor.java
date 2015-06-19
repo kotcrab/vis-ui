@@ -27,6 +27,10 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+/**
+ * Represents plugin descriptor that is going to be loaded into VisEditor
+ * @author Kotcrab
+ */
 public class PluginDescriptor {
 	public static final String PLUGIN_ID = "Plugin-Id";
 	public static final String PLUGIN_NAME = "Plugin-Name";

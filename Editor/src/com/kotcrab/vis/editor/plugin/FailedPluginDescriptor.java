@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.plugin;
 
 import com.badlogic.gdx.files.FileHandle;
 
+/**
+ * Represents plugin that failed to load for some reason
+ * @author Kotcrab
+ */
 public class FailedPluginDescriptor {
 	public FileHandle file;
 	public Throwable exception;

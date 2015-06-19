@@ -21,6 +21,10 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.util.gdx.ButtonUtils;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 
+/**
+ * Intermediate checkbox with undefined state. TODO: to be merged into VisUI when next LibGDX (1.6.3?) version is released.
+ * @author Kotcrab
+ */
 public class IndeterminateCheckbox extends VisCheckBox {
 	private static final Drawable INDETERMINATE = Assets.getMisc("check-indeterminate");
 	private static final Drawable INDETERMINATE_OVER = Assets.getMisc("check-over-indeterminate");

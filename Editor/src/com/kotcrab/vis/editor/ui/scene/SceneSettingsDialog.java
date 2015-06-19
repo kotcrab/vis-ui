@@ -30,6 +30,10 @@ import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 
+/**
+ * Dialog used to change scene settings
+ * @author Kotcrab
+ */
 public class SceneSettingsDialog extends VisWindow {
 	private SceneTab sceneTab;
 	private EditorScene scene;

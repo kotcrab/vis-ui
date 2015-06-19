@@ -30,6 +30,10 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
+/**
+ * Dialog used to select new font for text entities
+ * @author Kotcrab
+ */
 public class SelectFontDialog extends VisWindow {
 
 	private final String extension;

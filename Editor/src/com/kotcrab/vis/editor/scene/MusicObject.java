@@ -26,6 +26,11 @@ import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.MusicEntity;
 
+/**
+ * Music object
+ * @see MusicEntity
+ * @author Kotcrab
+ */
 public class MusicObject extends MusicEntity implements EditorObject {
 	private transient TextureRegion icon;
 

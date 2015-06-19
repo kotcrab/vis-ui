@@ -19,6 +19,10 @@ package com.kotcrab.vis.editor.scene;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 
+/**
+ * EditorScene layer class
+ * @author Kotcrab
+ */
 public class Layer implements Disposable {
 	public String name;
 	public boolean locked = false;

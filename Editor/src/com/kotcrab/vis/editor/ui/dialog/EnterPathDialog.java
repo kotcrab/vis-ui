@@ -30,6 +30,10 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 /** TODO: Temp dialog until we have some nice way to allow user select target directory from fixed parent. */
+/**
+ * Dialog used to enter new path during asset transaction
+ * @author Kotcrab
+ */
 public class EnterPathDialog extends VisWindow {
 
 	private final WindowResultListener<EnterPathDialogResult> listener;

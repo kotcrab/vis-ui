@@ -22,6 +22,9 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
+/**
+ * Kryo serializer for {@link Color}
+ */
 public class ColorSerializer extends Serializer<Color> {
 	@Override
 	public Color read (Kryo kryo, Input input, Class<Color> type) {

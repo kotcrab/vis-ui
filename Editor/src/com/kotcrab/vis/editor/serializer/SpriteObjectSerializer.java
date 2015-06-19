@@ -25,6 +25,10 @@ import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.scene.SpriteObject;
 
+/**
+ * Kryo serializer for {@link SpriteObject}
+ * @author Kotcrab
+ */
 public class SpriteObjectSerializer extends CompatibleFieldSerializer<SpriteObject> {
 	private static final int VERSION_CODE = 1;
 

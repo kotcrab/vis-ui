@@ -18,12 +18,18 @@ package com.kotcrab.vis.editor.ui.toast;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.plugin.FailedPluginDescriptor;
 import com.kotcrab.vis.editor.ui.dialog.ExceptionDialog;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
 
+/**
+ * Used to display information as toast that some plugin has failed loading.
+ * @author Kotcrab
+ * @see ToastModule
+ */
 public class LoadingPluginsFailedToast extends VisTable {
 	public LoadingPluginsFailedToast (Array<FailedPluginDescriptor> failedPlugins) {
 		LinkLabel label = new LinkLabel("Details");

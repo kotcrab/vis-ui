@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.webapi;
 
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * Listener for web api when getting information about last VisEditor build.
+ * @author Kotcrab
+ */
 public interface WebAPIEditorVersionListener {
 	void result (Array<EditorBuild> builds);
 

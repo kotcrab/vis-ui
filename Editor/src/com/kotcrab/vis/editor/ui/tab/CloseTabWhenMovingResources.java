@@ -19,7 +19,10 @@ package com.kotcrab.vis.editor.ui.tab;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.project.AssetsAnalyzerModule;
 
-/** Must be implemented by Tabs that must be closed when assets resources are being moved/updated by {@link AssetsAnalyzerModule} */
+/**
+ * Must be implemented by Tabs that must be closed when assets resources are being moved/updated by {@link AssetsAnalyzerModule}
+ * @author Kotcrab
+ */
 public interface CloseTabWhenMovingResources {
 	/**
 	 * Called when tab should recreate self. Note that at this point tab will be already removed and disposed

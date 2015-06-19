@@ -22,6 +22,10 @@ import com.badlogic.gdx.utils.OrderedMap;
 import com.kotcrab.vis.runtime.util.PrettyEnum;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
 
+/**
+ * Select box. For enums. Extends standard VisUI {@link VisSelectBox}
+ * @author Kotcrab
+ */
 public class EnumSelectBox<T extends Enum<T> & PrettyEnum> extends VisSelectBox<String> {
 	private EnumListListener<T> listener;
 

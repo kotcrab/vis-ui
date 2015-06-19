@@ -23,7 +23,12 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
+import com.kotcrab.vis.editor.module.editor.MenuBarModule;
 
+/**
+ * {@link MenuBarModule} MenuItem controller that automatically enables/disables item when project is loaded/unloaded.
+ * @author Kotcrab
+ */
 public class ProjectStatusWidgetController implements EventListener, Disposable {
 	private Array<Button> buttons;
 	private boolean loaded = false;

@@ -24,6 +24,10 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.scene.TextObject;
 
+/**
+ * Kryo serializer for {@link TextObject}
+ * @author Kotcrab
+ */
 public class TextObjectSerializer extends CompatibleFieldSerializer<TextObject> {
 	private static final int VERSION_CODE = 1;
 

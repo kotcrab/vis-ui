@@ -34,6 +34,10 @@ import com.kotcrab.vis.ui.widget.LinkLabel.LinkLabelListener;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+/**
+ * Main tab that is displayed after editor is launched. Provides VisEditor twitter feed and recent projects list.
+ * @author Kotcrab
+ */
 public class StartPageTab extends MainContentTab implements LinkLabelListener {
 	private static final String NEW_PROJECT_LINK = "\\*NEW_PROJECT";
 	private static final String LOAD_PROJECT_LINK = "\\*LOAD_PROJECT";

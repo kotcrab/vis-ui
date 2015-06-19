@@ -25,8 +25,9 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 
 /**
- * Text that you can scale, rotate, change color itp. Supports distance field fonts
+ * Text editor object
  * @author Kotcrab
+ * @see TextEntity
  */
 public class TextObject extends TextEntity implements EditorObject {
 	private VisAssetDescriptor assetDescriptor;

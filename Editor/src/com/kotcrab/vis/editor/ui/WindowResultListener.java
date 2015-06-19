@@ -16,6 +16,10 @@
 
 package com.kotcrab.vis.editor.ui;
 
+/**
+ * Generic listener for windows and dialogs, supports returning dialog result.
+ * @author Kotcrab
+ */
 public interface WindowResultListener<T> {
 	void finished (T result);
 

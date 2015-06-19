@@ -16,6 +16,15 @@
 
 package com.kotcrab.vis.editor.ui.tabbedpane;
 
+import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
+
+/**
+ * Possible view modes of {@link MainContentTab}. This is likely to be removed when better view management is done.
+ * @author Kotcrab
+ */
 public enum TabViewMode {
-	TAB_ONLY, SPLIT
+	/** Only the tab itself is displayed without any other tab. */
+	TAB_ONLY,
+	/** Screen is spited, in this mode one tab of {@link QuickAccessModule} can be displayed. */
+	SPLIT
 }

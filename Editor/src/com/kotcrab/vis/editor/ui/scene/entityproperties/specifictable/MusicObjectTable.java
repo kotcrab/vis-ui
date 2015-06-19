@@ -28,6 +28,9 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 
 import static com.kotcrab.vis.editor.util.EntityUtils.setCommonCheckBoxState;
 
+/**
+ * Specific table for {@link MusicObject}
+ */
 public class MusicObjectTable extends SpecificObjectTable {
 	private VisLabel label;
 	private IndeterminateCheckbox loopingCheck;

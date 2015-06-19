@@ -25,6 +25,12 @@ import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 
+
+/**
+ * Particle effect editor object
+ * @see ParticleEffectEntity
+ * @author Kotcrab
+ */
 public class ParticleEffectObject extends ParticleEffectEntity implements EditorObject {
 	private VisAssetDescriptor assetDescriptor;
 	private Rectangle bounds;

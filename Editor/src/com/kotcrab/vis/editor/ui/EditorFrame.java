@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.kotcrab.vis.editor.App;
@@ -37,6 +38,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.util.Set;
 
+/**
+ * VisEditor AWT/Swing based frame that holds {@link LwjglCanvas}. {@link LwjglApplication} is not used directly,
+ * because unfortunately we need some features from swing.
+ * @author Kotcrab
+ */
 public class EditorFrame extends JFrame {
 	private Editor editor;
 

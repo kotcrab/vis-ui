@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
+package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.runtime.data.TextData;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 
+/**
+ * Custom @{link TextData} used for entity properties to extend undo support
+ * @author Kotcrab
+ */
 public class TextObjectData extends TextData {
 	@Override
 	public void loadTo (TextEntity text) {

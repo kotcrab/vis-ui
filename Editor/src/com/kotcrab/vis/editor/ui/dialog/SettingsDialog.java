@@ -33,6 +33,10 @@ import com.kotcrab.vis.ui.widget.*;
 
 import java.util.Comparator;
 
+/**
+ * VisEditor settings dialog
+ * @author Kotcrab
+ */
 public class SettingsDialog extends VisWindow {
 	private static final String settingsInvalidError = "Settings are invalid and cannot be applied";
 

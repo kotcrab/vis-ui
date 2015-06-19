@@ -22,6 +22,10 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.scene.EditorScene;
 
+/**
+ * Kryo serializer for {@link EditorScene}
+ * @author Kotcrab
+ */
 public class EditorSceneSerializer extends CompatibleFieldSerializer<EditorScene> {
 	private static final int VERSION_CODE = 1;
 

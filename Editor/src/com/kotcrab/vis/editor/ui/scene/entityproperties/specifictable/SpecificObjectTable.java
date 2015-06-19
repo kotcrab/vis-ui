@@ -20,6 +20,10 @@ import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+/**
+ * Specific objects tables allow to add custom widgets for {@link EntityProperties} dialog.
+ * @author Kotcrab
+ */
 public abstract class SpecificObjectTable extends VisTable {
 	protected EntityProperties properties;
 

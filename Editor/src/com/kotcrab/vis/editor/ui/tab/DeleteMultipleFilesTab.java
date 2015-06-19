@@ -40,6 +40,10 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
+/**
+ * Used to display found usages of multiple files before delating them.
+ * @author Kotcrab
+ */
 public class DeleteMultipleFilesTab extends Tab {
 	private ModuleInjector injector;
 	private final Array<FileItem> items;

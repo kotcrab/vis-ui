@@ -24,16 +24,19 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.ui.VisUI;
 
+/**
+ * 20x20 image used to display currently selected color in {@link EntityProperties}
+ * @author Kotcrab
+ */
 public class TintImage extends Image {
 	private final Drawable alphaBar = Assets.getMisc("alpha-grid-20x20");
-	private final Drawable white = VisUI.getSkin().getDrawable("white");
 	private final Drawable questionMark = Assets.getIcon(Icons.QUESTION);
 
 	private boolean unknown;
 
 	public TintImage () {
 		super();
-		setDrawable(white);
+		setDrawable(VisUI.getSkin().getDrawable("white"));
 	}
 
 	@Override

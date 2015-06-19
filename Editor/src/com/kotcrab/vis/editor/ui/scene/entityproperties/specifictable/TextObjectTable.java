@@ -34,6 +34,13 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 import static com.kotcrab.vis.editor.util.EntityUtils.getCommonString;
 
+/**
+ * Specific table for {@link TextObject}. This is abstract because TextObject can use bitmap or TrueType fonts which
+ * requires different specific tables.
+ * @author Kotcrab
+ * @see BMPTextObjectTable
+ * @see TTFTextObjectTable
+ */
 public abstract class TextObjectTable extends SpecificObjectTable {
 	protected SelectFontDialog selectFontDialog;
 

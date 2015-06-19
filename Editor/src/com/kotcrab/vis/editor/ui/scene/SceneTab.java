@@ -25,11 +25,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.event.*;
+import com.kotcrab.vis.editor.event.ToolbarEvent;
+import com.kotcrab.vis.editor.event.ToolbarEventType;
+import com.kotcrab.vis.editor.event.UndoEvent;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.ContentTable;
 import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
@@ -48,6 +51,11 @@ import com.kotcrab.vis.editor.util.gdx.FocusUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+/**
+ * Main tab for scene editor, allows to edit scene, holds and provides all features related to it. Uses it's own
+ * {@link ModuleContainer} ({@link SceneModuleContainer})
+ * @author Kotcrab
+ */
 public class SceneTab extends MainContentTab implements DragAndDropTarget, EventListener, SceneMenuButtonsListener, CloseTabWhenMovingResources {
 	private Editor editor;
 	private EditorScene scene;

@@ -30,7 +30,6 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.ContentItemProperties;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
@@ -147,7 +146,7 @@ public class FileItem extends Table {
 
 	private ObjectSupport findSupportForDirectory (String ext, String relativePath) {
 		for (ObjectSupport support : supportModule.getSupports())
-			if (support.isSupportedDirectory(ext, relativePath)) return support;
+			if (support.isSupportedDirectory(relativePath, ext)) return support;
 
 		return null;
 	}

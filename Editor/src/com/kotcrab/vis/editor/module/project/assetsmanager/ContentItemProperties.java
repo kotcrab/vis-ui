@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.editor.module.project.assetsmanager;
 
+/**
+ * Used by {@link AssetsUIModule} to display more information about given file. Plugins returns this.
+ * @author Kotcrab
+ */
 public class ContentItemProperties {
 	public String title;
 	public boolean hideExtension;

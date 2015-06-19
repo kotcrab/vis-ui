@@ -25,6 +25,10 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
+/**
+ * Dialog used to display plugin details such as name, version etc.
+ * @author Kotcrab
+ */
 public class PluginDetailsDialog extends VisWindow {
 	public PluginDetailsDialog (PluginDescriptor descriptor) {
 		super("Plugin Details");

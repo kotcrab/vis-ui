@@ -21,6 +21,10 @@ import com.kotcrab.vis.editor.util.gdx.TableBuilder;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.widget.*;
 
+/**
+ * Dialog displayed when user must accept some license agreement
+ * @author Kotcrab
+ */
 public class LicenseDialog extends VisWindow {
 	public LicenseDialog (String license, LicenseDialogListener listener) {
 		super("License Agreement");

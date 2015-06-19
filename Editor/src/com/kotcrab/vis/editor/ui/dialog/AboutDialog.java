@@ -24,6 +24,10 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
 
+/**
+ * VisEditor about dialog
+ * @author Kotcrab
+ */
 public class AboutDialog extends VisWindow {
 	public AboutDialog () {
 		super("About");

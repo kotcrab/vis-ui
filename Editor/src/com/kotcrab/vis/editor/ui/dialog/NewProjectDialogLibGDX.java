@@ -32,6 +32,10 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 
+/**
+ * LibGDX project subdialog for {@link NewProjectDialog}
+ * @author Kotcrab
+ */
 public class NewProjectDialogLibGDX extends VisTable {
 	private VisValidableTextField projectRoot;
 	private VisValidableTextField sourceLoc;

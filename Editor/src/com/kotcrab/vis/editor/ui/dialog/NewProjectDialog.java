@@ -23,6 +23,10 @@ import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
 
+/**
+ * New project dialog, supports multiple projects types
+ * @author Kotcrab
+ */
 public class NewProjectDialog extends VisWindow {
 	private static final String LIBGDX = "LibGDX";
 	private static final String GENERIC = "Generic";

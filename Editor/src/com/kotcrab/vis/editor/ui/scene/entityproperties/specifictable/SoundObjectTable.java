@@ -25,6 +25,10 @@ import com.kotcrab.vis.editor.util.gdx.TableBuilder;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
+/**
+ * Specific table for {@link SoundObject}
+ * @author Kotcrab
+ */
 public class SoundObjectTable extends SpecificObjectTable {
 	private VisLabel label;
 

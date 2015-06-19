@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.webapi;
 
 import com.kotcrab.vis.runtime.util.PrettyEnum;
 
+/**
+ * Possible VisEditor update channels.
+ * @author Kotcrab
+ */
 public enum UpdateChannelType implements PrettyEnum, ReleaseInformationProvider {
 	STABLE {
 		@Override

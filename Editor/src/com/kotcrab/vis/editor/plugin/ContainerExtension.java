@@ -21,6 +21,7 @@ import com.kotcrab.vis.editor.module.Module;
 /**
  * Interface allowing to inject custom modules into VisEditor modules containers
  * @param <T> type of base module depending on container that you want to inject your module into
+ * @author Kotcrab
  */
 public interface ContainerExtension<T extends Module> {
 	enum ExtensionScope {EDITOR, PROJECT, SCENE, PHYSICS_EDITOR}

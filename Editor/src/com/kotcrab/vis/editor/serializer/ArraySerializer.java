@@ -22,6 +22,9 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
+/**
+ * Kryo serializer for LibGDX {@link Array}
+ */
 public class ArraySerializer extends Serializer<Array> {
 	private Class genericType;
 

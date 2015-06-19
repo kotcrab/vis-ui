@@ -22,6 +22,12 @@ import com.kotcrab.vis.runtime.assets.TextureAssetDescriptor;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.SpriteEntity;
 
+
+/**
+ * Sprite object
+ * @see SpriteEntity
+ * @author Kotcrab
+ */
 public class SpriteObject extends SpriteEntity implements EditorObject {
 	private VisAssetDescriptor assetDescriptor;
 

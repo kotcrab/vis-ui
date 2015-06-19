@@ -22,7 +22,10 @@ import com.badlogic.gdx.files.FileHandle;
 import java.io.File;
 import java.io.InputStream;
 
-/** FileHandle used to access files from inside plugin jars. Please note that some functionality of FileHandle won't be available. */
+/**
+ * FileHandle used to access files from inside plugin jars. Please note that some functionality of FileHandle won't be available.
+ * @author Kotcrab
+ */
 public class PluginFileHandle extends FileHandle {
 	private Class baseClass;
 	private String filePath;

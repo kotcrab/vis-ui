@@ -31,6 +31,11 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 import static com.kotcrab.vis.editor.util.NumberUtils.floatToString;
 
+/**
+ * Extended {@link VisValidableTextField} made specifically for entering numeric values. Support keys ctrl/shift + plus/minus
+ * to quickly change field value.
+ * @author Kotcrab
+ */
 public class NumberInputField extends VisValidableTextField {
 	private static FieldFilter sharedFieldFilter = new FieldFilter();
 	private static FieldValidator sharedFieldValidator = new FieldValidator();

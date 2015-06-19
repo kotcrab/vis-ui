@@ -18,6 +18,10 @@ package com.kotcrab.vis.editor.webapi;
 
 import com.badlogic.gdx.utils.Array;
 
+/**
+ * Json graph for VisEditor Web API content
+ * @author Kotcrab
+ */
 public class ContentSet {
 	Array<Content> content = new Array<>();
 

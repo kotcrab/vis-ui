@@ -19,8 +19,16 @@ package com.kotcrab.vis.editor.scene;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.data.EntityData;
+import com.kotcrab.vis.runtime.data.EntityGroupData;
 import com.kotcrab.vis.runtime.entity.Entity;
+import com.kotcrab.vis.runtime.entity.EntityGroup;
 
+/**
+ * {@link ObjectGroup} data. Similar to {@link EntityGroupData} but because {@link EntityGroup} does not support changing entities list, we use
+ * different class here.
+ * @see ObjectGroup
+ * @author Kotcrab
+ */
 public class ObjectGroupData extends EntityData<ObjectGroup> {
 	public Array<Entity> entities;
 

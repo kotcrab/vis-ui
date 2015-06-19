@@ -24,6 +24,11 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.entity.EntityGroup;
 
+/**
+ * Groups multiple editor objects
+ * @see EntityGroup
+ * @author Kotcrab
+ */
 public class ObjectGroup extends EntityGroup implements EditorObject {
 	private boolean preserveForRuntime;
 

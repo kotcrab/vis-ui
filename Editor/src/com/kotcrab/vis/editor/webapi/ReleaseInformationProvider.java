@@ -16,6 +16,10 @@
 
 package com.kotcrab.vis.editor.webapi;
 
+/**
+ * Implemented by classes which provides URL for update channel.
+ * @see UpdateChannelType
+ */
 public interface ReleaseInformationProvider {
 	String getStorageURL ();
 }

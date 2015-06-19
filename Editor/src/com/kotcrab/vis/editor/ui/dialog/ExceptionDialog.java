@@ -23,6 +23,10 @@ import com.kotcrab.vis.editor.util.ExceptionUtils;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.widget.*;
 
+/**
+ * Dialog used to display exception message along with stacktrace that can be copied to clipboard
+ * @author Kotcrab
+ */
 public class ExceptionDialog extends VisWindow {
 	public ExceptionDialog (Throwable cause) {
 		this(null, cause);

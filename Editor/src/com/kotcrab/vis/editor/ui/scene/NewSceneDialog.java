@@ -41,6 +41,10 @@ import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 
+/**
+ * Dialog used when user is creating new scene
+ * @author Kotcrab
+ */
 public class NewSceneDialog extends VisWindow {
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private SceneIOModule sceneIO;

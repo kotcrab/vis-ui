@@ -40,6 +40,10 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+/**
+ * Dialog displayed in scene tab, allows to manipulate layers
+ * @author Kotcrab
+ */
 public class LayersDialog extends VisTable {
 	private static final Drawable SELECTION = VisUI.getSkin().getDrawable("list-selection");
 	private static final VisImageButtonStyle BUTTON_STYLE = VisUI.getSkin().get("default", VisImageButtonStyle.class);

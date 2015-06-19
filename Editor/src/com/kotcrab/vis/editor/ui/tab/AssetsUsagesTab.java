@@ -41,6 +41,10 @@ import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
+/**
+ * Displayed in a list assets usages after analyzing by {@link AssetsAnalyzerModule}
+ * @author Kotcrab
+ */
 public class AssetsUsagesTab extends Tab {
 	@InjectModule private AssetsAnalyzerModule usageAnalyzer;
 	@InjectModule private SceneTabsModule sceneTabs;

@@ -17,12 +17,16 @@
 package com.kotcrab.vis.editor.webapi;
 
 import com.badlogic.gdx.utils.Json;
+import com.kotcrab.vis.editor.module.editor.WebAPIModule;
 import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+/**
+ * VisEditor web api client, to be used from {@link WebAPIModule} which supports caching.
+ */
 public class WebAPIClient {
 	private static final String API_PATH = "http://apps.kotcrab.com/vis/v1/";
 

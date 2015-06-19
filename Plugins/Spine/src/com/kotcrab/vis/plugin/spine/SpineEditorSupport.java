@@ -44,7 +44,7 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.ContentItemProperties;
+import com.kotcrab.vis.editor.module.project.assetsmanager.ContentItemProperties;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificObjectTable;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.VisDropSource;
@@ -90,7 +90,7 @@ public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 	}
 
 	@Override
-	public boolean isSupportedDirectory (String extension, String relativePath) {
+	public boolean isSupportedDirectory (String relativePath, String extension) {
 		return relativePath.startsWith("spine/");
 	}
 
@@ -100,11 +100,11 @@ public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
 	}
 
 	@Override
-	public ContentItemProperties getContentItemProperties (String relativePath, String ext) {
-		if (ext.equals("json"))
+	public ContentItemProperties getContentItemProperties (String relativePath, String extension) {
+		if (extension.equals("json"))
 			return new ContentItemProperties("Spine Json Skeleton", true);
 
-		if (ext.equals("skel"))
+		if (extension.equals("skel"))
 			return new ContentItemProperties("Spine Binary Skeleton", true);
 
 		return null;

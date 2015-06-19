@@ -23,6 +23,10 @@ import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+/**
+ * Tab that displays basic information about project. In the feature it shoud also provide recently used files, etc.
+ * @author Kotcrab
+ */
 public class ProjectInfoTab extends MainContentTab {
 	private Table content;
 

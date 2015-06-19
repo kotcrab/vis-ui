@@ -24,6 +24,10 @@ import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
 
+/**
+ * Dialog displayed for file delete confirmation
+ * @author Kotcrab
+ */
 public class DeleteDialog extends VisWindow {
 	private WindowResultListener<DeleteDialogResult> listener;
 

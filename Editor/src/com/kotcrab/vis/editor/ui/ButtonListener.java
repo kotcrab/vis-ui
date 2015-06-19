@@ -21,7 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 /**
  * Can be used instead of {@link ChangeListener}, to allow lambda expressions. Class that want to use it, should
  * create own wrapper for ChangeListener
+ * @author Kotcrab
  */
 public interface ButtonListener {
-	public void clicked ();
+	void clicked ();
 }

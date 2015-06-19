@@ -16,6 +16,10 @@
 
 package com.kotcrab.vis.editor.webapi;
 
+/**
+ * Describes single editor build
+ * @author Kotcrab
+ */
 public class EditorBuild {
 	public String timestamp;
 	public String url;

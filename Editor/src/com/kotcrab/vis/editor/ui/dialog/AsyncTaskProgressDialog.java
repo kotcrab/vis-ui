@@ -26,6 +26,10 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
+/**
+ * Dialog displayed with {@link AsyncTask} when doing tasks on another thread
+ * @author Kotcrab
+ */
 public class AsyncTaskProgressDialog extends VisWindow {
 	public AsyncTaskProgressDialog (String title, AsyncTask task) {
 		super(title);

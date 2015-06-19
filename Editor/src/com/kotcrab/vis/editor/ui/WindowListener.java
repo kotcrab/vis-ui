@@ -16,6 +16,10 @@
 
 package com.kotcrab.vis.editor.ui;
 
+/**
+ * Generic listener for windows and dialogs.
+ * @author Kotcrab
+ */
 public interface WindowListener {
 	void finished ();
 

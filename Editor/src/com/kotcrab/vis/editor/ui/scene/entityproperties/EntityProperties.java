@@ -26,23 +26,23 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.bus.Event;
-import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.event.RedoEvent;
 import com.kotcrab.vis.editor.event.UndoEvent;
+import com.kotcrab.vis.editor.event.bus.Event;
+import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
-import com.kotcrab.vis.editor.util.UndoableAction;
-import com.kotcrab.vis.editor.util.UndoableActionGroup;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.*;
 import com.kotcrab.vis.editor.util.EntityUtils;
-import com.kotcrab.vis.editor.util.value.FloatValue;
+import com.kotcrab.vis.editor.util.UndoableAction;
+import com.kotcrab.vis.editor.util.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
+import com.kotcrab.vis.editor.util.value.FloatValue;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.ui.VisUI;
@@ -56,6 +56,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.util.Iterator;
 
+/**
+ * Entity properties dialog, used to display and change all data about currently selected entites. Multiple selection
+ * is supported, even when entities have different values, <?> is used in float input fields, and intermediate checkbox are used
+ * for boolean support. Undo is supported. Plugin can add custom properties tables (see {@link SpecificObjectTable}),
+ * but they must support all base features of this dialog (multiple selection support, undo, etc.). See any class
+ * from 'specifictable' package for examples.
+ * @author Kotcrab
+ */
 public class EntityProperties extends VisTable implements Disposable, EventListener {
 	public static final int LABEL_WIDTH = 60;
 	public static final int AXIS_LABEL_WIDTH = 10;

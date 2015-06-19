@@ -18,8 +18,14 @@ package com.kotcrab.vis.editor.ui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.editor.MenuBarModule;
 import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
+import com.kotcrab.vis.editor.ui.scene.SceneTab;
 
+/**
+ * {@link MenuBarModule} MenuItem controller that automatically enables/disables item when current active tab is {@link SceneTab} or not
+ * @author Kotcrab
+ */
 public class SceneStatusWidgetController {
 	private Array<Button> buttons;
 	private boolean loaded = false;
@@ -35,7 +41,6 @@ public class SceneStatusWidgetController {
 			loaded = true;
 
 		updateWidgets();
-
 	}
 
 	private void updateWidgets () {

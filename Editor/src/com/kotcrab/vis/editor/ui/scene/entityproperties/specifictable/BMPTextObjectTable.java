@@ -24,6 +24,10 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.ui.widget.Tooltip;
 
+/**
+ * Specific tables for {@link TextObject} that uses bitmap fonts
+ * @author Kotcrab
+ */
 public class BMPTextObjectTable extends TextObjectTable {
 	private IndeterminateCheckbox distanceFieldCheck;
 

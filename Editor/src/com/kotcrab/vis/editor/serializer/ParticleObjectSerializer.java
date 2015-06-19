@@ -25,6 +25,10 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.editor.scene.ParticleEffectObject;
 
+/**
+ * Kryo serializer for {@link ParticleEffectObject}
+ * @author Kotcrab
+ */
 public class ParticleObjectSerializer extends CompatibleFieldSerializer<ParticleEffectObject> {
 	private static final int VERSION_CODE = 1;
 

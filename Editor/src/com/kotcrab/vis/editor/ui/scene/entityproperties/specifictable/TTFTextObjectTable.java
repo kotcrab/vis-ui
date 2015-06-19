@@ -29,6 +29,10 @@ import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
+/**
+ * Specific table for {@link TextObject} that uses TrueType fonts.
+ * @author Kotcrab
+ */
 public class TTFTextObjectTable extends TextObjectTable {
 	private NumberInputField sizeInputField;
 

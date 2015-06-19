@@ -16,6 +16,13 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
+import com.kotcrab.vis.editor.module.editor.MenuBarModule;
+import com.kotcrab.vis.ui.widget.MenuBar;
+
+/**
+ * {@link MenuBarModule} listener used to pass scene scope {@link MenuBar} events to {@link SceneTab}
+ * @author Kotcrab
+ */
 public interface SceneMenuButtonsListener {
 	void showSceneSettings ();
 

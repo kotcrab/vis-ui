@@ -21,8 +21,15 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.entity.Entity;
+import com.kotcrab.vis.runtime.entity.SpriteEntity;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
+/**
+ * Base interface for all VisEditor entities. Note that editor entities always extend runtime entity class
+ * (ex. {@link SpriteObject} implements EditorObject and extends {@link SpriteEntity} (which extends {@link Entity})
+ * @author Kotcrab
+ */
 public interface EditorObject extends Disposable {
 	String getId ();
 

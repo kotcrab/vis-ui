@@ -23,6 +23,10 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.EntityUtils;
 import com.kotcrab.vis.ui.widget.Tooltip;
 
+/**
+ * Specific table for {@link ObjectGroup}
+ * @author Kotcrab
+ */
 public class ObjectGroupTable extends SpecificObjectTable {
 	private IndeterminateCheckbox preserveCheck;
 

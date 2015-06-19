@@ -25,6 +25,10 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.scene.SoundObject;
 
+/**
+ * Kryo serializer for {@link SoundObject}
+ * @author Kotcrab
+ */
 public class SoundObjectSerializer extends CompatibleFieldSerializer<SoundObject> {
 	private static final int VERSION_CODE = 1;
 

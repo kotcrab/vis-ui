@@ -22,6 +22,10 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
+/**
+ * Editor scene class, serialized by Kryo
+ * @author Kotcrab
+ */
 public class EditorScene implements Disposable {
 	/** Scene file, path is relative to project Vis folder */
 	public String path;

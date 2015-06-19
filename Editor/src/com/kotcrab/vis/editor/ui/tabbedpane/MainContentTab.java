@@ -17,8 +17,12 @@
 package com.kotcrab.vis.editor.ui.tabbedpane;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
+/**
+ * All VisEditor tabs must extend this class. Note that tabs managed by {@link QuickAccessModule} does not require this.
+ */
 public abstract class MainContentTab extends Tab {
 	public MainContentTab () {
 	}
