@@ -95,7 +95,7 @@ public class MenuBarModule extends EditorModule {
 		//menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Quick Export", () -> projectContainer.get(ExportModule.class).export(true))); //TODO quick export
 		menu.addSeparator();
 
-		menu.addItem(createMenuItem("Settings", Icons.SETTINGS, editor::showSettingsWindow));
+		menu.addItem(createMenuItem("Settings...", Icons.SETTINGS, editor::showSettingsWindow));
 		menu.addSeparator();
 
 		menu.addItem(createMenuItem("Exit", Icons.EXIT, editor::requestExit));
@@ -144,7 +144,7 @@ public class MenuBarModule extends EditorModule {
 		Menu menu = new Menu("Help");
 		menuBar.addMenu(menu);
 
-		menu.addItem(createMenuItem("Web", Icons.GLOBE, () -> Gdx.net.openURI("http://vis.kotcrab.com")));
+		menu.addItem(createMenuItem("Website...", Icons.GLOBE, () -> Gdx.net.openURI("http://vis.kotcrab.com")));
 		menu.addItem(createMenuItem("About", Icons.INFO, () -> stage.addActor(new AboutDialog().fadeIn())));
 	}
 

@@ -46,7 +46,7 @@ public class RecentProjectModule extends EditorModule implements EventListener {
 	public void init () {
 		App.eventBus.register(this);
 
-		FileHandle storage = Gdx.files.absolute(App.APP_FOLDER_PATH + "metadata");
+		FileHandle storage = Gdx.files.absolute(App.METADATA_FOLDER_PATH);
 		storage.mkdirs();
 
 		storageFile = storage.child("recentProjects.json");
