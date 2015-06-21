@@ -12,6 +12,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>Parent</module>
         <module>UI</module>
         <module>Runtime</module>
         <module>Editor</module>
