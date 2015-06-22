@@ -40,8 +40,8 @@ import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.scene.ObjectGroup;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
-import com.kotcrab.vis.editor.util.UndoableAction;
-import com.kotcrab.vis.editor.util.UndoableActionGroup;
+import com.kotcrab.vis.editor.util.undo.UndoableAction;
+import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 
@@ -54,6 +54,10 @@ public class EntityManipulatorModule extends SceneModule {
 	@InjectModule private CameraModule camera;
 	@InjectModule private UndoModule undoModule;
 	@InjectModule private SceneIOModule sceneIOModule;
+	@InjectModule private ObjectSupportModule supportManager;
+	@InjectModule private FileAccessModule fileAccess;
+	@InjectModule private ColorPickerModule colorPickerModule;
+	@InjectModule private FontCacheModule fontCacheModule;
 
 	private ShapeRenderer shapeRenderer;
 
@@ -86,12 +90,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 		shapeRenderer = sceneContainer.get(RendererModule.class).getShapeRenderer();
 
-		ObjectSupportModule supportManager = projectContainer.get(ObjectSupportModule.class);
-		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
-		ColorPickerModule pickerModule = container.get(ColorPickerModule.class);
-		FontCacheModule fontCacheModule = projectContainer.get(FontCacheModule.class);
-		entityProperties = new EntityProperties(supportManager, fileAccess, fontCacheModule, undoModule, pickerModule.getPicker(), sceneTab, selectedEntities);
-		layersDialog = new LayersDialog(this, scene);
+		entityProperties = new EntityProperties(supportManager, fileAccess, fontCacheModule, undoModule, colorPickerModule.getPicker(), sceneTab, selectedEntities);
+		layersDialog = new LayersDialog(this, undoModule, scene);
 
 		rectangularSelection = new RectangularSelection(scene, this);
 	}

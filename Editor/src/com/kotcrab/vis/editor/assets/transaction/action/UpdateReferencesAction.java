@@ -21,7 +21,7 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.SceneCacheModule;
-import com.kotcrab.vis.editor.util.UndoableAction;
+import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;

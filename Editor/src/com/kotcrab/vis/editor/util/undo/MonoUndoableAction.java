@@ -14,31 +14,22 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.assets.transaction.action;
-
-import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.editor.util.undo.UndoableAction;
+package com.kotcrab.vis.editor.util.undo;
 
 /**
- * Undoable action for copying file
+ * Undoable action that on undo and redo executes the same method
  * @author Kotcrab
  */
-public class CopyFileAction implements UndoableAction {
-	private final FileHandle source;
-	private final FileHandle target;
-
-	public CopyFileAction (FileHandle source, FileHandle target) {
-		this.source = source;
-		this.target = target;
-	}
-
+public abstract class MonoUndoableAction implements UndoableAction {
 	@Override
 	public void execute () {
-		source.copyTo(target);
+		doAction();
 	}
 
 	@Override
 	public void undo () {
-		target.copyTo(source);
+		doAction();
 	}
+
+	public abstract void doAction ();
 }

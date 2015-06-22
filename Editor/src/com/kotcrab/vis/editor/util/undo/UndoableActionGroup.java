@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.undo;
 
 import com.badlogic.gdx.utils.Array;
 

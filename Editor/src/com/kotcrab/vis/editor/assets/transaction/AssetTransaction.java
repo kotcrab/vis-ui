@@ -16,8 +16,8 @@
 
 package com.kotcrab.vis.editor.assets.transaction;
 
-import com.kotcrab.vis.editor.util.UndoableAction;
-import com.kotcrab.vis.editor.util.UndoableActionGroup;
+import com.kotcrab.vis.editor.util.undo.UndoableAction;
+import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 
 /**
  * UndoableActionGroup for assets transactions. The only diffrence is that this class does not allow immediate action execution.

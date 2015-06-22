@@ -24,12 +24,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.scene.EntityManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.util.DefaultInputDialogListener;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.editor.util.undo.MonoUndoableAction;
+import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
@@ -49,7 +52,8 @@ public class LayersDialog extends VisTable {
 	private static final VisImageButtonStyle BUTTON_STYLE = VisUI.getSkin().get("default", VisImageButtonStyle.class);
 	private static final VisImageButtonStyle BUTTON_BLUE_STYLE = VisUI.getSkin().get("blue", VisImageButtonStyle.class);
 
-	private final EditorScene scene;
+	private UndoModule undoModule;
+	private EditorScene scene;
 	private EntityManipulatorModule entityManipulator;
 
 	private VisTable layersTable;
@@ -57,9 +61,10 @@ public class LayersDialog extends VisTable {
 	private VisImageButton layerDownButton;
 	private VisImageButton layerRemoveButton;
 
-	public LayersDialog (EntityManipulatorModule entityManipulator, EditorScene scene) {
+	public LayersDialog (EntityManipulatorModule entityManipulator, UndoModule undoModule, EditorScene scene) {
 		super(true);
 		this.entityManipulator = entityManipulator;
+		this.undoModule = undoModule;
 		this.scene = scene;
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
@@ -76,34 +81,17 @@ public class LayersDialog extends VisTable {
 		layerAddButton.addListener(new VisChangeListener((event, actor) ->
 				DialogUtils.showInputDialog(getStage(), "New Layer", "Name:", true,
 						input -> scene.getLayerByName(input) == null,
-						(DefaultInputDialogListener) input -> {
-							scene.layers.add(new Layer(input));
-							rebuildLayersTable();
-							entityManipulator.sceneDirty();
-						})));
+						(DefaultInputDialogListener) input -> undoModule.execute(new LayerAddedAction(new Layer(input))))));
 
-		layerUpButton.addListener(new VisChangeListener((event, actor) -> {
-			int index = scene.layers.indexOf(scene.activeLayer, true);
-			scene.layers.swap(index, index - 1);
-			rebuildLayersTable();
-			entityManipulator.sceneDirty();
-		}));
-
-		layerDownButton.addListener(new VisChangeListener((event, actor) -> {
-			int index = scene.layers.indexOf(scene.activeLayer, true);
-			scene.layers.swap(index, index + 1);
-			rebuildLayersTable();
-			entityManipulator.sceneDirty();
-		}));
+		layerUpButton.addListener(new VisChangeListener((event, actor) -> undoModule.execute(new LayerMovedAction(true))));
+		layerDownButton.addListener(new VisChangeListener((event, actor) -> undoModule.execute(new LayerMovedAction(false))));
 
 		layerRemoveButton.addListener(new VisChangeListener((event, actor) ->
 				DialogUtils.showOptionDialog(getStage(), "Delete Layer", "Are you sure you want to delete layer '" + scene.activeLayer.name + "'?",
 						OptionDialogType.YES_NO, new OptionDialogAdapter() {
 							@Override
 							public void yes () {
-								scene.layers.removeValue(scene.activeLayer, true);
-								rebuildLayersTable();
-								entityManipulator.sceneDirty();
+								undoModule.execute(new LayerRemovedAction(scene.activeLayer));
 							}
 						})));
 
@@ -167,6 +155,105 @@ public class LayersDialog extends VisTable {
 		}
 	}
 
+	private void selectFirstLayer () {
+		for (Actor a : layersTable.getChildren()) {
+			if (a instanceof LayerItem) {
+				LayerItem item = (LayerItem) a;
+				item.select();
+				return;
+			}
+		}
+	}
+
+	private void selectLayer (Layer layer) {
+		//selectedLayer would by already called from item.select
+		for (Actor a : layersTable.getChildren()) {
+			if (a instanceof LayerItem) {
+				LayerItem item = (LayerItem) a;
+				if (item.layer == layer) {
+					item.select();
+					return;
+				}
+			}
+		}
+	}
+
+	private class LayerAddedAction implements UndoableAction {
+		private Layer layer;
+
+		public LayerAddedAction (Layer layer) {
+			this.layer = layer;
+		}
+
+		@Override
+		public void execute () {
+			scene.layers.add(layer);
+			rebuildLayersTable();
+			selectLayer(layer);
+			entityManipulator.sceneDirty();
+		}
+
+		@Override
+		public void undo () {
+			scene.layers.removeValue(layer, true);
+			rebuildLayersTable();
+			selectFirstLayer();
+			entityManipulator.sceneDirty();
+		}
+	}
+
+	private class LayerRemovedAction implements UndoableAction {
+		private Layer layer;
+		private int index;
+
+		public LayerRemovedAction (Layer layer) {
+			this.layer = layer;
+		}
+
+		@Override
+		public void execute () {
+			index = scene.layers.indexOf(layer, true);
+			scene.layers.removeValue(layer, true);
+			rebuildLayersTable();
+			selectFirstLayer();
+		}
+
+		@Override
+		public void undo () {
+			scene.layers.insert(index, layer);
+			rebuildLayersTable();
+			selectLayer(layer);
+		}
+	}
+
+	private class LayerMovedAction implements UndoableAction {
+		int currentIndex;
+		int targetIndex;
+
+		public LayerMovedAction (boolean moveUp) {
+			currentIndex = scene.layers.indexOf(scene.activeLayer, true);
+			if (moveUp)
+				targetIndex = currentIndex - 1;
+			else
+				targetIndex = currentIndex + 1;
+
+		}
+
+		@Override
+		public void execute () {
+			scene.layers.swap(currentIndex, targetIndex);
+			rebuildLayersTable();
+			entityManipulator.sceneDirty();
+		}
+
+		@Override
+		public void undo () {
+			scene.layers.swap(targetIndex, currentIndex);
+			rebuildLayersTable();
+			entityManipulator.sceneDirty();
+		}
+	}
+
 	private class LayerItem extends VisTable {
 		private Layer layer;
 		private VisImageButton eyeButton;
@@ -182,21 +269,19 @@ public class LayersDialog extends VisTable {
 			lockButton = new VisImageButton("default");
 			updateButtonsImages();
 
-			eyeButton.addListener(new VisChangeListener((event, actor) -> {
-				layer.visible = !layer.visible;
-				updateButtonsImages();
-				entityManipulator.sceneDirty();
-			}));
+			eyeButton.addListener(new VisChangeListener((event, actor) -> undoModule.execute(new MonoUndoableAction() {
+				@Override
+				public void doAction () {
+					changeVisibility();
+				}
+			})));
 
-			lockButton.addListener(new VisChangeListener((event, actor) -> {
-				layer.locked = !layer.locked;
-				updateButtonsImages();
-
-				if (layer.locked)
-					entityManipulator.resetSelection();
-
-				entityManipulator.sceneDirty();
-			}));
+			lockButton.addListener(new VisChangeListener((event, actor) -> undoModule.execute(new MonoUndoableAction() {
+				@Override
+				public void doAction () {
+					changeLocked();
+				}
+			})));
 
 			pad(3);
 			add(eyeButton);
@@ -211,6 +296,22 @@ public class LayersDialog extends VisTable {
 				}
 			});
 
+		}
+
+		void changeVisibility () {
+			layer.visible = !layer.visible;
+			updateButtonsImages();
+			entityManipulator.sceneDirty();
+		}
+
+		void changeLocked () {
+			layer.locked = !layer.locked;
+			updateButtonsImages();
+
+			if (layer.locked)
+				entityManipulator.resetSelection();
+
+			entityManipulator.sceneDirty();
 		}
 
 		private void updateButtonsImages () {

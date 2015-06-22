@@ -22,8 +22,8 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.Layer;
-import com.kotcrab.vis.editor.util.UndoableAction;
-import com.kotcrab.vis.editor.util.UndoableActionGroup;
+import com.kotcrab.vis.editor.util.undo.UndoableAction;
+import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 
 /**
  * Allows to change entities z index. Z index in VisEditor is virtual and it is achieved by changing entities positions in entity list.
