@@ -65,7 +65,7 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 		loadProjectLinkLabel.setListener(this);
 
 		VisTable quickAccessTable = new VisTable(false);
-		quickAccessTable.add("Start doing something!").row();
+		quickAccessTable.add("Start creating!").row();
 		quickAccessTable.add(newProjectLinkLabel).row();
 		quickAccessTable.add(loadProjectLinkLabel).row();
 
