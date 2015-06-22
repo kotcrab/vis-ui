@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.scene.EntityManipulatorModule;
@@ -127,10 +128,12 @@ public class LayersDialog extends VisTable {
 	}
 
 	private void rebuildLayersTable () {
+		Array<Actor> actors = new Array<>(layersTable.getChildren());
 		layersTable.clearChildren();
 
 		for (Layer layer : scene.layers) {
-			LayerItem item = new LayerItem(layer);
+			LayerItem item = getItemForLayer(actors, layer);
+			if (item == null) item = new LayerItem(layer);
 			layersTable.add(item).expandX().fillX().row();
 
 			if (layer == scene.activeLayer)
@@ -146,6 +149,19 @@ public class LayersDialog extends VisTable {
 
 	}
 
+	private LayerItem getItemForLayer (Array<Actor> actors, Layer layer) {
+		for (Actor a : actors) {
+			if (a instanceof LayerItem) {
+				LayerItem item = (LayerItem) a;
+				if (item.layer == layer) {
+					return item;
+				}
+			}
+		}
+
+		return null;
+	}
+
 	private void deselectAll () {
 		for (Actor a : layersTable.getChildren()) {
 			if (a instanceof LayerItem) {
@@ -156,26 +172,15 @@ public class LayersDialog extends VisTable {
 	}
 
 	private void selectFirstLayer () {
-		for (Actor a : layersTable.getChildren()) {
-			if (a instanceof LayerItem) {
-				LayerItem item = (LayerItem) a;
-				item.select();
-				return;
-			}
-		}
+		selectLayer(scene.layers.first());
 	}
 
 	private void selectLayer (Layer layer) {
+		LayerItem item = getItemForLayer(layersTable.getChildren(), layer);
+		if (item == null) throw new IllegalStateException("Layer not found");
+
 		//selectedLayer would by already called from item.select
-		for (Actor a : layersTable.getChildren()) {
-			if (a instanceof LayerItem) {
-				LayerItem item = (LayerItem) a;
-				if (item.layer == layer) {
-					item.select();
-					return;
-				}
-			}
-		}
+		item.select();
 	}
 
 	private class LayerAddedAction implements UndoableAction {
