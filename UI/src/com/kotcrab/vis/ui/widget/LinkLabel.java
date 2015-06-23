@@ -35,10 +35,10 @@ public class LinkLabel extends VisLabel {
 	private LinkLabelListener listener;
 	private CharSequence url;
 
-	public LinkLabel (CharSequence text) {
-		super(text);
+	public LinkLabel (CharSequence url) {
+		super(url);
 		setColor(VisUI.getSkin().getColor(DEFAULT_COLOR_NAME));
-		init(text);
+		init(url);
 	}
 
 	public LinkLabel (CharSequence text, CharSequence url) {
