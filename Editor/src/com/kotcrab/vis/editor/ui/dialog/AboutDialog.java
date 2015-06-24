@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.ui.dialog;
 import com.badlogic.gdx.Version;
 import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
@@ -41,17 +42,20 @@ public class AboutDialog extends VisWindow {
 		contentTable.defaults().expand().left();
 
 		contentTable.add(new VisLabel("VisEditor - game level editor\nCopyright 2014-2015 Paweł Pastuszak\nLicensed under Apache2 license")).spaceBottom(8).row();
-		contentTable.add(new VisLabel("Physics editor based on Aurelien Ribon's Physics Body Editor\n(licensed under Apache2 license)")).spaceBottom(8).row();
+		contentTable.add(new VisLabel("Physics editor based on Aurelien Ribon's Physics Body Editor")).spaceBottom(8).row();
 		contentTable.add(new VisLabel("Thanks to all contributors and supporters,\nand thanks to you for using this software. <3", Align.center)).center().row();
 
 		VisTextButton okButton;
+		VisTextButton openAppDirectoryButton;
 
 		add(contentTable).pad(3).colspan(2).expand().fill().row();
 		VisLabel versionLabel = new VisLabel("Hover here to see libraries versions");
 		new Tooltip(versionLabel, "VisEditor " + App.VERSION + " \nBuild: " + App.buildTimestamp + "\nVisUI " + VisUI.VERSION + "\nLibGDX " + Version.VERSION, Align.left);
 		add(versionLabel).expandX().fillX();
+		add(openAppDirectoryButton = new VisTextButton("Open App Data Folder"));
 		add(okButton = new VisTextButton("OK")).right();
 
+		openAppDirectoryButton.addListener(new VisChangeListener((event, actor) -> FileUtils.browse(FileUtils.toFileHandle(App.APP_FOLDER_PATH))));
 		okButton.addListener(new VisChangeListener((event, actor) -> fadeOut()));
 		pack();
 		centerWindow();
