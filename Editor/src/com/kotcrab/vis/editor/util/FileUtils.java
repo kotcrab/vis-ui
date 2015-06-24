@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.util;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Log;
@@ -54,6 +55,14 @@ public class FileUtils {
 
 	public static boolean hasTrash () {
 		return jnaFileUtils.hasTrash();
+	}
+
+	public static void open (FileHandle file) {
+		try {
+			Desktop.getDesktop().open(file.file());
+		} catch (IOException e) {
+			Log.exception(e);
+		}
 	}
 
 	public static void browse (FileHandle dir) {
@@ -111,5 +120,13 @@ public class FileUtils {
 		Path pathBase = Paths.get(base.path());
 		Path pathRelative = pathBase.relativize(pathAbsolute);
 		return pathRelative.toString().replace("\\", "/");
+	}
+
+	public static FileHandle toFileHandle (String path) {
+		return Gdx.files.absolute(path);
+	}
+
+	public static FileHandle toFileHandle (File file) {
+		return Gdx.files.absolute(file.getAbsolutePath());
 	}
 }
