@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.project.ExportModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.ui.ButtonListener;
@@ -29,6 +30,7 @@ import com.kotcrab.vis.editor.ui.SceneStatusWidgetController;
 import com.kotcrab.vis.editor.ui.dialog.AboutDialog;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
+import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.Menu;
@@ -144,7 +146,9 @@ public class MenuBarModule extends EditorModule {
 		Menu menu = new Menu("Help");
 		menuBar.addMenu(menu);
 
-		menu.addItem(createMenuItem("Website...", Icons.GLOBE, () -> Gdx.net.openURI("http://vis.kotcrab.com")));
+		menu.addItem(createMenuItem("Website", Icons.GLOBE, () -> Gdx.net.openURI("http://vis.kotcrab.com")));
+		menu.addItem(createMenuItem("Documentation", null, () -> Gdx.net.openURI("https://github.com/kotcrab/VisEditor/wiki/Quick-Start")));
+		menu.addItem(createMenuItem("Show Log", null, () -> FileUtils.open(Log.getLogFile())));
 		menu.addItem(createMenuItem("About", Icons.INFO, () -> stage.addActor(new AboutDialog().fadeIn())));
 	}
 

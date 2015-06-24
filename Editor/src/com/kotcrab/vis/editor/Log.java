@@ -16,8 +16,10 @@
 
 package com.kotcrab.vis.editor;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.util.CrashReporter;
 import com.kotcrab.vis.editor.util.ExceptionUtils;
+import com.kotcrab.vis.ui.widget.file.FileUtils;
 
 import javax.swing.JOptionPane;
 import java.io.*;
@@ -78,6 +80,10 @@ public class Log {
 	public static void dispose () {
 		info("Exiting");
 		logFileWriter.close();
+	}
+
+	public static FileHandle getLogFile () {
+		return FileUtils.toFileHandle(logFile);
 	}
 
 	private static void prepareLogFile () {
