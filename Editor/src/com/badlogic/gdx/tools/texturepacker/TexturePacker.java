@@ -366,8 +366,10 @@ public class TexturePacker {
 		public int x, y, width, height, imageWidth, imageHeight;
 	}
 
-	/** @author Regnarock
-	 * @author Nathan Sweet */
+	/**
+	 * @author Regnarock
+	 * @author Nathan Sweet
+	 */
 	static public class Alias {
 		public String name;
 		public int index;
@@ -599,15 +601,19 @@ public class TexturePacker {
 		}
 	}
 
-	/** Packs using defaults settings.
-	 * @see TexturePacker#process(Settings, String, String, String) */
+	/**
+	 * Packs using defaults settings.
+	 * @see TexturePacker#process(Settings, String, String, String)
+	 */
 	static public void process (String input, String output, String packFileName) {
 		process(new Settings(), input, output, packFileName);
 	}
 
-	/** @param input Directory containing individual images to be packed.
+	/**
+	 * @param input Directory containing individual images to be packed.
 	 * @param output Directory where the pack file and page images will be written.
-	 * @param packFileName The name of the pack file. Also used to name the page images. */
+	 * @param packFileName The name of the pack file. Also used to name the page images.
+	 */
 	static public void process (Settings settings, String input, String output, String packFileName) {
 		try {
 			TexturePackerFileProcessor processor = new TexturePackerFileProcessor(settings, packFileName);
@@ -623,8 +629,10 @@ public class TexturePacker {
 		}
 	}
 
-	/** @return true if the output file does not yet exist or its last modification date is before the last modification date of the
-	 *         input file */
+	/**
+	 * @return true if the output file does not yet exist or its last modification date is before the last modification date of the
+	 * input file
+	 */
 	static public boolean isModified (String input, String output, String packFileName, Settings settings) {
 		String packFullFileName = output;
 

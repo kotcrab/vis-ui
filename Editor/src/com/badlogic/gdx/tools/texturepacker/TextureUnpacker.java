@@ -30,10 +30,12 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-/** Unpacks a texture atlas into individual image files.
+/**
+ * Unpacks a texture atlas into individual image files.
  * @author Geert Konijnendijk
  * @author Nathan Sweet
- * @author Michael Bazos */
+ * @author Michael Bazos
+ */
 public class TextureUnpacker {
 	private static final String DEFAULT_OUTPUT_PATH = "output";
 	private static final int NINEPATCH_PADDING = 1;
@@ -41,8 +43,10 @@ public class TextureUnpacker {
 	private static final String HELP = "Usage: atlasFile [imageDir] [outputDir]";
 	private static final String ATLAS_FILE_EXTENSION = ".atlas";
 
-	/** Checks the command line arguments for correctness.
-	 * @return 0 If arguments are invalid, Number of arguments otherwise. */
+	/**
+	 * Checks the command line arguments for correctness.
+	 * @return 0 If arguments are invalid, Number of arguments otherwise.
+	 */
 	private int parseArguments (String[] args) {
 		int numArgs = args.length;
 		// check if number of args is right
@@ -122,12 +126,14 @@ public class TextureUnpacker {
 		}
 	}
 
-	/** Extract an image from a texture atlas.
+	/**
+	 * Extract an image from a texture atlas.
 	 * @param page The image file related to the page the region is in
 	 * @param region The region to extract
 	 * @param outputDirFile The output directory
 	 * @param padding padding (in pixels) to apply to the image
-	 * @return The extracted image */
+	 * @return The extracted image
+	 */
 	private BufferedImage extractImage (BufferedImage page, Region region, File outputDirFile, int padding) {
 		BufferedImage splitImage = null;
 
@@ -158,10 +164,12 @@ public class TextureUnpacker {
 		}
 	}
 
-	/** Extract a ninepatch from a texture atlas, according to the android specification.
-	 * @see <a href="http://developer.android.com/guide/topics/graphics/2d-graphics.html#nine-patch">ninepatch specification</a>
+	/**
+	 * Extract a ninepatch from a texture atlas, according to the android specification.
 	 * @param page The image file related to the page the region is in
-	 * @param region The region to extract */
+	 * @param region The region to extract
+	 * @see <a href="http://developer.android.com/guide/topics/graphics/2d-graphics.html#nine-patch">ninepatch specification</a>
+	 */
 	private BufferedImage extractNinePatch (BufferedImage page, Region region, File outputDirFile) {
 		BufferedImage splitImage = extractImage(page, region, outputDirFile, NINEPATCH_PADDING);
 		Graphics2D g2 = splitImage.createGraphics();

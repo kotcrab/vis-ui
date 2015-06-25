@@ -26,8 +26,8 @@ import com.kotcrab.vis.runtime.entity.EntityGroup;
 /**
  * {@link ObjectGroup} data. Similar to {@link EntityGroupData} but because {@link EntityGroup} does not support changing entities list, we use
  * different class here.
- * @see ObjectGroup
  * @author Kotcrab
+ * @see ObjectGroup
  */
 public class ObjectGroupData extends EntityData<ObjectGroup> {
 	public Array<Entity> entities;

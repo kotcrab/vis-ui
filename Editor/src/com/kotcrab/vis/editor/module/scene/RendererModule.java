@@ -22,10 +22,10 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.scene.TextObject;
-import com.kotcrab.vis.editor.Log;
 
 /**
  * Render scene

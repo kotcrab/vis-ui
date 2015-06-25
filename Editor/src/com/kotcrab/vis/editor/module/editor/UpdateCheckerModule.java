@@ -19,12 +19,12 @@ package com.kotcrab.vis.editor.module.editor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.ui.toast.ExceptionToast;
-import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.webapi.WebAPIEditorVersionListener;
 import com.kotcrab.vis.editor.webapi.EditorBuild;
 import com.kotcrab.vis.editor.webapi.UpdateChannelType;
+import com.kotcrab.vis.editor.webapi.WebAPIEditorVersionListener;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 

@@ -26,9 +26,11 @@ import com.badlogic.gdx.utils.Sort;
 
 import java.util.Comparator;
 
-/** Packs pages of images using the maximal rectangles bin packing algorithm by Jukka Jylänki. A brute force binary search is used
+/**
+ * Packs pages of images using the maximal rectangles bin packing algorithm by Jukka Jylänki. A brute force binary search is used
  * to pack into the smallest bin possible.
- * @author Nathan Sweet */
+ * @author Nathan Sweet
+ */
 public class MaxRectsPacker implements Packer {
 	private RectComparator rectComparator = new RectComparator();
 	private FreeRectChoiceHeuristic[] methods = FreeRectChoiceHeuristic.values();
@@ -171,8 +173,10 @@ public class MaxRectsPacker implements Packer {
 		}
 	}
 
-	/** @param fully If true, the only results that pack all rects will be considered. If false, all results are considered, not all
-	 *           rects may be packed. */
+	/**
+	 * @param fully If true, the only results that pack all rects will be considered. If false, all results are considered, not all
+	 * rects may be packed.
+	 */
 	private Page packAtSize (boolean fully, int width, int height, Array<Rect> inputRects) {
 		Page bestResult = null;
 		for (int i = 0, n = methods.length; i < n; i++) {
@@ -235,10 +239,12 @@ public class MaxRectsPacker implements Packer {
 		}
 	}
 
-	/** Maximal rectangles bin packing algorithm. Adapted from this C++ public domain source:
+	/**
+	 * Maximal rectangles bin packing algorithm. Adapted from this C++ public domain source:
 	 * http://clb.demon.fi/projects/even-more-rectangle-bin-packing
 	 * @author Jukka Jyl�nki
-	 * @author Nathan Sweet */
+	 * @author Nathan Sweet
+	 */
 	class MaxRects {
 		private int binWidth;
 		private int binHeight;

@@ -27,6 +27,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectGeneric;
@@ -36,7 +37,6 @@ import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.CopyFileVisitor;
 import com.kotcrab.vis.editor.util.EditorException;
-import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 

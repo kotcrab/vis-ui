@@ -21,9 +21,11 @@ import com.badlogic.gdx.tools.texturepacker.ColorBleedEffect.Mask.MaskIterator;
 import java.awt.image.BufferedImage;
 import java.util.NoSuchElementException;
 
-/** @author Ruben Garat
+/**
+ * @author Ruben Garat
  * @author Ariel Coppes
- * @author Nathan Sweet */
+ * @author Nathan Sweet
+ */
 public class ColorBleedEffect {
 	static int TO_PROCESS = 0;
 	static int IN_PROCESS = 1;

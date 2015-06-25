@@ -26,11 +26,13 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.regex.Pattern;
 
-/** Collects files recursively, filtering by file name. Callbacks are provided to process files and the results are collected,
+/**
+ * Collects files recursively, filtering by file name. Callbacks are provided to process files and the results are collected,
  * either {@link #processFile(Entry)} or {@link #processDir(Entry, ArrayList)} can be overridden, or both. The entries provided to
  * the callbacks have the original file, the output directory, and the output file. If {@link #setFlattenOutput(boolean)} is
  * false, the output will match the directory structure of the input.
- * @author Nathan Sweet */
+ * @author Nathan Sweet
+ */
 public class FileProcessor {
 	FilenameFilter inputFilter;
 	Comparator<File> comparator = new Comparator<File>() {
@@ -104,15 +106,19 @@ public class FileProcessor {
 		return this;
 	}
 
-	/** @param outputRoot May be null.
-	 * @see #process(File, File) */
+	/**
+	 * @param outputRoot May be null.
+	 * @see #process(File, File)
+	 */
 	public ArrayList<Entry> process (String inputFile, String outputRoot) throws Exception {
 		return process(new File(inputFile), outputRoot == null ? null : new File(outputRoot));
 	}
 
-	/** Processes the specified input file or directory.
+	/**
+	 * Processes the specified input file or directory.
 	 * @param outputRoot May be null if there is no output from processing the files.
-	 * @return the processed files added with {@link #addProcessedFile(Entry)}. */
+	 * @return the processed files added with {@link #addProcessedFile(Entry)}.
+	 */
 	public ArrayList<Entry> process (File inputFile, File outputRoot) throws Exception {
 		if (!inputFile.exists())
 			throw new IllegalArgumentException("Input file does not exist: " + inputFile.getAbsolutePath());
@@ -122,9 +128,11 @@ public class FileProcessor {
 			return process(inputFile.listFiles(), outputRoot);
 	}
 
-	/** Processes the specified input files.
+	/**
+	 * Processes the specified input files.
 	 * @param outputRoot May be null if there is no output from processing the files.
-	 * @return the processed files added with {@link #addProcessedFile(Entry)}. */
+	 * @return the processed files added with {@link #addProcessedFile(Entry)}.
+	 */
 	public ArrayList<Entry> process (File[] files, File outputRoot) throws Exception {
 		if (outputRoot == null) outputRoot = new File("");
 		outputFiles.clear();
@@ -231,8 +239,10 @@ public class FileProcessor {
 	protected void processDir (Entry entryDir, ArrayList<Entry> files) throws Exception {
 	}
 
-	/** This method should be called by {@link #processFile(Entry)} or {@link #processDir(Entry, ArrayList)} if the return value of
-	 * {@link #process(File, File)} or {@link #process(File[], File)} should return all the processed files. */
+	/**
+	 * This method should be called by {@link #processFile(Entry)} or {@link #processDir(Entry, ArrayList)} if the return value of
+	 * {@link #process(File, File)} or {@link #process(File[], File)} should return all the processed files.
+	 */
 	protected void addProcessedFile (Entry entry) {
 		outputFiles.add(entry);
 	}

@@ -21,16 +21,16 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.SceneCacheModule;
-import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /**
  * Undoable action for updating assets references in Entities. This is generic case usage that replaces provided source {@link VisAssetDescriptor} with provided target.
- * @see UpdateAtlasAssetReferencesAction
  * @author Kotcrab
+ * @see UpdateAtlasAssetReferencesAction
  */
 public class UpdateReferencesAction implements UndoableAction {
 	@InjectModule private SceneCacheModule sceneCache;

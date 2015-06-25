@@ -20,12 +20,12 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Page;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.assets.transaction.action.CopyFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.DeleteFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.UpdateAtlasAssetReferencesAction;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
-import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 

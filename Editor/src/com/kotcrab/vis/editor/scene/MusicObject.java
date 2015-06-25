@@ -28,8 +28,8 @@ import com.kotcrab.vis.runtime.entity.MusicEntity;
 
 /**
  * Music object
- * @see MusicEntity
  * @author Kotcrab
+ * @see MusicEntity
  */
 public class MusicObject extends MusicEntity implements EditorObject {
 	private transient TextureRegion icon;

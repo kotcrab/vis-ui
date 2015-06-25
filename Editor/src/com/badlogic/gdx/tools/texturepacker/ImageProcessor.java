@@ -88,8 +88,10 @@ public class ImageProcessor {
 		if (rect != null && settings.limitMemory) rect.unloadImage(file);
 	}
 
-	/** The image will be kept in-memory during packing.
-	 * @see #addImage(File) */
+	/**
+	 * The image will be kept in-memory during packing.
+	 * @see #addImage(File)
+	 */
 	public Rect addImage (BufferedImage image, String name) {
 		Rect rect = processImage(image, name);
 
@@ -267,8 +269,10 @@ public class ImageProcessor {
 				+ rgba[1] + ", " + rgba[2] + ", " + rgba[3]);
 	}
 
-	/** Returns the splits, or null if the image had no splits or the splits were only a single region. Splits are an int[4] that
-	 * has left, right, top, bottom. */
+	/**
+	 * Returns the splits, or null if the image had no splits or the splits were only a single region. Splits are an int[4] that
+	 * has left, right, top, bottom.
+	 */
 	private int[] getSplits (BufferedImage image, String name) {
 		WritableRaster raster = image.getRaster();
 
@@ -310,8 +314,10 @@ public class ImageProcessor {
 		return new int[]{startX, endX, startY, endY};
 	}
 
-	/** Returns the pads, or null if the image had no pads or the pads match the splits. Pads are an int[4] that has left, right,
-	 * top, bottom. */
+	/**
+	 * Returns the pads, or null if the image had no pads or the pads match the splits. Pads are an int[4] that has left, right,
+	 * top, bottom.
+	 */
 	private int[] getPads (BufferedImage image, String name, int[] splits) {
 		WritableRaster raster = image.getRaster();
 
@@ -378,10 +384,12 @@ public class ImageProcessor {
 		return pads;
 	}
 
-	/** Hunts for the start or end of a sequence of split pixels. Begins searching at (startX, startY) then follows along the x or y
+	/**
+	 * Hunts for the start or end of a sequence of split pixels. Begins searching at (startX, startY) then follows along the x or y
 	 * axis (depending on value of xAxis) for the first non-transparent pixel if startPoint is true, or the first transparent pixel
 	 * if startPoint is false. Returns 0 if none found, as 0 is considered an invalid split point being in the outer border which
-	 * will be stripped. */
+	 * will be stripped.
+	 */
 	static private int getSplitPoint (WritableRaster raster, String name, int startX, int startY, boolean startPoint, boolean xAxis) {
 		int[] rgba = new int[4];
 
