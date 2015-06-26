@@ -27,6 +27,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
@@ -84,6 +86,10 @@ public class EntityManipulatorModule extends SceneModule {
 	private PopupMenu entityPopupMenu;
 	private float menuX, menuY;
 
+	private static float keyRepeatInitialTime = 0.4f;
+	private static float keyRepeatTime = 0.05f;
+	private EntityMoveTimerTask entityMoveTimerTask;
+
 	@Override
 	public void init () {
 		createPopupMenu();
@@ -94,6 +100,8 @@ public class EntityManipulatorModule extends SceneModule {
 		layersDialog = new LayersDialog(this, undoModule, scene);
 
 		rectangularSelection = new RectangularSelection(scene, this);
+
+		entityMoveTimerTask = new EntityMoveTimerTask();
 	}
 
 	@Override
@@ -368,6 +376,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 	@Override
 	public boolean keyDown (InputEvent event, int keycode) {
+		entityMoveTimerTask.cancel();
+
 		if (keycode == Keys.FORWARD_DEL) { //Delete
 			deleteSelectedEntities();
 			return true;
@@ -378,6 +388,42 @@ public class EntityManipulatorModule extends SceneModule {
 		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.V) paste();
 		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.X) cut();
 
+		int delta = 1;
+		if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) delta = 10;
+		boolean runTask = false;
+
+		if (Gdx.input.isKeyPressed(Keys.UP)) {
+			entityMoveTimerTask.set(Direction.UP, delta);
+			runTask = true;
+		}
+
+		if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+			entityMoveTimerTask.set(Direction.DOWN, delta);
+			runTask = true;
+		}
+
+		if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+			entityMoveTimerTask.set(Direction.LEFT, delta);
+			runTask = true;
+		}
+
+		if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+			entityMoveTimerTask.set(Direction.RIGHT, delta);
+			runTask = true;
+		}
+
+		if (runTask) {
+			entityMoveTimerTask.run();
+			Timer.schedule(entityMoveTimerTask, keyRepeatInitialTime, keyRepeatTime);
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean keyUp (InputEvent event, int keycode) {
+		entityMoveTimerTask.cancel();
 		return false;
 	}
 
@@ -653,6 +699,40 @@ public class EntityManipulatorModule extends SceneModule {
 
 		public void loadTo (EditorObject entity) {
 			entity.setPosition(x, y);
+		}
+	}
+
+	private enum Direction {UP, DOWN, LEFT, RIGHT}
+
+	private class EntityMoveTimerTask extends Task {
+		private Direction dir;
+		private int delta;
+
+		@Override
+		public void run () {
+			if (scene.activeLayer.locked) return;
+
+			for (EditorObject obj : selectedEntities) {
+				switch (dir) {
+					case UP:
+						obj.setY(obj.getY() + delta);
+						break;
+					case DOWN:
+						obj.setY(obj.getY() + delta * -1);
+						break;
+					case LEFT:
+						obj.setX(obj.getX() + delta * -1);
+						break;
+					case RIGHT:
+						obj.setX(obj.getX() + delta);
+						break;
+				}
+			}
+		}
+
+		public void set (Direction dir, int delta) {
+			this.dir = dir;
+			this.delta = delta;
 		}
 	}
 }
