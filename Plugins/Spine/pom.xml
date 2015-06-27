@@ -6,12 +6,13 @@
     <parent>
         <artifactId>vis-parent</artifactId>
         <groupId>com.kotcrab.vis</groupId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
         <relativePath>../../Parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>vis-editor-spine</artifactId>
     <packaging>jar</packaging>
+    <version>0.1.0</version>
     <name>VisEditor Spine Integration</name>
 
     <properties>
