@@ -1,4 +1,4 @@
-[0.8.0] [LibGDX 1.6.2] [Snapshot]
+[0.8.0] [LibGDX 1.6.3] [Snapshot]
 -API Addition: Tooltip (Actor target, String text, int textAlign)
 -API Addition: Tooltip (String styleName, Actor target, String text, int textAlign)
 -API Addition: FormInputValidator#hideErrorOnEmptyInput (can be used with FromValidator to don't display error
