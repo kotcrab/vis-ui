@@ -134,8 +134,7 @@ public class VisWindow extends Window {
 			}
 		});
 
-		//TODO label.getAligment does not exist, fix this after making PR
-		if (VisUI.getDefaultTitleAlign() == Align.center && getTitleTable().getChildren().size == 2)
+		if (getTitleLabel().getLabelAlign() == Align.center && getTitleTable().getChildren().size == 2)
 			getTitleTable().getCell(getTitleLabel()).padLeft(closeButton.getWidth() * 2);
 	}
 
