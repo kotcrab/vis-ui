@@ -37,7 +37,6 @@ import com.kotcrab.vis.editor.ui.toast.LoadingPluginsFailedToast;
 import com.kotcrab.vis.editor.util.ChildFirstURLClassLoader;
 import com.kotcrab.vis.editor.util.EditorException;
 import com.kotcrab.vis.editor.util.FileUtils;
-import com.kotcrab.vis.editor.util.gdx.ButtonUtils;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
@@ -252,7 +251,7 @@ public class PluginLoaderModule extends EditorModule {
 
 			for (PluginDescriptor descriptor : loader.getAllPlugins()) {
 				VisCheckBox checkBox = new VisCheckBox(descriptor.folderName);
-				ButtonUtils.disableProgrammaticEvents(checkBox);
+				checkBox.setProgrammaticChangeEvents(false);
 
 				LinkLabel detailsLabel = new LinkLabel("Details");
 				detailsLabel.setListener(url -> Editor.instance.getStage().addActor(new PluginDetailsDialog(descriptor).fadeIn()));
@@ -264,7 +263,7 @@ public class PluginLoaderModule extends EditorModule {
 
 				if (descriptor.license != null) {
 					checkBox.addListener(new VisChangeListener((event, actor) -> {
-						if (checkBox.isChecked() && event.isStopped() == false) {
+						if (checkBox.isChecked()) {
 							checkBox.setChecked(false);
 
 							Editor.instance.getStage().addActor(new LicenseDialog(descriptor.license, new LicenseDialogListener() {

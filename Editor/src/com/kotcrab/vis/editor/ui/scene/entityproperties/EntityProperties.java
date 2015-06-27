@@ -147,12 +147,10 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		sharedCheckBoxChangeListener = new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				if (event.isStopped() == false) {
-					beginSnapshot();
-					setValuesToEntity();
-					parentTab.dirty();
-					endSnapshot();
-				}
+				beginSnapshot();
+				setValuesToEntity();
+				parentTab.dirty();
+				endSnapshot();
 			}
 		};
 
