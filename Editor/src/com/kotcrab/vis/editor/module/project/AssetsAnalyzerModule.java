@@ -33,6 +33,7 @@ import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.scene.ObjectGroup;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
@@ -116,31 +117,40 @@ public class AssetsAnalyzerModule extends ProjectModule {
 
 			Array<EditorObject> sceneUsagesList = new Array<>();
 
-			for (Layer layer : scene.layers) {
-				for (EditorObject entity : layer.entities) {
-					boolean used = false;
-
-					if (entity.getAssetDescriptor() != null) {
-						if (entity.getAssetDescriptor().compare(provideDescriptor(file, path))) used = true;
-					}
-
-					if (used) {
-						usages.count++;
-						sceneUsagesList.add(entity);
-					}
-
-					if (usages.count == USAGE_SEARCH_LIMIT) {
-						usages.limitExceeded = true;
-						break;
-					}
-				}
-			}
+			for (Layer layer : scene.layers)
+				processEntities(usages, sceneUsagesList, file, path, layer.entities);
 
 			if (sceneUsagesList.size > 0)
 				usages.list.put(scene, sceneUsagesList);
 		}
 
 		return usages;
+	}
+
+	private void processEntities (AssetsUsages usages, Array<EditorObject> sceneUsagesList, FileHandle file, String path, Array<EditorObject> entities) {
+		for (EditorObject entity : entities) {
+			if (entity instanceof ObjectGroup) {
+				ObjectGroup group = (ObjectGroup) entity;
+				processEntities(usages, sceneUsagesList, file, path, group.getObjects());
+				continue;
+			}
+
+			boolean used = false;
+
+			if (entity.getAssetDescriptor() != null) {
+				if (entity.getAssetDescriptor().compare(provideDescriptor(file, path))) used = true;
+			}
+
+			if (used) {
+				usages.count++;
+				sceneUsagesList.add(entity);
+			}
+
+			if (usages.count == USAGE_SEARCH_LIMIT) {
+				usages.limitExceeded = true;
+				break;
+			}
+		}
 	}
 
 	public boolean isSafeFileMoveSupported (FileHandle file) {
