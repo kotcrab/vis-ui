@@ -61,7 +61,7 @@ public class RectangularSelection {
 	public void findContainedComponents () {
 		Array<EditorObject> matchingEntities = new Array<>();
 
-		for (EditorObject entity : scene.activeLayer.entities)
+		for (EditorObject entity : entityManipulatorModule.getSelectionRoot().getSelectionEntities())
 			if (rectToDraw.contains(entity.getBoundingRectangle())) matchingEntities.add(entity);
 
 		entityManipulatorModule.resetSelection();

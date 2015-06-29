@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.util.AfterDeserialize;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.SoundEntity;
@@ -30,7 +31,7 @@ import com.kotcrab.vis.runtime.entity.SoundEntity;
  * @author Kotcrab
  * @see SoundEntity
  */
-public class SoundObject extends SoundEntity implements EditorObject {
+public class SoundObject extends SoundEntity implements EditorObject, AfterDeserialize {
 	private transient TextureRegion icon;
 
 	private VisAssetDescriptor assetDescriptor;
@@ -60,6 +61,7 @@ public class SoundObject extends SoundEntity implements EditorObject {
 		bounds.set(x, y, icon.getRegionWidth(), icon.getRegionHeight());
 	}
 
+	@Override
 	public void onDeserialize () {
 		this.icon = Assets.getIconRegion(Icons.SOUND);
 	}

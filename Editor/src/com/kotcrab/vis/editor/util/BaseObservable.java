@@ -14,39 +14,40 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.scene;
+package com.kotcrab.vis.editor.util;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 
 /**
- * EditorScene layer class
+ * Default implementation of {@link Observable}
  * @author Kotcrab
  */
-public class Layer implements Disposable, SceneSelectionRoot {
-	public String name;
-	public boolean locked = false;
-	public boolean visible = true;
-	public Array<EditorObject> entities = new Array<EditorObject>();
+public class BaseObservable implements Observable, AfterDeserialize {
+	private transient Array<ObservableListener> listeners;
 
-	public Layer (String name) {
-		this.name = name;
+	public BaseObservable () {
+		listeners = new Array<>();
 	}
 
 	@Override
-	public void dispose () {
-		for (EditorObject entity : entities) {
-			entity.dispose();
+	public void onDeserialize () {
+		listeners = new Array<>();
+	}
+
+	@Override
+	public void addObservable (ObservableListener listener) {
+		listeners.add(listener);
+	}
+
+	@Override
+	public boolean removeObservable (ObservableListener listener) {
+		return listeners.removeValue(listener, true);
+	}
+
+	@Override
+	public void postNotification (int notification) {
+		for (ObservableListener listener : listeners) {
+			listener.notified(notification);
 		}
-	}
-
-	@Override
-	public String toString () {
-		return name;
-	}
-
-	@Override
-	public Array<EditorObject> getSelectionEntities () {
-		return entities;
 	}
 }

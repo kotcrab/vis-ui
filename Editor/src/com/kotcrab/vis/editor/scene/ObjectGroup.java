@@ -29,7 +29,7 @@ import com.kotcrab.vis.runtime.entity.EntityGroup;
  * @author Kotcrab
  * @see EntityGroup
  */
-public class ObjectGroup extends EntityGroup implements EditorObject {
+public class ObjectGroup extends EntityGroup implements EditorObject, SceneSelectionRoot {
 	private boolean preserveForRuntime;
 
 	private Rectangle bounds;
@@ -65,18 +65,15 @@ public class ObjectGroup extends EntityGroup implements EditorObject {
 			throw new IllegalArgumentException("ObjectGroup entities must be instance of EditorObject");
 
 		super.addEntity(entity);
-		calcBounds();
 	}
 
 	@Override
 	public void removeEntity (Entity entity) {
 		super.removeEntity(entity);
-		calcBounds();
 	}
 
-	public void addEntities (Array entites) {
-		entities.addAll(entites);
-		calcBounds();
+	public void addEntities (Array entities) {
+		this.entities.addAll(entities);
 	}
 
 	@Override
@@ -91,6 +88,7 @@ public class ObjectGroup extends EntityGroup implements EditorObject {
 
 	@Override
 	public Rectangle getBoundingRectangle () {
+		calcBounds();
 		return bounds;
 	}
 
@@ -178,5 +176,10 @@ public class ObjectGroup extends EntityGroup implements EditorObject {
 	@Override
 	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
 		return false;
+	}
+
+	@Override
+	public Array<EditorObject> getSelectionEntities () {
+		return getObjects();
 	}
 }

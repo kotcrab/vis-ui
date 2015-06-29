@@ -88,11 +88,11 @@ public class LayersDialog extends VisTable {
 		layerDownButton.addListener(new VisChangeListener((event, actor) -> undoModule.execute(new LayerMovedAction(false))));
 
 		layerRemoveButton.addListener(new VisChangeListener((event, actor) ->
-				DialogUtils.showOptionDialog(getStage(), "Delete Layer", "Are you sure you want to delete layer '" + scene.activeLayer.name + "'?",
+				DialogUtils.showOptionDialog(getStage(), "Delete Layer", "Are you sure you want to delete layer '" + scene.getActiveLayer().name + "'?",
 						OptionDialogType.YES_NO, new OptionDialogAdapter() {
 							@Override
 							public void yes () {
-								undoModule.execute(new LayerRemovedAction(scene.activeLayer));
+								undoModule.execute(new LayerRemovedAction(scene.getActiveLayer()));
 							}
 						})));
 
@@ -136,7 +136,7 @@ public class LayersDialog extends VisTable {
 			if (item == null) item = new LayerItem(layer);
 			layersTable.add(item).expandX().fillX().row();
 
-			if (layer == scene.activeLayer)
+			if (layer == scene.getActiveLayer())
 				item.select();
 		}
 
@@ -236,7 +236,7 @@ public class LayersDialog extends VisTable {
 		int targetIndex;
 
 		public LayerMovedAction (boolean moveUp) {
-			currentIndex = scene.layers.indexOf(scene.activeLayer, true);
+			currentIndex = scene.layers.indexOf(scene.getActiveLayer(), true);
 			if (moveUp)
 				targetIndex = currentIndex - 1;
 			else

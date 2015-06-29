@@ -17,36 +17,11 @@
 package com.kotcrab.vis.editor.scene;
 
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 
 /**
- * EditorScene layer class
+ * Implemented by objects that can become selection root in scene tab.
  * @author Kotcrab
  */
-public class Layer implements Disposable, SceneSelectionRoot {
-	public String name;
-	public boolean locked = false;
-	public boolean visible = true;
-	public Array<EditorObject> entities = new Array<EditorObject>();
-
-	public Layer (String name) {
-		this.name = name;
-	}
-
-	@Override
-	public void dispose () {
-		for (EditorObject entity : entities) {
-			entity.dispose();
-		}
-	}
-
-	@Override
-	public String toString () {
-		return name;
-	}
-
-	@Override
-	public Array<EditorObject> getSelectionEntities () {
-		return entities;
-	}
+public interface SceneSelectionRoot {
+	Array<EditorObject> getSelectionEntities ();
 }

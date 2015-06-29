@@ -118,7 +118,7 @@ public class SceneIOModule extends ProjectModule {
 			Input input = new Input(new FileInputStream(fullPathFile.file()));
 			EditorScene scene = kryo.readObject(input, EditorScene.class);
 			scene.path = fileAccessModule.relativizeToAssetsFolder(fullPathFile);
-			scene.activeLayer = scene.layers.get(0);
+			scene.setActiveLayer(scene.layers.get(0));
 			input.close();
 
 			return scene;

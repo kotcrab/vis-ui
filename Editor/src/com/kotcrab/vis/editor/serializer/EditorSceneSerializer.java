@@ -44,6 +44,7 @@ public class EditorSceneSerializer extends CompatibleFieldSerializer<EditorScene
 	public EditorScene read (Kryo kryo, Input input, Class<EditorScene> sceneClass) {
 		EditorScene obj = super.read(kryo, input, sceneClass);
 
+		obj.onDeserialize();
 		input.readInt(); //version code
 
 		return obj;

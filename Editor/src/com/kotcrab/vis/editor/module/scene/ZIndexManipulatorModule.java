@@ -21,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.scene.EditorObject;
-import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.scene.SceneSelectionRoot;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 
@@ -49,26 +49,30 @@ public class ZIndexManipulatorModule extends SceneModule {
 	}
 
 	private void moveEntity (EditorObject entity, Array<EditorObject> overlappingEntities, boolean up) {
+		Array<EditorObject> entities = entityManipulator.getSelectionRoot().getSelectionEntities();
+
 		if (overlappingEntities.size > 0) {
-			int currentIndex = scene.activeLayer.entities.indexOf(entity, true);
-			int targetIndex = scene.activeLayer.entities.indexOf(overlappingEntities.first(), true);
+			int currentIndex = entities.indexOf(entity, true);
+			int targetIndex = entities.indexOf(overlappingEntities.first(), true);
 
 			for (EditorObject overlappingEntity : overlappingEntities) {
-				int sceneIndex = scene.activeLayer.entities.indexOf(overlappingEntity, true);
+				int sceneIndex = entities.indexOf(overlappingEntity, true);
 				if (up ? sceneIndex < targetIndex : sceneIndex > targetIndex)
 					targetIndex = sceneIndex;
 			}
 
-			actionGroup.execute(new ZIndexChangeAction(scene.activeLayer, entity, currentIndex, targetIndex));
+			actionGroup.execute(new ZIndexChangeAction(entityManipulator.getSelectionRoot(), entity, currentIndex, targetIndex));
 		}
 	}
 
 	private Array<EditorObject> getOverlappingEntities (EditorObject entity, boolean up) {
-		Array<EditorObject> overlapping = new Array<>();
-		int entityIndex = scene.activeLayer.entities.indexOf(entity, true);
+		Array<EditorObject> entities = entityManipulator.getSelectionRoot().getSelectionEntities();
 
-		for (EditorObject sceneEntity : scene.activeLayer.entities) {
-			int sceneEntityIndex = scene.activeLayer.entities.indexOf(sceneEntity, true);
+		Array<EditorObject> overlapping = new Array<>();
+		int entityIndex = entities.indexOf(entity, true);
+
+		for (EditorObject sceneEntity : entities) {
+			int sceneEntityIndex = entities.indexOf(sceneEntity, true);
 
 			if (entity != sceneEntity &&
 					entity.getBoundingRectangle().overlaps(sceneEntity.getBoundingRectangle())) {
@@ -98,13 +102,13 @@ public class ZIndexManipulatorModule extends SceneModule {
 	}
 
 	private class ZIndexChangeAction implements UndoableAction {
-		private Layer layer;
+		private SceneSelectionRoot selectionRoot;
 		private EditorObject entity;
 		private int currentIndex;
 		private int targetIndex;
 
-		public ZIndexChangeAction (Layer layer, EditorObject entity, int currentIndex, int targetIndex) {
-			this.layer = layer;
+		public ZIndexChangeAction (SceneSelectionRoot selectionRoot, EditorObject entity, int currentIndex, int targetIndex) {
+			this.selectionRoot = selectionRoot;
 			this.entity = entity;
 			this.currentIndex = currentIndex;
 			this.targetIndex = targetIndex;
@@ -112,14 +116,14 @@ public class ZIndexManipulatorModule extends SceneModule {
 
 		@Override
 		public void execute () {
-			layer.entities.removeIndex(currentIndex);
-			layer.entities.insert(targetIndex, entity);
+			selectionRoot.getSelectionEntities().removeIndex(currentIndex);
+			selectionRoot.getSelectionEntities().insert(targetIndex, entity);
 		}
 
 		@Override
 		public void undo () {
-			layer.entities.removeIndex(targetIndex);
-			layer.entities.insert(currentIndex, entity);
+			selectionRoot.getSelectionEntities().removeIndex(targetIndex);
+			selectionRoot.getSelectionEntities().insert(currentIndex, entity);
 		}
 	}
 }

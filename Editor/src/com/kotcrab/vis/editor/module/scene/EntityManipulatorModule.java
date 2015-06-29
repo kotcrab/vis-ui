@@ -37,9 +37,7 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
-import com.kotcrab.vis.editor.scene.EditorObject;
-import com.kotcrab.vis.editor.scene.Layer;
-import com.kotcrab.vis.editor.scene.ObjectGroup;
+import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
@@ -72,6 +70,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private RectangularSelection rectangularSelection;
 	private final Array<EditorObject> selectedEntities = new Array<>();
+	private SceneSelectionRoot selectionRoot;
 
 	private float lastTouchX, lastTouchY;
 
@@ -102,6 +101,14 @@ public class EntityManipulatorModule extends SceneModule {
 		rectangularSelection = new RectangularSelection(scene, this);
 
 		entityMoveTimerTask = new EntityMoveTimerTask();
+
+		selectionRoot = scene.getActiveLayer();
+		scene.addObservable(notificationId -> {
+			if (notificationId == EditorScene.ACTIVE_LAYER_CHANGED) {
+				selectionRoot = scene.getActiveLayer();
+				resetSelection();
+			}
+		});
 	}
 
 	@Override
@@ -140,15 +147,32 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private void createPopupMenu () {
 		entityPopupMenu = new PopupMenu();
+		buildEntityPopupMenu(null);
+
+		generalPopupMenu = new PopupMenu();
+		generalPopupMenu.addItem(MenuUtils.createMenuItem("Paste", this::paste));
+		generalPopupMenu.addItem(MenuUtils.createMenuItem("Select All", this::selectAll));
+	}
+
+	private void buildEntityPopupMenu (Array<EditorObject> entities) {
+		entityPopupMenu.clearChildren();
+
+		if (entities != null) {
+			if (entities.size == 1 && entities.peek() instanceof SceneSelectionRoot) {
+				entityPopupMenu.addItem(MenuUtils.createMenuItem("Enter into group", () -> {
+					setSelectionRoot((SceneSelectionRoot) entities.peek());
+					selectAll();
+				}));
+				entityPopupMenu.addSeparator();
+			}
+		}
+
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Cut", this::cut));
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Copy", this::copy));
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Paste", this::paste));
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Remove", this::deleteSelectedEntities));
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Select All", this::selectAll));
 
-		generalPopupMenu = new PopupMenu();
-		generalPopupMenu.addItem(MenuUtils.createMenuItem("Paste", this::paste));
-		generalPopupMenu.addItem(MenuUtils.createMenuItem("Select All", this::selectAll));
 	}
 
 	private void selectedEntitiesToClipboard () {
@@ -194,7 +218,7 @@ public class EntityManipulatorModule extends SceneModule {
 				entity.setPosition(px, py);
 			}
 
-			undoModule.execute(new EntitiesAddedAction(scene.activeLayer, entitiesClipboard));
+			undoModule.execute(new EntitiesAddedAction(selectionRoot, entitiesClipboard));
 
 			Array<EditorObject> newClipboard = sceneIOModule.getKryo().copy(entitiesClipboard);
 			entitiesClipboard.clear();
@@ -214,7 +238,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private boolean isMouseInsideSelectedEntities (float x, float y) {
 		for (EditorObject entity : selectedEntities) {
 			if (entity.getBoundingRectangle().contains(x, y)) {
-				EditorObject result = findEntityWithSmallestSurfaceArea(x, y);
+				EditorObject result = findEntityWithSmallestSurfaceArea(selectionRoot, x, y);
 				if (result == entity) return true;
 			}
 		}
@@ -222,8 +246,8 @@ public class EntityManipulatorModule extends SceneModule {
 		return false;
 	}
 
-	private boolean isMouseInsideEntities (float x, float y) {
-		for (EditorObject obj : scene.activeLayer.entities) {
+	private boolean isMouseInsideSelectionRoot (float x, float y) {
+		for (EditorObject obj : selectionRoot.getSelectionEntities()) {
 			if (obj.getBoundingRectangle().contains(x, y)) return true;
 		}
 
@@ -231,7 +255,7 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	public void processDropPayload (Payload payload) {
-		if (scene.activeLayer.locked) {
+		if (scene.getActiveLayer().locked) {
 			App.eventBus.post(new StatusBarEvent("Layer is locked!"));
 			return;
 		}
@@ -244,38 +268,54 @@ public class EntityManipulatorModule extends SceneModule {
 			float y = camera.getInputY() - entity.getHeight() / 2;
 			entity.setPosition(x, y);
 
-			undoModule.execute(new EntityAddedAction(scene.activeLayer, entity));
+			undoModule.execute(new EntityAddedAction(selectionRoot, entity));
 		}
 	}
 
 	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-		if (scene.activeLayer.locked) return false;
+		if (scene.getActiveLayer().locked) return false;
 		x = camera.getInputX();
 		y = camera.getInputY();
 
 		if (button == Buttons.LEFT) {
 			dragging = true;
+
 			lastTouchX = x;
 			lastTouchY = y;
 
-			if (isMouseInsideEntities(x, y) == false) {
+			if (isMouseInsideSelectionRoot(x, y) == false) {
+				//entity wasn't in selection root but it was in layer so that means user finished editing current selection root and we need
+				//to switch selection root back to active layer
+				EditorObject layerEntity = findEntityWithSmallestSurfaceArea(scene.getActiveLayer(), x, y);
+				if (layerEntity != null) {
+					setSelectionRoot(scene.getActiveLayer());
+					touchDownMouseInsideSelected(x, y); //make sure that entity will be selected
+					return true;
+				}
+
 				rectangularSelection.touchDown(x, y, button);
 				return true;
 			}
 
-			if (isMouseInsideSelectedEntities(x, y) == false) {
-				//multiple select made easy
-				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) selectedEntities.clear();
+			if (touchDownMouseInsideSelected(x, y)) return true;
+		}
 
-				EditorObject result = findEntityWithSmallestSurfaceArea(x, y);
-				if (result != null && selectedEntities.contains(result, true) == false)
-					selectedEntities.add(result);
+		return false;
+	}
 
-				entityProperties.selectedEntitiesChanged();
-				mouseInsideSelected = true;
-				return true;
-			}
+	private boolean touchDownMouseInsideSelected (float x, float y) {
+		if (isMouseInsideSelectedEntities(x, y) == false) {
+			//multiple select made easy
+			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) selectedEntities.clear();
+
+			EditorObject result = findEntityWithSmallestSurfaceArea(selectionRoot, x, y);
+			if (result != null && selectedEntities.contains(result, true) == false)
+				selectedEntities.add(result);
+
+			entityProperties.selectedEntitiesChanged();
+			mouseInsideSelected = true;
+			return true;
 		}
 
 		return false;
@@ -323,7 +363,7 @@ public class EntityManipulatorModule extends SceneModule {
 		y = camera.getInputY();
 
 		if (button == Buttons.LEFT && dragged == false && mouseInsideSelected == false) {
-			EditorObject result = findEntityWithSmallestSurfaceArea(x, y);
+			EditorObject result = findEntityWithSmallestSurfaceArea(selectionRoot, x, y);
 			if (result != null)
 				selectedEntities.removeValue(result, true);
 
@@ -334,7 +374,7 @@ public class EntityManipulatorModule extends SceneModule {
 			if (isMouseInsideSelectedEntities(x, y) == false)
 				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) selectedEntities.clear();
 
-			EditorObject result = findEntityWithSmallestSurfaceArea(x, y);
+			EditorObject result = findEntityWithSmallestSurfaceArea(selectionRoot, x, y);
 			if (result != null && selectedEntities.contains(result, true) == false)
 				selectedEntities.add(result);
 
@@ -345,6 +385,7 @@ public class EntityManipulatorModule extends SceneModule {
 				menuX = x;
 				menuY = y;
 
+				buildEntityPopupMenu(selectedEntities);
 				entityPopupMenu.showMenu(event.getStage(), event.getStageX(), event.getStageY());
 			} else
 				generalPopupMenu.showMenu(event.getStage(), event.getStageX(), event.getStageY());
@@ -428,7 +469,7 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	private void deleteSelectedEntities () {
-		undoModule.execute(new EntityRemovedAction(scene.activeLayer, selectedEntities));
+		undoModule.execute(new EntityRemovedAction(selectionRoot, selectedEntities));
 	}
 
 	/**
@@ -437,11 +478,11 @@ public class EntityManipulatorModule extends SceneModule {
 	 * When selecting entities, and few of them are overlapping, selecting entity with smallest
 	 * area gives better results than just selecting first one.
 	 */
-	private EditorObject findEntityWithSmallestSurfaceArea (float x, float y) {
+	private EditorObject findEntityWithSmallestSurfaceArea (SceneSelectionRoot selectionRoot, float x, float y) {
 		EditorObject matchingEntity = null;
 		float lastSurfaceArea = Float.MAX_VALUE;
 
-		for (EditorObject entity : scene.activeLayer.entities) {
+		for (EditorObject entity : selectionRoot.getSelectionEntities()) {
 			Rectangle entityBoundingRectangle = entity.getBoundingRectangle();
 			if (entityBoundingRectangle.contains(x, y)) {
 
@@ -470,13 +511,21 @@ public class EntityManipulatorModule extends SceneModule {
 		return selectedEntities;
 	}
 
-	public void select (EditorObject entity) {
+	private boolean preSelect (EditorObject entity, boolean resetSelectionWhenSwitchingRoot) {
 		Layer layer = findObjectLayer(entity);
 		if (layer == null)
 			throw new IllegalArgumentException("Cannot select entity that isn't added to entity list");
 
-		if (layer.locked) return;
+		if (layer.locked) return false;
 		switchLayer(layer);
+
+		SceneSelectionRoot selectionRoot = findObjectSelectionRoot(entity);
+		if (selectionRoot != layer) setSelectionRoot(selectionRoot, resetSelectionWhenSwitchingRoot);
+		return true;
+	}
+
+	public void select (EditorObject entity) {
+		if (preSelect(entity, true) == false) return;
 
 		selectedEntities.clear();
 		selectedEntities.add(entity);
@@ -484,12 +533,7 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	void selectAppend (EditorObject entity) {
-		Layer layer = findObjectLayer(entity);
-		if (layer == null)
-			throw new IllegalArgumentException("Cannot select entity that isn't added to entity list");
-
-		if (layer.locked) return;
-		switchLayer(layer);
+		if (preSelect(entity, false) == false) return;
 
 		if (selectedEntities.contains(entity, true) == false)
 			selectedEntities.add(entity);
@@ -498,9 +542,8 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	public boolean switchLayer (Layer layer) {
-		if (scene.activeLayer != layer) {
-			scene.activeLayer = layer;
-			resetSelection();
+		if (scene.getActiveLayer() != layer) {
+			scene.setActiveLayer(layer);
 			return true;
 		}
 
@@ -513,15 +556,52 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private Layer findObjectLayer (EditorObject entity) {
 		for (Layer layer : scene.layers) {
-			if (layer.entities.contains(entity, true)) return layer;
+			if (isObjectInSelectionRoot(layer, entity))
+				return layer;
+		}
+
+		return null;
+	}
+
+	private boolean isObjectInSelectionRoot (SceneSelectionRoot selectionRoot, EditorObject entity) {
+		for (EditorObject object : selectionRoot.getSelectionEntities()) {
+			if (object == entity) return true;
+
+			if (object instanceof SceneSelectionRoot) {
+				if (isObjectInSelectionRoot((SceneSelectionRoot) object, entity) == true)
+					return true;
+			}
+		}
+
+		return false;
+	}
+
+	private SceneSelectionRoot findObjectSelectionRoot (EditorObject entity) {
+		for (Layer layer : scene.layers) {
+			SceneSelectionRoot root = findObjectInSelectionRoot(layer, entity);
+			if (root != null)
+				return root;
+		}
+
+		return null;
+	}
+
+	private SceneSelectionRoot findObjectInSelectionRoot (SceneSelectionRoot selectionRoot, EditorObject entity) {
+		if (selectionRoot.getSelectionEntities().contains(entity, true)) return selectionRoot;
+
+		for (EditorObject object : selectionRoot.getSelectionEntities()) {
+			if (object instanceof SceneSelectionRoot) {
+				SceneSelectionRoot root = findObjectInSelectionRoot((SceneSelectionRoot) object, entity);
+				if (root != null) return root;
+			}
 		}
 
 		return null;
 	}
 
 	private void selectAll () {
-		if (scene.activeLayer.locked == true) return;
-		for (EditorObject entity : scene.activeLayer.entities) {
+		if (scene.getActiveLayer().locked == true) return;
+		for (EditorObject entity : selectionRoot.getSelectionEntities()) {
 			if (selectedEntities.contains(entity, true) == false)
 				selectedEntities.add(entity);
 		}
@@ -545,8 +625,8 @@ public class EntityManipulatorModule extends SceneModule {
 		ObjectGroup objGroup = new ObjectGroup();
 		objGroup.addEntities(selectedEntities);
 
-		actionGroup.execute(new EntityRemovedAction(scene.activeLayer, selectedEntities));
-		actionGroup.execute(new EntityAddedAction(scene.activeLayer, objGroup));
+		actionGroup.execute(new EntityRemovedAction(selectionRoot, selectedEntities));
+		actionGroup.execute(new EntityAddedAction(selectionRoot, objGroup));
 		actionGroup.finalizeGroup();
 
 		undoModule.add(actionGroup);
@@ -564,8 +644,8 @@ public class EntityManipulatorModule extends SceneModule {
 			if (obj instanceof ObjectGroup) {
 				ObjectGroup group = (ObjectGroup) obj;
 
-				actionGroup.add(new EntityRemovedAction(scene.activeLayer, group));
-				actionGroup.add(new EntitiesAddedAction(scene.activeLayer, group.getObjects()));
+				actionGroup.add(new EntityRemovedAction(selectionRoot, group));
+				actionGroup.add(new EntitiesAddedAction(selectionRoot, group.getObjects()));
 			}
 		}
 
@@ -574,18 +654,31 @@ public class EntityManipulatorModule extends SceneModule {
 		undoModule.execute(actionGroup);
 	}
 
+	public SceneSelectionRoot getSelectionRoot () {
+		return selectionRoot;
+	}
+
+	public void setSelectionRoot (SceneSelectionRoot selectionRoot) {
+		setSelectionRoot(selectionRoot, true);
+	}
+
+	public void setSelectionRoot (SceneSelectionRoot selectionRoot, boolean resetSelection) {
+		this.selectionRoot = selectionRoot;
+		if (resetSelection) resetSelection();
+	}
+
 	private class EntitiesAddedAction implements UndoableAction {
-		private Layer layer;
+		private SceneSelectionRoot selectionRoot;
 		private Array<EditorObject> newEntities;
 
-		public EntitiesAddedAction (Layer layer, Array<EditorObject> newEntities) {
-			this.layer = layer;
+		public EntitiesAddedAction (SceneSelectionRoot selectionRoot, Array<EditorObject> newEntities) {
+			this.selectionRoot = selectionRoot;
 			this.newEntities = new Array<>(newEntities);
 		}
 
 		@Override
 		public void execute () {
-			layer.entities.addAll(newEntities);
+			selectionRoot.getSelectionEntities().addAll(newEntities);
 			resetSelection();
 			newEntities.forEach(EntityManipulatorModule.this::selectAppend);
 			sceneTab.dirty();
@@ -593,49 +686,49 @@ public class EntityManipulatorModule extends SceneModule {
 
 		@Override
 		public void undo () {
-			layer.entities.removeAll(newEntities, true);
+			selectionRoot.getSelectionEntities().removeAll(newEntities, true);
 			resetSelection();
 			sceneTab.dirty();
 		}
 	}
 
 	private class EntityAddedAction implements UndoableAction {
-		private Layer layer;
+		private SceneSelectionRoot selectionRoot;
 		private EditorObject entity;
 
-		public EntityAddedAction (Layer layer, EditorObject entity) {
-			this.layer = layer;
+		public EntityAddedAction (SceneSelectionRoot selectionRoot, EditorObject entity) {
+			this.selectionRoot = selectionRoot;
 			this.entity = entity;
 		}
 
 		@Override
 		public void execute () {
-			layer.entities.add(entity);
+			selectionRoot.getSelectionEntities().add(entity);
 			select(entity);
 			sceneTab.dirty();
 		}
 
 		@Override
 		public void undo () {
-			layer.entities.removeValue(entity, true);
+			selectionRoot.getSelectionEntities().removeValue(entity, true);
 			resetSelection();
 			sceneTab.dirty();
 		}
 	}
 
 	private class EntityRemovedAction implements UndoableAction {
-		private Layer layer;
+		private SceneSelectionRoot selectionRoot;
 		private Array<Integer> indexes;
 		private Array<EditorObject> entities;
 
-		public EntityRemovedAction (Layer layer, Array<EditorObject> selectedEntities) {
-			this.layer = layer;
+		public EntityRemovedAction (SceneSelectionRoot selectionRoot, Array<EditorObject> selectedEntities) {
+			this.selectionRoot = selectionRoot;
 			indexes = new Array<>(selectedEntities.size);
 			entities = new Array<>(selectedEntities);
 		}
 
-		public EntityRemovedAction (Layer layer, EditorObject object) {
-			this.layer = layer;
+		public EntityRemovedAction (SceneSelectionRoot selectionRoot, EditorObject object) {
+			this.selectionRoot = selectionRoot;
 			indexes = new Array<>(1);
 			entities = new Array<>(1);
 			entities.add(object);
@@ -644,9 +737,9 @@ public class EntityManipulatorModule extends SceneModule {
 		@Override
 		public void execute () {
 			for (EditorObject entity : entities)
-				indexes.add(layer.entities.indexOf(entity, true));
+				indexes.add(selectionRoot.getSelectionEntities().indexOf(entity, true));
 
-			layer.entities.removeAll(entities, true);
+			selectionRoot.getSelectionEntities().removeAll(entities, true);
 
 			resetSelection();
 		}
@@ -657,10 +750,10 @@ public class EntityManipulatorModule extends SceneModule {
 				int index = indexes.get(i);
 				EditorObject obj = entities.get(i);
 
-				if (index > layer.entities.size)
-					layer.entities.add(obj);
+				if (index > selectionRoot.getSelectionEntities().size)
+					selectionRoot.getSelectionEntities().add(obj);
 				else
-					layer.entities.insert(index, obj);
+					selectionRoot.getSelectionEntities().insert(index, obj);
 			}
 
 			resetSelection();
@@ -710,7 +803,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 		@Override
 		public void run () {
-			if (scene.activeLayer.locked) return;
+			if (scene.getActiveLayer().locked) return;
 
 			for (EditorObject obj : selectedEntities) {
 				switch (dir) {

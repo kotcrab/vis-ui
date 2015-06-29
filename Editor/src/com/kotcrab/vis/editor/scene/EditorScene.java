@@ -20,13 +20,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.kotcrab.vis.editor.util.BaseObservable;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 /**
  * Editor scene class, serialized by Kryo
  * @author Kotcrab
  */
-public class EditorScene implements Disposable {
+public class EditorScene extends BaseObservable implements Disposable {
+	public static final int ACTIVE_LAYER_CHANGED = 0;
+
 	/** Scene file, path is relative to project Vis folder */
 	public String path;
 	public int compatibilityCode;
@@ -35,7 +38,7 @@ public class EditorScene implements Disposable {
 	public SceneViewport viewport;
 
 	public Array<Layer> layers = new Array<>();
-	public transient Layer activeLayer;
+	private transient Layer activeLayer;
 
 	public EditorScene (FileHandle file, int compatibilityCode, SceneViewport viewport, int width, int height) {
 		this.path = file.path();
@@ -57,6 +60,15 @@ public class EditorScene implements Disposable {
 		}
 
 		return null;
+	}
+
+	public void setActiveLayer (Layer layer) {
+		this.activeLayer = layer;
+		postNotification(ACTIVE_LAYER_CHANGED);
+	}
+
+	public Layer getActiveLayer () {
+		return activeLayer;
 	}
 
 	@Override
