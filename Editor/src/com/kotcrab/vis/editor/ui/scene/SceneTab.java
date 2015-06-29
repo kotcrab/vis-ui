@@ -43,11 +43,13 @@ import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.util.gdx.FocusUtils;
+import com.kotcrab.vis.editor.util.gdx.VisValue;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.VisTable;
 
@@ -118,8 +120,10 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		leftColumn.row();
 		leftColumn.add().fill().expand();
 
+		EntityProperties entityProperties = sceneMC.get(EntityManipulatorModule.class).getEntityProperties();
+
 		rightColumn.top();
-		rightColumn.add(sceneMC.get(EntityManipulatorModule.class).getEntityProperties()).expandX().fillX().row();
+		rightColumn.add(entityProperties).height(new VisValue(context -> entityProperties.getPrefHeight())).expandX().fillX().row();
 		rightColumn.add().fill().expand().row();
 		rightColumn.add(sceneMC.get(EntityManipulatorModule.class).getLayersDialog()).expandX().fillX();
 //		rightColumn.row();
