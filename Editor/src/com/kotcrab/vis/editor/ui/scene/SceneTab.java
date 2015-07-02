@@ -68,11 +68,11 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	@InjectModule private SceneTabsModule sceneTabs;
 	@InjectModule private SceneIOModule sceneIOModule;
 
-	private EntityManipulatorModule entityManipulator;
-
 	private SceneModuleContainer sceneMC;
-	private UndoModule undoModule;
-	private CameraModule cameraModule;
+
+	@InjectModule private EntityManipulatorModule entityManipulator;
+	@InjectModule private UndoModule undoModule;
+	@InjectModule private CameraModule cameraModule;
 
 	private ContentTable content;
 
@@ -89,17 +89,18 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		projectMC.injectModules(this);
 
 		sceneMC = new SceneModuleContainer(projectMC, this, scene);
-		sceneMC.add(cameraModule = new CameraModule());
+		sceneMC.add(new CameraModule());
 		sceneMC.add(new GridRendererModule());
 		sceneMC.add(new RendererModule());
 
-		sceneMC.add(undoModule = new UndoModule());
+		sceneMC.add(new UndoModule());
 		sceneMC.add(new ZIndexManipulatorModule());
 
-		sceneMC.add(entityManipulator = new EntityManipulatorModule());
+		sceneMC.add(new EntityManipulatorModule());
 		sceneMC.addAll(pluginContainer.getContainersExtensions(SceneModule.class, ExtensionScope.SCENE));
 
 		sceneMC.init();
+		sceneMC.injectModules(this);
 
 		outline = new SceneOutline();
 
