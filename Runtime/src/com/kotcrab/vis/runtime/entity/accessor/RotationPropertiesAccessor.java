@@ -14,20 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.runtime.entity.accessor;
 
-import com.badlogic.gdx.files.FileHandle;
+/** @author Kotcrab */
+public interface RotationPropertiesAccessor {
+	float getRotation ();
 
-/**
- * Project paths releated utils
- * @author Kotcrab
- */
-public class ProjectPathUtils {
-	public static boolean isTexture (String relativePath, String ext) {
-		return relativePath.startsWith("gfx") && (ext.equals("jpg") || ext.equals("png"));
-	}
-
-	public static boolean isTextureAtlas (FileHandle file, String relativePath) {
-		return relativePath.startsWith("atlas") && file.extension().equals("atlas") && (FileUtils.siblingExists(file, "png") || FileUtils.siblingExists(file, "jpg"));
-	}
+	void setRotation (float rotation);
 }

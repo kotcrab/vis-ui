@@ -31,7 +31,7 @@ import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.util.FileUtils;
-import com.kotcrab.vis.editor.util.ProjectPathUtils;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.ui.VisUI;

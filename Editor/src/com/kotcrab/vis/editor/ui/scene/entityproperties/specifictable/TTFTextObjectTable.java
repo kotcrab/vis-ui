@@ -22,7 +22,7 @@ import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
-import com.kotcrab.vis.editor.util.EntityUtils;
+import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;

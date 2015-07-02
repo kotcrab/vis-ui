@@ -43,7 +43,7 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificObjectTable;
-import com.kotcrab.vis.editor.util.EntityUtils;
+import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;

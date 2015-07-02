@@ -25,6 +25,7 @@ import com.kotcrab.vis.runtime.entity.TextEntity;
  * Data class for {@link TextEntity}
  * @author Kotcrab
  */
+@Deprecated
 public class TextData extends EntityData<TextEntity> {
 	public float x, y;
 	public float originX, originY;

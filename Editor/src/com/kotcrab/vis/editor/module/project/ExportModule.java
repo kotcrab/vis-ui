@@ -21,11 +21,10 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
@@ -42,8 +41,11 @@ import java.io.IOException;
  * @author Kotcrab
  */
 public class ExportModule extends ProjectModule {
-	@InjectModule private SceneCacheModule sceneCache;
+	@InjectModule private StatusBarModule statusBar;
+
+	@InjectModule private SceneTabsModule tabsModule;
 	@InjectModule private ObjectSupportModule supportModule;
+	@InjectModule private SceneCacheModule sceneCache;
 
 	private FileHandle visAssetsDir;
 
@@ -97,8 +99,7 @@ public class ExportModule extends ProjectModule {
 
 		FileHandle outAssetsDir;
 
-		/** Holds currently exported scene */
-		private EditorScene editorScene;
+		EditorScene scene;
 
 		public ExportAsyncTask () {
 			super("ProjectExporter");
@@ -115,7 +116,7 @@ public class ExportModule extends ProjectModule {
 			exportScenes(this, visAssetsDir.child("scene"), outAssetsDir.child("scene"));
 
 			nextStep();
-			App.eventBus.post(new StatusBarEvent("Export finished"));
+			statusBar.setText("Export finished");
 		}
 
 		private void nextStep () {
@@ -178,7 +179,7 @@ public class ExportModule extends ProjectModule {
 		private void exportScenes (ExportAsyncTask task, FileHandle sceneDir, FileHandle outDir) {
 			outDir.mkdirs();
 
-			editorScene = null;
+			scene = null;
 
 			for (final FileHandle file : sceneDir.list()) {
 				if (file.isDirectory()) exportScenes(task, file, outDir.child(file.name()));
@@ -186,26 +187,28 @@ public class ExportModule extends ProjectModule {
 				if (file.extension().equals("scene")) {
 					task.setMessage("Exporting scene: " + file.name());
 
-					executeOnOpenGL(() -> editorScene = sceneCache.get(file));
+					executeOnOpenGL(() -> scene = sceneCache.get(file));
 
 					SceneData sceneData = new SceneData();
 
-					sceneData.viewport = editorScene.viewport;
-					sceneData.width = editorScene.width;
-					sceneData.height = editorScene.height;
+					sceneData.viewport = scene.viewport;
+					sceneData.width = scene.width;
+					sceneData.height = scene.height;
 
-					for (int i = 0; i < editorScene.layers.size; i++) {
-						Layer layer = editorScene.layers.get(i);
-						LayerData layerData = new LayerData(layer.name);
-						sceneData.layers.add(layerData);
+					scene.getSchemes().forEach(scheme -> sceneData.entities.add(scheme.toData()));
 
-						for (int j = 0; j < layer.entities.size; j++) {
-							EditorObject entity = layer.entities.get(j);
-
-							if (exportEntity(layerData.entities, entity) == false)
-								Log.error("Ignoring unknown entity: " + entity.getClass());
-						}
-					}
+//					for (int i = 0; i < editorScene.layers.size; i++) {
+//						Layer layer = editorScene.layers.get(i);
+//						LayerData layerData = new LayerData(layer.name);
+//						sceneData.layers.add(layerData);
+//
+//						for (int j = 0; j < layer.entities.size; j++) {
+//							EditorObject entity = layer.entities.get(j);
+//
+//							if (exportEntity(layerData.entities, entity) == false)
+//								Log.error("Ignoring unknown entity: " + entity.getClass());
+//						}
+//					}
 
 					json.toJson(sceneData, outDir.child(file.name()));
 					task.nextStep();
@@ -215,15 +218,16 @@ public class ExportModule extends ProjectModule {
 			}
 		}
 
+		@Deprecated
 		private boolean exportEntity (Array<EntityData> entities, EditorObject entity) {
-			if (entity instanceof SpriteObject) {
-				SpriteObject obj = (SpriteObject) entity;
-
-				SpriteData data = new SpriteData();
-				data.saveFrom(obj, obj.getAssetDescriptor());
-				entities.add(data);
-				return true;
-			}
+//			if (entity instanceof SpriteObject) {
+//				SpriteObject obj = (SpriteObject) entity;
+//
+//				SpriteData data = new SpriteData();
+//				data.saveFrom(obj, obj.getAssetDescriptor());
+//				entities.add(data);
+//				return true;
+//			}
 
 			if (entity instanceof TextObject) {
 				TextObject obj = (TextObject) entity;

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.vis;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
+import com.kotcrab.vis.editor.util.NumberUtils;
 import com.kotcrab.vis.editor.util.value.BooleanValue;
 import com.kotcrab.vis.editor.util.value.FloatValue;
 import com.kotcrab.vis.editor.util.value.StringValue;

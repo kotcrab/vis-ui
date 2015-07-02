@@ -21,6 +21,10 @@
 		<exclude name="font/FreeTypeFontProvider.java" />
 	</source>
 
+    <inherits name='com.artemis.backends.artemis_backends_gwt' />
+
+    <extend-configuration-property name="artemis.reflect.include" value="com.kotcrab.vis.runtime.system" />
+
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/runtime/bmp-font-df.frag" />
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/runtime/bmp-font-df.vert" />
 

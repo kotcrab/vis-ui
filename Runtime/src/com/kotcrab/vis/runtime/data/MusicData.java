@@ -23,6 +23,7 @@ import com.kotcrab.vis.runtime.entity.MusicEntity;
  * Data class for {@link MusicEntity}
  * @author Kotcrab
  */
+@Deprecated
 public class MusicData extends EntityData<MusicEntity> {
 	public boolean playOnStart;
 	public boolean looping;

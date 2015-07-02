@@ -28,6 +28,7 @@ import com.kotcrab.vis.editor.scene.TextObject;
  * Kryo serializer for {@link TextObject}
  * @author Kotcrab
  */
+@Deprecated
 public class TextObjectSerializer extends CompatibleFieldSerializer<TextObject> {
 	private static final int VERSION_CODE = 1;
 

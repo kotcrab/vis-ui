@@ -35,7 +35,7 @@ import com.kotcrab.vis.editor.ui.dialog.PluginDetailsDialog;
 import com.kotcrab.vis.editor.ui.toast.ExceptionToast;
 import com.kotcrab.vis.editor.ui.toast.LoadingPluginsFailedToast;
 import com.kotcrab.vis.editor.util.ChildFirstURLClassLoader;
-import com.kotcrab.vis.editor.util.EditorException;
+import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
@@ -149,7 +149,7 @@ public class PluginLoaderModule extends EditorModule {
 		Thread.currentThread().setContextClassLoader(classLoader);
 
 		for (PluginDescriptor descriptor : pluginsToLoad) {
-			if (descriptor.compatibility != App.COMPATIBILITY_CODE)
+			if (descriptor.compatibility != App.PLUGIN_COMPATIBILITY_CODE)
 				Log.warn(TAG, "Loading: " + descriptor.folderName + " (compatibility code mismatch! Will try to load anyway!)");
 			else
 				Log.debug(TAG, "Loading: " + descriptor.folderName);

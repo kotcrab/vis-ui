@@ -22,5 +22,6 @@ import com.kotcrab.vis.runtime.entity.SoundEntity;
  * Data class for {@link SoundEntity}
  * @author Kotcrab
  */
+@Deprecated
 public class SoundData extends EntityData<SoundEntity> {
 }

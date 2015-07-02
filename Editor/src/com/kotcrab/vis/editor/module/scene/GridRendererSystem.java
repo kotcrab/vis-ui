@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
+import com.artemis.systems.VoidEntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsModule;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.ui.util.Validators;
@@ -36,26 +38,36 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
  * Renders scene grid
  * @author Kotcrab
  */
-public class GridRendererModule extends SceneModule {
+public class GridRendererSystem extends VoidEntitySystem {
 	@InjectModule private CameraModule camera;
 	@InjectModule private RendererModule renderer;
 
-	private ShapeRenderer shapeRenderer;
-
 	@InjectModule private GridSettingsModule settings;
 
+	private Batch batch;
+	private ModuleInjector sceneMC;
+
+	private ShapeRenderer shapeRenderer;
+
+	public GridRendererSystem (Batch batch, ModuleInjector sceneMC) {
+		this.batch = batch;
+		this.sceneMC = sceneMC;
+	}
+
 	@Override
-	public void init () {
+	protected void initialize () {
+		sceneMC.injectModules(this);
 		shapeRenderer = renderer.getShapeRenderer();
 	}
 
 	@Override
-	public void render (Batch batch) {
+	protected void processSystem () {
 		if (settings.config.drawGrid) {
 			batch.end();
 
 			Gdx.gl.glLineWidth(1);
 
+			camera.update();
 			shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
 			shapeRenderer.begin(ShapeType.Line);
 			shapeRenderer.setColor(new Color(0.32f, 0.32f, 0.32f, 1f));
@@ -98,6 +110,7 @@ public class GridRendererModule extends SceneModule {
 		for (int i = drawingPointStart; i < drawingPointEnd; i++)
 			shapeRenderer.line(i * gridSize, yStart, i * gridSize, yEnd);
 	}
+
 
 	public static class GridSettingsModule extends EditorSettingsModule<GridConfig> {
 		private VisCheckBox drawGridCheck;

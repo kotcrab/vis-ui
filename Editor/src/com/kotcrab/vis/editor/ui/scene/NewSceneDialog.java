@@ -21,10 +21,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.SceneCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
@@ -46,6 +45,8 @@ import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
  * @author Kotcrab
  */
 public class NewSceneDialog extends VisWindow {
+	@InjectModule private StatusBarModule statusBar;
+
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private SceneIOModule sceneIO;
 	@InjectModule private SceneCacheModule sceneCache;
@@ -156,7 +157,7 @@ public class NewSceneDialog extends VisWindow {
 			public void changed (ChangeEvent event, Actor actor) {
 				final FileHandle targetFile = Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".scene");
 				sceneIO.create(targetFile, viewportModeSelectBox.getSelectedEnum(), Integer.valueOf(widthField.getText()), Integer.valueOf(heightField.getText()));
-				App.eventBus.post(new StatusBarEvent("Scene created: " + targetFile.path().substring(1)));
+				statusBar.setText("Scene created: " + targetFile.path().substring(1));
 
 				DialogUtils.showOptionDialog(getStage(), "Message", "Open this new scene in editor?", OptionDialogType.YES_NO, new OptionDialogAdapter() {
 					@Override

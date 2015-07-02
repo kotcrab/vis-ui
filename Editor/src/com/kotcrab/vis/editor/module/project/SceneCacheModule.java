@@ -25,7 +25,6 @@ import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.scene.*;
-import com.kotcrab.vis.editor.util.gdx.SpriteUtils;
 
 /**
  * Caches loaded scenes, so only one instance of each scene is loaded in editor.
@@ -65,11 +64,6 @@ public class SceneCacheModule extends ProjectModule implements EventListener {
 			for (EditorScene scene : scenes.values()) {
 				for (Layer layer : scene.layers) {
 					for (EditorObject object : layer.entities) {
-						if (object instanceof SpriteObject) {
-							SpriteObject spriteObject = (SpriteObject) object;
-							SpriteUtils.setRegion(spriteObject.getSprite(), textureCache.getRegion(spriteObject.getAssetDescriptor()));
-						}
-
 						if (object instanceof ObjectGroup) {
 							ObjectGroup group = (ObjectGroup) object;
 							group.reloadTextures(textureCache);

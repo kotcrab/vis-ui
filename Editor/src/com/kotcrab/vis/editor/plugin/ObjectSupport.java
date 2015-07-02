@@ -43,6 +43,7 @@ import com.kotcrab.vis.runtime.plugin.EntitySupport;
  * @param <E> custom entity type (see {@link Entity} and {@link EditorObject})
  * @author Kotcrab
  */
+@Deprecated
 public abstract class ObjectSupport<ED extends EntityData, E extends Entity & EditorObject> {
 	private int id = -1;
 

@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.runtime.util;
 
-/**
- * Generic VisEditor runtime exception
- * @author Kotcrab
- */
-public class EditorRuntimeException extends RuntimeException {
-	public EditorRuntimeException (String message) {
-		super(message);
-	}
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.system.SpriteRenderSystem;
 
-	public EditorRuntimeException (Throwable cause) {
-		super(cause);
-	}
-
-	public EditorRuntimeException (String message, Throwable cause) {
-		super(message, cause);
+/** @author Kotcrab */
+public class ArtemisUtils {
+	public static void createCommonSystems (EntityEngine engine, Batch batch, boolean controlBatchState) {
+		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, controlBatchState);
+		engine.setSystem(batchingSystem);
+		engine.setSystem(new SpriteRenderSystem(batchingSystem), true);
 	}
 }

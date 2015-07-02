@@ -32,14 +32,13 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.KryoException;
 import com.kotcrab.vis.editor.*;
 import com.kotcrab.vis.editor.event.AtlasReloadedEvent;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
+import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.project.*;
-import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.SearchField;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DeleteDialog;
@@ -67,6 +66,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 public class AssetsUIModule extends ProjectModule implements WatchListener, EventListener, VisTabbedPaneListener {
 	@InjectModule private TabsModule tabsModule;
 	@InjectModule private QuickAccessModule quickAccessModule;
+	@InjectModule private StatusBarModule statusBar;
 
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private SceneTabsModule sceneTabsModule;
@@ -339,8 +339,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Even
 	private void openFile (FileHandle file) {
 		if (file.extension().equals("scene")) {
 			try {
-				EditorScene scene = sceneCache.get(file);
-				sceneTabsModule.open(scene);
+				sceneTabsModule.open(sceneCache.get(file));
 			} catch (KryoException e) {
 				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file or missing required plugin.", e);
 				Log.exception(e);
@@ -459,7 +458,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Even
 		private void analyzeUsages (FileHandle file) {
 			AssetsUsages usages = assetsAnalyzer.analyzeUsages(file);
 			if (usages.count == 0)
-				App.eventBus.post(new StatusBarEvent("No usages found"));
+				statusBar.setText("No usages found");
 			else
 				quickAccessModule.addTab(new AssetsUsagesTab(projectContainer, usages, false));
 		}
@@ -467,7 +466,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Even
 
 	private void deleteSelectedFiles () {
 		if (selectedFiles.size == 0) {
-			App.eventBus.post(new StatusBarEvent("Nothing to delete"));
+			statusBar.setText("Nothing to delete");
 			return;
 		}
 
@@ -503,12 +502,12 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Even
 
 	private void clipboardPasteFiles () {
 		if (filesClipboard.size == 0) {
-			App.eventBus.post(new StatusBarEvent("Nothing to paste"));
+			statusBar.setText("Nothing to paste");
 			return;
 		}
 
 		if (filesClipboard.get(0).getFile().parent().equals(currentDirectory)) {
-			App.eventBus.post(new StatusBarEvent("Paste destination is the same as source directory"));
+			statusBar.setText("Paste destination is the same as source directory");
 			return;
 		}
 

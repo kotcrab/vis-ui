@@ -30,6 +30,7 @@ import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
  * @author Kotcrab
  * @see ParticleEffectEntity
  */
+@Deprecated
 public class ParticleEffectObject extends ParticleEffectEntity implements EditorObject {
 	private VisAssetDescriptor assetDescriptor;
 	private Rectangle bounds;

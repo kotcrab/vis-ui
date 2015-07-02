@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Array;
  * Implemented by objects that can become selection root in scene tab.
  * @author Kotcrab
  */
+@Deprecated
 public interface SceneSelectionRoot {
 	Array<EditorObject> getSelectionEntities ();
 }

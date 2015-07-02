@@ -22,7 +22,7 @@ import com.kotcrab.vis.editor.scene.ParticleEffectObject;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.ui.widget.Tooltip;
 
-import static com.kotcrab.vis.editor.util.EntityUtils.setCommonCheckBoxState;
+import static com.kotcrab.vis.editor.util.vis.EntityUtils.setCommonCheckBoxState;
 
 /**
  * Specific table for {@link ParticleEffectObject}

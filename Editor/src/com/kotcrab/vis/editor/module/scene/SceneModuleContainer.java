@@ -16,17 +16,26 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
+import com.kotcrab.vis.runtime.scene.SceneViewport;
+import com.kotcrab.vis.runtime.system.CameraManager;
+import com.kotcrab.vis.runtime.util.ArtemisUtils;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**
  * Module container for scene scope modules.
@@ -37,14 +46,26 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	private EditorModuleContainer editorModuleContainer;
 	private ProjectModuleContainer projectModuleContainer;
 
-	private SceneTab sceneTab;
 	private EditorScene scene;
+	private SceneTab sceneTab;
 
-	public SceneModuleContainer (ProjectModuleContainer projectModuleContainer, SceneTab sceneTab, EditorScene scene) {
+	private EntityEngine engine;
+
+	public SceneModuleContainer (ProjectModuleContainer projectModuleContainer, SceneTab sceneTab, EditorScene scene, Batch batch) {
 		this.editorModuleContainer = projectModuleContainer.getEditorContainer();
 		this.projectModuleContainer = projectModuleContainer;
-		this.sceneTab = sceneTab;
 		this.scene = scene;
+		this.sceneTab = sceneTab;
+
+		engine = new EntityEngine();
+		engine.setManager(new CameraManager(SceneViewport.SCREEN, 0, 0)); //size ignored for screen viewport
+		engine.setManager(new LayerManipulatorManager());
+		engine.setManager(new ZIndexManipulatorManager());
+		engine.setManager(new EntityProxyCache());
+		engine.setManager(new EntitySerializerManager());
+		engine.setManager(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
+		engine.setSystem(new GridRendererSystem(batch, this));
+		ArtemisUtils.createCommonSystems(engine, batch, false);
 	}
 
 	@Override
@@ -54,7 +75,23 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		module.setContainer(editorModuleContainer);
 		module.setSceneObjects(this, sceneTab, scene);
 
+		if (module instanceof EntityEngineConfigurator)
+			((EntityEngineConfigurator) module).setupEntityEngine(engine);
+
 		super.add(module);
+	}
+
+	@Override
+	public void init () {
+		super.init();
+		engine.initialize();
+
+		Log.debug("SceneModuleContainer", "Populating EntityEngine");
+		Array<EntityScheme> schemes = scene.getSchemes();
+		schemes.forEach(entityScheme -> entityScheme.build(engine));
+
+		engine.getSystems().forEach(this::injectModules);
+		engine.getManagers().forEach(this::injectModules);
 	}
 
 	@Override
@@ -72,10 +109,20 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	public void setProject (Project project) {
 		if (getModuleCounter() > 0)
 			throw new IllegalStateException("Project can't be changed while modules are loaded!");
+
 		this.project = project;
 	}
 
+	@Override
+	public void resize () {
+		super.resize();
+		engine.getManager(CameraManager.class).resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+	}
+
 	public void render (Batch batch) {
+		engine.setDelta(Gdx.graphics.getDeltaTime());
+		engine.process();
+
 		for (int i = 0; i < modules.size; i++)
 			modules.get(i).render(batch);
 	}
@@ -93,6 +140,10 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	public void save () {
 		for (int i = 0; i < modules.size; i++)
 			modules.get(i).save();
+	}
+
+	public EntityEngine getEntityEngine () {
+		return engine;
 	}
 
 	@Override

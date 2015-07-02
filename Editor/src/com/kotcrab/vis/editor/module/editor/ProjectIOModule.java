@@ -25,10 +25,9 @@ import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
-import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectGeneric;
 import com.kotcrab.vis.editor.module.project.ProjectLibGDX;
@@ -36,7 +35,7 @@ import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.CopyFileVisitor;
-import com.kotcrab.vis.editor.util.EditorException;
+import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
@@ -51,6 +50,8 @@ import java.nio.file.Files;
  * @author Kotcrab
  */
 public class ProjectIOModule extends EditorModule {
+	@InjectModule private StatusBarModule statusBar;
+
 	public static final String PROJECT_FILE = "project.data";
 
 	private Kryo kryo;
@@ -141,7 +142,7 @@ public class ProjectIOModule extends EditorModule {
 				saveProjectFile(project, projectFile);
 
 				setProgressPercent(100);
-				App.eventBus.post(new StatusBarEvent("Project created!"));
+				statusBar.setText("Project created!");
 
 				executeOnOpenGL(() -> loadNewGeneratedProject(projectFile));
 			}
@@ -173,7 +174,7 @@ public class ProjectIOModule extends EditorModule {
 				saveProjectFile(project, projectFile);
 
 				setProgressPercent(100);
-				App.eventBus.post(new StatusBarEvent("Project created!"));
+				statusBar.setText("Project created!");
 
 				executeOnOpenGL(() -> loadNewGeneratedProject(projectFile));
 			}

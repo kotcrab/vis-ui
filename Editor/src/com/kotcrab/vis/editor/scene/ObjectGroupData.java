@@ -29,6 +29,7 @@ import com.kotcrab.vis.runtime.entity.EntityGroup;
  * @author Kotcrab
  * @see ObjectGroup
  */
+@Deprecated
 public class ObjectGroupData extends EntityData<ObjectGroup> {
 	public Array<Entity> entities;
 

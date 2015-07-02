@@ -32,6 +32,7 @@ import com.kotcrab.vis.runtime.entity.MusicEntity;
  * @author Kotcrab
  * @see MusicEntity
  */
+@Deprecated
 public class MusicObject extends MusicEntity implements EditorObject, AfterDeserialize {
 	private transient TextureRegion icon;
 

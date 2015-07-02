@@ -31,6 +31,7 @@ import com.kotcrab.vis.runtime.entity.SoundEntity;
  * @author Kotcrab
  * @see SoundEntity
  */
+@Deprecated
 public class SoundObject extends SoundEntity implements EditorObject, AfterDeserialize {
 	private transient TextureRegion icon;
 

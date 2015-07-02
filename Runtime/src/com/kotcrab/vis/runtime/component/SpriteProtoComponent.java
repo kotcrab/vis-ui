@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.data;
+package com.kotcrab.vis.runtime.component;
 
 import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.entity.SpriteEntity;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 
-/**
- * Data class for {@link SpriteEntity}
- */
-public class SpriteData extends EntityData<SpriteEntity> {
+/** @author Kotcrab */
+public class SpriteProtoComponent extends ProtoComponent {
 	public float x, y;
 	public float width, height;
 	public float originX, originY;
@@ -32,9 +29,11 @@ public class SpriteData extends EntityData<SpriteEntity> {
 	public Color tint = Color.WHITE;
 	public boolean flipX, flipY;
 
-	@Override
-	public void saveFrom (SpriteEntity sprite, VisAssetDescriptor assetDescriptor) {
-		super.saveFrom(sprite, assetDescriptor);
+	private SpriteProtoComponent () {
+	}
+
+	public SpriteProtoComponent (SpriteComponent component) {
+		Sprite sprite = component.sprite;
 		x = sprite.getX();
 		y = sprite.getY();
 
@@ -53,17 +52,5 @@ public class SpriteData extends EntityData<SpriteEntity> {
 
 		flipX = sprite.isFlipX();
 		flipY = sprite.isFlipY();
-	}
-
-	@Override
-	public void loadTo (SpriteEntity sprite) {
-		super.loadTo(sprite);
-		sprite.setPosition(x, y);
-		sprite.setSize(width, height);
-		sprite.setOrigin(originX, originY);
-		sprite.setRotation(rotation);
-		sprite.setScale(scaleX, scaleY);
-		sprite.setColor(tint);
-		sprite.setFlip(flipX, flipY);
 	}
 }

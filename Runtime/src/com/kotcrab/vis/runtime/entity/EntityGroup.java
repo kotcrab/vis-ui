@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.Array;
  * Entity group contains multiple entities.
  * @author Kotcrab
  */
+@Deprecated
 public class EntityGroup extends Entity {
 	protected Array<Entity> entities = new Array<Entity>();
 

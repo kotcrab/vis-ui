@@ -46,7 +46,7 @@ public class PluginDetailsDialog extends VisWindow {
 		contentTable.add(new VisLabel("Provider: " + descriptor.provider)).row();
 		contentTable.add(new VisLabel("Version: " + descriptor.version)).row();
 		contentTable.add(new VisLabel("Compatibility: " + descriptor.compatibility + " " +
-				(descriptor.compatibility != App.COMPATIBILITY_CODE ? "(doesn't matches editor!)" : "(matches editor)"))).row();
+				(descriptor.compatibility != App.PLUGIN_COMPATIBILITY_CODE ? "(doesn't matches editor!)" : "(matches editor)"))).row();
 
 		VisTextButton okButton;
 

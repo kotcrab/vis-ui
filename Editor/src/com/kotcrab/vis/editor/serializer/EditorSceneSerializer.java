@@ -46,7 +46,6 @@ public class EditorSceneSerializer extends CompatibleFieldSerializer<EditorScene
 
 		obj.onDeserialize();
 		input.readInt(); //version code
-
 		return obj;
 	}
 }

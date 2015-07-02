@@ -20,7 +20,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.SoundObject;
-import com.kotcrab.vis.editor.util.EntityUtils;
+import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.ui.widget.VisLabel;

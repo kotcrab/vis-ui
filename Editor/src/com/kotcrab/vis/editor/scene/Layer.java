@@ -23,6 +23,7 @@ import com.badlogic.gdx.utils.Disposable;
  * EditorScene layer class
  * @author Kotcrab
  */
+@Deprecated
 public class Layer implements Disposable, SceneSelectionRoot {
 	public String name;
 	public boolean locked = false;

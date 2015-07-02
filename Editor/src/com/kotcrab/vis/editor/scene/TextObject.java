@@ -29,6 +29,7 @@ import com.kotcrab.vis.runtime.entity.TextEntity;
  * @author Kotcrab
  * @see TextEntity
  */
+@Deprecated
 public class TextObject extends TextEntity implements EditorObject {
 	private VisAssetDescriptor assetDescriptor;
 	private transient EditorFont font;

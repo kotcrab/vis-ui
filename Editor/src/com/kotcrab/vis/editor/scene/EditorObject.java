@@ -22,7 +22,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.Entity;
-import com.kotcrab.vis.runtime.entity.SpriteEntity;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 /**
@@ -30,6 +29,7 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
  * (ex. {@link SpriteObject} implements EditorObject and extends {@link SpriteEntity} (which extends {@link Entity})
  * @author Kotcrab
  */
+@Deprecated
 public interface EditorObject extends Disposable {
 	String getId ();
 

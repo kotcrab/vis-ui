@@ -20,7 +20,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.ObjectGroup;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
-import com.kotcrab.vis.editor.util.EntityUtils;
+import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.ui.widget.Tooltip;
 
 /**

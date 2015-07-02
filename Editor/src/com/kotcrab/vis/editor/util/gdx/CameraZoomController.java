@@ -53,7 +53,7 @@ public class CameraZoomController {
 		}
 
 		if (amount == 1) { // zoom out
-			if (camera.zoom >= 10f) return false;
+			if (camera.zoom >= 15f) return false;
 			newZoom = camera.zoom + 0.1f * camera.zoom * 2;
 		}
 

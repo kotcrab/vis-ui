@@ -25,6 +25,7 @@ import com.badlogic.gdx.utils.Disposable;
  * Particle effect entity
  * @author Kotcrab
  */
+@Deprecated
 public class ParticleEffectEntity extends Entity implements Disposable {
 	protected transient ParticleEffect effect;
 	private boolean active = true;

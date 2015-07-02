@@ -28,8 +28,9 @@ import com.kotcrab.vis.runtime.entity.Entity;
  * @param <E> custom entity type (see {@link Entity})
  * @author Kotcrab
  */
+@Deprecated
 public interface EntitySupport<ED extends EntityData<E>, E extends Entity> {
-	/** Called when entity support should add it's lodaer into AssetsManager */
+	/** Called when entity support should add it's loader into AssetsManager */
 	void setLoaders (AssetManager manager);
 
 	/** @return custom entity data class */

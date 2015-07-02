@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.ui.tab;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
@@ -34,9 +35,8 @@ public class ProjectInfoTab extends MainContentTab {
 		super(false, false);
 		content = new VisTable(true);
 
-		content.add(new VisLabel("Project loaded, in the feature here will be quick access to recently used files etc.")).row();
 		content.add(new VisLabel("To create new scene use Scene -> New Scene...")).row();
-		content.add(new VisLabel("To load scene navigate to scene directory in Assets Browser bellow and double click it")).row();
+		content.add(new VisLabel("To load scene navigate to scene directory in \nAssets Browser bellow and double click it", Align.center)).row();
 	}
 
 	@Override

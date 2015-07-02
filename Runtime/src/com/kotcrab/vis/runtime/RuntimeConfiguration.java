@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.runtime;
 
-/**
- * Generic VisEditor checked exception
- * @author Kotcrab
- */
-public class EditorException extends Exception {
-	public EditorException (String message) {
-		super(message);
-	}
-
-	public EditorException (Throwable cause) {
-		super(cause);
-	}
-
-	public EditorException (String message, Throwable cause) {
-		super(message, cause);
-	}
+/** @author Kotcrab */
+public class RuntimeConfiguration {
+	public boolean passiveInflaters = false;
+	public boolean removeAssetsComponentAfterInlfating = false;
 }

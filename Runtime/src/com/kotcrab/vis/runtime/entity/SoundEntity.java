@@ -22,6 +22,7 @@ import com.badlogic.gdx.audio.Sound;
  * Sound entity. Multiple same sound effects can be played from single entity.
  * @author Kotcrab
  */
+@Deprecated
 public class SoundEntity extends Entity {
 	protected transient Sound sound;
 

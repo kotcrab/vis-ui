@@ -19,13 +19,13 @@ package com.kotcrab.vis.editor.module.scene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.SceneMetadataModule;
 import com.kotcrab.vis.editor.util.gdx.CameraZoomController;
+import com.kotcrab.vis.runtime.system.CameraManager;
 
 /**
  * Manages scene camera
@@ -43,7 +43,7 @@ public class CameraModule extends SceneModule {
 	@Override
 	public void added () {
 		unprojectVec = new Vector3();
-		camera = new OrthographicCamera();
+		camera = entityEngine.getManager(CameraManager.class).getCamera();
 		zoomController = new CameraZoomController(camera, unprojectVec);
 	}
 
@@ -94,12 +94,6 @@ public class CameraModule extends SceneModule {
 		Vector3 oldPos = camera.position.cpy();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		camera.position.set(oldPos);
-	}
-
-	@Override
-	public void render (Batch batch) {
-		camera.update();
-		batch.setProjectionMatrix(camera.combined);
 	}
 
 	@Override
@@ -170,5 +164,9 @@ public class CameraModule extends SceneModule {
 
 	public void setPosition (float x, float y) {
 		camera.position.set(x, y, 0);
+	}
+
+	public void update () {
+		camera.update();
 	}
 }

@@ -24,6 +24,7 @@ import com.kotcrab.vis.runtime.entity.TextEntity;
  * Custom @{link TextData} used for entity properties to extend undo support
  * @author Kotcrab
  */
+@Deprecated
 public class TextObjectData extends TextData {
 	@Override
 	public void loadTo (TextEntity text) {

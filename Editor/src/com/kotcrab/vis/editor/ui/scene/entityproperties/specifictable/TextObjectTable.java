@@ -32,7 +32,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
-import static com.kotcrab.vis.editor.util.EntityUtils.getCommonString;
+import static com.kotcrab.vis.editor.util.vis.EntityUtils.getCommonString;
 
 /**
  * Specific table for {@link TextObject}. This is abstract because TextObject can use bitmap or TrueType fonts which

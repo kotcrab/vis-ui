@@ -25,6 +25,7 @@ import com.kotcrab.vis.runtime.entity.Entity;
  * JSON file during scene exporting in VisEditor.
  * @author Kotcrab
  */
+@Deprecated
 public abstract class EntityData<T extends Entity> {
 	public String id;
 	public VisAssetDescriptor assetDescriptor;

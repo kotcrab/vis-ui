@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.runtime.scene;
 
+import com.artemis.Component;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
@@ -26,24 +27,24 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.*;
 import com.kotcrab.vis.runtime.font.BmpFontProvider;
 import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 /**
@@ -53,6 +54,7 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> {
 	private static final FileHandle distanceFieldShader = Gdx.files.classpath("com/kotcrab/vis/runtime/bmp-font-df");
 
+	private RuntimeConfiguration configuration;
 	private SceneData data;
 	private Scene scene;
 
@@ -62,19 +64,25 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	private ObjectMap<Class, EntitySupport> supportMap = new ObjectMap<Class, EntitySupport>();
 
+	private Batch batch = new SpriteBatch();
+
 	public SceneLoader () {
-		this(new InternalFileHandleResolver());
+		this(new InternalFileHandleResolver(), new RuntimeConfiguration());
 	}
 
-	public SceneLoader (FileHandleResolver resolver) {
+	public SceneLoader (RuntimeConfiguration configuration) {
+		this(new InternalFileHandleResolver(), configuration);
+	}
+
+	public SceneLoader (FileHandleResolver resolver, RuntimeConfiguration configuration) {
 		super(resolver);
+		this.configuration = configuration;
 		bmpFontProvider = new BmpFontProvider();
 	}
 
 	public static Json getJson () {
 		Json json = new Json();
 		json.addClassTag("SceneData", SceneData.class);
-		json.addClassTag("SpriteData", SpriteData.class);
 		json.addClassTag("TextData", TextData.class);
 		json.addClassTag("ParticleEffectData", ParticleEffectData.class);
 		json.addClassTag("AtlasRegionAsset", AtlasRegionAsset.class);
@@ -103,33 +111,37 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 			loadDepsForEntities(deps, layer.entities);
 		}
 
+		loadDependencies(deps, data.entities);
+
 		return deps;
 	}
 
+	private void loadDependencies (Array<AssetDescriptor> dependencies, Array<ECSEntityData> entites) {
+		for (ECSEntityData entityData : entites) {
+			for (Component component : entityData.components) {
+				if (component instanceof AssetComponent) {
+					VisAssetDescriptor asset = ((AssetComponent) component).asset;
+
+					if (asset instanceof TextureRegionAsset) {
+						dependencies.add(new AssetDescriptor("gfx/textures.atlas", TextureAtlas.class));
+
+					} else if (asset instanceof AtlasRegionAsset) {
+						AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
+						dependencies.add(new AssetDescriptor(regionAsset.getPath(), TextureAtlas.class));
+					} else {
+						throw new UnsupportedAssetDescriptorException(asset);
+					}
+				}
+			}
+		}
+	}
+
+	@Deprecated
 	private void loadDepsForEntities (Array<AssetDescriptor> deps, Array<EntityData> entities) {
 		for (EntityData entityData : entities) {
 			if (entityData instanceof EntityGroupData) {
 				EntityGroupData groupData = (EntityGroupData) entityData;
 				loadDepsForEntities(deps, groupData.entities);
-				continue;
-			}
-
-			if (entityData instanceof SpriteData) {
-				SpriteData spriteData = (SpriteData) entityData;
-				VisAssetDescriptor asset = spriteData.assetDescriptor;
-
-				if (asset instanceof TextureRegionAsset) {
-					TextureRegionAsset regionAsset = (TextureRegionAsset) asset;
-					deps.add(new AssetDescriptor("gfx/textures.atlas", TextureAtlas.class));
-
-				} else if (asset instanceof AtlasRegionAsset) {
-					AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
-					deps.add(new AssetDescriptor(((PathAsset) spriteData.assetDescriptor).getPath(), TextureAtlas.class));
-
-				} else {
-					throw new UnsupportedAssetDescriptorException(asset);
-				}
-
 				continue;
 			}
 
@@ -184,7 +196,11 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		Array<Entity> entities = new Array<Entity>();
 		Array<TextureAtlas> atlases = new Array<TextureAtlas>();
 
-		scene = new Scene(entities, atlases, manager, data.viewport, data.width, data.height);
+		scene = new Scene(entities, atlases, batch, configuration, manager, data.viewport, data.width, data.height);
+
+		EntityEngine engine = scene.getEntityEngine();
+		for (ECSEntityData entityData : data.entities)
+			entityData.build(engine);
 
 		for (LayerData layer : data.layers) {
 			loadEntitiesFromData(manager, atlases, layer.entities, entities);
@@ -204,38 +220,38 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				entities.add(group);
 				continue;
 			}
-
-			if (entityData instanceof SpriteData) {
-				SpriteData spriteData = (SpriteData) entityData;
-
-				VisAssetDescriptor asset = spriteData.assetDescriptor;
-
-				String atlasPath;
-				String atlasRegion;
-
-				if (asset instanceof TextureRegionAsset) {
-					TextureRegionAsset regionAsset = (TextureRegionAsset) asset;
-					atlasPath = "gfx/textures.atlas";
-					atlasRegion = regionAsset.getPath().substring(4, regionAsset.getPath().length() - 4); //remove gfx/ and file extension
-
-				} else if (asset instanceof AtlasRegionAsset) {
-					AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
-					atlasPath = regionAsset.getPath();
-					atlasRegion = regionAsset.getRegionName();
-
-				} else {
-					throw new UnsupportedAssetDescriptorException(asset);
-				}
-
-				TextureAtlas atlas = manager.get(atlasPath, TextureAtlas.class);
-				if (atlases.contains(atlas, true) == false) atlases.add(atlas);
-
-				SpriteEntity entity = new SpriteEntity(entityData.id, new Sprite(atlas.findRegion(atlasRegion)));
-				spriteData.loadTo(entity);
-
-				entities.add(entity);
-				continue;
-			}
+//
+//			if (entityData instanceof SpriteData) {
+//				SpriteData spriteData = (SpriteData) entityData;
+//
+//				VisAssetDescriptor asset = spriteData.assetDescriptor;
+//
+//				String atlasPath;
+//				String atlasRegion;
+//
+//				if (asset instanceof TextureRegionAsset) {
+//					TextureRegionAsset regionAsset = (TextureRegionAsset) asset;
+//					atlasPath = "gfx/textures.atlas";
+//					atlasRegion = regionAsset.getPath().substring(4, regionAsset.getPath().length() - 4); //remove gfx/ and file extension
+//
+//				} else if (asset instanceof AtlasRegionAsset) {
+//					AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
+//					atlasPath = regionAsset.getPath();
+//					atlasRegion = regionAsset.getRegionName();
+//
+//				} else {
+//					throw new UnsupportedAssetDescriptorException(asset);
+//				}
+//
+//				TextureAtlas atlas = manager.get(atlasPath, TextureAtlas.class);
+//				if (atlases.contains(atlas, true) == false) atlases.add(atlas);
+//
+//				SpriteEntity entity = new SpriteEntity(entityData.id, new Sprite(atlas.findRegion(atlasRegion)));
+//				spriteData.loadTo(entity);
+//
+//				entities.add(entity);
+//				continue;
+//			}
 
 			if (entityData instanceof TextData) {
 				TextData textData = (TextData) entityData;

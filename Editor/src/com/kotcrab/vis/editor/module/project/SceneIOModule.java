@@ -16,6 +16,10 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.artemis.Component;
+import com.artemis.Entity;
+import com.artemis.utils.Bag;
+import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Matrix4;
@@ -26,16 +30,19 @@ import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
-import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.serializer.*;
+import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
+import com.kotcrab.vis.runtime.component.SpriteComponent;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.FileInputStream;
@@ -58,6 +65,8 @@ public class SceneIOModule extends ProjectModule {
 
 	private FileHandle assetsFolder;
 
+	private Array<EntityComponentSerializer> entityComponentSerializers = new Array<>();
+
 	@Override
 	public void init () {
 		assetsFolder = fileAccessModule.getAssetsFolder();
@@ -78,27 +87,36 @@ public class SceneIOModule extends ProjectModule {
 		//	31-60 vis classes
 		//	61-100 assets descriptors
 		//	101-200 reserved for future use
-		//201-400 entities support
+		//201-400 components, entities support (dep.)
 		//401-600 plugins
 
 		kryo.register(Array.class, new ArraySerializer(), 10);
-		kryo.register(Rectangle.class, 11);
-		kryo.register(Matrix4.class, 12);
-		kryo.register(Color.class, new ColorSerializer(), 13);
+		kryo.register(Bag.class, new BagSerializer(), 11);
+		kryo.register(Rectangle.class, 12);
+		kryo.register(Matrix4.class, 13);
+		kryo.register(Color.class, new ColorSerializer(), 14);
 
 		kryo.register(EditorScene.class, new EditorSceneSerializer(kryo), 31);
-		kryo.register(Layer.class, 32);
-		kryo.register(SceneViewport.class, 33);
+		kryo.register(EntityScheme.class, new EntitySchemeSerializer(kryo, this), 32);
+		kryo.register(Layer.class, 33);
+		kryo.register(SceneViewport.class, 34);
 
 		kryo.register(PathAsset.class, 61);
 		kryo.register(TextureRegionAsset.class, 62);
 		kryo.register(AtlasRegionAsset.class, 63);
 
-		kryo.register(SpriteObject.class, new SpriteObjectSerializer(kryo, textureCache), 201);
 		kryo.register(MusicObject.class, new MusicObjectSerializer(kryo, projectContainer), 202);
 		kryo.register(SoundObject.class, new SoundObjectSerializer(kryo, projectContainer), 203);
 		kryo.register(ParticleEffectObject.class, new ParticleObjectSerializer(kryo, fileAccessModule, particleCache), 204);
 		kryo.register(TextObject.class, new TextObjectSerializer(kryo, fileAccessModule, fontCache), 205);
+
+		//TODO: [high] map other components
+		registerEntityComponentSerializer(SpriteComponent.class, new SpriteComponentSerializer(kryo, textureCache), 201);
+	}
+
+	private void registerEntityComponentSerializer (Class<? extends Component> componentClass, EntityComponentSerializer serializer, int id) {
+		kryo.register(componentClass, serializer, id);
+		entityComponentSerializers.add(serializer);
 	}
 
 	@Override
@@ -109,6 +127,21 @@ public class SceneIOModule extends ProjectModule {
 			kryo.register(support.getObjectClass(), support.getSerializer(), support.getId());
 	}
 
+	public ProtoEntity createProtoEntity (EntityEngine entityEngine, Entity entity, boolean preserveEntity) {
+		return new ProtoEntity(this, entityEngine, entity, preserveEntity);
+	}
+
+	public Bag<Component> cloneEntityComponents (Bag<Component> components) {
+		Bag<Component> clonedComponents = new Bag<>();
+
+		entityComponentSerializers.forEach(entityComponentSerializer -> entityComponentSerializer.setComponents(components));
+		components.forEach(component -> clonedComponents.add(kryo.copy(component)));
+		entityComponentSerializers.forEach(entityComponentSerializer -> entityComponentSerializer.setComponents(null));
+
+		return clonedComponents;
+	}
+
+	/** Use only when you need kryo instance for creating serializers. For (de)serialization use methods inside this class. */
 	public Kryo getKryo () {
 		return kryo;
 	}
@@ -142,8 +175,12 @@ public class SceneIOModule extends ProjectModule {
 		return false;
 	}
 
+	public void setEngineSeriazliationContext (ImmutableBag<Component> components) {
+		entityComponentSerializers.forEach(entityComponentSerializer -> entityComponentSerializer.setComponents(components));
+	}
+
 	public void create (FileHandle relativeScenePath, SceneViewport viewport, int width, int height) {
-		EditorScene scene = new EditorScene(relativeScenePath, App.COMPATIBILITY_CODE, viewport, width, height);
+		EditorScene scene = new EditorScene(relativeScenePath, viewport, width, height);
 		save(scene);
 	}
 

@@ -23,6 +23,7 @@ import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
  * Data class for {@link ParticleEffectEntity}
  * @author Kotcrab
  */
+@Deprecated
 public class ParticleEffectData extends EntityData<ParticleEffectEntity> {
 	public float x, y;
 	public boolean active;

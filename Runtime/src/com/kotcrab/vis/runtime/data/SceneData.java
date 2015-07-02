@@ -29,5 +29,9 @@ public class SceneData {
 	public SceneViewport viewport;
 	public int width;
 	public int height;
+
+	public Array<ECSEntityData> entities = new Array<ECSEntityData>();
+
+	@Deprecated
 	public Array<LayerData> layers = new Array<LayerData>();
 }

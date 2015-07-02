@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.Disposable;
  * Music entity, hold single music file. In VisEditor can be set to automatically play from start.
  * @author Kotcrab
  */
+@Deprecated
 public class MusicEntity extends Entity implements Disposable {
 	protected transient Music music;
 

@@ -23,6 +23,7 @@ import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.project.ProjectModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**
  * Base class for all scene scope modules.
@@ -33,10 +34,14 @@ public abstract class SceneModule extends ProjectModule implements ModuleInput {
 	protected SceneTab sceneTab;
 	protected SceneModuleContainer sceneContainer;
 
+	protected EntityEngine entityEngine;
+
 	public void setSceneObjects (SceneModuleContainer projectContainer, SceneTab sceneTab, EditorScene scene) {
 		this.sceneContainer = projectContainer;
 		this.sceneTab = sceneTab;
 		this.scene = scene;
+
+		entityEngine = sceneContainer.getEntityEngine();
 	}
 
 	public void render (Batch batch) {

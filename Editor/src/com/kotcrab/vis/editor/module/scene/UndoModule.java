@@ -22,9 +22,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.RedoEvent;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.event.UndoEvent;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.InputModule;
+import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 
@@ -33,6 +34,8 @@ import com.kotcrab.vis.editor.util.undo.UndoableAction;
  * @author Kotcrab
  */
 public class UndoModule extends SceneModule {
+	@InjectModule private StatusBarModule statusBar;
+
 	private Array<UndoableAction> undoList;
 	private Array<UndoableAction> redoList;
 
@@ -54,8 +57,7 @@ public class UndoModule extends SceneModule {
 			redoList.add(action);
 			App.eventBus.post(new UndoEvent());
 		} else
-			App.eventBus.post(new StatusBarEvent("Can't undo more!"));
-
+			statusBar.setText("Can't undo more!");
 	}
 
 	public void redo () {
@@ -65,8 +67,7 @@ public class UndoModule extends SceneModule {
 			undoList.add(action);
 			App.eventBus.post(new RedoEvent());
 		} else
-			App.eventBus.post(new StatusBarEvent("Can't redo more!"));
-
+			statusBar.setText("Can't redo more!");
 	}
 
 	public void execute (UndoableAction action) {

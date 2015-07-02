@@ -26,7 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.scene.EditorObject;
-import com.kotcrab.vis.editor.util.EditorObjectProvider;
+import com.kotcrab.vis.editor.util.vis.EditorObjectProvider;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 /**

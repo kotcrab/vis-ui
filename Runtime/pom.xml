@@ -68,6 +68,25 @@
             <version>${gdx.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>net.onedaybeard.artemis</groupId>
+            <artifactId>artemis-odb</artifactId>
+            <version>0.9.1-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.onedaybeard.artemis</groupId>
+            <artifactId>artemis-odb-processor</artifactId>
+            <version>0.9.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>net.mostlyoriginal.artemis-odb</groupId>
+            <artifactId>contrib-core</artifactId>
+            <version>0.9.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -93,6 +112,7 @@
                     <target>1.6</target>
                     <annotationProcessors>
                         <annotationProcessor>com.kotcrab.annotation.callsuper.CallSuperProcessor</annotationProcessor>
+                        <annotationProcessor>com.artemis.EntityFactoryProcessor</annotationProcessor>
                     </annotationProcessors>
                 </configuration>
             </plugin>

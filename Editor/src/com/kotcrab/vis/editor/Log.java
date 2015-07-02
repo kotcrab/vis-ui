@@ -17,8 +17,9 @@
 package com.kotcrab.vis.editor;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.editor.util.CrashReporter;
+import com.badlogic.gdx.math.MathUtils;
 import com.kotcrab.vis.editor.util.ExceptionUtils;
+import com.kotcrab.vis.editor.util.vis.CrashReporter;
 import com.kotcrab.vis.ui.widget.file.FileUtils;
 
 import javax.swing.JOptionPane;
@@ -67,8 +68,11 @@ public class Log {
 			}
 
 			if (openGlCrash) {
-				if (App.OPENGL_CRASH_BEFORE_EXIT_MESSAGE)
-					JOptionPane.showMessageDialog(null, "An unexpected error occurred and editor had to shutdown, please check log: " + logFile.getParent());
+				if (App.OPENGL_CRASH_BEFORE_EXIT_MESSAGE) {
+					String error = "An unexpected error occurred and editor had to shutdown, please check log: " + logFile.getParent();
+					if (MathUtils.randomBoolean(0.001f)) error += " ¯\\_(ツ)_/¯";
+					JOptionPane.showMessageDialog(null, error);
+				}
 
 				System.exit(-1);
 			}

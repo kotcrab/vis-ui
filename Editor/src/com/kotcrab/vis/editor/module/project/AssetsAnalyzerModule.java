@@ -46,6 +46,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
  * {@link AssetTransactionGenerator} to extend supported types.
  * @author Kotcrab
  */
+@Deprecated
 public class AssetsAnalyzerModule extends ProjectModule {
 	public static final int USAGE_SEARCH_LIMIT = 100;
 

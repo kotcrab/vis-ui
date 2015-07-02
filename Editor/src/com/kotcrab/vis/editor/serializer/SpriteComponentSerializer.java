@@ -21,29 +21,31 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
-import com.kotcrab.vis.editor.scene.SpriteObject;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.SpriteComponent;
 
 /**
- * Kryo serializer for {@link SpriteObject}
+ * Kryo serializer for {@link SpriteComponent}
  * @author Kotcrab
  */
-public class SpriteObjectSerializer extends CompatibleFieldSerializer<SpriteObject> {
+public class SpriteComponentSerializer extends EntityComponentSerializer<SpriteComponent> {
 	private static final int VERSION_CODE = 1;
 
 	private TextureCacheModule textureCache;
 
-	public SpriteObjectSerializer (Kryo kryo, TextureCacheModule textureCache) {
-		super(kryo, SpriteObject.class);
+	public SpriteComponentSerializer (Kryo kryo, TextureCacheModule textureCache) {
+		super(kryo, SpriteComponent.class);
 		this.textureCache = textureCache;
 	}
 
 	@Override
-	public void write (Kryo kryo, Output output, SpriteObject obj) {
+	public void write (Kryo kryo, Output output, SpriteComponent obj) {
 		super.write(kryo, output, obj);
-
 		output.writeInt(VERSION_CODE);
+
+		kryo.writeClassAndObject(output, getComponent(AssetComponent.class).asset);
 
 		output.writeFloat(obj.getX());
 		output.writeFloat(obj.getY());
@@ -66,12 +68,12 @@ public class SpriteObjectSerializer extends CompatibleFieldSerializer<SpriteObje
 	}
 
 	@Override
-	public SpriteObject read (Kryo kryo, Input input, Class<SpriteObject> type) {
-		SpriteObject obj = super.read(kryo, input, type);
-
+	public SpriteComponent read (Kryo kryo, Input input, Class<SpriteComponent> type) {
+		super.read(kryo, input, type);
 		input.readInt(); //version code
 
-		obj.onDeserialize(textureCache.getRegion(obj.getAssetDescriptor()));
+		VisAssetDescriptor asset = (VisAssetDescriptor) kryo.readClassAndObject(input);
+		SpriteComponent obj = new SpriteComponent(textureCache.getSprite(asset));
 
 		obj.setPosition(input.readFloat(), input.readFloat());
 		obj.setSize(input.readFloat(), input.readFloat());
@@ -85,7 +87,8 @@ public class SpriteObjectSerializer extends CompatibleFieldSerializer<SpriteObje
 	}
 
 	@Override
-	public SpriteObject copy (Kryo kryo, SpriteObject original) {
-		return new SpriteObject(original, new Sprite(original.getSprite()));
+	public SpriteComponent copy (Kryo kryo, SpriteComponent original) {
+		super.copy(kryo, original);
+		return new SpriteComponent(new Sprite(original.sprite));
 	}
 }

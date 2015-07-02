@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.module.project.assetsmanager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -32,11 +33,15 @@ import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.*;
-import com.kotcrab.vis.editor.scene.*;
+import com.kotcrab.vis.editor.scene.MusicObject;
+import com.kotcrab.vis.editor.scene.ParticleEffectObject;
+import com.kotcrab.vis.editor.scene.SoundObject;
+import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.VisDropSource;
 import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.TextureAssetDescriptor;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
@@ -63,7 +68,6 @@ public class AssetDragAndDrop {
 
 	public void setDropTarget (DragAndDropTarget dropTarget) {
 		this.dropTarget = dropTarget;
-
 	}
 
 	public void rebuild (Array<Actor> actors, Values<TextureAtlasViewTab> atlasesViews) {
@@ -80,32 +84,20 @@ public class AssetDragAndDrop {
 			Array<AtlasItem> items = view.getItems();
 
 			for (AtlasItem item : items)
-				addSource(item);
+				addAtlasSource(item);
 		}
 	}
 
 	public void addSources (Array<AtlasItem> items) {
 		for (AtlasItem item : items)
-			addSource(item);
+			addAtlasSource(item);
 	}
 
-	private void addSource (AtlasItem item) {
+	private void addAtlasSource (AtlasItem item) {
 		dragAndDrop.addSource(new Source(item) {
 			@Override
 			public Payload dragStart (InputEvent event, float x, float y, int pointer) {
-				Payload payload = new Payload();
-
-				SpriteObject object = new SpriteObject(item.getAtlasAsset(), textureCache.getRegion(item.getAtlasAsset()), 0, 0);
-				payload.setObject(object);
-
-				Image img = new Image(item.getRegion());
-				payload.setDragActor(img);
-
-				float invZoom = 1.0f / dropTarget.getCameraZoom();
-				img.setScale(invZoom);
-				dragAndDrop.setDragActorPosition(-img.getWidth() * invZoom / 2, img.getHeight() - img.getHeight() * invZoom / 2);
-
-				return payload;
+				return createTexturePayload(item.getRegion(), item.getAtlasAsset());
 			}
 		});
 	}
@@ -115,22 +107,8 @@ public class AssetDragAndDrop {
 			dragAndDrop.addSource(new Source(item) {
 				@Override
 				public Payload dragStart (InputEvent event, float x, float y, int pointer) {
-					Payload payload = new Payload();
-					String relativePath = fileAccess.relativizeToAssetsFolder(item.getFile());
-
-					TextureRegionAsset asset = new TextureRegionAsset(relativePath);
-
-					SpriteObject object = new SpriteObject(asset, textureCache.getRegion(asset), 0, 0);
-					payload.setObject(object);
-
-					Image img = new Image(item.getRegion());
-					payload.setDragActor(img);
-
-					float invZoom = 1.0f / dropTarget.getCameraZoom();
-					img.setScale(invZoom);
-					dragAndDrop.setDragActorPosition(-img.getWidth() * invZoom / 2, img.getHeight() - img.getHeight() * invZoom / 2);
-
-					return payload;
+					TextureRegionAsset asset = new TextureRegionAsset(fileAccess.relativizeToAssetsFolder(item.getFile()));
+					return createTexturePayload(item.getRegion(), asset);
 				}
 			});
 		}
@@ -213,6 +191,23 @@ public class AssetDragAndDrop {
 		if (item.getType() == FileType.NON_STANDARD) {
 			dragAndDrop.addSource(item.getSupport().createDropSource(dragAndDrop, item));
 		}
+	}
+
+	private Payload createTexturePayload (TextureRegion region, TextureAssetDescriptor asset) {
+		Payload payload = new Payload();
+
+		payload.setObject(asset);
+
+		//image creation
+		Image img = new Image(region);
+		payload.setDragActor(img);
+
+		float invZoom = 1.0f / dropTarget.getCameraZoom();
+		img.setScale(invZoom);
+		dragAndDrop.setDragActorPosition(-img.getWidth() * invZoom / 2, img.getHeight() - img.getHeight() * invZoom / 2);
+
+		return payload;
+
 	}
 
 	public void clear () {

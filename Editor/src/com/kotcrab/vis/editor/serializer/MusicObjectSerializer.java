@@ -29,6 +29,7 @@ import com.kotcrab.vis.editor.scene.MusicObject;
  * Kryo serializer for {@link MusicObject}
  * @author Kotcrab
  */
+@Deprecated
 public class MusicObjectSerializer extends CompatibleFieldSerializer<MusicObject> {
 	private static final int VERSION_CODE = 1;
 

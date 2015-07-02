@@ -79,9 +79,10 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 			injectModules(module);
 	}
 
+	@Override
 	public void injectModules (Object module) {
 		try {
-			for (Field field : module.getClass().getDeclaredFields()) {
+			for (Field field : getAllFields(module.getClass())) {
 				if (field.isAnnotationPresent(InjectModule.class)) {
 					field.setAccessible(true);
 					field.set(module, findInHierarchy(field.getType().asSubclass(Module.class)));
@@ -90,6 +91,15 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 		} catch (ReflectiveOperationException e) {
 			Log.exception(e);
 		}
+	}
+
+	public static Array<Field> getAllFields (Class<?> type) {
+		Array<Field> fields = new Array<>();
+		for (Class<?> c = type; c != null; c = c.getSuperclass()) {
+			fields.addAll(c.getDeclaredFields());
+		}
+
+		return fields;
 	}
 
 	public <C extends Module> C findInHierarchy (Class<C> moduleClass) {

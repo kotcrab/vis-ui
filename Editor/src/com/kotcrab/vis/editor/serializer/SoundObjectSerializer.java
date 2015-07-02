@@ -29,6 +29,7 @@ import com.kotcrab.vis.editor.scene.SoundObject;
  * Kryo serializer for {@link SoundObject}
  * @author Kotcrab
  */
+@Deprecated
 public class SoundObjectSerializer extends CompatibleFieldSerializer<SoundObject> {
 	private static final int VERSION_CODE = 1;
 

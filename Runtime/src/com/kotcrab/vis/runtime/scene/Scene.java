@@ -17,18 +17,25 @@
 package com.kotcrab.vis.runtime.scene;
 
 import com.badlogic.gdx.ApplicationListener;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.*;
+import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.entity.TextEntity;
+import com.kotcrab.vis.runtime.system.CameraManager;
+import com.kotcrab.vis.runtime.system.SpriteInflaterSystem;
+import com.kotcrab.vis.runtime.util.ArtemisUtils;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**
  * Base class of VisRuntime scene system. Scene are typically constructed using {@link VisAssetManager} with {@link SceneLoader}
@@ -44,8 +51,10 @@ public class Scene implements Disposable {
 	private Array<Entity> entities;
 	private Array<TextureAtlas> textureAtlases;
 
+	private EntityEngine engine;
+
 	/** Used by framework, not indented for external use */
-	public Scene (Array<Entity> entities, Array<TextureAtlas> textureAtlases, AssetManager assetsManager, SceneViewport viewportType, int width, int height) {
+	public Scene (Array<Entity> entities, Array<TextureAtlas> textureAtlases, Batch batch, RuntimeConfiguration configuration, AssetManager assetsManager, SceneViewport viewportType, int width, int height) {
 		this.entities = entities;
 		this.textureAtlases = textureAtlases;
 		this.assetManager = assetsManager;
@@ -72,20 +81,29 @@ public class Scene implements Disposable {
 				viewport = new ExtendViewport(width, height, camera);
 				break;
 		}
+
+		engine = new EntityEngine();
+		engine.setManager(new CameraManager(viewportType, width, height));
+		engine.setSystem(new SpriteInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
+		ArtemisUtils.createCommonSystems(engine, batch, true);
+		engine.initialize();
 	}
 
 	/** Called by framework after scene has been loaded. */
+	@Deprecated
 	public void onAfterLoad () {
 		for (Entity entity : entities)
 			entity.onAfterLoad();
 	}
 
 	/** @return this scene entities list */
+	@Deprecated
 	public Array<Entity> getEntities () {
 		return entities;
 	}
 
 	/** Entity with provided id or null */
+	@Deprecated
 	public Entity getById (String id) {
 		for (Entity entity : entities)
 			if (entity.getId() != null && entity.getId().equals(id)) return entity;
@@ -104,6 +122,9 @@ public class Scene implements Disposable {
 
 	/** Renders entire scene. Typically called from {@link ApplicationListener#render()} */
 	public void render (SpriteBatch batch) {
+		engine.setDelta(Gdx.graphics.getDeltaTime());
+		engine.process();
+
 		batch.setProjectionMatrix(camera.combined);
 
 		boolean shader = false;
@@ -127,6 +148,7 @@ public class Scene implements Disposable {
 	/** Must by called when screen was resized. Typically called from {@link ApplicationListener#resize(int, int)} */
 	public void resize (int width, int height) {
 		viewport.update(width, height);
+		engine.getManager(CameraManager.class).resize(width, height);
 	}
 
 	void getDistanceFieldShaderFromManager (FileHandle shader) {
@@ -141,5 +163,9 @@ public class Scene implements Disposable {
 				disposable.dispose();
 			}
 		}
+	}
+
+	public EntityEngine getEntityEngine () {
+		return engine;
 	}
 }

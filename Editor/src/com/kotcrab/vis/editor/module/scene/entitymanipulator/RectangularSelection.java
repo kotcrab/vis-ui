@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.scene.entitymanipulator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -23,7 +23,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.module.scene.EntityProxyCache;
+import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 
 /**
@@ -32,14 +33,16 @@ import com.kotcrab.vis.editor.scene.EditorScene;
  */
 public class RectangularSelection {
 	private EditorScene scene;
-	private EntityManipulatorModule entityManipulatorModule;
+	private ECSEntityManipulatorModule entityManipulatorModule;
+	private EntityProxyCache proxyCache;
 
 	private Rectangle currentRect = null;
 	private Rectangle rectToDraw = null;
 
-	public RectangularSelection (EditorScene scene, EntityManipulatorModule entityManipulatorModule) {
+	public RectangularSelection (EditorScene scene, ECSEntityManipulatorModule entityManipulatorModule, EntityProxyCache proxyCache) {
 		this.scene = scene;
 		this.entityManipulatorModule = entityManipulatorModule;
+		this.proxyCache = proxyCache;
 	}
 
 	public void render (ShapeRenderer shapeRenderer) {
@@ -59,10 +62,10 @@ public class RectangularSelection {
 	}
 
 	public void findContainedComponents () {
-		Array<EditorObject> matchingEntities = new Array<>();
+		Array<EntityProxy> matchingEntities = new Array<>();
 
-		for (EditorObject entity : entityManipulatorModule.getSelectionRoot().getSelectionEntities())
-			if (rectToDraw.contains(entity.getBoundingRectangle())) matchingEntities.add(entity);
+		for (EntityProxy entity : proxyCache.getCache().values())
+			if (rectToDraw.contains(entity.getBoundingRectangle()) && entity.getLayerID() == scene.getActiveLayerId()) matchingEntities.add(entity);
 
 		entityManipulatorModule.resetSelection();
 		matchingEntities.forEach(entityManipulatorModule::selectAppend);

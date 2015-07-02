@@ -25,6 +25,7 @@ import com.kotcrab.vis.runtime.entity.EntityGroup;
  * Data class for {@link EntityGroup}
  * @author Kotcrab
  */
+@Deprecated
 public class EntityGroupData extends EntityData<EntityGroup> {
 	public Array<EntityData> entities = new Array<EntityData>();
 

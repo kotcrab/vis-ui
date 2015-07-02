@@ -19,7 +19,7 @@ package com.kotcrab.vis.editor.plugin;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StreamUtils;
-import com.kotcrab.vis.editor.util.EditorException;
+import com.kotcrab.vis.editor.util.vis.EditorException;
 
 import java.io.IOException;
 import java.util.jar.Attributes;

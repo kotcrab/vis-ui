@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
  * Base class for all entities.
  * @author Kotcrab
  */
+@Deprecated
 public abstract class Entity {
 	private String id;
 

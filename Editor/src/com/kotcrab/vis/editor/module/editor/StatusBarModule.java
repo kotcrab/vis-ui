@@ -20,10 +20,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
-import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
-import com.kotcrab.vis.editor.event.bus.Event;
-import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -32,7 +28,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
  * Provides UI widget with status bar that is displayed at the bottom of VisEditor screen
  * @author Kotcrab
  */
-public class StatusBarModule extends EditorModule implements EventListener {
+public class StatusBarModule extends EditorModule {
 	public VisTable table;
 	public VisLabel statusLabel;
 	public VisLabel infoLabel;
@@ -59,6 +55,10 @@ public class StatusBarModule extends EditorModule implements EventListener {
 		table.add(infoLabel);
 	}
 
+	public void setText (String text) {
+		setText(text, 3);
+	}
+
 	public void setText (String newText, int timeSeconds) {
 		setText(newText, Color.WHITE, timeSeconds);
 	}
@@ -70,32 +70,11 @@ public class StatusBarModule extends EditorModule implements EventListener {
 		timer.scheduleTask(resetTask, timeSeconds);
 	}
 
-	@Override
-	public void added () {
-		App.eventBus.register(this);
-	}
-
-	@Override
-	public void dispose () {
-		App.eventBus.unregister(this);
-	}
-
 	public Table getTable () {
 		return table;
 	}
 
 	public void setInfoLabelText (String text) {
 		infoLabel.setText(text);
-	}
-
-	@Override
-	public boolean onEvent (Event e) {
-		if (e instanceof StatusBarEvent) {
-			StatusBarEvent event = (StatusBarEvent) e;
-			setText(event.text, event.color, event.timeSeconds);
-			return true;
-		}
-
-		return false;
 	}
 }

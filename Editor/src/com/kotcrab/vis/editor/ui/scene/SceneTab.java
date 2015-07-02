@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.event.ToolbarEvent;
 import com.kotcrab.vis.editor.event.ToolbarEventType;
 import com.kotcrab.vis.editor.event.UndoEvent;
@@ -40,6 +41,7 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.module.scene.*;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.ECSEntityManipulatorModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
@@ -50,6 +52,7 @@ import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.util.gdx.FocusUtils;
 import com.kotcrab.vis.editor.util.gdx.VisValue;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.VisTable;
 
@@ -59,7 +62,6 @@ import com.kotcrab.vis.ui.widget.VisTable;
  * @author Kotcrab
  */
 public class SceneTab extends MainContentTab implements DragAndDropTarget, EventListener, SceneMenuButtonsListener, CloseTabWhenMovingResources {
-	private Editor editor;
 	private EditorScene scene;
 
 	@InjectModule private ExtensionStorageModule pluginContainer;
@@ -71,6 +73,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	private SceneModuleContainer sceneMC;
 
 	@InjectModule private EntityManipulatorModule entityManipulator;
+	@InjectModule private ECSEntityManipulatorModule ecsEntityManipulator;
 	@InjectModule private UndoModule undoModule;
 	@InjectModule private CameraModule cameraModule;
 
@@ -83,19 +86,16 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
 		super(true);
-		editor = Editor.instance;
 		this.scene = scene;
 
 		sceneMC = new SceneModuleContainer(projectMC, this, scene, Editor.instance.getStage().getBatch());
 		sceneMC.add(new CameraModule());
-		sceneMC.add(new GridRendererModule());
 		sceneMC.add(new RendererModule());
-
 		sceneMC.add(new UndoModule());
-		sceneMC.add(new ZIndexManipulatorModule());
-
+		//sceneMC.add(new ZIndexManipulatorModule());
+		sceneMC.add(new ECSEntityManipulatorModule());
 		sceneMC.add(new EntityManipulatorModule());
-		sceneMC.addAll(projectMC.getEditorContainer().get(ExtensionStorageModule.class).getContainersExtensions(SceneModule.class, ExtensionScope.SCENE));
+		sceneMC.addAll(sceneMC.findInHierarchy(ExtensionStorageModule.class).getContainersExtensions(SceneModule.class, ExtensionScope.SCENE));
 
 		sceneMC.init();
 
@@ -125,14 +125,12 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		rightColumn.top();
 		rightColumn.add(entityProperties).height(new VisValue(context -> entityProperties.getPrefHeight())).expandX().fillX().row();
 		rightColumn.add().fill().expand().row();
-		rightColumn.add(sceneMC.get(EntityManipulatorModule.class).getLayersDialog()).expandX().fillX();
-//		rightColumn.row();
-//		rightColumn.add().fill().expand();
+		rightColumn.add(sceneMC.get(ECSEntityManipulatorModule.class).getLayersDialog()).expandX().fillX();
 
 		dropTarget = new Target(content) {
 			@Override
 			public void drop (Source source, Payload payload, float x, float y, int pointer) {
-				entityManipulator.processDropPayload(payload);
+				ecsEntityManipulator.processDropPayload(payload);
 			}
 
 			@Override
@@ -179,6 +177,11 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	}
 
 	@Override
+	public EntityEngine getEntityEngine () {
+		return sceneMC.getEntityEngine();
+	}
+
+	@Override
 	public TabViewMode getViewMode () {
 		return TabViewMode.SPLIT;
 	}
@@ -205,6 +208,9 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	@Override
 	public boolean onEvent (Event event) {
+		if (event instanceof TexturesReloadedEvent)
+			sceneMC.getEntityEngine().getManager(TextureReloaderManager.class).reloadTextures();
+
 		if (isActiveTab()) {
 			if (event instanceof ToolbarEvent) {
 				ToolbarEventType type = ((ToolbarEvent) event).type;
@@ -225,6 +231,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	@Override
 	public boolean save () {
 		super.save();
+		scene.setSchemes(sceneMC.getEntityEngine().getManager(EntityProxyCache.class).getSchemes());
 		if (sceneIOModule.save(scene)) {
 			setDirty(false);
 			sceneMC.save();
@@ -244,7 +251,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	@Override
 	public void showSceneSettings () {
-		editor.getStage().addActor(new SceneSettingsDialog(this).fadeIn());
+		Editor.instance.getStage().addActor(new SceneSettingsDialog(this).fadeIn());
 	}
 
 	@Override
@@ -278,13 +285,15 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	}
 
 	public String getInfoLabelText () {
-		return "Entities: " + entityManipulator.getTotalEntityCount() + " FPS: " + Gdx.graphics.getFramesPerSecond() + " Scene: " + scene.width + " x " + scene.height;
+		return "Entities: " + getEntityEngine().getEntityManager().getActiveEntityCount() + " FPS: " + Gdx.graphics.getFramesPerSecond() + " Scene: " + scene.width + " x " + scene.height;
 	}
 
+	@Deprecated
 	public void selectEntity (EditorObject entity) {
 		entityManipulator.select(entity);
 	}
 
+	@Deprecated
 	public void centerCamera (EditorObject entity) {
 		cameraModule.setPosition(entity.getX() + entity.getWidth() / 2, entity.getY() + entity.getHeight() / 2);
 	}

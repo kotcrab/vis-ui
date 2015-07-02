@@ -28,14 +28,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.esotericsoftware.kryo.KryoException;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
-import com.kotcrab.vis.editor.module.scene.GridRendererModule.GridSettingsModule;
+import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EditorFrame;
@@ -45,8 +44,9 @@ import com.kotcrab.vis.editor.ui.dialog.SettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
-import com.kotcrab.vis.editor.util.EditorException;
+import com.kotcrab.vis.editor.util.ThreadUtils;
 import com.kotcrab.vis.editor.util.gdx.VisGroup;
+import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialog;
@@ -80,6 +80,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private ProjectModuleContainer projectMC;
 
 	private InputModule inputModule;
+	private StatusBarModule statusBar;
 	private ProjectIOModule projectIO;
 	private FileChooserModule fileChooser;
 	private ExtensionStorageModule pluginContainer;
@@ -212,7 +213,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(new ToastModule());
 		editorMC.add(new TabsModule(createTabsModuleListener()));
 		editorMC.add(new QuickAccessModule(createQuickAccessModuleListener()));
-		editorMC.add(new StatusBarModule());
+		editorMC.add(statusBar = new StatusBarModule());
 		editorMC.add(new UIDebugControllerModule());
 		editorMC.add(new EditorSettingsIOModule());
 
@@ -292,6 +293,15 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		frame.dispose();
 		Log.dispose();
+
+		//make sure that application will exit eventually
+		Thread exitThread = new Thread(() -> {
+			ThreadUtils.sleep(3000);
+			System.exit(-2);
+		}, "Force Exit");
+
+		exitThread.setDaemon(true);
+		exitThread.start();
 	}
 
 	public void showRestartDialog () {
@@ -385,7 +395,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.dispose();
 		settingsDialog.removeAll(projectMC.getModules());
 
-		App.eventBus.post(new StatusBarEvent("Project unloaded"));
+		statusBar.setText("Project unloaded");
 		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded, projectMC.getProject()));
 	}
 
@@ -423,6 +433,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.add(new FontCacheModule());
 		projectMC.add(new ParticleCacheModule());
 		projectMC.add(new SceneCacheModule());
+		projectMC.add(new ProjectVersionModule());
 		projectMC.add(new SceneIOModule());
 		projectMC.add(new ObjectSupportModule());
 		projectMC.add(new SceneMetadataModule());
@@ -438,7 +449,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		settingsDialog.addAll(projectMC.getModules());
 
-		App.eventBus.post(new StatusBarEvent("Project loaded"));
+		statusBar.setText("Project loaded");
 		App.eventBus.post(new ProjectStatusEvent(Status.Loaded, project));
 	}
 

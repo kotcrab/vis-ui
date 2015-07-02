@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
@@ -30,11 +31,11 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.AtlasReloadedEvent;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
-import com.kotcrab.vis.editor.util.ProjectPathUtils;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
@@ -47,6 +48,8 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
  * @author Kotcrab
  */
 public class TextureCacheModule extends ProjectModule implements WatchListener {
+	@InjectModule private StatusBarModule statusBar;
+
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private AssetsWatcherModule watcher;
 
@@ -149,7 +152,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 			App.eventBus.post(new TexturesReloadedEvent());
 			if (firstReload == false) {
 				//we don't want to display 'textures reloaded' right after editor startup / project loaded
-				App.eventBus.post(new StatusBarEvent("Textures reloaded"));
+				statusBar.setText("Textures reloaded");
 				firstReload = true;
 			}
 		} else
@@ -222,6 +225,10 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		if (descriptor instanceof AtlasRegionAsset) return getAtlasRegion((AtlasRegionAsset) descriptor);
 
 		throw new UnsupportedAssetDescriptorException(descriptor);
+	}
+
+	public Sprite getSprite (VisAssetDescriptor descriptor) {
+		return new Sprite(getRegion(descriptor));
 	}
 
 	private TextureRegion getCachedGfxRegion (TextureRegionAsset asset) {

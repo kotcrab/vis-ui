@@ -29,6 +29,7 @@ import com.badlogic.gdx.math.Rectangle;
  * Text that you can scale, rotate, change color itp. Supports distance field fonts
  * @author Kotcrab
  */
+@Deprecated
 public class TextEntity extends Entity {
 	/** Value used for fontSize filed when BMP font is used */
 	public static final int BITMAP_FONT_SIZE = -1;

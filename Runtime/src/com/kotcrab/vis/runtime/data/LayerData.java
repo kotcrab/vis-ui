@@ -24,6 +24,7 @@ import com.kotcrab.vis.runtime.entity.EntityGroup;
  * @author Kotcrab
  * @see EntityGroup
  */
+@Deprecated
 public class LayerData {
 	public String name;
 	public Array<EntityData> entities = new Array<EntityData>();

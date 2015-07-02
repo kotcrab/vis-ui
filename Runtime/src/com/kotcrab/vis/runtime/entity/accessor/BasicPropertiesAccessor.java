@@ -14,14 +14,25 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.runtime.entity.accessor;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.badlogic.gdx.math.Rectangle;
 
-/**
- * Interface implemented if something can provide {@link EditorObject}
- * @author Kotcrab
- */
-public interface EditorObjectProvider {
-	EditorObject newInstance ();
+/** @author Kotcrab */
+public interface BasicPropertiesAccessor {
+	float getX ();
+
+	void setX (float x);
+
+	float getY ();
+
+	void setY (float y);
+
+	void setPosition (float x, float y);
+
+	float getWidth ();
+
+	float getHeight ();
+
+	Rectangle getBoundingRectangle ();
 }

@@ -20,9 +20,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 
 /**
@@ -30,6 +28,8 @@ import com.kotcrab.vis.editor.module.InjectModule;
  * @author Kotcrab
  */
 public class UIDebugControllerModule extends EditorModule {
+	@InjectModule private StatusBarModule statusBar;
+
 	@InjectModule private GlobalInputModule inputModule;
 
 	private Stage stage;
@@ -43,9 +43,9 @@ public class UIDebugControllerModule extends EditorModule {
 				stage.setDebugAll(debugEnabled);
 
 				if (debugEnabled)
-					App.eventBus.post(new StatusBarEvent("UI debug mode was enabled! (press F12 to disable)"));
+					statusBar.setText("UI debug mode was enabled! (press F12 to disable)");
 				else
-					App.eventBus.post(new StatusBarEvent("UI debug mode was disabled!"));
+					statusBar.setText("UI debug mode was disabled!");
 
 				return true;
 			}

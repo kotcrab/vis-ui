@@ -29,6 +29,7 @@ import com.kotcrab.vis.editor.scene.ParticleEffectObject;
  * Kryo serializer for {@link ParticleEffectObject}
  * @author Kotcrab
  */
+@Deprecated
 public class ParticleObjectSerializer extends CompatibleFieldSerializer<ParticleEffectObject> {
 	private static final int VERSION_CODE = 1;
 

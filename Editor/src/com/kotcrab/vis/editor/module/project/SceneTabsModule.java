@@ -60,6 +60,8 @@ public class SceneTabsModule extends ProjectModule implements TabbedPaneListener
 	}
 
 	public SceneTab getTabByScene (EditorScene scene) {
+		if (scene == null) return null;
+
 		for (SceneTab tab : loadedTabs)
 			if (tab.getScene().path.equals(scene.path)) return tab;
 

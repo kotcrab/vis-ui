@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.scene;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
-import com.kotcrab.vis.editor.util.gdx.SpriteUtils;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.entity.EntityGroup;
@@ -29,6 +28,7 @@ import com.kotcrab.vis.runtime.entity.EntityGroup;
  * @author Kotcrab
  * @see EntityGroup
  */
+@Deprecated
 public class ObjectGroup extends EntityGroup implements EditorObject, SceneSelectionRoot {
 	private boolean preserveForRuntime;
 
@@ -156,10 +156,10 @@ public class ObjectGroup extends EntityGroup implements EditorObject, SceneSelec
 				objectGroup.reloadTextures(cacheModule);
 			}
 
-			if (entity instanceof SpriteObject) {
-				SpriteObject spriteObject = (SpriteObject) entity;
-				SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getAssetDescriptor()));
-			}
+//			if (entity instanceof SpriteObject) {
+//				SpriteObject spriteObject = (SpriteObject) entity;
+//				SpriteUtils.setRegion(spriteObject.getSprite(), cacheModule.getRegion(spriteObject.getAssetDescriptor()));
+//			}
 		}
 	}
 

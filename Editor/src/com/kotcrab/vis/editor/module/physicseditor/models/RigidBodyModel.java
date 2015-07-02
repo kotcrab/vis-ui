@@ -16,12 +16,9 @@
 
 package com.kotcrab.vis.editor.module.physicseditor.models;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.StatusBarEvent;
 import com.kotcrab.vis.editor.module.physicseditor.list.ChangeListener;
 import com.kotcrab.vis.editor.module.physicseditor.list.Changeable;
 import com.kotcrab.vis.editor.module.physicseditor.models.ShapeModel.Type;
@@ -105,7 +102,7 @@ public class RigidBodyModel extends Entity implements Changeable {
 				if (polys != null) for (Vector2[] poly : polys) {
 
 					if (PolygonUtils.isDegenerate(poly)) {
-						App.eventBus.post(new StatusBarEvent("Shape polygon is degenerated, removing shape", Color.RED));
+						//App.eventBus.post(new StatusBarEvent("Shape polygon is degenerated, removing shape", Color.RED)); //TODO: [physics editor][high] fix
 						shapesToRemove.add(shape);
 						continue;
 					}

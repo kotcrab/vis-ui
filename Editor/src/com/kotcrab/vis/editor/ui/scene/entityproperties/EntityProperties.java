@@ -37,7 +37,7 @@ import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.*;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.*;
-import com.kotcrab.vis.editor.util.EntityUtils;
+import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
@@ -57,13 +57,14 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import java.util.Iterator;
 
 /**
- * Entity properties dialog, used to display and change all data about currently selected entites. Multiple selection
+ * Entity properties dialog, used to display and change all data about currently selected entities. Multiple selection
  * is supported, even when entities have different values, <?> is used in float input fields, and intermediate checkbox are used
  * for boolean support. Undo is supported. Plugin can add custom properties tables (see {@link SpecificObjectTable}),
  * but they must support all base features of this dialog (multiple selection support, undo, etc.). See any class
  * from 'specifictable' package for examples.
  * @author Kotcrab
  */
+@Deprecated
 public class EntityProperties extends VisTable implements Disposable, EventListener {
 	public static final int LABEL_WIDTH = 60;
 	public static final int AXIS_LABEL_WIDTH = 10;
@@ -530,7 +531,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		}
 
 		private EntityData getDataForEntity (EditorObject entity) {
-			if (entity instanceof SpriteObject) return new SpriteData();
+			//if (entity instanceof SpriteObject) return new SpriteData();
 			if (entity instanceof TextObject) return new TextObjectData();
 			if (entity instanceof ParticleEffectObject) return new ParticleEffectData();
 			if (entity instanceof MusicObject) return new MusicData();
