@@ -69,7 +69,7 @@ public class RendererModule extends SceneModule {
 
 		batch.end();
 		shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
-		shapeRenderer.setColor(Color.WHITE);
+		shapeRenderer.setColor(Color.LIGHT_GRAY);
 		shapeRenderer.begin(ShapeType.Line);
 		shapeRenderer.rect(0, 0, scene.width, scene.height);
 		shapeRenderer.end();

@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.module.scene;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
@@ -55,7 +54,6 @@ public class EntityManipulatorModule extends SceneModule{
 
 	@Override
 	public void init () {
-
 		shapeRenderer = sceneContainer.get(RendererModule.class).getShapeRenderer();
 
 		entityProperties = new EntityProperties(supportManager, fileAccess, fontCacheModule, undoModule, colorPickerModule.getPicker(), sceneTab, selectedEntities);
@@ -66,42 +64,14 @@ public class EntityManipulatorModule extends SceneModule{
 		entityProperties.loadSupportsSpecificTables(projectContainer.get(ObjectSupportModule.class));
 	}
 
-	@Override
+	@Override @Deprecated
 	public void dispose () {
 		entityProperties.dispose();
 	}
 
+	@Deprecated
 	public EntityProperties getEntityProperties () {
 		return entityProperties;
-	}
-
-	public void processDropPayload (Payload payload) {
-		if (scene.getActiveLayer().locked) {
-			//App.eventBus.post(new StatusBarEvent("Layer is locked!"));
-			return;
-		}
-
-		Object obj = payload.getObject();
-
-		if (obj instanceof EditorObject) {
-			EditorObject entity = (EditorObject) obj;
-			float x = camera.getInputX() - entity.getWidth() / 2;
-			float y = camera.getInputY() - entity.getHeight() / 2;
-			entity.setPosition(x, y);
-
-			undoModule.execute(new EntityAddedAction(selectionRoot, entity));
-		}
-	}
-
-
-	private void deleteSelectedEntities () {
-		undoModule.execute(new EntityRemovedAction(selectionRoot, selectedEntities));
-	}
-
-
-	@Deprecated
-	public Array<EditorObject> getSelectedEntities () {
-		return selectedEntities;
 	}
 
 	@Deprecated
@@ -127,15 +97,6 @@ public class EntityManipulatorModule extends SceneModule{
 		entityProperties.selectedEntitiesChanged();
 	}
 
-	@Deprecated
-	void selectAppend (EditorObject entity) {
-		if (preSelect(entity, false) == false) return;
-
-		if (selectedEntities.contains(entity, true) == false)
-			selectedEntities.add(entity);
-
-		entityProperties.selectedEntitiesChanged();
-	}
 
 	@Deprecated
 	public boolean switchLayer (Layer layer) {
@@ -274,7 +235,7 @@ public class EntityManipulatorModule extends SceneModule{
 		public void execute () {
 			selectionRoot.getSelectionEntities().addAll(newEntities);
 			resetSelection();
-			newEntities.forEach(EntityManipulatorModule.this::selectAppend);
+//			newEntities.forEach(EntityManipulatorModule.this::selectAppend);
 			sceneTab.dirty();
 		}
 

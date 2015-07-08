@@ -6,35 +6,42 @@ filter: Nearest,Nearest
 repeat: none
 alpha-grid-20x20
   rotate: false
-  xy: 68, 96
+  xy: 68, 104
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 alpha-grid-32x32
   rotate: false
-  xy: 2, 18
+  xy: 2, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 ball
   rotate: false
-  xy: 2, 52
+  xy: 2, 60
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
-check-indeterminate
+breadcrumb-arrow
   rotate: false
   xy: 2, 2
+  size: 9, 22
+  orig: 9, 22
+  offset: 0, 0
+  index: -1
+check-indeterminate
+  rotate: false
+  xy: 36, 44
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 check-over-indeterminate
   rotate: false
-  xy: 36, 36
+  xy: 68, 88
   size: 14, 14
   orig: 14, 14
   offset: 0, 0

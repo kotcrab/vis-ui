@@ -18,12 +18,13 @@ package com.kotcrab.vis.editor.module.scene.action;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectSet;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.ECSEntityManipulatorModule;
-import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
+import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**
@@ -35,21 +36,21 @@ public class EntitiesAddedAction implements UndoableAction {
 	@InjectModule private SceneIOModule sceneIO;
 
 	private EntityEngine engine;
-	private Array<Entity> entities;
+	private ObjectSet<Entity> entities;
 
 	private Array<ProtoEntity> protoEntities = new Array<>();
 
 	public EntitiesAddedAction (ModuleInjector injector, EntityEngine engine, Entity entity) {
 		injector.injectModules(this);
 		this.engine = engine;
-		this.entities = new Array<>();
+		this.entities = new ObjectSet<>();
 		entities.add(entity);
 	}
 
-	public EntitiesAddedAction (ModuleInjector injector, EntityEngine engine, Array<Entity> newEntities) {
+	public EntitiesAddedAction (ModuleInjector injector, EntityEngine engine, ObjectSet<Entity> newEntities) {
 		injector.injectModules(this);
 		this.engine = engine;
-		this.entities = new Array<>(newEntities);
+		this.entities = new ObjectSet<>(newEntities);
 	}
 
 	@Override

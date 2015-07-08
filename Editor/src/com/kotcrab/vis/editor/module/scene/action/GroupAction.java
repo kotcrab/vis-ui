@@ -16,48 +16,54 @@
 
 package com.kotcrab.vis.editor.module.scene.action;
 
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 
-public class MoveEntityAction implements UndoableAction {
-	private EntityPositionData oldData = new EntityPositionData();
-	private EntityPositionData newData = new EntityPositionData();
-	private EntityProxy entity;
+/** @author Kotcrab */
+public class GroupAction implements UndoableAction {
+	private final Array<EntityProxy> entities;
+	private final int groupId;
+	private final boolean createGroup;
 
-	public MoveEntityAction (EntityProxy entity) {
-		this.entity = entity;
-		oldData.saveFrom(entity);
-	}
-
-	public void saveNewData (EntityProxy entity) {
-		newData.saveFrom(entity);
+	public GroupAction (Array<EntityProxy> entities, int groupId, boolean createGroup) {
+		this.entities = new Array<>(entities);
+		this.groupId = groupId;
+		this.createGroup = createGroup;
 	}
 
 	@Override
 	public void execute () {
-		entity.reload();
-		newData.loadTo(entity);
+		reload();
+
+		if (createGroup)
+			group();
+		else
+			ungroup();
 	}
 
 	@Override
 	public void undo () {
-		entity.reload();
-		oldData.loadTo(entity);
+		reload();
+
+		if (createGroup)
+			ungroup();
+		else
+			group();
 	}
 
-	private static class EntityPositionData {
-		public float x;
-		public float y;
-
-		public void saveFrom (EntityProxy entity) {
-			x = entity.getX();
-			y = entity.getY();
-		}
-
-		public void loadTo (EntityProxy entity) {
-			entity.setPosition(x, y);
-		}
+	private void group () {
+		for (EntityProxy entity : entities)
+			entity.addGroup(groupId);
 	}
 
+	private void ungroup () {
+		for (EntityProxy entity : entities)
+			entity.removeGroup(groupId);
+	}
+
+	private void reload () {
+		for (EntityProxy entity : entities)
+			entity.reload();
+	}
 }
-

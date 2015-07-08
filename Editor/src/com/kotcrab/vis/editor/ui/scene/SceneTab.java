@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
+import com.artemis.EntityManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -42,6 +43,7 @@ import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.ECSEntityManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupBreadcrumb;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
@@ -72,10 +74,15 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	private SceneModuleContainer sceneMC;
 
-	@InjectModule private EntityManipulatorModule entityManipulator;
+	@Deprecated
+	@InjectModule
+	private EntityManipulatorModule entityManipulator;
 	@InjectModule private ECSEntityManipulatorModule ecsEntityManipulator;
 	@InjectModule private UndoModule undoModule;
 	@InjectModule private CameraModule cameraModule;
+
+	private EntityEngine engine;
+	private EntityManager entityManager;
 
 	private ContentTable content;
 
@@ -98,8 +105,10 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		sceneMC.addAll(sceneMC.findInHierarchy(ExtensionStorageModule.class).getContainersExtensions(SceneModule.class, ExtensionScope.SCENE));
 
 		sceneMC.init();
-
 		sceneMC.injectModules(this);
+
+		engine = sceneMC.getEntityEngine();
+		entityManager = engine.getEntityManager();
 
 		outline = new SceneOutline();
 
@@ -111,6 +120,9 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 		content = new ContentTable(sceneMC);
 
+		GroupBreadcrumb breadcrumb = ecsEntityManipulator.getGroupBreadcrumb();
+
+		content.add(breadcrumb).height(new VisValue(context -> breadcrumb.getPrefHeight())).expandX().fillX().colspan(3).row();
 		content.add(leftColumn).width(300).fillY().expandY();
 		content.add().fill().expand();
 		content.add(rightColumn).width(260).fillY().expandY();
@@ -125,7 +137,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		rightColumn.top();
 		rightColumn.add(entityProperties).height(new VisValue(context -> entityProperties.getPrefHeight())).expandX().fillX().row();
 		rightColumn.add().fill().expand().row();
-		rightColumn.add(sceneMC.get(ECSEntityManipulatorModule.class).getLayersDialog()).expandX().fillX();
+		rightColumn.add(ecsEntityManipulator.getLayersDialog()).expandX().fillX();
 
 		dropTarget = new Target(content) {
 			@Override
@@ -178,7 +190,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	@Override
 	public EntityEngine getEntityEngine () {
-		return sceneMC.getEntityEngine();
+		return engine;
 	}
 
 	@Override
@@ -276,16 +288,16 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	@Override
 	public void group () {
-		entityManipulator.groupSelection();
+		ecsEntityManipulator.groupSelection();
 	}
 
 	@Override
 	public void ungroup () {
-		entityManipulator.ungroupSelection();
+		ecsEntityManipulator.ungroupSelection();
 	}
 
 	public String getInfoLabelText () {
-		return "Entities: " + getEntityEngine().getEntityManager().getActiveEntityCount() + " FPS: " + Gdx.graphics.getFramesPerSecond() + " Scene: " + scene.width + " x " + scene.height;
+		return "Entities: " + entityManager.getActiveEntityCount() + " FPS: " + Gdx.graphics.getFramesPerSecond() + " Scene: " + scene.width + " x " + scene.height;
 	}
 
 	@Deprecated

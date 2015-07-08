@@ -22,6 +22,7 @@ import com.artemis.utils.Bag;
 import com.artemis.utils.EntityBuilder;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.component.GroupComponent;
 import com.kotcrab.vis.runtime.data.ECSEntityData;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
@@ -54,7 +55,10 @@ public class EntityScheme {
 		components.forEach(component -> {
 			if (component instanceof UsesProtoComponent)
 				dataComponents.add(((UsesProtoComponent) component).getProtoComponent());
-			else
+			else if (component instanceof GroupComponent) { //strip empty GroupComponents
+				GroupComponent gdc = (GroupComponent) component;
+				if (gdc.groupIds.size > 0) dataComponents.add(component);
+			} else
 				dataComponents.add(component);
 		});
 

@@ -112,7 +112,7 @@ public class LayersDialog extends VisTable implements Disposable {
 							public void yes () {
 								UndoableActionGroup layerRemovedGroup = new UndoableActionGroup();
 								layerRemovedGroup.add(new EntitiesRemovedAction(sceneMC, entityEngine,
-										BagUtils.toArray(layerManipulatorManager.getEntitiesWithLayer(scene.getActiveLayerId()))));
+										BagUtils.toSet(layerManipulatorManager.getEntitiesWithLayer(scene.getActiveLayerId()))));
 								layerRemovedGroup.add(new LayerRemovedAction(scene.getActiveECSLayer()));
 								layerRemovedGroup.finalizeGroup();
 

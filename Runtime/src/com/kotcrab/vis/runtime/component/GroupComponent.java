@@ -16,14 +16,13 @@
 
 package com.kotcrab.vis.runtime.component;
 
+import com.artemis.Component;
+import com.badlogic.gdx.utils.IntArray;
+
 /** @author Kotcrab */
-public class GroupComponent {
-	public int groupId;
+public class GroupComponent extends Component {
+	public IntArray groupIds = new IntArray();
 
-	private GroupComponent () {
-	}
-
-	public GroupComponent (int groupId) {
-		this.groupId = groupId;
+	public GroupComponent () {
 	}
 }

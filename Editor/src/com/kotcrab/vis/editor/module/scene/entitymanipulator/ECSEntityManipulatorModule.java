@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.module.scene.entitymanipulator;
 
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -31,7 +30,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.Timer;
+import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
@@ -39,23 +40,27 @@ import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesAddedAction;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesRemovedAction;
+import com.kotcrab.vis.editor.module.scene.action.GroupAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTimerTask.Direction;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupBreadcrumb.GroupBreadcrumbListener;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
+import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.scene.ECSLayer;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
 import com.kotcrab.vis.editor.util.gdx.ImmutableArray;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
+import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.TextureAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.LayerComponent;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
 import com.kotcrab.vis.runtime.component.SpriteComponent;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 
 /** @author Kotcrab */
-@Wire
 public class ECSEntityManipulatorModule extends SceneModule {
 	@InjectModule private StatusBarModule statusBar;
 
@@ -69,10 +74,14 @@ public class ECSEntityManipulatorModule extends SceneModule {
 	private ShapeRenderer shapeRenderer;
 	private EntityProxyCache entityProxyCache;
 	private ZIndexManipulatorManager zIndexManipulator;
+	private GroupIdProviderSystem groupIdProvider;
+	private GroupProxyProviderSystem groupProxyProvider;
 
+	private GroupBreadcrumb groupBreadcrumb;
 	private LayersDialog layersDialog;
 
 	private Tool currentTool;
+	private int currentSelectionGid = -1;
 	private Array<EntityProxy> selectedEntities = new Array<>();
 	private ImmutableArray<EntityProxy> immutableSelectedEntities = new ImmutableArray<>(selectedEntities);
 
@@ -91,7 +100,23 @@ public class ECSEntityManipulatorModule extends SceneModule {
 		shapeRenderer = rendererModule.getShapeRenderer();
 		entityProxyCache = entityEngine.getManager(EntityProxyCache.class);
 		zIndexManipulator = entityEngine.getManager(ZIndexManipulatorManager.class);
+		groupIdProvider = entityEngine.getSystem(GroupIdProviderSystem.class);
+		groupProxyProvider = entityEngine.getSystem(GroupProxyProviderSystem.class);
 
+		groupBreadcrumb = new GroupBreadcrumb(new GroupBreadcrumbListener() {
+			@Override
+			public void clicked (int gid) {
+				currentSelectionGid = gid;
+				selectAll();
+			}
+
+			@Override
+			public void rootClicked () {
+				currentSelectionGid = -1;
+				groupBreadcrumb.resetHierarchy();
+				resetSelection();
+			}
+		});
 		layersDialog = new LayersDialog(sceneTab, sceneContainer.getEntityEngine(), sceneContainer);
 		createGeneralMenu();
 
@@ -118,15 +143,23 @@ public class ECSEntityManipulatorModule extends SceneModule {
 	private void buildEntityPopupMenu (Array<EntityProxy> entities) {
 		entityPopupMenu.clearChildren();
 
-//		if (entities != null) {
-//			if (entities.size == 1 && entities.peek() instanceof SceneSelectionRoot) {
-//				entityPopupMenu.addItem(MenuUtils.createMenuItem("Enter into group", () -> {
-//					setSelectionRoot((SceneSelectionRoot) entities.peek());
-//					selectAll();
-//				}));
-//				entityPopupMenu.addSeparator();
-//			}
-//		}
+		if (entities != null) {
+			if (isMenuItemEnterIntoGroupValid(entities)) {
+				entityPopupMenu.addItem(MenuUtils.createMenuItem("Enter into group", () -> {
+
+					if (isMenuItemEnterIntoGroupValid(entities) == false) {
+						DialogUtils.showErrorDialog(Editor.instance.getStage(), "Group was deselected");
+						return;
+					}
+
+					GroupEntityProxy groupEntityProxy = (GroupEntityProxy) entities.peek();
+					currentSelectionGid = groupEntityProxy.getGroupId();
+					groupBreadcrumb.addGroup(currentSelectionGid);
+					selectAll();
+				}));
+				entityPopupMenu.addSeparator();
+			}
+		}
 
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Cut", this::cut));
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Copy", this::copy));
@@ -135,10 +168,15 @@ public class ECSEntityManipulatorModule extends SceneModule {
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Select All", this::selectAll));
 	}
 
+	private boolean isMenuItemEnterIntoGroupValid (Array<EntityProxy> entities) {
+		return (entities.size == 1 && entities.peek() instanceof GroupEntityProxy);
+	}
+
 	private void copy () {
 		if (selectedEntities.size > 0) {
 			entitiesClipboard.clear();
-			selectedEntities.forEach(proxy -> entitiesClipboard.add(sceneIO.createProtoEntity(entityEngine, proxy.getEntity(), false)));
+			selectedEntities.forEach(proxy -> proxy.getEntities().forEach(
+					entity -> entitiesClipboard.add(sceneIO.createProtoEntity(entityEngine, entity, false))));
 
 			EntityProxy proxy = selectedEntities.peek();
 
@@ -158,7 +196,7 @@ public class ECSEntityManipulatorModule extends SceneModule {
 			selectedEntities.clear();
 
 			Array<EntityProxy> proxies = new Array<>(selectedEntities.size);
-			Array<Entity> entities = new Array<>(selectedEntities.size);
+			ObjectSet<Entity> entities = new ObjectSet<>(selectedEntities.size);
 
 			entitiesClipboard.forEach(protoEntity -> {
 				Entity entity = protoEntity.build();
@@ -193,9 +231,9 @@ public class ECSEntityManipulatorModule extends SceneModule {
 	}
 
 	private void deleteSelectedEntities () {
-		Array<Entity> entities = new Array<>();
+		ObjectSet<Entity> entities = new ObjectSet<>();
 
-		selectedEntities.forEach(proxy -> entities.add(proxy.getEntity()));
+		selectedEntities.forEach(proxy -> entities.addAll(proxy.getEntities()));
 		selectedEntities.clear();
 		selectedEntitiesChanged();
 
@@ -228,6 +266,25 @@ public class ECSEntityManipulatorModule extends SceneModule {
 		}
 	}
 
+//	@Deprecated
+//	public void processDropPayload (Payload payload) {
+//		if (scene.getActiveLayer().locked) {
+//			//App.eventBus.post(new StatusBarEvent("Layer is locked!"));
+//			return;
+//		}
+//
+//		Object obj = payload.getObject();
+//
+//		if (obj instanceof EditorObject) {
+//			EditorObject entity = (EditorObject) obj;
+//			float x = camera.getInputX() - entity.getWidth() / 2;
+//			float y = camera.getInputY() - entity.getHeight() / 2;
+//			entity.setPosition(x, y);
+//
+//			undoModule.execute(new EntityAddedAction(selectionRoot, entity));
+//		}
+//	}
+
 	public void switchTool (Tool tool) {
 		if (currentTool != null) currentTool.deactivated();
 		currentTool = tool;
@@ -242,12 +299,14 @@ public class ECSEntityManipulatorModule extends SceneModule {
 	public void select (EntityProxy proxy) {
 		ECSLayer layer = scene.getECSLayerById(proxy.getLayerID());
 		if (layer.locked) return;
-
 		scene.setActiveECSLayer(layer.id);
 
 		selectedEntities.clear();
-		selectedEntities.add(proxy);
-//		entityProperties.selectedEntitiesChanged();
+
+		checkProxyGid(proxy);
+
+		selectAddToList(proxy);
+		selectedEntitiesChanged();
 	}
 
 	/** Appends to current selection, however if entity layer is different than current layer then selection will be reset */
@@ -265,26 +324,70 @@ public class ECSEntityManipulatorModule extends SceneModule {
 			selectedEntities.clear();
 		}
 
-		selectedEntities.add(proxy);
+		checkProxyGid(proxy);
+
+		selectAddToList(proxy);
 		selectedEntitiesChanged();
+	}
+
+	private void checkProxyGid (EntityProxy proxy) {
+		int proxyGid = proxy.getLastGroupId();
+		if (proxy.groupsContains(currentSelectionGid) == false) {
+			if (groupBreadcrumb.isInHierarchy(proxyGid)) {
+				currentSelectionGid = proxyGid;
+				groupBreadcrumb.trimToGid(proxyGid);
+			} else {
+				currentSelectionGid = -1;
+				groupBreadcrumb.resetHierarchy();
+			}
+		}
 	}
 
 	public void selectAll () {
 		if (scene.getActiveECSLayer().locked) return;
 
-		int layerId = scene.getActiveLayerId();
-
 		selectedEntities.clear();
-		entityProxyCache.getCache().values().forEach(proxy -> {
-			if (proxy.getLayerID() == layerId)
-				selectedEntities.add(proxy);
-		});
+
+		if (currentSelectionGid == -1) {
+			int layerId = scene.getActiveLayerId();
+
+			entityProxyCache.getCache().values().forEach(proxy -> {
+				if (proxy.getLayerID() == layerId) {
+					selectAddToList(proxy);
+				}
+			});
+
+		} else {
+			GroupEntityProxy proxy = groupProxyProvider.getGroupEntityProxy(currentSelectionGid);
+			proxy.getProxies().forEach(this::selectAddToList);
+		}
 
 		selectedEntitiesChanged();
 	}
 
+	private void selectAddToList (EntityProxy proxy) {
+		int lastGid = currentSelectionGid == -1 ? proxy.getLastGroupId() : proxy.getGroupIdBefore(currentSelectionGid);
+		if (proxy instanceof GroupEntityProxy == false && lastGid != -1) {
+			if (isGroupIdAlreadySelected(lastGid) == false) {
+				selectedEntities.add(groupProxyProvider.getGroupEntityProxy(lastGid));
+			}
+		} else
+			selectedEntities.add(proxy);
+	}
+
 	public boolean isSelected (EntityProxy proxy) {
 		return selectedEntities.contains(proxy, true);
+	}
+
+	public boolean isGroupIdAlreadySelected (int gid) {
+		for (EntityProxy proxy : selectedEntities) {
+			if (proxy instanceof GroupEntityProxy) {
+				GroupEntityProxy groupProxy = (GroupEntityProxy) proxy;
+				if (groupProxy.getGroupId() == gid) return true;
+			}
+		}
+
+		return false;
 	}
 
 	public void resetSelection () {
@@ -298,11 +401,52 @@ public class ECSEntityManipulatorModule extends SceneModule {
 	}
 
 	public void selectedEntitiesChanged () {
-		//entityProperties.selectedEntitesChanged()
+		//entityProperties.selectedEntitiesChanged()
+	}
 
-		//debug
-		if(selectedEntities.size > 0)
-			System.out.println(selectedEntities.get(0).getZIndex());
+	public void groupSelection () {
+		if (selectedEntities.size <= 1) {
+			statusBar.setText("Noting to group!");
+			return;
+		}
+
+		int gid = groupIdProvider.getFreeGroupIndex();
+
+		undoModule.execute(new GroupAction(selectedEntities, gid, true));
+
+		GroupEntityProxy groupProxy = new GroupEntityProxy(selectedEntities, gid);
+		resetSelection();
+		select(groupProxy);
+	}
+
+	public void ungroupSelection () {
+		if (selectedEntities.size == 0) {
+			statusBar.setText("Noting to ungroup!");
+			return;
+		}
+
+		GroupEntityProxy selectionProxy = null; //proxy that will be used later to select group objects
+
+		UndoableActionGroup actionGroup = new UndoableActionGroup();
+
+		for (EntityProxy entity : selectedEntities) {
+			if (entity instanceof GroupEntityProxy) {
+				GroupEntityProxy group = (GroupEntityProxy) entity;
+				selectionProxy = group;
+				actionGroup.add(new GroupAction(group.getProxies(), group.getGroupId(), false));
+			}
+		}
+
+		if (selectionProxy != null) {
+			actionGroup.finalizeGroup();
+			undoModule.execute(actionGroup);
+
+			groupBreadcrumb.resetHierarchy();
+			currentSelectionGid = -1;
+			resetSelection();
+			selectionProxy.getProxies().forEach(this::selectAppend);
+		} else
+			statusBar.setText("No group selected!");
 	}
 
 	public void markSceneDirty () {
@@ -341,6 +485,10 @@ public class ECSEntityManipulatorModule extends SceneModule {
 
 	public LayersDialog getLayersDialog () {
 		return layersDialog;
+	}
+
+	public GroupBreadcrumb getGroupBreadcrumb () {
+		return groupBreadcrumb;
 	}
 
 	public ImmutableArray<EntityProxy> getSelectedEntities () {
@@ -420,8 +568,10 @@ public class ECSEntityManipulatorModule extends SceneModule {
 			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.C) copy();
 			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.V) paste();
 			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.X) cut();
-			if (Gdx.input.isKeyPressed(Keys.PAGE_UP)) zIndexManipulator.moveSelectedEntities(getSelectedEntities(), true);
-			if (Gdx.input.isKeyPressed(Keys.PAGE_DOWN)) zIndexManipulator.moveSelectedEntities(getSelectedEntities(), false);
+			if (Gdx.input.isKeyPressed(Keys.PAGE_UP))
+				zIndexManipulator.moveSelectedEntities(getSelectedEntities(), true);
+			if (Gdx.input.isKeyPressed(Keys.PAGE_DOWN))
+				zIndexManipulator.moveSelectedEntities(getSelectedEntities(), false);
 
 			int delta = 1;
 			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) delta *= 10;

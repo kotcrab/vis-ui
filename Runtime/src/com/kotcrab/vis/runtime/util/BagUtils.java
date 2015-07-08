@@ -18,11 +18,21 @@ package com.kotcrab.vis.runtime.util;
 
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectSet;
 
 /** @author Kotcrab */
 public class BagUtils {
 	public static <E> Array<E> toArray (ImmutableBag<E> bag) {
 		Array<E> array = new Array<E>(bag.size());
+
+		for(E element : bag)
+			array.add(element);
+
+		return array;
+	}
+
+	public static <E> ObjectSet<E> toSet (ImmutableBag<E> bag) {
+		ObjectSet<E> array = new ObjectSet<E>(bag.size());
 
 		for(E element : bag)
 			array.add(element);

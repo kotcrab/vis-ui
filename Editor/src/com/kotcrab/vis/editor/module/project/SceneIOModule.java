@@ -25,6 +25,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntArray;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
@@ -91,10 +92,11 @@ public class SceneIOModule extends ProjectModule {
 		//401-600 plugins
 
 		kryo.register(Array.class, new ArraySerializer(), 10);
-		kryo.register(Bag.class, new BagSerializer(), 11);
-		kryo.register(Rectangle.class, 12);
-		kryo.register(Matrix4.class, 13);
-		kryo.register(Color.class, new ColorSerializer(), 14);
+		kryo.register(IntArray.class, new IntArraySerializer(), 11);
+		kryo.register(Bag.class, new BagSerializer(), 12);
+		kryo.register(Rectangle.class, 13);
+		kryo.register(Matrix4.class, 14);
+		kryo.register(Color.class, new ColorSerializer(), 15);
 
 		kryo.register(EditorScene.class, new EditorSceneSerializer(kryo), 31);
 		kryo.register(EntityScheme.class, new EntitySchemeSerializer(kryo, this), 32);

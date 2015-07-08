@@ -19,12 +19,11 @@ package com.kotcrab.vis.editor.proxy;
 import com.artemis.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.IDComponent;
-import com.kotcrab.vis.runtime.component.LayerComponent;
-import com.kotcrab.vis.runtime.component.RenderableComponent;
+import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.entity.accessor.*;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
@@ -34,18 +33,21 @@ public abstract class EntityProxy {
 
 	protected EntityScheme scheme;
 
-	private BasicPropertiesAccessor basicAccessor;
+	protected BasicPropertiesAccessor basicAccessor;
 
-	private SizePropertiesAccessor sizeAccessor;
-	private OriginPropertiesAccessor originAccessor;
-	private ScalePropertiesAccessor scaleAccessor;
-	private ColorPropertiesAccessor colorAccessor;
-	private RotationPropertiesAccessor rotationAccessor;
-	private FlipPropertiesAccessor flipAccessor;
+	protected SizePropertiesAccessor sizeAccessor;
+	protected OriginPropertiesAccessor originAccessor;
+	protected ScalePropertiesAccessor scaleAccessor;
+	protected ColorPropertiesAccessor colorAccessor;
+	protected RotationPropertiesAccessor rotationAccessor;
+	protected FlipPropertiesAccessor flipAccessor;
 
 	public EntityProxy (Entity entity) {
 		this.entity = entity;
+		init();
+	}
 
+	protected void init () {
 		if (entity.getComponent(RenderableComponent.class) == null || entity.getComponent(LayerComponent.class) == null)
 			throw new IllegalArgumentException("Proxy cannot be used for non renderable entities. Entity must contain RenderableComponent and LayerComponent");
 
@@ -60,19 +62,64 @@ public abstract class EntityProxy {
 		basicAccessor = initAccessors();
 	}
 
+	public EntityScheme getScheme () {
+		if (scheme == null)
+			scheme = new EntityScheme(entity);
+
+		return scheme;
+	}
+
+	public void addGroup (int groupId) {
+		IntArray groupIds = getGroupComponent().groupIds;
+		if (groupIds.contains(groupId) == false) groupIds.add(groupId);
+	}
+
+	public void removeGroup (int groupId) {
+		IntArray groupIds = getGroupComponent().groupIds;
+		if (groupIds.contains(groupId)) groupIds.removeValue(groupId);
+	}
+
+	public int getLastGroupId () {
+		GroupComponent gdc = entity.getComponent(GroupComponent.class);
+
+		if (gdc == null || gdc.groupIds.size == 0) {
+			return -1;
+		}
+
+		return gdc.groupIds.peek();
+	}
+
+	public int getGroupIdBefore (int gid) {
+		IntArray groupIds = getGroupComponent().groupIds;
+		int index = groupIds.indexOf(gid) - 1;
+
+		if (index < 0)
+			return -1;
+		else
+			return groupIds.get(index);
+	}
+
+	public boolean groupsContains (int gid) {
+		return getGroupComponent().groupIds.contains(gid);
+	}
+
+	private GroupComponent getGroupComponent () {
+		GroupComponent gdc = entity.getComponent(GroupComponent.class);
+
+		if (gdc == null) {
+			gdc = new GroupComponent();
+			entity.edit().add(gdc);
+		}
+
+		return gdc;
+	}
+
 	public String getId () {
 		IDComponent idc = entity.getComponent(IDComponent.class);
 		if (idc != null)
 			return idc.id;
 		else
 			return null;
-	}
-
-	public EntityScheme getScheme () {
-		if (scheme == null)
-			scheme = new EntityScheme(entity);
-
-		return scheme;
 	}
 
 	public void setId (String id) {
@@ -283,7 +330,9 @@ public abstract class EntityProxy {
 
 	abstract boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor);
 
-	public Entity getEntity () {
-		return entity;
+	public Array<Entity> getEntities () {
+		Array<Entity> entities = new Array<>(1);
+		entities.add(entity);
+		return entities;
 	}
 }

@@ -58,13 +58,18 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		this.sceneTab = sceneTab;
 
 		engine = new EntityEngine();
+
 		engine.setManager(new CameraManager(SceneViewport.SCREEN, 0, 0)); //size ignored for screen viewport
 		engine.setManager(new LayerManipulatorManager());
 		engine.setManager(new ZIndexManipulatorManager());
 		engine.setManager(new EntityProxyCache());
 		engine.setManager(new EntitySerializerManager());
+
 		engine.setManager(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
+		engine.setSystem(new GroupIdProviderSystem(), true);
+		engine.setSystem(new GroupProxyProviderSystem(), true);
 		engine.setSystem(new GridRendererSystem(batch, this));
+
 		ArtemisUtils.createCommonSystems(engine, batch, false);
 	}
 
