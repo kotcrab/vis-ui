@@ -16,18 +16,14 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.Layer;
-import com.kotcrab.vis.editor.scene.ObjectGroup;
 import com.kotcrab.vis.editor.scene.SceneSelectionRoot;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
-import com.kotcrab.vis.editor.util.undo.UndoableAction;
-import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 
 /**
  * Entity manipulator module, allows to move entities on scene. Providers right click menu, rectangular selection
@@ -45,8 +41,6 @@ public class EntityManipulatorModule extends SceneModule{
 	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private FontCacheModule fontCacheModule;
 
-	private ShapeRenderer shapeRenderer;
-
 	private EntityProperties entityProperties;
 
 	private final Array<EditorObject> selectedEntities = new Array<>();
@@ -54,8 +48,6 @@ public class EntityManipulatorModule extends SceneModule{
 
 	@Override
 	public void init () {
-		shapeRenderer = sceneContainer.get(RendererModule.class).getShapeRenderer();
-
 		entityProperties = new EntityProperties(supportManager, fileAccess, fontCacheModule, undoModule, colorPickerModule.getPicker(), sceneTab, selectedEntities);
 	}
 
@@ -153,168 +145,17 @@ public class EntityManipulatorModule extends SceneModule{
 		return null;
 	}
 
-	private void selectAll () {
-		if (scene.getActiveLayer().locked == true) return;
-		for (EditorObject entity : selectionRoot.getSelectionEntities()) {
-			if (selectedEntities.contains(entity, true) == false)
-				selectedEntities.add(entity);
-		}
-
-		entityProperties.selectedEntitiesChanged();
-	}
-
 	public void resetSelection () {
 		selectedEntities.clear();
 		entityProperties.selectedEntitiesChanged();
 	}
 
-	public void groupSelection () {
-		if (selectedEntities.size == 0) {
-			//App.eventBus.post(new StatusBarEvent("Nothing to group!"));
-			return;
-		}
-
-		UndoableActionGroup actionGroup = new UndoableActionGroup();
-
-		ObjectGroup objGroup = new ObjectGroup();
-		objGroup.addEntities(selectedEntities);
-
-		actionGroup.execute(new EntityRemovedAction(selectionRoot, selectedEntities));
-		actionGroup.execute(new EntityAddedAction(selectionRoot, objGroup));
-		actionGroup.finalizeGroup();
-
-		undoModule.add(actionGroup);
-	}
-
-	public void ungroupSelection () {
-		if (selectedEntities.size == 0) {
-			//App.eventBus.post(new StatusBarEvent("Nothing to ungroup!"));
-			return;
-		}
-
-		UndoableActionGroup actionGroup = new UndoableActionGroup();
-
-		for (EditorObject obj : selectedEntities) {
-			if (obj instanceof ObjectGroup) {
-				ObjectGroup group = (ObjectGroup) obj;
-
-				actionGroup.add(new EntityRemovedAction(selectionRoot, group));
-				actionGroup.add(new EntitiesAddedAction(selectionRoot, group.getObjects()));
-			}
-		}
-
-		actionGroup.finalizeGroup();
-
-		undoModule.execute(actionGroup);
-	}
-
-	public SceneSelectionRoot getSelectionRoot () {
-		return selectionRoot;
-	}
-
-	public void setSelectionRoot (SceneSelectionRoot selectionRoot) {
-		setSelectionRoot(selectionRoot, true);
-	}
 
 	public void setSelectionRoot (SceneSelectionRoot selectionRoot, boolean resetSelection) {
 		this.selectionRoot = selectionRoot;
 		if (resetSelection) resetSelection();
 	}
 
-	@Deprecated
-	private class EntitiesAddedAction implements UndoableAction {
-		private SceneSelectionRoot selectionRoot;
-		private Array<EditorObject> newEntities;
 
-		public EntitiesAddedAction (SceneSelectionRoot selectionRoot, Array<EditorObject> newEntities) {
-			this.selectionRoot = selectionRoot;
-			this.newEntities = new Array<>(newEntities);
-		}
-
-		@Override
-		public void execute () {
-			selectionRoot.getSelectionEntities().addAll(newEntities);
-			resetSelection();
-//			newEntities.forEach(EntityManipulatorModule.this::selectAppend);
-			sceneTab.dirty();
-		}
-
-		@Override
-		public void undo () {
-			selectionRoot.getSelectionEntities().removeAll(newEntities, true);
-			resetSelection();
-			sceneTab.dirty();
-		}
-	}
-
-	@Deprecated
-	private class EntityAddedAction implements UndoableAction {
-		private SceneSelectionRoot selectionRoot;
-		private EditorObject entity;
-
-		public EntityAddedAction (SceneSelectionRoot selectionRoot, EditorObject entity) {
-			this.selectionRoot = selectionRoot;
-			this.entity = entity;
-		}
-
-		@Override
-		public void execute () {
-			selectionRoot.getSelectionEntities().add(entity);
-			select(entity);
-			sceneTab.dirty();
-		}
-
-		@Override
-		public void undo () {
-			selectionRoot.getSelectionEntities().removeValue(entity, true);
-			resetSelection();
-			sceneTab.dirty();
-		}
-	}
-
-	@Deprecated
-	private class EntityRemovedAction implements UndoableAction {
-		private SceneSelectionRoot selectionRoot;
-		private Array<Integer> indexes;
-		private Array<EditorObject> entities;
-
-		public EntityRemovedAction (SceneSelectionRoot selectionRoot, Array<EditorObject> selectedEntities) {
-			this.selectionRoot = selectionRoot;
-			indexes = new Array<>(selectedEntities.size);
-			entities = new Array<>(selectedEntities);
-		}
-
-		public EntityRemovedAction (SceneSelectionRoot selectionRoot, EditorObject object) {
-			this.selectionRoot = selectionRoot;
-			indexes = new Array<>(1);
-			entities = new Array<>(1);
-			entities.add(object);
-		}
-
-		@Override
-		public void execute () {
-			for (EditorObject entity : entities)
-				indexes.add(selectionRoot.getSelectionEntities().indexOf(entity, true));
-
-			selectionRoot.getSelectionEntities().removeAll(entities, true);
-
-			resetSelection();
-		}
-
-		@Override
-		public void undo () {
-			for (int i = 0; i < entities.size; i++) {
-				int index = indexes.get(i);
-				EditorObject obj = entities.get(i);
-
-				if (index > selectionRoot.getSelectionEntities().size)
-					selectionRoot.getSelectionEntities().add(obj);
-				else
-					selectionRoot.getSelectionEntities().insert(index, obj);
-			}
-
-			resetSelection();
-		}
-	}
 
 }

@@ -30,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.Timer;
 import com.kotcrab.vis.editor.Editor;
@@ -290,6 +291,23 @@ public class ECSEntityManipulatorModule extends SceneModule {
 		currentTool = tool;
 		currentTool.setModules(sceneContainer, scene);
 		currentTool.activated();
+	}
+
+	public void findEntityBaseGroupAndSelect (EntityProxy proxy) {
+		if (proxy instanceof GroupEntityProxy)
+			throw new UnsupportedOperationException("findEntityBaseGroupAndSelect(EntityProxy) does not supports GroupEntityProxy");
+
+		IntArray array = proxy.getGroupsIds();
+		array.reverse();
+
+		currentSelectionGid = array.peek();
+
+		for (int i = 0; i < array.size; i++) {
+			int gid = array.get(i);
+			groupBreadcrumb.addGroup(gid);
+		}
+
+		select(proxy);
 	}
 
 	public void select (Entity entity) {

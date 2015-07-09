@@ -23,15 +23,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.project.AssetsAnalyzerModule;
 import com.kotcrab.vis.editor.module.project.AssetsUsages;
+import com.kotcrab.vis.editor.module.project.AssetsUsages.SceneUsages;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
-import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.FileUtils;
@@ -105,8 +103,7 @@ public class AssetsUsagesTab extends Tab {
 
 		sceneTabs.switchTab(tab);
 
-		tab.selectEntity(label.getEntity());
-		tab.centerCamera(label.getEntity());
+		tab.centerAround(label.getEntityId());
 		tab.focusSelf();
 	}
 
@@ -154,13 +151,16 @@ public class AssetsUsagesTab extends Tab {
 	}
 
 	private void processUsages () {
-		for (Entry<EditorScene, Array<EditorObject>> entry : usages.list) {
-			Node node = new Node(new VisLabel(entry.key.path, "small"));
+		for (SceneUsages sceneUsages : usages.list) {
+			Node node = new Node(new VisLabel(sceneUsages.scene.path, "small"));
 			node.setExpanded(true);
 			tree.add(node);
 
-			for (EditorObject entity : entry.value)
-				node.add(new Node(new UsageLabel(entry.key, entity)));
+			for (int i = 0; i < sceneUsages.ids.size; i++) {
+				int id = sceneUsages.ids.get(i);
+				node.add(new Node(new UsageLabel(sceneUsages.scene, id)));
+			}
+
 		}
 	}
 
@@ -180,20 +180,20 @@ public class AssetsUsagesTab extends Tab {
 
 	private static class UsageLabel extends VisLabel {
 		private final EditorScene scene;
-		private final EditorObject entity;
+		private final int id;
 
-		public UsageLabel (EditorScene scene, EditorObject entity) {
-			super(entity.toPrettyString(), "small");
+		public UsageLabel (EditorScene scene, int id) {
+			super("Entity[" + id + "]", "small");
 			this.scene = scene;
-			this.entity = entity;
+			this.id = id;
 		}
 
 		public EditorScene getScene () {
 			return scene;
 		}
 
-		public EditorObject getEntity () {
-			return entity;
+		public int getEntityId () {
+			return id;
 		}
 	}
 

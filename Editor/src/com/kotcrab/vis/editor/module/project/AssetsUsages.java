@@ -18,28 +18,40 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.editor.scene.EditorScene;
 
 /**
- * Created by {@link AssetsAnalyzerModule}, holds found assets usages.
  * @author Kotcrab
  */
 public class AssetsUsages {
 	public FileHandle file;
-	public boolean limitExceeded;
-	public int count;
-	public ObjectMap<EditorScene, Array<EditorObject>> list = new ObjectMap<>();
+	public Array<SceneUsages> list = new Array<>();
 
 	public AssetsUsages (FileHandle file) {
 		this.file = file;
 	}
 
 	public String toPrettyString () {
-		if (limitExceeded)
-			return "More than " + AssetsAnalyzerModule.USAGE_SEARCH_LIMIT + " usages found for " + file.name();
-		else
-			return "Found " + count + " " + (count == 1 ? "usage" : "usages") + " for " + file.name();
+		int count = count();
+		return "Found " + count + " " + (count == 1 ? "usage" : "usages") + " for " + file.name();
+	}
+
+	public int count () {
+		int count = 0;
+
+		for (SceneUsages usages : list)
+			count = count + usages.ids.size;
+
+		return count;
+	}
+
+	public static class SceneUsages {
+		public EditorScene scene;
+		public IntArray ids = new IntArray();
+
+		public SceneUsages (EditorScene scene) {
+			this.scene = scene;
+		}
 	}
 }

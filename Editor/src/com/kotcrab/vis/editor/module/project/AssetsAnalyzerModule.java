@@ -29,14 +29,16 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
+import com.kotcrab.vis.editor.module.project.AssetsUsages.SceneUsages;
+import com.kotcrab.vis.editor.module.scene.AssetsUsageAnalyzerSystem;
+import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
-import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.Layer;
-import com.kotcrab.vis.editor.scene.ObjectGroup;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
+import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
@@ -46,10 +48,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
  * {@link AssetTransactionGenerator} to extend supported types.
  * @author Kotcrab
  */
-@Deprecated
 public class AssetsAnalyzerModule extends ProjectModule {
-	public static final int USAGE_SEARCH_LIMIT = 100;
-
 	@InjectModule private ToastModule toastModule;
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private ObjectSupportModule supportModule;
@@ -110,48 +109,32 @@ public class AssetsAnalyzerModule extends ProjectModule {
 
 	public AssetsUsages analyzeUsages (FileHandle file) {
 		String path = fileAccess.relativizeToAssetsFolder(file.path());
-
+		VisAssetDescriptor searchFor = provideDescriptor(file, path);
 		AssetsUsages usages = new AssetsUsages(file);
 
 		for (FileHandle sceneFile : fileAccess.getSceneFiles()) {
 			EditorScene scene = sceneCache.get(sceneFile);
+			SceneTab sceneTab = sceneTabsModule.getTabByScene(scene);
 
-			Array<EditorObject> sceneUsagesList = new Array<>();
+			EntityEngine engine;
 
-			for (Layer layer : scene.layers)
-				processEntities(usages, sceneUsagesList, file, path, layer.entities);
+			//TODO: analyze only current opened tabs
+			if (sceneTab == null) {
+				//scene is not loaded, manually prepare engine and populate it
+				engine = new EntityEngine();
+				SceneModuleContainer.createEssentialsSystems(engine);
+				engine.initialize();
+				SceneModuleContainer.populateEngine(engine, scene);
+			} else {
+				engine = sceneTab.getSceneMC().getEntityEngine();
+			}
 
-			if (sceneUsagesList.size > 0)
-				usages.list.put(scene, sceneUsagesList);
+			SceneUsages sceneUsages = new SceneUsages(scene);
+			engine.getSystem(AssetsUsageAnalyzerSystem.class).collectUsages(sceneUsages.ids, searchFor);
+			if (sceneUsages.ids.size > 0) usages.list.add(sceneUsages);
 		}
 
 		return usages;
-	}
-
-	private void processEntities (AssetsUsages usages, Array<EditorObject> sceneUsagesList, FileHandle file, String path, Array<EditorObject> entities) {
-		for (EditorObject entity : entities) {
-			if (entity instanceof ObjectGroup) {
-				ObjectGroup group = (ObjectGroup) entity;
-				processEntities(usages, sceneUsagesList, file, path, group.getObjects());
-				continue;
-			}
-
-			boolean used = false;
-
-			if (entity.getAssetDescriptor() != null) {
-				if (entity.getAssetDescriptor().compare(provideDescriptor(file, path))) used = true;
-			}
-
-			if (used) {
-				usages.count++;
-				sceneUsagesList.add(entity);
-			}
-
-			if (usages.count == USAGE_SEARCH_LIMIT) {
-				usages.limitExceeded = true;
-				break;
-			}
-		}
 	}
 
 	public boolean isSafeFileMoveSupported (FileHandle file) {
@@ -226,7 +209,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 			tab.reopenSelfAfterAssetsUpdated();
 	}
 
-	public FileHandle getNewTransactionBackup () {
+	private FileHandle getNewTransactionBackup () {
 		FileHandle dir;
 
 		do {

@@ -62,15 +62,26 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		engine.setManager(new CameraManager(SceneViewport.SCREEN, 0, 0)); //size ignored for screen viewport
 		engine.setManager(new LayerManipulatorManager());
 		engine.setManager(new ZIndexManipulatorManager());
-		engine.setManager(new EntityProxyCache());
 		engine.setManager(new EntitySerializerManager());
-
 		engine.setManager(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
+
 		engine.setSystem(new GroupIdProviderSystem(), true);
 		engine.setSystem(new GroupProxyProviderSystem(), true);
 		engine.setSystem(new GridRendererSystem(batch, this));
 
+		createEssentialsSystems(engine);
+
 		ArtemisUtils.createCommonSystems(engine, batch, false);
+	}
+
+	public static void createEssentialsSystems (EntityEngine engine) {
+		engine.setManager(new EntityProxyCache());
+		engine.setSystem(new AssetsUsageAnalyzerSystem(), true);
+	}
+
+	public static void populateEngine (final EntityEngine engine, EditorScene scene) {
+		Array<EntityScheme> schemes = scene.getSchemes();
+		schemes.forEach(entityScheme -> entityScheme.build(engine));
 	}
 
 	@Override
@@ -92,8 +103,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		engine.initialize();
 
 		Log.debug("SceneModuleContainer", "Populating EntityEngine");
-		Array<EntityScheme> schemes = scene.getSchemes();
-		schemes.forEach(entityScheme -> entityScheme.build(engine));
+		populateEngine(engine, scene);
 
 		engine.getSystems().forEach(this::injectModules);
 		engine.getManagers().forEach(this::injectModules);

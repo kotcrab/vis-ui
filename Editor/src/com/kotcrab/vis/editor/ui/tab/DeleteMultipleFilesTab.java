@@ -94,7 +94,7 @@ public class DeleteMultipleFilesTab extends Tab {
 				AssetsUsages usages = usageAnalyzer.analyzeUsages(file);
 				usagesTable.add(new VisLabel(usages.toPrettyString()));
 
-				if (usages.count > 0) {
+				if (usages.count() > 0) {
 					VisTextButton viewUsages = new VisTextButton("View " + usages.file.name() + " Usages");
 					usagesTable.add(viewUsages);
 

@@ -103,6 +103,10 @@ public abstract class EntityProxy {
 		return getGroupComponent().groupIds.contains(gid);
 	}
 
+	public IntArray getGroupsIds () {
+		return new IntArray(getGroupComponent().groupIds);
+	}
+
 	private GroupComponent getGroupComponent () {
 		GroupComponent gdc = entity.getComponent(GroupComponent.class);
 

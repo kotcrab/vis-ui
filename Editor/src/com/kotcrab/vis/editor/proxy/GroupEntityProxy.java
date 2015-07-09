@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.proxy;
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.entity.accessor.BasicPropertiesAccessor;
@@ -80,6 +81,11 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 	@Override
 	public boolean groupsContains (int gid) {
 		return proxies.get(0).groupsContains(gid);
+	}
+
+	@Override
+	public IntArray getGroupsIds () {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

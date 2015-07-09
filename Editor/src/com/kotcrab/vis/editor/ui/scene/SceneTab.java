@@ -45,7 +45,7 @@ import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.ECSEntityManipulatorModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupBreadcrumb;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
@@ -83,6 +83,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	private EntityEngine engine;
 	private EntityManager entityManager;
+	private EntityProxyCache entityProxyCache;
 
 	private ContentTable content;
 
@@ -109,6 +110,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 		engine = sceneMC.getEntityEngine();
 		entityManager = engine.getEntityManager();
+		entityProxyCache = engine.getManager(EntityProxyCache.class);
 
 		outline = new SceneOutline();
 
@@ -300,13 +302,9 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		return "Entities: " + entityManager.getActiveEntityCount() + " FPS: " + Gdx.graphics.getFramesPerSecond() + " Scene: " + scene.width + " x " + scene.height;
 	}
 
-	@Deprecated
-	public void selectEntity (EditorObject entity) {
-		entityManipulator.select(entity);
-	}
-
-	@Deprecated
-	public void centerCamera (EditorObject entity) {
+	public void centerAround (int entityId) {
+		EntityProxy entity = entityProxyCache.get(entityId);
+		ecsEntityManipulator.findEntityBaseGroupAndSelect(entity);
 		cameraModule.setPosition(entity.getX() + entity.getWidth() / 2, entity.getY() + entity.getHeight() / 2);
 	}
 
@@ -318,5 +316,9 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	public void reopenSelfAfterAssetsUpdated () {
 		save();
 		sceneTabs.open(scene);
+	}
+
+	public SceneModuleContainer getSceneMC () {
+		return sceneMC;
 	}
 }
