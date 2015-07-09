@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.scene;
+package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
-import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.ui.widget.VisTable;
 
-/**
- * Implemented by objects that can become selection root in scene tab.
- * @author Kotcrab
- */
-@Deprecated
-public interface SceneSelectionRoot {
-	Array<EditorObject> getSelectionEntities ();
+/** @author Kotcrab */
+public class ECSEntityProperties extends VisTable {
 }

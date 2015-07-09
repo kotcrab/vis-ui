@@ -24,10 +24,8 @@ import com.badlogic.gdx.utils.Disposable;
  * @author Kotcrab
  */
 @Deprecated
-public class Layer implements Disposable, SceneSelectionRoot {
+public class Layer implements Disposable {
 	public String name;
-	public boolean locked = false;
-	public boolean visible = true;
 	public Array<EditorObject> entities = new Array<EditorObject>();
 
 	public Layer (String name) {
@@ -44,10 +42,5 @@ public class Layer implements Disposable, SceneSelectionRoot {
 	@Override
 	public String toString () {
 		return name;
-	}
-
-	@Override
-	public Array<EditorObject> getSelectionEntities () {
-		return entities;
 	}
 }

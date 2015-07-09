@@ -49,6 +49,7 @@ import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.scene.ECSLayer;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.ECSEntityProperties;
 import com.kotcrab.vis.editor.util.gdx.ImmutableArray;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
@@ -78,6 +79,7 @@ public class ECSEntityManipulatorModule extends SceneModule {
 	private GroupIdProviderSystem groupIdProvider;
 	private GroupProxyProviderSystem groupProxyProvider;
 
+	private ECSEntityProperties entityProperties;
 	private GroupBreadcrumb groupBreadcrumb;
 	private LayersDialog layersDialog;
 
@@ -104,6 +106,7 @@ public class ECSEntityManipulatorModule extends SceneModule {
 		groupIdProvider = entityEngine.getSystem(GroupIdProviderSystem.class);
 		groupProxyProvider = entityEngine.getSystem(GroupProxyProviderSystem.class);
 
+		entityProperties = new ECSEntityProperties();
 		groupBreadcrumb = new GroupBreadcrumb(new GroupBreadcrumbListener() {
 			@Override
 			public void clicked (int gid) {
@@ -499,6 +502,10 @@ public class ECSEntityManipulatorModule extends SceneModule {
 	@Override
 	public void dispose () {
 		layersDialog.dispose();
+	}
+
+	public ECSEntityProperties getEntityProperties () {
+		return entityProperties;
 	}
 
 	public LayersDialog getLayersDialog () {

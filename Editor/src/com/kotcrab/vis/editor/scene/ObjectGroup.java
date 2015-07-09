@@ -29,7 +29,7 @@ import com.kotcrab.vis.runtime.entity.EntityGroup;
  * @see EntityGroup
  */
 @Deprecated
-public class ObjectGroup extends EntityGroup implements EditorObject, SceneSelectionRoot {
+public class ObjectGroup extends EntityGroup implements EditorObject {
 	private boolean preserveForRuntime;
 
 	private Rectangle bounds;
@@ -176,10 +176,5 @@ public class ObjectGroup extends EntityGroup implements EditorObject, SceneSelec
 	@Override
 	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
 		return false;
-	}
-
-	@Override
-	public Array<EditorObject> getSelectionEntities () {
-		return getObjects();
 	}
 }

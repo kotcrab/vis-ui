@@ -47,7 +47,7 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupBreadcrumb;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.ECSEntityProperties;
 import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
@@ -123,6 +123,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		content = new ContentTable(sceneMC);
 
 		GroupBreadcrumb breadcrumb = ecsEntityManipulator.getGroupBreadcrumb();
+		ECSEntityProperties entityProperties = ecsEntityManipulator.getEntityProperties();
 
 		content.add(breadcrumb).height(new VisValue(context -> breadcrumb.getPrefHeight())).expandX().fillX().colspan(3).row();
 		content.add(leftColumn).width(300).fillY().expandY();
@@ -133,8 +134,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		//leftColumn.add(outline).height(300).fillX().expandX();
 		leftColumn.row();
 		leftColumn.add().fill().expand();
-
-		EntityProperties entityProperties = sceneMC.get(EntityManipulatorModule.class).getEntityProperties();
 
 		rightColumn.top();
 		rightColumn.add(entityProperties).height(new VisValue(context -> entityProperties.getPrefHeight())).expandX().fillX().row();
