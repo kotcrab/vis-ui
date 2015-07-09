@@ -68,7 +68,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 		providers.add(new TextureDescriptorProvider());
 		providers.add(new BmpFontDescriptorProvider());
 
-		transactionsGens.add(new BaseAssetTransactionGenerator());
+		transactionsGens.add(new BasicAssetTransactionGenerator());
 		transactionsGens.add(new TextureRegionAssetTransactionGenerator());
 		transactionsGens.add(new AtlasRegionAssetTransactionGenerator());
 		transactionsGens.add(new BmpFontAssetTransactionGenerator());
@@ -181,7 +181,6 @@ public class AssetsAnalyzerModule extends ProjectModule {
 			}
 		}
 
-		//TODO support tabs with savable property
 		Array<Tab> quickTabs = quickAccessModule.getTabs();
 		for (int i = 0; i < quickTabs.size; i++) {
 			Tab tab = quickTabs.get(i);

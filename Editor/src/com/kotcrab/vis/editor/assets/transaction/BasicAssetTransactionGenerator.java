@@ -29,7 +29,7 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
  * TrueType fonts, music, sounds, and particles
  * @author Kotcrab
  */
-public class BaseAssetTransactionGenerator implements AssetTransactionGenerator {
+public class BasicAssetTransactionGenerator implements AssetTransactionGenerator {
 	private FileHandle transactionStorage;
 
 	@Override

@@ -16,16 +16,17 @@
 
 package com.kotcrab.vis.editor.assets.transaction.action;
 
+import com.artemis.Component;
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.SceneCacheModule;
-import com.kotcrab.vis.editor.scene.EditorObject;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.component.AssetComponent;
 
 /**
  * Undoable action for updating assets references in Entities. This is generic case usage that replaces provided source {@link VisAssetDescriptor} with provided target.
@@ -47,25 +48,24 @@ public class UpdateReferencesAction implements UndoableAction {
 
 	@Override
 	public void execute () {
-		for (FileHandle sceneFile : fileAccess.getSceneFiles()) {
-			EditorScene scene = sceneCache.get(sceneFile);
-
-			for (Layer layer : scene.layers) {
-				for (EditorObject entity : layer.entities) {
-					if (entity.getAssetDescriptor().compare(source)) entity.setAssetDescriptor(target);
-				}
-			}
-		}
+		swapAssets(source, target);
 	}
 
 	@Override
 	public void undo () {
+		swapAssets(target, source);
+	}
+
+	private void swapAssets (VisAssetDescriptor asset1, VisAssetDescriptor asset2) {
 		for (FileHandle sceneFile : fileAccess.getSceneFiles()) {
 			EditorScene scene = sceneCache.get(sceneFile);
 
-			for (Layer layer : scene.layers) {
-				for (EditorObject entity : layer.entities) {
-					if (entity.getAssetDescriptor().compare(target)) entity.setAssetDescriptor(source);
+			for (EntityScheme scheme : scene.getSchemes()) {
+				for (Component component : scheme.components) {
+					if (component instanceof AssetComponent) {
+						AssetComponent assetComponent = (AssetComponent) component;
+						if (assetComponent.asset.compare(asset1)) assetComponent.asset = asset2;
+					}
 				}
 			}
 		}
