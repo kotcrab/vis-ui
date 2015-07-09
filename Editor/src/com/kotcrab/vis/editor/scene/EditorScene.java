@@ -31,14 +31,13 @@ import java.util.Comparator;
  * @author Kotcrab
  */
 public class EditorScene extends BaseObservable {
-	@Deprecated public static final int ACTIVE_LAYER_CHANGED = 999;
-	public static final int ECS_ACTIVE_LAYER_CHANGED = 0;
+	public static final int ACTIVE_LAYER_CHANGED = 0;
 	public static final int LAYER_ADDED = 1;
 	public static final int LAYER_INSERTED = 2;
 	public static final int LAYER_REMOVED = 3;
 	public static final int LAYERS_SORTED = 4;
 
-	private static final Comparator<ECSLayer> LAYER_COMPARATOR = (o1, o2) -> (int) Math.signum(o1.id - o2.id) * -1;
+	private static final Comparator<Layer> LAYER_COMPARATOR = (o1, o2) -> (int) Math.signum(o1.id - o2.id) * -1;
 
 	/** Scene file, path is relative to project Vis folder */
 	public String path;
@@ -46,10 +45,7 @@ public class EditorScene extends BaseObservable {
 	public int height;
 	public SceneViewport viewport;
 
-	@Deprecated public Array<Layer> layers = new Array<>();
-	@Deprecated private transient Layer activeLayer;
-
-	private Array<ECSLayer> ecsLayers = new Array<>();
+	private Array<Layer> layers = new Array<>();
 	private int activeLayerId;
 
 	private Array<EntityScheme> schemes; //for serialization
@@ -60,8 +56,7 @@ public class EditorScene extends BaseObservable {
 		this.width = width;
 		this.height = height;
 
-		layers.add(new Layer("Background"));
-		ecsLayers.add(new ECSLayer("Background", 0));
+		layers.add(new Layer("Background", 0));
 		schemes = new Array<>();
 	}
 
@@ -84,19 +79,8 @@ public class EditorScene extends BaseObservable {
 		return Gdx.files.absolute(path);
 	}
 
-	@Deprecated
-	public void setActiveLayer (Layer layer) {
-		this.activeLayer = layer;
-		postNotification(ACTIVE_LAYER_CHANGED);
-	}
-
-	@Deprecated
 	public Layer getActiveLayer () {
-		return activeLayer;
-	}
-
-	public ECSLayer getActiveECSLayer () {
-		for (ECSLayer layer : ecsLayers) {
+		for (Layer layer : layers) {
 			if (layer.id == activeLayerId)
 				return layer;
 		}
@@ -108,65 +92,65 @@ public class EditorScene extends BaseObservable {
 		return activeLayerId;
 	}
 
-	public boolean setActiveECSLayer (int layerId) {
+	public boolean setActiveLayer (int layerId) {
 		if (this.activeLayerId != layerId) {
 			this.activeLayerId = layerId;
-			postNotification(ECS_ACTIVE_LAYER_CHANGED);
+			postNotification(ACTIVE_LAYER_CHANGED);
 			return true;
 		}
 
 		return false;
 	}
 
-	public ECSLayer getECSLayerById (int id) {
-		for (ECSLayer layer : ecsLayers) {
+	public Layer getLayerById (int id) {
+		for (Layer layer : layers) {
 			if (layer.id == id) return layer;
 		}
 
 		return null;
 	}
 
-	public ECSLayer getECSLayerByName (String name) {
-		for (ECSLayer layer : ecsLayers) {
+	public Layer getLayerByName (String name) {
+		for (Layer layer : layers) {
 			if (layer.name.equals(name)) return layer;
 		}
 
 		return null;
 	}
 
-	public ImmutableArray<ECSLayer> getECSLayers () {
-		return new ImmutableArray<>(ecsLayers);
+	public ImmutableArray<Layer> getLayers () {
+		return new ImmutableArray<>(layers);
 	}
 
-	public ECSLayer addLayer (String name) {
-		ECSLayer layer = new ECSLayer(name, getFreeLayerID());
-		ecsLayers.add(layer);
-		ecsLayers.sort(LAYER_COMPARATOR);
+	public Layer addLayer (String name) {
+		Layer layer = new Layer(name, getFreeLayerID());
+		layers.add(layer);
+		layers.sort(LAYER_COMPARATOR);
 		postNotification(LAYER_ADDED);
 		return layer;
 	}
 
-	public void insertLayer (ECSLayer layer) {
+	public void insertLayer (Layer layer) {
 		if (isLayerIdUsed(layer.id))
 			throw new IllegalStateException("Layer with this id already exist!");
 
-		ecsLayers.add(layer);
-		ecsLayers.sort(LAYER_COMPARATOR);
+		layers.add(layer);
+		layers.sort(LAYER_COMPARATOR);
 		postNotification(LAYER_INSERTED);
 	}
 
-	public boolean removeLayer (ECSLayer layer) {
-		boolean result = ecsLayers.removeValue(layer, true);
-		ecsLayers.sort(LAYER_COMPARATOR);
+	public boolean removeLayer (Layer layer) {
+		boolean result = layers.removeValue(layer, true);
+		layers.sort(LAYER_COMPARATOR);
 		if (layer.id == activeLayerId)
-			activeLayerId = ecsLayers.first().id;
+			activeLayerId = layers.first().id;
 
 		postNotification(LAYER_REMOVED);
 		return result;
 	}
 
 	public void forceSortLayers () {
-		ecsLayers.sort(LAYER_COMPARATOR);
+		layers.sort(LAYER_COMPARATOR);
 		postNotification(LAYERS_SORTED);
 	}
 
@@ -181,7 +165,7 @@ public class EditorScene extends BaseObservable {
 	}
 
 	private boolean isLayerIdUsed (int id) {
-		for (ECSLayer layer : ecsLayers) {
+		for (Layer layer : layers) {
 			if (layer.id == id)
 				return true;
 		}

@@ -180,7 +180,7 @@ public class SelectionTool extends Tool {
 				float currentSurfaceArea = entityBoundingRectangle.width * entityBoundingRectangle.height;
 
 				if (currentSurfaceArea < lastSurfaceArea) {
-					if (scene.getECSLayerById(entity.getLayerID()).locked)
+					if (scene.getLayerById(entity.getLayerID()).locked)
 						continue;
 
 					matchingEntity = entity;

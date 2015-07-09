@@ -100,8 +100,7 @@ public class SceneIOModule extends ProjectModule {
 
 		kryo.register(EditorScene.class, new EditorSceneSerializer(kryo), 31);
 		kryo.register(EntityScheme.class, new EntitySchemeSerializer(kryo, this), 32);
-		kryo.register(Layer.class, 33);
-		kryo.register(SceneViewport.class, 34);
+		kryo.register(SceneViewport.class, 33);
 
 		kryo.register(PathAsset.class, 61);
 		kryo.register(TextureRegionAsset.class, 62);
@@ -153,7 +152,6 @@ public class SceneIOModule extends ProjectModule {
 			Input input = new Input(new FileInputStream(fullPathFile.file()));
 			EditorScene scene = kryo.readObject(input, EditorScene.class);
 			scene.path = fileAccessModule.relativizeToAssetsFolder(fullPathFile);
-			scene.setActiveLayer(scene.layers.get(0));
 			input.close();
 
 			return scene;

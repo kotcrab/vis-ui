@@ -30,7 +30,7 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.ECSEntityManipulatorModule;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesRemovedAction;
-import com.kotcrab.vis.editor.scene.ECSLayer;
+import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.module.scene.LayerManipulatorManager;
 import com.kotcrab.vis.runtime.util.BagUtils;
@@ -99,21 +99,21 @@ public class LayersDialog extends VisTable implements Disposable {
 
 		layerAddButton.addListener(new VisChangeListener((event, actor) ->
 				DialogUtils.showInputDialog(getStage(), "New Layer", "Name:", true,
-						input -> scene.getECSLayerByName(input) == null,
+						input -> scene.getLayerByName(input) == null,
 						(DefaultInputDialogListener) input -> undoModule.execute(new LayerAddedAction(input)))));
 
 		layerUpButton.addListener(new VisChangeListener((event, actor) -> undoModule.execute(new LayerMovedAction(true))));
 		layerDownButton.addListener(new VisChangeListener((event, actor) -> undoModule.execute(new LayerMovedAction(false))));
 
 		layerRemoveButton.addListener(new VisChangeListener((event, actor) ->
-				DialogUtils.showOptionDialog(getStage(), "Delete Layer", "Are you sure you want to delete layer '" + scene.getActiveECSLayer().name + "'?",
+				DialogUtils.showOptionDialog(getStage(), "Delete Layer", "Are you sure you want to delete layer '" + scene.getActiveLayer().name + "'?",
 						OptionDialogType.YES_NO, new OptionDialogAdapter() {
 							@Override
 							public void yes () {
 								UndoableActionGroup layerRemovedGroup = new UndoableActionGroup();
 								layerRemovedGroup.add(new EntitiesRemovedAction(sceneMC, entityEngine,
 										BagUtils.toSet(layerManipulatorManager.getEntitiesWithLayer(scene.getActiveLayerId()))));
-								layerRemovedGroup.add(new LayerRemovedAction(scene.getActiveECSLayer()));
+								layerRemovedGroup.add(new LayerRemovedAction(scene.getActiveLayer()));
 								layerRemovedGroup.finalizeGroup();
 
 								undoModule.execute(layerRemovedGroup);
@@ -141,7 +141,7 @@ public class LayersDialog extends VisTable implements Disposable {
 
 		sceneObservable = nid -> {
 			if (nid == EditorScene.LAYER_ADDED || nid == EditorScene.LAYER_INSERTED || nid == EditorScene.LAYER_REMOVED
-					|| nid == EditorScene.LAYERS_SORTED || nid == EditorScene.ECS_ACTIVE_LAYER_CHANGED) {
+					|| nid == EditorScene.LAYERS_SORTED || nid == EditorScene.ACTIVE_LAYER_CHANGED) {
 				rebuildLayersTable();
 				sceneTab.dirty();
 			}
@@ -150,13 +150,13 @@ public class LayersDialog extends VisTable implements Disposable {
 		scene.addObservable(sceneObservable);
 	}
 
-	private void selectedLayer (ECSLayer layer) {
-		scene.setActiveECSLayer(layer.id);
+	private void selectedLayer (Layer layer) {
+		scene.setActiveLayer(layer.id);
 
 		layerUpButton.setDisabled(false);
 		layerDownButton.setDisabled(false);
 
-		ImmutableArray<ECSLayer> layers = scene.getECSLayers();
+		ImmutableArray<Layer> layers = scene.getLayers();
 
 		int index = layers.indexOf(layer, true);
 		if (index == 0) layerUpButton.setDisabled(true);
@@ -168,16 +168,16 @@ public class LayersDialog extends VisTable implements Disposable {
 		Array<Actor> actors = new Array<>(layersTable.getChildren());
 		layersTable.clearChildren();
 
-		for (ECSLayer layer : scene.getECSLayers()) {
+		for (Layer layer : scene.getLayers()) {
 			LayerItem item = getItemForLayer(actors, layer);
 			if (item == null) item = new LayerItem(layer);
 			layersTable.add(item).expandX().fillX().row();
 
-			if (layer == scene.getActiveECSLayer())
+			if (layer == scene.getActiveLayer())
 				item.select();
 		}
 
-		if (scene.getECSLayers().size() == 1) {
+		if (scene.getLayers().size() == 1) {
 			layerDownButton.setDisabled(true);
 			layerUpButton.setDisabled(true);
 			layerRemoveButton.setDisabled(true);
@@ -186,7 +186,7 @@ public class LayersDialog extends VisTable implements Disposable {
 
 	}
 
-	private LayerItem getItemForLayer (Array<Actor> actors, ECSLayer layer) {
+	private LayerItem getItemForLayer (Array<Actor> actors, Layer layer) {
 		for (Actor a : actors) {
 			if (a instanceof LayerItem) {
 				LayerItem item = (LayerItem) a;
@@ -209,10 +209,10 @@ public class LayersDialog extends VisTable implements Disposable {
 	}
 
 	private void selectFirstLayer () {
-		selectLayer(scene.getECSLayers().first());
+		selectLayer(scene.getLayers().first());
 	}
 
-	private void selectLayer (ECSLayer layer) {
+	private void selectLayer (Layer layer) {
 		LayerItem item = getItemForLayer(layersTable.getChildren(), layer);
 		if (item == null) throw new IllegalStateException("Layer not found");
 
@@ -228,7 +228,7 @@ public class LayersDialog extends VisTable implements Disposable {
 	private class LayerAddedAction implements UndoableAction {
 		private String name;
 
-		private ECSLayer layer;
+		private Layer layer;
 
 		public LayerAddedAction (String name) {
 			this.name = name;
@@ -247,9 +247,9 @@ public class LayersDialog extends VisTable implements Disposable {
 	}
 
 	private class LayerRemovedAction implements UndoableAction {
-		private ECSLayer layer;
+		private Layer layer;
 
-		public LayerRemovedAction (ECSLayer layer) {
+		public LayerRemovedAction (Layer layer) {
 			this.layer = layer;
 		}
 
@@ -266,11 +266,11 @@ public class LayersDialog extends VisTable implements Disposable {
 	}
 
 	private class LayerMovedAction extends MonoUndoableAction {
-		ECSLayer currentLayer;
-		ECSLayer targetLayer;
+		Layer currentLayer;
+		Layer targetLayer;
 
 		public LayerMovedAction (boolean moveUp) {
-			int currentIndex = scene.getECSLayers().indexOf(scene.getActiveECSLayer(), true);
+			int currentIndex = scene.getLayers().indexOf(scene.getActiveLayer(), true);
 			int targetIndex;
 
 			if (moveUp)
@@ -278,8 +278,8 @@ public class LayersDialog extends VisTable implements Disposable {
 			else
 				targetIndex = currentIndex + 1;
 
-			currentLayer = scene.getECSLayers().get(currentIndex);
-			targetLayer = scene.getECSLayers().get(targetIndex);
+			currentLayer = scene.getLayers().get(currentIndex);
+			targetLayer = scene.getLayers().get(targetIndex);
 		}
 
 		@Override
@@ -297,11 +297,11 @@ public class LayersDialog extends VisTable implements Disposable {
 	}
 
 	private class LayerItem extends VisTable {
-		private ECSLayer layer;
+		private Layer layer;
 		private VisImageButton eyeButton;
 		private VisImageButton lockButton;
 
-		public LayerItem (ECSLayer layer) {
+		public LayerItem (Layer layer) {
 			super(true);
 			this.layer = layer;
 

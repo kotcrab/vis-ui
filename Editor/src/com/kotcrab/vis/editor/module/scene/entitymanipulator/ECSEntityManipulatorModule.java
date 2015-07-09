@@ -46,7 +46,7 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTimerTask
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupBreadcrumb.GroupBreadcrumbListener;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
-import com.kotcrab.vis.editor.scene.ECSLayer;
+import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.ECSEntityProperties;
@@ -129,7 +129,7 @@ public class ECSEntityManipulatorModule extends SceneModule {
 		switchTool(new SelectionTool());
 
 		scene.addObservable(notificationId -> {
-			if (notificationId == EditorScene.ECS_ACTIVE_LAYER_CHANGED) {
+			if (notificationId == EditorScene.ACTIVE_LAYER_CHANGED) {
 				resetSelection();
 			}
 		});
@@ -245,7 +245,7 @@ public class ECSEntityManipulatorModule extends SceneModule {
 	}
 
 	public void processDropPayload (Payload payload) {
-		if (scene.getActiveECSLayer().locked) {
+		if (scene.getActiveLayer().locked) {
 			statusBar.setText("Layer is locked!");
 			return;
 		}
@@ -318,9 +318,9 @@ public class ECSEntityManipulatorModule extends SceneModule {
 	}
 
 	public void select (EntityProxy proxy) {
-		ECSLayer layer = scene.getECSLayerById(proxy.getLayerID());
+		Layer layer = scene.getLayerById(proxy.getLayerID());
 		if (layer.locked) return;
-		scene.setActiveECSLayer(layer.id);
+		scene.setActiveLayer(layer.id);
 
 		selectedEntities.clear();
 
@@ -337,11 +337,11 @@ public class ECSEntityManipulatorModule extends SceneModule {
 
 	/** Appends to current selection, however if entity layer is different than current layer then selection will be reset */
 	public void selectAppend (EntityProxy proxy) {
-		ECSLayer layer = scene.getECSLayerById(proxy.getLayerID());
+		Layer layer = scene.getLayerById(proxy.getLayerID());
 		if (layer.locked) return;
 
 		if (scene.getActiveLayerId() != layer.id) {
-			scene.setActiveECSLayer(layer.id);
+			scene.setActiveLayer(layer.id);
 			selectedEntities.clear();
 		}
 
@@ -365,7 +365,7 @@ public class ECSEntityManipulatorModule extends SceneModule {
 	}
 
 	public void selectAll () {
-		if (scene.getActiveECSLayer().locked) return;
+		if (scene.getActiveLayer().locked) return;
 
 		selectedEntities.clear();
 
@@ -522,20 +522,20 @@ public class ECSEntityManipulatorModule extends SceneModule {
 
 	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-		if (scene.getActiveECSLayer().locked) return false;
+		if (scene.getActiveLayer().locked) return false;
 		return currentTool.touchDown(event, x, y, pointer, button);
 	}
 
 	@Override
 	public void touchDragged (InputEvent event, float x, float y, int pointer) {
-		if (scene.getActiveECSLayer().locked) return;
+		if (scene.getActiveLayer().locked) return;
 		mouseDragged = true;
 		currentTool.touchDragged(event, x, y, pointer);
 	}
 
 	@Override
 	public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-		if (scene.getActiveECSLayer().locked) return;
+		if (scene.getActiveLayer().locked) return;
 		currentTool.touchUp(event, x, y, pointer, button);
 
 		if (button == Buttons.RIGHT && mouseDragged == false) {
@@ -554,31 +554,31 @@ public class ECSEntityManipulatorModule extends SceneModule {
 
 	@Override
 	public boolean mouseMoved (InputEvent event, float x, float y) {
-		if (scene.getActiveECSLayer().locked) return false;
+		if (scene.getActiveLayer().locked) return false;
 		return currentTool.mouseMoved(event, x, y);
 	}
 
 	@Override
 	public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-		if (scene.getActiveECSLayer().locked) return;
+		if (scene.getActiveLayer().locked) return;
 		currentTool.enter(event, x, y, pointer, fromActor);
 	}
 
 	@Override
 	public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
-		if (scene.getActiveECSLayer().locked) return;
+		if (scene.getActiveLayer().locked) return;
 		currentTool.exit(event, x, y, pointer, toActor);
 	}
 
 	@Override
 	public boolean scrolled (InputEvent event, float x, float y, int amount) {
-		if (scene.getActiveECSLayer().locked) return false;
+		if (scene.getActiveLayer().locked) return false;
 		return currentTool.scrolled(event, x, y, amount);
 	}
 
 	@Override
 	public boolean keyDown (InputEvent event, int keycode) {
-		if (scene.getActiveECSLayer().locked) return false;
+		if (scene.getActiveLayer().locked) return false;
 		boolean result = currentTool.keyDown(event, keycode);
 
 		if (result == false) {
@@ -639,14 +639,14 @@ public class ECSEntityManipulatorModule extends SceneModule {
 
 	@Override
 	public boolean keyUp (InputEvent event, int keycode) {
-		if (scene.getActiveECSLayer().locked) return false;
+		if (scene.getActiveLayer().locked) return false;
 		entityMoveTimerTask.cancel();
 		return currentTool.keyUp(event, keycode);
 	}
 
 	@Override
 	public boolean keyTyped (InputEvent event, char character) {
-		if (scene.getActiveECSLayer().locked) return false;
+		if (scene.getActiveLayer().locked) return false;
 		return currentTool.keyTyped(event, character);
 	}
 }

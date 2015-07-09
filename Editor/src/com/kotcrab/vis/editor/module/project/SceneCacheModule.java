@@ -18,34 +18,19 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.ParticleReloadedEvent;
-import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
-import com.kotcrab.vis.editor.event.bus.Event;
-import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.InjectModule;
-import com.kotcrab.vis.editor.scene.*;
+import com.kotcrab.vis.editor.scene.EditorScene;
 
 /**
  * Caches loaded scenes, so only one instance of each scene is loaded in editor.
  * @author Kotcrab
  */
-public class SceneCacheModule extends ProjectModule implements EventListener {
+public class SceneCacheModule extends ProjectModule {
 	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private ParticleCacheModule particleCache;
 	@InjectModule private SceneIOModule sceneIO;
 
 	private ObjectMap<FileHandle, EditorScene> scenes = new ObjectMap<>();
-
-	@Override
-	public void init () {
-		App.eventBus.register(this);
-	}
-
-	@Override
-	public void dispose () {
-		App.eventBus.unregister(this);
-	}
 
 	public EditorScene get (FileHandle fullPath) {
 		EditorScene scene = scenes.get(fullPath);
@@ -58,34 +43,22 @@ public class SceneCacheModule extends ProjectModule implements EventListener {
 		return scene;
 	}
 
-	@Override
-	public boolean onEvent (Event event) {
-		if (event instanceof TexturesReloadedEvent) {
-			for (EditorScene scene : scenes.values()) {
-				for (Layer layer : scene.layers) {
-					for (EditorObject object : layer.entities) {
-						if (object instanceof ObjectGroup) {
-							ObjectGroup group = (ObjectGroup) object;
-							group.reloadTextures(textureCache);
-						}
-					}
-				}
-			}
-		}
-
-		if (event instanceof ParticleReloadedEvent) {
-			for (EditorScene scene : scenes.values()) {
-				for (Layer layer : scene.layers) {
-					for (EditorObject object : layer.entities) {
-						if (object instanceof ParticleEffectObject) {
-							ParticleEffectObject particleObject = (ParticleEffectObject) object;
-							particleObject.setEffect(particleCache.get(particleObject.getAssetDescriptor()));
-						}
-					}
-				}
-			}
-		}
-
-		return false;
-	}
+	//TODO [high] reload particles
+//	@Override
+//	public boolean onEvent (Event event) {
+//		if (event instanceof ParticleReloadedEvent) {
+//			for (EditorScene scene : scenes.values()) {
+//				for (Layer layer : scene.layers) {
+//					for (EditorObject object : layer.entities) {
+//						if (object instanceof ParticleEffectObject) {
+//							ParticleEffectObject particleObject = (ParticleEffectObject) object;
+//							particleObject.setEffect(particleCache.get(particleObject.getAssetDescriptor()));
+//						}
+//					}
+//				}
+//			}
+//		}
+//
+//		return false;
+//	}
 }

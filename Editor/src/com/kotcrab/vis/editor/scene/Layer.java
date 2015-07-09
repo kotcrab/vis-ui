@@ -16,27 +16,19 @@
 
 package com.kotcrab.vis.editor.scene;
 
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
-
 /**
  * EditorScene layer class
  * @author Kotcrab
  */
-@Deprecated
-public class Layer implements Disposable {
+public class Layer {
 	public String name;
-	public Array<EditorObject> entities = new Array<EditorObject>();
+	public int id;
+	public boolean locked = false;
+	public boolean visible = true;
 
-	public Layer (String name) {
+	public Layer (String name, int id) {
 		this.name = name;
-	}
-
-	@Override
-	public void dispose () {
-		for (EditorObject entity : entities) {
-			entity.dispose();
-		}
+		this.id = id;
 	}
 
 	@Override

@@ -37,7 +37,7 @@ public class EntityMoveTimerTask extends Task {
 
 	@Override
 	public void run () {
-		if (scene.getActiveECSLayer().locked) return;
+		if (scene.getActiveLayer().locked) return;
 
 		for (EntityProxy entity : selectedEntities) {
 			switch (dir) {
