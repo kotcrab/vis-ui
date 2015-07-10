@@ -25,6 +25,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
+import com.kotcrab.vis.runtime.component.MusicComponent;
 import com.kotcrab.vis.runtime.component.PositionComponent;
 import com.kotcrab.vis.runtime.component.SoundComponent;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
@@ -33,19 +34,22 @@ import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 
 /** @author Kotcrab */
 @Wire
-public class SoundRenderSystem extends DeferredEntityProcessingSystem {
+public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 	public static final int ICON_SIZE = 76;
 
 	private ComponentMapper<PositionComponent> posCm;
+	private ComponentMapper<MusicComponent> musicCm;
 
-	private TextureRegion icon;
+	private TextureRegion soundIcon;
+	private TextureRegion musicIcon;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
 
-	public SoundRenderSystem (EntityProcessPrincipal principal) {
-		super(Aspect.all(SoundComponent.class, PositionComponent.class).exclude(InvisibleComponent.class), principal);
-		icon = Assets.getIconRegion(Icons.SOUND);
+	public SoundAndMusicRenderSystem (EntityProcessPrincipal principal) {
+		super(Aspect.all(PositionComponent.class).one(SoundComponent.class, MusicComponent.class).exclude(InvisibleComponent.class), principal);
+		soundIcon = Assets.getIconRegion(Icons.SOUND);
+		musicIcon = Assets.getIconRegion(Icons.MUSIC);
 	}
 
 	@Override
@@ -56,6 +60,11 @@ public class SoundRenderSystem extends DeferredEntityProcessingSystem {
 	@Override
 	protected void process (final Entity entity) {
 		PositionComponent pos = posCm.get(entity);
-		batch.draw(icon, pos.x, pos.y);
+
+		if (musicCm.has(entity))
+			batch.draw(musicIcon, pos.x, pos.y);
+		else
+			batch.draw(soundIcon, pos.x, pos.y);
+
 	}
 }

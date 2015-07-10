@@ -52,7 +52,7 @@ public abstract class EntityComponentSerializer<T> extends CompatibleFieldSerial
 	@Override
 	@CallSuper
 	public T read (Kryo kryo, Input input, Class<T> type) {
-		if (components != null) throw new IllegalStateException("Entity deseriazling cannot depend on entity context");
+		if (components != null) throw new IllegalStateException("Entity deserializing cannot depend on entity context");
 		return null;
 	}
 

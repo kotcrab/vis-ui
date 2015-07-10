@@ -35,12 +35,17 @@ import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
-import com.kotcrab.vis.editor.scene.*;
+import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.MusicObject;
+import com.kotcrab.vis.editor.scene.ParticleEffectObject;
+import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.serializer.*;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
+import com.kotcrab.vis.runtime.component.MusicComponent;
+import com.kotcrab.vis.runtime.component.SoundComponent;
 import com.kotcrab.vis.runtime.component.SpriteComponent;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.util.EntityEngine;
@@ -112,6 +117,8 @@ public class SceneIOModule extends ProjectModule {
 
 		//TODO: [high] map other components
 		registerEntityComponentSerializer(SpriteComponent.class, new SpriteComponentSerializer(kryo, textureCache), 201);
+		registerEntityComponentSerializer(MusicComponent.class, new MusicComponentSerializer(kryo), 202);
+		kryo.register(SoundComponent.class, 203);
 	}
 
 	private void registerEntityComponentSerializer (Class<? extends Component> componentClass, EntityComponentSerializer serializer, int id) {

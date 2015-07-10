@@ -62,6 +62,8 @@ public class App {
 	public static void init () {
 		new File(APP_FOLDER_PATH).mkdir();
 
+//		com.esotericsoftware.minlog.Log.TRACE();
+
 		Log.init();
 
 		checkCharset();

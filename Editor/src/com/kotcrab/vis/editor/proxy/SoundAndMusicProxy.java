@@ -18,18 +18,20 @@ package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.editor.module.scene.SoundRenderSystem;
+import com.kotcrab.vis.editor.module.scene.SoundAndMusicRenderSystem;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.PositionComponent;
 import com.kotcrab.vis.runtime.entity.accessor.BasicPropertiesAccessor;
 
 /** @author Kotcrab */
-public class SoundProxy extends EntityProxy {
+public class SoundAndMusicProxy extends EntityProxy {
 	PositionComponent pos;
+	private final boolean music;
 
-	public SoundProxy (Entity entity) {
+	public SoundAndMusicProxy (Entity entity, boolean music) {
 		super(entity);
+		this.music = music;
 		pos = entity.getComponent(PositionComponent.class);
 	}
 
@@ -40,7 +42,7 @@ public class SoundProxy extends EntityProxy {
 
 	@Override
 	protected String getEntityName () {
-		return "SoundEntity";
+		return music ? "MusicEntity" : "SoundEntity";
 	}
 
 	@Override
@@ -52,7 +54,7 @@ public class SoundProxy extends EntityProxy {
 		private Rectangle bounds = new Rectangle();
 
 		public Accessor () {
-			bounds = new Rectangle(0, 0, SoundRenderSystem.ICON_SIZE, SoundRenderSystem.ICON_SIZE);
+			bounds = new Rectangle(0, 0, SoundAndMusicRenderSystem.ICON_SIZE, SoundAndMusicRenderSystem.ICON_SIZE);
 		}
 
 		@Override
@@ -83,12 +85,12 @@ public class SoundProxy extends EntityProxy {
 
 		@Override
 		public float getWidth () {
-			return SoundRenderSystem.ICON_SIZE;
+			return SoundAndMusicRenderSystem.ICON_SIZE;
 		}
 
 		@Override
 		public float getHeight () {
-			return SoundRenderSystem.ICON_SIZE;
+			return SoundAndMusicRenderSystem.ICON_SIZE;
 		}
 
 		@Override

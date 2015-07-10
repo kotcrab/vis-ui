@@ -33,7 +33,6 @@ import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.*;
-import com.kotcrab.vis.editor.scene.MusicObject;
 import com.kotcrab.vis.editor.scene.ParticleEffectObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
@@ -180,8 +179,7 @@ public class AssetDragAndDrop {
 		}
 
 		if (item.getType() == FileType.MUSIC) {
-			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Music \n (drop on scene to add)").disposeOnNullTarget()
-					.setObjectProvider(() -> new MusicObject(new PathAsset(relativePath))));
+			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Music \n (drop on scene to add)").setPayload(new PathAsset(relativePath)));
 		}
 
 		if (item.getType() == FileType.SOUND) {

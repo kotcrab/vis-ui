@@ -118,7 +118,7 @@ public class SpineObjectTable extends SpecificObjectTable {
 		Tooltip.removeTooltip(warningImage);
 		warningImage.setVisible(false);
 
-		Array<EditorObject> entities = properties.getEntities();
+		Array<EditorObject> entities = properties.getProxies();
 
 		EntityUtils.setCommonCheckBoxState(entities, preview, entity -> ((SpineObject) entity).isPreviewInEditor());
 		EntityUtils.setCommonCheckBoxState(entities, playAnimationOnStart, entity -> ((SpineObject) entity).isPlayOnStart());
@@ -137,7 +137,7 @@ public class SpineObjectTable extends SpecificObjectTable {
 	}
 
 	private void createCommonAnimationsList () {
-		Array<EditorObject> entities = properties.getEntities();
+		Array<EditorObject> entities = properties.getProxies();
 		int animationCounter = 0;
 		HashSet<String> commonAnimations = new HashSet<>();
 		Array<HashSet<String>> allAnimNames = new Array<>();
@@ -179,7 +179,7 @@ public class SpineObjectTable extends SpecificObjectTable {
 
 	@Override
 	public void setValuesToEntities () {
-		Array<EditorObject> entities = properties.getEntities();
+		Array<EditorObject> entities = properties.getProxies();
 		for (EditorObject entity : entities) {
 			SpineObject obj = (SpineObject) entity;
 

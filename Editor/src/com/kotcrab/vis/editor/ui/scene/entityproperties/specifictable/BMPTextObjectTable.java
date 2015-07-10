@@ -68,14 +68,14 @@
 //	public void updateUIValues () {
 //		super.updateUIValues();
 //
-//		EntityUtils.setCommonCheckBoxState(properties.getEntities(), distanceFieldCheck, entity -> ((TextObject) entity).isDistanceFieldShaderEnabled());
+//		EntityUtils.setCommonCheckBoxState(properties.getProxies(), distanceFieldCheck, entity -> ((TextObject) entity).isDistanceFieldShaderEnabled());
 //	}
 //
 //	@Override
 //	public void setValuesToEntities () {
 //		super.setValuesToEntities();
 //
-//		Array<EditorObject> entities = properties.getEntities();
+//		Array<EditorObject> entities = properties.getProxies();
 //		for (EditorObject entity : entities) {
 //			TextObject obj = (TextObject) entity;
 //

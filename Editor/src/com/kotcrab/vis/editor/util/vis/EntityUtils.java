@@ -16,19 +16,18 @@
 
 package com.kotcrab.vis.editor.util.vis;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.NumberUtils;
-import com.kotcrab.vis.editor.util.value.BooleanValue;
-import com.kotcrab.vis.editor.util.value.FloatValue;
-import com.kotcrab.vis.editor.util.value.StringValue;
+import com.kotcrab.vis.editor.util.value.*;
 
 /**
  * @author Kotcrab
  */
 public class EntityUtils {
-	public static String getEntitiesCommonFloatValue (Array<EntityProxy> entities, FloatValue objValue) {
+	public static String getEntitiesCommonFloatValue (Array<EntityProxy> entities, FloatProxyValue objValue) {
 		float value = objValue.getFloat(entities.first());
 
 		for (EntityProxy entity : entities)
@@ -37,7 +36,7 @@ public class EntityUtils {
 		return NumberUtils.floatToString(value);
 	}
 
-	public static void setCommonCheckBoxState (Array<EntityProxy> entities, IndeterminateCheckbox target, BooleanValue value) {
+	public static void setCommonCheckBoxState (Array<EntityProxy> entities, IndeterminateCheckbox target, BooleanProxyValue value) {
 		boolean enabled = value.getBoolean(entities.first());
 
 		for (EntityProxy entity : entities) {
@@ -50,11 +49,50 @@ public class EntityUtils {
 		target.setChecked(enabled);
 	}
 
-	public static String getCommonString (Array<EntityProxy> entities, String ifNotCommon, StringValue value) {
+	public static String getCommonString (Array<EntityProxy> entities, String ifNotCommon, StringProxyValue value) {
 		String firstText = value.getString(entities.first());
 
 		for (EntityProxy entity : entities) {
 			if (value.getString(entity).equals(firstText) == false) return ifNotCommon;
+		}
+
+		return firstText;
+	}
+
+	public static String getEntitiesCommonFloatValue (Array<EntityProxy> proxies, FloatEntityValue objValue) {
+		float value = objValue.getFloat(proxies.first().getEntities().first());
+
+		for (EntityProxy proxy : proxies) {
+			for (Entity entity : proxy.getEntities()) {
+				if (value != objValue.getFloat(entity)) return "?";
+			}
+		}
+
+		return NumberUtils.floatToString(value);
+	}
+
+	public static void setCommonCheckBoxState (Array<EntityProxy> proxies, IndeterminateCheckbox target, BooleanEntityValue value) {
+		boolean enabled = value.getBoolean(proxies.first().getEntities().first());
+
+		for (EntityProxy proxy : proxies) {
+			for (Entity entity : proxy.getEntities()) {
+				if (enabled != value.getBoolean(entity)) {
+					target.setIndeterminate(true);
+					return;
+				}
+			}
+		}
+
+		target.setChecked(enabled);
+	}
+
+	public static String getCommonString (Array<EntityProxy> proxies, String ifNotCommon, StringEntityValue value) {
+		String firstText = value.getString(proxies.first().getEntities().first());
+
+		for (EntityProxy proxy : proxies) {
+			for (Entity entity : proxy.getEntities()) {
+				if (value.getString(entity).equals(firstText) == false) return ifNotCommon;
+			}
 		}
 
 		return firstText;

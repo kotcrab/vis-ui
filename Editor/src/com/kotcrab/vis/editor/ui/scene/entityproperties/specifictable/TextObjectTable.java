@@ -81,7 +81,7 @@
 //		});
 //
 //		selectFontDialog = new SelectFontDialog(getFontExtension(), getFontFolder(), file -> {
-//			for (EditorObject entity : properties.getEntities()) {
+//			for (EditorObject entity : properties.getProxies()) {
 //				TextObject obj = (TextObject) entity;
 //				obj.setFont(properties.getFontCacheModule().get(file));
 //			}
@@ -109,7 +109,7 @@
 //
 //	@Override
 //	public void updateUIValues () {
-//		Array<EditorObject> entities = properties.getEntities();
+//		Array<EditorObject> entities = properties.getProxies();
 //
 //		textField.setText(getCommonString(entities, "<multiple values>", entity -> ((TextObject) entity).getText()));
 //		fontLabel.setText(getCommonString(entities, "<?>", this::getFontTextForEntity));
@@ -117,7 +117,7 @@
 //
 //	@Override
 //	public void setValuesToEntities () {
-//		Array<EditorObject> entities = properties.getEntities();
+//		Array<EditorObject> entities = properties.getProxies();
 //		for (EditorObject entity : entities) {
 //			TextObject obj = (TextObject) entity;
 //

@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.proxy;
 
+import com.artemis.Component;
 import com.artemis.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
@@ -133,6 +134,10 @@ public abstract class EntityProxy {
 			idc.id = id;
 		else
 			entity.edit().add(new IDComponent(id));
+	}
+
+	public boolean hasComponent (Class<? extends Component> clazz) {
+		return entity.getComponent(clazz) != null;
 	}
 
 	public int getZIndex () {

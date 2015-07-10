@@ -20,32 +20,31 @@ import com.artemis.*;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.audio.Music;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SoundComponent;
-import com.kotcrab.vis.runtime.component.SoundProtoComponent;
+import com.kotcrab.vis.runtime.component.*;
 
 /** @author Kotcrab */
 @Wire
-public class SoundInflaterSystem extends EntityProcessingSystem {
+public class MusicInflaterSystem extends EntityProcessingSystem {
 	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<MusicProtoComponent> protoCm;
 
 	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
-	public SoundInflaterSystem (RuntimeConfiguration configuration, AssetManager manager) {
-		super(Aspect.all(SoundProtoComponent.class, AssetComponent.class));
+	public MusicInflaterSystem (RuntimeConfiguration configuration, AssetManager manager) {
+		super(Aspect.all(MusicProtoComponent.class, AssetComponent.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
 	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SoundProtoComponent.class);
+		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(MusicProtoComponent.class);
 		if (configuration.removeAssetsComponentAfterInlfating) factory.remove(AssetComponent.class);
 		transmuter = factory.build();
 	}
@@ -56,10 +55,10 @@ public class SoundInflaterSystem extends EntityProcessingSystem {
 
 		PathAsset asset = (PathAsset) assetComponent.asset;
 
-		Sound sound = manager.get(asset.getPath(), Sound.class);
-		SoundComponent soundComponent = new SoundComponent(sound);
+		Music music = manager.get(asset.getPath(), Music.class);
+		MusicComponent musicComponent = new MusicComponent(music);
 
 		transmuter.transmute(e);
-		e.edit().add(soundComponent);
+		e.edit().add(musicComponent);
 	}
 }

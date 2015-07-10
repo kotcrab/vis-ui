@@ -14,14 +14,20 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.value;
+package com.kotcrab.vis.runtime.component;
 
-import com.kotcrab.vis.editor.proxy.EntityProxy;
+/** @author Kotcrab */
+public class MusicProtoComponent extends ProtoComponent {
+	public boolean playOnStart;
+	public boolean looping;
+	public float volume;
 
-/**
- * Used when you need to get multiple string values from {@link EntityProxy}s
- * @author Kotcrab
- */
-public interface StringValue {
-	String getString (EntityProxy entity);
+	private MusicProtoComponent () {
+	}
+
+	public MusicProtoComponent (MusicComponent component) {
+		playOnStart = component.isPlayOnStart();
+		volume = component.getVolume();
+		looping = component.isLooping();
+	}
 }

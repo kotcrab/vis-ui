@@ -51,14 +51,14 @@
 //
 //	@Override
 //	public void updateUIValues () {
-//		Array<EditorObject> entities = properties.getEntities();
+//		Array<EditorObject> entities = properties.getProxies();
 //
 //		setCommonCheckBoxState(entities, activeCheck, entity -> ((ParticleEffectObject) entity).isActive());
 //	}
 //
 //	@Override
 //	public void setValuesToEntities () {
-//		Array<EditorObject> entities = properties.getEntities();
+//		Array<EditorObject> entities = properties.getProxies();
 //		for (EditorObject entity : entities) {
 //			ParticleEffectObject obj = (ParticleEffectObject) entity;
 //

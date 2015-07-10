@@ -16,12 +16,12 @@
 
 package com.kotcrab.vis.editor.util.value;
 
-import com.kotcrab.vis.editor.proxy.EntityProxy;
+import com.artemis.Entity;
 
 /**
- * Used when you need to get multiple boolean values from {@link EntityProxy}s
+ * Used when you need to get multiple float values from {@link Entity}s
  * @author Kotcrab
  */
-public interface BooleanValue {
-	boolean getBoolean (EntityProxy entity);
+public interface FloatEntityValue {
+	float getFloat (Entity entity);
 }

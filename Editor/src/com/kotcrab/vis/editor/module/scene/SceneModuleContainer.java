@@ -74,7 +74,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 		ArtemisUtils.createCommonSystems(engine, batch, false);
 		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
-		engine.setSystem(new SoundRenderSystem(renderBatchingSystem), true);
+		engine.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem), true);
 	}
 
 	public static void createEssentialsSystems (EntityEngine engine) {

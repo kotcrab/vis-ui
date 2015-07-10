@@ -75,7 +75,7 @@
 //	public void updateUIValues () {
 //		super.updateUIValues();
 //
-//		Array<EditorObject> entities = properties.getEntities();
+//		Array<EditorObject> entities = properties.getProxies();
 //
 //		sizeInputField.setText(EntityUtils.getEntitiesCommonFloatValue(entities, entity -> ((TextObject) entity).getFontSize()));
 //	}
@@ -83,7 +83,7 @@
 //	@Override
 //	public void setValuesToEntities () {
 //		super.setValuesToEntities();
-//		Array<EditorObject> entities = properties.getEntities();
+//		Array<EditorObject> entities = properties.getProxies();
 //		for (EditorObject entity : entities) {
 //			TextObject obj = (TextObject) entity;
 //

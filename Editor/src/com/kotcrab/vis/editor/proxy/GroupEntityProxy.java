@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.proxy;
 
+import com.artemis.Component;
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -58,6 +59,16 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 			proxies.forEach(proxy -> entities.addAll(proxy.getEntities()));
 		}
 		return entities;
+	}
+
+	@Override
+	public boolean hasComponent (Class<? extends Component> clazz) {
+		for (EntityProxy proxy : proxies) {
+			if (proxy.hasComponent(clazz) == false)
+				return false;
+		}
+
+		return true;
 	}
 
 	@Override

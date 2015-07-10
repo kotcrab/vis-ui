@@ -19,9 +19,9 @@ package com.kotcrab.vis.editor.util.value;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 
 /**
- * Used when you need to get multiple float values from {@link EntityProxy}s
+ * Used when you need to get multiple string values from {@link EntityProxy}s
  * @author Kotcrab
  */
-public interface FloatValue {
-	float getFloat (EntityProxy entity);
+public interface StringProxyValue {
+	String getString (EntityProxy entity);
 }

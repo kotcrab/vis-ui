@@ -46,12 +46,14 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorMo
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.MusicObjectTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SoundObjectTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificObjectTable;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
-import com.kotcrab.vis.editor.util.value.FloatValue;
+import com.kotcrab.vis.editor.util.value.FloatProxyValue;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.ui.VisUI;
@@ -131,10 +133,12 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private NumberInputField rotationField;
 	private IndeterminateCheckbox xFlipCheck;
 	private IndeterminateCheckbox yFlipCheck;
+	private SceneModuleContainer sceneMC;
 
 	public EntityProperties (SceneModuleContainer sceneMC, Tab parentSceneTab, Array<EntityProxy> entities) {
 		super(true);
 		sceneMC.injectModules(this);
+		this.sceneMC = sceneMC;
 		this.entities = entities;
 		this.parentTab = parentSceneTab;
 		this.picker = colorPickerModule.getPicker();
@@ -197,8 +201,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 //		registerSpecificTable(new TTFTextObjectTable());
 //		registerSpecificTable(new BMPTextObjectTable());
-//		registerSpecificTable(new MusicObjectTable());
-//		registerSpecificTable(new SoundObjectTable());
+		registerSpecificTable(new MusicObjectTable());
+		registerSpecificTable(new SoundObjectTable());
 //		registerSpecificTable(new ObjectGroupTable());
 //		registerSpecificTable(new ParticleEffectTable());
 
@@ -380,39 +384,28 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		return new NumberInputField(sharedFocusListener, sharedChangeListener);
 	}
 
-	@Deprecated
-	public Array<EntityProxy> getEntities () {
+	public Array<EntityProxy> getProxies () {
 		return entities;
 	}
 
-	@Deprecated
 	public ChangeListener getSharedChangeListener () {
 		return sharedChangeListener;
 	}
 
-	@Deprecated
 	public ChangeListener getSharedCheckBoxChangeListener () {
 		return sharedCheckBoxChangeListener;
 	}
 
-	@Deprecated
 	public FocusListener getSharedFocusListener () {
 		return sharedFocusListener;
 	}
 
-	@Deprecated
+	public SceneModuleContainer getSceneModuleContainer () {
+		return sceneMC;
+	}
+
 	public Tab getParentTab () {
 		return parentTab;
-	}
-
-	@Deprecated
-	public FileAccessModule getFileAccessModule () {
-		return fileAccessModule;
-	}
-
-	@Deprecated
-	public FontCacheModule getFontCacheModule () {
-		return fontCacheModule;
 	}
 
 	private void setTintUIForEntities () {
@@ -428,8 +421,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		tint.setColor(firstColor);
 	}
 
-	private String getEntitiesFieldValue (FloatValue floatValue) {
-		return EntityUtils.getEntitiesCommonFloatValue(entities, floatValue);
+	private String getEntitiesFieldValue (FloatProxyValue floatProxyValue) {
+		return EntityUtils.getEntitiesCommonFloatValue(entities, floatProxyValue);
 	}
 
 	private void setValuesToEntity () {

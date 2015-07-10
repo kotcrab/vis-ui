@@ -52,6 +52,7 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
+import com.kotcrab.vis.editor.util.gdx.DummyMusic;
 import com.kotcrab.vis.editor.util.gdx.ImmutableArray;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
@@ -276,6 +277,15 @@ public class EntityManipulatorModule extends SceneModule {
 				entity = new EntityBuilder(entityEngine)
 						.with(new SoundComponent(null), //editor does not require sound to be loaded, we can pass null sound here
 								new AssetComponent(asset), new PositionComponent(),
+								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
+								new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
+						.build();
+
+			}
+
+			if (asset.getPath().startsWith("music/")) {
+				entity = new EntityBuilder(entityEngine)
+						.with(new MusicComponent(new DummyMusic()), new AssetComponent(asset), new PositionComponent(),
 								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
 								new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
 						.build();
