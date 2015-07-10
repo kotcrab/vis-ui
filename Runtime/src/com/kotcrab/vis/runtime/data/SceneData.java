@@ -31,7 +31,4 @@ public class SceneData {
 	public int height;
 
 	public Array<ECSEntityData> entities = new Array<ECSEntityData>();
-
-	@Deprecated
-	public Array<LayerData> layers = new Array<LayerData>();
 }

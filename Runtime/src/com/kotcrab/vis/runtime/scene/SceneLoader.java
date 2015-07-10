@@ -25,7 +25,10 @@ import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
@@ -38,7 +41,6 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.Entity;
-import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 import com.kotcrab.vis.runtime.font.BmpFontProvider;
 import com.kotcrab.vis.runtime.font.FontProvider;
@@ -106,10 +108,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		data = json.fromJson(SceneData.class, file);
 
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
-
-		for (LayerData layer : data.layers) {
-			loadDepsForEntities(deps, layer.entities);
-		}
 
 		loadDependencies(deps, data.entities);
 
@@ -183,14 +181,11 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		for (ECSEntityData entityData : data.entities)
 			entityData.build(engine);
 
-		for (LayerData layer : data.layers) {
-			loadEntitiesFromData(manager, atlases, layer.entities, entities);
-		}
-
 		if (distanceFieldShaderLoaded)
 			scene.getDistanceFieldShaderFromManager(distanceFieldShader);
 	}
 
+	@Deprecated
 	private void loadEntitiesFromData (AssetManager manager, Array<TextureAtlas> atlases, Array<EntityData> datas, Array<Entity> entities) {
 		for (EntityData entityData : datas) {
 			if (entityData instanceof TextData) {
@@ -221,22 +216,22 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		Scene scene = this.scene;
 		this.scene = null;
 
-		for (LayerData layer : data.layers) {
-			for (EntityData entityData : layer.entities) {
-				if (entityData instanceof ParticleEffectData) {
-					ParticleEffectData particleData = (ParticleEffectData) entityData;
-					PathAsset path = (PathAsset) particleData.assetDescriptor;
-
-					FileHandle effectFile = resolve(path.getPath());
-					ParticleEffect emitter = new ParticleEffect();
-					emitter.load(effectFile, effectFile.parent());
-
-					ParticleEffectEntity entity = new ParticleEffectEntity(particleData.id, emitter);
-					particleData.loadTo(entity);
-					scene.getEntities().add(entity);
-				}
-			}
-		}
+//		for (LayerData layer : data.layers) {
+//			for (EntityData entityData : layer.entities) {
+//				if (entityData instanceof ParticleEffectData) {
+//					ParticleEffectData particleData = (ParticleEffectData) entityData;
+//					PathAsset path = (PathAsset) particleData.assetDescriptor;
+//
+//					FileHandle effectFile = resolve(path.getPath());
+//					ParticleEffect emitter = new ParticleEffect();
+//					emitter.load(effectFile, effectFile.parent());
+//
+//					ParticleEffectEntity entity = new ParticleEffectEntity(particleData.id, emitter);
+//					particleData.loadTo(entity);
+//					scene.getEntities().add(entity);
+//				}
+//			}
+//		}
 
 		scene.onAfterLoad();
 
