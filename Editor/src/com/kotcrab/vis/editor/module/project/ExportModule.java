@@ -251,24 +251,6 @@ public class ExportModule extends ProjectModule {
 				return true;
 			}
 
-			if (entity instanceof ObjectGroup) {
-				ObjectGroup group = (ObjectGroup) entity;
-
-				if (group.isPreserveOnRuntime()) {
-					EntityGroupData data = new EntityGroupData(group.getId());
-
-					for (EditorObject object : group.getObjects())
-						exportEntity(data.entities, object);
-
-					entities.add(data);
-				} else {
-					for (EditorObject object : group.getObjects())
-						exportEntity(entities, object);
-				}
-
-				return true;
-			}
-
 			ObjectSupport support = supportModule.get(entity.getClass());
 
 			if (support != null) {

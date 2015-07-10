@@ -38,7 +38,6 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.data.*;
 import com.kotcrab.vis.runtime.entity.Entity;
-import com.kotcrab.vis.runtime.entity.EntityGroup;
 import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
 import com.kotcrab.vis.runtime.entity.TextEntity;
 import com.kotcrab.vis.runtime.font.BmpFontProvider;
@@ -140,11 +139,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	@Deprecated
 	private void loadDepsForEntities (Array<AssetDescriptor> deps, Array<EntityData> entities) {
 		for (EntityData entityData : entities) {
-			if (entityData instanceof EntityGroupData) {
-				EntityGroupData groupData = (EntityGroupData) entityData;
-				loadDepsForEntities(deps, groupData.entities);
-				continue;
-			}
 
 			if (entityData instanceof TextData) {
 				TextData textData = (TextData) entityData;
@@ -199,15 +193,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	private void loadEntitiesFromData (AssetManager manager, Array<TextureAtlas> atlases, Array<EntityData> datas, Array<Entity> entities) {
 		for (EntityData entityData : datas) {
-			if (entityData instanceof EntityGroupData) {
-				EntityGroupData groupData = (EntityGroupData) entityData;
-
-				EntityGroup group = new EntityGroup(groupData.id);
-				loadEntitiesFromData(manager, atlases, groupData.entities, group.getEntities());
-				entities.add(group);
-				continue;
-			}
-
 			if (entityData instanceof TextData) {
 				TextData textData = (TextData) entityData;
 
