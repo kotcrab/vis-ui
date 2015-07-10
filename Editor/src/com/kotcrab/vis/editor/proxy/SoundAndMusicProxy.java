@@ -22,7 +22,7 @@ import com.kotcrab.vis.editor.module.scene.SoundAndMusicRenderSystem;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.PositionComponent;
-import com.kotcrab.vis.runtime.entity.accessor.BasicPropertiesAccessor;
+import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
 
 /** @author Kotcrab */
 public class SoundAndMusicProxy extends EntityProxy {

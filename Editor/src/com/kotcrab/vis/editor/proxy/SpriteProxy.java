@@ -20,7 +20,7 @@ import com.artemis.Entity;
 import com.kotcrab.vis.runtime.assets.TextureAssetDescriptor;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.SpriteComponent;
-import com.kotcrab.vis.runtime.entity.accessor.BasicPropertiesAccessor;
+import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
 
 /** @author Kotcrab */
 public class SpriteProxy extends EntityProxy {

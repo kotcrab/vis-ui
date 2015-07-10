@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.entity.accessor;
+package com.kotcrab.vis.runtime.accessor;
 
 /** @author Kotcrab */
-public interface SizePropertiesAccessor {
-	void setSize (float width, float height);
+public interface RotationPropertiesAccessor {
+	float getRotation ();
+
+	void setRotation (float rotation);
 }

@@ -14,11 +14,25 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.entity.accessor;
+package com.kotcrab.vis.runtime.accessor;
+
+import com.badlogic.gdx.math.Rectangle;
 
 /** @author Kotcrab */
-public interface RotationPropertiesAccessor {
-	float getRotation ();
+public interface BasicPropertiesAccessor {
+	float getX ();
 
-	void setRotation (float rotation);
+	void setX (float x);
+
+	float getY ();
+
+	void setY (float y);
+
+	void setPosition (float x, float y);
+
+	float getWidth ();
+
+	float getHeight ();
+
+	Rectangle getBoundingRectangle ();
 }

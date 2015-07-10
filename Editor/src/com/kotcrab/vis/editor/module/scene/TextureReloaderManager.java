@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.component.SpriteComponent;
 
 /** @author Kotcrab */
 @Wire
-public class TextureReloaderManager extends Manager {
+public class TextureReloaderManager extends Manager { //TODO: [high]particle reloader
 	private TextureCacheModule textureCache;
 
 	private ComponentMapper<SpriteComponent> spriteCm;

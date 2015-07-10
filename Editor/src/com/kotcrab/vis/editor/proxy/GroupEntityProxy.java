@@ -23,7 +23,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.entity.accessor.BasicPropertiesAccessor;
+import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
 
 /** @author Kotcrab */
 public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAccessor {

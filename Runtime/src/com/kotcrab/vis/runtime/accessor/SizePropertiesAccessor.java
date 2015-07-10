@@ -14,13 +14,9 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.entity.accessor;
+package com.kotcrab.vis.runtime.accessor;
 
 /** @author Kotcrab */
-public interface OriginPropertiesAccessor {
-	float getOriginX ();
-
-	float getOriginY ();
-
-	void setOrigin (float x, float y);
+public interface SizePropertiesAccessor {
+	void setSize (float width, float height);
 }

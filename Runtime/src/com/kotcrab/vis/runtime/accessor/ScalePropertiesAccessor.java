@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.entity.accessor;
+package com.kotcrab.vis.runtime.accessor;
 
 /** @author Kotcrab */
-public interface FlipPropertiesAccessor {
-	boolean isFlipX ();
+public interface ScalePropertiesAccessor {
+	float getScaleX ();
 
-	boolean isFlipY ();
+	float getScaleY ();
 
-	void setFlip (boolean x, boolean y);
+	void setScale (float x, float y);
 }

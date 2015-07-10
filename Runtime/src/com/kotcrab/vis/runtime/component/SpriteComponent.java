@@ -20,7 +20,7 @@ import com.artemis.Component;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.runtime.entity.accessor.*;
+import com.kotcrab.vis.runtime.accessor.*;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 
 public class SpriteComponent extends Component implements BasicPropertiesAccessor, SizePropertiesAccessor, OriginPropertiesAccessor,

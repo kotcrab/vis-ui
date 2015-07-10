@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.entity.accessor;
-
-import com.badlogic.gdx.graphics.Color;
+package com.kotcrab.vis.runtime.accessor;
 
 /** @author Kotcrab */
-public interface ColorPropertiesAccessor {
-	Color getColor ();
+public interface OriginPropertiesAccessor {
+	float getOriginX ();
 
-	void setColor (Color color);
+	float getOriginY ();
+
+	void setOrigin (float x, float y);
 }

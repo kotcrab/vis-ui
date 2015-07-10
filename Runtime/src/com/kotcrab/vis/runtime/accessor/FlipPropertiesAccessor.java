@@ -14,25 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.entity.accessor;
-
-import com.badlogic.gdx.math.Rectangle;
+package com.kotcrab.vis.runtime.accessor;
 
 /** @author Kotcrab */
-public interface BasicPropertiesAccessor {
-	float getX ();
+public interface FlipPropertiesAccessor {
+	boolean isFlipX ();
 
-	void setX (float x);
+	boolean isFlipY ();
 
-	float getY ();
-
-	void setY (float y);
-
-	void setPosition (float x, float y);
-
-	float getWidth ();
-
-	float getHeight ();
-
-	Rectangle getBoundingRectangle ();
+	void setFlip (boolean x, boolean y);
 }
