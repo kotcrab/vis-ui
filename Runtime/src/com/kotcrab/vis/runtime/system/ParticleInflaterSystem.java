@@ -20,32 +20,33 @@ import com.artemis.*;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SoundComponent;
-import com.kotcrab.vis.runtime.component.SoundProtoComponent;
+import com.kotcrab.vis.runtime.component.ParticleComponent;
+import com.kotcrab.vis.runtime.component.ParticleProtoComponent;
 
 /** @author Kotcrab */
 @Wire
-public class SoundInflaterSystem extends EntityProcessingSystem {
+public class ParticleInflaterSystem extends EntityProcessingSystem {
 	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<ParticleProtoComponent> protoCm;
 
 	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
-	public SoundInflaterSystem (RuntimeConfiguration configuration, AssetManager manager) {
-		super(Aspect.all(SoundProtoComponent.class, AssetComponent.class));
+	public ParticleInflaterSystem (RuntimeConfiguration configuration, AssetManager manager) {
+		super(Aspect.all(ParticleProtoComponent.class, AssetComponent.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
 	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SoundProtoComponent.class);
+		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(ParticleProtoComponent.class);
 		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
 		transmuter = factory.build();
 	}
@@ -53,13 +54,17 @@ public class SoundInflaterSystem extends EntityProcessingSystem {
 	@Override
 	protected void process (Entity e) {
 		AssetComponent assetComponent = assetCm.get(e);
+		ParticleProtoComponent protoComponent = protoCm.get(e);
 
-		PathAsset asset = (PathAsset) assetComponent.asset;
+		PathAsset path = (PathAsset) assetComponent.asset;
 
-		Sound sound = manager.get(asset.getPath(), Sound.class);
-		SoundComponent soundComponent = new SoundComponent(sound);
+		ParticleEffect effect = manager.get(path.getPath(), ParticleEffect.class);
+
+		ParticleComponent particleComponent = new ParticleComponent(effect);
+		particleComponent.setPosition(protoComponent.x, protoComponent.y);
+		particleComponent.active = protoComponent.active;
 
 		transmuter.transmute(e);
-		e.edit().add(soundComponent);
+		e.edit().add(particleComponent);
 	}
 }

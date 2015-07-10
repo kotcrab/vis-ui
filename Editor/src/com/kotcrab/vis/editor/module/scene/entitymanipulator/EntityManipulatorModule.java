@@ -38,6 +38,7 @@ import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
+import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.*;
@@ -72,6 +73,7 @@ public class EntityManipulatorModule extends SceneModule {
 	@InjectModule private CameraModule camera;
 	@InjectModule private UndoModule undoModule;
 	@InjectModule private TextureCacheModule textureCache;
+	@InjectModule private ParticleCacheModule particleCache;
 	@InjectModule private RendererModule rendererModule;
 
 	private ShapeRenderer shapeRenderer;
@@ -290,6 +292,14 @@ public class EntityManipulatorModule extends SceneModule {
 								new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
 						.build();
 
+			}
+
+
+			if (asset.getPath().startsWith("particle/")) {
+				entity = new EntityBuilder(entityEngine)
+						.with(new ParticleComponent(particleCache.get(asset)), new AssetComponent(asset),
+								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
+						.build();
 			}
 		}
 

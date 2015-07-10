@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
 import com.kotcrab.vis.runtime.component.MusicComponent;
+import com.kotcrab.vis.runtime.component.ParticleComponent;
 import com.kotcrab.vis.runtime.component.SoundComponent;
 import com.kotcrab.vis.runtime.component.SpriteComponent;
 
@@ -27,6 +28,7 @@ public class InternalEntityProxyResolver {
 		if (entity.getComponent(SpriteComponent.class) != null) return new SpriteProxy(entity);
 		if (entity.getComponent(SoundComponent.class) != null) return new SoundAndMusicProxy(entity, false);
 		if (entity.getComponent(MusicComponent.class) != null) return new SoundAndMusicProxy(entity, true);
+		if (entity.getComponent(ParticleComponent.class) != null) return new ParticleProxy(entity);
 
 		return null;
 	}

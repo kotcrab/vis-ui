@@ -18,21 +18,19 @@ package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.editor.module.scene.SoundAndMusicRenderSystem;
+import com.kotcrab.vis.editor.util.gdx.ParticleUtils;
+import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.PositionComponent;
-import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
+import com.kotcrab.vis.runtime.component.ParticleComponent;
 
 /** @author Kotcrab */
-public class SoundAndMusicProxy extends EntityProxy {
-	private PositionComponent pos;
-	private final boolean music;
+public class ParticleProxy extends EntityProxy {
+	private transient ParticleComponent particle;
 
-	public SoundAndMusicProxy (Entity entity, boolean music) {
+	public ParticleProxy (Entity entity) {
 		super(entity);
-		this.music = music;
-		pos = entity.getComponent(PositionComponent.class);
+		particle = entity.getComponent(ParticleComponent.class);
 	}
 
 	@Override
@@ -42,7 +40,7 @@ public class SoundAndMusicProxy extends EntityProxy {
 
 	@Override
 	protected String getEntityName () {
-		return music ? "MusicEntity" : "SoundEntity";
+		return "ParticleEntity";
 	}
 
 	@Override
@@ -54,48 +52,47 @@ public class SoundAndMusicProxy extends EntityProxy {
 		private Rectangle bounds = new Rectangle();
 
 		public Accessor () {
-			bounds = new Rectangle(0, 0, SoundAndMusicRenderSystem.ICON_SIZE, SoundAndMusicRenderSystem.ICON_SIZE);
+			bounds = new Rectangle();
 		}
 
 		@Override
 		public float getX () {
-			return pos.x;
+			return particle.getX();
 		}
 
 		@Override
 		public void setX (float x) {
-			pos.x = x;
+			particle.setX(x);
 		}
 
 		@Override
 		public float getY () {
-			return pos.y;
+			return particle.getY();
 		}
 
 		@Override
 		public void setY (float y) {
-			pos.y = y;
+			particle.setY(y);
 		}
 
 		@Override
 		public void setPosition (float x, float y) {
-			pos.x = x;
-			pos.y = y;
+			particle.setPosition(x, y);
 		}
 
 		@Override
 		public float getWidth () {
-			return SoundAndMusicRenderSystem.ICON_SIZE;
+			return bounds.getWidth();
 		}
 
 		@Override
 		public float getHeight () {
-			return SoundAndMusicRenderSystem.ICON_SIZE;
+			return bounds.getHeight();
 		}
 
 		@Override
 		public Rectangle getBoundingRectangle () {
-			bounds.setPosition(pos.x, pos.y);
+			ParticleUtils.calculateBoundingRectangle(particle.effect, bounds, false);
 			return bounds;
 		}
 	}

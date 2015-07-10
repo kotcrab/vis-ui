@@ -44,6 +44,7 @@ import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.component.MusicComponent;
+import com.kotcrab.vis.runtime.component.ParticleComponent;
 import com.kotcrab.vis.runtime.component.SoundComponent;
 import com.kotcrab.vis.runtime.component.SpriteComponent;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
@@ -117,6 +118,7 @@ public class SceneIOModule extends ProjectModule {
 		registerEntityComponentSerializer(SpriteComponent.class, new SpriteComponentSerializer(kryo, textureCache), 201);
 		registerEntityComponentSerializer(MusicComponent.class, new MusicComponentSerializer(kryo), 202);
 		kryo.register(SoundComponent.class, 203);
+		registerEntityComponentSerializer(ParticleComponent.class, new ParticleComponentSerializer(kryo, particleCache), 204);
 	}
 
 	private void registerEntityComponentSerializer (Class<? extends Component> componentClass, EntityComponentSerializer serializer, int id) {

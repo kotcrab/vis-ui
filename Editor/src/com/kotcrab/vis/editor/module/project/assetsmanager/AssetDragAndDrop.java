@@ -33,7 +33,6 @@ import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.*;
-import com.kotcrab.vis.editor.scene.ParticleEffectObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.FileUtils;
@@ -171,11 +170,7 @@ public class AssetDragAndDrop {
 		}
 
 		if (item.getType() == FileType.PARTICLE_EFFECT) {
-			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Particle Effect \n (drop on scene to add)")
-					.setObjectProvider(() -> {
-						PathAsset asset = new PathAsset(fileAccess.relativizeToAssetsFolder(item.getFile()));
-						return new ParticleEffectObject(asset, particleCache.get(asset));
-					}));
+			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Particle Effect \n (drop on scene to add)").setPayload(new PathAsset(relativePath)));
 		}
 
 		if (item.getType() == FileType.MUSIC) {

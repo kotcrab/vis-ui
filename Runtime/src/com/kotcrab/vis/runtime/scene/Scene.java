@@ -32,10 +32,7 @@ import com.badlogic.gdx.utils.viewport.*;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.entity.TextEntity;
-import com.kotcrab.vis.runtime.system.CameraManager;
-import com.kotcrab.vis.runtime.system.MusicInflaterSystem;
-import com.kotcrab.vis.runtime.system.SoundInflaterSystem;
-import com.kotcrab.vis.runtime.system.SpriteInflaterSystem;
+import com.kotcrab.vis.runtime.system.*;
 import com.kotcrab.vis.runtime.util.ArtemisUtils;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
@@ -91,7 +88,11 @@ public class Scene implements Disposable {
 		engine.setSystem(new SpriteInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
 		engine.setSystem(new SoundInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
 		engine.setSystem(new MusicInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
+		engine.setSystem(new ParticleInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
+
 		ArtemisUtils.createCommonSystems(engine, batch, true);
+		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
+		engine.setSystem(new ParticleRenderSystem(renderBatchingSystem, false), true);
 		engine.initialize();
 	}
 

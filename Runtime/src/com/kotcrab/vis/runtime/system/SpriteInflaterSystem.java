@@ -51,7 +51,7 @@ public class SpriteInflaterSystem extends EntityProcessingSystem {
 	@Override
 	protected void initialize () {
 		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SpriteProtoComponent.class);
-		if (configuration.removeAssetsComponentAfterInlfating) factory.remove(AssetComponent.class);
+		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
 		transmuter = factory.build();
 	}
 

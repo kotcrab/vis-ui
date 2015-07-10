@@ -62,6 +62,14 @@ public abstract class EntityComponentSerializer<T> extends CompatibleFieldSerial
 		if (components == null) throw new IllegalStateException("Entity context not set for serializer!");
 	}
 
+	protected T parentRead (Kryo kryo, Input input, Class<T> type) {
+		return super.read(kryo, input, type);
+	}
+
+	protected void parentWrite (Kryo kryo, Output output, T object) {
+		super.write(kryo, output, object);
+	}
+
 	@Override
 	@CallSuper
 	public T copy (Kryo kryo, T original) {

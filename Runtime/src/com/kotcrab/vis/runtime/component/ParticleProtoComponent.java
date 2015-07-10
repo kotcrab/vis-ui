@@ -14,10 +14,20 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime;
+package com.kotcrab.vis.runtime.component;
 
 /** @author Kotcrab */
-public class RuntimeConfiguration {
-	public boolean passiveInflaters = false; //TODO: [high] use this
-	public boolean removeAssetsComponentAfterInflating = false;
+public class ParticleProtoComponent extends ProtoComponent {
+	public float x, y;
+	public boolean active;
+
+	private ParticleProtoComponent () {
+
+	}
+
+	public ParticleProtoComponent (ParticleComponent particleComponent) {
+		x = particleComponent.getX();
+		y = particleComponent.getY();
+		active = particleComponent.active;
+	}
 }

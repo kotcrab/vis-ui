@@ -24,11 +24,10 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
@@ -121,12 +120,21 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 					VisAssetDescriptor asset = ((AssetComponent) component).asset;
 
 					if (asset instanceof TextureRegionAsset) {
-						dependencies.add(new AssetDescriptor("gfx/textures.atlas", TextureAtlas.class));
+						dependencies.add(new AssetDescriptor<TextureAtlas>("gfx/textures.atlas", TextureAtlas.class));
 
 					} else if (asset instanceof AtlasRegionAsset) {
 						AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
-						dependencies.add(new AssetDescriptor(regionAsset.getPath(), TextureAtlas.class));
-					} else {
+						dependencies.add(new AssetDescriptor<TextureAtlas>(regionAsset.getPath(), TextureAtlas.class));
+					} else if (asset instanceof PathAsset)
+					{
+						PathAsset pathAsset = (PathAsset) asset;
+						String path = pathAsset.getPath();
+
+						if(path.startsWith("sound/")) dependencies.add(new AssetDescriptor<Sound>(path, Sound.class));
+						if(path.startsWith("music/")) dependencies.add(new AssetDescriptor<Music>(path, Music.class));
+						if(path.startsWith("particle/")) dependencies.add(new AssetDescriptor<ParticleEffect>(path, ParticleEffect.class));
+					}
+					else {
 						throw new UnsupportedAssetDescriptorException(asset);
 					}
 				}

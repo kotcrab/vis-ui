@@ -23,7 +23,9 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.MusicComponent;
+import com.kotcrab.vis.runtime.component.MusicProtoComponent;
 
 /** @author Kotcrab */
 @Wire
@@ -45,18 +47,23 @@ public class MusicInflaterSystem extends EntityProcessingSystem {
 	@Override
 	protected void initialize () {
 		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(MusicProtoComponent.class);
-		if (configuration.removeAssetsComponentAfterInlfating) factory.remove(AssetComponent.class);
+		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
 		transmuter = factory.build();
 	}
 
 	@Override
 	protected void process (Entity e) {
 		AssetComponent assetComponent = assetCm.get(e);
+		MusicProtoComponent musicProtoComponent = protoCm.get(e);
 
 		PathAsset asset = (PathAsset) assetComponent.asset;
 
 		Music music = manager.get(asset.getPath(), Music.class);
 		MusicComponent musicComponent = new MusicComponent(music);
+
+		musicComponent.setLooping(musicProtoComponent.looping);
+		musicComponent.setPlayOnStart(musicProtoComponent.playOnStart);
+		musicComponent.setVolume(musicProtoComponent.volume);
 
 		transmuter.transmute(e);
 		e.edit().add(musicComponent);
