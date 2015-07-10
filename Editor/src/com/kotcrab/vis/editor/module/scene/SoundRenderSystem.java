@@ -14,28 +14,38 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system;
+package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
-import com.kotcrab.vis.runtime.component.SpriteComponent;
+import com.kotcrab.vis.runtime.component.PositionComponent;
+import com.kotcrab.vis.runtime.component.SoundComponent;
+import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
 import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 
+/** @author Kotcrab */
 @Wire
-public class SpriteRenderSystem extends DeferredEntityProcessingSystem {
-	private ComponentMapper<SpriteComponent> spriteCm;
+public class SoundRenderSystem extends DeferredEntityProcessingSystem {
+	public static final int ICON_SIZE = 76;
+
+	private ComponentMapper<PositionComponent> posCm;
+
+	private TextureRegion icon;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
 
-	public SpriteRenderSystem (EntityProcessPrincipal principal) {
-		super(Aspect.all(SpriteComponent.class).exclude(InvisibleComponent.class), principal);
+	public SoundRenderSystem (EntityProcessPrincipal principal) {
+		super(Aspect.all(SoundComponent.class, PositionComponent.class).exclude(InvisibleComponent.class), principal);
+		icon = Assets.getIconRegion(Icons.SOUND);
 	}
 
 	@Override
@@ -45,8 +55,7 @@ public class SpriteRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (final Entity entity) {
-		Sprite sprite = spriteCm.get(entity).sprite;
-		sprite.draw(batch);
+		PositionComponent pos = posCm.get(entity);
+		batch.draw(icon, pos.x, pos.y);
 	}
-
 }

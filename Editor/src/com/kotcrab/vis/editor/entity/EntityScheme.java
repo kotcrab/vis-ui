@@ -52,15 +52,31 @@ public class EntityScheme {
 	public ECSEntityData toData () {
 		Array<Component> dataComponents = new Array<>();
 
-		components.forEach(component -> {
-			if (component instanceof UsesProtoComponent)
+		ExporterDropsComponent dropsComponent = null;
+
+		for (Component component : components) {
+			if (component instanceof ExporterDropsComponent) {
+				dropsComponent = (ExporterDropsComponent) component;
+				break;
+			}
+		}
+
+		for (Component component : components) {
+			if (component instanceof ExporterDropsComponent)
+				continue;
+
+			if (dropsComponent != null && dropsComponent.componentsToDrop.contains(component.getClass(), false))
+				continue;
+
+			if (component instanceof UsesProtoComponent) {
 				dataComponents.add(((UsesProtoComponent) component).getProtoComponent());
-			else if (component instanceof GroupComponent) { //strip empty GroupComponents
+			} else if (component instanceof GroupComponent) { //strip empty GroupComponents
 				GroupComponent gdc = (GroupComponent) component;
 				if (gdc.groupIds.size > 0) dataComponents.add(component);
-			} else
+			} else {
 				dataComponents.add(component);
-		});
+			}
+		}
 
 		return new ECSEntityData(dataComponents);
 	}

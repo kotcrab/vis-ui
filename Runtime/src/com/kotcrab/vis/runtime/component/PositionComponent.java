@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime;
+package com.kotcrab.vis.runtime.component;
+
+import com.artemis.Component;
 
 /** @author Kotcrab */
-public class RuntimeConfiguration {
-	public boolean passiveInflaters = false; //TODO: [high] use this
-	public boolean removeAssetsComponentAfterInlfating = false;
+public class PositionComponent extends Component {
+	public float x;
+	public float y;
 }

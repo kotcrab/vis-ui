@@ -34,6 +34,7 @@ import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.Timer;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
@@ -55,11 +56,9 @@ import com.kotcrab.vis.editor.util.gdx.ImmutableArray;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.TextureAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.LayerComponent;
-import com.kotcrab.vis.runtime.component.RenderableComponent;
-import com.kotcrab.vis.runtime.component.SpriteComponent;
+import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 
@@ -258,14 +257,33 @@ public class EntityManipulatorModule extends SceneModule {
 
 		Object obj = payload.getObject();
 
+		Entity entity = null;
+
 		if (obj instanceof TextureAssetDescriptor) {
 			TextureAssetDescriptor asset = (TextureAssetDescriptor) obj;
 
-			Entity entity = new EntityBuilder(entityEngine)
+			entity = new EntityBuilder(entityEngine)
 					.with(new SpriteComponent(textureCache.getSprite(asset)), new AssetComponent(asset),
 							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
 					.build();
 
+		}
+
+		if (obj instanceof PathAsset) {
+			PathAsset asset = (PathAsset) obj;
+
+			if (asset.getPath().startsWith("sound/")) {
+				entity = new EntityBuilder(entityEngine)
+						.with(new SoundComponent(null), //editor does not require sound to be loaded, we can pass null sound here
+								new AssetComponent(asset), new PositionComponent(),
+								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
+								new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
+						.build();
+
+			}
+		}
+
+		if (entity != null) {
 			EntityProxy proxy = entityProxyCache.get(entity);
 
 			float x = camera.getInputX() - proxy.getWidth() / 2;

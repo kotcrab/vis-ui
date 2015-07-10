@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime;
+package com.kotcrab.vis.runtime.component;
 
 /** @author Kotcrab */
-public class RuntimeConfiguration {
-	public boolean passiveInflaters = false; //TODO: [high] use this
-	public boolean removeAssetsComponentAfterInlfating = false;
+public class SoundProtoComponent extends ProtoComponent {
 }

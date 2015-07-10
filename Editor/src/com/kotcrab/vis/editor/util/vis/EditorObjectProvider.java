@@ -22,6 +22,8 @@ import com.kotcrab.vis.editor.scene.EditorObject;
  * Interface implemented if something can provide {@link EditorObject}
  * @author Kotcrab
  */
+@Deprecated
 public interface EditorObjectProvider {
+	@Deprecated
 	EditorObject newInstance ();
 }

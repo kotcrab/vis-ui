@@ -35,22 +35,24 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 @Wire
 public class SpriteInflaterSystem extends EntityProcessingSystem {
 	private ComponentMapper<SpriteProtoComponent> protoCm;
-	private ComponentMapper<SpriteComponent> spriteCm;
 	private ComponentMapper<AssetComponent> assetCm;
 
 	private EntityTransmuter transmuter;
 
+	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
-	//TODO: [high] use config
 	public SpriteInflaterSystem (RuntimeConfiguration configuration, AssetManager manager) {
 		super(Aspect.all(SpriteProtoComponent.class, AssetComponent.class));
+		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
 	protected void initialize () {
-		transmuter = new EntityTransmuterFactory(world).remove(SpriteProtoComponent.class).remove(AssetComponent.class).build();
+		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SpriteProtoComponent.class);
+		if (configuration.removeAssetsComponentAfterInlfating) factory.remove(AssetComponent.class);
+		transmuter = factory.build();
 	}
 
 	@Override

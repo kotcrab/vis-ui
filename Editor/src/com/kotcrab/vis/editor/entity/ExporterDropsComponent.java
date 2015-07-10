@@ -14,10 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime;
+package com.kotcrab.vis.editor.entity;
+
+import com.artemis.Component;
+import com.badlogic.gdx.utils.Array;
 
 /** @author Kotcrab */
-public class RuntimeConfiguration {
-	public boolean passiveInflaters = false; //TODO: [high] use this
-	public boolean removeAssetsComponentAfterInlfating = false;
+public class ExporterDropsComponent extends Component {
+	public Array<Class> componentsToDrop = new Array<>();
+
+	public ExporterDropsComponent (Class... components) {
+		componentsToDrop.addAll(components);
+	}
 }

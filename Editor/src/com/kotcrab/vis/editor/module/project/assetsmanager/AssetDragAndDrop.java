@@ -35,7 +35,6 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.scene.MusicObject;
 import com.kotcrab.vis.editor.scene.ParticleEffectObject;
-import com.kotcrab.vis.editor.scene.SoundObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.FileUtils;
@@ -103,6 +102,8 @@ public class AssetDragAndDrop {
 	}
 
 	private void addSource (FileItem item) {
+		String relativePath = fileAccess.relativizeToAssetsFolder(item.getFile());
+
 		if (item.getType() == FileType.TEXTURE) {
 			dragAndDrop.addSource(new Source(item) {
 				@Override
@@ -180,12 +181,11 @@ public class AssetDragAndDrop {
 
 		if (item.getType() == FileType.MUSIC) {
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Music \n (drop on scene to add)").disposeOnNullTarget()
-					.setObjectProvider(() -> new MusicObject(new PathAsset(fileAccess.relativizeToAssetsFolder(item.getFile())))));
+					.setObjectProvider(() -> new MusicObject(new PathAsset(relativePath))));
 		}
 
 		if (item.getType() == FileType.SOUND) {
-			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Sound \n (drop on scene to add)").disposeOnNullTarget()
-					.setObjectProvider(() -> new SoundObject(new PathAsset(fileAccess.relativizeToAssetsFolder(item.getFile())))));
+			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Sound \n (drop on scene to add)").setPayload(new PathAsset(relativePath)));
 		}
 
 		if (item.getType() == FileType.NON_STANDARD) {

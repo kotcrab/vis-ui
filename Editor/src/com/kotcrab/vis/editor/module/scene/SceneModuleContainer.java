@@ -34,6 +34,7 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.system.CameraManager;
+import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.ArtemisUtils;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
@@ -72,6 +73,8 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		createEssentialsSystems(engine);
 
 		ArtemisUtils.createCommonSystems(engine, batch, false);
+		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
+		engine.setSystem(new SoundRenderSystem(renderBatchingSystem), true);
 	}
 
 	public static void createEssentialsSystems (EntityEngine engine) {

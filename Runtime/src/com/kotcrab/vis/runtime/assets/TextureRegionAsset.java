@@ -21,7 +21,7 @@ package com.kotcrab.vis.runtime.assets;
  * @author Kotcrab
  */
 public class TextureRegionAsset extends PathAsset implements TextureAssetDescriptor {
-	public TextureRegionAsset () {
+	protected TextureRegionAsset () {
 	}
 
 	public TextureRegionAsset (String relativePath) {

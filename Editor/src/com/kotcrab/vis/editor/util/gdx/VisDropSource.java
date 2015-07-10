@@ -35,12 +35,13 @@ import com.kotcrab.vis.ui.widget.VisLabel;
  */
 public class VisDropSource extends Source {
 	private final DragAndDrop dragAndDrop;
-	private EditorObject object;
+	@Deprecated private EditorObject object;
 
 	private boolean disposeOnNullTarget;
 
 	private String viewText;
-	private EditorObjectProvider provider;
+	@Deprecated private EditorObjectProvider provider;
+	private Object payloadObject;
 
 	public VisDropSource (DragAndDrop dragAndDrop, Actor actor) {
 		super(actor);
@@ -52,11 +53,18 @@ public class VisDropSource extends Source {
 		return this;
 	}
 
+	@Deprecated
 	public VisDropSource setObjectProvider (EditorObjectProvider provider) {
 		this.provider = provider;
 		return this;
 	}
 
+	public VisDropSource setPayload (Object payload) {
+		this.payloadObject = payload;
+		return this;
+	}
+
+	@Deprecated
 	public VisDropSource disposeOnNullTarget () {
 		disposeOnNullTarget = true;
 		return this;
@@ -66,8 +74,12 @@ public class VisDropSource extends Source {
 	public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 		Payload payload = new Payload();
 
-		object = provider.newInstance();
-		payload.setObject(object);
+		if(provider != null) {
+			object = provider.newInstance();
+			payload.setObject(object);
+		}
+		else
+			payload.setObject(payloadObject);
 
 		Label label = new VisLabel(viewText);
 		label.setAlignment(Align.center);

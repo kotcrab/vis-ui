@@ -113,8 +113,11 @@ public class CameraModule extends SceneModule {
 
 	@Override
 	public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-		if (button == Buttons.MIDDLE)
+		if (button == Buttons.MIDDLE) {
 			resetZoom();
+			camera.position.x = getInputX();
+			camera.position.y = getInputY();
+		}
 	}
 
 	private void pan (float deltaX, float deltaY) {

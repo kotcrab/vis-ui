@@ -23,7 +23,7 @@ package com.kotcrab.vis.runtime.assets;
 public class PathAsset implements VisAssetDescriptor {
 	private String relativePath;
 
-	public PathAsset () {
+	protected PathAsset () {
 	}
 
 	public PathAsset (String relativePath) {
