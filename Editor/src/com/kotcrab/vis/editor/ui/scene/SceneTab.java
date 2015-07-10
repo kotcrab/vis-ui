@@ -26,10 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
-import com.kotcrab.vis.editor.event.ToolbarEvent;
-import com.kotcrab.vis.editor.event.ToolbarEventType;
-import com.kotcrab.vis.editor.event.UndoEvent;
+import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.ContentTable;
@@ -218,6 +215,9 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	public boolean onEvent (Event event) {
 		if (event instanceof TexturesReloadedEvent)
 			sceneMC.getEntityEngine().getManager(TextureReloaderManager.class).reloadTextures();
+
+		if (event instanceof ParticleReloadedEvent)
+			sceneMC.getEntityEngine().getManager(ParticleReloaderManager.class).reloadTextures();
 
 		if (isActiveTab()) {
 			if (event instanceof ToolbarEvent) {

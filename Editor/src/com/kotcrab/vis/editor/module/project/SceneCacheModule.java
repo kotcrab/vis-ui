@@ -42,23 +42,4 @@ public class SceneCacheModule extends ProjectModule {
 
 		return scene;
 	}
-
-	//TODO [high] reload particles
-//	@Override
-//	public boolean onEvent (Event event) {
-//		if (event instanceof ParticleReloadedEvent) {
-//			for (EditorScene scene : scenes.values()) {
-//				for (Layer layer : scene.layers) {
-//					for (EditorObject object : layer.entities) {
-//						if (object instanceof ParticleEffectObject) {
-//							ParticleEffectObject particleObject = (ParticleEffectObject) object;
-//							particleObject.setEffect(particleCache.get(particleObject.getAssetDescriptor()));
-//						}
-//					}
-//				}
-//			}
-//		}
-//
-//		return false;
-//	}
 }

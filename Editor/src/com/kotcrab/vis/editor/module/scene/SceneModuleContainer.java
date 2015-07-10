@@ -27,6 +27,7 @@ import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
+import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
@@ -66,6 +67,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		engine.setManager(new ZIndexManipulatorManager());
 		engine.setManager(new EntitySerializerManager());
 		engine.setManager(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
+		engine.setManager(new ParticleReloaderManager(projectModuleContainer.get(ParticleCacheModule.class)));
 
 		engine.setSystem(new GroupIdProviderSystem(), true);
 		engine.setSystem(new GroupProxyProviderSystem(), true);
