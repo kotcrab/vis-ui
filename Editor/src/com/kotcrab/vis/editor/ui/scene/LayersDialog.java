@@ -27,7 +27,7 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.ECSEntityManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesRemovedAction;
 import com.kotcrab.vis.editor.scene.Layer;
@@ -64,7 +64,7 @@ public class LayersDialog extends VisTable implements Disposable {
 	private static final VisImageButtonStyle BUTTON_BLUE_STYLE = VisUI.getSkin().get("blue", VisImageButtonStyle.class);
 
 	@InjectModule private UndoModule undoModule;
-	@InjectModule private ECSEntityManipulatorModule entityManipulator;
+	@InjectModule private EntityManipulatorModule entityManipulator;
 
 	private LayerManipulatorManager layerManipulatorManager;
 

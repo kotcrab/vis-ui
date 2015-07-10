@@ -32,7 +32,7 @@ import com.kotcrab.vis.editor.scene.EditorScene;
  */
 public class Tool extends InputListener {
 	private boolean loaded = false;
-	@InjectModule protected ECSEntityManipulatorModule entityManipulator;
+	@InjectModule protected EntityManipulatorModule entityManipulator;
 	@InjectModule protected CameraModule camera;
 	@InjectModule protected UndoModule undoModule;
 	protected EditorScene scene;

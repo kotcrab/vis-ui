@@ -25,7 +25,7 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**
  * Entity blueprint that can be used to create clones of entity. Linked to specified {@link EntityEngine} and cannot
- * be used outside current scene. ProtoEntity instances should be obtained from {@link SceneIOModule#createProtoEntity(EntityEngine, Entity)}
+ * be used outside current scene. ProtoEntity instances should be obtained from {@link SceneIOModule#createProtoEntity(EntityEngine, Entity, boolean)}
  * @author Kotcrab
  */
 public class ProtoEntity {
@@ -43,6 +43,7 @@ public class ProtoEntity {
 		this.preserveId = preserveId;
 
 		entity.getComponents(components);
+		components = sceneIOModule.cloneEntityComponents(components);
 
 		id = entity.getId();
 	}

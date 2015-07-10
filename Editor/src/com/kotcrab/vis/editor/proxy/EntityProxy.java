@@ -267,15 +267,15 @@ public abstract class EntityProxy {
 		this.rotationAccessor = rotationAccessor;
 	}
 
-	boolean isRotationSupported () {
+	public boolean isRotationSupported () {
 		return rotationAccessor != null;
 	}
 
-	float getRotation () {
+	public float getRotation () {
 		return rotationAccessor.getRotation();
 	}
 
-	void setRotation (float rotation) {
+	public void setRotation (float rotation) {
 		rotationAccessor.setRotation(rotation);
 	}
 
@@ -285,19 +285,19 @@ public abstract class EntityProxy {
 		this.flipAccessor = flipAccessor;
 	}
 
-	boolean isFlipSupported () {
+	public boolean isFlipSupported () {
 		return flipAccessor != null;
 	}
 
-	boolean isFlipX () {
+	public boolean isFlipX () {
 		return flipAccessor.isFlipX();
 	}
 
-	boolean isFlipY () {
+	public boolean isFlipY () {
 		return flipAccessor.isFlipY();
 	}
 
-	void setFlip (boolean x, boolean y) {
+	public void setFlip (boolean x, boolean y) {
 		flipAccessor.setFlip(x, y);
 	}
 

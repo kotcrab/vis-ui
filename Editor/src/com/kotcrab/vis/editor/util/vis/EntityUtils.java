@@ -17,32 +17,30 @@
 package com.kotcrab.vis.editor.util.vis;
 
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.NumberUtils;
 import com.kotcrab.vis.editor.util.value.BooleanValue;
 import com.kotcrab.vis.editor.util.value.FloatValue;
 import com.kotcrab.vis.editor.util.value.StringValue;
-import com.kotcrab.vis.runtime.entity.Entity;
 
 /**
- * {@link Entity} and {@link EditorObject} related utils.
  * @author Kotcrab
  */
 public class EntityUtils {
-	public static String getEntitiesCommonFloatValue (Array<EditorObject> entities, FloatValue objValue) {
+	public static String getEntitiesCommonFloatValue (Array<EntityProxy> entities, FloatValue objValue) {
 		float value = objValue.getFloat(entities.first());
 
-		for (EditorObject entity : entities)
+		for (EntityProxy entity : entities)
 			if (value != objValue.getFloat(entity)) return "?";
 
 		return NumberUtils.floatToString(value);
 	}
 
-	public static void setCommonCheckBoxState (Array<EditorObject> entities, IndeterminateCheckbox target, BooleanValue value) {
+	public static void setCommonCheckBoxState (Array<EntityProxy> entities, IndeterminateCheckbox target, BooleanValue value) {
 		boolean enabled = value.getBoolean(entities.first());
 
-		for (EditorObject entity : entities) {
+		for (EntityProxy entity : entities) {
 			if (enabled != value.getBoolean(entity)) {
 				target.setIndeterminate(true);
 				return;
@@ -52,21 +50,21 @@ public class EntityUtils {
 		target.setChecked(enabled);
 	}
 
-	public static String getCommonString (Array<EditorObject> entities, String ifNotCommon, StringValue value) {
+	public static String getCommonString (Array<EntityProxy> entities, String ifNotCommon, StringValue value) {
 		String firstText = value.getString(entities.first());
 
-		for (EditorObject entity : entities) {
+		for (EntityProxy entity : entities) {
 			if (value.getString(entity).equals(firstText) == false) return ifNotCommon;
 		}
 
 		return firstText;
 	}
 
-	public static String getCommonId (Array<EditorObject> entities) {
+	public static String getCommonId (Array<EntityProxy> entities) {
 		String firstId = entities.first().getId();
 		if (firstId == null) firstId = "";
 
-		for (EditorObject entity : entities) {
+		for (EntityProxy entity : entities) {
 			String entityId = entity.getId();
 			if (entityId == null) entityId = "";
 
@@ -78,40 +76,40 @@ public class EntityUtils {
 		return firstId;
 	}
 
-	public static boolean isScaleSupportedForEntities (Array<EditorObject> entities) {
-		for (EditorObject entity : entities) {
+	public static boolean isScaleSupportedForEntities (Array<EntityProxy> entities) {
+		for (EntityProxy entity : entities) {
 			if (entity.isScaleSupported() == false) return false;
 		}
 
 		return true;
 	}
 
-	public static boolean isOriginSupportedForEntities (Array<EditorObject> entities) {
-		for (EditorObject entity : entities) {
+	public static boolean isOriginSupportedForEntities (Array<EntityProxy> entities) {
+		for (EntityProxy entity : entities) {
 			if (entity.isOriginSupported() == false) return false;
 		}
 
 		return true;
 	}
 
-	public static boolean isRotationSupportedForEntities (Array<EditorObject> entities) {
-		for (EditorObject entity : entities) {
+	public static boolean isRotationSupportedForEntities (Array<EntityProxy> entities) {
+		for (EntityProxy entity : entities) {
 			if (entity.isRotationSupported() == false) return false;
 		}
 
 		return true;
 	}
 
-	public static boolean isTintSupportedForEntities (Array<EditorObject> entities) {
-		for (EditorObject entity : entities) {
+	public static boolean isTintSupportedForEntities (Array<EntityProxy> entities) {
+		for (EntityProxy entity : entities) {
 			if (entity.isTintSupported() == false) return false;
 		}
 
 		return true;
 	}
 
-	public static boolean isFlipSupportedForEntities (Array<EditorObject> entities) {
-		for (EditorObject entity : entities) {
+	public static boolean isFlipSupportedForEntities (Array<EntityProxy> entities) {
+		for (EntityProxy entity : entities) {
 			if (entity.isFlipSupported() == false) return false;
 		}
 

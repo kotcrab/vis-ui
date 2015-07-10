@@ -16,6 +16,9 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
+import com.artemis.Component;
+import com.artemis.EntityEdit;
+import com.artemis.utils.Bag;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -25,26 +28,32 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.IntMap;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.RedoEvent;
 import com.kotcrab.vis.editor.event.UndoEvent;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
+import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
+import com.kotcrab.vis.editor.module.project.SceneIOModule;
+import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
-import com.kotcrab.vis.editor.scene.*;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.*;
-import com.kotcrab.vis.editor.util.vis.EntityUtils;
+import com.kotcrab.vis.editor.proxy.EntityProxy;
+import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificObjectTable;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.value.FloatValue;
-import com.kotcrab.vis.runtime.data.*;
-import com.kotcrab.vis.runtime.entity.Entity;
+import com.kotcrab.vis.editor.util.vis.EntityUtils;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
@@ -64,22 +73,28 @@ import java.util.Iterator;
  * from 'specifictable' package for examples.
  * @author Kotcrab
  */
-@Deprecated
 public class EntityProperties extends VisTable implements Disposable, EventListener {
 	public static final int LABEL_WIDTH = 60;
 	public static final int AXIS_LABEL_WIDTH = 10;
 	public static final int FIELD_WIDTH = 70;
 
-	private ObjectSupportModule supportModule;
+	@InjectModule private ColorPickerModule colorPickerModule;
 
-	private FileAccessModule fileAccessModule;
-	private FontCacheModule fontCacheModule;
-	private UndoModule undoModule;
+	@InjectModule private ObjectSupportModule supportModule;
+	@InjectModule private FileAccessModule fileAccessModule;
+	@InjectModule private FontCacheModule fontCacheModule;
+	@InjectModule private SceneIOModule sceneIO;
+
+	@InjectModule private UndoModule undoModule;
+	@InjectModule private EntityManipulatorModule entityManipulator;
+
+	private EntityEngine engine;
 
 	private ColorPicker picker;
 	private Tab parentTab;
 
-	private Array<EditorObject> entities;
+	private Array<EntityProxy> entities;
+	private boolean groupSelected;
 
 	private ChangeListener sharedChangeListener;
 	private ChangeListener sharedCheckBoxChangeListener;
@@ -117,22 +132,17 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private IndeterminateCheckbox xFlipCheck;
 	private IndeterminateCheckbox yFlipCheck;
 
-	public EntityProperties (ObjectSupportModule supportModule, FileAccessModule fileAccessModule, FontCacheModule fontCacheModule,
-							 final UndoModule undoModule, final ColorPicker picker, final Tab parentTab, final Array<EditorObject> selectedEntitiesList) {
+	public EntityProperties (SceneModuleContainer sceneMC, Tab parentSceneTab, Array<EntityProxy> entities) {
 		super(true);
-		this.supportModule = supportModule;
-		this.fileAccessModule = fileAccessModule;
-		this.fontCacheModule = fontCacheModule;
-		this.undoModule = undoModule;
-
-		this.picker = picker;
-		this.parentTab = parentTab;
+		sceneMC.injectModules(this);
+		this.entities = entities;
+		this.parentTab = parentSceneTab;
+		this.picker = colorPickerModule.getPicker();
+		this.engine = sceneMC.getEntityEngine();
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
 		setVisible(false);
-
-		entities = selectedEntitiesList;
 
 		sharedChangeListener = new ChangeListener() {
 			@Override
@@ -168,7 +178,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		pickerListener = new ColorPickerAdapter() {
 			@Override
 			public void finished (Color newColor) {
-				for (EditorObject entity : entities)
+				for (EntityProxy entity : entities)
 					entity.setColor(newColor);
 
 				parentTab.dirty();
@@ -185,12 +195,12 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		createRotationTintTable();
 		createFlipTable();
 
-		registerSpecificTable(new TTFTextObjectTable());
-		registerSpecificTable(new BMPTextObjectTable());
-		registerSpecificTable(new MusicObjectTable());
-		registerSpecificTable(new SoundObjectTable());
-		registerSpecificTable(new ObjectGroupTable());
-		registerSpecificTable(new ParticleEffectTable());
+//		registerSpecificTable(new TTFTextObjectTable());
+//		registerSpecificTable(new BMPTextObjectTable());
+//		registerSpecificTable(new MusicObjectTable());
+//		registerSpecificTable(new SoundObjectTable());
+//		registerSpecificTable(new ObjectGroupTable());
+//		registerSpecificTable(new ParticleEffectTable());
 
 		propertiesTable = new VisTable(true);
 
@@ -319,7 +329,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	}
 
 	private boolean checkEntityList (SpecificObjectTable table) {
-		for (EditorObject entity : entities)
+		for (EntityProxy entity : entities)
 			if (!table.isSupported(entity)) return false;
 
 		return true;
@@ -350,7 +360,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 		snapshots = new SnapshotUndoableActionGroup();
 
-		for (EditorObject entity : entities) {
+		for (EntityProxy entity : entities) {
 			snapshots.add(new SnapshotUndoableAction(entity));
 		}
 	}
@@ -370,37 +380,44 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		return new NumberInputField(sharedFocusListener, sharedChangeListener);
 	}
 
-	public Array<EditorObject> getEntities () {
+	@Deprecated
+	public Array<EntityProxy> getEntities () {
 		return entities;
 	}
 
+	@Deprecated
 	public ChangeListener getSharedChangeListener () {
 		return sharedChangeListener;
 	}
 
+	@Deprecated
 	public ChangeListener getSharedCheckBoxChangeListener () {
 		return sharedCheckBoxChangeListener;
 	}
 
+	@Deprecated
 	public FocusListener getSharedFocusListener () {
 		return sharedFocusListener;
 	}
 
+	@Deprecated
 	public Tab getParentTab () {
 		return parentTab;
 	}
 
+	@Deprecated
 	public FileAccessModule getFileAccessModule () {
 		return fileAccessModule;
 	}
 
+	@Deprecated
 	public FontCacheModule getFontCacheModule () {
 		return fontCacheModule;
 	}
 
 	private void setTintUIForEntities () {
 		Color firstColor = entities.first().getColor();
-		for (EditorObject entity : entities) {
+		for (EntityProxy entity : entities) {
 			if (!firstColor.equals(entity.getColor())) {
 				tint.setUnknown(true);
 				return;
@@ -417,9 +434,9 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	private void setValuesToEntity () {
 		for (int i = 0; i < entities.size; i++) {
-			EditorObject entity = entities.get(i);
+			EntityProxy entity = entities.get(i);
 
-			entity.setId(idField.getText().equals("") ? null : idField.getText());
+			if (groupSelected == false) entity.setId(idField.getText().equals("") ? null : idField.getText());
 			entity.setPosition(FieldUtils.getFloat(xField, entity.getX()), FieldUtils.getFloat(yField, entity.getY()));
 
 			if (EntityUtils.isScaleSupportedForEntities(entities))
@@ -444,25 +461,49 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	}
 
 	public void updateValues () {
+
+		groupSelected = false;
+		entities.forEach(proxy -> {
+			if (proxy instanceof GroupEntityProxy) groupSelected = true;
+		});
+
 		if (entities.size == 0)
 			setVisible(false);
 		else {
 			setVisible(true);
 
-			idField.setText(EntityUtils.getCommonId(entities));
-			xField.setText(getEntitiesFieldValue(EditorObject::getX));
-			yField.setText(getEntitiesFieldValue(EditorObject::getY));
-			xScaleField.setText(getEntitiesFieldValue(EditorObject::getScaleX));
-			yScaleField.setText(getEntitiesFieldValue(EditorObject::getScaleY));
-			xOriginField.setText(getEntitiesFieldValue(EditorObject::getOriginX));
-			yOriginField.setText(getEntitiesFieldValue(EditorObject::getOriginY));
-			rotationField.setText(getEntitiesFieldValue(EditorObject::getRotation));
+			if (groupSelected) {
+				idField.setText("<id cannot be set for group>");
+				idField.setDisabled(true);
+			} else {
+				idField.setText(EntityUtils.getCommonId(entities));
+				idField.setDisabled(false);
+			}
+
+			xField.setText(getEntitiesFieldValue(EntityProxy::getX));
+			yField.setText(getEntitiesFieldValue(EntityProxy::getY));
+
+			if (EntityUtils.isScaleSupportedForEntities(entities)) {
+				xScaleField.setText(getEntitiesFieldValue(EntityProxy::getScaleX));
+				yScaleField.setText(getEntitiesFieldValue(EntityProxy::getScaleY));
+			}
+
+			if (EntityUtils.isOriginSupportedForEntities(entities)) {
+				xOriginField.setText(getEntitiesFieldValue(EntityProxy::getOriginX));
+				yOriginField.setText(getEntitiesFieldValue(EntityProxy::getOriginY));
+			}
+
+			if (EntityUtils.isRotationSupportedForEntities(entities))
+				rotationField.setText(getEntitiesFieldValue(EntityProxy::getRotation));
 
 			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
 
 			if (EntityUtils.isTintSupportedForEntities(entities)) setTintUIForEntities();
-			EntityUtils.setCommonCheckBoxState(entities, xFlipCheck, EditorObject::isFlipX);
-			EntityUtils.setCommonCheckBoxState(entities, yFlipCheck, EditorObject::isFlipY);
+
+			if (EntityUtils.isFlipSupportedForEntities(entities)) {
+				EntityUtils.setCommonCheckBoxState(entities, xFlipCheck, EntityProxy::isFlipX);
+				EntityUtils.setCommonCheckBoxState(entities, yFlipCheck, EntityProxy::isFlipY);
+			}
 		}
 	}
 
@@ -496,53 +537,52 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		}
 	}
 
-	//introducing the most unsafe class ever
 	private class SnapshotUndoableAction implements UndoableAction {
-		EditorObject entity;
-		EntityData dataSnapshot;
-		EntityData dataSnapshot2;
+		private EntityProxy proxy;
 
-		public SnapshotUndoableAction (EditorObject entity) {
-			this.entity = entity;
-			this.dataSnapshot = getDataForEntity(entity);
-			this.dataSnapshot2 = getDataForEntity(entity);
+		private IntMap<Bag<Component>> snapshot1 = new IntMap<>();
+		private IntMap<Bag<Component>> snapshot2 = new IntMap<>();
 
-			dataSnapshot.saveFrom((Entity) entity, entity.getAssetDescriptor());
+		public SnapshotUndoableAction (EntityProxy proxy) {
+			this.proxy = proxy;
+			createSnapshot(snapshot1);
 		}
 
 		public void takeSecondSnapshot () {
-			dataSnapshot2.saveFrom((Entity) entity, entity.getAssetDescriptor());
+			createSnapshot(snapshot2);
+		}
+
+		private void createSnapshot (IntMap<Bag<Component>> target) {
+			proxy.getEntities().forEach(entity -> target.put(entity.getId(), sceneIO.cloneEntityComponents(entity.getComponents(new Bag<>()))));
 		}
 
 		public boolean isSnapshotsEquals () {
-			return EqualsBuilder.reflectionEquals(dataSnapshot, dataSnapshot2, true);
+			return EqualsBuilder.reflectionEquals(snapshot1, snapshot2, true);
 		}
 
 		@Override
 		public void execute () {
-			dataSnapshot.saveFrom((Entity) entity, entity.getAssetDescriptor());
-			dataSnapshot2.loadTo((Entity) entity);
+			proxy.reload();
+			replaceComponents(snapshot2);
 		}
 
 		@Override
 		public void undo () {
-			dataSnapshot2.saveFrom((Entity) entity, entity.getAssetDescriptor());
-			dataSnapshot.loadTo((Entity) entity);
+			proxy.reload();
+			replaceComponents(snapshot1);
 		}
 
-		private EntityData getDataForEntity (EditorObject entity) {
-			//if (entity instanceof SpriteObject) return new SpriteData();
-			if (entity instanceof TextObject) return new TextObjectData();
-			if (entity instanceof ParticleEffectObject) return new ParticleEffectData();
-			if (entity instanceof MusicObject) return new MusicData();
-			if (entity instanceof SoundObject) return new SoundData();
-			if (entity instanceof ObjectGroup) return new ObjectGroupData();
+		private void replaceComponents (IntMap<Bag<Component>> source) {
+			proxy.getEntities().forEach(entity -> {
+				Bag<Component> oldComponents = new Bag<>();
+				entity.getComponents(oldComponents);
+				EntityEdit editor = entity.edit();
+				oldComponents.forEach(editor::remove);
 
-			ObjectSupport support = supportModule.get(entity.getClass());
-			if (support != null) return support.getEmptyData();
-
-			throw new UnsupportedOperationException("Cannot create snapshots entity data for entity class: " + entity.getClass());
+				Bag<Component> newComponent = source.get(entity.getId());
+				newComponent.forEach(editor::add);
+			});
+			proxy.reload();
 		}
 	}
-
 }

@@ -16,12 +16,12 @@
 
 package com.kotcrab.vis.editor.util.value;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.proxy.EntityProxy;
 
 /**
- * Used when you need to get multiple boolean values from {@link EditorObject}s
+ * Used when you need to get multiple boolean values from {@link EntityProxy}s
  * @author Kotcrab
  */
 public interface BooleanValue {
-	boolean getBoolean (EditorObject entity);
+	boolean getBoolean (EntityProxy entity);
 }

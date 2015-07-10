@@ -42,12 +42,12 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.module.scene.*;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.ECSEntityManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupBreadcrumb;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.ECSEntityProperties;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
@@ -74,10 +74,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	private SceneModuleContainer sceneMC;
 
-	@Deprecated
-	@InjectModule
-	private EntityManipulatorModule entityManipulator;
-	@InjectModule private ECSEntityManipulatorModule ecsEntityManipulator;
+	@InjectModule private EntityManipulatorModule entityManipulator;
 	@InjectModule private UndoModule undoModule;
 	@InjectModule private CameraModule cameraModule;
 
@@ -100,8 +97,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		sceneMC.add(new CameraModule());
 		sceneMC.add(new RendererModule());
 		sceneMC.add(new UndoModule());
-		//sceneMC.add(new ZIndexManipulatorModule());
-		sceneMC.add(new ECSEntityManipulatorModule());
 		sceneMC.add(new EntityManipulatorModule());
 		sceneMC.addAll(sceneMC.findInHierarchy(ExtensionStorageModule.class).getContainersExtensions(SceneModule.class, ExtensionScope.SCENE));
 
@@ -122,8 +117,8 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 		content = new ContentTable(sceneMC);
 
-		GroupBreadcrumb breadcrumb = ecsEntityManipulator.getGroupBreadcrumb();
-		ECSEntityProperties entityProperties = ecsEntityManipulator.getEntityProperties();
+		GroupBreadcrumb breadcrumb = entityManipulator.getGroupBreadcrumb();
+		EntityProperties entityProperties = entityManipulator.getEntityProperties();
 
 		content.add(breadcrumb).height(new VisValue(context -> breadcrumb.getPrefHeight())).expandX().fillX().colspan(3).row();
 		content.add(leftColumn).width(300).fillY().expandY();
@@ -138,12 +133,12 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		rightColumn.top();
 		rightColumn.add(entityProperties).height(new VisValue(context -> entityProperties.getPrefHeight())).expandX().fillX().row();
 		rightColumn.add().fill().expand().row();
-		rightColumn.add(ecsEntityManipulator.getLayersDialog()).expandX().fillX();
+		rightColumn.add(entityManipulator.getLayersDialog()).expandX().fillX();
 
 		dropTarget = new Target(content) {
 			@Override
 			public void drop (Source source, Payload payload, float x, float y, int pointer) {
-				ecsEntityManipulator.processDropPayload(payload);
+				entityManipulator.processDropPayload(payload);
 			}
 
 			@Override
@@ -289,12 +284,12 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	@Override
 	public void group () {
-		ecsEntityManipulator.groupSelection();
+		entityManipulator.groupSelection();
 	}
 
 	@Override
 	public void ungroup () {
-		ecsEntityManipulator.ungroupSelection();
+		entityManipulator.ungroupSelection();
 	}
 
 	public String getInfoLabelText () {
@@ -303,7 +298,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	public void centerAround (int entityId) {
 		EntityProxy entity = entityProxyCache.get(entityId);
-		ecsEntityManipulator.findEntityBaseGroupAndSelect(entity);
+		entityManipulator.findEntityBaseGroupAndSelect(entity);
 		cameraModule.setPosition(entity.getX() + entity.getWidth() / 2, entity.getY() + entity.getHeight() / 2);
 	}
 

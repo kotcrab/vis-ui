@@ -36,6 +36,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
+import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.module.scene.*;
@@ -46,10 +47,10 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTimerTask
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupBreadcrumb.GroupBreadcrumbListener;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
-import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.ECSEntityProperties;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.gdx.ImmutableArray;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
@@ -63,7 +64,7 @@ import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 
 /** @author Kotcrab */
-public class ECSEntityManipulatorModule extends SceneModule {
+public class EntityManipulatorModule extends SceneModule {
 	@InjectModule private StatusBarModule statusBar;
 
 	@InjectModule private SceneIOModule sceneIO;
@@ -79,7 +80,7 @@ public class ECSEntityManipulatorModule extends SceneModule {
 	private GroupIdProviderSystem groupIdProvider;
 	private GroupProxyProviderSystem groupProxyProvider;
 
-	private ECSEntityProperties entityProperties;
+	private EntityProperties entityProperties;
 	private GroupBreadcrumb groupBreadcrumb;
 	private LayersDialog layersDialog;
 
@@ -106,7 +107,7 @@ public class ECSEntityManipulatorModule extends SceneModule {
 		groupIdProvider = entityEngine.getSystem(GroupIdProviderSystem.class);
 		groupProxyProvider = entityEngine.getSystem(GroupProxyProviderSystem.class);
 
-		entityProperties = new ECSEntityProperties();
+		entityProperties = new EntityProperties(sceneContainer, sceneTab, selectedEntities);
 		groupBreadcrumb = new GroupBreadcrumb(new GroupBreadcrumbListener() {
 			@Override
 			public void clicked (int gid) {
@@ -133,6 +134,11 @@ public class ECSEntityManipulatorModule extends SceneModule {
 				resetSelection();
 			}
 		});
+	}
+
+	@Override
+	public void postInit () {
+		entityProperties.loadSupportsSpecificTables(projectContainer.get(ObjectSupportModule.class));
 	}
 
 	private void createGeneralMenu () {
@@ -422,7 +428,7 @@ public class ECSEntityManipulatorModule extends SceneModule {
 	}
 
 	public void selectedEntitiesChanged () {
-		//entityProperties.selectedEntitiesChanged()
+		entityProperties.selectedEntitiesChanged();
 	}
 
 	public void groupSelection () {
@@ -502,9 +508,10 @@ public class ECSEntityManipulatorModule extends SceneModule {
 	@Override
 	public void dispose () {
 		layersDialog.dispose();
+		entityProperties.dispose();
 	}
 
-	public ECSEntityProperties getEntityProperties () {
+	public EntityProperties getEntityProperties () {
 		return entityProperties;
 	}
 

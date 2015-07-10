@@ -128,8 +128,8 @@ public class SceneIOModule extends ProjectModule {
 			kryo.register(support.getObjectClass(), support.getSerializer(), support.getId());
 	}
 
-	public ProtoEntity createProtoEntity (EntityEngine entityEngine, Entity entity, boolean preserveEntity) {
-		return new ProtoEntity(this, entityEngine, entity, preserveEntity);
+	public ProtoEntity createProtoEntity (EntityEngine entityEngine, Entity entity, boolean preserveEntityId) {
+		return new ProtoEntity(this, entityEngine, entity, preserveEntityId);
 	}
 
 	public Bag<Component> cloneEntityComponents (Bag<Component> components) {

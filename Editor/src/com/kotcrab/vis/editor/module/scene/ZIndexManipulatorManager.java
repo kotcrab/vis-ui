@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangeZIndexAction;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.ECSEntityManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.gdx.ImmutableArray;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
@@ -32,7 +32,7 @@ import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 @Wire
 public class ZIndexManipulatorManager extends Manager {
 	@InjectModule UndoModule undoModule;
-	@InjectModule private ECSEntityManipulatorModule entityManipulator;
+	@InjectModule private EntityManipulatorModule entityManipulator;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private EntityProxyCache proxyCache;

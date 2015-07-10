@@ -16,7 +16,7 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.ui.widget.VisTable;
 
@@ -43,7 +43,7 @@ public abstract class SpecificObjectTable extends VisTable {
 		init();
 	}
 
-	public abstract boolean isSupported (EditorObject entity);
+	public abstract boolean isSupported (EntityProxy entity);
 
 	public abstract void updateUIValues ();
 

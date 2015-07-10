@@ -33,13 +33,13 @@ import com.kotcrab.vis.editor.scene.EditorScene;
  */
 public class RectangularSelection {
 	private EditorScene scene;
-	private ECSEntityManipulatorModule entityManipulatorModule;
+	private EntityManipulatorModule entityManipulatorModule;
 	private EntityProxyCache proxyCache;
 
 	private Rectangle currentRect = null;
 	private Rectangle rectToDraw = null;
 
-	public RectangularSelection (EditorScene scene, ECSEntityManipulatorModule entityManipulatorModule, EntityProxyCache proxyCache) {
+	public RectangularSelection (EditorScene scene, EntityManipulatorModule entityManipulatorModule, EntityProxyCache proxyCache) {
 		this.scene = scene;
 		this.entityManipulatorModule = entityManipulatorModule;
 		this.proxyCache = proxyCache;

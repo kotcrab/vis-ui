@@ -29,11 +29,13 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 	private int groupId;
 	private Array<Entity> entities;
 	private Array<EntityProxy> proxies;
+	private Accessor accessor;
 
 	public GroupEntityProxy (Array<EntityProxy> proxies, int groupId) {
 		super(null);
 		this.groupId = groupId;
 		this.proxies = new Array<>(proxies);
+		accessor.calcBounds();
 	}
 
 	@Override
@@ -97,7 +99,8 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 
 	@Override
 	protected BasicPropertiesAccessor initAccessors () {
-		return new Accessor();
+		accessor = new Accessor();
+		return accessor;
 	}
 
 	@Override
