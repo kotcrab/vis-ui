@@ -50,7 +50,9 @@ public class Scene implements Disposable {
 	private OrthographicCamera camera;
 	private Viewport viewport;
 
+	@Deprecated
 	private Array<Entity> entities;
+	@Deprecated
 	private Array<TextureAtlas> textureAtlases;
 
 	private EntityEngine engine;
@@ -91,37 +93,6 @@ public class Scene implements Disposable {
 		engine.setSystem(new MusicInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
 		ArtemisUtils.createCommonSystems(engine, batch, true);
 		engine.initialize();
-	}
-
-	/** Called by framework after scene has been loaded. */
-	@Deprecated
-	public void onAfterLoad () {
-		for (Entity entity : entities)
-			entity.onAfterLoad();
-	}
-
-	/** @return this scene entities list */
-	@Deprecated
-	public Array<Entity> getEntities () {
-		return entities;
-	}
-
-	/** Entity with provided id or null */
-	@Deprecated
-	public Entity getById (String id) {
-		for (Entity entity : entities)
-			if (entity.getId() != null && entity.getId().equals(id)) return entity;
-
-		return null;
-	}
-
-	/**
-	 * Allows to get multiple entities with same id.
-	 * @param targetArray array to found entities will be added
-	 */
-	public void getMultipleById (Array<Entity> targetArray, String id) {
-		for (Entity entity : entities)
-			if (entity.getId() != null && entity.getId().equals(id)) targetArray.add(entity);
 	}
 
 	/** Renders entire scene. Typically called from {@link ApplicationListener#render()} */

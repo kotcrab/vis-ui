@@ -233,8 +233,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 //			}
 //		}
 
-		scene.onAfterLoad();
-
 		return scene;
 	}
 
