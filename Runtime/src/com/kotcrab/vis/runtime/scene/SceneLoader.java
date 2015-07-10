@@ -24,7 +24,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -38,7 +37,10 @@ import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.data.*;
-import com.kotcrab.vis.runtime.entity.*;
+import com.kotcrab.vis.runtime.entity.Entity;
+import com.kotcrab.vis.runtime.entity.EntityGroup;
+import com.kotcrab.vis.runtime.entity.ParticleEffectEntity;
+import com.kotcrab.vis.runtime.entity.TextEntity;
 import com.kotcrab.vis.runtime.font.BmpFontProvider;
 import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
@@ -157,13 +159,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				continue;
 			}
 
-			if (entityData instanceof MusicData) {
-				MusicData musicData = (MusicData) entityData;
-				PathAsset path = (PathAsset) musicData.assetDescriptor;
-				deps.add(new AssetDescriptor(path.getPath(), Music.class));
-				continue;
-			}
-
 			if (entityData instanceof ParticleEffectData)
 				continue;
 
@@ -258,14 +253,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 				TextEntity entity = new TextEntity(textData.id, font, textData.text, textData.fontSize);
 				textData.loadTo(entity);
-				entities.add(entity);
-				continue;
-			}
-
-			if (entityData instanceof MusicData) {
-				MusicData musicData = (MusicData) entityData;
-				MusicEntity entity = new MusicEntity(musicData.id, resolveAsset(manager, musicData.assetDescriptor, Music.class));
-				musicData.loadTo(entity);
 				entities.add(entity);
 				continue;
 			}
