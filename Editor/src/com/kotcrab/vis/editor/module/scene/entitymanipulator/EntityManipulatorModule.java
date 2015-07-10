@@ -304,25 +304,6 @@ public class EntityManipulatorModule extends SceneModule {
 		}
 	}
 
-//	@Deprecated
-//	public void processDropPayload (Payload payload) {
-//		if (scene.getActiveLayer().locked) {
-//			//App.eventBus.post(new StatusBarEvent("Layer is locked!"));
-//			return;
-//		}
-//
-//		Object obj = payload.getObject();
-//
-//		if (obj instanceof EditorObject) {
-//			EditorObject entity = (EditorObject) obj;
-//			float x = camera.getInputX() - entity.getWidth() / 2;
-//			float y = camera.getInputY() - entity.getHeight() / 2;
-//			entity.setPosition(x, y);
-//
-//			undoModule.execute(new EntityAddedAction(selectionRoot, entity));
-//		}
-//	}
-
 	public void switchTool (Tool tool) {
 		if (currentTool != null) currentTool.deactivated();
 		currentTool = tool;

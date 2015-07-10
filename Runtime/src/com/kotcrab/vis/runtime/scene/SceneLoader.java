@@ -207,38 +207,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				entities.add(group);
 				continue;
 			}
-//
-//			if (entityData instanceof SpriteData) {
-//				SpriteData spriteData = (SpriteData) entityData;
-//
-//				VisAssetDescriptor asset = spriteData.assetDescriptor;
-//
-//				String atlasPath;
-//				String atlasRegion;
-//
-//				if (asset instanceof TextureRegionAsset) {
-//					TextureRegionAsset regionAsset = (TextureRegionAsset) asset;
-//					atlasPath = "gfx/textures.atlas";
-//					atlasRegion = regionAsset.getPath().substring(4, regionAsset.getPath().length() - 4); //remove gfx/ and file extension
-//
-//				} else if (asset instanceof AtlasRegionAsset) {
-//					AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
-//					atlasPath = regionAsset.getPath();
-//					atlasRegion = regionAsset.getRegionName();
-//
-//				} else {
-//					throw new UnsupportedAssetDescriptorException(asset);
-//				}
-//
-//				TextureAtlas atlas = manager.get(atlasPath, TextureAtlas.class);
-//				if (atlases.contains(atlas, true) == false) atlases.add(atlas);
-//
-//				SpriteEntity entity = new SpriteEntity(entityData.id, new Sprite(atlas.findRegion(atlasRegion)));
-//				spriteData.loadTo(entity);
-//
-//				entities.add(entity);
-//				continue;
-//			}
 
 			if (entityData instanceof TextData) {
 				TextData textData = (TextData) entityData;
