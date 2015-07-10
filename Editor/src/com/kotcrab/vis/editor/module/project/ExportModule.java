@@ -262,17 +262,6 @@ public class ExportModule extends ProjectModule {
 				return true;
 			}
 
-			if (entity instanceof SoundObject) {
-				SoundObject obj = (SoundObject) entity;
-
-				SoundData data = new SoundData();
-				data.id = obj.getId();
-				data.saveFrom(obj, obj.getAssetDescriptor());
-
-				entities.add(data);
-				return true;
-			}
-
 			if (entity instanceof ObjectGroup) {
 				ObjectGroup group = (ObjectGroup) entity;
 

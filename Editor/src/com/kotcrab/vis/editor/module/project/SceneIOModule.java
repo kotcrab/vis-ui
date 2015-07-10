@@ -107,7 +107,6 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(AtlasRegionAsset.class, 63);
 
 		kryo.register(MusicObject.class, new MusicObjectSerializer(kryo, projectContainer), 202);
-		kryo.register(SoundObject.class, new SoundObjectSerializer(kryo, projectContainer), 203);
 		kryo.register(ParticleEffectObject.class, new ParticleObjectSerializer(kryo, fileAccessModule, particleCache), 204);
 		kryo.register(TextObject.class, new TextObjectSerializer(kryo, fileAccessModule, fontCache), 205);
 

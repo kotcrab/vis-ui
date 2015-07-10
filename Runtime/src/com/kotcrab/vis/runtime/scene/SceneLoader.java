@@ -25,7 +25,6 @@ import com.badlogic.gdx.assets.loaders.AsynchronousAssetLoader;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -165,13 +164,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				continue;
 			}
 
-			if (entityData instanceof SoundData) {
-				SoundData musicData = (SoundData) entityData;
-				PathAsset path = (PathAsset) musicData.assetDescriptor;
-				deps.add(new AssetDescriptor(path.getPath(), Sound.class));
-				continue;
-			}
-
 			if (entityData instanceof ParticleEffectData)
 				continue;
 
@@ -274,14 +266,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				MusicData musicData = (MusicData) entityData;
 				MusicEntity entity = new MusicEntity(musicData.id, resolveAsset(manager, musicData.assetDescriptor, Music.class));
 				musicData.loadTo(entity);
-				entities.add(entity);
-				continue;
-			}
-
-			if (entityData instanceof SoundData) {
-				SoundData soundData = (SoundData) entityData;
-				SoundEntity entity = new SoundEntity(soundData.id, resolveAsset(manager, soundData.assetDescriptor, Sound.class));
-				soundData.loadTo(entity);
 				entities.add(entity);
 				continue;
 			}
