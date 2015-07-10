@@ -26,7 +26,7 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.MusicComponent;
-import com.kotcrab.vis.runtime.component.PositionComponent;
+import com.kotcrab.vis.editor.entity.PositionComponent;
 import com.kotcrab.vis.runtime.component.SoundComponent;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;

@@ -21,7 +21,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.module.scene.SoundAndMusicRenderSystem;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.PositionComponent;
+import com.kotcrab.vis.editor.entity.PositionComponent;
 import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
 
 /** @author Kotcrab */
