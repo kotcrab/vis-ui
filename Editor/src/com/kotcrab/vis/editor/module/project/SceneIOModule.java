@@ -36,7 +36,6 @@ import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.ParticleEffectObject;
 import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.editor.serializer.*;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
@@ -111,7 +110,6 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(TextureRegionAsset.class, 62);
 		kryo.register(AtlasRegionAsset.class, 63);
 
-		kryo.register(ParticleEffectObject.class, new ParticleObjectSerializer(kryo, fileAccessModule, particleCache), 204);
 		kryo.register(TextObject.class, new TextObjectSerializer(kryo, fileAccessModule, fontCache), 205);
 
 		//TODO: [high] map other components

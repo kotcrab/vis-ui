@@ -85,7 +85,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		Json json = new Json();
 		json.addClassTag("SceneData", SceneData.class);
 		json.addClassTag("TextData", TextData.class);
-		json.addClassTag("ParticleEffectData", ParticleEffectData.class);
 		json.addClassTag("AtlasRegionAsset", AtlasRegionAsset.class);
 		json.addClassTag("TextureRegionAsset", TextureRegionAsset.class);
 		return json;
@@ -158,9 +157,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 				continue;
 			}
-
-			if (entityData instanceof ParticleEffectData)
-				continue;
 
 			EntitySupport support = supportMap.get(entityData.getClass());
 

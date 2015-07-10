@@ -240,17 +240,6 @@ public class ExportModule extends ProjectModule {
 				return true;
 			}
 
-			if (entity instanceof ParticleEffectObject) {
-				ParticleEffectObject obj = (ParticleEffectObject) entity;
-
-				ParticleEffectData data = new ParticleEffectData();
-				data.id = obj.getId();
-				data.saveFrom(obj, obj.getAssetDescriptor());
-
-				entities.add(data);
-				return true;
-			}
-
 			ObjectSupport support = supportModule.get(entity.getClass());
 
 			if (support != null) {

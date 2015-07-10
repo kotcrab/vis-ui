@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 import com.artemis.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.scene.ParticleEffectObject;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.runtime.component.ParticleComponent;
 import com.kotcrab.vis.ui.widget.Tooltip;
