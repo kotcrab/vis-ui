@@ -44,7 +44,7 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.ContentItemProperties;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
-import com.kotcrab.vis.editor.plugin.ObjectSupport;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificObjectTable;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.VisDropSource;
@@ -54,7 +54,7 @@ import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
 @VisPlugin
-public class SpineEditorSupport extends ObjectSupport<SpineData, SpineObject> {
+public class SpineEditorSupport extends EditorEntitySupport<SpineData, SpineObject> {
 	private SpineCacheModule spineCache;
 	private FileAccessModule fileAccess;
 

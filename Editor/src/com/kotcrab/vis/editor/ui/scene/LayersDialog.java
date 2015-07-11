@@ -37,7 +37,7 @@ import com.kotcrab.vis.runtime.util.BagUtils;
 import com.kotcrab.vis.editor.util.DefaultInputDialogListener;
 import com.kotcrab.vis.editor.util.ObservableListener;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
-import com.kotcrab.vis.editor.util.gdx.ImmutableArray;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.editor.util.undo.MonoUndoableAction;

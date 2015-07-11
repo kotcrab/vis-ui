@@ -21,7 +21,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.util.BaseObservable;
-import com.kotcrab.vis.editor.util.gdx.ImmutableArray;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
 import java.util.Comparator;

@@ -38,12 +38,12 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
-import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
+import com.kotcrab.vis.editor.module.project.SupportModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
-import com.kotcrab.vis.editor.plugin.ObjectSupport;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.*;
@@ -80,7 +80,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	@InjectModule private ColorPickerModule colorPickerModule;
 
-	@InjectModule private ObjectSupportModule supportModule;
+	@InjectModule private SupportModule supportModule;
 	@InjectModule private FileAccessModule fileAccessModule;
 	@InjectModule private FontCacheModule fontCacheModule;
 	@InjectModule private SceneIOModule sceneIO;
@@ -497,10 +497,13 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		}
 	}
 
-	public void loadSupportsSpecificTables (ObjectSupportModule supportModule) {
-		for (ObjectSupport support : supportModule.getSupports()) {
-			SpecificObjectTable specificObjectTable = support.getUIPropertyTable();
-			if (specificObjectTable != null) registerSpecificTable(specificObjectTable);
+	public void loadSupportsSpecificTables (SupportModule supportModule) {
+		for (EditorEntitySupport support : supportModule.getSupports()) {
+			Array<SpecificObjectTable> tables = support.getUIPropertyTables();
+			if (tables != null) {
+				for (SpecificObjectTable table : tables)
+					registerSpecificTable(table);
+			}
 		}
 	}
 

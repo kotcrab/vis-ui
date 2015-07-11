@@ -19,18 +19,15 @@ package com.kotcrab.vis.editor.module.project;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
-import com.kotcrab.vis.editor.plugin.ObjectSupport;
-import com.kotcrab.vis.editor.scene.*;
+import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
-import com.kotcrab.vis.runtime.data.*;
-import com.kotcrab.vis.runtime.entity.Entity;
+import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
 import org.apache.commons.io.FileUtils;
 
@@ -44,7 +41,7 @@ public class ExportModule extends ProjectModule {
 	@InjectModule private StatusBarModule statusBar;
 
 	@InjectModule private SceneTabsModule tabsModule;
-	@InjectModule private ObjectSupportModule supportModule;
+	@InjectModule private SupportModule supportModule;
 	@InjectModule private SceneCacheModule sceneCache;
 
 	private FileHandle visAssetsDir;
@@ -197,19 +194,6 @@ public class ExportModule extends ProjectModule {
 
 					scene.getSchemes().forEach(scheme -> sceneData.entities.add(scheme.toData()));
 
-//					for (int i = 0; i < editorScene.layers.size; i++) {
-//						Layer layer = editorScene.layers.get(i);
-//						LayerData layerData = new LayerData(layer.name);
-//						sceneData.layers.add(layerData);
-//
-//						for (int j = 0; j < layer.entities.size; j++) {
-//							EditorObject entity = layer.entities.get(j);
-//
-//							if (exportEntity(layerData.entities, entity) == false)
-//								Log.error("Ignoring unknown entity: " + entity.getClass());
-//						}
-//					}
-
 					json.toJson(sceneData, outDir.child(file.name()));
 					task.nextStep();
 
@@ -217,19 +201,5 @@ public class ExportModule extends ProjectModule {
 					Log.warn("Unknown file in 'scene' directory: " + file.path());
 			}
 		}
-
-		@Deprecated
-		private boolean exportEntity (Array<EntityData> entities, EditorObject entity) {
-
-			ObjectSupport support = supportModule.get(entity.getClass());
-
-			if (support != null) {
-				support.export(ExportModule.this, entities, (Entity) entity);
-				return true;
-			}
-
-			return false;
-		}
-
 	}
 }

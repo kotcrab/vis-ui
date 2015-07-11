@@ -25,7 +25,6 @@ import com.kotcrab.vis.editor.module.physicseditor.models.ShapeModel.Type;
 import com.kotcrab.vis.editor.module.physicseditor.util.Clipper;
 import com.kotcrab.vis.editor.module.physicseditor.util.Clipper.Polygonizer;
 import com.kotcrab.vis.editor.module.physicseditor.util.PolygonUtils;
-import com.kotcrab.vis.runtime.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ import java.util.List;
 /**
  * @author Aurelien Ribon | http://www.aurelienribon.com/
  */
-public class RigidBodyModel extends Entity implements Changeable {
+public class RigidBodyModel implements Changeable {
 	public static final String PROP_NAME = "name";
 	public static final String PROP_IMAGEPATH = "imagePath";
 	public static final String PROP_PHYSICS = "physics";
@@ -45,10 +44,6 @@ public class RigidBodyModel extends Entity implements Changeable {
 	private final Array<CircleModel> circles = new Array<>();
 	private String name = "unamed";
 	public transient TextureRegion region;
-
-	public RigidBodyModel () {
-		super(null);
-	}
 
 	public Vector2 getOrigin () {
 		return origin;

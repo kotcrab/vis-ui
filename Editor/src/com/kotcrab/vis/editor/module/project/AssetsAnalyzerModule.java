@@ -21,7 +21,9 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.assets.*;
-import com.kotcrab.vis.editor.assets.transaction.*;
+import com.kotcrab.vis.editor.assets.transaction.AssetTransaction;
+import com.kotcrab.vis.editor.assets.transaction.AssetTransactionException;
+import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
 import com.kotcrab.vis.editor.assets.transaction.generator.*;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
@@ -30,7 +32,7 @@ import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.module.project.AssetsUsages.SceneUsages;
 import com.kotcrab.vis.editor.module.scene.AssetsUsageAnalyzerSystem;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
-import com.kotcrab.vis.editor.plugin.ObjectSupport;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
@@ -49,7 +51,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 public class AssetsAnalyzerModule extends ProjectModule {
 	@InjectModule private ToastModule toastModule;
 	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private ObjectSupportModule supportModule;
+	@InjectModule private SupportModule supportModule;
 	@InjectModule private TabsModule tabsModule;
 	@InjectModule private SceneTabsModule sceneTabsModule;
 	@InjectModule private QuickAccessModule quickAccessModule;
@@ -88,12 +90,14 @@ public class AssetsAnalyzerModule extends ProjectModule {
 			if (desc != null) return desc;
 		}
 
-		for (ObjectSupport support : supportModule.getSupports()) {
-			AssetDescriptorProvider provider = support.getAssetDescriptorProvider();
+		for (EditorEntitySupport support : supportModule.getSupports()) {
+			Array<AssetDescriptorProvider> providers = support.getAssetDescriptorProviders();
 
-			if (provider != null) {
-				VisAssetDescriptor desc = provider.provide(file, relativePath);
-				if (desc != null) return desc;
+			if (providers != null) {
+				for (AssetDescriptorProvider provider : providers) {
+					VisAssetDescriptor desc = provider.provide(file, relativePath);
+					if (desc != null) return desc;
+				}
 			}
 		}
 
@@ -150,9 +154,13 @@ public class AssetsAnalyzerModule extends ProjectModule {
 				if (gen.isSupported(assetDescriptor)) return gen;
 			}
 
-			for (ObjectSupport support : supportModule.getSupports()) {
-				AssetTransactionGenerator gen = support.getAssetTransactionGenerator();
-				if (gen != null && gen.isSupported(assetDescriptor)) return gen;
+			for (EditorEntitySupport support : supportModule.getSupports()) {
+				Array<AssetTransactionGenerator> gens = support.getAssetTransactionGenerators();
+				if (gens != null) {
+					for (AssetTransactionGenerator gen : gens) {
+						if (gen.isSupported(assetDescriptor)) return gen;
+					}
+				}
 			}
 		}
 

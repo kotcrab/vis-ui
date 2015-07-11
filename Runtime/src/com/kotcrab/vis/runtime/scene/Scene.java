@@ -18,19 +18,14 @@ package com.kotcrab.vis.runtime.scene;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.*;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
-import com.kotcrab.vis.runtime.entity.Entity;
+import com.kotcrab.vis.runtime.RuntimeContext;
+import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.system.*;
 import com.kotcrab.vis.runtime.util.ArtemisUtils;
 import com.kotcrab.vis.runtime.util.EntityEngine;
@@ -39,27 +34,20 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
  * Base class of VisRuntime scene system. Scene are typically constructed using {@link VisAssetManager} with {@link SceneLoader}
  * @author Kotcrab
  */
-public class Scene implements Disposable {
-	private AssetManager assetManager;
-	private ShaderProgram distanceFieldShader;
+public class Scene {
 
-	private OrthographicCamera camera;
 	private Viewport viewport;
 
-	@Deprecated
-	private Array<Entity> entities;
-	@Deprecated
-	private Array<TextureAtlas> textureAtlases;
-
 	private EntityEngine engine;
+	private final RuntimeContext context;
 
 	/** Used by framework, not indented for external use */
-	public Scene (Array<Entity> entities, Array<TextureAtlas> textureAtlases, Batch batch, RuntimeConfiguration configuration, AssetManager assetsManager, SceneViewport viewportType, int width, int height) {
-		this.entities = entities;
-		this.textureAtlases = textureAtlases;
-		this.assetManager = assetsManager;
+	public Scene (RuntimeContext context, SceneViewport viewportType, int width, int height) {
+		this.context = context;
+		AssetManager assetsManager = context.assetsManager;
+		RuntimeConfiguration configuration = context.configuration;
 
-		camera = new OrthographicCamera(width, height);
+		OrthographicCamera camera = new OrthographicCamera(width, height);
 		camera.position.x = width / 2;
 		camera.position.y = height / 2;
 		camera.update();
@@ -84,7 +72,7 @@ public class Scene implements Disposable {
 
 		ShaderProgram distanceFieldShader = null;
 		if (assetsManager.isLoaded(SceneLoader.DISTANCE_FIELD_SHADER)) {
-			distanceFieldShader = assetManager.get(SceneLoader.DISTANCE_FIELD_SHADER, ShaderProgram.class);
+			distanceFieldShader = assetsManager.get(SceneLoader.DISTANCE_FIELD_SHADER, ShaderProgram.class);
 		}
 
 		engine = new EntityEngine();
@@ -95,9 +83,13 @@ public class Scene implements Disposable {
 		engine.setSystem(new ParticleInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
 		engine.setSystem(new TextInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
 
-		ArtemisUtils.createCommonSystems(engine, batch, distanceFieldShader, true);
+		ArtemisUtils.createCommonSystems(engine, context.batch, distanceFieldShader, true);
 		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
 		engine.setSystem(new ParticleRenderSystem(renderBatchingSystem, false), true);
+
+		for (EntitySupport support : context.supports)
+			support.registerSystems(engine);
+
 		engine.initialize();
 	}
 
@@ -105,45 +97,12 @@ public class Scene implements Disposable {
 	public void render (SpriteBatch batch) {
 		engine.setDelta(Gdx.graphics.getDeltaTime());
 		engine.process();
-
-//		batch.setProjectionMatrix(camera.combined);
-//
-//		boolean shader = false;
-//
-//		batch.begin();
-//
-//		for (Entity e : entities) {
-//			if (e instanceof TextEntity && ((TextEntity) e).isDistanceFieldShaderEnabled()) {
-//				shader = true;
-//				batch.setShader(distanceFieldShader);
-//			}
-//
-//			e.render(batch);
-//
-//			if (shader) batch.setShader(null);
-//		}
-//
-//		batch.end();
 	}
 
 	/** Must by called when screen was resized. Typically called from {@link ApplicationListener#resize(int, int)} */
 	public void resize (int width, int height) {
 		viewport.update(width, height);
 		engine.getManager(CameraManager.class).resize(width, height);
-	}
-
-	void getDistanceFieldShaderFromManager (FileHandle shader) {
-		distanceFieldShader = (ShaderProgram) assetManager.get(new AssetDescriptor(shader, ShaderProgram.class));
-	}
-
-	@Override
-	public void dispose () {
-		for (Entity entity : entities) {
-			if (entity instanceof Disposable) {
-				Disposable disposable = (Disposable) entity;
-				disposable.dispose();
-			}
-		}
 	}
 
 	public EntityEngine getEntityEngine () {

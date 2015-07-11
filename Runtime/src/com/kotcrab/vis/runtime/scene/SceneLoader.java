@@ -34,20 +34,18 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
+import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.data.ECSEntityData;
-import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.data.SceneData;
-import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.font.BitmapFontProvider;
 import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.util.EntityEngine;
-import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /**
  * Scene loader for {@link AssetManager}. Allow to load entire scene file with all required dependencies such as textures, sounds etc.
@@ -64,7 +62,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	private FontProvider bmpFontProvider;
 	private FontProvider ttfFontProvider;
 
-	private ObjectMap<Class, EntitySupport> supportMap = new ObjectMap<Class, EntitySupport>();
+	private Array<EntitySupport> supports = new Array<EntitySupport>();
 
 	private Batch batch = new SpriteBatch();
 
@@ -91,7 +89,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	}
 
 	public void registerSupport (AssetManager manager, EntitySupport support) {
-		supportMap.put(support.getEntityDataClass(), support);
+		supports.add(support);
 		support.setLoaders(manager);
 	}
 
@@ -139,37 +137,12 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 						if (path.startsWith("particle/"))
 							dependencies.add(new AssetDescriptor<ParticleEffect>(path, ParticleEffect.class));
 
-					} else {
-						throw new UnsupportedAssetDescriptorException(asset);
 					}
 				}
+
+				for (EntitySupport support : supports)
+					support.resolveDependencies(dependencies, entityData, component);
 			}
-		}
-	}
-
-	@Deprecated
-	private void loadDepsForEntities (Array<AssetDescriptor> deps, Array<EntityData> entities) {
-		for (EntityData entityData : entities) {
-
-//			if (entityData instanceof TextData) {
-//				TextData textData = (TextData) entityData;
-//
-//				if (textData.isTrueType)
-//					ttfFontProvider.load(deps, textData);
-//				else {
-//					checkShader(deps);
-//					bmpFontProvider.load(deps, textData);
-//				}
-//
-//				continue;
-//			}
-
-			EntitySupport support = supportMap.get(entityData.getClass());
-
-			if (support == null)
-				throw new IllegalStateException("Missing support for entity class: " + entityData.getClass());
-
-			support.resolveDependencies(deps, entityData);
 		}
 	}
 
@@ -182,76 +155,19 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	@Override
 	public void loadAsync (AssetManager manager, String fileName, FileHandle file, SceneParameter parameter) {
-		Array<Entity> entities = new Array<Entity>();
-		Array<TextureAtlas> atlases = new Array<TextureAtlas>();
-
-		scene = new Scene(entities, atlases, batch, configuration, manager, data.viewport, data.width, data.height);
+		RuntimeContext context = new RuntimeContext(configuration, batch, manager, new ImmutableArray<EntitySupport>(supports));
+		scene = new Scene(context, data.viewport, data.width, data.height);
 
 		EntityEngine engine = scene.getEntityEngine();
 		for (ECSEntityData entityData : data.entities)
 			entityData.build(engine);
-
-//		if (distanceFieldShaderLoaded)
-//			scene.getDistanceFieldShaderFromManager(distanceFieldShader);
-	}
-
-	@Deprecated
-	private void loadEntitiesFromData (AssetManager manager, Array<TextureAtlas> atlases, Array<EntityData> datas, Array<Entity> entities) {
-		for (EntityData entityData : datas) {
-//			if (entityData instanceof TextData) {
-//				TextData textData = (TextData) entityData;
-//
-//				BitmapFont font;
-//
-//				if (textData.isTrueType)
-//					font = manager.get(textData.arbitraryFontName, BitmapFont.class);
-//				else {
-//					font = resolveAsset(manager, textData.assetDescriptor, BitmapFont.class);
-//				}
-//
-//				TextEntity entity = new TextEntity(textData.id, font, textData.text, textData.fontSize);
-//				textData.loadTo(entity);
-//				entities.add(entity);
-//				continue;
-//			}
-
-			EntitySupport support = supportMap.get(entityData.getClass());
-			if (support != null)
-				entities.add(supportMap.get(entityData.getClass()).getInstanceFromData(manager, entityData));
-		}
 	}
 
 	@Override
 	public Scene loadSync (AssetManager manager, String fileName, FileHandle file, SceneLoader.SceneParameter parameter) {
 		Scene scene = this.scene;
 		this.scene = null;
-
-//		for (LayerData layer : data.layers) {
-//			for (EntityData entityData : layer.entities) {
-//				if (entityData instanceof ParticleEffectData) {
-//					ParticleEffectData particleData = (ParticleEffectData) entityData;
-//					PathAsset path = (PathAsset) particleData.assetDescriptor;
-//
-//					FileHandle effectFile = resolve(path.getPath());
-//					ParticleEffect emitter = new ParticleEffect();
-//					emitter.load(effectFile, effectFile.parent());
-//
-//					ParticleEffectEntity entity = new ParticleEffectEntity(particleData.id, emitter);
-//					particleData.loadTo(entity);
-//					scene.getEntities().add(entity);
-//				}
-//			}
-//		}
-
 		return scene;
-	}
-
-	private <T> T resolveAsset (AssetManager manager, VisAssetDescriptor assetDescriptor, Class<? extends T> clazz) {
-		if (assetDescriptor instanceof PathAsset == false)
-			throw new UnsupportedOperationException("Cannot resolve path for asset descriptor: " + assetDescriptor);
-
-		PathAsset path = (PathAsset) assetDescriptor;
-		return manager.get(path.getPath(), clazz);
 	}
 
 	static public class SceneParameter extends AssetLoaderParameters<Scene> {

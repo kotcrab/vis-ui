@@ -19,19 +19,19 @@ package com.kotcrab.vis.editor.module.project;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.ObjectMap.Values;
+import com.esotericsoftware.kryo.Serializer;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
-import com.kotcrab.vis.editor.plugin.ObjectSupport;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.kotcrab.vis.editor.plugin.PluginKryoSerializer;
 
 /**
- * Manages {@link ObjectSupport} loaded from plugins. Assigns and saves their ID for future use with Kryo serializer.
+ * Manages {@link EditorEntitySupport} loaded from plugins.
  * @author Kotcrab
  */
-public class ObjectSupportModule extends ProjectModule {
-	private ObjectMap<Class, ObjectSupport> supportMap = new ObjectMap<>();
-	private Array<SupportDescriptor> descriptors;
+public class SupportModule extends ProjectModule {
+	private Array<EditorEntitySupport> supports = new Array<>();
+	private Array<SupportSerializerDescriptor> descriptors;
 
 	private Json json;
 	private FileHandle descriptorFile;
@@ -39,70 +39,61 @@ public class ObjectSupportModule extends ProjectModule {
 	@Override
 	public void init () {
 		json = new Json();
-		json.addClassTag("SupportDescriptor", SupportDescriptor.class);
+		json.addClassTag("SupportSerializerDescriptor", SupportSerializerDescriptor.class);
 
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
 		descriptorFile = fileAccess.getModuleFolder().child("supportDescriptor.json");
 
 		if (descriptorFile.exists()) {
-			descriptors = json.fromJson(new Array<SupportDescriptor>().getClass(), descriptorFile);
+			descriptors = json.fromJson(new Array<SupportSerializerDescriptor>().getClass(), descriptorFile);
 		} else {
 			Log.info("ObjectSupportModule", "Support descriptor file does not exist, will be recreated");
 			descriptors = new Array<>();
 		}
 
 		ExtensionStorageModule pluginContainer = container.get(ExtensionStorageModule.class);
-		Array<ObjectSupport> supports = pluginContainer.getObjectSupports();
-		for (ObjectSupport support : supports)
+		Array<EditorEntitySupport> supports = pluginContainer.getObjectSupports();
+		for (EditorEntitySupport support : supports)
 			register(support);
 	}
 
 	@Override
 	public void dispose () {
 		saveDescriptors();
-
-		for (ObjectSupport support : supportMap.values())
-			support.releaseId();
 	}
 
 	private void saveDescriptors () {
 		json.toJson(descriptors, descriptorFile);
 	}
 
-	public void register (ObjectSupport support) {
-		supportMap.put(support.getObjectClass(), support);
+	public void register (EditorEntitySupport support) {
+		supports.add(support);
 
-		SupportDescriptor desc = getDescriptorBySupport(support);
+		for (Serializer serializer : support.getSerializers()) {
+			if (serializer instanceof PluginKryoSerializer == false)
+				throw new IllegalStateException("All plugin serializer must implement PluginKryoSerializer interface");
 
-		if (desc == null) {
-			desc = new SupportDescriptor(support.getObjectClass().getName(), getFreeId());
-			descriptors.add(desc);
-			saveDescriptors();
+			SupportSerializerDescriptor desc = getDescriptorByClazz(serializer.getClass());
+
+			if (desc == null) {
+				desc = new SupportSerializerDescriptor(serializer.getClass().getName(), getFreeId());
+				descriptors.add(desc);
+				saveDescriptors();
+			}
+
+			desc.serializer = serializer;
 		}
 
-		support.assignId(desc.id);
 		support.bindModules(projectContainer);
 	}
 
-	private SupportDescriptor getDescriptorBySupport (ObjectSupport support) {
-		String clazzName = support.getObjectClass().getName();
+	private SupportSerializerDescriptor getDescriptorByClazz (Class clazz) {
+		String clazzName = clazz.getName();
 
-		for (SupportDescriptor desc : descriptors)
-			if (desc.clazzName.equals(clazzName)) return desc;
+		for (SupportSerializerDescriptor desc : descriptors)
+			if (desc.serializerClazzName.equals(clazzName)) return desc;
 
 		return null;
-	}
-
-	public ObjectSupport get (Class key) {
-		return supportMap.get(key);
-	}
-
-	public Values<ObjectSupport> getSupports () {
-		return supportMap.values();
-	}
-
-	public ObjectMap<Class, ObjectSupport> getSupportsMap () {
-		return supportMap;
 	}
 
 	private int getFreeId () {
@@ -115,21 +106,32 @@ public class ObjectSupportModule extends ProjectModule {
 	}
 
 	private boolean isIdUsed (int id) {
-		for (SupportDescriptor desc : descriptors)
+		for (SupportSerializerDescriptor desc : descriptors)
 			if (desc.id == id) return true;
 
 		return false;
 	}
 
-	public static class SupportDescriptor {
-		public String clazzName;
+	public Array<EditorEntitySupport> getSupports () {
+		return supports;
+	}
+
+	public Array<SupportSerializerDescriptor> getSerializerDescriptors () {
+		return descriptors;
+	}
+
+	public static class SupportSerializerDescriptor {
+		public transient Serializer serializer;
+		public transient Class serializedClazz;
+
+		public String serializerClazzName;
 		public int id;
 
-		public SupportDescriptor () {
+		public SupportSerializerDescriptor () {
 		}
 
-		public SupportDescriptor (String clazzName, int id) {
-			this.clazzName = clazzName;
+		public SupportSerializerDescriptor (String clazzName, int id) {
+			this.serializerClazzName = clazzName;
 			this.id = id;
 		}
 	}

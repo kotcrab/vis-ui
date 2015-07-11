@@ -27,9 +27,9 @@ import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
+import com.kotcrab.vis.editor.module.project.SupportModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
-import com.kotcrab.vis.editor.plugin.ObjectSupport;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
@@ -45,7 +45,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
  */
 public class FileItem extends Table {
 	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private ObjectSupportModule supportModule;
+	@InjectModule private SupportModule supportModule;
 	@InjectModule private TextureCacheModule textureCache;
 	private FileHandle file;
 
@@ -54,7 +54,7 @@ public class FileItem extends Table {
 
 	private VisLabel name;
 
-	private ObjectSupport support;
+	private EditorEntitySupport support;
 
 	public FileItem (ModuleInjector injector, FileHandle file) {
 		super(VisUI.getSkin());
@@ -144,8 +144,8 @@ public class FileItem extends Table {
 		name = new VisLabel(file.name());
 	}
 
-	private ObjectSupport findSupportForDirectory (String ext, String relativePath) {
-		for (ObjectSupport support : supportModule.getSupports())
+	private EditorEntitySupport findSupportForDirectory (String ext, String relativePath) {
+		for (EditorEntitySupport support : supportModule.getSupports())
 			if (support.isSupportedDirectory(relativePath, ext)) return support;
 
 		return null;
@@ -180,7 +180,7 @@ public class FileItem extends Table {
 		return type;
 	}
 
-	public ObjectSupport getSupport () {
+	public EditorEntitySupport getSupport () {
 		return support;
 	}
 

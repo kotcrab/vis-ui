@@ -20,17 +20,17 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.plugin.ContainerExtension;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
-import com.kotcrab.vis.editor.plugin.ObjectSupport;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 
 /**
  * Holds plugins loaded by {@link PluginLoaderModule}. Others modules (even from different containers like 'project' or 'scene') then can access them.
  * @author Kotcrab
  */
 public class ExtensionStorageModule extends EditorModule {
-	private Array<ObjectSupport> objectSupports = new Array<>();
+	private Array<EditorEntitySupport> objectSupports = new Array<>();
 	private Array<ContainerExtension<?>> containerExtensions = new Array<>();
 
-	public void addObjectSupport (ObjectSupport support) {
+	public void addObjectSupport (EditorEntitySupport support) {
 		objectSupports.add(support);
 	}
 
@@ -38,7 +38,7 @@ public class ExtensionStorageModule extends EditorModule {
 		containerExtensions.add(extension);
 	}
 
-	public Array<ObjectSupport> getObjectSupports () {
+	public Array<EditorEntitySupport> getObjectSupports () {
 		return objectSupports;
 	}
 

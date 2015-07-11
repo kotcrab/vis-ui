@@ -45,6 +45,7 @@ import com.kotcrab.vis.editor.module.scene.action.EntitiesRemovedAction;
 import com.kotcrab.vis.editor.module.scene.action.GroupAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTimerTask.Direction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupBreadcrumb.GroupBreadcrumbListener;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
@@ -52,12 +53,12 @@ import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.gdx.DummyMusic;
-import com.kotcrab.vis.editor.util.gdx.ImmutableArray;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 
@@ -66,6 +67,7 @@ public class EntityManipulatorModule extends SceneModule {
 	@InjectModule private StatusBarModule statusBar;
 
 	@InjectModule private SceneIOModule sceneIO;
+	@InjectModule private SupportModule supportModule;
 
 	@InjectModule private CameraModule camera;
 	@InjectModule private UndoModule undoModule;
@@ -138,7 +140,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 	@Override
 	public void postInit () {
-		entityProperties.loadSupportsSpecificTables(projectContainer.get(ObjectSupportModule.class));
+		entityProperties.loadSupportsSpecificTables(projectContainer.get(SupportModule.class));
 	}
 
 	private void createGeneralMenu () {
@@ -304,6 +306,10 @@ public class EntityManipulatorModule extends SceneModule {
 								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
 						.build();
 			}
+		}
+
+		for (EditorEntitySupport support : supportModule.getSupports()) {
+			support.processDropPayload(entityEngine, scene, obj);
 		}
 
 		if (entity != null) {

@@ -27,7 +27,7 @@ import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension;
 import com.kotcrab.vis.editor.plugin.FailedPluginDescriptor;
-import com.kotcrab.vis.editor.plugin.ObjectSupport;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.plugin.PluginDescriptor;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
@@ -182,8 +182,8 @@ public class PluginLoaderModule extends EditorModule {
 				Constructor<?> cons = clazz.getConstructor();
 				Object object = cons.newInstance();
 
-				if (object instanceof ObjectSupport) {
-					pluginContainer.addObjectSupport((ObjectSupport) object);
+				if (object instanceof EditorEntitySupport) {
+					pluginContainer.addObjectSupport((EditorEntitySupport) object);
 					continue;
 				}
 

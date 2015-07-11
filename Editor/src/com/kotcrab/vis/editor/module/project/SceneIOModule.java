@@ -34,7 +34,8 @@ import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.module.InjectModule;
-import com.kotcrab.vis.editor.plugin.ObjectSupport;
+import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializerDescriptor;
+import com.kotcrab.vis.editor.plugin.PluginKryoSerializer;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.serializer.*;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
@@ -121,10 +122,14 @@ public class SceneIOModule extends ProjectModule {
 
 	@Override
 	public void postInit () {
-		ObjectSupportModule supportModule = projectContainer.get(ObjectSupportModule.class);
+		SupportModule supportModule = projectContainer.get(SupportModule.class);
 
-		for (ObjectSupport support : supportModule.getSupports())
-			kryo.register(support.getObjectClass(), support.getSerializer(), support.getId());
+		for (SupportSerializerDescriptor support : supportModule.getSerializerDescriptors()) {
+			kryo.register(((PluginKryoSerializer) support.serializer).getSerializedClassType(), support.serializer, support.id);
+
+			if (support.serializer instanceof EntityComponentSerializer)
+				entityComponentSerializers.add((EntityComponentSerializer) support.serializer);
+		}
 	}
 
 	public ProtoEntity createProtoEntity (EntityEngine entityEngine, Entity entity, boolean preserveEntityId) {

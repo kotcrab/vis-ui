@@ -16,32 +16,22 @@
 
 package com.kotcrab.vis.runtime.plugin;
 
+import com.artemis.Component;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.data.EntityData;
-import com.kotcrab.vis.runtime.entity.Entity;
+import com.kotcrab.vis.runtime.data.ECSEntityData;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**
- * Interface for plugins that provide additional runtime entities support
- * @param <ED> custom entity data type (see {@link EntityData})
- * @param <E> custom entity type (see {@link Entity})
  * @author Kotcrab
  */
-@Deprecated
-public interface EntitySupport<ED extends EntityData<E>, E extends Entity> {
+public interface EntitySupport {
 	/** Called when entity support should add it's loader into AssetsManager */
 	void setLoaders (AssetManager manager);
 
-	/** @return custom entity data class */
-	Class<ED> getEntityDataClass ();
-
 	/** Called when EntitySupport should resolve required dependencies for Entity and add them into dependency list */
-	void resolveDependencies (Array<AssetDescriptor> deps, ED entityData);
+	void resolveDependencies (Array<AssetDescriptor> dependencies, ECSEntityData entityData, Component component);
 
-	/**
-	 * Called when EntitySupport should construct new entity instance from data and dependencies from asset manager
-	 * (dependencies was loaded in {@link #resolveDependencies(Array, EntityData)})
-	 */
-	E getInstanceFromData (AssetManager manager, ED data);
+	void registerSystems (EntityEngine engine);
 }

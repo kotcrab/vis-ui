@@ -19,7 +19,7 @@ package com.kotcrab.vis.editor.module.scene.entitymanipulator;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.util.gdx.ImmutableArray;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 public class EntityMoveTimerTask extends Task {
 	private final EditorScene scene;
