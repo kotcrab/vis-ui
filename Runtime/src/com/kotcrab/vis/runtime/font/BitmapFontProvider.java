@@ -18,30 +18,20 @@ package com.kotcrab.vis.runtime.font;
 
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
-import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.data.TextData;
+import com.kotcrab.vis.runtime.assets.BmpFontAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /**
  * Bitmap font provide, allow to load distance field fonts. Enabled by default.
  * @author Kotcrab
  */
-public class BmpFontProvider implements FontProvider {
+public class BitmapFontProvider implements FontProvider {
 	@Override
-	public void load (Array<AssetDescriptor> dependencies, TextData data) {
-		BitmapFontParameter params = new BitmapFontParameter();
-		if (data.isUsesDistanceField) {
-			params.genMipMaps = true;
-			params.minFilter = TextureFilter.MipMapLinearLinear;
-			params.magFilter = TextureFilter.Linear;
-		}
-
-		PathAsset pathAsset = (PathAsset) data.assetDescriptor;
-
-		dependencies.add(new AssetDescriptor(pathAsset.getPath(), BitmapFont.class, params));
+	public void load (Array<AssetDescriptor> dependencies, VisAssetDescriptor asset) {
+		BmpFontAsset bmpAsset = (BmpFontAsset) asset;
+		dependencies.add(new AssetDescriptor<BitmapFont>(bmpAsset.getPath(), BitmapFont.class, bmpAsset.getFontParameter()));
 	}
 
 	@Override

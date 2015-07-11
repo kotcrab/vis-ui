@@ -38,10 +38,7 @@ import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
 import com.kotcrab.vis.editor.entity.PositionComponent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
-import com.kotcrab.vis.editor.module.project.ObjectSupportModule;
-import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
-import com.kotcrab.vis.editor.module.project.SceneIOModule;
-import com.kotcrab.vis.editor.module.project.TextureCacheModule;
+import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesAddedAction;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesRemovedAction;
@@ -59,8 +56,7 @@ import com.kotcrab.vis.editor.util.gdx.ImmutableArray;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.assets.TextureAssetDescriptor;
+import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
@@ -75,6 +71,7 @@ public class EntityManipulatorModule extends SceneModule {
 	@InjectModule private UndoModule undoModule;
 	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private ParticleCacheModule particleCache;
+	@InjectModule private FontCacheModule fontCache;
 	@InjectModule private RendererModule rendererModule;
 
 	private ShapeRenderer shapeRenderer;
@@ -271,9 +268,15 @@ public class EntityManipulatorModule extends SceneModule {
 							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
 					.build();
 
-		}
+		} else if (obj instanceof BmpFontAsset || obj instanceof TtfFontAsset) {
+			VisAssetDescriptor asset = (VisAssetDescriptor) obj;
 
-		if (obj instanceof PathAsset) {
+			entity = new EntityBuilder(entityEngine)
+					.with(new TextComponent(fontCache.getGeneric(asset), FontCacheModule.DEFAULT_TEXT), new AssetComponent(asset),
+							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
+					.build();
+
+		} else if (obj instanceof PathAsset) {
 			PathAsset asset = (PathAsset) obj;
 
 			if (asset.getPath().startsWith("sound/")) {
@@ -294,7 +297,6 @@ public class EntityManipulatorModule extends SceneModule {
 						.build();
 
 			}
-
 
 			if (asset.getPath().startsWith("particle/")) {
 				entity = new EntityBuilder(entityEngine)

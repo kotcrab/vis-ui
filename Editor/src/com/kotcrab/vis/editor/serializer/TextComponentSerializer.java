@@ -19,48 +19,56 @@ package com.kotcrab.vis.editor.serializer;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.TextComponent;
 
 /**
  * Kryo serializer for {@link TextObject}
  * @author Kotcrab
  */
-@Deprecated
-public class TextObjectSerializer extends CompatibleFieldSerializer<TextObject> {
+public class TextComponentSerializer extends EntityComponentSerializer<TextComponent> {
 	private static final int VERSION_CODE = 1;
 
 	private FileAccessModule fileAccess;
 	private final FontCacheModule fontCache;
 
-	public TextObjectSerializer (Kryo kryo, FileAccessModule fileAccess, FontCacheModule fontCache) {
-		super(kryo, TextObject.class);
+	public TextComponentSerializer (Kryo kryo, FontCacheModule fontCache) {
+		super(kryo, TextComponent.class);
 		this.fileAccess = fileAccess;
 		this.fontCache = fontCache;
 	}
 
 	@Override
-	public void write (Kryo kryo, Output output, TextObject textObject) {
+	public void write (Kryo kryo, Output output, TextComponent textObject) {
 		super.write(kryo, output, textObject);
+		parentWrite(kryo, output, textObject);
 
 		output.writeInt(VERSION_CODE);
+		output.writeString(textObject.getText());
+		kryo.writeClassAndObject(output, getComponent(AssetComponent.class).asset);
 	}
 
 	@Override
-	public TextObject read (Kryo kryo, Input input, Class<TextObject> type) {
-		TextObject obj = super.read(kryo, input, type);
+	public TextComponent read (Kryo kryo, Input input, Class<TextComponent> type) {
+		super.read(kryo, input, type);
+		TextComponent component = parentRead(kryo, input, type);
 
 		input.readInt(); //version code
+		String text = input.readString();
 
-		obj.onDeserialize(fontCache.get(obj.getAssetDescriptor()));
+		VisAssetDescriptor asset = (VisAssetDescriptor) kryo.readClassAndObject(input);
+		component.setFont(fontCache.getGeneric(asset));
 
-		return obj;
+		return component;
 	}
 
 	@Override
-	public TextObject copy (Kryo kryo, TextObject original) {
-		return new TextObject(original);
+	public TextComponent copy (Kryo kryo, TextComponent original) {
+		super.copy(kryo, original);
+		return new TextComponent(original);
 	}
 }

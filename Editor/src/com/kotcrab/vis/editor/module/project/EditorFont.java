@@ -26,6 +26,7 @@ import com.kotcrab.vis.editor.scene.TextObject;
  * @see BMPEditorFont
  * @see TTFEditorFont
  */
+@Deprecated
 public abstract class EditorFont implements Disposable {
 	protected FileHandle file;
 	protected String relativePath;

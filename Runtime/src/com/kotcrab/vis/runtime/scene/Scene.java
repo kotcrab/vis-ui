@@ -89,6 +89,7 @@ public class Scene implements Disposable {
 		engine.setSystem(new SoundInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
 		engine.setSystem(new MusicInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
 		engine.setSystem(new ParticleInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
+		engine.setSystem(new TextInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
 
 		ArtemisUtils.createCommonSystems(engine, batch, true);
 		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);

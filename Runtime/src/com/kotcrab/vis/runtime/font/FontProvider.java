@@ -19,18 +19,18 @@ package com.kotcrab.vis.runtime.font;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.data.TextData;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /**
  * Generic font provider interface. This allow to abstract loading FreeType fonts which may not be available if user don't
  * have FreeType dependency in his project.
  * @author Kotcrab
- * @see BmpFontProvider
+ * @see BitmapFontProvider
  * @see FreeTypeFontProvider
  */
 public interface FontProvider {
 	/** Called when font provider should check TextData and add required font dependency into dependencies list. */
-	void load (Array<AssetDescriptor> dependencies, TextData data);
+	void load (Array<AssetDescriptor> dependencies, VisAssetDescriptor asset);
 
 	/** Called when FontProvider should add all required loaders into {@link AssetManager} */
 	void setLoaders (AssetManager manager);

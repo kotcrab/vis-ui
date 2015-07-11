@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.module.project.assetsmanager;
 
+import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -32,14 +33,14 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.editor.module.project.*;
-import com.kotcrab.vis.editor.scene.TextObject;
+import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.editor.module.project.FontCacheModule;
+import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
+import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.VisDropSource;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.assets.TextureAssetDescriptor;
-import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
+import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 /**
@@ -118,14 +119,12 @@ public class AssetDragAndDrop {
 				public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 					Payload payload = new Payload();
 
-					int size = FontCacheModule.DEFAULT_FONT_SIZE;
-					EditorFont font = fontCache.get(item.getFile());
-					BitmapFont bmpFont = font.get(size);
+					TtfFontAsset asset = new TtfFontAsset(fileAccess.relativizeToAssetsFolder(item.getFile()), FontCacheModule.DEFAULT_FONT_SIZE);
+					payload.setObject(asset);
 
-					TextObject text = new TextObject(font, bmpFont, FontCacheModule.DEFAULT_TEXT, size);
-					payload.setObject(text);
+					BitmapFont font = fontCache.get(asset);
 
-					LabelStyle style = new LabelStyle(bmpFont, Color.WHITE);
+					LabelStyle style = new LabelStyle(font, Color.WHITE);
 					Label label = new VisLabel(FontCacheModule.DEFAULT_TEXT, style);
 					payload.setDragActor(label);
 
@@ -151,12 +150,11 @@ public class AssetDragAndDrop {
 					else
 						fontFile = FileUtils.sibling(item.getFile(), "fnt");
 
-					BMPEditorFont font = (BMPEditorFont) fontCache.get(fontFile);
+					BmpFontAsset asset = new BmpFontAsset(fileAccess.relativizeToAssetsFolder(fontFile), new BitmapFontParameter());
 
-					TextObject text = new TextObject(font, FontCacheModule.DEFAULT_TEXT);
-					payload.setObject(text);
+					payload.setObject(asset);
 
-					LabelStyle style = new LabelStyle(font.get(), Color.WHITE);
+					LabelStyle style = new LabelStyle(fontCache.get(asset), Color.WHITE);
 					Label label = new VisLabel(FontCacheModule.DEFAULT_TEXT, style);
 					payload.setDragActor(label);
 

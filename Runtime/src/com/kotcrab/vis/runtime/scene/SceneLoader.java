@@ -33,15 +33,15 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
-import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.data.*;
+import com.kotcrab.vis.runtime.data.ECSEntityData;
+import com.kotcrab.vis.runtime.data.EntityData;
+import com.kotcrab.vis.runtime.data.SceneData;
+import com.kotcrab.vis.runtime.data.TextData;
 import com.kotcrab.vis.runtime.entity.Entity;
 import com.kotcrab.vis.runtime.entity.TextEntity;
-import com.kotcrab.vis.runtime.font.BmpFontProvider;
+import com.kotcrab.vis.runtime.font.BitmapFontProvider;
 import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
@@ -78,7 +78,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	public SceneLoader (FileHandleResolver resolver, RuntimeConfiguration configuration) {
 		super(resolver);
 		this.configuration = configuration;
-		bmpFontProvider = new BmpFontProvider();
+		bmpFontProvider = new BitmapFontProvider();
 	}
 
 	public static Json getJson () {
@@ -112,8 +112,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		return deps;
 	}
 
-	private void loadDependencies (Array<AssetDescriptor> dependencies, Array<ECSEntityData> entites) {
-		for (ECSEntityData entityData : entites) {
+	private void loadDependencies (Array<AssetDescriptor> dependencies, Array<ECSEntityData> entities) {
+		for (ECSEntityData entityData : entities) {
 			for (Component component : entityData.components) {
 				if (component instanceof AssetComponent) {
 					VisAssetDescriptor asset = ((AssetComponent) component).asset;
@@ -124,16 +124,22 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 					} else if (asset instanceof AtlasRegionAsset) {
 						AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
 						dependencies.add(new AssetDescriptor<TextureAtlas>(regionAsset.getPath(), TextureAtlas.class));
-					} else if (asset instanceof PathAsset)
-					{
+
+					} else if (asset instanceof BmpFontAsset) {
+						checkShader(dependencies);
+						bmpFontProvider.load(dependencies, asset);
+					} else if (asset instanceof TtfFontAsset) {
+						ttfFontProvider.load(dependencies, asset);
+					} else if (asset instanceof PathAsset) {
 						PathAsset pathAsset = (PathAsset) asset;
 						String path = pathAsset.getPath();
 
-						if(path.startsWith("sound/")) dependencies.add(new AssetDescriptor<Sound>(path, Sound.class));
-						if(path.startsWith("music/")) dependencies.add(new AssetDescriptor<Music>(path, Music.class));
-						if(path.startsWith("particle/")) dependencies.add(new AssetDescriptor<ParticleEffect>(path, ParticleEffect.class));
-					}
-					else {
+						if (path.startsWith("sound/")) dependencies.add(new AssetDescriptor<Sound>(path, Sound.class));
+						if (path.startsWith("music/")) dependencies.add(new AssetDescriptor<Music>(path, Music.class));
+						if (path.startsWith("particle/"))
+							dependencies.add(new AssetDescriptor<ParticleEffect>(path, ParticleEffect.class));
+
+					} else {
 						throw new UnsupportedAssetDescriptorException(asset);
 					}
 				}
@@ -145,18 +151,18 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	private void loadDepsForEntities (Array<AssetDescriptor> deps, Array<EntityData> entities) {
 		for (EntityData entityData : entities) {
 
-			if (entityData instanceof TextData) {
-				TextData textData = (TextData) entityData;
-
-				if (textData.isTrueType)
-					ttfFontProvider.load(deps, textData);
-				else {
-					checkShader(deps);
-					bmpFontProvider.load(deps, textData);
-				}
-
-				continue;
-			}
+//			if (entityData instanceof TextData) {
+//				TextData textData = (TextData) entityData;
+//
+//				if (textData.isTrueType)
+//					ttfFontProvider.load(deps, textData);
+//				else {
+//					checkShader(deps);
+//					bmpFontProvider.load(deps, textData);
+//				}
+//
+//				continue;
+//			}
 
 			EntitySupport support = supportMap.get(entityData.getClass());
 
@@ -167,9 +173,9 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		}
 	}
 
-	private void checkShader (Array<AssetDescriptor> deps) {
+	private void checkShader (Array<AssetDescriptor> dependencies) {
 		if (distanceFieldShaderLoaded == false)
-			deps.add(new AssetDescriptor(distanceFieldShader, ShaderProgram.class));
+			dependencies.add(new AssetDescriptor<ShaderProgram>(distanceFieldShader, ShaderProgram.class));
 
 		distanceFieldShaderLoaded = true;
 	}

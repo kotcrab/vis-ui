@@ -27,22 +27,19 @@ import com.badlogic.gdx.utils.ObjectMap;
  * TTF font provider
  * @author Kotcrab
  */
-public class TTFEditorFont extends EditorFont {
+public class TTFEditorFont {
 	private FreeTypeFontGenerator generator;
 	private ObjectMap<Integer, BitmapFont> bitmapFonts = new ObjectMap<>();
 
-	public TTFEditorFont (FileHandle file, String relativePath) {
-		super(file, relativePath);
+	public TTFEditorFont (FileHandle file) {
 		generator = new FreeTypeFontGenerator(file);
 		get(FontCacheModule.DEFAULT_FONT_SIZE);
 	}
 
-	@Override
 	public BitmapFont get () {
 		return get(FontCacheModule.DEFAULT_FONT_SIZE);
 	}
 
-	@Override
 	public BitmapFont get (int size) {
 		BitmapFont font = bitmapFonts.get(size);
 
@@ -63,7 +60,6 @@ public class TTFEditorFont extends EditorFont {
 		return parameter;
 	}
 
-	@Override
 	public void dispose () {
 		for (BitmapFont font : bitmapFonts.values())
 			font.dispose();

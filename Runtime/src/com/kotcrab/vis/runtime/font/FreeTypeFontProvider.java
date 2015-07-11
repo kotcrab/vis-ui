@@ -26,8 +26,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGeneratorLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader;
 import com.badlogic.gdx.graphics.g2d.freetype.FreetypeFontLoader.FreeTypeFontLoaderParameter;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.data.TextData;
+import com.kotcrab.vis.runtime.assets.TtfFontAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /**
  * FreeType font provider. This is not enabled by default because FreeType dependencies may not be available is user doesn't add them.
@@ -35,15 +35,14 @@ import com.kotcrab.vis.runtime.data.TextData;
  */
 public class FreeTypeFontProvider implements FontProvider {
 	@Override
-	public void load (Array<AssetDescriptor> dependencies, TextData data) {
+	public void load (Array<AssetDescriptor> dependencies, VisAssetDescriptor asset) {
+		TtfFontAsset ttfAsset = (TtfFontAsset) asset;
+
 		FreeTypeFontLoaderParameter params = new FreeTypeFontLoaderParameter();
+		params.fontFileName = ttfAsset.getPath();
+		params.fontParameters.size = ttfAsset.getFontSize();
 
-		PathAsset pathAsset = (PathAsset) data.assetDescriptor;
-
-		params.fontFileName = pathAsset.getPath();
-		params.fontParameters.size = data.fontSize;
-
-		dependencies.add(new AssetDescriptor(data.arbitraryFontName, BitmapFont.class, params));
+		dependencies.add(new AssetDescriptor<BitmapFont>(ttfAsset.getArbitraryFontName(), BitmapFont.class, params));
 	}
 
 	@Override

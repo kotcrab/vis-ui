@@ -19,6 +19,7 @@ package com.kotcrab.vis.runtime.util;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.system.SpriteRenderSystem;
+import com.kotcrab.vis.runtime.system.TextRenderSystem;
 
 /** @author Kotcrab */
 public class ArtemisUtils {
@@ -26,5 +27,6 @@ public class ArtemisUtils {
 		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, controlBatchState);
 		engine.setSystem(batchingSystem);
 		engine.setSystem(new SpriteRenderSystem(batchingSystem), true);
+		engine.setSystem(new TextRenderSystem(batchingSystem), true);
 	}
 }

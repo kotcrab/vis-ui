@@ -27,6 +27,7 @@ import com.kotcrab.vis.editor.util.FileUtils;
  * Bitmap font provider
  * @author Kotcrab
  */
+@Deprecated
 public class BMPEditorFont extends EditorFont {
 	private BitmapFont font;
 
