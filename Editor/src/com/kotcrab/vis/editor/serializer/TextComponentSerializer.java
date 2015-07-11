@@ -19,26 +19,21 @@ package com.kotcrab.vis.editor.serializer;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
-import com.kotcrab.vis.editor.scene.TextObject;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.TextComponent;
 
 /**
- * Kryo serializer for {@link TextObject}
  * @author Kotcrab
  */
 public class TextComponentSerializer extends EntityComponentSerializer<TextComponent> {
 	private static final int VERSION_CODE = 1;
 
-	private FileAccessModule fileAccess;
 	private final FontCacheModule fontCache;
 
 	public TextComponentSerializer (Kryo kryo, FontCacheModule fontCache) {
 		super(kryo, TextComponent.class);
-		this.fileAccess = fileAccess;
 		this.fontCache = fontCache;
 	}
 
@@ -48,7 +43,6 @@ public class TextComponentSerializer extends EntityComponentSerializer<TextCompo
 		parentWrite(kryo, output, textObject);
 
 		output.writeInt(VERSION_CODE);
-		output.writeString(textObject.getText());
 		kryo.writeClassAndObject(output, getComponent(AssetComponent.class).asset);
 	}
 
@@ -58,7 +52,6 @@ public class TextComponentSerializer extends EntityComponentSerializer<TextCompo
 		TextComponent component = parentRead(kryo, input, type);
 
 		input.readInt(); //version code
-		String text = input.readString();
 
 		VisAssetDescriptor asset = (VisAssetDescriptor) kryo.readClassAndObject(input);
 		component.setFont(fontCache.getGeneric(asset));

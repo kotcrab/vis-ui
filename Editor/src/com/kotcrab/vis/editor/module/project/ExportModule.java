@@ -220,25 +220,6 @@ public class ExportModule extends ProjectModule {
 
 		@Deprecated
 		private boolean exportEntity (Array<EntityData> entities, EditorObject entity) {
-//			if (entity instanceof SpriteObject) {
-//				SpriteObject obj = (SpriteObject) entity;
-//
-//				SpriteData data = new SpriteData();
-//				data.saveFrom(obj, obj.getAssetDescriptor());
-//				entities.add(data);
-//				return true;
-//			}
-
-			if (entity instanceof TextObject) {
-				TextObject obj = (TextObject) entity;
-
-				TextData data = new TextData();
-				data.id = obj.getId();
-				data.saveFrom(obj, obj.getAssetDescriptor());
-
-				entities.add(data);
-				return true;
-			}
 
 			ObjectSupport support = supportModule.get(entity.getClass());
 

@@ -31,7 +31,6 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.*;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.entity.Entity;
-import com.kotcrab.vis.runtime.entity.TextEntity;
 import com.kotcrab.vis.runtime.system.*;
 import com.kotcrab.vis.runtime.util.ArtemisUtils;
 import com.kotcrab.vis.runtime.util.EntityEngine;
@@ -102,24 +101,24 @@ public class Scene implements Disposable {
 		engine.setDelta(Gdx.graphics.getDeltaTime());
 		engine.process();
 
-		batch.setProjectionMatrix(camera.combined);
-
-		boolean shader = false;
-
-		batch.begin();
-
-		for (Entity e : entities) {
-			if (e instanceof TextEntity && ((TextEntity) e).isDistanceFieldShaderEnabled()) {
-				shader = true;
-				batch.setShader(distanceFieldShader);
-			}
-
-			e.render(batch);
-
-			if (shader) batch.setShader(null);
-		}
-
-		batch.end();
+//		batch.setProjectionMatrix(camera.combined);
+//
+//		boolean shader = false;
+//
+//		batch.begin();
+//
+//		for (Entity e : entities) {
+//			if (e instanceof TextEntity && ((TextEntity) e).isDistanceFieldShaderEnabled()) {
+//				shader = true;
+//				batch.setShader(distanceFieldShader);
+//			}
+//
+//			e.render(batch);
+//
+//			if (shader) batch.setShader(null);
+//		}
+//
+//		batch.end();
 	}
 
 	/** Must by called when screen was resized. Typically called from {@link ApplicationListener#resize(int, int)} */

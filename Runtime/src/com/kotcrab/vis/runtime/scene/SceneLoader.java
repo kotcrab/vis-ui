@@ -27,7 +27,10 @@ import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
@@ -38,9 +41,7 @@ import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.data.ECSEntityData;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.data.SceneData;
-import com.kotcrab.vis.runtime.data.TextData;
 import com.kotcrab.vis.runtime.entity.Entity;
-import com.kotcrab.vis.runtime.entity.TextEntity;
 import com.kotcrab.vis.runtime.font.BitmapFontProvider;
 import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
@@ -84,7 +85,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	public static Json getJson () {
 		Json json = new Json();
 		json.addClassTag("SceneData", SceneData.class);
-		json.addClassTag("TextData", TextData.class);
 		json.addClassTag("AtlasRegionAsset", AtlasRegionAsset.class);
 		json.addClassTag("TextureRegionAsset", TextureRegionAsset.class);
 		return json;
@@ -198,22 +198,22 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	@Deprecated
 	private void loadEntitiesFromData (AssetManager manager, Array<TextureAtlas> atlases, Array<EntityData> datas, Array<Entity> entities) {
 		for (EntityData entityData : datas) {
-			if (entityData instanceof TextData) {
-				TextData textData = (TextData) entityData;
-
-				BitmapFont font;
-
-				if (textData.isTrueType)
-					font = manager.get(textData.arbitraryFontName, BitmapFont.class);
-				else {
-					font = resolveAsset(manager, textData.assetDescriptor, BitmapFont.class);
-				}
-
-				TextEntity entity = new TextEntity(textData.id, font, textData.text, textData.fontSize);
-				textData.loadTo(entity);
-				entities.add(entity);
-				continue;
-			}
+//			if (entityData instanceof TextData) {
+//				TextData textData = (TextData) entityData;
+//
+//				BitmapFont font;
+//
+//				if (textData.isTrueType)
+//					font = manager.get(textData.arbitraryFontName, BitmapFont.class);
+//				else {
+//					font = resolveAsset(manager, textData.assetDescriptor, BitmapFont.class);
+//				}
+//
+//				TextEntity entity = new TextEntity(textData.id, font, textData.text, textData.fontSize);
+//				textData.loadTo(entity);
+//				entities.add(entity);
+//				continue;
+//			}
 
 			EntitySupport support = supportMap.get(entityData.getClass());
 			if (support != null)
