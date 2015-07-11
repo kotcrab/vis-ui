@@ -16,13 +16,10 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
 
 /**
@@ -32,17 +29,10 @@ import com.kotcrab.vis.editor.module.InjectModule;
 public class RendererModule extends SceneModule {
 	@InjectModule private CameraModule camera;
 	private ShapeRenderer shapeRenderer;
-	private ShaderProgram fontShader;
 
 	@Override
 	public void added () {
 		shapeRenderer = new ShapeRenderer();
-
-		fontShader = new ShaderProgram(Gdx.files.internal("shader/bmp-font-df.vert"), Gdx.files.internal("shader/bmp-font-df.frag"));
-		if (!fontShader.isCompiled()) {
-			Log.fatal("Renderer", "FontShader compilation failed:\n" + fontShader.getLog());
-			throw new IllegalStateException("Shader compilation failed");
-		}
 	}
 
 	@Override

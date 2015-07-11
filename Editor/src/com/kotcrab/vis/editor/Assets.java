@@ -16,8 +16,10 @@
 
 package com.kotcrab.vis.editor;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
@@ -29,14 +31,23 @@ public class Assets {
 	public static TextureAtlas icons; //TODO [misc] remove statics
 	public static TextureAtlas misc;
 
+	public static ShaderProgram distanceFieldShader;
+
 	public static void load () {
 		icons = new TextureAtlas("gfx/icons.atlas");
 		misc = new TextureAtlas("gfx/misc.atlas");
+
+		distanceFieldShader = new ShaderProgram(Gdx.files.internal("shader/bmp-font-df.vert"), Gdx.files.internal("shader/bmp-font-df.frag"));
+		if (!distanceFieldShader.isCompiled()) {
+			Log.fatal("Renderer", "FontShader compilation failed:\n" + distanceFieldShader.getLog());
+			throw new IllegalStateException("Shader compilation failed");
+		}
 	}
 
 	public static void dispose () {
 		icons.dispose();
 		misc.dispose();
+		distanceFieldShader.dispose();
 	}
 
 	public static Drawable getIcon (Icons icon) {

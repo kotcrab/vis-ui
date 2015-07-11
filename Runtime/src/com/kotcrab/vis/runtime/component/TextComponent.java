@@ -30,9 +30,6 @@ import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 /** @author Kotcrab */
 public class TextComponent extends Component implements BasicPropertiesAccessor, ScalePropertiesAccessor,
 		RotationPropertiesAccessor, OriginPropertiesAccessor, ColorPropertiesAccessor, UsesProtoComponent {
-	public static final int BITMAP_FONT_SIZE = -1;
-
-	protected int fontSize;
 	protected boolean distanceFieldShaderEnabled;
 
 	private transient BitmapFontCache cache;
@@ -49,10 +46,6 @@ public class TextComponent extends Component implements BasicPropertiesAccessor,
 	protected CharSequence text;
 
 	public TextComponent (BitmapFont bitmapFont, String text) {
-		this(bitmapFont, text, BITMAP_FONT_SIZE);
-	}
-
-	public TextComponent (BitmapFont bitmapFont, String text, int fontSize) {
 		this.text = text;
 
 		cache = new BitmapFontCache(bitmapFont);
@@ -64,7 +57,7 @@ public class TextComponent extends Component implements BasicPropertiesAccessor,
 	}
 
 	public TextComponent (TextComponent other) {
-		this(other.cache.getFont(), other.getText(), other.getFontSize());
+		this(other.cache.getFont(), other.getText());
 
 		setAutoSetOriginToCenter(other.isAutoSetOriginToCenter());
 		setDistanceFieldShaderEnabled(other.isDistanceFieldShaderEnabled());
@@ -247,14 +240,6 @@ public class TextComponent extends Component implements BasicPropertiesAccessor,
 	@Override
 	public ProtoComponent getProtoComponent () {
 		return new TextProtoComponent(this);
-	}
-
-	public int getFontSize () {
-		return fontSize;
-	}
-
-	public boolean isTrueType () {
-		return fontSize != BITMAP_FONT_SIZE;
 	}
 
 	public boolean isDistanceFieldShaderEnabled () {

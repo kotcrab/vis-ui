@@ -54,7 +54,7 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
  * @author Kotcrab
  */
 public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> {
-	private static final FileHandle distanceFieldShader = Gdx.files.classpath("com/kotcrab/vis/runtime/bmp-font-df");
+	public static final String DISTANCE_FIELD_SHADER = "com/kotcrab/vis/runtime/bmp-font-df";
 
 	private RuntimeConfiguration configuration;
 	private SceneData data;
@@ -175,7 +175,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	private void checkShader (Array<AssetDescriptor> dependencies) {
 		if (distanceFieldShaderLoaded == false)
-			dependencies.add(new AssetDescriptor<ShaderProgram>(distanceFieldShader, ShaderProgram.class));
+			dependencies.add(new AssetDescriptor<ShaderProgram>(Gdx.files.classpath(DISTANCE_FIELD_SHADER), ShaderProgram.class));
 
 		distanceFieldShaderLoaded = true;
 	}
@@ -191,8 +191,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		for (ECSEntityData entityData : data.entities)
 			entityData.build(engine);
 
-		if (distanceFieldShaderLoaded)
-			scene.getDistanceFieldShaderFromManager(distanceFieldShader);
+//		if (distanceFieldShaderLoaded)
+//			scene.getDistanceFieldShaderFromManager(distanceFieldShader);
 	}
 
 	@Deprecated

@@ -82,6 +82,11 @@ public class Scene implements Disposable {
 				break;
 		}
 
+		ShaderProgram distanceFieldShader = null;
+		if (assetsManager.isLoaded(SceneLoader.DISTANCE_FIELD_SHADER)) {
+			distanceFieldShader = assetManager.get(SceneLoader.DISTANCE_FIELD_SHADER, ShaderProgram.class);
+		}
+
 		engine = new EntityEngine();
 		engine.setManager(new CameraManager(viewportType, width, height));
 		engine.setSystem(new SpriteInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
@@ -90,7 +95,7 @@ public class Scene implements Disposable {
 		engine.setSystem(new ParticleInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
 		engine.setSystem(new TextInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
 
-		ArtemisUtils.createCommonSystems(engine, batch, true);
+		ArtemisUtils.createCommonSystems(engine, batch, distanceFieldShader, true);
 		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
 		engine.setSystem(new ParticleRenderSystem(renderBatchingSystem, false), true);
 		engine.initialize();

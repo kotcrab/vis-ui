@@ -46,10 +46,7 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorMo
 import com.kotcrab.vis.editor.plugin.ObjectSupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.MusicObjectTable;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.ParticleEffectTable;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SoundObjectTable;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificObjectTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.*;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
@@ -200,8 +197,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		createRotationTintTable();
 		createFlipTable();
 
-//		registerSpecificTable(new TTFTextObjectTable());
-//		registerSpecificTable(new BMPTextObjectTable());
+		registerSpecificTable(new TTFTextObjectTable());
+		registerSpecificTable(new BMPTextObjectTable());
 		registerSpecificTable(new MusicObjectTable());
 		registerSpecificTable(new SoundObjectTable());
 		registerSpecificTable(new ParticleEffectTable());

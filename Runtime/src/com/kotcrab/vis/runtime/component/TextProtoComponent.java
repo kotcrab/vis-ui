@@ -17,8 +17,6 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /** @author Kotcrab */
 public class TextProtoComponent extends ProtoComponent {
@@ -29,14 +27,12 @@ public class TextProtoComponent extends ProtoComponent {
 	public Color tint = Color.WHITE;
 
 	public String text;
-	public VisAssetDescriptor assetDescriptor;
-	/** Arbitrary font name used by assets manager to recognize different font sizes for single truetype font */
-	public String arbitraryFontName;
-	public int fontSize;
 	public boolean autoSetOriginToCenter;
 
-	public boolean isTrueType;
 	public boolean isUsesDistanceField;
+
+	private TextProtoComponent () {
+	}
 
 	public TextProtoComponent (TextComponent component) {
 		x = component.getX();
@@ -53,13 +49,8 @@ public class TextProtoComponent extends ProtoComponent {
 		tint = component.getColor().cpy();
 
 		text = component.getText();
-		fontSize = component.getFontSize();
 		autoSetOriginToCenter = component.isAutoSetOriginToCenter();
 
-		PathAsset asset = (PathAsset) assetDescriptor;
-		arbitraryFontName = String.valueOf(fontSize) + "." + asset.getPath();
-
-		isTrueType = component.isTrueType();
 		isUsesDistanceField = component.isDistanceFieldShaderEnabled();
 	}
 }

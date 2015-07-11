@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.module.Module;
@@ -75,7 +76,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 		createEssentialsSystems(engine);
 
-		ArtemisUtils.createCommonSystems(engine, batch, false);
+		ArtemisUtils.createCommonSystems(engine, batch, Assets.distanceFieldShader, false);
 		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
 		engine.setSystem(new ParticleRenderSystem(renderBatchingSystem, true), true);
 		engine.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem), true);

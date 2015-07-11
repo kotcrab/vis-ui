@@ -21,6 +21,7 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.TextComponent;
@@ -35,9 +36,11 @@ public class TextRenderSystem extends DeferredEntityProcessingSystem {
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
+	private ShaderProgram distanceFieldShader;
 
-	public TextRenderSystem (EntityProcessPrincipal principal) {
+	public TextRenderSystem (EntityProcessPrincipal principal, ShaderProgram distanceFieldShader) {
 		super(Aspect.all(TextComponent.class).exclude(InvisibleComponent.class), principal);
+		this.distanceFieldShader = distanceFieldShader;
 	}
 
 	@Override
@@ -47,10 +50,12 @@ public class TextRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (final Entity entity) {
+		//TODO: optimize texts, handle distance field
 		TextComponent text = textCm.get(entity);
 		batch.setTransformMatrix(text.translationMatrix);
+		if(text.isDistanceFieldShaderEnabled()) batch.setShader(distanceFieldShader);
 		text.getCache().draw(batch);
-		batch.flush();
+		if(text.isDistanceFieldShaderEnabled()) batch.setShader(null);
 	}
 
 	@Override

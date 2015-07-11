@@ -17,16 +17,17 @@
 package com.kotcrab.vis.runtime.util;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.system.SpriteRenderSystem;
 import com.kotcrab.vis.runtime.system.TextRenderSystem;
 
 /** @author Kotcrab */
 public class ArtemisUtils {
-	public static void createCommonSystems (EntityEngine engine, Batch batch, boolean controlBatchState) {
+	public static void createCommonSystems (EntityEngine engine, Batch batch, ShaderProgram distanceFieldShader, boolean controlBatchState) {
 		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, controlBatchState);
 		engine.setSystem(batchingSystem);
 		engine.setSystem(new SpriteRenderSystem(batchingSystem), true);
-		engine.setSystem(new TextRenderSystem(batchingSystem), true);
+		engine.setSystem(new TextRenderSystem(batchingSystem, distanceFieldShader), true);
 	}
 }
