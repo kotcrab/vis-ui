@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.assets.transaction;
+package com.kotcrab.vis.editor.assets.transaction.generator;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.assets.transaction.AssetTransaction;
+import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
 import com.kotcrab.vis.editor.assets.transaction.action.CopyFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.DeleteFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.UpdateReferencesAction;
 import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /**
- * Transaction generator for {@link TextureRegionAsset}
+ * Basic {@link AssetTransactionGenerator} that can generate asset transaction for {@link PathAsset} of
+ * TrueType fonts, music, sounds, and particles
  * @author Kotcrab
  */
-public class TextureRegionAssetTransactionGenerator implements AssetTransactionGenerator {
+public class BasicAssetTransactionGenerator implements AssetTransactionGenerator {
 	private FileHandle transactionStorage;
 
 	@Override
@@ -38,7 +41,14 @@ public class TextureRegionAssetTransactionGenerator implements AssetTransactionG
 
 	@Override
 	public boolean isSupported (VisAssetDescriptor descriptor) {
-		return descriptor instanceof TextureRegionAsset;
+		if (descriptor instanceof PathAsset == false) return false;
+
+		PathAsset pathAsset = (PathAsset) descriptor;
+		String path = pathAsset.getPath();
+		if (path.startsWith("music") || path.startsWith("sound") || path.startsWith("particle"))
+			return true;
+
+		return false;
 	}
 
 	@Override
@@ -46,7 +56,7 @@ public class TextureRegionAssetTransactionGenerator implements AssetTransactionG
 		AssetTransaction transaction = new AssetTransaction();
 
 		transaction.add(new CopyFileAction(source, target));
-		transaction.add(new UpdateReferencesAction(injector, descriptor, new TextureRegionAsset(relativeTargetPath)));
+		transaction.add(new UpdateReferencesAction(injector, descriptor, new PathAsset(relativeTargetPath)));
 		transaction.add(new DeleteFileAction(source, transactionStorage));
 		transaction.finalizeGroup();
 

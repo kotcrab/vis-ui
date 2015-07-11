@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.assets.transaction;
+package com.kotcrab.vis.editor.assets.transaction.generator;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.assets.transaction.AssetTransaction;
+import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
 import com.kotcrab.vis.editor.assets.transaction.action.CopyFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.DeleteFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.UpdateReferencesAction;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /**
@@ -29,7 +32,7 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
  * TrueType fonts, music, sounds, and particles
  * @author Kotcrab
  */
-public class BasicAssetTransactionGenerator implements AssetTransactionGenerator {
+public class TtfAssetTransactionGenerator implements AssetTransactionGenerator {
 	private FileHandle transactionStorage;
 
 	@Override
@@ -54,7 +57,7 @@ public class BasicAssetTransactionGenerator implements AssetTransactionGenerator
 		AssetTransaction transaction = new AssetTransaction();
 
 		transaction.add(new CopyFileAction(source, target));
-		transaction.add(new UpdateReferencesAction(injector, descriptor, new PathAsset(relativeTargetPath)));
+		transaction.add(new UpdateReferencesAction(injector, descriptor, new TtfFontAsset(relativeTargetPath, ((TtfFontAsset) descriptor).getFontSize())));
 		transaction.add(new DeleteFileAction(source, transactionStorage));
 		transaction.finalizeGroup();
 

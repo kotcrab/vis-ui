@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.util.FileUtils;
-import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /**
@@ -31,9 +31,9 @@ public class BmpFontDescriptorProvider implements AssetDescriptorProvider {
 		if (relativePath.startsWith("bmpfont") == false) return null;
 
 		if (relativePath.endsWith("fnt"))
-			return new PathAsset(relativePath);
+			return new BmpFontAsset(relativePath, null);
 		else if (relativePath.endsWith("png"))
-			return new PathAsset(FileUtils.replaceExtension(relativePath, "fnt"));
+			return new BmpFontAsset(FileUtils.replaceExtension(relativePath, "fnt"), null);
 		else
 			return null;
 	}

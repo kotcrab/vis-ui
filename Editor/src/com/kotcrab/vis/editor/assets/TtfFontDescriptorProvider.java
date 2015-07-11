@@ -17,23 +17,18 @@
 package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-/**
- * Basic descriptor provider for {@link PathAsset}, supporting TrueType fonts, music, sound and particles
- * @author Kotcrab
- */
-public class PathDescriptorProvider implements AssetDescriptorProvider {
+/** @author Kotcrab */
+public class TtfFontDescriptorProvider implements AssetDescriptorProvider {
 	@Override
 	public VisAssetDescriptor provide (FileHandle file, String relativePath) {
 		if (checkIfSupported(relativePath) == false) return null;
-		return new PathAsset(relativePath);
+		return new TtfFontAsset(relativePath, -1);
 	}
 
 	private boolean checkIfSupported (String path) {
-		if (path.startsWith("music") || path.startsWith("sound")) return true;
-		if (path.startsWith("particle") && path.endsWith(".p")) return true;
-		return false;
+		return path.startsWith("font");
 	}
 }

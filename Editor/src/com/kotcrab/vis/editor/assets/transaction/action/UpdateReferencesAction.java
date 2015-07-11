@@ -31,7 +31,6 @@ import com.kotcrab.vis.runtime.component.AssetComponent;
 /**
  * Undoable action for updating assets references in Entities. This is generic case usage that replaces provided source {@link VisAssetDescriptor} with provided target.
  * @author Kotcrab
- * @see UpdateAtlasAssetReferencesAction
  */
 public class UpdateReferencesAction implements UndoableAction {
 	@InjectModule private SceneCacheModule sceneCache;

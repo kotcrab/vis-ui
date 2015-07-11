@@ -20,11 +20,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
-import com.kotcrab.vis.editor.assets.BmpFontDescriptorProvider;
-import com.kotcrab.vis.editor.assets.PathDescriptorProvider;
-import com.kotcrab.vis.editor.assets.TextureDescriptorProvider;
+import com.kotcrab.vis.editor.assets.*;
 import com.kotcrab.vis.editor.assets.transaction.*;
+import com.kotcrab.vis.editor.assets.transaction.generator.*;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
@@ -64,14 +62,16 @@ public class AssetsAnalyzerModule extends ProjectModule {
 
 	@Override
 	public void init () {
+		providers.add(new BmpFontDescriptorProvider());
 		providers.add(new PathDescriptorProvider());
 		providers.add(new TextureDescriptorProvider());
-		providers.add(new BmpFontDescriptorProvider());
+		providers.add(new TtfFontDescriptorProvider());
 
-		transactionsGens.add(new BasicAssetTransactionGenerator());
-		transactionsGens.add(new TextureRegionAssetTransactionGenerator());
 		transactionsGens.add(new AtlasRegionAssetTransactionGenerator());
+		transactionsGens.add(new BasicAssetTransactionGenerator());
 		transactionsGens.add(new BmpFontAssetTransactionGenerator());
+		transactionsGens.add(new TextureRegionAssetTransactionGenerator());
+		transactionsGens.add(new TtfAssetTransactionGenerator());
 
 		transactionBackupRoot = fileAccess.getModuleFolder(".transactionBackup");
 	}
