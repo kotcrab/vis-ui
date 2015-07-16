@@ -10,6 +10,8 @@
 -Fixed issue when FileChooser confirm button text wasn't updated after changing mode ( https://github.com/kotcrab/VisEditor/pull/14 )
 -Fixed issue when FileChooser would crash on file delete dialog
 -Added 'blue' button style
+-Added New Directory item in FileChooser popup menu ("contextMenuNewDirectory" was added to FileChooser I18N file)
+-FileChooser I18N file: added contextMenuNewDirectory, newDirectoryDialogIllegalCharacters, newDirectoryDialogAlreadyExists properties
 
 [0.7.7] [LibGDX 1.6.1]
 -uiskin.json is now generated from USL (see USL page on GitHub Wiki, if you are not writing custom VisUI skins this does not affect you)

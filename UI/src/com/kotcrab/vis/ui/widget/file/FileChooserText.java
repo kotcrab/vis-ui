@@ -49,7 +49,11 @@ public enum FileChooserText implements BundleText {
 	CONTEXT_MENU_SHOW_IN_EXPLORER		{public String getName () {return "contextMenuShowInExplorer";}},
 	CONTEXT_MENU_ADD_TO_FAVORITES		{public String getName () {return "contextMenuAddToFavorites";}},
 	CONTEXT_MENU_REMOVE_FROM_FAVORITES	{public String getName () {return "contextMenuRemoveFromFavorites";}},
-	CONTEXT_MENU_DELETE_WARNING			{public String getName () {return "contextMenuDeleteWarning";}};
+	CONTEXT_MENU_DELETE_WARNING			{public String getName () {return "contextMenuDeleteWarning";}},
+	CONTEXT_MENU_NEW_DIRECTORY 			{public String getName () {return "contextMenuNewDirectory";}},
+
+	NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS {public String getName () {return "newDirectoryDialogIllegalCharacters";}},
+	NEW_DIRECTORY_DIALOG_ALREADY_EXISTS 	{public String getName () {return "newDirectoryDialogAlreadyExists";}};
 	// @formatter:on
 
 	@Override
