@@ -25,7 +25,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.esotericsoftware.kryo.KryoException;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import com.kotcrab.vis.editor.event.bus.Event;
@@ -36,7 +35,6 @@ import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
-import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EditorFrame;
 import com.kotcrab.vis.editor.ui.WindowListener;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
@@ -48,7 +46,6 @@ import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.ThreadUtils;
 import com.kotcrab.vis.editor.util.gdx.VisGroup;
-import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialog;
@@ -62,7 +59,6 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
-import java.io.File;
 import java.lang.reflect.Field;
 
 /**
@@ -135,43 +131,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		createModuleContainers();
 		createModulesUI();
 
-		// debug section
-		// aka. the kinda smart way to ensure that debug will load only on my machine
-		// remove it later though...
-		if (new File("C:\\Users\\Kotcrab\\.viseditor\\debug.this").exists()) {
-			try {
-				editorMC.get(ProjectIOModule.class).load((Gdx.files.absolute("F:\\Poligon\\Tester")));
-			} catch (EditorException e) {
-				Log.exception(e);
-			}
-
-			FileHandle scene = Gdx.files.absolute("F:\\Poligon\\Tester\\vis\\assets\\scene\\test.scene");
-		}
-
-		//debug end
-
 		Log.debug("Loading completed");
-	}
-
-	private void debugAfterProjectLoaded () {
-		// debug section
-		if (new File("C:\\Users\\Kotcrab\\.viseditor\\debug.this").exists()) {
-			FileHandle scene = Gdx.files.absolute("F:\\Poligon\\Tester\\vis\\assets\\scene\\test.scene");
-
-			try {
-				if (scene.exists()) {
-					EditorScene testScene = projectMC.get(SceneCacheModule.class).get(scene);
-					projectMC.get(SceneTabsModule.class).open(testScene);
-				}
-			} catch (KryoException e) {
-				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
-				Log.exception(e);
-			}
-
-//			editorMC.get(TabsModule.class).addTab(new PhysicsEditorTab(projectMC));
-		}
-
-		//debug end
 	}
 
 	private Stage createStage () {
@@ -231,6 +191,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(settings = new GeneralSettingsModule());
 		editorMC.add(new PluginSettingsModule());
 		editorMC.add(new GridSettingsModule());
+
+		editorMC.add(new DevelopmentSpeedupModule(projectMC));
 
 		editorMC.init();
 
@@ -484,8 +446,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 					statusBar.setText("Project loaded");
 					App.eventBus.post(new ProjectStatusEvent(Status.Loaded, project));
 					controller.loading = false;
-
-					debugAfterProjectLoaded();
 				});
 
 				while (controller.loading) {
