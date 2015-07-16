@@ -102,8 +102,9 @@ public class Tooltip extends VisTable {
 	 */
 	public static void removeTooltip (Actor target) {
 		Array<EventListener> listeners = target.getListeners();
-		for (EventListener listener : listeners)
+		for (EventListener listener : listeners) {
 			if (listener instanceof TooltipInputListener) target.removeListener(listener);
+		}
 	}
 
 	private void init (TooltipStyle style, Actor target, Actor content) {
@@ -149,9 +150,10 @@ public class Tooltip extends VisTable {
 	public void attach () {
 		if (target == null) return;
 		Array<EventListener> listeners = target.getListeners();
-		for (EventListener listener : listeners)
+		for (EventListener listener : listeners) {
 			if (listener instanceof TooltipInputListener)
 				throw new IllegalStateException("More than one tooltip cannot be added to the same target!");
+		}
 
 		target.addListener(listener);
 	}
