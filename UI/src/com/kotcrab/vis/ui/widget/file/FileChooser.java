@@ -34,6 +34,7 @@ import com.badlogic.gdx.utils.I18NBundle;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.InputDialogAdapter;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.file.internal.FileChooserWinService;
@@ -279,6 +280,7 @@ public class FileChooser extends VisWindow {
 		fileScrollPane = createScrollPane(fileTable);
 		fileScrollPaneTable = new VisTable();
 		fileScrollPaneTable.add(fileScrollPane).pad(2).top().expand().fillX();
+		fileScrollPaneTable.setTouchable(Touchable.enabled);
 
 		shortcutsTable = new VisTable();
 		shortcutsScrollPane = createScrollPane(shortcutsTable);
@@ -293,6 +295,21 @@ public class FileChooser extends VisWindow {
 		row();
 		add(splitPane).expand().fill();
 		row();
+
+		fileScrollPaneTable.addListener(new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				return true;
+			}
+
+			@Override
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				if (button == Buttons.RIGHT && selectedItems.size == 0) {
+					fileMenu.build();
+					fileMenu.showMenu(getStage(), event.getStageX(), event.getStageY());
+				}
+			}
+		});
 	}
 
 	private void createFileTextBox () {
@@ -851,6 +868,27 @@ public class FileChooser extends VisWindow {
 		if (fileWatcherThread == null) throw new IllegalStateException("FileWatcherThread not running");
 		fileWatcherThread.interrupt();
 		fileWatcherThread = null;
+	}
+
+	void showNewDirectoryDialog () {
+		DialogUtils.showInputDialog(getStage(), "New Directory", "Name:", true, new InputDialogAdapter() {
+			@Override
+			public void finished (String input) {
+				if (FileUtils.isValidFileName(input) == false) {
+					DialogUtils.showErrorDialog(getStage(), getText(NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS));
+				}
+
+				for (FileHandle file : currentDirectory.list()) {
+					if (file.name().equals(input)) {
+						DialogUtils.showErrorDialog(getStage(), getText(NEW_DIRECTORY_DIALOG_ALREADY_EXISTS));
+						return;
+					}
+				}
+
+				currentDirectory.child(input).mkdirs();
+				refresh();
+			}
+		});
 	}
 
 	public enum Mode {OPEN, SAVE}

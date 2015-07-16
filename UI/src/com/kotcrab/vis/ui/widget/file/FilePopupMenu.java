@@ -45,6 +45,7 @@ public class FilePopupMenu extends PopupMenu {
 	private FileHandle file;
 
 	private MenuItem delete;
+	private MenuItem newDirectory;
 	private MenuItem showInExplorer;
 	private MenuItem addToFavorites;
 	private MenuItem removeFromFavorites;
@@ -55,6 +56,7 @@ public class FilePopupMenu extends PopupMenu {
 		this.bundle = bundle;
 
 		delete = new MenuItem(getText(CONTEXT_MENU_DELETE));
+		newDirectory = new MenuItem(getText(CONTEXT_MENU_NEW_DIRECTORY));
 		showInExplorer = new MenuItem(getText(CONTEXT_MENU_SHOW_IN_EXPLORER));
 		addToFavorites = new MenuItem(getText(CONTEXT_MENU_ADD_TO_FAVORITES));
 		removeFromFavorites = new MenuItem(getText(CONTEXT_MENU_REMOVE_FROM_FAVORITES));
@@ -69,6 +71,13 @@ public class FilePopupMenu extends PopupMenu {
 						chooser.refresh();
 					}
 				});
+			}
+		});
+
+		newDirectory.addListener(new ClickListener() {
+			@Override
+			public void clicked (InputEvent event, float x, float y) {
+				chooser.showNewDirectoryDialog();
 			}
 		});
 
@@ -101,10 +110,18 @@ public class FilePopupMenu extends PopupMenu {
 		});
 	}
 
+	public void build () {
+		clearChildren();
+		addItem(newDirectory);
+	}
+
 	public void build (Array<FileHandle> favorites, FileHandle file) {
 		this.file = file;
 
 		clearChildren();
+
+		addItem(newDirectory);
+		addSeparator();
 
 		if (file.type() == FileType.Absolute || file.type() == FileType.External) addItem(delete);
 
