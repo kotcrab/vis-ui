@@ -67,6 +67,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 	private FileAccessModule fileAccess;
 
 	private Array<Serializer> serializers = new Array<>();
+	private Array<Class<?>> serializedTypes = new Array<>();
 	private Array<AssetDescriptorProvider> assetProviders = new Array<>();
 
 	@Override
@@ -77,6 +78,11 @@ public class SpineEditorSupport extends EditorEntitySupport {
 
 		serializers.add(new SpineComponentSerializer(sceneIOModule.getKryo(), spineCache));
 		assetProviders.add(new SpineAssetDescriptorProvider());
+
+		serializedTypes.add(SpinePreviewComponent.class);
+		serializedTypes.add(SpineScaleComponent.class);
+		serializedTypes.add(SpineBoundsComponent.class);
+		serializedTypes.add(SpineAssetDescriptor.class);
 	}
 
 	@Override
@@ -156,5 +162,10 @@ public class SpineEditorSupport extends EditorEntitySupport {
 	@Override
 	public Array<Serializer> getSerializers () {
 		return serializers;
+	}
+
+	@Override
+	public Array<Class<?>> getSerializedTypes () {
+		return serializedTypes;
 	}
 }

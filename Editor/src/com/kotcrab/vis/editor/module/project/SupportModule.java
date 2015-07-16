@@ -31,30 +31,31 @@ import com.kotcrab.vis.editor.plugin.PluginKryoSerializer;
  */
 public class SupportModule extends ProjectModule {
 	private Array<EditorEntitySupport> supports = new Array<>();
-	private Array<SupportSerializerDescriptor> descriptors;
 
 	private Json json;
 	private FileHandle descriptorFile;
 
+	private DescriptorsStorage descriptorsStorage;
+
 	@Override
 	public void init () {
 		json = new Json();
+		json.addClassTag("DescriptorsStorage", DescriptorsStorage.class);
 		json.addClassTag("SupportSerializerDescriptor", SupportSerializerDescriptor.class);
+		json.addClassTag("SupportSerializedTypesDescriptor", SupportSerializedTypeDescriptor.class);
 
 		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
 		descriptorFile = fileAccess.getModuleFolder().child("supportDescriptor.json");
 
 		if (descriptorFile.exists()) {
-			descriptors = json.fromJson(new Array<SupportSerializerDescriptor>().getClass(), descriptorFile);
+			descriptorsStorage = json.fromJson(DescriptorsStorage.class, descriptorFile);
 		} else {
 			Log.info("ObjectSupportModule", "Support descriptor file does not exist, will be recreated");
-			descriptors = new Array<>();
+			descriptorsStorage = new DescriptorsStorage();
 		}
 
 		ExtensionStorageModule pluginContainer = container.get(ExtensionStorageModule.class);
-		Array<EditorEntitySupport> supports = pluginContainer.getObjectSupports();
-		for (EditorEntitySupport support : supports)
-			register(support);
+		pluginContainer.getObjectSupports().forEach(this::register);
 	}
 
 	@Override
@@ -63,7 +64,7 @@ public class SupportModule extends ProjectModule {
 	}
 
 	private void saveDescriptors () {
-		json.toJson(descriptors, descriptorFile);
+		json.toJson(descriptorsStorage, descriptorFile);
 	}
 
 	public void register (EditorEntitySupport support) {
@@ -72,26 +73,51 @@ public class SupportModule extends ProjectModule {
 		support.bindModules(projectContainer);
 
 		for (Serializer serializer : support.getSerializers()) {
-			if (serializer instanceof PluginKryoSerializer == false)
+			if (serializer instanceof PluginKryoSerializer == false) {
 				throw new IllegalStateException("All plugin serializer must implement PluginKryoSerializer interface");
+			}
 
-			SupportSerializerDescriptor desc = getDescriptorByClazz(serializer.getClass());
+			SupportSerializerDescriptor desc = getSerializerDescriptorByClass(serializer.getClass());
 
 			if (desc == null) {
-				desc = new SupportSerializerDescriptor(serializer.getClass().getName(), getFreeId());
-				descriptors.add(desc);
-				saveDescriptors();
+				desc = new SupportSerializerDescriptor(getFreeId(), serializer.getClass().getName());
+				descriptorsStorage.serializers.add(desc);
 			}
 
 			desc.serializer = serializer;
 		}
+
+		if (support.getSerializedTypes() != null) {
+			for (Class<?> clazz : support.getSerializedTypes()) {
+				SupportSerializedTypeDescriptor desc = getTypeDescriptorByClass(clazz);
+
+				if (desc == null) {
+					desc = new SupportSerializedTypeDescriptor(getFreeId(), clazz.getName());
+					descriptorsStorage.types.add(desc);
+				}
+
+				desc.clazz = clazz;
+			}
+		}
+		saveDescriptors();
 	}
 
-	private SupportSerializerDescriptor getDescriptorByClazz (Class clazz) {
+	private SupportSerializerDescriptor getSerializerDescriptorByClass (Class clazz) {
 		String clazzName = clazz.getName();
 
-		for (SupportSerializerDescriptor desc : descriptors)
-			if (desc.serializerClazzName.equals(clazzName)) return desc;
+		for (SupportSerializerDescriptor desc : descriptorsStorage.serializers) {
+			if (desc.serializerClassName.equals(clazzName)) return desc;
+		}
+
+		return null;
+	}
+
+	private SupportSerializedTypeDescriptor getTypeDescriptorByClass (Class clazz) {
+		String clazzName = clazz.getName();
+
+		for (SupportSerializedTypeDescriptor desc : descriptorsStorage.types) {
+			if (desc.serializedClassName.equals(clazzName)) return desc;
+		}
 
 		return null;
 	}
@@ -99,15 +125,21 @@ public class SupportModule extends ProjectModule {
 	private int getFreeId () {
 		int startId = SceneIOModule.KRYO_PLUGINS_RESERVED_ID_BEGIN;
 
-		for (int i = startId; i < SceneIOModule.KRYO_PLUGINS_RESERVED_ID_END; i++)
+		for (int i = startId; i < SceneIOModule.KRYO_PLUGINS_RESERVED_ID_END; i++) {
 			if (isIdUsed(i) == false) return i;
+		}
 
 		throw new IllegalStateException("Free id for object support does not exist");
 	}
 
 	private boolean isIdUsed (int id) {
-		for (SupportSerializerDescriptor desc : descriptors)
+		for (SupportSerializerDescriptor desc : descriptorsStorage.serializers) {
 			if (desc.id == id) return true;
+		}
+
+		for (SupportSerializedTypeDescriptor desc : descriptorsStorage.types) {
+			if (desc.id == id) return true;
+		}
 
 		return false;
 	}
@@ -117,21 +149,47 @@ public class SupportModule extends ProjectModule {
 	}
 
 	public Array<SupportSerializerDescriptor> getSerializerDescriptors () {
-		return descriptors;
+		return descriptorsStorage.serializers;
+	}
+
+	public Array<SupportSerializedTypeDescriptor> getTypesDescriptors () {
+		return descriptorsStorage.types;
+	}
+
+	public static class DescriptorsStorage {
+		private Array<SupportSerializerDescriptor> serializers = new Array<>();
+		private Array<SupportSerializedTypeDescriptor> types = new Array<>();
+
+		public DescriptorsStorage () {
+		}
+	}
+
+	public static class SupportSerializedTypeDescriptor {
+		public int id;
+
+		private String serializedClassName;
+		public transient Class clazz;
+
+		public SupportSerializedTypeDescriptor () {
+		}
+
+		public SupportSerializedTypeDescriptor (int id, String clazzName) {
+			this.id = id;
+			this.serializedClassName = clazzName;
+		}
 	}
 
 	public static class SupportSerializerDescriptor {
-		public transient Serializer serializer;
-		public transient Class serializedClazz;
-
-		public String serializerClazzName;
 		public int id;
+
+		private String serializerClassName;
+		public transient Serializer serializer;
 
 		public SupportSerializerDescriptor () {
 		}
 
-		public SupportSerializerDescriptor (String clazzName, int id) {
-			this.serializerClazzName = clazzName;
+		public SupportSerializerDescriptor (int id, String clazzName) {
+			this.serializerClassName = clazzName;
 			this.id = id;
 		}
 	}

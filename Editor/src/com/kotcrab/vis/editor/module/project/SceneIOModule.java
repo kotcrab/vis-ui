@@ -33,15 +33,17 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.EntityScheme;
+import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
+import com.kotcrab.vis.editor.entity.PositionComponent;
 import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializedTypeDescriptor;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializerDescriptor;
 import com.kotcrab.vis.editor.plugin.PluginKryoSerializer;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.serializer.*;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
-import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
+import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.util.EntityEngine;
@@ -59,7 +61,7 @@ import java.io.FileOutputStream;
 @SuppressWarnings("rawtypes")
 public class SceneIOModule extends ProjectModule {
 	public static final int KRYO_PLUGINS_RESERVED_ID_BEGIN = 401;
-	public static final int KRYO_PLUGINS_RESERVED_ID_END = 600;
+	public static final int KRYO_PLUGINS_RESERVED_ID_END = 800;
 
 	private Kryo kryo;
 
@@ -82,7 +84,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.setClassLoader(Thread.currentThread().getContextClassLoader());
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
-
+		kryo.setRegistrationRequired(true);
 		//id configuration:
 		//0-8 kryo primitives
 		//10-200 custom base types (sub categories don't have to be strictly enforced)
@@ -90,8 +92,8 @@ public class SceneIOModule extends ProjectModule {
 		//	31-60 vis classes
 		//	61-100 assets descriptors
 		//	101-200 reserved for future use
-		//201-400 components, entities support (dep.)
-		//401-600 plugins
+		//201-400 components
+		//401-800 plugins
 
 		kryo.register(Array.class, new ArraySerializer(), 10);
 		kryo.register(IntArray.class, new IntArraySerializer(), 11);
@@ -99,21 +101,36 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(Rectangle.class, 13);
 		kryo.register(Matrix4.class, 14);
 		kryo.register(Color.class, new ColorSerializer(), 15);
+		kryo.register(Class.class, 16);
+		kryo.register(float[].class, 17);
 
 		kryo.register(EditorScene.class, new EditorSceneSerializer(kryo), 31);
 		kryo.register(EntityScheme.class, new EntitySchemeSerializer(kryo, this), 32);
 		kryo.register(SceneViewport.class, 33);
+		kryo.register(Layer.class, 34);
 
 		kryo.register(PathAsset.class, 61);
 		kryo.register(TextureRegionAsset.class, 62);
 		kryo.register(AtlasRegionAsset.class, 63);
+		kryo.register(BmpFontAsset.class, 64);
+		kryo.register(TtfFontAsset.class, 65);
 
-		//TODO: [artemis-wip] map other components
 		registerEntityComponentSerializer(SpriteComponent.class, new SpriteComponentSerializer(kryo, textureCache), 201);
 		registerEntityComponentSerializer(MusicComponent.class, new MusicComponentSerializer(kryo), 202);
 		kryo.register(SoundComponent.class, 203);
 		registerEntityComponentSerializer(ParticleComponent.class, new ParticleComponentSerializer(kryo, particleCache), 204);
 		registerEntityComponentSerializer(TextComponent.class, new TextComponentSerializer(kryo, fontCache), 205);
+
+		kryo.register(PositionComponent.class, 206);
+		kryo.register(ExporterDropsComponent.class, 207);
+
+		kryo.register(AssetComponent.class, 209);
+		kryo.register(GroupComponent.class, 210);
+		kryo.register(IDComponent.class, 211);
+		kryo.register(InvisibleComponent.class, 212);
+		kryo.register(LayerComponent.class, 213);
+		kryo.register(RenderableComponent.class, 214);
+		kryo.register(RenderableComponent.class, 215);
 	}
 
 	private void registerEntityComponentSerializer (Class<? extends Component> componentClass, EntityComponentSerializer serializer, int id) {
@@ -128,8 +145,13 @@ public class SceneIOModule extends ProjectModule {
 		for (SupportSerializerDescriptor support : supportModule.getSerializerDescriptors()) {
 			kryo.register(((PluginKryoSerializer) support.serializer).getSerializedClassType(), support.serializer, support.id);
 
-			if (support.serializer instanceof EntityComponentSerializer)
+			if (support.serializer instanceof EntityComponentSerializer) {
 				entityComponentSerializers.add((EntityComponentSerializer) support.serializer);
+			}
+		}
+
+		for (SupportSerializedTypeDescriptor descriptor : supportModule.getTypesDescriptors()) {
+			kryo.register(descriptor.clazz, descriptor.id);
 		}
 	}
 

@@ -247,13 +247,20 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	public boolean save () {
 		super.save();
 		scene.setSchemes(sceneMC.getEntityEngine().getManager(EntityProxyCache.class).getSchemes());
-		if (sceneIOModule.save(scene)) {
-			setDirty(false);
-			sceneMC.save();
-			savedAtLeastOnce = true;
-			return true;
-		} else
-			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Unknown error encountered while saving resource");
+		try {
+
+			if (sceneIOModule.save(scene)) {
+				setDirty(false);
+				sceneMC.save();
+				savedAtLeastOnce = true;
+				return true;
+			} else
+				DialogUtils.showErrorDialog(Editor.instance.getStage(), "Unknown error encountered while saving resource");
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Unknown error encountered while saving resource", e);
+		}
 
 		return false;
 	}

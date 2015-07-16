@@ -69,6 +69,10 @@ public abstract class EditorEntitySupport {
 	/** @return kryo serializer used for serializing this entity */
 	public abstract Array<Serializer> getSerializers ();
 
+	public Array<Class<?>> getSerializedTypes () {
+		return null;
+	}
+
 	/** This must return new instance every time this is called. */
 	public Array<SpecificUITable> getUIPropertyTables () {
 		return null;
