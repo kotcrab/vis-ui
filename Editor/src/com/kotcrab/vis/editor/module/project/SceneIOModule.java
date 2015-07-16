@@ -108,7 +108,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(TextureRegionAsset.class, 62);
 		kryo.register(AtlasRegionAsset.class, 63);
 
-		//TODO: [high] map other components
+		//TODO: [artemis-wip] map other components
 		registerEntityComponentSerializer(SpriteComponent.class, new SpriteComponentSerializer(kryo, textureCache), 201);
 		registerEntityComponentSerializer(MusicComponent.class, new MusicComponentSerializer(kryo), 202);
 		kryo.register(SoundComponent.class, 203);

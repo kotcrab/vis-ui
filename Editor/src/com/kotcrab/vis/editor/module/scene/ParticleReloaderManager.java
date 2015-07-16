@@ -26,7 +26,7 @@ import com.kotcrab.vis.runtime.component.ParticleComponent;
 
 /** @author Kotcrab */
 @Wire
-public class ParticleReloaderManager extends Manager { //TODO: [high]particle reloader
+public class ParticleReloaderManager extends Manager { //TODO: [artemis-wip] particle reloader
 	private ParticleCacheModule particleCache;
 
 	private ComponentMapper<ParticleComponent> spriteCm;

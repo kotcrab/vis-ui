@@ -50,7 +50,7 @@ public class TextRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (final Entity entity) {
-		//TODO: optimize texts, handle distance field
+		//TODO: [artemis-wip] optimize texts, handle distance field
 		TextComponent text = textCm.get(entity);
 		batch.setTransformMatrix(text.translationMatrix);
 		if(text.isDistanceFieldShaderEnabled()) batch.setShader(distanceFieldShader);

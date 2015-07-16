@@ -31,7 +31,7 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 //TODO font reloading for bmp
-
+//TODO: [artemis-wip] clean up
 /**
  * Allows to get loaded fonts from project asset directory. TTF fonts can be reloaded automatically.
  * @author Kotcrab

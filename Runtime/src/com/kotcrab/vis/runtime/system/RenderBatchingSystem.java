@@ -29,15 +29,14 @@ import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 import net.mostlyoriginal.api.utils.BagUtils;
 
 @Wire
-//TODO [high] clean up
 public class RenderBatchingSystem extends BaseSystem implements EntityProcessPrincipal {
 	private CameraManager cameraManager;
 
 	private ComponentMapper<LayerComponent> layerCm;
 	private ComponentMapper<RenderableComponent> renderableCm;
 
-	private final Bag<Job> sortedJobs = new Bag<Job>();
 	private boolean sortedDirty = false;
+	private final Bag<Job> sortedJobs = new Bag<Job>();
 
 	private Batch batch;
 	private boolean controlBatchState;
@@ -88,7 +87,6 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 
 	@Override
 	protected void processSystem () {
-
 		cameraManager.getCamera().update();
 		batch.setProjectionMatrix(cameraManager.getCombined());
 
@@ -101,7 +99,6 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 		}
 
 		// iterate through all the jobs.
-		// @todo add support for entities being deleted.
 		EntityProcessAgent activeAgent = null;
 		final Object[] data = sortedJobs.getData();
 		for (int i = 0, s = sortedJobs.size(); i < s; i++) {
@@ -109,7 +106,6 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 			final EntityProcessAgent agent = job.agent;
 
 			// agent changed? end() the last agent, and begin() the next agent.
-			// @todo extend this with eventual texture/viewport/etc demarcation.
 			if (agent != activeAgent) {
 				if (activeAgent != null) {
 					activeAgent.end();
