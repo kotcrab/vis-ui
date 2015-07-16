@@ -19,14 +19,14 @@ package com.kotcrab.vis.editor.serializer;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
+import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
 import com.kotcrab.vis.editor.scene.EditorScene;
 
 /**
  * Kryo serializer for {@link EditorScene}
  * @author Kotcrab
  */
-public class EditorSceneSerializer extends CompatibleFieldSerializer<EditorScene> {
+public class EditorSceneSerializer extends TaggedFieldSerializer<EditorScene> {
 	private static final int VERSION_CODE = 1;
 
 	public EditorSceneSerializer (Kryo kryo) {

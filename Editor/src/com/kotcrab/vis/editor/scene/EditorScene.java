@@ -19,10 +19,11 @@ package com.kotcrab.vis.editor.scene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.util.BaseObservable;
-import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 import java.util.Comparator;
 
@@ -40,15 +41,15 @@ public class EditorScene extends BaseObservable {
 	private static final Comparator<Layer> LAYER_COMPARATOR = (o1, o2) -> (int) Math.signum(o1.id - o2.id) * -1;
 
 	/** Scene file, path is relative to project Vis folder */
-	public String path;
-	public int width;
-	public int height;
-	public SceneViewport viewport;
+	@Tag(0) public String path;
+	@Tag(1) public int width;
+	@Tag(2) public int height;
+	@Tag(3) public SceneViewport viewport;
 
-	private Array<Layer> layers = new Array<>();
-	private int activeLayerId;
+	@Tag(4) private Array<Layer> layers = new Array<>();
+	@Tag(5) private int activeLayerId;
 
-	private Array<EntityScheme> schemes; //for serialization
+	@Tag(6) private Array<EntityScheme> schemes; //for serialization
 
 	public EditorScene (FileHandle file, SceneViewport viewport, int width, int height) {
 		this.path = file.path();
