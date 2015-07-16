@@ -39,11 +39,13 @@ import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EditorFrame;
 import com.kotcrab.vis.editor.ui.WindowListener;
+import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.NewProjectDialog;
 import com.kotcrab.vis.editor.ui.dialog.SettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
+import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.ThreadUtils;
 import com.kotcrab.vis.editor.util.gdx.VisGroup;
 import com.kotcrab.vis.editor.util.vis.EditorException;
@@ -136,7 +138,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		// debug section
 		// aka. the kinda smart way to ensure that debug will load only on my machine
 		// remove it later though...
-
 		if (new File("C:\\Users\\Kotcrab\\.viseditor\\debug.this").exists()) {
 			try {
 				editorMC.get(ProjectIOModule.class).load((Gdx.files.absolute("F:\\Poligon\\Tester")));
@@ -144,6 +145,17 @@ public class Editor extends ApplicationAdapter implements EventListener {
 				Log.exception(e);
 			}
 
+			FileHandle scene = Gdx.files.absolute("F:\\Poligon\\Tester\\vis\\assets\\scene\\test.scene");
+		}
+
+		//debug end
+
+		Log.debug("Loading completed");
+	}
+
+	private void debugAfterProjectLoaded () {
+		// debug section
+		if (new File("C:\\Users\\Kotcrab\\.viseditor\\debug.this").exists()) {
 			FileHandle scene = Gdx.files.absolute("F:\\Poligon\\Tester\\vis\\assets\\scene\\test.scene");
 
 			try {
@@ -160,8 +172,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		}
 
 		//debug end
-
-		Log.debug("Loading completed");
 	}
 
 	private Stage createStage () {
@@ -430,33 +440,61 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			return;
 		}
 
-		projectLoaded = true;
-		projectMC.setProject(project);
+		ProjectLoadingDialogController controller = new ProjectLoadingDialogController();
 
-		projectMC.add(new FileAccessModule());
-		projectMC.add(new AssetsWatcherModule());
-		projectMC.add(new TextureCacheModule());
-		projectMC.add(new FontCacheModule());
-		projectMC.add(new ParticleCacheModule());
-		projectMC.add(new SceneCacheModule());
-		projectMC.add(new ProjectVersionModule());
-		projectMC.add(new SceneIOModule());
-		projectMC.add(new SupportModule());
-		projectMC.add(new SceneMetadataModule());
-		projectMC.add(new AssetsAnalyzerModule());
+		AsyncTaskProgressDialog dialog = new AsyncTaskProgressDialog("Loading Project", new AsyncTask("ProjectLoaderThread") {
+			@Override
+			public void execute () {
+				setProgressPercent(10);
+				setMessage("Loading project data...");
 
-		projectMC.add(new ExportModule());
-		projectMC.add(new SceneTabsModule());
-		projectMC.add(new ProjectInfoTabModule());
-		projectMC.add(new AssetsUIModule());
-		projectMC.addAll(pluginContainer.getContainersExtensions(ProjectModule.class, ExtensionScope.PROJECT));
+				executeOnOpenGL(() -> {
+					projectLoaded = true;
+					projectMC.setProject(project);
 
-		projectMC.init();
+					projectMC.add(new FileAccessModule());
+					projectMC.add(new AssetsWatcherModule());
+					projectMC.add(new TextureCacheModule());
+					projectMC.add(new FontCacheModule());
+					projectMC.add(new ParticleCacheModule());
+					projectMC.add(new SceneCacheModule());
+					projectMC.add(new ProjectVersionModule());
+					projectMC.add(new SceneIOModule());
+					projectMC.add(new SupportModule());
+					projectMC.add(new SceneMetadataModule());
+					projectMC.add(new AssetsAnalyzerModule());
 
-		settingsDialog.addAll(projectMC.getModules());
+					projectMC.add(new ExportModule());
+					projectMC.add(new SceneTabsModule());
+					projectMC.add(new ProjectInfoTabModule());
+					projectMC.add(new AssetsUIModule());
+					projectMC.addAll(pluginContainer.getContainersExtensions(ProjectModule.class, ExtensionScope.PROJECT));
+				});
 
-		statusBar.setText("Project loaded");
-		App.eventBus.post(new ProjectStatusEvent(Status.Loaded, project));
+				setMessage("Initializing...");
+				setProgressPercent(50);
+				ThreadUtils.sleep(10);
+
+				executeOnOpenGL(() -> {
+
+					projectMC.init();
+
+					settingsDialog.addAll(projectMC.getModules());
+
+					statusBar.setText("Project loaded");
+					App.eventBus.post(new ProjectStatusEvent(Status.Loaded, project));
+					controller.loading = false;
+
+					debugAfterProjectLoaded();
+				});
+
+				while (controller.loading) {
+					ThreadUtils.sleep(10);
+				}
+			}
+		});
+		dialog.setVisible(true);
+		Editor.instance.getStage().addActor(dialog);
 	}
 
 	private void switchProject (final Project project) {
@@ -505,5 +543,9 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			splitPane.setWidgets(tabContentTable, quickAccessContentTable);
 			mainContentTable.add(splitPane).expand().fill();
 		}
+	}
+
+	private class ProjectLoadingDialogController {
+		public boolean loading = true;
 	}
 }
