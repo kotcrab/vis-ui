@@ -185,6 +185,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 				parentTab.dirty();
 				tint.setColor(newColor);
+				tint.setUnknown(false);
 				picker.setListener(null);
 				endSnapshot();
 			}
