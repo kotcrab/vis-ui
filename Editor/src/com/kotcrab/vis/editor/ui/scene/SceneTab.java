@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
@@ -258,7 +259,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 				DialogUtils.showErrorDialog(Editor.instance.getStage(), "Unknown error encountered while saving resource");
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.exception(e);
 			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Unknown error encountered while saving resource", e);
 		}
 

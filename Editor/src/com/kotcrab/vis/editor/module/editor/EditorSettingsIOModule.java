@@ -24,7 +24,9 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
+import com.kotcrab.vis.editor.ui.toast.ExceptionToast;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.File;
@@ -39,6 +41,8 @@ import java.lang.reflect.Constructor;
  * @author Kotcrab
  */
 public class EditorSettingsIOModule extends EditorModule {
+	@InjectModule private ToastModule toastModule;
+
 	private Kryo kryo;
 	private File settingsDirectory;
 
@@ -73,7 +77,8 @@ public class EditorSettingsIOModule extends EditorModule {
 				T config = kryo.readObject(input, type);
 				input.close();
 				return config;
-			} catch (FileNotFoundException e) {
+			} catch (Exception e) {
+				toastModule.show(new ExceptionToast("Failed to load settings for: '" + type.getSimpleName() + "'", e));
 				Log.exception(e);
 			}
 		}
@@ -85,6 +90,6 @@ public class EditorSettingsIOModule extends EditorModule {
 			Log.exception(e);
 		}
 
-		throw new IllegalStateException("Failed to load settings");
+		throw new IllegalStateException("Failed to create settings class");
 	}
 }
