@@ -324,6 +324,9 @@ public class EntityManipulatorModule extends SceneModule {
 			proxy.setPosition(x, y);
 
 			undoModule.add(new EntitiesAddedAction(sceneContainer, entityEngine, entity));
+
+			if (currentSelectionGid != -1)
+				proxy.addGroup(currentSelectionGid);
 		}
 	}
 
