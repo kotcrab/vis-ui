@@ -54,7 +54,6 @@ import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.VisDropSource;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
-import com.kotcrab.vis.plugin.spine.runtime.SpineRenderSystem;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.LayerComponent;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
@@ -83,7 +82,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 	@Override
 	public void registerSystems (SceneModuleContainer sceneMC, EntityEngine engine) {
 		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
-		engine.setSystem(new SpineRenderSystem(renderBatchingSystem), true);
+		engine.setSystem(new SpineEditorRenderSystem(renderBatchingSystem), true);
 
 		engine.setSystem(new SpinePreviewUpdaterSystem());
 		engine.setSystem(new SpineScaleUpdaterSystem());
@@ -137,10 +136,10 @@ public class SpineEditorSupport extends EditorEntitySupport {
 			SpineAssetDescriptor asset = (SpineAssetDescriptor) payload;
 
 			return new EntityBuilder(engine)
-					.with(new SpineComponent(spineCache.get(asset)), new SpinePreviewComponent(), new SpineScaleComponent(),
+					.with(new SpineComponent(spineCache.get(asset)), new SpinePreviewComponent(), new SpineScaleComponent(), new SpineBoundsComponent(),
 							new AssetComponent(asset),
 							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-							new ExporterDropsComponent(SpinePreviewComponent.class, SpineScaleComponent.class))
+							new ExporterDropsComponent(SpinePreviewComponent.class, SpineScaleComponent.class, SpineBoundsComponent.class))
 					.build();
 		}
 

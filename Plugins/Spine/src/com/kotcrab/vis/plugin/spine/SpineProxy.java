@@ -33,9 +33,6 @@ package com.kotcrab.vis.plugin.spine;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.spine.Slot;
-import com.esotericsoftware.spine.attachments.*;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
 import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
@@ -45,6 +42,7 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 public class SpineProxy extends EntityProxy {
 
 	private SpineComponent spineComponent;
+	private SpineBoundsComponent boundsComponent;
 
 	public SpineProxy (Entity entity) {
 		super(entity);
@@ -53,6 +51,7 @@ public class SpineProxy extends EntityProxy {
 	@Override
 	protected BasicPropertiesAccessor initAccessors () {
 		spineComponent = entity.getComponent(SpineComponent.class);
+		boundsComponent = entity.getComponent(SpineBoundsComponent.class);
 		enableColor(spineComponent);
 		enableFlip(spineComponent);
 		return new BasicPropertiesAccessor() {
@@ -85,66 +84,22 @@ public class SpineProxy extends EntityProxy {
 
 			@Override
 			public float getWidth () {
-				computeBoundingRectangle();
-				return bounds.width;
+				boundsComponent.boundsRequested = true;
+				return boundsComponent.bounds.width;
 			}
 
 			@Override
 			public float getHeight () {
-				computeBoundingRectangle();
-				return bounds.height;
+				boundsComponent.boundsRequested = true;
+				return boundsComponent.bounds.height;
 			}
 
 			@Override
 			public Rectangle getBoundingRectangle () {
-				computeBoundingRectangle();
-				return bounds;
+				boundsComponent.boundsRequested = true;
+				return boundsComponent.bounds;
 			}
 
-			private void computeBoundingRectangle () {
-				Array<Slot> slots = spineComponent.getSkeleton().getSlots();
-				bounds = null;
-
-				for (Slot slot : slots) {
-					Attachment attachment = slot.getAttachment();
-					if (attachment == null) continue;
-
-					float[] vertices = null;
-					if (attachment instanceof BoundingBoxAttachment)
-						vertices = ((BoundingBoxAttachment) attachment).getVertices();
-					if (attachment instanceof RegionAttachment)
-						vertices = ((RegionAttachment) attachment).getWorldVertices();
-					if (attachment instanceof SkinnedMeshAttachment)
-						vertices = ((SkinnedMeshAttachment) attachment).getWorldVertices();
-					if (attachment instanceof MeshAttachment)
-						vertices = ((MeshAttachment) attachment).getWorldVertices();
-
-					if (vertices == null) continue;
-
-					float minX = vertices[0];
-					float minY = vertices[1];
-					float maxX = vertices[0];
-					float maxY = vertices[1];
-
-					for (int i = 5; i < vertices.length; i += 5) {
-						minX = minX > vertices[i] ? vertices[i] : minX;
-						minY = minY > vertices[i + 1] ? vertices[i + 1] : minY;
-						maxX = maxX < vertices[i] ? vertices[i] : maxX;
-						maxY = maxY < vertices[i + 1] ? vertices[i + 1] : maxY;
-					}
-
-					Rectangle partBounds = new Rectangle();
-					partBounds.x = minX;
-					partBounds.y = minY;
-					partBounds.width = maxX - minX;
-					partBounds.height = maxY - minY;
-
-					if (bounds == null)
-						bounds = partBounds;
-					else
-						bounds.merge(partBounds);
-				}
-			}
 		};
 	}
 
