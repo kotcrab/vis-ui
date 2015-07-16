@@ -41,9 +41,6 @@ public class SceneTabsModule extends ProjectModule implements TabbedPaneListener
 
 	@Override
 	public void dispose () {
-		for (SceneTab tab : loadedTabs)
-			tab.dispose();
-
 		tabsModule.removeListener(this);
 	}
 

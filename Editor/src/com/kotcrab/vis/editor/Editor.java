@@ -80,6 +80,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private ProjectModuleContainer projectMC;
 
 	private InputModule inputModule;
+	private TabsModule tabsModule;
 	private StatusBarModule statusBar;
 	private ProjectIOModule projectIO;
 	private FileChooserModule fileChooser;
@@ -211,7 +212,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(new MenuBarModule(projectMC));
 		editorMC.add(new ToolbarModule());
 		editorMC.add(new ToastModule());
-		editorMC.add(new TabsModule(createTabsModuleListener()));
+		editorMC.add(tabsModule = new TabsModule(createTabsModuleListener()));
 		editorMC.add(new QuickAccessModule(createQuickAccessModuleListener()));
 		editorMC.add(statusBar = new StatusBarModule());
 		editorMC.add(new UIDebugControllerModule());
@@ -331,8 +332,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 			return;
 		}
 
-		TabsModule tabsModule = editorMC.get(TabsModule.class);
-
 		if (tabsModule.getDirtyTabCount() > 0) {
 			getStage().addActor(new UnsavedResourcesDialog(tabsModule, new WindowListener() {
 				@Override
@@ -391,6 +390,13 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	}
 
 	public void requestProjectUnload () {
+		if (tabsModule.getDirtyTabCount() > 0)
+			getStage().addActor(new UnsavedResourcesDialog(tabsModule, () -> doProjectUnloading()).fadeIn());
+		else
+			doProjectUnloading();
+	}
+
+	private void doProjectUnloading () {
 		projectLoaded = false;
 		projectMC.dispose();
 		settingsDialog.removeAll(projectMC.getModules());
