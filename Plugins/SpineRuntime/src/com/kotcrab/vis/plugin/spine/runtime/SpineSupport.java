@@ -41,7 +41,7 @@ import com.kotcrab.vis.plugin.spine.runtime.SkeletonDataLoader.SkeletonDataLoade
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.data.ECSEntityData;
+import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
@@ -61,7 +61,7 @@ public class SpineSupport implements EntitySupport {
 	}
 
 	@Override
-	public void resolveDependencies (Array<AssetDescriptor> dependencies, ECSEntityData entityData, Component component) {
+	public void resolveDependencies (Array<AssetDescriptor> dependencies, EntityData entityData, Component component) {
 		if (component instanceof AssetComponent) {
 			VisAssetDescriptor asset = ((AssetComponent) component).asset;
 			if (asset instanceof SpineAssetDescriptor) {

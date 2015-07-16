@@ -23,7 +23,7 @@ import com.artemis.utils.EntityBuilder;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.component.GroupComponent;
-import com.kotcrab.vis.runtime.data.ECSEntityData;
+import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 
@@ -49,7 +49,7 @@ public class EntityScheme {
 		return entity;
 	}
 
-	public ECSEntityData toData () {
+	public EntityData toData () {
 		Array<Component> dataComponents = new Array<>();
 
 		ExporterDropsComponent dropsComponent = null;
@@ -78,6 +78,6 @@ public class EntityScheme {
 			}
 		}
 
-		return new ECSEntityData(dataComponents);
+		return new EntityData(dataComponents);
 	}
 }

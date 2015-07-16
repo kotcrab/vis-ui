@@ -38,7 +38,7 @@ import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.data.ECSEntityData;
+import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.font.BitmapFontProvider;
 import com.kotcrab.vis.runtime.font.FontProvider;
@@ -110,8 +110,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		return deps;
 	}
 
-	private void loadDependencies (Array<AssetDescriptor> dependencies, Array<ECSEntityData> entities) {
-		for (ECSEntityData entityData : entities) {
+	private void loadDependencies (Array<AssetDescriptor> dependencies, Array<EntityData> entities) {
+		for (EntityData entityData : entities) {
 			for (Component component : entityData.components) {
 				if (component instanceof AssetComponent) {
 					VisAssetDescriptor asset = ((AssetComponent) component).asset;
@@ -159,7 +159,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		scene = new Scene(context, data.viewport, data.width, data.height);
 
 		EntityEngine engine = scene.getEntityEngine();
-		for (ECSEntityData entityData : data.entities)
+		for (EntityData entityData : data.entities)
 			entityData.build(engine);
 	}
 

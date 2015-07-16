@@ -16,33 +16,29 @@
 
 package com.kotcrab.vis.runtime.data;
 
-import com.kotcrab.annotation.CallSuper;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.entity.Entity;
+import com.artemis.Component;
+import com.artemis.Entity;
+import com.artemis.utils.EntityBuilder;
+import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 
-/**
- * Base class for all entities data inside scene. Subclasses of this class are directly serialized into
- * JSON file during scene exporting in VisEditor.
- * @author Kotcrab
- */
-@Deprecated
-public abstract class EntityData<T extends Entity> {
-	public String id;
-	public VisAssetDescriptor assetDescriptor;
+/** @author Kotcrab */
+public class EntityData {
+	public Array<Component> components;
 
-	@CallSuper
-	/** Saves all values from this entity to instance of this class */
-	public void saveFrom (T entity, VisAssetDescriptor assetDescriptor) {
-		this.id = entity.getId();
-		this.assetDescriptor = assetDescriptor;
+	private EntityData () {
 	}
 
-	/**
-	 * Loads all possible values from this entity to instance of this class. If value can't be loaded it should
-	 * be ignored, in such cases it is typically handled by VisEditor serializer.
-	 */
-	@CallSuper
-	public void loadTo (T entity) {
-		entity.setId(id);
+	public EntityData (Array<Component> components) {
+		this.components = components;
+	}
+
+	public Entity build (EntityEngine engine) {
+		EntityBuilder builder = new EntityBuilder(engine);
+
+		for (Component component : components)
+			builder.with(component);
+
+		return builder.build();
 	}
 }

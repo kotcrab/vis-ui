@@ -30,5 +30,5 @@ public class SceneData {
 	public int width;
 	public int height;
 
-	public Array<ECSEntityData> entities = new Array<ECSEntityData>();
+	public Array<EntityData> entities = new Array<EntityData>();
 }

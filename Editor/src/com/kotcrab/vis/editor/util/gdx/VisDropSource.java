@@ -22,11 +22,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
 import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
-import com.kotcrab.vis.editor.scene.EditorObject;
-import com.kotcrab.vis.editor.util.vis.EditorObjectProvider;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 /**
@@ -35,12 +32,8 @@ import com.kotcrab.vis.ui.widget.VisLabel;
  */
 public class VisDropSource extends Source {
 	private final DragAndDrop dragAndDrop;
-	@Deprecated private EditorObject object;
-
-	private boolean disposeOnNullTarget;
 
 	private String viewText;
-	@Deprecated private EditorObjectProvider provider;
 	private Object payloadObject;
 
 	public VisDropSource (DragAndDrop dragAndDrop, Actor actor) {
@@ -53,20 +46,8 @@ public class VisDropSource extends Source {
 		return this;
 	}
 
-	@Deprecated
-	public VisDropSource setObjectProvider (EditorObjectProvider provider) {
-		this.provider = provider;
-		return this;
-	}
-
 	public VisDropSource setPayload (Object payload) {
 		this.payloadObject = payload;
-		return this;
-	}
-
-	@Deprecated
-	public VisDropSource disposeOnNullTarget () {
-		disposeOnNullTarget = true;
 		return this;
 	}
 
@@ -74,12 +55,7 @@ public class VisDropSource extends Source {
 	public Payload dragStart (InputEvent event, float x, float y, int pointer) {
 		Payload payload = new Payload();
 
-		if(provider != null) {
-			object = provider.newInstance();
-			payload.setObject(object);
-		}
-		else
-			payload.setObject(payloadObject);
+		payload.setObject(payloadObject);
 
 		Label label = new VisLabel(viewText);
 		label.setAlignment(Align.center);
@@ -88,11 +64,5 @@ public class VisDropSource extends Source {
 		dragAndDrop.setDragActorPosition(-label.getWidth() / 2, label.getHeight() / 2);
 
 		return payload;
-	}
-
-	@Override
-	public void dragStop (InputEvent event, float x, float y, int pointer, Payload payload, Target target) {
-		if (target == null && disposeOnNullTarget)
-			object.dispose();
 	}
 }
