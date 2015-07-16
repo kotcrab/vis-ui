@@ -250,11 +250,11 @@ public abstract class EntityProxy {
 
 	//color properties
 
-	protected void enableTint (ColorPropertiesAccessor colorAccessor) {
+	protected void enableColor (ColorPropertiesAccessor colorAccessor) {
 		this.colorAccessor = colorAccessor;
 	}
 
-	public boolean isTintSupported () {
+	public boolean isColorSupported () {
 		return colorAccessor != null;
 	}
 
@@ -321,7 +321,7 @@ public abstract class EntityProxy {
 		return entity.getComponent(AssetComponent.class).asset;
 	}
 
-	void setAssetDescriptor (VisAssetDescriptor asset) {
+	public void setAssetDescriptor (VisAssetDescriptor asset) {
 		checkAssetDescriptor(asset);
 
 		AssetComponent adc = entity.getComponent(AssetComponent.class);
@@ -332,12 +332,12 @@ public abstract class EntityProxy {
 			entity.edit().add(new AssetComponent(asset));
 	}
 
-	void checkAssetDescriptor (VisAssetDescriptor assetDescriptor) {
+	public void checkAssetDescriptor (VisAssetDescriptor assetDescriptor) {
 		if (isAssetsDescriptorSupported(assetDescriptor) == false)
 			throw new UnsupportedAssetDescriptorException(assetDescriptor);
 	}
 
-	abstract boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor);
+	protected abstract boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor);
 
 	public Array<Entity> getEntities () {
 		Array<Entity> entities = new Array<>(1);

@@ -31,52 +31,44 @@
 
 package com.kotcrab.vis.plugin.spine.runtime;
 
-import com.artemis.Component;
-import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.spine.SkeletonData;
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
+import com.artemis.Entity;
+import com.artemis.annotations.Wire;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.esotericsoftware.spine.SkeletonRenderer;
-import com.kotcrab.vis.plugin.spine.runtime.SkeletonDataLoader.SkeletonDataLoaderParameter;
-import com.kotcrab.vis.runtime.RuntimeConfiguration;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.data.ECSEntityData;
-import com.kotcrab.vis.runtime.plugin.EntitySupport;
-import com.kotcrab.vis.runtime.plugin.VisPlugin;
+import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
-import com.kotcrab.vis.runtime.util.EntityEngine;
+import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
+import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 
-@VisPlugin
-public class SpineSupport implements EntitySupport {
+/** @author Kotcrab */
+@Wire
+public class SpineRenderSystem extends DeferredEntityProcessingSystem {
+	private ComponentMapper<SpineComponent> spineCm;
+
+	private RenderBatchingSystem renderBatchingSystem;
+	private Batch batch;
+
 	private SkeletonRenderer skeletonRenderer;
 
-	public SpineSupport () {
+	public SpineRenderSystem (EntityProcessPrincipal principal) {
+		super(Aspect.all(SpineComponent.class).exclude(InvisibleComponent.class), principal);
 		skeletonRenderer = new SkeletonRenderer();
 	}
 
 	@Override
-	public void setLoaders (AssetManager manager) {
-		manager.setLoader(SkeletonData.class, new SkeletonDataLoader());
+	protected void initialize () {
+		batch = renderBatchingSystem.getBatch();
 	}
 
 	@Override
-	public void resolveDependencies (Array<AssetDescriptor> dependencies, ECSEntityData entityData, Component component) {
-		if (component instanceof AssetComponent) {
-			VisAssetDescriptor asset = ((AssetComponent) component).asset;
-			if (asset instanceof SpineAssetDescriptor) {
-				SpineAssetDescriptor spineAsset = (SpineAssetDescriptor) asset;
-
-				SkeletonDataLoaderParameter parameter = new SkeletonDataLoaderParameter(spineAsset.getAtlasPath(), spineAsset.getScale());
-				dependencies.add(new AssetDescriptor<SkeletonData>(spineAsset.getSkeletonPath(), SkeletonData.class, parameter));
-			}
-		}
-	}
-
-	@Override
-	public void registerSystems (RuntimeConfiguration configuration, AssetManager manager, EntityEngine engine) {
-		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
-		engine.setSystem(new SpineRenderSystem(renderBatchingSystem), true);
-		engine.setSystem(new SpineInflaterSystem(configuration, manager), configuration.passiveInflaters);
+	protected void process (Entity e) {
+		SpineComponent spine = spineCm.get(e);
+		spine.state.update(Gdx.graphics.getDeltaTime());
+		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
+		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
+		skeletonRenderer.draw(batch, spine.skeleton); // Draw the skeleton images.
 	}
 }

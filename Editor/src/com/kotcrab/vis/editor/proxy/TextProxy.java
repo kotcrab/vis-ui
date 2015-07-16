@@ -35,7 +35,7 @@ public class TextProxy extends EntityProxy {
 		TextComponent c = entity.getComponent(TextComponent.class);
 		enableOrigin(c);
 		enableScale(c);
-		enableTint(c);
+		enableColor(c);
 		enableRotation(c);
 		return c;
 	}
@@ -46,7 +46,7 @@ public class TextProxy extends EntityProxy {
 	}
 
 	@Override
-	boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
 		return assetDescriptor instanceof BmpFontAsset || assetDescriptor instanceof TtfFontAsset;
 	}
 }

@@ -88,7 +88,7 @@ public class Scene {
 		engine.setSystem(new ParticleRenderSystem(renderBatchingSystem, false), true);
 
 		for (EntitySupport support : context.supports)
-			support.registerSystems(engine);
+			support.registerSystems(configuration, assetsManager, engine);
 
 		engine.initialize();
 	}

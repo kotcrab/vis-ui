@@ -45,12 +45,12 @@ public class SpineAssetDescriptorProvider implements AssetDescriptorProvider {
 		if (relativePath.endsWith("atlas")) {
 			String skelPath = findSkelPath(file, relativePath);
 			if (skelPath == null) return null; //skeleton does not exist
-			return new SpineAssetDescriptor(relativePath, skelPath, 1); //scale is ignored when comparing
+			return new SpineAssetDescriptor(relativePath, skelPath, -1); //scale is ignored when comparing
 		}
 
 		if (relativePath.endsWith("skel") || relativePath.endsWith("json")) {
 			if (FileUtils.siblingExists(file, "atlas"))
-				return new SpineAssetDescriptor(FileUtils.replaceExtension(relativePath, "atlas"), relativePath, 1); //scale is ignored when comparing
+				return new SpineAssetDescriptor(FileUtils.replaceExtension(relativePath, "atlas"), relativePath, -1); //scale is ignored when comparing
 		}
 
 		return null;

@@ -29,59 +29,31 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.kotcrab.vis.plugin.spine;
+package com.kotcrab.vis.plugin.spine.runtime;
 
 import com.badlogic.gdx.graphics.Color;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
-import com.esotericsoftware.spine.SkeletonRenderer;
+import com.kotcrab.vis.runtime.component.ProtoComponent;
 
-@Deprecated
-public class SpineSerializer extends CompatibleFieldSerializer<SpineObject> {
-	private static final int VERSION_CODE = 1;
+/** @author Kotcrab */
+public class SpineProtoComponent extends ProtoComponent {
+	public float x, y;
+	public boolean flipX, flipY;
+	public Color color;
 
-	private SpineCacheModule spineCache;
-	private SkeletonRenderer renderer;
+	public boolean playOnStart;
+	public String defaultAnimation;
 
-	public SpineSerializer (Kryo kryo, SpineCacheModule spineCache, SkeletonRenderer renderer) {
-		super(kryo, SpineObject.class);
-		this.spineCache = spineCache;
-		this.renderer = renderer;
+	private SpineProtoComponent () {
 	}
 
-	@Override
-	public void write (Kryo kryo, Output output, SpineObject object) {
-		super.write(kryo, output, object);
+	public SpineProtoComponent (SpineComponent spineComponent) {
+		x = spineComponent.getX();
+		y = spineComponent.getY();
 
-		output.writeInt(VERSION_CODE);
+		flipX = spineComponent.isFlipX();
+		flipY = spineComponent.isFlipY();
 
-		output.writeFloat(object.getX());
-		output.writeFloat(object.getY());
-
-		output.writeBoolean(object.isFlipX());
-		output.writeBoolean(object.isFlipY());
-
-		kryo.writeObject(output, object.getColor());
-	}
-
-	@Override
-	public SpineObject read (Kryo kryo, Input input, Class<SpineObject> type) {
-		SpineObject object = super.read(kryo, input, type);
-
-		input.readInt(); //version code
-
-		object.onDeserialize(spineCache.get(object.getAssetDescriptor()), renderer, spineCache);
-		object.setPosition(input.readFloat(), input.readFloat());
-		object.setFlip(input.readBoolean(), input.readBoolean());
-		object.setColor(kryo.readObject(input, Color.class));
-		return object;
-	}
-
-	@Override
-	public SpineObject copy (Kryo kryo, SpineObject original) {
-		return new SpineObject(original);
+		playOnStart = spineComponent.isPlayOnStart();
+		defaultAnimation = spineComponent.getDefaultAnimation();
 	}
 }
-

@@ -31,7 +31,7 @@ import static com.kotcrab.vis.editor.util.vis.EntityUtils.setCommonCheckBoxState
 /**
  * @author Kotcrab
  */
-public class BMPTextObjectTable extends TextObjectTable {
+public class BMPTextUITable extends TextUITable {
 	private IndeterminateCheckbox distanceFieldCheck;
 
 	@Override

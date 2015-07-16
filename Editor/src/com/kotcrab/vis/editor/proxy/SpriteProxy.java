@@ -35,7 +35,7 @@ public class SpriteProxy extends EntityProxy {
 		enableResize(c);
 		enableOrigin(c);
 		enableScale(c);
-		enableTint(c);
+		enableColor(c);
 		enableRotation(c);
 		enableFlip(c);
 		return c;
@@ -47,7 +47,7 @@ public class SpriteProxy extends EntityProxy {
 	}
 
 	@Override
-	boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
 		return assetDescriptor instanceof TextureAssetDescriptor;
 	}
 }

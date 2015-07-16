@@ -309,7 +309,8 @@ public class EntityManipulatorModule extends SceneModule {
 		}
 
 		for (EditorEntitySupport support : supportModule.getSupports()) {
-			support.processDropPayload(entityEngine, scene, obj);
+			entity = support.processDropPayload(entityEngine, scene, obj);
+			if (entity != null) break;
 		}
 
 		if (entity != null) {

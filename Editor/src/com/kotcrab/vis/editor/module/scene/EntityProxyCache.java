@@ -23,6 +23,9 @@ import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.entity.EntityScheme;
+import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.project.SupportModule;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.InternalEntityProxyResolver;
 import com.kotcrab.vis.runtime.component.LayerComponent;
@@ -30,6 +33,8 @@ import com.kotcrab.vis.runtime.component.RenderableComponent;
 
 @Wire
 public class EntityProxyCache extends Manager {
+	@InjectModule private SupportModule supportModule;
+
 	private AspectSubscriptionManager subscriptionManager;
 
 	private EntitySubscription subscription;
@@ -60,10 +65,14 @@ public class EntityProxyCache extends Manager {
 	private EntityProxy getProxy (Entity entity) {
 		EntityProxy proxy = InternalEntityProxyResolver.getFor(entity);
 
-		//TODO resolve external proxies
+		for (EditorEntitySupport support : supportModule.getSupports()) {
+			proxy = support.resolveProxy(entity);
+			if (proxy != null)
+				return proxy;
+		}
 
 		if (proxy == null)
-			throw new IllegalStateException("Could not find appropriate proxy");
+			throw new IllegalStateException("Could not find appropriate proxy for entity");
 
 		return proxy;
 	}

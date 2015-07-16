@@ -44,6 +44,7 @@ import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.SpineEntity;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
+@Deprecated
 public class SpineObject extends SpineEntity implements EditorObject {
 	private transient boolean boundsRequested;
 	private transient SpineCacheModule spineCache;

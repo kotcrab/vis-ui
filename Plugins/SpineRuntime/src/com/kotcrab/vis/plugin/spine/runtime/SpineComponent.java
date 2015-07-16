@@ -31,34 +31,44 @@
 
 package com.kotcrab.vis.plugin.spine.runtime;
 
-import com.badlogic.gdx.Gdx;
+import com.artemis.Component;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.esotericsoftware.spine.*;
-import com.kotcrab.vis.runtime.entity.Entity;
+import com.esotericsoftware.spine.AnimationState;
+import com.esotericsoftware.spine.AnimationStateData;
+import com.esotericsoftware.spine.Skeleton;
+import com.esotericsoftware.spine.SkeletonData;
+import com.kotcrab.vis.runtime.accessor.ColorPropertiesAccessor;
+import com.kotcrab.vis.runtime.accessor.FlipPropertiesAccessor;
+import com.kotcrab.vis.runtime.component.ProtoComponent;
+import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 
-@Deprecated
-public class SpineEntity extends Entity {
-	protected transient Skeleton skeleton;
-	protected transient AnimationStateData stateData;
-	protected transient AnimationState state;
-	protected transient SkeletonRenderer renderer;
+/** @author Kotcrab */
+public class SpineComponent extends Component implements FlipPropertiesAccessor, ColorPropertiesAccessor, UsesProtoComponent {
+	public transient Skeleton skeleton;
+	public transient AnimationStateData stateData;
+	public transient AnimationState state;
 
-	protected boolean playOnStart;
-	protected String defaultAnimation;
+	public boolean playOnStart;
+	public String defaultAnimation;
 
-	public SpineEntity (String id, SkeletonData skeletonData, SkeletonRenderer renderer) {
-		super(id);
-		this.renderer = renderer;
+	public SpineComponent (SkeletonData skeletonData) {
 		init(skeletonData);
 	}
 
-	protected void init (SkeletonData skeletonData) {
+	public SpineComponent (SpineComponent other, SkeletonData skeletonData) {
+		this.playOnStart = other.playOnStart;
+		this.defaultAnimation = other.defaultAnimation;
+		init(skeletonData);
+	}
+
+	private void init (SkeletonData skeletonData) {
 		skeleton = new Skeleton(skeletonData);
 
 		stateData = new AnimationStateData(skeletonData);
 		state = new AnimationState(stateData);
+	}
 
+	void updateDefaultAnimations () {
 		if (defaultAnimation == null)
 			defaultAnimation = skeleton.getData().getAnimations().get(0).getName();
 
@@ -66,18 +76,10 @@ public class SpineEntity extends Entity {
 			state.setAnimation(0, defaultAnimation, true);
 	}
 
-	@Override
-	public void onAfterLoad () {
+	public void onDeserialize (SkeletonData skeletonData) {
+		init(skeletonData);
 		if (playOnStart)
 			state.setAnimation(0, defaultAnimation, true);
-	}
-
-	@Override
-	public void render (Batch batch) {
-		state.update(Gdx.graphics.getDeltaTime());
-		state.apply(skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
-		skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
-		renderer.draw(batch, skeleton); // Draw the skeleton images.
 	}
 
 	public float getX () {
@@ -100,30 +102,27 @@ public class SpineEntity extends Entity {
 		skeleton.setPosition(x, y);
 	}
 
+	@Override
 	public void setFlip (boolean flipX, boolean flipY) {
 		skeleton.setFlip(flipX, flipY);
 	}
 
-	public void setFlipY (boolean flipY) {
-		skeleton.setFlipY(flipY);
-	}
-
+	@Override
 	public boolean isFlipY () {
 		return skeleton.getFlipY();
 	}
 
-	public void setFlipX (boolean flipX) {
-		skeleton.setFlipX(flipX);
-	}
-
+	@Override
 	public boolean isFlipX () {
 		return skeleton.getFlipX();
 	}
 
+	@Override
 	public void setColor (Color color) {
 		skeleton.setColor(color);
 	}
 
+	@Override
 	public Color getColor () {
 		return skeleton.getColor();
 	}
@@ -146,5 +145,10 @@ public class SpineEntity extends Entity {
 
 	public void setPlayOnStart (boolean playOnStart) {
 		this.playOnStart = playOnStart;
+	}
+
+	@Override
+	public ProtoComponent getProtoComponent () {
+		return new SpineProtoComponent(this);
 	}
 }

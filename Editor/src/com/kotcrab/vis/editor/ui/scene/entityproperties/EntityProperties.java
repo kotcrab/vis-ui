@@ -68,7 +68,7 @@ import java.util.Iterator;
 /**
  * Entity properties dialog, used to display and change all data about currently selected entities. Multiple selection
  * is supported, even when entities have different values, <?> is used in float input fields, and intermediate checkbox are used
- * for boolean support. Undo is supported. Plugin can add custom properties tables (see {@link SpecificObjectTable}),
+ * for boolean support. Undo is supported. Plugin can add custom properties tables (see {@link SpecificUITable}),
  * but they must support all base features of this dialog (multiple selection support, undo, etc.). See any class
  * from 'specifictable' package for examples.
  * @author Kotcrab
@@ -118,8 +118,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private VisTable tintTable;
 	private VisTable flipTable;
 
-	private Array<SpecificObjectTable> specificTables = new Array<>();
-	private SpecificObjectTable activeSpecificTable;
+	private Array<SpecificUITable> specificTables = new Array<>();
+	private SpecificUITable activeSpecificTable;
 
 	private VisValidableTextField idField;
 	private NumberInputField xField;
@@ -197,10 +197,10 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		createRotationTintTable();
 		createFlipTable();
 
-		registerSpecificTable(new TTFTextObjectTable());
-		registerSpecificTable(new BMPTextObjectTable());
-		registerSpecificTable(new MusicObjectTable());
-		registerSpecificTable(new SoundObjectTable());
+		registerSpecificTable(new TTFTextUITable());
+		registerSpecificTable(new BMPTextUITable());
+		registerSpecificTable(new MusicUITable());
+		registerSpecificTable(new SoundUITable());
 		registerSpecificTable(new ParticleEffectTable());
 
 		propertiesTable = new VisTable(true);
@@ -317,7 +317,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			propertiesTable.add(flipTable).right().fill(false).spaceBottom(2).row();
 
 		activeSpecificTable = null;
-		for (SpecificObjectTable table : specificTables) {
+		for (SpecificUITable table : specificTables) {
 			if (checkEntityList(table)) {
 				activeSpecificTable = table;
 				propertiesTable.add(new Separator()).fillX().row();
@@ -329,7 +329,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		invalidateHierarchy();
 	}
 
-	private boolean checkEntityList (SpecificObjectTable table) {
+	private boolean checkEntityList (SpecificUITable table) {
 		for (EntityProxy entity : entities)
 			if (!table.isSupported(entity)) return false;
 
@@ -499,17 +499,17 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	public void loadSupportsSpecificTables (SupportModule supportModule) {
 		for (EditorEntitySupport support : supportModule.getSupports()) {
-			Array<SpecificObjectTable> tables = support.getUIPropertyTables();
+			Array<SpecificUITable> tables = support.getUIPropertyTables();
 			if (tables != null) {
-				for (SpecificObjectTable table : tables)
+				for (SpecificUITable table : tables)
 					registerSpecificTable(table);
 			}
 		}
 	}
 
-	private void registerSpecificTable (SpecificObjectTable specificObjectTable) {
-		specificTables.add(specificObjectTable);
-		specificObjectTable.setProperties(this);
+	private void registerSpecificTable (SpecificUITable specificUITable) {
+		specificTables.add(specificUITable);
+		specificUITable.setProperties(this);
 	}
 
 	private static class SnapshotUndoableActionGroup extends UndoableActionGroup {

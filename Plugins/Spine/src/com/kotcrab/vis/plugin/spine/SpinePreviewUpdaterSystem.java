@@ -31,57 +31,37 @@
 
 package com.kotcrab.vis.plugin.spine;
 
-import com.badlogic.gdx.graphics.Color;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
-import com.esotericsoftware.spine.SkeletonRenderer;
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
+import com.artemis.Entity;
+import com.artemis.annotations.Wire;
+import com.artemis.systems.EntityProcessingSystem;
+import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
 
-@Deprecated
-public class SpineSerializer extends CompatibleFieldSerializer<SpineObject> {
-	private static final int VERSION_CODE = 1;
+/** @author Kotcrab */
+@Wire
+public class SpinePreviewUpdaterSystem extends EntityProcessingSystem {
+	private ComponentMapper<SpineComponent> spineCm;
+	private ComponentMapper<SpinePreviewComponent> previewCm;
 
-	private SpineCacheModule spineCache;
-	private SkeletonRenderer renderer;
-
-	public SpineSerializer (Kryo kryo, SpineCacheModule spineCache, SkeletonRenderer renderer) {
-		super(kryo, SpineObject.class);
-		this.spineCache = spineCache;
-		this.renderer = renderer;
+	public SpinePreviewUpdaterSystem () {
+		super(Aspect.all(SpineComponent.class, SpinePreviewComponent.class));
 	}
 
 	@Override
-	public void write (Kryo kryo, Output output, SpineObject object) {
-		super.write(kryo, output, object);
+	protected void process (Entity e) {
+		SpinePreviewComponent previewComponent = previewCm.get(e);
 
-		output.writeInt(VERSION_CODE);
+		if (previewComponent.updateAnimation) {
+			previewComponent.updateAnimation = false;
 
-		output.writeFloat(object.getX());
-		output.writeFloat(object.getY());
+			SpineComponent spineComponent = spineCm.get(e);
 
-		output.writeBoolean(object.isFlipX());
-		output.writeBoolean(object.isFlipY());
+			spineComponent.state.clearTrack(0);
+			spineComponent.skeleton.setToSetupPose();
 
-		kryo.writeObject(output, object.getColor());
-	}
-
-	@Override
-	public SpineObject read (Kryo kryo, Input input, Class<SpineObject> type) {
-		SpineObject object = super.read(kryo, input, type);
-
-		input.readInt(); //version code
-
-		object.onDeserialize(spineCache.get(object.getAssetDescriptor()), renderer, spineCache);
-		object.setPosition(input.readFloat(), input.readFloat());
-		object.setFlip(input.readBoolean(), input.readBoolean());
-		object.setColor(kryo.readObject(input, Color.class));
-		return object;
-	}
-
-	@Override
-	public SpineObject copy (Kryo kryo, SpineObject original) {
-		return new SpineObject(original);
+			if (previewComponent.previewEnabled)
+				spineComponent.state.setAnimation(0, spineComponent.defaultAnimation, true);
+		}
 	}
 }
-

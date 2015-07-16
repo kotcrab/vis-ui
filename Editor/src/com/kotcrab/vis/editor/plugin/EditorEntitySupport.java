@@ -27,17 +27,22 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.ContentItemProperties;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
+import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
+import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificObjectTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**
  * @author Kotcrab
  */
-@Deprecated
 public abstract class EditorEntitySupport {
 	/** Called when ObjectSupport can get required modules from {@link ProjectModuleContainer} */
 	public void bindModules (ProjectModuleContainer projectMC) {
+
+	}
+
+	public void registerSystems (SceneModuleContainer sceneMC, EntityEngine engine) {
 
 	}
 
@@ -59,11 +64,13 @@ public abstract class EditorEntitySupport {
 
 	public abstract Entity processDropPayload (EntityEngine engine, EditorScene scene, Object payload);
 
+	public abstract EntityProxy resolveProxy (Entity entity);
+
 	/** @return kryo serializer used for serializing this entity */
 	public abstract Array<Serializer> getSerializers ();
 
 	/** This must return new instance every time this is called. */
-	public Array<SpecificObjectTable> getUIPropertyTables () {
+	public Array<SpecificUITable> getUIPropertyTables () {
 		return null;
 	}
 

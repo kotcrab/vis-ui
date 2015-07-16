@@ -20,6 +20,7 @@ import com.artemis.Component;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.data.ECSEntityData;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
@@ -33,5 +34,5 @@ public interface EntitySupport {
 	/** Called when EntitySupport should resolve required dependencies for Entity and add them into dependency list */
 	void resolveDependencies (Array<AssetDescriptor> dependencies, ECSEntityData entityData, Component component);
 
-	void registerSystems (EntityEngine engine);
+	void registerSystems (RuntimeConfiguration configuration, AssetManager manager, EntityEngine engine);
 }

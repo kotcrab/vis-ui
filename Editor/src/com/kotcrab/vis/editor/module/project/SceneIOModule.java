@@ -64,6 +64,7 @@ public class SceneIOModule extends ProjectModule {
 	private Kryo kryo;
 
 	@InjectModule private FileAccessModule fileAccessModule;
+	@InjectModule private SupportModule supportModule;
 
 	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private ParticleCacheModule particleCache;

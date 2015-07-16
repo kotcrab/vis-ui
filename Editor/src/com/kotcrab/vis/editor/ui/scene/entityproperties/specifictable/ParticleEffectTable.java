@@ -29,7 +29,7 @@ import static com.kotcrab.vis.editor.util.vis.EntityUtils.setCommonCheckBoxState
  * Specific table for {@link ParticleEffectObject}
  * @author Kotcrab
  */
-public class ParticleEffectTable extends SpecificObjectTable {
+public class ParticleEffectTable extends SpecificUITable {
 	private IndeterminateCheckbox activeCheck;
 
 	@Override

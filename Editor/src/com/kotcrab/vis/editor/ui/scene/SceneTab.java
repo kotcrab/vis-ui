@@ -38,10 +38,12 @@ import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
+import com.kotcrab.vis.editor.module.project.SupportModule;
 import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupBreadcrumb;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
@@ -97,10 +99,15 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		sceneMC.add(new EntityManipulatorModule());
 		sceneMC.addAll(sceneMC.findInHierarchy(ExtensionStorageModule.class).getContainersExtensions(SceneModule.class, ExtensionScope.SCENE));
 
+		engine = sceneMC.getEntityEngine();
+
+		for (EditorEntitySupport support : projectMC.get(SupportModule.class).getSupports()) {
+			support.registerSystems(sceneMC, engine);
+		}
+
 		sceneMC.init();
 		sceneMC.injectModules(this);
 
-		engine = sceneMC.getEntityEngine();
 		entityManager = engine.getEntityManager();
 		entityProxyCache = engine.getManager(EntityProxyCache.class);
 

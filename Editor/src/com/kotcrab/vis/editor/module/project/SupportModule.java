@@ -69,6 +69,8 @@ public class SupportModule extends ProjectModule {
 	public void register (EditorEntitySupport support) {
 		supports.add(support);
 
+		support.bindModules(projectContainer);
+
 		for (Serializer serializer : support.getSerializers()) {
 			if (serializer instanceof PluginKryoSerializer == false)
 				throw new IllegalStateException("All plugin serializer must implement PluginKryoSerializer interface");
@@ -83,8 +85,6 @@ public class SupportModule extends ProjectModule {
 
 			desc.serializer = serializer;
 		}
-
-		support.bindModules(projectContainer);
 	}
 
 	private SupportSerializerDescriptor getDescriptorByClazz (Class clazz) {

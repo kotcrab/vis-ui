@@ -35,6 +35,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.data.EntityData;
 
+@Deprecated
 public class SpineData extends EntityData<SpineEntity> {
 	public float x, y;
 	public boolean flipX, flipY;

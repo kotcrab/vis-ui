@@ -35,7 +35,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 /**
  * @author Kotcrab
  */
-public class TTFTextObjectTable extends TextObjectTable {
+public class TTFTextUITable extends TextUITable {
 	private NumberInputField sizeInputField;
 
 	@Override

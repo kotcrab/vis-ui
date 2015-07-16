@@ -140,7 +140,7 @@ public class EntityUtils {
 
 	public static boolean isTintSupportedForEntities (Array<EntityProxy> entities) {
 		for (EntityProxy entity : entities) {
-			if (entity.isTintSupported() == false) return false;
+			if (entity.isColorSupported() == false) return false;
 		}
 
 		return true;

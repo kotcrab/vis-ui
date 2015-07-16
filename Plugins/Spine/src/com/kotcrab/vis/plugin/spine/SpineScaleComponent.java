@@ -31,57 +31,10 @@
 
 package com.kotcrab.vis.plugin.spine;
 
-import com.badlogic.gdx.graphics.Color;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
-import com.esotericsoftware.spine.SkeletonRenderer;
+import com.artemis.Component;
 
-@Deprecated
-public class SpineSerializer extends CompatibleFieldSerializer<SpineObject> {
-	private static final int VERSION_CODE = 1;
-
-	private SpineCacheModule spineCache;
-	private SkeletonRenderer renderer;
-
-	public SpineSerializer (Kryo kryo, SpineCacheModule spineCache, SkeletonRenderer renderer) {
-		super(kryo, SpineObject.class);
-		this.spineCache = spineCache;
-		this.renderer = renderer;
-	}
-
-	@Override
-	public void write (Kryo kryo, Output output, SpineObject object) {
-		super.write(kryo, output, object);
-
-		output.writeInt(VERSION_CODE);
-
-		output.writeFloat(object.getX());
-		output.writeFloat(object.getY());
-
-		output.writeBoolean(object.isFlipX());
-		output.writeBoolean(object.isFlipY());
-
-		kryo.writeObject(output, object.getColor());
-	}
-
-	@Override
-	public SpineObject read (Kryo kryo, Input input, Class<SpineObject> type) {
-		SpineObject object = super.read(kryo, input, type);
-
-		input.readInt(); //version code
-
-		object.onDeserialize(spineCache.get(object.getAssetDescriptor()), renderer, spineCache);
-		object.setPosition(input.readFloat(), input.readFloat());
-		object.setFlip(input.readBoolean(), input.readBoolean());
-		object.setColor(kryo.readObject(input, Color.class));
-		return object;
-	}
-
-	@Override
-	public SpineObject copy (Kryo kryo, SpineObject original) {
-		return new SpineObject(original);
-	}
+/** @author Kotcrab */
+public class SpineScaleComponent extends Component {
+	public boolean updateScale;
+	public float scale = 1;
 }
-

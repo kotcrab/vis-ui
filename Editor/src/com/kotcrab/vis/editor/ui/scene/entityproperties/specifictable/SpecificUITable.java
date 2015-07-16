@@ -24,14 +24,14 @@ import com.kotcrab.vis.ui.widget.VisTable;
  * Specific objects tables allow to add custom widgets for {@link EntityProperties} dialog.
  * @author Kotcrab
  */
-public abstract class SpecificObjectTable extends VisTable {
+public abstract class SpecificUITable extends VisTable {
 	protected EntityProperties properties;
 
-	public SpecificObjectTable () {
+	public SpecificUITable () {
 		this(true);
 	}
 
-	public SpecificObjectTable (boolean useVisDefaults) {
+	public SpecificUITable (boolean useVisDefaults) {
 		super(useVisDefaults);
 	}
 

@@ -31,52 +31,58 @@
 
 package com.kotcrab.vis.plugin.spine.runtime;
 
-import com.artemis.Component;
-import com.badlogic.gdx.assets.AssetDescriptor;
+import com.artemis.*;
+import com.artemis.annotations.Wire;
+import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.spine.SkeletonData;
-import com.esotericsoftware.spine.SkeletonRenderer;
-import com.kotcrab.vis.plugin.spine.runtime.SkeletonDataLoader.SkeletonDataLoaderParameter;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.data.ECSEntityData;
-import com.kotcrab.vis.runtime.plugin.EntitySupport;
-import com.kotcrab.vis.runtime.plugin.VisPlugin;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
-import com.kotcrab.vis.runtime.util.EntityEngine;
 
-@VisPlugin
-public class SpineSupport implements EntitySupport {
-	private SkeletonRenderer skeletonRenderer;
+/** @author Kotcrab */
+@Wire
+public class SpineInflaterSystem extends EntityProcessingSystem {
+	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<SpineProtoComponent> protoCm;
 
-	public SpineSupport () {
-		skeletonRenderer = new SkeletonRenderer();
+	private EntityTransmuter transmuter;
+
+	private RuntimeConfiguration configuration;
+	private AssetManager manager;
+
+	public SpineInflaterSystem (RuntimeConfiguration configuration, AssetManager manager) {
+		super(Aspect.all(SpineProtoComponent.class, AssetComponent.class));
+		this.configuration = configuration;
+		this.manager = manager;
 	}
 
 	@Override
-	public void setLoaders (AssetManager manager) {
-		manager.setLoader(SkeletonData.class, new SkeletonDataLoader());
+	protected void initialize () {
+		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SpineProtoComponent.class);
+		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
+		transmuter = factory.build();
 	}
 
 	@Override
-	public void resolveDependencies (Array<AssetDescriptor> dependencies, ECSEntityData entityData, Component component) {
-		if (component instanceof AssetComponent) {
-			VisAssetDescriptor asset = ((AssetComponent) component).asset;
-			if (asset instanceof SpineAssetDescriptor) {
-				SpineAssetDescriptor spineAsset = (SpineAssetDescriptor) asset;
+	protected void process (Entity e) {
+		AssetComponent assetComponent = assetCm.get(e);
+		SpineProtoComponent protoComponent = protoCm.get(e);
 
-				SkeletonDataLoaderParameter parameter = new SkeletonDataLoaderParameter(spineAsset.getAtlasPath(), spineAsset.getScale());
-				dependencies.add(new AssetDescriptor<SkeletonData>(spineAsset.getSkeletonPath(), SkeletonData.class, parameter));
-			}
-		}
-	}
+		SpineAssetDescriptor asset = (SpineAssetDescriptor) assetComponent.asset;
 
-	@Override
-	public void registerSystems (RuntimeConfiguration configuration, AssetManager manager, EntityEngine engine) {
-		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
-		engine.setSystem(new SpineRenderSystem(renderBatchingSystem), true);
-		engine.setSystem(new SpineInflaterSystem(configuration, manager), configuration.passiveInflaters);
+		SkeletonData skeleton = manager.get(asset.getSkeletonPath(), SkeletonData.class);
+		SpineComponent spineComponent = new SpineComponent(skeleton);
+
+		spineComponent.setPosition(protoComponent.x, protoComponent.y);
+		spineComponent.setFlip(protoComponent.flipX, protoComponent.flipY);
+
+		spineComponent.setPlayOnStart(protoComponent.playOnStart);
+		spineComponent.setDefaultAnimation(protoComponent.defaultAnimation);
+
+		spineComponent.updateDefaultAnimations();
+
+		transmuter.transmute(e);
+		e.edit().add(spineComponent);
 	}
 }
+

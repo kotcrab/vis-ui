@@ -46,7 +46,7 @@ public class SoundAndMusicProxy extends EntityProxy {
 	}
 
 	@Override
-	boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
 		return assetDescriptor instanceof PathAsset;
 	}
 

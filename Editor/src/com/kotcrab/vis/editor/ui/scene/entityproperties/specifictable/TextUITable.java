@@ -47,7 +47,7 @@ import static com.kotcrab.vis.editor.util.vis.EntityUtils.getCommonString;
 /**
  * @author Kotcrab
  */
-public abstract class TextObjectTable extends SpecificObjectTable {
+public abstract class TextUITable extends SpecificUITable {
 	@InjectModule protected FontCacheModule fontCache;
 	@InjectModule protected FileAccessModule fileAccess;
 

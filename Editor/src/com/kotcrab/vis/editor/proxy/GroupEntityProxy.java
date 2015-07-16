@@ -120,7 +120,7 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 	}
 
 	@Override
-	boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
+	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -31,6 +31,7 @@
 
 package com.kotcrab.vis.plugin.spine;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -38,14 +39,15 @@ import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.spine.Animation;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.scene.EditorObject;
+import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificObjectTable;
-import com.kotcrab.vis.editor.util.vis.EntityUtils;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
+import com.kotcrab.vis.editor.util.vis.EntityUtils;
+import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.widget.Tooltip;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -54,7 +56,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 
 import java.util.HashSet;
 
-public class SpineObjectTable extends SpecificObjectTable {
+public class SpineUITable extends SpecificUITable {
 	private static final String NO_COMMON_ANIMATION = "<?>";
 
 	private IndeterminateCheckbox playAnimationOnStart;
@@ -109,8 +111,8 @@ public class SpineObjectTable extends SpecificObjectTable {
 	}
 
 	@Override
-	public boolean isSupported (EditorObject entity) {
-		return entity instanceof SpineObject;
+	public boolean isSupported (EntityProxy proxy) {
+		return proxy.hasComponent(SpineComponent.class);
 	}
 
 	@Override
@@ -118,13 +120,13 @@ public class SpineObjectTable extends SpecificObjectTable {
 		Tooltip.removeTooltip(warningImage);
 		warningImage.setVisible(false);
 
-		Array<EditorObject> entities = properties.getProxies();
+		Array<EntityProxy> proxies = properties.getProxies();
 
-		EntityUtils.setCommonCheckBoxState(entities, preview, entity -> ((SpineObject) entity).isPreviewInEditor());
-		EntityUtils.setCommonCheckBoxState(entities, playAnimationOnStart, entity -> ((SpineObject) entity).isPlayOnStart());
+		EntityUtils.setCommonCheckBoxState(proxies, preview, (Entity entity) -> entity.getComponent(SpinePreviewComponent.class).previewEnabled);
+		EntityUtils.setCommonCheckBoxState(proxies, playAnimationOnStart, (Entity entity) -> entity.getComponent(SpineComponent.class).isPlayOnStart());
 
 		createCommonAnimationsList();
-		String commonAnimation = EntityUtils.getCommonString(entities, NO_COMMON_ANIMATION, entity -> ((SpineObject) entity).getDefaultAnimation());
+		String commonAnimation = EntityUtils.getCommonString(proxies, NO_COMMON_ANIMATION, (Entity entity) -> entity.getComponent(SpineComponent.class).getDefaultAnimation());
 
 		if (commonAnimation.equals(NO_COMMON_ANIMATION)) {
 			animSelectBox.getItems().add(NO_COMMON_ANIMATION);
@@ -133,27 +135,30 @@ public class SpineObjectTable extends SpecificObjectTable {
 		} else
 			animSelectBox.setSelected(commonAnimation);
 
-		scaleField.setText(EntityUtils.getEntitiesCommonFloatValue(entities, entity -> ((SpineObject) entity).getScale()));
+		scaleField.setText(EntityUtils.getEntitiesCommonFloatValue(proxies, (Entity entity) -> entity.getComponent(SpineScaleComponent.class).scale));
 	}
 
 	private void createCommonAnimationsList () {
-		Array<EditorObject> entities = properties.getProxies();
+		Array<EntityProxy> proxies = properties.getProxies();
+
 		int animationCounter = 0;
 		HashSet<String> commonAnimations = new HashSet<>();
 		Array<HashSet<String>> allAnimNames = new Array<>();
 
-		for (EditorObject obj : entities) {
-			SpineObject spineObject = (SpineObject) obj;
-			Array<Animation> animations = spineObject.getSkeleton().getData().getAnimations();
+		for (EntityProxy proxy : proxies) {
+			for (Entity entity : proxy.getEntities()) {
+				SpineComponent spineComponent = entity.getComponent(SpineComponent.class);
+				Array<Animation> animations = spineComponent.getSkeleton().getData().getAnimations();
 
-			HashSet<String> animNames = new HashSet<>(animations.size);
-			for (Animation anim : animations) {
-				commonAnimations.add(anim.getName());
-				animNames.add(anim.getName());
-				animationCounter++;
+				HashSet<String> animNames = new HashSet<>(animations.size);
+				for (Animation anim : animations) {
+					commonAnimations.add(anim.getName());
+					animNames.add(anim.getName());
+					animationCounter++;
+				}
+
+				allAnimNames.add(animNames);
 			}
-
-			allAnimNames.add(animNames);
 		}
 
 		for (HashSet<String> animationsNames : allAnimNames)
@@ -179,17 +184,30 @@ public class SpineObjectTable extends SpecificObjectTable {
 
 	@Override
 	public void setValuesToEntities () {
-		Array<EditorObject> entities = properties.getProxies();
-		for (EditorObject entity : entities) {
-			SpineObject obj = (SpineObject) entity;
+		for (EntityProxy proxy : properties.getProxies()) {
+			for (Entity entity : proxy.getEntities()) {
+				SpineComponent spineComponent = entity.getComponent(SpineComponent.class);
+				SpinePreviewComponent previewComponent = entity.getComponent(SpinePreviewComponent.class);
+				SpineScaleComponent scaleComponent = entity.getComponent(SpineScaleComponent.class);
 
-			if (animSelectBox.getSelection().first().equals(NO_COMMON_ANIMATION) == false)
-				obj.setDefaultAnimation(animSelectBox.getSelection().first());
+				if (animSelectBox.getSelection().first().equals(NO_COMMON_ANIMATION) == false)
+					spineComponent.setDefaultAnimation(animSelectBox.getSelection().first());
 
-			if (playAnimationOnStart.isIndeterminate() == false) obj.setPlayOnStart(playAnimationOnStart.isChecked());
-			if (preview.isIndeterminate() == false) obj.setPreviewInEditor(preview.isChecked());
+				if (playAnimationOnStart.isIndeterminate() == false)
+					spineComponent.setPlayOnStart(playAnimationOnStart.isChecked());
+				if (preview.isIndeterminate() == false) {
+					if (previewComponent.previewEnabled != preview.isChecked()) {
+						previewComponent.updateAnimation = true;
+						previewComponent.previewEnabled = preview.isChecked();
+					}
+				}
 
-			obj.setScale(FieldUtils.getFloat(scaleField, obj.getScale()));
+				float scale = FieldUtils.getFloat(scaleField, scaleComponent.scale);
+				if (scale != scaleComponent.scale) {
+					scaleComponent.scale = scale;
+					scaleComponent.updateScale = true;
+				}
+			}
 		}
 	}
 }

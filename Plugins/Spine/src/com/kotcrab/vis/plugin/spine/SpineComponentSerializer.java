@@ -35,27 +35,30 @@ import com.badlogic.gdx.graphics.Color;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
-import com.esotericsoftware.spine.SkeletonRenderer;
+import com.kotcrab.vis.editor.plugin.PluginKryoSerializer;
+import com.kotcrab.vis.editor.serializer.EntityComponentSerializer;
+import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.component.AssetComponent;
 
-@Deprecated
-public class SpineSerializer extends CompatibleFieldSerializer<SpineObject> {
+public class SpineComponentSerializer extends EntityComponentSerializer<SpineComponent> implements PluginKryoSerializer {
 	private static final int VERSION_CODE = 1;
 
 	private SpineCacheModule spineCache;
-	private SkeletonRenderer renderer;
 
-	public SpineSerializer (Kryo kryo, SpineCacheModule spineCache, SkeletonRenderer renderer) {
-		super(kryo, SpineObject.class);
+	public SpineComponentSerializer (Kryo kryo, SpineCacheModule spineCache) {
+		super(kryo, SpineComponent.class);
 		this.spineCache = spineCache;
-		this.renderer = renderer;
 	}
 
 	@Override
-	public void write (Kryo kryo, Output output, SpineObject object) {
+	public void write (Kryo kryo, Output output, SpineComponent object) {
 		super.write(kryo, output, object);
+		parentWrite(kryo, output, object);
 
 		output.writeInt(VERSION_CODE);
+
+		kryo.writeClassAndObject(output, getComponent(AssetComponent.class).asset);
 
 		output.writeFloat(object.getX());
 		output.writeFloat(object.getY());
@@ -67,12 +70,15 @@ public class SpineSerializer extends CompatibleFieldSerializer<SpineObject> {
 	}
 
 	@Override
-	public SpineObject read (Kryo kryo, Input input, Class<SpineObject> type) {
-		SpineObject object = super.read(kryo, input, type);
+	public SpineComponent read (Kryo kryo, Input input, Class<SpineComponent> type) {
+		super.read(kryo, input, type);
+		SpineComponent object = parentRead(kryo, input, type);
 
 		input.readInt(); //version code
 
-		object.onDeserialize(spineCache.get(object.getAssetDescriptor()), renderer, spineCache);
+		VisAssetDescriptor asset = (VisAssetDescriptor) kryo.readClassAndObject(input);
+
+		object.onDeserialize(spineCache.get(asset));
 		object.setPosition(input.readFloat(), input.readFloat());
 		object.setFlip(input.readBoolean(), input.readBoolean());
 		object.setColor(kryo.readObject(input, Color.class));
@@ -80,8 +86,14 @@ public class SpineSerializer extends CompatibleFieldSerializer<SpineObject> {
 	}
 
 	@Override
-	public SpineObject copy (Kryo kryo, SpineObject original) {
-		return new SpineObject(original);
+	public SpineComponent copy (Kryo kryo, SpineComponent original) {
+		super.copy(kryo, original);
+		return new SpineComponent(original, spineCache.get(getComponent(AssetComponent.class).asset));
+	}
+
+	@Override
+	public Class getSerializedClassType () {
+		return SpineComponent.class;
 	}
 }
 
