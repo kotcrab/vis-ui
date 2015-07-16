@@ -799,7 +799,7 @@ public class FileChooser extends VisWindow {
 
 	private void startFileWatcher () {
 		if (fileWatcherThread != null)
-			throw new IllegalStateException("FileWatcheThread already running");
+			throw new IllegalStateException("FileWatcherThread already running");
 
 		fileWatcherThread = new Thread(new Runnable() {
 			File[] lastRoots;
