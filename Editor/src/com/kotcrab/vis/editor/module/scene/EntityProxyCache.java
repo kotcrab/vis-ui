@@ -26,10 +26,8 @@ import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.SupportModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
-import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.proxy.InternalEntityProxyResolver;
-import com.kotcrab.vis.runtime.component.LayerComponent;
-import com.kotcrab.vis.runtime.component.RenderableComponent;
+import com.kotcrab.vis.editor.proxy.*;
+import com.kotcrab.vis.runtime.component.*;
 
 @Wire
 public class EntityProxyCache extends Manager {
@@ -63,18 +61,30 @@ public class EntityProxyCache extends Manager {
 	}
 
 	private EntityProxy getProxy (Entity entity) {
-		EntityProxy proxy = InternalEntityProxyResolver.getFor(entity);
+		EntityProxy proxy = getInternalProxyFor(entity);
 
-		for (EditorEntitySupport support : supportModule.getSupports()) {
-			proxy = support.resolveProxy(entity);
-			if (proxy != null)
-				return proxy;
+		if (proxy == null) {
+			for (EditorEntitySupport support : supportModule.getSupports()) {
+				proxy = support.resolveProxy(entity);
+				if (proxy != null)
+					return proxy;
+			}
 		}
 
 		if (proxy == null)
 			throw new IllegalStateException("Could not find appropriate proxy for entity");
 
 		return proxy;
+	}
+
+	private EntityProxy getInternalProxyFor (Entity entity) {
+		if (entity.getComponent(ParticleComponent.class) != null) return new ParticleProxy(entity);
+		if (entity.getComponent(SoundComponent.class) != null) return new SoundAndMusicProxy(entity, false);
+		if (entity.getComponent(MusicComponent.class) != null) return new SoundAndMusicProxy(entity, true);
+		if (entity.getComponent(SpriteComponent.class) != null) return new SpriteProxy(entity);
+		if (entity.getComponent(TextComponent.class) != null) return new TextProxy(entity);
+
+		return null;
 	}
 
 	public EntityProxy get (int entityId) {
