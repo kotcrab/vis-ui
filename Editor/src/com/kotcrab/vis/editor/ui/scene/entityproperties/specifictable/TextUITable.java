@@ -95,7 +95,8 @@ public abstract class TextUITable extends SpecificUITable {
 			for (EntityProxy proxy : properties.getProxies()) {
 				for (Entity entity : proxy.getEntities()) {
 					TextComponent text = entity.getComponent(TextComponent.class);
-					VisAssetDescriptor asset = entity.getComponent(AssetComponent.class).asset;
+					AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
+					VisAssetDescriptor asset = assetComponent.asset;
 
 					VisAssetDescriptor newAsset = null;
 
@@ -108,6 +109,8 @@ public abstract class TextUITable extends SpecificUITable {
 						throw new UnsupportedAssetDescriptorException(asset);
 
 					text.setFont(fontCache.getGeneric(newAsset));
+
+					assetComponent.asset = newAsset;
 				}
 			}
 
