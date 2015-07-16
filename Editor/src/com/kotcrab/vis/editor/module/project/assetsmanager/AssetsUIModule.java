@@ -43,8 +43,8 @@ import com.kotcrab.vis.editor.ui.SearchField;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DeleteDialog;
 import com.kotcrab.vis.editor.ui.dialog.EnterPathDialog;
-import com.kotcrab.vis.editor.ui.tab.DeleteMultipleFilesTab;
 import com.kotcrab.vis.editor.ui.tab.AssetsUsagesTab;
+import com.kotcrab.vis.editor.ui.tab.DeleteMultipleFilesTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.CopyFileTaskDescriptor;
 import com.kotcrab.vis.editor.util.CopyFilesAsyncTask;
@@ -131,8 +131,10 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Even
 
 		if (metadata.lastDirectory != null) {
 			FileHandle dir = Gdx.files.absolute(metadata.lastDirectory);
-			changeCurrentDirectory(dir);
-			highlightCurrentDir(contentTree.getNodes());
+			if (dir.exists()) {
+				changeCurrentDirectory(dir);
+				highlightCurrentDir(contentTree.getNodes());
+			}
 		}
 	}
 
