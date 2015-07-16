@@ -48,7 +48,7 @@ public class AboutDialog extends VisWindow {
 		VisTextButton okButton;
 		VisTextButton openAppDirectoryButton;
 
-		add(contentTable).pad(3).colspan(2).expand().fill().row();
+		add(contentTable).pad(3).colspan(3).expand().fill().row();
 		VisLabel versionLabel = new VisLabel("Hover here to see libraries versions");
 		new Tooltip(versionLabel, "VisEditor " + App.VERSION + " \nBuild: " + App.buildTimestamp + "\nVisUI " + VisUI.VERSION + "\nLibGDX " + Version.VERSION, Align.left);
 		add(versionLabel).expandX().fillX();
