@@ -66,6 +66,8 @@ public class SpineComponent extends Component implements FlipPropertiesAccessor,
 
 		stateData = new AnimationStateData(skeletonData);
 		state = new AnimationState(stateData);
+
+		defaultAnimation = skeleton.getData().getAnimations().get(0).getName();
 	}
 
 	void updateDefaultAnimations () {
