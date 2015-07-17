@@ -149,18 +149,18 @@ public class AssetsAnalyzerModule extends ProjectModule {
 	}
 
 	private AssetTransactionGenerator getTransactionGen (FileHandle file, String relativePath) {
-		VisAssetDescriptor assetDescriptor = provideDescriptor(file, relativePath).descriptor;
-		if (assetDescriptor != null) {
+		AssetProviderResult result = provideDescriptor(file, relativePath);
+		if (result != null) {
 
 			for (AssetTransactionGenerator gen : transactionsGens) {
-				if (gen.isSupported(assetDescriptor)) return gen;
+				if (gen.isSupported(result.descriptor)) return gen;
 			}
 
 			for (EditorEntitySupport support : supportModule.getSupports()) {
 				Array<AssetTransactionGenerator> gens = support.getAssetTransactionGenerators();
 				if (gens != null) {
 					for (AssetTransactionGenerator gen : gens) {
-						if (gen.isSupported(assetDescriptor)) return gen;
+						if (gen.isSupported(result.descriptor)) return gen;
 					}
 				}
 			}
