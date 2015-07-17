@@ -30,7 +30,8 @@ public class BaseObservable implements Observable, AfterDeserialize {
 		listeners = new Array<>();
 	}
 
-	@Override @CallSuper
+	@Override
+	@CallSuper
 	public void onDeserialize () {
 		listeners = new Array<>();
 	}

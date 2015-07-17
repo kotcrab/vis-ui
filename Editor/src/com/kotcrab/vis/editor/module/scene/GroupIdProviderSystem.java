@@ -47,7 +47,7 @@ public class GroupIdProviderSystem extends EntityProcessingSystem {
 	protected void process (Entity e) {
 		IntArray groupsIds = groupCm.get(e).groupIds;
 
-		if(groupsIds.size > 0) {
+		if (groupsIds.size > 0) {
 			int gid = groupsIds.peek();
 
 			if (gid >= freeId)

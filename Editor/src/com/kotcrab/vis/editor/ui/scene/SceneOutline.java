@@ -21,7 +21,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
- * Scene outline with all scene entities. Not done yet. TODO [artemis-wip] scene outline
+ * Scene outline with all scene entities. Not done yet. TODO scene outline
  * @author Kotcrab
  */
 public class SceneOutline extends VisTable {

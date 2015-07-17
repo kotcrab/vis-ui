@@ -25,7 +25,7 @@ public class BagUtils {
 	public static <E> Array<E> toArray (ImmutableBag<E> bag) {
 		Array<E> array = new Array<E>(bag.size());
 
-		for(E element : bag)
+		for (E element : bag)
 			array.add(element);
 
 		return array;
@@ -34,7 +34,7 @@ public class BagUtils {
 	public static <E> ObjectSet<E> toSet (ImmutableBag<E> bag) {
 		ObjectSet<E> array = new ObjectSet<E>(bag.size());
 
-		for(E element : bag)
+		for (E element : bag)
 			array.add(element);
 
 		return array;

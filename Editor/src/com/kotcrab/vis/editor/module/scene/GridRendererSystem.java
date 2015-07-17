@@ -111,7 +111,6 @@ public class GridRendererSystem extends VoidEntitySystem {
 			shapeRenderer.line(i * gridSize, yStart, i * gridSize, yEnd);
 	}
 
-
 	public static class GridSettingsModule extends EditorSettingsModule<GridConfig> {
 		private VisCheckBox drawGridCheck;
 		private VisValidableTextField gridSizeField;

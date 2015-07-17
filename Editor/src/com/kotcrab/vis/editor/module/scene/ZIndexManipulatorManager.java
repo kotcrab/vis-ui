@@ -24,9 +24,9 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangeZIndexAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /** @author Kotcrab */
 @Wire

@@ -23,9 +23,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.editor.entity.EntityScheme;
+import com.kotcrab.vis.runtime.accessor.*;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.*;
-import com.kotcrab.vis.runtime.accessor.*;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 /** @author Kotcrab */

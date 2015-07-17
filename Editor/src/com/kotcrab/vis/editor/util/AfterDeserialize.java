@@ -21,5 +21,5 @@ package com.kotcrab.vis.editor.util;
  * @author Kotcrab
  */
 public interface AfterDeserialize {
-	void onDeserialize();
+	void onDeserialize ();
 }

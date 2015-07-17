@@ -65,7 +65,8 @@ public class RectangularSelection {
 		Array<EntityProxy> matchingEntities = new Array<>();
 
 		for (EntityProxy entity : proxyCache.getCache().values())
-			if (rectToDraw.contains(entity.getBoundingRectangle()) && entity.getLayerID() == scene.getActiveLayerId()) matchingEntities.add(entity);
+			if (rectToDraw.contains(entity.getBoundingRectangle()) && entity.getLayerID() == scene.getActiveLayerId())
+				matchingEntities.add(entity);
 
 		entityManipulatorModule.resetSelection();
 		matchingEntities.forEach(entityManipulatorModule::selectAppend);

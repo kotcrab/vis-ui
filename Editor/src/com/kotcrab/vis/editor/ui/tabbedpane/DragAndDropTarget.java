@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
 public interface DragAndDropTarget {
 	float getCameraZoom ();
 
-	EntityEngine getEntityEngine();
+	EntityEngine getEntityEngine ();
 
 	Target getDropTarget ();
 }

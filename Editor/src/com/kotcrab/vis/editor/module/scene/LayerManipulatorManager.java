@@ -82,7 +82,7 @@ public class LayerManipulatorManager extends Manager {
 		for (int i = 0; i < bag.size(); i++) {
 			int id = data[i];
 			Entity entity = world.getEntity(id);
-			if(layerCm.get(entity).layerId == layerId)
+			if (layerCm.get(entity).layerId == layerId)
 				transmuter.transmute(entity);
 		}
 	}
