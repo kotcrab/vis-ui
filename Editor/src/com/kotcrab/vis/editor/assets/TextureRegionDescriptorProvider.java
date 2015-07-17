@@ -17,27 +17,22 @@
 package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 
 /**
- * Basic descriptor provider for {@link PathAsset}, supporting TrueType fonts, music, sound and particles
+ * Descriptor provider for texture type assets, supports both gfx textures and atlases
  * @author Kotcrab
  */
-public class PathDescriptorProvider implements AssetDescriptorProvider<PathAsset> {
+public class TextureRegionDescriptorProvider implements AssetDescriptorProvider<TextureRegionAsset> {
 	@Override
-	public PathAsset provide (FileHandle file, String relativePath) {
-		if (checkIfSupported(relativePath) == false) return null;
-		return new PathAsset(relativePath);
-	}
+	public TextureRegionAsset provide (FileHandle file, String relativePath) {
+		if (relativePath.startsWith("gfx")) return new TextureRegionAsset(relativePath);
 
-	private boolean checkIfSupported (String path) {
-		if (path.startsWith("music") || path.startsWith("sound")) return true;
-		if (path.startsWith("particle") && path.endsWith(".p")) return true;
-		return false;
+		return null;
 	}
 
 	@Override
-	public PathAsset parametrize (PathAsset rawAsset, PathAsset other) {
-		return rawAsset;
-	} //path is not parametrized
+	public TextureRegionAsset parametrize (TextureRegionAsset rawAsset, TextureRegionAsset other) {
+		return rawAsset; //texture region is not parametrized
+	}
 }

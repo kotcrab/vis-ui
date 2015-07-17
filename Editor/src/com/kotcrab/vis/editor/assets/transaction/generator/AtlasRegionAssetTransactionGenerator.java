@@ -21,6 +21,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.TextureAtlasData.Page;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.assets.transaction.AssetProviderResult;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransaction;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
 import com.kotcrab.vis.editor.assets.transaction.action.CopyFileAction;
@@ -51,7 +52,7 @@ public class AtlasRegionAssetTransactionGenerator implements AssetTransactionGen
 	}
 
 	@Override
-	public AssetTransaction analyze (ModuleInjector injector, VisAssetDescriptor descriptor, FileHandle source, FileHandle target, String relativeTargetPath) {
+	public AssetTransaction analyze (ModuleInjector injector, AssetProviderResult providerResult, FileHandle source, FileHandle target, String relativeTargetPath) {
 		Array<FileHandle> sourcePngs = new Array<>();
 		Array<FileHandle> targetPngs = new Array<>();
 
@@ -74,7 +75,7 @@ public class AtlasRegionAssetTransactionGenerator implements AssetTransactionGen
 		for (int i = 0; i < sourcePngs.size; i++)
 			transaction.add(new CopyFileAction(sourcePngs.get(i), targetPngs.get(i)));
 
-		transaction.add(new UpdateReferencesAction(injector, descriptor, new AtlasRegionAsset(relativeTargetPath, ((AtlasRegionAsset) descriptor).getRegionName())));
+		transaction.add(new UpdateReferencesAction(injector, providerResult, new AtlasRegionAsset(relativeTargetPath, null)));
 		transaction.add(new DeleteFileAction(source, transactionStorage));
 		transaction.add(new UndoableAction() { //update references in atlas file
 			boolean updatingRefs = true;

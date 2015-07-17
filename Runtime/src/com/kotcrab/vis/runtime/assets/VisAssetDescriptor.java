@@ -17,7 +17,7 @@
 package com.kotcrab.vis.runtime.assets;
 
 /**
- * Classes implementing this interface references some asset
+ * Classes implementing this interface references some asset. All asset descriptor must be immutable.
  * @author Kotcrab
  */
 public interface VisAssetDescriptor {

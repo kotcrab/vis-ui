@@ -23,6 +23,7 @@ import com.kotcrab.vis.editor.assets.transaction.action.CopyFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.DeleteFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.UpdateReferencesAction;
 import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.assets.transaction.AssetProviderResult;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
@@ -44,11 +45,11 @@ public class TextureRegionAssetTransactionGenerator implements AssetTransactionG
 	}
 
 	@Override
-	public AssetTransaction analyze (ModuleInjector injector, VisAssetDescriptor descriptor, FileHandle source, FileHandle target, String relativeTargetPath) {
+	public AssetTransaction analyze (ModuleInjector injector, AssetProviderResult providerResult, FileHandle source, FileHandle target, String relativeTargetPath) {
 		AssetTransaction transaction = new AssetTransaction();
 
 		transaction.add(new CopyFileAction(source, target));
-		transaction.add(new UpdateReferencesAction(injector, descriptor, new TextureRegionAsset(relativeTargetPath)));
+		transaction.add(new UpdateReferencesAction(injector, providerResult, new TextureRegionAsset(relativeTargetPath)));
 		transaction.add(new DeleteFileAction(source, transactionStorage));
 		transaction.finalizeGroup();
 

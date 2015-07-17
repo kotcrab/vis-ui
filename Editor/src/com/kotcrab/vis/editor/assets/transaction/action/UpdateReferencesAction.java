@@ -18,6 +18,8 @@ package com.kotcrab.vis.editor.assets.transaction.action;
 
 import com.artemis.Component;
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
+import com.kotcrab.vis.editor.assets.transaction.AssetProviderResult;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
@@ -36,12 +38,14 @@ public class UpdateReferencesAction implements UndoableAction {
 	@InjectModule private SceneCacheModule sceneCache;
 	@InjectModule private FileAccessModule fileAccess;
 
+	private AssetDescriptorProvider assetProvider;
 	private VisAssetDescriptor source;
 	private VisAssetDescriptor target;
 
-	public UpdateReferencesAction (ModuleInjector injector, VisAssetDescriptor source, VisAssetDescriptor target) {
+	public UpdateReferencesAction (ModuleInjector injector, AssetProviderResult providerResult, VisAssetDescriptor target) {
 		injector.injectModules(this);
-		this.source = source;
+		this.assetProvider = providerResult.provider;
+		this.source = providerResult.descriptor;
 		this.target = target;
 	}
 
@@ -63,7 +67,9 @@ public class UpdateReferencesAction implements UndoableAction {
 				for (Component component : scheme.components) {
 					if (component instanceof AssetComponent) {
 						AssetComponent assetComponent = (AssetComponent) component;
-						if (assetComponent.asset.compare(asset1)) assetComponent.asset = asset2;
+						if (assetComponent.asset.compare(asset1)) {
+							assetComponent.asset = assetProvider.parametrize(asset2, assetComponent.asset);
+						}
 					}
 				}
 			}

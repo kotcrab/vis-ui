@@ -16,18 +16,16 @@
 
 package com.kotcrab.vis.editor.assets.transaction;
 
-import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-/**
- * Interface for classes that are able to create assets transaction for specific {@link VisAssetDescriptor}.
- * Asset transaction is operation where asset file is moved or renamed.
- */
-public interface AssetTransactionGenerator {
-	void setTransactionStorage (FileHandle backupDirectory);
+/** @author Kotcrab */
+public class AssetProviderResult {
+	public AssetDescriptorProvider provider;
+	public VisAssetDescriptor descriptor;
 
-	boolean isSupported (VisAssetDescriptor descriptor);
-
-	AssetTransaction analyze (ModuleInjector injector, AssetProviderResult providerResult, FileHandle source, FileHandle target, String relativeTargetPath);
+	public AssetProviderResult (AssetDescriptorProvider provider, VisAssetDescriptor descriptor) {
+		this.provider = provider;
+		this.descriptor = descriptor;
+	}
 }

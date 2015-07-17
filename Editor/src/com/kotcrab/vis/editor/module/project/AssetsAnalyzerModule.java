@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.assets.*;
+import com.kotcrab.vis.editor.assets.transaction.AssetProviderResult;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransaction;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionException;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
@@ -66,7 +67,8 @@ public class AssetsAnalyzerModule extends ProjectModule {
 	public void init () {
 		providers.add(new BmpFontDescriptorProvider());
 		providers.add(new PathDescriptorProvider());
-		providers.add(new TextureDescriptorProvider());
+		providers.add(new TextureRegionDescriptorProvider());
+		providers.add(new AtlasRegionDescriptorProvider());
 		providers.add(new TtfFontDescriptorProvider());
 
 		transactionsGens.add(new AtlasRegionAssetTransactionGenerator());
@@ -84,10 +86,10 @@ public class AssetsAnalyzerModule extends ProjectModule {
 		return provideDescriptor(file, path) != null;
 	}
 
-	private VisAssetDescriptor provideDescriptor (FileHandle file, String relativePath) {
+	private AssetProviderResult provideDescriptor (FileHandle file, String relativePath) {
 		for (AssetDescriptorProvider provider : providers) {
 			VisAssetDescriptor desc = provider.provide(file, relativePath);
-			if (desc != null) return desc;
+			if (desc != null) return new AssetProviderResult(provider, desc);
 		}
 
 		for (EditorEntitySupport support : supportModule.getSupports()) {
@@ -96,7 +98,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 			if (providers != null) {
 				for (AssetDescriptorProvider provider : providers) {
 					VisAssetDescriptor desc = provider.provide(file, relativePath);
-					if (desc != null) return desc;
+					if (desc != null) return new AssetProviderResult(provider, desc);
 				}
 			}
 		}
@@ -113,7 +115,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 
 	public AssetsUsages analyzeUsages (FileHandle file) {
 		String path = fileAccess.relativizeToAssetsFolder(file.path());
-		VisAssetDescriptor searchFor = provideDescriptor(file, path);
+		VisAssetDescriptor searchFor = provideDescriptor(file, path).descriptor;
 		AssetsUsages usages = new AssetsUsages(file);
 
 		for (FileHandle sceneFile : fileAccess.getSceneFiles()) {
@@ -147,7 +149,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 	}
 
 	private AssetTransactionGenerator getTransactionGen (FileHandle file, String relativePath) {
-		VisAssetDescriptor assetDescriptor = provideDescriptor(file, relativePath);
+		VisAssetDescriptor assetDescriptor = provideDescriptor(file, relativePath).descriptor;
 		if (assetDescriptor != null) {
 
 			for (AssetTransactionGenerator gen : transactionsGens) {
@@ -204,7 +206,8 @@ public class AssetsAnalyzerModule extends ProjectModule {
 		AssetTransaction transaction = null;
 
 		try {
-			transaction = gen.analyze(projectContainer, provideDescriptor(source, path), source, target, fileAccess.relativizeToAssetsFolder(target));
+			AssetProviderResult result = provideDescriptor(source, path);
+			transaction = gen.analyze(projectContainer, result, source, target, fileAccess.relativizeToAssetsFolder(target));
 		} catch (AssetTransactionException e) {
 			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Error occurred during asset transaction preparation, nothing was changed.", e);
 		}
@@ -227,4 +230,5 @@ public class AssetsAnalyzerModule extends ProjectModule {
 
 		return dir;
 	}
+
 }

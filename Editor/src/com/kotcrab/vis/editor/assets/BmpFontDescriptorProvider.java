@@ -19,15 +19,14 @@ package com.kotcrab.vis.editor.assets;
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /**
  * Descriptor provider for bitmap fonts
  * @author Kotcrab
  */
-public class BmpFontDescriptorProvider implements AssetDescriptorProvider {
+public class BmpFontDescriptorProvider implements AssetDescriptorProvider<BmpFontAsset> {
 	@Override
-	public VisAssetDescriptor provide (FileHandle file, String relativePath) {
+	public BmpFontAsset provide (FileHandle file, String relativePath) {
 		if (relativePath.startsWith("bmpfont") == false) return null;
 
 		if (relativePath.endsWith("fnt"))
@@ -37,4 +36,10 @@ public class BmpFontDescriptorProvider implements AssetDescriptorProvider {
 		else
 			return null;
 	}
+
+	@Override
+	public BmpFontAsset parametrize (BmpFontAsset rawAsset, BmpFontAsset other) {
+		return new BmpFontAsset(rawAsset.getPath(), other.getFontParameter());
+	}
+
 }

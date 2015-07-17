@@ -23,7 +23,9 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
  * {@link AssetDescriptorProvider} constructs appropriate {@link VisAssetDescriptor} from given file and relative path.
  * @author Kotcrab
  */
-public interface AssetDescriptorProvider {
+public interface AssetDescriptorProvider<T extends VisAssetDescriptor> {
 	/** Provides asset descriptor for given path or null if this provider can't provide descriptor for given path */
-	VisAssetDescriptor provide (FileHandle file, String relativePath);
+	T provide (FileHandle file, String relativePath);
+
+	T parametrize (T rawAsset, T other);
 }

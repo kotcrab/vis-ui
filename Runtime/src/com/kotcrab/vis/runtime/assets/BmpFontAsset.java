@@ -27,7 +27,7 @@ public class BmpFontAsset extends PathAsset {
 
 	public BmpFontAsset (String relativePath, BitmapFontParameter fontParameter) {
 		super(relativePath);
-		fontParameter = new BitmapFontParameter();
+		this.fontParameter = fontParameter;
 	}
 
 	public BitmapFontParameter getFontParameter () {

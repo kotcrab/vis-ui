@@ -21,6 +21,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.BitmapFontData;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.assets.transaction.AssetProviderResult;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransaction;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
 import com.kotcrab.vis.editor.assets.transaction.action.CopyFileAction;
@@ -55,7 +56,7 @@ public class BmpFontAssetTransactionGenerator implements AssetTransactionGenerat
 	}
 
 	@Override
-	public AssetTransaction analyze (ModuleInjector injector, VisAssetDescriptor descriptor, FileHandle source, FileHandle target, String relativeTargetPath) {
+	public AssetTransaction analyze (ModuleInjector injector, AssetProviderResult providerResult, FileHandle source, FileHandle target, String relativeTargetPath) {
 		AssetTransaction transaction = new AssetTransaction();
 
 		BitmapFontData data = new BitmapFontData(source, false);
@@ -82,7 +83,7 @@ public class BmpFontAssetTransactionGenerator implements AssetTransactionGenerat
 		for (int i = 0; i < sourcePngs.size; i++)
 			transaction.add(new CopyFileAction(sourcePngs.get(i), targetPngs.get(i)));
 
-		transaction.add(new UpdateReferencesAction(injector, descriptor, new BmpFontAsset(relativeTargetPath, ((BmpFontAsset) descriptor).getFontParameter())));
+		transaction.add(new UpdateReferencesAction(injector, providerResult, new BmpFontAsset(relativeTargetPath, null)));
 		transaction.add(new DeleteFileAction(source, transactionStorage));
 		transaction.add(new UndoableAction() { //update references in font file
 			boolean updatingRefs = true;

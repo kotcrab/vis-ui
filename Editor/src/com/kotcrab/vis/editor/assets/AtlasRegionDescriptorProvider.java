@@ -18,20 +18,22 @@ package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
-import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /**
  * Descriptor provider for texture type assets, supports both gfx textures and atlases
  * @author Kotcrab
  */
-public class TextureDescriptorProvider implements AssetDescriptorProvider {
+public class AtlasRegionDescriptorProvider implements AssetDescriptorProvider<AtlasRegionAsset> {
 	@Override
-	public VisAssetDescriptor provide (FileHandle file, String relativePath) {
-		if (relativePath.startsWith("gfx")) return new TextureRegionAsset(relativePath);
+	public AtlasRegionAsset provide (FileHandle file, String relativePath) {
 		if (relativePath.startsWith("atlas"))
 			return new AtlasRegionAsset(relativePath, null); //usage analyzer ignores region name
 
 		return null;
+	}
+
+	@Override
+	public AtlasRegionAsset parametrize (AtlasRegionAsset rawAsset, AtlasRegionAsset other) {
+		return new AtlasRegionAsset(rawAsset.getPath(), other.getRegionName());
 	}
 }

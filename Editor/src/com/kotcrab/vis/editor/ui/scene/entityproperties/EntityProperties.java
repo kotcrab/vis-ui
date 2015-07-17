@@ -198,7 +198,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		createRotationTintTable();
 		createFlipTable();
 
-		registerSpecificTable(new TTFTextUITable());
+		registerSpecificTable(new TtfTextUITable());
 		registerSpecificTable(new BMPTextUITable());
 		registerSpecificTable(new MusicUITable());
 		registerSpecificTable(new SoundUITable());

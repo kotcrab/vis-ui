@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.assets.transaction.generator;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.assets.transaction.AssetProviderResult;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransaction;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
 import com.kotcrab.vis.editor.assets.transaction.action.CopyFileAction;
@@ -42,22 +43,15 @@ public class TtfAssetTransactionGenerator implements AssetTransactionGenerator {
 
 	@Override
 	public boolean isSupported (VisAssetDescriptor descriptor) {
-		if (descriptor instanceof PathAsset == false) return false;
-
-		PathAsset pathAsset = (PathAsset) descriptor;
-		String path = pathAsset.getPath();
-		if (path.startsWith("font") || path.startsWith("music") || path.startsWith("sound") || path.startsWith("particle"))
-			return true;
-
-		return false;
+		return descriptor instanceof TtfFontAsset;
 	}
 
 	@Override
-	public AssetTransaction analyze (ModuleInjector injector, VisAssetDescriptor descriptor, FileHandle source, FileHandle target, String relativeTargetPath) {
+	public AssetTransaction analyze (ModuleInjector injector, AssetProviderResult providerResult, FileHandle source, FileHandle target, String relativeTargetPath) {
 		AssetTransaction transaction = new AssetTransaction();
 
 		transaction.add(new CopyFileAction(source, target));
-		transaction.add(new UpdateReferencesAction(injector, descriptor, new TtfFontAsset(relativeTargetPath, ((TtfFontAsset) descriptor).getFontSize())));
+		transaction.add(new UpdateReferencesAction(injector, providerResult, new TtfFontAsset(relativeTargetPath, -1)));
 		transaction.add(new DeleteFileAction(source, transactionStorage));
 		transaction.finalizeGroup();
 

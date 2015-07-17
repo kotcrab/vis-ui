@@ -53,7 +53,7 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 
 	//TODO dispose
 	private ObjectMap<FileHandle, BitmapFont> bmpFonts = new ObjectMap<>();
-	private ObjectMap<FileHandle, TTFEditorFont> ttfFonts = new ObjectMap<>();
+	private ObjectMap<FileHandle, TtfEditorFont> ttfFonts = new ObjectMap<>();
 
 //	@Deprecated private Array<EditorFont> fonts = new Array<>();
 
@@ -139,11 +139,13 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	public BitmapFont get (TtfFontAsset asset) {
+		if(asset.getFontSize() == -1) throw new IllegalArgumentException("Invalid font size: -1");
+
 		FileHandle file = fileAccess.getAssetsFolder().child(asset.getPath());
-		TTFEditorFont ttfFont = ttfFonts.get(file);
+		TtfEditorFont ttfFont = ttfFonts.get(file);
 
 		if (ttfFont == null) {
-			ttfFont = new TTFEditorFont(file);
+			ttfFont = new TtfEditorFont(file);
 			ttfFonts.put(file, ttfFont);
 		}
 
