@@ -42,7 +42,7 @@ public class Log {
 
 	private static final boolean DEBUG_INTERRUPTED = false;
 
-	private static int logLevel = DEBUG;
+	public static int LOG_LEVEL = DEBUG;
 
 	private static File logFile;
 	private static PrintWriter logFileWriter;
@@ -124,53 +124,53 @@ public class Log {
 	// Standard log
 
 	public static void trace (String msg) {
-		if (logLevel >= TRACE) print("[Trace] " + msg);
+		if (LOG_LEVEL >= TRACE) print("[Trace] " + msg);
 	}
 
 	public static void debug (String msg) {
-		if (logLevel >= DEBUG) print("[Debug] " + msg);
+		if (LOG_LEVEL >= DEBUG) print("[Debug] " + msg);
 	}
 
 	public static void info (String msg) {
-		if (logLevel >= INFO) print("[Info] " + msg);
+		if (LOG_LEVEL >= INFO) print("[Info] " + msg);
 	}
 
 	public static void warn (String msg) {
-		if (logLevel >= WARN) print("[Warning] " + msg);
+		if (LOG_LEVEL >= WARN) print("[Warning] " + msg);
 	}
 
 	public static void error (String msg) {
-		if (logLevel >= ERROR) printErr("[Error] " + msg);
+		if (LOG_LEVEL >= ERROR) printErr("[Error] " + msg);
 	}
 
 	public static void fatal (String msg) {
-		if (logLevel >= FATAL) printErr("[Fatal] " + msg);
+		if (LOG_LEVEL >= FATAL) printErr("[Fatal] " + msg);
 	}
 
 	//Log with tag
 
 	public static void trace (String tag, String msg) {
-		if (logLevel >= TRACE) print("[Trace][" + tag + "] " + msg);
+		if (LOG_LEVEL >= TRACE) print("[Trace][" + tag + "] " + msg);
 	}
 
 	public static void debug (String tag, String msg) {
-		if (logLevel >= DEBUG) print("[Debug][" + tag + "] " + msg);
+		if (LOG_LEVEL >= DEBUG) print("[Debug][" + tag + "] " + msg);
 	}
 
 	public static void info (String tag, String msg) {
-		if (logLevel >= INFO) print("[Info][" + tag + "] " + msg);
+		if (LOG_LEVEL >= INFO) print("[Info][" + tag + "] " + msg);
 	}
 
 	public static void warn (String tag, String msg) {
-		if (logLevel >= WARN) print("[Warning][" + tag + "] " + msg);
+		if (LOG_LEVEL >= WARN) print("[Warning][" + tag + "] " + msg);
 	}
 
 	public static void error (String tag, String msg) {
-		if (logLevel >= ERROR) printErr("[Error][" + tag + "] " + msg);
+		if (LOG_LEVEL >= ERROR) printErr("[Error][" + tag + "] " + msg);
 	}
 
 	public static void fatal (String tag, String msg) {
-		if (logLevel >= FATAL) printErr("[Fatal][" + tag + "] " + msg);
+		if (LOG_LEVEL >= FATAL) printErr("[Fatal][" + tag + "] " + msg);
 	}
 
 	private static void print (String msg) {

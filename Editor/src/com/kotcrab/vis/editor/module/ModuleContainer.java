@@ -31,6 +31,9 @@ import java.lang.reflect.Field;
 public abstract class ModuleContainer<T extends Module> implements ModuleInjector {
 	protected Array<T> modules = new Array<>();
 	private boolean initFinished = false;
+	private static final String TAG = "ModuleContainer";
+
+	private boolean logTrace = Log.LOG_LEVEL == Log.TRACE;
 
 	public void add (T module) {
 		modules.add(module);
@@ -51,19 +54,37 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 		if (initFinished) throw new IllegalStateException("ModuleContainer cannot be initialized twice!");
 
 		long start = System.currentTimeMillis();
+		long moduleInit = 0;
 
 		injectAllModules();
 
 		for (int i = 0; i < modules.size; i++) {
 			Module m = modules.get(i);
-			Log.trace("ModuleContainer", "Init: " + m.getClass().getSimpleName());
+			if (logTrace) {
+				Log.trace(TAG, "Init: " + m.getClass().getSimpleName());
+				moduleInit = System.currentTimeMillis();
+			}
+
 			m.init();
+
+			if (logTrace) {
+				Log.trace(TAG, "Module init took: " + (System.currentTimeMillis() - moduleInit) + " ms");
+			}
 		}
 
 		for (int i = 0; i < modules.size; i++) {
 			Module m = modules.get(i);
-			Log.trace("ModuleContainer", "Post init: " + m.getClass().getSimpleName());
+
+			if (logTrace) {
+				Log.trace(TAG, "Post init: " + m.getClass().getSimpleName());
+				moduleInit = System.currentTimeMillis();
+			}
+
 			m.postInit();
+
+			if (logTrace) {
+				Log.trace(TAG, "Module post init took: " + (System.currentTimeMillis() - moduleInit) + " ms");
+			}
 		}
 
 		long end = System.currentTimeMillis();
