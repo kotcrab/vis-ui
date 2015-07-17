@@ -50,6 +50,12 @@ public enum Icons implements IconAsset {
 	EYE_DISABLED { public String getIconName () { return "eye-disabled"; } },
 	LOCKED { public String getIconName () { return "locked"; } },
 	UNLOCKED { public String getIconName () { return "unlocked"; } },
+	ALIGN_LEFT { public String getIconName () { return "align-left"; } },
+	ALIGN_RIGHT { public String getIconName () { return "align-right"; } },
+	ALIGN_BOTTOM { public String getIconName () { return "align-bottom"; } },
+	ALIGN_TOP { public String getIconName () { return "align-top"; } },
+	ALIGN_CENTER_X { public String getIconName () { return "align-center-x"; } },
+	ALIGN_CENTER_Y { public String getIconName () { return "align-center-y"; } },
 	// @formatter:on
 }
 

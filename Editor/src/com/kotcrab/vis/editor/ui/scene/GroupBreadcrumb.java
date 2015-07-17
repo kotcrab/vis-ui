@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene.entitymanipulator;
+package com.kotcrab.vis.editor.ui.scene;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -133,7 +133,7 @@ public class GroupBreadcrumb extends VisTable {
 			return 0;
 	}
 
-	interface GroupBreadcrumbListener {
+	public interface GroupBreadcrumbListener {
 		void clicked (int gid);
 
 		void rootClicked ();

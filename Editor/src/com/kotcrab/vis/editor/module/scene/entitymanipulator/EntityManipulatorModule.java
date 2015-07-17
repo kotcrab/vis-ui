@@ -44,7 +44,8 @@ import com.kotcrab.vis.editor.module.scene.action.EntitiesAddedAction;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesRemovedAction;
 import com.kotcrab.vis.editor.module.scene.action.GroupAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTimerTask.Direction;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupBreadcrumb.GroupBreadcrumbListener;
+import com.kotcrab.vis.editor.ui.scene.GroupBreadcrumb;
+import com.kotcrab.vis.editor.ui.scene.GroupBreadcrumb.GroupBreadcrumbListener;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
@@ -82,9 +83,11 @@ public class EntityManipulatorModule extends SceneModule {
 	private GroupIdProviderSystem groupIdProvider;
 	private GroupProxyProviderSystem groupProxyProvider;
 
+	//TODO [misc] create common class for scene ui dialogs
 	private EntityProperties entityProperties;
 	private GroupBreadcrumb groupBreadcrumb;
 	private LayersDialog layersDialog;
+	private AlignmentToolsDialog alignmentToolsDialog;
 
 	private Tool currentTool;
 	private int currentSelectionGid = -1;
@@ -125,6 +128,7 @@ public class EntityManipulatorModule extends SceneModule {
 			}
 		});
 		layersDialog = new LayersDialog(sceneTab, sceneContainer.getEntityEngine(), sceneContainer);
+		alignmentToolsDialog = new AlignmentToolsDialog(sceneContainer, selectedEntities);
 		createGeneralMenu();
 
 		entityMoveTimerTask = new EntityMoveTimerTask(scene, immutableSelectedEntities);
@@ -558,6 +562,10 @@ public class EntityManipulatorModule extends SceneModule {
 
 	public GroupBreadcrumb getGroupBreadcrumb () {
 		return groupBreadcrumb;
+	}
+
+	public AlignmentToolsDialog getAlignmentToolsDialog () {
+		return alignmentToolsDialog;
 	}
 
 	public ImmutableArray<EntityProxy> getSelectedEntities () {

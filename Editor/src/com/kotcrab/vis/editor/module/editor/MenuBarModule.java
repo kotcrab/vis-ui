@@ -109,6 +109,8 @@ public class MenuBarModule extends EditorModule {
 		menuBar.addMenu(menu);
 
 		//DO NOT replace this with method reference!!!
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Alignment tools", Icons.ALIGN_LEFT, () -> sceneButtonsListener.showAlignmentTools()));
+		menu.addSeparator();
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Undo", Icons.UNDO, () -> sceneButtonsListener.undo()));
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Redo", Icons.REDO, () -> sceneButtonsListener.redo()));
 		menu.addSeparator();

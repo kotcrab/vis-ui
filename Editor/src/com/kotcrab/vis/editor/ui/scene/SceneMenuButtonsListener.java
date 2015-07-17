@@ -24,6 +24,8 @@ import com.kotcrab.vis.ui.widget.MenuBar;
  * @author Kotcrab
  */
 public interface SceneMenuButtonsListener {
+	void showAlignmentTools ();
+
 	void showSceneSettings ();
 
 	void resetCamera ();

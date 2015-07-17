@@ -45,8 +45,8 @@ import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.module.project.SupportModule;
 import com.kotcrab.vis.editor.module.scene.*;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.AlignmentToolsDialog;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupBreadcrumb;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
@@ -92,6 +92,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	private boolean savedAtLeastOnce;
 
 	private Target dropTarget;
+	private final AlignmentToolsDialog alignmentTools;
 
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
 		super(true);
@@ -128,16 +129,17 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 		GroupBreadcrumb breadcrumb = entityManipulator.getGroupBreadcrumb();
 		EntityProperties entityProperties = entityManipulator.getEntityProperties();
+		alignmentTools = entityManipulator.getAlignmentToolsDialog();
 
 		content.add(breadcrumb).height(new VisValue(context -> breadcrumb.getPrefHeight())).expandX().fillX().colspan(3).row();
-		content.add(leftColumn).width(300).fillY().expandY();
+		content.add(leftColumn).width(190).fillY().expandY();
 		content.add().fill().expand();
 		content.add(rightColumn).width(260).fillY().expandY();
 
 		leftColumn.top();
+		leftColumn.add(alignmentTools).height(new VisValue(context -> alignmentTools.getPrefHeight())).expandX().fillX().row();
 		//leftColumn.add(outline).height(300).fillX().expandX();
-		leftColumn.row();
-		leftColumn.add().fill().expand();
+		leftColumn.add().fill().expand().row();
 
 		rightColumn.top();
 		rightColumn.add(entityProperties).height(new VisValue(context -> entityProperties.getPrefHeight())).expandX().fillX().row();
@@ -280,6 +282,11 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	public void dispose () {
 		sceneMC.dispose();
 		App.eventBus.unregister(this);
+	}
+
+	@Override
+	public void showAlignmentTools () {
+		alignmentTools.setVisible(true);
 	}
 
 	@Override
