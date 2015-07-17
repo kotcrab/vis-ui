@@ -20,8 +20,10 @@ import com.artemis.Component;
 import com.artemis.Entity;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -108,6 +110,8 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(EntityScheme.class, new EntitySchemeSerializer(kryo, this), 32);
 		kryo.register(SceneViewport.class, 33);
 		kryo.register(Layer.class, 34);
+		kryo.register(BitmapFontParameter.class, 35);
+		kryo.register(TextureFilter.class, 36);
 
 		kryo.register(PathAsset.class, 61);
 		kryo.register(TextureRegionAsset.class, 62);
