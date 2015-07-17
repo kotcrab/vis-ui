@@ -28,6 +28,8 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.*;
+import com.kotcrab.vis.editor.event.assetreloaded.BmpFontReloadedEvent;
+import com.kotcrab.vis.editor.event.assetreloaded.TtfFontReloadedEvent;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.ContentTable;
@@ -225,7 +227,13 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 			sceneMC.getEntityEngine().getManager(TextureReloaderManager.class).reloadTextures();
 
 		if (event instanceof ParticleReloadedEvent)
-			sceneMC.getEntityEngine().getManager(ParticleReloaderManager.class).reloadTextures();
+			sceneMC.getEntityEngine().getManager(ParticleReloaderManager.class).reloadParticles();
+
+		if (event instanceof BmpFontReloadedEvent)
+			sceneMC.getEntityEngine().getManager(FontReloaderManager.class).reloadFonts(true, false);
+
+		if (event instanceof TtfFontReloadedEvent)
+			sceneMC.getEntityEngine().getManager(FontReloaderManager.class).reloadFonts(false, true);
 
 		if (isActiveTab()) {
 			if (event instanceof ToolbarEvent) {

@@ -22,6 +22,9 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.event.assetreloaded.BmpFontReloadedEvent;
+import com.kotcrab.vis.editor.event.assetreloaded.TtfFontReloadedEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
@@ -30,10 +33,8 @@ import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
-//TODO font reloading for bmp
-//TODO: [artemis-wip] clean up
 /**
- * Allows to get loaded fonts from project asset directory. TTF fonts can be reloaded automatically.
+ * Allows to get loaded fonts from project asset directory. Fonts can be reloaded automatically.
  * @author Kotcrab
  */
 public class FontCacheModule extends ProjectModule implements WatchListener {
@@ -51,11 +52,8 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	private FileHandle bmpFontDirectory;
 	private FileHandle ttfFontDirectory;
 
-	//TODO dispose
 	private ObjectMap<FileHandle, BitmapFont> bmpFonts = new ObjectMap<>();
 	private ObjectMap<FileHandle, TtfEditorFont> ttfFonts = new ObjectMap<>();
-
-//	@Deprecated private Array<EditorFont> fonts = new Array<>();
 
 	@Override
 	public void init () {
@@ -63,69 +61,42 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 		bmpFontDirectory = fileAccess.getBMPFontFolder();
 
 		watcherModule.addListener(this);
-
-		//buildFonts();
 	}
-
-//	private void buildFonts () {
-//		FileHandle[] ttfFiles = ttfFontDirectory.list();
-//		for (FileHandle file : ttfFiles) {
-//			if (file.extension().equals("ttf")) {
-//				fonts.add(new TTFEditorFont(file, fileAccess.relativizeToAssetsFolder(file)));
-//			}
-//		}
-//
-//		FileHandle[] bmpFiles = bmpFontDirectory.list();
-//		for (FileHandle file : bmpFiles) {
-//			if (file.extension().equals("fnt")) {
-//				fonts.add(new BMPEditorFont(file, fileAccess.relativizeToAssetsFolder(file)));
-//			}
-//		}
-//	}
-//
-//	private void refreshFont (FileHandle file) {
-//		//FIXME font reloading
-//		EditorFont existingFont = null;
-//
-//		for (EditorFont font : fonts) {
-//			if (font.getFile().equals(file)) {
-//				existingFont = font;
-//				break;
-//			}
-//		}
-//
-//		if (existingFont != null) {
-//			existingFont.dispose();
-//			fonts.removeValue(existingFont, true);
-//		}
-//
-//		fonts.add(new TTFEditorFont(file, fileAccess.relativizeToAssetsFolder(file)));
-//
-//		//TODO: post font reloaded event
-//	}
 
 	@Override
 	public void dispose () {
 		watcherModule.removeListener(this);
+
+		for (BitmapFont font : bmpFonts.values())
+			font.dispose();
+
+		for (TtfEditorFont font : ttfFonts.values())
+			font.dispose();
 	}
 
 	@Override
 	public void fileChanged (FileHandle file) {
-		//refreshFont(file);
+		if (file.extension().equals("ttf")) refreshTtfFont(file);
+		if (file.extension().equals("fnt")) refreshBmpFont(file);
 	}
 
-	@Override
-	public void fileCreated (final FileHandle file) {
-		//if (file.extension().equals("ttf")) refreshFont(file);
+	private void refreshTtfFont (FileHandle file) {
+		TtfEditorFont font = ttfFonts.remove(file);
+		if (font != null) font.dispose();
+
+		App.eventBus.post(new TtfFontReloadedEvent());
 	}
 
-//	@Deprecated
-//	public EditorFont _get (VisAssetDescriptor assetDescriptor) {
-//		if (assetDescriptor instanceof PathAsset == false)
-//			throw new UnsupportedAssetDescriptorException(assetDescriptor);
-//
-//		PathAsset path = (PathAsset) assetDescriptor;
-//		return _get(fileAccess.getAssetsFolder().child(path.getPath()));
+	private void refreshBmpFont (FileHandle file) {
+		BitmapFont bmpFont = bmpFonts.remove(file);
+		if (bmpFont != null) bmpFont.dispose();
+
+		App.eventBus.post(new BmpFontReloadedEvent());
+	}
+
+//	@Override
+//	public void fileCreated (final FileHandle file) {
+//		if (file.extension().equals("ttf")) refreshFont(file);
 //	}
 
 	public BitmapFont getGeneric (VisAssetDescriptor asset) {
@@ -139,7 +110,7 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	public BitmapFont get (TtfFontAsset asset) {
-		if(asset.getFontSize() == -1) throw new IllegalArgumentException("Invalid font size: -1");
+		if (asset.getFontSize() == -1) throw new IllegalArgumentException("Invalid font size: -1");
 
 		FileHandle file = fileAccess.getAssetsFolder().child(asset.getPath());
 		TtfEditorFont ttfFont = ttfFonts.get(file);
@@ -166,25 +137,4 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 
 		return font;
 	}
-
-//	@Deprecated
-//	public EditorFont _get (FileHandle file) {
-//		for (EditorFont font : fonts) {
-//			if (font.getFile().equals(file))
-//				return font;
-//		}
-//
-//		throw new IllegalStateException("Font not found, file: " + file.path());
-//	}
-//
-//	@Deprecated
-//	public BitmapFont _get (FileHandle file, int size) {
-//		for (EditorFont font : fonts) {
-//			if (font.getFile().equals(file))
-//				return font.get(size);
-//		}
-//
-//		throw new IllegalStateException("Font not found");
-//	}
-
 }

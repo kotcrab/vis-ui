@@ -28,10 +28,7 @@ import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
-import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
-import com.kotcrab.vis.editor.module.project.Project;
-import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import com.kotcrab.vis.editor.module.project.TextureCacheModule;
+import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
@@ -69,6 +66,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		engine.setManager(new EntitySerializerManager());
 		engine.setManager(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
 		engine.setManager(new ParticleReloaderManager(projectModuleContainer.get(ParticleCacheModule.class)));
+		engine.setManager(new FontReloaderManager(projectModuleContainer.get(FontCacheModule.class)));
 
 		engine.setSystem(new GroupIdProviderSystem(), true);
 		engine.setSystem(new GroupProxyProviderSystem(), true);
