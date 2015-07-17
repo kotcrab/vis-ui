@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.event;
+package com.kotcrab.vis.editor.event.assetreloaded;
 
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;

@@ -31,7 +31,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.KryoException;
 import com.kotcrab.vis.editor.*;
-import com.kotcrab.vis.editor.event.AtlasReloadedEvent;
+import com.kotcrab.vis.editor.event.assetreloaded.AtlasReloadedEvent;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.InjectModule;

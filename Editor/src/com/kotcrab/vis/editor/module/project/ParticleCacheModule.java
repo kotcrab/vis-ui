@@ -19,7 +19,7 @@ package com.kotcrab.vis.editor.module.project;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.ParticleReloadedEvent;
+import com.kotcrab.vis.editor.event.assetreloaded.ParticleReloadedEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.runtime.assets.PathAsset;

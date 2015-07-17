@@ -29,7 +29,7 @@ import com.kotcrab.vis.runtime.component.ParticleComponent;
 public class ParticleReloaderManager extends Manager {
 	private ParticleCacheModule particleCache;
 
-	private ComponentMapper<ParticleComponent> spriteCm;
+	private ComponentMapper<ParticleComponent> particleCm;
 	private ComponentMapper<AssetComponent> assetCm;
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
@@ -43,7 +43,7 @@ public class ParticleReloaderManager extends Manager {
 		subscription = subscriptionManager.get(Aspect.all(ParticleComponent.class, AssetComponent.class));
 	}
 
-	public void reloadTextures () {
+	public void reloadParticles () {
 		IntBag bag = subscription.getEntities();
 		int[] data = bag.getData();
 
@@ -51,7 +51,7 @@ public class ParticleReloaderManager extends Manager {
 			int id = data[i];
 			Entity entity = world.getEntity(id);
 
-			ParticleComponent particle = spriteCm.get(entity);
+			ParticleComponent particle = particleCm.get(entity);
 			VisAssetDescriptor asset = assetCm.get(entity).asset;
 
 			particle.effect.dispose();

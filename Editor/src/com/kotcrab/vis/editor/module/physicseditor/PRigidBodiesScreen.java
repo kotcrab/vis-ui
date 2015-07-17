@@ -29,7 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
-import com.kotcrab.vis.editor.event.TexturesReloadedEvent;
+import com.kotcrab.vis.editor.event.assetreloaded.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.ModuleInput;

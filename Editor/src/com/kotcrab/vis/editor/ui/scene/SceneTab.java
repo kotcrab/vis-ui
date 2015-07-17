@@ -29,6 +29,8 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.event.assetreloaded.BmpFontReloadedEvent;
+import com.kotcrab.vis.editor.event.assetreloaded.ParticleReloadedEvent;
+import com.kotcrab.vis.editor.event.assetreloaded.TexturesReloadedEvent;
 import com.kotcrab.vis.editor.event.assetreloaded.TtfFontReloadedEvent;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
