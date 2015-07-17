@@ -20,7 +20,6 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.viewport.*;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
@@ -77,11 +76,11 @@ public class Scene {
 
 		engine = new EntityEngine();
 		engine.setManager(new CameraManager(viewportType, width, height));
-		engine.setSystem(new SpriteInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
-		engine.setSystem(new SoundInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
-		engine.setSystem(new MusicInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
-		engine.setSystem(new ParticleInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
-		engine.setSystem(new TextInflaterSystem(configuration, assetsManager), configuration.passiveInflaters);
+		engine.setSystem(new SpriteInflaterSystem(configuration, assetsManager));
+		engine.setSystem(new SoundInflaterSystem(configuration, assetsManager));
+		engine.setSystem(new MusicInflaterSystem(configuration, assetsManager));
+		engine.setSystem(new ParticleInflaterSystem(configuration, assetsManager));
+		engine.setSystem(new TextInflaterSystem(configuration, assetsManager));
 
 		ArtemisUtils.createCommonSystems(engine, context.batch, distanceFieldShader, true);
 		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
@@ -94,7 +93,7 @@ public class Scene {
 	}
 
 	/** Renders entire scene. Typically called from {@link ApplicationListener#render()} */
-	public void render (SpriteBatch batch) {
+	public void render () {
 		engine.setDelta(Gdx.graphics.getDeltaTime());
 		engine.process();
 	}

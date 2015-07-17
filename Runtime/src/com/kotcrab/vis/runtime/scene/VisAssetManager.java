@@ -19,6 +19,7 @@ package com.kotcrab.vis.runtime.scene;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.font.FreeTypeFontProvider;
@@ -33,13 +34,14 @@ import com.kotcrab.vis.runtime.util.ShaderLoader;
 public class VisAssetManager extends AssetManager {
 	private SceneLoader sceneLoader;
 
-	public VisAssetManager () {
-		this(new InternalFileHandleResolver());
+	public VisAssetManager (Batch batch) {
+		this(new InternalFileHandleResolver(), batch);
 	}
 
-	public VisAssetManager (FileHandleResolver resolver) {
+	public VisAssetManager (FileHandleResolver resolver, Batch batch) {
 		super(resolver);
 		sceneLoader = new SceneLoader();
+		sceneLoader.setBatch(batch);
 		setLoader(Scene.class, sceneLoader);
 		setLoader(ShaderProgram.class, new ShaderLoader());
 	}

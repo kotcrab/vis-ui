@@ -29,7 +29,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
@@ -64,7 +63,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	private Array<EntitySupport> supports = new Array<EntitySupport>();
 
-	private Batch batch = new SpriteBatch();
+	private Batch batch;
 
 	public SceneLoader () {
 		this(new InternalFileHandleResolver(), new RuntimeConfiguration());
@@ -88,6 +87,10 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		return json;
 	}
 
+	public void setBatch (Batch batch) {
+		this.batch = batch;
+	}
+
 	public void registerSupport (AssetManager manager, EntitySupport support) {
 		supports.add(support);
 		support.setLoaders(manager);
@@ -100,6 +103,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	@Override
 	public Array<AssetDescriptor> getDependencies (String fileName, FileHandle file, SceneParameter parameter) {
+		if (batch == null) throw new IllegalStateException("Batch not set, see #setBatch(Batch)");
+
 		Json json = getJson();
 		data = json.fromJson(SceneData.class, file);
 
@@ -161,6 +166,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		EntityEngine engine = scene.getEntityEngine();
 		for (EntityData entityData : data.entities)
 			entityData.build(engine);
+
+		scene.inflateEntities();
 	}
 
 	@Override

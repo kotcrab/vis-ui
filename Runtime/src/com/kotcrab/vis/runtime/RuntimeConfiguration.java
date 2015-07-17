@@ -18,6 +18,5 @@ package com.kotcrab.vis.runtime;
 
 /** @author Kotcrab */
 public class RuntimeConfiguration {
-	public boolean passiveInflaters = false; //TODO: [artemis-wip] use this
 	public boolean removeAssetsComponentAfterInflating = false;
 }
