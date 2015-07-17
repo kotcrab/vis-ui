@@ -77,6 +77,6 @@ public class SpineSupport implements EntitySupport {
 	public void registerSystems (RuntimeConfiguration configuration, AssetManager manager, EntityEngine engine) {
 		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
 		engine.setSystem(new SpineRenderSystem(renderBatchingSystem), true);
-		engine.setSystem(new SpineInflaterSystem(configuration, manager), configuration.passiveInflaters);
+		engine.setSystem(new SpineInflaterSystem(configuration, manager));
 	}
 }

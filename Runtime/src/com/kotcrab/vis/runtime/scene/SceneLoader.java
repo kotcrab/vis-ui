@@ -166,8 +166,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		EntityEngine engine = scene.getEntityEngine();
 		for (EntityData entityData : data.entities)
 			entityData.build(engine);
-
-		scene.inflateEntities();
 	}
 
 	@Override

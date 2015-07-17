@@ -134,7 +134,6 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(InvisibleComponent.class, 212);
 		kryo.register(LayerComponent.class, 213);
 		kryo.register(RenderableComponent.class, 214);
-		kryo.register(RenderableComponent.class, 215);
 	}
 
 	private void registerEntityComponentSerializer (Class<? extends Component> componentClass, EntityComponentSerializer serializer, int id) {
