@@ -342,13 +342,15 @@ public class EntityManipulatorModule extends SceneModule {
 			throw new UnsupportedOperationException("findEntityBaseGroupAndSelect(EntityProxy) does not supports GroupEntityProxy");
 
 		IntArray array = proxy.getGroupsIds();
-		array.reverse();
+		if (array.size > 0) {
+			array.reverse();
 
-		currentSelectionGid = array.peek();
+			currentSelectionGid = array.peek();
 
-		for (int i = 0; i < array.size; i++) {
-			int gid = array.get(i);
-			groupBreadcrumb.addGroup(gid);
+			for (int i = 0; i < array.size; i++) {
+				int gid = array.get(i);
+				groupBreadcrumb.addGroup(gid);
+			}
 		}
 
 		select(proxy);
