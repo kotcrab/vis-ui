@@ -20,15 +20,17 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 
 /**
  * Caches loaded scenes, so only one instance of each scene is loaded in editor.
  * @author Kotcrab
  */
-public class SceneCacheModule extends ProjectModule {
+public class SceneCacheModule extends ProjectModule implements WatchListener {
 	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private ParticleCacheModule particleCache;
 	@InjectModule private SceneIOModule sceneIO;
+	@InjectModule private AssetsWatcherModule assetsWatcherModule;
 
 	private ObjectMap<FileHandle, EditorScene> scenes = new ObjectMap<>();
 
@@ -41,5 +43,20 @@ public class SceneCacheModule extends ProjectModule {
 		}
 
 		return scene;
+	}
+
+	@Override
+	public void init () {
+		assetsWatcherModule.addListener(this);
+	}
+
+	@Override
+	public void dispose () {
+		assetsWatcherModule.removeListener(this);
+	}
+
+	@Override
+	public void fileDeleted (FileHandle file) {
+		scenes.remove(file);
 	}
 }
