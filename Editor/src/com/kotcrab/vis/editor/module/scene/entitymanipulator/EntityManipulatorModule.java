@@ -641,6 +641,8 @@ public class EntityManipulatorModule extends SceneModule {
 				return true;
 			}
 
+			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.S) sceneTab.save();
+
 			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.A) selectAll();
 			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.C) copy();
 			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.V) paste();
