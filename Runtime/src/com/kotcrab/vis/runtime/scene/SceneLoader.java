@@ -36,7 +36,7 @@ import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.assets.*;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.font.BitmapFontProvider;
@@ -82,8 +82,27 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	public static Json getJson () {
 		Json json = new Json();
 		json.addClassTag("SceneData", SceneData.class);
+		json.addClassTag("SceneViewport", SceneViewport.class);
+
+		json.addClassTag("PathAsset", PathAsset.class);
+		json.addClassTag("BmpFontAsset", BmpFontAsset.class);
+		json.addClassTag("TtfFontAsset", TtfFontAsset.class);
 		json.addClassTag("AtlasRegionAsset", AtlasRegionAsset.class);
 		json.addClassTag("TextureRegionAsset", TextureRegionAsset.class);
+
+		json.addClassTag("AssetComponent", AssetComponent.class);
+		json.addClassTag("GroupComponent", GroupComponent.class);
+		json.addClassTag("IDComponent", IDComponent.class);
+		json.addClassTag("InvisibleComponent", InvisibleComponent.class);
+		json.addClassTag("LayerComponent", LayerComponent.class);
+		json.addClassTag("RenderableComponent", RenderableComponent.class);
+
+		json.addClassTag("SpriteProtoComponent", SpriteProtoComponent.class);
+		json.addClassTag("MusicProtoComponent", MusicProtoComponent.class);
+		json.addClassTag("SoundProtoComponent", SoundProtoComponent.class);
+		json.addClassTag("ParticleProtoComponent", ParticleProtoComponent.class);
+		json.addClassTag("TextProtoComponent", TextProtoComponent.class);
+
 		return json;
 	}
 
