@@ -35,11 +35,10 @@ import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-public class SpineAssetDescriptorProvider implements AssetDescriptorProvider {
+public class SpineAssetDescriptorProvider implements AssetDescriptorProvider<SpineAssetDescriptor> {
 	@Override
-	public VisAssetDescriptor provide (FileHandle file, String relativePath) {
+	public SpineAssetDescriptor provide (FileHandle file, String relativePath) {
 		if (relativePath.startsWith("spine") == false) return null;
 
 		if (relativePath.endsWith("atlas")) {
@@ -54,6 +53,11 @@ public class SpineAssetDescriptorProvider implements AssetDescriptorProvider {
 		}
 
 		return null;
+	}
+
+	@Override
+	public SpineAssetDescriptor parametrize (SpineAssetDescriptor rawAsset, SpineAssetDescriptor other) {
+		return new SpineAssetDescriptor(rawAsset.getAtlasPath(), rawAsset.getSkeletonPath(), other.getScale());
 	}
 
 	private String findSkelPath (FileHandle file, String relativePath) {
