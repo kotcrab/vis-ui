@@ -90,11 +90,9 @@ public class DevelopmentSpeedupModule extends EditorModule implements EventListe
 			ProjectStatusEvent statusEvent = (ProjectStatusEvent) event;
 			if (statusEvent.status == Status.Loaded) {
 
-				FileHandle scene = Gdx.files.absolute("F:\\Poligon\\Tester\\vis\\assets\\scene\\test.scene");
-
 				try {
-					if (scene.exists()) {
-						EditorScene testScene = projectMC.get(SceneCacheModule.class).get(scene);
+					if (sceneFile.exists()) {
+						EditorScene testScene = projectMC.get(SceneCacheModule.class).get(sceneFile);
 						projectMC.get(SceneTabsModule.class).open(testScene);
 					}
 				} catch (KryoException e) {
