@@ -30,6 +30,7 @@ import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
+import com.kotcrab.vis.editor.util.gdx.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
@@ -57,6 +58,8 @@ public class NewSceneDialog extends VisWindow {
 
 	private VisValidableTextField widthField;
 	private VisValidableTextField heightField;
+
+	private VisValidableTextField pixelPerUnitsField;
 
 	private EnumSelectBox<SceneViewport> viewportModeSelectBox;
 
@@ -114,16 +117,27 @@ public class NewSceneDialog extends VisWindow {
 		add(viewportModeSelectBox);
 		row();
 
-		widthField = new VisValidableTextField("1280");
-		heightField = new VisValidableTextField("720");
-		widthField.setTextFieldFilter(new DigitsOnlyFilter());
-		heightField.setTextFieldFilter(new DigitsOnlyFilter());
+		pixelPerUnitsField = new VisValidableTextField("100");
+		pixelPerUnitsField.setTextFieldFilter(new DigitsOnlyFilter());
+
+		VisTable pixelPerUnitsTable = new VisTable(true);
+		add(new VisLabel("Pixels per units"));
+		add(pixelPerUnitsField).left().width(60);
+
+		//add(pixelPerUnitsTable).expand().fill();
+		row();
+
+		widthField = new VisValidableTextField("13");
+		heightField = new VisValidableTextField("7");
+		widthField.setTextFieldFilter(new FloatDigitsOnlyFilter());
+		heightField.setTextFieldFilter(new FloatDigitsOnlyFilter());
 
 		VisTable sizeTable = new VisTable(true);
 		add(new VisLabel("Width"));
 		sizeTable.add(widthField).width(60);
 		sizeTable.add(new VisLabel("Height"));
 		sizeTable.add(heightField).width(60);
+		sizeTable.add(new VisLabel("units"));
 		sizeTable.add().expand().fill();
 
 		add(sizeTable).expand().fill();
@@ -156,7 +170,9 @@ public class NewSceneDialog extends VisWindow {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				final FileHandle targetFile = Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".scene");
-				sceneIO.create(targetFile, viewportModeSelectBox.getSelectedEnum(), Integer.valueOf(widthField.getText()), Integer.valueOf(heightField.getText()));
+				assetsFolder.child(pathTextField.getText()).mkdirs(); //create non existing path dirs
+				sceneIO.create(targetFile, viewportModeSelectBox.getSelectedEnum(),
+						Float.valueOf(widthField.getText()), Float.valueOf(heightField.getText()), Integer.valueOf(pixelPerUnitsField.getText()));
 				statusBar.setText("Scene created: " + targetFile.path().substring(1));
 
 				DialogUtils.showOptionDialog(getStage(), "Message", "Open this new scene in editor?", OptionDialogType.YES_NO, new OptionDialogAdapter() {
@@ -174,17 +190,27 @@ public class NewSceneDialog extends VisWindow {
 
 	private void createValidators () {
 		FormValidator validator = new FormValidator(createButton, errorLabel);
-		validator.notEmpty(nameTextField, "Name cannot be empty!");
-		validator.notEmpty(pathTextField, "Path cannot be empty!");
+		validator.notEmpty(nameTextField, "Name cannot be empty");
+		validator.notEmpty(pathTextField, "Path cannot be empty");
 
-		validator.integerNumber(widthField, "Width must be a number");
-		validator.integerNumber(heightField, "Height must be a number");
+		validator.floatNumber(widthField, "Width must be a number");
+		validator.floatNumber(heightField, "Height must be a number");
+		validator.integerNumber(pixelPerUnitsField, "Pixel per units must be a number");
+
 		validator.valueGreaterThan(widthField, "Width must be greater than zero", 0);
 		validator.valueGreaterThan(heightField, "Height must be greater than zero", 0);
+		validator.valueGreaterThan(pixelPerUnitsField, "Pixel per units must be greater than zero", 0);
 
-		validator.fileExists(pathTextField, assetsFolder, "Path does not exist!");
+//		validator.fileExists(pathTextField, assetsFolder, "Path does not exist");
 
-		validator.custom(nameTextField, new FormInputValidator("That scene already exists!") {
+		validator.custom(nameTextField, new FormInputValidator("Scenes must be in /scene/ directory") {
+			@Override
+			public boolean validate (String input) {
+				return !input.startsWith("/scene/");
+			}
+		});
+
+		validator.custom(nameTextField, new FormInputValidator("That scene already exists") {
 			@Override
 			public boolean validate (String input) {
 				FileHandle sceneFile = assetsFolder.child(pathTextField.getText()).child(input + ".scene");

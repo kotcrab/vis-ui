@@ -42,16 +42,18 @@ public class EditorScene extends BaseObservable {
 
 	/** Scene file, path is relative to project Vis folder */
 	@Tag(0) public String path;
-	@Tag(1) public int width;
-	@Tag(2) public int height;
+	@Tag(1) public float width;
+	@Tag(2) public float height;
+	@Tag(7) public int pixelPerUnits;
 	@Tag(3) public SceneViewport viewport;
 
 	@Tag(4) private Array<Layer> layers = new Array<>();
 	@Tag(5) private int activeLayerId;
 
 	@Tag(6) private Array<EntityScheme> schemes; //for serialization
+	//last tag is 7
 
-	public EditorScene (FileHandle file, SceneViewport viewport, int width, int height) {
+	public EditorScene (FileHandle file, SceneViewport viewport, float width, float height, int pixelPerUnits) {
 		this.path = file.path();
 		this.viewport = viewport;
 		this.width = width;

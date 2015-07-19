@@ -27,8 +27,9 @@ import com.kotcrab.vis.runtime.scene.SceneViewport;
  */
 public class SceneData {
 	public SceneViewport viewport;
-	public int width;
-	public int height;
+	public float width;
+	public float height;
+	public int pixelPerUnits;
 
 	public Array<EntityData> entities = new Array<EntityData>();
 }

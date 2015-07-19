@@ -209,8 +209,8 @@ public class SceneIOModule extends ProjectModule {
 		entityComponentSerializers.forEach(entityComponentSerializer -> entityComponentSerializer.setComponents(components));
 	}
 
-	public void create (FileHandle relativeScenePath, SceneViewport viewport, int width, int height) {
-		EditorScene scene = new EditorScene(relativeScenePath, viewport, width, height);
+	public void create (FileHandle relativeScenePath, SceneViewport viewport, float width, float height, int pixelPerUnits) {
+		EditorScene scene = new EditorScene(relativeScenePath, viewport, width, height, pixelPerUnits);
 		save(scene);
 	}
 

@@ -41,7 +41,7 @@ public class Scene {
 	private final RuntimeContext context;
 
 	/** Used by framework, not indented for external use */
-	public Scene (RuntimeContext context, SceneViewport viewportType, int width, int height) {
+	public Scene (RuntimeContext context, SceneViewport viewportType, float width, float height) {
 		this.context = context;
 		AssetManager assetsManager = context.assetsManager;
 		RuntimeConfiguration configuration = context.configuration;
