@@ -60,7 +60,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 		engine = new EntityEngine();
 
-		engine.setManager(new CameraManager(SceneViewport.SCREEN, 0, 0)); //size ignored for screen viewport
+		engine.setManager(new CameraManager(SceneViewport.SCREEN, 0, 0, scene.pixelPerUnits)); //size ignored for screen viewport
 		engine.setManager(new LayerManipulatorManager());
 		engine.setManager(new ZIndexManipulatorManager());
 		engine.setManager(new EntitySerializerManager());
@@ -72,16 +72,16 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		engine.setSystem(new GroupProxyProviderSystem(), true);
 		engine.setSystem(new GridRendererSystem(batch, this));
 
-		createEssentialsSystems(engine);
+		createEssentialsSystems(engine, scene.pixelPerUnits);
 
 		ArtemisUtils.createCommonSystems(engine, batch, Assets.distanceFieldShader, false);
 		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
 		engine.setSystem(new ParticleRenderSystem(renderBatchingSystem, true), true);
-		engine.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem), true);
+		engine.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem, scene.pixelPerUnits), true);
 	}
 
-	public static void createEssentialsSystems (EntityEngine engine) {
-		engine.setManager(new EntityProxyCache());
+	public static void createEssentialsSystems (EntityEngine engine, float pixelPerUnits) {
+		engine.setManager(new EntityProxyCache(pixelPerUnits));
 		engine.setSystem(new AssetsUsageAnalyzerSystem(), true);
 	}
 

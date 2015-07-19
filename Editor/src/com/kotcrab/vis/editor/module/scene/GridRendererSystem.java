@@ -82,14 +82,14 @@ public class GridRendererSystem extends VoidEntitySystem {
 	}
 
 	private void drawVerticalLines () {
-		int gridSize = settings.config.gridSize;
+		float gridSize = settings.config.gridSize;
 		float xStart = camera.getX() - camera.getWidth() / 2;
 		float xEnd = xStart + camera.getWidth();
 
 		int leftDownY = (int) (camera.getY() - camera.getHeight() / 2);
 		int linesToDraw = (int) (camera.getHeight() / gridSize) + 1;
 
-		int drawingPointStart = leftDownY / gridSize;
+		int drawingPointStart = leftDownY / (int) gridSize + 1;
 		int drawingPointEnd = drawingPointStart + linesToDraw;
 
 		for (int i = drawingPointStart; i < drawingPointEnd; i++)
@@ -97,14 +97,14 @@ public class GridRendererSystem extends VoidEntitySystem {
 	}
 
 	private void drawHorizontalLines () {
-		int gridSize = settings.config.gridSize;
+		float gridSize = settings.config.gridSize;
 		float yStart = camera.getY() - camera.getHeight() / 2;
 		float yEnd = yStart + camera.getHeight();
 
 		int leftDownX = (int) (camera.getX() - camera.getWidth() / 2);
 		int linesToDraw = (int) (camera.getWidth() / gridSize) + 1;
 
-		int drawingPointStart = leftDownX / gridSize;
+		int drawingPointStart = leftDownX / (int)gridSize + 1;
 		int drawingPointEnd = drawingPointStart + linesToDraw;
 
 		for (int i = drawingPointStart; i < drawingPointEnd; i++)
@@ -150,13 +150,13 @@ public class GridRendererSystem extends VoidEntitySystem {
 		@Override
 		public void settingsApply () {
 			config.drawGrid = drawGridCheck.isChecked();
-			config.gridSize = FieldUtils.getInt(gridSizeField, 0);
+			config.gridSize = FieldUtils.getFloat(gridSizeField, 0);
 			settingsSave();
 		}
 	}
 
 	public static class GridConfig {
 		@Tag(0) public boolean drawGrid = true;
-		@Tag(1) public int gridSize = 256;
+		@Tag(1) public float gridSize = 3;
 	}
 }

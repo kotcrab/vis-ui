@@ -38,6 +38,11 @@ public class EntityProxyCache extends Manager {
 	private EntitySubscription subscription;
 
 	private ObjectMap<Entity, EntityProxy> cache = new ObjectMap<>();
+	private float pixelPerUnits;
+
+	public EntityProxyCache (float pixelPerUnits) {
+		this.pixelPerUnits = pixelPerUnits;
+	}
 
 	@Override
 	protected void initialize () {
@@ -79,8 +84,8 @@ public class EntityProxyCache extends Manager {
 
 	private EntityProxy getInternalProxyFor (Entity entity) {
 		if (entity.getComponent(ParticleComponent.class) != null) return new ParticleProxy(entity);
-		if (entity.getComponent(SoundComponent.class) != null) return new SoundAndMusicProxy(entity, false);
-		if (entity.getComponent(MusicComponent.class) != null) return new SoundAndMusicProxy(entity, true);
+		if (entity.getComponent(SoundComponent.class) != null) return new SoundAndMusicProxy(entity, false, pixelPerUnits);
+		if (entity.getComponent(MusicComponent.class) != null) return new SoundAndMusicProxy(entity, true, pixelPerUnits);
 		if (entity.getComponent(SpriteComponent.class) != null) return new SpriteProxy(entity);
 		if (entity.getComponent(TextComponent.class) != null) return new TextProxy(entity);
 

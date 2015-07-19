@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.viewport.*;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.RuntimeContext;
+import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.system.*;
 import com.kotcrab.vis.runtime.util.ArtemisUtils;
@@ -41,17 +42,20 @@ public class Scene {
 	private final RuntimeContext context;
 
 	/** Used by framework, not indented for external use */
-	public Scene (RuntimeContext context, SceneViewport viewportType, float width, float height) {
+	public Scene (RuntimeContext context, SceneData data) {
 		this.context = context;
 		AssetManager assetsManager = context.assetsManager;
 		RuntimeConfiguration configuration = context.configuration;
+
+		float width = data.width;
+		float height = data.height;
 
 		OrthographicCamera camera = new OrthographicCamera(width, height);
 		camera.position.x = width / 2;
 		camera.position.y = height / 2;
 		camera.update();
 
-		switch (viewportType) {
+		switch (data.viewport) {
 			case STRETCH:
 				viewport = new StretchViewport(width, height, camera);
 				break;
@@ -75,7 +79,7 @@ public class Scene {
 		}
 
 		engine = new EntityEngine();
-		engine.setManager(new CameraManager(viewportType, width, height));
+		engine.setManager(new CameraManager(data.viewport, width, height, data.pixelPerUnits));
 		engine.setSystem(new SpriteInflaterSystem(configuration, assetsManager));
 		engine.setSystem(new SoundInflaterSystem(configuration, assetsManager));
 		engine.setSystem(new MusicInflaterSystem(configuration, assetsManager));

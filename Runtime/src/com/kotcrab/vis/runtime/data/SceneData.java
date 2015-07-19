@@ -29,7 +29,7 @@ public class SceneData {
 	public SceneViewport viewport;
 	public float width;
 	public float height;
-	public int pixelPerUnits;
+	public float pixelPerUnits;
 
 	public Array<EntityData> entities = new Array<EntityData>();
 }

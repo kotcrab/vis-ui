@@ -27,7 +27,7 @@ public class CameraManager extends Manager {
 	private OrthographicCamera camera;
 	private Viewport viewport;
 
-	public CameraManager (SceneViewport viewportType, int width, int height) {
+	public CameraManager (SceneViewport viewportType, float width, float height, float pixelPerUnits) {
 		camera = new OrthographicCamera(width, height);
 		camera.position.x = width / 2;
 		camera.position.y = height / 2;
@@ -45,6 +45,7 @@ public class CameraManager extends Manager {
 				break;
 			case SCREEN:
 				viewport = new ScreenViewport(camera);
+				((ScreenViewport) viewport).setUnitsPerPixel(1f / pixelPerUnits);
 				break;
 			case EXTEND:
 				viewport = new ExtendViewport(width, height, camera);
@@ -58,6 +59,10 @@ public class CameraManager extends Manager {
 
 	public OrthographicCamera getCamera () {
 		return camera;
+	}
+
+	public Viewport getViewport () {
+		return viewport;
 	}
 
 	public void resize (int width, int height) {

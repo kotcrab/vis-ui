@@ -46,10 +46,14 @@ public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
 
-	public SoundAndMusicRenderSystem (EntityProcessPrincipal principal) {
+	private float renderSize;
+
+	public SoundAndMusicRenderSystem (EntityProcessPrincipal principal, float pixelPerUnits) {
 		super(Aspect.all(PositionComponent.class).one(SoundComponent.class, MusicComponent.class).exclude(InvisibleComponent.class), principal);
 		soundIcon = Assets.getIconRegion(Icons.SOUND);
 		musicIcon = Assets.getIconRegion(Icons.MUSIC);
+
+		renderSize = ICON_SIZE / pixelPerUnits;
 	}
 
 	@Override
@@ -62,9 +66,9 @@ public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 		PositionComponent pos = posCm.get(entity);
 
 		if (musicCm.has(entity))
-			batch.draw(musicIcon, pos.x, pos.y);
+			batch.draw(musicIcon, pos.x, pos.y, renderSize, renderSize);
 		else
-			batch.draw(soundIcon, pos.x, pos.y);
+			batch.draw(soundIcon, pos.x, pos.y, renderSize, renderSize);
 
 	}
 }

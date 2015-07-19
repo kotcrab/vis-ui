@@ -270,7 +270,7 @@ public class EntityManipulatorModule extends SceneModule {
 			TextureAssetDescriptor asset = (TextureAssetDescriptor) obj;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(new SpriteComponent(textureCache.getSprite(asset)), new AssetComponent(asset),
+					.with(new SpriteComponent(textureCache.getSprite(asset, scene.pixelPerUnits)), new AssetComponent(asset),
 							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
 					.build();
 

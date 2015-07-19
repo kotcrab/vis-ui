@@ -180,7 +180,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	@Override
 	public void loadAsync (AssetManager manager, String fileName, FileHandle file, SceneParameter parameter) {
 		RuntimeContext context = new RuntimeContext(configuration, batch, manager, new ImmutableArray<EntitySupport>(supports));
-		scene = new Scene(context, data.viewport, data.width, data.height);
+		scene = new Scene(context, data);
 
 		EntityEngine engine = scene.getEntityEngine();
 		for (EntityData entityData : data.entities)

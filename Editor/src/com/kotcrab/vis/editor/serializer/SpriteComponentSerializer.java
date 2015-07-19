@@ -73,7 +73,7 @@ public class SpriteComponentSerializer extends EntityComponentSerializer<SpriteC
 		input.readInt(); //version code
 
 		VisAssetDescriptor asset = (VisAssetDescriptor) kryo.readClassAndObject(input);
-		SpriteComponent obj = new SpriteComponent(textureCache.getSprite(asset));
+		SpriteComponent obj = new SpriteComponent(textureCache.getSprite(asset, 1));
 
 		obj.setPosition(input.readFloat(), input.readFloat());
 		obj.setSize(input.readFloat(), input.readFloat());

@@ -128,7 +128,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 			if (sceneTab == null) {
 				//scene is not loaded, manually prepare engine and populate it
 				engine = new EntityEngine();
-				SceneModuleContainer.createEssentialsSystems(engine);
+				SceneModuleContainer.createEssentialsSystems(engine, scene.pixelPerUnits);
 				engine.initialize();
 				SceneModuleContainer.populateEngine(engine, scene);
 			} else {

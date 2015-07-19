@@ -227,8 +227,10 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		throw new UnsupportedAssetDescriptorException(descriptor);
 	}
 
-	public Sprite getSprite (VisAssetDescriptor descriptor) {
-		return new Sprite(getRegion(descriptor));
+	public Sprite getSprite (VisAssetDescriptor descriptor, float pixelsPerUnits) {
+		Sprite sprite = new Sprite(getRegion(descriptor));
+		sprite.setSize(sprite.getWidth() / pixelsPerUnits, sprite.getHeight() / pixelsPerUnits);
+		return sprite;
 	}
 
 	private TextureRegion getCachedGfxRegion (TextureRegionAsset asset) {

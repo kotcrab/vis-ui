@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.SceneMetadataModule;
 import com.kotcrab.vis.editor.util.gdx.CameraZoomController;
@@ -36,6 +37,7 @@ public class CameraModule extends SceneModule {
 	private SceneMetadata metadata;
 
 	private OrthographicCamera camera;
+	private Viewport viewport;
 	private CameraZoomController zoomController;
 
 	private Vector3 unprojectVec;
@@ -43,7 +45,9 @@ public class CameraModule extends SceneModule {
 	@Override
 	public void added () {
 		unprojectVec = new Vector3();
-		camera = entityEngine.getManager(CameraManager.class).getCamera();
+		CameraManager manager = entityEngine.getManager(CameraManager.class);
+		camera = manager.getCamera();
+		viewport = manager.getViewport();
 		zoomController = new CameraZoomController(camera, unprojectVec);
 	}
 
@@ -90,13 +94,6 @@ public class CameraModule extends SceneModule {
 	}
 
 	@Override
-	public void resize () {
-		Vector3 oldPos = camera.position.cpy();
-		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		camera.position.set(oldPos);
-	}
-
-	@Override
 	public boolean scrolled (InputEvent event, float x, float y, int amount) {
 		return zoomController.zoomAroundPoint(x, y, amount);
 	}
@@ -108,7 +105,7 @@ public class CameraModule extends SceneModule {
 
 	@Override
 	public void touchDragged (InputEvent event, float x, float y, int pointer) {
-		if (Gdx.input.isButtonPressed(Buttons.RIGHT)) pan(Gdx.input.getDeltaX(), Gdx.input.getDeltaY());
+		if (Gdx.input.isButtonPressed(Buttons.RIGHT)) pan(Gdx.input.getDeltaX() / scene.pixelPerUnits, Gdx.input.getDeltaY() / scene.pixelPerUnits);
 	}
 
 	@Override
@@ -150,18 +147,18 @@ public class CameraModule extends SceneModule {
 	}
 
 	public Vector3 unproject (Vector3 vector) {
-		return camera.unproject(vector);
+		return viewport.unproject(vector);
 	}
 
 	public float getInputX () {
 		unprojectVec.x = Gdx.input.getX();
-		camera.unproject(unprojectVec);
+		viewport.unproject(unprojectVec);
 		return unprojectVec.x;
 	}
 
 	public float getInputY () {
 		unprojectVec.y = Gdx.input.getY();
-		camera.unproject(unprojectVec);
+		viewport.unproject(unprojectVec);
 		return unprojectVec.y;
 	}
 
