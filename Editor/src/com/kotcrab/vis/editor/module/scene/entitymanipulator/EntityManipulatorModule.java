@@ -524,9 +524,9 @@ public class EntityManipulatorModule extends SceneModule {
 	@Override
 	public void render (Batch batch) {
 		batch.end();
-		if (selectedEntities.size > 0) {
+		shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
 
-			shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
+		if (selectedEntities.size > 0) {
 			shapeRenderer.setColor(Color.WHITE);
 			shapeRenderer.begin(ShapeType.Line);
 

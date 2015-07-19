@@ -108,12 +108,12 @@ public class RectangularSelection {
 		// Make the width and height positive, if necessary.
 		if (width < 0) {
 			width = 0 - width;
-			x = x - width + 1;
+			x = x - width;
 		}
 
 		if (height < 0) {
 			height = 0 - height;
-			y = y - height + 1;
+			y = y - height;
 		}
 
 		// Update rectToDraw after saving old value.
