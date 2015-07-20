@@ -16,7 +16,7 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
-import com.artemis.systems.VoidEntitySystem;
+import com.artemis.BaseSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -26,19 +26,20 @@ import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsModule;
+import com.kotcrab.vis.editor.util.NumberUtils;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
+import com.kotcrab.vis.editor.util.gdx.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 /**
  * Renders scene grid
  * @author Kotcrab
  */
-public class GridRendererSystem extends VoidEntitySystem {
+public class GridRendererSystem extends BaseSystem {
 	@InjectModule private CameraModule camera;
 	@InjectModule private RendererModule renderer;
 
@@ -129,16 +130,16 @@ public class GridRendererSystem extends VoidEntitySystem {
 			VisTable sizeTable = new VisTable(true);
 
 			sizeTable.add(new VisLabel("Grid size: "));
-			sizeTable.add(gridSizeField = new VisValidableTextField(Validators.INTEGERS));
+			sizeTable.add(gridSizeField = new VisValidableTextField(Validators.FLOATS));
 
 			prepareTable();
 			settingsTable.add(drawGridCheck = new VisCheckBox("Draw grid", config.drawGrid)).left();
 			settingsTable.row();
 			settingsTable.add(sizeTable);
 
-			gridSizeField.setTextFieldFilter(new DigitsOnlyFilter());
+			gridSizeField.setTextFieldFilter(new FloatDigitsOnlyFilter());
 			gridSizeField.addValidator(new Validators.GreaterThanValidator(0));
-			gridSizeField.setText(String.valueOf(config.gridSize));
+			gridSizeField.setText(NumberUtils.floatToString(config.gridSize));
 		}
 
 		@Override
