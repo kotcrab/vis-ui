@@ -62,29 +62,29 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 		config = new EntityEngineConfiguration();
 
-		config.setManager(new CameraManager(SceneViewport.SCREEN, 0, 0, scene.pixelPerUnits)); //size ignored for screen viewport
+		config.setManager(new CameraManager(SceneViewport.SCREEN, 0, 0, scene.pixelsPerUnit)); //size ignored for screen viewport
 		config.setManager(new LayerManipulatorManager());
 		config.setManager(new ZIndexManipulatorManager());
 		config.setManager(new EntitySerializerManager());
 		config.setManager(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
-		config.setManager(new ParticleReloaderManager(projectModuleContainer.get(ParticleCacheModule.class), scene.pixelPerUnits));
-		config.setManager(new FontReloaderManager(projectModuleContainer.get(FontCacheModule.class)));
+		config.setManager(new ParticleReloaderManager(projectModuleContainer.get(ParticleCacheModule.class), scene.pixelsPerUnit));
+		config.setManager(new FontReloaderManager(projectModuleContainer.get(FontCacheModule.class), scene.pixelsPerUnit));
 
 		config.setSystem(new GroupIdProviderSystem(), true);
 		config.setSystem(new GroupProxyProviderSystem(), true);
 		config.setSystem(new GridRendererSystem(batch, this));
 
-		createEssentialsSystems(config, scene.pixelPerUnits);
+		createEssentialsSystems(config, scene.pixelsPerUnit);
 
 		ArtemisUtils.createCommonSystems(config, batch, Assets.distanceFieldShader, false);
 		RenderBatchingSystem renderBatchingSystem = config.getSystem(RenderBatchingSystem.class);
 		config.setSystem(new ParticleRenderSystem(renderBatchingSystem, true), true);
-		config.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem, scene.pixelPerUnits), true);
+		config.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem, scene.pixelsPerUnit), true);
 
 	}
 
-	public static void createEssentialsSystems (EntityEngineConfiguration config, float pixelPerUnits) {
-		config.setManager(new EntityProxyCache(pixelPerUnits));
+	public static void createEssentialsSystems (EntityEngineConfiguration config, float pixelsPerUnit) {
+		config.setManager(new EntityProxyCache(pixelsPerUnit));
 		config.setSystem(new AssetsUsageAnalyzerSystem(), true);
 	}
 

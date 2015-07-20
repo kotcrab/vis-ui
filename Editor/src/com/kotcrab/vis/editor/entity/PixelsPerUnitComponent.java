@@ -19,10 +19,12 @@ package com.kotcrab.vis.editor.entity;
 import com.artemis.Component;
 
 /** @author Kotcrab */
-public class ParticleScaleComponent extends Component{
-	public float scaleFactor;
+public class PixelsPerUnitComponent extends Component {
+	public final float pixelsPerUnits;
+	public final float scale;
 
-	public ParticleScaleComponent (float scaleFactor) {
-		this.scaleFactor = scaleFactor;
+	public PixelsPerUnitComponent (float pixelsPerUnit) {
+		this.pixelsPerUnits = pixelsPerUnit;
+		this.scale = 1f / pixelsPerUnit;
 	}
 }

@@ -20,7 +20,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.kotcrab.vis.editor.entity.ParticleScaleComponent;
+import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
 import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
@@ -48,7 +48,7 @@ public class ParticleComponentSerializer extends EntityComponentSerializer<Parti
 
 		kryo.writeClassAndObject(output, getComponent(AssetComponent.class).asset);
 
-		output.writeFloat(getComponent(ParticleScaleComponent.class).scaleFactor);
+		output.writeFloat(getComponent(PixelsPerUnitComponent.class).scale);
 
 		output.writeFloat(obj.getX());
 		output.writeFloat(obj.getY());
@@ -75,7 +75,7 @@ public class ParticleComponentSerializer extends EntityComponentSerializer<Parti
 	@Override
 	public ParticleComponent copy (Kryo kryo, ParticleComponent original) {
 		super.copy(kryo, original);
-		return new ParticleComponent(original, getNewEffect(getComponent(AssetComponent.class).asset, getComponent(ParticleScaleComponent.class).scaleFactor));
+		return new ParticleComponent(original, getNewEffect(getComponent(AssetComponent.class).asset, getComponent(PixelsPerUnitComponent.class).scale));
 	}
 
 	private ParticleEffect getNewEffect (VisAssetDescriptor asset, float scaleFactor) {

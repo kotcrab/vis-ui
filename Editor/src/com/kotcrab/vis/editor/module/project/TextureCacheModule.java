@@ -227,9 +227,9 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		throw new UnsupportedAssetDescriptorException(descriptor);
 	}
 
-	public Sprite getSprite (VisAssetDescriptor descriptor, float pixelsPerUnits) {
+	public Sprite getSprite (VisAssetDescriptor descriptor, float pixelsPerUnit) {
 		Sprite sprite = new Sprite(getRegion(descriptor));
-		sprite.setSize(sprite.getWidth() / pixelsPerUnits, sprite.getHeight() / pixelsPerUnits);
+		sprite.setSize(sprite.getWidth() / pixelsPerUnit, sprite.getHeight() / pixelsPerUnit);
 		return sprite;
 	}
 

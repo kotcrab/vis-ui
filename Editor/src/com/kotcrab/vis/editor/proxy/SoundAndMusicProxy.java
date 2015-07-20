@@ -30,11 +30,11 @@ public class SoundAndMusicProxy extends EntityProxy {
 	private  boolean music;
 	private float renderSize;
 
-	public SoundAndMusicProxy (Entity entity, boolean music, float pixelPerUnits) {
+	public SoundAndMusicProxy (Entity entity, boolean music, float pixelsPerUnit) {
 		super(entity);
 		this.music = music;
 		pos = entity.getComponent(PositionComponent.class);
-		renderSize = SoundAndMusicRenderSystem.ICON_SIZE / pixelPerUnits;
+		renderSize = SoundAndMusicRenderSystem.ICON_SIZE / pixelsPerUnit;
 	}
 
 	@Override

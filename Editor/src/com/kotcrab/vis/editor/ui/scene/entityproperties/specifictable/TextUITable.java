@@ -108,7 +108,7 @@ public abstract class TextUITable extends SpecificUITable {
 					} else
 						throw new UnsupportedAssetDescriptorException(asset);
 
-					text.setFont(fontCache.getGeneric(newAsset));
+					text.setFont(fontCache.getGeneric(newAsset, properties.getSceneModuleContainer().getScene().pixelsPerUnit));
 
 					assetComponent.asset = newAsset;
 				}

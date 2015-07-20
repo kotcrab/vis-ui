@@ -20,7 +20,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.BitmapFont.BitmapFontData;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.assetreloaded.BmpFontReloadedEvent;
@@ -52,8 +54,8 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	private FileHandle bmpFontDirectory;
 	private FileHandle ttfFontDirectory;
 
-	private ObjectMap<FileHandle, BitmapFont> bmpFonts = new ObjectMap<>();
-	private ObjectMap<FileHandle, TtfEditorFont> ttfFonts = new ObjectMap<>();
+	private ObjectMap<FileHandle, BmpFontsMap> bmpFonts = new ObjectMap<>();
+	private ObjectMap<FileHandle, TmpFontsMap> ttfFonts = new ObjectMap<>();
 
 	@Override
 	public void init () {
@@ -67,10 +69,10 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	public void dispose () {
 		watcherModule.removeListener(this);
 
-		for (BitmapFont font : bmpFonts.values())
+		for (BmpFontsMap font : bmpFonts.values())
 			font.dispose();
 
-		for (TtfEditorFont font : ttfFonts.values())
+		for (TmpFontsMap font : ttfFonts.values())
 			font.dispose();
 	}
 
@@ -81,60 +83,102 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	private void refreshTtfFont (FileHandle file) {
-		TtfEditorFont font = ttfFonts.remove(file);
+		TmpFontsMap font = ttfFonts.remove(file);
 		if (font != null) font.dispose();
 
 		App.eventBus.post(new TtfFontReloadedEvent());
 	}
 
 	private void refreshBmpFont (FileHandle file) {
-		BitmapFont bmpFont = bmpFonts.remove(file);
+		BmpFontsMap bmpFont = bmpFonts.remove(file);
 		if (bmpFont != null) bmpFont.dispose();
 
 		App.eventBus.post(new BmpFontReloadedEvent());
 	}
 
-//	@Override
-//	public void fileCreated (final FileHandle file) {
-//		if (file.extension().equals("ttf")) refreshFont(file);
-//	}
-
-	public BitmapFont getGeneric (VisAssetDescriptor asset) {
+	public BitmapFont getGeneric (VisAssetDescriptor asset, float pixelsPerUnit) {
 		if (asset instanceof BmpFontAsset)
-			return get((BmpFontAsset) asset);
+			return get((BmpFontAsset) asset, pixelsPerUnit);
 
 		if (asset instanceof TtfFontAsset)
-			return get((TtfFontAsset) asset);
+			return get((TtfFontAsset) asset, pixelsPerUnit);
 
 		throw new UnsupportedAssetDescriptorException(asset);
 	}
 
-	public BitmapFont get (TtfFontAsset asset) {
+	public BitmapFont get (TtfFontAsset asset, float pixelsPerUnit) {
 		if (asset.getFontSize() == -1) throw new IllegalArgumentException("Invalid font size: -1");
 
 		FileHandle file = fileAccess.getAssetsFolder().child(asset.getPath());
-		TtfEditorFont ttfFont = ttfFonts.get(file);
 
-		if (ttfFont == null) {
-			ttfFont = new TtfEditorFont(file);
-			ttfFonts.put(file, ttfFont);
+		TmpFontsMap fontsMap = ttfFonts.get(file);
+		if (fontsMap == null) {
+			fontsMap = new TmpFontsMap();
+			ttfFonts.put(file, fontsMap);
 		}
 
+		TtfEditorFont ttfFont = fontsMap.get(file, pixelsPerUnit);
 		return ttfFont.get(asset.getFontSize());
 	}
 
-	public BitmapFont get (BmpFontAsset asset) {
+	public BitmapFont get (BmpFontAsset asset, float pixelsPerUnit) {
 		FileHandle file = fileAccess.getAssetsFolder().child(asset.getPath());
-		BitmapFont font = bmpFonts.get(file);
 
-		if (font == null) {
-			Texture texture = new Texture(FileUtils.sibling(file, "png"), true);
-			texture.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.Linear);
-
-			font = new BitmapFont(file, new TextureRegion(texture), false);
-			bmpFonts.put(file, font);
+		BmpFontsMap fontsMap = bmpFonts.get(file);
+		if (fontsMap == null) {
+			fontsMap = new BmpFontsMap();
+			bmpFonts.put(file, fontsMap);
 		}
 
-		return font;
+		return fontsMap.get(file, pixelsPerUnit);
+	}
+
+	/** Maps various pixelsInUnit values to its {@link BitmapFont} */
+	private static class BmpFontsMap implements Disposable {
+		public ObjectMap<Float, BitmapFont> fonts = new ObjectMap<>();
+
+		@Override
+		public void dispose () {
+			for (BitmapFont font : fonts.values())
+				font.dispose();
+		}
+
+		public BitmapFont get (FileHandle file, float pixelsPerUnit) {
+			BitmapFont font = fonts.get(pixelsPerUnit);
+
+			if (font == null) {
+				Texture texture = new Texture(FileUtils.sibling(file, "png"), true);
+				texture.setFilter(TextureFilter.MipMapLinearLinear, TextureFilter.Linear);
+
+				font = new BitmapFont(new BitmapFontData(file, false), new TextureRegion(texture), false);
+				font.getData().setScale(1f / pixelsPerUnit);
+
+				fonts.put(pixelsPerUnit, font);
+			}
+
+			return font;
+		}
+	}
+
+	/** Maps various pixelsInUnit values to its {@link TtfEditorFont} */
+	private static class TmpFontsMap implements Disposable {
+		public ObjectMap<Float, TtfEditorFont> fonts = new ObjectMap<>();
+
+		@Override
+		public void dispose () {
+			for (TtfEditorFont font : fonts.values())
+				font.dispose();
+		}
+
+		public TtfEditorFont get (FileHandle file, float pixelsPerUnit) {
+			TtfEditorFont font = fonts.get(pixelsPerUnit);
+
+			if (font == null) {
+				font = new TtfEditorFont(file, pixelsPerUnit);
+				fonts.put(pixelsPerUnit, font);
+			}
+
+			return font;
+		}
 	}
 }

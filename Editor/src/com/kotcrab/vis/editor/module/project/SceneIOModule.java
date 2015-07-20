@@ -36,7 +36,7 @@ import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
-import com.kotcrab.vis.editor.entity.ParticleScaleComponent;
+import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
 import com.kotcrab.vis.editor.entity.PositionComponent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializedTypeDescriptor;
@@ -128,7 +128,7 @@ public class SceneIOModule extends ProjectModule {
 
 		kryo.register(PositionComponent.class, 206);
 		kryo.register(ExporterDropsComponent.class, 207);
-		kryo.register(ParticleScaleComponent.class, 208);
+		kryo.register(PixelsPerUnitComponent.class, 208);
 
 		kryo.register(AssetComponent.class, 209);
 		kryo.register(GroupComponent.class, 210);
@@ -221,8 +221,8 @@ public class SceneIOModule extends ProjectModule {
 		entityComponentSerializers.forEach(entityComponentSerializer -> entityComponentSerializer.setComponents(components));
 	}
 
-	public void create (FileHandle relativeScenePath, SceneViewport viewport, float width, float height, int pixelPerUnits) {
-		EditorScene scene = new EditorScene(relativeScenePath, viewport, width, height, pixelPerUnits);
+	public void create (FileHandle relativeScenePath, SceneViewport viewport, float width, float height, int pixelsPerUnit) {
+		EditorScene scene = new EditorScene(relativeScenePath, viewport, width, height, pixelsPerUnit);
 		save(scene);
 	}
 

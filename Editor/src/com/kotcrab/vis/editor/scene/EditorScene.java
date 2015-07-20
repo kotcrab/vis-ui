@@ -44,7 +44,7 @@ public class EditorScene extends BaseObservable {
 	@Tag(0) public String path;
 	@Tag(1) public float width;
 	@Tag(2) public float height;
-	@Tag(7) public float pixelPerUnits; //this value is float to avoid calculations problems
+	@Tag(7) public float pixelsPerUnit; //this value is float to avoid calculations problems
 	@Tag(3) public SceneViewport viewport;
 
 	@Tag(4) private Array<Layer> layers = new Array<>();
@@ -53,14 +53,14 @@ public class EditorScene extends BaseObservable {
 	@Tag(6) private Array<EntityScheme> schemes; //for serialization
 	//last tag is 7
 
-	public EditorScene (FileHandle file, SceneViewport viewport, float width, float height, int pixelPerUnits) {
+	public EditorScene (FileHandle file, SceneViewport viewport, float width, float height, int pixelsPerUnit) {
 		if(width < 0 || height < 0) throw new IllegalArgumentException("Invalid scene size");
-		if(pixelPerUnits <= 0) throw new IllegalArgumentException("Pixels per units cannot be smaler or equal zero");
+		if(pixelsPerUnit <= 0) throw new IllegalArgumentException("Pixels per units cannot be smaler or equal zero");
 		this.path = file.path();
 		this.viewport = viewport;
 		this.width = width;
 		this.height = height;
-		this.pixelPerUnits = pixelPerUnits;
+		this.pixelsPerUnit = pixelsPerUnit;
 
 		layers.add(new Layer("Background", 0));
 		schemes = new Array<>();

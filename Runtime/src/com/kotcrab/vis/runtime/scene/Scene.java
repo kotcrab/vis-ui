@@ -81,11 +81,11 @@ public class Scene {
 
 		EntityEngineConfiguration engineConfig = new EntityEngineConfiguration();
 
-		engineConfig.setManager(new CameraManager(data.viewport, width, height, data.pixelPerUnits));
+		engineConfig.setManager(new CameraManager(data.viewport, width, height, data.pixelsPerUnit));
 		engineConfig.setSystem(new SpriteInflaterSystem(runtimeConfig, assetsManager));
 		engineConfig.setSystem(new SoundInflaterSystem(runtimeConfig, assetsManager));
 		engineConfig.setSystem(new MusicInflaterSystem(runtimeConfig, assetsManager));
-		engineConfig.setSystem(new ParticleInflaterSystem(runtimeConfig, assetsManager, data.pixelPerUnits));
+		engineConfig.setSystem(new ParticleInflaterSystem(runtimeConfig, assetsManager, data.pixelsPerUnit));
 		engineConfig.setSystem(new TextInflaterSystem(runtimeConfig, assetsManager));
 
 		ArtemisUtils.createCommonSystems(engineConfig, context.batch, distanceFieldShader, true);

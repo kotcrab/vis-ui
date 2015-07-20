@@ -35,7 +35,7 @@ import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.Timer;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
-import com.kotcrab.vis.editor.entity.ParticleScaleComponent;
+import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
 import com.kotcrab.vis.editor.entity.PositionComponent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
@@ -271,7 +271,7 @@ public class EntityManipulatorModule extends SceneModule {
 			TextureAssetDescriptor asset = (TextureAssetDescriptor) obj;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(new SpriteComponent(textureCache.getSprite(asset, scene.pixelPerUnits)), new AssetComponent(asset),
+					.with(new SpriteComponent(textureCache.getSprite(asset, scene.pixelsPerUnit)), new AssetComponent(asset),
 							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
 					.build();
 
@@ -279,8 +279,11 @@ public class EntityManipulatorModule extends SceneModule {
 			VisAssetDescriptor asset = (VisAssetDescriptor) obj;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(new TextComponent(fontCache.getGeneric(asset), FontCacheModule.DEFAULT_TEXT), new AssetComponent(asset),
-							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
+					.with(new TextComponent(fontCache.getGeneric(asset, scene.pixelsPerUnit), FontCacheModule.DEFAULT_TEXT),
+							new PixelsPerUnitComponent(scene.pixelsPerUnit),
+							new AssetComponent(asset),
+							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
+							new ExporterDropsComponent(PixelsPerUnitComponent.class))
 					.build();
 
 		} else if (obj instanceof PathAsset) {
@@ -306,11 +309,11 @@ public class EntityManipulatorModule extends SceneModule {
 			}
 
 			if (asset.getPath().startsWith("particle/")) {
-				float scale = 1f / scene.pixelPerUnits;
+				float scale = 1f / scene.pixelsPerUnit;
 				entity = new EntityBuilder(entityEngine)
-						.with(new ParticleComponent(particleCache.get(asset, scale)), new AssetComponent(asset), new ParticleScaleComponent(scale),
+						.with(new ParticleComponent(particleCache.get(asset, scale)), new AssetComponent(asset), new PixelsPerUnitComponent(scene.pixelsPerUnit),
 								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-								new ExporterDropsComponent(ParticleScaleComponent.class))
+								new ExporterDropsComponent(PixelsPerUnitComponent.class))
 						.build();
 			}
 		}

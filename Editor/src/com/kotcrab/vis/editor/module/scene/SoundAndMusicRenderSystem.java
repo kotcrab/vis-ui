@@ -48,12 +48,12 @@ public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 
 	private float renderSize;
 
-	public SoundAndMusicRenderSystem (EntityProcessPrincipal principal, float pixelPerUnits) {
+	public SoundAndMusicRenderSystem (EntityProcessPrincipal principal, float pixelsPerUnit) {
 		super(Aspect.all(PositionComponent.class).one(SoundComponent.class, MusicComponent.class).exclude(InvisibleComponent.class), principal);
 		soundIcon = Assets.getIconRegion(Icons.SOUND);
 		musicIcon = Assets.getIconRegion(Icons.MUSIC);
 
-		renderSize = ICON_SIZE / pixelPerUnits;
+		renderSize = ICON_SIZE / pixelsPerUnit;
 	}
 
 	@Override

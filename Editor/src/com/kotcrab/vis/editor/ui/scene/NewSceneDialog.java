@@ -59,7 +59,7 @@ public class NewSceneDialog extends VisWindow {
 	private VisValidableTextField widthField;
 	private VisValidableTextField heightField;
 
-	private VisValidableTextField pixelPerUnitsField;
+	private VisValidableTextField pixelsPerUnitField;
 
 	private EnumSelectBox<SceneViewport> viewportModeSelectBox;
 
@@ -117,14 +117,11 @@ public class NewSceneDialog extends VisWindow {
 		add(viewportModeSelectBox);
 		row();
 
-		pixelPerUnitsField = new VisValidableTextField("100");
-		pixelPerUnitsField.setTextFieldFilter(new DigitsOnlyFilter());
+		pixelsPerUnitField = new VisValidableTextField("100");
+		pixelsPerUnitField.setTextFieldFilter(new DigitsOnlyFilter());
 
-		VisTable pixelPerUnitsTable = new VisTable(true);
-		add(new VisLabel("Pixels per units"));
-		add(pixelPerUnitsField).left().width(60);
-
-		//add(pixelPerUnitsTable).expand().fill();
+		add(new VisLabel("Pixels per unit"));
+		add(pixelsPerUnitField).left().width(60);
 		row();
 
 		widthField = new VisValidableTextField("13");
@@ -172,7 +169,7 @@ public class NewSceneDialog extends VisWindow {
 				final FileHandle targetFile = Gdx.files.absolute(pathTextField.getText()).child(nameTextField.getText() + ".scene");
 				assetsFolder.child(pathTextField.getText()).mkdirs(); //create non existing path dirs
 				sceneIO.create(targetFile, viewportModeSelectBox.getSelectedEnum(),
-						Float.valueOf(widthField.getText()), Float.valueOf(heightField.getText()), Integer.valueOf(pixelPerUnitsField.getText()));
+						Float.valueOf(widthField.getText()), Float.valueOf(heightField.getText()), Integer.valueOf(pixelsPerUnitField.getText()));
 				statusBar.setText("Scene created: " + targetFile.path().substring(1));
 
 				DialogUtils.showOptionDialog(getStage(), "Message", "Open this new scene in editor?", OptionDialogType.YES_NO, new OptionDialogAdapter() {
@@ -195,11 +192,11 @@ public class NewSceneDialog extends VisWindow {
 
 		validator.floatNumber(widthField, "Width must be a number");
 		validator.floatNumber(heightField, "Height must be a number");
-		validator.integerNumber(pixelPerUnitsField, "Pixel per units must be a number");
+		validator.integerNumber(pixelsPerUnitField, "Pixel per units must be a number");
 
 		validator.valueGreaterThan(widthField, "Width must be greater than zero", 0);
 		validator.valueGreaterThan(heightField, "Height must be greater than zero", 0);
-		validator.valueGreaterThan(pixelPerUnitsField, "Pixel per units must be greater than zero", 0);
+		validator.valueGreaterThan(pixelsPerUnitField, "Pixel per units must be greater than zero", 0);
 
 //		validator.fileExists(pathTextField, assetsFolder, "Path does not exist");
 

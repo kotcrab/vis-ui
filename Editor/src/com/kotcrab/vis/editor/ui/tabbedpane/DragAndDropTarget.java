@@ -30,4 +30,6 @@ public interface DragAndDropTarget {
 	EntityEngine getEntityEngine ();
 
 	Target getDropTarget ();
+
+	float getPixelsPerUnit ();
 }

@@ -191,7 +191,7 @@ public class ExportModule extends ProjectModule {
 					sceneData.viewport = scene.viewport;
 					sceneData.width = scene.width;
 					sceneData.height = scene.height;
-					sceneData.pixelPerUnits = scene.pixelPerUnits;
+					sceneData.pixelsPerUnit = scene.pixelsPerUnit;
 
 					scene.getSchemes().forEach(scheme -> sceneData.entities.add(scheme.toData()));
 

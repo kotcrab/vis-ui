@@ -71,7 +71,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 	private Array<Class<?>> serializedTypes = new Array<>();
 	private Array<AssetDescriptorProvider> assetProviders = new Array<>();
 
-	private float pixelPerUnits;
+	private float pixelsPerUnit;
 
 	@Override
 	public void bindModules (ProjectModuleContainer projectMC) {
@@ -96,7 +96,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 		config.setSystem(new SpinePreviewUpdaterSystem());
 		config.setSystem(new SpineScaleUpdaterSystem());
 
-		pixelPerUnits = sceneMC.getScene().pixelPerUnits;
+		pixelsPerUnit = sceneMC.getScene().pixelsPerUnit;
 	}
 
 	@Override
@@ -147,7 +147,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 			SpineAssetDescriptor asset = (SpineAssetDescriptor) payload;
 
 			return new EntityBuilder(engine)
-					.with(new SpineComponent(spineCache.get(asset)), new SpinePreviewComponent(), new SpineScaleComponent(1f/ pixelPerUnits), new SpineBoundsComponent(),
+					.with(new SpineComponent(spineCache.get(asset)), new SpinePreviewComponent(), new SpineScaleComponent(1f/ pixelsPerUnit), new SpineBoundsComponent(),
 							new AssetComponent(asset),
 							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
 							new ExporterDropsComponent(SpinePreviewComponent.class, SpineScaleComponent.class, SpineBoundsComponent.class))

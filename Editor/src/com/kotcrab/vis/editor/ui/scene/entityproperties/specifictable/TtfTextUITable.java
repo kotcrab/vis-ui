@@ -102,7 +102,7 @@ public class TtfTextUITable extends TextUITable {
 				if (ttfAsset.getFontSize() != fontSize) {
 					TtfFontAsset newAsset = new TtfFontAsset(ttfAsset.getPath(), fontSize);
 					assetComponent.asset = newAsset;
-					text.setFont(fontCache.get(newAsset));
+					text.setFont(fontCache.get(newAsset, properties.getSceneModuleContainer().getScene().pixelsPerUnit));
 				}
 
 			}

@@ -122,7 +122,7 @@ public class AssetDragAndDrop {
 					TtfFontAsset asset = new TtfFontAsset(fileAccess.relativizeToAssetsFolder(item.getFile()), FontCacheModule.DEFAULT_FONT_SIZE);
 					payload.setObject(asset);
 
-					BitmapFont font = fontCache.get(asset);
+					BitmapFont font = fontCache.get(asset, 1);
 
 					LabelStyle style = new LabelStyle(font, Color.WHITE);
 					Label label = new VisLabel(FontCacheModule.DEFAULT_TEXT, style);
@@ -154,7 +154,7 @@ public class AssetDragAndDrop {
 
 					payload.setObject(asset);
 
-					LabelStyle style = new LabelStyle(fontCache.get(asset), Color.WHITE);
+					LabelStyle style = new LabelStyle(fontCache.get(asset, 1), Color.WHITE);
 					Label label = new VisLabel(FontCacheModule.DEFAULT_TEXT, style);
 					payload.setDragActor(label);
 

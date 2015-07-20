@@ -192,6 +192,11 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	}
 
 	@Override
+	public float getPixelsPerUnit () {
+		return scene.pixelsPerUnit;
+	}
+
+	@Override
 	public float getCameraZoom () {
 		return cameraModule.getZoom();
 	}
