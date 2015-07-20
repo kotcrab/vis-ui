@@ -24,14 +24,17 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFont
 import com.badlogic.gdx.utils.ObjectMap;
 
 /**
- * TTF font provider
+ * TTF font provider that allows to get font for user provided size. TtfEditorFont can only provide fonts for one pixelsPerUnits value.
  * @author Kotcrab
  */
 public class TtfEditorFont {
+	private final float pixelsPerUnit;
+
 	private FreeTypeFontGenerator generator;
 	private ObjectMap<Integer, BitmapFont> bitmapFonts = new ObjectMap<>();
 
-	public TtfEditorFont (FileHandle file) {
+	public TtfEditorFont (FileHandle file, float pixelsPerUnit) {
+		this.pixelsPerUnit = pixelsPerUnit;
 		generator = new FreeTypeFontGenerator(file);
 		get(FontCacheModule.DEFAULT_FONT_SIZE);
 	}
@@ -45,6 +48,7 @@ public class TtfEditorFont {
 
 		if (font == null) {
 			font = generator.generateFont(getParameterForSize(size));
+			font.getData().setScale(1f / pixelsPerUnit);
 			bitmapFonts.put(size, font);
 		}
 
