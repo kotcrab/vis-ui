@@ -148,6 +148,11 @@ public class SceneIOModule extends ProjectModule {
 		SupportModule supportModule = projectContainer.get(SupportModule.class);
 
 		for (SupportSerializerDescriptor support : supportModule.getSerializerDescriptors()) {
+			if(support.serializer == null){
+				Log.error("Missing plugin serializer: " + support.getSerializerClassName() + " (a plugin could be missing or failed to load)");
+				continue;
+			}
+
 			kryo.register(((PluginKryoSerializer) support.serializer).getSerializedClassType(), support.serializer, support.id);
 
 			if (support.serializer instanceof EntityComponentSerializer) {
@@ -156,6 +161,11 @@ public class SceneIOModule extends ProjectModule {
 		}
 
 		for (SupportSerializedTypeDescriptor descriptor : supportModule.getTypesDescriptors()) {
+			if(descriptor.clazz == null){
+				Log.error("Missing class from plugin: " + descriptor.getSerializedClassName() + " (a plugin could be missing or failed to load)");
+				continue;
+			}
+
 			kryo.register(descriptor.clazz, descriptor.id);
 		}
 	}

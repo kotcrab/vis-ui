@@ -177,6 +177,10 @@ public class SupportModule extends ProjectModule {
 			this.id = id;
 			this.serializedClassName = clazzName;
 		}
+
+		public String getSerializedClassName () {
+			return serializedClassName;
+		}
 	}
 
 	public static class SupportSerializerDescriptor {
@@ -191,6 +195,10 @@ public class SupportModule extends ProjectModule {
 		public SupportSerializerDescriptor (int id, String clazzName) {
 			this.serializerClassName = clazzName;
 			this.id = id;
+		}
+
+		public String getSerializerClassName () {
+			return serializerClassName;
 		}
 	}
 }
