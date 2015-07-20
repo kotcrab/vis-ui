@@ -53,7 +53,6 @@ import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.value.FloatProxyValue;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
@@ -87,8 +86,6 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	@InjectModule private UndoModule undoModule;
 	@InjectModule private EntityManipulatorModule entityManipulator;
-
-	private EntityEngine engine;
 
 	private ColorPicker picker;
 	private Tab parentTab;
@@ -140,7 +137,6 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		this.entities = entities;
 		this.parentTab = parentSceneTab;
 		this.picker = colorPickerModule.getPicker();
-		this.engine = sceneMC.getEntityEngine();
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);

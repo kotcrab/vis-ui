@@ -60,6 +60,7 @@ import com.kotcrab.vis.runtime.component.RenderableComponent;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 @VisPlugin
 public class SpineEditorSupport extends EditorEntitySupport {
@@ -86,12 +87,12 @@ public class SpineEditorSupport extends EditorEntitySupport {
 	}
 
 	@Override
-	public void registerSystems (SceneModuleContainer sceneMC, EntityEngine engine) {
-		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
-		engine.setSystem(new SpineEditorRenderSystem(renderBatchingSystem), true);
+	public void registerSystems (SceneModuleContainer sceneMC, EntityEngineConfiguration config) {
+		RenderBatchingSystem renderBatchingSystem = config.getSystem(RenderBatchingSystem.class);
+		config.setSystem(new SpineEditorRenderSystem(renderBatchingSystem), true);
 
-		engine.setSystem(new SpinePreviewUpdaterSystem());
-		engine.setSystem(new SpineScaleUpdaterSystem());
+		config.setSystem(new SpinePreviewUpdaterSystem());
+		config.setSystem(new SpineScaleUpdaterSystem());
 	}
 
 	@Override

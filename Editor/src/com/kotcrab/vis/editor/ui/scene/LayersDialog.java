@@ -42,7 +42,7 @@ import com.kotcrab.vis.editor.util.undo.MonoUndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.runtime.util.BagUtils;
-import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
@@ -78,12 +78,12 @@ public class LayersDialog extends VisTable implements Disposable {
 
 	private ObservableListener sceneObservable;
 
-	public LayersDialog (SceneTab sceneTab, EntityEngine entityEngine, ModuleInjector sceneMC) {
+	public LayersDialog (SceneTab sceneTab, EntityEngineConfiguration engineConfig, ModuleInjector sceneMC) {
 		super(true);
 		this.sceneTab = sceneTab;
 		this.scene = sceneTab.getScene();
 		sceneMC.injectModules(this);
-		layerManipulatorManager = entityEngine.getManager(LayerManipulatorManager.class);
+		layerManipulatorManager = engineConfig.getManager(LayerManipulatorManager.class);
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
@@ -111,7 +111,7 @@ public class LayersDialog extends VisTable implements Disposable {
 							@Override
 							public void yes () {
 								UndoableActionGroup layerRemovedGroup = new UndoableActionGroup();
-								layerRemovedGroup.add(new EntitiesRemovedAction(sceneMC, entityEngine,
+								layerRemovedGroup.add(new EntitiesRemovedAction(sceneMC, sceneTab.getEntityEngine(),
 										BagUtils.toSet(layerManipulatorManager.getEntitiesWithLayer(scene.getActiveLayerId()))));
 								layerRemovedGroup.add(new LayerRemovedAction(scene.getActiveLayer()));
 								layerRemovedGroup.finalizeGroup();

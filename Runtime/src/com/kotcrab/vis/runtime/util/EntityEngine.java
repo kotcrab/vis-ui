@@ -23,4 +23,7 @@ import com.artemis.World;
  * @author Kotcrab
  */
 public class EntityEngine extends World {
+	public EntityEngine (EntityEngineConfiguration configuration) {
+		super(configuration.build());
+	}
 }

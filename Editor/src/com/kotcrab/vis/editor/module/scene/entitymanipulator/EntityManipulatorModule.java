@@ -107,10 +107,10 @@ public class EntityManipulatorModule extends SceneModule {
 	@Override
 	public void init () {
 		shapeRenderer = rendererModule.getShapeRenderer();
-		entityProxyCache = entityEngine.getManager(EntityProxyCache.class);
-		zIndexManipulator = entityEngine.getManager(ZIndexManipulatorManager.class);
-		groupIdProvider = entityEngine.getSystem(GroupIdProviderSystem.class);
-		groupProxyProvider = entityEngine.getSystem(GroupProxyProviderSystem.class);
+		entityProxyCache = engineConfiguration.getManager(EntityProxyCache.class);
+		zIndexManipulator = engineConfiguration.getManager(ZIndexManipulatorManager.class);
+		groupIdProvider = engineConfiguration.getSystem(GroupIdProviderSystem.class);
+		groupProxyProvider = engineConfiguration.getSystem(GroupProxyProviderSystem.class);
 
 		entityProperties = new EntityProperties(sceneContainer, sceneTab, selectedEntities);
 		groupBreadcrumb = new GroupBreadcrumb(new GroupBreadcrumbListener() {
@@ -127,7 +127,7 @@ public class EntityManipulatorModule extends SceneModule {
 				resetSelection();
 			}
 		});
-		layersDialog = new LayersDialog(sceneTab, sceneContainer.getEntityEngine(), sceneContainer);
+		layersDialog = new LayersDialog(sceneTab, engineConfiguration, sceneContainer);
 		alignmentToolsDialog = new AlignmentToolsDialog(sceneContainer, selectedEntities);
 		createGeneralMenu();
 

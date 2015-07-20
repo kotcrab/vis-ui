@@ -24,10 +24,10 @@ import com.kotcrab.vis.runtime.system.TextRenderSystem;
 
 /** @author Kotcrab */
 public class ArtemisUtils {
-	public static void createCommonSystems (EntityEngine engine, Batch batch, ShaderProgram distanceFieldShader, boolean controlBatchState) {
+	public static void createCommonSystems (EntityEngineConfiguration config, Batch batch, ShaderProgram distanceFieldShader, boolean controlBatchState) {
 		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, controlBatchState);
-		engine.setSystem(batchingSystem);
-		engine.setSystem(new SpriteRenderSystem(batchingSystem), true);
-		engine.setSystem(new TextRenderSystem(batchingSystem, distanceFieldShader), true);
+		config.setSystem(batchingSystem);
+		config.setSystem(new SpriteRenderSystem(batchingSystem), true);
+		config.setSystem(new TextRenderSystem(batchingSystem, distanceFieldShader), true);
 	}
 }

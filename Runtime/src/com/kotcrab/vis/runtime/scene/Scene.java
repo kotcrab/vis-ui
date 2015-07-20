@@ -16,6 +16,8 @@
 
 package com.kotcrab.vis.runtime.scene;
 
+import com.artemis.BaseSystem;
+import com.artemis.Manager;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -26,9 +28,11 @@ import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
+import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.system.*;
 import com.kotcrab.vis.runtime.util.ArtemisUtils;
 import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /**
  * Base class of VisRuntime scene system. Scene are typically constructed using {@link VisAssetManager} with {@link SceneLoader}
@@ -42,10 +46,10 @@ public class Scene {
 	private final RuntimeContext context;
 
 	/** Used by framework, not indented for external use */
-	public Scene (RuntimeContext context, SceneData data) {
+	public Scene (RuntimeContext context, SceneData data, SceneParameter parameter) {
 		this.context = context;
 		AssetManager assetsManager = context.assetsManager;
-		RuntimeConfiguration configuration = context.configuration;
+		RuntimeConfiguration runtimeConfig = context.configuration;
 
 		float width = data.width;
 		float height = data.height;
@@ -78,22 +82,31 @@ public class Scene {
 			distanceFieldShader = assetsManager.get(SceneLoader.DISTANCE_FIELD_SHADER, ShaderProgram.class);
 		}
 
-		engine = new EntityEngine();
-		engine.setManager(new CameraManager(data.viewport, width, height, data.pixelPerUnits));
-		engine.setSystem(new SpriteInflaterSystem(configuration, assetsManager));
-		engine.setSystem(new SoundInflaterSystem(configuration, assetsManager));
-		engine.setSystem(new MusicInflaterSystem(configuration, assetsManager));
-		engine.setSystem(new ParticleInflaterSystem(configuration, assetsManager));
-		engine.setSystem(new TextInflaterSystem(configuration, assetsManager));
+		EntityEngineConfiguration engineConfig = new EntityEngineConfiguration();
 
-		ArtemisUtils.createCommonSystems(engine, context.batch, distanceFieldShader, true);
-		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
-		engine.setSystem(new ParticleRenderSystem(renderBatchingSystem, false), true);
+		engineConfig.setManager(new CameraManager(data.viewport, width, height, data.pixelPerUnits));
+		engineConfig.setSystem(new SpriteInflaterSystem(runtimeConfig, assetsManager));
+		engineConfig.setSystem(new SoundInflaterSystem(runtimeConfig, assetsManager));
+		engineConfig.setSystem(new MusicInflaterSystem(runtimeConfig, assetsManager));
+		engineConfig.setSystem(new ParticleInflaterSystem(runtimeConfig, assetsManager));
+		engineConfig.setSystem(new TextInflaterSystem(runtimeConfig, assetsManager));
 
-		for (EntitySupport support : context.supports)
-			support.registerSystems(configuration, assetsManager, engine);
+		ArtemisUtils.createCommonSystems(engineConfig, context.batch, distanceFieldShader, true);
+		engineConfig.setSystem(new ParticleRenderSystem(engineConfig.getSystem(RenderBatchingSystem.class), false), true);
 
-		engine.initialize();
+		for (EntitySupport support : context.supports) {
+			support.registerSystems(runtimeConfig, engineConfig, assetsManager);
+		}
+
+		if (parameter != null) {
+			for (BaseSystem system : parameter.systems)
+				engineConfig.setSystem(system);
+
+			for (Manager manager : parameter.managers)
+				engineConfig.setManager(manager);
+		}
+
+		engine = new EntityEngine(engineConfig);
 	}
 
 	/** Renders entire scene. Typically called from {@link ApplicationListener#render()} */

@@ -22,7 +22,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.data.EntityData;
-import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /**
  * @author Kotcrab
@@ -34,5 +34,5 @@ public interface EntitySupport {
 	/** Called when EntitySupport should resolve required dependencies for Entity and add them into dependency list */
 	void resolveDependencies (Array<AssetDescriptor> dependencies, EntityData entityData, Component component);
 
-	void registerSystems (RuntimeConfiguration configuration, AssetManager manager, EntityEngine engine);
+	void registerSystems (RuntimeConfiguration configuration, EntityEngineConfiguration engineConfig, AssetManager manager);
 }

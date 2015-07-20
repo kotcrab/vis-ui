@@ -16,7 +16,9 @@
 
 package com.kotcrab.vis.runtime.scene;
 
+import com.artemis.BaseSystem;
 import com.artemis.Component;
+import com.artemis.Manager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
@@ -127,11 +129,9 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		Json json = getJson();
 		data = json.fromJson(SceneData.class, file);
 
-		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
-
-		loadDependencies(deps, data.entities);
-
-		return deps;
+		Array<AssetDescriptor> dependencies = new Array<AssetDescriptor>();
+		loadDependencies(dependencies, data.entities);
+		return dependencies;
 	}
 
 	private void loadDependencies (Array<AssetDescriptor> dependencies, Array<EntityData> entities) {
@@ -180,7 +180,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	@Override
 	public void loadAsync (AssetManager manager, String fileName, FileHandle file, SceneParameter parameter) {
 		RuntimeContext context = new RuntimeContext(configuration, batch, manager, new ImmutableArray<EntitySupport>(supports));
-		scene = new Scene(context, data);
+		scene = new Scene(context, data, parameter);
 
 		EntityEngine engine = scene.getEntityEngine();
 		for (EntityData entityData : data.entities)
@@ -194,6 +194,9 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		return scene;
 	}
 
+	/** Allows to add additional system and managers into {@link EntityEngine} */
 	static public class SceneParameter extends AssetLoaderParameters<Scene> {
+		public Array<BaseSystem> systems = new Array<BaseSystem>();
+		public Array<Manager> managers = new Array<Manager>();
 	}
 }

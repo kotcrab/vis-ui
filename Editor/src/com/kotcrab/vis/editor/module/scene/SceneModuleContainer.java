@@ -37,6 +37,7 @@ import com.kotcrab.vis.runtime.system.ParticleRenderSystem;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.ArtemisUtils;
 import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /**
  * Module container for scene scope modules.
@@ -51,6 +52,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	private SceneTab sceneTab;
 
 	private EntityEngine engine;
+	private EntityEngineConfiguration config;
 
 	public SceneModuleContainer (ProjectModuleContainer projectModuleContainer, SceneTab sceneTab, EditorScene scene, Batch batch) {
 		this.editorModuleContainer = projectModuleContainer.getEditorContainer();
@@ -58,31 +60,32 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		this.scene = scene;
 		this.sceneTab = sceneTab;
 
-		engine = new EntityEngine();
+		config = new EntityEngineConfiguration();
 
-		engine.setManager(new CameraManager(SceneViewport.SCREEN, 0, 0, scene.pixelPerUnits)); //size ignored for screen viewport
-		engine.setManager(new LayerManipulatorManager());
-		engine.setManager(new ZIndexManipulatorManager());
-		engine.setManager(new EntitySerializerManager());
-		engine.setManager(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
-		engine.setManager(new ParticleReloaderManager(projectModuleContainer.get(ParticleCacheModule.class)));
-		engine.setManager(new FontReloaderManager(projectModuleContainer.get(FontCacheModule.class)));
+		config.setManager(new CameraManager(SceneViewport.SCREEN, 0, 0, scene.pixelPerUnits)); //size ignored for screen viewport
+		config.setManager(new LayerManipulatorManager());
+		config.setManager(new ZIndexManipulatorManager());
+		config.setManager(new EntitySerializerManager());
+		config.setManager(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
+		config.setManager(new ParticleReloaderManager(projectModuleContainer.get(ParticleCacheModule.class)));
+		config.setManager(new FontReloaderManager(projectModuleContainer.get(FontCacheModule.class)));
 
-		engine.setSystem(new GroupIdProviderSystem(), true);
-		engine.setSystem(new GroupProxyProviderSystem(), true);
-		engine.setSystem(new GridRendererSystem(batch, this));
+		config.setSystem(new GroupIdProviderSystem(), true);
+		config.setSystem(new GroupProxyProviderSystem(), true);
+		config.setSystem(new GridRendererSystem(batch, this));
 
-		createEssentialsSystems(engine, scene.pixelPerUnits);
+		createEssentialsSystems(config, scene.pixelPerUnits);
 
-		ArtemisUtils.createCommonSystems(engine, batch, Assets.distanceFieldShader, false);
-		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
-		engine.setSystem(new ParticleRenderSystem(renderBatchingSystem, true), true);
-		engine.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem, scene.pixelPerUnits), true);
+		ArtemisUtils.createCommonSystems(config, batch, Assets.distanceFieldShader, false);
+		RenderBatchingSystem renderBatchingSystem = config.getSystem(RenderBatchingSystem.class);
+		config.setSystem(new ParticleRenderSystem(renderBatchingSystem, true), true);
+		config.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem, scene.pixelPerUnits), true);
+
 	}
 
-	public static void createEssentialsSystems (EntityEngine engine, float pixelPerUnits) {
-		engine.setManager(new EntityProxyCache(pixelPerUnits));
-		engine.setSystem(new AssetsUsageAnalyzerSystem(), true);
+	public static void createEssentialsSystems (EntityEngineConfiguration config, float pixelPerUnits) {
+		config.setManager(new EntityProxyCache(pixelPerUnits));
+		config.setSystem(new AssetsUsageAnalyzerSystem(), true);
 	}
 
 	public static void populateEngine (final EntityEngine engine, EditorScene scene) {
@@ -106,7 +109,9 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	@Override
 	public void init () {
 		super.init();
-		engine.initialize();
+		engine = new EntityEngine(config);
+
+		modules.forEach(sceneModule -> sceneModule.setEntityEngine(engine));
 
 		Log.debug("SceneModuleContainer", "Populating EntityEngine");
 		populateEngine(engine, scene);
@@ -121,6 +126,10 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		if (module != null) return module;
 
 		return projectModuleContainer.findInHierarchy(moduleClass);
+	}
+
+	public EntityEngineConfiguration getEntityEngineConfiguration () {
+		return config;
 	}
 
 	public Project getProject () {
@@ -164,6 +173,9 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	}
 
 	public EntityEngine getEntityEngine () {
+		if (engine == null)
+			throw new IllegalStateException("SceneModuleContainer wasn't initialized yet, use #getEntityEngineConfiguration if you need to get engine system or manager!");
+
 		return engine;
 	}
 

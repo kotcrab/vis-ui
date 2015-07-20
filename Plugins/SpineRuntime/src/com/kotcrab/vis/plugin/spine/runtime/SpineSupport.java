@@ -45,7 +45,7 @@ import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
-import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 @VisPlugin
 public class SpineSupport implements EntitySupport {
@@ -74,9 +74,9 @@ public class SpineSupport implements EntitySupport {
 	}
 
 	@Override
-	public void registerSystems (RuntimeConfiguration configuration, AssetManager manager, EntityEngine engine) {
-		RenderBatchingSystem renderBatchingSystem = engine.getSystem(RenderBatchingSystem.class);
-		engine.setSystem(new SpineRenderSystem(renderBatchingSystem), true);
-		engine.setSystem(new SpineInflaterSystem(configuration, manager));
+	public void registerSystems (RuntimeConfiguration configuration, EntityEngineConfiguration engineConfig, AssetManager manager) {
+		RenderBatchingSystem renderBatchingSystem = engineConfig.getSystem(RenderBatchingSystem.class);
+		engineConfig.setSystem(new SpineRenderSystem(renderBatchingSystem), true);
+		engineConfig.setSystem(new SpineInflaterSystem(configuration, manager));
 	}
 }

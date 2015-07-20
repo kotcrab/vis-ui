@@ -32,6 +32,7 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
 import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /**
  * @author Kotcrab
@@ -42,7 +43,7 @@ public abstract class EditorEntitySupport {
 
 	}
 
-	public void registerSystems (SceneModuleContainer sceneMC, EntityEngine engine) {
+	public void registerSystems (SceneModuleContainer sceneMC, EntityEngineConfiguration engineConfig) {
 
 	}
 

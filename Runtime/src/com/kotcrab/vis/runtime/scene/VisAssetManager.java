@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.font.FreeTypeFontProvider;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
+import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.util.ShaderLoader;
 
 /**
@@ -64,8 +65,13 @@ public class VisAssetManager extends AssetManager {
 
 	/** Quickest and easiest way to load scene. This method will block until entire scene is loaded. */
 	public Scene loadSceneNow (String scenePath) {
-		load(scenePath, Scene.class);
+		return loadSceneNow(scenePath, null);
+	}
+
+	public Scene loadSceneNow (String scenePath, SceneParameter parameter) {
+		load(scenePath, Scene.class, parameter);
 		finishLoading();
 		return get(scenePath, Scene.class);
 	}
+
 }

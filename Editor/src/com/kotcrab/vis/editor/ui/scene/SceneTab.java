@@ -107,14 +107,13 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		sceneMC.add(new EntityManipulatorModule());
 		sceneMC.addAll(sceneMC.findInHierarchy(ExtensionStorageModule.class).getContainersExtensions(SceneModule.class, ExtensionScope.SCENE));
 
-		engine = sceneMC.getEntityEngine();
-
 		for (EditorEntitySupport support : projectMC.get(SupportModule.class).getSupports()) {
-			support.registerSystems(sceneMC, engine);
+			support.registerSystems(sceneMC, sceneMC.getEntityEngineConfiguration());
 		}
 
 		sceneMC.init();
 		sceneMC.injectModules(this);
+		engine = sceneMC.getEntityEngine();
 
 		entityManager = engine.getEntityManager();
 		entityProxyCache = engine.getManager(EntityProxyCache.class);
