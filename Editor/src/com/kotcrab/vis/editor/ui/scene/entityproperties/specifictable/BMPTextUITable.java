@@ -17,7 +17,9 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.artemis.Entity;
+import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
@@ -86,10 +88,25 @@ public class BMPTextUITable extends TextUITable {
 		for (EntityProxy proxy : properties.getProxies()) {
 			for (Entity entity : proxy.getEntities()) {
 				TextComponent text = entity.getComponent(TextComponent.class);
+				AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
 
-				if (distanceFieldCheck.isIndeterminate() == false)
+				if (distanceFieldCheck.isIndeterminate() == false) {
 					text.setDistanceFieldShaderEnabled(distanceFieldCheck.isChecked());
+					assetComponent.asset = getNewAsset((BmpFontAsset) assetComponent.asset, distanceFieldCheck.isChecked());
+				}
 			}
 		}
+	}
+
+	private VisAssetDescriptor getNewAsset (BmpFontAsset original, boolean useDistanceFieldFilters) {
+		BitmapFontParameter data = new BitmapFontParameter();
+
+		if (useDistanceFieldFilters) {
+			data.genMipMaps = true;
+			data.minFilter = TextureFilter.MipMapLinearLinear;
+			data.magFilter = TextureFilter.Linear;
+		}
+
+		return new BmpFontAsset(original.getPath(), data);
 	}
 }

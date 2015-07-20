@@ -40,11 +40,13 @@ public class TextInflaterSystem extends EntityProcessingSystem {
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
+	private float pixelsPerUnit;
 
-	public TextInflaterSystem (RuntimeConfiguration configuration, AssetManager manager) {
+	public TextInflaterSystem (RuntimeConfiguration configuration, AssetManager manager, float pixelsPerUnit) {
 		super(Aspect.all(TextProtoComponent.class, AssetComponent.class));
 		this.configuration = configuration;
 		this.manager = manager;
+		this.pixelsPerUnit = pixelsPerUnit;
 	}
 
 	@Override
@@ -75,6 +77,9 @@ public class TextInflaterSystem extends EntityProcessingSystem {
 			font = manager.get(fontAsset.getArbitraryFontName(), BitmapFont.class);
 		} else
 			throw new UnsupportedAssetDescriptorException(asset);
+
+		font.setUseIntegerPositions(false);
+		font.getData().setScale(1f/ pixelsPerUnit);
 
 		TextComponent textComponent = new TextComponent(font, protoComponent.text);
 

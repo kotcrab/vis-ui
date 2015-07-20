@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.artemis.Entity;
-import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -101,7 +100,8 @@ public abstract class TextUITable extends SpecificUITable {
 					VisAssetDescriptor newAsset = null;
 
 					if (asset instanceof BmpFontAsset) {
-						newAsset = new BmpFontAsset(fileAccess.relativizeToAssetsFolder(file), new BitmapFontParameter());
+						BmpFontAsset fontAsset = (BmpFontAsset) asset;
+						newAsset = new BmpFontAsset(fileAccess.relativizeToAssetsFolder(file), fontAsset.getFontParameter());
 					} else if (asset instanceof TtfFontAsset) {
 						TtfFontAsset fontAsset = (TtfFontAsset) asset;
 						newAsset = new TtfFontAsset(fileAccess.relativizeToAssetsFolder(file), fontAsset.getFontSize());
