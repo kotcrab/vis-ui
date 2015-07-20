@@ -36,7 +36,7 @@ public class ExperimentalSettingsModule extends EditorSettingsModule<Experimenta
 		prepareTable();
 
 		settingsTable.defaults().left();
-		settingsTable.add("This sections contains experimental editor\nsettings.\nEditor restart will be required to apply\nchanges.").row();
+		settingsTable.add("This sections contains experimental editor\nsettings.\n\nEditor restart will be required to apply\nchanges.").row();
 		settingsTable.add(uiScaleCheck = new VisCheckBox("Enable 200% UI scaling\n(for high resolution displays)", config.uiScale)).row();
 	}
 

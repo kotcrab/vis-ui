@@ -145,7 +145,7 @@ public class GridRendererSystem extends BaseSystem {
 		@Override
 		public void loadConfigToTable () {
 			drawGridCheck.setChecked(config.drawGrid);
-			gridSizeField.setText(String.valueOf(config.gridSize));
+			gridSizeField.setText(NumberUtils.floatToString(config.gridSize));
 		}
 
 		@Override
