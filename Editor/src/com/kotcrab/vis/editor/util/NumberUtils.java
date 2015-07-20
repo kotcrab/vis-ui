@@ -27,9 +27,9 @@ public class NumberUtils {
 		if (d == (long) d) //if does not have decimal places
 			return String.format("%d", (long) d);
 		else {
-			//round to two decimal places
-			d = Math.round(d * 100);
-			d = d / 100;
+			//round to four decimal places //TODO: editor setting for choosing rounding precession
+			d = Math.round(d * 10000);
+			d = d / 10000;
 			String s = String.valueOf(d);
 
 			//remove trailing zeros if exists
