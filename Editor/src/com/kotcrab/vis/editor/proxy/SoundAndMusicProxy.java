@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 /** @author Kotcrab */
 public class SoundAndMusicProxy extends EntityProxy {
 	private PositionComponent pos;
-	private  boolean music;
+	private boolean music;
 	private float renderSize;
 
 	public SoundAndMusicProxy (Entity entity, boolean music, float pixelsPerUnit) {
@@ -56,7 +56,7 @@ public class SoundAndMusicProxy extends EntityProxy {
 		private Rectangle bounds = new Rectangle();
 
 		public Accessor () {
-			bounds = new Rectangle(0, 0, renderSize, renderSize);
+			bounds = new Rectangle();
 		}
 
 		@Override
@@ -97,7 +97,7 @@ public class SoundAndMusicProxy extends EntityProxy {
 
 		@Override
 		public Rectangle getBoundingRectangle () {
-			bounds.setPosition(pos.x, pos.y);
+			bounds.set(pos.x, pos.y, renderSize, renderSize);
 			return bounds;
 		}
 	}
