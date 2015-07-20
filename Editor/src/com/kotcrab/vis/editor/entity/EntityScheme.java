@@ -23,6 +23,7 @@ import com.artemis.utils.EntityBuilder;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.component.GroupComponent;
+import com.kotcrab.vis.runtime.component.IDComponent;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
@@ -73,6 +74,10 @@ public class EntityScheme {
 			} else if (component instanceof GroupComponent) { //strip empty GroupComponents
 				GroupComponent gdc = (GroupComponent) component;
 				if (gdc.groupIds.size > 0) dataComponents.add(component);
+			} else if (component instanceof IDComponent) { //strip empty IDComponents
+				IDComponent idc = (IDComponent) component;
+				if(idc.id != null && idc.id.equals("") == false)
+					dataComponents.add(component);
 			} else {
 				dataComponents.add(component);
 			}
