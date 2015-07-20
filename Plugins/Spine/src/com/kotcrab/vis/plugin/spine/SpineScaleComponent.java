@@ -37,4 +37,12 @@ import com.artemis.Component;
 public class SpineScaleComponent extends Component {
 	public boolean updateScale;
 	public float scale = 1;
+
+	public SpineScaleComponent () {
+	}
+
+	public SpineScaleComponent (float scale) {
+		this.scale = scale;
+		updateScale = true;
+	}
 }
