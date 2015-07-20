@@ -34,9 +34,9 @@ public class EntitySchemeSerializer extends CompatibleFieldSerializer<EntitySche
 
 	@Override
 	public void write (Kryo kryo, Output output, EntityScheme scheme) {
-		sceneIO.setEngineSeriazliationContext(scheme.components);
+		sceneIO.setEngineSerializationContext(scheme.components);
 		super.write(kryo, output, scheme);
-		sceneIO.setEngineSeriazliationContext(null);
+		sceneIO.setEngineSerializationContext(null);
 	}
 
 	@Override

@@ -25,6 +25,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gdx.version>1.6.3</gdx.version>
+        <artemis.version>0.10.1</artemis.version>
         <arguments/>
     </properties>
 
@@ -72,13 +73,13 @@
         <dependency>
             <groupId>net.onedaybeard.artemis</groupId>
             <artifactId>artemis-odb</artifactId>
-            <version>0.10.1</version>
+            <version>${artemis.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.onedaybeard.artemis</groupId>
             <artifactId>artemis-odb-processor</artifactId>
-            <version>0.9.0</version>
+            <version>${artemis.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

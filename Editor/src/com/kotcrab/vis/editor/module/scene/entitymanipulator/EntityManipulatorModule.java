@@ -35,6 +35,7 @@ import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.Timer;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
+import com.kotcrab.vis.editor.entity.ParticleScaleComponent;
 import com.kotcrab.vis.editor.entity.PositionComponent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
@@ -305,9 +306,11 @@ public class EntityManipulatorModule extends SceneModule {
 			}
 
 			if (asset.getPath().startsWith("particle/")) {
+				float scale = 1f / scene.pixelPerUnits;
 				entity = new EntityBuilder(entityEngine)
-						.with(new ParticleComponent(particleCache.get(asset)), new AssetComponent(asset),
-								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
+						.with(new ParticleComponent(particleCache.get(asset, scale)), new AssetComponent(asset), new ParticleScaleComponent(scale),
+								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
+								new ExporterDropsComponent(ParticleScaleComponent.class))
 						.build();
 			}
 		}

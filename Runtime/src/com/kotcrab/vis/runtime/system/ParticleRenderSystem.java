@@ -35,9 +35,9 @@ public class ParticleRenderSystem extends DeferredEntityProcessingSystem {
 	private Batch batch;
 	private final boolean ignoreActive;
 
-	public ParticleRenderSystem (EntityProcessPrincipal principal, boolean ignoreActive) {
+	public ParticleRenderSystem (EntityProcessPrincipal principal, boolean ignoreParticleActiveState) {
 		super(Aspect.all(ParticleComponent.class).exclude(InvisibleComponent.class), principal);
-		this.ignoreActive = ignoreActive;
+		this.ignoreActive = ignoreParticleActiveState;
 	}
 
 	@Override

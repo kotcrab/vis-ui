@@ -39,17 +39,18 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 		watcherModule.addListener(this);
 	}
 
-	public ParticleEffect get (VisAssetDescriptor assetDescriptor) {
+	public ParticleEffect get (VisAssetDescriptor assetDescriptor, float scaleFactor) {
 		if (assetDescriptor instanceof PathAsset == false)
 			throw new UnsupportedAssetDescriptorException(assetDescriptor);
 
 		PathAsset path = (PathAsset) assetDescriptor;
-		return get(fileAccess.getAssetsFolder().child(path.getPath()));
+		return get(fileAccess.getAssetsFolder().child(path.getPath()), scaleFactor);
 	}
 
-	private ParticleEffect get (FileHandle file) {
+	private ParticleEffect get (FileHandle file, float scaleFactor) {
 		ParticleEffect effect = new ParticleEffect();
 		effect.load(file, file.parent());
+		effect.scaleEffect(scaleFactor);
 		return effect;
 	}
 
@@ -60,7 +61,8 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 
 	@Override
 	public void fileChanged (FileHandle file) {
-		App.eventBus.post(new ParticleReloadedEvent());
+		String relativePath = fileAccess.relativizeToAssetsFolder(file);
+		if (relativePath.startsWith("particle")) App.eventBus.post(new ParticleReloadedEvent());
 	}
 
 	@Override

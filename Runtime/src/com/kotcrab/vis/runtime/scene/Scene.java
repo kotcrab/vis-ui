@@ -39,15 +39,12 @@ import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
  * @author Kotcrab
  */
 public class Scene {
-
 	private Viewport viewport;
 
 	private EntityEngine engine;
-	private final RuntimeContext context;
 
 	/** Used by framework, not indented for external use */
 	public Scene (RuntimeContext context, SceneData data, SceneParameter parameter) {
-		this.context = context;
 		AssetManager assetsManager = context.assetsManager;
 		RuntimeConfiguration runtimeConfig = context.configuration;
 
@@ -88,7 +85,7 @@ public class Scene {
 		engineConfig.setSystem(new SpriteInflaterSystem(runtimeConfig, assetsManager));
 		engineConfig.setSystem(new SoundInflaterSystem(runtimeConfig, assetsManager));
 		engineConfig.setSystem(new MusicInflaterSystem(runtimeConfig, assetsManager));
-		engineConfig.setSystem(new ParticleInflaterSystem(runtimeConfig, assetsManager));
+		engineConfig.setSystem(new ParticleInflaterSystem(runtimeConfig, assetsManager, data.pixelPerUnits));
 		engineConfig.setSystem(new TextInflaterSystem(runtimeConfig, assetsManager));
 
 		ArtemisUtils.createCommonSystems(engineConfig, context.batch, distanceFieldShader, true);
@@ -109,7 +106,7 @@ public class Scene {
 		engine = new EntityEngine(engineConfig);
 	}
 
-	/** Renders entire scene. Typically called from {@link ApplicationListener#render()} */
+	/** Updates and renders entire scene. Typically called from {@link ApplicationListener#render()} */
 	public void render () {
 		engine.setDelta(Gdx.graphics.getDeltaTime());
 		engine.process();

@@ -67,7 +67,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setManager(new ZIndexManipulatorManager());
 		config.setManager(new EntitySerializerManager());
 		config.setManager(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
-		config.setManager(new ParticleReloaderManager(projectModuleContainer.get(ParticleCacheModule.class)));
+		config.setManager(new ParticleReloaderManager(projectModuleContainer.get(ParticleCacheModule.class), scene.pixelPerUnits));
 		config.setManager(new FontReloaderManager(projectModuleContainer.get(FontCacheModule.class)));
 
 		config.setSystem(new GroupIdProviderSystem(), true);

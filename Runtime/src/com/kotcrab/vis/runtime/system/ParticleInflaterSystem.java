@@ -38,10 +38,13 @@ public class ParticleInflaterSystem extends EntityProcessingSystem {
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
-	public ParticleInflaterSystem (RuntimeConfiguration configuration, AssetManager manager) {
+	private float pixelPerUnits;
+
+	public ParticleInflaterSystem (RuntimeConfiguration configuration, AssetManager manager, float pixelPerUnits) {
 		super(Aspect.all(ParticleProtoComponent.class, AssetComponent.class));
 		this.configuration = configuration;
 		this.manager = manager;
+		this.pixelPerUnits = pixelPerUnits;
 	}
 
 	@Override
@@ -63,6 +66,7 @@ public class ParticleInflaterSystem extends EntityProcessingSystem {
 		ParticleComponent particleComponent = new ParticleComponent(effect);
 		particleComponent.setPosition(protoComponent.x, protoComponent.y);
 		particleComponent.active = protoComponent.active;
+		particleComponent.effect.scaleEffect(1f / pixelPerUnits);
 
 		transmuter.transmute(e);
 		e.edit().add(particleComponent);

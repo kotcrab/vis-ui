@@ -28,14 +28,16 @@ import com.kotcrab.vis.runtime.component.ParticleComponent;
 @Wire
 public class ParticleReloaderManager extends Manager {
 	private ParticleCacheModule particleCache;
+	private float pixelInUnits;
 
 	private ComponentMapper<ParticleComponent> particleCm;
 	private ComponentMapper<AssetComponent> assetCm;
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
-	public ParticleReloaderManager (ParticleCacheModule particleCache) {
+	public ParticleReloaderManager (ParticleCacheModule particleCache, float pixelInUnits) {
 		this.particleCache = particleCache;
+		this.pixelInUnits = pixelInUnits;
 	}
 
 	@Override
@@ -58,7 +60,7 @@ public class ParticleReloaderManager extends Manager {
 
 			float x = particle.getX();
 			float y = particle.getY();
-			particle.effect = particleCache.get(asset);
+			particle.effect = particleCache.get(asset, 1f / pixelInUnits);
 			particle.setPosition(x, y);
 		}
 	}
