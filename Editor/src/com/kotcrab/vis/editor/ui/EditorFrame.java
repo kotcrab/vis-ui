@@ -80,7 +80,19 @@ public class EditorFrame extends JFrame {
 
 		boolean showSplash = true;
 
-		if (args.length == 1 && args[0].equals("--no-splash")) showSplash = false;
+		for (String arg : args) {
+			if (arg.equals("--no-splash")) {
+				showSplash = false;
+				continue;
+			}
+
+			if (arg.equals("--scale-ui")) {
+				App.scaleUIEnabledFromCmd = true;
+				continue;
+			}
+
+			Log.warn("Unrecognized command line argument: " + arg);
+		}
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

@@ -193,7 +193,14 @@ public class SettingsDialog extends VisWindow {
 		public int compare (Node n1, Node n2) {
 			VisLabel l1 = (VisLabel) n1.getActor();
 			VisLabel l2 = (VisLabel) n2.getActor();
-			return l1.getText().toString().compareToIgnoreCase(l2.getText().toString());
+			String t1 = l1.getText().toString();
+			String t2 = l2.getText().toString();
+
+			//force that experimental tabs to be at the bottom //TODO settings priority in list
+			if(t1.equals("Experimental")) return 1;
+			if(t2.equals("Experimental")) return -1;
+
+			return t1.compareToIgnoreCase(t2.toString());
 		}
 	}
 }

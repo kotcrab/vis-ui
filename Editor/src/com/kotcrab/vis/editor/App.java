@@ -44,6 +44,9 @@ public class App {
 	public static boolean buildTimestampValid = false;
 	public static String buildTimestamp;
 
+	/** If true ui scaling mode was enabled from command line arguments, this may be false if ui scaling is enabled from settings */
+	public static boolean scaleUIEnabledFromCmd;
+
 	public static final boolean OPENGL_CRASH_BEFORE_EXIT_MESSAGE = true;
 	public static final boolean SNAPSHOT = VERSION.contains("SNAPSHOT");
 

@@ -83,7 +83,9 @@ public class Editor extends ApplicationAdapter implements EventListener {
 	private ProjectIOModule projectIO;
 	private FileChooserModule fileChooser;
 	private ExtensionStorageModule pluginContainer;
+
 	private GeneralSettingsModule settings;
+	private ExperimentalSettingsModule experimentalSettings;
 
 	// TODO move to module
 	private Table mainContentTable;
@@ -99,6 +101,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	private boolean exitInProgress;
 	private Tab quickAccessTab;
+	private ScreenViewport stageViewport;
 
 	public Editor (EditorFrame frame) {
 		this.frame = frame;
@@ -132,10 +135,15 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		createModulesUI();
 
 		Log.debug("Loading completed");
+
+		if(experimentalSettings.isUIScale() || App.scaleUIEnabledFromCmd) {
+			stageViewport.setUnitsPerPixel(0.5f);
+		}
 	}
 
 	private Stage createStage () {
-		Stage stage = new Stage(new ScreenViewport());
+		stageViewport = new ScreenViewport();
+		Stage stage = new Stage(stageViewport);
 
 		//the stage root is final field, by default group does not support actor changed events and we need that
 		//here we just set our custom group to get those events
@@ -189,6 +197,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		editorMC.add(new EditorSettingsIOModule());
 
 		editorMC.add(settings = new GeneralSettingsModule());
+		editorMC.add(experimentalSettings = new ExperimentalSettingsModule());
 		editorMC.add(new PluginSettingsModule());
 		editorMC.add(new GridSettingsModule());
 
