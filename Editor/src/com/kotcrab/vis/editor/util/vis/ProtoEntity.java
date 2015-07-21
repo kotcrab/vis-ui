@@ -20,6 +20,7 @@ import com.artemis.Component;
 import com.artemis.Entity;
 import com.artemis.utils.Bag;
 import com.artemis.utils.EntityBuilder;
+import com.kotcrab.vis.editor.entity.UUIDComponent;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
@@ -31,31 +32,32 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
 public class ProtoEntity {
 	private SceneIOModule sceneIOModule;
 	private EntityEngine entityEngine;
-	private boolean preserveId;
+	private boolean preserveUUID;
 
 	private Bag<Component> components = new Bag<>();
 
-	private int id;
-
-	public ProtoEntity (SceneIOModule sceneIOModule, EntityEngine entityEngine, Entity entity, boolean preserveId) {
+	public ProtoEntity (SceneIOModule sceneIOModule, EntityEngine entityEngine, Entity entity, boolean preserveUUID) {
 		this.sceneIOModule = sceneIOModule;
 		this.entityEngine = entityEngine;
-		this.preserveId = preserveId;
+		this.preserveUUID = preserveUUID;
 
 		entity.getComponents(components);
 		components = sceneIOModule.cloneEntityComponents(components);
-
-		id = entity.getId();
 	}
 
 	public Entity build () {
 		EntityBuilder builder = new EntityBuilder(entityEngine);
 
 		Bag<Component> components = sceneIOModule.cloneEntityComponents(this.components);
-		components.forEach(builder::with);
 
-		Entity entity = builder.build();
-		if (preserveId) entity.id = id;
-		return entity;
+		components.forEach((component) -> {
+			if (preserveUUID == false && component instanceof UUIDComponent) {
+				builder.with(new UUIDComponent());
+			} else {
+				builder.with(component);
+			}
+		});
+
+		return builder.build();
 	}
 }

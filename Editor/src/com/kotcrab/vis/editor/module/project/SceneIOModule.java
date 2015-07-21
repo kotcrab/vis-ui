@@ -34,10 +34,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.entity.EntityScheme;
-import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
-import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
-import com.kotcrab.vis.editor.entity.PositionComponent;
+import com.kotcrab.vis.editor.entity.*;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializedTypeDescriptor;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializerDescriptor;
@@ -55,6 +52,7 @@ import org.objenesis.strategy.StdInstantiatorStrategy;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.util.UUID;
 
 /**
  * Allows to load VisEditor scenes. This API should not be used directly. See {@link SceneCacheModule}
@@ -106,6 +104,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(Color.class, new ColorSerializer(), 15);
 		kryo.register(Class.class, 16);
 		kryo.register(float[].class, 17);
+		kryo.register(UUID.class, new UUIDSerializer(), 18);
 
 		kryo.register(EditorScene.class, new EditorSceneSerializer(kryo), 31);
 		kryo.register(EntityScheme.class, new EntitySchemeSerializer(kryo, this), 32);
@@ -129,13 +128,14 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(PositionComponent.class, 206);
 		kryo.register(ExporterDropsComponent.class, 207);
 		kryo.register(PixelsPerUnitComponent.class, 208);
+		kryo.register(UUIDComponent.class, 209);
 
-		kryo.register(AssetComponent.class, 209);
-		kryo.register(GroupComponent.class, 210);
-		kryo.register(IDComponent.class, 211);
-		kryo.register(InvisibleComponent.class, 212);
-		kryo.register(LayerComponent.class, 213);
-		kryo.register(RenderableComponent.class, 214);
+		kryo.register(AssetComponent.class, 220);
+		kryo.register(GroupComponent.class, 221);
+		kryo.register(IDComponent.class, 222);
+		kryo.register(InvisibleComponent.class, 223);
+		kryo.register(LayerComponent.class, 224);
+		kryo.register(RenderableComponent.class, 225);
 	}
 
 	private void registerEntityComponentSerializer (Class<? extends Component> componentClass, EntityComponentSerializer serializer, int id) {

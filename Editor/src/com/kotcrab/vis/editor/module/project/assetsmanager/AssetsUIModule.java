@@ -482,19 +482,25 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Even
 		boolean canBeSafeDeleted = assetsAnalyzer.canAnalyzeUsages(file);
 		stage.addActor(new DeleteDialog(file, canBeSafeDeleted, result -> {
 			if (canBeSafeDeleted == false) {
-				FileUtils.delete(file);
+				deleteWithErrorDialogIfNeeded(file);
 				return;
 			}
 
 			if (result.safeDelete) {
 				AssetsUsages usages = assetsAnalyzer.analyzeUsages(file);
 				if (usages.count() == 0)
-					FileUtils.delete(file);
+					deleteWithErrorDialogIfNeeded(file);
 				else
 					quickAccessModule.addTab(new AssetsUsagesTab(projectContainer, usages, true));
 			} else
-				FileUtils.delete(file);
+				deleteWithErrorDialogIfNeeded(file);
 		}));
+	}
+
+	private void deleteWithErrorDialogIfNeeded (FileHandle file) {
+		if (FileUtils.delete(file) == false) {
+			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Error occurred while deleting file, file may be used by system");
+		}
 	}
 
 	private void clipboardCopyFiles () {

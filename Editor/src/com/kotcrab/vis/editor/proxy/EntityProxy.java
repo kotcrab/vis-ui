@@ -23,14 +23,20 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.editor.entity.EntityScheme;
+import com.kotcrab.vis.editor.entity.UUIDComponent;
+import com.kotcrab.vis.editor.module.scene.VisUUIDManager;
 import com.kotcrab.vis.runtime.accessor.*;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
+import java.util.UUID;
+
 /** @author Kotcrab */
 public abstract class EntityProxy {
 	protected Entity entity;
+	protected VisUUIDManager uuidManager;
+	protected UUID uuid;
 
 	protected EntityScheme scheme;
 
@@ -46,6 +52,8 @@ public abstract class EntityProxy {
 	public EntityProxy (Entity entity) {
 		this.entity = entity;
 		init();
+		uuidManager = entity.getWorld().getManager(VisUUIDManager.class);
+		uuid = entity.getComponent(UUIDComponent.class).getUuid();
 	}
 
 	protected void init () {
@@ -59,7 +67,7 @@ public abstract class EntityProxy {
 
 	/** Reloads this proxy, must be called if there is chance that this entity was removed and then radded by UndoableAction. */
 	public void reload () {
-		entity = entity.getWorld().getEntity(entity.getId());
+		entity = uuidManager.get(uuid);
 		basicAccessor = initAccessors();
 	}
 

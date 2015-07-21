@@ -30,14 +30,12 @@ import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 
 /** @author Kotcrab */
 public class EntityScheme {
-	public int id;
 	public ImmutableBag<Component> components;
 
 	public EntityScheme (Entity entity) {
 		Bag<Component> components = new Bag<>();
 		entity.getComponents(components);
 		this.components = components;
-		this.id = entity.getId();
 	}
 
 	public Entity build (EntityEngine engine) {
@@ -45,9 +43,7 @@ public class EntityScheme {
 
 		components.forEach(builder::with);
 
-		Entity entity = builder.build();
-		entity.id = id;
-		return entity;
+		return builder.build();
 	}
 
 	public EntityData toData () {
@@ -66,6 +62,9 @@ public class EntityScheme {
 			if (component instanceof ExporterDropsComponent)
 				continue;
 
+			if (component instanceof UUIDComponent)
+				continue;
+
 			if (dropsComponent != null && dropsComponent.componentsToDrop.contains(component.getClass(), false))
 				continue;
 
@@ -76,8 +75,9 @@ public class EntityScheme {
 				if (gdc.groupIds.size > 0) dataComponents.add(component);
 			} else if (component instanceof IDComponent) { //strip empty IDComponents
 				IDComponent idc = (IDComponent) component;
-				if(idc.id != null && idc.id.equals("") == false)
+				if (idc.id != null && idc.id.equals("") == false) {
 					dataComponents.add(component);
+				}
 			} else {
 				dataComponents.add(component);
 			}

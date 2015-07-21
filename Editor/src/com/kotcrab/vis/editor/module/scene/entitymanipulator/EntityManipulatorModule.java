@@ -37,6 +37,7 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
 import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
 import com.kotcrab.vis.editor.entity.PositionComponent;
+import com.kotcrab.vis.editor.entity.UUIDComponent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.*;
@@ -327,6 +328,8 @@ public class EntityManipulatorModule extends SceneModule {
 		}
 
 		if (entity != null) {
+			entity.edit().add(new UUIDComponent());
+			
 			EntityProxy proxy = entityProxyCache.get(entity);
 
 			float x = camera.getInputX() - proxy.getWidth() / 2;
