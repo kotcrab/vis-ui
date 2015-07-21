@@ -88,6 +88,8 @@ public class Scene {
 		engineConfig.setSystem(new ParticleInflaterSystem(runtimeConfig, assetsManager, data.pixelsPerUnit));
 		engineConfig.setSystem(new TextInflaterSystem(runtimeConfig, assetsManager, data.pixelsPerUnit));
 
+		engineConfig.setManager(new VisIDManager());
+
 		ArtemisUtils.createCommonSystems(engineConfig, context.batch, distanceFieldShader, true);
 		engineConfig.setSystem(new ParticleRenderSystem(engineConfig.getSystem(RenderBatchingSystem.class), false), true);
 
