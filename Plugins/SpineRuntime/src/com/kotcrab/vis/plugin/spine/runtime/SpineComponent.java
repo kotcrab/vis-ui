@@ -58,7 +58,12 @@ public class SpineComponent extends Component implements FlipPropertiesAccessor,
 	public SpineComponent (SpineComponent other, SkeletonData skeletonData) {
 		this.playOnStart = other.playOnStart;
 		this.defaultAnimation = other.defaultAnimation;
+
 		init(skeletonData);
+
+		setPosition(other.getX(), other.getY());
+		setFlip(other.isFlipX(), other.isFlipY());
+		setColor(other.getColor());
 	}
 
 	private void init (SkeletonData skeletonData) {
