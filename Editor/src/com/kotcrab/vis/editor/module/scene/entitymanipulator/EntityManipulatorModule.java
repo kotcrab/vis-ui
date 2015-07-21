@@ -272,7 +272,8 @@ public class EntityManipulatorModule extends SceneModule {
 			TextureAssetDescriptor asset = (TextureAssetDescriptor) obj;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(new SpriteComponent(textureCache.getSprite(asset, scene.pixelsPerUnit)), new AssetComponent(asset),
+					.with(new SpriteComponent(textureCache.getSprite(asset, scene.pixelsPerUnit)),
+							new AssetComponent(asset),
 							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
 					.build();
 
@@ -292,8 +293,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 			if (asset.getPath().startsWith("sound/")) {
 				entity = new EntityBuilder(entityEngine)
-						.with(new SoundComponent(null), //editor does not require sound to be loaded, we can pass null sound here
-								new AssetComponent(asset), new PositionComponent(),
+						.with(new SoundComponent(null), new PositionComponent(), //editor does not require sound to be loaded, we can pass null sound here
+								new AssetComponent(asset),
 								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
 								new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
 						.build();
@@ -302,7 +303,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 			if (asset.getPath().startsWith("music/")) {
 				entity = new EntityBuilder(entityEngine)
-						.with(new MusicComponent(new DummyMusic()), new AssetComponent(asset), new PositionComponent(),
+						.with(new MusicComponent(new DummyMusic()), new PositionComponent(),
+								new AssetComponent(asset),
 								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
 								new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
 						.build();
@@ -312,7 +314,8 @@ public class EntityManipulatorModule extends SceneModule {
 			if (asset.getPath().startsWith("particle/")) {
 				float scale = 1f / scene.pixelsPerUnit;
 				entity = new EntityBuilder(entityEngine)
-						.with(new ParticleComponent(particleCache.get(asset, scale)), new AssetComponent(asset), new PixelsPerUnitComponent(scene.pixelsPerUnit),
+						.with(new ParticleComponent(particleCache.get(asset, scale)), new PixelsPerUnitComponent(scene.pixelsPerUnit),
+								new AssetComponent(asset),
 								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
 								new ExporterDropsComponent(PixelsPerUnitComponent.class))
 						.build();
@@ -329,7 +332,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 		if (entity != null) {
 			entity.edit().add(new UUIDComponent());
-			
+
 			EntityProxy proxy = entityProxyCache.get(entity);
 
 			float x = camera.getInputX() - proxy.getWidth() / 2;
