@@ -297,11 +297,14 @@ public class PluginLoaderModule extends EditorModule {
 
 		@Override
 		public void settingsApply () {
-			config.pluginsIdsToLoad.clear();
-			for (VisCheckBox checkBox : pluginsCheckBoxes.values())
-				if (checkBox.isChecked()) config.pluginsIdsToLoad.add(checkBox.getText().toString());
+			if (pluginsCheckBoxes.size > 0) {
+				config.pluginsIdsToLoad.clear();
+				for (VisCheckBox checkBox : pluginsCheckBoxes.values()) {
+					if (checkBox.isChecked()) config.pluginsIdsToLoad.add(checkBox.getText().toString());
+				}
 
-			settingsSave();
+				settingsSave();
+			}
 		}
 
 		public boolean isPluginEnabled (String folderName) {
