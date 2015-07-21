@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.OrderedMap;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.util.gdx.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
@@ -28,7 +29,6 @@ import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.*;
-import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 
 /**
  * Dialog used to change scene settings
@@ -91,8 +91,8 @@ public class SceneSettingsDialog extends VisWindow {
 
 		widthField = new VisValidableTextField(String.valueOf(scene.width));
 		heightField = new VisValidableTextField(String.valueOf(scene.height));
-		widthField.setTextFieldFilter(new DigitsOnlyFilter());
-		heightField.setTextFieldFilter(new DigitsOnlyFilter());
+		widthField.setTextFieldFilter(new FloatDigitsOnlyFilter());
+		heightField.setTextFieldFilter(new FloatDigitsOnlyFilter());
 
 		VisTable sizeTable = new VisTable(true);
 		add(new VisLabel("Width"));
@@ -102,8 +102,6 @@ public class SceneSettingsDialog extends VisWindow {
 
 		add(sizeTable).expand().fill();
 		row();
-
-		//This wil save any change previous change in scene
 
 		VisTable buttonTable = new VisTable(true);
 		buttonTable.defaults().minWidth(70);
@@ -156,8 +154,8 @@ public class SceneSettingsDialog extends VisWindow {
 	private void createValidators () {
 		FormValidator validator = new FormValidator(saveButton, errorLabel);
 
-		validator.integerNumber(widthField, "Width must be a number");
-		validator.integerNumber(heightField, "Height must be a number");
+		validator.floatNumber(widthField, "Width must be a number");
+		validator.floatNumber(heightField, "Height must be a number");
 		validator.valueGreaterThan(widthField, "Width must be greater than zero", 0);
 		validator.valueGreaterThan(heightField, "Height must be greater than zero", 0);
 	}
