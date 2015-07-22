@@ -20,6 +20,7 @@ import com.artemis.*;
 import com.artemis.EntitySubscription.SubscriptionListener;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.runtime.component.IDComponent;
 
@@ -32,7 +33,7 @@ public class VisIDManager extends Manager {
 	private ComponentMapper<IDComponent> idCm;
 	private AspectSubscriptionManager subscriptionManager;
 
-	private ObjectMap<String, Entity> idStore = new ObjectMap<String, Entity>();
+	private ObjectMap<String, Array<Entity>> idStore = new ObjectMap<String, Array<Entity>>();
 
 	@Override
 	protected void initialize () {
@@ -41,25 +42,51 @@ public class VisIDManager extends Manager {
 		subscription.addSubscriptionListener(new SubscriptionListener() {
 			@Override
 			public void inserted (ImmutableBag<Entity> entities) {
-				ObjectMap<String, Entity> tmpCache = new ObjectMap<String, Entity>();
-
 				for (Entity entity : entities) {
-					tmpCache.put(idCm.get(entity).id, entity);
-				}
+					String id = idCm.get(entity).id;
 
-				idStore.putAll(tmpCache);
+					Array<Entity> idList = idStore.get(id);
+
+					if (idList == null) {
+						idList = new Array<Entity>();
+						idStore.put(id, idList);
+					}
+
+					idList.add(entity);
+				}
 			}
 
 			@Override
 			public void removed (ImmutableBag<Entity> entities) {
 				for (Entity entity : entities) {
-					idStore.remove(idCm.get(entity).id);
+					String id = idCm.get(entity).id;
+
+					Array<Entity> idList = idStore.get(id);
+					idList.removeValue(entity, true);
+
+					if (idList.size == 0) {
+						idStore.remove(id);
+					}
 				}
 			}
 		});
 	}
 
+	/**
+	 * Returns entity for given ID. If multiple entities has the same id only the first one will be returned.
+	 * @see #getMultiple(String)
+	 */
 	public Entity get (String id) {
-		return idStore.get(id);
+		return getMultiple(id).get(0);
+	}
+
+	/**
+	 * Returns all entities with this ID.
+	 * @see #get(String)
+	 */
+	public Array<Entity> getMultiple (String id) {
+		Array<Entity> entities = idStore.get(id);
+		if (entities == null) throw new IllegalStateException("Could not find any entity with ID: " + id);
+		return entities;
 	}
 }
