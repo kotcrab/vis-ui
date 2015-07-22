@@ -35,4 +35,10 @@ public class EventStopper extends InputListener {
 		event.stop();
 		return true;
 	}
+
+	@Override
+	public boolean scrolled (InputEvent event, float x, float y, int amount) {
+		event.stop();
+		return true;
+	}
 }

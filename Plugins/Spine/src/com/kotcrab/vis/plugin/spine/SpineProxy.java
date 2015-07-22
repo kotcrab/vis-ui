@@ -104,7 +104,7 @@ public class SpineProxy extends EntityProxy {
 	}
 
 	@Override
-	protected String getEntityName () {
+	public String getEntityName () {
 		return "SpineEntity";
 	}
 

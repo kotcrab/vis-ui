@@ -42,7 +42,7 @@ public class SpriteProxy extends EntityProxy {
 	}
 
 	@Override
-	protected String getEntityName () {
+	public String getEntityName () {
 		return "SpriteEntity";
 	}
 

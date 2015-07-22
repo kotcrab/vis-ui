@@ -111,8 +111,8 @@ public class MenuBarModule extends EditorModule {
 		//DO NOT replace this with method reference!!!
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Alignment tools", Icons.ALIGN_LEFT, () -> sceneButtonsListener.showAlignmentTools()));
 		menu.addSeparator();
-		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Undo", Icons.UNDO, () -> sceneButtonsListener.undo()));
-		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Redo", Icons.REDO, () -> sceneButtonsListener.redo()));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Undo", Icons.UNDO, () -> sceneButtonsListener.undo()).setShortcut("Ctrl + Z"));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Redo", Icons.REDO, () -> sceneButtonsListener.redo()).setShortcut("Ctrl + Y"));
 		menu.addSeparator();
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Group", null, () -> sceneButtonsListener.group()));
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Ungroup", null, () -> sceneButtonsListener.ungroup()));

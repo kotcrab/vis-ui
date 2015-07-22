@@ -37,6 +37,7 @@ public class EntityProxyCache extends Manager {
 
 	private EntitySubscription subscription;
 
+	private Array<EntityProxyCacheListener> listeners = new Array<>();
 	private ObjectMap<Entity, EntityProxy> cache = new ObjectMap<>();
 	private float pixelsPerUnit;
 
@@ -56,11 +57,13 @@ public class EntityProxyCache extends Manager {
 				entities.forEach(entity -> tmpCache.put(entity, getProxy(entity)));
 
 				cache.putAll(tmpCache);
+				listeners.forEach(EntityProxyCacheListener::cacheChanged);
 			}
 
 			@Override
 			public void removed (ImmutableBag<Entity> entities) {
 				entities.forEach(cache::remove);
+				listeners.forEach(EntityProxyCacheListener::cacheChanged);
 			}
 		});
 	}
@@ -84,8 +87,10 @@ public class EntityProxyCache extends Manager {
 
 	private EntityProxy getInternalProxyFor (Entity entity) {
 		if (entity.getComponent(ParticleComponent.class) != null) return new ParticleProxy(entity);
-		if (entity.getComponent(SoundComponent.class) != null) return new SoundAndMusicProxy(entity, false, pixelsPerUnit);
-		if (entity.getComponent(MusicComponent.class) != null) return new SoundAndMusicProxy(entity, true, pixelsPerUnit);
+		if (entity.getComponent(SoundComponent.class) != null)
+			return new SoundAndMusicProxy(entity, false, pixelsPerUnit);
+		if (entity.getComponent(MusicComponent.class) != null)
+			return new SoundAndMusicProxy(entity, true, pixelsPerUnit);
 		if (entity.getComponent(SpriteComponent.class) != null) return new SpriteProxy(entity);
 		if (entity.getComponent(TextComponent.class) != null) return new TextProxy(entity);
 
@@ -115,5 +120,17 @@ public class EntityProxyCache extends Manager {
 
 	public ObjectMap<Entity, EntityProxy> getCache () {
 		return cache;
+	}
+
+	public void addListener (EntityProxyCacheListener listener) {
+		listeners.add(listener);
+	}
+
+	public boolean removeListener (EntityProxyCacheListener listener) {
+		return listeners.removeValue(listener, true);
+	}
+
+	public interface EntityProxyCacheListener {
+		void cacheChanged ();
 	}
 }

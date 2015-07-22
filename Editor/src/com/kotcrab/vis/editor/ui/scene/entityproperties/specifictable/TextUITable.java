@@ -115,7 +115,7 @@ public abstract class TextUITable extends SpecificUITable {
 			}
 
 			properties.getParentTab().dirty();
-			properties.updateValues();
+			properties.selectedEntitiesChanged();
 			properties.endSnapshot();
 		});
 

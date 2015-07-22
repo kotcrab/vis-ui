@@ -63,6 +63,8 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 
 	@Override
 	public boolean hasComponent (Class<? extends Component> clazz) {
+		if (proxies.size == 0) return false;
+
 		for (EntityProxy proxy : proxies) {
 			if (proxy.hasComponent(clazz) == false)
 				return false;
@@ -98,7 +100,8 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 
 	@Override
 	public IntArray getGroupsIds () {
-		throw new UnsupportedOperationException();
+		return proxies.get(0).getGroupsIds();
+//		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -115,8 +118,8 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 	}
 
 	@Override
-	protected String getEntityName () {
-		return "GroupEntity";
+	public String getEntityName () {
+		return "Group";
 	}
 
 	@Override
@@ -232,5 +235,13 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 	@Override
 	public void setLayerId (int layerId) {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public boolean compareProxyByID (EntityProxy other) {
+		if (other instanceof GroupEntityProxy == false) return false;
+
+		GroupEntityProxy groupProxy = (GroupEntityProxy) other;
+		return groupId == groupProxy.groupId;
 	}
 }

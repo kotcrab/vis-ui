@@ -133,6 +133,10 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		return config;
 	}
 
+	public SceneTab getSceneTab () {
+		return sceneTab;
+	}
+
 	public EditorScene getScene () {
 		return scene;
 	}

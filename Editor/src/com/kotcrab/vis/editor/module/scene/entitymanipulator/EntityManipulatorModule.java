@@ -33,11 +33,16 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.Timer;
+import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
 import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
 import com.kotcrab.vis.editor.entity.PositionComponent;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
+import com.kotcrab.vis.editor.event.RedoEvent;
+import com.kotcrab.vis.editor.event.UndoEvent;
+import com.kotcrab.vis.editor.event.bus.Event;
+import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.*;
@@ -54,6 +59,7 @@ import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.ui.scene.GroupBreadcrumb;
 import com.kotcrab.vis.editor.ui.scene.GroupBreadcrumb.GroupBreadcrumbListener;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
+import com.kotcrab.vis.editor.ui.scene.SceneOutline;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.gdx.DummyMusic;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
@@ -66,7 +72,7 @@ import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 
 /** @author Kotcrab */
-public class EntityManipulatorModule extends SceneModule {
+public class EntityManipulatorModule extends SceneModule implements EventListener {
 	@InjectModule private StatusBarModule statusBar;
 
 	@InjectModule private SceneIOModule sceneIO;
@@ -90,6 +96,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private GroupBreadcrumb groupBreadcrumb;
 	private LayersDialog layersDialog;
 	private AlignmentToolsDialog alignmentToolsDialog;
+	private SceneOutline sceneOutline;
 
 	private Tool currentTool;
 	private int currentSelectionGid = -1;
@@ -131,6 +138,7 @@ public class EntityManipulatorModule extends SceneModule {
 		});
 		layersDialog = new LayersDialog(sceneTab, engineConfiguration, sceneContainer);
 		alignmentToolsDialog = new AlignmentToolsDialog(sceneContainer, selectedEntities);
+		sceneOutline = new SceneOutline(sceneContainer, selectedEntities);
 		createGeneralMenu();
 
 		entityMoveTimerTask = new EntityMoveTimerTask(scene, immutableSelectedEntities);
@@ -142,6 +150,8 @@ public class EntityManipulatorModule extends SceneModule {
 				resetSelection();
 			}
 		});
+
+		App.eventBus.register(this);
 	}
 
 	@Override
@@ -354,9 +364,7 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	public void findEntityBaseGroupAndSelect (EntityProxy proxy) {
-		if (proxy instanceof GroupEntityProxy)
-			throw new UnsupportedOperationException("findEntityBaseGroupAndSelect(EntityProxy) does not supports GroupEntityProxy");
-
+		groupBreadcrumb.resetHierarchy();
 		IntArray array = proxy.getGroupsIds();
 		if (array.size > 0) {
 			array.reverse();
@@ -369,7 +377,10 @@ public class EntityManipulatorModule extends SceneModule {
 			}
 		}
 
-		select(proxy);
+		if (proxy instanceof GroupEntityProxy)
+			selectAll();
+		else
+			select(proxy);
 	}
 
 	public void select (Entity entity) {
@@ -482,6 +493,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 	public void selectedEntitiesChanged () {
 		entityProperties.selectedEntitiesChanged();
+		sceneOutline.selectedEntitiesChanged();
 	}
 
 	public void groupSelection () {
@@ -493,6 +505,8 @@ public class EntityManipulatorModule extends SceneModule {
 		int gid = groupIdProvider.getFreeGroupIndex();
 
 		undoModule.execute(new GroupAction(selectedEntities, gid, true));
+
+		sceneOutline.rebuildOutline();
 
 		GroupEntityProxy groupProxy = new GroupEntityProxy(selectedEntities, gid);
 		resetSelection();
@@ -523,6 +537,9 @@ public class EntityManipulatorModule extends SceneModule {
 
 			groupBreadcrumb.resetHierarchy();
 			currentSelectionGid = -1;
+
+			sceneOutline.rebuildOutline();
+
 			resetSelection();
 			selectionProxy.getProxies().forEach(this::selectAppend);
 		} else
@@ -559,6 +576,15 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	@Override
+	public boolean onEvent (Event event) {
+		if (event instanceof UndoEvent || event instanceof RedoEvent) {
+			sceneOutline.rebuildOutline();
+		}
+
+		return false;
+	}
+
+	@Override
 	public void dispose () {
 		layersDialog.dispose();
 		entityProperties.dispose();
@@ -578,6 +604,10 @@ public class EntityManipulatorModule extends SceneModule {
 
 	public AlignmentToolsDialog getAlignmentToolsDialog () {
 		return alignmentToolsDialog;
+	}
+
+	public SceneOutline getSceneOutline () {
+		return sceneOutline;
 	}
 
 	public ImmutableArray<EntityProxy> getSelectedEntities () {

@@ -220,8 +220,9 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	@Override
 	public boolean onEvent (Event event) {
-		if (event instanceof UndoEvent || event instanceof RedoEvent)
-			updateValues();
+		if (event instanceof UndoEvent || event instanceof RedoEvent) {
+			selectedEntitiesChanged();
+		}
 
 		return false;
 	}
@@ -327,8 +328,11 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	}
 
 	private boolean checkEntityList (SpecificUITable table) {
-		for (EntityProxy entity : entities)
-			if (!table.isSupported(entity)) return false;
+		if (entities.size == 0) return false;
+
+		for (EntityProxy entity : entities) {
+			if (table.isSupported(entity) == false) return false;
+		}
 
 		return true;
 	}
@@ -447,16 +451,15 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		if (activeSpecificTable != null) activeSpecificTable.setValuesToEntities();
 	}
 
-	public void updateValues () {
-
+	private void updateValues () {
 		groupSelected = false;
 		entities.forEach(proxy -> {
 			if (proxy instanceof GroupEntityProxy) groupSelected = true;
 		});
 
-		if (entities.size == 0)
+		if (entities.size == 0) {
 			setVisible(false);
-		else {
+		} else {
 			setVisible(true);
 
 			if (groupSelected) {

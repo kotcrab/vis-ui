@@ -90,7 +90,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	private ContentTable content;
 
-	private SceneOutline outline;
 	private boolean savedAtLeastOnce;
 
 	private Target dropTarget;
@@ -118,8 +117,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		entityManager = engine.getEntityManager();
 		entityProxyCache = engine.getManager(EntityProxyCache.class);
 
-		outline = new SceneOutline();
-
 		VisTable leftColumn = new VisTable(false);
 		VisTable rightColumn = new VisTable(false);
 
@@ -137,9 +134,10 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		content.add().fill().expand();
 		content.add(rightColumn).width(260).fillY().expandY();
 
+		//we need some better window management
 		leftColumn.top();
 		leftColumn.add(alignmentTools).height(new VisValue(context -> alignmentTools.getPrefHeight())).expandX().fillX().row();
-		//leftColumn.add(outline).height(300).fillX().expandX();
+		leftColumn.add(entityManipulator.getSceneOutline()).height(300).padTop(new VisValue(context -> alignmentTools.isVisible() ? 8 : 0)).top().fillX().expandX();
 		leftColumn.add().fill().expand().row();
 
 		rightColumn.top();
@@ -335,7 +333,10 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	}
 
 	public void centerAround (int entityId) {
-		EntityProxy entity = entityProxyCache.get(entityId);
+		centerAround(entityProxyCache.get(entityId));
+	}
+
+	public void centerAround (EntityProxy entity) {
 		entityManipulator.findEntityBaseGroupAndSelect(entity);
 		cameraModule.setPosition(entity.getX() + entity.getWidth() / 2, entity.getY() + entity.getHeight() / 2);
 	}

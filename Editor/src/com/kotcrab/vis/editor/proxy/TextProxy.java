@@ -41,7 +41,7 @@ public class TextProxy extends EntityProxy {
 	}
 
 	@Override
-	protected String getEntityName () {
+	public String getEntityName () {
 		return "TextEntity";
 	}
 

@@ -52,8 +52,11 @@ public abstract class EntityProxy {
 	public EntityProxy (Entity entity) {
 		this.entity = entity;
 		init();
-		uuidManager = entity.getWorld().getManager(VisUUIDManager.class);
-		uuid = entity.getComponent(UUIDComponent.class).getUuid();
+
+		if (entity != null) {
+			uuidManager = entity.getWorld().getManager(VisUUIDManager.class);
+			uuid = entity.getComponent(UUIDComponent.class).getUuid();
+		}
 	}
 
 	protected void init () {
@@ -316,14 +319,7 @@ public abstract class EntityProxy {
 
 	//others
 
-	public String toPrettyString () {
-		if (getId() == null)
-			return getEntityName() + " X: " + (int) getX() + " Y: " + (int) getY();
-		else
-			return getEntityName() + " ID: " + getId() + " X: " + (int) getX() + " Y: " + (int) getY();
-	}
-
-	protected abstract String getEntityName ();
+	public abstract String getEntityName ();
 
 	VisAssetDescriptor getAssetDescriptor () {
 		return entity.getComponent(AssetComponent.class).asset;
@@ -351,5 +347,9 @@ public abstract class EntityProxy {
 		Array<Entity> entities = new Array<>(1);
 		entities.add(entity);
 		return entities;
+	}
+
+	public boolean compareProxyByID (EntityProxy other) {
+		return uuid.equals(other.uuid);
 	}
 }
