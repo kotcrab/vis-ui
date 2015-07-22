@@ -146,8 +146,8 @@ public class SceneSettingsDialog extends VisWindow {
 
 	private void setValuesToSceneAndSave () {
 		scene.viewport = viewportMap.get(viewportModeSelectBox.getSelected());
-		scene.width = Integer.valueOf(widthField.getText());
-		scene.height = Integer.valueOf(heightField.getText());
+		scene.width = Float.valueOf(widthField.getText());
+		scene.height = Float.valueOf(heightField.getText());
 		sceneTab.save();
 	}
 
