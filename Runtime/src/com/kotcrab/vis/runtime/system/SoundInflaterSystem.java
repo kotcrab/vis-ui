@@ -23,7 +23,9 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.SoundComponent;
+import com.kotcrab.vis.runtime.component.SoundProtoComponent;
 
 /**
  * Inflates {@link SoundProtoComponent} into {@link SoundComponent}

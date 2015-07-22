@@ -136,7 +136,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		Log.debug("Loading completed");
 
-		if(experimentalSettings.isUIScale() || App.scaleUIEnabledFromCmd) {
+		if (experimentalSettings.isUIScale() || App.scaleUIEnabledFromCmd) {
 			stageViewport.setUnitsPerPixel(0.5f);
 		}
 	}

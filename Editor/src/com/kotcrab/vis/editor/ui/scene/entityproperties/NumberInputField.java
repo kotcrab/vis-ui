@@ -56,7 +56,7 @@ public class NumberInputField extends VisValidableTextField {
 
 		repeatTask = new TimerRepeatTask();
 
-		addListener(new InputListener(){
+		addListener(new InputListener() {
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
 				fire(new ChangeEvent());

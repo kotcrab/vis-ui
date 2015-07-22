@@ -105,7 +105,7 @@ public class GridRendererSystem extends BaseSystem {
 		int leftDownX = (int) (camera.getX() - camera.getWidth() / 2);
 		int linesToDraw = (int) (camera.getWidth() / gridSize) + 1;
 
-		int drawingPointStart = leftDownX / (int)gridSize;
+		int drawingPointStart = leftDownX / (int) gridSize;
 		int drawingPointEnd = drawingPointStart + linesToDraw;
 
 		for (int i = drawingPointStart; i < drawingPointEnd; i++)

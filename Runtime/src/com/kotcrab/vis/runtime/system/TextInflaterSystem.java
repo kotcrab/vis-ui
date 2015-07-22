@@ -25,7 +25,9 @@ import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.component.TextProtoComponent;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 /**
@@ -80,7 +82,7 @@ public class TextInflaterSystem extends EntityProcessingSystem {
 			throw new UnsupportedAssetDescriptorException(asset);
 
 		font.setUseIntegerPositions(false);
-		font.getData().setScale(1f/ pixelsPerUnit);
+		font.getData().setScale(1f / pixelsPerUnit);
 
 		TextComponent textComponent = new TextComponent(font, protoComponent.text);
 

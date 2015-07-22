@@ -54,8 +54,8 @@ public class EditorScene extends BaseObservable {
 	//last tag is 7
 
 	public EditorScene (FileHandle file, SceneViewport viewport, float width, float height, int pixelsPerUnit) {
-		if(width < 0 || height < 0) throw new IllegalArgumentException("Invalid scene size");
-		if(pixelsPerUnit <= 0) throw new IllegalArgumentException("Pixels per units cannot be smaler or equal zero");
+		if (width < 0 || height < 0) throw new IllegalArgumentException("Invalid scene size");
+		if (pixelsPerUnit <= 0) throw new IllegalArgumentException("Pixels per units cannot be smaler or equal zero");
 		this.path = file.path();
 		this.viewport = viewport;
 		this.width = width;

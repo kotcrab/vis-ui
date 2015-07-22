@@ -105,7 +105,8 @@ public class CameraModule extends SceneModule {
 
 	@Override
 	public void touchDragged (InputEvent event, float x, float y, int pointer) {
-		if (Gdx.input.isButtonPressed(Buttons.RIGHT)) pan(Gdx.input.getDeltaX() / scene.pixelsPerUnit, Gdx.input.getDeltaY() / scene.pixelsPerUnit);
+		if (Gdx.input.isButtonPressed(Buttons.RIGHT))
+			pan(Gdx.input.getDeltaX() / scene.pixelsPerUnit, Gdx.input.getDeltaY() / scene.pixelsPerUnit);
 	}
 
 	@Override

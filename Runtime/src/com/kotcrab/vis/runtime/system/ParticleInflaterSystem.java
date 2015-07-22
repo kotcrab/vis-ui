@@ -23,7 +23,9 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.ParticleComponent;
+import com.kotcrab.vis.runtime.component.ParticleProtoComponent;
 
 /**
  * Inflates {@link ParticleProtoComponent} into {@link ParticleComponent}

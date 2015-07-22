@@ -197,8 +197,8 @@ public class SettingsDialog extends VisWindow {
 			String t2 = l2.getText().toString();
 
 			//force that experimental tabs to be at the bottom //TODO settings priority in list
-			if(t1.equals("Experimental")) return 1;
-			if(t2.equals("Experimental")) return -1;
+			if (t1.equals("Experimental")) return 1;
+			if (t2.equals("Experimental")) return -1;
 
 			return t1.compareToIgnoreCase(t2.toString());
 		}

@@ -147,7 +147,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 			SpineAssetDescriptor asset = (SpineAssetDescriptor) payload;
 
 			return new EntityBuilder(engine)
-					.with(new SpineComponent(spineCache.get(asset)), new SpinePreviewComponent(), new SpineScaleComponent(1f/ pixelsPerUnit), new SpineBoundsComponent(),
+					.with(new SpineComponent(spineCache.get(asset)), new SpinePreviewComponent(), new SpineScaleComponent(1f / pixelsPerUnit), new SpineBoundsComponent(),
 							new AssetComponent(asset),
 							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
 							new ExporterDropsComponent(SpinePreviewComponent.class, SpineScaleComponent.class, SpineBoundsComponent.class))
