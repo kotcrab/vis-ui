@@ -12,6 +12,7 @@
 -Added 'blue' button style
 -Added New Directory item in FileChooser popup menu ("contextMenuNewDirectory" was added to FileChooser I18N file)
 -FileChooser I18N file: added contextMenuNewDirectory, newDirectoryDialogIllegalCharacters, newDirectoryDialogAlreadyExists properties
+-Improved small font (some uppercase letters were missing 1px at the top)
 
 [0.7.7] [LibGDX 1.6.1]
 -uiskin.json is now generated from USL (see USL page on GitHub Wiki, if you are not writing custom VisUI skins this does not affect you)
