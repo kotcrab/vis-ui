@@ -6,7 +6,7 @@
 
     <groupId>com.kotcrab.vis</groupId>
     <artifactId>vis-parent</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <description>Common Maven parent for Vis sub-modules</description>
 
     <name>VisParent</name>
@@ -20,8 +20,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <gdx.version>1.6.3</gdx.version>
-        <visui.version>0.8.0-SNAPSHOT</visui.version>
+        <gdx.version>1.6.4</gdx.version>
+        <visui.version>0.8.1-SNAPSHOT</visui.version>
     </properties>
 
     <dependencies>
