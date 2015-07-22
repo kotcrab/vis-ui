@@ -5,14 +5,14 @@
     <parent>
         <groupId>com.kotcrab.vis</groupId>
         <artifactId>vis-parent</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
         <relativePath>../Parent/pom.xml</relativePath>
     </parent>
 
     <artifactId>vis-editor</artifactId>
     <packaging>jar</packaging>
     <name>VisEditor</name>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <description>Scene Editor for LibGDX</description>
     <url>https://github.com/kotcrab/VisEditor</url>
 
