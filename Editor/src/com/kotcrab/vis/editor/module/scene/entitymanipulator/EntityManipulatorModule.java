@@ -50,7 +50,7 @@ import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesAddedAction;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesRemovedAction;
 import com.kotcrab.vis.editor.module.scene.action.GroupAction;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTimerTask.Direction;
+import com.kotcrab.vis.editor.module.scene.action.MoveEntitiesAction;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
@@ -70,6 +70,8 @@ import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
+
+import static com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTimerTask.*;
 
 /** @author Kotcrab */
 public class EntityManipulatorModule extends SceneModule implements EventListener {
@@ -112,6 +114,7 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 	private PopupMenu entityPopupMenu;
 
 	private EntityMoveTimerTask entityMoveTimerTask;
+	private MoveEntitiesAction keyMoveAction;
 
 	@Override
 	public void init () {
@@ -676,7 +679,7 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 		boolean result = currentTool.keyDown(event, keycode);
 
 		if (result == false) {
-			entityMoveTimerTask.cancel();
+//			cancelMoveEntityTask();
 
 			if (keycode == Keys.FORWARD_DEL) { //Delete
 				deleteSelectedEntities();
@@ -694,36 +697,30 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 			if (Gdx.input.isKeyPressed(Keys.PAGE_DOWN))
 				zIndexManipulator.moveSelectedEntities(getSelectedEntities(), false);
 
-			int delta = 1;
+			float delta = 10;
 			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) delta *= 10;
 			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) delta *= 10;
-			boolean runTask = false;
 
-			if (Gdx.input.isKeyPressed(Keys.UP)) {
-				entityMoveTimerTask.set(Direction.UP, delta);
-				runTask = true;
-			}
+			delta = delta / scene.pixelsPerUnit;
 
-			if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-				entityMoveTimerTask.set(Direction.DOWN, delta);
-				runTask = true;
-			}
+			int direction = 0;
 
-			if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-				entityMoveTimerTask.set(Direction.LEFT, delta);
-				runTask = true;
-			}
+			if (Gdx.input.isKeyPressed(Keys.UP)) direction = direction | UP;
+			else if (Gdx.input.isKeyPressed(Keys.DOWN)) direction = direction | DOWN;
+			if (Gdx.input.isKeyPressed(Keys.LEFT)) direction = direction | LEFT;
+			else if (Gdx.input.isKeyPressed(Keys.RIGHT)) direction = direction | RIGHT;
 
-			if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-				entityMoveTimerTask.set(Direction.RIGHT, delta);
-				runTask = true;
-			}
+			if (direction > 0) {
+				entityMoveTimerTask.set(direction, delta);
 
-			if (runTask) {
-				entityMoveTimerTask.run();
-				float keyRepeatInitialTime = 0.4f;
-				float keyRepeatTime = 0.05f;
-				Timer.schedule(entityMoveTimerTask, keyRepeatInitialTime, keyRepeatTime);
+				if (entityMoveTimerTask.isScheduled() == false) {
+					keyMoveAction = new MoveEntitiesAction(selectedEntities);
+
+					entityMoveTimerTask.run();
+					float keyRepeatInitialTime = 0.4f;
+					float keyRepeatTime = 0.05f;
+					Timer.schedule(entityMoveTimerTask, keyRepeatInitialTime, keyRepeatTime);
+				}
 				return true;
 			}
 
@@ -736,8 +733,18 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 	@Override
 	public boolean keyUp (InputEvent event, int keycode) {
 		if (scene.getActiveLayer().locked) return false;
-		entityMoveTimerTask.cancel();
+		if((Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.DOWN) || Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.RIGHT)) == false)
+			cancelMoveEntityTask(); //do not cancel task untill all keys are released
 		return currentTool.keyUp(event, keycode);
+	}
+
+	private void cancelMoveEntityTask () {
+		entityMoveTimerTask.cancel();
+		if (keyMoveAction != null) {
+			keyMoveAction.saveNewData();
+			undoModule.add(keyMoveAction);
+			keyMoveAction = null;
+		}
 	}
 
 	@Override
