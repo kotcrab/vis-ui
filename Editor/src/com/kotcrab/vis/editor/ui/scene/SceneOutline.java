@@ -90,7 +90,7 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 		setTouchable(Touchable.enabled);
 		addListener(new EventStopper());
 
-		add(new VisLabel("Outline", Align.center)).expandX().fillX().top().row();
+		add(new VisLabel("Outline", Align.center)).expandX().fillX().top().spaceBottom(0).row();
 
 		VisScrollPane scrollPane = new VisScrollPane(tree);
 		scrollPane.setFadeScrollBars(false);
