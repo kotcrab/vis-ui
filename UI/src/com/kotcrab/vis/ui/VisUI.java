@@ -30,7 +30,7 @@ import java.util.Locale;
  */
 public class VisUI {
 	/** Current VisUI version, does not include SNAPSHOT even if this version is snapshot */
-	public static final String VERSION = "0.8.0";
+	public static final String VERSION = "0.8.1";
 
 	private static int defaultTitleAlign = Align.left;
 	private static Skin skin;
