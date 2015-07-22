@@ -17,10 +17,8 @@
 package com.kotcrab.vis.ui.widget;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.InputValidator;
@@ -35,17 +33,10 @@ import com.kotcrab.vis.ui.util.Validators;
 public class VisValidableTextField extends VisTextField {
 	private Array<InputValidator> validators = new Array<InputValidator>();
 	private boolean validationEnabled = true;
-	private boolean programmaticChangeEvents = true;
 
 	private LastValidFocusListener restoreFocusListener;
 	private boolean restoreLastValid = false;
 	private String lastValid;
-
-	/**
-	 * If true, a ChangeListener has been added to a field, tracking this is required for firing change events,
-	 * if field does not have ChangeListener and ChangeEvent would be fired, field will lost focus
-	 */
-	private boolean changeListenerAdded;
 
 	public VisValidableTextField () {
 		super();
@@ -88,11 +79,12 @@ public class VisValidableTextField extends VisTextField {
 	}
 
 	private void init () {
+		setProgrammaticChangeEvents(true);
+
 		addListener(new InputListener() {
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
 				validateInput();
-				if (changeListenerAdded) fire(new ChangeListener.ChangeEvent());
 				return false;
 			}
 		});
@@ -101,9 +93,7 @@ public class VisValidableTextField extends VisTextField {
 	@Override
 	public void setText (String str) {
 		super.setText(str);
-
 		validateInput();
-		if (programmaticChangeEvents) fire(new ChangeListener.ChangeEvent());
 	}
 
 	public void validateInput () {
@@ -118,24 +108,6 @@ public class VisValidableTextField extends VisTextField {
 
 		// validation not enabled or validators does not returned false (input was valid)
 		setInputValid(true);
-	}
-
-	@Override
-	public boolean addListener (EventListener listener) {
-		//see changeListenerAdded comment
-		if (listener instanceof ChangeListener) changeListenerAdded = true;
-		return super.addListener(listener);
-	}
-
-	@Override
-	public boolean removeListener (EventListener listener) {
-		//see changeListenerAdded comment
-		boolean result = super.removeListener(listener);
-		for (EventListener fieldListener : getListeners())
-			if (fieldListener instanceof ChangeListener) return result;
-
-		changeListenerAdded = false;
-		return result;
 	}
 
 	public void addValidator (InputValidator validator) {
@@ -167,14 +139,6 @@ public class VisValidableTextField extends VisTextField {
 	public void setValidationEnabled (boolean validationEnabled) {
 		this.validationEnabled = validationEnabled;
 		validateInput();
-	}
-
-	/**
-	 * If false events font be fired when text was changed using {@link #setText(String)}
-	 * @param programmaticChangeEvents enable or disable firing programmatic change events
-	 */
-	public void setProgrammaticChangeEvents (boolean programmaticChangeEvents) {
-		this.programmaticChangeEvents = programmaticChangeEvents;
 	}
 
 	public boolean isRestoreLastValid () {

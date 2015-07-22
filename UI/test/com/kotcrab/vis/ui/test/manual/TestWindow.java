@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.Tooltip;
 
 public class TestWindow extends VisWindow {
 
@@ -99,12 +100,12 @@ public class TestWindow extends VisWindow {
 		passwordTextField.setPasswordMode(true);
 		invalidTextField.setInputValid(false);
 
-		VisTable textfieldTable = new VisTable(true);
-		textfieldTable.defaults().width(120);
-		textfieldTable.add(normalTextField);
-		textfieldTable.add(disabledTextField);
-		textfieldTable.add(passwordTextField);
-		textfieldTable.add(invalidTextField);
+		VisTable textFieldTable = new VisTable(true);
+		textFieldTable.defaults().width(120);
+		textFieldTable.add(normalTextField);
+		textFieldTable.add(disabledTextField);
+		textFieldTable.add(passwordTextField);
+		textFieldTable.add(invalidTextField);
 
 		// ---
 
@@ -158,7 +159,7 @@ public class TestWindow extends VisWindow {
 		add(buttonTable).row();
 		add(checkboxTable).row();
 		add(radioTable).row();
-		add(textfieldTable).row();
+		add(textFieldTable).row();
 		add(progressbarTable).row();
 		add(listTable).row();
 		add(selectorsTable).row();
@@ -215,16 +216,16 @@ public class TestWindow extends VisWindow {
 
 		// ---
 
-		TextField normalTextfield = new TextField("textbox", skin);
-		TextField disabledTextfield = new TextField("disabled", skin);
-		TextField passwordTextfield = new TextField("password", skin);
-		disabledTextfield.setDisabled(true);
-		passwordTextfield.setPasswordMode(true);
+		TextField normalTextField = new TextField("textbox", skin);
+		TextField disabledTextField = new TextField("disabled", skin);
+		TextField passwordTextField = new TextField("password", skin);
+		disabledTextField.setDisabled(true);
+		passwordTextField.setPasswordMode(true);
 
-		VisTable textfieldTable = new VisTable(true);
-		textfieldTable.add(normalTextfield);
-		textfieldTable.add(disabledTextfield);
-		textfieldTable.add(passwordTextfield);
+		VisTable textFieldTable = new VisTable(true);
+		textFieldTable.add(normalTextField);
+		textFieldTable.add(disabledTextField);
+		textFieldTable.add(passwordTextField);
 
 		// ---
 
@@ -266,7 +267,7 @@ public class TestWindow extends VisWindow {
 		add(buttonTable).row();
 		add(checkboxTable).row();
 		add(radioTable).row();
-		add(textfieldTable).row();
+		add(textFieldTable).row();
 		add(progressbarTable).row();
 		add(listTable).row();
 		add(selectBoxTable).row();

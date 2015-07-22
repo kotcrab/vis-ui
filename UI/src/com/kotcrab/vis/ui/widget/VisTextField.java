@@ -22,7 +22,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.BitmapFontData;
-import com.badlogic.gdx.graphics.g2d.BitmapFont.Glyph;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout.GlyphRun;
 import com.badlogic.gdx.math.MathUtils;
@@ -33,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField.OnscreenKeyboard;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -88,7 +88,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 	private String messageText;
 	protected CharSequence displayText;
-	private Clipboard clipboard;
+	Clipboard clipboard;
 	InputListener inputListener;
 	TextFieldListener listener;
 	TextFieldFilter filter;
@@ -100,9 +100,8 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	boolean passwordMode;
 	private StringBuilder passwordBuffer;
 	private char passwordCharacter = BULLET;
-	private float fontOffset;
 
-	protected float textHeight, textOffset;
+	protected float fontOffset, textHeight, textOffset;
 	float renderOffset;
 	private int visibleTextStart, visibleTextEnd;
 	private int maxLength = 0;
@@ -112,6 +111,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	long lastBlink;
 
 	KeyRepeatTask keyRepeatTask = new KeyRepeatTask();
+	boolean programmaticChangeEvents;
 
 	// vis fields
 	VisTextFieldStyle style;
@@ -141,7 +141,6 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	}
 
 	protected void initialize () {
-		writeEnters = false;
 		addListener(inputListener = createInputListener());
 		addListener(clickListener = new ClickListener());
 	}
@@ -272,7 +271,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			float minX = Math.max(glyphPositions[minIndex], startPos);
 			float maxX = Math.min(glyphPositions[maxIndex], glyphPositions[visibleTextEnd]);
 			selectionX = minX;
-			selectionWidth = maxX - minX;
+			selectionWidth = maxX - minX - style.font.getData().cursorX;
 		}
 
 		if (textHAlign == Align.center || textHAlign == Align.right) {
@@ -309,10 +308,11 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		float height = getHeight();
 
 		batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
-		float bgLeftWidth = 0;
+		float bgLeftWidth = 0, bgRightWidth = 0;
 		if (background != null) {
 			background.draw(batch, x, y, width, height);
 			bgLeftWidth = background.getLeftWidth();
+			bgRightWidth = background.getRightWidth();
 		}
 
 		float textY = getTextY(font, background);
@@ -327,14 +327,15 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			if (!focused && messageText != null) {
 				if (style.messageFontColor != null) {
 					font.setColor(style.messageFontColor.r, style.messageFontColor.g, style.messageFontColor.b,
-							style.messageFontColor.a * parentAlpha);
+							style.messageFontColor.a * color.a * parentAlpha);
 				} else
-					font.setColor(0.7f, 0.7f, 0.7f, parentAlpha);
+					font.setColor(0.7f, 0.7f, 0.7f, color.a * parentAlpha);
 				BitmapFont messageFont = style.messageFont != null ? style.messageFont : font;
-				messageFont.draw(batch, messageText, x + bgLeftWidth, y + textY + yOffset);
+				messageFont.draw(batch, messageText, x + bgLeftWidth, y + textY + yOffset, width - bgLeftWidth - bgRightWidth,
+						textHAlign, false);
 			}
 		} else {
-			font.setColor(fontColor.r, fontColor.g, fontColor.b, fontColor.a * parentAlpha);
+			font.setColor(fontColor.r, fontColor.g, fontColor.b, fontColor.a * color.a * parentAlpha);
 			drawText(batch, font, x + bgLeftWidth, y + textY + yOffset);
 		}
 		if (drawBorder && focused && !disabled) {
@@ -357,17 +358,18 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		float textY = textHeight / 2 + font.getDescent();
 		if (background != null) {
 			float bottom = background.getBottomHeight();
-			textY = (int) (textY + (height - background.getTopHeight() - bottom) / 2 + bottom);
+			textY = textY + (height - background.getTopHeight() - bottom) / 2 + bottom;
 		} else {
-			textY = (int) (textY + height / 2);
+			textY = textY + height / 2;
 		}
+		if (font.usesIntegerPositions()) textY = (int) textY;
 		return textY;
 	}
 
-	/** Draws selection rectangle * */
+	/** Draws selection rectangle **/
 	protected void drawSelection (Drawable selection, Batch batch, BitmapFont font, float x, float y) {
-		selection.draw(batch, x + selectionX + renderOffset + fontOffset - 1, y - textHeight - font.getDescent(),
-				selectionWidth, textHeight + font.getDescent() / 2);
+		selection.draw(batch, x + selectionX + renderOffset + fontOffset, y - textHeight - font.getDescent(), selectionWidth,
+				textHeight);
 	}
 
 	protected void drawText (Batch batch, BitmapFont font, float x, float y) {
@@ -375,8 +377,8 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	}
 
 	protected void drawCursor (Drawable cursorPatch, Batch batch, BitmapFont font, float x, float y) {
-		cursorPatch.draw(batch, x + textOffset + glyphPositions.get(cursor) - glyphPositions.items[visibleTextStart] + fontOffset
-				- 1, y - textHeight - font.getDescent(), cursorPatch.getMinWidth(), textHeight + font.getDescent() / 2);
+		cursorPatch.draw(batch, x + textOffset + glyphPositions.get(cursor) - glyphPositions.get(visibleTextStart) + fontOffset
+				+ font.getData().cursorX, y - textHeight - font.getDescent(), cursorPatch.getMinWidth(), textHeight);
 	}
 
 	void updateDisplayText () {
@@ -409,20 +411,24 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		float x = 0;
 		if (layout.runs.size > 0) {
 			GlyphRun run = layout.runs.first();
-			Array<Glyph> glyphs = run.glyphs;
 			FloatArray xAdvances = run.xAdvances;
 			fontOffset = xAdvances.first();
 			for (int i = 1, n = xAdvances.size; i < n; i++) {
 				glyphPositions.add(x);
 				x += xAdvances.get(i);
 			}
-		}
+		} else
+			fontOffset = 0;
 		glyphPositions.add(x);
 
 		if (selectionStart > newDisplayText.length()) selectionStart = textLength;
 	}
 
 	private void blink () {
+		if (!Gdx.graphics.isContinuousRendering()) {
+			cursorOn = true;
+			return;
+		}
 		long time = TimeUtils.nanoTime();
 		if ((time - lastBlink) / 1000000000.0f > blinkTime) {
 			cursorOn = !cursorOn;
@@ -442,18 +448,18 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	 * it.
 	 */
 	public void cut () {
+		cut(programmaticChangeEvents);
+	}
+
+	void cut (boolean fireChangeEvent) {
 		if (hasSelection && !passwordMode) {
 			copy();
-			cursor = delete();
+			cursor = delete(fireChangeEvent);
+			updateDisplayText();
 		}
 	}
 
-	/** Pastes the content of the {@link Clipboard} implementation set on this Textfield to this TextField. */
-	void paste () {
-		paste(clipboard.getContents());
-	}
-
-	void paste (String content) {
+	void paste (String content, boolean fireChangeEvent) {
 		if (content == null) return;
 		StringBuilder buffer = new StringBuilder();
 		int textLength = text.length();
@@ -469,8 +475,11 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		}
 		content = buffer.toString();
 
-		if (hasSelection) cursor = delete(false);
-		text = insert(cursor, content, text);
+		if (hasSelection) cursor = delete(fireChangeEvent);
+		if (fireChangeEvent)
+			changeText(text, insert(cursor, content, text));
+		else
+			text = insert(cursor, content, text);
 		updateDisplayText();
 		cursor += content.length();
 	}
@@ -480,20 +489,17 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		return to.substring(0, position) + text + to.substring(position, to.length());
 	}
 
-	int delete () {
-		return delete(true);
-	}
-
-	int delete (boolean updateText) {
-		return delete(selectionStart, cursor, updateText);
-	}
-
-	int delete (int from, int to, boolean updateText) {
+	int delete (boolean fireChangeEvent) {
+		int from = selectionStart;
+		int to = cursor;
 		int minIndex = Math.min(from, to);
 		int maxIndex = Math.max(from, to);
-		text = (minIndex > 0 ? text.substring(0, minIndex) : "")
+		String newText = (minIndex > 0 ? text.substring(0, minIndex) : "")
 				+ (maxIndex < text.length() ? text.substring(maxIndex, text.length()) : "");
-		if (updateText) updateDisplayText();
+		if (fireChangeEvent)
+			changeText(text, newText);
+		else
+			text = newText;
 		clearSelection();
 		return minIndex;
 	}
@@ -578,13 +584,13 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		this.listener = listener;
 	}
 
-	public TextFieldFilter getTextFieldFilter () {
-		return filter;
-	}
-
 	/** @param filter May be null. */
 	public void setTextFieldFilter (TextFieldFilter filter) {
 		this.filter = filter;
+	}
+
+	public TextFieldFilter getTextFieldFilter () {
+		return filter;
 	}
 
 	/** If true (the default), tab/shift+tab will move to the next text field. */
@@ -605,19 +611,53 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		this.messageText = messageText;
 	}
 
+	/** @param str If null, "" is used. */
+	public void appendText (String str) {
+		if (str == null) str = "";
+
+		clearSelection();
+		cursor = text.length();
+		paste(str, programmaticChangeEvents);
+	}
+
+	/** @param str If null, "" is used. */
+	public void setText (String str) {
+		if (str == null) str = "";
+		if (str.equals(text)) return;
+
+		clearSelection();
+		String oldText = text;
+		text = "";
+		paste(str, false);
+		if (programmaticChangeEvents) changeText(oldText, text);
+		cursor = 0;
+	}
+
 	/** @return Never null, might be an empty string. */
 	public String getText () {
 		return text;
 	}
 
-	public void setText (String str) {
-		if (str == null) throw new IllegalArgumentException("text cannot be null.");
-		if (str.equals(text)) return;
+	/**
+	 * @param oldText May be null.
+	 * @return True if the text was changed.
+	 */
+	boolean changeText (String oldText, String newText) {
+		if (newText.equals(oldText)) return false;
+		text = newText;
+		ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);
+		boolean cancelled = fire(changeEvent);
+		text = cancelled ? oldText : newText;
+		Pools.free(changeEvent);
+		return !cancelled;
+	}
 
-		clearSelection();
-		text = "";
-		paste(str);
-		cursor = 0;
+	/**
+	 * If false, methods that change the text will not fire {@link ChangeEvent}, the event will be fired only when user changes the
+	 * text.
+	 */
+	public void setProgrammaticChangeEvents (boolean programmaticChangeEvents) {
+		this.programmaticChangeEvents = programmaticChangeEvents;
 	}
 
 	public int getSelectionStart () {
@@ -657,15 +697,15 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		hasSelection = false;
 	}
 
-	public int getCursorPosition () {
-		return cursor;
-	}
-
 	/** Sets the cursor position and clears any selection. */
 	public void setCursorPosition (int cursorPosition) {
 		if (cursorPosition < 0) throw new IllegalArgumentException("cursorPosition must be >= 0");
 		clearSelection();
 		cursor = Math.min(cursorPosition, text.length());
+	}
+
+	public int getCursorPosition () {
+		return cursor;
 	}
 
 	/** Default is an instance of {@link DefaultOnscreenKeyboard}. */
@@ -696,8 +736,13 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		return prefHeight;
 	}
 
-	public boolean isPasswordMode () {
-		return passwordMode;
+	/**
+	 * Sets text horizontal alignment (left, center or right).
+	 * @see Align
+	 */
+	public void setAlignment (int alignment) {
+		if (alignment == Align.left || alignment == Align.center || alignment == Align.right)
+			this.textHAlign = alignment;
 	}
 
 	/**
@@ -707,6 +752,10 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	public void setPasswordMode (boolean passwordMode) {
 		this.passwordMode = passwordMode;
 		updateDisplayText();
+	}
+
+	public boolean isPasswordMode () {
+		return passwordMode;
 	}
 
 	/**
@@ -917,15 +966,15 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 			if (ctrl) {
 				if (keycode == Keys.V) {
-					paste();
-					return true;
+					paste(clipboard.getContents(), true);
+					repeat = true;
 				}
 				if (keycode == Keys.C || keycode == Keys.INSERT) {
 					copy();
 					return true;
 				}
 				if (keycode == Keys.X || keycode == Keys.DEL) {
-					cut();
+					cut(true);
 					return true;
 				}
 				if (keycode == Keys.A) {
@@ -935,11 +984,8 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			}
 
 			if (UIUtils.shift()) {
-				if (keycode == Keys.INSERT) paste();
-				if (keycode == Keys.FORWARD_DEL && hasSelection) {
-					copy();
-					delete(); // cut
-				}
+				if (keycode == Keys.INSERT) paste(clipboard.getContents(), true);
+				if (keycode == Keys.FORWARD_DEL) cut(true);
 				selection:
 				{
 					int temp = cursor;
@@ -1057,6 +1103,8 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 				boolean add = enter ? writeEnters : (!onlyFontChars || style.font.getData().hasGlyph(character));
 				boolean remove = backspace || delete;
 				if (add || remove) {
+					String oldText = text;
+					int oldCursor = cursor;
 					if (hasSelection)
 						cursor = delete(false);
 					else {
@@ -1078,7 +1126,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 						text = insert(cursor++, insertion, text);
 						scheduleKeyTypedRepeatTask(event != null ? event.getKeyCode() : keyTypedRepeatTask.keycode, character);
 					}
-
+					if (!changeText(oldText, text)) cursor = oldCursor;
 					updateDisplayText();
 				}
 			}

@@ -204,6 +204,8 @@ public class VisTextArea extends VisTextField {
 
 	@Override
 	protected void sizeChanged () {
+		lastText = null; // Cause calculateOffsets to recalculate the line breaks.
+
 		// The number of lines showed must be updated whenever the height is updated
 		BitmapFont font = style.font;
 		Drawable background = style.background;
@@ -240,7 +242,7 @@ public class VisTextArea extends VisTextField {
 				float selectionX = glyphPositions.get(start) - glyphPositions.get(linesBreak.get(i));
 				float selectionWidth = glyphPositions.get(end) - glyphPositions.get(start);
 
-				selection.draw(batch, x + selectionX, y - textHeight - font.getDescent() - offsetY, selectionWidth,
+				selection.draw(batch, x + selectionX + fontOffset, y - textHeight - font.getDescent() - offsetY, selectionWidth,
 						font.getLineHeight());
 			}
 
@@ -262,9 +264,8 @@ public class VisTextArea extends VisTextField {
 	protected void drawCursor (Drawable cursorPatch, Batch batch, BitmapFont font, float x, float y) {
 		float textOffset = cursor >= glyphPositions.size || cursorLine * 2 >= linesBreak.size ? 0 : glyphPositions.get(cursor)
 				- glyphPositions.get(linesBreak.items[cursorLine * 2]);
-		cursorPatch.draw(batch, x + textOffset,
-				y - font.getDescent() / 2 - (cursorLine - firstLineShowing + 1) * font.getLineHeight(), cursorPatch.getMinWidth(),
-				font.getLineHeight());
+		cursorPatch.draw(batch, x + textOffset + fontOffset + font.getData().cursorX, y - font.getDescent() / 2
+				- (cursorLine - firstLineShowing + 1) * font.getLineHeight(), cursorPatch.getMinWidth(), font.getLineHeight());
 	}
 
 	@Override
