@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -28,6 +29,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import org.apache.commons.lang3.StringUtils;
 
 import static com.kotcrab.vis.editor.util.NumberUtils.floatToString;
 
@@ -53,6 +55,29 @@ public class NumberInputField extends VisValidableTextField {
 		setTextFieldFilter(sharedFieldFilter);
 
 		repeatTask = new TimerRepeatTask();
+
+		addListener(new InputListener(){
+			@Override
+			public boolean keyTyped (InputEvent event, char character) {
+				fire(new ChangeEvent());
+				return false;
+			}
+		});
+
+		addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				int matches = StringUtils.countMatches(getText(), "-");
+				if (matches > 1) {
+					event.cancel();
+					return;
+				}
+
+				if (matches == 1 && getText().startsWith("-") == false) {
+					event.cancel();
+				}
+			}
+		});
 	}
 
 	@Override
@@ -76,6 +101,12 @@ public class NumberInputField extends VisValidableTextField {
 	public class InputFieldListener extends TextFieldClickListener {
 
 		@Override
+		public boolean keyTyped (InputEvent event, char character) {
+			if (character == '-' && Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) return false;
+			return super.keyTyped(event, character);
+		}
+
+		@Override
 		public boolean keyDown (InputEvent event, int keycode) {
 			repeatTask.cancel();
 
@@ -90,7 +121,7 @@ public class NumberInputField extends VisValidableTextField {
 					if (repeatTask.isScheduled() == false || repeatTask.valueDelta != delta) {
 						repeatTask.valueDelta = delta * -1;
 						repeatTask.cancel();
-						Timer.schedule(repeatTask, 0.1f, 0.1f);
+						Timer.schedule(repeatTask, 0.2f, 0.2f);
 						return false;
 					}
 
@@ -102,7 +133,7 @@ public class NumberInputField extends VisValidableTextField {
 					if (repeatTask.isScheduled() == false || repeatTask.valueDelta != delta) {
 						repeatTask.valueDelta = delta;
 						repeatTask.cancel();
-						Timer.schedule(repeatTask, 0.1f, 0.1f);
+						Timer.schedule(repeatTask, 0.2f, 0.2f);
 						return false;
 					}
 
@@ -148,7 +179,6 @@ public class NumberInputField extends VisValidableTextField {
 	private static class FieldFilter implements TextFieldFilter {
 		@Override
 		public boolean acceptChar (VisTextField field, char c) {
-			if (c == '-' && field.getCursorPosition() > 0 && field.getText().startsWith("-") == false) return false;
 			if (c == '.' && field.getText().contains(".")) return false;
 
 			if (c == '.' || c == '-' || c == '?') return true;

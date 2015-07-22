@@ -23,6 +23,7 @@ import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 public class EntityMoveTimerTask extends Task {
 	private final EditorScene scene;
+	private EntityManipulatorModule entityManipulatorModule;
 	private final ImmutableArray<EntityProxy> selectedEntities;
 
 	public enum Direction {UP, DOWN, LEFT, RIGHT}
@@ -30,8 +31,9 @@ public class EntityMoveTimerTask extends Task {
 	private Direction dir;
 	private int delta;
 
-	public EntityMoveTimerTask (EditorScene scene, ImmutableArray<EntityProxy> selectedEntities) {
+	public EntityMoveTimerTask (EditorScene scene, EntityManipulatorModule entityManipulatorModule, ImmutableArray<EntityProxy> selectedEntities) {
 		this.scene = scene;
+		this.entityManipulatorModule = entityManipulatorModule;
 		this.selectedEntities = selectedEntities;
 	}
 
@@ -55,6 +57,8 @@ public class EntityMoveTimerTask extends Task {
 					break;
 			}
 		}
+
+		entityManipulatorModule.selectedEntitiesChanged();
 	}
 
 	public void set (Direction dir, int delta) {

@@ -304,9 +304,12 @@ public class TexturePacker {
 			writer.write("filter: " + settings.filterMin + "," + settings.filterMag + "\n");
 			writer.write("repeat: " + getRepeatValue() + "\n");
 
+			page.outputRects.sort();
 			for (Rect rect : page.outputRects) {
 				writeRect(writer, page, rect, rect.name);
-				for (Alias alias : rect.aliases) {
+				Array<Alias> aliases = new Array(rect.aliases.toArray());
+				aliases.sort();
+				for (Alias alias : aliases) {
 					Rect aliasRect = new Rect();
 					aliasRect.set(rect);
 					alias.apply(aliasRect);
@@ -370,7 +373,7 @@ public class TexturePacker {
 	 * @author Regnarock
 	 * @author Nathan Sweet
 	 */
-	static public class Alias {
+	static public class Alias implements Comparable<Alias> {
 		public String name;
 		public int index;
 		public int[] splits;
@@ -398,10 +401,14 @@ public class TexturePacker {
 			rect.originalWidth = originalWidth;
 			rect.originalHeight = originalHeight;
 		}
+
+		public int compareTo (Alias o) {
+			return name.compareTo(o.name);
+		}
 	}
 
 	/** @author Nathan Sweet */
-	static public class Rect {
+	static public class Rect implements Comparable<Rect> {
 		public String name;
 		public int offsetX, offsetY, regionWidth, regionHeight, originalWidth, originalHeight;
 		public int x, y;
@@ -486,6 +493,10 @@ public class TexturePacker {
 			score2 = rect.score2;
 			file = rect.file;
 			isPatch = rect.isPatch;
+		}
+
+		public int compareTo (Rect o) {
+			return name.compareTo(o.name);
 		}
 
 		@Override

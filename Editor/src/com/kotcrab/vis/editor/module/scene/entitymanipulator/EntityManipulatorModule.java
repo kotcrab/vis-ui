@@ -141,7 +141,7 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 		sceneOutline = new SceneOutline(sceneContainer, selectedEntities);
 		createGeneralMenu();
 
-		entityMoveTimerTask = new EntityMoveTimerTask(scene, immutableSelectedEntities);
+		entityMoveTimerTask = new EntityMoveTimerTask(scene, this, immutableSelectedEntities);
 
 		switchTool(new SelectionTool());
 
