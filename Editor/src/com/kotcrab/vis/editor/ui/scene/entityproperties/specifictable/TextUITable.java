@@ -29,6 +29,7 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.dialog.SelectFontDialog;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.TtfFontAsset;
@@ -42,6 +43,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
 
 import static com.kotcrab.vis.editor.util.vis.EntityUtils.getCommonString;
+import static com.kotcrab.vis.editor.util.vis.EntityUtils.setCommonCheckBoxState;
 
 /**
  * @author Kotcrab
@@ -51,6 +53,8 @@ public abstract class TextUITable extends SpecificUITable {
 	@InjectModule protected FileAccessModule fileAccess;
 
 	protected SelectFontDialog selectFontDialog;
+
+	private IndeterminateCheckbox autoCenterOrigin;
 
 	private VisValidableTextField textField;
 
@@ -78,6 +82,9 @@ public abstract class TextUITable extends SpecificUITable {
 		fontPropertiesTable.add(new VisLabel("Font"));
 		fontPropertiesTable.add(fontLabel).width(100);
 		fontPropertiesTable.add(selectFontButton);
+
+		autoCenterOrigin = new IndeterminateCheckbox("Auto set origin to center");
+		autoCenterOrigin.addListener(properties.getSharedCheckBoxChangeListener());
 
 		properties.getSceneModuleContainer().injectModules(this);
 
@@ -120,6 +127,7 @@ public abstract class TextUITable extends SpecificUITable {
 		});
 
 		defaults().left();
+		add(autoCenterOrigin).row();
 		add(textTable).expandX().fillX();
 		row();
 		add(fontPropertiesTable);
@@ -139,6 +147,8 @@ public abstract class TextUITable extends SpecificUITable {
 	public void updateUIValues () {
 		Array<EntityProxy> proxies = properties.getProxies();
 
+		setCommonCheckBoxState(proxies, autoCenterOrigin, (Entity entity) -> entity.getComponent(TextComponent.class).isAutoSetOriginToCenter());
+
 		textField.setText(getCommonString(proxies, "<multiple values>", (Entity entity) -> entity.getComponent(TextComponent.class).getText()));
 		fontLabel.setText(getCommonString(proxies, "<?>", (Entity entity) -> getFontTextForEntity((PathAsset) entity.getComponent(AssetComponent.class).asset)));
 	}
@@ -147,8 +157,14 @@ public abstract class TextUITable extends SpecificUITable {
 	public void setValuesToEntities () {
 		for (EntityProxy proxy : properties.getProxies()) {
 			for (Entity entity : proxy.getEntities()) {
+
 				TextComponent text = entity.getComponent(TextComponent.class);
-				text.setText(textField.getText());
+				if (textField.getText().equals("<multiple values>") == false) { //TODO: lets hope that nobody will use <multiple values> as their text
+					text.setText(textField.getText());
+				}
+
+				if (autoCenterOrigin.isIndeterminate() == false)
+					text.setAutoSetOriginToCenter(autoCenterOrigin.isChecked());
 			}
 		}
 	}
