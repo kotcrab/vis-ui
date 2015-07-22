@@ -34,5 +34,6 @@ public interface EntitySupport {
 	/** Called when EntitySupport should resolve required dependencies for Entity and add them into dependency list */
 	void resolveDependencies (Array<AssetDescriptor> dependencies, EntityData entityData, Component component);
 
+	/** Called when EntitySupport should register system that it requires, such as render system or inflater systems */
 	void registerSystems (RuntimeConfiguration configuration, EntityEngineConfiguration engineConfig, AssetManager manager);
 }

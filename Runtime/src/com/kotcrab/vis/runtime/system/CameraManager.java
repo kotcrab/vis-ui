@@ -22,7 +22,10 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.viewport.*;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 
-/** @author Kotcrab */
+/**
+ * Manages scene camera and viewport.
+ * @author Kotcrab
+ */
 public class CameraManager extends Manager {
 	private OrthographicCamera camera;
 	private Viewport viewport;

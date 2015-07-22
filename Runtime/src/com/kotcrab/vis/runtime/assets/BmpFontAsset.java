@@ -17,8 +17,13 @@
 package com.kotcrab.vis.runtime.assets;
 
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-/** @author Kotcrab */
+/**
+ * References asset used by {@link BitmapFont}. This only applies to fonts created from fnt and png.
+ * @author Kotcrab
+ * @see TtfFontAsset
+ */
 public class BmpFontAsset extends PathAsset {
 	private BitmapFontParameter fontParameter;
 

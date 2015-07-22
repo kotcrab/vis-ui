@@ -16,7 +16,17 @@
 
 package com.kotcrab.vis.runtime;
 
-/** @author Kotcrab */
+import com.artemis.Entity;
+import com.kotcrab.vis.runtime.component.AssetComponent;
+
+/**
+ * Holds runtime configurations values
+ * @author Kotcrab
+ */
 public class RuntimeConfiguration {
+	/**
+	 * Controls whether to store {@link AssetComponent} in {@link Entity} after inflating it. Set this to true if you
+	 * need to access {@link AssetComponent} during runtime.
+	 */
 	public boolean removeAssetsComponentAfterInflating = false;
 }

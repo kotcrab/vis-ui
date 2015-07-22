@@ -16,7 +16,13 @@
 
 package com.kotcrab.vis.runtime.assets;
 
-/** @author Kotcrab */
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+
+/**
+ * References ttf font file used to generate {@link BitmapFont}
+ * @author Kotcrab
+ * @see BmpFontAsset
+ */
 public class TtfFontAsset extends PathAsset {
 	private int fontSize;
 

@@ -23,11 +23,12 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SoundComponent;
-import com.kotcrab.vis.runtime.component.SoundProtoComponent;
+import com.kotcrab.vis.runtime.component.*;
 
-/** @author Kotcrab */
+/**
+ * Inflates {@link SoundProtoComponent} into {@link SoundComponent}
+ * @author Kotcrab
+ */
 @Wire
 public class SoundInflaterSystem extends EntityProcessingSystem {
 	private ComponentMapper<AssetComponent> assetCm;

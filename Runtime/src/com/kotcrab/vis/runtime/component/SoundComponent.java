@@ -20,7 +20,10 @@ import com.artemis.Component;
 import com.badlogic.gdx.audio.Sound;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 
-/** @author Kotcrab */
+/**
+ * Stores single sound
+ * @author Kotcrab
+ */
 public class SoundComponent extends Component implements UsesProtoComponent {
 	public transient Sound sound;
 

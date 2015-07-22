@@ -19,7 +19,10 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.badlogic.gdx.utils.IntArray;
 
-/** @author Kotcrab */
+/**
+ * Holds Group IDs that entity that uses this component belongs to.
+ * @author Kotcrab
+ */
 public class GroupComponent extends Component {
 	public IntArray groupIds = new IntArray();
 

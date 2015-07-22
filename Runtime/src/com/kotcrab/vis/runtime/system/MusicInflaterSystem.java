@@ -27,7 +27,10 @@ import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.MusicComponent;
 import com.kotcrab.vis.runtime.component.MusicProtoComponent;
 
-/** @author Kotcrab */
+/**
+ * Inflates {@link MusicProtoComponent} into {@link MusicComponent}
+ * @author Kotcrab
+ */
 @Wire
 public class MusicInflaterSystem extends EntityProcessingSystem {
 	private ComponentMapper<AssetComponent> assetCm;

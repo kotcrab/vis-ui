@@ -21,7 +21,10 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 
-/** @author Kotcrab */
+/**
+ * Stores entity Music
+ * @author Kotcrab
+ */
 public class MusicComponent extends Component implements UsesProtoComponent {
 	public transient Music music;
 

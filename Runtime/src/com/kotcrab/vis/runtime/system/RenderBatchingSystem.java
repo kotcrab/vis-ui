@@ -28,6 +28,10 @@ import net.mostlyoriginal.api.system.delegate.EntityProcessAgent;
 import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 import net.mostlyoriginal.api.utils.BagUtils;
 
+/**
+ * Plugable render system that uses subsystems to render entities. Entities are rendered sorted by their layer and zIndex
+ * , if entity layer or zIndex has changed, {@link #markDirty()} must be called in order to resort the scene.
+ */
 @Wire
 public class RenderBatchingSystem extends BaseSystem implements EntityProcessPrincipal {
 	private CameraManager cameraManager;

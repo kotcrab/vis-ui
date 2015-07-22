@@ -16,11 +16,15 @@
 
 package com.kotcrab.vis.runtime.util;
 
+import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
 
-/** @author Kotcrab */
+/**
+ * Various {@link Bag} related utils
+ * @author Kotcrab
+ */
 public class BagUtils {
 	public static <E> Array<E> toArray (ImmutableBag<E> bag) {
 		Array<E> array = new Array<E>(bag.size());

@@ -18,6 +18,9 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 
-/** @author Kotcrab */
+/**
+ * Entities with this component should will be ignored by render subsystems
+ * @author Kotcrab
+ */
 public class InvisibleComponent extends Component {
 }

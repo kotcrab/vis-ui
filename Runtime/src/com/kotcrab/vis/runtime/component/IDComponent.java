@@ -18,7 +18,10 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 
-/** @author Kotcrab */
+/**
+ * Holds string entity id set from VisEditor
+ * @author Kotcrab
+ */
 public class IDComponent extends Component {
 	public String id;
 

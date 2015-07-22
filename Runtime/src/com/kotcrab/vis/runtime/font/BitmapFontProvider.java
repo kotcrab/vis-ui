@@ -22,9 +22,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.scene.SceneLoader;
 
 /**
- * Bitmap font provide, allow to load distance field fonts. Enabled by default.
+ * Bitmap font provider, allow to load distance field fonts. Enabled by default in {@link SceneLoader}.
  * @author Kotcrab
  */
 public class BitmapFontProvider implements FontProvider {

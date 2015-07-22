@@ -22,7 +22,10 @@ import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.system.SpriteRenderSystem;
 import com.kotcrab.vis.runtime.system.TextRenderSystem;
 
-/** @author Kotcrab */
+/**
+ * Various Artemis related utils
+ * @author Kotcrab
+ */
 public class ArtemisUtils {
 	public static void createCommonSystems (EntityEngineConfiguration config, Batch batch, ShaderProgram distanceFieldShader, boolean controlBatchState) {
 		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, controlBatchState);

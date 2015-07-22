@@ -21,7 +21,10 @@ import com.artemis.Manager;
 import com.artemis.WorldConfiguration;
 import com.badlogic.gdx.utils.Array;
 
-/** @author Kotcrab */
+/**
+ * Similar to {@link WorldConfiguration} however it allows to get added systems and managers.
+ * @author Kotcrab
+ */
 public class EntityEngineConfiguration {
 	private boolean built;
 	private Array<BaseSystem> systems = new Array<BaseSystem>();
@@ -70,7 +73,8 @@ public class EntityEngineConfiguration {
 	}
 
 	private <C> C getOrNull (Array<C> array, Class<C> clazz) {
-		if (built) throw new IllegalStateException("This configuration was already build and it's contents cannot be accessed!");
+		if (built)
+			throw new IllegalStateException("This configuration was already build and it's contents cannot be accessed!");
 		for (int i = 0; i < array.size; i++) {
 			C m = array.get(i);
 			if (m.getClass() == clazz) return m;
@@ -80,7 +84,7 @@ public class EntityEngineConfiguration {
 	}
 
 	public WorldConfiguration build () {
-		if(built) throw new IllegalStateException("Cannot built configuration twice!");
+		if (built) throw new IllegalStateException("Cannot built configuration twice!");
 		built = true;
 		WorldConfiguration config = new WorldConfiguration();
 

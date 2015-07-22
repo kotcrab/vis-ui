@@ -22,7 +22,10 @@ import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
-/** @author Kotcrab */
+/**
+ * Stores entity component, used for serializing.
+ * @author Kotcrab
+ */
 public class EntityData {
 	public Array<Component> components;
 

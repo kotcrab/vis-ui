@@ -18,7 +18,10 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 
-/** @author Kotcrab */
+/**
+ * Stores entity layerId
+ * @author Kotcrab
+ */
 public class LayerComponent extends Component {
 	public int layerId;
 

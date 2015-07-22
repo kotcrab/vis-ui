@@ -27,6 +27,10 @@ import com.kotcrab.vis.runtime.component.SpriteComponent;
 import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
 import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 
+/**
+ * Renders entities with {@link SpriteComponent}
+ * @author Kotcrab
+ */
 @Wire
 public class SpriteRenderSystem extends DeferredEntityProcessingSystem {
 	private ComponentMapper<SpriteComponent> spriteCm;

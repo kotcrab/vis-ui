@@ -18,7 +18,10 @@ package com.kotcrab.vis.runtime.accessor;
 
 import com.badlogic.gdx.graphics.Color;
 
-/** @author Kotcrab */
+/**
+ * Used by EntityProxy to access color attributes
+ * @author Kotcrab
+ */
 public interface ColorPropertiesAccessor {
 	Color getColor ();
 

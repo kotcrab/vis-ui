@@ -19,7 +19,10 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-/** @author Kotcrab */
+/**
+ * Holds entity asset descriptor
+ * @author Kotcrab
+ */
 public class AssetComponent extends Component {
 	public VisAssetDescriptor asset;
 

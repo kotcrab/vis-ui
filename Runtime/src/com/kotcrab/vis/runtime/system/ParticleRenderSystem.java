@@ -27,6 +27,10 @@ import com.kotcrab.vis.runtime.component.ParticleComponent;
 import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
 import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 
+/**
+ * Renders entities with {@link ParticleComponent}
+ * @author Kotcrab
+ */
 @Wire
 public class ParticleRenderSystem extends DeferredEntityProcessingSystem {
 	private ComponentMapper<ParticleComponent> particleCm;

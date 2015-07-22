@@ -18,7 +18,12 @@ package com.kotcrab.vis.runtime.util;
 
 import com.kotcrab.vis.runtime.component.ProtoComponent;
 
-/** @author Kotcrab */
+/**
+ * Component implementing this interface uses {@link ProtoComponent} for serialization. Such components must use
+ * InflaterSystem that will transform ProtoComponent into actual component. This is often used for components that cannot
+ * be serialized directly.
+ * @author Kotcrab
+ */
 public interface UsesProtoComponent {
 	ProtoComponent getProtoComponent ();
 }

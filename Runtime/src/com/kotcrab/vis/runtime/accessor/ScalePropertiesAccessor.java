@@ -16,7 +16,10 @@
 
 package com.kotcrab.vis.runtime.accessor;
 
-/** @author Kotcrab */
+/**
+ * Used by EntityProxy to access scale attributes
+ * @author Kotcrab
+ */
 public interface ScalePropertiesAccessor {
 	float getScaleX ();
 

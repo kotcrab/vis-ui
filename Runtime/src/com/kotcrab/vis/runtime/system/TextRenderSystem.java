@@ -28,6 +28,10 @@ import com.kotcrab.vis.runtime.component.TextComponent;
 import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
 import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 
+/**
+ * Renders entities with {@link TextComponent}
+ * @author Kotcrab
+ */
 @Wire
 public class TextRenderSystem extends DeferredEntityProcessingSystem {
 	private static final Matrix4 IDT_MATRIX = new Matrix4();

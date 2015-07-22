@@ -20,7 +20,10 @@ import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 
-/** @author Kotcrab */
+/**
+ * Stores particle effect
+ * @author Kotcrab
+ */
 public class ParticleComponent extends Component implements UsesProtoComponent {
 	public transient ParticleEffect effect;
 	public boolean active = true;

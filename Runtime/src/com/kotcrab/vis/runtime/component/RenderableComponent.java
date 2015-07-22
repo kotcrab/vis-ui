@@ -18,7 +18,10 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 
-/** @author Kotcrab */
+/**
+ * All renderable entities must have this component, stores entity zIndex
+ * @author Kotcrab
+ */
 public class RenderableComponent extends Component {
 	public int zIndex;
 

@@ -26,12 +26,13 @@ import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SpriteComponent;
-import com.kotcrab.vis.runtime.component.SpriteProtoComponent;
+import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
-/** @author Kotcrab */
+/**
+ * Inflates {@link SpriteProtoComponent} into {@link SpriteComponent}
+ * @author Kotcrab
+ */
 @Wire
 public class SpriteInflaterSystem extends EntityProcessingSystem {
 	private ComponentMapper<SpriteProtoComponent> protoCm;

@@ -16,7 +16,11 @@
 
 package com.kotcrab.vis.runtime.component;
 
-/** @author Kotcrab */
+/**
+ * {@link ProtoComponent} for {@link ParticleComponent}
+ * @author Kotcrab
+ * @see ParticleProtoComponent
+ */
 public class ParticleProtoComponent extends ProtoComponent {
 	public float x, y;
 	public boolean active;

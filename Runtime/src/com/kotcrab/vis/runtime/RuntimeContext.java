@@ -19,9 +19,13 @@ package com.kotcrab.vis.runtime;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
+import com.kotcrab.vis.runtime.scene.Scene;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 
-/** @author Kotcrab */
+/**
+ * Stores various runtime object that are common for loaded {@link Scene}s
+ * @author Kotcrab
+ */
 public class RuntimeContext {
 	public RuntimeConfiguration configuration;
 	public Batch batch;

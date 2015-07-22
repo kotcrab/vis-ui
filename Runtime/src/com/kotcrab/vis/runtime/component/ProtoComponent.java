@@ -17,7 +17,12 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
+import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 
-/** @author Kotcrab */
+/**
+ * Base class for all ProtoComponent, see {@link UsesProtoComponent} for details when to use ProtoComponents
+ * @author Kotcrab
+ * @see UsesProtoComponent
+ */
 public abstract class ProtoComponent extends Component {
 }

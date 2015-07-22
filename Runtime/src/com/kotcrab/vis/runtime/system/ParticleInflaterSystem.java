@@ -23,11 +23,12 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.ParticleComponent;
-import com.kotcrab.vis.runtime.component.ParticleProtoComponent;
+import com.kotcrab.vis.runtime.component.*;
 
-/** @author Kotcrab */
+/**
+ * Inflates {@link ParticleProtoComponent} into {@link ParticleComponent}
+ * @author Kotcrab
+ */
 @Wire
 public class ParticleInflaterSystem extends EntityProcessingSystem {
 	private ComponentMapper<AssetComponent> assetCm;

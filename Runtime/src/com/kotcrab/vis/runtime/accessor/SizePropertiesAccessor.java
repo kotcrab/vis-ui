@@ -16,7 +16,10 @@
 
 package com.kotcrab.vis.runtime.accessor;
 
-/** @author Kotcrab */
+/**
+ * Used by EntityProxy to access size attributes
+ * @author Kotcrab
+ */
 public interface SizePropertiesAccessor {
 	void setSize (float width, float height);
 }

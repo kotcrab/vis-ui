@@ -27,7 +27,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.runtime.accessor.*;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 
-/** @author Kotcrab */
+/**
+ * Text component storing all text properties
+ * @author Kotcrab
+ */
 public class TextComponent extends Component implements BasicPropertiesAccessor, ScalePropertiesAccessor,
 		RotationPropertiesAccessor, OriginPropertiesAccessor, ColorPropertiesAccessor, UsesProtoComponent {
 	protected boolean distanceFieldShaderEnabled;

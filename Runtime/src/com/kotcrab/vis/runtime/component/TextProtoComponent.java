@@ -17,8 +17,13 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.badlogic.gdx.graphics.Color;
+import com.kotcrab.vis.runtime.system.TextInflaterSystem;
 
-/** @author Kotcrab */
+/**
+ * {@link ProtoComponent} for {@link TextComponent}
+ * @author Kotcrab
+ * @see TextInflaterSystem
+ */
 public class TextProtoComponent extends ProtoComponent {
 	public float x, y;
 	public float originX, originY;

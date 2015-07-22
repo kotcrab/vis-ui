@@ -25,12 +25,13 @@ import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.TextComponent;
-import com.kotcrab.vis.runtime.component.TextProtoComponent;
+import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
-/** @author Kotcrab */
+/**
+ * Inflates {@link TextProtoComponent} into {@link TextComponent}
+ * @author Kotcrab
+ */
 @Wire
 public class TextInflaterSystem extends EntityProcessingSystem {
 	private ComponentMapper<AssetComponent> assetCm;

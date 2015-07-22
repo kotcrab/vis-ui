@@ -21,9 +21,7 @@ import com.artemis.Manager;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.utils.viewport.*;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.data.SceneData;
@@ -39,40 +37,13 @@ import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
  * @author Kotcrab
  */
 public class Scene {
-	private Viewport viewport;
-
+	private CameraManager cameraManager;
 	private EntityEngine engine;
 
 	/** Used by framework, not indented for external use */
 	public Scene (RuntimeContext context, SceneData data, SceneParameter parameter) {
 		AssetManager assetsManager = context.assetsManager;
 		RuntimeConfiguration runtimeConfig = context.configuration;
-
-		float width = data.width;
-		float height = data.height;
-
-		OrthographicCamera camera = new OrthographicCamera(width, height);
-		camera.position.x = width / 2;
-		camera.position.y = height / 2;
-		camera.update();
-
-		switch (data.viewport) {
-			case STRETCH:
-				viewport = new StretchViewport(width, height, camera);
-				break;
-			case FIT:
-				viewport = new FitViewport(width, height, camera);
-				break;
-			case FILL:
-				viewport = new FillViewport(width, height, camera);
-				break;
-			case SCREEN:
-				viewport = new ScreenViewport(camera);
-				break;
-			case EXTEND:
-				viewport = new ExtendViewport(width, height, camera);
-				break;
-		}
 
 		ShaderProgram distanceFieldShader = null;
 		if (assetsManager.isLoaded(SceneLoader.DISTANCE_FIELD_SHADER)) {
@@ -81,7 +52,7 @@ public class Scene {
 
 		EntityEngineConfiguration engineConfig = new EntityEngineConfiguration();
 
-		engineConfig.setManager(new CameraManager(data.viewport, width, height, data.pixelsPerUnit));
+		engineConfig.setManager(cameraManager = new CameraManager(data.viewport, data.width, data.height, data.pixelsPerUnit));
 		engineConfig.setSystem(new SpriteInflaterSystem(runtimeConfig, assetsManager));
 		engineConfig.setSystem(new SoundInflaterSystem(runtimeConfig, assetsManager));
 		engineConfig.setSystem(new MusicInflaterSystem(runtimeConfig, assetsManager));
@@ -116,8 +87,7 @@ public class Scene {
 
 	/** Must by called when screen was resized. Typically called from {@link ApplicationListener#resize(int, int)} */
 	public void resize (int width, int height) {
-		viewport.update(width, height);
-		engine.getManager(CameraManager.class).resize(width, height);
+		cameraManager.resize(width, height);
 	}
 
 	public EntityEngine getEntityEngine () {

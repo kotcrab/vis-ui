@@ -23,6 +23,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.runtime.accessor.*;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 
+/**
+ * Stores entity sprite
+ * @author Kotcrab
+ */
 public class SpriteComponent extends Component implements BasicPropertiesAccessor, SizePropertiesAccessor, OriginPropertiesAccessor,
 		ScalePropertiesAccessor, ColorPropertiesAccessor, RotationPropertiesAccessor, FlipPropertiesAccessor, UsesProtoComponent {
 	public Sprite sprite;
