@@ -17,15 +17,19 @@
 package com.kotcrab.vis.editor.module.scene.action;
 
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 
 public class MoveEntitiesAction implements UndoableAction {
+	private Array<EntityProxy> entities = new Array<>();
+	private final EntityManipulatorModule entityManipulatorModule;
+
 	private Array<EntityPositionData> oldDatas = new Array<>();
 	private Array<EntityPositionData> newDatas = new Array<>();
-	private Array<EntityProxy> entities = new Array<>();
 
-	public MoveEntitiesAction (Array<EntityProxy> entities) {
+	public MoveEntitiesAction (EntityManipulatorModule entityManipulatorModule, Array<EntityProxy> entities) {
+		this.entityManipulatorModule = entityManipulatorModule;
 		this.entities = new Array<>(entities);
 
 		for (EntityProxy entity : entities) {
@@ -45,6 +49,7 @@ public class MoveEntitiesAction implements UndoableAction {
 
 	@Override
 	public void execute () {
+		entityManipulatorModule.markSceneDirty();
 		entities.forEach(EntityProxy::reload);
 
 		for (int i = 0; i < entities.size; i++) {
@@ -54,6 +59,7 @@ public class MoveEntitiesAction implements UndoableAction {
 
 	@Override
 	public void undo () {
+		entityManipulatorModule.markSceneDirty();
 		entities.forEach(EntityProxy::reload);
 		for (int i = 0; i < entities.size; i++) {
 			oldDatas.get(i).loadTo(entities.get(i));

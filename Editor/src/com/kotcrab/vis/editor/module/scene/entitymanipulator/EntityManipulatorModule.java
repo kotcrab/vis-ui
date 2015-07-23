@@ -714,7 +714,7 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 				entityMoveTimerTask.set(direction, delta);
 
 				if (entityMoveTimerTask.isScheduled() == false) {
-					keyMoveAction = new MoveEntitiesAction(selectedEntities);
+					keyMoveAction = new MoveEntitiesAction(this, selectedEntities);
 
 					entityMoveTimerTask.run();
 					float keyRepeatInitialTime = 0.4f;
