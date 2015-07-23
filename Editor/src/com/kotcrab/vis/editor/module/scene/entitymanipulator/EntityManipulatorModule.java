@@ -247,6 +247,7 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 				float py = y - copyAttachY + (proxy.getY() - yOffset);
 
 				proxy.setPosition(px, py);
+				proxy.setLayerId(scene.getActiveLayerId());
 			}
 
 			undoModule.add(new EntitiesAddedAction(sceneContainer, entityEngine, entities));
