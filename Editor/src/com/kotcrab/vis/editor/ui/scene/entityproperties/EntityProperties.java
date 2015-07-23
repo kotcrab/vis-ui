@@ -427,7 +427,10 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		for (int i = 0; i < entities.size; i++) {
 			EntityProxy entity = entities.get(i);
 
-			if (groupSelected == false) entity.setId(idField.getText().equals("") ? null : idField.getText());
+			//TODO support indeterminate textfield
+			if (groupSelected == false && idField.getText().equals("<?>") == false)
+				entity.setId(idField.getText().equals("") ? null : idField.getText());
+
 			entity.setPosition(FieldUtils.getFloat(xField, entity.getX()), FieldUtils.getFloat(yField, entity.getY()));
 
 			if (EntityUtils.isScaleSupportedForEntities(entities))
