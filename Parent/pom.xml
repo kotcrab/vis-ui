@@ -6,7 +6,7 @@
 
     <groupId>com.kotcrab.vis</groupId>
     <artifactId>vis-parent</artifactId>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.5-SNAPSHOT</version>
     <description>Common Maven parent for Vis sub-modules</description>
 
     <name>VisParent</name>
@@ -21,8 +21,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gdx.version>1.6.4</gdx.version>
-        <editor.version>0.2.0-SNAPSHOT</editor.version>
-        <visui.version>0.8.1-SNAPSHOT</visui.version>
     </properties>
 
     <dependencies>
@@ -36,18 +34,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>vis-runtime</artifactId>
-                <version>${editor.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>${project.groupId}</groupId>
-                <artifactId>vis-ui</artifactId>
-                <version>${visui.version}</version>
-            </dependency>
-
             <dependency>
                 <groupId>com.badlogicgames.gdx</groupId>
                 <artifactId>gdx</artifactId>
