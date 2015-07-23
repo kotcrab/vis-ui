@@ -16,11 +16,11 @@
 
 package com.kotcrab.vis.runtime.system;
 
-import com.artemis.BaseSystem;
-import com.artemis.ComponentMapper;
-import com.artemis.Entity;
+import com.artemis.*;
+import com.artemis.EntitySubscription.SubscriptionListener;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;
+import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.kotcrab.vis.runtime.component.LayerComponent;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
@@ -30,7 +30,8 @@ import net.mostlyoriginal.api.utils.BagUtils;
 
 /**
  * Plugable render system that uses subsystems to render entities. Entities are rendered sorted by their layer and zIndex
- * , if entity layer or zIndex has changed, {@link #markDirty()} must be called in order to resort the scene.
+ * , if entity layer or zIndex has changed, {@link #markDirty()} must be called in order to resort the scene. System
+ * will automatically resort if entity was added.
  */
 @Wire
 public class RenderBatchingSystem extends BaseSystem implements EntityProcessPrincipal {
@@ -38,6 +39,8 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 
 	private ComponentMapper<LayerComponent> layerCm;
 	private ComponentMapper<RenderableComponent> renderableCm;
+
+	private AspectSubscriptionManager aspectSubscriptionManager;
 
 	private boolean sortedDirty = false;
 	private final Bag<Job> sortedJobs = new Bag<Job>();
@@ -48,6 +51,21 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 	public RenderBatchingSystem (Batch batch, boolean controlBatchState) {
 		this.batch = batch;
 		this.controlBatchState = controlBatchState;
+	}
+
+	@Override
+	protected void initialize () {
+		aspectSubscriptionManager.get(Aspect.all(RenderableComponent.class, LayerComponent.class)).addSubscriptionListener(new SubscriptionListener() {
+			@Override
+			public void inserted (ImmutableBag<Entity> entities) {
+				markDirty();
+			}
+
+			@Override
+			public void removed (ImmutableBag<Entity> entities) {
+				markDirty();
+			}
+		});
 	}
 
 	/**
@@ -158,7 +176,7 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 
 		@Override
 		public int compareTo (Job o) {
-			int layerResult = (int) Math.signum(layerCm.get(this.entity).layerId - layerCm.get(o.entity).layerId) * -1;
+			int layerResult = (int) Math.signum(layerCm.get(this.entity).layerId - layerCm.get(o.entity).layerId);
 
 			if (layerResult == 0)
 				return (int) Math.signum(renderableCm.get(this.entity).zIndex - renderableCm.get(o.entity).zIndex);
