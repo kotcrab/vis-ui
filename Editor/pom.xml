@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.kotcrab.vis</groupId>
         <artifactId>vis-parent</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4</version>
         <relativePath>../Parent/pom.xml</relativePath>
     </parent>
 
@@ -18,6 +18,7 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
+        <visui.version>0.8.1-SNAPSHOT</visui.version>
         <build.ci.timestamp>unknown, not built using CI</build.ci.timestamp>
     </properties>
 
@@ -25,11 +26,13 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>vis-runtime</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>vis-ui</artifactId>
+            <version>${visui.version}</version>
         </dependency>
 
         <dependency>
