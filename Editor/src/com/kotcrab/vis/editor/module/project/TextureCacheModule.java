@@ -230,6 +230,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	public Sprite getSprite (VisAssetDescriptor descriptor, float pixelsPerUnit) {
 		Sprite sprite = new Sprite(getRegion(descriptor));
 		sprite.setSize(sprite.getWidth() / pixelsPerUnit, sprite.getHeight() / pixelsPerUnit);
+		sprite.setOrigin(sprite.getOriginX() / pixelsPerUnit, sprite.getOriginY() / pixelsPerUnit);
 		return sprite;
 	}
 
