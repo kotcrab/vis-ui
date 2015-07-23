@@ -190,6 +190,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	@Override
 	public Scene loadSync (AssetManager manager, String fileName, FileHandle file, SceneLoader.SceneParameter parameter) {
 		Scene scene = this.scene;
+		scene.init();
 		this.scene = null;
 		return scene;
 	}

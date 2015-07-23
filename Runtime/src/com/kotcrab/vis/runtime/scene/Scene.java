@@ -28,6 +28,7 @@ import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.system.*;
+import com.kotcrab.vis.runtime.util.AfterSceneInit;
 import com.kotcrab.vis.runtime.util.ArtemisUtils;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
@@ -77,6 +78,23 @@ public class Scene {
 		}
 
 		engine = new EntityEngine(engineConfig);
+	}
+
+	/** Called by framework right after loading scene to finish loading scene and inflate all entities */
+	public void init () {
+		engine.process();
+
+		for (BaseSystem system : engine.getSystems()) {
+			if (system instanceof AfterSceneInit) {
+				((AfterSceneInit) system).afterSceneInit();
+			}
+		}
+
+		for (Manager manager : engine.getManagers()) {
+			if (manager instanceof AfterSceneInit) {
+				((AfterSceneInit) manager).afterSceneInit();
+			}
+		}
 	}
 
 	/** Updates and renders entire scene. Typically called from {@link ApplicationListener#render()} */
