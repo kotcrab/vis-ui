@@ -38,7 +38,7 @@ public class EditorScene extends BaseObservable {
 	public static final int LAYER_REMOVED = 3;
 	public static final int LAYERS_SORTED = 4;
 
-	private static final Comparator<Layer> LAYER_COMPARATOR = (o1, o2) -> (int) Math.signum(o1.id - o2.id) * -1;
+	private static final Comparator<Layer> LAYER_COMPARATOR = (o1, o2) -> (int) Math.signum(o1.id - o2.id);
 
 	/** Scene file, path is relative to project Vis folder */
 	@Tag(0) public String path;

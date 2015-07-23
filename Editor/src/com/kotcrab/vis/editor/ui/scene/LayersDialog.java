@@ -328,7 +328,7 @@ public class LayersDialog extends VisTable implements Disposable {
 			pad(3);
 			add(eyeButton);
 			add(lockButton);
-			add(new VisLabel(layer.name)).expandX().fillX();
+			add(new VisLabel(layer.name)).expandX().fillX(); //TODO: show id in layers dialog, don't forget about updating it when layer was moved
 
 			addListener(new InputListener() {
 				@Override
