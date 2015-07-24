@@ -25,6 +25,7 @@ import com.kotcrab.vis.editor.module.editor.ProjectIOModule;
 import com.kotcrab.vis.editor.module.project.ProjectGeneric;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.form.FormInputValidator;
 import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -70,6 +71,7 @@ public class NewProjectDialogGeneric extends VisTable {
 
 		errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);
+		errorLabel.setWrap(true);
 
 		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
@@ -94,8 +96,8 @@ public class NewProjectDialogGeneric extends VisTable {
 		createButton.setDisabled(true);
 
 		buttonTable.add(errorLabel).fill().expand();
-		buttonTable.add(cancelButton);
-		buttonTable.add(createButton);
+		buttonTable.add(cancelButton).top();
+		buttonTable.add(createButton).top();
 
 		add(buttonTable).colspan(3).fillX().expandX();
 	}
@@ -145,6 +147,12 @@ public class NewProjectDialogGeneric extends VisTable {
 
 		validator.notEmpty(projectRoot, "Project root path cannot be empty!");
 		validator.notEmpty(outputDirectory, "Output folder field cannot be empty!");
+		validator.custom(outputDirectory, new FormInputValidator("Output directory must be different than project root!") {
+			@Override
+			protected boolean validate (String input) {
+				return !projectRoot.getText().equals(outputDirectory.getText());
+			}
+		});
 
 		validator.directory(projectRoot, "Project folder is not a directory!");
 		validator.directory(outputDirectory, "Output folder is not a directory!");
