@@ -16,20 +16,28 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.esotericsoftware.kryo.Serializer;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
+import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.plugin.PluginKryoSerializer;
+import com.kotcrab.vis.editor.ui.toast.ExceptionToast;
+
+import java.util.UUID;
 
 /**
  * Manages {@link EditorEntitySupport} loaded from plugins.
  * @author Kotcrab
  */
 public class SupportModule extends ProjectModule {
+	@InjectModule private ToastModule toastModule;
+
 	private Array<EditorEntitySupport> supports = new Array<>();
 
 	private Json json;
@@ -48,7 +56,7 @@ public class SupportModule extends ProjectModule {
 		descriptorFile = fileAccess.getModuleFolder().child("supportDescriptor.json");
 
 		if (descriptorFile.exists()) {
-			descriptorsStorage = json.fromJson(DescriptorsStorage.class, descriptorFile);
+			descriptorsStorage = loadDescriptor();
 		} else {
 			Log.info("ObjectSupportModule", "Support descriptor file does not exist, will be recreated");
 			descriptorsStorage = new DescriptorsStorage();
@@ -56,6 +64,24 @@ public class SupportModule extends ProjectModule {
 
 		ExtensionStorageModule pluginContainer = container.get(ExtensionStorageModule.class);
 		pluginContainer.getObjectSupports().forEach(this::register);
+	}
+
+	private DescriptorsStorage loadDescriptor () {
+		try {
+			return json.fromJson(DescriptorsStorage.class, descriptorFile);
+		} catch (Exception e) {
+			toastModule.show(new ExceptionToast("Support descriptor file couldn't be loaded, plugins may not function properly.\nIt's not recommend to continue.", e));
+
+			String backupPath = descriptorFile.sibling(descriptorFile.name() + ".bak").path();
+			FileHandle backup = Gdx.files.absolute(backupPath);
+			if (backup.exists()) {
+				backup = Gdx.files.absolute(backupPath + UUID.randomUUID());
+			}
+
+			descriptorFile.moveTo(backup);
+			Log.exception(e);
+			return new DescriptorsStorage();
+		}
 	}
 
 	@Override
