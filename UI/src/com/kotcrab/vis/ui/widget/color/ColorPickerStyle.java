@@ -26,7 +26,6 @@ public class ColorPickerStyle {
 	public Drawable horizontalSelector;
 	public Drawable alphaBar10px;
 	public Drawable alphaBar25px;
-	public Drawable alphaBar25pxShifted;
 
 	public ColorPickerStyle () {
 	}

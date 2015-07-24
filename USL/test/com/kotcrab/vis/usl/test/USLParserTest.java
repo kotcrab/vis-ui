@@ -13,6 +13,7 @@ public class USLParserTest {
 	public void testVisUslParser () throws Exception {
 		USL.parse(null, "include <visui-0.7.7>");
 		USL.parse(null, "include <visui-0.8.0>");
+		USL.parse(null, "include <visui-0.8.1>");
 		USL.parse(null, "include <visui>");
 	}
 

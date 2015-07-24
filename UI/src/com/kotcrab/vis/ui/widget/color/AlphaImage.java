@@ -26,31 +26,31 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
  * @author Kotcrab
  */
 public class AlphaImage extends Image {
-	private ColorPickerStyle style;
 	private Drawable alphaDrawable;
 	private boolean shiftAlpha;
 
 	public AlphaImage (ColorPickerStyle style) {
 		super(style.white);
-		this.style = style;
-		setAlphaDrawable();
+		this.alphaDrawable = style.alphaBar25px;
 	}
 
 	public AlphaImage (ColorPickerStyle style, boolean shiftAlpha) {
 		super(style.white);
-		this.style = style;
+		this.alphaDrawable = style.alphaBar25px;
 		this.shiftAlpha = shiftAlpha;
-		setAlphaDrawable();
-	}
-
-	private void setAlphaDrawable () {
-		alphaDrawable = shiftAlpha ? style.alphaBar25pxShifted : style.alphaBar25px;
 	}
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		batch.setColor(1, 1, 1, parentAlpha);
-		alphaDrawable.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
+		float x = getX() + getImageX();
+		float y = getY() + getImageY();
+		float width = getImageWidth() * getScaleX();
+		float height = getImageHeight() * getScaleY();
+		if (shiftAlpha)
+			alphaDrawable.draw(batch, x + width, y, width * -1, height);
+		else
+			alphaDrawable.draw(batch, x, y, width, height);
 		super.draw(batch, parentAlpha);
 	}
 }

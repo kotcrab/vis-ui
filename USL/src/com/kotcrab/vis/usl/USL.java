@@ -10,7 +10,8 @@ public class USL {
 
 	/**
 	 * @param workingDirectory used for finding included files, may be null only if parsed string does not contains
-	 * any file include directive. Howewer 'include <gdx>' or 'include <visui>' is allowed
+	 * any file include directive. However 'include <gdx>' or 'include <visui>' is always allowed even when workingDirectory
+	 * is null.
 	 */
 	public static String parse (File workingDirectory, String usl) {
 		LexerContext context = new LexerContext(workingDirectory);
