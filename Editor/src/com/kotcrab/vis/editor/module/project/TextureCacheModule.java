@@ -81,6 +81,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		settings.maxHeight = 4096;
 		settings.combineSubdirectories = true;
 		settings.silent = true;
+		settings.useIndexes = false;
 		settings.fast = true;
 
 		loadingRegion = Assets.icons.findRegion("refresh-big");

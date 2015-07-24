@@ -61,6 +61,7 @@ public class ExportModule extends ProjectModule {
 		texturePackerSettings = new Settings();
 		texturePackerSettings.combineSubdirectories = true;
 		texturePackerSettings.silent = true;
+		texturePackerSettings.useIndexes = false;
 
 		json = SceneLoader.getJson();
 	}
