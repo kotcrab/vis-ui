@@ -24,8 +24,10 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
+import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
+import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
@@ -39,9 +41,8 @@ import java.io.IOException;
  */
 public class ExportModule extends ProjectModule {
 	@InjectModule private StatusBarModule statusBar;
+	@InjectModule private TabsModule tabsModule;
 
-	@InjectModule private SceneTabsModule tabsModule;
-	@InjectModule private SupportModule supportModule;
 	@InjectModule private SceneCacheModule sceneCache;
 
 	private FileHandle visAssetsDir;
@@ -64,7 +65,14 @@ public class ExportModule extends ProjectModule {
 		json = SceneLoader.getJson();
 	}
 
-	public void export (boolean quick) { //TODO do quick export
+	public void export (boolean quick) {
+		if (tabsModule.getDirtyTabCount() > 0)
+			Editor.instance.getStage().addActor(new UnsavedResourcesDialog(tabsModule, () -> beforeExport(quick)).fadeIn());
+		else
+			beforeExport(quick);
+	}
+
+	private void beforeExport (boolean quick) {
 		if (firstExportDone == false && quick)
 			Log.info("Requested quick export but normal export hasn't been done since editor launch, performing normal export.");
 
