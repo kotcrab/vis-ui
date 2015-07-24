@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.StringBuilder;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.i18n.BundleText;
@@ -144,7 +145,11 @@ public class DialogUtils {
 
 	private static String getStackTrace (Throwable throwable) {
 		StringBuilder builder = new StringBuilder();
+		getStackTrace(throwable, builder);
+		return builder.toString();
+	}
 
+	private static void getStackTrace (Throwable throwable, StringBuilder builder) {
 		String msg = throwable.getMessage();
 		if (msg != null) {
 			builder.append(msg);
@@ -156,7 +161,10 @@ public class DialogUtils {
 			builder.append("\n");
 		}
 
-		return builder.toString();
+		if (throwable.getCause() != null) {
+			builder.append("\nCaused by: ");
+			getStackTrace(throwable.getCause(), builder);
+		}
 	}
 
 	public enum OptionDialogType {
