@@ -281,11 +281,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="16"
-     inkscape:cx="680.36332"
-     inkscape:cy="599.7978"
+     inkscape:zoom="5.6568543"
+     inkscape:cx="589.79745"
+     inkscape:cy="597.48742"
      inkscape:document-units="px"
-     inkscape:current-layer="layer4"
+     inkscape:current-layer="layer2"
      showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1018"
@@ -4313,7 +4313,7 @@
     <rect
        style="display:inline;opacity:1;fill:#717171;fill-opacity:1;stroke:none"
        id="slider-knob-2x"
-       width="11"
+       width="22"
        height="44"
        x="557.82379"
        y="-343.95752"
@@ -4321,26 +4321,26 @@
     <rect
        style="display:inline;opacity:1;fill:#919191;fill-opacity:1;stroke:none"
        id="slider-knob-over-2x"
-       width="11"
+       width="22"
        height="44"
-       x="577.82379"
-       y="-343.95752"
+       x="583"
+       y="-344"
        inkscape:label="#rect7248-4" />
     <rect
        style="display:inline;opacity:1;fill:#1ba1e2;fill-opacity:1;stroke:none"
        id="slider-knob-down-2x"
-       width="11"
+       width="22"
        height="44"
-       x="597.82379"
-       y="-343.95752"
+       x="608"
+       y="-344"
        inkscape:label="#rect7248-7" />
     <rect
        style="display:inline;opacity:1;fill:#333333;fill-opacity:1;stroke:none"
        id="slider-knob-disabled-2x"
-       width="11"
+       width="22"
        height="44"
-       x="617.82379"
-       y="-343.95752"
+       x="633"
+       y="-344"
        inkscape:label="#rect7248-8" />
     <g
        transform="matrix(2,0,0,2,-47,-2058)"
@@ -4411,7 +4411,7 @@
          style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
     <g
-       transform="matrix(1,0,0,1.9976428,234,-2048.9409)"
+       transform="matrix(1,0,0,1.9976428,249,-2042.9775)"
        style="display:inline"
        id="scroll-horizontal.9-2x"
        inkscape:label="#g9201"
@@ -4448,7 +4448,7 @@
          style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
     <g
-       transform="matrix(2,0,0,1,-200,-1196)"
+       transform="matrix(2,0,0,1,-189,-1196)"
        style="display:inline"
        id="scroll.9-2x"
        inkscape:label="#g9207"
@@ -4485,7 +4485,7 @@
          style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
     <g
-       transform="matrix(2,0,0,1,-207,-1196)"
+       transform="matrix(2,0,0,1,-192,-1196)"
        style="display:inline"
        id="scroll-knob-vertical.9-2x"
        inkscape:label="#g9213"
@@ -4529,7 +4529,7 @@
          style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
     <g
-       transform="matrix(1,0,0,2,264,-2055)"
+       transform="matrix(1,0,0,2,229,-2050)"
        style="display:inline"
        id="scroll-knob-horizontal.9-2x"
        inkscape:label="#g9220"
