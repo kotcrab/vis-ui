@@ -19,14 +19,15 @@ package com.kotcrab.vis.ui.widget.color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.ui.Sizes;
 
 /**
  * Channel bar intended for alpha channel, renders alpha grid bellow channel texture. Not intended to use outside ColorPicker
  * @author Kotcrab
  */
 public class AlphaChannelBar extends ChannelBar {
-	public AlphaChannelBar (ColorPickerStyle style, Texture texture, int value, int maxValue, ChangeListener listener) {
-		super(style, texture, value, maxValue, listener);
+	public AlphaChannelBar (ColorPickerStyle style, Sizes sizes, Texture texture, int value, int maxValue, ChangeListener listener) {
+		super(style, sizes, texture, value, maxValue, listener);
 	}
 
 	@Override

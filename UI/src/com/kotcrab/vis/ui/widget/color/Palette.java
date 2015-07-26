@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Pools;
+import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.widget.VisImage;
 
 /**
@@ -31,14 +32,16 @@ import com.kotcrab.vis.ui.widget.VisImage;
  */
 public class Palette extends VisImage {
 	private ColorPickerStyle style;
+	private Sizes sizes;
 	private int x, y;
 	private int maxValue;
 	private float selectorX;
 	private float selectorY;
 
-	public Palette (ColorPickerStyle style, Texture texture, int x, int y, final int maxValue, ChangeListener listener) {
+	public Palette (ColorPickerStyle style, Sizes sizes, Texture texture, int x, int y, final int maxValue, ChangeListener listener) {
 		super(texture);
 		this.style = style;
+		this.sizes = sizes;
 		this.maxValue = maxValue;
 		setValue(x, y);
 		addListener(listener);
@@ -76,13 +79,13 @@ public class Palette extends VisImage {
 		if (y < 0) y = 0;
 		if (y > maxValue) y = maxValue;
 
-		selectorX = ((float) x / maxValue) * ColorPicker.PALETTE_SIZE;
-		selectorY = ((float) y / maxValue) * ColorPicker.PALETTE_SIZE;
+		selectorX = ((float) x / maxValue) * ColorPicker.PALETTE_SIZE * sizes.scaleFactor;
+		selectorY = ((float) y / maxValue) * ColorPicker.PALETTE_SIZE * sizes.scaleFactor;
 	}
 
 	private void updateValueFromTouch (float touchX, float touchY) {
-		int newX = (int) (touchX / ColorPicker.PALETTE_SIZE * maxValue);
-		int newY = (int) (touchY / ColorPicker.PALETTE_SIZE * maxValue);
+		int newX = (int) (touchX / ColorPicker.PALETTE_SIZE * maxValue / sizes.scaleFactor);
+		int newY = (int) (touchY / ColorPicker.PALETTE_SIZE * maxValue / sizes.scaleFactor);
 
 		setValue(newX, newY);
 

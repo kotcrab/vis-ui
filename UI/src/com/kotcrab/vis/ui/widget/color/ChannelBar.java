@@ -23,22 +23,25 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Pools;
+import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.widget.VisImage;
 
 /**
- * Class used to display channel color bars in color picker, not intended to use outside ColorPicker
+ * Class used to display channel color bars in color picker, not intended to be used outside ColorPicker
  * @author Kotcrab
  */
 public class ChannelBar extends VisImage {
 	protected ColorPickerStyle style;
 
+	private Sizes sizes;
 	private int maxValue;
 	private int value;
 	private float selectorX;
 
-	public ChannelBar (ColorPickerStyle style, Texture texture, int value, final int maxValue, ChangeListener listener) {
+	public ChannelBar (ColorPickerStyle style, Sizes sizes, Texture texture, int value, final int maxValue, ChangeListener listener) {
 		super(texture);
 		this.style = style;
+		this.sizes = sizes;
 		this.maxValue = maxValue;
 
 		setValue(value);
@@ -61,7 +64,7 @@ public class ChannelBar extends VisImage {
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		style.barSelector.draw(batch, getX() + selectorX - style.barSelector.getMinWidth() / 2, getY() - 2, style.barSelector.getMinWidth(), style.barSelector.getMinHeight());
+		style.barSelector.draw(batch, getX() + selectorX - style.barSelector.getMinWidth() / 2, getY() - 1, style.barSelector.getMinWidth(), style.barSelector.getMinHeight());
 	}
 
 	public void setValue (int newValue) {
@@ -69,7 +72,7 @@ public class ChannelBar extends VisImage {
 		if (value < 0) value = 0;
 		if (value > maxValue) value = maxValue;
 
-		selectorX = ((float) value / maxValue) * ColorPicker.BAR_WIDTH;
+		selectorX = ((float) value / maxValue) * ColorPicker.BAR_WIDTH * sizes.scaleFactor;
 	}
 
 	public int getValue () {
@@ -77,7 +80,7 @@ public class ChannelBar extends VisImage {
 	}
 
 	private void updateValueFromTouch (float x) {
-		int newValue = (int) (x / ColorPicker.BAR_WIDTH * maxValue);
+		int newValue = (int) (x / ColorPicker.BAR_WIDTH * maxValue / sizes.scaleFactor);
 		setValue(newValue);
 
 		ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);

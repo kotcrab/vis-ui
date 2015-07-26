@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Disposable;
+import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.color.ColorInputField.ColorInputFieldListener;
@@ -32,6 +33,7 @@ import com.kotcrab.vis.ui.widget.color.ColorInputField.ColorInputFieldListener;
  */
 public class ColorChannelWidget extends VisTable implements Disposable {
 	private ColorPickerStyle style;
+	private Sizes sizes;
 	private int value;
 	private int maxValue;
 	private ColorChannelWidgetListener drawer;
@@ -45,14 +47,15 @@ public class ColorChannelWidget extends VisTable implements Disposable {
 
 	private ChangeListener barListener;
 
-	public ColorChannelWidget (ColorPickerStyle style, String label, int maxValue, final ColorChannelWidgetListener drawer) {
-		this(style, label, maxValue, false, drawer);
+	public ColorChannelWidget (ColorPickerStyle style, Sizes sizes, String label, int maxValue, final ColorChannelWidgetListener drawer) {
+		this(style, sizes, label, maxValue, false, drawer);
 	}
 
-	public ColorChannelWidget (ColorPickerStyle style, String label, int maxValue, boolean useAlpha, final ColorChannelWidgetListener drawer) {
+	public ColorChannelWidget (ColorPickerStyle style, Sizes sizes, String label, int maxValue, boolean useAlpha, final ColorChannelWidgetListener drawer) {
 		super(true);
 
 		this.style = style;
+		this.sizes = sizes;
 		this.value = 0;
 		this.maxValue = maxValue;
 		this.drawer = drawer;
@@ -73,7 +76,7 @@ public class ColorChannelWidget extends VisTable implements Disposable {
 			pixmap = new Pixmap(maxValue, 1, Format.RGB888);
 
 		texture = new Texture(pixmap);
-		add(new VisLabel(label)).width(10).center();
+		add(new VisLabel(label)).width(10 * sizes.scaleFactor).center();
 		add(inputField = new ColorInputField(maxValue, new ColorInputFieldListener() {
 			@Override
 			public void changed (int newValue) {
@@ -81,8 +84,8 @@ public class ColorChannelWidget extends VisTable implements Disposable {
 				drawer.updateFields();
 				bar.setValue(newValue);
 			}
-		})).width(ColorPicker.FIELD_WIDTH);
-		add(bar = createBarImage()).size(ColorPicker.BAR_WIDTH, ColorPicker.BAR_HEIGHT);
+		})).width(ColorPicker.FIELD_WIDTH * sizes.scaleFactor);
+		add(bar = createBarImage()).size(ColorPicker.BAR_WIDTH * sizes.scaleFactor, ColorPicker.BAR_HEIGHT * sizes.scaleFactor);
 
 		inputField.setValue(0);
 	}
@@ -110,9 +113,9 @@ public class ColorChannelWidget extends VisTable implements Disposable {
 
 	private ChannelBar createBarImage () {
 		if (useAlpha)
-			return new AlphaChannelBar(style, texture, value, maxValue, barListener);
+			return new AlphaChannelBar(style, sizes, texture, value, maxValue, barListener);
 		else
-			return new ChannelBar(style, texture, value, maxValue, barListener);
+			return new ChannelBar(style, sizes, texture, value, maxValue, barListener);
 	}
 
 	public boolean isInputValid () {

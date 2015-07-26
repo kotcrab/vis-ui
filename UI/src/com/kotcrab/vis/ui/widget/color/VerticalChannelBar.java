@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Pools;
+import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.widget.VisImage;
 
 /**
@@ -31,13 +32,15 @@ import com.kotcrab.vis.ui.widget.VisImage;
  */
 public class VerticalChannelBar extends VisImage {
 	private ColorPickerStyle style;
+	private Sizes sizes;
 	private int maxValue;
 	private float selectorY;
 	private int value;
 
-	public VerticalChannelBar (ColorPickerStyle style, Texture texture, int value, final int maxValue, ChangeListener listener) {
+	public VerticalChannelBar (ColorPickerStyle style, Sizes sizes, Texture texture, int value, final int maxValue, ChangeListener listener) {
 		super(texture);
 		this.style = style;
+		this.sizes = sizes;
 		this.maxValue = maxValue;
 		setValue(value);
 		addListener(listener);
@@ -67,11 +70,11 @@ public class VerticalChannelBar extends VisImage {
 		if (value < 0) value = 0;
 		if (value > maxValue) value = maxValue;
 
-		selectorY = ((float) value / maxValue) * ColorPicker.PALETTE_SIZE;
+		selectorY = ((float) value / maxValue) * ColorPicker.PALETTE_SIZE * sizes.scaleFactor;
 	}
 
 	private void updateValueFromTouch (float y) {
-		int newValue = (int) (y / ColorPicker.PALETTE_SIZE * maxValue);
+		int newValue = (int) (y / ColorPicker.PALETTE_SIZE * maxValue / sizes.scaleFactor);
 		setValue(newValue);
 
 		ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);
