@@ -26,6 +26,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.ui.InputValidator;
+import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
@@ -58,10 +59,10 @@ public class NumberSelector extends VisTable {
 	}
 
 	public NumberSelector (String styleName, String name, int initialValue, int min, int max, int step) {
-		this(VisUI.getSkin().get(styleName, NumberSelectorStyle.class), name, initialValue, min, max, step);
+		this(VisUI.getSkin().get(styleName, NumberSelectorStyle.class), VisUI.getSizes(), name, initialValue, min, max, step);
 	}
 
-	public NumberSelector (NumberSelectorStyle style, String name, int initialValue, int min, int max, int step) {
+	public NumberSelector (NumberSelectorStyle style, final Sizes sizes, String name, int initialValue, int min, int max, int step) {
 		this.current = initialValue;
 		this.max = max;
 		this.min = min;
@@ -70,7 +71,7 @@ public class NumberSelector extends VisTable {
 		valueText = new VisValidableTextField(Validators.INTEGERS) {
 			@Override
 			public float getPrefWidth () {
-				return 40;
+				return sizes.numberSelectorFieldSize;
 			}
 		};
 
@@ -88,8 +89,8 @@ public class NumberSelector extends VisTable {
 		VisImageButton up = new VisImageButton(style.up);
 		VisImageButton down = new VisImageButton(style.down);
 
-		buttonsTable.add(up).height(12).row();
-		buttonsTable.add(down).height(12);
+		buttonsTable.add(up).height(sizes.numberSelectorButtonSize).row();
+		buttonsTable.add(down).height(sizes.numberSelectorButtonSize);
 
 		int padding = 0;
 		if (name != null && name.length() != 0) {
@@ -97,8 +98,8 @@ public class NumberSelector extends VisTable {
 			padding = 6;
 		}
 
-		add(valueText).fillX().expandX().height(24).padLeft(padding).padRight(1);
-		add(buttonsTable).width(12);
+		add(valueText).fillX().expandX().height(sizes.numberSelectorButtonSize * 2).padLeft(padding).padRight(1);
+		add(buttonsTable).width(sizes.numberSelectorButtonsWidth);
 
 		up.addListener(new ChangeListener() {
 			@Override

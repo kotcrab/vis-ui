@@ -97,12 +97,25 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 
 #com.kotcrab.vis.ui.Sizes: {
     default: {
-        spacingTop: { value: 0 }
-        spacingBottom: { value: 8, scale: false }
-        spacingRight: { value: 6 }
-        spacingLeft: { value: 0 }
+        spacingBottom: 8,
+        spacingRight: 6,
 
-        menuItemIconSize: { value: 22 }
+        menuItemIconSize: 22,
+
+        numberSelectorButtonSize: 12,
+        numberSelectorButtonsWidth: 12,
+        numberSelectorFieldSize: 40,
+    }
+
+    x2: {
+        spacingBottom: 16,
+        spacingRight: 12,
+
+        menuItemIconSize: 44,
+
+        numberSelectorButtonSize: 24,
+        numberSelectorButtonsWidth: 20,
+        numberSelectorFieldSize: 80,
     }
 }
 

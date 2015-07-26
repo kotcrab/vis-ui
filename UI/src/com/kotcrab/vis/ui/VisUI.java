@@ -33,6 +33,8 @@ public class VisUI {
 	public static final String VERSION = "0.8.1";
 
 	private static int defaultTitleAlign = Align.left;
+
+	private static SkinScale scale;
 	private static Skin skin;
 
 	private static I18NBundle fileChooserBundle;
@@ -48,8 +50,8 @@ public class VisUI {
 			}
 
 			@Override
-			public int getScaleFactor () {
-				return 1;
+			public String getSizesName () {
+				return "default";
 			}
 		},
 		X2 {
@@ -59,14 +61,14 @@ public class VisUI {
 			}
 
 			@Override
-			public int getScaleFactor () {
-				return 2;
+			public String getSizesName () {
+				return "x2";
 			}
 		};
 
 		public abstract FileHandle getSkinFile ();
 
-		public abstract int getScaleFactor ();
+		public abstract String getSizesName ();
 	}
 
 	/** Loads default VisUI skin */
@@ -76,8 +78,8 @@ public class VisUI {
 
 	/** Loads default VisUI skin */
 	public static void load (SkinScale scale) {
+		VisUI.scale = scale;
 		load(scale.getSkinFile());
-		skin.get(Sizes.class).scale(scale.getScaleFactor());
 	}
 
 	/** Loads skin from provided file, skin must be compatible with default VisUI skin */
@@ -101,6 +103,13 @@ public class VisUI {
 	public static Skin getSkin () {
 		if (skin == null) throw new IllegalStateException("VisUI is not loaded!");
 		return skin;
+	}
+
+	public static Sizes getSizes () {
+		if (scale == null)
+			return getSkin().get(Sizes.class);
+		else
+			return getSkin().get(scale.getSizesName(), Sizes.class);
 	}
 
 	/** @return int value from {@link Align} */

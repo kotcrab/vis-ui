@@ -103,7 +103,7 @@ public class MenuItem extends Button {
 		defaults().space(3);
 
 		if (image != null) image.setScaling(Scaling.fit);
-		add(image).size(sizes.menuItemIconSize.value);
+		add(image).size(sizes.menuItemIconSize);
 
 		label = new Label(text, new LabelStyle(style.font, style.fontColor));
 		label.setAlignment(Align.left);

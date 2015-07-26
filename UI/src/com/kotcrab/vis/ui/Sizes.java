@@ -17,36 +17,19 @@
 package com.kotcrab.vis.ui;
 
 /**
- * Default VisUI paddings, spacings and sizes
+ * VisUI paddings, spacings and sizes
  * @author Kotcrab
  */
 public class Sizes {
-	public SizeValue spacingTop;
-	public SizeValue spacingBottom;
-	public SizeValue spacingRight;
-	public SizeValue spacingLeft;
+	public float spacingTop;
+	public float spacingBottom;
+	public float spacingRight;
+	public float spacingLeft;
 
-	public SizeValue menuItemIconSize;
+	public float menuItemIconSize;
 
-	public void scale (float scaleFactor) {
-		if (scaleFactor == 1) return; //no need to scale for 1 scale factor
-
-		spacingBottom.scale(scaleFactor);
-		spacingTop.scale(scaleFactor);
-		spacingLeft.scale(scaleFactor);
-		spacingBottom.scale(scaleFactor);
-
-		menuItemIconSize.scale(scaleFactor);
-	}
-
-	public static class SizeValue {
-		public boolean scale = true;
-		public int value;
-
-		public void scale (float factor) {
-			if (scale == false) return;
-			value *= factor;
-		}
-	}
+	public float numberSelectorButtonSize;
+	public float numberSelectorButtonsWidth;
+	public float numberSelectorFieldSize;
 }
 

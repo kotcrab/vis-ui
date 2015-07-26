@@ -28,9 +28,9 @@ public class TableUtils {
 	/** Sets default table spacing for vis skin */
 	public static void setSpacingDefaults (Table table) {
 		Sizes sizes = VisUI.getSkin().get(Sizes.class);
-		if (sizes.spacingTop.value != 0) table.defaults().spaceTop(sizes.spacingTop.value);
-		if (sizes.spacingBottom.value != 0) table.defaults().spaceBottom(sizes.spacingBottom.value);
-		if (sizes.spacingRight.value != 0) table.defaults().spaceRight(sizes.spacingRight.value);
-		if (sizes.spacingLeft.value != 0) table.defaults().spaceLeft(sizes.spacingLeft.value);
+		if (sizes.spacingTop != 0) table.defaults().spaceTop(sizes.spacingTop);
+		if (sizes.spacingBottom != 0) table.defaults().spaceBottom(sizes.spacingBottom);
+		if (sizes.spacingRight != 0) table.defaults().spaceRight(sizes.spacingRight);
+		if (sizes.spacingLeft != 0) table.defaults().spaceLeft(sizes.spacingLeft);
 	}
 }
