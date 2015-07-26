@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
@@ -84,6 +85,7 @@ public class FileChooser extends VisWindow {
 
 	//UI
 	private FileChooserStyle style;
+	private Sizes sizes;
 	private I18NBundle bundle;
 
 	private VisTable fileTable;
@@ -115,6 +117,7 @@ public class FileChooser extends VisWindow {
 		getTitleLabel().setText(getText(TITLE_CHOOSE_FILES));
 
 		style = VisUI.getSkin().get(FileChooserStyle.class);
+		sizes = VisUI.getSizes();
 
 		init(directory);
 	}
@@ -129,6 +132,7 @@ public class FileChooser extends VisWindow {
 		this.bundle = VisUI.getFileChooserBundle();
 
 		style = VisUI.getSkin().get(styleName, FileChooserStyle.class);
+		sizes = VisUI.getSizes();
 
 		init(null);
 	}
@@ -140,6 +144,7 @@ public class FileChooser extends VisWindow {
 		getTitleLabel().setText(getText(TITLE_CHOOSE_FILES));
 
 		style = VisUI.getSkin().get(FileChooserStyle.class);
+		sizes = VisUI.getSizes();
 
 		init(null);
 	}
@@ -150,6 +155,7 @@ public class FileChooser extends VisWindow {
 		this.bundle = bundle;
 
 		style = VisUI.getSkin().get(FileChooserStyle.class);
+		sizes = VisUI.getSizes();
 
 		init(null);
 	}
@@ -931,7 +937,7 @@ public class FileChooser extends VisWindow {
 			labelCell.width(new Value() {
 				@Override
 				public float get (Actor context) {
-					int padding = file.isDirectory() ? 35 : 60;
+					int padding = (int) (file.isDirectory() ? 35 * sizes.scaleFactor : 60 * sizes.scaleFactor);
 					return fileScrollPaneTable.getWidth() - getUsedWidth() - padding;
 				}
 			});

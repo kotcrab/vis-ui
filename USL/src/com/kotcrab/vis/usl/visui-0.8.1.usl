@@ -97,6 +97,8 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 
 #com.kotcrab.vis.ui.Sizes: {
     default: {
+        scaleFactor: 1,
+
         spacingBottom: 8,
         spacingRight: 6,
 
@@ -108,6 +110,8 @@ package com.badlogic.gdx.scenes.scene2d.ui {
     }
 
     x2: {
+        scaleFactor: 2,
+
         spacingBottom: 16,
         spacingRight: 12,
 

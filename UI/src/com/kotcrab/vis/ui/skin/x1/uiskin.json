@@ -73,8 +73,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
 	default: {minus: tree-minus, plus: tree-plus, selection: tree-selection, over: tree-over }
 },
 com.kotcrab.vis.ui.Sizes: {
-	default: {spacingBottom: 8, spacingRight: 6, menuItemIconSize: 22, numberSelectorButtonSize: 12, numberSelectorButtonsWidth: 12, numberSelectorFieldSize: 40 },
-	x2: {spacingBottom: 16, spacingRight: 12, menuItemIconSize: 44, numberSelectorButtonSize: 24, numberSelectorButtonsWidth: 20, numberSelectorFieldSize: 80 }
+	default: {scaleFactor: 1, spacingBottom: 8, spacingRight: 6, menuItemIconSize: 22, numberSelectorButtonSize: 12, numberSelectorButtonsWidth: 12, numberSelectorFieldSize: 40 },
+	x2: {scaleFactor: 2, spacingBottom: 16, spacingRight: 12, menuItemIconSize: 44, numberSelectorButtonSize: 24, numberSelectorButtonsWidth: 20, numberSelectorFieldSize: 80 }
 },
 com.kotcrab.vis.ui.widget.VisTextField$VisTextFieldStyle: {
 	default: {selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor, focusBorder: border, font: default-font, fontColor: white, disabledFontColor: grey }

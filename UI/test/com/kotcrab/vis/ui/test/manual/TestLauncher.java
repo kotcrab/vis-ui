@@ -55,7 +55,7 @@ class TestApplication extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		VisUI.load(SkinScale.X2);
+		VisUI.load(SkinScale.X1);
 
 		stage = new Stage(new ScreenViewport());
 		Table root = new Table();

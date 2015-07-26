@@ -21,6 +21,8 @@ package com.kotcrab.vis.ui;
  * @author Kotcrab
  */
 public class Sizes {
+	public float scaleFactor;
+
 	public float spacingTop;
 	public float spacingBottom;
 	public float spacingRight;
