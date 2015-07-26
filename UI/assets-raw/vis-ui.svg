@@ -281,9 +281,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="8.0000002"
-     inkscape:cx="463.32794"
-     inkscape:cy="474.17022"
+     inkscape:zoom="16"
+     inkscape:cx="680.36332"
+     inkscape:cy="599.7978"
      inkscape:document-units="px"
      inkscape:current-layer="layer4"
      showgrid="true"
@@ -309,7 +309,9 @@
      fit-margin-top="0"
      fit-margin-left="0"
      fit-margin-right="0"
-     fit-margin-bottom="0">
+     fit-margin-bottom="0"
+     showguides="true"
+     inkscape:guide-bbox="true">
     <inkscape:grid
        type="xygrid"
        id="grid5070"
@@ -387,7 +389,7 @@
        style="display:inline;opacity:1;fill:#800000;fill-opacity:1;stroke:none"
        id="rect5044-92"
        width="90"
-       height="136.5"
+       height="158.82594"
        x="254.3562"
        y="563.53619" />
     <rect
@@ -4409,10 +4411,13 @@
          style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
     <g
-       transform="matrix(1,0,0,2,232.32381,-2050.9575)"
+       transform="matrix(1,0,0,1.9976428,234,-2048.9409)"
        style="display:inline"
        id="scroll-horizontal.9-2x"
-       inkscape:label="#g9201">
+       inkscape:label="#g9201"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\scroll-horizontal.9.png"
+       inkscape:export-xdpi="91.199997"
+       inkscape:export-ydpi="91.199997">
       <rect
          y="856"
          x="416"
@@ -4435,9 +4440,9 @@
          id="rect7290-2"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
       <rect
-         y="855"
+         y="855.5"
          x="415"
-         height="19"
+         height="18"
          width="8"
          id="rect9154-7"
          style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -4446,7 +4451,10 @@
        transform="matrix(2,0,0,1,-200,-1196)"
        style="display:inline"
        id="scroll.9-2x"
-       inkscape:label="#g9207">
+       inkscape:label="#g9207"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\scroll.9.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          y="858"
          x="430.5"
@@ -4470,9 +4478,9 @@
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
       <rect
          y="855"
-         x="430"
+         x="430.5"
          height="8"
-         width="19"
+         width="18"
          id="rect9156-4"
          style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
@@ -4480,7 +4488,10 @@
        transform="matrix(2,0,0,1,-207,-1196)"
        style="display:inline"
        id="scroll-knob-vertical.9-2x"
-       inkscape:label="#g9213">
+       inkscape:label="#g9213"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\scroll-knob-vertical.9.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          y="858"
          x="455.5"
@@ -4511,17 +4522,20 @@
          style="opacity:1;fill:#717171;fill-opacity:1;stroke:none" />
       <rect
          y="855"
-         x="455"
+         x="455.5"
          height="8"
-         width="19"
+         width="18"
          id="rect9158-4"
          style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
     <g
-       transform="matrix(1,0,0,2,264.32381,-2054.9575)"
+       transform="matrix(1,0,0,2,264,-2055)"
        style="display:inline"
        id="scroll-knob-horizontal.9-2x"
-       inkscape:label="#g9220">
+       inkscape:label="#g9220"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\scroll-knob-horizontal.9.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          y="857.47876"
          x="483"
@@ -4551,9 +4565,9 @@
          id="rect7317-8"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
       <rect
-         y="857"
+         y="857.5"
          x="480"
-         height="19"
+         height="18"
          width="8"
          id="rect9160-4"
          style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -4602,16 +4616,19 @@
        style="display:inline"
        id="window.9-2x"
        inkscape:label="#g9176"
-       transform="translate(190,-769.00002)">
+       transform="translate(190,-769.00002)"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\window.9.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          y="761"
          x="67"
-         height="34"
+         height="61.000015"
          width="27"
          id="rect7563-1"
          style="opacity:1;fill:#1ba1e2;fill-opacity:1;stroke:none" />
       <rect
-         y="787"
+         y="814"
          x="66"
          height="5"
          width="1"
@@ -4627,14 +4644,14 @@
       <rect
          y="762"
          x="68"
-         height="32"
+         height="59.000015"
          width="25"
          id="rect7590-9"
          style="opacity:1;fill:#252526;fill-opacity:1;stroke:none" />
       <rect
          y="760"
          x="66"
-         height="36"
+         height="63.000008"
          width="29"
          id="rect9164-5"
          style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
@@ -4643,16 +4660,19 @@
        style="display:inline"
        id="window-noborder.9-2x"
        inkscape:label="#g9183"
-       transform="translate(190,-769.00002)">
+       transform="translate(190,-769.00002)"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\window-noborder.9.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          y="761"
          x="101"
-         height="34"
+         height="61.000008"
          width="27"
          id="rect7563-0-8"
          style="opacity:1;fill:#252526;fill-opacity:1;stroke:none" />
       <rect
-         y="787"
+         y="814"
          x="100"
          height="5"
          width="1"
@@ -4668,16 +4688,19 @@
       <rect
          y="760"
          x="100"
-         height="36"
+         height="63.000008"
          width="29"
          id="rect9166-8"
          style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
     <g
        style="display:inline"
-       id="default-select-2x"
+       id="default-select.9-2x"
        inkscape:label="#g9243"
-       transform="translate(323.35621,-764.32592)">
+       transform="translate(325,-764.00001)"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\default-select.9.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          y="738"
          x="31"
@@ -4705,10 +4728,10 @@
          d="m 76,758.00001 -5,6 -5,-6 z"
          style="fill:#d1d1d1;fill-opacity:1;fill-rule:evenodd;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
       <rect
-         y="761"
+         y="737"
          x="30"
-         height="26"
-         width="29"
+         height="50.000042"
+         width="56"
          id="rect9162-6"
          style="opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
