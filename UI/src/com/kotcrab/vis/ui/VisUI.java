@@ -47,10 +47,11 @@ public class VisUI {
 
 	/** Loads default VisUI skin */
 	public static void load () {
-		load(Gdx.files.classpath("com/kotcrab/vis/ui/uiskin.json"));
+		//atlas is disposed automatically when skin is disposed
+		load(Gdx.files.classpath("com/kotcrab/vis/ui/skin/x1/uiskin.json"));
 	}
 
-	/** Loads skin from provided, skin must be compatible with default VisUI skin */
+	/** Loads skin from provided file, skin must be compatible with default VisUI skin */
 	public static void load (FileHandle visSkinFile) {
 		skin = new Skin(visSkinFile);
 	}
