@@ -29,13 +29,13 @@
 		<exclude name="util/form/FormValidator.java" />
 	</source>
 
-	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/uiskin.json" />
-
+	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/x1/uiskin.json" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/x1/uiskin.atlas" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/x1/uiskin.png" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/x1/default.fnt" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/x1/font-small.fnt" />
 
+	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/x2/uiskin.json" />
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/x2/uiskin.atlas" />
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/x2/uiskin.png" />
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/x2/default.fnt" />
