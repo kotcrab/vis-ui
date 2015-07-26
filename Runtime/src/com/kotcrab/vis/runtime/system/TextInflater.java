@@ -18,7 +18,6 @@ package com.kotcrab.vis.runtime.system;
 
 import com.artemis.*;
 import com.artemis.annotations.Wire;
-import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
@@ -35,7 +34,7 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
  * @author Kotcrab
  */
 @Wire
-public class TextInflaterSystem extends EntityProcessingSystem {
+public class TextInflater extends Manager {
 	private ComponentMapper<AssetComponent> assetCm;
 	private ComponentMapper<TextProtoComponent> protoCm;
 
@@ -45,8 +44,7 @@ public class TextInflaterSystem extends EntityProcessingSystem {
 	private AssetManager manager;
 	private float pixelsPerUnit;
 
-	public TextInflaterSystem (RuntimeConfiguration configuration, AssetManager manager, float pixelsPerUnit) {
-		super(Aspect.all(TextProtoComponent.class, AssetComponent.class));
+	public TextInflater (RuntimeConfiguration configuration, AssetManager manager, float pixelsPerUnit) {
 		this.configuration = configuration;
 		this.manager = manager;
 		this.pixelsPerUnit = pixelsPerUnit;
@@ -60,15 +58,11 @@ public class TextInflaterSystem extends EntityProcessingSystem {
 	}
 
 	@Override
-	protected void process (Entity e) {
+	public void added (Entity e) {
+		if (protoCm.has(e) == false) return;
+
 		VisAssetDescriptor asset = assetCm.get(e).asset;
 		TextProtoComponent protoComponent = protoCm.get(e);
-
-//		if (data.isUsesDistanceField) {
-//			params.genMipMaps = true;
-//			params.minFilter = TextureFilter.MipMapLinearLinear;
-//			params.magFilter = TextureFilter.Linear;
-//		}
 
 		BitmapFont font;
 

@@ -18,7 +18,6 @@ package com.kotcrab.vis.runtime.system;
 
 import com.artemis.*;
 import com.artemis.annotations.Wire;
-import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -36,7 +35,7 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
  * @author Kotcrab
  */
 @Wire
-public class SpriteInflaterSystem extends EntityProcessingSystem {
+public class SpriteInflater extends Manager {
 	private ComponentMapper<SpriteProtoComponent> protoCm;
 	private ComponentMapper<AssetComponent> assetCm;
 
@@ -45,8 +44,7 @@ public class SpriteInflaterSystem extends EntityProcessingSystem {
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
-	public SpriteInflaterSystem (RuntimeConfiguration configuration, AssetManager manager) {
-		super(Aspect.all(SpriteProtoComponent.class, AssetComponent.class));
+	public SpriteInflater (RuntimeConfiguration configuration, AssetManager manager) {
 		this.configuration = configuration;
 		this.manager = manager;
 	}
@@ -59,7 +57,9 @@ public class SpriteInflaterSystem extends EntityProcessingSystem {
 	}
 
 	@Override
-	protected void process (Entity e) {
+	public void added (Entity e) {
+		if (protoCm.has(e) == false) return;
+
 		SpriteProtoComponent proto = protoCm.get(e);
 		AssetComponent assetComponent = assetCm.get(e);
 

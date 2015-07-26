@@ -16,14 +16,14 @@
 
 package com.kotcrab.vis.runtime.component;
 
-import com.kotcrab.vis.runtime.system.SoundInflaterSystem;
+import com.kotcrab.vis.runtime.system.SoundInflater;
 
 /**
  * {@link ProtoComponent} for {@link SoundComponent}.
  * <p>
- * This component is empty because sound does not require storing any property, however it still requires inflating by {@link SoundInflaterSystem}
+ * This component is empty because sound does not require storing any property, however it still requires inflating by {@link SoundInflater}
  * @author Kotcrab
- * @see SoundInflaterSystem
+ * @see SoundInflater
  */
 public class SoundProtoComponent extends ProtoComponent {
 }

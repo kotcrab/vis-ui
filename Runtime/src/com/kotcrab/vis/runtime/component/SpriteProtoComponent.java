@@ -18,12 +18,12 @@ package com.kotcrab.vis.runtime.component;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.kotcrab.vis.runtime.system.SpriteInflaterSystem;
+import com.kotcrab.vis.runtime.system.SpriteInflater;
 
 /**
  * {@link ProtoComponent} for {@link SpriteComponent}
  * @author Kotcrab
- * @see SpriteInflaterSystem
+ * @see SpriteInflater
  */
 public class SpriteProtoComponent extends ProtoComponent {
 	public float x, y;

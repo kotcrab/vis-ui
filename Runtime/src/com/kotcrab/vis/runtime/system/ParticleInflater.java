@@ -18,57 +18,60 @@ package com.kotcrab.vis.runtime.system;
 
 import com.artemis.*;
 import com.artemis.annotations.Wire;
-import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.MusicComponent;
-import com.kotcrab.vis.runtime.component.MusicProtoComponent;
+import com.kotcrab.vis.runtime.component.ParticleComponent;
+import com.kotcrab.vis.runtime.component.ParticleProtoComponent;
 
 /**
- * Inflates {@link MusicProtoComponent} into {@link MusicComponent}
+ * Inflates {@link ParticleProtoComponent} into {@link ParticleComponent}
  * @author Kotcrab
  */
 @Wire
-public class MusicInflaterSystem extends EntityProcessingSystem {
+public class ParticleInflater extends Manager {
 	private ComponentMapper<AssetComponent> assetCm;
-	private ComponentMapper<MusicProtoComponent> protoCm;
+	private ComponentMapper<ParticleProtoComponent> protoCm;
 
 	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
-	public MusicInflaterSystem (RuntimeConfiguration configuration, AssetManager manager) {
-		super(Aspect.all(MusicProtoComponent.class, AssetComponent.class));
+	private float pixelsPerUnit;
+
+	public ParticleInflater (RuntimeConfiguration configuration, AssetManager manager, float pixelsPerUnit) {
 		this.configuration = configuration;
 		this.manager = manager;
+		this.pixelsPerUnit = pixelsPerUnit;
 	}
 
 	@Override
 	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(MusicProtoComponent.class);
+		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(ParticleProtoComponent.class);
 		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
 		transmuter = factory.build();
 	}
 
 	@Override
-	protected void process (Entity e) {
+	public void added (Entity e) {
+		if (protoCm.has(e) == false) return;
+
 		AssetComponent assetComponent = assetCm.get(e);
-		MusicProtoComponent musicProtoComponent = protoCm.get(e);
+		ParticleProtoComponent protoComponent = protoCm.get(e);
 
-		PathAsset asset = (PathAsset) assetComponent.asset;
+		PathAsset path = (PathAsset) assetComponent.asset;
 
-		Music music = manager.get(asset.getPath(), Music.class);
-		MusicComponent musicComponent = new MusicComponent(music);
+		ParticleEffect effect = manager.get(path.getPath(), ParticleEffect.class);
 
-		musicComponent.setLooping(musicProtoComponent.looping);
-		musicComponent.setPlayOnStart(musicProtoComponent.playOnStart);
-		musicComponent.setVolume(musicProtoComponent.volume);
+		ParticleComponent particleComponent = new ParticleComponent(effect);
+		particleComponent.setPosition(protoComponent.x, protoComponent.y);
+		particleComponent.active = protoComponent.active;
+		particleComponent.effect.scaleEffect(1f / pixelsPerUnit);
 
 		transmuter.transmute(e);
-		e.edit().add(musicComponent);
+		e.edit().add(particleComponent);
 	}
 }

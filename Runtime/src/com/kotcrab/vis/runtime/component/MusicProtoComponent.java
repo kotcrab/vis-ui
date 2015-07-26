@@ -16,12 +16,12 @@
 
 package com.kotcrab.vis.runtime.component;
 
-import com.kotcrab.vis.runtime.system.MusicInflaterSystem;
+import com.kotcrab.vis.runtime.system.MusicInflater;
 
 /**
  * {@link ProtoComponent} for {@link MusicComponent}
  * @author Kotcrab
- * @see MusicInflaterSystem
+ * @see MusicInflater
  */
 public class MusicProtoComponent extends ProtoComponent {
 	public boolean playOnStart;
