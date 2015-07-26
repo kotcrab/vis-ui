@@ -17,6 +17,7 @@
 package com.kotcrab.vis.ui.util;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
@@ -26,7 +27,10 @@ import com.kotcrab.vis.ui.VisUI;
 public class TableUtils {
 	/** Sets default table spacing for vis skin */
 	public static void setSpacingDefaults (Table table) {
-		table.defaults().spaceBottom(VisUI.getDefaultSpacingBottom());
-		table.defaults().spaceRight(VisUI.getDefaultSpacingRight());
+		Sizes sizes = VisUI.getSkin().get(Sizes.class);
+		if (sizes.spacingTop.value != 0) table.defaults().spaceTop(sizes.spacingTop.value);
+		if (sizes.spacingBottom.value != 0) table.defaults().spaceBottom(sizes.spacingBottom.value);
+		if (sizes.spacingRight.value != 0) table.defaults().spaceRight(sizes.spacingRight.value);
+		if (sizes.spacingLeft.value != 0) table.defaults().spaceLeft(sizes.spacingLeft.value);
 	}
 }

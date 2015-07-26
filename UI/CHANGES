@@ -4,6 +4,9 @@
 -Skin change: ColorPickerStyle alphaBar25pxShifted removed (no longer necessary)
 -Added skin in higher resolution (can be loaded by new method: VisUI.load(SkinScale.X2))
  -SVG file is also available thanks to piotr-j (https://github.com/piotr-j)
+-Removed VisUI.getDefaultSpacingTop/Bottom/Right/Left and VisUI.setDefaultSpacingTop/Bottom/Right/Left
+ -Replaced by Sizes class ( VisUI.getSkin().get(Sizes.class) )
+ -TableUtils.setSpacingDefault now properly uses all spacings if set
 
 [0.8.0] [LibGDX 1.6.3]
 -API Addition: Tooltip (Actor target, String text, int textAlign)

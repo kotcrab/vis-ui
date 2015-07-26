@@ -34,6 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
@@ -97,11 +98,12 @@ public class MenuItem extends Button {
 		this.style = style;
 		this.image = image;
 		setSkin(VisUI.getSkin());
+		Sizes sizes = getSkin().get(Sizes.class);
 
 		defaults().space(3);
 
 		if (image != null) image.setScaling(Scaling.fit);
-		add(image).size(22);
+		add(image).size(sizes.menuItemIconSize.value);
 
 		label = new Label(text, new LabelStyle(style.font, style.fontColor));
 		label.setAlignment(Align.left);

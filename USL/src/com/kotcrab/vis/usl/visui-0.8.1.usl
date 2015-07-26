@@ -95,6 +95,17 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	#Tree$TreeStyle: { default: { minus: tree-minus, plus: tree-plus, selection: tree-selection, over: tree-over } }
 }
 
+#com.kotcrab.vis.ui.Sizes: {
+    default: {
+        spacingTop: { value: 0 }
+        spacingBottom: { value: 8, scale: false }
+        spacingRight: { value: 6 }
+        spacingLeft: { value: 0 }
+
+        menuItemIconSize: { value: 22 }
+    }
+}
+
 package com.kotcrab.vis.ui.widget {
 	#VisTextField$VisTextFieldStyle: {
 		default inherits .focus-border, .font: { selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor }

@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.VisUI.SkinScale;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
@@ -54,7 +55,7 @@ class TestApplication extends ApplicationAdapter {
 
 	@Override
 	public void create () {
-		VisUI.load();
+		VisUI.load(SkinScale.X1);
 
 		stage = new Stage(new ScreenViewport());
 		Table root = new Table();

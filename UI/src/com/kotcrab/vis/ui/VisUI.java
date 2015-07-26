@@ -40,16 +40,16 @@ public class VisUI {
 	private static I18NBundle tabbedPaneBundle;
 	private static I18NBundle colorPickerBundle;
 
-	private static int defaultSpacingTop = 0;
-	private static int defaultSpacingBottom = 8;
-	private static int defaultSpacingRight = 6;
-	private static int defaultSpacingLeft = 0;
-
 	public enum SkinScale {
 		X1 {
 			@Override
 			public FileHandle getSkinFile () {
 				return Gdx.files.classpath("com/kotcrab/vis/ui/skin/x1/uiskin.json");
+			}
+
+			@Override
+			public int getScaleFactor () {
+				return 1;
 			}
 		},
 		X2 {
@@ -57,9 +57,16 @@ public class VisUI {
 			public FileHandle getSkinFile () {
 				return Gdx.files.classpath("com/kotcrab/vis/ui/skin/x2/uiskin.json");
 			}
+
+			@Override
+			public int getScaleFactor () {
+				return 2;
+			}
 		};
 
 		public abstract FileHandle getSkinFile ();
+
+		public abstract int getScaleFactor ();
 	}
 
 	/** Loads default VisUI skin */
@@ -70,6 +77,7 @@ public class VisUI {
 	/** Loads default VisUI skin */
 	public static void load (SkinScale scale) {
 		load(scale.getSkinFile());
+		skin.get(Sizes.class).scale(scale.getScaleFactor());
 	}
 
 	/** Loads skin from provided file, skin must be compatible with default VisUI skin */
@@ -91,7 +99,7 @@ public class VisUI {
 	}
 
 	public static Skin getSkin () {
-		if (skin == null) throw new IllegalStateException("VisUI not loaded!");
+		if (skin == null) throw new IllegalStateException("VisUI is not loaded!");
 		return skin;
 	}
 
@@ -178,37 +186,5 @@ public class VisUI {
 	 */
 	public static void setColorPickerBundle (I18NBundle colorPickerBundle) {
 		VisUI.colorPickerBundle = colorPickerBundle;
-	}
-
-	public static int getDefaultSpacingTop () {
-		return defaultSpacingTop;
-	}
-
-	public static void setDefaultSpacingTop (int defaultSpacingTop) {
-		VisUI.defaultSpacingTop = defaultSpacingTop;
-	}
-
-	public static int getDefaultSpacingBottom () {
-		return defaultSpacingBottom;
-	}
-
-	public static void setDefaultSpacingBottom (int defaultSpacingBottom) {
-		VisUI.defaultSpacingBottom = defaultSpacingBottom;
-	}
-
-	public static int getDefaultSpacingRight () {
-		return defaultSpacingRight;
-	}
-
-	public static void setDefaultSpacingRight (int defaultSpacingRight) {
-		VisUI.defaultSpacingRight = defaultSpacingRight;
-	}
-
-	public static int getDefaultSpacingLeft () {
-		return defaultSpacingLeft;
-	}
-
-	public static void setDefaultSpacingLeft (int defaultSpacingLeft) {
-		VisUI.defaultSpacingLeft = defaultSpacingLeft;
 	}
 }
