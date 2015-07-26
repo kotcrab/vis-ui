@@ -45,10 +45,31 @@ public class VisUI {
 	private static int defaultSpacingRight = 6;
 	private static int defaultSpacingLeft = 0;
 
+	public enum SkinScale {
+		X1 {
+			@Override
+			public FileHandle getSkinFile () {
+				return Gdx.files.classpath("com/kotcrab/vis/ui/skin/x1/uiskin.json");
+			}
+		},
+		X2 {
+			@Override
+			public FileHandle getSkinFile () {
+				return Gdx.files.classpath("com/kotcrab/vis/ui/skin/x2/uiskin.json");
+			}
+		};
+
+		public abstract FileHandle getSkinFile ();
+	}
+
 	/** Loads default VisUI skin */
 	public static void load () {
-		//atlas is disposed automatically when skin is disposed
-		load(Gdx.files.classpath("com/kotcrab/vis/ui/skin/x1/uiskin.json"));
+		load(SkinScale.X1);
+	}
+
+	/** Loads default VisUI skin */
+	public static void load (SkinScale scale) {
+		load(scale.getSkinFile());
 	}
 
 	/** Loads skin from provided file, skin must be compatible with default VisUI skin */

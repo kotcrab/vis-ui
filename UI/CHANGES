@@ -2,6 +2,8 @@
 -Updated libGDX to 1.6.4
 -Error dialog from DialogUtils with exception will now show stacktrace from nested exceptions
 -Skin change: ColorPickerStyle alphaBar25pxShifted removed (no longer necessary)
+-Added skin in higher resolution (can be loaded by new method: VisUI.load(SkinScale.X2))
+ -SVG file is also available thanks to piotr-j (https://github.com/piotr-j)
 
 [0.8.0] [LibGDX 1.6.3]
 -API Addition: Tooltip (Actor target, String text, int textAlign)
