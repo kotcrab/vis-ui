@@ -282,8 +282,8 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="5.6568543"
-     inkscape:cx="589.79745"
-     inkscape:cy="597.48742"
+     inkscape:cx="283.70837"
+     inkscape:cy="297.75527"
      inkscape:document-units="px"
      inkscape:current-layer="layer4"
      showgrid="true"
@@ -334,7 +334,7 @@
      inkscape:groupmode="layer"
      id="layer2"
      inkscape:label="bg"
-     style="display:inline"
+     style="display:none"
      transform="translate(-10,-198.26766)">
     <rect
        style="opacity:1;fill:#800000;fill-opacity:1;stroke:none"
@@ -367,7 +367,7 @@
     <rect
        style="display:inline;opacity:1;fill:#800000;fill-opacity:1;stroke:none"
        id="rect5044-27"
-       width="171.26808"
+       width="345.12595"
        height="124.53575"
        x="34.874069"
        y="558.62628" />
@@ -390,15 +390,15 @@
        id="rect5044-92"
        width="90"
        height="158.82594"
-       x="254.3562"
-       y="563.53619" />
+       x="418.5"
+       y="553.86212" />
     <rect
        style="display:inline;opacity:1;fill:#800000;fill-opacity:1;stroke:none"
        id="rect5044-92-21"
        width="90"
        height="136.5"
-       x="359.3562"
-       y="565.03619" />
+       x="523.5"
+       y="555.36212" />
     <rect
        style="display:inline;opacity:1;fill:#800000;fill-opacity:1;stroke:none"
        id="rect5044-5"
@@ -494,26 +494,26 @@
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="244.3562"
-       y="-106.32591"
+       x="408.5"
+       y="-116.00001"
        id="text4966"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan4968"
-         x="244.3562"
-         y="-106.32591"
+         x="408.5"
+         y="-116.00001"
          style="font-size:20px">Windows</tspan></text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       x="346.95673"
-       y="-104.94418"
+       x="511.10052"
+       y="-114.61828"
        id="text5044"
        sodipodi:linespacing="125%"><tspan
          sodipodi:role="line"
          id="tspan5046"
-         x="346.95673"
-         y="-104.94418"
+         x="511.10052"
+         y="-114.61828"
          style="font-size:20px">Selectbox</tspan></text>
     <text
        xml:space="preserve"
@@ -643,8 +643,8 @@
        height="5"
        width="5" />
     <image
-       y="569.03619"
-       x="364.3562"
+       y="559.36212"
+       x="528.5"
        id="default-select.9"
        xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAaCAYAAABLlle3AAAACXBIWXMAAAsTAAALEwEAmpwYAAAA B3RJTUUH3gsBDCQuD6iUhgAAAJBJREFUSMftlbENAyEMRR9RNmIL6luMhiEQuhJaFrgBTgzAAiDR XeooSXUil0h+5S/8ZFuyFe85+IziJApAa33wJbZtUzcuQKQiFenvS+9nCyzLgjHmJY8xEkKY02lK iZzzU5ZzJqU0b7y9d7z3lFIAqLWyriu997k7HWPgnGPfd6y1tNbky8hxEKlI/0R6CQ8lJzLMOUF7 ywAAAABJRU5ErkJggg== "
        style="image-rendering:optimizeSpeed"
@@ -896,8 +896,8 @@
        height="1"
        width="1" />
     <image
-       y="571.03619"
-       x="300.8562"
+       y="561.36212"
+       x="465"
        id="image6081"
        xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAkCAYAAAB15jFqAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI WXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gsLFAk4pt5plAAAAEtJREFUWMPt17ENACAIBVEwroL7 z6PD4AISG4iFdyXNS36HSpxLTno8mI0s4NpaU5s8CBQUFBQUFBQUFPQX1JkXNANV5q2qRy96ZRuS WgZKtEmJjQAAAABJRU5ErkJggg== "
        style="image-rendering:optimizeSpeed"
@@ -905,8 +905,8 @@
        height="36"
        width="29" />
     <image
-       y="572.03619"
-       x="265.8562"
+       y="562.36212"
+       x="430"
        id="image6092"
        xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB0AAAAkCAYAAAB15jFqAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI WXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gsLFAY5VkFFzQAAAGVJREFUWMNjZMAN/jNQBzBiFZBe +IhaFhAET+PlGFlgHK4WF5pb+K1mDwMDAwMDE8MAgFFLRy0dtXTU0lFLRy0dtXTU0lFLRy0dAEv/ jwbvqKXUsJRxRPiUBb3vSDdLuVpc6BrEAB7fDE6JAkKZAAAAAElFTkSuQmCC "
        style="image-rendering:optimizeSpeed"
@@ -1970,7 +1970,7 @@
     <g
        id="default-select"
        inkscape:label="#g9243"
-       transform="translate(339.85621,-209.32591)">
+       transform="translate(504,-219)">
       <rect
          y="765"
          x="26"
@@ -2008,7 +2008,7 @@
     <g
        id="window.9"
        inkscape:label="#g9176"
-       transform="translate(199.85621,-200.32591)">
+       transform="translate(364,-210)">
       <rect
          y="761"
          x="67"
@@ -2048,7 +2048,7 @@
     <g
        id="window-noborder.9"
        inkscape:label="#g9183"
-       transform="translate(199.85621,-200.32591)">
+       transform="translate(364,-210)">
       <rect
          y="761"
          x="101"
@@ -4628,7 +4628,7 @@
        style="display:inline"
        id="window.9-2x"
        inkscape:label="#g9176"
-       transform="translate(190,-769.00002)"
+       transform="translate(354.14379,-778.67411)"
        inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\window.9.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90">
@@ -4672,7 +4672,7 @@
        style="display:inline"
        id="window-noborder.9-2x"
        inkscape:label="#g9183"
-       transform="translate(190,-769.00002)"
+       transform="translate(354.14379,-778.67411)"
        inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\window-noborder.9.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90">
@@ -4709,7 +4709,7 @@
        style="display:inline"
        id="default-select.9-2x"
        inkscape:label="#g9243"
-       transform="translate(325,-764.00001)"
+       transform="translate(489.14379,-773.6741)"
        inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\default-select.9.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90">
@@ -5461,10 +5461,13 @@
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90" />
     <g
-       transform="matrix(1,0,0,2,-288,-1455.7243)"
+       transform="matrix(2,0,0,2,-604,-1458.7243)"
        style="display:inline"
        id="button-blue-down.9-2x"
-       inkscape:label="#g7975">
+       inkscape:label="#g7975"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\button-blue-down.9.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          y="712.36212"
          x="461"
@@ -5474,9 +5477,9 @@
          style="opacity:1;fill:#0078b3;fill-opacity:1;stroke:none" />
       <rect
          y="717.36212"
-         x="460"
+         x="460.5"
          height="11"
-         width="1"
+         width="0.49999991"
          id="rect7091-32-7"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
       <rect
@@ -5497,16 +5500,16 @@
          y="713.36212"
          x="473"
          height="18"
-         width="1"
+         width="0.50000006"
          id="rect7097-76-3"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
     </g>
     <g
-       transform="matrix(1,0,0,2,-289,-1459.7243)"
+       transform="matrix(2,0,0,2,-606,-1462.7243)"
        style="display:inline"
        id="button.9-2x"
        inkscape:label="#g7926"
-       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\button.png"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\button.9.png"
        inkscape:export-xdpi="90"
        inkscape:export-ydpi="90">
       <rect
@@ -5518,9 +5521,9 @@
          style="opacity:1;fill:#333333;fill-opacity:1;stroke:none" />
       <rect
          y="719.36212"
-         x="320"
+         x="320.5"
          height="11"
-         width="1"
+         width="0.49999991"
          id="rect7091-6"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
       <rect
@@ -5541,15 +5544,18 @@
          y="715.36212"
          x="333"
          height="18"
-         width="1"
+         width="0.50000006"
          id="rect7097-1"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
     </g>
     <g
-       transform="matrix(1,0,0,2,-289,-1463.7243)"
+       transform="matrix(2,0,0,2,-606,-1466.7243)"
        style="display:inline"
        id="button-window-bg.9-2x"
-       inkscape:label="#g7933">
+       inkscape:label="#g7933"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\button-window-bg.9.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          y="716.36212"
          x="342"
@@ -5559,9 +5565,9 @@
          style="opacity:1;fill:#252526;fill-opacity:1;stroke:none" />
       <rect
          y="721.36212"
-         x="341"
+         x="341.5"
          height="11"
-         width="1"
+         width="0.49999991"
          id="rect7091-1-2"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
       <rect
@@ -5582,15 +5588,18 @@
          y="717.36212"
          x="354"
          height="18"
-         width="1"
+         width="0.50000006"
          id="rect7097-0-1"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
     </g>
     <g
-       transform="matrix(1,0,0,2,-288,-1463.7243)"
+       transform="matrix(2,0,0,2,-604,-1466.7243)"
        style="display:inline"
        id="button-red.9-2x"
-       inkscape:label="#g7940">
+       inkscape:label="#g7940"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\button-red.9.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          y="716.36212"
          x="362"
@@ -5600,9 +5609,9 @@
          style="opacity:1;fill:#e51400;fill-opacity:1;stroke:none" />
       <rect
          y="721.36212"
-         x="361"
+         x="361.5"
          height="11"
-         width="1"
+         width="0.49999991"
          id="rect7091-9-1"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
       <rect
@@ -5623,15 +5632,18 @@
          y="717.36212"
          x="374"
          height="18"
-         width="1"
+         width="0.50000006"
          id="rect7097-7-2"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
     </g>
     <g
-       transform="matrix(1,0,0,2,-289,-1459.7243)"
+       transform="matrix(2,0,0,2,-606,-1462.7243)"
        style="display:inline"
        id="button-over.9-2x"
-       inkscape:label="#g7947">
+       inkscape:label="#g7947"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\button-over.9.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          y="714.36212"
          x="382"
@@ -5641,9 +5653,9 @@
          style="opacity:1;fill:#3e3e42;fill-opacity:1;stroke:none" />
       <rect
          y="719.36212"
-         x="381"
+         x="381.5"
          height="11"
-         width="1"
+         width="0.49999991"
          id="rect7091-13-2"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
       <rect
@@ -5664,15 +5676,18 @@
          y="715.36212"
          x="394"
          height="18"
-         width="1"
+         width="0.50000006"
          id="rect7097-78-9"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
     </g>
     <g
-       transform="matrix(1,0,0,2,-288,-1459.7243)"
+       transform="matrix(2,0,0,2,-604,-1462.7243)"
        style="display:inline"
        id="button-blue.9-2x"
-       inkscape:label="#g7954">
+       inkscape:label="#g7954"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\button-blue.9.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          y="714.36212"
          x="401"
@@ -5682,9 +5697,9 @@
          style="opacity:1;fill:#1ba1e2;fill-opacity:1;stroke:none" />
       <rect
          y="719.36212"
-         x="400"
+         x="400.5"
          height="11"
-         width="1"
+         width="0.49999991"
          id="rect7091-5-8"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
       <rect
@@ -5705,15 +5720,18 @@
          y="715.36212"
          x="413"
          height="18"
-         width="1"
+         width="0.50000006"
          id="rect7097-00-9"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
     </g>
     <g
-       transform="matrix(1,0,0,2,-289,-1457.7243)"
+       transform="matrix(2,0,0,2,-606,-1460.7243)"
        style="display:inline"
        id="button-down.9-2x"
-       inkscape:label="#g7961">
+       inkscape:label="#g7961"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\button-down.9.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          y="713.36212"
          x="422"
@@ -5723,9 +5741,9 @@
          style="opacity:1;fill:#1ba1e2;fill-opacity:1;stroke:none" />
       <rect
          y="718.36212"
-         x="421"
+         x="421.5"
          height="11"
-         width="1"
+         width="0.49999991"
          id="rect7091-3-0"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
       <rect
@@ -5746,15 +5764,18 @@
          y="714.36212"
          x="434"
          height="18"
-         width="1"
+         width="0.50000006"
          id="rect7097-09-9"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
     </g>
     <g
-       transform="matrix(1,0,0,2,-289,-1457.7243)"
+       transform="matrix(2,0,0,2,-606,-1460.7243)"
        style="display:inline"
        id="button-blue-over.9-2x"
-       inkscape:label="#g7968">
+       inkscape:label="#g7968"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\button-blue-over.9.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90">
       <rect
          y="713.36212"
          x="440"
@@ -5764,9 +5785,9 @@
          style="opacity:1;fill:#008fd4;fill-opacity:1;stroke:none" />
       <rect
          y="718.36212"
-         x="439"
+         x="439.5"
          height="11"
-         width="1"
+         width="0.49999991"
          id="rect7091-8-5"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
       <rect
@@ -5787,7 +5808,7 @@
          y="714.36212"
          x="452"
          height="18"
-         width="1"
+         width="0.50000012"
          id="rect7097-3-4"
          style="opacity:1;fill:#000000;fill-opacity:1;stroke:none" />
     </g>
