@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.module.scene;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -41,6 +42,9 @@ public class CameraModule extends SceneModule {
 	private CameraZoomController zoomController;
 
 	private Vector3 unprojectVec;
+
+	private float lastX;
+	private float lastY;
 
 	@Override
 	public void added () {
@@ -99,14 +103,23 @@ public class CameraModule extends SceneModule {
 	}
 
 	@Override
+	public boolean mouseMoved (InputEvent event, float x, float y) {
+		if (Gdx.input.isKeyPressed(Keys.SPACE)) {
+			pan();
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 		return true;
 	}
 
 	@Override
 	public void touchDragged (InputEvent event, float x, float y, int pointer) {
-		if (Gdx.input.isButtonPressed(Buttons.RIGHT))
-			pan(Gdx.input.getDeltaX() / scene.pixelsPerUnit, Gdx.input.getDeltaY() / scene.pixelsPerUnit);
+		if (Gdx.input.isButtonPressed(Buttons.RIGHT)) pan();
 	}
 
 	@Override
@@ -116,6 +129,10 @@ public class CameraModule extends SceneModule {
 			camera.position.x = getInputX();
 			camera.position.y = getInputY();
 		}
+	}
+
+	private void pan () {
+		pan(Gdx.input.getDeltaX() / scene.pixelsPerUnit, Gdx.input.getDeltaY() / scene.pixelsPerUnit);
 	}
 
 	private void pan (float deltaX, float deltaY) {
