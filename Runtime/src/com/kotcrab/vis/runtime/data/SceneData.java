@@ -17,6 +17,7 @@
 package com.kotcrab.vis.runtime.data;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
 import com.kotcrab.vis.runtime.scene.Scene;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
@@ -30,6 +31,8 @@ public class SceneData {
 	public float width;
 	public float height;
 	public float pixelsPerUnit;
+
+	public IntMap<String> groupIds;
 
 	public Array<LayerData> layers = new Array<LayerData>();
 

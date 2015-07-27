@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.scene;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.util.BaseObservable;
@@ -50,12 +51,15 @@ public class EditorScene extends BaseObservable {
 	@Tag(4) private Array<Layer> layers = new Array<>();
 	@Tag(5) private int activeLayerId;
 
+	@Tag(8) private IntMap<String> groupIds = new IntMap<>();
+
 	@Tag(6) private Array<EntityScheme> schemes; //for serialization
-	//last tag is 7
+
+	//last tag is 8
 
 	public EditorScene (FileHandle file, SceneViewport viewport, float width, float height, int pixelsPerUnit) {
 		if (width < 0 || height < 0) throw new IllegalArgumentException("Invalid scene size");
-		if (pixelsPerUnit <= 0) throw new IllegalArgumentException("Pixels per units cannot be smaler or equal zero");
+		if (pixelsPerUnit <= 0) throw new IllegalArgumentException("Pixels per units cannot be smaller or equal zero");
 		this.path = file.path();
 		this.viewport = viewport;
 		this.width = width;
@@ -83,6 +87,20 @@ public class EditorScene extends BaseObservable {
 
 	public FileHandle getFile () {
 		return Gdx.files.absolute(path);
+	}
+
+	public String getGroupStringId (int id) {
+		return groupIds.get(id, "");
+	}
+
+	public void setGroupStringId (int id, String stringId) {
+		if (stringId.equals("")) return;
+
+		groupIds.put(id, stringId);
+	}
+
+	public IntMap<String> getGroups () {
+		return groupIds;
 	}
 
 	public Layer getActiveLayer () {

@@ -16,18 +16,22 @@
 
 package com.kotcrab.vis.editor.serializer;
 
+import com.badlogic.gdx.utils.IntMap;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.scene.EditorScene;
+
+import java.lang.reflect.Field;
 
 /**
  * Kryo serializer for {@link EditorScene}
  * @author Kotcrab
  */
 public class EditorSceneSerializer extends TaggedFieldSerializer<EditorScene> {
-	private static final int VERSION_CODE = 1;
+	private static final int VERSION_CODE = 2;
 
 	public EditorSceneSerializer (Kryo kryo) {
 		super(kryo, EditorScene.class);
@@ -45,7 +49,20 @@ public class EditorSceneSerializer extends TaggedFieldSerializer<EditorScene> {
 		EditorScene obj = super.read(kryo, input, sceneClass);
 
 		obj.onDeserialize();
-		input.readInt(); //version code
+		int versionCode = input.readInt(); //version code
+
+		if (versionCode == 1) {
+			//groupIds was added in 0.2.1, need manual creation set if loading old scene version
+			try {
+				Field field = EditorScene.class.getDeclaredField("groupIds");
+				field.setAccessible(true);
+				field.set(obj, new IntMap<String>());
+			} catch (ReflectiveOperationException e) {
+				Log.exception(e);
+			}
+			Log.info("Updating EditorScene to version code: 2");
+		}
+
 		return obj;
 	}
 }

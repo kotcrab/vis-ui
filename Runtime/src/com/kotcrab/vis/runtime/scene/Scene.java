@@ -62,6 +62,8 @@ public class Scene {
 		engineConfig.setManager(cameraManager = new CameraManager(data.viewport, data.width, data.height, data.pixelsPerUnit));
 		engineConfig.setManager(new VisIDManager());
 
+		if (runtimeConfig.useVisGroupManager) engineConfig.setManager(new VisGroupManager(data.groupIds));
+
 		engineConfig.setManager(new SpriteInflater(runtimeConfig, assetsManager));
 		engineConfig.setManager(new SoundInflater(runtimeConfig, assetsManager));
 		engineConfig.setManager(new MusicInflater(runtimeConfig, assetsManager));

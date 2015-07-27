@@ -28,6 +28,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
+import com.badlogic.gdx.utils.IntMap;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
@@ -105,6 +106,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(Class.class, 16);
 		kryo.register(float[].class, 17);
 		kryo.register(UUID.class, new UUIDSerializer(), 18);
+		kryo.register(IntMap.class, new IntMapSerializer(), 19);
 
 		kryo.register(EditorScene.class, new EditorSceneSerializer(kryo), 31);
 		kryo.register(EntityScheme.class, new EntitySchemeSerializer(kryo, this), 32);

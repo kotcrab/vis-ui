@@ -208,6 +208,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		registerSpecificTable(new MusicUITable());
 		registerSpecificTable(new SoundUITable());
 		registerSpecificTable(new ParticleEffectTable());
+		registerSpecificTable(new GroupUITable());
 
 		registerComponentTable(new RenderableComponentTable());
 
@@ -344,7 +345,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			Bag<Component> components = entities.get(0).getEntities().get(0).getComponents(new Bag<>());
 
 			for (Component component : components) {
-				if(component == null) continue;
+				if (component == null) continue;
 
 				if (EntityUtils.isComponentCommon(component, entities)) {
 					SpecificComponentTable componentTable = getComponentTable(component);

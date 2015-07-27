@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.module.project;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
+import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
@@ -203,6 +204,8 @@ public class ExportModule extends ProjectModule {
 					sceneData.width = scene.width;
 					sceneData.height = scene.height;
 					sceneData.pixelsPerUnit = scene.pixelsPerUnit;
+
+					sceneData.groupIds = new IntMap<>(scene.getGroups());
 
 					for (Layer layer : scene.getLayers()) {
 						sceneData.layers.add(new LayerData(layer.name, layer.id));
