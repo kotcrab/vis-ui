@@ -25,8 +25,8 @@ import com.kotcrab.vis.runtime.component.AssetComponent;
  */
 public class RuntimeConfiguration {
 	/**
-	 * Controls whether to store {@link AssetComponent} in {@link Entity} after inflating it. Set this to true if you
-	 * need to access {@link AssetComponent} during runtime.
+	 * Controls whether to store {@link AssetComponent} in {@link Entity} after inflating it. Set this to false if you
+	 * need to access {@link AssetComponent} during runtime. Default is true.
 	 */
-	public boolean removeAssetsComponentAfterInflating = false;
+	public boolean removeAssetsComponentAfterInflating = true;
 }
