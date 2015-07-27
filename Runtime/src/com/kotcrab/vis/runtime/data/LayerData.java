@@ -24,6 +24,9 @@ public class LayerData {
 	public String name;
 	public int id;
 
+	private LayerData () {
+	}
+
 	public LayerData (String name, int id) {
 		this.name = name;
 		this.id = id;
