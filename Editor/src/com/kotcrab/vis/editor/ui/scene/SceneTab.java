@@ -127,23 +127,26 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 		GroupBreadcrumb breadcrumb = entityManipulator.getGroupBreadcrumb();
 		EntityProperties entityProperties = entityManipulator.getEntityProperties();
+		LayersDialog layersDialog = entityManipulator.getLayersDialog();
 		alignmentTools = entityManipulator.getAlignmentToolsDialog();
 
 		content.add(breadcrumb).height(new VisValue(context -> breadcrumb.getPrefHeight())).expandX().fillX().colspan(3).row();
 		content.add(leftColumn).width(190).fillY().expandY();
 		content.add().fill().expand();
-		content.add(rightColumn).width(260).fillY().expandY();
+		content.add(rightColumn).width(280).fillY().expandY();
 
-		//we need some better window management
+		//we need some better window management, really
 		leftColumn.top();
 		leftColumn.add(alignmentTools).height(new VisValue(context -> alignmentTools.getPrefHeight())).expandX().fillX().row();
 		leftColumn.add(entityManipulator.getSceneOutline()).height(300).padTop(new VisValue(context -> alignmentTools.isVisible() ? 8 : 0)).top().fillX().expandX();
 		leftColumn.add().fill().expand().row();
 
 		rightColumn.top();
-		rightColumn.add(entityProperties).height(new VisValue(context -> entityProperties.getPrefHeight())).expandX().fillX().row();
-		rightColumn.add().fill().expand().row();
-		rightColumn.add(entityManipulator.getLayersDialog()).expandX().fillX();
+		rightColumn.add(entityProperties)
+				.height(new VisValue(context -> Math.min(entityProperties.getPrefHeight(), rightColumn.getHeight() - layersDialog.getHeight() - 8)))
+				.maxHeight(new VisValue(context -> rightColumn.getHeight() - layersDialog.getHeight() - 8))
+				.expandX().fillX().top().row();
+		rightColumn.add(layersDialog).bottom().expand().fillX();
 
 		dropTarget = new Target(content) {
 			@Override
