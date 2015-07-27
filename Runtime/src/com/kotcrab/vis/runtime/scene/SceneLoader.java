@@ -34,6 +34,7 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.RuntimeContext;
@@ -104,6 +105,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		json.addClassTag("SoundProtoComponent", SoundProtoComponent.class);
 		json.addClassTag("ParticleProtoComponent", ParticleProtoComponent.class);
 		json.addClassTag("TextProtoComponent", TextProtoComponent.class);
+
+		json.setSerializer(IntMap.class, new IntMapJsonSerializer());
 
 		return json;
 	}
