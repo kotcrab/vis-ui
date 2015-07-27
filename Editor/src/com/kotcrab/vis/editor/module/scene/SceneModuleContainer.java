@@ -74,6 +74,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new GroupIdProviderSystem(), true);
 		config.setSystem(new GroupProxyProviderSystem(), true);
 		config.setSystem(new GridRendererSystem(batch, this));
+		config.setSystem(new VisComponentManipulator());
 
 		createEssentialsSystems(config, scene.pixelsPerUnit);
 

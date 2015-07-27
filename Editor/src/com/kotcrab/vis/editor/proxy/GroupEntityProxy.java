@@ -101,7 +101,6 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 	@Override
 	public IntArray getGroupsIds () {
 		return proxies.get(0).getGroupsIds();
-//		throw new UnsupportedOperationException();
 	}
 
 	@Override

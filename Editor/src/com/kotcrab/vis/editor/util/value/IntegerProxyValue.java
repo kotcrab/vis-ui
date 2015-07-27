@@ -14,26 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.entity;
+package com.kotcrab.vis.editor.util.value;
 
-import com.artemis.Component;
-import com.artemis.Entity;
-import com.artemis.World;
-
-import java.util.UUID;
+import com.kotcrab.vis.editor.proxy.EntityProxy;
 
 /**
- * VisEditor UUID is managed separately than Artemis {@link World} {@link Entity} UUID.
+ * Used when you need to get multiple integer values from {@link EntityProxy}s
  * @author Kotcrab
  */
-public class UUIDComponent extends Component {
-	private UUID uuid;
-
-	public UUIDComponent () {
-		uuid = UUID.randomUUID();
-	}
-
-	public UUID getUuid () {
-		return uuid;
-	}
+public interface IntegerProxyValue {
+	int getInteger (EntityProxy entity);
 }

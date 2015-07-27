@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.util.vis;
 
+import com.artemis.Component;
 import com.artemis.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
@@ -34,6 +35,15 @@ public class EntityUtils {
 			if (value != objValue.getFloat(entity)) return "?";
 
 		return NumberUtils.floatToString(value);
+	}
+
+	public static String getEntitiesCommonIntegerValue (Array<EntityProxy> entities, IntegerProxyValue objValue) {
+		int value = objValue.getInteger(entities.first());
+
+		for (EntityProxy entity : entities)
+			if (value != objValue.getInteger(entity)) return "?";
+
+		return String.valueOf(value);
 	}
 
 	public static void setCommonCheckBoxState (Array<EntityProxy> entities, IndeterminateCheckbox target, BooleanProxyValue value) {
@@ -69,6 +79,18 @@ public class EntityUtils {
 		}
 
 		return NumberUtils.floatToString(value);
+	}
+
+	public static String getEntitiesCommonIntegerValue (Array<EntityProxy> proxies, IntegerEntityValue objValue) {
+		int value = objValue.getInteger(proxies.first().getEntities().first());
+
+		for (EntityProxy proxy : proxies) {
+			for (Entity entity : proxy.getEntities()) {
+				if (value != objValue.getInteger(entity)) return "?";
+			}
+		}
+
+		return String.valueOf(value);
 	}
 
 	public static void setCommonCheckBoxState (Array<EntityProxy> proxies, IndeterminateCheckbox target, BooleanEntityValue value) {
@@ -149,6 +171,14 @@ public class EntityUtils {
 	public static boolean isFlipSupportedForEntities (Array<EntityProxy> entities) {
 		for (EntityProxy entity : entities) {
 			if (entity.isFlipSupported() == false) return false;
+		}
+
+		return true;
+	}
+
+	public static boolean isComponentCommon (Component component, Array<EntityProxy> entities) {
+		for (EntityProxy entity : entities) {
+			if (entity.hasComponent(component.getClass()) == false) return false;
 		}
 
 		return true;

@@ -17,12 +17,14 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
+import com.kotcrab.vis.runtime.util.EntityPropertyUI;
 
 /**
  * All renderable entities must have this component, stores entity zIndex
  * @author Kotcrab
  */
 public class RenderableComponent extends Component {
+	@EntityPropertyUI(fieldName = "Z Index")
 	public int zIndex;
 
 	private RenderableComponent () {

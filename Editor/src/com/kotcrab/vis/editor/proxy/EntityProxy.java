@@ -38,8 +38,6 @@ public abstract class EntityProxy {
 	protected VisUUIDManager uuidManager;
 	protected UUID uuid;
 
-	protected EntityScheme scheme;
-
 	protected BasicPropertiesAccessor basicAccessor;
 
 	protected SizePropertiesAccessor sizeAccessor;
@@ -75,10 +73,7 @@ public abstract class EntityProxy {
 	}
 
 	public EntityScheme getScheme () {
-		if (scheme == null)
-			scheme = new EntityScheme(entity);
-
-		return scheme;
+		return new EntityScheme(entity);
 	}
 
 	public void addGroup (int groupId) {

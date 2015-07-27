@@ -14,26 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.entity;
+package com.kotcrab.vis.runtime.util;
 
-import com.artemis.Component;
-import com.artemis.Entity;
-import com.artemis.World;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.util.UUID;
-
-/**
- * VisEditor UUID is managed separately than Artemis {@link World} {@link Entity} UUID.
- * @author Kotcrab
- */
-public class UUIDComponent extends Component {
-	private UUID uuid;
-
-	public UUIDComponent () {
-		uuid = UUID.randomUUID();
-	}
-
-	public UUID getUuid () {
-		return uuid;
-	}
+/** @author Kotcrab */
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface EntityPropertyUI {
+	String fieldName () default "";
 }

@@ -71,7 +71,7 @@ public class ZIndexManipulatorManager extends Manager {
 		}
 
 		if (targetZIndex != entity.getZIndex()) {
-			actionGroup.execute(new ChangeZIndexAction(renderBatchingSystem, entity, targetZIndex));
+			actionGroup.execute(new ChangeZIndexAction(renderBatchingSystem, entityManipulator, entity, targetZIndex));
 		}
 	}
 

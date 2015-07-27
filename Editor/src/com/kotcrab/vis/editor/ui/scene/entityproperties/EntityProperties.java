@@ -42,6 +42,7 @@ import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SupportModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
+import com.kotcrab.vis.editor.module.scene.VisComponentManipulator;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
@@ -87,6 +88,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	@InjectModule private UndoModule undoModule;
 	@InjectModule private EntityManipulatorModule entityManipulator;
 
+	private VisComponentManipulator componentManipulator;
+
 	private ColorPicker picker;
 	private Tab parentTab;
 
@@ -118,6 +121,9 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private Array<SpecificUITable> specificTables = new Array<>();
 	private SpecificUITable activeSpecificTable;
 
+	private Array<SpecificComponentTable> componentTables = new Array<>();
+	private Array<SpecificComponentTable> activeComponentTables = new Array<>();
+
 	private VisValidableTextField idField;
 	private NumberInputField xField;
 	private NumberInputField yField;
@@ -133,6 +139,9 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	public EntityProperties (SceneModuleContainer sceneMC, Tab parentSceneTab, Array<EntityProxy> entities) {
 		super(true);
 		sceneMC.injectModules(this);
+
+		componentManipulator = sceneMC.getEntityEngineConfiguration().getSystem(VisComponentManipulator.class);
+
 		this.sceneMC = sceneMC;
 		this.entities = entities;
 		this.parentTab = parentSceneTab;
@@ -199,6 +208,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		registerSpecificTable(new MusicUITable());
 		registerSpecificTable(new SoundUITable());
 		registerSpecificTable(new ParticleEffectTable());
+
+		registerComponentTable(new RenderableComponentTable());
 
 		propertiesTable = new VisTable(true);
 
@@ -328,7 +339,36 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			}
 		}
 
+		activeComponentTables.clear();
+		if (entities.size > 0) {
+			Bag<Component> components = entities.get(0).getEntities().get(0).getComponents(new Bag<>());
+
+			for (Component component : components) {
+				if(component == null) continue;
+
+				if (EntityUtils.isComponentCommon(component, entities)) {
+					SpecificComponentTable componentTable = getComponentTable(component);
+
+					if (componentTable != null) {
+						activeComponentTables.add(componentTable);
+						propertiesTable.add(new ComponentPanel(sceneMC, componentManipulator, component.getClass().getSimpleName(), componentTable));
+						propertiesTable.row();
+					}
+				}
+			}
+		}
+
 		invalidateHierarchy();
+	}
+
+	private <T extends Component> SpecificComponentTable getComponentTable (T component) {
+		if (componentTables.size == 0) return null;
+
+		for (SpecificComponentTable table : componentTables) {
+			if (table.getComponentClass().equals(component.getClass())) return table;
+		}
+
+		return null;
 	}
 
 	private boolean checkEntityList (SpecificUITable table) {
@@ -357,6 +397,10 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	public void selectedEntitiesChanged () {
 		rebuildPropertiesTable();
+		updateValues();
+	}
+
+	public void selectedEntitiesValuesChanged () {
 		updateValues();
 	}
 
@@ -456,6 +500,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		}
 
 		if (activeSpecificTable != null) activeSpecificTable.setValuesToEntities();
+		for (SpecificComponentTable table : activeComponentTables)
+			table.setValuesToEntities();
 	}
 
 	private void updateValues () {
@@ -493,13 +539,17 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			if (EntityUtils.isRotationSupportedForEntities(entities))
 				rotationField.setText(getEntitiesFieldValue(EntityProxy::getRotation));
 
-			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
-
 			if (EntityUtils.isTintSupportedForEntities(entities)) setTintUIForEntities();
 
 			if (EntityUtils.isFlipSupportedForEntities(entities)) {
 				EntityUtils.setCommonCheckBoxState(entities, xFlipCheck, EntityProxy::isFlipX);
 				EntityUtils.setCommonCheckBoxState(entities, yFlipCheck, EntityProxy::isFlipY);
+			}
+
+			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
+
+			for (SpecificComponentTable table : activeComponentTables) {
+				table.updateUIValues();
 			}
 		}
 	}
@@ -517,6 +567,11 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private void registerSpecificTable (SpecificUITable specificUITable) {
 		specificTables.add(specificUITable);
 		specificUITable.setProperties(this);
+	}
+
+	private void registerComponentTable (SpecificComponentTable table) {
+		componentTables.add(table);
+		table.setProperties(this);
 	}
 
 	private static class SnapshotUndoableActionGroup extends UndoableActionGroup {

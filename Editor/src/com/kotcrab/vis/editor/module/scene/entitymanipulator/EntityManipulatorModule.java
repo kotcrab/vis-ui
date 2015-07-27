@@ -67,6 +67,7 @@ import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
@@ -92,6 +93,7 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 	private ZIndexManipulatorManager zIndexManipulator;
 	private GroupIdProviderSystem groupIdProvider;
 	private GroupProxyProviderSystem groupProxyProvider;
+	private RenderBatchingSystem renderBatchingSystem;
 
 	//TODO [misc] create common class for scene ui dialogs
 	private EntityProperties entityProperties;
@@ -123,6 +125,7 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 		zIndexManipulator = engineConfiguration.getManager(ZIndexManipulatorManager.class);
 		groupIdProvider = engineConfiguration.getSystem(GroupIdProviderSystem.class);
 		groupProxyProvider = engineConfiguration.getSystem(GroupProxyProviderSystem.class);
+		renderBatchingSystem = engineConfiguration.getSystem(RenderBatchingSystem.class);
 
 		entityProperties = new EntityProperties(sceneContainer, sceneTab, selectedEntities);
 		groupBreadcrumb = new GroupBreadcrumb(new GroupBreadcrumbListener() {
@@ -500,6 +503,10 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 		sceneOutline.selectedEntitiesChanged();
 	}
 
+	public void selectedEntitiesValuesChanged () {
+		entityProperties.selectedEntitiesValuesChanged();
+	}
+
 	public void groupSelection () {
 		if (selectedEntities.size <= 1) {
 			statusBar.setText("Noting to group!");
@@ -583,6 +590,7 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 	public boolean onEvent (Event event) {
 		if (event instanceof UndoEvent || event instanceof RedoEvent) {
 			sceneOutline.rebuildOutline();
+			renderBatchingSystem.markDirty();
 		}
 
 		return false;

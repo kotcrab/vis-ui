@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.module.scene.action;
 
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
@@ -23,13 +24,15 @@ import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 /** @author Kotcrab */
 public class ChangeZIndexAction implements UndoableAction {
 	private RenderBatchingSystem renderBatchingSystem;
+	private EntityManipulatorModule entityManipulator;
 
 	private final int sourceZIndex;
 	private EntityProxy proxy;
 	private final int targetZIndex;
 
-	public ChangeZIndexAction (RenderBatchingSystem renderBatchingSystem, EntityProxy proxy, int targetZIndex) {
+	public ChangeZIndexAction (RenderBatchingSystem renderBatchingSystem, EntityManipulatorModule entityManipulator, EntityProxy proxy, int targetZIndex) {
 		this.renderBatchingSystem = renderBatchingSystem;
+		this.entityManipulator = entityManipulator;
 		this.proxy = proxy;
 		this.targetZIndex = targetZIndex;
 
@@ -41,6 +44,7 @@ public class ChangeZIndexAction implements UndoableAction {
 		proxy.reload();
 		proxy.setZIndex(targetZIndex);
 		renderBatchingSystem.markDirty();
+		entityManipulator.selectedEntitiesValuesChanged();
 	}
 
 	@Override
@@ -48,5 +52,6 @@ public class ChangeZIndexAction implements UndoableAction {
 		proxy.reload();
 		proxy.setZIndex(sourceZIndex);
 		renderBatchingSystem.markDirty();
+		entityManipulator.selectedEntitiesValuesChanged();
 	}
 }
