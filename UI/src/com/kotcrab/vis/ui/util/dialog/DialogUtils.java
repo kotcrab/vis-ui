@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.kotcrab.vis.ui.InputValidator;
+import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.i18n.BundleText;
 import com.kotcrab.vis.ui.util.TableUtils;
@@ -340,6 +341,8 @@ public class DialogUtils {
 				final VisTextButton copyButton = new VisTextButton(get(Text.COPY));
 				final VisLabel errorLabel = new VisLabel(stackTrace);
 
+				Sizes sizes = VisUI.getSizes();
+
 				copyButton.addListener(new ChangeListener() {
 					@Override
 					public void changed (ChangeEvent event, Actor actor) {
@@ -354,7 +357,7 @@ public class DialogUtils {
 
 				VisTable errorTable = new VisTable();
 				errorTable.add(errorLabel).top().expand().fillX();
-				detailsTable.add(createScrollPane(errorTable)).colspan(2).width(600).height(300);
+				detailsTable.add(createScrollPane(errorTable)).colspan(2).width(600 * sizes.scaleFactor).height(300 * sizes.scaleFactor);
 
 				getContentTable().row();
 				detailsCell = getContentTable().add(detailsTable);
