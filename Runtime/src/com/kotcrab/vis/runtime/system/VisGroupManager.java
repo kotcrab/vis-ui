@@ -86,6 +86,10 @@ public class VisGroupManager extends Manager {
 		});
 	}
 
+	public Array<Entity> get (int intId) {
+		return groups.get(intId);
+	}
+
 	public Array<Entity> get (String stringId) {
 		int gid = groupsIds.findKey(stringId, false, Integer.MIN_VALUE);
 		if (gid == Integer.MIN_VALUE)
