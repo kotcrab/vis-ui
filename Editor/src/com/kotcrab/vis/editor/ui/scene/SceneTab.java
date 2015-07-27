@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.ui.scene;
 
 import com.artemis.EntityManager;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -42,10 +43,7 @@ import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
-import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import com.kotcrab.vis.editor.module.project.SceneIOModule;
-import com.kotcrab.vis.editor.module.project.SceneTabsModule;
-import com.kotcrab.vis.editor.module.project.SupportModule;
+import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.AlignmentToolsDialog;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
@@ -76,6 +74,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	@InjectModule private MenuBarModule menuBarModule;
 	@InjectModule private StatusBarModule statusBarModule;
 	@InjectModule private SceneTabsModule sceneTabs;
+	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private SceneIOModule sceneIOModule;
 
 	private SceneModuleContainer sceneMC;
@@ -91,6 +90,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	private ContentTable content;
 
 	private boolean savedAtLeastOnce;
+	private boolean lastSaveFailed;
 
 	private Target dropTarget;
 	private final AlignmentToolsDialog alignmentTools;
@@ -268,16 +268,30 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		super.save();
 		scene.setSchemes(sceneMC.getEntityEngine().getManager(EntityProxyCache.class).getSchemes());
 		try {
+			FileHandle sceneFile = sceneIOModule.getFileHandleForScene(scene);
+			FileHandle backupTarget = sceneIOModule.getSceneBackupFolder().child(scene.path);
+
+			if (lastSaveFailed == false) {
+				sceneFile.copyTo(backupTarget.sibling(sceneFile.name() + ".bak"));
+			}
+
+			if (savedAtLeastOnce == false) {
+				sceneFile.copyTo(backupTarget.sibling(sceneFile.name() + ".firstSaveBak"));
+			}
 
 			if (sceneIOModule.save(scene)) {
 				setDirty(false);
 				sceneMC.save();
 				savedAtLeastOnce = true;
+				lastSaveFailed = false;
 				return true;
-			} else
+			} else {
+				lastSaveFailed = true;
 				DialogUtils.showErrorDialog(Editor.instance.getStage(), "Unknown error encountered while saving resource");
+			}
 
 		} catch (Exception e) {
+			lastSaveFailed = true;
 			Log.exception(e);
 			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Unknown error encountered while saving resource", e);
 		}

@@ -75,12 +75,14 @@ public class SceneIOModule extends ProjectModule {
 	@InjectModule private FontCacheModule fontCache;
 
 	private FileHandle assetsFolder;
+	private FileHandle sceneBackupFolder;
 
 	private Array<EntityComponentSerializer> entityComponentSerializers = new Array<>();
 
 	@Override
 	public void init () {
 		assetsFolder = fileAccessModule.getAssetsFolder();
+		sceneBackupFolder = fileAccessModule.getModuleFolder(".sceneBackup");
 
 		kryo = new Kryo();
 		kryo.setClassLoader(Thread.currentThread().getContextClassLoader());
@@ -226,6 +228,10 @@ public class SceneIOModule extends ProjectModule {
 	public void create (FileHandle relativeScenePath, SceneViewport viewport, float width, float height, int pixelsPerUnit) {
 		EditorScene scene = new EditorScene(relativeScenePath, viewport, width, height, pixelsPerUnit);
 		save(scene);
+	}
+
+	public FileHandle getSceneBackupFolder () {
+		return sceneBackupFolder;
 	}
 
 	public FileHandle getFileHandleForScene (EditorScene scene) {
