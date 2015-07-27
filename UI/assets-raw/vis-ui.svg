@@ -285,7 +285,7 @@
      inkscape:cx="589.79745"
      inkscape:cy="597.48742"
      inkscape:document-units="px"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer4"
      showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1018"
@@ -4317,7 +4317,10 @@
        height="44"
        x="557.82379"
        y="-343.95752"
-       inkscape:label="#rect7248" />
+       inkscape:label="#rect7248"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\slider-knob.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="display:inline;opacity:1;fill:#919191;fill-opacity:1;stroke:none"
        id="slider-knob-over-2x"
@@ -4325,7 +4328,10 @@
        height="44"
        x="583"
        y="-344"
-       inkscape:label="#rect7248-4" />
+       inkscape:label="#rect7248-4"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\slider-knob-over.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="display:inline;opacity:1;fill:#1ba1e2;fill-opacity:1;stroke:none"
        id="slider-knob-down-2x"
@@ -4333,7 +4339,10 @@
        height="44"
        x="608"
        y="-344"
-       inkscape:label="#rect7248-7" />
+       inkscape:label="#rect7248-7"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\slider-knob-down.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <rect
        style="display:inline;opacity:1;fill:#333333;fill-opacity:1;stroke:none"
        id="slider-knob-disabled-2x"
@@ -4341,7 +4350,10 @@
        height="44"
        x="633"
        y="-344"
-       inkscape:label="#rect7248-8" />
+       inkscape:label="#rect7248-8"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\slider-knob-disabled.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
     <g
        transform="matrix(2,0,0,2,-47,-2058)"
        style="display:inline"
