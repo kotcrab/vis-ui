@@ -22,8 +22,10 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.RuntimeContext;
+import com.kotcrab.vis.runtime.data.LayerData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
@@ -41,8 +43,12 @@ public class Scene {
 	private CameraManager cameraManager;
 	private EntityEngine engine;
 
+	private Array<LayerData> layerData;
+
 	/** Used by framework, not indented for external use */
 	public Scene (RuntimeContext context, SceneData data, SceneParameter parameter) {
+		layerData = data.layers;
+
 		AssetManager assetsManager = context.assetsManager;
 		RuntimeConfiguration runtimeConfig = context.configuration;
 
@@ -55,13 +61,12 @@ public class Scene {
 
 		engineConfig.setManager(cameraManager = new CameraManager(data.viewport, data.width, data.height, data.pixelsPerUnit));
 		engineConfig.setManager(new VisIDManager());
-		
+
 		engineConfig.setManager(new SpriteInflater(runtimeConfig, assetsManager));
 		engineConfig.setManager(new SoundInflater(runtimeConfig, assetsManager));
 		engineConfig.setManager(new MusicInflater(runtimeConfig, assetsManager));
 		engineConfig.setManager(new ParticleInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
 		engineConfig.setManager(new TextInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
-
 
 		ArtemisUtils.createCommonSystems(engineConfig, context.batch, distanceFieldShader, true);
 		engineConfig.setSystem(new ParticleRenderSystem(engineConfig.getSystem(RenderBatchingSystem.class), false), true);
@@ -107,6 +112,10 @@ public class Scene {
 	/** Must by called when screen was resized. Typically called from {@link ApplicationListener#resize(int, int)} */
 	public void resize (int width, int height) {
 		cameraManager.resize(width, height);
+	}
+
+	public Array<LayerData> getLayerData () {
+		return layerData;
 	}
 
 	public EntityEngine getEntityEngine () {

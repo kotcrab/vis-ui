@@ -26,9 +26,11 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
+import com.kotcrab.vis.runtime.data.LayerData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
 import org.apache.commons.io.FileUtils;
@@ -201,6 +203,10 @@ public class ExportModule extends ProjectModule {
 					sceneData.width = scene.width;
 					sceneData.height = scene.height;
 					sceneData.pixelsPerUnit = scene.pixelsPerUnit;
+
+					for (Layer layer : scene.getLayers()) {
+						sceneData.layers.add(new LayerData(layer.name, layer.id));
+					}
 
 					scene.getSchemes().forEach(scheme -> sceneData.entities.add(scheme.toData()));
 

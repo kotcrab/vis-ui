@@ -16,22 +16,16 @@
 
 package com.kotcrab.vis.runtime.data;
 
-import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.scene.Scene;
-import com.kotcrab.vis.runtime.scene.SceneLoader;
-import com.kotcrab.vis.runtime.scene.SceneViewport;
-
 /**
- * Scene data, used to build {@link Scene} by {@link SceneLoader}
+ * Holds single layer data exported from VisEditor
  * @author Kotcrab
  */
-public class SceneData {
-	public SceneViewport viewport;
-	public float width;
-	public float height;
-	public float pixelsPerUnit;
+public class LayerData {
+	public String name;
+	public int id;
 
-	public Array<LayerData> layers = new Array<LayerData>();
-
-	public Array<EntityData> entities = new Array<EntityData>();
+	public LayerData (String name, int id) {
+		this.name = name;
+		this.id = id;
+	}
 }

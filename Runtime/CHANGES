@@ -1,2 +1,6 @@
-[0.2.0] [LibGDX 1.6.4]
+[0.2.1] [LibGDX 1.6.4] [Re-export from new VisEditor required] [Snapshot]
+-LayerData is now saved in Scene
+ -API Addition: Scene#getLayerData()
+
+[0.2.0]
 -First public release
