@@ -27,7 +27,7 @@ import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.plugin.PluginKryoSerializer;
-import com.kotcrab.vis.editor.ui.toast.ExceptionToast;
+import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 
 import java.util.UUID;
 
@@ -70,7 +70,7 @@ public class SupportModule extends ProjectModule {
 		try {
 			return json.fromJson(DescriptorsStorage.class, descriptorFile);
 		} catch (Exception e) {
-			toastModule.show(new ExceptionToast("Support descriptor file couldn't be loaded, plugins may not function properly.\nIt's not recommend to continue.", e));
+			toastModule.show(new DetailsToast("Support descriptor file couldn't be loaded, plugins may not function properly.\nIt's not recommend to continue.", e));
 
 			String backupPath = descriptorFile.sibling(descriptorFile.name() + ".bak").path();
 			FileHandle backup = Gdx.files.absolute(backupPath);

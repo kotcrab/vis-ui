@@ -32,7 +32,7 @@ import com.kotcrab.vis.editor.plugin.PluginDescriptor;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
 import com.kotcrab.vis.editor.ui.dialog.PluginDetailsDialog;
-import com.kotcrab.vis.editor.ui.toast.ExceptionToast;
+import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.ui.toast.LoadingPluginsFailedToast;
 import com.kotcrab.vis.editor.util.ChildFirstURLClassLoader;
 import com.kotcrab.vis.editor.util.FileUtils;
@@ -82,7 +82,7 @@ public class PluginLoaderModule extends EditorModule {
 			loadMainPluginsClasses();
 		} catch (IOException | ReflectiveOperationException | LinkageError e) {
 			Log.exception(e);
-			toastModule.show(new ExceptionToast("Plugin loading failed! (" + currentlyLoadingPlugin + ")", e));
+			toastModule.show(new DetailsToast("Plugin loading failed! (" + currentlyLoadingPlugin + ")", e));
 		}
 
 		if (failedPlugins.size > 0)

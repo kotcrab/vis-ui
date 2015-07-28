@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
-import com.kotcrab.vis.editor.ui.toast.ExceptionToast;
+import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.webapi.EditorBuild;
 import com.kotcrab.vis.editor.webapi.UpdateChannelType;
 import com.kotcrab.vis.editor.webapi.WebAPIEditorVersionListener;
@@ -74,7 +74,7 @@ public class UpdateCheckerModule extends EditorModule {
 
 			@Override
 			public void failed (Exception ex) {
-				toastModule.show(new ExceptionToast("Checking for updates failed", ex), 3);
+				toastModule.show(new DetailsToast("Checking for updates failed", ex), 3);
 			}
 		});
 

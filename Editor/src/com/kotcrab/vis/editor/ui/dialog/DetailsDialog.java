@@ -24,15 +24,20 @@ import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.widget.*;
 
 /**
- * Dialog used to display exception message along with stacktrace that can be copied to clipboard
+ * Dialog used to display dialog with details that can be copied to clipboard. Can also display exception
+ * message along with stacktrace.
  * @author Kotcrab
  */
-public class ExceptionDialog extends VisWindow {
-	public ExceptionDialog (Throwable cause) {
+public class DetailsDialog extends VisWindow {
+	public DetailsDialog (Throwable cause) {
 		this(null, cause);
 	}
 
-	public ExceptionDialog (String text, Throwable cause) {
+	public DetailsDialog (String text, Throwable cause) {
+		this(text, ExceptionUtils.getStackTrace(cause));
+	}
+
+	public DetailsDialog (String text, String details) {
 		super("Exception Details");
 
 		addCloseButton();
@@ -41,7 +46,7 @@ public class ExceptionDialog extends VisWindow {
 
 		VisTextButton copyButton = new VisTextButton("Copy");
 		VisTextButton okButton = new VisTextButton("OK");
-		VisLabel errorLabel = new VisLabel(ExceptionUtils.getStackTrace(cause));
+		VisLabel errorLabel = new VisLabel(details);
 
 		VisTable detailsTable = new VisTable(true);
 		detailsTable.add("Details:").left().expand().padTop(6);

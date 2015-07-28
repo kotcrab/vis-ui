@@ -26,7 +26,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
-import com.kotcrab.vis.editor.ui.toast.ExceptionToast;
+import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.File;
@@ -78,7 +78,7 @@ public class EditorSettingsIOModule extends EditorModule {
 				input.close();
 				return config;
 			} catch (Exception e) {
-				toastModule.show(new ExceptionToast("Failed to load settings for: '" + type.getSimpleName() + "'", e));
+				toastModule.show(new DetailsToast("Failed to load settings for: '" + type.getSimpleName() + "'", e));
 				Log.exception(e);
 			}
 		}
