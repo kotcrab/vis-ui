@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.ui.dialog;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.editor.util.ExceptionUtils;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.widget.*;
@@ -47,6 +48,7 @@ public class DetailsDialog extends VisWindow {
 		VisTextButton copyButton = new VisTextButton("Copy");
 		VisTextButton okButton = new VisTextButton("OK");
 		VisLabel errorLabel = new VisLabel(details);
+		errorLabel.setAlignment(Align.top | Align.left);
 
 		VisTable detailsTable = new VisTable(true);
 		detailsTable.add("Details:").left().expand().padTop(6);
