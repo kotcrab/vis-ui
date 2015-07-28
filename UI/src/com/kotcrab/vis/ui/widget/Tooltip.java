@@ -16,11 +16,12 @@
 
 package com.kotcrab.vis.ui.widget;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -29,6 +30,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.ActorUtils;
 
 /**
  * Tooltips are widgets that appear bellow other widget after user hovers mouse pointer on that other widget.
@@ -216,37 +218,11 @@ public class Tooltip extends VisTable {
 		this.fadeTime = fadeTime;
 	}
 
-	private void keepWithinStage () {
-		//taken from Window
-		Stage stage = getStage();
-		Camera camera = stage.getCamera();
-		if (camera instanceof OrthographicCamera) {
-			OrthographicCamera orthographicCamera = (OrthographicCamera) camera;
-			float parentWidth = stage.getWidth();
-			float parentHeight = stage.getHeight();
-			if (getX(Align.right) - camera.position.x > parentWidth / 2 / orthographicCamera.zoom)
-				setPosition(camera.position.x + parentWidth / 2 / orthographicCamera.zoom, getY(Align.right), Align.right);
-			if (getX(Align.left) - camera.position.x < -parentWidth / 2 / orthographicCamera.zoom)
-				setPosition(camera.position.x - parentWidth / 2 / orthographicCamera.zoom, getY(Align.left), Align.left);
-			if (getY(Align.top) - camera.position.y > parentHeight / 2 / orthographicCamera.zoom)
-				setPosition(getX(Align.top), camera.position.y + parentHeight / 2 / orthographicCamera.zoom, Align.top);
-			if (getY(Align.bottom) - camera.position.y < -parentHeight / 2 / orthographicCamera.zoom)
-				setPosition(getX(Align.bottom), camera.position.y - parentHeight / 2 / orthographicCamera.zoom, Align.bottom);
-		} else if (getParent() == stage.getRoot()) {
-			float parentWidth = stage.getWidth();
-			float parentHeight = stage.getHeight();
-			if (getX() < 0) setX(0);
-			if (getRight() > parentWidth) setX(parentWidth - getWidth());
-			if (getY() < 0) setY(0);
-			if (getTop() > parentHeight) setY(parentHeight - getHeight());
-		}
-	}
-
 	private class DisplayTask extends Task {
 		@Override
 		public void run () {
 			target.getStage().addActor(fadeIn());
-			keepWithinStage();
+			ActorUtils.keepWithinStage(getStage(), Tooltip.this);
 		}
 	}
 
