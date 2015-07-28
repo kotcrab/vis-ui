@@ -217,6 +217,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		VisScrollPane scrollPane = new VisScrollPane(propertiesTable);
 		scrollPane.setScrollingDisabled(true, false);
 		scrollPane.setFadeScrollBars(false);
+		scrollPane.setFlickScroll(false);
 
 		top();
 		add(new VisLabel("Entity Properties")).row();
