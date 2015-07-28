@@ -17,7 +17,7 @@
 package com.kotcrab.vis.runtime.accessor;
 
 /**
- * Used by EntityProxy to access origin attributes
+ * Used by VisEditor EntityProxy to access origin attributes
  * @author Kotcrab
  */
 public interface OriginPropertiesAccessor {

@@ -19,7 +19,7 @@ package com.kotcrab.vis.runtime.accessor;
 import com.badlogic.gdx.math.Rectangle;
 
 /**
- * Used by EntityProxy to access entities basic attributes
+ * Used by VisEditor EntityProxy to access entities basic attributes
  * @author Kotcrab
  */
 public interface BasicPropertiesAccessor {

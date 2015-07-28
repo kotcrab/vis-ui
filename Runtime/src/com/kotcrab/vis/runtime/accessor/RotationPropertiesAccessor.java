@@ -17,7 +17,7 @@
 package com.kotcrab.vis.runtime.accessor;
 
 /**
- * Used by EntityProxy to access rotation attributes
+ * Used by VisEditor EntityProxy to access rotation attributes
  * @author Kotcrab
  */
 public interface RotationPropertiesAccessor {

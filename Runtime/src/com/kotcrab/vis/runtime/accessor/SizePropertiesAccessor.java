@@ -17,7 +17,7 @@
 package com.kotcrab.vis.runtime.accessor;
 
 /**
- * Used by EntityProxy to access size attributes
+ * Used by VisEditor EntityProxy to access size attributes
  * @author Kotcrab
  */
 public interface SizePropertiesAccessor {
