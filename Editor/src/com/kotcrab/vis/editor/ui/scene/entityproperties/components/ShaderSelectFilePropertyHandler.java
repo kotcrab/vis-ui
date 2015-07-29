@@ -55,6 +55,6 @@ public class ShaderSelectFilePropertyHandler implements SelectFilePropertyHandle
 	public String getLabelValue (Entity entity) {
 		ShaderAsset asset = entity.getComponent(ShaderComponent.class).asset;
 		if (asset == null) return "<no shader>";
-		return asset.getPathWithoutExtension();
+		return asset.getPathWithoutExtension().substring("shader/".length());
 	}
 }
