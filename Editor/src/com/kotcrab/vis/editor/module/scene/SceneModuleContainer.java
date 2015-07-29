@@ -69,6 +69,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setManager(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
 		config.setManager(new ParticleReloaderManager(projectModuleContainer.get(ParticleCacheModule.class), scene.pixelsPerUnit));
 		config.setManager(new FontReloaderManager(projectModuleContainer.get(FontCacheModule.class), scene.pixelsPerUnit));
+		config.setManager(new ShaderReloaderManager(projectModuleContainer.get(ShaderCacheModule.class)));
 		config.setManager(new VisUUIDManager());
 
 		config.setSystem(new GroupIdProviderSystem(), true);
