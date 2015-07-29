@@ -71,6 +71,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 		providers.add(new TextureRegionDescriptorProvider());
 		providers.add(new AtlasRegionDescriptorProvider());
 		providers.add(new TtfFontDescriptorProvider());
+		providers.add(new ShaderDescriptorProvider());
 
 		transactionsGens.add(new AtlasRegionAssetTransactionGenerator());
 		transactionsGens.add(new BasicAssetTransactionGenerator());

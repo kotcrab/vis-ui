@@ -24,6 +24,7 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.ShaderComponent;
 
 /**
  * This system should be passive.
@@ -32,18 +33,28 @@ import com.kotcrab.vis.runtime.component.AssetComponent;
 @Wire
 public class AssetsUsageAnalyzerSystem extends EntityProcessingSystem {
 	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<ShaderComponent> shaderCm;
 
 	private IntArray ids;
 	private VisAssetDescriptor searchFor;
 
 	public AssetsUsageAnalyzerSystem () {
-		super(Aspect.all(AssetComponent.class));
+		super(Aspect.one(AssetComponent.class, ShaderComponent.class));
 	}
 
 	@Override
 	protected void process (Entity e) {
-		if (assetCm.get(e).asset.compare(searchFor))
+		AssetComponent assetComponent = assetCm.getSafe(e);
+		if (assetComponent != null && assetComponent.asset.compare(searchFor)) {
 			ids.add(e.getId());
+			return;
+		}
+
+		ShaderComponent shaderComponent = shaderCm.getSafe(e);
+		if (shaderComponent != null && shaderComponent.asset.compare(searchFor)) {
+			ids.add(e.getId());
+			return;
+		}
 	}
 
 	public void collectUsages (IntArray ids, VisAssetDescriptor searchFor) {
