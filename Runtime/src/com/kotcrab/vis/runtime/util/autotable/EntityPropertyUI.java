@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.util;
+package com.kotcrab.vis.runtime.util.autotable;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

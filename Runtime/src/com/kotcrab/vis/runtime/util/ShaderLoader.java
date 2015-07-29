@@ -40,6 +40,7 @@ public class ShaderLoader extends AsynchronousAssetLoader<ShaderProgram, ShaderP
 
 	public ShaderLoader (FileHandleResolver resolver) {
 		super(resolver);
+		ShaderProgram.pedantic = false;
 	}
 
 	@Override

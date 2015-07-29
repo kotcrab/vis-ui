@@ -210,5 +210,6 @@ public class ProjectIOModule extends EditorModule {
 		visAssetsDir.child("sound").mkdirs();
 		visAssetsDir.child("music").mkdirs();
 		visAssetsDir.child("particle").mkdirs();
+		visAssetsDir.child("shader").mkdirs();
 	}
 }

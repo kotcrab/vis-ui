@@ -177,8 +177,12 @@ public class EntityUtils {
 	}
 
 	public static boolean isComponentCommon (Component component, Array<EntityProxy> entities) {
+		return isComponentCommon(component.getClass(), entities);
+	}
+
+	public static boolean isComponentCommon (Class<? extends Component> componentClazz, Array<EntityProxy> entities) {
 		for (EntityProxy entity : entities) {
-			if (entity.hasComponent(component.getClass()) == false) return false;
+			if (entity.hasComponent(componentClazz) == false) return false;
 		}
 
 		return true;

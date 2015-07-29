@@ -2,6 +2,8 @@
 -Unsaved resources dialog is displayed before export
 -You can hold space to pan camera
 -Scene backup file is created before saving (file with '.bak' and '.firstSaveBak' extension in `vis/modules/.sceneBackup`, that can be used when saving fails)
+-Added ShaderComponent
+-Improved Entity Properties dialog, now allows to add custom entity components
 
 [0.2.0] [LibGDX 1.6.4]
 -First public release

@@ -28,7 +28,7 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.ui.dialog.SelectFontDialog;
+import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.PathAsset;
@@ -52,7 +52,7 @@ public abstract class TextUITable extends SpecificUITable {
 	@InjectModule protected FontCacheModule fontCache;
 	@InjectModule protected FileAccessModule fileAccess;
 
-	protected SelectFontDialog selectFontDialog;
+	protected SelectFileDialog selectFontDialog;
 
 	private IndeterminateCheckbox autoCenterOrigin;
 
@@ -91,13 +91,13 @@ public abstract class TextUITable extends SpecificUITable {
 		selectFontButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				selectFontDialog.rebuildFontList();
+				selectFontDialog.rebuildFileList();
 				properties.beginSnapshot();
 				getStage().addActor(selectFontDialog.fadeIn());
 			}
 		});
 
-		selectFontDialog = new SelectFontDialog(getFontExtension(), getFontFolder(), file -> {
+		selectFontDialog = new SelectFileDialog(getFontExtension(), getFontFolder(), file -> {
 			for (EntityProxy proxy : properties.getProxies()) {
 				for (Entity entity : proxy.getEntities()) {
 					TextComponent text = entity.getComponent(TextComponent.class);

@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project.assetsmanager;
+package com.kotcrab.vis.runtime.util.autotable;
 
-/**
- * Possible file types in ui manager
- * @author Kotcrab
- */
-public enum FileType {
-	UNKNOWN, NON_STANDARD,
-	TEXTURE, TEXTURE_ATLAS,
-	TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE,
-	MUSIC, SOUND, PARTICLE_EFFECT,
-	FRAGMENT_SHADER, VERTEX_SHADER
+import com.artemis.Entity;
+import com.badlogic.gdx.files.FileHandle;
+
+/** @author Kotcrab */
+public interface SelectFilePropertyHandler {
+	void applyChanges (Entity entity, FileHandle file);
+
+	String getLabelValue (Entity entity);
 }

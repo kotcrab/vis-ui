@@ -24,6 +24,7 @@ import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.kotcrab.vis.runtime.component.LayerComponent;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
+import com.kotcrab.vis.runtime.component.ShaderComponent;
 import net.mostlyoriginal.api.system.delegate.EntityProcessAgent;
 import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 import net.mostlyoriginal.api.utils.BagUtils;
@@ -39,6 +40,7 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 
 	private ComponentMapper<LayerComponent> layerCm;
 	private ComponentMapper<RenderableComponent> renderableCm;
+	private ComponentMapper<ShaderComponent> shaderCm;
 
 	private AspectSubscriptionManager aspectSubscriptionManager;
 
@@ -136,8 +138,16 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 				activeAgent.begin();
 			}
 
+			boolean shaderUsed = shaderCm.has(job.entity);
+
+			if(shaderUsed)
+				batch.setShader(shaderCm.get(job.entity).shader);
+
 			// process the entity!
 			agent.process(job.entity);
+
+			if(shaderUsed)
+				batch.setShader(null);
 		}
 
 		// finished, terminate final agent.

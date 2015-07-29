@@ -24,7 +24,7 @@ import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
- * Used to display information some dessage with details. For example exception with stacktrace as details.
+ * Used to display toast with short message and additional details available in separate dialog after pressing "Details" button. For example exception with stacktrace as details.
  * @author Kotcrab
  * @see ToastModule
  */

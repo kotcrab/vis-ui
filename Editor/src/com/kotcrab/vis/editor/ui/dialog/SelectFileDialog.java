@@ -31,30 +31,35 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 /**
- * Dialog used to select new font for text entities
+ * Dialog used to select new file
  * @author Kotcrab
  */
-public class SelectFontDialog extends VisWindow {
+public class SelectFileDialog extends VisWindow {
+	private String extension;
+	private boolean hideExtension;
+	private FileHandle folder;
+	private FileDialogListener listener;
 
-	private final String extension;
-	private final FileHandle fontFolder;
-	private FontDialogListener listener;
+	private ObjectMap<String, FileHandle> fileMap = new ObjectMap<>();
 
-	private ObjectMap<String, FileHandle> fontsMap = new ObjectMap<>();
+	private VisList<String> fileList;
 
-	private VisList<String> fontList;
+	public SelectFileDialog (String extension, FileHandle folder, FileDialogListener listener) {
+		this(extension, false, folder, listener);
+	}
 
-	public SelectFontDialog (String extension, FileHandle fontFolder, FontDialogListener listener) {
-		super("Select New Font");
+	public SelectFileDialog (String extension, boolean hideExtension, FileHandle folder, FileDialogListener listener) {
+		super("Select File");
 		this.extension = extension;
-		this.fontFolder = fontFolder;
+		this.hideExtension = hideExtension;
+		this.folder = folder;
 		this.listener = listener;
 
 		setModal(true);
 		addCloseButton();
 		closeOnEscape();
 
-		fontList = new VisList<>();
+		fileList = new VisList<>();
 
 		VisTextButton cancelButton;
 		VisTextButton okButton;
@@ -66,7 +71,7 @@ public class SelectFontDialog extends VisWindow {
 		buttonsTable.add(cancelButton = new VisTextButton("Cancel"));
 		buttonsTable.add(okButton = new VisTextButton("OK"));
 
-		add(fontList).expand().fill().row();
+		add(fileList).expand().fill().row();
 		add(buttonsTable).right();
 
 		cancelButton.addListener(new ChangeListener() {
@@ -83,14 +88,14 @@ public class SelectFontDialog extends VisWindow {
 			}
 		});
 
-		fontList.addListener(new ClickListener() {
+		fileList.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
 				if (getTapCount() == 2 && event.getButton() == Buttons.LEFT) finishSelection();
 			}
 		});
 
-		rebuildFontList();
+		rebuildFileList();
 	}
 
 	private void packAndCenter () {
@@ -99,19 +104,19 @@ public class SelectFontDialog extends VisWindow {
 		centerWindow();
 	}
 
-	public void rebuildFontList () {
-		fontList.clearItems();
-		fontsMap.clear();
+	public void rebuildFileList () {
+		fileList.clearItems();
+		fileMap.clear();
 
-		buildFontList(fontFolder);
+		buildFileList(folder);
 		packAndCenter();
 	}
 
 	private void finishSelection () {
-		FileHandle file = fontsMap.get(fontList.getSelected());
+		FileHandle file = fileMap.get(fileList.getSelected());
 
 		if (file == null) {
-			DialogUtils.showErrorDialog(getStage(), "You must select font!");
+			DialogUtils.showErrorDialog(getStage(), "You must select file!");
 			return;
 		}
 
@@ -119,18 +124,18 @@ public class SelectFontDialog extends VisWindow {
 		fadeOut();
 	}
 
-	private void buildFontList (FileHandle fontDirectory) {
-		for (FileHandle file : fontDirectory.list()) {
-			if (file.isDirectory()) buildFontList(file);
+	private void buildFileList (FileHandle directory) {
+		for (FileHandle file : directory.list()) {
+			if (file.isDirectory()) buildFileList(file);
 
 			if (file.extension().equals(extension))
-				fontsMap.put(file.path().substring(fontFolder.path().length() + 1), file);
+				fileMap.put(file.path().substring(folder.path().length() + 1, file.path().length() - (hideExtension ? extension.length() + 1 : 0)), file);
 		}
 
-		fontList.setItems(fontsMap.keys().toArray());
+		fileList.setItems(fileMap.keys().toArray());
 	}
 
-	public interface FontDialogListener {
-		public void selected (FileHandle file);
+	public interface FileDialogListener {
+		void selected (FileHandle file);
 	}
 }

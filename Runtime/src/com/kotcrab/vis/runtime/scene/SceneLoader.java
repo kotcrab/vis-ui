@@ -105,6 +105,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		json.addClassTag("SoundProtoComponent", SoundProtoComponent.class);
 		json.addClassTag("ParticleProtoComponent", ParticleProtoComponent.class);
 		json.addClassTag("TextProtoComponent", TextProtoComponent.class);
+		json.addClassTag("ShaderProtoComponent", ShaderProtoComponent.class);
 
 		json.setSerializer(IntMap.class, new IntMapJsonSerializer());
 
@@ -163,7 +164,15 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 						if (path.startsWith("music/")) dependencies.add(new AssetDescriptor<Music>(path, Music.class));
 						if (path.startsWith("particle/"))
 							dependencies.add(new AssetDescriptor<ParticleEffect>(path, ParticleEffect.class));
+					}
+				}
 
+				if (component instanceof ShaderProtoComponent) {
+					ShaderProtoComponent shaderComponent = (ShaderProtoComponent) component;
+					ShaderAsset asset = shaderComponent.asset;
+					if(asset != null) {
+						String path = asset.getFragPath().substring(0, asset.getFragPath().length() - 5);
+						dependencies.add(new AssetDescriptor<ShaderProgram>(path, ShaderProgram.class));
 					}
 				}
 

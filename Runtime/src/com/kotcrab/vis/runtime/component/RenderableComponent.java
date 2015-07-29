@@ -17,7 +17,7 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.EntityPropertyUI;
+import com.kotcrab.vis.runtime.util.autotable.EntityPropertyUI;
 
 /**
  * All renderable entities must have this component, stores entity zIndex

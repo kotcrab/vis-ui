@@ -69,6 +69,7 @@ public class Scene {
 		engineConfig.setManager(new MusicInflater(runtimeConfig, assetsManager));
 		engineConfig.setManager(new ParticleInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
 		engineConfig.setManager(new TextInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
+		engineConfig.setManager(new ShaderInflater(assetsManager));
 
 		ArtemisUtils.createCommonSystems(engineConfig, context.batch, distanceFieldShader, true);
 		engineConfig.setSystem(new ParticleRenderSystem(engineConfig.getSystem(RenderBatchingSystem.class), false), true);

@@ -14,16 +14,24 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project.assetsmanager;
+package com.kotcrab.vis.runtime.util.autotable;
 
-/**
- * Possible file types in ui manager
- * @author Kotcrab
- */
-public enum FileType {
-	UNKNOWN, NON_STANDARD,
-	TEXTURE, TEXTURE_ATLAS,
-	TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE,
-	MUSIC, SOUND, PARTICLE_EFFECT,
-	FRAGMENT_SHADER, VERTEX_SHADER
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/** @author Kotcrab */
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface SelectFilePropertyUI {
+	String fieldName () default "";
+
+	String relativeFolderPath ();
+
+	String extension ();
+
+	boolean hideExtension () default false;
+
+	String handlerClass ();
 }

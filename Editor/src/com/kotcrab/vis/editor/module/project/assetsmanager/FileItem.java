@@ -131,6 +131,16 @@ public class FileItem extends Table {
 			return;
 		}
 
+		if (relativePath.startsWith("shader") && ext.equals("frag")) {
+			createDefaultView(FileType.FRAGMENT_SHADER, "Fragment Shader", true);
+			return;
+		}
+
+		if (relativePath.startsWith("shader") && ext.equals("vert")) {
+			createDefaultView(FileType.VERTEX_SHADER, "Vertex Shader", true);
+			return;
+		}
+
 		support = findSupportForDirectory(ext, relativePath);
 		if (support != null) {
 			ContentItemProperties item = support.getContentItemProperties(relativePath, ext);

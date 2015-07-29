@@ -73,6 +73,7 @@ public class SceneIOModule extends ProjectModule {
 	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private ParticleCacheModule particleCache;
 	@InjectModule private FontCacheModule fontCache;
+	@InjectModule private ShaderCacheModule shaderCache;
 
 	private FileHandle assetsFolder;
 	private FileHandle sceneBackupFolder;
@@ -122,6 +123,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(AtlasRegionAsset.class, 63);
 		kryo.register(BmpFontAsset.class, 64);
 		kryo.register(TtfFontAsset.class, 65);
+		kryo.register(ShaderAsset.class, 66);
 
 		registerEntityComponentSerializer(SpriteComponent.class, new SpriteComponentSerializer(kryo, textureCache), 201);
 		registerEntityComponentSerializer(MusicComponent.class, new MusicComponentSerializer(kryo), 202);
@@ -140,6 +142,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(InvisibleComponent.class, 223);
 		kryo.register(LayerComponent.class, 224);
 		kryo.register(RenderableComponent.class, 225);
+		registerEntityComponentSerializer(ShaderComponent.class, new ShaderComponentSerializer(kryo, shaderCache), 226);
 	}
 
 	private void registerEntityComponentSerializer (Class<? extends Component> componentClass, EntityComponentSerializer serializer, int id) {

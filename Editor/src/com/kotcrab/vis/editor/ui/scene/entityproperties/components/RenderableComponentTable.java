@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.components;
 
+import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 
@@ -24,8 +25,8 @@ public class RenderableComponentTable extends AutoComponentTable<RenderableCompo
 
 	private RenderBatchingSystem batchingSystem;
 
-	public RenderableComponentTable () {
-		super(RenderableComponent.class);
+	public RenderableComponentTable (ModuleInjector projectInjector) {
+		super(projectInjector, RenderableComponent.class);
 	}
 
 	@Override

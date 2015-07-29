@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project.assetsmanager;
+package com.kotcrab.vis.runtime.component;
 
-/**
- * Possible file types in ui manager
- * @author Kotcrab
- */
-public enum FileType {
-	UNKNOWN, NON_STANDARD,
-	TEXTURE, TEXTURE_ATLAS,
-	TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE,
-	MUSIC, SOUND, PARTICLE_EFFECT,
-	FRAGMENT_SHADER, VERTEX_SHADER
+import com.kotcrab.vis.runtime.assets.ShaderAsset;
+
+/** @author Kotcrab */
+public class ShaderProtoComponent extends ProtoComponent {
+	public ShaderAsset asset;
+
+	private ShaderProtoComponent () {
+	}
+
+	public ShaderProtoComponent (ShaderAsset asset) {
+		this.asset = asset;
+	}
 }

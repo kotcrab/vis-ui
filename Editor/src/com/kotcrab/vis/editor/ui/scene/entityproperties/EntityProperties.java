@@ -19,7 +19,10 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 import com.artemis.Component;
 import com.artemis.EntityEdit;
 import com.artemis.utils.Bag;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -30,31 +33,43 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntMap;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.RedoEvent;
 import com.kotcrab.vis.editor.event.UndoEvent;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
+import com.kotcrab.vis.editor.module.editor.StatusBarModule;
+import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SupportModule;
+import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.VisComponentManipulator;
+import com.kotcrab.vis.editor.module.scene.action.ComponentAddAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.components.AutoComponentTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.components.RenderableComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.*;
+import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
+import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.editor.util.gdx.VisValue;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.value.FloatProxyValue;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
+import com.kotcrab.vis.runtime.component.ShaderComponent;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.ActorUtils;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
@@ -63,6 +78,7 @@ import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
+import java.lang.reflect.Constructor;
 import java.util.Iterator;
 
 /**
@@ -78,6 +94,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	public static final int AXIS_LABEL_WIDTH = 10;
 	public static final int FIELD_WIDTH = 70;
 
+	@InjectModule private StatusBarModule statusBarModule;
+	@InjectModule private ToastModule toastModule;
 	@InjectModule private ColorPickerModule colorPickerModule;
 
 	@InjectModule private SupportModule supportModule;
@@ -86,6 +104,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	@InjectModule private SceneIOModule sceneIO;
 
 	@InjectModule private UndoModule undoModule;
+	@InjectModule private CameraModule cameraModule;
 	@InjectModule private EntityManipulatorModule entityManipulator;
 
 	private VisComponentManipulator componentManipulator;
@@ -107,6 +126,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private SnapshotUndoableActionGroup snapshots;
 
 	//UI
+	private boolean rebuiltScheduled;
+
 	private VisTable propertiesTable;
 
 	private VisTable idTable;
@@ -117,6 +138,9 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private VisTable rotationTable;
 	private VisTable tintTable;
 	private VisTable flipTable;
+
+	private ComponentSelectDialog componentSelectDialog;
+	private VisTextButton addComponentButton;
 
 	private Array<SpecificUITable> specificTables = new Array<>();
 	private SpecificUITable activeSpecificTable;
@@ -148,7 +172,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		this.picker = colorPickerModule.getPicker();
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
-		setTouchable(Touchable.enabled);
+		setTouchable(Touchable.childrenOnly);
 		setVisible(false);
 
 		sharedChangeListener = new ChangeListener() {
@@ -203,6 +227,32 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		createRotationTintTable();
 		createFlipTable();
 
+		componentSelectDialog = new ComponentSelectDialog(this, clazz -> {
+			try {
+				Constructor<? extends Component> cons = clazz.getDeclaredConstructor();
+				cons.setAccessible(true);
+				Component component = cons.newInstance();
+				undoModule.execute(new ComponentAddAction(componentManipulator, getProxies().first(), component));
+				rebuiltScheduled = true;
+			} catch (ReflectiveOperationException e) {
+				Log.exception(e);
+				toastModule.show(new DetailsToast("Component creation failed!", e));
+			}
+		});
+
+		addComponentButton = new VisTextButton("Add Component");
+		addComponentButton.addListener(new VisChangeListener((event, actor) -> {
+			boolean anyComponent = componentSelectDialog.build();
+			if (anyComponent == false) {
+				statusBarModule.setText("There isn't any available component");
+				return;
+			}
+			getStage().addActor(componentSelectDialog);
+			Vector2 pos = getStage().screenToStageCoordinates(new Vector2(Gdx.input.getX(), Gdx.input.getY() + componentSelectDialog.getHeight()));
+			componentSelectDialog.setPosition(pos.x, pos.y);
+			ActorUtils.keepWithinStage(getStage(), componentSelectDialog);
+		}));
+
 		registerSpecificTable(new TtfTextUITable());
 		registerSpecificTable(new BMPTextUITable());
 		registerSpecificTable(new MusicUITable());
@@ -210,7 +260,13 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		registerSpecificTable(new ParticleEffectTable());
 		registerSpecificTable(new GroupUITable());
 
-		registerComponentTable(new RenderableComponentTable());
+		registerComponentTable(new RenderableComponentTable(sceneMC));
+		registerComponentTable(new AutoComponentTable<ShaderComponent>(sceneMC, ShaderComponent.class) {
+			@Override
+			public boolean isRemovable () {
+				return true;
+			}
+		});
 
 		propertiesTable = new VisTable(true);
 
@@ -327,7 +383,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		if (EntityUtils.isScaleSupportedForEntities(entities)) propertiesTable.add(scaleTable).row();
 		if (EntityUtils.isOriginSupportedForEntities(entities)) propertiesTable.add(originTable).row();
 		if (EntityUtils.isRotationSupportedForEntities(entities) || EntityUtils.isTintSupportedForEntities(entities))
-			propertiesTable.add(rotationTintTable).row();
+			propertiesTable.add(rotationTintTable).maxWidth(new VisValue(context -> positionTable.getPrefWidth())).row();
 		if (EntityUtils.isFlipSupportedForEntities(entities))
 			propertiesTable.add(flipTable).right().fill(false).spaceBottom(2).row();
 
@@ -358,6 +414,11 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 					}
 				}
 			}
+		}
+
+		if (groupSelected == false && entities.size == 1) {
+			propertiesTable.addSeparator().padTop(0).padBottom(0).spaceTop(3).spaceBottom(3);
+			propertiesTable.add(addComponentButton).spaceBottom(3).fill(false);
 		}
 
 		invalidateHierarchy();
@@ -395,6 +456,15 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			return super.getPrefHeight() + 5;
 		else
 			return 0;
+	}
+
+	@Override
+	public void draw (Batch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+		if (rebuiltScheduled == true) {
+			selectedEntitiesChanged();
+			rebuiltScheduled = false;
+		}
 	}
 
 	public void selectedEntitiesChanged () {
