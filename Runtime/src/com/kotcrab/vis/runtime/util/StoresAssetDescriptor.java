@@ -14,28 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.util;
 
-import com.artemis.Component;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.util.StoresAssetDescriptor;
 
 /**
- * Holds entity asset descriptor
+ * Implemented by components that stores {@link VisAssetDescriptor}. Used by VisEditor asset usage analyzer
+ * to determinate whether certain asset is used.
  * @author Kotcrab
  */
-public class AssetComponent extends Component implements StoresAssetDescriptor {
-	public VisAssetDescriptor asset;
-
-	private AssetComponent () {
-	}
-
-	public AssetComponent (VisAssetDescriptor asset) {
-		this.asset = asset;
-	}
-
-	@Override
-	public VisAssetDescriptor getAsset () {
-		return asset;
-	}
+public interface StoresAssetDescriptor {
+	/** @return stored asset, may return null */
+	VisAssetDescriptor getAsset ();
 }

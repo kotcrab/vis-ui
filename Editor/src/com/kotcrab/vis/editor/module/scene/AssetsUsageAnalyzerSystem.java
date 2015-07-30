@@ -17,14 +17,14 @@
 package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.Aspect;
-import com.artemis.ComponentMapper;
+import com.artemis.Component;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.utils.Bag;
 import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.ShaderComponent;
+import com.kotcrab.vis.runtime.util.StoresAssetDescriptor;
 
 /**
  * This system should be passive.
@@ -32,28 +32,30 @@ import com.kotcrab.vis.runtime.component.ShaderComponent;
  */
 @Wire
 public class AssetsUsageAnalyzerSystem extends EntityProcessingSystem {
-	private ComponentMapper<AssetComponent> assetCm;
-	private ComponentMapper<ShaderComponent> shaderCm;
-
 	private IntArray ids;
 	private VisAssetDescriptor searchFor;
 
+	private Bag<Component> fillBag = new Bag<>();
+
 	public AssetsUsageAnalyzerSystem () {
-		super(Aspect.one(AssetComponent.class, ShaderComponent.class));
+		super(Aspect.all());
 	}
 
 	@Override
 	protected void process (Entity e) {
-		AssetComponent assetComponent = assetCm.getSafe(e);
-		if (assetComponent != null && assetComponent.asset.compare(searchFor)) {
-			ids.add(e.getId());
-			return;
-		}
+		fillBag.clear();
+		e.getComponents(fillBag);
 
-		ShaderComponent shaderComponent = shaderCm.getSafe(e);
-		if (shaderComponent != null && shaderComponent.asset.compare(searchFor)) {
-			ids.add(e.getId());
-			return;
+		for (Component component : fillBag) {
+			if (component instanceof StoresAssetDescriptor) {
+				StoresAssetDescriptor storage = (StoresAssetDescriptor) component;
+				VisAssetDescriptor asset = storage.getAsset();
+
+				if (asset != null && asset.compare(searchFor)) {
+					ids.add(e.getId());
+					return;
+				}
+			}
 		}
 	}
 

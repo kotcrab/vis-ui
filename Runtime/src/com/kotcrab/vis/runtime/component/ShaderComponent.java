@@ -19,11 +19,16 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.kotcrab.vis.runtime.assets.ShaderAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.util.StoresAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.autotable.SelectFilePropertyUI;
 
-/** @author Kotcrab */
-public class ShaderComponent extends Component implements UsesProtoComponent {
+/**
+ * Stores single shader along with it's asset descriptor
+ * @author Kotcrab
+ */
+public class ShaderComponent extends Component implements UsesProtoComponent, StoresAssetDescriptor {
 	@SelectFilePropertyUI(fieldName = "Shader", relativeFolderPath = "shader/", extension = "frag", hideExtension = true,
 			handlerClass = "com.kotcrab.vis.editor.ui.scene.entityproperties.components.ShaderSelectFilePropertyHandler")
 	public ShaderAsset asset;
@@ -40,5 +45,10 @@ public class ShaderComponent extends Component implements UsesProtoComponent {
 	@Override
 	public ProtoComponent getProtoComponent () {
 		return new ShaderProtoComponent(asset);
+	}
+
+	@Override
+	public VisAssetDescriptor getAsset () {
+		return asset;
 	}
 }
