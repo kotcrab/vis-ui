@@ -19,7 +19,12 @@ package com.kotcrab.vis.runtime.util.autotable;
 import com.artemis.Entity;
 import com.badlogic.gdx.files.FileHandle;
 
-/** @author Kotcrab */
+/**
+ * Handler interface for {@link SelectFilePropertyUI}. All handlers must implement this interface. Handlers may use
+ * any module from VisEditor SceneModuleContainer scope if those fields are annotated by @InjectModule annotation.
+ * Handlers must have no arg constructor.
+ * @author Kotcrab
+ */
 public interface SelectFilePropertyHandler {
 	void applyChanges (Entity entity, FileHandle file);
 

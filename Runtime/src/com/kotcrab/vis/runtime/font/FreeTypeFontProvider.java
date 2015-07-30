@@ -32,6 +32,7 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 /**
  * FreeType font provider. This is not enabled by default because FreeType dependencies may not be available is user doesn't add them.
  * To enable FreeType fonts you must call: {@code visAssetManger.enableFreeType(new FreeTypeFontProvider());}
+ * @author Kotcrab
  */
 public class FreeTypeFontProvider implements FontProvider {
 	@Override

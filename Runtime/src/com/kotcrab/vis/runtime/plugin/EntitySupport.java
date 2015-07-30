@@ -25,6 +25,7 @@ import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /**
+ * Implemented by plugin classes that can provide support for custom types entities
  * @author Kotcrab
  */
 public interface EntitySupport {

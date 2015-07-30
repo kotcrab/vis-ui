@@ -20,6 +20,10 @@ import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 
+/**
+ * Json serializer for {@link IntMap}
+ * @author Kotcrab
+ */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class IntMapJsonSerializer implements Json.Serializer<IntMap> {
 	@Override

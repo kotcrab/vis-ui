@@ -16,14 +16,23 @@
 
 package com.kotcrab.vis.runtime.util.autotable;
 
+import com.artemis.Component;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/** @author Kotcrab */
+/**
+ * This annotation is used on fields inside {@link Component}s to make them editable inside VisEditor. Target component
+ * class must be registered using AutoComponentTable. See VisEditor source for more details.
+ * <p>
+ * Auto table will automatically create number input field and update it when needed.
+ * @author Kotcrab
+ */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EntityPropertyUI {
+	/** @return human friendly field name that will be used in VisEditor UI. */
 	String fieldName () default "";
 }

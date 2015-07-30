@@ -18,7 +18,10 @@ package com.kotcrab.vis.runtime.component;
 
 import com.kotcrab.vis.runtime.assets.ShaderAsset;
 
-/** @author Kotcrab */
+/**
+ * {@link ProtoComponent} for {@link ShaderComponent}
+ * @author Kotcrab
+ */
 public class ShaderProtoComponent extends ProtoComponent {
 	public ShaderAsset asset;
 
