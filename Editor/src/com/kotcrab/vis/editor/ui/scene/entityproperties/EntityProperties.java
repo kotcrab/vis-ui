@@ -84,9 +84,9 @@ import java.util.Iterator;
 /**
  * Entity properties dialog, used to display and change all data about currently selected entities. Multiple selection
  * is supported, even when entities have different values, <?> is used in float input fields, and intermediate checkbox are used
- * for boolean support. Undo is supported. Plugin can add custom properties tables (see {@link SpecificUITable}),
+ * for boolean support. Undo is supported. Plugin can add custom properties tables (see {@link SpecificUITable} and {@link SpecificComponentTable}),
  * but they must support all base features of this dialog (multiple selection support, undo, etc.). See any class
- * from 'specifictable' package for examples.
+ * from 'specifictable' and 'components' child packages for examples.
  * @author Kotcrab
  */
 public class EntityProperties extends VisTable implements Disposable, EventListener {
@@ -98,7 +98,6 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	@InjectModule private ToastModule toastModule;
 	@InjectModule private ColorPickerModule colorPickerModule;
 
-	@InjectModule private SupportModule supportModule;
 	@InjectModule private FileAccessModule fileAccessModule;
 	@InjectModule private FontCacheModule fontCacheModule;
 	@InjectModule private SceneIOModule sceneIO;
@@ -628,10 +627,16 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 	public void loadSupportsSpecificTables (SupportModule supportModule) {
 		for (EditorEntitySupport support : supportModule.getSupports()) {
-			Array<SpecificUITable> tables = support.getUIPropertyTables();
-			if (tables != null) {
-				for (SpecificUITable table : tables)
+			Array<SpecificUITable> uiTables = support.getUIPropertyTables();
+			if (uiTables != null) {
+				for (SpecificUITable table : uiTables)
 					registerSpecificTable(table);
+			}
+
+			Array<SpecificComponentTable> componentTables = support.getComponentsUITables();
+			if (componentTables != null) {
+				for (SpecificComponentTable table : componentTables)
+					registerComponentTable(table);
 			}
 		}
 	}

@@ -30,6 +30,7 @@ import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
@@ -38,11 +39,16 @@ import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
  * @author Kotcrab
  */
 public abstract class EditorEntitySupport {
-	/** Called when ObjectSupport can get required modules from {@link ProjectModuleContainer} */
+	/** Called when support can get required modules from {@link ProjectModuleContainer} */
 	public void bindModules (ProjectModuleContainer projectMC) {
 
 	}
 
+	/**
+	 * Called when support should register it's {@link EntityEngine} systems and managers. WARNING: Do not store
+	 * modules from {@link SceneModuleContainer} because this method is called for each scene and scene modules are
+	 * scene context sensitive. If you need to get and store modules do it in {@link #bindModules(ProjectModuleContainer)}
+	 */
 	public void registerSystems (SceneModuleContainer sceneMC, EntityEngineConfiguration engineConfig) {
 
 	}
@@ -74,8 +80,13 @@ public abstract class EditorEntitySupport {
 		return null;
 	}
 
-	/** This must return new instance every time this is called. */
+	/** This must return new instances every time this is called. */
 	public Array<SpecificUITable> getUIPropertyTables () {
+		return null;
+	}
+
+	/** This must return new instances every time this is called. */
+	public Array<SpecificComponentTable> getComponentsUITables () {
 		return null;
 	}
 
