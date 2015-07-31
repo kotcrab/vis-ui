@@ -28,4 +28,9 @@ public class AssetTransaction extends UndoableActionGroup {
 	public void execute (UndoableAction action) {
 		throw new UnsupportedOperationException("execute (UndoableAction) not supported for AssetTransaction use: add (UndoableAction) instead!");
 	}
+
+	@Override
+	public String getActionName () {
+		return "Asset Transaction";
+	}
 }

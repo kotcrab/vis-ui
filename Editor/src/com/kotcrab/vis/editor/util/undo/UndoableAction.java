@@ -24,4 +24,12 @@ public interface UndoableAction {
 	void execute ();
 
 	void undo ();
+
+	/**
+	 * @return action name that will be used in VisEditor menu bar with undo button: ex. "Undo Entity Move" in such
+	 * case this function should only return "Entity Move".
+	 */
+	default String getActionName () {
+		return null;
+	}
 }

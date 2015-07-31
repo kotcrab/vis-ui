@@ -45,6 +45,11 @@ public class MoveEntityAction implements UndoableAction {
 		oldData.loadTo(entity);
 	}
 
+	@Override
+	public String getActionName () {
+		return "Entity Move";
+	}
+
 	private static class EntityPositionData {
 		public float x;
 		public float y;

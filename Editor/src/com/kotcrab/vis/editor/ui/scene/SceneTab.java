@@ -345,6 +345,11 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		entityManipulator.ungroupSelection();
 	}
 
+	@Override
+	public String getNextUndoActionName () {
+		return undoModule.getNextUndoActionName();
+	}
+
 	public String getInfoLabelText () {
 		return "Entities: " + entityManager.getActiveEntityCount() + " FPS: " + Gdx.graphics.getFramesPerSecond() + " Scene: " + scene.width + " x " + scene.height;
 	}

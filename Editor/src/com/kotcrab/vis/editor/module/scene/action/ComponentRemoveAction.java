@@ -64,4 +64,9 @@ public class ComponentRemoveAction implements UndoableAction {
 			componentManipulator.addJob(entity, componentMap.get(uuid.getUuid()), true);
 		}
 	}
+
+	@Override
+	public String getActionName () {
+		return "Remove Component";
+	}
 }

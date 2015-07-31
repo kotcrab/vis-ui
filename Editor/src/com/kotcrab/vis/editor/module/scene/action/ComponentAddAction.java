@@ -48,4 +48,9 @@ public class ComponentAddAction implements UndoableAction {
 		target.reload();
 		componentManipulator.addJob(target.getEntities().get(0), component, false);
 	}
+
+	@Override
+	public String getActionName () {
+		return "Add Component";
+	}
 }

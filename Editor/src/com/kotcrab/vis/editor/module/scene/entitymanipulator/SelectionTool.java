@@ -143,7 +143,7 @@ public class SelectionTool extends Tool {
 			for (int i = 0; i < entityManipulator.getSelectedEntities().size(); i++)
 				moveActions.get(i).saveNewData(entityManipulator.getSelectedEntities().get(i));
 
-			UndoableActionGroup group = new UndoableActionGroup();
+			UndoableActionGroup group = new UndoableActionGroup("Move entities");
 
 			for (MoveEntityAction action : moveActions)
 				group.add(action);

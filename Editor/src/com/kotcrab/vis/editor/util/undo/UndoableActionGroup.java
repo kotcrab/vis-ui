@@ -28,6 +28,15 @@ public class UndoableActionGroup implements UndoableAction {
 	private boolean finalized;
 	private boolean reversed;
 
+	private String actionName;
+
+	public UndoableActionGroup () {
+	}
+
+	public UndoableActionGroup (String actionName) {
+		this.actionName = actionName;
+	}
+
 	@Override
 	public void execute () {
 		if (!finalized) throw new IllegalStateException("Group must be finalized before use");
@@ -75,4 +84,12 @@ public class UndoableActionGroup implements UndoableAction {
 		add(action);
 	}
 
+	public void setActionName (String actionName) {
+		this.actionName = actionName;
+	}
+
+	@Override
+	public String getActionName () {
+		return actionName;
+	}
 }

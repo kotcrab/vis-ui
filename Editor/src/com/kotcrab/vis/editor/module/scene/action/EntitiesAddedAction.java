@@ -78,4 +78,9 @@ public class EntitiesAddedAction implements UndoableAction {
 		entityManipulator.resetSelection();
 		entityManipulator.markSceneDirty();
 	}
+
+	@Override
+	public String getActionName () {
+		return entities.size == 1 ? "Add Entity" : "Add Entities";
+	}
 }

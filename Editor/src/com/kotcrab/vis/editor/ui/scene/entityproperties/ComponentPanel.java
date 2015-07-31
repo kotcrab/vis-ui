@@ -70,7 +70,7 @@ public class ComponentPanel extends VisTable {
 			button.addListener(new VisChangeListener((event, actor) -> {
 				ImmutableArray<EntityProxy> proxies = entityManipulatorModule.getSelectedEntities();
 
-				UndoableActionGroup undoableActionGroup = new UndoableActionGroup();
+				UndoableActionGroup undoableActionGroup = new UndoableActionGroup("Remove components");
 
 				for (EntityProxy proxy : proxies) {
 					undoableActionGroup.add(new ComponentRemoveAction(componentManipulator, proxy, componentTable.getComponentClass()));

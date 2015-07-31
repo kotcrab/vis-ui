@@ -40,7 +40,7 @@ public class ZIndexManipulatorManager extends Manager {
 	private UndoableActionGroup actionGroup;
 
 	public void moveSelectedEntities (ImmutableArray<EntityProxy> selectedEntities, boolean up) {
-		actionGroup = new UndoableActionGroup();
+		actionGroup = new UndoableActionGroup("Change Z Index");
 
 		for (EntityProxy entity : selectedEntities) {
 			moveEntity(entity, getOverlappingEntities(entity, up), up);

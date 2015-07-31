@@ -39,4 +39,6 @@ public interface SceneMenuButtonsListener {
 	void group ();
 
 	void ungroup ();
+
+	String getNextUndoActionName();
 }

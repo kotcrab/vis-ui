@@ -114,7 +114,7 @@ public class LayersDialog extends VisTable implements Disposable {
 						OptionDialogType.YES_NO, new OptionDialogAdapter() {
 							@Override
 							public void yes () {
-								UndoableActionGroup layerRemovedGroup = new UndoableActionGroup();
+								UndoableActionGroup layerRemovedGroup = new UndoableActionGroup("Delete Layer");
 								layerRemovedGroup.add(new EntitiesRemovedAction(sceneMC, sceneTab.getEntityEngine(),
 										BagUtils.toSet(layerManipulatorManager.getEntitiesWithLayer(scene.getActiveLayerId()))));
 								layerRemovedGroup.add(new LayerRemovedAction(scene.getActiveLayer()));
@@ -249,6 +249,11 @@ public class LayersDialog extends VisTable implements Disposable {
 		public void undo () {
 			scene.removeLayer(layer);
 		}
+
+		@Override
+		public String getActionName () {
+			return "Add Layer";
+		}
 	}
 
 	private class LayerRemovedAction implements UndoableAction {
@@ -267,6 +272,11 @@ public class LayersDialog extends VisTable implements Disposable {
 		public void undo () {
 			scene.insertLayer(layer);
 			selectLayer(layer);
+		}
+
+		@Override
+		public String getActionName () {
+			return "Remove Layer";
 		}
 	}
 
@@ -299,6 +309,11 @@ public class LayersDialog extends VisTable implements Disposable {
 
 			selectLayer(currentLayer);
 		}
+
+		@Override
+		public String getActionName () {
+			return "Move Layer";
+		}
 	}
 
 	private class LayerItem extends VisTable {
@@ -320,12 +335,22 @@ public class LayersDialog extends VisTable implements Disposable {
 
 			eyeButton.addListener(new VisChangeListener((event, actor) -> undoModule.execute(new MonoUndoableAction() {
 				@Override
+				public String getActionName () {
+					return "Hide/Show Layer";
+				}
+
+				@Override
 				public void doAction () {
 					changeVisibility();
 				}
 			})));
 
 			lockButton.addListener(new VisChangeListener((event, actor) -> undoModule.execute(new MonoUndoableAction() {
+				@Override
+				public String getActionName () {
+					return "Lock/Unlock Layer";
+				}
+
 				@Override
 				public void doAction () {
 					changeLocked();

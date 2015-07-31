@@ -532,7 +532,7 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 
 		GroupEntityProxy selectionProxy = null; //proxy that will be used later to select group objects
 
-		UndoableActionGroup actionGroup = new UndoableActionGroup();
+		UndoableActionGroup actionGroup = new UndoableActionGroup("Ungroup");
 
 		for (EntityProxy entity : selectedEntities) {
 			if (entity instanceof GroupEntityProxy) {

@@ -25,6 +25,7 @@ import com.kotcrab.vis.editor.event.RedoEvent;
 import com.kotcrab.vis.editor.event.UndoEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.InputModule;
+import com.kotcrab.vis.editor.module.editor.MenuBarModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
@@ -34,6 +35,7 @@ import com.kotcrab.vis.editor.util.undo.UndoableAction;
  * @author Kotcrab
  */
 public class UndoModule extends SceneModule {
+	@InjectModule private MenuBarModule menuBar;
 	@InjectModule private StatusBarModule statusBar;
 
 	private Array<UndoableAction> undoList;
@@ -58,6 +60,8 @@ public class UndoModule extends SceneModule {
 			App.eventBus.post(new UndoEvent());
 		} else
 			statusBar.setText("Can't undo more!");
+
+		menuBar.updateUndoButtonText();
 	}
 
 	public void redo () {
@@ -79,10 +83,18 @@ public class UndoModule extends SceneModule {
 		undoList.add(action);
 		redoList.clear();
 		sceneTab.dirty();
+		menuBar.updateUndoButtonText();
 	}
 
 	public int getUndoSize () {
 		return undoList.size;
+	}
+
+	public String getNextUndoActionName () {
+		if (undoList.size == 0)
+			return null;
+
+		return undoList.peek().getActionName();
 	}
 
 	@Override

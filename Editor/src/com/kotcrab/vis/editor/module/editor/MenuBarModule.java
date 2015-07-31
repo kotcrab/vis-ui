@@ -58,6 +58,9 @@ public class MenuBarModule extends EditorModule {
 
 	private VisTable updateInfoTable;
 
+	private MenuItem undoMenuItem;
+	private Menu editMenu;
+
 	public MenuBarModule (ProjectModuleContainer moduleContainer) {
 		editor = Editor.instance;
 		stage = editor.getStage();
@@ -105,17 +108,17 @@ public class MenuBarModule extends EditorModule {
 
 	@SuppressWarnings("Convert2MethodRef")
 	private void createEditMenu () {
-		Menu menu = new Menu("Edit");
-		menuBar.addMenu(menu);
+		editMenu = new Menu("Edit");
+		menuBar.addMenu(editMenu);
 
 		//DO NOT replace this with method reference!!!
-		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Alignment tools", Icons.ALIGN_LEFT, () -> sceneButtonsListener.showAlignmentTools()));
-		menu.addSeparator();
-		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Undo", Icons.UNDO, () -> sceneButtonsListener.undo()).setShortcut("Ctrl + Z"));
-		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Redo", Icons.REDO, () -> sceneButtonsListener.redo()).setShortcut("Ctrl + Y"));
-		menu.addSeparator();
-		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Group", null, () -> sceneButtonsListener.group()));
-		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Ungroup", null, () -> sceneButtonsListener.ungroup()));
+		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Alignment tools", Icons.ALIGN_LEFT, () -> sceneButtonsListener.showAlignmentTools()));
+		editMenu.addSeparator();
+		editMenu.addItem(undoMenuItem = createMenuItem(ControllerPolicy.SCENE, "Undo", Icons.UNDO, () -> sceneButtonsListener.undo()).setShortcut("Ctrl + Z"));
+		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Redo", Icons.REDO, () -> sceneButtonsListener.redo()).setShortcut("Ctrl + Y"));
+		editMenu.addSeparator();
+		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Group", null, () -> sceneButtonsListener.group()));
+		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Ungroup", null, () -> sceneButtonsListener.ungroup()));
 	}
 
 	@SuppressWarnings("Convert2MethodRef")
@@ -157,6 +160,7 @@ public class MenuBarModule extends EditorModule {
 	public void setSceneButtonsListener (SceneMenuButtonsListener listener) {
 		sceneButtonsListener = listener;
 		sceneController.listenerChanged(listener);
+		updateUndoButtonText();
 	}
 
 	public Table getTable () {
@@ -201,6 +205,14 @@ public class MenuBarModule extends EditorModule {
 		updateInfoTable.clear();
 		if (content != null)
 			updateInfoTable.add(content).right().expand().padRight(5);
+	}
+
+	public void updateUndoButtonText () {
+		if (sceneButtonsListener != null) {
+			String name = sceneButtonsListener.getNextUndoActionName();
+			undoMenuItem.setText(name == null ? "Undo" : "Undo " + name);
+			editMenu.pack();
+		}
 	}
 
 	private enum ControllerPolicy {

@@ -54,4 +54,9 @@ public class ChangeZIndexAction implements UndoableAction {
 		renderBatchingSystem.markDirty();
 		entityManipulator.selectedEntitiesValuesChanged();
 	}
+
+	@Override
+	public String getActionName () {
+		return "Change Z Index";
+	}
 }

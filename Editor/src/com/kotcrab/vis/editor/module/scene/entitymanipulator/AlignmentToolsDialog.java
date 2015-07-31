@@ -96,7 +96,7 @@ public class AlignmentToolsDialog extends VisTable {
 	private void alignSelected (int align) {
 		if (selectedEntities.size == 0) return;
 
-		UndoableActionGroup undoableGroup = new UndoableActionGroup();
+		UndoableActionGroup undoableGroup = new UndoableActionGroup("Change Alignment");
 
 		if (align == Align.left || align == Align.right) {
 			float targetX = selectedEntities.get(0).getX();
@@ -147,9 +147,8 @@ public class AlignmentToolsDialog extends VisTable {
 	private void alignSelectedCenter (boolean yAlign) {
 		if (selectedEntities.size == 0) return;
 
-		UndoableActionGroup undoableGroup = new UndoableActionGroup();
+		UndoableActionGroup undoableGroup = new UndoableActionGroup("Change Alignment");
 
-//		float targetPos = xAlign == true ? selectedEntities.get(0).getX() : selectedEntities.get(0).getY();
 		float targetPos = 0;
 
 		for (EntityProxy proxy : selectedEntities) {

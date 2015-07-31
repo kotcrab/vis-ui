@@ -52,6 +52,11 @@ public class GroupAction implements UndoableAction {
 			group();
 	}
 
+	@Override
+	public String getActionName () {
+		return createGroup ? "Group" : "Ungroup";
+	}
+
 	private void group () {
 		for (EntityProxy entity : entities)
 			entity.addGroup(groupId);

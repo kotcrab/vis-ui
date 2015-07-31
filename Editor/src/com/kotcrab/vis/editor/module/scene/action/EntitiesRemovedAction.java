@@ -78,4 +78,9 @@ public class EntitiesRemovedAction implements UndoableAction {
 		entities.forEach(entityManipulator::selectAppend);
 		entityManipulator.markSceneDirty();
 	}
+
+	@Override
+	public String getActionName () {
+		return entities.size == 1 ? "Remove Entity" : "Remove Entities";
+	}
 }
