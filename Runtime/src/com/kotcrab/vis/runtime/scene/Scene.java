@@ -64,6 +64,8 @@ public class Scene {
 
 		if (runtimeConfig.useVisGroupManager) engineConfig.setManager(new VisGroupManager(data.groupIds));
 
+		engineConfig.setManager(new LayerManager(data.layers));
+
 		engineConfig.setManager(new SpriteInflater(runtimeConfig, assetsManager));
 		engineConfig.setManager(new SoundInflater(runtimeConfig, assetsManager));
 		engineConfig.setManager(new MusicInflater(runtimeConfig, assetsManager));
@@ -71,7 +73,7 @@ public class Scene {
 		engineConfig.setManager(new TextInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
 		engineConfig.setManager(new ShaderInflater(assetsManager));
 
-		ArtemisUtils.createCommonSystems(engineConfig, context.batch, distanceFieldShader, true);
+		ArtemisUtils.createCommonSystems(engineConfig, context.batch, distanceFieldShader, false);
 		engineConfig.setSystem(new ParticleRenderSystem(engineConfig.getSystem(RenderBatchingSystem.class), false), true);
 
 		for (EntitySupport support : context.supports) {

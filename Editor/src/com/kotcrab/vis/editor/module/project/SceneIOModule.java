@@ -46,6 +46,7 @@ import com.kotcrab.vis.editor.serializer.*;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import org.objenesis.strategy.StdInstantiatorStrategy;
@@ -117,6 +118,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(Layer.class, 34);
 		kryo.register(BitmapFontParameter.class, 35);
 		kryo.register(TextureFilter.class, 36);
+		kryo.register(LayerCordsSystem.class, 37);
 
 		kryo.register(PathAsset.class, 61);
 		kryo.register(TextureRegionAsset.class, 62);

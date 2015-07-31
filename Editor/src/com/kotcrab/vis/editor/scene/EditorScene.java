@@ -38,6 +38,7 @@ public class EditorScene extends BaseObservable {
 	public static final int LAYER_INSERTED = 2;
 	public static final int LAYER_REMOVED = 3;
 	public static final int LAYERS_SORTED = 4;
+	public static final int LAYER_DATA_CHANGED = 5;
 
 	private static final Comparator<Layer> LAYER_COMPARATOR = (o1, o2) -> (int) Math.signum(o1.id - o2.id);
 

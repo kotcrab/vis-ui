@@ -23,6 +23,8 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 
 import java.lang.reflect.Field;
 
@@ -31,7 +33,7 @@ import java.lang.reflect.Field;
  * @author Kotcrab
  */
 public class EditorSceneSerializer extends TaggedFieldSerializer<EditorScene> {
-	private static final int VERSION_CODE = 2;
+	private static final int VERSION_CODE = 3;
 
 	public EditorSceneSerializer (Kryo kryo) {
 		super(kryo, EditorScene.class);
@@ -60,7 +62,19 @@ public class EditorSceneSerializer extends TaggedFieldSerializer<EditorScene> {
 			} catch (ReflectiveOperationException e) {
 				Log.exception(e);
 			}
+
+			versionCode = 2;
 			Log.info("Updating EditorScene to version code: 2");
+		}
+
+		if (versionCode == 2) {
+			//coordinates system was added in 0.2.1, requires manual default cords set
+			for (Layer layer : obj.getLayers()) {
+				layer.cordsSystem = LayerCordsSystem.WORLD;
+			}
+
+			versionCode = 3;
+			Log.info("Updating EditorScene to version code: 3");
 		}
 
 		return obj;

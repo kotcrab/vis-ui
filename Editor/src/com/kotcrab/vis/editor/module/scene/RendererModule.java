@@ -23,7 +23,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.kotcrab.vis.editor.module.InjectModule;
 
 /**
- * Render scene
  * @author Kotcrab
  */
 public class RendererModule extends SceneModule {
@@ -37,26 +36,6 @@ public class RendererModule extends SceneModule {
 
 	@Override
 	public void render (Batch batch) {
-		boolean useShader;
-
-//		for (int i = scene.layers.size - 1; i >= 0; i--) {
-//			Layer layer = scene.layers.get(i);
-//			if (layer.visible == false) continue;
-//
-//			for (EditorObject entity : layer.entities) {
-//				useShader = false;
-//
-//				if (entity instanceof TextObject) {
-//					TextObject obj = (TextObject) entity;
-//					if (obj.isDistanceFieldShaderEnabled()) useShader = true;
-//				}
-//
-//				if (useShader) batch.setShader(fontShader);
-//				entity.render(batch);
-//				if (useShader) batch.setShader(null);
-//			}
-//		}
-
 		batch.end();
 		shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
 		shapeRenderer.setColor(Color.LIGHT_GRAY);

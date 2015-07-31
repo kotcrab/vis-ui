@@ -16,15 +16,16 @@
 
 package com.kotcrab.vis.runtime.system;
 
-import com.artemis.*;
-import com.artemis.EntitySubscription.SubscriptionListener;
+import com.artemis.BaseSystem;
+import com.artemis.ComponentMapper;
+import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.kotcrab.vis.runtime.component.LayerComponent;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
+import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 import net.mostlyoriginal.api.system.delegate.EntityProcessAgent;
 import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
 import net.mostlyoriginal.api.utils.BagUtils;
@@ -35,40 +36,24 @@ import net.mostlyoriginal.api.utils.BagUtils;
  * will automatically resort if entity was added.
  * @author Daan van Yperen
  */
-@Wire
+@Wire(failOnNull = false)
 public class RenderBatchingSystem extends BaseSystem implements EntityProcessPrincipal {
 	private CameraManager cameraManager;
+	private LayerManager layerManager;
 
 	private ComponentMapper<LayerComponent> layerCm;
 	private ComponentMapper<RenderableComponent> renderableCm;
 	private ComponentMapper<ShaderComponent> shaderCm;
 
-	private AspectSubscriptionManager aspectSubscriptionManager;
-
 	private boolean sortedDirty = false;
 	private final Bag<Job> sortedJobs = new Bag<Job>();
 
 	private Batch batch;
-	private boolean controlBatchState;
+	private boolean usingFromEditor;
 
-	public RenderBatchingSystem (Batch batch, boolean controlBatchState) {
+	public RenderBatchingSystem (Batch batch, boolean usingFromEditor) {
 		this.batch = batch;
-		this.controlBatchState = controlBatchState;
-	}
-
-	@Override
-	protected void initialize () {
-		aspectSubscriptionManager.get(Aspect.all(RenderableComponent.class, LayerComponent.class)).addSubscriptionListener(new SubscriptionListener() {
-			@Override
-			public void inserted (ImmutableBag<Entity> entities) {
-				markDirty();
-			}
-
-			@Override
-			public void removed (ImmutableBag<Entity> entities) {
-				markDirty();
-			}
-		});
+		this.usingFromEditor = usingFromEditor;
 	}
 
 	/**
@@ -113,12 +98,14 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 	@Override
 	protected void processSystem () {
 		cameraManager.getCamera().update();
+		cameraManager.getUiCamera().update();
+
+		LayerCordsSystem activeCordsSystem = LayerCordsSystem.WORLD;
 		batch.setProjectionMatrix(cameraManager.getCombined());
 
-		if (controlBatchState) batch.begin();
+		if (usingFromEditor == false) batch.begin();
 
 		if (sortedDirty) {
-			// sort our jobs (by layer).
 			sortedDirty = false;
 			BagUtils.sort(sortedJobs);
 		}
@@ -130,6 +117,13 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 			final Job job = (Job) data[i];
 			final EntityProcessAgent agent = job.agent;
 
+			boolean changedBatchState = false;
+			final boolean shaderUsed = shaderCm.has(job.entity);
+			LayerCordsSystem cordsSystem = null;
+
+			if (usingFromEditor == false)
+				cordsSystem = layerManager.getData(layerCm.get(job.entity).layerId).cordsSystem;
+
 			// agent changed? end() the last agent, and begin() the next agent.
 			if (agent != activeAgent) {
 				if (activeAgent != null) {
@@ -139,16 +133,30 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 				activeAgent.begin();
 			}
 
-			boolean shaderUsed = shaderCm.has(job.entity);
-
-			if(shaderUsed)
+			if (shaderUsed) {
+				changedBatchState = true;
+				batch.end();
 				batch.setShader(shaderCm.get(job.entity).shader);
+			}
 
-			// process the entity!
+			if (usingFromEditor == false && cordsSystem != activeCordsSystem) {
+				activeCordsSystem = cordsSystem;
+
+				switch (activeCordsSystem) {
+					case WORLD:
+						batch.setProjectionMatrix(cameraManager.getCombined());
+						break;
+					case SCREEN:
+						batch.setProjectionMatrix(cameraManager.getUiCombined());
+						break;
+				}
+			}
+
+			if (changedBatchState) batch.begin();
+
 			agent.process(job.entity);
 
-			if(shaderUsed)
-				batch.setShader(null);
+			if (shaderUsed) batch.setShader(null);
 		}
 
 		// finished, terminate final agent.
@@ -156,7 +164,7 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 			activeAgent.end();
 		}
 
-		if (controlBatchState) batch.end();
+		if (usingFromEditor == false) batch.end();
 	}
 
 	public Batch getBatch () {

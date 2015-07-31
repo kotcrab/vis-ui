@@ -28,13 +28,28 @@ import com.kotcrab.vis.runtime.scene.SceneViewport;
  */
 public class CameraManager extends Manager {
 	private OrthographicCamera camera;
+	private OrthographicCamera uiCamera;
 	private Viewport viewport;
+	private Viewport uiViewport;
 
 	public CameraManager (SceneViewport viewportType, float width, float height, float pixelsPerUnit) {
-		camera = new OrthographicCamera(width, height);
+		CameraSet cameraSet = createCamera(viewportType, width, height, pixelsPerUnit);
+		CameraSet uiCameraSet = createCamera(SceneViewport.STRETCH, width, height, pixelsPerUnit);
+
+		camera = cameraSet.camera;
+		viewport = cameraSet.viewport;
+
+		uiCamera = uiCameraSet.camera;
+		uiViewport = uiCameraSet.viewport;
+	}
+
+	private CameraSet createCamera (SceneViewport viewportType, float width, float height, float pixelsPerUnit) {
+		OrthographicCamera camera = new OrthographicCamera(width, height);
 		camera.position.x = width / 2;
 		camera.position.y = height / 2;
 		camera.update();
+
+		Viewport viewport = null;
 
 		switch (viewportType) {
 			case STRETCH:
@@ -54,21 +69,46 @@ public class CameraManager extends Manager {
 				viewport = new ExtendViewport(width, height, camera);
 				break;
 		}
+
+		return new CameraSet(camera, viewport);
 	}
 
 	public Matrix4 getCombined () {
 		return camera.combined;
 	}
 
+	public Matrix4 getUiCombined () {
+		return uiCamera.combined;
+	}
+
 	public OrthographicCamera getCamera () {
 		return camera;
+	}
+
+	public OrthographicCamera getUiCamera () {
+		return uiCamera;
 	}
 
 	public Viewport getViewport () {
 		return viewport;
 	}
 
+	public Viewport getUiViewport () {
+		return uiViewport;
+	}
+
 	public void resize (int width, int height) {
 		viewport.update(width, height);
+		uiViewport.update(width, height);
+	}
+
+	private static class CameraSet {
+		public OrthographicCamera camera;
+		public Viewport viewport;
+
+		public CameraSet (OrthographicCamera camera, Viewport viewport) {
+			this.camera = camera;
+			this.viewport = viewport;
+		}
 	}
 }

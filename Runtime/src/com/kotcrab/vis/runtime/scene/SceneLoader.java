@@ -86,6 +86,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		Json json = new Json();
 		json.addClassTag("SceneData", SceneData.class);
 		json.addClassTag("SceneViewport", SceneViewport.class);
+		json.addClassTag("LayerCordsSystem", LayerCordsSystem.class);
 
 		json.addClassTag("PathAsset", PathAsset.class);
 		json.addClassTag("BmpFontAsset", BmpFontAsset.class);

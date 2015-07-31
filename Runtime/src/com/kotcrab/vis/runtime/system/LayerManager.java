@@ -14,28 +14,32 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.scene;
+package com.kotcrab.vis.runtime.system;
 
-import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
+import com.artemis.Manager;
+import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.data.LayerData;
 
-/**
- * EditorScene layer class
- * @author Kotcrab
- */
-public class Layer {
-	public String name;
-	public int id;
-	public boolean locked = false;
-	public boolean visible = true;
-	public LayerCordsSystem cordsSystem = LayerCordsSystem.WORLD;
+/** @author Kotcrab */
+public class LayerManager extends Manager {
+	private LayerData layers[];
 
-	public Layer (String name, int id) {
-		this.name = name;
-		this.id = id;
+	public LayerManager (Array<LayerData> layerData) {
+		int maxId = 0;
+
+		for (LayerData data : layerData) {
+			if (data.id > maxId)
+				maxId = data.id;
+		}
+
+		layers = new LayerData[maxId + 1];
+
+		for (LayerData data : layerData) {
+			layers[data.id] = data;
+		}
 	}
 
-	@Override
-	public String toString () {
-		return name;
+	public LayerData getData (int layerId) {
+		return layers[layerId];
 	}
 }

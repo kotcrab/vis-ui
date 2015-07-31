@@ -16,18 +16,22 @@
 
 package com.kotcrab.vis.runtime.data;
 
+import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
+
 /**
  * Holds single layer data exported from VisEditor
  * @author Kotcrab
  */
 public class LayerData {
+	public LayerCordsSystem cordsSystem;
 	public String name;
 	public int id;
 
 	private LayerData () {
 	}
 
-	public LayerData (String name, int id) {
+	public LayerData (LayerCordsSystem cordsSystem, String name, int id) {
+		this.cordsSystem = cordsSystem;
 		this.name = name;
 		this.id = id;
 	}

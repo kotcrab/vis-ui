@@ -27,8 +27,8 @@ import com.kotcrab.vis.runtime.system.TextRenderSystem;
  * @author Kotcrab
  */
 public class ArtemisUtils {
-	public static void createCommonSystems (EntityEngineConfiguration config, Batch batch, ShaderProgram distanceFieldShader, boolean controlBatchState) {
-		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, controlBatchState);
+	public static void createCommonSystems (EntityEngineConfiguration config, Batch batch, ShaderProgram distanceFieldShader, boolean usingFromEditor) {
+		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, usingFromEditor);
 		config.setSystem(batchingSystem);
 		config.setSystem(new SpriteRenderSystem(batchingSystem), true);
 		config.setSystem(new TextRenderSystem(batchingSystem, distanceFieldShader), true);

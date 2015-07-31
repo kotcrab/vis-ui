@@ -74,6 +74,7 @@ public class LayersDialog extends VisTable implements Disposable {
 	private VisTable layersTable;
 	private VisImageButton layerUpButton;
 	private VisImageButton layerDownButton;
+	private VisImageButton layerSettingsButton;
 	private VisImageButton layerRemoveButton;
 
 	private ObservableListener sceneObservable;
@@ -91,6 +92,7 @@ public class LayersDialog extends VisTable implements Disposable {
 		VisImageButton layerAddButton = new VisImageButton(Assets.getIcon(Icons.LAYER_ADD));
 		layerUpButton = new VisImageButton(Assets.getIcon(Icons.LAYER_UP));
 		layerDownButton = new VisImageButton(Assets.getIcon(Icons.LAYER_DOWN));
+		layerSettingsButton = new VisImageButton(Assets.getIcon(Icons.SETTINGS));
 		layerRemoveButton = new VisImageButton(Assets.getIcon(Icons.LAYER_REMOVE));
 
 		layerUpButton.setGenerateDisabledImage(true);
@@ -104,6 +106,8 @@ public class LayersDialog extends VisTable implements Disposable {
 
 		layerUpButton.addListener(new VisChangeListener((event, actor) -> undoModule.execute(new LayerMovedAction(true))));
 		layerDownButton.addListener(new VisChangeListener((event, actor) -> undoModule.execute(new LayerMovedAction(false))));
+
+		layerSettingsButton.addListener(new VisChangeListener((event1, actor1) -> getStage().addActor(new LayerSettingsDialog(scene).fadeIn())));
 
 		layerRemoveButton.addListener(new VisChangeListener((event, actor) ->
 				DialogUtils.showOptionDialog(getStage(), "Delete Layer", "Are you sure you want to delete layer '" + scene.getActiveLayer().name + "'?",
@@ -133,7 +137,7 @@ public class LayersDialog extends VisTable implements Disposable {
 		add(new VisLabel("Layers")).center().row();
 		add(layersScrollPane).expandX().fillX().row();
 		addSeparator();
-		add(TableBuilder.build(layerAddButton, layerUpButton, layerDownButton, layerRemoveButton)).padBottom(8);
+		add(TableBuilder.build(layerAddButton, layerUpButton, layerDownButton, layerSettingsButton, layerRemoveButton)).padBottom(8);
 
 		addListener(new EventStopper());
 
@@ -141,7 +145,7 @@ public class LayersDialog extends VisTable implements Disposable {
 
 		sceneObservable = nid -> {
 			if (nid == EditorScene.LAYER_ADDED || nid == EditorScene.LAYER_INSERTED || nid == EditorScene.LAYER_REMOVED
-					|| nid == EditorScene.LAYERS_SORTED || nid == EditorScene.ACTIVE_LAYER_CHANGED) {
+					|| nid == EditorScene.LAYERS_SORTED || nid == EditorScene.ACTIVE_LAYER_CHANGED || nid == EditorScene.LAYER_DATA_CHANGED) {
 				rebuildLayersTable();
 				sceneTab.dirty();
 			}
@@ -171,6 +175,7 @@ public class LayersDialog extends VisTable implements Disposable {
 		for (Layer layer : scene.getLayers()) {
 			LayerItem item = getItemForLayer(actors, layer);
 			if (item == null) item = new LayerItem(layer);
+			item.update();
 			layersTable.add(item).expandX().fillX().row();
 
 			if (layer == scene.getActiveLayer())
@@ -298,6 +303,8 @@ public class LayersDialog extends VisTable implements Disposable {
 
 	private class LayerItem extends VisTable {
 		private Layer layer;
+
+		private VisLabel nameLabel;
 		private VisImageButton eyeButton;
 		private VisImageButton lockButton;
 
@@ -328,7 +335,7 @@ public class LayersDialog extends VisTable implements Disposable {
 			pad(3);
 			add(eyeButton);
 			add(lockButton);
-			add(new VisLabel(layer.name)).expandX().fillX(); //TODO: show id in layers dialog, don't forget about updating it when layer was moved
+			add(nameLabel = new VisLabel(layer.name)).expandX().fillX(); //TODO: show id in layers dialog, don't forget about updating it when layer was moved
 
 			addListener(new InputListener() {
 				@Override
@@ -337,7 +344,10 @@ public class LayersDialog extends VisTable implements Disposable {
 					return true;
 				}
 			});
+		}
 
+		public void update () {
+			nameLabel.setText(layer.name);
 		}
 
 		void changeVisibility () {

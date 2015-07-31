@@ -208,7 +208,7 @@ public class ExportModule extends ProjectModule {
 					sceneData.groupIds = new IntMap<>(scene.getGroups());
 
 					for (Layer layer : scene.getLayers()) {
-						sceneData.layers.add(new LayerData(layer.name, layer.id));
+						sceneData.layers.add(new LayerData(layer.cordsSystem, layer.name, layer.id));
 					}
 
 					scene.getSchemes().forEach(scheme -> sceneData.entities.add(scheme.toData()));

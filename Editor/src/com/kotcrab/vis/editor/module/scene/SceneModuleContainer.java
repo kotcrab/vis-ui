@@ -79,7 +79,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 		createEssentialsSystems(config, scene.pixelsPerUnit);
 
-		ArtemisUtils.createCommonSystems(config, batch, Assets.distanceFieldShader, false);
+		ArtemisUtils.createCommonSystems(config, batch, Assets.distanceFieldShader, true);
 		RenderBatchingSystem renderBatchingSystem = config.getSystem(RenderBatchingSystem.class);
 		config.setSystem(new ParticleRenderSystem(renderBatchingSystem, true), true);
 		config.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem, scene.pixelsPerUnit), true);

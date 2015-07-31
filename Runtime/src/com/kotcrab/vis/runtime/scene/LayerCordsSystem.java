@@ -14,28 +14,22 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.scene;
+package com.kotcrab.vis.runtime.scene;
 
-import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
+import com.kotcrab.vis.runtime.util.PrettyEnum;
 
-/**
- * EditorScene layer class
- * @author Kotcrab
- */
-public class Layer {
-	public String name;
-	public int id;
-	public boolean locked = false;
-	public boolean visible = true;
-	public LayerCordsSystem cordsSystem = LayerCordsSystem.WORLD;
-
-	public Layer (String name, int id) {
-		this.name = name;
-		this.id = id;
-	}
-
-	@Override
-	public String toString () {
-		return name;
+/** @author Kotcrab */
+public enum LayerCordsSystem implements PrettyEnum {
+	WORLD {
+		@Override
+		public String toPrettyString () {
+			return "World coordinates";
+		}
+	},
+	SCREEN {
+		@Override
+		public String toPrettyString () {
+			return "Screen coordinates";
+		}
 	}
 }
