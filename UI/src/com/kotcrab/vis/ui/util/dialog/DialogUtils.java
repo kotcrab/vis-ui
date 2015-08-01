@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.Sizes;
@@ -282,7 +283,7 @@ public class DialogUtils {
 
 			this.listener = listener;
 
-			text(text);
+			text(new VisLabel(text, Align.center));
 			defaults().padBottom(3);
 
 			switch (type) {

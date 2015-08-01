@@ -8,6 +8,7 @@
 -Removed VisUI.getDefaultSpacingTop/Bottom/Right/Left and VisUI.setDefaultSpacingTop/Bottom/Right/Left
  -Replaced by Sizes class ( VisUI.getSkin().get(Sizes.class) )
  -TableUtils.setSpacingDefault now properly uses all spacings if set
+-OptionDialog (DialogUtils.showOptionDialog(...)) message label is now by default center aligned.
 
 [0.8.0] [LibGDX 1.6.3]
 -API Addition: Tooltip (Actor target, String text, int textAlign)
