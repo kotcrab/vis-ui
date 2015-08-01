@@ -21,7 +21,7 @@ import com.kotcrab.vis.editor.module.editor.ExperimentalSettingsModule.Experimen
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 
 /**
- * VisEditor general settings module
+ * VisEditor experimental settings module
  * @author Kotcrab
  */
 public class ExperimentalSettingsModule extends EditorSettingsModule<ExperimentalConfig> {
