@@ -18,10 +18,7 @@ package com.kotcrab.vis.ui.widget;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -56,6 +53,7 @@ public class PopupMenu extends Table {
 
 	public PopupMenu (PopupMenuStyle style) {
 		this.style = style;
+		setTouchable(Touchable.enabled);
 		createListeners();
 	}
 
