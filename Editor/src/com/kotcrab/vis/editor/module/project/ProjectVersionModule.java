@@ -26,8 +26,13 @@ public class ProjectVersionModule extends ProjectModule {
 
 	@Override
 	public void init () {
+		Json json = getNewJson();
+		json.toJson(new ProjectVersionDescriptor(App.VERSION_CODE, App.VERSION), fileAccess.getModuleFolder().child("version.json"));
+	}
+
+	public static Json getNewJson () {
 		Json json = new Json();
 		json.addClassTag("ProjectVersionDescriptor", ProjectVersionDescriptor.class);
-		json.toJson(new ProjectVersionDescriptor(App.VERSION_CODE, App.VERSION), fileAccess.getModuleFolder().child("version.json"));
+		return json;
 	}
 }

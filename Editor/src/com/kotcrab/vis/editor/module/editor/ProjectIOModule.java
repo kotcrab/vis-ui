@@ -25,18 +25,19 @@ import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
+import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
-import com.kotcrab.vis.editor.module.project.Project;
-import com.kotcrab.vis.editor.module.project.ProjectGeneric;
-import com.kotcrab.vis.editor.module.project.ProjectLibGDX;
+import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.CopyFileVisitor;
 import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.FileInputStream;
@@ -66,32 +67,68 @@ public class ProjectIOModule extends EditorModule {
 		kryo.register(ProjectGeneric.class, 12);
 	}
 
-	public boolean loadHandleError (Stage stage, FileHandle projectRoot) {
+	public void loadHandleError (Stage stage, FileHandle projectRoot) {
 		try {
-			return load(projectRoot);
+			load(projectRoot);
 		} catch (EditorException e) {
 			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
 		}
-
-		return false;
 	}
 
-	public boolean load (FileHandle projectRoot) throws EditorException {
+	public void load (FileHandle projectRoot) throws EditorException {
 		if (projectRoot.exists() == false) throw new EditorException("Selected folder does not exist!");
-		if (projectRoot.name().equals(PROJECT_FILE)) return loadProject(projectRoot);
-		if (projectRoot.name().equals("vis") && projectRoot.isDirectory())
-			return loadProject(projectRoot.child(PROJECT_FILE));
-		if (projectRoot.child(PROJECT_FILE).exists()) return loadProject(projectRoot.child(PROJECT_FILE));
+		if (projectRoot.name().equals(PROJECT_FILE)) {
+			loadProject(projectRoot);
+			return;
+		}
+
+		if (projectRoot.name().equals("vis") && projectRoot.isDirectory()) {
+			loadProject(projectRoot.child(PROJECT_FILE));
+			return;
+		}
+
+		if (projectRoot.child(PROJECT_FILE).exists()) {
+			loadProject(projectRoot.child(PROJECT_FILE));
+			return;
+		}
 
 		FileHandle visFolder = projectRoot.child("vis");
-		if (visFolder.child(PROJECT_FILE).exists()) return loadProject(visFolder.child(PROJECT_FILE));
+		if (visFolder.child(PROJECT_FILE).exists()) {
+			loadProject(visFolder.child(PROJECT_FILE));
+			return;
+		}
 
 		throw new EditorException("Selected folder is not a Vis project!");
 	}
 
-	private boolean loadProject (FileHandle dataFile) throws EditorException {
+	private void loadProject (FileHandle dataFile) throws EditorException {
 		if (dataFile.exists() == false) throw new EditorException("Project file does not exist!");
 
+		FileHandle versionFile = dataFile.parent().child("modules").child("version.json");
+		ProjectVersionDescriptor descriptor = ProjectVersionModule.getNewJson().fromJson(ProjectVersionDescriptor.class, versionFile);
+		if (descriptor.versionCode > App.VERSION_CODE) {
+			DialogUtils.showOptionDialog(Editor.instance.getStage(), "Message",
+					"This project was opened in newer version of VisEditor.\nSome functions may not work properly. do you want to continue?",
+					OptionDialogType.YES_NO, new OptionDialogAdapter() {
+						@Override
+						public void yes () {
+							doLoadProject(dataFile);
+						}
+					});
+		} else if (descriptor.versionCode < App.VERSION_CODE) {
+			DialogUtils.showOptionDialog(Editor.instance.getStage(), "Message", //TODO users are "careless", create backup for them
+					"This project was created in older version of VisEditor.\nAfter opening it may no longer work in older version, please make backup.\nDo you want to continue?",
+					OptionDialogType.YES_NO, new OptionDialogAdapter() {
+						@Override
+						public void yes () {
+							doLoadProject(dataFile);
+						}
+					});
+		} else
+			doLoadProject(dataFile);
+	}
+
+	private void doLoadProject (FileHandle dataFile) {
 		try {
 			Input input = new Input(new FileInputStream(dataFile.file()));
 			Project project = (Project) kryo.readClassAndObject(input);
@@ -103,8 +140,6 @@ public class ProjectIOModule extends EditorModule {
 		} catch (FileNotFoundException e) {
 			Log.exception(e);
 		}
-
-		return true;
 	}
 
 	public void createLibGDXProject (final ProjectLibGDX project) {

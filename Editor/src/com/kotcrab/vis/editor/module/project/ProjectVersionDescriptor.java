@@ -21,6 +21,9 @@ public class ProjectVersionDescriptor {
 	public int versionCode;
 	public String version;
 
+	private ProjectVersionDescriptor () {
+	}
+
 	public ProjectVersionDescriptor (int versionCode, String version) {
 		this.versionCode = versionCode;
 		this.version = version;
