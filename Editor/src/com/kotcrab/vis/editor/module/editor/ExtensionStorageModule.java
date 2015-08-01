@@ -18,9 +18,11 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.Module;
+import com.kotcrab.vis.editor.module.project.DefaultExportModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.kotcrab.vis.editor.plugin.ExporterPlugin;
 
 /**
  * Holds plugins loaded by {@link PluginLoaderModule}. Others modules (even from different containers like 'project' or 'scene') then can access them.
@@ -28,6 +30,7 @@ import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
  */
 public class ExtensionStorageModule extends EditorModule {
 	private Array<EditorEntitySupport> objectSupports = new Array<>();
+	private Array<ExporterPlugin> exporterPlugins = new Array<>();
 	private Array<ContainerExtension<?>> containerExtensions = new Array<>();
 
 	public void addObjectSupport (EditorEntitySupport support) {
@@ -38,8 +41,21 @@ public class ExtensionStorageModule extends EditorModule {
 		containerExtensions.add(extension);
 	}
 
+	public void addExporterPlugin (ExporterPlugin exporterPlugin) {
+		exporterPlugins.add(exporterPlugin);
+	}
+
 	public Array<EditorEntitySupport> getObjectSupports () {
 		return objectSupports;
+	}
+
+	public Array<ExporterPlugin> getExporterPlugins () {
+		return exporterPlugins;
+	}
+
+	@Override
+	public void postInit () {
+		exporterPlugins.add(new DefaultExportModule());
 	}
 
 	public <T extends Module> Array<T> getContainersExtensions (Class<T> baseModuleType, ExtensionScope scope) {

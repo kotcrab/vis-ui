@@ -32,6 +32,7 @@ import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsModule;
 import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.module.project.ExportSettingsModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
@@ -379,8 +380,8 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	private void doProjectUnloading () {
 		projectLoaded = false;
-		projectMC.dispose();
 		settingsDialog.removeAll(projectMC.getModules());
+		projectMC.dispose();
 
 		statusBar.setText("Project unloaded");
 		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded, projectMC.getProject()));
@@ -432,11 +433,14 @@ public class Editor extends ApplicationAdapter implements EventListener {
 					projectMC.add(new ShaderCacheModule());
 					projectMC.add(new ProjectVersionModule());
 					projectMC.add(new SceneIOModule());
+					projectMC.add(new ProjectSettingsIOModule());
 					projectMC.add(new SupportModule());
 					projectMC.add(new SceneMetadataModule());
 					projectMC.add(new AssetsAnalyzerModule());
 
-					projectMC.add(new ExportModule());
+					projectMC.add(new ExportersManagerModule());
+					projectMC.add(new ExportSettingsModule());
+
 					projectMC.add(new SceneTabsModule());
 					projectMC.add(new ProjectInfoTabModule());
 					projectMC.add(new AssetsUIModule());
@@ -448,7 +452,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 				ThreadUtils.sleep(10);
 
 				executeOnOpenGL(() -> {
-
 					projectMC.init();
 
 					settingsDialog.addAll(projectMC.getModules());

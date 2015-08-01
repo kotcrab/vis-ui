@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.module.project.ExportModule;
+import com.kotcrab.vis.editor.module.project.ExportersManagerModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.ui.ButtonListener;
 import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
@@ -96,7 +96,7 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Close Project", editor::requestProjectUnload));
 		menu.addSeparator();
 
-		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Export", Icons.EXPORT, () -> projectContainer.get(ExportModule.class).export(false)));
+		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Export", Icons.EXPORT, () -> projectContainer.get(ExportersManagerModule.class).export(false)));
 		//menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Quick Export", () -> projectContainer.get(ExportModule.class).export(true))); //TODO quick export
 		menu.addSeparator();
 

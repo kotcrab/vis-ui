@@ -25,10 +25,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
-import com.kotcrab.vis.editor.plugin.ContainerExtension;
-import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
-import com.kotcrab.vis.editor.plugin.FailedPluginDescriptor;
-import com.kotcrab.vis.editor.plugin.PluginDescriptor;
+import com.kotcrab.vis.editor.plugin.*;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
 import com.kotcrab.vis.editor.ui.dialog.PluginDetailsDialog;
@@ -190,6 +187,10 @@ public class PluginLoaderModule extends EditorModule {
 				if (object instanceof ContainerExtension) {
 					pluginContainer.addContainerExtension((ContainerExtension) object);
 					continue;
+				}
+
+				if (object instanceof ExporterPlugin) {
+					pluginContainer.addExporterPlugin((ExporterPlugin) object);
 				}
 
 				if (object instanceof EntitySupport)

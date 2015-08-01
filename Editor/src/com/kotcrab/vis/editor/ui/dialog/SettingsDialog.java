@@ -169,7 +169,7 @@ public class SettingsDialog extends VisWindow {
 	}
 
 	public void remove (SettableModule module) {
-		tree.getNodes().removeValue(modulesMap.get(module), true);
+		tree.remove(modulesMap.get(module));
 		tree.getNodes().sort(nodeComparator);
 		modulesMap.remove(module);
 	}

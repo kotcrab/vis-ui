@@ -26,6 +26,7 @@ import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
+import com.kotcrab.vis.editor.plugin.ExporterPlugin;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
@@ -37,15 +38,21 @@ import com.kotcrab.vis.runtime.scene.SceneLoader;
 import org.apache.commons.io.FileUtils;
 
 import java.io.IOException;
+import java.util.UUID;
 
 /**
  * Allows to export project
  * @author Kotcrab
  */
-public class ExportModule extends ProjectModule {
+public class DefaultExportModule implements ExporterPlugin {
+	public static final String EXPORTER_UUID = "b8bd183c-1dc6-4ac5-9bbe-a4ba86a61b95";
+
+	private Project project;
+
 	@InjectModule private StatusBarModule statusBar;
 	@InjectModule private TabsModule tabsModule;
 
+	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private SceneCacheModule sceneCache;
 
 	private FileHandle visAssetsDir;
@@ -56,9 +63,8 @@ public class ExportModule extends ProjectModule {
 	private Json json;
 
 	@Override
-	public void init () {
-		FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
-
+	public void init (Project project) {
+		this.project = project;
 		visAssetsDir = fileAccess.getAssetsFolder();
 
 		texturePackerSettings = new Settings();
@@ -69,6 +75,22 @@ public class ExportModule extends ProjectModule {
 		json = SceneLoader.getJson();
 	}
 
+	@Override
+	public UUID getUUID () {
+		return UUID.fromString(EXPORTER_UUID);
+	}
+
+	@Override
+	public String getName () {
+		return "Default";
+	}
+
+	@Override
+	public boolean isQuickExportSupported () {
+		return false;
+	}
+
+	@Override
 	public void export (boolean quick) {
 		if (tabsModule.getDirtyTabCount() > 0)
 			Editor.instance.getStage().addActor(new UnsavedResourcesDialog(tabsModule, () -> beforeExport(quick)).fadeIn());

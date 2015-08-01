@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.editor;
+package com.kotcrab.vis.editor.module.project;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
-import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
-import com.kotcrab.vis.editor.module.project.ProjectSettingsIOModule;
+import com.kotcrab.vis.editor.module.editor.EditorSettingsIOModule;
+import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.serializer.UUIDSerializer;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
@@ -40,16 +41,18 @@ import java.util.UUID;
 
 /**
  * Provides common IO for saving editor scope settings. This is typically not used directly, it should be used by using
- * subclassing {@link EditorSettingsModule}. Very similar to {@link ProjectSettingsIOModule} but saves editor
+ * subclassing {@link ProjectSettingsModule}. Very similar to {@link EditorSettingsIOModule} but saves project
  * specific settings.
  * @author Kotcrab
- * @see ProjectSettingsIOModule
+ * @see EditorSettingsIOModule
  */
-public class EditorSettingsIOModule extends EditorModule {
+public class ProjectSettingsIOModule extends ProjectModule {
 	@InjectModule private ToastModule toastModule;
 
+	@InjectModule private FileAccessModule fileAccessModule;
+
 	private Kryo kryo;
-	private File settingsDirectory;
+	private FileHandle settingsDirectory;
 
 	@Override
 	public void init () {
@@ -59,13 +62,13 @@ public class EditorSettingsIOModule extends EditorModule {
 		kryo.register(Array.class, new ArraySerializer(), 10);
 		kryo.register(UUID.class, new UUIDSerializer(), 11);
 
-		settingsDirectory = new File(App.APP_FOLDER_PATH, "settings");
-		settingsDirectory.mkdir();
+		settingsDirectory = fileAccessModule.getModuleFolder("settings");
+		settingsDirectory.mkdirs();
 	}
 
 	public void save (Object configObject, String name) {
 		try {
-			Output output = new Output(new FileOutputStream(new File(settingsDirectory, name)));
+			Output output = new Output(new FileOutputStream(new File(settingsDirectory.file(), name)));
 			kryo.writeObject(output, configObject);
 			output.close();
 		} catch (FileNotFoundException e) {
@@ -75,7 +78,7 @@ public class EditorSettingsIOModule extends EditorModule {
 	}
 
 	public <T> T load (String name, Class<T> type) {
-		File configFile = new File(settingsDirectory, name);
+		File configFile = new File(settingsDirectory.file(), name);
 
 		if (configFile.exists()) {
 			try {

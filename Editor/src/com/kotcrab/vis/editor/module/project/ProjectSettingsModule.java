@@ -14,29 +14,30 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.editor;
+package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.kotcrab.vis.editor.module.project.ProjectSettingsModule;
+import com.kotcrab.vis.editor.module.editor.EditorSettingsModule;
+import com.kotcrab.vis.editor.module.editor.SettableModule;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
  * Base class for all modules that provides settings section in VisEditor settings dialog.
  * @author Kotcrab
- * @see ProjectSettingsModule
+ * @see EditorSettingsModule
  */
-public abstract class EditorSettingsModule<T> extends EditorModule implements SettableModule {
+public abstract class ProjectSettingsModule<T> extends ProjectModule implements SettableModule {
 	private String name;
 	private String settingsFileName;
 	private Class<T> configClass;
 
-	private EditorSettingsIOModule settingsIO;
+	private ProjectSettingsIOModule settingsIO;
 
 	protected Table settingsTable;
 
 	public T config;
 
-	public EditorSettingsModule (String name, String settingsFileName, Class<T> configClass) {
+	public ProjectSettingsModule (String name, String settingsFileName, Class<T> configClass) {
 		this.name = name;
 		this.settingsFileName = settingsFileName;
 		this.configClass = configClass;
@@ -54,7 +55,7 @@ public abstract class EditorSettingsModule<T> extends EditorModule implements Se
 
 	@Override
 	public void init () {
-		settingsIO = container.get(EditorSettingsIOModule.class);
+		settingsIO = projectContainer.get(ProjectSettingsIOModule.class);
 		config = settingsIO.load(settingsFileName, configClass);
 		buildTable();
 		loadConfigToTable();

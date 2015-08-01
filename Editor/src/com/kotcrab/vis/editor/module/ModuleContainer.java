@@ -101,12 +101,12 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 	}
 
 	@Override
-	public void injectModules (Object module) {
+	public void injectModules (Object target) {
 		try {
-			for (Field field : getAllFields(module.getClass())) {
+			for (Field field : getAllFields(target.getClass())) {
 				if (field.isAnnotationPresent(InjectModule.class)) {
 					field.setAccessible(true);
-					field.set(module, findInHierarchy(field.getType().asSubclass(Module.class)));
+					field.set(target, findInHierarchy(field.getType().asSubclass(Module.class)));
 				}
 			}
 		} catch (ReflectiveOperationException e) {
