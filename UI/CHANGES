@@ -6,9 +6,10 @@
 -Added skin in higher resolution (can be loaded by new method: VisUI.load(SkinScale.X2))
  -SVG file is also available thanks to piotr-j (https://github.com/piotr-j)
 -Removed VisUI.getDefaultSpacingTop/Bottom/Right/Left and VisUI.setDefaultSpacingTop/Bottom/Right/Left
- -Replaced by Sizes class ( VisUI.getSkin().get(Sizes.class) )
+ -Replaced by Sizes class ( VisUI.getSizes() )
  -TableUtils.setSpacingDefault now properly uses all spacings if set
 -OptionDialog (DialogUtils.showOptionDialog(...)) message label is now by default center aligned.
+-Fixed bug in ColorPicker: pasting hex value was changing picker old color
 
 [0.8.0] [LibGDX 1.6.3]
 -API Addition: Tooltip (Actor target, String text, int textAlign)

@@ -196,7 +196,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 		hexField.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				if (hexField.getText().length() == 8) setColor(Color.valueOf(hexField.getText()));
+				if (hexField.getText().length() == 8) setColor(Color.valueOf(hexField.getText()), false);
 			}
 		});
 
@@ -434,8 +434,14 @@ public class ColorPicker extends VisWindow implements Disposable {
 	/** Sets current selected color in picker.*/
 	public void setColor (Color c) {
 		//this method overrides setColor in Actor, not big deal we definitely don't need it
-		currentColor.setColor(new Color(c));
-		oldColor = new Color(c);
+		setColor(c, true);
+	}
+
+	private void setColor (Color c, boolean updateCurrentColor) {
+		if (updateCurrentColor) {
+			currentColor.setColor(new Color(c));
+			oldColor = new Color(c);
+		}
 		color = new Color(c);
 		updateFieldsFromColor();
 		updatePixmaps();
