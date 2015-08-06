@@ -22,15 +22,15 @@ import com.kotcrab.vis.runtime.assets.ShaderAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.StoresAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
-import com.kotcrab.vis.runtime.util.autotable.SelectFilePropertyUI;
+import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 
 /**
  * Stores single shader along with it's asset descriptor
  * @author Kotcrab
  */
 public class ShaderComponent extends Component implements UsesProtoComponent, StoresAssetDescriptor {
-	@SelectFilePropertyUI(fieldName = "Shader", relativeFolderPath = "shader/", extension = "frag", hideExtension = true,
-			handlerClass = "com.kotcrab.vis.editor.ui.scene.entityproperties.components.ShaderSelectFilePropertyHandler")
+	@ATSelectFile(fieldName = "Shader", relativeFolderPath = "shader/", extension = "frag", hideExtension = true,
+			handlerClass = "com.kotcrab.vis.editor.ui.scene.entityproperties.components.ShaderATSelectFileHandler")
 	public ShaderAsset asset;
 	public transient ShaderProgram shader;
 

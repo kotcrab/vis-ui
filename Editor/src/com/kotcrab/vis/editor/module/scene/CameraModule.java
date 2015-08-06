@@ -168,6 +168,10 @@ public class CameraModule extends SceneModule {
 		return viewport.unproject(vector);
 	}
 
+	public Vector3 project (Vector3 vector3) {
+		return viewport.project(vector3);
+	}
+
 	public float getInputX () {
 		unprojectVec.x = Gdx.input.getX();
 		viewport.unproject(unprojectVec);

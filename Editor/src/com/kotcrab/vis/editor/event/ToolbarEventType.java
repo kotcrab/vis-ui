@@ -17,5 +17,6 @@
 package com.kotcrab.vis.editor.event;
 
 public enum ToolbarEventType {
-	FILE_SAVE
+	FILE_SAVE,
+	TOOL_SELECTION, TOOL_POLYGON
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene.entitymanipulator;
+package com.kotcrab.vis.editor.module.scene.entitymanipulator.tool;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -25,16 +25,21 @@ import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.editor.module.scene.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
  * @author Kotcrab
  */
 public class Tool extends InputListener {
 	private boolean loaded = false;
+
 	@InjectModule protected EntityManipulatorModule entityManipulator;
 	@InjectModule protected CameraModule camera;
 	@InjectModule protected UndoModule undoModule;
+
+	protected SceneModuleContainer sceneMC;
 	protected EditorScene scene;
 
 	protected EntityProxyCache entityProxyCache;
@@ -42,6 +47,7 @@ public class Tool extends InputListener {
 	@CallSuper
 	public void setModules (SceneModuleContainer moduleContainer, EditorScene scene) {
 		if (loaded) return;
+		this.sceneMC = moduleContainer;
 		this.scene = scene;
 		moduleContainer.injectModules(this);
 		entityProxyCache = moduleContainer.getEntityEngineConfiguration().getManager(EntityProxyCache.class);
@@ -62,5 +68,17 @@ public class Tool extends InputListener {
 	}
 
 	public void deactivated () {
+	}
+
+	public void selectedEntitiesChanged () {
+
+	}
+
+	public void selectedEntitiesValuesChanged () {
+
+	}
+
+	public VisTable getToolPropertiesUI () {
+		return null;
 	}
 }

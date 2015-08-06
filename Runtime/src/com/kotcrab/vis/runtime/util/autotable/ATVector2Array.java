@@ -14,23 +14,17 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.util.autotable;
 
-import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.autotable.ATEntityProperty;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * All renderable entities must have this component, stores entity zIndex
- * @author Kotcrab
- */
-public class RenderableComponent extends Component {
-	@ATEntityProperty(fieldName = "Z Index")
-	public int zIndex;
-
-	private RenderableComponent () {
-	}
-
-	public RenderableComponent (int zIndex) {
-		this.zIndex = zIndex;
-	}
+/** @author Kotcrab */
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ATVector2Array {
+	/** @return human friendly field name that will be used in VisEditor UI. */
+	String fieldName () default "";
 }

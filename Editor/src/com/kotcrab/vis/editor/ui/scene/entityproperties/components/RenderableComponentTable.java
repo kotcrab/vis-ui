@@ -26,7 +26,7 @@ public class RenderableComponentTable extends AutoComponentTable<RenderableCompo
 	private RenderBatchingSystem batchingSystem;
 
 	public RenderableComponentTable (ModuleInjector projectInjector) {
-		super(projectInjector, RenderableComponent.class);
+		super(projectInjector, RenderableComponent.class, false);
 	}
 
 	@Override
@@ -39,10 +39,5 @@ public class RenderableComponentTable extends AutoComponentTable<RenderableCompo
 	public void setValuesToEntities () {
 		super.setValuesToEntities();
 		batchingSystem.markDirty();
-	}
-
-	@Override
-	public boolean isRemovable () {
-		return false;
 	}
 }

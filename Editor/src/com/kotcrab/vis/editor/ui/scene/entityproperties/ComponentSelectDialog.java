@@ -21,8 +21,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
+import com.kotcrab.vis.runtime.component.PolygonComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.*;
@@ -48,10 +50,11 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 		setBackground(VisUI.getSkin().getDrawable("tooltip-bg"));
 
 		componentClasses.add(ShaderComponent.class);
+		componentClasses.add(PolygonComponent.class);
 
 		buttonStyle = new VisTextButtonStyle(VisUI.getSkin().get(VisTextButtonStyle.class));
 
-		scrollPaneTable = new VisTable(true);
+		scrollPaneTable = new VisTable(false);
 		scrollPaneTable.top();
 
 		VisScrollPane scrollPane = new VisScrollPane(scrollPaneTable);
@@ -87,6 +90,10 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 		return getX() <= x && getX() + getWidth() >= x && getY() <= y && getY() + getHeight() >= y;
 	}
 
+	public Array<Class<? extends Component>> getComponentClasses () {
+		return componentClasses;
+	}
+
 	@Override
 	protected void setStage (Stage stage) {
 		super.setStage(stage);
@@ -107,6 +114,10 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 
 	public boolean build () {
 		scrollPaneTable.clearChildren();
+
+		if(properties.getProxies().first() instanceof GroupEntityProxy) {
+			return false;
+		}
 
 		boolean atLeastOneComponentAdded = false;
 

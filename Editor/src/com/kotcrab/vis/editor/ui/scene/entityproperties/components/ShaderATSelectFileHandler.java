@@ -23,10 +23,10 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ShaderCacheModule;
 import com.kotcrab.vis.runtime.assets.ShaderAsset;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
-import com.kotcrab.vis.runtime.util.autotable.SelectFilePropertyHandler;
+import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 
 /** @author Kotcrab */
-public class ShaderSelectFilePropertyHandler implements SelectFilePropertyHandler {
+public class ShaderATSelectFileHandler implements ATSelectFileHandler {
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private ShaderCacheModule shaderCache;
 

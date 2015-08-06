@@ -30,6 +30,8 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
+import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
+import com.kotcrab.vis.editor.ui.Vector2ArrayView;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
@@ -37,13 +39,9 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificCo
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.gdx.IntDigitsOnlyFilter;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.util.autotable.EntityPropertyUI;
-import com.kotcrab.vis.runtime.util.autotable.SelectFilePropertyHandler;
-import com.kotcrab.vis.runtime.util.autotable.SelectFilePropertyUI;
-import com.kotcrab.vis.ui.widget.Tooltip;
-import com.kotcrab.vis.ui.widget.VisImageButton;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.runtime.component.PolygonComponent;
+import com.kotcrab.vis.runtime.util.autotable.*;
+import com.kotcrab.vis.ui.widget.*;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -53,29 +51,37 @@ import static com.kotcrab.vis.editor.util.vis.EntityUtils.getCommonString;
 
 /**
  * Uses magic of annotations and reflection to automatically build and update specific table for component.
- * Only some primitives fields are supported. Component fields must be marked with {@link EntityPropertyUI} annotation.
+ * Only some primitives fields are supported. Component fields must be marked with {@link ATEntityProperty} annotation.
  * @author Kotcrab
  */
-public abstract class AutoComponentTable<T extends Component> extends SpecificComponentTable<T> {
+public class AutoComponentTable<T extends Component> extends SpecificComponentTable<T> {
 	private Class<T> componentClass;
 
 	private ModuleInjector injector;
+	private boolean removable;
 
 	@InjectModule private FileAccessModule fileAccessModule;
 
 	private ObjectMap<Field, NumberInputField> numberFields = new ObjectMap<>();
 	private ObjectMap<Field, SelectFileDialogSet> fileDialogLabels = new ObjectMap<>();
+	private ObjectMap<Field, Vector2ArrayView> vector2Views = new ObjectMap<>();
 
-	public AutoComponentTable (ModuleInjector injector, Class<T> componentClass) {
+	public AutoComponentTable (ModuleInjector injector, Class<T> componentClass, boolean removable) {
 		super(true);
 		this.injector = injector;
-		injector.injectModules(this);
+		this.removable = removable;
 		this.componentClass = componentClass;
+		injector.injectModules(this);
 	}
 
 	@Override
 	public Class<T> getComponentClass () {
 		return componentClass;
+	}
+
+	@Override
+	public boolean isRemovable () {
+		return removable;
 	}
 
 	@Override
@@ -87,17 +93,19 @@ public abstract class AutoComponentTable<T extends Component> extends SpecificCo
 			Class type = field.getType();
 
 			for (Annotation annotation : field.getAnnotations()) {
-				if (annotation instanceof EntityPropertyUI) {
-					createNumberInputField(field, type, (EntityPropertyUI) annotation);
+				if (annotation instanceof ATEntityProperty) {
+					createNumberInputField(field, type, (ATEntityProperty) annotation);
 				}
 
-				if (annotation instanceof SelectFilePropertyUI) {
-					createFileChooserField(field, (SelectFilePropertyUI) annotation);
+				if (annotation instanceof ATSelectFile) {
+					createFileChooserField(field, (ATSelectFile) annotation);
+				}
+
+				if (annotation instanceof ATVector2Array) {
+					createVector2ArrayView(field, (ATVector2Array) annotation);
 				}
 			}
 		}
-
-		componentClass.getAnnotation(EntityPropertyUI.class);
 	}
 
 	@Override
@@ -107,8 +115,9 @@ public abstract class AutoComponentTable<T extends Component> extends SpecificCo
 		for (Field field : componentClass.getDeclaredFields()) {
 			Class type = field.getType();
 			for (Annotation annotation : field.getAnnotations()) {
-				if (annotation instanceof EntityPropertyUI) updateNumberInputField(field, type, proxies);
-				if (annotation instanceof SelectFilePropertyUI) updateFileChooser(field, proxies);
+				if (annotation instanceof ATEntityProperty) updateNumberInputField(field, type, proxies);
+				if (annotation instanceof ATSelectFile) updateFileChooser(field, proxies);
+				if (annotation instanceof ATVector2Array) updateVector2View(field, proxies);
 			}
 		}
 	}
@@ -123,7 +132,7 @@ public abstract class AutoComponentTable<T extends Component> extends SpecificCo
 				for (Field field : componentClass.getDeclaredFields()) {
 					Class type = field.getType();
 					for (Annotation annotation : field.getAnnotations()) {
-						if (annotation instanceof EntityPropertyUI) {
+						if (annotation instanceof ATEntityProperty) {
 							setFromNumberInputField(field, type, component);
 						}
 					}
@@ -132,7 +141,7 @@ public abstract class AutoComponentTable<T extends Component> extends SpecificCo
 		}
 	}
 
-	private void createNumberInputField (Field field, Class type, EntityPropertyUI propertyUI) {
+	private void createNumberInputField (Field field, Class type, ATEntityProperty propertyUI) {
 		if (type.equals(Integer.TYPE) == false && type.equals(Float.TYPE) == false) {
 			throw new UnsupportedOperationException("Field of this type is not supported by EntityPropertyUI: " + type);
 		}
@@ -148,69 +157,6 @@ public abstract class AutoComponentTable<T extends Component> extends SpecificCo
 		table.add(numberInputField).width(EntityProperties.FIELD_WIDTH);
 		add(table).expandX().fillX().row();
 		numberFields.put(field, numberInputField);
-	}
-
-	private void createFileChooserField (Field field, SelectFilePropertyUI propertyUI) {
-		String fieldName = propertyUI.fieldName().equals("") ? field.getName() : propertyUI.fieldName();
-
-		VisLabel fileLabel = new VisLabel();
-		fileLabel.setColor(Color.GRAY);
-		fileLabel.setEllipsis(true);
-
-		VisImageButton selectFileButton = new VisImageButton(Assets.getIcon(Icons.MORE));
-
-		VisTable table = new VisTable(true);
-		table.add(new VisLabel(fieldName));
-		table.add(fileLabel).expandX().fillX();
-		table.add(selectFileButton);
-
-		Tooltip tooltip = new Tooltip(fileLabel, "");
-
-		add(table).expandX().fillX().row();
-
-		SelectFilePropertyHandler handler = null;
-
-		try {
-			Class clazz = Class.forName(propertyUI.handlerClass());
-			Constructor constructor = clazz.getConstructor();
-			Object object = constructor.newInstance();
-
-			if (object instanceof SelectFilePropertyHandler == false) {
-				throw new IllegalStateException("SelectFilePropertyUI handler must be instance of SelectFilePropertyHandler");
-			}
-
-			handler = (SelectFilePropertyHandler) object;
-		} catch (ReflectiveOperationException e) {
-			throw new IllegalStateException("AutoTable failed, failed to create handler with class: " + propertyUI.handlerClass(), e);
-		}
-
-		injector.injectModules(handler);
-
-		fileDialogLabels.put(field, new SelectFileDialogSet(fileLabel, tooltip, handler));
-
-		FileHandle folder = fileAccessModule.getAssetsFolder().child(propertyUI.relativeFolderPath());
-
-		final SelectFilePropertyHandler finalHandler = handler;
-		final SelectFileDialog selectFontDialog = new SelectFileDialog(propertyUI.extension(), propertyUI.hideExtension(), folder, file -> {
-			for (EntityProxy proxy : properties.getProxies()) {
-				for (Entity entity : proxy.getEntities()) {
-					finalHandler.applyChanges(entity, file);
-				}
-			}
-
-			properties.getParentTab().dirty();
-			properties.selectedEntitiesChanged();
-			properties.endSnapshot();
-		});
-
-		selectFileButton.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				selectFontDialog.rebuildFileList();
-				properties.beginSnapshot();
-				getStage().addActor(selectFontDialog.fadeIn());
-			}
-		});
 	}
 
 	private void updateNumberInputField (Field field, Class type, Array<EntityProxy> proxies) {
@@ -239,14 +185,6 @@ public abstract class AutoComponentTable<T extends Component> extends SpecificCo
 		}
 	}
 
-	private void updateFileChooser (Field field, Array<EntityProxy> proxies) {
-		SelectFileDialogSet set = fileDialogLabels.get(field);
-		String path = getCommonString(proxies, "<?>", set.handler::getLabelValue);
-		set.fileLabel.setText(path);
-		((VisLabel) set.tooltip.getContent()).setText(path);
-		set.tooltip.pack();
-	}
-
 	private void setFromNumberInputField (Field field, Class type, T component) {
 		if (type.equals(Integer.TYPE)) {
 			try {
@@ -267,12 +205,106 @@ public abstract class AutoComponentTable<T extends Component> extends SpecificCo
 		}
 	}
 
+	private void createFileChooserField (Field field, ATSelectFile propertyUI) {
+		String fieldName = propertyUI.fieldName().equals("") ? field.getName() : propertyUI.fieldName();
+
+		VisLabel fileLabel = new VisLabel();
+		fileLabel.setColor(Color.GRAY);
+		fileLabel.setEllipsis(true);
+
+		VisImageButton selectFileButton = new VisImageButton(Assets.getIcon(Icons.MORE));
+
+		VisTable table = new VisTable(true);
+		table.add(new VisLabel(fieldName));
+		table.add(fileLabel).expandX().fillX();
+		table.add(selectFileButton);
+
+		Tooltip tooltip = new Tooltip(fileLabel, "");
+
+		add(table).expandX().fillX().row();
+
+		ATSelectFileHandler handler = null;
+
+		try {
+			Class clazz = Class.forName(propertyUI.handlerClass());
+			Constructor constructor = clazz.getConstructor();
+			Object object = constructor.newInstance();
+
+			if (object instanceof ATSelectFileHandler == false) {
+				throw new IllegalStateException("SelectFilePropertyUI handler must be instance of SelectFilePropertyHandler");
+			}
+
+			handler = (ATSelectFileHandler) object;
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException("AutoTable failed, failed to create handler with class: " + propertyUI.handlerClass(), e);
+		}
+
+		injector.injectModules(handler);
+
+		fileDialogLabels.put(field, new SelectFileDialogSet(fileLabel, tooltip, handler));
+
+		FileHandle folder = fileAccessModule.getAssetsFolder().child(propertyUI.relativeFolderPath());
+
+		final ATSelectFileHandler finalHandler = handler;
+		final SelectFileDialog selectFontDialog = new SelectFileDialog(propertyUI.extension(), propertyUI.hideExtension(), folder, file -> {
+			for (EntityProxy proxy : properties.getProxies()) {
+				for (Entity entity : proxy.getEntities()) {
+					finalHandler.applyChanges(entity, file);
+				}
+			}
+
+			properties.getParentTab().dirty();
+			properties.selectedEntitiesChanged();
+			properties.endSnapshot();
+		});
+
+		selectFileButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				selectFontDialog.rebuildFileList();
+				properties.beginSnapshot();
+				getStage().addActor(selectFontDialog.fadeIn());
+			}
+		});
+	}
+
+	private void updateFileChooser (Field field, Array<EntityProxy> proxies) {
+		SelectFileDialogSet set = fileDialogLabels.get(field);
+		String path = getCommonString(proxies, "<?>", set.handler::getLabelValue);
+		set.fileLabel.setText(path);
+		((VisLabel) set.tooltip.getContent()).setText(path);
+		set.tooltip.pack();
+	}
+
+	private void createVector2ArrayView (Field field, ATVector2Array annotation) {
+		Vector2ArrayView view = new Vector2ArrayView();
+		vector2Views.put(field, view);
+
+		add(annotation.fieldName()).spaceBottom(3).row();
+		add(view).expandX().fillX().row();
+	}
+
+	private void updateVector2View (Field field, Array<EntityProxy> proxies) {
+		Vector2ArrayView view = vector2Views.get(field);
+
+		if (proxies.size > 1) {
+			view.setMultipleSelected(true);
+		} else {
+			EntityProxy proxy = proxies.get(0);
+
+			if (proxy instanceof GroupEntityProxy && proxy.getEntities().size > 1)
+				view.setMultipleSelected(true);
+			else
+				view.setVectors(proxies.first().getEntities().first().getComponent(PolygonComponent.class).points);
+		}
+	}
+
 	private static class SelectFileDialogSet {
 		public VisLabel fileLabel;
 		private Tooltip tooltip;
-		public SelectFilePropertyHandler handler;
+		public ATSelectFileHandler handler;
 
-		public SelectFileDialogSet (VisLabel fileLabel, Tooltip tooltip, SelectFilePropertyHandler handler) {
+		public SelectFileDialogSet (VisLabel fileLabel, Tooltip tooltip, ATSelectFileHandler handler) {
 			this.fileLabel = fileLabel;
 			this.tooltip = tooltip;
 			this.handler = handler;

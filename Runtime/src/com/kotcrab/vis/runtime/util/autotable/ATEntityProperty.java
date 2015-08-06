@@ -27,25 +27,12 @@ import java.lang.annotation.Target;
  * This annotation is used on fields inside {@link Component}s to make them editable inside VisEditor. Target component
  * class must be registered using AutoComponentTable. See VisEditor source for more details.
  * <p>
- * Auto table will automatically create label with current file path and button to chose new file. This annotation
- * requires providing handler class that will take care of updating entities.
+ * Auto table will automatically create number input field and update it when needed.
  * @author Kotcrab
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SelectFilePropertyUI {
+public @interface ATEntityProperty {
 	/** @return human friendly field name that will be used in VisEditor UI. */
 	String fieldName () default "";
-
-	/** @return relative folder path that will be used for file selector. For example: "gfx/". */
-	String relativeFolderPath ();
-
-	/** @return extension that file chooser will display. For example: "png". */
-	String extension ();
-
-	/** @return if true file selector will hide file extensions in dialog. */
-	boolean hideExtension () default false;
-
-	/** @return class name that will be used as handler. Must implement {@link SelectFilePropertyUI}. */
-	String handlerClass ();
 }

@@ -14,23 +14,19 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.util.autotable;
 
-import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.autotable.ATEntityProperty;
+import com.artemis.Entity;
+import com.badlogic.gdx.files.FileHandle;
 
 /**
- * All renderable entities must have this component, stores entity zIndex
+ * Handler interface for {@link ATSelectFile}. All handlers must implement this interface. Handlers may use
+ * any module from VisEditor SceneModuleContainer scope if those fields are annotated by @InjectModule annotation.
+ * Handlers must have no arg constructor.
  * @author Kotcrab
  */
-public class RenderableComponent extends Component {
-	@ATEntityProperty(fieldName = "Z Index")
-	public int zIndex;
+public interface ATSelectFileHandler {
+	void applyChanges (Entity entity, FileHandle file);
 
-	private RenderableComponent () {
-	}
-
-	public RenderableComponent (int zIndex) {
-		this.zIndex = zIndex;
-	}
+	String getLabelValue (Entity entity);
 }

@@ -26,6 +26,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
@@ -111,6 +112,9 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(float[].class, 17);
 		kryo.register(UUID.class, new UUIDSerializer(), 18);
 		kryo.register(IntMap.class, new IntMapSerializer(), 19);
+		kryo.register(Vector2.class, 20);
+		kryo.register(Vector2[].class, 21);
+		kryo.register(Vector2[][].class, 22);
 
 		kryo.register(EditorScene.class, new EditorSceneSerializer(kryo), 31);
 		kryo.register(EntityScheme.class, new EntitySchemeSerializer(kryo, this), 32);
@@ -145,6 +149,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(LayerComponent.class, 224);
 		kryo.register(RenderableComponent.class, 225);
 		registerEntityComponentSerializer(ShaderComponent.class, new ShaderComponentSerializer(kryo, shaderCache), 226);
+		kryo.register(PolygonComponent.class, 227);
 	}
 
 	private void registerEntityComponentSerializer (Class<? extends Component> componentClass, EntityComponentSerializer serializer, int id) {
@@ -187,7 +192,10 @@ public class SceneIOModule extends ProjectModule {
 		Bag<Component> clonedComponents = new Bag<>();
 
 		entityComponentSerializers.forEach(entityComponentSerializer -> entityComponentSerializer.setComponents(components));
-		components.forEach(component -> clonedComponents.add(kryo.copy(component)));
+		components.forEach(component -> {
+			if (component instanceof InvisibleComponent) return;
+			clonedComponents.add(kryo.copy(component));
+		});
 		entityComponentSerializers.forEach(entityComponentSerializer -> entityComponentSerializer.setComponents(null));
 
 		return clonedComponents;

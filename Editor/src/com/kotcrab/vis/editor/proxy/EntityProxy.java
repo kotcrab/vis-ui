@@ -17,14 +17,18 @@
 package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Component;
+import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
+import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
 import com.kotcrab.vis.editor.module.scene.VisUUIDManager;
+import com.kotcrab.vis.editor.util.polygon.Clipper;
 import com.kotcrab.vis.runtime.accessor.*;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.*;
@@ -34,6 +38,8 @@ import java.util.UUID;
 
 /** @author Kotcrab */
 public abstract class EntityProxy {
+	private ComponentMapper<PolygonComponent> polygonCm;
+
 	protected Entity entity;
 	protected VisUUIDManager uuidManager;
 	protected UUID uuid;
@@ -54,6 +60,8 @@ public abstract class EntityProxy {
 		if (entity != null) {
 			uuidManager = entity.getWorld().getManager(VisUUIDManager.class);
 			uuid = entity.getComponent(UUIDComponent.class).getUuid();
+
+			polygonCm = entity.getWorld().getMapper(PolygonComponent.class);
 		}
 	}
 
@@ -169,6 +177,7 @@ public abstract class EntityProxy {
 	}
 
 	public void setX (float x) {
+		updatePolygon(x, getY());
 		basicAccessor.setX(x);
 	}
 
@@ -177,11 +186,26 @@ public abstract class EntityProxy {
 	}
 
 	public void setY (float y) {
+		updatePolygon(getX(), y);
 		basicAccessor.setY(y);
 	}
 
 	public void setPosition (float x, float y) {
+		updatePolygon(x, y);
 		basicAccessor.setPosition(x, y);
+	}
+
+	private void updatePolygon (float x, float y) {
+		PolygonComponent polygon = polygonCm.getSafe(entity);
+		float dx = getX() - x;
+		float dy = getY() - y;
+		if (polygon != null) {
+			for (Vector2 point : polygon.points) {
+				point.sub(dx, dy);
+			}
+
+			polygon.vertices = Clipper.polygonize(App.DEFAULT_POLYGONIZER, polygon.points.toArray(Vector2.class));
+		}
 	}
 
 	public float getWidth () {

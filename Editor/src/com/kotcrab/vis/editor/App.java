@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor;
 
 import com.kotcrab.vis.editor.event.bus.EventBus;
 import com.kotcrab.vis.editor.util.JarUtils;
+import com.kotcrab.vis.editor.util.polygon.Clipper.Polygonizer;
 
 import javax.swing.JOptionPane;
 import java.io.File;
@@ -58,6 +59,8 @@ public class App {
 	public static final String METADATA_FOLDER_PATH = APP_FOLDER_PATH + "metadata" + File.separator;
 
 	private static final String GDX_RELEASE_ZIP = "http://libgdx.badlogicgames.com/releases/libgdx-1.5.6.zip";
+
+	public static final Polygonizer DEFAULT_POLYGONIZER = Polygonizer.EWJORDAN;
 
 	/** VisEditor common event bus */
 	public static EventBus eventBus;

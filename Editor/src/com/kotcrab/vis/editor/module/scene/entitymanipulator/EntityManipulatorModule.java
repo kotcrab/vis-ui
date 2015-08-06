@@ -40,6 +40,8 @@ import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
 import com.kotcrab.vis.editor.entity.PositionComponent;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
 import com.kotcrab.vis.editor.event.RedoEvent;
+import com.kotcrab.vis.editor.event.ToolbarEvent;
+import com.kotcrab.vis.editor.event.ToolbarEventType;
 import com.kotcrab.vis.editor.event.UndoEvent;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
@@ -51,6 +53,9 @@ import com.kotcrab.vis.editor.module.scene.action.EntitiesAddedAction;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesRemovedAction;
 import com.kotcrab.vis.editor.module.scene.action.GroupAction;
 import com.kotcrab.vis.editor.module.scene.action.MoveEntitiesAction;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.SelectionTool;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tool;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
@@ -71,6 +76,7 @@ import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
+import com.kotcrab.vis.ui.widget.VisTable;
 
 import static com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTimerTask.*;
 
@@ -103,6 +109,9 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 	private SceneOutline sceneOutline;
 
 	private Tool currentTool;
+	private SelectionTool selectionTool;
+	private PolygonTool polygonTool;
+
 	private int currentSelectionGid = -1;
 	private Array<EntityProxy> selectedEntities = new Array<>();
 	private ImmutableArray<EntityProxy> immutableSelectedEntities = new ImmutableArray<>(selectedEntities);
@@ -117,6 +126,8 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 
 	private EntityMoveTimerTask entityMoveTimerTask;
 	private MoveEntitiesAction keyMoveAction;
+
+	private VisTable toolPropertiesContainer;
 
 	@Override
 	public void init () {
@@ -147,9 +158,17 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 		sceneOutline = new SceneOutline(sceneContainer, selectedEntities);
 		createGeneralMenu();
 
+		toolPropertiesContainer = new VisTable();
+
 		entityMoveTimerTask = new EntityMoveTimerTask(scene, this, immutableSelectedEntities);
 
-		switchTool(new SelectionTool());
+		selectionTool = new SelectionTool();
+		polygonTool = new PolygonTool();
+
+		selectionTool.setModules(sceneContainer, scene);
+		polygonTool.setModules(sceneContainer, scene);
+
+		switchTool(selectionTool);
 
 		scene.addObservable(notificationId -> {
 			if (notificationId == EditorScene.ACTIVE_LAYER_CHANGED) {
@@ -235,6 +254,7 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 			entitiesClipboard.forEach(protoEntity -> {
 				Entity entity = protoEntity.build();
 				entities.add(entity);
+				if (scene.getActiveLayer().visible == false) entity.edit().add(new InvisibleComponent());
 				proxies.add(entityProxyCache.get(entity));
 			});
 
@@ -366,8 +386,12 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 	public void switchTool (Tool tool) {
 		if (currentTool != null) currentTool.deactivated();
 		currentTool = tool;
-		currentTool.setModules(sceneContainer, scene);
 		currentTool.activated();
+
+		toolPropertiesContainer.reset();
+		VisTable table = currentTool.getToolPropertiesUI();
+		if (table != null)
+			toolPropertiesContainer.add(table).expandX().fillX();
 	}
 
 	public void findEntityBaseGroupAndSelect (EntityProxy proxy) {
@@ -501,10 +525,14 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 	public void selectedEntitiesChanged () {
 		entityProperties.selectedEntitiesChanged();
 		sceneOutline.selectedEntitiesChanged();
+		currentTool.selectedEntitiesChanged();
+		markSceneDirty();
 	}
 
 	public void selectedEntitiesValuesChanged () {
 		entityProperties.selectedEntitiesValuesChanged();
+		currentTool.selectedEntitiesValuesChanged();
+		markSceneDirty();
 	}
 
 	public void groupSelection () {
@@ -593,6 +621,15 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 			renderBatchingSystem.markDirty();
 		}
 
+		if (event instanceof ToolbarEvent) {
+			ToolbarEventType type = ((ToolbarEvent) event).type;
+
+			if (type == ToolbarEventType.TOOL_SELECTION)
+				switchTool(selectionTool);
+			else if (type == ToolbarEventType.TOOL_POLYGON)
+				switchTool(polygonTool);
+		}
+
 		return false;
 	}
 
@@ -620,6 +657,10 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 
 	public SceneOutline getSceneOutline () {
 		return sceneOutline;
+	}
+
+	public VisTable getToolPropertiesContainer () {
+		return toolPropertiesContainer;
 	}
 
 	public ImmutableArray<EntityProxy> getSelectedEntities () {

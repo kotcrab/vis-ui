@@ -14,19 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.util.autotable;
+package com.kotcrab.vis.runtime.component;
 
-import com.artemis.Entity;
-import com.badlogic.gdx.files.FileHandle;
+import com.artemis.Component;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.util.autotable.ATVector2Array;
 
-/**
- * Handler interface for {@link SelectFilePropertyUI}. All handlers must implement this interface. Handlers may use
- * any module from VisEditor SceneModuleContainer scope if those fields are annotated by @InjectModule annotation.
- * Handlers must have no arg constructor.
- * @author Kotcrab
- */
-public interface SelectFilePropertyHandler {
-	void applyChanges (Entity entity, FileHandle file);
-
-	String getLabelValue (Entity entity);
+/** @author Kotcrab */
+public class PolygonComponent extends Component {
+	@ATVector2Array(fieldName = "Points")
+	public Array<Vector2> points = new Array<Vector2>();
+	public Vector2[][] vertices;
 }

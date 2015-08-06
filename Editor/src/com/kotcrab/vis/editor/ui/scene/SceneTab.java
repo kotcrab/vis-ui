@@ -135,8 +135,10 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		//we need some better window management, really
 		leftColumn.top();
 		leftColumn.add(alignmentTools).height(new VisValue(context -> alignmentTools.getPrefHeight())).expandX().fillX().row();
-		leftColumn.add(entityManipulator.getSceneOutline()).height(300).padTop(new VisValue(context -> alignmentTools.isVisible() ? 8 : 0)).top().fillX().expandX();
-		leftColumn.add().fill().expand().row();
+		leftColumn.add(entityManipulator.getSceneOutline())
+				.height(300).padTop(new VisValue(context -> alignmentTools.isVisible() ? 8 : 0))
+				.top().fillX().expandX().row();
+		leftColumn.add(entityManipulator.getToolPropertiesContainer()).bottom().expand().fillX();
 
 		rightColumn.top();
 		rightColumn.add(entityProperties)

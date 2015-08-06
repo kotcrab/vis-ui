@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene.entitymanipulator;
+package com.kotcrab.vis.editor.module.scene.entitymanipulator.tool;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
@@ -23,29 +23,36 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.annotation.CallSuper;
 import com.kotcrab.vis.editor.module.scene.action.MoveEntityAction;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.RectangularSelection;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 
-/** @author Kotcrab */
-public class SelectionTool extends Tool {
-	private float lastTouchX, lastTouchY;
+/**
+ * Most basic tool, allows only to select entities and use rectangular selection. May be used as common class for other
+ * tools.
+ * @author Kotcrab
+ * @see SelectionTool
+ */
+public abstract class BaseSelectionTool extends Tool {
+	protected float lastTouchX, lastTouchY;
 
-	private boolean mouseInsideSelected;
-	private boolean cameraDragged;
-	private boolean dragging;
-	private boolean dragged;
+	protected boolean mouseInsideSelected;
+	protected boolean cameraDragged;
+	protected boolean dragging;
+	protected boolean dragged;
 
-	private RectangularSelection rectangularSelection;
+	protected RectangularSelection rectangularSelection;
+	protected boolean rectSelectionTouchDraggedResult;
 
-	private Array<MoveEntityAction> moveActions = new Array<>();
+	protected Array<MoveEntityAction> moveActions = new Array<>();
 
-	@Override
+	@Override @CallSuper
 	public void init () {
 		rectangularSelection = new RectangularSelection(scene, entityManipulator, entityProxyCache);
 	}
 
-	@Override
+	@Override @CallSuper
 	public void render (ShapeRenderer shapeRenderer) {
 		rectangularSelection.render(shapeRenderer);
 	}
@@ -87,30 +94,7 @@ public class SelectionTool extends Tool {
 			x = camera.getInputX();
 			y = camera.getInputY();
 
-			if (dragged == false) {
-				moveActions.clear();
-				for (EntityProxy proxy : entityManipulator.getSelectedEntities())
-					moveActions.add(new MoveEntityAction(proxy));
-			}
-
-			if (rectangularSelection.touchDragged(x, y) == false) {
-
-				if (dragging && entityManipulator.getSelectedEntities().size() > 0) {
-					dragged = true;
-					float deltaX = (x - lastTouchX);
-					float deltaY = (y - lastTouchY);
-
-					for (EntityProxy entity : entityManipulator.getSelectedEntities())
-						entity.setPosition(entity.getX() + deltaX, entity.getY() + deltaY);
-
-					lastTouchX = x;
-					lastTouchY = y;
-
-					entityManipulator.markSceneDirty();
-					entityManipulator.selectedEntitiesChanged();
-				}
-
-			}
+			rectSelectionTouchDraggedResult = rectangularSelection.touchDragged(x, y);
 		}
 
 		if (Gdx.input.isButtonPressed(Buttons.RIGHT))
@@ -121,12 +105,6 @@ public class SelectionTool extends Tool {
 	public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 		x = camera.getInputX();
 		y = camera.getInputY();
-
-		if (button == Buttons.LEFT && dragged == false && mouseInsideSelected == false) {
-			EntityProxy result = findEntityWithSmallestSurfaceArea(x, y);
-			if (result != null)
-				entityManipulator.deselect(result);
-		}
 
 		if (button == Buttons.RIGHT && cameraDragged == false) {
 			if (isMouseInsideSelectedEntities(x, y) == false)
@@ -139,22 +117,18 @@ public class SelectionTool extends Tool {
 			mouseInsideSelected = true;
 		}
 
-		if (dragged) {
-			for (int i = 0; i < entityManipulator.getSelectedEntities().size(); i++)
-				moveActions.get(i).saveNewData(entityManipulator.getSelectedEntities().get(i));
-
-			UndoableActionGroup group = new UndoableActionGroup("Move entities");
-
-			for (MoveEntityAction action : moveActions)
-				group.add(action);
-
-			group.finalizeGroup();
-
-			undoModule.add(group);
+		if (button == Buttons.LEFT && dragged == false && mouseInsideSelected == false) {
+			EntityProxy result = findEntityWithSmallestSurfaceArea(x, y);
+			if (result != null)
+				entityManipulator.deselect(result);
 		}
 
 		rectangularSelection.touchUp();
 
+		resetAfterTouchUp();
+	}
+
+	protected void resetAfterTouchUp () {
 		lastTouchX = 0;
 		lastTouchY = 0;
 		mouseInsideSelected = false;
@@ -169,7 +143,7 @@ public class SelectionTool extends Tool {
 	 * When selecting entities, and few of them are overlapping, selecting entity with smallest
 	 * area gives better results than just selecting first one.
 	 */
-	private EntityProxy findEntityWithSmallestSurfaceArea (float x, float y) {
+	protected EntityProxy findEntityWithSmallestSurfaceArea (float x, float y) {
 		EntityProxy matchingEntity = null;
 		float lastSurfaceArea = Float.MAX_VALUE;
 
@@ -192,7 +166,7 @@ public class SelectionTool extends Tool {
 		return matchingEntity;
 	}
 
-	private boolean isMouseInsideSelectedEntities (float x, float y) {
+	protected boolean isMouseInsideSelectedEntities (float x, float y) {
 		for (EntityProxy entity : entityManipulator.getSelectedEntities()) {
 			if (entity.getBoundingRectangle().contains(x, y)) {
 				EntityProxy result = findEntityWithSmallestSurfaceArea(x, y);

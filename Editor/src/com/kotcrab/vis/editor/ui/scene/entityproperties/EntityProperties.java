@@ -67,6 +67,7 @@ import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.value.FloatProxyValue;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
+import com.kotcrab.vis.runtime.component.PolygonComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ActorUtils;
@@ -260,12 +261,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		registerSpecificTable(new GroupUITable());
 
 		registerComponentTable(new RenderableComponentTable(sceneMC));
-		registerComponentTable(new AutoComponentTable<ShaderComponent>(sceneMC, ShaderComponent.class) {
-			@Override
-			public boolean isRemovable () {
-				return true;
-			}
-		});
+		registerComponentTable(new AutoComponentTable<>(sceneMC, ShaderComponent.class, true));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, PolygonComponent.class, true));
 
 		propertiesTable = new VisTable(true);
 
