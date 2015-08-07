@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.ui;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.util.NumberUtils;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
@@ -29,6 +30,9 @@ public class Vector2ArrayView extends VisTable {
 
 	public Vector2ArrayView () {
 		updateUI();
+
+		left();
+		defaults().left();
 
 //		ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);
 //		fire(changeEvent);
@@ -59,7 +63,7 @@ public class Vector2ArrayView extends VisTable {
 			for (int i = 0; i < vectors.size; i++) {
 				Vector2 vec = vectors.get(i);
 
-				add(new VisLabel(i + ": X: " + vec.x + " Y: " + vec.y)).row();
+				add(new VisLabel(i + ": X: " + NumberUtils.floatToString(vec.x) + " Y: " + NumberUtils.floatToString(vec.y))).row();
 			}
 		} else {
 			add("Multiple entities selected!");

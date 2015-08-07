@@ -46,7 +46,7 @@ public class PolygonUtils {
 		return getPolygonSignedArea(points) > 0;
 	}
 
-	/** Checks whether polygon vertices will make degenerated box2d polygon or not */
+	/** Checks whether polygon faces will make degenerated box2d polygon or not */
 	public static boolean isDegenerate (Vector2[] vertices) {
 		// https://github.com/libgdx/libgdx/blob/master/extensions/gdx-box2d/gdx-box2d/jni/Box2D/Collision/Shapes/b2PolygonShape.cpp#L120-L226
 		// it's not like I understand what is going on here

@@ -295,7 +295,7 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 			if (proxy instanceof GroupEntityProxy && proxy.getEntities().size > 1)
 				view.setMultipleSelected(true);
 			else
-				view.setVectors(proxies.first().getEntities().first().getComponent(PolygonComponent.class).points);
+				view.setVectors(proxies.first().getEntities().first().getComponent(PolygonComponent.class).vertices);
 		}
 	}
 

@@ -3,6 +3,7 @@
 -You can hold space to pan camera
 -Scene backup file is created before saving (file with '.bak' and '.firstSaveBak' extension in `vis/modules/.sceneBackup`, that can be used when saving fails)
 -Added ShaderComponent
+-Added PolygonComponent
 -Improved Entity Properties dialog, now allows to add custom entity components
 -Added Layer settings dialog: allows to change name and coordinates system (world or screen for UI)
 

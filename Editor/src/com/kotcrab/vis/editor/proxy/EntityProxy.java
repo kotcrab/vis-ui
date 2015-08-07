@@ -200,11 +200,11 @@ public abstract class EntityProxy {
 		float dx = getX() - x;
 		float dy = getY() - y;
 		if (polygon != null) {
-			for (Vector2 point : polygon.points) {
-				point.sub(dx, dy);
+			for (Vector2 vertex : polygon.vertices) {
+				vertex.sub(dx, dy);
 			}
 
-			polygon.vertices = Clipper.polygonize(App.DEFAULT_POLYGONIZER, polygon.points.toArray(Vector2.class));
+			polygon.faces = Clipper.polygonize(App.DEFAULT_POLYGONIZER, polygon.vertices.toArray(Vector2.class));
 		}
 	}
 

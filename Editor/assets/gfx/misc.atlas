@@ -46,3 +46,24 @@ check-over-indeterminate
   orig: 14, 14
   offset: 0, 0
   index: -1
+polygon
+  rotate: false
+  xy: 90, 112
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: -1
+polygon-down
+  rotate: false
+  xy: 13, 12
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: -1
+polygon-over
+  rotate: false
+  xy: 36, 30
+  size: 12, 12
+  orig: 12, 12
+  offset: 0, 0
+  index: -1

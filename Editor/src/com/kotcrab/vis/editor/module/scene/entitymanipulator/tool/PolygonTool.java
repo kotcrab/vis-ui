@@ -17,26 +17,36 @@
 package com.kotcrab.vis.editor.module.scene.entitymanipulator.tool;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.editor.StatusBarModule;
+import com.kotcrab.vis.editor.module.scene.action.ChangePolygonAction;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.editor.util.gdx.VisValue;
 import com.kotcrab.vis.editor.util.polygon.Clipper;
+import com.kotcrab.vis.editor.util.polygon.PolygonUtils;
 import com.kotcrab.vis.runtime.component.PolygonComponent;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -46,51 +56,401 @@ public class PolygonTool extends BaseSelectionTool {
 	private static final String NO_POLYGON_IN_SELECTION = "No polygon component in selected entity";
 	private static final String NOTHING_SELECTED = "Select entity to edit it's polygon";
 	private static final String SELECT_ONLY_ONE = "Select only one entity to edit polygon";
+	private static final float POLYGON_RECT_SIZE = 16f;
 
-	private Color mainColor;
-	private Color gray;
+	@InjectModule private StatusBarModule statusBar;
+
+	private Color lineOverColor = new Color(0, 88 / 255f, 131 / 255f, 1);
+	private Color mainColor = VisUI.getSkin().getColor("vis-blue");
+
+	private TextureRegion white = VisUI.getSkin().getRegion("white");
+	private TextureRegion polygon = Assets.getMiscRegion("polygon");
+	private TextureRegion polygonOver = Assets.getMiscRegion("polygon-over");
+	private TextureRegion polygonDown = Assets.getMiscRegion("polygon-down");
 
 	private EntityProxy proxy;
 	private PolygonComponent component;
+	private Vector2 selectedVertex;
+	private Vector2 overVertex;
+	private Vector2 lineOverStartVertex;
 
+	private Array<Edge> drawnFacesLines = new Array<>();
+
+	private ChangePolygonAction changePolygonAction;
+
+	private Vector3 tmpVector = new Vector3();
+	private Vector2 tmpVector2 = new Vector2(); //this is not second temp vector, this is 2d vector
+	private Rectangle tmpRect = new Rectangle();
+
+	//UI
 	private VisTable uiTable;
 	private VisTable buttonTable;
 
 	private VisLabel statusLabel;
-	private VisTextButton makeDefaultButton;
 	private VisTextButton traceButton;
+	private VisCheckBox dynamicUpdateCheck;
 
 	@Override
 	public void init () {
 		super.init();
 		initUI();
-
-		mainColor = VisUI.getSkin().getColor("vis-blue");
-		gray = Color.GRAY;
 	}
 
 	@Override
-	public void render (ShapeRenderer shapeRenderer) {
-		shapeRenderer.setProjectionMatrix(Editor.instance.getStage().getCamera().combined);
+	public void render (Batch batch) {
+		lineOverStartVertex = null;
 
-		Gdx.gl.glLineWidth(3);
-		shapeRenderer.setColor(mainColor);
-		shapeRenderer.begin(ShapeType.Line);
 		if (component != null) {
-			for (Vector2 point : component.points) {
-				float size = 10.0f;
-				Vector3 res = camera.project(new Vector3(point.x, point.y, 0));
-				shapeRenderer.rect(res.x - size / 2, res.y - size / 2, size, size);
+			batch.setProjectionMatrix(Editor.instance.getStage().getCamera().combined);
+
+			camera.unproject(tmpVector.set(Gdx.input.getX(), Gdx.input.getY(), 0));
+
+			float worldMouseX = tmpVector.x;
+			float worldMouseY = tmpVector.y;
+
+			drawnFacesLines.clear();
+			if ((dynamicUpdateCheck.isChecked() == false && Gdx.input.isButtonPressed(Buttons.LEFT)) == false) {
+				batch.setColor(Color.GRAY);
+				if (component.faces != null) {
+					for (int i = 0; i < component.faces.length; i++) {
+						Vector2[] faces = component.faces[i];
+
+						for (int j = 1; j < faces.length; j++) {
+							drawFaceLine(batch, faces[j], faces[j - 1]);
+						}
+
+						drawFaceLine(batch, faces[0], faces[faces.length - 1]);
+					}
+				}
+			}
+
+			Array<Vector2> vertices = component.vertices;
+			batch.setColor(mainColor);
+			for (int i = 1; i < vertices.size; i++) {
+				drawPolygonBorderLine(batch, vertices.get(i), vertices.get(i - 1), worldMouseX, worldMouseY);
+			}
+
+			if (vertices.size > 1) {
+				drawPolygonBorderLine(batch, vertices.get(0), vertices.get(vertices.size - 1), worldMouseX, worldMouseY);
+			}
+
+			batch.setColor(Color.WHITE);
+			for (Vector2 vertex : vertices) {
+				tmpVector.set(vertex.x, vertex.y, 0);
+				camera.project(tmpVector);
+
+				TextureRegion region = polygon;
+
+				if (vertex == selectedVertex)
+					region = polygonDown;
+				else if (vertex == overVertex)
+					region = polygonOver;
+
+				batch.draw(region, tmpVector.x - POLYGON_RECT_SIZE / 2, tmpVector.y - POLYGON_RECT_SIZE / 2);
 			}
 		}
-		shapeRenderer.end();
+	}
+
+	private void drawFaceLine (Batch batch, Vector2 vert1, Vector2 vert2) {
+		if (wasLineDrawn(vert1, vert2, 1f / scene.pixelsPerUnit) == false) {
+			drawnFacesLines.add(new Edge(vert1, vert2));
+			drawLine(batch, vert1, vert2, 2);
+		}
+	}
+
+	private boolean wasLineDrawn (Vector2 start, Vector2 end, float epsilon) {
+		for (Edge edge : drawnFacesLines) {
+			if (edge.epsilonEquals(start, end, epsilon))
+				return true;
+		}
+
+		return false;
+	}
+
+	private void drawPolygonBorderLine (Batch batch, Vector2 start, Vector2 end, float mouseX, float mouseY) {
+		if (overVertex == null && isPointOnLine(start, end, mouseX, mouseY, 0.3f / scene.pixelsPerUnit)) {
+			batch.setColor(lineOverColor);
+			lineOverStartVertex = start;
+		} else {
+			batch.setColor(mainColor);
+		}
+
+		drawLine(batch, start, end, 3);
+	}
+
+	private void drawLine (Batch batch, Vector2 vert1, Vector2 vert2, int thickness) {
+		tmpVector.set(vert1.x, vert1.y, 0);
+		camera.project(tmpVector);
+
+		float x1 = tmpVector.x;
+		float y1 = tmpVector.y;
+
+		tmpVector.set(vert2.x, vert2.y, 0);
+		camera.project(tmpVector);
+
+		drawLine(batch, x1, y1, tmpVector.x, tmpVector.y, thickness);
+	}
+
+	private void drawLine (Batch batch, float x1, float y1, float x2, float y2, int thickness) {
+		float dx = x2 - x1;
+		float dy = y2 - y1;
+		float dist = (float) Math.sqrt(dx * dx + dy * dy);
+		float rad = (float) Math.atan2(dy, dx);
+
+		batch.draw(white, x1, y1, 0, 0, dist, thickness, 1, 1, rad * MathUtils.radiansToDegrees);
+	}
+
+	private boolean isPointOnLine (Vector2 start, Vector2 end, float x, float y, float epsilon) {
+		tmpVector2.set(x, y);
+		float d1 = start.dst(tmpVector2) + end.dst(tmpVector2);
+		float d2 = start.dst(end);
+		return (Math.abs(d1 - d2) <= epsilon);
+	}
+
+	private boolean isInsidePoint (Vector2 point, float x, float y, float epsilon) {
+		camera.project(tmpVector.set(point, 0));
+
+		return tmpRect.set(tmpVector.x - epsilon / 2, tmpVector.y - epsilon / 2, epsilon, epsilon).contains(x, y);
+	}
+
+	private boolean polygonLineIntersection (Vector2 a, Vector2 b, Vector2 c, Vector2 d) {
+		//ignore coincident lines
+		if (a.x == c.x || a.y == c.y || b.x == d.x || b.y == d.y) return false;
+		if (a.x == d.x || a.y == d.y || b.x == c.x || b.y == c.y) return false;
+
+		float denominator = ((b.x - a.x) * (d.y - c.y)) - ((b.y - a.y) * (d.x - c.x));
+		float numerator1 = ((a.y - c.y) * (d.x - c.x)) - ((a.x - c.x) * (d.y - c.y));
+		float numerator2 = ((a.y - c.y) * (b.x - a.x)) - ((a.x - c.x) * (b.y - a.y));
+
+		if (denominator == 0) return numerator1 == 0 && numerator2 == 0;
+
+		float r = numerator1 / denominator;
+		float s = numerator2 / denominator;
+
+		return (r >= 0 && r <= 1) && (s >= 0 && s <= 1);
+	}
+
+	private void makeDefaultPolygon () {
+		Rectangle rect = proxy.getBoundingRectangle();
+
+		ChangePolygonAction action = new ChangePolygonAction(entityManipulator, proxy);
+
+		component.vertices.clear();
+		component.vertices.add(new Vector2(rect.x, rect.y));
+		component.vertices.add(new Vector2(rect.x + rect.width, rect.y));
+		component.vertices.add(new Vector2(rect.x + rect.width, rect.y + rect.height));
+		component.vertices.add(new Vector2(rect.x, rect.y + rect.height));
+
+		updateComponentFaces();
+
+		action.takeSnapshot();
+		undoModule.add(action);
+		entityManipulator.selectedEntitiesChanged();
+	}
+
+	@Override
+	public void activated () {
+		super.activated();
+		selectedEntitiesChanged();
+	}
+
+	@Override
+	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+		camera.unproject(tmpVector.set(x, y, 0));
+
+		float worldX = tmpVector.x;
+		float worldY = tmpVector.y;
+
+		camera.project(tmpVector);
+
+		x = tmpVector.x;
+		y = tmpVector.y;
+
+		if (button == Buttons.LEFT && component != null) {
+			if (lineOverStartVertex != null) {
+				int vertexIndex = component.vertices.indexOf(lineOverStartVertex, true);
+				ChangePolygonAction action = new ChangePolygonAction(entityManipulator, proxy);
+
+				Vector2 newVertex = new Vector2(worldX, worldY);
+				component.vertices.insert(vertexIndex, newVertex);
+				overVertex = newVertex;
+
+				updateComponentFaces();
+				action.takeSnapshot();
+				undoModule.add(action);
+				entityManipulator.selectedEntitiesChanged();
+
+				changePolygonAction = new ChangePolygonAction(entityManipulator, proxy);
+
+				return true;
+			}
+
+			if (overVertex != null) {
+				changePolygonAction = new ChangePolygonAction(entityManipulator, proxy);
+			}
+
+			for (Vector2 v : component.vertices) {
+				if (isInsidePoint(v, x, y, POLYGON_RECT_SIZE)) {
+					return true;
+				}
+			}
+		}
+
+		return super.touchDown(event, x, y, pointer, button);
+	}
+
+	@Override
+	public void touchDragged (InputEvent event, float x, float y, int pointer) {
+		super.touchDragged(event, x, y, pointer);
+		camera.unproject(tmpVector.set(x, y, 0));
+
+		x = tmpVector.x;
+		y = tmpVector.y;
+
+		if (overVertex != null) {
+			overVertex.set(x, y);
+			if (dynamicUpdateCheck.isChecked()) updateComponentFaces();
+			dragged = true;
+			entityManipulator.selectedEntitiesValuesChanged();
+		}
+	}
+
+	@Override
+	public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+		camera.unproject(tmpVector.set(x, y, 0));
+		camera.project(tmpVector);
+
+		x = tmpVector.x;
+		y = tmpVector.y;
+
+		if (changePolygonAction != null) {
+			if (PolygonUtils.isDegenerate(component.vertices.toArray(Vector2.class))) {
+				changePolygonAction.takeSnapshot();
+				changePolygonAction.undo();
+				statusBar.setText("Polygon is degenerate", Color.RED, 3);
+			} else if (checkCurrentVertexIntersection()) {
+				changePolygonAction.takeSnapshot();
+				changePolygonAction.undo();
+				statusBar.setText("Invalid intersecting polygon", Color.RED, 3);
+			} else {
+				updateComponentFaces();
+				changePolygonAction.takeSnapshot();
+				undoModule.add(changePolygonAction);
+				entityManipulator.selectedEntitiesChanged();
+			}
+			changePolygonAction = null;
+		}
+
+		if (button == Buttons.LEFT) {
+			selectedVertex = null;
+			if (component != null) {
+				for (Vector2 v : component.vertices) {
+					if (isInsidePoint(v, x, y, POLYGON_RECT_SIZE)) {
+						selectedVertex = v;
+						resetAfterTouchUp();
+						return;
+					}
+				}
+			}
+		}
+
+		super.touchUp(event, x, y, pointer, button);
+	}
+
+	private boolean checkCurrentVertexIntersection () {
+		Array<Vector2> vertices = component.vertices;
+		int index = vertices.indexOf(overVertex, true);
+		if (index == -1) return true;
+
+		Edge firstEdge;
+		Edge secondEdge;
+
+		if (index == 0)
+			firstEdge = new Edge(vertices.peek(), overVertex);
+		else
+			firstEdge = new Edge(vertices.get(index - 1), overVertex);
+
+		if (index == vertices.size - 1)
+			secondEdge = new Edge(vertices.first(), overVertex);
+		else
+			secondEdge = new Edge(vertices.get(index + 1), overVertex);
+
+		Array<Edge> polygonEdges = new Array<>();
+
+		for (int i = 0; i < vertices.size - 1; i++) {
+			polygonEdges.add(new Edge(vertices.get(i), vertices.get(i + 1)));
+		}
+
+		polygonEdges.add(new Edge(vertices.peek(), vertices.first()));
+
+		for (Edge edge : polygonEdges) {
+			if (edge.epsilonEquals(firstEdge, 0) || edge.epsilonEquals(secondEdge, 0))
+				continue;
+
+			if (polygonLineIntersection(firstEdge.start, firstEdge.end, edge.start, edge.end))
+				return true;
+
+			if (polygonLineIntersection(secondEdge.start, secondEdge.end, edge.start, edge.end))
+				return true;
+		}
+
+		return false;
+	}
+
+	private void updateComponentFaces () {
+		component.faces = Clipper.polygonize(App.DEFAULT_POLYGONIZER, component.vertices.toArray(Vector2.class));
+	}
+
+	@Override
+	public boolean mouseMoved (InputEvent event, float x, float y) {
+		super.mouseMoved(event, x, y);
+
+		camera.unproject(tmpVector.set(x, y, 0));
+		camera.project(tmpVector);
+
+		x = tmpVector.x;
+		y = tmpVector.y;
+
+		overVertex = null;
+		if (component != null) {
+			for (Vector2 v : component.vertices) {
+				if (isInsidePoint(v, x, y, POLYGON_RECT_SIZE)) {
+					overVertex = v;
+					return false;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	@Override
+	public boolean keyDown (InputEvent event, int keycode) {
+		if (keycode == Keys.FORWARD_DEL && selectedVertex != null) {
+			if (component.vertices.size < 3) {
+				return false;
+			}
+
+			ChangePolygonAction action = new ChangePolygonAction(entityManipulator, proxy);
+
+			component.vertices.removeValue(selectedVertex, true);
+			selectedVertex = null;
+
+			updateComponentFaces();
+			action.takeSnapshot();
+			undoModule.add(action);
+			entityManipulator.selectedEntitiesValuesChanged();
+			return true;
+		}
+
+		return super.keyDown(event, keycode);
 	}
 
 	private void initUI () {
 		uiTable = new VisTable(true) {
 			@Override
 			public float getPrefHeight () {
-				return 110;
+				return 120;
 			}
 		};
 
@@ -123,44 +483,26 @@ public class PolygonTool extends BaseSelectionTool {
 				invalidateHierarchy();
 			}
 		};
+		VisTextButton makeDefaultButton;
+
 		buttonTable.setVisible(false);
 		buttonTable.add(makeDefaultButton = new VisTextButton("Set from bounds")).row();
-		buttonTable.add(traceButton = new VisTextButton("Auto trace")).row();
+//		buttonTable.add(traceButton = new VisTextButton("Auto trace")).row();
 
-		uiTable.add(statusLabel).pad(0, 3, 0, 3).height(new VisValue(context -> context.isVisible() ? 30 : 0)).row();
-		uiTable.add(buttonTable).spaceBottom(4);
+		dynamicUpdateCheck = new VisCheckBox("Dynamic faces update", true);
+
+		uiTable.add(statusLabel).pad(0, 3, 0, 3).height(new VisValue(context -> statusLabel.isVisible() ? statusLabel.getPrefHeight() : 0)).spaceBottom(0).row();
+		uiTable.add(buttonTable).height(new VisValue(context -> buttonTable.isVisible() ? buttonTable.getPrefHeight() : 0)).spaceBottom(0).row();
+		uiTable.add().expand().fill().row();
+		uiTable.add(dynamicUpdateCheck).expand(false, false).fill(false, false).center().padBottom(3);
 
 		makeDefaultButton.addListener(new VisChangeListener((event, actor) -> makeDefaultPolygon()));
-	}
-
-	private void makeDefaultPolygon () {
-		Rectangle rect = proxy.getBoundingRectangle();
-		//TODO action!!!
-		component.points.clear();
-
-		component.points.add(new Vector2(rect.x, rect.y));
-		component.points.add(new Vector2(rect.x + rect.width, rect.y));
-		component.points.add(new Vector2(rect.x, rect.y + rect.height));
-		component.points.add(new Vector2(rect.x + rect.width, rect.y + rect.height));
-
-		component.vertices = Clipper.polygonize(App.DEFAULT_POLYGONIZER, component.points.toArray(Vector2.class));
-		entityManipulator.selectedEntitiesChanged();
-	}
-
-	@Override
-	public void activated () {
-		super.activated();
-		selectedEntitiesChanged();
-	}
-
-	@Override
-	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-		return super.touchDown(event, x, y, pointer, button);
 	}
 
 	@Override
 	public void selectedEntitiesChanged () {
 		super.selectedEntitiesChanged();
+
 		ImmutableArray<EntityProxy> selection = entityManipulator.getSelectedEntities();
 
 		component = null;
@@ -171,11 +513,15 @@ public class PolygonTool extends BaseSelectionTool {
 
 		if (selection.size() == 0) {
 			statusLabel.setText(NOTHING_SELECTED);
+			overVertex = null;
+			selectedVertex = null;
 			return;
 		}
 
 		if (selection.size() > 1 || selection.first() instanceof GroupEntityProxy) {
 			statusLabel.setText(SELECT_ONLY_ONE);
+			overVertex = null;
+			selectedVertex = null;
 			return;
 		}
 
@@ -183,6 +529,8 @@ public class PolygonTool extends BaseSelectionTool {
 
 		if (proxy.hasComponent(PolygonComponent.class) == false) {
 			statusLabel.setText(NO_POLYGON_IN_SELECTION);
+			overVertex = null;
+			selectedVertex = null;
 			return;
 		}
 
@@ -198,4 +546,27 @@ public class PolygonTool extends BaseSelectionTool {
 		return uiTable;
 	}
 
+	private static class Edge {
+		public Vector2 start;
+		public Vector2 end;
+
+		public Edge (Vector2 start, Vector2 end) {
+			this.start = start;
+			this.end = end;
+		}
+
+		public boolean epsilonEquals (Edge edge, float epsilon) {
+			return epsilonEquals(edge.start, edge.end, epsilon);
+		}
+
+		public boolean epsilonEquals (Vector2 start, Vector2 end, float epsilon) {
+			if (this.start.epsilonEquals(start, epsilon) && this.end.epsilonEquals(end, epsilon))
+				return true;
+
+			if (this.start.epsilonEquals(end, epsilon) && this.end.epsilonEquals(start, epsilon))
+				return true;
+
+			return false;
+		}
+	}
 }

@@ -42,14 +42,14 @@ public class AboutDialog extends VisWindow {
 		contentTable.defaults().expand().left();
 
 		contentTable.add(new VisLabel("VisEditor - game level editor\nCopyright 2014-2015 Paweł Pastuszak\nLicensed under Apache2 license")).spaceBottom(8).row();
-		contentTable.add(new VisLabel("Physics editor based on Aurelien Ribon's Physics Body Editor")).spaceBottom(8).row();
+		contentTable.add(new VisLabel("Farseer Physics Engine - polygon decomposition algorithms")).spaceBottom(8).row();
 		contentTable.add(new VisLabel("Thanks to all contributors and supporters,\nand thanks to you for using this software. <3", Align.center)).center().row();
 
 		VisTextButton okButton;
 		VisTextButton openAppDirectoryButton;
 
 		add(contentTable).pad(3).colspan(3).expand().fill().row();
-		VisLabel versionLabel = new VisLabel("Hover here to see libraries versions");
+		VisLabel versionLabel = new VisLabel("Hover here to see\nlibraries versions", Align.center);
 		new Tooltip(versionLabel, "VisEditor " + App.VERSION + " \nBuild: " + App.buildTimestamp + "\nVisUI " + VisUI.VERSION + "\nLibGDX " + Version.VERSION, Align.left);
 		add(versionLabel).expandX().fillX();
 		add(openAppDirectoryButton = new VisTextButton("Open App Data Folder"));

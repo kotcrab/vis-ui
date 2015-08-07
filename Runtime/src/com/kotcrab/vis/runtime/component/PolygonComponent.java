@@ -23,7 +23,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATVector2Array;
 
 /** @author Kotcrab */
 public class PolygonComponent extends Component {
-	@ATVector2Array(fieldName = "Points")
-	public Array<Vector2> points = new Array<Vector2>();
-	public Vector2[][] vertices;
+	@ATVector2Array(fieldName = "Vertices")
+	public Array<Vector2> vertices = new Array<Vector2>();
+	public Vector2[][] faces;
 }
