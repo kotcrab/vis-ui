@@ -107,7 +107,7 @@ public class LayersDialog extends VisTable implements Disposable {
 		layerUpButton.addListener(new VisChangeListener((event, actor) -> undoModule.execute(new LayerMovedAction(true))));
 		layerDownButton.addListener(new VisChangeListener((event, actor) -> undoModule.execute(new LayerMovedAction(false))));
 
-		layerSettingsButton.addListener(new VisChangeListener((event1, actor1) -> getStage().addActor(new LayerSettingsDialog(scene).fadeIn())));
+		layerSettingsButton.addListener(new VisChangeListener((event1, actor1) -> getStage().addActor(new LayerSettingsDialog(sceneMC, scene).fadeIn())));
 
 		layerRemoveButton.addListener(new VisChangeListener((event, actor) ->
 				DialogUtils.showOptionDialog(getStage(), "Delete Layer", "Are you sure you want to delete layer '" + scene.getActiveLayer().name + "'?",

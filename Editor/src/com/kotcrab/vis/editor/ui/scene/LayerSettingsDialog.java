@@ -17,6 +17,10 @@
 package com.kotcrab.vis.editor.ui.scene;
 
 import com.badlogic.gdx.graphics.Color;
+import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.module.scene.UndoModule;
+import com.kotcrab.vis.editor.module.scene.action.ChangeLayerProperties;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
@@ -30,8 +34,12 @@ import com.kotcrab.vis.ui.widget.*;
 
 /** @author Kotcrab */
 public class LayerSettingsDialog extends VisWindow {
-	public LayerSettingsDialog (EditorScene scene) {
+	@InjectModule private UndoModule undoModule;
+
+	public LayerSettingsDialog (ModuleInjector injector, EditorScene scene) {
 		super("Layer Settings");
+		injector.injectModules(this);
+
 		Layer layer = scene.getActiveLayer();
 
 		TableUtils.setSpacingDefaults(this);
@@ -65,10 +73,8 @@ public class LayerSettingsDialog extends VisWindow {
 
 		cancelButton.addListener(new VisChangeListener((event, actor) -> fadeOut()));
 		applyButton.addListener(new VisChangeListener((event, actor) -> {
-			layer.name = nameField.getText();
-			layer.cordsSystem = cordsSelectBox.getSelectedEnum();
+			undoModule.execute(new ChangeLayerProperties(scene, layer, nameField.getText(), cordsSelectBox.getSelectedEnum()));
 			fadeOut();
-			scene.postNotification(EditorScene.LAYER_DATA_CHANGED);
 		}));
 
 		VisTable bottomTable = new VisTable();
