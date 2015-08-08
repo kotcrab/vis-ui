@@ -278,8 +278,10 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 		//make sure that application will exit eventually
 		Thread exitThread = new Thread(() -> {
-			ThreadUtils.sleep(3000);
-			System.exit(-2);
+			ThreadUtils.sleep(5000);
+			//System.exit(-2);
+			//sometimes awt shutdown hook may deadlock on System.exit so I'm using runtime halt
+			Runtime.getRuntime().halt(-2);
 		}, "Force Exit");
 
 		exitThread.setDaemon(true);
