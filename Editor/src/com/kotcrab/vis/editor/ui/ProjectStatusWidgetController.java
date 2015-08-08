@@ -35,12 +35,12 @@ public class ProjectStatusWidgetController implements EventListener, Disposable 
 
 	public ProjectStatusWidgetController () {
 		buttons = new Array<>();
-		App.eventBus.register(this);
+		App.oldEventBus.register(this);
 	}
 
 	@Override
 	public void dispose () {
-		App.eventBus.unregister(this);
+		App.oldEventBus.unregister(this);
 	}
 
 	@Override

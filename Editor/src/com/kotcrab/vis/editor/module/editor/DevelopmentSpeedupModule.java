@@ -57,7 +57,7 @@ public class DevelopmentSpeedupModule extends EditorModule implements EventListe
 
 	@Override
 	public void postInit () {
-		App.eventBus.register(this);
+		App.oldEventBus.register(this);
 
 		FileHandle debugFile = new FileHandle(App.APP_FOLDER_PATH).child("debug.this");
 

@@ -150,7 +150,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 			disposeCacheLater(oldCache);
 
-			App.eventBus.post(new TexturesReloadedEvent());
+			App.oldEventBus.post(new TexturesReloadedEvent());
 			if (firstReload == false) {
 				//we don't want to display 'textures reloaded' right after editor startup / project loaded
 				statusBar.setText("Textures reloaded");
@@ -180,8 +180,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 		if (file.exists()) {
 			atlases.put(relativePath, new TextureAtlas(file));
-			App.eventBus.post(new TexturesReloadedEvent());
-			App.eventBus.post(new AtlasReloadedEvent());
+			App.oldEventBus.post(new TexturesReloadedEvent());
+			App.oldEventBus.post(new AtlasReloadedEvent());
 		}
 	}
 

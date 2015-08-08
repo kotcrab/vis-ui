@@ -57,7 +57,7 @@ public class UndoModule extends SceneModule {
 			UndoableAction action = undoList.pop();
 			action.undo();
 			redoList.add(action);
-			App.eventBus.post(new UndoEvent());
+			App.oldEventBus.post(new UndoEvent());
 		} else
 			statusBar.setText("Can't undo more!");
 
@@ -69,7 +69,7 @@ public class UndoModule extends SceneModule {
 			UndoableAction action = redoList.pop();
 			action.execute();
 			undoList.add(action);
-			App.eventBus.post(new RedoEvent());
+			App.oldEventBus.post(new RedoEvent());
 		} else
 			statusBar.setText("Can't redo more!");
 	}

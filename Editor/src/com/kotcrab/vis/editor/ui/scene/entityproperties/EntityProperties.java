@@ -279,12 +279,12 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 		pack();
 
-		App.eventBus.register(this);
+		App.oldEventBus.register(this);
 	}
 
 	@Override
 	public void dispose () {
-		App.eventBus.unregister(this);
+		App.oldEventBus.unregister(this);
 	}
 
 	@Override

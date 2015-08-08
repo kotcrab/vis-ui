@@ -120,7 +120,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		FileChooser.setFavoritesPrefsName("com.kotcrab.vis.editor");
 		Log.debug("VisUI " + VisUI.VERSION + " loaded");
 
-		App.eventBus.register(this);
+		App.oldEventBus.register(this);
 
 		stage = createStage();
 		Gdx.input.setInputProcessor(stage);
@@ -265,7 +265,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	@Override
 	public void dispose () {
-		App.eventBus.stop();
+		App.oldEventBus.stop();
 		editorMC.dispose();
 		if (projectLoaded) projectMC.dispose();
 
@@ -383,7 +383,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.dispose();
 
 		statusBar.setText("Project unloaded");
-		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded, projectMC.getProject()));
+		App.oldEventBus.post(new ProjectStatusEvent(Status.Unloaded, projectMC.getProject()));
 	}
 
 	public void loadProjectDialog () {
@@ -456,7 +456,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 					settingsDialog.addAll(projectMC.getModules());
 
 					statusBar.setText("Project loaded");
-					App.eventBus.post(new ProjectStatusEvent(Status.Loaded, project));
+					App.oldEventBus.post(new ProjectStatusEvent(Status.Loaded, project));
 					controller.loading = false;
 				});
 

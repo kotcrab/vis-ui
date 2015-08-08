@@ -14,15 +14,10 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.event.bus;
+package com.kotcrab.vis.editor.module.scene.entitymanipulator.tool;
 
-import com.kotcrab.vis.editor.App;
-
-/**
- * Base class for all VisEditor events
- * @author Kotcrab
- * @see EventBus
- * @see App#oldEventBus
- */
-public interface Event {
+/** @author Kotcrab */
+public class Tools {
+	public static final int SELECTION_TOOL = 0;
+	public static final int POLYGON_TOOL = 1;
 }

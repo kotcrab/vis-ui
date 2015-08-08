@@ -33,16 +33,14 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ObjectSet;
 import com.badlogic.gdx.utils.Timer;
+import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
 import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
 import com.kotcrab.vis.editor.entity.PositionComponent;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
-import com.kotcrab.vis.editor.event.RedoEvent;
-import com.kotcrab.vis.editor.event.ToolbarEvent;
-import com.kotcrab.vis.editor.event.ToolbarEventType;
-import com.kotcrab.vis.editor.event.UndoEvent;
+import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.InjectModule;
@@ -56,6 +54,7 @@ import com.kotcrab.vis.editor.module.scene.action.MoveEntitiesAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.SelectionTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tool;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tools;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
@@ -176,6 +175,7 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 			}
 		});
 
+		App.oldEventBus.register(this);
 		App.eventBus.register(this);
 	}
 
@@ -621,20 +621,21 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 			renderBatchingSystem.markDirty();
 		}
 
-		if (event instanceof ToolbarEvent) {
-			ToolbarEventType type = ((ToolbarEvent) event).type;
-
-			if (type == ToolbarEventType.TOOL_SELECTION)
-				switchTool(selectionTool);
-			else if (type == ToolbarEventType.TOOL_POLYGON)
-				switchTool(polygonTool);
-		}
-
 		return false;
+	}
+
+	@Subscribe
+	public void handleToolSwitch (ToolSwitchedEvent event) {
+		if (event.newToolId == Tools.SELECTION_TOOL)
+			switchTool(selectionTool);
+		if (event.newToolId == Tools.POLYGON_TOOL)
+			switchTool(polygonTool);
 	}
 
 	@Override
 	public void dispose () {
+		App.oldEventBus.unregister(this);
+		App.eventBus.unregister(this);
 		layersDialog.dispose();
 		entityProperties.dispose();
 	}
@@ -737,6 +738,14 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 			}
 
 			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.S) sceneTab.save();
+			if (keycode == Keys.F1) {
+				switchTool(selectionTool);
+				App.eventBus.post(new ToolSwitchedEvent(Tools.SELECTION_TOOL));
+			}
+			if (keycode == Keys.F2) {
+				switchTool(polygonTool);
+				App.eventBus.post(new ToolSwitchedEvent(Tools.POLYGON_TOOL));
+			}
 
 			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.A) selectAll();
 			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.C) copy();

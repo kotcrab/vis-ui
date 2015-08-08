@@ -159,7 +159,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 			}
 		};
 
-		App.eventBus.register(this);
+		App.oldEventBus.register(this);
 	}
 
 	@Override
@@ -304,7 +304,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	@Override
 	public void dispose () {
 		sceneMC.dispose();
-		App.eventBus.unregister(this);
+		App.oldEventBus.unregister(this);
 	}
 
 	@Override

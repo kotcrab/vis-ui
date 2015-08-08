@@ -62,7 +62,7 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 	@Override
 	public void fileChanged (FileHandle file) {
 		String relativePath = fileAccess.relativizeToAssetsFolder(file);
-		if (relativePath.startsWith("particle")) App.eventBus.post(new ParticleReloadedEvent());
+		if (relativePath.startsWith("particle")) App.oldEventBus.post(new ParticleReloadedEvent());
 	}
 
 	@Override

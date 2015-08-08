@@ -25,9 +25,11 @@ import java.util.ArrayList;
 
 /**
  * Handles distributing {@link Event}s for all registered listeners. All events are handled on OpenGL thread.
+ * @deprecated to be replaced with new Guava EventBus
  * @author Kotcrab
- * @see App#eventBus
+ * @see App#oldEventBus
  */
+@Deprecated
 public class EventBus {
 	private ArrayList<EventListener> listeners;
 	private ProcessingQueue<Event> queue;

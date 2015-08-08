@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.event.bus;
+package com.kotcrab.vis.editor.event;
 
-import com.kotcrab.vis.editor.App;
+/** @author Kotcrab */
+public class ToolSwitchedEvent {
+	public int newToolId;
 
-/**
- * Base class for all VisEditor events
- * @author Kotcrab
- * @see EventBus
- * @see App#oldEventBus
- */
-public interface Event {
+	public ToolSwitchedEvent (int newToolId) {
+		this.newToolId = newToolId;
+	}
 }

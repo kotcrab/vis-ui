@@ -20,6 +20,7 @@ package com.kotcrab.vis.editor.event.bus;
  * EventListener for {@link EventBus}
  * @author Kotcrab
  */
+@Deprecated
 public interface EventListener {
 	/**
 	 * Called when this listener should handle event

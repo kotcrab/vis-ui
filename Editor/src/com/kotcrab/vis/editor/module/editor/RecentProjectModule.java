@@ -44,7 +44,7 @@ public class RecentProjectModule extends EditorModule implements EventListener {
 
 	@Override
 	public void init () {
-		App.eventBus.register(this);
+		App.oldEventBus.register(this);
 
 		FileHandle storage = Gdx.files.absolute(App.METADATA_FOLDER_PATH);
 		storage.mkdirs();
@@ -76,7 +76,7 @@ public class RecentProjectModule extends EditorModule implements EventListener {
 
 	@Override
 	public void dispose () {
-		App.eventBus.unregister(this);
+		App.oldEventBus.unregister(this);
 	}
 
 	@Override

@@ -133,7 +133,7 @@ public class ShaderCacheModule extends ProjectModule implements WatchListener {
 			ObjectMap<ShaderAsset, ShaderProgram> shadersCopy = new ObjectMap<>(shaders);
 
 			reloadShaders(true);
-			App.eventBus.post(new ShaderReloadedEvent());
+			App.oldEventBus.post(new ShaderReloadedEvent());
 
 			for (ShaderProgram shader : shadersCopy.values()) {
 				shader.dispose();

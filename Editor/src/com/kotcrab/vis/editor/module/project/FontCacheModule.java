@@ -86,14 +86,14 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 		TmpFontsMap font = ttfFonts.remove(file);
 		if (font != null) font.dispose();
 
-		App.eventBus.post(new TtfFontReloadedEvent());
+		App.oldEventBus.post(new TtfFontReloadedEvent());
 	}
 
 	private void refreshBmpFont (FileHandle file) {
 		BmpFontsMap bmpFont = bmpFonts.remove(file);
 		if (bmpFont != null) bmpFont.dispose();
 
-		App.eventBus.post(new BmpFontReloadedEvent());
+		App.oldEventBus.post(new BmpFontReloadedEvent());
 	}
 
 	public BitmapFont getGeneric (VisAssetDescriptor asset, float pixelsPerUnit) {

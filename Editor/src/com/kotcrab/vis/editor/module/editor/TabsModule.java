@@ -78,12 +78,12 @@ public class TabsModule extends EditorModule implements EventListener {
 
 	@Override
 	public void added () {
-		App.eventBus.register(this);
+		App.oldEventBus.register(this);
 	}
 
 	@Override
 	public void dispose () {
-		App.eventBus.unregister(this);
+		App.oldEventBus.unregister(this);
 	}
 
 	@Override

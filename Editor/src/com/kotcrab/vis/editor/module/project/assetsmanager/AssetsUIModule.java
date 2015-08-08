@@ -110,7 +110,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Even
 	@Override
 	public void init () {
 		stage = Editor.instance.getStage();
-		App.eventBus.register(this);
+		App.oldEventBus.register(this);
 
 		initModule();
 		initUI();
@@ -211,7 +211,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Even
 
 	@Override
 	public void dispose () {
-		App.eventBus.unregister(this);
+		App.oldEventBus.unregister(this);
 		tabsModule.removeListener(this);
 		assetsWatcher.removeListener(this);
 		assetsTab.removeFromTabPane();

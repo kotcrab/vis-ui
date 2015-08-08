@@ -16,7 +16,7 @@
 
 package com.kotcrab.vis.editor;
 
-import com.kotcrab.vis.editor.event.bus.EventBus;
+import com.google.common.eventbus.EventBus;
 import com.kotcrab.vis.editor.util.JarUtils;
 import com.kotcrab.vis.editor.util.polygon.Clipper.Polygonizer;
 
@@ -58,11 +58,10 @@ public class App {
 	public static final String CACHE_FOLDER_PATH = APP_FOLDER_PATH + "cache" + File.separator;
 	public static final String METADATA_FOLDER_PATH = APP_FOLDER_PATH + "metadata" + File.separator;
 
-	private static final String GDX_RELEASE_ZIP = "http://libgdx.badlogicgames.com/releases/libgdx-1.5.6.zip";
-
 	public static final Polygonizer DEFAULT_POLYGONIZER = Polygonizer.EWJORDAN;
 
-	/** VisEditor common event bus */
+	/** Deprecated VisEditor common event bus */
+	@Deprecated public static com.kotcrab.vis.editor.event.bus.EventBus oldEventBus; //TODO: old eventbus must die
 	public static EventBus eventBus;
 
 	public static void init () {
@@ -74,6 +73,7 @@ public class App {
 
 		checkCharset();
 
+		oldEventBus = new com.kotcrab.vis.editor.event.bus.EventBus();
 		eventBus = new EventBus();
 
 		try {
