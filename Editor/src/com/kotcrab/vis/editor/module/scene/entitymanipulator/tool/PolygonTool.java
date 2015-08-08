@@ -486,7 +486,7 @@ public class PolygonTool extends BaseSelectionTool {
 		VisTextButton makeDefaultButton;
 
 		buttonTable.setVisible(false);
-		buttonTable.add(makeDefaultButton = new VisTextButton("Set from bounds")).row();
+		buttonTable.add(makeDefaultButton = new VisTextButton("Set From Bounds")).row();
 //		buttonTable.add(traceButton = new VisTextButton("Auto trace")).row();
 
 		dynamicUpdateCheck = new VisCheckBox("Dynamic faces update", true);

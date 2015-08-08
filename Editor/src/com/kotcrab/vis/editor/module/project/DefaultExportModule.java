@@ -82,7 +82,7 @@ public class DefaultExportModule implements ExporterPlugin {
 
 	@Override
 	public String getName () {
-		return "Default";
+		return "Default Json";
 	}
 
 	@Override
