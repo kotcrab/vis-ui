@@ -35,7 +35,12 @@ public interface ExporterPlugin {
 
 	String getName ();
 
+	/** Not used for now */
 	boolean isQuickExportSupported ();
 
 	void export (boolean quickExport);
+
+	boolean isSettingsUsed();
+
+	void showSettings();
 }

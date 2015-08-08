@@ -17,13 +17,17 @@
 package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.ExportSettingsModule.ExportConfig;
 import com.kotcrab.vis.editor.plugin.ExporterPlugin;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
+import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
+import com.kotcrab.vis.ui.widget.VisTextButton;
 
 import java.util.UUID;
 
@@ -35,7 +39,7 @@ public class ExportSettingsModule extends ProjectSettingsModule<ExportConfig> {
 
 	private Array<String> exporters = new Array<>();
 
-	private VisSelectBox<String> exporterSelector;
+	private VisSelectBox<String> exporterSelector; //TODO change to uuid after libgdx supports name providers
 
 	public ExportSettingsModule () {
 		super("Export", "exportSettings", ExportConfig.class);
@@ -56,8 +60,20 @@ public class ExportSettingsModule extends ProjectSettingsModule<ExportConfig> {
 		exporterSelector = new VisSelectBox<>();
 		exporterSelector.setItems(exporters);
 
+		VisTextButton exporterSettingsButton = new VisTextButton("Settings");
+
 		settingsTable.defaults().left();
-		settingsTable.add(TableBuilder.build(new VisLabel("Exporter"), exporterSelector));
+		settingsTable.add(TableBuilder.build(new VisLabel("Exporter"), exporterSelector, exporterSettingsButton));
+
+		exporterSettingsButton.addListener(new VisChangeListener((event, actor) -> {
+			UUID uuid = getUUIDForName(exporterSelector.getSelected());
+			ExporterPlugin exporter = exportersManager.getExportersMap().get(uuid);
+
+			if (exporter.isSettingsUsed() == false)
+				DialogUtils.showOKDialog(Editor.instance.getStage(), "Message", "This exporter does not have any additional settings");
+			else
+				exporter.showSettings();
+		}));
 	}
 
 	@Override
@@ -67,15 +83,25 @@ public class ExportSettingsModule extends ProjectSettingsModule<ExportConfig> {
 
 	@Override
 	public void settingsApply () {
-		config.activeExporter = exportersManager.getExportersMap().findKey(exporterSelector.getSelected(), false);
+		config.activeExporter = getUUIDForName(exporterSelector.getSelected());
 		settingsSave();
 	}
 
-	public UUID getCurrentExporerUUID () {
+	private UUID getUUIDForName (String name) {
+		for (ExporterPlugin plugin : exportersManager.getExportersMap().values()) {
+			if (plugin.getName().equals(name)) {
+				return plugin.getUUID();
+			}
+		}
+
+		throw new IllegalStateException("Not exporter for name: " + name);
+	}
+
+	public UUID getCurrentExporterUUID () {
 		return config.activeExporter;
 	}
 
 	public static class ExportConfig {
-		public UUID activeExporter = UUID.fromString(DefaultExportModule.EXPORTER_UUID);
+		public UUID activeExporter = UUID.fromString(DefaultExporter.EXPORTER_UUID);
 	}
 }

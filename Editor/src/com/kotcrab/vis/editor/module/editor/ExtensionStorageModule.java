@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.Module;
-import com.kotcrab.vis.editor.module.project.DefaultExportModule;
+import com.kotcrab.vis.editor.module.project.DefaultExporter;
 import com.kotcrab.vis.editor.plugin.ContainerExtension;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
@@ -55,7 +55,7 @@ public class ExtensionStorageModule extends EditorModule {
 
 	@Override
 	public void postInit () {
-		exporterPlugins.add(new DefaultExportModule());
+		exporterPlugins.add(new DefaultExporter());
 	}
 
 	public <T extends Module> Array<T> getContainersExtensions (Class<T> baseModuleType, ExtensionScope scope) {

@@ -24,12 +24,14 @@ import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.editor.EditorSettingsIOModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.plugin.ExporterPlugin;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
+import com.kotcrab.vis.editor.ui.dialog.DefaultExporterSettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.runtime.data.LayerData;
@@ -41,14 +43,17 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * Allows to export project
+ * Default VisEditor exporter, exports scenes to JSON format.
  * @author Kotcrab
  */
-public class DefaultExportModule implements ExporterPlugin {
+public class DefaultExporter implements ExporterPlugin {
+	public static final String SETTINGS_FILE_NAME = "defaultExporterSettings";
 	public static final String EXPORTER_UUID = "b8bd183c-1dc6-4ac5-9bbe-a4ba86a61b95";
 
 	private Project project;
+	private DefaultExporterSettings settings;
 
+	@InjectModule private EditorSettingsIOModule settingsIO;
 	@InjectModule private StatusBarModule statusBar;
 	@InjectModule private TabsModule tabsModule;
 
@@ -56,6 +61,7 @@ public class DefaultExportModule implements ExporterPlugin {
 	@InjectModule private SceneCacheModule sceneCache;
 
 	private FileHandle visAssetsDir;
+
 
 	private Settings texturePackerSettings;
 	private boolean firstExportDone;
@@ -65,6 +71,8 @@ public class DefaultExportModule implements ExporterPlugin {
 	@Override
 	public void init (Project project) {
 		this.project = project;
+		settings = settingsIO.load(SETTINGS_FILE_NAME, DefaultExporterSettings.class);
+
 		visAssetsDir = fileAccess.getAssetsFolder();
 
 		texturePackerSettings = new Settings();
@@ -98,7 +106,19 @@ public class DefaultExportModule implements ExporterPlugin {
 			beforeExport(quick);
 	}
 
+	@Override
+	public boolean isSettingsUsed () {
+		return true;
+	}
+
+	@Override
+	public void showSettings () {
+		Editor.instance.getStage().addActor(new DefaultExporterSettingsDialog(settingsIO, settings).fadeIn());
+	}
+
 	private void beforeExport (boolean quick) {
+		json.setUsePrototypes(settings.skipDefaultValues);
+
 		if (firstExportDone == false && quick)
 			Log.info("Requested quick export but normal export hasn't been done since editor launch, performing normal export.");
 

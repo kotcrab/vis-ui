@@ -47,6 +47,6 @@ public class ExportersManagerModule extends ProjectModule {
 	}
 
 	public void export (boolean quickExport) {
-		exporters.get(exportSettings.getCurrentExporerUUID()).export(quickExport);
+		exporters.get(exportSettings.getCurrentExporterUUID()).export(quickExport);
 	}
 }
