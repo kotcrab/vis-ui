@@ -463,6 +463,8 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		if (content == null) return;
 		StringBuilder buffer = new StringBuilder();
 		int textLength = text.length();
+		if (hasSelection)
+			textLength -= Math.abs(cursor - selectionStart);
 		BitmapFontData data = style.font.getData();
 		for (int i = 0, n = content.length(); i < n; i++) {
 			if (!withinMaxLength(textLength + buffer.length())) break;
