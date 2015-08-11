@@ -31,6 +31,7 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
+import com.kotcrab.vis.editor.ui.AutoTableEnumSelectBox;
 import com.kotcrab.vis.editor.ui.Vector2ArrayView;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
@@ -41,10 +42,7 @@ import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.gdx.IntDigitsOnlyFilter;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.PolygonComponent;
-import com.kotcrab.vis.runtime.util.autotable.ATEntityProperty;
-import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
-import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
-import com.kotcrab.vis.runtime.util.autotable.ATVector2Array;
+import com.kotcrab.vis.runtime.util.autotable.*;
 import com.kotcrab.vis.ui.widget.Tooltip;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -76,6 +74,7 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 	private ObjectMap<Field, IndeterminateCheckbox> checkboxFields = new ObjectMap<>();
 	private ObjectMap<Field, SelectFileDialogSet> fileDialogLabels = new ObjectMap<>();
 	private ObjectMap<Field, Vector2ArrayView> vector2Views = new ObjectMap<>();
+	private ObjectMap<Field, EnumSelectBoxSet> enumSelectBoxes = new ObjectMap<>();
 
 	public AutoComponentTable (ModuleInjector injector, Class<T> componentClass, boolean removable) {
 		super(true);
@@ -104,57 +103,62 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 			Class type = field.getType();
 
 			for (Annotation annotation : field.getAnnotations()) {
-				if (annotation instanceof ATEntityProperty) {
+				if (annotation instanceof ATEntityProperty)
 					createEntityPropertyField(field, type, (ATEntityProperty) annotation);
-				}
-
-				if (annotation instanceof ATSelectFile) {
-					createFileChooserField(field, (ATSelectFile) annotation);
-				}
-
-				if (annotation instanceof ATVector2Array) {
-					createVector2ArrayView(field, (ATVector2Array) annotation);
-				}
+				if (annotation instanceof ATSelectFile) createFileChooserField(field, (ATSelectFile) annotation);
+				if (annotation instanceof ATVector2Array) createVector2ArrayView(field, (ATVector2Array) annotation);
+				if (annotation instanceof ATEnumProperty)
+					createEnumSelectBox(field, type, (ATEnumProperty) annotation);
 			}
 		}
 	}
 
 	@Override
 	public void updateUIValues () {
-		Array<EntityProxy> proxies = properties.getProxies();
+		try {
 
-		for (Field field : componentClass.getDeclaredFields()) {
-			Class type = field.getType();
-			for (Annotation annotation : field.getAnnotations()) {
-				if (annotation instanceof ATEntityProperty) updateEntityPropertyField(field, type, proxies);
-				if (annotation instanceof ATSelectFile) updateFileChooser(field, proxies);
-				if (annotation instanceof ATVector2Array) updateVector2View(field, proxies);
+			Array<EntityProxy> proxies = properties.getProxies();
+
+			for (Field field : componentClass.getDeclaredFields()) {
+				Class type = field.getType();
+				for (Annotation annotation : field.getAnnotations()) {
+					if (annotation instanceof ATEntityProperty) updateEntityPropertyField(field, type, proxies);
+					if (annotation instanceof ATSelectFile) updateFileChooser(field, proxies);
+					if (annotation instanceof ATVector2Array) updateVector2View(field, proxies);
+					if (annotation instanceof ATEnumProperty) updateEnumSelectBox(field, proxies);
+				}
 			}
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException(e);
 		}
 	}
 
 	@Override
 	public void setValuesToEntities () {
-		for (EntityProxy proxy : properties.getProxies()) {
-			for (Entity entity : proxy.getEntities()) {
+		try {
 
-				T component = entity.getComponent(componentClass);
+			for (EntityProxy proxy : properties.getProxies()) {
+				for (Entity entity : proxy.getEntities()) {
 
-				for (Field field : componentClass.getDeclaredFields()) {
-					Class type = field.getType();
-					for (Annotation annotation : field.getAnnotations()) {
-						if (annotation instanceof ATEntityProperty) {
-							try {
+					T component = entity.getComponent(componentClass);
+
+					for (Field field : componentClass.getDeclaredFields()) {
+						Class type = field.getType();
+						for (Annotation annotation : field.getAnnotations()) {
+							if (annotation instanceof ATEntityProperty)
 								setFromEntityPropertyField(field, type, component);
-							} catch (IllegalAccessException e) {
-								e.printStackTrace();
-							}
+							if (annotation instanceof ATEnumProperty) setFromEnumSelectBoxField(field, type, component);
 						}
 					}
 				}
 			}
+
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException(e);
 		}
 	}
+
+	// ============ NumberFields ============
 
 	private void createEntityPropertyField (Field field, Class type, ATEntityProperty propertyUI) {
 		if (type.equals(Integer.TYPE) == false && type.equals(Float.TYPE) == false && type.equals(Boolean.TYPE) == false) {
@@ -246,6 +250,8 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 		}
 	}
 
+	// ============ FileChooser ============
+
 	private void createFileChooserField (Field field, ATSelectFile propertyUI) {
 		String fieldName = propertyUI.fieldName().equals("") ? field.getName() : propertyUI.fieldName();
 
@@ -317,6 +323,8 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 		set.tooltip.pack();
 	}
 
+	// ============ Vector2View ============
+
 	private void createVector2ArrayView (Field field, ATVector2Array annotation) {
 		Vector2ArrayView view = new Vector2ArrayView();
 		vector2Views.put(field, view);
@@ -340,9 +348,74 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 		}
 	}
 
+	// ============ SelectBox ============
+
+	@SuppressWarnings("unchecked")
+	private void createEnumSelectBox (Field field, Class type, ATEnumProperty annotation) {
+		try {
+			String fieldName = annotation.fieldName().equals("") ? field.getName() : annotation.fieldName();
+
+			Constructor constructor = annotation.uiNameProvider().getConstructor();
+			EnumNameProvider nameProvider = (EnumNameProvider) constructor.newInstance();
+
+			AutoTableEnumSelectBox selectBox = new AutoTableEnumSelectBox<>(type, nameProvider);
+			selectBox.getSelection().setProgrammaticChangeEvents(false);
+			selectBox.addListener(properties.getSharedChangeListener());
+			enumSelectBoxes.put(field, new EnumSelectBoxSet(selectBox, nameProvider));
+
+			VisTable table = new VisTable(true);
+			table.add(fieldName);
+			table.add(selectBox).expandX().fillX().left();
+			add(table).left().expandX().fillX().row();
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void updateEnumSelectBox (Field field, Array<EntityProxy> proxies) throws IllegalAccessException {
+		EnumSelectBoxSet set = enumSelectBoxes.get(field);
+
+		String commonValue = EntityUtils.getCommonString(proxies, AutoTableEnumSelectBox.INDETERMINATE,
+				(Entity entity) -> {
+					try {
+						return set.enumNameProvider.getPrettyName((Enum) field.get(entity.getComponent(componentClass)));
+					} catch (IllegalAccessException e) {
+						throw new IllegalStateException(e);
+					}
+				});
+
+		if (commonValue.equals(AutoTableEnumSelectBox.INDETERMINATE)) {
+			set.selectBox.setIndeterminate(true);
+		} else {
+			set.selectBox.setIndeterminate(false);
+			set.selectBox.setSelectedEnum((Enum) field.get(proxies.first().getEntities().first().getComponent(componentClass)));
+		}
+	}
+
+	private void setFromEnumSelectBoxField (Field field, Class type, T component) throws IllegalAccessException {
+		EnumSelectBoxSet set = enumSelectBoxes.get(field);
+
+		if (set.selectBox.isIndeterminate() == false) {
+			field.set(component, set.selectBox.getSelectedEnum());
+		}
+	}
+
+	// ============ Other ============
+
+	private static class EnumSelectBoxSet {
+		public AutoTableEnumSelectBox selectBox;
+		public EnumNameProvider enumNameProvider;
+
+		public EnumSelectBoxSet (AutoTableEnumSelectBox selectBox, EnumNameProvider enumNameProvider) {
+			this.selectBox = selectBox;
+			this.enumNameProvider = enumNameProvider;
+		}
+	}
+
 	private static class SelectFileDialogSet {
 		public VisLabel fileLabel;
-		private Tooltip tooltip;
+		public Tooltip tooltip;
 		public ATSelectFileHandler handler;
 
 		public SelectFileDialogSet (VisLabel fileLabel, Tooltip tooltip, ATSelectFileHandler handler) {
