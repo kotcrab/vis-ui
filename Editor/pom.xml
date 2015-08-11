@@ -18,7 +18,7 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <visui.version>0.8.1-SNAPSHOT</visui.version>
+        <visui.version>0.8.2-SNAPSHOT</visui.version>
         <build.ci.timestamp>unknown, not built using CI</build.ci.timestamp>
     </properties>
 
@@ -58,18 +58,18 @@
 
         <dependency>
             <groupId>com.badlogicgames.gdx</groupId>
-            <artifactId>gdx-freetype-platform</artifactId>
-            <classifier>natives-desktop</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>com.badlogicgames.gdx</groupId>
             <artifactId>gdx-box2d</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.badlogicgames.gdx</groupId>
             <artifactId>gdx-box2d-platform</artifactId>
+            <classifier>natives-desktop</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>com.badlogicgames.gdx</groupId>
+            <artifactId>gdx-freetype-platform</artifactId>
             <classifier>natives-desktop</classifier>
         </dependency>
 
