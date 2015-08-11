@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
@@ -54,11 +55,14 @@ public class ComponentPanel extends VisTable {
 		VisTable topTable = new VisTable(true);
 		topTable.setBackground(treeOver);
 
-		image = new Image(treeMinus);
+		image = new Image(treeMinus, Scaling.none);
 
-		topTable.add(image);
-		topTable.add(new VisLabel(name));
-		topTable.add().expandX().fillX();
+		VisLabel nameLabel = new VisLabel(name);
+		nameLabel.setEllipsis(true);
+
+		topTable.add(image).size(22).spaceRight(0);
+		topTable.add(nameLabel).spaceRight(0).width(205);
+		topTable.add().space(0).expandX().fillX();
 		if (componentTable.isRemovable()) {
 			VisImageButton button = new VisImageButton("close");
 			VisImageButtonStyle style = button.getStyle();

@@ -31,7 +31,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import static com.kotcrab.vis.editor.util.vis.EntityUtils.setCommonCheckBoxState;
 
 /**
- * Specific table for {@link MusicObject}
+ * Specific table for MusicComponent
  */
 public class MusicUITable extends SpecificUITable {
 	private VisLabel label;

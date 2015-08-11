@@ -229,6 +229,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 		componentSelectDialog = new ComponentSelectDialog(this, clazz -> {
 			try {
+				if(getProxies().size == 0) return; //nothing is selected
+
 				Constructor<? extends Component> cons = clazz.getDeclaredConstructor();
 				cons.setAccessible(true);
 				Component component = cons.newInstance();

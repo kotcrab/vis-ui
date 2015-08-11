@@ -27,7 +27,8 @@ import java.lang.annotation.Target;
  * This annotation is used on fields inside {@link Component}s to make them editable inside VisEditor. Target component
  * class must be registered using AutoComponentTable. See VisEditor source for more details.
  * <p>
- * Auto table will automatically create number input field and update it when needed.
+ * This annotation supports float, int and boolean fields.
+ * Auto table will automatically create number input field or checkbox and update it when needed.
  * @author Kotcrab
  */
 @Target(ElementType.FIELD)

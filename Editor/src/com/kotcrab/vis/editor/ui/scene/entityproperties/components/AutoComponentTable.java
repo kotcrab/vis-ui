@@ -34,14 +34,21 @@ import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.ui.Vector2ArrayView;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificComponentTable;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.gdx.IntDigitsOnlyFilter;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.PolygonComponent;
-import com.kotcrab.vis.runtime.util.autotable.*;
-import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.runtime.util.autotable.ATEntityProperty;
+import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
+import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
+import com.kotcrab.vis.runtime.util.autotable.ATVector2Array;
+import com.kotcrab.vis.ui.widget.Tooltip;
+import com.kotcrab.vis.ui.widget.VisImageButton;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisTable;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -51,10 +58,13 @@ import static com.kotcrab.vis.editor.util.vis.EntityUtils.getCommonString;
 
 /**
  * Uses magic of annotations and reflection to automatically build and update specific table for component.
- * Only some primitives fields are supported. Component fields must be marked with {@link ATEntityProperty} annotation.
+ * Only some primitives fields are supported. Component fields must be marked with one of auto table annotations
+ * (see util.autotable package in runtime).
  * @author Kotcrab
  */
 public class AutoComponentTable<T extends Component> extends SpecificComponentTable<T> {
+	public static final int LABEL_WIDTH = 170;
+
 	private Class<T> componentClass;
 
 	private ModuleInjector injector;
@@ -63,6 +73,7 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 	@InjectModule private FileAccessModule fileAccessModule;
 
 	private ObjectMap<Field, NumberInputField> numberFields = new ObjectMap<>();
+	private ObjectMap<Field, IndeterminateCheckbox> checkboxFields = new ObjectMap<>();
 	private ObjectMap<Field, SelectFileDialogSet> fileDialogLabels = new ObjectMap<>();
 	private ObjectMap<Field, Vector2ArrayView> vector2Views = new ObjectMap<>();
 
@@ -94,7 +105,7 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 
 			for (Annotation annotation : field.getAnnotations()) {
 				if (annotation instanceof ATEntityProperty) {
-					createNumberInputField(field, type, (ATEntityProperty) annotation);
+					createEntityPropertyField(field, type, (ATEntityProperty) annotation);
 				}
 
 				if (annotation instanceof ATSelectFile) {
@@ -115,7 +126,7 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 		for (Field field : componentClass.getDeclaredFields()) {
 			Class type = field.getType();
 			for (Annotation annotation : field.getAnnotations()) {
-				if (annotation instanceof ATEntityProperty) updateNumberInputField(field, type, proxies);
+				if (annotation instanceof ATEntityProperty) updateEntityPropertyField(field, type, proxies);
 				if (annotation instanceof ATSelectFile) updateFileChooser(field, proxies);
 				if (annotation instanceof ATVector2Array) updateVector2View(field, proxies);
 			}
@@ -133,7 +144,11 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 					Class type = field.getType();
 					for (Annotation annotation : field.getAnnotations()) {
 						if (annotation instanceof ATEntityProperty) {
-							setFromNumberInputField(field, type, component);
+							try {
+								setFromEntityPropertyField(field, type, component);
+							} catch (IllegalAccessException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				}
@@ -141,26 +156,47 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 		}
 	}
 
-	private void createNumberInputField (Field field, Class type, ATEntityProperty propertyUI) {
-		if (type.equals(Integer.TYPE) == false && type.equals(Float.TYPE) == false) {
+	private void createEntityPropertyField (Field field, Class type, ATEntityProperty propertyUI) {
+		if (type.equals(Integer.TYPE) == false && type.equals(Float.TYPE) == false && type.equals(Boolean.TYPE) == false) {
 			throw new UnsupportedOperationException("Field of this type is not supported by EntityPropertyUI: " + type);
 		}
 
 		String fieldName = propertyUI.fieldName().equals("") ? field.getName() : propertyUI.fieldName();
-		NumberInputField numberInputField = new NumberInputField(properties.getSharedFocusListener(), properties.getSharedChangeListener());
+		if (type.equals(Boolean.TYPE)) {
+			IndeterminateCheckbox checkbox = new IndeterminateCheckbox(fieldName);
+			checkbox.addListener(properties.getSharedCheckBoxChangeListener());
 
-		if (type.equals(Integer.TYPE)) numberInputField.setTextFieldFilter(new IntDigitsOnlyFilter());
+			VisTable table = new VisTable(true);
+			table.add(checkbox).left();
+			add(table).left().expandX().row();
+			checkboxFields.put(field, checkbox);
+		} else {
+			NumberInputField numberInputField = new NumberInputField(properties.getSharedFocusListener(), properties.getSharedChangeListener());
 
-		VisTable table = new VisTable(true);
+			if (type.equals(Integer.TYPE)) numberInputField.setTextFieldFilter(new IntDigitsOnlyFilter());
 
-		table.add(new VisLabel(fieldName)).width(EntityProperties.LABEL_WIDTH);
-		table.add(numberInputField).width(EntityProperties.FIELD_WIDTH);
-		add(table).expandX().fillX().row();
-		numberFields.put(field, numberInputField);
+			VisTable table = new VisTable(true);
+
+			table.add(new VisLabel(fieldName)).width(LABEL_WIDTH);
+			table.add(numberInputField).width(EntityProperties.FIELD_WIDTH);
+			add(table).expandX().fillX().row();
+			numberFields.put(field, numberInputField);
+		}
 	}
 
-	private void updateNumberInputField (Field field, Class type, Array<EntityProxy> proxies) {
-		if (type.equals(Integer.TYPE) || type.equals(Float.TYPE)) {
+	private void updateEntityPropertyField (Field field, Class type, Array<EntityProxy> proxies) {
+		if (type.equals(Boolean.TYPE)) {
+			IndeterminateCheckbox checkbox = checkboxFields.get(field);
+
+			EntityUtils.setCommonCheckBoxState(proxies, checkbox, (Entity entity) -> {
+				try {
+					return (boolean) field.get(entity.getComponent(componentClass));
+				} catch (IllegalAccessException e) {
+					throw new IllegalStateException(e);
+				}
+			});
+
+		} else {
 			NumberInputField inputField = numberFields.get(field);
 
 			if (type.equals(Integer.TYPE)) {
@@ -185,7 +221,12 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 		}
 	}
 
-	private void setFromNumberInputField (Field field, Class type, T component) {
+	private void setFromEntityPropertyField (Field field, Class type, T component) throws IllegalAccessException {
+		if (type.equals(Boolean.TYPE)) {
+			IndeterminateCheckbox checkbox = checkboxFields.get(field);
+			if (checkbox.isIndeterminate() == false) field.set(component, checkbox.isChecked());
+		}
+
 		if (type.equals(Integer.TYPE)) {
 			try {
 				int value = FieldUtils.getInt(numberFields.get(field), (int) field.get(component));
