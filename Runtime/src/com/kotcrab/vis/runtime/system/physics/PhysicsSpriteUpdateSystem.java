@@ -28,11 +28,11 @@ import com.kotcrab.vis.runtime.component.SpriteComponent;
 
 /** @author Kotcrab */
 @Wire
-public class PhysicsSpritePositionUpdateSystem extends EntityProcessingSystem {
+public class PhysicsSpriteUpdateSystem extends EntityProcessingSystem {
 	private ComponentMapper<PhysicsComponent> physicsCm;
 	private ComponentMapper<SpriteComponent> spriteCm;
 
-	public PhysicsSpritePositionUpdateSystem () {
+	public PhysicsSpriteUpdateSystem () {
 		super(Aspect.all(PhysicsComponent.class, SpriteComponent.class));
 	}
 

@@ -20,6 +20,7 @@ import com.artemis.Entity;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.GroupComponent;
 import com.kotcrab.vis.runtime.system.VisGroupManager;
+import com.kotcrab.vis.runtime.system.physics.PhysicsSpriteUpdateSystem;
 
 /**
  * Holds runtime configurations values
@@ -40,8 +41,15 @@ public class RuntimeConfiguration {
 	public boolean useVisGroupManager = true;
 
 	/**
-	 * Contolrs whether to use box2d debug renderer that draw outlines of bodies, useful for debbuging. If true debug
-	 * renderer is used. Default is false.
+	 * Controls whether to use box2d debug renderer that draw outlines of bodies, useful for debbuging. If true debug
+	 * renderer is used. Default is false. This settings has no effect if physics is disabled.
 	 */
 	public boolean useBox2dDebugRenderer = false;
+
+	/**
+	 * Controls whether to use {@link PhysicsSpriteUpdateSystem} to automatically update sprite state depending on
+	 * box2d state. If false this system won't be added into entity engine. Default is true. This settings has no
+	 * effect if physics is disabled.
+	 */
+	public boolean useBox2dSpriteUpdateSystem = true;
 }
