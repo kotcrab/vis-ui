@@ -117,7 +117,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	private boolean groupSelected;
 
 	private ChangeListener sharedChangeListener;
-	private ChangeListener sharedCheckBoxChangeListener;
+	private ChangeListener sharedChckAndSelectBoxChangeListener;
 	private FocusListener sharedFocusListener;
 
 	private ColorPickerListener pickerListener;
@@ -180,14 +180,16 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				if (actor instanceof VisCheckBox)
-					throw new IllegalStateException("SharedChangeListener cannot be used for checkboxes, use sharedCheckBoxChangeListener instead");
+					throw new IllegalStateException("sharedChangeListener cannot be used for checkboxes, use sharedCheckBoxChangeListener instead");
+				if (actor instanceof VisSelectBox)
+					throw new IllegalStateException("sharedChangeListener cannot be used for checkboxes, use sharedSelectBoxChangeListener instead");
 
 				setValuesToEntity();
 				parentTab.dirty();
 			}
 		};
 
-		sharedCheckBoxChangeListener = new ChangeListener() {
+		sharedChckAndSelectBoxChangeListener = new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				beginSnapshot();
@@ -230,7 +232,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 		componentSelectDialog = new ComponentSelectDialog(this, clazz -> {
 			try {
-				if(getProxies().size == 0) return; //nothing is selected
+				if (getProxies().size == 0) return; //nothing is selected
 
 				Constructor<? extends Component> cons = clazz.getDeclaredConstructor();
 				cons.setAccessible(true);
@@ -364,8 +366,8 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		flipTable.add(xFlipCheck = new IndeterminateCheckbox("X"));
 		flipTable.add(yFlipCheck = new IndeterminateCheckbox("Y"));
 
-		xFlipCheck.addListener(sharedCheckBoxChangeListener);
-		yFlipCheck.addListener(sharedCheckBoxChangeListener);
+		xFlipCheck.addListener(sharedChckAndSelectBoxChangeListener);
+		yFlipCheck.addListener(sharedChckAndSelectBoxChangeListener);
 	}
 
 	private void rebuildPropertiesTable () {
@@ -511,7 +513,11 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	}
 
 	public ChangeListener getSharedCheckBoxChangeListener () {
-		return sharedCheckBoxChangeListener;
+		return sharedChckAndSelectBoxChangeListener;
+	}
+
+	public ChangeListener getSharedSelectBoxChangeListener () {
+		return sharedChckAndSelectBoxChangeListener;
 	}
 
 	public FocusListener getSharedFocusListener () {

@@ -360,7 +360,7 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 
 			AutoTableEnumSelectBox selectBox = new AutoTableEnumSelectBox<>(type, nameProvider);
 			selectBox.getSelection().setProgrammaticChangeEvents(false);
-			selectBox.addListener(properties.getSharedChangeListener());
+			selectBox.addListener(properties.getSharedSelectBoxChangeListener());
 			enumSelectBoxes.put(field, new EnumSelectBoxSet(selectBox, nameProvider));
 
 			VisTable table = new VisTable(true);
