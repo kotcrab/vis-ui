@@ -32,6 +32,8 @@ public class SceneData {
 	public float height;
 	public float pixelsPerUnit;
 
+	public PhysicsSettingsData physicsSettings;
+
 	public IntMap<String> groupIds;
 
 	public Array<LayerData> layers = new Array<LayerData>();

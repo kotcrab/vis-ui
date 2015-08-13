@@ -30,11 +30,13 @@ import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.plugin.ExporterPlugin;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.scene.PhysicsSettings;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DefaultExporterSettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.runtime.data.LayerData;
+import com.kotcrab.vis.runtime.data.PhysicsSettingsData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
 import org.apache.commons.io.FileUtils;
@@ -61,7 +63,6 @@ public class DefaultExporter implements ExporterPlugin {
 	@InjectModule private SceneCacheModule sceneCache;
 
 	private FileHandle visAssetsDir;
-
 
 	private Settings texturePackerSettings;
 	private boolean firstExportDone;
@@ -246,6 +247,9 @@ public class DefaultExporter implements ExporterPlugin {
 					sceneData.width = scene.width;
 					sceneData.height = scene.height;
 					sceneData.pixelsPerUnit = scene.pixelsPerUnit;
+
+					PhysicsSettings physics = scene.physicsSettings;
+					sceneData.physicsSettings = new PhysicsSettingsData(physics.physicsEnabled, physics.gravityX, physics.gravityY, physics.allowSleep);
 
 					sceneData.groupIds = new IntMap<>(scene.getGroups());
 
