@@ -51,6 +51,8 @@ public class PhysicsBodyManager extends Manager {
 		PolygonComponent polygon = polygonCm.get(e);
 		SpriteComponent sprite = spriteCm.get(e);
 
+		if (physicsProperties.adjustOrigin) sprite.setOrigin(0, 0);
+
 		Vector2 worldPos = new Vector2(sprite.getX(), sprite.getY());
 
 		BodyDef bodyDef = new BodyDef();
