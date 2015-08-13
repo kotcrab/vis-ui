@@ -730,8 +730,6 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 		boolean result = currentTool.keyDown(event, keycode);
 
 		if (result == false) {
-//			cancelMoveEntityTask();
-
 			if (keycode == Keys.FORWARD_DEL) { //Delete
 				deleteSelectedEntities();
 				return true;

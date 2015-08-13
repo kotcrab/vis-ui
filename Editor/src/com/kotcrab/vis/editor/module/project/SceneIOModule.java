@@ -27,6 +27,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
@@ -115,6 +116,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(Vector2.class, 20);
 		kryo.register(Vector2[].class, 21);
 		kryo.register(Vector2[][].class, 22);
+		kryo.register(BodyType.class, 23);
 
 		kryo.register(EditorScene.class, new EditorSceneSerializer(kryo), 31);
 		kryo.register(EntityScheme.class, new EntitySchemeSerializer(kryo, this), 32);
@@ -150,6 +152,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(RenderableComponent.class, 225);
 		registerEntityComponentSerializer(ShaderComponent.class, new ShaderComponentSerializer(kryo, shaderCache), 226);
 		kryo.register(PolygonComponent.class, 227);
+		kryo.register(PhysicsPropertiesComponent.class, 228);
 	}
 
 	private void registerEntityComponentSerializer (Class<? extends Component> componentClass, EntityComponentSerializer serializer, int id) {

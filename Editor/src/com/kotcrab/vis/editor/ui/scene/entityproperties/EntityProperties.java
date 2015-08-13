@@ -67,6 +67,7 @@ import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.value.FloatProxyValue;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
+import com.kotcrab.vis.runtime.component.PhysicsPropertiesComponent;
 import com.kotcrab.vis.runtime.component.PolygonComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
 import com.kotcrab.vis.ui.VisUI;
@@ -265,6 +266,7 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 		registerComponentTable(new RenderableComponentTable(sceneMC));
 		registerComponentTable(new AutoComponentTable<>(sceneMC, ShaderComponent.class, true));
 		registerComponentTable(new AutoComponentTable<>(sceneMC, PolygonComponent.class, true));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, PhysicsPropertiesComponent.class, true));
 
 		propertiesTable = new VisTable(true);
 
@@ -651,6 +653,10 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 	}
 
 	private static class SnapshotUndoableActionGroup extends UndoableActionGroup {
+		public SnapshotUndoableActionGroup () {
+			super("Change Entities Properties");
+		}
+
 		public void dropUnchanged () {
 			Iterator<UndoableAction> iterator = actions.iterator();
 
@@ -714,6 +720,11 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 				newComponent.forEach(editor::add);
 			});
 			proxy.reload();
+		}
+
+		@Override
+		public String getActionName () {
+			return "Change Entity Property";
 		}
 	}
 }

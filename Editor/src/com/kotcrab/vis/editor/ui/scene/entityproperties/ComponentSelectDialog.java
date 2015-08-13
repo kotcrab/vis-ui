@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
+import com.kotcrab.vis.runtime.component.PhysicsPropertiesComponent;
 import com.kotcrab.vis.runtime.component.PolygonComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
 import com.kotcrab.vis.ui.VisUI;
@@ -51,6 +52,7 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 
 		componentClasses.add(ShaderComponent.class);
 		componentClasses.add(PolygonComponent.class);
+		componentClasses.add(PhysicsPropertiesComponent.class);
 
 		buttonStyle = new VisTextButtonStyle(VisUI.getSkin().get(VisTextButtonStyle.class));
 
@@ -69,7 +71,7 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 
 		addSeparator().colspan(2);
 		add(scrollPane).colspan(2).expand().fill().padLeft(3).padRight(3);
-		setSize(170, 200);
+		setSize(220, 200);
 
 		closeButton.addListener(new VisChangeListener((event, actor) -> remove()));
 
