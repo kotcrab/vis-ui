@@ -24,6 +24,7 @@ import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.scene.PhysicsSettings;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 
 import java.lang.reflect.Field;
@@ -33,7 +34,7 @@ import java.lang.reflect.Field;
  * @author Kotcrab
  */
 public class EditorSceneSerializer extends TaggedFieldSerializer<EditorScene> {
-	private static final int VERSION_CODE = 3;
+	private static final int VERSION_CODE = 4;
 
 	public EditorSceneSerializer (Kryo kryo) {
 		super(kryo, EditorScene.class);
@@ -48,9 +49,9 @@ public class EditorSceneSerializer extends TaggedFieldSerializer<EditorScene> {
 
 	@Override
 	public EditorScene read (Kryo kryo, Input input, Class<EditorScene> sceneClass) {
-		EditorScene obj = super.read(kryo, input, sceneClass);
+		EditorScene scene = super.read(kryo, input, sceneClass);
 
-		obj.onDeserialize();
+		scene.onDeserialize();
 		int versionCode = input.readInt(); //version code
 
 		if (versionCode == 1) {
@@ -58,25 +59,34 @@ public class EditorSceneSerializer extends TaggedFieldSerializer<EditorScene> {
 			try {
 				Field field = EditorScene.class.getDeclaredField("groupIds");
 				field.setAccessible(true);
-				field.set(obj, new IntMap<String>());
+				field.set(scene, new IntMap<String>());
 			} catch (ReflectiveOperationException e) {
 				Log.exception(e);
 			}
 
 			versionCode = 2;
-			Log.info("Updating EditorScene to version code: 2");
+			Log.info("Updating EditorScene to version code 2");
 		}
 
 		if (versionCode == 2) {
 			//coordinates system was added in 0.2.1, requires manual default cords set
-			for (Layer layer : obj.getLayers()) {
+			for (Layer layer : scene.getLayers()) {
 				layer.cordsSystem = LayerCordsSystem.WORLD;
 			}
 
 			versionCode = 3;
-			Log.info("Updating EditorScene to version code: 3");
+			Log.info("Updating EditorScene to version code 3");
 		}
 
-		return obj;
+		if (versionCode == 3) {
+			//physics settings was added in 0.2.1, requires manual creation of PhysicsSettings object
+
+			scene.physicsSettings = new PhysicsSettings();
+
+			versionCode = 4;
+			Log.info("Updating EditorScene to version code 4");
+		}
+
+		return scene;
 	}
 }

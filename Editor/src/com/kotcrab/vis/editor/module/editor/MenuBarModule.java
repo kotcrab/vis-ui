@@ -129,11 +129,12 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "New Scene...", Icons.NEW, () -> stage.addActor(new NewSceneDialog(projectContainer).fadeIn())));
 
 		menu.addSeparator();
-
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Scene Settings...", () -> sceneButtonsListener.showSceneSettings()));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Physics Settings...", () -> sceneButtonsListener.showPhysicsSettings()));
+		menu.addSeparator();
 		//DO NOT replace this with method reference!!!
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera", () -> sceneButtonsListener.resetCamera()));
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera Zoom", () -> sceneButtonsListener.resetCameraZoom()));
-		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Scene Settings...", () -> sceneButtonsListener.showSceneSettings()));
 
 	}
 

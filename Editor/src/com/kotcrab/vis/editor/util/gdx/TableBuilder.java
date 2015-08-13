@@ -24,6 +24,13 @@ import com.kotcrab.vis.ui.widget.VisTable;
  * @author Kotcrab
  */
 public class TableBuilder {
+	public static VisTable build (String text, int labelWidth, Actor actor) {
+		VisTable table = new VisTable(true);
+		table.add(text).width(labelWidth);
+		table.add(actor);
+		return table;
+	}
+
 	public static VisTable build (Actor... actors) {
 		return build(new VisTable(true), actors);
 	}

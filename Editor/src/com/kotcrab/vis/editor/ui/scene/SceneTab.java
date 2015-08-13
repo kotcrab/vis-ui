@@ -21,6 +21,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
@@ -80,6 +81,8 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	@InjectModule private UndoModule undoModule;
 	@InjectModule private CameraModule cameraModule;
 
+	private Stage stage;
+
 	private EntityEngine engine;
 	private EntityManager entityManager;
 	private EntityProxyCache entityProxyCache;
@@ -96,7 +99,9 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		super(true);
 		this.scene = scene;
 
-		sceneMC = new SceneModuleContainer(projectMC, this, scene, Editor.instance.getStage().getBatch());
+		stage = Editor.instance.getStage();
+
+		sceneMC = new SceneModuleContainer(projectMC, this, scene, stage.getBatch());
 		sceneMC.add(new CameraModule());
 		sceneMC.add(new RendererModule());
 		sceneMC.add(new UndoModule());
@@ -289,13 +294,13 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 				return true;
 			} else {
 				lastSaveFailed = true;
-				DialogUtils.showErrorDialog(Editor.instance.getStage(), "Unknown error encountered while saving resource");
+				DialogUtils.showErrorDialog(stage, "Unknown error encountered while saving resource");
 			}
 
 		} catch (Exception e) {
 			lastSaveFailed = true;
 			Log.exception(e);
-			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Unknown error encountered while saving resource", e);
+			DialogUtils.showErrorDialog(stage, "Unknown error encountered while saving resource", e);
 		}
 
 		return false;
@@ -314,7 +319,12 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 
 	@Override
 	public void showSceneSettings () {
-		Editor.instance.getStage().addActor(new SceneSettingsDialog(this).fadeIn());
+		stage.addActor(new SceneSettingsDialog(this).fadeIn());
+	}
+
+	@Override
+	public void showPhysicsSettings () {
+		stage.addActor(new PhysicsSettingsDialog(sceneMC).fadeIn());
 	}
 
 	@Override

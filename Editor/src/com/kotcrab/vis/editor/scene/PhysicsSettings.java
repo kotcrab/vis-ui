@@ -14,34 +14,24 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene;
+package com.kotcrab.vis.editor.scene;
 
-import com.kotcrab.vis.editor.module.editor.MenuBarModule;
-import com.kotcrab.vis.ui.widget.MenuBar;
+import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 
-/**
- * {@link MenuBarModule} listener used to pass scene scope {@link MenuBar} events to {@link SceneTab}
- * @author Kotcrab
- */
-public interface SceneMenuButtonsListener {
-	void showAlignmentTools ();
+/** @author Kotcrab */
+public class PhysicsSettings {
+	@Tag(0) public boolean physicsEnabled = false;
+	@Tag(1) public float gravityX = 0;
+	@Tag(2) public float gravityY = 0;
+	@Tag(3) public boolean allowSleep = true;
 
-	void showSceneSettings ();
+	public PhysicsSettings () {
+	}
 
-	void showPhysicsSettings ();
-
-	void resetCamera ();
-
-	void resetCameraZoom ();
-
-	void undo ();
-
-	void redo ();
-
-	void group ();
-
-	void ungroup ();
-
-	String getNextUndoActionName();
-
+	public PhysicsSettings (PhysicsSettings other) {
+		this.physicsEnabled = other.physicsEnabled;
+		this.gravityX = other.gravityX;
+		this.gravityY = other.gravityY;
+		this.allowSleep = other.allowSleep;
+	}
 }

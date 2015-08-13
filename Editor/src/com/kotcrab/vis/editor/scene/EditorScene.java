@@ -49,6 +49,8 @@ public class EditorScene extends BaseObservable {
 	@Tag(7) public float pixelsPerUnit; //this value is float to avoid calculations problems
 	@Tag(3) public SceneViewport viewport;
 
+	@Tag(9) public PhysicsSettings physicsSettings = new PhysicsSettings();
+
 	@Tag(4) private Array<Layer> layers = new Array<>();
 	@Tag(5) private int activeLayerId;
 
@@ -56,7 +58,7 @@ public class EditorScene extends BaseObservable {
 
 	@Tag(6) private Array<EntityScheme> schemes; //for serialization
 
-	//last tag is 8
+	//last tag is 9
 
 	public EditorScene (FileHandle file, SceneViewport viewport, float width, float height, int pixelsPerUnit) {
 		if (width < 0 || height < 0) throw new IllegalArgumentException("Invalid scene size");

@@ -19,8 +19,8 @@ package com.kotcrab.vis.editor.ui.scene;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.OrderedMap;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.ui.EnumSelectBox;
 import com.kotcrab.vis.editor.util.gdx.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.ui.util.TableUtils;
@@ -41,14 +41,12 @@ public class SceneSettingsDialog extends VisWindow {
 	private VisValidableTextField widthField;
 	private VisValidableTextField heightField;
 
-	private VisSelectBox<String> viewportModeSelectBox;
+	private EnumSelectBox<SceneViewport> viewportModeSelectBox;
 
 	private VisLabel errorLabel;
 
 	private VisTextButton cancelButton;
 	private VisTextButton saveButton;
-
-	private OrderedMap<String, SceneViewport> viewportMap;
 
 	public SceneSettingsDialog (SceneTab tab) {
 		super("Scene Settings");
@@ -60,8 +58,6 @@ public class SceneSettingsDialog extends VisWindow {
 		closeOnEscape();
 		setModal(true);
 
-		viewportMap = new OrderedMap<>();
-		for (SceneViewport value : SceneViewport.values()) viewportMap.put(value.toPrettyString(), value);
 
 		createUI();
 		createListeners();
@@ -72,9 +68,8 @@ public class SceneSettingsDialog extends VisWindow {
 	}
 
 	private void createUI () {
-		viewportModeSelectBox = new VisSelectBox<>();
-		viewportModeSelectBox.setItems(viewportMap.keys().toArray());
-		viewportModeSelectBox.setSelected(viewportMap.findKey(scene.viewport, true));
+		viewportModeSelectBox = new EnumSelectBox<>(SceneViewport.class);
+		viewportModeSelectBox.setSelectedEnum(scene.viewport);
 
 		//TODO error msg can't fit on window, for now we don't display it at all
 		errorLabel = new VisLabel();
@@ -130,7 +125,7 @@ public class SceneSettingsDialog extends VisWindow {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				if (sceneTab.isDirty()) {
-					DialogUtils.showOptionDialog(getStage(), "Save settings", "This will save any previous change in scene, continue?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+					DialogUtils.showOptionDialog(getStage(), "Save settings", "This will save any previous changes in scene, continue?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 						@Override
 						public void yes () {
 							setValuesToSceneAndSave();
@@ -145,7 +140,7 @@ public class SceneSettingsDialog extends VisWindow {
 	}
 
 	private void setValuesToSceneAndSave () {
-		scene.viewport = viewportMap.get(viewportModeSelectBox.getSelected());
+		scene.viewport = viewportModeSelectBox.getSelectedEnum();
 		scene.width = Float.valueOf(widthField.getText());
 		scene.height = Float.valueOf(heightField.getText());
 		sceneTab.save();

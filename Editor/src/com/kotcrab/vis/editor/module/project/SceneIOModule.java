@@ -44,6 +44,7 @@ import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializerDesc
 import com.kotcrab.vis.editor.plugin.PluginKryoSerializer;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.scene.PhysicsSettings;
 import com.kotcrab.vis.editor.serializer.*;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
@@ -93,9 +94,9 @@ public class SceneIOModule extends ProjectModule {
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 		kryo.setRegistrationRequired(true);
-		//id configuration:
+		//id configuration: (categories aren't strictly enforced but should be used)
 		//0-8 kryo primitives
-		//10-200 custom base types (sub categories don't have to be strictly enforced)
+		//10-200 custom base types
 		//	10-30 libs classes
 		//	31-60 vis classes
 		//	61-100 assets descriptors
@@ -125,6 +126,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(BitmapFontParameter.class, 35);
 		kryo.register(TextureFilter.class, 36);
 		kryo.register(LayerCordsSystem.class, 37);
+		kryo.register(PhysicsSettings.class, 38);
 
 		kryo.register(PathAsset.class, 61);
 		kryo.register(TextureRegionAsset.class, 62);
