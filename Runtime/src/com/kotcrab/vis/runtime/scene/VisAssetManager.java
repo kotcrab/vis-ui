@@ -47,6 +47,10 @@ public class VisAssetManager extends AssetManager {
 		setLoader(ShaderProgram.class, new ShaderLoader());
 	}
 
+	public SceneLoader getSceneLoader () {
+		return sceneLoader;
+	}
+
 	/**
 	 * Allows to enable FreeType support.
 	 * @param freeTypeFontProvider must be instance of {@link FreeTypeFontProvider}. Note that this parameter is not checked!

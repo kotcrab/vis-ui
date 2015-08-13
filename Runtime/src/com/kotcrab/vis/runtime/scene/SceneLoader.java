@@ -208,6 +208,10 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		return scene;
 	}
 
+	public void setRuntimeConfig (RuntimeConfiguration configuration) {
+		this.configuration = configuration;
+	}
+
 	/** Allows to add additional system and managers into {@link EntityEngine} */
 	static public class SceneParameter extends AssetLoaderParameters<Scene> {
 		public Array<BaseSystem> systems = new Array<BaseSystem>();

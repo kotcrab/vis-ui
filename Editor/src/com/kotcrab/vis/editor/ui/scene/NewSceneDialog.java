@@ -126,8 +126,8 @@ public class NewSceneDialog extends VisWindow {
 
 		widthField = new VisValidableTextField("13");
 		heightField = new VisValidableTextField("7");
-		widthField.setTextFieldFilter(new FloatDigitsOnlyFilter());
-		heightField.setTextFieldFilter(new FloatDigitsOnlyFilter());
+		widthField.setTextFieldFilter(new FloatDigitsOnlyFilter(false));
+		heightField.setTextFieldFilter(new FloatDigitsOnlyFilter(false));
 
 		VisTable sizeTable = new VisTable(true);
 		add(new VisLabel("Width"));

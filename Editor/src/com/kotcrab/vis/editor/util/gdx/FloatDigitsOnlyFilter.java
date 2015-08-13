@@ -24,9 +24,16 @@ import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
  * @author Kotcrab
  */
 public class FloatDigitsOnlyFilter implements TextFieldFilter {
+	private boolean acceptNegativeValues;
+
+	public FloatDigitsOnlyFilter (boolean acceptNegativeValues) {
+		this.acceptNegativeValues = acceptNegativeValues;
+	}
+
 	@Override
 	public boolean acceptChar (VisTextField textField, char c) {
 		if (c == '.') return true;
+		if (c == '-' && acceptNegativeValues) return true;
 		return Character.isDigit(c);
 	}
 }

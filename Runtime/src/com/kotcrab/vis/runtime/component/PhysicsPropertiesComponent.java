@@ -28,34 +28,33 @@ public class PhysicsPropertiesComponent extends Component {
 	public BodyType bodyType = BodyType.StaticBody;
 
 	@ATEntityProperty(fieldName = "Friction")
-	public float friction;
+	public float friction = 1;
 	@ATEntityProperty(fieldName = "Density")
-	public float density;
+	public float density = 1;
 	@ATEntityProperty(fieldName = "Restitution")
-	public float restitution;
+	public float restitution = 0;
 
-	@ATEntityProperty(fieldName = "Mass")
-	public float mass;
+	@ATEntityProperty(fieldName = "Sensor")
+	public boolean sensor;
+
 	@ATEntityProperty(fieldName = "Gravity Scale")
-	public float gravityScale;
-
+	public float gravityScale = 1;
 	@ATEntityProperty(fieldName = "Linear Damping")
-	public float linearDamping;
+	public float linearDamping = 0;
 	@ATEntityProperty(fieldName = "Angular Damping")
-	public float angularDamping;
+	public float angularDamping = 0;
+
+	@ATEntityProperty(fieldName = "Bullet")
+	public boolean bullet;
+	@ATEntityProperty(fieldName = "Fixed Rotation")
+	public boolean fixedRotation;
+	@ATEntityProperty(fieldName = "Active")
+	public boolean active = true;
+	@ATEntityProperty(fieldName = "Sleeping Allowed")
+	public boolean sleepingAllowed = true;
 
 	@ATEntityProperty(fieldName = "Mask")
 	public int mask;
 	@ATEntityProperty(fieldName = "Category")
 	public int category;
-
-	@ATEntityProperty(fieldName = "Bullet")
-	public boolean bullet;
-	@ATEntityProperty(fieldName = "Sensor")
-	public boolean sensor;
-
-	@ATEntityProperty(fieldName = "Fixed Rotation")
-	public boolean fixedRotation;
-	@ATEntityProperty(fieldName = "Active")
-	public boolean active;
 }

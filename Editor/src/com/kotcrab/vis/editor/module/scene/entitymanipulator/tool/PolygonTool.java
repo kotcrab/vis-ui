@@ -324,7 +324,7 @@ public class PolygonTool extends BaseSelectionTool {
 		y = tmpVector.y;
 
 		if (changePolygonAction != null) {
-			if (PolygonUtils.isDegenerate(component.vertices.toArray(Vector2.class))) {
+			if (PolygonUtils.isDegenerate(component.faces)) {
 				changePolygonAction.takeSnapshot();
 				changePolygonAction.undo();
 				statusBar.setText("Polygon is degenerate", Color.RED, 3);

@@ -31,6 +31,10 @@ import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.system.*;
 import com.kotcrab.vis.runtime.system.inflater.*;
+import com.kotcrab.vis.runtime.system.physics.Box2dDebugRenderSystem;
+import com.kotcrab.vis.runtime.system.physics.PhysicsBodyManager;
+import com.kotcrab.vis.runtime.system.physics.PhysicsSpritePositionUpdateSystem;
+import com.kotcrab.vis.runtime.system.physics.PhysicsSystem;
 import com.kotcrab.vis.runtime.util.AfterSceneInit;
 import com.kotcrab.vis.runtime.util.ArtemisUtils;
 import com.kotcrab.vis.runtime.util.EntityEngine;
@@ -77,6 +81,8 @@ public class Scene {
 		ArtemisUtils.createCommonSystems(engineConfig, context.batch, distanceFieldShader, false);
 		engineConfig.setSystem(new ParticleRenderSystem(engineConfig.getSystem(RenderBatchingSystem.class), false), true);
 
+		if(runtimeConfig.useBox2dDebugRenderer) engineConfig.setSystem(new Box2dDebugRenderSystem());
+
 		for (EntitySupport support : context.supports) {
 			support.registerSystems(runtimeConfig, engineConfig, assetsManager);
 		}
@@ -87,6 +93,12 @@ public class Scene {
 
 			for (Manager manager : parameter.managers)
 				engineConfig.setManager(manager);
+		}
+
+		if (data.physicsSettings.physicsEnabled) {
+			engineConfig.setSystem(new PhysicsSystem(data.physicsSettings));
+			engineConfig.setSystem(new PhysicsSpritePositionUpdateSystem());
+			engineConfig.setManager(new PhysicsBodyManager());
 		}
 
 		engine = new EntityEngine(engineConfig);

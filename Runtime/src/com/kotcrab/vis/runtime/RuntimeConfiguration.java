@@ -38,4 +38,10 @@ public class RuntimeConfiguration {
 	 * stores all groups int ids) is not removed so it can be accessed if needed.
 	 */
 	public boolean useVisGroupManager = true;
+
+	/**
+	 * Contolrs whether to use box2d debug renderer that draw outlines of bodies, useful for debbuging. If true debug
+	 * renderer is used. Default is false.
+	 */
+	public boolean useBox2dDebugRenderer = false;
 }

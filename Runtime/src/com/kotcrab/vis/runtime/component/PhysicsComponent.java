@@ -17,18 +17,13 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.util.autotable.ATVector2Array;
+import com.badlogic.gdx.physics.box2d.Body;
 
-/**
- * Stores polygon data for creating Box2d Body. Keep in mind that after physics symulation is running, values of this
- * component won't be updated. Changing values after body creation won't have any effect. Values are stored in world
- * positions.
- * @author Kotcrab
- */
-public class PolygonComponent extends Component {
-	@ATVector2Array(fieldName = "Vertices")
-	public Array<Vector2> vertices = new Array<Vector2>();
-	public Vector2[][] faces;
+/** @author Kotcrab */
+public class PhysicsComponent extends Component {
+	public Body body;
+
+	public PhysicsComponent (Body body) {
+		this.body = body;
+	}
 }

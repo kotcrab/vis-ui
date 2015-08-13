@@ -86,8 +86,8 @@ public class SceneSettingsDialog extends VisWindow {
 
 		widthField = new VisValidableTextField(String.valueOf(scene.width));
 		heightField = new VisValidableTextField(String.valueOf(scene.height));
-		widthField.setTextFieldFilter(new FloatDigitsOnlyFilter());
-		heightField.setTextFieldFilter(new FloatDigitsOnlyFilter());
+		widthField.setTextFieldFilter(new FloatDigitsOnlyFilter(false));
+		heightField.setTextFieldFilter(new FloatDigitsOnlyFilter(false));
 
 		VisTable sizeTable = new VisTable(true);
 		add(new VisLabel("Width"));

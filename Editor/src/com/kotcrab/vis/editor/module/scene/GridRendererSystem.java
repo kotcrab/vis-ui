@@ -137,7 +137,7 @@ public class GridRendererSystem extends BaseSystem {
 			settingsTable.row();
 			settingsTable.add(sizeTable);
 
-			gridSizeField.setTextFieldFilter(new FloatDigitsOnlyFilter());
+			gridSizeField.setTextFieldFilter(new FloatDigitsOnlyFilter(false));
 			gridSizeField.addValidator(new Validators.GreaterThanValidator(0));
 			gridSizeField.setText(NumberUtils.floatToString(config.gridSize));
 		}

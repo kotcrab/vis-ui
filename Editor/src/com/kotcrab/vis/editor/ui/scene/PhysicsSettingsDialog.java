@@ -81,8 +81,8 @@ public class PhysicsSettingsDialog extends VisWindow {
 		gravityXField = new VisTextField();
 		gravityYField = new VisTextField();
 
-		gravityXField.setTextFieldFilter(new FloatDigitsOnlyFilter());
-		gravityYField.setTextFieldFilter(new FloatDigitsOnlyFilter());
+		gravityXField.setTextFieldFilter(new FloatDigitsOnlyFilter(true));
+		gravityYField.setTextFieldFilter(new FloatDigitsOnlyFilter(true));
 
 		add(enabledCheckbox).row();
 		add(sleepCheckbox).row();

@@ -46,6 +46,15 @@ public class PolygonUtils {
 		return getPolygonSignedArea(points) > 0;
 	}
 
+	public static boolean isDegenerate (Vector2[][] faces) {
+		for (Vector2[] vs : faces) {
+			if (isDegenerate(vs))
+				return true;
+		}
+
+		return false;
+	}
+
 	/** Checks whether polygon faces will make degenerated box2d polygon or not */
 	public static boolean isDegenerate (Vector2[] vertices) {
 		// https://github.com/libgdx/libgdx/blob/master/extensions/gdx-box2d/gdx-box2d/jni/Box2D/Collision/Shapes/b2PolygonShape.cpp#L120-L226
@@ -62,7 +71,7 @@ public class PolygonUtils {
 
 			boolean unique = true;
 			for (int j = 0; j < tempCount; ++j) {
-				if (distanceSquared(v, ps[j]) < 0.5f * B2_LINEAR_SLOP) {
+				if (distanceSquared(v, ps[j]) < ((0.5f * B2_LINEAR_SLOP) * (0.5f * B2_LINEAR_SLOP))) {
 					unique = false;
 					break;
 				}
