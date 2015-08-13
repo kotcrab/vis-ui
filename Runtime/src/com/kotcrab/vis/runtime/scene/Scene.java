@@ -30,6 +30,7 @@ import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.system.*;
+import com.kotcrab.vis.runtime.system.inflater.*;
 import com.kotcrab.vis.runtime.util.AfterSceneInit;
 import com.kotcrab.vis.runtime.util.ArtemisUtils;
 import com.kotcrab.vis.runtime.util.EntityEngine;

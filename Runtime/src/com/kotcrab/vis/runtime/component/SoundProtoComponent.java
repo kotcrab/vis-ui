@@ -16,7 +16,7 @@
 
 package com.kotcrab.vis.runtime.component;
 
-import com.kotcrab.vis.runtime.system.SoundInflater;
+import com.kotcrab.vis.runtime.system.inflater.SoundInflater;
 
 /**
  * {@link ProtoComponent} for {@link SoundComponent}.

@@ -14,43 +14,40 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system;
+package com.kotcrab.vis.runtime.system.inflater;
 
 import com.artemis.*;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.audio.Sound;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.ParticleComponent;
-import com.kotcrab.vis.runtime.component.ParticleProtoComponent;
+import com.kotcrab.vis.runtime.component.SoundComponent;
+import com.kotcrab.vis.runtime.component.SoundProtoComponent;
 
 /**
- * Inflates {@link ParticleProtoComponent} into {@link ParticleComponent}
+ * Inflates {@link SoundProtoComponent} into {@link SoundComponent}
  * @author Kotcrab
  */
 @Wire
-public class ParticleInflater extends Manager {
+public class SoundInflater extends Manager {
+	private ComponentMapper<SoundComponent> protoCm;
 	private ComponentMapper<AssetComponent> assetCm;
-	private ComponentMapper<ParticleProtoComponent> protoCm;
 
 	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
-	private float pixelsPerUnit;
-
-	public ParticleInflater (RuntimeConfiguration configuration, AssetManager manager, float pixelsPerUnit) {
+	public SoundInflater (RuntimeConfiguration configuration, AssetManager manager) {
 		this.configuration = configuration;
 		this.manager = manager;
-		this.pixelsPerUnit = pixelsPerUnit;
 	}
 
 	@Override
 	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(ParticleProtoComponent.class);
+		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SoundProtoComponent.class);
 		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
 		transmuter = factory.build();
 	}
@@ -60,18 +57,13 @@ public class ParticleInflater extends Manager {
 		if (protoCm.has(e) == false) return;
 
 		AssetComponent assetComponent = assetCm.get(e);
-		ParticleProtoComponent protoComponent = protoCm.get(e);
 
-		PathAsset path = (PathAsset) assetComponent.asset;
+		PathAsset asset = (PathAsset) assetComponent.asset;
 
-		ParticleEffect effect = manager.get(path.getPath(), ParticleEffect.class);
-
-		ParticleComponent particleComponent = new ParticleComponent(effect);
-		particleComponent.setPosition(protoComponent.x, protoComponent.y);
-		particleComponent.active = protoComponent.active;
-		particleComponent.effect.scaleEffect(1f / pixelsPerUnit);
+		Sound sound = manager.get(asset.getPath(), Sound.class);
+		SoundComponent soundComponent = new SoundComponent(sound);
 
 		transmuter.transmute(e);
-		e.edit().add(particleComponent);
+		e.edit().add(soundComponent);
 	}
 }

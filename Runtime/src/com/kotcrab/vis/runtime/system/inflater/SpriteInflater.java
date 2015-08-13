@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system;
+package com.kotcrab.vis.runtime.system.inflater;
 
 import com.artemis.*;
 import com.artemis.annotations.Wire;

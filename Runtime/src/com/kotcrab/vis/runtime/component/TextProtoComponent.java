@@ -17,7 +17,7 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.runtime.system.TextInflater;
+import com.kotcrab.vis.runtime.system.inflater.TextInflater;
 
 /**
  * {@link ProtoComponent} for {@link TextComponent}

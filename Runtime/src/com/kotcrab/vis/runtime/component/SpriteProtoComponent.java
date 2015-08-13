@@ -18,7 +18,7 @@ package com.kotcrab.vis.runtime.component;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.kotcrab.vis.runtime.system.SpriteInflater;
+import com.kotcrab.vis.runtime.system.inflater.SpriteInflater;
 
 /**
  * {@link ProtoComponent} for {@link SpriteComponent}
