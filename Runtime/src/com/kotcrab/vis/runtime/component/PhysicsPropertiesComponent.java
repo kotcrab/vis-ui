@@ -53,6 +53,6 @@ public class PhysicsPropertiesComponent extends Component {
 	@ATEntityProperty(fieldName = "Sleeping Allowed")
 	public boolean sleepingAllowed = true;
 
-	public short maskBits;
-	public short categoryBits;
+	public short maskBits = -1;
+	public short categoryBits = 0x0001;
 }
