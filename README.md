@@ -16,6 +16,6 @@ LibGDX runtime is a good start if you want to write your own runtime, if you do 
 You can follow Vis development on my Twitter channels: [@VisEditor](https://twitter.com/VsiEditor) and [@kotcrab](https://twitter.com/kotcrab) or read my [blog](http://kotcrab.com/).
 You can also join our [forum and IRC channel](https://github.com/kotcrab/VisEditor/wiki/IRC-Channel-and-Forum)!
 
-#### VisEditor Subprojects
+#### Subprojects
 * [VisUI](https://github.com/kotcrab/VisEditor/wiki/VisUI) - flat design skin and scene2d.ui toolkit for libGDX - [CHANGES](https://github.com/kotcrab/VisEditor/blob/master/UI/CHANGES) file - [Documentation](https://github.com/kotcrab/VisEditor/wiki/VisUI)  
 * [USL](https://github.com/kotcrab/VisEditor/wiki/USL) - UI Styling Language for scene2d.ui
