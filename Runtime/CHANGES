@@ -3,6 +3,7 @@
  -API Addition: Scene#getLayerData()
 -Added VisGroupManager - allows to retrieve groups made in VisEditor
  -Can be disabled in RuntimeConfiguration
+-Added Box2d physics support
 
 [0.2.0]
 -First public release
