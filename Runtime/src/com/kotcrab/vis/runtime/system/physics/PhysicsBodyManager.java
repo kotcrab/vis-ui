@@ -83,6 +83,8 @@ public class PhysicsBodyManager extends Manager {
 			fd.restitution = physicsProperties.restitution;
 			fd.isSensor = physicsProperties.sensor;
 			fd.shape = shape;
+			fd.filter.maskBits = physicsProperties.maskBits;
+			fd.filter.categoryBits = physicsProperties.categoryBits;
 
 			body.createFixture(fd);
 			shape.dispose();
