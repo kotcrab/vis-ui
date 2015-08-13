@@ -18,29 +18,25 @@ package com.kotcrab.vis.runtime.system.physics;
 
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.kotcrab.vis.runtime.system.CameraManager;
+import com.kotcrab.vis.runtime.util.AfterSceneInit;
 
 /** @author Kotcrab */
 @Wire
-public class Box2dDebugRenderSystem extends BaseSystem {
+public class Box2dDebugRenderSystem extends BaseSystem implements AfterSceneInit {
 	private CameraManager cameraManager;
 	private PhysicsSystem physicsSystem;
 
 	private Box2DDebugRenderer debugRenderer;
 
-	public Box2dDebugRenderSystem () {
-		Gdx.app.postRunnable(new Runnable() {
-			@Override
-			public void run () {
-				debugRenderer = new Box2DDebugRenderer();
-			}
-		});
+	@Override
+	public void afterSceneInit () {
+		debugRenderer = new Box2DDebugRenderer();
 	}
 
 	@Override
 	protected void processSystem () {
-		if(debugRenderer != null) debugRenderer.render(physicsSystem.getPhysicsWorld(), cameraManager.getCombined());
+		debugRenderer.render(physicsSystem.getPhysicsWorld(), cameraManager.getCombined());
 	}
 }
