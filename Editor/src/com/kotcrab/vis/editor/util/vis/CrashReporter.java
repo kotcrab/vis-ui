@@ -75,14 +75,10 @@ public class CrashReporter {
 		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
 
 		for (Thread t : threadSet) {
-			if (t.isDaemon()) {
-				println("Skipping daemon thread: " + t.getName());
-			} else {
-				println("Thread: " + t.getName());
-				for (StackTraceElement e : t.getStackTrace()) {
-					crashReport.append("\t");
-					println(e.toString());
-				}
+			println("Thread: " + t.getName() + " Daemon: " + t.isDaemon() + " State: " + t.getState());
+			for (StackTraceElement e : t.getStackTrace()) {
+				crashReport.append("\t");
+				println(e.toString());
 			}
 
 			println();
