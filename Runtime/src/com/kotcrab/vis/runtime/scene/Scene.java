@@ -17,6 +17,7 @@
 package com.kotcrab.vis.runtime.scene;
 
 import com.artemis.BaseSystem;
+import com.artemis.InvocationStrategy;
 import com.artemis.Manager;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
@@ -35,10 +36,7 @@ import com.kotcrab.vis.runtime.system.physics.Box2dDebugRenderSystem;
 import com.kotcrab.vis.runtime.system.physics.PhysicsBodyManager;
 import com.kotcrab.vis.runtime.system.physics.PhysicsSpriteUpdateSystem;
 import com.kotcrab.vis.runtime.system.physics.PhysicsSystem;
-import com.kotcrab.vis.runtime.util.AfterSceneInit;
-import com.kotcrab.vis.runtime.util.ArtemisUtils;
-import com.kotcrab.vis.runtime.util.EntityEngine;
-import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
+import com.kotcrab.vis.runtime.util.*;
 
 /**
  * Base class of VisRuntime scene system. Scene are typically constructed using {@link VisAssetManager} with {@link SceneLoader}
@@ -107,7 +105,9 @@ public class Scene {
 
 	/** Called by framework right after loading scene to finish loading scene and inflate all entities */
 	public void init () {
+		engine.setInvocationStrategy(new BootstrapInvocationStrategy());
 		engine.process();
+		engine.setInvocationStrategy(new InvocationStrategy());
 
 		for (BaseSystem system : engine.getSystems()) {
 			if (system instanceof AfterSceneInit) {
