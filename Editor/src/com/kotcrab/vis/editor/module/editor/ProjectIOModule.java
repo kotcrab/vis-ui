@@ -105,27 +105,32 @@ public class ProjectIOModule extends EditorModule {
 		if (dataFile.exists() == false) throw new EditorException("Project file does not exist!");
 
 		FileHandle versionFile = dataFile.parent().child("modules").child("version.json");
-		ProjectVersionDescriptor descriptor = ProjectVersionModule.getNewJson().fromJson(ProjectVersionDescriptor.class, versionFile);
-		if (descriptor.versionCode > App.VERSION_CODE) {
-			DialogUtils.showOptionDialog(Editor.instance.getStage(), "Message",
-					"This project was opened in newer version of VisEditor.\nSome functions may not work properly. do you want to continue?",
-					OptionDialogType.YES_NO, new OptionDialogAdapter() {
-						@Override
-						public void yes () {
-							doLoadProject(dataFile);
-						}
-					});
-		} else if (descriptor.versionCode < App.VERSION_CODE) {
-			DialogUtils.showOptionDialog(Editor.instance.getStage(), "Message", //TODO users are "careless", create backup for them
-					"This project was created in older version of VisEditor.\nAfter opening it may no longer work in older version, please make backup.\nDo you want to continue?",
-					OptionDialogType.YES_NO, new OptionDialogAdapter() {
-						@Override
-						public void yes () {
-							doLoadProject(dataFile);
-						}
-					});
-		} else
+
+		if (versionFile.exists()) {
+			ProjectVersionDescriptor descriptor = ProjectVersionModule.getNewJson().fromJson(ProjectVersionDescriptor.class, versionFile);
+			if (descriptor.versionCode > App.VERSION_CODE) {
+				DialogUtils.showOptionDialog(Editor.instance.getStage(), "Message",
+						"This project was opened in newer version of VisEditor.\nSome functions may not work properly. do you want to continue?",
+						OptionDialogType.YES_NO, new OptionDialogAdapter() {
+							@Override
+							public void yes () {
+								doLoadProject(dataFile);
+							}
+						});
+			} else if (descriptor.versionCode < App.VERSION_CODE) {
+				DialogUtils.showOptionDialog(Editor.instance.getStage(), "Message", //TODO users are "careless", create backup for them
+						"This project was created in older version of VisEditor.\nAfter opening it may no longer work in older version, please make backup.\nDo you want to continue?",
+						OptionDialogType.YES_NO, new OptionDialogAdapter() {
+							@Override
+							public void yes () {
+								doLoadProject(dataFile);
+							}
+						});
+			} else
+				doLoadProject(dataFile);
+		} else //if there is no version file that means that project was just created
 			doLoadProject(dataFile);
+
 	}
 
 	private void doLoadProject (FileHandle dataFile) {
