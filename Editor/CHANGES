@@ -1,4 +1,6 @@
-[0.2.1] [LibGDX 1.6.4] [Snapshot]
+[0.2.2] [LibGDX 1.6.4] [Snapshot]
+
+[0.2.1] [LibGDX 1.6.4]
 -Unsaved resources dialog is displayed before export
 -You can hold space to pan camera
 -Scene backup file is created before saving (file with '.bak' and '.firstSaveBak' extension in `vis/modules/.sceneBackup`, that can be used when saving fails)
