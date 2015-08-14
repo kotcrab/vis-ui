@@ -1,4 +1,7 @@
-[0.2.2] [LibGDX 1.6.4] [Snapshot]
+[0.2.3] [LibGDX 1.6.4] [Snapshot]
+
+[0.2.2] [LibGDX 1.6.4]
+-None, only VisEditor changes
 
 [0.2.1] [LibGDX 1.6.4] [Re-export from new VisEditor required]
 -LayerData is now saved in Scene
