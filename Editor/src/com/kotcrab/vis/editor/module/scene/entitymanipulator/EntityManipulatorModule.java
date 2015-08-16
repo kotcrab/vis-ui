@@ -40,9 +40,8 @@ import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
 import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
 import com.kotcrab.vis.editor.entity.PositionComponent;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
-import com.kotcrab.vis.editor.event.*;
-import com.kotcrab.vis.editor.event.bus.Event;
-import com.kotcrab.vis.editor.event.bus.EventListener;
+import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
+import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.*;
@@ -80,7 +79,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import static com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTimerTask.*;
 
 /** @author Kotcrab */
-public class EntityManipulatorModule extends SceneModule implements EventListener {
+public class EntityManipulatorModule extends SceneModule {
 	@InjectModule private StatusBarModule statusBar;
 
 	@InjectModule private SceneIOModule sceneIO;
@@ -175,7 +174,6 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 			}
 		});
 
-		App.oldEventBus.register(this);
 		App.eventBus.register(this);
 	}
 
@@ -614,14 +612,10 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 		currentTool.render(batch);
 	}
 
-	@Override
-	public boolean onEvent (Event event) {
-		if (event instanceof UndoEvent || event instanceof RedoEvent) {
-			sceneOutline.rebuildOutline();
-			renderBatchingSystem.markDirty();
-		}
-
-		return false;
+	@Subscribe
+	public void handleUndoableModuleEvent (UndoableModuleEvent event) {
+		sceneOutline.rebuildOutline();
+		renderBatchingSystem.markDirty();
 	}
 
 	@Subscribe
@@ -634,7 +628,6 @@ public class EntityManipulatorModule extends SceneModule implements EventListene
 
 	@Override
 	public void dispose () {
-		App.oldEventBus.unregister(this);
 		App.eventBus.unregister(this);
 		layersDialog.dispose();
 		entityProperties.dispose();

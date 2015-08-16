@@ -32,12 +32,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntMap;
+import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.event.RedoEvent;
-import com.kotcrab.vis.editor.event.UndoEvent;
-import com.kotcrab.vis.editor.event.bus.Event;
-import com.kotcrab.vis.editor.event.bus.EventListener;
+import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
@@ -91,7 +89,7 @@ import java.util.Iterator;
  * from 'specifictable' and 'components' child packages for examples.
  * @author Kotcrab
  */
-public class EntityProperties extends VisTable implements Disposable, EventListener {
+public class EntityProperties extends VisTable implements Disposable {
 	public static final int LABEL_WIDTH = 60;
 	public static final int AXIS_LABEL_WIDTH = 10;
 	public static final int FIELD_WIDTH = 70;
@@ -285,21 +283,17 @@ public class EntityProperties extends VisTable implements Disposable, EventListe
 
 		pack();
 
-		App.oldEventBus.register(this);
+		App.eventBus.register(this);
 	}
 
 	@Override
 	public void dispose () {
-		App.oldEventBus.unregister(this);
+		App.eventBus.unregister(this);
 	}
 
-	@Override
-	public boolean onEvent (Event event) {
-		if (event instanceof UndoEvent || event instanceof RedoEvent) {
-			selectedEntitiesChanged();
-		}
-
-		return false;
+	@Subscribe
+	public void handleUndoableModuleEvent (UndoableModuleEvent event) {
+		selectedEntitiesChanged();
 	}
 
 	private void createIdTable () {

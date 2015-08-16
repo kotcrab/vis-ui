@@ -27,8 +27,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
-import com.kotcrab.vis.editor.event.bus.Event;
-import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsModule;
 import com.kotcrab.vis.editor.module.project.*;
@@ -65,7 +63,7 @@ import java.lang.reflect.Field;
  * VisEditor main ApplicationAdapter class. The main() method is located in {@link EditorFrame}
  * @author Kotcrab
  */
-public class Editor extends ApplicationAdapter implements EventListener {
+public class Editor extends ApplicationAdapter {
 	public static Editor instance;
 
 	private EditorFrame frame;
@@ -119,8 +117,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		VisUI.setDefaultTitleAlign(Align.center);
 		FileChooser.setFavoritesPrefsName("com.kotcrab.vis.editor");
 		Log.debug("VisUI " + VisUI.VERSION + " loaded");
-
-		App.oldEventBus.register(this);
 
 		stage = createStage();
 		Gdx.input.setInputProcessor(stage);
@@ -265,7 +261,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 
 	@Override
 	public void dispose () {
-		App.oldEventBus.stop();
 		editorMC.dispose();
 		if (projectLoaded) projectMC.dispose();
 
@@ -367,11 +362,6 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		return stage;
 	}
 
-	@Override
-	public boolean onEvent (Event e) {
-		return false;
-	}
-
 	public void requestProjectUnload () {
 		if (tabsModule.getDirtyTabCount() > 0)
 			getStage().addActor(new UnsavedResourcesDialog(tabsModule, () -> doProjectUnloading()).fadeIn());
@@ -385,7 +375,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 		projectMC.dispose();
 
 		statusBar.setText("Project unloaded");
-		App.oldEventBus.post(new ProjectStatusEvent(Status.Unloaded, projectMC.getProject()));
+		App.eventBus.post(new ProjectStatusEvent(Status.Unloaded, projectMC.getProject()));
 	}
 
 	public void loadProjectDialog () {
@@ -458,7 +448,7 @@ public class Editor extends ApplicationAdapter implements EventListener {
 					settingsDialog.addAll(projectMC.getModules());
 
 					statusBar.setText("Project loaded");
-					App.oldEventBus.post(new ProjectStatusEvent(Status.Loaded, project));
+					App.eventBus.post(new ProjectStatusEvent(Status.Loaded, project));
 					controller.loading = false;
 				});
 

@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.event.bus;
+package com.kotcrab.vis.editor.event;
 
-import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 
 /**
- * Base class for all VisEditor events
+ * Base class for {@link UndoEvent} and {@link RedoEvent}. If subscriber want to receive both then it can just
+ * subscribe to this event
  * @author Kotcrab
- * @see EventBus
- * @see App#oldEventBus
  */
-public interface Event {
+public abstract class UndoableModuleEvent {
+	public SceneModuleContainer origin;
+
+	public UndoableModuleEvent (SceneModuleContainer origin) {
+		this.origin = origin;
+	}
 }

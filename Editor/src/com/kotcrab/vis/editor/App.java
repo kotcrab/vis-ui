@@ -60,8 +60,6 @@ public class App {
 
 	public static final Polygonizer DEFAULT_POLYGONIZER = Polygonizer.EWJORDAN;
 
-	/** Deprecated VisEditor common event bus */
-	@Deprecated public static com.kotcrab.vis.editor.event.bus.EventBus oldEventBus; //TODO: old eventbus must die
 	public static EventBus eventBus;
 
 	public static void init () {
@@ -73,7 +71,6 @@ public class App {
 
 		checkCharset();
 
-		oldEventBus = new com.kotcrab.vis.editor.event.bus.EventBus();
 		eventBus = new EventBus();
 
 		try {

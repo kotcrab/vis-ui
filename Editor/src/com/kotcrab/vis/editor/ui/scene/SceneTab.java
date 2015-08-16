@@ -30,12 +30,7 @@ import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
-import com.kotcrab.vis.editor.event.ToolbarEvent;
-import com.kotcrab.vis.editor.event.ToolbarEventType;
-import com.kotcrab.vis.editor.event.UndoEvent;
-import com.kotcrab.vis.editor.event.bus.Event;
-import com.kotcrab.vis.editor.event.bus.EventListener;
+import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.module.ContentTable;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleContainer;
@@ -66,7 +61,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
  * {@link ModuleContainer} ({@link SceneModuleContainer})
  * @author Kotcrab
  */
-public class SceneTab extends MainContentTab implements DragAndDropTarget, EventListener, SceneMenuButtonsListener, CloseTabWhenMovingResources {
+public class SceneTab extends MainContentTab implements DragAndDropTarget, SceneMenuButtonsListener, CloseTabWhenMovingResources {
 	private EditorScene scene;
 
 	@InjectModule private ExtensionStorageModule pluginContainer;
@@ -166,7 +161,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		};
 
 		App.eventBus.register(this);
-		App.oldEventBus.register(this);
 	}
 
 	@Override
@@ -261,23 +255,19 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		}
 	}
 
-	@Override
-	public boolean onEvent (Event event) {
+	@Subscribe
+	public void handleToolbarEvent (ToolbarEvent event) {
 		if (isActiveTab()) {
-			if (event instanceof ToolbarEvent) {
-				ToolbarEventType type = ((ToolbarEvent) event).type;
-
-				if (type == ToolbarEventType.FILE_SAVE)
-					save();
-			}
-
-			if (event instanceof UndoEvent) {
-				if (undoModule.getUndoSize() == 0 && savedAtLeastOnce == false)
-					setDirty(false);
-			}
+			if (event.type == ToolbarEventType.FILE_SAVE)
+				save();
 		}
+	}
 
-		return false;
+	@Subscribe
+	public void handleUndoEvent (UndoEvent event) {
+		if (event.origin == sceneMC && undoModule.getUndoSize() == 0 && savedAtLeastOnce == false) {
+			setDirty(false);
+		}
 	}
 
 	@Override
@@ -320,7 +310,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	public void dispose () {
 		sceneMC.dispose();
 		App.eventBus.unregister(this);
-		App.oldEventBus.unregister(this);
 	}
 
 	@Override

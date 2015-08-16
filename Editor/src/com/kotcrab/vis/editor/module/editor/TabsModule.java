@@ -18,10 +18,9 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
+import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
-import com.kotcrab.vis.editor.event.bus.Event;
-import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.ui.tab.StartPageTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
@@ -32,7 +31,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
  * Module for accessing VisEditor main tabbed pane.
  * @author Kotcrab
  */
-public class TabsModule extends EditorModule implements EventListener {
+public class TabsModule extends EditorModule {
 	private TabbedPane tabbedPane;
 	private TabbedPaneListener listener;
 
@@ -78,27 +77,22 @@ public class TabsModule extends EditorModule implements EventListener {
 
 	@Override
 	public void added () {
-		App.oldEventBus.register(this);
+		App.eventBus.register(this);
 	}
 
 	@Override
 	public void dispose () {
-		App.oldEventBus.unregister(this);
+		App.eventBus.unregister(this);
 	}
 
-	@Override
-	public boolean onEvent (Event e) {
-		if (e instanceof ProjectStatusEvent) {
-			ProjectStatusEvent event = (ProjectStatusEvent) e;
-			if (event.status == ProjectStatusEvent.Status.Loaded)
-				tabbedPane.remove(startPageTab);
-			else {
-				tabbedPane.removeAll();
-				tabbedPane.add(startPageTab);
-			}
+	@Subscribe
+	public void handleProjectStatusEvent (ProjectStatusEvent event) {
+		if (event.status == ProjectStatusEvent.Status.Loaded)
+			tabbedPane.remove(startPageTab);
+		else {
+			tabbedPane.removeAll();
+			tabbedPane.add(startPageTab);
 		}
-
-		return false;
 	}
 
 	public Array<Tab> getTabs () {

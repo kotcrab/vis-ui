@@ -19,44 +19,37 @@ package com.kotcrab.vis.editor.ui;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
+import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
-import com.kotcrab.vis.editor.event.bus.Event;
-import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;
 
 /**
  * {@link MenuBarModule} MenuItem controller that automatically enables/disables item when project is loaded/unloaded.
  * @author Kotcrab
  */
-public class ProjectStatusWidgetController implements EventListener, Disposable {
+public class ProjectStatusWidgetController implements Disposable {
 	private Array<Button> buttons;
 	private boolean loaded = false;
 
 	public ProjectStatusWidgetController () {
 		buttons = new Array<>();
-		App.oldEventBus.register(this);
+		App.eventBus.register(this);
 	}
 
 	@Override
 	public void dispose () {
-		App.oldEventBus.unregister(this);
+		App.eventBus.unregister(this);
 	}
 
-	@Override
-	public boolean onEvent (Event e) {
-		if (e instanceof ProjectStatusEvent) {
-			ProjectStatusEvent event = (ProjectStatusEvent) e;
-			if (event.status == ProjectStatusEvent.Status.Loaded)
-				loaded = true;
-			else
-				loaded = false;
+	@Subscribe
+	public void handleProjectStatusEvent (ProjectStatusEvent event) {
+		if (event.status == ProjectStatusEvent.Status.Loaded)
+			loaded = true;
+		else
+			loaded = false;
 
-			updateWidgets();
-		}
-
-		return false;
-
+		updateWidgets();
 	}
 
 	private void updateWidgets () {

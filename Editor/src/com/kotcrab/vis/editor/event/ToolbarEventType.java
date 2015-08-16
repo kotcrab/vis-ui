@@ -16,7 +16,9 @@
 
 package com.kotcrab.vis.editor.event;
 
-@Deprecated
+/**
+ * @author Kotcrab
+ */
 public enum ToolbarEventType {
 	FILE_SAVE,
 }

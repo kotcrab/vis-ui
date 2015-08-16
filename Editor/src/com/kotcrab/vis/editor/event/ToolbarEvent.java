@@ -16,9 +16,10 @@
 
 package com.kotcrab.vis.editor.event;
 
-import com.kotcrab.vis.editor.event.bus.Event;
-
-public class ToolbarEvent implements Event {
+/**
+ * @author Kotcrab
+ */
+public class ToolbarEvent {
 	public ToolbarEventType type;
 
 	public ToolbarEvent (ToolbarEventType type) {

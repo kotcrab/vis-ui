@@ -21,11 +21,10 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
+import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
-import com.kotcrab.vis.editor.event.bus.Event;
-import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.project.Project;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -36,7 +35,7 @@ import java.util.Iterator;
  * Creates and provides list of recently used projects
  * @author Kotcrab
  */
-public class RecentProjectModule extends EditorModule implements EventListener {
+public class RecentProjectModule extends EditorModule {
 	private Json json = new Json();
 
 	private Array<RecentProjectEntry> recentProjects;
@@ -44,7 +43,7 @@ public class RecentProjectModule extends EditorModule implements EventListener {
 
 	@Override
 	public void init () {
-		App.oldEventBus.register(this);
+		App.eventBus.register(this);
 
 		FileHandle storage = Gdx.files.absolute(App.METADATA_FOLDER_PATH);
 		storage.mkdirs();
@@ -76,29 +75,23 @@ public class RecentProjectModule extends EditorModule implements EventListener {
 
 	@Override
 	public void dispose () {
-		App.oldEventBus.unregister(this);
+		App.eventBus.unregister(this);
 	}
 
-	@Override
-	public boolean onEvent (Event event) {
-		if (event instanceof ProjectStatusEvent) {
-			ProjectStatusEvent projectEvent = (ProjectStatusEvent) event;
+	@Subscribe
+	public void handleProjectStatusEvent (ProjectStatusEvent event) {
+		if (event.status == Status.Loaded) {
+			Project project = event.project;
 
-			if (projectEvent.status == Status.Loaded) {
-				Project project = projectEvent.project;
+			RecentProjectEntry entry = new RecentProjectEntry(
+					project.getRecentProjectDisplayName(),
+					project.getVisDirectory().child(ProjectIOModule.PROJECT_FILE).path());
 
-				RecentProjectEntry entry = new RecentProjectEntry(
-						project.getRecentProjectDisplayName(),
-						project.getVisDirectory().child(ProjectIOModule.PROJECT_FILE).path());
+			if (recentProjects.contains(entry, false)) return;
+			recentProjects.add(entry);
 
-				if (recentProjects.contains(entry, false)) return false;
-				recentProjects.add(entry);
-
-				json.toJson(recentProjects, storageFile);
-			}
+			json.toJson(recentProjects, storageFile);
 		}
-
-		return false;
 	}
 
 	public Array<RecentProjectEntry> getRecentProjects () {

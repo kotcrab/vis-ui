@@ -19,13 +19,12 @@ package com.kotcrab.vis.editor.module.editor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.esotericsoftware.kryo.KryoException;
+import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
-import com.kotcrab.vis.editor.event.bus.Event;
-import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneCacheModule;
@@ -40,7 +39,7 @@ import com.kotcrab.vis.ui.util.dialog.DialogUtils;
  * will contain two lines: first is full project path and the second one is full scene path.
  * @author Kotcrab
  */
-public class DevelopmentSpeedupModule extends EditorModule implements EventListener {
+public class DevelopmentSpeedupModule extends EditorModule {
 	private static final String TAG = "DevelopmentSpeedupModule";
 
 	@InjectModule private ProjectIOModule projectIO;
@@ -57,7 +56,7 @@ public class DevelopmentSpeedupModule extends EditorModule implements EventListe
 
 	@Override
 	public void postInit () {
-		App.oldEventBus.register(this);
+		App.eventBus.register(this);
 
 		FileHandle debugFile = new FileHandle(App.APP_FOLDER_PATH).child("debug.this");
 
@@ -82,28 +81,23 @@ public class DevelopmentSpeedupModule extends EditorModule implements EventListe
 		}
 	}
 
-	@Override
-	public boolean onEvent (Event event) {
-		if (firstLoading == false || sceneFile == null) return false;
+	@Subscribe
+	public void handleProjectStatusEvent (ProjectStatusEvent event) {
+		if (firstLoading == false || sceneFile == null) return;
 
-		if (event instanceof ProjectStatusEvent) {
-			ProjectStatusEvent statusEvent = (ProjectStatusEvent) event;
-			if (statusEvent.status == Status.Loaded) {
-
-				try {
-					if (sceneFile.exists()) {
-						EditorScene testScene = projectMC.get(SceneCacheModule.class).get(sceneFile);
-						projectMC.get(SceneTabsModule.class).open(testScene);
-					}
-				} catch (KryoException e) {
-					DialogUtils.showErrorDialog(Editor.instance.getStage(), "Failed to load scene due to corrupted file.", e);
-					Log.exception(e);
+		if (event.status == Status.Loaded) {
+			try {
+				if (sceneFile.exists()) {
+					EditorScene testScene = projectMC.get(SceneCacheModule.class).get(sceneFile);
+					projectMC.get(SceneTabsModule.class).open(testScene);
 				}
-
-				firstLoading = false;
+			} catch (KryoException e) {
+				DialogUtils.showErrorDialog(Editor.instance.getStage(), "Failed to load scene due to corrupted file.", e);
+				Log.exception(e);
 			}
-		}
 
-		return false;
+			firstLoading = false;
+		}
 	}
+
 }
