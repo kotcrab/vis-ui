@@ -37,7 +37,7 @@ public class StatusBarModule extends EditorModule {
 	private Task resetTask = new Task() {
 		@Override
 		public void run () {
-			statusLabel.setText("Ready");
+			statusLabel.setText("");
 			statusLabel.setColor(Color.WHITE);
 		}
 	};
@@ -45,7 +45,7 @@ public class StatusBarModule extends EditorModule {
 	public StatusBarModule () {
 		timer = new Timer();
 
-		statusLabel = new VisLabel("Ready");
+		statusLabel = new VisLabel("");
 		infoLabel = new VisLabel("");
 
 		table = new VisTable();
