@@ -26,13 +26,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
+import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.event.ToolbarEvent;
 import com.kotcrab.vis.editor.event.ToolbarEventType;
 import com.kotcrab.vis.editor.event.UndoEvent;
-import com.kotcrab.vis.editor.event.assetreloaded.*;
 import com.kotcrab.vis.editor.event.bus.Event;
 import com.kotcrab.vis.editor.event.bus.EventListener;
 import com.kotcrab.vis.editor.module.ContentTable;
@@ -164,6 +165,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 			}
 		};
 
+		App.eventBus.register(this);
 		App.oldEventBus.register(this);
 	}
 
@@ -236,23 +238,31 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 		return scene;
 	}
 
+	@Subscribe
+	public void handleResourceReloaded (ResourceReloadedEvent event) {
+		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_TEXTURES) != 0) {
+			sceneMC.getEntityEngine().getManager(TextureReloaderManager.class).reloadTextures();
+		}
+
+		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_PARTICLES) != 0) {
+			sceneMC.getEntityEngine().getManager(ParticleReloaderManager.class).reloadParticles();
+		}
+
+		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_SHADERS) != 0) {
+			sceneMC.getEntityEngine().getManager(ShaderReloaderManager.class).reloadShaders();
+		}
+
+		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_BMP_FONTS) != 0) {
+			sceneMC.getEntityEngine().getManager(FontReloaderManager.class).reloadFonts(true, false);
+		}
+
+		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_TTF_FONTS) != 0) {
+			sceneMC.getEntityEngine().getManager(FontReloaderManager.class).reloadFonts(false, true);
+		}
+	}
+
 	@Override
 	public boolean onEvent (Event event) {
-		if (event instanceof TexturesReloadedEvent)
-			sceneMC.getEntityEngine().getManager(TextureReloaderManager.class).reloadTextures();
-
-		if (event instanceof ParticleReloadedEvent)
-			sceneMC.getEntityEngine().getManager(ParticleReloaderManager.class).reloadParticles();
-
-		if (event instanceof BmpFontReloadedEvent)
-			sceneMC.getEntityEngine().getManager(FontReloaderManager.class).reloadFonts(true, false);
-
-		if (event instanceof TtfFontReloadedEvent)
-			sceneMC.getEntityEngine().getManager(FontReloaderManager.class).reloadFonts(false, true);
-
-		if (event instanceof ShaderReloadedEvent)
-			sceneMC.getEntityEngine().getManager(ShaderReloaderManager.class).reloadShaders();
-
 		if (isActiveTab()) {
 			if (event instanceof ToolbarEvent) {
 				ToolbarEventType type = ((ToolbarEvent) event).type;
@@ -309,6 +319,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Event
 	@Override
 	public void dispose () {
 		sceneMC.dispose();
+		App.eventBus.unregister(this);
 		App.oldEventBus.unregister(this);
 	}
 

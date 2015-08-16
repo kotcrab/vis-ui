@@ -23,7 +23,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.assetreloaded.ShaderReloadedEvent;
+import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
@@ -133,7 +133,7 @@ public class ShaderCacheModule extends ProjectModule implements WatchListener {
 			ObjectMap<ShaderAsset, ShaderProgram> shadersCopy = new ObjectMap<>(shaders);
 
 			reloadShaders(true);
-			App.oldEventBus.post(new ShaderReloadedEvent());
+			App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_SHADERS));
 
 			for (ShaderProgram shader : shadersCopy.values()) {
 				shader.dispose();

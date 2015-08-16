@@ -14,14 +14,23 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.event.assetreloaded;
-
-import com.kotcrab.vis.editor.event.bus.Event;
-import com.kotcrab.vis.editor.module.project.TextureCacheModule;
+package com.kotcrab.vis.editor.event;
 
 /**
- * Posted when {@link TextureCacheModule} has finished reloading texture atlases cache
+ * Posted when scene should reloed various types of resources
  * @author Kotcrab
  */
-public class AtlasReloadedEvent implements Event {
+public class ResourceReloadedEvent {
+	public static final int RESOURCE_TEXTURES = 0x0001;
+	public static final int RESOURCE_TEXTURE_ATLASES = 0x0002;
+	public static final int RESOURCE_PARTICLES = 0x0004;
+	public static final int RESOURCE_BMP_FONTS = 0x0008;
+	public static final int RESOURCE_TTF_FONTS = 0x0016;
+	public static final int RESOURCE_SHADERS = 0x0032;
+
+	public int resourceType;
+
+	public ResourceReloadedEvent (int resourceType) {
+		this.resourceType = resourceType;
+	}
 }

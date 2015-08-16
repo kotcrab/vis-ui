@@ -30,10 +30,9 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.KryoException;
+import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.*;
-import com.kotcrab.vis.editor.event.assetreloaded.AtlasReloadedEvent;
-import com.kotcrab.vis.editor.event.bus.Event;
-import com.kotcrab.vis.editor.event.bus.EventListener;
+import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
@@ -63,7 +62,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
  * Provides UI module for managing assets.
  * @author Kotcrab
  */
-public class AssetsUIModule extends ProjectModule implements WatchListener, EventListener, VisTabbedPaneListener {
+public class AssetsUIModule extends ProjectModule implements WatchListener, VisTabbedPaneListener {
 	@InjectModule private TabsModule tabsModule;
 	@InjectModule private QuickAccessModule quickAccessModule;
 	@InjectModule private StatusBarModule statusBar;
@@ -110,7 +109,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Even
 	@Override
 	public void init () {
 		stage = Editor.instance.getStage();
-		App.oldEventBus.register(this);
+		App.eventBus.register(this);
 
 		initModule();
 		initUI();
@@ -211,7 +210,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Even
 
 	@Override
 	public void dispose () {
-		App.oldEventBus.unregister(this);
+		App.eventBus.unregister(this);
 		tabsModule.removeListener(this);
 		assetsWatcher.removeListener(this);
 		assetsTab.removeFromTabPane();
@@ -404,14 +403,12 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, Even
 			assetDragAndDrop.clear();
 	}
 
-	@Override
-	public boolean onEvent (Event event) {
-		if (event instanceof AtlasReloadedEvent) {
+	@Subscribe
+	public void handleResourceReloaded (ResourceReloadedEvent event) {
+		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_TEXTURE_ATLASES) != 0) {
 			String path = fileAccess.relativizeToAssetsFolder(currentDirectory);
 			if (path.startsWith("atlas")) refreshFilesList();
 		}
-
-		return false;
 	}
 
 	private class AssetsPopupMenu extends PopupMenu {

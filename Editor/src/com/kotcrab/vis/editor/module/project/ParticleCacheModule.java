@@ -19,7 +19,7 @@ package com.kotcrab.vis.editor.module.project;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.assetreloaded.ParticleReloadedEvent;
+import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.runtime.assets.PathAsset;
@@ -62,7 +62,8 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 	@Override
 	public void fileChanged (FileHandle file) {
 		String relativePath = fileAccess.relativizeToAssetsFolder(file);
-		if (relativePath.startsWith("particle")) App.oldEventBus.post(new ParticleReloadedEvent());
+		if (relativePath.startsWith("particle"))
+			App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_PARTICLES));
 	}
 
 	@Override

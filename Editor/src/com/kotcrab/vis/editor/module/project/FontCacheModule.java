@@ -25,8 +25,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.assetreloaded.BmpFontReloadedEvent;
-import com.kotcrab.vis.editor.event.assetreloaded.TtfFontReloadedEvent;
+import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
@@ -86,14 +85,14 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 		TmpFontsMap font = ttfFonts.remove(file);
 		if (font != null) font.dispose();
 
-		App.oldEventBus.post(new TtfFontReloadedEvent());
+		App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_TTF_FONTS));
 	}
 
 	private void refreshBmpFont (FileHandle file) {
 		BmpFontsMap bmpFont = bmpFonts.remove(file);
 		if (bmpFont != null) bmpFont.dispose();
 
-		App.oldEventBus.post(new BmpFontReloadedEvent());
+		App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_BMP_FONTS));
 	}
 
 	public BitmapFont getGeneric (VisAssetDescriptor asset, float pixelsPerUnit) {

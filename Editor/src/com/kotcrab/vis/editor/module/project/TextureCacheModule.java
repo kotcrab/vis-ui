@@ -30,8 +30,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.event.assetreloaded.AtlasReloadedEvent;
-import com.kotcrab.vis.editor.event.assetreloaded.TexturesReloadedEvent;
+import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
@@ -43,7 +42,7 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 /**
  * Allows to get loaded textures from project 'gfx' assets directory and allows to get loaded atlases from project 'atlas' asset directory.
- * Live reloading is fully supported, however it requires listening for {@link TexturesReloadedEvent} and {@link AtlasReloadedEvent} and manually updating
+ * Live reloading is fully supported, however it requires listening for {@link ResourceReloadedEvent} and manually updating
  * textures.
  * @author Kotcrab
  */
@@ -150,7 +149,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 			disposeCacheLater(oldCache);
 
-			App.oldEventBus.post(new TexturesReloadedEvent());
+			App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_TEXTURES));
 			if (firstReload == false) {
 				//we don't want to display 'textures reloaded' right after editor startup / project loaded
 				statusBar.setText("Textures reloaded");
@@ -180,8 +179,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 		if (file.exists()) {
 			atlases.put(relativePath, new TextureAtlas(file));
-			App.oldEventBus.post(new TexturesReloadedEvent());
-			App.oldEventBus.post(new AtlasReloadedEvent());
+			App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_TEXTURES));
+			App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_TEXTURE_ATLASES));
 		}
 	}
 
