@@ -71,7 +71,10 @@ public class App {
 
 		checkCharset();
 
-		eventBus = new EventBus();
+		eventBus = new EventBus((exception, context) -> {
+			Log.fatal("Exception when dispatching event: " + context.getSubscriber() + " to " + context.getSubscriberMethod());
+			Log.exception(exception);
+		});
 
 		try {
 			buildTimestamp = readTimestamp();
