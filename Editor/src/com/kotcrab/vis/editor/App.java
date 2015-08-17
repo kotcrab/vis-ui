@@ -65,9 +65,9 @@ public class App {
 	public static void init () {
 		new File(APP_FOLDER_PATH).mkdir();
 
-//		com.esotericsoftware.minlog.Log.TRACE();
-
 		Log.init();
+//		com.esotericsoftware.minlog.Log.TRACE();
+		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "ERROR");
 
 		checkCharset();
 

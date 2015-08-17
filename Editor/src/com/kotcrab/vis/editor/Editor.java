@@ -191,6 +191,7 @@ public class Editor extends ApplicationAdapter {
 		editorMC.add(statusBar = new StatusBarModule());
 		editorMC.add(new UIDebugControllerModule());
 		editorMC.add(new EditorSettingsIOModule());
+		editorMC.add(new AnalyticsModule());
 
 		editorMC.add(settings = new GeneralSettingsModule());
 		editorMC.add(experimentalSettings = new ExperimentalSettingsModule());

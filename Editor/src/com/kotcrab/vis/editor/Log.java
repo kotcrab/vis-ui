@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.MathUtils;
+import com.kotcrab.vis.editor.event.ExceptionEvent;
 import com.kotcrab.vis.editor.util.ExceptionUtils;
 import com.kotcrab.vis.editor.util.vis.CrashReporter;
 import com.kotcrab.vis.ui.widget.file.FileUtils;
@@ -60,6 +61,8 @@ public class Log {
 			boolean openGlCrash = false;
 			if (e.getMessage() != null && e.getMessage().contains("No OpenGL context found in the current thread."))
 				openGlCrash = true;
+
+			if (App.eventBus != null) App.eventBus.post(new ExceptionEvent(e, true));
 
 			try {
 				new CrashReporter(logFile).processReport();
@@ -187,6 +190,7 @@ public class Log {
 	public static void exception (Throwable e) {
 		if (e instanceof InterruptedException && DEBUG_INTERRUPTED == false) return;
 
+		if (App.eventBus != null) App.eventBus.post(new ExceptionEvent(e, false));
 		String stack = ExceptionUtils.getStackTrace(e);
 		fatal(stack);
 	}

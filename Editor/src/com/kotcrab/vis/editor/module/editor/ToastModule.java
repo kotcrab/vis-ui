@@ -110,7 +110,7 @@ public class ToastModule extends EditorModule {
 			setBackground(VisUI.getSkin().getDrawable("tooltip-bg"));
 
 			VisImageButton closeButton = new VisImageButton("close");
-			closeButton.addListener(new VisChangeListener((event, actor) -> fadeOut()));
+			closeButton.addListener(new VisChangeListener((event, actor) -> close()));
 
 			add(content).pad(3).fill().expand();
 			add(closeButton).top();
@@ -126,6 +126,11 @@ public class ToastModule extends EditorModule {
 
 			pack();
 			fadeIn();
+		}
+
+		/** Called when close button was pressed by default call {@link #fadeOut()} */
+		protected void close () {
+			fadeOut();
 		}
 
 		protected void fadeOut () {

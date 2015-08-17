@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.Align;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.module.editor.AnalyticsModule.AnalyticsState;
 import com.kotcrab.vis.editor.module.editor.GeneralSettingsModule.GeneralConfig;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
 import com.kotcrab.vis.editor.webapi.UpdateChannelType;
@@ -35,6 +36,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 	private VisCheckBox confirmExitCheck;
 	private VisCheckBox checkForUpdatesCheck;
+	private VisCheckBox analyticsCheck;
 	private EnumSelectBox<UpdateChannelType> updateChannelSelectBox;
 
 	public GeneralSettingsModule () {
@@ -61,7 +63,8 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 		settingsTable.defaults().left();
 		settingsTable.add(confirmExitCheck = new VisCheckBox("Confirm exit", config.confirmExit)).row();
 		settingsTable.add(checkForUpdatesCheck = new VisCheckBox("Check for updates", config.checkForUpdates)).row();
-		settingsTable.add(updateTable);
+		settingsTable.add(updateTable).row();
+		settingsTable.add(analyticsCheck = new VisCheckBox("Send anonymous usage statistics", config.analyticsState == AnalyticsState.ENABLED)).row();
 	}
 
 	@Override
@@ -76,6 +79,12 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 		config.confirmExit = confirmExitCheck.isChecked();
 		config.checkForUpdates = checkForUpdatesCheck.isChecked();
 		config.updateChannel = updateChannelSelectBox.getSelectedEnum();
+
+		if (analyticsCheck.isChecked())
+			config.analyticsState = AnalyticsState.ENABLED;
+		else
+			config.analyticsState = AnalyticsState.DISABLED;
+
 		settingsSave();
 	}
 
@@ -91,9 +100,20 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 		return config.updateChannel;
 	}
 
+	public AnalyticsState getAnalyticsState () {
+		return config.analyticsState;
+	}
+
+	public void setAnalyticsState (AnalyticsState state) {
+		config.analyticsState = state;
+		analyticsCheck.setChecked(config.analyticsState == AnalyticsState.ENABLED);
+		settingsSave();
+	}
+
 	public static class GeneralConfig {
 		@Tag(0) boolean confirmExit = true;
 		@Tag(1) boolean checkForUpdates = true;
 		@Tag(2) UpdateChannelType updateChannel = UpdateChannelType.STABLE;
+		@Tag(3) AnalyticsState analyticsState = AnalyticsState.SHOW_QUESTION;
 	}
 }
