@@ -24,7 +24,7 @@ import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
  * @author Kotcrab
  */
 public abstract class UndoableModuleEvent {
-	public SceneModuleContainer origin;
+	public final SceneModuleContainer origin;
 
 	public UndoableModuleEvent (SceneModuleContainer origin) {
 		this.origin = origin;

@@ -20,7 +20,7 @@ package com.kotcrab.vis.editor.event;
  * @author Kotcrab
  */
 public class ToolbarEvent {
-	public ToolbarEventType type;
+	public final ToolbarEventType type;
 
 	public ToolbarEvent (ToolbarEventType type) {
 		this.type = type;

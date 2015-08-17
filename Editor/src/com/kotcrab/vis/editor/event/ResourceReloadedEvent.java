@@ -28,7 +28,7 @@ public class ResourceReloadedEvent {
 	public static final int RESOURCE_TTF_FONTS = 0x0016;
 	public static final int RESOURCE_SHADERS = 0x0032;
 
-	public int resourceType;
+	public final int resourceType;
 
 	public ResourceReloadedEvent (int resourceType) {
 		this.resourceType = resourceType;

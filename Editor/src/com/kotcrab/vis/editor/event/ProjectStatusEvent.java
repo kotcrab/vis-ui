@@ -27,8 +27,8 @@ public class ProjectStatusEvent {
 		Loaded, Unloaded
 	}
 
-	public Status status;
-	public Project project;
+	public final Status status;
+	public final Project project;
 
 	public ProjectStatusEvent (Status status, Project project) {
 		this.status = status;
