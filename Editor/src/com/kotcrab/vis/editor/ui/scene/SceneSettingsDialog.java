@@ -58,7 +58,6 @@ public class SceneSettingsDialog extends VisWindow {
 		closeOnEscape();
 		setModal(true);
 
-
 		createUI();
 		createListeners();
 		createValidators();

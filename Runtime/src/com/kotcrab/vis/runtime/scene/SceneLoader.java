@@ -171,7 +171,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				if (component instanceof ShaderProtoComponent) {
 					ShaderProtoComponent shaderComponent = (ShaderProtoComponent) component;
 					ShaderAsset asset = shaderComponent.asset;
-					if(asset != null) {
+					if (asset != null) {
 						String path = asset.getFragPath().substring(0, asset.getFragPath().length() - 5);
 						dependencies.add(new AssetDescriptor<ShaderProgram>(path, ShaderProgram.class));
 					}

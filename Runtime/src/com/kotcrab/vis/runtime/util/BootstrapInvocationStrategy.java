@@ -22,7 +22,7 @@ import com.artemis.utils.Bag;
 
 public class BootstrapInvocationStrategy extends SystemInvocationStrategy {
 	@Override
-	protected void process(Bag<BaseSystem> systems) {
+	protected void process (Bag<BaseSystem> systems) {
 		Object[] systemsData = systems.getData();
 		for (int i = 0, s = systems.size(); s > i; i++) {
 			updateEntityStates();

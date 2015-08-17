@@ -117,7 +117,7 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 	public boolean build () {
 		scrollPaneTable.clearChildren();
 
-		if(properties.getProxies().first() instanceof GroupEntityProxy) {
+		if (properties.getProxies().first() instanceof GroupEntityProxy) {
 			return false;
 		}
 

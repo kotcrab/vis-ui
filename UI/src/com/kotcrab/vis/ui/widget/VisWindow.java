@@ -20,6 +20,8 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
@@ -125,8 +127,11 @@ public class VisWindow extends Window {
 	 * else was added to title table, and current title alignment is center then the title will be automatically centered.
 	 */
 	public void addCloseButton () {
+		Label titleLabel = getTitleLabel();
+		Table titleTable = getTitleTable();
+
 		VisImageButton closeButton = new VisImageButton("close-window");
-		getTitleTable().add(closeButton).padRight(-getPadRight() + 0.7f);
+		titleTable.add(closeButton).padRight(-getPadRight() + 0.7f);
 		closeButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
@@ -134,8 +139,8 @@ public class VisWindow extends Window {
 			}
 		});
 
-		if (getTitleLabel().getLabelAlign() == Align.center && getTitleTable().getChildren().size == 2)
-			getTitleTable().getCell(getTitleLabel()).padLeft(closeButton.getWidth() * 2);
+		if (titleLabel.getLabelAlign() == Align.center && titleTable.getChildren().size == 2)
+			titleTable.getCell(titleLabel).padLeft(closeButton.getWidth() * 2);
 	}
 
 	/** Will make this window close when escape key was pressed. After pressing escape {@link #close()} is called. */

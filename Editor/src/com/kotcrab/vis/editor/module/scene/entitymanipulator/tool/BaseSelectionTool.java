@@ -23,7 +23,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.annotation.CallSuper;
 import com.kotcrab.vis.editor.module.scene.action.MoveEntityAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.RectangularSelection;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
@@ -47,12 +46,12 @@ public abstract class BaseSelectionTool extends Tool {
 
 	protected Array<MoveEntityAction> moveActions = new Array<>();
 
-	@Override @CallSuper
+	@Override
 	public void init () {
 		rectangularSelection = new RectangularSelection(scene, entityManipulator, entityProxyCache);
 	}
 
-	@Override @CallSuper
+	@Override
 	public void render (ShapeRenderer shapeRenderer) {
 		rectangularSelection.render(shapeRenderer);
 	}

@@ -40,7 +40,7 @@ public interface ExporterPlugin {
 
 	void export (boolean quickExport);
 
-	boolean isSettingsUsed();
+	boolean isSettingsUsed ();
 
-	void showSettings();
+	void showSettings ();
 }

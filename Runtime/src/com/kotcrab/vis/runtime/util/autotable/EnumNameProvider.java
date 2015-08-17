@@ -18,5 +18,5 @@ package com.kotcrab.vis.runtime.util.autotable;
 
 /** @author Kotcrab */
 public interface EnumNameProvider<E extends Enum<E>> {
-	String getPrettyName(E value);
+	String getPrettyName (E value);
 }
