@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.OrderedMap;
+import com.kotcrab.vis.editor.ui.EnumSelectBox;
 import com.kotcrab.vis.editor.ui.EnumSelectBox.EnumListListener;
 import com.kotcrab.vis.runtime.util.autotable.EnumNameProvider;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
