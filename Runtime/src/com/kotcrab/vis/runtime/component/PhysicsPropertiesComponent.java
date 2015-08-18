@@ -19,7 +19,7 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.kotcrab.vis.runtime.util.BodyTypeEnumNameProvider;
-import com.kotcrab.vis.runtime.util.autotable.ATEntityProperty;
+import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 import com.kotcrab.vis.runtime.util.autotable.ATEnumProperty;
 
 /** @author Kotcrab */
@@ -27,32 +27,32 @@ public class PhysicsPropertiesComponent extends Component {
 	@ATEnumProperty(fieldName = "Body Type", uiNameProvider = BodyTypeEnumNameProvider.class)
 	public BodyType bodyType = BodyType.StaticBody;
 
-	@ATEntityProperty(fieldName = "Friction")
+	@ATProperty(fieldName = "Friction")
 	public float friction = 1;
-	@ATEntityProperty(fieldName = "Density")
+	@ATProperty(fieldName = "Density")
 	public float density = 1;
-	@ATEntityProperty(fieldName = "Restitution")
+	@ATProperty(fieldName = "Restitution")
 	public float restitution = 0;
 
-	@ATEntityProperty(fieldName = "Sensor")
+	@ATProperty(fieldName = "Sensor")
 	public boolean sensor;
 
-	@ATEntityProperty(fieldName = "Gravity Scale")
+	@ATProperty(fieldName = "Gravity Scale")
 	public float gravityScale = 1;
-	@ATEntityProperty(fieldName = "Linear Damping")
+	@ATProperty(fieldName = "Linear Damping")
 	public float linearDamping = 0;
-	@ATEntityProperty(fieldName = "Angular Damping")
+	@ATProperty(fieldName = "Angular Damping")
 	public float angularDamping = 0;
 
-	@ATEntityProperty(fieldName = "Bullet")
+	@ATProperty(fieldName = "Bullet")
 	public boolean bullet;
-	@ATEntityProperty(fieldName = "Fixed Rotation")
+	@ATProperty(fieldName = "Fixed Rotation")
 	public boolean fixedRotation;
-	@ATEntityProperty(fieldName = "Active")
+	@ATProperty(fieldName = "Active")
 	public boolean active = true;
-	@ATEntityProperty(fieldName = "Sleeping Allowed")
+	@ATProperty(fieldName = "Sleeping Allowed")
 	public boolean sleepingAllowed = true;
-	@ATEntityProperty(fieldName = "Auto adjust origin")
+	@ATProperty(fieldName = "Auto adjust origin")
 	public boolean adjustOrigin = true;
 
 	public short maskBits = -1;

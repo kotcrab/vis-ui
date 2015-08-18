@@ -14,23 +14,8 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
-
-import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.autotable.ATProperty;
-
 /**
- * All renderable entities must have this component, stores entity zIndex
+ * Contains utility classes used by VisEditor to generate UI for components in EntityProperties dialogs
  * @author Kotcrab
  */
-public class RenderableComponent extends Component {
-	@ATProperty(fieldName = "Z Index")
-	public int zIndex;
-
-	private RenderableComponent () {
-	}
-
-	public RenderableComponent (int zIndex) {
-		this.zIndex = zIndex;
-	}
-}
+package com.kotcrab.vis.runtime.util.autotable;

@@ -27,19 +27,19 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.gdx.IntDigitsOnlyFilter;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.util.autotable.ATEntityProperty;
+import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 import java.lang.reflect.Field;
 
 /** @author Kotcrab */
-public class EntityPropertyFragmentProvider extends AutoTableFragmentProvider<ATEntityProperty> {
+public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProperty> {
 	private ObjectMap<Field, NumberInputField> numberFields = new ObjectMap<>();
 	private ObjectMap<Field, IndeterminateCheckbox> checkboxFields = new ObjectMap<>();
 
 	@Override
-	public void createUI (ATEntityProperty annotation, Class type, Field field) {
+	public void createUI (ATProperty annotation, Class type, Field field) {
 		if (type.equals(Integer.TYPE) == false && type.equals(Float.TYPE) == false && type.equals(Boolean.TYPE) == false) {
 			throw new UnsupportedOperationException("Field of this type is not supported by EntityPropertyUI: " + type);
 		}

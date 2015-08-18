@@ -24,7 +24,7 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.*;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificComponentTable;
-import com.kotcrab.vis.runtime.util.autotable.ATEntityProperty;
+import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 import com.kotcrab.vis.runtime.util.autotable.ATEnumProperty;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 import com.kotcrab.vis.runtime.util.autotable.ATVector2Array;
@@ -55,7 +55,7 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 		injector.injectModules(this);
 
 		//TODO: [plugin] plugin entry point here
-		fragmentProviders.put(ATEntityProperty.class, new EntityPropertyFragmentProvider());
+		fragmentProviders.put(ATProperty.class, new PropertyFragmentProvider());
 		fragmentProviders.put(ATSelectFile.class, new SelectFileFragmentProvider());
 		fragmentProviders.put(ATVector2Array.class, new Vector2ViewFragmentProvider());
 		fragmentProviders.put(ATEnumProperty.class, new EnumSelectBoxFragmentProvider());

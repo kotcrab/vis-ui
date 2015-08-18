@@ -33,7 +33,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ATEntityProperty {
+public @interface ATProperty {
 	/** @return human friendly field name that will be used in VisEditor UI. */
 	String fieldName () default "";
 }
