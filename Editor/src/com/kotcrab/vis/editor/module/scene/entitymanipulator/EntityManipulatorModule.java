@@ -196,7 +196,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 		if (entities != null) {
 			if (isMenuItemEnterIntoGroupValid(entities)) {
-				entityPopupMenu.addItem(MenuUtils.createMenuItem("Enter into group", () -> {
+				entityPopupMenu.addItem(MenuUtils.createMenuItem("Enter Into Group", () -> {
 
 					if (isMenuItemEnterIntoGroupValid(entities) == false) {
 						DialogUtils.showErrorDialog(Editor.instance.getStage(), "Group was deselected");

@@ -36,9 +36,7 @@ public abstract class AutoTableFragmentProvider<A> {
 	protected ModuleInjector injector;
 	protected EntityProperties properties;
 
-	/**
-	 * Called after injecting modules
-	 */
+	/** Called after injecting modules */
 	public void init () {
 
 	}

@@ -66,7 +66,7 @@ public class Vector2ArrayView extends VisTable {
 				add(new VisLabel(i + ": X: " + NumberUtils.floatToString(vec.x) + " Y: " + NumberUtils.floatToString(vec.y))).row();
 			}
 		} else {
-			add("Multiple entities selected!");
+			add("<select only one entity>");
 		}
 	}
 }

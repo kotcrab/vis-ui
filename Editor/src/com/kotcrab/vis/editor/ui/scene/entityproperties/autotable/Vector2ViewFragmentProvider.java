@@ -29,12 +29,12 @@ import java.lang.reflect.Field;
 
 /** @author Kotcrab */
 public class Vector2ViewFragmentProvider extends AutoTableFragmentProvider<ATVector2Array> {
-	private ObjectMap<Field, Vector2ArrayView> vector2Views = new ObjectMap<>();
+	private ObjectMap<Field, Vector2ArrayView> views = new ObjectMap<>();
 
 	@Override
 	public void createUI (ATVector2Array annotation, Class type, Field field) {
 		Vector2ArrayView view = new Vector2ArrayView();
-		vector2Views.put(field, view);
+		views.put(field, view);
 
 		uiTable.add(annotation.fieldName()).spaceBottom(3).row();
 		uiTable.add(view).expandX().fillX().row();
@@ -42,7 +42,7 @@ public class Vector2ViewFragmentProvider extends AutoTableFragmentProvider<ATVec
 
 	@Override
 	public void updateUIFromEntities (Array<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
-		Vector2ArrayView view = vector2Views.get(field);
+		Vector2ArrayView view = views.get(field);
 
 		if (proxies.size > 1) {
 			view.setMultipleSelected(true);
