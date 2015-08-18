@@ -262,6 +262,8 @@ public class Editor extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
+		frame.dispose();
+
 		editorMC.dispose();
 		if (projectLoaded) projectMC.dispose();
 
@@ -269,7 +271,6 @@ public class Editor extends ApplicationAdapter {
 		Assets.dispose();
 		VisUI.dispose();
 
-		frame.dispose();
 		Log.dispose();
 
 		//make sure that application will exit eventually
@@ -354,7 +355,6 @@ public class Editor extends ApplicationAdapter {
 
 	private void exit (boolean restartAfterExit) {
 		if (restartAfterExit) App.startNewInstance();
-
 		Gdx.app.exit();
 	}
 

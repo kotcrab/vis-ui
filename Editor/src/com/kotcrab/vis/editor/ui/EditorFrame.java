@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.editor.ui;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
@@ -44,6 +43,7 @@ import java.util.Set;
  */
 public class EditorFrame extends JFrame {
 	private Editor editor;
+	private LwjglCanvas editorCanvas;
 
 	public EditorFrame (SplashController splashController) {
 		setTitle("VisEditor");
@@ -64,7 +64,7 @@ public class EditorFrame extends JFrame {
 
 		editor = new Editor(this);
 
-		LwjglCanvas editorCanvas = new LwjglCanvas(editor, config);
+		editorCanvas = new LwjglCanvas(editor, config);
 		Canvas canvas = editorCanvas.getCanvas();
 		canvas.setSize(1280, 720);
 
@@ -136,13 +136,13 @@ public class EditorFrame extends JFrame {
 
 		Log.fatal("Editor LibGDX thread is not running, performing force exit.");
 		Log.dispose();
-		System.exit(-1);
+		System.exit(-4);
 	}
 
 	@Override
 	public void dispose () {
 		super.dispose();
-		Gdx.app.exit();
+		editorCanvas.stop();
 	}
 
 	private static BufferedImage loadImage (String path) {
@@ -180,7 +180,7 @@ public class EditorFrame extends JFrame {
 					if (controller.fatalExceptionOccurred) {
 						Log.fatal("Initialization error");
 						JOptionPane.showMessageDialog(null, "An error occurred during editor initialization, please check log: " + Log.getLogStoragePath());
-						System.exit(-1);
+						System.exit(-5);
 					}
 
 					try {

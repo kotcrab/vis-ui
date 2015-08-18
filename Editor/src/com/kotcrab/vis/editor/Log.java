@@ -77,7 +77,7 @@ public class Log {
 					JOptionPane.showMessageDialog(null, error);
 				}
 
-				System.exit(-1);
+				System.exit(-3);
 			}
 		});
 

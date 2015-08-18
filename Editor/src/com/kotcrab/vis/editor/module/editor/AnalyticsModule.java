@@ -65,13 +65,12 @@ public class AnalyticsModule extends EditorModule {
 	@Override
 	public void dispose () {
 		App.eventBus.unregister(this);
+		if (prepare()) analytics.post(new AppViewHit("VisEditor", App.VERSION, "Exit"));
 		if (analytics != null) analytics.close();
 	}
 
 	private void postAppStarted () {
-		if (prepare()) {
-			analytics.postAsync(new AppViewHit("VisEditor", App.VERSION, "Startup"));
-		}
+		if (prepare()) analytics.postAsync(new AppViewHit("VisEditor", App.VERSION, "Startup"));
 	}
 
 	@Subscribe
