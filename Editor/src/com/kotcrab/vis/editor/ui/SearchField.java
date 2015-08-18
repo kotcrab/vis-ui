@@ -45,7 +45,7 @@ public class SearchField extends VisTable {
 
 		add(new Image(Assets.getIcon(Icons.SEARCH))).spaceRight(3);
 		add(searchField).width(200);
-		add(clearButton);
+		add(clearButton).height(searchField.getHeight());
 
 		clearButton.addListener(new VisChangeListener((event, actor) -> {
 			clearSearch();
