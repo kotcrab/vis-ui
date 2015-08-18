@@ -127,6 +127,13 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 	}
 
 	@Override
+	protected void updatePolygon (float x, float y) {
+		for (EntityProxy proxy : proxies) {
+			proxy.updatePolygon(x, y);
+		}
+	}
+
+	@Override
 	public int getLayerID () {
 		return proxies.get(0).getLayerID();
 	}

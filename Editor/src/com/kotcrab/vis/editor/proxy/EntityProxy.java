@@ -195,7 +195,7 @@ public abstract class EntityProxy {
 		basicAccessor.setPosition(x, y);
 	}
 
-	private void updatePolygon (float x, float y) {
+	protected void updatePolygon (float x, float y) {
 		PolygonComponent polygon = polygonCm.getSafe(entity);
 		float dx = getX() - x;
 		float dy = getY() - y;
