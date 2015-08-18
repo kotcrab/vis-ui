@@ -1,4 +1,5 @@
 [0.8.2] [LibGDX 1.6.4] [Snapshot]
+-API Addition: VisValidableTextField#restoreLastValidText()
 
 [0.8.1] [LibGDX 1.6.4]
 -Updated libGDX to 1.6.4

@@ -163,6 +163,15 @@ public class VisValidableTextField extends VisTextField {
 			removeListener(restoreFocusListener);
 	}
 
+	public void restoreLastValidText () {
+		if (restoreLastValid == false)
+			throw new IllegalStateException("Restore last valid is not enabled, see #setRestoreLastValid(boolean)");
+
+		//use super.setText to skip input validation and do not fire programmatic change event
+		VisValidableTextField.super.setText(lastValid);
+		setInputValid(true);
+	}
+
 	private class LastValidFocusListener extends FocusListener {
 		@Override
 		public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
@@ -170,9 +179,7 @@ public class VisValidableTextField extends VisTextField {
 				lastValid = getText();
 
 			if (focused == false && isInputValid() == false && restoreLastValid) {
-				//use super.setText to skip input validation and do not fire programmatic change event
-				VisValidableTextField.super.setText(lastValid);
-				setInputValid(true);
+				restoreLastValidText();
 			}
 		}
 	}
