@@ -16,6 +16,8 @@
 
 package com.kotcrab.vis.editor;
 
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+
 /**
  * VisEditor built-in icons enum
  * @author Kotcrab
@@ -58,7 +60,13 @@ public enum Icons implements IconAsset {
 	ALIGN_CENTER_Y { public String getIconName () { return "align-center-y"; } },
 	CURSOR { public String getIconName () { return "cursor"; } },
 	POLYGON { public String getIconName () { return "polygon"; } },
+	PLUS { public String getIconName () { return "plus"; } },;
+
 	// @formatter:on
+
+	public Drawable drawable () {
+		return Assets.getIcon(this);
+	}
 }
 
 interface IconAsset {
