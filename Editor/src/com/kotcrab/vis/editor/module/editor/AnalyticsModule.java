@@ -27,6 +27,10 @@ import com.kotcrab.vis.editor.ui.toast.EnableAnalyticsToast;
 import com.kotcrab.vis.editor.ui.toast.EnableAnalyticsToast.EnableAnalyticsToastListener;
 import org.apache.commons.codec.binary.Base64;
 
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+
 /** @author Kotcrab */
 public class AnalyticsModule extends EditorModule {
 	public static final String ID = "VUEtNDMwODg5MjAtNQ==";
@@ -73,8 +77,22 @@ public class AnalyticsModule extends EditorModule {
 	@Subscribe
 	public void handleExceptionEvent (ExceptionEvent event) {
 		if (prepare()) {
-			analytics.postAsync(new ExceptionHit(event.throwable.getMessage(), true));
+			StackTraceElement[] elements = event.throwable.getStackTrace();
+			String fullMsg = event.throwable + " " + (elements.length > 0 ? elements[0] + " " : "") + event.throwable.getMessage();
+			byte[] output = new byte[150]; //GA only allows 150 bytes
+			int returnValue = truncateUtf8(fullMsg, output);
+			String truncateMsg = new String(output, 0, returnValue);
+			analytics.postAsync(new ExceptionHit(truncateMsg, true));
 		}
+	}
+
+	public static int truncateUtf8 (String input, byte[] output) {
+		ByteBuffer outBuf = ByteBuffer.wrap(output);
+		CharBuffer inBuf = CharBuffer.wrap(input.toCharArray());
+
+		Charset utf8 = Charset.forName("UTF-8");
+		utf8.newEncoder().encode(inBuf, outBuf, true);
+		return outBuf.position();
 	}
 
 	private boolean prepare () {
