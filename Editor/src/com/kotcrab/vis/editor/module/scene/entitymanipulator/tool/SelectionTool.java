@@ -53,7 +53,7 @@ public class SelectionTool extends BaseSelectionTool {
 					lastTouchY = y;
 
 					entityManipulator.markSceneDirty();
-					entityManipulator.selectedEntitiesChanged();
+					entityManipulator.selectedEntitiesValuesChanged();
 				}
 
 			}

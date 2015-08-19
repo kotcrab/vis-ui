@@ -81,7 +81,7 @@ public class ChangePolygonAction implements UndoableAction {
 		component.vertices = newPoints;
 		component.faces = newVertices;
 
-		entityManipulator.selectedEntitiesChanged();
+		entityManipulator.selectedEntitiesValuesChanged();
 	}
 
 	@Override

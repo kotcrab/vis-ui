@@ -520,6 +520,10 @@ public class EntityManipulatorModule extends SceneModule {
 		selectedEntitiesChanged();
 	}
 
+	/**
+	 * Notifies that selected entities has changed. If only entities values was modified you must call {@link #selectedEntitiesValuesChanged()}
+	 * because this method will do full ui rebuilt expecting that selection is different.
+	 */
 	public void selectedEntitiesChanged () {
 		entityProperties.selectedEntitiesChanged();
 		sceneOutline.selectedEntitiesChanged();
@@ -527,6 +531,10 @@ public class EntityManipulatorModule extends SceneModule {
 		markSceneDirty();
 	}
 
+	/**
+	 * Notifies that selected entities values has changed. This must be only called if values has changed if new component
+	 * was added or selection itself changed you must call {@link #selectedEntitiesChanged()}
+	 */
 	public void selectedEntitiesValuesChanged () {
 		entityProperties.selectedEntitiesValuesChanged();
 		currentTool.selectedEntitiesValuesChanged();
