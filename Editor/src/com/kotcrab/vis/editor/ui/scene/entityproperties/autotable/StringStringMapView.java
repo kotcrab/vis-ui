@@ -127,7 +127,7 @@ public class StringStringMapView extends VisTable {
 
 					deleteButton.addListener(new VisChangeListener((event, actor) -> {
 						properties.beginSnapshot();
-						map.remove(e.key);
+						map.remove(keyField.getText());
 						updateUIFromMap();
 						properties.endSnapshot();
 					}
