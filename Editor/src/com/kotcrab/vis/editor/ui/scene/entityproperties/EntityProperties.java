@@ -20,11 +20,13 @@ import com.artemis.Component;
 import com.artemis.EntityEdit;
 import com.artemis.utils.Bag;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -68,6 +70,7 @@ import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.PhysicsPropertiesComponent;
 import com.kotcrab.vis.runtime.component.PolygonComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
+import com.kotcrab.vis.runtime.component.VariablesComponent;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ActorUtils;
 import com.kotcrab.vis.ui.util.TableUtils;
@@ -117,6 +120,7 @@ public class EntityProperties extends VisTable implements Disposable {
 	private ChangeListener sharedChangeListener;
 	private ChangeListener sharedChckAndSelectBoxChangeListener;
 	private FocusListener sharedFocusListener;
+	private InputListener sharedInputListener;
 
 	private ColorPickerListener pickerListener;
 	private TintImage tint;
@@ -207,6 +211,21 @@ public class EntityProperties extends VisTable implements Disposable {
 			}
 		};
 
+		sharedInputListener = new InputListener() {
+			@Override
+			public boolean keyDown (InputEvent event, int keycode) {
+				if (keycode == Keys.ENTER) {
+					if (snapshotInProgress == false) beginSnapshot();
+					setValuesToEntity();
+					parentTab.dirty();
+					endSnapshot();
+					return true;
+				}
+
+				return false;
+			}
+		};
+
 		pickerListener = new ColorPickerAdapter() {
 			@Override
 			public void finished (Color newColor) {
@@ -263,10 +282,12 @@ public class EntityProperties extends VisTable implements Disposable {
 		registerSpecificTable(new ParticleEffectTable());
 		registerSpecificTable(new GroupUITable());
 
+		//TODO: [plugin] plugin entry point
 		registerComponentTable(new RenderableComponentTable(sceneMC));
 		registerComponentTable(new AutoComponentTable<>(sceneMC, ShaderComponent.class, true));
 		registerComponentTable(new AutoComponentTable<>(sceneMC, PolygonComponent.class, true));
 		registerComponentTable(new AutoComponentTable<>(sceneMC, PhysicsPropertiesComponent.class, true));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, VariablesComponent.class, true));
 
 		propertiesTable = new VisTable(true);
 
@@ -301,7 +322,10 @@ public class EntityProperties extends VisTable implements Disposable {
 		idTable.add(new VisLabel("ID"));
 		idTable.add(idField = new VisValidableTextField()).expandX().fillX();
 		idField.setProgrammaticChangeEvents(false);
+
 		idField.addListener(sharedChangeListener);
+		idField.addListener(sharedFocusListener);
+		idField.addListener(sharedInputListener);
 	}
 
 	private void createPositionTable () {
@@ -518,8 +542,19 @@ public class EntityProperties extends VisTable implements Disposable {
 		return sharedFocusListener;
 	}
 
+	public InputListener getSharedInputListener () {
+		return sharedInputListener;
+	}
+
 	public SceneModuleContainer getSceneModuleContainer () {
 		return sceneMC;
+	}
+
+	public void setupStdPropertiesTextField (VisTextField textField) {
+		textField.setProgrammaticChangeEvents(false);
+		textField.addListener(sharedChangeListener);
+		textField.addListener(sharedFocusListener);
+		textField.addListener(sharedInputListener);
 	}
 
 	public Tab getParentTab () {

@@ -31,6 +31,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
@@ -94,6 +95,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
 		kryo.setRegistrationRequired(true);
+
 		//id configuration: (categories aren't strictly enforced but should be used)
 		//0-8 kryo primitives
 		//10-200 custom base types
@@ -118,6 +120,7 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(Vector2[].class, 21);
 		kryo.register(Vector2[][].class, 22);
 		kryo.register(BodyType.class, 23);
+		kryo.register(ObjectMap.class, new ObjectMapSerializer(), 24);
 
 		kryo.register(EditorScene.class, new EditorSceneSerializer(kryo), 31);
 		kryo.register(EntityScheme.class, new EntitySchemeSerializer(kryo, this), 32);
@@ -155,6 +158,7 @@ public class SceneIOModule extends ProjectModule {
 		registerEntityComponentSerializer(ShaderComponent.class, new ShaderComponentSerializer(kryo, shaderCache), 226);
 		kryo.register(PolygonComponent.class, 227);
 		kryo.register(PhysicsPropertiesComponent.class, 228);
+		kryo.register(VariablesComponent.class, 229);
 	}
 
 	private void registerEntityComponentSerializer (Class<? extends Component> componentClass, EntityComponentSerializer serializer, int id) {
@@ -164,6 +168,7 @@ public class SceneIOModule extends ProjectModule {
 
 	@Override
 	public void postInit () {
+		//TODO: [plugin] plugin entry point, allow plugin to simpler kryo class registration, currently requires making EditorEntitySupport
 		SupportModule supportModule = projectContainer.get(SupportModule.class);
 
 		for (SupportSerializerDescriptor support : supportModule.getSerializerDescriptors()) {

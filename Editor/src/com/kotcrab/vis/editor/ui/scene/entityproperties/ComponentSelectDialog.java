@@ -27,6 +27,7 @@ import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.PhysicsPropertiesComponent;
 import com.kotcrab.vis.runtime.component.PolygonComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
+import com.kotcrab.vis.runtime.component.VariablesComponent;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
@@ -50,9 +51,11 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 		this.listener = listener;
 		setBackground(VisUI.getSkin().getDrawable("tooltip-bg"));
 
+		//TODO: [plugin] plugin entry point
 		componentClasses.add(ShaderComponent.class);
 		componentClasses.add(PolygonComponent.class);
 		componentClasses.add(PhysicsPropertiesComponent.class);
+		componentClasses.add(VariablesComponent.class);
 
 		buttonStyle = new VisTextButtonStyle(VisUI.getSkin().get(VisTextButtonStyle.class));
 
