@@ -20,12 +20,27 @@ import com.artemis.Component;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.runtime.util.autotable.ATStringStringMap;
 
-/** @author Kotcrab */
+/**
+ * Stores user defined variables in key-value store
+ * @author Kotcrab
+ */
 public class VariablesComponent extends Component {
 	@ATStringStringMap
 	public ObjectMap<String, String> variables = new ObjectMap<String, String>();
 
 	public String get (String variableName) {
 		return variables.get(variableName);
+	}
+
+	public float getFloat (String variableName) {
+		return Float.valueOf(get(variableName));
+	}
+
+	public int getInt (String variableName) {
+		return Integer.valueOf(get(variableName));
+	}
+
+	public boolean getBoolean (String variableName) {
+		return Boolean.valueOf(get(variableName));
 	}
 }
