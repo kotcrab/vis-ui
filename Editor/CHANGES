@@ -1,6 +1,7 @@
 [0.2.3] [LibGDX 1.6.4] [Snapshot]
 -Added VariablesComponent
 -Fixed crash when moving entities group
+-Fixed issue when Entity Properties dialog wasn't updated after entity remove undo
 
 [0.2.2] [LibGDX 1.6.4]
 -Fixed crash when creating project

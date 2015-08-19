@@ -18,10 +18,12 @@ package com.kotcrab.vis.editor.util.vis;
 
 import com.artemis.Component;
 import com.artemis.Entity;
+import com.artemis.InvocationStrategy;
 import com.artemis.utils.Bag;
 import com.artemis.utils.EntityBuilder;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
+import com.kotcrab.vis.editor.util.NoneInvocationStrategy;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**
@@ -30,6 +32,9 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
  * @author Kotcrab
  */
 public class ProtoEntity {
+	private static final NoneInvocationStrategy noneInvStrategy = new NoneInvocationStrategy();
+	private static final InvocationStrategy stdInvStrategy = new InvocationStrategy();
+
 	private SceneIOModule sceneIOModule;
 	private EntityEngine entityEngine;
 	private boolean preserveUUID;
@@ -57,6 +62,10 @@ public class ProtoEntity {
 				builder.with(component);
 			}
 		});
+
+		entityEngine.setInvocationStrategy(noneInvStrategy);
+		entityEngine.process(); //makes sure that entity components will be registered so they can be retrieved, instantly after entity creation
+		entityEngine.setInvocationStrategy(stdInvStrategy);
 
 		return builder.build();
 	}
