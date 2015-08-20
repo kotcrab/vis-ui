@@ -76,16 +76,6 @@ public class Scene {
 		engineConfig.setManager(new TextInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
 		engineConfig.setManager(new ShaderInflater(assetsManager));
 
-		ArtemisUtils.createCommonSystems(engineConfig, context.batch, distanceFieldShader, false);
-		engineConfig.setSystem(new ParticleRenderSystem(engineConfig.getSystem(RenderBatchingSystem.class), false), true);
-
-		if (data.physicsSettings.physicsEnabled && runtimeConfig.useBox2dDebugRenderer)
-			engineConfig.setSystem(new Box2dDebugRenderSystem());
-
-		for (EntitySupport support : context.supports) {
-			support.registerSystems(runtimeConfig, engineConfig, assetsManager);
-		}
-
 		if (parameter != null) {
 			for (BaseSystem system : parameter.systems)
 				engineConfig.setSystem(system);
@@ -98,6 +88,16 @@ public class Scene {
 			engineConfig.setSystem(new PhysicsSystem(data.physicsSettings));
 			engineConfig.setManager(new PhysicsBodyManager());
 			if (runtimeConfig.useBox2dSpriteUpdateSystem) engineConfig.setSystem(new PhysicsSpriteUpdateSystem());
+		}
+
+		ArtemisUtils.createCommonSystems(engineConfig, context.batch, distanceFieldShader, false);
+		engineConfig.setSystem(new ParticleRenderSystem(engineConfig.getSystem(RenderBatchingSystem.class), false), true);
+
+		if (data.physicsSettings.physicsEnabled && runtimeConfig.useBox2dDebugRenderer)
+			engineConfig.setSystem(new Box2dDebugRenderSystem());
+
+		for (EntitySupport support : context.supports) {
+			support.registerSystems(runtimeConfig, engineConfig, assetsManager);
 		}
 
 		engine = new EntityEngine(engineConfig);
@@ -124,7 +124,7 @@ public class Scene {
 
 	/** Updates and renders entire scene. Typically called from {@link ApplicationListener#render()} */
 	public void render () {
-		engine.setDelta(Gdx.graphics.getDeltaTime());
+		engine.setDelta(Math.min(Gdx.graphics.getDeltaTime(), 1 / 60f));
 		engine.process();
 	}
 
