@@ -2,7 +2,8 @@
 -Added VariablesComponent
 -Fixed crash when moving entities group
 -Fixed issue when Entity Properties dialog wasn't updated after entity remove undo
--Fixed issue when Entity Properties collapsed components panels would expand again after dragging entity.
+-Fixed issue when Entity Properties collapsed components panels would expand again after dragging entity
+-When opening project from older version of VisEditor a project backup will be created
 
 [0.2.2] [LibGDX 1.6.4]
 -Fixed crash when creating project

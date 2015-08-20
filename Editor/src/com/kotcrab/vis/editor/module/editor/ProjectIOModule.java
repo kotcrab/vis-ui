@@ -34,10 +34,12 @@ import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.CopyFileVisitor;
+import com.kotcrab.vis.editor.util.SteppedAsyncTask;
 import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
+import org.apache.commons.io.IOUtils;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.FileInputStream;
@@ -45,6 +47,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Module allowing to perform IO operation with projects
@@ -109,8 +113,8 @@ public class ProjectIOModule extends EditorModule {
 		if (versionFile.exists()) {
 			ProjectVersionDescriptor descriptor = ProjectVersionModule.getNewJson().fromJson(ProjectVersionDescriptor.class, versionFile);
 			if (descriptor.versionCode > App.VERSION_CODE) {
-				DialogUtils.showOptionDialog(Editor.instance.getStage(), "Message",
-						"This project was opened in newer version of VisEditor.\nSome functions may not work properly. do you want to continue?",
+				DialogUtils.showOptionDialog(Editor.instance.getStage(), "Warning",
+						"This project was opened in newer version of VisEditor.\nSome functions may not work properly. Do you want to continue?",
 						OptionDialogType.YES_NO, new OptionDialogAdapter() {
 							@Override
 							public void yes () {
@@ -118,12 +122,12 @@ public class ProjectIOModule extends EditorModule {
 							}
 						});
 			} else if (descriptor.versionCode < App.VERSION_CODE) {
-				DialogUtils.showOptionDialog(Editor.instance.getStage(), "Message", //TODO users are "careless", create backup for them
-						"This project was created in older version of VisEditor.\nAfter opening it may no longer work in older version, please make backup.\nDo you want to continue?",
+				DialogUtils.showOptionDialog(Editor.instance.getStage(), "Warning",
+						"This project was created in older version of VisEditor.\nAfter opening it may no longer work in older versions.\nDo you want to continue?",
 						OptionDialogType.YES_NO, new OptionDialogAdapter() {
 							@Override
 							public void yes () {
-								doLoadProject(dataFile);
+								backupProjectAndLoad(dataFile, descriptor.versionCode);
 							}
 						});
 			} else
@@ -133,7 +137,19 @@ public class ProjectIOModule extends EditorModule {
 
 	}
 
-	private void doLoadProject (FileHandle dataFile) {
+	private void backupProjectAndLoad (FileHandle dataFile, int oldVersionCode) {
+		Project project = loadProjectDataFile(dataFile);
+		FileHandle backupRoot = project.getVisDirectory();
+		FileHandle backupOut = backupRoot.child("modules").child(".conversionBackup");
+		backupOut.mkdirs();
+
+		FileHandle backupArchive = backupOut.child("before-conversion-from-" + oldVersionCode + "-to-" + App.VERSION_CODE + ".zip");
+
+		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Creating backup...",
+				new CreateProjectBackupAsyncTask(dataFile, backupRoot, backupArchive)).fadeIn());
+	}
+
+	private Project loadProjectDataFile (FileHandle dataFile) {
 		try {
 			Input input = new Input(new FileInputStream(dataFile.file()));
 			Project project = (Project) kryo.readClassAndObject(input);
@@ -141,10 +157,16 @@ public class ProjectIOModule extends EditorModule {
 
 			project.updateRoot(dataFile);
 
-			Editor.instance.projectLoaded(project);
+			return project;
 		} catch (FileNotFoundException e) {
 			Log.exception(e);
+			throw new IllegalStateException(e);
 		}
+	}
+
+	private void doLoadProject (FileHandle dataFile) {
+		Project project = loadProjectDataFile(dataFile);
+		Editor.instance.projectLoaded(project);
 	}
 
 	public void createLibGDXProject (final ProjectLibGDX project) {
@@ -251,5 +273,65 @@ public class ProjectIOModule extends EditorModule {
 		visAssetsDir.child("music").mkdirs();
 		visAssetsDir.child("particle").mkdirs();
 		visAssetsDir.child("shader").mkdirs();
+	}
+
+	private class CreateProjectBackupAsyncTask extends SteppedAsyncTask {
+		private FileHandle dataFile;
+		private final FileHandle backupRoot;
+		private final FileHandle backupArchive;
+
+		public CreateProjectBackupAsyncTask (FileHandle dataFile, FileHandle backupRoot, FileHandle backupArchive) {
+			super("ProjectBackupZipCreator");
+			this.dataFile = dataFile;
+			this.backupRoot = backupRoot;
+			this.backupArchive = backupArchive;
+		}
+
+		@Override
+		public void execute () {
+			try {
+				setMessage("Creating project backup...");
+				setTotalSteps(countZipFiles(backupRoot, 0));
+				try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(backupArchive.file()))) {
+					processZipFolder(backupRoot, zipOutputStream, backupRoot.path().length() + 1);
+				}
+
+				doLoadProject(dataFile);
+			} catch (IOException e) {
+				failed("IO error occurred during backup creation", e);
+			}
+		}
+
+		private void processZipFolder (final FileHandle folder, final ZipOutputStream zipOutputStream, final int prefixLength) throws IOException {
+			for (FileHandle file : folder.list()) {
+				if (file.name().equals(".conversionBackup")) continue;
+
+				if (file.isDirectory()) {
+					processZipFolder(file, zipOutputStream, prefixLength);
+				} else {
+					final ZipEntry zipEntry = new ZipEntry(file.path().substring(prefixLength));
+					zipOutputStream.putNextEntry(zipEntry);
+					try (FileInputStream inputStream = new FileInputStream(file.file())) {
+						IOUtils.copy(inputStream, zipOutputStream);
+					}
+					zipOutputStream.closeEntry();
+					nextStep();
+				}
+			}
+		}
+
+		private int countZipFiles (FileHandle folder, int count) {
+			for (FileHandle file : folder.list()) {
+				if (file.name().equals(".conversionBackup")) continue;
+
+				if (file.isDirectory()) {
+					count = countZipFiles(file, count);
+				} else {
+					count++;
+				}
+			}
+
+			return count;
+		}
 	}
 }

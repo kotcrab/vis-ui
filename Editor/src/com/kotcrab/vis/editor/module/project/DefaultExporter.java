@@ -34,7 +34,7 @@ import com.kotcrab.vis.editor.scene.PhysicsSettings;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DefaultExporterSettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
-import com.kotcrab.vis.editor.util.AsyncTask;
+import com.kotcrab.vis.editor.util.SteppedAsyncTask;
 import com.kotcrab.vis.runtime.data.LayerData;
 import com.kotcrab.vis.runtime.data.PhysicsSettingsData;
 import com.kotcrab.vis.runtime.data.SceneData;
@@ -145,10 +145,7 @@ public class DefaultExporter implements ExporterPlugin {
 		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Exporting", exportTask).fadeIn());
 	}
 
-	private class ExportAsyncTask extends AsyncTask {
-		int step;
-		int totalSteps;
-
+	private class ExportAsyncTask extends SteppedAsyncTask {
 		FileHandle outAssetsDir;
 
 		EditorScene scene;
@@ -160,7 +157,7 @@ public class DefaultExporter implements ExporterPlugin {
 		@Override
 		public void execute () {
 			setMessage("Preparing for export...");
-			totalSteps = calculateSteps();
+			setTotalSteps(calculateSteps());
 
 			cleanOldAssets();
 			packageTextures();
@@ -169,10 +166,6 @@ public class DefaultExporter implements ExporterPlugin {
 
 			nextStep();
 			statusBar.setText("Export finished");
-		}
-
-		private void nextStep () {
-			setProgressPercent(++step * 100 / totalSteps);
 		}
 
 		private int calculateSteps () {
