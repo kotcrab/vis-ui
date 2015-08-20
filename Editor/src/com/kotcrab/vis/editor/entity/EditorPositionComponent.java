@@ -17,9 +17,15 @@
 package com.kotcrab.vis.editor.entity;
 
 import com.artemis.Component;
+import com.kotcrab.vis.runtime.component.PositionComponent;
+import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 
-/** @author Kotcrab */
-public class PositionComponent extends Component {
+/**
+ * Replaced by {@link PositionComponent}
+ * @author Kotcrab
+ */
+@Deprecated @DeprecatedOn(versionCode = 8)
+public class EditorPositionComponent extends Component {
 	public float x;
 	public float y;
 }

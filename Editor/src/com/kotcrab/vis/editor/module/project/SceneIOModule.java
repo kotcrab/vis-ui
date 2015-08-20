@@ -39,6 +39,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.*;
+import com.kotcrab.vis.editor.entity.EditorPositionComponent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializedTypeDescriptor;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializerDescriptor;
@@ -144,7 +145,7 @@ public class SceneIOModule extends ProjectModule {
 		registerEntityComponentSerializer(ParticleComponent.class, new ParticleComponentSerializer(kryo, particleCache), 204);
 		registerEntityComponentSerializer(TextComponent.class, new TextComponentSerializer(kryo, fontCache), 205);
 
-		kryo.register(PositionComponent.class, 206);
+		kryo.register(EditorPositionComponent.class, 206);
 		kryo.register(ExporterDropsComponent.class, 207);
 		kryo.register(PixelsPerUnitComponent.class, 208);
 		kryo.register(UUIDComponent.class, 209);

@@ -38,7 +38,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
 import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
-import com.kotcrab.vis.editor.entity.PositionComponent;
+import com.kotcrab.vis.editor.entity.EditorPositionComponent;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
@@ -328,20 +328,20 @@ public class EntityManipulatorModule extends SceneModule {
 
 			if (asset.getPath().startsWith("sound/")) {
 				entity = new EntityBuilder(entityEngine)
-						.with(new SoundComponent(null), new PositionComponent(), //editor does not require sound to be loaded, we can pass null sound here
+						.with(new SoundComponent(null), new EditorPositionComponent(), //editor does not require sound to be loaded, we can pass null sound here
 								new AssetComponent(asset),
 								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-								new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
+								new ExporterDropsComponent(EditorPositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
 						.build();
 
 			}
 
 			if (asset.getPath().startsWith("music/")) {
 				entity = new EntityBuilder(entityEngine)
-						.with(new MusicComponent(new DummyMusic()), new PositionComponent(),
+						.with(new MusicComponent(new DummyMusic()), new EditorPositionComponent(),
 								new AssetComponent(asset),
 								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-								new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
+								new ExporterDropsComponent(EditorPositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
 						.build();
 
 			}
