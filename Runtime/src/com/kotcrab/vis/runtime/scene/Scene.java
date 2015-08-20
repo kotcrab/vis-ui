@@ -137,6 +137,14 @@ public class Scene {
 		return layerData;
 	}
 
+	public LayerData getLayerDataByName (String name) {
+		for (LayerData data : layerData) {
+			if (data.name.equals(name)) return data;
+		}
+
+		return null;
+	}
+
 	public EntityEngine getEntityEngine () {
 		return engine;
 	}
