@@ -16,10 +16,15 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
+import com.kotcrab.vis.editor.module.editor.InputModule;
 import com.kotcrab.vis.editor.plugin.ExporterPlugin;
+import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
 
 import java.util.UUID;
 
@@ -27,11 +32,14 @@ import java.util.UUID;
  * @author Kotcrab
  */
 public class ExportersManagerModule extends ProjectModule {
+	@InjectModule private InputModule inputModule;
 	@InjectModule private ExtensionStorageModule extensionStorage;
 
 	@InjectModule private ExportSettingsModule exportSettings;
 
 	private ObjectMap<UUID, ExporterPlugin> exporters = new ObjectMap<>();
+
+	private ExportInputListener inputListener;
 
 	@Override
 	public void init () {
@@ -40,6 +48,14 @@ public class ExportersManagerModule extends ProjectModule {
 			projectContainer.injectModules(exporterPlugin);
 			exporterPlugin.init(project);
 		}
+
+		inputListener = new ExportInputListener();
+		inputModule.addListener(inputListener);
+	}
+
+	@Override
+	public void dispose () {
+		inputModule.removeListener(inputListener);
 	}
 
 	public ObjectMap<UUID, ExporterPlugin> getExportersMap () {
@@ -48,5 +64,17 @@ public class ExportersManagerModule extends ProjectModule {
 
 	public void export (boolean quickExport) {
 		exporters.get(exportSettings.getCurrentExporterUUID()).export(quickExport);
+	}
+
+	private class ExportInputListener extends ModalInputListener {
+		@Override
+		public boolean keyDown (InputEvent event, int keycode) {
+			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.E) {
+				export(false);
+				return true;
+			}
+
+			return false;
+		}
 	}
 }

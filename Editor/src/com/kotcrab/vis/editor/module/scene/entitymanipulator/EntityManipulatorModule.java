@@ -36,9 +36,9 @@ import com.badlogic.gdx.utils.Timer;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.entity.EditorPositionComponent;
 import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
 import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
-import com.kotcrab.vis.editor.entity.EditorPositionComponent;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
@@ -746,10 +746,13 @@ public class EntityManipulatorModule extends SceneModule {
 				App.eventBus.post(new ToolSwitchedEvent(Tools.POLYGON_TOOL));
 			}
 
-			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.A) selectAll();
-			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.C) copy();
-			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.V) paste();
-			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.X) cut();
+			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+				if (keycode == Keys.A) selectAll();
+				if (keycode == Keys.C) copy();
+				if (keycode == Keys.V) paste();
+				if (keycode == Keys.X) cut();
+			}
+
 			if (Gdx.input.isKeyPressed(Keys.PAGE_UP))
 				zIndexManipulator.moveSelectedEntities(getSelectedEntities(), true);
 			if (Gdx.input.isKeyPressed(Keys.PAGE_DOWN))

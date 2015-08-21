@@ -38,6 +38,7 @@ public abstract class ModalInputListener extends InputListener {
 			return super.handle(e);
 	}
 
+	/** Called by framework */
 	public void setInputModule (InputModule inputModule) {
 		this.inputModule = inputModule;
 	}
