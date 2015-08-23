@@ -22,7 +22,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 
 /**
- * Jar releated utils.
+ * Jar related utils.
  * @author Kotcrab
  */
 public class JarUtils {
