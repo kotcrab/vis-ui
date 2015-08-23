@@ -34,11 +34,11 @@ import java.util.regex.Pattern;
 /** @author Nathan Sweet */
 public class TexturePackerFileProcessor extends FileProcessor {
 	private final Settings defaultSettings;
-	private ObjectMap<File, Settings> dirToSettings = new ObjectMap();
+	private ObjectMap<File, Settings> dirToSettings = new ObjectMap<>();
 	private Json json = new Json();
 	private String packFileName;
 	private File root;
-	ArrayList<File> ignoreDirs = new ArrayList();
+	ArrayList<File> ignoreDirs = new ArrayList<>();
 
 	public TexturePackerFileProcessor () {
 		this(new Settings(), "pack.atlas");
@@ -59,7 +59,7 @@ public class TexturePackerFileProcessor extends FileProcessor {
 		root = inputFile;
 
 		// Collect pack.json setting files.
-		final ArrayList<File> settingsFiles = new ArrayList();
+		final ArrayList<File> settingsFiles = new ArrayList<>();
 		FileProcessor settingsProcessor = new FileProcessor() {
 			protected void processFile (Entry inputFile) throws Exception {
 				settingsFiles.add(inputFile.inputFile);

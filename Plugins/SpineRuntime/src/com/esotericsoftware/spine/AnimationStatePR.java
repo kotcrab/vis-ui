@@ -38,9 +38,9 @@ import com.badlogic.gdx.utils.Pools;
 /** Stores state for an animation and automatically mixes between animations. */
 public class AnimationStatePR {
 	private final AnimationStateData data;
-	private Array<TrackEntry> tracks = new Array();
-	private final Array<Event> events = new Array();
-	private final Array<AnimationStateListener> listeners = new Array();
+	private Array<TrackEntry> tracks = new Array<TrackEntry>();
+	private final Array<Event> events = new Array<Event>();
+	private final Array<AnimationStateListener> listeners = new Array<AnimationStateListener>();
 	private float timeScale = 1;
 
 	public AnimationStatePR (AnimationStateData data) {

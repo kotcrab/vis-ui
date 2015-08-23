@@ -53,7 +53,7 @@ public class TexturePackerTest extends ApplicationAdapter {
 
 		if (pages == null) {
 			Random random = new Random(1243);
-			Array<Rect> inputRects = new Array();
+			Array<Rect> inputRects = new Array<>();
 			for (int i = 0; i < 240; i++) {
 				Rect rect = new Rect();
 				rect.name = "rect" + i;

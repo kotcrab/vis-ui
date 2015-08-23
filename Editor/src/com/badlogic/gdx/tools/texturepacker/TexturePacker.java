@@ -47,7 +47,7 @@ public class TexturePacker {
 	private final Settings settings;
 	private final Packer packer;
 	private final ImageProcessor imageProcessor;
-	private final Array<InputImage> inputImages = new Array();
+	private final Array<InputImage> inputImages = new Array<>();
 	private File rootDir;
 
 	/** @param rootDir Used to strip the root directory prefix from image file names, can be null. */

@@ -308,7 +308,7 @@ public class TextureConverter {
 		return v1.x == v2.x && v1.y == v2.y;
 	}
 
-	public static int vectorListIndexOf (Array list, Vector2 v) {
+	public static int vectorListIndexOf (Array<Vector2> list, Vector2 v) {
 		for (int i = 0; i < list.size; i++) {
 			Object obj = list.get(i);
 			if (obj == v)
@@ -322,7 +322,7 @@ public class TextureConverter {
 		return -1;
 	}
 
-	public static Boolean vectorListContains (Array list, Vector2 v) {
+	public static Boolean vectorListContains (Array<Vector2> list, Vector2 v) {
 		int index = vectorListIndexOf(list, v);
 		return index != -1;
 	}

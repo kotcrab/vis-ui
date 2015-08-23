@@ -35,13 +35,13 @@ import com.badlogic.gdx.utils.Array;
 
 public class SkeletonData {
 	String name;
-	final Array<BoneData> bones = new Array(); // Ordered parents first.
-	final Array<SlotData> slots = new Array(); // Setup pose draw order.
-	final Array<Skin> skins = new Array();
+	final Array<BoneData> bones = new Array<BoneData>(); // Ordered parents first.
+	final Array<SlotData> slots = new Array<SlotData>(); // Setup pose draw order.
+	final Array<Skin> skins = new Array<Skin>();
 	Skin defaultSkin;
-	final Array<EventData> events = new Array();
-	final Array<Animation> animations = new Array();
-	final Array<IkConstraintData> ikConstraints = new Array();
+	final Array<EventData> events = new Array<EventData>();
+	final Array<Animation> animations = new Array<Animation>();
+	final Array<IkConstraintData> ikConstraints = new Array<IkConstraintData>();
 	float width, height;
 	String version, hash, imagesPath;
 

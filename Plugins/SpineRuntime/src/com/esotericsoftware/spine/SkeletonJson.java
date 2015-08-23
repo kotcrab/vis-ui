@@ -287,7 +287,7 @@ public class SkeletonJson {
 
 	private void readAnimation (String name, JsonValue map, SkeletonData skeletonData) {
 		float scale = this.scale;
-		Array<Timeline> timelines = new Array();
+		Array<Timeline> timelines = new Array<Timeline>();
 		float duration = 0;
 
 		// Slot timelines.

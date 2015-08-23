@@ -321,7 +321,7 @@ public class SkeletonBinary {
 	}
 
 	private void readAnimation (String name, DataInput input, SkeletonData skeletonData) {
-		Array<Timeline> timelines = new Array();
+		Array<Timeline> timelines = new Array<Timeline>();
 		float scale = this.scale;
 		float duration = 0;
 
