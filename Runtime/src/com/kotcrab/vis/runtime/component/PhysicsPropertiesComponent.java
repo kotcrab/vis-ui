@@ -52,7 +52,7 @@ public class PhysicsPropertiesComponent extends Component {
 	public boolean active = true;
 	@ATProperty(fieldName = "Sleeping Allowed")
 	public boolean sleepingAllowed = true;
-	@ATProperty(fieldName = "Auto adjust origin")
+	@ATProperty(fieldName = "Auto Adjust Origin")
 	public boolean adjustOrigin = true;
 
 	public short maskBits = -1;
