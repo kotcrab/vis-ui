@@ -80,55 +80,51 @@ public class DirectoryWatcher {
 	 * it might take several seconds until all directories are being monitored. For normal cases (1-100 folders), this should not
 	 * take longer than a few milliseconds.
 	 */
-	public void start () {
-		try {
-			watchService = FileSystems.getDefault().newWatchService();
-			watchThread = new Thread(() -> {
-				running.set(true);
-				walkTreeAndSetWatches();
-				while (running.get()) {
-					try {
-						WatchKey watchKey = watchService.take();
+	public void start () throws IOException {
+		watchService = FileSystems.getDefault().newWatchService();
+		watchThread = new Thread(() -> {
+			running.set(true);
+			walkTreeAndSetWatches();
+			while (running.get()) {
+				try {
+					WatchKey watchKey = watchService.take();
 
-						for (WatchEvent<?> event : watchKey.pollEvents()) {
-							WatchEvent<Path> ev = (WatchEvent<Path>) event;
-							Path dir = (Path) watchKey.watchable();
-							Path fullPath = dir.resolve(ev.context());
-							final FileHandle fileHandle = Gdx.files.absolute(fullPath.toFile().toString());
+					for (WatchEvent<?> event : watchKey.pollEvents()) {
+						WatchEvent<Path> ev = (WatchEvent<Path>) event;
+						Path dir = (Path) watchKey.watchable();
+						Path fullPath = dir.resolve(ev.context());
+						final FileHandle fileHandle = Gdx.files.absolute(fullPath.toFile().toString());
 
-							if (ev.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
-								Gdx.app.postRunnable(() -> {
-									for (WatchListener listener : listeners)
-										listener.fileChanged(fileHandle);
-								});
-							}
-
-							if (ev.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
-								Gdx.app.postRunnable(() -> {
-									for (WatchListener listener : listeners)
-										listener.fileDeleted(fileHandle);
-								});
-							}
-
-							if (ev.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
-								Gdx.app.postRunnable(() -> {
-									for (WatchListener listener : listeners)
-										listener.fileCreated(fileHandle);
-								});
-							}
+						if (ev.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
+							Gdx.app.postRunnable(() -> {
+								for (WatchListener listener : listeners)
+									listener.fileChanged(fileHandle);
+							});
 						}
 
-						watchKey.reset();
-						resetWaitSettlementTimer();
-					} catch (InterruptedException | ClosedWatchServiceException e) {
-						running.set(false);
-					}
-				}
-			}, "Watcher");
-			watchThread.start();
-		} catch (IOException e) {
+						if (ev.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
+							Gdx.app.postRunnable(() -> {
+								for (WatchListener listener : listeners)
+									listener.fileDeleted(fileHandle);
+							});
+						}
 
-		}
+						if (ev.kind() == StandardWatchEventKinds.ENTRY_CREATE) {
+							Gdx.app.postRunnable(() -> {
+								for (WatchListener listener : listeners)
+									listener.fileCreated(fileHandle);
+							});
+						}
+					}
+
+					watchKey.reset();
+					resetWaitSettlementTimer();
+				} catch (InterruptedException | ClosedWatchServiceException e) {
+					running.set(false);
+				}
+			}
+		}, "Watcher");
+		watchThread.start();
 	}
 
 	public synchronized void stop () {
