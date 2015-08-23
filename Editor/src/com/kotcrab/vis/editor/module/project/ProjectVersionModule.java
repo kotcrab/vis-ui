@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.module.InjectModule;
@@ -27,7 +28,14 @@ public class ProjectVersionModule extends ProjectModule {
 	@Override
 	public void init () {
 		Json json = getNewJson();
-		json.toJson(new ProjectVersionDescriptor(App.VERSION_CODE, App.VERSION), fileAccess.getModuleFolder().child("version.json"));
+		FileHandle versionFile = fileAccess.getModuleFolder().child("version.json");
+
+		if (versionFile.exists()) {
+			ProjectVersionDescriptor descriptor = json.fromJson(ProjectVersionDescriptor.class, versionFile);
+			if (descriptor.versionCode > App.VERSION_CODE) return; //prevent downgrading version saved in version.json
+		}
+
+		json.toJson(new ProjectVersionDescriptor(App.VERSION_CODE, App.VERSION), versionFile);
 	}
 
 	public static Json getNewJson () {
