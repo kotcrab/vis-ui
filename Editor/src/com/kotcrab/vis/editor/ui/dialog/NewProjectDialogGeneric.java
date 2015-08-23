@@ -87,6 +87,7 @@ public class NewProjectDialogGeneric extends VisTable {
 		add(outputDirectory);
 		add(chooseOutputButton);
 		row();
+		add(new VisLabel("Output folder is cleared on each export!")).colspan(3).row();
 
 		VisTable buttonTable = new VisTable(true);
 		buttonTable.defaults().minWidth(70);

@@ -89,6 +89,8 @@ public class NewProjectDialogLibGDX extends VisTable {
 		add(assetsLoc).fill();
 		row();
 
+		add(new VisLabel("Assets folder is cleared on each export!")).colspan(3).row();
+
 		VisTable buttonTable = new VisTable(true);
 		buttonTable.defaults().minWidth(70);
 
