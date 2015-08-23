@@ -122,14 +122,7 @@ public class ProjectIOModule extends EditorModule {
 							}
 						});
 			} else if (descriptor.versionCode < App.VERSION_CODE) {
-				DialogUtils.showOptionDialog(Editor.instance.getStage(), "Warning",
-						"This project was created in older version of VisEditor.\nAfter opening it may no longer work in older versions.\nDo you want to continue?",
-						OptionDialogType.YES_NO, new OptionDialogAdapter() {
-							@Override
-							public void yes () {
-								backupProjectAndLoad(dataFile, descriptor.versionCode);
-							}
-						});
+				backupProjectAndLoad(dataFile, descriptor.versionCode);
 			} else
 				doLoadProject(dataFile);
 		} else //if there is no version file that means that project was just created
