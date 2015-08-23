@@ -223,7 +223,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		contentTitleLabel = new VisLabel("Content");
 		searchField = new SearchField(newText -> {
 			if (currentDirectory == null) return true;
-			if (currentDirectory.list().length == 0 && searchField.getText().length() == 0) return true;
+			if (currentDirectory.list().length == 0 || searchField.getText().length() == 0) return true;
 
 			refreshFilesList();
 
