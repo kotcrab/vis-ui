@@ -41,6 +41,7 @@ public class VisAssetManager extends AssetManager {
 
 	public VisAssetManager (FileHandleResolver resolver, Batch batch) {
 		super(resolver);
+		if (batch == null) throw new IllegalStateException("Batch cannot be null");
 		sceneLoader = new SceneLoader();
 		sceneLoader.setBatch(batch);
 		setLoader(Scene.class, sceneLoader);
