@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
@@ -87,13 +88,13 @@ public class GridRendererSystem extends BaseSystem {
 		float xStart = camera.getX() - camera.getWidth() / 2;
 		float xEnd = xStart + camera.getWidth();
 
-		int leftDownY = (int) (camera.getY() - camera.getHeight() / 2);
-		int linesToDraw = (int) (camera.getHeight() / gridSize) + 1;
+		float leftDownY = (camera.getY() - camera.getHeight() / 2);
+		float linesToDraw = (camera.getHeight() / gridSize) + 10;
 
-		int drawingPointStart = leftDownY / (int) gridSize;
-		int drawingPointEnd = drawingPointStart + linesToDraw;
+		float drawingPointStart = leftDownY / gridSize;
+		float drawingPointEnd = drawingPointStart + linesToDraw;
 
-		for (int i = drawingPointStart; i < drawingPointEnd; i++)
+		for (int i = MathUtils.round(drawingPointStart); i < MathUtils.round(drawingPointEnd); i++)
 			shapeRenderer.line(xStart, i * gridSize, xEnd, i * gridSize);
 	}
 
@@ -102,13 +103,13 @@ public class GridRendererSystem extends BaseSystem {
 		float yStart = camera.getY() - camera.getHeight() / 2;
 		float yEnd = yStart + camera.getHeight();
 
-		int leftDownX = (int) (camera.getX() - camera.getWidth() / 2);
-		int linesToDraw = (int) (camera.getWidth() / gridSize) + 1;
+		float leftDownX = (camera.getX() - camera.getWidth() / 2);
+		float linesToDraw = (camera.getWidth() / gridSize) + 10;
 
-		int drawingPointStart = leftDownX / (int) gridSize;
-		int drawingPointEnd = drawingPointStart + linesToDraw;
+		float drawingPointStart = leftDownX / gridSize;
+		float drawingPointEnd = drawingPointStart + linesToDraw;
 
-		for (int i = drawingPointStart; i < drawingPointEnd; i++)
+		for (int i = MathUtils.round(drawingPointStart); i < MathUtils.round(drawingPointEnd); i++)
 			shapeRenderer.line(i * gridSize, yStart, i * gridSize, yEnd);
 	}
 
