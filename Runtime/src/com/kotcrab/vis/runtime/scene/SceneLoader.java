@@ -215,6 +215,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	/** Allows to add additional system and managers into {@link EntityEngine} */
 	static public class SceneParameter extends AssetLoaderParameters<Scene> {
 		public Array<BaseSystem> systems = new Array<BaseSystem>();
+		public Array<BaseSystem> passiveSystems = new Array<BaseSystem>();
 		public Array<Manager> managers = new Array<Manager>();
 	}
 }

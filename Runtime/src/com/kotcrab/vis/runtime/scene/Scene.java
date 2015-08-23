@@ -80,6 +80,9 @@ public class Scene {
 			for (BaseSystem system : parameter.systems)
 				engineConfig.setSystem(system);
 
+			for (BaseSystem system : parameter.passiveSystems)
+				engineConfig.setSystem(system, true);
+
 			for (Manager manager : parameter.managers)
 				engineConfig.setManager(manager);
 		}
