@@ -34,7 +34,6 @@ package com.kotcrab.vis.plugin.spine;
 import com.artemis.Entity;
 import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Serializer;
@@ -51,6 +50,7 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
 import com.kotcrab.vis.editor.util.FileUtils;
+import com.kotcrab.vis.editor.util.gdx.VisDragAndDrop;
 import com.kotcrab.vis.editor.util.gdx.VisDropSource;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
@@ -128,7 +128,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 	}
 
 	@Override
-	public Source createDropSource (DragAndDrop dragAndDrop, FileItem item) {
+	public Source createDropSource (VisDragAndDrop dragAndDrop, FileItem item) {
 		FileHandle atlasFile = FileUtils.sibling(item.getFile(), "atlas");
 		FileHandle skeletonFile = item.getFile();
 

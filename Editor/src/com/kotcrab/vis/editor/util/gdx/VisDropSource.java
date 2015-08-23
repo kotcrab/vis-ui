@@ -31,12 +31,12 @@ import com.kotcrab.vis.ui.widget.VisLabel;
  * @author Kotcrab
  */
 public class VisDropSource extends Source {
-	private final DragAndDrop dragAndDrop;
+	private final VisDragAndDrop dragAndDrop;
 
 	private String viewText;
 	private Object payloadObject;
 
-	public VisDropSource (DragAndDrop dragAndDrop, Actor actor) {
+	public VisDropSource (VisDragAndDrop dragAndDrop, Actor actor) {
 		super(actor);
 		this.dragAndDrop = dragAndDrop;
 	}

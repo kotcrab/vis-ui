@@ -211,6 +211,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	@Override
 	public void dispose () {
 		App.eventBus.unregister(this);
+		assetDragAndDrop.dispose();
 		tabsModule.removeListener(this);
 		assetsWatcher.removeListener(this);
 		assetsTab.removeFromTabPane();

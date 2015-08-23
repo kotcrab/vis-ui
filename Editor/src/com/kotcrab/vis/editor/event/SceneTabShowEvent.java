@@ -16,9 +16,13 @@
 
 package com.kotcrab.vis.editor.event;
 
-/**
- * @author Kotcrab
- */
-public enum ToolbarEventType {
-	FILE_SAVE, GRID_SNAP_SETTING_CHANGED
+import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
+
+/** @author Kotcrab */
+public class SceneTabShowEvent {
+	public final SceneModuleContainer sceneMC;
+
+	public SceneTabShowEvent (SceneModuleContainer sceneMC) {
+		this.sceneMC = sceneMC;
+	}
 }

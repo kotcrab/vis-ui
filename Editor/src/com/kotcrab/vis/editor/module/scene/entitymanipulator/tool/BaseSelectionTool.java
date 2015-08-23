@@ -35,6 +35,7 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
  */
 public abstract class BaseSelectionTool extends Tool {
 	protected float lastTouchX, lastTouchY;
+	protected float dragStartX, dragStartY;
 
 	protected boolean mouseInsideSelected;
 	protected boolean cameraDragged;
@@ -66,6 +67,9 @@ public abstract class BaseSelectionTool extends Tool {
 
 			lastTouchX = x;
 			lastTouchY = y;
+
+			dragStartX = x;
+			dragStartY = y;
 
 			if (isMouseInsideSelectedEntities(x, y) == false) {
 				mouseInsideSelected = true;
@@ -130,6 +134,8 @@ public abstract class BaseSelectionTool extends Tool {
 	protected void resetAfterTouchUp () {
 		lastTouchX = 0;
 		lastTouchY = 0;
+		dragStartX = 0;
+		dragStartY = 0;
 		mouseInsideSelected = false;
 		dragging = false;
 		dragged = false;

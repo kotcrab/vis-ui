@@ -46,7 +46,8 @@ public class EditorScene extends BaseObservable {
 	@Tag(0) public String path;
 	@Tag(1) public float width;
 	@Tag(2) public float height;
-	@Tag(7) public float pixelsPerUnit; //this value is float to avoid calculations problems
+	/** This value is float to avoid calculations problems */
+	@Tag(7) public float pixelsPerUnit;
 	@Tag(3) public SceneViewport viewport;
 
 	@Tag(9) public PhysicsSettings physicsSettings = new PhysicsSettings();

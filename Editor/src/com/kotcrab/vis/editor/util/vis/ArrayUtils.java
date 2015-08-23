@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.event;
+package com.kotcrab.vis.editor.util.vis;
 
-/**
- * @author Kotcrab
- */
-public enum ToolbarEventType {
-	FILE_SAVE, GRID_SNAP_SETTING_CHANGED
+import com.badlogic.gdx.utils.Array;
+
+/** @author Kotcrab */
+public class ArrayUtils {
+	public static <BaseType, RequiredType> void stream (Array<BaseType> array, Class<RequiredType> classFilter, VisConsumer<RequiredType> consumer) {
+		for (BaseType obj : array) {
+			if (classFilter.isInstance(obj)) {
+				if (consumer.accept((RequiredType) obj))
+					break;
+			}
+		}
+	}
 }

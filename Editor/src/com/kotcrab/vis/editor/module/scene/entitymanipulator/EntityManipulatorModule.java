@@ -25,6 +25,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -43,9 +44,11 @@ import com.kotcrab.vis.editor.entity.UUIDComponent;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.scene.*;
+import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesAddedAction;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesRemovedAction;
 import com.kotcrab.vis.editor.module.scene.action.GroupAction;
@@ -81,6 +84,8 @@ import static com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTi
 /** @author Kotcrab */
 public class EntityManipulatorModule extends SceneModule {
 	@InjectModule private StatusBarModule statusBar;
+	@InjectModule private EditingSettingsModule editingSettings;
+	@InjectModule private GridSettingsModule gridSettings;
 
 	@InjectModule private SceneIOModule sceneIO;
 	@InjectModule private SupportModule supportModule;
@@ -370,9 +375,16 @@ public class EntityManipulatorModule extends SceneModule {
 
 			EntityProxy proxy = entityProxyCache.get(entity);
 
-			float x = camera.getInputX() - proxy.getWidth() / 2;
-			float y = camera.getInputY() - proxy.getHeight() / 2;
-			proxy.setPosition(x, y);
+			if (editingSettings.isSnapEnabledOrKeyPressed()) {
+				float gridSize = gridSettings.config.gridSize;
+				float x = MathUtils.floor(camera.getInputX() / gridSize) * gridSize;
+				float y = MathUtils.floor(camera.getInputY() / gridSize) * gridSize;
+				proxy.setPosition(x, y);
+			} else {
+				float x = camera.getInputX() - proxy.getWidth() / 2;
+				float y = camera.getInputY() - proxy.getHeight() / 2;
+				proxy.setPosition(x, y);
+			}
 
 			undoModule.add(new EntitiesAddedAction(sceneContainer, entityEngine, entity));
 

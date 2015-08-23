@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.plugin;
 
 import com.artemis.Entity;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Serializer;
@@ -32,6 +31,7 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
+import com.kotcrab.vis.editor.util.gdx.VisDragAndDrop;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
@@ -67,7 +67,7 @@ public abstract class EditorEntitySupport {
 	public abstract ContentItemProperties getContentItemProperties (String relativePath, String extension);
 
 	/** Called when ObjectSupport must create drop source for assets drag and drop */
-	public abstract Source createDropSource (DragAndDrop dragAndDrop, FileItem item);
+	public abstract Source createDropSource (VisDragAndDrop dragAndDrop, FileItem item);
 
 	public abstract Entity processDropPayload (EntityEngine engine, EditorScene scene, Object payload);
 

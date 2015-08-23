@@ -26,10 +26,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
@@ -39,6 +39,7 @@ import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.FileUtils;
+import com.kotcrab.vis.editor.util.gdx.VisDragAndDrop;
 import com.kotcrab.vis.editor.util.gdx.VisDropSource;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -47,19 +48,19 @@ import com.kotcrab.vis.ui.widget.VisLabel;
  * Assets manager drag and drop helper class.
  * @author Kotcrab
  */
-public class AssetDragAndDrop {
+public class AssetDragAndDrop implements Disposable{
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private FontCacheModule fontCache;
 	@InjectModule private ParticleCacheModule particleCache;
 
-	private DragAndDrop dragAndDrop;
+	private VisDragAndDrop dragAndDrop;
 	private DragAndDropTarget dropTarget;
 
 	public AssetDragAndDrop (ModuleInjector injector) {
 		injector.injectModules(this);
 
-		dragAndDrop = new DragAndDrop();
+		dragAndDrop = new VisDragAndDrop(injector);
 		dragAndDrop.setKeepWithinStage(false);
 		dragAndDrop.setDragTime(0);
 	}
@@ -203,5 +204,10 @@ public class AssetDragAndDrop {
 
 	public void clear () {
 		dragAndDrop.clear();
+	}
+
+	@Override
+	public void dispose () {
+		dragAndDrop.dispose();
 	}
 }

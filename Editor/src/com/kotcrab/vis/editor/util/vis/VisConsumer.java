@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.event;
+package com.kotcrab.vis.editor.util.vis;
 
-/**
- * @author Kotcrab
- */
-public enum ToolbarEventType {
-	FILE_SAVE, GRID_SNAP_SETTING_CHANGED
+/** @author Kotcrab */
+public interface VisConsumer<T> {
+	boolean accept (T t);
 }

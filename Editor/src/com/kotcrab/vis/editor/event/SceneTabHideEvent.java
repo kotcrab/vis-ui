@@ -16,9 +16,6 @@
 
 package com.kotcrab.vis.editor.event;
 
-/**
- * @author Kotcrab
- */
-public enum ToolbarEventType {
-	FILE_SAVE, GRID_SNAP_SETTING_CHANGED
+/** @author Kotcrab */
+public class SceneTabHideEvent {
 }

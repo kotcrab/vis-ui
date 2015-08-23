@@ -16,9 +16,12 @@
 
 package com.kotcrab.vis.editor.event;
 
-/**
- * @author Kotcrab
- */
-public enum ToolbarEventType {
-	FILE_SAVE, GRID_SNAP_SETTING_CHANGED
+/** @author Kotcrab */
+public class ToggleToolbarEvent extends ToolbarEvent {
+	public final boolean toggleState;
+
+	public ToggleToolbarEvent (ToolbarEventType type, boolean toggleState) {
+		super(type);
+		this.toggleState = toggleState;
+	}
 }

@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.event;
+package com.kotcrab.vis.editor.util.vis;
 
-/**
- * @author Kotcrab
- */
-public enum ToolbarEventType {
-	FILE_SAVE, GRID_SNAP_SETTING_CHANGED
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.editor.App;
+
+public class EventButtonChangeListener extends ChangeListener {
+	private Object event;
+
+	public EventButtonChangeListener (Object event) {
+		this.event = event;
+	}
+
+	@Override
+	public void changed (ChangeEvent ignored, Actor actor) {
+		App.eventBus.post(event);
+	}
 }

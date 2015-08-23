@@ -16,22 +16,23 @@
 
 package com.kotcrab.vis.editor.module.editor;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.event.ToggleToolbarEvent;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.ToolbarEvent;
 import com.kotcrab.vis.editor.event.ToolbarEventType;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tools;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
+import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.editor.util.vis.ArrayUtils;
+import com.kotcrab.vis.editor.util.vis.EventButtonChangeListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -52,16 +53,21 @@ public class ToolbarModule extends EditorModule {
 	private final ButtonGroup<ToolButton> toolsGroup;
 
 	public ToolbarModule () {
+		toolsGroup = new ButtonGroup<>();
+
 		table = new VisTable(false);
 		table.defaults().pad(4, 0, 4, 3);
 		table.setBackground(VisUI.getSkin().getDrawable("button"));
-		table.add(createButton(Icons.SAVE, "Save (Ctrl + S)", ToolbarEventType.FILE_SAVE, ControllerPolicy.SAVABLE));
+
+		table.add(new ToolbarButtonBuilder().icon(Icons.SAVE).text("Save (Ctrl + S)").eventToolbar(ToolbarEventType.FILE_SAVE).policy(ControllerPolicy.SAVABLE).build());
+
 		table.addSeparator(true);
+		table.add(new ToolbarButtonBuilder().icon(Icons.CURSOR).text("Select entities (F1)").eventTool(Tools.SELECTION_TOOL).build());
+		table.add(new ToolbarButtonBuilder().icon(Icons.POLYGON).text("Edit polygons (F2)").eventTool(Tools.POLYGON_TOOL).build());
 
-		toolsGroup = new ButtonGroup<>();
+		table.addSeparator(true);
+		table.add(new ToolbarButtonBuilder().icon(Icons.SETTINGS_VIEW).text("Enable grid snapping (%)").eventToolbar(ToolbarEventType.GRID_SNAP_SETTING_CHANGED).toggle().build());
 
-		table.add(createToolButton(Icons.CURSOR, Tools.SELECTION_TOOL, "Select entities (F1)"));
-		table.add(createToolButton(Icons.POLYGON, Tools.POLYGON_TOOL, "Edit polygons (F2)"));
 		table.add().expand().fill();
 	}
 
@@ -101,75 +107,33 @@ public class ToolbarModule extends EditorModule {
 		}
 	}
 
+	@Subscribe
+	public void handleToggleToolbarEvent (ToggleToolbarEvent event) {
+		ArrayUtils.stream(table.getChildren(), ToolbarButton.class, button -> {
+			if (button.eventType == event.type) {
+				button.setChecked(event.toggleState);
+				return true;
+			}
+
+			return false;
+		});
+	}
+
 	public Table getTable () {
 		return table;
 	}
 
-	private VisImageButton createButton (Icons icon, String text, ToolbarEventType eventType, ControllerPolicy controllerPolicy) {
-		return createButton(icon, text, eventType, controllerPolicy, null, false);
-	}
+	private static class ToolbarButton extends VisImageButton {
+		private ToolbarEventType eventType;
 
-	private VisImageButton createToolButton (Icons icon, int toolId, String text) {
-		ToolButton button = new ToolButton(Assets.getIcon(icon), text, toolId);
-		button.addListener(new ToolbarButtonListener(new ToolSwitchedEvent(toolId)));
-		button.setProgrammaticChangeEvents(false);
-		button.setGenerateDisabledImage(true);
-
-		return finishButtonCreation(button, ControllerPolicy.SCENE, toolsGroup, true);
-	}
-
-	private VisImageButton createButton (Icons icon, String text, ToolbarEventType eventType, ControllerPolicy controllerPolicy, ButtonGroup group, boolean toggle) {
-		VisImageButton button = new VisImageButton(Assets.getIcon(icon), text);
-		button.addListener(new ToolbarButtonChangeListener(eventType));
-		button.setGenerateDisabledImage(true);
-
-		return finishButtonCreation(button, controllerPolicy, group, toggle);
-	}
-
-	private VisImageButton finishButtonCreation (VisImageButton button, ControllerPolicy controllerPolicy, ButtonGroup group, boolean toggle) {
-		if (group != null) group.add(button);
-		if (toggle) button.getStyle().checked = VisUI.getSkin().getDrawable("button-down");
-
-		switch (controllerPolicy) {
-			case SAVABLE:
-				savableScope.add(button);
-				break;
-			case SCENE:
-				sceneScope.add(button);
-				break;
-		}
-
-		return button;
-	}
-
-	private static class ToolbarButtonListener extends ChangeListener {
-		private Object event;
-
-		public ToolbarButtonListener (Object event) {
-			this.event = event;
-		}
-
-		@Override
-		public void changed (ChangeEvent changeEvent, Actor actor) {
-			App.eventBus.post(event);
-		}
-	}
-
-	@Deprecated
-	private static class ToolbarButtonChangeListener extends ChangeListener {
-		private ToolbarEventType type;
-
-		public ToolbarButtonChangeListener (ToolbarEventType eventType) {
-			this.type = eventType;
-		}
-
-		@Override
-		public void changed (ChangeEvent event, Actor actor) {
-			App.eventBus.post(new ToolbarEvent(type));
+		public ToolbarButton (Drawable imageUp, String tooltipText, ToolbarEventType eventType) {
+			super(imageUp, tooltipText);
+			this.eventType = eventType;
 		}
 	}
 
 	private static class ToolButton extends VisImageButton {
+
 		private int toolId;
 
 		public ToolButton (Drawable imageUp, String tooltipText, int toolId) {
@@ -180,9 +144,101 @@ public class ToolbarModule extends EditorModule {
 		public int getToolId () {
 			return toolId;
 		}
+
 	}
 
 	enum ControllerPolicy {
-		SAVABLE, SCENE
+		SAVABLE, SCENE, NONE
+	}
+
+	public class ToolbarButtonBuilder {
+		private Icons icon;
+		private String text;
+
+		private ControllerPolicy policy = ControllerPolicy.NONE;
+		private ButtonGroup group;
+
+		private boolean toggle;
+
+		private ToolbarEventType type;
+
+		private int toolId = -1;
+
+		public ToolbarButtonBuilder icon (Icons icon) {
+			this.icon = icon;
+			return this;
+		}
+
+		public ToolbarButtonBuilder text (String text) {
+			this.text = text;
+			return this;
+		}
+
+		public ToolbarButtonBuilder policy (ControllerPolicy policy) {
+			this.policy = policy;
+			return this;
+		}
+
+		public ToolbarButtonBuilder group (ButtonGroup group) {
+			this.group = group;
+			return this;
+		}
+
+		public ToolbarButtonBuilder toggle () {
+			this.toggle = true;
+			return this;
+		}
+
+		public ToolbarButtonBuilder eventTool (int toolId) {
+			this.toolId = toolId;
+			this.group = toolsGroup;
+			this.toggle = true;
+			return this;
+		}
+
+		public ToolbarButtonBuilder eventToolbar (ToolbarEventType type) {
+			this.type = type;
+			return this;
+		}
+
+		public VisImageButton build () {
+			VisImageButton button;
+
+			if (toolId != -1) {
+				button = new ToolButton(icon.drawable(), text, toolId);
+				button.addListener(new EventButtonChangeListener(new ToolSwitchedEvent(toolId)));
+			} else {
+				button = new ToolbarButton(icon.drawable(), text, type);
+
+				if (toggle)
+					button.addListener(new VisChangeListener((changeEvent, actor) -> App.eventBus.post(new ToggleToolbarEvent(type, button.isChecked()))));
+				else
+					button.addListener(new EventButtonChangeListener(new ToolbarEvent(type)));
+
+			}
+
+			button.setGenerateDisabledImage(true);
+			button.setProgrammaticChangeEvents(false);
+
+			if (group != null) group.add(button);
+
+			if (toggle) {
+				button.getStyle().checked = VisUI.getSkin().getDrawable("button-down");
+				button.getStyle().focusBorder = null;
+			}
+
+			switch (policy) {
+				case SAVABLE:
+					savableScope.add(button);
+					break;
+				case SCENE:
+					sceneScope.add(button);
+					break;
+				case NONE:
+					break;
+			}
+
+			return button;
+		}
 	}
 }

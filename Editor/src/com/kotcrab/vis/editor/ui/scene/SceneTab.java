@@ -30,10 +30,7 @@ import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
-import com.kotcrab.vis.editor.event.ToolbarEvent;
-import com.kotcrab.vis.editor.event.ToolbarEventType;
-import com.kotcrab.vis.editor.event.UndoEvent;
+import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.module.ContentTable;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleContainer;
@@ -221,6 +218,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Scene
 		sceneMC.onShow();
 		menuBarModule.setSceneButtonsListener(this);
 		focusSelf();
+		App.eventBus.post(new SceneTabShowEvent(sceneMC));
 	}
 
 	@Override
@@ -229,6 +227,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Scene
 		sceneMC.onHide();
 		menuBarModule.setSceneButtonsListener(null);
 		statusBarModule.setInfoLabelText("");
+		App.eventBus.post(new SceneTabHideEvent());
 	}
 
 	public EditorScene getScene () {

@@ -18,13 +18,31 @@ package com.kotcrab.vis.editor.module.scene.entitymanipulator.tool;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
+import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.action.MoveEntityAction;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /** @author Kotcrab */
 public class SelectionTool extends BaseSelectionTool {
+	@InjectModule private EditingSettingsModule editingSettings;
+	@InjectModule private GridSettingsModule gridSettings;
+
+	private Array<Pos> startingEntityPos = new Array<>();
+
+	@Override
+	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+		boolean result = super.touchDown(event, x, y, pointer, button);
+		entityManipulator.getSelectedEntities().forEach(proxy -> startingEntityPos.add(new Pos(proxy)));
+		return result;
+	}
+
 	@Override
 	public void touchDragged (InputEvent event, float x, float y, int pointer) {
 		super.touchDragged(event, x, y, pointer);
@@ -43,12 +61,39 @@ public class SelectionTool extends BaseSelectionTool {
 
 				if (dragging && entityManipulator.getSelectedEntities().size() > 0) {
 					dragged = true;
-					float deltaX = (x - lastTouchX);
-					float deltaY = (y - lastTouchY);
 
-					for (EntityProxy entity : entityManipulator.getSelectedEntities())
-						entity.setPosition(entity.getX() + deltaX, entity.getY() + deltaY);
+					float totalDeltaX = (x - dragStartX);
+					float totalDeltaY = (y - dragStartY);
 
+					ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
+					for (int i = 0; i < entities.size(); i++) {
+						EntityProxy entity = entities.get(i);
+						Pos startingPos = startingEntityPos.get(i);
+
+						entity.setPosition(startingPos.x + totalDeltaX, startingPos.y + totalDeltaY);
+
+						if (editingSettings.isSnapEnabledOrKeyPressed()) {
+							float gridSize = gridSettings.config.gridSize;
+
+							float snapX;
+							float snapY;
+
+							if (entities.size() == 1) {
+								//for single entity selection we can use precise coordinates
+								snapX = x;
+								snapY = y;
+							} else {
+								//for multiple be use imprecise value
+								//selection may not always be on grid square that mouse points to (it will aligned to some other square)
+								//but this method allows to align selection of many entities
+								snapX = entity.getX();
+								snapY = entity.getY();
+							}
+
+							entity.setPosition(MathUtils.floor(snapX / gridSize) * gridSize, MathUtils.floor(snapY / gridSize) * gridSize);
+						}
+
+					}
 					lastTouchX = x;
 					lastTouchY = y;
 
@@ -80,5 +125,21 @@ public class SelectionTool extends BaseSelectionTool {
 		}
 
 		super.touchUp(event, x, y, pointer, button);
+	}
+
+	@Override
+	protected void resetAfterTouchUp () {
+		super.resetAfterTouchUp();
+		startingEntityPos.clear();
+	}
+
+	private static class Pos {
+		float x;
+		float y;
+
+		public Pos (EntityProxy proxy) {
+			x = proxy.getX();
+			y = proxy.getY();
+		}
 	}
 }
