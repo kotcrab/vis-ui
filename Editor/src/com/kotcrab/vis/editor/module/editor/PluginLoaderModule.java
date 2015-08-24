@@ -52,6 +52,8 @@ import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 
+import org.apache.commons.io.IOUtils;
+
 public class PluginLoaderModule extends EditorModule {
 	private static final String TAG = "PluginLoader";
 	private static final String PLUGINS_FOLDER_PATH = App.getJarFolderPath() + File.separator + "plugins";
@@ -155,6 +157,7 @@ public class PluginLoaderModule extends EditorModule {
 
 			JarFile jarFile = new JarFile(descriptor.file.path());
 			loadJarClasses(classLoader, descriptor, jarFile.entries());
+			IOUtils.closeQuietly(jarFile);
 		}
 	}
 
