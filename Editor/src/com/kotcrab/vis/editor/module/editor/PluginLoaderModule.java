@@ -155,6 +155,7 @@ public class PluginLoaderModule extends EditorModule {
 
 			JarFile jarFile = new JarFile(descriptor.file.path());
 			loadJarClasses(classLoader, descriptor, jarFile.entries());
+			jarFile.close();
 		}
 	}
 

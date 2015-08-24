@@ -45,7 +45,7 @@ public class Skeleton {
 	final Array<Slot> slots;
 	Array<Slot> drawOrder;
 	final Array<IkConstraint> ikConstraints;
-	private final Array<Array<Bone>> boneCache = new Array();
+	private final Array<Array<Bone>> boneCache = new Array<Array<Bone>>();
 	Skin skin;
 	final Color color;
 	float time;
@@ -56,14 +56,14 @@ public class Skeleton {
 		if (data == null) throw new IllegalArgumentException("data cannot be null.");
 		this.data = data;
 
-		bones = new Array(data.bones.size);
+		bones = new Array<Bone>(data.bones.size);
 		for (BoneData boneData : data.bones) {
 			Bone parent = boneData.parent == null ? null : bones.get(data.bones.indexOf(boneData.parent, true));
 			bones.add(new Bone(boneData, this, parent));
 		}
 
-		slots = new Array(data.slots.size);
-		drawOrder = new Array(data.slots.size);
+		slots = new Array<Slot>(data.slots.size);
+		drawOrder = new Array<Slot>(data.slots.size);
 		for (SlotData slotData : data.slots) {
 			Bone bone = bones.get(data.bones.indexOf(slotData.boneData, true));
 			Slot slot = new Slot(slotData, bone);
@@ -71,7 +71,7 @@ public class Skeleton {
 			drawOrder.add(slot);
 		}
 
-		ikConstraints = new Array(data.ikConstraints.size);
+		ikConstraints = new Array<IkConstraint>(data.ikConstraints.size);
 		for (IkConstraintData ikConstraintData : data.ikConstraints)
 			ikConstraints.add(new IkConstraint(ikConstraintData, this));
 
@@ -85,26 +85,26 @@ public class Skeleton {
 		if (skeleton == null) throw new IllegalArgumentException("skeleton cannot be null.");
 		data = skeleton.data;
 
-		bones = new Array(skeleton.bones.size);
+		bones = new Array<Bone>(skeleton.bones.size);
 		for (Bone bone : skeleton.bones) {
 			Bone parent = bone.parent == null ? null : bones.get(skeleton.bones.indexOf(bone.parent, true));
 			bones.add(new Bone(bone, this, parent));
 		}
 
-		slots = new Array(skeleton.slots.size);
+		slots = new Array<Slot>(skeleton.slots.size);
 		for (Slot slot : skeleton.slots) {
 			Bone bone = bones.get(skeleton.bones.indexOf(slot.bone, true));
 			slots.add(new Slot(slot, bone));
 		}
 
-		drawOrder = new Array(slots.size);
+		drawOrder = new Array<Slot>(slots.size);
 		for (Slot slot : skeleton.drawOrder)
 			drawOrder.add(slots.get(skeleton.slots.indexOf(slot, true)));
 
-		ikConstraints = new Array(skeleton.ikConstraints.size);
+		ikConstraints = new Array<IkConstraint>(skeleton.ikConstraints.size);
 		for (IkConstraint ikConstraint : skeleton.ikConstraints) {
 			Bone target = bones.get(skeleton.bones.indexOf(ikConstraint.target, true));
-			Array<Bone> ikBones = new Array(ikConstraint.bones.size);
+			Array<Bone> ikBones = new Array<Bone>(ikConstraint.bones.size);
 			for (Bone bone : ikConstraint.bones)
 				ikBones.add(bones.get(skeleton.bones.indexOf(bone, true)));
 			ikConstraints.add(new IkConstraint(ikConstraint, ikBones, target));
@@ -128,7 +128,7 @@ public class Skeleton {
 
 		int arrayCount = ikConstraintsCount + 1;
 		while (boneCache.size < arrayCount)
-			boneCache.add(new Array());
+			boneCache.add(new Array<Bone>());
 		for (int i = 0; i < arrayCount; i++)
 			boneCache.get(i).clear();
 

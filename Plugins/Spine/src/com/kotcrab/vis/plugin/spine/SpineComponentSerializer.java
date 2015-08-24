@@ -92,7 +92,7 @@ public class SpineComponentSerializer extends EntityComponentSerializer<SpineCom
 	}
 
 	@Override
-	public Class getSerializedClassType () {
+	public Class<SpineComponent> getSerializedClassType () {
 		return SpineComponent.class;
 	}
 }

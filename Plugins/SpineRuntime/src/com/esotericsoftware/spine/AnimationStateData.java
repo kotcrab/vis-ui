@@ -36,7 +36,7 @@ import com.badlogic.gdx.utils.ObjectFloatMap;
 /** Stores mixing times between animations. */
 public class AnimationStateData {
 	private final SkeletonData skeletonData;
-	final ObjectFloatMap<Key> animationToMixTime = new ObjectFloatMap();
+	final ObjectFloatMap<Key> animationToMixTime = new ObjectFloatMap<Key>();
 	final Key tempKey = new Key();
 	float defaultMix;
 

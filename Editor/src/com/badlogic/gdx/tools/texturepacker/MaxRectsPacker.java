@@ -73,7 +73,7 @@ public class MaxRectsPacker implements Packer {
 			}
 		}
 
-		Array<Page> pages = new Array();
+		Array<Page> pages = new Array<>();
 		while (inputRects.size > 0) {
 			Page result = packPage(inputRects);
 			pages.add(result);
@@ -185,7 +185,7 @@ public class MaxRectsPacker implements Packer {
 			if (!settings.fast) {
 				result = maxRects.pack(inputRects, methods[i]);
 			} else {
-				Array<Rect> remaining = new Array();
+				Array<Rect> remaining = new Array<>();
 				for (int ii = 0, nn = inputRects.size; ii < nn; ii++) {
 					Rect rect = inputRects.get(ii);
 					if (maxRects.insert(rect, methods[i]) == null) {
@@ -248,8 +248,8 @@ public class MaxRectsPacker implements Packer {
 	class MaxRects {
 		private int binWidth;
 		private int binHeight;
-		private final Array<Rect> usedRectangles = new Array();
-		private final Array<Rect> freeRectangles = new Array();
+		private final Array<Rect> usedRectangles = new Array<>();
+		private final Array<Rect> freeRectangles = new Array<>();
 
 		public void init (int width, int height) {
 			binWidth = width;
@@ -297,7 +297,7 @@ public class MaxRectsPacker implements Packer {
 
 		/** For each rectangle, packs each one then chooses the best and packs that. Slow! */
 		public Page pack (Array<Rect> rects, FreeRectChoiceHeuristic method) {
-			rects = new Array(rects);
+			rects = new Array<>(rects);
 			while (rects.size > 0) {
 				int bestRectIndex = -1;
 				Rect bestNode = new Rect();
@@ -339,7 +339,7 @@ public class MaxRectsPacker implements Packer {
 				h = Math.max(h, rect.y + rect.height);
 			}
 			Page result = new Page();
-			result.outputRects = new Array(usedRectangles);
+			result.outputRects = new Array<>(usedRectangles);
 			result.occupancy = getOccupancy();
 			result.width = w;
 			result.height = h;

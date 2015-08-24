@@ -39,10 +39,10 @@ import com.esotericsoftware.spine.attachments.BoundingBoxAttachment;
 
 public class SkeletonBounds {
 	private float minX, minY, maxX, maxY;
-	private Array<BoundingBoxAttachment> boundingBoxes = new Array();
-	private Array<FloatArray> polygons = new Array();
-	private Pool<FloatArray> polygonPool = new Pool() {
-		protected Object newObject () {
+	private Array<BoundingBoxAttachment> boundingBoxes = new Array<BoundingBoxAttachment>();
+	private Array<FloatArray> polygons = new Array<FloatArray>();
+	private Pool<FloatArray> polygonPool = new Pool<FloatArray>() {
+		protected FloatArray newObject () {
 			return new FloatArray();
 		}
 	};

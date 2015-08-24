@@ -107,6 +107,7 @@ public class CrashReporter {
 
 		println("---------------------------------");
 		println();
+		reader.close();
 	}
 
 	private void println () {

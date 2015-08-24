@@ -42,9 +42,9 @@ public class Skin {
 	static private final Key lookup = new Key();
 
 	final String name;
-	final ObjectMap<Key, Attachment> attachments = new ObjectMap();
-	final Pool<Key> keyPool = new Pool(64) {
-		protected Object newObject () {
+	final ObjectMap<Key, Attachment> attachments = new ObjectMap<Key, Attachment>();
+	final Pool<Key> keyPool = new Pool<Key>(64) {
+		protected Key newObject () {
 			return new Key();
 		}
 	};

@@ -43,8 +43,8 @@ public class ImageProcessor {
 
 	private String rootPath;
 	private final Settings settings;
-	private final HashMap<String, Rect> crcs = new HashMap();
-	private final Array<Rect> rects = new Array();
+	private final HashMap<String, Rect> crcs = new HashMap<>();
+	private final Array<Rect> rects = new Array<>();
 	private float scale = 1;
 
 	/** @param rootDir Used to strip the root directory prefix from image file names, can be null. */
