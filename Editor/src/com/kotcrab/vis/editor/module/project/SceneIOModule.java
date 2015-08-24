@@ -146,7 +146,6 @@ public class SceneIOModule extends ProjectModule {
 		registerTagged(TtfFontAsset.class, 65);
 		registerTagged(ShaderAsset.class, 66);
 
-		//TODO
 		registerEntityComponentSerializer(SpriteComponent.class, new SpriteComponentSerializer(kryo, textureCache), 201);
 		registerEntityComponentSerializer(MusicComponent.class, new MusicComponentSerializer(kryo), 202);
 		registerTagged(SoundComponent.class, 203);
