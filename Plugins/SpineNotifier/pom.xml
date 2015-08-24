@@ -45,7 +45,7 @@
                             <Plugin-Description>Notifies if Spine integration plugin may be enabled</Plugin-Description>
                             <Plugin-Provider>Kotcrab</Plugin-Provider>
                             <Plugin-Version>${project.version}</Plugin-Version>
-                            <Plugin-Compatibility>2</Plugin-Compatibility>
+                            <Plugin-Compatibility>3</Plugin-Compatibility>
                         </manifestEntries>
                     </archive>
                     <outputDirectory>../../Editor/target/plugins/spine-notifier</outputDirectory>
