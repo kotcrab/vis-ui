@@ -77,6 +77,8 @@ public class DefaultExporter implements ExporterPlugin {
 		visAssetsDir = fileAccess.getAssetsFolder();
 
 		texturePackerSettings = new Settings();
+		texturePackerSettings.maxHeight = 2048;
+		texturePackerSettings.maxWidth = 2048;
 		texturePackerSettings.combineSubdirectories = true;
 		texturePackerSettings.silent = true;
 		texturePackerSettings.useIndexes = false;
