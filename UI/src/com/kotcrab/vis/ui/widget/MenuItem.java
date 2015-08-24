@@ -49,7 +49,8 @@ public class MenuItem extends Button {
 
 	private boolean generateDisabledImage = true;
 
-	private Cell<VisLabel> shortcutLabelCell;
+	private Color shortcutLabelColor;
+	private VisLabel shortcutLabel;
 
 	private PopupMenu subMenu;
 	private Image subMenuImage;
@@ -109,7 +110,8 @@ public class MenuItem extends Button {
 		label.setAlignment(Align.left);
 		add(label).expand().fill();
 
-		shortcutLabelCell = add(new VisLabel("", "menuitem-shortcut")).padLeft(10).right();
+		add(shortcutLabel = new VisLabel("", "menuitem-shortcut")).padLeft(10).right();
+		shortcutLabelColor = shortcutLabel.getStyle().fontColor;
 
 		subMenuIconCell = add(subMenuImage = new Image(style.subMenu)).padLeft(3).padRight(3).size(style.subMenu.getMinWidth(), style.subMenu.getMinHeight());
 		subMenuIconCell.setActor(null);
@@ -191,6 +193,12 @@ public class MenuItem extends Button {
 			fontColor = style.fontColor;
 		if (fontColor != null) label.getStyle().fontColor = fontColor;
 
+		if(isDisabled())
+			shortcutLabel.getStyle().fontColor = style.disabledFontColor;
+		else
+			shortcutLabel.getStyle().fontColor = shortcutLabelColor;
+
+
 		if (image != null && generateDisabledImage) {
 			if (isDisabled())
 				image.setColor(Color.GRAY);
@@ -233,7 +241,7 @@ public class MenuItem extends Button {
 	}
 
 	public String getShortcut () {
-		return shortcutLabelCell.getActor().getText().toString();
+		return shortcutLabel.getText().toString();
 	}
 
 	/**
@@ -243,7 +251,7 @@ public class MenuItem extends Button {
 	 * @return this object for the purpose of chaining methods
 	 */
 	public MenuItem setShortcut (String text) {
-		shortcutLabelCell.getActor().setText(text);
+		shortcutLabel.setText(text);
 		return this;
 	}
 
