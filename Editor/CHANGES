@@ -1,4 +1,6 @@
-[0.2.3] [LibGDX 1.6.4] [Snapshot]
+[0.2.4] [LibGDX 1.6.4] [Snapshot]
+
+[0.2.3] [LibGDX 1.6.4]
 -Added VariablesComponent
 -Fixed crash when moving entities group
 -Fixed crash for very small grid sizes
