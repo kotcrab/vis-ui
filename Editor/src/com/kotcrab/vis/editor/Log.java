@@ -116,7 +116,7 @@ public class Log {
 		}
 
 		logFileWriter.println();
-		info("VisEditor " + App.VERSION);
+		info("VisEditor " + App.VERSION + " (version code: " + App.VERSION_CODE + ")");
 		info("Started: " + fileName);
 	}
 
