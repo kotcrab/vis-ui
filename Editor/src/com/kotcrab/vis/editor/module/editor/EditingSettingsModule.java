@@ -18,25 +18,31 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ToggleToolbarEvent;
 import com.kotcrab.vis.editor.event.ToolbarEventType;
 import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
 
 /** @author Kotcrab */
 public class EditingSettingsModule extends EditorModule {
+	@InjectModule private InputModule inputModule;
 	@InjectModule private EditorSettingsIOModule settingsIO;
 
 	private static final String SETTINGS_NAME = "editingProperties";
 
 	private EditingConfig config;
 
+	private EditingInputListener inputListener = new EditingInputListener();
+
 	@Override
 	public void init () {
 		config = settingsIO.load(SETTINGS_NAME, EditingConfig.class);
 		App.eventBus.register(this);
+		inputModule.addListener(inputListener);
 	}
 
 	@Override
@@ -48,6 +54,7 @@ public class EditingSettingsModule extends EditorModule {
 	public void dispose () {
 		settingsIO.save(config, SETTINGS_NAME);
 		App.eventBus.unregister(this);
+		inputModule.removeListener(inputListener);
 	}
 
 	@Subscribe
@@ -69,5 +76,17 @@ public class EditingSettingsModule extends EditorModule {
 
 	public static class EditingConfig {
 		@Tag(0) public boolean snapToGrid = false;
+	}
+
+	private class EditingInputListener extends ModalInputListener {
+		@Override
+		public boolean keyDown (InputEvent event, int keycode) {
+			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) && keycode == Keys.NUM_5) {
+				App.eventBus.post(new ToggleToolbarEvent(ToolbarEventType.GRID_SNAP_SETTING_CHANGED, !isSnapToGrid()));
+				return true;
+			}
+
+			return false;
+		}
 	}
 }
