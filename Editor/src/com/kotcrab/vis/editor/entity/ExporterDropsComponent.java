@@ -18,10 +18,11 @@ package com.kotcrab.vis.editor.entity;
 
 import com.artemis.Component;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 /** @author Kotcrab */
 public class ExporterDropsComponent extends Component {
-	public Array<Class> componentsToDrop = new Array<>();
+	@VisTag(0) public Array<Class> componentsToDrop = new Array<>();
 
 	public ExporterDropsComponent (Class... components) {
 		componentsToDrop.addAll(components);

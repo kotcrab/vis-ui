@@ -24,15 +24,19 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.module.project.converter.DummyConverter;
+import com.kotcrab.vis.editor.module.project.converter.ProjectConverter;
+import com.kotcrab.vis.editor.module.project.converter.ProjectConverter8to9;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
+import com.kotcrab.vis.editor.serializer.VisTaggedFieldSerializer;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.AsyncTask;
+import com.kotcrab.vis.editor.util.AsyncTaskListener;
 import com.kotcrab.vis.editor.util.CopyFileVisitor;
 import com.kotcrab.vis.editor.util.SteppedAsyncTask;
 import com.kotcrab.vis.editor.util.vis.EditorException;
@@ -55,20 +59,38 @@ import java.util.zip.ZipOutputStream;
  * @author Kotcrab
  */
 public class ProjectIOModule extends EditorModule {
-	@InjectModule private StatusBarModule statusBar;
+	private static final String TAG = "ProjectIOModule";
 
 	public static final String PROJECT_FILE = "project.data";
 
+	@InjectModule private StatusBarModule statusBar;
+
 	private Kryo kryo;
+
+	private Array<ProjectConverter> projectConverters = new Array<>();
+	private AsyncTaskProgressDialog taskDialog;
 
 	@Override
 	public void init () {
 		kryo = new Kryo();
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
-		kryo.setDefaultSerializer(TaggedFieldSerializer.class);
+		kryo.setDefaultSerializer(VisTaggedFieldSerializer.class);
 		kryo.register(Array.class, new ArraySerializer(), 10);
 		kryo.register(ProjectLibGDX.class, 11);
 		kryo.register(ProjectGeneric.class, 12);
+
+		//TODO: [plugins] plugin entry point
+		projectConverters.add(new DummyConverter(1, 8));
+		projectConverters.add(new DummyConverter(2, 8));
+		projectConverters.add(new DummyConverter(3, 8));
+		projectConverters.add(new DummyConverter(4, 8));
+		projectConverters.add(new DummyConverter(5, 8));
+		projectConverters.add(new DummyConverter(6, 8));
+		projectConverters.add(new DummyConverter(7, 8));
+		projectConverters.add(new ProjectConverter8to9());
+
+		for (ProjectConverter converter : projectConverters)
+			container.injectModules(converter);
 	}
 
 	public void loadHandleError (Stage stage, FileHandle projectRoot) {
@@ -76,6 +98,7 @@ public class ProjectIOModule extends EditorModule {
 			load(projectRoot);
 		} catch (EditorException e) {
 			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
+			Log.exception(e);
 		}
 	}
 
@@ -122,7 +145,7 @@ public class ProjectIOModule extends EditorModule {
 							}
 						});
 			} else if (descriptor.versionCode < App.VERSION_CODE) {
-				backupProjectAndLoad(dataFile, descriptor.versionCode);
+				backupProject(dataFile, descriptor.versionCode, () -> convertAndLoad(dataFile, descriptor.versionCode));
 			} else
 				doLoadProject(dataFile);
 		} else //if there is no version file that means that project was just created
@@ -130,19 +153,43 @@ public class ProjectIOModule extends EditorModule {
 
 	}
 
-	private void backupProjectAndLoad (FileHandle dataFile, int oldVersionCode) {
-		Project project = loadProjectDataFile(dataFile);
+	private void backupProject (FileHandle dataFile, int oldVersionCode, AsyncTaskListener listener) {
+		Project project = readProjectDataFile(dataFile);
 		FileHandle backupRoot = project.getVisDirectory();
 		FileHandle backupOut = backupRoot.child("modules").child(".conversionBackup");
 		backupOut.mkdirs();
 
 		FileHandle backupArchive = backupOut.child("before-conversion-from-" + oldVersionCode + "-to-" + App.VERSION_CODE + ".zip");
 
-		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Creating backup...",
-				new CreateProjectBackupAsyncTask(dataFile, backupRoot, backupArchive)).fadeIn());
+		taskDialog = new AsyncTaskProgressDialog("Creating backup", new CreateProjectBackupAsyncTask(backupRoot, backupArchive));
+		taskDialog.setTaskListener(listener);
+		Editor.instance.getStage().addActor(taskDialog.fadeIn());
 	}
 
-	private Project loadProjectDataFile (FileHandle dataFile) {
+	private void convertAndLoad (FileHandle dataFile, int versionCode) {
+		if (versionCode == App.VERSION_CODE) {
+			doLoadProject(dataFile);
+			return;
+		}
+
+		for (ProjectConverter converter : projectConverters) {
+			if (converter.getFromVersion() == versionCode) {
+				Log.info(TAG, "Running converter from versionCode " + converter.getFromVersion() + " to versionCode " + converter.getToVersion());
+				AsyncTask task = converter.getConversionTask(dataFile);
+				if (task == null) {
+					convertAndLoad(dataFile, converter.getToVersion());
+					return;
+				}
+
+				taskDialog = new AsyncTaskProgressDialog("Converting project", task);
+				taskDialog.setTaskListener(() -> convertAndLoad(dataFile, converter.getToVersion())); //damn recursive async tasks
+				Editor.instance.getStage().addActor(taskDialog.fadeIn());
+				return;
+			}
+		}
+	}
+
+	public Project readProjectDataFile (FileHandle dataFile) {
 		try {
 			Input input = new Input(new FileInputStream(dataFile.file()));
 			Project project = (Project) kryo.readClassAndObject(input);
@@ -158,7 +205,7 @@ public class ProjectIOModule extends EditorModule {
 	}
 
 	private void doLoadProject (FileHandle dataFile) {
-		Project project = loadProjectDataFile(dataFile);
+		Project project = readProjectDataFile(dataFile);
 		Editor.instance.projectLoaded(project);
 	}
 
@@ -203,7 +250,7 @@ public class ProjectIOModule extends EditorModule {
 			}
 		};
 
-		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Creating project...", task).fadeIn());
+		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Creating project", task).fadeIn());
 	}
 
 	public void createGenericProject (ProjectGeneric project) {
@@ -235,7 +282,7 @@ public class ProjectIOModule extends EditorModule {
 			}
 		};
 
-		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Creating project...", task).fadeIn());
+		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Creating project", task).fadeIn());
 	}
 
 	private void saveProjectFile (Project project, FileHandle projectFile) {
@@ -269,13 +316,11 @@ public class ProjectIOModule extends EditorModule {
 	}
 
 	private class CreateProjectBackupAsyncTask extends SteppedAsyncTask {
-		private FileHandle dataFile;
 		private final FileHandle backupRoot;
 		private final FileHandle backupArchive;
 
-		public CreateProjectBackupAsyncTask (FileHandle dataFile, FileHandle backupRoot, FileHandle backupArchive) {
+		public CreateProjectBackupAsyncTask (FileHandle backupRoot, FileHandle backupArchive) {
 			super("ProjectBackupZipCreator");
-			this.dataFile = dataFile;
 			this.backupRoot = backupRoot;
 			this.backupArchive = backupArchive;
 		}
@@ -288,8 +333,6 @@ public class ProjectIOModule extends EditorModule {
 				try (ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(backupArchive.file()))) {
 					processZipFolder(backupRoot, zipOutputStream, backupRoot.path().length() + 1);
 				}
-
-				doLoadProject(dataFile);
 			} catch (IOException e) {
 				failed("IO error occurred during backup creation", e);
 			}

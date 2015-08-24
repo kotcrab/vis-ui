@@ -17,6 +17,7 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
+import com.kotcrab.vis.runtime.util.annotation.VisTag;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
 /**
@@ -24,7 +25,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATProperty;
  * @author Kotcrab
  */
 public class RenderableComponent extends Component {
-	@ATProperty(fieldName = "Z Index")
+	@VisTag(0) @ATProperty(fieldName = "Z Index")
 	public int zIndex;
 
 	private RenderableComponent () {

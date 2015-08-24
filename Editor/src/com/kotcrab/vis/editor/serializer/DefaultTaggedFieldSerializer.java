@@ -19,32 +19,25 @@ package com.kotcrab.vis.editor.serializer;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.kotcrab.vis.editor.entity.EntityScheme;
-import com.kotcrab.vis.editor.module.project.SceneIOModule;
 
 /** @author Kotcrab */
-public class EntitySchemeSerializer extends VisTaggedFieldSerializer<EntityScheme> {
+public class DefaultTaggedFieldSerializer<T> extends VisTaggedFieldSerializer<T> {
 	private static final int VERSION_CODE = 1;
 
-	private SceneIOModule sceneIO;
-
-	public EntitySchemeSerializer (Kryo kryo, SceneIOModule sceneIO) {
-		super(kryo, EntityScheme.class);
-		this.sceneIO = sceneIO;
+	public DefaultTaggedFieldSerializer (Kryo kryo, Class type) {
+		super(kryo, type);
 	}
 
 	@Override
-	public void write (Kryo kryo, Output output, EntityScheme scheme) {
-		sceneIO.setEngineSerializationContext(scheme.components);
+	public void write (Kryo kryo, Output output, T scheme) {
 		super.write(kryo, output, scheme);
 		output.writeInt(VERSION_CODE);
-		sceneIO.setEngineSerializationContext(null);
 	}
 
 	@Override
-	public EntityScheme read (Kryo kryo, Input input, Class<EntityScheme> type) {
-		EntityScheme scheme = super.read(kryo, input, type);
+	public T read (Kryo kryo, Input input, Class<T> type) {
+		T obj = super.read(kryo, input, type);
 		int versionCode = input.readInt();
-		return scheme;
+		return obj;
 	}
 }

@@ -24,6 +24,8 @@ import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.plugin.ExporterPlugin;
 
+import java.lang.reflect.Constructor;
+
 /**
  * Holds plugins loaded by {@link PluginLoaderModule}. Others modules (even from different containers like 'project' or 'scene') then can access them.
  * @author Kotcrab
@@ -61,8 +63,17 @@ public class ExtensionStorageModule extends EditorModule {
 	public <T extends Module> Array<T> getContainersExtensions (Class<T> baseModuleType, ExtensionScope scope) {
 		Array<T> modules = new Array<>();
 
-		for (ContainerExtension extension : containerExtensions)
-			if (extension.getScope() == scope) modules.add((T) extension);
+		for (ContainerExtension extension : containerExtensions) {
+			if (extension.getScope() == scope) {
+				try {
+					Constructor<?> cons = extension.getClass().getConstructor();
+					Object module = cons.newInstance();
+					modules.add((T) module);
+				} catch (ReflectiveOperationException e) {
+					throw new IllegalStateException(e);
+				}
+			}
+		}
 
 		return modules;
 	}

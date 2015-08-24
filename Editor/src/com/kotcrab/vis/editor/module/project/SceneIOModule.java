@@ -39,7 +39,6 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.*;
-import com.kotcrab.vis.editor.entity.EditorPositionComponent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializedTypeDescriptor;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializerDescriptor;
@@ -71,15 +70,15 @@ public class SceneIOModule extends ProjectModule {
 	public static final int KRYO_PLUGINS_RESERVED_ID_BEGIN = 401;
 	public static final int KRYO_PLUGINS_RESERVED_ID_END = 800;
 
-	private Kryo kryo;
+	protected Kryo kryo;
 
-	@InjectModule private FileAccessModule fileAccessModule;
-	@InjectModule private SupportModule supportModule;
+	@InjectModule protected FileAccessModule fileAccessModule;
+	@InjectModule protected SupportModule supportModule;
 
-	@InjectModule private TextureCacheModule textureCache;
-	@InjectModule private ParticleCacheModule particleCache;
-	@InjectModule private FontCacheModule fontCache;
-	@InjectModule private ShaderCacheModule shaderCache;
+	@InjectModule protected TextureCacheModule textureCache;
+	@InjectModule protected ParticleCacheModule particleCache;
+	@InjectModule protected FontCacheModule fontCache;
+	@InjectModule protected ShaderCacheModule shaderCache;
 
 	private FileHandle assetsFolder;
 	private FileHandle sceneBackupFolder;
@@ -87,11 +86,19 @@ public class SceneIOModule extends ProjectModule {
 	private Array<EntityComponentSerializer> entityComponentSerializers = new Array<>();
 
 	@Override
+	public void added () {
+		kryo = new Kryo();
+	}
+
+	@Override
 	public void init () {
 		assetsFolder = fileAccessModule.getAssetsFolder();
 		sceneBackupFolder = fileAccessModule.getModuleFolder(".sceneBackup");
 
-		kryo = new Kryo();
+		setupKryo();
+	}
+
+	protected void setupKryo () {
 		kryo.setClassLoader(Thread.currentThread().getContextClassLoader());
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
@@ -126,43 +133,48 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(EditorScene.class, new EditorSceneSerializer(kryo), 31);
 		kryo.register(EntityScheme.class, new EntitySchemeSerializer(kryo, this), 32);
 		kryo.register(SceneViewport.class, 33);
-		kryo.register(Layer.class, 34);
+		registerTagged(Layer.class, 34);
 		kryo.register(BitmapFontParameter.class, 35);
 		kryo.register(TextureFilter.class, 36);
 		kryo.register(LayerCordsSystem.class, 37);
-		kryo.register(PhysicsSettings.class, 38);
+		registerTagged(PhysicsSettings.class, 38);
 
-		kryo.register(PathAsset.class, 61);
-		kryo.register(TextureRegionAsset.class, 62);
-		kryo.register(AtlasRegionAsset.class, 63);
-		kryo.register(BmpFontAsset.class, 64);
-		kryo.register(TtfFontAsset.class, 65);
-		kryo.register(ShaderAsset.class, 66);
+		registerTagged(PathAsset.class, 61);
+		registerTagged(TextureRegionAsset.class, 62);
+		registerTagged(AtlasRegionAsset.class, 63);
+		registerTagged(BmpFontAsset.class, 64);
+		registerTagged(TtfFontAsset.class, 65);
+		registerTagged(ShaderAsset.class, 66);
 
+		//TODO
 		registerEntityComponentSerializer(SpriteComponent.class, new SpriteComponentSerializer(kryo, textureCache), 201);
 		registerEntityComponentSerializer(MusicComponent.class, new MusicComponentSerializer(kryo), 202);
-		kryo.register(SoundComponent.class, 203);
+		registerTagged(SoundComponent.class, 203);
 		registerEntityComponentSerializer(ParticleComponent.class, new ParticleComponentSerializer(kryo, particleCache), 204);
 		registerEntityComponentSerializer(TextComponent.class, new TextComponentSerializer(kryo, fontCache), 205);
-
-		kryo.register(EditorPositionComponent.class, 206);
-		kryo.register(ExporterDropsComponent.class, 207);
-		kryo.register(PixelsPerUnitComponent.class, 208);
-		kryo.register(UUIDComponent.class, 209);
-
-		kryo.register(AssetComponent.class, 220);
-		kryo.register(GroupComponent.class, 221);
-		kryo.register(IDComponent.class, 222);
-		kryo.register(InvisibleComponent.class, 223);
-		kryo.register(LayerComponent.class, 224);
-		kryo.register(RenderableComponent.class, 225);
 		registerEntityComponentSerializer(ShaderComponent.class, new ShaderComponentSerializer(kryo, shaderCache), 226);
-		kryo.register(PolygonComponent.class, 227);
-		kryo.register(PhysicsPropertiesComponent.class, 228);
-		kryo.register(VariablesComponent.class, 229);
+
+		registerTagged(EditorPositionComponent.class, 206);
+		registerTagged(ExporterDropsComponent.class, 207);
+		registerTagged(PixelsPerUnitComponent.class, 208);
+		registerTagged(UUIDComponent.class, 209);
+
+		registerTagged(AssetComponent.class, 220);
+		registerTagged(GroupComponent.class, 221);
+		registerTagged(IDComponent.class, 222);
+		registerTagged(InvisibleComponent.class, 223);
+		registerTagged(LayerComponent.class, 224);
+		registerTagged(RenderableComponent.class, 225);
+		registerTagged(PolygonComponent.class, 227);
+		registerTagged(PhysicsPropertiesComponent.class, 228);
+		registerTagged(VariablesComponent.class, 229);
 	}
 
-	private void registerEntityComponentSerializer (Class<? extends Component> componentClass, EntityComponentSerializer serializer, int id) {
+	private <T> void registerTagged (Class<T> clazz, int id) {
+		kryo.register(clazz, new DefaultTaggedFieldSerializer<T>(kryo, clazz), id);
+	}
+
+	protected void registerEntityComponentSerializer (Class<? extends Component> componentClass, EntityComponentSerializer serializer, int id) {
 		kryo.register(componentClass, serializer, id);
 		entityComponentSerializers.add(serializer);
 	}

@@ -93,7 +93,7 @@ public class SpineUITable extends SpecificUITable {
 				createCommonAnimationsList();
 			}
 		});
-		animSelectBox.addListener(properties.getSharedChangeListener());
+		animSelectBox.addListener(properties.getSharedSelectBoxChangeListener());
 
 		warningImage = new Image(Assets.getIcon(Icons.WARNING));
 
@@ -190,8 +190,10 @@ public class SpineUITable extends SpecificUITable {
 				SpinePreviewComponent previewComponent = entity.getComponent(SpinePreviewComponent.class);
 				SpineScaleComponent scaleComponent = entity.getComponent(SpineScaleComponent.class);
 
-				if (animSelectBox.getSelection().first().equals(NO_COMMON_ANIMATION) == false)
+				if (animSelectBox.getSelection().first().equals(NO_COMMON_ANIMATION) == false) {
 					spineComponent.setDefaultAnimation(animSelectBox.getSelection().first());
+					previewComponent.updateAnimation = true;
+				}
 
 				if (playAnimationOnStart.isIndeterminate() == false)
 					spineComponent.setPlayOnStart(playAnimationOnStart.isChecked());

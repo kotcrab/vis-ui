@@ -19,13 +19,14 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.StoresAssetDescriptor;
+import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 /**
  * Holds entity asset descriptor
  * @author Kotcrab
  */
 public class AssetComponent extends Component implements StoresAssetDescriptor {
-	public VisAssetDescriptor asset;
+	@VisTag(0) public VisAssetDescriptor asset;
 
 	private AssetComponent () {
 	}

@@ -20,7 +20,6 @@ import com.badlogic.gdx.utils.IntMap;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
@@ -33,7 +32,7 @@ import java.lang.reflect.Field;
  * Kryo serializer for {@link EditorScene}
  * @author Kotcrab
  */
-public class EditorSceneSerializer extends TaggedFieldSerializer<EditorScene> {
+public class EditorSceneSerializer extends VisTaggedFieldSerializer<EditorScene> {
 	private static final int VERSION_CODE = 4;
 
 	public EditorSceneSerializer (Kryo kryo) {

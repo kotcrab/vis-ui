@@ -22,13 +22,13 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsIOModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.serializer.UUIDSerializer;
+import com.kotcrab.vis.editor.serializer.VisTaggedFieldSerializer;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
@@ -58,7 +58,7 @@ public class ProjectSettingsIOModule extends ProjectModule {
 	public void init () {
 		kryo = new Kryo();
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
-		kryo.setDefaultSerializer(TaggedFieldSerializer.class);
+		kryo.setDefaultSerializer(VisTaggedFieldSerializer.class);
 		kryo.register(Array.class, new ArraySerializer(), 10);
 		kryo.register(UUID.class, new UUIDSerializer(), 11);
 

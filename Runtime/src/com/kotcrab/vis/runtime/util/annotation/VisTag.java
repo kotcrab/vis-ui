@@ -14,29 +14,19 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.scene;
+package com.kotcrab.vis.runtime.util.annotation;
 
-import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * EditorScene layer class
+ * Fields with this annotation will be serialized by VisTaggedFieldSerializer
  * @author Kotcrab
  */
-public class Layer {
-	@VisTag(0) public String name;
-	@VisTag(1) public int id;
-	@VisTag(2) public boolean locked = false;
-	@VisTag(3) public boolean visible = true;
-	@VisTag(4) public LayerCordsSystem cordsSystem = LayerCordsSystem.WORLD;
-
-	public Layer (String name, int id) {
-		this.name = name;
-		this.id = id;
-	}
-
-	@Override
-	public String toString () {
-		return name;
-	}
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface VisTag {
+	int value ();
 }

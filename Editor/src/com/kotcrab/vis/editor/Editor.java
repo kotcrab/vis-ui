@@ -209,6 +209,10 @@ public class Editor extends ApplicationAdapter {
 		settingsDialog.addAll(editorMC.getModules());
 	}
 
+	public EditorModuleContainer getEditorModuleContainer () {
+		return editorMC;
+	}
+
 	private TabbedPaneListener createTabsModuleListener () {
 		return new TabbedPaneAdapter() {
 			@Override
@@ -416,28 +420,7 @@ public class Editor extends ApplicationAdapter {
 				executeOnOpenGL(() -> {
 					projectLoaded = true;
 					projectMC.setProject(project);
-
-					projectMC.add(new FileAccessModule());
-					projectMC.add(new AssetsWatcherModule());
-					projectMC.add(new TextureCacheModule());
-					projectMC.add(new FontCacheModule());
-					projectMC.add(new ParticleCacheModule());
-					projectMC.add(new SceneCacheModule());
-					projectMC.add(new ShaderCacheModule());
-					projectMC.add(new ProjectVersionModule());
-					projectMC.add(new SceneIOModule());
-					projectMC.add(new ProjectSettingsIOModule());
-					projectMC.add(new SupportModule());
-					projectMC.add(new SceneMetadataModule());
-					projectMC.add(new AssetsAnalyzerModule());
-
-					projectMC.add(new ExportersManagerModule());
-					projectMC.add(new ExportSettingsModule());
-
-					projectMC.add(new SceneTabsModule());
-					projectMC.add(new ProjectInfoTabModule());
-					projectMC.add(new AssetsUIModule());
-					projectMC.addAll(pluginContainer.getContainersExtensions(ProjectModule.class, ExtensionScope.PROJECT));
+					addDefaultProjectMCModules(projectMC);
 				});
 
 				setMessage("Initializing...");
@@ -461,6 +444,30 @@ public class Editor extends ApplicationAdapter {
 		});
 		dialog.setVisible(true);
 		Editor.instance.getStage().addActor(dialog);
+	}
+
+	public void addDefaultProjectMCModules (ProjectModuleContainer projectMC) {
+		projectMC.add(new FileAccessModule());
+		projectMC.add(new AssetsWatcherModule());
+		projectMC.add(new TextureCacheModule());
+		projectMC.add(new FontCacheModule());
+		projectMC.add(new ParticleCacheModule());
+		projectMC.add(new SceneCacheModule());
+		projectMC.add(new ShaderCacheModule());
+		projectMC.add(new ProjectVersionModule());
+		projectMC.add(new SceneIOModule());
+		projectMC.add(new ProjectSettingsIOModule());
+		projectMC.add(new SupportModule());
+		projectMC.add(new SceneMetadataModule());
+		projectMC.add(new AssetsAnalyzerModule());
+
+		projectMC.add(new ExportersManagerModule());
+		projectMC.add(new ExportSettingsModule());
+
+		projectMC.add(new SceneTabsModule());
+		projectMC.add(new ProjectInfoTabModule());
+		projectMC.add(new AssetsUIModule());
+		projectMC.addAll(pluginContainer.getContainersExtensions(ProjectModule.class, ExtensionScope.PROJECT));
 	}
 
 	private void switchProject (final Project project) {

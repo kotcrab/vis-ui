@@ -14,29 +14,19 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.scene;
+package com.kotcrab.vis.editor.module.project.converter;
 
-import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
+import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.util.AsyncTask;
 
-/**
- * EditorScene layer class
- * @author Kotcrab
- */
-public class Layer {
-	@VisTag(0) public String name;
-	@VisTag(1) public int id;
-	@VisTag(2) public boolean locked = false;
-	@VisTag(3) public boolean visible = true;
-	@VisTag(4) public LayerCordsSystem cordsSystem = LayerCordsSystem.WORLD;
-
-	public Layer (String name, int id) {
-		this.name = name;
-		this.id = id;
+/** @author Kotcrab */
+public class DummyConverter extends ProjectConverter {
+	public DummyConverter (int fromVersion, int toVersion) {
+		super(fromVersion, toVersion);
 	}
 
 	@Override
-	public String toString () {
-		return name;
+	public AsyncTask getConversionTask (FileHandle dataFile) {
+		return null;
 	}
 }

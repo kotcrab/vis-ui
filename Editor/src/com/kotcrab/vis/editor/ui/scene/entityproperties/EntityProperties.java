@@ -184,7 +184,7 @@ public class EntityProperties extends VisTable implements Disposable {
 				if (actor instanceof VisCheckBox)
 					throw new IllegalStateException("sharedChangeListener cannot be used for checkboxes, use sharedCheckBoxChangeListener instead");
 				if (actor instanceof VisSelectBox)
-					throw new IllegalStateException("sharedChangeListener cannot be used for checkboxes, use sharedSelectBoxChangeListener instead");
+					throw new IllegalStateException("sharedChangeListener cannot be used for selectBoxes, use sharedSelectBoxChangeListener instead");
 
 				setValuesToEntity();
 				parentTab.dirty();

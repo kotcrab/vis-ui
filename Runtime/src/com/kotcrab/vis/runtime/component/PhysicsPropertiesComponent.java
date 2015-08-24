@@ -19,42 +19,45 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.kotcrab.vis.runtime.util.BodyTypeEnumNameProvider;
-import com.kotcrab.vis.runtime.util.autotable.ATProperty;
+import com.kotcrab.vis.runtime.util.annotation.VisTag;
 import com.kotcrab.vis.runtime.util.autotable.ATEnumProperty;
+import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
 /** @author Kotcrab */
 public class PhysicsPropertiesComponent extends Component {
-	@ATEnumProperty(fieldName = "Body Type", uiNameProvider = BodyTypeEnumNameProvider.class)
+	@VisTag(0) @ATEnumProperty(fieldName = "Body Type", uiNameProvider = BodyTypeEnumNameProvider.class)
 	public BodyType bodyType = BodyType.StaticBody;
 
-	@ATProperty(fieldName = "Friction")
+	@VisTag(1) @ATProperty(fieldName = "Friction")
 	public float friction = 1;
-	@ATProperty(fieldName = "Density")
+	@VisTag(2) @ATProperty(fieldName = "Density")
 	public float density = 1;
-	@ATProperty(fieldName = "Restitution")
+	@VisTag(3) @ATProperty(fieldName = "Restitution")
 	public float restitution = 0;
 
-	@ATProperty(fieldName = "Sensor")
+	@VisTag(4) @ATProperty(fieldName = "Sensor")
 	public boolean sensor;
 
-	@ATProperty(fieldName = "Gravity Scale")
+	@VisTag(5) @ATProperty(fieldName = "Gravity Scale")
 	public float gravityScale = 1;
-	@ATProperty(fieldName = "Linear Damping")
+	@VisTag(6) @ATProperty(fieldName = "Linear Damping")
 	public float linearDamping = 0;
-	@ATProperty(fieldName = "Angular Damping")
+	@VisTag(7) @ATProperty(fieldName = "Angular Damping")
 	public float angularDamping = 0;
 
-	@ATProperty(fieldName = "Bullet")
+	@VisTag(8) @ATProperty(fieldName = "Bullet")
 	public boolean bullet;
-	@ATProperty(fieldName = "Fixed Rotation")
+	@VisTag(9) @ATProperty(fieldName = "Fixed Rotation")
 	public boolean fixedRotation;
-	@ATProperty(fieldName = "Active")
+	@VisTag(10) @ATProperty(fieldName = "Active")
 	public boolean active = true;
-	@ATProperty(fieldName = "Sleeping Allowed")
+	@VisTag(11) @ATProperty(fieldName = "Sleeping Allowed")
 	public boolean sleepingAllowed = true;
-	@ATProperty(fieldName = "Auto Adjust Origin")
+	@VisTag(12) @ATProperty(fieldName = "Auto Adjust Origin")
 	public boolean adjustOrigin = true;
 
+	@VisTag(13)
 	public short maskBits = -1;
+	@VisTag(14)
 	public short categoryBits = 0x0001;
 }

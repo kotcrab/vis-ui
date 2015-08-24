@@ -38,7 +38,7 @@ import java.util.jar.Manifest;
 public class App {
 	public static final String TAG = "App";
 
-	public static final int VERSION_CODE = 8;
+	public static final int VERSION_CODE = 9;
 	public static final int PLUGIN_COMPATIBILITY_CODE = 3;
 	public static final String VERSION = "0.2.3-SNAPSHOT";
 

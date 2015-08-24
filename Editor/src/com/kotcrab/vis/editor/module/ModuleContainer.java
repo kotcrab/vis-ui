@@ -45,6 +45,14 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 		}
 	}
 
+	public <C extends Module> boolean remove (Class<C> moduleClass) {
+		if (initFinished) throw new IllegalStateException("Modules cannot be removed after initialization!");
+		C module = get(moduleClass);
+		boolean result = modules.removeValue((T) module, true);
+		if (result) module.removed();
+		return result;
+	}
+
 	public void addAll (Array<T> modules) {
 		for (T module : modules)
 			add(module);
@@ -138,7 +146,7 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 	protected <C extends Module> C getOrNull (Class<C> moduleClass) {
 		for (int i = 0; i < modules.size; i++) {
 			Module m = modules.get(i);
-			if (m.getClass() == moduleClass) return (C) m;
+			if (moduleClass.isAssignableFrom(m.getClass())) return (C) m;
 		}
 
 		return null;

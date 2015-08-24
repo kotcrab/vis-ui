@@ -27,10 +27,11 @@ import com.kotcrab.vis.runtime.component.IDComponent;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
+import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 /** @author Kotcrab */
 public class EntityScheme {
-	public ImmutableBag<Component> components;
+	@VisTag(0) public ImmutableBag<Component> components;
 
 	public EntityScheme (Entity entity) {
 		Bag<Component> components = new Bag<>();

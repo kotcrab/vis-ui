@@ -71,6 +71,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	private Timer cacheWaitTimer = new Timer();
 	private Timer atlasWaitTimer = new Timer();
 
+	private boolean packagingEnabled = true;
 	private boolean firstReload = true;
 
 	@Override
@@ -122,7 +123,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	private void packageAndReloadCache () {
-		TexturePacker.process(settings, gfxPath, cachePath, "cache");
+		if (packagingEnabled)
+			TexturePacker.process(settings, gfxPath, cachePath, "cache");
 
 		Gdx.app.postRunnable(this::reloadCache);
 	}
@@ -218,6 +220,10 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 				}
 			}, 0.5f);
 		}
+	}
+
+	public void setPackagingEnabled (boolean packagingEnabled) {
+		this.packagingEnabled = packagingEnabled;
 	}
 
 	public TextureRegion getRegion (VisAssetDescriptor descriptor) {

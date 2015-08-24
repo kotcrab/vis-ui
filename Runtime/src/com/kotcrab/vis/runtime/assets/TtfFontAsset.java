@@ -17,6 +17,7 @@
 package com.kotcrab.vis.runtime.assets;
 
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 /**
  * References ttf font file used to generate {@link BitmapFont}
@@ -24,7 +25,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
  * @see BmpFontAsset
  */
 public class TtfFontAsset extends PathAsset {
-	private int fontSize;
+	@VisTag(1) private int fontSize;
 
 	protected TtfFontAsset () {
 	}
