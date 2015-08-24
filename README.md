@@ -1,4 +1,4 @@
-VisEditor [![Build Status](http://kotcrab.com:8080/buildStatus/icon?job=viseditor-edge)](http://kotcrab.com:8080/job/viseditor-edge/)
+VisEditor [![](http://kotcrab.com:8080/buildStatus/icon?job=viseditor-edge)](http://kotcrab.com:8080/job/viseditor-edge/)
 =========
 
 [VisEditor](http://vis.kotcrab.com/) is cross platform 2d game level editor, it allows to easily create game scenes using drag and drop editor. 
