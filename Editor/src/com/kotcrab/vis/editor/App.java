@@ -40,7 +40,7 @@ public class App {
 
 	public static final int VERSION_CODE = 9;
 	public static final int PLUGIN_COMPATIBILITY_CODE = 3;
-	public static final String VERSION = "0.2.3-SNAPSHOT";
+	public static final String VERSION = "0.2.3";
 
 	public static boolean buildTimestampValid = false;
 	public static String buildTimestamp;
