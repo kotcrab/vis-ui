@@ -70,17 +70,21 @@ public class ParticleUtils {
 			if (particles.length == 0)
 				return bounds.set(0, 0, 0, 0);
 
+			boolean activeFound = false;
 			int startIndex = 0;
 
 			//find first active particle and set first bounding box
 			for (; startIndex < particles.length; startIndex++) {
 				if (active[startIndex]) {
 					bounds.set(particles[startIndex].getBoundingRectangle());
+					activeFound = true;
 					break;
 				}
 
-				return bounds.set(0, 0, 0, 0);
 			}
+
+			if (activeFound == false)
+				return bounds.set(0, 0, 0, 0);
 
 			//merge other active particles
 			for (int i = startIndex; i < particles.length; i++) {
