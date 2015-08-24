@@ -27,6 +27,8 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 
+import org.apache.commons.io.IOUtils;
+
 /**
  * Represents plugin descriptor that is going to be loaded into VisEditor
  * @author Kotcrab
@@ -81,12 +83,15 @@ public class PluginDescriptor {
 		}
 
 		if (licenseFile != null) {
+			JarFile jar = null;
 			try {
-				JarFile jar = new JarFile(file.file());
+				jar = new JarFile(file.file());
 				JarEntry licenseEntry = jar.getJarEntry(licenseFile);
 				license = StreamUtils.copyStreamToString(jar.getInputStream(licenseEntry));
 			} catch (IOException e) {
 				throw new EditorException("Failed to read license file for plugin: " + file.extension(), e);
+			} finally {
+				IOUtils.closeQuietly(jar);
 			}
 		}
 	}

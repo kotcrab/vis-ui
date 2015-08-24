@@ -91,7 +91,7 @@ public class App {
 	}
 
 	private static String readTimestamp () throws IOException {
-		Class clazz = App.class;
+		Class<App> clazz = App.class;
 		String className = clazz.getSimpleName() + ".class";
 		String classPath = clazz.getResource(className).toString();
 		if (!classPath.startsWith("jar")) {
