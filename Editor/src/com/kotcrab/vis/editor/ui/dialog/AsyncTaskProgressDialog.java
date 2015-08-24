@@ -31,6 +31,8 @@ import com.kotcrab.vis.ui.widget.VisWindow;
  * @author Kotcrab
  */
 public class AsyncTaskProgressDialog extends VisWindow {
+	private AsyncTaskListener listener;
+
 	public AsyncTaskProgressDialog (String title, AsyncTask task) {
 		super(title);
 		setModal(true);
@@ -49,26 +51,31 @@ public class AsyncTaskProgressDialog extends VisWindow {
 			@Override
 			public void progressChanged (int newProgressPercent) {
 				Gdx.app.postRunnable(() -> progressBar.setValue(newProgressPercent));
+				if (listener != null) listener.progressChanged(newProgressPercent);
 			}
 
 			@Override
 			public void messageChanged (String newMsg) {
 				Gdx.app.postRunnable(() -> statusLabel.setText(newMsg));
+				if (listener != null) listener.messageChanged(newMsg);
 			}
 
 			@Override
 			public void finished () {
 				fadeOut();
+				if (listener != null) listener.finished();
 			}
 
 			@Override
 			public void failed (String reason) {
 				failed(reason, null);
+				if (listener != null) listener.failed(reason);
 			}
 
 			@Override
 			public void failed (String reason, Exception ex) {
 				DialogUtils.showErrorDialog(Editor.instance.getStage(), reason == null ? "Unknown error occurred" : reason, ex);
+				if (listener != null) listener.failed(reason, ex);
 			}
 		});
 
@@ -78,4 +85,8 @@ public class AsyncTaskProgressDialog extends VisWindow {
 		task.start();
 	}
 
+	public AsyncTaskProgressDialog setTaskListener (AsyncTaskListener listener) {
+		this.listener = listener;
+		return this;
+	}
 }
