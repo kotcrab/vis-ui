@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.kotcrab.vis</groupId>
         <artifactId>vis-parent</artifactId>
-        <version>1.0.7</version>
+        <version>1.0.8</version>
         <relativePath>../Parent/pom.xml</relativePath>
     </parent>
 
@@ -116,6 +116,11 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.imgscalr</groupId>
+            <artifactId>imgscalr-lib</artifactId>
         </dependency>
     </dependencies>
 
