@@ -115,6 +115,10 @@ public class SimpleFormValidator {
 
 				Array<InputValidator> validators = field.getValidators();
 				for (InputValidator v : validators) {
+					if(v instanceof FormInputValidator == false)
+						throw new IllegalStateException("Fields validated by FormValidator cannot have validators not added using FormValidator methods. " +
+								"Are you adding validators to field manually?");
+
 					FormInputValidator validator = (FormInputValidator) v;
 
 					if (validator.getLastResult() == false) {
