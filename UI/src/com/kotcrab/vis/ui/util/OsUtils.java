@@ -19,41 +19,46 @@ package com.kotcrab.vis.ui.util;
 import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.Gdx;
 
-/** @author Kotcrab
- * @author Simon Gerst */
+/**
+ * Operating system related utils
+ * @author Kotcrab
+ * @author Simon Gerst
+ */
 public class OsUtils {
 	private static final String OS = System.getProperty("os.name").toLowerCase();
-	private static final boolean windows = OS.contains("win");
-	private static final boolean mac = OS.contains("mac");
-	private static final boolean unix = OS.contains("nix") || OS.contains("nux") || OS.contains("aix");
+	private static final boolean WINDOWS = OS.contains("win");
+	private static final boolean MAC = OS.contains("mac");
+	private static final boolean UNIX = OS.contains("nix") || OS.contains("nux") || OS.contains("aix");
 
 	/** @return {@code true} if the current OS is Windows */
 	public static boolean isWindows () {
-		return windows;
+		return WINDOWS;
 	}
 
 	/** @return {@code true} if the current OS is Mac */
 	public static boolean isMac () {
-		return mac;
+		return MAC;
 	}
 
 	/** @return {@code true} if the current OS is Unix */
 	public static boolean isUnix () {
-		return unix;
+		return UNIX;
 	}
 
 	/** @return {@code true} if the current OS is iOS */
 	public static boolean isIos () {
-		return Gdx.app.getType().equals(ApplicationType.iOS);
+		return Gdx.app.getType() == ApplicationType.iOS;
 	}
 
 	/** @return {@code true} if the current OS is Android */
 	public static boolean isAndroid () {
-		return Gdx.app.getType().equals(ApplicationType.Android);
+		return Gdx.app.getType() == ApplicationType.Android;
 	}
 
-	/** Returns the Android API level it's basically the same as android.os.Build.VERSION.SDK_INT
-	 * @return the API level. Returns 0 if the current OS isn't Android */
+	/**
+	 * Returns the Android API level it's basically the same as android.os.Build.VERSION.SDK_INT
+	 * @return the API level. Returns 0 if the current OS isn't Android
+	 */
 	public static int getAndroidApiLevel () {
 		if (isAndroid()) {
 			return Gdx.app.getVersion();
