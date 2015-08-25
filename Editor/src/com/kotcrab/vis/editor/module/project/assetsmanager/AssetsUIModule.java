@@ -293,7 +293,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			if (file.isDirectory() == false) {
 				String relativePath = fileAccess.relativizeToAssetsFolder(file);
 				String ext = file.extension();
-
+				
 				if (relativePath.startsWith("atlas") && (ext.equals("png") || ext.equals("jpg"))) continue;
 				//if (relativePath.startsWith("particle") && (ext.equals("png") || ext.equals("jpg"))) continue;
 				if (relativePath.startsWith("bmpfont") && (ext.equals("png") || ext.equals("jpg"))) continue;
@@ -316,7 +316,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private void rebuildFolderTree () {
 		contentTree.clearChildren();
 
-		for (FileHandle contentRoot : assetsFolder.list(DirectoriesOnlyFileFilter.filter)) {
+		for (FileHandle contentRoot : assetsFolder.list(DirectoriesOnlyFileFilter.FILTER)) {
 
 			//hide empty dirs except 'gfx' and 'scene'
 			if (contentRoot.list().length != 0 || contentRoot.name().equals("gfx") || contentRoot.name().equals("scene")) {
@@ -328,9 +328,11 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	}
 
 	private void processFolder (Node node, FileHandle dir) {
-		FileHandle[] files = dir.list(DirectoriesOnlyFileFilter.filter);
+		FileHandle[] files = dir.list(DirectoriesOnlyFileFilter.FILTER);
 
 		for (FileHandle file : files) {
+			if (file.name().startsWith(".")) continue; //hide folders starting with dot
+
 			Node currentNode = new Node(new FolderItem(file));
 			node.add(currentNode);
 

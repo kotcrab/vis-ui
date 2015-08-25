@@ -24,7 +24,7 @@ import java.io.FileFilter;
  * @author Kotcrab
  */
 public class DirectoriesOnlyFileFilter implements FileFilter {
-	public static final DirectoriesOnlyFileFilter filter = new DirectoriesOnlyFileFilter();
+	public static final DirectoriesOnlyFileFilter FILTER = new DirectoriesOnlyFileFilter();
 
 	@Override
 	public boolean accept (File file) {
