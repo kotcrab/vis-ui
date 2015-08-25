@@ -1,6 +1,11 @@
 [0.8.2] [LibGDX 1.6.4] [Snapshot]
 -API Addition: VisValidableTextField#restoreLastValidText()
+-API Addition: OsUtils#isAndroid()
+-API Addition: OsUtils#getAndroidApiLevel()
+-API Addition: OsUtils#isIos()
+-API Change: FileUtils#isMac(), FileUtils#isUnix() and FileUtils#isWindows() are moved to OsUtils
 -Fixed MenuItem shortcut label color when MenuItem is disabled
+-FileChooser now supports the back and forward button of the mouse for navigating in the history
 
 [0.8.1] [LibGDX 1.6.4]
 -Updated libGDX to 1.6.4

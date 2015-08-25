@@ -16,19 +16,24 @@
 
 package com.kotcrab.vis.ui.widget.file.internal;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.ui.widget.file.FileUtils;
-import sun.awt.shell.ShellFolder;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
+
+import sun.awt.shell.ShellFolder;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.ObjectMap;
+import com.kotcrab.vis.ui.util.OsUtils;
 
 public class FileChooserWinService {
 	private static FileChooserWinService instance;
@@ -38,10 +43,9 @@ public class FileChooserWinService {
 	private Map<File, ListenerSet> listeners = new HashMap<File, ListenerSet>();
 
 	public static synchronized FileChooserWinService getInstance () {
-		if (FileUtils.isWindows() == false) return null;
+		if (OsUtils.isWindows() == false) return null;
 
-		if (instance == null)
-			instance = new FileChooserWinService();
+		if (instance == null) instance = new FileChooserWinService();
 
 		return instance;
 	}
@@ -113,7 +117,7 @@ public class FileChooserWinService {
 		}
 
 		if (name == null || name.length() == 0) {
-			name = f.getPath(); //the "/" directory
+			name = f.getPath(); // the "/" directory
 		}
 
 		return name;

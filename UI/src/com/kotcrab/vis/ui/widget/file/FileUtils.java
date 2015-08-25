@@ -19,6 +19,7 @@ package com.kotcrab.vis.ui.widget.file;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.ui.util.OsUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,12 +29,8 @@ import java.util.Comparator;
 
 /** @author Kotcrab */
 public class FileUtils {
-	private static final String OS = System.getProperty("os.name").toLowerCase();
-	private static final boolean windows = OS.contains("win");
-	private static final boolean mac = OS.contains("mac");
-	private static final boolean unix = OS.contains("nix") || OS.contains("nux") || OS.contains("aix");
 
-	private static final String[] UNITS = new String[]{"B", "KB", "MB", "GB", "TB", "EB"};
+	private static final String[] UNITS = new String[] {"B", "KB", "MB", "GB", "TB", "EB"};
 
 	private static final Comparator<FileHandle> FILE_COMPARATOR = new Comparator<FileHandle>() {
 		@Override
@@ -44,7 +41,7 @@ public class FileUtils {
 
 	public static String readableFileSize (long size) {
 		if (size <= 0) return "0 B";
-		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+		int digitGroups = (int)(Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)).replace(",", ".") + " " + UNITS[digitGroups];
 	}
 
@@ -68,23 +65,11 @@ public class FileUtils {
 
 	public static boolean isValidFileName (String name) {
 		try {
-			if (isWindows()) if (name.contains(">") || name.contains("<")) return false;
+			if (OsUtils.isWindows()) if (name.contains(">") || name.contains("<")) return false;
 			return new File(name).getCanonicalFile().getName().equals(name);
 		} catch (IOException e) {
 			return false;
 		}
-	}
-
-	public static boolean isWindows () {
-		return windows;
-	}
-
-	public static boolean isMac () {
-		return mac;
-	}
-
-	public static boolean isUnix () {
-		return unix;
 	}
 
 	public static FileHandle toFileHandle (File file) {
