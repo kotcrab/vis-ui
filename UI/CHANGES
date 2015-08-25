@@ -5,6 +5,9 @@
 -Fixed MenuItem shortcut label color when MenuItem is disabled
 -FileChooser now supports the back and forward button of the mouse for navigating in the history
 -Fixed crash in FileChooser when user tried to use history buttons for no longer existing directory
+-FileChooser I18N:
+ -added directoryNoLongerExists
+ -added missing entries: newDirectoryDialogTitle, newDirectoryDialogText
 
 [0.8.1] [LibGDX 1.6.4]
 -Updated libGDX to 1.6.4

@@ -421,7 +421,7 @@ public class FileChooser extends VisWindow {
 			else {
 				// this part is executed when nothing is selected but selection mode is `files` or `files and directories`
 				// it is perfectly valid, nothing is selected so that means the `current directory` have to be selected and passed to
-// listener
+				// listener
 				Array<FileHandle> files = new Array<FileHandle>();
 				files.add(currentDirectory);
 				notifyListenerAndCloseDialog(files);
@@ -715,7 +715,7 @@ public class FileChooser extends VisWindow {
 			setDirectory(dir, HistoryPolicy.IGNORE);
 			return true;
 		} else {
-			DialogUtils.showErrorDialog(getStage(), "Directory does no longer exists");
+			DialogUtils.showErrorDialog(getStage(), getText(FileChooserText.DIRECTORY_NO_LONGER_EXISTS));
 			return false;
 		}
 	}
@@ -890,7 +890,7 @@ public class FileChooser extends VisWindow {
 					lastRoots = roots;
 
 					// if current directory changed during pools then our lastCurrentDirectoryFiles list is outdated and we shouldn't
-// schedule files list rebuild
+					// schedule files list rebuild
 					if (lastCurrentDirectory.equals(currentDirectory) == true) {
 						FileHandle[] currentFiles = currentDirectory.list();
 
@@ -922,7 +922,7 @@ public class FileChooser extends VisWindow {
 	}
 
 	void showNewDirectoryDialog () {
-		DialogUtils.showInputDialog(getStage(), "New Directory", "Name:", true, new InputDialogAdapter() {
+		DialogUtils.showInputDialog(getStage(), getText(NEW_DIRECTORY_DIALOG_TITLE), getText(NEW_DIRECTORY_DIALOG_TEXT), true, new InputDialogAdapter() {
 			@Override
 			public void finished (String input) {
 				if (FileUtils.isValidFileName(input) == false) {

@@ -36,6 +36,8 @@ public enum FileChooserText implements BundleText {
 	OPEN								{public String getName () {return "open";}},
 	SAVE								{public String getName () {return "save";}},
 
+	DIRECTORY_NO_LONGER_EXISTS			{public String getName () {return "directoryNoLongerExists";}},
+
 	POPUP_TITLE							{public String getName () {return "popupTitle";}},
 	POPUP_CHOOSE_FILE					{public String getName () {return "popupChooseFile";}},
 	POPUP_SELECTED_FILE_DOES_NOT_EXIST	{public String getName () {return "popupSelectedFileDoesNotExist";}},
@@ -52,6 +54,8 @@ public enum FileChooserText implements BundleText {
 	CONTEXT_MENU_DELETE_WARNING			{public String getName () {return "contextMenuDeleteWarning";}},
 	CONTEXT_MENU_NEW_DIRECTORY 			{public String getName () {return "contextMenuNewDirectory";}},
 
+	NEW_DIRECTORY_DIALOG_TITLE 				{public String getName () {return "newDirectoryDialogTitle";}},
+	NEW_DIRECTORY_DIALOG_TEXT 				{public String getName () {return "newDirectoryDialogText";}},
 	NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS {public String getName () {return "newDirectoryDialogIllegalCharacters";}},
 	NEW_DIRECTORY_DIALOG_ALREADY_EXISTS 	{public String getName () {return "newDirectoryDialogAlreadyExists";}};
 	// @formatter:on
