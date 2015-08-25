@@ -5,6 +5,7 @@
 -Fixed MenuItem shortcut label color when MenuItem is disabled
 -FileChooser now supports the back and forward button of the mouse for navigating in the history
 -Fixed crash in FileChooser when user tried to use history buttons for no longer existing directory
+-If user clicks mouse before Tooltip appears, Tooltip won't be showed
 -FileChooser I18N:
  -added directoryNoLongerExists
  -added missing entries: newDirectoryDialogTitle, newDirectoryDialogText

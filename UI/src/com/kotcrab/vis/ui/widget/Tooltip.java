@@ -229,6 +229,7 @@ public class Tooltip extends VisTable {
 	private class TooltipInputListener extends InputListener {
 		@Override
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+			displayTask.cancel();
 			Tooltip.this.toFront();
 			fadeOut();
 			return true;
