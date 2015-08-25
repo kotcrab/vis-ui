@@ -689,7 +689,9 @@ public class FileChooser extends VisWindow {
 	private void historyBack () {
 		FileHandle dir = history.pop();
 		historyForward.add(currentDirectory);
-		setDirectory(dir, HistoryPolicy.IGNORE);
+
+		if (setDirectoryFromHistory(dir) == false)
+			historyForward.pop();
 
 		if (!hasHistoryBack()) backButton.setDisabled(true);
 
@@ -699,11 +701,23 @@ public class FileChooser extends VisWindow {
 	private void historyForward () {
 		FileHandle dir = historyForward.pop();
 		history.add(currentDirectory);
-		setDirectory(dir, HistoryPolicy.IGNORE);
+
+		if (setDirectoryFromHistory(dir) == false)
+			history.pop();
 
 		if (!hasHistoryForward()) forwardButton.setDisabled(true);
 
 		backButton.setDisabled(false);
+	}
+
+	private boolean setDirectoryFromHistory (FileHandle dir) {
+		if (dir.exists()) {
+			setDirectory(dir, HistoryPolicy.IGNORE);
+			return true;
+		} else {
+			DialogUtils.showErrorDialog(getStage(), "Directory does no longer exists");
+			return false;
+		}
 	}
 
 	/** @return returns {@code true} if a forward-history is available */
