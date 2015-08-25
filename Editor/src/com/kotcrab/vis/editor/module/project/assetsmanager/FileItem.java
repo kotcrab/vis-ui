@@ -141,6 +141,11 @@ public class FileItem extends Table {
 			return;
 		}
 
+		if (relativePath.startsWith("spriter") && ext.equals("scml") && file.parent().child(".vis").exists()) {
+			createDefaultView(FileType.SPRITER_SCML, "Spriter Animation", true);
+			return;
+		}
+
 		support = findSupportForDirectory(ext, relativePath);
 		if (support != null) {
 			ContentItemProperties item = support.getContentItemProperties(relativePath, ext);

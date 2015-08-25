@@ -30,16 +30,16 @@ import com.kotcrab.vis.runtime.component.TextComponent;
 @Wire
 public class FontReloaderManager extends Manager {
 	private FontCacheModule fontCache;
-	private float pixelInUntis;
+	private float pixelInUnits;
 
 	private ComponentMapper<TextComponent> textCm;
 	private ComponentMapper<AssetComponent> assetCm;
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
-	public FontReloaderManager (FontCacheModule fontCache, float pixelInUntis) {
+	public FontReloaderManager (FontCacheModule fontCache, float pixelInUnits) {
 		this.fontCache = fontCache;
-		this.pixelInUntis = pixelInUntis;
+		this.pixelInUnits = pixelInUnits;
 	}
 
 	@Override
@@ -59,10 +59,10 @@ public class FontReloaderManager extends Manager {
 			VisAssetDescriptor asset = assetCm.get(entity).asset;
 
 			if (asset instanceof BmpFontAsset && reloadBmpFonts)
-				text.setFont(fontCache.get((BmpFontAsset) asset, pixelInUntis));
+				text.setFont(fontCache.get((BmpFontAsset) asset, pixelInUnits));
 
 			if (asset instanceof TtfFontAsset && reloadTtfFonts)
-				text.setFont(fontCache.get((TtfFontAsset) asset, pixelInUntis));
+				text.setFont(fontCache.get((TtfFontAsset) asset, pixelInUnits));
 		}
 	}
 }

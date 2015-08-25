@@ -75,6 +75,7 @@ public class Scene {
 		engineConfig.setManager(new ParticleInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
 		engineConfig.setManager(new TextInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
 		engineConfig.setManager(new ShaderInflater(assetsManager));
+		engineConfig.setManager(new SpriterInflater(assetsManager));
 
 		if (parameter != null) {
 			for (BaseSystem system : parameter.systems)

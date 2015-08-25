@@ -37,10 +37,7 @@ import com.badlogic.gdx.utils.Timer;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.entity.EditorPositionComponent;
-import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
-import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
-import com.kotcrab.vis.editor.entity.UUIDComponent;
+import com.kotcrab.vis.editor.entity.*;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
@@ -95,6 +92,7 @@ public class EntityManipulatorModule extends SceneModule {
 	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private ParticleCacheModule particleCache;
 	@InjectModule private FontCacheModule fontCache;
+	@InjectModule private SpriterCacheModule spriterCache;
 	@InjectModule private RendererModule rendererModule;
 
 	private ShapeRenderer shapeRenderer;
@@ -308,6 +306,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 		Entity entity = null;
 
+		//TODO: refactor this maybe?
 		if (obj instanceof TextureAssetDescriptor) {
 			TextureAssetDescriptor asset = (TextureAssetDescriptor) obj;
 
@@ -328,6 +327,17 @@ public class EntityManipulatorModule extends SceneModule {
 							new ExporterDropsComponent(PixelsPerUnitComponent.class))
 					.build();
 
+		} else if (obj instanceof SpriterAsset) {
+			SpriterAsset asset = (SpriterAsset) obj;
+
+			float scale = 1f / scene.pixelsPerUnit;
+
+			entity = new EntityBuilder(entityEngine)
+					.with(spriterCache.createComponent(asset, scale), new SpriterPropertiesComponent(scale),
+							new AssetComponent(asset),
+							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
+							new ExporterDropsComponent(SpriterPropertiesComponent.class))
+					.build();
 		} else if (obj instanceof PathAsset) {
 			PathAsset asset = (PathAsset) obj;
 

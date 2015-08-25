@@ -89,11 +89,11 @@ public class LayersDialog extends VisTable implements Disposable {
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
 
-		VisImageButton layerAddButton = new VisImageButton(Assets.getIcon(Icons.LAYER_ADD));
-		layerUpButton = new VisImageButton(Assets.getIcon(Icons.LAYER_UP));
-		layerDownButton = new VisImageButton(Assets.getIcon(Icons.LAYER_DOWN));
-		layerSettingsButton = new VisImageButton(Assets.getIcon(Icons.SETTINGS));
-		layerRemoveButton = new VisImageButton(Assets.getIcon(Icons.LAYER_REMOVE));
+		VisImageButton layerAddButton = new VisImageButton(Icons.LAYER_ADD.drawable(), "Add new layer");
+		layerUpButton = new VisImageButton(Icons.LAYER_UP.drawable(), "Move layer up");
+		layerDownButton = new VisImageButton(Icons.LAYER_DOWN.drawable(), "Move layer down");
+		layerSettingsButton = new VisImageButton(Icons.SETTINGS.drawable(), "Show layer settings");
+		layerRemoveButton = new VisImageButton(Icons.LAYER_REMOVE.drawable(), "Delete layer");
 
 		layerUpButton.setGenerateDisabledImage(true);
 		layerDownButton.setGenerateDisabledImage(true);
@@ -393,8 +393,8 @@ public class LayersDialog extends VisTable implements Disposable {
 		}
 
 		private void updateButtonsImages () {
-			eyeButton.getStyle().imageUp = layer.visible ? Assets.getIcon(Icons.EYE) : Assets.getIcon(Icons.EYE_DISABLED);
-			lockButton.getStyle().imageUp = layer.locked ? Assets.getIcon(Icons.LOCKED) : Assets.getIcon(Icons.UNLOCKED);
+			eyeButton.getStyle().imageUp = layer.visible ? Icons.EYE.drawable() : Icons.EYE_DISABLED.drawable();
+			lockButton.getStyle().imageUp = layer.locked ? Icons.LOCKED.drawable() : Icons.UNLOCKED.drawable();
 		}
 
 		public void select () {

@@ -32,7 +32,7 @@ import com.kotcrab.vis.runtime.component.SoundProtoComponent;
  */
 @Wire
 public class SoundInflater extends Manager {
-	private ComponentMapper<SoundComponent> protoCm;
+	private ComponentMapper<SoundProtoComponent> soundCm;
 	private ComponentMapper<AssetComponent> assetCm;
 
 	private EntityTransmuter transmuter;
@@ -54,7 +54,7 @@ public class SoundInflater extends Manager {
 
 	@Override
 	public void added (Entity e) {
-		if (protoCm.has(e) == false) return;
+		if (soundCm.has(e) == false) return;
 
 		AssetComponent assetComponent = assetCm.get(e);
 

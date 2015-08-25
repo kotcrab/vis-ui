@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.ActorUtils;
 
 /**
  * Standard popup menu that can be displayed anywhere on stage. Menu is automatically removed when user clicked outside menu,
@@ -138,6 +139,7 @@ public class PopupMenu extends Table {
 	public void showMenu (Stage stage, float x, float y) {
 		setPosition(x, y - getHeight());
 		if (stage.getHeight() - getY() > stage.getHeight()) setY(getY() + getHeight());
+		ActorUtils.keepWithinStage(stage, this);
 		stage.addActor(this);
 	}
 

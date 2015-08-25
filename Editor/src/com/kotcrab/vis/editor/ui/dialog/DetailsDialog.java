@@ -35,11 +35,11 @@ public class DetailsDialog extends VisWindow {
 	}
 
 	public DetailsDialog (String text, Throwable cause) {
-		this(text, ExceptionUtils.getStackTrace(cause));
+		this(text, "Exception Details", ExceptionUtils.getStackTrace(cause));
 	}
 
-	public DetailsDialog (String text, String details) {
-		super("Exception Details");
+	public DetailsDialog (String text, String title, String details) {
+		super(title);
 
 		addCloseButton();
 		closeOnEscape();

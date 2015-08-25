@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.system.SpriteRenderSystem;
+import com.kotcrab.vis.runtime.system.SpriterRenderSystem;
 import com.kotcrab.vis.runtime.system.TextRenderSystem;
 
 /**
@@ -32,5 +33,6 @@ public class ArtemisUtils {
 		config.setSystem(batchingSystem);
 		config.setSystem(new SpriteRenderSystem(batchingSystem), true);
 		config.setSystem(new TextRenderSystem(batchingSystem, distanceFieldShader), true);
+		config.setSystem(new SpriterRenderSystem(batchingSystem), true);
 	}
 }

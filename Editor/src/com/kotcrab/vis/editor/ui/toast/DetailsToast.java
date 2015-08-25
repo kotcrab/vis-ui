@@ -30,12 +30,12 @@ import com.kotcrab.vis.ui.widget.VisTable;
  */
 public class DetailsToast extends VisTable {
 	public DetailsToast (String text, Throwable cause) {
-		this(text, ExceptionUtils.getStackTrace(cause));
+		this(text, "Exception Details", ExceptionUtils.getStackTrace(cause));
 	}
 
-	public DetailsToast (String text, String details) {
+	public DetailsToast (String text, String detailsDialogTitle, String details) {
 		LinkLabel label = new LinkLabel("Details");
-		label.setListener(url -> Editor.instance.getStage().addActor(new DetailsDialog(text, details).fadeIn()));
+		label.setListener(url -> Editor.instance.getStage().addActor(new DetailsDialog(text, detailsDialogTitle, details).fadeIn()));
 
 		add(text).expand().fill().row();
 		add(label).right();

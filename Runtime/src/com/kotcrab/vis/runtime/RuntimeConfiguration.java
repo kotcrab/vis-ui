@@ -29,7 +29,8 @@ import com.kotcrab.vis.runtime.system.physics.PhysicsSpriteUpdateSystem;
 public class RuntimeConfiguration {
 	/**
 	 * Controls whether to store {@link AssetComponent} in {@link Entity} after inflating it. Set this to false if you
-	 * need to access {@link AssetComponent} during runtime. Default is true.
+	 * need to access {@link AssetComponent} during runtime. Default is true. Certain inflaters may ignore this setting
+	 * if asset is still always required later for example to render entity.
 	 */
 	public boolean removeAssetsComponentAfterInflating = true;
 

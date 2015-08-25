@@ -16,7 +16,7 @@
 
 package com.kotcrab.vis.editor;
 
-import com.google.common.eventbus.EventBus;
+import com.kotcrab.vis.editor.event.VisEventBus;
 import com.kotcrab.vis.editor.util.JarUtils;
 import com.kotcrab.vis.editor.util.polygon.Clipper.Polygonizer;
 
@@ -60,7 +60,7 @@ public class App {
 
 	public static final Polygonizer DEFAULT_POLYGONIZER = Polygonizer.EWJORDAN;
 
-	public static EventBus eventBus;
+	public static VisEventBus eventBus;
 
 	public static void init () {
 		new File(APP_FOLDER_PATH).mkdir();
@@ -71,7 +71,7 @@ public class App {
 
 		checkCharset();
 
-		eventBus = new EventBus((exception, context) -> {
+		eventBus = new VisEventBus((exception, context) -> {
 			Log.fatal("Exception when dispatching event: " + context.getSubscriber() + " to " + context.getSubscriberMethod());
 			Log.exception(exception);
 		});

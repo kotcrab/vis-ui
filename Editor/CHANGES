@@ -1,4 +1,6 @@
 [0.2.4] [LibGDX 1.6.4] [Snapshot]
+-Fixed crash after unexpectedly removing one of shader file (issue #21)
+-Fixed crash after opening Select File Dialog but there isn't any available file to select
 
 [0.2.3] [LibGDX 1.6.4]
 -Added VariablesComponent

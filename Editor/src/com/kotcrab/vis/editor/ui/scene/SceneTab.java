@@ -255,6 +255,10 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Scene
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_TTF_FONTS) != 0) {
 			sceneMC.getEntityEngine().getManager(FontReloaderManager.class).reloadFonts(false, true);
 		}
+
+		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_SPRITER_DATA) != 0) {
+			sceneMC.getEntityEngine().getManager(SpriterReloaderManager.class).reloadSpriterData();
+		}
 	}
 
 	@Subscribe

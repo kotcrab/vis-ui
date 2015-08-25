@@ -454,6 +454,8 @@ public class Editor extends ApplicationAdapter {
 		projectMC.add(new ParticleCacheModule());
 		projectMC.add(new SceneCacheModule());
 		projectMC.add(new ShaderCacheModule());
+		projectMC.add(new SpriterCacheModule());
+		projectMC.add(new SpriterDataIOModule());
 		projectMC.add(new ProjectVersionModule());
 		projectMC.add(new SceneIOModule());
 		projectMC.add(new ProjectSettingsIOModule());

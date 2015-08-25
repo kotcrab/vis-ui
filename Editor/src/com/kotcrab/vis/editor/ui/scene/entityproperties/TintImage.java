@@ -30,7 +30,7 @@ import com.kotcrab.vis.ui.VisUI;
  */
 public class TintImage extends Image {
 	private final Drawable alphaBar = Assets.getMisc("alpha-grid-20x20");
-	private final Drawable questionMark = Assets.getIcon(Icons.QUESTION);
+	private final Drawable questionMark = Icons.QUESTION.drawable();
 
 	private boolean unknown;
 

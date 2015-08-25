@@ -31,7 +31,10 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.KryoException;
 import com.google.common.eventbus.Subscribe;
-import com.kotcrab.vis.editor.*;
+import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
@@ -89,6 +92,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 	private VisTable mainTable;
 	private VisTable treeTable;
+	private VisTable filesViewContextContainer;
 	private GridGroup filesView;
 	private VisTable toolbarTable;
 	private VisTree contentTree;
@@ -106,6 +110,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private Array<FileItem> filesClipboard = new Array<>();
 	private Array<FileItem> selectedFiles = new Array<>();
 
+	private Array<AssetsUIContextProvider> contextProviders = new Array<>();
+
 	@Override
 	public void init () {
 		stage = Editor.instance.getStage();
@@ -116,6 +122,12 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 		rebuildFolderTree();
 		contentTree.getSelection().set(contentTree.getNodes().get(0)); // select first item in tree
+
+		//TODO: [plugins] plugin entry point
+		contextProviders.add(new SpriterContextProvider());
+
+		for (AssetsUIContextProvider provider : contextProviders)
+			projectContainer.injectModules(provider);
 
 		tabsModule.addListener(this);
 		assetsWatcher.addListener(this);
@@ -172,12 +184,15 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private void initUI () {
 		treeTable = new VisTable(true);
 		toolbarTable = new VisTable(true);
+		filesViewContextContainer = new VisTable(false);
 		filesView = new GridGroup(92, 4);
 
 		VisTable contentsTable = new VisTable(false);
 		contentsTable.add(toolbarTable).expandX().fillX().pad(3).padBottom(0);
 		contentsTable.row();
 		contentsTable.add(new Separator()).padTop(3).expandX().fillX();
+		contentsTable.row();
+		contentsTable.add(filesViewContextContainer).expandX().fillX();
 		contentsTable.row();
 		contentsTable.add(createScrollPane(filesView, true)).expand().fill();
 
@@ -230,9 +245,9 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			return filesDisplayed != 0;
 		});
 
-		VisImageButton exploreButton = new VisImageButton(Assets.getIcon(Icons.FOLDER_OPEN), "Open in Explorer");
-		VisImageButton settingsButton = new VisImageButton(Assets.getIcon(Icons.SETTINGS_VIEW), "Change view");
-		VisImageButton importButton = new VisImageButton(Assets.getIcon(Icons.IMPORT), "Import");
+		VisImageButton exploreButton = new VisImageButton(Icons.FOLDER_OPEN.drawable(), "Open in Explorer");
+		VisImageButton settingsButton = new VisImageButton(Icons.SETTINGS_VIEW.drawable(), "Change view");
+		VisImageButton importButton = new VisImageButton(Icons.IMPORT.drawable(), "Import");
 
 		toolbarTable.add(contentTitleLabel).expand().left().padLeft(3);
 		toolbarTable.add(exploreButton);
@@ -283,6 +298,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		filesView.clearChildren();
 		filesDisplayed = 0;
 
+		updateContextProviderContainer(directory);
+
 		FileHandle[] files = directory.list(file -> {
 			if (searchField.getText().equals("")) return true;
 
@@ -293,10 +310,12 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			if (file.isDirectory() == false) {
 				String relativePath = fileAccess.relativizeToAssetsFolder(file);
 				String ext = file.extension();
-				
-				if (relativePath.startsWith("atlas") && (ext.equals("png") || ext.equals("jpg"))) continue;
+
+				if (relativePath.startsWith("atlas") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")))
+					continue;
 				//if (relativePath.startsWith("particle") && (ext.equals("png") || ext.equals("jpg"))) continue;
-				if (relativePath.startsWith("bmpfont") && (ext.equals("png") || ext.equals("jpg"))) continue;
+				if (relativePath.startsWith("bmpfont") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")))
+					continue;
 
 				filesView.addActor(createFileItem(file));
 				filesDisplayed++;
@@ -307,6 +326,17 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 		String currentPath = directory.path().substring(visFolder.path().length() + 1);
 		contentTitleLabel.setText("Content [" + currentPath + "]");
+	}
+
+	private void updateContextProviderContainer (FileHandle directory) {
+		filesViewContextContainer.clearChildren();
+		for (AssetsUIContextProvider provider : contextProviders) {
+			Table content = provider.provideContext(directory, fileAccess.relativizeToAssetsFolder(directory));
+			if (content != null) {
+				filesViewContextContainer.add(content).fillX().expandX();
+				break;
+			}
+		}
 	}
 
 	private void refreshFilesList () {
@@ -383,6 +413,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		if (file.isDirectory()) rebuildFolderTree();
 		if (file.parent().equals(currentDirectory))
 			refreshFilesList();
+
+		updateContextProviderContainer(currentDirectory);
 	}
 
 	@Override

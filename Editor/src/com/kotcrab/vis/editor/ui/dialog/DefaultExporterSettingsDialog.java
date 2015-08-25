@@ -53,7 +53,7 @@ public class DefaultExporterSettingsDialog extends VisWindow {
 
 		skipDefaultCheck = new VisCheckBox("Skip default values");
 
-		VisImage skipDefaultHelpImage = new VisImage(Assets.getIcon(Icons.QUESTION));
+		VisImage skipDefaultHelpImage = new VisImage(Icons.QUESTION.drawable());
 		new Tooltip(skipDefaultHelpImage, "Reduces output file size by skipping default values like '0' or 'null'.\n" +
 				"Typically there is no need to disable it but you can do it if you want to inspect\n" +
 				"output scene file.", Align.left);

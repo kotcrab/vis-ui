@@ -48,6 +48,7 @@ import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
+import com.kotcrab.vis.runtime.util.SpriterData;
 
 /**
  * Scene loader for {@link AssetManager}. Allow to load entire scene file with all required dependencies such as textures, sounds etc.
@@ -93,6 +94,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		json.addClassTag("TtfFontAsset", TtfFontAsset.class);
 		json.addClassTag("AtlasRegionAsset", AtlasRegionAsset.class);
 		json.addClassTag("TextureRegionAsset", TextureRegionAsset.class);
+		json.addClassTag("ShaderAsset", ShaderAsset.class);
+		json.addClassTag("SpriterAsset", SpriterAsset.class);
 
 		json.addClassTag("AssetComponent", AssetComponent.class);
 		json.addClassTag("GroupComponent", GroupComponent.class);
@@ -100,6 +103,9 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		json.addClassTag("InvisibleComponent", InvisibleComponent.class);
 		json.addClassTag("LayerComponent", LayerComponent.class);
 		json.addClassTag("RenderableComponent", RenderableComponent.class);
+		json.addClassTag("VariablesComponent", VariablesComponent.class);
+		json.addClassTag("PhysicsPropertiesComponent", PhysicsPropertiesComponent.class);
+		json.addClassTag("PolygonComponent", PolygonComponent.class);
 
 		json.addClassTag("SpriteProtoComponent", SpriteProtoComponent.class);
 		json.addClassTag("MusicProtoComponent", MusicProtoComponent.class);
@@ -107,6 +113,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 		json.addClassTag("ParticleProtoComponent", ParticleProtoComponent.class);
 		json.addClassTag("TextProtoComponent", TextProtoComponent.class);
 		json.addClassTag("ShaderProtoComponent", ShaderProtoComponent.class);
+		json.addClassTag("SpriterProtoComponent", SpriterProtoComponent.class);
 
 		json.setSerializer(IntMap.class, new IntMapJsonSerializer());
 
@@ -165,6 +172,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 						if (path.startsWith("music/")) dependencies.add(new AssetDescriptor<Music>(path, Music.class));
 						if (path.startsWith("particle/"))
 							dependencies.add(new AssetDescriptor<ParticleEffect>(path, ParticleEffect.class));
+						if (path.startsWith("spriter/"))
+							dependencies.add(new AssetDescriptor<SpriterData>(path, SpriterData.class));
 					}
 				}
 

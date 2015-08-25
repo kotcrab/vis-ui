@@ -20,7 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.util.vis.VisConsumer;
+import com.kotcrab.vis.editor.util.vis.CancelableConsumer;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -131,7 +131,7 @@ public class FileUtils {
 		return Gdx.files.absolute(file.getAbsolutePath());
 	}
 
-	public static void streamResursive (FileHandle folder, VisConsumer<FileHandle> consumer) {
+	public static void streamResursive (FileHandle folder, CancelableConsumer<FileHandle> consumer) {
 		if (folder.isDirectory() == false) throw new IllegalStateException("Root must be directory!");
 
 		for (FileHandle file : folder.list()) {
@@ -140,5 +140,15 @@ public class FileUtils {
 			else
 				consumer.accept(file);
 		}
+	}
+
+	/** Removes the first directory separator from a path
+	 * <p>
+	 * gdx/asset.png -> asset.png
+	 * @param path path where the the first directory separator is removed from
+	 * @return the path without the parts that are before the separator
+	 * @see com.kotcrab.vis.runtime.util.PathUtils#removeFirstSeparator(String path) */
+	public static String removeFirstSeparator (String path) {
+		return path.substring(path.indexOf('/') + 1);
 	}
 }

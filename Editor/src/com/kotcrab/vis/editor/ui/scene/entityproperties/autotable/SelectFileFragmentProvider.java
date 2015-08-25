@@ -57,7 +57,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 		fileLabel.setColor(Color.GRAY);
 		fileLabel.setEllipsis(true);
 
-		VisImageButton selectFileButton = new VisImageButton(Assets.getIcon(Icons.MORE));
+		VisImageButton selectFileButton = new VisImageButton(Icons.MORE.drawable());
 
 		VisTable table = new VisTable(true);
 		table.add(new VisLabel(fieldName));

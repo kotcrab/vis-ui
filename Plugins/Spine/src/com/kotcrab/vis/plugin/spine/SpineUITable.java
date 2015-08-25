@@ -95,7 +95,7 @@ public class SpineUITable extends SpecificUITable {
 		});
 		animSelectBox.addListener(properties.getSharedSelectBoxChangeListener());
 
-		warningImage = new Image(Assets.getIcon(Icons.WARNING));
+		warningImage = new Image(Icons.WARNING.drawable());
 
 		onlyCommonAnimationTooltip = new Tooltip("Only showing animations that are common for all selected objects!");
 		noCommonAnimationTooltip = new Tooltip("There isn't any common animation for selected objects");

@@ -79,6 +79,7 @@ public class SceneIOModule extends ProjectModule {
 	@InjectModule protected ParticleCacheModule particleCache;
 	@InjectModule protected FontCacheModule fontCache;
 	@InjectModule protected ShaderCacheModule shaderCache;
+	@InjectModule protected SpriterCacheModule spriterCache;
 
 	private FileHandle assetsFolder;
 	private FileHandle sceneBackupFolder;
@@ -145,6 +146,7 @@ public class SceneIOModule extends ProjectModule {
 		registerTagged(BmpFontAsset.class, 64);
 		registerTagged(TtfFontAsset.class, 65);
 		registerTagged(ShaderAsset.class, 66);
+		registerTagged(SpriterAsset.class, 67);
 
 		registerEntityComponentSerializer(SpriteComponent.class, new SpriteComponentSerializer(kryo, textureCache), 201);
 		registerEntityComponentSerializer(MusicComponent.class, new MusicComponentSerializer(kryo), 202);
@@ -152,6 +154,7 @@ public class SceneIOModule extends ProjectModule {
 		registerEntityComponentSerializer(ParticleComponent.class, new ParticleComponentSerializer(kryo, particleCache), 204);
 		registerEntityComponentSerializer(TextComponent.class, new TextComponentSerializer(kryo, fontCache), 205);
 		registerEntityComponentSerializer(ShaderComponent.class, new ShaderComponentSerializer(kryo, shaderCache), 226);
+		registerEntityComponentSerializer(SpriterComponent.class, new SpriterComponentSerializer(kryo, spriterCache), 230);
 
 		registerTagged(EditorPositionComponent.class, 206);
 		registerTagged(ExporterDropsComponent.class, 207);
@@ -167,6 +170,7 @@ public class SceneIOModule extends ProjectModule {
 		registerTagged(PolygonComponent.class, 227);
 		registerTagged(PhysicsPropertiesComponent.class, 228);
 		registerTagged(VariablesComponent.class, 229);
+		registerTagged(SpriterPropertiesComponent.class, 231);
 	}
 
 	private <T> void registerTagged (Class<T> clazz, int id) {

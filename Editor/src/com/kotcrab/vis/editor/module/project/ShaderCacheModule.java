@@ -88,19 +88,19 @@ public class ShaderCacheModule extends ProjectModule implements WatchListener {
 				continue;
 			}
 
-			if (vertexFile == null) {
-				toastModule.show(new DetailsToast("Shader compilation not possible, missing vertex file!", "Missing vertex file for fragment: " + fragmentFile.name()));
+			if (vertexFile == null || vertexFile.exists() == false) {
+				toastModule.show(new DetailsToast("Shader compilation not possible, missing vertex file!", "Error", "Missing vertex file for fragment: " + fragmentFile.name()));
 				continue;
 			}
 
-			if (fragmentFile == null) {
-				toastModule.show(new DetailsToast("Shader compilation not possible, missing fragment file!", "Missing fragment file for fragment: " + vertexFile.name()));
+			if (fragmentFile == null || fragmentFile.exists() == false) {
+				toastModule.show(new DetailsToast("Shader compilation not possible, missing fragment file!", "Error", "Missing fragment file for fragment: " + vertexFile.name()));
 				continue;
 			}
 
 			ShaderProgram shader = new ShaderProgram(vertexFile, fragmentFile);
 			if (shader.isCompiled() == false) {
-				toastModule.show(new DetailsToast("Shader " + vertexFile.nameWithoutExtension() + " compilation failed!", shader.getLog()), 5);
+				toastModule.show(new DetailsToast("Shader " + vertexFile.nameWithoutExtension() + " compilation failed!", "Error", shader.getLog()), 5);
 			} else {
 				if (showSuccessMessage)
 					toastModule.show("Shader " + vertexFile.nameWithoutExtension() + " successfully compiled", 2);

@@ -25,6 +25,7 @@ import com.kotcrab.vis.runtime.util.annotation.VisTag;
  * Holds entity asset descriptor
  * @author Kotcrab
  */
+//TODO: support generic asset component to avoid casting?
 public class AssetComponent extends Component implements StoresAssetDescriptor {
 	@VisTag(0) public VisAssetDescriptor asset;
 

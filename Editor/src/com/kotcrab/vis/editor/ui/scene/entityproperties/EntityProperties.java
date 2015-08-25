@@ -37,6 +37,7 @@ import com.badlogic.gdx.utils.IntMap;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.entity.SpriterPropertiesComponent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
@@ -57,6 +58,7 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.AutoComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.RenderableComponentTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.components.SpriterPropertiesComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.*;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
@@ -288,6 +290,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		registerComponentTable(new AutoComponentTable<>(sceneMC, PolygonComponent.class, true));
 		registerComponentTable(new AutoComponentTable<>(sceneMC, PhysicsPropertiesComponent.class, true));
 		registerComponentTable(new AutoComponentTable<>(sceneMC, VariablesComponent.class, true));
+		registerComponentTable(new SpriterPropertiesComponentTable(sceneMC));
 
 		propertiesTable = new VisTable(true);
 
