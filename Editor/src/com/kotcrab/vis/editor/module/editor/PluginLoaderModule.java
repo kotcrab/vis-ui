@@ -38,6 +38,7 @@ import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 import com.kotcrab.vis.ui.widget.*;
+import org.apache.commons.io.IOUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -51,8 +52,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
-
-import org.apache.commons.io.IOUtils;
 
 public class PluginLoaderModule extends EditorModule {
 	private static final String TAG = "PluginLoader";

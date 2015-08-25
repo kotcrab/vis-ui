@@ -30,7 +30,7 @@ import java.util.Comparator;
 /** @author Kotcrab */
 public class FileUtils {
 
-	private static final String[] UNITS = new String[] {"B", "KB", "MB", "GB", "TB", "EB"};
+	private static final String[] UNITS = new String[]{"B", "KB", "MB", "GB", "TB", "EB"};
 
 	private static final Comparator<FileHandle> FILE_COMPARATOR = new Comparator<FileHandle>() {
 		@Override
@@ -41,7 +41,7 @@ public class FileUtils {
 
 	public static String readableFileSize (long size) {
 		if (size <= 0) return "0 B";
-		int digitGroups = (int)(Math.log10(size) / Math.log10(1024));
+		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)).replace(",", ".") + " " + UNITS[digitGroups];
 	}
 

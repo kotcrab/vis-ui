@@ -193,11 +193,10 @@ public class MenuItem extends Button {
 			fontColor = style.fontColor;
 		if (fontColor != null) label.getStyle().fontColor = fontColor;
 
-		if(isDisabled())
+		if (isDisabled())
 			shortcutLabel.getStyle().fontColor = style.disabledFontColor;
 		else
 			shortcutLabel.getStyle().fontColor = shortcutLabelColor;
-
 
 		if (image != null && generateDisabledImage) {
 			if (isDisabled())

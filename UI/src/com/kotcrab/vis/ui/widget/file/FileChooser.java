@@ -48,10 +48,12 @@ import java.util.Arrays;
 
 import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
 
-/** Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called. FileChooser is heavy widget
+/**
+ * Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called. FileChooser is heavy widget
  * and should be reused whenever possible. Chooser is platform dependent and can be only used on desktop
  * @author Kotcrab
- * @since 0.1.0 */
+ * @since 0.1.0
+ */
 public class FileChooser extends VisWindow {
 	private static final long FILE_WATCHER_CHECK_DELAY_MILLIS = 2000;
 
@@ -104,7 +106,7 @@ public class FileChooser extends VisWindow {
 	private FilePopupMenu fileMenu;
 
 	public FileChooser (Mode mode) {
-		this((FileHandle)null, mode);
+		this((FileHandle) null, mode);
 	}
 
 	public FileChooser (FileHandle directory, Mode mode) {
@@ -159,8 +161,10 @@ public class FileChooser extends VisWindow {
 		init(null);
 	}
 
-	/** Sets file name that will be used to store favorites, if not changed default will be used that may be shared with other
-	 * programs, should be package name e.g. com.seriouscompay.seriousprogram */
+	/**
+	 * Sets file name that will be used to store favorites, if not changed default will be used that may be shared with other
+	 * programs, should be package name e.g. com.seriouscompay.seriousprogram
+	 */
 	public static void setFavoritesPrefsName (String name) {
 		FavoritesIO.setFavoritesPrefsName(name);
 	}
@@ -573,7 +577,8 @@ public class FileChooser extends VisWindow {
 		Array<FileHandle> fileList = FileUtils.sortFiles(files);
 
 		for (FileHandle f : fileList)
-			if (f.file() == null || f.file().isHidden() == false) fileTable.add(new FileItem(f, null)).expand().fill().row();
+			if (f.file() == null || f.file().isHidden() == false)
+				fileTable.add(new FileItem(f, null)).expand().fill().row();
 
 		fileScrollPane.setScrollX(0);
 		fileScrollPane.setScrollY(0);
@@ -585,17 +590,21 @@ public class FileChooser extends VisWindow {
 		rebuildFileList();
 	}
 
-	/** Adds favorite to favorite list
-	 * @param favourite to be added */
+	/**
+	 * Adds favorite to favorite list
+	 * @param favourite to be added
+	 */
 	public void addFavorite (FileHandle favourite) {
 		favorites.add(favourite);
 		favoritesIO.saveFavorites(favorites);
 		rebuildShortcutsList(false);
 	}
 
-	/** Removes favorite from current favorite list
+	/**
+	 * Removes favorite from current favorite list
 	 * @param favorite to be removed (path to favorite)
-	 * @return true if favorite was removed, false otherwise */
+	 * @return true if favorite was removed, false otherwise
+	 */
 	public boolean removeFavorite (FileHandle favorite) {
 		boolean removed = favorites.removeValue(favorite, false);
 		favoritesIO.saveFavorites(favorites);
@@ -604,7 +613,8 @@ public class FileChooser extends VisWindow {
 	}
 
 	public void setVisble (boolean visible) {
-		if (isVisible() == false && visible) deselectAll(); // reset selected item when dialog is changed from invisible to visible
+		if (isVisible() == false && visible)
+			deselectAll(); // reset selected item when dialog is changed from invisible to visible
 
 		super.setVisible(visible);
 	}
@@ -624,7 +634,7 @@ public class FileChooser extends VisWindow {
 	private void selectAll () {
 		Array<Cell> cells = fileTable.getCells();
 		for (Cell c : cells) {
-			FileItem item = (FileItem)c.getActor();
+			FileItem item = (FileItem) c.getActor();
 			item.select(false);
 		}
 
@@ -730,7 +740,8 @@ public class FileChooser extends VisWindow {
 	public void setDirectory (FileHandle directory, HistoryPolicy historyPolicy) {
 		if (directory.equals(currentDirectory)) return;
 		if (directory.exists() == false) throw new IllegalStateException("Provided directory does not exist!");
-		if (directory.isDirectory() == false) throw new IllegalStateException("Provided path is a file, not directory!");
+		if (directory.isDirectory() == false)
+			throw new IllegalStateException("Provided path is a file, not directory!");
 
 		if (historyPolicy == HistoryPolicy.ADD) historyAdd();
 
@@ -753,21 +764,23 @@ public class FileChooser extends VisWindow {
 		return selectionMode;
 	}
 
-	/** Changes selection mode, also updates the title of this file chooser to match current selection mode (eg. Choose file, Choose
-	 * directory etc.) */
+	/**
+	 * Changes selection mode, also updates the title of this file chooser to match current selection mode (eg. Choose file, Choose
+	 * directory etc.)
+	 */
 	public void setSelectionMode (SelectionMode selectionMode) {
 		this.selectionMode = selectionMode;
 
 		switch (selectionMode) {
-		case FILES:
-			getTitleLabel().setText(getText(TITLE_CHOOSE_FILES));
-			break;
-		case DIRECTORIES:
-			getTitleLabel().setText(getText(TITLE_CHOOSE_DIRECTORIES));
-			break;
-		case FILES_AND_DIRECTORIES:
-			getTitleLabel().setText(getText(TITLE_CHOOSE_FILES_AND_DIRECTORIES));
-			break;
+			case FILES:
+				getTitleLabel().setText(getText(TITLE_CHOOSE_FILES));
+				break;
+			case DIRECTORIES:
+				getTitleLabel().setText(getText(TITLE_CHOOSE_DIRECTORIES));
+				break;
+			case FILES_AND_DIRECTORIES:
+				getTitleLabel().setText(getText(TITLE_CHOOSE_FILES_AND_DIRECTORIES));
+				break;
 		}
 	}
 
@@ -806,8 +819,10 @@ public class FileChooser extends VisWindow {
 		if (listener == null) listener = new FileChooserAdapter();
 	}
 
-	/** If false file chooser won't pool directories for changes, adding new files or connecting new drive won't refresh file list.
-	 * This must be called when file chooser is not added to Stage */
+	/**
+	 * If false file chooser won't pool directories for changes, adding new files or connecting new drive won't refresh file list.
+	 * This must be called when file chooser is not added to Stage
+	 */
 	public void setWatchingFilesEnabled (boolean watchingFilesEnabled) {
 		if (getStage() != null)
 			throw new IllegalStateException("Pooling setting cannot be changed when file chooser is added to Stage!");
@@ -959,7 +974,7 @@ public class FileChooser extends VisWindow {
 			labelCell.width(new Value() {
 				@Override
 				public float get (Actor context) {
-					int padding = (int)(file.isDirectory() ? 35 * sizes.scaleFactor : 60 * sizes.scaleFactor);
+					int padding = (int) (file.isDirectory() ? 35 * sizes.scaleFactor : 60 * sizes.scaleFactor);
 					return fileScrollPaneTable.getWidth() - getUsedWidth() - padding;
 				}
 			});
@@ -1004,12 +1019,13 @@ public class FileChooser extends VisWindow {
 					if (selectedShortcut != null) selectedShortcut.deselect();
 
 					if (multiselectionEnabled == false
-						|| (Gdx.input.isKeyPressed(multiselectKey) == false && Gdx.input.isKeyPressed(groupMultiselectKey) == false))
+							|| (Gdx.input.isKeyPressed(multiselectKey) == false && Gdx.input.isKeyPressed(groupMultiselectKey) == false))
 						deselectAll();
 
 					boolean itemSelected = select();
 
-					if (selectedItems.size > 1 && multiselectionEnabled && Gdx.input.isKeyPressed(groupMultiselectKey)) selectGroup();
+					if (selectedItems.size > 1 && multiselectionEnabled && Gdx.input.isKeyPressed(groupMultiselectKey))
+						selectGroup();
 
 					if (selectedItems.size > 1) removeInvalidSelections();
 
@@ -1052,7 +1068,7 @@ public class FileChooser extends VisWindow {
 					}
 
 					for (int i = start; i < end; i++) {
-						FileItem item = (FileItem)cells.get(i).getActor();
+						FileItem item = (FileItem) cells.get(i).getActor();
 						item.select(false);
 					}
 				}
@@ -1088,7 +1104,7 @@ public class FileChooser extends VisWindow {
 		}
 
 		private void deselect (boolean removeFromList) {
-			setBackground((Drawable)null);
+			setBackground((Drawable) null);
 			if (removeFromList) selectedItems.removeValue(this, true);
 		}
 
@@ -1185,7 +1201,7 @@ public class FileChooser extends VisWindow {
 		}
 
 		private void deselect () {
-			setBackground((Drawable)null);
+			setBackground((Drawable) null);
 		}
 
 		@Override

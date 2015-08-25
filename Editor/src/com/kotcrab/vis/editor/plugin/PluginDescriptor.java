@@ -20,14 +20,13 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.StreamUtils;
 import com.kotcrab.vis.editor.util.vis.EditorException;
+import org.apache.commons.io.IOUtils;
 
 import java.io.IOException;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-
-import org.apache.commons.io.IOUtils;
 
 /**
  * Represents plugin descriptor that is going to be loaded into VisEditor

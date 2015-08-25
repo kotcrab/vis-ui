@@ -48,7 +48,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
  * Assets manager drag and drop helper class.
  * @author Kotcrab
  */
-public class AssetDragAndDrop implements Disposable{
+public class AssetDragAndDrop implements Disposable {
 	@InjectModule private FileAccessModule fileAccess;
 	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private FontCacheModule fontCache;
