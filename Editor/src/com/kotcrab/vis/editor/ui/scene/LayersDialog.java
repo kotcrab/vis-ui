@@ -89,11 +89,11 @@ public class LayersDialog extends VisTable implements Disposable {
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
 
-		VisImageButton layerAddButton = new VisImageButton(Assets.getIcon(Icons.LAYER_ADD));
-		layerUpButton = new VisImageButton(Assets.getIcon(Icons.LAYER_UP));
-		layerDownButton = new VisImageButton(Assets.getIcon(Icons.LAYER_DOWN));
-		layerSettingsButton = new VisImageButton(Assets.getIcon(Icons.SETTINGS));
-		layerRemoveButton = new VisImageButton(Assets.getIcon(Icons.LAYER_REMOVE));
+		VisImageButton layerAddButton = new VisImageButton(Assets.getIcon(Icons.LAYER_ADD), "Add new layer");
+		layerUpButton = new VisImageButton(Assets.getIcon(Icons.LAYER_UP), "Move layer up");
+		layerDownButton = new VisImageButton(Assets.getIcon(Icons.LAYER_DOWN), "Move layer down");
+		layerSettingsButton = new VisImageButton(Assets.getIcon(Icons.SETTINGS), "Show layer settings");
+		layerRemoveButton = new VisImageButton(Assets.getIcon(Icons.LAYER_REMOVE), "Delete layer");
 
 		layerUpButton.setGenerateDisabledImage(true);
 		layerDownButton.setGenerateDisabledImage(true);
