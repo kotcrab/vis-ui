@@ -10,7 +10,7 @@ Start by forking this repository, then learn [how to run Vis Projects from sourc
 We require you to use code formatter when making pull requests. Code formatter for IntelliJ IDEA can be found in root directory of this repository. If you are using Eclipse then
 you must use [libGDX Eclipse formatter](https://github.com/kotcrab/libgdx/blob/master/eclipse-formatter.xml). 
 
-Remember to don't use formatter on existing code, it may change other irrelevant source code and if you decide to make pull request later it will be harder to review. It applies especially do Eclipse formatter which isn't fully compatible with the IntelliJ IDEA formatter, used mainly in this repository.
+Remember to don't Eclipse formatter on existing source code because it isn't fully compatible with the IntelliJ IDEA formatter, used in this repository. It may change other irrelevant source code and if you decide to make pull request later it will be harder to review.
 
 To install formatter in Eclipse simply import xml file from settings window.
 
