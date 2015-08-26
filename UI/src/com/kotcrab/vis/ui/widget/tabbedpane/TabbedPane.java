@@ -86,7 +86,7 @@ public class TabbedPane {
 		tabs = new Array<Tab>();
 		tabsButtonMap = new ObjectMap<Tab, TabButtonTable>();
 
-		mainTable.add(tabsTable).left().expand();
+		mainTable.add(tabsTable).left().expandX();
 		mainTable.row();
 
 		// if height is not set bottomBar may sometimes disappear
