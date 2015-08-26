@@ -77,7 +77,7 @@ public class GridGroup extends WidgetGroup {
 				maxHeight += itemSize + spacing;
 			}
 
-			tempX += itemSize - spacing;
+			tempX += itemSize + spacing;
 		}
 
 		if (itemSize + spacing * 2 >= prefWidth)
