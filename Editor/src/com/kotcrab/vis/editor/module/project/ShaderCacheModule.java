@@ -88,12 +88,12 @@ public class ShaderCacheModule extends ProjectModule implements WatchListener {
 				continue;
 			}
 
-			if (vertexFile == null) {
+			if (vertexFile == null || vertexFile.exists() == false) {
 				toastModule.show(new DetailsToast("Shader compilation not possible, missing vertex file!", "Missing vertex file for fragment: " + fragmentFile.name()));
 				continue;
 			}
 
-			if (fragmentFile == null) {
+			if (fragmentFile == null || fragmentFile.exists() == false) {
 				toastModule.show(new DetailsToast("Shader compilation not possible, missing fragment file!", "Missing fragment file for fragment: " + vertexFile.name()));
 				continue;
 			}
