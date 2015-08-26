@@ -59,7 +59,7 @@ public class CrashReporter {
 
 	private void printHeader () {
 		println("--- VisEditor Crash Report ---");
-		println("VisEditor " + App.VERSION + " (version code: " + App.VERSION_CODE + ")");
+		println("VisEditor " + App.VERSION);
 		println("VersionCode: " + App.VERSION_CODE + " Snapshot: " + App.SNAPSHOT);
 		println();
 
