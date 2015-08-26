@@ -141,4 +141,14 @@ public class FileUtils {
 				consumer.accept(file);
 		}
 	}
+
+	/** Removes the first directory separator from a path
+	 * <p>
+	 * gdx/asset.png -> asset.png
+	 * @param path path where the the first directory separator is removed from
+	 * @return the path without the parts that are before the separator
+	 * @see com.kotcrab.vis.runtime.util.PathUtils#removeFirstSeparator(String path) */
+	public static String removeFirstSeparator (String path) {
+		return path.substring(path.indexOf('/') + 1);
+	}
 }

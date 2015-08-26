@@ -294,9 +294,9 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 				String relativePath = fileAccess.relativizeToAssetsFolder(file);
 				String ext = file.extension();
 				
-				if (relativePath.startsWith("atlas") && (ext.equals("png") || ext.equals("jpg"))) continue;
+				if (relativePath.startsWith("atlas") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg"))) continue;
 				//if (relativePath.startsWith("particle") && (ext.equals("png") || ext.equals("jpg"))) continue;
-				if (relativePath.startsWith("bmpfont") && (ext.equals("png") || ext.equals("jpg"))) continue;
+				if (relativePath.startsWith("bmpfont") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg"))) continue;
 
 				filesView.addActor(createFileItem(file));
 				filesDisplayed++;

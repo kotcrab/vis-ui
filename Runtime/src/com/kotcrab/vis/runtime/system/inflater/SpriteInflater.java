@@ -28,6 +28,7 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.SpriteComponent;
 import com.kotcrab.vis.runtime.component.SpriteProtoComponent;
+import com.kotcrab.vis.runtime.util.PathUtils;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 /**
@@ -71,7 +72,7 @@ public class SpriteInflater extends Manager {
 		if (asset instanceof TextureRegionAsset) {
 			TextureRegionAsset regionAsset = (TextureRegionAsset) asset;
 			atlasPath = "gfx/textures.atlas";
-			atlasRegion = regionAsset.getPath().substring(4, regionAsset.getPath().length() - 4); //remove gfx/ and file extension
+			atlasRegion = PathUtils.removeFirstSeparator(PathUtils.removeExtension(regionAsset.getPath())); //remove gfx/ and file extension
 
 		} else if (asset instanceof AtlasRegionAsset) {
 			AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;

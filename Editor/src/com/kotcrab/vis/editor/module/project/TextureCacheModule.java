@@ -16,6 +16,8 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import org.apache.commons.io.FilenameUtils;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -34,6 +36,7 @@ import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
+import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
@@ -138,11 +141,9 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 			cache = new TextureAtlas(cacheFile);
 
 			for (Entry<String, TextureRegion> e : regions.entries()) {
-				String path = e.key.substring(4, e.key.length() - 4);
+				String path = FileUtils.removeFirstSeparator(FilenameUtils.removeExtension(e.key));
 				TextureRegion region = e.value;
-
 				TextureRegion newRegion = cache.findRegion(path);
-
 				if (newRegion == null)
 					region.setRegion(missingRegion);
 				else
@@ -242,7 +243,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	private TextureRegion getCachedGfxRegion (TextureRegionAsset asset) {
 		String relativePath = asset.getPath();
-		String regionName = relativePath.substring(4, relativePath.length() - 4);
+		String regionName = FileUtils.removeFirstSeparator(FilenameUtils.removeExtension(relativePath));
 
 		TextureRegion region = regions.get(regionName);
 
