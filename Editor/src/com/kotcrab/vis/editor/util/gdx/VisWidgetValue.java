@@ -18,25 +18,26 @@ package com.kotcrab.vis.editor.util.gdx;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
 /**
- * Allows to use LibGDX {@link Value} with lambdas
- * @see VisWidgetValue
+ * Allows to use LibGDX {@link Value} with lambdas for scene2d.ui widgets
+ * @see VisValue
  * @author Kotcrab
  */
-public class VisValue extends Value {
-	private ValueGetter getter;
+public class VisWidgetValue extends Value {
+	protected WidgetValueGetter getter;
 
-	public VisValue (ValueGetter getter) {
+	public VisWidgetValue (WidgetValueGetter getter) {
 		this.getter = getter;
 	}
 
 	@Override
 	public float get (Actor context) {
-		return getter.get(context);
+		return getter.get((Widget) context);
 	}
 
-	public interface ValueGetter {
-		float get (Actor context);
+	public interface WidgetValueGetter {
+		float get (Widget context);
 	}
 }

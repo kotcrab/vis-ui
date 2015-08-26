@@ -16,27 +16,9 @@
 
 package com.kotcrab.vis.editor.util.gdx;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
-
-/**
- * Allows to use LibGDX {@link Value} with lambdas
- * @see VisWidgetValue
- * @author Kotcrab
- */
-public class VisValue extends Value {
-	private ValueGetter getter;
-
-	public VisValue (ValueGetter getter) {
-		this.getter = getter;
-	}
-
-	@Override
-	public float get (Actor context) {
-		return getter.get(context);
-	}
-
-	public interface ValueGetter {
-		float get (Actor context);
+/** @author Kotcrab */
+public class PrefHeightIfVissibleValue extends VisWidgetValue {
+	public PrefHeightIfVissibleValue () {
+		super(context -> context.isVisible() ? context.getPrefHeight() : 0);
 	}
 }
