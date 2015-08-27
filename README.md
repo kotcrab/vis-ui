@@ -13,7 +13,7 @@ VisEditor currently have libGDX runtime using [artemis-odb](https://github.com/j
 LibGDX runtime is a good start if you want to write your own runtime, if you do so don't forget to let me now and I will link it here.
 
 #### Community
-You can follow Vis development on my Twitter channels: [@VisEditor](https://twitter.com/VsiEditor) and [@kotcrab](https://twitter.com/kotcrab) or read my [blog](http://kotcrab.com/).
+You can follow Vis development on my Twitter channels: [@VisEditor](https://twitter.com/VisEditor) and [@kotcrab](https://twitter.com/kotcrab) or read my [blog](http://kotcrab.com/).
 You can also join our [forum and IRC channel](https://github.com/kotcrab/VisEditor/wiki/IRC-Channel-and-Forum)!
 
 #### Subprojects
