@@ -55,12 +55,12 @@ public class AlignmentToolsDialog extends VisTable {
 
 		VisTable horizontalAlign = new VisTable(true);
 
-		VisImageButton alignLeft = new VisImageButton(Assets.getIcon(Icons.ALIGN_LEFT), "Align entities at left edge");
-		VisImageButton alignRight = new VisImageButton(Assets.getIcon(Icons.ALIGN_RIGHT), "Align entities at right edge");
-		VisImageButton alignCenterX = new VisImageButton(Assets.getIcon(Icons.ALIGN_CENTER_X), "Center entities at x axis");
-		VisImageButton alignTop = new VisImageButton(Assets.getIcon(Icons.ALIGN_BOTTOM), "Align entities at top edge");
-		VisImageButton alignBottom = new VisImageButton(Assets.getIcon(Icons.ALIGN_TOP), "Align entities at bottom edge");
-		VisImageButton alignCenterY = new VisImageButton(Assets.getIcon(Icons.ALIGN_CENTER_Y), "Center entities at y axis");
+		VisImageButton alignLeft = new VisImageButton(Icons.ALIGN_LEFT.drawable(), "Align entities at left edge");
+		VisImageButton alignRight = new VisImageButton(Icons.ALIGN_RIGHT.drawable(), "Align entities at right edge");
+		VisImageButton alignCenterX = new VisImageButton(Icons.ALIGN_CENTER_X.drawable(), "Center entities at x axis");
+		VisImageButton alignTop = new VisImageButton(Icons.ALIGN_BOTTOM.drawable(), "Align entities at top edge");
+		VisImageButton alignBottom = new VisImageButton(Icons.ALIGN_TOP.drawable(), "Align entities at bottom edge");
+		VisImageButton alignCenterY = new VisImageButton(Icons.ALIGN_CENTER_Y.drawable(), "Center entities at y axis");
 
 		VisImageButton closeButton = new VisImageButton("close-window");
 

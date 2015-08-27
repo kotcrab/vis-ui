@@ -53,7 +53,7 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 		VisTable updateTable = new VisTable(true);
 		updateTable.add("Update channel:");
 		updateTable.add(updateChannelSelectBox);
-		VisImage updateHelpImage = new VisImage(Assets.getIcon(Icons.QUESTION));
+		VisImage updateHelpImage = new VisImage(Icons.QUESTION.drawable());
 		new Tooltip(updateHelpImage, "Select update channel that will be used for update checking:\n" +
 				"Stable: The most stable builds, should be bug free in theory.\n" +
 				"Beta: Experimentally builds made before stable release, may contain bugs.\n" +

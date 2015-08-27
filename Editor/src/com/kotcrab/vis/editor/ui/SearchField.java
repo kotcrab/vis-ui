@@ -43,7 +43,7 @@ public class SearchField extends VisTable {
 
 		VisImageButton clearButton = new VisImageButton(VisUI.getSkin().getDrawable("icon-close"));
 
-		add(new Image(Assets.getIcon(Icons.SEARCH))).spaceRight(3);
+		add(new Image(Icons.SEARCH.drawable())).spaceRight(3);
 		add(searchField).width(200);
 		add(clearButton).height(searchField.getHeight());
 
