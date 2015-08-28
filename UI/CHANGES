@@ -7,6 +7,7 @@
 -Fixed crash in FileChooser when user tried to use history buttons for no longer existing directory
 -If user clicks mouse before Tooltip appears, Tooltip won't be showed
 -Fixed issue with GridGroup in ScrollPane - scroll bar appeared too late
+-PopupMenu is now kept inside stage when displaying it
 -FileChooser I18N:
  -added directoryNoLongerExists
  -added missing entries: newDirectoryDialogTitle, newDirectoryDialogText
