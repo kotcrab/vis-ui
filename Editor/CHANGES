@@ -2,6 +2,7 @@
 -Added Spriter support
 -Fixed crash after unexpectedly removing one of shader file (issue #21)
 -Fixed crash after opening Select File Dialog but there isn't any available file to select
+-"Add Component" dialog now can be used for multiple selected entities
 
 [0.2.3] [LibGDX 1.6.4]
 -Added VariablesComponent

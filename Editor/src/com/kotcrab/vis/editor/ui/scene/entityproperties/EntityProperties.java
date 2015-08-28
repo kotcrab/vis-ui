@@ -37,7 +37,6 @@ import com.badlogic.gdx.utils.IntMap;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.entity.SpriterPropertiesComponent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
@@ -252,11 +251,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		componentSelectDialog = new ComponentSelectDialog(this, clazz -> {
 			try {
 				if (getProxies().size == 0) return; //nothing is selected
-
-				Constructor<? extends Component> cons = clazz.getDeclaredConstructor();
-				cons.setAccessible(true);
-				Component component = cons.newInstance();
-				undoModule.execute(new ComponentAddAction(componentManipulator, getProxies().first(), component));
+				undoModule.execute(new ComponentAddAction(componentManipulator, getProxies(), clazz));
 				rebuiltScheduled = true;
 			} catch (ReflectiveOperationException e) {
 				Log.exception(e);
@@ -439,7 +434,7 @@ public class EntityProperties extends VisTable implements Disposable {
 			}
 		}
 
-		if (groupSelected == false && entities.size == 1) {
+		if (groupSelected == false) {
 			propertiesTable.addSeparator().padTop(0).padBottom(0).spaceTop(3).spaceBottom(3);
 			propertiesTable.add(addComponentButton).spaceBottom(3).fill(false);
 		}
