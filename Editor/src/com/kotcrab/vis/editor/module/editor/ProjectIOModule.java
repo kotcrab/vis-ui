@@ -314,6 +314,7 @@ public class ProjectIOModule extends EditorModule {
 		visAssetsDir.child("music").mkdirs();
 		visAssetsDir.child("particle").mkdirs();
 		visAssetsDir.child("shader").mkdirs();
+		visAssetsDir.child("spriter").mkdirs();
 	}
 
 	private class CreateProjectBackupAsyncTask extends SteppedAsyncTask {

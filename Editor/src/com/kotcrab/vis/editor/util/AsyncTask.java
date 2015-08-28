@@ -62,7 +62,7 @@ public abstract class AsyncTask {
 		if (listener != null) listener.failed(reason, ex);
 	}
 
-	public abstract void execute ();
+	public abstract void execute () throws Exception;
 
 	/** Executes runnable on OpenGL thread. This methods blocks until runnable finished executing */
 	protected void executeOnOpenGL (final Runnable runnable) {

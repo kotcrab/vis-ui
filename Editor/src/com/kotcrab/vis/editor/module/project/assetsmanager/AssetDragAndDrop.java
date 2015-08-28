@@ -33,10 +33,8 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.module.project.FontCacheModule;
-import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
-import com.kotcrab.vis.editor.module.project.TextureCacheModule;
+import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.scheme.SpriterAssetData;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.VisDragAndDrop;
@@ -53,6 +51,7 @@ public class AssetDragAndDrop implements Disposable {
 	@InjectModule private TextureCacheModule textureCache;
 	@InjectModule private FontCacheModule fontCache;
 	@InjectModule private ParticleCacheModule particleCache;
+	@InjectModule private SpriterDataIOModule spriterDataIO;
 
 	private VisDragAndDrop dragAndDrop;
 	private DragAndDropTarget dropTarget;
@@ -178,6 +177,13 @@ public class AssetDragAndDrop implements Disposable {
 
 		if (item.getType() == FileType.SOUND) {
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Sound \n (drop on scene to add)").setPayload(new PathAsset(relativePath)));
+		}
+
+		if (item.getType() == FileType.SPRITER_SCML) {
+			FileHandle dataFile = item.getFile().parent().child(".vis").child("data.json");
+			if(dataFile.exists() == false) return;
+			SpriterAssetData data = spriterDataIO.loadData(dataFile);
+			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Spriter Animation \n (drop on scene to add)").setPayload(new SpriterAsset(relativePath, data.imageScale)));
 		}
 
 		if (item.getType() == FileType.NON_STANDARD) {

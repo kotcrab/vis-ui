@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project.assetsmanager;
+package com.kotcrab.vis.runtime.util;
+
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.brashmonkey.spriter.Data;
+import com.brashmonkey.spriter.Loader;
 
 /**
- * Possible file types in ui manager
+ * Loaded by {@link AssetManager}
  * @author Kotcrab
  */
-public enum FileType {
-	UNKNOWN, NON_STANDARD,
-	TEXTURE, TEXTURE_ATLAS,
-	TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE,
-	MUSIC, SOUND, PARTICLE_EFFECT,
-	FRAGMENT_SHADER, VERTEX_SHADER,
-	SPRITER_SCML
+public class SpriterData {
+	public final Data data;
+	public final Loader<Sprite> loader;
+
+	public SpriterData (Data data, Loader<Sprite> loader) {
+		this.data = data;
+		this.loader = loader;
+	}
 }

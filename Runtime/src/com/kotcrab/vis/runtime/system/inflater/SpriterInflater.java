@@ -19,51 +19,46 @@ package com.kotcrab.vis.runtime.system.inflater;
 import com.artemis.*;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Sound;
-import com.kotcrab.vis.runtime.RuntimeConfiguration;
-import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.SpriterAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SoundComponent;
-import com.kotcrab.vis.runtime.component.SoundProtoComponent;
+import com.kotcrab.vis.runtime.component.SpriterComponent;
+import com.kotcrab.vis.runtime.component.SpriterProtoComponent;
+import com.kotcrab.vis.runtime.util.SpriterData;
 
-/**
- * Inflates {@link SoundProtoComponent} into {@link SoundComponent}
- * @author Kotcrab
- */
+/** @author Kotcrab */
 @Wire
-public class SoundInflater extends Manager {
-	private ComponentMapper<SoundProtoComponent> soundCm;
+public class SpriterInflater extends Manager {
+	private ComponentMapper<SpriterProtoComponent> protoCm;
 	private ComponentMapper<AssetComponent> assetCm;
 
 	private EntityTransmuter transmuter;
 
-	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
-	public SoundInflater (RuntimeConfiguration configuration, AssetManager manager) {
-		this.configuration = configuration;
+	public SpriterInflater (AssetManager manager) {
 		this.manager = manager;
 	}
 
 	@Override
 	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SoundProtoComponent.class);
-		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
+		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SpriterProtoComponent.class);
 		transmuter = factory.build();
 	}
 
 	@Override
 	public void added (Entity e) {
-		if (soundCm.has(e) == false) return;
+		if (protoCm.has(e) == false) return;
 
 		AssetComponent assetComponent = assetCm.get(e);
+		SpriterProtoComponent protoComponent = protoCm.get(e);
 
-		PathAsset asset = (PathAsset) assetComponent.asset;
+		SpriterAsset asset = (SpriterAsset) assetComponent.asset;
+		SpriterData data = manager.get(asset.getPath(), SpriterData.class);
+		SpriterComponent component = new SpriterComponent(data.loader, data.data, protoComponent.scale);
 
-		Sound sound = manager.get(asset.getPath(), Sound.class);
-		SoundComponent soundComponent = new SoundComponent(sound);
+		protoComponent.fill(component);
 
 		transmuter.transmute(e);
-		e.edit().add(soundComponent);
+		e.edit().add(component);
 	}
 }

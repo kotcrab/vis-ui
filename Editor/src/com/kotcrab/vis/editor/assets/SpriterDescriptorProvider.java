@@ -14,30 +14,27 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.editor.assets;
 
-import com.artemis.Component;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.util.StoresAssetDescriptor;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
+import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.runtime.assets.SpriterAsset;
 
 /**
- * Holds entity asset descriptor
+ * Descriptor provider for spriter assets
  * @author Kotcrab
  */
-//TODO: support generic asset component to avoid casting?
-public class AssetComponent extends Component implements StoresAssetDescriptor {
-	@VisTag(0) public VisAssetDescriptor asset;
+public class SpriterDescriptorProvider implements AssetDescriptorProvider<SpriterAsset> {
+	@Override
+	public SpriterAsset provide (FileHandle file, String relativePath) {
+		if (relativePath.startsWith("spriter") && file.extension().equals("scml"))
+			return new SpriterAsset(relativePath, -1);
+		else
+			return null;
 
-	private AssetComponent () {
-	}
-
-	public AssetComponent (VisAssetDescriptor asset) {
-		this.asset = asset;
 	}
 
 	@Override
-	public VisAssetDescriptor getAsset () {
-		return asset;
+	public SpriterAsset parametrize (SpriterAsset rawAsset, SpriterAsset other) {
+		return new SpriterAsset(rawAsset.getPath(), other.getImageScale());
 	}
 }

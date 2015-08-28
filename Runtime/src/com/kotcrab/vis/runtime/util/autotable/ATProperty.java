@@ -36,4 +36,10 @@ import java.lang.annotation.Target;
 public @interface ATProperty {
 	/** @return human friendly field name that will be used in VisEditor UI. */
 	String fieldName () default "";
+
+	/** @return field max value, if target field is boolean this if ignored */
+	float max () default Float.MAX_VALUE;
+
+	/** @return field min value, if target field is boolean this if ignored */
+	float min () default Float.MIN_VALUE;
 }

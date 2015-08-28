@@ -19,35 +19,35 @@ package com.kotcrab.vis.editor.module.scene;
 import com.artemis.*;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
-import com.kotcrab.vis.editor.module.project.FontCacheModule;
-import com.kotcrab.vis.runtime.assets.BmpFontAsset;
-import com.kotcrab.vis.runtime.assets.TtfFontAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.editor.module.InjectModule;
+import com.kotcrab.vis.editor.module.project.SpriterCacheModule;
+import com.kotcrab.vis.runtime.assets.SpriterAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.component.SpriterComponent;
 
 /** @author Kotcrab */
 @Wire
-public class FontReloaderManager extends Manager {
-	private FontCacheModule fontCache;
-	private float pixelInUnits;
+public class SpriterReloaderManager extends Manager {
+	@InjectModule private SpriterCacheModule spriterCacheModule;
 
-	private ComponentMapper<TextComponent> textCm;
+	private SpriterCacheModule spriterCache;
+
+	private ComponentMapper<SpriterComponent> spriterCm;
 	private ComponentMapper<AssetComponent> assetCm;
+
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
-	public FontReloaderManager (FontCacheModule fontCache, float pixelInUnits) {
-		this.fontCache = fontCache;
-		this.pixelInUnits = pixelInUnits;
+	public SpriterReloaderManager (SpriterCacheModule spriterCache) {
+		this.spriterCache = spriterCache;
 	}
 
 	@Override
 	protected void initialize () {
-		subscription = subscriptionManager.get(Aspect.all(TextComponent.class, AssetComponent.class));
+		subscription = subscriptionManager.get(Aspect.all(SpriterComponent.class, AssetComponent.class));
 	}
 
-	public void reloadFonts (boolean reloadBmpFonts, boolean reloadTtfFonts) {
+	public void reloadSpriterData () {
 		IntBag bag = subscription.getEntities();
 		int[] data = bag.getData();
 
@@ -55,14 +55,13 @@ public class FontReloaderManager extends Manager {
 			int id = data[i];
 			Entity entity = world.getEntity(id);
 
-			TextComponent text = textCm.get(entity);
-			VisAssetDescriptor asset = assetCm.get(entity).asset;
+			SpriterComponent spriter = spriterCm.get(entity);
+			SpriterAsset asset = (SpriterAsset) assetCm.get(entity).asset;
 
-			if (asset instanceof BmpFontAsset && reloadBmpFonts)
-				text.setFont(fontCache.get((BmpFontAsset) asset, pixelInUnits));
-
-			if (asset instanceof TtfFontAsset && reloadTtfFonts)
-				text.setFont(fontCache.get((TtfFontAsset) asset, pixelInUnits));
+			SpriterComponent newSpriter = spriterCache.cloneComponent(asset, spriter);
+			entity.edit().remove(spriter).add(newSpriter);
 		}
+
+		spriterCacheModule.disposeOldLoaders();
 	}
 }

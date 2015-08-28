@@ -20,7 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.util.vis.VisConsumer;
+import com.kotcrab.vis.editor.util.vis.CancelableConsumer;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -131,7 +131,7 @@ public class FileUtils {
 		return Gdx.files.absolute(file.getAbsolutePath());
 	}
 
-	public static void streamResursive (FileHandle folder, VisConsumer<FileHandle> consumer) {
+	public static void streamResursive (FileHandle folder, CancelableConsumer<FileHandle> consumer) {
 		if (folder.isDirectory() == false) throw new IllegalStateException("Root must be directory!");
 
 		for (FileHandle file : folder.list()) {

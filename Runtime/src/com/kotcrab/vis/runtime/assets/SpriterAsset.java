@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project.assetsmanager;
+package com.kotcrab.vis.runtime.assets;
 
-/**
- * Possible file types in ui manager
- * @author Kotcrab
- */
-public enum FileType {
-	UNKNOWN, NON_STANDARD,
-	TEXTURE, TEXTURE_ATLAS,
-	TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE,
-	MUSIC, SOUND, PARTICLE_EFFECT,
-	FRAGMENT_SHADER, VERTEX_SHADER,
-	SPRITER_SCML
+import com.kotcrab.vis.runtime.util.annotation.VisTag;
+
+/** @author Kotcrab */
+public class SpriterAsset extends PathAsset {
+	@VisTag(1) private float imageScale;
+
+	protected SpriterAsset () {
+	}
+
+	public SpriterAsset (String relativePath, float imageScale) {
+		super(relativePath);
+		this.imageScale = imageScale;
+	}
+
+	public float getImageScale () {
+		return imageScale;
+	}
 }

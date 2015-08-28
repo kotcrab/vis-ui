@@ -28,6 +28,8 @@ import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.gdx.IntDigitsOnlyFilter;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
+import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
+import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
@@ -57,6 +59,12 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 			NumberInputField numberInputField = new NumberInputField(properties.getSharedFocusListener(), properties.getSharedChangeListener());
 
 			if (type.equals(Integer.TYPE)) numberInputField.setTextFieldFilter(new IntDigitsOnlyFilter());
+
+			if (annotation.max() != Float.MAX_VALUE)
+				numberInputField.addValidator(new LesserThanValidator(annotation.max(), true));
+
+			if (annotation.min() != Float.MIN_VALUE)
+				numberInputField.addValidator(new GreaterThanValidator(annotation.min(), true));
 
 			VisTable table = new VisTable(true);
 
@@ -110,24 +118,20 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 		if (type.equals(Boolean.TYPE)) {
 			IndeterminateCheckbox checkbox = checkboxFields.get(field);
 			if (checkbox.isIndeterminate() == false) field.set(component, checkbox.isChecked());
+			return;
 		}
 
+		NumberInputField inputField = numberFields.get(field);
+		inputField.validateInput();
+
 		if (type.equals(Integer.TYPE)) {
-			try {
-				int value = FieldUtils.getInt(numberFields.get(field), (int) field.get(component));
-				field.set(component, value);
-			} catch (IllegalAccessException e) {
-				throw new IllegalStateException(e);
-			}
+			int value = FieldUtils.getInt(inputField, (Integer) field.get(component));
+			field.set(component, value);
 		}
 
 		if (type.equals(Float.TYPE)) {
-			try {
-				float value = FieldUtils.getFloat(numberFields.get(field), (float) field.get(component));
-				field.set(component, value);
-			} catch (IllegalAccessException e) {
-				throw new IllegalStateException(e);
-			}
+			float value = FieldUtils.getFloat(inputField, (Float) field.get(component));
+			field.set(component, value);
 		}
 	}
 }

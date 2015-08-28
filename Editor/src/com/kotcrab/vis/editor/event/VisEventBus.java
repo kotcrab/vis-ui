@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project.assetsmanager;
+package com.kotcrab.vis.editor.event;
 
-/**
- * Possible file types in ui manager
- * @author Kotcrab
- */
-public enum FileType {
-	UNKNOWN, NON_STANDARD,
-	TEXTURE, TEXTURE_ATLAS,
-	TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE,
-	MUSIC, SOUND, PARTICLE_EFFECT,
-	FRAGMENT_SHADER, VERTEX_SHADER,
-	SPRITER_SCML
+import com.badlogic.gdx.Gdx;
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.SubscriberExceptionHandler;
+
+/** @author Kotcrab */
+public class VisEventBus extends EventBus {
+	public VisEventBus () {
+	}
+
+	public VisEventBus (String identifier) {
+		super(identifier);
+	}
+
+	public VisEventBus (SubscriberExceptionHandler subscriberExceptionHandler) {
+		super(subscriberExceptionHandler);
+	}
+
+	public void postToMainThread (Object object) {
+		Gdx.app.postRunnable(() -> post(object));
+	}
 }

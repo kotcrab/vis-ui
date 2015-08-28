@@ -215,7 +215,7 @@ public class DefaultExporter implements ExporterPlugin {
 				setMessage("Copying assets directory: " + file.name());
 
 				try {
-					FileUtils.copyDirectory(file.file(), outAssetsDir.child(file.name()).file());
+					FileUtils.copyDirectory(file.file(), outAssetsDir.child(file.name()).file(), f -> f.getName().equals(".vis") == false);
 				} catch (IOException e) {
 					Log.exception(e);
 				}

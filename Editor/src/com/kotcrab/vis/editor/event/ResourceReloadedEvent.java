@@ -17,7 +17,7 @@
 package com.kotcrab.vis.editor.event;
 
 /**
- * Posted when scene should reloed various types of resources
+ * Posted when scene should reload various types of resources
  * @author Kotcrab
  */
 public class ResourceReloadedEvent {
@@ -27,6 +27,7 @@ public class ResourceReloadedEvent {
 	public static final int RESOURCE_BMP_FONTS = 0x0008;
 	public static final int RESOURCE_TTF_FONTS = 0x0016;
 	public static final int RESOURCE_SHADERS = 0x0032;
+	public static final int RESOURCE_SPRITER_DATA = 0x0064;
 
 	public final int resourceType;
 

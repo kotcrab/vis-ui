@@ -14,17 +14,24 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project.assetsmanager;
+package com.kotcrab.vis.editor.util;
+
+import java.io.File;
+import java.io.FileFilter;
 
 /**
- * Possible file types in ui manager
+ * Directory filter which only shows directories
  * @author Kotcrab
  */
-public enum FileType {
-	UNKNOWN, NON_STANDARD,
-	TEXTURE, TEXTURE_ATLAS,
-	TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE,
-	MUSIC, SOUND, PARTICLE_EFFECT,
-	FRAGMENT_SHADER, VERTEX_SHADER,
-	SPRITER_SCML
+public class ExtensionFileFilter implements FileFilter {
+	private String extension;
+
+	public ExtensionFileFilter (String extension) {
+		this.extension = extension;
+	}
+
+	@Override
+	public boolean accept (File file) {
+		return file.getPath().endsWith(extension);
+	}
 }

@@ -20,9 +20,13 @@ import com.artemis.Component;
 import com.artemis.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
+import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.NumberUtils;
 import com.kotcrab.vis.editor.util.value.*;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author Kotcrab
@@ -186,5 +190,34 @@ public class EntityUtils {
 		}
 
 		return true;
+	}
+
+	public static <T extends Component> void stream (Array<EntityProxy> proxies, Class<T> componentClass, BiConsumer<Entity, T> consumer) {
+		stream(proxies, entity -> consumer.accept(entity, entity.getComponent(componentClass)));
+	}
+
+	public static void stream (Array<EntityProxy> proxies, Consumer<Entity> consumer) {
+		for (EntityProxy proxy : proxies) {
+			for (Entity entity : proxy.getEntities()) {
+				consumer.accept(entity);
+			}
+		}
+	}
+
+	public static boolean isMultipleEntitiesSelected (Array<EntityProxy> proxies) {
+		if (proxies.size > 1) {
+			return true;
+		} else {
+			EntityProxy proxy = proxies.get(0);
+			return (proxy instanceof GroupEntityProxy && proxy.getEntities().size > 1);
+		}
+	}
+
+	public static Entity getFirstEntity (Array<EntityProxy> proxies) {
+		return proxies.first().getEntities().first();
+	}
+
+	public static <T extends Component> T getFirstEntityComponent (Array<EntityProxy> proxies, Class<T> componentClass) {
+		return getFirstEntity(proxies).getComponent(componentClass);
 	}
 }

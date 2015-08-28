@@ -36,6 +36,7 @@ public class FileAccessModule extends ProjectModule {
 	private FileHandle ttfFontFolder;
 	private FileHandle bmpFontFolder;
 	private FileHandle particleFolder;
+	private FileHandle spriterFolder;
 
 	@Override
 	public void init () {
@@ -48,6 +49,7 @@ public class FileAccessModule extends ProjectModule {
 		ttfFontFolder = assetsFolder.child("font");
 		bmpFontFolder = assetsFolder.child("bmpfont");
 		particleFolder = assetsFolder.child("particle");
+		spriterFolder = assetsFolder.child("spriter");
 	}
 
 	public Array<FileHandle> getSceneFiles () {
@@ -92,6 +94,10 @@ public class FileAccessModule extends ProjectModule {
 
 	public FileHandle getParticleFolder () {
 		return particleFolder;
+	}
+
+	public FileHandle getSpriterFolder () {
+		return spriterFolder;
 	}
 
 	public FileHandle getBMPFontFolder () {

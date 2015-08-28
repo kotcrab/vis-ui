@@ -20,11 +20,10 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.module.project.ShaderCacheModule;
-import com.kotcrab.vis.runtime.component.MusicComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
 
 /**
- * Kryo serializer for {@link MusicComponent}
+ * Kryo serializer for {@link ShaderComponent}
  * @author Kotcrab
  */
 public class ShaderComponentSerializer extends EntityComponentSerializer<ShaderComponent> {

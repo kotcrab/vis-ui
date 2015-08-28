@@ -14,9 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.vis;
+package com.kotcrab.vis.editor.module.project.assetsmanager;
 
-/** @author Kotcrab */
-public interface VisConsumer<T> {
-	boolean accept (T t);
+import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.ui.widget.VisTable;
+
+/**
+ * May use injected modules from project level scope
+ * @author Kotcrab
+ */
+public interface AssetsUIContextProvider {
+	/** @return context table or null if this provider is not interested */
+	VisTable provideContext (FileHandle fileHandle, String assetsFolderRelativePath);
 }

@@ -14,30 +14,26 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.editor.entity;
 
 import com.artemis.Component;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.util.StoresAssetDescriptor;
 import com.kotcrab.vis.runtime.util.annotation.VisTag;
+import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
-/**
- * Holds entity asset descriptor
- * @author Kotcrab
- */
-//TODO: support generic asset component to avoid casting?
-public class AssetComponent extends Component implements StoresAssetDescriptor {
-	@VisTag(0) public VisAssetDescriptor asset;
+/** @author Kotcrab */
+public class SpriterPropertiesComponent extends Component {
+	@VisTag(0) @ATProperty(fieldName = "Scale", min = 0.000001f)
+	public float scale;
 
-	private AssetComponent () {
-	}
+	@VisTag(3)
+	public int animation = 0;
 
-	public AssetComponent (VisAssetDescriptor asset) {
-		this.asset = asset;
-	}
+	@VisTag(1) @ATProperty(fieldName = "Play animation on start")
+	public boolean playOnStart = false;
+	@VisTag(2) @ATProperty(fieldName = "Preview in editor")
+	public boolean previewInEditor = false;
 
-	@Override
-	public VisAssetDescriptor getAsset () {
-		return asset;
+	public SpriterPropertiesComponent (float scale) {
+		this.scale = scale;
 	}
 }

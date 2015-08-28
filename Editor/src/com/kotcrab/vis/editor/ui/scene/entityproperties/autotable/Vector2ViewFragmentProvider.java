@@ -20,8 +20,8 @@ import com.artemis.Component;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.ui.Vector2ArrayView;
+import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.PolygonComponent;
 import com.kotcrab.vis.runtime.util.autotable.ATVector2Array;
 
@@ -44,16 +44,10 @@ public class Vector2ViewFragmentProvider extends AutoTableFragmentProvider<ATVec
 	public void updateUIFromEntities (Array<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
 		Vector2ArrayView view = views.get(field);
 
-		if (proxies.size > 1) {
+		if (EntityUtils.isMultipleEntitiesSelected(proxies))
 			view.setMultipleSelected(true);
-		} else {
-			EntityProxy proxy = proxies.get(0);
-
-			if (proxy instanceof GroupEntityProxy && proxy.getEntities().size > 1)
-				view.setMultipleSelected(true);
-			else
-				view.setVectors(proxies.first().getEntities().first().getComponent(PolygonComponent.class).vertices);
-		}
+		else
+			view.setVectors(EntityUtils.getFirstEntityComponent(proxies, PolygonComponent.class).vertices);
 	}
 
 	@Override
