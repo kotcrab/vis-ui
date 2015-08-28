@@ -1,4 +1,5 @@
 [0.2.4] [LibGDX 1.6.4] [Snapshot]
+-Added Spriter support
 
 [0.2.3] [LibGDX 1.6.4]
 -Added VariablesComponent
