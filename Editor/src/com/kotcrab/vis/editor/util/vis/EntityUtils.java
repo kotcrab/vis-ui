@@ -204,6 +204,14 @@ public class EntityUtils {
 		}
 	}
 
+	public static void stream (Array<EntityProxy> proxies, BiConsumer<EntityProxy, Entity> consumer) {
+		for (EntityProxy proxy : proxies) {
+			for (Entity entity : proxy.getEntities()) {
+				consumer.accept(proxy, entity);
+			}
+		}
+	}
+
 	public static boolean isMultipleEntitiesSelected (Array<EntityProxy> proxies) {
 		if (proxies.size > 1) {
 			return true;

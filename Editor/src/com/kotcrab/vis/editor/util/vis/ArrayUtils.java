@@ -17,11 +17,35 @@
 package com.kotcrab.vis.editor.util.vis;
 
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Array.ArrayIterable;
+
+import java.util.function.Consumer;
 
 /** @author Kotcrab */
 public class ArrayUtils {
-	public static <BaseType, RequiredType> void stream (Array<BaseType> array, Class<RequiredType> classFilter, CancelableConsumer<RequiredType> consumer) {
-		for (BaseType obj : array) {
+	public static <BaseType> void stream (Array<BaseType> array, Consumer<BaseType> consumer) {
+		for (BaseType obj : new ArrayIterable<>(array)) {
+			consumer.accept(obj);
+		}
+	}
+
+	public static <BaseType, RequiredType> void stream (Array<BaseType> array, Class<RequiredType> classFilter, Consumer<RequiredType> consumer) {
+		for (BaseType obj : new ArrayIterable<>(array)) {
+			if (classFilter.isInstance(obj)) {
+				consumer.accept((RequiredType) obj);
+			}
+		}
+	}
+
+	public static <BaseType> void cancelableStream (Array<BaseType> array, CancelableConsumer<BaseType> consumer) {
+		for (BaseType obj : new ArrayIterable<>(array)) {
+			if (consumer.accept(obj))
+				break;
+		}
+	}
+
+	public static <BaseType, RequiredType> void cancelableStream (Array<BaseType> array, Class<RequiredType> classFilter, CancelableConsumer<RequiredType> consumer) {
+		for (BaseType obj : new ArrayIterable<>(array)) {
 			if (classFilter.isInstance(obj)) {
 				if (consumer.accept((RequiredType) obj))
 					break;

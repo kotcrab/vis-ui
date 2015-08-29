@@ -109,7 +109,7 @@ public class ToolbarModule extends EditorModule {
 
 	@Subscribe
 	public void handleToggleToolbarEvent (ToggleToolbarEvent event) {
-		ArrayUtils.stream(table.getChildren(), ToolbarButton.class, button -> {
+		ArrayUtils.cancelableStream(table.getChildren(), ToolbarButton.class, button -> {
 			if (button.eventType == event.type) {
 				button.setChecked(event.toggleState);
 				return true;
