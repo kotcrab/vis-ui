@@ -123,6 +123,7 @@ public class TextComponent extends Component implements BasicPropertiesAccessor,
 
 	public void setAutoSetOriginToCenter (boolean autoSetOriginToCenter) {
 		this.autoSetOriginToCenter = autoSetOriginToCenter;
+		textChanged();
 	}
 
 	public void setOriginCenter () {

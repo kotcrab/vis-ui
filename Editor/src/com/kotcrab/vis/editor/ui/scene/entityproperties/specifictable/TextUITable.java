@@ -22,7 +22,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
@@ -163,8 +162,10 @@ public abstract class TextUITable extends SpecificUITable {
 					text.setText(textField.getText());
 				}
 
-				if (autoCenterOrigin.isIndeterminate() == false)
+				if (autoCenterOrigin.isIndeterminate() == false) {
 					text.setAutoSetOriginToCenter(autoCenterOrigin.isChecked());
+					properties.selectedEntitiesValuesChanged();
+				}
 			}
 		}
 	}
