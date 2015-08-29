@@ -21,6 +21,7 @@ import com.artemis.annotations.Wire;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
@@ -84,8 +85,9 @@ public class SpriteInflater extends Manager {
 		}
 
 		TextureAtlas atlas = manager.get(atlasPath, TextureAtlas.class);
-
-		Sprite sprite = new Sprite(atlas.findRegion(atlasRegion));
+		TextureRegion region = atlas.findRegion(atlasRegion);
+		if (region == null) throw new IllegalStateException("Can't load scene, gfx asset is missing: " + atlasRegion);
+		Sprite sprite = new Sprite(region);
 
 		SpriteComponent spriteComponent = new SpriteComponent(sprite);
 

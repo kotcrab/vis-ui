@@ -52,7 +52,10 @@ public class ShaderInflater extends Manager {
 		ShaderProtoComponent protoComponent = protoCm.get(e);
 
 		if (protoComponent.asset != null) {
-			ShaderProgram program = manager.get(protoComponent.asset.getPathWithoutExtension(), ShaderProgram.class);
+			String shaderPath = protoComponent.asset.getPathWithoutExtension();
+			ShaderProgram program = manager.get(shaderPath, ShaderProgram.class);
+			if (program == null)
+				throw new IllegalStateException("Can't load scene, shader program is missing:" + shaderPath);
 
 			transmuter.transmute(e);
 			e.edit().add(new ShaderComponent(protoComponent.asset, program));

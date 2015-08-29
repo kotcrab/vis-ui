@@ -1,5 +1,7 @@
 [0.2.4] [LibGDX 1.6.4] [Snapshot]
 -Added Spriter support
+-Improved scene loading errors logging
+-When loading Scene without using VisAssetManager#loadSceneNow you must now manually cal Scene#init()
 
 [0.2.3] [LibGDX 1.6.4]
 -Added VariablesComponent

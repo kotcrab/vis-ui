@@ -22,6 +22,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
+import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
@@ -74,6 +75,9 @@ public class TextInflater extends Manager {
 			font = manager.get(fontAsset.getArbitraryFontName(), BitmapFont.class);
 		} else
 			throw new UnsupportedAssetDescriptorException(asset);
+
+		if (font == null)
+			throw new IllegalStateException("Can't load scene, font is missing: " + ((PathAsset) asset).getPath());
 
 		font.setUseIntegerPositions(false);
 		font.getData().setScale(1f / pixelsPerUnit);

@@ -61,6 +61,7 @@ public class SoundInflater extends Manager {
 		PathAsset asset = (PathAsset) assetComponent.asset;
 
 		Sound sound = manager.get(asset.getPath(), Sound.class);
+		if(sound == null) throw new IllegalStateException("Can't load scene sound is missing: " + asset.getPath());
 		SoundComponent soundComponent = new SoundComponent(sound);
 
 		transmuter.transmute(e);

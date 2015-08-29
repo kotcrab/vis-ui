@@ -54,6 +54,7 @@ public class SpriterInflater extends Manager {
 
 		SpriterAsset asset = (SpriterAsset) assetComponent.asset;
 		SpriterData data = manager.get(asset.getPath(), SpriterData.class);
+		if(data == null) throw new IllegalStateException("Can't load scene, spriter data is missing: " + asset.getPath());
 		SpriterComponent component = new SpriterComponent(data.loader, data.data, protoComponent.scale);
 
 		protoComponent.fill(component);

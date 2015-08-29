@@ -79,7 +79,9 @@ public class VisAssetManager extends AssetManager {
 	public Scene loadSceneNow (String scenePath, SceneParameter parameter) {
 		load(scenePath, Scene.class, parameter);
 		finishLoading();
-		return get(scenePath, Scene.class);
+		Scene scene = get(scenePath, Scene.class);
+		scene.init();
+		return scene;
 	}
 
 }
