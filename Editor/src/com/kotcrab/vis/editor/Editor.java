@@ -34,6 +34,7 @@ import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.ui.EditorFrame;
+import com.kotcrab.vis.editor.ui.NoProjectFilesOpenView;
 import com.kotcrab.vis.editor.ui.WindowListener;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.NewProjectDialog;
@@ -90,6 +91,8 @@ public class Editor extends ApplicationAdapter {
 	private Table tabContentTable;
 	private VisTable quickAccessContentTable;
 	private VisSplitPane splitPane;
+
+	private NoProjectFilesOpenView noProjectFilesOpenView;
 
 	private SettingsDialog settingsDialog;
 
@@ -168,6 +171,7 @@ public class Editor extends ApplicationAdapter {
 	private void createModuleContainers () {
 		editorMC = new EditorModuleContainer();
 		projectMC = new ProjectModuleContainer(editorMC);
+		noProjectFilesOpenView = new NoProjectFilesOpenView(projectMC);
 
 		editorMC.add(projectIO = new ProjectIOModule());
 		editorMC.add(inputModule = new InputModule(stage, stageRoot));
@@ -467,7 +471,6 @@ public class Editor extends ApplicationAdapter {
 		projectMC.add(new ExportSettingsModule());
 
 		projectMC.add(new SceneTabsModule());
-		projectMC.add(new ProjectInfoTabModule());
 		projectMC.add(new AssetsUIModule());
 		projectMC.addAll(pluginContainer.getContainersExtensions(ProjectModule.class, ExtensionScope.PROJECT));
 	}
@@ -494,6 +497,8 @@ public class Editor extends ApplicationAdapter {
 
 		if (tab != null)
 			tabContentTable.add(tab.getContentTable()).expand().fill();
+		else if (projectLoaded)
+			tabContentTable.add(noProjectFilesOpenView).center();
 
 		updateRootView();
 	}

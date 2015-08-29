@@ -75,7 +75,6 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	private Timer atlasWaitTimer = new Timer();
 
 	private boolean packagingEnabled = true;
-	private boolean firstReload = true;
 
 	@Override
 	public void init () {
@@ -153,11 +152,6 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 			disposeCacheLater(oldCache);
 
 			App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_TEXTURES));
-			if (firstReload == false) {
-				//we don't want to display 'textures reloaded' right after editor startup / project loaded
-				statusBar.setText("Textures reloaded");
-				firstReload = true;
-			}
 		} else
 			Log.error("Texture cache not ready, probably they aren't any textures in project or packer failed");
 	}

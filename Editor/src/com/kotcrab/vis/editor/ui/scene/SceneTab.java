@@ -161,6 +161,9 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Scene
 		};
 
 		App.eventBus.register(this);
+
+		//reload all assets on next frame (after EntityEngine registers all entities)
+		Gdx.app.postRunnable(() -> handleResourceReloaded(new ResourceReloadedEvent(Integer.MAX_VALUE)));
 	}
 
 	@Override

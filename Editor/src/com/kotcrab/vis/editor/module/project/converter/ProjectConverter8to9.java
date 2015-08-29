@@ -62,8 +62,6 @@ public class ProjectConverter8to9 extends ProjectConverter {
 
 					oldProjectMC.get(TextureCacheModule.class).setPackagingEnabled(false);
 					newProjectMC.get(TextureCacheModule.class).setPackagingEnabled(false);
-					oldProjectMC.remove(ProjectInfoTabModule.class);
-					newProjectMC.remove(ProjectInfoTabModule.class);
 					oldProjectMC.remove(AssetsUIModule.class);
 					newProjectMC.remove(AssetsUIModule.class);
 

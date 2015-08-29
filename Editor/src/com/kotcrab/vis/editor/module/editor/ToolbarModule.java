@@ -89,6 +89,12 @@ public class ToolbarModule extends EditorModule {
 				if (tab.isSavable())
 					savableScope.forEach(button -> button.setDisabled(false));
 			}
+
+			@Override
+			public void removedAllTabs () {
+				savableScope.forEach(button -> button.setDisabled(true));
+				sceneScope.forEach(button -> button.setDisabled(true));
+			}
 		});
 	}
 

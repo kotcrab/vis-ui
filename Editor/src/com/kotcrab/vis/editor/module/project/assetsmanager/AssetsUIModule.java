@@ -291,7 +291,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		return scrollPane;
 	}
 
-	private void changeCurrentDirectory (FileHandle directory) {
+	public void changeCurrentDirectory (FileHandle directory) {
 		clearSelection();
 		this.currentDirectory = directory;
 		if (metadata != null) metadata.lastDirectory = directory.path();
@@ -324,6 +324,10 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 		String currentPath = directory.path().substring(visFolder.path().length() + 1);
 		contentTitleLabel.setText("Content [" + currentPath + "]");
+	}
+
+	public FileHandle getCurrentDirectory () {
+		return currentDirectory;
 	}
 
 	private void updateContextProviderContainer (FileHandle directory) {
