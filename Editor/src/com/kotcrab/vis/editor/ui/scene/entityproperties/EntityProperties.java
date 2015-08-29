@@ -32,6 +32,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Array.ArrayIterable;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.IntMap;
 import com.google.common.eventbus.Subscribe;
@@ -56,6 +57,7 @@ import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.AutoComponentTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.components.PhysicsPropertiesComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.RenderableComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.SpriterPropertiesComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.*;
@@ -68,7 +70,6 @@ import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.value.FloatProxyValue;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.component.PhysicsPropertiesComponent;
 import com.kotcrab.vis.runtime.component.PolygonComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
 import com.kotcrab.vis.runtime.component.VariablesComponent;
@@ -82,7 +83,6 @@ import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
-import java.lang.reflect.Constructor;
 import java.util.Iterator;
 
 /**
@@ -130,7 +130,7 @@ public class EntityProperties extends VisTable implements Disposable {
 	private SnapshotUndoableActionGroup snapshots;
 
 	//UI
-	private boolean rebuiltScheduled;
+	private boolean entityComponentChanged;
 
 	private VisTable propertiesTable;
 
@@ -252,7 +252,7 @@ public class EntityProperties extends VisTable implements Disposable {
 			try {
 				if (getProxies().size == 0) return; //nothing is selected
 				undoModule.execute(new ComponentAddAction(componentManipulator, getProxies(), clazz));
-				rebuiltScheduled = true;
+				entityComponentChanged = true;
 			} catch (ReflectiveOperationException e) {
 				Log.exception(e);
 				toastModule.show(new DetailsToast("Component creation failed!", e));
@@ -283,7 +283,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		registerComponentTable(new RenderableComponentTable(sceneMC));
 		registerComponentTable(new AutoComponentTable<>(sceneMC, ShaderComponent.class, true));
 		registerComponentTable(new AutoComponentTable<>(sceneMC, PolygonComponent.class, true));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, PhysicsPropertiesComponent.class, true));
+		registerComponentTable(new PhysicsPropertiesComponentTable(sceneMC));
 		registerComponentTable(new AutoComponentTable<>(sceneMC, VariablesComponent.class, true));
 		registerComponentTable(new SpriterPropertiesComponentTable(sceneMC));
 
@@ -415,6 +415,12 @@ public class EntityProperties extends VisTable implements Disposable {
 			}
 		}
 
+		if (entityComponentChanged == true) {
+			for (SpecificComponentTable table : componentTables) {
+				table.componentAddedToEntities();
+			}
+		}
+
 		activeComponentTables.clear();
 		if (entities.size > 0) {
 			Bag<Component> components = entities.get(0).getEntities().get(0).getComponents(new Bag<>());
@@ -479,9 +485,9 @@ public class EntityProperties extends VisTable implements Disposable {
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		if (rebuiltScheduled == true) {
+		if (entityComponentChanged == true) {
 			selectedEntitiesChanged();
-			rebuiltScheduled = false;
+			entityComponentChanged = false;
 		}
 	}
 
@@ -605,7 +611,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		}
 
 		if (activeSpecificTable != null) activeSpecificTable.setValuesToEntities();
-		for (SpecificComponentTable table : activeComponentTables)
+		for (SpecificComponentTable table : new ArrayIterable<>(activeComponentTables))
 			table.setValuesToEntities();
 	}
 

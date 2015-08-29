@@ -50,4 +50,7 @@ public abstract class SpecificComponentTable<T extends Component> extends VisTab
 	public abstract void updateUIValues ();
 
 	public abstract void setValuesToEntities ();
+
+	public void componentAddedToEntities () {
+	}
 }
