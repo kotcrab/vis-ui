@@ -54,4 +54,9 @@ public class Vector2ViewFragmentProvider extends AutoTableFragmentProvider<ATVec
 	public void setToEntities (Class type, Field field, Component component) throws ReflectiveOperationException {
 
 	}
+
+	@Override
+	public Object getUiByField (Class type, Field field) {
+		return views.get(field);
+	}
 }

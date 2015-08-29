@@ -144,4 +144,19 @@ public class AutoComponentTable<T extends Component> extends SpecificComponentTa
 			throw new IllegalStateException(e);
 		}
 	}
+
+	protected <Widget> Widget getUiByField (String fieldName, Class<Widget> uiType) {
+		try {
+			Field field = componentClass.getDeclaredField(fieldName);
+			Class type = field.getType();
+			for (AutoTableFragmentProvider provider : fragmentProviders.values()) {
+				Object obj = provider.getUiByField(type, field);
+				if (obj != null) return (Widget) obj;
+			}
+		} catch (NoSuchFieldException e) {
+			throw new IllegalStateException(e);
+		}
+
+		return null;
+	}
 }

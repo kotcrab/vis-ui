@@ -55,4 +55,9 @@ public class StringStringMapFragmentProvider extends AutoTableFragmentProvider<A
 		StringStringMapView view = views.get(field);
 		view.updateMapFromUI();
 	}
+
+	@Override
+	public Object getUiByField (Class type, Field field) {
+		return views.get(field);
+	}
 }

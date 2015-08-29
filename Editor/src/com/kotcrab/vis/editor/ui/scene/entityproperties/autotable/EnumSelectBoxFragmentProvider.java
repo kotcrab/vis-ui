@@ -81,6 +81,11 @@ public class EnumSelectBoxFragmentProvider extends AutoTableFragmentProvider<ATE
 		}
 	}
 
+	@Override
+	public Object getUiByField (Class type, Field field) {
+		return enumSelectBoxes.get(field);
+	}
+
 	private static class EnumSelectBoxSet {
 		public AutoTableEnumSelectBox selectBox;
 		public EnumNameProvider enumNameProvider;

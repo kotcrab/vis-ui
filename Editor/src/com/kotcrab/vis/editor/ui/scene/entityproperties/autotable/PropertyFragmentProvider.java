@@ -134,4 +134,12 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 			field.set(component, value);
 		}
 	}
+
+	@Override
+	public Object getUiByField (Class type, Field field) {
+		if (type.equals(Boolean.TYPE))
+			return checkboxFields.get(field);
+		else
+			return numberFields.get(field);
+	}
 }

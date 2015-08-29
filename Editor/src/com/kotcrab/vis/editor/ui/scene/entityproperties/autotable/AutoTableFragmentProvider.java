@@ -48,6 +48,8 @@ public abstract class AutoTableFragmentProvider<A> {
 		this.componentClass = componentClass;
 	}
 
+	public abstract Object getUiByField (Class type, Field field);
+
 	public abstract void createUI (A annotation, Class type, Field field) throws ReflectiveOperationException;
 
 	public abstract void updateUIFromEntities (Array<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException;

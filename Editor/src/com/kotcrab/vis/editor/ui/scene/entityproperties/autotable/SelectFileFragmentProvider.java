@@ -24,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.InjectModule;
@@ -125,6 +124,11 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 	@Override
 	public void setToEntities (Class type, Field field, Component component) throws ReflectiveOperationException {
 
+	}
+
+	@Override
+	public Object getUiByField (Class type, Field field) {
+		return fileDialogLabels.get(field);
 	}
 
 	private static class SelectFileDialogSet {
