@@ -82,7 +82,7 @@ public abstract class TextUITable extends SpecificUITable {
 		fontPropertiesTable.add(fontLabel).width(100);
 		fontPropertiesTable.add(selectFontButton);
 
-		autoCenterOrigin = new IndeterminateCheckbox("Auto set origin to center");
+		autoCenterOrigin = new IndeterminateCheckbox("Auto Set Origin to Center");
 		autoCenterOrigin.addListener(properties.getSharedCheckBoxChangeListener());
 
 		properties.getSceneModuleContainer().injectModules(this);
