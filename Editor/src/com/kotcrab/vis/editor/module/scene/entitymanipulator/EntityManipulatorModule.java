@@ -121,6 +121,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private Array<ProtoEntity> entitiesClipboard = new Array<>();
 
 	private boolean mouseDragged;
+	/** popup menu position in scene cords system*/
 	private float menuX, menuY;
 	private PopupMenu generalPopupMenu;
 	private PopupMenu entityPopupMenu;
@@ -711,8 +712,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 		if (button == Buttons.RIGHT && mouseDragged == false) {
 			if (selectedEntities.size > 0) {
-				menuX = x;
-				menuY = y;
+				menuX = camera.getInputX();
+				menuY = camera.getInputY();
 
 				buildEntityPopupMenu(selectedEntities);
 				entityPopupMenu.showMenu(event.getStage(), event.getStageX(), event.getStageY());
