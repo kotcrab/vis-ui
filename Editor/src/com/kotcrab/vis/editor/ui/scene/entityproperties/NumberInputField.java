@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Timer;
@@ -29,6 +30,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
+
 import org.apache.commons.lang3.StringUtils;
 
 import static com.kotcrab.vis.editor.util.NumberUtils.floatToString;
@@ -102,7 +104,7 @@ public class NumberInputField extends VisValidableTextField {
 
 		@Override
 		public boolean keyTyped (InputEvent event, char character) {
-			if (character == '-' && Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) return false;
+			if (character == '-' && UIUtils.shift()) return false;
 			return super.keyTyped(event, character);
 		}
 
@@ -111,8 +113,8 @@ public class NumberInputField extends VisValidableTextField {
 			repeatTask.cancel();
 
 			int delta = 0;
-			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) delta = 1;
-			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) delta = 10;
+			if (UIUtils.ctrl()) delta = 1;
+			if (UIUtils.shift()) delta = 10;
 
 			if (delta != 0) {
 				if (keycode == Keys.MINUS) {

@@ -22,6 +22,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.scene.action.MoveEntityAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.RectangularSelection;
@@ -75,7 +76,7 @@ public abstract class BaseSelectionTool extends Tool {
 				mouseInsideSelected = true;
 
 				//multiple select made easy
-				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) entityManipulator.resetSelection();
+				if (UIUtils.ctrl() == false) entityManipulator.resetSelection();
 
 				EntityProxy result = findEntityWithSmallestSurfaceArea(x, y);
 				if (result != null && entityManipulator.isSelected(result) == false)
@@ -111,7 +112,7 @@ public abstract class BaseSelectionTool extends Tool {
 
 		if (button == Buttons.RIGHT && cameraDragged == false) {
 			if (isMouseInsideSelectedEntities(x, y) == false)
-				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) entityManipulator.resetSelection();
+				if (UIUtils.ctrl() == false) entityManipulator.resetSelection();
 
 			EntityProxy result = findEntityWithSmallestSurfaceArea(x, y);
 			if (result != null && entityManipulator.isSelected(result) == false)
