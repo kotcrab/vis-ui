@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.utils.Align;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
-import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.editor.AnalyticsModule.AnalyticsState;
 import com.kotcrab.vis.editor.module.editor.GeneralSettingsModule.GeneralConfig;

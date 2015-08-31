@@ -22,6 +22,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.FieldSerializer;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 import java.lang.reflect.Field;
@@ -38,16 +39,21 @@ import static com.esotericsoftware.minlog.Log.trace;
  * <p>
  * For compatibility reason fields can be also tagged with {@link Tag} but for new classes should always use {@link VisTag}
  * @author Nathan Sweet <misc@n4te.com>
+ * @author Kotcrab
  */
 public class VisTaggedFieldSerializer<T> extends FieldSerializer<T> {
 	private int[] tags;
 	private int writeFieldCount;
 	private boolean[] deprecated;
 
+	private boolean ignoreMissingTags = false;
+	private boolean logMissingTags = false;
+
 	public VisTaggedFieldSerializer (Kryo kryo, Class type) {
 		super(kryo, type);
 	}
 
+	@Override
 	protected void initializeCachedFields () {
 		CachedField[] fields = getFields();
 		// Remove untagged fields.
@@ -80,16 +86,19 @@ public class VisTaggedFieldSerializer<T> extends FieldSerializer<T> {
 		this.removedFields.clear();
 	}
 
+	@Override
 	public void removeField (String fieldName) {
 		super.removeField(fieldName);
 		initializeCachedFields();
 	}
 
+	@Override
 	public void removeField (CachedField field) {
 		super.removeField(field);
 		initializeCachedFields();
 	}
 
+	@Override
 	public void write (Kryo kryo, Output output, T object) {
 		CachedField[] fields = getFields();
 		output.writeVarInt(writeFieldCount, true); // Can be used for null.
@@ -100,6 +109,16 @@ public class VisTaggedFieldSerializer<T> extends FieldSerializer<T> {
 		}
 	}
 
+	/** If true this serializer won't fail when there are tags that exists in deserialized data but not on object target */
+	public void setIgnoreMissingTags (boolean ignoreMissingTags) {
+		this.ignoreMissingTags = ignoreMissingTags;
+	}
+
+	public void setLogMissingTags (boolean logMissingTags) {
+		this.logMissingTags = logMissingTags;
+	}
+
+	@Override
 	public T read (Kryo kryo, Input input, Class<T> type) {
 		T object = create(kryo, input, type);
 		kryo.reference(object);
@@ -116,8 +135,16 @@ public class VisTaggedFieldSerializer<T> extends FieldSerializer<T> {
 					break;
 				}
 			}
-			if (cachedField == null)
+			if (cachedField == null) {
+				if (ignoreMissingTags) {
+					if (logMissingTags) {
+						Log.warn("Ignoring missing field tag: " + tag + " (" + getType().getName() + ")");
+					}
+
+					continue;
+				}
 				throw new KryoException("Unknown field tag: " + tag + " (" + getType().getName() + ")");
+			}
 			cachedField.read(input, object);
 		}
 		return object;

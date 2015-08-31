@@ -28,8 +28,8 @@ import com.kotcrab.vis.editor.module.editor.EditorSettingsIOModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.serializer.UUIDSerializer;
-import com.kotcrab.vis.editor.serializer.VisTaggedFieldSerializer;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
+import com.kotcrab.vis.editor.util.SettingsSerializerFactory;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.File;
@@ -58,7 +58,7 @@ public class ProjectSettingsIOModule extends ProjectModule {
 	public void init () {
 		kryo = new Kryo();
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
-		kryo.setDefaultSerializer(VisTaggedFieldSerializer.class);
+		kryo.setDefaultSerializer(new SettingsSerializerFactory());
 		kryo.register(Array.class, new ArraySerializer(), 10);
 		kryo.register(UUID.class, new UUIDSerializer(), 11);
 
