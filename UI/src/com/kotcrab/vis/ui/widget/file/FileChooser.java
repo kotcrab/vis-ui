@@ -29,6 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.kotcrab.vis.ui.Sizes;
@@ -202,7 +203,7 @@ public class FileChooser extends VisWindow {
 		addListener(new InputListener() {
 			@Override
 			public boolean keyDown (InputEvent event, int keycode) {
-				if (keycode == Keys.A && Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+				if (keycode == Keys.A && UIUtils.ctrl()) {
 					selectAll();
 					return true;
 				}

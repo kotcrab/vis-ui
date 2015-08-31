@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.module.editor;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
@@ -70,7 +71,7 @@ public class EditingSettingsModule extends EditorModule {
 
 	public boolean isSnapEnabledOrKeyPressed () {
 		boolean snap = config.snapToGrid;
-		if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) snap = !snap; //allow to override snap setting
+		if (UIUtils.ctrl()) snap = !snap; //allow to override snap setting
 		return snap;
 	}
 
@@ -81,7 +82,7 @@ public class EditingSettingsModule extends EditorModule {
 	private class EditingInputListener extends ModalInputListener {
 		@Override
 		public boolean keyDown (InputEvent event, int keycode) {
-			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) && keycode == Keys.NUM_5) {
+			if (UIUtils.shift() && keycode == Keys.NUM_5) {
 				App.eventBus.post(new ToggleToolbarEvent(ToolbarEventType.GRID_SNAP_SETTING_CHANGED, !isSnapToGrid()));
 				return true;
 			}

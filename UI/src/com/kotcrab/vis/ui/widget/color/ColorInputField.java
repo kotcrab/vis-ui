@@ -23,6 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
@@ -57,8 +58,8 @@ public class ColorInputField extends VisValidableTextField {
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
 				ColorInputField field = (ColorInputField) event.getListenerActor();
-				if (character == '+') field.changeValue(Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) ? 10 : 1);
-				if (character == '-') field.changeValue(Gdx.input.isKeyPressed(Keys.SHIFT_LEFT) ? -10 : -1);
+				if (character == '+') field.changeValue(UIUtils.shift() ? 10 : 1);
+				if (character == '-') field.changeValue(UIUtils.shift() ? -10 : -1);
 
 				if (character != 0) listener.changed(getValue());
 

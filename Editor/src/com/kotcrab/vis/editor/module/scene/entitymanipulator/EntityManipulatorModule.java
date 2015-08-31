@@ -27,9 +27,11 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ObjectSet;
@@ -759,7 +761,7 @@ public class EntityManipulatorModule extends SceneModule {
 				return true;
 			}
 
-			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) && keycode == Keys.S) sceneTab.save();
+			if (UIUtils.ctrl() && keycode == Keys.S) sceneTab.save();
 			if (keycode == Keys.F1) {
 				switchTool(selectionTool);
 				App.eventBus.post(new ToolSwitchedEvent(Tools.SELECTION_TOOL));
@@ -769,7 +771,7 @@ public class EntityManipulatorModule extends SceneModule {
 				App.eventBus.post(new ToolSwitchedEvent(Tools.POLYGON_TOOL));
 			}
 
-			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) {
+			if (UIUtils.ctrl()) {
 				if (keycode == Keys.A) selectAll();
 				if (keycode == Keys.C) copy();
 				if (keycode == Keys.V) paste();
@@ -782,8 +784,8 @@ public class EntityManipulatorModule extends SceneModule {
 				zIndexManipulator.moveSelectedEntities(getSelectedEntities(), false);
 
 			float delta = 10;
-			if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) delta *= 10;
-			if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT)) delta *= 10;
+			if (UIUtils.shift()) delta *= 10;
+			if (UIUtils.ctrl()) delta *= 10;
 
 			delta = delta / scene.pixelsPerUnit;
 

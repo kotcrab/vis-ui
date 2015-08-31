@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.Pool;
@@ -393,7 +394,7 @@ public class VisTextArea extends VisTextField {
 			Stage stage = getStage();
 			if (stage != null && stage.getKeyboardFocus() == VisTextArea.this) {
 				boolean repeat = false;
-				boolean shift = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT);
+				boolean shift = UIUtils.shift();
 				if (keycode == Input.Keys.DOWN) {
 					if (shift) {
 						if (!hasSelection) {
