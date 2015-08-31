@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;

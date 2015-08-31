@@ -23,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
-import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
