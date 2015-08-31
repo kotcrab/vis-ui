@@ -46,12 +46,13 @@ import com.kotcrab.vis.ui.widget.file.internal.FileChooserWinService.RootNameLis
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
+import java.util.Iterator;
 
 import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
 
 /**
  * Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called. FileChooser is heavy widget
- * and should be reused whenever possible. Chooser is platform dependent and can be only used on desktop
+ * and should be reused whenever possible. Chooser is platform dependent and can be only used on desktop.
  * @author Kotcrab
  * @since 0.1.0
  */
@@ -63,9 +64,10 @@ public class FileChooser extends VisWindow {
 	private FileChooserListener listener;
 	private FileFilter fileFilter = new DefaultFileFilter();
 
+	public static final int DEFAULT_KEY = -1;
 	private boolean multiselectionEnabled = false;
-	private int groupMultiselectKey = Keys.SHIFT_LEFT;
-	private int multiselectKey = Keys.CONTROL_LEFT;
+	private int groupMultiselectKey = DEFAULT_KEY; //shift by default
+	private int multiselectKey = DEFAULT_KEY; //ctrl (or command on mac by default)
 
 	private FavoritesIO favoritesIO;
 	private Array<FileHandle> favorites;
@@ -663,13 +665,27 @@ public class FileChooser extends VisWindow {
 
 	private void removeInvalidSelections () {
 		if (selectionMode == SelectionMode.FILES) {
-			for (FileItem item : selectedItems)
-				if (item.file.isDirectory()) item.deselect();
+			Iterator<FileItem> it = selectedItems.iterator();
+			while (it.hasNext()) {
+				FileItem item = it.next();
+
+				if (item.file.isDirectory()) {
+					item.deselect(false);
+					it.remove();
+				}
+			}
 		}
 
 		if (selectionMode == SelectionMode.DIRECTORIES) {
-			for (FileItem item : selectedItems)
-				if (item.file.isDirectory() == false) item.deselect();
+			Iterator<FileItem> it = selectedItems.iterator();
+			while (it.hasNext()) {
+				FileItem item = it.next();
+
+				if (item.file.isDirectory() == false) {
+					item.deselect(false);
+					it.remove();
+				}
+			}
 		}
 	}
 
@@ -816,7 +832,7 @@ public class FileChooser extends VisWindow {
 		return multiselectKey;
 	}
 
-	/** @param multiselectKey from {@link Keys} */
+	/** @param multiselectKey from {@link Keys} or {@link FileChooser#DEFAULT_KEY} to restore to default */
 	public void setMultiselectKey (int multiselectKey) {
 		this.multiselectKey = multiselectKey;
 	}
@@ -825,9 +841,23 @@ public class FileChooser extends VisWindow {
 		return groupMultiselectKey;
 	}
 
-	/** @param groupMultiselectKey from {@link Keys} */
+	/** @param groupMultiselectKey from {@link Keys} or {@link FileChooser#DEFAULT_KEY} to restore to default */
 	public void setGroupMultiselectKey (int groupMultiselectKey) {
 		this.groupMultiselectKey = groupMultiselectKey;
+	}
+
+	private boolean isMultiSelectKeyPressed () {
+		if (multiselectKey == DEFAULT_KEY)
+			return UIUtils.ctrl();
+		else
+			return Gdx.input.isKeyPressed(multiselectKey);
+	}
+
+	private boolean isGroupMultiSelectKeyPressed () {
+		if (groupMultiselectKey == DEFAULT_KEY)
+			return UIUtils.shift();
+		else
+			return Gdx.input.isKeyPressed(groupMultiselectKey);
 	}
 
 	private void validateSettings () {
@@ -1033,13 +1063,12 @@ public class FileChooser extends VisWindow {
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 					if (selectedShortcut != null) selectedShortcut.deselect();
 
-					if (multiselectionEnabled == false
-							|| (Gdx.input.isKeyPressed(multiselectKey) == false && Gdx.input.isKeyPressed(groupMultiselectKey) == false))
+					if (multiselectionEnabled == false || (isMultiSelectKeyPressed() == false && isGroupMultiSelectKeyPressed() == false))
 						deselectAll();
 
 					boolean itemSelected = select();
 
-					if (selectedItems.size > 1 && multiselectionEnabled && Gdx.input.isKeyPressed(groupMultiselectKey))
+					if (selectedItems.size > 1 && multiselectionEnabled && isGroupMultiSelectKeyPressed())
 						selectGroup();
 
 					if (selectedItems.size > 1) removeInvalidSelections();

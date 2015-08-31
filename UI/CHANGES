@@ -3,14 +3,16 @@
 -API Addition: OsUtils.isAndroid(), OsUtils.getAndroidApiLevel(), OsUtils.isIos()
 -API Change: FileUtils.isMac(), FileUtils.isUnix() and FileUtils.isWindows() moved to OsUtils
 -Fixed MenuItem shortcut label color when MenuItem is disabled
--FileChooser now supports the back and forward button of the mouse for navigating in the history
--Fixed crash in FileChooser when user tried to use history buttons for no longer existing directory
 -If user clicks mouse before Tooltip appears, Tooltip won't be showed
 -Fixed issue with GridGroup in ScrollPane - scroll bar appeared too late
 -PopupMenu is now kept inside stage when displaying it
--FileChooser I18N:
- -added directoryNoLongerExists
- -added missing entries: newDirectoryDialogTitle, newDirectoryDialogText
+-FileChooser
+ -Fixed crash in when user tried to use history buttons for no longer existing directory
+ -Fixed multiple selection when selection mode was set to FILES or DIRECTORIES
+ -Added support for the back and forward mouse button for navigating in the history
+ -I18N
+  -added directoryNoLongerExists
+  -added missing entries: newDirectoryDialogTitle, newDirectoryDialogText
 
 [0.8.1] [LibGDX 1.6.4]
 -Updated libGDX to 1.6.4
