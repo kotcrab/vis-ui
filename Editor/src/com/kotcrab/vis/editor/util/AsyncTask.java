@@ -21,6 +21,7 @@ import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Task that can be executed on another thread.
@@ -42,6 +43,7 @@ public abstract class AsyncTask {
 			try {
 				execute();
 			} catch (Exception e) {
+				Log.exception(e);
 				failed(e.getMessage(), e);
 			}
 
@@ -64,17 +66,32 @@ public abstract class AsyncTask {
 
 	public abstract void execute () throws Exception;
 
-	/** Executes runnable on OpenGL thread. This methods blocks until runnable finished executing */
+	/**
+	 * Executes runnable on OpenGL thread. This methods blocks until runnable finished executing. Note that this
+	 * will also block main render thread.
+	 */
 	protected void executeOnOpenGL (final Runnable runnable) {
 		final CountDownLatch latch = new CountDownLatch(1);
 
+		AtomicReference<Exception> exceptionAt = new AtomicReference<>();
+
 		Gdx.app.postRunnable(() -> {
-			runnable.run();
+			try {
+				runnable.run();
+			} catch (Exception e) {
+				Log.exception(e);
+				exceptionAt.set(e);
+			}
 			latch.countDown();
 		});
 
 		try {
 			latch.await();
+
+			Exception e = exceptionAt.get();
+			if (e != null) {
+				failed(e.getMessage(), e);
+			}
 		} catch (InterruptedException e) {
 			Log.exception(e);
 		}
