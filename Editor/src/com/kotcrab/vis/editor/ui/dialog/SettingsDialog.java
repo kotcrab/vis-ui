@@ -161,7 +161,7 @@ public class SettingsDialog extends VisWindow {
 	}
 
 	public void add (final SettableModule module) {
-		Node node = new Node(new VisLabel(module.getSettingsName()));
+		Node node = new Node(new SettingsCategoryLabel(module.getSettingsName(), module.getListPriority()));
 
 		modulesMap.put(module, node);
 		tree.add(node);
@@ -188,19 +188,33 @@ public class SettingsDialog extends VisWindow {
 		}
 	}
 
+	private class SettingsCategoryLabel extends VisLabel {
+		private int priority;
+
+		public SettingsCategoryLabel (CharSequence text, int priority) {
+			super(text);
+			this.priority = priority;
+		}
+
+		public int getPriority () {
+			return priority;
+		}
+	}
+
 	private class NodeComparator implements Comparator<Node> {
 		@Override
 		public int compare (Node n1, Node n2) {
-			VisLabel l1 = (VisLabel) n1.getActor();
-			VisLabel l2 = (VisLabel) n2.getActor();
+			SettingsCategoryLabel l1 = (SettingsCategoryLabel) n1.getActor();
+			SettingsCategoryLabel l2 = (SettingsCategoryLabel) n2.getActor();
 			String t1 = l1.getText().toString();
 			String t2 = l2.getText().toString();
 
-			//force that experimental tabs to be at the bottom //TODO settings priority in list
-			if (t1.equals("Experimental")) return 1;
-			if (t2.equals("Experimental")) return -1;
+			int priorityResult = (int) Math.signum(l1.getPriority() - l2.getPriority()) * -1;
 
-			return t1.compareToIgnoreCase(t2.toString());
+			if (priorityResult != 0)
+				return priorityResult;
+			else
+				return t1.compareToIgnoreCase(t2);
 		}
 	}
 }

@@ -85,4 +85,9 @@ public abstract class ProjectSettingsModule<T> extends ProjectModule implements 
 	protected abstract void buildTable ();
 
 	protected abstract void loadConfigToTable ();
+
+	@Override
+	public int getListPriority () {
+		return PRIORITY_NORMAL;
+	}
 }

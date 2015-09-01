@@ -109,6 +109,11 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 		settingsSave();
 	}
 
+	@Override
+	public int getListPriority () {
+		return PRIORITY_HIGHEST;
+	}
+
 	public static class GeneralConfig {
 		@Tag(0) boolean confirmExit = true;
 		@Tag(1) boolean checkForUpdates = true;

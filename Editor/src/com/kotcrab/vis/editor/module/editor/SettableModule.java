@@ -24,6 +24,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
  * @author Kotcrab
  */
 public interface SettableModule {
+	int PRIORITY_HIGHEST = 1000;
+	int PRIORITY_HIGH = 750;
+	int PRIORITY_NORMAL = 500;
+	int PRIORITY_LOW = 250;
+	int PRIORITY_LOWEST = 0;
+
 	/** @return table that will be displayed in settings window, this method must always return same table instance */
 	Table getSettingsTable ();
 
@@ -32,4 +38,6 @@ public interface SettableModule {
 	boolean settingsChanged ();
 
 	void settingsApply ();
+
+	int getListPriority ();
 }

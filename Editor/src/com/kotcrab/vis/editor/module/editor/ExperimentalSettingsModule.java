@@ -55,6 +55,11 @@ public class ExperimentalSettingsModule extends EditorSettingsModule<Experimenta
 		return config.uiScale;
 	}
 
+	@Override
+	public int getListPriority () {
+		return PRIORITY_LOWEST;
+	}
+
 	public static class ExperimentalConfig {
 		@Tag(0) boolean uiScale = false;
 	}
