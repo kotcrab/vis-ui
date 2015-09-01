@@ -1,7 +1,10 @@
-font.name=Open Sans
+font.name=Vis Open Sans
 font.size=15
 font.bold=false
 font.italic=false
+
+font2.file=C:\Users\Kotcrab\Desktop\aaaopensans.ttf
+font2.use=false
 
 pad.top=0
 pad.right=0
@@ -13,7 +16,7 @@ pad.advance.y=0
 glyph.native.rendering=false
 glyph.page.width=256
 glyph.page.height=256
-glyph.text=ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n1234567890•\n"!`?¿'.,;:()[]{}<>|/@\^$-%+=#_&~*\nñÑąćęłńóśźżĄĆĘŁŃÓŚŹŻÄäÖöÜüß\náéíóúàèìòùÁÉÍÓÚÀÈÌÒÙ\nАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ\nабвгдеёжзийклмнопрстуфхцчшщъыьэюя\nΑΆΒΓΔΕΈΖΗΉΘΙΊΚΛΜΝΞΟΌΠΡΣΤΥΎΦΧΨΩΏ·\nαάβγδεέζηήθιίκλμνξοόπρστυύφχψωώ\nϊΐςϋΰ
+glyph.text=ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n1234567890•\n"!`?¿'.,;:()[]{}<>|/@\^$-%+=#_&~*\nñÑąćęłńóśźżĄĆĘŁŃÓŚŹŻÄäÖöÜüß\náéíóúàèìòùÁÉÍÓÚÀÈÌÒÙ\nАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ\nабвгдеёжзийклмнопрстуфхцчшщъыьэюя\nΑΆΒΓΔΕΈΖΗΉΘΙΊΚΛΜΝΞΟΌΠΡΣΤΥΎΦΧΨΩΏ·\nαάβγδεέζηήθιίκλμνξοόπρστυύφχψωώ\nϊΐςϋΰ⌘⌥⇧
 
 effect.class=com.badlogic.gdx.tools.hiero.unicodefont.effects.ColorEffect
 effect.Color=ffffff
