@@ -25,7 +25,6 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
-import com.kotcrab.vis.editor.util.gdx.IntDigitsOnlyFilter;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
@@ -56,9 +55,7 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 			uiTable.add(table).left().expandX().row();
 			checkboxFields.put(field, checkbox);
 		} else {
-			NumberInputField numberInputField = new NumberInputField(properties.getSharedFocusListener(), properties.getSharedChangeListener());
-
-			if (type.equals(Integer.TYPE)) numberInputField.setTextFieldFilter(new IntDigitsOnlyFilter());
+			NumberInputField numberInputField = new NumberInputField(properties.getSharedFocusListener(), properties.getSharedChangeListener(), type.equals(Float.TYPE));
 
 			if (annotation.max() != Float.MAX_VALUE)
 				numberInputField.addValidator(new LesserThanValidator(annotation.max(), true));

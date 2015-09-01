@@ -21,15 +21,14 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidableTextField;
-
 import org.apache.commons.lang3.StringUtils;
 
 import static com.kotcrab.vis.editor.util.NumberUtils.floatToString;
@@ -40,12 +39,16 @@ import static com.kotcrab.vis.editor.util.NumberUtils.floatToString;
  * @author Kotcrab
  */
 public class NumberInputField extends VisValidableTextField {
-	private static FieldFilter sharedFieldFilter = new FieldFilter();
 	private static FieldValidator sharedFieldValidator = new FieldValidator();
 
 	private TimerRepeatTask repeatTask;
 
 	public NumberInputField (FocusListener sharedFocusListener, ChangeListener sharedChangeListener) {
+		this(sharedFocusListener, sharedChangeListener, true);
+	}
+
+	/** @param floatInput if true field fill allow to enter floats, if false only integers will be allowed */
+	public NumberInputField (FocusListener sharedFocusListener, ChangeListener sharedChangeListener, boolean floatInput) {
 		addValidator(sharedFieldValidator);
 
 		//without disabling it, it would cause to set old values from new entities on switch
@@ -53,7 +56,7 @@ public class NumberInputField extends VisValidableTextField {
 
 		addListener(sharedFocusListener);
 		addListener(sharedChangeListener);
-		setTextFieldFilter(sharedFieldFilter);
+		setTextFieldFilter(new FieldFilter(floatInput));
 
 		repeatTask = new TimerRepeatTask();
 
@@ -178,11 +181,21 @@ public class NumberInputField extends VisValidableTextField {
 	}
 
 	private static class FieldFilter implements TextFieldFilter {
+		private boolean floatInput;
+
+		public FieldFilter (boolean floatInput) {
+			this.floatInput = floatInput;
+		}
+
 		@Override
 		public boolean acceptChar (VisTextField field, char c) {
 			if (c == '.' && field.getText().contains(".")) return false;
+			if (field.getCursorPosition() > 0 && c == '-' && UIUtils.shift() == false && UIUtils.ctrl() == false)
+				return false;
+			if (field.getText().startsWith("-") && c == '-') return false;
 
-			if (c == '.' || c == '-' || c == '?') return true;
+			if (c == '-' || c == '?') return true;
+			if (c == '.') return floatInput;
 			if (c == '+') return false;
 
 			return Character.isDigit(c);

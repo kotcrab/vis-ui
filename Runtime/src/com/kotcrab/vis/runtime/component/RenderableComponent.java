@@ -25,7 +25,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATProperty;
  * @author Kotcrab
  */
 public class RenderableComponent extends Component {
-	@VisTag(0) @ATProperty(fieldName = "Z Index")
+	@VisTag(0) @ATProperty(fieldName = "Z Index", min = 0)
 	public int zIndex;
 
 	private RenderableComponent () {
