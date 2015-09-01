@@ -36,10 +36,11 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.OsUtils;
 
 /**
  * MenuItem displayed in {@link Menu} and {@link PopupMenu}. MenuItem contains text or text with icon.
- * Best icon size is 22px. MenuItem can also have hotkey text.
+ * Best icon size is 22px. MenuItem can also have a hotkey text.
  * @author Kotcrab
  */
 public class MenuItem extends Button {
@@ -229,16 +230,6 @@ public class MenuItem extends Button {
 		return setShortcut(Keys.toString(keycode));
 	}
 
-	/**
-	 * Set shortcuts text displayed in this menu item.
-	 * Displayed as modifier+keycode (eg. Ctrl+F5). This DOES NOT set actual hot key for this menu item, it only makes shortcut text visible in item.
-	 * @param modifier form {@link Keys}
-	 * @param keycode form {@link Keys}
-	 */
-	public MenuItem setShortcut (int modifier, int keycode) {
-		return setShortcut(Keys.toString(modifier) + "+" + Keys.toString(keycode));
-	}
-
 	public String getShortcut () {
 		return shortcutLabel.getText().toString();
 	}
@@ -251,6 +242,16 @@ public class MenuItem extends Button {
 	 */
 	public MenuItem setShortcut (String text) {
 		shortcutLabel.setText(text);
+		return this;
+	}
+	
+	/** Set shortcut text displayed in this menu item. Displayed as keycode+keycode+keycode (eg. Ctrl+Shift+F5 on Windows and Linux,
+	 * on Mac ⌘⇧F5). CONTROL_LEFT and CONTROL_RIGHT are mapped to Ctrl. The same goes for Alt and Shift. This DOES NOT set actual
+	 * hot key for this menu item, it only makes shortcut text visible in item.
+	 * @param keycodes keycodes from {@link Keys} that are used to determine the shortcut text
+	 * @return this object for the purpose of chaining methods */
+	public MenuItem setShortcut (int... keycodes) {
+		shortcutLabel.setText(OsUtils.getShortcutFor(keycodes));
 		return this;
 	}
 

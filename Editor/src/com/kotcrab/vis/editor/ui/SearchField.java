@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.ui;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;

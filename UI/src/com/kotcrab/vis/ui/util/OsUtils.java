@@ -17,6 +17,7 @@
 package com.kotcrab.vis.ui.util;
 
 import com.badlogic.gdx.Application.ApplicationType;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.Gdx;
 
 /**
@@ -65,6 +66,40 @@ public class OsUtils {
 		} else {
 			return 0;
 		}
+	}
+
+	/** Returns a shortcut text that can be displayed in a menu item. Returns keycode+keycode+keycode (eg. Ctrl+Shift+F5 on Windows
+	 * and Linux, on Mac ⌘⇧F5). CONTROL_LEFT and CONTROL_RIGHT are mapped to Ctrl. The same goes for Alt and Shift.
+	 * @param keycodes keycodes from {@link Keys} that are used to determine the shortcut text
+	 * @return the platform dependent shortcut text **/
+	public static String getShortcutFor (int... keycodes) {
+		StringBuilder builder = new StringBuilder();
+		String separatorString = "+";
+		String ctrlKey = "Ctrl";
+		String altKey = "Alt";
+		String shiftKey = "Shift";
+		if (OsUtils.isMac()) {
+			separatorString = "";
+			ctrlKey = "\u2318";
+			altKey = "\u2325";
+			shiftKey = "\u21E7";
+		}
+		for (int i = 0; i < keycodes.length; i++) {
+			if (keycodes[i] == Keys.CONTROL_LEFT || keycodes[i] == Keys.CONTROL_RIGHT) {
+				builder.append(ctrlKey);
+			} else if (keycodes[i] == Keys.SHIFT_LEFT || keycodes[i] == Keys.SHIFT_RIGHT) {
+				builder.append(shiftKey);
+			} else if (keycodes[i] == Keys.ALT_LEFT || keycodes[i] == Keys.ALT_RIGHT) {
+				builder.append(altKey);
+			} else {
+				builder.append(Keys.toString(keycodes[i]));
+			}
+
+			if (i < keycodes.length - 1) { // Is this NOT the last key
+				builder.append(separatorString);
+			}
+		}
+		return builder.toString();
 	}
 
 }

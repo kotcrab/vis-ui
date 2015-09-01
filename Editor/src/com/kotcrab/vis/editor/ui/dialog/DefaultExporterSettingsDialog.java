@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.ui.dialog;
 
 import com.badlogic.gdx.utils.Align;
-import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsIOModule;
 import com.kotcrab.vis.editor.module.project.DefaultExporter;

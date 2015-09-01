@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.module.editor;
 
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -34,6 +35,7 @@ import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.ArrayUtils;
 import com.kotcrab.vis.editor.util.vis.EventButtonChangeListener;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.OsUtils;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
@@ -59,7 +61,9 @@ public class ToolbarModule extends EditorModule {
 		table.defaults().pad(4, 0, 4, 3);
 		table.setBackground(VisUI.getSkin().getDrawable("button"));
 
-		table.add(new ToolbarButtonBuilder().icon(Icons.SAVE).text("Save (Ctrl + S)").eventToolbar(ToolbarEventType.FILE_SAVE).policy(ControllerPolicy.SAVABLE).build());
+		table.add(new ToolbarButtonBuilder().icon(Icons.SAVE)
+			.text("Save (" + OsUtils.getShortcutFor(Keys.CONTROL_LEFT, Keys.S) + ")").eventToolbar(ToolbarEventType.FILE_SAVE)
+			.policy(ControllerPolicy.SAVABLE).build());
 
 		table.addSeparator(true);
 		table.add(new ToolbarButtonBuilder().icon(Icons.CURSOR).text("Select entities (F1)").eventTool(Tools.SELECTION_TOOL).build());
