@@ -29,6 +29,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
+import com.kotcrab.vis.editor.ui.HorizontalFlowGroup;
 import com.kotcrab.vis.editor.ui.tab.StartPageTab;
 import com.kotcrab.vis.editor.util.URLUtils;
 import com.kotcrab.vis.ui.widget.LinkLabel;
@@ -88,7 +89,7 @@ public class VisTwitterReader extends EditorModule {
 
 		containerTable.add("@VisEditor");
 		containerTable.add().expandX().fillX();
-		containerTable.add(new LinkLabel("Open in browser", URL)).row();
+		containerTable.add(new LinkLabel("Open in Browser", URL)).row();
 		containerTable.addSeparator().colspan(3).spaceBottom(4);
 		containerTable.row();
 		statusesCell = containerTable.add(new VisLabel("Loading...", Align.center)).colspan(3).expand().fill();
@@ -132,14 +133,27 @@ public class VisTwitterReader extends EditorModule {
 			}
 
 			for (String tweet : cache.tweets) {
-				VisLabel label = new VisLabel(tweet, Align.left);
-				label.setWrap(true);
-				statusesTable.add(label).expandX().fillX().spaceBottom(4).padRight(4).row();
+				HorizontalFlowGroup tweetTable = new HorizontalFlowGroup();
+				String[] tweetParts = tweet.split(" ");
+				for (String part : tweetParts) {
+					String url = URLUtils.getFirstUrl(part);
+					boolean hashtag = false;
 
-				String url = URLUtils.getFirstUrl(tweet);
-				if (url != null)
-					statusesTable.add(new LinkLabel("Open Link", url)).padRight(4).right().row();
+					if (part.startsWith("pic.twitter.com/")) url = part;
+					if (part.startsWith("#")) {
+						url = "https://twitter.com/hashtag/" + part.substring(1);
+						hashtag = true;
+					}
 
+					VisLabel label;
+					if (url != null)
+						label = new LinkLabel(hashtag ? part + " " : getTrimmedUrl(url), url);
+					else
+						label = new VisLabel(part + " ");
+
+					tweetTable.addActor(label);
+				}
+				statusesTable.add(tweetTable).width(390).spaceBottom(4).padRight(4).row();
 				statusesTable.addSeparator().spaceBottom(4);
 			}
 
@@ -147,6 +161,13 @@ public class VisTwitterReader extends EditorModule {
 
 			saveCache();
 		});
+	}
+
+	private CharSequence getTrimmedUrl (String url) {
+		if (url.length() > 40)
+			return url.substring(0, 20) + "..." + url.substring(url.length() - 20, url.length()) + " ";
+		else
+			return url + " ";
 	}
 
 	private void readCache () {

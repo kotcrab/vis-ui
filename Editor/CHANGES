@@ -6,6 +6,7 @@
 -Fixed "Auto Adjust Origin" in PhysicsPropertiesComponent for scaled objects
 -Fixed copy-paste at wrong position when using right click popup menu
 -"Add Component" dialog now can be used for multiple selected entities
+-Improved Twitter view
 
 [0.2.3] [LibGDX 1.6.4]
 -Added VariablesComponent
