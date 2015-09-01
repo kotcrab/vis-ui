@@ -92,7 +92,7 @@ public class ComponentPanel extends VisTable {
 		image.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
-				collapsible.setCollapsed(!collapsible.isCollapsed()); //TODO: [misc] fix animation, sometimes glitches with scroll pane
+				collapsible.setCollapsed(!collapsible.isCollapsed(), false);
 				image.setDrawable(collapsible.isCollapsed() ? treePlus : treeMinus);
 			}
 		});
