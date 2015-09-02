@@ -165,6 +165,23 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 		return false;
 	}
+	
+	private boolean highlightDir(FileHandle fileHandle){
+		Array<Node> allNodes = contentTree.getNodes();
+		for(Node node: allNodes){
+			if(((FolderItem)node.getActor()).getFile().equals(fileHandle)){
+				contentTree.getSelection().choose(node);
+				return true;
+			}
+			
+			if (node.getChildren().size > 0) {
+				node.setExpanded(true);
+				if (highlightCurrentDir(node.getChildren())) return true;
+				node.setExpanded(false);
+			}
+		}
+		return false;
+	}
 
 	private void initModule () {
 		visFolder = fileAccess.getVisFolder();
@@ -324,6 +341,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 		String currentPath = directory.path().substring(visFolder.path().length() + 1);
 		contentTitleLabel.setText("Content [" + currentPath + "]");
+		highlightDir(directory);
 	}
 
 	public FileHandle getCurrentDirectory () {
