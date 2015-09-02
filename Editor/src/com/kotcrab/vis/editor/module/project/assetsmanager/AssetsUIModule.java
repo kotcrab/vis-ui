@@ -144,42 +144,29 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			FileHandle dir = Gdx.files.absolute(metadata.lastDirectory);
 			if (dir.exists()) {
 				changeCurrentDirectory(dir);
-				highlightCurrentDir(contentTree.getNodes());
 			}
 		}
 	}
 
-	private boolean highlightCurrentDir (Array<Node> nodes) {
-		for (Node n : nodes) {
-			if (n.getActor() instanceof FolderItem && ((FolderItem) n.getActor()).getFile().equals(currentDirectory)) {
-				contentTree.getSelection().choose(n);
-				return true;
-			}
-
-			if (n.getChildren().size > 0) {
-				n.setExpanded(true);
-				if (highlightCurrentDir(n.getChildren())) return true;
-				n.setExpanded(false);
-			}
-		}
-
-		return false;
+	private boolean highlightDir (FileHandle dir) {
+		return highlightDir(dir, contentTree.getNodes());
 	}
-	
-	private boolean highlightDir(FileHandle fileHandle){
-		Array<Node> allNodes = contentTree.getNodes();
-		for(Node node: allNodes){
-			if(((FolderItem)node.getActor()).getFile().equals(fileHandle)){
+
+	private boolean highlightDir (FileHandle dir, Array<Node> nodes) {
+		for (Node node : nodes) {
+			if (((FolderItem) node.getActor()).getFile().equals(dir)) {
 				contentTree.getSelection().choose(node);
 				return true;
 			}
-			
+
 			if (node.getChildren().size > 0) {
+				boolean prevNodeState = node.isExpanded();
 				node.setExpanded(true);
-				if (highlightCurrentDir(node.getChildren())) return true;
-				node.setExpanded(false);
+				if (highlightDir(dir, node.getChildren())) return true;
+				node.setExpanded(prevNodeState);
 			}
 		}
+
 		return false;
 	}
 
@@ -328,9 +315,11 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 				String relativePath = fileAccess.relativizeToAssetsFolder(file);
 				String ext = file.extension();
 
-				if (relativePath.startsWith("atlas") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg"))) continue;
+				if (relativePath.startsWith("atlas") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")))
+					continue;
 				//if (relativePath.startsWith("particle") && (ext.equals("png") || ext.equals("jpg"))) continue;
-				if (relativePath.startsWith("bmpfont") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg"))) continue;
+				if (relativePath.startsWith("bmpfont") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")))
+					continue;
 
 				filesView.addActor(createFileItem(file));
 				filesDisplayed++;

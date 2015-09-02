@@ -5,7 +5,6 @@
 -Fixed "Auto Set Origin to Center" checkbox not updating EntityProperties UI after checking
 -Fixed "Auto Adjust Origin" in PhysicsPropertiesComponent for scaled objects
 -Fixed copy-paste at wrong position when using right click popup menu
--Fixed "Open Existing Scene" link, now the scene directory is also selected
 -"Add Component" dialog now can be used for multiple selected entities
 -Improved Twitter view
 
