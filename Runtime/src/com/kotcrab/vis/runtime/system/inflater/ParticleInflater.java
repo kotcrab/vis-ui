@@ -68,7 +68,7 @@ public class ParticleInflater extends Manager {
 		if (effect == null)
 			throw new IllegalStateException("Can't load scene particle effect is missing: " + path.getPath());
 
-		ParticleComponent particleComponent = new ParticleComponent(effect);
+		ParticleComponent particleComponent = new ParticleComponent(new ParticleEffect(effect));
 		particleComponent.setPosition(protoComponent.x, protoComponent.y);
 		particleComponent.active = protoComponent.active;
 		particleComponent.effect.scaleEffect(1f / pixelsPerUnit);
