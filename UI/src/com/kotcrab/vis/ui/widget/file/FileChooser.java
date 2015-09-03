@@ -22,30 +22,29 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.layout.ColumnGroup;
 import com.kotcrab.vis.ui.util.OsUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.InputDialogAdapter;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService;
+import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.DriveCheckerListener;
+import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.RootMode;
 import com.kotcrab.vis.ui.widget.file.internal.FileChooserWinService;
 import com.kotcrab.vis.ui.widget.file.internal.FileChooserWinService.RootNameListener;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
@@ -59,15 +58,20 @@ import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
 public class FileChooser extends VisWindow {
 	private static final long FILE_WATCHER_CHECK_DELAY_MILLIS = 2000;
 
+	private static final ShortcutsComparator SHORTCUTS_COMPARATOR = new ShortcutsComparator();
+
 	private Mode mode;
 	private SelectionMode selectionMode = SelectionMode.FILES;
-	private FileChooserListener listener;
+	private FileChooserListener listener = new FileChooserAdapter();
 	private FileFilter fileFilter = new DefaultFileFilter();
+
+	private DriveCheckerService driveCheckerService = DriveCheckerService.getInstance();
+	private FileChooserWinService chooserWinService = FileChooserWinService.getInstance();
 
 	public static final int DEFAULT_KEY = -1;
 	private boolean multiselectionEnabled = false;
 	private int groupMultiselectKey = DEFAULT_KEY; //shift by default
-	private int multiselectKey = DEFAULT_KEY; //ctrl (or command on mac by default)
+	private int multiselectKey = DEFAULT_KEY; //ctrl (or command on mac) by default
 
 	private FavoritesIO favoritesIO;
 	private Array<FileHandle> favorites;
@@ -79,9 +83,6 @@ public class FileChooser extends VisWindow {
 	private Array<FileHandle> history = new Array<FileHandle>();
 	private Array<FileHandle> historyForward = new Array<FileHandle>();
 
-	private FileChooserWinService chooserWinService = FileChooserWinService.getInstance();
-	private Array<ShortcutItem> fileRootsCache = new Array<ShortcutItem>();
-
 	private boolean watchingFilesEnabled = true;
 	private Thread fileWatcherThread;
 	private boolean shortcutsListRebuildScheduled;
@@ -92,13 +93,15 @@ public class FileChooser extends VisWindow {
 	private Sizes sizes;
 	private I18NBundle bundle;
 
+	private VisSplitPane mainSplitPane;
+
 	private VisTable fileTable;
 	private VisScrollPane fileScrollPane;
-	private VisTable fileScrollPaneTable;
 
 	private VisTable shortcutsTable;
-	private VisScrollPane shortcutsScrollPane;
-	private VisTable shortcutsScrollPaneTable;
+	private ColumnGroup shortcutsMainPanel;
+	private ColumnGroup shortcutsRootsPanel;
+	private ColumnGroup shortcutsFavoritesPanel;
 
 	private VisImageButton backButton;
 	private VisImageButton forwardButton;
@@ -188,6 +191,11 @@ public class FileChooser extends VisWindow {
 		createFileTextBox();
 		createBottomButtons();
 
+		createShortcutsMainPanel();
+		shortcutsRootsPanel = new ColumnGroup();
+		shortcutsFavoritesPanel = new ColumnGroup();
+		rebuildShortcutsFavoritesPanel();
+
 		fileMenu = new FilePopupMenu(style.popupMenuStyleName, this, bundle);
 
 		rebuildShortcutsList();
@@ -200,19 +208,7 @@ public class FileChooser extends VisWindow {
 		setSize(500, 600);
 		centerWindow();
 
-		validateSettings();
-
-		addListener(new InputListener() {
-			@Override
-			public boolean keyDown (InputEvent event, int keycode) {
-				if (keycode == Keys.A && UIUtils.ctrl()) {
-					selectAll();
-					return true;
-				}
-
-				return false;
-			}
-		});
+		createListeners();
 	}
 
 	private String getText (FileChooserText text) {
@@ -306,26 +302,32 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void createCenterContentPanel () {
-		// fileTable is contained in fileScrollPane contained in fileScrollPaneTable contained in splitPane
+		// fileTable is contained in fileScrollPane contained in fileScrollPaneTable contained in mainSplitPane
 		// same for shortcuts
 		fileTable = new VisTable();
 		fileScrollPane = createScrollPane(fileTable);
-		fileScrollPaneTable = new VisTable();
+		VisTable fileScrollPaneTable = new VisTable();
 		fileScrollPaneTable.add(fileScrollPane).pad(2).top().expand().fillX();
 		fileScrollPaneTable.setTouchable(Touchable.enabled);
 
 		shortcutsTable = new VisTable();
-		shortcutsScrollPane = createScrollPane(shortcutsTable);
-		shortcutsScrollPaneTable = new VisTable();
+		final VisScrollPane shortcutsScrollPane = createScrollPane(shortcutsTable);
+		VisTable shortcutsScrollPaneTable = new VisTable();
 		shortcutsScrollPaneTable.add(shortcutsScrollPane).pad(2).top().expand().fillX();
 
-		VisSplitPane splitPane = new VisSplitPane(shortcutsScrollPaneTable, fileScrollPaneTable, false);
-		splitPane.setSplitAmount(0.3f);
-		splitPane.setMinSplitAmount(0.05f);
-		splitPane.setMaxSplitAmount(0.8913f);
+		mainSplitPane = new VisSplitPane(shortcutsScrollPaneTable, fileScrollPaneTable, false) {
+			@Override
+			public void invalidate () {
+				super.invalidate();
+				invalidateChildHierarchy(shortcutsScrollPane);
+			}
+		};
+		mainSplitPane.setSplitAmount(0.3f);
+		mainSplitPane.setMinSplitAmount(0.05f);
+		mainSplitPane.setMaxSplitAmount(0.8913f);
 
 		row();
-		add(splitPane).expand().fill();
+		add(mainSplitPane).expand().fill();
 		row();
 
 		fileScrollPaneTable.addListener(new InputListener() {
@@ -342,6 +344,18 @@ public class FileChooser extends VisWindow {
 				}
 			}
 		});
+	}
+
+	private void invalidateChildHierarchy (WidgetGroup layout) {
+		if (layout != null) {
+			layout.invalidate();
+			for (Actor actor : layout.getChildren()) {
+				if (actor instanceof WidgetGroup)
+					invalidateChildHierarchy((WidgetGroup) actor);
+				else if (actor instanceof Layout)
+					((Layout) actor).invalidate();
+			}
+		}
 	}
 
 	private void createFileTextBox () {
@@ -388,6 +402,31 @@ public class FileChooser extends VisWindow {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				selectionFinished();
+			}
+		});
+	}
+
+	private void createShortcutsMainPanel () {
+		shortcutsMainPanel = new ColumnGroup();
+		String userHome = System.getProperty("user.home");
+		String userName = System.getProperty("user.name");
+		File userDesktop = new File(userHome + "/Desktop");
+
+		if (userDesktop.exists())
+			shortcutsMainPanel.addActor(new ShortcutItem(userDesktop, getText(DESKTOP), style.iconFolder));
+		shortcutsMainPanel.addActor(new ShortcutItem(new File(userHome), userName, style.iconFolder));
+	}
+
+	private void createListeners () {
+		addListener(new InputListener() {
+			@Override
+			public boolean keyDown (InputEvent event, int keycode) {
+				if (keycode == Keys.A && UIUtils.ctrl()) {
+					selectAll();
+					return true;
+				}
+
+				return false;
 			}
 		});
 	}
@@ -517,29 +556,16 @@ public class FileChooser extends VisWindow {
 	private void rebuildShortcutsList (boolean rebuildRootCache) {
 		shortcutsTable.clear();
 
-		String userHome = System.getProperty("user.home");
-		String userName = System.getProperty("user.name");
-		File userDesktop = new File(userHome + "/Desktop");
-
-		if (userDesktop.exists())
-			shortcutsTable.add(new ShortcutItem(userDesktop, getText(DESKTOP), style.iconFolder)).expand().fill().row();
-		shortcutsTable.add(new ShortcutItem(new File(userHome), userName, style.iconFolder)).expand().fill().row();
-
+		shortcutsTable.add(shortcutsMainPanel).left().row();
 		shortcutsTable.addSeparator();
 
 		if (rebuildRootCache) rebuildFileRootsCache();
 
-		for (ShortcutItem item : fileRootsCache)
-			shortcutsTable.add(item).expandX().fillX().row();
+		shortcutsTable.add(shortcutsRootsPanel).left().row();
 
-		Array<FileHandle> favourites = favoritesIO.loadFavorites();
-
-		if (favourites.size > 0) {
+		if (shortcutsFavoritesPanel.getChildren().size > 0)
 			shortcutsTable.addSeparator();
-
-			for (FileHandle f : favourites)
-				shortcutsTable.add(new ShortcutItem(f.file(), f.name(), style.iconFolder)).expand().fill().row();
-		}
+		shortcutsTable.add(shortcutsFavoritesPanel).left().row();
 	}
 
 	private void rebuildShortcutsList () {
@@ -548,22 +574,33 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void rebuildFileRootsCache () {
-		fileRootsCache.clear();
-
+		shortcutsRootsPanel.clear();
 		File[] roots = File.listRoots();
 
 		for (final File root : roots) {
-			if (mode == Mode.OPEN ? root.canRead() : root.canWrite()) {
-				String initialName = root.toString();
+			driveCheckerService.addListener(root, mode == Mode.OPEN ? RootMode.READABLE : RootMode.WRITABLE, new DriveCheckerListener() {
+				@Override
+				public void rootMode (File root, RootMode mode) {
+					String initialName = root.toString();
 
-				if (initialName.equals("/")) initialName = getText(FileChooserText.COMPUTER);
+					if (initialName.equals("/")) initialName = getText(FileChooserText.COMPUTER);
 
-				final ShortcutItem item = new ShortcutItem(root, initialName, style.iconDrive);
+					final ShortcutItem item = new ShortcutItem(root, initialName, style.iconDrive);
 
-				if (OsUtils.isWindows()) chooserWinService.addListener(root, item);
+					if (OsUtils.isWindows()) chooserWinService.addListener(root, item);
 
-				fileRootsCache.add(item);
-			}
+					shortcutsRootsPanel.addActor(item);
+					shortcutsRootsPanel.getChildren().sort(SHORTCUTS_COMPARATOR);
+				}
+			});
+		}
+	}
+
+	private void rebuildShortcutsFavoritesPanel () {
+		shortcutsFavoritesPanel.clear();
+		if (favorites.size > 0) {
+			for (FileHandle f : favorites)
+				shortcutsFavoritesPanel.addActor(new ShortcutItem(f.file(), f.name(), style.iconFolder));
 		}
 	}
 
@@ -600,6 +637,7 @@ public class FileChooser extends VisWindow {
 	public void addFavorite (FileHandle favourite) {
 		favorites.add(favourite);
 		favoritesIO.saveFavorites(favorites);
+		rebuildShortcutsFavoritesPanel();
 		rebuildShortcutsList(false);
 	}
 
@@ -611,11 +649,13 @@ public class FileChooser extends VisWindow {
 	public boolean removeFavorite (FileHandle favorite) {
 		boolean removed = favorites.removeValue(favorite, false);
 		favoritesIO.saveFavorites(favorites);
+		rebuildShortcutsFavoritesPanel();
 		rebuildShortcutsList(false);
 		return removed;
 	}
 
-	public void setVisble (boolean visible) {
+	@Override
+	public void setVisible (boolean visible) {
 		if (isVisible() == false && visible)
 			deselectAll(); // reset selected item when dialog is changed from invisible to visible
 
@@ -754,6 +794,7 @@ public class FileChooser extends VisWindow {
 	public void setMode (Mode mode) {
 		this.mode = mode;
 		confirmButton.setText(mode == Mode.OPEN ? getText(OPEN) : getText(SAVE));
+		refresh();
 	}
 
 	public void setDirectory (String directory) {
@@ -825,7 +866,7 @@ public class FileChooser extends VisWindow {
 
 	public void setListener (FileChooserListener listener) {
 		this.listener = listener;
-		validateSettings();
+		if (listener == null) listener = new FileChooserAdapter();
 	}
 
 	public int getMultiselectKey () {
@@ -858,10 +899,6 @@ public class FileChooser extends VisWindow {
 			return UIUtils.shift();
 		else
 			return Gdx.input.isKeyPressed(groupMultiselectKey);
-	}
-
-	private void validateSettings () {
-		if (listener == null) listener = new FileChooserAdapter();
 	}
 
 	/**
@@ -1020,7 +1057,7 @@ public class FileChooser extends VisWindow {
 				@Override
 				public float get (Actor context) {
 					int padding = (int) (file.isDirectory() ? 35 * sizes.scaleFactor : 60 * sizes.scaleFactor);
-					return fileScrollPaneTable.getWidth() - getUsedWidth() - padding;
+					return mainSplitPane.getSecondWidgetBounds().width - getUsedWidth() - padding;
 				}
 			});
 
@@ -1164,29 +1201,15 @@ public class FileChooser extends VisWindow {
 			name = new VisLabel(customName);
 			name.setEllipsis(true);
 			add(new Image(icon)).padTop(3);
-			Cell<VisLabel> labelCell = add(name).expand().fill().padRight(6);
-
+			Cell<VisLabel> labelCell = add(name).padRight(6);
 			labelCell.width(new Value() {
 				@Override
 				public float get (Actor context) {
-					return shortcutsScrollPaneTable.getWidth() - getUsedWidth() - 10;
+					return mainSplitPane.getFirstWidgetBounds().width - 30;
 				}
 			});
 
 			addListener();
-		}
-
-		private int getUsedWidth () {
-			@SuppressWarnings("rawtypes")
-			Array<Cell> cells = getCells();
-
-			int width = 0;
-			for (Cell<?> cell : cells) {
-				if (cell.getActor() == name) continue;
-				width += cell.getActor().getWidth();
-			}
-
-			return width;
 		}
 
 		private void addListener () {
@@ -1222,6 +1245,7 @@ public class FileChooser extends VisWindow {
 						File file = ShortcutItem.this.file;
 						if (file.exists() == false) {
 							showDialog(getText(POPUP_DIRECTORY_DOES_NOT_EXIST));
+							refresh();
 							return;
 						}
 
@@ -1236,6 +1260,10 @@ public class FileChooser extends VisWindow {
 
 		public void setLabelText (String text) {
 			name.setText(text);
+		}
+
+		public String getLabelText () {
+			return name.getText().toString();
 		}
 
 		private void select () {
@@ -1254,4 +1282,12 @@ public class FileChooser extends VisWindow {
 		}
 	}
 
+	private static class ShortcutsComparator implements Comparator<Actor> {
+		@Override
+		public int compare (Actor o1, Actor o2) {
+			ShortcutItem s1 = (ShortcutItem) o1;
+			ShortcutItem s2 = (ShortcutItem) o2;
+			return s1.getLabelText().compareTo(s2.getLabelText());
+		}
+	}
 }

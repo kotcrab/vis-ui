@@ -17,6 +17,7 @@
 package com.kotcrab.vis.ui.widget.file.internal;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.util.OsUtils;
 import sun.awt.shell.ShellFolder;
@@ -24,11 +25,11 @@ import sun.awt.shell.ShellFolder;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.lang.ref.WeakReference;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class FileChooserWinService {
 	private static FileChooserWinService instance;
@@ -36,6 +37,7 @@ public class FileChooserWinService {
 	private ObjectMap<File, String> nameCache = new ObjectMap<File, String>();
 
 	private Map<File, ListenerSet> listeners = new HashMap<File, ListenerSet>();
+	private final ExecutorService pool;
 
 	public static synchronized FileChooserWinService getInstance () {
 		if (OsUtils.isWindows() == false) return null;
@@ -46,28 +48,22 @@ public class FileChooserWinService {
 	}
 
 	protected FileChooserWinService () {
-		ExecutorService pool = Executors.newFixedThreadPool(3, new ThreadFactory() {
-			final AtomicLong count = new AtomicLong(0);
-
-			@Override
-			public Thread newThread (Runnable runnable) {
-				Thread thread = Executors.defaultThreadFactory().newThread(runnable);
-				thread.setName("SystemDisplayNameGetter-" + count.getAndIncrement());
-				thread.setDaemon(true);
-				return thread;
-			}
-		});
+		pool = Executors.newFixedThreadPool(3, new ServiceThreadFactory("SystemDisplayNameGetter"));
 
 		File[] roots = File.listRoots();
 
-		for (final File file : roots) {
-			pool.execute(new Runnable() {
-				@Override
-				public void run () {
-					processResult(file, getSystemDisplayName(file));
-				}
-			});
+		for (File root : roots) {
+			processRoot(root);
 		}
+	}
+
+	private void processRoot (final File root) {
+		pool.execute(new Runnable() {
+			@Override
+			public void run () {
+				processResult(root, getSystemDisplayName(root));
+			}
+		});
 	}
 
 	private void processResult (final File root, final String name) {
@@ -100,6 +96,7 @@ public class FileChooserWinService {
 		}
 
 		set.add(listener);
+		processRoot(root);
 	}
 
 	private String getSystemDisplayName (File f) {
@@ -123,7 +120,7 @@ public class FileChooserWinService {
 	}
 
 	private static class ListenerSet {
-		List<WeakReference<RootNameListener>> list = new ArrayList<WeakReference<RootNameListener>>();
+		Array<WeakReference<RootNameListener>> list = new Array<WeakReference<RootNameListener>>();
 
 		public void add (RootNameListener listener) {
 			list.add(new WeakReference<RootNameListener>(listener));

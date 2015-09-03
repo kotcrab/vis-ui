@@ -18,7 +18,9 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit trunk//EN" "http://google-web-toolkit.googlecode.com/svn/trunk/distro-source/core/src/gwt-module.dtd">
 <module>
 	<source path='ui'>
+		<exclude name="widget/file/internal/DriveCheckerService.java" />
 		<exclude name="widget/file/internal/FileChooserWinService.java" />
+		<exclude name="widget/file/internal/ServiceThreadFactory.java" />
 		<exclude name="widget/file/FavoritesIO.java" />
 		<exclude name="widget/file/FileChooser.java" />
 		<exclude name="widget/file/FileChooserAdapter.java" />
