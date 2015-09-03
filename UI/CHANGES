@@ -1,7 +1,8 @@
 [0.8.2] [LibGDX 1.6.4] [Snapshot]
 -API Addition: VisValidableTextField#restoreLastValidText()
--API Addition: OsUtils.isAndroid(), OsUtils.getAndroidApiLevel(), OsUtils.isIos(), OsUtils.getShortcutFor()
--API Addition: MenuItem#setShortcut(int ... keys)
+-API Addition: OsUtils.isAndroid(), OsUtils.getAndroidApiLevel(), OsUtils.isIos(), OsUtils.getShortcutFor(int... keycodes)
+-API Addition: MenuItem#setShortcut(int... keycodes)
+-API Addition: VisSplitPane#getFirstWidgetBounds(), VisSplitPane#getSecondWidgetBounds()
 -API Change: Removed MenuItem#setShortcut(int modifier, int keycode)
 -API Change: FileUtils.isMac(), FileUtils.isUnix() and FileUtils.isWindows() moved to OsUtils
 -Added ColumnGroup

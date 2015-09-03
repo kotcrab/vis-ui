@@ -220,6 +220,16 @@ public class VisSplitPane extends WidgetGroup {
 		return 0;
 	}
 
+	/** @return first widgets bounds, changing returned rectangle values does not have any effect */
+	public Rectangle getFirstWidgetBounds () {
+		return firstWidgetBounds;
+	}
+
+	/** @return seconds widgets bounds, changing returned rectangle values does not have any effect */
+	public Rectangle getSecondWidgetBounds () {
+		return new Rectangle(secondWidgetBounds);
+	}
+
 	public void setVertical (boolean vertical) {
 		this.vertical = vertical;
 	}
