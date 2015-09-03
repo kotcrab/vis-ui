@@ -12,7 +12,9 @@
 -PopupMenu is now kept inside stage when displaying it
 -FileChooser
  -API Change: Removed FileChooser#setVisble(boolean) (typo in name), use FileChooser#setVisible(boolean)
- -API Change:
+ -API Change: Renamed: setGroupMultiselectKey to setGroupMultiSelectKey, getGroupMultiselectKey to getGroupMultiSelectKey,
+                       setMultiselectKey to setMultiSelectKey, getMultiselectKey to getMultiSelectKey
+                       setMultiselectionEnabled to setMultiSelectionEnabled, isMultiselectionEnabled to isMultiSelectionEnabled
  -Fixed issue with very slow chooser creation on computers with floppy disk drivers installed ( https://github.com/kotcrab/VisEditor/issues/11#issuecomment-136892177 )
  -Fixed crash in when user tried to use history buttons for no longer existing directory
  -Fixed multiple selection when selection mode was set to FILES or DIRECTORIES

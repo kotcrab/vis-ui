@@ -69,9 +69,9 @@ public class FileChooser extends VisWindow {
 	private FileChooserWinService chooserWinService = FileChooserWinService.getInstance();
 
 	public static final int DEFAULT_KEY = -1;
-	private boolean multiselectionEnabled = false;
-	private int groupMultiselectKey = DEFAULT_KEY; //shift by default
-	private int multiselectKey = DEFAULT_KEY; //ctrl (or command on mac) by default
+	private boolean multiSelectionEnabled = false;
+	private int groupMultiSelectKey = DEFAULT_KEY; //shift by default
+	private int multiSelectKey = DEFAULT_KEY; //ctrl (or command on mac) by default
 
 	private FavoritesIO favoritesIO;
 	private Array<FileHandle> favorites;
@@ -856,12 +856,12 @@ public class FileChooser extends VisWindow {
 		}
 	}
 
-	public boolean isMultiselectionEnabled () {
-		return multiselectionEnabled;
+	public boolean isMultiSelectionEnabled () {
+		return multiSelectionEnabled;
 	}
 
-	public void setMultiselectionEnabled (boolean multiselectionEnabled) {
-		this.multiselectionEnabled = multiselectionEnabled;
+	public void setMultiSelectionEnabled (boolean multiSelectionEnabled) {
+		this.multiSelectionEnabled = multiSelectionEnabled;
 	}
 
 	public void setListener (FileChooserListener listener) {
@@ -869,36 +869,36 @@ public class FileChooser extends VisWindow {
 		if (listener == null) listener = new FileChooserAdapter();
 	}
 
-	public int getMultiselectKey () {
-		return multiselectKey;
+	public int getMultiSelectKey () {
+		return multiSelectKey;
 	}
 
-	/** @param multiselectKey from {@link Keys} or {@link FileChooser#DEFAULT_KEY} to restore to default */
-	public void setMultiselectKey (int multiselectKey) {
-		this.multiselectKey = multiselectKey;
+	/** @param multiSelectKey from {@link Keys} or {@link FileChooser#DEFAULT_KEY} to restore to default */
+	public void setMultiSelectKey (int multiSelectKey) {
+		this.multiSelectKey = multiSelectKey;
 	}
 
-	public int getGroupMultiselectKey () {
-		return groupMultiselectKey;
+	public int getGroupMultiSelectKey () {
+		return groupMultiSelectKey;
 	}
 
-	/** @param groupMultiselectKey from {@link Keys} or {@link FileChooser#DEFAULT_KEY} to restore to default */
-	public void setGroupMultiselectKey (int groupMultiselectKey) {
-		this.groupMultiselectKey = groupMultiselectKey;
+	/** @param groupMultiSelectKey from {@link Keys} or {@link FileChooser#DEFAULT_KEY} to restore to default */
+	public void setGroupMultiSelectKey (int groupMultiSelectKey) {
+		this.groupMultiSelectKey = groupMultiSelectKey;
 	}
 
 	private boolean isMultiSelectKeyPressed () {
-		if (multiselectKey == DEFAULT_KEY)
+		if (multiSelectKey == DEFAULT_KEY)
 			return UIUtils.ctrl();
 		else
-			return Gdx.input.isKeyPressed(multiselectKey);
+			return Gdx.input.isKeyPressed(multiSelectKey);
 	}
 
 	private boolean isGroupMultiSelectKeyPressed () {
-		if (groupMultiselectKey == DEFAULT_KEY)
+		if (groupMultiSelectKey == DEFAULT_KEY)
 			return UIUtils.shift();
 		else
-			return Gdx.input.isKeyPressed(groupMultiselectKey);
+			return Gdx.input.isKeyPressed(groupMultiSelectKey);
 	}
 
 	/**
@@ -1100,12 +1100,12 @@ public class FileChooser extends VisWindow {
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 					if (selectedShortcut != null) selectedShortcut.deselect();
 
-					if (multiselectionEnabled == false || (isMultiSelectKeyPressed() == false && isGroupMultiSelectKeyPressed() == false))
+					if (multiSelectionEnabled == false || (isMultiSelectKeyPressed() == false && isGroupMultiSelectKeyPressed() == false))
 						deselectAll();
 
 					boolean itemSelected = select();
 
-					if (selectedItems.size > 1 && multiselectionEnabled && isGroupMultiSelectKeyPressed())
+					if (selectedItems.size > 1 && multiSelectionEnabled && isGroupMultiSelectKeyPressed())
 						selectGroup();
 
 					if (selectedItems.size > 1) removeInvalidSelections();
