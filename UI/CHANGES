@@ -4,6 +4,7 @@
 -API Addition: MenuItem#setShortcut(int ... keys)
 -API Change: Removed MenuItem#setShortcut(int modifier, int keycode)
 -API Change: FileUtils.isMac(), FileUtils.isUnix() and FileUtils.isWindows() moved to OsUtils
+-Added ColumnGroup
 -Fixed MenuItem shortcut label color when MenuItem is disabled
 -If user clicks mouse before Tooltip appears, Tooltip won't be showed
 -Fixed issue with GridGroup in ScrollPane - scroll bar appeared too late
