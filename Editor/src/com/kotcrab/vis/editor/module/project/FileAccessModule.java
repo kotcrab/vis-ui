@@ -32,6 +32,7 @@ public class FileAccessModule extends ProjectModule {
 	private FileHandle modulesFolder;
 
 	private FileHandle sceneFolder;
+	private FileHandle gfxFolder;
 	private FileHandle shaderFolder;
 	private FileHandle ttfFontFolder;
 	private FileHandle bmpFontFolder;
@@ -45,6 +46,7 @@ public class FileAccessModule extends ProjectModule {
 		modulesFolder = visFolder.child("modules");
 
 		sceneFolder = assetsFolder.child("scene");
+		gfxFolder = assetsFolder.child("gfx");
 		shaderFolder = assetsFolder.child("shader");
 		ttfFontFolder = assetsFolder.child("font");
 		bmpFontFolder = assetsFolder.child("bmpfont");
@@ -86,6 +88,10 @@ public class FileAccessModule extends ProjectModule {
 
 	public FileHandle getSceneFolder () {
 		return sceneFolder;
+	}
+
+	public FileHandle getGfxFolder () {
+		return gfxFolder;
 	}
 
 	public FileHandle getShaderFolder () {

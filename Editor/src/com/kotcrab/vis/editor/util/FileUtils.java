@@ -131,12 +131,12 @@ public class FileUtils {
 		return Gdx.files.absolute(file.getAbsolutePath());
 	}
 
-	public static void streamResursive (FileHandle folder, CancelableConsumer<FileHandle> consumer) {
-		if (folder.isDirectory() == false) throw new IllegalStateException("Root must be directory!");
+	public static void streamRecursively (FileHandle folder, CancelableConsumer<FileHandle> consumer) {
+		if (folder.isDirectory() == false) throw new IllegalStateException("File must be directory!");
 
 		for (FileHandle file : folder.list()) {
 			if (file.isDirectory())
-				streamResursive(folder, consumer);
+				streamRecursively(file, consumer);
 			else
 				consumer.accept(file);
 		}

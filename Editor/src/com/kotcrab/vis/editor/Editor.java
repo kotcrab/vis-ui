@@ -466,6 +466,7 @@ public class Editor extends ApplicationAdapter {
 		projectMC.add(new SupportModule());
 		projectMC.add(new SceneMetadataModule());
 		projectMC.add(new AssetsAnalyzerModule());
+		projectMC.add(new TextureNameCheckerModule());
 
 		projectMC.add(new ExportersManagerModule());
 		projectMC.add(new ExportSettingsModule());
