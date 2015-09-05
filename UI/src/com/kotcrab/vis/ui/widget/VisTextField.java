@@ -274,9 +274,9 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 			selectionWidth = maxX - minX - style.font.getData().cursorX;
 		}
 
-		if (textHAlign == Align.center || textHAlign == Align.right) {
+		if ((textHAlign & Align.left) == 0) {
 			textOffset = visibleWidth - (glyphPositions[visibleTextEnd] - startPos);
-			if (textHAlign == Align.center) textOffset = Math.round(textOffset * 0.5f);
+			if ((textHAlign & Align.center) != 0) textOffset = Math.round(textOffset * 0.5f);
 			if (hasSelection) selectionX += textOffset;
 		}
 	}
@@ -743,8 +743,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	 * @see Align
 	 */
 	public void setAlignment (int alignment) {
-		if (alignment == Align.left || alignment == Align.center || alignment == Align.right)
-			this.textHAlign = alignment;
+		this.textHAlign = alignment;
 	}
 
 	/**
