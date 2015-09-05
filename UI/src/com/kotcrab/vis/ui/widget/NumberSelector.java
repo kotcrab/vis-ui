@@ -45,6 +45,8 @@ public class NumberSelector extends VisTable {
 	private float buttonRepeatInitialTime = 0.4f;
 	private float buttonRepeatTime = 0.08f;
 
+	private boolean programmaticChangeEvents = true;
+
 	private int max;
 	private int min;
 	private int step;
@@ -106,7 +108,7 @@ public class NumberSelector extends VisTable {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				getStage().setScrollFocus(valueText);
-				increment();
+				increment(true);
 			}
 		});
 
@@ -114,7 +116,7 @@ public class NumberSelector extends VisTable {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				getStage().setScrollFocus(valueText);
-				decrement();
+				decrement(true);
 			}
 		});
 
@@ -165,7 +167,7 @@ public class NumberSelector extends VisTable {
 			@Override
 			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
 				if (focused == false) {
-					valueChanged();
+					valueChanged(true);
 					getStage().setScrollFocus(null);
 				}
 			}
@@ -181,9 +183,9 @@ public class NumberSelector extends VisTable {
 			@Override
 			public boolean scrolled (InputEvent event, float x, float y, int amount) {
 				if (amount == 1)
-					decrement();
+					decrement(true);
 				else
-					increment();
+					increment(true);
 
 				return true;
 			}
@@ -191,7 +193,7 @@ public class NumberSelector extends VisTable {
 			@Override
 			public boolean keyDown (InputEvent event, int keycode) {
 				if (keycode == Keys.ENTER) {
-					valueChanged();
+					valueChanged(true);
 					return true;
 				}
 
@@ -208,24 +210,36 @@ public class NumberSelector extends VisTable {
 	}
 
 	public void increment () {
+		increment(programmaticChangeEvents);
+	}
+
+	private void increment (boolean fireEvent) {
 		if (current + step > max)
 			this.current = max;
 		else
 			this.current += step;
 
-		valueChanged();
+		valueChanged(fireEvent);
 	}
 
 	public void decrement () {
+		decrement(programmaticChangeEvents);
+	}
+
+	private void decrement (boolean fireEvent) {
 		if (current - step < min)
 			this.current = min;
 		else
 			this.current -= step;
 
-		valueChanged();
+		valueChanged(fireEvent);
 	}
 
 	public void setValue (int newValue) {
+		setValue(newValue, programmaticChangeEvents);
+	}
+
+	public void setValue (int newValue, boolean fireEvent) {
 		if (newValue > max)
 			current = max;
 		else if (newValue < min)
@@ -233,7 +247,7 @@ public class NumberSelector extends VisTable {
 		else
 			current = newValue;
 
-		valueChanged();
+		valueChanged(fireEvent);
 	}
 
 	public int getValue () {
@@ -250,7 +264,7 @@ public class NumberSelector extends VisTable {
 
 		if (current < min) {
 			current = min;
-			valueChanged();
+			valueChanged(true);
 		}
 	}
 
@@ -264,8 +278,16 @@ public class NumberSelector extends VisTable {
 
 		if (current > max) {
 			current = max;
-			valueChanged();
+			valueChanged(true);
 		}
+	}
+
+	/**
+	 * If false, {@link #setValue(int)}, {@link #decrement()} and {@link #increment()} will not fire change event,
+	 * it will be fired only when user changed value
+	 */
+	public void setProgrammaticChangeEvents (boolean programmaticChangeEvents) {
+		this.programmaticChangeEvents = programmaticChangeEvents;
 	}
 
 	public int getStep () {
@@ -285,19 +307,25 @@ public class NumberSelector extends VisTable {
 		}
 	}
 
-	private void valueChanged () {
+	private void valueChanged (boolean fireEvent) {
 		int pos = valueText.getCursorPosition();
 		valueText.setText(String.valueOf(current));
 		valueText.setCursorPosition(pos);
 
-		for (NumberSelectorListener listener : listeners)
-			listener.changed(current);
+		if (fireEvent) {
+			for (NumberSelectorListener listener : listeners)
+				listener.changed(current);
+		}
 	}
 
 	public void addChangeListener (NumberSelectorListener listener) {
 		if (listener != null && !listeners.contains(listener, true)) {
 			listeners.add(listener);
 		}
+	}
+
+	public boolean removeChangeListener (NumberSelectorListener listener) {
+		return listeners.removeValue(listener, true);
 	}
 
 	public static class NumberSelectorStyle {
@@ -323,9 +351,9 @@ public class NumberSelector extends VisTable {
 		@Override
 		public void run () {
 			if (increment)
-				increment();
+				increment(true);
 			else
-				decrement();
+				decrement(true);
 		}
 	}
 }

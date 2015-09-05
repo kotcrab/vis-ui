@@ -3,6 +3,8 @@
 -API Addition: OsUtils.isAndroid(), OsUtils.getAndroidApiLevel(), OsUtils.isIos(), OsUtils.getShortcutFor(int... keycodes)
 -API Addition: MenuItem#setShortcut(int... keycodes)
 -API Addition: VisSplitPane#getFirstWidgetBounds(), VisSplitPane#getSecondWidgetBounds()
+-API Addition: NumberSelector#setProgrammaticChangeEvents(boolean), NumberSelector#setValue(int value, boolean fireEvent)
+-API Addition: NumberSelector#removeChangeListener(...)
 -API Change: Removed MenuItem#setShortcut(int modifier, int keycode)
 -API Change: FileUtils.isMac(), FileUtils.isUnix() and FileUtils.isWindows() moved to OsUtils
 -Added ColumnGroup
