@@ -94,7 +94,7 @@ public class ExportSettingsModule extends ProjectSettingsModule<ExportConfig> {
 			}
 		}
 
-		throw new IllegalStateException("Not exporter for name: " + name);
+		throw new IllegalStateException("Could not found exporter for name: " + name);
 	}
 
 	public UUID getCurrentExporterUUID () {
