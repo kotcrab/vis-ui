@@ -1,0 +1,6 @@
+<config>
+    <forceLinkClasses>
+        <pattern>com.kotcrab.vis.ui.Sizes</pattern>
+        <pattern>com.kotcrab.vis.ui.widget.**</pattern>
+    </forceLinkClasses>
+</config>
