@@ -11,7 +11,7 @@
 -Fixed MenuItem shortcut label color when MenuItem is disabled
 -If user clicks mouse before Tooltip appears, Tooltip won't be showed
 -Fixed issue with GridGroup in ScrollPane - scroll bar appeared too late
--Fixed GWT complication issues
+-Fixed GWT compilation issues
 -PopupMenu is now kept inside stage when displaying it
 -FileChooser
  -API Change: Removed FileChooser#setVisble(boolean) (typo in name), use FileChooser#setVisible(boolean)
