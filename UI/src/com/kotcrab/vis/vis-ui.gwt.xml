@@ -48,6 +48,8 @@
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/FileChooser.properties" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/TabbedPane.properties" />
 
+    <!-- When changing those don't forget to update robovm.xml -->
+
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.Sizes" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.dialog" />
