@@ -26,9 +26,9 @@ import com.kotcrab.vis.runtime.component.LayerComponent;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
-import net.mostlyoriginal.api.system.delegate.EntityProcessAgent;
-import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
-import net.mostlyoriginal.api.utils.BagUtils;
+import com.kotcrab.vis.runtime.system.delegate.EntityProcessAgent;
+import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
+import com.kotcrab.vis.runtime.util.BagUtils;
 
 /**
  * Plugable render system that uses subsystems to render entities. Entities are rendered sorted by their layer and zIndex

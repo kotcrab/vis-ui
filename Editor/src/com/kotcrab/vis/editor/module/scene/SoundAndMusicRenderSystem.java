@@ -29,8 +29,8 @@ import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.MusicComponent;
 import com.kotcrab.vis.runtime.component.SoundComponent;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
-import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
-import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
+import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
+import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 
 /** @author Kotcrab */
 @Wire

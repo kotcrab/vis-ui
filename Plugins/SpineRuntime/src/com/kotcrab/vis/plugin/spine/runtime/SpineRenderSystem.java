@@ -40,8 +40,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
-import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
-import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
+import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
+import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 
 /** @author Kotcrab */
 @Wire

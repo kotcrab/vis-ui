@@ -16,21 +16,31 @@
 
 package com.kotcrab.vis.runtime.util;
 
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.kotcrab.vis.runtime.spriter.Data;
-import com.kotcrab.vis.runtime.spriter.Loader;
+import com.artemis.utils.Bag;
+import com.artemis.utils.ImmutableBag;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectSet;
 
 /**
- * Loaded by {@link AssetManager}
+ * Various {@link Bag} related utils
  * @author Kotcrab
  */
-public class SpriterData {
-	public final Data data;
-	public final Loader<Sprite> loader;
+public class VisBagUtils {
+	public static <E> Array<E> toArray (ImmutableBag<E> bag) {
+		Array<E> array = new Array<E>(bag.size());
 
-	public SpriterData (Data data, Loader<Sprite> loader) {
-		this.data = data;
-		this.loader = loader;
+		for (E element : bag)
+			array.add(element);
+
+		return array;
+	}
+
+	public static <E> ObjectSet<E> toSet (ImmutableBag<E> bag) {
+		ObjectSet<E> array = new ObjectSet<E>(bag.size());
+
+		for (E element : bag)
+			array.add(element);
+
+		return array;
 	}
 }

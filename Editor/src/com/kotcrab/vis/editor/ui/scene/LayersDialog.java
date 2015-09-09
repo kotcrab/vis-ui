@@ -40,7 +40,7 @@ import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.editor.util.undo.MonoUndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
-import com.kotcrab.vis.runtime.util.BagUtils;
+import com.kotcrab.vis.runtime.util.VisBagUtils;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.VisUI;
@@ -115,7 +115,7 @@ public class LayersDialog extends VisTable implements Disposable {
 							public void yes () {
 								UndoableActionGroup layerRemovedGroup = new UndoableActionGroup("Delete Layer");
 								layerRemovedGroup.add(new EntitiesRemovedAction(sceneMC, sceneTab.getEntityEngine(),
-										BagUtils.toSet(layerManipulatorManager.getEntitiesWithLayer(scene.getActiveLayerId()))));
+										VisBagUtils.toSet(layerManipulatorManager.getEntitiesWithLayer(scene.getActiveLayerId()))));
 								layerRemovedGroup.add(new LayerRemovedAction(scene.getActiveLayer()));
 								layerRemovedGroup.finalizeGroup();
 

@@ -1,5 +1,6 @@
 /*
- * Copyright 2014-2015 See AUTHORS file.
+ * Copyright 2014 by Trixt0r
+ * (https://github.com/Trixt0r, Heinrich Reich, e-mail: trixter16@web.de)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +15,19 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.util;
-
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.kotcrab.vis.runtime.spriter.Data;
-import com.kotcrab.vis.runtime.spriter.Loader;
+package com.kotcrab.vis.runtime.spriter;
 
 /**
- * Loaded by {@link AssetManager}
- * @author Kotcrab
+ * An Exception which will be thrown if a Spriter specific issue happens at runtime.
+ * @author Trixt0r
+ *
  */
-public class SpriterData {
-	public final Data data;
-	public final Loader<Sprite> loader;
-
-	public SpriterData (Data data, Loader<Sprite> loader) {
-		this.data = data;
-		this.loader = loader;
+public class SpriterException extends RuntimeException {
+	
+	private static final long serialVersionUID = 1L;
+	
+	public SpriterException(String message){
+		super(message);
 	}
+
 }

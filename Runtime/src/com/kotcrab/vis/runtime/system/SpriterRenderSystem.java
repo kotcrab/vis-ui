@@ -23,14 +23,14 @@ import com.artemis.annotations.Wire;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.brashmonkey.spriter.Drawer;
-import com.brashmonkey.spriter.Timeline.Key;
+import com.kotcrab.vis.runtime.spriter.Drawer;
+import com.kotcrab.vis.runtime.spriter.Timeline.Key;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.SpriterComponent;
-import net.mostlyoriginal.api.system.delegate.DeferredEntityProcessingSystem;
-import net.mostlyoriginal.api.system.delegate.EntityProcessPrincipal;
+import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
+import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 
 /** @author Kotcrab */
 @Wire

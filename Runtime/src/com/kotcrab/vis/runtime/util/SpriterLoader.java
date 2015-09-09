@@ -27,9 +27,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.brashmonkey.spriter.Data;
-import com.brashmonkey.spriter.FileReference;
-import com.brashmonkey.spriter.Loader;
+import com.kotcrab.vis.runtime.spriter.Data;
+import com.kotcrab.vis.runtime.spriter.FileReference;
+import com.kotcrab.vis.runtime.spriter.Loader;
 
 import java.util.HashMap;
 import java.util.Map.Entry;

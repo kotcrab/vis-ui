@@ -17,7 +17,7 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.components;
 
 import com.badlogic.gdx.utils.Array;
-import com.brashmonkey.spriter.Entity;
+import com.kotcrab.vis.runtime.spriter.Entity;
 import com.kotcrab.vis.editor.entity.SpriterPropertiesComponent;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;

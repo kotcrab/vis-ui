@@ -17,16 +17,18 @@
 
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit trunk//EN" "http://google-web-toolkit.googlecode.com/svn/trunk/distro-source/core/src/gwt-module.dtd">
 <module>
-	<source path='runtime'>
-		<exclude name="font/FreeTypeFontProvider.java" />
-	</source>
+    <source path='runtime'>
+        <exclude name="font/FreeTypeFontProvider.java" />
+    </source>
 
     <inherits name='com.artemis.backends.artemis_backends_gwt' />
 
     <extend-configuration-property name="artemis.reflect.include" value="com.kotcrab.vis.runtime.system" />
+    <extend-configuration-property name="artemis.reflect.include" value="com.kotcrab.vis.runtime.component" />
 
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/runtime/bmp-font-df.frag" />
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/runtime/bmp-font-df.vert" />
 
-	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.runtime.data" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.runtime.data" />
+
 </module>
