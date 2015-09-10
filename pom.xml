@@ -15,6 +15,7 @@
         <module>Parent</module>
         <module>UI</module>
         <module>Runtime</module>
+        <module>RuntimeGWT</module>
         <module>Editor</module>
         <module>Plugins/SpineRuntime</module>
         <module>Plugins/Spine</module>

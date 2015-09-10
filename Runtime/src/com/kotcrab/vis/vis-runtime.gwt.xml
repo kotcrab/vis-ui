@@ -21,6 +21,11 @@
         <exclude name="font/FreeTypeFontProvider.java" />
     </source>
 
+    <super-source path="gwt/emu" />
+    <source path="gwt">
+        <exclude name="**/**.java" />
+    </source>
+
     <inherits name='com.artemis.backends.artemis_backends_gwt' />
 
     <extend-configuration-property name="artemis.reflect.include" value="com.kotcrab.vis.runtime.system" />

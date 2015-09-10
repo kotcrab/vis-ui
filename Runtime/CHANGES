@@ -1,5 +1,6 @@
 [0.2.4] [LibGDX 1.6.4] [Snapshot]
 -Added Spriter support
+-Fixed GWT support
 -Improved scene loading errors logging
 -When loading Scene without using VisAssetManager#loadSceneNow you must now manually cal Scene#init()
 -Fixed wrong particle rendering when there was two or more particle effects of same kind
