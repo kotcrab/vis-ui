@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties;
+package com.kotcrab.vis.editor.ui;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
@@ -30,13 +30,19 @@ import com.kotcrab.vis.ui.VisUI;
  */
 public class TintImage extends Image {
 	private final Drawable alphaBar = Assets.getMisc("alpha-grid-20x20");
+	private final Drawable focusBorder = VisUI.getSkin().getDrawable("border");
 	private final Drawable questionMark = Icons.QUESTION.drawable();
 
+	private boolean useFocusBorder = true;
 	private boolean unknown;
 
 	public TintImage () {
-		super();
-		setDrawable(VisUI.getSkin().getDrawable("white"));
+		this(false);
+	}
+
+	public TintImage (boolean useFocusBorder) {
+		super(VisUI.getSkin().getDrawable("white"));
+		this.useFocusBorder = useFocusBorder;
 	}
 
 	@Override
@@ -49,14 +55,14 @@ public class TintImage extends Image {
 			alphaBar.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
 			super.draw(batch, parentAlpha);
 		}
+
+		if (useFocusBorder) {
+			batch.setColor(1, 1, 1, parentAlpha);
+			focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
+		}
 	}
 
 	public void setUnknown (boolean unknown) {
 		this.unknown = unknown;
-	}
-
-	@Override
-	public void setColor (Color color) {
-		super.setColor(color);
 	}
 }

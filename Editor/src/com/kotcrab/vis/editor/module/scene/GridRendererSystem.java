@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.BaseSystem;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -26,6 +25,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.module.editor.ColorSettingsModule;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsModule;
 import com.kotcrab.vis.editor.util.NumberUtils;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
@@ -44,6 +44,7 @@ public class GridRendererSystem extends BaseSystem {
 	@InjectModule private CameraModule camera;
 	@InjectModule private RendererModule renderer;
 
+	@InjectModule private ColorSettingsModule colorSettings;
 	@InjectModule private GridSettingsModule settings;
 
 	private Batch batch;
@@ -72,7 +73,7 @@ public class GridRendererSystem extends BaseSystem {
 			camera.update();
 			shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
 			shapeRenderer.begin(ShapeType.Line);
-			shapeRenderer.setColor(new Color(0.32f, 0.32f, 0.32f, 1f));
+			shapeRenderer.setColor(colorSettings.getGridColor());
 
 			drawVerticalLines();
 			drawHorizontalLines();

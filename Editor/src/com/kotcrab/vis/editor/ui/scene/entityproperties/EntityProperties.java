@@ -56,6 +56,7 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorMo
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
+import com.kotcrab.vis.editor.ui.TintImage;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.AutoComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.PhysicsPropertiesComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.RenderableComponentTable;

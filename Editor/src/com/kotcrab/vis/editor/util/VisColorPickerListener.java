@@ -16,16 +16,12 @@
 
 package com.kotcrab.vis.editor.util;
 
-/**
- * Useful for example when you have a variable that must be changed from anonymous class or lambadas. Normally such
- * variables can't be changed because they have to be final.
- * @author Kotcrab
- * @see BiHolder
- */
-public class Holder<T> {
-	public T value;
+import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
 
-	public Holder (T value) {
-		this.value = value;
+/** @author Kotcrab */
+public interface VisColorPickerListener extends ColorPickerListener {
+	@Override
+	default void canceled () {
+
 	}
 }

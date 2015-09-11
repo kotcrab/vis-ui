@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -76,7 +77,6 @@ public class Editor extends ApplicationAdapter {
 	private EditorModuleContainer editorMC;
 	private ProjectModuleContainer projectMC;
 
-	private InputModule inputModule;
 	private TabsModule tabsModule;
 	private StatusBarModule statusBar;
 	private ProjectIOModule projectIO;
@@ -84,6 +84,7 @@ public class Editor extends ApplicationAdapter {
 	private ExtensionStorageModule pluginContainer;
 
 	private GeneralSettingsModule settings;
+	private ColorSettingsModule colorSettings;
 	private ExperimentalSettingsModule experimentalSettings;
 
 	// TODO move to module
@@ -174,7 +175,7 @@ public class Editor extends ApplicationAdapter {
 		noProjectFilesOpenView = new NoProjectFilesOpenView(projectMC);
 
 		editorMC.add(projectIO = new ProjectIOModule());
-		editorMC.add(inputModule = new InputModule(stage, stageRoot));
+		editorMC.add(new InputModule(stage, stageRoot));
 		editorMC.add(new GlobalInputModule());
 
 		editorMC.add(new PluginLoaderModule());
@@ -199,6 +200,7 @@ public class Editor extends ApplicationAdapter {
 		editorMC.add(new EditingSettingsModule());
 
 		editorMC.add(settings = new GeneralSettingsModule());
+		editorMC.add(colorSettings = new ColorSettingsModule());
 		editorMC.add(experimentalSettings = new ExperimentalSettingsModule());
 		editorMC.add(new PluginSettingsModule());
 		editorMC.add(new GridSettingsModule());
@@ -263,6 +265,8 @@ public class Editor extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		Color bgColor = colorSettings.getBackgroundColor();
+		Gdx.gl.glClearColor(bgColor.r, bgColor.g, bgColor.b, 1f);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		stage.act(Gdx.graphics.getDeltaTime());
 		if (tab != null) tab.render(stage.getBatch());

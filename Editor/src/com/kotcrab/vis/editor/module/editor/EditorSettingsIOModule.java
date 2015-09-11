@@ -16,27 +16,21 @@
 
 package com.kotcrab.vis.editor.module.editor;
 
-import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.ProjectSettingsIOModule;
-import com.kotcrab.vis.editor.serializer.ArraySerializer;
-import com.kotcrab.vis.editor.serializer.UUIDSerializer;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
-import com.kotcrab.vis.editor.util.SettingsSerializerFactory;
-import org.objenesis.strategy.StdInstantiatorStrategy;
+import com.kotcrab.vis.editor.util.KryoUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.reflect.Constructor;
-import java.util.UUID;
 
 /**
  * Provides common IO for saving editor scope settings. This is typically not used directly, it should be used by using
@@ -53,11 +47,7 @@ public class EditorSettingsIOModule extends EditorModule {
 
 	@Override
 	public void init () {
-		kryo = new Kryo();
-		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
-		kryo.setDefaultSerializer(new SettingsSerializerFactory());
-		kryo.register(Array.class, new ArraySerializer(), 10);
-		kryo.register(UUID.class, new UUIDSerializer(), 11);
+		kryo = KryoUtils.getCommonSettingsKryo();
 
 		settingsDirectory = new File(App.APP_FOLDER_PATH, "settings");
 		settingsDirectory.mkdir();

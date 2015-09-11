@@ -17,15 +17,15 @@
 package com.kotcrab.vis.editor.util;
 
 /**
- * Useful for example when you have a variable that must be changed from anonymous class or lambadas. Normally such
- * variables can't be changed because they have to be final.
  * @author Kotcrab
- * @see BiHolder
+ * @see Holder
  */
-public class Holder<T> {
-	public T value;
+public class BiHolder<First, Second> {
+	public First first;
+	public Second second;
 
-	public Holder (T value) {
-		this.value = value;
+	public BiHolder (First first, Second second) {
+		this.first = first;
+		this.second = second;
 	}
 }

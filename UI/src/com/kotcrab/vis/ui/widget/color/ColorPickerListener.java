@@ -24,8 +24,8 @@ import com.badlogic.gdx.graphics.Color;
  */
 public interface ColorPickerListener {
 	/** Called when color selection was canceled by user (either by clicking cancel or closing the window) */
-	public void canceled ();
+	void canceled ();
 
 	/** Called when user finises selecting new color */
-	public void finished (Color newColor);
+	void finished (Color newColor);
 }
