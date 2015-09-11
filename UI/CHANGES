@@ -1,4 +1,6 @@
-[0.8.2] [LibGDX 1.6.4] [Snapshot]
+[0.9.0] [LibGDX 1.6.5] [Snapshot]
+
+[0.8.2] [LibGDX 1.6.4]
 -API Addition: VisValidableTextField#restoreLastValidText()
 -API Addition: OsUtils.isAndroid(), OsUtils.getAndroidApiLevel(), OsUtils.isIos(), OsUtils.getShortcutFor(int... keycodes)
 -API Addition: MenuItem#setShortcut(int... keycodes)
