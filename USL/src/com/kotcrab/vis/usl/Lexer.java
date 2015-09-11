@@ -218,8 +218,10 @@ public class Lexer {
 				content = streamToString(USL.class.getResourceAsStream("visui-0.8.0.usl"));
 			else if (includeName.equals("visui-0.8.1"))
 				content = streamToString(USL.class.getResourceAsStream("visui-0.8.1.usl"));
-			else if (includeName.equals("visui-0.8.2") || includeName.equals("visui"))
+			else if (includeName.equals("visui-0.8.2"))
 				content = streamToString(USL.class.getResourceAsStream("visui-0.8.2.usl"));
+			else if (includeName.equals("visui-0.9.0") || includeName.equals("visui"))
+				content = streamToString(USL.class.getResourceAsStream("visui-0.9.0.usl"));
 			else
 				Utils.throwException("Invalid internal include file: " + includeName, usl, i);
 
