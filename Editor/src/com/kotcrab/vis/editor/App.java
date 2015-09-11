@@ -38,9 +38,9 @@ import java.util.jar.Manifest;
 public class App {
 	public static final String TAG = "App";
 
-	public static final int VERSION_CODE = 10;
+	public static final int VERSION_CODE = 11;
 	public static final int PLUGIN_COMPATIBILITY_CODE = 3;
-	public static final String VERSION = "0.2.4";
+	public static final String VERSION = "0.2.5-SNAPSHOT";
 
 	public static boolean buildTimestampValid = false;
 	public static String buildTimestamp;

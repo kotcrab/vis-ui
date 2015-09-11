@@ -89,6 +89,7 @@ public class ProjectIOModule extends EditorModule {
 		projectConverters.add(new DummyConverter(7, 8));
 		projectConverters.add(new ProjectConverter8to9());
 		projectConverters.add(new DummyConverter(9, 10));
+		projectConverters.add(new DummyConverter(10, 11));
 
 		for (ProjectConverter converter : projectConverters)
 			container.injectModules(converter);

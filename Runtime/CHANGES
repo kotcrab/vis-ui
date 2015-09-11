@@ -1,4 +1,6 @@
-[0.2.4] [LibGDX 1.6.4] [Snapshot]
+[0.2.5] [LibGDX 1.6.5] [Snapshot]
+
+[0.2.4] [LibGDX 1.6.4]
 -Added Spriter support
 -Fixed GWT support
 -Improved scene loading errors logging
