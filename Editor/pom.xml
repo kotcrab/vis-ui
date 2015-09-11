@@ -12,13 +12,13 @@
     <artifactId>vis-editor</artifactId>
     <packaging>jar</packaging>
     <name>VisEditor</name>
-    <version>0.2.4-SNAPSHOT</version>
+    <version>0.2.4</version>
     <description>Scene Editor for LibGDX</description>
     <url>https://github.com/kotcrab/VisEditor</url>
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <visui.version>0.8.2-SNAPSHOT</visui.version>
+        <visui.version>0.8.2</visui.version>
         <build.ci.timestamp>unknown, not built using CI</build.ci.timestamp>
     </properties>
 
