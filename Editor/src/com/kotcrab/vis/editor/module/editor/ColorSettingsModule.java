@@ -43,7 +43,7 @@ import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 
 /**
- * VisEditor general settings module
+ * VisEditor colors settings module
  * @author Kotcrab
  */
 public class ColorSettingsModule extends EditorSettingsModule<ColorConfig> {
