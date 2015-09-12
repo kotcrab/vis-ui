@@ -44,6 +44,8 @@ public class TextureReloaderManager extends Manager {
 		subscription = subscriptionManager.get(Aspect.all(SpriteComponent.class, AssetComponent.class));
 	}
 
+	//TODO: use flyweights for reloading, also update other reloaders
+
 	public void reloadTextures () {
 		IntBag bag = subscription.getEntities();
 		int[] data = bag.getData();

@@ -35,6 +35,8 @@ public class ParticleInflater extends Manager {
 	private ComponentMapper<AssetComponent> assetCm;
 	private ComponentMapper<ParticleProtoComponent> protoCm;
 
+	private Entity flyweight;
+
 	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
@@ -49,6 +51,12 @@ public class ParticleInflater extends Manager {
 	}
 
 	@Override
+	protected void setWorld(World world) {
+		super.setWorld(world);
+		flyweight = Entity.createFlyweight(world);
+	}
+
+	@Override
 	protected void initialize () {
 		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(ParticleProtoComponent.class);
 		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
@@ -56,11 +64,12 @@ public class ParticleInflater extends Manager {
 	}
 
 	@Override
-	public void added (Entity e) {
-		if (protoCm.has(e) == false) return;
+	public void added (int entityId) {
+		flyweight.id = entityId;
+		if (protoCm.has(entityId) == false) return;
 
-		AssetComponent assetComponent = assetCm.get(e);
-		ParticleProtoComponent protoComponent = protoCm.get(e);
+		AssetComponent assetComponent = assetCm.get(entityId);
+		ParticleProtoComponent protoComponent = protoCm.get(entityId);
 
 		PathAsset path = (PathAsset) assetComponent.asset;
 
@@ -73,7 +82,7 @@ public class ParticleInflater extends Manager {
 		particleComponent.active = protoComponent.active;
 		particleComponent.effect.scaleEffect(1f / pixelsPerUnit);
 
-		transmuter.transmute(e);
-		e.edit().add(particleComponent);
+		transmuter.transmute(flyweight);
+		flyweight.edit().add(particleComponent);
 	}
 }

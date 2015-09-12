@@ -19,7 +19,7 @@ package com.kotcrab.vis.runtime.system;
 import com.artemis.*;
 import com.artemis.EntitySubscription.SubscriptionListener;
 import com.artemis.annotations.Wire;
-import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
@@ -47,12 +47,15 @@ public class VisGroupManager extends Manager {
 
 		subscription.addSubscriptionListener(new SubscriptionListener() {
 			@Override
-			public void inserted (ImmutableBag<Entity> entities) {
-				for (Entity entity : entities) {
-					IntArray groupIds = groupCm.get(entity).groupIds;
+			public void inserted (IntBag entities) {
+				int[] data = entities.getData();
+				for (int i = 0; i < entities.size(); i++) {
+					int entityId = data[i];
 
-					for (int i = 0; i < groupIds.size; i++) {
-						int gid = groupIds.get(i);
+					IntArray groupIds = groupCm.get(entityId).groupIds;
+
+					for (int j = 0; j < groupIds.size; j++) {
+						int gid = groupIds.get(j);
 
 						Array<Entity> groupList = groups.get(gid);
 
@@ -61,21 +64,25 @@ public class VisGroupManager extends Manager {
 							groups.put(gid, groupList);
 						}
 
-						groupList.add(entity);
+						groupList.add(world.getEntity(entityId));
 					}
+
 				}
 			}
 
 			@Override
-			public void removed (ImmutableBag<Entity> entities) {
-				for (Entity entity : entities) {
-					IntArray groupIds = groupCm.get(entity).groupIds;
+			public void removed (IntBag entities) {
+				int[] data = entities.getData();
+				for (int i = 0; i < entities.size(); i++) {
+					int entityId = data[i];
 
-					for (int i = 0; i < groupIds.size; i++) {
-						int gid = groupIds.get(i);
+					IntArray groupIds = groupCm.get(entityId).groupIds;
+
+					for (int j = 0; j < groupIds.size; j++) {
+						int gid = groupIds.get(j);
 
 						Array<Entity> groupList = groups.get(gid);
-						groupList.removeValue(entity, true);
+						groupList.removeValue(world.getEntity(entityId), true);
 
 						if (groupList.size == 0) {
 							groups.remove(gid);

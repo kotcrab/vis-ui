@@ -19,7 +19,7 @@ package com.kotcrab.vis.runtime.system;
 import com.artemis.*;
 import com.artemis.EntitySubscription.SubscriptionListener;
 import com.artemis.annotations.Wire;
-import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.runtime.component.IDComponent;
@@ -41,9 +41,11 @@ public class VisIDManager extends Manager {
 
 		subscription.addSubscriptionListener(new SubscriptionListener() {
 			@Override
-			public void inserted (ImmutableBag<Entity> entities) {
-				for (Entity entity : entities) {
-					String id = idCm.get(entity).id;
+			public void inserted (IntBag entities) {
+				int[] data = entities.getData();
+				for (int i = 0; i < entities.size(); i++) {
+					int entityId = data[i];
+					String id = idCm.get(entityId).id;
 
 					Array<Entity> idList = idStore.get(id);
 
@@ -52,17 +54,19 @@ public class VisIDManager extends Manager {
 						idStore.put(id, idList);
 					}
 
-					idList.add(entity);
+					idList.add(world.getEntity(entityId));
 				}
 			}
 
 			@Override
-			public void removed (ImmutableBag<Entity> entities) {
-				for (Entity entity : entities) {
-					String id = idCm.get(entity).id;
+			public void removed (IntBag entities) {
+				int[] data = entities.getData();
+				for (int i = 0; i < entities.size(); i++) {
+					int entityId = data[i];
+					String id = idCm.get(entityId).id;
 
 					Array<Entity> idList = idStore.get(id);
-					idList.removeValue(entity, true);
+					idList.removeValue(world.getEntity(entityId), true);
 
 					if (idList.size == 0) {
 						idStore.remove(id);

@@ -24,7 +24,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <artemis.version>0.10.2</artemis.version>
+        <artemis.version>0.12.1</artemis.version>
         <additionalparam>-Xdoclint:none</additionalparam>
         <arguments/>
     </properties>

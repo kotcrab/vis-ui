@@ -48,7 +48,7 @@ public class ComponentRemoveAction implements UndoableAction {
 			UUIDComponent uuid = entity.getComponent(UUIDComponent.class);
 			Component component = entity.getComponent(componentClazz);
 
-			componentMap.put(uuid.getUuid(), component);
+			componentMap.put(uuid.getUUID(), component);
 
 			componentManipulator.addJob(entity, component, false);
 		}
@@ -61,7 +61,7 @@ public class ComponentRemoveAction implements UndoableAction {
 
 		for (Entity entity : target.getEntities()) {
 			UUIDComponent uuid = entity.getComponent(UUIDComponent.class);
-			componentManipulator.addJob(entity, componentMap.get(uuid.getUuid()), true);
+			componentManipulator.addJob(entity, componentMap.get(uuid.getUUID()), true);
 		}
 	}
 

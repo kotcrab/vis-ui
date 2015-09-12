@@ -41,6 +41,8 @@ public class SpriteInflater extends Manager {
 	private ComponentMapper<SpriteProtoComponent> protoCm;
 	private ComponentMapper<AssetComponent> assetCm;
 
+	private Entity flyweight;
+
 	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
@@ -59,11 +61,18 @@ public class SpriteInflater extends Manager {
 	}
 
 	@Override
-	public void added (Entity e) {
-		if (protoCm.has(e) == false) return;
+	protected void setWorld(World world) {
+		super.setWorld(world);
+		flyweight = Entity.createFlyweight(world);
+	}
 
-		SpriteProtoComponent proto = protoCm.get(e);
-		AssetComponent assetComponent = assetCm.get(e);
+	@Override
+	public void added (int entityId) {
+		flyweight.id = entityId;
+		if (protoCm.has(entityId) == false) return;
+
+		SpriteProtoComponent proto = protoCm.get(entityId);
+		AssetComponent assetComponent = assetCm.get(entityId);
 
 		VisAssetDescriptor asset = assetComponent.asset;
 
@@ -99,7 +108,7 @@ public class SpriteInflater extends Manager {
 		sprite.setColor(proto.tint);
 		sprite.setFlip(proto.flipX, proto.flipY);
 
-		transmuter.transmute(e);
-		e.edit().add(spriteComponent);
+		transmuter.transmute(flyweight);
+		flyweight.edit().add(spriteComponent);
 	}
 }

@@ -35,6 +35,8 @@ public class SoundInflater extends Manager {
 	private ComponentMapper<SoundProtoComponent> soundCm;
 	private ComponentMapper<AssetComponent> assetCm;
 
+	private Entity flyweight;
+
 	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
@@ -46,6 +48,12 @@ public class SoundInflater extends Manager {
 	}
 
 	@Override
+	protected void setWorld(World world) {
+		super.setWorld(world);
+		flyweight = Entity.createFlyweight(world);
+	}
+
+	@Override
 	protected void initialize () {
 		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SoundProtoComponent.class);
 		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
@@ -53,10 +61,11 @@ public class SoundInflater extends Manager {
 	}
 
 	@Override
-	public void added (Entity e) {
-		if (soundCm.has(e) == false) return;
+	public void added (int entityId) {
+		flyweight.id = entityId;
+		if (soundCm.has(entityId) == false) return;
 
-		AssetComponent assetComponent = assetCm.get(e);
+		AssetComponent assetComponent = assetCm.get(entityId);
 
 		PathAsset asset = (PathAsset) assetComponent.asset;
 
@@ -64,7 +73,7 @@ public class SoundInflater extends Manager {
 		if(sound == null) throw new IllegalStateException("Can't load scene sound is missing: " + asset.getPath());
 		SoundComponent soundComponent = new SoundComponent(sound);
 
-		transmuter.transmute(e);
-		e.edit().add(soundComponent);
+		transmuter.transmute(flyweight);
+		flyweight.edit().add(soundComponent);
 	}
 }

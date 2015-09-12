@@ -19,7 +19,7 @@ package com.kotcrab.vis.editor.module.scene;
 import com.artemis.*;
 import com.artemis.EntitySubscription.SubscriptionListener;
 import com.artemis.annotations.Wire;
-import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
 
@@ -40,15 +40,27 @@ public class VisUUIDManager extends Manager {
 
 		subscription.addSubscriptionListener(new SubscriptionListener() {
 			@Override
-			public void inserted (ImmutableBag<Entity> entities) {
+			public void inserted (IntBag entities) {
 				ObjectMap<UUID, Entity> tmpCache = new ObjectMap<>();
-				entities.forEach(entity -> tmpCache.put(idCm.get(entity).getUuid(), entity));
+
+				int[] data = entities.getData();
+				for (int i = 0; i < entities.size(); i++) {
+					int entityId = data[i];
+					Entity entity = world.getEntity(entityId);
+					tmpCache.put(idCm.get(entityId).getUUID(), entity);
+				}
+
 				idStore.putAll(tmpCache);
 			}
 
 			@Override
-			public void removed (ImmutableBag<Entity> entities) {
-				entities.forEach(entity -> idStore.remove(idCm.get(entity).getUuid()));
+			public void removed (IntBag entities) {
+				int[] data = entities.getData();
+				for (int i = 0; i < entities.size(); i++) {
+					int entityId = data[i];
+					Entity entity = world.getEntity(entityId);
+					idStore.remove(idCm.get(entity).getUUID());
+				}
 			}
 		});
 	}

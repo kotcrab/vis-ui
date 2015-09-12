@@ -10,12 +10,12 @@ import com.artemis.Entity;
 public interface EntityProcessAgent {
 
 	/** Prepare to receive a set of entities. */
-	public void begin ();
+	void begin ();
 
 	/** Done receiving entities. */
-	public void end ();
+	void end ();
 
 	/** Process the entity. */
-	public void process (Entity e);
+	void process (Entity e);
 
 }

@@ -44,12 +44,13 @@ public class PhysicsBodyManager extends Manager {
 	}
 
 	@Override
-	public void added (Entity e) {
-		if (physicsCm.has(e) == false || polygonCm.has(e) == false || spriteCm.has(e) == false) return;
+	public void added (int entityId) {
+		Entity entity = super.world.getEntity(entityId);
+		if (physicsCm.has(entityId) == false || polygonCm.has(entityId) == false || spriteCm.has(entityId) == false) return;
 
-		PhysicsPropertiesComponent physicsProperties = physicsCm.get(e);
-		PolygonComponent polygon = polygonCm.get(e);
-		SpriteComponent sprite = spriteCm.get(e);
+		PhysicsPropertiesComponent physicsProperties = physicsCm.get(entityId);
+		PolygonComponent polygon = polygonCm.get(entityId);
+		SpriteComponent sprite = spriteCm.get(entityId);
 
 		if (physicsProperties.adjustOrigin) sprite.setOrigin(0, 0);
 
@@ -60,7 +61,7 @@ public class PhysicsBodyManager extends Manager {
 
 		Body body = world.createBody(bodyDef);
 		body.setType(physicsProperties.bodyType);
-		body.setUserData(e);
+		body.setUserData(entity);
 
 		body.setGravityScale(physicsProperties.gravityScale);
 		body.setLinearDamping(physicsProperties.linearDamping);
@@ -92,6 +93,6 @@ public class PhysicsBodyManager extends Manager {
 			shape.dispose();
 		}
 
-		e.edit().add(new PhysicsComponent(body));
+		entity.edit().add(new PhysicsComponent(body));
 	}
 }

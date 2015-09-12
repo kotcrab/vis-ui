@@ -31,6 +31,8 @@ import com.kotcrab.vis.runtime.component.ShaderProtoComponent;
 public class ShaderInflater extends Manager {
 	private ComponentMapper<ShaderProtoComponent> protoCm;
 
+	private Entity flyweight;
+
 	private EntityTransmuter transmuter;
 
 	private AssetManager manager;
@@ -46,10 +48,17 @@ public class ShaderInflater extends Manager {
 	}
 
 	@Override
-	public void added (Entity e) {
-		if (protoCm.has(e) == false) return;
+	protected void setWorld(World world) {
+		super.setWorld(world);
+		flyweight = Entity.createFlyweight(world);
+	}
 
-		ShaderProtoComponent protoComponent = protoCm.get(e);
+	@Override
+	public void added (int entityId) {
+		flyweight.id = entityId;
+		if (protoCm.has(entityId) == false) return;
+
+		ShaderProtoComponent protoComponent = protoCm.get(entityId);
 
 		if (protoComponent.asset != null) {
 			String shaderPath = protoComponent.asset.getPathWithoutExtension();
@@ -57,10 +66,9 @@ public class ShaderInflater extends Manager {
 			if (program == null)
 				throw new IllegalStateException("Can't load scene, shader program is missing:" + shaderPath);
 
-			transmuter.transmute(e);
-			e.edit().add(new ShaderComponent(protoComponent.asset, program));
+			transmuter.transmute(flyweight);
+			flyweight.edit().add(new ShaderComponent(protoComponent.asset, program));
 		} else
-			transmuter.transmute(e);
-
+			transmuter.transmute(flyweight);
 	}
 }

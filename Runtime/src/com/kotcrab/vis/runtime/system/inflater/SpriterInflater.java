@@ -31,6 +31,8 @@ public class SpriterInflater extends Manager {
 	private ComponentMapper<SpriterProtoComponent> protoCm;
 	private ComponentMapper<AssetComponent> assetCm;
 
+	private Entity flyweight;
+
 	private EntityTransmuter transmuter;
 
 	private AssetManager manager;
@@ -46,11 +48,18 @@ public class SpriterInflater extends Manager {
 	}
 
 	@Override
-	public void added (Entity e) {
-		if (protoCm.has(e) == false) return;
+	protected void setWorld(World world) {
+		super.setWorld(world);
+		flyweight = Entity.createFlyweight(world);
+	}
 
-		AssetComponent assetComponent = assetCm.get(e);
-		SpriterProtoComponent protoComponent = protoCm.get(e);
+	@Override
+	public void added (int entityId) {
+		flyweight.id = entityId;
+		if (protoCm.has(entityId) == false) return;
+
+		AssetComponent assetComponent = assetCm.get(entityId);
+		SpriterProtoComponent protoComponent = protoCm.get(entityId);
 
 		SpriterAsset asset = (SpriterAsset) assetComponent.asset;
 		SpriterData data = manager.get(asset.getPath(), SpriterData.class);
@@ -59,7 +68,7 @@ public class SpriterInflater extends Manager {
 
 		protoComponent.fill(component);
 
-		transmuter.transmute(e);
-		e.edit().add(component);
+		transmuter.transmute(flyweight);
+		flyweight.edit().add(component);
 	}
 }

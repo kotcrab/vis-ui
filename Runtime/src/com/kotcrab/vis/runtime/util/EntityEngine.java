@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.runtime.util;
 
+import com.artemis.SystemInvocationStrategy;
 import com.artemis.World;
 
 /**
@@ -25,5 +26,10 @@ import com.artemis.World;
 public class EntityEngine extends World {
 	public EntityEngine (EntityEngineConfiguration configuration) {
 		super(configuration.build());
+	}
+
+	@Override
+	public void setInvocationStrategy (SystemInvocationStrategy invocationStrategy) {
+		super.setInvocationStrategy(invocationStrategy);
 	}
 }

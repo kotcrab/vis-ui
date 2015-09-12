@@ -35,6 +35,8 @@ public class MusicInflater extends Manager {
 	private ComponentMapper<AssetComponent> assetCm;
 	private ComponentMapper<MusicProtoComponent> protoCm;
 
+	private Entity flyweight;
+
 	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
@@ -46,6 +48,12 @@ public class MusicInflater extends Manager {
 	}
 
 	@Override
+	protected void setWorld(World world) {
+		super.setWorld(world);
+		flyweight = Entity.createFlyweight(world);
+	}
+
+	@Override
 	protected void initialize () {
 		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(MusicProtoComponent.class);
 		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
@@ -53,11 +61,12 @@ public class MusicInflater extends Manager {
 	}
 
 	@Override
-	public void added (Entity e) {
-		if (protoCm.has(e) == false) return;
+	public void added (int entityId) {
+		flyweight.id = entityId;
+		if (protoCm.has(entityId) == false) return;
 
-		AssetComponent assetComponent = assetCm.get(e);
-		MusicProtoComponent musicProtoComponent = protoCm.get(e);
+		AssetComponent assetComponent = assetCm.get(entityId);
+		MusicProtoComponent musicProtoComponent = protoCm.get(entityId);
 
 		PathAsset asset = (PathAsset) assetComponent.asset;
 
@@ -69,7 +78,7 @@ public class MusicInflater extends Manager {
 		musicComponent.setPlayOnStart(musicProtoComponent.playOnStart);
 		musicComponent.setVolume(musicProtoComponent.volume);
 
-		transmuter.transmute(e);
-		e.edit().add(musicComponent);
+		transmuter.transmute(flyweight);
+		flyweight.edit().add(musicComponent);
 	}
 }

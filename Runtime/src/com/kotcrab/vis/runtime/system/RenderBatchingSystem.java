@@ -19,6 +19,7 @@ package com.kotcrab.vis.runtime.system;
 import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
+import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -45,6 +46,7 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 	private ComponentMapper<RenderableComponent> renderableCm;
 	private ComponentMapper<ShaderComponent> shaderCm;
 
+	private Entity flyweight;
 	private boolean sortedDirty = false;
 	private final Bag<Job> sortedJobs = new Bag<Job>();
 
@@ -56,20 +58,26 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 		this.usingFromEditor = usingFromEditor;
 	}
 
+	@Override
+	protected void setWorld(World world) {
+		super.setWorld(world);
+		flyweight = createFlyweightEntity();
+	}
+
 	/**
 	 * Declare entity relevant for agent.
 	 * <p>
 	 * After this is called, the principal can use the agent
 	 * interface to begin/end and process the given entity.
-	 * @param e entity to process
+	 * @param entityId entityId to process
 	 * @param agent interface to dispatch with.
 	 */
 	@Override
-	public void registerAgent (Entity e, EntityProcessAgent agent) {
-		if (!renderableCm.has(e))
+	public void registerAgent (int entityId, EntityProcessAgent agent) {
+		if (!renderableCm.has(entityId))
 			throw new RuntimeException("RenderBatchingSystem requires agents entities to have component Renderable.");
 		// register new job. this will influence sorting order.
-		sortedJobs.add(new Job(e, agent));
+		sortedJobs.add(new Job(entityId, agent));
 		sortedDirty = true;
 	}
 
@@ -78,16 +86,16 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 	 * <p>
 	 * After this is called, the principal should no longer
 	 * attempt to process the entity with the agent.
-	 * @param e entity to process
+	 * @param entityId entityId to process
 	 * @param agent interface to dispatch with.
 	 */
 	@Override
-	public void unregisterAgent (Entity e, EntityProcessAgent agent) {
+	public void unregisterAgent (int entityId, EntityProcessAgent agent) {
 		// forget about the job.
 		final Object[] data = sortedJobs.getData();
 		for (int i = 0, s = sortedJobs.size(); i < s; i++) {
 			final Job e2 = (Job) data[i];
-			if (e2.entity == e && e2.agent == agent) {
+			if (e2.entityId == entityId && e2.agent == agent) {
 				sortedJobs.remove(i);
 				sortedDirty = true;
 				break;
@@ -117,12 +125,14 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 			final Job job = (Job) data[i];
 			final EntityProcessAgent agent = job.agent;
 
+
+			flyweight.id = job.entityId;
 			boolean changedBatchState = false;
-			final boolean shaderUsed = shaderCm.has(job.entity);
+			final boolean shaderUsed = shaderCm.has(job.entityId);
 			LayerCordsSystem cordsSystem = null;
 
 			if (usingFromEditor == false)
-				cordsSystem = layerManager.getData(layerCm.get(job.entity).layerId).cordsSystem;
+				cordsSystem = layerManager.getData(layerCm.get(job.entityId).layerId).cordsSystem;
 
 			// agent changed? end() the last agent, and begin() the next agent.
 			if (agent != activeAgent) {
@@ -136,7 +146,7 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 			if (shaderUsed) {
 				changedBatchState = true;
 				batch.end();
-				batch.setShader(shaderCm.get(job.entity).shader);
+				batch.setShader(shaderCm.get(job.entityId).shader);
 			}
 
 			if (usingFromEditor == false && cordsSystem != activeCordsSystem) {
@@ -154,7 +164,7 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 
 			if (changedBatchState) batch.begin();
 
-			agent.process(job.entity);
+			agent.process(flyweight);
 
 			if (shaderUsed) batch.setShader(null);
 		}
@@ -179,26 +189,26 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 		return sortedDirty;
 	}
 
-	/** Rendering job wrapper. */
-	public class Job implements Comparable<Job> {
-		public final Entity entity;
-		public final EntityProcessAgent agent;
+    /** Rendering job wrapper. */
+    public class Job implements Comparable<Job> {
+        public final int entityId;
+        public final EntityProcessAgent agent;
 
-		/**
-		 * @param entity entity we will process
-		 * @param agent agent responsible for processing.
-		 */
-		public Job (final Entity entity, final EntityProcessAgent agent) {
-			this.entity = entity;
-			this.agent = agent;
-		}
+        /**
+         * @param entityId entity we will process
+         * @param agent agent responsible for processing.
+         */
+        public Job(final int entityId, final EntityProcessAgent agent) {
+            this.entityId = entityId;
+            this.agent = agent;
+        }
 
 		@Override
 		public int compareTo (Job o) {
-			int layerResult = (int) Math.signum(layerCm.get(this.entity).layerId - layerCm.get(o.entity).layerId);
+			int layerResult = (int) Math.signum(layerCm.get(this.entityId).layerId - layerCm.get(o.entityId).layerId);
 
 			if (layerResult == 0)
-				return (int) Math.signum(renderableCm.get(this.entity).zIndex - renderableCm.get(o.entity).zIndex);
+				return (int) Math.signum(renderableCm.get(this.entityId).zIndex - renderableCm.get(o.entityId).zIndex);
 			else
 				return layerResult;
 		}

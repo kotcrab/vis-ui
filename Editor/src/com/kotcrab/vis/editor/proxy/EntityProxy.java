@@ -59,7 +59,7 @@ public abstract class EntityProxy {
 
 		if (entity != null) {
 			uuidManager = entity.getWorld().getManager(VisUUIDManager.class);
-			uuid = entity.getComponent(UUIDComponent.class).getUuid();
+			uuid = entity.getComponent(UUIDComponent.class).getUUID();
 
 			polygonCm = entity.getWorld().getMapper(PolygonComponent.class);
 		}

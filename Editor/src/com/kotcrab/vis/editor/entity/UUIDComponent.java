@@ -34,7 +34,7 @@ public class UUIDComponent extends Component {
 		uuid = UUID.randomUUID();
 	}
 
-	public UUID getUuid () {
+	public UUID getUUID () {
 		return uuid;
 	}
 }

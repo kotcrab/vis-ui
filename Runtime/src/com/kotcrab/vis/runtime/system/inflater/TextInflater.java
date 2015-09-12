@@ -39,6 +39,8 @@ public class TextInflater extends Manager {
 	private ComponentMapper<AssetComponent> assetCm;
 	private ComponentMapper<TextProtoComponent> protoCm;
 
+	private Entity flyweight;
+
 	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
@@ -52,6 +54,12 @@ public class TextInflater extends Manager {
 	}
 
 	@Override
+	protected void setWorld(World world) {
+		super.setWorld(world);
+		flyweight = Entity.createFlyweight(world);
+	}
+
+	@Override
 	protected void initialize () {
 		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(TextProtoComponent.class);
 		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
@@ -59,11 +67,12 @@ public class TextInflater extends Manager {
 	}
 
 	@Override
-	public void added (Entity e) {
-		if (protoCm.has(e) == false) return;
+	public void added (int entityId) {
+		flyweight.id = entityId;
+		if (protoCm.has(entityId) == false) return;
 
-		VisAssetDescriptor asset = assetCm.get(e).asset;
-		TextProtoComponent protoComponent = protoCm.get(e);
+		VisAssetDescriptor asset = assetCm.get(entityId).asset;
+		TextProtoComponent protoComponent = protoCm.get(entityId);
 
 		BitmapFont font;
 
@@ -96,7 +105,7 @@ public class TextInflater extends Manager {
 
 		textComponent.setDistanceFieldShaderEnabled(protoComponent.isUsesDistanceField);
 
-		transmuter.transmute(e);
-		e.edit().add(textComponent);
+		transmuter.transmute(flyweight);
+		flyweight.edit().add(textComponent);
 	}
 }

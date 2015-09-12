@@ -19,7 +19,7 @@ package com.kotcrab.vis.editor.module.scene;
 import com.artemis.*;
 import com.artemis.EntitySubscription.SubscriptionListener;
 import com.artemis.annotations.Wire;
-import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.entity.EntityScheme;
@@ -51,18 +51,26 @@ public class EntityProxyCache extends Manager {
 
 		subscription.addSubscriptionListener(new SubscriptionListener() {
 			@Override
-			public void inserted (ImmutableBag<Entity> entities) {
+			public void inserted (IntBag entities) {
 				ObjectMap<Entity, EntityProxy> tmpCache = new ObjectMap<>();
 
-				entities.forEach(entity -> tmpCache.put(entity, getProxy(entity)));
+				int[] data = entities.getData();
+				for (int i = 0; i < entities.size(); i++) {
+					int entityId = data[i];
+					Entity entity = world.getEntity(entityId);
+					tmpCache.put(entity, getProxy(entity));
+				}
 
 				cache.putAll(tmpCache);
 				listeners.forEach(EntityProxyCacheListener::cacheChanged);
 			}
 
 			@Override
-			public void removed (ImmutableBag<Entity> entities) {
-				entities.forEach(cache::remove);
+			public void removed (IntBag entities) {
+				int[] data = entities.getData();
+				for (int i = 0; i < entities.size(); i++) {
+					cache.remove(world.getEntity(data[i]));
+				}
 				listeners.forEach(EntityProxyCacheListener::cacheChanged);
 			}
 		});
