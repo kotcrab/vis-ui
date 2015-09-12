@@ -1,6 +1,6 @@
-[0.2.5] [LibGDX 1.6.5] [Snapshot]
+[0.2.5] [Snapshot]
 
-[0.2.4] [LibGDX 1.6.4]
+[0.2.4]
 -Added Spriter support
 -Added "Colors" settings
  -Changed default background and grid color
@@ -12,7 +12,7 @@
 -"Add Component" dialog now can be used for multiple selected entities
 -Improved Twitter view
 
-[0.2.3] [LibGDX 1.6.4]
+[0.2.3]
 -Added VariablesComponent
 -Fixed crash when moving entities group
 -Fixed crash for very small grid sizes
@@ -22,10 +22,10 @@
 -Added Ctrl + E keyboard shortcut to export project
 -Added snapping to grid
 
-[0.2.2] [LibGDX 1.6.4]
+[0.2.2]
 -Fixed crash when creating project
 
-[0.2.1] [LibGDX 1.6.4]
+[0.2.1]
 -Unsaved resources dialog is displayed before export
 -You can hold space to pan camera
 -Scene backup file is created before saving (file with '.bak' and '.firstSaveBak' extension in `vis/modules/.sceneBackup`, that can be used when saving fails)
@@ -36,5 +36,5 @@
 -Improved Entity Properties dialog, now allows to add custom entity components
 -Added Layer settings dialog: allows to change name and coordinates system (world or screen for UI)
 
-[0.2.0] [LibGDX 1.6.4]
+[0.2.0]
 -First public release
