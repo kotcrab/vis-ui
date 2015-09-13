@@ -16,16 +16,41 @@
 
 package com.kotcrab.vis.runtime.util;
 
+import com.artemis.Entity;
+import com.artemis.EntityManager;
 import com.artemis.SystemInvocationStrategy;
 import com.artemis.World;
+import com.artemis.utils.Bag;
+
+import java.lang.reflect.Field;
 
 /**
  * Extends Artemis {@link World}. Does not provide any additional methods, exists because Artemis World duplicated box2d World class.
  * @author Kotcrab
  */
 public class EntityEngine extends World {
+
+	private Bag<Entity> entities;
+
 	public EntityEngine (EntityEngineConfiguration configuration) {
 		super(configuration.build());
+
+		//FIXME: this must be removed ASAP when artemis is fixed
+		//https://github.com/junkdog/artemis-odb/issues/347
+		try {
+			Field entitiesField = EntityManager.class.getDeclaredField("entities");
+			entitiesField.setAccessible(true);
+			entities = (Bag<Entity>) entitiesField.get(getEntityManager());
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException(e);
+		}
+	}
+
+	@Override
+	public Entity getEntity (int entityId) {
+		Entity e = entities.safeGet(entityId);
+		if(e != null) return e;
+		return super.getEntity(entityId);
 	}
 
 	@Override
