@@ -16,9 +16,11 @@
 
 package com.kotcrab.vis.runtime.component;
 
+import com.artemis.Component;
+
 /** @author Kotcrab */
-public class PositionComponent {
-	public int x;
-	public int y;
+public class PositionComponent extends Component{
+	public float x;
+	public float y;
 	public boolean dirty;
 }

@@ -171,6 +171,8 @@ public class SceneIOModule extends ProjectModule {
 		registerTagged(PhysicsPropertiesComponent.class, 228);
 		registerTagged(VariablesComponent.class, 229);
 		registerTagged(SpriterPropertiesComponent.class, 231);
+		registerTagged(PointComponent.class, 232);
+		registerTagged(PositionComponent.class, 233);
 	}
 
 	private <T> void registerTagged (Class<T> clazz, int id) {

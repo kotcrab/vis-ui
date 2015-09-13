@@ -33,12 +33,16 @@ public class MenuUtils {
 	}
 
 	public static MenuItem createMenuItem (String text, Icons icon, ButtonListener listener) {
-		return new MenuItem(text, icon != null ? Assets.getIcon(icon) : null, new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				listener.clicked();
-			}
-		});
+		if (listener == null) {
+			return new MenuItem(text, icon != null ? Assets.getIcon(icon) : null);
+		} else {
+			return new MenuItem(text, icon != null ? Assets.getIcon(icon) : null, new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent event, Actor actor) {
+					listener.clicked();
+				}
+			});
+		}
 	}
 
 }

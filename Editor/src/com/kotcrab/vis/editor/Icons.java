@@ -60,7 +60,8 @@ public enum Icons implements IconAsset {
 	ALIGN_CENTER_Y { public String getIconName () { return "align-center-y"; } },
 	CURSOR { public String getIconName () { return "cursor"; } },
 	POLYGON { public String getIconName () { return "polygon"; } },
-	PLUS { public String getIconName () { return "plus"; } },;
+	PLUS { public String getIconName () { return "plus"; } },
+	POINT { public String getIconName () { return "point-big"; } },;
 
 	// @formatter:on
 

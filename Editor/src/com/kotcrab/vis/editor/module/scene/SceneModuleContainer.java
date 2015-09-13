@@ -84,6 +84,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		RenderBatchingSystem renderBatchingSystem = config.getSystem(RenderBatchingSystem.class);
 		config.setSystem(new ParticleRenderSystem(renderBatchingSystem, true), true);
 		config.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem, scene.pixelsPerUnit), true);
+		config.setSystem(new PointRenderSystem(renderBatchingSystem, scene.pixelsPerUnit), true);
 
 	}
 

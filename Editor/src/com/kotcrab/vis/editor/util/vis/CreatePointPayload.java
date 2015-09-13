@@ -14,36 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene;
+package com.kotcrab.vis.editor.util.vis;
 
-import com.kotcrab.vis.editor.module.editor.MenuBarModule;
-import com.kotcrab.vis.ui.widget.MenuBar;
+/** @author Kotcrab */
+public class CreatePointPayload {
+	public boolean centerPosAfterCreation;
 
-/**
- * {@link MenuBarModule} listener used to pass scene scope {@link MenuBar} events to {@link SceneTab}
- * @author Kotcrab
- */
-public interface SceneMenuButtonsListener {
-	void showAlignmentTools ();
-
-	void showSceneSettings ();
-
-	void showPhysicsSettings ();
-
-	void resetCamera ();
-
-	void resetCameraZoom ();
-
-	void undo ();
-
-	void redo ();
-
-	void group ();
-
-	void ungroup ();
-
-	void addNewPointToScene ();
-
-	String getNextUndoActionName ();
-
+	public CreatePointPayload (boolean centerPosAfterCreation) {
+		this.centerPosAfterCreation = centerPosAfterCreation;
+	}
 }

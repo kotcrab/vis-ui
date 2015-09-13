@@ -1,4 +1,5 @@
 [0.2.5] [Snapshot]
+-Added PointComponent - can be placed on scene, for example for spawn points
 
 [0.2.4]
 -Added Spriter support

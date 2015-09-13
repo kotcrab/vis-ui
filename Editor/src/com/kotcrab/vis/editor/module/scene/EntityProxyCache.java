@@ -102,6 +102,7 @@ public class EntityProxyCache extends Manager {
 		if (entity.getComponent(SpriteComponent.class) != null) return new SpriteProxy(entity);
 		if (entity.getComponent(TextComponent.class) != null) return new TextProxy(entity);
 		if (entity.getComponent(SpriterComponent.class) != null) return new SpriterProxy(entity);
+		if (entity.getComponent(PointComponent.class) != null) return new PointProxy(entity, pixelsPerUnit);
 
 		return null;
 	}

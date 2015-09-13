@@ -164,6 +164,10 @@ public class CameraModule extends SceneModule {
 		return camera.zoom;
 	}
 
+	public void setZoom (float zoom) {
+		camera.zoom = zoom;
+	}
+
 	public Vector3 unproject (Vector3 vector) {
 		return viewport.unproject(vector);
 	}

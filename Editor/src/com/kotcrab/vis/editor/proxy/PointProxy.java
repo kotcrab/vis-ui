@@ -18,23 +18,20 @@ package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.editor.entity.EditorPositionComponent;
-import com.kotcrab.vis.editor.module.scene.SoundAndMusicRenderSystem;
+import com.kotcrab.vis.editor.module.scene.PointRenderSystem;
 import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
-import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.component.PointComponent;
 
 /** @author Kotcrab */
-public class SoundAndMusicProxy extends EntityProxy {
-	private EditorPositionComponent pos;
-	private boolean music;
+public class PointProxy extends EntityProxy {
+	private PointComponent pos;
 	private float renderSize;
 
-	public SoundAndMusicProxy (Entity entity, boolean music, float pixelsPerUnit) {
+	public PointProxy (Entity entity, float pixelsPerUnit) {
 		super(entity);
-		this.music = music;
-		pos = entity.getComponent(EditorPositionComponent.class);
-		renderSize = SoundAndMusicRenderSystem.ICON_SIZE / pixelsPerUnit;
+		pos = entity.getComponent(PointComponent.class);
+		renderSize = PointRenderSystem.ICON_SIZE / pixelsPerUnit;
 	}
 
 	@Override
@@ -44,12 +41,12 @@ public class SoundAndMusicProxy extends EntityProxy {
 
 	@Override
 	public String getEntityName () {
-		return music ? "MusicEntity" : "SoundEntity";
+		return "Point";
 	}
 
 	@Override
 	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
-		return assetDescriptor instanceof PathAsset;
+		return false;
 	}
 
 	private class Accessor implements BasicPropertiesAccessor {
@@ -97,7 +94,7 @@ public class SoundAndMusicProxy extends EntityProxy {
 
 		@Override
 		public Rectangle getBoundingRectangle () {
-			return bounds.set(pos.x, pos.y, renderSize, renderSize);
+			return bounds.set(pos.x - renderSize / 2, pos.y - renderSize / 2, renderSize, renderSize);
 		}
 	}
 }

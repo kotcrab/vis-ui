@@ -29,7 +29,6 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
@@ -68,6 +67,7 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.gdx.DummyMusic;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
+import com.kotcrab.vis.editor.util.vis.CreatePointPayload;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
@@ -122,7 +122,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private Array<ProtoEntity> entitiesClipboard = new Array<>();
 
 	private boolean mouseDragged;
-	/** popup menu position in scene cords system*/
+	/** popup menu position in scene cords system */
 	private float menuX, menuY;
 	private PopupMenu generalPopupMenu;
 	private PopupMenu entityPopupMenu;
@@ -298,18 +298,29 @@ public class EntityManipulatorModule extends SceneModule {
 		undoModule.execute(new EntitiesRemovedAction(sceneContainer, entityEngine, entities));
 	}
 
-	public void processDropPayload (Payload payload) {
+	public void processDropPayload (Object obj) {
 		if (scene.getActiveLayer().locked) {
 			statusBar.setText("Layer is locked!");
 			return;
 		}
 
-		Object obj = payload.getObject();
+		boolean setEntityPosToMouse = true;
 
 		Entity entity = null;
 
-		//TODO: refactor this maybe?
-		if (obj instanceof TextureAssetDescriptor) {
+		//TODO: refactor this
+
+		if (obj instanceof CreatePointPayload) {
+			CreatePointPayload pointPayload = (CreatePointPayload) obj;
+			if (pointPayload.centerPosAfterCreation) setEntityPosToMouse = false;
+
+			entity = new EntityBuilder(entityEngine)
+					.with(new PointComponent())
+					.with(new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
+					.with(new ExporterDropsComponent(RenderableComponent.class, LayerComponent.class))
+					.build();
+
+		} else if (obj instanceof TextureAssetDescriptor) {
 			TextureAssetDescriptor asset = (TextureAssetDescriptor) obj;
 
 			entity = new EntityBuilder(entityEngine)
@@ -387,14 +398,20 @@ public class EntityManipulatorModule extends SceneModule {
 
 			EntityProxy proxy = entityProxyCache.get(entity);
 
-			if (editingSettings.isSnapEnabledOrKeyPressed()) {
-				float gridSize = gridSettings.config.gridSize;
-				float x = MathUtils.floor(camera.getInputX() / gridSize) * gridSize;
-				float y = MathUtils.floor(camera.getInputY() / gridSize) * gridSize;
-				proxy.setPosition(x, y);
+			if (setEntityPosToMouse) {
+				if (editingSettings.isSnapEnabledOrKeyPressed()) {
+					float gridSize = gridSettings.config.gridSize;
+					float x = MathUtils.floor(camera.getInputX() / gridSize) * gridSize;
+					float y = MathUtils.floor(camera.getInputY() / gridSize) * gridSize;
+					proxy.setPosition(x, y);
+				} else {
+					float x = camera.getInputX() - proxy.getWidth() / 2;
+					float y = camera.getInputY() - proxy.getHeight() / 2;
+					proxy.setPosition(x, y);
+				}
 			} else {
-				float x = camera.getInputX() - proxy.getWidth() / 2;
-				float y = camera.getInputY() - proxy.getHeight() / 2;
+				float x = camera.getX() - proxy.getWidth() / 2;
+				float y = camera.getY() - proxy.getHeight() / 2;
 				proxy.setPosition(x, y);
 			}
 

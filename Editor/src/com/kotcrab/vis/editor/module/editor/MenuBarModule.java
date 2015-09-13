@@ -34,11 +34,7 @@ import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.util.OsUtils;
-import com.kotcrab.vis.ui.widget.Menu;
-import com.kotcrab.vis.ui.widget.MenuBar;
-import com.kotcrab.vis.ui.widget.MenuItem;
-import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.widget.*;
 
 /**
  * VisEditor menu bar UI component.
@@ -99,7 +95,7 @@ public class MenuBarModule extends EditorModule {
 		menu.addSeparator();
 
 		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Export", Icons.EXPORT,
-			() -> projectContainer.get(ExportersManagerModule.class).export(false)).setShortcut(Keys.CONTROL_LEFT, Keys.E));
+				() -> projectContainer.get(ExportersManagerModule.class).export(false)).setShortcut(Keys.CONTROL_LEFT, Keys.E));
 		//menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Quick Export", () -> projectContainer.get(ExportModule.class).export(true))); //TODO quick export
 		menu.addSeparator();
 
@@ -114,16 +110,24 @@ public class MenuBarModule extends EditorModule {
 		editMenu = new Menu("Edit");
 		menuBar.addMenu(editMenu);
 
+		MenuItem addNewMenuItem = createMenuItem(ControllerPolicy.SCENE, "Add New", null, null);
+		PopupMenu addNewPopupMenu = new PopupMenu();
+		addNewMenuItem.setSubMenu(addNewPopupMenu);
+		editMenu.addItem(addNewMenuItem);
+
 		//DO NOT replace this with method reference!!!
-		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Alignment tools", Icons.ALIGN_LEFT, () -> sceneButtonsListener.showAlignmentTools()));
+		editMenu.addSeparator();
+		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Alignment Tools", Icons.ALIGN_LEFT, () -> sceneButtonsListener.showAlignmentTools()));
 		editMenu.addSeparator();
 		editMenu.addItem(undoMenuItem = createMenuItem(ControllerPolicy.SCENE, "Undo", Icons.UNDO,
-			() -> sceneButtonsListener.undo()).setShortcut(Keys.CONTROL_LEFT, Keys.Z));
+				() -> sceneButtonsListener.undo()).setShortcut(Keys.CONTROL_LEFT, Keys.Z));
 		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Redo", Icons.REDO, () -> sceneButtonsListener.redo()).setShortcut(
-			Keys.CONTROL_LEFT,Keys.Y));
+				Keys.CONTROL_LEFT, Keys.Y));
 		editMenu.addSeparator();
 		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Group", null, () -> sceneButtonsListener.group()));
 		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Ungroup", null, () -> sceneButtonsListener.ungroup()));
+
+		addNewPopupMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Point", null, () -> sceneButtonsListener.addNewPointToScene()));
 	}
 
 	@SuppressWarnings("Convert2MethodRef")
