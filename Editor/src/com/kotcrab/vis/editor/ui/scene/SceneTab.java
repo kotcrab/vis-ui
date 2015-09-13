@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
-import com.artemis.EntityManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -81,7 +80,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Scene
 	private Stage stage;
 
 	private EntityEngine engine;
-	private EntityManager entityManager;
+	private EntityCounterManager entityCounter;
 	private EntityProxyCache entityProxyCache;
 
 	private ContentTable content;
@@ -113,7 +112,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Scene
 		sceneMC.injectModules(this);
 		engine = sceneMC.getEntityEngine();
 
-		entityManager = engine.getEntityManager();
+		entityCounter = engine.getManager(EntityCounterManager.class);
 		entityProxyCache = engine.getManager(EntityProxyCache.class);
 
 		VisTable leftColumn = new VisTable(false);
@@ -378,7 +377,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Scene
 	}
 
 	public String getInfoLabelText () {
-		return "Entities: " + entityManager.getActiveEntityCount() + " FPS: " + Gdx.graphics.getFramesPerSecond() + " Scene: " + scene.width + " x " + scene.height;
+		return "Entities: " + entityCounter.getEntityCount() + " FPS: " + Gdx.graphics.getFramesPerSecond() + " Scene: " + scene.width + " x " + scene.height;
 	}
 
 	public void centerAround (int entityId) {

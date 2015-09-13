@@ -72,6 +72,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setManager(new ShaderReloaderManager(projectModuleContainer.get(ShaderCacheModule.class)));
 		config.setManager(new SpriterReloaderManager(projectModuleContainer.get(SpriterCacheModule.class)));
 		config.setManager(new VisUUIDManager());
+		config.setManager(new EntityCounterManager());
 
 		config.setSystem(new GroupIdProviderSystem(), true);
 		config.setSystem(new GroupProxyProviderSystem(), true);
