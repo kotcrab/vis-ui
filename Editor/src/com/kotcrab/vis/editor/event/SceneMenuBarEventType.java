@@ -14,36 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene;
+package com.kotcrab.vis.editor.event;
 
-import com.kotcrab.vis.editor.module.editor.MenuBarModule;
-import com.kotcrab.vis.ui.widget.MenuBar;
-
-/**
- * {@link MenuBarModule} listener used to pass scene scope {@link MenuBar} events to {@link SceneTab}
- * @author Kotcrab
- */
-public interface SceneMenuButtonsListener {
-	void showAlignmentTools ();
-
-	void showSceneSettings ();
-
-	void showPhysicsSettings ();
-
-	void resetCamera ();
-
-	void resetCameraZoom ();
-
-	void undo ();
-
-	void redo ();
-
-	void group ();
-
-	void ungroup ();
-
-	void addNewPointToScene ();
-
-	String getNextUndoActionName ();
-
+/** @author Kotcrab */
+public enum SceneMenuBarEventType {
+	SHOW_ALIGNMENT_TOOLS, SHOW_SCENE_SETTINGS, SHOW_PHYSICS_SETTINGS,
+	RESET_CAMERA, RESET_ZOOM,
+	UNDO, REDO,
+	GROUP, UNGROUP,
+	ADD_NEW_POINT
 }

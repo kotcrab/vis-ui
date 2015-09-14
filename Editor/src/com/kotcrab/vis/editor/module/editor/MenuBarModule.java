@@ -20,9 +20,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.event.SceneMenuBarEvent;
 import com.kotcrab.vis.editor.module.project.ExportersManagerModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.ui.ButtonListener;
@@ -30,11 +32,13 @@ import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
 import com.kotcrab.vis.editor.ui.SceneStatusWidgetController;
 import com.kotcrab.vis.editor.ui.dialog.AboutDialog;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
-import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
+import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.*;
+
+import static com.kotcrab.vis.editor.event.SceneMenuBarEventType.*;
 
 /**
  * VisEditor menu bar UI component.
@@ -52,12 +56,13 @@ public class MenuBarModule extends EditorModule {
 	private ProjectStatusWidgetController projectController;
 	private SceneStatusWidgetController sceneController;
 
-	private SceneMenuButtonsListener sceneButtonsListener;
+	private SceneTab activeSceneTab;
 
 	private VisTable updateInfoTable;
 
 	private MenuItem undoMenuItem;
 	private Menu editMenu;
+	private Object sceneTab;
 
 	public MenuBarModule (ProjectModuleContainer moduleContainer) {
 		editor = Editor.instance;
@@ -117,17 +122,17 @@ public class MenuBarModule extends EditorModule {
 
 		//DO NOT replace this with method reference!!!
 		editMenu.addSeparator();
-		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Alignment Tools", Icons.ALIGN_LEFT, () -> sceneButtonsListener.showAlignmentTools()));
+		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Alignment Tools", Icons.ALIGN_LEFT, () -> App.eventBus.post(new SceneMenuBarEvent(SHOW_ALIGNMENT_TOOLS))));
 		editMenu.addSeparator();
 		editMenu.addItem(undoMenuItem = createMenuItem(ControllerPolicy.SCENE, "Undo", Icons.UNDO,
-				() -> sceneButtonsListener.undo()).setShortcut(Keys.CONTROL_LEFT, Keys.Z));
-		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Redo", Icons.REDO, () -> sceneButtonsListener.redo()).setShortcut(
+				() -> App.eventBus.post(new SceneMenuBarEvent(UNDO))).setShortcut(Keys.CONTROL_LEFT, Keys.Z));
+		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Redo", Icons.REDO, () -> App.eventBus.post(new SceneMenuBarEvent(REDO))).setShortcut(
 				Keys.CONTROL_LEFT, Keys.Y));
 		editMenu.addSeparator();
-		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Group", null, () -> sceneButtonsListener.group()));
-		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Ungroup", null, () -> sceneButtonsListener.ungroup()));
+		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Group", null, () -> App.eventBus.post(new SceneMenuBarEvent(GROUP))));
+		editMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Ungroup", null, () -> App.eventBus.post(new SceneMenuBarEvent(UNGROUP))));
 
-		addNewPopupMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Point", null, () -> sceneButtonsListener.addNewPointToScene()));
+		addNewPopupMenu.addItem(createMenuItem(ControllerPolicy.SCENE, "Point", null, () -> App.eventBus.post(new SceneMenuBarEvent(ADD_NEW_POINT))));
 	}
 
 	@SuppressWarnings("Convert2MethodRef")
@@ -138,12 +143,12 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "New Scene...", Icons.NEW, () -> stage.addActor(new NewSceneDialog(projectContainer).fadeIn())));
 
 		menu.addSeparator();
-		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Scene Settings...", () -> sceneButtonsListener.showSceneSettings()));
-		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Physics Settings...", () -> sceneButtonsListener.showPhysicsSettings()));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Scene Settings...", () -> App.eventBus.post(new SceneMenuBarEvent(SHOW_SCENE_SETTINGS))));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Physics Settings...", () -> App.eventBus.post(new SceneMenuBarEvent(SHOW_PHYSICS_SETTINGS))));
 		menu.addSeparator();
 		//DO NOT replace this with method reference!!!
-		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera", () -> sceneButtonsListener.resetCamera()));
-		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera Zoom", () -> sceneButtonsListener.resetCameraZoom()));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera", () -> App.eventBus.post(new SceneMenuBarEvent(RESET_CAMERA))));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera Zoom", () -> App.eventBus.post(new SceneMenuBarEvent(RESET_ZOOM))));
 
 	}
 
@@ -165,12 +170,6 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(createMenuItem("Documentation", null, () -> Gdx.net.openURI("https://github.com/kotcrab/VisEditor/wiki/Quick-Start")));
 		menu.addItem(createMenuItem("Show Log", null, () -> FileUtils.open(Log.getLogFile())));
 		menu.addItem(createMenuItem("About", Icons.INFO, () -> stage.addActor(new AboutDialog().fadeIn())));
-	}
-
-	public void setSceneButtonsListener (SceneMenuButtonsListener listener) {
-		sceneButtonsListener = listener;
-		sceneController.listenerChanged(listener);
-		updateUndoButtonText();
 	}
 
 	public Table getTable () {
@@ -218,15 +217,21 @@ public class MenuBarModule extends EditorModule {
 	}
 
 	public void updateUndoButtonText () {
-		if (sceneButtonsListener != null) {
+		if (activeSceneTab != null) {
 			//perform update next frame, this is to allow menu to close before updating it's text, otherwise menu size
 			//could change and it would miss user click and thus menu will remain opened
 			Gdx.app.postRunnable(() -> {
-				String name = sceneButtonsListener.getNextUndoActionName();
+				String name = activeSceneTab.getNextUndoActionName();
 				undoMenuItem.setText(name == null ? "Undo" : "Undo " + name);
 				editMenu.pack();
 			});
 		}
+	}
+
+	public void setSceneTab (SceneTab sceneTab) {
+		this.sceneTab = sceneTab;
+		sceneController.setSceneTabActive(sceneTab == null ? false : true);
+		updateUndoButtonText();
 	}
 
 	private enum ControllerPolicy {

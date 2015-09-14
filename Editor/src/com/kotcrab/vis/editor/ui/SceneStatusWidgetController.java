@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.ui;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;
-import com.kotcrab.vis.editor.ui.scene.SceneMenuButtonsListener;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 
 /**
@@ -34,12 +33,8 @@ public class SceneStatusWidgetController {
 		buttons = new Array<>();
 	}
 
-	public void listenerChanged (SceneMenuButtonsListener listener) {
-		if (listener == null)
-			loaded = false;
-		else
-			loaded = true;
-
+	public void setSceneTabActive (boolean active) {
+		loaded = active;
 		updateWidgets();
 	}
 

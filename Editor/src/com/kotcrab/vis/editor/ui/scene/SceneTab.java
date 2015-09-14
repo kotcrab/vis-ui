@@ -61,7 +61,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
  * {@link ModuleContainer} ({@link SceneModuleContainer})
  * @author Kotcrab
  */
-public class SceneTab extends MainContentTab implements DragAndDropTarget, SceneMenuButtonsListener, CloseTabWhenMovingResources {
+public class SceneTab extends MainContentTab implements DragAndDropTarget, CloseTabWhenMovingResources {
 	private EditorScene scene;
 
 	@InjectModule private ExtensionStorageModule pluginContainer;
@@ -219,7 +219,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Scene
 	public void onShow () {
 		super.onShow();
 		sceneMC.onShow();
-		menuBarModule.setSceneButtonsListener(this);
+		menuBarModule.setSceneTab(this);
 		focusSelf();
 		App.eventBus.post(new SceneTabShowEvent(sceneMC));
 	}
@@ -228,7 +228,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Scene
 	public void onHide () {
 		super.onHide();
 		sceneMC.onHide();
-		menuBarModule.setSceneButtonsListener(null);
+		menuBarModule.setSceneTab(null);
 		statusBarModule.setInfoLabelText("");
 		App.eventBus.post(new SceneTabHideEvent());
 	}
@@ -261,6 +261,44 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Scene
 
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_SPRITER_DATA) != 0) {
 			sceneMC.getEntityEngine().getManager(SpriterReloaderManager.class).reloadSpriterData();
+		}
+	}
+
+	@Subscribe
+	public void handleSceneMenuBarEvent (SceneMenuBarEvent event) {
+		if(isActiveTab() == false) return;
+
+		switch (event.type) {
+			case SHOW_ALIGNMENT_TOOLS:
+				alignmentTools.setVisible(true);
+				break;
+			case SHOW_SCENE_SETTINGS:
+				stage.addActor(new SceneSettingsDialog(this).fadeIn());
+				break;
+			case SHOW_PHYSICS_SETTINGS:
+				stage.addActor(new PhysicsSettingsDialog(sceneMC).fadeIn());
+				break;
+			case RESET_CAMERA:
+				cameraModule.reset();
+				break;
+			case RESET_ZOOM:
+				cameraModule.resetZoom();
+				break;
+			case UNDO:
+				undoModule.undo();
+				break;
+			case REDO:
+				undoModule.redo();
+				break;
+			case GROUP:
+				entityManipulator.groupSelection();
+				break;
+			case UNGROUP:
+				entityManipulator.ungroupSelection();
+				break;
+			case ADD_NEW_POINT:
+				entityManipulator.processDropPayload(new CreatePointPayload(true));
+				break;
 		}
 	}
 
@@ -321,57 +359,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Scene
 		App.eventBus.unregister(this);
 	}
 
-	@Override
-	public void showAlignmentTools () {
-		alignmentTools.setVisible(true);
-	}
-
-	@Override
-	public void showSceneSettings () {
-		stage.addActor(new SceneSettingsDialog(this).fadeIn());
-	}
-
-	@Override
-	public void showPhysicsSettings () {
-		stage.addActor(new PhysicsSettingsDialog(sceneMC).fadeIn());
-	}
-
-	@Override
-	public void resetCamera () {
-		cameraModule.reset();
-	}
-
-	@Override
-	public void resetCameraZoom () {
-		cameraModule.resetZoom();
-	}
-
-	@Override
-	public void undo () {
-		undoModule.undo();
-	}
-
-	@Override
-	public void redo () {
-		undoModule.redo();
-	}
-
-	@Override
-	public void group () {
-		entityManipulator.groupSelection();
-	}
-
-	@Override
-	public void ungroup () {
-		entityManipulator.ungroupSelection();
-	}
-
-	@Override
-	public void addNewPointToScene () {
-		entityManipulator.processDropPayload(new CreatePointPayload(true));
-	}
-
-	@Override
 	public String getNextUndoActionName () {
 		return undoModule.getNextUndoActionName();
 	}
