@@ -219,9 +219,13 @@ public class MenuBarModule extends EditorModule {
 
 	public void updateUndoButtonText () {
 		if (sceneButtonsListener != null) {
-			String name = sceneButtonsListener.getNextUndoActionName();
-			undoMenuItem.setText(name == null ? "Undo" : "Undo " + name);
-			editMenu.pack();
+			//perform update next frame, this is to allow menu to close before updating it's text, otherwise menu size
+			//could change and it would miss user click and thus menu will remain opened
+			Gdx.app.postRunnable(() -> {
+				String name = sceneButtonsListener.getNextUndoActionName();
+				undoMenuItem.setText(name == null ? "Undo" : "Undo " + name);
+				editMenu.pack();
+			});
 		}
 	}
 
