@@ -168,6 +168,7 @@ public class TabbedPane {
 
 		if (success) {
 			tab.setPane(null);
+			tab.onHide();
 			tab.dispose();
 			notifyListenersRemoved(tab);
 
@@ -185,6 +186,7 @@ public class TabbedPane {
 	public void removeAll () {
 		for (Tab tab : tabs) {
 			tab.setPane(null);
+			tab.onHide();
 			tab.dispose();
 		}
 

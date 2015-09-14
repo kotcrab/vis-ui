@@ -1,4 +1,5 @@
 [0.9.0] [LibGDX 1.6.5] [Snapshot]
+-Now Tab#onHide() is called before Tab#dispose()
 
 [0.8.2] [LibGDX 1.6.4]
 -API Addition: VisValidableTextField#restoreLastValidText()
