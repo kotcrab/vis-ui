@@ -22,6 +22,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglCanvas;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.util.vis.LaunchConfiguration;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -42,10 +43,12 @@ import java.util.Set;
  * @author Kotcrab
  */
 public class EditorFrame extends JFrame {
+	private final LaunchConfiguration launchConfig;
 	private Editor editor;
 	private LwjglCanvas editorCanvas;
 
-	public EditorFrame (SplashController splashController) {
+	public EditorFrame (SplashController splashController, LaunchConfiguration launchConfig) {
+		this.launchConfig = launchConfig;
 		setTitle("VisEditor");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
@@ -75,19 +78,23 @@ public class EditorFrame extends JFrame {
 		splashController.shouldClose = true;
 	}
 
+	public LaunchConfiguration getLaunchConfig () {
+		return launchConfig;
+	}
+
 	public static void main (String[] args) {
 		App.init();
 
-		boolean showSplash = true;
+		LaunchConfiguration launchConfig = new LaunchConfiguration();
 
 		for (String arg : args) {
 			if (arg.equals("--no-splash")) {
-				showSplash = false;
+				launchConfig.showSplash = false;
 				continue;
 			}
 
 			if (arg.equals("--scale-ui")) {
-				App.scaleUIEnabledFromCmd = true;
+				launchConfig.scaleUIEnabled = true;
 				continue;
 			}
 
@@ -102,7 +109,7 @@ public class EditorFrame extends JFrame {
 
 		SplashController splashController = new SplashController();
 
-		if (showSplash) {
+		if (launchConfig.showSplash) {
 			try {
 				EventQueue.invokeAndWait(() -> new Splash(splashController).setVisible(true));
 			} catch (InterruptedException | InvocationTargetException e) {
@@ -112,7 +119,7 @@ public class EditorFrame extends JFrame {
 
 		EventQueue.invokeLater(() -> {
 			try {
-				new EditorFrame(splashController).setVisible(true);
+				new EditorFrame(splashController, launchConfig).setVisible(true);
 			} catch (Exception e) {
 				splashController.fatalExceptionOccurred = true;
 				throw e;

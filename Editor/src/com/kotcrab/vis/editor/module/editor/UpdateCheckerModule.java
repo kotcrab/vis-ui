@@ -41,7 +41,7 @@ public class UpdateCheckerModule extends EditorModule {
 
 	@Override
 	public void postInit () {
-		if (settings.isCheckForUpdates() == false || App.buildTimestampValid == false) {
+		if (settings.isCheckForUpdates() == false || App.isBuildTimestampValid() == false) {
 			Log.info(TAG, "Update check skipped");
 			return;
 		}
@@ -51,7 +51,7 @@ public class UpdateCheckerModule extends EditorModule {
 		webAPI.getReleases(updateChannel, new WebAPIEditorVersionListener() {
 			@Override
 			public void result (Array<EditorBuild> builds) {
-				String parts[] = App.buildTimestamp.split("-");
+				String parts[] = App.getBuildTimestamp().split("-");
 				int currentBuildDate = Integer.parseInt(parts[0]);
 				int currentBuildNumber = Integer.parseInt(parts[1]);
 

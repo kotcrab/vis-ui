@@ -71,11 +71,9 @@ public class Log {
 			}
 
 			if (openGlCrash) {
-				if (App.OPENGL_CRASH_BEFORE_EXIT_MESSAGE) {
-					String error = "An unexpected error occurred and editor had to shutdown, please check log: " + logFile.getParent();
-					if (MathUtils.randomBoolean(0.001f)) error += " ¯\\_(ツ)_/¯";
-					JOptionPane.showMessageDialog(null, error);
-				}
+				String error = "An unexpected error occurred and editor had to shutdown, please check log: " + logFile.getParent();
+				if (MathUtils.randomBoolean(0.001f)) error += " ¯\\_(ツ)_/¯";
+				JOptionPane.showMessageDialog(null, error);
 
 				System.exit(-3);
 			}

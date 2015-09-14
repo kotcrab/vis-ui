@@ -30,7 +30,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.InjectModule;
@@ -42,6 +41,7 @@ import com.kotcrab.vis.editor.util.gdx.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.editor.util.gdx.VisValue;
 import com.kotcrab.vis.editor.util.polygon.Clipper;
+import com.kotcrab.vis.editor.util.polygon.Clipper.Polygonizer;
 import com.kotcrab.vis.editor.util.polygon.PolygonUtils;
 import com.kotcrab.vis.runtime.component.PolygonComponent;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
@@ -53,6 +53,8 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 
 /** @author Kotcrab */
 public class PolygonTool extends BaseSelectionTool {
+	public static final Polygonizer DEFAULT_POLYGONIZER = Polygonizer.EWJORDAN;
+
 	private static final String NO_POLYGON_IN_SELECTION = "No polygon component in selected entity";
 	private static final String NOTHING_SELECTED = "Select entity to edit it's polygon";
 	private static final String SELECT_ONLY_ONE = "Select only one entity to edit polygon";
@@ -398,7 +400,7 @@ public class PolygonTool extends BaseSelectionTool {
 	}
 
 	private void updateComponentFaces () {
-		component.faces = Clipper.polygonize(App.DEFAULT_POLYGONIZER, component.vertices.toArray(Vector2.class));
+		component.faces = Clipper.polygonize(DEFAULT_POLYGONIZER, component.vertices.toArray(Vector2.class));
 	}
 
 	@Override

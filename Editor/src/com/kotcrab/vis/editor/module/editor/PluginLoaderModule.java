@@ -40,7 +40,6 @@ import com.kotcrab.vis.runtime.plugin.VisPlugin;
 import com.kotcrab.vis.ui.widget.*;
 import org.apache.commons.io.IOUtils;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -55,7 +54,7 @@ import java.util.jar.Manifest;
 
 public class PluginLoaderModule extends EditorModule {
 	private static final String TAG = "PluginLoader";
-	private static final String PLUGINS_FOLDER_PATH = App.getJarFolderPath() + File.separator + "plugins";
+	private static final String PLUGINS_FOLDER_PATH = App.JAR_FOLDER_PATH + "plugins";
 
 	@InjectModule private ExtensionStorageModule pluginContainer;
 	@InjectModule private PluginSettingsModule settings;

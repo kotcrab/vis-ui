@@ -136,7 +136,7 @@ public class Editor extends ApplicationAdapter {
 
 		Log.debug("Loading completed");
 
-		if (experimentalSettings.isUIScale() || App.scaleUIEnabledFromCmd) {
+		if (experimentalSettings.isUIScale() || frame.getLaunchConfig().scaleUIEnabled) {
 			stageViewport.setUnitsPerPixel(0.5f);
 		}
 	}

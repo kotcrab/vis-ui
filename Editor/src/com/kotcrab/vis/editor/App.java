@@ -17,8 +17,10 @@
 package com.kotcrab.vis.editor;
 
 import com.kotcrab.vis.editor.event.VisEventBus;
+import com.kotcrab.vis.editor.module.editor.PluginFilesAccessModule;
 import com.kotcrab.vis.editor.util.JarUtils;
-import com.kotcrab.vis.editor.util.polygon.Clipper.Polygonizer;
+import com.kotcrab.vis.editor.util.PublicApi;
+import org.slf4j.impl.SimpleLogger;
 
 import javax.swing.JOptionPane;
 import java.io.File;
@@ -32,49 +34,71 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 /**
- * Provides VisEditor init methods, version fields, basic app data folders path.
+ * Provides access to version fields, basic app data folders path, {@link VisEventBus}.
  * @author Kotcrab
  */
+@PublicApi
 public class App {
-	public static final String TAG = "App";
+	private static boolean initialized;
 
+	private static final String TAG = "App";
+
+	/** VisEditor version code, also used as project version code. Incremented when incompatible changes are made. */
 	public static final int VERSION_CODE = 11;
+
+	/**
+	 * VisEditor plugin version code. This only informs about plugin format version, even if this code matches plugin
+	 * still may fail to load, for example when incompatibles changes were made to code.
+	 */
 	public static final int PLUGIN_COMPATIBILITY_CODE = 3;
+
+	/** VisEditor version in text format: x.y.z, may be  x.y.z-SNAPSHOT if this version is snapshot */
 	public static final String VERSION = "0.2.5-SNAPSHOT";
 
-	public static boolean buildTimestampValid = false;
-	public static String buildTimestamp;
-
-	/** If true ui scaling mode was enabled from command line arguments, this may be false if ui scaling is enabled from settings */
-	public static boolean scaleUIEnabledFromCmd;
-
-	public static final boolean OPENGL_CRASH_BEFORE_EXIT_MESSAGE = true;
+	/** If true this version is snapshot */
 	public static final boolean SNAPSHOT = VERSION.contains("SNAPSHOT");
 
-	private static String JAR_FOLDER_PATH = JarUtils.getJarPath(App.class);
+	/** If true this version of editor was build on CI server and has valid timestamp in manifest */
+	private static boolean buildTimestampValid = false;
+	/** VisEditor build timestamp, only valid if this version was built on CI server, check {@link #buildTimestampValid} first! */
+	private static String buildTimestamp;
+
+	/** Path to folder that editor jar is located, if launched from Maven or IDE this will point to Maven /target/ folder. */
+	public static final String JAR_FOLDER_PATH = JarUtils.getJarPath(App.class);
 
 	private static final String USER_HOME_PATH = System.getProperty("user.home") + File.separator;
+
+	/**
+	 * VisEditor folder path in `user.home` folder, actual location depends on OS. This SHOULD NOT be used by plugins
+	 * see {@link PluginFilesAccessModule}
+	 */
 	public static final String APP_FOLDER_PATH = USER_HOME_PATH + ".viseditor" + File.separator;
+
+	/**
+	 * VisEditor cache folder path, stores application-wide cache data (different than project cache data, that is stored inside project). This SHOULD NOT be used by plugins
+	 * see {@link PluginFilesAccessModule}
+	 */
 	public static final String CACHE_FOLDER_PATH = APP_FOLDER_PATH + "cache" + File.separator;
+
+	/** VisEditor metadata folder path. This SHOULD NOT be used by plugins see {@link PluginFilesAccessModule} */
 	public static final String METADATA_FOLDER_PATH = APP_FOLDER_PATH + "metadata" + File.separator;
 
-	public static final Polygonizer DEFAULT_POLYGONIZER = Polygonizer.EWJORDAN;
+	/** VisEditor main {@link VisEventBus} */
+	public static final VisEventBus eventBus = new VisEventBus((exception, context) -> {
+		Log.fatal("Exception when dispatching event: " + context.getSubscriber() + " to " + context.getSubscriberMethod());
+		Log.exception(exception);
+	});
 
-	public static VisEventBus eventBus;
-
+	/** Performs App init, called only once by editor. */
 	public static void init () {
+		if (initialized) throw new IllegalStateException("App cannot be initialized twice");
 		new File(APP_FOLDER_PATH).mkdir();
 
 		Log.init();
 //		com.esotericsoftware.minlog.Log.TRACE();
-		System.setProperty(org.slf4j.impl.SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "ERROR");
+		System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "ERROR");
 
 		checkCharset();
-
-		eventBus = new VisEventBus((exception, context) -> {
-			Log.fatal("Exception when dispatching event: " + context.getSubscriber() + " to " + context.getSubscriberMethod());
-			Log.exception(exception);
-		});
 
 		try {
 			buildTimestamp = readTimestamp();
@@ -88,6 +112,15 @@ public class App {
 			buildTimestampValid = true;
 
 		Log.info("Build: " + App.buildTimestamp);
+		initialized = true;
+	}
+
+	public static String getBuildTimestamp () {
+		return buildTimestamp;
+	}
+
+	public static boolean isBuildTimestampValid () {
+		return buildTimestampValid;
 	}
 
 	private static String readTimestamp () throws IOException {
@@ -162,9 +195,5 @@ public class App {
 		} catch (Exception e) {
 			Log.exception(e);
 		}
-	}
-
-	public static String getJarFolderPath () {
-		return JAR_FOLDER_PATH;
 	}
 }

@@ -24,10 +24,10 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
-import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
 import com.kotcrab.vis.editor.module.scene.VisUUIDManager;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
 import com.kotcrab.vis.editor.util.polygon.Clipper;
 import com.kotcrab.vis.runtime.accessor.*;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
@@ -204,7 +204,7 @@ public abstract class EntityProxy {
 				vertex.sub(dx, dy);
 			}
 
-			polygon.faces = Clipper.polygonize(App.DEFAULT_POLYGONIZER, polygon.vertices.toArray(Vector2.class));
+			polygon.faces = Clipper.polygonize(PolygonTool.DEFAULT_POLYGONIZER, polygon.vertices.toArray(Vector2.class));
 		}
 	}
 
