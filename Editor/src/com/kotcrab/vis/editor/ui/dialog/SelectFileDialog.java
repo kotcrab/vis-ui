@@ -33,7 +33,7 @@ import com.kotcrab.vis.ui.widget.*;
  * @author Kotcrab
  */
 public class SelectFileDialog extends VisWindow {
-	private String extension;
+	private String[] extensions;
 	private boolean hideExtension;
 	private FileHandle folder;
 	private FileDialogListener listener;
@@ -44,16 +44,18 @@ public class SelectFileDialog extends VisWindow {
 	private VisList<String> fileList;
 	private VisTextButton okButton;
 
-	public SelectFileDialog (String extension, FileHandle folder, FileDialogListener listener) {
-		this(extension, false, folder, listener);
+	/** @param extensions multiple extensions can be passed seprated with | for example: mp3|wav|ogg */
+	public SelectFileDialog (String extensions, FileHandle folder, FileDialogListener listener) {
+		this(extensions, false, folder, listener);
 	}
 
-	public SelectFileDialog (String extension, boolean hideExtension, FileHandle folder, FileDialogListener listener) {
+	/** @param extensions multiple extensions can be passed seprated with | for example: mp3|wav|ogg */
+	public SelectFileDialog (String extensions, boolean hideExtension, FileHandle folder, FileDialogListener listener) {
 		super("Select File");
-		this.extension = extension;
 		this.hideExtension = hideExtension;
 		this.folder = folder;
 		this.listener = listener;
+		this.extensions = extensions.split("\\|");
 
 		setModal(true);
 		addCloseButton();
@@ -139,8 +141,10 @@ public class SelectFileDialog extends VisWindow {
 		for (FileHandle file : directory.list()) {
 			if (file.isDirectory()) buildFileList(file);
 
-			if (file.extension().equals(extension))
-				fileMap.put(file.path().substring(folder.path().length() + 1, file.path().length() - (hideExtension ? extension.length() + 1 : 0)), file);
+			for(String extension : extensions) {
+				if (file.extension().equals(extension))
+					fileMap.put(file.path().substring(folder.path().length() + 1, file.path().length() - (hideExtension ? file.extension().length() + 1 : 0)), file);
+			}
 		}
 
 		fileList.setItems(fileMap.keys().toArray());
