@@ -99,8 +99,10 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 	}
 
 	private ATSelectFileHandler getHandler (ATSelectFile annotation) {
+		String groupClassName = annotation.handlerGroupClass();
+		String handlerAlias = annotation.handlerAlias();
+
 		try {
-			String groupClassName = annotation.handlerGroupClass();
 
 			ATSelectFileHandlerGroup group = handlerGroups.get(groupClassName);
 
@@ -117,9 +119,11 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 				handlerGroups.put(groupClassName, group);
 			}
 
-			return group.getByAlias(annotation.handlerAlias());
+			ATSelectFileHandler handler = group.getByAlias(handlerAlias);
+			if (handler == null) throw new IllegalStateException("Could not find handler for alias: " + handlerAlias + " in group: " + groupClassName);
+			return handler;
 		} catch (ReflectiveOperationException e) {
-			throw new IllegalStateException("AutoTable failed to create ATSelectFile handler for class: " + annotation.handlerGroupClass(), e);
+			throw new IllegalStateException("AutoTable failed to create ATSelectFile handler for class: " + groupClassName, e);
 		}
 	}
 
