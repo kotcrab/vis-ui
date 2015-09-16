@@ -46,6 +46,10 @@ public @interface ATSelectFile {
 	/** @return if true file selector will hide file extensions in dialog. */
 	boolean hideExtension () default false;
 
-	/** @return class name that will be used as handler. Must implement {@link ATSelectFile}. */
-	String handlerClass ();
+	/** @return class name that will be used as group handler. Must implement ATSelectFileHandlerGroup. This defaults to
+	 * VisEditor default group handler, if you are using this annotation from plugins you must change this to your own. */
+	String handlerGroupClass () default "com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.VisATSelectFileHandlerGroup";
+
+	/** @return handler alias that is used in group returned by {@link #handlerGroupClass()} */
+	String handlerAlias ();
 }

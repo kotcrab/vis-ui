@@ -14,21 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
 
-/**
- * Useful for example when you have a variable that must be changed from anonymous class or lambadas. Normally such
- * variables can't be changed because they have to be final.
- * @author Kotcrab
- * @see BiHolder
- */
-public class Holder<T> {
-	public T value;
+import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 
-	public Holder () {
-	}
+/** @author Kotcrab */
+public interface ATSelectFileHandlerGroup {
+	void setInjector(ModuleInjector injector);
 
-	public Holder (T value) {
-		this.value = value;
-	}
+	ATSelectFileHandler getByAlias (String alias);
 }

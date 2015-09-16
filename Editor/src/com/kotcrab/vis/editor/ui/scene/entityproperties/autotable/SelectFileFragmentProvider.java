@@ -30,6 +30,7 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
+import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 import com.kotcrab.vis.ui.widget.Tooltip;
@@ -45,6 +46,8 @@ import static com.kotcrab.vis.editor.util.vis.EntityUtils.getCommonString;
 /** @author Kotcrab */
 public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSelectFile> {
 	@InjectModule private FileAccessModule fileAccessModule;
+
+	private ObjectMap<String, ATSelectFileHandlerGroup> handlerGroups = new ObjectMap<>();
 
 	private ObjectMap<Field, SelectFileDialogSet> fileDialogLabels = new ObjectMap<>();
 
@@ -67,33 +70,16 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 
 		uiTable.add(table).expandX().fillX().row();
 
-		ATSelectFileHandler handler = null;
+		Holder<ATSelectFileHandler> holder = new Holder<>(getHandler(annotation));
 
-		try {
-			Class clazz = Class.forName(annotation.handlerClass());
-			Constructor constructor = clazz.getConstructor();
-			Object object = constructor.newInstance();
-
-			if (object instanceof ATSelectFileHandler == false) {
-				throw new IllegalStateException("SelectFilePropertyUI handler must be instance of SelectFilePropertyHandler");
-			}
-
-			handler = (ATSelectFileHandler) object;
-		} catch (ReflectiveOperationException e) {
-			throw new IllegalStateException("AutoTable failed, failed to create handler with class: " + annotation.handlerClass(), e);
-		}
-
-		injector.injectModules(handler);
-
-		fileDialogLabels.put(field, new SelectFileDialogSet(fileLabel, tooltip, handler));
+		fileDialogLabels.put(field, new SelectFileDialogSet(fileLabel, tooltip, holder.value));
 
 		FileHandle folder = fileAccessModule.getAssetsFolder().child(annotation.relativeFolderPath());
 
-		final ATSelectFileHandler finalHandler = handler;
 		final SelectFileDialog selectFontDialog = new SelectFileDialog(annotation.extension(), annotation.hideExtension(), folder, file -> {
 			for (EntityProxy proxy : properties.getProxies()) {
 				for (Entity entity : proxy.getEntities()) {
-					finalHandler.applyChanges(entity, file);
+					holder.value.applyChanges(entity, file);
 				}
 			}
 
@@ -110,6 +96,31 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 				Editor.instance.getStage().addActor(selectFontDialog.fadeIn());
 			}
 		});
+	}
+
+	private ATSelectFileHandler getHandler (ATSelectFile annotation) {
+		try {
+			String groupClassName = annotation.handlerGroupClass();
+
+			ATSelectFileHandlerGroup group = handlerGroups.get(groupClassName);
+
+			if (group == null) {
+				Class clazz = Class.forName(groupClassName);
+				Constructor constructor = clazz.getConstructor();
+				try {
+					group = (ATSelectFileHandlerGroup) constructor.newInstance();
+				} catch (ClassCastException castEx) {
+					throw new IllegalStateException("ATSelectFile handler group must be instance of ATSelectFileHandlerGroup", castEx);
+				}
+
+				group.setInjector(injector);
+				handlerGroups.put(groupClassName, group);
+			}
+
+			return group.getByAlias(annotation.handlerAlias());
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException("AutoTable failed to create ATSelectFile handler for class: " + annotation.handlerGroupClass(), e);
+		}
 	}
 
 	@Override
