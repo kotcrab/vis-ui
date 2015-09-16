@@ -182,6 +182,7 @@ public class Editor extends ApplicationAdapter {
 		editorMC.add(pluginContainer = new ExtensionStorageModule());
 		editorMC.add(new VisTwitterReader());
 		editorMC.add(new WebAPIModule());
+		editorMC.add(new EventBusExceptionMonitorModule());
 		editorMC.add(new RecentProjectModule());
 		editorMC.add(new PluginFilesAccessModule());
 		editorMC.add(new ColorPickerModule());

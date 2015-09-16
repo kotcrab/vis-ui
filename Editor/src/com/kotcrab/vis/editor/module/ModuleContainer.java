@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.module;
 
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 
@@ -67,28 +68,32 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 		injectAllModules();
 
 		for (int i = 0; i < modules.size; i++) {
-			Module m = modules.get(i);
+			Module module = modules.get(i);
 			if (logTrace) {
-				Log.trace(TAG, "Init: " + m.getClass().getSimpleName());
+				Log.trace(TAG, "Init: " + module.getClass().getSimpleName());
 				moduleInit = System.currentTimeMillis();
 			}
 
-			m.init();
+			module.init();
 
 			if (logTrace) {
 				Log.trace(TAG, "Module init took: " + (System.currentTimeMillis() - moduleInit) + " ms");
 			}
+
+			if (module.getClass().isAnnotationPresent(EventBusSubscriber.class)) {
+				App.eventBus.register(module);
+			}
 		}
 
 		for (int i = 0; i < modules.size; i++) {
-			Module m = modules.get(i);
+			Module module = modules.get(i);
 
 			if (logTrace) {
-				Log.trace(TAG, "Post init: " + m.getClass().getSimpleName());
+				Log.trace(TAG, "Post init: " + module.getClass().getSimpleName());
 				moduleInit = System.currentTimeMillis();
 			}
 
-			m.postInit();
+			module.postInit();
 
 			if (logTrace) {
 				Log.trace(TAG, "Module post init took: " + (System.currentTimeMillis() - moduleInit) + " ms");
@@ -157,8 +162,14 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 	}
 
 	public void dispose () {
-		for (int i = 0; i < modules.size; i++)
-			modules.get(i).dispose();
+		for (int i = 0; i < modules.size; i++) {
+			Module module = modules.get(i);
+			module.dispose();
+
+			if (module.getClass().isAnnotationPresent(EventBusSubscriber.class)) {
+				App.eventBus.unregister(module);
+			}
+		}
 
 		modules.clear();
 		initFinished = false;

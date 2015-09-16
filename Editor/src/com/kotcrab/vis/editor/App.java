@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor;
 
+import com.kotcrab.vis.editor.event.EventBusExceptionEvent;
 import com.kotcrab.vis.editor.event.VisEventBus;
 import com.kotcrab.vis.editor.module.editor.PluginFilesAccessModule;
 import com.kotcrab.vis.editor.util.JarUtils;
@@ -87,6 +88,7 @@ public class App {
 	public static final VisEventBus eventBus = new VisEventBus((exception, context) -> {
 		Log.fatal("Exception when dispatching event: " + context.getSubscriber() + " to " + context.getSubscriberMethod());
 		Log.exception(exception);
+		App.eventBus.post(new EventBusExceptionEvent(exception, context));
 	});
 
 	/** Performs App init, called only once by editor. */
