@@ -17,16 +17,11 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.artemis.Entity;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
-import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.MusicComponent;
-import com.kotcrab.vis.ui.widget.VisLabel;
 
 import static com.kotcrab.vis.editor.util.vis.EntityUtils.setCommonCheckBoxState;
 
@@ -34,7 +29,6 @@ import static com.kotcrab.vis.editor.util.vis.EntityUtils.setCommonCheckBoxState
  * Specific table for MusicComponent
  */
 public class MusicUITable extends SpecificUITable {
-	private VisLabel label;
 	private IndeterminateCheckbox loopingCheck;
 	private IndeterminateCheckbox playOnStartCheck;
 
@@ -46,13 +40,8 @@ public class MusicUITable extends SpecificUITable {
 		loopingCheck.addListener(properties.getSharedCheckBoxChangeListener());
 		playOnStartCheck.addListener(properties.getSharedCheckBoxChangeListener());
 
-		label = new VisLabel();
-		label.setColor(Color.GRAY);
-
 		left();
 		defaults().left();
-		add(new VisLabel("Music:"));
-		add(label).width(240).row();
 		add(TableBuilder.build(loopingCheck, playOnStartCheck)).colspan(2);
 	}
 
@@ -65,9 +54,6 @@ public class MusicUITable extends SpecificUITable {
 	public void updateUIValues () {
 		Array<EntityProxy> proxies = properties.getProxies();
 
-		label.setText(EntityUtils.getCommonString(proxies, "<?>", (Entity entity) -> {
-			return ((PathAsset) entity.getComponent(AssetComponent.class).asset).getPath();
-		}));
 		setCommonCheckBoxState(proxies, loopingCheck, (Entity entity) -> entity.getComponent(MusicComponent.class).isLooping());
 		setCommonCheckBoxState(proxies, playOnStartCheck, (Entity entity) -> entity.getComponent(MusicComponent.class).isPlayOnStart());
 	}

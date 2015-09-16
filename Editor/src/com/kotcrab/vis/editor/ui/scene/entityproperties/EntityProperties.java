@@ -71,9 +71,7 @@ import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.value.FloatProxyValue;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.component.PolygonComponent;
-import com.kotcrab.vis.runtime.component.ShaderComponent;
-import com.kotcrab.vis.runtime.component.VariablesComponent;
+import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ActorUtils;
 import com.kotcrab.vis.ui.util.TableUtils;
@@ -276,7 +274,6 @@ public class EntityProperties extends VisTable implements Disposable {
 		registerSpecificTable(new TtfTextUITable());
 		registerSpecificTable(new BMPTextUITable());
 		registerSpecificTable(new MusicUITable());
-		registerSpecificTable(new SoundUITable());
 		registerSpecificTable(new ParticleEffectTable());
 		registerSpecificTable(new GroupUITable());
 
@@ -287,6 +284,8 @@ public class EntityProperties extends VisTable implements Disposable {
 		registerComponentTable(new PhysicsPropertiesComponentTable(sceneMC));
 		registerComponentTable(new AutoComponentTable<>(sceneMC, VariablesComponent.class, true));
 		registerComponentTable(new SpriterPropertiesComponentTable(sceneMC));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, MusicComponent.class, false));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, SoundComponent.class, false));
 
 		propertiesTable = new VisTable(true);
 

@@ -31,6 +31,7 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
 import com.kotcrab.vis.editor.util.Holder;
+import com.kotcrab.vis.editor.util.gdx.VisWidgetValue;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 import com.kotcrab.vis.ui.widget.Tooltip;
@@ -45,6 +46,8 @@ import static com.kotcrab.vis.editor.util.vis.EntityUtils.getCommonString;
 
 /** @author Kotcrab */
 public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSelectFile> {
+	private static final int MAX_FILE_LABEL_WIDTH = 175;
+
 	@InjectModule private FileAccessModule fileAccessModule;
 
 	private ObjectMap<String, ATSelectFileHandlerGroup> handlerGroups = new ObjectMap<>();
@@ -63,7 +66,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 
 		VisTable table = new VisTable(true);
 		table.add(new VisLabel(fieldName));
-		table.add(fileLabel).expandX().fillX();
+		table.add(fileLabel).width(new VisWidgetValue(context -> Math.min(context.getMinWidth(), MAX_FILE_LABEL_WIDTH)));
 		table.add(selectFileButton);
 
 		Tooltip tooltip = new Tooltip(fileLabel, "");

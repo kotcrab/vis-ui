@@ -19,12 +19,14 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.badlogic.gdx.audio.Sound;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
+import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 
 /**
  * Stores single sound
  * @author Kotcrab
  */
 public class SoundComponent extends Component implements UsesProtoComponent {
+	@ATSelectFile(fieldName = "Sound", relativeFolderPath = "sound/", extension = "mp3|wav|ogg", hideExtension = false, handlerAlias = "sound")
 	public transient Sound sound;
 
 	public SoundComponent (Sound sound) {

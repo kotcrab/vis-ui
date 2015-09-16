@@ -20,12 +20,14 @@ import com.artemis.Component;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
+import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 
 /**
  * Stores entity Music
  * @author Kotcrab
  */
 public class MusicComponent extends Component implements UsesProtoComponent {
+	@ATSelectFile(fieldName = "Music", relativeFolderPath = "music/", extension = "mp3|wav|ogg", hideExtension = false, handlerAlias = "music")
 	public transient Music music;
 
 	private boolean playOnStart;

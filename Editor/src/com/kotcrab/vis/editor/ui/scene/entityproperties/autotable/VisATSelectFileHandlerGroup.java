@@ -18,7 +18,9 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
 
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.components.MusicATSelectFileHandler;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.ShaderATSelectFileHandler;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.components.SoundATSelectFileHandler;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 
 /** @author Kotcrab */
@@ -30,6 +32,8 @@ public class VisATSelectFileHandlerGroup implements ATSelectFileHandlerGroup {
 	@Override
 	public void setInjector (ModuleInjector injector) {
 		handlers.put("shader", new ShaderATSelectFileHandler());
+		handlers.put("music", new MusicATSelectFileHandler());
+		handlers.put("sound", new SoundATSelectFileHandler());
 
 		for (ATSelectFileHandler handler : handlers.values())
 			injector.injectModules(handler);
