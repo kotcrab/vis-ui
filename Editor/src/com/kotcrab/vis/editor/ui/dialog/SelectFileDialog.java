@@ -44,12 +44,12 @@ public class SelectFileDialog extends VisWindow {
 	private VisList<String> fileList;
 	private VisTextButton okButton;
 
-	/** @param extensions multiple extensions can be passed seprated with | for example: mp3|wav|ogg */
+	/** @param extensions multiple extensions can be passed separated with | for example: mp3|wav|ogg */
 	public SelectFileDialog (String extensions, FileHandle folder, FileDialogListener listener) {
 		this(extensions, false, folder, listener);
 	}
 
-	/** @param extensions multiple extensions can be passed seprated with | for example: mp3|wav|ogg */
+	/** @param extensions multiple extensions can be passed separated with | for example: mp3|wav|ogg */
 	public SelectFileDialog (String extensions, boolean hideExtension, FileHandle folder, FileDialogListener listener) {
 		super("Select File");
 		this.hideExtension = hideExtension;
