@@ -273,7 +273,6 @@ public class EntityProperties extends VisTable implements Disposable {
 
 		registerSpecificTable(new TtfTextUITable());
 		registerSpecificTable(new BMPTextUITable());
-		registerSpecificTable(new MusicUITable());
 		registerSpecificTable(new ParticleEffectTable());
 		registerSpecificTable(new GroupUITable());
 
