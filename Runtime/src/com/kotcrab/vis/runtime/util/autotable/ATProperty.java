@@ -27,7 +27,8 @@ import java.lang.annotation.Target;
  * This annotation is used on fields inside {@link Component}s to make them editable inside VisEditor. Target component
  * class must be registered using AutoComponentTable. See VisEditor source for more details.
  * <p>
- * This annotation supports float, int and boolean fields.
+ * This annotation supports float, int and boolean fields. It can be also used to invoke getters and setters for those
+ * primitive types on other objects types. See {@link #setStrategy()}
  * Auto table will automatically create number input field or checkbox and update it when needed.
  * @author Kotcrab
  */
@@ -42,4 +43,21 @@ public @interface ATProperty {
 
 	/** @return field min value, if target field is boolean this if ignored */
 	float min () default Float.MIN_VALUE;
+
+	/**
+	 * @return filed set strategy that will be used for this annotation, if this is set to {@link FieldSetStrategy#DIRECT_CHANGE}
+	 * this field will be tried to set directly. If this is set to {@link FieldSetStrategy#GETTER_AND_SETTER} an getter
+	 * and setter will be used to change this object, in this mode {@link #targetType()}, {@link #getterName()} and {@link #setterName()} must be set.
+	 */
+	FieldSetStrategy setStrategy () default FieldSetStrategy.DIRECT_CHANGE;
+
+	/** @return type that is used by getter and setter, used only if {@link #setStrategy()} is set to {@link FieldSetStrategy#GETTER_AND_SETTER} */
+	Class<?> targetType () default Object.class;
+
+	/** @return getter name used to get value from this object, used only if {@link #setStrategy()} is set to {@link FieldSetStrategy#GETTER_AND_SETTER} */
+	String getterName () default "";
+
+	/** @return setter name used to set value for this object, used only if {@link #setStrategy()} is set to {@link FieldSetStrategy#GETTER_AND_SETTER} */
+	String setterName () default "";
 }
+

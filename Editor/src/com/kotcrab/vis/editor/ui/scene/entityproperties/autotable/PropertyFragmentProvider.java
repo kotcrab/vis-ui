@@ -27,20 +27,25 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
+import com.kotcrab.vis.runtime.util.autotable.FieldSetStrategy;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /** @author Kotcrab */
 public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProperty> {
+	private ObjectMap<Field, PropertyAccessor> propertyAccessors = new ObjectMap<>();
 	private ObjectMap<Field, NumberInputField> numberFields = new ObjectMap<>();
 	private ObjectMap<Field, IndeterminateCheckbox> checkboxFields = new ObjectMap<>();
 
 	@Override
-	public void createUI (ATProperty annotation, Class type, Field field) {
+	public void createUI (ATProperty annotation, Class type, Field field) throws ReflectiveOperationException {
+		if(annotation.setStrategy() == FieldSetStrategy.GETTER_AND_SETTER) type = annotation.targetType();
+
 		if (type.equals(Integer.TYPE) == false && type.equals(Float.TYPE) == false && type.equals(Boolean.TYPE) == false) {
 			throw new UnsupportedOperationException("Field of this type is not supported by EntityPropertyUI: " + type);
 		}
@@ -70,17 +75,31 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 			uiTable.add(table).expandX().fillX().row();
 			numberFields.put(field, numberInputField);
 		}
+
+		switch (annotation.setStrategy()) {
+			case DIRECT_CHANGE:
+				propertyAccessors.put(field, new FieldAccessor(field));
+				break;
+			case GETTER_AND_SETTER:
+				propertyAccessors.put(field, new GetterSetterAccessor(field, annotation.targetType(), annotation.getterName(), annotation.setterName()));
+				break;
+			default:
+				throw new UnsupportedOperationException("Unsupported ATProperty set strategy: " + annotation.setStrategy());
+		}
 	}
 
 	@Override
 	public void updateUIFromEntities (Array<EntityProxy> proxies, Class type, Field field) {
+		ATProperty annotation =  field.getDeclaredAnnotation(ATProperty.class);
+		if(annotation.setStrategy() == FieldSetStrategy.GETTER_AND_SETTER) type = annotation.targetType();
+
 		if (type.equals(Boolean.TYPE)) {
 			IndeterminateCheckbox checkbox = checkboxFields.get(field);
 
 			EntityUtils.setCommonCheckBoxState(proxies, checkbox, (Entity entity) -> {
 				try {
-					return (boolean) field.get(entity.getComponent(componentClass));
-				} catch (IllegalAccessException e) {
+					return (boolean) propertyAccessors.get(field).get(entity.getComponent(componentClass));
+				} catch (ReflectiveOperationException e) {
 					throw new IllegalStateException(e);
 				}
 			});
@@ -92,8 +111,8 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 				inputField.setText(EntityUtils.getEntitiesCommonIntegerValue(proxies,
 						(Entity entity) -> {
 							try {
-								return (int) field.get(entity.getComponent(componentClass));
-							} catch (IllegalAccessException e) {
+								return (int) propertyAccessors.get(field).get(entity.getComponent(componentClass));
+							} catch (ReflectiveOperationException e) {
 								throw new IllegalStateException(e);
 							}
 						}));
@@ -101,8 +120,8 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 				inputField.setText(EntityUtils.getEntitiesCommonFloatValue(proxies,
 						(Entity entity) -> {
 							try {
-								return (float) field.get(entity.getComponent(componentClass));
-							} catch (IllegalAccessException e) {
+								return (float) propertyAccessors.get(field).get(entity.getComponent(componentClass));
+							} catch (ReflectiveOperationException e) {
 								throw new IllegalStateException(e);
 							}
 						}));
@@ -112,9 +131,12 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 
 	@Override
 	public void setToEntities (Class type, Field field, Component component) throws ReflectiveOperationException {
+		ATProperty annotation = field.getDeclaredAnnotation(ATProperty.class);
+		if(annotation.setStrategy() == FieldSetStrategy.GETTER_AND_SETTER) type = annotation.targetType();
+
 		if (type.equals(Boolean.TYPE)) {
 			IndeterminateCheckbox checkbox = checkboxFields.get(field);
-			if (checkbox.isIndeterminate() == false) field.set(component, checkbox.isChecked());
+			if (checkbox.isIndeterminate() == false) propertyAccessors.get(field).set(component, checkbox.isChecked());
 			return;
 		}
 
@@ -122,13 +144,13 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 		inputField.validateInput();
 
 		if (type.equals(Integer.TYPE)) {
-			int value = FieldUtils.getInt(inputField, (Integer) field.get(component));
-			field.set(component, value);
+			int value = FieldUtils.getInt(inputField, (Integer) propertyAccessors.get(field).get(component));
+			propertyAccessors.get(field).set(component, value);
 		}
 
 		if (type.equals(Float.TYPE)) {
-			float value = FieldUtils.getFloat(inputField, (Float) field.get(component));
-			field.set(component, value);
+			float value = FieldUtils.getFloat(inputField, (Float) propertyAccessors.get(field).get(component));
+			propertyAccessors.get(field).set(component, value);
 		}
 	}
 
@@ -139,4 +161,58 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 		else
 			return numberFields.get(field);
 	}
+
+	private interface PropertyAccessor {
+		Object get (Object obj) throws ReflectiveOperationException;
+
+		void set (Object obj, Object value) throws ReflectiveOperationException;
+	}
+
+	private static class FieldAccessor implements PropertyAccessor {
+		private Field field;
+
+		public FieldAccessor (Field field) {
+			this.field = field;
+			field.setAccessible(true);
+		}
+
+		@Override
+		public Object get (Object obj) throws ReflectiveOperationException {
+			return field.get(obj);
+		}
+
+		@Override
+		public void set (Object obj, Object value) throws ReflectiveOperationException {
+			field.set(obj, value);
+		}
+	}
+
+	private static class GetterSetterAccessor implements PropertyAccessor {
+		private Field targetField;
+		private final Method getter;
+		private final Method setter;
+
+		public GetterSetterAccessor (Field targetField, Class<?> parameter, String getterName, String setterName) throws ReflectiveOperationException {
+			this.targetField = targetField;
+			Class<?> type = targetField.getType();
+			getter = type.getMethod(getterName);
+			setter = type.getMethod(setterName, parameter);
+
+			if (getter.getReturnType().equals(parameter) == false) {
+				throw new IllegalStateException("Invalid ATProperty, getter: " + getterName + " for type: " + type
+						+ " has invalid return type: " + getter.getReturnType() + ", should be: " + parameter);
+			}
+		}
+
+		@Override
+		public Object get (Object obj) throws ReflectiveOperationException {
+			return getter.invoke(targetField.get(obj));
+		}
+
+		@Override
+		public void set (Object obj, Object value) throws ReflectiveOperationException {
+			setter.invoke(targetField.get(obj), value);
+		}
+	}
+
 }
