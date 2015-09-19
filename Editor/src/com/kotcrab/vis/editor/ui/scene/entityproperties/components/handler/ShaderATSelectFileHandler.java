@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties.components;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.components.handler;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.files.FileHandle;

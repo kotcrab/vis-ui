@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties.components;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
 
 import com.artemis.Component;
 import com.artemis.Entity;
@@ -22,8 +22,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.*;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificComponentTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.ComponentTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider.*;
 import com.kotcrab.vis.runtime.util.autotable.*;
 
 import java.lang.annotation.Annotation;
@@ -36,7 +36,7 @@ import java.lang.reflect.Field;
  * @author Kotcrab
  */
 @SuppressWarnings("unchecked")
-public class AutoComponentTable<T extends Component> extends SpecificComponentTable<T> {
+public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 	private Class<T> componentClass;
 
 	private ModuleInjector injector;

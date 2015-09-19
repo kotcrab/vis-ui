@@ -28,7 +28,6 @@ import com.kotcrab.vis.editor.module.scene.VisComponentManipulator;
 import com.kotcrab.vis.editor.module.scene.action.ComponentRemoveAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificComponentTable;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
@@ -50,7 +49,7 @@ public class ComponentPanel extends VisTable {
 
 	private Image image;
 
-	public ComponentPanel (ModuleInjector injector, VisComponentManipulator componentManipulator, String name, SpecificComponentTable componentTable) {
+	public ComponentPanel (ModuleInjector injector, VisComponentManipulator componentManipulator, String name, ComponentTable componentTable) {
 		injector.injectModules(this);
 		VisTable topTable = new VisTable(true);
 		topTable.setBackground(treeOver);

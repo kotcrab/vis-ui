@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
 import com.artemis.Entity;
@@ -30,6 +30,7 @@ import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.ATSelectFileHandlerGroup;
 import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.editor.util.gdx.VisWidgetValue;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;

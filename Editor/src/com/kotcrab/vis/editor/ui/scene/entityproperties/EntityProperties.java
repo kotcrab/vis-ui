@@ -57,7 +57,7 @@ import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.ui.TintImage;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.components.AutoComponentTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.PhysicsPropertiesComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.RenderableComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.SpriterPropertiesComponentTable;
@@ -87,7 +87,7 @@ import java.util.Iterator;
 /**
  * Entity properties dialog, used to display and change all data about currently selected entities. Multiple selection
  * is supported, even when entities have different values, <?> is used in float input fields, and intermediate checkbox are used
- * for boolean support. Undo is supported. Plugin can add custom properties tables (see {@link SpecificUITable} and {@link SpecificComponentTable}),
+ * for boolean support. Undo is supported. Plugin can add custom properties tables (see {@link SpecificUITable} and {@link ComponentTable}),
  * but they must support all base features of this dialog (multiple selection support, undo, etc.). See any class
  * from 'specifictable' and 'components' child packages for examples.
  * @author Kotcrab
@@ -148,8 +148,8 @@ public class EntityProperties extends VisTable implements Disposable {
 	private Array<SpecificUITable> specificTables = new Array<>();
 	private SpecificUITable activeSpecificTable;
 
-	private Array<SpecificComponentTable> componentTables = new Array<>();
-	private Array<SpecificComponentTable> activeComponentTables = new Array<>();
+	private Array<ComponentTable> componentTables = new Array<>();
+	private Array<ComponentTable> activeComponentTables = new Array<>();
 
 	private VisValidatableTextField idField;
 	private NumberInputField xField;
@@ -415,7 +415,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		}
 
 		if (entityComponentChanged == true) {
-			for (SpecificComponentTable table : componentTables) {
+			for (ComponentTable table : componentTables) {
 				table.componentAddedToEntities();
 			}
 		}
@@ -428,7 +428,7 @@ public class EntityProperties extends VisTable implements Disposable {
 				if (component == null) continue;
 
 				if (EntityUtils.isComponentCommon(component, entities)) {
-					SpecificComponentTable componentTable = getComponentTable(component);
+					ComponentTable componentTable = getComponentTable(component);
 
 					if (componentTable != null) {
 						activeComponentTables.add(componentTable);
@@ -447,10 +447,10 @@ public class EntityProperties extends VisTable implements Disposable {
 		invalidateHierarchy();
 	}
 
-	private <T extends Component> SpecificComponentTable getComponentTable (T component) {
+	private <T extends Component> ComponentTable getComponentTable (T component) {
 		if (componentTables.size == 0) return null;
 
-		for (SpecificComponentTable table : componentTables) {
+		for (ComponentTable table : componentTables) {
 			if (table.getComponentClass().equals(component.getClass())) return table;
 		}
 
@@ -610,7 +610,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		}
 
 		if (activeSpecificTable != null) activeSpecificTable.setValuesToEntities();
-		for (SpecificComponentTable table : new ArrayIterable<>(activeComponentTables))
+		for (ComponentTable table : new ArrayIterable<>(activeComponentTables))
 			table.setValuesToEntities();
 	}
 
@@ -658,7 +658,7 @@ public class EntityProperties extends VisTable implements Disposable {
 
 			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
 
-			for (SpecificComponentTable table : activeComponentTables) {
+			for (ComponentTable table : activeComponentTables) {
 				table.updateUIValues();
 			}
 		}
@@ -672,9 +672,9 @@ public class EntityProperties extends VisTable implements Disposable {
 					registerSpecificTable(table);
 			}
 
-			Array<SpecificComponentTable> componentTables = support.getComponentsUITables();
+			Array<ComponentTable> componentTables = support.getComponentsUITables();
 			if (componentTables != null) {
-				for (SpecificComponentTable table : componentTables)
+				for (ComponentTable table : componentTables)
 					registerComponentTable(table);
 			}
 		}
@@ -685,7 +685,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		specificUITable.setProperties(this);
 	}
 
-	private void registerComponentTable (SpecificComponentTable table) {
+	private void registerComponentTable (ComponentTable table) {
 		componentTables.add(table);
 		table.setProperties(this);
 	}

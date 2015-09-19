@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
+package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.artemis.Component;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
  * Specific objects tables allow to add custom widgets for {@link EntityProperties} dialog.
  * @author Kotcrab
  */
-public abstract class SpecificComponentTable<T extends Component> extends VisTable {
+public abstract class ComponentTable<T extends Component> extends VisTable {
 	protected EntityProperties properties;
 
-	public SpecificComponentTable () {
+	public ComponentTable () {
 		this(true);
 	}
 
-	public SpecificComponentTable (boolean useVisDefaults) {
+	public ComponentTable (boolean useVisDefaults) {
 		super(useVisDefaults);
 	}
 

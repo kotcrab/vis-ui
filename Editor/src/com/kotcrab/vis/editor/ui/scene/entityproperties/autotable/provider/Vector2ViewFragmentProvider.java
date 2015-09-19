@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
 import com.badlogic.gdx.utils.Array;

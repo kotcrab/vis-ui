@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties.components;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.components.handler;
 
 /** @author Kotcrab */
-public class SoundATSelectFileHandler extends AudioATSelectFileHandler {
+public class MusicATSelectFileHandler extends AudioATSelectFileHandler {
 	@Override
 	protected String getAudioRoot () {
-		return "sound";
+		return "music";
 	}
 }

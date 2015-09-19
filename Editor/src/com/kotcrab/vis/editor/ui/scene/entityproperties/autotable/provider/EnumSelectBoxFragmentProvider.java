@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
 import com.artemis.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoTableEnumSelectBox;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.util.autotable.ATEnumProperty;
 import com.kotcrab.vis.runtime.util.autotable.EnumNameProvider;

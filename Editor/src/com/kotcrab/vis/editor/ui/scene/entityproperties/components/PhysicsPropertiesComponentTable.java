@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.components;
 
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
 import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.editor.util.vis.ArrayUtils;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;

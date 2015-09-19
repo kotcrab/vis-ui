@@ -29,7 +29,7 @@ import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificComponentTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.ComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
 import com.kotcrab.vis.editor.util.gdx.VisDragAndDrop;
 import com.kotcrab.vis.runtime.util.EntityEngine;
@@ -86,7 +86,7 @@ public abstract class EditorEntitySupport {
 	}
 
 	/** This must return new instances every time this is called. */
-	public Array<SpecificComponentTable> getComponentsUITables () {
+	public Array<ComponentTable> getComponentsUITables () {
 		return null;
 	}
 

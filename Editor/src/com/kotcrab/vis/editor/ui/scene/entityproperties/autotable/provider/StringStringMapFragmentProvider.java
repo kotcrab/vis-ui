@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
+package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.StringStringMapView;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.VariablesComponent;
 import com.kotcrab.vis.runtime.util.autotable.ATStringStringMap;

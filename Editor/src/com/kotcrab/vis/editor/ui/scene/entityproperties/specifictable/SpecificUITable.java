@@ -18,14 +18,15 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.ComponentTable;
 import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
  * Specific objects tables allow to add custom widgets for {@link EntityProperties} dialog.
  * @author Kotcrab
- * @see SpecificComponentTable
- * @deprecated SpecificUITable are kept for backward compatibility, and are intended to be replaced by {@link SpecificComponentTable}
+ * @see ComponentTable
+ * @deprecated SpecificUITable are kept for backward compatibility, and are intended to be replaced by {@link ComponentTable}
  */
 @Deprecated @DeprecatedOn(versionCode = 10)
 public abstract class SpecificUITable extends VisTable {
