@@ -34,7 +34,7 @@ import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
  * Renders scene grid
@@ -116,7 +116,7 @@ public class GridRendererSystem extends BaseSystem {
 
 	public static class GridSettingsModule extends EditorSettingsModule<GridConfig> {
 		private VisCheckBox drawGridCheck;
-		private VisValidableTextField gridSizeField;
+		private VisValidatableTextField gridSizeField;
 
 		public GridSettingsModule () {
 			super("Grid", "gridSettings", GridConfig.class);
@@ -132,7 +132,7 @@ public class GridRendererSystem extends BaseSystem {
 			VisTable sizeTable = new VisTable(true);
 
 			sizeTable.add(new VisLabel("Grid size: "));
-			sizeTable.add(gridSizeField = new VisValidableTextField(Validators.FLOATS));
+			sizeTable.add(gridSizeField = new VisValidatableTextField(Validators.FLOATS));
 
 			prepareTable();
 			settingsTable.add(drawGridCheck = new VisCheckBox("Draw grid", config.drawGrid)).left();

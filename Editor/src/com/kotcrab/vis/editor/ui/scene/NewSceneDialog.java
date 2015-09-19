@@ -53,13 +53,13 @@ public class NewSceneDialog extends VisWindow {
 	@InjectModule private SceneCacheModule sceneCache;
 	@InjectModule private SceneTabsModule sceneTabsModule;
 
-	private VisValidableTextField nameTextField;
-	private VisValidableTextField pathTextField;
+	private VisValidatableTextField nameTextField;
+	private VisValidatableTextField pathTextField;
 
-	private VisValidableTextField widthField;
-	private VisValidableTextField heightField;
+	private VisValidatableTextField widthField;
+	private VisValidatableTextField heightField;
 
-	private VisValidableTextField pixelsPerUnitField;
+	private VisValidatableTextField pixelsPerUnitField;
 
 	private EnumSelectBox<SceneViewport> viewportModeSelectBox;
 
@@ -88,8 +88,8 @@ public class NewSceneDialog extends VisWindow {
 	}
 
 	private void createUI () {
-		nameTextField = new VisValidableTextField();
-		pathTextField = new VisValidableTextField("/scene/");
+		nameTextField = new VisValidatableTextField();
+		pathTextField = new VisValidatableTextField("/scene/");
 		viewportModeSelectBox = new EnumSelectBox<>(SceneViewport.class);
 
 		errorLabel = new VisLabel();
@@ -117,15 +117,15 @@ public class NewSceneDialog extends VisWindow {
 		add(viewportModeSelectBox);
 		row();
 
-		pixelsPerUnitField = new VisValidableTextField("100");
+		pixelsPerUnitField = new VisValidatableTextField("100");
 		pixelsPerUnitField.setTextFieldFilter(new DigitsOnlyFilter());
 
 		add(new VisLabel("Pixels per unit"));
 		add(pixelsPerUnitField).left().width(60);
 		row();
 
-		widthField = new VisValidableTextField("12.8");
-		heightField = new VisValidableTextField("7.2");
+		widthField = new VisValidatableTextField("12.8");
+		heightField = new VisValidatableTextField("7.2");
 		widthField.setTextFieldFilter(new FloatDigitsOnlyFilter(false));
 		heightField.setTextFieldFilter(new FloatDigitsOnlyFilter(false));
 

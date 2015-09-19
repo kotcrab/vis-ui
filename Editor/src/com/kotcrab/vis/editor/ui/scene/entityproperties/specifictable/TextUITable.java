@@ -39,7 +39,7 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 import static com.kotcrab.vis.editor.util.vis.EntityUtils.getCommonString;
 import static com.kotcrab.vis.editor.util.vis.EntityUtils.setCommonCheckBoxState;
@@ -55,7 +55,7 @@ public abstract class TextUITable extends SpecificUITable {
 
 	private IndeterminateCheckbox autoCenterOrigin;
 
-	private VisValidableTextField textField;
+	private VisValidatableTextField textField;
 
 	private VisLabel fontLabel;
 	protected VisImageButton selectFontButton;
@@ -64,7 +64,7 @@ public abstract class TextUITable extends SpecificUITable {
 
 	@Override
 	protected void init () {
-		textField = new VisValidableTextField();
+		textField = new VisValidatableTextField();
 		textField.addListener(properties.getSharedChangeListener());
 		textField.setProgrammaticChangeEvents(false);
 

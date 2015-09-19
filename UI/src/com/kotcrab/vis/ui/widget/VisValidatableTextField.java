@@ -30,7 +30,7 @@ import com.kotcrab.vis.ui.util.Validators;
  * @see Validators
  * @see InputValidator
  */
-public class VisValidableTextField extends VisTextField {
+public class VisValidatableTextField extends VisTextField {
 	private Array<InputValidator> validators = new Array<InputValidator>();
 	private boolean validationEnabled = true;
 
@@ -38,23 +38,23 @@ public class VisValidableTextField extends VisTextField {
 	private boolean restoreLastValid = false;
 	private String lastValid;
 
-	public VisValidableTextField () {
+	public VisValidatableTextField () {
 		super();
 		init();
 	}
 
-	public VisValidableTextField (String text) {
+	public VisValidatableTextField (String text) {
 		super(text);
 		init();
 	}
 
-	public VisValidableTextField (InputValidator validator) {
+	public VisValidatableTextField (InputValidator validator) {
 		super();
 		addValidator(validator);
 		init();
 	}
 
-	public VisValidableTextField (InputValidator... validators) {
+	public VisValidatableTextField (InputValidator... validators) {
 		super();
 		for (InputValidator validator : validators)
 			addValidator(validator);
@@ -62,14 +62,14 @@ public class VisValidableTextField extends VisTextField {
 		init();
 	}
 
-	public VisValidableTextField (boolean restoreLastValid, InputValidator validator) {
+	public VisValidatableTextField (boolean restoreLastValid, InputValidator validator) {
 		super();
 		addValidator(validator);
 		init();
 		setRestoreLastValid(restoreLastValid);
 	}
 
-	public VisValidableTextField (boolean restoreLastValid, InputValidator... validators) {
+	public VisValidatableTextField (boolean restoreLastValid, InputValidator... validators) {
 		super();
 		for (InputValidator validator : validators)
 			addValidator(validator);
@@ -168,7 +168,7 @@ public class VisValidableTextField extends VisTextField {
 			throw new IllegalStateException("Restore last valid is not enabled, see #setRestoreLastValid(boolean)");
 
 		//use super.setText to skip input validation and do not fire programmatic change event
-		VisValidableTextField.super.setText(lastValid);
+		VisValidatableTextField.super.setText(lastValid);
 		setInputValid(true);
 	}
 

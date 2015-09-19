@@ -24,14 +24,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.widget.VisTextField;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
  * Fields used to enter color numbers in color picker, verifies max allowed value
  * provides quick increment/decrement of current value by pressing [shift +] plus or minus on numpad
  * @author Kotcrab
  */
-public class ColorInputField extends VisValidableTextField {
+public class ColorInputField extends VisValidatableTextField {
 	private int value;
 	private int maxValue;
 

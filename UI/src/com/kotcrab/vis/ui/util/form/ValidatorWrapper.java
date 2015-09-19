@@ -17,10 +17,10 @@
 package com.kotcrab.vis.ui.util.form;
 
 import com.kotcrab.vis.ui.InputValidator;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
- * Allows standard InputValidator to be used with {@link SimpleFormValidator#custom(VisValidableTextField, FormInputValidator)}
+ * Allows standard InputValidator to be used with {@link SimpleFormValidator#custom(VisValidatableTextField, FormInputValidator)}
  * Wraps standard input validator and adds error message
  * @author Kotcrab
  */

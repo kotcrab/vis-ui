@@ -41,9 +41,9 @@ public class StringStringMapView extends VisTable {
 
 	private KeyExistsValidator keyExistsValidator = new KeyExistsValidator();
 
-	private Array<VisValidableTextField> keyFields = new Array<>();
+	private Array<VisValidatableTextField> keyFields = new Array<>();
 	private Array<VisTextField> valueFields = new Array<>();
-	private VisValidableTextField newVariableField;
+	private VisValidatableTextField newVariableField;
 
 	public StringStringMapView (String emptyMsg, EntityProperties properties) {
 		this.emptyMsg = emptyMsg;
@@ -53,7 +53,7 @@ public class StringStringMapView extends VisTable {
 		left();
 		defaults().left().spaceBottom(8);
 
-		newVariableField = new VisValidableTextField(input -> {
+		newVariableField = new VisValidatableTextField(input -> {
 			if (map == null || map.size == 0) return true;
 			return !map.containsKey(input);
 		});
@@ -105,7 +105,7 @@ public class StringStringMapView extends VisTable {
 
 				for (Entry<String, String> e : map.entries()) {
 					//TODO: [misc] we can reuse fields to reduce overhead
-					VisValidableTextField keyField = new VisValidableTextField(keyExistsValidator);
+					VisValidatableTextField keyField = new VisValidatableTextField(keyExistsValidator);
 					VisTextField valueField = new VisTextField();
 					VisImageButton deleteButton = new VisImageButton(VisUI.getSkin().getDrawable("icon-close"));
 
@@ -147,7 +147,7 @@ public class StringStringMapView extends VisTable {
 		map.clear();
 
 		for (int i = 0; i < keyFields.size; i++) {
-			VisValidableTextField keyField = keyFields.get(i);
+			VisValidatableTextField keyField = keyFields.get(i);
 			VisTextField valueField = valueFields.get(i);
 
 			if (keyField.isInputValid() == false) keyField.restoreLastValidText();
@@ -161,7 +161,7 @@ public class StringStringMapView extends VisTable {
 		public boolean validateInput (String input) {
 			int count = 0;
 
-			for (VisValidableTextField field : keyFields) {
+			for (VisValidatableTextField field : keyFields) {
 				if (field.getText().equals(input))
 					count++;
 			}

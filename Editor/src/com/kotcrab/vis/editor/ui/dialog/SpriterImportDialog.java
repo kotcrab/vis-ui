@@ -47,7 +47,7 @@ public class SpriterImportDialog extends VisWindow {
 	private final VisImage image;
 	private FileHandle animFolder;
 	private FileHandle visAnimFolder;
-	private final VisValidableTextField scaleField;
+	private final VisValidatableTextField scaleField;
 
 	private Array<String> warnings = new Array<>();
 
@@ -65,7 +65,7 @@ public class SpriterImportDialog extends VisWindow {
 		closeOnEscape();
 		TableUtils.setSpacingDefaults(this);
 
-		scaleField = new VisValidableTextField("1.00");
+		scaleField = new VisValidatableTextField("1.00");
 		scaleField.setTextFieldFilter(new FloatDigitsOnlyFilter(false));
 		image = new VisImage(Icons.QUESTION.drawable());
 		new Tooltip(image, "If your images are too big you can use this to rescale source images");

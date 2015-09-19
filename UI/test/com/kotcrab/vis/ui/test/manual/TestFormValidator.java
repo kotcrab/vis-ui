@@ -34,9 +34,9 @@ public class TestFormValidator extends VisWindow {
 		VisTextButton cancelButton = new VisTextButton("cancel");
 		VisTextButton acceptButton = new VisTextButton("accept");
 
-		VisValidableTextField firstNameField = new VisValidableTextField();
-		VisValidableTextField lastNameField = new VisValidableTextField();
-		VisValidableTextField age = new VisValidableTextField();
+		VisValidatableTextField firstNameField = new VisValidatableTextField();
+		VisValidatableTextField lastNameField = new VisValidatableTextField();
+		VisValidatableTextField age = new VisValidatableTextField();
 
 		VisLabel errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);

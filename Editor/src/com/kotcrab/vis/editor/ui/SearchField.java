@@ -25,7 +25,7 @@ import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
  * Search field used in {@link AssetsUIModule}
@@ -33,12 +33,12 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
  */
 public class SearchField extends VisTable {
 	private SearchFieldListener listener;
-	private VisValidableTextField searchField;
+	private VisValidatableTextField searchField;
 
 	public SearchField (SearchFieldListener listener) {
 		super(false);
 		this.listener = listener;
-		this.searchField = new VisValidableTextField();
+		this.searchField = new VisValidatableTextField();
 
 		VisImageButton clearButton = new VisImageButton(VisUI.getSkin().getDrawable("icon-close"));
 

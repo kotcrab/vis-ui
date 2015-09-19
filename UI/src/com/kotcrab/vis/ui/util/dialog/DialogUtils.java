@@ -200,7 +200,7 @@ public class DialogUtils {
 			if (validator == null)
 				field = new VisTextField();
 			else
-				field = new VisValidableTextField(validator);
+				field = new VisValidatableTextField(validator);
 
 			if (fieldTitle != null) fieldTable.add(new VisLabel(fieldTitle));
 

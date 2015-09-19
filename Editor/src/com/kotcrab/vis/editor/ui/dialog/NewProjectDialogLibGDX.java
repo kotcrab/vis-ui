@@ -29,7 +29,7 @@ import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 
 /**
@@ -37,9 +37,9 @@ import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
  * @author Kotcrab
  */
 public class NewProjectDialogLibGDX extends VisTable {
-	private VisValidableTextField projectRoot;
-	private VisValidableTextField sourceLoc;
-	private VisValidableTextField assetsLoc;
+	private VisValidatableTextField projectRoot;
+	private VisValidatableTextField sourceLoc;
+	private VisValidatableTextField assetsLoc;
 
 	private VisTextButton chooseRootButton;
 
@@ -63,10 +63,10 @@ public class NewProjectDialogLibGDX extends VisTable {
 	}
 
 	private void createUI () {
-		projectRoot = new VisValidableTextField("");
+		projectRoot = new VisValidatableTextField("");
 		chooseRootButton = new VisTextButton("Choose...");
-		sourceLoc = new VisValidableTextField("/core/src");
-		assetsLoc = new VisValidableTextField("/android/assets");
+		sourceLoc = new VisValidatableTextField("/core/src");
+		assetsLoc = new VisValidatableTextField("/android/assets");
 
 		errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);

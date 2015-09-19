@@ -28,17 +28,17 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.widget.VisTextField;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import org.apache.commons.lang3.StringUtils;
 
 import static com.kotcrab.vis.editor.util.NumberUtils.floatToString;
 
 /**
- * Extended {@link VisValidableTextField} made specifically for entering numeric values. Support keys ctrl/shift + plus/minus
+ * Extended {@link VisValidatableTextField} made specifically for entering numeric values. Support keys ctrl/shift + plus/minus
  * to quickly change field value.
  * @author Kotcrab
  */
-public class NumberInputField extends VisValidableTextField {
+public class NumberInputField extends VisValidatableTextField {
 	private static FieldValidator sharedFieldValidator = new FieldValidator();
 
 	private TimerRepeatTask repeatTask;

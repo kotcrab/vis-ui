@@ -20,12 +20,12 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /** @author Kotcrab */
 public class GroupUITable extends SpecificUITable {
 	private VisLabel idLabel;
-	private VisValidableTextField idField;
+	private VisValidatableTextField idField;
 
 	public GroupUITable () {
 		super(true);
@@ -41,7 +41,7 @@ public class GroupUITable extends SpecificUITable {
 		VisTable stringIdTable = new VisTable(true);
 
 		stringIdTable.add(new VisLabel("Group ID"));
-		stringIdTable.add(idField = new VisValidableTextField()).expandX().fillX();
+		stringIdTable.add(idField = new VisValidatableTextField()).expandX().fillX();
 		idField.setProgrammaticChangeEvents(false);
 		idField.addListener(properties.getSharedChangeListener());
 

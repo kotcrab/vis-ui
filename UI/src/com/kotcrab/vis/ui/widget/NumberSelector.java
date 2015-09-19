@@ -39,7 +39,7 @@ import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 public class NumberSelector extends VisTable {
 	private Array<NumberSelectorListener> listeners = new Array<NumberSelectorListener>();
 
-	private VisValidableTextField valueText;
+	private VisValidatableTextField valueText;
 
 	private ButtonRepeatTask buttonRepeatTask = new ButtonRepeatTask();
 	private float buttonRepeatInitialTime = 0.4f;
@@ -71,7 +71,7 @@ public class NumberSelector extends VisTable {
 		this.min = min;
 		this.step = step;
 
-		valueText = new VisValidableTextField(Validators.INTEGERS) {
+		valueText = new VisValidatableTextField(Validators.INTEGERS) {
 			@Override
 			public float getPrefWidth () {
 				return sizes.numberSelectorFieldSize;

@@ -25,7 +25,7 @@ import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
  * Makes validating forms easier
@@ -36,7 +36,7 @@ import com.kotcrab.vis.ui.widget.VisValidableTextField;
  */
 public class SimpleFormValidator {
 	private ChangeSharedListener changeListener = new ChangeSharedListener();
-	private Array<VisValidableTextField> fields = new Array<VisValidableTextField>();
+	private Array<VisValidatableTextField> fields = new Array<VisValidatableTextField>();
 
 	private Button button;
 	private Label errorMsgLabel;
@@ -48,56 +48,56 @@ public class SimpleFormValidator {
 		this.errorMsgLabel = errorMsgLabel;
 	}
 
-	public FormInputValidator notEmpty (VisValidableTextField field, String errorMsg) {
+	public FormInputValidator notEmpty (VisValidatableTextField field, String errorMsg) {
 		EmptyInputValidator validator = new EmptyInputValidator(errorMsg);
 		field.addValidator(validator);
 		add(field);
 		return validator;
 	}
 
-	public FormInputValidator integerNumber (VisValidableTextField field, String errorMsg) {
+	public FormInputValidator integerNumber (VisValidatableTextField field, String errorMsg) {
 		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, Validators.INTEGERS);
 		field.addValidator(wrapper);
 		add(field);
 		return wrapper;
 	}
 
-	public FormInputValidator floatNumber (VisValidableTextField field, String errorMsg) {
+	public FormInputValidator floatNumber (VisValidatableTextField field, String errorMsg) {
 		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, Validators.FLOATS);
 		field.addValidator(wrapper);
 		add(field);
 		return wrapper;
 	}
 
-	public FormInputValidator valueGreaterThan (VisValidableTextField field, String errorMsg, float value) {
+	public FormInputValidator valueGreaterThan (VisValidatableTextField field, String errorMsg, float value) {
 		return valueGreaterThan(field, errorMsg, value, false);
 	}
 
-	public FormInputValidator valueLesserThan (VisValidableTextField field, String errorMsg, float value) {
+	public FormInputValidator valueLesserThan (VisValidatableTextField field, String errorMsg, float value) {
 		return valueLesserThan(field, errorMsg, value, false);
 	}
 
-	public FormInputValidator valueGreaterThan (VisValidableTextField field, String errorMsg, float value, boolean equals) {
+	public FormInputValidator valueGreaterThan (VisValidatableTextField field, String errorMsg, float value, boolean equals) {
 		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, new GreaterThanValidator(value, equals));
 		field.addValidator(wrapper);
 		add(field);
 		return wrapper;
 	}
 
-	public FormInputValidator valueLesserThan (VisValidableTextField field, String errorMsg, float value, boolean equals) {
+	public FormInputValidator valueLesserThan (VisValidatableTextField field, String errorMsg, float value, boolean equals) {
 		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, new LesserThanValidator(value, equals));
 		field.addValidator(wrapper);
 		add(field);
 		return wrapper;
 	}
 
-	public FormInputValidator custom (VisValidableTextField field, FormInputValidator customValidator) {
+	public FormInputValidator custom (VisValidatableTextField field, FormInputValidator customValidator) {
 		field.addValidator(customValidator);
 		add(field);
 		return customValidator;
 	}
 
-	protected void add (VisValidableTextField field) {
+	protected void add (VisValidatableTextField field) {
 		fields.add(field);
 		field.addListener(changeListener);
 		checkAll();
@@ -107,10 +107,10 @@ public class SimpleFormValidator {
 		button.setDisabled(false);
 		errorMsgLabel.setText("");
 
-		for (VisValidableTextField field : fields)
+		for (VisValidatableTextField field : fields)
 			field.validateInput();
 
-		for (VisValidableTextField field : fields) {
+		for (VisValidatableTextField field : fields) {
 			if (field.isInputValid() == false) {
 
 				Array<InputValidator> validators = field.getValidators();

@@ -51,7 +51,7 @@ public class LayerSettingsDialog extends VisWindow {
 
 		VisLabel idLabel = new VisLabel();
 		idLabel.setColor(Color.GRAY);
-		VisValidableTextField nameField = new VisValidableTextField();
+		VisValidatableTextField nameField = new VisValidatableTextField();
 		EnumSelectBox<LayerCordsSystem> cordsSelectBox = new EnumSelectBox<>(LayerCordsSystem.class);
 		add(new VisLabel("Layer ID"), idLabel);
 		row();

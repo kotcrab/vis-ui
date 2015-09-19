@@ -26,7 +26,7 @@ import com.kotcrab.vis.ui.util.form.FormInputValidator;
 import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTextButton;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 /** TODO: Temp dialog until we have some nice way to allow user select target directory from fixed parent. */
@@ -53,7 +53,7 @@ public class EnterPathDialog extends VisWindow {
 
 		VisLabel errorLabel = new VisLabel(" ");
 		errorLabel.setColor(Color.RED);
-		VisValidableTextField fieldPath = new VisValidableTextField(parentRelativePath);
+		VisValidatableTextField fieldPath = new VisValidatableTextField(parentRelativePath);
 
 		VisTextButton refactorButton = new VisTextButton("Refactor");
 

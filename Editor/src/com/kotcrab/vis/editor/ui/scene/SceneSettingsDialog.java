@@ -38,8 +38,8 @@ public class SceneSettingsDialog extends VisWindow {
 	private SceneTab sceneTab;
 	private EditorScene scene;
 
-	private VisValidableTextField widthField;
-	private VisValidableTextField heightField;
+	private VisValidatableTextField widthField;
+	private VisValidatableTextField heightField;
 
 	private EnumSelectBox<SceneViewport> viewportModeSelectBox;
 
@@ -83,8 +83,8 @@ public class SceneSettingsDialog extends VisWindow {
 		add(viewportModeSelectBox).expand().fill();
 		row();
 
-		widthField = new VisValidableTextField(String.valueOf(scene.width));
-		heightField = new VisValidableTextField(String.valueOf(scene.height));
+		widthField = new VisValidatableTextField(String.valueOf(scene.width));
+		heightField = new VisValidatableTextField(String.valueOf(scene.height));
 		widthField.setTextFieldFilter(new FloatDigitsOnlyFilter(false));
 		heightField.setTextFieldFilter(new FloatDigitsOnlyFilter(false));
 

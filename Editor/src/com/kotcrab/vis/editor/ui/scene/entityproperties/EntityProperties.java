@@ -151,7 +151,7 @@ public class EntityProperties extends VisTable implements Disposable {
 	private Array<SpecificComponentTable> componentTables = new Array<>();
 	private Array<SpecificComponentTable> activeComponentTables = new Array<>();
 
-	private VisValidableTextField idField;
+	private VisValidatableTextField idField;
 	private NumberInputField xField;
 	private NumberInputField yField;
 	private NumberInputField xScaleField;
@@ -317,7 +317,7 @@ public class EntityProperties extends VisTable implements Disposable {
 	private void createIdTable () {
 		idTable = new VisTable(true);
 		idTable.add(new VisLabel("ID"));
-		idTable.add(idField = new VisValidableTextField()).expandX().fillX();
+		idTable.add(idField = new VisValidatableTextField()).expandX().fillX();
 		idField.setProgrammaticChangeEvents(false);
 
 		idField.addListener(sharedChangeListener);

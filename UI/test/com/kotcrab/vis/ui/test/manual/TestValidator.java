@@ -18,7 +18,7 @@ package com.kotcrab.vis.ui.test.manual;
 
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.Validators;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestValidator extends VisWindow {
@@ -29,7 +29,7 @@ public class TestValidator extends VisWindow {
 		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
-		VisValidableTextField textField = new VisValidableTextField(Validators.FLOATS);
+		VisValidatableTextField textField = new VisValidatableTextField(Validators.FLOATS);
 
 		add(textField);
 

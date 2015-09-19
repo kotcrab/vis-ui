@@ -78,7 +78,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 	private ColorChannelWidget aBar;
 
-	private VisValidableTextField hexField;
+	private VisValidatableTextField hexField;
 
 	private VisTextButton restoreButton;
 	private VisTextButton cancelButton;
@@ -181,7 +181,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 	private VisTable createHexTable () {
 		VisTable table = new VisTable(true);
 		table.add(new VisLabel(getText(HEX)));
-		table.add(hexField = new VisValidableTextField("00000000")).width(HEX_FIELD_WIDTH * sizes.scaleFactor);
+		table.add(hexField = new VisValidatableTextField("00000000")).width(HEX_FIELD_WIDTH * sizes.scaleFactor);
 		table.row();
 
 		hexField.setMaxLength(8);

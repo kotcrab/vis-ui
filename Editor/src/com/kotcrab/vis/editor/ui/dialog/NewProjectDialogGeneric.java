@@ -30,7 +30,7 @@ import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 
 /**
@@ -38,8 +38,8 @@ import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
  * @author Kotcrab
  */
 public class NewProjectDialogGeneric extends VisTable {
-	private VisValidableTextField projectRoot;
-	private VisValidableTextField outputDirectory;
+	private VisValidatableTextField projectRoot;
+	private VisValidatableTextField outputDirectory;
 
 	private VisTextButton chooseRootButton;
 	private VisTextButton chooseOutputButton;
@@ -64,8 +64,8 @@ public class NewProjectDialogGeneric extends VisTable {
 	}
 
 	private void createUI () {
-		projectRoot = new VisValidableTextField("");
-		outputDirectory = new VisValidableTextField("");
+		projectRoot = new VisValidatableTextField("");
+		outputDirectory = new VisValidatableTextField("");
 		chooseRootButton = new VisTextButton("Choose...");
 		chooseOutputButton = new VisTextButton("Choose...");
 

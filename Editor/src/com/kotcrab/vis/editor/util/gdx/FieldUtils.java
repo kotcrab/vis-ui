@@ -17,10 +17,10 @@
 package com.kotcrab.vis.editor.util.gdx;
 
 import com.kotcrab.vis.ui.widget.VisTextField;
-import com.kotcrab.vis.ui.widget.VisValidableTextField;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
- * {@link VisTextField}/{@link VisValidableTextField} related utils.
+ * {@link VisTextField}/{@link VisValidatableTextField} related utils.
  * @author Kotcrab
  */
 public class FieldUtils {
@@ -40,7 +40,7 @@ public class FieldUtils {
 		}
 	}
 
-	public static float getFloat (VisValidableTextField field, float valueIfError) {
+	public static float getFloat (VisValidatableTextField field, float valueIfError) {
 		if (field.isInputValid() == false) return valueIfError;
 
 		try {
@@ -50,7 +50,7 @@ public class FieldUtils {
 		}
 	}
 
-	public static int getInt (VisValidableTextField field, int valueIfError) {
+	public static int getInt (VisValidatableTextField field, int valueIfError) {
 		if (field.isInputValid() == false) return valueIfError;
 
 		try {
