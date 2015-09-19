@@ -30,6 +30,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 import com.kotcrab.vis.runtime.util.autotable.FieldSetStrategy;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
+import com.kotcrab.vis.ui.widget.Tooltip;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
@@ -44,16 +45,20 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 
 	@Override
 	public void createUI (ATProperty annotation, Class type, Field field) throws ReflectiveOperationException {
-		if(annotation.setStrategy() == FieldSetStrategy.GETTER_AND_SETTER) type = annotation.targetType();
+		if (annotation.setStrategy() == FieldSetStrategy.GETTER_AND_SETTER) type = annotation.targetType();
 
 		if (type.equals(Integer.TYPE) == false && type.equals(Float.TYPE) == false && type.equals(Boolean.TYPE) == false) {
 			throw new UnsupportedOperationException("Field of this type is not supported by EntityPropertyUI: " + type);
 		}
 
 		String fieldName = annotation.fieldName().equals("") ? field.getName() : annotation.fieldName();
+		String tooltipText = annotation.tooltip();
+
 		if (type.equals(Boolean.TYPE)) {
 			IndeterminateCheckbox checkbox = new IndeterminateCheckbox(fieldName);
 			checkbox.addListener(properties.getSharedCheckBoxChangeListener());
+
+			if (tooltipText.equals("") == false) new Tooltip(checkbox, tooltipText);
 
 			VisTable table = new VisTable(true);
 			table.add(checkbox).left();
@@ -61,6 +66,7 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 			checkboxFields.put(field, checkbox);
 		} else {
 			NumberInputField numberInputField = new NumberInputField(properties.getSharedFocusListener(), properties.getSharedChangeListener(), type.equals(Float.TYPE));
+			if (tooltipText.equals("") == false) new Tooltip(numberInputField, tooltipText);
 
 			if (annotation.max() != Float.MAX_VALUE)
 				numberInputField.addValidator(new LesserThanValidator(annotation.max(), true));
@@ -90,8 +96,8 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 
 	@Override
 	public void updateUIFromEntities (Array<EntityProxy> proxies, Class type, Field field) {
-		ATProperty annotation =  field.getDeclaredAnnotation(ATProperty.class);
-		if(annotation.setStrategy() == FieldSetStrategy.GETTER_AND_SETTER) type = annotation.targetType();
+		ATProperty annotation = field.getDeclaredAnnotation(ATProperty.class);
+		if (annotation.setStrategy() == FieldSetStrategy.GETTER_AND_SETTER) type = annotation.targetType();
 
 		if (type.equals(Boolean.TYPE)) {
 			IndeterminateCheckbox checkbox = checkboxFields.get(field);
@@ -132,7 +138,7 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 	@Override
 	public void setToEntities (Class type, Field field, Component component) throws ReflectiveOperationException {
 		ATProperty annotation = field.getDeclaredAnnotation(ATProperty.class);
-		if(annotation.setStrategy() == FieldSetStrategy.GETTER_AND_SETTER) type = annotation.targetType();
+		if (annotation.setStrategy() == FieldSetStrategy.GETTER_AND_SETTER) type = annotation.targetType();
 
 		if (type.equals(Boolean.TYPE)) {
 			IndeterminateCheckbox checkbox = checkboxFields.get(field);

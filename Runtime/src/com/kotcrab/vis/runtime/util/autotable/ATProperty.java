@@ -44,6 +44,9 @@ public @interface ATProperty {
 	/** @return field min value, if target field is boolean this if ignored */
 	float min () default Float.MIN_VALUE;
 
+	/** @return text that is used for this field tooltip, if text equals "" tooltip won't be created */
+	String tooltip () default "";
+
 	/**
 	 * @return filed set strategy that will be used for this annotation, if this is set to {@link FieldSetStrategy#DIRECT_CHANGE}
 	 * this field will be tried to set directly. If this is set to {@link FieldSetStrategy#GETTER_AND_SETTER} an getter
