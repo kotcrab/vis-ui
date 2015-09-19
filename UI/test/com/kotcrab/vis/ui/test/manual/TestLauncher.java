@@ -95,12 +95,12 @@ class TestApplication extends ApplicationAdapter {
 		fileMenu.addItem(new MenuItem("menuitem #3").setShortcut("f2"));
 		fileMenu.addItem(new MenuItem("menuitem #4").setShortcut("alt + f4"));
 
-		MenuItem subMenuItem = new MenuItem("subnenu #1");
+		MenuItem subMenuItem = new MenuItem("submenu #1");
 		subMenuItem.setShortcut("alt + insert");
 		subMenuItem.setSubMenu(createSubMenu());
 		fileMenu.addItem(subMenuItem);
 
-		MenuItem subMenuItem2 = new MenuItem("subnenu #2");
+		MenuItem subMenuItem2 = new MenuItem("submenu #2");
 		subMenuItem2.setSubMenu(createSubMenu());
 		fileMenu.addItem(subMenuItem2);
 
