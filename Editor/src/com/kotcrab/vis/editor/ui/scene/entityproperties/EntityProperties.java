@@ -273,7 +273,6 @@ public class EntityProperties extends VisTable implements Disposable {
 
 		registerSpecificTable(new TtfTextUITable());
 		registerSpecificTable(new BMPTextUITable());
-		registerSpecificTable(new ParticleEffectTable());
 		registerSpecificTable(new GroupUITable());
 
 		//TODO: [plugin] plugin entry point
@@ -285,6 +284,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		registerComponentTable(new SpriterPropertiesComponentTable(sceneMC));
 		registerComponentTable(new AutoComponentTable<>(sceneMC, MusicComponent.class, false));
 		registerComponentTable(new AutoComponentTable<>(sceneMC, SoundComponent.class, false));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, ParticleComponent.class, false));
 
 		propertiesTable = new VisTable(true);
 

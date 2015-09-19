@@ -19,6 +19,7 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
+import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
 /**
  * Stores particle effect
@@ -26,6 +27,7 @@ import com.kotcrab.vis.runtime.util.UsesProtoComponent;
  */
 public class ParticleComponent extends Component implements UsesProtoComponent {
 	public transient ParticleEffect effect;
+	@ATProperty(fieldName = "Active on start", tooltip = "Controls whether to automatically start this effect on runtime.\nIn editor, particle effect are always active.")
 	public boolean active = true;
 
 	private ParticleComponent () {
