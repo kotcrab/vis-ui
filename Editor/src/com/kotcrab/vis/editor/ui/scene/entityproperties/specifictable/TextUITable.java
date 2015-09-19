@@ -29,6 +29,7 @@ import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
+import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.TtfFontAsset;
@@ -153,20 +154,22 @@ public abstract class TextUITable extends SpecificUITable {
 	}
 
 	@Override
-	public void setValuesToEntities () {
-		for (EntityProxy proxy : properties.getProxies()) {
-			for (Entity entity : proxy.getEntities()) {
-
-				TextComponent text = entity.getComponent(TextComponent.class);
-				if (textField.getText().equals("<multiple values>") == false) { //TODO: lets hope that nobody will use <multiple values> as their text
-					text.setText(textField.getText());
-				}
-
-				if (autoCenterOrigin.isIndeterminate() == false) {
-					text.setAutoSetOriginToCenter(autoCenterOrigin.isChecked());
-					properties.selectedEntitiesValuesChanged();
-				}
+	public final void setValuesToEntities () {
+		EntityUtils.stream(properties.getProxies(), TextComponent.class, (entity, text) -> {
+			if (textField.getText().equals("<multiple values>") == false) { //TODO: lets hope that nobody will use <multiple values> as their text
+				text.setText(textField.getText());
 			}
-		}
+		});
+
+		updateEntitiesValues();
+
+		EntityUtils.stream(properties.getProxies(), TextComponent.class, (entity, text) -> {
+			if (autoCenterOrigin.isIndeterminate() == false) {
+				text.setAutoSetOriginToCenter(autoCenterOrigin.isChecked());
+				properties.selectedEntitiesValuesChanged();
+			}
+		});
 	}
+
+	protected abstract void updateEntitiesValues ();
 }

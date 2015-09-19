@@ -82,9 +82,7 @@ public class BMPTextUITable extends TextUITable {
 	}
 
 	@Override
-	public void setValuesToEntities () {
-		super.setValuesToEntities();
-
+	protected void updateEntitiesValues () {
 		for (EntityProxy proxy : properties.getProxies()) {
 			for (Entity entity : proxy.getEntities()) {
 				TextComponent text = entity.getComponent(TextComponent.class);

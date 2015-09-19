@@ -44,6 +44,8 @@ public class GroupUITable extends SpecificUITable {
 		stringIdTable.add(idField = new VisValidatableTextField()).expandX().fillX();
 		idField.setProgrammaticChangeEvents(false);
 		idField.addListener(properties.getSharedChangeListener());
+		idField.addListener(properties.getSharedFocusListener());
+		idField.addListener(properties.getSharedInputListener());
 
 		add(intIdTable).expandX().fillX().row();
 		add(stringIdTable).expandX().fillX();

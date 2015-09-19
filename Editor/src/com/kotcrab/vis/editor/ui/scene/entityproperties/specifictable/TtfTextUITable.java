@@ -88,9 +88,7 @@ public class TtfTextUITable extends TextUITable {
 	}
 
 	@Override
-	public void setValuesToEntities () {
-		super.setValuesToEntities();
-
+	protected void updateEntitiesValues () {
 		for (EntityProxy proxy : properties.getProxies()) {
 			for (Entity entity : proxy.getEntities()) {
 				AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
@@ -107,6 +105,5 @@ public class TtfTextUITable extends TextUITable {
 
 			}
 		}
-
 	}
 }
