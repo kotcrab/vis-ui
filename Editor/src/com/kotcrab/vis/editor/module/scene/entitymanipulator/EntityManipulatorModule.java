@@ -220,6 +220,7 @@ public class EntityManipulatorModule extends SceneModule {
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Cut", this::cut));
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Copy", this::copy));
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Paste", this::paste));
+		entityPopupMenu.addItem(MenuUtils.createMenuItem("Duplicate", this::duplicate));
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Remove", this::deleteSelectedEntities));
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Select All", this::selectAll));
 	}
@@ -248,6 +249,10 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	private void paste () {
+		paste(true);
+	}
+
+	private void paste (boolean changePastePositon) {
 		if (entitiesClipboard.size > 0) {
 			selectedEntities.clear();
 
@@ -261,19 +266,26 @@ public class EntityManipulatorModule extends SceneModule {
 				proxies.add(entityProxyCache.get(entity));
 			});
 
-			float x = camera.getInputX();
-			float y = camera.getInputY();
+			if(changePastePositon) {
+				float x = camera.getInputX();
+				float y = camera.getInputY();
 
-			EntityProxy baseProxy = proxies.peek();
-			float xOffset = baseProxy.getX();
-			float yOffset = baseProxy.getY();
+				EntityProxy baseProxy = proxies.peek();
+				float xOffset = baseProxy.getX();
+				float yOffset = baseProxy.getY();
 
-			for (EntityProxy proxy : proxies) {
-				float px = x - copyAttachX + (proxy.getX() - xOffset);
-				float py = y - copyAttachY + (proxy.getY() - yOffset);
+				for (EntityProxy proxy : proxies) {
+					float px = x - copyAttachX + (proxy.getX() - xOffset);
+					float py = y - copyAttachY + (proxy.getY() - yOffset);
 
-				proxy.setPosition(px, py);
-				proxy.setLayerId(scene.getActiveLayerId());
+					proxy.setPosition(px, py);
+					proxy.setLayerId(scene.getActiveLayerId());
+				}
+			}
+			else {
+				for (EntityProxy proxy : proxies) {
+					proxy.setLayerId(scene.getActiveLayerId());
+				}
 			}
 
 			undoModule.add(new EntitiesAddedAction(sceneContainer, entityEngine, entities));
@@ -286,6 +298,12 @@ public class EntityManipulatorModule extends SceneModule {
 	private void cut () {
 		copy();
 		deleteSelectedEntities();
+	}
+
+	private void duplicate () {
+		copy();
+		paste(false);
+		statusBar.setText("Selection duplicated");
 	}
 
 	private void deleteSelectedEntities () {
@@ -792,6 +810,7 @@ public class EntityManipulatorModule extends SceneModule {
 				if (keycode == Keys.C) copy();
 				if (keycode == Keys.V) paste();
 				if (keycode == Keys.X) cut();
+				if (keycode == Keys.D) duplicate();
 			}
 
 			if (Gdx.input.isKeyPressed(Keys.PAGE_UP))

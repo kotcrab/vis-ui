@@ -2,6 +2,7 @@
 -Added PointComponent - can be placed on scene, for example for spawn points
 -Music and Sound files can now be changed from Entity Properties
 -Fixed text size was not possible to change for ttf fonts
+-Added Ctrl+D for duplicating selected entities
 
 [0.2.4]
 -Added Spriter support
