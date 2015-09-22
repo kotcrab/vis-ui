@@ -647,11 +647,16 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	boolean changeText (String oldText, String newText) {
 		if (newText.equals(oldText)) return false;
 		text = newText;
+		beforeChangeEventFired();
 		ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);
 		boolean cancelled = fire(changeEvent);
 		text = cancelled ? oldText : newText;
 		Pools.free(changeEvent);
 		return !cancelled;
+	}
+
+	void beforeChangeEventFired () {
+
 	}
 
 	/**

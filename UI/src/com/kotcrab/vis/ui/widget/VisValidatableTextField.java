@@ -17,8 +17,6 @@
 package com.kotcrab.vis.ui.widget;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.InputValidator;
@@ -80,14 +78,11 @@ public class VisValidatableTextField extends VisTextField {
 
 	private void init () {
 		setProgrammaticChangeEvents(true);
+	}
 
-		addListener(new InputListener() {
-			@Override
-			public boolean keyTyped (InputEvent event, char character) {
-				validateInput();
-				return false;
-			}
-		});
+	@Override
+	void beforeChangeEventFired () {
+		validateInput();
 	}
 
 	@Override
