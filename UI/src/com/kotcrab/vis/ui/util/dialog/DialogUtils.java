@@ -213,7 +213,7 @@ public class DialogUtils {
 			addListeners();
 
 			if (validator != null) {
-				addValidableFieldListener(field);
+				addValidatableFieldListener(field);
 				okButton.setDisabled(!field.isInputValid());
 			}
 
@@ -229,7 +229,7 @@ public class DialogUtils {
 			listener.canceled();
 		}
 
-		private void addValidableFieldListener (final VisTextField field) {
+		private void addValidatableFieldListener (final VisTextField field) {
 			field.addListener(new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
