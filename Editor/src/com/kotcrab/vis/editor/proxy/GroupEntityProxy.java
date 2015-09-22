@@ -79,6 +79,11 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 	}
 
 	@Override
+	public void addGroup (int groupId, int parentGroupId) {
+		proxies.forEach(entity -> entity.addGroup(groupId, parentGroupId));
+	}
+
+	@Override
 	public void removeGroup (int groupId) {
 		proxies.forEach(entity -> entity.removeGroup(groupId));
 	}

@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.module.scene.entitymanipulator;
 
+import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.Gdx;
@@ -30,10 +31,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.ObjectSet;
-import com.badlogic.gdx.utils.Timer;
+import com.badlogic.gdx.utils.*;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
@@ -64,6 +62,7 @@ import com.kotcrab.vis.editor.ui.scene.GroupBreadcrumb.GroupBreadcrumbListener;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneOutline;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
+import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.editor.util.gdx.DummyMusic;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
@@ -72,6 +71,7 @@ import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.PopupMenu;
@@ -95,6 +95,8 @@ public class EntityManipulatorModule extends SceneModule {
 	@InjectModule private FontCacheModule fontCache;
 	@InjectModule private SpriterCacheModule spriterCache;
 	@InjectModule private RendererModule rendererModule;
+
+	private ComponentMapper<GroupComponent> groupCm;
 
 	private ShapeRenderer shapeRenderer;
 	private EntityProxyCache entityProxyCache;
@@ -159,7 +161,7 @@ public class EntityManipulatorModule extends SceneModule {
 		layersDialog = new LayersDialog(sceneTab, engineConfiguration, sceneContainer);
 		alignmentToolsDialog = new AlignmentToolsDialog(sceneContainer, selectedEntities);
 		sceneOutline = new SceneOutline(sceneContainer, selectedEntities);
-		createGeneralMenu();
+		createContextMenus();
 
 		toolPropertiesContainer = new VisTable();
 
@@ -187,9 +189,14 @@ public class EntityManipulatorModule extends SceneModule {
 		entityProperties.loadSupportsSpecificTables(projectContainer.get(SupportModule.class));
 	}
 
-	private void createGeneralMenu () {
+	@Override
+	public void setEntityEngine (EntityEngine entityEngine) {
+		super.setEntityEngine(entityEngine);
+		groupCm = entityEngine.getMapper(GroupComponent.class);
+	}
+
+	private void createContextMenus () {
 		entityPopupMenu = new PopupMenu();
-		buildEntityPopupMenu(null);
 
 		generalPopupMenu = new PopupMenu();
 		generalPopupMenu.addItem(MenuUtils.createMenuItem("Paste", this::paste));
@@ -199,23 +206,24 @@ public class EntityManipulatorModule extends SceneModule {
 	private void buildEntityPopupMenu (Array<EntityProxy> entities) {
 		entityPopupMenu.clearChildren();
 
-		if (entities != null) {
-			if (isMenuItemEnterIntoGroupValid(entities)) {
-				entityPopupMenu.addItem(MenuUtils.createMenuItem("Enter Into Group", () -> {
+		if (isMenuItemEnterIntoGroupValid(entities)) {
+			entityPopupMenu.addItem(MenuUtils.createMenuItem("Enter Into Group", () -> {
 
-					if (isMenuItemEnterIntoGroupValid(entities) == false) {
-						DialogUtils.showErrorDialog(Editor.instance.getStage(), "Group was deselected");
-						return;
-					}
+				if (isMenuItemEnterIntoGroupValid(entities) == false) {
+					DialogUtils.showErrorDialog(Editor.instance.getStage(), "Group was deselected");
+					return;
+				}
 
-					GroupEntityProxy groupEntityProxy = (GroupEntityProxy) entities.peek();
-					currentSelectionGid = groupEntityProxy.getGroupId();
-					groupBreadcrumb.addGroup(currentSelectionGid);
-					selectAll();
-				}));
-				entityPopupMenu.addSeparator();
-			}
+				GroupEntityProxy groupEntityProxy = (GroupEntityProxy) entities.peek();
+				currentSelectionGid = groupEntityProxy.getGroupId();
+				groupBreadcrumb.addGroup(currentSelectionGid);
+				selectAll();
+			}));
+			entityPopupMenu.addSeparator();
 		}
+
+		entityPopupMenu.addItem(MenuUtils.createMenuItem("Move to Layer", this::duplicate));
+		entityPopupMenu.addSeparator();
 
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Cut", this::cut));
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Copy", this::copy));
@@ -259,14 +267,37 @@ public class EntityManipulatorModule extends SceneModule {
 			Array<EntityProxy> proxies = new Array<>(selectedEntities.size);
 			ObjectSet<Entity> entities = new ObjectSet<>(selectedEntities.size);
 
+			IntIntMap groupIdRemap = new IntIntMap();
+			Holder<Integer> freeGidHolder = new Holder<>(groupIdProvider.getFreeGroupId());
+
 			entitiesClipboard.forEach(protoEntity -> {
 				Entity entity = protoEntity.build();
 				entities.add(entity);
 				if (scene.getActiveLayer().visible == false) entity.edit().add(new InvisibleComponent());
 				proxies.add(entityProxyCache.get(entity));
+
+				GroupComponent groups = groupCm.getSafe(entity);
+
+				if (groups != null) {
+					for (int i = 0; i < groups.groupIds.size; i++) {
+						int gid = groups.groupIds.get(i);
+
+						if (groupBreadcrumb.isInHierarchy(gid))
+							continue;
+
+						int remapToGid = groupIdRemap.get(gid, Integer.MIN_VALUE);
+						if (remapToGid == Integer.MIN_VALUE) {
+							remapToGid = freeGidHolder.value;
+							groupIdRemap.put(gid, freeGidHolder.value);
+							freeGidHolder.value += 1;
+						}
+
+						groups.groupIds.set(i, remapToGid);
+					}
+				}
 			});
 
-			if(changePastePositon) {
+			if (changePastePositon) {
 				float x = camera.getInputX();
 				float y = camera.getInputY();
 
@@ -281,8 +312,7 @@ public class EntityManipulatorModule extends SceneModule {
 					proxy.setPosition(px, py);
 					proxy.setLayerId(scene.getActiveLayerId());
 				}
-			}
-			else {
+			} else {
 				for (EntityProxy proxy : proxies) {
 					proxy.setLayerId(scene.getActiveLayerId());
 				}
@@ -290,6 +320,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 			undoModule.add(new EntitiesAddedAction(sceneContainer, entityEngine, entities));
 
+			sceneOutline.rebuildOutline();
 			selectedEntitiesChanged();
 		} else
 			statusBar.setText("Nothing to paste!");
@@ -606,9 +637,9 @@ public class EntityManipulatorModule extends SceneModule {
 			return;
 		}
 
-		int gid = groupIdProvider.getFreeGroupIndex();
+		int gid = groupIdProvider.getFreeGroupId();
 
-		undoModule.execute(new GroupAction(selectedEntities, gid, true));
+		undoModule.execute(new GroupAction(selectedEntities, gid, currentSelectionGid, true));
 
 		sceneOutline.rebuildOutline();
 
@@ -631,7 +662,7 @@ public class EntityManipulatorModule extends SceneModule {
 			if (entity instanceof GroupEntityProxy) {
 				GroupEntityProxy group = (GroupEntityProxy) entity;
 				selectionProxy = group;
-				actionGroup.add(new GroupAction(group.getProxies(), group.getGroupId(), false));
+				actionGroup.add(new GroupAction(group.getProxies(), group.getGroupId(), currentSelectionGid, false));
 			}
 		}
 

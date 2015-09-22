@@ -3,6 +3,9 @@
 -Music and Sound files can now be changed from Entity Properties
 -Fixed text size was not possible to change for ttf fonts
 -Added Ctrl+D for duplicating selected entities
+-Fixed groups issues
+ -Grouping entities while inside group is now working properly
+ -Fixed copy pasting groups
 
 [0.2.4]
 -Added Spriter support

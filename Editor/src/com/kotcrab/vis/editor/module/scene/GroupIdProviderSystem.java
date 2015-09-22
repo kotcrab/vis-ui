@@ -32,6 +32,7 @@ import com.kotcrab.vis.runtime.component.GroupComponent;
 public class GroupIdProviderSystem extends EntityProcessingSystem {
 	private ComponentMapper<GroupComponent> groupCm;
 
+	private IntArray usedGids = new IntArray();
 	private int freeId;
 
 	public GroupIdProviderSystem () {
@@ -40,22 +41,27 @@ public class GroupIdProviderSystem extends EntityProcessingSystem {
 
 	@Override
 	protected void begin () {
-		freeId = 0;
+		usedGids.clear();
 	}
 
 	@Override
 	protected void process (Entity e) {
 		IntArray groupsIds = groupCm.get(e).groupIds;
+		if(groupsIds.size == 0) return;
+		usedGids.addAll(groupsIds);
+	}
 
-		if (groupsIds.size > 0) {
-			int gid = groupsIds.peek();
-
-			if (gid >= freeId)
-				freeId = gid + 1;
+	@Override
+	protected void end () {
+		if (usedGids.size == 0) {
+			freeId = 0;
+		} else {
+			usedGids.sort();
+			freeId = usedGids.peek() + 1;
 		}
 	}
 
-	public int getFreeGroupIndex () {
+	public int getFreeGroupId () {
 		process();
 		return freeId;
 	}

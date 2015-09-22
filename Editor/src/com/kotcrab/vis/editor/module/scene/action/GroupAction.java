@@ -24,19 +24,22 @@ import com.kotcrab.vis.editor.util.undo.UndoableAction;
 public class GroupAction implements UndoableAction {
 	private final Array<EntityProxy> entities;
 	private final int groupId;
-	private final boolean createGroup;
+	private final boolean group;
+	private final int groupIdBefore;
 
-	public GroupAction (Array<EntityProxy> entities, int groupId, boolean createGroup) {
+	/** @param group if true group will be created, if false ungroup will be performed */
+	public GroupAction (Array<EntityProxy> entities, int groupId, int groupIdBefore, boolean group) {
 		this.entities = new Array<>(entities);
+		this.groupIdBefore = groupIdBefore;
 		this.groupId = groupId;
-		this.createGroup = createGroup;
+		this.group = group;
 	}
 
 	@Override
 	public void execute () {
 		reload();
 
-		if (createGroup)
+		if (group)
 			group();
 		else
 			ungroup();
@@ -46,7 +49,7 @@ public class GroupAction implements UndoableAction {
 	public void undo () {
 		reload();
 
-		if (createGroup)
+		if (group)
 			ungroup();
 		else
 			group();
@@ -54,12 +57,12 @@ public class GroupAction implements UndoableAction {
 
 	@Override
 	public String getActionName () {
-		return createGroup ? "Group" : "Ungroup";
+		return group ? "Group" : "Ungroup";
 	}
 
 	private void group () {
 		for (EntityProxy entity : entities)
-			entity.addGroup(groupId);
+			entity.addGroup(groupId, groupIdBefore);
 	}
 
 	private void ungroup () {

@@ -85,8 +85,17 @@ public abstract class EntityProxy {
 	}
 
 	public void addGroup (int groupId) {
+		addGroup(groupId, -1);
+	}
+
+	public void addGroup (int groupId, int parentGroupId) {
 		IntArray groupIds = getGroupComponent().groupIds;
-		if (groupIds.contains(groupId) == false) groupIds.add(groupId);
+		if (groupIds.contains(groupId) == false) {
+			if (parentGroupId != -1)
+				groupIds.insert(groupIds.indexOf(parentGroupId), groupId);
+			else
+				groupIds.add(groupId);
+		}
 	}
 
 	public void removeGroup (int groupId) {
