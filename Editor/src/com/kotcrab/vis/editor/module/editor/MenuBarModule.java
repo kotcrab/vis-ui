@@ -62,7 +62,6 @@ public class MenuBarModule extends EditorModule {
 
 	private MenuItem undoMenuItem;
 	private Menu editMenu;
-	private Object sceneTab;
 
 	public MenuBarModule (ProjectModuleContainer moduleContainer) {
 		editor = Editor.instance;
@@ -229,8 +228,8 @@ public class MenuBarModule extends EditorModule {
 	}
 
 	public void setSceneTab (SceneTab sceneTab) {
-		this.sceneTab = sceneTab;
-		sceneController.setSceneTabActive(sceneTab == null ? false : true);
+		this.activeSceneTab = sceneTab;
+		sceneController.setSceneTabActive(sceneTab != null);
 		updateUndoButtonText();
 	}
 
