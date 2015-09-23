@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.NumberSelector.NumberSelectorListener;
 import com.kotcrab.vis.ui.widget.Tooltip;
 
 public class TestWindow extends VisWindow {
@@ -138,10 +139,19 @@ public class TestWindow extends VisWindow {
 		VisSelectBox<String> selectBox = new VisSelectBox<String>();
 		selectBox.setItems("item 1", "item 2", "item 3", "item 4");
 
+		NumberSelector numberSelector;
+
 		selectorsTable.add(new VisLabel("select box: "));
 		selectorsTable.add(selectBox);
-		selectorsTable.add(new NumberSelector("number selector:", 0, 0, 100, 1));
+		selectorsTable.add(numberSelector = new NumberSelector("number selector:", 0, 0, 100, 1));
 		selectorsTable.add(new NumberSelector(null, 15, 10, 30, 1)).row();
+
+		numberSelector.addChangeListener(new NumberSelectorListener() {
+			@Override
+			public void changed (int number) {
+				System.out.println("changed: " + number);
+			}
+		});
 
 		// ---
 
