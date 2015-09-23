@@ -245,7 +245,7 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 
 	@Override
 	public void setLayerId (int layerId) {
-		throw new UnsupportedOperationException();
+		proxies.forEach(entity -> entity.setLayerId(layerId));
 	}
 
 	@Override

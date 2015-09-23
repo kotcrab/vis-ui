@@ -30,6 +30,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.*;
 import com.google.common.eventbus.Subscribe;
@@ -44,10 +45,7 @@ import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
-import com.kotcrab.vis.editor.module.scene.action.EntitiesAddedAction;
-import com.kotcrab.vis.editor.module.scene.action.EntitiesRemovedAction;
-import com.kotcrab.vis.editor.module.scene.action.GroupAction;
-import com.kotcrab.vis.editor.module.scene.action.MoveEntitiesAction;
+import com.kotcrab.vis.editor.module.scene.action.*;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.SelectionTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tool;
@@ -57,6 +55,7 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.ui.dialog.SelectLayerDialog;
 import com.kotcrab.vis.editor.ui.scene.GroupBreadcrumb;
 import com.kotcrab.vis.editor.ui.scene.GroupBreadcrumb.GroupBreadcrumbListener;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
@@ -74,6 +73,8 @@ import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisTable;
 
@@ -95,6 +96,8 @@ public class EntityManipulatorModule extends SceneModule {
 	@InjectModule private FontCacheModule fontCache;
 	@InjectModule private SpriterCacheModule spriterCache;
 	@InjectModule private RendererModule rendererModule;
+
+	private Stage stage;
 
 	private ComponentMapper<GroupComponent> groupCm;
 
@@ -136,6 +139,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 	@Override
 	public void init () {
+		stage = Editor.instance.getStage();
+
 		shapeRenderer = rendererModule.getShapeRenderer();
 		entityProxyCache = engineConfiguration.getManager(EntityProxyCache.class);
 		zIndexManipulator = engineConfiguration.getManager(ZIndexManipulatorManager.class);
@@ -210,7 +215,7 @@ public class EntityManipulatorModule extends SceneModule {
 			entityPopupMenu.addItem(MenuUtils.createMenuItem("Enter Into Group", () -> {
 
 				if (isMenuItemEnterIntoGroupValid(entities) == false) {
-					DialogUtils.showErrorDialog(Editor.instance.getStage(), "Group was deselected");
+					DialogUtils.showErrorDialog(stage, "Group was deselected");
 					return;
 				}
 
@@ -222,8 +227,10 @@ public class EntityManipulatorModule extends SceneModule {
 			entityPopupMenu.addSeparator();
 		}
 
-		entityPopupMenu.addItem(MenuUtils.createMenuItem("Move to Layer", this::duplicate));
-		entityPopupMenu.addSeparator();
+		if (scene.getLayers().size() > 1) {
+			entityPopupMenu.addItem(MenuUtils.createMenuItem("Move to Layer", () -> moveToLayer(true)));
+			entityPopupMenu.addSeparator();
+		}
 
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Cut", this::cut));
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Copy", this::copy));
@@ -231,6 +238,46 @@ public class EntityManipulatorModule extends SceneModule {
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Duplicate", this::duplicate));
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Remove", this::deleteSelectedEntities));
 		entityPopupMenu.addItem(MenuUtils.createMenuItem("Select All", this::selectAll));
+	}
+
+	private void moveToLayer (boolean showGroupMoveWarning) {
+		if (currentSelectionGid != -1 && showGroupMoveWarning) {
+			DialogUtils.showOptionDialog(stage, "Warning", "This will move whole group to another layer. Continue moving?",
+					OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+						@Override
+						public void yes () {
+							moveToLayer(false);
+						}
+					});
+			return;
+		}
+
+		Array<EntityProxy> targetEntities;
+
+		if (currentSelectionGid != -1) {
+			targetEntities = new Array<>();
+			targetEntities.add(groupProxyProvider.getGroupEntityProxy(groupBreadcrumb.peekFirstGroupId()));
+
+			resetSelection();
+			groupBreadcrumb.resetHierarchy();
+			currentSelectionGid = -1;
+		} else
+			targetEntities = new Array<>(selectedEntities);
+
+		stage.addActor(new SelectLayerDialog(scene.getLayers(), scene.getActiveLayer(), result -> {
+			UndoableActionGroup group = new UndoableActionGroup("Move Entity To Layer", "Move Entities To Layer");
+			for (EntityProxy proxy : targetEntities) {
+				group.add(new ChangeEntityLayerAction(renderBatchingSystem, this, proxy, result.id));
+			}
+
+			group.finalizeGroup();
+			undoModule.execute(group);
+
+			//reselect entities again
+			resetSelection();
+			for (EntityProxy proxy : targetEntities)
+				selectAppend(proxy);
+		}).fadeIn());
 	}
 
 	private boolean isMenuItemEnterIntoGroupValid (Array<EntityProxy> entities) {
@@ -260,7 +307,7 @@ public class EntityManipulatorModule extends SceneModule {
 		paste(true);
 	}
 
-	private void paste (boolean changePastePositon) {
+	private void paste (boolean changePastePosition) {
 		if (entitiesClipboard.size > 0) {
 			selectedEntities.clear();
 
@@ -297,7 +344,7 @@ public class EntityManipulatorModule extends SceneModule {
 				}
 			});
 
-			if (changePastePositon) {
+			if (changePastePosition) {
 				float x = camera.getInputX();
 				float y = camera.getInputY();
 

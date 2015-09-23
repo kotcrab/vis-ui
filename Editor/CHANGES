@@ -3,6 +3,7 @@
 -Music and Sound files can now be changed from Entity Properties
 -Fixed text size was not possible to change for ttf fonts
 -Added Ctrl+D for duplicating selected entities
+-In scene editor, added "Move to Layer" in popup menu, for quick entity moving between layers
 -Fixed groups issues
  -Grouping entities while inside group is now working properly
  -Fixed copy pasting groups

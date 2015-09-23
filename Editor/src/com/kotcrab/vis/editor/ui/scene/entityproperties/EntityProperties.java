@@ -692,7 +692,7 @@ public class EntityProperties extends VisTable implements Disposable {
 
 	private static class SnapshotUndoableActionGroup extends UndoableActionGroup {
 		public SnapshotUndoableActionGroup () {
-			super("Change Entities Properties");
+			super("Change Entity Properties", "Change Entities Properties");
 		}
 
 		public void dropUnchanged () {

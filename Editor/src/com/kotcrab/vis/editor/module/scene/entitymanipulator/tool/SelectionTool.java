@@ -114,7 +114,7 @@ public class SelectionTool extends BaseSelectionTool {
 			for (int i = 0; i < entityManipulator.getSelectedEntities().size(); i++)
 				moveActions.get(i).saveNewData(entityManipulator.getSelectedEntities().get(i));
 
-			UndoableActionGroup group = new UndoableActionGroup(entityManipulator.getSelectedEntities().size() == 1 ? "Move Entity" : "Move Entities");
+			UndoableActionGroup group = new UndoableActionGroup("Move Entity", "Move Entities");
 
 			for (MoveEntityAction action : moveActions)
 				group.add(action);

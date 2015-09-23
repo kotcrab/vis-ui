@@ -28,13 +28,20 @@ public class UndoableActionGroup implements UndoableAction {
 	private boolean finalized;
 	private boolean reversed;
 
-	private String actionName;
+	private String singularActionName;
+	private String pluralActionName;
 
 	public UndoableActionGroup () {
 	}
 
 	public UndoableActionGroup (String actionName) {
-		this.actionName = actionName;
+		this.singularActionName = actionName;
+		this.pluralActionName = actionName;
+	}
+
+	public UndoableActionGroup (String singularActionName, String pluralActionName) {
+		this.singularActionName = singularActionName;
+		this.pluralActionName = pluralActionName;
 	}
 
 	@Override
@@ -84,12 +91,8 @@ public class UndoableActionGroup implements UndoableAction {
 		add(action);
 	}
 
-	public void setActionName (String actionName) {
-		this.actionName = actionName;
-	}
-
 	@Override
 	public String getActionName () {
-		return actionName;
+		return size() == 1 ? singularActionName : pluralActionName;
 	}
 }

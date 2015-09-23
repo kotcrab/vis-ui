@@ -83,6 +83,13 @@ public class GroupBreadcrumb extends VisTable {
 		}
 	}
 
+	public int peekFirstGroupId () {
+		if (groupsHierarchy.size != 0)
+			return groupsHierarchy.first();
+		else
+			return -1;
+	}
+
 	public int peekLastGroupId () {
 		if (groupsHierarchy.size != 0)
 			return groupsHierarchy.peek();
