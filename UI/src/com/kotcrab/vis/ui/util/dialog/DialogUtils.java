@@ -358,7 +358,7 @@ public class DialogUtils {
 
 				VisTable errorTable = new VisTable();
 				errorTable.add(errorLabel).top().expand().fillX();
-				detailsTable.add(createScrollPane(errorTable)).colspan(2).width(600 * sizes.scaleFactor).height(300 * sizes.scaleFactor);
+				detailsTable.add(createScrollPane(errorTable)).colspan(2).minWidth(600 * sizes.scaleFactor).height(300 * sizes.scaleFactor);
 
 				getContentTable().row();
 				detailsCell = getContentTable().add(detailsTable);
