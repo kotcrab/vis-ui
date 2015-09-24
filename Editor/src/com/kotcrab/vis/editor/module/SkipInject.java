@@ -16,21 +16,16 @@
 
 package com.kotcrab.vis.editor.module;
 
-import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation used to inject modules from {@link ModuleContainer}s in subclasses of {@link Module}. Can be also used outside
- * {@link Module} but it requires passing {@link ModuleInjector} to class.
+ * Fields annotated by this annotation will be skipped during field injection done by {@link ModuleInjector}
  * @author Kotcrab
- * @deprecated all modules are now injected by default without need to add this annotation, if necessary injecting can be skipped with {@link SkipInject}
  */
-@Deprecated @DeprecatedOn(versionCode = 11)
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface InjectModule {
+public @interface SkipInject {
 }

@@ -16,10 +16,13 @@
 
 package com.kotcrab.vis.editor.module;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
+import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
 
 import java.lang.reflect.Field;
 
@@ -117,13 +120,28 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 	public void injectModules (Object target) {
 		try {
 			for (Field field : getAllFields(target.getClass())) {
-				if (field.isAnnotationPresent(InjectModule.class)) {
-					field.setAccessible(true);
-					field.set(target, findInHierarchy(field.getType().asSubclass(Module.class)));
-				}
+				if (field.isAnnotationPresent(SkipInject.class)) continue;
+
+				injectField(target, field);
 			}
+		} catch (EditorRuntimeException e) {
+			throw new IllegalStateException("ModuleInjector failed for target: " + target.getClass() + ". See nested exception for error details.", e);
 		} catch (ReflectiveOperationException e) {
 			Log.exception(e);
+		}
+	}
+
+	protected void injectField (Object target, Field field) throws ReflectiveOperationException {
+		if (Module.class.isAssignableFrom(field.getType())) {
+			if (Module.class.isAssignableFrom(field.getType())) {
+				field.setAccessible(true);
+				field.set(target, findInHierarchy(field.getType().asSubclass(Module.class)));
+			}
+		}
+
+		if (Stage.class.isAssignableFrom(field.getType())) {
+			field.setAccessible(true);
+			field.set(target, Editor.instance.getStage());
 		}
 	}
 
@@ -144,7 +162,7 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 		C module = getOrNull(moduleClass);
 		if (module != null) return module;
 
-		throw new IllegalStateException("Failed to get module: '" + moduleClass + "' from ModuleContainer, module not found!");
+		throw new EditorRuntimeException("Failed to get module: '" + moduleClass + "' from ModuleContainer, module not found!");
 	}
 
 	@SuppressWarnings("unchecked")

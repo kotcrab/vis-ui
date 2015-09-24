@@ -40,6 +40,7 @@ import com.kotcrab.vis.editor.event.SceneTabHideEvent;
 import com.kotcrab.vis.editor.event.SceneTabShowEvent;
 import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.module.SkipInject;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
@@ -71,7 +72,7 @@ public class VisDragAndDrop implements Disposable {
 	boolean cancelTouchFocus = true;
 	boolean keepWithinStage = true;
 
-	private CameraModule currentSceneCamera;
+	@SkipInject private CameraModule currentSceneCamera;
 	private float scenePixelPerUnit;
 	private Vector3 tmpVector3 = new Vector3();
 
