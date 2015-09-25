@@ -16,8 +16,6 @@
 
 package com.kotcrab.vis.editor.module.project;
 
-import org.apache.commons.io.FilenameUtils;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -33,7 +31,6 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
@@ -42,6 +39,7 @@ import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Allows to get loaded textures from project 'gfx' assets directory and allows to get loaded atlases from project 'atlas' asset directory.
@@ -50,10 +48,10 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
  * @author Kotcrab
  */
 public class TextureCacheModule extends ProjectModule implements WatchListener {
-	@InjectModule private StatusBarModule statusBar;
+	private StatusBarModule statusBar;
 
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private AssetsWatcherModule watcher;
+	private FileAccessModule fileAccess;
+	private AssetsWatcherModule watcher;
 
 	private String gfxPath;
 	private String cachePath;

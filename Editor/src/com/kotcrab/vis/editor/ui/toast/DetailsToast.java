@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.editor.ui.toast;
 
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.ui.dialog.DetailsDialog;
 import com.kotcrab.vis.editor.util.ExceptionUtils;
@@ -35,7 +34,7 @@ public class DetailsToast extends VisTable {
 
 	public DetailsToast (String text, String detailsDialogTitle, String details) {
 		LinkLabel label = new LinkLabel("Details");
-		label.setListener(url -> Editor.instance.getStage().addActor(new DetailsDialog(text, detailsDialogTitle, details).fadeIn()));
+		label.setListener(url -> getStage().addActor(new DetailsDialog(text, detailsDialogTitle, details).fadeIn()));
 
 		add(text).expand().fill().row();
 		add(label).right();

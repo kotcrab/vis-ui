@@ -25,7 +25,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ObjectMap.Values;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.scene.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.EntityProxyCache.EntityProxyCacheListener;
 import com.kotcrab.vis.editor.module.scene.GroupProxyProviderSystem;
@@ -45,7 +44,7 @@ import com.kotcrab.vis.ui.widget.VisTree;
  * @author Kotcrab
  */
 public class SceneOutline extends VisTable implements EntityProxyCacheListener {
-	@InjectModule private EntityManipulatorModule entityManipulator;
+	private EntityManipulatorModule entityManipulator;
 
 	private Array<EntityProxy> selectedEntities;
 	private EntityProxyCache proxyCache;

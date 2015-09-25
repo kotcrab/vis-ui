@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.kotcrab.vis.editor.Editor;
 
 /**
  * Allow to add InputListener that will send input events from entire editor, ignoring modality of windows etc. Event will
@@ -28,11 +27,6 @@ import com.kotcrab.vis.editor.Editor;
  */
 public class GlobalInputModule extends EditorModule {
 	private Stage stage;
-
-	@Override
-	public void init () {
-		stage = Editor.instance.getStage();
-	}
 
 	public void addListener (InputListener listener) {
 		stage.addListener(listener);

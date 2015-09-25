@@ -38,7 +38,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.spine.SkeletonBinary;
 import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonJson;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModule;
 import com.kotcrab.vis.editor.plugin.ContainerExtension;
@@ -50,7 +49,7 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 //TODO support dynamic refreshing
 @VisPlugin
 public class SpineCacheModule extends ProjectModule implements ContainerExtension<ProjectModule> {
-	@InjectModule private FileAccessModule fileAccess;
+	private FileAccessModule fileAccess;
 
 	private ObjectMap<FileHandle, TextureAtlas> atlases = new ObjectMap<>();
 	private ObjectMap<FileHandle, SkeletonCache> skeletonsData = new ObjectMap<>();

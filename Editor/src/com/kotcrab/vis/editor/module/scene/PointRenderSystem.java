@@ -24,7 +24,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.PointComponent;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
@@ -36,7 +35,7 @@ import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 public class PointRenderSystem extends DeferredEntityProcessingSystem {
 	public static final int ICON_SIZE = 76;
 
-	@InjectModule private CameraModule camera;
+	private CameraModule camera;
 
 	private ComponentMapper<PointComponent> pointCm;
 

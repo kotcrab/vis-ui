@@ -21,7 +21,6 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.ProjectSettingsIOModule;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.KryoUtils;
@@ -40,7 +39,7 @@ import java.lang.reflect.Constructor;
  * @see ProjectSettingsIOModule
  */
 public class EditorSettingsIOModule extends EditorModule {
-	@InjectModule private ToastModule toastModule;
+	private ToastModule toastModule;
 
 	private Kryo kryo;
 	private File settingsDirectory;

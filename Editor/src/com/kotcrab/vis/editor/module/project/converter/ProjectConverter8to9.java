@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.module.project.converter;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ProjectIOModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
@@ -30,7 +29,7 @@ import com.kotcrab.vis.editor.util.ThreadUtils;
 
 /** @author Kotcrab */
 public class ProjectConverter8to9 extends ProjectConverter {
-	@InjectModule private ProjectIOModule projectIO;
+	private ProjectIOModule projectIO;
 
 	public ProjectConverter8to9 () {
 		super(8, 9);

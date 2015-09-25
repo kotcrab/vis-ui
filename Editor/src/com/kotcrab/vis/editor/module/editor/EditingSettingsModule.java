@@ -24,13 +24,12 @@ import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ToggleToolbarEvent;
 import com.kotcrab.vis.editor.event.ToolbarEventType;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
 
 /** @author Kotcrab */
 public class EditingSettingsModule extends EditorModule {
-	@InjectModule private InputModule inputModule;
-	@InjectModule private EditorSettingsIOModule settingsIO;
+	private InputModule inputModule;
+	private EditorSettingsIOModule settingsIO;
 
 	private static final String SETTINGS_NAME = "editingProperties";
 

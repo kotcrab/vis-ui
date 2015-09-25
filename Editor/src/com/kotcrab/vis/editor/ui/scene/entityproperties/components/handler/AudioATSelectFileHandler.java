@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.components.handler;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
@@ -26,7 +25,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 
 /** @author Kotcrab */
 public abstract class AudioATSelectFileHandler implements ATSelectFileHandler {
-	@InjectModule private FileAccessModule fileAccess;
+	private FileAccessModule fileAccess;
 
 	@Override
 	public void applyChanges (Entity entity, FileHandle file) {

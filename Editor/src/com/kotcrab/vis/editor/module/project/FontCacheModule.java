@@ -26,7 +26,6 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
@@ -47,8 +46,8 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	public static final int DEFAULT_FONT_SIZE = 20;
 	public static final String DEFAULT_TEXT = "The quick brown fox jumps over the lazy dog";
 
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private AssetsWatcherModule watcherModule;
+	private FileAccessModule fileAccess;
+	private AssetsWatcherModule watcherModule;
 
 	private FileHandle bmpFontDirectory;
 	private FileHandle ttfFontDirectory;

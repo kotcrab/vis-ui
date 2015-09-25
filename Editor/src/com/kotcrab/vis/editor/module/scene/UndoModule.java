@@ -23,7 +23,6 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.RedoEvent;
 import com.kotcrab.vis.editor.event.UndoEvent;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.InputModule;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
@@ -35,8 +34,8 @@ import com.kotcrab.vis.editor.util.undo.UndoableAction;
  * @author Kotcrab
  */
 public class UndoModule extends SceneModule {
-	@InjectModule private MenuBarModule menuBar;
-	@InjectModule private StatusBarModule statusBar;
+	private MenuBarModule menuBar;
+	private StatusBarModule statusBar;
 
 	private Array<UndoableAction> undoList;
 	private Array<UndoableAction> redoList;

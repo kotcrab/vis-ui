@@ -27,12 +27,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Assets;
-import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangePolygonAction;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
@@ -60,7 +59,8 @@ public class PolygonTool extends BaseSelectionTool {
 	private static final String SELECT_ONLY_ONE = "Select only one entity to edit polygon";
 	private static final float POLYGON_RECT_SIZE = 16f;
 
-	@InjectModule private StatusBarModule statusBar;
+	private StatusBarModule statusBar;
+	private Stage stage;
 
 	private Color lineOverColor = new Color(0, 88 / 255f, 131 / 255f, 1);
 	private Color mainColor = VisUI.getSkin().getColor("vis-blue");
@@ -103,7 +103,7 @@ public class PolygonTool extends BaseSelectionTool {
 		lineOverStartVertex = null;
 
 		if (component != null) {
-			batch.setProjectionMatrix(Editor.instance.getStage().getCamera().combined);
+			batch.setProjectionMatrix(stage.getCamera().combined);
 
 			camera.unproject(tmpVector.set(Gdx.input.getX(), Gdx.input.getY(), 0));
 

@@ -37,7 +37,6 @@ import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
 import com.kotcrab.vis.runtime.component.AssetComponent;
@@ -45,7 +44,7 @@ import com.kotcrab.vis.runtime.component.AssetComponent;
 /** @author Kotcrab */
 @Wire
 public class SpineScaleUpdaterSystem extends EntityProcessingSystem {
-	@InjectModule private SpineCacheModule spineCache;
+	private SpineCacheModule spineCache;
 
 	private ComponentMapper<SpineComponent> spineCm;
 	private ComponentMapper<AssetComponent> assetCm;

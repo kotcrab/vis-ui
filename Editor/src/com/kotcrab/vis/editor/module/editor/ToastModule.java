@@ -24,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisImageButton;
@@ -41,13 +40,9 @@ public class ToastModule extends EditorModule {
 	private static final int MESSAGE_PADDING = 5;
 
 	private Stage stage;
+
 	private Array<ToastTable> toasts = new Array<>();
 	private static final int UNTIL_CLOSED = -1;
-
-	@Override
-	public void init () {
-		stage = Editor.instance.getStage();
-	}
 
 	@Override
 	public void resize () {

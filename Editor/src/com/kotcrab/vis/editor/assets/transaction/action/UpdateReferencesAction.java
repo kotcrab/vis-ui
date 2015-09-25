@@ -21,7 +21,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.assets.transaction.AssetProviderResult;
 import com.kotcrab.vis.editor.entity.EntityScheme;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.SceneCacheModule;
@@ -35,8 +34,8 @@ import com.kotcrab.vis.runtime.component.AssetComponent;
  * @author Kotcrab
  */
 public class UpdateReferencesAction implements UndoableAction {
-	@InjectModule private SceneCacheModule sceneCache;
-	@InjectModule private FileAccessModule fileAccess;
+	private SceneCacheModule sceneCache;
+	private FileAccessModule fileAccess;
 
 	private AssetDescriptorProvider assetProvider;
 	private VisAssetDescriptor source;

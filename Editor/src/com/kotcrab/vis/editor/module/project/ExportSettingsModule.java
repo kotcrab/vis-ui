@@ -16,9 +16,8 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.ExportSettingsModule.ExportConfig;
 import com.kotcrab.vis.editor.plugin.ExporterPlugin;
@@ -33,9 +32,10 @@ import java.util.UUID;
 
 /** @author Kotcrab */
 public class ExportSettingsModule extends ProjectSettingsModule<ExportConfig> {
-	@InjectModule private ExtensionStorageModule extensionStorage;
+	private ExtensionStorageModule extensionStorage;
+	private Stage stage;
 
-	@InjectModule private ExportersManagerModule exportersManager;
+	private ExportersManagerModule exportersManager;
 
 	private Array<String> exporters = new Array<>();
 
@@ -70,7 +70,7 @@ public class ExportSettingsModule extends ProjectSettingsModule<ExportConfig> {
 			ExporterPlugin exporter = exportersManager.getExportersMap().get(uuid);
 
 			if (exporter.isSettingsUsed() == false)
-				DialogUtils.showOKDialog(Editor.instance.getStage(), "Message", "This exporter does not have any additional settings");
+				DialogUtils.showOKDialog(stage, "Message", "This exporter does not have any additional settings");
 			else
 				exporter.showSettings();
 		}));

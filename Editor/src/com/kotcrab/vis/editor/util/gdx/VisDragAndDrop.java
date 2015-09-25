@@ -38,7 +38,6 @@ import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.SceneTabHideEvent;
 import com.kotcrab.vis.editor.event.SceneTabShowEvent;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.SkipInject;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
@@ -53,8 +52,8 @@ import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule
 public class VisDragAndDrop implements Disposable {
 	static final Vector2 tmpVector = new Vector2();
 
-	@InjectModule private EditingSettingsModule editingSettings;
-	@InjectModule private GridSettingsModule gridSettings;
+	private EditingSettingsModule editingSettings;
+	private GridSettingsModule gridSettings;
 
 	Payload payload;
 	Actor dragActor;

@@ -20,7 +20,6 @@ import com.artemis.Manager;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Values;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangeZIndexAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
@@ -31,8 +30,8 @@ import com.kotcrab.vis.runtime.util.ImmutableArray;
 /** @author Kotcrab */
 @Wire
 public class ZIndexManipulatorManager extends Manager {
-	@InjectModule UndoModule undoModule;
-	@InjectModule private EntityManipulatorModule entityManipulator;
+	private UndoModule undoModule;
+	private EntityManipulatorModule entityManipulator;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private EntityProxyCache proxyCache;

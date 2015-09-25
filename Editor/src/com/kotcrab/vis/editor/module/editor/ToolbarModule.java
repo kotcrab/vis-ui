@@ -28,7 +28,6 @@ import com.kotcrab.vis.editor.event.ToggleToolbarEvent;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.ToolbarEvent;
 import com.kotcrab.vis.editor.event.ToolbarEventType;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tools;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
@@ -46,7 +45,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
  * @author Kotcrab
  */
 public class ToolbarModule extends EditorModule {
-	@InjectModule private TabsModule tabsModule;
+	private TabsModule tabsModule;
 
 	private VisTable table;
 

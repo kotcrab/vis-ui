@@ -19,13 +19,12 @@ package com.kotcrab.vis.editor.module.editor;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.event.EventBusExceptionEvent;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 
 /** @author Kotcrab */
 @EventBusSubscriber
 public class EventBusExceptionMonitorModule extends EditorModule {
-	@InjectModule private ToastModule toastModule;
+	private ToastModule toastModule;
 
 	@Subscribe
 	public void handleEventBusException (EventBusExceptionEvent event) {

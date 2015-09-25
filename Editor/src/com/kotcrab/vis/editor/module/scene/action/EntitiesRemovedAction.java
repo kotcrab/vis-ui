@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.module.scene.action;
 import com.artemis.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
@@ -32,8 +31,8 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
  * @author Kotcrab
  */
 public class EntitiesRemovedAction implements UndoableAction {
-	@InjectModule private EntityManipulatorModule entityManipulator;
-	@InjectModule private SceneIOModule sceneIO;
+	private EntityManipulatorModule entityManipulator;
+	private SceneIOModule sceneIO;
 
 	private EntityEngine engine;
 	private ObjectSet<Entity> entities;

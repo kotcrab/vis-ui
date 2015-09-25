@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.ui.scene;
 
 import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangeLayerProperties;
@@ -34,7 +33,7 @@ import com.kotcrab.vis.ui.widget.*;
 
 /** @author Kotcrab */
 public class LayerSettingsDialog extends VisWindow {
-	@InjectModule private UndoModule undoModule;
+	private UndoModule undoModule;
 
 	public LayerSettingsDialog (ModuleInjector injector, EditorScene scene) {
 		super("Layer Settings");

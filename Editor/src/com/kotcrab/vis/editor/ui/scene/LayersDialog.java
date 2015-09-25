@@ -24,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.LayerManipulatorManager;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
@@ -40,9 +39,9 @@ import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.editor.util.undo.MonoUndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
-import com.kotcrab.vis.runtime.util.VisBagUtils;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
+import com.kotcrab.vis.runtime.util.VisBagUtils;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
@@ -62,8 +61,8 @@ public class LayersDialog extends VisTable implements Disposable {
 	private static final VisImageButtonStyle BUTTON_STYLE = VisUI.getSkin().get("default", VisImageButtonStyle.class);
 	private static final VisImageButtonStyle BUTTON_BLUE_STYLE = VisUI.getSkin().get("blue", VisImageButtonStyle.class);
 
-	@InjectModule private UndoModule undoModule;
-	@InjectModule private EntityManipulatorModule entityManipulator;
+	private UndoModule undoModule;
+	private EntityManipulatorModule entityManipulator;
 
 	private LayerManipulatorManager layerManipulatorManager;
 

@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 
@@ -27,10 +26,8 @@ import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
  * @author Kotcrab
  */
 public class SceneCacheModule extends ProjectModule implements WatchListener {
-	@InjectModule private TextureCacheModule textureCache;
-	@InjectModule private ParticleCacheModule particleCache;
-	@InjectModule private SceneIOModule sceneIO;
-	@InjectModule private AssetsWatcherModule assetsWatcherModule;
+	private SceneIOModule sceneIO;
+	private AssetsWatcherModule assetsWatcherModule;
 
 	private ObjectMap<FileHandle, EditorScene> scenes = new ObjectMap<>();
 

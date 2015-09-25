@@ -20,19 +20,17 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.module.InjectModule;
 
 /**
  * Module controlling UI debug mode which can be enabled by pressing F12 key.
  * @author Kotcrab
  */
 public class UIDebugControllerModule extends EditorModule {
-	@InjectModule private StatusBarModule statusBar;
-
-	@InjectModule private GlobalInputModule inputModule;
+	private StatusBarModule statusBar;
+	private GlobalInputModule inputModule;
 
 	private Stage stage;
+
 	private boolean debugEnabled;
 
 	private InputListener inputListener = new InputListener() {
@@ -56,7 +54,6 @@ public class UIDebugControllerModule extends EditorModule {
 
 	@Override
 	public void init () {
-		stage = Editor.instance.getStage();
 		inputModule.addListener(inputListener);
 	}
 

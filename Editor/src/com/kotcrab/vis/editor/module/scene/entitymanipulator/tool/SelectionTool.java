@@ -21,7 +21,6 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
 import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.action.MoveEntityAction;
@@ -31,8 +30,8 @@ import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /** @author Kotcrab */
 public class SelectionTool extends BaseSelectionTool {
-	@InjectModule private EditingSettingsModule editingSettings;
-	@InjectModule private GridSettingsModule gridSettings;
+	private EditingSettingsModule editingSettings;
+	private GridSettingsModule gridSettings;
 
 	private Array<Pos> startingEntityPos = new Array<>();
 

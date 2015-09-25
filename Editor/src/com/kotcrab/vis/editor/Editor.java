@@ -300,7 +300,7 @@ public class Editor extends ApplicationAdapter {
 	}
 
 	public void showRestartDialog () {
-		OptionDialog optionDialog = DialogUtils.showOptionDialog(Editor.instance.getStage(), "Restart?",
+		OptionDialog optionDialog = DialogUtils.showOptionDialog(stage, "Restart?",
 				"Editor restart is required to apply changes", OptionDialogType.YES_NO, new OptionDialogAdapter() {
 					@Override
 					public void yes () {
@@ -327,7 +327,7 @@ public class Editor extends ApplicationAdapter {
 		}
 
 		if (tabsModule.getDirtyTabCount() > 0) {
-			getStage().addActor(new UnsavedResourcesDialog(tabsModule, new WindowListener() {
+			stage.addActor(new UnsavedResourcesDialog(tabsModule, new WindowListener() {
 				@Override
 				public void finished () {
 					showExitDialogIfNeeded(restartAfterExit);
@@ -350,7 +350,7 @@ public class Editor extends ApplicationAdapter {
 		}
 
 		if (settings.isConfirmExit()) {
-			OptionDialog dialog = DialogUtils.showOptionDialog(getStage(), "Confirm Exit", "Are you sure you want to exit VisEditor?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+			OptionDialog dialog = DialogUtils.showOptionDialog(stage, "Confirm Exit", "Are you sure you want to exit VisEditor?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 				@Override
 				public void yes () {
 					exit(false);
@@ -372,14 +372,13 @@ public class Editor extends ApplicationAdapter {
 		Gdx.app.exit();
 	}
 
-	//TODO minimize usage of this method or remove it completly
 	public Stage getStage () {
 		return stage;
 	}
 
 	public void requestProjectUnload () {
 		if (tabsModule.getDirtyTabCount() > 0)
-			getStage().addActor(new UnsavedResourcesDialog(tabsModule, () -> doProjectUnloading()).fadeIn());
+			stage.addActor(new UnsavedResourcesDialog(tabsModule, () -> doProjectUnloading()).fadeIn());
 		else
 			doProjectUnloading();
 	}
@@ -397,7 +396,7 @@ public class Editor extends ApplicationAdapter {
 		fileChooser.pickFileOrDirectory(new FileChooserAdapter() {
 			@Override
 			public void selected (FileHandle file) {
-				editorMC.get(ProjectIOModule.class).loadHandleError(getStage(), file);
+				editorMC.get(ProjectIOModule.class).loadHandleError(stage, file);
 			}
 		});
 	}
@@ -408,7 +407,7 @@ public class Editor extends ApplicationAdapter {
 
 	public void projectLoaded (final Project project) {
 		if (projectLoaded) {
-			DialogUtils.showOptionDialog(getStage(), "Warning", "Other project is already loaded, unload it and continue?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+			DialogUtils.showOptionDialog(stage, "Warning", "Other project is already loaded, unload it and continue?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 				@Override
 				public void yes () {
 					switchProject(project);
@@ -452,7 +451,7 @@ public class Editor extends ApplicationAdapter {
 			}
 		});
 		dialog.setVisible(true);
-		Editor.instance.getStage().addActor(dialog);
+		stage.addActor(dialog);
 	}
 
 	public void addDefaultProjectMCModules (ProjectModuleContainer projectMC) {

@@ -24,7 +24,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.SceneMetadataModule;
 import com.kotcrab.vis.editor.util.gdx.CameraZoomController;
 import com.kotcrab.vis.runtime.system.CameraManager;
@@ -34,7 +33,8 @@ import com.kotcrab.vis.runtime.system.CameraManager;
  * @author Kotcrab
  */
 public class CameraModule extends SceneModule {
-	@InjectModule private SceneMetadataModule metadataModule;
+	private SceneMetadataModule metadataModule;
+
 	private SceneMetadata metadata;
 
 	private OrthographicCamera camera;

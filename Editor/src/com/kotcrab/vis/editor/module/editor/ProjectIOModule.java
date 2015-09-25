@@ -27,7 +27,6 @@ import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.converter.DummyConverter;
 import com.kotcrab.vis.editor.module.project.converter.ProjectConverter;
@@ -63,7 +62,9 @@ public class ProjectIOModule extends EditorModule {
 
 	public static final String PROJECT_FILE = "project.data";
 
-	@InjectModule private StatusBarModule statusBar;
+	private StatusBarModule statusBar;
+
+	private Stage stage;
 
 	private Kryo kryo;
 
@@ -138,7 +139,7 @@ public class ProjectIOModule extends EditorModule {
 		if (versionFile.exists()) {
 			ProjectVersionDescriptor descriptor = ProjectVersionModule.getNewJson().fromJson(ProjectVersionDescriptor.class, versionFile);
 			if (descriptor.versionCode > App.VERSION_CODE) {
-				DialogUtils.showOptionDialog(Editor.instance.getStage(), "Warning",
+				DialogUtils.showOptionDialog(stage, "Warning",
 						"This project was opened in newer version of VisEditor.\nSome functions may not work properly. Do you want to continue?",
 						OptionDialogType.YES_NO, new OptionDialogAdapter() {
 							@Override
@@ -165,7 +166,7 @@ public class ProjectIOModule extends EditorModule {
 
 		taskDialog = new AsyncTaskProgressDialog("Creating backup", new CreateProjectBackupAsyncTask(backupRoot, backupArchive));
 		taskDialog.setTaskListener(listener);
-		Editor.instance.getStage().addActor(taskDialog.fadeIn());
+		stage.addActor(taskDialog.fadeIn());
 	}
 
 	private void convertAndLoad (FileHandle dataFile, int versionCode) {
@@ -185,7 +186,7 @@ public class ProjectIOModule extends EditorModule {
 
 				taskDialog = new AsyncTaskProgressDialog("Converting project", task);
 				taskDialog.setTaskListener(() -> convertAndLoad(dataFile, converter.getToVersion())); //damn recursive async tasks
-				Editor.instance.getStage().addActor(taskDialog.fadeIn());
+				stage.addActor(taskDialog.fadeIn());
 				return;
 			}
 		}
@@ -252,7 +253,7 @@ public class ProjectIOModule extends EditorModule {
 			}
 		};
 
-		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Creating project", task).fadeIn());
+		stage.addActor(new AsyncTaskProgressDialog("Creating project", task).fadeIn());
 	}
 
 	public void createGenericProject (ProjectGeneric project) {
@@ -284,7 +285,7 @@ public class ProjectIOModule extends EditorModule {
 			}
 		};
 
-		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Creating project", task).fadeIn());
+		stage.addActor(new AsyncTaskProgressDialog("Creating project", task).fadeIn());
 	}
 
 	private void saveProjectFile (Project project, FileHandle projectFile) {
@@ -301,7 +302,7 @@ public class ProjectIOModule extends EditorModule {
 		try {
 			load(projectFile);
 		} catch (EditorException e) {
-			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Error occurred while loading project", e);
+			DialogUtils.showErrorDialog(stage, "Error occurred while loading project", e);
 			Log.exception(e);
 		}
 	}

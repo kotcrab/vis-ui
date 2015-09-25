@@ -20,19 +20,18 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.runtime.spriter.Data;
-import com.kotcrab.vis.runtime.spriter.Loader;
-import com.kotcrab.vis.runtime.spriter.SCMLReader;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
 import com.kotcrab.vis.runtime.component.SpriterComponent;
+import com.kotcrab.vis.runtime.spriter.Data;
+import com.kotcrab.vis.runtime.spriter.Loader;
+import com.kotcrab.vis.runtime.spriter.SCMLReader;
 import com.kotcrab.vis.runtime.util.SpriterLoader;
 
 /** @author Kotcrab */
 public class SpriterCacheModule extends ProjectModule implements WatchListener {
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private AssetsWatcherModule assetsWatcher;
+	private FileAccessModule fileAccess;
+	private AssetsWatcherModule assetsWatcher;
 
 	private ObjectMap<FileHandle, Loader> loaders = new ObjectMap<>();
 	private Array<Loader> awaitingDisposeLoaders = new Array<>();

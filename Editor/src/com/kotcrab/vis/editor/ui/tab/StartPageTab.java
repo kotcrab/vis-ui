@@ -18,10 +18,10 @@ package com.kotcrab.vis.editor.ui.tab;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.ProjectIOModule;
 import com.kotcrab.vis.editor.module.editor.RecentProjectModule;
@@ -42,9 +42,11 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 	private static final String NEW_PROJECT_LINK = "\\*NEW_PROJECT";
 	private static final String LOAD_PROJECT_LINK = "\\*LOAD_PROJECT";
 
-	@InjectModule VisTwitterReader twitterReader;
-	@InjectModule RecentProjectModule recentProjectsModule;
-	@InjectModule ProjectIOModule projectIOModule;
+	private VisTwitterReader twitterReader;
+	private RecentProjectModule recentProjectsModule;
+	private ProjectIOModule projectIOModule;
+
+	private Stage stage;
 
 	public StartPageTab (ModuleInjector injector) {
 		super(false, false);
@@ -110,7 +112,7 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 				Editor.instance.loadProjectDialog();
 				break;
 			default:
-				projectIOModule.loadHandleError(Editor.instance.getStage(), Gdx.files.absolute(url));
+				projectIOModule.loadHandleError(stage, Gdx.files.absolute(url));
 				break;
 		}
 	}

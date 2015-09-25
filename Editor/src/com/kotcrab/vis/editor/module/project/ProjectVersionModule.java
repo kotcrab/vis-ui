@@ -19,11 +19,10 @@ package com.kotcrab.vis.editor.module.project;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.module.InjectModule;
 
 /** @author Kotcrab */
 public class ProjectVersionModule extends ProjectModule {
-	@InjectModule FileAccessModule fileAccess;
+	private FileAccessModule fileAccess;
 
 	@Override
 	public void init () {

@@ -18,13 +18,12 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.plugin.*;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
@@ -52,13 +51,16 @@ import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.jar.Manifest;
 
+/**
+ * @author Kotcrab
+ */
 public class PluginLoaderModule extends EditorModule {
 	private static final String TAG = "PluginLoader";
 	private static final String PLUGINS_FOLDER_PATH = App.JAR_FOLDER_PATH + "plugins";
 
-	@InjectModule private ExtensionStorageModule pluginContainer;
-	@InjectModule private PluginSettingsModule settings;
-	@InjectModule private ToastModule toastModule;
+	private ExtensionStorageModule pluginContainer;
+	private PluginSettingsModule settings;
+	private ToastModule toastModule;
 
 	private Array<PluginDescriptor> allPlugins = new Array<>();
 	private Array<PluginDescriptor> pluginsToLoad;
@@ -208,6 +210,7 @@ public class PluginLoaderModule extends EditorModule {
 
 	public static class PluginSettingsModule extends EditorSettingsModule<PluginsConfig> {
 		private PluginLoaderModule loader;
+		private Stage stage;
 
 		private ObjectMap<String, VisCheckBox> pluginsCheckBoxes = new ObjectMap<>();
 		private VisTable pluginsTable;
@@ -256,7 +259,7 @@ public class PluginLoaderModule extends EditorModule {
 				checkBox.setProgrammaticChangeEvents(false);
 
 				LinkLabel detailsLabel = new LinkLabel("Details");
-				detailsLabel.setListener(url -> Editor.instance.getStage().addActor(new PluginDetailsDialog(descriptor).fadeIn()));
+				detailsLabel.setListener(url -> stage.addActor(new PluginDetailsDialog(descriptor).fadeIn()));
 
 				pluginsTable.add(checkBox);
 				pluginsTable.add().expandX().fillX();
@@ -268,7 +271,7 @@ public class PluginLoaderModule extends EditorModule {
 						if (checkBox.isChecked()) {
 							checkBox.setChecked(false);
 
-							Editor.instance.getStage().addActor(new LicenseDialog(descriptor.license, new LicenseDialogListener() {
+							stage.addActor(new LicenseDialog(descriptor.license, new LicenseDialogListener() {
 								@Override
 								public void licenseDeclined () {
 									checkBox.setChecked(false);

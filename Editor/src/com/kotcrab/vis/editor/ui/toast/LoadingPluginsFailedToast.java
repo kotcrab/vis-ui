@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.ui.toast;
 
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.plugin.FailedPluginDescriptor;
 import com.kotcrab.vis.editor.ui.dialog.DetailsDialog;
@@ -33,7 +32,7 @@ import com.kotcrab.vis.ui.widget.*;
 public class LoadingPluginsFailedToast extends VisTable {
 	public LoadingPluginsFailedToast (Array<FailedPluginDescriptor> failedPlugins) {
 		LinkLabel label = new LinkLabel("Details");
-		label.setListener(url -> Editor.instance.getStage().addActor(new LoadingPluginsFailedDialog(failedPlugins).fadeIn()));
+		label.setListener(url -> getStage().addActor(new LoadingPluginsFailedDialog(failedPlugins).fadeIn()));
 
 		add("Some plugins failed to load!").expand().fill().row();
 		add(label).right();
@@ -53,7 +52,7 @@ public class LoadingPluginsFailedToast extends VisTable {
 
 			for (FailedPluginDescriptor desc : failedPlugins) {
 				VisTextButton detailsButton = new VisTextButton("Details");
-				detailsButton.addListener(new VisChangeListener((event, actor) -> Editor.instance.getStage().addActor(new DetailsDialog(desc.exception).fadeIn())));
+				detailsButton.addListener(new VisChangeListener((event, actor) -> getStage().addActor(new DetailsDialog(desc.exception).fadeIn())));
 
 				list.add(desc.file.name()).left().expand().fill();
 				list.add(detailsButton);

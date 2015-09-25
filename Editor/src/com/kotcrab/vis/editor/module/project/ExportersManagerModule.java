@@ -20,7 +20,6 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.InputModule;
 import com.kotcrab.vis.editor.plugin.ExporterPlugin;
@@ -32,10 +31,10 @@ import java.util.UUID;
  * @author Kotcrab
  */
 public class ExportersManagerModule extends ProjectModule {
-	@InjectModule private InputModule inputModule;
-	@InjectModule private ExtensionStorageModule extensionStorage;
+	private InputModule inputModule;
+	private ExtensionStorageModule extensionStorage;
 
-	@InjectModule private ExportSettingsModule exportSettings;
+	private ExportSettingsModule exportSettings;
 
 	private ObjectMap<UUID, ExporterPlugin> exporters = new ObjectMap<>();
 

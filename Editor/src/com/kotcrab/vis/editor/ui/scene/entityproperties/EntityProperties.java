@@ -39,7 +39,6 @@ import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
@@ -61,7 +60,10 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentT
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.PhysicsPropertiesComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.RenderableComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.SpriterPropertiesComponentTable;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.*;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.BMPTextUITable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.GroupUITable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.TtfTextUITable;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.gdx.EventStopper;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
@@ -97,17 +99,17 @@ public class EntityProperties extends VisTable implements Disposable {
 	public static final int AXIS_LABEL_WIDTH = 10;
 	public static final int FIELD_WIDTH = 70;
 
-	@InjectModule private StatusBarModule statusBarModule;
-	@InjectModule private ToastModule toastModule;
-	@InjectModule private ColorPickerModule colorPickerModule;
+	private StatusBarModule statusBarModule;
+	private ToastModule toastModule;
+	private ColorPickerModule colorPickerModule;
 
-	@InjectModule private FileAccessModule fileAccessModule;
-	@InjectModule private FontCacheModule fontCacheModule;
-	@InjectModule private SceneIOModule sceneIO;
+	private FileAccessModule fileAccessModule;
+	private FontCacheModule fontCacheModule;
+	private SceneIOModule sceneIO;
 
-	@InjectModule private UndoModule undoModule;
-	@InjectModule private CameraModule cameraModule;
-	@InjectModule private EntityManipulatorModule entityManipulator;
+	private UndoModule undoModule;
+	private CameraModule cameraModule;
+	private EntityManipulatorModule entityManipulator;
 
 	private VisComponentManipulator componentManipulator;
 

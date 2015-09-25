@@ -18,11 +18,10 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
-import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ColorSettingsModule.ColorConfig;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
 import com.kotcrab.vis.editor.ui.TintImage;
@@ -49,7 +48,10 @@ import java.lang.reflect.Field;
 public class ColorSettingsModule extends EditorSettingsModule<ColorConfig> {
 	private static final int COLOR_LABEL_WIDTH = 100;
 
-	@InjectModule private ColorPickerModule colorPickerModule;
+	private ColorPickerModule colorPickerModule;
+
+	private Stage stage;
+
 	private ColorPicker colorPicker;
 
 	private TintImage backgroundColorImage;
@@ -102,7 +104,7 @@ public class ColorSettingsModule extends EditorSettingsModule<ColorConfig> {
 			public void clicked (InputEvent event, float x, float y) {
 				colorPicker.setColor(image.getColor());
 				colorPicker.setListener((VisColorPickerListener) image::setColor);
-				Editor.instance.getStage().addActor(colorPicker.fadeIn());
+				stage.addActor(colorPicker.fadeIn());
 			}
 		});
 

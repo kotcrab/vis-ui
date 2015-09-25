@@ -21,7 +21,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
@@ -32,7 +31,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 public class DonateReminderModule extends EditorModule {
 	private static final String DONATE_URL = "http://vis.kotcrab.com/donate.html";
 
-	@InjectModule MenuBarModule menuBar;
+	MenuBarModule menuBar;
 
 	@Override
 	public void init () {

@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.ui.dialog;
 
 import com.badlogic.gdx.Gdx;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.util.AsyncTask;
 import com.kotcrab.vis.editor.util.AsyncTaskListener;
 import com.kotcrab.vis.ui.util.TableUtils;
@@ -74,7 +73,7 @@ public class AsyncTaskProgressDialog extends VisWindow {
 
 			@Override
 			public void failed (String reason, Exception ex) {
-				DialogUtils.showErrorDialog(Editor.instance.getStage(), reason == null ? "Unknown error occurred" : reason, ex);
+				DialogUtils.showErrorDialog(getStage(), reason == null ? "Unknown error occurred" : reason, ex);
 				if (listener != null) listener.failed(reason, ex);
 			}
 		});

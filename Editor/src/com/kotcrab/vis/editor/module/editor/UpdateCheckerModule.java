@@ -20,7 +20,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.webapi.EditorBuild;
 import com.kotcrab.vis.editor.webapi.UpdateChannelType;
@@ -34,10 +33,10 @@ import com.kotcrab.vis.ui.widget.VisTable;
 public class UpdateCheckerModule extends EditorModule {
 	private static final String TAG = "UpdateChecker";
 
-	@InjectModule WebAPIModule webAPI;
-	@InjectModule GeneralSettingsModule settings;
-	@InjectModule ToastModule toastModule;
-	@InjectModule MenuBarModule menuBar;
+	private WebAPIModule webAPI;
+	private GeneralSettingsModule settings;
+	private ToastModule toastModule;
+	private MenuBarModule menuBar;
 
 	@Override
 	public void postInit () {

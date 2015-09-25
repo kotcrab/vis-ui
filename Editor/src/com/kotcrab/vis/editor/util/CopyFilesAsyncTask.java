@@ -16,8 +16,8 @@
 
 package com.kotcrab.vis.editor.util;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.ui.util.dialog.ConfirmDialogListener;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
@@ -29,7 +29,8 @@ import java.util.concurrent.CountDownLatch;
  * @author Kotcrab
  */
 public class CopyFilesAsyncTask extends AsyncTask implements ConfirmDialogListener<Integer> {
-	private Array<CopyFileTaskDescriptor> tasks;
+	private final Stage stage;
+	private final Array<CopyFileTaskDescriptor> tasks;
 
 	private static final int YES = 0;
 	private static final int NO = 1;
@@ -47,8 +48,9 @@ public class CopyFilesAsyncTask extends AsyncTask implements ConfirmDialogListen
 	private boolean canceled;
 	private CountDownLatch latch;
 
-	public CopyFilesAsyncTask (Array<CopyFileTaskDescriptor> tasks) {
+	public CopyFilesAsyncTask (Stage stage, Array<CopyFileTaskDescriptor> tasks) {
 		super("FileCopier");
+		this.stage = stage;
 		this.tasks = tasks;
 	}
 
@@ -68,7 +70,7 @@ public class CopyFilesAsyncTask extends AsyncTask implements ConfirmDialogListen
 
 					if (overwritePolicy == OverwritePolicy.ASK) {
 						latch = new CountDownLatch(1);
-						DialogUtils.showConfirmDialog(Editor.instance.getStage(), "Overwrite?",
+						DialogUtils.showConfirmDialog(stage, "Overwrite?",
 								"File '" + task.file.name() + "' already exists in target directory, overwrite it?", dialogButtons, dialogReturns, this);
 						latch.await();
 					}

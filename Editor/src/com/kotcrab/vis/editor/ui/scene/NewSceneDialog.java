@@ -21,7 +21,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
@@ -46,12 +45,12 @@ import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
  * @author Kotcrab
  */
 public class NewSceneDialog extends VisWindow {
-	@InjectModule private StatusBarModule statusBar;
+	private StatusBarModule statusBar;
 
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private SceneIOModule sceneIO;
-	@InjectModule private SceneCacheModule sceneCache;
-	@InjectModule private SceneTabsModule sceneTabsModule;
+	private FileAccessModule fileAccess;
+	private SceneIOModule sceneIO;
+	private SceneCacheModule sceneCache;
+	private SceneTabsModule sceneTabsModule;
 
 	private VisValidatableTextField nameTextField;
 	private VisValidatableTextField pathTextField;

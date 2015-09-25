@@ -23,7 +23,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.ColorSettingsModule;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsModule;
@@ -41,11 +40,11 @@ import com.kotcrab.vis.ui.widget.VisValidatableTextField;
  * @author Kotcrab
  */
 public class GridRendererSystem extends BaseSystem {
-	@InjectModule private CameraModule camera;
-	@InjectModule private RendererModule renderer;
+	private CameraModule camera;
+	private RendererModule renderer;
 
-	@InjectModule private ColorSettingsModule colorSettings;
-	@InjectModule private GridSettingsModule settings;
+	private ColorSettingsModule colorSettings;
+	private GridSettingsModule settings;
 
 	private Batch batch;
 	private ModuleInjector sceneMC;

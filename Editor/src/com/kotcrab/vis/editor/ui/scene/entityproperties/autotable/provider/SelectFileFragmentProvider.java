@@ -21,12 +21,11 @@ import com.artemis.Entity;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
@@ -49,7 +48,8 @@ import static com.kotcrab.vis.editor.util.vis.EntityUtils.getCommonString;
 public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSelectFile> {
 	private static final int MAX_FILE_LABEL_WIDTH = 175;
 
-	@InjectModule private FileAccessModule fileAccessModule;
+	private FileAccessModule fileAccessModule;
+	private Stage stage;
 
 	private ObjectMap<String, ATSelectFileHandlerGroup> handlerGroups = new ObjectMap<>();
 
@@ -97,7 +97,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 			public void changed (ChangeEvent event, Actor actor) {
 				selectFontDialog.rebuildFileList();
 				properties.beginSnapshot();
-				Editor.instance.getStage().addActor(selectFontDialog.fadeIn());
+				stage.addActor(selectFontDialog.fadeIn());
 			}
 		});
 	}

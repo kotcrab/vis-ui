@@ -23,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.project.AssetsAnalyzerModule;
@@ -44,9 +43,9 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
  * @author Kotcrab
  */
 public class AssetsUsagesTab extends Tab {
-	@InjectModule private AssetsAnalyzerModule usageAnalyzer;
-	@InjectModule private SceneTabsModule sceneTabs;
-	@InjectModule private QuickAccessModule quickAccess;
+	private AssetsAnalyzerModule usageAnalyzer;
+	private SceneTabsModule sceneTabs;
+	private QuickAccessModule quickAccess;
 
 	private AssetsUsages usages;
 

@@ -17,13 +17,12 @@
 package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Json;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsIOModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
@@ -52,15 +51,17 @@ public class DefaultExporter implements ExporterPlugin {
 	public static final String SETTINGS_FILE_NAME = "defaultExporterSettings";
 	public static final String EXPORTER_UUID = "b8bd183c-1dc6-4ac5-9bbe-a4ba86a61b95";
 
+	private EditorSettingsIOModule settingsIO;
+	private StatusBarModule statusBar;
+	private TabsModule tabsModule;
+
+	private FileAccessModule fileAccess;
+	private SceneCacheModule sceneCache;
+
+	private Stage stage;
+
 	private Project project;
 	private DefaultExporterSettings settings;
-
-	@InjectModule private EditorSettingsIOModule settingsIO;
-	@InjectModule private StatusBarModule statusBar;
-	@InjectModule private TabsModule tabsModule;
-
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private SceneCacheModule sceneCache;
 
 	private FileHandle visAssetsDir;
 
@@ -104,7 +105,7 @@ public class DefaultExporter implements ExporterPlugin {
 	@Override
 	public void export (boolean quick) {
 		if (tabsModule.getDirtyTabCount() > 0)
-			Editor.instance.getStage().addActor(new UnsavedResourcesDialog(tabsModule, () -> beforeExport(quick)).fadeIn());
+			stage.addActor(new UnsavedResourcesDialog(tabsModule, () -> beforeExport(quick)).fadeIn());
 		else
 			beforeExport(quick);
 	}
@@ -116,7 +117,7 @@ public class DefaultExporter implements ExporterPlugin {
 
 	@Override
 	public void showSettings () {
-		Editor.instance.getStage().addActor(new DefaultExporterSettingsDialog(settingsIO, settings).fadeIn());
+		stage.addActor(new DefaultExporterSettingsDialog(settingsIO, settings).fadeIn());
 	}
 
 	private void beforeExport (boolean quick) {
@@ -144,7 +145,7 @@ public class DefaultExporter implements ExporterPlugin {
 
 	private void exportProject () {
 		ExportAsyncTask exportTask = new ExportAsyncTask();
-		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Exporting", exportTask).fadeIn());
+		stage.addActor(new AsyncTaskProgressDialog("Exporting", exportTask).fadeIn());
 	}
 
 	private class ExportAsyncTask extends SteppedAsyncTask {

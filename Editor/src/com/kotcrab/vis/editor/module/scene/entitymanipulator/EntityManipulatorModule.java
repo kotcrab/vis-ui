@@ -39,7 +39,6 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.entity.*;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.*;
@@ -82,20 +81,20 @@ import static com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTi
 
 /** @author Kotcrab */
 public class EntityManipulatorModule extends SceneModule {
-	@InjectModule private StatusBarModule statusBar;
-	@InjectModule private EditingSettingsModule editingSettings;
-	@InjectModule private GridSettingsModule gridSettings;
+	private StatusBarModule statusBar;
+	private EditingSettingsModule editingSettings;
+	private GridSettingsModule gridSettings;
 
-	@InjectModule private SceneIOModule sceneIO;
-	@InjectModule private SupportModule supportModule;
+	private SceneIOModule sceneIO;
+	private SupportModule supportModule;
 
-	@InjectModule private CameraModule camera;
-	@InjectModule private UndoModule undoModule;
-	@InjectModule private TextureCacheModule textureCache;
-	@InjectModule private ParticleCacheModule particleCache;
-	@InjectModule private FontCacheModule fontCache;
-	@InjectModule private SpriterCacheModule spriterCache;
-	@InjectModule private RendererModule rendererModule;
+	private CameraModule camera;
+	private UndoModule undoModule;
+	private TextureCacheModule textureCache;
+	private ParticleCacheModule particleCache;
+	private FontCacheModule fontCache;
+	private SpriterCacheModule spriterCache;
+	private RendererModule rendererModule;
 
 	private Stage stage;
 
@@ -139,8 +138,6 @@ public class EntityManipulatorModule extends SceneModule {
 
 	@Override
 	public void init () {
-		stage = Editor.instance.getStage();
-
 		shapeRenderer = rendererModule.getShapeRenderer();
 		entityProxyCache = engineConfiguration.getManager(EntityProxyCache.class);
 		zIndexManipulator = engineConfiguration.getManager(ZIndexManipulatorManager.class);

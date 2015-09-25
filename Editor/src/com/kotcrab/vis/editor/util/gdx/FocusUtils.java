@@ -17,15 +17,15 @@
 package com.kotcrab.vis.editor.util.gdx;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.kotcrab.vis.editor.Editor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
  * Some utils to focus yourself.
  * @author Kotcrab
  */
 public class FocusUtils {
-	public static void focus (Actor target) {
-		Editor.instance.getStage().setKeyboardFocus(target);
-		Editor.instance.getStage().setScrollFocus(target);
+	public static void focus (Stage stage, Actor target) {
+		stage.setKeyboardFocus(target);
+		stage.setScrollFocus(target);
 	}
 }

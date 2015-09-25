@@ -18,10 +18,9 @@ package com.kotcrab.vis.editor.module.project.assetsmanager;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.SpriterDataIOModule;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.SpriterImportDialog;
@@ -37,7 +36,9 @@ import java.awt.image.BufferedImage;
 
 /** @author Kotcrab */
 public class SpriterContextProvider implements AssetsUIContextProvider {
-	@InjectModule private SpriterDataIOModule spriterDataIO;
+	private SpriterDataIOModule spriterDataIO;
+
+	private Stage stage;
 
 	private final VisTable importTable;
 	private final VisTable updateTable;
@@ -47,7 +48,7 @@ public class SpriterContextProvider implements AssetsUIContextProvider {
 
 	public SpriterContextProvider () {
 		VisTextButton importButton = new VisTextButton("Import", "blue");
-		importButton.addListener(new VisChangeListener((event, actor) -> Editor.instance.getStage().addActor(new SpriterImportDialog(animFolder, relativePath))));
+		importButton.addListener(new VisChangeListener((event, actor) -> stage.addActor(new SpriterImportDialog(animFolder, relativePath))));
 
 		importTable = new VisTable();
 		importTable.pad(3);
@@ -57,7 +58,7 @@ public class SpriterContextProvider implements AssetsUIContextProvider {
 
 		VisTextButton updateButton = new VisTextButton("Update", "blue");
 		updateButton.addListener(new VisChangeListener((event, actor) ->
-				Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Updating Animation", new UpdateAnimationAsyncTask()))));
+				stage.addActor(new AsyncTaskProgressDialog("Updating Animation", new UpdateAnimationAsyncTask()))));
 
 		updateTable = new VisTable();
 		updateTable.pad(3);

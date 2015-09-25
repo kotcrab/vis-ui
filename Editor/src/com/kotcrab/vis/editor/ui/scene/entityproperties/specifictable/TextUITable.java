@@ -23,7 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
@@ -49,8 +48,8 @@ import static com.kotcrab.vis.editor.util.vis.EntityUtils.setCommonCheckBoxState
  * @author Kotcrab
  */
 public abstract class TextUITable extends SpecificUITable {
-	@InjectModule protected FontCacheModule fontCache;
-	@InjectModule protected FileAccessModule fileAccess;
+	protected FontCacheModule fontCache;
+	protected FileAccessModule fileAccess;
 
 	protected SelectFileDialog selectFontDialog;
 

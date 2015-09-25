@@ -20,7 +20,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Keys;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.scene.SceneMetadata;
 
 /**
@@ -28,7 +27,7 @@ import com.kotcrab.vis.editor.module.scene.SceneMetadata;
  * @author Kotcrab
  */
 public class SceneMetadataModule extends ProjectModule {
-	@InjectModule FileAccessModule fileAccess;
+	private FileAccessModule fileAccess;
 
 	private FileHandle metadataFile;
 

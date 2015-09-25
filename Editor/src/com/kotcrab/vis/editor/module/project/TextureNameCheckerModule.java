@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.ObjectSet;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
@@ -26,10 +25,10 @@ import com.kotcrab.vis.editor.util.FileUtils;
 
 /** @author Kotcrab */
 public class TextureNameCheckerModule extends ProjectModule implements WatchListener {
-	@InjectModule private ToastModule toastModule;
+	private ToastModule toastModule;
 
-	@InjectModule private AssetsWatcherModule assetsWatcher;
-	@InjectModule private FileAccessModule fileAccess;
+	private AssetsWatcherModule assetsWatcher;
+	private FileAccessModule fileAccess;
 
 	private ObjectSet<String> paths = new ObjectSet<>();
 

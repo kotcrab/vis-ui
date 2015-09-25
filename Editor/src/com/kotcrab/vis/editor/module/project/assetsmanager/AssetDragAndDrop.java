@@ -31,7 +31,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap.Values;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.scheme.SpriterAssetData;
@@ -47,11 +46,11 @@ import com.kotcrab.vis.ui.widget.VisLabel;
  * @author Kotcrab
  */
 public class AssetDragAndDrop implements Disposable {
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private TextureCacheModule textureCache;
-	@InjectModule private FontCacheModule fontCache;
-	@InjectModule private ParticleCacheModule particleCache;
-	@InjectModule private SpriterDataIOModule spriterDataIO;
+	private FileAccessModule fileAccess;
+	private TextureCacheModule textureCache;
+	private FontCacheModule fontCache;
+	private ParticleCacheModule particleCache;
+	private SpriterDataIOModule spriterDataIO;
 
 	private VisDragAndDrop dragAndDrop;
 	private DragAndDropTarget dropTarget;

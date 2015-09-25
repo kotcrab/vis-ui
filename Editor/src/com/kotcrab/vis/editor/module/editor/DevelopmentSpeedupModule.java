@@ -18,14 +18,13 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.esotericsoftware.kryo.KryoException;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
@@ -42,7 +41,9 @@ import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 public class DevelopmentSpeedupModule extends EditorModule {
 	private static final String TAG = "DevelopmentSpeedupModule";
 
-	@InjectModule private ProjectIOModule projectIO;
+	private ProjectIOModule projectIO;
+
+	private Stage stage;
 
 	private FileHandle projectFile;
 	private FileHandle sceneFile;
@@ -92,7 +93,7 @@ public class DevelopmentSpeedupModule extends EditorModule {
 					projectMC.get(SceneTabsModule.class).open(testScene);
 				}
 			} catch (KryoException e) {
-				DialogUtils.showErrorDialog(Editor.instance.getStage(), "Failed to load scene due to corrupted file.", e);
+				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
 				Log.exception(e);
 			}
 

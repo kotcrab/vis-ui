@@ -21,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.VisComponentManipulator;
@@ -44,8 +43,8 @@ public class ComponentPanel extends VisTable {
 	private static final Drawable treeMinus = VisUI.getSkin().getDrawable("tree-minus");
 	private static final Drawable treeOver = VisUI.getSkin().getDrawable("tree-over");
 
-	@InjectModule private EntityManipulatorModule entityManipulatorModule;
-	@InjectModule private UndoModule undoModule;
+	private EntityManipulatorModule entityManipulatorModule;
+	private UndoModule undoModule;
 
 	private Image image;
 

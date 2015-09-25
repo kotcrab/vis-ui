@@ -18,12 +18,11 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.scheme.SpriterAssetData;
 
 /** @author Kotcrab */
 public class SpriterDataIOModule extends ProjectModule {
-	@InjectModule private FileAccessModule fileAccess;
+	private FileAccessModule fileAccess;
 
 	private Json json;
 

@@ -22,7 +22,6 @@ import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ExceptionEvent;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.ui.toast.EnableAnalyticsToast;
 import com.kotcrab.vis.editor.ui.toast.EnableAnalyticsToast.EnableAnalyticsToastListener;
 import org.apache.commons.codec.binary.Base64;
@@ -35,8 +34,8 @@ import java.nio.charset.Charset;
 public class AnalyticsModule extends EditorModule {
 	public static final String ID = "VUEtNDMwODg5MjAtNQ==";
 
-	@InjectModule ToastModule toastModule;
-	@InjectModule GeneralSettingsModule generalSettings;
+	private ToastModule toastModule;
+	private GeneralSettingsModule generalSettings;
 
 	private GoogleAnalytics analytics;
 

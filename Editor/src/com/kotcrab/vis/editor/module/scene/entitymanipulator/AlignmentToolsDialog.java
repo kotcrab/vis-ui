@@ -20,7 +20,6 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.MoveEntityAction;
@@ -36,7 +35,8 @@ import com.kotcrab.vis.ui.widget.VisTable;
 
 /** @author Kotcrab */
 public class AlignmentToolsDialog extends VisTable {
-	@InjectModule UndoModule undoModule;
+	private UndoModule undoModule;
+
 	private Array<EntityProxy> selectedEntities;
 
 	public AlignmentToolsDialog (ModuleInjector injector, Array<EntityProxy> selectedEntities) {

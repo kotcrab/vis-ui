@@ -18,15 +18,14 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.assets.*;
 import com.kotcrab.vis.editor.assets.transaction.AssetProviderResult;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransaction;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionException;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
 import com.kotcrab.vis.editor.assets.transaction.generator.*;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
@@ -51,13 +50,15 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
  * @author Kotcrab
  */
 public class AssetsAnalyzerModule extends ProjectModule {
-	@InjectModule private ToastModule toastModule;
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private SupportModule supportModule;
-	@InjectModule private TabsModule tabsModule;
-	@InjectModule private SceneTabsModule sceneTabsModule;
-	@InjectModule private QuickAccessModule quickAccessModule;
-	@InjectModule private SceneCacheModule sceneCache;
+	private ToastModule toastModule;
+	private FileAccessModule fileAccess;
+	private SupportModule supportModule;
+	private TabsModule tabsModule;
+	private SceneTabsModule sceneTabsModule;
+	private QuickAccessModule quickAccessModule;
+	private SceneCacheModule sceneCache;
+
+	private Stage stage;
 
 	private Array<AssetDescriptorProvider> providers = new Array<>();
 	private Array<AssetTransactionGenerator> transactionsGens = new Array<>();
@@ -176,7 +177,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 		toastModule.show("Some tabs must be reopened during refactoring", 3);
 
 		if (tabsModule.getDirtyTabCount() > 0) {
-			Editor.instance.getStage().addActor(new UnsavedResourcesDialog(tabsModule, () -> doFileMoving(source, target)).fadeIn());
+			stage.addActor(new UnsavedResourcesDialog(tabsModule, () -> doFileMoving(source, target)).fadeIn());
 		} else
 			doFileMoving(source, target);
 	}
@@ -212,7 +213,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 			AssetProviderResult result = provideDescriptor(source, path);
 			transaction = gen.analyze(projectContainer, result, source, target, fileAccess.relativizeToAssetsFolder(target));
 		} catch (AssetTransactionException e) {
-			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Error occurred during asset transaction preparation, nothing was changed.", e);
+			DialogUtils.showErrorDialog(stage, "Error occurred during asset transaction preparation, nothing was changed.", e);
 		}
 
 		//TODO support for transaction execute undo

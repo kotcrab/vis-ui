@@ -21,7 +21,6 @@ import com.artemis.Component;
 import com.artemis.Entity;
 import com.artemis.EntityEdit;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 
@@ -30,7 +29,7 @@ import com.kotcrab.vis.editor.util.undo.UndoableAction;
  * @author Kotcrab
  */
 public class VisComponentManipulator extends BaseSystem {
-	@InjectModule EntityManipulatorModule entityManipulatorModule;
+	private EntityManipulatorModule entityManipulatorModule;
 
 	private Array<Job> jobs = new Array<>();
 

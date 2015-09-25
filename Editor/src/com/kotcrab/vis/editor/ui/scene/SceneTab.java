@@ -31,7 +31,6 @@ import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.module.ContentTable;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;
@@ -64,18 +63,18 @@ import com.kotcrab.vis.ui.widget.VisTable;
 public class SceneTab extends MainContentTab implements DragAndDropTarget, CloseTabWhenMovingResources {
 	private EditorScene scene;
 
-	@InjectModule private ExtensionStorageModule pluginContainer;
-	@InjectModule private MenuBarModule menuBarModule;
-	@InjectModule private StatusBarModule statusBarModule;
-	@InjectModule private SceneTabsModule sceneTabs;
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private SceneIOModule sceneIOModule;
+	private ExtensionStorageModule pluginContainer;
+	private MenuBarModule menuBarModule;
+	private StatusBarModule statusBarModule;
+	private SceneTabsModule sceneTabs;
+	private FileAccessModule fileAccess;
+	private SceneIOModule sceneIOModule;
 
 	private SceneModuleContainer sceneMC;
 
-	@InjectModule private EntityManipulatorModule entityManipulator;
-	@InjectModule private UndoModule undoModule;
-	@InjectModule private CameraModule cameraModule;
+	private EntityManipulatorModule entityManipulator;
+	private UndoModule undoModule;
+	private CameraModule cameraModule;
 
 	private Stage stage;
 
@@ -94,7 +93,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
 		super(true);
 		this.scene = scene;
-
 		stage = Editor.instance.getStage();
 
 		sceneMC = new SceneModuleContainer(projectMC, this, scene, stage.getBatch());
@@ -377,7 +375,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 	}
 
 	public void focusSelf () {
-		FocusUtils.focus(content);
+		FocusUtils.focus(stage, content);
 	}
 
 	@Override

@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.components.handler;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ShaderCacheModule;
 import com.kotcrab.vis.runtime.assets.ShaderAsset;
@@ -27,8 +26,8 @@ import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 
 /** @author Kotcrab */
 public class ShaderATSelectFileHandler implements ATSelectFileHandler {
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private ShaderCacheModule shaderCache;
+	private FileAccessModule fileAccess;
+	private ShaderCacheModule shaderCache;
 
 	@Override
 	public void applyChanges (Entity entity, FileHandle file) {

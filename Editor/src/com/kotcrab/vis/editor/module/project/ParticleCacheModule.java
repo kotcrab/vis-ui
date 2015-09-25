@@ -20,7 +20,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
@@ -31,8 +30,8 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
  * @author Kotcrab
  */
 public class ParticleCacheModule extends ProjectModule implements WatchListener {
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private AssetsWatcherModule watcherModule;
+	private FileAccessModule fileAccess;
+	private AssetsWatcherModule watcherModule;
 
 	@Override
 	public void init () {

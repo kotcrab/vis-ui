@@ -22,7 +22,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.esotericsoftware.kryo.Serializer;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
@@ -36,7 +35,7 @@ import java.util.UUID;
  * @author Kotcrab
  */
 public class SupportModule extends ProjectModule {
-	@InjectModule private ToastModule toastModule;
+	private ToastModule toastModule;
 
 	private Array<EditorEntitySupport> supports = new Array<>();
 

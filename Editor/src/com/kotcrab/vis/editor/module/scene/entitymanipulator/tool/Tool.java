@@ -20,7 +20,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.kotcrab.annotation.CallSuper;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.editor.module.scene.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
@@ -35,9 +34,9 @@ import com.kotcrab.vis.ui.widget.VisTable;
 public class Tool extends InputListener {
 	private boolean loaded = false;
 
-	@InjectModule protected EntityManipulatorModule entityManipulator;
-	@InjectModule protected CameraModule camera;
-	@InjectModule protected UndoModule undoModule;
+	protected EntityManipulatorModule entityManipulator;
+	protected CameraModule camera;
+	protected UndoModule undoModule;
 
 	protected SceneModuleContainer sceneMC;
 	protected EditorScene scene;

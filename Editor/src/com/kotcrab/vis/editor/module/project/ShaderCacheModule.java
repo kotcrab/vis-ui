@@ -24,7 +24,6 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
@@ -34,9 +33,9 @@ import com.kotcrab.vis.runtime.assets.ShaderAsset;
  * @author Kotcrab
  */
 public class ShaderCacheModule extends ProjectModule implements WatchListener {
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private AssetsWatcherModule watcherModule;
-	@InjectModule private ToastModule toastModule;
+	private FileAccessModule fileAccess;
+	private AssetsWatcherModule watcherModule;
+	private ToastModule toastModule;
 
 	private ObjectMap<ShaderAsset, ShaderProgram> shaders = new ObjectMap<>();
 

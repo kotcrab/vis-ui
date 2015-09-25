@@ -24,7 +24,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.SupportModule;
@@ -44,9 +43,10 @@ import com.kotcrab.vis.ui.widget.VisLabel;
  * @author Kotcrab
  */
 public class FileItem extends Table {
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private SupportModule supportModule;
-	@InjectModule private TextureCacheModule textureCache;
+	private FileAccessModule fileAccess;
+	private SupportModule supportModule;
+	private TextureCacheModule textureCache;
+
 	private FileHandle file;
 
 	private TextureRegion region;

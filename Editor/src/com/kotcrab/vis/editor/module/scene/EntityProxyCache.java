@@ -23,7 +23,6 @@ import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.entity.EntityScheme;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.SupportModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.*;
@@ -31,7 +30,7 @@ import com.kotcrab.vis.runtime.component.*;
 
 @Wire
 public class EntityProxyCache extends Manager {
-	@InjectModule private SupportModule supportModule;
+	private SupportModule supportModule;
 
 	private AspectSubscriptionManager subscriptionManager;
 

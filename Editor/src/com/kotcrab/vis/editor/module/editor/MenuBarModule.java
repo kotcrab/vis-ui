@@ -46,9 +46,9 @@ import static com.kotcrab.vis.editor.event.SceneMenuBarEventType.*;
  */
 public class MenuBarModule extends EditorModule {
 	private ProjectModuleContainer projectContainer;
+	private Stage stage;
 	private Editor editor;
 
-	private Stage stage;
 	private MenuBar menuBar;
 
 	private VisTable container;
@@ -65,7 +65,6 @@ public class MenuBarModule extends EditorModule {
 
 	public MenuBarModule (ProjectModuleContainer moduleContainer) {
 		editor = Editor.instance;
-		stage = editor.getStage();
 		projectContainer = moduleContainer;
 
 		menuBar = new MenuBar();

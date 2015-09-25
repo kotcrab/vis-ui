@@ -32,11 +32,9 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.KryoException;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
@@ -66,19 +64,19 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
  * @author Kotcrab
  */
 public class AssetsUIModule extends ProjectModule implements WatchListener, VisTabbedPaneListener {
-	@InjectModule private TabsModule tabsModule;
-	@InjectModule private QuickAccessModule quickAccessModule;
-	@InjectModule private StatusBarModule statusBar;
+	private TabsModule tabsModule;
+	private QuickAccessModule quickAccessModule;
+	private StatusBarModule statusBar;
 
-	@InjectModule private FileAccessModule fileAccess;
-	@InjectModule private SceneTabsModule sceneTabsModule;
-	@InjectModule private SceneCacheModule sceneCache;
-	@InjectModule private AssetsWatcherModule assetsWatcher;
-	@InjectModule private AssetsAnalyzerModule assetsAnalyzer;
+	private FileAccessModule fileAccess;
+	private SceneTabsModule sceneTabsModule;
+	private SceneCacheModule sceneCache;
+	private AssetsWatcherModule assetsWatcher;
+	private AssetsAnalyzerModule assetsAnalyzer;
 
-	@InjectModule private TextureCacheModule textureCache;
-	@InjectModule private FontCacheModule fontCache;
-	@InjectModule private ParticleCacheModule particleCache;
+	private TextureCacheModule textureCache;
+
+	private Stage stage;
 
 	private FileHandle visFolder;
 	private FileHandle assetsFolder;
@@ -99,8 +97,6 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private VisLabel contentTitleLabel;
 	private SearchField searchField;
 
-	private Stage stage;
-
 	private AssetsTab assetsTab;
 	private AssetDragAndDrop assetDragAndDrop;
 	private AssetsPopupMenu popupMenu;
@@ -114,7 +110,6 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 	@Override
 	public void init () {
-		stage = Editor.instance.getStage();
 		App.eventBus.register(this);
 
 		initModule();
@@ -402,7 +397,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 					quickAccessModule.addTab(tab);
 					atlasViews.put(file, tab);
 				} else {
-					DialogUtils.showErrorDialog(Editor.instance.getStage(), "Unknown error encountered during atlas loading");
+					DialogUtils.showErrorDialog(stage, "Unknown error encountered during atlas loading");
 					return;
 				}
 			} else
@@ -540,7 +535,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 	private void deleteWithErrorDialogIfNeeded (FileHandle file) {
 		if (FileUtils.delete(file) == false) {
-			DialogUtils.showErrorDialog(Editor.instance.getStage(), "Error occurred while deleting file, file may be used by system");
+			DialogUtils.showErrorDialog(stage, "Error occurred while deleting file, file may be used by system");
 		}
 	}
 
@@ -568,7 +563,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			tasks.add(new CopyFileTaskDescriptor(item.getFile(), currentDirectory, overwrites));
 		}
 
-		Editor.instance.getStage().addActor(new AsyncTaskProgressDialog("Copying files", new CopyFilesAsyncTask(tasks)).fadeIn());
+		stage.addActor(new AsyncTaskProgressDialog("Copying files", new CopyFilesAsyncTask(stage, tasks)).fadeIn());
 	}
 
 	private boolean doesFileExists (Array<FileHandle> files, String name) {

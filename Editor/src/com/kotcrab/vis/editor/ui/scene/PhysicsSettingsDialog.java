@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangePhysicsSettingsAction;
@@ -33,7 +32,7 @@ import com.kotcrab.vis.ui.widget.*;
  * @author Kotcrab
  */
 public class PhysicsSettingsDialog extends VisWindow {
-	@InjectModule private UndoModule undoModule;
+	private UndoModule undoModule;
 
 	private SceneTab sceneTab;
 	private EditorScene scene;

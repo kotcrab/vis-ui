@@ -39,7 +39,6 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.*;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializedTypeDescriptor;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializerDescriptor;
 import com.kotcrab.vis.editor.plugin.PluginKryoSerializer;
@@ -72,14 +71,13 @@ public class SceneIOModule extends ProjectModule {
 
 	protected Kryo kryo;
 
-	@InjectModule protected FileAccessModule fileAccessModule;
-	@InjectModule protected SupportModule supportModule;
+	protected FileAccessModule fileAccessModule;
 
-	@InjectModule protected TextureCacheModule textureCache;
-	@InjectModule protected ParticleCacheModule particleCache;
-	@InjectModule protected FontCacheModule fontCache;
-	@InjectModule protected ShaderCacheModule shaderCache;
-	@InjectModule protected SpriterCacheModule spriterCache;
+	protected TextureCacheModule textureCache;
+	protected ParticleCacheModule particleCache;
+	protected FontCacheModule fontCache;
+	protected ShaderCacheModule shaderCache;
+	protected SpriterCacheModule spriterCache;
 
 	private FileHandle assetsFolder;
 	private FileHandle sceneBackupFolder;

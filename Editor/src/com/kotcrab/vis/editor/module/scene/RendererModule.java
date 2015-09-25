@@ -20,13 +20,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
-import com.kotcrab.vis.editor.module.InjectModule;
 
 /**
  * @author Kotcrab
  */
 public class RendererModule extends SceneModule {
-	@InjectModule private CameraModule camera;
+	private CameraModule camera;
+
 	private ShapeRenderer shapeRenderer;
 
 	@Override

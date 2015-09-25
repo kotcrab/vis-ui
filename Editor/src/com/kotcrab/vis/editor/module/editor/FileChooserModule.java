@@ -17,8 +17,8 @@
 package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.file.FileChooser.Mode;
 import com.kotcrab.vis.ui.widget.file.FileChooser.SelectionMode;
@@ -30,6 +30,8 @@ import com.kotcrab.vis.ui.widget.file.FileChooserListener;
  * @author Kotcrab
  */
 public class FileChooserModule extends EditorModule {
+	private Stage stage;
+
 	private FileChooser chooser;
 
 	private FileChooserListener listener;
@@ -78,7 +80,7 @@ public class FileChooserModule extends EditorModule {
 
 		chooser.setMode(Mode.OPEN);
 		chooser.setSelectionMode(mode);
-		Editor.instance.getStage().addActor(chooser.fadeIn());
+		stage.addActor(chooser.fadeIn());
 	}
 
 	public void saveFile (FileChooserAdapter listener) {
@@ -98,6 +100,6 @@ public class FileChooserModule extends EditorModule {
 
 		chooser.setMode(Mode.SAVE);
 		chooser.setSelectionMode(mode);
-		Editor.instance.getStage().addActor(chooser.fadeIn());
+		stage.addActor(chooser.fadeIn());
 	}
 }

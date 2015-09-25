@@ -21,7 +21,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.project.AssetsAnalyzerModule;
@@ -48,9 +47,9 @@ public class DeleteMultipleFilesTab extends Tab {
 	private ModuleInjector injector;
 	private final Array<FileItem> items;
 
-	@InjectModule private AssetsAnalyzerModule usageAnalyzer;
-	@InjectModule private SceneTabsModule tabsModule;
-	@InjectModule private QuickAccessModule quickAccess;
+	private AssetsAnalyzerModule usageAnalyzer;
+	private SceneTabsModule tabsModule;
+	private QuickAccessModule quickAccess;
 
 	private VisTable table;
 	private VisTable usagesTable;
