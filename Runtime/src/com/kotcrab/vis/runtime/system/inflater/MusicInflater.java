@@ -48,7 +48,7 @@ public class MusicInflater extends Manager {
 	}
 
 	@Override
-	protected void setWorld(World world) {
+	protected void setWorld (World world) {
 		super.setWorld(world);
 		flyweight = Entity.createFlyweight(world);
 	}
@@ -71,7 +71,7 @@ public class MusicInflater extends Manager {
 		PathAsset asset = (PathAsset) assetComponent.asset;
 
 		Music music = manager.get(asset.getPath(), Music.class);
-		if(music == null) throw new IllegalStateException("Can't load scene music is missing: " + asset.getPath());
+		if (music == null) throw new IllegalStateException("Can't load scene music is missing: " + asset.getPath());
 		MusicComponent musicComponent = new MusicComponent(music);
 
 		musicComponent.setLooping(musicProtoComponent.looping);

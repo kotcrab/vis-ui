@@ -35,7 +35,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.*;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.entity.*;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;

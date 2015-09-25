@@ -17,13 +17,13 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.components;
 
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
-import com.kotcrab.vis.runtime.spriter.Entity;
 import com.kotcrab.vis.editor.entity.SpriterPropertiesComponent;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.SpriterComponent;
+import com.kotcrab.vis.runtime.spriter.Entity;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
 import com.kotcrab.vis.ui.widget.VisTable;

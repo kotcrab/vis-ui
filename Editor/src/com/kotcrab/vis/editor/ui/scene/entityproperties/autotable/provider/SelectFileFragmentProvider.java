@@ -124,7 +124,8 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 			}
 
 			ATSelectFileHandler handler = group.getByAlias(handlerAlias);
-			if (handler == null) throw new IllegalStateException("Could not find handler for alias: " + handlerAlias + " in group: " + groupClassName);
+			if (handler == null)
+				throw new IllegalStateException("Could not find handler for alias: " + handlerAlias + " in group: " + groupClassName);
 			return handler;
 		} catch (ReflectiveOperationException e) {
 			throw new IllegalStateException("AutoTable failed to create ATSelectFile handler for class: " + groupClassName, e);

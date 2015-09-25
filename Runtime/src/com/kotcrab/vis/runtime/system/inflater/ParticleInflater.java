@@ -51,7 +51,7 @@ public class ParticleInflater extends Manager {
 	}
 
 	@Override
-	protected void setWorld(World world) {
+	protected void setWorld (World world) {
 		super.setWorld(world);
 		flyweight = Entity.createFlyweight(world);
 	}

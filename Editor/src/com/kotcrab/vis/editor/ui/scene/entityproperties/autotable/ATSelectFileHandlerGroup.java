@@ -21,7 +21,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 
 /** @author Kotcrab */
 public interface ATSelectFileHandlerGroup {
-	void setInjector(ModuleInjector injector);
+	void setInjector (ModuleInjector injector);
 
 	ATSelectFileHandler getByAlias (String alias);
 }

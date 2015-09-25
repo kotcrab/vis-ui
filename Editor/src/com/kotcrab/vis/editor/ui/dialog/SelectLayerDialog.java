@@ -86,7 +86,7 @@ public class SelectLayerDialog extends VisWindow {
 		layersMap = new ObjectMap<>();
 
 		for (Layer layer : layers) {
-			if(layer.id == activeLayer.id) continue;
+			if (layer.id == activeLayer.id) continue;
 
 			layersMap.put(layer.name, layer);
 		}

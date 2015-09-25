@@ -25,13 +25,13 @@ import com.kotcrab.vis.editor.util.FileUtils;
  */
 public class ProjectPathUtils {
 	public static boolean isTexture (String relativePath, String ext) {
-		return relativePath.startsWith("gfx") && (ext.equals("jpeg") ||ext.equals("jpg") || ext.equals("png"));
+		return relativePath.startsWith("gfx") && (ext.equals("jpeg") || ext.equals("jpg") || ext.equals("png"));
 	}
 
 	public static boolean isTextureAtlas (FileHandle file, String relativePath) {
 		return relativePath.startsWith("atlas")
-			&& file.extension().equals("atlas")
-			&& (FileUtils.siblingExists(file, "png") || FileUtils.siblingExists(file, "jpg") || FileUtils
+				&& file.extension().equals("atlas")
+				&& (FileUtils.siblingExists(file, "png") || FileUtils.siblingExists(file, "jpg") || FileUtils
 				.siblingExists(file, "jpeg"));
 	}
 }

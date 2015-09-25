@@ -21,8 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 
 /**
  * Allows to use LibGDX {@link Value} with lambdas
- * @see VisWidgetValue
  * @author Kotcrab
+ * @see VisWidgetValue
  */
 public class VisValue extends Value {
 	private ValueGetter getter;

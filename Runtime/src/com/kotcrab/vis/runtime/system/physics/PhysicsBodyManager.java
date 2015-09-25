@@ -46,7 +46,8 @@ public class PhysicsBodyManager extends Manager {
 	@Override
 	public void added (int entityId) {
 		Entity entity = super.world.getEntity(entityId);
-		if (physicsCm.has(entityId) == false || polygonCm.has(entityId) == false || spriteCm.has(entityId) == false) return;
+		if (physicsCm.has(entityId) == false || polygonCm.has(entityId) == false || spriteCm.has(entityId) == false)
+			return;
 
 		PhysicsPropertiesComponent physicsProperties = physicsCm.get(entityId);
 		PolygonComponent polygon = polygonCm.get(entityId);

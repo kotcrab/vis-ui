@@ -19,9 +19,6 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.components.handler;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.ATSelectFileHandlerGroup;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.components.handler.MusicATSelectFileHandler;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.components.handler.ShaderATSelectFileHandler;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.components.handler.SoundATSelectFileHandler;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 
 /** @author Kotcrab */

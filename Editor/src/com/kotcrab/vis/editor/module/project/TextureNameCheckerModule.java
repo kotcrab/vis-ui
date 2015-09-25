@@ -51,7 +51,7 @@ public class TextureNameCheckerModule extends ProjectModule implements WatchList
 
 	@Override
 	public void fileCreated (FileHandle file) {
-		if(warningShown) return;
+		if (warningShown) return;
 
 		String relativePath = fileAccess.relativizeToAssetsFolder(file);
 		if (relativePath.startsWith("gfx") == false) return;
@@ -73,7 +73,7 @@ public class TextureNameCheckerModule extends ProjectModule implements WatchList
 
 	@Override
 	public void fileDeleted (FileHandle file) {
-		if(warningShown) return;
+		if (warningShown) return;
 
 		String relativePath = fileAccess.relativizeToAssetsFolder(file);
 		if (relativePath.startsWith("gfx") == false) return;

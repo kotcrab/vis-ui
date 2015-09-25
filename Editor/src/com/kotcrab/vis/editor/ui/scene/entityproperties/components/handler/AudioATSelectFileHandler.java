@@ -39,5 +39,5 @@ public abstract class AudioATSelectFileHandler implements ATSelectFileHandler {
 		return asset.getPath().substring((getAudioRoot() + "/").length());
 	}
 
-	protected abstract String getAudioRoot();
+	protected abstract String getAudioRoot ();
 }

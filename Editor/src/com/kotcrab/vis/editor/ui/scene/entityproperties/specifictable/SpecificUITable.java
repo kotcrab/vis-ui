@@ -17,8 +17,8 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.ComponentTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 import com.kotcrab.vis.ui.widget.VisTable;
 

@@ -245,8 +245,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		});
 
 		VisImageButton exploreButton = new VisImageButton(Icons.FOLDER_OPEN.drawable(), "Open in Explorer");
-		VisImageButton settingsButton = new VisImageButton(Icons.SETTINGS_VIEW.drawable(), "Change view");
-		VisImageButton importButton = new VisImageButton(Icons.IMPORT.drawable(), "Import");
+//		VisImageButton settingsButton = new VisImageButton(Icons.SETTINGS_VIEW.drawable(), "Change view");
+//		VisImageButton importButton = new VisImageButton(Icons.IMPORT.drawable(), "Import");
 
 		toolbarTable.add(contentTitleLabel).expand().left().padLeft(3);
 		toolbarTable.add(exploreButton);

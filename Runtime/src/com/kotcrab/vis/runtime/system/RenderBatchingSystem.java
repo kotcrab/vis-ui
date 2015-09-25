@@ -59,7 +59,7 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 	}
 
 	@Override
-	protected void setWorld(World world) {
+	protected void setWorld (World world) {
 		super.setWorld(world);
 		flyweight = createFlyweightEntity();
 	}
@@ -125,7 +125,6 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 			final Job job = (Job) data[i];
 			final EntityProcessAgent agent = job.agent;
 
-
 			flyweight.id = job.entityId;
 			boolean changedBatchState = false;
 			final boolean shaderUsed = shaderCm.has(job.entityId);
@@ -189,19 +188,19 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 		return sortedDirty;
 	}
 
-    /** Rendering job wrapper. */
-    public class Job implements Comparable<Job> {
-        public final int entityId;
-        public final EntityProcessAgent agent;
+	/** Rendering job wrapper. */
+	public class Job implements Comparable<Job> {
+		public final int entityId;
+		public final EntityProcessAgent agent;
 
-        /**
-         * @param entityId entity we will process
-         * @param agent agent responsible for processing.
-         */
-        public Job(final int entityId, final EntityProcessAgent agent) {
-            this.entityId = entityId;
-            this.agent = agent;
-        }
+		/**
+		 * @param entityId entity we will process
+		 * @param agent agent responsible for processing.
+		 */
+		public Job (final int entityId, final EntityProcessAgent agent) {
+			this.entityId = entityId;
+			this.agent = agent;
+		}
 
 		@Override
 		public int compareTo (Job o) {

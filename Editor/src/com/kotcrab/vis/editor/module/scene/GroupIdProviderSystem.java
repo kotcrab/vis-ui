@@ -47,7 +47,7 @@ public class GroupIdProviderSystem extends EntityProcessingSystem {
 	@Override
 	protected void process (Entity e) {
 		IntArray groupsIds = groupCm.get(e).groupIds;
-		if(groupsIds.size == 0) return;
+		if (groupsIds.size == 0) return;
 		usedGids.addAll(groupsIds);
 	}
 

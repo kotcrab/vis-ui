@@ -63,6 +63,6 @@ public class PointRenderSystem extends DeferredEntityProcessingSystem {
 
 		float renderSize = baseRenderSize * camera.getZoom();
 		renderSize = Math.min(renderSize, baseRenderSize);
-		batch.draw(icon,  pos.x - renderSize / 2,  pos.y - renderSize / 2, renderSize, renderSize);
+		batch.draw(icon, pos.x - renderSize / 2, pos.y - renderSize / 2, renderSize, renderSize);
 	}
 }

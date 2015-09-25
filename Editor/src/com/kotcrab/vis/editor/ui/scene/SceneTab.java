@@ -264,7 +264,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 
 	@Subscribe
 	public void handleSceneMenuBarEvent (SceneMenuBarEvent event) {
-		if(isActiveTab() == false) return;
+		if (isActiveTab() == false) return;
 
 		switch (event.type) {
 			case SHOW_ALIGNMENT_TOOLS:

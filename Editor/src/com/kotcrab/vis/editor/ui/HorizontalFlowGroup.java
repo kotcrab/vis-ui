@@ -27,7 +27,6 @@ import com.badlogic.gdx.utils.SnapshotArray;
  * available horizontal space and expanding vertically as necessary. During a
  * layout pass, new rows will automatically be added when a child would overflow
  * the available horizontal space.
- * 
  * @author Justin Shapcott
  */
 public class HorizontalFlowGroup extends WidgetGroup {
@@ -38,11 +37,11 @@ public class HorizontalFlowGroup extends WidgetGroup {
 	private boolean sizeInvalid = true;
 	private float spacing = 0;
 
-	public float getSpacing() {
+	public float getSpacing () {
 		return spacing;
 	}
 
-	public void setSpacing(float spacing) {
+	public void setSpacing (float spacing) {
 		this.spacing = spacing;
 	}
 
@@ -107,7 +106,7 @@ public class HorizontalFlowGroup extends WidgetGroup {
 				width = layout.getPrefWidth();
 				height = layout.getPrefHeight();
 			}
-			if (x + width <= groupWidth) {				
+			if (x + width <= groupWidth) {
 				maxHeight = Math.max(height, maxHeight);
 			} else {
 				y -= maxHeight + spacing;

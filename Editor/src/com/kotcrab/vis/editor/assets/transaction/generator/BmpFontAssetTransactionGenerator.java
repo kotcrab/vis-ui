@@ -61,8 +61,6 @@ public class BmpFontAssetTransactionGenerator implements AssetTransactionGenerat
 
 		BitmapFontData data = new BitmapFontData(source, false);
 
-		String[] paths = data.imagePaths;
-
 		Array<FileHandle> sourcePngs = new Array<>();
 		Array<FileHandle> targetPngs = new Array<>();
 

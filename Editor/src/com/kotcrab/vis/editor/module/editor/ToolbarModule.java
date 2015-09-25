@@ -61,8 +61,8 @@ public class ToolbarModule extends EditorModule {
 		table.setBackground(VisUI.getSkin().getDrawable("button"));
 
 		table.add(new ToolbarButtonBuilder().icon(Icons.SAVE)
-			.text("Save (" + OsUtils.getShortcutFor(Keys.CONTROL_LEFT, Keys.S) + ")").eventToolbar(ToolbarEventType.FILE_SAVE)
-			.policy(ControllerPolicy.SAVABLE).build());
+				.text("Save (" + OsUtils.getShortcutFor(Keys.CONTROL_LEFT, Keys.S) + ")").eventToolbar(ToolbarEventType.FILE_SAVE)
+				.policy(ControllerPolicy.SAVABLE).build());
 
 		table.addSeparator(true);
 		table.add(new ToolbarButtonBuilder().icon(Icons.CURSOR).text("Select entities (F1)").eventTool(Tools.SELECTION_TOOL).build());

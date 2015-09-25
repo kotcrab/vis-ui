@@ -141,7 +141,7 @@ public class SelectFileDialog extends VisWindow {
 		for (FileHandle file : directory.list()) {
 			if (file.isDirectory()) buildFileList(file);
 
-			for(String extension : extensions) {
+			for (String extension : extensions) {
 				if (file.extension().equals(extension))
 					fileMap.put(file.path().substring(folder.path().length() + 1, file.path().length() - (hideExtension ? file.extension().length() + 1 : 0)), file);
 			}

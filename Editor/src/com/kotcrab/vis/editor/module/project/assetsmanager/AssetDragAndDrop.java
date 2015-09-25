@@ -180,7 +180,7 @@ public class AssetDragAndDrop implements Disposable {
 
 		if (item.getType() == FileType.SPRITER_SCML) {
 			FileHandle dataFile = item.getFile().parent().child(".vis").child("data.json");
-			if(dataFile.exists() == false) return;
+			if (dataFile.exists() == false) return;
 			SpriterAssetData data = spriterDataIO.loadData(dataFile);
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Spriter Animation \n (drop on scene to add)").setPayload(new SpriterAsset(relativePath, data.imageScale)));
 		}
