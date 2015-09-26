@@ -6,6 +6,7 @@
 -FileChooser:
  -Added tooltips for back, forward, and parent directory buttons
  -Added "New directory" button next to path field
+ -DefaultFileFilter class is now public so it's possible to extend it
  -I18N:
     -added entries: back, forward, parentDirectory, newDirectory
 

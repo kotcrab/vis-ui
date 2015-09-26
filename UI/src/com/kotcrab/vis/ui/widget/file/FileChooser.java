@@ -63,7 +63,7 @@ public class FileChooser extends VisWindow {
 	private Mode mode;
 	private SelectionMode selectionMode = SelectionMode.FILES;
 	private FileChooserListener listener = new FileChooserAdapter();
-	private FileFilter fileFilter = new DefaultFileFilter();
+	private FileFilter fileFilter = new DefaultFileFilter(this);
 
 	private DriveCheckerService driveCheckerService = DriveCheckerService.getInstance();
 	private FileChooserWinService chooserWinService = FileChooserWinService.getInstance();
@@ -1032,11 +1032,17 @@ public class FileChooser extends VisWindow {
 		ADD, CLEAR, IGNORE
 	}
 
-	private class DefaultFileFilter implements FileFilter {
+	public static class DefaultFileFilter implements FileFilter {
+		private FileChooser chooser;
+
+		public DefaultFileFilter (FileChooser chooser) {
+			this.chooser = chooser;
+		}
+
 		@Override
 		public boolean accept (File f) {
 			if (f.isHidden()) return false;
-			if (mode == Mode.OPEN ? f.canRead() == false : f.canWrite() == false) return false;
+			if (chooser.getMode() == Mode.OPEN ? f.canRead() == false : f.canWrite() == false) return false;
 
 			return true;
 		}
