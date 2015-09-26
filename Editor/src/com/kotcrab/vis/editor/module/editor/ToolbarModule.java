@@ -28,6 +28,7 @@ import com.kotcrab.vis.editor.event.ToggleToolbarEvent;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.ToolbarEvent;
 import com.kotcrab.vis.editor.event.ToolbarEventType;
+import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tools;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
@@ -44,6 +45,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
  * VisEditor toolbar UI widget.
  * @author Kotcrab
  */
+@EventBusSubscriber
 public class ToolbarModule extends EditorModule {
 	private TabsModule tabsModule;
 
@@ -76,8 +78,6 @@ public class ToolbarModule extends EditorModule {
 
 	@Override
 	public void init () {
-		App.eventBus.register(this);
-
 		tabsModule.addListener(new TabbedPaneAdapter() {
 			@Override
 			public void switchedTab (Tab tab) {
@@ -99,11 +99,6 @@ public class ToolbarModule extends EditorModule {
 				sceneScope.forEach(button -> button.setDisabled(true));
 			}
 		});
-	}
-
-	@Override
-	public void dispose () {
-		App.eventBus.unregister(this);
 	}
 
 	@Subscribe

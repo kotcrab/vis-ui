@@ -24,9 +24,11 @@ import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ToggleToolbarEvent;
 import com.kotcrab.vis.editor.event.ToolbarEventType;
+import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
 
 /** @author Kotcrab */
+@EventBusSubscriber
 public class EditingSettingsModule extends EditorModule {
 	private InputModule inputModule;
 	private EditorSettingsIOModule settingsIO;
@@ -40,7 +42,6 @@ public class EditingSettingsModule extends EditorModule {
 	@Override
 	public void init () {
 		config = settingsIO.load(SETTINGS_NAME, EditingConfig.class);
-		App.eventBus.register(this);
 		inputModule.addListener(inputListener);
 	}
 
@@ -52,7 +53,6 @@ public class EditingSettingsModule extends EditorModule {
 	@Override
 	public void dispose () {
 		settingsIO.save(config, SETTINGS_NAME);
-		App.eventBus.unregister(this);
 		inputModule.removeListener(inputListener);
 	}
 

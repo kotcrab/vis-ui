@@ -38,6 +38,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.entity.*;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
+import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.*;
@@ -79,6 +80,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import static com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTimerTask.*;
 
 /** @author Kotcrab */
+@EventBusSubscriber
 public class EntityManipulatorModule extends SceneModule {
 	private StatusBarModule statusBar;
 	private EditingSettingsModule editingSettings;
@@ -181,8 +183,6 @@ public class EntityManipulatorModule extends SceneModule {
 				resetSelection();
 			}
 		});
-
-		App.eventBus.register(this);
 	}
 
 	@Override
@@ -769,7 +769,6 @@ public class EntityManipulatorModule extends SceneModule {
 
 	@Override
 	public void dispose () {
-		App.eventBus.unregister(this);
 		layersDialog.dispose();
 		entityProperties.dispose();
 	}

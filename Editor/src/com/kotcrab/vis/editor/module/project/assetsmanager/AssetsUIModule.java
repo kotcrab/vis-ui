@@ -31,10 +31,10 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.KryoException;
 import com.google.common.eventbus.Subscribe;
-import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
+import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
@@ -63,6 +63,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
  * Provides UI module for managing assets.
  * @author Kotcrab
  */
+@EventBusSubscriber
 public class AssetsUIModule extends ProjectModule implements WatchListener, VisTabbedPaneListener {
 	private TabsModule tabsModule;
 	private QuickAccessModule quickAccessModule;
@@ -110,8 +111,6 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 	@Override
 	public void init () {
-		App.eventBus.register(this);
-
 		initModule();
 		initUI();
 
@@ -224,7 +223,6 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 	@Override
 	public void dispose () {
-		App.eventBus.unregister(this);
 		assetDragAndDrop.dispose();
 		tabsModule.removeListener(this);
 		assetsWatcher.removeListener(this);

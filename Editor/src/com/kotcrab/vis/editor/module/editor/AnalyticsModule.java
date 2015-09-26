@@ -22,6 +22,7 @@ import com.brsanthu.googleanalytics.GoogleAnalytics;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ExceptionEvent;
+import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.ui.toast.EnableAnalyticsToast;
 import com.kotcrab.vis.editor.ui.toast.EnableAnalyticsToast.EnableAnalyticsToastListener;
 import org.apache.commons.codec.binary.Base64;
@@ -31,6 +32,7 @@ import java.nio.CharBuffer;
 import java.nio.charset.Charset;
 
 /** @author Kotcrab */
+@EventBusSubscriber
 public class AnalyticsModule extends EditorModule {
 	public static final String ID = "VUEtNDMwODg5MjAtNQ==";
 
@@ -57,13 +59,10 @@ public class AnalyticsModule extends EditorModule {
 		} else {
 			postAppStarted();
 		}
-
-		App.eventBus.register(this);
 	}
 
 	@Override
 	public void dispose () {
-		App.eventBus.unregister(this);
 		if (prepare()) analytics.post(new AppViewHit("VisEditor", App.VERSION, "Exit"));
 		if (analytics != null) analytics.close();
 	}

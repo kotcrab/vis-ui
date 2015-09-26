@@ -24,6 +24,7 @@ import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.OpenSceneRequest;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
+import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.util.vis.EditorException;
 
 /**
@@ -32,6 +33,7 @@ import com.kotcrab.vis.editor.util.vis.EditorException;
  * will contain two lines: first is full project path and the second one is full scene path.
  * @author Kotcrab
  */
+@EventBusSubscriber
 public class DevelopmentSpeedupModule extends EditorModule {
 	private static final String TAG = "DevelopmentSpeedupModule";
 
@@ -44,8 +46,6 @@ public class DevelopmentSpeedupModule extends EditorModule {
 
 	@Override
 	public void postInit () {
-		App.eventBus.register(this);
-
 		FileHandle debugFile = new FileHandle(App.APP_FOLDER_PATH).child("debug.this");
 
 		if (debugFile.exists() == false) return;

@@ -19,8 +19,8 @@ package com.kotcrab.vis.editor.module.editor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.google.common.eventbus.Subscribe;
-import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
+import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.ui.tab.StartPageTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
@@ -31,6 +31,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
  * Module for accessing VisEditor main tabbed pane.
  * @author Kotcrab
  */
+@EventBusSubscriber
 public class TabsModule extends EditorModule {
 	private TabbedPane tabbedPane;
 	private TabbedPaneListener listener;
@@ -73,16 +74,6 @@ public class TabsModule extends EditorModule {
 
 	public Table getTable () {
 		return tabbedPane.getTable();
-	}
-
-	@Override
-	public void added () {
-		App.eventBus.register(this);
-	}
-
-	@Override
-	public void dispose () {
-		App.eventBus.unregister(this);
 	}
 
 	@Subscribe

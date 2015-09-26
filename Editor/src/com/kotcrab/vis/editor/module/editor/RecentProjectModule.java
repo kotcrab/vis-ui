@@ -25,6 +25,7 @@ import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
+import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.project.Project;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -35,6 +36,7 @@ import java.util.Iterator;
  * Creates and provides list of recently used projects
  * @author Kotcrab
  */
+@EventBusSubscriber
 public class RecentProjectModule extends EditorModule {
 	private Json json = new Json();
 
@@ -43,8 +45,6 @@ public class RecentProjectModule extends EditorModule {
 
 	@Override
 	public void init () {
-		App.eventBus.register(this);
-
 		FileHandle storage = Gdx.files.absolute(App.METADATA_FOLDER_PATH);
 		storage.mkdirs();
 
@@ -71,11 +71,6 @@ public class RecentProjectModule extends EditorModule {
 		} catch (SerializationException ignored) { //no big deal if cache can't be loaded
 			recentProjects = new Array<>();
 		}
-	}
-
-	@Override
-	public void dispose () {
-		App.eventBus.unregister(this);
 	}
 
 	@Subscribe
