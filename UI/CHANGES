@@ -3,6 +3,11 @@
 -Now Tab#onHide() is called before Tab#dispose()
 -VisValidatableTextField ChangeEvent is now fired after input validation
  -Fixes bug with input dialog with validator, it was possible to enter invalid value
+-FileChooser:
+ -Added tooltips for back, forward, and parent directory buttons
+ -Added "New directory" button next to path field
+ -I18N:
+    -added entries: back, forward, parentDirectory, newDirectory
 
 [0.8.2] [LibGDX 1.6.4]
 -API Addition: VisValidableTextField#restoreLastValidText()

@@ -26,6 +26,7 @@ public class FileChooserStyle {
 	public Drawable iconArrowRight;
 	public Drawable iconFolder;
 	public Drawable iconFolderParent;
+	public Drawable iconFolderNew;
 	public Drawable iconDrive;
 
 	public FileChooserStyle () {

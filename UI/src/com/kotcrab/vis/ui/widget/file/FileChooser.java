@@ -220,10 +220,10 @@ public class FileChooser extends VisWindow {
 		toolbarTable.defaults().minWidth(30).right();
 		add(toolbarTable).fillX().expandX().pad(3).padRight(2);
 
-		backButton = new VisImageButton(style.iconArrowLeft);
+		backButton = new VisImageButton(style.iconArrowLeft, getText(BACK));
 		backButton.setGenerateDisabledImage(true);
 		backButton.setDisabled(true);
-		forwardButton = new VisImageButton(style.iconArrowRight);
+		forwardButton = new VisImageButton(style.iconArrowRight, getText(FORWARD));
 		forwardButton.setGenerateDisabledImage(true);
 		forwardButton.setDisabled(true);
 
@@ -245,24 +245,14 @@ public class FileChooser extends VisWindow {
 			}
 		});
 
-		VisImageButton folderParentButton = new VisImageButton(style.iconFolderParent);
-		folderParentButton.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				FileHandle parent = currentDirectory.parent();
-
-				// if current directory is drive root (eg. "C:/") navigating to parent
-				// would navigate to "/" which would work but it is bad for UX
-				if (OsUtils.isWindows() && currentDirectory.path().endsWith(":/")) return;
-
-				setDirectory(parent, HistoryPolicy.ADD);
-			}
-		});
+		VisImageButton folderParentButton = new VisImageButton(style.iconFolderParent, getText(PARENT_DIRECTORY));
+		VisImageButton folderNewButton = new VisImageButton(style.iconFolderNew, getText(NEW_DIRECTORY));
 
 		toolbarTable.add(backButton);
 		toolbarTable.add(forwardButton);
 		toolbarTable.add(currentPath).expand().fill();
 		toolbarTable.add(folderParentButton);
+		toolbarTable.add(folderNewButton);
 
 		backButton.addListener(new ChangeListener() {
 			@Override
@@ -277,8 +267,28 @@ public class FileChooser extends VisWindow {
 				historyForward();
 			}
 		});
-		this.addListener(new ClickListener() {
 
+		folderParentButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				FileHandle parent = currentDirectory.parent();
+
+				// if current directory is drive root (eg. "C:/") navigating to parent
+				// would navigate to "/" which would work but it is bad for UX
+				if (OsUtils.isWindows() && currentDirectory.path().endsWith(":/")) return;
+
+				setDirectory(parent, HistoryPolicy.ADD);
+			}
+		});
+
+		folderNewButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				showNewDirectoryDialog();
+			}
+		});
+
+		this.addListener(new ClickListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				if (button == Buttons.BACK || button == Buttons.FORWARD) {
