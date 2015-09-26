@@ -18,6 +18,8 @@ package com.kotcrab.vis.editor.module.project.converter;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.module.VisContainers;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.ProjectIOModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
@@ -29,6 +31,7 @@ import com.kotcrab.vis.editor.util.ThreadUtils;
 
 /** @author Kotcrab */
 public class ProjectConverter8to9 extends ProjectConverter {
+	private ExtensionStorageModule extensionStorage;
 	private ProjectIOModule projectIO;
 
 	public ProjectConverter8to9 () {
@@ -56,8 +59,8 @@ public class ProjectConverter8to9 extends ProjectConverter {
 					oldProjectMC.setProject(project);
 					newProjectMC.setProject(project);
 
-					editor.addDefaultProjectMCModules(oldProjectMC);
-					editor.addDefaultProjectMCModules(newProjectMC);
+					VisContainers.createProjectModules(oldProjectMC, extensionStorage);
+					VisContainers.createProjectModules(newProjectMC, extensionStorage);
 
 					oldProjectMC.get(TextureCacheModule.class).setPackagingEnabled(false);
 					newProjectMC.get(TextureCacheModule.class).setPackagingEnabled(false);

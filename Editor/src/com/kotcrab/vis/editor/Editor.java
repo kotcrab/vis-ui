@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor;
 
+import com.artemis.annotations.SkipWire;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -28,11 +29,10 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
+import com.kotcrab.vis.editor.module.VisContainers;
 import com.kotcrab.vis.editor.module.editor.*;
-import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsModule;
-import com.kotcrab.vis.editor.module.project.*;
-import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
-import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
+import com.kotcrab.vis.editor.module.project.Project;
+import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.ui.EditorFrame;
 import com.kotcrab.vis.editor.ui.NoProjectFilesOpenView;
@@ -70,7 +70,7 @@ public class Editor extends ApplicationAdapter {
 
 	private EditorFrame frame;
 
-	private Stage stage;
+	@SkipWire private Stage stage;
 	private VisGroup stageRoot;
 	private Table uiRoot;
 
@@ -81,7 +81,7 @@ public class Editor extends ApplicationAdapter {
 	private StatusBarModule statusBar;
 	private ProjectIOModule projectIO;
 	private FileChooserModule fileChooser;
-	private ExtensionStorageModule pluginContainer;
+	private ExtensionStorageModule extensionStorage;
 
 	private GeneralSettingsModule settings;
 	private ColorSettingsModule colorSettings;
@@ -174,43 +174,12 @@ public class Editor extends ApplicationAdapter {
 		projectMC = new ProjectModuleContainer(editorMC);
 		noProjectFilesOpenView = new NoProjectFilesOpenView(projectMC);
 
-		editorMC.add(projectIO = new ProjectIOModule());
-		editorMC.add(new InputModule(stage, stageRoot));
-		editorMC.add(new GlobalInputModule());
-
-		editorMC.add(new PluginLoaderModule());
-		editorMC.add(pluginContainer = new ExtensionStorageModule());
-		editorMC.add(new VisTwitterReader());
-		editorMC.add(new WebAPIModule());
-		editorMC.add(new EventBusExceptionMonitorModule());
-		editorMC.add(new RecentProjectModule());
-		editorMC.add(new PluginFilesAccessModule());
-		editorMC.add(new ColorPickerModule());
-		editorMC.add(new UpdateCheckerModule());
-		editorMC.add(new DonateReminderModule());
-		editorMC.add(tabsModule = new TabsModule(createTabsModuleListener()));
-		editorMC.add(fileChooser = new FileChooserModule());
-		editorMC.add(new MenuBarModule(projectMC));
-		editorMC.add(new ToolbarModule());
-		editorMC.add(new ToastModule());
-		editorMC.add(new QuickAccessModule(createQuickAccessModuleListener()));
-		editorMC.add(statusBar = new StatusBarModule());
-		editorMC.add(new UIDebugControllerModule());
-		editorMC.add(new EditorSettingsIOModule());
-		editorMC.add(new AnalyticsModule());
-		editorMC.add(new EditingSettingsModule());
-
-		editorMC.add(settings = new GeneralSettingsModule());
-		editorMC.add(colorSettings = new ColorSettingsModule());
-		editorMC.add(experimentalSettings = new ExperimentalSettingsModule());
-		editorMC.add(new PluginSettingsModule());
-		editorMC.add(new GridSettingsModule());
-
-		editorMC.add(new DevelopmentSpeedupModule(projectMC));
+		VisContainers.createEditorModules(editorMC, createTabsModuleListener(), createQuickAccessModuleListener());
 
 		editorMC.init();
+		editorMC.injectModules(this);
 
-		Array<EditorModule> modules = pluginContainer.getContainersExtensions(EditorModule.class, ExtensionScope.EDITOR);
+		Array<EditorModule> modules = extensionStorage.getContainersExtensions(EditorModule.class, ExtensionScope.EDITOR);
 		editorMC.addAll(modules);
 
 		settingsDialog.addAll(editorMC.getModules());
@@ -428,7 +397,7 @@ public class Editor extends ApplicationAdapter {
 				executeOnOpenGL(() -> {
 					projectLoaded = true;
 					projectMC.setProject(project);
-					addDefaultProjectMCModules(projectMC);
+					VisContainers.createProjectModules(projectMC, extensionStorage);
 				});
 
 				setMessage("Initializing...");
@@ -452,32 +421,6 @@ public class Editor extends ApplicationAdapter {
 		});
 		dialog.setVisible(true);
 		stage.addActor(dialog);
-	}
-
-	public void addDefaultProjectMCModules (ProjectModuleContainer projectMC) {
-		projectMC.add(new FileAccessModule());
-		projectMC.add(new AssetsWatcherModule());
-		projectMC.add(new TextureCacheModule());
-		projectMC.add(new FontCacheModule());
-		projectMC.add(new ParticleCacheModule());
-		projectMC.add(new SceneCacheModule());
-		projectMC.add(new ShaderCacheModule());
-		projectMC.add(new SpriterCacheModule());
-		projectMC.add(new SpriterDataIOModule());
-		projectMC.add(new ProjectVersionModule());
-		projectMC.add(new SceneIOModule());
-		projectMC.add(new ProjectSettingsIOModule());
-		projectMC.add(new SupportModule());
-		projectMC.add(new SceneMetadataModule());
-		projectMC.add(new AssetsAnalyzerModule());
-		projectMC.add(new TextureNameCheckerModule());
-
-		projectMC.add(new ExportersManagerModule());
-		projectMC.add(new ExportSettingsModule());
-
-		projectMC.add(new SceneTabsModule());
-		projectMC.add(new AssetsUIModule());
-		projectMC.addAll(pluginContainer.getContainersExtensions(ProjectModule.class, ExtensionScope.PROJECT));
 	}
 
 	private void switchProject (final Project project) {

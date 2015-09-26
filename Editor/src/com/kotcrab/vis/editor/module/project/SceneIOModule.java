@@ -28,6 +28,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
@@ -37,8 +38,12 @@ import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
+import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.*;
+import com.kotcrab.vis.editor.event.ProjectMenuBarEvent;
+import com.kotcrab.vis.editor.event.ProjectMenuBarEventType;
+import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializedTypeDescriptor;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializerDescriptor;
 import com.kotcrab.vis.editor.plugin.PluginKryoSerializer;
@@ -46,6 +51,7 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.scene.PhysicsSettings;
 import com.kotcrab.vis.editor.serializer.*;
+import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
@@ -65,6 +71,7 @@ import java.util.UUID;
  * @see SceneCacheModule
  */
 @SuppressWarnings("rawtypes")
+@EventBusSubscriber
 public class SceneIOModule extends ProjectModule {
 	public static final int KRYO_PLUGINS_RESERVED_ID_BEGIN = 401;
 	public static final int KRYO_PLUGINS_RESERVED_ID_END = 800;
@@ -72,6 +79,7 @@ public class SceneIOModule extends ProjectModule {
 	protected Kryo kryo;
 
 	protected FileAccessModule fileAccessModule;
+	protected Stage stage;
 
 	protected TextureCacheModule textureCache;
 	protected ParticleCacheModule particleCache;
@@ -95,6 +103,13 @@ public class SceneIOModule extends ProjectModule {
 		sceneBackupFolder = fileAccessModule.getModuleFolder(".sceneBackup");
 
 		setupKryo();
+	}
+
+	@Subscribe
+	public void handleProjectMenuBarEvent (ProjectMenuBarEvent event) {
+		if (event.type == ProjectMenuBarEventType.SHOW_NEW_SCENE_DIALOG) {
+			stage.addActor(new NewSceneDialog(projectContainer).fadeIn());
+		}
 	}
 
 	protected void setupKryo () {

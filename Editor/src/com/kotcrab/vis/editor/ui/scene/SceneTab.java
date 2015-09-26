@@ -32,6 +32,7 @@ import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.*;
 import com.kotcrab.vis.editor.module.ContentTable;
 import com.kotcrab.vis.editor.module.ModuleContainer;
+import com.kotcrab.vis.editor.module.VisContainers;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
@@ -39,7 +40,6 @@ import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.AlignmentToolsDialog;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
-import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
@@ -96,11 +96,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 		stage = Editor.instance.getStage();
 
 		sceneMC = new SceneModuleContainer(projectMC, this, scene, stage.getBatch());
-		sceneMC.add(new CameraModule());
-		sceneMC.add(new RendererModule());
-		sceneMC.add(new UndoModule());
-		sceneMC.add(new EntityManipulatorModule());
-		sceneMC.addAll(sceneMC.findInHierarchy(ExtensionStorageModule.class).getContainersExtensions(SceneModule.class, ExtensionScope.SCENE));
+		VisContainers.createSceneModules(sceneMC, projectMC.findInHierarchy(ExtensionStorageModule.class));
 
 		for (EditorEntitySupport support : projectMC.get(SupportModule.class).getSupports()) {
 			support.registerSystems(sceneMC, sceneMC.getEntityEngineConfiguration());

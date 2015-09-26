@@ -31,9 +31,12 @@ public class InputModule extends EditorModule {
 	private Stage stage;
 	private VisGroup stageRoot;
 
-	public InputModule (Stage stage, VisGroup stageRoot) {
-		this.stage = stage;
-		this.stageRoot = stageRoot;
+	public InputModule () {
+	}
+
+	@Override
+	public void init () {
+		stageRoot = (VisGroup) stage.getRoot();
 	}
 
 	public void addListener (ModalInputListener listener) {

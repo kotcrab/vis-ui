@@ -16,12 +16,16 @@
 
 package com.kotcrab.vis.editor.module;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
+
 /**
- * Allows to injects modules in object from some {@link ModuleContainer}. Class fields must be annotated with {@link InjectModule}
- * annotation. For subclasses of {@link Module} module injection is done automatically when module is loaded into {@link ModuleContainer}.
- * For other classes you must pass them ModuleInjector and they must call {@link ModuleInjector#injectModules(Object)}
+ * Allows to injects modules or other objects into target object. For subclasses of {@link Module} module injection
+ * is done automatically when module is loaded into {@link ModuleContainer}. For other classes you must pass them ModuleInjector
+ * and they must call {@link ModuleInjector#injectModules(Object)}. All possible fields will be injected, injection can
+ * be skipped with {@link SkipInject}. What other objects are injected depends on container implementation, eg. {@link EditorModuleContainer}.
+ * will also inject main VisEditor {@link Stage}
  * @author Kotcrab
- * @see InjectModule
  */
 public interface ModuleInjector {
 	/** Injects modules into given object */

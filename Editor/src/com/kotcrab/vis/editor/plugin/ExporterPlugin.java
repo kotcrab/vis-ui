@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.editor.plugin;
 
-import com.kotcrab.vis.editor.module.InjectModule;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 

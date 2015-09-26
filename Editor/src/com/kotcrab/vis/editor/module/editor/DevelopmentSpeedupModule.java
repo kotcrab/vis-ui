@@ -18,19 +18,13 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.esotericsoftware.kryo.KryoException;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.event.OpenSceneRequest;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
-import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import com.kotcrab.vis.editor.module.project.SceneCacheModule;
-import com.kotcrab.vis.editor.module.project.SceneTabsModule;
-import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.util.vis.EditorException;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 
 /**
  * The purpose of this module is to dramatically speed up development by auto loading project and test scene. To start using it do the
@@ -43,17 +37,10 @@ public class DevelopmentSpeedupModule extends EditorModule {
 
 	private ProjectIOModule projectIO;
 
-	private Stage stage;
-
 	private FileHandle projectFile;
 	private FileHandle sceneFile;
 
 	private boolean firstLoading = true;
-	private ProjectModuleContainer projectMC;
-
-	public DevelopmentSpeedupModule (ProjectModuleContainer projectMC) {
-		this.projectMC = projectMC;
-	}
 
 	@Override
 	public void postInit () {
@@ -87,14 +74,8 @@ public class DevelopmentSpeedupModule extends EditorModule {
 		if (firstLoading == false || sceneFile == null) return;
 
 		if (event.status == Status.Loaded) {
-			try {
-				if (sceneFile.exists()) {
-					EditorScene testScene = projectMC.get(SceneCacheModule.class).get(sceneFile);
-					projectMC.get(SceneTabsModule.class).open(testScene);
-				}
-			} catch (KryoException e) {
-				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
-				Log.exception(e);
+			if (sceneFile.exists()) {
+				App.eventBus.post(new OpenSceneRequest(sceneFile));
 			}
 
 			firstLoading = false;

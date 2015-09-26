@@ -24,20 +24,20 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.event.ProjectMenuBarEvent;
 import com.kotcrab.vis.editor.event.SceneMenuBarEvent;
-import com.kotcrab.vis.editor.module.project.ExportersManagerModule;
-import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.ui.ButtonListener;
 import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
 import com.kotcrab.vis.editor.ui.SceneStatusWidgetController;
 import com.kotcrab.vis.editor.ui.dialog.AboutDialog;
-import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.gdx.MenuUtils;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.*;
 
+import static com.kotcrab.vis.editor.event.ProjectMenuBarEventType.EXPORT;
+import static com.kotcrab.vis.editor.event.ProjectMenuBarEventType.SHOW_NEW_SCENE_DIALOG;
 import static com.kotcrab.vis.editor.event.SceneMenuBarEventType.*;
 
 /**
@@ -45,7 +45,6 @@ import static com.kotcrab.vis.editor.event.SceneMenuBarEventType.*;
  * @author Kotcrab
  */
 public class MenuBarModule extends EditorModule {
-	private ProjectModuleContainer projectContainer;
 	private Stage stage;
 	private Editor editor;
 
@@ -63,9 +62,8 @@ public class MenuBarModule extends EditorModule {
 	private MenuItem undoMenuItem;
 	private Menu editMenu;
 
-	public MenuBarModule (ProjectModuleContainer moduleContainer) {
+	public MenuBarModule () {
 		editor = Editor.instance;
-		projectContainer = moduleContainer;
 
 		menuBar = new MenuBar();
 
@@ -98,7 +96,7 @@ public class MenuBarModule extends EditorModule {
 		menu.addSeparator();
 
 		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Export", Icons.EXPORT,
-				() -> projectContainer.get(ExportersManagerModule.class).export(false)).setShortcut(Keys.CONTROL_LEFT, Keys.E));
+				() -> App.eventBus.post(new ProjectMenuBarEvent(EXPORT))).setShortcut(Keys.CONTROL_LEFT, Keys.E));
 		//menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "Quick Export", () -> projectContainer.get(ExportModule.class).export(true))); //TODO quick export
 		menu.addSeparator();
 
@@ -138,7 +136,7 @@ public class MenuBarModule extends EditorModule {
 		Menu menu = new Menu("Scene");
 		menuBar.addMenu(menu);
 
-		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "New Scene...", Icons.NEW, () -> stage.addActor(new NewSceneDialog(projectContainer).fadeIn())));
+		menu.addItem(createMenuItem(ControllerPolicy.PROJECT, "New Scene...", Icons.NEW, () -> App.eventBus.post(new ProjectMenuBarEvent(SHOW_NEW_SCENE_DIALOG))));
 
 		menu.addSeparator();
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Scene Settings...", () -> App.eventBus.post(new SceneMenuBarEvent(SHOW_SCENE_SETTINGS))));

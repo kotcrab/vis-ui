@@ -1,0 +1,100 @@
+/*
+ * Copyright 2014-2015 See AUTHORS file.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.kotcrab.vis.editor.module;
+
+import com.kotcrab.vis.editor.module.editor.*;
+import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsModule;
+import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
+import com.kotcrab.vis.editor.module.scene.*;
+import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
+import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
+import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
+
+/** @author Kotcrab */
+public class VisContainers {
+	public static void createEditorModules (EditorModuleContainer editorMC, TabbedPaneListener tabsModuleListener, TabbedPaneListener quickAccessModuleListener) {
+		editorMC.add(new ProjectIOModule());
+		editorMC.add(new InputModule());
+		editorMC.add(new GlobalInputModule());
+
+		editorMC.add(new PluginLoaderModule());
+		editorMC.add(new ExtensionStorageModule());
+		editorMC.add(new VisTwitterReader());
+		editorMC.add(new WebAPIModule());
+		editorMC.add(new EventBusExceptionMonitorModule());
+		editorMC.add(new RecentProjectModule());
+		editorMC.add(new PluginFilesAccessModule());
+		editorMC.add(new ColorPickerModule());
+		editorMC.add(new UpdateCheckerModule());
+		editorMC.add(new DonateReminderModule());
+		editorMC.add(new TabsModule(tabsModuleListener));
+		editorMC.add(new FileChooserModule());
+		editorMC.add(new MenuBarModule());
+		editorMC.add(new ToolbarModule());
+		editorMC.add(new ToastModule());
+		editorMC.add(new QuickAccessModule(quickAccessModuleListener));
+		editorMC.add(new StatusBarModule());
+		editorMC.add(new UIDebugControllerModule());
+		editorMC.add(new EditorSettingsIOModule());
+		editorMC.add(new AnalyticsModule());
+		editorMC.add(new EditingSettingsModule());
+
+		editorMC.add(new GeneralSettingsModule());
+		editorMC.add(new ColorSettingsModule());
+		editorMC.add(new ExperimentalSettingsModule());
+		editorMC.add(new PluginSettingsModule());
+		editorMC.add(new GridSettingsModule());
+
+		editorMC.add(new DevelopmentSpeedupModule());
+	}
+
+	public static void createProjectModules (ProjectModuleContainer projectMC, ExtensionStorageModule extensionStorage) {
+		projectMC.add(new FileAccessModule());
+		projectMC.add(new AssetsWatcherModule());
+		projectMC.add(new TextureCacheModule());
+		projectMC.add(new FontCacheModule());
+		projectMC.add(new ParticleCacheModule());
+		projectMC.add(new SceneCacheModule());
+		projectMC.add(new ShaderCacheModule());
+		projectMC.add(new SpriterCacheModule());
+		projectMC.add(new SpriterDataIOModule());
+		projectMC.add(new ProjectVersionModule());
+		projectMC.add(new SceneIOModule());
+		projectMC.add(new ProjectSettingsIOModule());
+		projectMC.add(new SupportModule());
+		projectMC.add(new SceneMetadataModule());
+		projectMC.add(new AssetsAnalyzerModule());
+		projectMC.add(new TextureNameCheckerModule());
+
+		projectMC.add(new ExportersManagerModule());
+		projectMC.add(new ExportSettingsModule());
+
+		projectMC.add(new SceneTabsModule());
+		projectMC.add(new AssetsUIModule());
+		projectMC.addAll(extensionStorage.getContainersExtensions(ProjectModule.class, ExtensionScope.PROJECT));
+	}
+
+	public static void createSceneModules (SceneModuleContainer sceneMC, ExtensionStorageModule extensionStorage) {
+		sceneMC.add(new CameraModule());
+		sceneMC.add(new RendererModule());
+		sceneMC.add(new UndoModule());
+		sceneMC.add(new EntityManipulatorModule());
+		sceneMC.addAll(extensionStorage.getContainersExtensions(SceneModule.class, ExtensionScope.SCENE));
+	}
+}

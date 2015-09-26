@@ -20,6 +20,10 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.google.common.eventbus.Subscribe;
+import com.kotcrab.vis.editor.event.ProjectMenuBarEvent;
+import com.kotcrab.vis.editor.event.ProjectMenuBarEventType;
+import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.InputModule;
 import com.kotcrab.vis.editor.plugin.ExporterPlugin;
@@ -30,6 +34,7 @@ import java.util.UUID;
 /**
  * @author Kotcrab
  */
+@EventBusSubscriber
 public class ExportersManagerModule extends ProjectModule {
 	private InputModule inputModule;
 	private ExtensionStorageModule extensionStorage;
@@ -39,6 +44,13 @@ public class ExportersManagerModule extends ProjectModule {
 	private ObjectMap<UUID, ExporterPlugin> exporters = new ObjectMap<>();
 
 	private ExportInputListener inputListener;
+
+	@Subscribe
+	public void handleProjectMenuBarEvent (ProjectMenuBarEvent event) {
+		if (event.type == ProjectMenuBarEventType.EXPORT) {
+			export(false);
+		}
+	}
 
 	@Override
 	public void init () {

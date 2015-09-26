@@ -16,19 +16,30 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.esotericsoftware.kryo.KryoException;
+import com.google.common.eventbus.Subscribe;
+import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.event.OpenSceneRequest;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
+import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
+import com.kotcrab.vis.editor.util.gdx.VisTabbedPaneListener;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
-import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
 /**
  * Module for managing {@link SceneTab}. Ensures that only one tab is created for each tab.
  * @author Kotcrab
  */
-public class SceneTabsModule extends ProjectModule implements TabbedPaneListener {
+@EventBusSubscriber
+public class SceneTabsModule extends ProjectModule implements VisTabbedPaneListener {
 	private TabsModule tabsModule;
+	private Stage stage;
+
+	private SceneCacheModule sceneCache;
 
 	private Array<SceneTab> loadedTabs;
 
@@ -41,6 +52,17 @@ public class SceneTabsModule extends ProjectModule implements TabbedPaneListener
 	@Override
 	public void dispose () {
 		tabsModule.removeListener(this);
+	}
+
+	@Subscribe
+	public void handleOpenSceneRequest (OpenSceneRequest request) {
+		try {
+			EditorScene scene = sceneCache.get(request.sceneFile);
+			open(scene);
+		} catch (KryoException e) {
+			DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
+			Log.exception(e);
+		}
 	}
 
 	public void open (EditorScene scene) {
@@ -76,18 +98,8 @@ public class SceneTabsModule extends ProjectModule implements TabbedPaneListener
 	}
 
 	@Override
-	public void switchedTab (Tab tab) {
-
-	}
-
-	@Override
 	public void removedTab (Tab tab) {
 		if (tab instanceof SceneTab)
 			loadedTabs.removeValue((SceneTab) tab, true);
-	}
-
-	@Override
-	public void removedAllTabs () {
-
 	}
 }

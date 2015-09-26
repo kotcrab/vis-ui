@@ -85,6 +85,7 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 
 			if (module.getClass().isAnnotationPresent(EventBusSubscriber.class)) {
 				App.eventBus.register(module);
+				Log.trace(TAG, "Registered " + module.getClass().getSimpleName() + " to EventBus");
 			}
 		}
 
