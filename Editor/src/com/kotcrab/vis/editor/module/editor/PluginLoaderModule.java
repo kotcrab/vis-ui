@@ -281,7 +281,7 @@ public class PluginLoaderModule extends EditorModule {
 								public void licenseAccepted () {
 									checkBox.setChecked(true);
 								}
-							}));
+							}).fadeIn());
 						}
 					}));
 				}
