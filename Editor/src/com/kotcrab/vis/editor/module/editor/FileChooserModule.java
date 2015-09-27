@@ -24,6 +24,7 @@ import com.kotcrab.vis.ui.widget.file.FileChooser.Mode;
 import com.kotcrab.vis.ui.widget.file.FileChooser.SelectionMode;
 import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 import com.kotcrab.vis.ui.widget.file.FileChooserListener;
+import com.kotcrab.vis.ui.widget.file.JNAFileDeleter;
 
 /**
  * Provides shared file chooser instance
@@ -40,6 +41,7 @@ public class FileChooserModule extends EditorModule {
 	public void init () {
 		chooser = new FileChooser(Mode.OPEN);
 		chooser.setSelectionMode(SelectionMode.FILES_AND_DIRECTORIES);
+		chooser.setFileDeleter(new JNAFileDeleter());
 		chooser.setListener(new FileChooserListener() {
 			@Override
 			public void selected (Array<FileHandle> files) {

@@ -51,12 +51,15 @@ public enum FileChooserText implements BundleText {
 	POPUP_FILENAME_INVALID					{public String getName () {return "popupFilenameInvalid";}},
 	POPUP_FILE_EXIST_OVERWRITE				{public String getName () {return "popupFileExistOverwrite";}},
 	POPUP_MULTIPLE_FILE_EXIST_OVERWRITE 	{public String getName () {return "popupMultipleFileExistOverwrite";}},
+	POPUP_DELETE_FILE_FAILED			 	{public String getName () {return "popupDeleteFileFailed";}},
 
 	CONTEXT_MENU_DELETE						{public String getName () {return "contextMenuDelete";}},
+	CONTEXT_MENU_MOVE_TO_TRASH				{public String getName () {return "contextMenuMoveToTrash";}},
 	CONTEXT_MENU_SHOW_IN_EXPLORER			{public String getName () {return "contextMenuShowInExplorer";}},
 	CONTEXT_MENU_ADD_TO_FAVORITES			{public String getName () {return "contextMenuAddToFavorites";}},
 	CONTEXT_MENU_REMOVE_FROM_FAVORITES		{public String getName () {return "contextMenuRemoveFromFavorites";}},
 	CONTEXT_MENU_DELETE_WARNING				{public String getName () {return "contextMenuDeleteWarning";}},
+	CONTEXT_MENU_MOVE_TO_TRASH_WARNING		{public String getName () {return "contextMenuMoveToTrashWarning";}},
 	CONTEXT_MENU_NEW_DIRECTORY 				{public String getName () {return "contextMenuNewDirectory";}},
 
 	NEW_DIRECTORY_DIALOG_TITLE 				{public String getName () {return "newDirectoryDialogTitle";}},

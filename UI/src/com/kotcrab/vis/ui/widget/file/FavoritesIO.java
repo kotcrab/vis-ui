@@ -44,6 +44,7 @@ public class FavoritesIO {
 	}
 
 	public static void setFavoritesPrefsName (String favoritesPrefsName) {
+		if(favoritesPrefsName == null) throw new IllegalStateException("favoritesPrefsName can't be null");
 		FavoritesIO.favoritesPrefsName = favoritesPrefsName;
 	}
 

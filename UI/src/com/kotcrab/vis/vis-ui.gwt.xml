@@ -21,6 +21,7 @@
 		<exclude name="widget/file/internal/DriveCheckerService.java" />
 		<exclude name="widget/file/internal/FileChooserWinService.java" />
 		<exclude name="widget/file/internal/ServiceThreadFactory.java" />
+		<exclude name="widget/file/JNAFileDeleter.java" />
 		<exclude name="widget/file/FavoritesIO.java" />
 		<exclude name="widget/file/FileChooser.java" />
 		<exclude name="widget/file/FileChooserAdapter.java" />

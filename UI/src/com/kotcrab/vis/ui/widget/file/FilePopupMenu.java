@@ -41,6 +41,7 @@ import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
 public class FilePopupMenu extends PopupMenu {
 	private FileChooser chooser;
 	private I18NBundle bundle;
+	private boolean trashAvailable;
 
 	private FileHandle file;
 
@@ -64,13 +65,22 @@ public class FilePopupMenu extends PopupMenu {
 		delete.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
-				DialogUtils.showOptionDialog(fileChooser.getStage(), getText(POPUP_TITLE), getText(CONTEXT_MENU_DELETE_WARNING), OptionDialogType.YES_NO, new OptionDialogAdapter() {
-					@Override
-					public void yes () {
-						file.delete();
-						chooser.refresh();
-					}
-				});
+				DialogUtils.showOptionDialog(fileChooser.getStage(), getText(POPUP_TITLE),
+						getText(trashAvailable ? CONTEXT_MENU_MOVE_TO_TRASH_WARNING : CONTEXT_MENU_DELETE_WARNING),
+						OptionDialogType.YES_NO, new OptionDialogAdapter() {
+							@Override
+							public void yes () {
+								try {
+									boolean success = chooser.getFileDeleter().delete(file);
+									if (success == false)
+										DialogUtils.showErrorDialog(getStage(), getText(POPUP_DELETE_FILE_FAILED));
+								} catch (IOException e) {
+									DialogUtils.showErrorDialog(getStage(), getText(POPUP_DELETE_FILE_FAILED), e);
+									e.printStackTrace();
+								}
+								chooser.refresh();
+							}
+						});
 			}
 		});
 
@@ -149,5 +159,10 @@ public class FilePopupMenu extends PopupMenu {
 
 	private String getText (FileChooserText text) {
 		return bundle.get(text.getName());
+	}
+
+	void fileDeleterChanged () {
+		trashAvailable = chooser.getFileDeleter().hasTrash();
+		delete.setText(getText(trashAvailable ? CONTEXT_MENU_MOVE_TO_TRASH : CONTEXT_MENU_DELETE));
 	}
 }

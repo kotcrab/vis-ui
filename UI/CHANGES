@@ -7,8 +7,9 @@
  -Added tooltips for back, forward, and parent directory buttons
  -Added "New directory" button next to path field
  -DefaultFileFilter class is now public so it's possible to extend it
+ -If your project uses JNA library you can enable moving files to trash instead of deleting them permanently (chooser.setFileDeleter(new JNAFileDeleter()))
  -I18N:
-    -added entries: back, forward, parentDirectory, newDirectory
+    -added entries: back, forward, parentDirectory, newDirectory, popupDeleteFileFailed, contextMenuMoveToTrash, contextMenuMoveToTrashWarning
 
 [0.8.2] [LibGDX 1.6.4]
 -API Addition: VisValidableTextField#restoreLastValidText()

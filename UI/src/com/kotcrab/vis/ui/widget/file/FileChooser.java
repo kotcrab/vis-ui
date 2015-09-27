@@ -43,6 +43,7 @@ import com.kotcrab.vis.ui.widget.file.internal.FileChooserWinService.RootNameLis
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -67,6 +68,8 @@ public class FileChooser extends VisWindow {
 
 	private DriveCheckerService driveCheckerService = DriveCheckerService.getInstance();
 	private FileChooserWinService chooserWinService = FileChooserWinService.getInstance();
+
+	private FileDeleter fileDeleter = new DefaultFileDeleter();
 
 	public static final int DEFAULT_KEY = -1;
 	private boolean multiSelectionEnabled = false;
@@ -851,6 +854,7 @@ public class FileChooser extends VisWindow {
 	 * directory etc.)
 	 */
 	public void setSelectionMode (SelectionMode selectionMode) {
+		if(selectionMode == null) selectionMode = SelectionMode.FILES;
 		this.selectionMode = selectionMode;
 
 		switch (selectionMode) {
@@ -874,8 +878,8 @@ public class FileChooser extends VisWindow {
 		this.multiSelectionEnabled = multiSelectionEnabled;
 	}
 
-	public void setListener (FileChooserListener listener) {
-		this.listener = listener;
+	public void setListener (FileChooserListener newListener) {
+		this.listener = newListener;
 		if (listener == null) listener = new FileChooserAdapter();
 	}
 
@@ -1020,6 +1024,21 @@ public class FileChooser extends VisWindow {
 		});
 	}
 
+	/**
+	 * Sets {@link FileDeleter} that will be used for deleting files. You cannot set your own file deleter, {@link FileDeleter}
+	 * interface is public, delete must be either {@link DefaultFileDeleter} or {@link JNAFileDeleter}. {@link JNAFileDeleter}
+	 * supports moving file to system trash instead of deleting it permanently, but it requires JNA library in your project.
+	 */
+	public void setFileDeleter (FileDeleter fileDeleter) {
+		if(fileDeleter == null) throw new IllegalStateException("fileDeleter can't be null");
+		this.fileDeleter = fileDeleter;
+		fileMenu.fileDeleterChanged();
+	}
+
+	public FileDeleter getFileDeleter () {
+		return fileDeleter;
+	}
+
 	public enum Mode {
 		OPEN, SAVE
 	}
@@ -1045,6 +1064,24 @@ public class FileChooser extends VisWindow {
 			if (chooser.getMode() == Mode.OPEN ? f.canRead() == false : f.canWrite() == false) return false;
 
 			return true;
+		}
+	}
+
+	interface FileDeleter {
+		boolean hasTrash ();
+
+		boolean delete (FileHandle file) throws IOException;
+	}
+
+	public static final class DefaultFileDeleter implements FileDeleter{
+		@Override
+		public boolean hasTrash () {
+			return false;
+		}
+
+		@Override
+		public boolean delete (FileHandle file) {
+			return file.delete();
 		}
 	}
 
