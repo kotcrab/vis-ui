@@ -100,7 +100,7 @@ public class MenuItem extends Button {
 		this.style = style;
 		this.image = image;
 		setSkin(VisUI.getSkin());
-		Sizes sizes = getSkin().get(Sizes.class);
+		Sizes sizes = VisUI.getSizes();
 
 		defaults().space(3);
 

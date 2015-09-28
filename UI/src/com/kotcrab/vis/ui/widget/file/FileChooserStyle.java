@@ -18,6 +18,7 @@ package com.kotcrab.vis.ui.widget.file;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
+/** @author Kotcrab */
 public class FileChooserStyle {
 	public String popupMenuStyleName;
 
@@ -26,8 +27,10 @@ public class FileChooserStyle {
 	public Drawable iconArrowRight;
 	public Drawable iconFolder;
 	public Drawable iconFolderParent;
+	public Drawable iconFolderStar;
 	public Drawable iconFolderNew;
 	public Drawable iconDrive;
+	public Drawable iconTrash;
 
 	public FileChooserStyle () {
 	}

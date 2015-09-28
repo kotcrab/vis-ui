@@ -209,7 +209,8 @@ package com.kotcrab.vis.ui.widget {
 
 	#file.FileChooserStyle: {
 	    default: { highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right,
-	                iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive }
+	                iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive,
+	                 iconFolderStar: icon-folder-star, iconTrash: icon-trash }
 	}
 
 	#color.ColorPickerStyle: {

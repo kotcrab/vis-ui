@@ -3,13 +3,15 @@
 -Now Tab#onHide() is called before Tab#dispose()
 -VisValidatableTextField ChangeEvent is now fired after input validation
  -Fixes bug with input dialog with validator, it was possible to enter invalid value
+-Fixed MenuItem not using bigger icons when using SkinScale.X2
 -FileChooser:
  -Added tooltips for back, forward, and parent directory buttons
  -Added "New directory" button next to path field
+ -Added popup menu icons
  -DefaultFileFilter class is now public so it's possible to extend it
  -If your project uses JNA library you can enable moving files to trash instead of deleting them permanently (chooser.setFileDeleter(new JNAFileDeleter()))
- -I18N:
-    -added entries: back, forward, parentDirectory, newDirectory, popupDeleteFileFailed, contextMenuMoveToTrash, contextMenuMoveToTrashWarning
+ -I18N changes: added entries: back, forward, parentDirectory, newDirectory, popupDeleteFileFailed, contextMenuMoveToTrash, contextMenuMoveToTrashWarning
+ -Skin changes: added iconFolderNew, iconFolderStar, iconTrash
 
 [0.8.2] [LibGDX 1.6.4]
 -API Addition: VisValidableTextField#restoreLastValidText()

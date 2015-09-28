@@ -915,6 +915,10 @@ public class FileChooser extends VisWindow {
 			return Gdx.input.isKeyPressed(groupMultiSelectKey);
 	}
 
+	FileChooserStyle getChooserStyle () {
+		return style;
+	}
+
 	/**
 	 * If false file chooser won't pool directories for changes, adding new files or connecting new drive won't refresh file list.
 	 * This must be called when file chooser is not added to Stage

@@ -56,11 +56,13 @@ public class FilePopupMenu extends PopupMenu {
 		this.chooser = fileChooser;
 		this.bundle = bundle;
 
-		delete = new MenuItem(getText(CONTEXT_MENU_DELETE));
-		newDirectory = new MenuItem(getText(CONTEXT_MENU_NEW_DIRECTORY));
+		FileChooserStyle style = fileChooser.getChooserStyle();
+
+		delete = new MenuItem(getText(CONTEXT_MENU_DELETE), style.iconTrash);
+		newDirectory = new MenuItem(getText(CONTEXT_MENU_NEW_DIRECTORY), style.iconFolderNew);
 		showInExplorer = new MenuItem(getText(CONTEXT_MENU_SHOW_IN_EXPLORER));
-		addToFavorites = new MenuItem(getText(CONTEXT_MENU_ADD_TO_FAVORITES));
-		removeFromFavorites = new MenuItem(getText(CONTEXT_MENU_REMOVE_FROM_FAVORITES));
+		addToFavorites = new MenuItem(getText(CONTEXT_MENU_ADD_TO_FAVORITES), style.iconFolderStar);
+		removeFromFavorites = new MenuItem(getText(CONTEXT_MENU_REMOVE_FROM_FAVORITES), style.iconFolderStar);
 
 		delete.addListener(new ClickListener() {
 			@Override
