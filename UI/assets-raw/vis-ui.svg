@@ -281,11 +281,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2"
-     inkscape:cx="673.35448"
-     inkscape:cy="376.44767"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="806.50112"
+     inkscape:cy="395.01519"
      inkscape:document-units="px"
-     inkscape:current-layer="layer3"
+     inkscape:current-layer="layer2"
      showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1018"
@@ -335,8 +335,7 @@
      id="layer2"
      inkscape:label="bg"
      style="display:inline"
-     transform="translate(-10,-198.26766)"
-     sodipodi:insensitive="true">
+     transform="translate(-10,-198.26766)">
     <rect
        style="opacity:1;fill:#800000;fill-opacity:1;stroke:none"
        id="rect5044"
@@ -417,10 +416,71 @@
     <rect
        style="display:inline;opacity:1;fill:#800000;fill-opacity:1;stroke:none"
        id="rect5044-2-3"
-       width="101.5"
-       height="50.325493"
+       width="335.02112"
+       height="50.639202"
        x="664"
        y="597.3869" />
+    <rect
+       style="display:inline;opacity:1;fill:#800000;fill-opacity:1;stroke:none"
+       id="rect5044-2-3-0"
+       width="72"
+       height="72"
+       x="432.5"
+       y="635.86212" />
+    <g
+       transform="translate(-3.8890828,51.12472)"
+       style="display:inline"
+       id="g5377"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\icon-file-video.png"
+       inkscape:export-xdpi="90.001999"
+       inkscape:export-ydpi="90.001999">
+      <path
+         transform="translate(10,145.90552)"
+         sodipodi:nodetypes="cccccccccccccccccc"
+         inkscape:connector-curvature="0"
+         id="path5028-8"
+         d="m 949.875,410.37305 0,29.98633 10.64062,0 1.09375,-2.85547 -8.8789,0 0,-24.27539 11.42383,0 0,8.56836 8.5664,0 0,0.67187 2.85742,0 0,-3.70703 -8.39062,-8.38867 z m 17.13477,3.74804 4.81835,4.81836 -4.81835,0 z"
+         style="display:inline;fill:#ffffff;fill-opacity:1;stroke-width:0.2;stroke-linejoin:round" />
+      <rect
+         style="display:inline;opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         id="rect7715-0-8-8-3-9-9-3-8-2"
+         width="43.999023"
+         height="43.999023"
+         x="-801.10083"
+         y="549.00049"
+         transform="matrix(-1,0,0,1,193.62456,0.27161)" />
+      <path
+         inkscape:connector-curvature="0"
+         id="rect5192"
+         d="m 972.00035,568.66015 0,20.86915 3.86924,0 0,-20.86915 -3.86924,0 z m 1.07078,1.18327 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z m 0,2.7962 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z m 0,2.79395 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z m 0,2.7962 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z m 0,2.7962 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z m 0,2.79394 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z m 0,2.79621 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z"
+         style="display:inline;opacity:0.98999999;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.39999998;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="rect5192-3"
+         d="m 986.6967,568.66015 0,20.86915 3.86925,0 0,-20.86915 -3.86925,0 z m 1.07079,1.18327 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z m 0,2.7962 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z m 0,2.79395 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z m 0,2.7962 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z m 0,2.7962 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z m 0,2.79394 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z m 0,2.79621 1.72766,0 0,1.72766 -1.72766,0 0,-1.72766 z"
+         style="display:inline;opacity:0.98999999;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.39999998;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         y="571.0838"
+         x="975.35315"
+         height="1.5117022"
+         width="11.75973"
+         id="rect5209"
+         style="display:inline;opacity:0.98999999;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.39999998;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         y="585.94885"
+         x="975.27618"
+         height="1.5117022"
+         width="11.75973"
+         id="rect5209-3"
+         style="display:inline;opacity:0.98999999;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.39999998;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <rect
+         y="578.5163"
+         x="975.19922"
+         height="1.5117022"
+         width="11.75973"
+         id="rect5209-3-0"
+         style="display:inline;opacity:0.98999999;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.39999998;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
   </g>
   <g
      inkscape:groupmode="layer"
@@ -548,6 +608,18 @@
          y="-76.745117"
          style="font-size:17.5px"
          id="tspan5786">Icons SVG</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:125%;font-family:Sans;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       x="425"
+       y="-35.500008"
+       id="text5118"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan5120"
+         x="425"
+         y="-35.500008"
+         style="font-size:12.5px">Icon Frame</tspan></text>
   </g>
   <g
      inkscape:label="pngs"
@@ -3513,7 +3585,7 @@
     </g>
     <g
        id="icon-folder-star"
-       transform="translate(-1.25,-1.625)"
+       transform="translate(0.94970017,-2.034298)"
        inkscape:label="#g5915"
        inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x1\icon-folder-star.png"
        inkscape:export-xdpi="45.000999"
@@ -3533,26 +3605,117 @@
          id="path5792" />
     </g>
     <g
-       id="icon-trash"
-       transform="translate(-10,-5)"
-       inkscape:label="#g5919"
-       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\icon-trash.png"
-       inkscape:export-xdpi="90.001999"
-       inkscape:export-ydpi="90.001999">
+       id="g5084"
+       transform="translate(-0.38665771,-0.10882193)">
       <path
          style="fill:#ffffff;fill-opacity:1;stroke-width:0.2;stroke-linejoin:round"
          inkscape:connector-curvature="0"
-         d="m 740.20961,565.41165 20.96953,0 c 0.72378,0 0.98286,2.96146 0.98286,2.96146 l -22.93533,0 c 0,0 0.25917,-2.96146 0.98294,-2.96146 z m 8.51888,-3.29048 3.93177,0 c 0.36189,0 1.31057,0.95274 1.31057,1.31617 0,0.36344 -0.94868,1.31626 -1.31057,1.31626 l -3.93177,0 c -0.36189,0 -1.31065,-0.95282 -1.31065,-1.31626 0,-0.36343 0.94876,-1.31617 1.31065,-1.31617 z m -6.55299,7.23909 17.03767,0 c 0.72386,0 1.31064,0.5893 1.31064,1.31626 l -1.31064,19.74306 c 0,0.72688 -0.58671,1.31618 -1.31057,1.31618 l -14.41645,0 c -0.72386,0 -1.31065,-0.5893 -1.31065,-1.31618 l -1.31056,-19.74306 c 0,-0.72696 0.58678,-1.31626 1.31056,-1.31626 z m 1.96589,2.63244 0.3277,17.11062 2.29351,0 -0.32762,-17.11062 -2.29359,0 z m 5.24242,0 0,17.11062 2.62113,0 0,-17.11062 -2.62113,0 z m 5.56996,0 -0.32762,17.11062 2.29351,0 0.3277,-17.11062 -2.29359,0 z"
+         d="m 728.20467,559.86364 20.96953,0 c 0.72378,0 0.98286,2.96146 0.98286,2.96146 l -22.93533,0 c 0,0 0.25917,-2.96146 0.98294,-2.96146 z m 8.51888,-3.29048 3.93177,0 c 0.36189,0 1.31057,0.95274 1.31057,1.31617 0,0.36344 -0.94868,1.31626 -1.31057,1.31626 l -3.93177,0 c -0.36189,0 -1.31065,-0.95282 -1.31065,-1.31626 0,-0.36343 0.94876,-1.31617 1.31065,-1.31617 z m -6.55299,7.23909 17.03767,0 c 0.72386,0 1.31064,0.5893 1.31064,1.31626 l -1.31064,19.74306 c 0,0.72688 -0.58671,1.31618 -1.31057,1.31618 l -14.41645,0 c -0.72386,0 -1.31065,-0.5893 -1.31065,-1.31618 L 728.86,565.12851 c 0,-0.72696 0.58678,-1.31626 1.31056,-1.31626 z m 1.96589,2.63244 0.3277,17.11062 2.29351,0 -0.32762,-17.11062 -2.29359,0 z m 5.24242,0 0,17.11062 2.62113,0 0,-17.11062 -2.62113,0 z m 5.56996,0 -0.32762,17.11062 2.29351,0 0.3277,-17.11062 -2.29359,0 z"
          id="path5889" />
       <rect
          transform="scale(-1,1)"
-         y="554.92896"
-         x="-772.69385"
+         y="549.38092"
+         x="-760.6889"
          height="43.999023"
          width="43.999023"
          id="rect7715-0-8-8-3-9-9"
          style="display:inline;opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
     </g>
+    <rect
+       style="display:inline;opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect7715-0-8-8-3-9-9-3"
+       width="43.999023"
+       height="43.999023"
+       x="-490.49951"
+       y="597.50049"
+       transform="scale(-1,1)" />
+    <g
+       id="g5137"
+       transform="translate(5.8392317,0.2716102)"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\icon-file-text.png"
+       inkscape:export-xdpi="90.001999"
+       inkscape:export-ydpi="90.001999">
+      <path
+         style="fill:#ffffff;fill-opacity:1;stroke-width:0.2;stroke-linejoin:round"
+         inkscape:connector-curvature="0"
+         d="m 766.25,556.00677 17.3136,0 8.38907,8.38907 0,21.59738 -25.70267,0 0,-29.98645 z m 2.85585,2.85585 0,24.27475 19.99097,0 0,-15.70719 -8.56756,0 0,-8.56756 -11.42341,0 z m 14.27926,0.89246 0,4.81925 4.81925,0 -4.81925,-4.81925 z m -12.85133,0.53547 8.56755,0 0,3.56981 -8.56755,0 0,-3.56981 z m 0,4.99774 8.56755,0 0,2.14189 -8.56755,0 0,-2.14189 z m 0,3.56982 17.13511,0 0,2.14188 -17.13511,0 0,-2.14188 z m 0,3.56981 17.13511,0 0,2.14189 -17.13511,0 0,-2.14189 z m 0,3.56982 17.13511,0 0,2.14189 -17.13511,0 0,-2.14189 z m 0,3.56981 17.13511,0 0,2.14189 -17.13511,0 0,-2.14189 z"
+         id="path5028" />
+      <rect
+         transform="scale(-1,1)"
+         y="549.00049"
+         x="-801.10083"
+         height="43.999023"
+         width="43.999023"
+         id="rect7715-0-8-8-3-9-9-3-8"
+         style="display:inline;opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="g5147"
+       transform="translate(6.2842555,-13.611813)"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\icon-file-image.png"
+       inkscape:export-xdpi="90.001999"
+       inkscape:export-ydpi="90.001999">
+      <path
+         style="fill:#ffffff;fill-opacity:1;stroke-width:0.2;stroke-linejoin:round"
+         inkscape:connector-curvature="0"
+         d="m 812.44279,569.8902 17.31361,0 8.38907,8.38906 0,21.59739 -25.70268,0 0,-29.98645 z m 2.85586,2.85585 0,24.27475 19.99096,0 0,-14.99323 -9.28152,0 0,-9.28152 -10.70944,0 z m 13.5653,0.89245 0,5.53322 5.53321,0 -5.53321,-5.53322 z m -11.42341,18.02757 2.14189,2.14189 8.92454,-8.92454 3.56981,3.56982 2.49887,-2.85585 0,10.70944 -18.56304,0 0,-2.85585 1.42793,-1.78491 z m 4.28378,-18.20606 c 0,3.12166 -2.59005,5.71171 -5.71171,5.71171 l 0,-5.71171 5.71171,0 z"
+         id="path5039" />
+      <rect
+         transform="scale(-1,1)"
+         y="562.88391"
+         x="-847.29364"
+         height="43.999023"
+         width="43.999023"
+         id="rect7715-0-8-8-3-9-9-3-9"
+         style="display:inline;opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="g5157"
+       transform="translate(10.318973,-4.4194298)"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\icon-file-pdf.png"
+       inkscape:export-xdpi="90.001999"
+       inkscape:export-ydpi="90.001999">
+      <path
+         style="fill:#ffffff;fill-opacity:1;stroke-width:0.2;stroke-linejoin:round"
+         inkscape:connector-curvature="0"
+         d="m 865.54017,587.09069 c -1.59693,1.48283 -4.44343,4.50325 -2.5123,3.97977 3.11231,-1.87123 5.05722,-7.87166 6.64407,-11.88435 -1.84738,-4.09986 -0.0662,-7.28128 1.33818,-7.37488 1.71102,-0.11409 2.15703,3.12909 2.15703,3.12909 0,0 -1.89643,-1.43342 -2.18551,-2.30724 -0.32707,0.0817 -0.6777,2.73904 0.28908,5.67814 1.13049,-1.413 1.69566,-2.82608 1.69566,-2.82608 0,0 1.41308,1.41308 -0.70761,3.58231 0.3789,0.83984 2.44411,4.22502 3.37969,4.8376 5.92525,-1.59263 6.20777,1.53174 6.20777,1.53174 -0.91488,-0.83534 -2.93939,-0.92158 -5.18837,-0.67969 2.83729,1.49054 5.23906,0.99748 5.23906,0.99748 0,1.16718 -3.84355,2.44803 -6.68063,-0.23982 -2.97101,0.466 -6.0055,1.89564 -7.20624,2.2564 -3.20884,5.60633 -6.71761,5.16189 -7.19589,3.82278 -0.84783,-2.26091 4.72601,-4.50325 4.72601,-4.50325 z m 5.48894,-6.87126 -2.09833,5.78553 c 1.23194,-0.35305 2.59354,-1.03003 5.03501,-1.50953 -0.79115,-0.5766 -1.50511,-1.29056 -2.93668,-4.276 z m -17.13147,-21.28931 16.59964,0 9.10303,9.10303 0,14.45776 -2.85585,0.17849 0,-11.6019 -9.28152,0 0,-9.28152 -10.70945,0 0,24.27474 7.49662,0 -3.21284,2.85586 -7.13963,0 0,-29.98646 z m 14.27926,29.98646 0,-0.35699 6.42567,-2.14189 4.99774,2.49888 -11.42341,0 z m 2.14189,-26.23815 0,5.53322 5.53322,0 -5.53322,-5.53322 z"
+         id="path5017" />
+      <rect
+         transform="scale(-1,1)"
+         y="553.69153"
+         x="-889.89679"
+         height="43.999023"
+         width="43.999023"
+         id="rect7715-0-8-8-3-9-9-3-3"
+         style="display:inline;opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       id="g5167"
+       transform="translate(31.500893,-10.253048)"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\icon-file-audio.png"
+       inkscape:export-xdpi="90.001999"
+       inkscape:export-ydpi="90.001999">
+      <path
+         style="fill:#ffffff;fill-opacity:1;stroke-width:0.2;stroke-linejoin:round"
+         inkscape:connector-curvature="0"
+         d="m 906.56147,577.69721 0,13.86459 c 0,1.03296 -0.13144,1.81232 -0.39439,2.33816 -0.26288,0.52576 -0.87225,1.14291 -1.50083,1.48461 -0.62857,0.34163 -1.33918,0.51241 -2.13189,0.51241 -0.91016,0 -1.63619,-0.26088 -2.17802,-0.78271 -0.54182,-0.52177 -0.8127,-1.19503 -0.8127,-2.0198 0,-0.83277 0.32093,-1.55209 0.96285,-2.15796 0.64193,-0.60594 1.47134,-0.90887 2.48831,-0.90887 l 0.88274,0.0881 0.54204,0.19663 0,-8.58534 -6.42567,2.22906 0,10.46156 c 0,1.0089 -0.13344,1.79498 -0.40039,2.35815 -0.26688,0.56318 -0.87767,1.00826 -1.52759,1.3419 -0.64992,0.33363 -1.35925,0.50041 -2.12797,0.50041 -0.90745,0 -1.62612,-0.25617 -2.15596,-0.76865 -0.52983,-0.51248 -0.79471,-1.18239 -0.79471,-2.00988 0,-0.87546 0.31693,-1.61141 0.95086,-2.208 0.63393,-0.59652 1.46334,-0.89481 2.4883,-0.89481 0.48443,0 0.91994,-0.0353 1.42557,0.16571 l 0,-11.33616 10.70945,-3.86911 z m -26.41664,-13.26601 16.59965,0 9.10303,9.10303 0,3.56982 -2.85586,1.07094 0,-1.60641 -9.28152,0 0,-9.28153 -10.70944,0 0,24.27475 9.6385,0 -2.49887,2.85585 -9.99549,0 0,-29.98645 z m 16.42116,3.74831 0,5.53321 5.53321,0 -5.53321,-5.53321 z"
+         id="path5050" />
+      <rect
+         transform="scale(-1,1)"
+         y="559.52515"
+         x="-915.35266"
+         height="43.999023"
+         width="43.999023"
+         id="rect7715-0-8-8-3-9-9-3-1"
+         style="display:inline;opacity:1;fill:none;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+    </g>
+    <g
+       style="display:inline"
+       id="g5137-3"
+       transform="translate(193.62456,0.27161)"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x1\icon-file-text.png"
+       inkscape:export-xdpi="45.000999"
+       inkscape:export-ydpi="45.000999" />
   </g>
   <g
      inkscape:groupmode="layer"
