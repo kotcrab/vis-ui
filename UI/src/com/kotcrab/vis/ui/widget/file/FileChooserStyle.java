@@ -32,6 +32,11 @@ public class FileChooserStyle {
 	public Drawable iconDrive;
 	public Drawable iconTrash;
 
+	public Drawable iconFileText;
+	public Drawable iconFileImage;
+	public Drawable iconFilePdf;
+	public Drawable iconFileAudio;
+
 	public FileChooserStyle () {
 	}
 }

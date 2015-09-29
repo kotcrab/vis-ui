@@ -143,7 +143,7 @@ com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane$TabbedPaneStyle: {
 	default: {background: menu-bg, bottomBar: list-selection, buttonStyle: {down: button-down, up: button, checked: button-down, over: button-over, font: default-font, fontColor: white, disabledFontColor: grey} }
 },
 com.kotcrab.vis.ui.widget.file.FileChooserStyle: {
-	default: {highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right, iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive, iconFolderStar: icon-folder-star, iconTrash: icon-trash }
+	default: {highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right, iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive, iconFolderStar: icon-folder-star, iconTrash: icon-trash, iconFileText: icon-file-text, iconFileImage: icon-file-image, iconFilePdf: icon-file-pdf, iconFileAudio: icon-file-audio }
 },
 com.kotcrab.vis.ui.widget.color.ColorPickerStyle: {
 	default: {white: white, alphaBar10px: alpha-bar-10px, alphaBar25px: alpha-bar-25px, barSelector: color-picker-bar-selector, cross: color-picker-cross, verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }

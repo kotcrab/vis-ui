@@ -65,6 +65,7 @@ public class FileChooser extends VisWindow {
 	private SelectionMode selectionMode = SelectionMode.FILES;
 	private FileChooserListener listener = new FileChooserAdapter();
 	private FileFilter fileFilter = new DefaultFileFilter(this);
+	private FileIconProvider iconProvider = new DefaultFileIconProvider(this);
 
 	private DriveCheckerService driveCheckerService = DriveCheckerService.getInstance();
 	private FileChooserWinService chooserWinService = FileChooserWinService.getInstance();
@@ -631,7 +632,7 @@ public class FileChooser extends VisWindow {
 
 		for (FileHandle f : fileList)
 			if (f.file() == null || f.file().isHidden() == false)
-				fileTable.add(new FileItem(f, null)).expand().fill().row();
+				fileTable.add(new FileItem(f)).expand().fill().row();
 
 		fileScrollPane.setScrollX(0);
 		fileScrollPane.setScrollY(0);
@@ -854,7 +855,7 @@ public class FileChooser extends VisWindow {
 	 * directory etc.)
 	 */
 	public void setSelectionMode (SelectionMode selectionMode) {
-		if(selectionMode == null) selectionMode = SelectionMode.FILES;
+		if (selectionMode == null) selectionMode = SelectionMode.FILES;
 		this.selectionMode = selectionMode;
 
 		switch (selectionMode) {
@@ -1034,13 +1035,17 @@ public class FileChooser extends VisWindow {
 	 * supports moving file to system trash instead of deleting it permanently, but it requires JNA library in your project.
 	 */
 	public void setFileDeleter (FileDeleter fileDeleter) {
-		if(fileDeleter == null) throw new IllegalStateException("fileDeleter can't be null");
+		if (fileDeleter == null) throw new IllegalStateException("fileDeleter can't be null");
 		this.fileDeleter = fileDeleter;
 		fileMenu.fileDeleterChanged();
 	}
 
 	public FileDeleter getFileDeleter () {
 		return fileDeleter;
+	}
+
+	public void setIconProvider (FileIconProvider iconProvider) {
+		this.iconProvider = iconProvider;
 	}
 
 	public enum Mode {
@@ -1053,6 +1058,35 @@ public class FileChooser extends VisWindow {
 
 	public enum HistoryPolicy {
 		ADD, CLEAR, IGNORE
+	}
+
+	/**
+	 * Provides icons that will be used for file thumbnail on file list. If not set default is used that supports
+	 * directories and few basic file types. If you want to add your custom icon your should extend {@link DefaultFileIconProvider}
+	 */
+	public interface FileIconProvider {
+		/** @return icon that will be used for this file or null if no icon should be displayed */
+		Drawable provideIcon (FileHandle file);
+	}
+
+	public static class DefaultFileIconProvider implements FileIconProvider {
+		private FileChooser chooser;
+
+		public DefaultFileIconProvider (FileChooser chooser) {
+			this.chooser = chooser;
+		}
+
+		@Override
+		public Drawable provideIcon (FileHandle file) {
+			FileChooserStyle style = chooser.style;
+			if (file.isDirectory()) return style.iconFolder;
+			String ext = file.extension();
+			if(ext.equals("jpg") || ext.equals("png")) return style.iconFileImage;
+			if(ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) return style.iconFileAudio;
+			if(ext.equals("pdf")) return style.iconFilePdf;
+			if(ext.equals("txt")) return style.iconFileText;
+			return null;
+		}
 	}
 
 	public static class DefaultFileFilter implements FileFilter {
@@ -1077,7 +1111,7 @@ public class FileChooser extends VisWindow {
 		boolean delete (FileHandle file) throws IOException;
 	}
 
-	public static final class DefaultFileDeleter implements FileDeleter{
+	public static final class DefaultFileDeleter implements FileDeleter {
 		@Override
 		public boolean hasTrash () {
 			return false;
@@ -1094,7 +1128,7 @@ public class FileChooser extends VisWindow {
 		private VisLabel name;
 		private VisLabel size;
 
-		public FileItem (final FileHandle file, Drawable icon) {
+		public FileItem (final FileHandle file) {
 			this.file = file;
 			setTouchable(Touchable.enabled);
 			name = new VisLabel(file.name());
@@ -1105,7 +1139,7 @@ public class FileChooser extends VisWindow {
 			else
 				size = new VisLabel(FileUtils.readableFileSize(file.length()));
 
-			if (icon == null && file.isDirectory()) icon = style.iconFolder;
+			Drawable icon = iconProvider.provideIcon(file);
 
 			if (icon != null) add(new Image(icon)).padTop(3);
 			Cell<VisLabel> labelCell = add(name).padLeft(icon == null ? 22 : 0);
