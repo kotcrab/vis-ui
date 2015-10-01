@@ -1,5 +1,6 @@
 [0.9.0] [LibGDX 1.6.5] [Snapshot]
 -API Change: Renamed VisValidableTextField to VisValidatableTextField (fixes typo in name)
+-API Addition: ColorPicker#setCloseAfterPickingFinished(boolean)
 -Now Tab#onHide() is called before Tab#dispose()
 -VisValidatableTextField ChangeEvent is now fired after input validation
  -Fixes bug with input dialog with validator, it was possible to enter invalid value
