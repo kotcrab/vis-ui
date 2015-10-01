@@ -59,8 +59,6 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 
 		this.selectedEntities = selectedEntities;
 
-		proxyCache = sceneMC.getEntityEngineConfiguration().getManager(EntityProxyCache.class);
-		groupProxyProvider = sceneMC.getEntityEngineConfiguration().getSystem(GroupProxyProviderSystem.class);
 		proxyCache.addListener(this);
 
 		tree = new VisTree();

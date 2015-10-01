@@ -69,7 +69,6 @@ import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
-import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
@@ -101,12 +100,13 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private ComponentMapper<GroupComponent> groupCm;
 
-	private ShapeRenderer shapeRenderer;
 	private EntityProxyCache entityProxyCache;
 	private ZIndexManipulatorManager zIndexManipulator;
 	private GroupIdProviderSystem groupIdProvider;
 	private GroupProxyProviderSystem groupProxyProvider;
 	private RenderBatchingSystem renderBatchingSystem;
+
+	private ShapeRenderer shapeRenderer;
 
 	//TODO [misc] create common class for scene ui dialogs
 	private EntityProperties entityProperties;
@@ -140,11 +140,6 @@ public class EntityManipulatorModule extends SceneModule {
 	@Override
 	public void init () {
 		shapeRenderer = rendererModule.getShapeRenderer();
-		entityProxyCache = engineConfiguration.getManager(EntityProxyCache.class);
-		zIndexManipulator = engineConfiguration.getManager(ZIndexManipulatorManager.class);
-		groupIdProvider = engineConfiguration.getSystem(GroupIdProviderSystem.class);
-		groupProxyProvider = engineConfiguration.getSystem(GroupProxyProviderSystem.class);
-		renderBatchingSystem = engineConfiguration.getSystem(RenderBatchingSystem.class);
 
 		entityProperties = new EntityProperties(sceneContainer, sceneTab, selectedEntities);
 		groupBreadcrumb = new GroupBreadcrumb(new GroupBreadcrumbListener() {
@@ -188,12 +183,6 @@ public class EntityManipulatorModule extends SceneModule {
 	@Override
 	public void postInit () {
 		entityProperties.loadSupportsSpecificTables(projectContainer.get(SupportModule.class));
-	}
-
-	@Override
-	public void setEntityEngine (EntityEngine entityEngine) {
-		super.setEntityEngine(entityEngine);
-		groupCm = entityEngine.getMapper(GroupComponent.class);
 	}
 
 	private void createContextMenus () {

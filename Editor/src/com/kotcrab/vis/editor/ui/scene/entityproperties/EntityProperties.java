@@ -169,8 +169,6 @@ public class EntityProperties extends VisTable implements Disposable {
 		super(true);
 		sceneMC.injectModules(this);
 
-		componentManipulator = sceneMC.getEntityEngineConfiguration().getSystem(VisComponentManipulator.class);
-
 		this.sceneMC = sceneMC;
 		this.entities = entities;
 		this.parentTab = parentSceneTab;

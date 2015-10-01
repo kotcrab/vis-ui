@@ -16,6 +16,10 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
+import com.artemis.BaseSystem;
+import com.artemis.Component;
+import com.artemis.ComponentMapper;
+import com.artemis.Manager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -31,6 +35,7 @@ import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
+import com.kotcrab.vis.editor.util.BiHolder;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.system.CameraManager;
 import com.kotcrab.vis.runtime.system.ParticleRenderSystem;
@@ -38,6 +43,9 @@ import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.ArtemisUtils;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 
 /**
  * Module container for scene scope modules.
@@ -47,6 +55,8 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	private Project project;
 	private EditorModuleContainer editorModuleContainer;
 	private ProjectModuleContainer projectModuleContainer;
+
+	private Array<BiHolder<Object, Field>> delayedCompMapperToInject = new Array<>();
 
 	private EditorScene scene;
 	private SceneTab sceneTab;
@@ -86,7 +96,6 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new ParticleRenderSystem(renderBatchingSystem, true), true);
 		config.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem, scene.pixelsPerUnit), true);
 		config.setSystem(new PointRenderSystem(renderBatchingSystem, scene.pixelsPerUnit), true);
-
 	}
 
 	public static void createEssentialsSystems (EntityEngineConfiguration config, float pixelsPerUnit) {
@@ -97,6 +106,44 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	public static void populateEngine (final EntityEngine engine, EditorScene scene) {
 		Array<EntityScheme> schemes = scene.getSchemes();
 		schemes.forEach(entityScheme -> entityScheme.build(engine));
+	}
+
+	@Override
+	protected boolean injectField (Object target, Field field, Class<?> type) throws ReflectiveOperationException {
+		boolean alreadyInjected = super.injectField(target, field, type);
+		if (alreadyInjected) return true;
+
+		//artemis already handles injecting objects inside systems
+		if(target instanceof BaseSystem || target instanceof Manager) return false;
+
+		if (BaseSystem.class.isAssignableFrom(type)) {
+			field.setAccessible(true);
+			field.set(target, engine != null ? engine.getSystem(type.asSubclass(BaseSystem.class)) : config.getSystem(type.asSubclass(BaseSystem.class)));
+			return true;
+		}
+
+		if (Manager.class.isAssignableFrom(type)) {
+			field.setAccessible(true);
+			field.set(target, engine != null ? engine.getManager(type.asSubclass(Manager.class)) : config.getManager(type.asSubclass(Manager.class)));
+			return true;
+		}
+
+		if (ComponentMapper.class.isAssignableFrom(type)) {
+			field.setAccessible(true);
+			if (engine == null)
+				delayedCompMapperToInject.add(new BiHolder<>(target, field));
+			else
+				injectComponentMapper(target, field);
+
+			return true;
+		}
+
+		return false;
+	}
+
+	private void injectComponentMapper (Object target, Field field) throws ReflectiveOperationException {
+		ParameterizedType mapperType = (ParameterizedType) field.getGenericType();
+		field.set(target, engine.getMapper((Class<Component>) mapperType.getActualTypeArguments()[0]));
 	}
 
 	@Override
@@ -124,6 +171,16 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 		engine.getSystems().forEach(this::injectModules);
 		engine.getManagers().forEach(this::injectModules);
+
+		try {
+			for (BiHolder<Object, Field> target : delayedCompMapperToInject) {
+				injectComponentMapper(target.first, target.second);
+			}
+			delayedCompMapperToInject.clear();
+			delayedCompMapperToInject = null;
+		} catch (ReflectiveOperationException e) {
+			Log.exception(e);
+		}
 	}
 
 	@Override

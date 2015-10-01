@@ -26,6 +26,7 @@ import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 /** @author Kotcrab */
 public class RenderableComponentTable extends AutoComponentTable<RenderableComponent> {
 	private RenderBatchingSystem batchingSystem;
+
 	private NumberInputField zIndexField;
 
 	public RenderableComponentTable (ModuleInjector projectInjector) {
@@ -35,7 +36,6 @@ public class RenderableComponentTable extends AutoComponentTable<RenderableCompo
 	@Override
 	protected void init () {
 		super.init();
-		batchingSystem = properties.getSceneModuleContainer().getEntityEngineConfiguration().getSystem(RenderBatchingSystem.class);
 		zIndexField = getUiByField("zIndex", NumberInputField.class);
 		zIndexField.addListener(new VisChangeListener((event, actor) -> {
 			if (zIndexField.isInputValid()) {

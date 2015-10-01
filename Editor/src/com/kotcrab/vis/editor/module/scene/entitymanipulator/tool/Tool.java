@@ -49,7 +49,6 @@ public class Tool extends InputListener {
 		this.sceneMC = moduleContainer;
 		this.scene = scene;
 		moduleContainer.injectModules(this);
-		entityProxyCache = moduleContainer.getEntityEngineConfiguration().getManager(EntityProxyCache.class);
 		loaded = true;
 		init();
 	}

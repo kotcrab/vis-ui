@@ -123,7 +123,7 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 			for (Field field : getAllFields(target.getClass())) {
 				if (field.isAnnotationPresent(SkipInject.class)) continue;
 
-				injectField(target, field);
+				injectField(target, field, field.getType());
 			}
 		} catch (EditorRuntimeException e) {
 			throw new IllegalStateException("ModuleInjector failed for target: " + target.getClass() + ". See nested exception for error details.", e);
@@ -132,18 +132,23 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 		}
 	}
 
-	protected void injectField (Object target, Field field) throws ReflectiveOperationException {
-		if (Module.class.isAssignableFrom(field.getType())) {
-			if (Module.class.isAssignableFrom(field.getType())) {
+	protected boolean injectField (Object target, Field field, Class<?> type) throws ReflectiveOperationException {
+		if (Module.class.isAssignableFrom(type)) {
+			if (Module.class.isAssignableFrom(type)) {
 				field.setAccessible(true);
-				field.set(target, findInHierarchy(field.getType().asSubclass(Module.class)));
+				field.set(target, findInHierarchy(type.asSubclass(Module.class)));
 			}
+
+			return true;
 		}
 
-		if (Stage.class.isAssignableFrom(field.getType())) {
+		if (Stage.class.isAssignableFrom(type)) {
 			field.setAccessible(true);
 			field.set(target, Editor.instance.getStage());
+			return true;
 		}
+
+		return false;
 	}
 
 	public static Array<Field> getAllFields (Class<?> type) {
