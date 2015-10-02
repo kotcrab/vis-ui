@@ -2,6 +2,7 @@
 -Added PointComponent - can be placed on scene, for example for spawn points
 -Music and Sound files can now be changed from Entity Properties
 -Fixed text size was not possible to change for ttf fonts
+-Fixed error when loading scene with ShaderComponent without shader set
 -Added Ctrl+D for duplicating selected entities
 -In scene editor, added "Move to Layer" in popup menu, for quick entity moving between layers
 -Fixed groups issues

@@ -52,7 +52,9 @@ public class ShaderComponentSerializer extends EntityComponentSerializer<ShaderC
 
 		input.readInt(); //version code
 
-		component.shader = shaderCache.get(component.asset);
+		if(component.asset != null) {
+			component.shader = shaderCache.get(component.asset);
+		}
 
 		return component;
 	}
