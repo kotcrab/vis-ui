@@ -230,8 +230,8 @@ public class MenuItem extends Button {
 		return setShortcut(Keys.toString(keycode));
 	}
 
-	public String getShortcut () {
-		return shortcutLabel.getText().toString();
+	public CharSequence getShortcut () {
+		return shortcutLabel.getText();
 	}
 
 	/**
@@ -242,6 +242,7 @@ public class MenuItem extends Button {
 	 */
 	public MenuItem setShortcut (String text) {
 		shortcutLabel.setText(text);
+		packParentMenu();
 		return this;
 	}
 
@@ -254,7 +255,15 @@ public class MenuItem extends Button {
 	 */
 	public MenuItem setShortcut (int... keycodes) {
 		shortcutLabel.setText(OsUtils.getShortcutFor(keycodes));
+		packParentMenu();
 		return this;
+	}
+
+	private void packParentMenu () {
+		if (getParent() instanceof PopupMenu) {
+			PopupMenu menu = (PopupMenu) getParent();
+			menu.pack();
+		}
 	}
 
 	@Override

@@ -1,9 +1,11 @@
 [0.9.0] [LibGDX 1.6.5] [Snapshot]
 -API Change: Renamed VisValidableTextField to VisValidatableTextField (fixes typo in name)
+-API Change: MenuItem#getShortcut() returns CharSequence (was String)
 -API Addition: ColorPicker#setCloseAfterPickingFinished(boolean)
 -Now Tab#onHide() is called before Tab#dispose()
 -VisValidatableTextField ChangeEvent is now fired after input validation
  -Fixes bug with input dialog with validator, it was possible to enter invalid value
+-Fixed MenuItem not properly updated after changing menu shortcut when item was already added to PopupMenu
 -Fixed MenuItem not using bigger icons when using SkinScale.X2
 -FileChooser:
  -Added tooltips for back, forward, and parent directory buttons
