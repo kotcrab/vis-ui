@@ -17,8 +17,8 @@
 package com.kotcrab.vis.editor.module.scene.action;
 
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.PhysicsSettings;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
+import com.kotcrab.vis.runtime.data.PhysicsSettings;
 
 /** @author Kotcrab */
 public class ChangePhysicsSettingsAction implements UndoableAction {

@@ -32,7 +32,7 @@ public class SceneData {
 	public float height;
 	public float pixelsPerUnit;
 
-	public PhysicsSettingsData physicsSettings;
+	public PhysicsSettings physicsSettings;
 
 	public IntMap<String> groupIds;
 

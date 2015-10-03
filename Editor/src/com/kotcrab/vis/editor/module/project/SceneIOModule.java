@@ -47,14 +47,15 @@ import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializedTypeDescriptor;
 import com.kotcrab.vis.editor.module.project.SupportModule.SupportSerializerDescriptor;
 import com.kotcrab.vis.editor.plugin.PluginKryoSerializer;
+import com.kotcrab.vis.editor.scene.EditorPhysicsSettings;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
-import com.kotcrab.vis.editor.scene.PhysicsSettings;
 import com.kotcrab.vis.editor.serializer.*;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.data.PhysicsSettings;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.util.EntityEngine;
@@ -151,7 +152,8 @@ public class SceneIOModule extends ProjectModule {
 		kryo.register(BitmapFontParameter.class, 35);
 		kryo.register(TextureFilter.class, 36);
 		kryo.register(LayerCordsSystem.class, 37);
-		registerTagged(PhysicsSettings.class, 38);
+		registerTagged(EditorPhysicsSettings.class, 38);
+		registerTagged(PhysicsSettings.class, 39);
 
 		registerTagged(PathAsset.class, 61);
 		registerTagged(TextureRegionAsset.class, 62);
@@ -188,7 +190,7 @@ public class SceneIOModule extends ProjectModule {
 		registerTagged(PositionComponent.class, 233);
 	}
 
-	private <T> void registerTagged (Class<T> clazz, int id) {
+	protected <T> void registerTagged (Class<T> clazz, int id) {
 		kryo.register(clazz, new DefaultTaggedFieldSerializer<T>(kryo, clazz), id);
 	}
 

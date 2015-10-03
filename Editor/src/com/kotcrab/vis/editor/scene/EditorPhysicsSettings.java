@@ -17,18 +17,24 @@
 package com.kotcrab.vis.editor.scene;
 
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
+import com.kotcrab.vis.runtime.data.PhysicsSettings;
+import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 
-/** @author Kotcrab */
-public class PhysicsSettings {
+/**
+ * @author Kotcrab
+ * @deprecated replaced by {@link PhysicsSettings}
+ */
+@Deprecated @DeprecatedOn(versionCode = 11)
+public class EditorPhysicsSettings {
 	@Tag(0) public boolean physicsEnabled = false;
 	@Tag(1) public float gravityX = 0;
 	@Tag(2) public float gravityY = 0;
 	@Tag(3) public boolean allowSleep = true;
 
-	public PhysicsSettings () {
+	public EditorPhysicsSettings () {
 	}
 
-	public PhysicsSettings (PhysicsSettings other) {
+	public EditorPhysicsSettings (EditorPhysicsSettings other) {
 		this.physicsEnabled = other.physicsEnabled;
 		this.gravityX = other.gravityX;
 		this.gravityY = other.gravityY;

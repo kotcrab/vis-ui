@@ -21,9 +21,10 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.scene.EditorPhysicsSettings;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
-import com.kotcrab.vis.editor.scene.PhysicsSettings;
+import com.kotcrab.vis.runtime.data.PhysicsSettings;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 
 import java.lang.reflect.Field;
@@ -33,7 +34,7 @@ import java.lang.reflect.Field;
  * @author Kotcrab
  */
 public class EditorSceneSerializer extends VisTaggedFieldSerializer<EditorScene> {
-	private static final int VERSION_CODE = 4;
+	private static final int VERSION_CODE = 5;
 
 	public EditorSceneSerializer (Kryo kryo) {
 		super(kryo, EditorScene.class);
@@ -84,6 +85,23 @@ public class EditorSceneSerializer extends VisTaggedFieldSerializer<EditorScene>
 
 			versionCode = 4;
 			Log.info("Updating EditorScene to version code 4");
+		}
+
+		if (versionCode == 4) {
+			//in 0.2.5 PhysicsSettings (editor class) was renamed to EditorPhysicsSettings. Old settings was replaced
+			//with PhysicsSettingsData (runtime class) renamed to PhysicsSettings
+
+			try {
+				Field field = EditorScene.class.getDeclaredField("_physicsSettings");
+				field.setAccessible(true);
+				EditorPhysicsSettings editorPs = (EditorPhysicsSettings) field.get(scene);
+				scene.physicsSettings = new PhysicsSettings(editorPs.physicsEnabled, editorPs.gravityX, editorPs.gravityY, editorPs.allowSleep);
+			} catch (ReflectiveOperationException e) {
+				Log.exception(e);
+			}
+
+			versionCode = 5;
+			Log.info("Updating EditorScene to version code 5");
 		}
 
 		return scene;

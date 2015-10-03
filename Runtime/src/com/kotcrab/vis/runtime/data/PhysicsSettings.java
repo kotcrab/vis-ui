@@ -16,20 +16,29 @@
 
 package com.kotcrab.vis.runtime.data;
 
-/** @author Kotcrab */
-public class PhysicsSettingsData {
-	public boolean physicsEnabled;
-	public float gravityX;
-	public float gravityY;
-	public boolean allowSleep;
+import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
-	private PhysicsSettingsData () {
+/** @author Kotcrab */
+public class PhysicsSettings {
+	@VisTag(0) public boolean physicsEnabled;
+	@VisTag(1) public float gravityX;
+	@VisTag(2) public float gravityY;
+	@VisTag(3) public boolean allowSleep;
+
+	public PhysicsSettings () {
 	}
 
-	public PhysicsSettingsData (boolean physicsEnabled, float gravityX, float gravityY, boolean allowSleep) {
+	public PhysicsSettings (boolean physicsEnabled, float gravityX, float gravityY, boolean allowSleep) {
 		this.physicsEnabled = physicsEnabled;
 		this.gravityX = gravityX;
 		this.gravityY = gravityY;
 		this.allowSleep = allowSleep;
+	}
+
+	public PhysicsSettings (PhysicsSettings other) {
+		this.physicsEnabled = other.physicsEnabled;
+		this.gravityX = other.gravityX;
+		this.gravityY = other.gravityY;
+		this.allowSleep = other.allowSleep;
 	}
 }

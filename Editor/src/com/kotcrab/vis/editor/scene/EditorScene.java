@@ -23,8 +23,10 @@ import com.badlogic.gdx.utils.IntMap;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.util.BaseObservable;
+import com.kotcrab.vis.runtime.data.PhysicsSettings;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
+import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 
 import java.util.Comparator;
 
@@ -50,7 +52,10 @@ public class EditorScene extends BaseObservable {
 	@Tag(7) public float pixelsPerUnit;
 	@Tag(3) public SceneViewport viewport;
 
-	@Tag(9) public PhysicsSettings physicsSettings = new PhysicsSettings();
+	@Tag(10) public PhysicsSettings physicsSettings = new PhysicsSettings();
+
+	@Tag(9) @Deprecated @DeprecatedOn(versionCode = 11)
+	private EditorPhysicsSettings _physicsSettings;
 
 	@Tag(4) private Array<Layer> layers = new Array<>();
 	@Tag(5) private int activeLayerId;
@@ -59,7 +64,7 @@ public class EditorScene extends BaseObservable {
 
 	@Tag(6) private Array<EntityScheme> schemes; //for serialization
 
-	//last tag is 9
+	//last tag is 10
 
 	public EditorScene (FileHandle file, SceneViewport viewport, float width, float height, int pixelsPerUnit) {
 		if (width < 0 || height < 0) throw new IllegalArgumentException("Invalid scene size");

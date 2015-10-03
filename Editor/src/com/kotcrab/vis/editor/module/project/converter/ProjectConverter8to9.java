@@ -26,7 +26,6 @@ import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.project.support.vc8.SceneIOModuleVC8;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.util.AsyncTask;
-import com.kotcrab.vis.editor.util.SteppedAsyncTask;
 import com.kotcrab.vis.editor.util.ThreadUtils;
 
 /** @author Kotcrab */
@@ -40,7 +39,7 @@ public class ProjectConverter8to9 extends ProjectConverter {
 
 	@Override
 	public AsyncTask getConversionTask (FileHandle dataFile) {
-		return new SteppedAsyncTask("ProjectConverter8to9") {
+		return new AsyncTask("ProjectConverter8to9") {
 			@Override
 			public void execute () {
 				Project project = projectIO.readProjectDataFile(dataFile);

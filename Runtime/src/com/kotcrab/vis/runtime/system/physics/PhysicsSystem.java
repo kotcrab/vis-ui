@@ -20,7 +20,7 @@ import com.artemis.BaseSystem;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
-import com.kotcrab.vis.runtime.data.PhysicsSettingsData;
+import com.kotcrab.vis.runtime.data.PhysicsSettings;
 
 /** @author Kotcrab */
 @Wire
@@ -32,7 +32,7 @@ public class PhysicsSystem extends BaseSystem {
 	private World box2dWorld;
 	private float timeAccumulator;
 
-	public PhysicsSystem (PhysicsSettingsData physicsSettings) {
+	public PhysicsSystem (PhysicsSettings physicsSettings) {
 		box2dWorld = new World(new Vector2(physicsSettings.gravityX, physicsSettings.gravityY), physicsSettings.allowSleep);
 	}
 

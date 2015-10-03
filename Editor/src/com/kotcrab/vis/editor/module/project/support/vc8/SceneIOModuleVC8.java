@@ -35,7 +35,7 @@ import com.kotcrab.vis.editor.module.project.SceneCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
-import com.kotcrab.vis.editor.scene.PhysicsSettings;
+import com.kotcrab.vis.editor.scene.EditorPhysicsSettings;
 import com.kotcrab.vis.editor.serializer.*;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
@@ -94,7 +94,7 @@ public class SceneIOModuleVC8 extends SceneIOModule {
 		kryo.register(BitmapFontParameter.class, 35);
 		kryo.register(TextureFilter.class, 36);
 		kryo.register(LayerCordsSystem.class, 37);
-		kryo.register(PhysicsSettings.class, 38);
+		kryo.register(EditorPhysicsSettings.class, 38);
 
 		kryo.register(PathAsset.class, 61);
 		kryo.register(TextureRegionAsset.class, 62);
