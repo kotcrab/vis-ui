@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.kotcrab.vis</groupId>
         <artifactId>vis-parent</artifactId>
-        <version>1.0.9</version>
+        <version>1.1.1</version>
         <relativePath>../Parent/pom.xml</relativePath>
     </parent>
 
@@ -71,6 +71,11 @@
             <groupId>com.badlogicgames.gdx</groupId>
             <artifactId>gdx-freetype-platform</artifactId>
             <classifier>natives-desktop</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>com.badlogicgames.box2dlights</groupId>
+            <artifactId>box2dlights</artifactId>
         </dependency>
 
         <dependency>

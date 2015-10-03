@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.kotcrab.vis</groupId>
         <artifactId>vis-parent</artifactId>
-        <version>1.0.9</version>
+        <version>1.1.1</version>
         <relativePath>../Parent/pom.xml</relativePath>
     </parent>
 
@@ -24,7 +24,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <artemis.version>0.13.1</artemis.version> <!-- TODO: this should be moved to parent eventually-->
         <additionalparam>-Xdoclint:none</additionalparam>
         <arguments/>
     </properties>
@@ -75,15 +74,19 @@
         </dependency>
 
         <dependency>
+            <groupId>com.badlogicgames.box2dlights</groupId>
+            <artifactId>box2dlights</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>net.onedaybeard.artemis</groupId>
             <artifactId>artemis-odb</artifactId>
-            <version>${artemis.version}</version>
         </dependency>
 
         <dependency>
             <groupId>net.onedaybeard.artemis</groupId>
             <artifactId>artemis-odb-processor</artifactId>
-            <version>${artemis.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

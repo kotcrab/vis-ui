@@ -6,7 +6,7 @@
 
     <groupId>com.kotcrab.vis</groupId>
     <artifactId>vis-parent</artifactId>
-    <version>1.0.10-SNAPSHOT</version>
+    <version>1.1.2-SNAPSHOT</version>
     <description>Common Maven parent for Vis sub-modules</description>
 
     <name>VisParent</name>
@@ -21,6 +21,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <gdx.version>1.6.5</gdx.version>
+        <artemis.version>0.13.1</artemis.version>
     </properties>
 
     <dependencies>
@@ -83,6 +84,24 @@
                 <artifactId>gdx-box2d-platform</artifactId>
                 <version>${gdx.version}</version>
                 <classifier>natives-desktop</classifier>
+            </dependency>
+
+            <dependency>
+                <groupId>com.badlogicgames.box2dlights</groupId>
+                <artifactId>box2dlights</artifactId>
+                <version>1.4</version> <!-- Box2DLights version is different than LibGDX versions -->
+            </dependency>
+
+            <dependency>
+                <groupId>net.onedaybeard.artemis</groupId>
+                <artifactId>artemis-odb</artifactId>
+                <version>${artemis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>net.onedaybeard.artemis</groupId>
+                <artifactId>artemis-odb-processor</artifactId>
+                <version>${artemis.version}</version>
             </dependency>
 
             <dependency>
