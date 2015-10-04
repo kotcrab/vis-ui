@@ -6,7 +6,7 @@
 
     <groupId>com.kotcrab.vis</groupId>
     <artifactId>vis-parent</artifactId>
-    <version>1.1.2-SNAPSHOT</version>
+    <version>1.1.3-SNAPSHOT</version>
     <description>Common Maven parent for Vis sub-modules</description>
 
     <name>VisParent</name>
@@ -20,7 +20,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <gdx.version>1.6.5</gdx.version>
+        <gdx.version>1.7.0</gdx.version>
         <artemis.version>0.13.1</artemis.version>
     </properties>
 
