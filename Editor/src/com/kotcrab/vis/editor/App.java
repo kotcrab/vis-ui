@@ -53,8 +53,8 @@ public class App {
 	 */
 	public static final int PLUGIN_COMPATIBILITY_CODE = 3;
 
-	/** VisEditor version in text format: x.y.z, may be  x.y.z-SNAPSHOT if this version is snapshot */
-	public static final String VERSION = "0.2.5-SNAPSHOT";
+	/** VisEditor version in text format: x.y.z, may be x.y.z-SNAPSHOT if this version is snapshot */
+	public static final String VERSION = "0.2.5";
 
 	/** If true this version is snapshot */
 	public static final boolean SNAPSHOT = VERSION.contains("SNAPSHOT");
