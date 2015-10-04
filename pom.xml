@@ -6,13 +6,12 @@
 
     <groupId>com.kotcrab.vis</groupId>
     <artifactId>vis-aggregator</artifactId>
-    <version>0.2.5</version>
+    <version>0.2.6-SNAPSHOT</version>
     <name>VisAggregator</name>
 
     <packaging>pom</packaging>
 
     <modules>
-        <module>Parent</module>
         <module>UI</module>
         <module>Runtime</module>
         <module>RuntimeGWT</module>
