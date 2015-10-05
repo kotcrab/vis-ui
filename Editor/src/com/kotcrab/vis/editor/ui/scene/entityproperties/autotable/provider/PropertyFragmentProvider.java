@@ -48,7 +48,7 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 		if (annotation.setStrategy() == FieldSetStrategy.GETTER_AND_SETTER) type = annotation.targetType();
 
 		if (type.equals(Integer.TYPE) == false && type.equals(Float.TYPE) == false && type.equals(Boolean.TYPE) == false) {
-			throw new UnsupportedOperationException("Field of this type is not supported by EntityPropertyUI: " + type);
+			throw new UnsupportedOperationException("Field of this type is not supported by PropertyFragmentProvider: " + type);
 		}
 
 		String fieldName = annotation.fieldName().equals("") ? field.getName() : annotation.fieldName();
