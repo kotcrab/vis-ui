@@ -22,6 +22,7 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsIOModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
@@ -120,6 +121,11 @@ public class DefaultExporter implements ExporterPlugin {
 
 	private void beforeExport (boolean quick) {
 		json.setUsePrototypes(settings.skipDefaultValues);
+		if(settings.useMinimalOutputType)
+			json.setOutputType(OutputType.minimal);
+		else
+			json.setOutputType(OutputType.json);
+
 
 		if (firstExportDone == false && quick)
 			Log.info("Requested quick export but normal export hasn't been done since editor launch, performing normal export.");

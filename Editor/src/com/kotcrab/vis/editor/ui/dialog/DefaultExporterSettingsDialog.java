@@ -29,7 +29,9 @@ import com.kotcrab.vis.ui.widget.*;
 public class DefaultExporterSettingsDialog extends VisWindow {
 	private EditorSettingsIOModule settingsIO;
 	private DefaultExporterSettings settings;
+
 	private final VisCheckBox skipDefaultCheck;
+	private final VisCheckBox miniamlOutputCheck;
 
 	public DefaultExporterSettingsDialog (EditorSettingsIOModule settingsIO, DefaultExporterSettings settings) {
 		super("Settings");
@@ -59,6 +61,15 @@ public class DefaultExporterSettingsDialog extends VisWindow {
 		add(skipDefaultCheck);
 		add(skipDefaultHelpImage).size(22).row();
 
+		miniamlOutputCheck = new VisCheckBox("Use minimal output type");
+
+		VisImage minimalOutputHelpImage = new VisImage(Icons.QUESTION.drawable());
+		new Tooltip(minimalOutputHelpImage, "If checked output JSON will use minimal format, unnecessary double quotes\n" +
+				"will be skipped unless needed. This format may not be supported by all JSON parsers.\nUncheck" +
+				"this to disable minimal format.", Align.left);
+		add(miniamlOutputCheck);
+		add(minimalOutputHelpImage).size(22).row();
+
 		add(buttonTable).right().colspan(2);
 
 		cancelButton.addListener(new VisChangeListener((event1, actor1) -> {
@@ -79,10 +90,12 @@ public class DefaultExporterSettingsDialog extends VisWindow {
 
 	private void setUIFromSettings () {
 		skipDefaultCheck.setChecked(settings.skipDefaultValues);
+		miniamlOutputCheck.setChecked(settings.useMinimalOutputType);
 	}
 
 	private void setToSettings () {
 		settings.skipDefaultValues = skipDefaultCheck.isChecked();
+		settings.useMinimalOutputType = miniamlOutputCheck.isChecked();
 		settingsIO.save(settings, DefaultExporter.SETTINGS_FILE_NAME);
 	}
 }

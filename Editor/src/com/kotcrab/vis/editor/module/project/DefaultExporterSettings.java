@@ -21,4 +21,5 @@ import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 /** @author Kotcrab */
 public class DefaultExporterSettings {
 	@Tag(0) public boolean skipDefaultValues = true;
+	@Tag(1) public boolean useMinimalOutputType = true;
 }
