@@ -47,13 +47,14 @@ public class DialogUtils {
 	private static final int BUTTON_DETAILS = 4;
 
 	/** Dialog with text and OK button */
-	public static void showOKDialog (Stage stage, String title, String text) {
+	public static VisDialog showOKDialog (Stage stage, String title, String text) {
 		VisDialog dialog = new VisDialog(title);
 		dialog.text(text);
 		dialog.button(get(Text.OK)).padBottom(3);
 		dialog.pack();
 		dialog.centerWindow();
 		stage.addActor(dialog.fadeIn());
+		return dialog;
 	}
 
 	/**
@@ -83,9 +84,10 @@ public class DialogUtils {
 	 * Dialog with text and text field for user input. Cannot be canceled.
 	 * @param fieldTitle may be null
 	 */
-	public static void showInputDialog (Stage stage, String title, String fieldTitle, InputDialogListener listener) {
+	public static InputDialog showInputDialog (Stage stage, String title, String fieldTitle, InputDialogListener listener) {
 		InputDialog dialog = new InputDialog(title, fieldTitle, true, null, listener);
 		stage.addActor(dialog.fadeIn());
+		return dialog;
 	}
 
 	/**
@@ -93,9 +95,10 @@ public class DialogUtils {
 	 * @param validator used to validate user input, can be used to easily limit input to int etc. See {@link Validators} for premade validators
 	 * @param fieldTitle may be null
 	 */
-	public static void showInputDialog (Stage stage, String title, String fieldTitle, InputValidator validator, InputDialogListener listener) {
+	public static InputDialog showInputDialog (Stage stage, String title, String fieldTitle, InputValidator validator, InputDialogListener listener) {
 		InputDialog dialog = new InputDialog(title, fieldTitle, true, validator, listener);
 		stage.addActor(dialog.fadeIn());
+		return dialog;
 	}
 
 	/**
@@ -103,9 +106,10 @@ public class DialogUtils {
 	 * @param cancelable if true dialog may be canceled
 	 * @param fieldTitle may be null
 	 */
-	public static void showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputDialogListener listener) {
+	public static InputDialog showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputDialogListener listener) {
 		InputDialog dialog = new InputDialog(title, fieldTitle, cancelable, null, listener);
 		stage.addActor(dialog.fadeIn());
+		return dialog;
 	}
 
 	/**
@@ -114,28 +118,30 @@ public class DialogUtils {
 	 * @param cancelable if true dialog may be canceled
 	 * @param fieldTitle may be null
 	 */
-	public static void showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputValidator validator, InputDialogListener listener) {
+	public static InputDialog showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputValidator validator, InputDialogListener listener) {
 		InputDialog dialog = new InputDialog(title, fieldTitle, cancelable, validator, listener);
 		stage.addActor(dialog.fadeIn());
+		return dialog;
 	}
 
 	/** Dialog with title "Error" and provided text */
-	public static void showErrorDialog (Stage stage, String text) {
-		showErrorDialog(stage, text, (String) null);
+	public static ErrorDialog showErrorDialog (Stage stage, String text) {
+		return showErrorDialog(stage, text, (String) null);
 	}
 
 	/** Dialog with title "Error", provided text, and exception stacktrace available after pressing 'Details' button */
-	public static void showErrorDialog (Stage stage, String text, Exception exception) {
+	public static ErrorDialog showErrorDialog (Stage stage, String text, Exception exception) {
 		if (exception == null)
-			showErrorDialog(stage, text, (String) null);
+			return showErrorDialog(stage, text, (String) null);
 		else
-			showErrorDialog(stage, text, getStackTrace(exception));
+			return showErrorDialog(stage, text, getStackTrace(exception));
 	}
 
 	/** Dialog with title "Error", provided text, and provided details available after pressing 'Details' button */
-	public static void showErrorDialog (Stage stage, String text, String details) {
+	public static ErrorDialog showErrorDialog (Stage stage, String text, String details) {
 		ErrorDialog dialog = new ErrorDialog(text, details);
 		stage.addActor(dialog.fadeIn());
+		return dialog;
 	}
 
 	private static VisScrollPane createScrollPane (Actor widget) {
@@ -219,8 +225,6 @@ public class DialogUtils {
 
 			pack();
 			centerWindow();
-
-			field.focusField();
 		}
 
 		@Override
@@ -229,7 +233,28 @@ public class DialogUtils {
 			listener.canceled();
 		}
 
-		private void addValidatableFieldListener (final VisTextField field) {
+		@Override
+		protected void setStage (Stage stage) {
+			super.setStage(stage);
+			if(stage != null)
+				field.focusField();
+		}
+
+		public InputDialog setText (String text) {
+			return setText(text, false);
+		}
+
+		/** @param selectText if true text will be selected (this can be useful if you want to allow user quickly erase all text) */
+		public InputDialog setText (String text, boolean selectText) {
+			field.setText(text);
+			field.setCursorPosition(text.length());
+			if (selectText)
+				field.selectAll();
+
+			return this;
+		}
+
+		private InputDialog addValidatableFieldListener (final VisTextField field) {
 			field.addListener(new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
@@ -239,6 +264,7 @@ public class DialogUtils {
 						okButton.setDisabled(true);
 				}
 			});
+			return this;
 		}
 
 		private void addListeners () {
@@ -315,16 +341,19 @@ public class DialogUtils {
 			if (result == BUTTON_CANCEL) listener.cancel();
 		}
 
-		public void setNoButtonText (String text) {
+		public OptionDialog setNoButtonText (String text) {
 			noButton.setText(text);
+			return this;
 		}
 
-		public void setYesButtonText (String text) {
+		public OptionDialog setYesButtonText (String text) {
 			yesButton.setText(text);
+			return this;
 		}
 
-		public void setCancelButtonText (String text) {
+		public OptionDialog setCancelButtonText (String text) {
 			cancelButton.setText(text);
+			return this;
 		}
 	}
 
