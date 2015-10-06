@@ -1,5 +1,6 @@
 [0.9.2] [LibGDX 1.7.0] [Snapshot]
 -API Addition: InputDialog#setText(String text), InputDialog#setText(String text, boolean selectAll)
+-API Addition: FileChooser#setSelectedFiles (FileHandle... files)
 -TextField/VisTextField.setMessageText(String text) now works properly.
 -DialogUtils methods now return dialogs objects (was void)
 

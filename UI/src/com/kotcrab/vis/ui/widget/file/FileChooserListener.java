@@ -21,9 +21,9 @@ import com.badlogic.gdx.utils.Array;
 
 /** @author Kotcrab */
 public interface FileChooserListener {
-	public void selected (Array<FileHandle> files);
+	void selected (Array<FileHandle> files);
 
-	public void selected (FileHandle file);
+	void selected (FileHandle file);
 
-	public void canceled ();
+	void canceled ();
 }

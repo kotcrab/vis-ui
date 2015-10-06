@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.layout.ColumnGroup;
@@ -81,6 +82,7 @@ public class FileChooser extends VisWindow {
 	private Array<FileHandle> favorites;
 
 	private FileHandle currentDirectory;
+	private ObjectMap<FileHandle, FileItem> items = new ObjectMap();
 	private Array<FileItem> selectedItems = new Array<FileItem>();
 	private ShortcutItem selectedShortcut;
 
@@ -623,6 +625,7 @@ public class FileChooser extends VisWindow {
 		deselectAll();
 
 		fileTable.clear();
+		items.clear();
 		FileHandle[] files = currentDirectory.list(fileFilter);
 		currentPath.setText(currentDirectory.path());
 
@@ -630,12 +633,35 @@ public class FileChooser extends VisWindow {
 
 		Array<FileHandle> fileList = FileUtils.sortFiles(files);
 
-		for (FileHandle f : fileList)
-			if (f.file() == null || f.file().isHidden() == false)
-				fileTable.add(new FileItem(f)).expand().fill().row();
+		for (FileHandle file : fileList) {
+			if (file.file() != null) {
+				FileItem item = new FileItem(file);
+				fileTable.add(item).expand().fill().row();
+				items.put(file, item);
+			}
+		}
 
 		fileScrollPane.setScrollX(0);
 		fileScrollPane.setScrollY(0);
+	}
+
+	/**
+	 * Sets chooser selected files. All files that are invalid for current selection won't be selected. Files that doesn't
+	 * exist will be ignored.
+	 * @param files absolute {@link FileHandle}s of files to be selected
+	 */
+	public void setSelectedFiles (FileHandle... files) {
+		deselectAll(false);
+
+		for (FileHandle file : files) {
+			FileItem item = items.get(file);
+			if (item != null) {
+				item.select(false);
+			}
+		}
+
+		removeInvalidSelections();
+		setSelectedFileFieldText();
 	}
 
 	/** Refresh chooser lists content */
@@ -689,11 +715,8 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void selectAll () {
-		Array<Cell> cells = fileTable.getCells();
-		for (Cell c : cells) {
-			FileItem item = (FileItem) c.getActor();
+		for (FileItem item : items.values())
 			item.select(false);
-		}
 
 		removeInvalidSelections();
 		setSelectedFileFieldText();
@@ -942,7 +965,6 @@ public class FileChooser extends VisWindow {
 	@Override
 	protected void setStage (Stage stage) {
 		super.setStage(stage);
-		deselectAll();
 
 		if (watchingFilesEnabled) {
 			if (stage != null)
@@ -1081,10 +1103,10 @@ public class FileChooser extends VisWindow {
 			FileChooserStyle style = chooser.style;
 			if (file.isDirectory()) return style.iconFolder;
 			String ext = file.extension();
-			if(ext.equals("jpg") || ext.equals("png")) return style.iconFileImage;
-			if(ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) return style.iconFileAudio;
-			if(ext.equals("pdf")) return style.iconFilePdf;
-			if(ext.equals("txt")) return style.iconFileText;
+			if (ext.equals("jpg") || ext.equals("png")) return style.iconFileImage;
+			if (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) return style.iconFileAudio;
+			if (ext.equals("pdf")) return style.iconFilePdf;
+			if (ext.equals("txt")) return style.iconFileText;
 			return null;
 		}
 	}
