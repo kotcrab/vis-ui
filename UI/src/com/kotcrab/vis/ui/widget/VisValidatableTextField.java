@@ -114,14 +114,6 @@ public class VisValidatableTextField extends VisTextField {
 		return validators;
 	}
 
-	/**
-	 * Returns first validator, or null if there is no added validators. Please note that is this field has more than one
-	 * validator, this method will always return first
-	 */
-	public InputValidator getValidator () {
-		return validators.size == 0 ? null : validators.get(0);
-	}
-
 	public boolean isValidationEnabled () {
 		return validationEnabled;
 	}
