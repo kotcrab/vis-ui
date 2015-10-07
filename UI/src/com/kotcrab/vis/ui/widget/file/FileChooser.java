@@ -661,7 +661,7 @@ public class FileChooser extends VisWindow {
 		}
 
 		removeInvalidSelections();
-		setSelectedFileFieldText();
+		updateSelectedFileFieldText();
 	}
 
 	/** Refresh chooser lists content */
@@ -711,7 +711,7 @@ public class FileChooser extends VisWindow {
 			item.deselect(false);
 
 		selectedItems.clear();
-		if (updateTextField) setSelectedFileFieldText();
+		if (updateTextField) updateSelectedFileFieldText();
 	}
 
 	private void selectAll () {
@@ -719,10 +719,10 @@ public class FileChooser extends VisWindow {
 			item.select(false);
 
 		removeInvalidSelections();
-		setSelectedFileFieldText();
+		updateSelectedFileFieldText();
 	}
 
-	private void setSelectedFileFieldText () {
+	private void updateSelectedFileFieldText () {
 		if (selectedItems.size == 0)
 			selectedFileTextField.setText("");
 		else if (selectedItems.size == 1)
@@ -1223,7 +1223,7 @@ public class FileChooser extends VisWindow {
 
 					if (selectedItems.size > 1) removeInvalidSelections();
 
-					setSelectedFileFieldText();
+					updateSelectedFileFieldText();
 
 					// very fast selecting and deselecting folder would navigate to that folder
 					// return false will protect against that (tap count won't be increased)
@@ -1345,7 +1345,7 @@ public class FileChooser extends VisWindow {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 					deselectAll();
-					setSelectedFileFieldText();
+					updateSelectedFileFieldText();
 					select();
 					return super.touchDown(event, x, y, pointer, button);
 				}
