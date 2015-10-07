@@ -55,6 +55,12 @@ public class ExportersManagerModule extends ProjectModule {
 	@Override
 	public void init () {
 		for (ExporterPlugin exporterPlugin : extensionStorage.getExporterPlugins()) {
+			//simple check to verify that exporters returns same uuid every time
+			UUID u1 = exporterPlugin.getUUID();
+			UUID u2 = exporterPlugin.getUUID();
+			if (u1.equals(u2) == false)
+				throw new IllegalStateException("ExporterPlugin must return always return same UUID");
+
 			exporters.put(exporterPlugin.getUUID(), exporterPlugin);
 			projectContainer.injectModules(exporterPlugin);
 			exporterPlugin.init(project);
