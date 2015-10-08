@@ -20,7 +20,7 @@ import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangePhysicsSettingsAction;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.util.gdx.FloatDigitsOnlyFilter;
+import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.editor.util.gdx.TableBuilder;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.runtime.data.PhysicsSettings;

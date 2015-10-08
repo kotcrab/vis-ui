@@ -1,7 +1,11 @@
 [0.9.2] [LibGDX 1.7.0] [Snapshot]
--API Change: VisValidatableTextField#getValidator() removed, use getValidators() instead.
+-API Change: VisValidatableTextField#getValidator() removed, use getValidators() instead
+-API Change: NumberSelector now supports float values, methods taking and returning integers are now using floats
+-API Change: NumberSelectorListener#changed(int) is now NumberSelectorListener#changed(float)
+-API Addition: NumberSelector#setPrecision
 -API Addition: InputDialog#setText(String text), InputDialog#setText(String text, boolean selectAll)
 -API Addition: FileChooser#setSelectedFiles (FileHandle... files)
+-API Addition: FloatDigitsOnlyFilter
 -TextField/VisTextField.setMessageText(String text) now works properly.
 -DialogUtils methods now return dialogs objects (was void)
 

@@ -26,7 +26,7 @@ import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.project.SpriterDataIOModule;
 import com.kotcrab.vis.editor.scheme.SpriterAssetData;
 import com.kotcrab.vis.editor.util.SteppedAsyncTask;
-import com.kotcrab.vis.editor.util.gdx.FloatDigitsOnlyFilter;
+import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.ui.util.TableUtils;

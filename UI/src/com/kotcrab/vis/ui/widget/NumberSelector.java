@@ -17,6 +17,7 @@
 package com.kotcrab.vis.ui.widget;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -29,6 +30,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 
@@ -47,25 +49,26 @@ public class NumberSelector extends VisTable {
 
 	private boolean programmaticChangeEvents = true;
 
-	private int max;
-	private int min;
-	private int step;
-	private int current;
+	private float max;
+	private float min;
+	private float step;
+	private float current;
+	private int precision = 0;
 
 	/** Creates number selector with step set to 1 */
-	public NumberSelector (String name, int initialValue, int min, int max) {
+	public NumberSelector (String name, float initialValue, float min, float max) {
 		this(name, initialValue, min, max, 1);
 	}
 
-	public NumberSelector (String name, int initialValue, int min, int max, int step) {
+	public NumberSelector (String name, float initialValue, float min, float max, float step) {
 		this("default", name, initialValue, min, max, step);
 	}
 
-	public NumberSelector (String styleName, String name, int initialValue, int min, int max, int step) {
+	public NumberSelector (String styleName, String name, float initialValue, float min, float max, float step) {
 		this(VisUI.getSkin().get(styleName, NumberSelectorStyle.class), VisUI.getSizes(), name, initialValue, min, max, step);
 	}
 
-	public NumberSelector (NumberSelectorStyle style, final Sizes sizes, String name, int initialValue, int min, int max, int step) {
+	public NumberSelector (NumberSelectorStyle style, final Sizes sizes, String name, float initialValue, float min, float max, float step) {
 		this.current = initialValue;
 		this.max = max;
 		this.min = min;
@@ -80,7 +83,7 @@ public class NumberSelector extends VisTable {
 
 		valueText.setProgrammaticChangeEvents(false);
 		valueText.setTextFieldFilter(new DigitsOnlyFilter());
-		valueText.setText(String.valueOf(current));
+		valueText.setText(valueOf(current));
 		valueText.addValidator(new InputValidator() {
 			@Override
 			public boolean validateInput (String input) {
@@ -202,11 +205,42 @@ public class NumberSelector extends VisTable {
 		});
 	}
 
+	/**
+	 * Sets precision of this selector. Precision defines how many digits after decimal point can be entered. By default
+	 * this is set to 0, meaning that only integers are allowed. Setting precision to 1 would allow 0.0, precision = 2 would
+	 * allow 0.00 and etc.
+	 */
+	public void setPrecision (final int precision) {
+		if (precision < 0) throw new IllegalStateException("Precision can't be < 0");
+		this.precision = precision;
+
+		valueText.getValidators().clear();
+		if (precision == 0) {
+			valueText.addValidator(Validators.INTEGERS);
+			valueText.setTextFieldFilter(new DigitsOnlyFilter());
+		} else {
+			valueText.addValidator(Validators.FLOATS);
+			valueText.addValidator(new InputValidator() {
+				@Override
+				public boolean validateInput (String input) {
+					int dotIndex = input.indexOf('.');
+					if (dotIndex == -1) return true;
+					return input.length() - input.indexOf('.') - 1 <= precision;
+				}
+			});
+			valueText.setTextFieldFilter(new FloatDigitsOnlyFilter(true));
+		}
+	}
+
+	public int getPrecision () {
+		return precision;
+	}
+
 	private void textChanged () {
 		if (valueText.getText().equals(""))
 			current = min;
 		else if (checkInput(valueText.getText()))
-			current = Integer.parseInt(valueText.getText());
+			current = Float.parseFloat(valueText.getText());
 	}
 
 	public void increment () {
@@ -235,11 +269,11 @@ public class NumberSelector extends VisTable {
 		valueChanged(fireEvent);
 	}
 
-	public void setValue (int newValue) {
+	public void setValue (float newValue) {
 		setValue(newValue, programmaticChangeEvents);
 	}
 
-	public void setValue (int newValue, boolean fireEvent) {
+	public void setValue (float newValue, boolean fireEvent) {
 		if (newValue > max)
 			current = max;
 		else if (newValue < min)
@@ -250,16 +284,16 @@ public class NumberSelector extends VisTable {
 		valueChanged(fireEvent);
 	}
 
-	public int getValue () {
+	public float getValue () {
 		return current;
 	}
 
-	public int getMin () {
+	public float getMin () {
 		return min;
 	}
 
 	/** Sets min value, if current is lesser than min, the current value is set to min value */
-	public void setMin (int min) {
+	public void setMin (float min) {
 		this.min = min;
 
 		if (current < min) {
@@ -268,12 +302,12 @@ public class NumberSelector extends VisTable {
 		}
 	}
 
-	public int getMax () {
+	public float getMax () {
 		return max;
 	}
 
 	/** Sets max value, if current is greater than max, the current value is set to max value */
-	public void setMax (int max) {
+	public void setMax (float max) {
 		this.max = max;
 
 		if (current > max) {
@@ -283,24 +317,24 @@ public class NumberSelector extends VisTable {
 	}
 
 	/**
-	 * If false, {@link #setValue(int)}, {@link #decrement()} and {@link #increment()} will not fire change event,
+	 * If false, {@link #setValue(float)}, {@link #decrement()} and {@link #increment()} will not fire change event,
 	 * it will be fired only when user changed value
 	 */
 	public void setProgrammaticChangeEvents (boolean programmaticChangeEvents) {
 		this.programmaticChangeEvents = programmaticChangeEvents;
 	}
 
-	public int getStep () {
+	public float getStep () {
 		return step;
 	}
 
-	public void setStep (int step) {
+	public void setStep (float step) {
 		this.step = step;
 	}
 
 	private boolean checkInput (String input) {
 		try {
-			int x = Integer.parseInt(input);
+			float x = Float.parseFloat(input);
 			return x >= min && x <= max;
 		} catch (NumberFormatException e) {
 			return false;
@@ -308,14 +342,20 @@ public class NumberSelector extends VisTable {
 	}
 
 	private void valueChanged (boolean fireEvent) {
-		int pos = valueText.getCursorPosition();
-		valueText.setText(String.valueOf(current));
-		valueText.setCursorPosition(pos);
+		valueText.setText(valueOf(current));
+		valueText.setCursorPosition(valueText.getText().length());
 
 		if (fireEvent) {
 			for (NumberSelectorListener listener : listeners)
 				listener.changed(current);
 		}
+	}
+
+	private String valueOf (float current) {
+		if (current == MathUtils.floor(current))
+			return String.valueOf((int) current);
+		else
+			return String.valueOf(current);
 	}
 
 	public void addChangeListener (NumberSelectorListener listener) {
@@ -342,7 +382,7 @@ public class NumberSelector extends VisTable {
 	}
 
 	public interface NumberSelectorListener {
-		void changed (int number);
+		void changed (float number);
 	}
 
 	private class ButtonRepeatTask extends Task {

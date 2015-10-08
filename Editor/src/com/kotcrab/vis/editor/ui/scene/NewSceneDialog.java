@@ -29,7 +29,7 @@ import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
-import com.kotcrab.vis.editor.util.gdx.FloatDigitsOnlyFilter;
+import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;

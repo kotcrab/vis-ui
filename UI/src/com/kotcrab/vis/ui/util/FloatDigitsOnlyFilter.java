@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.gdx;
+package com.kotcrab.vis.ui.util;
 
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;

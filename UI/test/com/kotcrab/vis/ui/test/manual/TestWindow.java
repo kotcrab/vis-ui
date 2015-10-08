@@ -148,7 +148,7 @@ public class TestWindow extends VisWindow {
 
 		numberSelector.addChangeListener(new NumberSelectorListener() {
 			@Override
-			public void changed (int number) {
+			public void changed (float number) {
 				System.out.println("changed: " + number);
 			}
 		});
