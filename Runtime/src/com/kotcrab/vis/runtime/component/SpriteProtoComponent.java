@@ -34,7 +34,7 @@ public class SpriteProtoComponent extends ProtoComponent {
 	public Color tint = Color.WHITE;
 	public boolean flipX, flipY;
 
-	private SpriteProtoComponent () {
+	public SpriteProtoComponent () {
 	}
 
 	public SpriteProtoComponent (SpriteComponent component) {

@@ -28,7 +28,7 @@ public class MusicProtoComponent extends ProtoComponent {
 	public boolean looping;
 	public float volume;
 
-	private MusicProtoComponent () {
+	public MusicProtoComponent () {
 	}
 
 	public MusicProtoComponent (MusicComponent component) {

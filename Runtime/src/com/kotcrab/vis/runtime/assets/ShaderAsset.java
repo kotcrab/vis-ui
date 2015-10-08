@@ -27,7 +27,8 @@ public class ShaderAsset implements VisAssetDescriptor {
 	@VisTag(0) private String relativeVertPath;
 	@VisTag(1) private String relativeFragPath;
 
-	private ShaderAsset () {
+	@Deprecated
+	public ShaderAsset () {
 	}
 
 	/** Both files must be in the same folder */

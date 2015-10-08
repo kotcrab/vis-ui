@@ -25,7 +25,7 @@ import com.kotcrab.vis.runtime.assets.ShaderAsset;
 public class ShaderProtoComponent extends ProtoComponent {
 	public ShaderAsset asset;
 
-	private ShaderProtoComponent () {
+	public ShaderProtoComponent () {
 	}
 
 	public ShaderProtoComponent (ShaderAsset asset) {

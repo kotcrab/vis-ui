@@ -22,7 +22,8 @@ import com.kotcrab.vis.runtime.util.annotation.VisTag;
 public class SpriterAsset extends PathAsset {
 	@VisTag(1) private float imageScale;
 
-	protected SpriterAsset () {
+	@Deprecated
+	public SpriterAsset () {
 	}
 
 	public SpriterAsset (String relativePath, float imageScale) {

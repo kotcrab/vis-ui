@@ -27,7 +27,8 @@ import com.kotcrab.vis.runtime.util.annotation.VisTag;
 public class TtfFontAsset extends PathAsset {
 	@VisTag(1) private int fontSize;
 
-	protected TtfFontAsset () {
+	@Deprecated
+	public TtfFontAsset () {
 	}
 
 	public TtfFontAsset (String relativePath, int fontSize) {

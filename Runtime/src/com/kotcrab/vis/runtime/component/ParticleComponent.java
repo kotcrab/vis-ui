@@ -30,7 +30,7 @@ public class ParticleComponent extends Component implements UsesProtoComponent {
 	@ATProperty(fieldName = "Active on start", tooltip = "Controls whether to automatically start this effect on runtime.\nIn editor, particle effect are always active.")
 	public boolean active = true;
 
-	private ParticleComponent () {
+	public ParticleComponent () {
 	}
 
 	public ParticleComponent (ParticleEffect effect) {

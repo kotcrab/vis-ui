@@ -21,22 +21,23 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
+import com.kotcrab.vis.runtime.util.autotable.ATReflectedProperty;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
-import com.kotcrab.vis.runtime.util.autotable.FieldSetStrategy;
 
 /**
  * Stores entity Music
  * @author Kotcrab
  */
-public class MusicComponent extends Component implements UsesProtoComponent {
+public class MusicComponent extends Component implements UsesProtoComponent { //emulated on gwt
 	@ATSelectFile(fieldName = "Music", relativeFolderPath = "music/", extension = "mp3|wav|ogg", hideExtension = false, handlerAlias = "music")
-	@ATProperty(fieldName = "Loop", setStrategy = FieldSetStrategy.GETTER_AND_SETTER, targetType = boolean.class, getterName = "isLooping", setterName = "setLooping")
+	@ATProperty(fieldName = "Loop")
+	@ATReflectedProperty(targetType = boolean.class, getterName = "isLooping", setterName = "setLooping")
 	public transient Music music;
 
 	@ATProperty(fieldName = "Play on start")
 	private boolean playOnStart;
 
-	private MusicComponent () {
+	public MusicComponent () {
 	}
 
 	public MusicComponent (Music music) {

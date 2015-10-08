@@ -25,7 +25,8 @@ import com.kotcrab.vis.runtime.util.annotation.VisTag;
 public class AtlasRegionAsset extends PathAsset implements TextureAssetDescriptor {
 	@VisTag(1) private String regionName; //ignored in descriptor compassion
 
-	protected AtlasRegionAsset () {
+	@Deprecated
+	public AtlasRegionAsset () {
 	}
 
 	/** @param regionName name of region from atlas, if null the first texture of atlas itself would be used */

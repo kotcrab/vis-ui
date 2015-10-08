@@ -27,7 +27,7 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
 import com.kotcrab.vis.editor.util.gdx.FieldUtils;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
-import com.kotcrab.vis.runtime.util.autotable.FieldSetStrategy;
+import com.kotcrab.vis.runtime.util.autotable.ATReflectedProperty;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
 import com.kotcrab.vis.ui.widget.Tooltip;
@@ -45,9 +45,12 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 
 	@Override
 	public void createUI (ATProperty annotation, Class type, Field field) throws ReflectiveOperationException {
-		if (annotation.setStrategy() == FieldSetStrategy.GETTER_AND_SETTER) type = annotation.targetType();
+		ATReflectedProperty reflAnnotation = field.getDeclaredAnnotation(ATReflectedProperty.class);
+		if (reflAnnotation != null)
+			type = reflAnnotation.targetType();
 
-		if (type.equals(Integer.TYPE) == false && type.equals(Float.TYPE) == false && type.equals(Boolean.TYPE) == false) {
+		if (type.equals(Integer.TYPE) == false && type.equals(Float.TYPE) == false && type.equals(Boolean.TYPE) == false
+				&& type.equals(Integer.class) == false && type.equals(Float.class) == false && type.equals(Boolean.class) == false) {
 			throw new UnsupportedOperationException("Field of this type is not supported by PropertyFragmentProvider: " + type);
 		}
 
@@ -82,22 +85,17 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 			numberFields.put(field, numberInputField);
 		}
 
-		switch (annotation.setStrategy()) {
-			case DIRECT_CHANGE:
-				propertyAccessors.put(field, new FieldAccessor(field));
-				break;
-			case GETTER_AND_SETTER:
-				propertyAccessors.put(field, new GetterSetterAccessor(field, annotation.targetType(), annotation.getterName(), annotation.setterName()));
-				break;
-			default:
-				throw new UnsupportedOperationException("Unsupported ATProperty set strategy: " + annotation.setStrategy());
-		}
+		if(reflAnnotation != null)
+			propertyAccessors.put(field, new GetterSetterAccessor(field, reflAnnotation.targetType(), reflAnnotation.getterName(), reflAnnotation.setterName()));
+		else
+			propertyAccessors.put(field, new FieldAccessor(field));
 	}
 
 	@Override
 	public void updateUIFromEntities (Array<EntityProxy> proxies, Class type, Field field) {
-		ATProperty annotation = field.getDeclaredAnnotation(ATProperty.class);
-		if (annotation.setStrategy() == FieldSetStrategy.GETTER_AND_SETTER) type = annotation.targetType();
+		ATReflectedProperty reflection = field.getDeclaredAnnotation(ATReflectedProperty.class);
+		if (reflection != null)
+			type = reflection.targetType();
 
 		if (type.equals(Boolean.TYPE)) {
 			IndeterminateCheckbox checkbox = checkboxFields.get(field);
@@ -137,8 +135,9 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 
 	@Override
 	public void setToEntities (Class type, Field field, Component component) throws ReflectiveOperationException {
-		ATProperty annotation = field.getDeclaredAnnotation(ATProperty.class);
-		if (annotation.setStrategy() == FieldSetStrategy.GETTER_AND_SETTER) type = annotation.targetType();
+		ATReflectedProperty reflection = field.getDeclaredAnnotation(ATReflectedProperty.class);
+		if (reflection != null)
+			type = reflection.targetType();
 
 		if (type.equals(Boolean.TYPE)) {
 			IndeterminateCheckbox checkbox = checkboxFields.get(field);

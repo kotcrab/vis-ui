@@ -26,7 +26,7 @@ import com.kotcrab.vis.runtime.util.annotation.VisTag;
 public class IDComponent extends Component {
 	@VisTag(0) public String id;
 
-	private IDComponent () {
+	public IDComponent () {
 	}
 
 	public IDComponent (String id) {

@@ -25,7 +25,8 @@ import com.kotcrab.vis.runtime.util.annotation.VisTag;
 public class PathAsset implements VisAssetDescriptor {
 	@VisTag(0) private String relativePath;
 
-	protected PathAsset () {
+	@Deprecated
+	public PathAsset () {
 	}
 
 	public PathAsset (String relativePath) {

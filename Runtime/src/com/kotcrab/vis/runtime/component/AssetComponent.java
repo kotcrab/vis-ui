@@ -29,7 +29,7 @@ import com.kotcrab.vis.runtime.util.annotation.VisTag;
 public class AssetComponent extends Component implements StoresAssetDescriptor {
 	@VisTag(0) public VisAssetDescriptor asset;
 
-	private AssetComponent () {
+	public AssetComponent () {
 	}
 
 	public AssetComponent (VisAssetDescriptor asset) {

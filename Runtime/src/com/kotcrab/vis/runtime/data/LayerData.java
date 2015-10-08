@@ -27,7 +27,7 @@ public class LayerData {
 	public String name;
 	public int id;
 
-	private LayerData () {
+	public LayerData () {
 	}
 
 	public LayerData (LayerCordsSystem cordsSystem, String name, int id) {

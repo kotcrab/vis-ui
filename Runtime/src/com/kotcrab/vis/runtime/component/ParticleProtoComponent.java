@@ -25,8 +25,7 @@ public class ParticleProtoComponent extends ProtoComponent {
 	public float x, y;
 	public boolean active;
 
-	private ParticleProtoComponent () {
-
+	public ParticleProtoComponent () {
 	}
 
 	public ParticleProtoComponent (ParticleComponent particleComponent) {

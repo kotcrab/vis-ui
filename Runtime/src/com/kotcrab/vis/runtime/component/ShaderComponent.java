@@ -33,7 +33,7 @@ public class ShaderComponent extends Component implements UsesProtoComponent, St
 	public ShaderAsset asset;
 	public transient ShaderProgram shader;
 
-	private ShaderComponent () {
+	public ShaderComponent () {
 	}
 
 	public ShaderComponent (ShaderAsset asset, ShaderProgram shader) {

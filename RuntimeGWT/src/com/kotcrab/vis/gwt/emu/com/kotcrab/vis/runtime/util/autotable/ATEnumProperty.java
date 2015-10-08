@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.util.autotable;
 
-import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Stores entity layerId
+ * Target field must have default value set!
  * @author Kotcrab
  */
-public class LayerComponent extends Component {
-	@VisTag(0) public int layerId;
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.SOURCE)
+public @interface ATEnumProperty {
+	String fieldName () default "";
 
-	public LayerComponent () {
-	}
-
-	public LayerComponent (int layerId) {
-		this.layerId = layerId;
-	}
+	Class<? extends EnumNameProvider> uiNameProvider ();
 }

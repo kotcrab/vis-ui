@@ -35,5 +35,14 @@
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/runtime/bmp-font-df.vert" />
 
     <extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.runtime.data" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.runtime.component" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.runtime.scene" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.runtime.assets" />
+
+    <extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.utils.IntMap" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.assets.AssetLoaderParameters" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.assets.loaders.BitmapFontLoader" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.graphics.Texture.TextureFilter" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.artemis.Component"/>
 
 </module>

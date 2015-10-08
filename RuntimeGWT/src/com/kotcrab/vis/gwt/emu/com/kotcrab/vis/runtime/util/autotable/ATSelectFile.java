@@ -27,24 +27,31 @@ import java.lang.annotation.Target;
  * This annotation is used on fields inside {@link Component}s to make them editable inside VisEditor. Target component
  * class must be registered using AutoComponentTable. See VisEditor source for more details.
  * <p>
- * This annotation supports float, int and boolean fields. It can be also used to invoke getters and setters for those
- * primitive types on other objects types. See {@link ATReflectedProperty}
- * Auto table will automatically create number input field or checkbox and update it when needed.
+ * Auto table will automatically create label with current file path and button to chose new file. This annotation
+ * requires providing handler class that will take care of updating entities.
  * @author Kotcrab
  */
 @Target(ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface ATProperty {
+@Retention(RetentionPolicy.SOURCE)
+public @interface ATSelectFile {
 	/** @return human friendly field name that will be used in VisEditor UI. */
 	String fieldName () default "";
 
-	/** @return field max value, if target field is boolean this if ignored */
-	float max () default Float.MAX_VALUE;
+	/** @return relative folder path that will be used for file selector. For example: "gfx/". */
+	String relativeFolderPath ();
 
-	/** @return field min value, if target field is boolean this if ignored */
-	float min () default Float.MIN_VALUE;
+	/** @return extension that file chooser will display. For example: "png". */
+	String extension ();
 
-	/** @return text that is used for this field tooltip, if text equals "" tooltip won't be created */
-	String tooltip () default "";
+	/** @return if true file selector will hide file extensions in dialog. */
+	boolean hideExtension () default false;
+
+	/**
+	 * @return class name that will be used as group handler. Must implement ATSelectFileHandlerGroup. This defaults to
+	 * VisEditor default group handler, if you are using this annotation from plugins you must change this to your own.
+	 */
+	String handlerGroupClass () default "com.kotcrab.vis.editor.ui.scene.entityproperties.components.handler.VisATSelectFileHandlerGroup";
+
+	/** @return handler alias that is used in group returned by {@link #handlerGroupClass()} */
+	String handlerAlias ();
 }
-

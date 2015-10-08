@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.util.autotable;
 
-import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-/**
- * Stores entity layerId
- * @author Kotcrab
- */
-public class LayerComponent extends Component {
-	@VisTag(0) public int layerId;
-
-	public LayerComponent () {
-	}
-
-	public LayerComponent (int layerId) {
-		this.layerId = layerId;
-	}
+/** @author Kotcrab */
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.SOURCE)
+public @interface ATVector2Array {
+	/** @return human friendly field name that will be used in VisEditor UI. */
+	String fieldName () default "";
 }

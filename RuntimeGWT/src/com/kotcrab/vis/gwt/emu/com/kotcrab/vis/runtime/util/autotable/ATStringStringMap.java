@@ -16,10 +16,15 @@
 
 package com.kotcrab.vis.runtime.util.autotable;
 
-/**
- * @author Kotcrab
- * @see ATProperty#setStrategy()
- */
-public enum FieldSetStrategy {
-	DIRECT_CHANGE, GETTER_AND_SETTER
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/** @author Kotcrab */
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.SOURCE)
+public @interface ATStringStringMap {
+	/** @return human friendly field name that will be used in VisEditor UI. */
+	String fieldName () default "";
 }

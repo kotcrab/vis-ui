@@ -29,7 +29,7 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
 public class EntityData {
 	public Array<Component> components;
 
-	private EntityData () {
+	public EntityData () {
 	}
 
 	public EntityData (Array<Component> components) {

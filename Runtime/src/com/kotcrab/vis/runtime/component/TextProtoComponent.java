@@ -36,7 +36,7 @@ public class TextProtoComponent extends ProtoComponent {
 
 	public boolean isUsesDistanceField;
 
-	private TextProtoComponent () {
+	public TextProtoComponent () {
 	}
 
 	public TextProtoComponent (TextComponent component) {

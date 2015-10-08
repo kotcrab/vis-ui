@@ -28,7 +28,8 @@ import com.kotcrab.vis.runtime.util.annotation.VisTag;
 public class BmpFontAsset extends PathAsset {
 	@VisTag(1) private BitmapFontParameter fontParameter;
 
-	protected BmpFontAsset () {
+	@Deprecated
+	public BmpFontAsset () {
 	}
 
 	public BmpFontAsset (String relativePath, BitmapFontParameter fontParameter) {

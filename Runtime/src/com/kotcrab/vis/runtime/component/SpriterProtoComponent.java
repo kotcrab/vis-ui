@@ -26,7 +26,7 @@ public class SpriterProtoComponent extends ProtoComponent {
 	public boolean playOnStart;
 	public int defaultAnimation;
 
-	private SpriterProtoComponent () {
+	public SpriterProtoComponent () {
 	}
 
 	public SpriterProtoComponent (SpriterComponent comp) {
