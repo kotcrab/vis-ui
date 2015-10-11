@@ -165,7 +165,7 @@ public abstract class TextUITable extends SpecificUITable {
 		EntityUtils.stream(properties.getProxies(), TextComponent.class, (entity, text) -> {
 			if (autoCenterOrigin.isIndeterminate() == false) {
 				text.setAutoSetOriginToCenter(autoCenterOrigin.isChecked());
-				properties.selectedEntitiesValuesChanged();
+				properties.selectedEntitiesBasicValuesChanged();
 			}
 		});
 	}

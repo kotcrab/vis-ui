@@ -499,6 +499,10 @@ public class EntityProperties extends VisTable implements Disposable {
 		updateValues();
 	}
 
+	public void selectedEntitiesBasicValuesChanged () {
+		updateBasicValues();
+	}
+
 	public void beginSnapshot () {
 		if (snapshotInProgress) endSnapshot();
 		snapshotInProgress = true;
@@ -625,42 +629,46 @@ public class EntityProperties extends VisTable implements Disposable {
 		} else {
 			setVisible(true);
 
-			if (groupSelected) {
-				idField.setText("<id cannot be set for group>");
-				idField.setDisabled(true);
-			} else {
-				idField.setText(EntityUtils.getCommonId(entities));
-				idField.setDisabled(false);
-			}
-
-			xField.setText(getEntitiesFieldValue(EntityProxy::getX));
-			yField.setText(getEntitiesFieldValue(EntityProxy::getY));
-
-			if (EntityUtils.isScaleSupportedForEntities(entities)) {
-				xScaleField.setText(getEntitiesFieldValue(EntityProxy::getScaleX));
-				yScaleField.setText(getEntitiesFieldValue(EntityProxy::getScaleY));
-			}
-
-			if (EntityUtils.isOriginSupportedForEntities(entities)) {
-				xOriginField.setText(getEntitiesFieldValue(EntityProxy::getOriginX));
-				yOriginField.setText(getEntitiesFieldValue(EntityProxy::getOriginY));
-			}
-
-			if (EntityUtils.isRotationSupportedForEntities(entities))
-				rotationField.setText(getEntitiesFieldValue(EntityProxy::getRotation));
-
-			if (EntityUtils.isTintSupportedForEntities(entities)) setTintUIForEntities();
-
-			if (EntityUtils.isFlipSupportedForEntities(entities)) {
-				EntityUtils.setCommonCheckBoxState(entities, xFlipCheck, EntityProxy::isFlipX);
-				EntityUtils.setCommonCheckBoxState(entities, yFlipCheck, EntityProxy::isFlipY);
-			}
+			updateBasicValues();
 
 			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
 
 			for (ComponentTable table : activeComponentTables) {
 				table.updateUIValues();
 			}
+		}
+	}
+
+	private void updateBasicValues () {
+		if (groupSelected) {
+			idField.setText("<id cannot be set for group>");
+			idField.setDisabled(true);
+		} else {
+			idField.setText(EntityUtils.getCommonId(entities));
+			idField.setDisabled(false);
+		}
+
+		xField.setText(getEntitiesFieldValue(EntityProxy::getX));
+		yField.setText(getEntitiesFieldValue(EntityProxy::getY));
+
+		if (EntityUtils.isScaleSupportedForEntities(entities)) {
+			xScaleField.setText(getEntitiesFieldValue(EntityProxy::getScaleX));
+			yScaleField.setText(getEntitiesFieldValue(EntityProxy::getScaleY));
+		}
+
+		if (EntityUtils.isOriginSupportedForEntities(entities)) {
+			xOriginField.setText(getEntitiesFieldValue(EntityProxy::getOriginX));
+			yOriginField.setText(getEntitiesFieldValue(EntityProxy::getOriginY));
+		}
+
+		if (EntityUtils.isRotationSupportedForEntities(entities))
+			rotationField.setText(getEntitiesFieldValue(EntityProxy::getRotation));
+
+		if (EntityUtils.isTintSupportedForEntities(entities)) setTintUIForEntities();
+
+		if (EntityUtils.isFlipSupportedForEntities(entities)) {
+			EntityUtils.setCommonCheckBoxState(entities, xFlipCheck, EntityProxy::isFlipX);
+			EntityUtils.setCommonCheckBoxState(entities, yFlipCheck, EntityProxy::isFlipY);
 		}
 	}
 

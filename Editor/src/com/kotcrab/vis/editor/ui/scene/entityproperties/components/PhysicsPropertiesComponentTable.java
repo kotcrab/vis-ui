@@ -67,7 +67,7 @@ public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsP
 					}
 				});
 
-				if (uiUpdatedNeeded.value) properties.selectedEntitiesValuesChanged();
+				if (uiUpdatedNeeded.value) properties.selectedEntitiesBasicValuesChanged();
 			}
 		}
 	}
