@@ -28,9 +28,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.project.*;
-import com.kotcrab.vis.editor.module.project.converter.DummyConverter;
 import com.kotcrab.vis.editor.module.project.converter.ProjectConverter;
-import com.kotcrab.vis.editor.module.project.converter.ProjectConverter8to9;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.serializer.VisTaggedFieldSerializer;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
@@ -81,17 +79,6 @@ public class ProjectIOModule extends EditorModule {
 		kryo.register(ProjectGeneric.class, 12);
 
 		//TODO: [plugins] plugin entry point
-		projectConverters.add(new DummyConverter(1, 8));
-		projectConverters.add(new DummyConverter(2, 8));
-		projectConverters.add(new DummyConverter(3, 8));
-		projectConverters.add(new DummyConverter(4, 8));
-		projectConverters.add(new DummyConverter(5, 8));
-		projectConverters.add(new DummyConverter(6, 8));
-		projectConverters.add(new DummyConverter(7, 8));
-		projectConverters.add(new ProjectConverter8to9());
-		projectConverters.add(new DummyConverter(9, 12));
-		projectConverters.add(new DummyConverter(10, 12));
-		projectConverters.add(new DummyConverter(11, 12));
 
 		for (ProjectConverter converter : projectConverters)
 			container.injectModules(converter);
@@ -139,6 +126,14 @@ public class ProjectIOModule extends EditorModule {
 
 		if (versionFile.exists()) {
 			ProjectVersionDescriptor descriptor = ProjectVersionModule.getNewJson().fromJson(ProjectVersionDescriptor.class, versionFile);
+
+			if (descriptor.versionCode < 20) {
+				//TODO: include link to converting help
+				DialogUtils.showOKDialog(stage, "Warning", "This project uses old project format and must be converted before loading." +
+						"\nThis is a early preview version and converting it's not available yet.");
+				return;
+			}
+
 			if (descriptor.versionCode > App.VERSION_CODE) {
 				DialogUtils.showOptionDialog(stage, "Warning",
 						"This project was opened in newer version of VisEditor.\nSome functions may not work properly. Do you want to continue?",

@@ -51,7 +51,7 @@
                             <Plugin-Description>Spine integration for VisEditor</Plugin-Description>
                             <Plugin-Provider>Kotcrab</Plugin-Provider>
                             <Plugin-Version>${project.version}</Plugin-Version>
-                            <Plugin-Compatibility>3</Plugin-Compatibility>
+                            <Plugin-Compatibility>4</Plugin-Compatibility>
                             <Plugin-License>LICENSE.txt</Plugin-License>
                         </manifestEntries>
                     </archive>
