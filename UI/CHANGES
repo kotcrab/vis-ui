@@ -8,6 +8,7 @@
 -API Addition: FloatDigitsOnlyFilter
 -TextField/VisTextField.setMessageText(String text) now works properly.
 -DialogUtils methods now return dialogs objects (was void)
+-Fixed font kerning for character pairs: Ma, Me, Mi
 
 [0.9.1] [LibGDX 1.7.0]
 -Updated to LibGDX 1.7.0

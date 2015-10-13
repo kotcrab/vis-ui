@@ -3,8 +3,8 @@ font.size=24
 font.bold=false
 font.italic=false
 
-font2.file=C:\Users\Kotcrab\Desktop\aaaopensans.ttf
-font2.use=false
+font2.file=E:\Git\VisSceneEditor\UI\assets-raw\VisOpenSansKerned.ttf
+font2.use=true
 
 pad.top=1
 pad.right=0
