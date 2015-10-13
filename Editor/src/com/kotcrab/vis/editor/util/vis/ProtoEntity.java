@@ -23,7 +23,6 @@ import com.artemis.utils.Bag;
 import com.artemis.utils.EntityBuilder;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
-import com.kotcrab.vis.editor.util.NoneInvocationStrategy;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**

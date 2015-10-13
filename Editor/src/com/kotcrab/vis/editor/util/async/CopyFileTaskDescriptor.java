@@ -14,28 +14,22 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.async;
+
+import com.badlogic.gdx.files.FileHandle;
 
 /**
- * Listener for {@link AsyncTask}
+ * Descriptor for {@link CopyFilesAsyncTask}
  * @author Kotcrab
  */
-public interface AsyncTaskListener {
-	default void messageChanged (String newMsg) {
+public class CopyFileTaskDescriptor {
+	public FileHandle file;
+	public FileHandle target;
+	public boolean overwrites;
 
-	}
-
-	default void progressChanged (int newProgressPercent) {
-
-	}
-
-	void finished ();
-
-	default void failed (String reason) {
-
-	}
-
-	default void failed (String reason, Exception ex) {
-
+	public CopyFileTaskDescriptor (FileHandle file, FileHandle target, boolean overwrites) {
+		this.file = file;
+		this.target = target;
+		this.overwrites = overwrites;
 	}
 }

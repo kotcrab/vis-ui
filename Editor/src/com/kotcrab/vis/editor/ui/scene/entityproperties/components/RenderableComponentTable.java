@@ -19,7 +19,7 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.components;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
-import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
 import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
 

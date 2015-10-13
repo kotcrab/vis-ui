@@ -20,7 +20,7 @@ import com.badlogic.gdx.Version;
 import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.util.FileUtils;
-import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;

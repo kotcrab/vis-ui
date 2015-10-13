@@ -21,7 +21,7 @@ import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsIOModule;
 import com.kotcrab.vis.editor.module.project.DefaultExporter;
 import com.kotcrab.vis.editor.module.project.DefaultExporterSettings;
-import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
 

@@ -14,18 +14,20 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.gdx;
+package com.kotcrab.vis.editor.util.scene2d;
 
-import com.kotcrab.vis.ui.widget.VisTextField;
-import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
+import java.io.File;
+import java.io.FileFilter;
 
 /**
- * {@link TextFieldFilter} that only allows integer chars.
+ * Directory filter which only shows directories
  * @author Kotcrab
  */
-public class IntDigitsOnlyFilter implements TextFieldFilter {
+public class DirectoriesOnlyFileFilter implements FileFilter {
+	public static final DirectoriesOnlyFileFilter FILTER = new DirectoriesOnlyFileFilter();
+
 	@Override
-	public boolean acceptChar (VisTextField textField, char c) {
-		return Character.isDigit(c);
+	public boolean accept (File file) {
+		return file.isDirectory();
 	}
 }

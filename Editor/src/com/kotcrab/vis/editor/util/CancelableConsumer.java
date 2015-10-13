@@ -16,18 +16,8 @@
 
 package com.kotcrab.vis.editor.util;
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Serializer;
-import com.esotericsoftware.kryo.factories.SerializerFactory;
-import com.kotcrab.vis.editor.serializer.VisTaggedFieldSerializer;
-
 /** @author Kotcrab */
-public class SettingsSerializerFactory implements SerializerFactory {
-	@Override
-	public Serializer makeSerializer (Kryo kryo, Class<?> type) {
-		VisTaggedFieldSerializer serializer = new VisTaggedFieldSerializer(kryo, type);
-		serializer.setIgnoreMissingTags(true);
-		serializer.setLogMissingTags(true);
-		return serializer;
-	}
+public interface CancelableConsumer<T> {
+	/** @return if true current streaming will be canceled */
+	boolean accept (T t);
 }

@@ -27,7 +27,7 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.ColorSettingsModule;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsModule;
 import com.kotcrab.vis.editor.util.NumberUtils;
-import com.kotcrab.vis.editor.util.gdx.FieldUtils;
+import com.kotcrab.vis.editor.util.scene2d.FieldUtils;
 import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisCheckBox;

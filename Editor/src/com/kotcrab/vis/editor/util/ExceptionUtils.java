@@ -20,7 +20,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 /**
- * Exception related uitls
+ * Exception related utils
  * @author Kotcrab
  */
 public class ExceptionUtils {

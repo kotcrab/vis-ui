@@ -31,7 +31,7 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.ComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
-import com.kotcrab.vis.editor.util.gdx.VisDragAndDrop;
+import com.kotcrab.vis.editor.util.scene2d.VisDragAndDrop;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 

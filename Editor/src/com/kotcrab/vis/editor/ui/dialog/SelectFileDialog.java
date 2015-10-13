@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.util.gdx.PrefHeightIfVissibleValue;
+import com.kotcrab.vis.editor.util.scene2d.PrefHeightIfVisibleValue;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.*;
@@ -74,8 +74,8 @@ public class SelectFileDialog extends VisWindow {
 
 		noFilesLabel = new VisLabel("There isn't any available file to select");
 
-		add(noFilesLabel).height(new PrefHeightIfVissibleValue()).center().spaceBottom(0).row();
-		add(fileList).expand().fill().height(new PrefHeightIfVissibleValue()).row();
+		add(noFilesLabel).height(new PrefHeightIfVisibleValue()).center().spaceBottom(0).row();
+		add(fileList).expand().fill().height(new PrefHeightIfVisibleValue()).row();
 		add(buttonsTable).padBottom(2).right();
 
 		cancelButton.addListener(new ChangeListener() {

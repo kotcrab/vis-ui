@@ -26,7 +26,7 @@ import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
-import com.kotcrab.vis.editor.util.gdx.VisTabbedPaneListener;
+import com.kotcrab.vis.editor.util.scene2d.VisTabbedPaneListener;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 

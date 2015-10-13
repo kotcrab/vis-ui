@@ -14,30 +14,20 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.gdx;
+package com.kotcrab.vis.editor.util.vis;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.badlogic.gdx.scenes.scene2d.ui.Widget;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.Serializer;
+import com.esotericsoftware.kryo.factories.SerializerFactory;
+import com.kotcrab.vis.editor.serializer.VisTaggedFieldSerializer;
 
-/**
- * Allows to use LibGDX {@link Value} with lambdas for scene2d.ui widgets
- * @author Kotcrab
- * @see VisValue
- */
-public class VisWidgetValue extends Value {
-	protected WidgetValueGetter getter;
-
-	public VisWidgetValue (WidgetValueGetter getter) {
-		this.getter = getter;
-	}
-
+/** @author Kotcrab */
+public class SettingsSerializerFactory implements SerializerFactory {
 	@Override
-	public float get (Actor context) {
-		return getter.get((Widget) context);
-	}
-
-	public interface WidgetValueGetter {
-		float get (Widget context);
+	public Serializer makeSerializer (Kryo kryo, Class<?> type) {
+		VisTaggedFieldSerializer serializer = new VisTaggedFieldSerializer(kryo, type);
+		serializer.setIgnoreMissingTags(true);
+		serializer.setLogMissingTags(true);
+		return serializer;
 	}
 }

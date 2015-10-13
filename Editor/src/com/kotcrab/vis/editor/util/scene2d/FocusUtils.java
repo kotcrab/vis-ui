@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.scene2d;
 
-/** @author Kotcrab */
-public abstract class SteppedAsyncTask extends AsyncTask {
-	private int step;
-	private int totalSteps;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
-	public SteppedAsyncTask (String threadName) {
-		super(threadName);
-	}
-
-	public void setTotalSteps (int totalSteps) {
-		this.totalSteps = totalSteps;
-		this.step = 0;
-		setProgressPercent(0);
-	}
-
-	protected void nextStep () {
-		setProgressPercent(++step * 100 / totalSteps);
+/**
+ * Some utils to focus yourself.
+ * @author Kotcrab
+ */
+public class FocusUtils {
+	public static void focus (Stage stage, Actor target) {
+		stage.setKeyboardFocus(target);
+		stage.setScrollFocus(target);
 	}
 }

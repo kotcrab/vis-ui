@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.async;
 
 import com.badlogic.gdx.Gdx;
 import com.kotcrab.vis.editor.Log;

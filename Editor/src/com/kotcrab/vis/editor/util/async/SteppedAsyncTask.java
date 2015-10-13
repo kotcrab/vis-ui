@@ -14,28 +14,24 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.gdx;
+package com.kotcrab.vis.editor.util.async;
 
-import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
-import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
+/** @author Kotcrab */
+public abstract class SteppedAsyncTask extends AsyncTask {
+	private int step;
+	private int totalSteps;
 
-/**
- * Java 8 default implementation of {@link TabbedPaneListener} Aka. TabbedPaneAdapter
- * @author Kotcrab
- */
-public interface VisTabbedPaneListener extends TabbedPaneListener {
-	@Override
-	default void switchedTab (Tab tab) {
-
+	public SteppedAsyncTask (String threadName) {
+		super(threadName);
 	}
 
-	@Override
-	default void removedTab (Tab tab) {
-
+	public void setTotalSteps (int totalSteps) {
+		this.totalSteps = totalSteps;
+		this.step = 0;
+		setProgressPercent(0);
 	}
 
-	@Override
-	default void removedAllTabs () {
-
+	protected void nextStep () {
+		setProgressPercent(++step * 100 / totalSteps);
 	}
 }

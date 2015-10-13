@@ -14,24 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.scene2d;
 
-import java.io.File;
-import java.io.FileFilter;
+import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
 
-/**
- * Directory filter which only shows directories
- * @author Kotcrab
- */
-public class ExtensionFileFilter implements FileFilter {
-	private String extension;
-
-	public ExtensionFileFilter (String extension) {
-		this.extension = extension;
-	}
-
+/** @author Kotcrab */
+public interface VisColorPickerListener extends ColorPickerListener {
 	@Override
-	public boolean accept (File file) {
-		return file.getPath().endsWith(extension);
+	default void canceled () {
+
 	}
 }

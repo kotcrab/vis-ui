@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.vis;
+package com.kotcrab.vis.editor.util.gdx;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Array.ArrayIterable;
+import com.kotcrab.vis.editor.util.CancelableConsumer;
 
 import java.util.function.Consumer;
 

@@ -14,18 +14,29 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.gdx;
+package com.kotcrab.vis.editor.util.scene2d;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 
 /**
- * Some utils to focus yourself.
+ * Allows to use LibGDX {@link Value} with lambdas
  * @author Kotcrab
+ * @see VisWidgetValue
  */
-public class FocusUtils {
-	public static void focus (Stage stage, Actor target) {
-		stage.setKeyboardFocus(target);
-		stage.setScrollFocus(target);
+public class VisValue extends Value {
+	private ValueGetter getter;
+
+	public VisValue (ValueGetter getter) {
+		this.getter = getter;
+	}
+
+	@Override
+	public float get (Actor context) {
+		return getter.get(context);
+	}
+
+	public interface ValueGetter {
+		float get (Actor context);
 	}
 }

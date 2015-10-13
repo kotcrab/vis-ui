@@ -14,31 +14,28 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.gdx;
+package com.kotcrab.vis.editor.util.scene2d;
 
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
+import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
 /**
- * Stops parent actor from receiving child events
+ * Java 8 default implementation of {@link TabbedPaneListener} Aka. TabbedPaneAdapter
  * @author Kotcrab
  */
-public class EventStopper extends InputListener {
+public interface VisTabbedPaneListener extends TabbedPaneListener {
 	@Override
-	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-		event.stop();
-		return true;
+	default void switchedTab (Tab tab) {
+
 	}
 
 	@Override
-	public boolean keyDown (InputEvent event, int keycode) {
-		event.stop();
-		return true;
+	default void removedTab (Tab tab) {
+
 	}
 
 	@Override
-	public boolean scrolled (InputEvent event, float x, float y, int amount) {
-		event.stop();
-		return true;
+	default void removedAllTabs () {
+
 	}
 }

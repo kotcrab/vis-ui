@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.gdx;
+package com.kotcrab.vis.editor.util.scene2d;
 
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.math.MathUtils;

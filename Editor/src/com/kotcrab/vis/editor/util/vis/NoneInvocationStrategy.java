@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.vis;
 
-import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
+import com.artemis.BaseSystem;
+import com.artemis.SystemInvocationStrategy;
+import com.artemis.utils.Bag;
 
 /** @author Kotcrab */
-public interface VisColorPickerListener extends ColorPickerListener {
+public class NoneInvocationStrategy extends SystemInvocationStrategy {
 	@Override
-	default void canceled () {
+	protected void process (Bag<BaseSystem> systems) {
 
 	}
 }

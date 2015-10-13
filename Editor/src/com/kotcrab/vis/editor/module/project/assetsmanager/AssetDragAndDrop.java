@@ -36,8 +36,8 @@ import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.scheme.SpriterAssetData;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.FileUtils;
-import com.kotcrab.vis.editor.util.gdx.VisDragAndDrop;
-import com.kotcrab.vis.editor.util.gdx.VisDropSource;
+import com.kotcrab.vis.editor.util.scene2d.VisDragAndDrop;
+import com.kotcrab.vis.editor.util.scene2d.VisDropSource;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.ui.widget.VisLabel;
 

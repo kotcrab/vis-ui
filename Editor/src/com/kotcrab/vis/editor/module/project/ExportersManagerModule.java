@@ -27,7 +27,7 @@ import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.InputModule;
 import com.kotcrab.vis.editor.plugin.ExporterPlugin;
-import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
+import com.kotcrab.vis.editor.util.scene2d.ModalInputListener;
 
 import java.util.UUID;
 

@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.vis;
+package com.kotcrab.vis.editor.util.scene2d;
 
-/** @author Kotcrab */
-public interface CancelableConsumer<T> {
-	/** @return if true current streaming will be canceled */
-	boolean accept (T t);
+import com.kotcrab.vis.ui.util.dialog.InputDialogListener;
+
+/**
+ * Java8 default implementation of {@link InputDialogListener}
+ */
+public interface DefaultInputDialogListener extends InputDialogListener {
+	@Override
+	void finished (String input);
+
+	@Override
+	default void canceled () {
+
+	}
 }

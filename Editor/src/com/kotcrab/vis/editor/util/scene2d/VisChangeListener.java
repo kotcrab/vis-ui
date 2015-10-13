@@ -14,29 +14,28 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.gdx;
+package com.kotcrab.vis.editor.util.scene2d;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
- * Allows to use LibGDX {@link Value} with lambdas
+ * Allow to use standard scene2d.ui {@link ChangeListener} with lambdas.
  * @author Kotcrab
- * @see VisWidgetValue
  */
-public class VisValue extends Value {
-	private ValueGetter getter;
+public class VisChangeListener extends ChangeListener {
+	private ChangedListener listener;
 
-	public VisValue (ValueGetter getter) {
-		this.getter = getter;
+	public VisChangeListener (ChangedListener listener) {
+		this.listener = listener;
 	}
 
 	@Override
-	public float get (Actor context) {
-		return getter.get(context);
+	public void changed (ChangeEvent event, Actor actor) {
+		listener.changed(event, actor);
 	}
 
-	public interface ValueGetter {
-		float get (Actor context);
+	public interface ChangedListener {
+		void changed (ChangeEvent event, Actor actor);
 	}
 }

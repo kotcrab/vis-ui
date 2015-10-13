@@ -14,19 +14,24 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.scene2d;
 
-import com.kotcrab.vis.ui.util.dialog.InputDialogListener;
+import java.io.File;
+import java.io.FileFilter;
 
 /**
- * Java8 default implementation of {@link InputDialogListener}
+ * Directory filter which only shows directories
+ * @author Kotcrab
  */
-public interface DefaultInputDialogListener extends InputDialogListener {
-	@Override
-	void finished (String input);
+public class ExtensionFileFilter implements FileFilter {
+	private String extension;
+
+	public ExtensionFileFilter (String extension) {
+		this.extension = extension;
+	}
 
 	@Override
-	default void canceled () {
-
+	public boolean accept (File file) {
+		return file.getPath().endsWith(extension);
 	}
 }

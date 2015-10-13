@@ -62,7 +62,7 @@ import com.kotcrab.vis.editor.ui.scene.SceneOutline;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.editor.util.gdx.DummyMusic;
-import com.kotcrab.vis.editor.util.gdx.MenuUtils;
+import com.kotcrab.vis.editor.util.scene2d.MenuUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.vis.CreatePointPayload;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;

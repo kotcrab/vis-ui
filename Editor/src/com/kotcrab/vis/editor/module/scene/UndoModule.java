@@ -26,7 +26,7 @@ import com.kotcrab.vis.editor.event.UndoEvent;
 import com.kotcrab.vis.editor.module.editor.InputModule;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
-import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
+import com.kotcrab.vis.editor.util.scene2d.ModalInputListener;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 
 /**

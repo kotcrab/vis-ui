@@ -14,20 +14,28 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
-
-import java.io.File;
-import java.io.FileFilter;
+package com.kotcrab.vis.editor.util.async;
 
 /**
- * Directory filter which only shows directories
+ * Listener for {@link AsyncTask}
  * @author Kotcrab
  */
-public class DirectoriesOnlyFileFilter implements FileFilter {
-	public static final DirectoriesOnlyFileFilter FILTER = new DirectoriesOnlyFileFilter();
+public interface AsyncTaskListener {
+	default void messageChanged (String newMsg) {
 
-	@Override
-	public boolean accept (File file) {
-		return file.isDirectory();
+	}
+
+	default void progressChanged (int newProgressPercent) {
+
+	}
+
+	void finished ();
+
+	default void failed (String reason) {
+
+	}
+
+	default void failed (String reason, Exception ex) {
+
 	}
 }

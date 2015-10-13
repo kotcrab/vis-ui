@@ -17,8 +17,8 @@
 package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
-import com.kotcrab.vis.editor.util.gdx.VisGroup;
+import com.kotcrab.vis.editor.util.scene2d.ModalInputListener;
+import com.kotcrab.vis.editor.util.scene2d.VisGroup;
 
 /**
  * Allow to add ModalInputListener that will send events from editor.

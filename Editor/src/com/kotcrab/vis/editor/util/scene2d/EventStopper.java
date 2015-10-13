@@ -14,22 +14,31 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
+package com.kotcrab.vis.editor.util.scene2d;
 
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 
 /**
- * Descriptor for {@link CopyFilesAsyncTask}
+ * Stops parent actor from receiving child events
  * @author Kotcrab
  */
-public class CopyFileTaskDescriptor {
-	public FileHandle file;
-	public FileHandle target;
-	public boolean overwrites;
+public class EventStopper extends InputListener {
+	@Override
+	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+		event.stop();
+		return true;
+	}
 
-	public CopyFileTaskDescriptor (FileHandle file, FileHandle target, boolean overwrites) {
-		this.file = file;
-		this.target = target;
-		this.overwrites = overwrites;
+	@Override
+	public boolean keyDown (InputEvent event, int keycode) {
+		event.stop();
+		return true;
+	}
+
+	@Override
+	public boolean scrolled (InputEvent event, float x, float y, int amount) {
+		event.stop();
+		return true;
 	}
 }

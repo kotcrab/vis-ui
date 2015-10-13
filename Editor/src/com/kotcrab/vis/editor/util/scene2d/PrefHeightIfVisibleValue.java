@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util;
-
-import com.artemis.BaseSystem;
-import com.artemis.SystemInvocationStrategy;
-import com.artemis.utils.Bag;
+package com.kotcrab.vis.editor.util.scene2d;
 
 /** @author Kotcrab */
-public class NoneInvocationStrategy extends SystemInvocationStrategy {
-	@Override
-	protected void process (Bag<BaseSystem> systems) {
-
+public class PrefHeightIfVisibleValue extends VisWidgetValue {
+	public PrefHeightIfVisibleValue () {
+		super(context -> context.isVisible() ? context.getPrefHeight() : 0);
 	}
 }

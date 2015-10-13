@@ -22,7 +22,7 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
-import com.kotcrab.vis.editor.util.gdx.TableBuilder;
+import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
