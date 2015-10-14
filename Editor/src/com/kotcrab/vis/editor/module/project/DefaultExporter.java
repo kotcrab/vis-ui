@@ -121,11 +121,10 @@ public class DefaultExporter implements ExporterPlugin {
 
 	private void beforeExport (boolean quick) {
 		json.setUsePrototypes(settings.skipDefaultValues);
-		if(settings.useMinimalOutputType)
+		if (settings.useMinimalOutputType)
 			json.setOutputType(OutputType.minimal);
 		else
 			json.setOutputType(OutputType.json);
-
 
 		if (firstExportDone == false && quick)
 			Log.info("Requested quick export but normal export hasn't been done since editor launch, performing normal export.");

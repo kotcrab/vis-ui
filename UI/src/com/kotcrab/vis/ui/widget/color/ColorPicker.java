@@ -379,7 +379,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 			public void changed (ChangeEvent event, Actor actor) {
 				if (listener != null) listener.finished(new Color(color));
 				setColor(color);
-				if(closeAfterPickingFinished) fadeOut();
+				if (closeAfterPickingFinished) fadeOut();
 			}
 		});
 

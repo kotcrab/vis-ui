@@ -49,7 +49,7 @@ public class ShaderReloaderManager extends Manager {
 			Entity entity = world.getEntity(id);
 
 			ShaderComponent shader = shaderCm.get(entity);
-			if(shader.asset == null) continue;
+			if (shader.asset == null) continue;
 			shader.shader = shaderCache.get(shader.asset);
 		}
 	}

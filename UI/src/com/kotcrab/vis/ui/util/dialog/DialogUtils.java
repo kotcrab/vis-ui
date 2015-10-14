@@ -236,7 +236,7 @@ public class DialogUtils {
 		@Override
 		protected void setStage (Stage stage) {
 			super.setStage(stage);
-			if(stage != null)
+			if (stage != null)
 				field.focusField();
 		}
 

@@ -110,7 +110,7 @@ public class TweenedAnimation extends Animation {
 						this.unmappedTweenedKeys[ref.parent.timeline].object() : root);
 			}
 			/*for(ObjectRef ref: baseAnim.currentKey.objectRefs){
-	        	Timeline timeline = baseAnim.getTimeline(ref.timeline);//getSimilarTimeline(ref, tempTimelines);
+				Timeline timeline = baseAnim.getTimeline(ref.timeline);//getSimilarTimeline(ref, tempTimelines);
 	        	if(timeline != null){
 	        		//tempTimelines.addLast(timeline);
 	        		Timeline.Key key = baseAnim.tweenedKeys[timeline.id];

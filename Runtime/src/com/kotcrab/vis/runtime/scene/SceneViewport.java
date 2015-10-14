@@ -48,10 +48,5 @@ public enum SceneViewport implements PrettyEnum {
 		public String toPrettyString () {
 			return "Extend Viewport";
 		}
-	};
-
-	@Override
-	public String toPrettyString () {
-		return toString();
 	}
 }

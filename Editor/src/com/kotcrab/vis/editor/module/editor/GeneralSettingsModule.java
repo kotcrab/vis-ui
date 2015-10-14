@@ -68,7 +68,7 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 	@Override
 	public void loadConfigToTable () {
 		//beta update channel was removed in 0.3.0
-		if(config.updateChannel == UpdateChannelType.BETA) {
+		if (config.updateChannel == UpdateChannelType.BETA) {
 			config.updateChannel = UpdateChannelType.STABLE;
 			settingsSave();
 		}
