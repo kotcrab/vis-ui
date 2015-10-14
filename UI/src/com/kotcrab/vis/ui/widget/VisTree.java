@@ -16,10 +16,12 @@
 
 package com.kotcrab.vis.ui.widget;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree;
 import com.kotcrab.vis.ui.FocusManager;
+import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
@@ -46,7 +48,11 @@ public class VisTree extends Tree {
 		addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				FocusManager.getFocus();
+				Focusable focusable = FocusManager.getFocusedWidget();
+				if (focusable instanceof Actor == false || isAscendantOf((Actor) focusable) == false) {
+					FocusManager.getFocus();
+				}
+
 				return false;
 			}
 		});
