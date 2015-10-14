@@ -171,7 +171,7 @@ public class SceneIOModule extends ProjectModule {
 		registerEntityComponentSerializer(ShaderComponent.class, new ShaderComponentSerializer(kryo, shaderCache), 226);
 		registerEntityComponentSerializer(SpriterComponent.class, new SpriterComponentSerializer(kryo, spriterCache), 230);
 
-		registerTagged(EditorPositionComponent.class, 206);
+//		registerTagged(EditorPositionComponent.class, 206);
 		registerTagged(ExporterDropsComponent.class, 207);
 		registerTagged(PixelsPerUnitComponent.class, 208);
 		registerTagged(UUIDComponent.class, 209);

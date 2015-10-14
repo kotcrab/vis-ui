@@ -437,20 +437,20 @@ public class EntityManipulatorModule extends SceneModule {
 
 			if (asset.getPath().startsWith("sound/")) {
 				entity = new EntityBuilder(entityEngine)
-						.with(new SoundComponent(null), new EditorPositionComponent(), //editor does not require sound to be loaded, we can pass null sound here
+						.with(new SoundComponent(null), new PositionComponent(), //editor does not require sound to be loaded, we can pass null sound here
 								new AssetComponent(asset),
 								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-								new ExporterDropsComponent(EditorPositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
+								new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
 						.build();
 
 			}
 
 			if (asset.getPath().startsWith("music/")) {
 				entity = new EntityBuilder(entityEngine)
-						.with(new MusicComponent(new DummyMusic()), new EditorPositionComponent(),
+						.with(new MusicComponent(new DummyMusic()), new PositionComponent(),
 								new AssetComponent(asset),
 								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-								new ExporterDropsComponent(EditorPositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
+								new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
 						.build();
 
 			}

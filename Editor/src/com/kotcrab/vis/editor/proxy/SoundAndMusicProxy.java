@@ -18,22 +18,22 @@ package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.editor.entity.EditorPositionComponent;
 import com.kotcrab.vis.editor.module.scene.SoundAndMusicRenderSystem;
 import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.component.PositionComponent;
 
 /** @author Kotcrab */
 public class SoundAndMusicProxy extends EntityProxy {
-	private EditorPositionComponent pos;
+	private PositionComponent pos;
 	private boolean music;
 	private float renderSize;
 
 	public SoundAndMusicProxy (Entity entity, boolean music, float pixelsPerUnit) {
 		super(entity);
 		this.music = music;
-		pos = entity.getComponent(EditorPositionComponent.class);
+		pos = entity.getComponent(PositionComponent.class);
 		renderSize = SoundAndMusicRenderSystem.ICON_SIZE / pixelsPerUnit;
 	}
 
