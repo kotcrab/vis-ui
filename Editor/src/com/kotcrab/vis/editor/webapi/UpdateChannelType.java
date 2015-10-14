@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.webapi;
 
 import com.kotcrab.vis.runtime.util.PrettyEnum;
+import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 
 /**
  * Possible VisEditor update channels.
@@ -34,15 +35,16 @@ public enum UpdateChannelType implements PrettyEnum, ReleaseInformationProvider 
 			return "http://dl.kotcrab.com/vis/editor/stable/";
 		}
 	},
+	@Deprecated @DeprecatedOn(versionCode = 20)
 	BETA {
 		@Override
 		public String toPrettyString () {
-			return "Beta";
+			throw new IllegalStateException("Beta update channel is no longer supported");
 		}
 
 		@Override
 		public String getStorageURL () {
-			return "http://dl.kotcrab.com/vis/editor/beta/";
+			throw new IllegalStateException("Beta update channel is no longer supported");
 		}
 	},
 	EDGE {
