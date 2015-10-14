@@ -38,4 +38,8 @@ public class FocusManager {
 		if (focusedWidget != null) focusedWidget.focusLost();
 		focusedWidget = null;
 	}
+
+	public static Focusable getFocusedWidget () {
+		return focusedWidget;
+	}
 }
