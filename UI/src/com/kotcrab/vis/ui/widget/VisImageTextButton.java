@@ -91,7 +91,7 @@ public class VisImageTextButton extends Button implements Focusable {
 		addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (isDisabled() == false) FocusManager.getFocus(VisImageTextButton.this);
+				if (isDisabled() == false) FocusManager.getFocus(getStage(), VisImageTextButton.this);
 				return false;
 			}
 		});
@@ -184,7 +184,7 @@ public class VisImageTextButton extends Button implements Focusable {
 	@Override
 	public void setDisabled (boolean disabled) {
 		super.setDisabled(disabled);
-		if (disabled) FocusManager.getFocus();
+		if (disabled) FocusManager.getFocus(getStage());
 	}
 
 	@Override
