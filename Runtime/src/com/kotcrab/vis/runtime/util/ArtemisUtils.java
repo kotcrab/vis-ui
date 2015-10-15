@@ -18,10 +18,7 @@ package com.kotcrab.vis.runtime.util;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
-import com.kotcrab.vis.runtime.system.SpriteRenderSystem;
-import com.kotcrab.vis.runtime.system.SpriterRenderSystem;
-import com.kotcrab.vis.runtime.system.TextRenderSystem;
+import com.kotcrab.vis.runtime.system.render.*;
 
 /**
  * Various Artemis related utils
@@ -31,6 +28,7 @@ public class ArtemisUtils {
 	public static void createCommonSystems (EntityEngineConfiguration config, Batch batch, ShaderProgram distanceFieldShader, boolean usingFromEditor) {
 		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, usingFromEditor);
 		config.setSystem(batchingSystem);
+		config.setSystem(new VisSpriteRenderSystem(batchingSystem));
 		config.setSystem(new SpriteRenderSystem(batchingSystem), true);
 		config.setSystem(new TextRenderSystem(batchingSystem, distanceFieldShader), true);
 		config.setSystem(new SpriterRenderSystem(batchingSystem), true);

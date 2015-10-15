@@ -1,3 +1,6 @@
+[0.3.0] [LibGDX 1.7.0] [Artemis 0.13.1] [Snapshot]
+-Moved RenderBatchingSystem, ParticleRenderSystem, SpriteRenderSystem, SpriterRenderSystem, TextRenderSystem to com.kotcrab.vis.runtime.system.render package
+
 [0.2.6] [LibGDX 1.7.0] [Artemis 0.13.1] [Snapshot]
 
 [0.2.5] [LibGDX 1.7.0] [Artemis 0.13.1]

@@ -28,7 +28,7 @@ import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.MusicComponent;
 import com.kotcrab.vis.runtime.component.PositionComponent;
 import com.kotcrab.vis.runtime.component.SoundComponent;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 

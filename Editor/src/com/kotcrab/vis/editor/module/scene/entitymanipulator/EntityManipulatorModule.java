@@ -68,7 +68,7 @@ import com.kotcrab.vis.editor.util.vis.CreatePointPayload;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;

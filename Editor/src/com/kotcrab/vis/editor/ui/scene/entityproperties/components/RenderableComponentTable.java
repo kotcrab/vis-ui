@@ -21,7 +21,7 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /** @author Kotcrab */
 public class RenderableComponentTable extends AutoComponentTable<RenderableComponent> {

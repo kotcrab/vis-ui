@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system;
+package com.kotcrab.vis.runtime.system.render;
 
 import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
@@ -27,6 +27,8 @@ import com.kotcrab.vis.runtime.component.LayerComponent;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
+import com.kotcrab.vis.runtime.system.CameraManager;
+import com.kotcrab.vis.runtime.system.LayerManager;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessAgent;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 import com.kotcrab.vis.runtime.util.BagUtils;

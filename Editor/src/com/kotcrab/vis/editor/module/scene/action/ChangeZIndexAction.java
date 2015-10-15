@@ -19,7 +19,7 @@ package com.kotcrab.vis.editor.module.scene.action;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /** @author Kotcrab */
 public class ChangeZIndexAction implements UndoableAction {

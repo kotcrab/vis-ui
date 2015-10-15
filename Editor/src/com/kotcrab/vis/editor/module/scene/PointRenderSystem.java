@@ -26,7 +26,7 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.PointComponent;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 

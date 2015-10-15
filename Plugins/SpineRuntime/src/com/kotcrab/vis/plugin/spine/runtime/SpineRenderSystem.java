@@ -39,7 +39,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 

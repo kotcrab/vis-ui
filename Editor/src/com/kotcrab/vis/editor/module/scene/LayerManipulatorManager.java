@@ -25,7 +25,7 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.LayerComponent;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /**
  * Provides utils for manipulating layers. This is internal VisEditor API.

@@ -44,7 +44,7 @@ import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 @VisPlugin

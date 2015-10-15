@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system;
+package com.kotcrab.vis.runtime.system.render;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;

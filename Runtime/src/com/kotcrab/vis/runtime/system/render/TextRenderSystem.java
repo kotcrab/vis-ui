@@ -14,34 +14,37 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system;
+package com.kotcrab.vis.runtime.system.render;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.math.Matrix4;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
-import com.kotcrab.vis.runtime.component.ParticleComponent;
+import com.kotcrab.vis.runtime.component.TextComponent;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 
 /**
- * Renders entities with {@link ParticleComponent}
+ * Renders entities with {@link TextComponent}
  * @author Kotcrab
  */
 @Wire
-public class ParticleRenderSystem extends DeferredEntityProcessingSystem {
-	private ComponentMapper<ParticleComponent> particleCm;
+public class TextRenderSystem extends DeferredEntityProcessingSystem {
+	private static final Matrix4 IDT_MATRIX = new Matrix4();
+
+	private ComponentMapper<TextComponent> textCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
-	private final boolean ignoreActive;
+	private ShaderProgram distanceFieldShader;
 
-	public ParticleRenderSystem (EntityProcessPrincipal principal, boolean ignoreParticleActiveState) {
-		super(Aspect.all(ParticleComponent.class).exclude(InvisibleComponent.class), principal);
-		this.ignoreActive = ignoreParticleActiveState;
+	public TextRenderSystem (EntityProcessPrincipal principal, ShaderProgram distanceFieldShader) {
+		super(Aspect.all(TextComponent.class).exclude(InvisibleComponent.class), principal);
+		this.distanceFieldShader = distanceFieldShader;
 	}
 
 	@Override
@@ -51,14 +54,16 @@ public class ParticleRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (final Entity entity) {
-		ParticleComponent particle = particleCm.get(entity);
+		//TODO: optimize texts
+		TextComponent text = textCm.get(entity);
+		batch.setTransformMatrix(text.translationMatrix);
+		if (text.isDistanceFieldShaderEnabled()) batch.setShader(distanceFieldShader);
+		text.getCache().draw(batch);
+		if (text.isDistanceFieldShaderEnabled()) batch.setShader(null);
+	}
 
-		if (ignoreActive || particle.active)
-			particle.effect.update(Gdx.graphics.getDeltaTime());
-
-		particle.effect.draw(batch);
-
-		if (particle.effect.isComplete())
-			particle.effect.reset();
+	@Override
+	protected void end () {
+		batch.setTransformMatrix(IDT_MATRIX);
 	}
 }
