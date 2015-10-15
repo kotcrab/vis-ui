@@ -46,7 +46,7 @@ public class VisSelectBox<T> extends SelectBox<T> {
 		addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				FocusManager.getFocus();
+				FocusManager.getFocus(getStage());
 				return false;
 			}
 		});

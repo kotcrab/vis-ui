@@ -78,7 +78,7 @@ public class VisSlider extends VisProgressBar {
 				if (draggingPointer != -1) return false;
 				draggingPointer = pointer;
 				calculatePositionAndValue(x, y);
-				FocusManager.getFocus();
+				FocusManager.getFocus(getStage());
 				return true;
 			}
 

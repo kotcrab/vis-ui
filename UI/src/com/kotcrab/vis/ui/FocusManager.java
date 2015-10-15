@@ -16,6 +16,8 @@
 
 package com.kotcrab.vis.ui;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
+
 /**
  * Manages focus of VisUI components
  * @author Kotcrab
@@ -25,17 +27,23 @@ public class FocusManager {
 
 	/**
 	 * Takes focus from current focused widget (if any), and sets current focused widget to provided widget
+	 * @param stage if passed stage is not null then stage keyboard focus will be set to null
 	 * @param widget that will acquire focus
 	 */
-	public static void getFocus (Focusable widget) {
+	public static void getFocus (Stage stage, Focusable widget) {
 		if (focusedWidget != null) focusedWidget.focusLost();
 		focusedWidget = widget;
+		if (stage != null) stage.setKeyboardFocus(null);
 		focusedWidget.focusGained();
 	}
 
-	/** Takes focus from current focused widget (if any), and sets current focused widget to null */
-	public static void getFocus () {
+	/**
+	 * Takes focus from current focused widget (if any), and sets current focused widget to null
+	 * @param stage if passed stage is not null then stage keyboard focus will be set to null
+	 */
+	public static void getFocus (Stage stage) {
 		if (focusedWidget != null) focusedWidget.focusLost();
+		if (stage != null) stage.setKeyboardFocus(null);
 		focusedWidget = null;
 	}
 
