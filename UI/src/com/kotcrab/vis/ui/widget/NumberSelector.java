@@ -40,7 +40,7 @@ import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
  */
 public class NumberSelector extends VisTable {
 	private Array<NumberSelectorListener> listeners = new Array<NumberSelectorListener>();
-
+	private InputValidator boundsValidator;
 	private VisValidatableTextField valueText;
 
 	private ButtonRepeatTask buttonRepeatTask = new ButtonRepeatTask();
@@ -84,10 +84,10 @@ public class NumberSelector extends VisTable {
 		valueText.setProgrammaticChangeEvents(false);
 		valueText.setTextFieldFilter(new DigitsOnlyFilter());
 		valueText.setText(valueOf(current));
-		valueText.addValidator(new InputValidator() {
+		valueText.addValidator(boundsValidator = new InputValidator() {
 			@Override
 			public boolean validateInput (String input) {
-				return checkInput(input);
+				return checkInputBounds(input);
 			}
 		});
 
@@ -215,6 +215,7 @@ public class NumberSelector extends VisTable {
 		this.precision = precision;
 
 		valueText.getValidators().clear();
+		valueText.addValidator(boundsValidator); //Both need the bounds check
 		if (precision == 0) {
 			valueText.addValidator(Validators.INTEGERS);
 			valueText.setTextFieldFilter(new DigitsOnlyFilter());
@@ -239,7 +240,7 @@ public class NumberSelector extends VisTable {
 	private void textChanged () {
 		if (valueText.getText().equals(""))
 			current = min;
-		else if (checkInput(valueText.getText()))
+		else if (checkInputBounds(valueText.getText()))
 			current = Float.parseFloat(valueText.getText());
 	}
 
@@ -332,7 +333,7 @@ public class NumberSelector extends VisTable {
 		this.step = step;
 	}
 
-	private boolean checkInput (String input) {
+	private boolean checkInputBounds (String input) {
 		try {
 			float x = Float.parseFloat(input);
 			return x >= min && x <= max;
