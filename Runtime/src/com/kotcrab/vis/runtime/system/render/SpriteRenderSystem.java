@@ -18,7 +18,6 @@ package com.kotcrab.vis.runtime.system.render;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -48,9 +47,8 @@ public class SpriteRenderSystem extends DeferredEntityProcessingSystem {
 	}
 
 	@Override
-	protected void process (final Entity entity) {
-		Sprite sprite = spriteCm.get(entity).sprite;
+	protected void process (int entityId) {
+		Sprite sprite = spriteCm.get(entityId).sprite;
 		sprite.draw(batch);
 	}
-
 }

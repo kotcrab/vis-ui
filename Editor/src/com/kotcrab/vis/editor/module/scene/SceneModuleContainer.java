@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.module.scene;
 import com.artemis.BaseSystem;
 import com.artemis.Component;
 import com.artemis.ComponentMapper;
-import com.artemis.Manager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -72,20 +71,20 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 		config = new EntityEngineConfiguration();
 
-		config.setManager(new CameraManager(SceneViewport.SCREEN, 0, 0, scene.pixelsPerUnit)); //size ignored for screen viewport
-		config.setManager(new LayerManipulatorManager());
-		config.setManager(new ZIndexManipulatorManager());
-		config.setManager(new EntitySerializerManager());
-		config.setManager(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
-		config.setManager(new ParticleReloaderManager(projectModuleContainer.get(ParticleCacheModule.class), scene.pixelsPerUnit));
-		config.setManager(new FontReloaderManager(projectModuleContainer.get(FontCacheModule.class), scene.pixelsPerUnit));
-		config.setManager(new ShaderReloaderManager(projectModuleContainer.get(ShaderCacheModule.class)));
-		config.setManager(new SpriterReloaderManager(projectModuleContainer.get(SpriterCacheModule.class)));
-		config.setManager(new VisUUIDManager());
-		config.setManager(new EntityCounterManager());
+		config.setSystem(new CameraManager(SceneViewport.SCREEN, 0, 0, scene.pixelsPerUnit)); //size ignored for screen viewport
+		config.setSystem(new LayerManipulatorManager());
+		config.setSystem(new ZIndexManipulatorManager());
+		config.setSystem(new EntitySerializerManager());
+		config.setSystem(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
+		config.setSystem(new ParticleReloaderManager(projectModuleContainer.get(ParticleCacheModule.class), scene.pixelsPerUnit));
+		config.setSystem(new FontReloaderManager(projectModuleContainer.get(FontCacheModule.class), scene.pixelsPerUnit));
+		config.setSystem(new ShaderReloaderManager(projectModuleContainer.get(ShaderCacheModule.class)));
+		config.setSystem(new SpriterReloaderManager(projectModuleContainer.get(SpriterCacheModule.class)));
+		config.setSystem(new VisUUIDManager());
+		config.setSystem(new EntityCounterManager());
 
-		config.setSystem(new GroupIdProviderSystem(), true);
-		config.setSystem(new GroupProxyProviderSystem(), true);
+		config.setSystem(new GroupIdProviderSystem());
+		config.setSystem(new GroupProxyProviderSystem());
 		config.setSystem(new GridRendererSystem(batch, this));
 		config.setSystem(new VisComponentManipulator());
 
@@ -93,14 +92,14 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 		ArtemisUtils.createCommonSystems(config, batch, Assets.distanceFieldShader, true);
 		RenderBatchingSystem renderBatchingSystem = config.getSystem(RenderBatchingSystem.class);
-		config.setSystem(new ParticleRenderSystem(renderBatchingSystem, true), true);
-		config.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem, scene.pixelsPerUnit), true);
-		config.setSystem(new PointRenderSystem(renderBatchingSystem, scene.pixelsPerUnit), true);
+		config.setSystem(new ParticleRenderSystem(renderBatchingSystem, true));
+		config.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem, scene.pixelsPerUnit));
+		config.setSystem(new PointRenderSystem(renderBatchingSystem, scene.pixelsPerUnit));
 	}
 
 	public static void createEssentialsSystems (EntityEngineConfiguration config, float pixelsPerUnit) {
-		config.setManager(new EntityProxyCache(pixelsPerUnit));
-		config.setSystem(new AssetsUsageAnalyzerSystem(), true);
+		config.setSystem(new EntityProxyCache(pixelsPerUnit));
+		config.setSystem(new AssetsUsageAnalyzerSystem());
 	}
 
 	public static void populateEngine (final EntityEngine engine, EditorScene scene) {
@@ -114,17 +113,11 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		if (alreadyInjected) return true;
 
 		//artemis already handles injecting objects inside systems
-		if (target instanceof BaseSystem || target instanceof Manager) return false;
+		if (target instanceof BaseSystem) return false;
 
 		if (BaseSystem.class.isAssignableFrom(type)) {
 			field.setAccessible(true);
 			field.set(target, engine != null ? engine.getSystem(type.asSubclass(BaseSystem.class)) : config.getSystem(type.asSubclass(BaseSystem.class)));
-			return true;
-		}
-
-		if (Manager.class.isAssignableFrom(type)) {
-			field.setAccessible(true);
-			field.set(target, engine != null ? engine.getManager(type.asSubclass(Manager.class)) : config.getManager(type.asSubclass(Manager.class)));
 			return true;
 		}
 
@@ -170,7 +163,6 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		populateEngine(engine, scene);
 
 		engine.getSystems().forEach(this::injectModules);
-		engine.getManagers().forEach(this::injectModules);
 
 		try {
 			for (BiHolder<Object, Field> target : delayedCompMapperToInject) {

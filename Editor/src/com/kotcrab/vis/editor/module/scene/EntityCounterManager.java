@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.module.scene;
 
+import com.artemis.Entity;
 import com.artemis.Manager;
 
 /** @author Kotcrab */
@@ -23,12 +24,12 @@ public class EntityCounterManager extends Manager {
 	private int count;
 
 	@Override
-	public void added (int entityId) {
+	public void added (Entity e) {
 		count++;
 	}
 
 	@Override
-	public void deleted (int entityId) {
+	public void deleted (Entity e) {
 		count--;
 	}
 

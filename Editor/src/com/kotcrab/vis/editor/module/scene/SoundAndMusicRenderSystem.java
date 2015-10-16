@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -28,9 +27,9 @@ import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.MusicComponent;
 import com.kotcrab.vis.runtime.component.PositionComponent;
 import com.kotcrab.vis.runtime.component.SoundComponent;
-import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /** @author Kotcrab */
 @Wire
@@ -62,13 +61,12 @@ public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 	}
 
 	@Override
-	protected void process (final Entity entity) {
-		PositionComponent pos = posCm.get(entity);
+	protected void process (int entityId) {
+		PositionComponent pos = posCm.get(entityId);
 
-		if (musicCm.has(entity))
+		if (musicCm.has(entityId))
 			batch.draw(musicIcon, pos.x, pos.y, renderSize, renderSize);
 		else
 			batch.draw(soundIcon, pos.x, pos.y, renderSize, renderSize);
-
 	}
 }

@@ -29,6 +29,9 @@ public class SoundComponent extends Component implements UsesProtoComponent {
 	@ATSelectFile(fieldName = "Sound", relativeFolderPath = "sound/", extension = "mp3|wav|ogg", hideExtension = false, handlerAlias = "sound")
 	public transient Sound sound;
 
+	public SoundComponent () {
+	}
+
 	public SoundComponent (Sound sound) {
 		this.sound = sound;
 	}

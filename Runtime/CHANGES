@@ -1,5 +1,10 @@
-[0.3.0] [LibGDX 1.7.0] [Artemis 0.13.1] [Snapshot]
+[0.3.0] [LibGDX 1.7.0] [Artemis 1.0.1] [Snapshot]
 -Moved RenderBatchingSystem, ParticleRenderSystem, SpriteRenderSystem, SpriterRenderSystem, TextRenderSystem to com.kotcrab.vis.runtime.system.render package
+-Updated to Artemis 1.0.1
+ -API Change: EntityEngineConfiguration removed setSystem(BaseSystem system, boolean passive), use setSystem(BaseSystem system) instead
+ -API Change: EntityEngineConfiguration removed setManager(Manager manager), use setSystem(BaseSystem system) instead
+ -API Change: EntityEngineConfiguration removed getManager(Class), use getSystem(Class) instead
+ -API Change: SceneParameter removed 'managers' and 'passiveSystem' fields, use 'systems' instead
 
 [0.2.6] [LibGDX 1.7.0] [Artemis 0.13.1] [Snapshot]
 

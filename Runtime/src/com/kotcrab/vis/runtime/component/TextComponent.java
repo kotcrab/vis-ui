@@ -48,7 +48,15 @@ public class TextComponent extends Component implements BasicPropertiesAccessor,
 	public Matrix4 translationMatrix;
 	protected CharSequence text;
 
+	/** Creates empty component, {@link #init(BitmapFont, String)} must be called before use */
+	public TextComponent () {
+	}
+
 	public TextComponent (BitmapFont bitmapFont, String text) {
+		init(bitmapFont, text);
+	}
+
+	public void init (BitmapFont bitmapFont, String text) {
 		this.text = text;
 
 		cache = new BitmapFontCache(bitmapFont);

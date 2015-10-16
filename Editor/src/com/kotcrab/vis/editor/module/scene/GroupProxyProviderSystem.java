@@ -42,6 +42,7 @@ public class GroupProxyProviderSystem extends EntityProcessingSystem {
 
 	public GroupProxyProviderSystem () {
 		super(Aspect.all(GroupComponent.class));
+		setEnabled(false);
 	}
 
 	@Override

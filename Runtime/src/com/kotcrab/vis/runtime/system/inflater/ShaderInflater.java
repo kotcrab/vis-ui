@@ -16,10 +16,13 @@
 
 package com.kotcrab.vis.runtime.system.inflater;
 
-import com.artemis.*;
+import com.artemis.Aspect;
+import com.artemis.BaseEntitySystem;
+import com.artemis.ComponentMapper;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
 import com.kotcrab.vis.runtime.component.ShaderProtoComponent;
 
@@ -28,36 +31,24 @@ import com.kotcrab.vis.runtime.component.ShaderProtoComponent;
  * @author Kotcrab
  */
 @Wire
-public class ShaderInflater extends Manager {
+public class ShaderInflater extends BaseEntitySystem {
+	private ComponentMapper<ShaderComponent> shaderCm;
 	private ComponentMapper<ShaderProtoComponent> protoCm;
-
-	private Entity flyweight;
-
-	private EntityTransmuter transmuter;
 
 	private AssetManager manager;
 
 	public ShaderInflater (AssetManager manager) {
+		super(Aspect.all(ShaderProtoComponent.class, AssetComponent.class));
 		this.manager = manager;
 	}
 
 	@Override
-	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(ShaderProtoComponent.class);
-		transmuter = factory.build();
+	protected void processSystem () {
+
 	}
 
 	@Override
-	protected void setWorld (World world) {
-		super.setWorld(world);
-		flyweight = Entity.createFlyweight(world);
-	}
-
-	@Override
-	public void added (int entityId) {
-		flyweight.id = entityId;
-		if (protoCm.has(entityId) == false) return;
-
+	public void inserted (int entityId) {
 		ShaderProtoComponent protoComponent = protoCm.get(entityId);
 
 		if (protoComponent.asset != null) {
@@ -66,9 +57,11 @@ public class ShaderInflater extends Manager {
 			if (program == null)
 				throw new IllegalStateException("Can't load scene, shader program is missing:" + shaderPath);
 
-			transmuter.transmute(flyweight);
-			flyweight.edit().add(new ShaderComponent(protoComponent.asset, program));
-		} else
-			transmuter.transmute(flyweight);
+			ShaderComponent shaderComponent = shaderCm.create(entityId);
+			shaderComponent.asset = protoComponent.asset;
+			shaderComponent.shader = program;
+		}
+
+		protoCm.remove(entityId);
 	}
 }

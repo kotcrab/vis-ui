@@ -28,9 +28,9 @@ public class ArtemisUtils {
 	public static void createCommonSystems (EntityEngineConfiguration config, Batch batch, ShaderProgram distanceFieldShader, boolean usingFromEditor) {
 		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, usingFromEditor);
 		config.setSystem(batchingSystem);
-		config.setSystem(new VisSpriteRenderSystem(batchingSystem));
-		config.setSystem(new SpriteRenderSystem(batchingSystem), true);
-		config.setSystem(new TextRenderSystem(batchingSystem, distanceFieldShader), true);
-		config.setSystem(new SpriterRenderSystem(batchingSystem), true);
+//		config.setSystem(new VisSpriteRenderSystem(batchingSystem));
+		config.setSystem(new SpriteRenderSystem(batchingSystem));
+		config.setSystem(new TextRenderSystem(batchingSystem, distanceFieldShader));
+		config.setSystem(new SpriterRenderSystem(batchingSystem));
 	}
 }

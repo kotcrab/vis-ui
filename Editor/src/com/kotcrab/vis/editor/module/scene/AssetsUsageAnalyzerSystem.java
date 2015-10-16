@@ -39,6 +39,7 @@ public class AssetsUsageAnalyzerSystem extends EntityProcessingSystem {
 
 	public AssetsUsageAnalyzerSystem () {
 		super(Aspect.all());
+		setEnabled(false);
 	}
 
 	@Override

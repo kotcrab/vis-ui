@@ -18,7 +18,6 @@ package com.kotcrab.vis.runtime.system.render;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -53,9 +52,9 @@ public class TextRenderSystem extends DeferredEntityProcessingSystem {
 	}
 
 	@Override
-	protected void process (final Entity entity) {
+	protected void process (int entityId) {
 		//TODO: optimize texts
-		TextComponent text = textCm.get(entity);
+		TextComponent text = textCm.get(entityId);
 		batch.setTransformMatrix(text.translationMatrix);
 		if (text.isDistanceFieldShaderEnabled()) batch.setShader(distanceFieldShader);
 		text.getCache().draw(batch);

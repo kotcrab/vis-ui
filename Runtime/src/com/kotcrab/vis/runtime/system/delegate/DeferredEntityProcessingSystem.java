@@ -17,29 +17,29 @@
 package com.kotcrab.vis.runtime.system.delegate;
 
 import com.artemis.Aspect;
-import com.artemis.Entity;
-import com.artemis.EntitySystem;
+import com.artemis.BaseEntitySystem;
 
 /**
  * Actor for a principal system.
- * <p>
+ *
  * Deferred entity systems are a drop in replacement for
  * EntityProcessingSystem, where you need to delegate order of
  * entity processing to an overarching system.
- * <p>
+ *
  * One example would be an animation, font and map rendering
  * subsystem of a simplistic render pipeline principal,
  * sorting render calls by z-layer.
- * <p>
+ *
  * Upon entity insertion/removal, the system registers the entity
  * and itself with the principal. The principal can then register
- * and act upon this information, and call begin/process(entity)/end
+ * and basic upon this information, and call begin/process(entity)/end
  * methods whenever desired.
+ *
  * @author Daan van Yperen
  * @see EntityProcessAgent
  * @see EntityProcessPrincipal
  */
-public abstract class DeferredEntityProcessingSystem extends EntitySystem {
+public abstract class DeferredEntityProcessingSystem extends BaseEntitySystem {
 
 	private final Aspect.Builder aspect;
 	private final EntityProcessPrincipal principal;
@@ -47,24 +47,27 @@ public abstract class DeferredEntityProcessingSystem extends EntitySystem {
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
 	 * against entities.
+	 *
 	 * @param aspect to match against entities
 	 * @param principal principal that will organize process calls to this system.
 	 */
-	public DeferredEntityProcessingSystem (Aspect.Builder aspect, EntityProcessPrincipal principal) {
+	public DeferredEntityProcessingSystem(Aspect.Builder aspect, EntityProcessPrincipal principal) {
 		super(aspect);
 		this.aspect = aspect;
 		this.principal = principal;
-		setPassive(true);
+		setEnabled(false);
 	}
 
 	/**
 	 * Process a entity this system is interested in.
-	 * @param e the entity to process
+	 *
+	 * @param e
+	 *			the entity to process
 	 */
-	protected abstract void process (Entity e);
+	protected abstract void process(int e);
 
 	@Override
-	protected void removed (int entityId) {
+	protected void removed(int entityId) {
 
 		// inform delegation handler
 		principal.unregisterAgent(entityId, localProcessingAgent);
@@ -73,7 +76,7 @@ public abstract class DeferredEntityProcessingSystem extends EntitySystem {
 	}
 
 	@Override
-	protected void inserted (int entityId) {
+	protected void inserted(int entityId) {
 		super.inserted(entityId);
 
 		// warn delegation handler we've lost interest in this entity.
@@ -81,7 +84,7 @@ public abstract class DeferredEntityProcessingSystem extends EntitySystem {
 	}
 
 	@Override
-	protected void processSystem () {
+	protected void processSystem() {
 	}
 
 	/**
@@ -91,17 +94,17 @@ public abstract class DeferredEntityProcessingSystem extends EntitySystem {
 	 */
 	protected EntityProcessAgent localProcessingAgent = new EntityProcessAgent() {
 		@Override
-		public void begin () {
+		public void begin() {
 			DeferredEntityProcessingSystem.this.begin();
 		}
 
 		@Override
-		public void end () {
+		public void end() {
 			DeferredEntityProcessingSystem.this.end();
 		}
 
 		@Override
-		public void process (Entity e) {
+		public void process(int e) {
 			DeferredEntityProcessingSystem.this.process(e);
 		}
 	};

@@ -31,54 +31,41 @@ import com.kotcrab.vis.runtime.component.MusicProtoComponent;
  * @author Kotcrab
  */
 @Wire
-public class MusicInflater extends Manager {
+public class MusicInflater extends BaseEntitySystem {
 	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<MusicComponent> musicCm;
 	private ComponentMapper<MusicProtoComponent> protoCm;
-
-	private Entity flyweight;
-
-	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
 	public MusicInflater (RuntimeConfiguration configuration, AssetManager manager) {
+		super(Aspect.all(MusicProtoComponent.class, AssetComponent.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
-	protected void setWorld (World world) {
-		super.setWorld(world);
-		flyweight = Entity.createFlyweight(world);
+	protected void processSystem () {
+
 	}
 
 	@Override
-	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(MusicProtoComponent.class);
-		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
-		transmuter = factory.build();
-	}
-
-	@Override
-	public void added (int entityId) {
-		flyweight.id = entityId;
-		if (protoCm.has(entityId) == false) return;
-
+	protected void inserted (int entityId) {
 		AssetComponent assetComponent = assetCm.get(entityId);
 		MusicProtoComponent musicProtoComponent = protoCm.get(entityId);
 
 		PathAsset asset = (PathAsset) assetComponent.asset;
 
 		Music music = manager.get(asset.getPath(), Music.class);
-		if (music == null) throw new IllegalStateException("Can't load scene music is missing: " + asset.getPath());
-		MusicComponent musicComponent = new MusicComponent(music);
-
+		if (music == null) throw new IllegalStateException("Can't load scene, music is missing: " + asset.getPath());
+		MusicComponent musicComponent = musicCm.create(entityId);
+		musicComponent.music = music;
 		musicComponent.setLooping(musicProtoComponent.looping);
 		musicComponent.setPlayOnStart(musicProtoComponent.playOnStart);
 		musicComponent.setVolume(musicProtoComponent.volume);
 
-		transmuter.transmute(flyweight);
-		flyweight.edit().add(musicComponent);
+		if(configuration.removeAssetsComponentAfterInflating)
+			assetCm.remove(entityId);
 	}
 }

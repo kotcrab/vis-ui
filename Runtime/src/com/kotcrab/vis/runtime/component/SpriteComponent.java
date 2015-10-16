@@ -31,6 +31,9 @@ public class SpriteComponent extends Component implements BasicPropertiesAccesso
 		ScalePropertiesAccessor, ColorPropertiesAccessor, RotationPropertiesAccessor, FlipPropertiesAccessor, UsesProtoComponent {
 	public Sprite sprite;
 
+	public SpriteComponent () {
+	}
+
 	public SpriteComponent (Sprite sprite) {
 		this.sprite = sprite;
 	}

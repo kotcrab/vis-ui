@@ -91,7 +91,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 	@Override
 	public void registerSystems (SceneModuleContainer sceneMC, EntityEngineConfiguration config) {
 		RenderBatchingSystem renderBatchingSystem = config.getSystem(RenderBatchingSystem.class);
-		config.setSystem(new SpineEditorRenderSystem(renderBatchingSystem), true);
+		config.setSystem(new SpineEditorRenderSystem(renderBatchingSystem));
 
 		config.setSystem(new SpinePreviewUpdaterSystem());
 		config.setSystem(new SpineScaleUpdaterSystem());

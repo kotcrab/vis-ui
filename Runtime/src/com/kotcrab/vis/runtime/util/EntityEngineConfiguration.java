@@ -17,7 +17,6 @@
 package com.kotcrab.vis.runtime.util;
 
 import com.artemis.BaseSystem;
-import com.artemis.Manager;
 import com.artemis.WorldConfiguration;
 import com.badlogic.gdx.utils.Array;
 
@@ -28,25 +27,10 @@ import com.badlogic.gdx.utils.Array;
 public class EntityEngineConfiguration {
 	private boolean built;
 	private Array<BaseSystem> systems = new Array<BaseSystem>();
-	private Array<BaseSystem> passiveSystems = new Array<BaseSystem>();
-	private Array<Manager> managers = new Array<Manager>();
 
 	public void setSystem (BaseSystem system) {
 		checkBeforeAdd();
 		systems.add(system);
-	}
-
-	public void setSystem (BaseSystem system, boolean passive) {
-		checkBeforeAdd();
-		if (passive)
-			passiveSystems.add(system);
-		else
-			systems.add(system);
-	}
-
-	public void setManager (Manager manager) {
-		checkBeforeAdd();
-		managers.add(manager);
 	}
 
 	private void checkBeforeAdd () {
@@ -54,19 +38,8 @@ public class EntityEngineConfiguration {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <C extends Manager> C getManager (Class<C> clazz) {
-		Manager manager = getOrNull(managers, (Class<Manager>) clazz);
-		if (manager != null) return (C) manager;
-
-		throw new IllegalStateException("Failed to get manager: '" + clazz + "', manager not added!");
-	}
-
-	@SuppressWarnings("unchecked")
 	public <C extends BaseSystem> C getSystem (Class<C> clazz) {
 		BaseSystem system = getOrNull(systems, (Class<BaseSystem>) clazz);
-		if (system != null) return (C) system;
-
-		system = getOrNull(passiveSystems, (Class<BaseSystem>) clazz);
 		if (system != null) return (C) system;
 
 		throw new IllegalStateException("Failed to get system: '" + clazz + "', system not added!");
@@ -90,14 +63,6 @@ public class EntityEngineConfiguration {
 
 		for (BaseSystem system : systems) {
 			config.setSystem(system);
-		}
-
-		for (BaseSystem system : passiveSystems) {
-			config.setSystem(system, true);
-		}
-
-		for (Manager manager : managers) {
-			config.setManager(manager);
 		}
 
 		return config;

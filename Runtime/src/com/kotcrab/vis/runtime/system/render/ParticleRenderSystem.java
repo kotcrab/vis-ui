@@ -18,7 +18,6 @@ package com.kotcrab.vis.runtime.system.render;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -50,8 +49,8 @@ public class ParticleRenderSystem extends DeferredEntityProcessingSystem {
 	}
 
 	@Override
-	protected void process (final Entity entity) {
-		ParticleComponent particle = particleCm.get(entity);
+	protected void process (int entityId) {
+		ParticleComponent particle = particleCm.get(entityId);
 
 		if (ignoreActive || particle.active)
 			particle.effect.update(Gdx.graphics.getDeltaTime());

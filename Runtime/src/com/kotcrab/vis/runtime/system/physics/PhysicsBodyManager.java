@@ -16,9 +16,10 @@
 
 package com.kotcrab.vis.runtime.system.physics;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.Manager;
+import com.artemis.EntitySystem;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -29,7 +30,7 @@ import com.kotcrab.vis.runtime.component.SpriteComponent;
 
 /** @author Kotcrab */
 @Wire
-public class PhysicsBodyManager extends Manager {
+public class PhysicsBodyManager extends EntitySystem {
 	private PhysicsSystem physicsSystem;
 
 	private ComponentMapper<PhysicsPropertiesComponent> physicsCm;
@@ -38,20 +39,25 @@ public class PhysicsBodyManager extends Manager {
 
 	private World world;
 
+	public PhysicsBodyManager () {
+		super(Aspect.all(PhysicsPropertiesComponent.class, PolygonComponent.class, SpriteComponent.class));
+	}
+
 	@Override
 	protected void initialize () {
 		world = physicsSystem.getPhysicsWorld();
 	}
 
 	@Override
-	public void added (int entityId) {
-		Entity entity = super.world.getEntity(entityId);
-		if (physicsCm.has(entityId) == false || polygonCm.has(entityId) == false || spriteCm.has(entityId) == false)
-			return;
+	protected void processSystem () {
 
-		PhysicsPropertiesComponent physicsProperties = physicsCm.get(entityId);
-		PolygonComponent polygon = polygonCm.get(entityId);
-		SpriteComponent sprite = spriteCm.get(entityId);
+	}
+
+	@Override
+	public void inserted (Entity entity) {
+		PhysicsPropertiesComponent physicsProperties = physicsCm.get(entity);
+		PolygonComponent polygon = polygonCm.get(entity);
+		SpriteComponent sprite = spriteCm.get(entity);
 
 		if (physicsProperties.adjustOrigin) sprite.setOrigin(0, 0);
 

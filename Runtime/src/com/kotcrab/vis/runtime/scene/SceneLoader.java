@@ -18,7 +18,6 @@ package com.kotcrab.vis.runtime.scene;
 
 import com.artemis.BaseSystem;
 import com.artemis.Component;
-import com.artemis.Manager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
@@ -223,7 +222,5 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	/** Allows to add additional system and managers into {@link EntityEngine} */
 	static public class SceneParameter extends AssetLoaderParameters<Scene> {
 		public Array<BaseSystem> systems = new Array<BaseSystem>();
-		public Array<BaseSystem> passiveSystems = new Array<BaseSystem>();
-		public Array<Manager> managers = new Array<Manager>();
 	}
 }

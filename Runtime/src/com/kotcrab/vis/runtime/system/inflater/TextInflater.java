@@ -16,7 +16,9 @@
 
 package com.kotcrab.vis.runtime.system.inflater;
 
-import com.artemis.*;
+import com.artemis.Aspect;
+import com.artemis.BaseEntitySystem;
+import com.artemis.ComponentMapper;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -35,42 +37,24 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
  * @author Kotcrab
  */
 @Wire
-public class TextInflater extends Manager {
+public class TextInflater extends BaseEntitySystem {
 	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<TextComponent> textCm;
 	private ComponentMapper<TextProtoComponent> protoCm;
-
-	private Entity flyweight;
-
-	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 	private float pixelsPerUnit;
 
 	public TextInflater (RuntimeConfiguration configuration, AssetManager manager, float pixelsPerUnit) {
+		super(Aspect.all(TextProtoComponent.class, AssetComponent.class));
 		this.configuration = configuration;
 		this.manager = manager;
 		this.pixelsPerUnit = pixelsPerUnit;
 	}
 
 	@Override
-	protected void setWorld (World world) {
-		super.setWorld(world);
-		flyweight = Entity.createFlyweight(world);
-	}
-
-	@Override
-	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(TextProtoComponent.class);
-		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
-		transmuter = factory.build();
-	}
-
-	@Override
-	public void added (int entityId) {
-		flyweight.id = entityId;
-		if (protoCm.has(entityId) == false) return;
-
+	public void inserted (int entityId) {
 		VisAssetDescriptor asset = assetCm.get(entityId).asset;
 		TextProtoComponent protoComponent = protoCm.get(entityId);
 
@@ -91,8 +75,9 @@ public class TextInflater extends Manager {
 		font.setUseIntegerPositions(false);
 		font.getData().setScale(1f / pixelsPerUnit);
 
-		TextComponent textComponent = new TextComponent(font, protoComponent.text);
+		TextComponent textComponent = textCm.create(entityId);
 
+		textComponent.init(font, protoComponent.text);
 		textComponent.setPosition(protoComponent.x, protoComponent.y);
 		textComponent.setOrigin(protoComponent.originX, protoComponent.originY);
 		textComponent.setRotation(protoComponent.rotation);
@@ -105,7 +90,12 @@ public class TextInflater extends Manager {
 
 		textComponent.setDistanceFieldShaderEnabled(protoComponent.isUsesDistanceField);
 
-		transmuter.transmute(flyweight);
-		flyweight.edit().add(textComponent);
+		if (configuration.removeAssetsComponentAfterInflating)
+			assetCm.remove(entityId);
+	}
+
+	@Override
+	protected void processSystem () {
+
 	}
 }

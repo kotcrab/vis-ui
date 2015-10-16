@@ -49,7 +49,7 @@ public class CameraModule extends SceneModule {
 	@Override
 	public void added () {
 		unprojectVec = new Vector3();
-		CameraManager manager = engineConfiguration.getManager(CameraManager.class);
+		CameraManager manager = engineConfiguration.getSystem(CameraManager.class);
 		camera = manager.getCamera();
 		viewport = manager.getViewport();
 		zoomController = new CameraZoomController(camera, unprojectVec);

@@ -31,49 +31,37 @@ import com.kotcrab.vis.runtime.component.SoundProtoComponent;
  * @author Kotcrab
  */
 @Wire
-public class SoundInflater extends Manager {
-	private ComponentMapper<SoundProtoComponent> soundCm;
+public class SoundInflater extends BaseEntitySystem {
+	private ComponentMapper<SoundProtoComponent> protoCm;
+	private ComponentMapper<SoundComponent> soundCm;
 	private ComponentMapper<AssetComponent> assetCm;
-
-	private Entity flyweight;
-
-	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
 	public SoundInflater (RuntimeConfiguration configuration, AssetManager manager) {
+		super(Aspect.all(SoundProtoComponent.class, AssetComponent.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
-	protected void setWorld (World world) {
-		super.setWorld(world);
-		flyweight = Entity.createFlyweight(world);
+	protected void processSystem () {
+
 	}
 
 	@Override
-	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SoundProtoComponent.class);
-		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
-		transmuter = factory.build();
-	}
-
-	@Override
-	public void added (int entityId) {
-		flyweight.id = entityId;
-		if (soundCm.has(entityId) == false) return;
-
+	public void inserted (int entityId) {
 		AssetComponent assetComponent = assetCm.get(entityId);
 
 		PathAsset asset = (PathAsset) assetComponent.asset;
 
 		Sound sound = manager.get(asset.getPath(), Sound.class);
-		if (sound == null) throw new IllegalStateException("Can't load scene sound is missing: " + asset.getPath());
-		SoundComponent soundComponent = new SoundComponent(sound);
+		if (sound == null) throw new IllegalStateException("Can't load scene, sound is missing: " + asset.getPath());
+		SoundComponent soundComponent = soundCm.create(entityId);
+		soundComponent.sound = sound;
 
-		transmuter.transmute(flyweight);
-		flyweight.edit().add(soundComponent);
+		if (configuration.removeAssetsComponentAfterInflating)
+			assetCm.remove(entityId);
 	}
 }

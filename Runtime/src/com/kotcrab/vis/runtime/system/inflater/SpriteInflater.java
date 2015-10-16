@@ -37,40 +37,27 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
  * @author Kotcrab
  */
 @Wire
-public class SpriteInflater extends Manager {
+public class SpriteInflater extends BaseEntitySystem {
 	private ComponentMapper<SpriteProtoComponent> protoCm;
+	private ComponentMapper<SpriteComponent> spriteCm;
 	private ComponentMapper<AssetComponent> assetCm;
-
-	private Entity flyweight;
-
-	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
 	public SpriteInflater (RuntimeConfiguration configuration, AssetManager manager) {
+		super(Aspect.all(SpriteProtoComponent.class, AssetComponent.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
-	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SpriteProtoComponent.class);
-		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
-		transmuter = factory.build();
+	protected void processSystem () {
+
 	}
 
 	@Override
-	protected void setWorld (World world) {
-		super.setWorld(world);
-		flyweight = Entity.createFlyweight(world);
-	}
-
-	@Override
-	public void added (int entityId) {
-		flyweight.id = entityId;
-		if (protoCm.has(entityId) == false) return;
-
+	public void inserted (int entityId) {
 		SpriteProtoComponent proto = protoCm.get(entityId);
 		AssetComponent assetComponent = assetCm.get(entityId);
 
@@ -98,7 +85,8 @@ public class SpriteInflater extends Manager {
 		if (region == null) throw new IllegalStateException("Can't load scene, gfx asset is missing: " + atlasRegion);
 		Sprite sprite = new Sprite(region);
 
-		SpriteComponent spriteComponent = new SpriteComponent(sprite);
+		SpriteComponent spriteComponent = spriteCm.create(entityId);
+		spriteComponent.sprite = sprite;
 
 		sprite.setPosition(proto.x, proto.y);
 		sprite.setSize(proto.width, proto.height);
@@ -108,7 +96,7 @@ public class SpriteInflater extends Manager {
 		sprite.setColor(proto.tint);
 		sprite.setFlip(proto.flipX, proto.flipY);
 
-		transmuter.transmute(flyweight);
-		flyweight.edit().add(spriteComponent);
+		if (configuration.removeAssetsComponentAfterInflating)
+			assetCm.remove(entityId);
 	}
 }

@@ -82,7 +82,7 @@ public class LayersDialog extends VisTable implements Disposable {
 		this.sceneTab = sceneTab;
 		this.scene = sceneTab.getScene();
 		sceneMC.injectModules(this);
-		layerManipulatorManager = engineConfig.getManager(LayerManipulatorManager.class);
+		layerManipulatorManager = engineConfig.getSystem(LayerManipulatorManager.class);
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);

@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -26,9 +25,9 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.PointComponent;
-import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /** @author Kotcrab */
 @Wire
@@ -58,8 +57,8 @@ public class PointRenderSystem extends DeferredEntityProcessingSystem {
 	}
 
 	@Override
-	protected void process (final Entity entity) {
-		PointComponent pos = pointCm.get(entity);
+	protected void process (int entityId) {
+		PointComponent pos = pointCm.get(entityId);
 
 		float renderSize = baseRenderSize * camera.getZoom();
 		renderSize = Math.min(renderSize, baseRenderSize);

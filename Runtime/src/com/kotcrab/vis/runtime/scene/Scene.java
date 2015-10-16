@@ -18,7 +18,6 @@ package com.kotcrab.vis.runtime.scene;
 
 import com.artemis.BaseSystem;
 import com.artemis.InvocationStrategy;
-import com.artemis.Manager;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
@@ -30,7 +29,10 @@ import com.kotcrab.vis.runtime.data.LayerData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
-import com.kotcrab.vis.runtime.system.*;
+import com.kotcrab.vis.runtime.system.CameraManager;
+import com.kotcrab.vis.runtime.system.LayerManager;
+import com.kotcrab.vis.runtime.system.VisGroupManager;
+import com.kotcrab.vis.runtime.system.VisIDManager;
 import com.kotcrab.vis.runtime.system.inflater.*;
 import com.kotcrab.vis.runtime.system.physics.Box2dDebugRenderSystem;
 import com.kotcrab.vis.runtime.system.physics.PhysicsBodyManager;
@@ -64,40 +66,34 @@ public class Scene {
 
 		EntityEngineConfiguration engineConfig = new EntityEngineConfiguration();
 
-		engineConfig.setManager(cameraManager = new CameraManager(data.viewport, data.width, data.height, data.pixelsPerUnit));
-		engineConfig.setManager(new VisIDManager());
+		engineConfig.setSystem(cameraManager = new CameraManager(data.viewport, data.width, data.height, data.pixelsPerUnit));
+		engineConfig.setSystem(new VisIDManager());
 
-		if (runtimeConfig.useVisGroupManager) engineConfig.setManager(new VisGroupManager(data.groupIds));
+		if (runtimeConfig.useVisGroupManager) engineConfig.setSystem(new VisGroupManager(data.groupIds));
 
-		engineConfig.setManager(new LayerManager(data.layers));
+		engineConfig.setSystem(new LayerManager(data.layers));
 
-		engineConfig.setManager(new SpriteInflater(runtimeConfig, assetsManager));
-		engineConfig.setManager(new SoundInflater(runtimeConfig, assetsManager));
-		engineConfig.setManager(new MusicInflater(runtimeConfig, assetsManager));
-		engineConfig.setManager(new ParticleInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
-		engineConfig.setManager(new TextInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
-		engineConfig.setManager(new ShaderInflater(assetsManager));
-		engineConfig.setManager(new SpriterInflater(assetsManager));
+		engineConfig.setSystem(new SpriteInflater(runtimeConfig, assetsManager));
+		engineConfig.setSystem(new SoundInflater(runtimeConfig, assetsManager));
+		engineConfig.setSystem(new MusicInflater(runtimeConfig, assetsManager));
+		engineConfig.setSystem(new ParticleInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
+		engineConfig.setSystem(new TextInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
+		engineConfig.setSystem(new ShaderInflater(assetsManager));
+		engineConfig.setSystem(new SpriterInflater(assetsManager));
 
 		if (parameter != null) {
 			for (BaseSystem system : parameter.systems)
 				engineConfig.setSystem(system);
-
-			for (BaseSystem system : parameter.passiveSystems)
-				engineConfig.setSystem(system, true);
-
-			for (Manager manager : parameter.managers)
-				engineConfig.setManager(manager);
 		}
 
 		if (data.physicsSettings.physicsEnabled) {
 			engineConfig.setSystem(new PhysicsSystem(data.physicsSettings));
-			engineConfig.setManager(new PhysicsBodyManager());
+			engineConfig.setSystem(new PhysicsBodyManager());
 			if (runtimeConfig.useBox2dSpriteUpdateSystem) engineConfig.setSystem(new PhysicsSpriteUpdateSystem());
 		}
 
 		ArtemisUtils.createCommonSystems(engineConfig, context.batch, distanceFieldShader, false);
-		engineConfig.setSystem(new ParticleRenderSystem(engineConfig.getSystem(RenderBatchingSystem.class), false), true);
+		engineConfig.setSystem(new ParticleRenderSystem(engineConfig.getSystem(RenderBatchingSystem.class), false));
 
 		if (data.physicsSettings.physicsEnabled && runtimeConfig.useBox2dDebugRenderer)
 			engineConfig.setSystem(new Box2dDebugRenderSystem());
@@ -118,12 +114,6 @@ public class Scene {
 		for (BaseSystem system : engine.getSystems()) {
 			if (system instanceof AfterSceneInit) {
 				((AfterSceneInit) system).afterSceneInit();
-			}
-		}
-
-		for (Manager manager : engine.getManagers()) {
-			if (manager instanceof AfterSceneInit) {
-				((AfterSceneInit) manager).afterSceneInit();
 			}
 		}
 	}

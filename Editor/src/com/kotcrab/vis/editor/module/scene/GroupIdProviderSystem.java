@@ -37,6 +37,7 @@ public class GroupIdProviderSystem extends EntityProcessingSystem {
 
 	public GroupIdProviderSystem () {
 		super(Aspect.all(GroupComponent.class));
+		setEnabled(false);
 	}
 
 	@Override

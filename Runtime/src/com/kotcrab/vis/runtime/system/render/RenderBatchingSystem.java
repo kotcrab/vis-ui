@@ -18,8 +18,6 @@ package com.kotcrab.vis.runtime.system.render;
 
 import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
-import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -48,7 +46,6 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 	private ComponentMapper<RenderableComponent> renderableCm;
 	private ComponentMapper<ShaderComponent> shaderCm;
 
-	private Entity flyweight;
 	private boolean sortedDirty = false;
 	private final Bag<Job> sortedJobs = new Bag<Job>();
 
@@ -58,12 +55,6 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 	public RenderBatchingSystem (Batch batch, boolean usingFromEditor) {
 		this.batch = batch;
 		this.usingFromEditor = usingFromEditor;
-	}
-
-	@Override
-	protected void setWorld (World world) {
-		super.setWorld(world);
-		flyweight = createFlyweightEntity();
 	}
 
 	/**
@@ -127,7 +118,6 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 			final Job job = (Job) data[i];
 			final EntityProcessAgent agent = job.agent;
 
-			flyweight.id = job.entityId;
 			boolean changedBatchState = false;
 			final boolean shaderUsed = shaderCm.has(job.entityId);
 			LayerCordsSystem cordsSystem = null;
@@ -165,7 +155,7 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 
 			if (changedBatchState) batch.begin();
 
-			agent.process(flyweight);
+			agent.process(job.entityId);
 
 			if (shaderUsed) batch.setShader(null);
 		}

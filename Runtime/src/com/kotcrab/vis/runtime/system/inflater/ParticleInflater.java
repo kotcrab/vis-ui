@@ -16,7 +16,9 @@
 
 package com.kotcrab.vis.runtime.system.inflater;
 
-import com.artemis.*;
+import com.artemis.Aspect;
+import com.artemis.BaseEntitySystem;
+import com.artemis.ComponentMapper;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
@@ -31,13 +33,10 @@ import com.kotcrab.vis.runtime.component.ParticleProtoComponent;
  * @author Kotcrab
  */
 @Wire
-public class ParticleInflater extends Manager {
+public class ParticleInflater extends BaseEntitySystem {
 	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<ParticleComponent> partcielCm;
 	private ComponentMapper<ParticleProtoComponent> protoCm;
-
-	private Entity flyweight;
-
-	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
@@ -45,29 +44,19 @@ public class ParticleInflater extends Manager {
 	private float pixelsPerUnit;
 
 	public ParticleInflater (RuntimeConfiguration configuration, AssetManager manager, float pixelsPerUnit) {
+		super(Aspect.all(ParticleProtoComponent.class, AssetComponent.class));
 		this.configuration = configuration;
 		this.manager = manager;
 		this.pixelsPerUnit = pixelsPerUnit;
 	}
 
 	@Override
-	protected void setWorld (World world) {
-		super.setWorld(world);
-		flyweight = Entity.createFlyweight(world);
+	protected void processSystem () {
+
 	}
 
 	@Override
-	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(ParticleProtoComponent.class);
-		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
-		transmuter = factory.build();
-	}
-
-	@Override
-	public void added (int entityId) {
-		flyweight.id = entityId;
-		if (protoCm.has(entityId) == false) return;
-
+	protected void inserted (int entityId) {
 		AssetComponent assetComponent = assetCm.get(entityId);
 		ParticleProtoComponent protoComponent = protoCm.get(entityId);
 
@@ -75,14 +64,15 @@ public class ParticleInflater extends Manager {
 
 		ParticleEffect effect = manager.get(path.getPath(), ParticleEffect.class);
 		if (effect == null)
-			throw new IllegalStateException("Can't load scene particle effect is missing: " + path.getPath());
+			throw new IllegalStateException("Can't load scene, particle effect is missing: " + path.getPath());
 
-		ParticleComponent particleComponent = new ParticleComponent(new ParticleEffect(effect));
+		ParticleComponent particleComponent = partcielCm.create(entityId);
+		particleComponent.effect = new ParticleEffect(effect);
 		particleComponent.setPosition(protoComponent.x, protoComponent.y);
 		particleComponent.active = protoComponent.active;
 		particleComponent.effect.scaleEffect(1f / pixelsPerUnit);
 
-		transmuter.transmute(flyweight);
-		flyweight.edit().add(particleComponent);
+		if (configuration.removeAssetsComponentAfterInflating)
+			assetCm.remove(entityId);
 	}
 }

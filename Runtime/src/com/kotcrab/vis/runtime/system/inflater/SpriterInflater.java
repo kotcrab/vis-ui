@@ -27,37 +27,25 @@ import com.kotcrab.vis.runtime.util.SpriterData;
 
 /** @author Kotcrab */
 @Wire
-public class SpriterInflater extends Manager {
+public class SpriterInflater extends BaseEntitySystem {
 	private ComponentMapper<SpriterProtoComponent> protoCm;
+	private ComponentMapper<SpriterComponent> spriterCm;
 	private ComponentMapper<AssetComponent> assetCm;
-
-	private Entity flyweight;
-
-	private EntityTransmuter transmuter;
 
 	private AssetManager manager;
 
 	public SpriterInflater (AssetManager manager) {
+		super(Aspect.all(SpriterProtoComponent.class, AssetComponent.class));
 		this.manager = manager;
 	}
 
 	@Override
-	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SpriterProtoComponent.class);
-		transmuter = factory.build();
+	protected void processSystem () {
+
 	}
 
 	@Override
-	protected void setWorld (World world) {
-		super.setWorld(world);
-		flyweight = Entity.createFlyweight(world);
-	}
-
-	@Override
-	public void added (int entityId) {
-		flyweight.id = entityId;
-		if (protoCm.has(entityId) == false) return;
-
+	public void inserted (int entityId) {
 		AssetComponent assetComponent = assetCm.get(entityId);
 		SpriterProtoComponent protoComponent = protoCm.get(entityId);
 
@@ -66,10 +54,7 @@ public class SpriterInflater extends Manager {
 		if (data == null)
 			throw new IllegalStateException("Can't load scene, spriter data is missing: " + asset.getPath());
 		SpriterComponent component = new SpriterComponent(data.loader, data.data, protoComponent.scale);
-
 		protoComponent.fill(component);
-
-		transmuter.transmute(flyweight);
-		flyweight.edit().add(component);
+		world.getEntity(entityId).edit().add(component);
 	}
 }
