@@ -70,7 +70,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	}
 	
 	#Slider$SliderStyle: {
-		-base: { knob: slider-knob, disabledKnob: slider-knob-disabled}
+		-base: { knob: slider-knob, knobOver: slider-knob-over, knobDown: slider-knob-down, disabledKnob: slider-knob-disabled}
 		default-horizontal inherits base: { background: slider }
 		default-vertical inherits base: { background: slider-vertical }
 	}
@@ -149,12 +149,6 @@ package com.kotcrab.vis.ui.widget {
 		blue: { }
 		default-noborder inherits default: { focusBorder: NULL }
 		toggle-noborder inherits toggle: { focusBorder: NULL }
-	}
-	
-	#VisSlider$VisSliderStyle extends SliderStyle: {
-		-base: { knobOver: slider-knob-over, knobDown: slider-knob-down }
-		default-horizontal inherits base: {}
-		default-vertical inherits base: {}
 	}
 	
 	#VisCheckBox$VisCheckBoxStyle extends CheckBoxStyle: {

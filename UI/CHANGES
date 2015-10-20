@@ -2,6 +2,8 @@
 -API Change: VisValidatableTextField#getValidator() removed, use getValidators() instead
 -API Change: NumberSelector now supports float values, methods taking and returning integers are now using floats
 -API Change: NumberSelectorListener#changed(int) is now NumberSelectorListener#changed(float)
+-API Change: VisProgressBar and VisSlider now extends standard scene2d.ui ProgressBar and Slider (should not affect existing code)
+ -VisSliderStyle was removed, use SliderStyle which is fully compatible with VisSliderStyle
 -API Addition: NumberSelector#setPrecision
 -API Addition: InputDialog#setText(String text), InputDialog#setText(String text, boolean selectAll)
 -API Addition: FileChooser#setSelectedFiles (FileHandle... files)
