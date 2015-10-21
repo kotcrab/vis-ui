@@ -88,7 +88,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	#TextField$TextFieldStyle: {
 	    -base: { selection: selection, background: textfield, cursor: cursor, messageFont: default-font, messageFontColor: grey }
 		default inherits .font, base: { }
-		default inherits .font-small, base: { }
+		small inherits .font-small, base: { }
 	}
 	
 	#CheckBox$CheckBoxStyle: {
