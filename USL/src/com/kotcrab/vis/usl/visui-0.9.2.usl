@@ -20,6 +20,9 @@
 
 .font: { font: default-font, fontColor: white, disabledFontColor: grey }
 .font-nodisabled: { font: default-font, fontColor: white }
+.font-small: { font: small-font, fontColor: white, disabledFontColor: grey }
+.font-small-nodisabled: { font: small-font, fontColor: white }
+
 .focus-border: { focusBorder: border }
 .focus-border-dark-blue: { focusBorder: border-dark-blue }
 .focus-border-circle: { focusBorder: border-circle }
@@ -77,13 +80,15 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	}
 	
 	#Label$LabelStyle: {
-		default: { font: default-font, fontColor: white }
-		small: { font: small-font, fontColor: white }
+		default inherits .font-nodisabled: { }
+		small inherits .font-small-nodisabled: { }
 		menuitem-shortcut: { font: default-font, fontColor: menuitem-grey }
 	}
 	
 	#TextField$TextFieldStyle: {
-		default inherits .font: { selection: selection, background: textfield, cursor: cursor, messageFont: default-font, messageFontColor: grey }
+	    -base: { selection: selection, background: textfield, cursor: cursor, messageFont: default-font, messageFontColor: grey }
+		default inherits .font, base: { }
+		default inherits .font-small, base: { }
 	}
 	
 	#CheckBox$CheckBoxStyle: {
@@ -133,7 +138,9 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 
 package com.kotcrab.vis.ui.widget {
 	#VisTextField$VisTextFieldStyle: {
-		default inherits .focus-border, .font: { selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor }
+	    -base: { selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor }
+		default inherits .focus-border, .font, base: { }
+		small inherits .focus-border, .font-small, base: { }
 	}
 	
 	#VisTextButton$VisTextButtonStyle extends TextButtonStyle: {

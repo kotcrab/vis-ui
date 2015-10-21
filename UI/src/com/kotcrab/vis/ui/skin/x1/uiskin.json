@@ -57,7 +57,8 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	menuitem-shortcut: {font: default-font, fontColor: menuitem-grey }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
-	default: {selection: selection, background: textfield, cursor: cursor, messageFont: default-font, messageFontColor: grey, font: default-font, fontColor: white, disabledFontColor: grey }
+	default: {font: default-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, cursor: cursor, messageFont: default-font, messageFontColor: grey },
+	default: {font: small-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, cursor: cursor, messageFont: default-font, messageFontColor: grey }
 },
 com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
 	default: {checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white, disabledFontColor: grey },
@@ -80,7 +81,8 @@ com.kotcrab.vis.ui.Sizes: {
 	x2: {scaleFactor: 2, spacingBottom: 16, spacingRight: 12, menuItemIconSize: 44, numberSelectorButtonSize: 24, numberSelectorButtonsWidth: 20, numberSelectorFieldSize: 80 }
 },
 com.kotcrab.vis.ui.widget.VisTextField$VisTextFieldStyle: {
-	default: {selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor, focusBorder: border, font: default-font, fontColor: white, disabledFontColor: grey }
+	default: {focusBorder: border, font: default-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor },
+	small: {focusBorder: border, font: small-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor }
 },
 com.kotcrab.vis.ui.widget.VisTextButton$VisTextButtonStyle: {
 	default: {focusBorder: border, down: button-down, up: button, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey },
