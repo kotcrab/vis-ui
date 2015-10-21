@@ -8,6 +8,7 @@
 -API Addition: InputDialog#setText(String text), InputDialog#setText(String text, boolean selectAll)
 -API Addition: FileChooser#setSelectedFiles (FileHandle... files)
 -API Addition: FloatDigitsOnlyFilter
+-API Addition: VisUI.isLoaded()
 -TextField/VisTextField.setMessageText(String text) now works properly.
 -DialogUtils methods now return dialogs objects (was void)
 -Fixed VisTree taking VisTextField focus when it was placed inside tree node

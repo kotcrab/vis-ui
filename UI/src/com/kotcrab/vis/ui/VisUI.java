@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.I18NBundle;
 
 import java.util.Locale;
@@ -78,12 +79,14 @@ public class VisUI {
 
 	/** Loads default VisUI skin */
 	public static void load (SkinScale scale) {
+		if (skin != null) throw new GdxRuntimeException("VisUI cannot be loaded twice");
 		VisUI.scale = scale;
 		load(scale.getSkinFile());
 	}
 
 	/** Loads skin from provided file, skin must be compatible with default VisUI skin */
 	public static void load (FileHandle visSkinFile) {
+		if (skin != null) throw new GdxRuntimeException("VisUI cannot be loaded twice");
 		skin = new Skin(visSkinFile);
 	}
 
@@ -103,6 +106,10 @@ public class VisUI {
 	public static Skin getSkin () {
 		if (skin == null) throw new IllegalStateException("VisUI is not loaded!");
 		return skin;
+	}
+
+	public static boolean isLoaded () {
+		return skin != null;
 	}
 
 	public static Sizes getSizes () {
