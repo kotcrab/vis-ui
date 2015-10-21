@@ -72,6 +72,9 @@ com.badlogic.gdx.scenes.scene2d.ui.Touchpad$TouchpadStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.Tree$TreeStyle: {
 	default: {minus: tree-minus, plus: tree-plus, selection: tree-selection, over: tree-over }
 },
+com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+	default: {background: default-pane, label: {font: default-font, fontColor: white} }
+},
 com.kotcrab.vis.ui.Sizes: {
 	default: {scaleFactor: 1, spacingBottom: 8, spacingRight: 6, menuItemIconSize: 22, numberSelectorButtonSize: 12, numberSelectorButtonsWidth: 12, numberSelectorFieldSize: 40 },
 	x2: {scaleFactor: 2, spacingBottom: 16, spacingRight: 12, menuItemIconSize: 44, numberSelectorButtonSize: 24, numberSelectorButtonsWidth: 20, numberSelectorFieldSize: 80 }

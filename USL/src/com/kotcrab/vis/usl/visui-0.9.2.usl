@@ -19,6 +19,7 @@
 }
 
 .font: { font: default-font, fontColor: white, disabledFontColor: grey }
+.font-nodisabled: { font: default-font, fontColor: white }
 .focus-border: { focusBorder: border }
 .focus-border-dark-blue: { focusBorder: border-dark-blue }
 .focus-border-circle: { focusBorder: border-circle }
@@ -93,6 +94,13 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	#List$ListStyle: { default: { fontColorUnselected: white, selection: padded-list-selection, fontColorSelected: white, font: default-font } }
 	#Touchpad$TouchpadStyle: { default: { background: default-pane, knob: touchpad-knob } }
 	#Tree$TreeStyle: { default: { minus: tree-minus, plus: tree-plus, selection: tree-selection, over: tree-over } }
+
+    #TextTooltip$TextTooltipStyle: {
+    	default: {
+    		background: default-pane,
+    	    label inherits .font-nodisabled: { }
+        }
+    }
 }
 
 #com.kotcrab.vis.ui.Sizes: {

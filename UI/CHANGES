@@ -9,6 +9,7 @@
 -API Addition: FileChooser#setSelectedFiles (FileHandle... files)
 -API Addition: FloatDigitsOnlyFilter
 -API Addition: VisUI.isLoaded()
+-Added default style for standard scene2d.ui TextTooltip
 -TextField/VisTextField.setMessageText(String text) now works properly.
 -DialogUtils methods now return dialogs objects (was void)
 -Fixed VisTree taking VisTextField focus when it was placed inside tree node
