@@ -26,12 +26,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.BorderOwner;
 
 /**
  * @author Kotcrab
  * @see TextButton
  */
-public class VisTextButton extends TextButton implements Focusable {
+public class VisTextButton extends TextButton implements Focusable, BorderOwner {
 	private VisTextButtonStyle style;
 
 	private boolean drawBorder;
@@ -100,10 +101,12 @@ public class VisTextButton extends TextButton implements Focusable {
 		}
 	}
 
+	@Override
 	public boolean isFocusBorderEnabled () {
 		return focusBorderEnabled;
 	}
 
+	@Override
 	public void setFocusBorderEnabled (boolean focusBorderEnabled) {
 		this.focusBorderEnabled = focusBorderEnabled;
 	}

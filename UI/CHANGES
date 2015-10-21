@@ -13,6 +13,7 @@
 -Added VisTextField and TextArea "small" style with smaller font
 -TextField/VisTextField.setMessageText(String text) now works properly.
 -DialogUtils methods now return dialogs objects (was void)
+-Focus border can now be disabled on all widgets having it
 -Fixed VisTree taking VisTextField focus when it was placed inside tree node
 -Fixed invalid key up/down events propagation when using multiple input processors
 -Fixed font kerning for character pairs: Ma, Me, Mi

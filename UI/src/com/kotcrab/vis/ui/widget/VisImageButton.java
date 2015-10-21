@@ -29,14 +29,16 @@ import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.BorderOwner;
 
 /** @author Kotcrab */
-public class VisImageButton extends Button implements Focusable {
+public class VisImageButton extends Button implements Focusable, BorderOwner {
 	private Image image;
 
 	private VisImageButtonStyle style;
 
 	private boolean drawBorder;
+	private boolean focusBorderEnabled = true;
 
 	private boolean generateDisabledImage = false;
 
@@ -131,7 +133,7 @@ public class VisImageButton extends Button implements Focusable {
 	public void draw (Batch batch, float parentAlpha) {
 		updateImage();
 		super.draw(batch, parentAlpha);
-		if (drawBorder && style.focusBorder != null)
+		if (focusBorderEnabled && drawBorder && style.focusBorder != null)
 			style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
 
@@ -157,6 +159,16 @@ public class VisImageButton extends Button implements Focusable {
 	@Override
 	public void focusGained () {
 		drawBorder = true;
+	}
+
+	@Override
+	public boolean isFocusBorderEnabled () {
+		return focusBorderEnabled;
+	}
+
+	@Override
+	public void setFocusBorderEnabled (boolean focusBorderEnabled) {
+		this.focusBorderEnabled = focusBorderEnabled;
 	}
 
 	/**
