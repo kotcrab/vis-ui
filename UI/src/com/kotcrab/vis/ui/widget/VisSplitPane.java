@@ -97,6 +97,9 @@ public class VisSplitPane extends WidgetGroup {
 
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				//fixes issue when split bar could be still dragged even when touchable is set to childrenOnly, probably scene2d issue
+				if (isTouchable() == false) return false;
+
 				if (draggingPointer != -1) return false;
 				if (pointer == 0 && button != 0) return false;
 				if (handleBounds.contains(x, y)) {
@@ -291,7 +294,7 @@ public class VisSplitPane extends WidgetGroup {
 		}
 
 		Drawable handle = style.handle;
-		if (mouseOnHandle && style.handleOver != null) handle = style.handleOver;
+		if (mouseOnHandle && isTouchable() && style.handleOver != null) handle = style.handleOver;
 		batch.setColor(color.r, color.g, color.b, parentAlpha * color.a);
 		handle.draw(batch, handleBounds.x, handleBounds.y, handleBounds.width, handleBounds.height);
 		resetTransform(batch);
