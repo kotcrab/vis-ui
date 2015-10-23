@@ -9,6 +9,8 @@
 -API Addition: FileChooser#setSelectedFiles (FileHandle... files)
 -API Addition: FloatDigitsOnlyFilter
 -API Addition: VisUI.isLoaded()
+-API Addition: constructor VisValidatableTextField (String text, String styleName)
+-API Addition: constructor VisValidatableTextField (String text, VisTextFieldStyle style)
 -Added default style for standard scene2d.ui TextTooltip
 -Added VisTextField and TextArea "small" style with smaller font
 -TextField/VisTextField.setMessageText(String text) now works properly.
