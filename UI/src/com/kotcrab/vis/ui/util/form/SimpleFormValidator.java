@@ -38,10 +38,11 @@ public class SimpleFormValidator {
 	private ChangeSharedListener changeListener = new ChangeSharedListener();
 	private Array<VisValidatableTextField> fields = new Array<VisValidatableTextField>();
 
+	private boolean buttonDisable = false;
+	private String errorMsgText = "";
+
 	private Button button;
 	private Label errorMsgLabel;
-
-	private boolean hideErrorOnEmptyInput;
 
 	public SimpleFormValidator (Button buttonToDisable, Label errorMsgLabel) {
 		this.button = buttonToDisable;
@@ -77,15 +78,15 @@ public class SimpleFormValidator {
 		return valueLesserThan(field, errorMsg, value, false);
 	}
 
-	public FormInputValidator valueGreaterThan (VisValidatableTextField field, String errorMsg, float value, boolean equals) {
-		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, new GreaterThanValidator(value, equals));
+	public FormInputValidator valueGreaterThan (VisValidatableTextField field, String errorMsg, float value, boolean validIfEqualsValue) {
+		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, new GreaterThanValidator(value, validIfEqualsValue));
 		field.addValidator(wrapper);
 		add(field);
 		return wrapper;
 	}
 
-	public FormInputValidator valueLesserThan (VisValidatableTextField field, String errorMsg, float value, boolean equals) {
-		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, new LesserThanValidator(value, equals));
+	public FormInputValidator valueLesserThan (VisValidatableTextField field, String errorMsg, float value, boolean validIfEqualsValue) {
+		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, new LesserThanValidator(value, validIfEqualsValue));
 		field.addValidator(wrapper);
 		add(field);
 		return wrapper;
@@ -103,9 +104,19 @@ public class SimpleFormValidator {
 		checkAll();
 	}
 
+	public void setButtonToDisable (Button button) {
+		this.button = button;
+		updateWidgets();
+	}
+
+	public void setErrorMsgLabel (Label errorMsgLabel) {
+		this.errorMsgLabel = errorMsgLabel;
+		updateWidgets();
+	}
+
 	private void checkAll () {
-		button.setDisabled(false);
-		errorMsgLabel.setText("");
+		buttonDisable = false;
+		errorMsgText = "";
 
 		for (VisValidatableTextField field : fields)
 			field.validateInput();
@@ -115,17 +126,18 @@ public class SimpleFormValidator {
 
 				Array<InputValidator> validators = field.getValidators();
 				for (InputValidator v : validators) {
-					if (v instanceof FormInputValidator == false)
+					if (v instanceof FormInputValidator == false) {
 						throw new IllegalStateException("Fields validated by FormValidator cannot have validators not added using FormValidator methods. " +
 								"Are you adding validators to field manually?");
+					}
 
 					FormInputValidator validator = (FormInputValidator) v;
 
 					if (validator.getLastResult() == false) {
 						if (!(validator.isHideErrorOnEmptyInput() && field.getText().equals("")))
-							errorMsgLabel.setText(validator.getErrorMsg());
+							errorMsgText = validator.getErrorMsg();
 
-						button.setDisabled(true);
+						buttonDisable = true;
 						break;
 					}
 				}
@@ -133,6 +145,13 @@ public class SimpleFormValidator {
 				break;
 			}
 		}
+
+		updateWidgets();
+	}
+
+	private void updateWidgets () {
+		if (button != null) button.setDisabled(buttonDisable);
+		if (errorMsgLabel != null) errorMsgLabel.setText(errorMsgText);
 	}
 
 	public static class EmptyInputValidator extends FormInputValidator {

@@ -51,8 +51,7 @@ public class FormValidator extends SimpleFormValidator {
 
 	/**
 	 * @param errorIfRelativeEmpty if true field input will be valid if 'relativeTo' field is empty, usually used with notEmpty validator on 'relativeTo' to
-	 * avoid form errors. Settings this to true improves UX, error are not displayed until user types something in 'relativeTo'
-	 * field
+	 * avoid form errors. Settings this to true improves UX, error are not displayed until user types something in 'relativeTo' field
 	 */
 	public FormInputValidator fileExists (VisValidatableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty) {
 		FileExistsValidator validator = new FileExistsValidator(relativeTo, errorMsg, false, errorIfRelativeEmpty);
