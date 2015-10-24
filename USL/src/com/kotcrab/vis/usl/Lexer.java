@@ -4,6 +4,7 @@ import com.kotcrab.vis.usl.Token.Type;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -17,6 +18,8 @@ public class Lexer {
 
 	private static final Pattern globalStyleRegex = Pattern.compile("^\\.[a-zA-Z0-9-_]+:.*$", Pattern.DOTALL);
 	private static final Pattern metaStyleRegex = Pattern.compile("^-[a-zA-Z0-9-_ ]+:.*$", Pattern.DOTALL);
+
+	private static HashMap<String, String> includeMappings;
 
 	static void lexUsl (LexerContext ctx, String usl) {
 		for (int i = 0; i < usl.length(); ) {
@@ -64,7 +67,10 @@ public class Lexer {
 				ctx.tokens.add(new Token(usl, i, Type.RCURL));
 				i++;
 			} else if (ch == ',') {
-				Utils.throwException("Unexpected ','", usl, i);
+				if (ctx.curliesLevel > 1 && peek(ctx.tokens, 2).type == Type.IDENTIFIER_CONTENT) //',' will be valid if we are currently inside style definition
+					i++;
+				else
+					Utils.throwException("Unexpected ','", usl, i);
 			} else if (peek(ctx.tokens).type == Type.IDENTIFIER) { //identifier content: someName: content
 				i = lexIdentifierContent(ctx, usl, i);
 			} else if (checkIdentifierDef(usl, i)) { // identifier: someName: content
@@ -105,11 +111,14 @@ public class Lexer {
 	private static int lexIdentifierContent (LexerContext ctx, String usl, int i) {
 		int commaIndex = usl.indexOf(',', i);
 		int curlyIndex = usl.indexOf('}', i);
+		int endLineIndex = usl.indexOf('\r', i);
+		if (endLineIndex == -1) endLineIndex = usl.indexOf('\n', i);
 
 		if (commaIndex == -1) commaIndex = Integer.MAX_VALUE;
 		if (curlyIndex == -1) curlyIndex = Integer.MAX_VALUE;
+		if (endLineIndex == -1) endLineIndex = Integer.MAX_VALUE;
 
-		int end = Math.min(commaIndex, curlyIndex);
+		int end = Math.min(commaIndex, Math.min(curlyIndex, endLineIndex));
 		if (end == -1) Utils.throwException("Identifier content end could not be found", usl, i);
 
 		String content = usl.substring(i, end);
@@ -210,22 +219,11 @@ public class Lexer {
 			String content = null;
 			String includeName = usl.substring(i + 1, includeEnd);
 
-			if (includeName.equals("gdx"))
-				content = streamToString(USL.class.getResourceAsStream("gdx.usl"));
-			else if (includeName.equals("visui-0.7.7"))
-				content = streamToString(USL.class.getResourceAsStream("visui-0.7.7.usl"));
-			else if (includeName.equals("visui-0.8.0"))
-				content = streamToString(USL.class.getResourceAsStream("visui-0.8.0.usl"));
-			else if (includeName.equals("visui-0.8.1"))
-				content = streamToString(USL.class.getResourceAsStream("visui-0.8.1.usl"));
-			else if (includeName.equals("visui-0.8.2"))
-				content = streamToString(USL.class.getResourceAsStream("visui-0.8.2.usl"));
-			else if (includeName.equals("visui-0.9.0"))
-				content = streamToString(USL.class.getResourceAsStream("visui-0.9.0.usl"));
-			else if (includeName.equals("visui-0.9.1") || includeName.equals("visui"))
-				content = streamToString(USL.class.getResourceAsStream("visui-0.9.1.usl"));
-			else if (includeName.equals("visui-0.9.2")) //snapshot
-				content = streamToString(USL.class.getResourceAsStream("visui-0.9.2.usl"));
+			if(includeMappings == null) loadIncludeMappings();
+
+			String fileName = includeMappings.get(includeName);
+			if(fileName != null)
+				content = streamToString(USL.class.getResourceAsStream(fileName));
 			else
 				Utils.throwException("Invalid internal include file: " + includeName, usl, i);
 
@@ -249,6 +247,19 @@ public class Lexer {
 		return -1;
 	}
 
+	private static void loadIncludeMappings () {
+		includeMappings = new HashMap<String, String>();
+		includeMappings.put("gdx", "gdx.usl");
+		includeMappings.put("visui-0.7.7", "visui-0.7.7.usl");
+		includeMappings.put("visui-0.8.0", "visui-0.8.0.usl");
+		includeMappings.put("visui-0.8.1", "visui-0.8.1.usl");
+		includeMappings.put("visui-0.8.2", "visui-0.8.2.usl");
+		includeMappings.put("visui-0.9.0", "visui-0.9.0.usl");
+		includeMappings.put("visui-0.9.1", "visui-0.9.1.usl");
+		includeMappings.put("visui", "visui-0.9.1.usl"); //stable
+		includeMappings.put("visui-0.9.2", "visui-0.9.2.usl"); //snapshot
+	}
+
 	private static int skipLineComment (String usl, int i) {
 		for (; i < usl.length(); i++)
 			if (usl.charAt(i) == '\n') break;
@@ -257,8 +268,12 @@ public class Lexer {
 	}
 
 	private static <T> T peek (List<T> list) {
+		return peek(list, 1);
+	}
+
+	private static <T> T peek (List<T> list, int i) {
 		if (list != null && !list.isEmpty()) {
-			return list.get(list.size() - 1);
+			return list.get(list.size() - i);
 		}
 
 		return null;
