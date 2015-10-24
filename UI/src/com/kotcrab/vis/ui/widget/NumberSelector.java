@@ -197,6 +197,7 @@ public class NumberSelector extends VisTable {
 			public boolean keyDown (InputEvent event, int keycode) {
 				if (keycode == Keys.ENTER) {
 					valueChanged(true);
+					FocusManager.getFocus(getStage());
 					return true;
 				}
 
