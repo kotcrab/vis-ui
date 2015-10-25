@@ -6,6 +6,8 @@
  -VisSliderStyle was removed, use SliderStyle which is fully compatible with VisSliderStyle
 -API Change: added ColorPickerListener#changed (Color newColor)
  -If you are using ColorPickerAdapter this does not affect you
+-API Change: removed constructor LinkLabel (CharSequence text, String fontName, String colorName) because it was misleading
+             with LinkLabel (CharSequence text, CharSequence url, String styleName)
 -API Addition: NumberSelector#setPrecision
 -API Addition: InputDialog#setText(String text), InputDialog#setText(String text, boolean selectAll)
 -API Addition: FileChooser#setSelectedFiles (FileHandle... files)

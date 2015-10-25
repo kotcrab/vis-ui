@@ -73,11 +73,6 @@ public class LinkLabel extends VisLabel {
 		init(text);
 	}
 
-	public LinkLabel (CharSequence text, String fontName, String colorName) {
-		super(text, fontName, colorName);
-		init(text);
-	}
-
 	private void init (CharSequence linkUrl) {
 		this.url = linkUrl;
 		addListener(new ClickListener(Buttons.LEFT) {
