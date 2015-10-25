@@ -21,7 +21,6 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.kotcrab.vis.ui.VisUI;
 
 /**
  * Simple LinkLabel allowing to create label with clickable link.
@@ -30,26 +29,24 @@ import com.kotcrab.vis.ui.VisUI;
  * @since 0.7.2
  */
 public class LinkLabel extends VisLabel {
-	private static final String DEFAULT_COLOR_NAME = "link-label";
+	private static final String DEFAULT_STYLE_NAME = "link-label";
 
 	private LinkLabelListener listener;
 	private CharSequence url;
 
 	public LinkLabel (CharSequence url) {
-		super(url);
-		setColor(VisUI.getSkin().getColor(DEFAULT_COLOR_NAME));
+		super(url, DEFAULT_STYLE_NAME);
 		init(url);
 	}
 
 	public LinkLabel (CharSequence text, CharSequence url) {
-		super(text);
-		setColor(VisUI.getSkin().getColor(DEFAULT_COLOR_NAME));
+		super(text, DEFAULT_STYLE_NAME);
 		init(url);
 	}
 
 	public LinkLabel (CharSequence text, int alignment) {
-		super(text, alignment);
-		setColor(VisUI.getSkin().getColor(DEFAULT_COLOR_NAME));
+		super(text, DEFAULT_STYLE_NAME);
+		setAlignment(alignment);
 		init(text);
 	}
 

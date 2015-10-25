@@ -81,6 +81,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	
 	#Label$LabelStyle: {
 		default inherits .font-nodisabled: { }
+		link-label inherits default: { fontColor: link-label }
 		small inherits .font-small-nodisabled: { }
 		menuitem-shortcut: { font: default-font, fontColor: menuitem-grey }
 	}

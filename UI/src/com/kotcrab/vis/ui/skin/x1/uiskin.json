@@ -53,6 +53,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {font: default-font, fontColor: white },
+	link-label: {fontColor: link-label, font: default-font },
 	small: {font: small-font, fontColor: white },
 	menuitem-shortcut: {font: default-font, fontColor: menuitem-grey }
 },
