@@ -28,6 +28,10 @@ public abstract class FormInputValidator implements InputValidator {
 		this.errorMsg = errorMsg;
 	}
 
+	public void setErrorMsg (String errorMsg) {
+		this.errorMsg = errorMsg;
+	}
+
 	public String getErrorMsg () {
 		return errorMsg;
 	}
@@ -48,12 +52,17 @@ public abstract class FormInputValidator implements InputValidator {
 		return this;
 	}
 
+	public void setHideErrorOnEmptyInput (boolean hideErrorOnEmptyInput) {
+		this.hideErrorOnEmptyInput = hideErrorOnEmptyInput;
+	}
+
 	public boolean isHideErrorOnEmptyInput () {
 		return hideErrorOnEmptyInput;
 	}
 
 	/**
-	 * Called by FormInputValidator when input should be validated, for proper validator working must be used instead of {@link #validateInput(String)}.
+	 * Called by FormInputValidator when input should be validated, for proper validator working this must be used
+	 * instead of {@link #validateInput(String)}.
 	 * Last result of this function will be stored because it is required by FromValidator
 	 * @param input that should be validated
 	 * @return if input is valid, false otherwise
