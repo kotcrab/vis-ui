@@ -35,6 +35,9 @@ import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 
 /**
+ * NumberSelector can be used to select number using buttons or by entering it into text fields. Supports
+ * mimimum and maximum value, step size. Both integer and floats are supported. When using float you can specify
+ * selector precision, see {@link #setPrecision(int)} Similar to JSpinner from Swing.
  * @author Javier, Kotcrab
  * @since 0.7.0
  */
@@ -54,6 +57,7 @@ public class NumberSelector extends VisTable {
 	private float step;
 	private float current;
 	private int precision = 0;
+	private String formatPattern;
 
 	/** Creates number selector with step set to 1 */
 	public NumberSelector (String name, float initialValue, float min, float max) {
@@ -219,6 +223,7 @@ public class NumberSelector extends VisTable {
 		if (precision == 0) {
 			valueText.addValidator(Validators.INTEGERS);
 			valueText.setTextFieldFilter(new DigitsOnlyFilter());
+			formatPattern = null;
 		} else {
 			valueText.addValidator(Validators.FLOATS);
 			valueText.addValidator(new InputValidator() {
@@ -230,6 +235,7 @@ public class NumberSelector extends VisTable {
 				}
 			});
 			valueText.setTextFieldFilter(new FloatDigitsOnlyFilter(true));
+			formatPattern = "%." + String.valueOf(precision) + "f"; //eg. "%.1f"
 		}
 	}
 
@@ -353,10 +359,14 @@ public class NumberSelector extends VisTable {
 	}
 
 	private String valueOf (float current) {
-		if (current == MathUtils.floor(current))
+		if (current == MathUtils.floor(current)) {
 			return String.valueOf((int) current);
-		else
-			return String.valueOf(current);
+		} else {
+			//dealing with float rounding errors
+			String text = String.format(formatPattern, current).replace(',', '.');
+			this.current = Float.valueOf(text);
+			return text;
+		}
 	}
 
 	public void addChangeListener (NumberSelectorListener listener) {
