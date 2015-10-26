@@ -37,7 +37,8 @@ import static com.kotcrab.vis.ui.widget.color.ColorPickerText.*;
 
 /**
  * Color Picker widget, allows user to select color. ColorPicker is heavy widget and should be reused whenever possible.
- * This widget must be disposed when no longer needed!
+ * This widget must be disposed when no longer needed! ColorPicker will be centered on screen after adding to Stage
+ * use {@link #setCenterOnAdd(boolean)} to change this.
  * @author Kotcrab
  * @since 0.6.0
  */
