@@ -73,7 +73,7 @@ public class VisWindow extends Window {
 	}
 
 	/**
-	 * @param centerOnAdd if true window will be position will be centered on screen after adding to stage
+	 * @param centerOnAdd if true window position will be centered on screen after adding to stage
 	 * @see #centerWindow()
 	 */
 	public void setCenterOnAdd (boolean centerOnAdd) {
