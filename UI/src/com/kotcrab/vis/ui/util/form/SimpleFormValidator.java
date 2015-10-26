@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.util.Validators;
@@ -37,16 +38,19 @@ import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 public class SimpleFormValidator {
 	private ChangeSharedListener changeListener = new ChangeSharedListener();
 	private Array<VisValidatableTextField> fields = new Array<VisValidatableTextField>();
+	private Array<CheckedButtonWrapper> buttons = new Array<CheckedButtonWrapper>();
 
-	private boolean buttonDisable = false;
+	private String successMsg;
+
+	private boolean formInvalid = false;
 	private String errorMsgText = "";
 
-	private Button button;
-	private Label errorMsgLabel;
+	private Array<Disableable> disableTargets = new Array<Disableable>();
+	private Label messageLabel;
 
-	public SimpleFormValidator (Button buttonToDisable, Label errorMsgLabel) {
-		this.button = buttonToDisable;
-		this.errorMsgLabel = errorMsgLabel;
+	public SimpleFormValidator (Disableable targetToDisable, Label messageLabel) {
+		if (targetToDisable != null) disableTargets.add(targetToDisable);
+		this.messageLabel = messageLabel;
 	}
 
 	public FormInputValidator notEmpty (VisValidatableTextField field, String errorMsg) {
@@ -98,28 +102,64 @@ public class SimpleFormValidator {
 		return customValidator;
 	}
 
-	protected void add (VisValidatableTextField field) {
-		fields.add(field);
-		field.addListener(changeListener);
+	/**
+	 * Adds field to this form without attaching any {@link FormInputValidator} to it. This can be used when field
+	 * already has added all required validators.
+	 */
+	public void add (VisValidatableTextField field) {
+		if (fields.contains(field, true) == false) fields.add(field);
+		field.addListener(changeListener); //addListener won't allow to add same listener twice
 		checkAll();
 	}
 
-	public void setButtonToDisable (Button button) {
-		this.button = button;
+	public void checked (Button button, String errorMsg) {
+		buttons.add(new CheckedButtonWrapper(button, true, errorMsg));
+		button.addListener(changeListener);
+		checkAll();
+	}
+
+	public void unchecked (Button button, String errorMsg) {
+		buttons.add(new CheckedButtonWrapper(button, false, errorMsg));
+		button.addListener(changeListener);
+		checkAll();
+	}
+
+	public void addDisableTarget (Disableable disableable) {
+		disableTargets.add(disableable);
 		updateWidgets();
 	}
 
-	public void setErrorMsgLabel (Label errorMsgLabel) {
-		this.errorMsgLabel = errorMsgLabel;
+	public boolean removeDisableTarget (Disableable disableable) {
+		boolean result = disableTargets.removeValue(disableable, true);
 		updateWidgets();
+		return result;
+	}
+
+	public void setMessageLabel (Label messageLabel) {
+		this.messageLabel = messageLabel;
+		updateWidgets();
+	}
+
+	/** @param successMsg message that will be displayed on {@link #messageLabel} if all fields were valid. May be null. */
+	public void setSuccessMessage (String successMsg) {
+		this.successMsg = successMsg;
 	}
 
 	private void checkAll () {
-		buttonDisable = false;
-		errorMsgText = "";
+		formInvalid = false;
+		errorMsgText = null;
 
-		for (VisValidatableTextField field : fields)
+		for (CheckedButtonWrapper wrapper : buttons) {
+			if (wrapper.button.isChecked() != wrapper.mustBeChecked) {
+				errorMsgText = wrapper.errorMsg;
+				formInvalid = true;
+				break;
+			}
+		}
+
+		for (VisValidatableTextField field : fields) {
 			field.validateInput();
+		}
 
 		for (VisValidatableTextField field : fields) {
 			if (field.isInputValid() == false) {
@@ -137,7 +177,7 @@ public class SimpleFormValidator {
 						if (!(validator.isHideErrorOnEmptyInput() && field.getText().equals("")))
 							errorMsgText = validator.getErrorMsg();
 
-						buttonDisable = true;
+						formInvalid = true;
 						break;
 					}
 				}
@@ -150,8 +190,16 @@ public class SimpleFormValidator {
 	}
 
 	private void updateWidgets () {
-		if (button != null) button.setDisabled(buttonDisable);
-		if (errorMsgLabel != null) errorMsgLabel.setText(errorMsgText);
+		for (Disableable disableable : disableTargets) {
+			disableable.setDisabled(formInvalid);
+		}
+
+		if (messageLabel != null) {
+			if (errorMsgText != null)
+				messageLabel.setText(errorMsgText);
+			else
+				messageLabel.setText(successMsg); //setText will default to "" if successMsg is null
+		}
 	}
 
 	public static class EmptyInputValidator extends FormInputValidator {
@@ -162,6 +210,18 @@ public class SimpleFormValidator {
 		@Override
 		public boolean validate (String input) {
 			return !input.isEmpty();
+		}
+	}
+
+	private static class CheckedButtonWrapper {
+		public Button button;
+		public boolean mustBeChecked;
+		public String errorMsg;
+
+		public CheckedButtonWrapper (Button button, boolean mustBeChecked, String errorMsg) {
+			this.button = button;
+			this.mustBeChecked = mustBeChecked;
+			this.errorMsg = errorMsg;
 		}
 	}
 

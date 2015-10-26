@@ -17,7 +17,10 @@
 package com.kotcrab.vis.ui.test.manual;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.util.TableUtils;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.form.SimpleFormValidator;
 import com.kotcrab.vis.ui.widget.*;
 
@@ -37,6 +40,7 @@ public class TestFormValidator extends VisWindow {
 		VisValidatableTextField firstNameField = new VisValidatableTextField();
 		VisValidatableTextField lastNameField = new VisValidatableTextField();
 		VisValidatableTextField age = new VisValidatableTextField();
+		VisCheckBox termsCheckbox = new VisCheckBox("accept terms");
 
 		VisLabel errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);
@@ -55,6 +59,8 @@ public class TestFormValidator extends VisWindow {
 		add(new VisLabel("age: "));
 		add(age).expand().fill();
 		row();
+		add(termsCheckbox);
+		row();
 		add(buttonTable).fill().expand().colspan(2).padBottom(3);
 
 		SimpleFormValidator validator; //for GWT compatibility
@@ -64,9 +70,24 @@ public class TestFormValidator extends VisWindow {
 		validator.notEmpty(age, "age cannot be empty");
 		validator.integerNumber(age, "age must be a number");
 		validator.valueGreaterThan(age, "you must be at least 18 years old", 18, true);
+		validator.checked(termsCheckbox, "you must accept terms");
+
+		acceptButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				DialogUtils.showOKDialog(getStage(), "message", "you made it!");
+			}
+		});
+
+		cancelButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				DialogUtils.showOKDialog(getStage(), "message", "you can't escape this!");
+			}
+		});
 
 		pack();
 		setSize(getWidth() + 60, getHeight());
-		setPosition(548, 110);
+		setPosition(548, 85);
 	}
 }

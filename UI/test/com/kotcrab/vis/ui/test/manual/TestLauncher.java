@@ -47,7 +47,7 @@ public class TestLauncher {
 }
 
 class TestApplication extends ApplicationAdapter {
-	private static final int TESTS_VERSION = 3;
+	private static final int TESTS_VERSION = 4;
 	private static final boolean USE_VIS_WIDGETS = true;
 
 	private Stage stage;
