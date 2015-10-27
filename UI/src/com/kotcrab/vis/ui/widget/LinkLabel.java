@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 /**
- * Simple LinkLabel allowing to create label with clickable link.
+ * Simple LinkLabel allows to create label with clickable link.
  * Link can have custom text. By default clicking link will open it in default browser, this can be changed by settings label listener.
  * @author Kotcrab
  * @since 0.7.2
