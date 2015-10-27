@@ -17,10 +17,10 @@
 package com.kotcrab.vis.ui.widget;
 
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
@@ -37,14 +37,18 @@ import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 /**
  * NumberSelector can be used to select number using buttons or by entering it into text fields. Supports
  * mimimum and maximum value, step size. Both integer and floats are supported. When using float you can specify
- * selector precision, see {@link #setPrecision(int)} Similar to JSpinner from Swing.
+ * selector precision, see {@link #setPrecision(int)}. Similar to JSpinner from Swing.
  * @author Javier, Kotcrab
  * @since 0.7.0
  */
 public class NumberSelector extends VisTable {
 	private Array<NumberSelectorListener> listeners = new Array<NumberSelectorListener>();
-	private InputValidator boundsValidator;
+
+	private InputValidator boundsValidator = new BoundsValidator();
 	private VisValidatableTextField valueText;
+	private Cell<VisLabel> labelCell;
+
+	private String formatPattern;
 
 	private ButtonRepeatTask buttonRepeatTask = new ButtonRepeatTask();
 	private float buttonRepeatInitialTime = 0.4f;
@@ -57,28 +61,66 @@ public class NumberSelector extends VisTable {
 	private float step;
 	private float current;
 	private int precision = 0;
-	private String formatPattern;
 
-	/** Creates number selector with step set to 1 */
+	/**
+	 * Creates integer number selector with step set to 1
+	 * @param name may be null
+	 */
 	public NumberSelector (String name, float initialValue, float min, float max) {
 		this(name, initialValue, min, max, 1);
 	}
 
+	/**
+	 * Creates integer number selector
+	 * @param name may be null
+	 */
 	public NumberSelector (String name, float initialValue, float min, float max, float step) {
 		this("default", name, initialValue, min, max, step);
 	}
 
-	public NumberSelector (String styleName, String name, float initialValue, float min, float max, float step) {
-		this(VisUI.getSkin().get(styleName, NumberSelectorStyle.class), VisUI.getSizes(), name, initialValue, min, max, step);
+	/**
+	 * Creates integer or float number selector depending on precision, see {@link #setPrecision(int)}
+	 * @param name may be null
+	 */
+	public NumberSelector (String name, float initialValue, float min, float max, float step, int precision) {
+		this(VisUI.getSkin().get("default", NumberSelectorStyle.class), VisUI.getSizes(), name, initialValue, min, max, step, precision);
 	}
 
-	public NumberSelector (NumberSelectorStyle style, final Sizes sizes, String name, float initialValue, float min, float max, float step) {
+	/**
+	 * Creates integer number selector
+	 * @param name may be null
+	 */
+	public NumberSelector (String styleName, String name, float initialValue, float min, float max, float step) {
+		this(VisUI.getSkin().get(styleName, NumberSelectorStyle.class), VisUI.getSizes(), name, initialValue, min, max, step, 0);
+	}
+
+	/**
+	 * Creates integer or float number selector depending on precision, see {@link #setPrecision(int)}
+	 * @param name may be null
+	 */
+	public NumberSelector (String styleName, String name, float initialValue, float min, float max, float step, int precision) {
+		this(VisUI.getSkin().get(styleName, NumberSelectorStyle.class), VisUI.getSizes(), name, initialValue, min, max, step, precision);
+	}
+
+	/**
+	 * Creates integer number selector
+	 * @param name may be null
+	 */
+	public NumberSelector (NumberSelectorStyle style, Sizes sizes, String name, float initialValue, float min, float max, float step) {
+		this(style, sizes, name, initialValue, min, max, step, 0);
+	}
+
+	/**
+	 * Creates integer or float number selector depending on precision, see {@link #setPrecision(int)}
+	 * @param name may be null
+	 */
+	public NumberSelector (NumberSelectorStyle style, final Sizes sizes, String name, float initialValue, float min, float max, float step, int precision) {
 		this.current = initialValue;
 		this.max = max;
 		this.min = min;
 		this.step = step;
 
-		valueText = new VisValidatableTextField(Validators.INTEGERS) {
+		valueText = new VisValidatableTextField() {
 			@Override
 			public float getPrefWidth () {
 				return sizes.numberSelectorFieldSize;
@@ -86,32 +128,28 @@ public class NumberSelector extends VisTable {
 		};
 
 		valueText.setProgrammaticChangeEvents(false);
-		valueText.setTextFieldFilter(new DigitsOnlyFilter());
+		setPrecision(precision);
 		valueText.setText(valueOf(current));
-		valueText.addValidator(boundsValidator = new InputValidator() {
-			@Override
-			public boolean validateInput (String input) {
-				return checkInputBounds(input);
-			}
-		});
 
 		VisTable buttonsTable = new VisTable();
-		VisImageButton up = new VisImageButton(style.up);
-		VisImageButton down = new VisImageButton(style.down);
+		VisImageButton upButton = new VisImageButton(style.up);
+		VisImageButton downButton = new VisImageButton(style.down);
 
-		buttonsTable.add(up).height(sizes.numberSelectorButtonSize).row();
-		buttonsTable.add(down).height(sizes.numberSelectorButtonSize);
+		buttonsTable.add(upButton).height(sizes.numberSelectorButtonSize).row();
+		buttonsTable.add(downButton).height(sizes.numberSelectorButtonSize);
 
-		int padding = 0;
-		if (name != null && name.length() != 0) {
-			add(name);
-			padding = 6;
-		}
+		labelCell = add(new VisLabel(""));
+		setSelectorName(name);
 
-		add(valueText).fillX().expandX().height(sizes.numberSelectorButtonSize * 2).padLeft(padding).padRight(1);
+		add(valueText).fillX().expandX().height(sizes.numberSelectorButtonSize * 2).padRight(1);
 		add(buttonsTable).width(sizes.numberSelectorButtonsWidth);
 
-		up.addListener(new ChangeListener() {
+		addButtonsListeners(upButton, downButton);
+		addTextFieldListeners();
+	}
+
+	private void addButtonsListeners (VisImageButton upButton, VisImageButton downButton) {
+		upButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				getStage().setScrollFocus(valueText);
@@ -119,7 +157,7 @@ public class NumberSelector extends VisTable {
 			}
 		});
 
-		down.addListener(new ChangeListener() {
+		downButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				getStage().setScrollFocus(valueText);
@@ -127,7 +165,7 @@ public class NumberSelector extends VisTable {
 			}
 		});
 
-		up.addListener(new InputListener() {
+		upButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				if (buttonRepeatTask.isScheduled() == false) {
@@ -145,7 +183,7 @@ public class NumberSelector extends VisTable {
 			}
 		});
 
-		down.addListener(new InputListener() {
+		downButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				if (buttonRepeatTask.isScheduled() == false) {
@@ -162,7 +200,9 @@ public class NumberSelector extends VisTable {
 				buttonRepeatTask.cancel();
 			}
 		});
+	}
 
+	private void addTextFieldListeners () {
 		valueText.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
@@ -241,6 +281,19 @@ public class NumberSelector extends VisTable {
 
 	public int getPrecision () {
 		return precision;
+	}
+
+	public void setSelectorName (String name) {
+		labelCell.getActor().setText(name);
+		if (name == null || name.length() == 0) {
+			labelCell.padRight(0);
+		} else {
+			labelCell.padRight(6);
+		}
+	}
+
+	public String getSelectorName () {
+		return super.getName();
 	}
 
 	private void textChanged () {
@@ -359,14 +412,13 @@ public class NumberSelector extends VisTable {
 	}
 
 	private String valueOf (float current) {
-		if (current == MathUtils.floor(current)) {
-			return String.valueOf((int) current);
-		} else {
+		if (precision >= 1) {
 			//dealing with float rounding errors
 			String text = String.format(formatPattern, current).replace(',', '.');
 			this.current = Float.valueOf(text);
 			return text;
-		}
+		} else
+			return String.valueOf((int) current);
 	}
 
 	public void addChangeListener (NumberSelectorListener listener) {
@@ -377,6 +429,10 @@ public class NumberSelector extends VisTable {
 
 	public boolean removeChangeListener (NumberSelectorListener listener) {
 		return listeners.removeValue(listener, true);
+	}
+
+	public interface NumberSelectorListener {
+		void changed (float number);
 	}
 
 	public static class NumberSelectorStyle {
@@ -390,10 +446,14 @@ public class NumberSelector extends VisTable {
 			this.up = up;
 			this.down = down;
 		}
+
 	}
 
-	public interface NumberSelectorListener {
-		void changed (float number);
+	private class BoundsValidator implements InputValidator {
+		@Override
+		public boolean validateInput (String input) {
+			return checkInputBounds(input);
+		}
 	}
 
 	private class ButtonRepeatTask extends Task {

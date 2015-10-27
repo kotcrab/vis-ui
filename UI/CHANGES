@@ -9,6 +9,9 @@
 -API Change: removed constructor LinkLabel (CharSequence text, String fontName, String colorName) because it was misleading
              with LinkLabel (CharSequence text, CharSequence url, String styleName)
 -API Addition: NumberSelector#setPrecision
+-API Addition: NumberSelector(String name, float initialValue, float min, float max, float step, int precision)
+-API Addition: NumberSelector(String styleName, String name, float initialValue, float min, float max, float step, int precision)
+-API Addition: NumberSelector(NumberSelectorStyle style, Sizes sizes, String name, float initialValue, float min, float max, float step, int precision)
 -API Addition: InputDialog#setText(String text), InputDialog#setText(String text, boolean selectAll)
 -API Addition: FileChooser#setSelectedFiles (FileHandle... files)
 -API Addition: FloatDigitsOnlyFilter
