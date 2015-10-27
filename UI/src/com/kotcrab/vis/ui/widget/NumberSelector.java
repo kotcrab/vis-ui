@@ -34,6 +34,8 @@ import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 
+import java.math.BigDecimal;
+
 /**
  * NumberSelector can be used to select number using buttons or by entering it into text fields. Supports
  * mimimum and maximum value, step size. Both integer and floats are supported. When using float you can specify
@@ -47,8 +49,6 @@ public class NumberSelector extends VisTable {
 	private InputValidator boundsValidator = new BoundsValidator();
 	private VisValidatableTextField valueText;
 	private Cell<VisLabel> labelCell;
-
-	private String formatPattern;
 
 	private ButtonRepeatTask buttonRepeatTask = new ButtonRepeatTask();
 	private float buttonRepeatInitialTime = 0.4f;
@@ -263,7 +263,6 @@ public class NumberSelector extends VisTable {
 		if (precision == 0) {
 			valueText.addValidator(Validators.INTEGERS);
 			valueText.setTextFieldFilter(new DigitsOnlyFilter());
-			formatPattern = null;
 		} else {
 			valueText.addValidator(Validators.FLOATS);
 			valueText.addValidator(new InputValidator() {
@@ -275,7 +274,6 @@ public class NumberSelector extends VisTable {
 				}
 			});
 			valueText.setTextFieldFilter(new FloatDigitsOnlyFilter(true));
-			formatPattern = "%." + String.valueOf(precision) + "f"; //eg. "%.1f"
 		}
 	}
 
@@ -414,9 +412,9 @@ public class NumberSelector extends VisTable {
 	private String valueOf (float current) {
 		if (precision >= 1) {
 			//dealing with float rounding errors
-			String text = String.format(formatPattern, current).replace(',', '.');
-			this.current = Float.valueOf(text);
-			return text;
+			BigDecimal bd = new BigDecimal(String.valueOf(current));
+			bd = bd.setScale(precision, BigDecimal.ROUND_HALF_UP);
+			return String.valueOf(bd.floatValue());
 		} else
 			return String.valueOf((int) current);
 	}
