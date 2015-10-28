@@ -156,6 +156,7 @@ package com.kotcrab.vis.ui.widget {
 		blue inherits .focus-border-dark-blue: { down: button-blue-down, up: button-blue, over: button-blue-over, disabled: button-blue }
 		toggle inherits default, .focus-border: { checked: button-down }
 		close: { down: button-red, up: button, over: button-over, imageUp: icon-close }
+		close-active-tab inherits blue: { down: button-red, imageUp: icon-close, focusBorder: NULL }
 		close-window inherits close: { up: button-window-bg }
 	}
 	
