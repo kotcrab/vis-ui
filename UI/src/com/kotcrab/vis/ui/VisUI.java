@@ -17,6 +17,7 @@
 package com.kotcrab.vis.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Version;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
@@ -32,6 +33,9 @@ import java.util.Locale;
 public class VisUI {
 	/** Current VisUI version, does not include SNAPSHOT even if this version is snapshot */
 	public static final String VERSION = "0.9.2";
+
+	private static final String TARGET_GDX_VERSION = "1.7.0";
+	private static boolean setSkipGdxVersionCheck = false;
 
 	private static int defaultTitleAlign = Align.left;
 
@@ -79,20 +83,29 @@ public class VisUI {
 
 	/** Loads default VisUI skin */
 	public static void load (SkinScale scale) {
-		if (skin != null) throw new GdxRuntimeException("VisUI cannot be loaded twice");
 		VisUI.scale = scale;
 		load(scale.getSkinFile());
 	}
 
 	/** Loads skin from provided file, skin must be compatible with default VisUI skin */
 	public static void load (FileHandle visSkinFile) {
-		if (skin != null) throw new GdxRuntimeException("VisUI cannot be loaded twice");
-		skin = new Skin(visSkinFile);
+		checkBeforeLoad();
+		VisUI.skin = new Skin(visSkinFile);
 	}
 
 	/** Sets provided skin as default for every VisUI widget, skin must be compatible with default VisUI skin */
 	public static void load (Skin skin) {
+		checkBeforeLoad();
 		VisUI.skin = skin;
+	}
+
+	private static void checkBeforeLoad () {
+		if (skin != null) throw new GdxRuntimeException("VisUI cannot be loaded twice");
+		if (setSkipGdxVersionCheck == false && Version.VERSION.equals(TARGET_GDX_VERSION) == false) {
+			Gdx.app.log("VisUI", "Warning, using invalid libGDX version for VisUI " + VERSION + ".\n" +
+					"You are using libGDX " + Version.VERSION + " but you need " + TARGET_GDX_VERSION + ". This may cause " +
+					"unexpected problems and runtime exceptions.");
+		}
 	}
 
 	/** Unloads skin */
@@ -202,5 +215,15 @@ public class VisUI {
 	 */
 	public static void setColorPickerBundle (I18NBundle colorPickerBundle) {
 		VisUI.colorPickerBundle = colorPickerBundle;
+	}
+
+	/**
+	 * @param setSkipGdxVersionCheck if true VisUI won't check if provided libGDX version is compatible for current version of VisUI.
+	 * If false, before loading VisUI, a libGDX version check will be performed, in case of version mismatch warning
+	 * will be printed to console
+	 * @see <a href="https://github.com/kotcrab/VisEditor/wiki/VisUI#libgdx-compatibility">Version compatiblity table (online)</a>
+	 */
+	public static void setSkipGdxVersionCheck (boolean setSkipGdxVersionCheck) {
+		VisUI.setSkipGdxVersionCheck = setSkipGdxVersionCheck;
 	}
 }
