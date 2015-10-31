@@ -23,6 +23,8 @@
 -CollapsibleWidget now supports creation without setting initial table
 -Added default style for standard scene2d.ui TextTooltip
 -Added VisTextField and TextArea "small" style with smaller font
+-LinkLabel now uses LinkLabelStyle
+-LinkLabel now has link underline on mouse over
 -FormInputValidator:
  -API Addition: SimpleFormValidator#setMessageLabel(), and #setSuccessMessage
  -API Addition: SimpleFormValidator#addDisableTarget(Disableable) and SimpleFormValidator#removeDisableTarget(Disableable)

@@ -213,6 +213,10 @@ package com.kotcrab.vis.ui.widget {
 	    default: { background: tooltip-bg }
 	}
 
+    #LinkLabel$LinkLabelStyle: {
+        default inherits .font-nodisabled: { fontColor: link-label, underline: white }
+    }
+
 	#tabbedpane.TabbedPane$TabbedPaneStyle: {
 		default: { background: menu-bg, bottomBar: list-selection,
 					buttonStyle inherits .font: { down: button-down, up: button, checked: button-down, over: button-over } }

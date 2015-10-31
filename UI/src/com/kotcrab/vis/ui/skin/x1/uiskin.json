@@ -142,6 +142,9 @@ com.kotcrab.vis.ui.widget.NumberSelector$NumberSelectorStyle: {
 com.kotcrab.vis.ui.widget.Tooltip$TooltipStyle: {
 	default: {background: tooltip-bg }
 },
+com.kotcrab.vis.ui.widget.LinkLabel$LinkLabelStyle: {
+	default: {fontColor: link-label, underline: white, font: default-font }
+},
 com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane$TabbedPaneStyle: {
 	default: {background: menu-bg, bottomBar: list-selection, buttonStyle: {down: button-down, up: button, checked: button-down, over: button-over, font: default-font, fontColor: white, disabledFontColor: grey} }
 },
