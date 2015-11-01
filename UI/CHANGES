@@ -1,5 +1,7 @@
 [0.9.2] [LibGDX 1.7.1] [Snapshot]
 -API Change: VisValidatableTextField#getValidator() removed, use getValidators() instead
+-API Change: Removed constructors FileChooser taking I18NBundle
+ -This way inconsistent with other widgets that did not support this, use VisUI class for setting global I18NBundles
 -API Change: NumberSelector now supports float values, methods taking and returning integers are now using floats
 -API Change: NumberSelectorListener#changed(int) is now NumberSelectorListener#changed(float)
 -API Change: VisProgressBar and VisSlider now extends standard scene2d.ui ProgressBar and Slider (should not affect existing code)

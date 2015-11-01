@@ -25,7 +25,6 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
@@ -98,7 +97,6 @@ public class FileChooser extends VisWindow {
 	// UI
 	private FileChooserStyle style;
 	private Sizes sizes;
-	private I18NBundle bundle;
 
 	private VisSplitPane mainSplitPane;
 
@@ -125,10 +123,9 @@ public class FileChooser extends VisWindow {
 	public FileChooser (FileHandle directory, Mode mode) {
 		super("");
 
-		this.bundle = VisUI.getFileChooserBundle();
 		this.mode = mode;
 
-		getTitleLabel().setText(getText(TITLE_CHOOSE_FILES));
+		getTitleLabel().setText(TITLE_CHOOSE_FILES.get());
 
 		style = VisUI.getSkin().get(FileChooserStyle.class);
 		sizes = VisUI.getSizes();
@@ -143,32 +140,8 @@ public class FileChooser extends VisWindow {
 	public FileChooser (String styleName, String title, Mode mode) {
 		super(title);
 		this.mode = mode;
-		this.bundle = VisUI.getFileChooserBundle();
 
 		style = VisUI.getSkin().get(styleName, FileChooserStyle.class);
-		sizes = VisUI.getSizes();
-
-		init(null);
-	}
-
-	public FileChooser (I18NBundle bundle, Mode mode) {
-		super("");
-		this.mode = mode;
-		this.bundle = bundle;
-		getTitleLabel().setText(getText(TITLE_CHOOSE_FILES));
-
-		style = VisUI.getSkin().get(FileChooserStyle.class);
-		sizes = VisUI.getSizes();
-
-		init(null);
-	}
-
-	public FileChooser (I18NBundle bundle, String title, Mode mode) {
-		super(title);
-		this.mode = mode;
-		this.bundle = bundle;
-
-		style = VisUI.getSkin().get(FileChooserStyle.class);
 		sizes = VisUI.getSizes();
 
 		init(null);
@@ -203,7 +176,7 @@ public class FileChooser extends VisWindow {
 		shortcutsFavoritesPanel = new ColumnGroup();
 		rebuildShortcutsFavoritesPanel();
 
-		fileMenu = new FilePopupMenu(style.popupMenuStyleName, this, bundle);
+		fileMenu = new FilePopupMenu(style.popupMenuStyleName, this);
 
 		rebuildShortcutsList();
 
@@ -218,19 +191,15 @@ public class FileChooser extends VisWindow {
 		createListeners();
 	}
 
-	private String getText (FileChooserText text) {
-		return bundle.get(text.getName());
-	}
-
 	private void createToolbar () {
 		VisTable toolbarTable = new VisTable(true);
 		toolbarTable.defaults().minWidth(30).right();
 		add(toolbarTable).fillX().expandX().pad(3).padRight(2);
 
-		backButton = new VisImageButton(style.iconArrowLeft, getText(BACK));
+		backButton = new VisImageButton(style.iconArrowLeft, BACK.get());
 		backButton.setGenerateDisabledImage(true);
 		backButton.setDisabled(true);
-		forwardButton = new VisImageButton(style.iconArrowRight, getText(FORWARD));
+		forwardButton = new VisImageButton(style.iconArrowRight, FORWARD.get());
 		forwardButton.setGenerateDisabledImage(true);
 		forwardButton.setDisabled(true);
 
@@ -244,7 +213,7 @@ public class FileChooser extends VisWindow {
 					if (file.exists())
 						setDirectory(file, HistoryPolicy.ADD);
 					else {
-						showDialog(getText(POPUP_DIRECTORY_DOES_NOT_EXIST));
+						showDialog(POPUP_DIRECTORY_DOES_NOT_EXIST.get());
 						currentPath.setText(currentDirectory.path());
 					}
 				}
@@ -252,8 +221,8 @@ public class FileChooser extends VisWindow {
 			}
 		});
 
-		VisImageButton folderParentButton = new VisImageButton(style.iconFolderParent, getText(PARENT_DIRECTORY));
-		VisImageButton folderNewButton = new VisImageButton(style.iconFolderNew, getText(NEW_DIRECTORY));
+		VisImageButton folderParentButton = new VisImageButton(style.iconFolderParent, PARENT_DIRECTORY.get());
+		VisImageButton folderNewButton = new VisImageButton(style.iconFolderNew, NEW_DIRECTORY.get());
 
 		toolbarTable.add(backButton);
 		toolbarTable.add(forwardButton);
@@ -377,7 +346,7 @@ public class FileChooser extends VisWindow {
 
 	private void createFileTextBox () {
 		VisTable table = new VisTable(true);
-		VisLabel nameLabel = new VisLabel(getText(FILE_NAME));
+		VisLabel nameLabel = new VisLabel(FILE_NAME.get());
 		selectedFileTextField = new VisTextField();
 
 		table.add(nameLabel);
@@ -397,8 +366,8 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void createBottomButtons () {
-		VisTextButton cancelButton = new VisTextButton(getText(CANCEL));
-		confirmButton = new VisTextButton(mode == Mode.OPEN ? getText(OPEN) : getText(SAVE));
+		VisTextButton cancelButton = new VisTextButton(CANCEL.get());
+		confirmButton = new VisTextButton(mode == Mode.OPEN ? OPEN.get() : SAVE.get());
 
 		VisTable buttonTable = new VisTable(true);
 		buttonTable.defaults().minWidth(70).right();
@@ -430,7 +399,7 @@ public class FileChooser extends VisWindow {
 		File userDesktop = new File(userHome + "/Desktop");
 
 		if (userDesktop.exists())
-			shortcutsMainPanel.addActor(new ShortcutItem(userDesktop, getText(DESKTOP), style.iconFolder));
+			shortcutsMainPanel.addActor(new ShortcutItem(userDesktop, DESKTOP.get(), style.iconFolder));
 		shortcutsMainPanel.addActor(new ShortcutItem(new File(userHome), userName, style.iconFolder));
 	}
 
@@ -465,7 +434,7 @@ public class FileChooser extends VisWindow {
 			if (selectionMode == SelectionMode.DIRECTORIES) {
 				FileHandle selected = selectedItems.get(0).file;
 				if (selected.isDirectory() == false) {
-					showDialog(getText(POPUP_ONLY_DIRECTORIES));
+					showDialog(POPUP_ONLY_DIRECTORIES.get());
 					return;
 				}
 			}
@@ -476,7 +445,7 @@ public class FileChooser extends VisWindow {
 			notifyListenerAndCloseDialog(files);
 		} else {
 			if (selectionMode == SelectionMode.FILES)
-				showDialog(getText(POPUP_CHOOSE_FILE));
+				showDialog(POPUP_CHOOSE_FILE.get());
 			else {
 				// this part is executed when nothing is selected but selection mode is `directories` or `files and directories`
 				// it is perfectly valid, nothing is selected so that means the current chooser directory have to be
@@ -500,7 +469,7 @@ public class FileChooser extends VisWindow {
 		if (mode == Mode.OPEN) {
 			for (FileHandle file : files) {
 				if (file.exists() == false) {
-					showDialog(getText(POPUP_SELECTED_FILE_DOES_NOT_EXIST));
+					showDialog(POPUP_SELECTED_FILE_DOES_NOT_EXIST.get());
 					return;
 				}
 			}
@@ -539,7 +508,7 @@ public class FileChooser extends VisWindow {
 			FileHandle file = currentDirectory.child(fileName);
 
 			if (FileUtils.isValidFileName(fileName) == false) {
-				showDialog(getText(POPUP_FILENAME_INVALID));
+				showDialog(POPUP_FILENAME_INVALID.get());
 				return null;
 			}
 
@@ -557,12 +526,12 @@ public class FileChooser extends VisWindow {
 	}
 
 	private void showDialog (String text) {
-		DialogUtils.showOKDialog(getStage(), getText(POPUP_TITLE), text);
+		DialogUtils.showOKDialog(getStage(), POPUP_TITLE.get(), text);
 	}
 
 	private void showOverwriteQuestion (final Array<FileHandle> filesList) {
-		String text = filesList.size == 1 ? getText(POPUP_FILE_EXIST_OVERWRITE) : getText(POPUP_MULTIPLE_FILE_EXIST_OVERWRITE);
-		DialogUtils.showOptionDialog(getStage(), getText(POPUP_TITLE), text, OptionDialogType.YES_NO, new OptionDialogAdapter() {
+		String text = filesList.size == 1 ? POPUP_FILE_EXIST_OVERWRITE.get() : POPUP_MULTIPLE_FILE_EXIST_OVERWRITE.get();
+		DialogUtils.showOptionDialog(getStage(), POPUP_TITLE.get(), text, OptionDialogType.YES_NO, new OptionDialogAdapter() {
 			@Override
 			public void yes () {
 				notifyListenerAndCloseDialog(filesList);
@@ -600,7 +569,7 @@ public class FileChooser extends VisWindow {
 				public void rootMode (File root, RootMode mode) {
 					String initialName = root.toString();
 
-					if (initialName.equals("/")) initialName = getText(FileChooserText.COMPUTER);
+					if (initialName.equals("/")) initialName = COMPUTER.get();
 
 					final ShortcutItem item = new ShortcutItem(root, initialName, style.iconDrive);
 
@@ -810,7 +779,7 @@ public class FileChooser extends VisWindow {
 			setDirectory(dir, HistoryPolicy.IGNORE);
 			return true;
 		} else {
-			DialogUtils.showErrorDialog(getStage(), getText(FileChooserText.DIRECTORY_NO_LONGER_EXISTS));
+			DialogUtils.showErrorDialog(getStage(), DIRECTORY_NO_LONGER_EXISTS.get());
 			return false;
 		}
 	}
@@ -831,7 +800,7 @@ public class FileChooser extends VisWindow {
 
 	public void setMode (Mode mode) {
 		this.mode = mode;
-		confirmButton.setText(mode == Mode.OPEN ? getText(OPEN) : getText(SAVE));
+		confirmButton.setText(mode == Mode.OPEN ? OPEN.get() : SAVE.get());
 		refresh();
 	}
 
@@ -884,13 +853,13 @@ public class FileChooser extends VisWindow {
 
 		switch (selectionMode) {
 			case FILES:
-				getTitleLabel().setText(getText(TITLE_CHOOSE_FILES));
+				getTitleLabel().setText(TITLE_CHOOSE_FILES.get());
 				break;
 			case DIRECTORIES:
-				getTitleLabel().setText(getText(TITLE_CHOOSE_DIRECTORIES));
+				getTitleLabel().setText(TITLE_CHOOSE_DIRECTORIES.get());
 				break;
 			case FILES_AND_DIRECTORIES:
-				getTitleLabel().setText(getText(TITLE_CHOOSE_FILES_AND_DIRECTORIES));
+				getTitleLabel().setText(TITLE_CHOOSE_FILES_AND_DIRECTORIES.get());
 				break;
 		}
 	}
@@ -1032,16 +1001,16 @@ public class FileChooser extends VisWindow {
 	}
 
 	void showNewDirectoryDialog () {
-		DialogUtils.showInputDialog(getStage(), getText(NEW_DIRECTORY_DIALOG_TITLE), getText(NEW_DIRECTORY_DIALOG_TEXT), true, new InputDialogAdapter() {
+		DialogUtils.showInputDialog(getStage(), NEW_DIRECTORY_DIALOG_TITLE.get(), NEW_DIRECTORY_DIALOG_TEXT.get(), true, new InputDialogAdapter() {
 			@Override
 			public void finished (String input) {
 				if (FileUtils.isValidFileName(input) == false) {
-					DialogUtils.showErrorDialog(getStage(), getText(NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS));
+					DialogUtils.showErrorDialog(getStage(), NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS.get());
 				}
 
 				for (FileHandle file : currentDirectory.list()) {
 					if (file.name().equals(input)) {
-						DialogUtils.showErrorDialog(getStage(), getText(NEW_DIRECTORY_DIALOG_ALREADY_EXISTS));
+						DialogUtils.showErrorDialog(getStage(), NEW_DIRECTORY_DIALOG_ALREADY_EXISTS.get());
 						return;
 					}
 				}
@@ -1358,7 +1327,7 @@ public class FileChooser extends VisWindow {
 					if (getTapCount() == 1) {
 						File file = ShortcutItem.this.file;
 						if (file.exists() == false) {
-							showDialog(getText(POPUP_DIRECTORY_DOES_NOT_EXIST));
+							showDialog(POPUP_DIRECTORY_DOES_NOT_EXIST.get());
 							refresh();
 							return;
 						}

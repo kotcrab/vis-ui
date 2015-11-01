@@ -148,7 +148,7 @@ public class TabbedPane {
 		}
 
 		if (tab.isDirty() && mainTable.getStage() != null) {
-			DialogUtils.showOptionDialog(mainTable.getStage(), get(Text.UNSAVED_DIALOG_TITLE), get(Text.UNSAVED_DIALOG_TEXT),
+			DialogUtils.showOptionDialog(mainTable.getStage(), Text.UNSAVED_DIALOG_TITLE.get(), Text.UNSAVED_DIALOG_TEXT.get(),
 					OptionDialogType.YES_NO_CANCEL, new OptionDialogAdapter() {
 						@Override
 						public void yes () {
@@ -290,10 +290,6 @@ public class TabbedPane {
 
 	public Array<Tab> getTabs () {
 		return tabs;
-	}
-
-	private String get (Text text) {
-		return VisUI.getTabbedPaneBundle().get(text.getName());
 	}
 
 	public static class TabbedPaneStyle {
@@ -458,7 +454,7 @@ public class TabbedPane {
 
 		@Override
 		public String get () {
-			throw new UnsupportedOperationException();
+			return VisUI.getTabbedPaneBundle().get(getName());
 		}
 
 		@Override
