@@ -1,5 +1,6 @@
 [0.2.6] [Snapshot]
 -Fixed issue with unmodifiable entity properties on Entity with TextComponent or PhysicsPropertiesComponent
+-Fixed crash when trying to add PhysicsPropertiesComponent to SpriterComponent
 
 [0.2.5]
 -Added PointComponent - can be placed on scene, for example for spawn points
