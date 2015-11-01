@@ -110,7 +110,7 @@ public class LinkLabel extends VisLabel {
 			color.a *= parentAlpha;
 			if (style.fontColor != null) color.mul(style.fontColor);
 			batch.setColor(color);
-			underline.draw(batch, getX(), getY(), underline.getMinHeight(), 1);
+			underline.draw(batch, getX(), getY(), getWidth(), 1);
 		}
 	}
 
