@@ -45,6 +45,7 @@ public class VisCheckBox extends TextButton implements Focusable, BorderOwner {
 	private VisCheckBoxStyle style;
 
 	private boolean drawBorder;
+	private boolean stateInvalid;
 	private boolean focusBorderEnabled = true;
 
 	public VisCheckBox (String text) {
@@ -102,7 +103,9 @@ public class VisCheckBox extends TextButton implements Focusable, BorderOwner {
 		image.setDrawable(checkbox);
 		super.draw(batch, parentAlpha);
 
-		if (focusBorderEnabled && drawBorder && style.focusBorder != null)
+		if (stateInvalid && style.errorBorder != null)
+			style.errorBorder.draw(batch, getX(), getY() + image.getY(), image.getWidth(), image.getHeight());
+		else if (focusBorderEnabled && drawBorder && style.focusBorder != null)
 			style.focusBorder.draw(batch, getX(), getY() + image.getY(), image.getWidth(), image.getHeight());
 	}
 
@@ -112,6 +115,15 @@ public class VisCheckBox extends TextButton implements Focusable, BorderOwner {
 
 	public Cell getImageCell () {
 		return imageCell;
+	}
+
+	/** @param stateInvalid if true error border around this checkbox will be drawn. Does not affect any other properties */
+	public void setStateInvalid (boolean stateInvalid) {
+		this.stateInvalid = stateInvalid;
+	}
+
+	public boolean setStateInvalid () {
+		return stateInvalid;
 	}
 
 	@Override
@@ -163,6 +175,7 @@ public class VisCheckBox extends TextButton implements Focusable, BorderOwner {
 
 	static public class VisCheckBoxStyle extends CheckBoxStyle {
 		public Drawable focusBorder;
+		public Drawable errorBorder;
 		public Drawable checkboxOnOver;
 		public Drawable checkboxOnDown;
 		public Drawable checkboxOffDown;
@@ -178,6 +191,7 @@ public class VisCheckBox extends TextButton implements Focusable, BorderOwner {
 		public VisCheckBoxStyle (VisCheckBoxStyle style) {
 			super(style);
 			this.focusBorder = style.focusBorder;
+			this.errorBorder = style.errorBorder;
 			this.checkboxOnOver = style.checkboxOnOver;
 			this.checkboxOnDown = style.checkboxOnDown;
 			this.checkboxOffDown = style.checkboxOffDown;

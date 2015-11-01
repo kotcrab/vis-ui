@@ -29,6 +29,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
+import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
@@ -165,6 +166,14 @@ public class SimpleFormValidator {
 
 		for (CheckedButtonWrapper wrapper : buttons) {
 			if (wrapper.button.isChecked() != wrapper.mustBeChecked) {
+				wrapper.setButtonStateInvalid(true);
+			} else {
+				wrapper.setButtonStateInvalid(false);
+			}
+		}
+
+		for (CheckedButtonWrapper wrapper : buttons) {
+			if (wrapper.button.isChecked() != wrapper.mustBeChecked) {
 				errorMsgText = wrapper.errorMsg;
 				formInvalid = true;
 				break;
@@ -241,6 +250,12 @@ public class SimpleFormValidator {
 			this.button = button;
 			this.mustBeChecked = mustBeChecked;
 			this.errorMsg = errorMsg;
+		}
+
+		public void setButtonStateInvalid (boolean state) {
+			if (button instanceof VisCheckBox) {
+				((VisCheckBox) button).setStateInvalid(state);
+			}
 		}
 	}
 

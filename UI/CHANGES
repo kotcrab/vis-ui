@@ -1,4 +1,4 @@
-[0.9.2] [LibGDX 1.7.0] [Snapshot]
+[0.9.2] [LibGDX 1.7.1] [Snapshot]
 -API Change: VisValidatableTextField#getValidator() removed, use getValidators() instead
 -API Change: NumberSelector now supports float values, methods taking and returning integers are now using floats
 -API Change: NumberSelectorListener#changed(int) is now NumberSelectorListener#changed(float)
@@ -20,6 +20,8 @@
 -API Addition: constructor VisValidatableTextField (String text, VisTextFieldStyle style)
 -API Addition: CollapsibleWidget#setTable()
 -API Addition: VisWindow#setCenterOnAdd(boolean)
+API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvalid()
+ -VisCheckBox and VisRadioButton can now be marked as invalid (error border will be drawn around them)
 -CollapsibleWidget now supports creation without setting initial table
 -Added default style for standard scene2d.ui TextTooltip
 -Added VisTextField and TextArea "small" style with smaller font

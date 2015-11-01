@@ -108,8 +108,8 @@ com.kotcrab.vis.ui.widget.VisImageTextButton$VisImageTextButtonStyle: {
 	menu-bar: {over: button-down, font: default-font, fontColor: white, disabledFontColor: grey, down: button-down, up: button, disabled: button }
 },
 com.kotcrab.vis.ui.widget.VisCheckBox$VisCheckBoxStyle: {
-	default: {checkboxOver: check-over-off, checkboxOnOver: check-over-on, checkboxOffDown: check-down, checkboxOnDown: check-down-on, checkboxOffDisabled: check-off, checkboxOnDisabled: check-on-disabled, focusBorder: border, checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white, disabledFontColor: grey },
-	radio: {checkboxOver: radio-over-off, checkboxOnOver: radio-over-on, checkboxOffDown: radio-down, checkboxOnDown: radio-down-on, checkboxOffDisabled: radio-off, checkboxOnDisabled: radio-on-disabled, focusBorder: border-circle, checkboxOn: radio-on, checkboxOff: radio-off, font: default-font, fontColor: white, disabledFontColor: grey }
+	default: {checkboxOver: check-over-off, checkboxOnOver: check-over-on, checkboxOffDown: check-down, checkboxOnDown: check-down-on, checkboxOffDisabled: check-off, checkboxOnDisabled: check-on-disabled, errorBorder: border-error, focusBorder: border, checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white, disabledFontColor: grey },
+	radio: {checkboxOver: radio-over-off, checkboxOnOver: radio-over-on, checkboxOffDown: radio-down, checkboxOnDown: radio-down-on, checkboxOffDisabled: radio-off, checkboxOnDisabled: radio-on-disabled, errorBorder: border-circle-error, focusBorder: border-circle, checkboxOn: radio-on, checkboxOff: radio-off, font: default-font, fontColor: white, disabledFontColor: grey }
 },
 com.kotcrab.vis.ui.widget.PopupMenu$PopupMenuStyle: {
 	noborder: {background: button },
