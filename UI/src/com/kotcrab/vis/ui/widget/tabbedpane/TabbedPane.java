@@ -248,9 +248,8 @@ public class TabbedPane {
 
 			if (tabs.size == 1 && lastSelectedTab != null) {
 				buttonTable.select();
-			}
-
-			if (tab == lastSelectedTab) {
+				notifyListenersSwitched(tab);
+			} else if (tab == lastSelectedTab) {
 				buttonTable.select(); // maintains current previous tab while rebuilding
 			}
 		}
