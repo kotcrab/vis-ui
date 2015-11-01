@@ -234,3 +234,8 @@ package com.kotcrab.vis.ui.widget {
                     cross: color-picker-cross, verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }
 	}
 }
+
+#com.kotcrab.vis.ui.util.form.SimpleFormValidator$FormValidatorStyle: {
+    default: { errorLabelColor: vis-red, validLabelColor: white }
+    smooth inherits default: { colorTransition: true, colorTransitionDuration: 0.3 }
+}

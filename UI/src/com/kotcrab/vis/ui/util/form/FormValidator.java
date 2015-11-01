@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
@@ -33,6 +34,14 @@ import java.io.File;
 public class FormValidator extends SimpleFormValidator {
 	public FormValidator (Button buttonToDisable, Label errorMsgLabel) {
 		super(buttonToDisable, errorMsgLabel);
+	}
+
+	public FormValidator (Disableable targetToDisable, Label messageLabel, String styleName) {
+		super(targetToDisable, messageLabel, styleName);
+	}
+
+	public FormValidator (Disableable targetToDisable, Label messageLabel, FormValidatorStyle style) {
+		super(targetToDisable, messageLabel, style);
 	}
 
 	public FormInputValidator fileExists (VisValidatableTextField field, String errorMsg) {

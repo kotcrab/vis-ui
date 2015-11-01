@@ -25,9 +25,13 @@
 -Added VisTextField and TextArea "small" style with smaller font
 -LinkLabel now uses LinkLabelStyle
 -LinkLabel now has link underline on mouse over
--FormInputValidator:
+-SimpleFormInputValidator (note that following also applies to FromInputValidator):
+ -API Addition: constructor SimpleFormValidator (Disableable targetToDisable, Label messageLabel, String styleName)
+ -API Addition: constructor SimpleFormValidator (Disableable targetToDisable, Label messageLabel, FormValidatorStyle style)
  -API Addition: SimpleFormValidator#setMessageLabel(), and #setSuccessMessage
  -API Addition: SimpleFormValidator#addDisableTarget(Disableable) and SimpleFormValidator#removeDisableTarget(Disableable)
+ -Now using FormValidatorStyle: allows to set color for message label when form is valid or invalid
+  -Two built-in styles: 'default' and 'smooth' with smooth transition between colors
  -Any object implementing Disableable interface may be passed to FormInputValidator as target to disable if form is invalid
  -Multiple Disableable targets are supported
  -Added CheckBox support (checking if checkbox is checked/unchecked)

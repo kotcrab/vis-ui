@@ -16,13 +16,16 @@
 
 package com.kotcrab.vis.ui.util.form;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.InputValidator;
+import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
@@ -36,6 +39,8 @@ import com.kotcrab.vis.ui.widget.VisValidatableTextField;
  * @author Kotcrab
  */
 public class SimpleFormValidator {
+	private FormValidatorStyle style;
+
 	private ChangeSharedListener changeListener = new ChangeSharedListener();
 	private Array<VisValidatableTextField> fields = new Array<VisValidatableTextField>();
 	private Array<CheckedButtonWrapper> buttons = new Array<CheckedButtonWrapper>();
@@ -49,6 +54,15 @@ public class SimpleFormValidator {
 	private Label messageLabel;
 
 	public SimpleFormValidator (Disableable targetToDisable, Label messageLabel) {
+		this(targetToDisable, messageLabel, "default");
+	}
+
+	public SimpleFormValidator (Disableable targetToDisable, Label messageLabel, String styleName) {
+		this(targetToDisable, messageLabel, VisUI.getSkin().get(styleName, FormValidatorStyle.class));
+	}
+
+	public SimpleFormValidator (Disableable targetToDisable, Label messageLabel, FormValidatorStyle style) {
+		this.style = style;
 		if (targetToDisable != null) disableTargets.add(targetToDisable);
 		this.messageLabel = messageLabel;
 	}
@@ -195,21 +209,26 @@ public class SimpleFormValidator {
 		}
 
 		if (messageLabel != null) {
-			if (errorMsgText != null)
+
+			if (errorMsgText != null) {
 				messageLabel.setText(errorMsgText);
-			else
+			} else {
 				messageLabel.setText(successMsg); //setText will default to "" if successMsg is null
+			}
+
+			Color targetColor = errorMsgText != null ? style.errorLabelColor : style.validLabelColor;
+			if (targetColor != null && style.colorTransition) {
+				messageLabel.addAction(Actions.color(targetColor, style.colorTransitionDuration));
+			} else {
+				messageLabel.setColor(targetColor);
+			}
 		}
 	}
 
-	public static class EmptyInputValidator extends FormInputValidator {
-		public EmptyInputValidator (String errorMsg) {
-			super(errorMsg);
-		}
-
+	private class ChangeSharedListener extends ChangeListener {
 		@Override
-		public boolean validate (String input) {
-			return !input.isEmpty();
+		public void changed (ChangeEvent event, Actor actor) {
+			checkAll();
 		}
 	}
 
@@ -225,10 +244,24 @@ public class SimpleFormValidator {
 		}
 	}
 
-	private class ChangeSharedListener extends ChangeListener {
-		@Override
-		public void changed (ChangeEvent event, Actor actor) {
-			checkAll();
+	public static class EmptyInputValidator extends FormInputValidator {
+		public EmptyInputValidator (String errorMsg) {
+			super(errorMsg);
 		}
+
+		@Override
+		public boolean validate (String input) {
+			return !input.isEmpty();
+		}
+	}
+
+	public static class FormValidatorStyle {
+		/** Optional */
+		public Color errorLabelColor;
+		/** Optional */
+		public Color validLabelColor;
+
+		public boolean colorTransition;
+		public float colorTransitionDuration;
 	}
 }

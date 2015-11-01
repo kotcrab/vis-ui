@@ -64,7 +64,8 @@ public class TestFormValidator extends VisWindow {
 		add(buttonTable).fill().expand().colspan(2).padBottom(3);
 
 		SimpleFormValidator validator; //for GWT compatibility
-		validator = new SimpleFormValidator(acceptButton, errorLabel);
+		validator = new SimpleFormValidator(acceptButton, errorLabel, "smooth");
+		validator.setSuccessMessage("all good!");
 		validator.notEmpty(firstNameField, "first name cannot be empty");
 		validator.notEmpty(lastNameField, "last name cannot be empty");
 		validator.notEmpty(age, "age cannot be empty");
