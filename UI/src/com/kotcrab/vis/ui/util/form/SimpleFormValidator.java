@@ -263,5 +263,20 @@ public class SimpleFormValidator {
 
 		public boolean colorTransition;
 		public float colorTransitionDuration;
+
+		public FormValidatorStyle () {
+		}
+
+		public FormValidatorStyle (Color errorLabelColor, Color validLabelColor) {
+			this.errorLabelColor = errorLabelColor;
+			this.validLabelColor = validLabelColor;
+		}
+
+		public FormValidatorStyle (FormValidatorStyle other) {
+			this.errorLabelColor = other.errorLabelColor;
+			this.validLabelColor = other.validLabelColor;
+			this.colorTransition = other.colorTransition;
+			this.colorTransitionDuration = other.colorTransitionDuration;
+		}
 	}
 }
