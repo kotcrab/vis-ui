@@ -25,7 +25,7 @@
 -Added VisTextField and TextArea "small" style with smaller font
 -LinkLabel now uses LinkLabelStyle
 -LinkLabel now has link underline on mouse over
--SimpleFormInputValidator (note that following also applies to FromInputValidator):
+-SimpleFormValidator (note that following also applies to FormValidator):
  -API Addition: constructor SimpleFormValidator (Disableable targetToDisable, Label messageLabel, String styleName)
  -API Addition: constructor SimpleFormValidator (Disableable targetToDisable, Label messageLabel, FormValidatorStyle style)
  -API Addition: SimpleFormValidator#setMessageLabel(), and #setSuccessMessage
