@@ -281,11 +281,11 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="2.8284271"
-     inkscape:cx="806.50112"
-     inkscape:cy="395.01519"
+     inkscape:zoom="7.9999999"
+     inkscape:cx="488.3579"
+     inkscape:cy="145.29316"
      inkscape:document-units="px"
-     inkscape:current-layer="layer2"
+     inkscape:current-layer="layer3"
      showgrid="true"
      inkscape:window-width="1920"
      inkscape:window-height="1018"
@@ -409,7 +409,7 @@
     <rect
        style="display:inline;opacity:1;fill:#800000;fill-opacity:1;stroke:none"
        id="rect5044-8-3"
-       width="119.31614"
+       width="159.0909"
        height="70.190002"
        x="420.84192"
        y="759.76715" />
@@ -3716,14 +3716,22 @@
        inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x1\icon-file-text.png"
        inkscape:export-xdpi="45.000999"
        inkscape:export-ydpi="45.000999" />
+    <path
+       style="display:inline;opacity:1;fill:#dc000c;fill-opacity:1;stroke:none"
+       d="m 551.50471,729.81672 a 7,7 0 0 0 -7,7 7,7 0 0 0 7,7 7,7 0 0 0 7,-7 7,7 0 0 0 -7,-7 z m 0,1.25 a 5.75,5.75 0 0 1 5.75,5.75 5.75,5.75 0 0 1 -5.75,5.75 5.75,5.75 0 0 1 -5.75,-5.75 5.75,5.75 0 0 1 5.75,-5.75 z"
+       id="border-circle-error"
+       inkscape:connector-curvature="0"
+       inkscape:label="#path7592"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x1\border-circle-error.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer4"
      inkscape:label="vector x2"
      style="display:inline"
-     transform="translate(0,468.09449)"
-     sodipodi:insensitive="true">
+     transform="translate(0,468.09449)">
     <rect
        style="display:inline;opacity:1;fill:#3e3e42;fill-opacity:1;stroke:none"
        id="check-over-off-2x"
@@ -6062,5 +6070,15 @@
          d="m 173,894.36212 1,0 3,3.00002 3,-3 1,-2e-5 0,0.90002 -3,3.1 3,3 0,0.99998 -1,2e-5 -3,-3 -3,2.99998 -1,0 0,-0.99998 3,-3 -3,-3 z"
          style="opacity:1;fill:#ffffff;fill-opacity:1;stroke:none;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;filter:url(#filter4888-3)" />
     </g>
+    <path
+       transform="translate(-10,-666.36215)"
+       style="display:inline;opacity:1;fill:#dc000c;fill-opacity:1;stroke:none"
+       d="m 551.25001,798.86215 a 14,14 0 0 0 -14,14 14,14 0 0 0 14,14 14,14 0 0 0 14,-14 14,14 0 0 0 -14,-14 z m 0,2.5 a 11.5,11.5 0 0 1 11.5,11.5 11.5,11.5 0 0 1 -11.5,11.5 11.5,11.5 0 0 1 -11.5,-11.5 11.5,11.5 0 0 1 11.5,-11.5 z"
+       id="border-circle-error-2x"
+       inkscape:connector-curvature="0"
+       inkscape:label="#path7592"
+       inkscape:export-filename="E:\Git\VisSceneEditor\UI\assets-raw\x2\border-circle-error.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90" />
   </g>
 </svg>
