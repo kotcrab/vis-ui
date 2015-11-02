@@ -18,5 +18,6 @@
     <forceLinkClasses>
         <pattern>com.kotcrab.vis.ui.Sizes</pattern>
         <pattern>com.kotcrab.vis.ui.widget.**</pattern>
+        <pattern>com.kotcrab.vis.ui.util.form.**</pattern>
     </forceLinkClasses>
 </config>
