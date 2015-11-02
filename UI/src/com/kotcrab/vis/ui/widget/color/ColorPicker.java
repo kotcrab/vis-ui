@@ -459,7 +459,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 	/**
 	 * Controls whether to fade out color picker after users finished color picking and has pressed OK button. If
 	 * this is set to false picker won't close after pressing OK button. Default is true.
-	 * Note that  by default picker is a modal window so might also want to call {@code colorPicker.setModal(false)} to
+	 * Note that by default picker is a modal window so might also want to call {@code colorPicker.setModal(false)} to
 	 * disable it.
 	 */
 	public void setCloseAfterPickingFinished (boolean closeAfterPickingFinished) {
