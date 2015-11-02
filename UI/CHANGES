@@ -24,6 +24,7 @@
 -API Addition: CollapsibleWidget#setTable()
 -API Addition: VisWindow#setCenterOnAdd(boolean)
 -API Addition: ColorPicker#setAllowAlphaEdit (boolean allowAlphaEdit)
+-API Addition: ColorPicker#isDisposed()
 API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvalid()
  -VisCheckBox and VisRadioButton can now be marked as invalid (error border will be drawn around them)
 -CollapsibleWidget now supports creation without setting initial table

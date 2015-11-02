@@ -91,6 +91,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 	private boolean allowAlphaEdit = true;
 	private boolean closeAfterPickingFinished = true;
+	private boolean disposed = false;
 
 	public ColorPicker () {
 		this((String) null);
@@ -486,8 +487,14 @@ public class ColorPicker extends VisWindow implements Disposable {
 		return allowAlphaEdit;
 	}
 
+	public boolean isDisposed () {
+		return disposed;
+	}
+
 	@Override
 	public void dispose () {
+		if (disposed) throw new IllegalStateException("ColorPicker can't be disposed twice!");
+
 		paletteTexture.dispose();
 		barTexture.dispose();
 
@@ -503,6 +510,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 		bBar.dispose();
 
 		aBar.dispose();
+
+		disposed = true;
 	}
 
 	private void updateFieldsFromColor () {
