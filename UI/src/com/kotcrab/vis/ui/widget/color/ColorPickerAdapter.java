@@ -24,7 +24,7 @@ import com.badlogic.gdx.graphics.Color;
  */
 public class ColorPickerAdapter implements ColorPickerListener {
 	@Override
-	public void canceled () {
+	public void canceled (Color oldColor) {
 
 	}
 

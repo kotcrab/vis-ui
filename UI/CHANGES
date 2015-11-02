@@ -6,6 +6,7 @@
 -API Change: NumberSelectorListener#changed(int) is now NumberSelectorListener#changed(float)
 -API Change: VisProgressBar and VisSlider now extends standard scene2d.ui ProgressBar and Slider (should not affect existing code)
  -VisSliderStyle was removed, use SliderStyle which is fully compatible with VisSliderStyle
+-API Change: changed ColorPickerListener#canceled () to ColorPickerListener#canceled (Color oldColor)
 -API Change: added ColorPickerListener#changed (Color newColor)
  -If you are using ColorPickerAdapter this does not affect you
 -API Change: removed constructor LinkLabel (CharSequence text, String fontName, String colorName) because it was misleading
@@ -22,6 +23,7 @@
 -API Addition: constructor VisValidatableTextField (String text, VisTextFieldStyle style)
 -API Addition: CollapsibleWidget#setTable()
 -API Addition: VisWindow#setCenterOnAdd(boolean)
+-API Addition: ColorPicker#setAllowAlphaEdit (boolean allowAlphaEdit)
 API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvalid()
  -VisCheckBox and VisRadioButton can now be marked as invalid (error border will be drawn around them)
 -CollapsibleWidget now supports creation without setting initial table
