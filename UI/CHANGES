@@ -1,4 +1,6 @@
-[0.9.2] [LibGDX 1.7.1] [Snapshot]
+[0.9.3] [LibGDX 1.7.1] [Snapshot]
+
+[0.9.2] [LibGDX 1.7.1]
 -API Change: VisValidatableTextField#getValidator() removed, use getValidators() instead
 -API Change: Removed constructors FileChooser taking I18NBundle
  -This way inconsistent with other widgets that did not support this, use VisUI class for setting global I18NBundles
