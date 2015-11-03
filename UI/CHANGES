@@ -50,6 +50,7 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -Fixed font kerning for character pairs: Ma, Me, Mi
 -Fixed TabbedPane listener called multiple times when user was switching current tab
 -Fixed TabbedPane close tab buttons styles
+-Fixed 'directory' validator in FormValidator
 -Added libGDX version check before loading VisUI, in case of version mismatch warning will be printed to console
  -Can be suppressed by VisUI.setSkipGdxVersionCheck(true);
 

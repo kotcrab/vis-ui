@@ -68,6 +68,7 @@ public class SimpleFormValidator {
 		this.messageLabel = messageLabel;
 	}
 
+	/** Validates if file is not empty */
 	public FormInputValidator notEmpty (VisValidatableTextField field, String errorMsg) {
 		EmptyInputValidator validator = new EmptyInputValidator(errorMsg);
 		field.addValidator(validator);
@@ -75,6 +76,7 @@ public class SimpleFormValidator {
 		return validator;
 	}
 
+	/** Validates if entered text is integer number */
 	public FormInputValidator integerNumber (VisValidatableTextField field, String errorMsg) {
 		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, Validators.INTEGERS);
 		field.addValidator(wrapper);
@@ -82,6 +84,7 @@ public class SimpleFormValidator {
 		return wrapper;
 	}
 
+	/** Validates if entered text is float number */
 	public FormInputValidator floatNumber (VisValidatableTextField field, String errorMsg) {
 		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, Validators.FLOATS);
 		field.addValidator(wrapper);
@@ -89,14 +92,26 @@ public class SimpleFormValidator {
 		return wrapper;
 	}
 
+	/**
+	 * Validates if entered text is greater than entered number <p>
+	 * Can be used in combination with {@link #integerNumber(VisValidatableTextField, String)} to only allows integers.
+	 */
 	public FormInputValidator valueGreaterThan (VisValidatableTextField field, String errorMsg, float value) {
 		return valueGreaterThan(field, errorMsg, value, false);
 	}
 
+	/**
+	 * Validates if entered text is lesser than entered number <p>
+	 * Can be used in combination with {@link #integerNumber(VisValidatableTextField, String)} to only allows integers.
+	 */
 	public FormInputValidator valueLesserThan (VisValidatableTextField field, String errorMsg, float value) {
 		return valueLesserThan(field, errorMsg, value, false);
 	}
 
+	/**
+	 * Validates if entered text is greater than (or equal) entered number <p>
+	 * Can be used in combination with {@link #integerNumber(VisValidatableTextField, String)} to only allows integers.
+	 */
 	public FormInputValidator valueGreaterThan (VisValidatableTextField field, String errorMsg, float value, boolean validIfEqualsValue) {
 		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, new GreaterThanValidator(value, validIfEqualsValue));
 		field.addValidator(wrapper);
@@ -104,6 +119,10 @@ public class SimpleFormValidator {
 		return wrapper;
 	}
 
+	/**
+	 * Validates if entered text is lesser (or equal) than entered number <p>
+	 * Can be used in combination with {@link #integerNumber(VisValidatableTextField, String)} to only allows integers.
+	 */
 	public FormInputValidator valueLesserThan (VisValidatableTextField field, String errorMsg, float value, boolean validIfEqualsValue) {
 		ValidatorWrapper wrapper = new ValidatorWrapper(errorMsg, new LesserThanValidator(value, validIfEqualsValue));
 		field.addValidator(wrapper);
@@ -111,10 +130,25 @@ public class SimpleFormValidator {
 		return wrapper;
 	}
 
+	/** Allows to add custom validator to field */
 	public FormInputValidator custom (VisValidatableTextField field, FormInputValidator customValidator) {
 		field.addValidator(customValidator);
 		add(field);
 		return customValidator;
+	}
+
+	/** Validates if given button (usually checkbox) is checked. Use VisCheckBox to additionally support error border around it. */
+	public void checked (Button button, String errorMsg) {
+		buttons.add(new CheckedButtonWrapper(button, true, errorMsg));
+		button.addListener(changeListener);
+		checkAll();
+	}
+
+	/** Validates if given button (usually checkbox) is unchecked. Use VisCheckBox to additionally support error border around it. */
+	public void unchecked (Button button, String errorMsg) {
+		buttons.add(new CheckedButtonWrapper(button, false, errorMsg));
+		button.addListener(changeListener);
+		checkAll();
 	}
 
 	/**
@@ -124,18 +158,6 @@ public class SimpleFormValidator {
 	public void add (VisValidatableTextField field) {
 		if (fields.contains(field, true) == false) fields.add(field);
 		field.addListener(changeListener); //addListener won't allow to add same listener twice
-		checkAll();
-	}
-
-	public void checked (Button button, String errorMsg) {
-		buttons.add(new CheckedButtonWrapper(button, true, errorMsg));
-		button.addListener(changeListener);
-		checkAll();
-	}
-
-	public void unchecked (Button button, String errorMsg) {
-		buttons.add(new CheckedButtonWrapper(button, false, errorMsg));
-		button.addListener(changeListener);
 		checkAll();
 	}
 
