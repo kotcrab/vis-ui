@@ -302,8 +302,8 @@ public class FormValidator extends SimpleFormValidator {
 			this.relativeTo = relativeTo;
 		}
 
-		public void setMustNotExists (boolean notExists) {
-			this.mustNotExist = notExists;
+		public void setMustNotExist (boolean notExist) {
+			this.mustNotExist = notExist;
 		}
 
 		public void setErrorIfRelativeEmpty (boolean errorIfRelativeEmpty) {
