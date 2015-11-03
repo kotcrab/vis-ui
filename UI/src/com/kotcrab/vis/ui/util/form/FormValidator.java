@@ -226,43 +226,43 @@ public class FormValidator extends SimpleFormValidator {
 		VisTextField relativeTo;
 		File relativeToFile;
 
-		boolean existNot;
+		boolean mustNotExist;
 		boolean errorIfRelativeEmpty;
 
 		public FileExistsValidator (String errorMsg) {
 			this(errorMsg, false);
 		}
 
-		public FileExistsValidator (String errorMsg, boolean existNot) {
+		public FileExistsValidator (String errorMsg, boolean mustNotExist) {
 			super(errorMsg);
-			this.existNot = existNot;
+			this.mustNotExist = mustNotExist;
 		}
 
 		public FileExistsValidator (File relativeTo, String errorMsg) {
 			this(relativeTo, errorMsg, false);
 		}
 
-		public FileExistsValidator (File relativeTo, String errorMsg, boolean existNot) {
+		public FileExistsValidator (File relativeTo, String errorMsg, boolean mustNotExist) {
 			super(errorMsg);
 			this.relativeToFile = relativeTo;
-			this.existNot = existNot;
+			this.mustNotExist = mustNotExist;
 		}
 
 		public FileExistsValidator (VisTextField relativeTo, String errorMsg) {
 			this(relativeTo, errorMsg, false);
 		}
 
-		public FileExistsValidator (VisTextField relativeTo, String errorMsg, boolean existNot) {
+		public FileExistsValidator (VisTextField relativeTo, String errorMsg, boolean mustNotExist) {
 			super(errorMsg);
 			this.relativeTo = relativeTo;
-			this.existNot = existNot;
+			this.mustNotExist = mustNotExist;
 		}
 
 		/** @see FormValidator#fileExists(VisValidatableTextField, VisTextField, String, boolean) */
-		public FileExistsValidator (VisTextField relativeTo, String errorMsg, boolean existNot, boolean errorIfRelativeEmpty) {
+		public FileExistsValidator (VisTextField relativeTo, String errorMsg, boolean mustNotExist, boolean errorIfRelativeEmpty) {
 			super(errorMsg);
 			this.relativeTo = relativeTo;
-			this.existNot = existNot;
+			this.mustNotExist = mustNotExist;
 			this.errorIfRelativeEmpty = errorIfRelativeEmpty;
 		}
 
@@ -282,7 +282,7 @@ public class FormValidator extends SimpleFormValidator {
 				file = new File(input);
 			}
 
-			if (existNot)
+			if (mustNotExist)
 				return !file.exists();
 			else
 				return file.exists();
@@ -302,8 +302,8 @@ public class FormValidator extends SimpleFormValidator {
 			this.relativeTo = relativeTo;
 		}
 
-		public void setExistNot (boolean existNot) {
-			this.existNot = existNot;
+		public void setMustNotExists (boolean notExists) {
+			this.mustNotExist = notExists;
 		}
 
 		public void setErrorIfRelativeEmpty (boolean errorIfRelativeEmpty) {
