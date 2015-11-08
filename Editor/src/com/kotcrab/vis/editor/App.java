@@ -143,7 +143,7 @@ public class App {
 	/** Checks if proper charset is set, if not tries to change it, if that fails method will throw IllegalStateException */
 	private static void checkCharset () {
 		if (Charset.defaultCharset().name().equals("UTF-8") == false) {
-			Log.error(TAG, "UTF-8 is not default charset, trying to change...");
+			Log.warn(TAG, "UTF-8 is not default charset, trying to change...");
 
 			try {
 				System.setProperty("file.encoding", "UTF-8");
@@ -153,9 +153,9 @@ public class App {
 				Log.warn(TAG, "Charset change successful, run with VM argument: -Dfile.encoding=UTF-8 to avoid this.");
 			} catch (Exception e) {
 				String charsetChangeFailed = "UTF-8 charset is not default for this system and attempt to change it failed, " +
-						"cannot continue! Run with VM argument: -Dfile.encoding=UTF-8 to fix this.";
+						"cannot continue. Run with VM argument: -Dfile.encoding=UTF-8 to fix this.";
 				JOptionPane.showMessageDialog(null, charsetChangeFailed, "Fatal error", JOptionPane.ERROR_MESSAGE);
-				throw new IllegalStateException(charsetChangeFailed);
+				throw new IllegalStateException(charsetChangeFailed, e);
 			}
 		}
 	}
