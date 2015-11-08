@@ -24,4 +24,6 @@ public class LaunchConfiguration {
 	public boolean showSplash = true;
 	/** If true ui scaling mode was enabled from command line arguments, this may be false if ui scaling is enabled from settings */
 	public boolean scaleUIEnabled = false;
+	/** Allows software OpenGL rendering if hardware acceleration was not available. **/
+	public boolean allowSoftwareMode = false;
 }
