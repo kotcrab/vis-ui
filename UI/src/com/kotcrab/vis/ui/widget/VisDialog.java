@@ -60,6 +60,21 @@ public class VisDialog extends VisWindow {
 	public VisDialog (String title) {
 		super(title);
 		this.skin = VisUI.getSkin();
+		setSkin(skin);
+		initialize();
+	}
+
+	public VisDialog (String title, String windowStyleName) {
+		super(title, VisUI.getSkin().get(windowStyleName, WindowStyle.class));
+		this.skin = VisUI.getSkin();
+		setSkin(skin);
+		initialize();
+	}
+
+	public VisDialog (String title, WindowStyle windowStyle) {
+		super(title, windowStyle);
+		this.skin = VisUI.getSkin();
+		setSkin(skin);
 		initialize();
 	}
 
