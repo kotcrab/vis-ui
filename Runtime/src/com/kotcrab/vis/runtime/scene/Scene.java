@@ -29,17 +29,13 @@ import com.kotcrab.vis.runtime.data.LayerData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
-import com.kotcrab.vis.runtime.system.CameraManager;
-import com.kotcrab.vis.runtime.system.LayerManager;
-import com.kotcrab.vis.runtime.system.VisGroupManager;
-import com.kotcrab.vis.runtime.system.VisIDManager;
+import com.kotcrab.vis.runtime.system.*;
 import com.kotcrab.vis.runtime.system.inflater.*;
 import com.kotcrab.vis.runtime.system.physics.Box2dDebugRenderSystem;
 import com.kotcrab.vis.runtime.system.physics.PhysicsBodyManager;
 import com.kotcrab.vis.runtime.system.physics.PhysicsSpriteUpdateSystem;
 import com.kotcrab.vis.runtime.system.physics.PhysicsSystem;
-import com.kotcrab.vis.runtime.system.render.ParticleRenderSystem;
-import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.system.render.*;
 import com.kotcrab.vis.runtime.util.*;
 
 /**
@@ -68,9 +64,7 @@ public class Scene {
 
 		engineConfig.setSystem(cameraManager = new CameraManager(data.viewport, data.width, data.height, data.pixelsPerUnit));
 		engineConfig.setSystem(new VisIDManager());
-
 		if (runtimeConfig.useVisGroupManager) engineConfig.setSystem(new VisGroupManager(data.groupIds));
-
 		engineConfig.setSystem(new LayerManager(data.layers));
 
 		engineConfig.setSystem(new SpriteInflater(runtimeConfig, assetsManager));
@@ -82,8 +76,9 @@ public class Scene {
 		engineConfig.setSystem(new SpriterInflater(assetsManager));
 
 		if (parameter != null) {
-			for (BaseSystem system : parameter.systems)
+			for (BaseSystem system : parameter.systems) {
 				engineConfig.setSystem(system);
+			}
 		}
 
 		if (data.physicsSettings.physicsEnabled) {
@@ -92,20 +87,34 @@ public class Scene {
 			if (runtimeConfig.useBox2dSpriteUpdateSystem) engineConfig.setSystem(new PhysicsSpriteUpdateSystem());
 		}
 
-		ArtemisUtils.createCommonSystems(engineConfig, context.batch, distanceFieldShader, false);
+		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(context.batch, false);
+		engineConfig.setSystem(batchingSystem);
+
+		//common render systems
+		engineConfig.setSystem(new VisSpriteRenderSystem(batchingSystem));
+		engineConfig.setSystem(new SpriteRenderSystem(batchingSystem));
+		engineConfig.setSystem(new TextRenderSystem(batchingSystem, distanceFieldShader));
+		engineConfig.setSystem(new SpriterRenderSystem(batchingSystem));
+
 		engineConfig.setSystem(new ParticleRenderSystem(engineConfig.getSystem(RenderBatchingSystem.class), false));
 
-		if (data.physicsSettings.physicsEnabled && runtimeConfig.useBox2dDebugRenderer)
+		if (data.physicsSettings.physicsEnabled && runtimeConfig.useBox2dDebugRenderer) {
 			engineConfig.setSystem(new Box2dDebugRenderSystem());
+		}
 
 		for (EntitySupport support : context.supports) {
 			support.registerSystems(runtimeConfig, engineConfig, assetsManager);
 		}
 
+		engineConfig.setSystem(new PositionChangedCleanerSystem());
+
 		engine = new EntityEngine(engineConfig);
 	}
 
-	/** Called by framework right after loading scene to finish loading scene and inflate all entities */
+	/**
+	 * Finishes loading scene and inflate all entities. This must be called manually if scene wasn't loaded
+	 * using {@link VisAssetManager} loadSceneNow methods.
+	 */
 	public void init () {
 		engine.setInvocationStrategy(new BootstrapInvocationStrategy());
 		engine.process();

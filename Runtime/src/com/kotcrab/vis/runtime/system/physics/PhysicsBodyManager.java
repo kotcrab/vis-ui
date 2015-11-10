@@ -20,7 +20,6 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
-import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.kotcrab.vis.runtime.component.PhysicsComponent;
@@ -29,7 +28,6 @@ import com.kotcrab.vis.runtime.component.PolygonComponent;
 import com.kotcrab.vis.runtime.component.SpriteComponent;
 
 /** @author Kotcrab */
-@Wire
 public class PhysicsBodyManager extends EntitySystem {
 	private PhysicsSystem physicsSystem;
 

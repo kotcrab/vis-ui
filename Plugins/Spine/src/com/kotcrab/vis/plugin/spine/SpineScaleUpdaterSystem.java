@@ -34,7 +34,6 @@ package com.kotcrab.vis.plugin.spine;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
@@ -42,7 +41,6 @@ import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 
 /** @author Kotcrab */
-@Wire
 public class SpineScaleUpdaterSystem extends EntityProcessingSystem {
 	private SpineCacheModule spineCache;
 

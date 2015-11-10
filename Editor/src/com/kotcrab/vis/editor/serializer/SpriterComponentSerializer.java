@@ -24,18 +24,20 @@ import com.kotcrab.vis.runtime.assets.SpriterAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
 import com.kotcrab.vis.runtime.component.SpriterComponent;
+import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 
 /**
  * Kryo serializer for {@link SpriterComponent}
  * @author Kotcrab
  */
+@Deprecated @DeprecatedOn(versionCode = 20)
 public class SpriterComponentSerializer extends EntityComponentSerializer<SpriterComponent> {
 	private static final int VERSION_CODE = 1;
 	private final SpriterCacheModule cache;
 
-	public SpriterComponentSerializer (Kryo kryo, SpriterCacheModule shaderCache) {
+	public SpriterComponentSerializer (Kryo kryo, SpriterCacheModule spriterCache) {
 		super(kryo, ShaderComponent.class);
-		this.cache = shaderCache;
+		this.cache = spriterCache;
 	}
 
 	@Override

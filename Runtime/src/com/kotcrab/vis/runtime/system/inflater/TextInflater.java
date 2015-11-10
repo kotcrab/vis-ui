@@ -17,9 +17,7 @@
 package com.kotcrab.vis.runtime.system.inflater;
 
 import com.artemis.Aspect;
-import com.artemis.BaseEntitySystem;
 import com.artemis.ComponentMapper;
-import com.artemis.annotations.Wire;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
@@ -36,8 +34,7 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
  * Inflates {@link TextProtoComponent} into {@link TextComponent}
  * @author Kotcrab
  */
-@Wire
-public class TextInflater extends BaseEntitySystem {
+public class TextInflater extends InflaterSystem {
 	private ComponentMapper<AssetComponent> assetCm;
 	private ComponentMapper<TextComponent> textCm;
 	private ComponentMapper<TextProtoComponent> protoCm;
@@ -78,24 +75,10 @@ public class TextInflater extends BaseEntitySystem {
 		TextComponent textComponent = textCm.create(entityId);
 
 		textComponent.init(font, protoComponent.text);
-		textComponent.setPosition(protoComponent.x, protoComponent.y);
-		textComponent.setOrigin(protoComponent.originX, protoComponent.originY);
-		textComponent.setRotation(protoComponent.rotation);
-		textComponent.setScale(protoComponent.scaleX, protoComponent.scaleY);
-		textComponent.setColor(protoComponent.tint);
-
-		textComponent.setText(protoComponent.text);
+		protoComponent.fill(textComponent);
 		//text.setFontSize(fontSize); //font size must be handled manually from SceneLoader because it is not a public property for TextEntity
-		textComponent.setAutoSetOriginToCenter(protoComponent.autoSetOriginToCenter);
 
-		textComponent.setDistanceFieldShaderEnabled(protoComponent.isUsesDistanceField);
-
-		if (configuration.removeAssetsComponentAfterInflating)
-			assetCm.remove(entityId);
-	}
-
-	@Override
-	protected void processSystem () {
-
+		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
+		protoCm.remove(entityId);
 	}
 }

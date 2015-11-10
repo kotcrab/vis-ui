@@ -83,6 +83,7 @@ public class TextComponent extends Component implements BasicPropertiesAccessor,
 	public void setFont (BitmapFont font) {
 		cache = new BitmapFontCache(font);
 		setText(text);
+		setColor(color);
 	}
 
 	private void translate () {
@@ -119,6 +120,15 @@ public class TextComponent extends Component implements BasicPropertiesAccessor,
 
 	public void setText (CharSequence str) {
 		this.text = str;
+		cache.clear();
+		textLayout = cache.setText(str, 0, 0);
+		cache.setColor(color);
+		textChanged();
+	}
+
+	public void setText (CharSequence str, Color color) {
+		this.text = str;
+		this.color = color;
 		cache.clear();
 		textLayout = cache.setText(str, 0, 0);
 		cache.setColor(color);
@@ -236,7 +246,6 @@ public class TextComponent extends Component implements BasicPropertiesAccessor,
 	@Override
 	public void setColor (Color color) {
 		this.color = color;
-		cache.setColor(color);
 		setText(text);
 	}
 

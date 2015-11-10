@@ -14,36 +14,28 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system.inflater;
+package com.kotcrab.vis.editor.module.scene.system.inflater;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.kotcrab.vis.runtime.RuntimeConfiguration;
-import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
+import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.ParticleComponent;
 import com.kotcrab.vis.runtime.component.ParticleProtoComponent;
+import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
-/**
- * Inflates {@link ParticleProtoComponent} into {@link ParticleComponent}
- * @author Kotcrab
- */
-public class ParticleInflater extends InflaterSystem {
+/** @author Kotcrab */
+public class EditorParticleInflater extends InflaterSystem {
+	private ParticleCacheModule particleCache;
+	private float pixelsPerUnit;
+
 	private ComponentMapper<AssetComponent> assetCm;
 	private ComponentMapper<ParticleComponent> partcielCm;
 	private ComponentMapper<ParticleProtoComponent> protoCm;
 
-	private RuntimeConfiguration configuration;
-	private AssetManager manager;
-
-	private float pixelsPerUnit;
-
-	public ParticleInflater (RuntimeConfiguration configuration, AssetManager manager, float pixelsPerUnit) {
-		super(Aspect.all(ParticleProtoComponent.class, AssetComponent.class));
-		this.configuration = configuration;
-		this.manager = manager;
+	public EditorParticleInflater (float pixelsPerUnit) {
+		super(Aspect.all(ParticleProtoComponent.class, PixelsPerUnitComponent.class, AssetComponent.class));
 		this.pixelsPerUnit = pixelsPerUnit;
 	}
 
@@ -52,19 +44,11 @@ public class ParticleInflater extends InflaterSystem {
 		AssetComponent assetComponent = assetCm.get(entityId);
 		ParticleProtoComponent protoComponent = protoCm.get(entityId);
 
-		PathAsset path = (PathAsset) assetComponent.asset;
-
-		ParticleEffect effect = manager.get(path.getPath(), ParticleEffect.class);
-		if (effect == null)
-			throw new IllegalStateException("Can't load scene, particle effect is missing: " + path.getPath());
-
 		ParticleComponent particleComponent = partcielCm.create(entityId);
-		particleComponent.effect = new ParticleEffect(effect);
+		particleComponent.effect = particleCache.get(assetComponent.asset, 1f / pixelsPerUnit);
 		particleComponent.setPosition(protoComponent.x, protoComponent.y);
 		particleComponent.active = protoComponent.active;
-		particleComponent.effect.scaleEffect(1f / pixelsPerUnit);
 
-		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);
 	}
 }

@@ -58,4 +58,17 @@ public class TextProtoComponent extends ProtoComponent {
 
 		isUsesDistanceField = component.isDistanceFieldShaderEnabled();
 	}
+
+	public void fill (TextComponent component) {
+		component.setPosition(x, y);
+		component.setOrigin(originX, originY);
+		component.setRotation(rotation);
+		component.setScale(scaleX, scaleY);
+
+		component.setText(text, tint);
+
+		component.setAutoSetOriginToCenter(autoSetOriginToCenter);
+
+		component.setDistanceFieldShaderEnabled(isUsesDistanceField);
+	}
 }

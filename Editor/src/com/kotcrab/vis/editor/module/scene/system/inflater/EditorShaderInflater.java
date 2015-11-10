@@ -14,44 +14,35 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system.inflater;
+package com.kotcrab.vis.editor.module.scene.system.inflater;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.kotcrab.vis.editor.module.project.ShaderCacheModule;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
 import com.kotcrab.vis.runtime.component.ShaderProtoComponent;
+import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
-/**
- * Inflates {@link ShaderProtoComponent} into {@link ShaderComponent}
- * @author Kotcrab
- */
-public class ShaderInflater extends InflaterSystem {
+/** @author Kotcrab */
+public class EditorShaderInflater extends InflaterSystem {
 	private ComponentMapper<ShaderComponent> shaderCm;
 	private ComponentMapper<ShaderProtoComponent> protoCm;
+	private ShaderCacheModule shaderCache;
 
-	private AssetManager manager;
-
-	public ShaderInflater (AssetManager manager) {
+	public EditorShaderInflater (ShaderCacheModule shaderCache) {
 		super(Aspect.all(ShaderProtoComponent.class, AssetComponent.class));
-		this.manager = manager;
+		this.shaderCache = shaderCache;
 	}
 
 	@Override
 	public void inserted (int entityId) {
 		ShaderProtoComponent protoComponent = protoCm.get(entityId);
 
-		if (protoComponent.asset != null) {
-			String shaderPath = protoComponent.asset.getPathWithoutExtension();
-			ShaderProgram program = manager.get(shaderPath, ShaderProgram.class);
-			if (program == null)
-				throw new IllegalStateException("Can't load scene, shader program is missing:" + shaderPath);
-
-			ShaderComponent shaderComponent = shaderCm.create(entityId);
-			shaderComponent.asset = protoComponent.asset;
-			shaderComponent.shader = program;
+		ShaderComponent shaderComponent = shaderCm.create(entityId);
+		shaderComponent.asset = protoComponent.asset;
+		if (shaderComponent.asset != null) {
+			shaderComponent.shader = shaderCache.get(shaderComponent.asset);
 		}
 
 		protoCm.remove(entityId);

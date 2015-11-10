@@ -21,11 +21,13 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.module.project.ShaderCacheModule;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
+import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 
 /**
  * Kryo serializer for {@link ShaderComponent}
  * @author Kotcrab
  */
+@Deprecated @DeprecatedOn(versionCode = 20)
 public class ShaderComponentSerializer extends EntityComponentSerializer<ShaderComponent> {
 	private static final int VERSION_CODE = 1;
 	private final ShaderCacheModule shaderCache;

@@ -18,7 +18,6 @@ package com.kotcrab.vis.runtime.system.render;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
@@ -30,7 +29,6 @@ import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
  * Renders entities with {@link ParticleComponent}
  * @author Kotcrab
  */
-@Wire
 public class ParticleRenderSystem extends DeferredEntityProcessingSystem {
 	private ComponentMapper<ParticleComponent> particleCm;
 

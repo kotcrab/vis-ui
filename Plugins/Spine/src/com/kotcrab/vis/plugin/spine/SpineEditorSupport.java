@@ -54,6 +54,7 @@ import com.kotcrab.vis.editor.util.scene2d.VisDragAndDrop;
 import com.kotcrab.vis.editor.util.scene2d.VisDropSource;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
+import com.kotcrab.vis.plugin.spine.runtime.SpineProtoComponent;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.LayerComponent;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
@@ -79,13 +80,19 @@ public class SpineEditorSupport extends EditorEntitySupport {
 		spineCache = projectMC.get(SpineCacheModule.class);
 		fileAccess = projectMC.get(FileAccessModule.class);
 
-		serializers.add(new SpineComponentSerializer(sceneIOModule.getKryo(), spineCache));
+//		serializers.add(new SpineComponentSerializer(sceneIOModule.getKryo(), spineCache));
 		assetProviders.add(new SpineAssetDescriptorProvider());
 
 		serializedTypes.add(SpinePreviewComponent.class);
 		serializedTypes.add(SpineScaleComponent.class);
 		serializedTypes.add(SpineBoundsComponent.class);
 		serializedTypes.add(SpineAssetDescriptor.class);
+		serializedTypes.add(SpineProtoComponent.class);
+	}
+
+	@Override
+	public void registerInflatersSystems (EntityEngineConfiguration config) {
+		config.setSystem(new EditorSpineInflaterSystem());
 	}
 
 	@Override

@@ -24,10 +24,12 @@ import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 
 /**
  * @author Kotcrab
  */
+@Deprecated @DeprecatedOn(versionCode = 20)
 public class TextComponentSerializer extends EntityComponentSerializer<TextComponent> {
 	private static final int VERSION_CODE = 1;
 
@@ -56,8 +58,8 @@ public class TextComponentSerializer extends EntityComponentSerializer<TextCompo
 		input.readInt(); //version code
 
 		VisAssetDescriptor asset = (VisAssetDescriptor) kryo.readClassAndObject(input);
-		float pixelsPerUnits = input.readFloat();
-		component.setFont(fontCache.getGeneric(asset, pixelsPerUnits));
+		float pixelsPerUnit = input.readFloat();
+		component.setFont(fontCache.getGeneric(asset, pixelsPerUnit));
 
 		return component;
 	}

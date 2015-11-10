@@ -36,4 +36,10 @@ public class MusicProtoComponent extends ProtoComponent {
 		volume = component.getVolume();
 		looping = component.isLooping();
 	}
+
+	public void fill (MusicComponent component) {
+		component.setLooping(looping);
+		component.setPlayOnStart(playOnStart);
+		component.setVolume(volume);
+	}
 }

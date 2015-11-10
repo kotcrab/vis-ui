@@ -377,6 +377,10 @@ public abstract class EntityProxy {
 		return entities;
 	}
 
+	public Entity getEntity () {
+		return entity;
+	}
+
 	public boolean compareProxyByID (EntityProxy other) {
 		return uuid.equals(other.uuid);
 	}

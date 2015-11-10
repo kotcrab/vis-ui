@@ -25,10 +25,12 @@ import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.ParticleComponent;
+import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 
 /**
  * @author Kotcrab
  */
+@Deprecated @DeprecatedOn(versionCode = 20)
 public class ParticleComponentSerializer extends EntityComponentSerializer<ParticleComponent> {
 	private static final int VERSION_CODE = 1;
 

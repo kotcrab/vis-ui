@@ -58,4 +58,14 @@ public class SpriteProtoComponent extends ProtoComponent {
 		flipX = sprite.isFlipX();
 		flipY = sprite.isFlipY();
 	}
+
+	public void fill (SpriteComponent component) {
+		component.setPosition(x, y);
+		component.setSize(width, height);
+		component.setOrigin(originX, originY);
+		component.setRotation(rotation);
+		component.setScale(scaleX, scaleY);
+		component.setColor(tint);
+		component.setFlip(flipX, flipY);
+	}
 }

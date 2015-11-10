@@ -19,7 +19,6 @@ package com.kotcrab.vis.runtime.system.physics;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -27,7 +26,6 @@ import com.kotcrab.vis.runtime.component.PhysicsComponent;
 import com.kotcrab.vis.runtime.component.SpriteComponent;
 
 /** @author Kotcrab */
-@Wire
 public class PhysicsSpriteUpdateSystem extends EntityProcessingSystem {
 	private ComponentMapper<PhysicsComponent> physicsCm;
 	private ComponentMapper<SpriteComponent> spriteCm;

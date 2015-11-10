@@ -34,12 +34,10 @@ package com.kotcrab.vis.plugin.spine;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
 
 /** @author Kotcrab */
-@Wire
 public class SpinePreviewUpdaterSystem extends EntityProcessingSystem {
 	private ComponentMapper<SpineComponent> spineCm;
 	private ComponentMapper<SpinePreviewComponent> previewCm;

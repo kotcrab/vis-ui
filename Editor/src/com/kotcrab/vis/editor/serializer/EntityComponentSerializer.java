@@ -17,7 +17,7 @@
 package com.kotcrab.vis.editor.serializer;
 
 import com.artemis.Component;
-import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.Bag;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -29,13 +29,13 @@ import com.kotcrab.annotation.CallSuper;
  * @author Kotcrab
  */
 public abstract class EntityComponentSerializer<T> extends CompatibleFieldSerializer<T> {
-	protected ImmutableBag<Component> components;
+	protected Bag<Component> components;
 
 	public EntityComponentSerializer (Kryo kryo, Class type) {
 		super(kryo, type);
 	}
 
-	public void setComponents (ImmutableBag<Component> components) {
+	public void setComponents (Bag<Component> components) {
 		this.components = components;
 	}
 

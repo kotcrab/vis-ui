@@ -255,4 +255,9 @@ public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAcce
 		GroupEntityProxy groupProxy = (GroupEntityProxy) other;
 		return groupId == groupProxy.groupId;
 	}
+
+	@Override
+	public Entity getEntity () {
+		throw new UnsupportedOperationException();
+	}
 }

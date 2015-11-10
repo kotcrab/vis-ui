@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.*;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.util.gdx.SpriteUtils;
@@ -26,8 +25,7 @@ import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.SpriteComponent;
 
 /** @author Kotcrab */
-@Wire
-public class TextureReloaderManager extends Manager {
+public class TextureReloaderManager extends Manager { //TODO: migrate all reloaders to entity processing systems from managers
 	private TextureCacheModule textureCache;
 
 	private ComponentMapper<SpriteComponent> spriteCm;
@@ -35,16 +33,10 @@ public class TextureReloaderManager extends Manager {
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
-	public TextureReloaderManager (TextureCacheModule textureCache) {
-		this.textureCache = textureCache;
-	}
-
 	@Override
 	protected void initialize () {
 		subscription = subscriptionManager.get(Aspect.all(SpriteComponent.class, AssetComponent.class));
 	}
-
-	//TODO: use flyweights for reloading, also update other reloaders
 
 	public void reloadTextures () {
 		IntBag bag = subscription.getEntities();

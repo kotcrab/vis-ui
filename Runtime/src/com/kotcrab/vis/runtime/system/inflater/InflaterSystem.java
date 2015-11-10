@@ -14,27 +14,23 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system.physics;
+package com.kotcrab.vis.runtime.system.inflater;
 
-import com.artemis.BaseSystem;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.kotcrab.vis.runtime.system.CameraManager;
-import com.kotcrab.vis.runtime.util.AfterSceneInit;
+import com.artemis.Aspect.Builder;
+import com.artemis.BaseEntitySystem;
 
-/** @author Kotcrab */
-public class Box2dDebugRenderSystem extends BaseSystem implements AfterSceneInit {
-	private CameraManager cameraManager;
-	private PhysicsSystem physicsSystem;
-
-	private Box2DDebugRenderer debugRenderer;
-
-	@Override
-	public void afterSceneInit () {
-		debugRenderer = new Box2DDebugRenderer();
+/**
+ * Base class for all inflater systems. This is more like a utility class because inflaters can extend any type of
+ * entity system class.
+ * @author Kotcrab
+ */
+public class InflaterSystem extends BaseEntitySystem {
+	public InflaterSystem (Builder aspect) {
+		super(aspect);
 	}
 
 	@Override
 	protected void processSystem () {
-		debugRenderer.render(physicsSystem.getPhysicsWorld(), cameraManager.getCombined());
+
 	}
 }

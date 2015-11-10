@@ -17,23 +17,17 @@
 package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.*;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
 import com.kotcrab.vis.editor.module.project.ShaderCacheModule;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
 
 /** @author Kotcrab */
-@Wire
 public class ShaderReloaderManager extends Manager {
 	private ShaderCacheModule shaderCache;
 
 	private ComponentMapper<ShaderComponent> shaderCm;
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
-
-	public ShaderReloaderManager (ShaderCacheModule shaderCache) {
-		this.shaderCache = shaderCache;
-	}
 
 	@Override
 	protected void initialize () {

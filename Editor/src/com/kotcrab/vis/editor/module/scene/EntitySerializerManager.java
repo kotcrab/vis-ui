@@ -17,13 +17,11 @@
 package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.*;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
 
-@Wire
 public class EntitySerializerManager extends Manager {
 	private AspectSubscriptionManager subscriptionManager;
 

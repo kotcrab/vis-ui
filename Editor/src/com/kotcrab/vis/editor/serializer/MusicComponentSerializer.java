@@ -21,11 +21,13 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.util.gdx.DummyMusic;
 import com.kotcrab.vis.runtime.component.MusicComponent;
+import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 
 /**
  * Kryo serializer for {@link MusicComponent}
  * @author Kotcrab
  */
+@Deprecated @DeprecatedOn(versionCode = 20)
 public class MusicComponentSerializer extends EntityComponentSerializer<MusicComponent> {
 	private static final int VERSION_CODE = 1;
 

@@ -25,11 +25,13 @@ import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.SpriteComponent;
+import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 
 /**
  * Kryo serializer for {@link SpriteComponent}
  * @author Kotcrab
  */
+@Deprecated @DeprecatedOn(versionCode = 20)
 public class SpriteComponentSerializer extends EntityComponentSerializer<SpriteComponent> {
 	private static final int VERSION_CODE = 1;
 

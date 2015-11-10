@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.*;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
@@ -27,7 +26,6 @@ import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.TextComponent;
 
 /** @author Kotcrab */
-@Wire
 public class FontReloaderManager extends Manager {
 	private FontCacheModule fontCache;
 	private float pixelInUnits;
@@ -37,7 +35,7 @@ public class FontReloaderManager extends Manager {
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
-	public FontReloaderManager (FontCacheModule fontCache, float pixelInUnits) {
+	public FontReloaderManager (float pixelInUnits) {
 		this.fontCache = fontCache;
 		this.pixelInUnits = pixelInUnits;
 	}

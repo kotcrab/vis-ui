@@ -18,18 +18,20 @@ package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.*;
 import com.artemis.EntitySubscription.SubscriptionListener;
-import com.artemis.annotations.Wire;
+import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.module.project.SupportModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.*;
 import com.kotcrab.vis.runtime.component.*;
 
-@Wire
 public class EntityProxyCache extends Manager {
+	private static final String TAG = "EntityProxyCache";
+
 	private SupportModule supportModule;
 
 	private AspectSubscriptionManager subscriptionManager;
@@ -86,8 +88,22 @@ public class EntityProxyCache extends Manager {
 			}
 		}
 
-		if (proxy == null)
-			throw new IllegalStateException("Could not find appropriate proxy for entity");
+		if (proxy == null) {
+			proxy = new MissingProxy(entity);
+			Log.error(TAG, String.format("Missing proxy for: %s. Entity structure:", entity));
+			Log.error(TAG, String.format("=-%s", entity));
+
+			Bag<Component> components = entity.getComponents(new Bag<>());
+			for (int i = 0; i < components.size(); i++) {
+				String formatString;
+				if (i == components.size() - 1)
+					formatString = " \\-- %s";
+				else
+					formatString = " |-- %s";
+
+				Log.error(TAG, String.format(formatString, components.get(i)));
+			}
+		}
 
 		return proxy;
 	}
@@ -121,7 +137,7 @@ public class EntityProxyCache extends Manager {
 		return proxy;
 	}
 
-	public Array<EntityScheme> getSchemes () {
+	public Array<EntityScheme> getEntitySchemes () {
 		Array<EntityScheme> schemes = new Array<>(cache.size);
 		cache.values().forEach(proxy -> schemes.add(proxy.getScheme()));
 		return schemes;

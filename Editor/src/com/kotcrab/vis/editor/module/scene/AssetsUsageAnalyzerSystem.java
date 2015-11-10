@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.module.scene;
 import com.artemis.Aspect;
 import com.artemis.Component;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.Bag;
 import com.badlogic.gdx.utils.IntArray;
@@ -30,7 +29,6 @@ import com.kotcrab.vis.runtime.util.StoresAssetDescriptor;
  * This system should be passive.
  * @author Kotcrab
  */
-@Wire
 public class AssetsUsageAnalyzerSystem extends EntityProcessingSystem {
 	private IntArray ids;
 	private VisAssetDescriptor searchFor;

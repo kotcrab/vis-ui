@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.*;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
 import com.kotcrab.vis.editor.module.project.SpriterCacheModule;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
@@ -25,7 +24,6 @@ import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.SpriterComponent;
 
 /** @author Kotcrab */
-@Wire
 public class SpriterReloaderManager extends Manager {
 	private SpriterCacheModule spriterCacheModule;
 
@@ -36,10 +34,6 @@ public class SpriterReloaderManager extends Manager {
 
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
-
-	public SpriterReloaderManager (SpriterCacheModule spriterCache) {
-		this.spriterCache = spriterCache;
-	}
 
 	@Override
 	protected void initialize () {

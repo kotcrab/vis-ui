@@ -32,14 +32,14 @@ import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.module.scene.system.inflater.*;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.BiHolder;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.system.CameraManager;
-import com.kotcrab.vis.runtime.system.render.ParticleRenderSystem;
-import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
-import com.kotcrab.vis.runtime.util.ArtemisUtils;
+import com.kotcrab.vis.runtime.system.render.*;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
@@ -63,9 +63,9 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	private EntityEngine engine;
 	private EntityEngineConfiguration config;
 
-	public SceneModuleContainer (ProjectModuleContainer projectModuleContainer, SceneTab sceneTab, EditorScene scene, Batch batch) {
-		this.editorModuleContainer = projectModuleContainer.getEditorContainer();
-		this.projectModuleContainer = projectModuleContainer;
+	public SceneModuleContainer (ProjectModuleContainer projectMC, SceneTab sceneTab, EditorScene scene, Batch batch) {
+		this.editorModuleContainer = projectMC.getEditorContainer();
+		this.projectModuleContainer = projectMC;
 		this.scene = scene;
 		this.sceneTab = sceneTab;
 
@@ -75,13 +75,24 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new LayerManipulatorManager());
 		config.setSystem(new ZIndexManipulatorManager());
 		config.setSystem(new EntitySerializerManager());
-		config.setSystem(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
-		config.setSystem(new ParticleReloaderManager(projectModuleContainer.get(ParticleCacheModule.class), scene.pixelsPerUnit));
-		config.setSystem(new FontReloaderManager(projectModuleContainer.get(FontCacheModule.class), scene.pixelsPerUnit));
-		config.setSystem(new ShaderReloaderManager(projectModuleContainer.get(ShaderCacheModule.class)));
-		config.setSystem(new SpriterReloaderManager(projectModuleContainer.get(SpriterCacheModule.class)));
+		config.setSystem(new TextureReloaderManager());
+		config.setSystem(new ParticleReloaderManager(scene.pixelsPerUnit));
+		config.setSystem(new FontReloaderManager(scene.pixelsPerUnit));
+		config.setSystem(new ShaderReloaderManager());
+		config.setSystem(new SpriterReloaderManager());
 		config.setSystem(new VisUUIDManager());
 		config.setSystem(new EntityCounterManager());
+
+		config.setSystem(new EditorSpriteInflater());
+		config.setSystem(new EditorSoundInflater());
+		config.setSystem(new EditorMusicInflater());
+		config.setSystem(new EditorParticleInflater(scene.pixelsPerUnit));
+		config.setSystem(new EditorTextInflater(scene.pixelsPerUnit));
+		config.setSystem(new EditorSpriterInflater());
+
+		for (EditorEntitySupport support : projectMC.get(SupportModule.class).getSupports()) {
+			support.registerInflatersSystems(config);
+		}
 
 		config.setSystem(new GroupIdProviderSystem());
 		config.setSystem(new GroupProxyProviderSystem());
@@ -90,11 +101,18 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 		createEssentialsSystems(config, scene.pixelsPerUnit);
 
-		ArtemisUtils.createCommonSystems(config, batch, Assets.distanceFieldShader, true);
-		RenderBatchingSystem renderBatchingSystem = config.getSystem(RenderBatchingSystem.class);
-		config.setSystem(new ParticleRenderSystem(renderBatchingSystem, true));
-		config.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem, scene.pixelsPerUnit));
-		config.setSystem(new PointRenderSystem(renderBatchingSystem, scene.pixelsPerUnit));
+		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, true);
+		config.setSystem(batchingSystem);
+
+		//common render systems
+		config.setSystem(new VisSpriteRenderSystem(batchingSystem));
+		config.setSystem(new SpriteRenderSystem(batchingSystem));
+		config.setSystem(new TextRenderSystem(batchingSystem, Assets.distanceFieldShader));
+		config.setSystem(new SpriterRenderSystem(batchingSystem));
+
+		config.setSystem(new ParticleRenderSystem(batchingSystem, true));
+		config.setSystem(new SoundAndMusicRenderSystem(batchingSystem, scene.pixelsPerUnit));
+		config.setSystem(new PointRenderSystem(batchingSystem, scene.pixelsPerUnit));
 	}
 
 	public static void createEssentialsSystems (EntityEngineConfiguration config, float pixelsPerUnit) {

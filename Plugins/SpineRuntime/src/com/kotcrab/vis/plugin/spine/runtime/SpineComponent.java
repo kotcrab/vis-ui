@@ -75,16 +75,17 @@ public class SpineComponent extends Component implements FlipPropertiesAccessor,
 		defaultAnimation = skeleton.getData().getAnimations().get(0).getName();
 	}
 
-	void updateDefaultAnimations () {
-		if (defaultAnimation == null)
-			defaultAnimation = skeleton.getData().getAnimations().get(0).getName();
-
+	public void onDeserialize (SkeletonData skeletonData) {
+		init(skeletonData);
 		if (playOnStart)
 			state.setAnimation(0, defaultAnimation, true);
 	}
 
-	public void onDeserialize (SkeletonData skeletonData) {
-		init(skeletonData);
+	/** Called by framework */
+	public void updateDefaultAnimations () {
+		if (defaultAnimation == null)
+			defaultAnimation = skeleton.getData().getAnimations().get(0).getName();
+
 		if (playOnStart)
 			state.setAnimation(0, defaultAnimation, true);
 	}

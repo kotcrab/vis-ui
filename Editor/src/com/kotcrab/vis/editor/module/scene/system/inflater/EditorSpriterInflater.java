@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system.inflater;
+package com.kotcrab.vis.editor.module.scene.system.inflater;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.badlogic.gdx.assets.AssetManager;
+import com.kotcrab.vis.editor.module.project.SpriterCacheModule;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.SpriterComponent;
 import com.kotcrab.vis.runtime.component.SpriterProtoComponent;
-import com.kotcrab.vis.runtime.util.SpriterData;
+import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
-public class SpriterInflater extends InflaterSystem {
+public class EditorSpriterInflater extends InflaterSystem {
 	private ComponentMapper<SpriterProtoComponent> protoCm;
 	private ComponentMapper<AssetComponent> assetCm;
+	private SpriterCacheModule cache;
 
-	private AssetManager manager;
-
-	public SpriterInflater (AssetManager manager) {
+	public EditorSpriterInflater () {
 		super(Aspect.all(SpriterProtoComponent.class, AssetComponent.class));
-		this.manager = manager;
 	}
 
 	@Override
@@ -43,10 +41,9 @@ public class SpriterInflater extends InflaterSystem {
 		SpriterProtoComponent protoComponent = protoCm.get(entityId);
 
 		SpriterAsset asset = (SpriterAsset) assetComponent.asset;
-		SpriterData data = manager.get(asset.getPath(), SpriterData.class);
-		if (data == null)
-			throw new IllegalStateException("Can't load scene, spriter data is missing: " + asset.getPath());
-		SpriterComponent component = new SpriterComponent(data.loader, data.data, protoComponent.scale);
+
+		SpriterComponent component = cache.createComponent(asset, protoComponent.scale);
+
 		protoComponent.fill(component);
 		world.getEntity(entityId).edit().add(component);
 

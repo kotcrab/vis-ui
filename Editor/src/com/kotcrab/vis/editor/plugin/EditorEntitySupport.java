@@ -44,12 +44,16 @@ public abstract class EditorEntitySupport {
 
 	}
 
+	public void registerInflatersSystems (EntityEngineConfiguration config) {
+
+	}
+
 	/**
 	 * Called when support should register it's {@link EntityEngine} systems and managers. WARNING: Do not store
 	 * modules from {@link SceneModuleContainer} because this method is called for each scene and scene modules are
 	 * scene context sensitive. If you need to get and store modules do it in {@link #bindModules(ProjectModuleContainer)}
 	 */
-	public void registerSystems (SceneModuleContainer sceneMC, EntityEngineConfiguration engineConfig) {
+	public void registerSystems (SceneModuleContainer sceneMC, EntityEngineConfiguration config) {
 
 	}
 

@@ -234,27 +234,27 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 	@Subscribe
 	public void handleResourceReloaded (ResourceReloadedEvent event) {
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_TEXTURES) != 0) {
-			sceneMC.getEntityEngine().getManager(TextureReloaderManager.class).reloadTextures();
+			sceneMC.getEntityEngine().getSystem(TextureReloaderManager.class).reloadTextures();
 		}
 
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_PARTICLES) != 0) {
-			sceneMC.getEntityEngine().getManager(ParticleReloaderManager.class).reloadParticles();
+			sceneMC.getEntityEngine().getSystem(ParticleReloaderManager.class).reloadParticles();
 		}
 
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_SHADERS) != 0) {
-			sceneMC.getEntityEngine().getManager(ShaderReloaderManager.class).reloadShaders();
+			sceneMC.getEntityEngine().getSystem(ShaderReloaderManager.class).reloadShaders();
 		}
 
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_BMP_FONTS) != 0) {
-			sceneMC.getEntityEngine().getManager(FontReloaderManager.class).reloadFonts(true, false);
+			sceneMC.getEntityEngine().getSystem(FontReloaderManager.class).reloadFonts(true, false);
 		}
 
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_TTF_FONTS) != 0) {
-			sceneMC.getEntityEngine().getManager(FontReloaderManager.class).reloadFonts(false, true);
+			sceneMC.getEntityEngine().getSystem(FontReloaderManager.class).reloadFonts(false, true);
 		}
 
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_SPRITER_DATA) != 0) {
-			sceneMC.getEntityEngine().getManager(SpriterReloaderManager.class).reloadSpriterData();
+			sceneMC.getEntityEngine().getSystem(SpriterReloaderManager.class).reloadSpriterData();
 		}
 	}
 
@@ -314,7 +314,9 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 	@Override
 	public boolean save () {
 		super.save();
-		scene.setSchemes(sceneMC.getEntityEngine().getManager(EntityProxyCache.class).getSchemes());
+		//TODO: this deserves async task when scene has many entities
+
+		scene.setSchemes(sceneMC.getEntityEngine().getSystem(EntityProxyCache.class).getEntitySchemes());
 		try {
 			FileHandle sceneFile = sceneIOModule.getFileHandleForScene(scene);
 			FileHandle backupTarget = sceneIOModule.getSceneBackupFolder().child(scene.path);

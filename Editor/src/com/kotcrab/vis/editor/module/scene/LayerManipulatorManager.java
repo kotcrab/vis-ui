@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.*;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
@@ -31,7 +30,6 @@ import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
  * Provides utils for manipulating layers. This is internal VisEditor API.
  * @author Kotcrab
  */
-@Wire
 public class LayerManipulatorManager extends Manager {
 	private ComponentMapper<LayerComponent> layerCm;
 	private AspectSubscriptionManager subscriptionManager;

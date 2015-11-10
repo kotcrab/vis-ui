@@ -18,7 +18,6 @@ package com.kotcrab.vis.runtime.system;
 
 import com.artemis.*;
 import com.artemis.EntitySubscription.SubscriptionListener;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -28,7 +27,6 @@ import com.kotcrab.vis.runtime.component.IDComponent;
  * Allows to get entities by their string id that was set in VisEditor
  * @author Kotcrab
  */
-@Wire
 public class VisIDManager extends Manager {
 	private ComponentMapper<IDComponent> idCm;
 	private AspectSubscriptionManager subscriptionManager;

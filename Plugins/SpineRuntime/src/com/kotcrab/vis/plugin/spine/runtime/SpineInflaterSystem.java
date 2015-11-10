@@ -31,21 +31,19 @@
 
 package com.kotcrab.vis.plugin.spine.runtime;
 
-import com.artemis.*;
-import com.artemis.annotations.Wire;
-import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
 import com.esotericsoftware.spine.SkeletonData;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
-@Wire
-public class SpineInflaterSystem extends EntityProcessingSystem {
+public class SpineInflaterSystem extends InflaterSystem {
 	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<SpineComponent> spineCm;
 	private ComponentMapper<SpineProtoComponent> protoCm;
-
-	private EntityTransmuter transmuter;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
@@ -57,16 +55,9 @@ public class SpineInflaterSystem extends EntityProcessingSystem {
 	}
 
 	@Override
-	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SpineProtoComponent.class);
-		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
-		transmuter = factory.build();
-	}
-
-	@Override
-	protected void process (Entity e) {
-		AssetComponent assetComponent = assetCm.get(e);
-		SpineProtoComponent protoComponent = protoCm.get(e);
+	public void inserted (int entityId) {
+		AssetComponent assetComponent = assetCm.get(entityId);
+		SpineProtoComponent protoComponent = protoCm.get(entityId);
 
 		SpineAssetDescriptor asset = (SpineAssetDescriptor) assetComponent.asset;
 
@@ -81,8 +72,10 @@ public class SpineInflaterSystem extends EntityProcessingSystem {
 
 		spineComponent.updateDefaultAnimations();
 
-		transmuter.transmute(e);
-		e.edit().add(spineComponent);
+		world.getEntity(entityId).edit().add(spineComponent);
+
+		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
+		protoCm.remove(entityId);
 	}
 }
 

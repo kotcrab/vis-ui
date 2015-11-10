@@ -29,43 +29,45 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.kotcrab.vis.plugin.spine.runtime;
+package com.kotcrab.vis.plugin.spine;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.esotericsoftware.spine.SkeletonRenderer;
-import com.kotcrab.vis.runtime.component.InvisibleComponent;
-import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
-import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
-import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
+import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
+import com.kotcrab.vis.plugin.spine.runtime.SpineProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
-public class SpineRenderSystem extends DeferredEntityProcessingSystem {
+public class EditorSpineInflaterSystem extends InflaterSystem {
+	private SpineCacheModule spineCache;
+
+	private ComponentMapper<AssetComponent> assetCm;
 	private ComponentMapper<SpineComponent> spineCm;
+	private ComponentMapper<SpineProtoComponent> protoCm;
 
-	private RenderBatchingSystem renderBatchingSystem;
-	private Batch batch;
-
-	private SkeletonRenderer skeletonRenderer;
-
-	public SpineRenderSystem (EntityProcessPrincipal principal) {
-		super(Aspect.all(SpineComponent.class).exclude(InvisibleComponent.class), principal);
-		skeletonRenderer = new SkeletonRenderer();
+	public EditorSpineInflaterSystem () {
+		super(Aspect.all(SpineProtoComponent.class, AssetComponent.class));
 	}
 
 	@Override
-	protected void initialize () {
-		batch = renderBatchingSystem.getBatch();
-	}
+	public void inserted (int entityId) {
+		AssetComponent assetComponent = assetCm.get(entityId);
+		SpineProtoComponent protoComponent = protoCm.get(entityId);
 
-	@Override
-	protected void process (int entityId) {
-		SpineComponent spine = spineCm.get(entityId);
-		spine.state.update(Gdx.graphics.getDeltaTime());
-		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
-		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
-		skeletonRenderer.draw(batch, spine.skeleton); // Draw the skeleton images.
+		SpineComponent spineComponent = new SpineComponent(spineCache.get(assetComponent.asset));
+
+		spineComponent.setPosition(protoComponent.x, protoComponent.y);
+		spineComponent.setFlip(protoComponent.flipX, protoComponent.flipY);
+
+		spineComponent.setPlayOnStart(protoComponent.playOnStart);
+		spineComponent.setDefaultAnimation(protoComponent.defaultAnimation);
+
+		spineComponent.updateDefaultAnimations();
+
+		world.getEntity(entityId).edit().add(spineComponent);
+
+		protoCm.remove(entityId);
 	}
 }
+

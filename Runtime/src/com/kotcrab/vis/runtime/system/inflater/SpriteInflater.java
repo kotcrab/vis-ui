@@ -16,8 +16,8 @@
 
 package com.kotcrab.vis.runtime.system.inflater;
 
-import com.artemis.*;
-import com.artemis.annotations.Wire;
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -36,8 +36,7 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
  * Inflates {@link SpriteProtoComponent} into {@link SpriteComponent}
  * @author Kotcrab
  */
-@Wire
-public class SpriteInflater extends BaseEntitySystem {
+public class SpriteInflater extends InflaterSystem {
 	private ComponentMapper<SpriteProtoComponent> protoCm;
 	private ComponentMapper<SpriteComponent> spriteCm;
 	private ComponentMapper<AssetComponent> assetCm;
@@ -52,13 +51,8 @@ public class SpriteInflater extends BaseEntitySystem {
 	}
 
 	@Override
-	protected void processSystem () {
-
-	}
-
-	@Override
 	public void inserted (int entityId) {
-		SpriteProtoComponent proto = protoCm.get(entityId);
+		SpriteProtoComponent protoComponent = protoCm.get(entityId);
 		AssetComponent assetComponent = assetCm.get(entityId);
 
 		VisAssetDescriptor asset = assetComponent.asset;
@@ -87,16 +81,9 @@ public class SpriteInflater extends BaseEntitySystem {
 
 		SpriteComponent spriteComponent = spriteCm.create(entityId);
 		spriteComponent.sprite = sprite;
+		protoComponent.fill(spriteComponent);
 
-		sprite.setPosition(proto.x, proto.y);
-		sprite.setSize(proto.width, proto.height);
-		sprite.setOrigin(proto.originX, proto.originY);
-		sprite.setRotation(proto.rotation);
-		sprite.setScale(proto.scaleX, proto.scaleY);
-		sprite.setColor(proto.tint);
-		sprite.setFlip(proto.flipX, proto.flipY);
-
-		if (configuration.removeAssetsComponentAfterInflating)
-			assetCm.remove(entityId);
+		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
+		protoCm.remove(entityId);
 	}
 }

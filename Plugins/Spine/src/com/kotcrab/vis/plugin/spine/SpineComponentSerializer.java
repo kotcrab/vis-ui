@@ -40,7 +40,9 @@ import com.kotcrab.vis.editor.serializer.EntityComponentSerializer;
 import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 
+@Deprecated @DeprecatedOn(versionCode = 20)
 public class SpineComponentSerializer extends EntityComponentSerializer<SpineComponent> implements PluginKryoSerializer {
 	private static final int VERSION_CODE = 1;
 
@@ -78,7 +80,7 @@ public class SpineComponentSerializer extends EntityComponentSerializer<SpineCom
 
 		VisAssetDescriptor asset = (VisAssetDescriptor) kryo.readClassAndObject(input);
 
-		object.onDeserialize(spineCache.get(asset));
+//		object.onDeserialize(spineCache.get(asset));
 		object.setPosition(input.readFloat(), input.readFloat());
 		object.setFlip(input.readBoolean(), input.readBoolean());
 		object.setColor(kryo.readObject(input, Color.class));

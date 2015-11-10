@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.Manager;
-import com.artemis.annotations.Wire;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.kotcrab.vis.editor.module.scene.action.ChangeZIndexAction;
@@ -28,7 +27,6 @@ import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /** @author Kotcrab */
-@Wire
 public class ZIndexManipulatorManager extends Manager {
 	private UndoModule undoModule;
 	private EntityManipulatorModule entityManipulator;

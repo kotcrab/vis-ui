@@ -21,6 +21,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
+import com.kotcrab.vis.runtime.util.VisBagUtils;
 
 /** @author Kotcrab */
 public class EntitySchemeSerializer extends VisTaggedFieldSerializer<EntityScheme> {
@@ -35,7 +36,7 @@ public class EntitySchemeSerializer extends VisTaggedFieldSerializer<EntitySchem
 
 	@Override
 	public void write (Kryo kryo, Output output, EntityScheme scheme) {
-		sceneIO.setEngineSerializationContext(scheme.components);
+		sceneIO.setEngineSerializationContext(VisBagUtils.toBag(scheme.components));
 		super.write(kryo, output, scheme);
 		output.writeInt(VERSION_CODE);
 		sceneIO.setEngineSerializationContext(null);

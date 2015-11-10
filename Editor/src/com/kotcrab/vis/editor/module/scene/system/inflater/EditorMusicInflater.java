@@ -14,50 +14,33 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system.inflater;
+package com.kotcrab.vis.editor.module.scene.system.inflater;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.audio.Music;
-import com.kotcrab.vis.runtime.RuntimeConfiguration;
-import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.editor.util.gdx.DummyMusic;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.MusicComponent;
 import com.kotcrab.vis.runtime.component.MusicProtoComponent;
+import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
-/**
- * Inflates {@link MusicProtoComponent} into {@link MusicComponent}
- * @author Kotcrab
- */
-public class MusicInflater extends InflaterSystem {
-	private ComponentMapper<AssetComponent> assetCm;
+/** @author Kotcrab */
+public class EditorMusicInflater extends InflaterSystem {
 	private ComponentMapper<MusicComponent> musicCm;
 	private ComponentMapper<MusicProtoComponent> protoCm;
 
-	private RuntimeConfiguration configuration;
-	private AssetManager manager;
-
-	public MusicInflater (RuntimeConfiguration configuration, AssetManager manager) {
+	public EditorMusicInflater () {
 		super(Aspect.all(MusicProtoComponent.class, AssetComponent.class));
-		this.configuration = configuration;
-		this.manager = manager;
 	}
 
 	@Override
 	protected void inserted (int entityId) {
-		AssetComponent assetComponent = assetCm.get(entityId);
 		MusicProtoComponent musicProtoComponent = protoCm.get(entityId);
 
-		PathAsset asset = (PathAsset) assetComponent.asset;
-
-		Music music = manager.get(asset.getPath(), Music.class);
-		if (music == null) throw new IllegalStateException("Can't load scene, music is missing: " + asset.getPath());
 		MusicComponent musicComponent = musicCm.create(entityId);
-		musicComponent.music = music;
+		musicComponent.music = new DummyMusic();
 		musicProtoComponent.fill(musicComponent);
 
-		if(configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);
 	}
 }

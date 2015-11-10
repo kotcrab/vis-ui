@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.module.scene;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.runtime.component.GroupComponent;
@@ -28,7 +27,6 @@ import com.kotcrab.vis.runtime.component.GroupComponent;
  * This system should be passive.
  * @author Kotcrab
  */
-@Wire
 public class GroupIdProviderSystem extends EntityProcessingSystem {
 	private ComponentMapper<GroupComponent> groupCm;
 

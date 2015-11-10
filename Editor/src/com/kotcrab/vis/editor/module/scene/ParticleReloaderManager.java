@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.*;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
 import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
@@ -25,7 +24,6 @@ import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.ParticleComponent;
 
 /** @author Kotcrab */
-@Wire
 public class ParticleReloaderManager extends Manager {
 	private ParticleCacheModule particleCache;
 	private float pixelsPerUnit;
@@ -35,8 +33,7 @@ public class ParticleReloaderManager extends Manager {
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
-	public ParticleReloaderManager (ParticleCacheModule particleCache, float pixelsPerUnit) {
-		this.particleCache = particleCache;
+	public ParticleReloaderManager (float pixelsPerUnit) {
 		this.pixelsPerUnit = pixelsPerUnit;
 	}
 

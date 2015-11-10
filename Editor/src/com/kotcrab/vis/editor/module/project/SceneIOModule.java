@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.module.project;
 import com.artemis.Component;
 import com.artemis.Entity;
 import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
@@ -59,6 +58,7 @@ import com.kotcrab.vis.runtime.data.PhysicsSettings;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.FileInputStream;
@@ -163,13 +163,14 @@ public class SceneIOModule extends ProjectModule {
 		registerTagged(ShaderAsset.class, 66);
 		registerTagged(SpriterAsset.class, 67);
 
-		registerEntityComponentSerializer(SpriteComponent.class, new SpriteComponentSerializer(kryo, textureCache), 201);
-		registerEntityComponentSerializer(MusicComponent.class, new MusicComponentSerializer(kryo), 202);
-		registerTagged(SoundComponent.class, 203);
-		registerEntityComponentSerializer(ParticleComponent.class, new ParticleComponentSerializer(kryo, particleCache), 204);
-		registerEntityComponentSerializer(TextComponent.class, new TextComponentSerializer(kryo, fontCache), 205);
-		registerEntityComponentSerializer(ShaderComponent.class, new ShaderComponentSerializer(kryo, shaderCache), 226);
-		registerEntityComponentSerializer(SpriterComponent.class, new SpriterComponentSerializer(kryo, spriterCache), 230);
+		//replaced by ProtoComponents serialized directly //TODO: [clean up] remove this
+//		registerEntityComponentSerializer(SpriteComponent.class, new SpriteComponentSerializer(kryo, textureCache), 201);
+//		registerEntityComponentSerializer(MusicComponent.class, new MusicComponentSerializer(kryo), 202);
+//		registerTagged(SoundComponent.class, 203);
+//		registerEntityComponentSerializer(ParticleComponent.class, new ParticleComponentSerializer(kryo, particleCache), 204);
+//		registerEntityComponentSerializer(TextComponent.class, new TextComponentSerializer(kryo, fontCache), 205);
+//		registerEntityComponentSerializer(ShaderComponent.class, new ShaderComponentSerializer(kryo, shaderCache), 226);
+//		registerEntityComponentSerializer(SpriterComponent.class, new SpriterComponentSerializer(kryo, spriterCache), 230);
 
 //		registerTagged(EditorPositionComponent.class, 206);
 		registerTagged(ExporterDropsComponent.class, 207);
@@ -188,6 +189,14 @@ public class SceneIOModule extends ProjectModule {
 		registerTagged(SpriterPropertiesComponent.class, 231);
 		registerTagged(PointComponent.class, 232);
 		registerTagged(PositionComponent.class, 233);
+
+		kryo.register(SpriteProtoComponent.class, 300);
+		kryo.register(SoundProtoComponent.class, 301);
+		kryo.register(MusicProtoComponent.class, 302);
+		kryo.register(TextProtoComponent.class, 303);
+		kryo.register(ParticleProtoComponent.class, 304);
+		kryo.register(SpriterProtoComponent.class, 305);
+		kryo.register(ShaderProtoComponent.class, 306);
 	}
 
 	protected <T> void registerTagged (Class<T> clazz, int id) {
@@ -237,7 +246,12 @@ public class SceneIOModule extends ProjectModule {
 		entityComponentSerializers.forEach(entityComponentSerializer -> entityComponentSerializer.setComponents(components));
 		components.forEach(component -> {
 			if (component instanceof InvisibleComponent) return;
-			clonedComponents.add(kryo.copy(component));
+			if (component instanceof UsesProtoComponent) {
+				ProtoComponent protoComponent = ((UsesProtoComponent)component).getProtoComponent();
+				clonedComponents.add(kryo.copy(protoComponent));
+			} else {
+				clonedComponents.add(kryo.copy(component));
+			}
 		});
 		entityComponentSerializers.forEach(entityComponentSerializer -> entityComponentSerializer.setComponents(null));
 
@@ -277,7 +291,7 @@ public class SceneIOModule extends ProjectModule {
 		return false;
 	}
 
-	public void setEngineSerializationContext (ImmutableBag<Component> components) {
+	public void setEngineSerializationContext (Bag<Component> components) {
 		entityComponentSerializers.forEach(entityComponentSerializer -> entityComponentSerializer.setComponents(components));
 	}
 

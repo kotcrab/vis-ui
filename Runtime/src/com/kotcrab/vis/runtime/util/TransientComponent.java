@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.util;
 
-import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /** @author Kotcrab */
-public class PositionComponent extends Component {
-	@VisTag(0) public float x;
-	@VisTag(1) public float y;
-	@VisTag(2) public boolean dirty;
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface TransientComponent {
 }

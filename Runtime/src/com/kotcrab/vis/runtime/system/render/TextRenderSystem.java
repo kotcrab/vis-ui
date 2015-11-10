@@ -18,7 +18,6 @@ package com.kotcrab.vis.runtime.system.render;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.annotations.Wire;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
@@ -31,7 +30,6 @@ import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
  * Renders entities with {@link TextComponent}
  * @author Kotcrab
  */
-@Wire
 public class TextRenderSystem extends DeferredEntityProcessingSystem {
 	private static final Matrix4 IDT_MATRIX = new Matrix4();
 

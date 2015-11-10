@@ -16,8 +16,8 @@
 
 package com.kotcrab.vis.runtime.system.inflater;
 
-import com.artemis.*;
-import com.artemis.annotations.Wire;
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
@@ -30,8 +30,7 @@ import com.kotcrab.vis.runtime.component.SoundProtoComponent;
  * Inflates {@link SoundProtoComponent} into {@link SoundComponent}
  * @author Kotcrab
  */
-@Wire
-public class SoundInflater extends BaseEntitySystem {
+public class SoundInflater extends InflaterSystem {
 	private ComponentMapper<SoundProtoComponent> protoCm;
 	private ComponentMapper<SoundComponent> soundCm;
 	private ComponentMapper<AssetComponent> assetCm;
@@ -46,11 +45,6 @@ public class SoundInflater extends BaseEntitySystem {
 	}
 
 	@Override
-	protected void processSystem () {
-
-	}
-
-	@Override
 	public void inserted (int entityId) {
 		AssetComponent assetComponent = assetCm.get(entityId);
 
@@ -61,7 +55,7 @@ public class SoundInflater extends BaseEntitySystem {
 		SoundComponent soundComponent = soundCm.create(entityId);
 		soundComponent.sound = sound;
 
-		if (configuration.removeAssetsComponentAfterInflating)
-			assetCm.remove(entityId);
+		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
+		protoCm.remove(entityId);
 	}
 }

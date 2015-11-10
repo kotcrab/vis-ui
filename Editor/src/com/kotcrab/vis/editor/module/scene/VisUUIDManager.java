@@ -18,14 +18,12 @@ package com.kotcrab.vis.editor.module.scene;
 
 import com.artemis.*;
 import com.artemis.EntitySubscription.SubscriptionListener;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
 
 import java.util.UUID;
 
-@Wire
 public class VisUUIDManager extends Manager {
 	private ComponentMapper<UUIDComponent> idCm;
 	private AspectSubscriptionManager subscriptionManager;

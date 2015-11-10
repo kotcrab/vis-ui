@@ -33,7 +33,6 @@ package com.kotcrab.vis.plugin.spine;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.annotations.Wire;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
@@ -48,7 +47,6 @@ import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /** @author Kotcrab */
-@Wire
 public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 	private ComponentMapper<SpineComponent> spineCm;
 	private ComponentMapper<SpineBoundsComponent> boundsCm;
