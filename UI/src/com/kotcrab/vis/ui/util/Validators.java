@@ -78,6 +78,14 @@ public class Validators {
 				return false;
 			}
 		}
+
+		public void setEquals (boolean equals) {
+			this.equals = equals;
+		}
+
+		public void setLesserThan (float lesserThan) {
+			this.lesserThan = lesserThan;
+		}
 	}
 
 	/** Validates whether input is geater (alternatively greater or equal) than provided number */
@@ -102,6 +110,14 @@ public class Validators {
 			} catch (NumberFormatException ex) {
 				return false;
 			}
+		}
+
+		public void setEquals (boolean equals) {
+			this.equals = equals;
+		}
+
+		public void setGreaterThan (float greaterThan) {
+			this.greaterThan = greaterThan;
 		}
 	}
 }

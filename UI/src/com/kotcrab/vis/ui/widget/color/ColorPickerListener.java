@@ -24,8 +24,14 @@ import com.badlogic.gdx.graphics.Color;
  */
 public interface ColorPickerListener {
 	/** Called when color selection was canceled by user (either by clicking cancel or closing the window) */
-	void canceled ();
+	void canceled (Color oldColor);
 
-	/** Called when user finises selecting new color */
+	/**
+	 * Called when currently selected color in picker has changed. This does not mean that user finished selecting color, if
+	 * you are only interested in that event use {@link #finished(Color)} or {@link #canceled(Color)}
+	 */
+	void changed (Color newColor);
+
+	/** Called when user has finished selecting new color */
 	void finished (Color newColor);
 }

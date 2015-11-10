@@ -31,6 +31,7 @@ import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.BorderOwner;
 
 /**
  * A checkbox is a button that contains an image indicating the checked or unchecked state and a label.
@@ -38,13 +39,14 @@ import com.kotcrab.vis.ui.VisUI;
  * @author Kotcrab
  */
 @SuppressWarnings("rawtypes")
-public class VisCheckBox extends TextButton implements Focusable {
+public class VisCheckBox extends TextButton implements Focusable, BorderOwner {
 	private Image image;
 	private Cell imageCell;
 	private VisCheckBoxStyle style;
 
 	private boolean drawBorder;
-	private Drawable checkboxImage;
+	private boolean stateInvalid;
+	private boolean focusBorderEnabled = true;
 
 	public VisCheckBox (String text) {
 		this(text, VisUI.getSkin().get(VisCheckBoxStyle.class));
@@ -101,7 +103,9 @@ public class VisCheckBox extends TextButton implements Focusable {
 		image.setDrawable(checkbox);
 		super.draw(batch, parentAlpha);
 
-		if (drawBorder && style.focusBorder != null)
+		if (stateInvalid && style.errorBorder != null)
+			style.errorBorder.draw(batch, getX(), getY() + image.getY(), image.getWidth(), image.getHeight());
+		else if (focusBorderEnabled && drawBorder && style.focusBorder != null)
 			style.focusBorder.draw(batch, getX(), getY() + image.getY(), image.getWidth(), image.getHeight());
 	}
 
@@ -111,6 +115,15 @@ public class VisCheckBox extends TextButton implements Focusable {
 
 	public Cell getImageCell () {
 		return imageCell;
+	}
+
+	/** @param stateInvalid if true error border around this checkbox will be drawn. Does not affect any other properties */
+	public void setStateInvalid (boolean stateInvalid) {
+		this.stateInvalid = stateInvalid;
+	}
+
+	public boolean setStateInvalid () {
+		return stateInvalid;
 	}
 
 	@Override
@@ -150,8 +163,19 @@ public class VisCheckBox extends TextButton implements Focusable {
 			return style.checkboxOff;
 	}
 
+	@Override
+	public boolean isFocusBorderEnabled () {
+		return focusBorderEnabled;
+	}
+
+	@Override
+	public void setFocusBorderEnabled (boolean focusBorderEnabled) {
+		this.focusBorderEnabled = focusBorderEnabled;
+	}
+
 	static public class VisCheckBoxStyle extends CheckBoxStyle {
 		public Drawable focusBorder;
+		public Drawable errorBorder;
 		public Drawable checkboxOnOver;
 		public Drawable checkboxOnDown;
 		public Drawable checkboxOffDown;
@@ -167,6 +191,7 @@ public class VisCheckBox extends TextButton implements Focusable {
 		public VisCheckBoxStyle (VisCheckBoxStyle style) {
 			super(style);
 			this.focusBorder = style.focusBorder;
+			this.errorBorder = style.errorBorder;
 			this.checkboxOnOver = style.checkboxOnOver;
 			this.checkboxOnDown = style.checkboxOnDown;
 			this.checkboxOffDown = style.checkboxOffDown;

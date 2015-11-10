@@ -19,78 +19,99 @@ package com.kotcrab.vis.ui.widget;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
- * Simple LinkLabel allowing to create label with clickable link.
+ * Simple LinkLabel allows to create label with clickable link.
  * Link can have custom text. By default clicking link will open it in default browser, this can be changed by settings label listener.
  * @author Kotcrab
  * @since 0.7.2
  */
 public class LinkLabel extends VisLabel {
-	private static final String DEFAULT_COLOR_NAME = "link-label";
+	static private final Color tempColor = new Color();
+
+	private LinkLabelStyle style;
+	private ClickListener clickListener;
 
 	private LinkLabelListener listener;
 	private CharSequence url;
 
 	public LinkLabel (CharSequence url) {
-		super(url);
-		setColor(VisUI.getSkin().getColor(DEFAULT_COLOR_NAME));
+		super(url, VisUI.getSkin().get(LinkLabelStyle.class));
 		init(url);
 	}
 
 	public LinkLabel (CharSequence text, CharSequence url) {
-		super(text);
-		setColor(VisUI.getSkin().getColor(DEFAULT_COLOR_NAME));
+		super(text, VisUI.getSkin().get(LinkLabelStyle.class));
 		init(url);
 	}
 
 	public LinkLabel (CharSequence text, int alignment) {
-		super(text, alignment);
-		setColor(VisUI.getSkin().getColor(DEFAULT_COLOR_NAME));
+		super(text, VisUI.getSkin().get(LinkLabelStyle.class));
+		setAlignment(alignment);
 		init(text);
 	}
 
 	public LinkLabel (CharSequence text, Color textColor) {
-		super(text, textColor);
+		super(text, VisUI.getSkin().get(LinkLabelStyle.class));
+		setColor(textColor);
 		init(text);
 	}
 
-	public LinkLabel (CharSequence text, LabelStyle style) {
+	public LinkLabel (CharSequence text, LinkLabelStyle style) {
 		super(text, style);
 		init(text);
 	}
 
 	public LinkLabel (CharSequence text, CharSequence url, String styleName) {
-		super(text, styleName);
+		super(text, VisUI.getSkin().get(styleName, LinkLabelStyle.class));
 		init(url);
 	}
 
 	public LinkLabel (CharSequence text, String fontName, Color color) {
-		super(text, fontName, color);
+		super(text, new LinkLabelStyle(VisUI.getSkin().getFont(fontName), color, VisUI.getSkin().getDrawable("white")));
 		init(text);
 	}
 
-	public LinkLabel (CharSequence text, String fontName, String colorName) {
-		super(text, fontName, colorName);
-		init(text);
+	@Override
+	public LinkLabelStyle getStyle () {
+		return (LinkLabelStyle) super.getStyle();
 	}
 
 	private void init (CharSequence linkUrl) {
 		this.url = linkUrl;
-		addListener(new ClickListener(Buttons.LEFT) {
+		style = getStyle();
+
+		addListener(clickListener = new ClickListener(Buttons.LEFT) {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
 				super.clicked(event, x, y);
 
-				if (listener == null)
+				if (listener == null) {
 					Gdx.net.openURI(url.toString());
-				else
+				} else {
 					listener.clicked(url.toString());
+				}
 			}
 		});
+	}
+
+	@Override
+	public void draw (Batch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+		Drawable underline = style.underline;
+		if (underline != null && clickListener.isOver()) {
+			Color color = tempColor.set(getColor());
+			color.a *= parentAlpha;
+			if (style.fontColor != null) color.mul(style.fontColor);
+			batch.setColor(color);
+			underline.draw(batch, getX(), getY(), getWidth(), 1);
+		}
 	}
 
 	public CharSequence getUrl () {
@@ -111,5 +132,23 @@ public class LinkLabel extends VisLabel {
 
 	public interface LinkLabelListener {
 		void clicked (String url);
+	}
+
+	public static class LinkLabelStyle extends LabelStyle {
+		/** Optional */
+		public Drawable underline;
+
+		public LinkLabelStyle () {
+		}
+
+		public LinkLabelStyle (BitmapFont font, Color fontColor, Drawable underline) {
+			super(font, fontColor);
+			this.underline = underline;
+		}
+
+		public LinkLabelStyle (LinkLabelStyle other) {
+			super(other);
+			this.underline = other.underline;
+		}
 	}
 }

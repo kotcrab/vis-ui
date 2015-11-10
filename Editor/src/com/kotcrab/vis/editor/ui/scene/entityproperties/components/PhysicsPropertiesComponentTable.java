@@ -44,8 +44,9 @@ public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsP
 
 		EntityUtils.stream(properties.getProxies(), (proxy, entity) -> {
 			if (proxy.hasComponent(PhysicsPropertiesComponent.class)) {
-				if (entity.getComponent(PhysicsPropertiesComponent.class).adjustOrigin)
+				if (entity.getComponent(PhysicsPropertiesComponent.class).adjustOrigin && proxy.isOriginSupported()) {
 					proxy.setOrigin(0, 0);
+				}
 			}
 		});
 	}

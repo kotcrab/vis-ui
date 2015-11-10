@@ -18,10 +18,10 @@ package com.kotcrab.vis.ui.widget;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 
 /**
  * Widget containing table that can be collapsed
@@ -31,10 +31,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 public class CollapsibleWidget extends WidgetGroup {
 	private Table table;
 
+	private CollapseAction collapseAction = new CollapseAction();
+
 	private boolean collapsed;
 	private boolean actionRunning;
 
 	private float currentHeight;
+
+	public CollapsibleWidget () {
+	}
 
 	public CollapsibleWidget (Table table) {
 		this(table, false);
@@ -46,41 +51,19 @@ public class CollapsibleWidget extends WidgetGroup {
 
 		updateTouchable();
 
-		addActor(table);
+		if (table != null) addActor(table);
 	}
 
 	public void setCollapsed (boolean collapse, boolean withAnimation) {
 		this.collapsed = collapse;
+		updateTouchable();
+
+		if (table == null) return;
 
 		actionRunning = true;
 
-		updateTouchable();
-
 		if (withAnimation) {
-			addAction(new Action() {
-				@Override
-				public boolean act (float delta) {
-
-					if (collapsed) {
-						currentHeight -= delta * 1000;
-						if (currentHeight <= 0) {
-							currentHeight = 0;
-							collapsed = true;
-							actionRunning = false;
-						}
-					} else {
-						currentHeight += delta * 1000;
-						if (currentHeight > table.getPrefHeight()) {
-							currentHeight = table.getPrefHeight();
-							collapsed = false;
-							actionRunning = false;
-						}
-					}
-
-					invalidateHierarchy();
-					return !actionRunning;
-				}
-			});
+			addAction(collapseAction);
 		} else {
 			if (collapse) {
 				currentHeight = 0;
@@ -99,15 +82,15 @@ public class CollapsibleWidget extends WidgetGroup {
 		setCollapsed(collapse, true);
 	}
 
+	public boolean isCollapsed () {
+		return collapsed;
+	}
+
 	private void updateTouchable () {
 		if (collapsed)
 			setTouchable(Touchable.disabled);
 		else
 			setTouchable(Touchable.enabled);
-	}
-
-	public boolean isCollapsed () {
-		return collapsed;
 	}
 
 	@Override
@@ -125,7 +108,8 @@ public class CollapsibleWidget extends WidgetGroup {
 
 	@Override
 	public void layout () {
-		super.layout();
+		if (table == null) return;
+
 		table.setBounds(0, 0, table.getPrefWidth(), table.getPrefHeight());
 
 		if (actionRunning == false) {
@@ -138,11 +122,13 @@ public class CollapsibleWidget extends WidgetGroup {
 
 	@Override
 	public float getPrefWidth () {
-		return table.getPrefWidth();
+		return table == null ? 0 : table.getPrefWidth();
 	}
 
 	@Override
 	public float getPrefHeight () {
+		if (table == null) return 0;
+
 		if (actionRunning == false) {
 			if (collapsed)
 				return 0;
@@ -153,8 +139,39 @@ public class CollapsibleWidget extends WidgetGroup {
 		return currentHeight;
 	}
 
+	public void setTable (Table table) {
+		this.table = table;
+		clearChildren();
+		addActor(table);
+	}
+
 	@Override
-	protected void setStage (Stage stage) {
-		super.setStage(stage);
+	protected void childrenChanged () {
+		super.childrenChanged();
+		if (getChildren().size > 1) throw new GdxRuntimeException("Only one actor can be added to CollapsibleWidget");
+	}
+
+	private class CollapseAction extends Action {
+		@Override
+		public boolean act (float delta) {
+			if (collapsed) {
+				currentHeight -= delta * 1000;
+				if (currentHeight <= 0) {
+					currentHeight = 0;
+					collapsed = true;
+					actionRunning = false;
+				}
+			} else {
+				currentHeight += delta * 1000;
+				if (currentHeight > table.getPrefHeight()) {
+					currentHeight = table.getPrefHeight();
+					collapsed = false;
+					actionRunning = false;
+				}
+			}
+
+			invalidateHierarchy();
+			return !actionRunning;
+		}
 	}
 }

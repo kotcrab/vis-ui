@@ -28,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Scaling;
@@ -51,6 +52,7 @@ import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
  */
 public class TabbedPane {
 	private TabbedPaneStyle style;
+	private VisImageButtonStyle sharedCloseActiveButtonStyle;
 
 	private VisTable tabsTable;
 	private VisTable mainTable;
@@ -76,6 +78,8 @@ public class TabbedPane {
 		this.style = style;
 		listeners = new Array<TabbedPaneListener>();
 
+		sharedCloseActiveButtonStyle = VisUI.getSkin().get("close-active-tab", VisImageButtonStyle.class);
+
 		group = new ButtonGroup<Button>();
 
 		mainTable = new VisTable();
@@ -90,8 +94,9 @@ public class TabbedPane {
 		mainTable.row();
 
 		// if height is not set bottomBar may sometimes disappear
-		if (style.bottomBar != null)
+		if (style.bottomBar != null) {
 			mainTable.add(new Image(style.bottomBar)).expand().fill().height(style.bottomBar.getMinHeight());
+		}
 	}
 
 	/**
@@ -143,7 +148,7 @@ public class TabbedPane {
 		}
 
 		if (tab.isDirty() && mainTable.getStage() != null) {
-			DialogUtils.showOptionDialog(mainTable.getStage(), get(Text.UNSAVED_DIALOG_TITLE), get(Text.UNSAVED_DIALOG_TEXT),
+			DialogUtils.showOptionDialog(mainTable.getStage(), Text.UNSAVED_DIALOG_TITLE.get(), Text.UNSAVED_DIALOG_TEXT.get(),
 					OptionDialogType.YES_NO_CANCEL, new OptionDialogAdapter() {
 						@Override
 						public void yes () {
@@ -167,14 +172,20 @@ public class TabbedPane {
 		boolean success = tabs.removeValue(tab, true);
 
 		if (success) {
+			tabsButtonMap.remove(tab);
+
 			tab.setPane(null);
 			tab.onHide();
 			tab.dispose();
 			notifyListenersRemoved(tab);
 
-			if (tabs.size == 0)
+			if (tabs.size == 0) {
+				//all tabs were removed so notify listener
 				notifyListenersRemovedAll();
-			else if (activeTab == tab && index != 0) switchTab(--index);
+			} else if (activeTab == tab && index != 0) {
+				//switch to previous tab
+				switchTab(--index);
+			}
 
 			rebuildTabsTable();
 		}
@@ -191,6 +202,7 @@ public class TabbedPane {
 		}
 
 		tabs.clear();
+		tabsButtonMap.clear();
 
 		rebuildTabsTable();
 		notifyListenersRemovedAll();
@@ -223,22 +235,23 @@ public class TabbedPane {
 		Tab lastSelectedTab = activeTab;
 		tabsTable.clear();
 		group.clear();
-		tabsButtonMap.clear();
 
 		for (final Tab tab : tabs) {
-			final TabButtonTable buttonTable = new TabButtonTable(tab);
+			TabButtonTable buttonTable = tabsButtonMap.get(tab);
+			if (buttonTable == null) {
+				buttonTable = new TabButtonTable(tab);
+				tabsButtonMap.put(tab, buttonTable);
+			}
 
 			tabsTable.add(buttonTable);
-			tabsButtonMap.put(tab, buttonTable);
-			group.add(buttonTable.button); //this will change activeTab
+			group.add(buttonTable.button);
 
 			if (tabs.size == 1 && lastSelectedTab != null) {
 				buttonTable.select();
 				notifyListenersSwitched(tab);
-			}
-
-			if (tab == lastSelectedTab)
+			} else if (tab == lastSelectedTab) {
 				buttonTable.select(); // maintains current previous tab while rebuilding
+			}
 		}
 	}
 
@@ -278,10 +291,6 @@ public class TabbedPane {
 		return tabs;
 	}
 
-	private String get (Text text) {
-		return VisUI.getTabbedPaneBundle().get(text.getName());
-	}
-
 	public static class TabbedPaneStyle {
 		public Drawable bottomBar;
 		public Drawable background;
@@ -316,8 +325,11 @@ public class TabbedPane {
 			this.tab = tab;
 			button = new VisTextButton(getTabTitle(tab), style.buttonStyle);
 			button.setFocusBorderEnabled(false);
+			button.setProgrammaticChangeEvents(false);
 
-			closeButton = new VisImageButton("close");
+			closeButtonStyle = new VisImageButtonStyle(VisUI.getSkin().get("close", VisImageButtonStyle.class));
+
+			closeButton = new VisImageButton(closeButtonStyle);
 			closeButton.getImage().setScaling(Scaling.fill);
 			closeButton.getImage().setColor(Color.RED);
 
@@ -334,85 +346,102 @@ public class TabbedPane {
 			closeButton.addListener(new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
-					closeTab();
+					closeTabAsUser();
 				}
 			});
 
 			button.addListener(new InputListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int mouseButton) {
-					closeButtonStyle.up = buttonStyle.down;
+					if (UIUtils.left()) {
+						closeButtonStyle.up = buttonStyle.down;
+					}
 
-					if (mouseButton == Buttons.MIDDLE) closeTab();
+					if (mouseButton == Buttons.MIDDLE) closeTabAsUser();
 
-					return false;
+					return true;
+				}
+
+				@Override
+				public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+					closeButtonStyle.up = buttonStyle.up;
 				}
 
 				@Override
 				public boolean mouseMoved (InputEvent event, float x, float y) {
-					if (activeTab != tab)
-						closeButtonStyle.up = buttonStyle.over;
+					if (activeTab != tab) {
+						setCloseButtonOnMouseMove();
+					}
+
 					return false;
 				}
 
 				@Override
 				public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
-					if (activeTab != tab)
+					if (activeTab != tab) {
 						closeButtonStyle.up = buttonStyle.up;
+					}
 				}
 
 				@Override
 				public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-					if (activeTab != tab && Gdx.input.justTouched() == false)
+					if (activeTab != tab && Gdx.input.justTouched() == false) {
+						setCloseButtonOnMouseMove();
+					}
+				}
+
+				private void setCloseButtonOnMouseMove () {
+					if (UIUtils.left()) {
+						closeButtonStyle.up = buttonStyle.down;
+					} else {
 						closeButtonStyle.up = buttonStyle.over;
+					}
 				}
 			});
 
 			button.addListener(new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
-					if (button.isChecked()) {
-						if (activeTab != null) {
-							TabButtonTable table = tabsButtonMap.get(activeTab);
-							if (table != null) table.deselect();
-							activeTab.onHide();
-						}
-
-						activeTab = tab;
-						notifyListenersSwitched(tab);
-						tab.onShow();
-						closeButtonStyle.up = buttonStyle.down;
-						closeButtonStyle.over = null;
-					} else {
-
-						if (group.getChecked() == null) {
-
-							if (activeTab != null) {
-								TabButtonTable table = tabsButtonMap.get(activeTab);
-								if (table != null) table.deselect();
-								activeTab.onHide();
-							}
-
-							activeTab = null;
-							notifyListenersSwitched(null);
-						}
-					}
+					switchToNewTab();
 				}
 			});
 		}
 
-		private void closeTab () {
-			if (tab.isCloseableByUser())
+		private void switchToNewTab () {
+			//there was some previous tab, deselect it
+			if (activeTab != null && activeTab != tab) {
+				TabButtonTable table = tabsButtonMap.get(activeTab);
+				//table may no longer exists if tab was removed, no big deal since this only changes
+				//button style, tab.onHide() will be already called by remove() method
+				if (table != null) {
+					table.deselect();
+					activeTab.onHide();
+				}
+			}
+
+			if (button.isChecked() && tab != activeTab) { //switch to new tab
+				activeTab = tab;
+				notifyListenersSwitched(tab);
+				tab.onShow();
+				closeButton.setStyle(sharedCloseActiveButtonStyle);
+			}
+
+		}
+
+		/** Closes tab, does nothing if Tab is not closeable by User */
+		private void closeTabAsUser () {
+			if (tab.isCloseableByUser()) {
 				TabbedPane.this.remove(tab, false);
+			}
 		}
 
 		public void select () {
 			button.setChecked(true);
+			switchToNewTab();
 		}
 
 		public void deselect () {
-			closeButtonStyle.up = buttonStyle.up;
-			closeButtonStyle.over = buttonStyle.over;
+			closeButton.setStyle(closeButtonStyle);
 		}
 	}
 
@@ -424,7 +453,7 @@ public class TabbedPane {
 
 		@Override
 		public String get () {
-			throw new UnsupportedOperationException();
+			return VisUI.getTabbedPaneBundle().get(getName());
 		}
 
 		@Override

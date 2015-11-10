@@ -64,6 +64,7 @@ public class EditorFrame extends JFrame {
 		config.width = 1280;
 		config.height = 720;
 		config.backgroundFPS = 0; //default is 60, when in background it takes a lot of cpu, maybe vsync causes it?
+		config.allowSoftwareMode = launchConfig.allowSoftwareMode;
 
 		editor = new Editor(this);
 
@@ -95,6 +96,11 @@ public class EditorFrame extends JFrame {
 
 			if (arg.equals("--scale-ui")) {
 				launchConfig.scaleUIEnabled = true;
+				continue;
+			}
+
+			if (arg.equals("--allow-software-mode")) {
+				launchConfig.allowSoftwareMode = true;
 				continue;
 			}
 

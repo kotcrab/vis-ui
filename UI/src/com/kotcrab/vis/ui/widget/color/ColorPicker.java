@@ -25,7 +25,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.I18NBundle;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ColorUtils;
@@ -37,7 +36,8 @@ import static com.kotcrab.vis.ui.widget.color.ColorPickerText.*;
 
 /**
  * Color Picker widget, allows user to select color. ColorPicker is heavy widget and should be reused whenever possible.
- * This widget must be disposed when no longer needed!
+ * This widget must be disposed when no longer needed! ColorPicker will be centered on screen after adding to Stage
+ * use {@link #setCenterOnAdd(boolean)} to change this.
  * @author Kotcrab
  * @since 0.6.0
  */
@@ -50,9 +50,11 @@ public class ColorPicker extends VisWindow implements Disposable {
 	static final int BAR_HEIGHT = 11;
 	static final float VERTICAL_BAR_WIDTH = 15;
 
+	private static final int HEX_COLOR_LENGTH = 6;
+	private static final int HEX_COLOR_LENGTH_WITH_ALPHA = 8;
+
 	private ColorPickerStyle style;
 	private Sizes sizes;
-	private I18NBundle bundle;
 
 	private ColorPickerListener listener;
 
@@ -84,10 +86,12 @@ public class ColorPicker extends VisWindow implements Disposable {
 	private VisTextButton cancelButton;
 	private VisTextButton okButton;
 
-	private Image currentColor;
-	private Image newColor;
+	private Image currentColorImg;
+	private Image newColorImg;
 
+	private boolean allowAlphaEdit = true;
 	private boolean closeAfterPickingFinished = true;
+	private boolean disposed = false;
 
 	public ColorPicker () {
 		this((String) null);
@@ -110,9 +114,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 		this.listener = listener;
 		this.style = VisUI.getSkin().get(styleName, ColorPickerStyle.class);
 		this.sizes = VisUI.getSizes();
-		this.bundle = VisUI.getColorPickerBundle();
 
-		if (title == null) getTitleLabel().setText(getText(TITLE));
+		if (title == null) getTitleLabel().setText(TITLE.get());
 
 		setModal(true);
 		setMovable(true);
@@ -168,21 +171,21 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 	private VisTable createColorsPreviewTable () {
 		VisTable table = new VisTable(false);
-		table.add(new VisLabel(getText(OLD))).spaceRight(3);
-		table.add(currentColor = new AlphaImage(style)).height(25 * sizes.scaleFactor).expandX().fillX();
+		table.add(new VisLabel(OLD.get())).spaceRight(3);
+		table.add(currentColorImg = new AlphaImage(style)).height(25 * sizes.scaleFactor).expandX().fillX();
 		table.row();
-		table.add(new VisLabel(getText(NEW))).spaceRight(3);
-		table.add(newColor = new AlphaImage(style, true)).height(25 * sizes.scaleFactor).expandX().fillX();
+		table.add(new VisLabel(NEW.get())).spaceRight(3);
+		table.add(newColorImg = new AlphaImage(style, true)).height(25 * sizes.scaleFactor).expandX().fillX();
 
-		currentColor.setColor(color);
-		newColor.setColor(color);
+		currentColorImg.setColor(color);
+		newColorImg.setColor(color);
 
 		return table;
 	}
 
 	private VisTable createHexTable () {
 		VisTable table = new VisTable(true);
-		table.add(new VisLabel(getText(HEX)));
+		table.add(new VisLabel(HEX.get()));
 		table.add(hexField = new VisValidatableTextField("00000000")).width(HEX_FIELD_WIDTH * sizes.scaleFactor);
 		table.row();
 
@@ -198,7 +201,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 		hexField.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				if (hexField.getText().length() == 8) setColor(Color.valueOf(hexField.getText()), false);
+				if (hexField.getText().length() == (allowAlphaEdit ? HEX_COLOR_LENGTH_WITH_ALPHA : HEX_COLOR_LENGTH))
+					setColor(Color.valueOf(hexField.getText()), false);
 			}
 		});
 
@@ -208,9 +212,9 @@ public class ColorPicker extends VisWindow implements Disposable {
 	private VisTable createButtons () {
 		VisTable table = new VisTable(true);
 		table.defaults().right();
-		table.add(restoreButton = new VisTextButton(getText(RESTORE)));
-		table.add(okButton = new VisTextButton(getText(OK)));
-		table.add(cancelButton = new VisTextButton(getText(CANCEL)));
+		table.add(restoreButton = new VisTextButton(RESTORE.get()));
+		table.add(okButton = new VisTextButton(OK.get()));
+		table.add(cancelButton = new VisTextButton(CANCEL.get()));
 		return table;
 	}
 
@@ -394,7 +398,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 	@Override
 	protected void close () {
-		if (listener != null) listener.canceled();
+		if (listener != null) listener.canceled(oldColor);
 		super.close();
 	}
 
@@ -416,7 +420,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 		paletteTexture.draw(palettePixmap, 0, 0);
 
-		newColor.setColor(color);
+		newColorImg.setColor(color);
 
 		hBar.redraw();
 		sBar.redraw();
@@ -430,41 +434,67 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 		hexField.setText(color.toString().toUpperCase());
 		hexField.setCursorPosition(hexField.getMaxLength());
+
+		if (listener != null) listener.changed(color);
 	}
 
 	@Override
-	/** Sets current selected color in picker.*/
-	public void setColor (Color c) {
+	/** Sets current selected color in picker. If alpha editing is disabled then alpha channel of this new color will be set to 1 */
+	public void setColor (Color newColor) {
+		if (allowAlphaEdit == false) newColor.a = 1;
 		//this method overrides setColor in Actor, not big deal we definitely don't need it
-		setColor(c, true);
+		setColor(newColor, true);
 	}
 
-	private void setColor (Color c, boolean updateCurrentColor) {
+	private void setColor (Color newColor, boolean updateCurrentColor) {
 		if (updateCurrentColor) {
-			currentColor.setColor(new Color(c));
-			oldColor = new Color(c);
+			currentColorImg.setColor(new Color(newColor));
+			oldColor = new Color(newColor);
 		}
-		color = new Color(c);
+		color = new Color(newColor);
 		updateFieldsFromColor();
 		updatePixmaps();
-	}
-
-	private String getText (ColorPickerText text) {
-		return bundle.get(text.getName());
 	}
 
 	/**
 	 * Controls whether to fade out color picker after users finished color picking and has pressed OK button. If
 	 * this is set to false picker won't close after pressing OK button. Default is true.
-	 * Note that  by default picker is a modal window so might also want to call {@code colorPicker.setModal(false)} to
+	 * Note that by default picker is a modal window so might also want to call {@code colorPicker.setModal(false)} to
 	 * disable it.
 	 */
 	public void setCloseAfterPickingFinished (boolean closeAfterPickingFinished) {
 		this.closeAfterPickingFinished = closeAfterPickingFinished;
 	}
 
+	/**
+	 * @param allowAlphaEdit if false this picker will have disabled editing color alpha channel. If current picker color
+	 * has alpha it will be reset to 1. If true alpha editing will be re-enabled. For better UX this should not be called
+	 * while ColorPicker is visible.
+	 */
+	public void setAllowAlphaEdit (boolean allowAlphaEdit) {
+		this.allowAlphaEdit = allowAlphaEdit;
+
+		aBar.setVisible(allowAlphaEdit);
+		hexField.setMaxLength(allowAlphaEdit ? HEX_COLOR_LENGTH_WITH_ALPHA : HEX_COLOR_LENGTH);
+		if (allowAlphaEdit == false) {
+			Color newColor = new Color(color);
+			newColor.a = 1;
+			setColor(newColor);
+		}
+	}
+
+	public boolean isAllowAlphaEdit () {
+		return allowAlphaEdit;
+	}
+
+	public boolean isDisposed () {
+		return disposed;
+	}
+
 	@Override
 	public void dispose () {
+		if (disposed) throw new IllegalStateException("ColorPicker can't be disposed twice!");
+
 		paletteTexture.dispose();
 		barTexture.dispose();
 
@@ -480,6 +510,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 		bBar.dispose();
 
 		aBar.dispose();
+
+		disposed = true;
 	}
 
 	private void updateFieldsFromColor () {

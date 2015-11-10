@@ -42,6 +42,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.BorderOwner;
 
 import java.lang.StringBuilder;
 
@@ -64,7 +65,7 @@ import java.lang.StringBuilder;
  * @author Nathan Sweet
  * @author Kotcrab
  */
-public class VisTextField extends Widget implements Disableable, Focusable {
+public class VisTextField extends Widget implements Disableable, Focusable, BorderOwner {
 	static private final char BACKSPACE = 8;
 	static protected final char ENTER_DESKTOP = '\r';
 	static protected final char ENTER_ANDROID = '\n';
@@ -118,6 +119,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 	KeyTypedRepeatTask keyTypedRepeatTask = new KeyTypedRepeatTask();
 	private ClickListener clickListener;
 	private boolean drawBorder;
+	private boolean focusBorderEnabled = true;
 	private boolean inputValid = true;
 
 	public VisTextField () {
@@ -348,7 +350,7 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 		// vis
 		if (inputValid == false)
 			style.errorBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
-		else if (drawBorder && style.focusBorder != null)
+		else if (focusBorderEnabled && drawBorder && style.focusBorder != null)
 			style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
 
 	}
@@ -836,6 +838,16 @@ public class VisTextField extends Widget implements Disableable, Focusable {
 
 	public void setInputValid (boolean inputValid) {
 		this.inputValid = inputValid;
+	}
+
+	@Override
+	public boolean isFocusBorderEnabled () {
+		return focusBorderEnabled;
+	}
+
+	@Override
+	public void setFocusBorderEnabled (boolean focusBorderEnabled) {
+		this.focusBorderEnabled = focusBorderEnabled;
 	}
 
 	static public class VisTextFieldStyle extends TextFieldStyle {

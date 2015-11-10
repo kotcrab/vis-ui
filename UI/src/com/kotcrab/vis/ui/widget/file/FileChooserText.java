@@ -16,11 +16,13 @@
 
 package com.kotcrab.vis.ui.widget.file;
 
+import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.i18n.BundleText;
 
 /**
  * Contains texts for chooser access via I18NBundle
  * @since 0.7.0
+ * @author Kotcrab
  */
 public enum FileChooserText implements BundleText {
 	// @formatter:off
@@ -70,7 +72,7 @@ public enum FileChooserText implements BundleText {
 
 	@Override
 	public String get () {
-		throw new UnsupportedOperationException();
+		return VisUI.getFileChooserBundle().get(getName());
 	}
 
 	@Override

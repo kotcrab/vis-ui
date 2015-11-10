@@ -16,12 +16,18 @@
 
 package com.kotcrab.vis.editor.util.scene2d;
 
+import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
 
 /** @author Kotcrab */
 public interface VisColorPickerListener extends ColorPickerListener {
 	@Override
-	default void canceled () {
+	default void canceled (Color oldColor) {
+
+	}
+
+	@Override
+	default void changed (Color newColor) {
 
 	}
 }

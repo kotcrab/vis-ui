@@ -50,7 +50,7 @@ public class DialogUtils {
 	public static VisDialog showOKDialog (Stage stage, String title, String text) {
 		VisDialog dialog = new VisDialog(title);
 		dialog.text(text);
-		dialog.button(get(Text.OK)).padBottom(3);
+		dialog.button(Text.OK.get()).padBottom(3);
 		dialog.pack();
 		dialog.centerWindow();
 		stage.addActor(dialog.fadeIn());
@@ -198,8 +198,8 @@ public class DialogUtils {
 			}
 
 			VisTable buttonsTable = new VisTable(true);
-			buttonsTable.add(cancelButton = new VisTextButton(get(Text.CANCEL)));
-			buttonsTable.add(okButton = new VisTextButton(get(Text.OK)));
+			buttonsTable.add(cancelButton = new VisTextButton(Text.CANCEL.get()));
+			buttonsTable.add(okButton = new VisTextButton(Text.OK.get()));
 
 			VisTable fieldTable = new VisTable(true);
 
@@ -300,9 +300,9 @@ public class DialogUtils {
 	public static class OptionDialog extends VisDialog {
 		private OptionDialogListener listener;
 
-		private VisTextButton yesButton = new VisTextButton(get(Text.YES));
-		private VisTextButton noButton = new VisTextButton(get(Text.NO));
-		private VisTextButton cancelButton = new VisTextButton(get(Text.CANCEL));
+		private VisTextButton yesButton = new VisTextButton(Text.YES.get());
+		private VisTextButton noButton = new VisTextButton(Text.NO.get());
+		private VisTextButton cancelButton = new VisTextButton(Text.CANCEL.get());
 
 		public OptionDialog (String title, String text, OptionDialogType type, OptionDialogListener listener) {
 			super(title);
@@ -363,12 +363,12 @@ public class DialogUtils {
 		private Cell<?> detailsCell;
 
 		public ErrorDialog (String text, String stackTrace) {
-			super(get(Text.ERROR));
+			super(Text.ERROR.get());
 
 			text(text);
 
 			if (stackTrace != null) {
-				final VisTextButton copyButton = new VisTextButton(get(Text.COPY));
+				final VisTextButton copyButton = new VisTextButton(Text.COPY.get());
 				final VisLabel errorLabel = new VisLabel(stackTrace);
 
 				Sizes sizes = VisUI.getSizes();
@@ -377,11 +377,11 @@ public class DialogUtils {
 					@Override
 					public void changed (ChangeEvent event, Actor actor) {
 						Gdx.app.getClipboard().setContents((errorLabel.getText().toString()));
-						copyButton.setText(get(Text.COPIED));
+						copyButton.setText(Text.COPIED.get());
 					}
 				});
 
-				detailsTable.add(new VisLabel(get(Text.DETAILS_COLON))).left().expand().padTop(6);
+				detailsTable.add(new VisLabel(Text.DETAILS_COLON.get())).left().expand().padTop(6);
 				detailsTable.add(copyButton);
 				detailsTable.row();
 
@@ -392,10 +392,10 @@ public class DialogUtils {
 				getContentTable().row();
 				detailsCell = getContentTable().add(detailsTable);
 				detailsCell.setActor(null);
-				button(get(Text.DETAILS), BUTTON_DETAILS);
+				button(Text.DETAILS.get(), BUTTON_DETAILS);
 			}
 
-			button(get(Text.OK), BUTTON_OK).padBottom(3);
+			button(Text.OK.get(), BUTTON_OK).padBottom(3);
 			pack();
 			centerWindow();
 		}
@@ -411,10 +411,6 @@ public class DialogUtils {
 				cancel();
 			}
 		}
-	}
-
-	private static String get (Text text) {
-		return VisUI.getDialogUtilsBundle().get(text.getName());
 	}
 
 	/** @author Javier, Kotcrab */
@@ -457,7 +453,7 @@ public class DialogUtils {
 
 		@Override
 		public String get () {
-			throw new UnsupportedOperationException();
+			return VisUI.getDialogUtilsBundle().get(getName());
 		}
 
 		@Override

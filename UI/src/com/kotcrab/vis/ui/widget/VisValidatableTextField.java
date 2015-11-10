@@ -46,6 +46,16 @@ public class VisValidatableTextField extends VisTextField {
 		init();
 	}
 
+	public VisValidatableTextField (String text, String styleName) {
+		super(text, styleName);
+		init();
+	}
+
+	public VisValidatableTextField (String text, VisTextFieldStyle style) {
+		super(text, style);
+		init();
+	}
+
 	public VisValidatableTextField (InputValidator validator) {
 		super();
 		addValidator(validator);

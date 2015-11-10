@@ -22,6 +22,7 @@ public class Token {
 	}
 
 	public enum Type {
+		INVALID,
 		LCURL, RCURL, // { }
 		STYLE_BLOCK, STYLE_BLOCK_EXTENDS,
 		STYLE_BLOCK_OVERRIDE,

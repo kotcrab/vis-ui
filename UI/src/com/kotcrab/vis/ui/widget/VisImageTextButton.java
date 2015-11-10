@@ -29,6 +29,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.BorderOwner;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 
 /**
@@ -39,11 +40,12 @@ import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
  * @see TextButton
  * @see Button
  */
-public class VisImageTextButton extends Button implements Focusable {
+public class VisImageTextButton extends Button implements Focusable, BorderOwner {
 	private Image image;
 	private Label label;
 
 	private boolean drawBorder;
+	private boolean focusBorderEnabled = true;
 
 	private VisImageTextButtonStyle style;
 
@@ -149,7 +151,7 @@ public class VisImageTextButton extends Button implements Focusable {
 			fontColor = style.fontColor;
 		if (fontColor != null) label.getStyle().fontColor = fontColor;
 		super.draw(batch, parentAlpha);
-		if (drawBorder && style.focusBorder != null)
+		if (focusBorderEnabled && drawBorder && style.focusBorder != null)
 			style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
 
@@ -195,6 +197,16 @@ public class VisImageTextButton extends Button implements Focusable {
 	@Override
 	public void focusGained () {
 		drawBorder = true;
+	}
+
+	@Override
+	public boolean isFocusBorderEnabled () {
+		return focusBorderEnabled;
+	}
+
+	@Override
+	public void setFocusBorderEnabled (boolean focusBorderEnabled) {
+		this.focusBorderEnabled = focusBorderEnabled;
 	}
 
 	/**

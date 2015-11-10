@@ -1,16 +1,60 @@
-[0.9.2] [LibGDX 1.7.0] [Snapshot]
+[0.9.3] [LibGDX 1.7.1] [Snapshot]
+
+[0.9.2] [LibGDX 1.7.1]
 -API Change: VisValidatableTextField#getValidator() removed, use getValidators() instead
+-API Change: Removed constructors FileChooser taking I18NBundle
+ -This way inconsistent with other widgets that did not support this, use VisUI class for setting global I18NBundles
 -API Change: NumberSelector now supports float values, methods taking and returning integers are now using floats
 -API Change: NumberSelectorListener#changed(int) is now NumberSelectorListener#changed(float)
+-API Change: VisProgressBar and VisSlider now extends standard scene2d.ui ProgressBar and Slider (should not affect existing code)
+ -VisSliderStyle was removed, use SliderStyle which is fully compatible with VisSliderStyle
+-API Change: changed ColorPickerListener#canceled () to ColorPickerListener#canceled (Color oldColor)
+-API Change: added ColorPickerListener#changed (Color newColor)
+ -If you are using ColorPickerAdapter this does not affect you
+-API Change: removed constructor LinkLabel (CharSequence text, String fontName, String colorName) because it was misleading
+             with LinkLabel (CharSequence text, CharSequence url, String styleName)
 -API Addition: NumberSelector#setPrecision
+-API Addition: NumberSelector(String name, float initialValue, float min, float max, float step, int precision)
+-API Addition: NumberSelector(String styleName, String name, float initialValue, float min, float max, float step, int precision)
+-API Addition: NumberSelector(NumberSelectorStyle style, Sizes sizes, String name, float initialValue, float min, float max, float step, int precision)
 -API Addition: InputDialog#setText(String text), InputDialog#setText(String text, boolean selectAll)
 -API Addition: FileChooser#setSelectedFiles (FileHandle... files)
 -API Addition: FloatDigitsOnlyFilter
+-API Addition: VisUI.isLoaded()
+-API Addition: constructor VisValidatableTextField (String text, String styleName)
+-API Addition: constructor VisValidatableTextField (String text, VisTextFieldStyle style)
+-API Addition: CollapsibleWidget#setTable()
+-API Addition: VisWindow#setCenterOnAdd(boolean)
+-API Addition: ColorPicker#setAllowAlphaEdit (boolean allowAlphaEdit)
+-API Addition: ColorPicker#isDisposed()
+API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvalid()
+ -VisCheckBox and VisRadioButton can now be marked as invalid (error border will be drawn around them)
+-CollapsibleWidget now supports creation without setting initial table
+-Added default style for standard scene2d.ui TextTooltip
+-Added VisTextField and TextArea "small" style with smaller font
+-LinkLabel now uses LinkLabelStyle
+-LinkLabel now has link underline on mouse over
+-SimpleFormValidator (note that following also applies to FormValidator):
+ -API Addition: constructor SimpleFormValidator (Disableable targetToDisable, Label messageLabel, String styleName)
+ -API Addition: constructor SimpleFormValidator (Disableable targetToDisable, Label messageLabel, FormValidatorStyle style)
+ -API Addition: SimpleFormValidator#setMessageLabel(), and #setSuccessMessage
+ -API Addition: SimpleFormValidator#addDisableTarget(Disableable) and SimpleFormValidator#removeDisableTarget(Disableable)
+ -Now using FormValidatorStyle: allows to set color for message label when form is valid or invalid
+  -Two built-in styles: 'default' and 'smooth' with smooth transition between colors
+ -Any object implementing Disableable interface may be passed to FormInputValidator as target to disable if form is invalid
+ -Multiple Disableable targets are supported
+ -Added CheckBox support (checking if checkbox is checked/unchecked)
 -TextField/VisTextField.setMessageText(String text) now works properly.
 -DialogUtils methods now return dialogs objects (was void)
+-Focus border can now be disabled on all widgets having it
 -Fixed VisTree taking VisTextField focus when it was placed inside tree node
 -Fixed invalid key up/down events propagation when using multiple input processors
 -Fixed font kerning for character pairs: Ma, Me, Mi
+-Fixed TabbedPane listener called multiple times when user was switching current tab
+-Fixed TabbedPane close tab buttons styles
+-Fixed 'directory' validator in FormValidator
+-Added libGDX version check before loading VisUI, in case of version mismatch warning will be printed to console
+ -Can be suppressed by VisUI.setSkipGdxVersionCheck(true);
 
 [0.9.1] [LibGDX 1.7.0]
 -Updated to LibGDX 1.7.0

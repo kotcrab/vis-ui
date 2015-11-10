@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor;
 import com.artemis.annotations.SkipWire;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.backends.lwjgl.LwjglGraphics;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -121,6 +122,10 @@ public class Editor extends ApplicationAdapter {
 		VisUI.setDefaultTitleAlign(Align.center);
 		FileChooser.setFavoritesPrefsName("com.kotcrab.vis.editor");
 		Log.debug("VisUI " + VisUI.VERSION + " loaded");
+
+		if (Gdx.graphics instanceof LwjglGraphics && ((LwjglGraphics) Gdx.graphics).isSoftwareMode()) {
+			Log.info("Running in software mode");
+		}
 
 		stage = createStage();
 		Gdx.input.setInputProcessor(stage);

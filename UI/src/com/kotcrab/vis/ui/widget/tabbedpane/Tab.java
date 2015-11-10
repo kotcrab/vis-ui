@@ -119,7 +119,7 @@ public abstract class Tab implements Disposable {
 	}
 
 	private void checkSavable () {
-		if (savable == false) throw new IllegalStateException("Tab " + getTabTitle() + " is not savable!");
+		if (isSavable() == false) throw new IllegalStateException("Tab " + getTabTitle() + " is not savable!");
 	}
 
 	/** Removes this tab from pane (if any) */

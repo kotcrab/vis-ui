@@ -14,27 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.widget.color;
-
-import com.badlogic.gdx.graphics.Color;
+package com.kotcrab.vis.ui.util;
 
 /**
- * Empty implementation of {@link ColorPickerListener}
+ * Implemented by actors that has focus border, actor implemeting this interface must support disabling its border.
  * @author Kotcrab
  */
-public class ColorPickerAdapter implements ColorPickerListener {
-	@Override
-	public void canceled (Color oldColor) {
+public interface BorderOwner {
+	boolean isFocusBorderEnabled ();
 
-	}
-
-	@Override
-	public void changed (Color newColor) {
-
-	}
-
-	@Override
-	public void finished (Color newColor) {
-
-	}
+	void setFocusBorderEnabled (boolean focusBorderEnabled);
 }
