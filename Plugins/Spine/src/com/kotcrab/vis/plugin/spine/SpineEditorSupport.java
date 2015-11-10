@@ -80,7 +80,6 @@ public class SpineEditorSupport extends EditorEntitySupport {
 		spineCache = projectMC.get(SpineCacheModule.class);
 		fileAccess = projectMC.get(FileAccessModule.class);
 
-//		serializers.add(new SpineComponentSerializer(sceneIOModule.getKryo(), spineCache));
 		assetProviders.add(new SpineAssetDescriptorProvider());
 
 		serializedTypes.add(SpinePreviewComponent.class);
