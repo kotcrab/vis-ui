@@ -1,4 +1,5 @@
 [0.9.3] [LibGDX 1.7.1] [Snapshot]
+-API Addition: TabbedPane.disableTab(Tab tab, boolean disable), TabbedPane.isTabDisabled(Tab)
 -Trying to use PopupMenu.add(Actor) with MenuItem will throw an exception (MenuItems must be added using addItem method)
 -ColorPickerStyle now extends WindowStyle
 

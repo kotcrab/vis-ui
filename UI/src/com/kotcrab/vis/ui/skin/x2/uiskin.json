@@ -95,9 +95,9 @@ com.kotcrab.vis.ui.widget.VisImageButton$VisImageButtonStyle: {
 	default: {down: button-down, up: button, over: button-over, disabled: button, focusBorder: border },
 	blue: {down: button-blue-down, up: button-blue, over: button-blue-over, disabled: button-blue, focusBorder: border-dark-blue },
 	toggle: {checked: button-down, focusBorder: border, down: button-down, up: button, over: button-over, disabled: button },
-	close: {down: button-red, up: button, over: button-over, imageUp: icon-close },
+	close: {down: button-red, up: button, over: button-over, imageUp: icon-close, disabled: button },
 	close-active-tab: {down: button-red, imageUp: icon-close, up: button-blue, over: button-blue-over, disabled: button-blue },
-	close-window: {up: button-window-bg, down: button-red, over: button-over, imageUp: icon-close }
+	close-window: {up: button-window-bg, down: button-red, over: button-over, imageUp: icon-close, disabled: button }
 },
 com.kotcrab.vis.ui.widget.VisImageTextButton$VisImageTextButtonStyle: {
 	default: {down: button-down, up: button, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey, focusBorder: border },
@@ -146,7 +146,7 @@ com.kotcrab.vis.ui.widget.LinkLabel$LinkLabelStyle: {
 	default: {fontColor: link-label, underline: white, font: default-font }
 },
 com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane$TabbedPaneStyle: {
-	default: {background: menu-bg, bottomBar: list-selection, buttonStyle: {down: button-down, up: button, checked: button-down, over: button-over, font: default-font, fontColor: white, disabledFontColor: grey} }
+	default: {background: menu-bg, bottomBar: list-selection, buttonStyle: {down: button-down, up: button, checked: button-down, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey} }
 },
 com.kotcrab.vis.ui.widget.file.FileChooserStyle: {
 	default: {highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right, iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive, iconFolderStar: icon-folder-star, iconTrash: icon-trash, iconFileText: icon-file-text, iconFileImage: icon-file-image, iconFilePdf: icon-file-pdf, iconFileAudio: icon-file-audio }

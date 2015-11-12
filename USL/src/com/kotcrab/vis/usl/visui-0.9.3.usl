@@ -155,7 +155,7 @@ package com.kotcrab.vis.ui.widget {
 		default inherits .focus-border: { down: button-down, up: button, over: button-over, disabled: button }
 		blue inherits .focus-border-dark-blue: { down: button-blue-down, up: button-blue, over: button-blue-over, disabled: button-blue }
 		toggle inherits default, .focus-border: { checked: button-down }
-		close: { down: button-red, up: button, over: button-over, imageUp: icon-close }
+		close: { down: button-red, up: button, over: button-over, imageUp: icon-close, disabled: button }
 		close-active-tab inherits blue: { down: button-red, imageUp: icon-close, focusBorder: NULL }
 		close-window inherits close: { up: button-window-bg }
 	}
@@ -219,7 +219,7 @@ package com.kotcrab.vis.ui.widget {
 
 	#tabbedpane.TabbedPane$TabbedPaneStyle: {
 		default: { background: menu-bg, bottomBar: list-selection,
-					buttonStyle inherits .font: { down: button-down, up: button, checked: button-down, over: button-over } }
+					buttonStyle inherits .font: { down: button-down, up: button, checked: button-down, over: button-over, disabled: button } }
 	}
 
 	#file.FileChooserStyle: {
