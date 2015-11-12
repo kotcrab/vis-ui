@@ -75,6 +75,7 @@ public class TextComponent extends Component implements BasicPropertiesAccessor,
 	public void setFont (BitmapFont font) {
 		cache = new BitmapFontCache(font);
 		setText(text);
+		setColor(color);
 	}
 
 	private void translate () {
