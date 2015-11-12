@@ -19,6 +19,7 @@ package com.kotcrab.vis.ui.widget;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -95,8 +96,17 @@ public class PopupMenu extends Table {
 		};
 	}
 
+	@Override
+	public <T extends Actor> Cell<T> add (T actor) {
+		if (actor instanceof MenuItem) {
+			throw new IllegalArgumentException("MenuItems can be only added to PopupMenu by using addItem(MenuItem) method");
+		}
+
+		return super.add(actor);
+	}
+
 	public void addItem (MenuItem item) {
-		add(item).fillX().row();
+		super.add(item).fillX().row();
 		pack();
 
 		item.addListener(sharedMenuItemListener);
