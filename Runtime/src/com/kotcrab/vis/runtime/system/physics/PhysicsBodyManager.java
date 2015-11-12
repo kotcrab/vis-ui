@@ -20,6 +20,7 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.Manager;
 import com.artemis.annotations.Wire;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.kotcrab.vis.runtime.component.PhysicsComponent;
@@ -59,6 +60,7 @@ public class PhysicsBodyManager extends Manager {
 
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(worldPos);
+		bodyDef.angle = MathUtils.degreesToRadians * sprite.getRotation();
 
 		Body body = world.createBody(bodyDef);
 		body.setType(physicsProperties.bodyType);
