@@ -6,5 +6,6 @@ import java.util.ArrayList;
 public class StyleBlock {
 	public String fullName;
 	public StyleBlock extendsStyle;
+	public boolean extendsInheritOnlyDefinedStyles;
 	public ArrayList<StyleIdentifier> styles = new ArrayList<StyleIdentifier>();
 }

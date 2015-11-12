@@ -110,9 +110,9 @@ public class ColorPicker extends VisWindow implements Disposable {
 	}
 
 	public ColorPicker (String styleName, String title, ColorPickerListener listener) {
-		super(title != null ? title : "");
+		super(title != null ? title : "", VisUI.getSkin().get(styleName, ColorPickerStyle.class));
 		this.listener = listener;
-		this.style = VisUI.getSkin().get(styleName, ColorPickerStyle.class);
+		this.style = (ColorPickerStyle) getStyle();
 		this.sizes = VisUI.getSizes();
 
 		if (title == null) getTitleLabel().setText(TITLE.get());
