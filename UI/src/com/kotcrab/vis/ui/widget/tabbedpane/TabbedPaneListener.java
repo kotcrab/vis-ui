@@ -21,9 +21,21 @@ package com.kotcrab.vis.ui.widget.tabbedpane;
  * @author Kotcrab
  */
 public interface TabbedPaneListener {
+	/**
+	 * Called when TabbedPane switched to new tab.
+	 * @param tab that TabbedPane switched to. May be null if {@link TabbedPane#setAllowTabDeselect(boolean)} was set to
+	 * true and all tabs were deselected.
+	 */
 	void switchedTab (Tab tab);
 
+	/**
+	 * Called when Tab was removed TabbedPane
+	 * @param tab that was removed
+	 */
 	void removedTab (Tab tab);
 
+	/**
+	 * Called when all tabs were removed from TabbedPane.
+	 */
 	void removedAllTabs ();
 }

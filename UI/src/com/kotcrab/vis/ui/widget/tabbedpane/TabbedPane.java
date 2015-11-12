@@ -424,6 +424,9 @@ public class TabbedPane {
 				notifyListenersSwitched(tab);
 				tab.onShow();
 				closeButton.setStyle(sharedCloseActiveButtonStyle);
+			} else if (group.getCheckedIndex() == -1) { //no tab selected (allowTabDeselect == true)
+				activeTab = null;
+				notifyListenersSwitched(null);
 			}
 
 		}
