@@ -53,9 +53,12 @@ public abstract class EntityProxy {
 	protected RotationPropertiesAccessor rotationAccessor;
 	protected FlipPropertiesAccessor flipAccessor;
 
+	private Array<Entity> entitiesArray = new Array<>(1);
+
 	public EntityProxy (Entity entity) {
 		this.entity = entity;
 		init();
+		entitiesArray.add(entity);
 
 		if (entity != null) {
 			uuidManager = entity.getWorld().getManager(VisUUIDManager.class);
@@ -78,6 +81,8 @@ public abstract class EntityProxy {
 	public void reload () {
 		entity = uuidManager.get(uuid);
 		basicAccessor = initAccessors();
+		entitiesArray.clear();
+		entitiesArray.add(entity);
 	}
 
 	public EntityScheme getScheme () {
@@ -372,9 +377,7 @@ public abstract class EntityProxy {
 	protected abstract boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor);
 
 	public Array<Entity> getEntities () {
-		Array<Entity> entities = new Array<>(1);
-		entities.add(entity);
-		return entities;
+		return entitiesArray;
 	}
 
 	public boolean compareProxyByID (EntityProxy other) {
