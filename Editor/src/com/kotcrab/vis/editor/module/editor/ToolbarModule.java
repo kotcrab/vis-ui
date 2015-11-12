@@ -74,6 +74,9 @@ public class ToolbarModule extends EditorModule {
 		table.add(new ToolbarButtonBuilder().icon(Icons.SETTINGS_VIEW).text("Enable grid snapping (%)").eventToolbar(ToolbarEventType.GRID_SNAP_SETTING_CHANGED).toggle().build());
 
 		table.add().expand().fill();
+
+		savableScope.forEach(button -> button.setDisabled(true));
+		sceneScope.forEach(button -> button.setDisabled(true));
 	}
 
 	@Override
