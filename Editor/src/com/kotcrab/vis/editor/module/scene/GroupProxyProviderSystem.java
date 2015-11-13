@@ -40,7 +40,6 @@ public class GroupProxyProviderSystem extends EntityProcessingSystem {
 
 	public GroupProxyProviderSystem () {
 		super(Aspect.all(GroupComponent.class));
-		setEnabled(false);
 	}
 
 	@Override
@@ -50,7 +49,10 @@ public class GroupProxyProviderSystem extends EntityProcessingSystem {
 
 	public GroupEntityProxy getGroupEntityProxy (int gid) {
 		findGid = gid;
+
+		setEnabled(true);
 		process();
+		setEnabled(false);
 
 		return new GroupEntityProxy(result, gid);
 	}

@@ -35,7 +35,6 @@ public class GroupIdProviderSystem extends EntityProcessingSystem {
 
 	public GroupIdProviderSystem () {
 		super(Aspect.all(GroupComponent.class));
-		setEnabled(false);
 	}
 
 	@Override
@@ -61,7 +60,9 @@ public class GroupIdProviderSystem extends EntityProcessingSystem {
 	}
 
 	public int getFreeGroupId () {
+		setEnabled(true);
 		process();
+		setEnabled(false);
 		return freeId;
 	}
 }

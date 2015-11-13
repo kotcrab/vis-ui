@@ -37,7 +37,6 @@ public class AssetsUsageAnalyzerSystem extends EntityProcessingSystem {
 
 	public AssetsUsageAnalyzerSystem () {
 		super(Aspect.all());
-		setEnabled(false);
 	}
 
 	@Override
@@ -61,6 +60,9 @@ public class AssetsUsageAnalyzerSystem extends EntityProcessingSystem {
 	public void collectUsages (IntArray ids, VisAssetDescriptor searchFor) {
 		this.ids = ids;
 		this.searchFor = searchFor;
+
+		setEnabled(true);
 		process();
+		setEnabled(false);
 	}
 }
