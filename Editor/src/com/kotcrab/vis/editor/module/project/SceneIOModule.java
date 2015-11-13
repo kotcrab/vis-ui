@@ -34,11 +34,11 @@ import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.google.common.eventbus.Subscribe;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.*;
 import com.kotcrab.vis.editor.event.ProjectMenuBarEvent;
@@ -51,6 +51,7 @@ import com.kotcrab.vis.editor.scene.EditorPhysicsSettings;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.serializer.*;
+import com.kotcrab.vis.editor.serializer.json.*;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
@@ -63,9 +64,10 @@ import com.kotcrab.vis.runtime.util.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.annotation.VisTag;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.UUID;
@@ -84,6 +86,7 @@ public class SceneIOModule extends ProjectModule {
 	public static final int KRYO_PLUGINS_RESERVED_ID_END = 800;
 
 	protected Kryo kryo;
+	protected Gson gson;
 
 	protected FileAccessModule fileAccessModule;
 	protected Stage stage;
@@ -109,7 +112,7 @@ public class SceneIOModule extends ProjectModule {
 		assetsFolder = fileAccessModule.getAssetsFolder();
 		sceneBackupFolder = fileAccessModule.getModuleFolder(".sceneBackup");
 
-		setupKryo();
+		setupSerializer();
 	}
 
 	@Subscribe
@@ -119,7 +122,21 @@ public class SceneIOModule extends ProjectModule {
 		}
 	}
 
-	protected void setupKryo () {
+	protected void setupSerializer () {
+		ClassJsonSerializer classSerializer;
+
+		gson = new GsonBuilder()
+				.setPrettyPrinting()
+				.excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+				.registerTypeAdapter(Array.class, new ArrayJsonSerializer())
+				.registerTypeAdapter(IntArray.class, new IntArrayJsonSerializer())
+				.registerTypeAdapter(IntMap.class, new IntMapJsonSerializer())
+				.registerTypeAdapter(Class.class, classSerializer = new ClassJsonSerializer(Thread.currentThread().getContextClassLoader()))
+				.registerTypeAdapter(AssetComponent.class, new AssetComponentSerializer())
+				.create();
+
+		EditorJsonTags.registerTags(new GsonTagRegistrar(classSerializer));
+
 		kryo.setClassLoader(Thread.currentThread().getContextClassLoader());
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 		kryo.setDefaultSerializer(CompatibleFieldSerializer.class);
@@ -289,13 +306,20 @@ public class SceneIOModule extends ProjectModule {
 
 	public EditorScene load (FileHandle fullPathFile) {
 		try {
-			Input input = new Input(new FileInputStream(fullPathFile.file()));
-			EditorScene scene = kryo.readObject(input, EditorScene.class);
+//			Input input = new Input(new FileInputStream(fullPathFile.file()));
+//			EditorScene scene = kryo.readObject(input, EditorScene.class);
+//			scene.path = fileAccessModule.relativizeToAssetsFolder(fullPathFile);
+//			input.close();
+//
+			BufferedReader reader = new BufferedReader(new FileReader(fullPathFile.file()));
+			EditorScene scene = gson.fromJson(reader, EditorScene.class);
 			scene.path = fileAccessModule.relativizeToAssetsFolder(fullPathFile);
-			input.close();
+			reader.close();
+
+			scene.onDeserialize();
 
 			return scene;
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			Log.exception(e);
 		}
 
@@ -304,11 +328,15 @@ public class SceneIOModule extends ProjectModule {
 
 	public boolean save (EditorScene scene) {
 		try {
-			Output output = new Output(new FileOutputStream(getFileHandleForScene(scene).file()));
-			kryo.writeObject(output, scene);
-			output.close();
+//			Output output = new Output(new FileOutputStream(getFileHandleForScene(scene).file()));
+//			kryo.writeObject(output, scene);
+//			output.close();
+
+			FileWriter writer = new FileWriter(getFileHandleForScene(scene).file());
+			gson.toJson(scene, writer);
+			writer.close();
 			return true;
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			Log.exception(e);
 		}
 

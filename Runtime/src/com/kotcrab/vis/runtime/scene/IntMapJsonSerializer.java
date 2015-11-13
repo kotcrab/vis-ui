@@ -26,20 +26,26 @@ import com.badlogic.gdx.utils.JsonValue;
  */
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class IntMapJsonSerializer implements Json.Serializer<IntMap> {
-	@Override
-	public void write (Json json, IntMap object, Class knownType) {
-		json.writeObjectStart();
+	private static final String VALUE_SIZE = "size";
+	private static final String VALUE_ENTRIES = "entries";
 
-		for (IntMap.Entry entry : (IntMap.Entries<?>) object.entries()) {
+	@Override
+	public void write (Json json, IntMap intMap, Class knownType) {
+		json.writeObjectStart();
+		json.writeValue(VALUE_SIZE, intMap.size);
+
+		json.writeObjectStart(VALUE_ENTRIES);
+		for (IntMap.Entry entry : (IntMap.Entries<?>) intMap.entries()) {
 			json.writeValue(String.valueOf(entry.key), entry.value, null);
 		}
+		json.writeArrayEnd();
 
 		json.writeObjectEnd();
 	}
 
 	@Override
 	public IntMap read (Json json, JsonValue jsonData, Class type) {
-		IntMap intMap = new IntMap();
+		IntMap intMap = new IntMap(json.readValue(VALUE_SIZE, int.class, jsonData));
 
 		for (JsonValue entry = jsonData.child; entry != null; entry = entry.next) {
 			intMap.put(Integer.parseInt(entry.name), json.readValue(entry.name, null, jsonData));

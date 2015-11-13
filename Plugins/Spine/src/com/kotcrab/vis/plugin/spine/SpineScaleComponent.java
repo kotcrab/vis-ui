@@ -35,7 +35,7 @@ import com.artemis.Component;
 
 /** @author Kotcrab */
 public class SpineScaleComponent extends Component {
-	public boolean updateScale;
+	public transient boolean updateScale;
 	public float scale = 1;
 
 	public SpineScaleComponent () {

@@ -36,6 +36,6 @@ import com.badlogic.gdx.math.Rectangle;
 
 /** @author Kotcrab */
 public class SpineBoundsComponent extends Component {
-	public boolean boundsRequested;
+	public transient boolean boundsRequested;
 	public Rectangle bounds = new Rectangle();
 }

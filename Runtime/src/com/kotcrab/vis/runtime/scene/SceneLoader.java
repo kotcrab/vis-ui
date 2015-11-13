@@ -48,6 +48,8 @@ import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.SpriterData;
+import com.kotcrab.vis.runtime.util.json.LibgdxJsonTagRegistrar;
+import com.kotcrab.vis.runtime.util.json.RuntimeJsonTags;
 
 /**
  * Scene loader for {@link AssetManager}. Allow to load entire scene file with all required dependencies such as textures, sounds etc.
@@ -84,35 +86,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	public static Json getJson () {
 		Json json = new Json();
-		json.addClassTag("SceneData", SceneData.class);
-		json.addClassTag("SceneViewport", SceneViewport.class);
-		json.addClassTag("LayerCordsSystem", LayerCordsSystem.class);
-
-		json.addClassTag("PathAsset", PathAsset.class);
-		json.addClassTag("BmpFontAsset", BmpFontAsset.class);
-		json.addClassTag("TtfFontAsset", TtfFontAsset.class);
-		json.addClassTag("AtlasRegionAsset", AtlasRegionAsset.class);
-		json.addClassTag("TextureRegionAsset", TextureRegionAsset.class);
-		json.addClassTag("ShaderAsset", ShaderAsset.class);
-		json.addClassTag("SpriterAsset", SpriterAsset.class);
-
-		json.addClassTag("AssetComponent", AssetComponent.class);
-		json.addClassTag("GroupComponent", GroupComponent.class);
-		json.addClassTag("IDComponent", IDComponent.class);
-		json.addClassTag("InvisibleComponent", InvisibleComponent.class);
-		json.addClassTag("LayerComponent", LayerComponent.class);
-		json.addClassTag("RenderableComponent", RenderableComponent.class);
-		json.addClassTag("VariablesComponent", VariablesComponent.class);
-		json.addClassTag("PhysicsPropertiesComponent", PhysicsPropertiesComponent.class);
-		json.addClassTag("PolygonComponent", PolygonComponent.class);
-
-		json.addClassTag("SpriteProtoComponent", SpriteProtoComponent.class);
-		json.addClassTag("MusicProtoComponent", MusicProtoComponent.class);
-		json.addClassTag("SoundProtoComponent", SoundProtoComponent.class);
-		json.addClassTag("ParticleProtoComponent", ParticleProtoComponent.class);
-		json.addClassTag("TextProtoComponent", TextProtoComponent.class);
-		json.addClassTag("ShaderProtoComponent", ShaderProtoComponent.class);
-		json.addClassTag("SpriterProtoComponent", SpriterProtoComponent.class);
+		RuntimeJsonTags.registerTags(new LibgdxJsonTagRegistrar(json));
 
 		json.setSerializer(IntMap.class, new IntMapJsonSerializer());
 
