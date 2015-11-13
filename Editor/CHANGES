@@ -3,6 +3,8 @@
 
 [0.2.6] [Snapshot]
 -Fixed issue with unmodifiable entity properties on Entity with TextComponent or PhysicsPropertiesComponent
+-Fixed issue when TextComponent color wasn't applied to text after reloading scene
+-Fixed issues with entering float values in TextComponent properties fields
 -Fixed crash when trying to add PhysicsPropertiesComponent to SpriterComponent
 
 [0.2.5]

@@ -22,10 +22,7 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.kotcrab.vis.runtime.component.PhysicsComponent;
-import com.kotcrab.vis.runtime.component.PhysicsPropertiesComponent;
-import com.kotcrab.vis.runtime.component.PolygonComponent;
-import com.kotcrab.vis.runtime.component.SpriteComponent;
+import com.kotcrab.vis.runtime.component.*;
 
 /** @author Kotcrab */
 public class PhysicsBodyManager extends EntitySystem {
@@ -34,6 +31,7 @@ public class PhysicsBodyManager extends EntitySystem {
 	private ComponentMapper<PhysicsPropertiesComponent> physicsCm;
 	private ComponentMapper<PolygonComponent> polygonCm;
 	private ComponentMapper<SpriteComponent> spriteCm;
+	private ComponentMapper<PhysicsSpriteComponent> physicsSpriteCm;
 
 	private World world;
 
@@ -98,6 +96,8 @@ public class PhysicsBodyManager extends EntitySystem {
 			shape.dispose();
 		}
 
-		entity.edit().add(new PhysicsComponent(body));
+		entity.edit()
+				.add(new PhysicsComponent(body))
+				.add(new PhysicsSpriteComponent(sprite.getRotation()));
 	}
 }

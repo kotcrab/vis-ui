@@ -168,6 +168,7 @@ public class NumberInputField extends VisValidatableTextField {
 	private static class FieldValidator implements InputValidator {
 		@Override
 		public boolean validateInput (String input) {
+			if (input.endsWith(".")) return false;
 			if (input.equals("?")) return true;
 
 			try {

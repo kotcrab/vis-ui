@@ -9,6 +9,7 @@
  -API Change: SceneParameter removed 'managers' and 'passiveSystem' fields, use 'systems' instead
 
 [0.2.6] [LibGDX 1.7.0] [Artemis 0.13.1] [Snapshot]
+-Fixed rotation of sprite ignored when creating physics body
 
 [0.2.5] [LibGDX 1.7.0] [Artemis 0.13.1]
 -Updated to Artemis 0.13.1, LibGDX 1.7.0

@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.i18n.BundleText;
@@ -130,6 +131,66 @@ public class TabbedPane {
 	}
 
 	/**
+	 * Disables or enables given tab.
+	 * <p>
+	 * When disabling, if tab is currently selected, TabbedPane will switch to first available enabled Tab.
+	 * If there is no any other enabled Tab, listener {@link TabbedPaneListener#switchedTab(Tab)} with null
+	 * Tab will be called.
+	 * <p>
+	 * When enabling Tab and there isn't any others Tab enabled and {@link #setAllowTabDeselect(boolean)} was set to false,
+	 * passed Tab will be selected. If {@link #setAllowTabDeselect(boolean)} is set to true nothing will be selected,
+	 * all tabs will remain unselected.
+	 * @param tab tab to change its state
+	 * @param disable controls whether to disable or enable this tab
+	 * @throws IllegalArgumentException if tab does not belong to this TabbedPane
+	 */
+	public void disableTab (Tab tab, boolean disable) {
+		checkIfTabsBelongsToThisPane(tab);
+
+		TabButtonTable buttonTable = tabsButtonMap.get(tab);
+		buttonTable.button.setDisabled(disable);
+
+		if (activeTab == tab && disable) {
+			if (selectFirstEnabledTab()) return;
+
+			//there isn't any tab we can switch to
+			activeTab = null;
+			notifyListenersSwitched(null);
+		}
+
+		if (activeTab == null && allowTabDeselect == false) {
+			selectFirstEnabledTab();
+		}
+	}
+
+	public boolean isTabDisabled (Tab tab) {
+		TabButtonTable table = tabsButtonMap.get(tab);
+		if (table == null) throwNotBelongingTabException(tab);
+		return table.button.isDisabled();
+	}
+
+	private boolean selectFirstEnabledTab () {
+		for (Entry<Tab, TabButtonTable> entry : tabsButtonMap) {
+			if (entry.value.button.isDisabled() == false) {
+				switchTab(entry.key);
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private void checkIfTabsBelongsToThisPane (Tab tab) {
+		if (tabs.contains(tab, true) == false) {
+			throwNotBelongingTabException(tab);
+		}
+	}
+
+	private void throwNotBelongingTabException (Tab tab) {
+		throw new IllegalArgumentException("Tab '" + tab.getTabTitle() + "' does not belong to this TabbedPane");
+	}
+
+	/**
 	 * Removes tab from pane, if tab is dirty this won't cause to display "Unsaved changes" dialog!
 	 * @param tab to be removed
 	 * @return true if tab was removed, false if that tab wasn't added to this pane
@@ -143,6 +204,8 @@ public class TabbedPane {
 	 * @return true if tab was removed, false if that tab wasn't added to this pane or "Unsaved changes" dialog was started
 	 */
 	public boolean remove (final Tab tab, boolean ignoreTabDirty) {
+		checkIfTabsBelongsToThisPane(tab);
+
 		if (ignoreTabDirty) {
 			return removeTab(tab);
 		}
@@ -213,7 +276,9 @@ public class TabbedPane {
 	}
 
 	public void switchTab (Tab tab) {
-		tabsButtonMap.get(tab).select();
+		TabButtonTable table = tabsButtonMap.get(tab);
+		if (table == null) throwNotBelongingTabException(tab);
+		table.select();
 	}
 
 	/**
@@ -222,7 +287,9 @@ public class TabbedPane {
 	 * @param tab that title will be updated
 	 */
 	public void updateTabTitle (Tab tab) {
-		tabsButtonMap.get(tab).button.setText(getTabTitle(tab));
+		TabButtonTable table = tabsButtonMap.get(tab);
+		if (table == null) throwNotBelongingTabException(tab);
+		table.button.setText(getTabTitle(tab));
 	}
 
 	private String getTabTitle (Tab tab) {
@@ -323,13 +390,21 @@ public class TabbedPane {
 
 		public TabButtonTable (final Tab tab) {
 			this.tab = tab;
-			button = new VisTextButton(getTabTitle(tab), style.buttonStyle);
+			button = new VisTextButton(getTabTitle(tab), style.buttonStyle) {
+				@Override
+				public void setDisabled (boolean isDisabled) {
+					super.setDisabled(isDisabled);
+					closeButton.setDisabled(isDisabled);
+					deselect();
+				}
+			};
 			button.setFocusBorderEnabled(false);
 			button.setProgrammaticChangeEvents(false);
 
 			closeButtonStyle = new VisImageButtonStyle(VisUI.getSkin().get("close", VisImageButtonStyle.class));
 
 			closeButton = new VisImageButton(closeButtonStyle);
+			closeButton.setGenerateDisabledImage(true);
 			closeButton.getImage().setScaling(Scaling.fill);
 			closeButton.getImage().setColor(Color.RED);
 
@@ -353,6 +428,8 @@ public class TabbedPane {
 			button.addListener(new InputListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int mouseButton) {
+					if (button.isDisabled()) return false;
+
 					if (UIUtils.left()) {
 						closeButtonStyle.up = buttonStyle.down;
 					}
@@ -369,6 +446,8 @@ public class TabbedPane {
 
 				@Override
 				public boolean mouseMoved (InputEvent event, float x, float y) {
+					if (button.isDisabled()) return false;
+
 					if (activeTab != tab) {
 						setCloseButtonOnMouseMove();
 					}
@@ -378,6 +457,8 @@ public class TabbedPane {
 
 				@Override
 				public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+					if (button.isDisabled()) return;
+
 					if (activeTab != tab) {
 						closeButtonStyle.up = buttonStyle.up;
 					}
@@ -385,6 +466,8 @@ public class TabbedPane {
 
 				@Override
 				public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+					if (button.isDisabled()) return;
+
 					if (activeTab != tab && Gdx.input.justTouched() == false) {
 						setCloseButtonOnMouseMove();
 					}
@@ -424,6 +507,9 @@ public class TabbedPane {
 				notifyListenersSwitched(tab);
 				tab.onShow();
 				closeButton.setStyle(sharedCloseActiveButtonStyle);
+			} else if (group.getCheckedIndex() == -1) { //no tab selected (allowTabDeselect == true)
+				activeTab = null;
+				notifyListenersSwitched(null);
 			}
 
 		}

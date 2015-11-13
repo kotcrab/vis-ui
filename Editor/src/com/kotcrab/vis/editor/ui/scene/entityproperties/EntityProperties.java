@@ -94,6 +94,7 @@ import java.util.Iterator;
  * from 'specifictable' and 'components' child packages for examples.
  * @author Kotcrab
  */
+//TODO: needs refactoring on how changes to entities made during components UI tables updates are handled
 public class EntityProperties extends VisTable implements Disposable {
 	public static final int LABEL_WIDTH = 60;
 	public static final int AXIS_LABEL_WIDTH = 10;
@@ -500,7 +501,7 @@ public class EntityProperties extends VisTable implements Disposable {
 	}
 
 	public void selectedEntitiesBasicValuesChanged () {
-		updateBasicValues();
+		updateBasicValues(false);
 	}
 
 	public void beginSnapshot () {
@@ -629,7 +630,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		} else {
 			setVisible(true);
 
-			updateBasicValues();
+			updateBasicValues(true);
 
 			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
 
@@ -639,7 +640,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		}
 	}
 
-	private void updateBasicValues () {
+	private void updateBasicValues (boolean updateInvalidFields) {
 		if (groupSelected) {
 			idField.setText("<id cannot be set for group>");
 			idField.setDisabled(true);
@@ -652,19 +653,29 @@ public class EntityProperties extends VisTable implements Disposable {
 		yField.setText(getEntitiesFieldValue(EntityProxy::getY));
 
 		if (EntityUtils.isScaleSupportedForEntities(entities)) {
-			xScaleField.setText(getEntitiesFieldValue(EntityProxy::getScaleX));
-			yScaleField.setText(getEntitiesFieldValue(EntityProxy::getScaleY));
+			if (updateInvalidFields || xScaleField.isInputValid())
+				xScaleField.setText(getEntitiesFieldValue(EntityProxy::getScaleX));
+
+			if (updateInvalidFields || yScaleField.isInputValid())
+				yScaleField.setText(getEntitiesFieldValue(EntityProxy::getScaleY));
 		}
 
 		if (EntityUtils.isOriginSupportedForEntities(entities)) {
-			xOriginField.setText(getEntitiesFieldValue(EntityProxy::getOriginX));
-			yOriginField.setText(getEntitiesFieldValue(EntityProxy::getOriginY));
+			if (updateInvalidFields || xOriginField.isInputValid())
+				xOriginField.setText(getEntitiesFieldValue(EntityProxy::getOriginX));
+
+			if (updateInvalidFields || yOriginField.isInputValid())
+				yOriginField.setText(getEntitiesFieldValue(EntityProxy::getOriginY));
 		}
 
-		if (EntityUtils.isRotationSupportedForEntities(entities))
-			rotationField.setText(getEntitiesFieldValue(EntityProxy::getRotation));
+		if (EntityUtils.isRotationSupportedForEntities(entities)) {
+			if (updateInvalidFields || rotationField.isInputValid())
+				rotationField.setText(getEntitiesFieldValue(EntityProxy::getRotation));
+		}
 
-		if (EntityUtils.isTintSupportedForEntities(entities)) setTintUIForEntities();
+		if (EntityUtils.isTintSupportedForEntities(entities)) {
+			setTintUIForEntities();
+		}
 
 		if (EntityUtils.isFlipSupportedForEntities(entities)) {
 			EntityUtils.setCommonCheckBoxState(entities, xFlipCheck, EntityProxy::isFlipX);

@@ -23,24 +23,27 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.kotcrab.vis.runtime.component.PhysicsComponent;
+import com.kotcrab.vis.runtime.component.PhysicsSpriteComponent;
 import com.kotcrab.vis.runtime.component.SpriteComponent;
 
 /** @author Kotcrab */
 public class PhysicsSpriteUpdateSystem extends EntityProcessingSystem {
 	private ComponentMapper<PhysicsComponent> physicsCm;
 	private ComponentMapper<SpriteComponent> spriteCm;
+	private ComponentMapper<PhysicsSpriteComponent> physicsSpriteCm;
 
 	public PhysicsSpriteUpdateSystem () {
-		super(Aspect.all(PhysicsComponent.class, SpriteComponent.class));
+		super(Aspect.all(PhysicsComponent.class, PhysicsSpriteComponent.class, SpriteComponent.class));
 	}
 
 	@Override
 	protected void process (Entity e) {
 		PhysicsComponent physics = physicsCm.get(e);
 		SpriteComponent sprite = spriteCm.get(e);
+		PhysicsSpriteComponent physicsSprite = physicsSpriteCm.get(e);
 
 		Vector2 pos = physics.body.getPosition();
 		sprite.setPosition(pos.x, pos.y);
-		sprite.setRotation(physics.body.getAngle() * MathUtils.radiansToDegrees);
+		sprite.setRotation(physicsSprite.originalRotation + physics.body.getAngle() * MathUtils.radiansToDegrees);
 	}
 }

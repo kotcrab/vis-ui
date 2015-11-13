@@ -197,17 +197,22 @@ public class EntityUtils {
 	}
 
 	public static void stream (Array<EntityProxy> proxies, Consumer<Entity> consumer) {
-		for (EntityProxy proxy : proxies) {
-			for (Entity entity : proxy.getEntities()) {
-				consumer.accept(entity);
+		for (int i = 0; i < proxies.size; i++) {
+			Array<Entity> entities = proxies.get(i).getEntities();
+
+			for (int j = 0; j < entities.size; j++) {
+				consumer.accept(entities.get(j));
 			}
 		}
 	}
 
 	public static void stream (Array<EntityProxy> proxies, BiConsumer<EntityProxy, Entity> consumer) {
-		for (EntityProxy proxy : proxies) {
-			for (Entity entity : proxy.getEntities()) {
-				consumer.accept(proxy, entity);
+		for (int i = 0; i < proxies.size; i++) {
+			EntityProxy proxy = proxies.get(i);
+			Array<Entity> entities = proxy.getEntities();
+
+			for (int j = 0; j < entities.size; j++) {
+				consumer.accept(proxy, entities.get(j));
 			}
 		}
 	}

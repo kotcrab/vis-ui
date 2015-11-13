@@ -73,7 +73,10 @@ public class Parser {
 				if (currentStyleBlock.extendsStyle != null)
 					Utils.throwException("Style block can only extend one style", t);
 
-				currentStyleBlock.extendsStyle = findMatchingStyle(t, t.content);
+				boolean isDefinedOnly = t.content.startsWith("~");
+
+				currentStyleBlock.extendsStyle = findMatchingStyle(t, isDefinedOnly ? t.content.substring(1) : t.content);
+				currentStyleBlock.extendsInheritOnlyDefinedStyles = isDefinedOnly;
 
 				i++;
 				continue;

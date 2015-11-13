@@ -122,7 +122,7 @@ public class StyleMerger {
 
 			if (mergeTargetStyle != null)
 				mergeStyles(styleToBeMerged, mergeTargetStyle);
-			else
+			else if (mergeTarget.extendsInheritOnlyDefinedStyles == false)
 				mergeTarget.styles.add(new StyleIdentifier(styleToBeMerged));
 		}
 	}
