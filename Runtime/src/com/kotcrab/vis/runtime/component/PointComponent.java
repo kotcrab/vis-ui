@@ -23,4 +23,12 @@ import com.kotcrab.vis.runtime.util.annotation.VisTag;
 public class PointComponent extends Component {
 	@VisTag(0) public float x;
 	@VisTag(1) public float y;
+
+	public PointComponent () {
+	}
+
+	public PointComponent (float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
 }
