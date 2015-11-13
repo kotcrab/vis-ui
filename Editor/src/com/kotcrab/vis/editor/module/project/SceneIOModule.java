@@ -235,8 +235,17 @@ public class SceneIOModule extends ProjectModule {
 		Field[] fields = clazz.getDeclaredFields();
 		if (fields.length == 0) return true;
 
+		boolean allFieldsTransient = true;
 		for (Field field : fields) {
-			if (Modifier.isTransient(field.getModifiers())) continue;
+			if (Modifier.isTransient(field.getModifiers()) == false) {
+				allFieldsTransient = false;
+				break;
+			}
+		}
+
+		if (allFieldsTransient) return true;
+
+		for (Field field : fields) {
 			if (field.getAnnotation(VisTag.class) != null) return true;
 			if (field.getAnnotation(Tag.class) != null) return true;
 		}
