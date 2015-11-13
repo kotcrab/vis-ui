@@ -38,6 +38,7 @@ import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CompatibleFieldSerializer;
+import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.*;
@@ -59,11 +60,14 @@ import com.kotcrab.vis.runtime.data.PhysicsSettings;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.kotcrab.vis.runtime.util.annotation.VisTag;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.UUID;
 
 /**
@@ -74,6 +78,8 @@ import java.util.UUID;
 @SuppressWarnings("rawtypes")
 @EventBusSubscriber
 public class SceneIOModule extends ProjectModule {
+	private static final String TAG = "SceneIOModule";
+
 	public static final int KRYO_PLUGINS_RESERVED_ID_BEGIN = 401;
 	public static final int KRYO_PLUGINS_RESERVED_ID_END = 800;
 
@@ -191,7 +197,25 @@ public class SceneIOModule extends ProjectModule {
 	}
 
 	protected <T> void registerTagged (Class<T> clazz, int id) {
+		if (checkIfClassHasTagAnnotations(clazz) == false) {
+			Log.warn(TAG, "Class " + clazz.getName() + " doesn't have any serializer tags but you are registering it at " +
+					"using tagged serializer. Did you forget to add VisTag annotations?");
+		}
+
 		kryo.register(clazz, new DefaultTaggedFieldSerializer<T>(kryo, clazz), id);
+	}
+
+	private boolean checkIfClassHasTagAnnotations (Class<?> clazz) {
+		Field[] fields = clazz.getDeclaredFields();
+		if (fields.length == 0) return true;
+
+		for (Field field : fields) {
+			if (Modifier.isTransient(field.getModifiers())) continue;
+			if (field.getAnnotation(VisTag.class) != null) return true;
+			if (field.getAnnotation(Tag.class) != null) return true;
+		}
+
+		return false;
 	}
 
 	protected void registerEntityComponentSerializer (Class<? extends Component> componentClass, EntityComponentSerializer serializer, int id) {
