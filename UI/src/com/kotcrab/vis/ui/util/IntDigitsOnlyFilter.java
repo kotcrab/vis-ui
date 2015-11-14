@@ -14,25 +14,25 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui;
+package com.kotcrab.vis.ui.util;
+
+import com.kotcrab.vis.ui.widget.VisTextField;
+import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
 
 /**
- * VisUI paddings, spacings and sizes
+ * {@link TextFieldFilter} that only allows digits for integer values.
  * @author Kotcrab
  */
-public class Sizes {
-	public float scaleFactor;
+public class IntDigitsOnlyFilter implements TextFieldFilter {
+	private boolean acceptNegativeValues;
 
-	public float spacingTop;
-	public float spacingBottom;
-	public float spacingRight;
-	public float spacingLeft;
+	public IntDigitsOnlyFilter (boolean acceptNegativeValues) {
+		this.acceptNegativeValues = acceptNegativeValues;
+	}
 
-	public float menuItemIconSize;
-
-	public float numberSelectorButtonSize;
-	public float numberSelectorButtonsWidth;
-	public float numberSelectorFieldSize;
-	public float numberSelectorFieldRightPadding;
+	@Override
+	public boolean acceptChar (VisTextField textField, char c) {
+		if (c == '-' && acceptNegativeValues) return true;
+		return Character.isDigit(c);
+	}
 }
-

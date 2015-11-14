@@ -31,8 +31,8 @@ import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
+import com.kotcrab.vis.ui.util.IntDigitsOnlyFilter;
 import com.kotcrab.vis.ui.util.Validators;
-import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter.DigitsOnlyFilter;
 
 import java.math.BigDecimal;
 
@@ -141,7 +141,7 @@ public class NumberSelector extends VisTable {
 		labelCell = add(new VisLabel(""));
 		setSelectorName(name);
 
-		add(valueText).fillX().expandX().height(sizes.numberSelectorButtonSize * 2).padRight(1);
+		add(valueText).fillX().expandX().height(sizes.numberSelectorButtonSize * 2).padRight(sizes.numberSelectorFieldRightPadding);
 		add(buttonsTable).width(sizes.numberSelectorButtonsWidth);
 
 		addButtonsListeners(upButton, downButton);
@@ -214,7 +214,15 @@ public class NumberSelector extends VisTable {
 			@Override
 			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
 				if (focused == false) {
-					valueChanged(true);
+
+					try {
+						float newValue = Float.valueOf(valueText.getText());
+						setValue(newValue, true);
+					} catch (NumberFormatException e) {
+						//if entered value is invalid then restore last valid value
+						valueChanged(true);
+					}
+
 					getStage().setScrollFocus(null);
 				}
 			}
@@ -229,10 +237,11 @@ public class NumberSelector extends VisTable {
 
 			@Override
 			public boolean scrolled (InputEvent event, float x, float y, int amount) {
-				if (amount == 1)
+				if (amount == 1) {
 					decrement(true);
-				else
+				} else {
 					increment(true);
+				}
 
 				return true;
 			}
@@ -262,7 +271,7 @@ public class NumberSelector extends VisTable {
 		valueText.addValidator(boundsValidator); //Both need the bounds check
 		if (precision == 0) {
 			valueText.addValidator(Validators.INTEGERS);
-			valueText.setTextFieldFilter(new DigitsOnlyFilter());
+			valueText.setTextFieldFilter(new IntDigitsOnlyFilter(true));
 		} else {
 			valueText.addValidator(Validators.FLOATS);
 			valueText.addValidator(new InputValidator() {
@@ -295,10 +304,11 @@ public class NumberSelector extends VisTable {
 	}
 
 	private void textChanged () {
-		if (valueText.getText().equals(""))
+		if (valueText.getText().equals("")) {
 			current = min;
-		else if (checkInputBounds(valueText.getText()))
+		} else if (checkInputBounds(valueText.getText())) {
 			current = Float.parseFloat(valueText.getText());
+		}
 	}
 
 	public void increment () {
@@ -306,10 +316,11 @@ public class NumberSelector extends VisTable {
 	}
 
 	private void increment (boolean fireEvent) {
-		if (current + step > max)
+		if (current + step > max) {
 			this.current = max;
-		else
+		} else {
 			this.current += step;
+		}
 
 		valueChanged(fireEvent);
 	}
@@ -319,10 +330,11 @@ public class NumberSelector extends VisTable {
 	}
 
 	private void decrement (boolean fireEvent) {
-		if (current - step < min)
+		if (current - step < min) {
 			this.current = min;
-		else
+		} else {
 			this.current -= step;
+		}
 
 		valueChanged(fireEvent);
 	}
@@ -332,12 +344,13 @@ public class NumberSelector extends VisTable {
 	}
 
 	public void setValue (float newValue, boolean fireEvent) {
-		if (newValue > max)
+		if (newValue > max) {
 			current = max;
-		else if (newValue < min)
+		} else if (newValue < min) {
 			current = min;
-		else
+		} else {
 			current = newValue;
+		}
 
 		valueChanged(fireEvent);
 	}
@@ -404,8 +417,9 @@ public class NumberSelector extends VisTable {
 		valueText.setCursorPosition(valueText.getText().length());
 
 		if (fireEvent) {
-			for (NumberSelectorListener listener : listeners)
+			for (NumberSelectorListener listener : listeners) {
 				listener.changed(current);
+			}
 		}
 	}
 
@@ -415,8 +429,9 @@ public class NumberSelector extends VisTable {
 			BigDecimal bd = new BigDecimal(String.valueOf(current));
 			bd = bd.setScale(precision, BigDecimal.ROUND_HALF_UP);
 			return String.valueOf(bd.floatValue());
-		} else
+		} else {
 			return String.valueOf((int) current);
+		}
 	}
 
 	public void addChangeListener (NumberSelectorListener listener) {
@@ -459,10 +474,11 @@ public class NumberSelector extends VisTable {
 
 		@Override
 		public void run () {
-			if (increment)
+			if (increment) {
 				increment(true);
-			else
+			} else {
 				decrement(true);
+			}
 		}
 	}
 }
