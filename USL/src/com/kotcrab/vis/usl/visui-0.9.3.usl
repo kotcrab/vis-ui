@@ -121,6 +121,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
         numberSelectorButtonSize: 12,
         numberSelectorButtonsWidth: 12,
         numberSelectorFieldSize: 40,
+        numberSelectorFieldRightPadding: 1
     }
 
     x2: {
@@ -134,6 +135,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
         numberSelectorButtonSize: 24,
         numberSelectorButtonsWidth: 20,
         numberSelectorFieldSize: 80,
+        numberSelectorFieldRightPadding: 5
     }
 }
 

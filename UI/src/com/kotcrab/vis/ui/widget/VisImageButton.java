@@ -83,7 +83,7 @@ public class VisImageButton extends Button implements Focusable, BorderOwner {
 		addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (isDisabled() == false) FocusManager.getFocus(getStage(), VisImageButton.this);
+				if (isDisabled() == false) FocusManager.switchFocus(getStage(), VisImageButton.this);
 				return false;
 			}
 		});
@@ -148,7 +148,7 @@ public class VisImageButton extends Button implements Focusable, BorderOwner {
 	@Override
 	public void setDisabled (boolean disabled) {
 		super.setDisabled(disabled);
-		if (disabled) FocusManager.getFocus(getStage());
+		if (disabled) FocusManager.resetFocus(getStage(), this);
 	}
 
 	@Override

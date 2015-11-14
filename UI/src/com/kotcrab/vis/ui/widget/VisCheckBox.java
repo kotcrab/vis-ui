@@ -73,7 +73,7 @@ public class VisCheckBox extends TextButton implements Focusable, BorderOwner {
 		addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (isDisabled() == false) FocusManager.getFocus(getStage(), VisCheckBox.this);
+				if (isDisabled() == false) FocusManager.switchFocus(getStage(), VisCheckBox.this);
 				return false;
 			}
 		});

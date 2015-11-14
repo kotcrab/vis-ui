@@ -16,72 +16,91 @@
 
 package com.kotcrab.vis.ui.widget.file;
 
+import com.badlogic.gdx.utils.I18NBundle;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.i18n.BundleText;
 
 /**
  * Contains texts for chooser access via I18NBundle
- * @since 0.7.0
  * @author Kotcrab
+ * @since 0.7.0
  */
 public enum FileChooserText implements BundleText {
-	// @formatter:off
-	TITLE_CHOOSE_FILES						{public String getName () {return "titleChooseFiles";}},
-	TITLE_CHOOSE_DIRECTORIES				{public String getName () {return "titleChooseDirectories";}},
-	TITLE_CHOOSE_FILES_AND_DIRECTORIES		{public String getName () {return "titleChooseFilesAndDirectories";}},
+	TITLE_CHOOSE_FILES("titleChooseFiles"),
+	TITLE_CHOOSE_DIRECTORIES("titleChooseDirectories"),
+	TITLE_CHOOSE_FILES_AND_DIRECTORIES("titleChooseFilesAndDirectories"),
 
-	CANCEL									{public String getName () {return "cancel";}},
-	FILE_NAME								{public String getName () {return "fileName";}},
-	DESKTOP									{public String getName () {return "desktop";}},
-	COMPUTER								{public String getName () {return "computer";}},
+	CANCEL("cancel"),
+	FILE_NAME("fileName"),
+	DESKTOP("desktop"),
+	COMPUTER("computer"),
 
-	OPEN									{public String getName () {return "open";}},
-	SAVE									{public String getName () {return "save";}},
+	OPEN("open"),
+	SAVE("save"),
 
-	BACK									{public String getName () {return "back";}},
-	FORWARD									{public String getName () {return "forward";}},
-	PARENT_DIRECTORY						{public String getName () {return "parentDirectory";}},
-	NEW_DIRECTORY							{public String getName () {return "newDirectory";}},
+	BACK("back"),
+	FORWARD("forward"),
+	PARENT_DIRECTORY("parentDirectory"),
+	NEW_DIRECTORY("newDirectory"),
 
-	DIRECTORY_NO_LONGER_EXISTS				{public String getName () {return "directoryNoLongerExists";}},
+	DIRECTORY_NO_LONGER_EXISTS("directoryNoLongerExists"),
 
-	POPUP_TITLE								{public String getName () {return "popupTitle";}},
-	POPUP_CHOOSE_FILE						{public String getName () {return "popupChooseFile";}},
-	POPUP_SELECTED_FILE_DOES_NOT_EXIST		{public String getName () {return "popupSelectedFileDoesNotExist";}},
-	POPUP_DIRECTORY_DOES_NOT_EXIST			{public String getName () {return "popupDirectoryDoesNotExist";}},
-	POPUP_ONLY_DIRECTORIES					{public String getName () {return "popupOnlyDirectories";}},
-	POPUP_FILENAME_INVALID					{public String getName () {return "popupFilenameInvalid";}},
-	POPUP_FILE_EXIST_OVERWRITE				{public String getName () {return "popupFileExistOverwrite";}},
-	POPUP_MULTIPLE_FILE_EXIST_OVERWRITE 	{public String getName () {return "popupMultipleFileExistOverwrite";}},
-	POPUP_DELETE_FILE_FAILED			 	{public String getName () {return "popupDeleteFileFailed";}},
+	POPUP_TITLE("popupTitle"),
+	POPUP_CHOOSE_FILE("popupChooseFile"),
+	POPUP_SELECTED_FILE_DOES_NOT_EXIST("popupSelectedFileDoesNotExist"),
+	POPUP_DIRECTORY_DOES_NOT_EXIST("popupDirectoryDoesNotExist"),
+	POPUP_ONLY_DIRECTORIES("popupOnlyDirectories"),
+	POPUP_FILENAME_INVALID("popupFilenameInvalid"),
+	POPUP_FILE_EXIST_OVERWRITE("popupFileExistOverwrite"),
+	POPUP_MULTIPLE_FILE_EXIST_OVERWRITE("popupMultipleFileExistOverwrite"),
+	POPUP_DELETE_FILE_FAILED("popupDeleteFileFailed"),
 
-	CONTEXT_MENU_DELETE						{public String getName () {return "contextMenuDelete";}},
-	CONTEXT_MENU_MOVE_TO_TRASH				{public String getName () {return "contextMenuMoveToTrash";}},
-	CONTEXT_MENU_SHOW_IN_EXPLORER			{public String getName () {return "contextMenuShowInExplorer";}},
-	CONTEXT_MENU_ADD_TO_FAVORITES			{public String getName () {return "contextMenuAddToFavorites";}},
-	CONTEXT_MENU_REMOVE_FROM_FAVORITES		{public String getName () {return "contextMenuRemoveFromFavorites";}},
-	CONTEXT_MENU_DELETE_WARNING				{public String getName () {return "contextMenuDeleteWarning";}},
-	CONTEXT_MENU_MOVE_TO_TRASH_WARNING		{public String getName () {return "contextMenuMoveToTrashWarning";}},
-	CONTEXT_MENU_NEW_DIRECTORY 				{public String getName () {return "contextMenuNewDirectory";}},
+	CONTEXT_MENU_DELETE("contextMenuDelete"),
+	CONTEXT_MENU_MOVE_TO_TRASH("contextMenuMoveToTrash"),
+	CONTEXT_MENU_SHOW_IN_EXPLORER("contextMenuShowInExplorer"),
+	CONTEXT_MENU_ADD_TO_FAVORITES("contextMenuAddToFavorites"),
+	CONTEXT_MENU_REMOVE_FROM_FAVORITES("contextMenuRemoveFromFavorites"),
+	CONTEXT_MENU_DELETE_WARNING("contextMenuDeleteWarning"),
+	CONTEXT_MENU_MOVE_TO_TRASH_WARNING("contextMenuMoveToTrashWarning"),
+	CONTEXT_MENU_NEW_DIRECTORY("contextMenuNewDirectory"),
 
-	NEW_DIRECTORY_DIALOG_TITLE 				{public String getName () {return "newDirectoryDialogTitle";}},
-	NEW_DIRECTORY_DIALOG_TEXT 				{public String getName () {return "newDirectoryDialogText";}},
-	NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS {public String getName () {return "newDirectoryDialogIllegalCharacters";}},
-	NEW_DIRECTORY_DIALOG_ALREADY_EXISTS 	{public String getName () {return "newDirectoryDialogAlreadyExists";}};
-	// @formatter:on
+	NEW_DIRECTORY_DIALOG_TITLE("newDirectoryDialogTitle"),
+	NEW_DIRECTORY_DIALOG_TEXT("newDirectoryDialogText"),
+	NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS("newDirectoryDialogIllegalCharacters"),
+	NEW_DIRECTORY_DIALOG_ALREADY_EXISTS("newDirectoryDialogAlreadyExists");
 
-	@Override
-	public String get () {
-		return VisUI.getFileChooserBundle().get(getName());
+	private final String name;
+
+	FileChooserText (final String name) {
+		this.name = name;
+	}
+
+	private static I18NBundle getBundle () {
+		return VisUI.getFileChooserBundle();
 	}
 
 	@Override
-	public String format () {
-		throw new UnsupportedOperationException();
+	public final String getName () {
+		return name;
 	}
 
 	@Override
-	public String format (Object... arguments) {
-		throw new UnsupportedOperationException();
+	public final String get () {
+		return getBundle().get(name);
+	}
+
+	@Override
+	public final String format () {
+		return getBundle().format(name);
+	}
+
+	@Override
+	public final String format (final Object... arguments) {
+		return getBundle().format(name, arguments);
+	}
+
+	@Override
+	public final String toString () {
+		return get();
 	}
 }

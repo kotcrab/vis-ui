@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.StringBuilder;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.Sizes;
@@ -438,32 +439,50 @@ public class DialogUtils {
 	}
 
 	private enum Text implements BundleText {
-		// @formatter:off
-		YES 					{public String getName () {return "yes";}},
-		NO						{public String getName () {return "no";}},
-		CANCEL					{public String getName () {return "cancel";}},
-		OK 						{public String getName () {return "ok";}},
-		ERROR					{public String getName () {return "error";}},
+		YES("yes"),
+		NO("no"),
+		CANCEL("cancel"),
+		OK("ok"),
+		ERROR("error"),
 
-		DETAILS 				{public String getName () {return "details";}},
-		DETAILS_COLON			{public String getName () {return "detailsColon";}},
-		COPY 					{public String getName () {return "copy";}},
-		COPIED 					{public String getName () {return "copied";}};
-		// @formatter:on
+		DETAILS("details"),
+		DETAILS_COLON("detailsColon"),
+		COPY("copy"),
+		COPIED("copied");
 
-		@Override
-		public String get () {
-			return VisUI.getDialogUtilsBundle().get(getName());
+		private final String name;
+
+		Text (final String name) {
+			this.name = name;
+		}
+
+		private static I18NBundle getBundle () {
+			return VisUI.getDialogUtilsBundle();
 		}
 
 		@Override
-		public String format () {
-			throw new UnsupportedOperationException();
+		public final String getName () {
+			return name;
 		}
 
 		@Override
-		public String format (Object... arguments) {
-			throw new UnsupportedOperationException();
+		public final String get () {
+			return getBundle().get(name);
+		}
+
+		@Override
+		public final String format () {
+			return getBundle().format(name);
+		}
+
+		@Override
+		public final String format (final Object... arguments) {
+			return getBundle().format(name, arguments);
+		}
+
+		@Override
+		public final String toString () {
+			return get();
 		}
 	}
 

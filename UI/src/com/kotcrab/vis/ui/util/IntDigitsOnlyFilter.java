@@ -20,17 +20,25 @@ import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
 
 /**
- * {@link TextFieldFilter} that only allows digits for float values.
+ * {@link TextFieldFilter} that only allows digits for integer values.
  * @author Kotcrab
  */
-public class FloatDigitsOnlyFilter extends IntDigitsOnlyFilter {
-	public FloatDigitsOnlyFilter (boolean acceptNegativeValues) {
+public class IntDigitsOnlyFilter extends NumberDigitsTextFieldFilter {
+	public IntDigitsOnlyFilter (boolean acceptNegativeValues) {
 		super(acceptNegativeValues);
 	}
 
 	@Override
 	public boolean acceptChar (VisTextField field, char c) {
-		if (c == '.' && field.getText().contains(".") == false) return true;
-		return super.acceptChar(field, c);
+		if (isAcceptNegativeValues()) {
+			if (isUseFieldCursorPosition()) {
+				if (c == '-' && (field.getCursorPosition() > 0 || field.getText().startsWith("-"))) return false;
+			} else {
+				if (c == '-' && field.getText().startsWith("-")) return false;
+			}
+
+			if (c == '-') return true;
+		}
+		return Character.isDigit(c);
 	}
 }

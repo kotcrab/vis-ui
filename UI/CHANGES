@@ -1,5 +1,15 @@
 [0.9.3] [LibGDX 1.7.1] [Snapshot]
--API Addition: TabbedPane.disableTab(Tab tab, boolean disable), TabbedPane.isTabDisabled(Tab)
+-API Change: FocusManager.getFocus(Stage) renamed to resetFocus
+-API Change: FocusManager.getFocus(Stage, Focusable) renamed to switchFocus
+-API Addition: FocusManager.resetFocus(Stage, Actor)
+-API Addition: TabbedPane#disableTab(Tab tab, boolean disable), TabbedPane#isTabDisabled(Tab)
+-API Addition: IntDigitsOnlyFilter
+-NumberSelector:
+ -API Addition: setMaxLength(int), getMaxLength()
+ -Fixed entering negative integer values
+ -Fixed NumberSelector text field focus border when using SkinScale.X2
+ -When selector loses focus and entered value is bigger than max it will be set to max value, if it's smaller than min it will be set to min value
+  -Previous behaviour was to restore last valid value
 -Trying to use PopupMenu.add(Actor) with MenuItem will throw an exception (MenuItems must be added using addItem method)
 -ColorPickerStyle now extends WindowStyle
 

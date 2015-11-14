@@ -33,5 +33,6 @@ public class Sizes {
 	public float numberSelectorButtonSize;
 	public float numberSelectorButtonsWidth;
 	public float numberSelectorFieldSize;
+	public float numberSelectorFieldRightPadding;
 }
 
