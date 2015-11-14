@@ -14,10 +14,19 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.util.json;
+package com.kotcrab.vis.editor.serializer.cloner;
+
+import com.rits.cloning.IDeepCloner;
+import com.rits.cloning.IFastCloner;
+
+import java.util.Map;
 
 /** @author Kotcrab */
-@FunctionalInterface
-public interface JsonTagRegistrar {
-	void register(String tag, Class<?> clazz);
+public abstract class VisCloner<T> implements IFastCloner {
+	@Override
+	public Object clone (Object t, IDeepCloner cloner, Map<Object, Object> clones) {
+		return cloneObject((T) t, cloner, clones);
+	}
+
+	protected abstract T cloneObject(T t, IDeepCloner cloner, Map<Object, Object> clones);
 }

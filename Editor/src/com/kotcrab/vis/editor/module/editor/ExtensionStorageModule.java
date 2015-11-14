@@ -47,7 +47,7 @@ public class ExtensionStorageModule extends EditorModule {
 		exporterPlugins.add(exporterPlugin);
 	}
 
-	public Array<EditorEntitySupport> getObjectSupports () {
+	public Array<EditorEntitySupport> getEntitiesSupports () {
 		return objectSupports;
 	}
 

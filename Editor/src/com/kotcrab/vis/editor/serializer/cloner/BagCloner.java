@@ -14,10 +14,24 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.util.json;
+package com.kotcrab.vis.editor.serializer.cloner;
+
+import com.artemis.utils.Bag;
+import com.rits.cloning.IDeepCloner;
+
+import java.util.Map;
 
 /** @author Kotcrab */
-@FunctionalInterface
-public interface JsonTagRegistrar {
-	void register(String tag, Class<?> clazz);
+@SuppressWarnings({"rawtypes", "unchecked"})
+public class BagCloner extends VisCloner<Bag> {
+	@Override
+	protected Bag cloneObject (Bag original, IDeepCloner cloner, Map<Object, Object> clones) {
+		Bag bag = new Bag(original.size());
+
+		for (Object obj : original) {
+			bag.add(cloner.deepClone(obj, clones));
+		}
+
+		return bag;
+	}
 }

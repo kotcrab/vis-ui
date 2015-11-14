@@ -40,6 +40,7 @@ import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.scene.*;
@@ -84,9 +85,9 @@ public class EntityManipulatorModule extends SceneModule {
 	private StatusBarModule statusBar;
 	private EditingSettingsModule editingSettings;
 	private GridSettingsModule gridSettings;
+	private ExtensionStorageModule extensionStorage;
 
 	private SceneIOModule sceneIO;
-	private SupportModule supportModule;
 
 	private CameraModule camera;
 	private UndoModule undoModule;
@@ -466,7 +467,7 @@ public class EntityManipulatorModule extends SceneModule {
 			}
 		}
 
-		for (EditorEntitySupport support : supportModule.getSupports()) {
+		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
 			Entity supportEntity = support.processDropPayload(entityEngine, scene, obj);
 			if (supportEntity != null) {
 				entity = supportEntity;

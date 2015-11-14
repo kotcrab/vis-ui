@@ -31,6 +31,7 @@ import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.scene.system.inflater.*;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
@@ -90,7 +91,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new EditorTextInflater(scene.pixelsPerUnit));
 		config.setSystem(new EditorSpriterInflater());
 
-		for (EditorEntitySupport support : projectMC.get(SupportModule.class).getSupports()) {
+		for (EditorEntitySupport support : editorModuleContainer.get(ExtensionStorageModule.class).getEntitiesSupports()) {
 			support.registerInflatersSystems(config);
 		}
 

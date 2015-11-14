@@ -24,7 +24,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.EntityScheme;
-import com.kotcrab.vis.editor.module.project.SupportModule;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.*;
 import com.kotcrab.vis.runtime.component.*;
@@ -32,11 +32,9 @@ import com.kotcrab.vis.runtime.component.*;
 public class EntityProxyCache extends Manager {
 	private static final String TAG = "EntityProxyCache";
 
-	private SupportModule supportModule;
+	private ExtensionStorageModule extensionStorage;
 
 	private AspectSubscriptionManager subscriptionManager;
-
-	private EntitySubscription subscription;
 
 	private Array<EntityProxyCacheListener> listeners = new Array<>();
 	private ObjectMap<Entity, EntityProxy> cache = new ObjectMap<>();
@@ -48,7 +46,7 @@ public class EntityProxyCache extends Manager {
 
 	@Override
 	protected void initialize () {
-		subscription = subscriptionManager.get(Aspect.all(LayerComponent.class, RenderableComponent.class));
+		EntitySubscription subscription = subscriptionManager.get(Aspect.all(LayerComponent.class, RenderableComponent.class));
 
 		subscription.addSubscriptionListener(new SubscriptionListener() {
 			@Override
@@ -81,7 +79,7 @@ public class EntityProxyCache extends Manager {
 		EntityProxy proxy = getInternalProxyFor(entity);
 
 		if (proxy == null) {
-			for (EditorEntitySupport support : supportModule.getSupports()) {
+			for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
 				proxy = support.resolveProxy(entity);
 				if (proxy != null)
 					return proxy;

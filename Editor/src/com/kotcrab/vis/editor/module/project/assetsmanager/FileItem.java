@@ -25,8 +25,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.module.project.SupportModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.util.FileUtils;
@@ -43,8 +43,9 @@ import com.kotcrab.vis.ui.widget.VisLabel;
  * @author Kotcrab
  */
 public class FileItem extends Table {
+	private ExtensionStorageModule extensionStorage;
+
 	private FileAccessModule fileAccess;
-	private SupportModule supportModule;
 	private TextureCacheModule textureCache;
 
 	private FileHandle file;
@@ -160,7 +161,7 @@ public class FileItem extends Table {
 	}
 
 	private EditorEntitySupport findSupportForDirectory (String ext, String relativePath) {
-		for (EditorEntitySupport support : supportModule.getSupports())
+		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports())
 			if (support.isSupportedDirectory(relativePath, ext)) return support;
 
 		return null;

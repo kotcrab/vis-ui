@@ -40,6 +40,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
@@ -103,6 +104,7 @@ public class EntityProperties extends VisTable implements Disposable {
 	private StatusBarModule statusBarModule;
 	private ToastModule toastModule;
 	private ColorPickerModule colorPickerModule;
+	private ExtensionStorageModule extensionStorage;
 
 	private FileAccessModule fileAccessModule;
 	private FontCacheModule fontCacheModule;
@@ -684,14 +686,14 @@ public class EntityProperties extends VisTable implements Disposable {
 	}
 
 	public void loadSupportsSpecificTables (SupportModule supportModule) {
-		for (EditorEntitySupport support : supportModule.getSupports()) {
+		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
 			Array<SpecificUITable> uiTables = support.getUIPropertyTables();
 			if (uiTables != null) {
 				for (SpecificUITable table : uiTables)
 					registerSpecificTable(table);
 			}
 
-			Array<ComponentTable> componentTables = support.getComponentsUITables();
+			Array<ComponentTable<?>> componentTables = support.getComponentsUITables();
 			if (componentTables != null) {
 				for (ComponentTable table : componentTables)
 					registerComponentTable(table);

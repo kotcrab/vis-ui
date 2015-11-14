@@ -14,10 +14,22 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.util.json;
+package com.kotcrab.vis.editor.serializer.cloner;
+
+import com.badlogic.gdx.utils.IntArray;
+import com.rits.cloning.IDeepCloner;
+
+import java.util.Map;
 
 /** @author Kotcrab */
-@FunctionalInterface
-public interface JsonTagRegistrar {
-	void register(String tag, Class<?> clazz);
+public class IntArrayCloner extends VisCloner<IntArray> {
+	@Override
+	protected IntArray cloneObject (IntArray original, IDeepCloner cloner, Map<Object, Object> clones) {
+		IntArray array = new IntArray(original.size);
+
+		for (int i = 0; i < original.size; i++)
+			array.add(original.get(i));
+
+		return array;
+	}
 }

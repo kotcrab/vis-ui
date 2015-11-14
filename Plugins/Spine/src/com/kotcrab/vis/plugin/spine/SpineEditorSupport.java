@@ -36,7 +36,6 @@ import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.kryo.Serializer;
 import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
@@ -54,7 +53,6 @@ import com.kotcrab.vis.editor.util.scene2d.VisDragAndDrop;
 import com.kotcrab.vis.editor.util.scene2d.VisDropSource;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
-import com.kotcrab.vis.plugin.spine.runtime.SpineProtoComponent;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.LayerComponent;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
@@ -68,9 +66,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 	private SpineCacheModule spineCache;
 	private FileAccessModule fileAccess;
 
-	private Array<Serializer> serializers = new Array<>();
-	private Array<Class<?>> serializedTypes = new Array<>();
-	private Array<AssetDescriptorProvider> assetProviders = new Array<>();
+	private Array<AssetDescriptorProvider<?>> assetProviders = new Array<>();
 
 	private float pixelsPerUnit;
 
@@ -81,12 +77,6 @@ public class SpineEditorSupport extends EditorEntitySupport {
 		fileAccess = projectMC.get(FileAccessModule.class);
 
 		assetProviders.add(new SpineAssetDescriptorProvider());
-
-		serializedTypes.add(SpinePreviewComponent.class);
-		serializedTypes.add(SpineScaleComponent.class);
-		serializedTypes.add(SpineBoundsComponent.class);
-		serializedTypes.add(SpineAssetDescriptor.class);
-		serializedTypes.add(SpineProtoComponent.class);
 	}
 
 	@Override
@@ -118,7 +108,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 	}
 
 	@Override
-	public Array<AssetDescriptorProvider> getAssetDescriptorProviders () {
+	public Array<AssetDescriptorProvider<?>> getAssetDescriptorProviders () {
 		return assetProviders;
 	}
 
@@ -168,15 +158,5 @@ public class SpineEditorSupport extends EditorEntitySupport {
 		if (entity.getComponent(SpineComponent.class) != null) return new SpineProxy(entity);
 
 		return null;
-	}
-
-	@Override
-	public Array<Serializer> getSerializers () {
-		return serializers;
-	}
-
-	@Override
-	public Array<Class<?>> getSerializedTypes () {
-		return serializedTypes;
 	}
 }

@@ -26,6 +26,7 @@ import com.kotcrab.vis.editor.assets.transaction.AssetTransaction;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionException;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
 import com.kotcrab.vis.editor.assets.transaction.generator.*;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
@@ -50,9 +51,10 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
  * @author Kotcrab
  */
 public class AssetsAnalyzerModule extends ProjectModule {
+	private ExtensionStorageModule extensionStorage;
+
 	private ToastModule toastModule;
 	private FileAccessModule fileAccess;
-	private SupportModule supportModule;
 	private TabsModule tabsModule;
 	private SceneTabsModule sceneTabsModule;
 	private QuickAccessModule quickAccessModule;
@@ -91,16 +93,16 @@ public class AssetsAnalyzerModule extends ProjectModule {
 	}
 
 	private AssetProviderResult provideDescriptor (FileHandle file, String relativePath) {
-		for (AssetDescriptorProvider provider : providers) {
+		for (AssetDescriptorProvider<?> provider : providers) {
 			VisAssetDescriptor desc = provider.provide(file, relativePath);
 			if (desc != null) return new AssetProviderResult(provider, desc);
 		}
 
-		for (EditorEntitySupport support : supportModule.getSupports()) {
-			Array<AssetDescriptorProvider> providers = support.getAssetDescriptorProviders();
+		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
+			Array<AssetDescriptorProvider<?>> providers = support.getAssetDescriptorProviders();
 
 			if (providers != null) {
-				for (AssetDescriptorProvider provider : providers) {
+				for (AssetDescriptorProvider<?> provider : providers) {
 					VisAssetDescriptor desc = provider.provide(file, relativePath);
 					if (desc != null) return new AssetProviderResult(provider, desc);
 				}
@@ -160,7 +162,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 				if (gen.isSupported(result.descriptor)) return gen;
 			}
 
-			for (EditorEntitySupport support : supportModule.getSupports()) {
+			for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
 				Array<AssetTransactionGenerator> gens = support.getAssetTransactionGenerators();
 				if (gens != null) {
 					for (AssetTransactionGenerator gen : gens) {
