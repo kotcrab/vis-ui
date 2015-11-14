@@ -50,7 +50,7 @@ public class VisTree extends Tree {
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				Focusable focusable = FocusManager.getFocusedWidget();
 				if (focusable instanceof Actor == false || isAscendantOf((Actor) focusable) == false) {
-					FocusManager.getFocus(getStage());
+					FocusManager.resetFocus(getStage());
 				}
 				return false;
 			}

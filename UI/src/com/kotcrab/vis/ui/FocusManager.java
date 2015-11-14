@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
@@ -26,11 +27,11 @@ public class FocusManager {
 	private static Focusable focusedWidget;
 
 	/**
-	 * Takes focus from current focused widget (if any), and sets current focused widget to provided widget
+	 * Takes focus from current focused widget (if any), and sets focus to provided widget
 	 * @param stage if passed stage is not null then stage keyboard focus will be set to null
 	 * @param widget that will acquire focus
 	 */
-	public static void getFocus (Stage stage, Focusable widget) {
+	public static void switchFocus (Stage stage, Focusable widget) {
 		if (focusedWidget != null) focusedWidget.focusLost();
 		focusedWidget = widget;
 		if (stage != null) stage.setKeyboardFocus(null);
@@ -38,12 +39,24 @@ public class FocusManager {
 	}
 
 	/**
-	 * Takes focus from current focused widget (if any), and sets current focused widget to null
+	 * Takes focus from current focused widget (if any), and sets current focused widget to null. If widgets owns
+	 * keyboard focus {@link #resetFocus(Stage, Actor)} should be always preferred.
 	 * @param stage if passed stage is not null then stage keyboard focus will be set to null
 	 */
-	public static void getFocus (Stage stage) {
+	public static void resetFocus (Stage stage) {
 		if (focusedWidget != null) focusedWidget.focusLost();
 		if (stage != null) stage.setKeyboardFocus(null);
+		focusedWidget = null;
+	}
+
+	/**
+	 * Takes focus from current focused widget (if any), and sets current focused widget to null
+	 * @param stage if passed stage is not null then stage keyboard focus will be set to null only if current
+	 * focus owner is passed actor
+	 */
+	public static void resetFocus (Stage stage, Actor caller) {
+		if (focusedWidget != null) focusedWidget.focusLost();
+		if (stage != null && stage.getKeyboardFocus() == caller) stage.setKeyboardFocus(null);
 		focusedWidget = null;
 	}
 

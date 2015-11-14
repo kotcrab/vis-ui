@@ -787,7 +787,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	public void setDisabled (boolean disabled) {
 		this.disabled = disabled;
 		if (disabled) {
-			FocusManager.getFocus(getStage());
+			FocusManager.resetFocus(getStage(), this);
 			keyRepeatTask.cancel();
 			keyTypedRepeatTask.cancel();
 		}
@@ -810,7 +810,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	public void focusField () {
 		if (disabled) return;
 		Stage stage = getStage();
-		FocusManager.getFocus(stage, VisTextField.this);
+		FocusManager.switchFocus(stage, VisTextField.this);
 		setCursorPosition(0);
 		selectionStart = cursor;
 		if (stage != null) stage.setKeyboardFocus(VisTextField.this);
@@ -932,7 +932,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 			if (pointer == 0 && button != 0) return false;
 			if (disabled) return true;
 			Stage stage = getStage();
-			FocusManager.getFocus(stage, VisTextField.this);
+			FocusManager.switchFocus(stage, VisTextField.this);
 			setCursorPosition(x, y);
 			selectionStart = cursor;
 			if (stage != null) stage.setKeyboardFocus(VisTextField.this);

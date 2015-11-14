@@ -1,5 +1,8 @@
 [0.9.3] [LibGDX 1.7.1] [Snapshot]
--API Addition: TabbedPane.disableTab(Tab tab, boolean disable), TabbedPane.isTabDisabled(Tab)
+-API Change: FocusManager.getFocus(Stage) renamed to resetFocus
+-API Change: FocusManager.getFocus(Stage, Focusable) renamed to switchFocus
+-API Addition: FocusManager.resetFocus(Stage, Actor)
+-API Addition: TabbedPane#disableTab(Tab tab, boolean disable), TabbedPane#isTabDisabled(Tab)
 -API Addition: IntDigitsOnlyFilter
 -NumberSelector:
  -API Addition: setMaxLength(int), getMaxLength()

@@ -71,7 +71,7 @@ public class VisTextButton extends TextButton implements Focusable, BorderOwner 
 		addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (isDisabled() == false) FocusManager.getFocus(getStage(), VisTextButton.this);
+				if (isDisabled() == false) FocusManager.switchFocus(getStage(), VisTextButton.this);
 				return false;
 			}
 		});

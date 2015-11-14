@@ -103,7 +103,7 @@ public class VisSplitPane extends WidgetGroup {
 				if (draggingPointer != -1) return false;
 				if (pointer == 0 && button != 0) return false;
 				if (handleBounds.contains(x, y)) {
-					FocusManager.getFocus(getStage());
+					FocusManager.resetFocus(getStage());
 
 					draggingPointer = pointer;
 					lastPoint.set(x, y);
