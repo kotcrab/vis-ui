@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui.widget.color;
 
+import com.badlogic.gdx.utils.I18NBundle;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.i18n.BundleText;
 
@@ -24,28 +25,46 @@ import com.kotcrab.vis.ui.i18n.BundleText;
  * @since 0.7.0
  */
 public enum ColorPickerText implements BundleText {
-	// @formatter:off
-	TITLE			 		{public String getName () {return "title";}},
-	RESTORE					{public String getName () {return "restore";}},
-	CANCEL 					{public String getName () {return "cancel";}},
-	OK						{public String getName () {return "ok";}},
-	NEW 					{public String getName () {return "new";}},
-	OLD 					{public String getName () {return "old";}},
-	HEX 					{public String getName () {return "hex";}};
-	// @formatter:on
+	TITLE("title"),
+	RESTORE("restore"),
+	CANCEL("cancel"),
+	OK("ok"),
+	NEW("new"),
+	OLD("old"),
+	HEX("hex");
 
-	@Override
-	public String get () {
-		return VisUI.getColorPickerBundle().get(getName());
+	private final String name;
+
+	ColorPickerText (final String name) {
+		this.name = name;
+	}
+
+	private static I18NBundle getBundle () {
+		return VisUI.getColorPickerBundle();
 	}
 
 	@Override
-	public String format () {
-		throw new UnsupportedOperationException();
+	public final String getName () {
+		return name;
 	}
 
 	@Override
-	public String format (Object... arguments) {
-		throw new UnsupportedOperationException();
+	public final String get () {
+		return getBundle().get(name);
+	}
+
+	@Override
+	public final String format () {
+		return getBundle().format(name);
+	}
+
+	@Override
+	public final String format (final Object... arguments) {
+		return getBundle().format(name, arguments);
+	}
+
+	@Override
+	public final String toString () {
+		return get();
 	}
 }

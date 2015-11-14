@@ -30,6 +30,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.Scaling;
@@ -532,24 +533,42 @@ public class TabbedPane {
 	}
 
 	private enum Text implements BundleText {
-		// @formatter:off
-		UNSAVED_DIALOG_TITLE		{public String getName () {return "unsavedDialogTitle";}},
-		UNSAVED_DIALOG_TEXT			{public String getName () {return "unsavedDialogText";}};
-		// @formatter:on
+		UNSAVED_DIALOG_TITLE("unsavedDialogTitle"),
+		UNSAVED_DIALOG_TEXT("unsavedDialogText");
 
-		@Override
-		public String get () {
-			return VisUI.getTabbedPaneBundle().get(getName());
+		private final String name;
+
+		Text (final String name) {
+			this.name = name;
+		}
+
+		private static I18NBundle getBundle () {
+			return VisUI.getTabbedPaneBundle();
 		}
 
 		@Override
-		public String format () {
-			throw new UnsupportedOperationException();
+		public final String getName () {
+			return name;
 		}
 
 		@Override
-		public String format (Object... arguments) {
-			throw new UnsupportedOperationException();
+		public final String get () {
+			return getBundle().get(name);
+		}
+
+		@Override
+		public final String format () {
+			return getBundle().format(name);
+		}
+
+		@Override
+		public final String format (final Object... arguments) {
+			return getBundle().format(name, arguments);
+		}
+
+		@Override
+		public final String toString () {
+			return get();
 		}
 	}
 }
