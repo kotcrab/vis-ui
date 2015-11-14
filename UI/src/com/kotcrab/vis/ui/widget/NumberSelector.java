@@ -403,6 +403,14 @@ public class NumberSelector extends VisTable {
 		this.step = step;
 	}
 
+	public int getMaxLength () {
+		return valueText.getMaxLength();
+	}
+
+	public void setMaxLength (int maxLength) {
+		valueText.setMaxLength(maxLength);
+	}
+
 	private boolean checkInputBounds (String input) {
 		try {
 			float x = Float.parseFloat(input);

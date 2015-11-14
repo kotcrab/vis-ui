@@ -2,6 +2,7 @@
 -API Addition: TabbedPane.disableTab(Tab tab, boolean disable), TabbedPane.isTabDisabled(Tab)
 -API Addition: IntDigitsOnlyFilter
 -NumberSelector:
+ -API Addition: setMaxLength(int), getMaxLength()
  -Fixed entering negative integer values
  -Fixed NumberSelector text field focus border when using SkinScale.X2
  -When selector loses focus and entered value is bigger than max it will be set to max value, if it's smaller than min it will be set to min value
