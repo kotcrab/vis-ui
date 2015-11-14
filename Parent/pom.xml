@@ -6,7 +6,7 @@
 
     <groupId>com.kotcrab.vis</groupId>
     <artifactId>vis-parent</artifactId>
-    <version>1.2.5-SNASPHOT</version>
+    <version>1.2.6-SNAPSHOT</version>
     <description>Common Maven parent for Vis sub-modules</description>
 
     <name>VisParent</name>
@@ -175,6 +175,12 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>2.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>uk.com.robust-it</groupId>
+                <artifactId>cloning</artifactId>
+                <version>1.9.2</version>
             </dependency>
 
         </dependencies>
