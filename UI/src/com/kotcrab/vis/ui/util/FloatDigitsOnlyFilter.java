@@ -23,17 +23,14 @@ import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
  * {@link TextFieldFilter} that only allows digits for float values.
  * @author Kotcrab
  */
-public class FloatDigitsOnlyFilter implements TextFieldFilter {
-	private boolean acceptNegativeValues;
-
+public class FloatDigitsOnlyFilter extends IntDigitsOnlyFilter {
 	public FloatDigitsOnlyFilter (boolean acceptNegativeValues) {
-		this.acceptNegativeValues = acceptNegativeValues;
+		super(acceptNegativeValues);
 	}
 
 	@Override
-	public boolean acceptChar (VisTextField textField, char c) {
-		if (c == '.') return true;
-		if (c == '-' && acceptNegativeValues) return true;
-		return Character.isDigit(c);
+	public boolean acceptChar (VisTextField field, char c) {
+		if (c == '.' && field.getText().contains(".") == false) return true;
+		return super.acceptChar(field, c);
 	}
 }

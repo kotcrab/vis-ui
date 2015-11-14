@@ -32,6 +32,7 @@ import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.ui.util.IntDigitsOnlyFilter;
+import com.kotcrab.vis.ui.util.NumberDigitsTextFieldFilter;
 import com.kotcrab.vis.ui.util.Validators;
 
 import java.math.BigDecimal;
@@ -48,6 +49,7 @@ public class NumberSelector extends VisTable {
 
 	private InputValidator boundsValidator = new BoundsValidator();
 	private VisValidatableTextField valueText;
+	private NumberDigitsTextFieldFilter textFieldFilter;
 	private Cell<VisLabel> labelCell;
 
 	private ButtonRepeatTask buttonRepeatTask = new ButtonRepeatTask();
@@ -115,6 +117,9 @@ public class NumberSelector extends VisTable {
 	 * @param name may be null
 	 */
 	public NumberSelector (NumberSelectorStyle style, final Sizes sizes, String name, float initialValue, float min, float max, float step, int precision) {
+		if (min > max) throw new IllegalArgumentException("min can't be > max");
+		if (step <= 0) throw new IllegalArgumentException("step must be > 0");
+
 		this.current = initialValue;
 		this.max = max;
 		this.min = min;
@@ -271,7 +276,7 @@ public class NumberSelector extends VisTable {
 		valueText.addValidator(boundsValidator); //Both need the bounds check
 		if (precision == 0) {
 			valueText.addValidator(Validators.INTEGERS);
-			valueText.setTextFieldFilter(new IntDigitsOnlyFilter(true));
+			valueText.setTextFieldFilter(textFieldFilter = new IntDigitsOnlyFilter(true));
 		} else {
 			valueText.addValidator(Validators.FLOATS);
 			valueText.addValidator(new InputValidator() {
@@ -282,7 +287,12 @@ public class NumberSelector extends VisTable {
 					return input.length() - input.indexOf('.') - 1 <= precision;
 				}
 			});
-			valueText.setTextFieldFilter(new FloatDigitsOnlyFilter(true));
+			valueText.setTextFieldFilter(textFieldFilter = new FloatDigitsOnlyFilter(true));
+		}
+
+		textFieldFilter.setUseFieldCursorPosition(true);
+		if (min >= 0) {
+			textFieldFilter.setAcceptNegativeValues(false);
 		}
 	}
 
@@ -365,7 +375,15 @@ public class NumberSelector extends VisTable {
 
 	/** Sets min value, if current is lesser than min, the current value is set to min value */
 	public void setMin (float min) {
+		if (min > max) throw new IllegalArgumentException("min can't be > max");
+
 		this.min = min;
+
+		if (min >= 0) {
+			textFieldFilter.setAcceptNegativeValues(false);
+		} else {
+			textFieldFilter.setAcceptNegativeValues(true);
+		}
 
 		if (current < min) {
 			current = min;
@@ -379,6 +397,8 @@ public class NumberSelector extends VisTable {
 
 	/** Sets max value, if current is greater than max, the current value is set to max value */
 	public void setMax (float max) {
+		if (min > max) throw new IllegalArgumentException("min can't be > max");
+
 		this.max = max;
 
 		if (current > max) {
@@ -400,6 +420,8 @@ public class NumberSelector extends VisTable {
 	}
 
 	public void setStep (float step) {
+		if (step <= 0) throw new IllegalArgumentException("step must be > 0");
+
 		this.step = step;
 	}
 
@@ -421,6 +443,7 @@ public class NumberSelector extends VisTable {
 	}
 
 	private void valueChanged (boolean fireEvent) {
+		valueText.setCursorPosition(0);
 		valueText.setText(valueOf(current));
 		valueText.setCursorPosition(valueText.getText().length());
 
