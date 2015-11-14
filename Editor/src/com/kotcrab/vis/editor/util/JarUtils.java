@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.util;
 
+import com.kotcrab.vis.ui.util.OsUtils;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -30,7 +31,12 @@ public class JarUtils {
 		try {
 			URL url = caller.getProtectionDomain().getCodeSource().getLocation();
 			String path = URLDecoder.decode(url.getFile(), "UTF-8");
-			path = path.substring(1, path.lastIndexOf('/')); // remove jar name from path
+
+			// remove jar name from path
+			if (OsUtils.isWindows())
+				path = path.substring(1, path.lastIndexOf('/')); // cut first '/' for Windows
+			else
+				path = path.substring(0, path.lastIndexOf('/'));
 
 			if (path.endsWith("target/classes")) //launched from ide, remove classes from path
 				path = path.substring(0, path.length() - "/classes".length());
