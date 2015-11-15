@@ -18,6 +18,8 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.badlogic.gdx.graphics.g2d.ParticleEmitter;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
@@ -48,7 +50,15 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 
 	private ParticleEffect get (FileHandle file, float scaleFactor) {
 		ParticleEffect effect = new ParticleEffect();
-		effect.load(file, file.parent());
+
+		try {
+			effect.load(file, file.parent());
+		}
+		catch (GdxRuntimeException error) {
+			error.printStackTrace();
+			return null;
+		}
+
 		effect.scaleEffect(scaleFactor);
 		return effect;
 	}
