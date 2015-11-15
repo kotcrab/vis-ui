@@ -19,6 +19,7 @@ package com.kotcrab.vis.ui.layout;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
@@ -66,6 +67,7 @@ public class DragPane extends Container<WidgetGroup> {
             throw new IllegalArgumentException("Group cannot be null.");
         }
         super.setActor(group);
+        setTouchable(Touchable.enabled);
     }
 
     /** @return true if children are displayed vertically in a {@link VerticalGroup}.
@@ -419,7 +421,8 @@ public class DragPane extends Container<WidgetGroup> {
 
         /** Determines behavior of {@link DefaultDragListener}.
          *
-         * @author MJ */
+         * @author MJ
+         * @since 0.9.3 */
         public static interface Policy {
             /** @param dragPane is under the actor.
              * @param actor was dragged into the drag pane.
@@ -429,7 +432,8 @@ public class DragPane extends Container<WidgetGroup> {
 
         /** Contains basic {@link DefaultDragListener} behaviors, allowing to modify the listener without extending it.
          *
-         * @author MJ */
+         * @author MJ
+         * @since 0.9.3 */
         public static enum DefaultPolicy implements Policy {
             /** Allows children to be moved to different {@link DragPane}s. */
             ALLOW_REMOVAL {
@@ -473,6 +477,24 @@ public class DragPane extends Container<WidgetGroup> {
                 return dragPane.contains(actor);
             }
         }
+
+        /** Limits {@link DragPane} children amount to a certain number.
+         *
+         * @author MJ
+         * @since 0.9.3 */
+        public static class LimitChildren implements DragPaneListener {
+            private final int max;
+
+            /** @param max if {@link DragPane}'s children amount equals (or is greater than) this value, other children
+             *            will not be accepted. */
+            public LimitChildren(final int max) {
+                this.max = max;
+            }
+
+            @Override
+            public boolean accept(final DragPane dragPane, final Actor actor) {
+                return dragPane.getChildren().size < max;
+            }
+        }
     }
 }
-
