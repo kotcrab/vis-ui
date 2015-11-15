@@ -32,7 +32,8 @@ public class GridGroup extends WidgetGroup {
 	private float lastPrefHeight;
 	private boolean sizeInvalid = true;
 
-	private int itemSize = 256;
+	private int itemWidth = 256;
+	private int itemHeight = 256;
 	private float spacing = 8;
 
 	public GridGroup () {
@@ -40,7 +41,8 @@ public class GridGroup extends WidgetGroup {
 	}
 
 	public GridGroup (int itemSize) {
-		this.itemSize = itemSize;
+		this.itemWidth = itemSize;
+		this.itemHeight = itemSize;
 		setTouchable(Touchable.childrenOnly);
 	}
 
@@ -51,7 +53,8 @@ public class GridGroup extends WidgetGroup {
 
 	public GridGroup (int itemSize, float spacing) {
 		this.spacing = spacing;
-		this.itemSize = itemSize;
+		this.itemWidth = itemSize;
+		this.itemHeight = itemSize;
 		setTouchable(Touchable.childrenOnly);
 	}
 
@@ -60,7 +63,9 @@ public class GridGroup extends WidgetGroup {
 		prefHeight = 0;
 		sizeInvalid = false;
 
-		if (getChildren().size == 0) {
+		SnapshotArray<Actor> children = getChildren();
+
+		if (children.size == 0) {
 			prefWidth = 0;
 			prefHeight = 0;
 			return;
@@ -71,21 +76,22 @@ public class GridGroup extends WidgetGroup {
 		float maxHeight = 0;
 		float tempX = spacing;
 
-		for (int i = 0, n = getChildren().size; i < n; i++) {
-			if (tempX + itemSize + spacing > width) {
+		for (int i = 0; i < children.size; i++) {
+			if (tempX + itemWidth + spacing > width) {
 				tempX = spacing;
-				maxHeight += itemSize + spacing;
+				maxHeight += itemHeight + spacing;
 			}
 
-			tempX += itemSize + spacing;
+			tempX += itemWidth + spacing;
 		}
 
-		if (itemSize + spacing * 2 >= prefWidth)
+		if (itemWidth + spacing * 2 > prefWidth)
 			maxHeight += spacing;
 		else
-			maxHeight += itemSize + spacing * 2;
+			maxHeight += itemHeight + spacing * 2;
 
 		prefHeight = maxHeight;
+		System.out.println(width + " " + maxHeight);
 	}
 
 	@Override
@@ -101,21 +107,21 @@ public class GridGroup extends WidgetGroup {
 		SnapshotArray<Actor> children = getChildren();
 
 		float width = getWidth();
-		boolean notEnoughSpace = itemSize + spacing * 2 > width;
+		boolean notEnoughSpace = itemWidth + spacing * 2 > width;
 
 		float x = spacing;
-		float y = notEnoughSpace ? (getHeight()) : (getHeight() - itemSize - spacing);
+		float y = notEnoughSpace ? (getHeight()) : (getHeight() - itemHeight - spacing);
 
-		for (int i = 0, n = children.size; i < n; i++) {
+		for (int i = 0; i < children.size; i++) {
 			Actor child = children.get(i);
 
-			if (x + itemSize + spacing > width) {
+			if (x + itemWidth + spacing > width) {
 				x = spacing;
-				y -= itemSize + spacing;
+				y -= itemHeight + spacing;
 			}
 
-			child.setBounds(x, y, itemSize, itemSize);
-			x += itemSize + spacing;
+			child.setBounds(x, y, itemWidth, itemHeight);
+			x += itemWidth + spacing;
 		}
 	}
 
@@ -128,13 +134,32 @@ public class GridGroup extends WidgetGroup {
 		invalidateHierarchy();
 	}
 
-	public int getItemSize () {
-		return itemSize;
+	public void setItemSize (int itemSize) {
+		this.itemWidth = itemSize;
+		this.itemHeight = itemSize;
+		invalidateHierarchy();
 	}
 
-	public void setItemSize (int itemSize) {
-		this.itemSize = itemSize;
+	public void setItemSize (int itemWidth, int itemHeight) {
+		this.itemWidth = itemWidth;
+		this.itemHeight = itemHeight;
 		invalidateHierarchy();
+	}
+
+	public int getItemWidth () {
+		return itemWidth;
+	}
+
+	public void setItemWidth (int itemWidth) {
+		this.itemWidth = itemWidth;
+	}
+
+	public int getItemHeight () {
+		return itemHeight;
+	}
+
+	public void setItemHeight (int itemHeight) {
+		this.itemHeight = itemHeight;
 	}
 
 	@Override
