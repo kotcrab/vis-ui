@@ -20,7 +20,7 @@ import com.artemis.Component;
 import com.artemis.Entity;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
-import com.kotcrab.vis.editor.module.scene.VisComponentManipulator;
+import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 

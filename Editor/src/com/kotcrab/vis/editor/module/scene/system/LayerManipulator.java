@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.scene.system;
 
 import com.artemis.*;
 import com.artemis.utils.Bag;
@@ -30,7 +30,7 @@ import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
  * Provides utils for manipulating layers. This is internal VisEditor API.
  * @author Kotcrab
  */
-public class LayerManipulatorManager extends Manager {
+public class LayerManipulator extends Manager {
 	private ComponentMapper<LayerComponent> layerCm;
 	private AspectSubscriptionManager subscriptionManager;
 

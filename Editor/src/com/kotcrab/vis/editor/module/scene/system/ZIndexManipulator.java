@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.scene.system;
 
 import com.artemis.Manager;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap.Values;
+import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangeZIndexAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
@@ -27,7 +28,7 @@ import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /** @author Kotcrab */
-public class ZIndexManipulatorManager extends Manager {
+public class ZIndexManipulator extends Manager {
 	private UndoModule undoModule;
 	private EntityManipulatorModule entityManipulator;
 

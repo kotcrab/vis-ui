@@ -14,38 +14,35 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.scene.system.reloader;
 
 import com.artemis.*;
 import com.artemis.utils.IntBag;
-import com.kotcrab.vis.editor.module.project.FontCacheModule;
-import com.kotcrab.vis.runtime.assets.BmpFontAsset;
-import com.kotcrab.vis.runtime.assets.TtfFontAsset;
+import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.component.ParticleComponent;
 
 /** @author Kotcrab */
-public class FontReloaderManager extends Manager {
-	private FontCacheModule fontCache;
-	private float pixelInUnits;
+public class ParticleReloaderManager extends Manager {
+	private ParticleCacheModule particleCache;
+	private float pixelsPerUnit;
 
-	private ComponentMapper<TextComponent> textCm;
+	private ComponentMapper<ParticleComponent> particleCm;
 	private ComponentMapper<AssetComponent> assetCm;
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
-	public FontReloaderManager (float pixelInUnits) {
-		this.fontCache = fontCache;
-		this.pixelInUnits = pixelInUnits;
+	public ParticleReloaderManager (float pixelsPerUnit) {
+		this.pixelsPerUnit = pixelsPerUnit;
 	}
 
 	@Override
 	protected void initialize () {
-		subscription = subscriptionManager.get(Aspect.all(TextComponent.class, AssetComponent.class));
+		subscription = subscriptionManager.get(Aspect.all(ParticleComponent.class, AssetComponent.class));
 	}
 
-	public void reloadFonts (boolean reloadBmpFonts, boolean reloadTtfFonts) {
+	public void reloadParticles () {
 		IntBag bag = subscription.getEntities();
 		int[] data = bag.getData();
 
@@ -53,14 +50,15 @@ public class FontReloaderManager extends Manager {
 			int id = data[i];
 			Entity entity = world.getEntity(id);
 
-			TextComponent text = textCm.get(entity);
+			ParticleComponent particle = particleCm.get(entity);
 			VisAssetDescriptor asset = assetCm.get(entity).asset;
 
-			if (asset instanceof BmpFontAsset && reloadBmpFonts)
-				text.setFont(fontCache.get((BmpFontAsset) asset, pixelInUnits));
+			particle.effect.dispose();
 
-			if (asset instanceof TtfFontAsset && reloadTtfFonts)
-				text.setFont(fontCache.get((TtfFontAsset) asset, pixelInUnits));
+			float x = particle.getX();
+			float y = particle.getY();
+			particle.effect = particleCache.get(asset, 1f / pixelsPerUnit);
+			particle.setPosition(x, y);
 		}
 	}
 }

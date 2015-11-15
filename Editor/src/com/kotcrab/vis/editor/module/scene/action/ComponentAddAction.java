@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.module.scene.action;
 
 import com.artemis.Component;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.module.scene.VisComponentManipulator;
+import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;

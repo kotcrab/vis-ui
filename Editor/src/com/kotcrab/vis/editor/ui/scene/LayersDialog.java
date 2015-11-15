@@ -25,7 +25,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.editor.module.scene.LayerManipulatorManager;
+import com.kotcrab.vis.editor.module.scene.system.LayerManipulator;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesRemovedAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
@@ -64,7 +64,7 @@ public class LayersDialog extends VisTable implements Disposable {
 	private UndoModule undoModule;
 	private EntityManipulatorModule entityManipulator;
 
-	private LayerManipulatorManager layerManipulatorManager;
+	private LayerManipulator layerManipulator;
 
 	private SceneTab sceneTab;
 	private EditorScene scene;
@@ -82,7 +82,7 @@ public class LayersDialog extends VisTable implements Disposable {
 		this.sceneTab = sceneTab;
 		this.scene = sceneTab.getScene();
 		sceneMC.injectModules(this);
-		layerManipulatorManager = engineConfig.getSystem(LayerManipulatorManager.class);
+		layerManipulator = engineConfig.getSystem(LayerManipulator.class);
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
@@ -114,7 +114,7 @@ public class LayersDialog extends VisTable implements Disposable {
 							public void yes () {
 								UndoableActionGroup layerRemovedGroup = new UndoableActionGroup("Delete Layer");
 								layerRemovedGroup.add(new EntitiesRemovedAction(sceneMC, sceneTab.getEntityEngine(),
-										VisBagUtils.toSet(layerManipulatorManager.getEntitiesWithLayer(scene.getActiveLayerId()))));
+										VisBagUtils.toSet(layerManipulator.getEntitiesWithLayer(scene.getActiveLayerId()))));
 								layerRemovedGroup.add(new LayerRemovedAction(scene.getActiveLayer()));
 								layerRemovedGroup.finalizeGroup();
 
@@ -297,7 +297,7 @@ public class LayersDialog extends VisTable implements Disposable {
 
 		@Override
 		public void doAction () {
-			layerManipulatorManager.swapLayers(currentLayer.id, targetLayer.id);
+			layerManipulator.swapLayers(currentLayer.id, targetLayer.id);
 
 			int oldCurrentId = currentLayer.id;
 			currentLayer.id = targetLayer.id;
@@ -375,7 +375,7 @@ public class LayersDialog extends VisTable implements Disposable {
 
 		void changeVisibility () {
 			layer.visible = !layer.visible;
-			layerManipulatorManager.changeLayerVisibility(layer.id, layer.visible);
+			layerManipulator.changeLayerVisibility(layer.id, layer.visible);
 			updateButtonsImages();
 			sceneTab.dirty();
 		}

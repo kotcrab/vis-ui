@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.scene.system.reloader;
 
 import com.artemis.*;
 import com.artemis.utils.IntBag;

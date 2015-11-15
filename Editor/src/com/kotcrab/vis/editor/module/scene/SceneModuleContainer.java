@@ -33,7 +33,12 @@ import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.module.scene.system.*;
 import com.kotcrab.vis.editor.module.scene.system.inflater.*;
+import com.kotcrab.vis.editor.module.scene.system.reloader.*;
+import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem;
+import com.kotcrab.vis.editor.module.scene.system.render.PointRenderSystem;
+import com.kotcrab.vis.editor.module.scene.system.render.SoundAndMusicRenderSystem;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
@@ -73,9 +78,8 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config = new EntityEngineConfiguration();
 
 		config.setSystem(new CameraManager(SceneViewport.SCREEN, 0, 0, scene.pixelsPerUnit)); //size ignored for screen viewport
-		config.setSystem(new LayerManipulatorManager());
-		config.setSystem(new ZIndexManipulatorManager());
-		config.setSystem(new EntitySerializerManager());
+		config.setSystem(new LayerManipulator());
+		config.setSystem(new ZIndexManipulator());
 		config.setSystem(new TextureReloaderManager());
 		config.setSystem(new ParticleReloaderManager(scene.pixelsPerUnit));
 		config.setSystem(new FontReloaderManager(scene.pixelsPerUnit));
@@ -118,7 +122,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 	public static void createEssentialsSystems (EntityEngineConfiguration config, float pixelsPerUnit) {
 		config.setSystem(new EntityProxyCache(pixelsPerUnit));
-		config.setSystem(new AssetsUsageAnalyzerSystem());
+		config.setSystem(new AssetsUsageAnalyzer());
 	}
 
 	public static void populateEngine (final EntityEngine engine, EditorScene scene) {

@@ -42,7 +42,7 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.SkipInject;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
-import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
+import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
 
 /**
  * Manages drag and drop operations through registered drag sources and drop targets.

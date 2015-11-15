@@ -31,7 +31,7 @@ import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.module.project.AssetsUsages.SceneUsages;
-import com.kotcrab.vis.editor.module.scene.AssetsUsageAnalyzerSystem;
+import com.kotcrab.vis.editor.module.scene.system.AssetsUsageAnalyzer;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.scene.EditorScene;
@@ -142,7 +142,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 			}
 
 			SceneUsages sceneUsages = new SceneUsages(scene);
-			engine.getSystem(AssetsUsageAnalyzerSystem.class).collectUsages(sceneUsages.ids, searchFor);
+			engine.getSystem(AssetsUsageAnalyzer.class).collectUsages(sceneUsages.ids, searchFor);
 			if (sceneUsages.ids.size > 0) usages.list.add(sceneUsages);
 		}
 

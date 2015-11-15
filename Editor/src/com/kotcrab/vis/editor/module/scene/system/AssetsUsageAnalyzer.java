@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.scene.system;
 
 import com.artemis.Aspect;
 import com.artemis.Component;
@@ -29,13 +29,13 @@ import com.kotcrab.vis.runtime.util.StoresAssetDescriptor;
  * This system should be passive.
  * @author Kotcrab
  */
-public class AssetsUsageAnalyzerSystem extends EntityProcessingSystem {
+public class AssetsUsageAnalyzer extends EntityProcessingSystem {
 	private IntArray ids;
 	private VisAssetDescriptor searchFor;
 
 	private Bag<Component> fillBag = new Bag<>();
 
-	public AssetsUsageAnalyzerSystem () {
+	public AssetsUsageAnalyzer () {
 		super(Aspect.all());
 	}
 

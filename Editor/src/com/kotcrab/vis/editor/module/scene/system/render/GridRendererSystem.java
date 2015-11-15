@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.scene.system.render;
 
 import com.artemis.BaseSystem;
 import com.badlogic.gdx.Gdx;
@@ -26,6 +26,8 @@ import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.ColorSettingsModule;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsModule;
+import com.kotcrab.vis.editor.module.scene.CameraModule;
+import com.kotcrab.vis.editor.module.scene.RendererModule;
 import com.kotcrab.vis.editor.util.NumberUtils;
 import com.kotcrab.vis.editor.util.scene2d.FieldUtils;
 import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;

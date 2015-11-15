@@ -14,55 +14,54 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.scene.system;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.systems.EntityProcessingSystem;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
+import com.kotcrab.vis.editor.proxy.EntityProxy;
+import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.runtime.component.GroupComponent;
 
 /**
  * This system should be passive.
  * @author Kotcrab
  */
-public class GroupIdProviderSystem extends EntityProcessingSystem {
+public class GroupProxyProviderSystem extends EntityProcessingSystem {
+	private EntityProxyCache proxyCache;
+
 	private ComponentMapper<GroupComponent> groupCm;
 
-	private IntArray usedGids = new IntArray();
-	private int freeId;
+	private int findGid;
+	private Array<EntityProxy> result = new Array<>();
 
-	public GroupIdProviderSystem () {
+	public GroupProxyProviderSystem () {
 		super(Aspect.all(GroupComponent.class));
 	}
 
 	@Override
 	protected void begin () {
-		usedGids.clear();
+		result.clear();
+	}
+
+	public GroupEntityProxy getGroupEntityProxy (int gid) {
+		findGid = gid;
+
+		setEnabled(true);
+		process();
+		setEnabled(false);
+
+		return new GroupEntityProxy(result, gid);
 	}
 
 	@Override
 	protected void process (Entity e) {
 		IntArray groupsIds = groupCm.get(e).groupIds;
-		if (groupsIds.size == 0) return;
-		usedGids.addAll(groupsIds);
-	}
 
-	@Override
-	protected void end () {
-		if (usedGids.size == 0) {
-			freeId = 0;
-		} else {
-			usedGids.sort();
-			freeId = usedGids.peek() + 1;
-		}
-	}
-
-	public int getFreeGroupId () {
-		setEnabled(true);
-		process();
-		setEnabled(false);
-		return freeId;
+		if (groupsIds.contains(findGid))
+			result.add(proxyCache.get(e));
 	}
 }

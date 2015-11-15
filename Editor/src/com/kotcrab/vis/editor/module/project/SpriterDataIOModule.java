@@ -22,8 +22,6 @@ import com.kotcrab.vis.editor.scheme.SpriterAssetData;
 
 /** @author Kotcrab */
 public class SpriterDataIOModule extends ProjectModule {
-	private FileAccessModule fileAccess;
-
 	private Json json;
 
 	@Override

@@ -44,12 +44,16 @@ import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.scene.*;
-import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
+import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.action.*;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.SelectionTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tools;
+import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
+import com.kotcrab.vis.editor.module.scene.system.GroupIdProviderSystem;
+import com.kotcrab.vis.editor.module.scene.system.GroupProxyProviderSystem;
+import com.kotcrab.vis.editor.module.scene.system.ZIndexManipulator;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
@@ -102,7 +106,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private ComponentMapper<GroupComponent> groupCm;
 
 	private EntityProxyCache entityProxyCache;
-	private ZIndexManipulatorManager zIndexManipulator;
+	private ZIndexManipulator zIndexManipulator;
 	private GroupIdProviderSystem groupIdProvider;
 	private GroupProxyProviderSystem groupProxyProvider;
 	private RenderBatchingSystem renderBatchingSystem;

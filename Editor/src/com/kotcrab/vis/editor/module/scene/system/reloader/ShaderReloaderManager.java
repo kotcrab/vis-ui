@@ -14,33 +14,27 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.scene.system.reloader;
 
 import com.artemis.*;
 import com.artemis.utils.IntBag;
-import com.kotcrab.vis.editor.module.project.SpriterCacheModule;
-import com.kotcrab.vis.runtime.assets.SpriterAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SpriterComponent;
+import com.kotcrab.vis.editor.module.project.ShaderCacheModule;
+import com.kotcrab.vis.runtime.component.ShaderComponent;
 
 /** @author Kotcrab */
-public class SpriterReloaderManager extends Manager {
-	private SpriterCacheModule spriterCacheModule;
+public class ShaderReloaderManager extends Manager {
+	private ShaderCacheModule shaderCache;
 
-	private SpriterCacheModule spriterCache;
-
-	private ComponentMapper<SpriterComponent> spriterCm;
-	private ComponentMapper<AssetComponent> assetCm;
-
+	private ComponentMapper<ShaderComponent> shaderCm;
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
 	@Override
 	protected void initialize () {
-		subscription = subscriptionManager.get(Aspect.all(SpriterComponent.class, AssetComponent.class));
+		subscription = subscriptionManager.get(Aspect.all(ShaderComponent.class));
 	}
 
-	public void reloadSpriterData () {
+	public void reloadShaders () {
 		IntBag bag = subscription.getEntities();
 		int[] data = bag.getData();
 
@@ -48,13 +42,9 @@ public class SpriterReloaderManager extends Manager {
 			int id = data[i];
 			Entity entity = world.getEntity(id);
 
-			SpriterComponent spriter = spriterCm.get(entity);
-			SpriterAsset asset = (SpriterAsset) assetCm.get(entity).asset;
-
-			SpriterComponent newSpriter = spriterCache.cloneComponent(asset, spriter);
-			entity.edit().remove(spriter).add(newSpriter);
+			ShaderComponent shader = shaderCm.get(entity);
+			if (shader.asset == null) continue;
+			shader.shader = shaderCache.get(shader.asset);
 		}
-
-		spriterCacheModule.disposeOldLoaders();
 	}
 }

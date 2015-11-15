@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.editor.module.scene.PointRenderSystem;
+import com.kotcrab.vis.editor.module.scene.system.render.PointRenderSystem;
 import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.PointComponent;

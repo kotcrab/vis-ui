@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene;
+package com.kotcrab.vis.editor.module.scene.system.render;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
@@ -23,30 +23,34 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
-import com.kotcrab.vis.runtime.component.PointComponent;
+import com.kotcrab.vis.runtime.component.MusicComponent;
+import com.kotcrab.vis.runtime.component.PositionComponent;
+import com.kotcrab.vis.runtime.component.SoundComponent;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /** @author Kotcrab */
-public class PointRenderSystem extends DeferredEntityProcessingSystem {
+public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 	public static final int ICON_SIZE = 76;
 
-	private CameraModule camera;
+	private ComponentMapper<PositionComponent> posCm;
+	private ComponentMapper<MusicComponent> musicCm;
 
-	private ComponentMapper<PointComponent> pointCm;
+	private TextureRegion soundIcon;
+	private TextureRegion musicIcon;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
 
-	private TextureRegion icon;
-	private float baseRenderSize;
+	private float renderSize;
 
-	public PointRenderSystem (EntityProcessPrincipal principal, float pixelsPerUnit) {
-		super(Aspect.all(PointComponent.class).exclude(InvisibleComponent.class), principal);
-		icon = Assets.getIconRegion(Icons.POINT);
+	public SoundAndMusicRenderSystem (EntityProcessPrincipal principal, float pixelsPerUnit) {
+		super(Aspect.all(PositionComponent.class).one(SoundComponent.class, MusicComponent.class).exclude(InvisibleComponent.class), principal);
+		soundIcon = Assets.getIconRegion(Icons.SOUND);
+		musicIcon = Assets.getIconRegion(Icons.MUSIC);
 
-		baseRenderSize = ICON_SIZE / pixelsPerUnit;
+		renderSize = ICON_SIZE / pixelsPerUnit;
 	}
 
 	@Override
@@ -56,10 +60,11 @@ public class PointRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (int entityId) {
-		PointComponent pos = pointCm.get(entityId);
+		PositionComponent pos = posCm.get(entityId);
 
-		float renderSize = baseRenderSize * camera.getZoom();
-		renderSize = Math.min(renderSize, baseRenderSize);
-		batch.draw(icon, pos.x - renderSize / 2, pos.y - renderSize / 2, renderSize, renderSize);
+		if (musicCm.has(entityId))
+			batch.draw(musicIcon, pos.x, pos.y, renderSize, renderSize);
+		else
+			batch.draw(soundIcon, pos.x, pos.y, renderSize, renderSize);
 	}
 }
