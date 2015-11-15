@@ -91,7 +91,6 @@ public class GridGroup extends WidgetGroup {
 			maxHeight += itemHeight + spacing * 2;
 
 		prefHeight = maxHeight;
-		System.out.println(width + " " + maxHeight);
 	}
 
 	@Override
