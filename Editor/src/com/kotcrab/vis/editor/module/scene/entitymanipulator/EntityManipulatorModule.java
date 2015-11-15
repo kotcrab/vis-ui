@@ -24,7 +24,6 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
@@ -36,16 +35,23 @@ import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.*;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.entity.*;
+import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
+import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
+import com.kotcrab.vis.editor.entity.SpriterPropertiesComponent;
+import com.kotcrab.vis.editor.entity.UUIDComponent;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
+import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.module.project.*;
-import com.kotcrab.vis.editor.module.scene.*;
-import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
+import com.kotcrab.vis.editor.module.scene.CameraModule;
+import com.kotcrab.vis.editor.module.scene.RendererModule;
+import com.kotcrab.vis.editor.module.scene.SceneModule;
+import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.*;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.SelectionTool;
@@ -55,6 +61,7 @@ import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.system.GroupIdProviderSystem;
 import com.kotcrab.vis.editor.module.scene.system.GroupProxyProviderSystem;
 import com.kotcrab.vis.editor.module.scene.system.ZIndexManipulator;
+import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
@@ -66,11 +73,13 @@ import com.kotcrab.vis.editor.ui.scene.GroupBreadcrumb.GroupBreadcrumbListener;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneOutline;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
+import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.editor.util.gdx.DummyMusic;
 import com.kotcrab.vis.editor.util.scene2d.MenuUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.vis.CreatePointPayload;
+import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
@@ -88,6 +97,7 @@ import static com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTi
 @EventBusSubscriber
 public class EntityManipulatorModule extends SceneModule {
 	private StatusBarModule statusBar;
+	private ToastModule toastModule;
 	private EditingSettingsModule editingSettings;
 	private GridSettingsModule gridSettings;
 	private ExtensionStorageModule extensionStorage;
@@ -464,17 +474,16 @@ public class EntityManipulatorModule extends SceneModule {
 			if (asset.getPath().startsWith("particle/")) {
 				float scale = 1f / scene.pixelsPerUnit;
 
-				ParticleEffect particleEffect = particleCache.get(asset, scale);
-				if (particleEffect != null) {
+				try {
 					entity = new EntityBuilder(entityEngine)
-							.with(new ParticleComponent(particleEffect), new PixelsPerUnitComponent(scene.pixelsPerUnit),
+							.with(new ParticleComponent(particleCache.get(asset, scale)), new PixelsPerUnitComponent(scene.pixelsPerUnit),
 									new AssetComponent(asset),
 									new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
 									new ExporterDropsComponent(PixelsPerUnitComponent.class))
 							.build();
-				}
-				else {
-					statusBar.setText("Particle system cannot be created. Probably, particle texture is missing.");
+				} catch (EditorRuntimeException e) {
+					Log.exception(e);
+					toastModule.show(new DetailsToast("Particle system cannot be created.\nProbably, particle texture is missing.", e));
 					return;
 				}
 			}

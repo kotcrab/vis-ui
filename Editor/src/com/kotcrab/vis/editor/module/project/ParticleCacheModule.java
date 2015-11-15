@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
+import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
@@ -52,10 +53,8 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 
 		try {
 			effect.load(file, file.parent());
-		}
-		catch (GdxRuntimeException error) {
-			error.printStackTrace();
-			return null;
+		} catch (GdxRuntimeException e) {
+			throw new EditorRuntimeException(e);
 		}
 
 		effect.scaleEffect(scaleFactor);
