@@ -17,14 +17,13 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 /**
  * Stores entity layerId
  * @author Kotcrab
  */
 public class LayerComponent extends Component {
-	@VisTag(0) public int layerId;
+	public int layerId;
 
 	public LayerComponent () {
 	}

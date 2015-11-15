@@ -18,7 +18,6 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
 import com.kotcrab.vis.runtime.util.autotable.ATStringStringMap;
 
 /**
@@ -26,7 +25,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATStringStringMap;
  * @author Kotcrab
  */
 public class VariablesComponent extends Component {
-	@VisTag(0) @ATStringStringMap
+	@ATStringStringMap
 	public ObjectMap<String, String> variables = new ObjectMap<String, String>();
 
 	public String get (String variableName) {

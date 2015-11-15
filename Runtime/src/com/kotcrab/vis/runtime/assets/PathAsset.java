@@ -16,14 +16,12 @@
 
 package com.kotcrab.vis.runtime.assets;
 
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
-
 /**
  * References assets only by its path, for example used to reference music, sound or particles.
  * @author Kotcrab
  */
 public class PathAsset implements VisAssetDescriptor {
-	@VisTag(0) private String relativePath;
+	private String relativePath;
 
 	@Deprecated
 	public PathAsset () {

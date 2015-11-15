@@ -17,14 +17,13 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 /**
  * Holds string entity id set from VisEditor
  * @author Kotcrab
  */
 public class IDComponent extends Component {
-	@VisTag(0) public String id;
+	public String id;
 
 	public IDComponent () {
 	}

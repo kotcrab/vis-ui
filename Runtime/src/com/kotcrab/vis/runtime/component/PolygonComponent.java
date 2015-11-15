@@ -19,7 +19,6 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
 import com.kotcrab.vis.runtime.util.autotable.ATVector2Array;
 
 /**
@@ -29,8 +28,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATVector2Array;
  * @author Kotcrab
  */
 public class PolygonComponent extends Component {
-	@VisTag(0) @ATVector2Array(fieldName = "Vertices")
+	@ATVector2Array(fieldName = "Vertices")
 	public Array<Vector2> vertices = new Array<Vector2>();
-	@VisTag(1)
 	public Vector2[][] faces;
 }

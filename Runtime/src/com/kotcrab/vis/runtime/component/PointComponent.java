@@ -17,12 +17,11 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 /** @author Kotcrab */
 public class PointComponent extends Component {
-	@VisTag(0) public float x;
-	@VisTag(1) public float y;
+	public float x;
+	public float y;
 
 	public PointComponent () {
 	}

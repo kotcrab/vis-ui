@@ -17,12 +17,11 @@
 package com.kotcrab.vis.editor.entity;
 
 import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 /** @author Kotcrab */
 public class PixelsPerUnitComponent extends Component {
-	@VisTag(0) public final float pixelsPerUnits;
-	@VisTag(1) public final float scale;
+	public final float pixelsPerUnits;
+	public final float scale;
 
 	public PixelsPerUnitComponent (float pixelsPerUnit) {
 		this.pixelsPerUnits = pixelsPerUnit;

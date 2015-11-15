@@ -20,7 +20,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
-import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.util.BaseObservable;
 import com.kotcrab.vis.runtime.data.PhysicsSettings;
@@ -34,6 +33,8 @@ import java.util.Comparator;
  * @author Kotcrab
  */
 public class EditorScene extends BaseObservable {
+	private static final int VERSION_CODE = 1;
+
 	public static final int ACTIVE_LAYER_CHANGED = 0;
 	public static final int LAYER_ADDED = 1;
 	public static final int LAYER_INSERTED = 2;
@@ -43,24 +44,24 @@ public class EditorScene extends BaseObservable {
 
 	private static final Comparator<Layer> LAYER_COMPARATOR = (o1, o2) -> (int) Math.signum(o1.id - o2.id);
 
+	private int versionCode = VERSION_CODE;
+
 	/** Scene file, path is relative to project Vis folder */
-	@Tag(0) public String path;
-	@Tag(1) public float width;
-	@Tag(2) public float height;
+	public String path;
+	public float width;
+	public float height;
 	/** This value is float to avoid calculations problems */
-	@Tag(7) public float pixelsPerUnit;
-	@Tag(3) public SceneViewport viewport;
+	public float pixelsPerUnit;
+	public SceneViewport viewport;
 
-	@Tag(9) public PhysicsSettings physicsSettings = new PhysicsSettings();
+	public PhysicsSettings physicsSettings = new PhysicsSettings();
 
-	@Tag(4) private Array<Layer> layers = new Array<>();
-	@Tag(5) private int activeLayerId;
+	private Array<Layer> layers = new Array<>();
+	private int activeLayerId;
 
-	@Tag(8) private IntMap<String> groupIds = new IntMap<>();
+	private IntMap<String> groupIds = new IntMap<>();
 
-	@Tag(6) private Array<EntityScheme> schemes; //for serialization
-
-	//last tag is 9
+	private Array<EntityScheme> schemes; //for serialization
 
 	public EditorScene (FileHandle file, SceneViewport viewport, float width, float height, int pixelsPerUnit) {
 		if (width < 0 || height < 0) throw new IllegalArgumentException("Invalid scene size");

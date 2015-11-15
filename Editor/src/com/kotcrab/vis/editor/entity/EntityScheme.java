@@ -27,13 +27,12 @@ import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.TransientComponent;
 import com.kotcrab.vis.runtime.util.UsesProtoComponent;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 /** @author Kotcrab */
 public class EntityScheme {
 	private static transient final Bag<Component> fillBag = new Bag<>();
 
-	@VisTag(0) public Array<Component> components;
+	public Array<Component> components;
 
 	public EntityScheme (Entity entity) {
 		fillBag.clear();

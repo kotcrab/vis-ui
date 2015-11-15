@@ -17,20 +17,18 @@
 package com.kotcrab.vis.editor.entity;
 
 import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
 /** @author Kotcrab */
 public class SpriterPropertiesComponent extends Component {
-	@VisTag(0) @ATProperty(fieldName = "Scale", min = 0.000001f)
+	@ATProperty(fieldName = "Scale", min = 0.000001f)
 	public float scale;
 
-	@VisTag(3)
 	public int animation = 0;
 
-	@VisTag(1) @ATProperty(fieldName = "Play animation on start")
+	@ATProperty(fieldName = "Play animation on start")
 	public boolean playOnStart = false;
-	@VisTag(2) @ATProperty(fieldName = "Preview in editor")
+	@ATProperty(fieldName = "Preview in editor")
 	public boolean previewInEditor = false;
 
 	public SpriterPropertiesComponent (float scale) {

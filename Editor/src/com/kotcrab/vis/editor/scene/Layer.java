@@ -17,18 +17,17 @@
 package com.kotcrab.vis.editor.scene;
 
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 /**
  * EditorScene layer class
  * @author Kotcrab
  */
 public class Layer {
-	@VisTag(0) public String name;
-	@VisTag(1) public int id;
-	@VisTag(2) public boolean locked = false;
-	@VisTag(3) public boolean visible = true;
-	@VisTag(4) public LayerCordsSystem cordsSystem = LayerCordsSystem.WORLD;
+	public String name;
+	public int id;
+	public boolean locked = false;
+	public boolean visible = true;
+	public LayerCordsSystem cordsSystem = LayerCordsSystem.WORLD;
 
 	public Layer (String name, int id) {
 		this.name = name;

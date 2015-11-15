@@ -18,14 +18,13 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 import com.badlogic.gdx.utils.IntArray;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 /**
  * Holds Group IDs that entity that uses this component belongs to.
  * @author Kotcrab
  */
 public class GroupComponent extends Component {
-	@VisTag(0) public IntArray groupIds = new IntArray();
+	public IntArray groupIds = new IntArray();
 
 	public GroupComponent () {
 	}

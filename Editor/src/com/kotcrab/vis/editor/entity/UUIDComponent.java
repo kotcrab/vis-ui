@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.entity;
 import com.artemis.Component;
 import com.artemis.Entity;
 import com.artemis.World;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 import java.util.UUID;
 
@@ -28,7 +27,7 @@ import java.util.UUID;
  * @author Kotcrab
  */
 public class UUIDComponent extends Component {
-	@VisTag(0) private UUID uuid;
+	private UUID uuid;
 
 	public UUIDComponent () {
 		uuid = UUID.randomUUID();
