@@ -24,6 +24,7 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
@@ -462,12 +463,20 @@ public class EntityManipulatorModule extends SceneModule {
 
 			if (asset.getPath().startsWith("particle/")) {
 				float scale = 1f / scene.pixelsPerUnit;
-				entity = new EntityBuilder(entityEngine)
-						.with(new ParticleComponent(particleCache.get(asset, scale)), new PixelsPerUnitComponent(scene.pixelsPerUnit),
-								new AssetComponent(asset),
-								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-								new ExporterDropsComponent(PixelsPerUnitComponent.class))
-						.build();
+
+				ParticleEffect particleEffect = particleCache.get(asset, scale);
+				if (particleEffect != null) {
+					entity = new EntityBuilder(entityEngine)
+							.with(new ParticleComponent(particleEffect), new PixelsPerUnitComponent(scene.pixelsPerUnit),
+									new AssetComponent(asset),
+									new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
+									new ExporterDropsComponent(PixelsPerUnitComponent.class))
+							.build();
+				}
+				else {
+					statusBar.setText("Particle system cannot be created. Probably, particle texture is missing.");
+					return;
+				}
 			}
 		}
 
