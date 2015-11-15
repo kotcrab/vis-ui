@@ -72,7 +72,7 @@ public class GridGroup extends WidgetGroup {
 		float tempX = spacing;
 
 		for (int i = 0, n = getChildren().size; i < n; i++) {
-			if (tempX + itemSize + spacing >= width) {
+			if (tempX + itemSize + spacing > width) {
 				tempX = spacing;
 				maxHeight += itemSize + spacing;
 			}

@@ -12,6 +12,7 @@
   -Previous behaviour was to restore last valid value
 -Trying to use PopupMenu.add(Actor) with MenuItem will throw an exception (MenuItems must be added using addItem method)
 -ColorPickerStyle now extends WindowStyle
+-Fixed GridGroup too high when total items width in single row was equals to group width
 
 [0.9.2] [LibGDX 1.7.1]
 -API Change: VisValidatableTextField#getValidator() removed, use getValidators() instead
