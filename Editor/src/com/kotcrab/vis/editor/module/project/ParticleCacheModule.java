@@ -23,6 +23,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
@@ -68,8 +69,7 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 
 	@Override
 	public void fileChanged (FileHandle file) {
-		String relativePath = fileAccess.relativizeToAssetsFolder(file);
-		if (relativePath.startsWith("particle"))
+		if (ProjectPathUtils.isParticle(file))
 			App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_PARTICLES));
 	}
 

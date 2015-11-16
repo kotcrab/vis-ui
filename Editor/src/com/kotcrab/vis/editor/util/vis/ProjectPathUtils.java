@@ -40,6 +40,10 @@ public class ProjectPathUtils {
 		return (ext.equals("jpeg") || ext.equals("jpg") || ext.equals("png"));
 	}
 
+	public static boolean isParticle (FileHandle file) {
+		return file.extension().equals("p");
+	}
+
 	public static boolean isTrueTypeFont (FileHandle file) {
 		return file.extension().equals("ttf");
 	}

@@ -448,6 +448,24 @@ public class EntityManipulatorModule extends SceneModule {
 							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
 							new ExporterDropsComponent(SpriterPropertiesComponent.class))
 					.build();
+
+		} else if (obj instanceof ParticleAsset) {
+			ParticleAsset asset = (ParticleAsset) obj;
+			float scale = 1f / scene.pixelsPerUnit;
+
+			try {
+				entity = new EntityBuilder(entityEngine)
+						.with(new ParticleComponent(particleCache.get(asset, scale)), new PixelsPerUnitComponent(scene.pixelsPerUnit),
+								new AssetComponent(asset),
+								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
+								new ExporterDropsComponent(PixelsPerUnitComponent.class))
+						.build();
+			} catch (EditorRuntimeException e) {
+				Log.exception(e);
+				toastModule.show(new DetailsToast("Particle system cannot be created.\nProbably, particle texture is missing.", e));
+				return;
+			}
+
 		} else if (obj instanceof PathAsset) {
 			PathAsset asset = (PathAsset) obj;
 
@@ -469,23 +487,6 @@ public class EntityManipulatorModule extends SceneModule {
 								new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
 						.build();
 
-			}
-
-			if (asset.getPath().startsWith("particle/")) {
-				float scale = 1f / scene.pixelsPerUnit;
-
-				try {
-					entity = new EntityBuilder(entityEngine)
-							.with(new ParticleComponent(particleCache.get(asset, scale)), new PixelsPerUnitComponent(scene.pixelsPerUnit),
-									new AssetComponent(asset),
-									new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-									new ExporterDropsComponent(PixelsPerUnitComponent.class))
-							.build();
-				} catch (EditorRuntimeException e) {
-					Log.exception(e);
-					toastModule.show(new DetailsToast("Particle system cannot be created.\nProbably, particle texture is missing.", e));
-					return;
-				}
 			}
 		}
 

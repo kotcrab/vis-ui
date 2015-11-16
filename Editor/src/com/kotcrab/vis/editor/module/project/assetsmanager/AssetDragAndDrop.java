@@ -168,7 +168,7 @@ public class AssetDragAndDrop implements Disposable {
 		}
 
 		if (item.getType() == AssetFileType.PARTICLE_EFFECT) {
-			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Particle Effect \n (drop on scene to add)").setPayload(new PathAsset(relativePath)));
+			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Particle Effect \n (drop on scene to add)").setPayload(new ParticleAsset(relativePath)));
 		}
 
 		if (item.getType() == AssetFileType.MUSIC) {

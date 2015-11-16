@@ -118,7 +118,7 @@ public class FileItem extends Table {
 			return;
 		}
 
-		if (relativePath.startsWith("particle") && ext.equals("p")) {
+		if (ProjectPathUtils.isParticle(file)) {
 			createDefaultView(AssetFileType.PARTICLE_EFFECT, "Particle Effect", true);
 			return;
 		}

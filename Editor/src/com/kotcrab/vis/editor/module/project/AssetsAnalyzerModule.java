@@ -70,6 +70,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 	@Override
 	public void init () {
 		providers.add(new BmpFontDescriptorProvider());
+		providers.add(new ParticleDescriptorProvider());
 		providers.add(new PathDescriptorProvider());
 		providers.add(new TextureRegionDescriptorProvider());
 		providers.add(new AtlasRegionDescriptorProvider());

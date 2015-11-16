@@ -24,15 +24,13 @@ import com.kotcrab.vis.editor.assets.transaction.action.CopyFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.DeleteFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.UpdateReferencesAction;
 import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.runtime.assets.ParticleAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /**
- * Basic {@link AssetTransactionGenerator} that can generate asset transaction for {@link PathAsset} of
- * TrueType fonts, music, sounds
  * @author Kotcrab
  */
-public class BasicAssetTransactionGenerator implements AssetTransactionGenerator {
+public class ParticleAssetTransactionGenerator implements AssetTransactionGenerator {
 	private FileHandle transactionStorage;
 
 	@Override
@@ -42,14 +40,7 @@ public class BasicAssetTransactionGenerator implements AssetTransactionGenerator
 
 	@Override
 	public boolean isSupported (VisAssetDescriptor descriptor) {
-		if (descriptor instanceof PathAsset == false) return false;
-
-		PathAsset pathAsset = (PathAsset) descriptor;
-		String path = pathAsset.getPath();
-		if (path.startsWith("music") || path.startsWith("sound") || path.startsWith("particle"))
-			return true;
-
-		return false;
+		return descriptor instanceof ParticleAsset;
 	}
 
 	@Override
@@ -57,7 +48,7 @@ public class BasicAssetTransactionGenerator implements AssetTransactionGenerator
 		AssetTransaction transaction = new AssetTransaction();
 
 		transaction.add(new CopyFileAction(source, target));
-		transaction.add(new UpdateReferencesAction(injector, providerResult, new PathAsset(relativeTargetPath)));
+		transaction.add(new UpdateReferencesAction(injector, providerResult, new ParticleAsset(relativeTargetPath)));
 		transaction.add(new DeleteFileAction(source, transactionStorage));
 		transaction.finalizeGroup();
 

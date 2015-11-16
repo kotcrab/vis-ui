@@ -38,7 +38,8 @@ import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.assets.*;
-import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.ShaderProtoComponent;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.font.BitmapFontProvider;
@@ -135,16 +136,21 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 					} else if (asset instanceof BmpFontAsset) {
 						checkShader(dependencies);
 						bmpFontProvider.load(dependencies, asset);
+
 					} else if (asset instanceof TtfFontAsset) {
 						ttfFontProvider.load(dependencies, asset);
-					} else if (asset instanceof PathAsset) {
+
+					} else if (asset instanceof ParticleAsset) {
+						PathAsset pathAsset = (ParticleAsset) asset;
+						String path = pathAsset.getPath();
+						dependencies.add(new AssetDescriptor<ParticleEffect>(path, ParticleEffect.class));
+
+					}else if (asset instanceof PathAsset) {
 						PathAsset pathAsset = (PathAsset) asset;
 						String path = pathAsset.getPath();
 
 						if (path.startsWith("sound/")) dependencies.add(new AssetDescriptor<Sound>(path, Sound.class));
 						if (path.startsWith("music/")) dependencies.add(new AssetDescriptor<Music>(path, Music.class));
-						if (path.startsWith("particle/"))
-							dependencies.add(new AssetDescriptor<ParticleEffect>(path, ParticleEffect.class));
 						if (path.startsWith("spriter/"))
 							dependencies.add(new AssetDescriptor<SpriterData>(path, SpriterData.class));
 					}

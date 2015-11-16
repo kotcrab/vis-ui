@@ -17,26 +17,19 @@
 package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
+import com.kotcrab.vis.runtime.assets.ParticleAsset;
 
-/**
- * Basic descriptor provider for {@link PathAsset}, supporting TrueType fonts, music, sound
- * @author Kotcrab
- */
-public class PathDescriptorProvider implements AssetDescriptorProvider<PathAsset> {
+/** @author Kotcrab */
+public class ParticleDescriptorProvider implements AssetDescriptorProvider<ParticleAsset> {
 	@Override
-	public PathAsset provide (FileHandle file, String relativePath) {
-		if (checkIfSupported(file, relativePath) == false) return null;
-		return new PathAsset(relativePath);
-	}
-
-	private boolean checkIfSupported (FileHandle file, String path) {
-		if (path.startsWith("music") || path.startsWith("sound")) return true;
-		return false;
+	public ParticleAsset provide (FileHandle file, String relativePath) {
+		if (ProjectPathUtils.isParticle(file)) return new ParticleAsset(relativePath);
+		return null;
 	}
 
 	@Override
-	public PathAsset parametrize (PathAsset rawAsset, PathAsset other) {
-		return rawAsset;
-	} //path is not parametrized
+	public ParticleAsset parametrize (ParticleAsset rawAsset, ParticleAsset other) {
+		return rawAsset; //particle asset is not parametrized
+	}
 }
