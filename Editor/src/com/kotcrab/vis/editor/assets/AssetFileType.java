@@ -16,12 +16,17 @@
 
 package com.kotcrab.vis.editor.assets;
 
+import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+
 /**
  * Possible file types in VisEditor project assets
  * @author Kotcrab
  */
 public enum AssetFileType {
-	UNKNOWN, NON_STANDARD,
+	UNKNOWN,
+	/** Used when {@link FileItem} content is created from external {@link EditorEntitySupport}, for example by plugin. */
+	NON_STANDARD,
 	TEXTURE, TEXTURE_ATLAS,
 	TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE,
 	MUSIC, SOUND, PARTICLE_EFFECT,

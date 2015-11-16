@@ -49,17 +49,11 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 	private FileAccessModule fileAccess;
 	private AssetsWatcherModule watcherModule;
 
-	private FileHandle bmpFontDirectory;
-	private FileHandle ttfFontDirectory;
-
 	private ObjectMap<FileHandle, BmpFontsMap> bmpFonts = new ObjectMap<>();
 	private ObjectMap<FileHandle, TmpFontsMap> ttfFonts = new ObjectMap<>();
 
 	@Override
 	public void init () {
-		ttfFontDirectory = fileAccess.getTTFFontFolder();
-		bmpFontDirectory = fileAccess.getBMPFontFolder();
-
 		watcherModule.addListener(this);
 	}
 

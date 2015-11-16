@@ -44,6 +44,10 @@ public class ProjectPathUtils {
 		return file.extension().equals("p");
 	}
 
+	public static boolean isScene (FileHandle file) {
+		return file.extension().equals("scene");
+	}
+
 	public static boolean isTrueTypeFont (FileHandle file) {
 		return file.extension().equals("ttf");
 	}

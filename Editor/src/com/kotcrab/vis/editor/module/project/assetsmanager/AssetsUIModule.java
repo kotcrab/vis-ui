@@ -53,6 +53,7 @@ import com.kotcrab.vis.editor.util.async.CopyFilesAsyncTask;
 import com.kotcrab.vis.editor.util.scene2d.DirectoriesOnlyFileFilter;
 import com.kotcrab.vis.editor.util.scene2d.MenuUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisTabbedPaneListener;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.ui.layout.GridGroup;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.*;
@@ -373,7 +374,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	}
 
 	private void openFile (FileHandle file) {
-		if (file.extension().equals("scene")) {
+		if (ProjectPathUtils.isScene(file)) {
 			try {
 				sceneTabsModule.open(sceneCache.get(file));
 			} catch (KryoException e) {

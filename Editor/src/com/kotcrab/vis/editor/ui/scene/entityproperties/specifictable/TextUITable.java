@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.artemis.Entity;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -98,7 +97,7 @@ public abstract class TextUITable extends SpecificUITable {
 			}
 		});
 
-		selectFontDialog = new SelectFileDialog(getFontExtension(), getFontFolder(), file -> {
+		selectFontDialog = new SelectFileDialog(getFontExtension(), fileAccess.getAssetsFolder(), file -> {
 			for (EntityProxy proxy : properties.getProxies()) {
 				for (Entity entity : proxy.getEntities()) {
 					TextComponent text = entity.getComponent(TextComponent.class);
@@ -135,8 +134,6 @@ public abstract class TextUITable extends SpecificUITable {
 	}
 
 	protected abstract String getFontExtension ();
-
-	protected abstract FileHandle getFontFolder ();
 
 	@Override
 	public void updateUIValues () {

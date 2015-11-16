@@ -197,15 +197,6 @@ public class NewSceneDialog extends VisWindow {
 		validator.valueGreaterThan(heightField, "Height must be greater than zero", 0);
 		validator.valueGreaterThan(pixelsPerUnitField, "Pixel per units must be greater than zero", 0);
 
-//		validator.fileExists(pathTextField, assetsFolder, "Path does not exist");
-
-		validator.custom(nameTextField, new FormInputValidator("Scenes must be in /scene/ directory") {
-			@Override
-			public boolean validate (String input) {
-				return !input.startsWith("/scene/");
-			}
-		});
-
 		validator.custom(nameTextField, new FormInputValidator("That scene already exists") {
 			@Override
 			public boolean validate (String input) {

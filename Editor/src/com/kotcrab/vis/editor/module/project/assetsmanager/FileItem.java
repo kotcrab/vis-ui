@@ -148,7 +148,7 @@ public class FileItem extends Table {
 			return;
 		}
 
-		if (relativePath.startsWith("scene") && ext.equals("scene")) {
+		if (ProjectPathUtils.isScene(file)) {
 			createDefaultView(AssetFileType.SCENE, "Scene", true);
 			return;
 		}

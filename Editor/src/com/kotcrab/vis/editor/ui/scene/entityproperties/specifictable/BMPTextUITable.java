@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.assets.loaders.BitmapFontLoader.BitmapFontParameter;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
@@ -50,11 +49,6 @@ public class BMPTextUITable extends TextUITable {
 	@Override
 	protected String getFontExtension () {
 		return "fnt";
-	}
-
-	@Override
-	protected FileHandle getFontFolder () {
-		return fileAccess.getBMPFontFolder();
 	}
 
 	@Override

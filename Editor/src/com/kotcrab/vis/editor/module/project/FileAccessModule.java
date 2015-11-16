@@ -34,10 +34,6 @@ public class FileAccessModule extends ProjectModule {
 	private FileHandle sceneFolder;
 	private FileHandle gfxFolder;
 	private FileHandle shaderFolder;
-	private FileHandle ttfFontFolder;
-	private FileHandle bmpFontFolder;
-	private FileHandle particleFolder;
-	private FileHandle spriterFolder;
 
 	@Override
 	public void init () {
@@ -48,14 +44,10 @@ public class FileAccessModule extends ProjectModule {
 		sceneFolder = assetsFolder.child("scene");
 		gfxFolder = assetsFolder.child("gfx");
 		shaderFolder = assetsFolder.child("shader");
-		ttfFontFolder = assetsFolder.child("font");
-		bmpFontFolder = assetsFolder.child("bmpfont");
-		particleFolder = assetsFolder.child("particle");
-		spriterFolder = assetsFolder.child("spriter");
 	}
 
 	public Array<FileHandle> getSceneFiles () {
-		Array<FileHandle> files = FileUtils.listRecursive(getSceneFolder());
+		Array<FileHandle> files = FileUtils.listRecursive(getAssetsFolder());
 
 		Iterator<FileHandle> it = files.iterator();
 
@@ -86,40 +78,14 @@ public class FileAccessModule extends ProjectModule {
 		return moduleFolder;
 	}
 
-	public FileHandle getSceneFolder () {
-		return sceneFolder;
-	}
-
+	@Deprecated
 	public FileHandle getGfxFolder () {
 		return gfxFolder;
 	}
 
+	@Deprecated
 	public FileHandle getShaderFolder () {
 		return shaderFolder;
-	}
-
-	public FileHandle getParticleFolder () {
-		return particleFolder;
-	}
-
-	public FileHandle getSpriterFolder () {
-		return spriterFolder;
-	}
-
-	public FileHandle getBMPFontFolder () {
-		return bmpFontFolder;
-	}
-
-	public String getBMPFontFolderRelative () {
-		return relativizeToAssetsFolder(bmpFontFolder);
-	}
-
-	public FileHandle getTTFFontFolder () {
-		return ttfFontFolder;
-	}
-
-	public String getTTFFontFolderRelative () {
-		return relativizeToAssetsFolder(ttfFontFolder);
 	}
 
 	public String relativizeToVisFolder (FileHandle file) {

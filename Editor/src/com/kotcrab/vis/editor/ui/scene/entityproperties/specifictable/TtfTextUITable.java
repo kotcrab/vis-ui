@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.artemis.Entity;
-import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
@@ -54,11 +53,6 @@ public class TtfTextUITable extends TextUITable {
 	@Override
 	protected String getFontExtension () {
 		return "ttf";
-	}
-
-	@Override
-	protected FileHandle getFontFolder () {
-		return fileAccess.getTTFFontFolder();
 	}
 
 	@Override
