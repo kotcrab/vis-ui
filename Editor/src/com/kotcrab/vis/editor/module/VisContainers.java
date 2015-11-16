@@ -67,6 +67,7 @@ public class VisContainers {
 	public static void createProjectModules (ProjectModuleContainer projectMC, ExtensionStorageModule extensionStorage) {
 		projectMC.add(new FileAccessModule());
 		projectMC.add(new AssetsWatcherModule());
+		projectMC.add(new AssetsMetadataModule());
 		projectMC.add(new TextureCacheModule());
 		projectMC.add(new FontCacheModule());
 		projectMC.add(new ParticleCacheModule());

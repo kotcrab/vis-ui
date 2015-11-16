@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 
 /**
@@ -26,7 +27,7 @@ import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 public class TextureRegionDescriptorProvider implements AssetDescriptorProvider<TextureRegionAsset> {
 	@Override
 	public TextureRegionAsset provide (FileHandle file, String relativePath) {
-		if (relativePath.startsWith("gfx")) return new TextureRegionAsset(relativePath);
+		if (ProjectPathUtils.isTexture(relativePath, file.extension())) return new TextureRegionAsset(relativePath);
 
 		return null;
 	}

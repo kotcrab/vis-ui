@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap.Values;
+import com.kotcrab.vis.editor.assets.AssetFileType;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.scheme.SpriterAssetData;
@@ -102,7 +103,7 @@ public class AssetDragAndDrop implements Disposable {
 	private void addSource (FileItem item) {
 		String relativePath = fileAccess.relativizeToAssetsFolder(item.getFile());
 
-		if (item.getType() == FileType.TEXTURE) {
+		if (item.getType() == AssetFileType.TEXTURE) {
 			dragAndDrop.addSource(new Source(item) {
 				@Override
 				public Payload dragStart (InputEvent event, float x, float y, int pointer) {
@@ -112,7 +113,7 @@ public class AssetDragAndDrop implements Disposable {
 			});
 		}
 
-		if (item.getType() == FileType.TTF_FONT) {
+		if (item.getType() == AssetFileType.TTF_FONT) {
 			dragAndDrop.addSource(new Source(item) {
 				@Override
 				public Payload dragStart (InputEvent event, float x, float y, int pointer) {
@@ -136,7 +137,7 @@ public class AssetDragAndDrop implements Disposable {
 			});
 		}
 
-		if (item.getType() == FileType.BMP_FONT_FILE || item.getType() == FileType.BMP_FONT_TEXTURE) {
+		if (item.getType() == AssetFileType.BMP_FONT_FILE || item.getType() == AssetFileType.BMP_FONT_TEXTURE) {
 			dragAndDrop.addSource(new Source(item) {
 				@Override
 				public Payload dragStart (InputEvent event, float x, float y, int pointer) {
@@ -144,7 +145,7 @@ public class AssetDragAndDrop implements Disposable {
 
 					FileHandle fontFile;
 
-					if (item.getType() == FileType.BMP_FONT_FILE)
+					if (item.getType() == AssetFileType.BMP_FONT_FILE)
 						fontFile = item.getFile();
 					else
 						fontFile = FileUtils.sibling(item.getFile(), "fnt");
@@ -166,26 +167,26 @@ public class AssetDragAndDrop implements Disposable {
 			});
 		}
 
-		if (item.getType() == FileType.PARTICLE_EFFECT) {
+		if (item.getType() == AssetFileType.PARTICLE_EFFECT) {
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Particle Effect \n (drop on scene to add)").setPayload(new PathAsset(relativePath)));
 		}
 
-		if (item.getType() == FileType.MUSIC) {
+		if (item.getType() == AssetFileType.MUSIC) {
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Music \n (drop on scene to add)").setPayload(new PathAsset(relativePath)));
 		}
 
-		if (item.getType() == FileType.SOUND) {
+		if (item.getType() == AssetFileType.SOUND) {
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Sound \n (drop on scene to add)").setPayload(new PathAsset(relativePath)));
 		}
 
-		if (item.getType() == FileType.SPRITER_SCML) {
+		if (item.getType() == AssetFileType.SPRITER_SCML) {
 			FileHandle dataFile = item.getFile().parent().child(".vis").child("data.json");
 			if (dataFile.exists() == false) return;
 			SpriterAssetData data = spriterDataIO.loadData(dataFile);
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Spriter Animation \n (drop on scene to add)").setPayload(new SpriterAsset(relativePath, data.imageScale)));
 		}
 
-		if (item.getType() == FileType.NON_STANDARD) {
+		if (item.getType() == AssetFileType.NON_STANDARD) {
 			dragAndDrop.addSource(item.getSupport().createDropSource(dragAndDrop, item));
 		}
 	}

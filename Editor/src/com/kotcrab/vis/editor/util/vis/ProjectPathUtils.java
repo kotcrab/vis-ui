@@ -34,4 +34,8 @@ public class ProjectPathUtils {
 				&& (FileUtils.siblingExists(file, "png") || FileUtils.siblingExists(file, "jpg") || FileUtils
 				.siblingExists(file, "jpeg"));
 	}
+
+	public static boolean isTtfFont (FileHandle file) {
+		return file.extension().equals("ttf");
+	}
 }

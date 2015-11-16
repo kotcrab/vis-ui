@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.kotcrab.vis.editor.assets.AssetFileType;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
@@ -51,7 +52,7 @@ public class FileItem extends Table {
 	private FileHandle file;
 
 	private TextureRegion region;
-	private FileType type;
+	private AssetFileType type;
 
 	private VisLabel name;
 
@@ -83,7 +84,7 @@ public class FileItem extends Table {
 		boolean atlas = ProjectPathUtils.isTextureAtlas(file, relativePath);
 
 		if (texture || atlas) {
-			type = texture ? FileType.TEXTURE : FileType.TEXTURE_ATLAS;
+			type = texture ? AssetFileType.TEXTURE : AssetFileType.TEXTURE_ATLAS;
 
 			name = new VisLabel(file.nameWithoutExtension(), "small");
 			TextureRegion region;
@@ -102,61 +103,67 @@ public class FileItem extends Table {
 			return;
 		}
 
-		if (relativePath.startsWith("font") && ext.equals("ttf")) {
-			createDefaultView(FileType.TTF_FONT, "TTF Font", true);
+		if (ext.equals("ttf")) {
+			createDefaultView(AssetFileType.TTF_FONT, "TTF Font", true);
 			return;
 		}
 
 		if (relativePath.startsWith("bmpfont") && ext.equals("fnt") && FileUtils.siblingExists(file, "png")) {
-			createDefaultView(FileType.BMP_FONT_FILE, "BMP Font", true);
+			createDefaultView(AssetFileType.BMP_FONT_FILE, "BMP Font", true);
 			return;
 		}
 
 		if (relativePath.startsWith("bmpfont") && ext.equals("png") && FileUtils.siblingExists(file, "fnt")) {
-			createDefaultView(FileType.BMP_FONT_TEXTURE, "BMP Font Texture", true);
+			createDefaultView(AssetFileType.BMP_FONT_TEXTURE, "BMP Font Texture", true);
 			return;
 		}
 
 		if (relativePath.startsWith("particle") && ext.equals("p")) {
-			createDefaultView(FileType.PARTICLE_EFFECT, "Particle Effect", true);
+			createDefaultView(AssetFileType.PARTICLE_EFFECT, "Particle Effect", true);
 			return;
 		}
 
 		if (relativePath.startsWith("music") && (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3"))) {
-			createDefaultView(FileType.MUSIC, "Music");
+			createDefaultView(AssetFileType.MUSIC, "Music");
 			return;
 		}
 
 		if (relativePath.startsWith("sound") && (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3"))) {
-			createDefaultView(FileType.SOUND, "Sound");
+			createDefaultView(AssetFileType.SOUND, "Sound");
 			return;
 		}
 
 		if (relativePath.startsWith("shader") && ext.equals("frag")) {
-			createDefaultView(FileType.FRAGMENT_SHADER, "Fragment Shader", true);
+			createDefaultView(AssetFileType.FRAGMENT_SHADER, "Fragment Shader", true);
 			return;
 		}
 
 		if (relativePath.startsWith("shader") && ext.equals("vert")) {
-			createDefaultView(FileType.VERTEX_SHADER, "Vertex Shader", true);
+			createDefaultView(AssetFileType.VERTEX_SHADER, "Vertex Shader", true);
 			return;
 		}
 
 		if (relativePath.startsWith("spriter") && ext.equals("scml") && file.parent().child(".vis").exists()) {
-			createDefaultView(FileType.SPRITER_SCML, "Spriter Animation", true);
+			createDefaultView(AssetFileType.SPRITER_SCML, "Spriter Animation", true);
 			return;
 		}
+
+		if (relativePath.startsWith("scene") && ext.equals("scene")) {
+			createDefaultView(AssetFileType.SCENE, "Scene", true);
+			return;
+		}
+
 
 		support = findSupportForDirectory(ext, relativePath);
 		if (support != null) {
 			ContentItemProperties item = support.getContentItemProperties(relativePath, ext);
 			if (item != null) {
-				createDefaultView(FileType.NON_STANDARD, item.title, item.hideExtension);
+				createDefaultView(AssetFileType.NON_STANDARD, item.title, item.hideExtension);
 				return;
 			}
 		}
 
-		type = FileType.UNKNOWN;
+		type = AssetFileType.UNKNOWN;
 		name = new VisLabel(file.name());
 	}
 
@@ -167,11 +174,11 @@ public class FileItem extends Table {
 		return null;
 	}
 
-	private void createDefaultView (FileType type, String itemTypeName) {
+	private void createDefaultView (AssetFileType type, String itemTypeName) {
 		createDefaultView(type, itemTypeName, false);
 	}
 
-	private void createDefaultView (FileType type, String itemTypeName, boolean hideExtension) {
+	private void createDefaultView (AssetFileType type, String itemTypeName, boolean hideExtension) {
 		this.type = type;
 
 		VisLabel tagLabel = new VisLabel((hideExtension ? "" : file.extension().toUpperCase() + " ") + itemTypeName, Color.GRAY);
@@ -192,7 +199,7 @@ public class FileItem extends Table {
 		return file;
 	}
 
-	public FileType getType () {
+	public AssetFileType getType () {
 		return type;
 	}
 

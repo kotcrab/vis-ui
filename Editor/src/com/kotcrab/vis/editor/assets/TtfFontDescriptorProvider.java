@@ -17,13 +17,14 @@
 package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 
 /** @author Kotcrab */
 public class TtfFontDescriptorProvider implements AssetDescriptorProvider<TtfFontAsset> {
 	@Override
 	public TtfFontAsset provide (FileHandle file, String relativePath) {
-		if (relativePath.startsWith("font") == false) return null;
+		if (ProjectPathUtils.isTtfFont(file) == false) return null;
 		return new TtfFontAsset(relativePath, -1);
 	}
 
