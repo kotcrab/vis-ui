@@ -109,6 +109,7 @@ public class SceneIOModule extends ProjectModule {
 				.registerTypeAdapter(Array.class, new ArrayJsonSerializer())
 				.registerTypeAdapter(IntArray.class, new IntArrayJsonSerializer())
 				.registerTypeAdapter(IntMap.class, new IntMapJsonSerializer())
+				.registerTypeAdapter(ObjectMap.class, new ObjectMapJsonSerializer())
 				.registerTypeAdapter(Class.class, classSerializer = new ClassJsonSerializer(Thread.currentThread().getContextClassLoader()))
 				.registerTypeAdapter(AssetComponent.class, new AssetComponentSerializer());
 

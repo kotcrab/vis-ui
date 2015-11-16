@@ -23,10 +23,18 @@ import com.google.gson.JsonSerializationContext;
 /** @author Kotcrab */
 public class GsonUtils {
 	public static void appendClassProperty (JsonElement json, Object object, JsonSerializationContext context) {
-		json.getAsJsonObject().add("@class", context.serialize(object.getClass()));
+		appendClassProperty(json, object, context, "@class");
+	}
+
+	public static void appendClassProperty (JsonElement json, Object object, JsonSerializationContext context, String customMemberName) {
+		json.getAsJsonObject().add(customMemberName, context.serialize(object.getClass()));
 	}
 
 	public static Class<?> readClassProperty (JsonElement json, JsonDeserializationContext context) {
-		return context.deserialize(json.getAsJsonObject().get("@class"), Class.class);
+		return readClassProperty(json, context, "@class");
+	}
+
+	public static Class<?> readClassProperty (JsonElement json, JsonDeserializationContext context, String customMemberName) {
+		return context.deserialize(json.getAsJsonObject().get(customMemberName), Class.class);
 	}
 }
