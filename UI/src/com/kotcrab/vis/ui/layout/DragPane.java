@@ -138,6 +138,11 @@ public class DragPane extends Container<WidgetGroup> {
         return (GridGroup) getActor();
     }
 
+    /** @return dragging listener automatically added to all panes' children. */
+    public Draggable getDraggable() {
+        return draggable;
+    }
+
     /** @param draggable will be automatically added to all children. */
     public void setDraggable(final Draggable draggable) {
         removeListener();
@@ -197,6 +202,11 @@ public class DragPane extends Container<WidgetGroup> {
     @Override
     public boolean removeActor(final Actor actor, final boolean unfocus) {
         return getActor().removeActor(actor, unfocus);
+    }
+
+    @Override
+    public void clear() {
+        getActor().clear();
     }
 
     @Override
@@ -332,9 +342,9 @@ public class DragPane extends Container<WidgetGroup> {
             final Actor directPaneChild = getActorInDragPane(overActor, dragPane);
             directPaneChild.stageToLocalCoordinates(DRAG_POSITION);
             if (dragPane.isVertical()) {
-                addToHorizontalGroup(actor, dragPane, directPaneChild);
-            } else if (dragPane.isHorizontal()) {
                 addToVerticalGroup(actor, dragPane, directPaneChild);
+            } else if (dragPane.isHorizontal()) {
+                addToHorizontalGroup(actor, dragPane, directPaneChild);
             } else { // This is the default behavior for grid and unknown groups.
                 addToOtherGroup(actor, dragPane, directPaneChild);
             }
@@ -344,7 +354,16 @@ public class DragPane extends Container<WidgetGroup> {
          * @param dragPane is under the actor. Stores a {@link HorizontalGroup}.
          * @param directPaneChild actor under the cursor. */
         protected void addToHorizontalGroup(final Actor actor, final DragPane dragPane, final Actor directPaneChild) {
-            if (DRAG_POSITION.y < directPaneChild.getHeight() / 2f) { // Y inverted.
+            final Array<Actor> children = dragPane.getChildren();
+            final int indexOfDraggedActor = children.indexOf(actor, true);
+            if (indexOfDraggedActor >= 0) {
+                final int indexOfDirectChild = children.indexOf(directPaneChild, true);
+                if (indexOfDirectChild > indexOfDraggedActor) {
+                    dragPane.addActorAfter(directPaneChild, actor);
+                } else {
+                    dragPane.addActorBefore(directPaneChild, actor);
+                }
+            } else if (DRAG_POSITION.x > directPaneChild.getWidth() / 2f) {
                 dragPane.addActorAfter(directPaneChild, actor);
             } else {
                 dragPane.addActorBefore(directPaneChild, actor);
@@ -355,7 +374,16 @@ public class DragPane extends Container<WidgetGroup> {
          * @param dragPane is under the actor. Stores a {@link VerticalGroup}.
          * @param directPaneChild actor under the cursor. */
         protected void addToVerticalGroup(final Actor actor, final DragPane dragPane, final Actor directPaneChild) {
-            if (DRAG_POSITION.x > directPaneChild.getWidth() / 2f) {
+            final Array<Actor> children = dragPane.getChildren();
+            final int indexOfDraggedActor = children.indexOf(actor, true);
+            if (indexOfDraggedActor >= 0) {
+                final int indexOfDirectChild = children.indexOf(directPaneChild, true);
+                if (indexOfDirectChild > indexOfDraggedActor) {
+                    dragPane.addActorAfter(directPaneChild, actor);
+                } else {
+                    dragPane.addActorBefore(directPaneChild, actor);
+                }
+            } else if (DRAG_POSITION.y < directPaneChild.getHeight() / 2f) { // Y inverted.
                 dragPane.addActorAfter(directPaneChild, actor);
             } else {
                 dragPane.addActorBefore(directPaneChild, actor);
