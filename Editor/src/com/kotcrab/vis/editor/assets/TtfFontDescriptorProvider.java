@@ -24,7 +24,7 @@ import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 public class TtfFontDescriptorProvider implements AssetDescriptorProvider<TtfFontAsset> {
 	@Override
 	public TtfFontAsset provide (FileHandle file, String relativePath) {
-		if (ProjectPathUtils.isTtfFont(file) == false) return null;
+		if (ProjectPathUtils.isTrueTypeFont(file) == false) return null;
 		return new TtfFontAsset(relativePath, -1);
 	}
 

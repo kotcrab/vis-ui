@@ -35,7 +35,20 @@ public class ProjectPathUtils {
 				.siblingExists(file, "jpeg"));
 	}
 
-	public static boolean isTtfFont (FileHandle file) {
+	public static boolean isImage (FileHandle file) {
+		String ext = file.extension();
+		return (ext.equals("jpeg") || ext.equals("jpg") || ext.equals("png"));
+	}
+
+	public static boolean isTrueTypeFont (FileHandle file) {
 		return file.extension().equals("ttf");
+	}
+
+	public static boolean isBitmapFont (FileHandle file) {
+		return file.extension().equals("fnt") && FileUtils.sibling(file, "png").exists();
+	}
+
+	public static boolean isBitmapFontTexture (FileHandle file) {
+		return file.extension().equals("png") && FileUtils.sibling(file, "fnt").exists();
 	}
 }

@@ -22,6 +22,7 @@ import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 
 /** @author Kotcrab */
 public class TextureNameCheckerModule extends ProjectModule implements WatchListener {
@@ -54,7 +55,7 @@ public class TextureNameCheckerModule extends ProjectModule implements WatchList
 		if (warningShown) return;
 
 		String relativePath = fileAccess.relativizeToAssetsFolder(file);
-		if (relativePath.startsWith("gfx") == false) return;
+		if (relativePath.startsWith("gfx") == false || ProjectPathUtils.isImage(file) == false) return;
 
 		String pathWithoutExt = file.pathWithoutExtension();
 

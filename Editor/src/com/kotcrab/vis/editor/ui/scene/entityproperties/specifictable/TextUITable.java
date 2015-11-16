@@ -28,6 +28,7 @@ import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
+import com.kotcrab.vis.editor.util.scene2d.VisWidgetValue;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.PathAsset;
@@ -36,10 +37,7 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.TextComponent;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
-import com.kotcrab.vis.ui.widget.VisImageButton;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisValidatableTextField;
+import com.kotcrab.vis.ui.widget.*;
 
 import static com.kotcrab.vis.editor.util.vis.EntityUtils.getCommonString;
 import static com.kotcrab.vis.editor.util.vis.EntityUtils.setCommonCheckBoxState;
@@ -48,6 +46,8 @@ import static com.kotcrab.vis.editor.util.vis.EntityUtils.setCommonCheckBoxState
  * @author Kotcrab
  */
 public abstract class TextUITable extends SpecificUITable {
+	private static final int MAX_FONT_LABEL_WIDTH = 100;
+
 	protected FontCacheModule fontCache;
 	protected FileAccessModule fileAccess;
 
@@ -58,8 +58,9 @@ public abstract class TextUITable extends SpecificUITable {
 	private VisValidatableTextField textField;
 
 	private VisLabel fontLabel;
-	protected VisImageButton selectFontButton;
+	private Tooltip fontLabelTooltip;
 
+	protected VisImageButton selectFontButton;
 	protected VisTable fontPropertiesTable;
 
 	@Override
@@ -75,11 +76,12 @@ public abstract class TextUITable extends SpecificUITable {
 		fontLabel = new VisLabel();
 		fontLabel.setColor(Color.GRAY);
 		fontLabel.setEllipsis(true);
+		fontLabelTooltip = new Tooltip(fontLabel, "");
 		selectFontButton = new VisImageButton(Icons.MORE.drawable());
 
 		fontPropertiesTable = new VisTable(true);
 		fontPropertiesTable.add(new VisLabel("Font"));
-		fontPropertiesTable.add(fontLabel).width(100);
+		fontPropertiesTable.add(fontLabel).width(new VisWidgetValue(context -> Math.min(context.getMinWidth(), MAX_FONT_LABEL_WIDTH)));
 		fontPropertiesTable.add(selectFontButton);
 
 		autoCenterOrigin = new IndeterminateCheckbox("Auto Set Origin to Center");
@@ -136,12 +138,6 @@ public abstract class TextUITable extends SpecificUITable {
 
 	protected abstract FileHandle getFontFolder ();
 
-	abstract int getRelativeFontFolderLength ();
-
-	private String getFontTextForEntity (PathAsset asset) {
-		return asset.getPath().substring(getRelativeFontFolderLength() + 1);
-	}
-
 	@Override
 	public void updateUIValues () {
 		Array<EntityProxy> proxies = properties.getProxies();
@@ -149,7 +145,9 @@ public abstract class TextUITable extends SpecificUITable {
 		setCommonCheckBoxState(proxies, autoCenterOrigin, (Entity entity) -> entity.getComponent(TextComponent.class).isAutoSetOriginToCenter());
 
 		textField.setText(getCommonString(proxies, "<multiple values>", (Entity entity) -> entity.getComponent(TextComponent.class).getText()));
-		fontLabel.setText(getCommonString(proxies, "<?>", (Entity entity) -> getFontTextForEntity((PathAsset) entity.getComponent(AssetComponent.class).asset)));
+		fontLabel.setText(getCommonString(proxies, "<?>", (Entity entity) -> ((PathAsset) entity.getComponent(AssetComponent.class).asset).getPath()));
+		((VisLabel) fontLabelTooltip.getContent()).setText(fontLabel.getText());
+		fontLabelTooltip.pack();
 	}
 
 	@Override

@@ -62,11 +62,6 @@ public class TtfTextUITable extends TextUITable {
 	}
 
 	@Override
-	int getRelativeFontFolderLength () {
-		return fileAccess.getTTFFontFolderRelative().length();
-	}
-
-	@Override
 	public boolean isSupported (EntityProxy proxy) {
 		if (proxy.hasComponent(TextComponent.class) == false) return false;
 

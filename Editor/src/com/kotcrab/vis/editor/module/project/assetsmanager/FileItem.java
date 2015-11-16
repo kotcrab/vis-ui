@@ -30,7 +30,6 @@ import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
-import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
@@ -38,6 +37,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 //TODO refactor
+//TODO filter system in assets ui module
 
 /**
  * Displays single item inside assets manager.
@@ -83,6 +83,21 @@ public class FileItem extends Table {
 		boolean texture = ProjectPathUtils.isTexture(relativePath, ext);
 		boolean atlas = ProjectPathUtils.isTextureAtlas(file, relativePath);
 
+		if (ProjectPathUtils.isTrueTypeFont(file)) {
+			createDefaultView(AssetFileType.TTF_FONT, "TTF Font", true);
+			return;
+		}
+
+		if (ProjectPathUtils.isBitmapFont(file)) {
+			createDefaultView(AssetFileType.BMP_FONT_FILE, "BMP Font", true);
+			return;
+		}
+
+		if (ProjectPathUtils.isBitmapFontTexture(file)) {
+			createDefaultView(AssetFileType.BMP_FONT_TEXTURE, "BMP Font Texture", true);
+			return;
+		}
+
 		if (texture || atlas) {
 			type = texture ? AssetFileType.TEXTURE : AssetFileType.TEXTURE_ATLAS;
 
@@ -100,21 +115,6 @@ public class FileItem extends Table {
 
 			this.region = region;
 
-			return;
-		}
-
-		if (ext.equals("ttf")) {
-			createDefaultView(AssetFileType.TTF_FONT, "TTF Font", true);
-			return;
-		}
-
-		if (relativePath.startsWith("bmpfont") && ext.equals("fnt") && FileUtils.siblingExists(file, "png")) {
-			createDefaultView(AssetFileType.BMP_FONT_FILE, "BMP Font", true);
-			return;
-		}
-
-		if (relativePath.startsWith("bmpfont") && ext.equals("png") && FileUtils.siblingExists(file, "fnt")) {
-			createDefaultView(AssetFileType.BMP_FONT_TEXTURE, "BMP Font Texture", true);
 			return;
 		}
 

@@ -71,11 +71,6 @@ public class BMPTextUITable extends TextUITable {
 	}
 
 	@Override
-	int getRelativeFontFolderLength () {
-		return fileAccess.getBMPFontFolderRelative().length();
-	}
-
-	@Override
 	public void updateUIValues () {
 		super.updateUIValues();
 		setCommonCheckBoxState(properties.getProxies(), distanceFieldCheck, (Entity entity) -> entity.getComponent(TextComponent.class).isDistanceFieldShaderEnabled());
