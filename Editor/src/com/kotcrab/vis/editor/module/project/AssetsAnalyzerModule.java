@@ -31,8 +31,8 @@ import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.module.project.AssetsUsages.SceneUsages;
-import com.kotcrab.vis.editor.module.scene.system.AssetsUsageAnalyzer;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
+import com.kotcrab.vis.editor.module.scene.system.AssetsUsageAnalyzer;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
@@ -134,9 +134,10 @@ public class AssetsAnalyzerModule extends ProjectModule {
 			if (sceneTab == null) {
 				//scene is not loaded, manually prepare engine and populate it
 				EntityEngineConfiguration config = new EntityEngineConfiguration();
-				SceneModuleContainer.createEssentialsSystems(config, scene.pixelsPerUnit);
+				SceneModuleContainer.createEssentialsSystems(config);
 				engine = new EntityEngine(config);
 				SceneModuleContainer.populateEngine(engine, scene);
+				engine.process();
 			} else {
 				engine = sceneTab.getSceneMC().getEntityEngine();
 			}

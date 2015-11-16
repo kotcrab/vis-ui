@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.module.scene;
 import com.artemis.BaseSystem;
 import com.artemis.Component;
 import com.artemis.ComponentMapper;
+import com.artemis.InvocationStrategy;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -46,6 +47,7 @@ import com.kotcrab.vis.editor.util.BiHolder;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.system.CameraManager;
 import com.kotcrab.vis.runtime.system.render.*;
+import com.kotcrab.vis.runtime.util.BootstrapInvocationStrategy;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
@@ -104,7 +106,8 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new GridRendererSystem(batch, this));
 		config.setSystem(new VisComponentManipulator());
 
-		createEssentialsSystems(config, scene.pixelsPerUnit);
+		config.setSystem(new EntityProxyCache(scene.pixelsPerUnit));
+		createEssentialsSystems(config);
 
 		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, true);
 		config.setSystem(batchingSystem);
@@ -120,8 +123,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new PointRenderSystem(batchingSystem, scene.pixelsPerUnit));
 	}
 
-	public static void createEssentialsSystems (EntityEngineConfiguration config, float pixelsPerUnit) {
-		config.setSystem(new EntityProxyCache(pixelsPerUnit));
+	public static void createEssentialsSystems (EntityEngineConfiguration config) {
 		config.setSystem(new AssetsUsageAnalyzer());
 	}
 
@@ -186,6 +188,9 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		populateEngine(engine, scene);
 
 		engine.getSystems().forEach(this::injectModules);
+		engine.setInvocationStrategy(new BootstrapInvocationStrategy());
+		engine.process();
+		engine.setInvocationStrategy(new InvocationStrategy());
 
 		try {
 			for (BiHolder<Object, Field> target : delayedCompMapperToInject) {
