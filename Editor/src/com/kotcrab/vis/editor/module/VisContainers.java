@@ -35,6 +35,7 @@ public class VisContainers {
 
 		editorMC.add(new PluginLoaderModule());
 		editorMC.add(new ExtensionStorageModule());
+		editorMC.add(new AppFileAccessModule());
 		editorMC.add(new VisTwitterReader());
 		editorMC.add(new WebAPIModule());
 		editorMC.add(new EventBusExceptionMonitorModule());
@@ -43,6 +44,7 @@ public class VisContainers {
 		editorMC.add(new ColorPickerModule());
 		editorMC.add(new UpdateCheckerModule());
 		editorMC.add(new DonateReminderModule());
+		editorMC.add(new DisableableDialogsModule());
 		editorMC.add(new TabsModule(tabsModuleListener));
 		editorMC.add(new FileChooserModule());
 		editorMC.add(new MenuBarModule());

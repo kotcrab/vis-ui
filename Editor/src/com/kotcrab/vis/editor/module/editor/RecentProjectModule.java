@@ -22,7 +22,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
 import com.google.common.eventbus.Subscribe;
-import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
@@ -40,13 +39,14 @@ import java.util.Iterator;
 public class RecentProjectModule extends EditorModule {
 	private Json json = new Json();
 
+	private AppFileAccessModule fileAccess;
+
 	private Array<RecentProjectEntry> recentProjects;
 	private FileHandle storageFile;
 
 	@Override
 	public void init () {
-		FileHandle storage = Gdx.files.absolute(App.METADATA_FOLDER_PATH);
-		storage.mkdirs();
+		FileHandle storage = fileAccess.getMetadataFolder();
 
 		storageFile = storage.child("recentProjects.json");
 

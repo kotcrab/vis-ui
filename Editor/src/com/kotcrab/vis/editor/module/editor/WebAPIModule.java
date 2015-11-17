@@ -16,12 +16,10 @@
 
 package com.kotcrab.vis.editor.module.editor;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.SerializationException;
-import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.webapi.*;
 import com.kotcrab.vis.editor.webapi.WebAPIClient.SiteAPICallback;
@@ -39,6 +37,8 @@ import java.util.regex.Pattern;
 public class WebAPIModule extends EditorModule {
 	private static final Pattern BUILD_TIMESTAMP_PATTERN = Pattern.compile("[0-9]{6}.*-[0-9]");
 
+	private AppFileAccessModule fileAccess;
+
 	private WebAPIClient webApiClient;
 
 	private Json json;
@@ -53,7 +53,7 @@ public class WebAPIModule extends EditorModule {
 	public void init () {
 		webApiClient = new WebAPIClient();
 
-		FileHandle apiCache = Gdx.files.absolute(App.CACHE_FOLDER_PATH).child("api");
+		FileHandle apiCache = fileAccess.getCacheFolder().child("api");
 		apiCache.mkdirs();
 
 		contentCacheFile = apiCache.child("content.json");
