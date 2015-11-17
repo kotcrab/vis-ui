@@ -191,9 +191,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	@Override
 	public void fileChanged (FileHandle file) {
-		String relativePath = fileAccess.relativizeToAssetsFolder(file);
-
-		if (ProjectPathUtils.isTexture(relativePath, file.extension())) {
+		if (ProjectPathUtils.isTexture(file)) {
 			cacheWaitTimer.clear();
 			cacheWaitTimer.scheduleTask(new Task() {
 				@Override

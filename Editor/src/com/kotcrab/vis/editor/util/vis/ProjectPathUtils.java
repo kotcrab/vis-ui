@@ -20,23 +20,19 @@ import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.util.FileUtils;
 
 /**
- * Project paths related utils
+ * Project paths and assets file types related utils
  * @author Kotcrab
  */
 public class ProjectPathUtils {
-	public static boolean isTexture (String relativePath, String ext) {
-		return relativePath.startsWith("gfx") && (ext.equals("jpeg") || ext.equals("jpg") || ext.equals("png"));
+	public static boolean isTexture (FileHandle file) {
+		String ext = file.extension();
+		return (ext.equals("jpeg") || ext.equals("jpg") || ext.equals("png"));
 	}
 
 	public static boolean isTextureAtlas (FileHandle file) {
 		return file.extension().equals("atlas")
 				&& (FileUtils.siblingExists(file, "png") || FileUtils.siblingExists(file, "jpg") || FileUtils
 				.siblingExists(file, "jpeg"));
-	}
-
-	public static boolean isImage (FileHandle file) {
-		String ext = file.extension();
-		return (ext.equals("jpeg") || ext.equals("jpg") || ext.equals("png"));
 	}
 
 	public static boolean isParticle (FileHandle file) {

@@ -80,7 +80,7 @@ public class FileItem extends Table {
 		String ext = file.extension();
 		String relativePath = fileAccess.relativizeToAssetsFolder(file);
 
-		boolean texture = ProjectPathUtils.isTexture(relativePath, ext);
+		boolean texture = ProjectPathUtils.isTexture(file);
 		boolean atlas = ProjectPathUtils.isTextureAtlas(file);
 
 		if (ProjectPathUtils.isTrueTypeFont(file)) {

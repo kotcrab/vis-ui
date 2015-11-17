@@ -52,7 +52,7 @@ public class TextureNameCheckerModule extends ProjectModule implements WatchList
 		if (warningShown) return;
 
 		String relativePath = fileAccess.relativizeToAssetsFolder(file);
-		if (relativePath.startsWith("gfx") == false || ProjectPathUtils.isImage(file) == false) return;
+		if (relativePath.startsWith("gfx") == false || ProjectPathUtils.isTexture(file) == false) return;
 
 		String pathWithoutExt = file.pathWithoutExtension();
 

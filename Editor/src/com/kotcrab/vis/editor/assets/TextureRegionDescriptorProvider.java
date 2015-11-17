@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 public class TextureRegionDescriptorProvider implements AssetDescriptorProvider<TextureRegionAsset> {
 	@Override
 	public TextureRegionAsset provide (FileHandle file, String relativePath) {
-		if (ProjectPathUtils.isTexture(relativePath, file.extension())) return new TextureRegionAsset(relativePath);
+		if (ProjectPathUtils.isTexture(file)) return new TextureRegionAsset(relativePath);
 
 		return null;
 	}
