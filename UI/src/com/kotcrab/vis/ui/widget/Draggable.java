@@ -169,7 +169,7 @@ public class Draggable extends InputListener {
 	@Override
 	public boolean touchDown (final InputEvent event, final float x, final float y, final int pointer, final int button) {
 		final Actor actor = event.getListenerActor();
-		if (actor instanceof Disableable && ((Disableable)actor).isDisabled()) {
+		if (actor == null || actor.getStage() == null || actor instanceof Disableable && ((Disableable)actor).isDisabled()) {
 			return false;
 		}
 		if (listener == null || listener.onStart(actor, event.getStageX(), event.getStageY())) {
