@@ -18,17 +18,24 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.event.ProjectMenuBarEvent;
 import com.kotcrab.vis.editor.event.ProjectMenuBarEventType;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
+import com.kotcrab.vis.editor.module.editor.DisableableDialogsModule;
+import com.kotcrab.vis.editor.module.editor.DisableableDialogsModule.DefaultDialogOption;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.InputModule;
 import com.kotcrab.vis.editor.plugin.ExporterPlugin;
 import com.kotcrab.vis.editor.util.scene2d.ModalInputListener;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialog;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -36,8 +43,11 @@ import java.util.UUID;
  */
 @EventBusSubscriber
 public class ExportersManagerModule extends ProjectModule {
+	private Stage stage;
+
 	private InputModule inputModule;
 	private ExtensionStorageModule extensionStorage;
+	private DisableableDialogsModule disableableDialogs;
 
 	private ExportSettingsModule exportSettings;
 
@@ -48,7 +58,16 @@ public class ExportersManagerModule extends ProjectModule {
 	@Subscribe
 	public void handleProjectMenuBarEvent (ProjectMenuBarEvent event) {
 		if (event.type == ProjectMenuBarEventType.EXPORT) {
-			export(false);
+			Optional<OptionDialog> dialog = disableableDialogs.showOptionDialog(DisableableDialogsModule.DIALOG_PROJECT_EXPORT, DefaultDialogOption.YES, stage, "Export",
+					String.format("Project will be exported to directory: %s.\nAll current contents of this folder will be removed.", project.getAssetOutputDirectory()),
+					OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+						@Override
+						public void yes () {
+							export(false);
+						}
+					});
+
+			dialog.ifPresent(optDialog -> optDialog.setYesButtonText("Export"));
 		}
 	}
 

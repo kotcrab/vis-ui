@@ -17,9 +17,9 @@
 package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.Layout;
 
 /**
  * Module controlling UI debug mode which can be enabled by pressing F12 key.
@@ -36,6 +36,16 @@ public class UIDebugControllerModule extends EditorModule {
 	private InputListener inputListener = new InputListener() {
 		@Override
 		public boolean keyDown (InputEvent event, int keycode) {
+			if (keycode == Keys.F11) {
+				for (Actor actor : stage.getRoot().getChildren()) {
+					if (actor instanceof WidgetGroup) {
+						invalidateRecursively((WidgetGroup) actor);
+					}
+				}
+
+				statusBar.setText("Invalidated UI layout");
+			}
+
 			if (keycode == Keys.F12) {
 				debugEnabled = !debugEnabled;
 				stage.setDebugAll(debugEnabled);
@@ -51,6 +61,17 @@ public class UIDebugControllerModule extends EditorModule {
 			return false;
 		}
 	};
+
+	private void invalidateRecursively (WidgetGroup group) {
+		group.invalidate();
+
+		for (Actor actor : group.getChildren()) {
+			if (actor instanceof WidgetGroup)
+				invalidateRecursively((WidgetGroup) actor);
+			else if (actor instanceof Layout)
+				((Layout) actor).invalidate();
+		}
+	}
 
 	@Override
 	public void init () {

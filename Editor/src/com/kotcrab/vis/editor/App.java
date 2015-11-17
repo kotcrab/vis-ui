@@ -75,15 +75,6 @@ public class App {
 	 */
 	public static final String APP_FOLDER_PATH = USER_HOME_PATH + ".viseditor" + File.separator;
 
-	/**
-	 * VisEditor cache folder path, stores application-wide cache data (different than project cache data, that is stored inside project). This SHOULD NOT be used by plugins
-	 * see {@link PluginFilesAccessModule}
-	 */
-	public static final String CACHE_FOLDER_PATH = APP_FOLDER_PATH + "cache" + File.separator;
-
-	/** VisEditor metadata folder path. This SHOULD NOT be used by plugins see {@link PluginFilesAccessModule} */
-	public static final String METADATA_FOLDER_PATH = APP_FOLDER_PATH + "metadata" + File.separator;
-
 	/** VisEditor main {@link VisEventBus} */
 	public static final VisEventBus eventBus = new VisEventBus((exception, context) -> {
 		Log.fatal("Exception when dispatching event: " + context.getSubscriber() + " to " + context.getSubscriberMethod());

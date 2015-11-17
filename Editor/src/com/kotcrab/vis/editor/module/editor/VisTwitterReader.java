@@ -26,7 +26,6 @@ import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.KryoException;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.ui.HorizontalFlowGroup;
@@ -56,6 +55,8 @@ import java.time.temporal.ChronoUnit;
 public class VisTwitterReader extends EditorModule {
 	private static final String URL = "https://twitter.com/viseditor";
 
+	private AppFileAccessModule fileAccess;
+
 	private VisTable containerTable;
 
 	private Cell statusesCell;
@@ -71,7 +72,7 @@ public class VisTwitterReader extends EditorModule {
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 		kryo.register(Array.class, new ArraySerializer());
 
-		FileHandle apiCache = Gdx.files.absolute(App.CACHE_FOLDER_PATH).child("twitter");
+		FileHandle apiCache = fileAccess.getCacheFolder().child("twitter");
 		apiCache.mkdirs();
 		twitterCacheFile = apiCache.child("viseditor.data");
 
