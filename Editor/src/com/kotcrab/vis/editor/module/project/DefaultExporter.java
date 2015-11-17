@@ -213,7 +213,11 @@ public class DefaultExporter implements ExporterPlugin {
 
 		private void copyAssets () {
 			for (FileHandle file : visAssetsDir.list()) {
-				if (file.isDirectory() == false) continue;
+				if (file.isDirectory() == false) {
+					file.copyTo(outAssetsDir.child(file.name()));
+					continue;
+				}
+
 				if (file.list().length == 0) continue;
 				if (file.name().equals("gfx") || file.name().equals("scene")) continue;
 
