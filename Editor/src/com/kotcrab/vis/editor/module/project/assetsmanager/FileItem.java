@@ -81,7 +81,7 @@ public class FileItem extends Table {
 		String relativePath = fileAccess.relativizeToAssetsFolder(file);
 
 		boolean texture = ProjectPathUtils.isTexture(relativePath, ext);
-		boolean atlas = ProjectPathUtils.isTextureAtlas(file, relativePath);
+		boolean atlas = ProjectPathUtils.isTextureAtlas(file);
 
 		if (ProjectPathUtils.isTrueTypeFont(file)) {
 			createDefaultView(AssetFileType.TTF_FONT, "TTF Font", true);
@@ -101,7 +101,7 @@ public class FileItem extends Table {
 		if (texture || atlas) {
 			type = texture ? AssetFileType.TEXTURE : AssetFileType.TEXTURE_ATLAS;
 
-			name = new VisLabel(file.nameWithoutExtension(), "small");
+			name = new VisLabel(texture ? file.nameWithoutExtension() : file.name(), "small");
 			TextureRegion region;
 
 			if (atlas)

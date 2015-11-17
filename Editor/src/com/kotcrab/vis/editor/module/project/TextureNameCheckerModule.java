@@ -39,10 +39,7 @@ public class TextureNameCheckerModule extends ProjectModule implements WatchList
 	public void init () {
 		assetsWatcher.addListener(this);
 
-		FileUtils.streamRecursively(fileAccess.getGfxFolder(), fileHandle -> {
-			fileCreated(fileHandle);
-			return warningShown;
-		});
+		FileUtils.streamRecursively(fileAccess.getGfxFolder(), this::fileCreated);
 	}
 
 	@Override

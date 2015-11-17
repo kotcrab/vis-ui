@@ -28,9 +28,8 @@ public class ProjectPathUtils {
 		return relativePath.startsWith("gfx") && (ext.equals("jpeg") || ext.equals("jpg") || ext.equals("png"));
 	}
 
-	public static boolean isTextureAtlas (FileHandle file, String relativePath) {
-		return relativePath.startsWith("atlas")
-				&& file.extension().equals("atlas")
+	public static boolean isTextureAtlas (FileHandle file) {
+		return file.extension().equals("atlas")
 				&& (FileUtils.siblingExists(file, "png") || FileUtils.siblingExists(file, "jpg") || FileUtils
 				.siblingExists(file, "jpeg"));
 	}

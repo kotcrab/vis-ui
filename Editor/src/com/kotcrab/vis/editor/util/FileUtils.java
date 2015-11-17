@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.Consumer;
 
 /**
  * File related utils.
@@ -47,7 +48,7 @@ public class FileUtils {
 	private static void list (Array<FileHandle> files, FileHandle current) {
 		for (FileHandle file : current.list()) {
 			if (file.isDirectory())
-				list(files, current);
+				list(files, file);
 			else
 				files.add(file);
 		}
@@ -130,8 +131,8 @@ public class FileUtils {
 		return Gdx.files.absolute(file.getAbsolutePath());
 	}
 
-	public static void streamRecursively (FileHandle folder, CancelableConsumer<FileHandle> consumer) {
-		if (folder.isDirectory() == false) throw new IllegalStateException("File must be directory!");
+	public static void streamRecursively (FileHandle folder, Consumer<FileHandle> consumer) {
+		if (folder.isDirectory() == false) throw new IllegalStateException("Folder must be directory!");
 
 		for (FileHandle file : folder.list()) {
 			if (file.isDirectory())

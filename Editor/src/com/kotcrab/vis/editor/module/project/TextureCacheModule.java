@@ -65,6 +65,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	private FileHandle cacheFile;
 	private FileHandle atlasesFolder;
+	private FileHandle assetsFolder;
 	private TextureAtlas cache;
 
 	private ObjectMap<String, TextureAtlas> atlases = new ObjectMap<>();
@@ -93,6 +94,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 		gfxPath = fileAccess.getAssetsFolder().child("gfx").path();
 		atlasesFolder = fileAccess.getAssetsFolder().child("atlas");
+		assetsFolder = fileAccess.getAssetsFolder();
 
 		watcher.addListener(this);
 
@@ -103,13 +105,10 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		}
 
 		try {
-			if (atlasesFolder.exists()) {
-				FileHandle[] files = atlasesFolder.list();
-
-				for (FileHandle file : files)
-					if (file.extension().equals("atlas"))
-						updateAtlas(file);
-			}
+			FileUtils.streamRecursively(assetsFolder, file -> {
+				if (file.extension().equals("atlas"))
+					updateAtlas(file);
+			});
 		} catch (Exception e) {
 			Log.error("Error encountered while loading one of atlases");
 			Log.exception(e);
@@ -204,7 +203,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 			}, 0.5f);
 		}
 
-		if (ProjectPathUtils.isTextureAtlas(file, relativePath)) {
+		if (ProjectPathUtils.isTextureAtlas(file)) {
 			atlasWaitTimer.clear();
 			cacheWaitTimer.scheduleTask(new Task() {
 				@Override

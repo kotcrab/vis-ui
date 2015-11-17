@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 public class AtlasRegionDescriptorProvider implements AssetDescriptorProvider<AtlasRegionAsset> {
 	@Override
 	public AtlasRegionAsset provide (FileHandle file, String relativePath) {
-		if (ProjectPathUtils.isTextureAtlas(file, relativePath))
+		if (ProjectPathUtils.isTextureAtlas(file))
 			return new AtlasRegionAsset(relativePath, null); //usage analyzer ignores region name
 
 		return null;
