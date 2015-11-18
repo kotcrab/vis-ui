@@ -58,7 +58,6 @@ import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
  * {@link #getTabsPane()} method to get a reference of {@link DragPane}, and invoke {@link DragPane#setDraggable(Draggable)} with
  * null argument - this will clear draggable listener from all tabs' buttons; naturally, setting this value to non-null
  * {@link Draggable} listener will also add it to all buttons.
- *
  * @author Kotcrab
  * @author MJ
  * @since 0.7.0
@@ -116,6 +115,9 @@ public class TabbedPane {
 				mainTable.row();
 				mainTable.add(new Image(style.bottomBar)).expand().fill().height(style.bottomBar.getMinHeight());
 			}
+		} else {
+			//make sure that tab will fill available space even when there is not bottomBar image set
+			mainTable.add().expand().fill();
 		}
 	}
 
@@ -139,7 +141,7 @@ public class TabbedPane {
 
 	/**
 	 * @param allowTabDeselect if true user may deselect tab, meaning that there won't be any active tab. Allows to create similar
-	 *           behaviour like in Intellij IDEA bottom quick access bar
+	 * behaviour like in Intellij IDEA bottom quick access bar
 	 */
 	public void setAllowTabDeselect (boolean allowTabDeselect) {
 		this.allowTabDeselect = allowTabDeselect;
@@ -280,18 +282,18 @@ public class TabbedPane {
 
 		if (tab.isDirty() && mainTable.getStage() != null) {
 			DialogUtils.showOptionDialog(mainTable.getStage(), Text.UNSAVED_DIALOG_TITLE.get(), Text.UNSAVED_DIALOG_TEXT.get(),
-				OptionDialogType.YES_NO_CANCEL, new OptionDialogAdapter() {
-					@Override
-					public void yes () {
-						tab.save();
-						removeTab(tab);
-					}
+					OptionDialogType.YES_NO_CANCEL, new OptionDialogAdapter() {
+						@Override
+						public void yes () {
+							tab.save();
+							removeTab(tab);
+						}
 
-					@Override
-					public void no () {
-						removeTab(tab);
-					}
-				});
+						@Override
+						public void no () {
+							removeTab(tab);
+						}
+					});
 		} else {
 			return removeTab(tab);
 		}
@@ -452,8 +454,7 @@ public class TabbedPane {
 			this.buttonStyle = buttonStyle;
 		}
 
-		public TabbedPaneStyle (Drawable bottomBar, Drawable background, VisTextButtonStyle buttonStyle, boolean vertical,
-			boolean draggable) {
+		public TabbedPaneStyle (Drawable bottomBar, Drawable background, VisTextButtonStyle buttonStyle, boolean vertical, boolean draggable) {
 			this.bottomBar = bottomBar;
 			this.background = background;
 			this.buttonStyle = buttonStyle;
@@ -493,7 +494,7 @@ public class TabbedPane {
 
 			addListeners();
 
-			buttonStyle = new VisTextButtonStyle((VisTextButtonStyle)button.getStyle());
+			buttonStyle = new VisTextButtonStyle((VisTextButtonStyle) button.getStyle());
 			button.setStyle(buttonStyle);
 			closeButtonStyle = closeButton.getStyle();
 			up = buttonStyle.up;
@@ -612,7 +613,7 @@ public class TabbedPane {
 
 		}
 
-		/** Closes tab, does nothing if Tab is not closeable by User */
+		/** Closes tab, does nothing if Tab is not closeable by user */
 		private void closeTabAsUser () {
 			if (tab.isCloseableByUser()) {
 				TabbedPane.this.remove(tab, false);

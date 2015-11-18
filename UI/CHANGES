@@ -7,6 +7,7 @@
 -API Addition: GridGroup#getItemSize(int width, int height)
 -API Addition: TabbedPane#disableTab(Tab tab, boolean disable), TabbedPane#isTabDisabled(Tab)
 -API Addition: IntDigitsOnlyFilter
+-API Addition: DragPane
 -NumberSelector:
  -API Addition: setMaxLength(int), getMaxLength()
  -Fixed entering negative integer values
@@ -17,6 +18,7 @@
 -ColorPickerStyle now extends WindowStyle
 -Fixed GridGroup too high when total items width in single row was equals to group width
 -GridGroup now supports setting item width and height separately
+-TabbedPane tabs order can be changed by mouse dragging
 
 [0.9.2] [LibGDX 1.7.1]
 -API Change: VisValidatableTextField#getValidator() removed, use getValidators() instead
