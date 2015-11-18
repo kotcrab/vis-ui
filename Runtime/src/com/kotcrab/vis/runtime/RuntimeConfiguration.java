@@ -19,8 +19,10 @@ package com.kotcrab.vis.runtime;
 import com.artemis.Entity;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.GroupComponent;
+import com.kotcrab.vis.runtime.component.PhysicsComponent;
 import com.kotcrab.vis.runtime.system.VisGroupManager;
 import com.kotcrab.vis.runtime.system.physics.PhysicsSpriteUpdateSystem;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**
  * Holds runtime configurations values
@@ -53,4 +55,11 @@ public class RuntimeConfiguration {
 	 * effect if physics is disabled.
 	 */
 	public boolean useBox2dSpriteUpdateSystem = true;
+
+	/**
+	 * If true body stored in {@link PhysicsComponent} will be automatically disposed when entity was removed from entity
+	 * engine (for example after calling {@link EntityEngine#deleteEntity(Entity)} or {@link Entity#deleteFromWorld()}).
+	 * Note that actual body will be disposed during next {@link EntityEngine} update.
+	 */
+	public boolean autoDisposeBox2dBodyOnEntityRemove = true;
 }

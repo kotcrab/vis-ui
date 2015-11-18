@@ -22,6 +22,7 @@ import com.artemis.Manager;
 import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.component.*;
 
 /** @author Kotcrab */
@@ -29,12 +30,18 @@ import com.kotcrab.vis.runtime.component.*;
 public class PhysicsBodyManager extends Manager {
 	private PhysicsSystem physicsSystem;
 
-	private ComponentMapper<PhysicsPropertiesComponent> physicsCm;
+	private ComponentMapper<PhysicsPropertiesComponent> physicsPropCm;
+	private ComponentMapper<PhysicsComponent> physicsCm;
 	private ComponentMapper<PolygonComponent> polygonCm;
 	private ComponentMapper<SpriteComponent> spriteCm;
 	private ComponentMapper<PhysicsSpriteComponent> physicsSpriteCm;
 
 	private World world;
+	private RuntimeConfiguration runtimeConfig;
+
+	public PhysicsBodyManager (RuntimeConfiguration runtimeConfig) {
+		this.runtimeConfig = runtimeConfig;
+	}
 
 	@Override
 	protected void initialize () {
@@ -44,10 +51,10 @@ public class PhysicsBodyManager extends Manager {
 	@Override
 	public void added (int entityId) {
 		Entity entity = super.world.getEntity(entityId);
-		if (physicsCm.has(entityId) == false || polygonCm.has(entityId) == false || spriteCm.has(entityId) == false)
+		if (physicsPropCm.has(entityId) == false || polygonCm.has(entityId) == false || spriteCm.has(entityId) == false)
 			return;
 
-		PhysicsPropertiesComponent physicsProperties = physicsCm.get(entityId);
+		PhysicsPropertiesComponent physicsProperties = physicsPropCm.get(entityId);
 		PolygonComponent polygon = polygonCm.get(entityId);
 		SpriteComponent sprite = spriteCm.get(entityId);
 
@@ -95,5 +102,14 @@ public class PhysicsBodyManager extends Manager {
 		entity.edit()
 				.add(new PhysicsComponent(body))
 				.add(new PhysicsSpriteComponent(sprite.getRotation()));
+	}
+
+	@Override
+	public void deleted (int entityId) {
+		if (runtimeConfig.autoDisposeBox2dBodyOnEntityRemove == false || physicsCm.has(entityId) == false) return;
+		PhysicsComponent physics = physicsCm.get(entityId);
+		if (physics.body == null) return;
+		world.destroyBody(physics.body);
+		physics.body = null;
 	}
 }

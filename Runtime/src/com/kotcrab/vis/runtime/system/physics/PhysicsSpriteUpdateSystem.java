@@ -41,6 +41,7 @@ public class PhysicsSpriteUpdateSystem extends EntityProcessingSystem {
 	@Override
 	protected void process (Entity e) {
 		PhysicsComponent physics = physicsCm.get(e);
+		if (physics.body == null) return;
 		SpriteComponent sprite = spriteCm.get(e);
 		PhysicsSpriteComponent physicsSprite = physicsSpriteCm.get(e);
 
