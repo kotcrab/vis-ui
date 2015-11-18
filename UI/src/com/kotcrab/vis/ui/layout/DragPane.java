@@ -17,8 +17,10 @@
 package com.kotcrab.vis.ui.layout;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
@@ -212,14 +214,48 @@ public class DragPane extends Container<WidgetGroup> {
 		return actor.getParent() == getActor();
 	}
 
+	/**
+	 * Removes an actor from this group. If the actor will not be used again and has actions, they should be
+	 * {@link Actor#clearActions() cleared} so the actions will be returned to their
+	 * {@link Action#setPool(com.badlogic.gdx.utils.Pool) pool}, if any. This is not done automatically.
+	 * <p>
+	 * Note that the direct parent of {@link DragPane}'s children is the internal pane's group accessible through
+	 * {@link #getGroup()} - and since this removal method is overridden and extended, pane's children should be deleted with
+	 * {@code dragPane.removeActor(child)} rather than {@link Actor#remove()} method.
+	 *
+	 * @param actor will be removed, if present in the internal {@link WidgetGroup}.
+	 * @return true if the actor was removed from this group.
+	 */
 	@Override
 	public boolean removeActor (final Actor actor) {
-		return getActor().removeActor(actor);
+		return removeActor(actor, true);
 	}
 
+	/**
+	 * Removes an actor from this group. If the actor will not be used again and has actions, they should be
+	 * {@link Actor#clearActions() cleared} so the actions will be returned to their
+	 * {@link Action#setPool(com.badlogic.gdx.utils.Pool) pool}, if any. This is not done automatically.
+	 * <p>
+	 * Note that the direct parent of {@link DragPane}'s children is the internal pane's group accessible through
+	 * {@link #getGroup()} - and since this removal method is overridden and extended, pane's children should be deleted with
+	 * {@code dragPane.removeActor(child, true)} rather than {@link Actor#remove()} method.
+	 *
+	 * @param unfocus if true, {@link Stage#unfocus(Actor)} is called.
+	 * @param actor will be removed, if present in the internal {@link WidgetGroup}.
+	 * @return true if the actor was removed from this group.
+	 */
 	@Override
 	public boolean removeActor (final Actor actor, final boolean unfocus) {
-		return getActor().removeActor(actor, unfocus);
+		if (getActor().getChildren().contains(actor, true)) {
+			// Stage input focus causes problems, as touchUp is called in Draggable. Reproducing input unfocus after stage removed.
+			Stage stage = actor.getStage();
+			getActor().removeActor(actor, false); // Stage is cleared.
+			if (unfocus && stage != null) {
+				stage.unfocus(actor);
+			}
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -278,7 +314,6 @@ public class DragPane extends Container<WidgetGroup> {
 	/** @param listener manages children appended to the drag pane. */
 	public void setListener (final DragPaneListener listener) {
 		this.listener = listener;
-
 	}
 
 	/**
@@ -336,6 +371,9 @@ public class DragPane extends Container<WidgetGroup> {
 
 		@Override
 		public boolean onEnd (final Actor actor, final float stageX, final float stageY) {
+			if (actor == null || actor.getStage() == null) {
+				return CANCEL;
+			}
 			final Actor overActor = actor.getStage().hit(stageX, stageY, true);
 			if (overActor == null || overActor == actor || overActor.isAscendantOf(actor)) {
 				return CANCEL;
