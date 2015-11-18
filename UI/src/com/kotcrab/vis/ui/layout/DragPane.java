@@ -29,7 +29,8 @@ import com.badlogic.gdx.utils.SnapshotArray;
 import com.kotcrab.vis.ui.widget.Draggable;
 import com.kotcrab.vis.ui.widget.Draggable.DragListener;
 
-/** Stores actors in an internally managed {@link WidgetGroup}. Allows actors with specialized {@link Draggable} listener attached
+/**
+ * Stores actors in an internally managed {@link WidgetGroup}. Allows actors with specialized {@link Draggable} listener attached
  * to be dropped and added into its group's content.
  *
  * <p>
@@ -41,7 +42,8 @@ import com.kotcrab.vis.ui.widget.Draggable.DragListener;
  * @author MJ
  * @see #setDraggable(Draggable)
  * @see #setListener(DragPaneListener)
- * @since 0.9.3 */
+ * @since 0.9.3
+ */
 public class DragPane extends Container<WidgetGroup> {
 	private Draggable draggable;
 	private DragPaneListener listener;
@@ -56,12 +58,14 @@ public class DragPane extends Container<WidgetGroup> {
 		this(vertical ? new VerticalGroup() : new HorizontalGroup());
 	}
 
-	/** @param group must append its actors through standard {@link WidgetGroup#addActor(Actor)} method. Must support
+	/**
+	 * @param group must append its actors through standard {@link WidgetGroup#addActor(Actor)} method. Must support
 	 *           {@link WidgetGroup#addActorAfter(Actor, Actor)} and {@link WidgetGroup#addActorBefore(Actor, Actor)} methods. Note
 	 *           that {@link com.badlogic.gdx.scenes.scene2d.ui.Table} does not meet these requirements.
 	 * @see VerticalGroup
 	 * @see HorizontalGroup
-	 * @see GridGroup */
+	 * @see GridGroup
+	 */
 	public DragPane (final WidgetGroup group) {
 		if (group == null) {
 			throw new IllegalArgumentException("Group cannot be null.");
@@ -70,20 +74,26 @@ public class DragPane extends Container<WidgetGroup> {
 		setTouchable(Touchable.enabled);
 	}
 
-	/** @return true if children are displayed vertically in a {@link VerticalGroup}.
-	 * @see #getVerticalGroup() */
+	/**
+	 * @return true if children are displayed vertically in a {@link VerticalGroup}.
+	 * @see #getVerticalGroup()
+	 */
 	public boolean isVertical () {
 		return getActor() instanceof VerticalGroup;
 	}
 
-	/** @return true if children are displayed horizontally in a {@link HorizontalGroup}.
-	 * @see #getHorizontalGroup() */
+	/**
+	 * @return true if children are displayed horizontally in a {@link HorizontalGroup}.
+	 * @see #getHorizontalGroup()
+	 */
 	public boolean isHorizontal () {
 		return getActor() instanceof HorizontalGroup;
 	}
 
-	/** @return true if children are displayed as a grid in a {@link GridGroup}.
-	 * @see #getGridGroup() */
+	/**
+	 * @return true if children are displayed as a grid in a {@link GridGroup}.
+	 * @see #getGridGroup()
+	 */
 	public boolean isGrid () {
 		return getActor() instanceof GridGroup;
 	}
@@ -117,23 +127,29 @@ public class DragPane extends Container<WidgetGroup> {
 		}
 	}
 
-	/** @return internally managed group of actors.
+	/**
+	 * @return internally managed group of actors.
 	 * @throws ClassCastException if drag pane is not horizontal.
-	 * @see #isHorizontal() */
+	 * @see #isHorizontal()
+	 */
 	public HorizontalGroup getHorizontalGroup () {
 		return (HorizontalGroup)getActor();
 	}
 
-	/** @return internally managed group of actors.
+	/**
+	 * @return internally managed group of actors.
 	 * @throws ClassCastException if drag pane is not vertical.
-	 * @see #isVertical() */
+	 * @see #isVertical()
+	 */
 	public VerticalGroup getVerticalGroup () {
 		return (VerticalGroup)getActor();
 	}
 
-	/** @return internally managed group of actors.
+	/**
+	 * @return internally managed group of actors.
 	 * @throws ClassCastException if drag pane is not a grid.
-	 * @see #isGrid() */
+	 * @see #isGrid()
+	 */
 	public GridGroup getGridGroup () {
 		return (GridGroup)getActor();
 	}
@@ -188,8 +204,10 @@ public class DragPane extends Container<WidgetGroup> {
 		}
 	}
 
-	/** @param actor might be in the drag pane.
-	 * @return true if actor is added to the pane's internal group. */
+	/**
+	 * @param actor might be in the drag pane.
+	 * @return true if actor is added to the pane's internal group.
+	 */
 	public boolean contains (final Actor actor) {
 		return actor.getParent() == getActor();
 	}
@@ -263,16 +281,20 @@ public class DragPane extends Container<WidgetGroup> {
 
 	}
 
-	/** @param actor is dragged over the pane.
-	 * @return true if actor can be added to the pane. */
+	/**
+	 * @param actor is dragged over the pane.
+	 * @return true if actor can be added to the pane.
+	 */
 	protected boolean accept (final Actor actor) {
 		return listener == null || listener.accept(this, actor);
 	}
 
-	/** Default {@link DragListener} implementation. Implements {@link DragPane} behavior.
+	/**
+	 * Default {@link DragListener} implementation. Implements {@link DragPane} behavior.
 	 *
 	 * @author MJ
-	 * @since 0.9.3 */
+	 * @since 0.9.3
+	 */
 	public static class DefaultDragListener implements DragListener {
 		private static final Vector2 DRAG_POSITION = new Vector2();
 		private Policy policy;
@@ -282,16 +304,20 @@ public class DragPane extends Container<WidgetGroup> {
 			this(DefaultPolicy.ALLOW_REMOVAL);
 		}
 
-		/** @param policy determines behavior of dragged actors. Allows to prohibit actors from being added to a {@link DragPane}.
+		/**
+		 * @param policy determines behavior of dragged actors. Allows to prohibit actors from being added to a {@link DragPane}.
 		 *           Cannot be null.
-		 * @see #setPolicy(Policy) */
+		 * @see #setPolicy(Policy)
+		 */
 		public DefaultDragListener (final Policy policy) {
 			setPolicy(policy);
 		}
 
-		/** @param policy determines behavior of dragged actors. Allows to prohibit actors from being added to a {@link DragPane}.
+		/**
+		 * @param policy determines behavior of dragged actors. Allows to prohibit actors from being added to a {@link DragPane}.
 		 *           Cannot be null.
-		 * @see DefaultPolicy */
+		 * @see DefaultPolicy
+		 */
 		public void setPolicy (final Policy policy) {
 			if (policy == null) {
 				throw new IllegalArgumentException("Policy cannot be null.");
@@ -311,7 +337,7 @@ public class DragPane extends Container<WidgetGroup> {
 		@Override
 		public boolean onEnd (final Actor actor, final float stageX, final float stageY) {
 			final Actor overActor = actor.getStage().hit(stageX, stageY, true);
-			if (overActor == null || overActor == actor) {
+			if (overActor == null || overActor == actor || overActor.isAscendantOf(actor)) {
 				return CANCEL;
 			}
 			if (overActor instanceof DragPane) {
@@ -331,9 +357,11 @@ public class DragPane extends Container<WidgetGroup> {
 			return CANCEL;
 		}
 
-		/** @param actor has just been dragged.
+		/**
+		 * @param actor has just been dragged.
 		 * @param dragPane is under the dragged actor (if exists). Can be null.
-		 * @return true if the actor can be added to the dragPane. */
+		 * @return true if the actor can be added to the dragPane.
+		 */
 		protected boolean accept (final Actor actor, final DragPane dragPane) {
 			return dragPane != null && dragPane.accept(actor) && policy.accept(dragPane, actor);
 		}
@@ -350,9 +378,11 @@ public class DragPane extends Container<WidgetGroup> {
 			}
 		}
 
-		/** @param actor is being dragged.
+		/**
+		 * @param actor is being dragged.
 		 * @param dragPane is under the actor. Stores a {@link HorizontalGroup}.
-		 * @param directPaneChild actor under the cursor. */
+		 * @param directPaneChild actor under the cursor.
+		 */
 		protected void addToHorizontalGroup (final Actor actor, final DragPane dragPane, final Actor directPaneChild) {
 			final Array<Actor> children = dragPane.getChildren();
 			final int indexOfDraggedActor = children.indexOf(actor, true);
@@ -370,9 +400,11 @@ public class DragPane extends Container<WidgetGroup> {
 			}
 		}
 
-		/** @param actor is being dragged.
+		/**
+		 * @param actor is being dragged.
 		 * @param dragPane is under the actor. Stores a {@link VerticalGroup}.
-		 * @param directPaneChild actor under the cursor. */
+		 * @param directPaneChild actor under the cursor.
+		 */
 		protected void addToVerticalGroup (final Actor actor, final DragPane dragPane, final Actor directPaneChild) {
 			final Array<Actor> children = dragPane.getChildren();
 			final int indexOfDraggedActor = children.indexOf(actor, true);
@@ -390,9 +422,11 @@ public class DragPane extends Container<WidgetGroup> {
 			}
 		}
 
-		/** @param actor is being dragged.
+		/**
+		 * @param actor is being dragged.
 		 * @param dragPane is under the actor. Stores a {@link GridGroup} or unknown group.
-		 * @param directPaneChild actor under the cursor. */
+		 * @param directPaneChild actor under the cursor.
+		 */
 		protected void addToOtherGroup (final Actor actor, final DragPane dragPane, final Actor directPaneChild) {
 			final Array<Actor> children = dragPane.getChildren();
 			final int indexOfDirectChild = children.indexOf(directPaneChild, true);
@@ -421,9 +455,11 @@ public class DragPane extends Container<WidgetGroup> {
 			}
 		}
 
-		/** @param actor if in the drag pane, but does not have to be added directly.
+		/**
+		 * @param actor if in the drag pane, but does not have to be added directly.
 		 * @param dragPane contains the actor.
-		 * @return passed actor or the parent of the actor added directly to the pane. */
+		 * @return passed actor or the parent of the actor added directly to the pane.
+		 */
 		protected Actor getActorInDragPane (Actor actor, final DragPane dragPane) {
 			while (actor != dragPane && actor != null) {
 				if (dragPane.contains(actor)) {
@@ -434,8 +470,10 @@ public class DragPane extends Container<WidgetGroup> {
 			return null;
 		}
 
-		/** @param fromActor might be in a drag pane.
-		 * @return drag pane parent or null. */
+		/**
+		 * @param fromActor might be in a drag pane.
+		 * @return drag pane parent or null.
+		 */
 		protected DragPane getDragPane (Actor fromActor) {
 			while (fromActor != null) {
 				if (fromActor instanceof DragPane) {
@@ -446,21 +484,27 @@ public class DragPane extends Container<WidgetGroup> {
 			return null;
 		}
 
-		/** Determines behavior of {@link DefaultDragListener}.
+		/**
+		 * Determines behavior of {@link DefaultDragListener}.
 		 *
 		 * @author MJ
-		 * @since 0.9.3 */
+		 * @since 0.9.3
+		 */
 		public static interface Policy {
-			/** @param dragPane is under the actor.
+			/**
+			 * @param dragPane is under the actor.
 			 * @param actor was dragged into the drag pane.
-			 * @return true if the actor can be added to the {@link DragPane} */
+			 * @return true if the actor can be added to the {@link DragPane}
+			 */
 			boolean accept (DragPane dragPane, Actor actor);
 		}
 
-		/** Contains basic {@link DefaultDragListener} behaviors, allowing to modify the listener without extending it.
+		/**
+		 * Contains basic {@link DefaultDragListener} behaviors, allowing to modify the listener without extending it.
 		 *
 		 * @author MJ
-		 * @since 0.9.3 */
+		 * @since 0.9.3
+		 */
 		public static enum DefaultPolicy implements Policy {
 			/** Allows children to be moved to different {@link DragPane}s. */
 			ALLOW_REMOVAL {
@@ -479,24 +523,30 @@ public class DragPane extends Container<WidgetGroup> {
 		}
 	}
 
-	/** Allows to select children added to the group.
+	/**
+	 * Allows to select children added to the group.
 	 *
 	 * @author MJ
-	 * @since 0.9.3 */
+	 * @since 0.9.3
+	 */
 	public static interface DragPaneListener {
 		/** Return in {@link #accept(DragPane, Actor)} method for code clarity. */
 		boolean ACCEPT = true, REFUSE = false;
 
-		/** @param dragPane has this listener attached.
+		/**
+		 * @param dragPane has this listener attached.
 		 * @param actor if being dragged over the {@link DragPane}.
-		 * @return true if actor can be added to the drag pane. False if it cannot. */
+		 * @return true if actor can be added to the drag pane. False if it cannot.
+		 */
 		boolean accept (DragPane dragPane, Actor actor);
 
-		/** When actors are dragged into the {@link DragPane}, they are accepted and added into the pane only if their direct parent
+		/**
+		 * When actors are dragged into the {@link DragPane}, they are accepted and added into the pane only if their direct parent
 		 * is the pane itself.
 		 *
 		 * @author MJ
-		 * @since 0.9.3 */
+		 * @since 0.9.3
+		 */
 		public static class AcceptOwnChildren implements DragPaneListener {
 			@Override
 			public boolean accept (final DragPane dragPane, final Actor actor) {
@@ -504,15 +554,19 @@ public class DragPane extends Container<WidgetGroup> {
 			}
 		}
 
-		/** Limits {@link DragPane} children amount to a certain number.
+		/**
+		 * Limits {@link DragPane} children amount to a certain number.
 		 *
 		 * @author MJ
-		 * @since 0.9.3 */
+		 * @since 0.9.3
+		 */
 		public static class LimitChildren implements DragPaneListener {
 			private final int max;
 
-			/** @param max if {@link DragPane}'s children amount equals (or is greater than) this value, other children will not be
-			 *           accepted. */
+			/**
+			 * @param max if {@link DragPane}'s children amount equals (or is greater than) this value, other children will not be
+			 *           accepted.
+			 */
 			public LimitChildren (final int max) {
 				this.max = max;
 			}
