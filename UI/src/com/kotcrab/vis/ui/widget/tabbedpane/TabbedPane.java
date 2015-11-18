@@ -307,8 +307,7 @@ public class TabbedPane {
 
 		if (success) {
 			TabButtonTable buttonTable = tabsButtonMap.get(tab);
-			buttonTable.remove();
-			purge(tabsPane.getChildren(), buttonTable);
+			tabsPane.removeActor(buttonTable, true);
 			tabsPane.invalidateHierarchy();
 			tabsButtonMap.remove(tab);
 
@@ -332,19 +331,6 @@ public class TabbedPane {
 		}
 
 		return success;
-	}
-
-	// This is a weird error. Sometimes SnapshotArray#removeValue does not actually remove the element - instead, it moves it into
-	// the first array position. Try printing tabsPane.getChildren() in #removeTab method before and after buttonTable.remove().
-	private static void purge (Array<Actor> children, Object actor) {
-		Object[] array = children.items;
-		for (int index = 0, length = array.length; index < length; index++) {
-			if (array[index] == actor) {
-				System.arraycopy(array, index + 1, array, index, array.length - index - 1);
-				children.size--;
-				return;
-			}
-		}
 	}
 
 	/** Removes all tabs, ignores if tab is dirty */

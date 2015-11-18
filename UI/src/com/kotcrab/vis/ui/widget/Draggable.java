@@ -221,7 +221,7 @@ public class Draggable extends InputListener {
 	}
 
 	/**
-	 * @param actor might be a {@link Disableable}
+	 * @param actor might be a {@link Disableable}.
 	 * @return true if actor is disabled.
 	 */
 	protected boolean isDisabled (final Actor actor) {
