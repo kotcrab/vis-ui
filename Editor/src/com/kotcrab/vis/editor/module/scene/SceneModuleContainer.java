@@ -114,7 +114,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		if (alreadyInjected) return true;
 
 		//artemis already handles injecting objects inside systems
-		if(target instanceof BaseSystem || target instanceof Manager) return false;
+		if (target instanceof BaseSystem || target instanceof Manager) return false;
 
 		if (BaseSystem.class.isAssignableFrom(type)) {
 			field.setAccessible(true);

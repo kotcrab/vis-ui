@@ -85,7 +85,7 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 			numberFields.put(field, numberInputField);
 		}
 
-		if(reflAnnotation != null)
+		if (reflAnnotation != null)
 			propertyAccessors.put(field, new GetterSetterAccessor(field, reflAnnotation.targetType(), reflAnnotation.getterName(), reflAnnotation.setterName()));
 		else
 			propertyAccessors.put(field, new FieldAccessor(field));

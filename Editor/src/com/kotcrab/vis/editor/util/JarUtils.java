@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.util;
 
 import com.kotcrab.vis.ui.util.OsUtils;
+
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
