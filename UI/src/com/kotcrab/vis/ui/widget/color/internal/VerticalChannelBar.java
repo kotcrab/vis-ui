@@ -14,35 +14,37 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.widget.color;
+package com.kotcrab.vis.ui.widget.color.internal;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.Sizes;
-import com.kotcrab.vis.ui.widget.VisImage;
+import com.kotcrab.vis.ui.widget.color.ColorPicker;
+import com.kotcrab.vis.ui.widget.color.ColorPickerStyle;
 
 /**
- * Vertical channel bar used to display vertical hue bar, not intended to use outside ColorPicker
+ * Vertical channel bar is used to display vertical hue bar
  * @author Kotcrab
  */
-public class VerticalChannelBar extends VisImage {
+public class VerticalChannelBar extends ShaderImage {
 	private ColorPickerStyle style;
 	private Sizes sizes;
 	private int maxValue;
 	private float selectorY;
 	private int value;
 
-	public VerticalChannelBar (ColorPickerStyle style, Sizes sizes, Texture texture, int value, final int maxValue, ChangeListener listener) {
-		super(texture);
+	public VerticalChannelBar (ColorPickerStyle style, Sizes sizes, ShaderProgram shader, Texture whiteTexture, int maxValue, ChangeListener listener) {
+		super(shader, whiteTexture);
 		this.style = style;
 		this.sizes = sizes;
 		this.maxValue = maxValue;
-		setValue(value);
+		setValue(0);
 		addListener(listener);
 
 		addListener(new InputListener() {

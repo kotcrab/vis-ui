@@ -8,6 +8,9 @@
 -API Addition: TabbedPane#disableTab(Tab tab, boolean disable), TabbedPane#isTabDisabled(Tab)
 -API Addition: IntDigitsOnlyFilter
 -API Addition: DragPane
+-ColorPicker:
+ -Rewritten using shaders, huge performance boost, now usable on gwt and low end devices
+ -Internal ColorPicker classes moved to `com.kotcrab.vis.ui.widget.color.internal` package (remember that those classes aren't considered as public api)
 -NumberSelector:
  -API Addition: setMaxLength(int), getMaxLength()
  -Fixed entering negative integer values

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.widget.color;
+package com.kotcrab.vis.ui.widget.color.internal;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -97,8 +97,8 @@ public class ColorInputField extends VisValidatableTextField {
 		setCursorPosition(getMaxLength());
 	}
 
-	interface ColorInputFieldListener {
-		public void changed (int newValue);
+	public interface ColorInputFieldListener {
+		void changed (int newValue);
 	}
 
 	private static class NumberFilter implements TextFieldFilter {

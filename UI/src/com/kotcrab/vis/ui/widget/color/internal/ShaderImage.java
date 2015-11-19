@@ -14,25 +14,37 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.widget.color;
+package com.kotcrab.vis.ui.widget.color.internal;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.kotcrab.vis.ui.Sizes;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.kotcrab.vis.ui.widget.VisImage;
 
 /**
- * Channel bar intended for alpha channel, renders alpha grid bellow channel texture. Not intended to use outside ColorPicker
+ * Allow to render standard {@link VisImage} with shader. Shaders uniforms can be set in {@link #setShaderUniforms(ShaderProgram)}
  * @author Kotcrab
  */
-public class AlphaChannelBar extends ChannelBar {
-	public AlphaChannelBar (ColorPickerStyle style, Sizes sizes, Texture texture, int value, int maxValue, ChangeListener listener) {
-		super(style, sizes, texture, value, maxValue, listener);
+public class ShaderImage extends VisImage {
+	private ShaderProgram shader;
+
+	public ShaderImage (ShaderProgram shader, Texture texture) {
+		super(texture);
+		this.shader = shader;
 	}
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
-		style.alphaBar10px.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
+		ShaderProgram originalShader = batch.getShader();
+		batch.setShader(shader);
+		setShaderUniforms(shader);
+
 		super.draw(batch, parentAlpha);
+
+		batch.setShader(originalShader);
+	}
+
+	protected void setShaderUniforms (ShaderProgram shader) {
+
 	}
 }

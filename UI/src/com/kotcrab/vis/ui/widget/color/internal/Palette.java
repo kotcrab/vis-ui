@@ -14,36 +14,42 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.widget.color;
+package com.kotcrab.vis.ui.widget.color.internal;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.Sizes;
-import com.kotcrab.vis.ui.widget.VisImage;
+import com.kotcrab.vis.ui.widget.color.ColorPicker;
+import com.kotcrab.vis.ui.widget.color.ColorPickerStyle;
 
 /**
- * Colors palette used to display colors using all possible values of saturation and value, not intended to use outside ColorPicker
+ * Colors palette used to display colors using all possible values of saturation and value.
  * @author Kotcrab
  */
-public class Palette extends VisImage {
+public class Palette extends ShaderImage {
 	private ColorPickerStyle style;
 	private Sizes sizes;
+
 	private int x, y;
 	private int maxValue;
+
 	private float selectorX;
 	private float selectorY;
 
-	public Palette (ColorPickerStyle style, Sizes sizes, Texture texture, int x, int y, final int maxValue, ChangeListener listener) {
-		super(texture);
+	private float pickerHue;
+
+	public Palette (ColorPickerStyle style, Sizes sizes, ShaderProgram program, Texture whiteTexture, int maxValue, ChangeListener listener) {
+		super(program, whiteTexture);
 		this.style = style;
 		this.sizes = sizes;
 		this.maxValue = maxValue;
-		setValue(x, y);
+		setValue(0, 0);
 		addListener(listener);
 
 		addListener(new InputListener() {
@@ -63,10 +69,30 @@ public class Palette extends VisImage {
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		style.verticalSelector.draw(batch, getX(), getY() + selectorY - style.verticalSelector.getMinHeight() / 2 + 0.1f, getImageWidth(), style.verticalSelector.getMinHeight());
-		style.horizontalSelector.draw(batch, getX() + selectorX - style.horizontalSelector.getMinWidth() / 2 + 0.1f, getY(), style.horizontalSelector.getMinWidth(), getImageHeight());
-		style.cross.draw(batch, getX() + selectorX - style.cross.getMinWidth() / 2 + 0.1f, getY() + selectorY - style.cross.getMinHeight() / 2 + 0.1f,
+
+		style.verticalSelector.draw(batch,
+				getX(),
+				getY() + selectorY - style.verticalSelector.getMinHeight() / 2 + 0.1f,
+				getImageWidth(), style.verticalSelector.getMinHeight());
+
+		style.horizontalSelector.draw(batch,
+				getX() + selectorX - style.horizontalSelector.getMinWidth() / 2 + 0.1f,
+				getY(),
+				style.horizontalSelector.getMinWidth(), getImageHeight());
+
+		style.cross.draw(batch,
+				getX() + selectorX - style.cross.getMinWidth() / 2 + 0.1f,
+				getY() + selectorY - style.cross.getMinHeight() / 2 + 0.1f,
 				style.cross.getMinWidth(), style.cross.getMinHeight());
+	}
+
+	@Override
+	protected void setShaderUniforms (ShaderProgram shader) {
+		shader.setUniformf("u_h", pickerHue);
+	}
+
+	public void setPickerHue (int pickerHue) {
+		this.pickerHue = pickerHue / 360.0f;
 	}
 
 	public void setValue (int v, int s) {
