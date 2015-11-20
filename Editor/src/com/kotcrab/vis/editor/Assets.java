@@ -50,14 +50,6 @@ public class Assets {
 		distanceFieldShader.dispose();
 	}
 
-	public static Drawable getIcon (Icons icon) {
-		return new TextureRegionDrawable(getIconRegion(icon));
-	}
-
-	public static TextureRegion getIconRegion (Icons icon) {
-		return icons.findRegion(icon.getIconName());
-	}
-
 	public static Drawable getMisc (String name) {
 		return new TextureRegionDrawable(getMiscRegion(name));
 	}

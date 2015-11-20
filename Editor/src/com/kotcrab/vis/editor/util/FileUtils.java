@@ -32,7 +32,7 @@ import java.util.function.Consumer;
  * File related utils.
  * @author Kotcrab
  */
-public class FileUtils {
+public class FileUtils extends com.kotcrab.vis.ui.widget.file.FileUtils {
 	private static com.sun.jna.platform.FileUtils jnaFileUtils;
 
 	static {

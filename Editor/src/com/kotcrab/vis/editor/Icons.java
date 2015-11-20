@@ -16,60 +16,87 @@
 
 package com.kotcrab.vis.editor;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.kotcrab.vis.ui.VisUI;
 
 /**
  * VisEditor built-in icons enum
  * @author Kotcrab
- * @see Assets#getIcon(Icons)
  */
-public enum Icons implements IconAsset {
-	// @formatter:off
-	NEW { public String getIconName () { return "new"; } },
-	UNDO { public String getIconName () { return "undo"; } },
-	REDO { public String getIconName () { return "redo"; } },
-	SETTINGS { public String getIconName () { return "settings"; } },
-	SETTINGS_VIEW { public String getIconName () { return "settings-view"; } },
-	EXPORT { public String getIconName () { return "export"; } },
-	IMPORT { public String getIconName () { return "import"; } },
-	LOAD { public String getIconName () { return "load"; } },
-	SAVE { public String getIconName () { return "save"; } },
-	GLOBE { public String getIconName () { return "globe"; } },
-	INFO { public String getIconName () { return "info"; } },
-	EXIT { public String getIconName () { return "exit"; } },
-	FOLDER_OPEN { public String getIconName () { return "folder-open"; } },
-	SEARCH { public String getIconName () { return "search"; } },
-	QUESTION { public String getIconName () { return "question-big"; } },
-	MORE { public String getIconName () { return "more"; } },
-	SOUND { public String getIconName () { return "sound-big"; } },
-	MUSIC { public String getIconName () { return "music-big"; } },
-	WARNING { public String getIconName () { return "warning"; } },
-	LAYER_ADD { public String getIconName () { return "layer-add"; } },
-	LAYER_REMOVE { public String getIconName () { return "layer-remove"; } },
-	LAYER_UP { public String getIconName () { return "layer-up"; } },
-	LAYER_DOWN { public String getIconName () { return "layer-down"; } },
-	EYE { public String getIconName () { return "eye"; } },
-	EYE_DISABLED { public String getIconName () { return "eye-disabled"; } },
-	LOCKED { public String getIconName () { return "locked"; } },
-	UNLOCKED { public String getIconName () { return "unlocked"; } },
-	ALIGN_LEFT { public String getIconName () { return "align-left"; } },
-	ALIGN_RIGHT { public String getIconName () { return "align-right"; } },
-	ALIGN_BOTTOM { public String getIconName () { return "align-bottom"; } },
-	ALIGN_TOP { public String getIconName () { return "align-top"; } },
-	ALIGN_CENTER_X { public String getIconName () { return "align-center-x"; } },
-	ALIGN_CENTER_Y { public String getIconName () { return "align-center-y"; } },
-	CURSOR { public String getIconName () { return "cursor"; } },
-	POLYGON { public String getIconName () { return "polygon"; } },
-	PLUS { public String getIconName () { return "plus"; } },
-	POINT { public String getIconName () { return "point-big"; } },;
+public enum Icons {
+	NEW("new"),
+	UNDO("undo"),
+	REDO("redo"),
+	SETTINGS("settings"),
+	SETTINGS_VIEW("settings-view"),
+	EXPORT("export"),
+	IMPORT("import"),
+	LOAD("load"),
+	SAVE("save"),
+	GLOBE("globe"),
+	INFO("info"),
+	EXIT("exit"),
+	FOLDER_OPEN("folder-open"),
+	SEARCH("search"),
+	MORE("more"),
 
-	// @formatter:on
+	WARNING("warning"),
+	LAYER_ADD("layer-add"),
+	LAYER_REMOVE("layer-remove"),
+	LAYER_UP("layer-up"),
+	LAYER_DOWN("layer-down"),
+	EYE("eye"),
+	EYE_DISABLED("eye-disabled"),
+	LOCKED("locked"),
+	UNLOCKED("unlocked"),
+	ALIGN_LEFT("align-left"),
+	ALIGN_RIGHT("align-right"),
+	ALIGN_BOTTOM("align-bottom"),
+	ALIGN_TOP("align-top"),
+	ALIGN_CENTER_X("align-center-x"),
+	ALIGN_CENTER_Y("align-center-y"),
+	CURSOR("cursor"),
+	POLYGON("polygon"),
+	PLUS("plus"),
+
+	FOLDER_MEDIUM("folder-medium"),
+
+	QUESTION_BIG("question-big"),
+	SOUND_BIG("sound-big"),
+	MUSIC_BIG("music-big"),
+	POINT_BIG("point-big"),
+
+	CLOSE("icon-close", true),
+	FOLDER("icon-folder", true),
+	ARROW_LEFT("icon-arrow-left", true),
+	ARROW_RIGHT("icon-arrow-right", true);
+
+	private final String name;
+	private final boolean fromVisUI;
+
+	Icons (String name) {
+		this.name = name;
+		fromVisUI = false;
+	}
+
+	Icons (String name, boolean fromVisUI) {
+		this.name = name;
+		this.fromVisUI = fromVisUI;
+	}
 
 	public Drawable drawable () {
-		return Assets.getIcon(this);
+		if (fromVisUI)
+			return VisUI.getSkin().getDrawable(name);
+		else
+			return new TextureRegionDrawable(textureRegion());
 	}
-}
 
-interface IconAsset {
-	String getIconName ();
+	public TextureRegion textureRegion () {
+		if (fromVisUI)
+			return VisUI.getSkin().getRegion(name);
+		else
+			return Assets.icons.findRegion(name);
+	}
 }

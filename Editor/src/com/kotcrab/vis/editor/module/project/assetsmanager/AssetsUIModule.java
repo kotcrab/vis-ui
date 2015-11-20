@@ -54,9 +54,14 @@ import com.kotcrab.vis.editor.util.scene2d.DirectoriesOnlyFileFilter;
 import com.kotcrab.vis.editor.util.scene2d.MenuUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisTabbedPaneListener;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
+import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.layout.GridGroup;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.file.FileChooser.HistoryPolicy;
+import com.kotcrab.vis.ui.widget.file.FileChooserStyle;
+import com.kotcrab.vis.ui.widget.file.internal.FileHistoryManager;
+import com.kotcrab.vis.ui.widget.file.internal.FileHistoryManager.FileHistoryCallback;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 
@@ -84,31 +89,35 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private FileHandle assetsFolder;
 	private FileHandle currentDirectory;
 
+	//metadata
 	private Json json;
 	private FileHandle metadataFile;
 	private AssetsUIModuleMetadata metadata;
 
+	private Array<FileItem> filesClipboard = new Array<>();
+	private Array<FileItem> selectedFiles = new Array<>();
+
+	private ObjectMap<FileHandle, TextureAtlasViewTab> atlasViews = new ObjectMap<>();
+
 	private int filesDisplayed;
 
+	private AssetsTab assetsTab;
+	private AssetDragAndDrop assetDragAndDrop;
+	private AssetsPopupMenu popupMenu;
+	private Array<AssetsUIContextProvider> contextProviders = new Array<>();
+
+	//UI
 	private VisTable mainTable;
 	private VisTable treeTable;
 	private VisTable filesViewContextContainer;
 	private GridGroup filesView;
 	private VisTable toolbarTable;
 	private VisTree contentTree;
+
 	private VisLabel contentTitleLabel;
 	private SearchField searchField;
 
-	private AssetsTab assetsTab;
-	private AssetDragAndDrop assetDragAndDrop;
-	private AssetsPopupMenu popupMenu;
-
-	private ObjectMap<FileHandle, TextureAtlasViewTab> atlasViews = new ObjectMap<>();
-
-	private Array<FileItem> filesClipboard = new Array<>();
-	private Array<FileItem> selectedFiles = new Array<>();
-
-	private Array<AssetsUIContextProvider> contextProviders = new Array<>();
+	private FileHistoryManager fileHistoryManager;
 
 	@Override
 	public void init () {
@@ -116,7 +125,9 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		initUI();
 
 		rebuildFolderTree();
-		contentTree.getSelection().set(contentTree.getNodes().get(0)); // select first item in tree
+		Node node = contentTree.getNodes().get(0);
+		contentTree.getSelection().set(node); // select first item in tree
+		changeCurrentDirectory(((FolderItem)node.getActor()).getFile(), HistoryPolicy.IGNORE);
 
 		//TODO: [plugins] plugin entry point
 		contextProviders.add(new SpriterContextProvider());
@@ -138,7 +149,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		if (metadata.lastDirectory != null) {
 			FileHandle dir = Gdx.files.absolute(metadata.lastDirectory);
 			if (dir.exists()) {
-				changeCurrentDirectory(dir);
+				changeCurrentDirectory(dir, HistoryPolicy.IGNORE);
 			}
 		}
 	}
@@ -150,7 +161,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private boolean highlightDir (FileHandle dir, Array<Node> nodes) {
 		for (Node node : nodes) {
 			if (((FolderItem) node.getActor()).getFile().equals(dir)) {
-				contentTree.getSelection().choose(node);
+				contentTree.getSelection().set(node);
 				return true;
 			}
 
@@ -233,6 +244,23 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	}
 
 	private void createToolbarTable () {
+		fileHistoryManager = new FileHistoryManager(VisUI.getSkin().get(FileChooserStyle.class), new FileHistoryCallback() {
+			@Override
+			public FileHandle getCurrentDirectory () {
+				return currentDirectory;
+			}
+
+			@Override
+			public void setDirectory (FileHandle directory, HistoryPolicy policy) {
+				changeCurrentDirectory(directory, policy);
+			}
+
+			@Override
+			public Stage getStage () {
+				return stage;
+			}
+		});
+
 		contentTitleLabel = new VisLabel("Content");
 		searchField = new SearchField(newText -> {
 			if (currentDirectory == null) return true;
@@ -247,7 +275,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 //		VisImageButton settingsButton = new VisImageButton(Icons.SETTINGS_VIEW.drawable(), "Change view");
 //		VisImageButton importButton = new VisImageButton(Icons.IMPORT.drawable(), "Import");
 
-		toolbarTable.add(contentTitleLabel).expand().left().padLeft(3);
+		toolbarTable.add(fileHistoryManager.getButtonsTable());
+		toolbarTable.add(contentTitleLabel).left().expand();
 		toolbarTable.add(exploreButton);
 		//toolbarTable.add(settingsButton); //FIXME buttons
 		//toolbarTable.add(importButton);
@@ -265,6 +294,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		contentTree = new VisTree();
 		contentTree.getSelection().setMultiple(false);
 		contentTree.getSelection().setRequired(true);
+		contentTree.getSelection().setProgrammaticChangeEvents(false);
 		treeTable.add(createScrollPane(contentTree, false)).expand().fill();
 
 		contentTree.addListener(new ChangeListener() {
@@ -276,7 +306,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 					searchField.clearSearch();
 
 					FolderItem item = (FolderItem) node.getActor();
-					changeCurrentDirectory(item.getFile());
+					changeCurrentDirectory(item.getFile(), HistoryPolicy.ADD);
 				}
 			}
 		});
@@ -290,7 +320,14 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	}
 
 	public void changeCurrentDirectory (FileHandle directory) {
+		changeCurrentDirectory(directory, HistoryPolicy.CLEAR);
+	}
+
+	public void changeCurrentDirectory (FileHandle directory, HistoryPolicy historyPolicy) {
 		clearSelection();
+
+		if (historyPolicy == HistoryPolicy.ADD) fileHistoryManager.historyAdd();
+
 		this.currentDirectory = directory;
 		if (metadata != null) metadata.lastDirectory = directory.path();
 		filesView.clearChildren();
@@ -304,20 +341,20 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			return file.getName().contains(searchField.getText());
 		});
 
-		for (FileHandle file : files) {
-			if (file.isDirectory() == false) {
-				String relativePath = fileAccess.relativizeToAssetsFolder(file);
-				String ext = file.extension();
+		Array<FileHandle> sortedFiles = FileUtils.sortFiles(files);
 
-				if (relativePath.startsWith("atlas") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")))
-					continue;
-				//if (relativePath.startsWith("particle") && (ext.equals("png") || ext.equals("jpg"))) continue;
+		for (FileHandle file : sortedFiles) {
+			String relativePath = fileAccess.relativizeToAssetsFolder(file);
+			String ext = file.extension();
+
+			if (relativePath.startsWith("atlas") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")))
+				continue;
+			//if (relativePath.startsWith("particle") && (ext.equals("png") || ext.equals("jpg"))) continue;
 //				if (relativePath.startsWith("bmpfont") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")))
 //					continue;
 
-				filesView.addActor(createFileItem(file));
-				filesDisplayed++;
-			}
+			filesView.addActor(createFileItem(file));
+			filesDisplayed++;
 		}
 
 		assetDragAndDrop.rebuild(filesView.getChildren(), atlasViews.values());
@@ -325,6 +362,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		String currentPath = directory.path().substring(visFolder.path().length() + 1);
 		contentTitleLabel.setText("Content [" + currentPath + "]");
 		highlightDir(directory);
+
+		if (historyPolicy == HistoryPolicy.CLEAR) fileHistoryManager.historyClear();
 	}
 
 	public FileHandle getCurrentDirectory () {
@@ -343,7 +382,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	}
 
 	private void refreshFilesList () {
-		changeCurrentDirectory(currentDirectory);
+		changeCurrentDirectory(currentDirectory, HistoryPolicy.IGNORE);
 	}
 
 	private void rebuildFolderTree () {
@@ -374,6 +413,11 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	}
 
 	private void openFile (FileHandle file) {
+		if (file.isDirectory()) {
+			changeCurrentDirectory(file, HistoryPolicy.ADD);
+			return;
+		}
+
 		if (ProjectPathUtils.isScene(file)) {
 			try {
 				sceneTabsModule.open(sceneCache.get(file));
@@ -458,24 +502,28 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 				addItem(MenuUtils.createMenuItem("Paste", () -> clipboardPasteFiles()));
 				addItem(MenuUtils.createMenuItem("Delete", () -> deleteSelectedFiles()));
 			} else {
+				FileHandle file = item.getFile();
+				boolean directory = file.isDirectory();
 
-				if (isOpenSupported(item.getFile().extension())) {
-					addItem(MenuUtils.createMenuItem("Open", () -> openFile(item.getFile())));
+				if (directory || isOpenSupported(file.extension())) {
+					addItem(MenuUtils.createMenuItem("Open", () -> openFile(file)));
 					addSeparator();
 				}
 
 				//TODO cache canAnalyze and isSafeFileMoveSupported results too speed up opening menus
-				if (assetsAnalyzer.canAnalyzeUsages(item.getFile())) {
-					addItem(MenuUtils.createMenuItem("Find Usages", () -> analyzeUsages(item.getFile())));
+				if (assetsAnalyzer.canAnalyzeUsages(file)) {
+					addItem(MenuUtils.createMenuItem("Find Usages", () -> analyzeUsages(file)));
 					addSeparator();
 				}
 
-				addItem(MenuUtils.createMenuItem("Copy", () -> clipboardCopyFiles()));
-				addItem(MenuUtils.createMenuItem("Paste", () -> clipboardPasteFiles()));
+				if(directory == false) { //TODO: add support for copying directories
+					addItem(MenuUtils.createMenuItem("Copy", () -> clipboardCopyFiles()));
+					addItem(MenuUtils.createMenuItem("Paste", () -> clipboardPasteFiles()));
+				}
 
-				if (assetsAnalyzer.isSafeFileMoveSupported(item.getFile())) {
-					addItem(MenuUtils.createMenuItem("Move", () -> moveFiles(item.getFile())));
-					addItem(MenuUtils.createMenuItem("Rename", () -> moveFiles(item.getFile())));
+				if (assetsAnalyzer.isSafeFileMoveSupported(file)) {
+					addItem(MenuUtils.createMenuItem("Move", () -> moveFiles(file)));
+					addItem(MenuUtils.createMenuItem("Rename", () -> moveFiles(file)));
 				}
 
 				addItem(MenuUtils.createMenuItem("Delete", () -> deleteSelectedFiles()));

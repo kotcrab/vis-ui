@@ -20,7 +20,6 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
@@ -45,7 +44,7 @@ public class PointRenderSystem extends DeferredEntityProcessingSystem {
 
 	public PointRenderSystem (EntityProcessPrincipal principal, float pixelsPerUnit) {
 		super(Aspect.all(PointComponent.class).exclude(InvisibleComponent.class), principal);
-		icon = Assets.getIconRegion(Icons.POINT);
+		icon = Icons.POINT_BIG.textureRegion();
 
 		baseRenderSize = ICON_SIZE / pixelsPerUnit;
 	}

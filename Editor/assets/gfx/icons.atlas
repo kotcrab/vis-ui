@@ -6,77 +6,77 @@ filter: Nearest,Nearest
 repeat: none
 align-bottom
   rotate: false
-  xy: 2, 26
+  xy: 470, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 align-center-x
   rotate: false
-  xy: 2, 2
+  xy: 48, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 align-center-y
   rotate: false
-  xy: 470, 104
+  xy: 48, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 align-left
   rotate: false
-  xy: 26, 26
+  xy: 470, 80
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 align-right
   rotate: false
-  xy: 26, 2
+  xy: 72, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 align-top
   rotate: false
-  xy: 470, 80
+  xy: 72, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 cursor
   rotate: false
-  xy: 50, 26
+  xy: 470, 56
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 exit
   rotate: false
-  xy: 50, 2
+  xy: 96, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 export
   rotate: false
-  xy: 470, 56
+  xy: 96, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 eye
   rotate: false
-  xy: 74, 26
+  xy: 120, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 eye-disabled
   rotate: false
-  xy: 74, 2
+  xy: 120, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -88,72 +88,79 @@ file-question-big
   orig: 76, 76
   offset: 0, 0
   index: -1
+folder-medium
+  rotate: false
+  xy: 2, 4
+  size: 44, 44
+  orig: 44, 44
+  offset: 0, 0
+  index: -1
 folder-open
   rotate: false
-  xy: 98, 26
+  xy: 144, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 globe
   rotate: false
-  xy: 98, 2
+  xy: 144, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 import
   rotate: false
-  xy: 122, 26
+  xy: 168, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 info
   rotate: false
-  xy: 122, 2
+  xy: 168, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 layer-add
   rotate: false
-  xy: 146, 26
+  xy: 192, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 layer-down
   rotate: false
-  xy: 146, 2
+  xy: 192, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 layer-remove
   rotate: false
-  xy: 170, 26
+  xy: 216, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 layer-up
   rotate: false
-  xy: 170, 2
+  xy: 216, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 load
   rotate: false
-  xy: 194, 26
+  xy: 240, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 locked
   rotate: false
-  xy: 194, 2
+  xy: 240, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -174,14 +181,14 @@ music-big
   index: -1
 new
   rotate: false
-  xy: 218, 26
+  xy: 264, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 plus
   rotate: false
-  xy: 218, 2
+  xy: 264, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -195,7 +202,7 @@ point-big
   index: -1
 polygon
   rotate: false
-  xy: 242, 26
+  xy: 288, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -209,7 +216,7 @@ question-big
   index: -1
 redo
   rotate: false
-  xy: 242, 2
+  xy: 288, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -223,28 +230,28 @@ refresh-big
   index: -1
 save
   rotate: false
-  xy: 266, 26
+  xy: 312, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 search
   rotate: false
-  xy: 266, 2
+  xy: 312, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 settings
   rotate: false
-  xy: 290, 26
+  xy: 336, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 settings-view
   rotate: false
-  xy: 290, 2
+  xy: 336, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -258,21 +265,21 @@ sound-big
   index: -1
 undo
   rotate: false
-  xy: 314, 26
+  xy: 360, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 unlocked
   rotate: false
-  xy: 314, 2
+  xy: 360, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 warning
   rotate: false
-  xy: 338, 26
+  xy: 384, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0

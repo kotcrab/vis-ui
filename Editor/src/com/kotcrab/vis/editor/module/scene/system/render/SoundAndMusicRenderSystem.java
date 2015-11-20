@@ -20,7 +20,6 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.MusicComponent;
@@ -47,8 +46,8 @@ public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 
 	public SoundAndMusicRenderSystem (EntityProcessPrincipal principal, float pixelsPerUnit) {
 		super(Aspect.all(PositionComponent.class).one(SoundComponent.class, MusicComponent.class).exclude(InvisibleComponent.class), principal);
-		soundIcon = Assets.getIconRegion(Icons.SOUND);
-		musicIcon = Assets.getIconRegion(Icons.MUSIC);
+		soundIcon = Icons.SOUND_BIG.textureRegion();
+		musicIcon = Icons.MUSIC_BIG.textureRegion();
 
 		renderSize = ICON_SIZE / pixelsPerUnit;
 	}

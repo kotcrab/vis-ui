@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.util.scene2d;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.ui.ButtonListener;
 import com.kotcrab.vis.ui.widget.MenuItem;
@@ -34,9 +33,9 @@ public class MenuUtils {
 
 	public static MenuItem createMenuItem (String text, Icons icon, ButtonListener listener) {
 		if (listener == null) {
-			return new MenuItem(text, icon != null ? Assets.getIcon(icon) : null);
+			return new MenuItem(text, icon != null ? icon.drawable() : null);
 		} else {
-			return new MenuItem(text, icon != null ? Assets.getIcon(icon) : null, new ChangeListener() {
+			return new MenuItem(text, icon != null ? icon.drawable() : null, new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
 					listener.clicked();

@@ -77,7 +77,7 @@ public class DeleteDialog extends VisWindow {
 		});
 
 		pack();
-		setSize(getWidth() + 4, getHeight() + 4);
+		setSize(getWidth() + 10, getHeight() + 4);
 		centerWindow();
 	}
 

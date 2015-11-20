@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.assets.AssetFileType;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
@@ -34,6 +35,7 @@ import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 //TODO refactor
@@ -82,6 +84,12 @@ public class FileItem extends Table {
 
 		boolean texture = ProjectPathUtils.isTexture(file);
 		boolean atlas = ProjectPathUtils.isTextureAtlas(file);
+
+		if (file.isDirectory()) {
+			type = AssetFileType.DIRECTORY;
+			add(new VisImage(Icons.FOLDER_MEDIUM.drawable())).row();
+			name = new VisLabel(file.nameWithoutExtension());
+		}
 
 		if (ProjectPathUtils.isTrueTypeFont(file)) {
 			createDefaultView(AssetFileType.TTF_FONT, "TTF Font", true);
@@ -152,7 +160,6 @@ public class FileItem extends Table {
 			createDefaultView(AssetFileType.SCENE, "Scene", true);
 			return;
 		}
-
 
 		support = findSupportForDirectory(ext, relativePath);
 		if (support != null) {

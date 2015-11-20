@@ -67,7 +67,7 @@ public class SpriterImportDialog extends VisWindow {
 
 		scaleField = new VisValidatableTextField("1.00");
 		scaleField.setTextFieldFilter(new FloatDigitsOnlyFilter(false));
-		image = new VisImage(Icons.QUESTION.drawable());
+		image = new VisImage(Icons.QUESTION_BIG.drawable());
 		new Tooltip(image, "If your images are too big you can use this to rescale source images");
 
 		VisTable scaleRatioTable = new VisTable();

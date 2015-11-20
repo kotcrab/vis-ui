@@ -31,7 +31,7 @@ import com.kotcrab.vis.ui.VisUI;
 public class TintImage extends Image {
 	private final Drawable alphaBar = Assets.getMisc("alpha-grid-20x20");
 	private final Drawable focusBorder = VisUI.getSkin().getDrawable("border");
-	private final Drawable questionMark = Icons.QUESTION.drawable();
+	private final Drawable questionMark = Icons.QUESTION_BIG.drawable();
 
 	private boolean useFocusBorder = true;
 	private boolean unknown;

@@ -27,6 +27,8 @@ public enum AssetFileType {
 	UNKNOWN,
 	/** Used when {@link FileItem} content is created from external {@link EditorEntitySupport}, for example by plugin. */
 	NON_STANDARD,
+	/** Special type used for directories */
+	DIRECTORY,
 	TEXTURE, TEXTURE_ATLAS,
 	TTF_FONT, BMP_FONT_FILE, BMP_FONT_TEXTURE,
 	MUSIC, SOUND, PARTICLE_EFFECT,
