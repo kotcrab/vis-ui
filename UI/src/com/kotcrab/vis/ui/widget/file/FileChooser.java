@@ -40,6 +40,8 @@ import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.DriveCheckerL
 import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.RootMode;
 import com.kotcrab.vis.ui.widget.file.internal.FileChooserWinService;
 import com.kotcrab.vis.ui.widget.file.internal.FileChooserWinService.RootNameListener;
+import com.kotcrab.vis.ui.widget.file.internal.FileHistoryManager;
+import com.kotcrab.vis.ui.widget.file.internal.FileHistoryManager.FileHistoryCallback;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -57,7 +59,7 @@ import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
  * @author Kotcrab
  * @since 0.1.0
  */
-public class FileChooser extends VisWindow {
+public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private static final long FILE_WATCHER_CHECK_DELAY_MILLIS = 2000;
 
 	private static final ShortcutsComparator SHORTCUTS_COMPARATOR = new ShortcutsComparator();
@@ -86,9 +88,6 @@ public class FileChooser extends VisWindow {
 	private Array<FileItem> selectedItems = new Array<FileItem>();
 	private ShortcutItem selectedShortcut;
 
-	private Array<FileHandle> history = new Array<FileHandle>();
-	private Array<FileHandle> historyForward = new Array<FileHandle>();
-
 	private boolean watchingFilesEnabled = true;
 	private Thread fileWatcherThread;
 	private boolean shortcutsListRebuildScheduled;
@@ -97,6 +96,8 @@ public class FileChooser extends VisWindow {
 	// UI
 	private FileChooserStyle style;
 	private Sizes sizes;
+
+	private FileHistoryManager historyManager;
 
 	private VisSplitPane mainSplitPane;
 
@@ -108,8 +109,6 @@ public class FileChooser extends VisWindow {
 	private ColumnGroup shortcutsRootsPanel;
 	private ColumnGroup shortcutsFavoritesPanel;
 
-	private VisImageButton backButton;
-	private VisImageButton forwardButton;
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextField;
 	private VisTextButton confirmButton;
@@ -196,12 +195,7 @@ public class FileChooser extends VisWindow {
 		toolbarTable.defaults().minWidth(30).right();
 		add(toolbarTable).fillX().expandX().pad(3).padRight(2);
 
-		backButton = new VisImageButton(style.iconArrowLeft, BACK.get());
-		backButton.setGenerateDisabledImage(true);
-		backButton.setDisabled(true);
-		forwardButton = new VisImageButton(style.iconArrowRight, FORWARD.get());
-		forwardButton.setGenerateDisabledImage(true);
-		forwardButton.setDisabled(true);
+		historyManager = new FileHistoryManager(style, this);
 
 		currentPath = new VisTextField();
 
@@ -224,25 +218,10 @@ public class FileChooser extends VisWindow {
 		VisImageButton folderParentButton = new VisImageButton(style.iconFolderParent, PARENT_DIRECTORY.get());
 		VisImageButton folderNewButton = new VisImageButton(style.iconFolderNew, NEW_DIRECTORY.get());
 
-		toolbarTable.add(backButton);
-		toolbarTable.add(forwardButton);
+		toolbarTable.add(historyManager.getButtonsTable());
 		toolbarTable.add(currentPath).expand().fill();
 		toolbarTable.add(folderParentButton);
 		toolbarTable.add(folderNewButton);
-
-		backButton.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				historyBack();
-			}
-		});
-
-		forwardButton.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				historyForward();
-			}
-		});
 
 		folderParentButton.addListener(new ChangeListener() {
 			@Override
@@ -264,27 +243,7 @@ public class FileChooser extends VisWindow {
 			}
 		});
 
-		this.addListener(new ClickListener() {
-			@Override
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (button == Buttons.BACK || button == Buttons.FORWARD) {
-					return true;
-				}
-				return super.touchDown(event, x, y, pointer, button);
-			}
-
-			@Override
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				if (button == Buttons.BACK && hasHistoryBack()) {
-					historyBack();
-				} else if (button == Buttons.FORWARD && hasHistoryForward()) {
-					historyForward();
-				} else {
-					super.touchUp(event, x, y, pointer, button);
-				}
-			}
-
-		});
+		addListener(historyManager.getDefaultClickListener());
 	}
 
 	private void createCenterContentPanel () {
@@ -736,64 +695,6 @@ public class FileChooser extends VisWindow {
 		}
 	}
 
-	private void historyClear () {
-		history.clear();
-		historyForward.clear();
-		forwardButton.setDisabled(true);
-		backButton.setDisabled(true);
-	}
-
-	private void historyAdd () {
-		history.add(currentDirectory);
-		historyForward.clear();
-		backButton.setDisabled(false);
-		forwardButton.setDisabled(true);
-	}
-
-	private void historyBack () {
-		FileHandle dir = history.pop();
-		historyForward.add(currentDirectory);
-
-		if (setDirectoryFromHistory(dir) == false)
-			historyForward.pop();
-
-		if (!hasHistoryBack()) backButton.setDisabled(true);
-
-		forwardButton.setDisabled(false);
-	}
-
-	private void historyForward () {
-		FileHandle dir = historyForward.pop();
-		history.add(currentDirectory);
-
-		if (setDirectoryFromHistory(dir) == false)
-			history.pop();
-
-		if (!hasHistoryForward()) forwardButton.setDisabled(true);
-
-		backButton.setDisabled(false);
-	}
-
-	private boolean setDirectoryFromHistory (FileHandle dir) {
-		if (dir.exists()) {
-			setDirectory(dir, HistoryPolicy.IGNORE);
-			return true;
-		} else {
-			DialogUtils.showErrorDialog(getStage(), DIRECTORY_NO_LONGER_EXISTS.get());
-			return false;
-		}
-	}
-
-	/** @return returns {@code true} if a forward-history is available */
-	private boolean hasHistoryForward () {
-		return historyForward.size != 0;
-	}
-
-	/** @return returns {@code true} if a back-history is available */
-	private boolean hasHistoryBack () {
-		return history.size != 0;
-	}
-
 	public Mode getMode () {
 		return mode;
 	}
@@ -822,12 +723,17 @@ public class FileChooser extends VisWindow {
 		if (directory.isDirectory() == false)
 			throw new IllegalStateException("Provided path is a file, not directory!");
 
-		if (historyPolicy == HistoryPolicy.ADD) historyAdd();
+		if (historyPolicy == HistoryPolicy.ADD) historyManager.historyAdd();
 
 		currentDirectory = directory;
 		rebuildFileList();
 
-		if (historyPolicy == HistoryPolicy.CLEAR) historyClear();
+		if (historyPolicy == HistoryPolicy.CLEAR) historyManager.historyClear();
+	}
+
+	@Override
+	public FileHandle getCurrentDirectory () {
+		return currentDirectory;
 	}
 
 	public FileFilter getFileFilter () {

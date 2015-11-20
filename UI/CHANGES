@@ -3,6 +3,7 @@
 -API Change: FocusManager.getFocus(Stage, Focusable) renamed to switchFocus
 -API Change: GridGroup#getItemSize() removed, use getItemWidth or getItemHeight
 -API Addition: FocusManager.resetFocus(Stage, Actor)
+-API Addition: FileChooser#getCurrentDirectory()
 -API Addition: GridGroup#setItemWidth(int), GridGroup#setItemWidth(int), GridGroup#getItemWidth(), GridGroup#getItemWidth()
 -API Addition: GridGroup#getItemSize(int width, int height)
 -API Addition: TabbedPane#disableTab(Tab tab, boolean disable), TabbedPane#isTabDisabled(Tab)
