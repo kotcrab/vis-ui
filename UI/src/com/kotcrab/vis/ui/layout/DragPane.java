@@ -35,7 +35,6 @@ import com.kotcrab.vis.ui.widget.Draggable.DragListener;
  * Stores actors in an internally managed {@link WidgetGroup}. Allows actors with specialized {@link Draggable} listener attached
  * to be dropped and added into its group's content.
  * <p>
- * <p>
  * Note that unless {@link Draggable} with appropriate listener (preferably {@link DefaultDragListener}) is attached to dragged
  * actors, this widget will act like a regular group with no extra functionalities. It's usually a good idea to use
  * {@link #setDraggable(Draggable)} method, as it will attach the listener to all its children, making them all draggable. If you
@@ -61,8 +60,8 @@ public class DragPane extends Container<WidgetGroup> {
 
 	/**
 	 * @param group must append its actors through standard {@link WidgetGroup#addActor(Actor)} method. Must support
-	 * {@link WidgetGroup#addActorAfter(Actor, Actor)} and {@link WidgetGroup#addActorBefore(Actor, Actor)} methods. Note
-	 * that {@link com.badlogic.gdx.scenes.scene2d.ui.Table} does not meet these requirements.
+	 *           {@link WidgetGroup#addActorAfter(Actor, Actor)} and {@link WidgetGroup#addActorBefore(Actor, Actor)} methods. Note
+	 *           that {@link com.badlogic.gdx.scenes.scene2d.ui.Table} does not meet these requirements.
 	 * @see VerticalGroup
 	 * @see HorizontalGroup
 	 * @see GridGroup
@@ -221,7 +220,6 @@ public class DragPane extends Container<WidgetGroup> {
 	 * Note that the direct parent of {@link DragPane}'s children is the internal pane's group accessible through
 	 * {@link #getGroup()} - and since this removal method is overridden and extended, pane's children should be deleted with
 	 * {@code dragPane.removeActor(child)} rather than {@link Actor#remove()} method.
-	 *
 	 * @param actor will be removed, if present in the internal {@link WidgetGroup}.
 	 * @return true if the actor was removed from this group.
 	 */
@@ -238,7 +236,6 @@ public class DragPane extends Container<WidgetGroup> {
 	 * Note that the direct parent of {@link DragPane}'s children is the internal pane's group accessible through
 	 * {@link #getGroup()} - and since this removal method is overridden and extended, pane's children should be deleted with
 	 * {@code dragPane.removeActor(child, true)} rather than {@link Actor#remove()} method.
-	 *
 	 * @param unfocus if true, {@link Stage#unfocus(Actor)} is called.
 	 * @param actor will be removed, if present in the internal {@link WidgetGroup}.
 	 * @return true if the actor was removed from this group.
@@ -329,7 +326,8 @@ public class DragPane extends Container<WidgetGroup> {
 	 * @since 0.9.3
 	 */
 	public static class DefaultDragListener implements DragListener {
-		private static final Vector2 DRAG_POSITION = new Vector2();
+		/** Contains stage drag end position, which might be changed to local widget coordinates by some methods. */
+		protected static final Vector2 DRAG_POSITION = new Vector2();
 		private Policy policy;
 
 		/** Creates a new drag listener with default policy. */
@@ -339,7 +337,7 @@ public class DragPane extends Container<WidgetGroup> {
 
 		/**
 		 * @param policy determines behavior of dragged actors. Allows to prohibit actors from being added to a {@link DragPane}.
-		 * Cannot be null.
+		 *           Cannot be null.
 		 * @see #setPolicy(Policy)
 		 */
 		public DefaultDragListener (final Policy policy) {
@@ -348,7 +346,7 @@ public class DragPane extends Container<WidgetGroup> {
 
 		/**
 		 * @param policy determines behavior of dragged actors. Allows to prohibit actors from being added to a {@link DragPane}.
-		 * Cannot be null.
+		 *           Cannot be null.
 		 * @see DefaultPolicy
 		 */
 		public void setPolicy (final Policy policy) {
@@ -376,18 +374,26 @@ public class DragPane extends Container<WidgetGroup> {
 			if (overActor == null || overActor == actor || overActor.isAscendantOf(actor)) {
 				return CANCEL;
 			}
+			DRAG_POSITION.set(stageX, stageY);
 			if (overActor instanceof DragPane) {
-				// Dragged directly to a pane. Assuming no padding, adding last.
-				if (accept(overActor, (DragPane) overActor)) {
-					((DragPane) overActor).addActor(actor);
-					return APPROVE;
-				}
-				return CANCEL;
+				return addDirectlyToPane(actor, (DragPane) overActor);
 			}
 			final DragPane dragPane = getDragPane(overActor);
 			if (accept(actor, dragPane)) {
-				DRAG_POSITION.set(stageX, stageY);
-				addActor(actor, overActor, dragPane);
+				return addActor(actor, overActor, dragPane);
+			}
+			return CANCEL;
+		}
+
+		/**
+		 * @param actor dragged actor.
+		 * @param dragPane is directly under the dragged actor. If accepts the actor, it should be added to its content.
+		 * @return true if actor was accepted.
+		 */
+		protected boolean addDirectlyToPane (final Actor actor, final DragPane dragPane) {
+			if (accept(actor, dragPane)) {
+				// Dragged directly to a pane. Assuming no padding, adding last:
+				dragPane.addActor(actor);
 				return APPROVE;
 			}
 			return CANCEL;
@@ -402,24 +408,30 @@ public class DragPane extends Container<WidgetGroup> {
 			return dragPane != null && dragPane.accept(actor) && policy.accept(dragPane, actor);
 		}
 
-		private void addActor (final Actor actor, final Actor overActor, final DragPane dragPane) {
+		/**
+		 * @param actor is being dragged.
+		 * @param overActor is directly under the dragged actor.
+		 * @param dragPane contains the actor under dragged widget.
+		 * @return true if actor is accepted and added to the group.
+		 */
+		protected boolean addActor (final Actor actor, final Actor overActor, final DragPane dragPane) {
 			final Actor directPaneChild = getActorInDragPane(overActor, dragPane);
 			directPaneChild.stageToLocalCoordinates(DRAG_POSITION);
 			if (dragPane.isVertical()) {
-				addToVerticalGroup(actor, dragPane, directPaneChild);
+				return addToVerticalGroup(actor, dragPane, directPaneChild);
 			} else if (dragPane.isHorizontal()) {
-				addToHorizontalGroup(actor, dragPane, directPaneChild);
-			} else { // This is the default behavior for grid and unknown groups.
-				addToOtherGroup(actor, dragPane, directPaneChild);
-			}
+				return addToHorizontalGroup(actor, dragPane, directPaneChild);
+			} // This is the default behavior for grid and unknown groups:
+			return addToOtherGroup(actor, dragPane, directPaneChild);
 		}
 
 		/**
 		 * @param actor is being dragged.
 		 * @param dragPane is under the actor. Stores a {@link HorizontalGroup}.
 		 * @param directPaneChild actor under the cursor.
+		 * @return true if actor was accepted by the group.
 		 */
-		protected void addToHorizontalGroup (final Actor actor, final DragPane dragPane, final Actor directPaneChild) {
+		protected boolean addToHorizontalGroup (final Actor actor, final DragPane dragPane, final Actor directPaneChild) {
 			final Array<Actor> children = dragPane.getChildren();
 			final int indexOfDraggedActor = children.indexOf(actor, true);
 			if (indexOfDraggedActor >= 0) {
@@ -434,14 +446,16 @@ public class DragPane extends Container<WidgetGroup> {
 			} else {
 				dragPane.addActorBefore(directPaneChild, actor);
 			}
+			return APPROVE;
 		}
 
 		/**
 		 * @param actor is being dragged.
 		 * @param dragPane is under the actor. Stores a {@link VerticalGroup}.
 		 * @param directPaneChild actor under the cursor.
+		 * @return true if actor was accepted by the group.
 		 */
-		protected void addToVerticalGroup (final Actor actor, final DragPane dragPane, final Actor directPaneChild) {
+		protected boolean addToVerticalGroup (final Actor actor, final DragPane dragPane, final Actor directPaneChild) {
 			final Array<Actor> children = dragPane.getChildren();
 			final int indexOfDraggedActor = children.indexOf(actor, true);
 			if (indexOfDraggedActor >= 0) {
@@ -456,14 +470,16 @@ public class DragPane extends Container<WidgetGroup> {
 			} else {
 				dragPane.addActorBefore(directPaneChild, actor);
 			}
+			return APPROVE;
 		}
 
 		/**
 		 * @param actor is being dragged.
 		 * @param dragPane is under the actor. Stores a {@link GridGroup} or unknown group.
 		 * @param directPaneChild actor under the cursor.
+		 * @return true if actor was accepted by the group.
 		 */
-		protected void addToOtherGroup (final Actor actor, final DragPane dragPane, final Actor directPaneChild) {
+		protected boolean addToOtherGroup (final Actor actor, final DragPane dragPane, final Actor directPaneChild) {
 			final Array<Actor> children = dragPane.getChildren();
 			final int indexOfDirectChild = children.indexOf(directPaneChild, true);
 			final int indexOfDraggedActor = children.indexOf(actor, true);
@@ -474,8 +490,8 @@ public class DragPane extends Container<WidgetGroup> {
 					dragPane.addActorAfter(directPaneChild, actor);
 				}
 			} else if (indexOfDirectChild == children.size - 1) { // Dragged into last element.
-				if (DRAG_POSITION.y < directPaneChild.getHeight() / 2f || DRAG_POSITION.x > directPaneChild.getWidth() / 2f) { // Adding
-					// last:
+				if (DRAG_POSITION.y < directPaneChild.getHeight() / 2f || DRAG_POSITION.x > directPaneChild.getWidth() / 2f) {
+					// Adding last:																																	// last:
 					dragPane.addActor(actor);
 				} else {
 					dragPane.addActorBefore(directPaneChild, actor);
@@ -489,6 +505,7 @@ public class DragPane extends Container<WidgetGroup> {
 			} else { // Replacing hovered actor:
 				dragPane.addActorBefore(directPaneChild, actor);
 			}
+			return APPROVE;
 		}
 
 		/**
@@ -596,7 +613,7 @@ public class DragPane extends Container<WidgetGroup> {
 
 			/**
 			 * @param max if {@link DragPane}'s children amount equals (or is greater than) this value, other children will not be
-			 * accepted.
+			 *           accepted.
 			 */
 			public LimitChildren (final int max) {
 				this.max = max;
