@@ -66,7 +66,6 @@ public class ColorPicker extends VisWindow implements Disposable {
 	private Color color;
 
 	private Texture whiteTexture;
-	private Pixmap whitePixmap;
 
 	private ShaderProgram paletteShader;
 	private ShaderProgram verticalChannelShader;
@@ -145,11 +144,12 @@ public class ColorPicker extends VisWindow implements Disposable {
 	}
 
 	private void createPixmap () {
-		whitePixmap = new Pixmap(2, 2, Format.RGB888);
+		Pixmap whitePixmap = new Pixmap(2, 2, Format.RGB888);
 		whitePixmap.setColor(Color.WHITE);
 		whitePixmap.drawRectangle(0, 0, 2, 2);
 		whiteTexture = new Texture(whitePixmap);
 		whiteTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		whitePixmap.dispose();
 	}
 
 	private void loadShaders () {
@@ -408,7 +408,6 @@ public class ColorPicker extends VisWindow implements Disposable {
 		if (disposed) throw new IllegalStateException("ColorPicker can't be disposed twice!");
 
 		whiteTexture.dispose();
-		whitePixmap.dispose();
 
 		paletteShader.dispose();
 		verticalChannelShader.dispose();
