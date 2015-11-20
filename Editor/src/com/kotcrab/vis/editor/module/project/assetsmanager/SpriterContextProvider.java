@@ -48,7 +48,7 @@ public class SpriterContextProvider implements AssetsUIContextProvider {
 
 	public SpriterContextProvider () {
 		VisTextButton importButton = new VisTextButton("Import", "blue");
-		importButton.addListener(new VisChangeListener((event, actor) -> stage.addActor(new SpriterImportDialog(animFolder, relativePath))));
+		importButton.addListener(new VisChangeListener((event, actor) -> stage.addActor(new SpriterImportDialog(animFolder, relativePath).fadeIn())));
 
 		importTable = new VisTable();
 		importTable.pad(3);

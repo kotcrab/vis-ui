@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.assets.AssetFileType;
+import com.kotcrab.vis.editor.assets.AssetType;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.serializer.json.ObjectMapJsonSerializer;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
@@ -40,7 +40,7 @@ public class AssetsMetadataModule extends ProjectModule {
 
 	private FileHandle metadataFile;
 	private FileHandle metadataBackupFile;
-	private ObjectMap<FileHandle, AssetFileType> metadata;
+	private ObjectMap<FileHandle, String> metadata;
 
 	private Gson gson;
 
@@ -64,16 +64,16 @@ public class AssetsMetadataModule extends ProjectModule {
 		}
 	}
 
-	private void commit (FileHandle file, AssetFileType fileType) {
-		if (fileType == AssetFileType.UNKNOWN)
+	private void commit (FileHandle file, String fileType) {
+		if (fileType.equals(AssetType.UNKNOWN))
 			throw new IllegalStateException("Cannot commit unknown file type to metadata!");
 
 		metadata.put(file, fileType);
 		saveMetadata();
 	}
 
-	private AssetFileType get (FileHandle file) {
-		return metadata.get(file, AssetFileType.UNKNOWN);
+	private String get (FileHandle file) {
+		return metadata.get(file, AssetType.UNKNOWN);
 	}
 
 	private void loadMetadata () {

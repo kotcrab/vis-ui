@@ -21,14 +21,16 @@ package com.kotcrab.vis.editor.module.project.assetsmanager;
  * @author Kotcrab
  */
 public class ContentItemProperties {
-	public String title;
-	public boolean hideExtension;
+	public final String type;
+	public final String title;
+	public final boolean hideExtension;
 
-	public ContentItemProperties (String title) {
-		this.title = title;
+	public ContentItemProperties (String type, String title) {
+		this(type, title, false);
 	}
 
-	public ContentItemProperties (String title, boolean hideExtension) {
+	public ContentItemProperties (String type, String title, boolean hideExtension) {
+		this.type = type;
 		this.title = title;
 		this.hideExtension = hideExtension;
 	}

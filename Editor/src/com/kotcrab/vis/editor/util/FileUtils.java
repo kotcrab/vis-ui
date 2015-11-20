@@ -127,10 +127,6 @@ public class FileUtils extends com.kotcrab.vis.ui.widget.file.FileUtils {
 		return Gdx.files.absolute(path);
 	}
 
-	public static FileHandle toFileHandle (File file) {
-		return Gdx.files.absolute(file.getAbsolutePath());
-	}
-
 	public static void streamRecursively (FileHandle folder, Consumer<FileHandle> consumer) {
 		if (folder.isDirectory() == false) throw new IllegalStateException("Folder must be directory!");
 

@@ -115,10 +115,10 @@ public class SpineEditorSupport extends EditorEntitySupport {
 	@Override
 	public ContentItemProperties getContentItemProperties (String relativePath, String extension) {
 		if (extension.equals("json"))
-			return new ContentItemProperties("Spine Json Skeleton", true);
+			return new ContentItemProperties(SpineAssetType.JSON_SKELETON, "Spine Json Skeleton", true);
 
 		if (extension.equals("skel"))
-			return new ContentItemProperties("Spine Binary Skeleton", true);
+			return new ContentItemProperties(SpineAssetType.BINARY_SKELETON, "Spine Binary Skeleton", true);
 
 		return null;
 	}
