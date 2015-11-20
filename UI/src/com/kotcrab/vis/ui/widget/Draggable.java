@@ -1,15 +1,37 @@
+/*
+ * Copyright 2014-2015 See AUTHORS file.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.kotcrab.vis.ui.widget;
+
+import java.util.Iterator;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.kotcrab.vis.ui.layout.DragPane;
-
-import java.util.Iterator;
 
 /**
  * Draws copies of dragged actors which have this listener attached.
@@ -25,6 +47,11 @@ public class Draggable extends InputListener {
 	 * @see #setFadingTime(float)
 	 */
 	public static float DEFAULT_FADING_TIME = 0.1f;
+	/**
+	 * Initial moving time value of dragged actors.
+	 * @see #setMovingTime(float)
+	 */
+	public static float DEFAULT_MOVING_TIME = 0.1f;
 	/**
 	 * Initial invisibility setting of dragged actors.
 	 * @see #setInvisibleWhenDragged(boolean)
@@ -61,6 +88,7 @@ public class Draggable extends InputListener {
 	private boolean invisibleWhenDragged = INVISIBLE_ON_DRAG;
 	private boolean keepWithinParent = KEEP_WITHIN_PARENT;
 	private float fadingTime = DEFAULT_FADING_TIME;
+	private float movingTime = DEFAULT_FADING_TIME;
 	private float alpha = DEFAULT_ALPHA;
 	private Interpolation fadingInterpolation = Interpolation.fade;
 	private Interpolation movingInterpolation = Interpolation.sineOut;
@@ -105,12 +133,12 @@ public class Draggable extends InputListener {
 
 	/**
 	 * @param actor will have this listener attached and all other {@link Draggable} listeners removed. If you want multiple
-	 * {@link Draggable} listeners or you are sure that the widget has no other {@link Draggable}s attached, you can add
-	 * the listener using the standard method: {@link Actor#addListener(EventListener)} - avoiding validation and
-	 * iteration over actor's listeners.
+	 *           {@link Draggable} listeners or you are sure that the widget has no other {@link Draggable}s attached, you can add
+	 *           the listener using the standard method: {@link Actor#addListener(EventListener)} - avoiding validation and
+	 *           iteration over actor's listeners.
 	 */
 	public void attachTo (final Actor actor) {
-		for (final Iterator<EventListener> listeners = actor.getListeners().iterator(); listeners.hasNext(); ) {
+		for (final Iterator<EventListener> listeners = actor.getListeners().iterator(); listeners.hasNext();) {
 			final EventListener listener = listeners.next();
 			if (listener instanceof Draggable) {
 				listeners.remove();
@@ -136,7 +164,7 @@ public class Draggable extends InputListener {
 
 	/**
 	 * @param blockInput true if mouse input should be blocked during actors dragging. If false, other actors might still receive
-	 * mouse events (for example, buttons might switch to "over" style).
+	 *           mouse events (for example, buttons might switch to "over" style).
 	 */
 	public void setBlockInput (final boolean blockInput) {
 		this.blockInput = blockInput;
@@ -159,8 +187,8 @@ public class Draggable extends InputListener {
 
 	/**
 	 * @param keepWithinParent if true, widget cannot be dragged out of the bounds of its parent. Stage coordinates in listener
-	 * will always be inside the parent. Note that for this setting to work properly, both actor and its parent have to
-	 * correctly return their sizes with {@link Actor#getWidth()} and {@link Actor#getHeight()} methods.
+	 *           will always be inside the parent. Note that for this setting to work properly, both actor and its parent have to
+	 *           correctly return their sizes with {@link Actor#getWidth()} and {@link Actor#getHeight()} methods.
 	 */
 	public void setKeepWithinParent (final boolean keepWithinParent) {
 		this.keepWithinParent = keepWithinParent;
@@ -174,6 +202,16 @@ public class Draggable extends InputListener {
 	/** @param fadingTime time after which the dragged actor copy disappears. */
 	public void setFadingTime (final float fadingTime) {
 		this.fadingTime = fadingTime;
+	}
+
+	/** @return time after which the dragged actor copy returns to its origin. */
+	public float getMovingTime () {
+		return movingTime;
+	}
+
+	/** @param movingTime time after which the dragged actor copy returns to its origin. */
+	public void setMovingTime (final float movingTime) {
+		this.movingTime = movingTime;
 	}
 
 	/** @param movingInterpolation used to move the dragged widgets to the original position when their drag was cancelled. */
@@ -287,7 +325,7 @@ public class Draggable extends InputListener {
 					MIMIC_COORDINATES.y = parentEndY - mimic.getHeight();
 				}
 				STAGE_COORDINATES.set(MathUtils.clamp(event.getStageX(), parentX, parentEndX - 1f),
-						MathUtils.clamp(event.getStageY(), parentY, parentEndY - 1f));
+					MathUtils.clamp(event.getStageY(), parentY, parentEndY - 1f));
 			}
 		} else {
 			MIMIC_COORDINATES.set(event.getStageX() + offsetX, event.getStageY() + offsetY);
@@ -313,12 +351,12 @@ public class Draggable extends InputListener {
 			getStageCoordinates(event);
 			mimic.setPosition(MIMIC_COORDINATES.x, MIMIC_COORDINATES.y);
 			if (listener == null || mimic.getActor().getStage() != null
-					&& listener.onEnd(mimic.getActor(), STAGE_COORDINATES.x, STAGE_COORDINATES.y)) {
+				&& listener.onEnd(mimic.getActor(), STAGE_COORDINATES.x, STAGE_COORDINATES.y)) {
 				// Drag end approved - fading out.
-				addMimicHidingAction(Actions.fadeOut(fadingTime, fadingInterpolation));
+				addMimicHidingAction(Actions.fadeOut(fadingTime, fadingInterpolation), fadingTime);
 			} else {
 				// Drag end cancelled - returning to the original position.
-				addMimicHidingAction(Actions.moveTo(dragStartX, dragStartY, fadingTime, movingInterpolation));
+				addMimicHidingAction(Actions.moveTo(dragStartX, dragStartY, movingTime, movingInterpolation), movingTime);
 			}
 		}
 	}
@@ -329,9 +367,9 @@ public class Draggable extends InputListener {
 	}
 
 	/** @param hidingAction will be attached to the mimic actor. */
-	protected void addMimicHidingAction (final Action hidingAction) {
+	protected void addMimicHidingAction (final Action hidingAction, float delay) {
 		mimic.addAction(Actions.sequence(hidingAction, Actions.removeActor()));
-		mimic.getActor().addAction(Actions.delay(fadingTime, Actions.visible(true)));
+		mimic.getActor().addAction(Actions.delay(delay, Actions.visible(true)));
 	}
 
 	/**
@@ -363,7 +401,7 @@ public class Draggable extends InputListener {
 		 * @param stageX stage coordinate on X axis where the drag ends.
 		 * @param stageY stage coordinate on X axis where the drag ends.
 		 * @return if true, "mirror" of the actor will quickly fade out. If false, mirror will return to the original actor's
-		 * position.
+		 *         position.
 		 */
 		boolean onEnd (Actor actor, float stageX, float stageY);
 	}
