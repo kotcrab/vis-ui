@@ -54,6 +54,6 @@ public class ShaderATSelectFileHandler implements ATSelectFileHandler {
 	public String getLabelValue (Entity entity) {
 		ShaderAsset asset = entity.getComponent(ShaderComponent.class).asset;
 		if (asset == null) return "<no shader>";
-		return asset.getPathWithoutExtension().substring("shader/".length());
+		return asset.getPathWithoutExtension();
 	}
 }

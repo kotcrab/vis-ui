@@ -51,6 +51,14 @@ public class ProjectPathUtils {
 		return file.extension().equals("fnt") && FileUtils.sibling(file, "png").exists();
 	}
 
+	public static boolean isFragmentShader (FileHandle file) {
+		return file.extension().equals("frag");
+	}
+
+	public static boolean isVertexShader (FileHandle file) {
+		return file.extension().equals("vert");
+	}
+
 	public static boolean isBitmapFontTexture (FileHandle file) {
 		return file.extension().equals("png") && FileUtils.sibling(file, "fnt").exists();
 	}

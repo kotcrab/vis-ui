@@ -133,12 +133,12 @@ public class FileItem extends Table {
 			return;
 		}
 
-		if (relativePath.startsWith("shader") && ext.equals("frag")) {
+		if (ProjectPathUtils.isFragmentShader(file)) {
 			createDefaultView(AssetFileType.FRAGMENT_SHADER, "Fragment Shader", true);
 			return;
 		}
 
-		if (relativePath.startsWith("shader") && ext.equals("vert")) {
+		if (ProjectPathUtils.isVertexShader(file)) {
 			createDefaultView(AssetFileType.VERTEX_SHADER, "Vertex Shader", true);
 			return;
 		}
