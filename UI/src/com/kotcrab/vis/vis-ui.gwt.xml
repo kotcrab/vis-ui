@@ -32,24 +32,34 @@
 		<exclude name="util/form/FormValidator.java" />
 	</source>
 
+    <!-- X1 skin -->
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/skin/x1/uiskin.json" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/skin/x1/uiskin.atlas" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/skin/x1/uiskin.png" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/skin/x1/default.fnt" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/skin/x1/font-small.fnt" />
 
+    <!-- X2 skin -->
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/skin/x2/uiskin.json" />
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/skin/x2/uiskin.atlas" />
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/skin/x2/uiskin.png" />
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/skin/x2/default.fnt" />
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/skin/x2/font-small.fnt" />
 
+    <!-- ColorPicker shaders -->
+    <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/widget/color/internal/default.vert" />
+    <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/widget/color/internal/hsv.frag" />
+    <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/widget/color/internal/rgb.frag" />
+    <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/widget/color/internal/palette.frag" />
+    <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/widget/color/internal/verticalBar.frag" />
+
+    <!-- I18N files -->
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/ColorPicker.properties" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/DialogUtils.properties" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/FileChooser.properties" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/TabbedPane.properties" />
 
-    <!-- When changing those don't forget to update robovm.xml -->
+    <!-- When changing those don't forget to update META-INF/robovm/ios/robovm.xml -->
 
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.Sizes" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget" />

@@ -22,26 +22,25 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.component.*;
 
 /** @author Kotcrab */
 public class PhysicsBodyManager extends EntitySystem {
 	private PhysicsSystem physicsSystem;
 
-	private ComponentMapper<PhysicsPropertiesComponent> physicsCm;
+	private ComponentMapper<PhysicsPropertiesComponent> physicsPropCm;
+	private ComponentMapper<PhysicsComponent> physicsCm;
 	private ComponentMapper<PolygonComponent> polygonCm;
 	private ComponentMapper<SpriteComponent> spriteCm;
 	private ComponentMapper<PhysicsSpriteComponent> physicsSpriteCm;
 
 	private World world;
+	private RuntimeConfiguration runtimeConfig;
 
-	public PhysicsBodyManager () {
+	public PhysicsBodyManager (RuntimeConfiguration runtimeConfig) {
 		super(Aspect.all(PhysicsPropertiesComponent.class, PolygonComponent.class, SpriteComponent.class));
-	}
-
-	@Override
-	protected void initialize () {
-		world = physicsSystem.getPhysicsWorld();
+		this.runtimeConfig = runtimeConfig;
 	}
 
 	@Override
@@ -50,8 +49,13 @@ public class PhysicsBodyManager extends EntitySystem {
 	}
 
 	@Override
+	protected void initialize () {
+		world = physicsSystem.getPhysicsWorld();
+	}
+
+	@Override
 	public void inserted (Entity entity) {
-		PhysicsPropertiesComponent physicsProperties = physicsCm.get(entity);
+		PhysicsPropertiesComponent physicsProperties = physicsPropCm.get(entity);
 		PolygonComponent polygon = polygonCm.get(entity);
 		SpriteComponent sprite = spriteCm.get(entity);
 
@@ -99,5 +103,14 @@ public class PhysicsBodyManager extends EntitySystem {
 		entity.edit()
 				.add(new PhysicsComponent(body))
 				.add(new PhysicsSpriteComponent(sprite.getRotation()));
+	}
+
+	@Override
+	public void removed (Entity entity) {
+		if (runtimeConfig.autoDisposeBox2dBodyOnEntityRemove == false || physicsCm.has(entity) == false) return;
+		PhysicsComponent physics = physicsCm.get(entity);
+		if (physics.body == null) return;
+		world.destroyBody(physics.body);
+		physics.body = null;
 	}
 }

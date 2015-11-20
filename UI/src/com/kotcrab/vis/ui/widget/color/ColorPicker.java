@@ -16,10 +16,13 @@
 
 package com.kotcrab.vis.ui.widget.color;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Pixmap.Format;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -30,7 +33,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ColorUtils;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
-import com.kotcrab.vis.ui.widget.color.ColorChannelWidget.ColorChannelWidgetListener;
+import com.kotcrab.vis.ui.widget.color.internal.*;
 
 import static com.kotcrab.vis.ui.widget.color.ColorPickerText.*;
 
@@ -42,14 +45,15 @@ import static com.kotcrab.vis.ui.widget.color.ColorPickerText.*;
  * @since 0.6.0
  */
 public class ColorPicker extends VisWindow implements Disposable {
-	static final int FIELD_WIDTH = 50;
-	static final int HEX_FIELD_WIDTH = 95;
+	public static final int FIELD_WIDTH = 50;
 
-	static final int PALETTE_SIZE = 160;
-	static final int BAR_WIDTH = 130;
-	static final int BAR_HEIGHT = 11;
-	static final float VERTICAL_BAR_WIDTH = 15;
+	public static final int PALETTE_SIZE = 160;
+	public static final int BAR_WIDTH = 130;
+	public static final int BAR_HEIGHT = 11;
 
+	private static final float VERTICAL_BAR_WIDTH = 15;
+
+	private static final int HEX_FIELD_WIDTH = 95;
 	private static final int HEX_COLOR_LENGTH = 6;
 	private static final int HEX_COLOR_LENGTH_WITH_ALPHA = 8;
 
@@ -60,15 +64,16 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 	private Color oldColor;
 	private Color color;
-	private Color tmpColor; //temp color used for hsv to rgb calculations
 
-	private Pixmap barPixmap;
-	private Texture barTexture;
-	private VerticalChannelBar verticalBar;
+	private Texture whiteTexture;
 
-	private Texture paletteTexture;
-	private Pixmap palettePixmap;
+	private ShaderProgram paletteShader;
+	private ShaderProgram verticalChannelShader;
+	private ShaderProgram hsvShader;
+	private ShaderProgram rgbShader;
+
 	private Palette palette;
+	private VerticalChannelBar verticalBar;
 
 	private ColorChannelWidget hBar;
 	private ColorChannelWidget sBar;
@@ -125,15 +130,45 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 		oldColor = new Color(Color.BLACK);
 		color = new Color(Color.BLACK);
-		tmpColor = new Color(Color.BLACK);
+
+		createPixmap();
+		loadShaders();
 
 		createColorWidgets();
 		createUI();
 		createListeners();
-		updatePixmaps();
+		updateUI();
 
 		pack();
 		centerWindow();
+	}
+
+	private void createPixmap () {
+		Pixmap whitePixmap = new Pixmap(2, 2, Format.RGB888);
+		whitePixmap.setColor(Color.WHITE);
+		whitePixmap.drawRectangle(0, 0, 2, 2);
+		whiteTexture = new Texture(whitePixmap);
+		whiteTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		whitePixmap.dispose();
+	}
+
+	private void loadShaders () {
+		paletteShader = loadShader("default.vert", "palette.frag");
+		verticalChannelShader = loadShader("default.vert", "verticalBar.frag");
+		hsvShader = loadShader("default.vert", "hsv.frag");
+		rgbShader = loadShader("default.vert", "rgb.frag");
+	}
+
+	private ShaderProgram loadShader (String vertFile, String fragFile) {
+		ShaderProgram program = new ShaderProgram(
+				Gdx.files.classpath("com/kotcrab/vis/ui/widget/color/internal/" + vertFile),
+				Gdx.files.classpath("com/kotcrab/vis/ui/widget/color/internal/" + fragFile));
+
+		if (program.isCompiled() == false) {
+			throw new IllegalStateException("ColorPicker shader compilation failed: " + program.getLog());
+		}
+
+		return program;
 	}
 
 	private void createUI () {
@@ -219,155 +254,49 @@ public class ColorPicker extends VisWindow implements Disposable {
 	}
 
 	private void createColorWidgets () {
-		palettePixmap = new Pixmap(100, 100, Format.RGB888);
-		paletteTexture = new Texture(palettePixmap);
-
-		barPixmap = new Pixmap(1, 360, Format.RGB888);
-
-		for (int h = 0; h < 360; h++) {
-			ColorUtils.HSVtoRGB(360 - h, 100, 100, tmpColor);
-			barPixmap.drawPixel(0, h, Color.rgba8888(tmpColor));
-		}
-
-		barTexture = new Texture(barPixmap);
-
-		palette = new Palette(style, sizes, paletteTexture, 0, 0, 100, new ChangeListener() {
+		palette = new Palette(style, sizes, paletteShader, whiteTexture, 100, new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				sBar.setValue(palette.getV());
 				vBar.setValue(palette.getS());
 
-				updateHSVValuesFromFields();
-				updatePixmaps();
+				updateValuesFromHSVFields();
+				updateUI();
 			}
 		});
 
-		verticalBar = new VerticalChannelBar(style, sizes, barTexture, 0, 360, new ChangeListener() {
+		verticalBar = new VerticalChannelBar(style, sizes, verticalChannelShader, whiteTexture, 360, new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				hBar.setValue(verticalBar.getValue());
-				updateHSVValuesFromFields();
-				updatePixmaps();
+				updateValuesFromHSVFields();
+				updateUI();
 			}
 		});
 
-		hBar = new ColorChannelWidget(style, sizes, "H", 360, new ColorChannelWidgetListener() {
+		HsvChannelBarListener svListener = new HsvChannelBarListener() {
 			@Override
-			public void updateFields () {
+			protected void updateLinkedWidget () {
+				palette.setValue(vBar.getValue(), sBar.getValue());
+			}
+		};
+
+		hBar = new ColorChannelWidget(style, sizes, "H", hsvShader, whiteTexture, ChannelBar.MODE_H, 360, new HsvChannelBarListener() {
+			@Override
+			protected void updateLinkedWidget () {
 				verticalBar.setValue(hBar.getValue());
-				updateHSVValuesFromFields();
-				updatePixmaps();
-			}
-
-			@Override
-			public void draw (Pixmap pixmap) {
-				for (int h = 0; h < 360; h++) {
-					ColorUtils.HSVtoRGB(h, sBar.getValue(), vBar.getValue(), tmpColor);
-					pixmap.drawPixel(h, 0, Color.rgba8888(tmpColor));
-				}
 			}
 		});
 
-		sBar = new ColorChannelWidget(style, sizes, "S", 100, new ColorChannelWidgetListener() {
-			@Override
-			public void updateFields () {
-				palette.setValue(vBar.getValue(), sBar.getValue());
-				updateHSVValuesFromFields();
-				updatePixmaps();
-			}
+		sBar = new ColorChannelWidget(style, sizes, "S", hsvShader, whiteTexture, ChannelBar.MODE_S, 100, svListener);
+		vBar = new ColorChannelWidget(style, sizes, "V", hsvShader, whiteTexture, ChannelBar.MODE_V, 100, svListener);
 
-			@Override
-			public void draw (Pixmap pixmap) {
-				for (int s = 0; s < 100; s++) {
-					ColorUtils.HSVtoRGB(hBar.getValue(), s, vBar.getValue(), tmpColor);
-					pixmap.drawPixel(s, 0, Color.rgba8888(tmpColor));
-				}
-			}
-		});
+		RgbChannelBarListener rgbListener = new RgbChannelBarListener();
+		rBar = new ColorChannelWidget(style, sizes, "R", rgbShader, whiteTexture, ChannelBar.MODE_R, 255, rgbListener);
+		gBar = new ColorChannelWidget(style, sizes, "G", rgbShader, whiteTexture, ChannelBar.MODE_G, 255, rgbListener);
+		bBar = new ColorChannelWidget(style, sizes, "B", rgbShader, whiteTexture, ChannelBar.MODE_B, 255, rgbListener);
 
-		vBar = new ColorChannelWidget(style, sizes, "V", 100, new ColorChannelWidgetListener() {
-			@Override
-			public void updateFields () {
-				palette.setValue(vBar.getValue(), sBar.getValue());
-				updateHSVValuesFromFields();
-				updatePixmaps();
-			}
-
-			@Override
-			public void draw (Pixmap pixmap) {
-				for (int v = 0; v < 100; v++) {
-					ColorUtils.HSVtoRGB(hBar.getValue(), sBar.getValue(), v, tmpColor);
-					pixmap.drawPixel(v, 0, Color.rgba8888(tmpColor));
-				}
-
-			}
-		});
-
-		rBar = new ColorChannelWidget(style, sizes, "R", 255, new ColorChannelWidgetListener() {
-			@Override
-			public void updateFields () {
-				updateRGBValuesFromFields();
-				updatePixmaps();
-			}
-
-			@Override
-			public void draw (Pixmap pixmap) {
-				for (int r = 0; r < 255; r++) {
-					tmpColor.set(r / 255.0f, color.g, color.b, 1);
-					pixmap.drawPixel(r, 0, Color.rgba8888(tmpColor));
-				}
-			}
-		});
-
-		gBar = new ColorChannelWidget(style, sizes, "G", 255, new ColorChannelWidgetListener() {
-			@Override
-			public void updateFields () {
-				updateRGBValuesFromFields();
-				updatePixmaps();
-			}
-
-			@Override
-			public void draw (Pixmap pixmap) {
-				for (int g = 0; g < 255; g++) {
-					tmpColor.set(color.r, g / 255.0f, color.b, 1);
-					pixmap.drawPixel(g, 0, Color.rgba8888(tmpColor));
-				}
-			}
-		});
-
-		bBar = new ColorChannelWidget(style, sizes, "B", 255, new ColorChannelWidgetListener() {
-			@Override
-			public void updateFields () {
-				updateRGBValuesFromFields();
-				updatePixmaps();
-			}
-
-			@Override
-			public void draw (Pixmap pixmap) {
-				for (int b = 0; b < 255; b++) {
-					tmpColor.set(color.r, color.g, b / 255.0f, 1);
-					pixmap.drawPixel(b, 0, Color.rgba8888(tmpColor));
-				}
-
-			}
-		});
-
-		aBar = new ColorChannelWidget(style, sizes, "A", 255, true, new ColorChannelWidgetListener() {
-			@Override
-			public void updateFields () {
-				if (aBar.isInputValid()) color.a = aBar.getValue() / 255.0f;
-				updatePixmaps();
-			}
-
-			@Override
-			public void draw (Pixmap pixmap) {
-				pixmap.fill();
-				for (int i = 0; i < 255; i++) {
-					tmpColor.set(color.r, color.g, color.b, i / 255.0f);
-					pixmap.drawPixel(i, 0, Color.rgba8888(tmpColor));
-				}
-			}
-		});
+		aBar = new ColorChannelWidget(style, sizes, "A", rgbShader, whiteTexture, ChannelBar.MODE_ALPHA, 255, new AlphaChannelBarListener());
 	}
 
 	private void createListeners () {
@@ -410,27 +339,10 @@ public class ColorPicker extends VisWindow implements Disposable {
 		this.listener = listener;
 	}
 
-	private void updatePixmaps () {
-		for (int v = 0; v <= 100; v++) {
-			for (int s = 0; s <= 100; s++) {
-				ColorUtils.HSVtoRGB(hBar.getValue(), s, v, tmpColor);
-				palettePixmap.drawPixel(v, 100 - s, Color.rgba8888(tmpColor));
-			}
-		}
-
-		paletteTexture.draw(palettePixmap, 0, 0);
+	private void updateUI () {
+		palette.setPickerHue(hBar.getValue());
 
 		newColorImg.setColor(color);
-
-		hBar.redraw();
-		sBar.redraw();
-		vBar.redraw();
-
-		rBar.redraw();
-		gBar.redraw();
-		bBar.redraw();
-
-		aBar.redraw();
 
 		hexField.setText(color.toString().toUpperCase());
 		hexField.setCursorPosition(hexField.getMaxLength());
@@ -452,8 +364,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 			oldColor = new Color(newColor);
 		}
 		color = new Color(newColor);
-		updateFieldsFromColor();
-		updatePixmaps();
+		updateValuesFromCurrentColor();
+		updateUI();
 	}
 
 	/**
@@ -495,26 +407,18 @@ public class ColorPicker extends VisWindow implements Disposable {
 	public void dispose () {
 		if (disposed) throw new IllegalStateException("ColorPicker can't be disposed twice!");
 
-		paletteTexture.dispose();
-		barTexture.dispose();
+		whiteTexture.dispose();
 
-		palettePixmap.dispose();
-		barPixmap.dispose();
-
-		hBar.dispose();
-		sBar.dispose();
-		vBar.dispose();
-
-		rBar.dispose();
-		gBar.dispose();
-		bBar.dispose();
-
-		aBar.dispose();
+		paletteShader.dispose();
+		verticalChannelShader.dispose();
+		hsvShader.dispose();
+		rgbShader.dispose();
 
 		disposed = true;
 	}
 
-	private void updateFieldsFromColor () {
+	/** Updates picker ui from current color */
+	private void updateValuesFromCurrentColor () {
 		int[] hsv = ColorUtils.RGBtoHSV(color);
 		int ch = hsv[0];
 		int cs = hsv[1];
@@ -539,7 +443,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 		palette.setValue(vBar.getValue(), sBar.getValue());
 	}
 
-	private void updateHSVValuesFromFields () {
+	/** Updates picker from H, S and V bars */
+	private void updateValuesFromHSVFields () {
 		int[] hsv = ColorUtils.RGBtoHSV(color);
 		int h = hsv[0];
 		int s = hsv[1];
@@ -560,7 +465,8 @@ public class ColorPicker extends VisWindow implements Disposable {
 		bBar.setValue(cb);
 	}
 
-	private void updateRGBValuesFromFields () {
+	/** Updates picker from R, G and B bars */
+	private void updateValuesFromRGBFields () {
 		int r = MathUtils.round(color.r * 255.0f);
 		int g = MathUtils.round(color.g * 255.0f);
 		int b = MathUtils.round(color.b * 255.0f);
@@ -582,5 +488,46 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 		verticalBar.setValue(hBar.getValue());
 		palette.setValue(vBar.getValue(), sBar.getValue());
+	}
+
+	private class RgbChannelBarListener implements ChannelBar.ChannelBarListener {
+		@Override
+		public void updateFields () {
+			updateValuesFromRGBFields();
+			updateUI();
+		}
+
+		@Override
+		public void setShaderUniforms (ShaderProgram shader) {
+			shader.setUniformf("u_r", color.r);
+			shader.setUniformf("u_g", color.g);
+			shader.setUniformf("u_b", color.b);
+		}
+	}
+
+	private class AlphaChannelBarListener extends RgbChannelBarListener {
+		@Override
+		public void updateFields () {
+			if (aBar.isInputValid()) color.a = aBar.getValue() / 255.0f;
+			updateUI();
+		}
+	}
+
+	private abstract class HsvChannelBarListener implements ChannelBar.ChannelBarListener {
+		@Override
+		public void updateFields () {
+			updateLinkedWidget();
+			updateValuesFromHSVFields();
+			updateUI();
+		}
+
+		@Override
+		public void setShaderUniforms (ShaderProgram shader) {
+			shader.setUniformf("u_h", hBar.getValue() / 360.0f);
+			shader.setUniformf("u_s", sBar.getValue() / 100.0f);
+			shader.setUniformf("u_v", vBar.getValue() / 100.0f);
+		}
+
+		protected abstract void updateLinkedWidget ();
 	}
 }

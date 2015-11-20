@@ -219,10 +219,10 @@ public class Lexer {
 			String content = null;
 			String includeName = usl.substring(i + 1, includeEnd);
 
-			if(includeMappings == null) loadIncludeMappings();
+			if (includeMappings == null) loadIncludeMappings();
 
 			String fileName = includeMappings.get(includeName);
-			if(fileName != null)
+			if (fileName != null)
 				content = streamToString(USL.class.getResourceAsStream(fileName));
 			else
 				Utils.throwException("Invalid internal include file: " + includeName, usl, i);

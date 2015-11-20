@@ -83,7 +83,7 @@ public class Scene {
 
 		if (data.physicsSettings.physicsEnabled) {
 			engineConfig.setSystem(new PhysicsSystem(data.physicsSettings));
-			engineConfig.setSystem(new PhysicsBodyManager());
+			engineConfig.setSystem(new PhysicsBodyManager(context.configuration));
 			if (runtimeConfig.useBox2dSpriteUpdateSystem) engineConfig.setSystem(new PhysicsSpriteUpdateSystem());
 		}
 

@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -31,14 +32,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.I18NBundle;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.ObjectMap.Entry;
+import com.badlogic.gdx.utils.IdentityMap;
+import com.badlogic.gdx.utils.IdentityMap.Entry;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.i18n.BundleText;
+import com.kotcrab.vis.ui.layout.DragPane;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
+import com.kotcrab.vis.ui.widget.Draggable;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisImageButton.VisImageButtonStyle;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -47,20 +50,27 @@ import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 
 /**
  * A tabbed pane, allows to have multiple tabs open and switch between them. TabbedPane does not handle displaying tab content,
- * you have to do that manually using tabbed pane listener to get tab content table (see {@link Tab#getContentTable()} and {@link TabbedPaneListener}).
- * All tabs must extend {@link Tab} class.
+ * you have to do that manually using tabbed pane listener to get tab content table (see {@link Tab#getContentTable()} and
+ * {@link TabbedPaneListener}). All tabs must extend {@link Tab} class.
+ * <p>
+ * Since 0.9.3, tabbed pane uses an internal {@link DragPane} to make the tabs draggable. You can completely turn off this
+ * functionality by setting {@link TabbedPaneStyle#draggable} to false. To turn off the drag listener at runtime, use
+ * {@link #getTabsPane()} method to get a reference of {@link DragPane}, and invoke {@link DragPane#setDraggable(Draggable)} with
+ * null argument - this will clear draggable listener from all tabs' buttons; naturally, setting this value to non-null
+ * {@link Draggable} listener will also add it to all buttons.
  * @author Kotcrab
+ * @author MJ
  * @since 0.7.0
  */
 public class TabbedPane {
 	private TabbedPaneStyle style;
 	private VisImageButtonStyle sharedCloseActiveButtonStyle;
 
-	private VisTable tabsTable;
+	private DragPane tabsPane;
 	private VisTable mainTable;
 
 	private Array<Tab> tabs;
-	private ObjectMap<Tab, TabButtonTable> tabsButtonMap;
+	private IdentityMap<Tab, TabButtonTable> tabsButtonMap;
 	private ButtonGroup<Button> group;
 
 	private Tab activeTab;
@@ -85,32 +95,61 @@ public class TabbedPane {
 		group = new ButtonGroup<Button>();
 
 		mainTable = new VisTable();
-		tabsTable = new VisTable();
+		tabsPane = new DragPane(style.vertical); // TODO Use flow layout.
+		configureDragPane(style);
 
 		mainTable.setBackground(style.background);
 
 		tabs = new Array<Tab>();
-		tabsButtonMap = new ObjectMap<Tab, TabButtonTable>();
+		tabsButtonMap = new IdentityMap<Tab, TabButtonTable>();
 
-		mainTable.add(tabsTable).left().expandX();
-		mainTable.row();
+		mainTable.add(tabsPane);
 
 		// if height is not set bottomBar may sometimes disappear
 		if (style.bottomBar != null) {
-			mainTable.add(new Image(style.bottomBar)).expand().fill().height(style.bottomBar.getMinHeight());
+			if (style.vertical) {
+				// TODO Separate image. One that actually looks good.
+				mainTable.add(new Image(style.bottomBar)).expand().fill().width(style.bottomBar.getMinWidth());
+			} else {
+				mainTable.getCell(tabsPane).left().expandX();
+				mainTable.row();
+				mainTable.add(new Image(style.bottomBar)).expand().fill().height(style.bottomBar.getMinHeight());
+			}
+		} else {
+			//make sure that tab will fill available space even when there is not bottomBar image set
+			mainTable.add().expand().fill();
 		}
 	}
 
+	private void configureDragPane (TabbedPaneStyle style) {
+		tabsPane.setTouchable(Touchable.childrenOnly);
+		tabsPane.setListener(new DragPane.DragPaneListener.AcceptOwnChildren());
+		if (style.draggable) {
+			Draggable draggable = new Draggable();
+			draggable.setInvisibleWhenDragged(true);
+			draggable.setKeepWithinParent(true);
+			draggable.setBlockInput(true);
+			draggable.setFadingTime(0f);
+			tabsPane.setDraggable(draggable);
+		}
+	}
+
+	/** @return a direct reference to internal {@link DragPane}. Allows to manage {@link Draggable} settings. */
+	public DragPane getTabsPane () {
+		return tabsPane;
+	}
+
 	/**
-	 * @param allowTabDeselect if true user may deselect tab, meaning that there won't be any active tab.
-	 * Allows to create similar behaviour like in Intellij IDEA bottom quick access bar
+	 * @param allowTabDeselect if true user may deselect tab, meaning that there won't be any active tab. Allows to create similar
+	 * behaviour like in Intellij IDEA bottom quick access bar
 	 */
 	public void setAllowTabDeselect (boolean allowTabDeselect) {
 		this.allowTabDeselect = allowTabDeselect;
-		if (allowTabDeselect)
+		if (allowTabDeselect) {
 			group.setMinCheckCount(0);
-		else
+		} else {
 			group.setMinCheckCount(1);
+		}
 	}
 
 	public boolean isAllowTabDeselect () {
@@ -121,26 +160,52 @@ public class TabbedPane {
 		tab.setPane(this);
 		tabs.add(tab);
 
-		rebuildTabsTable();
+		addTab(tab, tabsPane.getChildren().size);
 		switchTab(tab);
 	}
 
 	public void insert (int index, Tab tab) {
 		tab.setPane(this);
 		tabs.insert(index, tab);
-		rebuildTabsTable();
+		addTab(tab, index);
+	}
+
+	/**
+	 * @param tab will be added in the selected index.
+	 * @param index index of the tab, starting from zero.
+	 */
+	protected void addTab (Tab tab, int index) {
+		TabButtonTable buttonTable = tabsButtonMap.get(tab);
+		if (buttonTable == null) {
+			buttonTable = new TabButtonTable(tab);
+			tabsButtonMap.put(tab, buttonTable);
+		}
+
+		buttonTable.setTouchable(Touchable.enabled);
+		if (index >= tabsPane.getChildren().size) {
+			tabsPane.addActor(buttonTable);
+		} else {
+			tabsPane.addActorAt(index, buttonTable);
+		}
+		group.add(buttonTable.button);
+
+		if (tabs.size == 1 && activeTab != null) {
+			buttonTable.select();
+			notifyListenersSwitched(tab);
+		} else if (tab == activeTab) {
+			buttonTable.select(); // maintains current previous tab while rebuilding
+		}
 	}
 
 	/**
 	 * Disables or enables given tab.
 	 * <p>
-	 * When disabling, if tab is currently selected, TabbedPane will switch to first available enabled Tab.
-	 * If there is no any other enabled Tab, listener {@link TabbedPaneListener#switchedTab(Tab)} with null
-	 * Tab will be called.
+	 * When disabling, if tab is currently selected, TabbedPane will switch to first available enabled Tab. If there is no any
+	 * other enabled Tab, listener {@link TabbedPaneListener#switchedTab(Tab)} with null Tab will be called.
 	 * <p>
-	 * When enabling Tab and there isn't any others Tab enabled and {@link #setAllowTabDeselect(boolean)} was set to false,
-	 * passed Tab will be selected. If {@link #setAllowTabDeselect(boolean)} is set to true nothing will be selected,
-	 * all tabs will remain unselected.
+	 * When enabling Tab and there isn't any others Tab enabled and {@link #setAllowTabDeselect(boolean)} was set to false, passed
+	 * Tab will be selected. If {@link #setAllowTabDeselect(boolean)} is set to true nothing will be selected, all tabs will remain
+	 * unselected.
 	 * @param tab tab to change its state
 	 * @param disable controls whether to disable or enable this tab
 	 * @throws IllegalArgumentException if tab does not belong to this TabbedPane
@@ -152,9 +217,11 @@ public class TabbedPane {
 		buttonTable.button.setDisabled(disable);
 
 		if (activeTab == tab && disable) {
-			if (selectFirstEnabledTab()) return;
+			if (selectFirstEnabledTab()) {
+				return;
+			}
 
-			//there isn't any tab we can switch to
+			// there isn't any tab we can switch to
 			activeTab = null;
 			notifyListenersSwitched(null);
 		}
@@ -166,7 +233,9 @@ public class TabbedPane {
 
 	public boolean isTabDisabled (Tab tab) {
 		TabButtonTable table = tabsButtonMap.get(tab);
-		if (table == null) throwNotBelongingTabException(tab);
+		if (table == null) {
+			throwNotBelongingTabException(tab);
+		}
 		return table.button.isDisabled();
 	}
 
@@ -187,7 +256,7 @@ public class TabbedPane {
 		}
 	}
 
-	private void throwNotBelongingTabException (Tab tab) {
+	protected void throwNotBelongingTabException (Tab tab) {
 		throw new IllegalArgumentException("Tab '" + tab.getTabTitle() + "' does not belong to this TabbedPane");
 	}
 
@@ -225,8 +294,9 @@ public class TabbedPane {
 							removeTab(tab);
 						}
 					});
-		} else
+		} else {
 			return removeTab(tab);
+		}
 
 		return false;
 	}
@@ -236,6 +306,9 @@ public class TabbedPane {
 		boolean success = tabs.removeValue(tab, true);
 
 		if (success) {
+			TabButtonTable buttonTable = tabsButtonMap.get(tab);
+			tabsPane.removeActor(buttonTable, true);
+			tabsPane.invalidateHierarchy();
 			tabsButtonMap.remove(tab);
 
 			tab.setPane(null);
@@ -244,14 +317,17 @@ public class TabbedPane {
 			notifyListenersRemoved(tab);
 
 			if (tabs.size == 0) {
-				//all tabs were removed so notify listener
+				// all tabs were removed so notify listener
 				notifyListenersRemovedAll();
-			} else if (activeTab == tab && index != 0) {
-				//switch to previous tab
-				switchTab(--index);
+			} else if (activeTab == tab) {
+				if (index > 0) {
+					// switch to previous tab
+					switchTab(--index);
+				} else {
+					// Switching to the next tab, currently having our removed tab index.
+					switchTab(index);
+				}
 			}
-
-			rebuildTabsTable();
 		}
 
 		return success;
@@ -267,8 +343,8 @@ public class TabbedPane {
 
 		tabs.clear();
 		tabsButtonMap.clear();
+		tabsPane.clear();
 
-		rebuildTabsTable();
 		notifyListenersRemovedAll();
 	}
 
@@ -278,49 +354,27 @@ public class TabbedPane {
 
 	public void switchTab (Tab tab) {
 		TabButtonTable table = tabsButtonMap.get(tab);
-		if (table == null) throwNotBelongingTabException(tab);
+		if (table == null) {
+			throwNotBelongingTabException(tab);
+		}
 		table.select();
 	}
 
 	/**
-	 * Must be called when you want to update tab title. If tab is dirty an '*' is added before title.
-	 * This is called automatically if using {@link Tab#setDirty(boolean)}
+	 * Must be called when you want to update tab title. If tab is dirty an '*' is added before title. This is called automatically
+	 * if using {@link Tab#setDirty(boolean)}
 	 * @param tab that title will be updated
 	 */
 	public void updateTabTitle (Tab tab) {
 		TabButtonTable table = tabsButtonMap.get(tab);
-		if (table == null) throwNotBelongingTabException(tab);
+		if (table == null) {
+			throwNotBelongingTabException(tab);
+		}
 		table.button.setText(getTabTitle(tab));
 	}
 
-	private String getTabTitle (Tab tab) {
-		String title = tab.getTabTitle();
-		if (tab.isDirty()) title = "*" + title;
-		return title;
-	}
-
-	private void rebuildTabsTable () {
-		Tab lastSelectedTab = activeTab;
-		tabsTable.clear();
-		group.clear();
-
-		for (final Tab tab : tabs) {
-			TabButtonTable buttonTable = tabsButtonMap.get(tab);
-			if (buttonTable == null) {
-				buttonTable = new TabButtonTable(tab);
-				tabsButtonMap.put(tab, buttonTable);
-			}
-
-			tabsTable.add(buttonTable);
-			group.add(buttonTable.button);
-
-			if (tabs.size == 1 && lastSelectedTab != null) {
-				buttonTable.select();
-				notifyListenersSwitched(tab);
-			} else if (tab == lastSelectedTab) {
-				buttonTable.select(); // maintains current previous tab while rebuilding
-			}
-		}
+	protected String getTabTitle (Tab tab) {
+		return tab.isDirty() ? "*" + tab.getTabTitle() : tab.getTabTitle();
 	}
 
 	public Table getTable () {
@@ -341,18 +395,21 @@ public class TabbedPane {
 	}
 
 	private void notifyListenersSwitched (Tab tab) {
-		for (TabbedPaneListener listener : listeners)
+		for (TabbedPaneListener listener : listeners) {
 			listener.switchedTab(tab);
+		}
 	}
 
 	private void notifyListenersRemoved (Tab tab) {
-		for (TabbedPaneListener listener : listeners)
+		for (TabbedPaneListener listener : listeners) {
 			listener.removedTab(tab);
+		}
 	}
 
 	private void notifyListenersRemovedAll () {
-		for (TabbedPaneListener listener : listeners)
+		for (TabbedPaneListener listener : listeners) {
 			listener.removedAllTabs();
+		}
 	}
 
 	public Array<Tab> getTabs () {
@@ -363,14 +420,18 @@ public class TabbedPane {
 		public Drawable bottomBar;
 		public Drawable background;
 		public VisTextButtonStyle buttonStyle;
+		/** Optional, defaults to false. */
+		public boolean vertical;
+		/** Optional, defaults to true. */
+		public boolean draggable = true;
 
 		public TabbedPaneStyle () {
 		}
 
 		public TabbedPaneStyle (TabbedPaneStyle other) {
-			this.bottomBar = other.bottomBar;
-			this.background = other.background;
-			this.buttonStyle = other.buttonStyle;
+			bottomBar = other.bottomBar;
+			background = other.background;
+			buttonStyle = other.buttonStyle;
 		}
 
 		public TabbedPaneStyle (Drawable background, Drawable bottomBar, VisTextButtonStyle buttonStyle) {
@@ -379,6 +440,13 @@ public class TabbedPane {
 			this.buttonStyle = buttonStyle;
 		}
 
+		public TabbedPaneStyle (Drawable bottomBar, Drawable background, VisTextButtonStyle buttonStyle, boolean vertical, boolean draggable) {
+			this.bottomBar = bottomBar;
+			this.background = background;
+			this.buttonStyle = buttonStyle;
+			this.vertical = vertical;
+			this.draggable = draggable;
+		}
 	}
 
 	private class TabButtonTable extends VisTable {
@@ -388,8 +456,9 @@ public class TabbedPane {
 
 		private VisTextButtonStyle buttonStyle;
 		private VisImageButtonStyle closeButtonStyle;
+		private Drawable up;
 
-		public TabButtonTable (final Tab tab) {
+		public TabButtonTable (Tab tab) {
 			this.tab = tab;
 			button = new VisTextButton(getTabTitle(tab), style.buttonStyle) {
 				@Override
@@ -411,11 +480,15 @@ public class TabbedPane {
 
 			addListeners();
 
-			buttonStyle = (VisTextButtonStyle) button.getStyle();
+			buttonStyle = new VisTextButtonStyle((VisTextButtonStyle) button.getStyle());
+			button.setStyle(buttonStyle);
 			closeButtonStyle = closeButton.getStyle();
+			up = buttonStyle.up;
 
 			add(button);
-			if (tab.isCloseableByUser()) add(closeButton).size(14, button.getHeight());
+			if (tab.isCloseableByUser()) {
+				add(closeButton).size(14, button.getHeight());
+			}
 		}
 
 		private void addListeners () {
@@ -427,49 +500,50 @@ public class TabbedPane {
 			});
 
 			button.addListener(new InputListener() {
+				private boolean isDown;
+
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int mouseButton) {
-					if (button.isDisabled()) return false;
-
-					if (UIUtils.left()) {
-						closeButtonStyle.up = buttonStyle.down;
+					if (button.isDisabled()) {
+						return false;
 					}
 
-					if (mouseButton == Buttons.MIDDLE) closeTabAsUser();
+					isDown = true;
+					if (UIUtils.left()) {
+						setDraggedUpImage();
+					}
+
+					if (mouseButton == Buttons.MIDDLE) {
+						closeTabAsUser();
+					}
 
 					return true;
 				}
 
 				@Override
 				public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-					closeButtonStyle.up = buttonStyle.up;
+					setDefaultUpImage();
+					isDown = false;
 				}
 
 				@Override
 				public boolean mouseMoved (InputEvent event, float x, float y) {
-					if (button.isDisabled()) return false;
-
-					if (activeTab != tab) {
+					if (!button.isDisabled() && activeTab != tab) {
 						setCloseButtonOnMouseMove();
 					}
-
 					return false;
 				}
 
 				@Override
 				public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
-					if (button.isDisabled()) return;
-
-					if (activeTab != tab) {
-						closeButtonStyle.up = buttonStyle.up;
+					if (!button.isDisabled() && !isDown && activeTab != tab) {
+						setDefaultUpImage();
 					}
 				}
 
 				@Override
 				public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-					if (button.isDisabled()) return;
-
-					if (activeTab != tab && Gdx.input.justTouched() == false) {
+					if (!button.isDisabled() && activeTab != tab && Gdx.input.justTouched() == false) {
 						setCloseButtonOnMouseMove();
 					}
 				}
@@ -480,6 +554,16 @@ public class TabbedPane {
 					} else {
 						closeButtonStyle.up = buttonStyle.over;
 					}
+				}
+
+				private void setDraggedUpImage () {
+					closeButtonStyle.up = buttonStyle.down;
+					buttonStyle.up = buttonStyle.down;
+				}
+
+				private void setDefaultUpImage () {
+					closeButtonStyle.up = up;
+					buttonStyle.up = up;
 				}
 			});
 
@@ -492,30 +576,30 @@ public class TabbedPane {
 		}
 
 		private void switchToNewTab () {
-			//there was some previous tab, deselect it
+			// there was some previous tab, deselect it
 			if (activeTab != null && activeTab != tab) {
 				TabButtonTable table = tabsButtonMap.get(activeTab);
-				//table may no longer exists if tab was removed, no big deal since this only changes
-				//button style, tab.onHide() will be already called by remove() method
+				// table may no longer exists if tab was removed, no big deal since this only changes
+				// button style, tab.onHide() will be already called by remove() method
 				if (table != null) {
 					table.deselect();
 					activeTab.onHide();
 				}
 			}
 
-			if (button.isChecked() && tab != activeTab) { //switch to new tab
+			if (button.isChecked() && tab != activeTab) { // switch to new tab
 				activeTab = tab;
 				notifyListenersSwitched(tab);
 				tab.onShow();
 				closeButton.setStyle(sharedCloseActiveButtonStyle);
-			} else if (group.getCheckedIndex() == -1) { //no tab selected (allowTabDeselect == true)
+			} else if (group.getCheckedIndex() == -1) { // no tab selected (allowTabDeselect == true)
 				activeTab = null;
 				notifyListenersSwitched(null);
 			}
 
 		}
 
-		/** Closes tab, does nothing if Tab is not closeable by User */
+		/** Closes tab, does nothing if Tab is not closeable by user */
 		private void closeTabAsUser () {
 			if (tab.isCloseableByUser()) {
 				TabbedPane.this.remove(tab, false);
@@ -533,8 +617,7 @@ public class TabbedPane {
 	}
 
 	private enum Text implements BundleText {
-		UNSAVED_DIALOG_TITLE("unsavedDialogTitle"),
-		UNSAVED_DIALOG_TEXT("unsavedDialogText");
+		UNSAVED_DIALOG_TITLE("unsavedDialogTitle"), UNSAVED_DIALOG_TEXT("unsavedDialogText");
 
 		private final String name;
 

@@ -71,7 +71,7 @@ class TestApplication extends ApplicationAdapter {
 		createMenus();
 
 		stage.addActor(new TestCollapsible());
-		if (Gdx.app.getType() != ApplicationType.WebGL) stage.addActor(new TestColorPicker());
+		stage.addActor(new TestColorPicker());
 		if (Gdx.app.getType() == ApplicationType.Desktop) stage.addActor(new TestFileChooser());
 		stage.addActor(new TestWindow(USE_VIS_WIDGETS));
 		stage.addActor(new TestSplitPane(USE_VIS_WIDGETS));

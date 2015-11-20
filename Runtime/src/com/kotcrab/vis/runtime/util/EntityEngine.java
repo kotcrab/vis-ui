@@ -20,7 +20,10 @@ import com.artemis.SystemInvocationStrategy;
 import com.artemis.World;
 
 /**
- * Extends Artemis {@link World}. Does not provide any additional methods, exists because Artemis World duplicated box2d World class.
+ * Contains all the Scene systems and entities. You can use this to create, delete and retrieve entities. Each Scene has
+ * it's own instance of EntityEngine.
+ * <p>
+ * Extends Artemis {@link World} because Artemis World duplicates box2d World class.
  * @author Kotcrab
  */
 public class EntityEngine extends World {

@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.widget.color;
+package com.kotcrab.vis.ui.widget.color.internal;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.kotcrab.vis.ui.widget.color.ColorPickerStyle;
 
 /**
  * Image that displays alpha grid as background, used by ColorPicker to display selected colors, should not be used outside Picker
@@ -34,10 +35,10 @@ public class AlphaImage extends Image {
 		this.alphaDrawable = style.alphaBar25px;
 	}
 
-	public AlphaImage (ColorPickerStyle style, boolean shiftAlpha) {
+	public AlphaImage (ColorPickerStyle style, boolean shiftAlphaGrid) {
 		super(style.white);
 		this.alphaDrawable = style.alphaBar25px;
-		this.shiftAlpha = shiftAlpha;
+		this.shiftAlpha = shiftAlphaGrid;
 	}
 
 	@Override

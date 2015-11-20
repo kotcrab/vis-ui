@@ -14,38 +14,54 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.widget.color;
+package com.kotcrab.vis.ui.widget.color.internal;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.Sizes;
-import com.kotcrab.vis.ui.widget.VisImage;
+import com.kotcrab.vis.ui.widget.color.ColorPicker;
+import com.kotcrab.vis.ui.widget.color.ColorPickerStyle;
 
 /**
- * Class used to display channel color bars in color picker, not intended to be used outside ColorPicker
+ * Used to display channel color bars in color picker.
  * @author Kotcrab
  */
-public class ChannelBar extends VisImage {
-	protected ColorPickerStyle style;
+public class ChannelBar extends ShaderImage {
+	public static final int MODE_ALPHA = 0;
 
+	public static final int MODE_H = 1;
+	public static final int MODE_S = 2;
+	public static final int MODE_V = 3;
+
+	public static final int MODE_R = 4;
+	public static final int MODE_G = 5;
+	public static final int MODE_B = 6;
+
+	protected ColorPickerStyle style;
 	private Sizes sizes;
+
 	private int maxValue;
 	private int value;
 	private float selectorX;
 
-	public ChannelBar (ColorPickerStyle style, Sizes sizes, Texture texture, int value, final int maxValue, ChangeListener listener) {
-		super(texture);
+	private int mode;
+	private ChannelBarListener channelBarListener;
+
+	public ChannelBar (ColorPickerStyle style, Sizes sizes, ShaderProgram shader, Texture texture, int mode, int maxValue, ChangeListener changeListener) {
+		super(shader, texture);
 		this.style = style;
 		this.sizes = sizes;
+		this.mode = mode;
 		this.maxValue = maxValue;
 
 		setValue(value);
-		addListener(listener);
+		addListener(changeListener);
 
 		addListener(new InputListener() {
 			@Override
@@ -86,6 +102,22 @@ public class ChannelBar extends VisImage {
 		ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);
 		fire(changeEvent);
 		Pools.free(changeEvent);
+	}
+
+	@Override
+	protected void setShaderUniforms (ShaderProgram shader) {
+		shader.setUniformi("u_mode", mode);
+		channelBarListener.setShaderUniforms(shader);
+	}
+
+	public void setChannelBarListener (ChannelBarListener channelBarListener) {
+		this.channelBarListener = channelBarListener;
+	}
+
+	public interface ChannelBarListener {
+		void updateFields ();
+
+		void setShaderUniforms (ShaderProgram shader);
 	}
 }
 

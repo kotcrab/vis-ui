@@ -34,7 +34,7 @@ public class DonateReminderModule extends EditorModule {
 
 	@Override
 	public void init () {
-		FileHandle storage =fileAccess.getMetadataFolder();
+		FileHandle storage = fileAccess.getMetadataFolder();
 		FileHandle storageFile = storage.child("donateReminder.json");
 
 		Json json = new Json();
