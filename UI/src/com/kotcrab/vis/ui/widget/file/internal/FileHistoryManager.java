@@ -27,13 +27,14 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.file.FileChooser.HistoryPolicy;
 import com.kotcrab.vis.ui.widget.file.FileChooserStyle;
 
 import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
 
 /**
- * Managers FileChooser history of directories that user navigated into. This is internal VisUI API however this class
+ * Manages {@link FileChooser} history of directories that user navigated into. This is internal VisUI API however this class
  * is also reused by VisEditor.
  * @author Kotcrab
  */
