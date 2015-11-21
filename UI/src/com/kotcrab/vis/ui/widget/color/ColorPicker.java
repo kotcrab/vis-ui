@@ -16,17 +16,15 @@
 
 package com.kotcrab.vis.ui.widget.color;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Pixmap.Format;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
@@ -49,7 +47,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 	public static final int PALETTE_SIZE = 160;
 	public static final int BAR_WIDTH = 130;
-	public static final int BAR_HEIGHT = 11;
+	public static final int BAR_HEIGHT = 12;
 
 	private static final float VERTICAL_BAR_WIDTH = 15;
 
@@ -65,12 +63,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 	private Color oldColor;
 	private Color color;
 
-	private Texture whiteTexture;
-
-	private ShaderProgram paletteShader;
-	private ShaderProgram verticalChannelShader;
-	private ShaderProgram hsvShader;
-	private ShaderProgram rgbShader;
+	private PickerCommons commons;
 
 	private Palette palette;
 	private VerticalChannelBar verticalBar;
@@ -131,8 +124,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 		oldColor = new Color(Color.BLACK);
 		color = new Color(Color.BLACK);
 
-		createPixmap();
-		loadShaders();
+		commons = new PickerCommons(style, sizes);
 
 		createColorWidgets();
 		createUI();
@@ -141,34 +133,6 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 		pack();
 		centerWindow();
-	}
-
-	private void createPixmap () {
-		Pixmap whitePixmap = new Pixmap(2, 2, Format.RGB888);
-		whitePixmap.setColor(Color.WHITE);
-		whitePixmap.drawRectangle(0, 0, 2, 2);
-		whiteTexture = new Texture(whitePixmap);
-		whiteTexture.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-		whitePixmap.dispose();
-	}
-
-	private void loadShaders () {
-		paletteShader = loadShader("default.vert", "palette.frag");
-		verticalChannelShader = loadShader("default.vert", "verticalBar.frag");
-		hsvShader = loadShader("default.vert", "hsv.frag");
-		rgbShader = loadShader("default.vert", "rgb.frag");
-	}
-
-	private ShaderProgram loadShader (String vertFile, String fragFile) {
-		ShaderProgram program = new ShaderProgram(
-				Gdx.files.classpath("com/kotcrab/vis/ui/widget/color/internal/" + vertFile),
-				Gdx.files.classpath("com/kotcrab/vis/ui/widget/color/internal/" + fragFile));
-
-		if (program.isCompiled() == false) {
-			throw new IllegalStateException("ColorPicker shader compilation failed: " + program.getLog());
-		}
-
-		return program;
 	}
 
 	private void createUI () {
@@ -192,13 +156,13 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 		VisTable leftTable = new VisTable(true);
 		leftTable.add(palette).size(PALETTE_SIZE * sizes.scaleFactor);
+		leftTable.add(verticalBar).size(VERTICAL_BAR_WIDTH * sizes.scaleFactor, PALETTE_SIZE * sizes.scaleFactor).top();
 		leftTable.row();
-		leftTable.add(createColorsPreviewTable()).expandX().fillX();
+		leftTable.add(createColorsPreviewTable()).colspan(2).expandX().fillX();
 		leftTable.row();
-		leftTable.add(createHexTable()).expandX().left();
+		leftTable.add(createHexTable()).colspan(2).expandX().left();
 
 		add(leftTable).top().padRight(5);
-		add(verticalBar).size(VERTICAL_BAR_WIDTH * sizes.scaleFactor, PALETTE_SIZE * sizes.scaleFactor).top();
 		add(rightTable).expand().left().top().pad(4);
 		row();
 		add(createButtons()).pad(3).right().expandX().colspan(3);
@@ -206,14 +170,19 @@ public class ColorPicker extends VisWindow implements Disposable {
 
 	private VisTable createColorsPreviewTable () {
 		VisTable table = new VisTable(false);
-		table.add(new VisLabel(OLD.get())).spaceRight(3);
-		table.add(currentColorImg = new AlphaImage(style)).height(25 * sizes.scaleFactor).expandX().fillX();
-		table.row();
-		table.add(new VisLabel(NEW.get())).spaceRight(3);
-		table.add(newColorImg = new AlphaImage(style, true)).height(25 * sizes.scaleFactor).expandX().fillX();
+		table.add(currentColorImg = new AlphaImage(commons, 5 * sizes.scaleFactor)).height(25 * sizes.scaleFactor).width(80 * sizes.scaleFactor).expandX().fillX();
+		table.add(new Image(VisUI.getSkin().getDrawable("icon-arrow-right")));
+		table.add(newColorImg = new AlphaImage(commons, 5 * sizes.scaleFactor)).height(25 * sizes.scaleFactor).width(80 * sizes.scaleFactor).expandX().fillX();
 
 		currentColorImg.setColor(color);
 		newColorImg.setColor(color);
+
+		currentColorImg.addListener(new ClickListener() {
+			@Override
+			public void clicked (InputEvent event, float x, float y) {
+				setColor(currentColorImg.getColor());
+			}
+		});
 
 		return table;
 	}
@@ -254,7 +223,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 	}
 
 	private void createColorWidgets () {
-		palette = new Palette(style, sizes, paletteShader, whiteTexture, 100, new ChangeListener() {
+		palette = new Palette(commons, 100, new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				sBar.setValue(palette.getV());
@@ -265,7 +234,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 			}
 		});
 
-		verticalBar = new VerticalChannelBar(style, sizes, verticalChannelShader, whiteTexture, 360, new ChangeListener() {
+		verticalBar = new VerticalChannelBar(commons, 360, new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				hBar.setValue(verticalBar.getValue());
@@ -281,22 +250,22 @@ public class ColorPicker extends VisWindow implements Disposable {
 			}
 		};
 
-		hBar = new ColorChannelWidget(style, sizes, "H", hsvShader, whiteTexture, ChannelBar.MODE_H, 360, new HsvChannelBarListener() {
+		hBar = new ColorChannelWidget(commons, "H", ChannelBar.MODE_H, 360, new HsvChannelBarListener() {
 			@Override
 			protected void updateLinkedWidget () {
 				verticalBar.setValue(hBar.getValue());
 			}
 		});
 
-		sBar = new ColorChannelWidget(style, sizes, "S", hsvShader, whiteTexture, ChannelBar.MODE_S, 100, svListener);
-		vBar = new ColorChannelWidget(style, sizes, "V", hsvShader, whiteTexture, ChannelBar.MODE_V, 100, svListener);
+		sBar = new ColorChannelWidget(commons, "S", ChannelBar.MODE_S, 100, svListener);
+		vBar = new ColorChannelWidget(commons, "V", ChannelBar.MODE_V, 100, svListener);
 
 		RgbChannelBarListener rgbListener = new RgbChannelBarListener();
-		rBar = new ColorChannelWidget(style, sizes, "R", rgbShader, whiteTexture, ChannelBar.MODE_R, 255, rgbListener);
-		gBar = new ColorChannelWidget(style, sizes, "G", rgbShader, whiteTexture, ChannelBar.MODE_G, 255, rgbListener);
-		bBar = new ColorChannelWidget(style, sizes, "B", rgbShader, whiteTexture, ChannelBar.MODE_B, 255, rgbListener);
+		rBar = new ColorChannelWidget(commons, "R", ChannelBar.MODE_R, 255, rgbListener);
+		gBar = new ColorChannelWidget(commons, "G", ChannelBar.MODE_G, 255, rgbListener);
+		bBar = new ColorChannelWidget(commons, "B", ChannelBar.MODE_B, 255, rgbListener);
 
-		aBar = new ColorChannelWidget(style, sizes, "A", rgbShader, whiteTexture, ChannelBar.MODE_ALPHA, 255, new AlphaChannelBarListener());
+		aBar = new ColorChannelWidget(commons, "A", ChannelBar.MODE_ALPHA, 255, new AlphaChannelBarListener());
 	}
 
 	private void createListeners () {
@@ -395,6 +364,14 @@ public class ColorPicker extends VisWindow implements Disposable {
 		}
 	}
 
+	@Override
+	public void draw (Batch batch, float parentAlpha) {
+		boolean wasPedantic = ShaderProgram.pedantic;
+		ShaderProgram.pedantic = false;
+		super.draw(batch, parentAlpha);
+		ShaderProgram.pedantic = wasPedantic;
+	}
+
 	public boolean isAllowAlphaEdit () {
 		return allowAlphaEdit;
 	}
@@ -406,14 +383,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 	@Override
 	public void dispose () {
 		if (disposed) throw new IllegalStateException("ColorPicker can't be disposed twice!");
-
-		whiteTexture.dispose();
-
-		paletteShader.dispose();
-		verticalChannelShader.dispose();
-		hsvShader.dispose();
-		rgbShader.dispose();
-
+		commons.dispose();
 		disposed = true;
 	}
 

@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.ui.widget.color.internal;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -35,13 +34,13 @@ import com.kotcrab.vis.ui.widget.color.ColorPickerStyle;
 public class ChannelBar extends ShaderImage {
 	public static final int MODE_ALPHA = 0;
 
-	public static final int MODE_H = 1;
-	public static final int MODE_S = 2;
-	public static final int MODE_V = 3;
+	public static final int MODE_R = 1;
+	public static final int MODE_G = 2;
+	public static final int MODE_B = 3;
 
-	public static final int MODE_R = 4;
-	public static final int MODE_G = 5;
-	public static final int MODE_B = 6;
+	public static final int MODE_H = 4;
+	public static final int MODE_S = 5;
+	public static final int MODE_V = 6;
 
 	protected ColorPickerStyle style;
 	private Sizes sizes;
@@ -53,10 +52,10 @@ public class ChannelBar extends ShaderImage {
 	private int mode;
 	private ChannelBarListener channelBarListener;
 
-	public ChannelBar (ColorPickerStyle style, Sizes sizes, ShaderProgram shader, Texture texture, int mode, int maxValue, ChangeListener changeListener) {
-		super(shader, texture);
-		this.style = style;
-		this.sizes = sizes;
+	public ChannelBar (PickerCommons commons, int mode, int maxValue, ChangeListener changeListener) {
+		super(commons.getBarShader(mode), commons.whiteTexture);
+		this.style = commons.style;
+		this.sizes = commons.sizes;
 		this.mode = mode;
 		this.maxValue = maxValue;
 

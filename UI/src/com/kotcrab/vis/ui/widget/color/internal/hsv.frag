@@ -2,8 +2,6 @@
 precision mediump float;
 #endif
 
-uniform sampler2D u_texture;
-
 uniform int u_mode; //defined in ChannelBar.java
 uniform float u_h;
 uniform float u_s;
@@ -19,7 +17,7 @@ vec3 hsv2rgb(vec3 c) {
 }
 
 void main() {
-    if(u_mode == 1) gl_FragColor = v_color * texture2D(u_texture, v_texCoords) * vec4(hsv2rgb(vec3(v_texCoords.s, u_s, u_v)), 1.0); //h bar
-    if(u_mode == 2) gl_FragColor = v_color * texture2D(u_texture, v_texCoords) * vec4(hsv2rgb(vec3(u_h, v_texCoords.s, u_v)), 1.0); //s bar
-    if(u_mode == 3) gl_FragColor = v_color * texture2D(u_texture, v_texCoords) * vec4(hsv2rgb(vec3(u_h, u_s, v_texCoords.s)), 1.0); //v bar
+    if(u_mode == 4) gl_FragColor = v_color * vec4(hsv2rgb(vec3(v_texCoords.s, u_s, u_v)), 1.0); //h bar
+    if(u_mode == 5) gl_FragColor = v_color * vec4(hsv2rgb(vec3(u_h, v_texCoords.s, u_v)), 1.0); //s bar
+    if(u_mode == 6) gl_FragColor = v_color * vec4(hsv2rgb(vec3(u_h, u_s, v_texCoords.s)), 1.0); //v bar
 }

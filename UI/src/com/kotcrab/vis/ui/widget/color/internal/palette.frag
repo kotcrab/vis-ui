@@ -2,8 +2,6 @@
 precision mediump float;
 #endif
 
-uniform sampler2D u_texture;
-
 uniform float u_h;
 
 varying vec4 v_color;
@@ -16,6 +14,5 @@ vec3 hsv2rgb(vec3 c) {
 }
 
 void main() {
-    gl_FragColor = v_color * texture2D(u_texture, v_texCoords) * vec4(hsv2rgb(vec3(u_h, 1.0 - v_texCoords.t, v_texCoords.s)), 1.0);
+    gl_FragColor = v_color * vec4(hsv2rgb(vec3(u_h, 1.0 - v_texCoords.t, v_texCoords.s)), 1.0);
 }
-

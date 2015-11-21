@@ -26,8 +26,6 @@ public class ColorPickerStyle extends WindowStyle {
 	public Drawable cross;
 	public Drawable verticalSelector;
 	public Drawable horizontalSelector;
-	public Drawable alphaBar10px;
-	public Drawable alphaBar25px;
 
 	public ColorPickerStyle () {
 	}
@@ -39,7 +37,5 @@ public class ColorPickerStyle extends WindowStyle {
 		this.cross = other.cross;
 		this.verticalSelector = other.verticalSelector;
 		this.horizontalSelector = other.horizontalSelector;
-		this.alphaBar10px = other.alphaBar10px;
-		this.alphaBar25px = other.alphaBar25px;
 	}
 }

@@ -52,6 +52,7 @@
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/widget/color/internal/rgb.frag" />
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/widget/color/internal/palette.frag" />
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/widget/color/internal/verticalBar.frag" />
+    <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/widget/color/internal/checkerboard.frag" />
 
     <!-- I18N files -->
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/ColorPicker.properties" />

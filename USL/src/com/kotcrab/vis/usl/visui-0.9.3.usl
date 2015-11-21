@@ -232,8 +232,8 @@ package com.kotcrab.vis.ui.widget {
 	}
 
 	#color.ColorPickerStyle extends ~WindowStyle: {
-        default: { white: white, alphaBar10px: alpha-bar-10px, alphaBar25px: alpha-bar-25px, barSelector: color-picker-bar-selector,
-                    cross: color-picker-cross, verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }
+        default: { white: white, barSelector: color-picker-bar-selector, cross: color-picker-cross,
+                   verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }
 	}
 }
 

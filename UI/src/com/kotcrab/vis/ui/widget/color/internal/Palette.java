@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.ui.widget.color.internal;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -44,10 +43,10 @@ public class Palette extends ShaderImage {
 
 	private float pickerHue;
 
-	public Palette (ColorPickerStyle style, Sizes sizes, ShaderProgram program, Texture whiteTexture, int maxValue, ChangeListener listener) {
-		super(program, whiteTexture);
-		this.style = style;
-		this.sizes = sizes;
+	public Palette (PickerCommons commons, int maxValue, ChangeListener listener) {
+		super(commons.paletteShader, commons.whiteTexture);
+		this.style = commons.style;
+		this.sizes = commons.sizes;
 		this.maxValue = maxValue;
 		setValue(0, 0);
 		addListener(listener);
