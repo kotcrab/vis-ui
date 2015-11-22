@@ -16,58 +16,32 @@
 
 package com.kotcrab.vis.ui.widget.color;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Disposable;
-import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ColorUtils;
-import com.kotcrab.vis.ui.widget.*;
-import com.kotcrab.vis.ui.widget.VisTextField.TextFieldFilter;
-import com.kotcrab.vis.ui.widget.color.internal.*;
-
-import static com.kotcrab.vis.ui.widget.color.ColorPickerText.*;
+import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.widget.color.internal.ChannelBar;
+import com.kotcrab.vis.ui.widget.color.internal.ColorChannelWidget;
+import com.kotcrab.vis.ui.widget.color.internal.Palette;
+import com.kotcrab.vis.ui.widget.color.internal.VerticalChannelBar;
 
 /**
  * Color Picker widget, allows user to select color. ColorPicker is relatively heavy widget and should be reused if possible.
  * Unlike other widgets, this one must be disposed when no longer needed!
+ * <p>
+ * Extends {@link BasicColorPicker} functionality and additionally provides separate bars for H, S, V color components.
+ * Additional 3 bars (R, G, B) for selecting colors using RGB systems and dedicated bar to alpha channel. Alpha edition
+ * is enabled by default.
+ * <p>
+ * Used directly by {@link ColorPicker} dialog.
  * @author Kotcrab
- * @since 0.9.3
+ * @see BasicColorPicker
  * @see ColorPicker
+ * @since 0.9.3
  */
-public class ExtendedColorPicker extends VisTable implements Disposable {
-	public static final int FIELD_WIDTH = 50;
-
-	public static final int PALETTE_SIZE = 160;
-	public static final int BAR_WIDTH = 130;
-	public static final int BAR_HEIGHT = 12;
-
-	private static final float VERTICAL_BAR_WIDTH = 15;
-
-	private static final int HEX_FIELD_WIDTH = 95;
-	private static final int HEX_COLOR_LENGTH = 6;
-	private static final int HEX_COLOR_LENGTH_WITH_ALPHA = 8;
-
-	private ColorPickerStyle style;
-	private Sizes sizes;
-
-	private ColorPickerListener listener;
-
-	Color oldColor;
-	Color color;
-
-	private PickerCommons commons;
-
-	private Palette palette;
-	private VerticalChannelBar verticalBar;
-
+public class ExtendedColorPicker extends BasicColorPicker implements Disposable {
 	private ColorChannelWidget hBar;
 	private ColorChannelWidget sBar;
 	private ColorChannelWidget vBar;
@@ -78,14 +52,6 @@ public class ExtendedColorPicker extends VisTable implements Disposable {
 
 	private ColorChannelWidget aBar;
 
-	private VisValidatableTextField hexField;
-
-	private Image currentColorImg;
-	private Image newColorImg;
-
-	private boolean allowAlphaEdit = true;
-	private boolean disposed = false;
-
 	public ExtendedColorPicker () {
 		this(null);
 	}
@@ -95,114 +61,53 @@ public class ExtendedColorPicker extends VisTable implements Disposable {
 	}
 
 	public ExtendedColorPicker (String styleName, ColorPickerListener listener) {
-		this.listener = listener;
-		this.style = VisUI.getSkin().get(styleName, ColorPickerStyle.class);
-		this.sizes = VisUI.getSizes();
-
-		oldColor = new Color(Color.BLACK);
-		color = new Color(Color.BLACK);
-
-		commons = new PickerCommons(style, sizes);
-
-		createColorWidgets();
-		createUI();
-		updateUI();
+		this(VisUI.getSkin().get(styleName, ColorPickerWidgetStyle.class), listener);
 	}
 
-	private void createUI () {
-		VisTable rightTable = new VisTable(true);
-
-		rightTable.add(hBar).row();
-		rightTable.add(sBar).row();
-		rightTable.add(vBar).row();
-
-		rightTable.add();
-		rightTable.row();
-
-		rightTable.add(rBar).row();
-		rightTable.add(gBar).row();
-		rightTable.add(bBar).row();
-
-		rightTable.add();
-		rightTable.row();
-
-		rightTable.add(aBar).row();
-
-		VisTable leftTable = new VisTable(true);
-		leftTable.add(palette).size(PALETTE_SIZE * sizes.scaleFactor);
-		leftTable.add(verticalBar).size(VERTICAL_BAR_WIDTH * sizes.scaleFactor, PALETTE_SIZE * sizes.scaleFactor).top();
-		leftTable.row();
-		leftTable.add(createColorsPreviewTable()).colspan(2).expandX().fillX();
-		leftTable.row();
-		leftTable.add(createHexTable()).colspan(2).expandX().left();
-
-		add(leftTable).top().padRight(5);
-		add(rightTable).expand().left().top().pad(4);
+	public ExtendedColorPicker (ColorPickerWidgetStyle style, ColorPickerListener listener) {
+		super(style, listener, true);
+		setAllowAlphaEdit(true);
 	}
 
-	private VisTable createColorsPreviewTable () {
-		VisTable table = new VisTable(false);
-		table.add(currentColorImg = new AlphaImage(commons, 5 * sizes.scaleFactor)).height(25 * sizes.scaleFactor).width(80 * sizes.scaleFactor).expandX().fillX();
-		table.add(new Image(VisUI.getSkin().getDrawable("icon-arrow-right")));
-		table.add(newColorImg = new AlphaImage(commons, 5 * sizes.scaleFactor)).height(25 * sizes.scaleFactor).width(80 * sizes.scaleFactor).expandX().fillX();
+	@Override
+	protected void createUI () {
+		super.createUI();
 
-		currentColorImg.setColor(color);
-		newColorImg.setColor(color);
+		VisTable extendedTable = new VisTable(true); //displayed next to mainTable
 
-		currentColorImg.addListener(new ClickListener() {
-			@Override
-			public void clicked (InputEvent event, float x, float y) {
-				restoreLastColor();
-			}
-		});
+		extendedTable.add(hBar).row();
+		extendedTable.add(sBar).row();
+		extendedTable.add(vBar).row();
 
-		return table;
+		extendedTable.add();
+		extendedTable.row();
+
+		extendedTable.add(rBar).row();
+		extendedTable.add(gBar).row();
+		extendedTable.add(bBar).row();
+
+		extendedTable.add();
+		extendedTable.row();
+
+		extendedTable.add(aBar).row();
+
+		add(extendedTable).expand().left().top().pad(4);
 	}
 
-	private VisTable createHexTable () {
-		VisTable table = new VisTable(true);
-		table.add(new VisLabel(HEX.get()));
-		table.add(hexField = new VisValidatableTextField("00000000")).width(HEX_FIELD_WIDTH * sizes.scaleFactor);
-		table.row();
-
-		hexField.setMaxLength(8);
-		hexField.setProgrammaticChangeEvents(false);
-		hexField.setTextFieldFilter(new TextFieldFilter() {
+	@Override
+	protected void createColorWidgets () {
+		palette = new Palette(commons, 100, new PickerChangeListener() {
 			@Override
-			public boolean acceptChar (VisTextField textField, char c) {
-				return Character.isDigit(c) || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
-			}
-		});
-
-		hexField.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				if (hexField.getText().length() == (allowAlphaEdit ? HEX_COLOR_LENGTH_WITH_ALPHA : HEX_COLOR_LENGTH))
-					setColor(Color.valueOf(hexField.getText()), false);
-			}
-		});
-
-		return table;
-	}
-
-	private void createColorWidgets () {
-		palette = new Palette(commons, 100, new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
+			public void updateLinkedWidget () {
 				sBar.setValue(palette.getV());
 				vBar.setValue(palette.getS());
-
-				updateValuesFromHSVFields();
-				updateUI();
 			}
 		});
 
-		verticalBar = new VerticalChannelBar(commons, 360, new ChangeListener() {
+		verticalBar = new VerticalChannelBar(commons, 360, new PickerChangeListener() {
 			@Override
-			public void changed (ChangeEvent event, Actor actor) {
+			public void updateLinkedWidget () {
 				hBar.setValue(verticalBar.getValue());
-				updateValuesFromHSVFields();
-				updateUI();
 			}
 		});
 
@@ -231,85 +136,14 @@ public class ExtendedColorPicker extends VisTable implements Disposable {
 		aBar = new ColorChannelWidget(commons, "A", ChannelBar.MODE_ALPHA, 255, new AlphaChannelBarListener());
 	}
 
-	public ColorPickerListener getListener () {
-		return listener;
-	}
-
-	public void setListener (ColorPickerListener listener) {
-		this.listener = listener;
-	}
-
-	private void updateUI () {
-		palette.setPickerHue(hBar.getValue());
-
-		newColorImg.setColor(color);
-
-		hexField.setText(color.toString().toUpperCase());
-		hexField.setCursorPosition(hexField.getMaxLength());
-
-		if (listener != null) listener.changed(color);
-	}
-
 	@Override
-	/** Sets current selected color in picker. If alpha editing is disabled then alpha channel of this new color will be set to 1 */
-	public void setColor (Color newColor) {
-		if (allowAlphaEdit == false) newColor.a = 1;
-		//this method overrides setColor in Actor, not big deal we definitely don't need it
-		setColor(newColor, true);
-	}
-
-	private void setColor (Color newColor, boolean updateCurrentColor) {
-		if (updateCurrentColor) {
-			currentColorImg.setColor(new Color(newColor));
-			oldColor = new Color(newColor);
-		}
-		color = new Color(newColor);
-		updateValuesFromCurrentColor();
-		updateUI();
-	}
-
-	/**
-	 * @param allowAlphaEdit if false this picker will have disabled editing color alpha channel. If current picker color
-	 * has alpha it will be reset to 1. If true alpha editing will be re-enabled. For better UX this should not be called
-	 * while ColorPicker is visible.
-	 */
 	public void setAllowAlphaEdit (boolean allowAlphaEdit) {
-		this.allowAlphaEdit = allowAlphaEdit;
-
 		aBar.setVisible(allowAlphaEdit);
-		hexField.setMaxLength(allowAlphaEdit ? HEX_COLOR_LENGTH_WITH_ALPHA : HEX_COLOR_LENGTH);
-		if (allowAlphaEdit == false) {
-			Color newColor = new Color(color);
-			newColor.a = 1;
-			setColor(newColor);
-		}
+		super.setAllowAlphaEdit(allowAlphaEdit);
 	}
 
 	@Override
-	public void draw (Batch batch, float parentAlpha) {
-		boolean wasPedantic = ShaderProgram.pedantic;
-		ShaderProgram.pedantic = false;
-		super.draw(batch, parentAlpha);
-		ShaderProgram.pedantic = wasPedantic;
-	}
-
-	public boolean isAllowAlphaEdit () {
-		return allowAlphaEdit;
-	}
-
-	public boolean isDisposed () {
-		return disposed;
-	}
-
-	@Override
-	public void dispose () {
-		if (disposed) throw new IllegalStateException("ColorPicker can't be disposed twice!");
-		commons.dispose();
-		disposed = true;
-	}
-
-	/** Updates picker ui from current color */
-	private void updateValuesFromCurrentColor () {
+	protected void updateValuesFromCurrentColor () {
 		int[] hsv = ColorUtils.RGBtoHSV(color);
 		int ch = hsv[0];
 		int cs = hsv[1];
@@ -335,7 +169,8 @@ public class ExtendedColorPicker extends VisTable implements Disposable {
 	}
 
 	/** Updates picker from H, S and V bars */
-	private void updateValuesFromHSVFields () {
+	@Override
+	protected void updateValuesFromHSVFields () {
 		int[] hsv = ColorUtils.RGBtoHSV(color);
 		int h = hsv[0];
 		int s = hsv[1];
@@ -379,12 +214,6 @@ public class ExtendedColorPicker extends VisTable implements Disposable {
 
 		verticalBar.setValue(hBar.getValue());
 		palette.setValue(vBar.getValue(), sBar.getValue());
-	}
-
-	public void restoreLastColor () {
-		Color colorBeforeReset = new Color(color);
-		setColor(oldColor);
-		if(listener != null) listener.reset(colorBeforeReset, color);
 	}
 
 	private class RgbChannelBarListener implements ChannelBar.ChannelBarListener {

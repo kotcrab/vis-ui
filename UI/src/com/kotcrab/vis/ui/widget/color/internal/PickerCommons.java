@@ -25,13 +25,14 @@ import com.badlogic.gdx.graphics.Texture.TextureWrap;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.ui.Sizes;
-import com.kotcrab.vis.ui.widget.color.ColorPickerStyle;
+import com.kotcrab.vis.ui.widget.color.ColorPickerWidgetStyle;
 
 /** @author Kotcrab */
 public class PickerCommons implements Disposable {
-	final ColorPickerStyle style;
+	final ColorPickerWidgetStyle style;
 	final Sizes sizes;
 
+	private boolean loadExtendedShaders;
 	ShaderProgram paletteShader;
 	ShaderProgram verticalChannelShader;
 	ShaderProgram hsvShader;
@@ -40,9 +41,10 @@ public class PickerCommons implements Disposable {
 
 	Texture whiteTexture;
 
-	public PickerCommons (ColorPickerStyle style, Sizes sizes) {
+	public PickerCommons (ColorPickerWidgetStyle style, Sizes sizes, boolean loadExtendedShaders) {
 		this.style = style;
 		this.sizes = sizes;
+		this.loadExtendedShaders = loadExtendedShaders;
 
 		createPixmap();
 		loadShaders();
@@ -60,9 +62,12 @@ public class PickerCommons implements Disposable {
 	private void loadShaders () {
 		paletteShader = loadShader("default.vert", "palette.frag");
 		verticalChannelShader = loadShader("default.vert", "verticalBar.frag");
-		hsvShader = loadShader("default.vert", "hsv.frag");
-		rgbShader = loadShader("default.vert", "rgb.frag");
 		gridShader = loadShader("default.vert", "checkerboard.frag");
+
+		if (loadExtendedShaders) {
+			hsvShader = loadShader("default.vert", "hsv.frag");
+			rgbShader = loadShader("default.vert", "rgb.frag");
+		}
 	}
 
 	private ShaderProgram loadShader (String vertFile, String fragFile) {
@@ -99,8 +104,11 @@ public class PickerCommons implements Disposable {
 
 		paletteShader.dispose();
 		verticalChannelShader.dispose();
-		hsvShader.dispose();
-		rgbShader.dispose();
 		gridShader.dispose();
+
+		if (loadExtendedShaders) {
+			hsvShader.dispose();
+			rgbShader.dispose();
+		}
 	}
 }

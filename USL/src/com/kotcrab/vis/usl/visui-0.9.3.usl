@@ -231,9 +231,14 @@ package com.kotcrab.vis.ui.widget {
 	               iconFilePdf: icon-file-pdf, iconFileAudio: icon-file-audio }
 	}
 
-	#color.ColorPickerStyle extends ~WindowStyle: {
-        default: { white: white, barSelector: color-picker-bar-selector, cross: color-picker-cross,
+	#color.ColorPickerWidgetStyle: {
+        default: { barSelector: color-picker-bar-selector, cross: color-picker-cross,
                    verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }
+	}
+
+	#color.ColorPickerStyle extends ~WindowStyle: {
+        default: { pickerStyle: { barSelector: color-picker-bar-selector, cross: color-picker-cross,
+                   verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }}
 	}
 }
 

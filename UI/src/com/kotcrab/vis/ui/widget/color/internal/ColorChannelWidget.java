@@ -22,7 +22,7 @@ import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.color.ExtendedColorPicker;
-import com.kotcrab.vis.ui.widget.color.ColorPickerStyle;
+import com.kotcrab.vis.ui.widget.color.ColorPickerWidgetStyle;
 import com.kotcrab.vis.ui.widget.color.internal.ColorInputField.ColorInputFieldListener;
 
 /**
@@ -31,7 +31,7 @@ import com.kotcrab.vis.ui.widget.color.internal.ColorInputField.ColorInputFieldL
  */
 public class ColorChannelWidget extends VisTable {
 	private PickerCommons commons;
-	private ColorPickerStyle style;
+	private ColorPickerWidgetStyle style;
 	private Sizes sizes;
 
 	private ChannelBar bar;

@@ -25,14 +25,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.widget.color.ExtendedColorPicker;
-import com.kotcrab.vis.ui.widget.color.ColorPickerStyle;
+import com.kotcrab.vis.ui.widget.color.ColorPickerWidgetStyle;
 
 /**
  * Colors palette used to display colors using all possible values of saturation and value.
  * @author Kotcrab
  */
 public class Palette extends ShaderImage {
-	private ColorPickerStyle style;
+	private ColorPickerWidgetStyle style;
 	private Sizes sizes;
 
 	private int x, y;

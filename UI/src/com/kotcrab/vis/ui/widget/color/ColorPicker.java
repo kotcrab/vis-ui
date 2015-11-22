@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Disposable;
+import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
@@ -31,8 +32,10 @@ import static com.kotcrab.vis.ui.widget.color.ColorPickerText.*;
  * This dialog must be disposed when no longer needed! ColorPicker will be centered on screen after adding to Stage
  * use {@link #setCenterOnAdd(boolean)} to change this.
  * @author Kotcrab
- * @since 0.6.0
  * @see ColorPicker
+ * @see BasicColorPicker
+ * @see ExtendedColorPicker
+ * @since 0.6.0
  */
 public class ColorPicker extends VisWindow implements Disposable {
 	private ExtendedColorPicker picker;
@@ -62,8 +65,10 @@ public class ColorPicker extends VisWindow implements Disposable {
 	}
 
 	public ColorPicker (String styleName, String title, ColorPickerListener listener) {
-		super(title != null ? title : "");
+		super(title != null ? title : "", VisUI.getSkin().get(styleName, ColorPickerStyle.class));
 		this.listener = listener;
+
+		ColorPickerStyle style = (ColorPickerStyle) getStyle();
 
 		if (title == null) getTitleLabel().setText(TITLE.get());
 
@@ -73,7 +78,7 @@ public class ColorPicker extends VisWindow implements Disposable {
 		addCloseButton();
 		closeOnEscape();
 
-		picker = new ExtendedColorPicker(styleName, listener);
+		picker = new ExtendedColorPicker(style.pickerStyle, listener);
 
 		add(picker);
 		row();

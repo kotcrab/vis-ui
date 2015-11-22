@@ -24,14 +24,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.widget.color.ExtendedColorPicker;
-import com.kotcrab.vis.ui.widget.color.ColorPickerStyle;
+import com.kotcrab.vis.ui.widget.color.ColorPickerWidgetStyle;
 
 /**
  * Vertical channel bar is used to display vertical hue bar
  * @author Kotcrab
  */
 public class VerticalChannelBar extends ShaderImage {
-	private ColorPickerStyle style;
+	private ColorPickerWidgetStyle style;
 	private Sizes sizes;
 	private int maxValue;
 	private float selectorY;

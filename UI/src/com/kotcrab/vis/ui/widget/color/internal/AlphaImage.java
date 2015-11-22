@@ -35,7 +35,10 @@ public class AlphaImage extends VisImage {
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
-		gridImage.draw(batch, this);
+		//don't draw grid if widget alpha is different than 1 because
+		//this creates weird affect when window is fading in/out,
+		//both parent image and grid is visible
+		if (getColor().a != 1) gridImage.draw(batch, this);
 		super.draw(batch, parentAlpha);
 	}
 }
