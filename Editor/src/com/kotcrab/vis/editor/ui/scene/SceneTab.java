@@ -49,7 +49,7 @@ import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.util.gdx.FocusUtils;
-import com.kotcrab.vis.editor.util.gdx.VisValue;
+import com.kotcrab.vis.ui.util.value.VisValue;
 import com.kotcrab.vis.editor.util.vis.CreatePointPayload;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;

@@ -31,7 +31,7 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.ATSelectFileHandlerGroup;
 import com.kotcrab.vis.editor.util.Holder;
-import com.kotcrab.vis.editor.util.gdx.VisWidgetValue;
+import com.kotcrab.vis.ui.util.value.VisWidgetValue;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 import com.kotcrab.vis.ui.widget.Tooltip;
