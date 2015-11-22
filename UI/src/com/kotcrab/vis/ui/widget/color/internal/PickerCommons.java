@@ -71,7 +71,7 @@ public class PickerCommons implements Disposable {
 				Gdx.files.classpath("com/kotcrab/vis/ui/widget/color/internal/" + fragFile));
 
 		if (program.isCompiled() == false) {
-			throw new IllegalStateException("ColorPicker shader compilation failed: " + program.getLog());
+			throw new IllegalStateException("ColorPicker shader compilation failed. Shader: " + vertFile + ", " + fragFile + ": " + program.getLog());
 		}
 
 		return program;
