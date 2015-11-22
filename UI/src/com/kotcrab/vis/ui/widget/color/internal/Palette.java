@@ -24,7 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.Sizes;
-import com.kotcrab.vis.ui.widget.color.ColorPicker;
+import com.kotcrab.vis.ui.widget.color.ExtendedColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerStyle;
 
 /**
@@ -104,13 +104,13 @@ public class Palette extends ShaderImage {
 		if (y < 0) y = 0;
 		if (y > maxValue) y = maxValue;
 
-		selectorX = ((float) x / maxValue) * ColorPicker.PALETTE_SIZE * sizes.scaleFactor;
-		selectorY = ((float) y / maxValue) * ColorPicker.PALETTE_SIZE * sizes.scaleFactor;
+		selectorX = ((float) x / maxValue) * ExtendedColorPicker.PALETTE_SIZE * sizes.scaleFactor;
+		selectorY = ((float) y / maxValue) * ExtendedColorPicker.PALETTE_SIZE * sizes.scaleFactor;
 	}
 
 	private void updateValueFromTouch (float touchX, float touchY) {
-		int newX = (int) (touchX / ColorPicker.PALETTE_SIZE * maxValue / sizes.scaleFactor);
-		int newY = (int) (touchY / ColorPicker.PALETTE_SIZE * maxValue / sizes.scaleFactor);
+		int newX = (int) (touchX / ExtendedColorPicker.PALETTE_SIZE * maxValue / sizes.scaleFactor);
+		int newY = (int) (touchY / ExtendedColorPicker.PALETTE_SIZE * maxValue / sizes.scaleFactor);
 
 		setValue(newX, newY);
 
