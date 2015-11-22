@@ -146,18 +146,35 @@ public class ColorPicker extends VisWindow implements Disposable {
 		picker.dispose();
 	}
 
-	// Delegates
+	/** @return internal dialog color picker */
+	public ExtendedColorPicker getPicker () {
+		return picker;
+	}
+
+	// ColorPicker delegates
+
+	public boolean isShowHexFields () {
+		return picker.isShowHexFields();
+	}
+
+	public void setShowHexFields (boolean showHexFields) {
+		picker.setShowHexFields(showHexFields);
+	}
 
 	public boolean isDisposed () {
 		return picker.isDisposed();
+	}
+
+	public void setAllowAlphaEdit (boolean allowAlphaEdit) {
+		picker.setAllowAlphaEdit(allowAlphaEdit);
 	}
 
 	public boolean isAllowAlphaEdit () {
 		return picker.isAllowAlphaEdit();
 	}
 
-	public void setAllowAlphaEdit (boolean allowAlphaEdit) {
-		picker.setAllowAlphaEdit(allowAlphaEdit);
+	public void restoreLastColor () {
+		picker.restoreLastColor();
 	}
 
 	@Override
