@@ -1,4 +1,6 @@
-[0.9.3] [LibGDX 1.7.1] [Snapshot]
+[0.9.4] [LibGDX 1.7.1] [Snapshot]
+
+[0.9.3] [LibGDX 1.7.1]
 -API Change: FocusManager.getFocus(Stage) renamed to resetFocus
 -API Change: FocusManager.getFocus(Stage, Focusable) renamed to switchFocus
 -API Change: GridGroup#getItemSize() removed, use getItemWidth or getItemHeight
