@@ -28,7 +28,7 @@ import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
- * Extends functionality of standard scene2d.ui {@link Window}
+ * Extends functionality of standard scene2d.ui {@link Window}.
  * @author Kotcrab
  * @see Window
  */

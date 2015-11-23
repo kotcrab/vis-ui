@@ -25,7 +25,7 @@ import com.badlogic.gdx.utils.Align;
 /** @author Kotcrab */
 public class ActorUtils {
 	public static void keepWithinStage (Stage stage, Actor actor) {
-		//taken from Window
+		//taken from scene2d.ui Window
 		Camera camera = stage.getCamera();
 		if (camera instanceof OrthographicCamera) {
 			OrthographicCamera orthographicCamera = (OrthographicCamera) camera;

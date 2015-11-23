@@ -20,8 +20,11 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 /**
- * Manages focus of VisUI components
+ * Manages focus of VisUI components. This is different from stage2d.ui focus management. In scene2d widgets can only
+ * acquire keyboard and scroll focus. VisUI focus managers allows any widget to acquire general use focus, this is used
+ * mainly to manage rendering focus borders around widgets.
  * @author Kotcrab
+ * @see Focusable
  */
 public class FocusManager {
 	private static Focusable focusedWidget;

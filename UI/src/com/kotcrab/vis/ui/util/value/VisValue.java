@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
  * not supported.
  * @author Kotcrab
  * @see VisWidgetValue
+ * @since 0.9.3
  */
 public class VisValue extends Value {
 	private ValueGetter getter;

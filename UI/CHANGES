@@ -2,6 +2,7 @@
 -API Change: FocusManager.getFocus(Stage) renamed to resetFocus
 -API Change: FocusManager.getFocus(Stage, Focusable) renamed to switchFocus
 -API Change: GridGroup#getItemSize() removed, use getItemWidth or getItemHeight
+-API Change: Moved FileChooser's FavouritesIO to 'com.kotcrab.vis.ui.widget.file.internal' package (isn't VisUI public API)
 -API Addition: FocusManager.resetFocus(Stage, Actor)
 -API Addition: FileChooser#getCurrentDirectory()
 -API Addition: GridGroup#setItemWidth(int), GridGroup#setItemWidth(int), GridGroup#getItemWidth(), GridGroup#getItemWidth()
@@ -12,6 +13,7 @@
 -API Addition: VisValue, VisWidgetValue - standard Table Values can be used as lambadas if you are using Java 1.8
 -APi Addition: PrefHeightIfVisibleValue
 -ColorPicker:
+ -API Change: added ColorPickerListener#reset (Color previousColor, Color newColor)
  -Rewritten using shaders, huge performance boost, now usable on gwt and low end devices
  -Internal ColorPicker classes moved to `com.kotcrab.vis.ui.widget.color.internal` package (remember that those classes aren't considered as public api)
  -ColorPicker can now be used as embeddable widget, see ExtendedColorPicker and BasicColorPicker

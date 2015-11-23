@@ -21,12 +21,13 @@ import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
  * Interface implemented by classes that can validate whether user input is right or wrong, typically used by {@link VisValidatableTextField}
- * and {@link DialogUtils} input dialog
+ * and {@link DialogUtils} input dialog.
  * @author Kotcrab
+ * @since 0.0.3
  */
 public interface InputValidator {
 	/**
-	 * Called when input must be validated
+	 * Called when input must be validated.
 	 * @param input text that should be validated
 	 * @return true if input is valid, false otherwise
 	 */

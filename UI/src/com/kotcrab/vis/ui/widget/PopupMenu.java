@@ -31,7 +31,7 @@ import com.kotcrab.vis.ui.util.ActorUtils;
  * or clicked menu item. For proper behaviour menu should be displayed in touchUp event. If you want to display
  * menu from touchDown you have to call event.stop() otherwise menu will by immediately closed.
  * <p>
- * If you want to add right click menu to actor you can use getDefaultInputListener() to get premade listener.
+ * If you want to add right click menu to actor you can use getDefaultInputListener() to get premade default listener.
  * @author Kotcrab
  */
 public class PopupMenu extends Table {

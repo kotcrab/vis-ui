@@ -24,8 +24,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 /**
  * Value that returns widget preferred height if it's visible. If widget is inedible then returns 0.
  * This can be only added to classes extending {@link Widget} or {@link Table}, if you try to add it to any other class
- * you will get {@link ClassCastException}.
+ * you will get {@link IllegalStateException}.
  * @author Kotcrab
+ * @since 0.9.3
  */
 public class PrefHeightIfVisibleValue extends Value {
 	public static final PrefHeightIfVisibleValue INSTANCE = new PrefHeightIfVisibleValue();
@@ -43,6 +44,5 @@ public class PrefHeightIfVisibleValue extends Value {
 		}
 
 		throw new IllegalStateException("Unsupported actor type for PrefHeightIfVisibleValue: " + actor.getClass());
-
 	}
 }

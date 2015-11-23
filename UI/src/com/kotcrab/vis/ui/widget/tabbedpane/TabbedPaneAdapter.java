@@ -16,7 +16,10 @@
 
 package com.kotcrab.vis.ui.widget.tabbedpane;
 
-/** @author Kotcrab */
+/**
+ * Empty implementation of {@link TabbedPaneListener}
+ * @author Kotcrab
+ */
 public class TabbedPaneAdapter implements TabbedPaneListener {
 	@Override
 	public void switchedTab (Tab tab) {

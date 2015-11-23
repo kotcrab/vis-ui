@@ -17,7 +17,7 @@
 package com.kotcrab.vis.ui.widget.tabbedpane;
 
 /**
- * Listener used to get events from {@link TabbedPane}
+ * Listener used to get events from {@link TabbedPane}.
  * @author Kotcrab
  */
 public interface TabbedPaneListener {
@@ -29,8 +29,8 @@ public interface TabbedPaneListener {
 	void switchedTab (Tab tab);
 
 	/**
-	 * Called when Tab was removed TabbedPane
-	 * @param tab that was removed
+	 * Called when Tab was removed TabbedPane.
+	 * @param tab that was removed.
 	 */
 	void removedTab (Tab tab);
 

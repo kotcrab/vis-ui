@@ -27,7 +27,10 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 
-/** @author Kotcrab */
+/**
+ * File related utils. Note that FileUtils are not available on GWT.
+ * @author Kotcrab
+ */
 public class FileUtils {
 
 	private static final String[] UNITS = new String[]{"B", "KB", "MB", "GB", "TB", "EB"};
@@ -39,30 +42,51 @@ public class FileUtils {
 		}
 	};
 
+	/**
+	 * Converts byte file size to human readable, eg:<br>
+	 * 500->500 B<br>
+	 * 1024->1 KB<br>
+	 * 123456->120.6 KB<br>
+	 * 10000000000->9.3 GB<br>
+	 * Max supported unit is exabyte (EB).
+	 * @param size file size in bytes.
+	 * @return human readable file size.
+	 */
 	public static String readableFileSize (long size) {
 		if (size <= 0) return "0 B";
 		int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
 		return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)).replace(",", ".") + " " + UNITS[digitGroups];
 	}
 
+	/**
+	 * Sorts file list, using this rules: directories first, sorted by names ignoring uppercase, then files sorted by names
+	 * ignoring uppercase.
+	 * @param files list to sort
+	 * @return sorted list
+	 */
 	public static Array<FileHandle> sortFiles (FileHandle[] files) {
 		Array<FileHandle> directoriesList = new Array<FileHandle>();
 		Array<FileHandle> filesList = new Array<FileHandle>();
 
 		Arrays.sort(files, FILE_COMPARATOR);
 
-		for (int i = 0; i < files.length; i++) {
-			FileHandle f = files[i];
-			if (f.isDirectory())
+		for (FileHandle f : files) {
+			if (f.isDirectory()) {
 				directoriesList.add(f);
-			else
+			} else {
 				filesList.add(f);
+			}
 		}
 
 		directoriesList.addAll(filesList); // combine lists
 		return directoriesList;
 	}
 
+	/**
+	 * Checks whether given name is valid for current user OS.
+	 * @param name that will be checked
+	 * @return true if name is valid, false otherwise
+	 */
 	public static boolean isValidFileName (String name) {
 		try {
 			if (OsUtils.isWindows()) if (name.contains(">") || name.contains("<")) return false;
@@ -72,6 +96,7 @@ public class FileUtils {
 		}
 	}
 
+	/** Converts {@link File} to absolute {@link FileHandle}. */
 	public static FileHandle toFileHandle (File file) {
 		return Gdx.files.absolute(file.getAbsolutePath());
 	}

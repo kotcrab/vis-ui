@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.Disposable;
 
 /**
  * Base class for tabs used in TabbedPane. Tab can be savable, meaning that it can be saved and will display warning dialog 'do you want to save changes'
- * before closing. Tab can be also closeable by user meaning that user can close this tab manually from tabbed pane (using 'X' button or by pressing mouse wheel on tab)
+ * before closing. Tab can be also closeable by user meaning that user can close this tab manually from tabbed pane (using 'X' button or by pressing mouse wheel on tab).
  * @author Kotcrab
  */
 public abstract class Tab implements Disposable {
@@ -35,47 +35,47 @@ public abstract class Tab implements Disposable {
 	public Tab () {
 	}
 
-	/** @param savable if true tab can be saved and marked as dirty */
+	/** @param savable if true tab can be saved and marked as dirty. */
 	public Tab (boolean savable) {
 		this.savable = savable;
 	}
 
 	/**
-	 * @param savable if true tab can be saved and marked as dirty
-	 * @param closeableByUser if true tab can be closed by user from tabbed pane
+	 * @param savable if true tab can be saved and marked as dirty.
+	 * @param closeableByUser if true tab can be closed by user from tabbed pane.
 	 */
 	public Tab (boolean savable, boolean closeableByUser) {
 		this.savable = savable;
 		this.closeableByUser = closeableByUser;
 	}
 
-	/** @return tab title used by tabbed pane */
+	/** @return tab title used by tabbed pane. */
 	public abstract String getTabTitle ();
 
-	/** @return table that contains this tab view, will be passed to tabbed pane listener */
+	/** @return table that contains this tab view, will be passed to tabbed pane listener. */
 	public abstract Table getContentTable ();
 
-	/** Called by pane when this tab becomes shown. Class overriding this should call super.onShow() */
+	/** Called by pane when this tab becomes shown. Class overriding this should call super.onShow(). */
 	public void onShow () {
 		activeTab = true;
 	}
 
-	/** Called by pane when this tab becomes hidden. Class overriding this should call super.onHide() */
+	/** Called by pane when this tab becomes hidden. Class overriding this should call super.onHide(). */
 	public void onHide () {
 		activeTab = false;
 	}
 
-	/** @return true is this tab is currently active */
+	/** @return true is this tab is currently active. */
 	public boolean isActiveTab () {
 		return activeTab;
 	}
 
-	/** @return pane that this tab belongs to, or null */
+	/** @return pane that this tab belongs to, or null. */
 	public TabbedPane getPane () {
 		return pane;
 	}
 
-	/** Should be called by TabbedPane only, when tab is added to pane */
+	/** Should be called by TabbedPane only, when tab is added to pane. */
 	public void setPane (TabbedPane pane) {
 		this.pane = pane;
 	}
@@ -109,8 +109,8 @@ public abstract class Tab implements Disposable {
 	}
 
 	/**
-	 * Called when this tab should save its own state. After saving setDirty(false) must be called manually to remove dirty state
-	 * @return true when save succeeded, false otherwise
+	 * Called when this tab should save its own state. After saving setDirty(false) must be called manually to remove dirty state.
+	 * @return true when save succeeded, false otherwise.
 	 */
 	public boolean save () {
 		checkSavable();
@@ -122,12 +122,12 @@ public abstract class Tab implements Disposable {
 		if (isSavable() == false) throw new IllegalStateException("Tab " + getTabTitle() + " is not savable!");
 	}
 
-	/** Removes this tab from pane (if any) */
+	/** Removes this tab from pane (if any). */
 	public void removeFromTabPane () {
 		if (pane != null) pane.remove(this);
 	}
 
-	/** Called when tab is being removed from scene */
+	/** Called when tab is being removed from scene. */
 	@Override
 	public void dispose () {
 

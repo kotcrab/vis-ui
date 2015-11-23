@@ -429,9 +429,11 @@ public class TabbedPane {
 		}
 
 		public TabbedPaneStyle (TabbedPaneStyle other) {
-			bottomBar = other.bottomBar;
-			background = other.background;
-			buttonStyle = other.buttonStyle;
+			this.bottomBar = other.bottomBar;
+			this.background = other.background;
+			this.buttonStyle = other.buttonStyle;
+			this.vertical = other.vertical;
+			this.draggable = other.draggable;
 		}
 
 		public TabbedPaneStyle (Drawable background, Drawable bottomBar, VisTextButtonStyle buttonStyle) {

@@ -17,7 +17,7 @@
 package com.kotcrab.vis.ui.util.dialog;
 
 /**
- * Empty implementation of {@link OptionDialogListener}
+ * Empty implementation of {@link OptionDialogListener}.
  * @author Kotcrab
  */
 public class OptionDialogAdapter implements OptionDialogListener {

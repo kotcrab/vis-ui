@@ -17,7 +17,7 @@
 package com.kotcrab.vis.ui.util;
 
 /**
- * Implemented by actors that has focus border, actor implemeting this interface must support disabling its border.
+ * Implemented by actors that has focus border, actor implementing this interface must support disabling its border.
  * @author Kotcrab
  */
 public interface BorderOwner {

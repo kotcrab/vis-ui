@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
  * @author Kotcrab
  * @see VisValue
  * @see PrefHeightIfVisibleValue
+ * @since 0.9.3
  */
 public class VisWidgetValue extends Value {
 	protected WidgetValueGetter getter;
