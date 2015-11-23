@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.widget.file;
+package com.kotcrab.vis.ui.widget.file.internal;
 
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Gdx;
@@ -53,7 +53,7 @@ public class FavoritesIO {
 		if (data == null)
 			return new Array<FileHandle>();
 		else
-			return json.fromJson(FavouriteData.class, data).toFileHadnleArray();
+			return json.fromJson(FavouriteData.class, data).toFileHandleArray();
 	}
 
 	public void saveFavorites (Array<FileHandle> favorites) {
@@ -62,8 +62,9 @@ public class FavoritesIO {
 	}
 
 	public void checkIfUsingDefaultName () {
-		if (favoritesPrefsName.equals(DEFAULT_FAVORITES_PREFS_NAME))
+		if (favoritesPrefsName.equals(DEFAULT_FAVORITES_PREFS_NAME)) {
 			Gdx.app.log("VisUI", "Warning, using default favorites preference name for file chooser! (see FileChooser.setFavoritesPrefsName(String))");
+		}
 	}
 
 	@SuppressWarnings("unused")
@@ -80,7 +81,7 @@ public class FavoritesIO {
 				data.add(new FileHandleData(file));
 		}
 
-		public Array<FileHandle> toFileHadnleArray () {
+		public Array<FileHandle> toFileHandleArray () {
 			Array<FileHandle> files = new Array<FileHandle>();
 
 			for (FileHandleData fileData : data)
