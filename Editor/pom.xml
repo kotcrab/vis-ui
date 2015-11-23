@@ -18,7 +18,7 @@
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <visui.version>0.9.3-SNAPSHOT</visui.version>
+        <visui.version>0.9.5-SNAPSHOT</visui.version>
         <build.ci.timestamp>unknown, not built using CI</build.ci.timestamp>
     </properties>
 
