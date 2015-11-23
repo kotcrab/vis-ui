@@ -1,4 +1,5 @@
 [0.9.4] [LibGDX 1.7.1] [Snapshot]
+-Fix GWT support
 
 [0.9.3] [LibGDX 1.7.1]
 -API Change: FocusManager.getFocus(Stage) renamed to resetFocus

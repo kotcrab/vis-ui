@@ -312,7 +312,7 @@ public class BasicColorPicker extends VisTable implements Disposable {
 	}
 
 	/** Internal default picker listener used to get events from color widgets */
-	protected class PickerChangeListener extends ChangeListener {
+	class PickerChangeListener extends ChangeListener {
 		protected void updateLinkedWidget () {
 
 		}
