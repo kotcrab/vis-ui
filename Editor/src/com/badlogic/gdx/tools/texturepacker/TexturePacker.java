@@ -36,6 +36,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -626,8 +627,13 @@ public class TexturePacker {
 	 * @param packFileName The name of the pack file. Also used to name the page images.
 	 */
 	static public void process (Settings settings, String input, String output, String packFileName) {
+		process(settings, input, output, packFileName, null);
+	}
+
+	static public void process (Settings settings, String input, String output, String packFileName, FilenameFilter filter) {
 		try {
 			TexturePackerFileProcessor processor = new TexturePackerFileProcessor(settings, packFileName);
+			processor.setInputFilter(filter);
 			// Sort input files by name to avoid platform-dependent atlas output changes.
 			processor.setComparator(new Comparator<File>() {
 				public int compare (File file1, File file2) {

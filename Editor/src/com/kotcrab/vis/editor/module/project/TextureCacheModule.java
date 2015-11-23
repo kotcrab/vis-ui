@@ -41,6 +41,9 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 import org.apache.commons.io.FilenameUtils;
 
+import java.io.File;
+import java.io.FilenameFilter;
+
 /**
  * Allows to get loaded textures from project 'gfx' assets directory and allows to get loaded atlases from project 'atlas' asset directory.
  * Live reloading is fully supported, however it requires listening for {@link ResourceReloadedEvent} and manually updating
@@ -122,8 +125,14 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	private void packageAndReloadCache () {
-		if (packagingEnabled)
-			TexturePacker.process(settings, gfxPath, cachePath, "cache");
+		if (packagingEnabled) {
+			TexturePacker.process(settings, gfxPath, cachePath, "cache", new FilenameFilter() {
+				@Override
+				public boolean accept (File dir, String name) {
+					return true;
+				}
+			});
+		}
 
 		Gdx.app.postRunnable(this::reloadCache);
 	}
