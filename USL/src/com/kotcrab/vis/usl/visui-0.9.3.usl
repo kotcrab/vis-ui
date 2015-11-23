@@ -232,12 +232,12 @@ package com.kotcrab.vis.ui.widget {
 	}
 
 	#color.ColorPickerWidgetStyle: {
-        default: { barSelector: color-picker-bar-selector, cross: color-picker-cross,
+        default: { barSelector: color-picker-bar-selector, cross: color-picker-cross, iconArrowRight: icon-arrow-right
                    verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }
 	}
 
 	#color.ColorPickerStyle extends ~WindowStyle: {
-        default: { pickerStyle: { barSelector: color-picker-bar-selector, cross: color-picker-cross,
+        default: { pickerStyle: { barSelector: color-picker-bar-selector, cross: color-picker-cross, iconArrowRight: icon-arrow-right
                    verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }}
 	}
 }

@@ -28,6 +28,7 @@ public class ColorPickerWidgetStyle {
 	public Drawable cross;
 	public Drawable verticalSelector;
 	public Drawable horizontalSelector;
+	public Drawable iconArrowRight;
 
 	public ColorPickerWidgetStyle () {
 	}
@@ -37,5 +38,6 @@ public class ColorPickerWidgetStyle {
 		this.cross = other.cross;
 		this.verticalSelector = other.verticalSelector;
 		this.horizontalSelector = other.horizontalSelector;
+		this.iconArrowRight = other.iconArrowRight;
 	}
 }

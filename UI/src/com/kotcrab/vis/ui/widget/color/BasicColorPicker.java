@@ -154,9 +154,11 @@ public class BasicColorPicker extends VisTable implements Disposable {
 
 	private VisTable createColorsPreviewTable () {
 		VisTable table = new VisTable(false);
-		table.add(currentColorImg = new AlphaImage(commons, 5 * sizes.scaleFactor)).height(25 * sizes.scaleFactor).width(80 * sizes.scaleFactor).expandX().fillX();
-		table.add(new Image(VisUI.getSkin().getDrawable("icon-arrow-right")));
-		table.add(newColorImg = new AlphaImage(commons, 5 * sizes.scaleFactor)).height(25 * sizes.scaleFactor).width(80 * sizes.scaleFactor).expandX().fillX();
+		table.add(currentColorImg = new AlphaImage(commons, 5 * sizes.scaleFactor))
+				.height(25 * sizes.scaleFactor).width(80 * sizes.scaleFactor).expandX().fillX();
+		table.add(new Image(style.iconArrowRight)).pad(0, 2, 0, 2);
+		table.add(newColorImg = new AlphaImage(commons, 5 * sizes.scaleFactor))
+				.height(25 * sizes.scaleFactor).width(80 * sizes.scaleFactor).expandX().fillX();
 
 		currentColorImg.setColor(color);
 		newColorImg.setColor(color);
