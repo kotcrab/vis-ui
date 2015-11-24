@@ -14,11 +14,21 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.scene2d;
+package com.kotcrab.vis.editor.module.project.assetsmanager;
+
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 /** @author Kotcrab */
-public class PrefHeightIfVisibleValue extends VisWidgetValue {
-	public PrefHeightIfVisibleValue () {
-		super(context -> context.isVisible() ? context.getPrefHeight() : 0);
+public class AssetRootDirectoryDescriptor {
+	public final String fullCodeName;
+	public final String menuItemName;
+	public final Drawable menuItemIcon;
+	public final Drawable assetsViewIcon;
+
+	public AssetRootDirectoryDescriptor (String fullCodeName, String menuItemName, Drawable menuItemIcon, Drawable assetsViewIcon) {
+		this.fullCodeName = fullCodeName;
+		this.menuItemName = menuItemName;
+		this.menuItemIcon = menuItemIcon;
+		this.assetsViewIcon = assetsViewIcon;
 	}
 }

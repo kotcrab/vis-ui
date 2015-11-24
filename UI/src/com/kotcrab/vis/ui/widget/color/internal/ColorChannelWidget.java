@@ -16,15 +16,13 @@
 
 package com.kotcrab.vis.ui.widget.color.internal;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.color.ColorPicker;
-import com.kotcrab.vis.ui.widget.color.ColorPickerStyle;
+import com.kotcrab.vis.ui.widget.color.BasicColorPicker;
+import com.kotcrab.vis.ui.widget.color.ColorPickerWidgetStyle;
 import com.kotcrab.vis.ui.widget.color.internal.ColorInputField.ColorInputFieldListener;
 
 /**
@@ -32,8 +30,8 @@ import com.kotcrab.vis.ui.widget.color.internal.ColorInputField.ColorInputFieldL
  * @author Kotcrab
  */
 public class ColorChannelWidget extends VisTable {
-
-	private ColorPickerStyle style;
+	private PickerCommons commons;
+	private ColorPickerWidgetStyle style;
 	private Sizes sizes;
 
 	private ChannelBar bar;
@@ -41,19 +39,15 @@ public class ColorChannelWidget extends VisTable {
 	private ColorInputField inputField;
 
 	private int mode;
-	private ShaderProgram shader;
-	private Texture whiteTexture;
-
 	private int value;
 	private int maxValue;
 
-	public ColorChannelWidget (ColorPickerStyle style, Sizes sizes, String label, ShaderProgram shader, Texture whiteTexture, int mode, int maxValue, final ChannelBar.ChannelBarListener listener) {
+	public ColorChannelWidget (PickerCommons commons, String label, int mode, int maxValue, final ChannelBar.ChannelBarListener listener) {
 		super(true);
+		this.commons = commons;
 
-		this.style = style;
-		this.sizes = sizes;
-		this.shader = shader;
-		this.whiteTexture = whiteTexture;
+		this.style = commons.style;
+		this.sizes = commons.sizes;
 		this.mode = mode;
 		this.maxValue = maxValue;
 
@@ -74,8 +68,8 @@ public class ColorChannelWidget extends VisTable {
 				listener.updateFields();
 				bar.setValue(newValue);
 			}
-		})).width(ColorPicker.FIELD_WIDTH * sizes.scaleFactor);
-		add(bar = createBarImage()).size(ColorPicker.BAR_WIDTH * sizes.scaleFactor, ColorPicker.BAR_HEIGHT * sizes.scaleFactor);
+		})).width(BasicColorPicker.FIELD_WIDTH * sizes.scaleFactor);
+		add(bar = createBarImage()).size(BasicColorPicker.BAR_WIDTH * sizes.scaleFactor, BasicColorPicker.BAR_HEIGHT * sizes.scaleFactor);
 		bar.setChannelBarListener(listener);
 
 		inputField.setValue(0);
@@ -93,9 +87,9 @@ public class ColorChannelWidget extends VisTable {
 
 	private ChannelBar createBarImage () {
 		if (mode == ChannelBar.MODE_ALPHA)
-			return new AlphaChannelBar(style, sizes, shader, whiteTexture, mode, maxValue, barListener);
+			return new AlphaChannelBar(commons, mode, maxValue, barListener);
 		else
-			return new ChannelBar(style, sizes, shader, whiteTexture, mode, maxValue, barListener);
+			return new ChannelBar(commons, mode, maxValue, barListener);
 	}
 
 	public ChannelBar getBar () {

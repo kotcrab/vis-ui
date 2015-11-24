@@ -1,7 +1,14 @@
-[0.9.3] [LibGDX 1.7.1] [Snapshot]
+[0.9.5] [LibGDX 1.7.1] [Snapshot]
+-Fixed BaisColorPicker palette color selection were flipped
+
+[0.9.4] [LibGDX 1.7.1]
+-Fixed GWT support
+
+[0.9.3] [LibGDX 1.7.1]
 -API Change: FocusManager.getFocus(Stage) renamed to resetFocus
 -API Change: FocusManager.getFocus(Stage, Focusable) renamed to switchFocus
 -API Change: GridGroup#getItemSize() removed, use getItemWidth or getItemHeight
+-API Change: Moved FileChooser's FavouritesIO to 'com.kotcrab.vis.ui.widget.file.internal' package (isn't VisUI public API)
 -API Addition: FocusManager.resetFocus(Stage, Actor)
 -API Addition: FileChooser#getCurrentDirectory()
 -API Addition: GridGroup#setItemWidth(int), GridGroup#setItemWidth(int), GridGroup#getItemWidth(), GridGroup#getItemWidth()
@@ -9,9 +16,17 @@
 -API Addition: TabbedPane#disableTab(Tab tab, boolean disable), TabbedPane#isTabDisabled(Tab)
 -API Addition: IntDigitsOnlyFilter
 -API Addition: DragPane
+-API Addition: VisValue, VisWidgetValue - standard Table Values can be used as lambadas if you are using Java 1.8
+-APi Addition: PrefHeightIfVisibleValue
 -ColorPicker:
+ -API Change: added ColorPickerListener#reset (Color previousColor, Color newColor)
  -Rewritten using shaders, huge performance boost, now usable on gwt and low end devices
  -Internal ColorPicker classes moved to `com.kotcrab.vis.ui.widget.color.internal` package (remember that those classes aren't considered as public api)
+ -ColorPicker can now be used as embeddable widget, see ExtendedColorPicker and BasicColorPicker
+ -Added ColorPickerWidgetStyle used by ExtendedColorPicker and BasicColorPicker
+  -Changed ColorPickerStyle, now uses ColorPickerWidgetStyle as composition
+ -I18N: Removed entries: "old", "new" (no longer needed)
+ -Style: removed fields: alphaBar10px and alphaBar25px, white (no longer needed)
 -NumberSelector:
  -API Addition: setMaxLength(int), getMaxLength()
  -Fixed entering negative integer values
@@ -23,6 +38,9 @@
 -Fixed GridGroup too high when total items width in single row was equals to group width
 -GridGroup now supports setting item width and height separately
 -TabbedPane tabs order can be changed by mouse dragging
+-Skin changes:
+ -Removed drawables: alpha-bar-10px, alpha-bar-25px
+-VisUI is now supported by LML (templates for scene2d.ui with HTML-like syntax), https://github.com/czyzby/gdx-lml-vis
 
 [0.9.2] [LibGDX 1.7.1]
 -API Change: VisValidatableTextField#getValidator() removed, use getValidators() instead

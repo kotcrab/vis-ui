@@ -33,7 +33,8 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ActorUtils;
 
 /**
- * Tooltips are widgets that appear bellow other widget after user hovers mouse pointer on that other widget.
+ * Tooltips are widgets that appear bellow other widget after user hovers mouse pointer on that other widget. Each
+ * actor can have only one tooltip.
  * @author Kotcrab
  * @since 0.5.0
  */

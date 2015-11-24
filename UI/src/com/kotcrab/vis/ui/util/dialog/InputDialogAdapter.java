@@ -17,7 +17,7 @@
 package com.kotcrab.vis.ui.util.dialog;
 
 /**
- * Empty implementation of {@link InputDialogListener}
+ * Empty implementation of {@link InputDialogListener}.
  * @author Kotcrab
  */
 public class InputDialogAdapter implements InputDialogListener {

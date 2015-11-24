@@ -34,6 +34,11 @@ public class ColorPickerAdapter implements ColorPickerListener {
 	}
 
 	@Override
+	public void reset (Color previousColor, Color newColor) {
+
+	}
+
+	@Override
 	public void finished (Color newColor) {
 
 	}

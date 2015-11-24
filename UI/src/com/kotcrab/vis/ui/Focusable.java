@@ -17,13 +17,14 @@
 package com.kotcrab.vis.ui;
 
 /**
- * Implemented by objects that can acquire UI focus
+ * Implemented by objects that can acquire VisUI focus.
  * @author Kotcrab
+ * @see FocusManager
  */
 public interface Focusable {
-	/** Called when object lost focus */
+	/** Called when object lost focus. */
 	void focusLost ();
 
-	/** Called when object gained focus */
+	/** Called when object gained focus. */
 	void focusGained ();
 }

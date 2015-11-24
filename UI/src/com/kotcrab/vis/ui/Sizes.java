@@ -17,8 +17,10 @@
 package com.kotcrab.vis.ui;
 
 /**
- * VisUI paddings, spacings and sizes
+ * VisUI padding, spacings and sizes. Loaded from skin, will differ between different skin sizes. If you are using
+ * custom skin it must contain "default" definition of Sizes values.
  * @author Kotcrab
+ * @since 0.8.1
  */
 public class Sizes {
 	public float scaleFactor;

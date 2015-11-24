@@ -21,8 +21,8 @@ import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
- * Provides premade validators that can be used with {@link VisValidatableTextField} or {@link DialogUtils} when displaying
- * input dialogs
+ * Provides premade validators that can be used with for example with {@link VisValidatableTextField} or {@link DialogUtils}
+ * when displaying input dialogs.
  * @author Kotcrab
  */
 public class Validators {

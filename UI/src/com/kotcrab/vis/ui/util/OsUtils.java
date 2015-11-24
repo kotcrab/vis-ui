@@ -21,7 +21,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 
 /**
- * Operating system related utils
+ * Operating system related utils.
  * @author Kotcrab
  * @author Simon Gerst
  */
@@ -73,7 +73,7 @@ public class OsUtils {
 	 * and Linux, on Mac ⌘⇧F5). CONTROL_LEFT and CONTROL_RIGHT are mapped to Ctrl. The same goes for Alt and Shift.
 	 * @param keycodes keycodes from {@link Keys} that are used to determine the shortcut text
 	 * @return the platform dependent shortcut text
-	 **/
+	 */
 	public static String getShortcutFor (int... keycodes) {
 		StringBuilder builder = new StringBuilder();
 		String separatorString = "+";

@@ -36,8 +36,9 @@ import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.*;
 
 /**
- * Utilities for displaying various dialogs, equivalent of JOptionPane from Swing
+ * Utilities for displaying various dialogs, equivalent of JOptionPane from Swing.
  * @author Kotcrab
+ * @since 0.2.0
  */
 public class DialogUtils {
 
@@ -47,7 +48,7 @@ public class DialogUtils {
 	private static final int BUTTON_OK = 3;
 	private static final int BUTTON_DETAILS = 4;
 
-	/** Dialog with text and OK button */
+	/** Dialog with text and OK button. */
 	public static VisDialog showOKDialog (Stage stage, String title, String text) {
 		VisDialog dialog = new VisDialog(title);
 		dialog.text(text);
@@ -59,8 +60,8 @@ public class DialogUtils {
 	}
 
 	/**
-	 * Dialog with text and buttons like Yes, No, Cancel
-	 * @return dialog for the purpose of changing buttons text
+	 * Dialog with text and buttons like Yes, No, Cancel.
+	 * @return dialog for the purpose of changing buttons text.
 	 * @see OptionDialog
 	 * @since 0.6.0
 	 */
@@ -72,7 +73,7 @@ public class DialogUtils {
 
 	/**
 	 * Dialog with title, text and n amount of buttons. If you need dialog with only buttons like Yes, No, Cancel etc.
-	 * see {@link #showOptionDialog(Stage, String, String, OptionDialogType, OptionDialogListener)}
+	 * see {@link #showOptionDialog(Stage, String, String, OptionDialogType, OptionDialogListener)}.
 	 * @since 0.7.0
 	 */
 	public static <T> ConfirmDialog<T> showConfirmDialog (Stage stage, String title, String text, String[] buttons, T[] returns, ConfirmDialogListener<T> listener) {
@@ -83,7 +84,7 @@ public class DialogUtils {
 
 	/**
 	 * Dialog with text and text field for user input. Cannot be canceled.
-	 * @param fieldTitle may be null
+	 * @param fieldTitle may be null.
 	 */
 	public static InputDialog showInputDialog (Stage stage, String title, String fieldTitle, InputDialogListener listener) {
 		InputDialog dialog = new InputDialog(title, fieldTitle, true, null, listener);
@@ -93,8 +94,8 @@ public class DialogUtils {
 
 	/**
 	 * Dialog with text and text field for user input. Cannot be canceled.
-	 * @param validator used to validate user input, can be used to easily limit input to int etc. See {@link Validators} for premade validators
-	 * @param fieldTitle may be null
+	 * @param validator used to validate user input, can be used to easily limit input to int etc. See {@link Validators} for premade validators.
+	 * @param fieldTitle may be null.
 	 */
 	public static InputDialog showInputDialog (Stage stage, String title, String fieldTitle, InputValidator validator, InputDialogListener listener) {
 		InputDialog dialog = new InputDialog(title, fieldTitle, true, validator, listener);
@@ -104,8 +105,8 @@ public class DialogUtils {
 
 	/**
 	 * Dialog with text and text field for user input.
-	 * @param cancelable if true dialog may be canceled
-	 * @param fieldTitle may be null
+	 * @param cancelable if true dialog may be canceled.
+	 * @param fieldTitle may be null.
 	 */
 	public static InputDialog showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputDialogListener listener) {
 		InputDialog dialog = new InputDialog(title, fieldTitle, cancelable, null, listener);
@@ -115,9 +116,9 @@ public class DialogUtils {
 
 	/**
 	 * Dialog with text and text field for user input.
-	 * @param validator used to validate user input, can be used to easily limit input to int etc. See {@link Validators} for premade validators
-	 * @param cancelable if true dialog may be canceled
-	 * @param fieldTitle may be null
+	 * @param validator used to validate user input, can be used to easily limit input to int etc. See {@link Validators} for premade validators.
+	 * @param cancelable if true dialog may be canceled.
+	 * @param fieldTitle may be null.
 	 */
 	public static InputDialog showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputValidator validator, InputDialogListener listener) {
 		InputDialog dialog = new InputDialog(title, fieldTitle, cancelable, validator, listener);
@@ -125,12 +126,12 @@ public class DialogUtils {
 		return dialog;
 	}
 
-	/** Dialog with title "Error" and provided text */
+	/** Dialog with title "Error" and provided text. */
 	public static ErrorDialog showErrorDialog (Stage stage, String text) {
 		return showErrorDialog(stage, text, (String) null);
 	}
 
-	/** Dialog with title "Error", provided text, and exception stacktrace available after pressing 'Details' button */
+	/** Dialog with title "Error", provided text, and exception stacktrace available after pressing 'Details' button. */
 	public static ErrorDialog showErrorDialog (Stage stage, String text, Exception exception) {
 		if (exception == null)
 			return showErrorDialog(stage, text, (String) null);
@@ -138,7 +139,7 @@ public class DialogUtils {
 			return showErrorDialog(stage, text, getStackTrace(exception));
 	}
 
-	/** Dialog with title "Error", provided text, and provided details available after pressing 'Details' button */
+	/** Dialog with title "Error", provided text, and provided details available after pressing 'Details' button. */
 	public static ErrorDialog showErrorDialog (Stage stage, String text, String details) {
 		ErrorDialog dialog = new ErrorDialog(text, details);
 		stage.addActor(dialog.fadeIn());
@@ -359,7 +360,6 @@ public class DialogUtils {
 	}
 
 	public static class ErrorDialog extends VisDialog {
-
 		private VisTable detailsTable = new VisTable(true);
 		private Cell<?> detailsCell;
 

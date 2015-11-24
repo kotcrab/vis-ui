@@ -30,8 +30,6 @@ public enum ColorPickerText implements BundleText {
 	RESTORE("restore"),
 	CANCEL("cancel"),
 	OK("ok"),
-	NEW("new"),
-	OLD("old"),
 	HEX("hex");
 
 	private final String name;

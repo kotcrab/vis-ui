@@ -17,41 +17,28 @@
 package com.kotcrab.vis.ui.widget.color.internal;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.kotcrab.vis.ui.widget.color.ColorPickerStyle;
+import com.kotcrab.vis.ui.widget.VisImage;
 
 /**
- * Image that displays alpha grid as background, used by ColorPicker to display selected colors, should not be used outside Picker
- * due to that this Image scales 25px grid image to whatever size it needed. It will look weird for smaller or bigger images.
+ * Image that displays checkerboard as background, used by ColorPicker to display selected colors with alphas. Note that for perfect grid
+ * this image should have size which is multiplication of gridSize. Eg. if gridSize is equal to 5, this image can have size 65x100.
+ * (because both 65 and 100 are divisible by 5)
  * @author Kotcrab
  */
-public class AlphaImage extends Image {
-	private Drawable alphaDrawable;
-	private boolean shiftAlpha;
+public class AlphaImage extends VisImage {
+	private GridSubImage gridImage;
 
-	public AlphaImage (ColorPickerStyle style) {
-		super(style.white);
-		this.alphaDrawable = style.alphaBar25px;
-	}
-
-	public AlphaImage (ColorPickerStyle style, boolean shiftAlphaGrid) {
-		super(style.white);
-		this.alphaDrawable = style.alphaBar25px;
-		this.shiftAlpha = shiftAlphaGrid;
+	public AlphaImage (PickerCommons commons, float gridSize) {
+		super(commons.whiteTexture);
+		gridImage = new GridSubImage(commons.gridShader, commons.whiteTexture, gridSize);
 	}
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
-		batch.setColor(1, 1, 1, parentAlpha);
-		float x = getX() + getImageX();
-		float y = getY() + getImageY();
-		float width = getImageWidth() * getScaleX();
-		float height = getImageHeight() * getScaleY();
-		if (shiftAlpha)
-			alphaDrawable.draw(batch, x + width, y, width * -1, height);
-		else
-			alphaDrawable.draw(batch, x, y, width, height);
+		//don't draw grid if widget alpha is different than 1 because
+		//this creates weird affect when window is fading in/out,
+		//both parent image and grid is visible
+		if (getColor().a != 1) gridImage.draw(batch, this);
 		super.draw(batch, parentAlpha);
 	}
 }

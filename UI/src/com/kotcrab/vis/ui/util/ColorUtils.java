@@ -20,7 +20,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
 
 /**
- * Utilities for converting between color systems
+ * Utilities for converting between color systems.
  * @author Kotcrab
  * @since 0.6.0
  */

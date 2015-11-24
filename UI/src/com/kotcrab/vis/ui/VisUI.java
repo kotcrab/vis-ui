@@ -18,6 +18,7 @@ package com.kotcrab.vis.ui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Version;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
@@ -27,12 +28,13 @@ import com.badlogic.gdx.utils.I18NBundle;
 import java.util.Locale;
 
 /**
- * Allows to easily load VisUI skin and change default title alignment, contains static version field
+ * Allows to easily load VisUI skin and change default title alignment and I18N bundles.
+ * Contains static field with VisUI version.
  * @author Kotcrab
  */
 public class VisUI {
-	/** Current VisUI version, does not include SNAPSHOT even if this version is snapshot */
-	public static final String VERSION = "0.9.3";
+	/** Current VisUI version, does not include SNAPSHOT even if this version is snapshot. */
+	public static final String VERSION = "0.9.5";
 
 	private static final String TARGET_GDX_VERSION = "1.7.1";
 	private static boolean setSkipGdxVersionCheck = false;
@@ -47,7 +49,9 @@ public class VisUI {
 	private static I18NBundle tabbedPaneBundle;
 	private static I18NBundle colorPickerBundle;
 
+	/** Defines possible built-in skin scales. */
 	public enum SkinScale {
+		/** Standard VisUI skin */
 		X1 {
 			@Override
 			public FileHandle getSkinFile () {
@@ -59,6 +63,7 @@ public class VisUI {
 				return "default";
 			}
 		},
+		/** VisUI skin 2x unscaled */
 		X2 {
 			@Override
 			public FileHandle getSkinFile () {
@@ -76,24 +81,27 @@ public class VisUI {
 		public abstract String getSizesName ();
 	}
 
-	/** Loads default VisUI skin */
+	/** Loads default VisUI skin with {@link SkinScale#X1}. */
 	public static void load () {
 		load(SkinScale.X1);
 	}
 
-	/** Loads default VisUI skin */
+	/** Loads default VisUI skin for given {@link SkinScale}. */
 	public static void load (SkinScale scale) {
 		VisUI.scale = scale;
 		load(scale.getSkinFile());
 	}
 
-	/** Loads skin from provided file, skin must be compatible with default VisUI skin */
+	/** Loads skin from provided file. Skin must be compatible with default VisUI skin. */
 	public static void load (FileHandle visSkinFile) {
 		checkBeforeLoad();
 		VisUI.skin = new Skin(visSkinFile);
 	}
 
-	/** Sets provided skin as default for every VisUI widget, skin must be compatible with default VisUI skin */
+	/**
+	 * Sets provided skin as default for every VisUI widget. Skin must be compatible with default VisUI skin. This
+	 * can be used if you prefer to load skin manually for example by using {@link AssetManager}.
+	 */
 	public static void load (Skin skin) {
 		checkBeforeLoad();
 		VisUI.skin = skin;
@@ -108,7 +116,7 @@ public class VisUI {
 		}
 	}
 
-	/** Unloads skin */
+	/** Unloads skin. */
 	public static void dispose () {
 		if (skin != null) {
 			skin.dispose();

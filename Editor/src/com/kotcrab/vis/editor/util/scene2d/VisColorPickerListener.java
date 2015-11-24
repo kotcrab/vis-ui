@@ -20,9 +20,15 @@ import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
 
 /** @author Kotcrab */
+@FunctionalInterface
 public interface VisColorPickerListener extends ColorPickerListener {
 	@Override
 	default void canceled (Color oldColor) {
+
+	}
+
+	@Override
+	default void reset (Color previousColor, Color newColor) {
 
 	}
 

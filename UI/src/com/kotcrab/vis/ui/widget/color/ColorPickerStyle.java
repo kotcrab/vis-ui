@@ -17,29 +17,16 @@
 package com.kotcrab.vis.ui.widget.color;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 /** @author Kotcrab */
 public class ColorPickerStyle extends WindowStyle {
-	public Drawable white;
-	public Drawable barSelector;
-	public Drawable cross;
-	public Drawable verticalSelector;
-	public Drawable horizontalSelector;
-	public Drawable alphaBar10px;
-	public Drawable alphaBar25px;
+	public ColorPickerWidgetStyle pickerStyle;
 
 	public ColorPickerStyle () {
 	}
 
 	public ColorPickerStyle (ColorPickerStyle other) {
 		super(other);
-		this.white = other.white;
-		this.barSelector = other.barSelector;
-		this.cross = other.cross;
-		this.verticalSelector = other.verticalSelector;
-		this.horizontalSelector = other.horizontalSelector;
-		this.alphaBar10px = other.alphaBar10px;
-		this.alphaBar25px = other.alphaBar25px;
+		this.pickerStyle = other.pickerStyle;
 	}
 }

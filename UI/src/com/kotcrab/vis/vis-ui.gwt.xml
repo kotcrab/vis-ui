@@ -20,6 +20,7 @@
 	<source path='ui'>
 		<exclude name="widget/file/internal/DriveCheckerService.java" />
 		<exclude name="widget/file/internal/FileChooserWinService.java" />
+		<exclude name="widget/file/internal/FileHistoryManager.java" />
 		<exclude name="widget/file/internal/ServiceThreadFactory.java" />
 		<exclude name="widget/file/JNAFileDeleter.java" />
 		<exclude name="widget/file/FavoritesIO.java" />
@@ -52,6 +53,7 @@
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/widget/color/internal/rgb.frag" />
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/widget/color/internal/palette.frag" />
     <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/widget/color/internal/verticalBar.frag" />
+    <extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/widget/color/internal/checkerboard.frag" />
 
     <!-- I18N files -->
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/ColorPicker.properties" />

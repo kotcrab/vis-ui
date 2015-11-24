@@ -26,7 +26,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 
 /**
- * Menu used in MenuBar, it is a standard {@link PopupMenu} with tittle displayed in MenuBar
+ * Menu used in MenuBar, it is a standard {@link PopupMenu} with tittle displayed in MenuBar.
  * @author Kotcrab
  */
 public class Menu extends PopupMenu {

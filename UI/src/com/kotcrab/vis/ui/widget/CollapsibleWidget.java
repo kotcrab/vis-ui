@@ -24,7 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 
 /**
- * Widget containing table that can be collapsed
+ * Widget containing table that can be collapsed.
  * @author Kotcrab
  * @since 0.3.1
  */

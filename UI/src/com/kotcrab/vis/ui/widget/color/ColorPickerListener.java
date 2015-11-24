@@ -23,7 +23,10 @@ import com.badlogic.gdx.graphics.Color;
  * @author Kotcrab
  */
 public interface ColorPickerListener {
-	/** Called when color selection was canceled by user (either by clicking cancel or closing the window) */
+	/**
+	 * Called when color selection was canceled by user (either by clicking cancel or closing the window). Note that this
+	 * event can only occur when using {@link ColorPicker} dialog
+	 */
 	void canceled (Color oldColor);
 
 	/**
@@ -32,6 +35,16 @@ public interface ColorPickerListener {
 	 */
 	void changed (Color newColor);
 
-	/** Called when user has finished selecting new color */
+	/**
+	 * Called when selected color in picker were reset to previously select one.
+	 * @param previousColor color that was set before reset
+	 * @param newColor new picker color
+	 */
+	void reset (Color previousColor, Color newColor);
+
+	/**
+	 * Called when user has finished selecting new color. Note that this
+	 * event can only occur when using {@link ColorPicker} dialog.
+	 */
 	void finished (Color newColor);
 }

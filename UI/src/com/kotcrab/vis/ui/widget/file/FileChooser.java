@@ -38,6 +38,7 @@ import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService;
 import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.DriveCheckerListener;
 import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.RootMode;
+import com.kotcrab.vis.ui.widget.file.internal.FavoritesIO;
 import com.kotcrab.vis.ui.widget.file.internal.FileChooserWinService;
 import com.kotcrab.vis.ui.widget.file.internal.FileChooserWinService.RootNameListener;
 import com.kotcrab.vis.ui.widget.file.internal.FileHistoryManager;

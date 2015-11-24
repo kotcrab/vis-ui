@@ -79,7 +79,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 },
 com.kotcrab.vis.ui.Sizes: {
 	default: {scaleFactor: 1, spacingBottom: 8, spacingRight: 6, menuItemIconSize: 22, numberSelectorButtonSize: 12, numberSelectorButtonsWidth: 12, numberSelectorFieldSize: 40, numberSelectorFieldRightPadding: 1 },
-	x2: {scaleFactor: 2, spacingBottom: 16, spacingRight: 12, menuItemIconSize: 44, numberSelectorButtonSize: 24, numberSelectorButtonsWidth: 20, numberSelectorFieldSize: 80, numberSelectorFieldRightPadding: 5 }
+	x2: {scaleFactor: 2, spacingBottom: 8, spacingRight: 6, menuItemIconSize: 44, numberSelectorButtonSize: 24, numberSelectorButtonsWidth: 20, numberSelectorFieldSize: 80, numberSelectorFieldRightPadding: 5 }
 },
 com.kotcrab.vis.ui.widget.VisTextField$VisTextFieldStyle: {
 	default: {focusBorder: border, font: default-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor },
@@ -151,8 +151,11 @@ com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane$TabbedPaneStyle: {
 com.kotcrab.vis.ui.widget.file.FileChooserStyle: {
 	default: {highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right, iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive, iconFolderStar: icon-folder-star, iconTrash: icon-trash, iconFileText: icon-file-text, iconFileImage: icon-file-image, iconFilePdf: icon-file-pdf, iconFileAudio: icon-file-audio }
 },
+com.kotcrab.vis.ui.widget.color.ColorPickerWidgetStyle: {
+	default: {barSelector: color-picker-bar-selector, cross: color-picker-cross, iconArrowRight: icon-arrow-right, verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }
+},
 com.kotcrab.vis.ui.widget.color.ColorPickerStyle: {
-	default: {white: white, alphaBar10px: alpha-bar-10px, alphaBar25px: alpha-bar-25px, barSelector: color-picker-bar-selector, cross: color-picker-cross, verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal, titleFont: default-font, background: window, titleFontColor: white }
+	default: {pickerStyle: {barSelector: color-picker-bar-selector, cross: color-picker-cross, iconArrowRight: icon-arrow-right, verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal}, titleFont: default-font, background: window, titleFontColor: white }
 },
 com.kotcrab.vis.ui.util.form.SimpleFormValidator$FormValidatorStyle: {
 	default: {errorLabelColor: vis-red, validLabelColor: white },

@@ -16,25 +16,24 @@
 
 package com.kotcrab.vis.ui.widget.color.internal;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.kotcrab.vis.ui.Sizes;
-import com.kotcrab.vis.ui.widget.color.ColorPickerStyle;
 
 /**
  * Channel bar intended for alpha channel, renders alpha grid bellow channel texture.
  * @author Kotcrab
  */
 public class AlphaChannelBar extends ChannelBar {
-	public AlphaChannelBar (ColorPickerStyle style, Sizes sizes, ShaderProgram program, Texture texture, int mode, int maxValue, ChangeListener listener) {
-		super(style, sizes, program, texture, mode, maxValue, listener);
+	private GridSubImage gridImage;
+
+	public AlphaChannelBar (PickerCommons commons, int mode, int maxValue, ChangeListener changeListener) {
+		super(commons, mode, maxValue, changeListener);
+		gridImage = new GridSubImage(commons.gridShader, commons.whiteTexture, 6 * commons.sizes.scaleFactor);
 	}
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
-		style.alphaBar10px.draw(batch, getX() + getImageX(), getY() + getImageY(), getImageWidth() * getScaleX(), getImageHeight() * getScaleY());
+		gridImage.draw(batch, this);
 		super.draw(batch, parentAlpha);
 	}
 }
