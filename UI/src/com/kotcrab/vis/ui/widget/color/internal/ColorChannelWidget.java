@@ -21,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.color.ExtendedColorPicker;
+import com.kotcrab.vis.ui.widget.color.BasicColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerWidgetStyle;
 import com.kotcrab.vis.ui.widget.color.internal.ColorInputField.ColorInputFieldListener;
 
@@ -68,8 +68,8 @@ public class ColorChannelWidget extends VisTable {
 				listener.updateFields();
 				bar.setValue(newValue);
 			}
-		})).width(ExtendedColorPicker.FIELD_WIDTH * sizes.scaleFactor);
-		add(bar = createBarImage()).size(ExtendedColorPicker.BAR_WIDTH * sizes.scaleFactor, ExtendedColorPicker.BAR_HEIGHT * sizes.scaleFactor);
+		})).width(BasicColorPicker.FIELD_WIDTH * sizes.scaleFactor);
+		add(bar = createBarImage()).size(BasicColorPicker.BAR_WIDTH * sizes.scaleFactor, BasicColorPicker.BAR_HEIGHT * sizes.scaleFactor);
 		bar.setChannelBarListener(listener);
 
 		inputField.setValue(0);

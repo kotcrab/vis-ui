@@ -99,8 +99,8 @@ public class ExtendedColorPicker extends BasicColorPicker implements Disposable 
 		palette = new Palette(commons, 100, new PickerChangeListener() {
 			@Override
 			public void updateLinkedWidget () {
-				sBar.setValue(palette.getV());
-				vBar.setValue(palette.getS());
+				sBar.setValue(palette.getS());
+				vBar.setValue(palette.getV());
 			}
 		});
 
@@ -114,7 +114,7 @@ public class ExtendedColorPicker extends BasicColorPicker implements Disposable 
 		HsvChannelBarListener svListener = new HsvChannelBarListener() {
 			@Override
 			protected void updateLinkedWidget () {
-				palette.setValue(vBar.getValue(), sBar.getValue());
+				palette.setValue(sBar.getValue(), vBar.getValue());
 			}
 		};
 
@@ -165,7 +165,7 @@ public class ExtendedColorPicker extends BasicColorPicker implements Disposable 
 		aBar.setValue(ca);
 
 		verticalBar.setValue(hBar.getValue());
-		palette.setValue(vBar.getValue(), sBar.getValue());
+		palette.setValue(sBar.getValue(), vBar.getValue());
 	}
 
 	/** Updates picker from H, S and V bars */
@@ -213,7 +213,7 @@ public class ExtendedColorPicker extends BasicColorPicker implements Disposable 
 		vBar.setValue(cv);
 
 		verticalBar.setValue(hBar.getValue());
-		palette.setValue(vBar.getValue(), sBar.getValue());
+		palette.setValue(sBar.getValue(), vBar.getValue());
 	}
 
 	private class RgbChannelBarListener implements ChannelBar.ChannelBarListener {

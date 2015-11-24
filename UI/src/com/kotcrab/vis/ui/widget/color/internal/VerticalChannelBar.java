@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.Sizes;
-import com.kotcrab.vis.ui.widget.color.ExtendedColorPicker;
+import com.kotcrab.vis.ui.widget.color.BasicColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerWidgetStyle;
 
 /**
@@ -70,11 +70,11 @@ public class VerticalChannelBar extends ShaderImage {
 		if (value < 0) value = 0;
 		if (value > maxValue) value = maxValue;
 
-		selectorY = ((float) value / maxValue) * ExtendedColorPicker.PALETTE_SIZE * sizes.scaleFactor;
+		selectorY = ((float) value / maxValue) * BasicColorPicker.PALETTE_SIZE * sizes.scaleFactor;
 	}
 
 	private void updateValueFromTouch (float y) {
-		int newValue = (int) (y / ExtendedColorPicker.PALETTE_SIZE * maxValue / sizes.scaleFactor);
+		int newValue = (int) (y / BasicColorPicker.PALETTE_SIZE * maxValue / sizes.scaleFactor);
 		setValue(newValue);
 
 		ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);

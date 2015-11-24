@@ -1,7 +1,8 @@
 [0.9.5] [LibGDX 1.7.1] [Snapshot]
+-Fixed BaisColorPicker palette color selection were flipped
 
 [0.9.4] [LibGDX 1.7.1]
--Fix GWT support
+-Fixed GWT support
 
 [0.9.3] [LibGDX 1.7.1]
 -API Change: FocusManager.getFocus(Stage) renamed to resetFocus

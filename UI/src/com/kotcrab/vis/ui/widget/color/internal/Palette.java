@@ -24,7 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener.ChangeEvent;
 import com.badlogic.gdx.utils.Pools;
 import com.kotcrab.vis.ui.Sizes;
-import com.kotcrab.vis.ui.widget.color.ExtendedColorPicker;
+import com.kotcrab.vis.ui.widget.color.BasicColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerWidgetStyle;
 
 /**
@@ -35,7 +35,7 @@ public class Palette extends ShaderImage {
 	private ColorPickerWidgetStyle style;
 	private Sizes sizes;
 
-	private int x, y;
+	private int xV, yS;
 	private int maxValue;
 
 	private float selectorX;
@@ -94,36 +94,36 @@ public class Palette extends ShaderImage {
 		this.pickerHue = pickerHue / 360.0f;
 	}
 
-	public void setValue (int v, int s) {
-		x = v;
-		y = s;
+	public void setValue (int s, int v) {
+		xV = v;
+		yS = s;
 
-		if (x < 0) x = 0;
-		if (x > maxValue) x = maxValue;
+		if (xV < 0) xV = 0;
+		if (xV > maxValue) xV = maxValue;
 
-		if (y < 0) y = 0;
-		if (y > maxValue) y = maxValue;
+		if (yS < 0) yS = 0;
+		if (yS > maxValue) yS = maxValue;
 
-		selectorX = ((float) x / maxValue) * ExtendedColorPicker.PALETTE_SIZE * sizes.scaleFactor;
-		selectorY = ((float) y / maxValue) * ExtendedColorPicker.PALETTE_SIZE * sizes.scaleFactor;
+		selectorX = ((float) xV / maxValue) * BasicColorPicker.PALETTE_SIZE * sizes.scaleFactor;
+		selectorY = ((float) yS / maxValue) * BasicColorPicker.PALETTE_SIZE * sizes.scaleFactor;
 	}
 
 	private void updateValueFromTouch (float touchX, float touchY) {
-		int newX = (int) (touchX / ExtendedColorPicker.PALETTE_SIZE * maxValue / sizes.scaleFactor);
-		int newY = (int) (touchY / ExtendedColorPicker.PALETTE_SIZE * maxValue / sizes.scaleFactor);
+		int newV = (int) (touchX / BasicColorPicker.PALETTE_SIZE * maxValue / sizes.scaleFactor);
+		int newS = (int) (touchY / BasicColorPicker.PALETTE_SIZE * maxValue / sizes.scaleFactor);
 
-		setValue(newX, newY);
+		setValue(newS, newV);
 
 		ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);
 		fire(changeEvent);
 		Pools.free(changeEvent);
 	}
 
-	public int getS () {
-		return x;
+	public int getV () {
+		return xV;
 	}
 
-	public int getV () {
-		return y;
+	public int getS () {
+		return yS;
 	}
 }
