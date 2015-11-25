@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.module.project.assetsmanager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -35,6 +36,7 @@ import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
@@ -48,6 +50,7 @@ import com.kotcrab.vis.editor.ui.tab.DeleteMultipleFilesTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
+import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.editor.util.async.CopyFileTaskDescriptor;
 import com.kotcrab.vis.editor.util.async.CopyFilesAsyncTask;
 import com.kotcrab.vis.editor.util.scene2d.DirectoriesOnlyFileFilter;
@@ -57,6 +60,8 @@ import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.layout.GridGroup;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.file.FileChooser.HistoryPolicy;
 import com.kotcrab.vis.ui.widget.file.FileChooserStyle;
@@ -64,6 +69,8 @@ import com.kotcrab.vis.ui.widget.file.internal.FileHistoryManager;
 import com.kotcrab.vis.ui.widget.file.internal.FileHistoryManager.FileHistoryCallback;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
+
+import java.util.Optional;
 
 /**
  * Provides UI module for managing assets.
@@ -74,10 +81,12 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private TabsModule tabsModule;
 	private QuickAccessModule quickAccessModule;
 	private StatusBarModule statusBar;
+	private ExtensionStorageModule extensionStorage;
 
 	private FileAccessModule fileAccess;
 	private SceneTabsModule sceneTabsModule;
 	private SceneCacheModule sceneCache;
+	private AssetsMetadataModule assetsMetadata;
 	private AssetsWatcherModule assetsWatcher;
 	private AssetsAnalyzerModule assetsAnalyzer;
 
@@ -88,6 +97,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private FileHandle visFolder;
 	private FileHandle assetsFolder;
 	private FileHandle currentDirectory;
+	private AssetDirectoryDescriptor currentDirectoryDescriptor;
 
 	//metadata
 	private Json json;
@@ -115,6 +125,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private VisTree contentTree;
 
 	private VisLabel contentTitleLabel;
+	private VisLabel dirDescriptorTitleLabel;
 	private SearchField searchField;
 
 	private FileHistoryManager fileHistoryManager;
@@ -127,13 +138,14 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		rebuildFolderTree();
 		Node node = contentTree.getNodes().get(0);
 		contentTree.getSelection().set(node); // select first item in tree
-		changeCurrentDirectory(((FolderItem)node.getActor()).getFile(), HistoryPolicy.IGNORE);
+		changeCurrentDirectory(((FolderItem) node.getActor()).getFile(), HistoryPolicy.IGNORE);
 
 		//TODO: [plugins] plugin entry point
 		contextProviders.add(new SpriterContextProvider());
 
-		for (AssetsUIContextProvider provider : contextProviders)
+		for (AssetsUIContextProvider provider : contextProviders) {
 			projectContainer.injectModules(provider);
+		}
 
 		tabsModule.addListener(this);
 		assetsWatcher.addListener(this);
@@ -262,6 +274,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		});
 
 		contentTitleLabel = new VisLabel("Content");
+		dirDescriptorTitleLabel = new VisLabel("", Color.GRAY);
 		searchField = new SearchField(newText -> {
 			if (currentDirectory == null) return true;
 			if (currentDirectory.list().length == 0 || searchField.getText().length() == 0) return true;
@@ -277,6 +290,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 		toolbarTable.add(fileHistoryManager.getButtonsTable());
 		toolbarTable.add(contentTitleLabel).left().expand();
+		toolbarTable.add(dirDescriptorTitleLabel);
 		toolbarTable.add(exploreButton);
 		//toolbarTable.add(settingsButton); //FIXME buttons
 		//toolbarTable.add(importButton);
@@ -347,22 +361,27 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			String relativePath = fileAccess.relativizeToAssetsFolder(file);
 			String ext = file.extension();
 
-			if(file.name().equals(".vis")) continue;
+			if (file.name().equals(".vis")) continue;
 
 			if (relativePath.startsWith("atlas") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")))
 				continue;
-			//if (relativePath.startsWith("particle") && (ext.equals("png") || ext.equals("jpg"))) continue;
-//				if (relativePath.startsWith("bmpfont") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")))
-//					continue;
 
 			filesView.addActor(createFileItem(file));
 			filesDisplayed++;
 		}
 
+		currentDirectoryDescriptor = assetsMetadata.getAsDirectoryDescriptorRecursively(directory);
+
 		assetDragAndDrop.rebuild(filesView.getChildren(), atlasViews.values());
 
 		String currentPath = directory.path().substring(visFolder.path().length() + 1);
 		contentTitleLabel.setText("Content [" + currentPath + "]");
+		if (currentDirectoryDescriptor != null) {
+			dirDescriptorTitleLabel.setText("[" + currentDirectoryDescriptor.getUIName() + "]");
+		} else {
+			dirDescriptorTitleLabel.setText("");
+		}
+
 		highlightDir(directory);
 
 		if (historyPolicy == HistoryPolicy.CLEAR) fileHistoryManager.historyClear();
@@ -496,6 +515,12 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	}
 
 	private class AssetsPopupMenu extends PopupMenu {
+		private PopupMenu markDirSubMenu;
+
+		public AssetsPopupMenu () {
+			markDirSubMenu = new PopupMenu();
+		}
+
 		@SuppressWarnings("Convert2MethodRef")
 		void build (FileItem item) {
 			clearChildren();
@@ -506,6 +531,27 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			} else {
 				FileHandle file = item.getFile();
 				boolean directory = file.isDirectory();
+
+				if (directory && currentDirectoryDescriptor == null) {
+					addItem(MenuUtils.createMenuItem("Mark Directory As", markDirSubMenu));
+					markDirSubMenu.clearChildren();
+
+					Optional<AssetDirectoryDescriptor> currentDirDesc = Optional.ofNullable(assetsMetadata.getAsDirectoryDescriptor(file));
+					Holder<Boolean> atLeastOneAdded = Holder.of(false);
+
+					extensionStorage.getAssetDirectoryDescriptors().forEach(desc -> {
+						if (currentDirDesc.isPresent() && currentDirDesc.get().getId().equals(desc.getId())) return;
+
+						markDirSubMenu.addItem(MenuUtils.createMenuItem(desc.getUIName(), desc.getMenuItemIcon(),
+								() -> safeMarkDirectory(file, currentDirDesc.isPresent(), desc.getId())));
+						atLeastOneAdded.value = true;
+					});
+
+					if (currentDirDesc.isPresent()) {
+						if (atLeastOneAdded.get()) markDirSubMenu.addSeparator();
+						markDirSubMenu.addItem(MenuUtils.createMenuItem("Unmark directory", () -> safeMarkDirectory(file, currentDirDesc.isPresent(), null)));
+					}
+				}
 
 				if (directory || isOpenSupported(file.extension())) {
 					addItem(MenuUtils.createMenuItem("Open", () -> openFile(file)));
@@ -518,7 +564,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 					addSeparator();
 				}
 
-				if(directory == false) { //TODO: add support for copying directories
+				if (directory == false) { //TODO: add support for copying directories
 					addItem(MenuUtils.createMenuItem("Copy", () -> clipboardCopyFiles()));
 					addItem(MenuUtils.createMenuItem("Paste", () -> clipboardPasteFiles()));
 				}
@@ -530,6 +576,32 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 				addItem(MenuUtils.createMenuItem("Delete", () -> deleteSelectedFiles()));
 			}
+		}
+
+		private void safeMarkDirectory (FileHandle dir, boolean dirMarked, String fullCodeName) {
+			if (dirMarked) {
+				//TODO: include link to help
+				//TODO: add safe remark feature
+				DialogUtils.showOptionDialog(getStage(), "Warning", "This directory is already marked, changing it may\n" +
+								"result in unexpected errors if asset files are used in scenes.", OptionDialogType.YES_CANCEL,
+						new OptionDialogAdapter() {
+							@Override
+							public void yes () {
+								markDirectory(dir, fullCodeName);
+							}
+						}).setYesButtonText("Change Anyway");
+			} else {
+				markDirectory(dir, fullCodeName);
+			}
+		}
+
+		private void markDirectory (FileHandle dir, String fullCodeName) {
+			if (fullCodeName == null) {
+				assetsMetadata.remove(dir);
+			} else {
+				assetsMetadata.commit(dir, fullCodeName);
+			}
+			refreshFilesList();
 		}
 
 		private void moveFiles (FileHandle file) {

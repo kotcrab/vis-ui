@@ -25,6 +25,8 @@ import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.plugin.*;
+import com.kotcrab.vis.editor.plugin.api.AssetTypeStorage;
+import com.kotcrab.vis.editor.plugin.api.ResourceLoader;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
 import com.kotcrab.vis.editor.ui.dialog.PluginDetailsDialog;
@@ -70,7 +72,7 @@ public class PluginLoaderModule extends EditorModule {
 	private String currentlyLoadingPlugin; //name of plugin that is loaded, used to throw exception if plugin loading failed
 
 	@Override
-	public void postInit () {
+	public void init () {
 		FileHandle pluginsFolder = Gdx.files.absolute(PLUGINS_FOLDER_PATH);
 		Log.debug(TAG, "Loading plugins from: " + pluginsFolder);
 
@@ -84,8 +86,9 @@ public class PluginLoaderModule extends EditorModule {
 			toastModule.show(new DetailsToast("Plugin loading failed! (" + currentlyLoadingPlugin + ")", e));
 		}
 
-		if (failedPlugins.size > 0)
+		if (failedPlugins.size > 0) {
 			toastModule.show(new LoadingPluginsFailedToast(failedPlugins));
+		}
 	}
 
 	private void loadPluginsDescriptors (Array<FileHandle> pluginsFolders) throws IOException {
@@ -194,6 +197,17 @@ public class PluginLoaderModule extends EditorModule {
 
 				if (object instanceof ExporterPlugin) {
 					pluginContainer.addExporterPlugin((ExporterPlugin) object);
+					continue;
+				}
+
+				if (object instanceof ResourceLoader) {
+					pluginContainer.addResourceLoader((ResourceLoader) object);
+					continue;
+				}
+
+				if (object instanceof AssetTypeStorage) {
+					pluginContainer.addAssetTypeStorage((AssetTypeStorage) object);
+					continue;
 				}
 
 				if (object instanceof EntitySupport)

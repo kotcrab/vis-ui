@@ -62,6 +62,7 @@ public enum Icons {
 	PLUS("plus"),
 
 	FOLDER_MEDIUM("folder-medium"),
+	FOLDER_SPRITER_MEDIUM("folder-spriter-medium"),
 
 	QUESTION_BIG("question-big"),
 	SOUND_BIG("sound-big"),

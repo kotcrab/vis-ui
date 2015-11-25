@@ -17,30 +17,34 @@
 package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.assets.AssetType;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
+import com.kotcrab.vis.editor.module.editor.GsonModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
-import com.kotcrab.vis.editor.serializer.json.ObjectMapJsonSerializer;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 
 /** @author Kotcrab */
 public class AssetsMetadataModule extends ProjectModule {
+	private ExtensionStorageModule extensionStorage;
+	private GsonModule gsonModule;
 	private ToastModule toastModule;
 
 	private FileAccessModule fileAccess;
 
 	private FileHandle metadataFile;
 	private FileHandle metadataBackupFile;
-	private ObjectMap<FileHandle, String> metadata;
+	private ObjectMap<String, String> metadata;
 
 	private Gson gson;
 
@@ -50,30 +54,67 @@ public class AssetsMetadataModule extends ProjectModule {
 		metadataFile = fileAccess.getModuleFolder().child("assetsMetadata.json");
 		metadataBackupFile = fileAccess.getModuleFolder(".backup").child("assetsMetadata.json.bak");
 
-		GsonBuilder builder = new GsonBuilder()
-				.setPrettyPrinting()
-				.excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-				.registerTypeAdapter(ObjectMap.class, new ObjectMapJsonSerializer());
+		gson = gsonModule.getCommonGson();
 
-		gson = builder.create();
-
-		if (metadataFile.exists()) {
-			loadMetadata();
-		} else {
-			metadata = new ObjectMap<>();
-		}
+		if (metadataFile.exists()) loadMetadata();
+		if (metadata == null) metadata = new ObjectMap<>();
+		verifyMetadata();
 	}
 
-	private void commit (FileHandle file, String fileType) {
-		if (fileType.equals(AssetType.UNKNOWN))
+	public void commit (FileHandle file, String fileType) {
+		if (fileType.equals(AssetType.UNKNOWN)) {
 			throw new IllegalStateException("Cannot commit unknown file type to metadata!");
+		}
 
-		metadata.put(file, fileType);
+		metadata.put(fileAccess.relativizeToAssetsFolder(file), fileType);
 		saveMetadata();
 	}
 
-	private String get (FileHandle file) {
-		return metadata.get(file, AssetType.UNKNOWN);
+	public String get (FileHandle file) {
+		return metadata.get(fileAccess.relativizeToAssetsFolder(file), AssetType.UNKNOWN);
+	}
+
+	public String getRecursively (FileHandle dir) {
+		String relativePath = fileAccess.relativizeToAssetsFolder(dir);
+		for (Entry<String, String> entry : metadata) {
+			if (relativePath.startsWith(entry.key)) {
+				return entry.value;
+			}
+		}
+		return AssetType.UNKNOWN;
+	}
+
+	public AssetDirectoryDescriptor getAsDirectoryDescriptor (FileHandle file) {
+		return getDirDescriptorForId(get(file));
+	}
+
+	public AssetDirectoryDescriptor getAsDirectoryDescriptorRecursively (FileHandle file) {
+		return getDirDescriptorForId(getRecursively(file));
+	}
+
+	public boolean isMarked (FileHandle file) {
+		return get(file) != null;
+	}
+
+	public boolean isMarkedRecursively (FileHandle file) {
+		return getRecursively(file) != null;
+	}
+
+	public void remove (FileHandle file) {
+		metadata.remove(fileAccess.relativizeToAssetsFolder(file));
+		saveMetadata();
+	}
+
+	private AssetDirectoryDescriptor getDirDescriptorForId (String descId) {
+		if (descId.equals(AssetType.UNKNOWN)) return null;
+
+		for (AssetDirectoryDescriptor desc : extensionStorage.getAssetDirectoryDescriptors()) {
+			if (descId.equals(desc.getId())) {
+				return desc;
+			}
+		}
+
+		return null;
 	}
 
 	private void loadMetadata () {
@@ -88,7 +129,7 @@ public class AssetsMetadataModule extends ProjectModule {
 	}
 
 	private void saveMetadata () {
-		metadataFile.copyTo(metadataBackupFile);
+		if (metadataFile.exists()) metadataFile.copyTo(metadataBackupFile);
 		try {
 			FileWriter writer = new FileWriter(metadataFile.file());
 			gson.toJson(metadata, writer);
@@ -97,5 +138,35 @@ public class AssetsMetadataModule extends ProjectModule {
 			Log.exception(e);
 			toastModule.show(new DetailsToast("Error occurred when saving assets metadata.\nIt's not recommend to continue.", e)); //TODO: help link what to do
 		}
+	}
+
+	private void verifyMetadata () {
+		Array<String> missingDescIds = new Array<>();
+
+		for (String descId : metadata.values()) {
+			if (descriptorIdExistsInAdvisableDirDescriptors(descId) == false)
+				missingDescIds.add(descId);
+		}
+
+		if (missingDescIds.size > 0) {
+			String msg = "A required plugin could be missing or failed to load.\n\nMissing descriptors:\n";
+
+			for (String descId : missingDescIds) {
+				msg += descId + "\n";
+			}
+
+			msg += "\nIt's not recommend to continue."; //TODO: help link what to do
+			toastModule.show(new DetailsToast("Missing AssetDirectory definitions. It's not recommend to continue.", msg));
+		}
+	}
+
+	private boolean descriptorIdExistsInAdvisableDirDescriptors (String descId) {
+		for (AssetDirectoryDescriptor desc : extensionStorage.getAssetDirectoryDescriptors()) {
+			if (descId.equals(desc.getId())) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

@@ -31,20 +31,28 @@
 
 package com.kotcrab.vis.plugin.spine;
 
-import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
-import com.kotcrab.vis.editor.plugin.api.AssetTypeStorage;
+import com.badlogic.gdx.graphics.Texture;
+import com.kotcrab.vis.editor.plugin.PluginFileHandle;
+import com.kotcrab.vis.editor.plugin.api.ResourceLoader;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
 /** @author Kotcrab */
 @VisPlugin
-public class SpineAssetType implements AssetTypeStorage {
-	private static final String PREFIX = "com.kotcrab.vis.editor.plugin.spine.";
-	private static final String FILE_TYPE = PREFIX + "file.";
-	private static final String DIRECTORY_TYPE = PREFIX + "directory.";
+public class SpineAssets implements ResourceLoader {
+	public static Texture folderSpineMedium;
 
-	public static final String JSON_SKELETON = FILE_TYPE + "JsonSkeleton";
-	public static final String BINARY_SKELETON = FILE_TYPE + "BinarySkeleton";
+	@Override
+	public void load () {
+		folderSpineMedium = new Texture(new PluginFileHandle(SpineAssetType.class, "icons/folder-spine-medium.png"));
+	}
 
-	public static final AssetDirectoryDescriptor DIRECTORY_SPRITER =
-			new AssetDirectoryDescriptor(DIRECTORY_TYPE + "Spine", "Spine Animation", SpineIcons.FOLDER_SPINE_MEDIUM::drawable);
+	@Override
+	public String getName () {
+		return "SpinePluginAssets";
+	}
+
+	@Override
+	public void dispose () {
+		folderSpineMedium.dispose();
+	}
 }

@@ -18,9 +18,11 @@ package com.kotcrab.vis.editor.util.scene2d;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.ui.ButtonListener;
 import com.kotcrab.vis.ui.widget.MenuItem;
+import com.kotcrab.vis.ui.widget.PopupMenu;
 
 /**
  * {@link MenuItem}/menus related utils
@@ -28,14 +30,24 @@ import com.kotcrab.vis.ui.widget.MenuItem;
  */
 public class MenuUtils {
 	public static MenuItem createMenuItem (String text, ButtonListener listener) {
-		return createMenuItem(text, null, listener);
+		return createMenuItem(text, (Drawable) null, listener);
 	}
 
-	public static MenuItem createMenuItem (String text, Icons icon, ButtonListener listener) {
+	public static MenuItem createMenuItem (String text, PopupMenu subMenu) {
+		MenuItem item = new MenuItem(text);
+		item.setSubMenu(subMenu);
+		return item;
+	}
+
+	public static MenuItem createMenuItem (String text, Drawable icon) {
+		return createMenuItem(text, icon, null);
+	}
+
+	public static MenuItem createMenuItem (String text, Drawable icon, ButtonListener listener) {
 		if (listener == null) {
-			return new MenuItem(text, icon != null ? icon.drawable() : null);
+			return new MenuItem(text, icon);
 		} else {
-			return new MenuItem(text, icon != null ? icon.drawable() : null, new ChangeListener() {
+			return new MenuItem(text, icon, new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
 					listener.clicked();
@@ -44,4 +56,7 @@ public class MenuUtils {
 		}
 	}
 
+	public static MenuItem createMenuItem (String text, Icons icon, ButtonListener listener) {
+		return createMenuItem(text, icon == null ? null : icon.drawable(), listener);
+	}
 }

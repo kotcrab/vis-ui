@@ -13,14 +13,14 @@ align-bottom
   index: -1
 align-center-x
   rotate: false
-  xy: 48, 26
+  xy: 94, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 align-center-y
   rotate: false
-  xy: 48, 2
+  xy: 94, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -34,14 +34,14 @@ align-left
   index: -1
 align-right
   rotate: false
-  xy: 72, 26
+  xy: 118, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 align-top
   rotate: false
-  xy: 72, 2
+  xy: 118, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -55,28 +55,28 @@ cursor
   index: -1
 exit
   rotate: false
-  xy: 96, 26
+  xy: 142, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 export
   rotate: false
-  xy: 96, 2
+  xy: 142, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 eye
   rotate: false
-  xy: 120, 26
+  xy: 166, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 eye-disabled
   rotate: false
-  xy: 120, 2
+  xy: 166, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -97,70 +97,77 @@ folder-medium
   index: -1
 folder-open
   rotate: false
-  xy: 144, 26
+  xy: 190, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
+folder-spriter-medium
+  rotate: false
+  xy: 48, 4
+  size: 44, 44
+  orig: 44, 44
+  offset: 0, 0
+  index: -1
 globe
   rotate: false
-  xy: 144, 2
+  xy: 190, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 import
   rotate: false
-  xy: 168, 26
+  xy: 214, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 info
   rotate: false
-  xy: 168, 2
+  xy: 214, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 layer-add
   rotate: false
-  xy: 192, 26
+  xy: 238, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 layer-down
   rotate: false
-  xy: 192, 2
+  xy: 238, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 layer-remove
   rotate: false
-  xy: 216, 26
+  xy: 262, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 layer-up
   rotate: false
-  xy: 216, 2
+  xy: 262, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 load
   rotate: false
-  xy: 240, 26
+  xy: 286, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 locked
   rotate: false
-  xy: 240, 2
+  xy: 286, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -181,14 +188,14 @@ music-big
   index: -1
 new
   rotate: false
-  xy: 264, 26
+  xy: 310, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 plus
   rotate: false
-  xy: 264, 2
+  xy: 310, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -202,7 +209,7 @@ point-big
   index: -1
 polygon
   rotate: false
-  xy: 288, 26
+  xy: 334, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -216,7 +223,7 @@ question-big
   index: -1
 redo
   rotate: false
-  xy: 288, 2
+  xy: 334, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -230,28 +237,28 @@ refresh-big
   index: -1
 save
   rotate: false
-  xy: 312, 26
+  xy: 358, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 search
   rotate: false
-  xy: 312, 2
+  xy: 358, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 settings
   rotate: false
-  xy: 336, 26
+  xy: 382, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 settings-view
   rotate: false
-  xy: 336, 2
+  xy: 382, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -265,21 +272,21 @@ sound-big
   index: -1
 undo
   rotate: false
-  xy: 360, 26
+  xy: 406, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 unlocked
   rotate: false
-  xy: 360, 2
+  xy: 406, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 warning
   rotate: false
-  xy: 384, 26
+  xy: 430, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0

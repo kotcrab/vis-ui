@@ -31,20 +31,18 @@
 
 package com.kotcrab.vis.plugin.spine;
 
-import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
-import com.kotcrab.vis.editor.plugin.api.AssetTypeStorage;
-import com.kotcrab.vis.runtime.plugin.VisPlugin;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /** @author Kotcrab */
-@VisPlugin
-public class SpineAssetType implements AssetTypeStorage {
-	private static final String PREFIX = "com.kotcrab.vis.editor.plugin.spine.";
-	private static final String FILE_TYPE = PREFIX + "file.";
-	private static final String DIRECTORY_TYPE = PREFIX + "directory.";
+public enum SpineIcons {
+	FOLDER_SPINE_MEDIUM {
+		@Override
+		Drawable drawable () {
+			return new TextureRegionDrawable(new TextureRegion(SpineAssets.folderSpineMedium));
+		}
+	};
 
-	public static final String JSON_SKELETON = FILE_TYPE + "JsonSkeleton";
-	public static final String BINARY_SKELETON = FILE_TYPE + "BinarySkeleton";
-
-	public static final AssetDirectoryDescriptor DIRECTORY_SPRITER =
-			new AssetDirectoryDescriptor(DIRECTORY_TYPE + "Spine", "Spine Animation", SpineIcons.FOLDER_SPINE_MEDIUM::drawable);
+	abstract Drawable drawable ();
 }

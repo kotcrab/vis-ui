@@ -74,7 +74,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 
 		uiTable.add(table).expandX().fillX().row();
 
-		Holder<ATSelectFileHandler> holder = new Holder<>(getHandler(annotation));
+		Holder<ATSelectFileHandler> holder = Holder.of(getHandler(annotation));
 
 		fileDialogLabels.put(field, new SelectFileDialogSet(fileLabel, tooltip, holder.value));
 

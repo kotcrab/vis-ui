@@ -21,27 +21,24 @@ import com.artemis.Entity;
 import com.artemis.utils.Bag;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.google.common.eventbus.Subscribe;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.ProjectMenuBarEvent;
 import com.kotcrab.vis.editor.event.ProjectMenuBarEventType;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
+import com.kotcrab.vis.editor.module.editor.GsonModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.serializer.cloner.BagCloner;
 import com.kotcrab.vis.editor.serializer.cloner.IntArrayCloner;
 import com.kotcrab.vis.editor.serializer.cloner.IntMapCloner;
 import com.kotcrab.vis.editor.serializer.cloner.ObjectMapCloner;
-import com.kotcrab.vis.editor.serializer.json.*;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
-import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.ProtoComponent;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
@@ -53,7 +50,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 
 /**
  * Allows to load VisEditor scenes. This API should not be used directly. See {@link SceneCacheModule}
@@ -64,6 +60,8 @@ import java.lang.reflect.Modifier;
 @EventBusSubscriber
 public class SceneIOModule extends ProjectModule {
 	private static final String TAG = "SceneIOModule";
+
+	private GsonModule gsonModule;
 
 	protected Cloner cloner;
 	protected Gson gson;
@@ -90,7 +88,7 @@ public class SceneIOModule extends ProjectModule {
 		cloner.registerFastCloner(IntMap.class, new IntMapCloner());
 		cloner.registerFastCloner(ObjectMap.class, new ObjectMapCloner());
 
-		setupSerializer();
+		gson = gsonModule.getCommonGson();
 	}
 
 	@Subscribe
@@ -98,30 +96,6 @@ public class SceneIOModule extends ProjectModule {
 		if (event.type == ProjectMenuBarEventType.SHOW_NEW_SCENE_DIALOG) {
 			stage.addActor(new NewSceneDialog(projectContainer).fadeIn());
 		}
-	}
-
-	protected void setupSerializer () {
-		ClassJsonSerializer classSerializer;
-
-		GsonBuilder builder = new GsonBuilder()
-				.setPrettyPrinting()
-				.excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
-				.registerTypeAdapter(Array.class, new ArrayJsonSerializer())
-				.registerTypeAdapter(IntArray.class, new IntArrayJsonSerializer())
-				.registerTypeAdapter(IntMap.class, new IntMapJsonSerializer())
-				.registerTypeAdapter(ObjectMap.class, new ObjectMapJsonSerializer())
-				.registerTypeAdapter(Class.class, classSerializer = new ClassJsonSerializer(Thread.currentThread().getContextClassLoader()))
-				.registerTypeAdapter(AssetComponent.class, new AssetComponentSerializer());
-
-		//TODO: [plugin] plugin entry point, allow plugin to simpler serializer registration, currently requires making EditorEntitySupport
-		//register plugins serializers
-		extensionStorage.getEntitiesSupports().forEach(
-				support -> support.getJsonTypeAdapters().forEach(
-						typeObjectEntry -> builder.registerTypeAdapter(typeObjectEntry.key, typeObjectEntry.value)));
-
-		gson = builder.create();
-
-		EditorJsonTags.registerTags(new GsonTagRegistrar(classSerializer));
 	}
 
 	public ProtoEntity createProtoEntity (EntityEngine entityEngine, Entity entity, boolean preserveEntityId) {

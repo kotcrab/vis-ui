@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.plugin;
+package com.kotcrab.vis.editor.plugin.api;
 
-import com.kotcrab.vis.editor.module.Module;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 
 /**
- * Interface allowing to inject custom modules into VisEditor modules containers
- * @param <T> type of base module depending on container that you want to inject your module into
+ * Implemented by classes that stores assets metadata prefixes and {@link AssetDirectoryDescriptor}s.
  * @author Kotcrab
  */
-public interface ContainerExtension<T extends Module> {
-	enum ExtensionScope {EDITOR, PROJECT, SCENE}
-
-	ExtensionScope getScope ();
+public interface AssetTypeStorage {
 }

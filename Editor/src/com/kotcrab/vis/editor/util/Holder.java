@@ -25,10 +25,22 @@ package com.kotcrab.vis.editor.util;
 public class Holder<T> {
 	public T value;
 
-	public Holder () {
+	private Holder () {
 	}
 
-	public Holder (T value) {
+	private Holder (T value) {
 		this.value = value;
+	}
+
+	public static <T> Holder<T> empty () {
+		return new Holder<>();
+	}
+
+	public static <T> Holder<T> of (T value) {
+		return new Holder<>(value);
+	}
+
+	public T get () {
+		return value;
 	}
 }

@@ -31,10 +31,10 @@
     <build>
         <resources>
             <resource>
-                <directory>${basedir}</directory>
-                <includes>
-                    <include>LICENSE.txt</include>
-                </includes>
+                <directory>src</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
             </resource>
         </resources>
 
@@ -52,7 +52,7 @@
                             <Plugin-Provider>Kotcrab</Plugin-Provider>
                             <Plugin-Version>${project.version}</Plugin-Version>
                             <Plugin-Compatibility>4</Plugin-Compatibility>
-                            <Plugin-License>LICENSE.txt</Plugin-License>
+                            <Plugin-License>com/kotcrab/vis/plugin/spine/LICENSE.txt</Plugin-License>
                         </manifestEntries>
                     </archive>
                     <outputDirectory>../../Editor/target/plugins/spine/</outputDirectory>

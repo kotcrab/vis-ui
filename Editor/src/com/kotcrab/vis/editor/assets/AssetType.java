@@ -16,11 +16,15 @@
 
 package com.kotcrab.vis.editor.assets;
 
+import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
+import com.kotcrab.vis.editor.plugin.api.AssetTypeStorage;
+
 /**
  * Built-in possible file types for assets files
  * @author Kotcrab
  */
-public class AssetType {
+public class AssetType implements AssetTypeStorage {
 	private static final String PREFIX = "com.kotcrab.vis.editor.";
 	private static final String FILE_TYPE = PREFIX + "file.";
 	private static final String DIRECTORY_TYPE = PREFIX + "directory.";
@@ -43,5 +47,6 @@ public class AssetType {
 	public static final String SPRITER_SCML = FILE_TYPE + "SpriterScml";
 	public static final String SCENE = FILE_TYPE + "Scene";
 
-	public static final String DIRECTORY_SPRITER = DIRECTORY_TYPE + "spriter";
+	public static final AssetDirectoryDescriptor DIRECTORY_SPRITER =
+			new AssetDirectoryDescriptor(DIRECTORY_TYPE + "Spriter", "Spriter Animation", Icons.FOLDER_SPRITER_MEDIUM.drawable(), null);
 }

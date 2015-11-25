@@ -29,12 +29,18 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 /** @author Kotcrab */
 public class VisContainers {
 	public static void createEditorModules (EditorModuleContainer editorMC, TabbedPaneListener tabsModuleListener, TabbedPaneListener quickAccessModuleListener) {
-		editorMC.add(new ProjectIOModule());
 		editorMC.add(new InputModule());
 		editorMC.add(new GlobalInputModule());
 
+		editorMC.add(new ToastModule());
+		editorMC.add(new EditorSettingsIOModule());
+
+		editorMC.add(new PluginSettingsModule());
 		editorMC.add(new PluginLoaderModule());
+
 		editorMC.add(new ExtensionStorageModule());
+
+		editorMC.add(new GsonModule());
 		editorMC.add(new AppFileAccessModule());
 		editorMC.add(new VisTwitterReader());
 		editorMC.add(new WebAPIModule());
@@ -49,18 +55,16 @@ public class VisContainers {
 		editorMC.add(new FileChooserModule());
 		editorMC.add(new MenuBarModule());
 		editorMC.add(new ToolbarModule());
-		editorMC.add(new ToastModule());
 		editorMC.add(new QuickAccessModule(quickAccessModuleListener));
 		editorMC.add(new StatusBarModule());
 		editorMC.add(new UIDebugControllerModule());
-		editorMC.add(new EditorSettingsIOModule());
+		editorMC.add(new ProjectIOModule());
 		editorMC.add(new AnalyticsModule());
 		editorMC.add(new EditingSettingsModule());
 
 		editorMC.add(new GeneralSettingsModule());
 		editorMC.add(new ColorSettingsModule());
 		editorMC.add(new ExperimentalSettingsModule());
-		editorMC.add(new PluginSettingsModule());
 		editorMC.add(new GridSettingsModule());
 
 		editorMC.add(new DevelopmentSpeedupModule());

@@ -53,7 +53,9 @@ public class PluginFileHandle extends FileHandle {
 
 	@Override
 	public InputStream read () {
-		return baseClass.getResourceAsStream(filePath);
+		InputStream stream = baseClass.getResourceAsStream(filePath);
+		if (stream == null) throw new IllegalStateException("PluginFileHandle could not find file: " + filePath);
+		return stream;
 	}
 
 	@Override

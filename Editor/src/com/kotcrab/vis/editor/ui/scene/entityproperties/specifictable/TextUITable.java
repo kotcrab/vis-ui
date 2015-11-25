@@ -35,6 +35,7 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.TextComponent;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
+import com.kotcrab.vis.ui.util.value.VisWidgetValue;
 import com.kotcrab.vis.ui.widget.*;
 
 import static com.kotcrab.vis.editor.util.vis.EntityUtils.getCommonString;

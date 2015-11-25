@@ -22,12 +22,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.assets.AssetType;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
@@ -47,6 +49,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
  */
 public class FileItem extends Table {
 	private ExtensionStorageModule extensionStorage;
+	private AssetsMetadataModule assetsMetadata;
 
 	private FileAccessModule fileAccess;
 	private TextureCacheModule textureCache;
@@ -87,7 +90,16 @@ public class FileItem extends Table {
 
 		if (file.isDirectory()) {
 			type = AssetType.DIRECTORY;
-			add(new VisImage(Icons.FOLDER_MEDIUM.drawable())).row();
+
+			Drawable icon;
+			AssetDirectoryDescriptor desc = assetsMetadata.getAsDirectoryDescriptor(file);
+			if (desc != null) {
+				icon = desc.getAssetsViewIcon();
+			} else {
+				icon = Icons.FOLDER_MEDIUM.drawable();
+			}
+			add(new VisImage(icon, Scaling.fillX)).row();
+
 			name = new VisLabel(file.nameWithoutExtension());
 		}
 
@@ -188,10 +200,10 @@ public class FileItem extends Table {
 	private void createDefaultView (String type, String itemTypeName, boolean hideExtension) {
 		this.type = type;
 
-		VisLabel tagLabel = new VisLabel((hideExtension ? "" : file.extension().toUpperCase() + " ") + itemTypeName, Color.GRAY);
-		tagLabel.setWrap(true);
-		tagLabel.setAlignment(Align.center);
-		add(tagLabel).expandX().fillX().row();
+		VisLabel assetTypeLabel = new VisLabel((hideExtension ? "" : file.extension().toUpperCase() + " ") + itemTypeName, Color.GRAY);
+		assetTypeLabel.setWrap(true);
+		assetTypeLabel.setAlignment(Align.center);
+		add(assetTypeLabel).expandX().fillX().row();
 		name = new VisLabel(file.nameWithoutExtension());
 	}
 

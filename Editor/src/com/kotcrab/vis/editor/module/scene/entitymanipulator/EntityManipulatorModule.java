@@ -316,7 +316,7 @@ public class EntityManipulatorModule extends SceneModule {
 			ObjectSet<Entity> entities = new ObjectSet<>(selectedEntities.size);
 
 			IntIntMap groupIdRemap = new IntIntMap();
-			Holder<Integer> freeGidHolder = new Holder<>(groupIdProvider.getFreeGroupId());
+			Holder<Integer> freeGidHolder = Holder.of(groupIdProvider.getFreeGroupId());
 
 			entitiesClipboard.forEach(protoEntity -> {
 				Entity entity = protoEntity.build();

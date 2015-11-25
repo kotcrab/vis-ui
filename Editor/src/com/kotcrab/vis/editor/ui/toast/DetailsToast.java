@@ -32,6 +32,10 @@ public class DetailsToast extends VisTable {
 		this(text, "Exception Details", ExceptionUtils.getStackTrace(cause));
 	}
 
+	public DetailsToast (String text, String details) {
+		this(text, "Details", details);
+	}
+
 	public DetailsToast (String text, String detailsDialogTitle, String details) {
 		LinkLabel label = new LinkLabel("Details");
 		label.setListener(url -> getStage().addActor(new DetailsDialog(text, detailsDialogTitle, details).fadeIn()));
