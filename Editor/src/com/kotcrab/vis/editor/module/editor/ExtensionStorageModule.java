@@ -22,10 +22,10 @@ import com.kotcrab.vis.editor.assets.AssetType;
 import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.project.DefaultExporter;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
-import com.kotcrab.vis.editor.plugin.ContainerExtension;
-import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
+import com.kotcrab.vis.editor.plugin.api.ContainerExtension;
+import com.kotcrab.vis.editor.plugin.api.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
-import com.kotcrab.vis.editor.plugin.ExporterPlugin;
+import com.kotcrab.vis.editor.plugin.api.ExporterPlugin;
 import com.kotcrab.vis.editor.plugin.api.AssetTypeStorage;
 import com.kotcrab.vis.editor.plugin.api.ResourceLoader;
 

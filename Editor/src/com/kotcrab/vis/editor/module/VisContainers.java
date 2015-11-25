@@ -23,7 +23,7 @@ import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
-import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
+import com.kotcrab.vis.editor.plugin.api.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
 /** @author Kotcrab */

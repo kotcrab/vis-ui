@@ -29,7 +29,7 @@ import com.kotcrab.vis.editor.module.editor.DisableableDialogsModule;
 import com.kotcrab.vis.editor.module.editor.DisableableDialogsModule.DefaultDialogOption;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.InputModule;
-import com.kotcrab.vis.editor.plugin.ExporterPlugin;
+import com.kotcrab.vis.editor.plugin.api.ExporterPlugin;
 import com.kotcrab.vis.editor.util.scene2d.ModalInputListener;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialog;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;

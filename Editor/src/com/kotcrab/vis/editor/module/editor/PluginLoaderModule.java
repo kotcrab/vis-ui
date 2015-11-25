@@ -26,6 +26,8 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.plugin.*;
 import com.kotcrab.vis.editor.plugin.api.AssetTypeStorage;
+import com.kotcrab.vis.editor.plugin.api.ContainerExtension;
+import com.kotcrab.vis.editor.plugin.api.ExporterPlugin;
 import com.kotcrab.vis.editor.plugin.api.ResourceLoader;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;

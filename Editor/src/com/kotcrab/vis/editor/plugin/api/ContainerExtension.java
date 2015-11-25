@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.plugin;
+package com.kotcrab.vis.editor.plugin.api;
 
 import com.kotcrab.vis.editor.module.Module;
 

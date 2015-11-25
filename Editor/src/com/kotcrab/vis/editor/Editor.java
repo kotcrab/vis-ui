@@ -34,7 +34,7 @@ import com.kotcrab.vis.editor.module.VisContainers;
 import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
+import com.kotcrab.vis.editor.plugin.api.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.ui.EditorFrame;
 import com.kotcrab.vis.editor.ui.NoProjectFilesOpenView;
 import com.kotcrab.vis.editor.ui.WindowListener;
