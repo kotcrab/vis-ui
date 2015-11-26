@@ -220,6 +220,7 @@ public class PluginLoaderModule extends EditorModule {
 
 				if (object instanceof AssetsFileSorter) {
 					extensionStorage.addAssetFileSorter((AssetsFileSorter) object);
+					continue;
 				}
 
 				if (object instanceof AssetDescriptorProvider) {
@@ -229,13 +230,14 @@ public class PluginLoaderModule extends EditorModule {
 
 				if (object instanceof AssetTransactionGenerator) {
 					extensionStorage.addAssetTransactionGenerators((AssetTransactionGenerator) object);
+					continue;
 				}
 
 				if (object instanceof EntitySupport) {
 					continue;
 				}
 
-				Log.warn("Plugin '" + descriptor.folderName + "' was successfully loaded but it's plugin class '" + clazz.getSimpleName() + "' object wasn't recognized.");
+				Log.warn("Plugin '" + descriptor.folderName + "' was successfully loaded but it's main plugin class '" + clazz.getSimpleName() + "' object wasn't recognized.");
 			}
 		}
 	}

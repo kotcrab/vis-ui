@@ -74,7 +74,7 @@ public class SpriterUIContextGenerator implements AssetsUIContextGenerator {
 
 	@Override
 	public VisTable provideContext (FileHandle fileHandle, String relativePath) {
-		if (ProjectPathUtils.isSpriterAnimationDir(assetsMetadata, fileHandle)) {
+		if (ProjectPathUtils.isNotImportedSpriterAnimationDir(assetsMetadata, fileHandle)) {
 			this.animFolder = fileHandle;
 			this.relativePath = relativePath;
 

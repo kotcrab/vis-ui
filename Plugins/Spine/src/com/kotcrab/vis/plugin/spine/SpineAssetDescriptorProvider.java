@@ -42,17 +42,18 @@ import com.kotcrab.vis.runtime.plugin.VisPlugin;
 public class SpineAssetDescriptorProvider implements AssetDescriptorProvider<SpineAssetDescriptor> {
 	@Override
 	public SpineAssetDescriptor provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
-		if (relativePath.startsWith("spine") == false) return null;
+		if (metadata.getRecursively(file).equals(SpineAssetType.DIRECTORY_SPINE.getId()) == false) return null;
 
 		if (relativePath.endsWith("atlas")) {
 			String skelPath = findSkelPath(file, relativePath);
-			if (skelPath == null) return null; //skeleton does not exist
+			if (skelPath == null) return null; //matching skeleton does not exist
 			return new SpineAssetDescriptor(relativePath, skelPath, -1); //scale is ignored when comparing
 		}
 
 		if (relativePath.endsWith("skel") || relativePath.endsWith("json")) {
-			if (FileUtils.siblingExists(file, "atlas"))
+			if (FileUtils.siblingExists(file, "atlas")) {
 				return new SpineAssetDescriptor(FileUtils.replaceExtension(relativePath, "atlas"), relativePath, -1); //scale is ignored when comparing
+			}
 		}
 
 		return null;

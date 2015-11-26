@@ -65,11 +65,11 @@ public class ProjectPathUtils {
 		return file.extension().equals("png") && FileUtils.sibling(file, "fnt").exists();
 	}
 
-	public static boolean isSpriterAnimationDir (AssetsMetadataModule metadata, FileHandle file) {
-		return metadata.getRecursively(file).equals(AssetType.DIRECTORY_SPRITER.getId()) && file.extension().equals("scml") && file.parent().child(".vis").exists();
+	public static boolean isNotImportedSpriterAnimationDir (AssetsMetadataModule metadata, FileHandle file) {
+		return metadata.getRecursively(file).equals(AssetType.DIRECTORY_SPRITER.getId()) && file.parent().child(".vis").exists() == false;
 	}
 
 	public static boolean isImportedSpriterAnimationDir (AssetsMetadataModule metadata, FileHandle file) {
-		return isSpriterAnimationDir(metadata, file) && file.parent().child(".vis").exists();
+		return metadata.getRecursively(file).equals(AssetType.DIRECTORY_SPRITER.getId()) && file.parent().child(".vis").exists();
 	}
 }
