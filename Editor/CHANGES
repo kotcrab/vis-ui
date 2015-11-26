@@ -3,6 +3,7 @@
 -Fixed issue when TextComponent color wasn't applied to text after reloading scene
 -Fixed issues with entering float values in TextComponent properties fields
 -Fixed crash when trying to add PhysicsPropertiesComponent to SpriterComponent
+-Fixed crash when using PhysicsPropertiesComponent with entities not supporting origin
 -Fixed issue when position of Point wasn't saved properly
 
 [0.2.5]
