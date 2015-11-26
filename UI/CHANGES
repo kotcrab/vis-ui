@@ -1,5 +1,6 @@
 [0.9.5] [LibGDX 1.7.1] [Snapshot]
--Fixed BaisColorPicker palette color selection were flipped
+-Fixed BasicColorPicker palette color selection were flipped
+-Fixed MenuItem sub menu could appear outside screen
 
 [0.9.4] [LibGDX 1.7.1]
 -Fixed GWT support
