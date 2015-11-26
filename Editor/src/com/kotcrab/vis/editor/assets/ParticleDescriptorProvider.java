@@ -17,13 +17,14 @@
 package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.ParticleAsset;
 
 /** @author Kotcrab */
 public class ParticleDescriptorProvider implements AssetDescriptorProvider<ParticleAsset> {
 	@Override
-	public ParticleAsset provide (FileHandle file, String relativePath) {
+	public ParticleAsset provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
 		if (ProjectPathUtils.isParticle(file)) return new ParticleAsset(relativePath);
 		return null;
 	}

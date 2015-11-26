@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project;
+package com.kotcrab.vis.editor.module.project.assetsmanager;
 
-import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
-import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
- * Manages {@link EditorEntitySupport} loaded from plugins.
+ * Provides additional UI context shown by AssetsUIModule. May use injected modules from project level scope.
  * @author Kotcrab
  */
-public class SupportModule extends ProjectModule {
-	private ExtensionStorageModule extensionStorage;
+public interface AssetsUIContextGenerator {
+	/**
+	 * Called when this provider shout init self, eg. create UI elements. When this method is called
+	 * project modules were already injected.
+	 */
+	void init ();
 
-	@Override
-	public void init () {
-		extensionStorage.getEntitiesSupports().forEach(support -> {
-					projectContainer.injectModules(support);
-					support.init();
-				}
-		);
-	}
+	/** @return context table or null if this provider is not interested */
+	VisTable provideContext (FileHandle fileHandle, String assetsFolderRelativePath);
 }

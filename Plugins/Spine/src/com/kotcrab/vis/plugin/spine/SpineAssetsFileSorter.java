@@ -32,40 +32,20 @@
 package com.kotcrab.vis.plugin.spine;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
-import com.kotcrab.vis.editor.util.FileUtils;
-import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
+import com.kotcrab.vis.editor.plugin.api.AssetsFileSorter;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
+/** @author Kotcrab */
 @VisPlugin
-public class SpineAssetDescriptorProvider implements AssetDescriptorProvider<SpineAssetDescriptor> {
+public class SpineAssetsFileSorter implements AssetsFileSorter {
 	@Override
-	public SpineAssetDescriptor provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
-		if (relativePath.startsWith("spine") == false) return null;
-
-		if (relativePath.endsWith("atlas")) {
-			String skelPath = findSkelPath(file, relativePath);
-			if (skelPath == null) return null; //skeleton does not exist
-			return new SpineAssetDescriptor(relativePath, skelPath, -1); //scale is ignored when comparing
-		}
-
-		if (relativePath.endsWith("skel") || relativePath.endsWith("json")) {
-			if (FileUtils.siblingExists(file, "atlas"))
-				return new SpineAssetDescriptor(FileUtils.replaceExtension(relativePath, "atlas"), relativePath, -1); //scale is ignored when comparing
-		}
-
-		return null;
+	public boolean isSupported (AssetsMetadataModule assetsMetadata, FileHandle fileHandle, String assetsFolderRelativePath) {
+		return assetsMetadata.getRecursively(fileHandle).equals(SpineAssetType.DIRECTORY_SPINE.getId());
 	}
 
 	@Override
-	public SpineAssetDescriptor parametrize (SpineAssetDescriptor rawAsset, SpineAssetDescriptor other) {
-		return new SpineAssetDescriptor(rawAsset.getAtlasPath(), rawAsset.getSkeletonPath(), other.getScale());
-	}
-
-	private String findSkelPath (FileHandle file, String relativePath) {
-		if (FileUtils.siblingExists(file, "json")) return FileUtils.replaceExtension(relativePath, "json");
-		if (FileUtils.siblingExists(file, "skel")) return FileUtils.replaceExtension(relativePath, "skel");
-		return null;
+	public boolean isMainFile (FileHandle file) {
+		return file.extension().equals("json") || file.extension().equals("skel");
 	}
 }

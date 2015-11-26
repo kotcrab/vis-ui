@@ -31,7 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap.Values;
-import com.kotcrab.vis.editor.assets.AssetType;
+import com.kotcrab.vis.editor.extension.AssetType;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.scheme.SpriterAssetData;
@@ -68,12 +68,17 @@ public class AssetDragAndDrop implements Disposable {
 		this.dropTarget = dropTarget;
 	}
 
-	public void rebuild (Array<Actor> actors, Values<TextureAtlasViewTab> atlasesViews) {
+	public void rebuild (Array<Actor> mainActors, Array<Actor> miscActors, Values<TextureAtlasViewTab> atlasesViews) {
 		if (dropTarget != null) {
 			dragAndDrop.clear();
 
-			for (Actor actor : actors)
+			for (Actor actor : mainActors) {
 				addSource((FileItem) actor);
+			}
+
+			for (Actor actor : miscActors) {
+				addSource((FileItem) actor);
+			}
 
 			dragAndDrop.addTarget(dropTarget.getDropTarget());
 		}
@@ -101,6 +106,10 @@ public class AssetDragAndDrop implements Disposable {
 	}
 
 	private void addSource (FileItem item) {
+		if (item.isMainFile() == false) {
+			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("This file type is unsupported in this marked directory."));
+			return;
+		}
 		String relativePath = fileAccess.relativizeToAssetsFolder(item.getFile());
 
 		if (item.getType().equals(AssetType.TEXTURE)) {

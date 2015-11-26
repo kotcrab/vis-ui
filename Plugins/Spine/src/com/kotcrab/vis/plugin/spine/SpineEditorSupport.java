@@ -36,11 +36,9 @@ import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.ContentItemProperties;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
@@ -61,23 +59,15 @@ import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
+/** @author Kotcrab */
 @VisPlugin
 public class SpineEditorSupport extends EditorEntitySupport {
+	private AssetsMetadataModule assetsMetadata;
+
 	private SpineCacheModule spineCache;
 	private FileAccessModule fileAccess;
 
-	private Array<AssetDescriptorProvider<?>> assetProviders = new Array<>();
-
 	private float pixelsPerUnit;
-
-	@Override
-	public void bindModules (ProjectModuleContainer projectMC) {
-		SceneIOModule sceneIOModule = projectMC.get(SceneIOModule.class);
-		spineCache = projectMC.get(SpineCacheModule.class);
-		fileAccess = projectMC.get(FileAccessModule.class);
-
-		assetProviders.add(new SpineAssetDescriptorProvider());
-	}
 
 	@Override
 	public void registerInflatersSystems (EntityEngineConfiguration config) {
@@ -103,13 +93,8 @@ public class SpineEditorSupport extends EditorEntitySupport {
 	}
 
 	@Override
-	public boolean isSupportedDirectory (String relativePath, String extension) {
-		return relativePath.startsWith("spine/");
-	}
-
-	@Override
-	public Array<AssetDescriptorProvider<?>> getAssetDescriptorProviders () {
-		return assetProviders;
+	public boolean isSupportedDirectory (FileHandle file, String relativePath) {
+		return assetsMetadata.getRecursively(file).equals(SpineAssetType.DIRECTORY_SPINE.getId());
 	}
 
 	@Override

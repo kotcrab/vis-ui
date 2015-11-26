@@ -32,6 +32,7 @@
 package com.kotcrab.vis.plugin.spine;
 
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor.AssetDirectoryDescriptorBuilder;
 import com.kotcrab.vis.editor.plugin.api.AssetTypeStorage;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
@@ -45,6 +46,8 @@ public class SpineAssetType implements AssetTypeStorage {
 	public static final String JSON_SKELETON = FILE_TYPE + "JsonSkeleton";
 	public static final String BINARY_SKELETON = FILE_TYPE + "BinarySkeleton";
 
-	public static final AssetDirectoryDescriptor DIRECTORY_SPRITER =
-			new AssetDirectoryDescriptor(DIRECTORY_TYPE + "Spine", "Spine Animation", SpineIcons.FOLDER_SPINE_MEDIUM::drawable);
+	public static final AssetDirectoryDescriptor DIRECTORY_SPINE
+			= new AssetDirectoryDescriptorBuilder(DIRECTORY_TYPE + "Spine", "Spine Animation", SpineIcons.FOLDER_SPINE_MEDIUM::drawable)
+			.excludeFromTextureCache()
+			.build();
 }

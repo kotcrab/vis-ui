@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
@@ -27,7 +28,7 @@ import com.kotcrab.vis.runtime.assets.BmpFontAsset;
  */
 public class BmpFontDescriptorProvider implements AssetDescriptorProvider<BmpFontAsset> {
 	@Override
-	public BmpFontAsset provide (FileHandle file, String relativePath) {
+	public BmpFontAsset provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
 		if(ProjectPathUtils.isBitmapFont(file) == false && ProjectPathUtils.isBitmapFontTexture(file) == false) return null;
 
 		if (relativePath.endsWith("fnt"))

@@ -116,11 +116,13 @@ public class FileUtils extends com.kotcrab.vis.ui.widget.file.FileUtils {
 		return builder.toString();
 	}
 
-	public static String relativize (FileHandle base, String absolute) {
-		Path pathAbsolute = Paths.get(absolute);
+	public static String relativize (FileHandle base, FileHandle absolute) {
+		Path pathAbsolute = Paths.get(absolute.path());
 		Path pathBase = Paths.get(base.path());
 		Path pathRelative = pathBase.relativize(pathAbsolute);
-		return pathRelative.toString().replace("\\", "/");
+		String path = pathRelative.toString().replace("\\", "/");
+		if (absolute.isDirectory()) path += "/";
+		return path;
 	}
 
 	public static FileHandle toFileHandle (String path) {

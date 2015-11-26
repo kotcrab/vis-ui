@@ -17,6 +17,8 @@
 package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
 
 /**
@@ -25,8 +27,8 @@ import com.kotcrab.vis.runtime.assets.SpriterAsset;
  */
 public class SpriterDescriptorProvider implements AssetDescriptorProvider<SpriterAsset> {
 	@Override
-	public SpriterAsset provide (FileHandle file, String relativePath) {
-		if (relativePath.startsWith("spriter") && file.extension().equals("scml"))
+	public SpriterAsset provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
+		if (ProjectPathUtils.isImportedSpriterAnimationDir(metadata, file))
 			return new SpriterAsset(relativePath, -1);
 		else
 			return null;

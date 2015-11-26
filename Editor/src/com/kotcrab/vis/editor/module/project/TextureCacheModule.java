@@ -32,6 +32,7 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
@@ -40,9 +41,6 @@ import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 import org.apache.commons.io.FilenameUtils;
-
-import java.io.File;
-import java.io.FilenameFilter;
 
 /**
  * Allows to get loaded textures from project 'gfx' assets directory and allows to get loaded atlases from project 'atlas' asset directory.
@@ -53,6 +51,7 @@ import java.io.FilenameFilter;
 public class TextureCacheModule extends ProjectModule implements WatchListener {
 	private StatusBarModule statusBar;
 
+	private AssetsMetadataModule assetsMetadata;
 	private FileAccessModule fileAccess;
 	private AssetsWatcherModule watcher;
 
@@ -109,8 +108,9 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 		try {
 			FileUtils.streamRecursively(assetsFolder, file -> {
-				if (file.extension().equals("atlas"))
+				if (file.extension().equals("atlas")) {
 					updateAtlas(file);
+				}
 			});
 		} catch (Exception e) {
 			Log.error("Error encountered while loading one of atlases");
@@ -126,11 +126,11 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	private void packageAndReloadCache () {
 		if (packagingEnabled) {
-			TexturePacker.process(settings, gfxPath, cachePath, "cache", new FilenameFilter() {
-				@Override
-				public boolean accept (File dir, String name) {
-					return true;
-				}
+			TexturePacker.process(settings, gfxPath, cachePath, "cache", (dir, name) -> {
+				AssetDirectoryDescriptor desc = assetsMetadata.getAsDirectoryDescriptorRecursively(FileUtils.toFileHandle(dir));
+				if (desc != null && desc.isExcludeFromTextureCache()) return false;
+
+				return true;
 			});
 		}
 

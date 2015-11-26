@@ -26,7 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.assets.AssetType;
+import com.kotcrab.vis.editor.extension.AssetType;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
@@ -55,6 +55,7 @@ public class FileItem extends Table {
 	private TextureCacheModule textureCache;
 
 	private FileHandle file;
+	private boolean isMainFile;
 
 	private TextureRegion region;
 	private String type;
@@ -63,10 +64,11 @@ public class FileItem extends Table {
 
 	private EditorEntitySupport support;
 
-	public FileItem (ModuleInjector injector, FileHandle file) {
+	public FileItem (ModuleInjector injector, FileHandle file, boolean isMainFile) {
 		super(VisUI.getSkin());
 		injector.injectModules(this);
 		this.file = file;
+		this.isMainFile = isMainFile;
 		init();
 	}
 
@@ -121,7 +123,15 @@ public class FileItem extends Table {
 		if (texture || atlas) {
 			type = texture ? AssetType.TEXTURE : AssetType.TEXTURE_ATLAS;
 
+			//don't create region preview for files excluded from texture cache
+			AssetDirectoryDescriptor desc = assetsMetadata.getAsDirectoryDescriptorRecursively(file);
+			if (desc != null && desc.isExcludeFromTextureCache()) {
+				createDefaultView(type, texture ? "Texture" : "Texture Atlas", true);
+				return;
+			}
+
 			name = new VisLabel(texture ? file.nameWithoutExtension() : file.name(), "small");
+
 			TextureRegion region;
 
 			if (atlas)
@@ -163,7 +173,7 @@ public class FileItem extends Table {
 			return;
 		}
 
-		if (relativePath.startsWith("spriter") && ext.equals("scml") && file.parent().child(".vis").exists()) {
+		if (ProjectPathUtils.isImportedSpriterAnimationDir(assetsMetadata, file)) {
 			createDefaultView(AssetType.SPRITER_SCML, "Spriter Animation", true);
 			return;
 		}
@@ -173,7 +183,7 @@ public class FileItem extends Table {
 			return;
 		}
 
-		support = findSupportForDirectory(ext, relativePath);
+		support = findSupportForDirectory(file, relativePath);
 		if (support != null) {
 			ContentItemProperties item = support.getContentItemProperties(relativePath, ext);
 			if (item != null) {
@@ -186,9 +196,10 @@ public class FileItem extends Table {
 		name = new VisLabel(file.name());
 	}
 
-	private EditorEntitySupport findSupportForDirectory (String ext, String relativePath) {
-		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports())
-			if (support.isSupportedDirectory(relativePath, ext)) return support;
+	private EditorEntitySupport findSupportForDirectory (FileHandle file, String relativePath) {
+		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
+			if (support.isSupportedDirectory(file, relativePath)) return support;
+		}
 
 		return null;
 	}
@@ -216,6 +227,10 @@ public class FileItem extends Table {
 
 	public FileHandle getFile () {
 		return file;
+	}
+
+	public boolean isMainFile () {
+		return isMainFile;
 	}
 
 	public String getType () {

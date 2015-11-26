@@ -41,6 +41,8 @@ import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.plugin.api.AssetsFileSorter;
+import com.kotcrab.vis.editor.plugin.api.AssetsUIContextGeneratorProvider;
 import com.kotcrab.vis.editor.ui.SearchField;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DeleteDialog;
@@ -55,6 +57,7 @@ import com.kotcrab.vis.editor.util.async.CopyFileTaskDescriptor;
 import com.kotcrab.vis.editor.util.async.CopyFilesAsyncTask;
 import com.kotcrab.vis.editor.util.scene2d.DirectoriesOnlyFileFilter;
 import com.kotcrab.vis.editor.util.scene2d.MenuUtils;
+import com.kotcrab.vis.editor.util.scene2d.ScrollPaneScrollWidthValue;
 import com.kotcrab.vis.editor.util.scene2d.VisTabbedPaneListener;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.ui.VisUI;
@@ -98,6 +101,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private FileHandle assetsFolder;
 	private FileHandle currentDirectory;
 	private AssetDirectoryDescriptor currentDirectoryDescriptor;
+	private AssetsFileSorter fileSorter;
 
 	//metadata
 	private Json json;
@@ -109,18 +113,22 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 	private ObjectMap<FileHandle, TextureAtlasViewTab> atlasViews = new ObjectMap<>();
 
+	private Array<AssetsUIContextGenerator> contextGenerators = new Array<>();
+
 	private int filesDisplayed;
 
 	private AssetsTab assetsTab;
 	private AssetDragAndDrop assetDragAndDrop;
 	private AssetsPopupMenu popupMenu;
-	private Array<AssetsUIContextProvider> contextProviders = new Array<>();
 
 	//UI
 	private VisTable mainTable;
 	private VisTable treeTable;
 	private VisTable filesViewContextContainer;
-	private GridGroup filesView;
+	private VisScrollPane filesViewScrollPane;
+	private VisTable filesView;
+	private GridGroup mainFilesView;
+	private GridGroup miscFilesView;
 	private VisTable toolbarTable;
 	private VisTree contentTree;
 
@@ -141,10 +149,14 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		changeCurrentDirectory(((FolderItem) node.getActor()).getFile(), HistoryPolicy.IGNORE);
 
 		//TODO: [plugins] plugin entry point
-		contextProviders.add(new SpriterContextProvider());
+		Array<AssetsUIContextGeneratorProvider> providers = extensionStorage.getAssetsContextGeneratorsProviders();
+		for (AssetsUIContextGeneratorProvider provider : providers) {
+			contextGenerators.add(provider.provide());
+		}
 
-		for (AssetsUIContextProvider provider : contextProviders) {
-			projectContainer.injectModules(provider);
+		for (AssetsUIContextGenerator generator : contextGenerators) {
+			projectContainer.injectModules(generator);
+			generator.init();
 		}
 
 		tabsModule.addListener(this);
@@ -207,7 +219,14 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		treeTable = new VisTable(true);
 		toolbarTable = new VisTable(true);
 		filesViewContextContainer = new VisTable(false);
-		filesView = new GridGroup(92, 4);
+
+		filesView = new VisTable();
+		mainFilesView = new GridGroup(92, 4);
+		miscFilesView = new GridGroup(92, 4);
+
+		filesView.setTouchable(Touchable.enabled);
+		mainFilesView.setTouchable(Touchable.enabled);
+		miscFilesView.setTouchable(Touchable.enabled);
 
 		VisTable contentsTable = new VisTable(false);
 		contentsTable.add(toolbarTable).expandX().fillX().pad(3).padBottom(0);
@@ -216,7 +235,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		contentsTable.row();
 		contentsTable.add(filesViewContextContainer).expandX().fillX();
 		contentsTable.row();
-		contentsTable.add(createScrollPane(filesView, true)).expand().fill();
+		contentsTable.add(filesViewScrollPane = createScrollPane(filesView, true)).expand().fill();
 
 		VisSplitPane splitPane = new VisSplitPane(treeTable, contentsTable, false);
 		splitPane.setSplitAmount(0.2f);
@@ -232,13 +251,13 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		quickAccessModule.addTab(assetsTab);
 
 		popupMenu = new AssetsPopupMenu();
-		filesView.setTouchable(Touchable.enabled);
 		filesView.addListener(popupMenu.getDefaultInputListener());
 		filesView.addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (event.getTarget() == filesView)
+				if (event.getTarget() == filesView || event.getTarget() == mainFilesView || event.getTarget() == miscFilesView) {
 					popupMenu.build(null);
+				}
 
 				return false;
 			}
@@ -344,10 +363,12 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 		this.currentDirectory = directory;
 		if (metadata != null) metadata.lastDirectory = directory.path();
-		filesView.clearChildren();
-		filesDisplayed = 0;
+		mainFilesView.clearChildren();
+		miscFilesView.clearChildren();
 
-		updateContextProviderContainer(directory);
+		updateContextGeneratorContainer(directory);
+
+		currentDirectoryDescriptor = assetsMetadata.getAsDirectoryDescriptorRecursively(directory);
 
 		FileHandle[] files = directory.list(file -> {
 			if (searchField.getText().equals("")) return true;
@@ -355,10 +376,21 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			return file.getName().contains(searchField.getText());
 		});
 
+		fileSorter = null;
+		String relativePath = fileAccess.relativizeToAssetsFolder(directory);
+		for (AssetsFileSorter sorter : extensionStorage.getAssetsFileSorters()) {
+			if (sorter.isSupported(assetsMetadata, directory, relativePath)) {
+				fileSorter = sorter;
+				break;
+			}
+		}
+
 		Array<FileHandle> sortedFiles = FileUtils.sortFiles(files);
 
+		filesDisplayed = 0;
+		boolean miscFileViewUsed = false;
+		boolean mainFileViewUsed = false;
 		for (FileHandle file : sortedFiles) {
-			String relativePath = fileAccess.relativizeToAssetsFolder(file);
 			String ext = file.extension();
 
 			if (file.name().equals(".vis")) continue;
@@ -366,13 +398,34 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			if (relativePath.startsWith("atlas") && (ext.equals("png") || ext.equals("jpg") || ext.equals("jpeg")))
 				continue;
 
-			filesView.addActor(createFileItem(file));
+			boolean isMain = fileSorter == null ? true : fileSorter.isMainFile(file);
+			FileItem item = createFileItem(file, isMain);
+
+			if (isMain) {
+				mainFilesView.addActor(item);
+				mainFileViewUsed = true;
+			} else {
+				miscFilesView.addActor(item);
+				miscFileViewUsed = true;
+			}
 			filesDisplayed++;
 		}
 
-		currentDirectoryDescriptor = assetsMetadata.getAsDirectoryDescriptorRecursively(directory);
+		assetDragAndDrop.rebuild(mainFilesView.getChildren(), miscFilesView.getChildren(), atlasViews.values());
 
-		assetDragAndDrop.rebuild(filesView.getChildren(), atlasViews.values());
+		filesView.clearChildren();
+		filesView.top();
+		ScrollPaneScrollWidthValue scrollWidthValue = new ScrollPaneScrollWidthValue(filesViewScrollPane);
+		if (miscFileViewUsed) {
+			if (mainFileViewUsed) {
+				filesView.add(mainFilesView).width(scrollWidthValue).growX();
+				filesView.row();
+			}
+			filesView.add(new VisLabel("Other files")).padLeft(mainFilesView.getSpacing()).left().row();
+			filesView.add(miscFilesView).width(scrollWidthValue).growX();
+		} else {
+			filesView.add(mainFilesView).width(scrollWidthValue).growX();
+		}
 
 		String currentPath = directory.path().substring(visFolder.path().length() + 1);
 		contentTitleLabel.setText("Content [" + currentPath + "]");
@@ -387,14 +440,11 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		if (historyPolicy == HistoryPolicy.CLEAR) fileHistoryManager.historyClear();
 	}
 
-	public FileHandle getCurrentDirectory () {
-		return currentDirectory;
-	}
-
-	private void updateContextProviderContainer (FileHandle directory) {
+	private void updateContextGeneratorContainer (FileHandle directory) {
 		filesViewContextContainer.clearChildren();
-		for (AssetsUIContextProvider provider : contextProviders) {
-			Table content = provider.provideContext(directory, fileAccess.relativizeToAssetsFolder(directory));
+		String relativePath = fileAccess.relativizeToAssetsFolder(directory);
+		for (AssetsUIContextGenerator generator : contextGenerators) {
+			Table content = generator.provideContext(directory, relativePath);
 			if (content != null) {
 				filesViewContextContainer.add(content).fillX().expandX();
 				break;
@@ -408,6 +458,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 	private void rebuildFolderTree () {
 		contentTree.clearChildren();
+
+		contentTree.add(new Node(new FolderItem(assetsFolder, true)));
 
 		for (FileHandle contentRoot : assetsFolder.list(DirectoriesOnlyFileFilter.FILTER)) {
 
@@ -436,6 +488,11 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private void openFile (FileHandle file) {
 		if (file.isDirectory()) {
 			changeCurrentDirectory(file, HistoryPolicy.ADD);
+			return;
+		}
+
+		if (fileSorter != null && fileSorter.isMainFile(file) == false) {
+			DialogUtils.showOKDialog(stage, "Message", "This file type is unsupported in this marked directory.");
 			return;
 		}
 
@@ -479,10 +536,9 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 	private void refreshAllIfNeeded (FileHandle file) {
 		if (file.isDirectory()) rebuildFolderTree();
-		if (file.parent().equals(currentDirectory))
-			refreshFilesList();
+		if (file.parent().equals(currentDirectory)) refreshFilesList();
 
-		updateContextProviderContainer(currentDirectory);
+		updateContextGeneratorContainer(currentDirectory);
 	}
 
 	@Override
@@ -501,7 +557,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	public void switchedTab (Tab tab) {
 		if (tab instanceof DragAndDropTarget) {
 			assetDragAndDrop.setDropTarget((DragAndDropTarget) tab);
-			assetDragAndDrop.rebuild(filesView.getChildren(), atlasViews.values());
+			assetDragAndDrop.rebuild(mainFilesView.getChildren(), miscFilesView.getChildren(), atlasViews.values());
 		} else
 			assetDragAndDrop.clear();
 	}
@@ -591,7 +647,17 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 							}
 						}).setYesButtonText("Change Anyway");
 			} else {
-				markDirectory(dir, fullCodeName);
+				if (dir.list().length > 0) {
+					DialogUtils.showOptionDialog(getStage(), "Warning", "This directory already contains files. Marking it \n" +
+									"may cause unexpected errors if assets files are used in scenes.", OptionDialogType.YES_CANCEL,
+							new OptionDialogAdapter() {
+								@Override
+								public void yes () {
+									markDirectory(dir, fullCodeName);
+								}
+							}).setYesButtonText("Mark Anyway");
+				} else
+					markDirectory(dir, fullCodeName);
 			}
 		}
 
@@ -695,8 +761,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		return false;
 	}
 
-	private FileItem createFileItem (FileHandle file) {
-		FileItem fileItem = new FileItem(projectContainer, file);
+	private FileItem createFileItem (FileHandle file, boolean isMainFile) {
+		FileItem fileItem = new FileItem(projectContainer, file, isMainFile);
 
 		fileItem.addListener(new InputListener() {
 			@Override

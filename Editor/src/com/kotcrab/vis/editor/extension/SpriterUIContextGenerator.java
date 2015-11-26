@@ -14,18 +14,21 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project.assetsmanager;
+package com.kotcrab.vis.editor.extension;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.SpriterDataIOModule;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIContextGenerator;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.SpriterImportDialog;
 import com.kotcrab.vis.editor.util.async.SteppedAsyncTask;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -35,18 +38,20 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 
 /** @author Kotcrab */
-public class SpriterContextProvider implements AssetsUIContextProvider {
+public class SpriterUIContextGenerator implements AssetsUIContextGenerator {
+	private AssetsMetadataModule assetsMetadata;
 	private SpriterDataIOModule spriterDataIO;
 
 	private Stage stage;
 
-	private final VisTable importTable;
-	private final VisTable updateTable;
+	private VisTable importTable;
+	private VisTable updateTable;
 
 	private FileHandle animFolder;
 	private String relativePath;
 
-	public SpriterContextProvider () {
+	@Override
+	public void init () {
 		VisTextButton importButton = new VisTextButton("Import", "blue");
 		importButton.addListener(new VisChangeListener((event, actor) -> stage.addActor(new SpriterImportDialog(animFolder, relativePath).fadeIn())));
 
@@ -69,7 +74,7 @@ public class SpriterContextProvider implements AssetsUIContextProvider {
 
 	@Override
 	public VisTable provideContext (FileHandle fileHandle, String relativePath) {
-		if (relativePath.matches("^spriter/..*")) {
+		if (ProjectPathUtils.isSpriterAnimationDir(assetsMetadata, fileHandle)) {
 			this.animFolder = fileHandle;
 			this.relativePath = relativePath;
 

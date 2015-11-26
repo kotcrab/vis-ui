@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.extension.DefaultExporter;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.ExportSettingsModule.ExportConfig;
 import com.kotcrab.vis.editor.plugin.api.ExporterPlugin;

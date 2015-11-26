@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.assets;
+package com.kotcrab.vis.editor.extension;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
-import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
-import com.kotcrab.vis.runtime.assets.TtfFontAsset;
+import com.kotcrab.vis.editor.plugin.api.AssetsFileSorter;
 
 /** @author Kotcrab */
-public class TtfFontDescriptorProvider implements AssetDescriptorProvider<TtfFontAsset> {
+public class SpriterAssetsFileSorter implements AssetsFileSorter {
 	@Override
-	public TtfFontAsset provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
-		if (ProjectPathUtils.isTrueTypeFont(file) == false) return null;
-		return new TtfFontAsset(relativePath, -1);
+	public boolean isSupported (AssetsMetadataModule assetsMetadata, FileHandle fileHandle, String assetsFolderRelativePath) {
+		return assetsMetadata.getRecursively(fileHandle).equals(AssetType.DIRECTORY_SPRITER.getId());
 	}
 
 	@Override
-	public TtfFontAsset parametrize (TtfFontAsset rawAsset, TtfFontAsset other) {
-		return new TtfFontAsset(rawAsset.getPath(), other.getFontSize());
+	public boolean isMainFile (FileHandle file) {
+		return file.extension().equals("scml");
 	}
 }

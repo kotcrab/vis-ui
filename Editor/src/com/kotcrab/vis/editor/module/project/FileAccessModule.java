@@ -33,7 +33,6 @@ public class FileAccessModule extends ProjectModule {
 
 	private FileHandle sceneFolder;
 	private FileHandle gfxFolder;
-	private FileHandle shaderFolder;
 
 	@Override
 	public void init () {
@@ -43,7 +42,6 @@ public class FileAccessModule extends ProjectModule {
 
 		sceneFolder = assetsFolder.child("scene");
 		gfxFolder = assetsFolder.child("gfx");
-		shaderFolder = assetsFolder.child("shader");
 	}
 
 	public Array<FileHandle> getSceneFiles () {
@@ -83,25 +81,12 @@ public class FileAccessModule extends ProjectModule {
 		return gfxFolder;
 	}
 
-	@Deprecated
-	public FileHandle getShaderFolder () {
-		return shaderFolder;
-	}
-
 	public String relativizeToVisFolder (FileHandle file) {
-		return relativizeToVisFolder(file.path());
-	}
-
-	public String relativizeToVisFolder (String absolutePath) {
-		return FileUtils.relativize(visFolder, absolutePath);
+		return FileUtils.relativize(visFolder, file);
 	}
 
 	public String relativizeToAssetsFolder (FileHandle file) {
-		return relativizeToAssetsFolder(file.path());
-	}
-
-	public String relativizeToAssetsFolder (String absolutePath) {
-		return FileUtils.relativize(assetsFolder, absolutePath);
+		return FileUtils.relativize(assetsFolder, file);
 	}
 
 	public String derelativizeFromAssetsFolder (String relativePath) {

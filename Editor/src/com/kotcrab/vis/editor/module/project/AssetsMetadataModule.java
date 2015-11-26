@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.google.gson.Gson;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.assets.AssetType;
+import com.kotcrab.vis.editor.extension.AssetType;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.GsonModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
@@ -66,7 +66,8 @@ public class AssetsMetadataModule extends ProjectModule {
 			throw new IllegalStateException("Cannot commit unknown file type to metadata!");
 		}
 
-		metadata.put(fileAccess.relativizeToAssetsFolder(file), fileType);
+		String path = fileAccess.relativizeToAssetsFolder(file);
+		metadata.put(path, fileType);
 		saveMetadata();
 	}
 

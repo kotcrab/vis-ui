@@ -14,10 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.assets;
+package com.kotcrab.vis.editor.extension;
 
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor.AssetDirectoryDescriptorBuilder;
 import com.kotcrab.vis.editor.plugin.api.AssetTypeStorage;
 
 /**
@@ -47,6 +48,8 @@ public class AssetType implements AssetTypeStorage {
 	public static final String SPRITER_SCML = FILE_TYPE + "SpriterScml";
 	public static final String SCENE = FILE_TYPE + "Scene";
 
-	public static final AssetDirectoryDescriptor DIRECTORY_SPRITER =
-			new AssetDirectoryDescriptor(DIRECTORY_TYPE + "Spriter", "Spriter Animation", Icons.FOLDER_SPRITER_MEDIUM.drawable(), null);
+	public static final AssetDirectoryDescriptor DIRECTORY_SPRITER
+			= new AssetDirectoryDescriptorBuilder(DIRECTORY_TYPE + "Spriter", "Spriter Animation", Icons.FOLDER_SPRITER_MEDIUM.drawable())
+			.excludeFromTextureCache()
+			.build();
 }

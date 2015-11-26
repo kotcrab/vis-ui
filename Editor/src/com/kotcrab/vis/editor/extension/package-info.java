@@ -14,16 +14,9 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project.assetsmanager;
-
-import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.ui.widget.VisTable;
-
 /**
- * May use injected modules from project level scope
+ * Contains default VisEditor extensions, such as DefaultExporter, built in {@link com.kotcrab.vis.editor.plugin.api.AssetTypeStorage}
+ * or built in {@link com.kotcrab.vis.editor.plugin.api.AssetsUIContextGeneratorProvider}
  * @author Kotcrab
  */
-public interface AssetsUIContextProvider {
-	/** @return context table or null if this provider is not interested */
-	VisTable provideContext (FileHandle fileHandle, String assetsFolderRelativePath);
-}
+package com.kotcrab.vis.editor.extension;

@@ -17,12 +17,10 @@
 package com.kotcrab.vis.editor.plugin;
 
 import com.artemis.Entity;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
-import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
-import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.ContentItemProperties;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
@@ -41,8 +39,8 @@ import java.lang.reflect.Type;
  * @author Kotcrab
  */
 public abstract class EditorEntitySupport {
-	/** Called when support can get required modules from {@link ProjectModuleContainer} */
-	public void bindModules (ProjectModuleContainer projectMC) {
+	/** Called after injecting modules. */
+	public void init () {
 
 	}
 
@@ -53,26 +51,23 @@ public abstract class EditorEntitySupport {
 	/**
 	 * Called when support should register it's {@link EntityEngine} systems and managers. WARNING: Do not store
 	 * modules from {@link SceneModuleContainer} because this method is called for each scene and scene modules are
-	 * scene context sensitive. If you need to get and store modules do it in {@link #bindModules(ProjectModuleContainer)}
+	 * scene context sensitive.
 	 */
 	public void registerSystems (SceneModuleContainer sceneMC, EntityEngineConfiguration config) {
 
 	}
 
 	/**
-	 * Checks whether this extensions supports given asset directory. Supports should have their own main directory in project
-	 * assets folder where assets for entities can be stored. This is called when VisEditor searches for matching
-	 * ObjectSupport for currently tested file.
-	 * @param relativePath of the file that is tested
-	 * @param extension of the file that is tested
+	 * Checks whether this extensions supports given asset directory. This is called when VisEditor searches for matching
+	 * EditorEntitySupport for currently tested file.
 	 * @return true if supported, false otherwise
 	 */
-	public abstract boolean isSupportedDirectory (String relativePath, String extension);
+	public abstract boolean isSupportedDirectory (FileHandle file, String relativePath);
 
 	/** Returns {@link ContentItemProperties} for given file, that is displayed in {@link AssetsUIModule} */
 	public abstract ContentItemProperties getContentItemProperties (String relativePath, String extension);
 
-	/** Called when ObjectSupport must create drop source for assets drag and drop */
+	/** Called when EditorEntitySupport must create drop source for assets drag and drop */
 	public abstract Source createDropSource (VisDragAndDrop dragAndDrop, FileItem item);
 
 	public abstract Entity processDropPayload (EntityEngine engine, EditorScene scene, Object payload);
@@ -92,14 +87,6 @@ public abstract class EditorEntitySupport {
 
 	/** This must return new instances every time this is called. */
 	public Array<ComponentTable<?>> getComponentsUITables () {
-		return null;
-	}
-
-	public Array<AssetDescriptorProvider<?>> getAssetDescriptorProviders () {
-		return null;
-	}
-
-	public Array<AssetTransactionGenerator> getAssetTransactionGenerators () {
 		return null;
 	}
 }

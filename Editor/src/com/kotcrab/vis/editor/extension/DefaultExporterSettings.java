@@ -14,24 +14,12 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project;
+package com.kotcrab.vis.editor.extension;
 
-import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
-import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 
-/**
- * Manages {@link EditorEntitySupport} loaded from plugins.
- * @author Kotcrab
- */
-public class SupportModule extends ProjectModule {
-	private ExtensionStorageModule extensionStorage;
-
-	@Override
-	public void init () {
-		extensionStorage.getEntitiesSupports().forEach(support -> {
-					projectContainer.injectModules(support);
-					support.init();
-				}
-		);
-	}
+/** @author Kotcrab */
+public class DefaultExporterSettings {
+	@Tag(0) public boolean skipDefaultValues = true;
+	@Tag(1) public boolean useMinimalOutputType = true;
 }

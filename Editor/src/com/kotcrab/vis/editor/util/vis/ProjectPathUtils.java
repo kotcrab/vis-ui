@@ -17,6 +17,8 @@
 package com.kotcrab.vis.editor.util.vis;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.extension.AssetType;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.util.FileUtils;
 
 /**
@@ -61,5 +63,13 @@ public class ProjectPathUtils {
 
 	public static boolean isBitmapFontTexture (FileHandle file) {
 		return file.extension().equals("png") && FileUtils.sibling(file, "fnt").exists();
+	}
+
+	public static boolean isSpriterAnimationDir (AssetsMetadataModule metadata, FileHandle file) {
+		return metadata.getRecursively(file).equals(AssetType.DIRECTORY_SPRITER.getId()) && file.extension().equals("scml") && file.parent().child(".vis").exists();
+	}
+
+	public static boolean isImportedSpriterAnimationDir (AssetsMetadataModule metadata, FileHandle file) {
+		return isSpriterAnimationDir(metadata, file) && file.parent().child(".vis").exists();
 	}
 }

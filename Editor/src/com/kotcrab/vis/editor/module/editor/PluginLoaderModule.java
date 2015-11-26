@@ -24,11 +24,12 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.plugin.*;
-import com.kotcrab.vis.editor.plugin.api.AssetTypeStorage;
-import com.kotcrab.vis.editor.plugin.api.ContainerExtension;
-import com.kotcrab.vis.editor.plugin.api.ExporterPlugin;
-import com.kotcrab.vis.editor.plugin.api.ResourceLoader;
+import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
+import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.kotcrab.vis.editor.plugin.FailedPluginDescriptor;
+import com.kotcrab.vis.editor.plugin.PluginDescriptor;
+import com.kotcrab.vis.editor.plugin.api.*;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
 import com.kotcrab.vis.editor.ui.dialog.PluginDetailsDialog;
@@ -62,7 +63,7 @@ public class PluginLoaderModule extends EditorModule {
 	private static final String TAG = "PluginLoader";
 	private static final String PLUGINS_FOLDER_PATH = App.JAR_FOLDER_PATH + "plugins";
 
-	private ExtensionStorageModule pluginContainer;
+	private ExtensionStorageModule extensionStorage;
 	private PluginSettingsModule settings;
 	private ToastModule toastModule;
 
@@ -188,32 +189,51 @@ public class PluginLoaderModule extends EditorModule {
 				Object object = cons.newInstance();
 
 				if (object instanceof EditorEntitySupport) {
-					pluginContainer.addObjectSupport((EditorEntitySupport) object);
+					extensionStorage.addObjectSupport((EditorEntitySupport) object);
 					continue;
 				}
 
 				if (object instanceof ContainerExtension) {
-					pluginContainer.addContainerExtension((ContainerExtension) object);
+					extensionStorage.addContainerExtension((ContainerExtension) object);
 					continue;
 				}
 
 				if (object instanceof ExporterPlugin) {
-					pluginContainer.addExporterPlugin((ExporterPlugin) object);
+					extensionStorage.addExporterPlugin((ExporterPlugin) object);
 					continue;
 				}
 
 				if (object instanceof ResourceLoader) {
-					pluginContainer.addResourceLoader((ResourceLoader) object);
+					extensionStorage.addResourceLoader((ResourceLoader) object);
 					continue;
 				}
 
 				if (object instanceof AssetTypeStorage) {
-					pluginContainer.addAssetTypeStorage((AssetTypeStorage) object);
+					extensionStorage.addAssetTypeStorage((AssetTypeStorage) object);
 					continue;
 				}
 
-				if (object instanceof EntitySupport)
+				if (object instanceof AssetsUIContextGeneratorProvider) {
+					extensionStorage.addAssetContextGeneratorProvider((AssetsUIContextGeneratorProvider) object);
 					continue;
+				}
+
+				if (object instanceof AssetsFileSorter) {
+					extensionStorage.addAssetFileSorter((AssetsFileSorter) object);
+				}
+
+				if (object instanceof AssetDescriptorProvider) {
+					extensionStorage.addAssetDescriptorProvider((AssetDescriptorProvider<?>) object);
+					continue;
+				}
+
+				if (object instanceof AssetTransactionGenerator) {
+					extensionStorage.addAssetTransactionGenerators((AssetTransactionGenerator) object);
+				}
+
+				if (object instanceof EntitySupport) {
+					continue;
+				}
 
 				Log.warn("Plugin '" + descriptor.folderName + "' was successfully loaded but it's plugin class '" + clazz.getSimpleName() + "' object wasn't recognized.");
 			}

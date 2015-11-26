@@ -29,24 +29,15 @@ public final class AssetDirectoryDescriptor {
 	private final String uiName;
 	private final Supplier<Drawable> menuItemIcon;
 	private final Supplier<Drawable> assetsViewIcon;
+	private boolean excludeFromTextureCache;
 
-	public AssetDirectoryDescriptor (String id, String uiName, Drawable assetsViewIcon) {
-		this(id, uiName, assetsViewIcon, null);
-	}
-
-	public AssetDirectoryDescriptor (String id, String uiName, Drawable assetsViewIcon, Drawable menuItemIcon) {
-		this(id, uiName, () -> assetsViewIcon, () -> menuItemIcon);
-	}
-
-	public AssetDirectoryDescriptor (String id, String uiName, Supplier<Drawable> assetsViewIcon) {
-		this(id, uiName, assetsViewIcon, () -> null);
-	}
-
-	public AssetDirectoryDescriptor (String id, String uiName, Supplier<Drawable> assetsViewIcon, Supplier<Drawable> menuItemIcon) {
+	public AssetDirectoryDescriptor (String id, String uiName, Supplier<Drawable> assetsViewIcon,
+									 Supplier<Drawable> menuItemIcon, boolean excludeFromTextureCache) {
 		this.id = id;
 		this.uiName = uiName;
 		this.menuItemIcon = menuItemIcon;
 		this.assetsViewIcon = assetsViewIcon;
+		this.excludeFromTextureCache = excludeFromTextureCache;
 	}
 
 	public String getId () {
@@ -63,5 +54,41 @@ public final class AssetDirectoryDescriptor {
 
 	public Drawable getAssetsViewIcon () {
 		return assetsViewIcon.get();
+	}
+
+	public boolean isExcludeFromTextureCache () {
+		return excludeFromTextureCache;
+	}
+
+	public static class AssetDirectoryDescriptorBuilder {
+		private String id;
+		private String uiName;
+		private Supplier<Drawable> assetsViewIcon = () -> null;
+		private Supplier<Drawable> menuItemIcon = () -> null;
+		private boolean excludeFromTextureCache = false;
+
+		public AssetDirectoryDescriptorBuilder (String id, String uiName, Drawable assetsViewIcon) {
+			this(id, uiName, () -> assetsViewIcon);
+		}
+
+		public AssetDirectoryDescriptorBuilder (String id, String uiName, Supplier<Drawable> assetsViewIcon) {
+			this.id = id;
+			this.uiName = uiName;
+			this.assetsViewIcon = assetsViewIcon;
+		}
+
+		public AssetDirectoryDescriptorBuilder menuItemIcon (Supplier<Drawable> menuItemIcon) {
+			this.menuItemIcon = menuItemIcon;
+			return this;
+		}
+
+		public AssetDirectoryDescriptorBuilder excludeFromTextureCache () {
+			this.excludeFromTextureCache = true;
+			return this;
+		}
+
+		public AssetDirectoryDescriptor build () {
+			return new AssetDirectoryDescriptor(id, uiName, assetsViewIcon, menuItemIcon, excludeFromTextureCache);
+		}
 	}
 }

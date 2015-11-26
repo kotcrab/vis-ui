@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.project;
+package com.kotcrab.vis.editor.plugin.api;
 
-import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIContextGenerator;
 
-/** @author Kotcrab */
-public class DefaultExporterSettings {
-	@Tag(0) public boolean skipDefaultValues = true;
-	@Tag(1) public boolean useMinimalOutputType = true;
+/**
+ * Implemented by plugins providing additional {@Link AssetsUIContextGenerator}s
+ * @author Kotcrab
+ */
+public interface AssetsUIContextGeneratorProvider {
+	public AssetsUIContextGenerator provide ();
 }

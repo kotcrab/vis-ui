@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 
 /**
@@ -25,7 +26,7 @@ import com.kotcrab.vis.runtime.assets.PathAsset;
  */
 public class PathDescriptorProvider implements AssetDescriptorProvider<PathAsset> {
 	@Override
-	public PathAsset provide (FileHandle file, String relativePath) {
+	public PathAsset provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
 		if (checkIfSupported(file, relativePath) == false) return null;
 		return new PathAsset(relativePath);
 	}
