@@ -48,6 +48,14 @@ public class AssetType implements AssetTypeStorage {
 	public static final String SPRITER_SCML = FILE_TYPE + "SpriterScml";
 	public static final String SCENE = FILE_TYPE + "Scene";
 
+	public static final AssetDirectoryDescriptor DIRECTORY_MUSIC
+			= new AssetDirectoryDescriptorBuilder(DIRECTORY_TYPE + "Music", "Music Files", Icons.FOLDER_MUSIC_MEDIUM.drawable())
+			.build();
+
+	public static final AssetDirectoryDescriptor DIRECTORY_SOUND
+			= new AssetDirectoryDescriptorBuilder(DIRECTORY_TYPE + "Sound", "Sound Files", Icons.FOLDER_SOUND_MEDIUM.drawable())
+			.build();
+
 	public static final AssetDirectoryDescriptor DIRECTORY_SPRITER
 			= new AssetDirectoryDescriptorBuilder(DIRECTORY_TYPE + "Spriter", "Spriter Animation", Icons.FOLDER_SPRITER_MEDIUM.drawable())
 			.excludeFromTextureCache()

@@ -31,8 +31,8 @@ public class PathDescriptorProvider implements AssetDescriptorProvider<PathAsset
 		return new PathAsset(relativePath);
 	}
 
-	private boolean checkIfSupported (FileHandle file, String path) {
-		if (path.startsWith("music") || path.startsWith("sound")) return true;
+	private boolean checkIfSupported (FileHandle file, String relativePath) {
+		if (relativePath.startsWith("music") || relativePath.startsWith("sound")) return true;
 		return false;
 	}
 

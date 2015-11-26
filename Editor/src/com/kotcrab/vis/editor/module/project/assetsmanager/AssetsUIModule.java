@@ -615,7 +615,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 				}
 
 				//TODO cache canAnalyze and isSafeFileMoveSupported results too speed up opening menus
-				if (assetsAnalyzer.canAnalyzeUsages(file)) {
+				if (directory == false && assetsAnalyzer.canAnalyzeUsages(file)) {
 					addItem(MenuUtils.createMenuItem("Find Usages", () -> analyzeUsages(file)));
 					addSeparator();
 				}
