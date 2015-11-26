@@ -136,8 +136,15 @@ public class MenuItem extends Button {
 				} else {
 					Stage stage = getStage();
 					Vector2 pos = localToStageCoordinates(new Vector2(0, 0));
+					
+					float subMenuX;
+					if (pos.x + getWidth() + subMenu.getWidth() >= stage.getWidth()) { //if won't fit on screen
+						subMenuX = pos.x - getWidth() + 3;
+					} else {
+						subMenuX = pos.x + getWidth() - 1;
+					}
+					subMenu.setPosition(subMenuX, pos.y - subMenu.getHeight() + getHeight());
 
-					subMenu.setPosition(pos.x + getWidth() - 1, pos.y - subMenu.getHeight() + getHeight());
 					if (subMenu.getY() < 0) {
 						subMenu.setY(subMenu.getY() + subMenu.getHeight() - getHeight());
 					}

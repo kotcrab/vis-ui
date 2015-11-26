@@ -62,7 +62,7 @@ public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsP
 				Holder<Boolean> uiUpdatedNeeded = Holder.of(false);
 
 				ArrayUtils.stream(properties.getProxies(), proxy -> {
-					if (proxy.getOriginX() != 0 || proxy.getOriginY() != 0) {
+					if (proxy.isOriginSupported() && (proxy.getOriginX() != 0 || proxy.getOriginY() != 0)) {
 						uiUpdatedNeeded.value = true;
 						proxy.setOrigin(0, 0);
 					}
