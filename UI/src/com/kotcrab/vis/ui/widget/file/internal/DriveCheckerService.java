@@ -26,7 +26,10 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/** @author Kotcrab */
+/**
+ * Used to check whether file system root is readable or writeable.
+ * @author Kotcrab
+ */
 public class DriveCheckerService {
 	private static DriveCheckerService instance;
 

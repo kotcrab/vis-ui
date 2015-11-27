@@ -27,8 +27,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
- * Simple LinkLabel allows to create label with clickable link and underline on mouse over.
- * Link can have custom text. By default clicking link will open it in default browser, this can be changed by settings label listener.
+ * Simple LinkLabel allows to create label with clickable link and underline on mouse over. Link can have custom text.
+ * By default clicking link will open it in default browser, this can be changed by settings label listener.
  * @author Kotcrab
  * @since 0.7.2
  */

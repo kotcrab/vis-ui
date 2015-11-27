@@ -21,6 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
+ * Compatible with {@link Label}. Does not provide additional features.
  * @author Kotcrab
  * @see Label
  */

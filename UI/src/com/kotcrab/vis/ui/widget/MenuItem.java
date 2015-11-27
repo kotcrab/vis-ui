@@ -44,6 +44,8 @@ import com.kotcrab.vis.ui.util.OsUtils;
  * @author Kotcrab
  */
 public class MenuItem extends Button {
+	//MenuItem is modified version of TextButton
+
 	private Image image;
 	private Label label;
 	private MenuItemStyle style;
@@ -136,7 +138,7 @@ public class MenuItem extends Button {
 				} else {
 					Stage stage = getStage();
 					Vector2 pos = localToStageCoordinates(new Vector2(0, 0));
-					
+
 					float subMenuX;
 					if (pos.x + getWidth() + subMenu.getWidth() >= stage.getWidth()) { //if won't fit on screen
 						subMenuX = pos.x - getWidth() + 3;
@@ -221,8 +223,8 @@ public class MenuItem extends Button {
 	}
 
 	/**
-	 * Changes generateDisabledImage property, when true that function is enabled. When it is enabled and this MenuItem is disabled then image color will be changed
-	 * to gray meaning that it is disabled, by default it is enabled.
+	 * Changes generateDisabledImage property, when true that function is enabled. When it is enabled and this MenuItem
+	 * is disabled then image color will be changed to gray meaning that it is disabled, by default it is enabled.
 	 */
 	public void setGenerateDisabledImage (boolean generateDisabledImage) {
 		this.generateDisabledImage = generateDisabledImage;
@@ -254,10 +256,13 @@ public class MenuItem extends Button {
 	}
 
 	/**
-	 * Set shortcut text displayed in this menu item. Displayed as keycode+keycode+keycode (eg. Ctrl+Shift+F5 on Windows and Linux,
-	 * on Mac ⌘⇧F5). CONTROL_LEFT and CONTROL_RIGHT are mapped to Ctrl. The same goes for Alt and Shift. This DOES NOT set actual
-	 * hot key for this menu item, it only makes shortcut text visible in item.
-	 * @param keycodes keycodes from {@link Keys} that are used to determine the shortcut text
+	 * Creates platform dependant shortcut text. Converts int keycodes to String text. Eg. Keys.CONTROL_LEFT,
+	 * Keys.SHIFT_LEFT, Keys.F5 will be converted to Ctrl+Shift+F5 on Windows and Linux, and to ⌘⇧F5 on Mac.
+	 * <p>
+	 * CONTROL_LEFT and CONTROL_RIGHT are mapped to Ctrl. The same goes for Alt (ALT_LEFT, ALT_RIGHT) and Shift (SHIFT_LEFT, SHIFT_RIGHT).
+	 * <p>
+	 * This DOES NOT set actual hot key for this menu item, it only makes shortcut text visible in item.
+	 * @param keycodes keycodes from {@link Keys} that are used to create shortcut text
 	 * @return this object for the purpose of chaining methods
 	 */
 	public MenuItem setShortcut (int... keycodes) {

@@ -23,6 +23,8 @@ import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
+ * Compatible with {@link List}. Does not provide additional features however for proper VisUI focus management List
+ * should be always preferred.
  * @author Kotcrab
  * @see List
  */

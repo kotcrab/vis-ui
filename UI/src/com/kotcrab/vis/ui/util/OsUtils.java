@@ -69,9 +69,11 @@ public class OsUtils {
 	}
 
 	/**
-	 * Returns a shortcut text that can be displayed in a menu item. Returns keycode+keycode+keycode (eg. Ctrl+Shift+F5 on Windows
-	 * and Linux, on Mac ⌘⇧F5). CONTROL_LEFT and CONTROL_RIGHT are mapped to Ctrl. The same goes for Alt and Shift.
-	 * @param keycodes keycodes from {@link Keys} that are used to determine the shortcut text
+	 * Creates platform dependant shortcut text. Converts int keycodes to String text. Eg. Keys.CONTROL_LEFT,
+	 * Keys.SHIFT_LEFT, Keys.F5 will be converted to Ctrl+Shift+F5 on Windows and Linux, and to ⌘⇧F5 on Mac.
+	 * <p>
+	 * CONTROL_LEFT and CONTROL_RIGHT are mapped to Ctrl. The same goes for Alt (ALT_LEFT, ALT_RIGHT) and Shift (SHIFT_LEFT, SHIFT_RIGHT).
+	 * @param keycodes keycodes from {@link Keys} that are used to create shortcut text
 	 * @return the platform dependent shortcut text
 	 */
 	public static String getShortcutFor (int... keycodes) {

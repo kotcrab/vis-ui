@@ -14,27 +14,8 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.widget;
-
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.kotcrab.vis.ui.VisUI;
-
 /**
- * Compatible with {@link ScrollPane}. Does not provide additional features.
+ * Contains files for built-in VisUI skins.
  * @author Kotcrab
- * @see ScrollPane
  */
-public class VisScrollPane extends ScrollPane {
-	public VisScrollPane (Actor widget, ScrollPaneStyle style) {
-		super(widget, style);
-	}
-
-	public VisScrollPane (Actor widget, String styleName) {
-		super(widget, VisUI.getSkin(), styleName);
-	}
-
-	public VisScrollPane (Actor widget) {
-		super(widget, VisUI.getSkin(), "list");
-	}
-}
+package com.kotcrab.vis.ui.skin;

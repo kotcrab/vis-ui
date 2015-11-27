@@ -652,11 +652,11 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void updateSelectedFileFieldText () {
-		if (selectedItems.size == 0)
+		if (selectedItems.size == 0) {
 			selectedFileTextField.setText("");
-		else if (selectedItems.size == 1)
+		} else if (selectedItems.size == 1) {
 			selectedFileTextField.setText(selectedItems.get(0).file.name());
-		else {
+		} else {
 			StringBuilder b = new StringBuilder();
 
 			for (FileItem item : selectedItems) {

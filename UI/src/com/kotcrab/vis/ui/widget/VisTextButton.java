@@ -29,6 +29,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.BorderOwner;
 
 /**
+ * Extends functionality of standard {@link TextButton}, supports focus border. Compatible with standard {@link TextButton}.
  * @author Kotcrab
  * @see TextButton
  */
@@ -80,8 +81,9 @@ public class VisTextButton extends TextButton implements Focusable, BorderOwner 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
-		if (focusBorderEnabled && drawBorder && style.focusBorder != null)
+		if (focusBorderEnabled && drawBorder && style.focusBorder != null) {
 			style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
+		}
 	}
 
 	static public class VisTextButtonStyle extends TextButtonStyle {

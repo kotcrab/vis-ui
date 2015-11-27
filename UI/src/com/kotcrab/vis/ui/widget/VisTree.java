@@ -25,6 +25,8 @@ import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
+ * Does not provide additional features over standard {@link Tree}, however for proper VisUI focus border management VisTree
+ * should be always preferred. Compatible with standard {@link Tree}
  * @author Kotcrab
  * @see Tree
  */

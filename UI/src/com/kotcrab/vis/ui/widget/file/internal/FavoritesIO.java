@@ -23,10 +23,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 
-/**
- * This class isn't considered as public API.
- * @author Kotcrab
- */
+/** @author Kotcrab */
 public class FavoritesIO {
 	private static final String DEFAULT_FAVORITES_PREFS_NAME = "com.kotcrab.vis.ui.widget.file.filechooser_favorites";
 	private static String favoritesPrefsName = DEFAULT_FAVORITES_PREFS_NAME;

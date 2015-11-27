@@ -21,5 +21,6 @@ package com.kotcrab.vis.ui.util.dialog;
  * @author Kotcrab
  */
 public interface ConfirmDialogListener<T> {
+	/** Called when dialog button was pressed, type of results is generic and depends on created dialog. */
 	void result (T result);
 }

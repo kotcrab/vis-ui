@@ -23,10 +23,10 @@ import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.util.Validators;
 
 /**
- * Text field that input can be validated by custom input validators
+ * Text field that input can be validated by custom input validators.
  * @author Kotcrab
- * @see Validators
  * @see InputValidator
+ * @see Validators
  */
 public class VisValidatableTextField extends VisTextField {
 	private Array<InputValidator> validators = new Array<InputValidator>();

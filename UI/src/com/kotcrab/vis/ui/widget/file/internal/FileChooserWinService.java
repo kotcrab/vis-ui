@@ -31,6 +31,10 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Used to get system drive name. Only used on Windows.
+ * @author Kotcrab
+ */
 public class FileChooserWinService {
 	private static FileChooserWinService instance;
 

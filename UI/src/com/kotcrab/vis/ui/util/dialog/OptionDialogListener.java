@@ -21,12 +21,12 @@ package com.kotcrab.vis.ui.util.dialog;
  * @author Kotcrab
  */
 public interface OptionDialogListener {
-	/** Called when 'yes' button was pressed */
+	/** Called when 'yes' button was pressed. */
 	void yes ();
 
-	/** Called when 'no' button was pressed */
+	/** Called when 'no' button was pressed. */
 	void no ();
 
-	/** Called when 'cancel' button was pressed */
+	/** Called when 'cancel' button was pressed. */
 	void cancel ();
 }

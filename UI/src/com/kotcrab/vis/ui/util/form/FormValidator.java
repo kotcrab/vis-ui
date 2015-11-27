@@ -18,7 +18,6 @@ package com.kotcrab.vis.ui.util.form;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.kotcrab.vis.ui.widget.VisTextField;
@@ -27,24 +26,34 @@ import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import java.io.File;
 
 /**
- * Makes validating forms easier <br>
- * FromValidator is not gwt compatible, if you need that see {@link SimpleFormValidator}
+ * Utility class made for creating input forms that requires inputting various information and that information cannot be wrong.
+ * For example user registration form.
+ * <p></p>
+ * FromValidator is not GWT compatible, if you need that see {@link SimpleFormValidator}.
  * @author Kotcrab
  */
 public class FormValidator extends SimpleFormValidator {
-	public FormValidator (Button buttonToDisable, Label errorMsgLabel) {
+	/** @see SimpleFormValidator#SimpleFormValidator(Disableable) */
+	public FormValidator (Disableable targetToDisable) {
+		super(targetToDisable);
+	}
+
+	/** @see SimpleFormValidator#SimpleFormValidator(Disableable, Label) */
+	public FormValidator (Disableable buttonToDisable, Label errorMsgLabel) {
 		super(buttonToDisable, errorMsgLabel);
 	}
 
+	/** @see SimpleFormValidator#SimpleFormValidator(Disableable, Label, String) */
 	public FormValidator (Disableable targetToDisable, Label messageLabel, String styleName) {
 		super(targetToDisable, messageLabel, styleName);
 	}
 
+	/** @see SimpleFormValidator#SimpleFormValidator(Disableable, Label, FormValidatorStyle) */
 	public FormValidator (Disableable targetToDisable, Label messageLabel, FormValidatorStyle style) {
 		super(targetToDisable, messageLabel, style);
 	}
 
-	/** Validates if absolute path entered in text field points to an existing file */
+	/** Validates if absolute path entered in text field points to an existing file. */
 	public FormInputValidator fileExists (VisValidatableTextField field, String errorMsg) {
 		FileExistsValidator validator = new FileExistsValidator(errorMsg);
 		field.addValidator(validator);
@@ -54,7 +63,7 @@ public class FormValidator extends SimpleFormValidator {
 
 	/**
 	 * Validates if relative path entered in text field points to an existing file.
-	 * @param relativeTo path entered in this field is used to create absolute path from entered in field (see {@link FileExistsValidator})
+	 * @param relativeTo path entered in this field is used to create absolute path from entered in field (see {@link FileExistsValidator}).
 	 */
 	public FormInputValidator fileExists (VisValidatableTextField field, VisTextField relativeTo, String errorMsg) {
 		FileExistsValidator validator = new FileExistsValidator(relativeTo, errorMsg);
@@ -65,9 +74,9 @@ public class FormValidator extends SimpleFormValidator {
 
 	/**
 	 * Validates if relative path entered in text field points to an existing file.
-	 * @param relativeTo path entered in this field is used to create absolute path from entered in field (see {@link FileExistsValidator})
+	 * @param relativeTo path entered in this field is used to create absolute path from entered in field (see {@link FileExistsValidator}).
 	 * @param errorIfRelativeEmpty if true field input will be valid if 'relativeTo' field is empty, usually used with notEmpty validator on 'relativeTo' field to
-	 * avoid form errors. Settings this to true improves UX, errors are not displayed until user types something in 'relativeTo' field
+	 * avoid form errors. Settings this to true improves UX, errors are not displayed until user types something in 'relativeTo' field.
 	 */
 	public FormInputValidator fileExists (VisValidatableTextField field, VisTextField relativeTo, String errorMsg, boolean errorIfRelativeEmpty) {
 		FileExistsValidator validator = new FileExistsValidator(relativeTo, errorMsg, false, errorIfRelativeEmpty);
@@ -78,7 +87,7 @@ public class FormValidator extends SimpleFormValidator {
 
 	/**
 	 * Validates if relative path entered in text field points to an existing file.
-	 * @param relativeTo path of this file is used to create absolute path from entered in field (see {@link FileExistsValidator})
+	 * @param relativeTo path of this file is used to create absolute path from entered in field (see {@link FileExistsValidator}).
 	 */
 	public FormInputValidator fileExists (VisValidatableTextField field, File relativeTo, String errorMsg) {
 		FileExistsValidator validator = new FileExistsValidator(relativeTo, errorMsg);
@@ -89,7 +98,7 @@ public class FormValidator extends SimpleFormValidator {
 
 	/**
 	 * Validates if relative path entered in text field points to an existing file.
-	 * @param relativeTo path of this file is used to create absolute path from entered in field (see {@link FileExistsValidator})
+	 * @param relativeTo path of this file is used to create absolute path from entered in field (see {@link FileExistsValidator}).
 	 */
 	public FormInputValidator fileExists (VisValidatableTextField field, FileHandle relativeTo, String errorMsg) {
 		FileExistsValidator validator = new FileExistsValidator(relativeTo.file(), errorMsg);
@@ -110,7 +119,7 @@ public class FormValidator extends SimpleFormValidator {
 
 	/**
 	 * Validates if relative path entered in text field points to an non existing file.
-	 * @param relativeTo path entered in this field is used to create absolute path from entered in field (see {@link FileExistsValidator})
+	 * @param relativeTo path entered in this field is used to create absolute path from entered in field (see {@link FileExistsValidator}).
 	 */
 	public FormInputValidator fileNotExists (VisValidatableTextField field, VisTextField relativeTo, String errorMsg) {
 		FileExistsValidator validator = new FileExistsValidator(relativeTo, errorMsg, true);
@@ -122,7 +131,7 @@ public class FormValidator extends SimpleFormValidator {
 
 	/**
 	 * Validates if relative path entered in text field points to an non existing file.
-	 * @param relativeTo path of this file is used to create absolute path from entered in field (see {@link FileExistsValidator})
+	 * @param relativeTo path of this file is used to create absolute path from entered in field (see {@link FileExistsValidator}).
 	 */
 	public FormInputValidator fileNotExists (VisValidatableTextField field, File relativeTo, String errorMsg) {
 		FileExistsValidator validator = new FileExistsValidator(relativeTo, errorMsg, true);
@@ -134,7 +143,7 @@ public class FormValidator extends SimpleFormValidator {
 
 	/**
 	 * Validates if relative path entered in text field points to an non existing file.
-	 * @param relativeTo path of this file is used to create absolute path from entered in field (see {@link FileExistsValidator})
+	 * @param relativeTo path of this file is used to create absolute path from entered in field (see {@link FileExistsValidator}).
 	 */
 	public FormInputValidator fileNotExists (VisValidatableTextField field, FileHandle relativeTo, String errorMsg) {
 		FileExistsValidator validator = new FileExistsValidator(relativeTo.file(), errorMsg, true);
@@ -143,7 +152,7 @@ public class FormValidator extends SimpleFormValidator {
 		return validator;
 	}
 
-	/** Validates if relative path entered in text field points to an existing directory */
+	/** Validates if relative path entered in text field points to an existing directory. */
 	public FormInputValidator directory (VisValidatableTextField field, String errorMsg) {
 		DirectoryValidator validator = new DirectoryValidator(errorMsg);
 		field.addValidator(validator);
@@ -151,7 +160,7 @@ public class FormValidator extends SimpleFormValidator {
 		return validator;
 	}
 
-	/** Validates if relative path entered in text field points to an existing and empty directory */
+	/** Validates if relative path entered in text field points to an existing and empty directory. */
 	public FormInputValidator directoryEmpty (VisValidatableTextField field, String errorMsg) {
 		DirectoryContentValidator validator = new DirectoryContentValidator(errorMsg, true);
 		field.addValidator(validator);
@@ -159,7 +168,7 @@ public class FormValidator extends SimpleFormValidator {
 		return validator;
 	}
 
-	/** Validates if relative path entered in text field points to an existing and non empty directory */
+	/** Validates if relative path entered in text field points to an existing and non empty directory. */
 	public FormInputValidator directoryNotEmpty (VisValidatableTextField field, String errorMsg) {
 		DirectoryContentValidator validator = new DirectoryContentValidator(errorMsg, false);
 		field.addValidator(validator);
@@ -167,7 +176,7 @@ public class FormValidator extends SimpleFormValidator {
 		return validator;
 	}
 
-	/** Validates if entered absolute path points to existing directory */
+	/** Validates if entered absolute path points to existing directory. */
 	public static class DirectoryValidator extends FormInputValidator {
 		public DirectoryValidator (String errorMsg) {
 			super(errorMsg);
@@ -182,13 +191,13 @@ public class FormValidator extends SimpleFormValidator {
 
 	/**
 	 * Validates if entered path (absolute) points to an existing directory. Then checks if this directory is empty or if
-	 * it has files in it
+	 * it has files in it.
 	 * @see DirectoryValidator
 	 */
 	public static class DirectoryContentValidator extends FormInputValidator {
 		private boolean mustBeEmpty;
 
-		/** @param mustBeEmpty if true validated directory must be empty, if false that directory must not be empty */
+		/** @param mustBeEmpty if true validated directory must be empty, if false that directory must not be empty. */
 		public DirectoryContentValidator (String errorMsg, boolean mustBeEmpty) {
 			super(errorMsg);
 			this.mustBeEmpty = mustBeEmpty;

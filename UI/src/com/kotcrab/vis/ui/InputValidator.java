@@ -17,11 +17,12 @@
 package com.kotcrab.vis.ui;
 
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.form.SimpleFormValidator;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
  * Interface implemented by classes that can validate whether user input is right or wrong, typically used by {@link VisValidatableTextField}
- * and {@link DialogUtils} input dialog.
+ * {@link SimpleFormValidator} and {@link DialogUtils} input dialogs.
  * @author Kotcrab
  * @since 0.0.3
  */

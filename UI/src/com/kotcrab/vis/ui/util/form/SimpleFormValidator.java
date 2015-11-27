@@ -33,10 +33,11 @@ import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
- * Makes validating forms easier
+ * Utility class made for creating input forms that requires inputting various information and that information cannot be wrong.
+ * For example user registration form.
  * <p>
  * SimpleFormValidator is GWT compatible and does not provide fileExists methods, if you are not using GWT use
- * {@link FormValidator}
+ * {@link FormValidator}.
  * @author Kotcrab
  */
 public class SimpleFormValidator {
@@ -54,14 +55,37 @@ public class SimpleFormValidator {
 	private Array<Disableable> disableTargets = new Array<Disableable>();
 	private Label messageLabel;
 
+	/**
+	 * @param targetToDisable target actor that will be disabled if form is invalid. Eg. you can pass form Confirm button.
+	 * May be null.
+	 */
+	public SimpleFormValidator (Disableable targetToDisable) {
+		this(targetToDisable, null, "default");
+	}
+
+	/**
+	 * @param targetToDisable target actor that will be disabled if form is invalid. Eg. you can pass form Confirm button.
+	 * May be null.
+	 * @param messageLabel label that text will be changed if from is valid or invalid. May be null.
+	 */
 	public SimpleFormValidator (Disableable targetToDisable, Label messageLabel) {
 		this(targetToDisable, messageLabel, "default");
 	}
 
+	/**
+	 * @param targetToDisable target actor that will be disabled if form is invalid. Eg. you can pass form Confirm button.
+	 * May be null.
+	 * @param messageLabel label that text will be changed if from is valid or invalid. May be null.
+	 */
 	public SimpleFormValidator (Disableable targetToDisable, Label messageLabel, String styleName) {
 		this(targetToDisable, messageLabel, VisUI.getSkin().get(styleName, FormValidatorStyle.class));
 	}
 
+	/**
+	 * @param targetToDisable target actor that will be disabled if form is invalid. Eg. you can pass form Confirm button.
+	 * May be null.
+	 * @param messageLabel label that text will be changed if from is valid or invalid. May be null.
+	 */
 	public SimpleFormValidator (Disableable targetToDisable, Label messageLabel, FormValidatorStyle style) {
 		this.style = style;
 		if (targetToDisable != null) disableTargets.add(targetToDisable);
@@ -240,7 +264,6 @@ public class SimpleFormValidator {
 		}
 
 		if (messageLabel != null) {
-
 			if (errorMsgText != null) {
 				messageLabel.setText(errorMsgText);
 			} else {

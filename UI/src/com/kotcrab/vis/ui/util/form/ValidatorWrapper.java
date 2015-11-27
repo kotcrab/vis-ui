@@ -20,7 +20,7 @@ import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
- * Allows standard InputValidator to be used with {@link SimpleFormValidator#custom(VisValidatableTextField, FormInputValidator)}
+ * Allows standard {@link InputValidator} to be used with {@link SimpleFormValidator#custom(VisValidatableTextField, FormInputValidator)}
  * Wraps standard input validator and adds error message
  * @author Kotcrab
  */

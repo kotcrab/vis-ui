@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
- * Bar with menus displayed usually on top of the stage.
+ * Bar with expandable menus available after pressing button, usually displayed on top of the stage.
  * @author Kotcrab
  */
 public class MenuBar {

@@ -22,7 +22,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.utils.SnapshotArray;
 
 /**
- * Allows to easily arrange actors in grid layout. Item size and spacing can be specified in constructors.
+ * Arrange actors in grid layout. You can set item width, height and spacing between items.
+ * <p>
+ * Grid group can be embedded in scroll pane. However in such case scrolling in X direction must be disabled.
  * @author Kotcrab
  * @since 0.7.2
  */
@@ -178,5 +180,4 @@ public class GridGroup extends WidgetGroup {
 		if (sizeInvalid) computeSize();
 		return prefHeight;
 	}
-
 }

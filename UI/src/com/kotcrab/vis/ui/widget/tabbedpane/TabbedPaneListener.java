@@ -34,8 +34,6 @@ public interface TabbedPaneListener {
 	 */
 	void removedTab (Tab tab);
 
-	/**
-	 * Called when all tabs were removed from TabbedPane.
-	 */
+	/** Called when all tabs were removed from TabbedPane. */
 	void removedAllTabs ();
 }

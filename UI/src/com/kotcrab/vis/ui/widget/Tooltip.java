@@ -33,8 +33,10 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ActorUtils;
 
 /**
- * Tooltips are widgets that appear bellow other widget after user hovers mouse pointer on that other widget. Each
- * actor can have only one tooltip.
+ * Tooltips are widgets that appear bellow other widget on mouse pointer hover. Each actor can have only one tooltip.
+ * <p>
+ * LibGDX 1.6.4 introduced it's own systems of tooltips. VisUI tooltips existed before that and are unrelated with libGDX
+ * tooltips. VisUI tooltips will remain supported.
  * @author Kotcrab
  * @since 0.5.0
  */
