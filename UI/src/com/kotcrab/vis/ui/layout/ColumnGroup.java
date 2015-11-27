@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Layout;
 import com.badlogic.gdx.utils.SnapshotArray;
 
 /**
- * ColumnGroup Lays it's children in single column. Each child is added in new row.
+ * ColumnGroup lays it's children in single column. Each child is added in new row.
  * @author Kotcrab
  * @since 0.8.2
  */
