@@ -90,12 +90,13 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new VisUUIDManager());
 		config.setSystem(new EntityCounterManager());
 
-		config.setSystem(new EditorSpriteInflater());
-		config.setSystem(new EditorSoundInflater());
 		config.setSystem(new EditorMusicInflater());
 		config.setSystem(new EditorParticleInflater(scene.pixelsPerUnit));
-		config.setSystem(new EditorTextInflater(scene.pixelsPerUnit));
+		config.setSystem(new EditorShaderInflater());
+		config.setSystem(new EditorSoundInflater());
+		config.setSystem(new EditorSpriteInflater());
 		config.setSystem(new EditorSpriterInflater());
+		config.setSystem(new EditorTextInflater(scene.pixelsPerUnit));
 
 		for (EditorEntitySupport support : editorModuleContainer.get(ExtensionStorageModule.class).getEntitiesSupports()) {
 			support.registerInflatersSystems(config);

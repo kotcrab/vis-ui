@@ -30,9 +30,8 @@ public class EditorShaderInflater extends InflaterSystem {
 	private ComponentMapper<ShaderProtoComponent> protoCm;
 	private ShaderCacheModule shaderCache;
 
-	public EditorShaderInflater (ShaderCacheModule shaderCache) {
+	public EditorShaderInflater () {
 		super(Aspect.all(ShaderProtoComponent.class, AssetComponent.class));
-		this.shaderCache = shaderCache;
 	}
 
 	@Override
