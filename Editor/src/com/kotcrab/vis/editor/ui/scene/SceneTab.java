@@ -113,8 +113,8 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 		sceneMC.injectModules(this);
 		engine = sceneMC.getEntityEngine();
 
-		entityCounter = engine.getManager(EntityCounterManager.class);
-		entityProxyCache = engine.getManager(EntityProxyCache.class);
+		entityCounter = engine.getSystem(EntityCounterManager.class);
+		entityProxyCache = engine.getSystem(EntityProxyCache.class);
 
 		VisTable leftColumn = new VisTable(false);
 		VisTable rightColumn = new VisTable(false);

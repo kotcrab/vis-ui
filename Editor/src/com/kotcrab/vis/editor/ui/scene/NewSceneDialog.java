@@ -27,7 +27,6 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.SceneCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
-import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
@@ -174,8 +173,7 @@ public class NewSceneDialog extends VisWindow {
 				DialogUtils.showOptionDialog(getStage(), "Message", "Open this new scene in editor?", OptionDialogType.YES_NO, new OptionDialogAdapter() {
 					@Override
 					public void yes () {
-						EditorScene scene = sceneCache.get(assetsFolder.child(targetFile.path()));
-						sceneTabsModule.open(scene);
+						sceneTabsModule.open(assetsFolder.child(targetFile.path()));
 					}
 				});
 

@@ -30,10 +30,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.esotericsoftware.kryo.KryoException;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
@@ -497,13 +495,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		}
 
 		if (ProjectPathUtils.isScene(file)) {
-			try {
-				sceneTabsModule.open(sceneCache.get(file));
-			} catch (KryoException e) {
-				DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file or missing required plugin.", e);
-				Log.exception(e);
-			}
-
+			sceneTabsModule.open(file);
 			return;
 		}
 

@@ -25,7 +25,7 @@ import java.lang.reflect.Type;
 public class AssetComponentSerializer implements JsonSerializer<AssetComponent>, JsonDeserializer<AssetComponent> {
 	@Override
 	public JsonElement serialize (AssetComponent asset, Type typeOfSrc, JsonSerializationContext context) {
-		JsonElement jsonAsset = context.serialize(asset.asset);
+		JsonElement jsonAsset = context.serialize(asset.asset, asset.asset.getClass());
 		GsonUtils.appendClassProperty(jsonAsset, asset.asset, context);
 
 		JsonObject jsonObject = new JsonObject();

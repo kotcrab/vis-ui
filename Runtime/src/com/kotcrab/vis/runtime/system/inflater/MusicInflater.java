@@ -56,8 +56,9 @@ public class MusicInflater extends InflaterSystem {
 		MusicComponent musicComponent = musicCm.create(entityId);
 		musicComponent.music = music;
 		musicProtoComponent.fill(musicComponent);
+		if (musicComponent.playOnStart) musicComponent.music.play();
 
-		if(configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
+		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);
 	}
 }

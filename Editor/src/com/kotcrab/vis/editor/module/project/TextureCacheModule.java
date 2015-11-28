@@ -32,10 +32,10 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
-import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
+import com.kotcrab.vis.editor.util.vis.TextureCacheFilter;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
@@ -59,6 +59,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	private String cachePath;
 
 	private Settings settings;
+
+	private TextureCacheFilter cacheFilter;
 
 	private TextureRegion loadingRegion;
 	private TextureRegion missingRegion;
@@ -86,6 +88,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		settings.silent = true;
 		settings.useIndexes = false;
 		settings.fast = true;
+
+		cacheFilter = new TextureCacheFilter(assetsMetadata);
 
 		loadingRegion = Assets.icons.findRegion("refresh-big");
 		missingRegion = Assets.icons.findRegion("file-question-big");
@@ -126,12 +130,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	private void packageAndReloadCache () {
 		if (packagingEnabled) {
-			TexturePacker.process(settings, gfxPath, cachePath, "cache", (dir, name) -> {
-				AssetDirectoryDescriptor desc = assetsMetadata.getAsDirectoryDescriptorRecursively(FileUtils.toFileHandle(dir));
-				if (desc != null && desc.isExcludeFromTextureCache()) return false;
-
-				return true;
-			});
+			TexturePacker.process(settings, gfxPath, cachePath, "cache", cacheFilter);
 		}
 
 		Gdx.app.postRunnable(this::reloadCache);

@@ -37,6 +37,7 @@ public class AssetType implements AssetTypeStorage {
 
 	public static final String TEXTURE = FILE_TYPE + "Texture";
 	public static final String TEXTURE_ATLAS = FILE_TYPE + "TextureAtlas";
+	public static final String TEXTURE_ATLAS_IMAGE = FILE_TYPE + "TextureAtlasImage";
 	public static final String TTF_FONT = FILE_TYPE + "TtfFont";
 	public static final String BMP_FONT_FILE = FILE_TYPE + "BmpFont";
 	public static final String BMP_FONT_TEXTURE = FILE_TYPE + "BmpFontTexture";

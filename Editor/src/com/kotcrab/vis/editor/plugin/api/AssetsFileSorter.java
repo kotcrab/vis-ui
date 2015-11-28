@@ -32,4 +32,6 @@ public interface AssetsFileSorter {
 	 * Note that user won't be able to add non-main files to scene. DragAndDrop {@link Source} creation will be skipped for them.
 	 */
 	boolean isMainFile (FileHandle file);
+
+	boolean isExportedFile(FileHandle file);
 }

@@ -14,26 +14,32 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.extension;
+package com.kotcrab.vis.editor.util.vis;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
-import com.kotcrab.vis.editor.plugin.api.AssetsFileSorter;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
+import com.kotcrab.vis.editor.util.FileUtils;
+
+import java.io.File;
+import java.io.FilenameFilter;
 
 /** @author Kotcrab */
-public class SpriterAssetsFileSorter implements AssetsFileSorter {
-	@Override
-	public boolean isSupported (AssetsMetadataModule assetsMetadata, FileHandle file, String assetsFolderRelativePath) {
-		return assetsMetadata.isDirectoryMarkedAs(file, AssetType.DIRECTORY_SPRITER);
+public class TextureCacheFilter implements FilenameFilter {
+	private AssetsMetadataModule metadata;
+
+	public TextureCacheFilter (AssetsMetadataModule metadata) {
+		this.metadata = metadata;
 	}
 
 	@Override
-	public boolean isMainFile (FileHandle file) {
-		return file.extension().equals("scml");
-	}
+	public boolean accept (File dir, String name) {
+		FileHandle file = FileUtils.toFileHandle(dir);
+		if (ProjectPathUtils.isTextureAtlasImage(file.child(name))) return false;
 
-	@Override
-	public boolean isExportedFile (FileHandle file) {
+		AssetDirectoryDescriptor desc = metadata.getAsDirectoryDescriptorRecursively(file);
+		if (desc != null && desc.isExcludeFromTextureCache()) return false;
+
 		return true;
 	}
 }

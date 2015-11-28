@@ -45,6 +45,7 @@ public class EditorSpineInflaterSystem extends InflaterSystem {
 	private ComponentMapper<AssetComponent> assetCm;
 	private ComponentMapper<SpineComponent> spineCm;
 	private ComponentMapper<SpineProtoComponent> protoCm;
+	private ComponentMapper<SpinePreviewComponent> previewCm;
 
 	public EditorSpineInflaterSystem () {
 		super(Aspect.all(SpineProtoComponent.class, AssetComponent.class));
@@ -64,6 +65,9 @@ public class EditorSpineInflaterSystem extends InflaterSystem {
 		spineComponent.setDefaultAnimation(protoComponent.defaultAnimation);
 
 		spineComponent.updateDefaultAnimations();
+
+		SpinePreviewComponent spinePreviewComponent = previewCm.get(entityId);
+		spinePreviewComponent.updateAnimation = true;
 
 		world.getEntity(entityId).edit().add(spineComponent);
 

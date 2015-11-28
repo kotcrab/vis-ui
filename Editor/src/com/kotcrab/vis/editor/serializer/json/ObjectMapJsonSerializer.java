@@ -31,8 +31,8 @@ public class ObjectMapJsonSerializer<K, V> implements JsonSerializer<ObjectMap<K
 		JsonArray jsonArray = new JsonArray();
 		for (ObjectMap.Entry<K, V> entry : objMap.entries()) {
 			JsonObject jsonObject = new JsonObject();
-			jsonObject.add("key", context.serialize(entry.key));
-			jsonObject.add("value", context.serialize(entry.value));
+			jsonObject.add("key", context.serialize(entry.key, entry.key.getClass()));
+			jsonObject.add("value", context.serialize(entry.value, entry.value.getClass()));
 			GsonUtils.appendClassProperty(jsonObject, entry.key, context, PROPERTY_CLASS_KEY);
 			GsonUtils.appendClassProperty(jsonObject, entry.value, context, PROPERTY_CLASS_VALUE);
 

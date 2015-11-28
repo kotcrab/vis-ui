@@ -35,7 +35,7 @@ public class MusicComponent extends Component implements UsesProtoComponent { //
 	public transient Music music;
 
 	@ATProperty(fieldName = "Play on start")
-	private boolean playOnStart;
+	public boolean playOnStart;
 
 	public MusicComponent () {
 	}

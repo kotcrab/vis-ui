@@ -237,7 +237,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	@Override
 	public void resize () {
 		super.resize();
-		engine.getManager(CameraManager.class).resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		engine.getSystem(CameraManager.class).resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	public void render (Batch batch) {

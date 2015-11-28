@@ -25,9 +25,11 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsIOModule;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.plugin.api.AssetsFileSorter;
 import com.kotcrab.vis.editor.plugin.api.ExporterPlugin;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
@@ -35,6 +37,8 @@ import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DefaultExporterSettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.util.async.SteppedAsyncTask;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
+import com.kotcrab.vis.editor.util.vis.TextureCacheFilter;
 import com.kotcrab.vis.runtime.data.LayerData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
@@ -52,16 +56,19 @@ public class DefaultExporter implements ExporterPlugin {
 	public static final String EXPORTER_UUID = "b8bd183c-1dc6-4ac5-9bbe-a4ba86a61b95";
 
 	private EditorSettingsIOModule settingsIO;
+	private ExtensionStorageModule extensionStorage;
 	private StatusBarModule statusBar;
 	private TabsModule tabsModule;
 
 	private FileAccessModule fileAccess;
+	private AssetsMetadataModule assetsMetadata;
 	private SceneCacheModule sceneCache;
 
 	private Stage stage;
 
 	private Project project;
 	private DefaultExporterSettings settings;
+	private TextureCacheFilter textureCacheFilter;
 
 	private FileHandle visAssetsDir;
 
@@ -85,6 +92,8 @@ public class DefaultExporter implements ExporterPlugin {
 		texturePackerSettings.useIndexes = false;
 
 		json = SceneLoader.getJson();
+
+		textureCacheFilter = new TextureCacheFilter(assetsMetadata);
 	}
 
 	@Override
@@ -169,7 +178,7 @@ public class DefaultExporter implements ExporterPlugin {
 			cleanOldAssets();
 			packageTextures();
 			copyAssets();
-			exportScenes(this, visAssetsDir.child("scene"), outAssetsDir.child("scene"));
+			exportScenes(visAssetsDir, outAssetsDir);
 
 			nextStep();
 			statusBar.setText("Export finished");
@@ -181,13 +190,13 @@ public class DefaultExporter implements ExporterPlugin {
 			steps++; //package textures
 
 			int assetsDirCounter = visAssetsDir.list(file -> {
-				//exclude gfx and scene dir, exclude empty folders
-				return file.isDirectory() && file.list().length > 0 && !(file.getName().equals("gfx") || file.getName().equals("scene"));
+				//exclude exclude empty folders
+				return file.isDirectory() && file.list().length > 0;
 			}).length;
 			steps += assetsDirCounter;
 
 			String[] ext = {"scene"};
-			int sceneCounter = FileUtils.listFiles(visAssetsDir.child("scene").file(), ext, true).size();
+			int sceneCounter = FileUtils.listFiles(visAssetsDir.file(), ext, true).size();
 			steps += sceneCounter;
 
 			return steps;
@@ -200,26 +209,42 @@ public class DefaultExporter implements ExporterPlugin {
 			outAssetsDir.deleteDirectory();
 			outAssetsDir.mkdirs();
 
-			outAssetsDir.child("gfx").mkdirs();
-			outAssetsDir.child("scene").mkdirs();
 			nextStep();
 		}
 
 		private void packageTextures () {
 			setMessage("Packaging textures");
-			TexturePacker.process(texturePackerSettings, visAssetsDir.child("gfx").path(), outAssetsDir.child("gfx").path(), "textures");
+			TexturePacker.process(texturePackerSettings, visAssetsDir.path(), outAssetsDir.path(), "textures", textureCacheFilter);
 			nextStep();
 		}
 
 		private void copyAssets () {
 			for (FileHandle file : visAssetsDir.list()) {
 				if (file.isDirectory() == false) {
-					file.copyTo(outAssetsDir.child(file.name()));
+
+					AssetsFileSorter fileSorter = null;
+					String relativePath = fileAccess.relativizeToAssetsFolder(file);
+					for (AssetsFileSorter sorter : extensionStorage.getAssetsFileSorters()) {
+						if (sorter.isSupported(assetsMetadata, file, relativePath)) {
+							fileSorter = sorter;
+							break;
+						}
+					}
+
+					String ext = file.extension();
+
+					if (ProjectPathUtils.isScene(file)) continue;
+
+					if (fileSorter != null && fileSorter.isExportedFile(file)) {
+						file.copyTo(outAssetsDir.child(file.name()));
+					} else {
+						if (ProjectPathUtils.isTexture(file)) continue;
+						file.copyTo(outAssetsDir.child(file.name()));
+					}
 					continue;
 				}
 
 				if (file.list().length == 0) continue;
-				if (file.name().equals("gfx") || file.name().equals("scene")) continue;
 
 				setMessage("Copying assets directory: " + file.name());
 
@@ -232,16 +257,16 @@ public class DefaultExporter implements ExporterPlugin {
 			}
 		}
 
-		private void exportScenes (ExportAsyncTask task, FileHandle sceneDir, FileHandle outDir) {
+		private void exportScenes (FileHandle sceneDir, FileHandle outDir) {
 			outDir.mkdirs();
 
 			scene = null;
 
 			for (final FileHandle file : sceneDir.list()) {
-				if (file.isDirectory()) exportScenes(task, file, outDir.child(file.name()));
+				if (file.isDirectory()) exportScenes(file, outDir.child(file.name()));
 
-				if (file.extension().equals("scene")) {
-					task.setMessage("Exporting scene: " + file.name());
+				if (ProjectPathUtils.isScene(file)) {
+					setMessage("Exporting scene: " + file.name());
 
 					executeOnOpenGL(() -> scene = sceneCache.get(file));
 
@@ -262,10 +287,9 @@ public class DefaultExporter implements ExporterPlugin {
 					scene.getSchemes().forEach(scheme -> sceneData.entities.add(scheme.toData()));
 
 					json.toJson(sceneData, outDir.child(file.name()));
-					task.nextStep();
+					nextStep();
 
-				} else
-					Log.warn("Unknown file in 'scene' directory: " + file.path());
+				}
 			}
 		}
 	}

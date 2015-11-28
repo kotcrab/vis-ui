@@ -62,8 +62,8 @@ public class SpriteInflater extends InflaterSystem {
 
 		if (asset instanceof TextureRegionAsset) {
 			TextureRegionAsset regionAsset = (TextureRegionAsset) asset;
-			atlasPath = "gfx/textures.atlas";
-			atlasRegion = PathUtils.removeFirstSeparator(PathUtils.removeExtension(regionAsset.getPath())); //remove gfx/ and file extension
+			atlasPath = "textures.atlas";
+			atlasRegion = PathUtils.removeExtension(regionAsset.getPath()); //remove gfx/ and file extension
 
 		} else if (asset instanceof AtlasRegionAsset) {
 			AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;

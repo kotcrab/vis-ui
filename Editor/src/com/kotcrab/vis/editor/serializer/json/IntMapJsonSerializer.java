@@ -29,7 +29,7 @@ public class IntMapJsonSerializer<T> implements JsonSerializer<IntMap<T>>, JsonD
 		JsonArray jsonArray = new JsonArray();
 		for (IntMap.Entry<T> entry : intMap.entries()) {
 			JsonObject jsonObject = new JsonObject();
-			jsonObject.add(String.valueOf(entry.key), context.serialize(entry.value));
+			jsonObject.add(String.valueOf(entry.key), context.serialize(entry.value, entry.value.getClass()));
 			GsonUtils.appendClassProperty(jsonObject, entry.value, context);
 
 			jsonArray.add(jsonObject);

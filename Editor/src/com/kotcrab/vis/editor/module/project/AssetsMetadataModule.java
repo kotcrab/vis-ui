@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.module.project;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.ObjectMap.Entries;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.google.gson.Gson;
 import com.kotcrab.vis.editor.Log;
@@ -77,7 +78,7 @@ public class AssetsMetadataModule extends ProjectModule {
 
 	public String getRecursively (FileHandle dir) {
 		String relativePath = fileAccess.relativizeToAssetsFolder(dir);
-		for (Entry<String, String> entry : metadata) {
+		for (Entry<String, String> entry : new Entries<>(metadata)) {
 			if (relativePath.startsWith(entry.key)) {
 				return entry.value;
 			}

@@ -38,6 +38,7 @@ import com.kotcrab.vis.editor.serializer.cloner.IntArrayCloner;
 import com.kotcrab.vis.editor.serializer.cloner.IntMapCloner;
 import com.kotcrab.vis.editor.serializer.cloner.ObjectMapCloner;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
+import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.ProtoComponent;
@@ -121,6 +122,8 @@ public class SceneIOModule extends ProjectModule {
 
 	public EditorScene load (FileHandle fullPathFile) {
 		try {
+			if (fullPathFile.length() == 0) throw new EditorRuntimeException("Scene file does not contain any data");
+
 			BufferedReader reader = new BufferedReader(new FileReader(fullPathFile.file()));
 			EditorScene scene = gson.fromJson(reader, EditorScene.class);
 			scene.path = fileAccessModule.relativizeToAssetsFolder(fullPathFile);
@@ -130,10 +133,8 @@ public class SceneIOModule extends ProjectModule {
 
 			return scene;
 		} catch (IOException e) {
-			Log.exception(e);
+			throw new IllegalStateException("There was an IO error during scene loading", e);
 		}
-
-		throw new IllegalStateException("There was an unknown error during scene loading");
 	}
 
 	public boolean save (EditorScene scene) {

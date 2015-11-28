@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.KryoException;
@@ -27,6 +28,7 @@ import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.scene2d.VisTabbedPaneListener;
+import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
@@ -57,10 +59,18 @@ public class SceneTabsModule extends ProjectModule implements VisTabbedPaneListe
 	@Subscribe
 	public void handleOpenSceneRequest (OpenSceneRequest request) {
 		try {
-			EditorScene scene = sceneCache.get(request.sceneFile);
-			open(scene);
+			open(request.sceneFile);
 		} catch (KryoException e) {
 			DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
+			Log.exception(e);
+		}
+	}
+
+	public void open (FileHandle file) {
+		try {
+			open(sceneCache.getSafely(file));
+		} catch (EditorException e) {
+			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
 			Log.exception(e);
 		}
 	}

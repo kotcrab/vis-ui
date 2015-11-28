@@ -120,6 +120,11 @@ public class FileItem extends Table {
 			return;
 		}
 
+		if (ProjectPathUtils.isTextureAtlasImage(file)) {
+			createDefaultView(AssetType.TEXTURE_ATLAS_IMAGE, "TextureAtlas Image", true);
+			return;
+		}
+
 		if (texture || atlas) {
 			type = texture ? AssetType.TEXTURE : AssetType.TEXTURE_ATLAS;
 

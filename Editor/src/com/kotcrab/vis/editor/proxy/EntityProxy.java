@@ -26,8 +26,8 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
-import com.kotcrab.vis.editor.module.scene.system.VisUUIDManager;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
+import com.kotcrab.vis.editor.module.scene.system.VisUUIDManager;
 import com.kotcrab.vis.editor.util.polygon.Clipper;
 import com.kotcrab.vis.runtime.accessor.*;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
@@ -61,7 +61,7 @@ public abstract class EntityProxy {
 		entitiesArray.add(entity);
 
 		if (entity != null) {
-			uuidManager = entity.getWorld().getManager(VisUUIDManager.class);
+			uuidManager = entity.getWorld().getSystem(VisUUIDManager.class);
 			uuid = entity.getComponent(UUIDComponent.class).getUUID();
 
 			polygonCm = entity.getWorld().getMapper(PolygonComponent.class);
@@ -77,7 +77,10 @@ public abstract class EntityProxy {
 
 	protected abstract BasicPropertiesAccessor initAccessors ();
 
-	/** Reloads this proxy, must be called if there is chance that this entity was removed and then radded by UndoableAction. */
+	/**
+	 * Reloads this proxy, must be called if there is chance that this entity was removed and then radded by UndoableAction
+	 * or it's components used by proxy changed.
+	 */
 	public void reload () {
 		entity = uuidManager.get(uuid);
 		basicAccessor = initAccessors();

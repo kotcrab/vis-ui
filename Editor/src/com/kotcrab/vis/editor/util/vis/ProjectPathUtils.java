@@ -33,8 +33,12 @@ public class ProjectPathUtils {
 
 	public static boolean isTextureAtlas (FileHandle file) {
 		return file.extension().equals("atlas")
-				&& (FileUtils.siblingExists(file, "png") || FileUtils.siblingExists(file, "jpg") || FileUtils
-				.siblingExists(file, "jpeg"));
+				&& (FileUtils.siblingExists(file, "png") || FileUtils.siblingExists(file, "jpg") ||
+				FileUtils.siblingExists(file, "jpeg"));
+	}
+
+	public static boolean isTextureAtlasImage (FileHandle file) {
+		return isTexture(file) && FileUtils.siblingExists(file, "atlas");
 	}
 
 	public static boolean isParticle (FileHandle file) {

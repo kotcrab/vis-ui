@@ -48,4 +48,9 @@ public class SpineAssetsFileSorter implements AssetsFileSorter {
 	public boolean isMainFile (FileHandle file) {
 		return file.extension().equals("json") || file.extension().equals("skel");
 	}
+
+	@Override
+	public boolean isExportedFile (FileHandle file) {
+		return true;
+	}
 }

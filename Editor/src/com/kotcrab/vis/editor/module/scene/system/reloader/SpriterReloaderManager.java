@@ -19,14 +19,14 @@ package com.kotcrab.vis.editor.module.scene.system.reloader;
 import com.artemis.*;
 import com.artemis.utils.IntBag;
 import com.kotcrab.vis.editor.module.project.SpriterCacheModule;
+import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.SpriterComponent;
 
 /** @author Kotcrab */
 public class SpriterReloaderManager extends Manager {
-	private SpriterCacheModule spriterCacheModule;
-
+	private EntityProxyCache entityProxyCache;
 	private SpriterCacheModule spriterCache;
 
 	private ComponentMapper<SpriterComponent> spriterCm;
@@ -53,8 +53,11 @@ public class SpriterReloaderManager extends Manager {
 
 			SpriterComponent newSpriter = spriterCache.cloneComponent(asset, spriter);
 			entity.edit().remove(spriter).add(newSpriter);
+
+			//we've replaced SpriterComponent in entity so proxy needs manual reloading
+			entityProxyCache.get(entity).reload();
 		}
 
-		spriterCacheModule.disposeOldLoaders();
+		spriterCache.disposeOldLoaders();
 	}
 }

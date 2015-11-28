@@ -47,7 +47,7 @@ public class NoProjectFilesOpenView extends VisTable {
 			SceneTabsModule sceneTabs = projectMC.findInHierarchy(SceneTabsModule.class);
 			SceneCacheModule sceneCache = projectMC.findInHierarchy(SceneCacheModule.class);
 
-			getStage().addActor(new SelectFileDialog("scene", fileAccess.getAssetsFolder(), file -> sceneTabs.open(sceneCache.get(file))).fadeIn());
+			getStage().addActor(new SelectFileDialog("scene", fileAccess.getAssetsFolder(), sceneTabs::open).fadeIn());
 		});
 
 		add(new VisLabel("No files are open")).center().row();

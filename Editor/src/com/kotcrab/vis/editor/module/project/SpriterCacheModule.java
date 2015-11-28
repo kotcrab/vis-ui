@@ -81,6 +81,7 @@ public class SpriterCacheModule extends ProjectModule implements WatchListener {
 		clone.setPosition(original.getX(), original.getY());
 		clone.setFlip(original.isFlipX(), original.isFlipY());
 		clone.onDeserialize(original.playOnStart, original.defaultAnimation);
+		clone.animationPlaying = original.animationPlaying;
 		return clone;
 	}
 }

@@ -23,6 +23,8 @@ import java.lang.reflect.Type;
 
 /** @author Kotcrab */
 public class ArrayJsonSerializer<T> implements JsonSerializer<Array<T>>, JsonDeserializer<Array<T>> {
+	public static final String PRIMITIVE_CONTENT = "@content";
+
 	@Override
 	public JsonElement serialize (Array<T> array, Type typeOfSrc, JsonSerializationContext context) {
 		JsonArray jsonArray = new JsonArray();
@@ -31,13 +33,12 @@ public class ArrayJsonSerializer<T> implements JsonSerializer<Array<T>>, JsonDes
 
 			if (jsonElement.isJsonObject()) {
 				GsonUtils.appendClassProperty(jsonElement.getAsJsonObject(), element, context);
-			}
-
-			if (jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString() == false) {
-				throw new UnsupportedOperationException("ArrayJsonSerializer only supports String primitives");
-			}
-
-			if (jsonElement instanceof JsonArray) {
+			} else if (jsonElement.isJsonPrimitive()) {
+				JsonObject jsonNestedPrimitive = new JsonObject();
+				jsonNestedPrimitive.add(PRIMITIVE_CONTENT, jsonElement);
+				GsonUtils.appendClassProperty(jsonNestedPrimitive, element, context);
+				jsonElement = jsonNestedPrimitive;
+			} else if (jsonElement instanceof JsonArray) {
 				throw new UnsupportedOperationException("Nested Arrays are not supported by ArrayJsonSerializer");
 			}
 
@@ -54,10 +55,17 @@ public class ArrayJsonSerializer<T> implements JsonSerializer<Array<T>>, JsonDes
 
 		for (JsonElement jsonElement : jsonArray) {
 			if (jsonElement.isJsonObject()) {
-				array.add(context.deserialize(jsonElement, GsonUtils.readClassProperty(jsonElement, context)));
-			} else if (jsonElement.isJsonPrimitive()) {
-				array.add(context.deserialize(jsonElement, String.class));
+				JsonObject jsonObjectElement = jsonElement.getAsJsonObject();
+				if (jsonObjectElement.has(PRIMITIVE_CONTENT)) {
+					array.add(context.deserialize(jsonObjectElement.get(PRIMITIVE_CONTENT), GsonUtils.readClassProperty(jsonObjectElement, context)));
+				} else {
+					array.add(context.deserialize(jsonObjectElement, GsonUtils.readClassProperty(jsonObjectElement, context)));
+				}
+
+				continue;
 			}
+
+			throw new UnsupportedOperationException("Invalid JsonElement type in ArrayJsonSerializer");
 		}
 
 		return array;
