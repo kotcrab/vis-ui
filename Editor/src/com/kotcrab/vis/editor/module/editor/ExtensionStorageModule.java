@@ -155,7 +155,8 @@ public class ExtensionStorageModule extends EditorModule {
 
 		assetDescriptorProviders.add(new BmpFontDescriptorProvider());
 		assetDescriptorProviders.add(new ParticleDescriptorProvider());
-		assetDescriptorProviders.add(new PathDescriptorProvider());
+		assetDescriptorProviders.add(new MusicDescriptorProvider());
+		assetDescriptorProviders.add(new SoundDescriptorProvider());
 		assetDescriptorProviders.add(new TextureRegionDescriptorProvider());
 		assetDescriptorProviders.add(new AtlasRegionDescriptorProvider());
 		assetDescriptorProviders.add(new TtfFontDescriptorProvider());
@@ -163,7 +164,9 @@ public class ExtensionStorageModule extends EditorModule {
 		assetDescriptorProviders.add(new SpriterDescriptorProvider());
 
 		assetTransactionGens.add(new AtlasRegionAssetTransactionGenerator());
-		assetTransactionGens.add(new BasicAssetTransactionGenerator());
+		assetTransactionGens.add(new MusicAssetTransactionGenerator());
+		assetTransactionGens.add(new SoundAssetTransactionGenerator());
+		assetTransactionGens.add(new ParticleAssetTransactionGenerator());
 		assetTransactionGens.add(new BmpFontAssetTransactionGenerator());
 		assetTransactionGens.add(new TextureRegionAssetTransactionGenerator());
 		assetTransactionGens.add(new TtfAssetTransactionGenerator());

@@ -14,21 +14,20 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.util.autotable;
+package com.kotcrab.vis.editor.assets.transaction.generator;
 
-import com.artemis.Entity;
-import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.runtime.assets.MusicAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-/**
- * Handler interface for {@link ATSelectFile}. All handlers must implement this interface. Handlers may use
- * any module from VisEditor SceneModuleContainer scope.
- * Handlers must have no arg constructor.
- * @author Kotcrab
- */
-public interface ATSelectFileHandler {
-	void applyChanges (Entity entity, FileHandle file);
+/** @author Kotcrab */
+public class MusicAssetTransactionGenerator extends BasicAssetTransactionGenerator {
+	@Override
+	public boolean isSupported (VisAssetDescriptor descriptor) {
+		return descriptor instanceof MusicAsset;
+	}
 
-	String getAssetDirectoryDescriptorId ();
-
-	String getLabelValue (Entity entity);
+	@Override
+	protected VisAssetDescriptor createNewAsset (String relativeTargetPath) {
+		return new MusicAsset(relativeTargetPath);
+	}
 }

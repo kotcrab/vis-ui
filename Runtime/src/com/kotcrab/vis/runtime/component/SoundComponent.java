@@ -26,7 +26,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
  * @author Kotcrab
  */
 public class SoundComponent extends Component implements UsesProtoComponent {
-	@ATSelectFile(fieldName = "Sound", relativeFolderPath = "sound/", extension = "mp3|wav|ogg", hideExtension = false, handlerAlias = "sound")
+	@ATSelectFile(fieldName = "Sound", extension = "mp3|wav|ogg", hideExtension = false, handlerAlias = "sound")
 	public transient Sound sound;
 
 	public SoundComponent () {

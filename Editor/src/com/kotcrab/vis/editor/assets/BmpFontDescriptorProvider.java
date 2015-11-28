@@ -43,5 +43,4 @@ public class BmpFontDescriptorProvider implements AssetDescriptorProvider<BmpFon
 	public BmpFontAsset parametrize (BmpFontAsset rawAsset, BmpFontAsset other) {
 		return new BmpFontAsset(rawAsset.getPath(), other.getFontParameter());
 	}
-
 }

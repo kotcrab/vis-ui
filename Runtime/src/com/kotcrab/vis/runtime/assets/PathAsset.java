@@ -17,10 +17,12 @@
 package com.kotcrab.vis.runtime.assets;
 
 /**
- * References assets only by its path, for example used to reference music, sound or particles.
+ * References assets only by its path, for example used to reference music, sound or particles. This class is abstract,
+ * and must be extended, eg to create. {@link MusicAsset}, {@link SoundAsset} even if they do not provide any additional
+ * fields or methods.
  * @author Kotcrab
  */
-public class PathAsset implements VisAssetDescriptor {
+public abstract class PathAsset implements VisAssetDescriptor {
 	private String relativePath;
 
 	@Deprecated

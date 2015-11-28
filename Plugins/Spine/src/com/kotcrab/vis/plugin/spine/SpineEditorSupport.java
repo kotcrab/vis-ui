@@ -94,7 +94,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 
 	@Override
 	public boolean isSupportedDirectory (FileHandle file, String relativePath) {
-		return assetsMetadata.getRecursively(file).equals(SpineAssetType.DIRECTORY_SPINE.getId());
+		return assetsMetadata.isDirectoryMarkedAs(file, SpineAssetType.DIRECTORY_SPINE);
 	}
 
 	@Override

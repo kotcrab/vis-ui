@@ -18,26 +18,19 @@ package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
-import com.kotcrab.vis.runtime.assets.PathAsset;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
+import com.kotcrab.vis.runtime.assets.SoundAsset;
 
-/**
- * Basic descriptor provider for {@link PathAsset}, supporting TrueType fonts, music, sound
- * @author Kotcrab
- */
-public class PathDescriptorProvider implements AssetDescriptorProvider<PathAsset> {
+/** @author Kotcrab */
+public class SoundDescriptorProvider implements AssetDescriptorProvider<SoundAsset> {
 	@Override
-	public PathAsset provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
-		if (checkIfSupported(file, relativePath) == false) return null;
-		return new PathAsset(relativePath);
-	}
-
-	private boolean checkIfSupported (FileHandle file, String relativePath) {
-		if (relativePath.startsWith("music") || relativePath.startsWith("sound")) return true;
-		return false;
+	public SoundAsset provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
+		if (ProjectPathUtils.isSoundFile(metadata, file)) return new SoundAsset(relativePath);
+		return null;
 	}
 
 	@Override
-	public PathAsset parametrize (PathAsset rawAsset, PathAsset other) {
-		return rawAsset;
-	} //path is not parametrized
+	public SoundAsset parametrize (SoundAsset rawAsset, SoundAsset other) {
+		return rawAsset; //sound asset is not parametrized
+	}
 }

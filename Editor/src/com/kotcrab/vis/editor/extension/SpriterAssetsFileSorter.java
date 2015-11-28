@@ -23,8 +23,8 @@ import com.kotcrab.vis.editor.plugin.api.AssetsFileSorter;
 /** @author Kotcrab */
 public class SpriterAssetsFileSorter implements AssetsFileSorter {
 	@Override
-	public boolean isSupported (AssetsMetadataModule assetsMetadata, FileHandle fileHandle, String assetsFolderRelativePath) {
-		return assetsMetadata.getRecursively(fileHandle).equals(AssetType.DIRECTORY_SPRITER.getId());
+	public boolean isSupported (AssetsMetadataModule assetsMetadata, FileHandle file, String assetsFolderRelativePath) {
+		return assetsMetadata.isDirectoryMarkedAs(file, AssetType.DIRECTORY_SPRITER);
 	}
 
 	@Override

@@ -42,7 +42,7 @@ import com.kotcrab.vis.runtime.plugin.VisPlugin;
 public class SpineAssetDescriptorProvider implements AssetDescriptorProvider<SpineAssetDescriptor> {
 	@Override
 	public SpineAssetDescriptor provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
-		if (metadata.getRecursively(file).equals(SpineAssetType.DIRECTORY_SPINE.getId()) == false) return null;
+		if (metadata.isDirectoryMarkedAs(file, SpineAssetType.DIRECTORY_SPINE) == false) return null;
 
 		if (relativePath.endsWith("atlas")) {
 			String skelPath = findSkelPath(file, relativePath);

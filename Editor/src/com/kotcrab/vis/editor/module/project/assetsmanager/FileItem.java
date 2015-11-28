@@ -153,12 +153,12 @@ public class FileItem extends Table {
 			return;
 		}
 
-		if (relativePath.startsWith("music") && (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3"))) {
+		if (ProjectPathUtils.isMusicFile(assetsMetadata, file)) {
 			createDefaultView(AssetType.MUSIC, "Music");
 			return;
 		}
 
-		if (relativePath.startsWith("sound") && (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3"))) {
+		if (ProjectPathUtils.isSoundFile(assetsMetadata, file)) {
 			createDefaultView(AssetType.SOUND, "Sound");
 			return;
 		}

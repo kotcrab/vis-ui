@@ -126,6 +126,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 				if (component instanceof AssetComponent) {
 					VisAssetDescriptor asset = ((AssetComponent) component).asset;
 
+					//TODO refactor
 					if (asset instanceof TextureRegionAsset) {
 						dependencies.add(new AssetDescriptor<TextureAtlas>("gfx/textures.atlas", TextureAtlas.class));
 
@@ -141,18 +142,21 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 						ttfFontProvider.load(dependencies, asset);
 
 					} else if (asset instanceof ParticleAsset) {
-						PathAsset pathAsset = (ParticleAsset) asset;
-						String path = pathAsset.getPath();
-						dependencies.add(new AssetDescriptor<ParticleEffect>(path, ParticleEffect.class));
+						PathAsset particleAsset = (ParticleAsset) asset;
+						dependencies.add(new AssetDescriptor<ParticleEffect>(particleAsset.getPath(), ParticleEffect.class));
 
-					}else if (asset instanceof PathAsset) {
-						PathAsset pathAsset = (PathAsset) asset;
-						String path = pathAsset.getPath();
+					} else if (asset instanceof SoundAsset) {
+						SoundAsset soundAsset = (SoundAsset) asset;
+						dependencies.add(new AssetDescriptor<Sound>(soundAsset.getPath(), Sound.class));
 
-						if (path.startsWith("sound/")) dependencies.add(new AssetDescriptor<Sound>(path, Sound.class));
-						if (path.startsWith("music/")) dependencies.add(new AssetDescriptor<Music>(path, Music.class));
-						if (path.startsWith("spriter/"))
-							dependencies.add(new AssetDescriptor<SpriterData>(path, SpriterData.class));
+					} else if (asset instanceof MusicAsset) {
+						MusicAsset musicAsset = (MusicAsset) asset;
+						dependencies.add(new AssetDescriptor<Music>(musicAsset.getPath(), Music.class));
+
+					} else if (asset instanceof SpriterAsset) {
+						SpriterAsset spriterAsset = (SpriterAsset) asset;
+						dependencies.add(new AssetDescriptor<SpriterData>(spriterAsset.getPath(), SpriterData.class));
+
 					}
 				}
 

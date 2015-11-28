@@ -26,7 +26,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.ATSelectFileHandlerGroup;
@@ -49,6 +51,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 	private static final int MAX_FILE_LABEL_WIDTH = 175;
 
 	private FileAccessModule fileAccessModule;
+	private AssetsMetadataModule assetsMetadata;
 	private Stage stage;
 
 	private ObjectMap<String, ATSelectFileHandlerGroup> handlerGroups = new ObjectMap<>();
@@ -78,9 +81,11 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 
 		fileDialogLabels.put(field, new SelectFileDialogSet(fileLabel, tooltip, holder.value));
 
-		FileHandle folder = fileAccessModule.getAssetsFolder().child(annotation.relativeFolderPath());
+		FileHandle folder = fileAccessModule.getAssetsFolder();
 
-		final SelectFileDialog selectFontDialog = new SelectFileDialog(annotation.extension(), annotation.hideExtension(), folder, file -> {
+		AssetDirectoryDescriptor directoryDescriptor = assetsMetadata.getDirectoryDescriptorForId(holder.value.getAssetDirectoryDescriptorId());
+		final SelectFileDialog selectFontDialog = new SelectFileDialog(annotation.extension(), annotation.hideExtension(),
+				folder, assetsMetadata, directoryDescriptor, file -> {
 			for (EntityProxy proxy : properties.getProxies()) {
 				for (Entity entity : proxy.getEntities()) {
 					holder.value.applyChanges(entity, file);

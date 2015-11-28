@@ -29,7 +29,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
  * @author Kotcrab
  */
 public class MusicComponent extends Component implements UsesProtoComponent { //emulated on gwt
-	@ATSelectFile(fieldName = "Music", relativeFolderPath = "music/", extension = "mp3|wav|ogg", hideExtension = false, handlerAlias = "music")
+	@ATSelectFile(fieldName = "Music", extension = "mp3|wav|ogg", hideExtension = false, handlerAlias = "music")
 	@ATProperty(fieldName = "Loop")
 	@ATReflectedProperty(targetType = boolean.class, getterName = "isLooping", setterName = "setLooping")
 	public transient Music music;

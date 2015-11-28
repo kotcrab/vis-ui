@@ -37,9 +37,6 @@ public @interface ATSelectFile {
 	/** @return human friendly field name that will be used in VisEditor UI. */
 	String fieldName () default "";
 
-	/** @return relative folder path that will be used for file selector. For example: "gfx/". */
-	String relativeFolderPath ();
-
 	/** @return extension that file chooser will display. For example: "png". */
 	String extension ();
 

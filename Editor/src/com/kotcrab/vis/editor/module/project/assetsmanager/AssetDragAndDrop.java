@@ -181,11 +181,11 @@ public class AssetDragAndDrop implements Disposable {
 		}
 
 		if (item.getType().equals(AssetType.MUSIC)) {
-			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Music \n (drop on scene to add)").setPayload(new PathAsset(relativePath)));
+			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Music \n (drop on scene to add)").setPayload(new MusicAsset(relativePath)));
 		}
 
 		if (item.getType().equals(AssetType.SOUND)) {
-			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Sound \n (drop on scene to add)").setPayload(new PathAsset(relativePath)));
+			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Sound \n (drop on scene to add)").setPayload(new SoundAsset(relativePath)));
 		}
 
 		if (item.getType().equals(AssetType.SPRITER_SCML)) {

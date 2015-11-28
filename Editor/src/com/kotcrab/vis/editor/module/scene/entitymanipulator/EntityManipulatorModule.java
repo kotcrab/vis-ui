@@ -466,28 +466,26 @@ public class EntityManipulatorModule extends SceneModule {
 				return;
 			}
 
-		} else if (obj instanceof PathAsset) {
-			PathAsset asset = (PathAsset) obj;
+		} else if (obj instanceof SoundAsset) {
+			SoundAsset asset = (SoundAsset) obj;
 
-			if (asset.getPath().startsWith("sound/")) {
-				entity = new EntityBuilder(entityEngine)
-						.with(new SoundComponent(null), new PositionComponent(), //editor does not require sound to be loaded, we can pass null sound here
-								new AssetComponent(asset),
-								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-								new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
-						.build();
+			entity = new EntityBuilder(entityEngine)
+					.with(new SoundComponent(null), new PositionComponent(), //editor does not require sound to be loaded, we can pass null sound here
+							new AssetComponent(asset),
+							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
+							new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
+					.build();
 
-			}
+		} else if (obj instanceof MusicAsset) {
+			MusicAsset asset = (MusicAsset) obj;
 
-			if (asset.getPath().startsWith("music/")) {
-				entity = new EntityBuilder(entityEngine)
-						.with(new MusicComponent(new DummyMusic()), new PositionComponent(),
-								new AssetComponent(asset),
-								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-								new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
-						.build();
+			entity = new EntityBuilder(entityEngine)
+					.with(new MusicComponent(new DummyMusic()), new PositionComponent(),
+							new AssetComponent(asset),
+							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
+							new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
+					.build();
 
-			}
 		}
 
 		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {

@@ -67,7 +67,7 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 		loadProjectLinkLabel.setListener(this);
 
 		VisTable quickAccessTable = new VisTable(false);
-		quickAccessTable.add("Start creating!").row();
+		quickAccessTable.add("Start creating").row();
 		quickAccessTable.add(newProjectLinkLabel).row();
 		quickAccessTable.add(loadProjectLinkLabel).row();
 
@@ -85,7 +85,7 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 		}
 
 		VisTable leftSide = new VisTable(false);
-		leftSide.add("Welcome to VisEditor!").colspan(2).spaceBottom(8).row();
+		leftSide.add("Welcome to VisEditor").colspan(2).spaceBottom(8).row();
 		leftSide.add(quickAccessTable).spaceRight(24);
 		leftSide.add(recentProjectsTable).top();
 

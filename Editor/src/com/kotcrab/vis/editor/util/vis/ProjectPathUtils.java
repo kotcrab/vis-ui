@@ -66,10 +66,23 @@ public class ProjectPathUtils {
 	}
 
 	public static boolean isNotImportedSpriterAnimationDir (AssetsMetadataModule metadata, FileHandle file) {
-		return metadata.getRecursively(file).equals(AssetType.DIRECTORY_SPRITER.getId()) && file.parent().child(".vis").exists() == false;
+		return metadata.isDirectoryMarkedAs(file, AssetType.DIRECTORY_SPRITER) && file.parent().child(".vis").exists() == false;
 	}
 
 	public static boolean isImportedSpriterAnimationDir (AssetsMetadataModule metadata, FileHandle file) {
-		return metadata.getRecursively(file).equals(AssetType.DIRECTORY_SPRITER.getId()) && file.parent().child(".vis").exists();
+		return metadata.isDirectoryMarkedAs(file, AssetType.DIRECTORY_SPRITER) && file.parent().child(".vis").exists();
+	}
+
+	public static boolean isAudioFile (FileHandle file) {
+		String ext = file.extension();
+		return ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3");
+	}
+
+	public static boolean isMusicFile (AssetsMetadataModule metadata, FileHandle file) {
+		return metadata.isDirectoryMarkedAs(file, AssetType.DIRECTORY_MUSIC) && isAudioFile(file);
+	}
+
+	public static boolean isSoundFile (AssetsMetadataModule metadata, FileHandle file) {
+		return metadata.isDirectoryMarkedAs(file, AssetType.DIRECTORY_SOUND) && isAudioFile(file);
 	}
 }

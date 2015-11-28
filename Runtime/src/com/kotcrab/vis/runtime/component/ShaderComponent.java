@@ -29,7 +29,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
  * @author Kotcrab
  */
 public class ShaderComponent extends Component implements UsesProtoComponent, StoresAssetDescriptor {
-	@ATSelectFile(fieldName = "Shader", relativeFolderPath = "", extension = "frag", hideExtension = true, handlerAlias = "shader")
+	@ATSelectFile(fieldName = "Shader", extension = "frag", hideExtension = true, handlerAlias = "shader")
 	public ShaderAsset asset;
 	public transient ShaderProgram shader;
 

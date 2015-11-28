@@ -40,8 +40,8 @@ import com.kotcrab.vis.runtime.plugin.VisPlugin;
 @VisPlugin
 public class SpineAssetsFileSorter implements AssetsFileSorter {
 	@Override
-	public boolean isSupported (AssetsMetadataModule assetsMetadata, FileHandle fileHandle, String assetsFolderRelativePath) {
-		return assetsMetadata.getRecursively(fileHandle).equals(SpineAssetType.DIRECTORY_SPINE.getId());
+	public boolean isSupported (AssetsMetadataModule assetsMetadata, FileHandle file, String assetsFolderRelativePath) {
+		return assetsMetadata.isDirectoryMarkedAs(file, SpineAssetType.DIRECTORY_SPINE);
 	}
 
 	@Override

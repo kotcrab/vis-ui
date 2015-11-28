@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.plugin.api;
+package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
+import com.kotcrab.vis.runtime.assets.MusicAsset;
 
-/**
- * Sorts file from given directory into main and misc files.
- * @author Kotcrab
- */
-public interface AssetsFileSorter {
-	boolean isSupported (AssetsMetadataModule assetsMetadata, FileHandle file, String assetsFolderRelativePath);
+/** @author Kotcrab */
+public class MusicDescriptorProvider implements AssetDescriptorProvider<MusicAsset> {
+	@Override
+	public MusicAsset provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
+		if (ProjectPathUtils.isMusicFile(metadata, file)) return new MusicAsset(relativePath);
+		return null;
+	}
 
-	/**
-	 * Called when this context should decide if this file is main file. Such files will be showed in top part of files view.
-	 * Note that user won't be able to add non-main files to scene. DragAndDrop {@link Source} creation will be skipped for them.
-	 */
-	boolean isMainFile (FileHandle file);
+	@Override
+	public MusicAsset parametrize (MusicAsset rawAsset, MusicAsset other) {
+		return rawAsset; //music asset is not parametrized
+	}
 }

@@ -56,4 +56,9 @@ public class ShaderATSelectFileHandler implements ATSelectFileHandler {
 		if (asset == null) return "<no shader>";
 		return asset.getPathWithoutExtension();
 	}
+
+	@Override
+	public String getAssetDirectoryDescriptorId () {
+		return null;
+	}
 }

@@ -16,42 +16,18 @@
 
 package com.kotcrab.vis.editor.assets.transaction.generator;
 
-import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.editor.assets.transaction.AssetProviderResult;
-import com.kotcrab.vis.editor.assets.transaction.AssetTransaction;
-import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
-import com.kotcrab.vis.editor.assets.transaction.action.CopyFileAction;
-import com.kotcrab.vis.editor.assets.transaction.action.DeleteFileAction;
-import com.kotcrab.vis.editor.assets.transaction.action.UpdateReferencesAction;
-import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.runtime.assets.ParticleAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
-/**
- * @author Kotcrab
- */
-public class ParticleAssetTransactionGenerator implements AssetTransactionGenerator {
-	private FileHandle transactionStorage;
-
-	@Override
-	public void setTransactionStorage (FileHandle transactionStorage) {
-		this.transactionStorage = transactionStorage;
-	}
-
+/** @author Kotcrab */
+public class ParticleAssetTransactionGenerator extends BasicAssetTransactionGenerator {
 	@Override
 	public boolean isSupported (VisAssetDescriptor descriptor) {
 		return descriptor instanceof ParticleAsset;
 	}
 
 	@Override
-	public AssetTransaction analyze (ModuleInjector injector, AssetProviderResult providerResult, FileHandle source, FileHandle target, String relativeTargetPath) {
-		AssetTransaction transaction = new AssetTransaction();
-
-		transaction.add(new CopyFileAction(source, target));
-		transaction.add(new UpdateReferencesAction(injector, providerResult, new ParticleAsset(relativeTargetPath)));
-		transaction.add(new DeleteFileAction(source, transactionStorage));
-		transaction.finalizeGroup();
-
-		return transaction;
+	protected VisAssetDescriptor createNewAsset (String relativeTargetPath) {
+		return new ParticleAsset(relativeTargetPath);
 	}
 }

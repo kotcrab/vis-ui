@@ -86,19 +86,15 @@ public class AssetsMetadataModule extends ProjectModule {
 	}
 
 	public AssetDirectoryDescriptor getAsDirectoryDescriptor (FileHandle file) {
-		return getDirDescriptorForId(get(file));
+		return getDirectoryDescriptorForId(get(file));
 	}
 
 	public AssetDirectoryDescriptor getAsDirectoryDescriptorRecursively (FileHandle file) {
-		return getDirDescriptorForId(getRecursively(file));
+		return getDirectoryDescriptorForId(getRecursively(file));
 	}
 
-	public boolean isMarked (FileHandle file) {
-		return get(file) != null;
-	}
-
-	public boolean isMarkedRecursively (FileHandle file) {
-		return getRecursively(file) != null;
+	public boolean isDirectoryMarkedAs (FileHandle file, AssetDirectoryDescriptor desc) {
+		return getRecursively(file).equals(desc.getId());
 	}
 
 	public void remove (FileHandle file) {
@@ -106,7 +102,8 @@ public class AssetsMetadataModule extends ProjectModule {
 		saveMetadata();
 	}
 
-	private AssetDirectoryDescriptor getDirDescriptorForId (String descId) {
+	public AssetDirectoryDescriptor getDirectoryDescriptorForId (String descId) {
+		if (descId == null) return null;
 		if (descId.equals(AssetType.UNKNOWN)) return null;
 
 		for (AssetDirectoryDescriptor desc : extensionStorage.getAssetDirectoryDescriptors()) {

@@ -14,21 +14,15 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.util.autotable;
+package com.kotcrab.vis.runtime.assets;
 
-import com.artemis.Entity;
-import com.badlogic.gdx.files.FileHandle;
+/** @author Kotcrab */
+public class SoundAsset extends PathAsset {
+	@Deprecated
+	public SoundAsset () {
+	}
 
-/**
- * Handler interface for {@link ATSelectFile}. All handlers must implement this interface. Handlers may use
- * any module from VisEditor SceneModuleContainer scope.
- * Handlers must have no arg constructor.
- * @author Kotcrab
- */
-public interface ATSelectFileHandler {
-	void applyChanges (Entity entity, FileHandle file);
-
-	String getAssetDirectoryDescriptorId ();
-
-	String getLabelValue (Entity entity);
+	public SoundAsset (String relativePath) {
+		super(relativePath);
+	}
 }
