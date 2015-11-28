@@ -1,5 +1,10 @@
 [0.3.0] [Snapshot]
 -Removed 'beta' update channel
+-Scene files are now saved using Json format
+-Old project from previous versions have to be converted using project converter before loading
+-It's possible to store any asset file in any directory
+-Fixed crash when trying to load particle with missing texture
+-Other bug fixes
 
 [0.2.6] [Snapshot]
 -Fixed issue with unmodifiable entity properties on Entity with TextComponent or PhysicsPropertiesComponent
