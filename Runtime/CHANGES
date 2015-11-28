@@ -1,8 +1,8 @@
-[0.3.0] [LibGDX 1.7.0] [Artemis 1.2.0] [Snapshot]
+[0.3.0] [LibGDX 1.7.1] [Artemis 1.2.1] [Snapshot]
 -Moved RenderBatchingSystem, ParticleRenderSystem, SpriteRenderSystem, SpriterRenderSystem, TextRenderSystem to com.kotcrab.vis.runtime.system.render package
 -API Change: Removed ArtemisUtils
 -Fixed inflaters not removing ProtoComponents
--Updated to Artemis 1.2.0
+-Updated to Artemis 1.2.1
  -API Change: EntityEngineConfiguration removed setSystem(BaseSystem system, boolean passive), use setSystem(BaseSystem system) instead
  -API Change: EntityEngineConfiguration removed setManager(Manager manager), use setSystem(BaseSystem system) instead
  -API Change: EntityEngineConfiguration removed getManager(Class), use getSystem(Class) instead
