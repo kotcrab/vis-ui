@@ -209,9 +209,9 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 			}, 0.5f);
 		}
 
-		if (ProjectPathUtils.isTextureAtlas(file)) {
+		if (ProjectPathUtils.isTextureAtlas(file) || ProjectPathUtils.isTextureAtlasImage(file)) {
 			atlasWaitTimer.clear();
-			cacheWaitTimer.scheduleTask(new Task() {
+			atlasWaitTimer.scheduleTask(new Task() {
 				@Override
 				public void run () {
 					updateAtlas(file);

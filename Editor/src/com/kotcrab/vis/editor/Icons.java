@@ -71,6 +71,7 @@ public enum Icons {
 	MUSIC_BIG("music-big"),
 	POINT_BIG("point-big"),
 
+	FOLDER_PARENT("icon-folder-parent", true),
 	CLOSE("icon-close", true),
 	FOLDER("icon-folder", true),
 	ARROW_LEFT("icon-arrow-left", true),

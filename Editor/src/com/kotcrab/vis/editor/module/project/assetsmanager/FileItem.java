@@ -139,10 +139,11 @@ public class FileItem extends Table {
 
 			TextureRegion region;
 
-			if (atlas)
+			if (atlas) {
 				region = textureCache.getRegion(new AtlasRegionAsset(relativePath, null));
-			else
+			} else {
 				region = textureCache.getRegion(new TextureRegionAsset(relativePath));
+			}
 
 			Image img = new Image(region);
 			img.setScaling(Scaling.fit);

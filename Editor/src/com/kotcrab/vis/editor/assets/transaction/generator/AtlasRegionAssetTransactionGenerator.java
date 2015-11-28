@@ -29,6 +29,7 @@ import com.kotcrab.vis.editor.assets.transaction.action.DeleteFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.UpdateReferencesAction;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
@@ -47,8 +48,8 @@ public class AtlasRegionAssetTransactionGenerator implements AssetTransactionGen
 	}
 
 	@Override
-	public boolean isSupported (VisAssetDescriptor descriptor) {
-		return descriptor instanceof AtlasRegionAsset;
+	public boolean isSupported (VisAssetDescriptor descriptor, FileHandle file) {
+		return descriptor instanceof AtlasRegionAsset && ProjectPathUtils.isTextureAtlas(file);
 	}
 
 	@Override
@@ -62,18 +63,20 @@ public class AtlasRegionAssetTransactionGenerator implements AssetTransactionGen
 
 			sourcePngs.add(page.textureFile);
 
-			if (i == 0)
+			if (i == 0) {
 				targetPngs.add(target.parent().child(target.nameWithoutExtension() + ".png"));
-			else
+			} else {
 				targetPngs.add(target.parent().child(target.nameWithoutExtension() + i + ".png"));
+			}
 		}
 
 		AssetTransaction transaction = new AssetTransaction();
 
 		transaction.add(new CopyFileAction(source, target));
 
-		for (int i = 0; i < sourcePngs.size; i++)
+		for (int i = 0; i < sourcePngs.size; i++) {
 			transaction.add(new CopyFileAction(sourcePngs.get(i), targetPngs.get(i)));
+		}
 
 		transaction.add(new UpdateReferencesAction(injector, providerResult, new AtlasRegionAsset(relativeTargetPath, null)));
 		transaction.add(new DeleteFileAction(source, transactionStorage));
@@ -117,8 +120,9 @@ public class AtlasRegionAssetTransactionGenerator implements AssetTransactionGen
 			}
 		});
 
-		for (int i = 0; i < sourcePngs.size; i++)
+		for (int i = 0; i < sourcePngs.size; i++) {
 			transaction.add(new DeleteFileAction(sourcePngs.get(i), transactionStorage));
+		}
 
 		transaction.finalizeGroup();
 

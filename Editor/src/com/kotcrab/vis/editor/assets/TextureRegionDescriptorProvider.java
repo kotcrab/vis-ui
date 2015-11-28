@@ -28,6 +28,7 @@ import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 public class TextureRegionDescriptorProvider implements AssetDescriptorProvider<TextureRegionAsset> {
 	@Override
 	public TextureRegionAsset provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
+		if (ProjectPathUtils.isTextureAtlasImage(file)) return null;
 		if (ProjectPathUtils.isTexture(file)) return new TextureRegionAsset(relativePath);
 
 		return null;

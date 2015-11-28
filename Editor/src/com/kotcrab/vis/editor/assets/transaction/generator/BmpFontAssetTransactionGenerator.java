@@ -29,6 +29,7 @@ import com.kotcrab.vis.editor.assets.transaction.action.DeleteFileAction;
 import com.kotcrab.vis.editor.assets.transaction.action.UpdateReferencesAction;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
@@ -46,8 +47,8 @@ public class BmpFontAssetTransactionGenerator implements AssetTransactionGenerat
 	private FileHandle transactionStorage;
 
 	@Override
-	public boolean isSupported (VisAssetDescriptor descriptor) {
-		return descriptor instanceof BmpFontAsset;
+	public boolean isSupported (VisAssetDescriptor descriptor, FileHandle file) {
+		return descriptor instanceof BmpFontAsset && ProjectPathUtils.isBitmapFont(file);
 	}
 
 	@Override

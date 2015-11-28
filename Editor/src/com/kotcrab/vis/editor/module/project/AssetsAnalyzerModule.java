@@ -134,7 +134,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 
 			Array<AssetTransactionGenerator> gens = extensionStorage.getAssetTransactionGenerator();
 			for (AssetTransactionGenerator gen : gens) {
-				if (gen.isSupported(result.descriptor)) return gen;
+				if (gen.isSupported(result.descriptor, file)) return gen;
 			}
 		}
 

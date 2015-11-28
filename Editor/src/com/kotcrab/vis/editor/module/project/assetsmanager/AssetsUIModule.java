@@ -53,10 +53,7 @@ import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.editor.util.async.CopyFileTaskDescriptor;
 import com.kotcrab.vis.editor.util.async.CopyFilesAsyncTask;
-import com.kotcrab.vis.editor.util.scene2d.DirectoriesOnlyFileFilter;
-import com.kotcrab.vis.editor.util.scene2d.MenuUtils;
-import com.kotcrab.vis.editor.util.scene2d.ScrollPaneScrollWidthValue;
-import com.kotcrab.vis.editor.util.scene2d.VisTabbedPaneListener;
+import com.kotcrab.vis.editor.util.scene2d.*;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.layout.GridGroup;
@@ -129,6 +126,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private GridGroup miscFilesView;
 	private VisTable toolbarTable;
 	private VisTree contentTree;
+
+	private VisImageButton navigateToParentButton;
 
 	private VisLabel contentTitleLabel;
 	private VisLabel dirDescriptorTitleLabel;
@@ -301,10 +300,13 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			return filesDisplayed != 0;
 		});
 
+		navigateToParentButton = new VisImageButton(Icons.FOLDER_PARENT.drawable(), "Go to Parent Directory");
+		navigateToParentButton.setGenerateDisabledImage(true);
 		VisImageButton exploreButton = new VisImageButton(Icons.FOLDER_OPEN.drawable(), "Open in Explorer");
 //		VisImageButton settingsButton = new VisImageButton(Icons.SETTINGS_VIEW.drawable(), "Change view");
 //		VisImageButton importButton = new VisImageButton(Icons.IMPORT.drawable(), "Import");
 
+		toolbarTable.add(navigateToParentButton);
 		toolbarTable.add(fileHistoryManager.getButtonsTable());
 		toolbarTable.add(contentTitleLabel).left().expand();
 		toolbarTable.add(dirDescriptorTitleLabel);
@@ -313,12 +315,11 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		//toolbarTable.add(importButton);
 		toolbarTable.add(searchField);
 
-		exploreButton.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				FileUtils.browse(currentDirectory);
-			}
-		});
+		navigateToParentButton.addListener(new VisChangeListener((event, actor) -> {
+			if (currentDirectory.equals(assetsFolder)) return;
+			changeCurrentDirectory(currentDirectory.parent());
+		}));
+		exploreButton.addListener(new VisChangeListener((event, actor) -> FileUtils.browse(currentDirectory)));
 	}
 
 	private void createContentTree () {
@@ -367,6 +368,11 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		updateContextGeneratorContainer(directory);
 
 		currentDirectoryDescriptor = assetsMetadata.getAsDirectoryDescriptorRecursively(directory);
+
+		if (currentDirectory.equals(assetsFolder))
+			navigateToParentButton.setDisabled(true);
+		else
+			navigateToParentButton.setDisabled(false);
 
 		FileHandle[] files = directory.list(file -> {
 			if (searchField.getText().equals("")) return true;
@@ -557,8 +563,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	@Subscribe
 	public void handleResourceReloaded (ResourceReloadedEvent event) {
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_TEXTURE_ATLASES) != 0) {
-			String path = fileAccess.relativizeToAssetsFolder(currentDirectory);
-			if (path.startsWith("atlas")) refreshFilesList();
+			refreshFilesList();
 		}
 	}
 
@@ -664,9 +669,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 		private void moveFiles (FileHandle file) {
 			String relativePath = fileAccess.relativizeToAssetsFolder(file);
-			String root = relativePath.substring(0, relativePath.indexOf('/') + 1);
 
-			getStage().addActor(new EnterPathDialog(file, root, relativePath.substring(root.length()), result -> {
+			getStage().addActor(new EnterPathDialog(fileAccess.getAssetsFolder(), relativePath, result -> {
 				FileHandle target = Gdx.files.absolute(fileAccess.derelativizeFromAssetsFolder(result.relativePath));
 				assetsAnalyzer.moveFileSafely(file, target);
 			}));

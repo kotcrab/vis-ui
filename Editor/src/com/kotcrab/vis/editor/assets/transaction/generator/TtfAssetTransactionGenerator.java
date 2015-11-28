@@ -42,7 +42,7 @@ public class TtfAssetTransactionGenerator implements AssetTransactionGenerator {
 	}
 
 	@Override
-	public boolean isSupported (VisAssetDescriptor descriptor) {
+	public boolean isSupported (VisAssetDescriptor descriptor, FileHandle file) {
 		return descriptor instanceof TtfFontAsset;
 	}
 

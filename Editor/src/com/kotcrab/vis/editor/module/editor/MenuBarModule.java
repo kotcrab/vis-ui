@@ -148,15 +148,15 @@ public class MenuBarModule extends EditorModule {
 
 	}
 
-	private void createToolsMenu () {
-		Menu menu = new Menu("Tools");
-		menuBar.addMenu(menu);
-
-		menu.addItem(createMenuItem("Hiero", null, () -> System.out.println("not yet")));
-		menu.addItem(createMenuItem("Particle Editor", null, () -> System.out.println("not yet")));
-		menu.addSeparator();
-
-	}
+//	private void createToolsMenu () {
+//		Menu menu = new Menu("Tools");
+//		menuBar.addMenu(menu);
+//
+//		menu.addItem(createMenuItem("Hiero", null, () -> System.out.println("not yet")));
+//		menu.addItem(createMenuItem("Particle Editor", null, () -> System.out.println("not yet")));
+//		menu.addSeparator();
+//
+//	}
 
 	private void createHelpMenu () {
 		Menu menu = new Menu("Help");

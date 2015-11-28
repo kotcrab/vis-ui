@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.ui.dialog;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.editor.ui.WindowResultListener;
-import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.form.FormInputValidator;
@@ -39,11 +38,9 @@ public class EnterPathDialog extends VisWindow {
 
 	private final WindowResultListener<EnterPathDialogResult> listener;
 
-	public EnterPathDialog (FileHandle absoluteParent, String parent, String parentRelativePath, WindowResultListener<EnterPathDialogResult> listener) {
+	public EnterPathDialog (FileHandle root, String relativePath, WindowResultListener<EnterPathDialogResult> listener) {
 		super("Enter new path");
 		this.listener = listener;
-
-		if (parent.endsWith("/") == false) parent += "/";
 
 		setModal(true);
 		addCloseButton();
@@ -51,29 +48,37 @@ public class EnterPathDialog extends VisWindow {
 		centerWindow();
 		TableUtils.setSpacingDefaults(this);
 
+		String extension = relativePath.substring(relativePath.lastIndexOf(".") + 1);
+
 		VisLabel errorLabel = new VisLabel(" ");
 		errorLabel.setColor(Color.RED);
-		VisValidatableTextField fieldPath = new VisValidatableTextField(parentRelativePath);
+		VisValidatableTextField fieldPath = new VisValidatableTextField(relativePath);
 
 		VisTextButton refactorButton = new VisTextButton("Refactor");
 
 		FormValidator validator = new FormValidator(refactorButton, errorLabel);
 		validator.notEmpty(fieldPath, "Path is empty");
-		validator.fileNotExists(fieldPath, absoluteParent, "This file already exist");
+		validator.fileNotExists(fieldPath, root, "This file already exist");
 		validator.custom(fieldPath, new FormInputValidator("The path is unchanged") {
 			@Override
 			protected boolean validate (String input) {
-				return input.equals(parentRelativePath) == false;
+				return input.equals(relativePath) == false;
+			}
+		});
+		validator.custom(fieldPath, new FormInputValidator("Extension cannot be changed") {
+			@Override
+			protected boolean validate (String input) {
+				String newExt = input.substring(input.lastIndexOf(".") + 1);
+				return newExt.equals(extension);
 			}
 		});
 
-		add(TableBuilder.build(new VisLabel(parent), fieldPath)).colspan(2).row();
-		add(errorLabel).expand().fill();
-		add(refactorButton);
+		add(fieldPath).colspan(2).expandX().fillX().row();
+		add(errorLabel).width(200).expand().fill();
+		add(refactorButton).padBottom(2).padRight(1);
 
-		final String finalParent = parent;
 		refactorButton.addListener(new VisChangeListener((event, actor) -> {
-			listener.finished(new EnterPathDialogResult(finalParent + fieldPath.getText()));
+			listener.finished(new EnterPathDialogResult(fieldPath.getText()));
 			fadeOut();
 		}));
 

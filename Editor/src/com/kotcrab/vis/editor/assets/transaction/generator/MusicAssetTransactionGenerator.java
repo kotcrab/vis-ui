@@ -16,13 +16,14 @@
 
 package com.kotcrab.vis.editor.assets.transaction.generator;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.runtime.assets.MusicAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /** @author Kotcrab */
 public class MusicAssetTransactionGenerator extends BasicAssetTransactionGenerator {
 	@Override
-	public boolean isSupported (VisAssetDescriptor descriptor) {
+	public boolean isSupported (VisAssetDescriptor descriptor, FileHandle file) {
 		return descriptor instanceof MusicAsset;
 	}
 

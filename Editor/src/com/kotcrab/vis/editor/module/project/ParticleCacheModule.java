@@ -69,8 +69,9 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 
 	@Override
 	public void fileChanged (FileHandle file) {
-		if (ProjectPathUtils.isParticle(file))
+		if (ProjectPathUtils.isParticle(file)) {
 			App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_PARTICLES));
+		}
 	}
 
 	@Override
