@@ -243,32 +243,27 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private void moveToLayer (boolean showGroupMoveWarning) {
 		if (showGroupMoveWarning && entitiesSelection.getGroupId() != -1) {
-			DialogUtils.showOptionDialog(stage, "Warning", "This will move whole group to another layer. Continue moving?",
+			DialogUtils.showOptionDialog(stage, "Warning", "This will move whole group (including parent groups) to another layer.",
 					OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 						@Override
 						public void yes () {
 							moveToLayer(false);
 						}
-					});
+					}).setYesButtonText("Continue");
 			return;
 		}
 
-		Array<EntityProxy> targetEntities = new Array<>(entitiesSelection.getSelection().toArray());
-		;
+		int baseGid = entitiesSelection.getSelection().first().getGroupsIds().peek();
+		Array<EntityProxy> targetEntities = entitiesCollector.collect(scene.getActiveLayerId(), baseGid);
 
 		stage.addActor(new SelectLayerDialog(scene.getLayers(), scene.getActiveLayer(), result -> {
-			UndoableActionGroup group = new UndoableActionGroup("Move Entity To Layer", "Move Entities To Layer");
-			for (EntityProxy proxy : targetEntities) {
-				group.add(new ChangeEntityLayerAction(renderBatchingSystem, this, proxy, result.id));
-			}
-
-			group.finalizeGroup();
-			undoModule.execute(group);
+			undoModule.execute(new ChangeEntitiesLayerAction(renderBatchingSystem, this, targetEntities, result.id));
 
 			//reselect entities again
 			hardSelectionReset();
-			for (EntityProxy proxy : targetEntities)
+			for (EntityProxy proxy : targetEntities) {
 				selectAppend(proxy);
+			}
 		}).fadeIn());
 	}
 
@@ -573,7 +568,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 		if (scene.getActiveLayerId() != layer.id) {
 			scene.setActiveLayer(layer.id);
-			entitiesSelection.clearSelection();
+			hardSelectionReset();
 		}
 
 		checkProxyGid(proxy);
@@ -607,12 +602,18 @@ public class EntityManipulatorModule extends SceneModule {
 		Array<EntityProxy> proxies = entitiesCollector.collect(layerId, groupId);
 		if (proxies.size == 0) return;
 
+		EntityProxy proxy = proxies.first(); //not important what proxy we will use, it just have to belong to hierarchy //TODO collect only one;
+
+		if (scene.getActiveLayerId() != proxy.getLayerID()) {
+			scene.setActiveLayer(proxy.getLayerID());
+		}
+
 		groupBreadcrumb.resetHierarchy();
 
-		int targetGid = proxies.first().getGroupIdAfter(groupId);
+		int targetGid = proxy.getGroupIdAfter(groupId);
 
 		if (targetGid != -1) {
-			IntArray groupsIds = proxies.first().getGroupsIds();
+			IntArray groupsIds = proxy.getGroupsIds();
 			if (groupsIds.size > 1) {
 				groupsIds.reverse();
 
@@ -626,7 +627,7 @@ public class EntityManipulatorModule extends SceneModule {
 		}
 
 		entitiesSelection = new EntitiesSelection(entitiesCollector, layerId, targetGid);
-		selectAppend(proxies.first()); //selecting first entity is enough to select whole group
+		selectAppend(proxy); //selecting first entity is enough to select whole group
 	}
 
 	public boolean isSelected (EntityProxy proxy) {

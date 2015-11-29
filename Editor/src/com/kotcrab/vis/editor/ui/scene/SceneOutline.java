@@ -232,7 +232,7 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 		private final int groupId;
 
 		public GroupNode (int layerId, int groupId) {
-			super(new VisLabel("Group", "small"));
+			super(new VisLabel("Group (id: " + groupId + ")", "small"));
 			this.layerId = layerId;
 			this.groupId = groupId;
 		}
