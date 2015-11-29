@@ -61,7 +61,7 @@ public class EntitiesRemovedAction implements UndoableAction {
 			entity.deleteFromWorld();
 		});
 
-		entityManipulator.resetSelection();
+		entityManipulator.softSelectionReset();
 		entityManipulator.markSceneDirty();
 	}
 
@@ -73,7 +73,7 @@ public class EntitiesRemovedAction implements UndoableAction {
 			entities.add(protoEntity.build()); //build will also add to entity engine
 		});
 
-		entityManipulator.resetSelection();
+		entityManipulator.softSelectionReset();
 		entities.forEach(entityManipulator::selectAppend);
 		entityManipulator.markSceneDirty();
 	}

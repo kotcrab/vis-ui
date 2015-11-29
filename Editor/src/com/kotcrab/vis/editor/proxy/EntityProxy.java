@@ -131,6 +131,16 @@ public abstract class EntityProxy {
 			return groupIds.get(index);
 	}
 
+	public int getGroupIdAfter (int gid) {
+		IntArray groupIds = getGroupComponent().groupIds;
+		int index = groupIds.indexOf(gid) + 1;
+
+		if (index >= groupIds.size)
+			return -1;
+		else
+			return groupIds.get(index);
+	}
+
 	public boolean groupsContains (int gid) {
 		return getGroupComponent().groupIds.contains(gid);
 	}
@@ -379,6 +389,7 @@ public abstract class EntityProxy {
 
 	protected abstract boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor);
 
+	@Deprecated
 	public Array<Entity> getEntities () {
 		return entitiesArray;
 	}

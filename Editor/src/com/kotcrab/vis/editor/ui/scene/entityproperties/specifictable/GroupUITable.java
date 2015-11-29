@@ -53,13 +53,13 @@ public class GroupUITable extends SpecificUITable {
 
 	@Override
 	public boolean isSupported (EntityProxy entity) {
-		if (properties.getProxies().size != 1) return false;
+		if (properties.getSelectedEntities().size() != 1) return false;
 		return entity instanceof GroupEntityProxy;
 	}
 
 	@Override
 	public void updateUIValues () {
-		GroupEntityProxy groupProxy = (GroupEntityProxy) properties.getProxies().get(0);
+		GroupEntityProxy groupProxy = (GroupEntityProxy) properties.getSelectedEntities().get(0);
 		int id = groupProxy.getGroupId();
 		idLabel.setText(String.valueOf(id));
 		idField.setText(properties.getSceneModuleContainer().getScene().getGroupStringId(id));
@@ -67,7 +67,7 @@ public class GroupUITable extends SpecificUITable {
 
 	@Override
 	public void setValuesToEntities () {
-		GroupEntityProxy groupProxy = (GroupEntityProxy) properties.getProxies().get(0);
+		GroupEntityProxy groupProxy = (GroupEntityProxy) properties.getSelectedEntities().get(0);
 		int id = groupProxy.getGroupId();
 
 		properties.getSceneModuleContainer().getScene().setGroupStringId(id, idField.getText());

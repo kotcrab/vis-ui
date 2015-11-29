@@ -24,6 +24,7 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentT
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.SpriterComponent;
 import com.kotcrab.vis.runtime.spriter.Entity;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -56,7 +57,7 @@ public class SpriterPropertiesComponentTable extends AutoComponentTable<SpriterP
 	public void updateUIValues () {
 		super.updateUIValues();
 
-		Array<EntityProxy> proxies = properties.getProxies();
+		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 		if (EntityUtils.isMultipleEntitiesSelected(proxies) == false) {
 			SpriterComponent spriter = EntityUtils.getFirstEntity(proxies).getComponent(SpriterComponent.class);
 			animSelectBox.setDisabled(false);
@@ -80,7 +81,7 @@ public class SpriterPropertiesComponentTable extends AutoComponentTable<SpriterP
 	public void setValuesToEntities () {
 		super.setValuesToEntities();
 
-		Array<EntityProxy> proxies = properties.getProxies();
+		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 		if (EntityUtils.isMultipleEntitiesSelected(proxies) == false) {
 			SpriterComponent spriter = EntityUtils.getFirstEntityComponent(proxies, SpriterComponent.class);
 			SpriterPropertiesComponent properties = EntityUtils.getFirstEntityComponent(proxies, SpriterPropertiesComponent.class);

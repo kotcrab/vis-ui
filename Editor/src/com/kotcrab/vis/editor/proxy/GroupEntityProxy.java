@@ -26,6 +26,7 @@ import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /** @author Kotcrab */
+@Deprecated
 public class GroupEntityProxy extends EntityProxy implements BasicPropertiesAccessor {
 	private int groupId;
 	private Array<Entity> entities;

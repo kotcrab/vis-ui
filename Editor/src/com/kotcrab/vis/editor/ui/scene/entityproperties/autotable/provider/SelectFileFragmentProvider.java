@@ -23,7 +23,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
@@ -33,6 +32,7 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.ATSelectFileHandlerGroup;
 import com.kotcrab.vis.editor.util.Holder;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 import com.kotcrab.vis.ui.util.value.VisWidgetValue;
@@ -86,7 +86,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 		AssetDirectoryDescriptor directoryDescriptor = assetsMetadata.getDirectoryDescriptorForId(holder.value.getAssetDirectoryDescriptorId());
 		final SelectFileDialog selectFontDialog = new SelectFileDialog(annotation.extension(), annotation.hideExtension(),
 				folder, assetsMetadata, directoryDescriptor, file -> {
-			for (EntityProxy proxy : properties.getProxies()) {
+			for (EntityProxy proxy : properties.getSelectedEntities()) {
 				for (Entity entity : proxy.getEntities()) {
 					holder.value.applyChanges(entity, file);
 				}
@@ -138,7 +138,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 	}
 
 	@Override
-	public void updateUIFromEntities (Array<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
+	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
 		SelectFileDialogSet set = fileDialogLabels.get(field);
 		String path = getCommonString(proxies, "<?>", set.handler::getLabelValue);
 		set.fileLabel.setText(path);

@@ -22,6 +22,7 @@ import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 import java.lang.reflect.Constructor;
 
@@ -32,7 +33,7 @@ public class ComponentAddAction implements UndoableAction {
 
 	private Array<Component> componentInstances;
 
-	public ComponentAddAction (VisComponentManipulator componentManipulator, Array<EntityProxy> proxies, Class<? extends Component> componentClass) throws ReflectiveOperationException {
+	public ComponentAddAction (VisComponentManipulator componentManipulator, ImmutableArray<EntityProxy> proxies, Class<? extends Component> componentClass) throws ReflectiveOperationException {
 		this.componentManipulator = componentManipulator;
 		this.proxies = new Array<>();
 		this.componentInstances = new Array<>();

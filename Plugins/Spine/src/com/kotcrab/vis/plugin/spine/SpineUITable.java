@@ -47,6 +47,7 @@ import com.kotcrab.vis.editor.util.scene2d.FieldUtils;
 import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.widget.Tooltip;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -119,7 +120,7 @@ public class SpineUITable extends SpecificUITable {
 		Tooltip.removeTooltip(warningImage);
 		warningImage.setVisible(false);
 
-		Array<EntityProxy> proxies = properties.getProxies();
+		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 
 		EntityUtils.setCommonCheckBoxState(proxies, preview, (Entity entity) -> entity.getComponent(SpinePreviewComponent.class).previewEnabled);
 		EntityUtils.setCommonCheckBoxState(proxies, playAnimationOnStart, (Entity entity) -> entity.getComponent(SpineComponent.class).isPlayOnStart());
@@ -138,7 +139,7 @@ public class SpineUITable extends SpecificUITable {
 	}
 
 	private void createCommonAnimationsList () {
-		Array<EntityProxy> proxies = properties.getProxies();
+		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 
 		int animationCounter = 0;
 		HashSet<String> commonAnimations = new HashSet<>();
@@ -183,7 +184,7 @@ public class SpineUITable extends SpecificUITable {
 
 	@Override
 	public void setValuesToEntities () {
-		for (EntityProxy proxy : properties.getProxies()) {
+		for (EntityProxy proxy : properties.getSelectedEntities()) {
 			for (Entity entity : proxy.getEntities()) {
 				SpineComponent spineComponent = entity.getComponent(SpineComponent.class);
 				SpinePreviewComponent previewComponent = entity.getComponent(SpinePreviewComponent.class);

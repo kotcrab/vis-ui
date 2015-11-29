@@ -44,7 +44,7 @@ public class ChangeEntityLayerAction implements UndoableAction {
 		proxy.reload();
 		proxy.setLayerId(targetLayer);
 		renderBatchingSystem.markDirty();
-		entityManipulator.resetSelection();
+		entityManipulator.softSelectionReset();
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class ChangeEntityLayerAction implements UndoableAction {
 		proxy.reload();
 		proxy.setLayerId(sourceLayer);
 		renderBatchingSystem.markDirty();
-		entityManipulator.resetSelection();
+		entityManipulator.softSelectionReset();
 	}
 
 	@Override

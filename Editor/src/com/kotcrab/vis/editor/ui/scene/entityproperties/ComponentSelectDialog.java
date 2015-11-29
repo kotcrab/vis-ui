@@ -120,14 +120,14 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 	public boolean build () {
 		scrollPaneTable.clearChildren();
 
-		if (properties.getProxies().first() instanceof GroupEntityProxy) {
+		if (properties.getSelectedEntities().first() instanceof GroupEntityProxy) {
 			return false;
 		}
 
 		boolean atLeastOneComponentAdded = false;
 
 		for (Class<? extends Component> clazz : componentClasses) {
-			if (EntityUtils.isComponentCommon(clazz, properties.getProxies()) == false) {
+			if (EntityUtils.isComponentCommon(clazz, properties.getSelectedEntities()) == false) {
 				VisTextButton button = new VisTextButton(clazz.getSimpleName(), buttonStyle);
 				button.setFocusBorderEnabled(false);
 				scrollPaneTable.add(button).expandX().fillX().row();

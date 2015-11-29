@@ -67,12 +67,12 @@ public class BMPTextUITable extends TextUITable {
 	@Override
 	public void updateUIValues () {
 		super.updateUIValues();
-		setCommonCheckBoxState(properties.getProxies(), distanceFieldCheck, (Entity entity) -> entity.getComponent(TextComponent.class).isDistanceFieldShaderEnabled());
+		setCommonCheckBoxState(properties.getSelectedEntities(), distanceFieldCheck, (Entity entity) -> entity.getComponent(TextComponent.class).isDistanceFieldShaderEnabled());
 	}
 
 	@Override
 	protected void updateEntitiesValues () {
-		for (EntityProxy proxy : properties.getProxies()) {
+		for (EntityProxy proxy : properties.getSelectedEntities()) {
 			for (Entity entity : proxy.getEntities()) {
 				TextComponent text = entity.getComponent(TextComponent.class);
 				AssetComponent assetComponent = entity.getComponent(AssetComponent.class);

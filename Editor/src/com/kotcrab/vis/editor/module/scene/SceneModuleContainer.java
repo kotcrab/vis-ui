@@ -102,8 +102,8 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 			support.registerInflatersSystems(config);
 		}
 
+		config.setSystem(new EntitiesCollector());
 		config.setSystem(new GroupIdProviderSystem());
-		config.setSystem(new GroupProxyProviderSystem());
 		config.setSystem(new GridRendererSystem(batch, this));
 		config.setSystem(new VisComponentManipulator());
 

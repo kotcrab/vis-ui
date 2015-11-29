@@ -57,9 +57,9 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.SelectionTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tools;
+import com.kotcrab.vis.editor.module.scene.system.EntitiesCollector;
 import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.system.GroupIdProviderSystem;
-import com.kotcrab.vis.editor.module.scene.system.GroupProxyProviderSystem;
 import com.kotcrab.vis.editor.module.scene.system.ZIndexManipulator;
 import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
@@ -96,6 +96,8 @@ import static com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityMoveTi
 /** @author Kotcrab */
 @EventBusSubscriber
 public class EntityManipulatorModule extends SceneModule {
+	private static final int NO_GROUP_SET = -1;
+
 	private StatusBarModule statusBar;
 	private ToastModule toastModule;
 	private EditingSettingsModule editingSettings;
@@ -118,8 +120,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private EntityProxyCache entityProxyCache;
 	private ZIndexManipulator zIndexManipulator;
+	private EntitiesCollector entitiesCollector;
 	private GroupIdProviderSystem groupIdProvider;
-	private GroupProxyProviderSystem groupProxyProvider;
 	private RenderBatchingSystem renderBatchingSystem;
 
 	private ShapeRenderer shapeRenderer;
@@ -135,9 +137,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private SelectionTool selectionTool;
 	private PolygonTool polygonTool;
 
-	private int currentSelectionGid = -1;
-	private Array<EntityProxy> selectedEntities = new Array<>();
-	private ImmutableArray<EntityProxy> immutableSelectedEntities = new ImmutableArray<>(selectedEntities);
+	private EntitiesSelection entitiesSelection;
 
 	private float copyAttachX, copyAttachY;
 	private Array<ProtoEntity> entitiesClipboard = new Array<>();
@@ -157,32 +157,32 @@ public class EntityManipulatorModule extends SceneModule {
 	public void init () {
 		shapeRenderer = rendererModule.getShapeRenderer();
 
-		entityProperties = new EntityProperties(sceneContainer, sceneTab, selectedEntities);
+		entityProperties = new EntityProperties(sceneContainer, sceneTab);
 		groupBreadcrumb = new GroupBreadcrumb(new GroupBreadcrumbListener() {
 			@Override
 			public void clicked (int gid) {
-				currentSelectionGid = gid;
+				entitiesSelection = new EntitiesSelection(entitiesCollector, scene.getActiveLayerId(), gid);
 				selectAll();
 			}
 
 			@Override
 			public void rootClicked () {
-				currentSelectionGid = -1;
-				groupBreadcrumb.resetHierarchy();
-				resetSelection();
+				hardSelectionReset();
 			}
 		});
 		layersDialog = new LayersDialog(sceneTab, engineConfiguration, sceneContainer);
-		alignmentToolsDialog = new AlignmentToolsDialog(sceneContainer, selectedEntities);
-		sceneOutline = new SceneOutline(sceneContainer, selectedEntities);
+		alignmentToolsDialog = new AlignmentToolsDialog(sceneContainer);
+		sceneOutline = new SceneOutline(sceneContainer);
 		createContextMenus();
 
 		toolPropertiesContainer = new VisTable();
 
-		entityMoveTimerTask = new EntityMoveTimerTask(scene, this, immutableSelectedEntities);
+		entityMoveTimerTask = new EntityMoveTimerTask(scene, this);
 
 		selectionTool = new SelectionTool();
 		polygonTool = new PolygonTool();
+
+		entitiesSelection = new EntitiesSelection(entitiesCollector, scene.getActiveLayerId());
 
 		selectionTool.setModules(sceneContainer, scene);
 		polygonTool.setModules(sceneContainer, scene);
@@ -191,7 +191,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 		scene.addObservable(notificationId -> {
 			if (notificationId == EditorScene.ACTIVE_LAYER_CHANGED) {
-				resetSelection();
+				softSelectionReset();
 			}
 		});
 	}
@@ -209,20 +209,20 @@ public class EntityManipulatorModule extends SceneModule {
 		generalPopupMenu.addItem(MenuUtils.createMenuItem("Select All", this::selectAll));
 	}
 
-	private void buildEntityPopupMenu (Array<EntityProxy> entities) {
+	private void buildSelectedEntitiesPopupMenu () {
 		entityPopupMenu.clearChildren();
 
-		if (isMenuItemEnterIntoGroupValid(entities)) {
+		if (entitiesSelection.isEnterIntoGroupValid()) {
 			entityPopupMenu.addItem(MenuUtils.createMenuItem("Enter Into Group", () -> {
 
-				if (isMenuItemEnterIntoGroupValid(entities) == false) {
+				if (entitiesSelection.isEnterIntoGroupValid() == false) {
 					DialogUtils.showErrorDialog(stage, "Group was deselected");
 					return;
 				}
 
-				GroupEntityProxy groupEntityProxy = (GroupEntityProxy) entities.peek();
-				currentSelectionGid = groupEntityProxy.getGroupId();
-				groupBreadcrumb.addGroup(currentSelectionGid);
+				int newSelectionGid = entitiesSelection.getNestedGroupId();
+				groupBreadcrumb.addGroup(newSelectionGid);
+				entitiesSelection = new EntitiesSelection(entitiesCollector, scene.getActiveLayerId(), newSelectionGid);
 				selectAll();
 			}));
 			entityPopupMenu.addSeparator();
@@ -242,7 +242,7 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	private void moveToLayer (boolean showGroupMoveWarning) {
-		if (currentSelectionGid != -1 && showGroupMoveWarning) {
+		if (showGroupMoveWarning && entitiesSelection.getGroupId() != -1) {
 			DialogUtils.showOptionDialog(stage, "Warning", "This will move whole group to another layer. Continue moving?",
 					OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 						@Override
@@ -253,17 +253,8 @@ public class EntityManipulatorModule extends SceneModule {
 			return;
 		}
 
-		Array<EntityProxy> targetEntities;
-
-		if (currentSelectionGid != -1) {
-			targetEntities = new Array<>();
-			targetEntities.add(groupProxyProvider.getGroupEntityProxy(groupBreadcrumb.peekFirstGroupId()));
-
-			resetSelection();
-			groupBreadcrumb.resetHierarchy();
-			currentSelectionGid = -1;
-		} else
-			targetEntities = new Array<>(selectedEntities);
+		Array<EntityProxy> targetEntities = new Array<>(entitiesSelection.getSelection().toArray());
+		;
 
 		stage.addActor(new SelectLayerDialog(scene.getLayers(), scene.getActiveLayer(), result -> {
 			UndoableActionGroup group = new UndoableActionGroup("Move Entity To Layer", "Move Entities To Layer");
@@ -275,23 +266,19 @@ public class EntityManipulatorModule extends SceneModule {
 			undoModule.execute(group);
 
 			//reselect entities again
-			resetSelection();
+			hardSelectionReset();
 			for (EntityProxy proxy : targetEntities)
 				selectAppend(proxy);
 		}).fadeIn());
 	}
 
-	private boolean isMenuItemEnterIntoGroupValid (Array<EntityProxy> entities) {
-		return (entities.size == 1 && entities.peek() instanceof GroupEntityProxy);
-	}
-
 	private void copy () {
-		if (selectedEntities.size > 0) {
+		if (entitiesSelection.size() > 0) {
 			entitiesClipboard.clear();
-			selectedEntities.forEach(proxy -> proxy.getEntities().forEach(
+			entitiesSelection.forEach(proxy -> proxy.getEntities().forEach(
 					entity -> entitiesClipboard.add(sceneIO.createProtoEntity(entityEngine, entity, false))));
 
-			EntityProxy proxy = selectedEntities.peek();
+			EntityProxy proxy = entitiesSelection.peek();
 
 			if (entityPopupMenu.getParent() != null) { //is menu visible
 				copyAttachX = menuX - proxy.getX();
@@ -310,10 +297,10 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private void paste (boolean changePastePosition) {
 		if (entitiesClipboard.size > 0) {
-			selectedEntities.clear();
+			silentSelectionReset();
 
-			Array<EntityProxy> proxies = new Array<>(selectedEntities.size);
-			ObjectSet<Entity> entities = new ObjectSet<>(selectedEntities.size);
+			Array<EntityProxy> proxies = new Array<>(entitiesSelection.size());
+			ObjectSet<Entity> entities = new ObjectSet<>(entitiesSelection.size());
 
 			IntIntMap groupIdRemap = new IntIntMap();
 			Holder<Integer> freeGidHolder = Holder.of(groupIdProvider.getFreeGroupId());
@@ -388,9 +375,8 @@ public class EntityManipulatorModule extends SceneModule {
 	private void deleteSelectedEntities () {
 		ObjectSet<Entity> entities = new ObjectSet<>();
 
-		selectedEntities.forEach(proxy -> entities.addAll(proxy.getEntities()));
-		selectedEntities.clear();
-		selectedEntitiesChanged();
+		entitiesSelection.forEach(proxy -> entities.addAll(proxy.getEntities()));
+		softSelectionReset();
 
 		undoModule.execute(new EntitiesRemovedAction(sceneContainer, entityEngine, entities));
 	}
@@ -520,8 +506,9 @@ public class EntityManipulatorModule extends SceneModule {
 
 			undoModule.add(new EntitiesAddedAction(sceneContainer, entityEngine, entity));
 
-			if (currentSelectionGid != -1)
-				proxy.addGroup(currentSelectionGid);
+			if (entitiesSelection.getGroupId() != NO_GROUP_SET) {
+				proxy.addGroup(entitiesSelection.getGroupId());
+			}
 		}
 	}
 
@@ -542,7 +529,8 @@ public class EntityManipulatorModule extends SceneModule {
 		if (array.size > 0) {
 			array.reverse();
 
-			currentSelectionGid = array.peek();
+			int newGid = array.peek();
+			entitiesSelection = new EntitiesSelection(entitiesCollector, scene.getActiveLayerId(), newGid);
 
 			for (int i = 0; i < array.size; i++) {
 				int gid = array.get(i);
@@ -565,11 +553,11 @@ public class EntityManipulatorModule extends SceneModule {
 		if (layer.locked) return;
 		scene.setActiveLayer(layer.id);
 
-		selectedEntities.clear();
+		entitiesSelection.clearSelection();
 
 		checkProxyGid(proxy);
 
-		selectAddToList(proxy);
+		entitiesSelection.append(proxy);
 		selectedEntitiesChanged();
 	}
 
@@ -585,24 +573,25 @@ public class EntityManipulatorModule extends SceneModule {
 
 		if (scene.getActiveLayerId() != layer.id) {
 			scene.setActiveLayer(layer.id);
-			selectedEntities.clear();
+			entitiesSelection.clearSelection();
 		}
 
 		checkProxyGid(proxy);
 
-		selectAddToList(proxy);
+		entitiesSelection.append(proxy);
 		selectedEntitiesChanged();
 	}
 
 	private void checkProxyGid (EntityProxy proxy) {
+		if (entitiesSelection.getGroupId() == NO_GROUP_SET) return;
+
 		int proxyGid = proxy.getLastGroupId();
-		if (proxy.groupsContains(currentSelectionGid) == false) {
+		if (proxy.groupsContains(entitiesSelection.getGroupId()) == false) {
 			if (groupBreadcrumb.isInHierarchy(proxyGid)) {
-				currentSelectionGid = proxyGid;
+				entitiesSelection = new EntitiesSelection(entitiesCollector, scene.getActiveLayerId(), proxyGid);
 				groupBreadcrumb.trimToGid(proxyGid);
 			} else {
-				currentSelectionGid = -1;
-				groupBreadcrumb.resetHierarchy();
+				hardSelectionReset();
 			}
 		}
 	}
@@ -610,57 +599,60 @@ public class EntityManipulatorModule extends SceneModule {
 	public void selectAll () {
 		if (scene.getActiveLayer().locked) return;
 
-		selectedEntities.clear();
-
-		if (currentSelectionGid == -1) {
-			int layerId = scene.getActiveLayerId();
-
-			entityProxyCache.getCache().values().forEach(proxy -> {
-				if (proxy.getLayerID() == layerId) {
-					selectAddToList(proxy);
-				}
-			});
-
-		} else {
-			GroupEntityProxy proxy = groupProxyProvider.getGroupEntityProxy(currentSelectionGid);
-			proxy.getProxies().forEach(this::selectAddToList);
-		}
-
-		selectedEntitiesChanged();
+		Array<EntityProxy> proxies = entitiesCollector.collect(entitiesSelection.getLayerId(), entitiesSelection.getGroupId());
+		proxies.forEach(this::selectAppend);
 	}
 
-	private void selectAddToList (EntityProxy proxy) {
-		int lastGid = currentSelectionGid == -1 ? proxy.getLastGroupId() : proxy.getGroupIdBefore(currentSelectionGid);
-		if (proxy instanceof GroupEntityProxy == false && lastGid != -1) {
-			if (isGroupIdAlreadySelected(lastGid) == false) {
-				selectedEntities.add(groupProxyProvider.getGroupEntityProxy(lastGid));
+	public void selectAll (int layerId, int groupId) {
+		Array<EntityProxy> proxies = entitiesCollector.collect(layerId, groupId);
+		if (proxies.size == 0) return;
+
+		groupBreadcrumb.resetHierarchy();
+
+		int targetGid = proxies.first().getGroupIdAfter(groupId);
+
+		if (targetGid != -1) {
+			IntArray groupsIds = proxies.first().getGroupsIds();
+			if (groupsIds.size > 1) {
+				groupsIds.reverse();
+
+				for (int i = 0; i < groupsIds.size; i++) {
+					int gid = groupsIds.get(i);
+					groupBreadcrumb.addGroup(gid);
+					if (targetGid == gid) break;
+				}
+
 			}
-		} else
-			selectedEntities.add(proxy);
+		}
+
+		entitiesSelection = new EntitiesSelection(entitiesCollector, layerId, targetGid);
+		selectAppend(proxies.first()); //selecting first entity is enough to select whole group
 	}
 
 	public boolean isSelected (EntityProxy proxy) {
-		return selectedEntities.contains(proxy, true);
+		return entitiesSelection.isSelected(proxy);
 	}
 
-	public boolean isGroupIdAlreadySelected (int gid) {
-		for (EntityProxy proxy : selectedEntities) {
-			if (proxy instanceof GroupEntityProxy) {
-				GroupEntityProxy groupProxy = (GroupEntityProxy) proxy;
-				if (groupProxy.getGroupId() == gid) return true;
-			}
-		}
-
-		return false;
-	}
-
-	public void resetSelection () {
-		selectedEntities.clear();
+	/** Resets selection along with group breadcrumb and changes current groupId to -1 */
+	public void hardSelectionReset () {
+		groupBreadcrumb.resetHierarchy();
+		entitiesSelection = new EntitiesSelection(entitiesCollector, scene.getActiveLayerId());
 		selectedEntitiesChanged();
 	}
 
+	/** Resets selection without changing current groupId */
+	public void softSelectionReset () {
+		entitiesSelection.clearSelection();
+		selectedEntitiesChanged();
+	}
+
+	/** Resets selection without changing current groupId and wihtout calling {@link #selectedEntitiesChanged()} */
+	void silentSelectionReset () {
+		entitiesSelection.clearSelection();
+	}
+
 	public void deselect (EntityProxy result) {
-		selectedEntities.removeValue(result, true);
+		entitiesSelection.deselect(result);
 		selectedEntitiesChanged();
 	}
 
@@ -686,24 +678,24 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	public void groupSelection () {
-		if (selectedEntities.size <= 1) {
+		if (entitiesSelection.size() <= 1) {
 			statusBar.setText("Noting to group!");
 			return;
 		}
 
 		int gid = groupIdProvider.getFreeGroupId();
 
-		undoModule.execute(new GroupAction(selectedEntities, gid, currentSelectionGid, true));
+		undoModule.execute(new GroupAction(entitiesSelection.getSelection(), gid, entitiesSelection.getGroupId(), true));
 
 		sceneOutline.rebuildOutline();
 
-		GroupEntityProxy groupProxy = new GroupEntityProxy(selectedEntities, gid);
-		resetSelection();
+		GroupEntityProxy groupProxy = new GroupEntityProxy(new Array<>(entitiesSelection.getSelection().toArray()), gid);
+		softSelectionReset();
 		select(groupProxy);
 	}
 
 	public void ungroupSelection () {
-		if (selectedEntities.size == 0) {
+		if (entitiesSelection.size() == 0) {
 			statusBar.setText("Noting to ungroup!");
 			return;
 		}
@@ -712,11 +704,11 @@ public class EntityManipulatorModule extends SceneModule {
 
 		UndoableActionGroup actionGroup = new UndoableActionGroup("Ungroup");
 
-		for (EntityProxy entity : selectedEntities) {
+		for (EntityProxy entity : entitiesSelection.getSelection()) {
 			if (entity instanceof GroupEntityProxy) {
 				GroupEntityProxy group = (GroupEntityProxy) entity;
 				selectionProxy = group;
-				actionGroup.add(new GroupAction(group.getProxies(), group.getGroupId(), currentSelectionGid, false));
+				actionGroup.add(new GroupAction(new ImmutableArray<>(group.getProxies()), group.getGroupId(), entitiesSelection.getGroupId(), false));
 			}
 		}
 
@@ -724,12 +716,10 @@ public class EntityManipulatorModule extends SceneModule {
 			actionGroup.finalizeGroup();
 			undoModule.execute(actionGroup);
 
-			groupBreadcrumb.resetHierarchy();
-			currentSelectionGid = -1;
+			hardSelectionReset();
 
 			sceneOutline.rebuildOutline();
 
-			resetSelection();
 			selectionProxy.getProxies().forEach(this::selectAppend);
 		} else
 			statusBar.setText("No group selected!");
@@ -744,17 +734,16 @@ public class EntityManipulatorModule extends SceneModule {
 		batch.end();
 		shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
 
-		if (selectedEntities.size > 0) {
+		if (entitiesSelection.size() > 0) {
 			shapeRenderer.setColor(Color.WHITE);
 			shapeRenderer.begin(ShapeType.Line);
 
-			for (EntityProxy entity : selectedEntities) {
-				Rectangle bounds = entity.getBoundingRectangle();
+			for (SelectionFragment fragment : entitiesSelection.getFragmentedSelection()) {
+				Rectangle bounds = fragment.getBoundingRectangle();
 				shapeRenderer.rect(bounds.x, bounds.y, bounds.width, bounds.height);
 			}
 
 			shapeRenderer.end();
-
 		}
 
 		currentTool.render(shapeRenderer);
@@ -809,7 +798,11 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	public ImmutableArray<EntityProxy> getSelectedEntities () {
-		return immutableSelectedEntities;
+		return entitiesSelection.getSelection();
+	}
+
+	public EntitiesSelection getSelection () {
+		return entitiesSelection;
 	}
 
 	@Override
@@ -831,11 +824,11 @@ public class EntityManipulatorModule extends SceneModule {
 		currentTool.touchUp(event, x, y, pointer, button);
 
 		if (button == Buttons.RIGHT && mouseDragged == false) {
-			if (selectedEntities.size > 0) {
+			if (entitiesSelection.size() > 0) {
 				menuX = camera.getInputX();
 				menuY = camera.getInputY();
 
-				buildEntityPopupMenu(selectedEntities);
+				buildSelectedEntitiesPopupMenu();
 				entityPopupMenu.showMenu(event.getStage(), event.getStageX(), event.getStageY());
 			} else
 				generalPopupMenu.showMenu(event.getStage(), event.getStageX(), event.getStageY());
@@ -919,7 +912,7 @@ public class EntityManipulatorModule extends SceneModule {
 				entityMoveTimerTask.set(direction, delta);
 
 				if (entityMoveTimerTask.isScheduled() == false) {
-					keyMoveAction = new MoveEntitiesAction(this, selectedEntities);
+					keyMoveAction = new MoveEntitiesAction(this);
 
 					entityMoveTimerTask.run();
 					float keyRepeatInitialTime = 0.4f;

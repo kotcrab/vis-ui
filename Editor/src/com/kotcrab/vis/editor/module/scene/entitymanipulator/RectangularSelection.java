@@ -68,7 +68,7 @@ public class RectangularSelection {
 			if (rectToDraw.contains(entity.getBoundingRectangle()) && entity.getLayerID() == scene.getActiveLayerId())
 				matchingEntities.add(entity);
 
-		entityManipulatorModule.resetSelection();
+		entityManipulatorModule.softSelectionReset();
 		matchingEntities.forEach(entityManipulatorModule::selectAppend);
 	}
 

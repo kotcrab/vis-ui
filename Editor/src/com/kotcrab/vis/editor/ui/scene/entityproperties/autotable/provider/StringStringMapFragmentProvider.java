@@ -17,12 +17,12 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.StringStringMapView;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.VariablesComponent;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.autotable.ATStringStringMap;
 
 import java.lang.reflect.Field;
@@ -42,7 +42,7 @@ public class StringStringMapFragmentProvider extends AutoTableFragmentProvider<A
 	}
 
 	@Override
-	public void updateUIFromEntities (Array<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
+	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
 		StringStringMapView view = views.get(field);
 
 		if (EntityUtils.isMultipleEntitiesSelected(proxies))

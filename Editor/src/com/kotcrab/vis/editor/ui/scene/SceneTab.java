@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
@@ -40,9 +41,12 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
-import com.kotcrab.vis.editor.module.scene.*;
+import com.kotcrab.vis.editor.module.scene.CameraModule;
+import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
+import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.AlignmentToolsDialog;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
 import com.kotcrab.vis.editor.module.scene.system.EntityCounterManager;
 import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.system.reloader.*;
@@ -55,10 +59,11 @@ import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.util.scene2d.FocusUtils;
-import com.kotcrab.vis.ui.util.value.VisValue;
 import com.kotcrab.vis.editor.util.vis.CreatePointPayload;
 import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.value.VisValue;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
@@ -376,7 +381,23 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 
 	public void centerAround (EntityProxy entity) {
 		entityManipulator.findEntityBaseGroupAndSelect(entity);
-		cameraModule.setPosition(entity.getX() + entity.getWidth() / 2, entity.getY() + entity.getHeight() / 2);
+		centerCameraAroundSelection();
+	}
+
+	public void centerAroundGroup (int layerId, int groupId) {
+		entityManipulator.selectAll(layerId, groupId);
+		centerCameraAroundSelection();
+	}
+
+	private void centerCameraAroundSelection () {
+		ImmutableArray<SelectionFragment> fragments = entityManipulator.getSelection().getFragmentedSelection();
+		if (fragments.size() == 0) return;
+
+		Rectangle rect = fragments.first().getBoundingRectangle();
+
+		for (SelectionFragment fragment : fragments) {
+			rect.merge(fragment.getBoundingRectangle());
+		}
 	}
 
 	public void focusSelf () {

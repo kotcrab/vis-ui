@@ -20,7 +20,6 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
 import com.kotcrab.vis.editor.util.Holder;
-import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.PhysicsPropertiesComponent;
 
@@ -42,7 +41,7 @@ public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsP
 	public void componentAddedToEntities () {
 		super.componentAddedToEntities();
 
-		EntityUtils.stream(properties.getProxies(), (proxy, entity) -> {
+		EntityUtils.stream(properties.getSelectedEntities(), (proxy, entity) -> {
 			if (proxy.hasComponent(PhysicsPropertiesComponent.class)) {
 				if (entity.getComponent(PhysicsPropertiesComponent.class).adjustOrigin && proxy.isOriginSupported()) {
 					proxy.setOrigin(0, 0);
@@ -61,7 +60,7 @@ public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsP
 
 				Holder<Boolean> uiUpdatedNeeded = Holder.of(false);
 
-				ArrayUtils.stream(properties.getProxies(), proxy -> {
+				EntityUtils.stream(properties.getSelectedEntities(), (proxy, entity) -> {
 					if (proxy.isOriginSupported() && (proxy.getOriginX() != 0 || proxy.getOriginY() != 0)) {
 						uiUpdatedNeeded.value = true;
 						proxy.setOrigin(0, 0);

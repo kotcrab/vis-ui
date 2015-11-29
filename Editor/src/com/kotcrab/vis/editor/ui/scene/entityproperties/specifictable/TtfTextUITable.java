@@ -72,13 +72,13 @@ public class TtfTextUITable extends TextUITable {
 	public void updateUIValues () {
 		super.updateUIValues();
 
-		sizeInputField.setText(EntityUtils.getEntitiesCommonFloatValue(properties.getProxies(),
+		sizeInputField.setText(EntityUtils.getEntitiesCommonFloatValue(properties.getSelectedEntities(),
 				(Entity entity) -> ((TtfFontAsset) entity.getComponent(AssetComponent.class).asset).getFontSize()));
 	}
 
 	@Override
 	protected void updateEntitiesValues () {
-		for (EntityProxy proxy : properties.getProxies()) {
+		for (EntityProxy proxy : properties.getSelectedEntities()) {
 			for (Entity entity : proxy.getEntities()) {
 				AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
 				TextComponent text = entity.getComponent(TextComponent.class);

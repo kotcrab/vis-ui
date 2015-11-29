@@ -34,6 +34,7 @@ import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 import com.kotcrab.vis.ui.util.value.VisWidgetValue;
 import com.kotcrab.vis.ui.widget.*;
@@ -98,7 +99,7 @@ public abstract class TextUITable extends SpecificUITable {
 		});
 
 		selectFontDialog = new SelectFileDialog(getFontExtension(), fileAccess.getAssetsFolder(), file -> {
-			for (EntityProxy proxy : properties.getProxies()) {
+			for (EntityProxy proxy : properties.getSelectedEntities()) {
 				for (Entity entity : proxy.getEntities()) {
 					TextComponent text = entity.getComponent(TextComponent.class);
 					AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
@@ -137,7 +138,7 @@ public abstract class TextUITable extends SpecificUITable {
 
 	@Override
 	public void updateUIValues () {
-		Array<EntityProxy> proxies = properties.getProxies();
+		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 
 		setCommonCheckBoxState(proxies, autoCenterOrigin, (Entity entity) -> entity.getComponent(TextComponent.class).isAutoSetOriginToCenter());
 
@@ -149,7 +150,7 @@ public abstract class TextUITable extends SpecificUITable {
 
 	@Override
 	public final void setValuesToEntities () {
-		EntityUtils.stream(properties.getProxies(), TextComponent.class, (entity, text) -> {
+		EntityUtils.stream(properties.getSelectedEntities(), TextComponent.class, (entity, text) -> {
 			if (textField.getText().equals("<multiple values>") == false) { //TODO: lets hope that nobody will use <multiple values> as their text
 				text.setText(textField.getText());
 			}
@@ -157,7 +158,7 @@ public abstract class TextUITable extends SpecificUITable {
 
 		updateEntitiesValues();
 
-		EntityUtils.stream(properties.getProxies(), TextComponent.class, (entity, text) -> {
+		EntityUtils.stream(properties.getSelectedEntities(), TextComponent.class, (entity, text) -> {
 			if (autoCenterOrigin.isIndeterminate() == false) {
 				text.setAutoSetOriginToCenter(autoCenterOrigin.isChecked());
 				properties.selectedEntitiesBasicValuesChanged();
