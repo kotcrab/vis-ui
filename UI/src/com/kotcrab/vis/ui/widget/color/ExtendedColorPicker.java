@@ -91,7 +91,7 @@ public class ExtendedColorPicker extends BasicColorPicker implements Disposable 
 
 		extendedTable.add(aBar).row();
 
-		add(extendedTable).expand().left().top().pad(4);
+		add(extendedTable).expand().left().top().pad(0, 9, 4, 4);
 	}
 
 	@Override

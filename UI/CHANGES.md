@@ -3,6 +3,7 @@
 - **Added**: `ActorUtils#keepWithinStage(Actor)`
 - **Deprecated**: `ColumnGroup`. Will be removed in future versions. Use libGDX's `VerticalGroup` which supports more features.
 - **Fixed**: `BasicColorPicker` palette color selection were flipped.
+- **Fixed**: `BasicColorPicker` removed unnecessary right padding
 - **Fixed**: `MenuItem` sub menu could appear outside screen.
 
 #### Old changelog file:
