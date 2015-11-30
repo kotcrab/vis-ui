@@ -58,7 +58,7 @@ public class SpriterPropertiesComponentTable extends AutoComponentTable<SpriterP
 		super.updateUIValues();
 
 		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
-		if (EntityUtils.isMultipleEntitiesSelected(proxies) == false) {
+		if (proxies.size() == 1) {
 			SpriterComponent spriter = EntityUtils.getFirstEntity(proxies).getComponent(SpriterComponent.class);
 			animSelectBox.setDisabled(false);
 
@@ -82,7 +82,7 @@ public class SpriterPropertiesComponentTable extends AutoComponentTable<SpriterP
 		super.setValuesToEntities();
 
 		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
-		if (EntityUtils.isMultipleEntitiesSelected(proxies) == false) {
+		if (proxies.size() == 1) {
 			SpriterComponent spriter = EntityUtils.getFirstEntityComponent(proxies, SpriterComponent.class);
 			SpriterPropertiesComponent properties = EntityUtils.getFirstEntityComponent(proxies, SpriterPropertiesComponent.class);
 			Entity entity = spriter.player.getEntity();

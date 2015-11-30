@@ -21,7 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragment;
+import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.PhysicsPropertiesComponent;
@@ -120,9 +121,7 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 	public boolean build () {
 		scrollPaneTable.clearChildren();
 
-		if (properties.getSelectedEntities().first() instanceof GroupEntityProxy) {
-			return false;
-		}
+		if(ArrayUtils.has(properties.getSelection().getFragmentedSelection(), GroupSelectionFragment.class)) return false;
 
 		boolean atLeastOneComponentAdded = false;
 

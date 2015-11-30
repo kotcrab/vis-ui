@@ -146,19 +146,18 @@ public class SpineUITable extends SpecificUITable {
 		Array<HashSet<String>> allAnimNames = new Array<>();
 
 		for (EntityProxy proxy : proxies) {
-			for (Entity entity : proxy.getEntities()) {
-				SpineComponent spineComponent = entity.getComponent(SpineComponent.class);
-				Array<Animation> animations = spineComponent.getSkeleton().getData().getAnimations();
+			Entity entity = proxy.getEntity();
+			SpineComponent spineComponent = entity.getComponent(SpineComponent.class);
+			Array<Animation> animations = spineComponent.getSkeleton().getData().getAnimations();
 
-				HashSet<String> animNames = new HashSet<>(animations.size);
-				for (Animation anim : animations) {
-					commonAnimations.add(anim.getName());
-					animNames.add(anim.getName());
-					animationCounter++;
-				}
-
-				allAnimNames.add(animNames);
+			HashSet<String> animNames = new HashSet<>(animations.size);
+			for (Animation anim : animations) {
+				commonAnimations.add(anim.getName());
+				animNames.add(anim.getName());
+				animationCounter++;
 			}
+
+			allAnimNames.add(animNames);
 		}
 
 		for (HashSet<String> animationsNames : allAnimNames)
@@ -185,30 +184,29 @@ public class SpineUITable extends SpecificUITable {
 	@Override
 	public void setValuesToEntities () {
 		for (EntityProxy proxy : properties.getSelectedEntities()) {
-			for (Entity entity : proxy.getEntities()) {
-				SpineComponent spineComponent = entity.getComponent(SpineComponent.class);
-				SpinePreviewComponent previewComponent = entity.getComponent(SpinePreviewComponent.class);
-				SpineScaleComponent scaleComponent = entity.getComponent(SpineScaleComponent.class);
+			Entity entity = proxy.getEntity();
+			SpineComponent spineComponent = entity.getComponent(SpineComponent.class);
+			SpinePreviewComponent previewComponent = entity.getComponent(SpinePreviewComponent.class);
+			SpineScaleComponent scaleComponent = entity.getComponent(SpineScaleComponent.class);
 
-				if (animSelectBox.getSelection().first().equals(NO_COMMON_ANIMATION) == false) {
-					spineComponent.setDefaultAnimation(animSelectBox.getSelection().first());
+			if (animSelectBox.getSelection().first().equals(NO_COMMON_ANIMATION) == false) {
+				spineComponent.setDefaultAnimation(animSelectBox.getSelection().first());
+				previewComponent.updateAnimation = true;
+			}
+
+			if (playAnimationOnStart.isIndeterminate() == false)
+				spineComponent.setPlayOnStart(playAnimationOnStart.isChecked());
+			if (preview.isIndeterminate() == false) {
+				if (previewComponent.previewEnabled != preview.isChecked()) {
 					previewComponent.updateAnimation = true;
+					previewComponent.previewEnabled = preview.isChecked();
 				}
+			}
 
-				if (playAnimationOnStart.isIndeterminate() == false)
-					spineComponent.setPlayOnStart(playAnimationOnStart.isChecked());
-				if (preview.isIndeterminate() == false) {
-					if (previewComponent.previewEnabled != preview.isChecked()) {
-						previewComponent.updateAnimation = true;
-						previewComponent.previewEnabled = preview.isChecked();
-					}
-				}
-
-				float scale = FieldUtils.getFloat(scaleField, scaleComponent.scale);
-				if (scale != scaleComponent.scale) {
-					scaleComponent.scale = scale;
-					scaleComponent.updateScale = true;
-				}
+			float scale = FieldUtils.getFloat(scaleField, scaleComponent.scale);
+			if (scale != scaleComponent.scale) {
+				scaleComponent.scale = scale;
+				scaleComponent.updateScale = true;
 			}
 		}
 	}

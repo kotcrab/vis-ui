@@ -59,11 +59,9 @@ public class TtfTextUITable extends TextUITable {
 	public boolean isSupported (EntityProxy proxy) {
 		if (proxy.hasComponent(TextComponent.class) == false) return false;
 
-		for (Entity entity : proxy.getEntities()) {
-			VisAssetDescriptor asset = entity.getComponent(AssetComponent.class).asset;
-			if (asset instanceof TtfFontAsset == false)
-				return false;
-		}
+		VisAssetDescriptor asset = proxy.getEntity().getComponent(AssetComponent.class).asset;
+		if (asset instanceof TtfFontAsset == false)
+			return false;
 
 		return true;
 	}
@@ -79,19 +77,17 @@ public class TtfTextUITable extends TextUITable {
 	@Override
 	protected void updateEntitiesValues () {
 		for (EntityProxy proxy : properties.getSelectedEntities()) {
-			for (Entity entity : proxy.getEntities()) {
-				AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
-				TextComponent text = entity.getComponent(TextComponent.class);
+			Entity entity = proxy.getEntity();
+			AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
+			TextComponent text = entity.getComponent(TextComponent.class);
 
-				TtfFontAsset ttfAsset = (TtfFontAsset) assetComponent.asset;
-				int fontSize = FieldUtils.getInt(sizeInputField, ttfAsset.getFontSize());
+			TtfFontAsset ttfAsset = (TtfFontAsset) assetComponent.asset;
+			int fontSize = FieldUtils.getInt(sizeInputField, ttfAsset.getFontSize());
 
-				if (ttfAsset.getFontSize() != fontSize) {
-					TtfFontAsset newAsset = new TtfFontAsset(ttfAsset.getPath(), fontSize);
-					assetComponent.asset = newAsset;
-					text.setFont(fontCache.get(newAsset, properties.getSceneModuleContainer().getScene().pixelsPerUnit));
-				}
-
+			if (ttfAsset.getFontSize() != fontSize) {
+				TtfFontAsset newAsset = new TtfFontAsset(ttfAsset.getPath(), fontSize);
+				assetComponent.asset = newAsset;
+				text.setFont(fontCache.get(newAsset, properties.getSceneModuleContainer().getScene().pixelsPerUnit));
 			}
 		}
 	}

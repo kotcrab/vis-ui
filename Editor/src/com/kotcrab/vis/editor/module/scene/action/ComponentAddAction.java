@@ -18,9 +18,9 @@ package com.kotcrab.vis.editor.module.scene.action;
 
 import com.artemis.Component;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 
@@ -29,12 +29,13 @@ import java.lang.reflect.Constructor;
 /** @author Kotcrab */
 public class ComponentAddAction implements UndoableAction {
 	private VisComponentManipulator componentManipulator;
+
 	private Array<EntityProxy> proxies;
 
 	private Array<Component> componentInstances;
 
-	public ComponentAddAction (VisComponentManipulator componentManipulator, ImmutableArray<EntityProxy> proxies, Class<? extends Component> componentClass) throws ReflectiveOperationException {
-		this.componentManipulator = componentManipulator;
+	public ComponentAddAction (ModuleInjector injector, ImmutableArray<EntityProxy> proxies, Class<? extends Component> componentClass) throws ReflectiveOperationException {
+		injector.injectModules(this);
 		this.proxies = new Array<>();
 		this.componentInstances = new Array<>();
 
@@ -42,9 +43,6 @@ public class ComponentAddAction implements UndoableAction {
 		compConstructor.setAccessible(true);
 
 		for (EntityProxy proxy : proxies) {
-			if (proxy instanceof GroupEntityProxy)
-				throw new IllegalStateException("ComponentAddAction does not support GroupEntityProxy as target");
-
 			if (proxy.hasComponent(componentClass)) continue;
 
 			this.proxies.add(proxy);
@@ -69,7 +67,7 @@ public class ComponentAddAction implements UndoableAction {
 
 			proxy.reload();
 
-			componentManipulator.addJob(proxy.getEntities().first(), component, add);
+			componentManipulator.addJob(proxy.getEntity(), component, add);
 		}
 	}
 

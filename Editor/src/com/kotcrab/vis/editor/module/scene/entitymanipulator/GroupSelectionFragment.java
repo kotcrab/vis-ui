@@ -32,6 +32,10 @@ public class GroupSelectionFragment implements SelectionFragment {
 		this.groupId = groupId;
 	}
 
+	public ImmutableArray<EntityProxy> getProxies () {
+		return proxies;
+	}
+
 	public int getGroupId () {
 		return groupId;
 	}

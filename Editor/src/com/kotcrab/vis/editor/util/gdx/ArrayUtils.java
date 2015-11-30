@@ -19,11 +19,32 @@ package com.kotcrab.vis.editor.util.gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Array.ArrayIterable;
 import com.kotcrab.vis.editor.util.CancelableConsumer;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 import java.util.function.Consumer;
 
 /** @author Kotcrab */
 public class ArrayUtils {
+	public static boolean has (Array<?> array, Class<?> clazz) {
+		for (Object obj : array) {
+			if (clazz.isInstance(obj)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static boolean has (ImmutableArray<?> array, Class<?> clazz) {
+		for (Object obj : array) {
+			if (clazz.isInstance(obj)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public static <BaseType> void stream (Array<BaseType> array, Consumer<BaseType> consumer) {
 		for (BaseType obj : new ArrayIterable<>(array)) {
 			consumer.accept(obj);

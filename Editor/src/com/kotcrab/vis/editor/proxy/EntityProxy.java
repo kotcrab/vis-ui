@@ -22,7 +22,6 @@ import com.artemis.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.entity.UUIDComponent;
@@ -53,12 +52,9 @@ public abstract class EntityProxy {
 	protected RotationPropertiesAccessor rotationAccessor;
 	protected FlipPropertiesAccessor flipAccessor;
 
-	private Array<Entity> entitiesArray = new Array<>(1);
-
 	public EntityProxy (Entity entity) {
 		this.entity = entity;
 		init();
-		entitiesArray.add(entity);
 
 		if (entity != null) {
 			uuidManager = entity.getWorld().getSystem(VisUUIDManager.class);
@@ -84,8 +80,6 @@ public abstract class EntityProxy {
 	public void reload () {
 		entity = uuidManager.get(uuid);
 		basicAccessor = initAccessors();
-		entitiesArray.clear();
-		entitiesArray.add(entity);
 	}
 
 	public EntityScheme getScheme () {
@@ -388,11 +382,6 @@ public abstract class EntityProxy {
 	}
 
 	protected abstract boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor);
-
-	@Deprecated
-	public Array<Entity> getEntities () {
-		return entitiesArray;
-	}
 
 	public Entity getEntity () {
 		return entity;

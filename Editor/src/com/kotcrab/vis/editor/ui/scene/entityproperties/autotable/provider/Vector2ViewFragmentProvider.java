@@ -44,7 +44,7 @@ public class Vector2ViewFragmentProvider extends AutoTableFragmentProvider<ATVec
 	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
 		Vector2ArrayView view = views.get(field);
 
-		if (EntityUtils.isMultipleEntitiesSelected(proxies))
+		if (proxies.size() > 1)
 			view.setMultipleSelected(true);
 		else
 			view.setVectors(EntityUtils.getFirstEntityComponent(proxies, PolygonComponent.class).vertices);

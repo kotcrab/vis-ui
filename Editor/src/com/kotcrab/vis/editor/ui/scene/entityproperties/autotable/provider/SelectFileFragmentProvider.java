@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
-import com.artemis.Entity;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -87,9 +86,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 		final SelectFileDialog selectFontDialog = new SelectFileDialog(annotation.extension(), annotation.hideExtension(),
 				folder, assetsMetadata, directoryDescriptor, file -> {
 			for (EntityProxy proxy : properties.getSelectedEntities()) {
-				for (Entity entity : proxy.getEntities()) {
-					holder.value.applyChanges(entity, file);
-				}
+				holder.value.applyChanges(proxy.getEntity(), file);
 			}
 
 			properties.getParentTab().dirty();

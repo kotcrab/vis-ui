@@ -35,7 +35,6 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangePolygonAction;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.util.polygon.Clipper;
 import com.kotcrab.vis.editor.util.polygon.Clipper.Polygonizer;
 import com.kotcrab.vis.editor.util.polygon.PolygonUtils;
@@ -520,7 +519,7 @@ public class PolygonTool extends BaseSelectionTool {
 			return;
 		}
 
-		if (selection.size() > 1 || selection.first() instanceof GroupEntityProxy) {
+		if (selection.size() > 1) {
 			statusLabel.setText(SELECT_ONLY_ONE);
 			overVertex = null;
 			selectedVertex = null;
@@ -536,7 +535,7 @@ public class PolygonTool extends BaseSelectionTool {
 			return;
 		}
 
-		component = proxy.getEntities().get(0).getComponent(PolygonComponent.class);
+		component = proxy.getEntity().getComponent(PolygonComponent.class);
 
 		statusLabel.setVisible(false);
 		buttonTable.setVisible(true);

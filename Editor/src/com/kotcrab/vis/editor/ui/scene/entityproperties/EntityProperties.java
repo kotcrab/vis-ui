@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.artemis.Component;
+import com.artemis.Entity;
 import com.artemis.EntityEdit;
 import com.artemis.utils.Bag;
 import com.badlogic.gdx.Gdx;
@@ -51,11 +52,12 @@ import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.ComponentAddAction;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntitiesSelection;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragment;
 import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.ui.TintImage;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.PhysicsPropertiesComponentTable;
@@ -66,6 +68,7 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.GroupUITab
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.TtfTextUITable;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
+import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
 import com.kotcrab.vis.editor.util.scene2d.EventStopper;
 import com.kotcrab.vis.editor.util.scene2d.FieldUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
@@ -254,7 +257,7 @@ public class EntityProperties extends VisTable implements Disposable {
 				ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
 
 				if (entities.size() == 0) return; //nothing is selected
-				undoModule.execute(new ComponentAddAction(componentManipulator, entities, clazz));
+				undoModule.execute(new ComponentAddAction(sceneMC, entities, clazz));
 				entityComponentChanged = true;
 			} catch (ReflectiveOperationException e) {
 				Log.exception(e);
@@ -264,8 +267,8 @@ public class EntityProperties extends VisTable implements Disposable {
 
 		addComponentButton = new VisTextButton("Add Component");
 		addComponentButton.addListener(new VisChangeListener((event, actor) -> {
-			boolean anyComponent = componentSelectDialog.build();
-			if (anyComponent == false) {
+			boolean anyComponentAvailable = componentSelectDialog.build();
+			if (anyComponentAvailable == false) {
 				statusBarModule.setText("There isn't any available component");
 				return;
 			}
@@ -428,7 +431,7 @@ public class EntityProperties extends VisTable implements Disposable {
 
 		activeComponentTables.clear();
 		if (entities.size() > 0) {
-			Bag<Component> components = entities.get(0).getEntities().get(0).getComponents(new Bag<>());
+			Bag<Component> components = entities.get(0).getEntity().getComponents(new Bag<>());
 
 			for (Component component : components) {
 				if (component == null) continue;
@@ -629,10 +632,7 @@ public class EntityProperties extends VisTable implements Disposable {
 	private void updateValues () {
 		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
 
-		groupSelected = false;
-		entities.forEach(proxy -> {
-			if (proxy instanceof GroupEntityProxy) groupSelected = true;
-		});
+		groupSelected = ArrayUtils.has(entityManipulator.getSelection().getFragmentedSelection(), GroupSelectionFragment.class);
 
 		if (entities.size() == 0) {
 			setVisible(false);
@@ -724,6 +724,10 @@ public class EntityProperties extends VisTable implements Disposable {
 		return entityManipulator.getSelectedEntities();
 	}
 
+	public EntitiesSelection getSelection () {
+		return entityManipulator.getSelection();
+	}
+
 	private static class SnapshotUndoableActionGroup extends UndoableActionGroup {
 		public SnapshotUndoableActionGroup () {
 			super("Change Entity Properties", "Change Entities Properties");
@@ -762,7 +766,8 @@ public class EntityProperties extends VisTable implements Disposable {
 		}
 
 		private void createSnapshot (IntMap<Bag<Component>> target) {
-			proxy.getEntities().forEach(entity -> target.put(entity.getId(), sceneIO.cloneEntityComponents(entity.getComponents(new Bag<>()))));
+			Entity entity = proxy.getEntity();
+			target.put(entity.getId(), sceneIO.cloneEntityComponents(entity.getComponents(new Bag<>())));
 		}
 
 		public boolean isSnapshotsEquals () {
@@ -782,15 +787,14 @@ public class EntityProperties extends VisTable implements Disposable {
 		}
 
 		private void replaceComponents (IntMap<Bag<Component>> source) {
-			proxy.getEntities().forEach(entity -> {
-				Bag<Component> oldComponents = new Bag<>();
-				entity.getComponents(oldComponents);
-				EntityEdit editor = entity.edit();
-				oldComponents.forEach(editor::remove);
+			Entity entity = proxy.getEntity();
+			Bag<Component> oldComponents = new Bag<>();
+			entity.getComponents(oldComponents);
+			EntityEdit editor = entity.edit();
+			oldComponents.forEach(editor::remove);
 
-				Bag<Component> newComponent = source.get(entity.getId());
-				newComponent.forEach(editor::add);
-			});
+			Bag<Component> newComponent = source.get(entity.getId());
+			newComponent.forEach(editor::add);
 			proxy.reload();
 		}
 

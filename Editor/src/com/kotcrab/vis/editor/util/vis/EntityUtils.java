@@ -18,9 +18,7 @@ package com.kotcrab.vis.editor.util.vis;
 
 import com.artemis.Component;
 import com.artemis.Entity;
-import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.NumberUtils;
 import com.kotcrab.vis.editor.util.value.*;
@@ -75,38 +73,32 @@ public class EntityUtils {
 	}
 
 	public static String getEntitiesCommonFloatValue (ImmutableArray<EntityProxy> proxies, FloatEntityValue objValue) {
-		float value = objValue.getFloat(proxies.first().getEntities().first());
+		float value = objValue.getFloat(proxies.first().getEntity());
 
 		for (EntityProxy proxy : proxies) {
-			for (Entity entity : proxy.getEntities()) {
-				if (value != objValue.getFloat(entity)) return "?";
-			}
+			if (value != objValue.getFloat(proxy.getEntity())) return "?";
 		}
 
 		return NumberUtils.floatToString(value);
 	}
 
 	public static String getEntitiesCommonIntegerValue (ImmutableArray<EntityProxy> proxies, IntegerEntityValue objValue) {
-		int value = objValue.getInteger(proxies.first().getEntities().first());
+		int value = objValue.getInteger(proxies.first().getEntity());
 
 		for (EntityProxy proxy : proxies) {
-			for (Entity entity : proxy.getEntities()) {
-				if (value != objValue.getInteger(entity)) return "?";
-			}
+			if (value != objValue.getInteger(proxy.getEntity())) return "?";
 		}
 
 		return String.valueOf(value);
 	}
 
 	public static void setCommonCheckBoxState (ImmutableArray<EntityProxy> proxies, IndeterminateCheckbox target, BooleanEntityValue value) {
-		boolean enabled = value.getBoolean(proxies.first().getEntities().first());
+		boolean enabled = value.getBoolean(proxies.first().getEntity());
 
 		for (EntityProxy proxy : proxies) {
-			for (Entity entity : proxy.getEntities()) {
-				if (enabled != value.getBoolean(entity)) {
-					target.setIndeterminate(true);
-					return;
-				}
+			if (enabled != value.getBoolean(proxy.getEntity())) {
+				target.setIndeterminate(true);
+				return;
 			}
 		}
 
@@ -114,12 +106,10 @@ public class EntityUtils {
 	}
 
 	public static String getCommonString (ImmutableArray<EntityProxy> proxies, String ifNotCommon, StringEntityValue value) {
-		String firstText = value.getString(proxies.first().getEntities().first());
+		String firstText = value.getString(proxies.first().getEntity());
 
 		for (EntityProxy proxy : proxies) {
-			for (Entity entity : proxy.getEntities()) {
-				if (value.getString(entity).equals(firstText) == false) return ifNotCommon;
-			}
+			if (value.getString(proxy.getEntity()).equals(firstText) == false) return ifNotCommon;
 		}
 
 		return firstText;
@@ -199,36 +189,19 @@ public class EntityUtils {
 
 	public static void stream (ImmutableArray<EntityProxy> proxies, Consumer<Entity> consumer) {
 		for (int i = 0; i < proxies.size(); i++) {
-			Array<Entity> entities = proxies.get(i).getEntities();
-
-			for (int j = 0; j < entities.size; j++) {
-				consumer.accept(entities.get(j));
-			}
+			consumer.accept(proxies.get(i).getEntity());
 		}
 	}
 
 	public static void stream (ImmutableArray<EntityProxy> proxies, BiConsumer<EntityProxy, Entity> consumer) {
 		for (int i = 0; i < proxies.size(); i++) {
 			EntityProxy proxy = proxies.get(i);
-			Array<Entity> entities = proxy.getEntities();
-
-			for (int j = 0; j < entities.size; j++) {
-				consumer.accept(proxy, entities.get(j));
-			}
-		}
-	}
-
-	public static boolean isMultipleEntitiesSelected (ImmutableArray<EntityProxy> proxies) {
-		if (proxies.size() > 1) {
-			return true;
-		} else {
-			EntityProxy proxy = proxies.get(0);
-			return (proxy instanceof GroupEntityProxy && proxy.getEntities().size > 1);
+			consumer.accept(proxy, proxy.getEntity());
 		}
 	}
 
 	public static Entity getFirstEntity (ImmutableArray<EntityProxy> proxies) {
-		return proxies.first().getEntities().first();
+		return proxies.first().getEntity();
 	}
 
 	public static <T extends Component> T getFirstEntityComponent (ImmutableArray<EntityProxy> proxies, Class<T> componentClass) {

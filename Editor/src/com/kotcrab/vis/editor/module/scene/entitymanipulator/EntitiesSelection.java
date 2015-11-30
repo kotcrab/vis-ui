@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.module.scene.entitymanipulator;
 
+import com.artemis.Entity;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.scene.system.EntitiesCollector;
 import com.kotcrab.vis.editor.module.scene.system.EntitiesCollector.Result;
@@ -76,6 +77,10 @@ public class EntitiesSelection {
 
 	public void forEach (Consumer<EntityProxy> consumer) {
 		selectedProxies.forEach(consumer);
+	}
+
+	public void forEachEntity (Consumer<Entity> consumer) {
+		selectedProxies.forEach(proxy -> consumer.accept(proxy.getEntity()));
 	}
 
 	public boolean isSelected (EntityProxy proxy) {

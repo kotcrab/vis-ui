@@ -20,6 +20,7 @@ import com.artemis.BaseSystem;
 import com.artemis.Component;
 import com.artemis.Entity;
 import com.artemis.EntityEdit;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
@@ -53,7 +54,7 @@ public class VisComponentManipulator extends BaseSystem {
 		jobs.clear();
 
 		entityManipulatorModule.markSceneDirty();
-		entityManipulatorModule.selectedEntitiesChanged();
+		Gdx.app.postRunnable(() -> entityManipulatorModule.selectedEntitiesChanged());
 	}
 
 	private static class Job {

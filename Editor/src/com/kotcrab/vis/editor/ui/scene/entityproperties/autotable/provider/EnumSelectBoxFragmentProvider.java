@@ -69,7 +69,7 @@ public class EnumSelectBoxFragmentProvider extends AutoTableFragmentProvider<ATE
 			set.selectBox.setIndeterminate(true);
 		} else {
 			set.selectBox.setIndeterminate(false);
-			set.selectBox.setSelectedEnum((Enum) field.get(proxies.first().getEntities().first().getComponent(componentClass)));
+			set.selectBox.setSelectedEnum((Enum) field.get(proxies.first().getEntity().getComponent(componentClass)));
 		}
 	}
 

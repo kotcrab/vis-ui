@@ -45,7 +45,7 @@ public class StringStringMapFragmentProvider extends AutoTableFragmentProvider<A
 	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
 		StringStringMapView view = views.get(field);
 
-		if (EntityUtils.isMultipleEntitiesSelected(proxies))
+		if (proxies.size() > 1)
 			view.multipleSelected();
 		else
 			view.setMap(EntityUtils.getFirstEntityComponent(proxies, VariablesComponent.class).variables);

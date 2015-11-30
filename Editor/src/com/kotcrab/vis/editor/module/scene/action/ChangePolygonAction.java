@@ -36,18 +36,15 @@ public class ChangePolygonAction implements UndoableAction {
 
 	public ChangePolygonAction (EntityManipulatorModule entityManipulator, EntityProxy proxy) {
 		this.entityManipulator = entityManipulator;
-		if (proxy.getEntities().size > 1)
-			throw new IllegalStateException("This action supports only one entity per proxy");
-
 		this.proxy = proxy;
 
-		PolygonComponent component = proxy.getEntities().first().getComponent(PolygonComponent.class);
+		PolygonComponent component = proxy.getEntity().getComponent(PolygonComponent.class);
 		oldVertices = copyArray(component.vertices);
 		oldFaces = component.faces;
 	}
 
 	public void takeSnapshot () {
-		PolygonComponent component = proxy.getEntities().first().getComponent(PolygonComponent.class);
+		PolygonComponent component = proxy.getEntity().getComponent(PolygonComponent.class);
 		vertices = copyArray(component.vertices);
 		faces = component.faces;
 	}
@@ -77,7 +74,7 @@ public class ChangePolygonAction implements UndoableAction {
 
 		proxy.reload();
 
-		PolygonComponent component = proxy.getEntities().first().getComponent(PolygonComponent.class);
+		PolygonComponent component = proxy.getEntity().getComponent(PolygonComponent.class);
 		component.vertices = newPoints;
 		component.faces = newVertices;
 

@@ -20,7 +20,6 @@ import com.artemis.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
@@ -100,26 +99,25 @@ public abstract class TextUITable extends SpecificUITable {
 
 		selectFontDialog = new SelectFileDialog(getFontExtension(), fileAccess.getAssetsFolder(), file -> {
 			for (EntityProxy proxy : properties.getSelectedEntities()) {
-				for (Entity entity : proxy.getEntities()) {
-					TextComponent text = entity.getComponent(TextComponent.class);
-					AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
-					VisAssetDescriptor asset = assetComponent.asset;
+				Entity entity = proxy.getEntity();
+				TextComponent text = entity.getComponent(TextComponent.class);
+				AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
+				VisAssetDescriptor asset = assetComponent.asset;
 
-					VisAssetDescriptor newAsset = null;
+				VisAssetDescriptor newAsset = null;
 
-					if (asset instanceof BmpFontAsset) {
-						BmpFontAsset fontAsset = (BmpFontAsset) asset;
-						newAsset = new BmpFontAsset(fileAccess.relativizeToAssetsFolder(file), fontAsset.getFontParameter());
-					} else if (asset instanceof TtfFontAsset) {
-						TtfFontAsset fontAsset = (TtfFontAsset) asset;
-						newAsset = new TtfFontAsset(fileAccess.relativizeToAssetsFolder(file), fontAsset.getFontSize());
-					} else
-						throw new UnsupportedAssetDescriptorException(asset);
+				if (asset instanceof BmpFontAsset) {
+					BmpFontAsset fontAsset = (BmpFontAsset) asset;
+					newAsset = new BmpFontAsset(fileAccess.relativizeToAssetsFolder(file), fontAsset.getFontParameter());
+				} else if (asset instanceof TtfFontAsset) {
+					TtfFontAsset fontAsset = (TtfFontAsset) asset;
+					newAsset = new TtfFontAsset(fileAccess.relativizeToAssetsFolder(file), fontAsset.getFontSize());
+				} else
+					throw new UnsupportedAssetDescriptorException(asset);
 
-					text.setFont(fontCache.getGeneric(newAsset, properties.getSceneModuleContainer().getScene().pixelsPerUnit));
+				text.setFont(fontCache.getGeneric(newAsset, properties.getSceneModuleContainer().getScene().pixelsPerUnit));
 
-					assetComponent.asset = newAsset;
-				}
+				assetComponent.asset = newAsset;
 			}
 
 			properties.getParentTab().dirty();

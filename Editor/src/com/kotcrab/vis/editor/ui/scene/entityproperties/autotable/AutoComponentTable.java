@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
 
 import com.artemis.Component;
-import com.artemis.Entity;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
@@ -124,17 +123,14 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 		try {
 
 			for (EntityProxy proxy : properties.getSelectedEntities()) {
-				for (Entity entity : proxy.getEntities()) {
+				T component = proxy.getEntity().getComponent(componentClass);
 
-					T component = entity.getComponent(componentClass);
-
-					for (Field field : componentClass.getDeclaredFields()) {
-						Class type = field.getType();
-						for (Annotation annotation : field.getAnnotations()) {
-							AutoTableFragmentProvider fragmentProvider = fragmentProviders.get(annotation.annotationType());
-							if (fragmentProvider != null) {
-								fragmentProvider.setToEntities(type, field, component);
-							}
+				for (Field field : componentClass.getDeclaredFields()) {
+					Class type = field.getType();
+					for (Annotation annotation : field.getAnnotations()) {
+						AutoTableFragmentProvider fragmentProvider = fragmentProviders.get(annotation.annotationType());
+						if (fragmentProvider != null) {
+							fragmentProvider.setToEntities(type, field, component);
 						}
 					}
 				}

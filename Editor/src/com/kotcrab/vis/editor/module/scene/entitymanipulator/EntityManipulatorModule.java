@@ -64,7 +64,6 @@ import com.kotcrab.vis.editor.module.scene.system.ZIndexManipulator;
 import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.Layer;
 import com.kotcrab.vis.editor.ui.dialog.SelectLayerDialog;
@@ -270,8 +269,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private void copy () {
 		if (entitiesSelection.size() > 0) {
 			entitiesClipboard.clear();
-			entitiesSelection.forEach(proxy -> proxy.getEntities().forEach(
-					entity -> entitiesClipboard.add(sceneIO.createProtoEntity(entityEngine, entity, false))));
+			entitiesSelection.forEachEntity(entity -> entitiesClipboard.add(sceneIO.createProtoEntity(entityEngine, entity, false)));
 
 			EntityProxy proxy = entitiesSelection.peek();
 
@@ -370,7 +368,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private void deleteSelectedEntities () {
 		ObjectSet<Entity> entities = new ObjectSet<>();
 
-		entitiesSelection.forEach(proxy -> entities.addAll(proxy.getEntities()));
+		entitiesSelection.forEachEntity(entity -> entities.addAll(entity));
 		softSelectionReset();
 
 		undoModule.execute(new EntitiesRemovedAction(sceneContainer, entityEngine, entities));
@@ -533,10 +531,7 @@ public class EntityManipulatorModule extends SceneModule {
 			}
 		}
 
-		if (proxy instanceof GroupEntityProxy)
-			selectAll();
-		else
-			select(proxy);
+		select(proxy);
 	}
 
 	public void select (Entity entity) {
@@ -690,9 +685,9 @@ public class EntityManipulatorModule extends SceneModule {
 
 		sceneOutline.rebuildOutline();
 
-		GroupEntityProxy groupProxy = new GroupEntityProxy(new Array<>(entitiesSelection.getSelection().toArray()), gid);
+		EntityProxy proxy = entitiesSelection.getSelection().first(); //selecting one proxy will select whole group
 		softSelectionReset();
-		select(groupProxy);
+		select(proxy);
 	}
 
 	public void ungroupSelection () {
@@ -701,19 +696,20 @@ public class EntityManipulatorModule extends SceneModule {
 			return;
 		}
 
-		GroupEntityProxy selectionProxy = null; //proxy that will be used later to select group objects
+		//fragment that will be used later to select group objects
+		GroupSelectionFragment selectionFragment = null;
 
 		UndoableActionGroup actionGroup = new UndoableActionGroup("Ungroup");
 
-		for (EntityProxy entity : entitiesSelection.getSelection()) {
-			if (entity instanceof GroupEntityProxy) {
-				GroupEntityProxy group = (GroupEntityProxy) entity;
-				selectionProxy = group;
-				actionGroup.add(new GroupAction(new ImmutableArray<>(group.getProxies()), group.getGroupId(), entitiesSelection.getGroupId(), false));
+		for (SelectionFragment f : entitiesSelection.getFragmentedSelection()) {
+			if (f instanceof GroupSelectionFragment) {
+				GroupSelectionFragment fragment = (GroupSelectionFragment) f;
+				selectionFragment = fragment;
+				actionGroup.add(new GroupAction(fragment.getProxies(), fragment.getGroupId(), entitiesSelection.getGroupId(), false));
 			}
 		}
 
-		if (selectionProxy != null) {
+		if (selectionFragment != null) {
 			actionGroup.finalizeGroup();
 			undoModule.execute(actionGroup);
 
@@ -721,7 +717,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 			sceneOutline.rebuildOutline();
 
-			selectionProxy.getProxies().forEach(this::selectAppend);
+			selectionFragment.getProxies().forEach(this::selectAppend);
 		} else
 			statusBar.setText("No group selected!");
 	}

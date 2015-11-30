@@ -55,11 +55,9 @@ public class BMPTextUITable extends TextUITable {
 	public boolean isSupported (EntityProxy proxy) {
 		if (proxy.hasComponent(TextComponent.class) == false) return false;
 
-		for (Entity entity : proxy.getEntities()) {
-			VisAssetDescriptor asset = entity.getComponent(AssetComponent.class).asset;
-			if (asset instanceof BmpFontAsset == false)
-				return false;
-		}
+		VisAssetDescriptor asset = proxy.getEntity().getComponent(AssetComponent.class).asset;
+		if (asset instanceof BmpFontAsset == false)
+			return false;
 
 		return true;
 	}
@@ -73,14 +71,13 @@ public class BMPTextUITable extends TextUITable {
 	@Override
 	protected void updateEntitiesValues () {
 		for (EntityProxy proxy : properties.getSelectedEntities()) {
-			for (Entity entity : proxy.getEntities()) {
-				TextComponent text = entity.getComponent(TextComponent.class);
-				AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
+			Entity entity = proxy.getEntity();
+			TextComponent text = entity.getComponent(TextComponent.class);
+			AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
 
-				if (distanceFieldCheck.isIndeterminate() == false) {
-					text.setDistanceFieldShaderEnabled(distanceFieldCheck.isChecked());
-					assetComponent.asset = getNewAsset((BmpFontAsset) assetComponent.asset, distanceFieldCheck.isChecked());
-				}
+			if (distanceFieldCheck.isIndeterminate() == false) {
+				text.setDistanceFieldShaderEnabled(distanceFieldCheck.isChecked());
+				assetComponent.asset = getNewAsset((BmpFontAsset) assetComponent.asset, distanceFieldCheck.isChecked());
 			}
 		}
 	}
