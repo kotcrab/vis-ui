@@ -31,6 +31,7 @@ import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.ui.HorizontalFlowGroup;
 import com.kotcrab.vis.editor.ui.tab.StartPageTab;
 import com.kotcrab.vis.editor.util.URLUtils;
+import com.kotcrab.vis.ui.util.value.VisValue;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
@@ -84,6 +85,7 @@ public class VisTwitterReader extends EditorModule {
 		statusesTable.left().top();
 
 		scrollPane = new VisScrollPane(statusesTable);
+		scrollPane.setOverscroll(false, true);
 		scrollPane.setFlickScroll(false);
 		scrollPane.setFadeScrollBars(false);
 		scrollPane.setScrollingDisabled(true, false);
@@ -154,7 +156,7 @@ public class VisTwitterReader extends EditorModule {
 
 					tweetTable.addActor(label);
 				}
-				statusesTable.add(tweetTable).width(390).spaceBottom(4).padRight(4).row();
+				statusesTable.add(tweetTable).width(new VisValue(context -> scrollPane.getScrollWidth() - 10)).spaceBottom(4).padRight(4).row();
 				statusesTable.addSeparator().spaceBottom(4);
 			}
 
