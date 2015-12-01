@@ -37,6 +37,7 @@ import com.kotcrab.vis.editor.util.async.AsyncTask;
 import com.kotcrab.vis.editor.util.async.AsyncTaskListener;
 import com.kotcrab.vis.editor.util.async.SteppedAsyncTask;
 import com.kotcrab.vis.editor.util.vis.EditorException;
+import com.kotcrab.vis.editor.util.vis.WikiPages;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
@@ -56,6 +57,10 @@ import java.util.zip.ZipOutputStream;
  * @author Kotcrab
  */
 public class ProjectIOModule extends EditorModule {
+	//confirm dialog buttons
+	private static final int OK = 0;
+	private static final int CONVERTING_HELP = 1;
+
 	private static final String TAG = "ProjectIOModule";
 
 	public static final String PROJECT_FILE = "project.data";
@@ -128,9 +133,13 @@ public class ProjectIOModule extends EditorModule {
 			ProjectVersionDescriptor descriptor = ProjectVersionModule.getNewJson().fromJson(ProjectVersionDescriptor.class, versionFile);
 
 			if (descriptor.versionCode < 20) {
-				//TODO: include link to converting help
-				DialogUtils.showOKDialog(stage, "Warning", "This project uses old project format and must be converted before loading." +
-						"\nThis is a early preview version and converting it's not available yet.");
+				String[] buttons = {"How to convert project", "OK"};
+				Integer[] returns = {CONVERTING_HELP, OK};
+				DialogUtils.showConfirmDialog(stage, "Warning", "This project uses old project format and must be converted before loading." +
+						"\nThis is a early preview version and converting it's not available yet.", buttons, returns, result -> { //TODO edit msg
+					if (result == CONVERTING_HELP) Gdx.net.openURI(WikiPages.CONVERTING_FROM_VISEDITOR_025);
+				});
+
 				return;
 			}
 

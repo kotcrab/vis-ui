@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.editor.module.project;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -27,13 +28,16 @@ import com.kotcrab.vis.editor.extension.AssetType;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.GsonModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
+import com.kotcrab.vis.editor.module.editor.ToastModule.ToastTable;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
-import com.kotcrab.vis.editor.ui.toast.DetailsToast;
+import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
+import com.kotcrab.vis.editor.util.vis.WikiPages;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.widget.LinkLabel;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 
 /** @author Kotcrab */
 public class AssetsMetadataModule extends ProjectModule {
@@ -121,9 +125,9 @@ public class AssetsMetadataModule extends ProjectModule {
 			BufferedReader reader = new BufferedReader(new FileReader(metadataFile.file()));
 			metadata = gson.fromJson(reader, ObjectMap.class);
 			reader.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Log.exception(e);
-			toastModule.show(new DetailsToast("Error occurred when loading assets metadata.\nIt's not recommend to continue.", e)); //TODO: help link what to do
+			toastModule.show(new DamagedAssetsMetadataToast("Error occurred while loading assets metadata.\nIt's not recommend to continue.").setDetailsMessage(e));
 		}
 	}
 
@@ -133,9 +137,9 @@ public class AssetsMetadataModule extends ProjectModule {
 			FileWriter writer = new FileWriter(metadataFile.file());
 			gson.toJson(metadata, writer);
 			writer.close();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Log.exception(e);
-			toastModule.show(new DetailsToast("Error occurred when saving assets metadata.\nIt's not recommend to continue.", e)); //TODO: help link what to do
+			toastModule.show(new DamagedAssetsMetadataToast("Error occurred while saving assets metadata.\nIt's not recommend to continue.").setDetailsMessage(e));
 		}
 	}
 
@@ -154,8 +158,9 @@ public class AssetsMetadataModule extends ProjectModule {
 				msg += descId + "\n";
 			}
 
-			msg += "\nIt's not recommend to continue."; //TODO: help link what to do
-			toastModule.show(new DetailsToast("Missing AssetDirectory definitions. It's not recommend to continue.", msg));
+			msg += "\nIt's not recommend to continue.";
+			toastModule.show(new DamagedAssetsMetadataToast("Missing AssetDirectory definitions.\nIt's not recommend to continue.")
+					.setDetailsMessage("Missing AssetDirectory definitions.", msg));
 		}
 	}
 
@@ -167,5 +172,33 @@ public class AssetsMetadataModule extends ProjectModule {
 		}
 
 		return false;
+	}
+
+	public static class DamagedAssetsMetadataToast extends ToastTable {
+		private LinkLabel details;
+
+		public DamagedAssetsMetadataToast (String message) {
+			LinkLabel help = new LinkLabel("Help");
+			details = new LinkLabel("Details");
+			LinkLabel ignore = new LinkLabel("Ignore");
+
+			content.add(message).row();
+			content.add(TableBuilder.build(12, help, details, ignore)).right();
+
+			help.setListener(url -> Gdx.net.openURI(WikiPages.DAMAGED_ASSETS_METADATA));
+			ignore.setListener(url -> fadeOut());
+
+			pack();
+		}
+
+		DamagedAssetsMetadataToast setDetailsMessage (String message, String detailsText) {
+			details.setListener(url -> DialogUtils.showErrorDialog(getStage(), message, detailsText));
+			return this;
+		}
+
+		DamagedAssetsMetadataToast setDetailsMessage (Exception e) {
+			details.setListener(url -> DialogUtils.showErrorDialog(getStage(), "Error cause: " + e.getMessage(), e));
+			return this;
+		}
 	}
 }

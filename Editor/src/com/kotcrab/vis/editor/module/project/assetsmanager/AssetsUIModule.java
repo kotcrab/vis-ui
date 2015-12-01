@@ -55,6 +55,7 @@ import com.kotcrab.vis.editor.util.async.CopyFileTaskDescriptor;
 import com.kotcrab.vis.editor.util.async.CopyFilesAsyncTask;
 import com.kotcrab.vis.editor.util.scene2d.*;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
+import com.kotcrab.vis.editor.util.vis.WikiPages;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.layout.GridGroup;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
@@ -76,6 +77,10 @@ import java.util.Optional;
  */
 @EventBusSubscriber
 public class AssetsUIModule extends ProjectModule implements WatchListener, VisTabbedPaneListener {
+	//ConfirmDialog buttons
+	private static final int OK = 0;
+	private static final int HELP = 1;
+
 	private TabsModule tabsModule;
 	private QuickAccessModule quickAccessModule;
 	private StatusBarModule statusBar;
@@ -633,16 +638,14 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 		private void safeMarkDirectory (FileHandle dir, boolean dirMarked, String fullCodeName) {
 			if (dirMarked) {
-				//TODO: include link to help
 				//TODO: add safe remark feature
-				DialogUtils.showOptionDialog(getStage(), "Warning", "This directory is already marked, changing it may\n" +
-								"result in unexpected errors if asset files are used in scenes.", OptionDialogType.YES_CANCEL,
-						new OptionDialogAdapter() {
-							@Override
-							public void yes () {
-								markDirectory(dir, fullCodeName);
-							}
-						}).setYesButtonText("Change Anyway");
+				String[] buttons = {"Help", "Change Anyway"};
+				Integer[] returns = {HELP, OK};
+				DialogUtils.showConfirmDialog(getStage(), "Warning", "This directory is already marked, changing it may\n" +
+						"result in unexpected errors if asset files are used in scenes.", buttons, returns, result -> {
+					if (result == HELP) Gdx.net.openURI(WikiPages.MARKING_DIRECTORIES);
+					if (result == OK) markDirectory(dir, fullCodeName);
+				});
 			} else {
 				if (dir.list().length > 0) {
 					DialogUtils.showOptionDialog(getStage(), "Warning", "This directory already contains files. Marking it \n" +
