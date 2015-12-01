@@ -461,7 +461,9 @@ public class DialogUtils {
 			}
 
 			this.listener = listener;
-			text(text);
+
+			text(new VisLabel(text, Align.center));
+			defaults().padBottom(3);
 
 			for (int i = 0; i < buttons.length; i++) {
 				button(buttons[i], returns[i]);

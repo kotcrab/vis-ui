@@ -1,10 +1,11 @@
 #### Version: 0.9.5-SNAPSHOT (LibGDX 1.7.1)
-- **Added**: constructor `SimpleFormValidator(Disableable)`
-- **Added**: `ActorUtils#keepWithinStage(Actor)`
+- **Added**: constructor `SimpleFormValidator(Disableable)`.
+- **Added**: `ActorUtils#keepWithinStage(Actor)`.
 - **Deprecated**: `ColumnGroup`. Will be removed in future versions. Use libGDX's `VerticalGroup` which supports more features.
 - **Fixed**: `BasicColorPicker` palette color selection were flipped.
-- **Fixed**: `BasicColorPicker` removed unnecessary right padding
+- **Fixed**: `BasicColorPicker` removed unnecessary right padding.
 - **Fixed**: `MenuItem` sub menu could appear outside screen.
+- **Fixed**: `DialogUtils`'s `ConfirmDialog` text label was not centered.
 
 #### Old changelog file:
 ```
