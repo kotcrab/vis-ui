@@ -17,6 +17,7 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.badlogic.gdx.graphics.Color;
+import com.kotcrab.vis.runtime.properties.*;
 import com.kotcrab.vis.runtime.system.inflater.SpriteInflater;
 
 /**
@@ -24,7 +25,8 @@ import com.kotcrab.vis.runtime.system.inflater.SpriteInflater;
  * @author Kotcrab
  * @see SpriteInflater
  */
-public class ProtoVisSprite extends ProtoComponent {
+public class ProtoVisSprite extends ProtoComponent implements PositionOwner, SizeOwner, OriginOwner, RotationOwner,
+		ScaleOwner, TintOwner, FlipOwner, Resizeable {
 	public float x, y;
 	public float width, height;
 	public float originX, originY;
@@ -51,9 +53,119 @@ public class ProtoVisSprite extends ProtoComponent {
 		scaleX = sprite.getScaleX();
 		scaleY = sprite.getScaleY();
 
-		tint = sprite.getColor().cpy();
+		tint = sprite.getTint().cpy();
 
 		flipX = sprite.isFlipX();
 		flipY = sprite.isFlipY();
+	}
+
+	@Override
+	public float getX () {
+		return x;
+	}
+
+	@Override
+	public void setX (float x) {
+		this.x = x;
+	}
+
+	@Override
+	public float getY () {
+		return y;
+	}
+
+	@Override
+	public void setY (float y) {
+		this.y = y;
+	}
+
+	@Override
+	public void setPosition (float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	@Override
+	public float getWidth () {
+		return width;
+	}
+
+	@Override
+	public float getHeight () {
+		return height;
+	}
+
+	@Override
+	public void setSize (float width, float height) {
+		this.width = width;
+		this.height = height;
+	}
+
+	@Override
+	public float getOriginX () {
+		return originX;
+	}
+
+	@Override
+	public float getOriginY () {
+		return originY;
+	}
+
+	@Override
+	public void setOrigin (float originX, float originY) {
+		this.originX = originX;
+		this.originY = originY;
+	}
+
+	@Override
+	public float getRotation () {
+		return rotation;
+	}
+
+	@Override
+	public void setRotation (float rotation) {
+		this.rotation = rotation;
+	}
+
+	@Override
+	public float getScaleX () {
+		return scaleX;
+	}
+
+	@Override
+	public float getScaleY () {
+		return scaleY;
+	}
+
+	@Override
+	public void setScale (float scaleX, float scaleY) {
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
+	}
+
+	@Override
+	public boolean isFlipX () {
+		return flipX;
+	}
+
+	@Override
+	public boolean isFlipY () {
+		return flipY;
+	}
+
+	@Override
+	public void setFlip (boolean flipX, boolean flipY) {
+		this.flipX = flipX;
+		this.flipY = flipY;
+	}
+
+	@Override
+	public Color getTint () {
+		return tint;
+	}
+
+	@Override
+	public void setTint (Color tint) {
+		this.tint = tint;
 	}
 }

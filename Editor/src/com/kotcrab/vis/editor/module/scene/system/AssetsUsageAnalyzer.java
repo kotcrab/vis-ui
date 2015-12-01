@@ -23,7 +23,7 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.Bag;
 import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.util.StoresAssetDescriptor;
+import com.kotcrab.vis.runtime.properties.StoresAssetDescriptor;
 
 /**
  * This system should be passive.

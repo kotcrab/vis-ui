@@ -16,8 +16,12 @@
 
 package com.kotcrab.vis.runtime.component;
 
+import com.kotcrab.vis.runtime.properties.FlipOwner;
+import com.kotcrab.vis.runtime.properties.PositionOwner;
+import com.kotcrab.vis.runtime.properties.RotationOwner;
+
 /** @author Kotcrab */
-public class SpriterProtoComponent extends ProtoComponent {
+public class SpriterProtoComponent extends ProtoComponent implements PositionOwner, RotationOwner, FlipOwner {
 	public float x, y;
 	public float rotation;
 	public float scale;
@@ -50,5 +54,57 @@ public class SpriterProtoComponent extends ProtoComponent {
 		comp.setRotation(rotation);
 		comp.setFlip(flipX, flipY);
 		comp.onDeserialize(playOnStart, defaultAnimation);
+	}
+
+	@Override
+	public float getX () {
+		return x;
+	}
+
+	@Override
+	public void setX (float x) {
+		this.x = x;
+	}
+
+	@Override
+	public float getY () {
+		return y;
+	}
+
+	@Override
+	public void setY (float y) {
+		this.y = y;
+	}
+
+	@Override
+	public void setPosition (float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	@Override
+	public float getRotation () {
+		return rotation;
+	}
+
+	@Override
+	public void setRotation (float rotation) {
+		this.rotation = rotation;
+	}
+
+	@Override
+	public boolean isFlipX () {
+		return flipX;
+	}
+
+	@Override
+	public boolean isFlipY () {
+		return flipY;
+	}
+
+	@Override
+	public void setFlip (boolean x, boolean y) {
+		this.flipX = x;
+		this.flipY = y;
 	}
 }

@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.util;
+package com.kotcrab.vis.runtime.properties;
 
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+/** @author Kotcrab */
+public interface SizeOwner {
+	float getWidth ();
 
-/**
- * Implemented by components that stores {@link VisAssetDescriptor}. Used by VisEditor asset usage analyzer
- * to determinate whether certain asset is used.
- * @author Kotcrab
- */
-public interface StoresAssetDescriptor {
-	/** @return stored asset, may return null */
-	VisAssetDescriptor getAsset ();
+	float getHeight ();
 }

@@ -19,16 +19,14 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
-import com.kotcrab.vis.runtime.accessor.FlipPropertiesAccessor;
-import com.kotcrab.vis.runtime.accessor.RotationPropertiesAccessor;
+import com.kotcrab.vis.runtime.properties.*;
 import com.kotcrab.vis.runtime.spriter.Data;
 import com.kotcrab.vis.runtime.spriter.Loader;
 import com.kotcrab.vis.runtime.spriter.Player;
-import com.kotcrab.vis.runtime.util.UsesProtoComponent;
+import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
 /** @author Kotcrab */
-public class SpriterComponent extends Component implements BasicPropertiesAccessor, FlipPropertiesAccessor, RotationPropertiesAccessor, UsesProtoComponent {
+public class SpriterComponent extends Component implements PositionOwner, SizeOwner, BoundsOwner, FlipOwner, RotationOwner, UsesProtoComponent {
 	public final Loader<Sprite> loader;
 	public final Player player;
 

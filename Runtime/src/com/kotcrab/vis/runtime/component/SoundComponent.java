@@ -18,7 +18,7 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 import com.badlogic.gdx.audio.Sound;
-import com.kotcrab.vis.runtime.util.UsesProtoComponent;
+import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 
 /**

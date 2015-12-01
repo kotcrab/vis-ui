@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.accessor;
+package com.kotcrab.vis.runtime.properties;
 
-/**
- * Used by VisEditor EntityProxy to access flip attributes
- * @author Kotcrab
- */
-public interface FlipPropertiesAccessor {
+/** @author Kotcrab */
+public interface FlipOwner {
 	boolean isFlipX ();
 
 	boolean isFlipY ();

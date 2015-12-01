@@ -195,7 +195,7 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 				ProxyNode proxyNode = (ProxyNode) node;
 				SingleSelectionFragment fragment = (SingleSelectionFragment) selFragment;
 
-				if (proxyNode.proxy.compareProxyByID(fragment.getProxy())) {
+				if (proxyNode.proxy.compareProxyByUUID(fragment.getProxy())) {
 					tree.getSelection().add(node);
 					return true;
 				}

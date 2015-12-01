@@ -19,65 +19,41 @@ package com.kotcrab.vis.editor.proxy;
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.util.gdx.ParticleUtils;
-import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
-import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.ParticleComponent;
+import com.kotcrab.vis.runtime.properties.BoundsOwner;
+import com.kotcrab.vis.runtime.properties.SizeOwner;
 
 /** @author Kotcrab */
 public class ParticleProxy extends EntityProxy {
-	private transient ParticleComponent particle;
+	private ParticleComponent particle;
+
+	private Accessor accessor;
 
 	public ParticleProxy (Entity entity) {
 		super(entity);
-		particle = entity.getComponent(ParticleComponent.class);
 	}
 
 	@Override
-	protected BasicPropertiesAccessor initAccessors () {
-		return new Accessor();
+	protected void createAccessors () {
+		accessor = new Accessor();
+	}
+
+	@Override
+	protected void reloadAccessors () {
+		particle = getEntity().getComponent(ParticleComponent.class);
+		enableBasicProperties(particle, accessor, accessor);
 	}
 
 	@Override
 	public String getEntityName () {
-		return "ParticleEntity";
+		return "Particle Effect";
 	}
 
-	@Override
-	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
-		return assetDescriptor instanceof PathAsset;
-	}
-
-	private class Accessor implements BasicPropertiesAccessor {
+	private class Accessor implements SizeOwner, BoundsOwner {
 		private Rectangle bounds = new Rectangle();
 
 		public Accessor () {
 			bounds = new Rectangle();
-		}
-
-		@Override
-		public float getX () {
-			return particle.getX();
-		}
-
-		@Override
-		public void setX (float x) {
-			particle.setX(x);
-		}
-
-		@Override
-		public float getY () {
-			return particle.getY();
-		}
-
-		@Override
-		public void setY (float y) {
-			particle.setY(y);
-		}
-
-		@Override
-		public void setPosition (float x, float y) {
-			particle.setPosition(x, y);
 		}
 
 		@Override

@@ -69,14 +69,14 @@ public class SpineScaleUpdaterSystem extends EntityProcessingSystem {
 
 			float x = spineComponent.getX(), y = spineComponent.getY();
 			boolean flipX = spineComponent.isFlipX(), flipY = spineComponent.isFlipY();
-			Color color = spineComponent.getColor();
+			Color color = spineComponent.getTint();
 
 			spineComponent.onDeserialize(spineCache.get(assetComponent.asset));
 			previewComponent.updateAnimation = true;
 
 			spineComponent.setPosition(x, y);
 			spineComponent.setFlip(flipX, flipY);
-			spineComponent.setColor(color);
+			spineComponent.setTint(color);
 		}
 	}
 }

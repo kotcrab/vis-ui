@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.accessor;
+package com.kotcrab.vis.runtime.properties;
 
-/**
- * Used by VisEditor EntityProxy to access size attributes
- * @author Kotcrab
- */
-public interface SizePropertiesAccessor {
-	void setSize (float width, float height);
+/** @author Kotcrab */
+public interface RotationOwner {
+	float getRotation ();
+
+	void setRotation (float rotation);
 }

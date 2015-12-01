@@ -17,9 +17,10 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
+import com.kotcrab.vis.runtime.properties.PositionOwner;
 
 /** @author Kotcrab */
-public class PointComponent extends Component {
+public class PointComponent extends Component implements PositionOwner {
 	public float x;
 	public float y;
 
@@ -27,6 +28,32 @@ public class PointComponent extends Component {
 	}
 
 	public PointComponent (float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	@Override
+	public float getX () {
+		return x;
+	}
+
+	@Override
+	public void setX (float x) {
+		this.x = x;
+	}
+
+	@Override
+	public float getY () {
+		return y;
+	}
+
+	@Override
+	public void setY (float y) {
+		this.y = y;
+	}
+
+	@Override
+	public void setPosition (float x, float y) {
 		this.x = x;
 		this.y = y;
 	}

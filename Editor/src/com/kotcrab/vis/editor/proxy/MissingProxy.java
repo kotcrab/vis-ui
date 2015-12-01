@@ -18,20 +18,25 @@ package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.properties.BoundsOwner;
+import com.kotcrab.vis.runtime.properties.PositionOwner;
+import com.kotcrab.vis.runtime.properties.SizeOwner;
 
 /** @author Kotcrab */
 public class MissingProxy extends EntityProxy {
 	private Rectangle rectangle = new Rectangle();
+
+	private PositionOwner posOwner;
+	private SizeOwner sizeOwner;
+	private BoundsOwner boundsOwner;
 
 	public MissingProxy (Entity entity) {
 		super(entity);
 	}
 
 	@Override
-	protected BasicPropertiesAccessor initAccessors () {
-		return new BasicPropertiesAccessor() {
+	protected void createAccessors () {
+		posOwner = new PositionOwner() {
 			@Override
 			public float getX () {
 				return 0;
@@ -56,7 +61,9 @@ public class MissingProxy extends EntityProxy {
 			public void setPosition (float x, float y) {
 
 			}
+		};
 
+		sizeOwner = new SizeOwner() {
 			@Override
 			public float getWidth () {
 				return 0;
@@ -66,21 +73,18 @@ public class MissingProxy extends EntityProxy {
 			public float getHeight () {
 				return 0;
 			}
-
-			@Override
-			public Rectangle getBoundingRectangle () {
-				return rectangle;
-			}
 		};
+
+		boundsOwner = () -> rectangle;
+	}
+
+	@Override
+	protected void reloadAccessors () {
+		enableBasicProperties(posOwner, sizeOwner, boundsOwner);
 	}
 
 	@Override
 	public String getEntityName () {
 		return "~Missing Proxy";
-	}
-
-	@Override
-	protected boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
-		return false;
 	}
 }

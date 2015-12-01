@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.accessor;
+package com.kotcrab.vis.runtime.properties;
 
-/**
- * Used by VisEditor EntityProxy to access origin attributes
- * @author Kotcrab
- */
-public interface OriginPropertiesAccessor {
-	float getOriginX ();
+import com.badlogic.gdx.graphics.Color;
 
-	float getOriginY ();
+/** @author Kotcrab */
+public interface TintOwner {
+	Color getTint ();
 
-	void setOrigin (float x, float y);
+	void setTint (Color tint);
 }

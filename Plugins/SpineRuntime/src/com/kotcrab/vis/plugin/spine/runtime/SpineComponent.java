@@ -37,13 +37,14 @@ import com.esotericsoftware.spine.AnimationState;
 import com.esotericsoftware.spine.AnimationStateData;
 import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.SkeletonData;
-import com.kotcrab.vis.runtime.accessor.ColorPropertiesAccessor;
-import com.kotcrab.vis.runtime.accessor.FlipPropertiesAccessor;
 import com.kotcrab.vis.runtime.component.ProtoComponent;
-import com.kotcrab.vis.runtime.util.UsesProtoComponent;
+import com.kotcrab.vis.runtime.properties.TintOwner;
+import com.kotcrab.vis.runtime.properties.FlipOwner;
+import com.kotcrab.vis.runtime.properties.PositionOwner;
+import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
 /** @author Kotcrab */
-public class SpineComponent extends Component implements FlipPropertiesAccessor, ColorPropertiesAccessor, UsesProtoComponent {
+public class SpineComponent extends Component implements PositionOwner, FlipOwner, TintOwner, UsesProtoComponent {
 	public transient Skeleton skeleton;
 	public transient AnimationStateData stateData;
 	public transient AnimationState state;
@@ -63,7 +64,7 @@ public class SpineComponent extends Component implements FlipPropertiesAccessor,
 
 		setPosition(other.getX(), other.getY());
 		setFlip(other.isFlipX(), other.isFlipY());
-		setColor(other.getColor());
+		setTint(other.getTint());
 	}
 
 	private void init (SkeletonData skeletonData) {
@@ -90,22 +91,27 @@ public class SpineComponent extends Component implements FlipPropertiesAccessor,
 			state.setAnimation(0, defaultAnimation, true);
 	}
 
+	@Override
 	public float getX () {
 		return skeleton.getX();
 	}
 
+	@Override
 	public void setX (float x) {
 		skeleton.setX(x);
 	}
 
+	@Override
 	public float getY () {
 		return skeleton.getY();
 	}
 
+	@Override
 	public void setY (float y) {
 		skeleton.setY(y);
 	}
 
+	@Override
 	public void setPosition (float x, float y) {
 		skeleton.setPosition(x, y);
 	}
@@ -126,12 +132,12 @@ public class SpineComponent extends Component implements FlipPropertiesAccessor,
 	}
 
 	@Override
-	public void setColor (Color color) {
-		skeleton.setColor(color);
+	public void setTint (Color tint) {
+		skeleton.setColor(tint);
 	}
 
 	@Override
-	public Color getColor () {
+	public Color getTint () {
 		return skeleton.getColor();
 	}
 

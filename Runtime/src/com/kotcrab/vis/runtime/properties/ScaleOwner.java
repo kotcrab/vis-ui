@@ -14,16 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.accessor;
+package com.kotcrab.vis.runtime.properties;
 
-import com.badlogic.gdx.graphics.Color;
+/** @author Kotcrab */
+public interface ScaleOwner {
+	float getScaleX ();
 
-/**
- * Used by VisEditor EntityProxy to access color attributes
- * @author Kotcrab
- */
-public interface ColorPropertiesAccessor {
-	Color getColor ();
+	float getScaleY ();
 
-	void setColor (Color color);
+	void setScale (float x, float y);
 }

@@ -14,28 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.properties;
 
-import com.kotcrab.vis.runtime.assets.ShaderAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.properties.StoresAssetDescriptor;
 
 /**
- * {@link ProtoComponent} for {@link ShaderComponent}
+ * Implemented by components that stores {@link VisAssetDescriptor}. Used by VisEditor asset usage analyzer
+ * to determinate whether certain asset is used.
  * @author Kotcrab
  */
-public class ShaderProtoComponent extends ProtoComponent implements StoresAssetDescriptor {
-	public ShaderAsset asset;
-
-	public ShaderProtoComponent () {
-	}
-
-	public ShaderProtoComponent (ShaderAsset asset) {
-		this.asset = asset;
-	}
-
-	@Override
-	public VisAssetDescriptor getAsset () {
-		return asset;
-	}
+public interface StoresAssetDescriptor {
+	/** @return stored asset, may return null */
+	VisAssetDescriptor getAsset ();
 }

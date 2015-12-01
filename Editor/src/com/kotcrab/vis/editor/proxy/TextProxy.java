@@ -17,10 +17,6 @@
 package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
-import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
-import com.kotcrab.vis.runtime.assets.BmpFontAsset;
-import com.kotcrab.vis.runtime.assets.TtfFontAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.TextComponent;
 
 /** @author Kotcrab */
@@ -31,22 +27,21 @@ public class TextProxy extends EntityProxy {
 	}
 
 	@Override
-	protected BasicPropertiesAccessor initAccessors () {
-		TextComponent c = entity.getComponent(TextComponent.class);
-		enableOrigin(c);
-		enableScale(c);
-		enableColor(c);
-		enableRotation(c);
-		return c;
+	protected void createAccessors () {
+	}
+
+	@Override
+	protected void reloadAccessors () {
+		TextComponent text = getEntity().getComponent(TextComponent.class);
+		enableBasicProperties(text, text, text);
+		enableOrigin(text);
+		enableScale(text);
+		enableColor(text);
+		enableRotation(text);
 	}
 
 	@Override
 	public String getEntityName () {
-		return "TextEntity";
-	}
-
-	@Override
-	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
-		return assetDescriptor instanceof BmpFontAsset || assetDescriptor instanceof TtfFontAsset;
+		return "Text";
 	}
 }

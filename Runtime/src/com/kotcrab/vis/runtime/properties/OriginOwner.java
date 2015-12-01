@@ -14,28 +14,13 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.accessor;
+package com.kotcrab.vis.runtime.properties;
 
-import com.badlogic.gdx.math.Rectangle;
+/** @author Kotcrab */
+public interface OriginOwner {
+	float getOriginX ();
 
-/**
- * Used by VisEditor EntityProxy to access entities basic attributes
- * @author Kotcrab
- */
-public interface BasicPropertiesAccessor {
-	float getX ();
+	float getOriginY ();
 
-	void setX (float x);
-
-	float getY ();
-
-	void setY (float y);
-
-	void setPosition (float x, float y);
-
-	float getWidth ();
-
-	float getHeight ();
-
-	Rectangle getBoundingRectangle ();
+	void setOrigin (float x, float y);
 }

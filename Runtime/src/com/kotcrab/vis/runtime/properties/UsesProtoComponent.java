@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.accessor;
+package com.kotcrab.vis.runtime.properties;
+
+import com.kotcrab.vis.runtime.component.ProtoComponent;
 
 /**
- * Used by VisEditor EntityProxy to access rotation attributes
+ * Component implementing this interface uses {@link ProtoComponent} for serialization. Such components must use
+ * InflaterSystem that will transform ProtoComponent into actual component. This is often used for components that cannot
+ * be serialized directly.
  * @author Kotcrab
  */
-public interface RotationPropertiesAccessor {
-	float getRotation ();
-
-	void setRotation (float rotation);
+public interface UsesProtoComponent {
+	ProtoComponent getProtoComponent ();
 }

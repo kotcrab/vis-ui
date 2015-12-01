@@ -17,6 +17,7 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.badlogic.gdx.graphics.Color;
+import com.kotcrab.vis.runtime.properties.*;
 import com.kotcrab.vis.runtime.system.inflater.TextInflater;
 
 /**
@@ -24,7 +25,7 @@ import com.kotcrab.vis.runtime.system.inflater.TextInflater;
  * @author Kotcrab
  * @see TextInflater
  */
-public class TextProtoComponent extends ProtoComponent {
+public class TextProtoComponent extends ProtoComponent implements PositionOwner, OriginOwner, RotationOwner, ScaleOwner, TintOwner {
 	public float x, y;
 	public float originX, originY;
 	public float rotation;
@@ -51,7 +52,7 @@ public class TextProtoComponent extends ProtoComponent {
 		scaleX = component.getScaleX();
 		scaleY = component.getScaleY();
 
-		tint = component.getColor().cpy();
+		tint = component.getTint().cpy();
 
 		text = component.getText();
 		autoSetOriginToCenter = component.isAutoSetOriginToCenter();
@@ -70,5 +71,87 @@ public class TextProtoComponent extends ProtoComponent {
 		component.setAutoSetOriginToCenter(autoSetOriginToCenter);
 
 		component.setDistanceFieldShaderEnabled(isUsesDistanceField);
+	}
+
+	@Override
+	public float getX () {
+		return x;
+	}
+
+	@Override
+	public void setX (float x) {
+		this.x = x;
+	}
+
+	@Override
+	public float getY () {
+		return y;
+	}
+
+	@Override
+	public void setY (float y) {
+		this.y = y;
+	}
+
+	@Override
+	public void setPosition (float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	@Override
+	public float getOriginX () {
+		return originX;
+	}
+
+	@Override
+	public float getOriginY () {
+		return originY;
+	}
+
+	@Override
+	public void setOrigin (float x, float y) {
+		this.originX = x;
+		this.originY = y;
+	}
+
+	@Override
+	public float getRotation () {
+		return rotation;
+	}
+
+	@Override
+	public void setRotation (float rotation) {
+		this.rotation = rotation;
+	}
+
+	@Override
+	public float getScaleX () {
+		return scaleX;
+	}
+
+	@Override
+	public float getScaleY () {
+		return scaleY;
+	}
+
+	@Override
+	public void setScale (float x, float y) {
+		this.scaleX = x;
+		this.scaleY = y;
+	}
+
+	public void setScaleY (float scaleY) {
+		this.scaleY = scaleY;
+	}
+
+	@Override
+	public Color getTint () {
+		return tint;
+	}
+
+	@Override
+	public void setTint (Color tint) {
+		this.tint = this.tint;
 	}
 }

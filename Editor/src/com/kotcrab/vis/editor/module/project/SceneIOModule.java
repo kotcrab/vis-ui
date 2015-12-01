@@ -44,7 +44,7 @@ import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.ProtoComponent;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.util.EntityEngine;
-import com.kotcrab.vis.runtime.util.UsesProtoComponent;
+import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.rits.cloning.Cloner;
 
 import java.io.BufferedReader;

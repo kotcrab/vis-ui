@@ -14,16 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.accessor;
+package com.kotcrab.vis.runtime.properties;
 
-/**
- * Used by VisEditor EntityProxy to access scale attributes
- * @author Kotcrab
- */
-public interface ScalePropertiesAccessor {
-	float getScaleX ();
+import com.badlogic.gdx.math.Rectangle;
 
-	float getScaleY ();
-
-	void setScale (float x, float y);
+/** @author Kotcrab */
+public interface BoundsOwner {
+	Rectangle getBoundingRectangle ();
 }

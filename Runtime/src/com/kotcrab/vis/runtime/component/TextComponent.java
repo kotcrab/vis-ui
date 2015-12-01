@@ -24,15 +24,15 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.runtime.accessor.*;
-import com.kotcrab.vis.runtime.util.UsesProtoComponent;
+import com.kotcrab.vis.runtime.properties.*;
+import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
 /**
  * Text component storing all text properties
  * @author Kotcrab
  */
-public class TextComponent extends Component implements BasicPropertiesAccessor, ScalePropertiesAccessor,
-		RotationPropertiesAccessor, OriginPropertiesAccessor, ColorPropertiesAccessor, UsesProtoComponent {
+public class TextComponent extends Component implements PositionOwner, SizeOwner, BoundsOwner, ScaleOwner,
+		RotationOwner, OriginOwner, TintOwner, UsesProtoComponent {
 	protected boolean distanceFieldShaderEnabled;
 
 	private transient BitmapFontCache cache;
@@ -77,13 +77,13 @@ public class TextComponent extends Component implements BasicPropertiesAccessor,
 		setOrigin(other.getOriginX(), other.getOriginY());
 		setScale(other.getScaleX(), other.getScaleY());
 		setRotation(other.getRotation());
-		setColor(other.getColor());
+		setTint(other.getTint());
 	}
 
 	public void setFont (BitmapFont font) {
 		cache = new BitmapFontCache(font);
 		setText(text);
-		setColor(color);
+		setTint(color);
 	}
 
 	private void translate () {
@@ -239,18 +239,18 @@ public class TextComponent extends Component implements BasicPropertiesAccessor,
 	}
 
 	@Override
-	public Color getColor () {
+	public Color getTint () {
 		return color;
 	}
 
 	@Override
-	public void setColor (Color color) {
-		this.color = color;
+	public void setTint (Color tint) {
+		this.color = tint;
 		setText(text);
 	}
 
 	public void setColor (float r, float g, float b, float a) {
-		setColor(new Color(r, g, b, a));
+		setTint(new Color(r, g, b, a));
 	}
 
 	@Override

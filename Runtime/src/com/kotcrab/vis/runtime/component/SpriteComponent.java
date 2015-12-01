@@ -20,15 +20,15 @@ import com.artemis.Component;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.runtime.accessor.*;
-import com.kotcrab.vis.runtime.util.UsesProtoComponent;
+import com.kotcrab.vis.runtime.properties.*;
+import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
 /**
  * Stores entity sprite
  * @author Kotcrab
  */
-public class SpriteComponent extends Component implements BasicPropertiesAccessor, SizePropertiesAccessor, OriginPropertiesAccessor,
-		ScalePropertiesAccessor, ColorPropertiesAccessor, RotationPropertiesAccessor, FlipPropertiesAccessor, UsesProtoComponent {
+public class SpriteComponent extends Component implements UsesProtoComponent, PositionOwner, SizeOwner, Resizeable,
+		BoundsOwner, ScaleOwner, TintOwner, RotationOwner, OriginOwner, FlipOwner {
 	public Sprite sprite;
 
 	public SpriteComponent () {
@@ -114,13 +114,13 @@ public class SpriteComponent extends Component implements BasicPropertiesAccesso
 	}
 
 	@Override
-	public Color getColor () {
+	public Color getTint () {
 		return sprite.getColor();
 	}
 
 	@Override
-	public void setColor (Color color) {
-		sprite.setColor(color);
+	public void setTint (Color tint) {
+		sprite.setColor(tint);
 	}
 
 	@Override
