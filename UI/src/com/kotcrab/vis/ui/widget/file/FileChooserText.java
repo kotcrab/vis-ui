@@ -21,7 +21,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.i18n.BundleText;
 
 /**
- * Contains texts for chooser access via I18NBundle
+ * Contains texts for chooser access via I18NBundle.
  * @author Kotcrab
  * @since 0.7.0
  */

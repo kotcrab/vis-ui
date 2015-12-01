@@ -36,19 +36,21 @@ import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.*;
 
 /**
- * Utilities for displaying various dialogs, equivalent of JOptionPane from Swing.
+ * Utilities for displaying various type of dialogs, equivalent of JOptionPane from Swing.
  * @author Kotcrab
  * @since 0.2.0
  */
 public class DialogUtils {
-
 	private static final int BUTTON_CANCEL = 0;
 	private static final int BUTTON_YES = 1;
 	private static final int BUTTON_NO = 2;
 	private static final int BUTTON_OK = 3;
 	private static final int BUTTON_DETAILS = 4;
 
-	/** Dialog with text and OK button. */
+	/**
+	 * Dialog with given text and single OK button.
+	 * @param title dialog title
+	 */
 	public static VisDialog showOKDialog (Stage stage, String title, String text) {
 		VisDialog dialog = new VisDialog(title);
 		dialog.text(text);
@@ -61,6 +63,9 @@ public class DialogUtils {
 
 	/**
 	 * Dialog with text and buttons like Yes, No, Cancel.
+	 * @param title dialog title
+	 * @param type specifies what types of buttons will this dialog have
+	 * @param listener dialog buttons listener.
 	 * @return dialog for the purpose of changing buttons text.
 	 * @see OptionDialog
 	 * @since 0.6.0
@@ -72,8 +77,12 @@ public class DialogUtils {
 	}
 
 	/**
-	 * Dialog with title, text and n amount of buttons. If you need dialog with only buttons like Yes, No, Cancel etc.
+	 * Dialog with title, text and n amount of buttons. If you need dialog with only buttons like Yes, No, Cancel then
 	 * see {@link #showOptionDialog(Stage, String, String, OptionDialogType, OptionDialogListener)}.
+	 * <p>
+	 * @param title dialog title.
+	 * @param listener button listener for this dialog. This dialog is generic, listener type will depend on
+	 * 'returns' param type.
 	 * @since 0.7.0
 	 */
 	public static <T> ConfirmDialog<T> showConfirmDialog (Stage stage, String title, String text, String[] buttons, T[] returns, ConfirmDialogListener<T> listener) {
@@ -84,7 +93,9 @@ public class DialogUtils {
 
 	/**
 	 * Dialog with text and text field for user input. Cannot be canceled.
-	 * @param fieldTitle may be null.
+	 * @param title dialog title.
+	 * @param fieldTitle displayed before input field, may be null.
+	 * @param listener dialog buttons listener.
 	 */
 	public static InputDialog showInputDialog (Stage stage, String title, String fieldTitle, InputDialogListener listener) {
 		InputDialog dialog = new InputDialog(title, fieldTitle, true, null, listener);
@@ -94,8 +105,10 @@ public class DialogUtils {
 
 	/**
 	 * Dialog with text and text field for user input. Cannot be canceled.
-	 * @param validator used to validate user input, can be used to easily limit input to int etc. See {@link Validators} for premade validators.
-	 * @param fieldTitle may be null.
+	 * @param title dialog title.
+	 * @param fieldTitle displayed before input field, may be null.
+	 * @param validator used to validate user input. Eg. limit input to integers only. See {@link Validators} for built-in validators.
+	 * @param listener dialog buttons listener.
 	 */
 	public static InputDialog showInputDialog (Stage stage, String title, String fieldTitle, InputValidator validator, InputDialogListener listener) {
 		InputDialog dialog = new InputDialog(title, fieldTitle, true, validator, listener);
@@ -105,8 +118,10 @@ public class DialogUtils {
 
 	/**
 	 * Dialog with text and text field for user input.
-	 * @param cancelable if true dialog may be canceled.
-	 * @param fieldTitle may be null.
+	 * @param title dialog title.
+	 * @param cancelable if true dialog may be canceled by user.
+	 * @param fieldTitle displayed before input field, may be null.
+	 * @param listener dialog buttons listener.
 	 */
 	public static InputDialog showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputDialogListener listener) {
 		InputDialog dialog = new InputDialog(title, fieldTitle, cancelable, null, listener);
@@ -116,9 +131,10 @@ public class DialogUtils {
 
 	/**
 	 * Dialog with text and text field for user input.
+	 * @param title dialog title
 	 * @param validator used to validate user input, can be used to easily limit input to int etc. See {@link Validators} for premade validators.
 	 * @param cancelable if true dialog may be canceled.
-	 * @param fieldTitle may be null.
+	 * @param fieldTitle displayed before input field, may be null.
 	 */
 	public static InputDialog showInputDialog (Stage stage, String title, String fieldTitle, boolean cancelable, InputValidator validator, InputDialogListener listener) {
 		InputDialog dialog = new InputDialog(title, fieldTitle, cancelable, validator, listener);
@@ -131,7 +147,7 @@ public class DialogUtils {
 		return showErrorDialog(stage, text, (String) null);
 	}
 
-	/** Dialog with title "Error", provided text, and exception stacktrace available after pressing 'Details' button. */
+	/** Dialog with title "Error", provided text and exception stacktrace available after pressing 'Details' button. */
 	public static ErrorDialog showErrorDialog (Stage stage, String text, Exception exception) {
 		if (exception == null)
 			return showErrorDialog(stage, text, (String) null);
@@ -181,6 +197,10 @@ public class DialogUtils {
 		YES_NO, YES_NO_CANCEL, YES_CANCEL
 	}
 
+	/**
+	 * Dialog with input field and optional {@link InputValidator}. Can be used directly although you should use {@link DialogUtils}
+	 * showInputDialog methods.
+	 */
 	public static class InputDialog extends VisWindow {
 		private InputDialogListener listener;
 		private VisTextField field;
@@ -246,12 +266,13 @@ public class DialogUtils {
 			return setText(text, false);
 		}
 
-		/** @param selectText if true text will be selected (this can be useful if you want to allow user quickly erase all text) */
+		/** @param selectText if true text will be selected (this can be useful if you want to allow user quickly erase all text). */
 		public InputDialog setText (String text, boolean selectText) {
 			field.setText(text);
 			field.setCursorPosition(text.length());
-			if (selectText)
+			if (selectText) {
 				field.selectAll();
+			}
 
 			return this;
 		}
@@ -260,10 +281,11 @@ public class DialogUtils {
 			field.addListener(new ChangeListener() {
 				@Override
 				public void changed (ChangeEvent event, Actor actor) {
-					if (field.isInputValid())
+					if (field.isInputValid()) {
 						okButton.setDisabled(false);
-					else
+					} else {
 						okButton.setDisabled(true);
+					}
 				}
 			});
 			return this;
@@ -299,6 +321,10 @@ public class DialogUtils {
 		}
 	}
 
+	/**
+	 * Dialog with text and buttons like Yes, No, Cancel. Can be used directly although you should use {@link DialogUtils}
+	 * showOptionDialog methods.
+	 */
 	public static class OptionDialog extends VisDialog {
 		private OptionDialogListener listener;
 
@@ -359,6 +385,10 @@ public class DialogUtils {
 		}
 	}
 
+	/**
+	 * Dialog with text and exception stacktrace available after pressing Details button.
+	 * Can be used directly although you should use {@link DialogUtils} showErrorDialog methods.
+	 */
 	public static class ErrorDialog extends VisDialog {
 		private VisTable detailsTable = new VisTable(true);
 		private Cell<?> detailsCell;
@@ -414,14 +444,26 @@ public class DialogUtils {
 		}
 	}
 
-	/** @author Javier, Kotcrab */
+	/**
+	 * Dialog with title, text and n amount of buttons. Can be used directly although you should use {@link DialogUtils}
+	 * showConfirmDialog methods.
+	 * @author Javier
+	 * @author Kotcrab
+	 */
 	public static class ConfirmDialog<T> extends VisDialog {
 		private ConfirmDialogListener<T> listener;
 
 		public ConfirmDialog (String title, String text, String[] buttons, T[] returns, ConfirmDialogListener<T> listener) {
 			super(title);
+
+			if (buttons.length != returns.length) {
+				throw new IllegalStateException("buttons.length must be equal to returns.length");
+			}
+
 			this.listener = listener;
-			text(text);
+
+			text(new VisLabel(text, Align.center));
+			defaults().padBottom(3);
 
 			for (int i = 0; i < buttons.length; i++) {
 				button(buttons[i], returns[i]);
@@ -438,6 +480,7 @@ public class DialogUtils {
 		}
 	}
 
+	/** {@link DialogUtils} I18N properties. */
 	private enum Text implements BundleText {
 		YES("yes"),
 		NO("no"),

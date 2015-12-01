@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
@@ -32,8 +33,9 @@ import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 
 /**
- * A multiple-line text input field, entirely based on {@link TextField}
+ * A multiple-line text input field, entirely based on {@link TextField}.
  * @author Kotcrab
+ * @see TextArea
  */
 public class VisTextArea extends VisTextField {
 	/** Array storing lines breaks positions * */

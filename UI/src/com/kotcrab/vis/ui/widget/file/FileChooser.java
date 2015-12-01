@@ -28,7 +28,6 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.layout.ColumnGroup;
 import com.kotcrab.vis.ui.util.OsUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
@@ -106,9 +105,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private VisScrollPane fileScrollPane;
 
 	private VisTable shortcutsTable;
-	private ColumnGroup shortcutsMainPanel;
-	private ColumnGroup shortcutsRootsPanel;
-	private ColumnGroup shortcutsFavoritesPanel;
+	private VerticalGroup shortcutsMainPanel;
+	private VerticalGroup shortcutsRootsPanel;
+	private VerticalGroup shortcutsFavoritesPanel;
 
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextField;
@@ -172,8 +171,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		createBottomButtons();
 
 		createShortcutsMainPanel();
-		shortcutsRootsPanel = new ColumnGroup();
-		shortcutsFavoritesPanel = new ColumnGroup();
+		shortcutsRootsPanel = new VerticalGroup();
+		shortcutsFavoritesPanel = new VerticalGroup();
 		rebuildShortcutsFavoritesPanel();
 
 		fileMenu = new FilePopupMenu(style.popupMenuStyleName, this);
@@ -353,7 +352,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void createShortcutsMainPanel () {
-		shortcutsMainPanel = new ColumnGroup();
+		shortcutsMainPanel = new VerticalGroup();
 		String userHome = System.getProperty("user.home");
 		String userName = System.getProperty("user.name");
 		File userDesktop = new File(userHome + "/Desktop");
@@ -653,11 +652,11 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void updateSelectedFileFieldText () {
-		if (selectedItems.size == 0)
+		if (selectedItems.size == 0) {
 			selectedFileTextField.setText("");
-		else if (selectedItems.size == 1)
+		} else if (selectedItems.size == 1) {
 			selectedFileTextField.setText(selectedItems.get(0).file.name());
-		else {
+		} else {
 			StringBuilder b = new StringBuilder();
 
 			for (FileItem item : selectedItems) {

@@ -23,6 +23,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SplitPane.SplitPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -33,14 +34,12 @@ import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
- * A container that contains two widgets and is divided either horizontally or vertically. The user may resize the widgets. The
- * child widgets are always sized to fill their half of the splitpane.
- * <p>
- * The preferred size of a splitpane is that of the child widgets and the size of the {@link SplitPaneStyle#handle}. The widgets
- * are sized depending on the splitpane's size and the {@link #setSplitAmount(float) split position}.
+ * Extends functionality of standard {@link SplitPane}. Style supports handle over {@link Drawable}. Due to scope of
+ * changes made this widget is not compatible with {@link SplitPane}.
  * @author mzechner
  * @author Nathan Sweet
  * @author Kotcrab
+ * @see SplitPane
  */
 public class VisSplitPane extends WidgetGroup {
 	VisSplitPaneStyle style;
@@ -97,6 +96,7 @@ public class VisSplitPane extends WidgetGroup {
 
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				//TODO potential bug with libgdx scene2d?
 				//fixes issue when split bar could be still dragged even when touchable is set to childrenOnly, probably scene2d issue
 				if (isTouchable() == false) return false;
 
@@ -369,7 +369,7 @@ public class VisSplitPane extends WidgetGroup {
 	}
 
 	public static class VisSplitPaneStyle extends SplitPaneStyle {
-		/** Optional * */
+		/** Optional **/
 		public Drawable handleOver;
 
 		public VisSplitPaneStyle () {

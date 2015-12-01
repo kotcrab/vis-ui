@@ -22,6 +22,8 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 
 /**
+ * Extends functionality of standard {@link Table}, supports setting default VisUI spacing and has utilities method for adding
+ * separators. Compatible with {@link Table}.
  * @author Kotcrab
  * @see Table
  */

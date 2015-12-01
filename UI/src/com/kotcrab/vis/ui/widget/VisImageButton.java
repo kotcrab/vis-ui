@@ -31,7 +31,11 @@ import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.BorderOwner;
 
-/** @author Kotcrab */
+/**
+ * Due to scope of changes made this widget is not compatible with standard {@link ImageButton}.
+ * @author Kotcrab
+ * @see ImageButton
+ */
 public class VisImageButton extends Button implements Focusable, BorderOwner {
 	private Image image;
 

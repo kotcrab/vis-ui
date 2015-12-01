@@ -26,8 +26,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 
 /**
- * Standard scene2d.ui Image with added method to change drawable using texture
+ * Compatible with {@link Image}. Does not provide additional features.
  * @author Kotcrab
+ * @see Image
  */
 public class VisImage extends Image {
 	public VisImage () {

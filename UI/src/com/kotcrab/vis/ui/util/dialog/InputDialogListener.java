@@ -22,11 +22,14 @@ package com.kotcrab.vis.ui.util.dialog;
  */
 public interface InputDialogListener {
 	/**
-	 * Called when input dialog has finished
-	 * @param input text entered by user
+	 * Called when input dialog has finished.
+	 * @param input text entered by user.
 	 */
 	void finished (String input);
 
-	/** Called when user canceled dialog or pressed 'close' button. Dialog must be cancelable for that */
+	/**
+	 * Called when user canceled dialog or pressed 'close' button. This won't be ever called if dialog is not
+	 * cancelable.
+	 */
 	void canceled ();
 }

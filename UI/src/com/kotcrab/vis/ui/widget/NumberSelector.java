@@ -39,7 +39,7 @@ import java.math.BigDecimal;
 
 /**
  * NumberSelector can be used to select number using buttons or by entering it into text fields. Supports
- * mimimum and maximum value, step size. Both integer and floats are supported. When using float you can specify
+ * minimum and maximum value, step size. Both integer and floats are supported. When using float you can specify
  * selector precision, see {@link #setPrecision(int)}. Similar to JSpinner from Swing.
  * @author Javier, Kotcrab
  * @since 0.7.0

@@ -21,11 +21,11 @@ import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
- * Utilities for VisTable/Table
+ * Utilities for VisTable/Table.
  * @author Kotcrab
  */
 public class TableUtils {
-	/** Sets default table spacing for VisUI skin. Uses values from current skin {@link Sizes} class obatined from {@link VisUI#getSizes()} */
+	/** Sets default table spacing for VisUI skin. Uses values from current skin {@link Sizes} class obtained from {@link VisUI#getSizes()}. */
 	public static void setSpacingDefaults (Table table) {
 		Sizes sizes = VisUI.getSizes();
 		if (sizes.spacingTop != 0) table.defaults().spaceTop(sizes.spacingTop);

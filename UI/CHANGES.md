@@ -1,7 +1,14 @@
-!IMPORTANT!
-Changelog was moved to CHANGES.md file. This file will be soon removed.
-https://github.com/kotcrab/VisEditor/tree/master/UI/CHANGES.md
+#### Version: 0.9.5-SNAPSHOT (LibGDX 1.7.1)
+- **Added**: constructor `SimpleFormValidator(Disableable)`.
+- **Added**: `ActorUtils#keepWithinStage(Actor)`.
+- **Deprecated**: `ColumnGroup`. Will be removed in future versions. Use libGDX's `VerticalGroup` which supports more features.
+- **Fixed**: `BasicColorPicker` palette color selection were flipped.
+- **Fixed**: `BasicColorPicker` removed unnecessary right padding.
+- **Fixed**: `MenuItem` sub menu could appear outside screen.
+- **Fixed**: `DialogUtils`'s `ConfirmDialog` text label was not centered.
 
+#### Old changelog file:
+```
 [0.9.4] [LibGDX 1.7.1]
 -Fixed GWT support
 
@@ -423,3 +430,4 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 
 [0.0.1] [LibGDX 1.4.1]
 -Initial release
+```

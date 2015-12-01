@@ -17,5 +17,5 @@ You can follow Vis development on my Twitter channels: [@VisEditor](https://twit
 You can also join our [forum and IRC channel](https://github.com/kotcrab/VisEditor/wiki/IRC-Channel-and-Forum)!
 
 #### Subprojects
-* [VisUI](https://github.com/kotcrab/VisEditor/wiki/VisUI) - flat design skin and scene2d.ui toolkit for libGDX - [CHANGES](https://github.com/kotcrab/VisEditor/blob/master/UI/CHANGES) file - [Documentation](https://github.com/kotcrab/VisEditor/wiki/VisUI)  
+* [VisUI](https://github.com/kotcrab/VisEditor/wiki/VisUI) - flat design skin and scene2d.ui toolkit for libGDX - [CHANGES](https://github.com/kotcrab/VisEditor/blob/master/UI/CHANGES.md) file - [Documentation](https://github.com/kotcrab/VisEditor/wiki/VisUI)  
 * [USL](https://github.com/kotcrab/VisEditor/wiki/USL) - UI Styling Language for scene2d.ui

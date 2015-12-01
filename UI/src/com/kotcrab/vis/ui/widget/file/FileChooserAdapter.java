@@ -19,9 +19,11 @@ package com.kotcrab.vis.ui.widget.file;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 
-/** @author Kotcrab */
+/**
+ * Empty implementation of {@link FileChooserListener}.
+ * @author Kotcrab
+ */
 public class FileChooserAdapter implements FileChooserListener {
-
 	@Override
 	public void canceled () {
 
@@ -36,5 +38,4 @@ public class FileChooserAdapter implements FileChooserListener {
 	public void selected (FileHandle file) {
 
 	}
-
 }

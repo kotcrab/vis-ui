@@ -136,7 +136,7 @@ public class BasicColorPicker extends VisTable implements Disposable {
 
 		rebuildMainTable();
 
-		add(mainTable).top().padRight(5);
+		add(mainTable).top();
 	}
 
 	private void rebuildMainTable () {

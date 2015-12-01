@@ -23,8 +23,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
- * A separator that can be used in menus, tables or other widgets, typically add to new row with fillX() and expandX().
- * {@link PopupMenu} and {@link VisTable} provides addSeparator() that automatically adds new separator.
+ * A separator widget (horizontal or vertical bar) that can be used in menus, tables or other widgets, typically added
+ * to new row with growX() (if creating horizontal separator) OR growY() (if creating vertical seperator)
+ * {@link PopupMenu} and {@link VisTable} provides utilities addSeparator() methods that adds new separator.
  * @author Kotcrab
  * @since 0.1.0
  */

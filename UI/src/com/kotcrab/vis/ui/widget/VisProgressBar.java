@@ -20,7 +20,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
+ * Compatible with {@link VisProgressBar}. Does not provide additional features.
  * @author Kotcrab
+ * @see ProgressBar
  */
 public class VisProgressBar extends ProgressBar {
 	public VisProgressBar (float min, float max, float stepSize, boolean vertical) {

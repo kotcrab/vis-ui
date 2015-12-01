@@ -26,10 +26,12 @@ import com.kotcrab.vis.ui.widget.VisValidatableTextField;
  * @author Kotcrab
  */
 public class Validators {
+	/** Shared static instance of {@link IntegerValidator}. Can be safely reused. */
 	public static final IntegerValidator INTEGERS = new IntegerValidator();
+	/** Shared static instance of {@link FloatValidator}. Can be safely reused. */
 	public static final FloatValidator FLOATS = new FloatValidator();
 
-	/** Validates whether input is a integer number */
+	/** Validates whether input is an integer number. You should use shared instance {@link Validators#INTEGERS}. */
 	public static class IntegerValidator implements InputValidator {
 		@Override
 		public boolean validateInput (String input) {
@@ -42,7 +44,7 @@ public class Validators {
 		}
 	}
 
-	/** Validates whether input is a float number */
+	/** Validates whether input is a float number. You should use shared instance {@link Validators#FLOATS}. */
 	public static class FloatValidator implements InputValidator {
 		@Override
 		public boolean validateInput (String input) {
@@ -55,7 +57,7 @@ public class Validators {
 		}
 	}
 
-	/** Validates whether input is lesser (alternatively lesser or equal) than provided number */
+	/** Validates whether input is lesser (alternatively lesser or equal) than provided number. */
 	public static class LesserThanValidator implements InputValidator {
 		private float lesserThan;
 		private boolean equals;
@@ -64,6 +66,7 @@ public class Validators {
 			this.lesserThan = lesserThan;
 		}
 
+		/** @param inputCanBeEqual if true <= comparison will be used, if false < will be used. */
 		public LesserThanValidator (float lesserThan, boolean inputCanBeEqual) {
 			this.lesserThan = lesserThan;
 			this.equals = inputCanBeEqual;
@@ -88,7 +91,7 @@ public class Validators {
 		}
 	}
 
-	/** Validates whether input is geater (alternatively greater or equal) than provided number */
+	/** Validates whether input is greater (alternatively greater or equal) than provided number. */
 	public static class GreaterThanValidator implements InputValidator {
 		private float greaterThan;
 		private boolean equals;
@@ -97,6 +100,7 @@ public class Validators {
 			this.greaterThan = greaterThan;
 		}
 
+		/** @param inputCanBeEqual if true >= comparison will be used, if false > will be used. */
 		public GreaterThanValidator (float greaterThan, boolean inputCanBeEqual) {
 			this.greaterThan = greaterThan;
 			this.equals = inputCanBeEqual;

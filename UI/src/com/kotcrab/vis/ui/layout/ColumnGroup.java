@@ -18,14 +18,16 @@ package com.kotcrab.vis.ui.layout;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Layout;
 import com.badlogic.gdx.utils.SnapshotArray;
 
 /**
- * ColumnGroup Lays it's children in single column. Each child is added in new row.
+ * ColumnGroup lays it's children in single column. Each child is added in new row.
  * @author Kotcrab
  * @since 0.8.2
+ * @deprecated use {@link VerticalGroup}
  */
 public class ColumnGroup extends WidgetGroup {
 	private float prefWidth;

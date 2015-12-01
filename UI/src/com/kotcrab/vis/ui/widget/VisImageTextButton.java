@@ -34,6 +34,8 @@ import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 
 /**
  * A button with a child {@link Image} and {@link Label}.
+ * <p>
+ * Due to scope of changes made this widget is not compatible with standard {@link ImageTextButton}.
  * @author Nathan Sweet
  * @author Kotcrab
  * @see ImageButton

@@ -16,9 +16,16 @@
 
 package com.kotcrab.vis.ui.widget;
 
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
 
-/** @author Kotcrab */
+/**
+ * Similar to {@link VisCheckBox} however uses round (instead of square) button {@link Drawable}. Note that if you
+ * want to achieve 'select only one option' behaviour you need to use {@link ButtonGroup}.
+ * @author Kotcrab
+ * @see VisCheckBox
+ */
 public class VisRadioButton extends VisCheckBox {
 	public VisRadioButton (String text) {
 		this(text, VisUI.getSkin().get("radio", VisCheckBoxStyle.class));
