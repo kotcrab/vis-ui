@@ -107,7 +107,7 @@ public class SpriterComponent extends Component implements PositionOwner, SizeOw
 	}
 
 	@Override
-	public ProtoComponent getProtoComponent () {
+	public ProtoComponent toProtoComponent () {
 		return new SpriterProtoComponent(this);
 	}
 

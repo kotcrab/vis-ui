@@ -112,10 +112,10 @@ public class EntityProxyCache extends Manager {
 			return new SoundAndMusicProxy(entity, false, pixelsPerUnit);
 		if (entity.getComponent(MusicComponent.class) != null)
 			return new SoundAndMusicProxy(entity, true, pixelsPerUnit);
-		if (entity.getComponent(SpriteComponent.class) != null) return new SpriteProxy(entity);
 		if (entity.getComponent(TextComponent.class) != null) return new TextProxy(entity);
 		if (entity.getComponent(SpriterComponent.class) != null) return new SpriterProxy(entity);
 		if (entity.getComponent(PointComponent.class) != null) return new PointProxy(entity, pixelsPerUnit);
+		if (entity.getComponent(VisSprite.class) != null) return new VisSpriteProxy(entity);
 
 		return null;
 	}

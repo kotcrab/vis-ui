@@ -17,139 +17,46 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.runtime.properties.*;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.kotcrab.vis.runtime.component.SimpleProtoComponent.Type;
+import com.kotcrab.vis.runtime.properties.FlipOwner;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
-/**
- * Entity component storing Sprite.
- * @author Kotcrab
- */
-public class VisSprite extends Component implements UsesProtoComponent, PositionOwner, SizeOwner, Resizeable,
-		BoundsOwner, ScaleOwner, TintOwner, RotationOwner, OriginOwner, FlipOwner {
-	public Sprite sprite;
+/** @author Kotcrab */
+public class VisSprite extends Component implements FlipOwner, UsesProtoComponent {
+	public TextureRegion region;
 
+	@Deprecated
 	public VisSprite () {
 	}
 
-	public VisSprite (Sprite sprite) {
-		this.sprite = sprite;
-	}
-
-	@Override
-	public float getX () {
-		return sprite.getX();
-	}
-
-	@Override
-	public void setX (float x) {
-		sprite.setX(x);
-	}
-
-	@Override
-	public float getY () {
-		return sprite.getY();
-	}
-
-	@Override
-	public void setY (float y) {
-		sprite.setY(y);
-	}
-
-	@Override
-	public void setPosition (float x, float y) {
-		sprite.setPosition(x, y);
-	}
-
-	@Override
-	public float getWidth () {
-		return sprite.getWidth();
-	}
-
-	@Override
-	public float getHeight () {
-		return sprite.getHeight();
-	}
-
-	@Override
-	public Rectangle getBoundingRectangle () {
-		return sprite.getBoundingRectangle();
-	}
-
-	@Override
-	public void setSize (float width, float height) {
-		sprite.setSize(width, height);
-	}
-
-	@Override
-	public float getOriginX () {
-		return sprite.getOriginX();
-	}
-
-	@Override
-	public float getOriginY () {
-		return sprite.getOriginY();
-	}
-
-	@Override
-	public void setOrigin (float x, float y) {
-		sprite.setOrigin(x, y);
-	}
-
-	@Override
-	public float getScaleX () {
-		return sprite.getScaleX();
-	}
-
-	@Override
-	public float getScaleY () {
-		return sprite.getScaleY();
-	}
-
-	@Override
-	public void setScale (float x, float y) {
-		sprite.setScale(x, y);
-	}
-
-	@Override
-	public Color getTint () {
-		return sprite.getColor();
-	}
-
-	@Override
-	public void setTint (Color tint) {
-		sprite.setColor(tint);
-	}
-
-	@Override
-	public float getRotation () {
-		return sprite.getRotation();
-	}
-
-	@Override
-	public void setRotation (float rotation) {
-		sprite.setRotation(rotation);
+	public VisSprite (TextureRegion region) {
+		this.region = region;
 	}
 
 	@Override
 	public boolean isFlipX () {
-		return sprite.isFlipX();
+		return region.isFlipX();
 	}
 
 	@Override
 	public boolean isFlipY () {
-		return sprite.isFlipY();
+		return region.isFlipY();
 	}
 
 	@Override
-	public void setFlip (boolean x, boolean y) {
-		sprite.setFlip(x, y);
+	public void setFlip (boolean flipX, boolean flipY) {
+		boolean doFlipX = false;
+		boolean doFlipY = false;
+
+		if (region.isFlipX() != flipX) doFlipX = true;
+		if (region.isFlipY() != flipY) doFlipY = true;
+
+		region.flip(doFlipX, doFlipY);
 	}
 
 	@Override
-	public ProtoComponent getProtoComponent () {
-		return new ProtoVisSprite(this);
+	public ProtoComponent toProtoComponent () {
+		return new SimpleProtoComponent(Type.SPRITE);
 	}
 }

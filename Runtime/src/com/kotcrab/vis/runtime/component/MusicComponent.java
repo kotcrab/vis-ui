@@ -45,7 +45,7 @@ public class MusicComponent extends Component implements UsesProtoComponent { //
 	}
 
 	@Override
-	public ProtoComponent getProtoComponent () {
+	public ProtoComponent toProtoComponent () {
 		return new MusicProtoComponent(this);
 	}
 

@@ -14,24 +14,9 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system;
-
-import com.artemis.Aspect;
-import com.artemis.ComponentMapper;
-import com.artemis.systems.IteratingSystem;
-import com.kotcrab.vis.runtime.component.PositionChanged;
+package com.kotcrab.vis.runtime.properties;
 
 /** @author Kotcrab */
-public class PositionChangedCleanerSystem extends IteratingSystem {
-	private ComponentMapper<PositionChanged> posChangedCm;
-
-	public PositionChangedCleanerSystem () {
-		super(Aspect.all(PositionChanged.class));
-	}
-
-	@Override
-	protected void process (int entityId) {
-		PositionChanged posChanged = posChangedCm.get(entityId);
-		if (posChanged.persistent == false) posChangedCm.remove(entityId);
-	}
+public interface Resizable {
+	void setSize (float width, float height);
 }

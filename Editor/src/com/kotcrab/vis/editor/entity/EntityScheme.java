@@ -18,15 +18,15 @@ package com.kotcrab.vis.editor.entity;
 
 import com.artemis.Component;
 import com.artemis.Entity;
+import com.artemis.annotations.Transient;
 import com.artemis.utils.Bag;
 import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.component.GroupComponent;
 import com.kotcrab.vis.runtime.component.IDComponent;
 import com.kotcrab.vis.runtime.data.EntityData;
-import com.kotcrab.vis.runtime.util.EntityEngine;
-import com.kotcrab.vis.runtime.util.TransientComponent;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /** @author Kotcrab */
 public class EntityScheme {
@@ -40,10 +40,10 @@ public class EntityScheme {
 		components = new Array<>(fillBag.size());
 
 		for (Component component : fillBag) {
-			if (component.getClass().isAnnotationPresent(TransientComponent.class)) continue;
+			if (component.getClass().isAnnotationPresent(Transient.class)) continue;
 
 			if (component instanceof UsesProtoComponent) {
-				components.add(((UsesProtoComponent) component).getProtoComponent());
+				components.add(((UsesProtoComponent) component).toProtoComponent());
 			} else {
 				components.add(component);
 			}
@@ -79,7 +79,7 @@ public class EntityScheme {
 				continue;
 
 			if (component instanceof UsesProtoComponent) {
-				dataComponents.add(((UsesProtoComponent) component).getProtoComponent());
+				dataComponents.add(((UsesProtoComponent) component).toProtoComponent());
 			} else if (component instanceof GroupComponent) { //strip empty GroupComponents
 				GroupComponent gdc = (GroupComponent) component;
 				if (gdc.groupIds.size > 0) dataComponents.add(component);

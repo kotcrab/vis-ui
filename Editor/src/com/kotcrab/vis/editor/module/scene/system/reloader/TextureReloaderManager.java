@@ -19,23 +19,22 @@ package com.kotcrab.vis.editor.module.scene.system.reloader;
 import com.artemis.*;
 import com.artemis.utils.IntBag;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
-import com.kotcrab.vis.editor.util.gdx.SpriteUtils;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SpriteComponent;
+import com.kotcrab.vis.runtime.component.VisSprite;
 
 /** @author Kotcrab */
 public class TextureReloaderManager extends Manager { //TODO: migrate all reloaders to entity processing systems from managers
 	private TextureCacheModule textureCache;
 
-	private ComponentMapper<SpriteComponent> spriteCm;
+	private ComponentMapper<VisSprite> spriteCm;
 	private ComponentMapper<AssetComponent> assetCm;
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
 	@Override
 	protected void initialize () {
-		subscription = subscriptionManager.get(Aspect.all(SpriteComponent.class, AssetComponent.class));
+		subscription = subscriptionManager.get(Aspect.all(VisSprite.class, AssetComponent.class));
 	}
 
 	public void reloadTextures () {
@@ -46,10 +45,10 @@ public class TextureReloaderManager extends Manager { //TODO: migrate all reload
 			int id = data[i];
 			Entity entity = world.getEntity(id);
 
-			SpriteComponent sprite = spriteCm.get(entity);
+			VisSprite sprite = spriteCm.get(entity);
 			VisAssetDescriptor asset = assetCm.get(entity).asset;
 
-			SpriteUtils.setRegion(sprite.sprite, textureCache.getRegion(asset));
+			sprite.region = textureCache.getRegion(asset);
 		}
 	}
 }

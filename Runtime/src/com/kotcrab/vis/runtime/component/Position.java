@@ -16,12 +16,13 @@
 
 package com.kotcrab.vis.runtime.component;
 
+import com.artemis.Component;
 import com.kotcrab.vis.runtime.properties.PositionOwner;
 
 /** @author Kotcrab */
-public class Position implements PositionOwner {
-	public float x;
-	public float y;
+public class Position extends Component implements PositionOwner {
+	private float x;
+	private float y;
 
 	public Position () {
 	}

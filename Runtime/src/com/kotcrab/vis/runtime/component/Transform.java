@@ -18,12 +18,17 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 import com.kotcrab.vis.runtime.properties.PositionOwner;
+import com.kotcrab.vis.runtime.properties.RotationOwner;
+import com.kotcrab.vis.runtime.properties.ScaleOwner;
 
 /** @author Kotcrab */
-public class PositionComponent extends Component implements PositionOwner {
-	public float x;
-	public float y;
-	public boolean dirty;
+public class Transform extends Component implements PositionOwner, ScaleOwner, RotationOwner {
+	public float x = 0, y = 0;
+	public float scaleX = 1, scaleY = 1;
+	public float rotation = 0;
+
+	public Transform () {
+	}
 
 	@Override
 	public float getX () {
@@ -49,5 +54,31 @@ public class PositionComponent extends Component implements PositionOwner {
 	public void setPosition (float x, float y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	@Override
+	public float getRotation () {
+		return rotation;
+	}
+
+	@Override
+	public void setRotation (float rotation) {
+		this.rotation = rotation;
+	}
+
+	@Override
+	public float getScaleX () {
+		return scaleX;
+	}
+
+	@Override
+	public float getScaleY () {
+		return scaleY;
+	}
+
+	@Override
+	public void setScale (float scaleX, float scaleY) {
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
 	}
 }

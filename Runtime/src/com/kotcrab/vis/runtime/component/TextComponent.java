@@ -259,7 +259,7 @@ public class TextComponent extends Component implements PositionOwner, SizeOwner
 	}
 
 	@Override
-	public ProtoComponent getProtoComponent () {
+	public ProtoComponent toProtoComponent () {
 		return new TextProtoComponent(this);
 	}
 

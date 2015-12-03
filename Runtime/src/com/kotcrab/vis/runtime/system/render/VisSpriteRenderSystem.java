@@ -18,9 +18,9 @@ package com.kotcrab.vis.runtime.system.render;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.kotcrab.vis.runtime.component.InvisibleComponent;
-import com.kotcrab.vis.runtime.component.VisSprite;
+import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 
@@ -29,6 +29,10 @@ import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
  */
 public class VisSpriteRenderSystem extends DeferredEntityProcessingSystem {
 	private ComponentMapper<VisSprite> spriteCm;
+	private ComponentMapper<Transform> transformCm;
+	private ComponentMapper<Origin> originCm;
+	private ComponentMapper<Size> sizeCm;
+	private ComponentMapper<Tint> tintCm;
 
 	private RenderBatchingSystem renderSystem;
 	private Batch batch;
@@ -44,6 +48,15 @@ public class VisSpriteRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (int entityId) {
-		spriteCm.get(entityId).sprite.draw(batch);
+		VisSprite sprite = spriteCm.get(entityId);
+		Transform transform = transformCm.get(entityId);
+		Origin origin = originCm.get(entityId);
+		Size size = sizeCm.get(entityId);
+		Tint tint = tintCm.get(entityId);
+
+		Color oldColor = batch.getColor();
+		batch.setColor(tint.color);
+		batch.draw(sprite.region, transform.x, transform.y, origin.originX, origin.originY, size.width, size.height, transform.scaleX, transform.scaleY, transform.rotation);
+		batch.setColor(oldColor);
 	}
 }

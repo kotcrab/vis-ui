@@ -162,7 +162,7 @@ public class SpineComponent extends Component implements PositionOwner, FlipOwne
 	}
 
 	@Override
-	public ProtoComponent getProtoComponent () {
+	public ProtoComponent toProtoComponent () {
 		return new SpineProtoComponent(this);
 	}
 }

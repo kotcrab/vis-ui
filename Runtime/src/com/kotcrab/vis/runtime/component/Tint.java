@@ -14,9 +14,31 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.properties;
+package com.kotcrab.vis.runtime.component;
+
+import com.artemis.Component;
+import com.badlogic.gdx.graphics.Color;
+import com.kotcrab.vis.runtime.properties.TintOwner;
 
 /** @author Kotcrab */
-public interface Resizeable {
-	void setSize (float width, float height);
+public class Tint extends Component implements TintOwner {
+	public Color color;
+
+	public Tint () {
+		color = Color.WHITE;
+	}
+
+	public Tint (Color color) {
+		this.color = color;
+	}
+
+	@Override
+	public Color getTint () {
+		return color;
+	}
+
+	@Override
+	public void setTint (Color tint) {
+		this.color = tint;
+	}
 }

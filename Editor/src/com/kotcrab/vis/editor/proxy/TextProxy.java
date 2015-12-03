@@ -36,7 +36,7 @@ public class TextProxy extends EntityProxy {
 		enableBasicProperties(text, text, text);
 		enableOrigin(text);
 		enableScale(text);
-		enableColor(text);
+		enableTint(text);
 		enableRotation(text);
 	}
 

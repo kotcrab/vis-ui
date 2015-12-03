@@ -14,15 +14,36 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.util;
+package com.kotcrab.vis.runtime.component;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.artemis.Component;
+import com.kotcrab.vis.runtime.properties.OriginOwner;
 
 /** @author Kotcrab */
-@Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface TransientComponent {
+public class Origin extends Component implements OriginOwner{
+	public float originX, originY;
+
+	public Origin () {
+	}
+
+	public Origin (float originX, float originY) {
+		this.originX = originX;
+		this.originY = originY;
+	}
+
+	@Override
+	public float getOriginX () {
+		return originX;
+	}
+
+	@Override
+	public float getOriginY () {
+		return originY;
+	}
+
+	@Override
+	public void setOrigin (float originX, float originY) {
+		this.originX = originX;
+		this.originY = originY;
+	}
 }

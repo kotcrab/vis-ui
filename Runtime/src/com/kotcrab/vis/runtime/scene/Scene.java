@@ -67,7 +67,7 @@ public class Scene {
 		if (runtimeConfig.useVisGroupManager) engineConfig.setSystem(new VisGroupManager(data.groupIds));
 		engineConfig.setSystem(new LayerManager(data.layers));
 
-		engineConfig.setSystem(new SpriteInflater(runtimeConfig, assetsManager));
+		engineConfig.setSystem(new VisSpriteInflater(runtimeConfig, assetsManager));
 		engineConfig.setSystem(new SoundInflater(runtimeConfig, assetsManager));
 		engineConfig.setSystem(new MusicInflater(runtimeConfig, assetsManager));
 		engineConfig.setSystem(new ParticleInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
@@ -92,7 +92,6 @@ public class Scene {
 
 		//common render systems
 		engineConfig.setSystem(new VisSpriteRenderSystem(batchingSystem));
-		engineConfig.setSystem(new SpriteRenderSystem(batchingSystem));
 		engineConfig.setSystem(new TextRenderSystem(batchingSystem, distanceFieldShader));
 		engineConfig.setSystem(new SpriterRenderSystem(batchingSystem));
 
@@ -105,8 +104,6 @@ public class Scene {
 		for (EntitySupport support : context.supports) {
 			support.registerSystems(runtimeConfig, engineConfig, assetsManager);
 		}
-
-		engineConfig.setSystem(new PositionChangedCleanerSystem());
 
 		engine = new EntityEngine(engineConfig);
 	}

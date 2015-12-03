@@ -110,7 +110,7 @@ public class SceneIOModule extends ProjectModule {
 			if (component instanceof InvisibleComponent) return;
 
 			if (component instanceof UsesProtoComponent) {
-				ProtoComponent protoComponent = ((UsesProtoComponent) component).getProtoComponent();
+				ProtoComponent protoComponent = ((UsesProtoComponent) component).toProtoComponent();
 				clonedComponents.add(cloner.deepClone(protoComponent));
 			} else {
 				clonedComponents.add(cloner.deepClone(component));

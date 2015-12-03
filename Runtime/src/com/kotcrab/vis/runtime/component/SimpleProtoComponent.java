@@ -16,15 +16,18 @@
 
 package com.kotcrab.vis.runtime.component;
 
-import com.artemis.PooledComponent;
-
 /** @author Kotcrab */
-public class PositionChanged extends PooledComponent {
-	/** If true, entity position will be updated every world update, use this if entity movement is dynamic */
-	public boolean persistent;
+public class SimpleProtoComponent extends ProtoComponent {
+	public Type type;
 
-	@Override
-	protected void reset () {
-		persistent = false;
+	public SimpleProtoComponent () {
+	}
+
+	public SimpleProtoComponent (Type type) {
+		this.type = type;
+	}
+
+	public enum Type {
+		SPRITE
 	}
 }

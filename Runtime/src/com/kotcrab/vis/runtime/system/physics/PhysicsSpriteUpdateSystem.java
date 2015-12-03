@@ -24,27 +24,28 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.kotcrab.vis.runtime.component.PhysicsComponent;
 import com.kotcrab.vis.runtime.component.PhysicsSpriteComponent;
-import com.kotcrab.vis.runtime.component.SpriteComponent;
+import com.kotcrab.vis.runtime.component.Transform;
+import com.kotcrab.vis.runtime.component.VisSprite;
 
 /** @author Kotcrab */
 public class PhysicsSpriteUpdateSystem extends EntityProcessingSystem {
 	private ComponentMapper<PhysicsComponent> physicsCm;
-	private ComponentMapper<SpriteComponent> spriteCm;
 	private ComponentMapper<PhysicsSpriteComponent> physicsSpriteCm;
+	private ComponentMapper<Transform> transformCm;
 
 	public PhysicsSpriteUpdateSystem () {
-		super(Aspect.all(PhysicsComponent.class, PhysicsSpriteComponent.class, SpriteComponent.class));
+		super(Aspect.all(PhysicsComponent.class, PhysicsSpriteComponent.class, VisSprite.class));
 	}
 
 	@Override
 	protected void process (Entity e) {
 		PhysicsComponent physics = physicsCm.get(e);
 		if (physics.body == null) return;
-		SpriteComponent sprite = spriteCm.get(e);
 		PhysicsSpriteComponent physicsSprite = physicsSpriteCm.get(e);
+		Transform transform = transformCm.get(e);
 
-		Vector2 pos = physics.body.getPosition();
-		sprite.setPosition(pos.x, pos.y);
-		sprite.setRotation(physicsSprite.originalRotation + physics.body.getAngle() * MathUtils.radiansToDegrees);
+		Vector2 bodyPos = physics.body.getPosition();
+		transform.setPosition(bodyPos.x, bodyPos.y);
+		transform.setRotation(physicsSprite.originalRotation + physics.body.getAngle() * MathUtils.radiansToDegrees);
 	}
 }

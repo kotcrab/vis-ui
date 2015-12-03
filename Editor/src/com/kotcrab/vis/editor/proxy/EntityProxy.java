@@ -51,7 +51,7 @@ public abstract class EntityProxy {
 	private RotationOwner rotationOwner;
 	private ScaleOwner scaleOwner;
 
-	private Resizeable resizeable;
+	private Resizable resizable;
 
 	public EntityProxy (Entity entity) {
 		this.entity = entity;
@@ -261,22 +261,24 @@ public abstract class EntityProxy {
 
 	//resize properties
 
-	protected void enableResize (Resizeable resizeable) {
-		this.resizeable = this.resizeable;
+	protected void enableResize (Resizable resizable) {
+		if (resizable == null) throw new IllegalStateException("resizeable can't be null");
+		this.resizable = resizable;
 	}
 
 	public boolean isResizeSupported () {
-		return resizeable != null;
+		return resizable != null;
 	}
 
 	public void setSize (float width, float height) {
-		if (resizeable == null) return;
-		resizeable.setSize(width, height);
+		if (resizable == null) return;
+		resizable.setSize(width, height);
 	}
 
 	//origin properties
 
 	protected void enableOrigin (OriginOwner originOwner) {
+		if (originOwner == null) throw new IllegalStateException("originOwner can't be null");
 		this.originOwner = originOwner;
 	}
 
@@ -302,6 +304,7 @@ public abstract class EntityProxy {
 	//scale properties
 
 	protected void enableScale (ScaleOwner scaleOwner) {
+		if (scaleOwner == null) throw new IllegalStateException("scaleOwner can't be null");
 		this.scaleOwner = scaleOwner;
 	}
 
@@ -326,7 +329,8 @@ public abstract class EntityProxy {
 
 	//color properties
 
-	protected void enableColor (TintOwner tintOwner) {
+	protected void enableTint (TintOwner tintOwner) {
+		if (tintOwner == null) throw new IllegalStateException("tintOwner can't be null");
 		this.tintOwner = tintOwner;
 	}
 
@@ -347,6 +351,7 @@ public abstract class EntityProxy {
 	//rotation properties
 
 	protected void enableRotation (RotationOwner rotationOwner) {
+		if (rotationOwner == null) throw new IllegalStateException("rotationOwner can't be null");
 		this.rotationOwner = rotationOwner;
 	}
 
@@ -367,6 +372,7 @@ public abstract class EntityProxy {
 	//flip properties
 
 	protected void enableFlip (FlipOwner flipOwner) {
+		if (flipOwner == null) throw new IllegalStateException("flipOwner can't be null");
 		this.flipOwner = flipOwner;
 	}
 

@@ -39,6 +39,14 @@ public class RuntimeJsonTags {
 		registrar.register("ShaderAsset", ShaderAsset.class);
 		registrar.register("SpriterAsset", SpriterAsset.class);
 
+		registrar.register("Transform", Transform.class);
+		registrar.register("Position", Position.class);
+		registrar.register("Size", Size.class);
+		registrar.register("Tint", Tint.class);
+		registrar.register("Origin", Origin.class);
+
+		registrar.register("VisSprite", VisSprite.class);
+
 		registrar.register("AssetComponent", AssetComponent.class);
 		registrar.register("GroupComponent", GroupComponent.class);
 		registrar.register("IDComponent", IDComponent.class);
@@ -48,9 +56,8 @@ public class RuntimeJsonTags {
 		registrar.register("VariablesComponent", VariablesComponent.class);
 		registrar.register("PhysicsPropertiesComponent", PhysicsPropertiesComponent.class);
 		registrar.register("PolygonComponent", PolygonComponent.class);
-		registrar.register("PositionComponent", PositionComponent.class);
 
-		registrar.register("SpriteProtoComponent", SpriteProtoComponent.class);
+		registrar.register("SimpleProtoComponent", SimpleProtoComponent.class);
 		registrar.register("MusicProtoComponent", MusicProtoComponent.class);
 		registrar.register("SoundProtoComponent", SoundProtoComponent.class);
 		registrar.register("ParticleProtoComponent", ParticleProtoComponent.class);

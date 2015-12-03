@@ -21,13 +21,12 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.runtime.properties.*;
-import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
 /**
  * Stores entity sprite
  * @author Kotcrab
  */
-public class SpriteComponent extends Component implements UsesProtoComponent, PositionOwner, SizeOwner, Resizeable,
+public class SpriteComponent extends Component implements UsesProtoComponent, PositionOwner, SizeOwner, Resizable,
 		BoundsOwner, ScaleOwner, TintOwner, RotationOwner, OriginOwner, FlipOwner {
 	public Sprite sprite;
 
@@ -36,31 +35,6 @@ public class SpriteComponent extends Component implements UsesProtoComponent, Po
 
 	public SpriteComponent (Sprite sprite) {
 		this.sprite = sprite;
-	}
-
-	@Override
-	public float getX () {
-		return sprite.getX();
-	}
-
-	@Override
-	public void setX (float x) {
-		sprite.setX(x);
-	}
-
-	@Override
-	public float getY () {
-		return sprite.getY();
-	}
-
-	@Override
-	public void setY (float y) {
-		sprite.setY(y);
-	}
-
-	@Override
-	public void setPosition (float x, float y) {
-		sprite.setPosition(x, y);
 	}
 
 	@Override
@@ -148,8 +122,37 @@ public class SpriteComponent extends Component implements UsesProtoComponent, Po
 		sprite.setFlip(x, y);
 	}
 
+	public Sprite getSprite () {
+		return sprite;
+	}
+
 	@Override
-	public ProtoComponent getProtoComponent () {
-		return new SpriteProtoComponent(this);
+	public ProtoComponent toProtoComponent () {
+		return null;
+	}
+
+	@Override
+	public float getX () {
+		return sprite.getX();
+	}
+
+	@Override
+	public void setX (float x) {
+		sprite.setX(x);
+	}
+
+	@Override
+	public float getY () {
+		return sprite.getY();
+	}
+
+	@Override
+	public void setY (float y) {
+		sprite.setY(y);
+	}
+
+	@Override
+	public void setPosition (float x, float y) {
+		sprite.setPosition(x, y);
 	}
 }

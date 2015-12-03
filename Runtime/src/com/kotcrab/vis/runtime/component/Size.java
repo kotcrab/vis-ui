@@ -14,21 +14,30 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.util.gdx;
+package com.kotcrab.vis.runtime.component;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.artemis.Component;
+import com.kotcrab.vis.runtime.properties.SizeOwner;
 
-/**
- * Sprite related utils.
- * @author Kotcrab
- */
-public class SpriteUtils {
-	public static void setRegion (Sprite sprite, TextureRegion region) {
-		boolean flipX, flipY;
-		flipX = sprite.isFlipX();
-		flipY = sprite.isFlipY();
-		sprite.setRegion(region);
-		sprite.setFlip(flipX, flipY);
+/** @author Kotcrab */
+public class Size extends Component implements SizeOwner {
+	public float width, height;
+
+	public Size () {
+	}
+
+	public Size (float width, float height) {
+		this.width = width;
+		this.height = height;
+	}
+
+	@Override
+	public float getWidth () {
+		return width;
+	}
+
+	@Override
+	public float getHeight () {
+		return height;
 	}
 }

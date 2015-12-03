@@ -64,8 +64,8 @@ import com.kotcrab.vis.editor.module.scene.system.ZIndexManipulator;
 import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.EditorLayer;
+import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.dialog.SelectLayerDialog;
 import com.kotcrab.vis.editor.ui.scene.GroupBreadcrumb;
 import com.kotcrab.vis.editor.ui.scene.GroupBreadcrumb.GroupBreadcrumbListener;
@@ -399,8 +399,12 @@ public class EntityManipulatorModule extends SceneModule {
 		} else if (obj instanceof TextureAssetDescriptor) {
 			TextureAssetDescriptor asset = (TextureAssetDescriptor) obj;
 
+			VisSprite sprite = new VisSprite(textureCache.getRegion(asset));
+			Size size = new Size(sprite.region.getRegionWidth() / scene.pixelsPerUnit, sprite.region.getRegionHeight() / scene.pixelsPerUnit);
+			Origin origin = new Origin(size.width / 2, scene.height / 2);
+
 			entity = new EntityBuilder(entityEngine)
-					.with(new SpriteComponent(textureCache.getSprite(asset, scene.pixelsPerUnit)),
+					.with(sprite, new Transform(), size, origin, new Tint(),
 							new AssetComponent(asset),
 							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
 					.build();
@@ -449,20 +453,20 @@ public class EntityManipulatorModule extends SceneModule {
 			SoundAsset asset = (SoundAsset) obj;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(new SoundComponent(null), new PositionComponent(), //editor does not require sound to be loaded, we can pass null sound here
+					.with(new SoundComponent(null), new Position(), //editor does not require sound to be loaded, we can pass null sound here
 							new AssetComponent(asset),
 							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-							new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
+							new ExporterDropsComponent(Position.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
 					.build();
 
 		} else if (obj instanceof MusicAsset) {
 			MusicAsset asset = (MusicAsset) obj;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(new MusicComponent(new DummyMusic()), new PositionComponent(),
+					.with(new MusicComponent(new DummyMusic()), new Position(),
 							new AssetComponent(asset),
 							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-							new ExporterDropsComponent(PositionComponent.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
+							new ExporterDropsComponent(Position.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
 					.build();
 
 		}

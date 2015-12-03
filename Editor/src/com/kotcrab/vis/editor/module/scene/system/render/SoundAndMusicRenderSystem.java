@@ -23,7 +23,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.component.InvisibleComponent;
 import com.kotcrab.vis.runtime.component.MusicComponent;
-import com.kotcrab.vis.runtime.component.PositionComponent;
+import com.kotcrab.vis.runtime.component.Position;
 import com.kotcrab.vis.runtime.component.SoundComponent;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
@@ -33,7 +33,7 @@ import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 	public static final int ICON_SIZE = 76;
 
-	private ComponentMapper<PositionComponent> posCm;
+	private ComponentMapper<Position> posCm;
 	private ComponentMapper<MusicComponent> musicCm;
 
 	private TextureRegion soundIcon;
@@ -45,7 +45,7 @@ public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 	private float renderSize;
 
 	public SoundAndMusicRenderSystem (EntityProcessPrincipal principal, float pixelsPerUnit) {
-		super(Aspect.all(PositionComponent.class).one(SoundComponent.class, MusicComponent.class).exclude(InvisibleComponent.class), principal);
+		super(Aspect.all(Position.class).one(SoundComponent.class, MusicComponent.class).exclude(InvisibleComponent.class), principal);
 		soundIcon = Icons.SOUND_BIG.textureRegion();
 		musicIcon = Icons.MUSIC_BIG.textureRegion();
 
@@ -59,11 +59,11 @@ public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (int entityId) {
-		PositionComponent pos = posCm.get(entityId);
+		Position pos = posCm.get(entityId);
 
 		if (musicCm.has(entityId))
-			batch.draw(musicIcon, pos.x, pos.y, renderSize, renderSize);
+			batch.draw(musicIcon, pos.getX(), pos.getY(), renderSize, renderSize);
 		else
-			batch.draw(soundIcon, pos.x, pos.y, renderSize, renderSize);
+			batch.draw(soundIcon, pos.getX(), pos.getY(), renderSize, renderSize);
 	}
 }

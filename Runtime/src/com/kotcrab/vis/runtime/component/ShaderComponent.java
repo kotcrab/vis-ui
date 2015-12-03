@@ -42,7 +42,7 @@ public class ShaderComponent extends Component implements UsesProtoComponent, St
 	}
 
 	@Override
-	public ProtoComponent getProtoComponent () {
+	public ProtoComponent toProtoComponent () {
 		return new ShaderProtoComponent(asset);
 	}
 

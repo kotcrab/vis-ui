@@ -24,6 +24,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.component.Transform;
 
 /** @author Kotcrab */
 public class PhysicsBodyManager extends EntitySystem {
@@ -32,14 +33,15 @@ public class PhysicsBodyManager extends EntitySystem {
 	private ComponentMapper<PhysicsPropertiesComponent> physicsPropCm;
 	private ComponentMapper<PhysicsComponent> physicsCm;
 	private ComponentMapper<PolygonComponent> polygonCm;
-	private ComponentMapper<SpriteComponent> spriteCm;
 	private ComponentMapper<PhysicsSpriteComponent> physicsSpriteCm;
+	private ComponentMapper<Transform> transformCm;
+	private ComponentMapper<Origin> originCm;
 
 	private World world;
 	private RuntimeConfiguration runtimeConfig;
 
 	public PhysicsBodyManager (RuntimeConfiguration runtimeConfig) {
-		super(Aspect.all(PhysicsPropertiesComponent.class, PolygonComponent.class, SpriteComponent.class));
+		super(Aspect.all(PhysicsPropertiesComponent.class, PolygonComponent.class, VisSprite.class));
 		this.runtimeConfig = runtimeConfig;
 	}
 
@@ -57,11 +59,11 @@ public class PhysicsBodyManager extends EntitySystem {
 	public void inserted (Entity entity) {
 		PhysicsPropertiesComponent physicsProperties = physicsPropCm.get(entity);
 		PolygonComponent polygon = polygonCm.get(entity);
-		SpriteComponent sprite = spriteCm.get(entity);
+		Transform transform = transformCm.get(entity);
 
-		if (physicsProperties.adjustOrigin) sprite.setOrigin(0, 0);
+		if (physicsProperties.adjustOrigin) originCm.get(entity).setOrigin(0, 0);
 
-		Vector2 worldPos = new Vector2(sprite.getX(), sprite.getY());
+		Vector2 worldPos = new Vector2(transform.x, transform.y);
 
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(worldPos);
@@ -102,7 +104,7 @@ public class PhysicsBodyManager extends EntitySystem {
 
 		entity.edit()
 				.add(new PhysicsComponent(body))
-				.add(new PhysicsSpriteComponent(sprite.getRotation()));
+				.add(new PhysicsSpriteComponent(transform.rotation));
 	}
 
 	@Override

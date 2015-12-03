@@ -19,7 +19,6 @@ package com.kotcrab.vis.runtime.system.inflater;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
@@ -27,35 +26,33 @@ import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SpriteComponent;
-import com.kotcrab.vis.runtime.component.SpriteProtoComponent;
+import com.kotcrab.vis.runtime.component.SimpleProtoComponent;
+import com.kotcrab.vis.runtime.component.SimpleProtoComponent.Type;
+import com.kotcrab.vis.runtime.component.VisSprite;
 import com.kotcrab.vis.runtime.util.PathUtils;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
-/**
- * Inflates {@link SpriteProtoComponent} into {@link SpriteComponent}
- * @author Kotcrab
- */
-public class SpriteInflater extends InflaterSystem {
-	private ComponentMapper<SpriteProtoComponent> protoCm;
-	private ComponentMapper<SpriteComponent> spriteCm;
+/** @author Kotcrab */
+public class VisSpriteInflater extends InflaterSystem {
+	private ComponentMapper<VisSprite> spriteCm;
+	private ComponentMapper<SimpleProtoComponent> protoCm;
 	private ComponentMapper<AssetComponent> assetCm;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
-	public SpriteInflater (RuntimeConfiguration configuration, AssetManager manager) {
-		super(Aspect.all(SpriteProtoComponent.class, AssetComponent.class));
+	public VisSpriteInflater (RuntimeConfiguration configuration, AssetManager manager) {
+		super(Aspect.all(SimpleProtoComponent.class, AssetComponent.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
 	public void inserted (int entityId) {
-		SpriteProtoComponent protoComponent = protoCm.get(entityId);
-		AssetComponent assetComponent = assetCm.get(entityId);
+		SimpleProtoComponent proto = protoCm.get(entityId);
+		if(proto.type != Type.SPRITE) return;
 
-		VisAssetDescriptor asset = assetComponent.asset;
+		VisAssetDescriptor asset =  assetCm.get(entityId).asset;
 
 		String atlasPath;
 		String atlasRegion;
@@ -63,7 +60,7 @@ public class SpriteInflater extends InflaterSystem {
 		if (asset instanceof TextureRegionAsset) {
 			TextureRegionAsset regionAsset = (TextureRegionAsset) asset;
 			atlasPath = "textures.atlas";
-			atlasRegion = PathUtils.removeExtension(regionAsset.getPath()); //remove gfx/ and file extension
+			atlasRegion = PathUtils.removeExtension(regionAsset.getPath());
 
 		} else if (asset instanceof AtlasRegionAsset) {
 			AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
@@ -77,11 +74,9 @@ public class SpriteInflater extends InflaterSystem {
 		TextureAtlas atlas = manager.get(atlasPath, TextureAtlas.class);
 		TextureRegion region = atlas.findRegion(atlasRegion);
 		if (region == null) throw new IllegalStateException("Can't load scene, gfx asset is missing: " + atlasRegion);
-		Sprite sprite = new Sprite(region);
 
-		SpriteComponent spriteComponent = spriteCm.create(entityId);
-		spriteComponent.sprite = sprite;
-		protoComponent.fill(spriteComponent);
+		VisSprite sprite = spriteCm.create(entityId);
+		sprite.region = region;
 
 		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);

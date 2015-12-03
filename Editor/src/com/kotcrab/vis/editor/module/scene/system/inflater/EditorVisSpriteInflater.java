@@ -18,34 +18,31 @@ package com.kotcrab.vis.editor.module.scene.system.inflater;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SpriteComponent;
-import com.kotcrab.vis.runtime.component.SpriteProtoComponent;
+import com.kotcrab.vis.runtime.component.SimpleProtoComponent;
+import com.kotcrab.vis.runtime.component.SimpleProtoComponent.Type;
+import com.kotcrab.vis.runtime.component.VisSprite;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
-public class EditorSpriteInflater extends InflaterSystem {
-	private ComponentMapper<SpriteProtoComponent> protoCm;
-	private ComponentMapper<SpriteComponent> spriteCm;
+public class EditorVisSpriteInflater extends InflaterSystem {
+	private ComponentMapper<SimpleProtoComponent> protoCm;
+	private ComponentMapper<VisSprite> spriteCm;
 	private ComponentMapper<AssetComponent> assetCm;
 	private TextureCacheModule textureCache;
 
-	public EditorSpriteInflater () {
-		super(Aspect.all(SpriteProtoComponent.class, AssetComponent.class));
+	public EditorVisSpriteInflater () {
+		super(Aspect.all(SimpleProtoComponent.class, AssetComponent.class));
 	}
 
 	@Override
 	public void inserted (int entityId) {
-		SpriteProtoComponent protoComponent = protoCm.get(entityId);
-		AssetComponent assetComponent = assetCm.get(entityId);
+		SimpleProtoComponent proto = protoCm.get(entityId);
+		if(proto.type != Type.SPRITE) return;
 
-		Sprite sprite = new Sprite(textureCache.getSprite(assetComponent.asset, 1));
-
-		SpriteComponent spriteComponent = spriteCm.create(entityId);
-		spriteComponent.sprite = sprite;
-		protoComponent.fill(spriteComponent);
+		VisSprite sprite = spriteCm.create(entityId);
+		sprite.region = textureCache.getRegion(assetCm.get(entityId).asset);
 
 		protoCm.remove(entityId);
 	}

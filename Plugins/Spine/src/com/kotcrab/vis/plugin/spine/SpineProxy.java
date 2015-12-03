@@ -58,7 +58,7 @@ public class SpineProxy extends EntityProxy {
 		SpineComponent spineComponent = getEntity().getComponent(SpineComponent.class);
 		boundsComponent = getEntity().getComponent(SpineBoundsComponent.class);
 		enableBasicProperties(spineComponent, accessor, accessor);
-		enableColor(spineComponent);
+		enableTint(spineComponent);
 		enableFlip(spineComponent);
 	}
 

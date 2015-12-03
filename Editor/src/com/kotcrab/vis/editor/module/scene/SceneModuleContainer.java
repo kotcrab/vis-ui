@@ -94,7 +94,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new EditorParticleInflater(scene.pixelsPerUnit));
 		config.setSystem(new EditorShaderInflater());
 		config.setSystem(new EditorSoundInflater());
-		config.setSystem(new EditorSpriteInflater());
+		config.setSystem(new EditorVisSpriteInflater());
 		config.setSystem(new EditorSpriterInflater());
 		config.setSystem(new EditorTextInflater(scene.pixelsPerUnit));
 
@@ -115,7 +115,6 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 		//common render systems
 		config.setSystem(new VisSpriteRenderSystem(batchingSystem));
-		config.setSystem(new SpriteRenderSystem(batchingSystem));
 		config.setSystem(new TextRenderSystem(batchingSystem, Assets.distanceFieldShader));
 		config.setSystem(new SpriterRenderSystem(batchingSystem));
 
