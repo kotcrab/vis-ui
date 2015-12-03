@@ -30,7 +30,7 @@ import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesRemovedAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.scene.EditorLayer;
 import com.kotcrab.vis.editor.util.ObservableListener;
 import com.kotcrab.vis.editor.util.scene2d.DefaultInputDialogListener;
 import com.kotcrab.vis.editor.util.scene2d.EventStopper;
@@ -152,13 +152,13 @@ public class LayersDialog extends VisTable implements Disposable {
 		scene.addObservable(sceneObservable);
 	}
 
-	private void selectedLayer (Layer layer) {
+	private void selectedLayer (EditorLayer layer) {
 		scene.setActiveLayer(layer.id);
 
 		layerUpButton.setDisabled(false);
 		layerDownButton.setDisabled(false);
 
-		ImmutableArray<Layer> layers = scene.getLayers();
+		ImmutableArray<EditorLayer> layers = scene.getLayers();
 
 		int index = layers.indexOf(layer, true);
 		if (index == 0) layerUpButton.setDisabled(true);
@@ -170,7 +170,7 @@ public class LayersDialog extends VisTable implements Disposable {
 		Array<Actor> actors = new Array<>(layersTable.getChildren());
 		layersTable.clearChildren();
 
-		for (Layer layer : scene.getLayers()) {
+		for (EditorLayer layer : scene.getLayers()) {
 			LayerItem item = getItemForLayer(actors, layer);
 			if (item == null) item = new LayerItem(layer);
 			item.update();
@@ -189,7 +189,7 @@ public class LayersDialog extends VisTable implements Disposable {
 
 	}
 
-	private LayerItem getItemForLayer (Array<Actor> actors, Layer layer) {
+	private LayerItem getItemForLayer (Array<Actor> actors, EditorLayer layer) {
 		for (Actor a : actors) {
 			if (a instanceof LayerItem) {
 				LayerItem item = (LayerItem) a;
@@ -215,7 +215,7 @@ public class LayersDialog extends VisTable implements Disposable {
 		selectLayer(scene.getLayers().first());
 	}
 
-	private void selectLayer (Layer layer) {
+	private void selectLayer (EditorLayer layer) {
 		LayerItem item = getItemForLayer(layersTable.getChildren(), layer);
 		if (item == null) throw new IllegalStateException("Layer not found");
 
@@ -231,7 +231,7 @@ public class LayersDialog extends VisTable implements Disposable {
 	private class LayerAddedAction implements UndoableAction {
 		private String name;
 
-		private Layer layer;
+		private EditorLayer layer;
 
 		public LayerAddedAction (String name) {
 			this.name = name;
@@ -255,9 +255,9 @@ public class LayersDialog extends VisTable implements Disposable {
 	}
 
 	private class LayerRemovedAction implements UndoableAction {
-		private Layer layer;
+		private EditorLayer layer;
 
-		public LayerRemovedAction (Layer layer) {
+		public LayerRemovedAction (EditorLayer layer) {
 			this.layer = layer;
 		}
 
@@ -279,8 +279,8 @@ public class LayersDialog extends VisTable implements Disposable {
 	}
 
 	private class LayerMovedAction extends MonoUndoableAction {
-		Layer currentLayer;
-		Layer targetLayer;
+		EditorLayer currentLayer;
+		EditorLayer targetLayer;
 
 		public LayerMovedAction (boolean moveUp) {
 			int currentIndex = scene.getLayers().indexOf(scene.getActiveLayer(), true);
@@ -315,13 +315,13 @@ public class LayersDialog extends VisTable implements Disposable {
 	}
 
 	private class LayerItem extends VisTable {
-		private Layer layer;
+		private EditorLayer layer;
 
 		private VisLabel nameLabel;
 		private VisImageButton eyeButton;
 		private VisImageButton lockButton;
 
-		public LayerItem (Layer layer) {
+		public LayerItem (EditorLayer layer) {
 			super(true);
 			this.layer = layer;
 

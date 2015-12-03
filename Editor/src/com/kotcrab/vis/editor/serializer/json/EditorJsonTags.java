@@ -17,7 +17,7 @@
 package com.kotcrab.vis.editor.serializer.json;
 
 import com.kotcrab.vis.editor.entity.*;
-import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.scene.EditorLayer;
 import com.kotcrab.vis.runtime.util.json.JsonTagRegistrar;
 import com.kotcrab.vis.runtime.util.json.RuntimeJsonTags;
 
@@ -26,7 +26,7 @@ public class EditorJsonTags {
 	public static void registerTags (JsonTagRegistrar registrar) {
 		RuntimeJsonTags.registerTags(registrar);
 
-		registrar.register("Layer", Layer.class);
+		registrar.register("EditorLayer", EditorLayer.class);
 		registrar.register("EntityScheme", EntityScheme.class);
 
 		registrar.register("UUIDComponent", UUIDComponent.class);

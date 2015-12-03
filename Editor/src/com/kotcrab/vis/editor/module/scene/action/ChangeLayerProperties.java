@@ -17,14 +17,14 @@
 package com.kotcrab.vis.editor.module.scene.action;
 
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.scene.EditorLayer;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 
 /** @author Kotcrab */
 public class ChangeLayerProperties implements UndoableAction {
 	private final EditorScene scene;
-	private final Layer layer;
+	private final EditorLayer layer;
 
 	private final String newName;
 	private final LayerCordsSystem newCordsSystem;
@@ -32,7 +32,7 @@ public class ChangeLayerProperties implements UndoableAction {
 	private final String oldName;
 	private final LayerCordsSystem oldCordsSystem;
 
-	public ChangeLayerProperties (EditorScene scene, Layer layer, String newName, LayerCordsSystem newCordsSystem) {
+	public ChangeLayerProperties (EditorScene scene, EditorLayer layer, String newName, LayerCordsSystem newCordsSystem) {
 		this.scene = scene;
 		this.layer = layer;
 		this.newName = newName;

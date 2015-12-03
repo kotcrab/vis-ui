@@ -22,7 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.scene.EditorLayer;
 import com.kotcrab.vis.editor.ui.WindowResultListener;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.TableUtils;
@@ -33,12 +33,12 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 
 /** @author Kotcrab */
 public class SelectLayerDialog extends VisWindow {
-	private final WindowResultListener<Layer> listener;
+	private final WindowResultListener<EditorLayer> listener;
 
 	private VisList<String> layerList;
-	private final ObjectMap<String, Layer> layersMap;
+	private final ObjectMap<String, EditorLayer> layersMap;
 
-	public SelectLayerDialog (ImmutableArray<Layer> layers, Layer activeLayer, WindowResultListener<Layer> listener) {
+	public SelectLayerDialog (ImmutableArray<EditorLayer> layers, EditorLayer activeLayer, WindowResultListener<EditorLayer> listener) {
 		super("Select Layer");
 		this.listener = listener;
 
@@ -85,7 +85,7 @@ public class SelectLayerDialog extends VisWindow {
 
 		layersMap = new ObjectMap<>();
 
-		for (Layer layer : layers) {
+		for (EditorLayer layer : layers) {
 			if (layer.id == activeLayer.id) continue;
 
 			layersMap.put(layer.name, layer);

@@ -65,7 +65,7 @@ import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.Grid
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.scene.EditorLayer;
 import com.kotcrab.vis.editor.ui.dialog.SelectLayerDialog;
 import com.kotcrab.vis.editor.ui.scene.GroupBreadcrumb;
 import com.kotcrab.vis.editor.ui.scene.GroupBreadcrumb.GroupBreadcrumbListener;
@@ -539,7 +539,7 @@ public class EntityManipulatorModule extends SceneModule {
 	}
 
 	public void select (EntityProxy proxy) {
-		Layer layer = scene.getLayerById(proxy.getLayerID());
+		EditorLayer layer = scene.getLayerById(proxy.getLayerID());
 		if (layer.locked) return;
 		scene.setActiveLayer(layer.id);
 
@@ -558,7 +558,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 	/** Appends to current selection, however if entity layer is different than current layer then selection will be reset */
 	public void selectAppend (EntityProxy proxy) {
-		Layer layer = scene.getLayerById(proxy.getLayerID());
+		EditorLayer layer = scene.getLayerById(proxy.getLayerID());
 		if (layer.locked) return;
 
 		if (scene.getActiveLayerId() != layer.id) {

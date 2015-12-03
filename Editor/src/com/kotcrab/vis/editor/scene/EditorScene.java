@@ -42,7 +42,7 @@ public class EditorScene extends BaseObservable {
 	public static final int LAYERS_SORTED = 4;
 	public static final int LAYER_DATA_CHANGED = 5;
 
-	private static final Comparator<Layer> LAYER_COMPARATOR = (o1, o2) -> (int) Math.signum(o1.id - o2.id);
+	private static final Comparator<EditorLayer> LAYER_COMPARATOR = (o1, o2) -> (int) Math.signum(o1.id - o2.id);
 
 	private int versionCode = VERSION_CODE;
 
@@ -56,7 +56,7 @@ public class EditorScene extends BaseObservable {
 
 	public PhysicsSettings physicsSettings = new PhysicsSettings();
 
-	private Array<Layer> layers = new Array<>();
+	private Array<EditorLayer> layers = new Array<>();
 	private int activeLayerId;
 
 	private IntMap<String> groupIds = new IntMap<>();
@@ -72,7 +72,7 @@ public class EditorScene extends BaseObservable {
 		this.height = height;
 		this.pixelsPerUnit = pixelsPerUnit;
 
-		layers.add(new Layer("Background", 0));
+		layers.add(new EditorLayer("Background", 0));
 		schemes = new Array<>();
 	}
 
@@ -109,8 +109,8 @@ public class EditorScene extends BaseObservable {
 		return groupIds;
 	}
 
-	public Layer getActiveLayer () {
-		for (Layer layer : layers) {
+	public EditorLayer getActiveLayer () {
+		for (EditorLayer layer : layers) {
 			if (layer.id == activeLayerId)
 				return layer;
 		}
@@ -132,35 +132,35 @@ public class EditorScene extends BaseObservable {
 		return false;
 	}
 
-	public Layer getLayerById (int id) {
-		for (Layer layer : layers) {
+	public EditorLayer getLayerById (int id) {
+		for (EditorLayer layer : layers) {
 			if (layer.id == id) return layer;
 		}
 
 		return null;
 	}
 
-	public Layer getLayerByName (String name) {
-		for (Layer layer : layers) {
+	public EditorLayer getLayerByName (String name) {
+		for (EditorLayer layer : layers) {
 			if (layer.name.equals(name)) return layer;
 		}
 
 		return null;
 	}
 
-	public ImmutableArray<Layer> getLayers () {
+	public ImmutableArray<EditorLayer> getLayers () {
 		return new ImmutableArray<>(layers);
 	}
 
-	public Layer addLayer (String name) {
-		Layer layer = new Layer(name, getFreeLayerID());
+	public EditorLayer addLayer (String name) {
+		EditorLayer layer = new EditorLayer(name, getFreeLayerID());
 		layers.add(layer);
 		layers.sort(LAYER_COMPARATOR);
 		postNotification(LAYER_ADDED);
 		return layer;
 	}
 
-	public void insertLayer (Layer layer) {
+	public void insertLayer (EditorLayer layer) {
 		if (isLayerIdUsed(layer.id))
 			throw new IllegalStateException("Layer with this id already exist!");
 
@@ -169,7 +169,7 @@ public class EditorScene extends BaseObservable {
 		postNotification(LAYER_INSERTED);
 	}
 
-	public boolean removeLayer (Layer layer) {
+	public boolean removeLayer (EditorLayer layer) {
 		boolean result = layers.removeValue(layer, true);
 		layers.sort(LAYER_COMPARATOR);
 		if (layer.id == activeLayerId)
@@ -195,7 +195,7 @@ public class EditorScene extends BaseObservable {
 	}
 
 	private boolean isLayerIdUsed (int id) {
-		for (Layer layer : layers) {
+		for (EditorLayer layer : layers) {
 			if (layer.id == id)
 				return true;
 		}

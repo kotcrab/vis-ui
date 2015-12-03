@@ -32,7 +32,7 @@ import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.plugin.api.AssetsFileSorter;
 import com.kotcrab.vis.editor.plugin.api.ExporterPlugin;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.scene.EditorLayer;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DefaultExporterSettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
@@ -280,7 +280,7 @@ public class DefaultExporter implements ExporterPlugin {
 
 					sceneData.groupIds = new IntMap<>(scene.getGroups());
 
-					for (Layer layer : scene.getLayers()) {
+					for (EditorLayer layer : scene.getLayers()) {
 						sceneData.layers.add(new LayerData(layer.cordsSystem, layer.name, layer.id));
 					}
 

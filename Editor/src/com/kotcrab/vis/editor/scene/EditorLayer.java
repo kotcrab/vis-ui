@@ -22,14 +22,14 @@ import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
  * EditorScene layer class
  * @author Kotcrab
  */
-public class Layer {
+public class EditorLayer {
 	public String name;
 	public int id;
 	public boolean locked = false;
 	public boolean visible = true;
 	public LayerCordsSystem cordsSystem = LayerCordsSystem.WORLD;
 
-	public Layer (String name, int id) {
+	public EditorLayer (String name, int id) {
 		this.name = name;
 		this.id = id;
 	}
