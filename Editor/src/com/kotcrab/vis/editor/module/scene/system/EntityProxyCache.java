@@ -109,13 +109,13 @@ public class EntityProxyCache extends Manager {
 	private EntityProxy getInternalProxyFor (Entity entity) {
 		if (entity.getComponent(VisParticle.class) != null) return new ParticleProxy(entity);
 		if (entity.getComponent(VisSound.class) != null)
-			return new SoundAndMusicProxy(entity, false, pixelsPerUnit);
+			return new AudioProxy(entity, false, pixelsPerUnit);
 		if (entity.getComponent(VisMusic.class) != null)
-			return new SoundAndMusicProxy(entity, true, pixelsPerUnit);
+			return new AudioProxy(entity, true, pixelsPerUnit);
 		if (entity.getComponent(VisText.class) != null) return new TextProxy(entity);
 		if (entity.getComponent(VisSpriter.class) != null) return new SpriterProxy(entity);
 		if (entity.getComponent(Point.class) != null) return new PointProxy(entity, pixelsPerUnit);
-		if (entity.getComponent(VisSprite.class) != null) return new VisSpriteProxy(entity);
+		if (entity.getComponent(VisSprite.class) != null) return new SpriteProxy(entity);
 
 		return null;
 	}

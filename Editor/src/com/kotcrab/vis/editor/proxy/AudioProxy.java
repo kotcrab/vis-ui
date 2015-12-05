@@ -24,14 +24,14 @@ import com.kotcrab.vis.runtime.properties.BoundsOwner;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
 
 /** @author Kotcrab */
-public class SoundAndMusicProxy extends EntityProxy {
+public class AudioProxy extends EntityProxy {
 	private Position pos;
 	private Accessor accessor;
 
 	private boolean music;
 	private float renderSize;
 
-	public SoundAndMusicProxy (Entity entity, boolean music, float pixelsPerUnit) {
+	public AudioProxy (Entity entity, boolean music, float pixelsPerUnit) {
 		super(entity);
 		this.music = music;
 		renderSize = SoundAndMusicRenderSystem.ICON_SIZE / pixelsPerUnit;

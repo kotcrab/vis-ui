@@ -23,13 +23,13 @@ import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.properties.BoundsOwner;
 
 /** @author Kotcrab */
-public class VisSpriteProxy extends EntityProxy {
+public class SpriteProxy extends EntityProxy {
 	private Accessor accessor;
 	private Transform transform;
 	private Origin origin;
 	private VisSprite sprite;
 
-	public VisSpriteProxy (Entity entity) {
+	public SpriteProxy (Entity entity) {
 		super(entity);
 	}
 
