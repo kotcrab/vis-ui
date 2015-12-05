@@ -43,7 +43,7 @@ import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /** @author Kotcrab */
 public class SpineRenderSystem extends DeferredEntityProcessingSystem {
-	private ComponentMapper<SpineComponent> spineCm;
+	private ComponentMapper<VisSpine> spineCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
@@ -51,7 +51,7 @@ public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 	private SkeletonRenderer skeletonRenderer;
 
 	public SpineRenderSystem (EntityProcessPrincipal principal) {
-		super(Aspect.all(SpineComponent.class).exclude(Invisible.class), principal);
+		super(Aspect.all(VisSpine.class).exclude(Invisible.class), principal);
 		skeletonRenderer = new SkeletonRenderer();
 	}
 
@@ -62,7 +62,7 @@ public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (int entityId) {
-		SpineComponent spine = spineCm.get(entityId);
+		VisSpine spine = spineCm.get(entityId);
 		spine.state.update(Gdx.graphics.getDeltaTime());
 		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.

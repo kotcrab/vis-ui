@@ -46,7 +46,9 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUI
 import com.kotcrab.vis.editor.util.scene2d.FieldUtils;
 import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
+import com.kotcrab.vis.plugin.spine.components.SpinePreview;
+import com.kotcrab.vis.plugin.spine.components.SpineScale;
+import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.widget.Tooltip;
@@ -112,7 +114,7 @@ public class SpineUITable extends SpecificUITable {
 
 	@Override
 	public boolean isSupported (EntityProxy proxy) {
-		return proxy.hasComponent(SpineComponent.class);
+		return proxy.hasComponent(VisSpine.class);
 	}
 
 	@Override
@@ -122,11 +124,11 @@ public class SpineUITable extends SpecificUITable {
 
 		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 
-		EntityUtils.setCommonCheckBoxState(proxies, preview, (Entity entity) -> entity.getComponent(SpinePreviewComponent.class).previewEnabled);
-		EntityUtils.setCommonCheckBoxState(proxies, playAnimationOnStart, (Entity entity) -> entity.getComponent(SpineComponent.class).isPlayOnStart());
+		EntityUtils.setCommonCheckBoxState(proxies, preview, (Entity entity) -> entity.getComponent(SpinePreview.class).previewEnabled);
+		EntityUtils.setCommonCheckBoxState(proxies, playAnimationOnStart, (Entity entity) -> entity.getComponent(VisSpine.class).isPlayOnStart());
 
 		createCommonAnimationsList();
-		String commonAnimation = EntityUtils.getCommonString(proxies, NO_COMMON_ANIMATION, (Entity entity) -> entity.getComponent(SpineComponent.class).getDefaultAnimation());
+		String commonAnimation = EntityUtils.getCommonString(proxies, NO_COMMON_ANIMATION, (Entity entity) -> entity.getComponent(VisSpine.class).getDefaultAnimation());
 
 		if (commonAnimation.equals(NO_COMMON_ANIMATION)) {
 			animSelectBox.getItems().add(NO_COMMON_ANIMATION);
@@ -135,7 +137,7 @@ public class SpineUITable extends SpecificUITable {
 		} else
 			animSelectBox.setSelected(commonAnimation);
 
-		scaleField.setText(EntityUtils.getEntitiesCommonFloatValue(proxies, (Entity entity) -> entity.getComponent(SpineScaleComponent.class).scale));
+		scaleField.setText(EntityUtils.getEntitiesCommonFloatValue(proxies, (Entity entity) -> entity.getComponent(SpineScale.class).scale));
 	}
 
 	private void createCommonAnimationsList () {
@@ -147,8 +149,8 @@ public class SpineUITable extends SpecificUITable {
 
 		for (EntityProxy proxy : proxies) {
 			Entity entity = proxy.getEntity();
-			SpineComponent spineComponent = entity.getComponent(SpineComponent.class);
-			Array<Animation> animations = spineComponent.getSkeleton().getData().getAnimations();
+			VisSpine visSpine = entity.getComponent(VisSpine.class);
+			Array<Animation> animations = visSpine.getSkeleton().getData().getAnimations();
 
 			HashSet<String> animNames = new HashSet<>(animations.size);
 			for (Animation anim : animations) {
@@ -185,17 +187,17 @@ public class SpineUITable extends SpecificUITable {
 	public void setValuesToEntities () {
 		for (EntityProxy proxy : properties.getSelectedEntities()) {
 			Entity entity = proxy.getEntity();
-			SpineComponent spineComponent = entity.getComponent(SpineComponent.class);
-			SpinePreviewComponent previewComponent = entity.getComponent(SpinePreviewComponent.class);
-			SpineScaleComponent scaleComponent = entity.getComponent(SpineScaleComponent.class);
+			VisSpine visSpine = entity.getComponent(VisSpine.class);
+			SpinePreview previewComponent = entity.getComponent(SpinePreview.class);
+			SpineScale scaleComponent = entity.getComponent(SpineScale.class);
 
 			if (animSelectBox.getSelection().first().equals(NO_COMMON_ANIMATION) == false) {
-				spineComponent.setDefaultAnimation(animSelectBox.getSelection().first());
+				visSpine.setDefaultAnimation(animSelectBox.getSelection().first());
 				previewComponent.updateAnimation = true;
 			}
 
 			if (playAnimationOnStart.isIndeterminate() == false)
-				spineComponent.setPlayOnStart(playAnimationOnStart.isChecked());
+				visSpine.setPlayOnStart(playAnimationOnStart.isChecked());
 			if (preview.isIndeterminate() == false) {
 				if (previewComponent.previewEnabled != preview.isChecked()) {
 					previewComponent.updateAnimation = true;

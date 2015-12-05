@@ -29,12 +29,13 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.kotcrab.vis.plugin.spine;
+package com.kotcrab.vis.plugin.spine.components;
 
 import com.artemis.Component;
+import com.badlogic.gdx.math.Rectangle;
 
 /** @author Kotcrab */
-public class SpinePreviewComponent extends Component {
-	public boolean updateAnimation;
-	public boolean previewEnabled;
+public class SpineBounds extends Component {
+	public transient boolean boundsRequested;
+	public Rectangle bounds = new Rectangle();
 }

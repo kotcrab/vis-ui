@@ -29,36 +29,20 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.kotcrab.vis.plugin.spine.runtime;
+package com.kotcrab.vis.plugin.spine.components;
 
-import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
+import com.artemis.Component;
 
 /** @author Kotcrab */
-public class SpineProtoComponent extends ProtoComponent<SpineComponent> {
-	public float x, y;
-	public boolean flipX, flipY;
-	public Color color;
+public class SpineScale extends Component {
+	public transient boolean updateScale;
+	public float scale = 1;
 
-	public boolean playOnStart;
-	public String defaultAnimation;
-
-	private SpineProtoComponent () {
+	public SpineScale () {
 	}
 
-	public SpineProtoComponent (SpineComponent spineComponent) {
-		x = spineComponent.getX();
-		y = spineComponent.getY();
-
-		flipX = spineComponent.isFlipX();
-		flipY = spineComponent.isFlipY();
-
-		playOnStart = spineComponent.isPlayOnStart();
-		defaultAnimation = spineComponent.getDefaultAnimation();
-	}
-
-	@Override
-	public void fill (SpineComponent target) {
-
+	public SpineScale (float scale) {
+		this.scale = scale;
+		updateScale = true;
 	}
 }

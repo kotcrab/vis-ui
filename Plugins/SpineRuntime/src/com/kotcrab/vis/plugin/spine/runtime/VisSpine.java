@@ -44,7 +44,7 @@ import com.kotcrab.vis.runtime.properties.PositionOwner;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
 /** @author Kotcrab */
-public class SpineComponent extends Component implements PositionOwner, FlipOwner, TintOwner, UsesProtoComponent {
+public class VisSpine extends Component implements PositionOwner, FlipOwner, TintOwner, UsesProtoComponent {
 	public transient Skeleton skeleton;
 	public transient AnimationStateData stateData;
 	public transient AnimationState state;
@@ -52,11 +52,11 @@ public class SpineComponent extends Component implements PositionOwner, FlipOwne
 	public boolean playOnStart;
 	public String defaultAnimation;
 
-	public SpineComponent (SkeletonData skeletonData) {
+	public VisSpine (SkeletonData skeletonData) {
 		init(skeletonData);
 	}
 
-	public SpineComponent (SpineComponent other, SkeletonData skeletonData) {
+	public VisSpine (VisSpine other, SkeletonData skeletonData) {
 		this.playOnStart = other.playOnStart;
 		this.defaultAnimation = other.defaultAnimation;
 
@@ -163,6 +163,6 @@ public class SpineComponent extends Component implements PositionOwner, FlipOwne
 
 	@Override
 	public ProtoComponent toProtoComponent () {
-		return new SpineProtoComponent(this);
+		return new ProtoVisSpine(this);
 	}
 }

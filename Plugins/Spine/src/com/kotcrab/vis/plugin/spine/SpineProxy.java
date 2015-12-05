@@ -34,13 +34,14 @@ package com.kotcrab.vis.plugin.spine;
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
+import com.kotcrab.vis.plugin.spine.components.SpineBounds;
+import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
 import com.kotcrab.vis.runtime.properties.BoundsOwner;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
 
 /** @author Kotcrab */
 public class SpineProxy extends EntityProxy {
-	private SpineBoundsComponent boundsComponent;
+	private SpineBounds boundsComponent;
 
 	private Accessor accessor;
 
@@ -55,11 +56,11 @@ public class SpineProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		SpineComponent spineComponent = getEntity().getComponent(SpineComponent.class);
-		boundsComponent = getEntity().getComponent(SpineBoundsComponent.class);
-		enableBasicProperties(spineComponent, accessor, accessor);
-		enableTint(spineComponent);
-		enableFlip(spineComponent);
+		VisSpine visSpine = getEntity().getComponent(VisSpine.class);
+		boundsComponent = getEntity().getComponent(SpineBounds.class);
+		enableBasicProperties(visSpine, accessor, accessor);
+		enableTint(visSpine);
+		enableFlip(visSpine);
 	}
 
 	@Override

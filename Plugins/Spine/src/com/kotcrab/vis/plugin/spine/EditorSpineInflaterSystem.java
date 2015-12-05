@@ -33,8 +33,9 @@ package com.kotcrab.vis.plugin.spine;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
-import com.kotcrab.vis.plugin.spine.runtime.SpineProtoComponent;
+import com.kotcrab.vis.plugin.spine.components.SpinePreview;
+import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
+import com.kotcrab.vis.plugin.spine.runtime.ProtoVisSpine;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
@@ -43,33 +44,33 @@ public class EditorSpineInflaterSystem extends InflaterSystem {
 	private SpineCacheModule spineCache;
 
 	private ComponentMapper<AssetReference> assetCm;
-	private ComponentMapper<SpineComponent> spineCm;
-	private ComponentMapper<SpineProtoComponent> protoCm;
-	private ComponentMapper<SpinePreviewComponent> previewCm;
+	private ComponentMapper<VisSpine> spineCm;
+	private ComponentMapper<ProtoVisSpine> protoCm;
+	private ComponentMapper<SpinePreview> previewCm;
 
 	public EditorSpineInflaterSystem () {
-		super(Aspect.all(SpineProtoComponent.class, AssetReference.class));
+		super(Aspect.all(ProtoVisSpine.class, AssetReference.class));
 	}
 
 	@Override
 	public void inserted (int entityId) {
 		AssetReference assetRef = assetCm.get(entityId);
-		SpineProtoComponent protoComponent = protoCm.get(entityId);
+		ProtoVisSpine protoComponent = protoCm.get(entityId);
 
-		SpineComponent spineComponent = new SpineComponent(spineCache.get(assetRef.asset));
+		VisSpine visSpine = new VisSpine(spineCache.get(assetRef.asset));
 
-		spineComponent.setPosition(protoComponent.x, protoComponent.y);
-		spineComponent.setFlip(protoComponent.flipX, protoComponent.flipY);
+		visSpine.setPosition(protoComponent.x, protoComponent.y);
+		visSpine.setFlip(protoComponent.flipX, protoComponent.flipY);
 
-		spineComponent.setPlayOnStart(protoComponent.playOnStart);
-		spineComponent.setDefaultAnimation(protoComponent.defaultAnimation);
+		visSpine.setPlayOnStart(protoComponent.playOnStart);
+		visSpine.setDefaultAnimation(protoComponent.defaultAnimation);
 
-		spineComponent.updateDefaultAnimations();
+		visSpine.updateDefaultAnimations();
 
-		SpinePreviewComponent spinePreviewComponent = previewCm.get(entityId);
-		spinePreviewComponent.updateAnimation = true;
+		SpinePreview spinePreview = previewCm.get(entityId);
+		spinePreview.updateAnimation = true;
 
-		world.getEntity(entityId).edit().add(spineComponent);
+		world.getEntity(entityId).edit().add(visSpine);
 
 		protoCm.remove(entityId);
 	}

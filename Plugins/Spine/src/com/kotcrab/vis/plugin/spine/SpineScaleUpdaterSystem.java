@@ -36,47 +36,49 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.graphics.Color;
+import com.kotcrab.vis.plugin.spine.components.SpinePreview;
+import com.kotcrab.vis.plugin.spine.components.SpineScale;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
-import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
+import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
 import com.kotcrab.vis.runtime.component.AssetReference;
 
 /** @author Kotcrab */
 public class SpineScaleUpdaterSystem extends EntityProcessingSystem {
 	private SpineCacheModule spineCache;
 
-	private ComponentMapper<SpineComponent> spineCm;
+	private ComponentMapper<VisSpine> spineCm;
 	private ComponentMapper<AssetReference> assetCm;
-	private ComponentMapper<SpineScaleComponent> scaleCm;
-	private ComponentMapper<SpinePreviewComponent> previewCm;
+	private ComponentMapper<SpineScale> scaleCm;
+	private ComponentMapper<SpinePreview> previewCm;
 
 	public SpineScaleUpdaterSystem () {
-		super(Aspect.all(SpineComponent.class, SpineScaleComponent.class, AssetReference.class));
+		super(Aspect.all(VisSpine.class, SpineScale.class, AssetReference.class));
 	}
 
 	@Override
 	protected void process (Entity e) {
-		SpineScaleComponent scaleComponent = scaleCm.get(e);
+		SpineScale scaleComponent = scaleCm.get(e);
 
 		if (scaleComponent.updateScale) {
 			scaleComponent.updateScale = false;
 
-			SpineComponent spineComponent = spineCm.get(e);
+			VisSpine visSpine = spineCm.get(e);
 			AssetReference assetRef = assetCm.get(e);
-			SpinePreviewComponent previewComponent = previewCm.get(e);
+			SpinePreview previewComponent = previewCm.get(e);
 
 			SpineAssetDescriptor old = (SpineAssetDescriptor) assetRef.asset;
 			assetRef.asset = new SpineAssetDescriptor(old.getAtlasPath(), old.getSkeletonPath(), scaleComponent.scale);
 
-			float x = spineComponent.getX(), y = spineComponent.getY();
-			boolean flipX = spineComponent.isFlipX(), flipY = spineComponent.isFlipY();
-			Color color = spineComponent.getTint();
+			float x = visSpine.getX(), y = visSpine.getY();
+			boolean flipX = visSpine.isFlipX(), flipY = visSpine.isFlipY();
+			Color color = visSpine.getTint();
 
-			spineComponent.onDeserialize(spineCache.get(assetRef.asset));
+			visSpine.onDeserialize(spineCache.get(assetRef.asset));
 			previewComponent.updateAnimation = true;
 
-			spineComponent.setPosition(x, y);
-			spineComponent.setFlip(flipX, flipY);
-			spineComponent.setTint(color);
+			visSpine.setPosition(x, y);
+			visSpine.setFlip(flipX, flipY);
+			visSpine.setTint(color);
 		}
 	}
 }

@@ -49,8 +49,11 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUI
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisDragAndDrop;
 import com.kotcrab.vis.editor.util.scene2d.VisDropSource;
+import com.kotcrab.vis.plugin.spine.components.SpineBounds;
+import com.kotcrab.vis.plugin.spine.components.SpinePreview;
+import com.kotcrab.vis.plugin.spine.components.SpineScale;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
-import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
+import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.Layer;
 import com.kotcrab.vis.runtime.component.Renderable;
@@ -128,10 +131,10 @@ public class SpineEditorSupport extends EditorEntitySupport {
 			SpineAssetDescriptor asset = (SpineAssetDescriptor) payload;
 
 			return new EntityBuilder(engine)
-					.with(new SpineComponent(spineCache.get(asset)), new SpinePreviewComponent(), new SpineScaleComponent(1f / pixelsPerUnit), new SpineBoundsComponent(),
+					.with(new VisSpine(spineCache.get(asset)), new SpinePreview(), new SpineScale(1f / pixelsPerUnit), new SpineBounds(),
 							new AssetReference(asset),
 							new Renderable(0), new Layer(scene.getActiveLayerId()),
-							new ExporterDropsComponent(SpinePreviewComponent.class, SpineScaleComponent.class, SpineBoundsComponent.class))
+							new ExporterDropsComponent(SpinePreview.class, SpineScale.class, SpineBounds.class))
 					.build();
 		}
 
@@ -140,7 +143,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 
 	@Override
 	public EntityProxy resolveProxy (Entity entity) {
-		if (entity.getComponent(SpineComponent.class) != null) return new SpineProxy(entity);
+		if (entity.getComponent(VisSpine.class) != null) return new SpineProxy(entity);
 
 		return null;
 	}

@@ -42,14 +42,14 @@ import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 /** @author Kotcrab */
 public class SpineInflaterSystem extends InflaterSystem {
 	private ComponentMapper<AssetReference> assetCm;
-	private ComponentMapper<SpineComponent> spineCm;
-	private ComponentMapper<SpineProtoComponent> protoCm;
+	private ComponentMapper<VisSpine> spineCm;
+	private ComponentMapper<ProtoVisSpine> protoCm;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
 	public SpineInflaterSystem (RuntimeConfiguration configuration, AssetManager manager) {
-		super(Aspect.all(SpineProtoComponent.class, AssetReference.class));
+		super(Aspect.all(ProtoVisSpine.class, AssetReference.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
@@ -57,22 +57,22 @@ public class SpineInflaterSystem extends InflaterSystem {
 	@Override
 	public void inserted (int entityId) {
 		AssetReference assetRef = assetCm.get(entityId);
-		SpineProtoComponent protoComponent = protoCm.get(entityId);
+		ProtoVisSpine protoComponent = protoCm.get(entityId);
 
 		SpineAssetDescriptor asset = (SpineAssetDescriptor) assetRef.asset;
 
 		SkeletonData skeleton = manager.get(asset.getSkeletonPath(), SkeletonData.class);
-		SpineComponent spineComponent = new SpineComponent(skeleton);
+		VisSpine visSpine = new VisSpine(skeleton);
 
-		spineComponent.setPosition(protoComponent.x, protoComponent.y);
-		spineComponent.setFlip(protoComponent.flipX, protoComponent.flipY);
+		visSpine.setPosition(protoComponent.x, protoComponent.y);
+		visSpine.setFlip(protoComponent.flipX, protoComponent.flipY);
 
-		spineComponent.setPlayOnStart(protoComponent.playOnStart);
-		spineComponent.setDefaultAnimation(protoComponent.defaultAnimation);
+		visSpine.setPlayOnStart(protoComponent.playOnStart);
+		visSpine.setDefaultAnimation(protoComponent.defaultAnimation);
 
-		spineComponent.updateDefaultAnimations();
+		visSpine.updateDefaultAnimations();
 
-		world.getEntity(entityId).edit().add(spineComponent);
+		world.getEntity(entityId).edit().add(visSpine);
 
 		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);

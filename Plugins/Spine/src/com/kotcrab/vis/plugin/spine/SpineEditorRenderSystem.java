@@ -40,7 +40,8 @@ import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import com.esotericsoftware.spine.Slot;
 import com.esotericsoftware.spine.attachments.*;
-import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
+import com.kotcrab.vis.plugin.spine.components.SpineBounds;
+import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
 import com.kotcrab.vis.runtime.component.Invisible;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
@@ -48,8 +49,8 @@ import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /** @author Kotcrab */
 public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
-	private ComponentMapper<SpineComponent> spineCm;
-	private ComponentMapper<SpineBoundsComponent> boundsCm;
+	private ComponentMapper<VisSpine> spineCm;
+	private ComponentMapper<SpineBounds> boundsCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
@@ -57,7 +58,7 @@ public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 	private SkeletonRenderer skeletonRenderer;
 
 	public SpineEditorRenderSystem (EntityProcessPrincipal principal) {
-		super(Aspect.all(SpineComponent.class, SpineBoundsComponent.class).exclude(Invisible.class), principal);
+		super(Aspect.all(VisSpine.class, SpineBounds.class).exclude(Invisible.class), principal);
 		skeletonRenderer = new SkeletonRenderer();
 	}
 
@@ -68,13 +69,13 @@ public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (int entityId) {
-		SpineComponent spine = spineCm.get(entityId);
+		VisSpine spine = spineCm.get(entityId);
 		spine.state.update(Gdx.graphics.getDeltaTime());
 		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
 		skeletonRenderer.draw(batch, spine.skeleton); // Draw the skeleton images.
 
-		SpineBoundsComponent boundsComponent = boundsCm.get(entityId);
+		SpineBounds boundsComponent = boundsCm.get(entityId);
 
 		if (boundsComponent.boundsRequested) {
 			boundsComponent.boundsRequested = false;
