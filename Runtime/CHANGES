@@ -8,15 +8,16 @@
   -Changes in those components will be reflected in render immediately
 -Renaming components:
  -TextComponent -> VisText
- -Spriter -> VisSpriter
  -SoundComponent -> VisSound
  -MusicComponent -> VisMusic
  -ParticleComponent -> VisParticle
+ -Spriter -> VisSpriter
+ -SpineComponent -> VisSpine
  -VariablesComponent -> Variables
  -ShaderComponent -> Shader
  -RenderableComponent -> Renderable
  -PolygonComponent -> Polygon
- -PointComponent -> Point
+ -PointComponent -> Point (position is now stored in Position component)
  -PhysicsSpriteComponent -> PhysicsSprite
  -PhysicsPropertiesComponent -> PhysicsProperties
  -PhysicsComponent -> PhysicsBody

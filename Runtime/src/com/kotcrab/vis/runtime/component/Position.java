@@ -21,8 +21,8 @@ import com.kotcrab.vis.runtime.properties.PositionOwner;
 
 /** @author Kotcrab */
 public class Position extends Component implements PositionOwner {
-	private float x;
-	private float y;
+	public float x;
+	public float y;
 
 	public Position () {
 	}

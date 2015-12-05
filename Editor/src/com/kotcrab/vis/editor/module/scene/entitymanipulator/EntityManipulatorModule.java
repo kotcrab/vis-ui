@@ -391,7 +391,7 @@ public class EntityManipulatorModule extends SceneModule {
 			if (pointPayload.centerPosAfterCreation) setEntityPosToMouse = false;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(new PointComponent())
+					.with(new Point())
 					.with(new Renderable(0), new Layer(scene.getActiveLayerId()))
 					.with(new ExporterDropsComponent(Renderable.class, Layer.class))
 					.build();

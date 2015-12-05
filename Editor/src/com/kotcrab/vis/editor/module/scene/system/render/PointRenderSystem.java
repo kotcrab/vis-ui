@@ -23,7 +23,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.runtime.component.Invisible;
-import com.kotcrab.vis.runtime.component.PointComponent;
+import com.kotcrab.vis.runtime.component.Point;
+import com.kotcrab.vis.runtime.component.Position;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
@@ -34,7 +35,7 @@ public class PointRenderSystem extends DeferredEntityProcessingSystem {
 
 	private CameraModule camera;
 
-	private ComponentMapper<PointComponent> pointCm;
+	private ComponentMapper<Position> posCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
@@ -43,7 +44,7 @@ public class PointRenderSystem extends DeferredEntityProcessingSystem {
 	private float baseRenderSize;
 
 	public PointRenderSystem (EntityProcessPrincipal principal, float pixelsPerUnit) {
-		super(Aspect.all(PointComponent.class).exclude(Invisible.class), principal);
+		super(Aspect.all(Point.class).exclude(Invisible.class), principal);
 		icon = Icons.POINT_BIG.textureRegion();
 
 		baseRenderSize = ICON_SIZE / pixelsPerUnit;
@@ -56,7 +57,7 @@ public class PointRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (int entityId) {
-		PointComponent pos = pointCm.get(entityId);
+		Position pos = posCm.get(entityId);
 
 		float renderSize = baseRenderSize * camera.getZoom();
 		renderSize = Math.min(renderSize, baseRenderSize);
