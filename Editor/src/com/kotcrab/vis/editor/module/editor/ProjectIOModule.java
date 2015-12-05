@@ -20,17 +20,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
+import com.google.gson.Gson;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.converter.ProjectConverter;
-import com.kotcrab.vis.editor.serializer.ArraySerializer;
-import com.kotcrab.vis.editor.serializer.VisTaggedFieldSerializer;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.CopyFileVisitor;
 import com.kotcrab.vis.editor.util.async.AsyncTask;
@@ -42,12 +37,8 @@ import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import org.apache.commons.io.IOUtils;
-import org.objenesis.strategy.StdInstantiatorStrategy;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -63,25 +54,21 @@ public class ProjectIOModule extends EditorModule {
 
 	private static final String TAG = "ProjectIOModule";
 
-	public static final String PROJECT_FILE = "project.data";
+	public static final String PROJECT_FILE = "project.json";
 
 	private StatusBarModule statusBar;
+	private GsonModule gsonModule;
 
 	private Stage stage;
 
-	private Kryo kryo;
+	private Gson gson;
 
 	private Array<ProjectConverter> projectConverters = new Array<>();
 	private AsyncTaskProgressDialog taskDialog;
 
 	@Override
 	public void init () {
-		kryo = new Kryo();
-		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
-		kryo.setDefaultSerializer(VisTaggedFieldSerializer.class);
-		kryo.register(Array.class, new ArraySerializer(), 10);
-		kryo.register(ProjectLibGDX.class, 11);
-		kryo.register(ProjectGeneric.class, 12);
+		gson = gsonModule.getCommonGson();
 
 		//TODO: [plugins] plugin entry point
 
@@ -199,14 +186,14 @@ public class ProjectIOModule extends EditorModule {
 
 	public Project readProjectDataFile (FileHandle dataFile) {
 		try {
-			Input input = new Input(new FileInputStream(dataFile.file()));
-			Project project = (Project) kryo.readClassAndObject(input);
-			input.close();
+			BufferedReader reader = new BufferedReader(new FileReader(dataFile.file()));
+			Project project = gson.fromJson(reader, Project.class);
+			reader.close();
 
 			project.updateRoot(dataFile);
 
 			return project;
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			Log.exception(e);
 			throw new IllegalStateException(e);
 		}
@@ -295,10 +282,10 @@ public class ProjectIOModule extends EditorModule {
 
 	private void saveProjectFile (Project project, FileHandle projectFile) {
 		try {
-			Output output = new Output(new FileOutputStream(projectFile.file()));
-			kryo.writeClassAndObject(output, project);
-			output.close();
-		} catch (FileNotFoundException e) {
+			FileWriter writer = new FileWriter(projectFile.file());
+			gson.toJson(project, writer);
+			writer.close();
+		} catch (IOException e) {
 			Log.exception(e);
 		}
 	}

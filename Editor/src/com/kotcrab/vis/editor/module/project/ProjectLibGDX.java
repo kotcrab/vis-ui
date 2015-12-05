@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 
 /**
  * LibGDX based project type, only supports Gradle based projects. In the future this project will support more LibGDX
@@ -27,11 +26,11 @@ import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
  */
 public class ProjectLibGDX extends Project {
 	/** Gradle root */
-	@Tag(0) private String root;
+	private String root;
 	/** typically gradleRoot/core/src/ */
-	@Tag(1) private String source;
+	private String source;
 	/** typically gradleRoot/android/asset/ */
-	@Tag(2) private String assetsOutput;
+	private String assetsOutput;
 
 	public ProjectLibGDX (String root, String source, String assetsOutput) {
 		this.root = root;

@@ -26,10 +26,10 @@ import java.util.Map;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class IntMapCloner extends VisCloner<IntMap> {
 	@Override
-	protected IntMap cloneObject (IntMap orignal, IDeepCloner cloner, Map<Object, Object> clones) {
-		IntMap map = new IntMap(orignal.size);
+	protected IntMap cloneObject (IntMap original, IDeepCloner cloner, Map<Object, Object> clones) {
+		IntMap map = new IntMap(original.size);
 
-		for (Object object : orignal.entries()) {
+		for (Object object : original.entries()) {
 			Entry entry = (Entry) object;
 			map.put(entry.key, cloner.deepClone(entry.value, clones));
 		}

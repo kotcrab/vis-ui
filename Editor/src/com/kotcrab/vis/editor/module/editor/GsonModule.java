@@ -22,6 +22,9 @@ import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.kotcrab.vis.editor.module.project.Project;
+import com.kotcrab.vis.editor.module.project.ProjectGeneric;
+import com.kotcrab.vis.editor.module.project.ProjectLibGDX;
 import com.kotcrab.vis.editor.serializer.json.*;
 import com.kotcrab.vis.runtime.component.AssetReference;
 
@@ -35,12 +38,15 @@ public class GsonModule extends EditorModule {
 
 	@SuppressWarnings("rawtypes")
 	@Override
-	public void postInit () {
+	public void init () {
 		ClassJsonSerializer classSerializer;
 
 		GsonBuilder builder = new GsonBuilder()
 				.setPrettyPrinting()
 				.excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+				.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Project.class, "@class")
+						.registerSubtype(ProjectLibGDX.class)
+						.registerSubtype(ProjectGeneric.class))
 				.registerTypeAdapter(Array.class, new ArrayJsonSerializer())
 				.registerTypeAdapter(IntArray.class, new IntArrayJsonSerializer())
 				.registerTypeAdapter(IntMap.class, new IntMapJsonSerializer())
