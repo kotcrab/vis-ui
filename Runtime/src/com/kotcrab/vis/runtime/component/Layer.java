@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component.proto;
+package com.kotcrab.vis.runtime.component;
 
-import com.kotcrab.vis.runtime.component.SoundComponent;
-import com.kotcrab.vis.runtime.system.inflater.SoundInflater;
+import com.artemis.Component;
 
 /**
- * {@link ProtoComponent} for {@link SoundComponent}.
- * <p>
- * This component is empty because sound does not require storing any property, however it still requires inflating by {@link SoundInflater}
+ * Stores entity layerId
  * @author Kotcrab
- * @see SoundInflater
  */
-public class SoundProtoComponent extends ProtoComponent<SoundComponent> {
-	@Override
-	public void fill (SoundComponent target) {
+public class Layer extends Component {
+	public int layerId;
 
+	public Layer () {
+	}
+
+	public Layer (int layerId) {
+		this.layerId = layerId;
 	}
 }

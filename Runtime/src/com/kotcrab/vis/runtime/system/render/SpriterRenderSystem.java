@@ -22,9 +22,9 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.InvisibleComponent;
-import com.kotcrab.vis.runtime.component.SpriterComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.Invisible;
+import com.kotcrab.vis.runtime.component.VisSpriter;
 import com.kotcrab.vis.runtime.spriter.Drawer;
 import com.kotcrab.vis.runtime.spriter.Timeline.Key;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
@@ -32,8 +32,8 @@ import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 
 /** @author Kotcrab */
 public class SpriterRenderSystem extends DeferredEntityProcessingSystem {
-	private ComponentMapper<SpriterComponent> spriterCm;
-	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<VisSpriter> spriterCm;
+	private ComponentMapper<AssetReference> assetCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
@@ -41,7 +41,7 @@ public class SpriterRenderSystem extends DeferredEntityProcessingSystem {
 	private SpriterDrawer drawer;
 
 	public SpriterRenderSystem (EntityProcessPrincipal principal) {
-		super(Aspect.all(SpriterComponent.class).exclude(InvisibleComponent.class), principal);
+		super(Aspect.all(VisSpriter.class).exclude(Invisible.class), principal);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class SpriterRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (int entityId) {
-		SpriterComponent spriter = spriterCm.get(entityId);
+		VisSpriter spriter = spriterCm.get(entityId);
 		SpriterAsset asset = (SpriterAsset) assetCm.get(entityId).asset;
 		if (spriter.animationPlaying == false) spriter.player.setTime(0);
 		spriter.player.update();

@@ -22,16 +22,16 @@ import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisText;
 
 /** @author Kotcrab */
 public class FontReloaderManager extends Manager {
 	private FontCacheModule fontCache;
 	private float pixelInUnits;
 
-	private ComponentMapper<TextComponent> textCm;
-	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<VisText> textCm;
+	private ComponentMapper<AssetReference> assetCm;
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
@@ -42,7 +42,7 @@ public class FontReloaderManager extends Manager {
 
 	@Override
 	protected void initialize () {
-		subscription = subscriptionManager.get(Aspect.all(TextComponent.class, AssetComponent.class));
+		subscription = subscriptionManager.get(Aspect.all(VisText.class, AssetReference.class));
 	}
 
 	public void reloadFonts (boolean reloadBmpFonts, boolean reloadTtfFonts) {
@@ -53,7 +53,7 @@ public class FontReloaderManager extends Manager {
 			int id = data[i];
 			Entity entity = world.getEntity(id);
 
-			TextComponent text = textCm.get(entity);
+			VisText text = textCm.get(entity);
 			VisAssetDescriptor asset = assetCm.get(entity).asset;
 
 			if (asset instanceof BmpFontAsset && reloadBmpFonts)

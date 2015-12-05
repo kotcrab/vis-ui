@@ -27,7 +27,7 @@ import com.kotcrab.vis.editor.module.project.SceneCacheModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
 
 /**
  * Undoable action for updating assets references in Entities. This is generic case usage that replaces provided source {@link VisAssetDescriptor} with provided target.
@@ -64,10 +64,10 @@ public class UpdateReferencesAction implements UndoableAction {
 
 			for (EntityScheme scheme : scene.getSchemes()) {
 				for (Component component : scheme.components) {
-					if (component instanceof AssetComponent) {
-						AssetComponent assetComponent = (AssetComponent) component;
-						if (assetComponent.asset.compare(asset1)) {
-							assetComponent.asset = assetProvider.parametrize(asset2, assetComponent.asset);
+					if (component instanceof AssetReference) {
+						AssetReference assetRef = (AssetReference) component;
+						if (assetRef.asset.compare(asset1)) {
+							assetRef.asset = assetProvider.parametrize(asset2, assetRef.asset);
 						}
 					}
 				}

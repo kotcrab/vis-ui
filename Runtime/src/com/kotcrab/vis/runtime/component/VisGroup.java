@@ -17,18 +17,15 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
+import com.badlogic.gdx.utils.IntArray;
 
 /**
- * Holds string entity id set from VisEditor
+ * Holds Group IDs that entity that uses this component belongs to.
  * @author Kotcrab
  */
-public class IDComponent extends Component {
-	public String id;
+public class VisGroup extends Component {
+	public IntArray groupIds = new IntArray();
 
-	public IDComponent () {
-	}
-
-	public IDComponent (String id) {
-		this.id = id;
+	public VisGroup () {
 	}
 }

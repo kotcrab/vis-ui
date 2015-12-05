@@ -21,20 +21,20 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.utils.IntArray;
-import com.kotcrab.vis.runtime.component.GroupComponent;
+import com.kotcrab.vis.runtime.component.VisGroup;
 
 /**
  * This system should be passive.
  * @author Kotcrab
  */
 public class GroupIdProviderSystem extends EntityProcessingSystem {
-	private ComponentMapper<GroupComponent> groupCm;
+	private ComponentMapper<VisGroup> groupCm;
 
 	private IntArray usedGids = new IntArray();
 	private int freeId;
 
 	public GroupIdProviderSystem () {
-		super(Aspect.all(GroupComponent.class));
+		super(Aspect.all(VisGroup.class));
 	}
 
 	@Override

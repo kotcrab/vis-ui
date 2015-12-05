@@ -22,9 +22,9 @@ import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.kotcrab.vis.runtime.component.LayerComponent;
-import com.kotcrab.vis.runtime.component.RenderableComponent;
-import com.kotcrab.vis.runtime.component.ShaderComponent;
+import com.kotcrab.vis.runtime.component.Layer;
+import com.kotcrab.vis.runtime.component.Renderable;
+import com.kotcrab.vis.runtime.component.Shader;
 import com.kotcrab.vis.runtime.component.Tint;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 import com.kotcrab.vis.runtime.system.CameraManager;
@@ -44,9 +44,9 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 	private CameraManager cameraManager;
 	private LayerManager layerManager;
 
-	private ComponentMapper<LayerComponent> layerCm;
-	private ComponentMapper<RenderableComponent> renderableCm;
-	private ComponentMapper<ShaderComponent> shaderCm;
+	private ComponentMapper<Layer> layerCm;
+	private ComponentMapper<Renderable> renderableCm;
+	private ComponentMapper<Shader> shaderCm;
 	private ComponentMapper<Tint> tintCm;
 
 	private boolean sortedDirty = false;

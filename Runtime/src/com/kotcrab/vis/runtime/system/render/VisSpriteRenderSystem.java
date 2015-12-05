@@ -33,7 +33,7 @@ public class VisSpriteRenderSystem extends DeferredEntityProcessingSystem {
 	private Batch batch;
 
 	public VisSpriteRenderSystem (EntityProcessPrincipal principal) {
-		super(Aspect.all(VisSprite.class).exclude(InvisibleComponent.class), principal);
+		super(Aspect.all(VisSprite.class).exclude(Invisible.class), principal);
 	}
 
 	@Override

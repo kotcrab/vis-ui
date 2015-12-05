@@ -23,8 +23,8 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisText;
 import com.kotcrab.vis.ui.widget.Tooltip;
 
 import static com.kotcrab.vis.editor.util.vis.EntityUtils.setCommonCheckBoxState;
@@ -53,9 +53,9 @@ public class BMPTextUITable extends TextUITable {
 
 	@Override
 	public boolean isSupported (EntityProxy proxy) {
-		if (proxy.hasComponent(TextComponent.class) == false) return false;
+		if (proxy.hasComponent(VisText.class) == false) return false;
 
-		VisAssetDescriptor asset = proxy.getEntity().getComponent(AssetComponent.class).asset;
+		VisAssetDescriptor asset = proxy.getEntity().getComponent(AssetReference.class).asset;
 		if (asset instanceof BmpFontAsset == false)
 			return false;
 
@@ -65,19 +65,19 @@ public class BMPTextUITable extends TextUITable {
 	@Override
 	public void updateUIValues () {
 		super.updateUIValues();
-		setCommonCheckBoxState(properties.getSelectedEntities(), distanceFieldCheck, (Entity entity) -> entity.getComponent(TextComponent.class).isDistanceFieldShaderEnabled());
+		setCommonCheckBoxState(properties.getSelectedEntities(), distanceFieldCheck, (Entity entity) -> entity.getComponent(VisText.class).isDistanceFieldShaderEnabled());
 	}
 
 	@Override
 	protected void updateEntitiesValues () {
 		for (EntityProxy proxy : properties.getSelectedEntities()) {
 			Entity entity = proxy.getEntity();
-			TextComponent text = entity.getComponent(TextComponent.class);
-			AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
+			VisText text = entity.getComponent(VisText.class);
+			AssetReference assetRef = entity.getComponent(AssetReference.class);
 
 			if (distanceFieldCheck.isIndeterminate() == false) {
 				text.setDistanceFieldShaderEnabled(distanceFieldCheck.isChecked());
-				assetComponent.asset = getNewAsset((BmpFontAsset) assetComponent.asset, distanceFieldCheck.isChecked());
+				assetRef.asset = getNewAsset((BmpFontAsset) assetRef.asset, distanceFieldCheck.isChecked());
 			}
 		}
 	}

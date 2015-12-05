@@ -22,18 +22,18 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.ParticleComponent;
-import com.kotcrab.vis.runtime.component.proto.ParticleProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisParticle;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
 
 /**
- * Inflates {@link ParticleProtoComponent} into {@link ParticleComponent}
+ * Inflates {@link ProtoVisParticle} into {@link VisParticle}
  * @author Kotcrab
  */
 public class ParticleInflater extends InflaterSystem {
-	private ComponentMapper<AssetComponent> assetCm;
-	private ComponentMapper<ParticleComponent> partcielCm;
-	private ComponentMapper<ParticleProtoComponent> protoCm;
+	private ComponentMapper<AssetReference> assetCm;
+	private ComponentMapper<VisParticle> partcielCm;
+	private ComponentMapper<ProtoVisParticle> protoCm;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
@@ -41,7 +41,7 @@ public class ParticleInflater extends InflaterSystem {
 	private float pixelsPerUnit;
 
 	public ParticleInflater (RuntimeConfiguration configuration, AssetManager manager, float pixelsPerUnit) {
-		super(Aspect.all(ParticleProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisParticle.class, AssetReference.class));
 		this.configuration = configuration;
 		this.manager = manager;
 		this.pixelsPerUnit = pixelsPerUnit;
@@ -49,20 +49,20 @@ public class ParticleInflater extends InflaterSystem {
 
 	@Override
 	protected void inserted (int entityId) {
-		AssetComponent assetComponent = assetCm.get(entityId);
-		ParticleProtoComponent protoComponent = protoCm.get(entityId);
+		AssetReference assetRef = assetCm.get(entityId);
+		ProtoVisParticle protoComponent = protoCm.get(entityId);
 
-		PathAsset path = (PathAsset) assetComponent.asset;
+		PathAsset path = (PathAsset) assetRef.asset;
 
 		ParticleEffect effect = manager.get(path.getPath(), ParticleEffect.class);
 		if (effect == null)
 			throw new IllegalStateException("Can't load scene, particle effect is missing: " + path.getPath());
 
-		ParticleComponent particleComponent = partcielCm.create(entityId);
-		particleComponent.effect = new ParticleEffect(effect);
-		particleComponent.setPosition(protoComponent.x, protoComponent.y);
-		particleComponent.active = protoComponent.active;
-		particleComponent.effect.scaleEffect(1f / pixelsPerUnit);
+		VisParticle particle = partcielCm.create(entityId);
+		particle.effect = new ParticleEffect(effect);
+		particle.setPosition(protoComponent.x, protoComponent.y);
+		particle.active = protoComponent.active;
+		particle.effect.scaleEffect(1f / pixelsPerUnit);
 
 		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);

@@ -25,7 +25,7 @@ import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisSprite;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisSprite;
 import com.kotcrab.vis.runtime.util.PathUtils;
@@ -35,13 +35,13 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 public class VisSpriteInflater extends InflaterSystem {
 	private ComponentMapper<VisSprite> spriteCm;
 	private ComponentMapper<ProtoVisSprite> protoCm;
-	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<AssetReference> assetCm;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
 	public VisSpriteInflater (RuntimeConfiguration configuration, AssetManager manager) {
-		super(Aspect.all(ProtoVisSprite.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisSprite.class, AssetReference.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}

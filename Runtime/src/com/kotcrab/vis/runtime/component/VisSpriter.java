@@ -20,7 +20,7 @@ import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
-import com.kotcrab.vis.runtime.component.proto.SpriterProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisSpriter;
 import com.kotcrab.vis.runtime.properties.*;
 import com.kotcrab.vis.runtime.spriter.Data;
 import com.kotcrab.vis.runtime.spriter.Loader;
@@ -28,7 +28,7 @@ import com.kotcrab.vis.runtime.spriter.Player;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
 /** @author Kotcrab */
-public class SpriterComponent extends Component implements PositionOwner, SizeOwner, BoundsOwner, FlipOwner, RotationOwner, UsesProtoComponent {
+public class VisSpriter extends Component implements PositionOwner, SizeOwner, BoundsOwner, FlipOwner, RotationOwner, UsesProtoComponent {
 	public final Loader<Sprite> loader;
 	public final Player player;
 
@@ -37,7 +37,7 @@ public class SpriterComponent extends Component implements PositionOwner, SizeOw
 
 	public boolean animationPlaying;
 
-	public SpriterComponent (Loader<Sprite> loader, Data data, float scale) {
+	public VisSpriter (Loader<Sprite> loader, Data data, float scale) {
 		this.loader = loader;
 		player = new Player(data.getEntity(0));
 		player.setScale(scale);
@@ -110,7 +110,7 @@ public class SpriterComponent extends Component implements PositionOwner, SizeOw
 
 	@Override
 	public ProtoComponent toProtoComponent () {
-		return new SpriterProtoComponent(this);
+		return new ProtoVisSpriter(this);
 	}
 
 	@Override

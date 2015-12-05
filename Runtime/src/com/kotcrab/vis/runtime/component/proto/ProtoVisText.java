@@ -17,16 +17,16 @@
 package com.kotcrab.vis.runtime.component.proto;
 
 import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.component.VisText;
 import com.kotcrab.vis.runtime.properties.*;
 import com.kotcrab.vis.runtime.system.inflater.TextInflater;
 
 /**
- * {@link ProtoComponent} for {@link TextComponent}
+ * {@link ProtoComponent} for {@link VisText}
  * @author Kotcrab
  * @see TextInflater
  */
-public class TextProtoComponent extends ProtoComponent<TextComponent> implements PositionOwner, OriginOwner, RotationOwner, ScaleOwner, TintOwner {
+public class ProtoVisText extends ProtoComponent<VisText> implements PositionOwner, OriginOwner, RotationOwner, ScaleOwner, TintOwner {
 	public float x, y;
 	public float originX, originY;
 	public float rotation;
@@ -38,10 +38,10 @@ public class TextProtoComponent extends ProtoComponent<TextComponent> implements
 
 	public boolean isUsesDistanceField;
 
-	public TextProtoComponent () {
+	public ProtoVisText () {
 	}
 
-	public TextProtoComponent (TextComponent component) {
+	public ProtoVisText (VisText component) {
 		x = component.getX();
 		y = component.getY();
 
@@ -62,7 +62,7 @@ public class TextProtoComponent extends ProtoComponent<TextComponent> implements
 	}
 
 	@Override
-	public void fill (TextComponent component) {
+	public void fill (VisText component) {
 		component.setPosition(x, y);
 		component.setOrigin(originX, originY);
 		component.setRotation(rotation);

@@ -22,40 +22,40 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.MusicComponent;
-import com.kotcrab.vis.runtime.component.proto.MusicProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisMusic;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisMusic;
 
 /**
- * Inflates {@link MusicProtoComponent} into {@link MusicComponent}
+ * Inflates {@link ProtoVisMusic} into {@link VisMusic}
  * @author Kotcrab
  */
 public class MusicInflater extends InflaterSystem {
-	private ComponentMapper<AssetComponent> assetCm;
-	private ComponentMapper<MusicComponent> musicCm;
-	private ComponentMapper<MusicProtoComponent> protoCm;
+	private ComponentMapper<AssetReference> assetCm;
+	private ComponentMapper<VisMusic> musicCm;
+	private ComponentMapper<ProtoVisMusic> protoCm;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
 	public MusicInflater (RuntimeConfiguration configuration, AssetManager manager) {
-		super(Aspect.all(MusicProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisMusic.class, AssetReference.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
 	protected void inserted (int entityId) {
-		AssetComponent assetComponent = assetCm.get(entityId);
-		MusicProtoComponent musicProtoComponent = protoCm.get(entityId);
+		AssetReference assetRef = assetCm.get(entityId);
+		ProtoVisMusic protoVisMusic = protoCm.get(entityId);
 
-		PathAsset asset = (PathAsset) assetComponent.asset;
+		PathAsset asset = (PathAsset) assetRef.asset;
 
 		Music music = manager.get(asset.getPath(), Music.class);
 		if (music == null) throw new IllegalStateException("Can't load scene, music is missing: " + asset.getPath());
-		MusicComponent musicComponent = musicCm.create(entityId);
+		VisMusic musicComponent = musicCm.create(entityId);
 		musicComponent.music = music;
-		musicProtoComponent.fill(musicComponent);
+		protoVisMusic.fill(musicComponent);
 		if (musicComponent.playOnStart) musicComponent.music.play();
 
 		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);

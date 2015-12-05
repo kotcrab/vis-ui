@@ -21,23 +21,23 @@ import com.artemis.utils.IntBag;
 import com.kotcrab.vis.editor.module.project.SpriterCacheModule;
 import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SpriterComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisSpriter;
 
 /** @author Kotcrab */
 public class SpriterReloaderManager extends Manager {
 	private EntityProxyCache entityProxyCache;
 	private SpriterCacheModule spriterCache;
 
-	private ComponentMapper<SpriterComponent> spriterCm;
-	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<VisSpriter> spriterCm;
+	private ComponentMapper<AssetReference> assetCm;
 
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
 	@Override
 	protected void initialize () {
-		subscription = subscriptionManager.get(Aspect.all(SpriterComponent.class, AssetComponent.class));
+		subscription = subscriptionManager.get(Aspect.all(VisSpriter.class, AssetReference.class));
 	}
 
 	public void reloadSpriterData () {
@@ -48,10 +48,10 @@ public class SpriterReloaderManager extends Manager {
 			int id = data[i];
 			Entity entity = world.getEntity(id);
 
-			SpriterComponent spriter = spriterCm.get(entity);
+			VisSpriter spriter = spriterCm.get(entity);
 			SpriterAsset asset = (SpriterAsset) assetCm.get(entity).asset;
 
-			SpriterComponent newSpriter = spriterCache.cloneComponent(asset, spriter);
+			VisSpriter newSpriter = spriterCache.cloneComponent(asset, spriter);
 			entity.edit().remove(spriter).add(newSpriter);
 
 			//we've replaced SpriterComponent in entity so proxy needs manual reloading

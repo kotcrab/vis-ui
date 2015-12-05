@@ -17,7 +17,7 @@
 package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
-import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.component.VisText;
 
 /** @author Kotcrab */
 public class TextProxy extends EntityProxy {
@@ -32,7 +32,7 @@ public class TextProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		TextComponent text = getEntity().getComponent(TextComponent.class);
+		VisText text = getEntity().getComponent(VisText.class);
 		enableBasicProperties(text, text, text);
 		enableOrigin(text);
 		enableScale(text);

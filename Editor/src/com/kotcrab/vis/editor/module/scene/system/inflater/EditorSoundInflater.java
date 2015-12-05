@@ -18,18 +18,18 @@ package com.kotcrab.vis.editor.module.scene.system.inflater;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SoundComponent;
-import com.kotcrab.vis.runtime.component.proto.SoundProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisSound;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisSound;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
 public class EditorSoundInflater extends InflaterSystem {
-	private ComponentMapper<SoundProtoComponent> protoCm;
-	private ComponentMapper<SoundComponent> soundCm;
+	private ComponentMapper<ProtoVisSound> protoCm;
+	private ComponentMapper<VisSound> soundCm;
 
 	public EditorSoundInflater () {
-		super(Aspect.all(SoundProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisSound.class, AssetReference.class));
 	}
 
 	@Override

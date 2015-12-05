@@ -22,26 +22,26 @@ import com.artemis.Entity;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.kotcrab.vis.runtime.component.PhysicsComponent;
-import com.kotcrab.vis.runtime.component.PhysicsSpriteComponent;
+import com.kotcrab.vis.runtime.component.PhysicsBody;
+import com.kotcrab.vis.runtime.component.PhysicsSprite;
 import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.component.VisSprite;
 
 /** @author Kotcrab */
 public class PhysicsSpriteUpdateSystem extends EntityProcessingSystem {
-	private ComponentMapper<PhysicsComponent> physicsCm;
-	private ComponentMapper<PhysicsSpriteComponent> physicsSpriteCm;
+	private ComponentMapper<PhysicsBody> physicsCm;
+	private ComponentMapper<PhysicsSprite> physicsSpriteCm;
 	private ComponentMapper<Transform> transformCm;
 
 	public PhysicsSpriteUpdateSystem () {
-		super(Aspect.all(PhysicsComponent.class, PhysicsSpriteComponent.class, VisSprite.class));
+		super(Aspect.all(PhysicsBody.class, PhysicsSprite.class, VisSprite.class));
 	}
 
 	@Override
 	protected void process (Entity e) {
-		PhysicsComponent physics = physicsCm.get(e);
+		PhysicsBody physics = physicsCm.get(e);
 		if (physics.body == null) return;
-		PhysicsSpriteComponent physicsSprite = physicsSpriteCm.get(e);
+		PhysicsSprite physicsSprite = physicsSpriteCm.get(e);
 		Transform transform = transformCm.get(e);
 
 		Vector2 bodyPos = physics.body.getPosition();

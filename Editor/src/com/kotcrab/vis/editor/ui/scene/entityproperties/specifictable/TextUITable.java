@@ -31,8 +31,8 @@ import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisText;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 import com.kotcrab.vis.ui.util.value.VisWidgetValue;
@@ -100,9 +100,9 @@ public abstract class TextUITable extends SpecificUITable {
 		selectFontDialog = new SelectFileDialog(getFontExtension(), fileAccess.getAssetsFolder(), file -> {
 			for (EntityProxy proxy : properties.getSelectedEntities()) {
 				Entity entity = proxy.getEntity();
-				TextComponent text = entity.getComponent(TextComponent.class);
-				AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
-				VisAssetDescriptor asset = assetComponent.asset;
+				VisText text = entity.getComponent(VisText.class);
+				AssetReference assetRef = entity.getComponent(AssetReference.class);
+				VisAssetDescriptor asset = assetRef.asset;
 
 				VisAssetDescriptor newAsset = null;
 
@@ -117,7 +117,7 @@ public abstract class TextUITable extends SpecificUITable {
 
 				text.setFont(fontCache.getGeneric(newAsset, properties.getSceneModuleContainer().getScene().pixelsPerUnit));
 
-				assetComponent.asset = newAsset;
+				assetRef.asset = newAsset;
 			}
 
 			properties.getParentTab().dirty();
@@ -138,17 +138,17 @@ public abstract class TextUITable extends SpecificUITable {
 	public void updateUIValues () {
 		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 
-		setCommonCheckBoxState(proxies, autoCenterOrigin, (Entity entity) -> entity.getComponent(TextComponent.class).isAutoSetOriginToCenter());
+		setCommonCheckBoxState(proxies, autoCenterOrigin, (Entity entity) -> entity.getComponent(VisText.class).isAutoSetOriginToCenter());
 
-		textField.setText(getCommonString(proxies, "<multiple values>", (Entity entity) -> entity.getComponent(TextComponent.class).getText()));
-		fontLabel.setText(getCommonString(proxies, "<?>", (Entity entity) -> ((PathAsset) entity.getComponent(AssetComponent.class).asset).getPath()));
+		textField.setText(getCommonString(proxies, "<multiple values>", (Entity entity) -> entity.getComponent(VisText.class).getText()));
+		fontLabel.setText(getCommonString(proxies, "<?>", (Entity entity) -> ((PathAsset) entity.getComponent(AssetReference.class).asset).getPath()));
 		((VisLabel) fontLabelTooltip.getContent()).setText(fontLabel.getText());
 		fontLabelTooltip.pack();
 	}
 
 	@Override
 	public final void setValuesToEntities () {
-		EntityUtils.stream(properties.getSelectedEntities(), TextComponent.class, (entity, text) -> {
+		EntityUtils.stream(properties.getSelectedEntities(), VisText.class, (entity, text) -> {
 			if (textField.getText().equals("<multiple values>") == false) { //TODO: lets hope that nobody will use <multiple values> as their text
 				text.setText(textField.getText());
 			}
@@ -156,7 +156,7 @@ public abstract class TextUITable extends SpecificUITable {
 
 		updateEntitiesValues();
 
-		EntityUtils.stream(properties.getSelectedEntities(), TextComponent.class, (entity, text) -> {
+		EntityUtils.stream(properties.getSelectedEntities(), VisText.class, (entity, text) -> {
 			if (autoCenterOrigin.isIndeterminate() == false) {
 				text.setAutoSetOriginToCenter(autoCenterOrigin.isChecked());
 				properties.selectedEntitiesBasicValuesChanged();

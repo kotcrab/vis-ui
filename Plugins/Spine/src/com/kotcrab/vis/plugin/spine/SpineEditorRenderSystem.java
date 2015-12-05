@@ -41,7 +41,7 @@ import com.esotericsoftware.spine.SkeletonRenderer;
 import com.esotericsoftware.spine.Slot;
 import com.esotericsoftware.spine.attachments.*;
 import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
-import com.kotcrab.vis.runtime.component.InvisibleComponent;
+import com.kotcrab.vis.runtime.component.Invisible;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
@@ -57,7 +57,7 @@ public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 	private SkeletonRenderer skeletonRenderer;
 
 	public SpineEditorRenderSystem (EntityProcessPrincipal principal) {
-		super(Aspect.all(SpineComponent.class, SpineBoundsComponent.class).exclude(InvisibleComponent.class), principal);
+		super(Aspect.all(SpineComponent.class, SpineBoundsComponent.class).exclude(Invisible.class), principal);
 		skeletonRenderer = new SkeletonRenderer();
 	}
 

@@ -18,7 +18,7 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.kotcrab.vis.runtime.component.proto.ParticleProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
 import com.kotcrab.vis.runtime.properties.PositionOwner;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
@@ -28,19 +28,19 @@ import com.kotcrab.vis.runtime.util.autotable.ATProperty;
  * Stores particle effect
  * @author Kotcrab
  */
-public class ParticleComponent extends Component implements UsesProtoComponent, PositionOwner {
+public class VisParticle extends Component implements UsesProtoComponent, PositionOwner {
 	public transient ParticleEffect effect;
 	@ATProperty(fieldName = "Active on start", tooltip = "Controls whether to automatically start this effect on runtime.\nIn editor, particle effect are always active.")
 	public boolean active = true;
 
-	public ParticleComponent () {
+	public VisParticle () {
 	}
 
-	public ParticleComponent (ParticleEffect effect) {
+	public VisParticle (ParticleEffect effect) {
 		this.effect = effect;
 	}
 
-	public ParticleComponent (ParticleComponent original, ParticleEffect effect) {
+	public VisParticle (VisParticle original, ParticleEffect effect) {
 		this.effect = effect;
 		setPosition(original.getX(), original.getY());
 		this.active = original.active;
@@ -48,7 +48,7 @@ public class ParticleComponent extends Component implements UsesProtoComponent, 
 
 	@Override
 	public ProtoComponent toProtoComponent () {
-		return new ParticleProtoComponent(this);
+		return new ProtoVisParticle(this);
 	}
 
 	@Override

@@ -21,26 +21,26 @@ import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Matrix4;
-import com.kotcrab.vis.runtime.component.InvisibleComponent;
-import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.component.Invisible;
+import com.kotcrab.vis.runtime.component.VisText;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 
 /**
- * Renders entities with {@link TextComponent}
+ * Renders entities with {@link VisText}
  * @author Kotcrab
  */
 public class TextRenderSystem extends DeferredEntityProcessingSystem {
 	private static final Matrix4 IDT_MATRIX = new Matrix4();
 
-	private ComponentMapper<TextComponent> textCm;
+	private ComponentMapper<VisText> textCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
 	private ShaderProgram distanceFieldShader;
 
 	public TextRenderSystem (EntityProcessPrincipal principal, ShaderProgram distanceFieldShader) {
-		super(Aspect.all(TextComponent.class).exclude(InvisibleComponent.class), principal);
+		super(Aspect.all(VisText.class).exclude(Invisible.class), principal);
 		this.distanceFieldShader = distanceFieldShader;
 	}
 
@@ -52,7 +52,7 @@ public class TextRenderSystem extends DeferredEntityProcessingSystem {
 	@Override
 	protected void process (int entityId) {
 		//TODO: optimize texts
-		TextComponent text = textCm.get(entityId);
+		VisText text = textCm.get(entityId);
 		batch.setTransformMatrix(text.translationMatrix);
 		if (text.isDistanceFieldShaderEnabled()) batch.setShader(distanceFieldShader);
 		text.getCache().draw(batch);

@@ -47,22 +47,22 @@ public class RuntimeJsonTags {
 
 		registrar.register("VisSprite", VisSprite.class);
 
-		registrar.register("AssetComponent", AssetComponent.class);
-		registrar.register("GroupComponent", GroupComponent.class);
-		registrar.register("IDComponent", IDComponent.class);
-		registrar.register("InvisibleComponent", InvisibleComponent.class);
-		registrar.register("LayerComponent", LayerComponent.class);
-		registrar.register("RenderableComponent", RenderableComponent.class);
-		registrar.register("VariablesComponent", VariablesComponent.class);
-		registrar.register("PhysicsPropertiesComponent", PhysicsPropertiesComponent.class);
-		registrar.register("PolygonComponent", PolygonComponent.class);
+		registrar.register("AssetComponent", AssetReference.class);
+		registrar.register("GroupComponent", VisGroup.class);
+		registrar.register("IDComponent", VisID.class);
+		registrar.register("InvisibleComponent", Invisible.class);
+		registrar.register("LayerComponent", Layer.class);
+		registrar.register("RenderableComponent", Renderable.class);
+		registrar.register("VariablesComponent", Variables.class);
+		registrar.register("PhysicsPropertiesComponent", PhysicsProperties.class);
+		registrar.register("PolygonComponent", Polygon.class);
 
 		registrar.register("ProtoVisSprite", ProtoVisSprite.class);
-		registrar.register("MusicProtoComponent", MusicProtoComponent.class);
-		registrar.register("SoundProtoComponent", SoundProtoComponent.class);
-		registrar.register("ParticleProtoComponent", ParticleProtoComponent.class);
-		registrar.register("TextProtoComponent", TextProtoComponent.class);
-		registrar.register("ShaderProtoComponent", ShaderProtoComponent.class);
-		registrar.register("SpriterProtoComponent", SpriterProtoComponent.class);
+		registrar.register("MusicProtoComponent", ProtoVisMusic.class);
+		registrar.register("SoundProtoComponent", ProtoVisSound.class);
+		registrar.register("ParticleProtoComponent", ProtoVisParticle.class);
+		registrar.register("TextProtoComponent", ProtoVisText.class);
+		registrar.register("ShaderProtoComponent", ProtoShader.class);
+		registrar.register("SpriterProtoComponent", ProtoVisSpriter.class);
 	}
 }

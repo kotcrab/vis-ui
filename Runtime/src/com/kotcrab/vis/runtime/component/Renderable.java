@@ -17,13 +17,20 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
-import com.badlogic.gdx.physics.box2d.Body;
+import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
-/** @author Kotcrab */
-public class PhysicsComponent extends Component {
-	public Body body;
+/**
+ * All renderable entities must have this component, stores entity zIndex
+ * @author Kotcrab
+ */
+public class Renderable extends Component {
+	@ATProperty(fieldName = "Z Index", min = 0)
+	public int zIndex;
 
-	public PhysicsComponent (Body body) {
-		this.body = body;
+	public Renderable () {
+	}
+
+	public Renderable (int zIndex) {
+		this.zIndex = zIndex;
 	}
 }

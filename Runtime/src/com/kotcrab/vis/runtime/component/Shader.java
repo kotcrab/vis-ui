@@ -21,7 +21,7 @@ import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.kotcrab.vis.runtime.assets.ShaderAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
-import com.kotcrab.vis.runtime.component.proto.ShaderProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.ProtoShader;
 import com.kotcrab.vis.runtime.properties.StoresAssetDescriptor;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
@@ -30,22 +30,22 @@ import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
  * Stores single shader along with it's asset descriptor
  * @author Kotcrab
  */
-public class ShaderComponent extends Component implements UsesProtoComponent, StoresAssetDescriptor {
+public class Shader extends Component implements UsesProtoComponent, StoresAssetDescriptor {
 	@ATSelectFile(fieldName = "Shader", extension = "frag", hideExtension = true, handlerAlias = "shader")
 	public ShaderAsset asset;
 	public transient ShaderProgram shader;
 
-	public ShaderComponent () {
+	public Shader () {
 	}
 
-	public ShaderComponent (ShaderAsset asset, ShaderProgram shader) {
+	public Shader (ShaderAsset asset, ShaderProgram shader) {
 		this.asset = asset;
 		this.shader = shader;
 	}
 
 	@Override
 	public ProtoComponent toProtoComponent () {
-		return new ShaderProtoComponent(asset);
+		return new ProtoShader(asset);
 	}
 
 	@Override

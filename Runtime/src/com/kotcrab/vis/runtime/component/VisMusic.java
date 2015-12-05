@@ -19,7 +19,7 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Music.OnCompletionListener;
-import com.kotcrab.vis.runtime.component.proto.MusicProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisMusic;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
@@ -30,7 +30,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
  * Stores entity Music
  * @author Kotcrab
  */
-public class MusicComponent extends Component implements UsesProtoComponent { //emulated on gwt
+public class VisMusic extends Component implements UsesProtoComponent { //emulated on gwt
 	@ATSelectFile(fieldName = "Music", extension = "mp3|wav|ogg", hideExtension = false, handlerAlias = "music")
 	@ATProperty(fieldName = "Loop")
 	@ATReflectedProperty(targetType = boolean.class, getterName = "isLooping", setterName = "setLooping")
@@ -39,16 +39,16 @@ public class MusicComponent extends Component implements UsesProtoComponent { //
 	@ATProperty(fieldName = "Play on start")
 	public boolean playOnStart;
 
-	public MusicComponent () {
+	public VisMusic () {
 	}
 
-	public MusicComponent (Music music) {
+	public VisMusic (Music music) {
 		this.music = music;
 	}
 
 	@Override
 	public ProtoComponent toProtoComponent () {
-		return new MusicProtoComponent(this);
+		return new ProtoVisMusic(this);
 	}
 
 	public boolean isPlayOnStart () {

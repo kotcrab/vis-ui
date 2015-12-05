@@ -25,26 +25,26 @@ import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.TextComponent;
-import com.kotcrab.vis.runtime.component.proto.TextProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisText;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisText;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 /**
- * Inflates {@link TextProtoComponent} into {@link TextComponent}
+ * Inflates {@link ProtoVisText} into {@link VisText}
  * @author Kotcrab
  */
 public class TextInflater extends InflaterSystem {
-	private ComponentMapper<AssetComponent> assetCm;
-	private ComponentMapper<TextComponent> textCm;
-	private ComponentMapper<TextProtoComponent> protoCm;
+	private ComponentMapper<AssetReference> assetCm;
+	private ComponentMapper<VisText> textCm;
+	private ComponentMapper<ProtoVisText> protoCm;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 	private float pixelsPerUnit;
 
 	public TextInflater (RuntimeConfiguration configuration, AssetManager manager, float pixelsPerUnit) {
-		super(Aspect.all(TextProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisText.class, AssetReference.class));
 		this.configuration = configuration;
 		this.manager = manager;
 		this.pixelsPerUnit = pixelsPerUnit;
@@ -53,7 +53,7 @@ public class TextInflater extends InflaterSystem {
 	@Override
 	public void inserted (int entityId) {
 		VisAssetDescriptor asset = assetCm.get(entityId).asset;
-		TextProtoComponent protoComponent = protoCm.get(entityId);
+		ProtoVisText protoComponent = protoCm.get(entityId);
 
 		BitmapFont font;
 
@@ -72,10 +72,10 @@ public class TextInflater extends InflaterSystem {
 		font.setUseIntegerPositions(false);
 		font.getData().setScale(1f / pixelsPerUnit);
 
-		TextComponent textComponent = textCm.create(entityId);
+		VisText text = textCm.create(entityId);
 
-		textComponent.init(font, protoComponent.text);
-		protoComponent.fill(textComponent);
+		text.init(font, protoComponent.text);
+		protoComponent.fill(text);
 		//text.setFontSize(fontSize); //font size must be handled manually from SceneLoader because it is not a public property for TextEntity
 
 		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);

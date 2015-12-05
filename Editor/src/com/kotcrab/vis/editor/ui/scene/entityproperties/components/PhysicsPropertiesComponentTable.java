@@ -21,14 +21,14 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
 import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.component.PhysicsPropertiesComponent;
+import com.kotcrab.vis.runtime.component.PhysicsProperties;
 
 /** @author Kotcrab */
-public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsPropertiesComponent> {
+public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsProperties> {
 	private IndeterminateCheckbox adjustOriginCheck;
 
 	public PhysicsPropertiesComponentTable (ModuleInjector injector) {
-		super(injector, PhysicsPropertiesComponent.class, true);
+		super(injector, PhysicsProperties.class, true);
 	}
 
 	@Override
@@ -42,8 +42,8 @@ public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsP
 		super.componentAddedToEntities();
 
 		EntityUtils.stream(properties.getSelectedEntities(), (proxy, entity) -> {
-			if (proxy.hasComponent(PhysicsPropertiesComponent.class)) {
-				if (entity.getComponent(PhysicsPropertiesComponent.class).adjustOrigin && proxy.isOriginSupported()) {
+			if (proxy.hasComponent(PhysicsProperties.class)) {
+				if (entity.getComponent(PhysicsProperties.class).adjustOrigin && proxy.isOriginSupported()) {
 					proxy.setOrigin(0, 0);
 				}
 			}

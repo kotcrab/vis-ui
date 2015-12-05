@@ -16,25 +16,25 @@
 
 package com.kotcrab.vis.runtime.component.proto;
 
-import com.kotcrab.vis.runtime.component.ParticleComponent;
+import com.kotcrab.vis.runtime.component.VisParticle;
 import com.kotcrab.vis.runtime.properties.PositionOwner;
 
 /**
- * {@link ProtoComponent} for {@link ParticleComponent}
+ * {@link ProtoComponent} for {@link VisParticle}
  * @author Kotcrab
- * @see ParticleProtoComponent
+ * @see ProtoVisParticle
  */
-public class ParticleProtoComponent extends ProtoComponent<ParticleComponent> implements PositionOwner {
+public class ProtoVisParticle extends ProtoComponent<VisParticle> implements PositionOwner {
 	public float x, y;
 	public boolean active;
 
-	public ParticleProtoComponent () {
+	public ProtoVisParticle () {
 	}
 
-	public ParticleProtoComponent (ParticleComponent particleComponent) {
-		x = particleComponent.getX();
-		y = particleComponent.getY();
-		active = particleComponent.active;
+	public ProtoVisParticle (VisParticle particle) {
+		x = particle.getX();
+		y = particle.getY();
+		active = particle.active;
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class ParticleProtoComponent extends ProtoComponent<ParticleComponent> im
 	}
 
 	@Override
-	public void fill (ParticleComponent target) {
+	public void fill (VisParticle target) {
 
 	}
 }

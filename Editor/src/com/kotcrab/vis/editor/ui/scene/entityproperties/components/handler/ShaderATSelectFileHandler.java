@@ -21,7 +21,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ShaderCacheModule;
 import com.kotcrab.vis.runtime.assets.ShaderAsset;
-import com.kotcrab.vis.runtime.component.ShaderComponent;
+import com.kotcrab.vis.runtime.component.Shader;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 
 /** @author Kotcrab */
@@ -31,7 +31,7 @@ public class ShaderATSelectFileHandler implements ATSelectFileHandler {
 
 	@Override
 	public void applyChanges (Entity entity, FileHandle file) {
-		ShaderComponent shader = entity.getComponent(ShaderComponent.class);
+		Shader shader = entity.getComponent(Shader.class);
 
 		String vert = null;
 		String frag = null;
@@ -52,7 +52,7 @@ public class ShaderATSelectFileHandler implements ATSelectFileHandler {
 
 	@Override
 	public String getLabelValue (Entity entity) {
-		ShaderAsset asset = entity.getComponent(ShaderComponent.class).asset;
+		ShaderAsset asset = entity.getComponent(Shader.class).asset;
 		if (asset == null) return "<no shader>";
 		return asset.getPathWithoutExtension();
 	}

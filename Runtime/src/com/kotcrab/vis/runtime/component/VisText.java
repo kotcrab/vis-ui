@@ -25,7 +25,7 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
-import com.kotcrab.vis.runtime.component.proto.TextProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisText;
 import com.kotcrab.vis.runtime.properties.*;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
@@ -33,7 +33,7 @@ import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
  * Text component storing all text properties
  * @author Kotcrab
  */
-public class TextComponent extends Component implements PositionOwner, SizeOwner, BoundsOwner, ScaleOwner,
+public class VisText extends Component implements PositionOwner, SizeOwner, BoundsOwner, ScaleOwner,
 		RotationOwner, OriginOwner, TintOwner, UsesProtoComponent {
 	private boolean distanceFieldShaderEnabled;
 
@@ -51,10 +51,10 @@ public class TextComponent extends Component implements PositionOwner, SizeOwner
 	private CharSequence text;
 
 	/** Creates empty component, {@link #init(BitmapFont, String)} must be called before use */
-	public TextComponent () {
+	public VisText () {
 	}
 
-	public TextComponent (BitmapFont bitmapFont, String text) {
+	public VisText (BitmapFont bitmapFont, String text) {
 		init(bitmapFont, text);
 	}
 
@@ -69,7 +69,7 @@ public class TextComponent extends Component implements PositionOwner, SizeOwner
 		translate();
 	}
 
-	public TextComponent (TextComponent other) {
+	public VisText (VisText other) {
 		this(other.cache.getFont(), other.getText());
 
 		setAutoSetOriginToCenter(other.isAutoSetOriginToCenter());
@@ -262,7 +262,7 @@ public class TextComponent extends Component implements PositionOwner, SizeOwner
 
 	@Override
 	public ProtoComponent toProtoComponent () {
-		return new TextProtoComponent(this);
+		return new ProtoVisText(this);
 	}
 
 	public boolean isDistanceFieldShaderEnabled () {

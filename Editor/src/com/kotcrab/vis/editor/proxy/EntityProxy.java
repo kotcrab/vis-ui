@@ -35,7 +35,7 @@ import java.util.UUID;
 
 /** @author Kotcrab */
 public abstract class EntityProxy {
-	private ComponentMapper<PolygonComponent> polygonCm;
+	private ComponentMapper<Polygon> polygonCm;
 
 	private Entity entity;
 	private VisUUIDManager uuidManager;
@@ -62,12 +62,12 @@ public abstract class EntityProxy {
 			uuid = entity.getComponent(UUIDComponent.class).getUUID();
 
 			//TODO: [misc] proxies may use injected component mappers to acuire other components, not they are using getComponent on entity directly
-			polygonCm = entity.getWorld().getMapper(PolygonComponent.class);
+			polygonCm = entity.getWorld().getMapper(Polygon.class);
 		}
 	}
 
 	protected void init () {
-		if (entity.getComponent(RenderableComponent.class) == null || entity.getComponent(LayerComponent.class) == null)
+		if (entity.getComponent(Renderable.class) == null || entity.getComponent(Layer.class) == null)
 			throw new IllegalArgumentException("Proxy cannot be used for non renderable entities. Entity must contain RenderableComponent and LayerComponent");
 
 		createAccessors();
@@ -118,7 +118,7 @@ public abstract class EntityProxy {
 	}
 
 	public int getLastGroupId () {
-		GroupComponent gdc = entity.getComponent(GroupComponent.class);
+		VisGroup gdc = entity.getComponent(VisGroup.class);
 
 		if (gdc == null || gdc.groupIds.size == 0) {
 			return -1;
@@ -155,11 +155,11 @@ public abstract class EntityProxy {
 		return new IntArray(getGroupComponent().groupIds);
 	}
 
-	private GroupComponent getGroupComponent () {
-		GroupComponent gdc = entity.getComponent(GroupComponent.class);
+	private VisGroup getGroupComponent () {
+		VisGroup gdc = entity.getComponent(VisGroup.class);
 
 		if (gdc == null) {
-			gdc = new GroupComponent();
+			gdc = new VisGroup();
 			entity.edit().add(gdc);
 		}
 
@@ -167,7 +167,7 @@ public abstract class EntityProxy {
 	}
 
 	public String getId () {
-		IDComponent idc = entity.getComponent(IDComponent.class);
+		VisID idc = entity.getComponent(VisID.class);
 		if (idc != null)
 			return idc.id;
 		else
@@ -175,12 +175,12 @@ public abstract class EntityProxy {
 	}
 
 	public void setId (String id) {
-		IDComponent idc = entity.getComponent(IDComponent.class);
+		VisID idc = entity.getComponent(VisID.class);
 
 		if (idc != null)
 			idc.id = id;
 		else
-			entity.edit().add(new IDComponent(id));
+			entity.edit().add(new VisID(id));
 	}
 
 	public boolean hasComponent (Class<? extends Component> clazz) {
@@ -188,19 +188,19 @@ public abstract class EntityProxy {
 	}
 
 	public int getZIndex () {
-		return entity.getComponent(RenderableComponent.class).zIndex;
+		return entity.getComponent(Renderable.class).zIndex;
 	}
 
 	public void setZIndex (int zIndex) {
-		entity.getComponent(RenderableComponent.class).zIndex = zIndex;
+		entity.getComponent(Renderable.class).zIndex = zIndex;
 	}
 
 	public int getLayerID () {
-		return entity.getComponent(LayerComponent.class).layerId;
+		return entity.getComponent(Layer.class).layerId;
 	}
 
 	public void setLayerId (int layerId) {
-		entity.getComponent(LayerComponent.class).layerId = layerId;
+		entity.getComponent(Layer.class).layerId = layerId;
 	}
 
 	protected void enableBasicProperties (PositionOwner posOwner, SizeOwner sizeOwner, BoundsOwner boundsOwner) {
@@ -235,7 +235,7 @@ public abstract class EntityProxy {
 	}
 
 	protected void updatePolygon (float x, float y) {
-		PolygonComponent polygon = polygonCm.getSafe(entity);
+		Polygon polygon = polygonCm.getSafe(entity);
 		float dx = getX() - x;
 		float dy = getY() - y;
 		if (polygon != null) {

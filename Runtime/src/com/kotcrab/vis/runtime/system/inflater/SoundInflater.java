@@ -22,38 +22,38 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SoundComponent;
-import com.kotcrab.vis.runtime.component.proto.SoundProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisSound;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisSound;
 
 /**
- * Inflates {@link SoundProtoComponent} into {@link SoundComponent}
+ * Inflates {@link ProtoVisSound} into {@link VisSound}
  * @author Kotcrab
  */
 public class SoundInflater extends InflaterSystem {
-	private ComponentMapper<SoundProtoComponent> protoCm;
-	private ComponentMapper<SoundComponent> soundCm;
-	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<ProtoVisSound> protoCm;
+	private ComponentMapper<VisSound> soundCm;
+	private ComponentMapper<AssetReference> assetCm;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
 	public SoundInflater (RuntimeConfiguration configuration, AssetManager manager) {
-		super(Aspect.all(SoundProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisSound.class, AssetReference.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
 	public void inserted (int entityId) {
-		AssetComponent assetComponent = assetCm.get(entityId);
+		AssetReference assetRef = assetCm.get(entityId);
 
-		PathAsset asset = (PathAsset) assetComponent.asset;
+		PathAsset asset = (PathAsset) assetRef.asset;
 
 		Sound sound = manager.get(asset.getPath(), Sound.class);
 		if (sound == null) throw new IllegalStateException("Can't load scene, sound is missing: " + asset.getPath());
-		SoundComponent soundComponent = soundCm.create(entityId);
-		soundComponent.sound = sound;
+		VisSound visSound = soundCm.create(entityId);
+		visSound.sound = sound;
 
 		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);

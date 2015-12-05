@@ -20,9 +20,9 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
 import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.ParticleComponent;
-import com.kotcrab.vis.runtime.component.proto.ParticleProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisParticle;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
@@ -30,24 +30,24 @@ public class EditorParticleInflater extends InflaterSystem {
 	private ParticleCacheModule particleCache;
 	private float pixelsPerUnit;
 
-	private ComponentMapper<AssetComponent> assetCm;
-	private ComponentMapper<ParticleComponent> partcielCm;
-	private ComponentMapper<ParticleProtoComponent> protoCm;
+	private ComponentMapper<AssetReference> assetCm;
+	private ComponentMapper<VisParticle> partcielCm;
+	private ComponentMapper<ProtoVisParticle> protoCm;
 
 	public EditorParticleInflater (float pixelsPerUnit) {
-		super(Aspect.all(ParticleProtoComponent.class, PixelsPerUnitComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisParticle.class, PixelsPerUnitComponent.class, AssetReference.class));
 		this.pixelsPerUnit = pixelsPerUnit;
 	}
 
 	@Override
 	protected void inserted (int entityId) {
-		AssetComponent assetComponent = assetCm.get(entityId);
-		ParticleProtoComponent protoComponent = protoCm.get(entityId);
+		AssetReference assetRef = assetCm.get(entityId);
+		ProtoVisParticle protoComponent = protoCm.get(entityId);
 
-		ParticleComponent particleComponent = partcielCm.create(entityId);
-		particleComponent.effect = particleCache.get(assetComponent.asset, 1f / pixelsPerUnit);
-		particleComponent.setPosition(protoComponent.x, protoComponent.y);
-		particleComponent.active = protoComponent.active;
+		VisParticle particle = partcielCm.create(entityId);
+		particle.effect = particleCache.get(assetRef.asset, 1f / pixelsPerUnit);
+		particle.setPosition(protoComponent.x, protoComponent.y);
+		particle.active = protoComponent.active;
 
 		protoCm.remove(entityId);
 	}

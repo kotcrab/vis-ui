@@ -38,8 +38,8 @@ import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.assets.*;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.proto.ShaderProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.proto.ProtoShader;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.font.BitmapFontProvider;
@@ -123,8 +123,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	private void loadDependencies (Array<AssetDescriptor> dependencies, Array<EntityData> entities) {
 		for (EntityData entityData : entities) {
 			for (Component component : entityData.components) {
-				if (component instanceof AssetComponent) {
-					VisAssetDescriptor asset = ((AssetComponent) component).asset;
+				if (component instanceof AssetReference) {
+					VisAssetDescriptor asset = ((AssetReference) component).asset;
 
 					//TODO refactor
 					if (asset instanceof TextureRegionAsset) {
@@ -160,8 +160,8 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 					}
 				}
 
-				if (component instanceof ShaderProtoComponent) {
-					ShaderProtoComponent shaderComponent = (ShaderProtoComponent) component;
+				if (component instanceof ProtoShader) {
+					ProtoShader shaderComponent = (ProtoShader) component;
 					ShaderAsset asset = shaderComponent.asset;
 					if (asset != null) {
 						String path = asset.getFragPath().substring(0, asset.getFragPath().length() - 5);

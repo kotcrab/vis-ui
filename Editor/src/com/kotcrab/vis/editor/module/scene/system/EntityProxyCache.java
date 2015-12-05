@@ -46,7 +46,7 @@ public class EntityProxyCache extends Manager {
 
 	@Override
 	protected void initialize () {
-		EntitySubscription subscription = subscriptionManager.get(Aspect.all(LayerComponent.class, RenderableComponent.class));
+		EntitySubscription subscription = subscriptionManager.get(Aspect.all(Layer.class, Renderable.class));
 
 		subscription.addSubscriptionListener(new SubscriptionListener() {
 			@Override
@@ -107,13 +107,13 @@ public class EntityProxyCache extends Manager {
 	}
 
 	private EntityProxy getInternalProxyFor (Entity entity) {
-		if (entity.getComponent(ParticleComponent.class) != null) return new ParticleProxy(entity);
-		if (entity.getComponent(SoundComponent.class) != null)
+		if (entity.getComponent(VisParticle.class) != null) return new ParticleProxy(entity);
+		if (entity.getComponent(VisSound.class) != null)
 			return new SoundAndMusicProxy(entity, false, pixelsPerUnit);
-		if (entity.getComponent(MusicComponent.class) != null)
+		if (entity.getComponent(VisMusic.class) != null)
 			return new SoundAndMusicProxy(entity, true, pixelsPerUnit);
-		if (entity.getComponent(TextComponent.class) != null) return new TextProxy(entity);
-		if (entity.getComponent(SpriterComponent.class) != null) return new SpriterProxy(entity);
+		if (entity.getComponent(VisText.class) != null) return new TextProxy(entity);
+		if (entity.getComponent(VisSpriter.class) != null) return new SpriterProxy(entity);
 		if (entity.getComponent(PointComponent.class) != null) return new PointProxy(entity, pixelsPerUnit);
 		if (entity.getComponent(VisSprite.class) != null) return new VisSpriteProxy(entity);
 

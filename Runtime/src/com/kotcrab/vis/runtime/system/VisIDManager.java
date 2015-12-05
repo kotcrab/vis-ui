@@ -21,21 +21,21 @@ import com.artemis.EntitySubscription.SubscriptionListener;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.runtime.component.IDComponent;
+import com.kotcrab.vis.runtime.component.VisID;
 
 /**
  * Allows to get entities by their string id that was set in VisEditor
  * @author Kotcrab
  */
 public class VisIDManager extends Manager {
-	private ComponentMapper<IDComponent> idCm;
+	private ComponentMapper<VisID> idCm;
 	private AspectSubscriptionManager subscriptionManager;
 
 	private ObjectMap<String, Array<Entity>> idStore = new ObjectMap<String, Array<Entity>>();
 
 	@Override
 	protected void initialize () {
-		EntitySubscription subscription = subscriptionManager.get(Aspect.all(IDComponent.class));
+		EntitySubscription subscription = subscriptionManager.get(Aspect.all(VisID.class));
 
 		subscription.addSubscriptionListener(new SubscriptionListener() {
 			@Override

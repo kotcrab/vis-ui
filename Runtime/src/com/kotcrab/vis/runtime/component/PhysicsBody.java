@@ -17,26 +17,13 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.properties.StoresAssetDescriptor;
+import com.badlogic.gdx.physics.box2d.Body;
 
-/**
- * Holds entity asset descriptor
- * @author Kotcrab
- */
-//TODO: support generic asset component to avoid casting?
-public class AssetComponent extends Component implements StoresAssetDescriptor {
-	public VisAssetDescriptor asset;
+/** @author Kotcrab */
+public class PhysicsBody extends Component {
+	public Body body;
 
-	public AssetComponent () {
-	}
-
-	public AssetComponent (VisAssetDescriptor asset) {
-		this.asset = asset;
-	}
-
-	@Override
-	public VisAssetDescriptor getAsset () {
-		return asset;
+	public PhysicsBody (Body body) {
+		this.body = body;
 	}
 }

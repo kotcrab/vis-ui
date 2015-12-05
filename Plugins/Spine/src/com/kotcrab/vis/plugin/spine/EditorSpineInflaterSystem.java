@@ -35,28 +35,28 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
 import com.kotcrab.vis.plugin.spine.runtime.SpineProtoComponent;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
 public class EditorSpineInflaterSystem extends InflaterSystem {
 	private SpineCacheModule spineCache;
 
-	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<AssetReference> assetCm;
 	private ComponentMapper<SpineComponent> spineCm;
 	private ComponentMapper<SpineProtoComponent> protoCm;
 	private ComponentMapper<SpinePreviewComponent> previewCm;
 
 	public EditorSpineInflaterSystem () {
-		super(Aspect.all(SpineProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(SpineProtoComponent.class, AssetReference.class));
 	}
 
 	@Override
 	public void inserted (int entityId) {
-		AssetComponent assetComponent = assetCm.get(entityId);
+		AssetReference assetRef = assetCm.get(entityId);
 		SpineProtoComponent protoComponent = protoCm.get(entityId);
 
-		SpineComponent spineComponent = new SpineComponent(spineCache.get(assetComponent.asset));
+		SpineComponent spineComponent = new SpineComponent(spineCache.get(assetRef.asset));
 
 		spineComponent.setPosition(protoComponent.x, protoComponent.y);
 		spineComponent.setFlip(protoComponent.flipX, protoComponent.flipY);

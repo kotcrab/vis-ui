@@ -30,10 +30,10 @@ import com.kotcrab.vis.runtime.component.Transform;
 public class PhysicsBodyManager extends EntitySystem {
 	private PhysicsSystem physicsSystem;
 
-	private ComponentMapper<PhysicsPropertiesComponent> physicsPropCm;
-	private ComponentMapper<PhysicsComponent> physicsCm;
-	private ComponentMapper<PolygonComponent> polygonCm;
-	private ComponentMapper<PhysicsSpriteComponent> physicsSpriteCm;
+	private ComponentMapper<PhysicsProperties> physicsPropCm;
+	private ComponentMapper<PhysicsBody> physicsCm;
+	private ComponentMapper<Polygon> polygonCm;
+	private ComponentMapper<PhysicsSprite> physicsSpriteCm;
 	private ComponentMapper<Transform> transformCm;
 	private ComponentMapper<Origin> originCm;
 
@@ -41,7 +41,7 @@ public class PhysicsBodyManager extends EntitySystem {
 	private RuntimeConfiguration runtimeConfig;
 
 	public PhysicsBodyManager (RuntimeConfiguration runtimeConfig) {
-		super(Aspect.all(PhysicsPropertiesComponent.class, PolygonComponent.class, VisSprite.class));
+		super(Aspect.all(PhysicsProperties.class, Polygon.class, VisSprite.class));
 		this.runtimeConfig = runtimeConfig;
 	}
 
@@ -57,8 +57,8 @@ public class PhysicsBodyManager extends EntitySystem {
 
 	@Override
 	public void inserted (Entity entity) {
-		PhysicsPropertiesComponent physicsProperties = physicsPropCm.get(entity);
-		PolygonComponent polygon = polygonCm.get(entity);
+		PhysicsProperties physicsProperties = physicsPropCm.get(entity);
+		Polygon polygon = polygonCm.get(entity);
 		Transform transform = transformCm.get(entity);
 
 		if (physicsProperties.adjustOrigin) originCm.get(entity).setOrigin(0, 0);
@@ -103,14 +103,14 @@ public class PhysicsBodyManager extends EntitySystem {
 		}
 
 		entity.edit()
-				.add(new PhysicsComponent(body))
-				.add(new PhysicsSpriteComponent(transform.rotation));
+				.add(new PhysicsBody(body))
+				.add(new PhysicsSprite(transform.rotation));
 	}
 
 	@Override
 	public void removed (Entity entity) {
 		if (runtimeConfig.autoDisposeBox2dBodyOnEntityRemove == false || physicsCm.has(entity) == false) return;
-		PhysicsComponent physics = physicsCm.get(entity);
+		PhysicsBody physics = physicsCm.get(entity);
 		if (physics.body == null) return;
 		world.destroyBody(physics.body);
 		physics.body = null;

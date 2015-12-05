@@ -14,13 +14,21 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.component.proto;
 
-import com.artemis.Component;
+import com.kotcrab.vis.runtime.component.VisSound;
+import com.kotcrab.vis.runtime.system.inflater.SoundInflater;
 
 /**
- * Entities with this component should will be ignored by render subsystems
+ * {@link ProtoComponent} for {@link VisSound}.
+ * <p>
+ * This component is empty because sound does not require storing any property, however it still requires inflating by {@link SoundInflater}
  * @author Kotcrab
+ * @see SoundInflater
  */
-public class InvisibleComponent extends Component {
+public class ProtoVisSound extends ProtoComponent<VisSound> {
+	@Override
+	public void fill (VisSound target) {
+
+	}
 }

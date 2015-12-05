@@ -17,14 +17,14 @@
 package com.kotcrab.vis.editor.serializer.json;
 
 import com.google.gson.*;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
 
 import java.lang.reflect.Type;
 
 /** @author Kotcrab */
-public class AssetComponentSerializer implements JsonSerializer<AssetComponent>, JsonDeserializer<AssetComponent> {
+public class AssetComponentSerializer implements JsonSerializer<AssetReference>, JsonDeserializer<AssetReference> {
 	@Override
-	public JsonElement serialize (AssetComponent asset, Type typeOfSrc, JsonSerializationContext context) {
+	public JsonElement serialize (AssetReference asset, Type typeOfSrc, JsonSerializationContext context) {
 		JsonElement jsonAsset = context.serialize(asset.asset, asset.asset.getClass());
 		GsonUtils.appendClassProperty(jsonAsset, asset.asset, context);
 
@@ -34,9 +34,9 @@ public class AssetComponentSerializer implements JsonSerializer<AssetComponent>,
 	}
 
 	@Override
-	public AssetComponent deserialize (JsonElement j, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+	public AssetReference deserialize (JsonElement j, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 		JsonObject json = j.getAsJsonObject().get("asset").getAsJsonObject();
-		AssetComponent asset = new AssetComponent();
+		AssetReference asset = new AssetReference();
 		asset.asset = context.deserialize(json, GsonUtils.readClassProperty(json, context));
 		return asset;
 	}

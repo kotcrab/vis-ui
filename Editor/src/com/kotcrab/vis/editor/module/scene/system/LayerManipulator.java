@@ -22,8 +22,8 @@ import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.LayersDialog;
-import com.kotcrab.vis.runtime.component.InvisibleComponent;
-import com.kotcrab.vis.runtime.component.LayerComponent;
+import com.kotcrab.vis.runtime.component.Invisible;
+import com.kotcrab.vis.runtime.component.Layer;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /**
@@ -31,7 +31,7 @@ import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
  * @author Kotcrab
  */
 public class LayerManipulator extends Manager {
-	private ComponentMapper<LayerComponent> layerCm;
+	private ComponentMapper<Layer> layerCm;
 	private AspectSubscriptionManager subscriptionManager;
 
 	private RenderBatchingSystem renderBatchingSystem;
@@ -43,14 +43,14 @@ public class LayerManipulator extends Manager {
 
 	@Override
 	protected void initialize () {
-		subscription = subscriptionManager.get(Aspect.all(LayerComponent.class));
+		subscription = subscriptionManager.get(Aspect.all(Layer.class));
 
 		invisibleTransmuter = new EntityTransmuterFactory(world)
-				.add(InvisibleComponent.class)
+				.add(Invisible.class)
 				.build();
 
 		invisibleRemoverTransmuter = new EntityTransmuterFactory(world)
-				.remove(InvisibleComponent.class)
+				.remove(Invisible.class)
 				.build();
 	}
 
@@ -63,7 +63,7 @@ public class LayerManipulator extends Manager {
 		for (int i = 0; i < bag.size(); i++) {
 			int id = data[i];
 			Entity entity = world.getEntity(id);
-			LayerComponent layer = layerCm.get(entity);
+			Layer layer = layerCm.get(entity);
 
 			if (layer.layerId == layerId)
 				entities.add(entity);
@@ -96,7 +96,7 @@ public class LayerManipulator extends Manager {
 		for (int i = 0; i < bag.size(); i++) {
 			int id = data[i];
 			Entity entity = world.getEntity(id);
-			LayerComponent layer = layerCm.get(entity);
+			Layer layer = layerCm.get(entity);
 
 			if (layer.layerId == id1) layer.layerId = id2;
 			else if (layer.layerId == id2) layer.layerId = id1;

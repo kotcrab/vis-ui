@@ -22,8 +22,8 @@ import com.artemis.annotations.Transient;
 import com.artemis.utils.Bag;
 import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.component.GroupComponent;
-import com.kotcrab.vis.runtime.component.IDComponent;
+import com.kotcrab.vis.runtime.component.VisGroup;
+import com.kotcrab.vis.runtime.component.VisID;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.EntityEngine;
@@ -80,11 +80,11 @@ public class EntityScheme {
 
 			if (component instanceof UsesProtoComponent) {
 				dataComponents.add(((UsesProtoComponent) component).toProtoComponent());
-			} else if (component instanceof GroupComponent) { //strip empty GroupComponents
-				GroupComponent gdc = (GroupComponent) component;
+			} else if (component instanceof VisGroup) { //strip empty GroupComponents
+				VisGroup gdc = (VisGroup) component;
 				if (gdc.groupIds.size > 0) dataComponents.add(component);
-			} else if (component instanceof IDComponent) { //strip empty IDComponents
-				IDComponent idc = (IDComponent) component;
+			} else if (component instanceof VisID) { //strip empty IDComponents
+				VisID idc = (VisID) component;
 				if (idc.id != null && idc.id.equals("") == false) {
 					dataComponents.add(component);
 				}

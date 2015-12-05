@@ -40,7 +40,7 @@ import com.esotericsoftware.spine.SkeletonRenderer;
 import com.kotcrab.vis.plugin.spine.runtime.SkeletonDataLoader.SkeletonDataLoaderParameter;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
@@ -62,8 +62,8 @@ public class SpineSupport implements EntitySupport {
 
 	@Override
 	public void resolveDependencies (Array<AssetDescriptor> dependencies, EntityData entityData, Component component) {
-		if (component instanceof AssetComponent) {
-			VisAssetDescriptor asset = ((AssetComponent) component).asset;
+		if (component instanceof AssetReference) {
+			VisAssetDescriptor asset = ((AssetReference) component).asset;
 			if (asset instanceof SpineAssetDescriptor) {
 				SpineAssetDescriptor spineAsset = (SpineAssetDescriptor) asset;
 

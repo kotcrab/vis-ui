@@ -36,12 +36,12 @@ import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
 import com.esotericsoftware.spine.SkeletonData;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
 public class SpineInflaterSystem extends InflaterSystem {
-	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<AssetReference> assetCm;
 	private ComponentMapper<SpineComponent> spineCm;
 	private ComponentMapper<SpineProtoComponent> protoCm;
 
@@ -49,17 +49,17 @@ public class SpineInflaterSystem extends InflaterSystem {
 	private AssetManager manager;
 
 	public SpineInflaterSystem (RuntimeConfiguration configuration, AssetManager manager) {
-		super(Aspect.all(SpineProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(SpineProtoComponent.class, AssetReference.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
 	public void inserted (int entityId) {
-		AssetComponent assetComponent = assetCm.get(entityId);
+		AssetReference assetRef = assetCm.get(entityId);
 		SpineProtoComponent protoComponent = protoCm.get(entityId);
 
-		SpineAssetDescriptor asset = (SpineAssetDescriptor) assetComponent.asset;
+		SpineAssetDescriptor asset = (SpineAssetDescriptor) assetRef.asset;
 
 		SkeletonData skeleton = manager.get(asset.getSkeletonPath(), SkeletonData.class);
 		SpineComponent spineComponent = new SpineComponent(skeleton);

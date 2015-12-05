@@ -25,10 +25,10 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragm
 import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.component.PhysicsPropertiesComponent;
-import com.kotcrab.vis.runtime.component.PolygonComponent;
-import com.kotcrab.vis.runtime.component.ShaderComponent;
-import com.kotcrab.vis.runtime.component.VariablesComponent;
+import com.kotcrab.vis.runtime.component.PhysicsProperties;
+import com.kotcrab.vis.runtime.component.Polygon;
+import com.kotcrab.vis.runtime.component.Shader;
+import com.kotcrab.vis.runtime.component.Variables;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
@@ -53,10 +53,10 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 		setBackground(VisUI.getSkin().getDrawable("tooltip-bg"));
 
 		//TODO: [plugin] plugin entry point
-		componentClasses.add(ShaderComponent.class);
-		componentClasses.add(PolygonComponent.class);
-		componentClasses.add(PhysicsPropertiesComponent.class);
-		componentClasses.add(VariablesComponent.class);
+		componentClasses.add(Shader.class);
+		componentClasses.add(Polygon.class);
+		componentClasses.add(PhysicsProperties.class);
+		componentClasses.add(Variables.class);
 
 		buttonStyle = new VisTextButtonStyle(VisUI.getSkin().get(VisTextButtonStyle.class));
 

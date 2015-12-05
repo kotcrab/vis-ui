@@ -20,24 +20,24 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.kotcrab.vis.runtime.component.InvisibleComponent;
-import com.kotcrab.vis.runtime.component.ParticleComponent;
+import com.kotcrab.vis.runtime.component.Invisible;
+import com.kotcrab.vis.runtime.component.VisParticle;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 
 /**
- * Renders entities with {@link ParticleComponent}
+ * Renders entities with {@link VisParticle}
  * @author Kotcrab
  */
 public class ParticleRenderSystem extends DeferredEntityProcessingSystem {
-	private ComponentMapper<ParticleComponent> particleCm;
+	private ComponentMapper<VisParticle> particleCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
 	private final boolean ignoreActive;
 
 	public ParticleRenderSystem (EntityProcessPrincipal principal, boolean ignoreParticleActiveState) {
-		super(Aspect.all(ParticleComponent.class).exclude(InvisibleComponent.class), principal);
+		super(Aspect.all(VisParticle.class).exclude(Invisible.class), principal);
 		this.ignoreActive = ignoreParticleActiveState;
 	}
 
@@ -48,7 +48,7 @@ public class ParticleRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (int entityId) {
-		ParticleComponent particle = particleCm.get(entityId);
+		VisParticle particle = particleCm.get(entityId);
 
 		if (ignoreActive || particle.active)
 			particle.effect.update(Gdx.graphics.getDeltaTime());

@@ -24,7 +24,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATStringStringMap;
  * Stores user defined variables in key-value store
  * @author Kotcrab
  */
-public class VariablesComponent extends Component {
+public class Variables extends Component {
 	@ATStringStringMap
 	public ObjectMap<String, String> variables = new ObjectMap<String, String>();
 

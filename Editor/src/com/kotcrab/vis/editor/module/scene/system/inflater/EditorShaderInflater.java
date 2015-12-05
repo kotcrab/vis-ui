@@ -19,29 +19,29 @@ package com.kotcrab.vis.editor.module.scene.system.inflater;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.kotcrab.vis.editor.module.project.ShaderCacheModule;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.ShaderComponent;
-import com.kotcrab.vis.runtime.component.proto.ShaderProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.Shader;
+import com.kotcrab.vis.runtime.component.proto.ProtoShader;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
 public class EditorShaderInflater extends InflaterSystem {
-	private ComponentMapper<ShaderComponent> shaderCm;
-	private ComponentMapper<ShaderProtoComponent> protoCm;
+	private ComponentMapper<Shader> shaderCm;
+	private ComponentMapper<ProtoShader> protoCm;
 	private ShaderCacheModule shaderCache;
 
 	public EditorShaderInflater () {
-		super(Aspect.all(ShaderProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoShader.class, AssetReference.class));
 	}
 
 	@Override
 	public void inserted (int entityId) {
-		ShaderProtoComponent protoComponent = protoCm.get(entityId);
+		ProtoShader protoComponent = protoCm.get(entityId);
 
-		ShaderComponent shaderComponent = shaderCm.create(entityId);
-		shaderComponent.asset = protoComponent.asset;
-		if (shaderComponent.asset != null) {
-			shaderComponent.shader = shaderCache.get(shaderComponent.asset);
+		Shader shader = shaderCm.create(entityId);
+		shader.asset = protoComponent.asset;
+		if (shader.asset != null) {
+			shader.shader = shaderCache.get(shader.asset);
 		}
 
 		protoCm.remove(entityId);

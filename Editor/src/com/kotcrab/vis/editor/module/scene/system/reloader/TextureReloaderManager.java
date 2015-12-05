@@ -20,7 +20,7 @@ import com.artemis.*;
 import com.artemis.utils.IntBag;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisSprite;
 
 /** @author Kotcrab */
@@ -28,13 +28,13 @@ public class TextureReloaderManager extends Manager { //TODO: migrate all reload
 	private TextureCacheModule textureCache;
 
 	private ComponentMapper<VisSprite> spriteCm;
-	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<AssetReference> assetCm;
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
 	@Override
 	protected void initialize () {
-		subscription = subscriptionManager.get(Aspect.all(VisSprite.class, AssetComponent.class));
+		subscription = subscriptionManager.get(Aspect.all(VisSprite.class, AssetReference.class));
 	}
 
 	public void reloadTextures () {

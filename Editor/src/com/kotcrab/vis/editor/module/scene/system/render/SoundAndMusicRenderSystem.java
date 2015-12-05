@@ -21,10 +21,10 @@ import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.runtime.component.InvisibleComponent;
-import com.kotcrab.vis.runtime.component.MusicComponent;
+import com.kotcrab.vis.runtime.component.Invisible;
+import com.kotcrab.vis.runtime.component.VisMusic;
 import com.kotcrab.vis.runtime.component.Position;
-import com.kotcrab.vis.runtime.component.SoundComponent;
+import com.kotcrab.vis.runtime.component.VisSound;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
@@ -34,7 +34,7 @@ public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 	public static final int ICON_SIZE = 76;
 
 	private ComponentMapper<Position> posCm;
-	private ComponentMapper<MusicComponent> musicCm;
+	private ComponentMapper<VisMusic> musicCm;
 
 	private TextureRegion soundIcon;
 	private TextureRegion musicIcon;
@@ -45,7 +45,7 @@ public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 	private float renderSize;
 
 	public SoundAndMusicRenderSystem (EntityProcessPrincipal principal, float pixelsPerUnit) {
-		super(Aspect.all(Position.class).one(SoundComponent.class, MusicComponent.class).exclude(InvisibleComponent.class), principal);
+		super(Aspect.all(Position.class).one(VisSound.class, VisMusic.class).exclude(Invisible.class), principal);
 		soundIcon = Icons.SOUND_BIG.textureRegion();
 		musicIcon = Icons.MUSIC_BIG.textureRegion();
 

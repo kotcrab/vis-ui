@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.StringStringMapView;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.component.VariablesComponent;
+import com.kotcrab.vis.runtime.component.Variables;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.autotable.ATStringStringMap;
 
@@ -48,7 +48,7 @@ public class StringStringMapFragmentProvider extends AutoTableFragmentProvider<A
 		if (proxies.size() > 1)
 			view.multipleSelected();
 		else
-			view.setMap(EntityUtils.getFirstEntityComponent(proxies, VariablesComponent.class).variables);
+			view.setMap(EntityUtils.getFirstEntityComponent(proxies, Variables.class).variables);
 	}
 
 	@Override

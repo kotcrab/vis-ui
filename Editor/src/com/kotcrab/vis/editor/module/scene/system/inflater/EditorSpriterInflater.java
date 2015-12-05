@@ -21,31 +21,31 @@ import com.artemis.ComponentMapper;
 import com.kotcrab.vis.editor.entity.SpriterPropertiesComponent;
 import com.kotcrab.vis.editor.module.project.SpriterCacheModule;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SpriterComponent;
-import com.kotcrab.vis.runtime.component.proto.SpriterProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisSpriter;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisSpriter;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
 public class EditorSpriterInflater extends InflaterSystem {
-	private ComponentMapper<SpriterProtoComponent> protoCm;
+	private ComponentMapper<ProtoVisSpriter> protoCm;
 	private ComponentMapper<SpriterPropertiesComponent> propertiesCm;
-	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<AssetReference> assetCm;
 	private SpriterCacheModule cache;
 
 	public EditorSpriterInflater () {
-		super(Aspect.all(SpriterProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisSpriter.class, AssetReference.class));
 	}
 
 	@Override
 	public void inserted (int entityId) {
-		AssetComponent assetComponent = assetCm.get(entityId);
-		SpriterProtoComponent protoComponent = protoCm.get(entityId);
+		AssetReference assetRef = assetCm.get(entityId);
+		ProtoVisSpriter protoComponent = protoCm.get(entityId);
 		SpriterPropertiesComponent propsComponent = propertiesCm.get(entityId);
 
-		SpriterAsset asset = (SpriterAsset) assetComponent.asset;
+		SpriterAsset asset = (SpriterAsset) assetRef.asset;
 
-		SpriterComponent component = cache.createComponent(asset, protoComponent.scale);
+		VisSpriter component = cache.createComponent(asset, protoComponent.scale);
 
 		protoComponent.fill(component);
 		world.getEntity(entityId).edit().add(component);

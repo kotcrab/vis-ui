@@ -19,7 +19,7 @@ package com.kotcrab.vis.editor.module.scene.system.inflater;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisSprite;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisSprite;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
@@ -28,11 +28,11 @@ import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 public class EditorVisSpriteInflater extends InflaterSystem {
 	private ComponentMapper<VisSprite> spriteCm;
 	private ComponentMapper<ProtoVisSprite> protoCm;
-	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<AssetReference> assetCm;
 	private TextureCacheModule textureCache;
 
 	public EditorVisSpriteInflater () {
-		super(Aspect.all(ProtoVisSprite.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisSprite.class, AssetReference.class));
 	}
 
 	@Override

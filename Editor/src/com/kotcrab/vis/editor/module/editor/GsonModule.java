@@ -23,7 +23,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kotcrab.vis.editor.serializer.json.*;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
 
 import java.lang.reflect.Modifier;
 
@@ -46,7 +46,7 @@ public class GsonModule extends EditorModule {
 				.registerTypeAdapter(IntMap.class, new IntMapJsonSerializer())
 				.registerTypeAdapter(ObjectMap.class, new ObjectMapJsonSerializer())
 				.registerTypeAdapter(Class.class, classSerializer = new ClassJsonSerializer(Thread.currentThread().getContextClassLoader()))
-				.registerTypeAdapter(AssetComponent.class, new AssetComponentSerializer());
+				.registerTypeAdapter(AssetReference.class, new AssetComponentSerializer());
 
 		//TODO: [plugin] plugin entry point, allow plugin to simpler serializer registration, currently requires making EditorEntitySupport
 		//register plugins serializers

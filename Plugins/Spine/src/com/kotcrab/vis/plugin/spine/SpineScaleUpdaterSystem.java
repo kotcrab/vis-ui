@@ -38,19 +38,19 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
 
 /** @author Kotcrab */
 public class SpineScaleUpdaterSystem extends EntityProcessingSystem {
 	private SpineCacheModule spineCache;
 
 	private ComponentMapper<SpineComponent> spineCm;
-	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<AssetReference> assetCm;
 	private ComponentMapper<SpineScaleComponent> scaleCm;
 	private ComponentMapper<SpinePreviewComponent> previewCm;
 
 	public SpineScaleUpdaterSystem () {
-		super(Aspect.all(SpineComponent.class, SpineScaleComponent.class, AssetComponent.class));
+		super(Aspect.all(SpineComponent.class, SpineScaleComponent.class, AssetReference.class));
 	}
 
 	@Override
@@ -61,17 +61,17 @@ public class SpineScaleUpdaterSystem extends EntityProcessingSystem {
 			scaleComponent.updateScale = false;
 
 			SpineComponent spineComponent = spineCm.get(e);
-			AssetComponent assetComponent = assetCm.get(e);
+			AssetReference assetRef = assetCm.get(e);
 			SpinePreviewComponent previewComponent = previewCm.get(e);
 
-			SpineAssetDescriptor old = (SpineAssetDescriptor) assetComponent.asset;
-			assetComponent.asset = new SpineAssetDescriptor(old.getAtlasPath(), old.getSkeletonPath(), scaleComponent.scale);
+			SpineAssetDescriptor old = (SpineAssetDescriptor) assetRef.asset;
+			assetRef.asset = new SpineAssetDescriptor(old.getAtlasPath(), old.getSkeletonPath(), scaleComponent.scale);
 
 			float x = spineComponent.getX(), y = spineComponent.getY();
 			boolean flipX = spineComponent.isFlipX(), flipY = spineComponent.isFlipY();
 			Color color = spineComponent.getTint();
 
-			spineComponent.onDeserialize(spineCache.get(assetComponent.asset));
+			spineComponent.onDeserialize(spineCache.get(assetRef.asset));
 			previewComponent.updateAnimation = true;
 
 			spineComponent.setPosition(x, y);

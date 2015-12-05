@@ -19,13 +19,13 @@ package com.kotcrab.vis.editor.proxy;
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.util.gdx.ParticleUtils;
-import com.kotcrab.vis.runtime.component.ParticleComponent;
+import com.kotcrab.vis.runtime.component.VisParticle;
 import com.kotcrab.vis.runtime.properties.BoundsOwner;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
 
 /** @author Kotcrab */
 public class ParticleProxy extends EntityProxy {
-	private ParticleComponent particle;
+	private VisParticle particle;
 
 	private Accessor accessor;
 
@@ -40,7 +40,7 @@ public class ParticleProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		particle = getEntity().getComponent(ParticleComponent.class);
+		particle = getEntity().getComponent(VisParticle.class);
 		enableBasicProperties(particle, accessor, accessor);
 	}
 

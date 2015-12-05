@@ -22,7 +22,7 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.component.SpriterComponent;
+import com.kotcrab.vis.runtime.component.VisSpriter;
 import com.kotcrab.vis.runtime.spriter.Entity;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -59,7 +59,7 @@ public class SpriterPropertiesComponentTable extends AutoComponentTable<SpriterP
 
 		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 		if (proxies.size() == 1) {
-			SpriterComponent spriter = EntityUtils.getFirstEntity(proxies).getComponent(SpriterComponent.class);
+			VisSpriter spriter = EntityUtils.getFirstEntity(proxies).getComponent(VisSpriter.class);
 			animSelectBox.setDisabled(false);
 
 			Entity entity = spriter.player.getEntity();
@@ -83,14 +83,14 @@ public class SpriterPropertiesComponentTable extends AutoComponentTable<SpriterP
 
 		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 		if (proxies.size() == 1) {
-			SpriterComponent spriter = EntityUtils.getFirstEntityComponent(proxies, SpriterComponent.class);
+			VisSpriter spriter = EntityUtils.getFirstEntityComponent(proxies, VisSpriter.class);
 			SpriterPropertiesComponent properties = EntityUtils.getFirstEntityComponent(proxies, SpriterPropertiesComponent.class);
 			Entity entity = spriter.player.getEntity();
 
 			properties.animation = entity.getAnimation(animSelectBox.getSelected()).id;
 		}
 
-		EntityUtils.stream(proxies, SpriterComponent.class, (entity, spriterComponent) -> {
+		EntityUtils.stream(proxies, VisSpriter.class, (entity, spriterComponent) -> {
 			SpriterPropertiesComponent propertiesComponent = entity.getComponent(SpriterPropertiesComponent.class);
 			spriterComponent.player.setScale(propertiesComponent.scale);
 			spriterComponent.playOnStart = propertiesComponent.playOnStart;

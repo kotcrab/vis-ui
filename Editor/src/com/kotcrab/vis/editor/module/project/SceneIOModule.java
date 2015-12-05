@@ -40,7 +40,7 @@ import com.kotcrab.vis.editor.serializer.cloner.ObjectMapCloner;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
-import com.kotcrab.vis.runtime.component.InvisibleComponent;
+import com.kotcrab.vis.runtime.component.Invisible;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.util.EntityEngine;
@@ -107,7 +107,7 @@ public class SceneIOModule extends ProjectModule {
 		Bag<Component> clonedComponents = new Bag<>();
 
 		components.forEach(component -> {
-			if (component instanceof InvisibleComponent) return;
+			if (component instanceof Invisible) return;
 
 			if (component instanceof UsesProtoComponent) {
 				ProtoComponent protoComponent = ((UsesProtoComponent) component).toProtoComponent();

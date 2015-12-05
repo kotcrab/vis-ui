@@ -4,8 +4,27 @@
 -Changes in SpriteComponent:
  -Renamed to VisSprite
  -Uses TextureRegion directly
- -Properties like position, scale are controlled by following components: Transform, Origin
+ -Properties like position, scale are controlled by following components: Transform, Origin, Tint
   -Changes in those components will be reflected in render immediately
+-Renaming components:
+ -TextComponent -> VisText
+ -Spriter -> VisSpriter
+ -SoundComponent -> VisSound
+ -MusicComponent -> VisMusic
+ -ParticleComponent -> VisParticle
+ -VariablesComponent -> Variables
+ -ShaderComponent -> Shader
+ -RenderableComponent -> Renderable
+ -PolygonComponent -> Polygon
+ -PointComponent -> Point
+ -PhysicsSpriteComponent -> PhysicsSprite
+ -PhysicsPropertiesComponent -> PhysicsProperties
+ -PhysicsComponent -> PhysicsBody
+ -LayerComponent -> Layer
+ -InvisibleComponent -> Invisible
+ -IDComponent -> VisID
+ -GroupComponent -> VisGroup
+ -AssetComponent -> AssetReference
 -Removed all PropertiesAccessor classes, now Components implements Owner classes for example every component that store position implements PositionOwner
 -API Change: Removed ArtemisUtils
 -Fixed inflaters not removing ProtoComponents

@@ -20,28 +20,28 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.ShaderComponent;
-import com.kotcrab.vis.runtime.component.proto.ShaderProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.Shader;
+import com.kotcrab.vis.runtime.component.proto.ProtoShader;
 
 /**
- * Inflates {@link ShaderProtoComponent} into {@link ShaderComponent}
+ * Inflates {@link ProtoShader} into {@link Shader}
  * @author Kotcrab
  */
 public class ShaderInflater extends InflaterSystem {
-	private ComponentMapper<ShaderComponent> shaderCm;
-	private ComponentMapper<ShaderProtoComponent> protoCm;
+	private ComponentMapper<Shader> shaderCm;
+	private ComponentMapper<ProtoShader> protoCm;
 
 	private AssetManager manager;
 
 	public ShaderInflater (AssetManager manager) {
-		super(Aspect.all(ShaderProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoShader.class, AssetReference.class));
 		this.manager = manager;
 	}
 
 	@Override
 	public void inserted (int entityId) {
-		ShaderProtoComponent protoComponent = protoCm.get(entityId);
+		ProtoShader protoComponent = protoCm.get(entityId);
 
 		if (protoComponent.asset != null) {
 			String shaderPath = protoComponent.asset.getPathWithoutExtension();
@@ -49,9 +49,9 @@ public class ShaderInflater extends InflaterSystem {
 			if (program == null)
 				throw new IllegalStateException("Can't load scene, shader program is missing:" + shaderPath);
 
-			ShaderComponent shaderComponent = shaderCm.create(entityId);
-			shaderComponent.asset = protoComponent.asset;
-			shaderComponent.shader = program;
+			Shader shader = shaderCm.create(entityId);
+			shader.asset = protoComponent.asset;
+			shader.shader = program;
 		}
 
 		protoCm.remove(entityId);

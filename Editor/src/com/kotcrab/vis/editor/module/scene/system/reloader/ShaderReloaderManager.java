@@ -19,19 +19,19 @@ package com.kotcrab.vis.editor.module.scene.system.reloader;
 import com.artemis.*;
 import com.artemis.utils.IntBag;
 import com.kotcrab.vis.editor.module.project.ShaderCacheModule;
-import com.kotcrab.vis.runtime.component.ShaderComponent;
+import com.kotcrab.vis.runtime.component.Shader;
 
 /** @author Kotcrab */
 public class ShaderReloaderManager extends Manager {
 	private ShaderCacheModule shaderCache;
 
-	private ComponentMapper<ShaderComponent> shaderCm;
+	private ComponentMapper<Shader> shaderCm;
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
 	@Override
 	protected void initialize () {
-		subscription = subscriptionManager.get(Aspect.all(ShaderComponent.class));
+		subscription = subscriptionManager.get(Aspect.all(Shader.class));
 	}
 
 	public void reloadShaders () {
@@ -42,7 +42,7 @@ public class ShaderReloaderManager extends Manager {
 			int id = data[i];
 			Entity entity = world.getEntity(id);
 
-			ShaderComponent shader = shaderCm.get(entity);
+			Shader shader = shaderCm.get(entity);
 			if (shader.asset == null) continue;
 			shader.shader = shaderCache.get(shader.asset);
 		}

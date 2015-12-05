@@ -20,33 +20,33 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SpriterComponent;
-import com.kotcrab.vis.runtime.component.proto.SpriterProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisSpriter;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisSpriter;
 import com.kotcrab.vis.runtime.util.SpriterData;
 
 /** @author Kotcrab */
 public class SpriterInflater extends InflaterSystem {
-	private ComponentMapper<SpriterProtoComponent> protoCm;
-	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<ProtoVisSpriter> protoCm;
+	private ComponentMapper<AssetReference> assetCm;
 
 	private AssetManager manager;
 
 	public SpriterInflater (AssetManager manager) {
-		super(Aspect.all(SpriterProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisSpriter.class, AssetReference.class));
 		this.manager = manager;
 	}
 
 	@Override
 	public void inserted (int entityId) {
-		AssetComponent assetComponent = assetCm.get(entityId);
-		SpriterProtoComponent protoComponent = protoCm.get(entityId);
+		AssetReference assetRef = assetCm.get(entityId);
+		ProtoVisSpriter protoComponent = protoCm.get(entityId);
 
-		SpriterAsset asset = (SpriterAsset) assetComponent.asset;
+		SpriterAsset asset = (SpriterAsset) assetRef.asset;
 		SpriterData data = manager.get(asset.getPath(), SpriterData.class);
 		if (data == null)
 			throw new IllegalStateException("Can't load scene, spriter data is missing: " + asset.getPath());
-		SpriterComponent component = new SpriterComponent(data.loader, data.data, protoComponent.scale);
+		VisSpriter component = new VisSpriter(data.loader, data.data, protoComponent.scale);
 		protoComponent.fill(component);
 		world.getEntity(entityId).edit().add(component);
 

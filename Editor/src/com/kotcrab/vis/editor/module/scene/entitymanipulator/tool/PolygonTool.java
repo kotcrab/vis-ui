@@ -40,7 +40,7 @@ import com.kotcrab.vis.editor.util.polygon.Clipper.Polygonizer;
 import com.kotcrab.vis.editor.util.polygon.PolygonUtils;
 import com.kotcrab.vis.editor.util.scene2d.EventStopper;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
-import com.kotcrab.vis.runtime.component.PolygonComponent;
+import com.kotcrab.vis.runtime.component.Polygon;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.value.VisValue;
@@ -70,7 +70,7 @@ public class PolygonTool extends BaseSelectionTool {
 	private TextureRegion polygonDown = Assets.getMiscRegion("polygon-down");
 
 	private EntityProxy proxy;
-	private PolygonComponent component;
+	private Polygon component;
 	private Vector2 selectedVertex;
 	private Vector2 overVertex;
 	private Vector2 lineOverStartVertex;
@@ -528,14 +528,14 @@ public class PolygonTool extends BaseSelectionTool {
 
 		proxy = selection.first();
 
-		if (proxy.hasComponent(PolygonComponent.class) == false) {
+		if (proxy.hasComponent(Polygon.class) == false) {
 			statusLabel.setText(NO_POLYGON_IN_SELECTION);
 			overVertex = null;
 			selectedVertex = null;
 			return;
 		}
 
-		component = proxy.getEntity().getComponent(PolygonComponent.class);
+		component = proxy.getEntity().getComponent(Polygon.class);
 
 		statusLabel.setVisible(false);
 		buttonTable.setVisible(true);

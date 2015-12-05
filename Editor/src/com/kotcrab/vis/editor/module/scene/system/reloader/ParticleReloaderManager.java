@@ -20,16 +20,16 @@ import com.artemis.*;
 import com.artemis.utils.IntBag;
 import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.ParticleComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisParticle;
 
 /** @author Kotcrab */
 public class ParticleReloaderManager extends Manager {
 	private ParticleCacheModule particleCache;
 	private float pixelsPerUnit;
 
-	private ComponentMapper<ParticleComponent> particleCm;
-	private ComponentMapper<AssetComponent> assetCm;
+	private ComponentMapper<VisParticle> particleCm;
+	private ComponentMapper<AssetReference> assetCm;
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
 
@@ -39,7 +39,7 @@ public class ParticleReloaderManager extends Manager {
 
 	@Override
 	protected void initialize () {
-		subscription = subscriptionManager.get(Aspect.all(ParticleComponent.class, AssetComponent.class));
+		subscription = subscriptionManager.get(Aspect.all(VisParticle.class, AssetReference.class));
 	}
 
 	public void reloadParticles () {
@@ -50,7 +50,7 @@ public class ParticleReloaderManager extends Manager {
 			int id = data[i];
 			Entity entity = world.getEntity(id);
 
-			ParticleComponent particle = particleCm.get(entity);
+			VisParticle particle = particleCm.get(entity);
 			VisAssetDescriptor asset = assetCm.get(entity).asset;
 
 			particle.effect.dispose();

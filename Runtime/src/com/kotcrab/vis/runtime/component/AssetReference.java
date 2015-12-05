@@ -17,18 +17,26 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.properties.StoresAssetDescriptor;
 
 /**
- * Stores entity layerId
+ * Holds entity asset descriptor
  * @author Kotcrab
  */
-public class LayerComponent extends Component {
-	public int layerId;
+//TODO: support generic asset component to avoid casting?
+public class AssetReference extends Component implements StoresAssetDescriptor {
+	public VisAssetDescriptor asset;
 
-	public LayerComponent () {
+	public AssetReference () {
 	}
 
-	public LayerComponent (int layerId) {
-		this.layerId = layerId;
+	public AssetReference (VisAssetDescriptor asset) {
+		this.asset = asset;
+	}
+
+	@Override
+	public VisAssetDescriptor getAsset () {
+		return asset;
 	}
 }

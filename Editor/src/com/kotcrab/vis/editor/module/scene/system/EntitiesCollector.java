@@ -25,23 +25,23 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragm
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.SingleSelectionFragment;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.runtime.component.GroupComponent;
-import com.kotcrab.vis.runtime.component.LayerComponent;
+import com.kotcrab.vis.runtime.component.VisGroup;
+import com.kotcrab.vis.runtime.component.Layer;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /** @author Kotcrab */
 public class EntitiesCollector extends EntityProcessingSystem {
 	private EntityProxyCache proxyCache;
 
-	private ComponentMapper<GroupComponent> groupCm;
-	private ComponentMapper<LayerComponent> layerCm;
+	private ComponentMapper<VisGroup> groupCm;
+	private ComponentMapper<Layer> layerCm;
 
 	private Array<EntityProxy> result;
 	private int findGroupId;
 	private int findLayerId;
 
 	public EntitiesCollector () {
-		super(Aspect.all(LayerComponent.class));
+		super(Aspect.all(Layer.class));
 	}
 
 	public Array<EntityProxy> collect (int layerId, int groupId) {
@@ -76,8 +76,8 @@ public class EntitiesCollector extends EntityProcessingSystem {
 
 	@Override
 	protected void process (Entity e) {
-		LayerComponent layer = layerCm.get(e);
-		GroupComponent group = groupCm.getSafe(e);
+		Layer layer = layerCm.get(e);
+		VisGroup group = groupCm.getSafe(e);
 
 		if (layer.layerId != findLayerId) return;
 		if (findGroupId != -1) {

@@ -17,7 +17,7 @@
 package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
-import com.kotcrab.vis.runtime.component.SpriterComponent;
+import com.kotcrab.vis.runtime.component.VisSpriter;
 
 /** @author Kotcrab */
 public class SpriterProxy extends EntityProxy {
@@ -32,7 +32,7 @@ public class SpriterProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		SpriterComponent spriter = getEntity().getComponent(SpriterComponent.class);
+		VisSpriter spriter = getEntity().getComponent(VisSpriter.class);
 		enableBasicProperties(spriter, spriter, spriter);
 		enableFlip(spriter);
 		enableRotation(spriter);

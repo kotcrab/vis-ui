@@ -36,7 +36,7 @@ import com.artemis.ComponentMapper;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.esotericsoftware.spine.SkeletonRenderer;
-import com.kotcrab.vis.runtime.component.InvisibleComponent;
+import com.kotcrab.vis.runtime.component.Invisible;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
@@ -51,7 +51,7 @@ public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 	private SkeletonRenderer skeletonRenderer;
 
 	public SpineRenderSystem (EntityProcessPrincipal principal) {
-		super(Aspect.all(SpineComponent.class).exclude(InvisibleComponent.class), principal);
+		super(Aspect.all(SpineComponent.class).exclude(Invisible.class), principal);
 		skeletonRenderer = new SkeletonRenderer();
 	}
 

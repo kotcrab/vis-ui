@@ -19,7 +19,7 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.badlogic.gdx.audio.Sound;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
-import com.kotcrab.vis.runtime.component.proto.SoundProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisSound;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 
@@ -27,14 +27,14 @@ import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
  * Stores single sound
  * @author Kotcrab
  */
-public class SoundComponent extends Component implements UsesProtoComponent {
+public class VisSound extends Component implements UsesProtoComponent {
 	@ATSelectFile(fieldName = "Sound", extension = "mp3|wav|ogg", hideExtension = false, handlerAlias = "sound")
 	public transient Sound sound;
 
-	public SoundComponent () {
+	public VisSound () {
 	}
 
-	public SoundComponent (Sound sound) {
+	public VisSound (Sound sound) {
 		this.sound = sound;
 	}
 
@@ -76,6 +76,6 @@ public class SoundComponent extends Component implements UsesProtoComponent {
 
 	@Override
 	public ProtoComponent toProtoComponent () {
-		return new SoundProtoComponent();
+		return new ProtoVisSound();
 	}
 }

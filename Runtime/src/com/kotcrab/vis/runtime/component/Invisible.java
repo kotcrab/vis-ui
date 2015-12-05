@@ -18,14 +18,9 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 
-/** @author Kotcrab */
-public class PhysicsSpriteComponent extends Component {
-	public float originalRotation;
-
-	public PhysicsSpriteComponent () {
-	}
-
-	public PhysicsSpriteComponent (float originalRotation) {
-		this.originalRotation = originalRotation;
-	}
+/**
+ * Entities with this component should will be ignored by render subsystems
+ * @author Kotcrab
+ */
+public class Invisible extends Component {
 }

@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.Vector2ArrayView;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.component.PolygonComponent;
+import com.kotcrab.vis.runtime.component.Polygon;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.autotable.ATVector2Array;
 
@@ -47,7 +47,7 @@ public class Vector2ViewFragmentProvider extends AutoTableFragmentProvider<ATVec
 		if (proxies.size() > 1)
 			view.setMultipleSelected(true);
 		else
-			view.setVectors(EntityUtils.getFirstEntityComponent(proxies, PolygonComponent.class).vertices);
+			view.setVectors(EntityUtils.getFirstEntityComponent(proxies, Polygon.class).vertices);
 	}
 
 	@Override

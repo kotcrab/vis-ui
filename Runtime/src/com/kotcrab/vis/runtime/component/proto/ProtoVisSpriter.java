@@ -16,13 +16,13 @@
 
 package com.kotcrab.vis.runtime.component.proto;
 
-import com.kotcrab.vis.runtime.component.SpriterComponent;
+import com.kotcrab.vis.runtime.component.VisSpriter;
 import com.kotcrab.vis.runtime.properties.FlipOwner;
 import com.kotcrab.vis.runtime.properties.PositionOwner;
 import com.kotcrab.vis.runtime.properties.RotationOwner;
 
 /** @author Kotcrab */
-public class SpriterProtoComponent extends ProtoComponent<SpriterComponent> implements PositionOwner, RotationOwner, FlipOwner {
+public class ProtoVisSpriter extends ProtoComponent<VisSpriter> implements PositionOwner, RotationOwner, FlipOwner {
 	public float x, y;
 	public float rotation;
 	public float scale;
@@ -31,10 +31,10 @@ public class SpriterProtoComponent extends ProtoComponent<SpriterComponent> impl
 	public boolean playOnStart;
 	public int defaultAnimation;
 
-	public SpriterProtoComponent () {
+	public ProtoVisSpriter () {
 	}
 
-	public SpriterProtoComponent (SpriterComponent comp) {
+	public ProtoVisSpriter (VisSpriter comp) {
 		x = comp.getX();
 		y = comp.getY();
 
@@ -50,7 +50,7 @@ public class SpriterProtoComponent extends ProtoComponent<SpriterComponent> impl
 	}
 
 	@Override
-	public void fill (SpriterComponent comp) {
+	public void fill (VisSpriter comp) {
 		comp.setPosition(x, y);
 		comp.player.setScale(scale);
 		comp.setRotation(rotation);

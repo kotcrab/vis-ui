@@ -22,7 +22,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
-import com.kotcrab.vis.runtime.component.SpriterComponent;
+import com.kotcrab.vis.runtime.component.VisSpriter;
 import com.kotcrab.vis.runtime.spriter.Data;
 import com.kotcrab.vis.runtime.spriter.Loader;
 import com.kotcrab.vis.runtime.spriter.SCMLReader;
@@ -41,7 +41,7 @@ public class SpriterCacheModule extends ProjectModule implements WatchListener {
 		assetsWatcher.addListener(this);
 	}
 
-	public SpriterComponent createComponent (SpriterAsset asset, float scale) {
+	public VisSpriter createComponent (SpriterAsset asset, float scale) {
 		FileHandle file = fileAccess.getAssetsFolder().child(asset.getPath());
 		Data data = new SCMLReader(file.read()).getData();
 		Loader<Sprite> loader = new SpriterLoader(data);
@@ -49,7 +49,7 @@ public class SpriterCacheModule extends ProjectModule implements WatchListener {
 
 		loaders.put(file, loader);
 
-		return new SpriterComponent(loader, data, scale);
+		return new VisSpriter(loader, data, scale);
 	}
 
 	@Override
@@ -76,8 +76,8 @@ public class SpriterCacheModule extends ProjectModule implements WatchListener {
 			loader.dispose();
 	}
 
-	public SpriterComponent cloneComponent (SpriterAsset asset, SpriterComponent original) {
-		SpriterComponent clone = createComponent(asset, original.player.getScale());
+	public VisSpriter cloneComponent (SpriterAsset asset, VisSpriter original) {
+		VisSpriter clone = createComponent(asset, original.player.getScale());
 		clone.setPosition(original.getX(), original.getY());
 		clone.setFlip(original.isFlipX(), original.isFlipY());
 		clone.onDeserialize(original.playOnStart, original.defaultAnimation);

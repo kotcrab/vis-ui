@@ -21,7 +21,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.extension.AssetType;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.runtime.assets.SoundAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 
 /** @author Kotcrab */
@@ -30,7 +30,7 @@ public class SoundATSelectFileHandler implements ATSelectFileHandler {
 
 	@Override
 	public void applyChanges (Entity entity, FileHandle file) {
-		AssetComponent asset = entity.getComponent(AssetComponent.class);
+		AssetReference asset = entity.getComponent(AssetReference.class);
 		asset.asset = new SoundAsset(fileAccess.relativizeToAssetsFolder(file));
 	}
 
@@ -41,7 +41,7 @@ public class SoundATSelectFileHandler implements ATSelectFileHandler {
 
 	@Override
 	public String getLabelValue (Entity entity) {
-		SoundAsset asset = (SoundAsset) entity.getComponent(AssetComponent.class).asset;
+		SoundAsset asset = (SoundAsset) entity.getComponent(AssetReference.class).asset;
 		return asset.getPath();
 	}
 }

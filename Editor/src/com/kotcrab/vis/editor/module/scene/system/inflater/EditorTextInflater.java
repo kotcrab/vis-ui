@@ -21,9 +21,9 @@ import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.TextComponent;
-import com.kotcrab.vis.runtime.component.proto.TextProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisText;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisText;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
@@ -31,26 +31,26 @@ public class EditorTextInflater extends InflaterSystem {
 	private FontCacheModule fontCache;
 	private float pixelsPerUnit;
 
-	private ComponentMapper<AssetComponent> assetCm;
-	private ComponentMapper<TextComponent> textCm;
-	private ComponentMapper<TextProtoComponent> protoCm;
+	private ComponentMapper<AssetReference> assetCm;
+	private ComponentMapper<VisText> textCm;
+	private ComponentMapper<ProtoVisText> protoCm;
 
 	public EditorTextInflater (float pixelsPerUnit) {
-		super(Aspect.all(TextProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisText.class, AssetReference.class));
 		this.pixelsPerUnit = pixelsPerUnit;
 	}
 
 	@Override
 	public void inserted (int entityId) {
 		VisAssetDescriptor asset = assetCm.get(entityId).asset;
-		TextProtoComponent protoComponent = protoCm.get(entityId);
+		ProtoVisText protoComponent = protoCm.get(entityId);
 
 		BitmapFont font = fontCache.getGeneric(asset, pixelsPerUnit);
 
-		TextComponent textComponent = textCm.create(entityId);
-		textComponent.init(font, protoComponent.text);
+		VisText text = textCm.create(entityId);
+		text.init(font, protoComponent.text);
 
-		protoComponent.fill(textComponent);
+		protoComponent.fill(text);
 
 		protoCm.remove(entityId);
 	}

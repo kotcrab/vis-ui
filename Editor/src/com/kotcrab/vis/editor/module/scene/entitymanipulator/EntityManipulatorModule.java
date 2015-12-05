@@ -115,7 +115,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private Stage stage;
 
-	private ComponentMapper<GroupComponent> groupCm;
+	private ComponentMapper<VisGroup> groupCm;
 
 	private EntityProxyCache entityProxyCache;
 	private ZIndexManipulator zIndexManipulator;
@@ -301,10 +301,10 @@ public class EntityManipulatorModule extends SceneModule {
 			entitiesClipboard.forEach(protoEntity -> {
 				Entity entity = protoEntity.build();
 				entities.add(entity);
-				if (scene.getActiveLayer().visible == false) entity.edit().add(new InvisibleComponent());
+				if (scene.getActiveLayer().visible == false) entity.edit().add(new Invisible());
 				proxies.add(entityProxyCache.get(entity));
 
-				GroupComponent groups = groupCm.getSafe(entity);
+				VisGroup groups = groupCm.getSafe(entity);
 
 				if (groups != null) {
 					for (int i = 0; i < groups.groupIds.size; i++) {
@@ -392,8 +392,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 			entity = new EntityBuilder(entityEngine)
 					.with(new PointComponent())
-					.with(new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
-					.with(new ExporterDropsComponent(RenderableComponent.class, LayerComponent.class))
+					.with(new Renderable(0), new Layer(scene.getActiveLayerId()))
+					.with(new ExporterDropsComponent(Renderable.class, Layer.class))
 					.build();
 
 		} else if (obj instanceof TextureAssetDescriptor) {
@@ -405,18 +405,18 @@ public class EntityManipulatorModule extends SceneModule {
 
 			entity = new EntityBuilder(entityEngine)
 					.with(sprite, new Transform(), sprite, origin, new Tint(),
-							new AssetComponent(asset),
-							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
+							new AssetReference(asset),
+							new Renderable(0), new Layer(scene.getActiveLayerId()))
 					.build();
 
 		} else if (obj instanceof BmpFontAsset || obj instanceof TtfFontAsset) {
 			VisAssetDescriptor asset = (VisAssetDescriptor) obj;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(new TextComponent(fontCache.getGeneric(asset, scene.pixelsPerUnit), FontCacheModule.DEFAULT_TEXT),
+					.with(new VisText(fontCache.getGeneric(asset, scene.pixelsPerUnit), FontCacheModule.DEFAULT_TEXT),
 							new PixelsPerUnitComponent(scene.pixelsPerUnit),
-							new AssetComponent(asset),
-							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
+							new AssetReference(asset),
+							new Renderable(0), new Layer(scene.getActiveLayerId()),
 							new ExporterDropsComponent(PixelsPerUnitComponent.class))
 					.build();
 
@@ -427,8 +427,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 			entity = new EntityBuilder(entityEngine)
 					.with(spriterCache.createComponent(asset, scale), new SpriterPropertiesComponent(scale),
-							new AssetComponent(asset),
-							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
+							new AssetReference(asset),
+							new Renderable(0), new Layer(scene.getActiveLayerId()),
 							new ExporterDropsComponent(SpriterPropertiesComponent.class))
 					.build();
 
@@ -438,9 +438,9 @@ public class EntityManipulatorModule extends SceneModule {
 
 			try {
 				entity = new EntityBuilder(entityEngine)
-						.with(new ParticleComponent(particleCache.get(asset, scale)), new PixelsPerUnitComponent(scene.pixelsPerUnit),
-								new AssetComponent(asset),
-								new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
+						.with(new VisParticle(particleCache.get(asset, scale)), new PixelsPerUnitComponent(scene.pixelsPerUnit),
+								new AssetReference(asset),
+								new Renderable(0), new Layer(scene.getActiveLayerId()),
 								new ExporterDropsComponent(PixelsPerUnitComponent.class))
 						.build();
 			} catch (EditorRuntimeException e) {
@@ -453,20 +453,20 @@ public class EntityManipulatorModule extends SceneModule {
 			SoundAsset asset = (SoundAsset) obj;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(new SoundComponent(null), new Position(), //editor does not require sound to be loaded, we can pass null sound here
-							new AssetComponent(asset),
-							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-							new ExporterDropsComponent(Position.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
+					.with(new VisSound(null), new Position(), //editor does not require sound to be loaded, we can pass null sound here
+							new AssetReference(asset),
+							new Renderable(0), new Layer(scene.getActiveLayerId()),
+							new ExporterDropsComponent(Position.class, Renderable.class, Layer.class, VisGroup.class))
 					.build();
 
 		} else if (obj instanceof MusicAsset) {
 			MusicAsset asset = (MusicAsset) obj;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(new MusicComponent(new DummyMusic()), new Position(),
-							new AssetComponent(asset),
-							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-							new ExporterDropsComponent(Position.class, RenderableComponent.class, LayerComponent.class, GroupComponent.class))
+					.with(new VisMusic(new DummyMusic()), new Position(),
+							new AssetReference(asset),
+							new Renderable(0), new Layer(scene.getActiveLayerId()),
+							new ExporterDropsComponent(Position.class, Renderable.class, Layer.class, VisGroup.class))
 					.build();
 
 		}

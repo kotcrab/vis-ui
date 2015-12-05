@@ -16,32 +16,32 @@
 
 package com.kotcrab.vis.runtime.component.proto;
 
-import com.kotcrab.vis.runtime.component.MusicComponent;
-import com.kotcrab.vis.runtime.system.inflater.MusicInflater;
+import com.kotcrab.vis.runtime.assets.ShaderAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.component.Shader;
+import com.kotcrab.vis.runtime.properties.StoresAssetDescriptor;
 
 /**
- * {@link ProtoComponent} for {@link MusicComponent}
+ * {@link ProtoComponent} for {@link Shader}
  * @author Kotcrab
- * @see MusicInflater
  */
-public class MusicProtoComponent extends ProtoComponent<MusicComponent> {
-	public boolean playOnStart;
-	public boolean looping;
-	public float volume;
+public class ProtoShader extends ProtoComponent<Shader> implements StoresAssetDescriptor {
+	public ShaderAsset asset;
 
-	public MusicProtoComponent () {
+	public ProtoShader () {
 	}
 
-	public MusicProtoComponent (MusicComponent component) {
-		playOnStart = component.isPlayOnStart();
-		volume = component.getVolume();
-		looping = component.isLooping();
+	public ProtoShader (ShaderAsset asset) {
+		this.asset = asset;
 	}
 
 	@Override
-	public void fill (MusicComponent component) {
-		component.setLooping(looping);
-		component.setPlayOnStart(playOnStart);
-		component.setVolume(volume);
+	public VisAssetDescriptor getAsset () {
+		return asset;
+	}
+
+	@Override
+	public void fill (Shader target) {
+
 	}
 }

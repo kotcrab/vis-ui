@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATVector2Array;
  * positions.
  * @author Kotcrab
  */
-public class PolygonComponent extends Component {
+public class Polygon extends Component {
 	@ATVector2Array(fieldName = "Vertices")
 	public Array<Vector2> vertices = new Array<Vector2>();
 	public Vector2[][] faces;

@@ -23,7 +23,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATEnumProperty;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
 /** @author Kotcrab */
-public class PhysicsPropertiesComponent extends Component {
+public class PhysicsProperties extends Component {
 	@ATEnumProperty(fieldName = "Body Type", uiNameProvider = BodyTypeEnumNameProvider.class)
 	public BodyType bodyType = BodyType.StaticBody;
 

@@ -24,8 +24,8 @@ import com.kotcrab.vis.editor.util.scene2d.FieldUtils;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisText;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
@@ -57,9 +57,9 @@ public class TtfTextUITable extends TextUITable {
 
 	@Override
 	public boolean isSupported (EntityProxy proxy) {
-		if (proxy.hasComponent(TextComponent.class) == false) return false;
+		if (proxy.hasComponent(VisText.class) == false) return false;
 
-		VisAssetDescriptor asset = proxy.getEntity().getComponent(AssetComponent.class).asset;
+		VisAssetDescriptor asset = proxy.getEntity().getComponent(AssetReference.class).asset;
 		if (asset instanceof TtfFontAsset == false)
 			return false;
 
@@ -71,22 +71,22 @@ public class TtfTextUITable extends TextUITable {
 		super.updateUIValues();
 
 		sizeInputField.setText(EntityUtils.getEntitiesCommonFloatValue(properties.getSelectedEntities(),
-				(Entity entity) -> ((TtfFontAsset) entity.getComponent(AssetComponent.class).asset).getFontSize()));
+				(Entity entity) -> ((TtfFontAsset) entity.getComponent(AssetReference.class).asset).getFontSize()));
 	}
 
 	@Override
 	protected void updateEntitiesValues () {
 		for (EntityProxy proxy : properties.getSelectedEntities()) {
 			Entity entity = proxy.getEntity();
-			AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
-			TextComponent text = entity.getComponent(TextComponent.class);
+			AssetReference assetRef = entity.getComponent(AssetReference.class);
+			VisText text = entity.getComponent(VisText.class);
 
-			TtfFontAsset ttfAsset = (TtfFontAsset) assetComponent.asset;
+			TtfFontAsset ttfAsset = (TtfFontAsset) assetRef.asset;
 			int fontSize = FieldUtils.getInt(sizeInputField, ttfAsset.getFontSize());
 
 			if (ttfAsset.getFontSize() != fontSize) {
 				TtfFontAsset newAsset = new TtfFontAsset(ttfAsset.getPath(), fontSize);
-				assetComponent.asset = newAsset;
+				assetRef.asset = newAsset;
 				text.setFont(fontCache.get(newAsset, properties.getSceneModuleContainer().getScene().pixelsPerUnit));
 			}
 		}

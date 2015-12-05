@@ -17,20 +17,15 @@
 package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
-/**
- * All renderable entities must have this component, stores entity zIndex
- * @author Kotcrab
- */
-public class RenderableComponent extends Component {
-	@ATProperty(fieldName = "Z Index", min = 0)
-	public int zIndex;
+/** @author Kotcrab */
+public class PhysicsSprite extends Component {
+	public float originalRotation;
 
-	public RenderableComponent () {
+	public PhysicsSprite () {
 	}
 
-	public RenderableComponent (int zIndex) {
-		this.zIndex = zIndex;
+	public PhysicsSprite (float originalRotation) {
+		this.originalRotation = originalRotation;
 	}
 }

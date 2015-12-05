@@ -19,27 +19,27 @@ package com.kotcrab.vis.editor.module.scene.system.inflater;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.kotcrab.vis.editor.util.gdx.DummyMusic;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.MusicComponent;
-import com.kotcrab.vis.runtime.component.proto.MusicProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisMusic;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisMusic;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
 public class EditorMusicInflater extends InflaterSystem {
-	private ComponentMapper<MusicComponent> musicCm;
-	private ComponentMapper<MusicProtoComponent> protoCm;
+	private ComponentMapper<VisMusic> musicCm;
+	private ComponentMapper<ProtoVisMusic> protoCm;
 
 	public EditorMusicInflater () {
-		super(Aspect.all(MusicProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisMusic.class, AssetReference.class));
 	}
 
 	@Override
 	protected void inserted (int entityId) {
-		MusicProtoComponent musicProtoComponent = protoCm.get(entityId);
+		ProtoVisMusic protoVisMusic = protoCm.get(entityId);
 
-		MusicComponent musicComponent = musicCm.create(entityId);
-		musicComponent.music = new DummyMusic();
-		musicProtoComponent.fill(musicComponent);
+		VisMusic music = musicCm.create(entityId);
+		music.music = new DummyMusic();
+		protoVisMusic.fill(music);
 
 		protoCm.remove(entityId);
 	}

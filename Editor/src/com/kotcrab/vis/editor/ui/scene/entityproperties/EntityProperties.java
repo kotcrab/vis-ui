@@ -284,14 +284,14 @@ public class EntityProperties extends VisTable implements Disposable {
 
 		//TODO: [plugin] plugin entry point
 		registerComponentTable(new RenderableComponentTable(sceneMC));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, ShaderComponent.class, true));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, PolygonComponent.class, true));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, Shader.class, true));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, Polygon.class, true));
 		registerComponentTable(new PhysicsPropertiesComponentTable(sceneMC));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, VariablesComponent.class, true));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, Variables.class, true));
 		registerComponentTable(new SpriterPropertiesComponentTable(sceneMC));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, MusicComponent.class, false));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, SoundComponent.class, false));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, ParticleComponent.class, false));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, VisMusic.class, false));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, VisSound.class, false));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, VisParticle.class, false));
 
 		propertiesTable = new VisTable(true);
 
