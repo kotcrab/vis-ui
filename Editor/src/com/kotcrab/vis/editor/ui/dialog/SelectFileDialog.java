@@ -83,7 +83,7 @@ public class SelectFileDialog extends VisWindow {
 		buttonsTable.add(cancelButton = new VisTextButton("Cancel"));
 		buttonsTable.add(okButton = new VisTextButton("OK"));
 
-		noFilesLabel = new VisLabel("There isn't any available file to select");
+		noFilesLabel = new VisLabel("There isn't any available file to select.");
 
 		add(noFilesLabel).height(PrefHeightIfVisibleValue.INSTANCE).center().spaceBottom(0).row();
 		add(fileList).expand().fill().height(PrefHeightIfVisibleValue.INSTANCE).row();

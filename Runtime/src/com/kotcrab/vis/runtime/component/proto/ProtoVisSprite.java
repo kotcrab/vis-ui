@@ -14,57 +14,48 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.component.proto;
 
-import com.artemis.Component;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
-import com.kotcrab.vis.runtime.component.proto.ProtoVisSprite;
+import com.kotcrab.vis.runtime.component.VisSprite;
 import com.kotcrab.vis.runtime.properties.FlipOwner;
 import com.kotcrab.vis.runtime.properties.Resizable;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
-import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
 /** @author Kotcrab */
-public class VisSprite extends Component implements FlipOwner, SizeOwner, Resizable, UsesProtoComponent {
-	private TextureRegion region;
-	private float width, height;
+public class ProtoVisSprite extends ProtoComponent<VisSprite> implements FlipOwner, Resizable, SizeOwner {
+	public boolean flipX, flipY;
+	public float width, height;
 
-	@Deprecated
-	public VisSprite () {
+	public ProtoVisSprite () {
 	}
 
-	public VisSprite (TextureRegion region) {
-		setRegion(region);
+	public ProtoVisSprite (VisSprite sprite) {
+		this.flipX = sprite.isFlipX();
+		this.flipY = sprite.isFlipY();
+		this.width = sprite.getWidth();
+		this.height = sprite.getHeight();
 	}
 
-	public TextureRegion getRegion () {
-		return region;
-	}
-
-	public void setRegion (TextureRegion region) {
-		this.region = new TextureRegion(region);
+	@Override
+	public void fill (VisSprite target) {
+		target.setFlip(flipX, flipY);
+		target.setSize(width, height);
 	}
 
 	@Override
 	public boolean isFlipX () {
-		return region.isFlipX();
+		return flipX;
 	}
 
 	@Override
 	public boolean isFlipY () {
-		return region.isFlipY();
+		return flipY;
 	}
 
 	@Override
 	public void setFlip (boolean flipX, boolean flipY) {
-		boolean doFlipX = false;
-		boolean doFlipY = false;
-
-		if (region.isFlipX() != flipX) doFlipX = true;
-		if (region.isFlipY() != flipY) doFlipY = true;
-
-		region.flip(doFlipX, doFlipY);
+		this.flipX = flipX;
+		this.flipY = flipY;
 	}
 
 	@Override
@@ -81,10 +72,5 @@ public class VisSprite extends Component implements FlipOwner, SizeOwner, Resiza
 	public void setSize (float width, float height) {
 		this.width = width;
 		this.height = height;
-	}
-
-	@Override
-	public ProtoComponent<VisSprite> toProtoComponent () {
-		return new ProtoVisSprite(this);
 	}
 }

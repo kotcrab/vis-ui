@@ -22,7 +22,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.SpriterComponent;
-import com.kotcrab.vis.runtime.component.SpriterProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.SpriterProtoComponent;
 import com.kotcrab.vis.runtime.util.SpriterData;
 
 /** @author Kotcrab */

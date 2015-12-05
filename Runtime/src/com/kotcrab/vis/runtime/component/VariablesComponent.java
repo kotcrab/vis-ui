@@ -32,7 +32,17 @@ public class VariablesComponent extends Component {
 		return variables.get(variableName);
 	}
 
+	public String get (String variableName, String defaultValue) {
+		return variables.get(variableName, defaultValue);
+	}
+
 	public float getFloat (String variableName) {
+		return Float.valueOf(get(variableName));
+	}
+
+	public float getFloat (String variableName, float defaultValue) {
+		String stringVal = get(variableName);
+		if (stringVal == null) return defaultValue;
 		return Float.valueOf(get(variableName));
 	}
 
@@ -40,7 +50,19 @@ public class VariablesComponent extends Component {
 		return Integer.valueOf(get(variableName));
 	}
 
+	public int getInt (String variableName, int defaultValue) {
+		String stringVal = get(variableName);
+		if (stringVal == null) return defaultValue;
+		return Integer.valueOf(get(variableName));
+	}
+
 	public boolean getBoolean (String variableName) {
+		return Boolean.valueOf(get(variableName));
+	}
+
+	public boolean getBoolean (String variableName, boolean defaultValue) {
+		String stringVal = get(variableName);
+		if (stringVal == null) return defaultValue;
 		return Boolean.valueOf(get(variableName));
 	}
 }

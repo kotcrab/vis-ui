@@ -21,7 +21,7 @@ import com.artemis.ComponentMapper;
 import com.kotcrab.vis.editor.module.project.ShaderCacheModule;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
-import com.kotcrab.vis.runtime.component.ShaderProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.ShaderProtoComponent;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */

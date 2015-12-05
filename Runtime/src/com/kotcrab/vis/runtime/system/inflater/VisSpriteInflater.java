@@ -26,32 +26,28 @@ import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SimpleProtoComponent;
-import com.kotcrab.vis.runtime.component.SimpleProtoComponent.Type;
 import com.kotcrab.vis.runtime.component.VisSprite;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisSprite;
 import com.kotcrab.vis.runtime.util.PathUtils;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 /** @author Kotcrab */
 public class VisSpriteInflater extends InflaterSystem {
 	private ComponentMapper<VisSprite> spriteCm;
-	private ComponentMapper<SimpleProtoComponent> protoCm;
+	private ComponentMapper<ProtoVisSprite> protoCm;
 	private ComponentMapper<AssetComponent> assetCm;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
 	public VisSpriteInflater (RuntimeConfiguration configuration, AssetManager manager) {
-		super(Aspect.all(SimpleProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisSprite.class, AssetComponent.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
 	public void inserted (int entityId) {
-		SimpleProtoComponent proto = protoCm.get(entityId);
-		if(proto.type != Type.SPRITE) return;
-
 		VisAssetDescriptor asset =  assetCm.get(entityId).asset;
 
 		String atlasPath;
@@ -76,9 +72,9 @@ public class VisSpriteInflater extends InflaterSystem {
 		if (region == null) throw new IllegalStateException("Can't load scene, gfx asset is missing: " + atlasRegion);
 
 		VisSprite sprite = spriteCm.create(entityId);
-		sprite.region = region;
-
-		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
+		sprite.setRegion(region);
+		protoCm.get(entityId).fill(sprite);
 		protoCm.remove(entityId);
+		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 	}
 }

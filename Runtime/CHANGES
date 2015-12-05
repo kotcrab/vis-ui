@@ -1,6 +1,11 @@
 [0.3.0] [LibGDX 1.7.1] [Artemis 1.2.1] [Snapshot]
 -Moved RenderBatchingSystem, ParticleRenderSystem, SpriteRenderSystem, SpriterRenderSystem, TextRenderSystem to com.kotcrab.vis.runtime.system.render package
 -Moved StoresAssetDescriptor, UsesProtoComponent interfaces to com.kotcrab.vis.runtime.properties package
+-Changes in SpriteComponent:
+ -Renamed to VisSprite
+ -Uses TextureRegion directly
+ -Properties like position, scale are controlled by following components: Transform, Origin
+  -Changes in those components will be reflected in render immediately
 -Removed all PropertiesAccessor classes, now Components implements Owner classes for example every component that store position implements PositionOwner
 -API Change: Removed ArtemisUtils
 -Fixed inflaters not removing ProtoComponents

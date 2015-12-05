@@ -21,7 +21,7 @@ import com.artemis.ComponentMapper;
 import com.kotcrab.vis.editor.util.gdx.DummyMusic;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.MusicComponent;
-import com.kotcrab.vis.runtime.component.MusicProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.MusicProtoComponent;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */

@@ -25,9 +25,9 @@ import com.kotcrab.vis.runtime.properties.BoundsOwner;
 /** @author Kotcrab */
 public class VisSpriteProxy extends EntityProxy {
 	private Accessor accessor;
-	private Size size;
 	private Transform transform;
 	private Origin origin;
+	private VisSprite sprite;
 
 	public VisSpriteProxy (Entity entity) {
 		super(entity);
@@ -41,13 +41,12 @@ public class VisSpriteProxy extends EntityProxy {
 	@Override
 	protected void reloadAccessors () {
 		Entity entity = getEntity();
-		VisSprite sprite = entity.getComponent(VisSprite.class);
-		size = entity.getComponent(Size.class);
+		sprite = entity.getComponent(VisSprite.class);
 		transform = entity.getComponent(Transform.class);
 		origin = entity.getComponent(Origin.class);
 		Tint tint = entity.getComponent(Tint.class);
 
-		enableBasicProperties(transform, size, accessor);
+		enableBasicProperties(transform, sprite, accessor);
 		enableOrigin(origin);
 		enableScale(transform);
 		enableTint(tint);
@@ -110,13 +109,12 @@ public class VisSpriteProxy extends EntityProxy {
 			return bounds;
 		}
 
-		/** Returns the packed vertices, colors, and texture coordinates for this sprite. */
-		public float[] getVertices () {
+		private float[] getVertices () {
 			float[] vertices = this.vertices;
 			float localX = -origin.originX;
 			float localY = -origin.originY;
-			float localX2 = localX + size.width;
-			float localY2 = localY + size.height;
+			float localX2 = localX + sprite.getWidth();
+			float localY2 = localY + sprite.getHeight();
 			float worldOriginX = transform.x - localX;
 			float worldOriginY = transform.y - localY;
 			if (transform.scaleX != 1 || transform.scaleY != 1) {

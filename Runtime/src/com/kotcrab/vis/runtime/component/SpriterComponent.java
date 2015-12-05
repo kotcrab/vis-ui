@@ -19,6 +19,8 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
+import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.SpriterProtoComponent;
 import com.kotcrab.vis.runtime.properties.*;
 import com.kotcrab.vis.runtime.spriter.Data;
 import com.kotcrab.vis.runtime.spriter.Loader;

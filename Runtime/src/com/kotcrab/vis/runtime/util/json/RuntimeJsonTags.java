@@ -18,6 +18,7 @@ package com.kotcrab.vis.runtime.util.json;
 
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.component.proto.*;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
@@ -41,7 +42,6 @@ public class RuntimeJsonTags {
 
 		registrar.register("Transform", Transform.class);
 		registrar.register("Position", Position.class);
-		registrar.register("Size", Size.class);
 		registrar.register("Tint", Tint.class);
 		registrar.register("Origin", Origin.class);
 
@@ -57,7 +57,7 @@ public class RuntimeJsonTags {
 		registrar.register("PhysicsPropertiesComponent", PhysicsPropertiesComponent.class);
 		registrar.register("PolygonComponent", PolygonComponent.class);
 
-		registrar.register("SimpleProtoComponent", SimpleProtoComponent.class);
+		registrar.register("ProtoVisSprite", ProtoVisSprite.class);
 		registrar.register("MusicProtoComponent", MusicProtoComponent.class);
 		registrar.register("SoundProtoComponent", SoundProtoComponent.class);
 		registrar.register("ParticleProtoComponent", ParticleProtoComponent.class);

@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.TextComponent;
-import com.kotcrab.vis.runtime.component.TextProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.TextProtoComponent;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 /**

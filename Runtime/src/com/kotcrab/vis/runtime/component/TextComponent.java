@@ -24,6 +24,8 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
+import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.TextProtoComponent;
 import com.kotcrab.vis.runtime.properties.*;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
@@ -33,7 +35,7 @@ import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
  */
 public class TextComponent extends Component implements PositionOwner, SizeOwner, BoundsOwner, ScaleOwner,
 		RotationOwner, OriginOwner, TintOwner, UsesProtoComponent {
-	protected boolean distanceFieldShaderEnabled;
+	private boolean distanceFieldShaderEnabled;
 
 	private transient BitmapFontCache cache;
 	private transient GlyphLayout textLayout;
@@ -46,7 +48,7 @@ public class TextComponent extends Component implements PositionOwner, SizeOwner
 	private Rectangle boundingRectangle;
 	private boolean autoSetOriginToCenter = true;
 	public Matrix4 translationMatrix;
-	protected CharSequence text;
+	private CharSequence text;
 
 	/** Creates empty component, {@link #init(BitmapFont, String)} must be called before use */
 	public TextComponent () {

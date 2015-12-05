@@ -22,7 +22,7 @@ import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
 import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.ParticleComponent;
-import com.kotcrab.vis.runtime.component.ParticleProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.ParticleProtoComponent;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */

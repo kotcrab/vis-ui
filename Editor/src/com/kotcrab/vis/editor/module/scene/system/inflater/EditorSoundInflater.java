@@ -20,7 +20,7 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.SoundComponent;
-import com.kotcrab.vis.runtime.component.SoundProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.SoundProtoComponent;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */

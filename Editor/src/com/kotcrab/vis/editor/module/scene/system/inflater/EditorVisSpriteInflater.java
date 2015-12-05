@@ -20,30 +20,26 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SimpleProtoComponent;
-import com.kotcrab.vis.runtime.component.SimpleProtoComponent.Type;
 import com.kotcrab.vis.runtime.component.VisSprite;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisSprite;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
 public class EditorVisSpriteInflater extends InflaterSystem {
-	private ComponentMapper<SimpleProtoComponent> protoCm;
 	private ComponentMapper<VisSprite> spriteCm;
+	private ComponentMapper<ProtoVisSprite> protoCm;
 	private ComponentMapper<AssetComponent> assetCm;
 	private TextureCacheModule textureCache;
 
 	public EditorVisSpriteInflater () {
-		super(Aspect.all(SimpleProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisSprite.class, AssetComponent.class));
 	}
 
 	@Override
 	public void inserted (int entityId) {
-		SimpleProtoComponent proto = protoCm.get(entityId);
-		if(proto.type != Type.SPRITE) return;
-
 		VisSprite sprite = spriteCm.create(entityId);
-		sprite.region = textureCache.getRegion(assetCm.get(entityId).asset);
-
+		sprite.setRegion(textureCache.getRegion(assetCm.get(entityId).asset));
+		protoCm.get(entityId).fill(sprite);
 		protoCm.remove(entityId);
 	}
 }

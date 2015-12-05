@@ -22,7 +22,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
-import com.kotcrab.vis.runtime.component.ShaderProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.ShaderProtoComponent;
 
 /**
  * Inflates {@link ShaderProtoComponent} into {@link ShaderComponent}

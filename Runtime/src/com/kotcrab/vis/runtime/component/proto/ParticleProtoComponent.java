@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.component.proto;
 
+import com.kotcrab.vis.runtime.component.ParticleComponent;
 import com.kotcrab.vis.runtime.properties.PositionOwner;
 
 /**
@@ -23,7 +24,7 @@ import com.kotcrab.vis.runtime.properties.PositionOwner;
  * @author Kotcrab
  * @see ParticleProtoComponent
  */
-public class ParticleProtoComponent extends ProtoComponent implements PositionOwner {
+public class ParticleProtoComponent extends ProtoComponent<ParticleComponent> implements PositionOwner {
 	public float x, y;
 	public boolean active;
 
@@ -60,5 +61,10 @@ public class ParticleProtoComponent extends ProtoComponent implements PositionOw
 	public void setPosition (float x, float y) {
 		this.x = x;
 		this.y = y;
+	}
+
+	@Override
+	public void fill (ParticleComponent target) {
+
 	}
 }

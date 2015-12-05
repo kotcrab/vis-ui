@@ -14,17 +14,18 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.component.proto;
 
 import com.kotcrab.vis.runtime.assets.ShaderAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.component.ShaderComponent;
 import com.kotcrab.vis.runtime.properties.StoresAssetDescriptor;
 
 /**
  * {@link ProtoComponent} for {@link ShaderComponent}
  * @author Kotcrab
  */
-public class ShaderProtoComponent extends ProtoComponent implements StoresAssetDescriptor {
+public class ShaderProtoComponent extends ProtoComponent<ShaderComponent> implements StoresAssetDescriptor {
 	public ShaderAsset asset;
 
 	public ShaderProtoComponent () {
@@ -37,5 +38,10 @@ public class ShaderProtoComponent extends ProtoComponent implements StoresAssetD
 	@Override
 	public VisAssetDescriptor getAsset () {
 		return asset;
+	}
+
+	@Override
+	public void fill (ShaderComponent target) {
+
 	}
 }

@@ -25,7 +25,7 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
- * 20x20 image used to display currently selected color in {@link EntityProperties}
+ * 20x20 image used to display currently selected tint in {@link EntityProperties}
  * @author Kotcrab
  */
 public class TintImage extends Image {

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.component.proto;
 
+import com.kotcrab.vis.runtime.component.MusicComponent;
 import com.kotcrab.vis.runtime.system.inflater.MusicInflater;
 
 /**
@@ -23,7 +24,7 @@ import com.kotcrab.vis.runtime.system.inflater.MusicInflater;
  * @author Kotcrab
  * @see MusicInflater
  */
-public class MusicProtoComponent extends ProtoComponent {
+public class MusicProtoComponent extends ProtoComponent<MusicComponent> {
 	public boolean playOnStart;
 	public boolean looping;
 	public float volume;
@@ -37,6 +38,7 @@ public class MusicProtoComponent extends ProtoComponent {
 		looping = component.isLooping();
 	}
 
+	@Override
 	public void fill (MusicComponent component) {
 		component.setLooping(looping);
 		component.setPlayOnStart(playOnStart);

@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.component.proto;
 
+import com.kotcrab.vis.runtime.component.SoundComponent;
 import com.kotcrab.vis.runtime.system.inflater.SoundInflater;
 
 /**
@@ -25,5 +26,9 @@ import com.kotcrab.vis.runtime.system.inflater.SoundInflater;
  * @author Kotcrab
  * @see SoundInflater
  */
-public class SoundProtoComponent extends ProtoComponent {
+public class SoundProtoComponent extends ProtoComponent<SoundComponent> {
+	@Override
+	public void fill (SoundComponent target) {
+
+	}
 }

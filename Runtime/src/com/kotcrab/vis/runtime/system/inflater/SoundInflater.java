@@ -24,7 +24,7 @@ import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.SoundComponent;
-import com.kotcrab.vis.runtime.component.SoundProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.SoundProtoComponent;
 
 /**
  * Inflates {@link SoundProtoComponent} into {@link SoundComponent}

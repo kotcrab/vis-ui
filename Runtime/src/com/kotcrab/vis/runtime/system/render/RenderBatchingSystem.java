@@ -20,10 +20,12 @@ import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.kotcrab.vis.runtime.component.LayerComponent;
 import com.kotcrab.vis.runtime.component.RenderableComponent;
 import com.kotcrab.vis.runtime.component.ShaderComponent;
+import com.kotcrab.vis.runtime.component.Tint;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 import com.kotcrab.vis.runtime.system.CameraManager;
 import com.kotcrab.vis.runtime.system.LayerManager;
@@ -45,6 +47,7 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 	private ComponentMapper<LayerComponent> layerCm;
 	private ComponentMapper<RenderableComponent> renderableCm;
 	private ComponentMapper<ShaderComponent> shaderCm;
+	private ComponentMapper<Tint> tintCm;
 
 	private boolean sortedDirty = false;
 	private final Bag<Job> sortedJobs = new Bag<Job>();
@@ -122,6 +125,8 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 			final boolean shaderUsed = shaderCm.has(job.entityId);
 			LayerCordsSystem cordsSystem = null;
 
+			final boolean tintUsed = tintCm.has(job.entityId);
+
 			if (usingFromEditor == false)
 				cordsSystem = layerManager.getData(layerCm.get(job.entityId).layerId).cordsSystem;
 
@@ -151,6 +156,12 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 						batch.setProjectionMatrix(cameraManager.getUiCombined());
 						break;
 				}
+			}
+
+			if (tintUsed) {
+				batch.setColor(tintCm.get(job.entityId).tint);
+			} else {
+				batch.setColor(Color.WHITE);
 			}
 
 			if (changedBatchState) batch.begin();

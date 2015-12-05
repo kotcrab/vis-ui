@@ -327,7 +327,7 @@ public abstract class EntityProxy {
 		scaleOwner.setScale(x, y);
 	}
 
-	//color properties
+	//tint properties
 
 	protected void enableTint (TintOwner tintOwner) {
 		if (tintOwner == null) throw new IllegalStateException("tintOwner can't be null");

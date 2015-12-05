@@ -14,30 +14,16 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.component.proto;
 
 import com.artemis.Component;
-import com.kotcrab.vis.runtime.properties.SizeOwner;
+import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 
-/** @author Kotcrab */
-public class Size extends Component implements SizeOwner {
-	public float width, height;
-
-	public Size () {
-	}
-
-	public Size (float width, float height) {
-		this.width = width;
-		this.height = height;
-	}
-
-	@Override
-	public float getWidth () {
-		return width;
-	}
-
-	@Override
-	public float getHeight () {
-		return height;
-	}
+/**
+ * Base class for all ProtoComponent, see {@link UsesProtoComponent} for details when to use ProtoComponents
+ * @author Kotcrab
+ * @see UsesProtoComponent
+ */
+public abstract class ProtoComponent<T> extends Component {
+	public abstract void fill (T target);
 }

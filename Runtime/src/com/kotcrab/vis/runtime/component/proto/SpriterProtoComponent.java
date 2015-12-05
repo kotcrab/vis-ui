@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.component.proto;
 
+import com.kotcrab.vis.runtime.component.SpriterComponent;
 import com.kotcrab.vis.runtime.properties.FlipOwner;
 import com.kotcrab.vis.runtime.properties.PositionOwner;
 import com.kotcrab.vis.runtime.properties.RotationOwner;
 
 /** @author Kotcrab */
-public class SpriterProtoComponent extends ProtoComponent implements PositionOwner, RotationOwner, FlipOwner {
+public class SpriterProtoComponent extends ProtoComponent<SpriterComponent> implements PositionOwner, RotationOwner, FlipOwner {
 	public float x, y;
 	public float rotation;
 	public float scale;
@@ -48,6 +49,7 @@ public class SpriterProtoComponent extends ProtoComponent implements PositionOwn
 		defaultAnimation = comp.defaultAnimation;
 	}
 
+	@Override
 	public void fill (SpriterComponent comp) {
 		comp.setPosition(x, y);
 		comp.player.setScale(scale);

@@ -20,6 +20,8 @@ import com.artemis.Component;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.kotcrab.vis.runtime.assets.ShaderAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.ShaderProtoComponent;
 import com.kotcrab.vis.runtime.properties.StoresAssetDescriptor;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;

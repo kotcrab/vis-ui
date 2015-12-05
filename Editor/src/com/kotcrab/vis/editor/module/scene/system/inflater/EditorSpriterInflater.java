@@ -23,7 +23,7 @@ import com.kotcrab.vis.editor.module.project.SpriterCacheModule;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.SpriterComponent;
-import com.kotcrab.vis.runtime.component.SpriterProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.SpriterProtoComponent;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */

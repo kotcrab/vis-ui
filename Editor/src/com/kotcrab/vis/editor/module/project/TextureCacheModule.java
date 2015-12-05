@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
@@ -229,14 +228,6 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		if (descriptor instanceof AtlasRegionAsset) return getAtlasRegion((AtlasRegionAsset) descriptor);
 
 		throw new UnsupportedAssetDescriptorException(descriptor);
-	}
-
-	@Deprecated
-	public Sprite getSprite (VisAssetDescriptor descriptor, float pixelsPerUnit) {
-		Sprite sprite = new Sprite(getRegion(descriptor));
-		sprite.setSize(sprite.getWidth() / pixelsPerUnit, sprite.getHeight() / pixelsPerUnit);
-		sprite.setOrigin(sprite.getOriginX() / pixelsPerUnit, sprite.getOriginY() / pixelsPerUnit);
-		return sprite;
 	}
 
 	private TextureRegion getCachedGfxRegion (TextureRegionAsset asset) {

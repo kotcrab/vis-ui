@@ -400,11 +400,11 @@ public class EntityManipulatorModule extends SceneModule {
 			TextureAssetDescriptor asset = (TextureAssetDescriptor) obj;
 
 			VisSprite sprite = new VisSprite(textureCache.getRegion(asset));
-			Size size = new Size(sprite.region.getRegionWidth() / scene.pixelsPerUnit, sprite.region.getRegionHeight() / scene.pixelsPerUnit);
-			Origin origin = new Origin(size.width / 2, scene.height / 2);
+			sprite.setSize(sprite.getRegion().getRegionWidth() / scene.pixelsPerUnit, sprite.getRegion().getRegionHeight() / scene.pixelsPerUnit);
+			Origin origin = new Origin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 
 			entity = new EntityBuilder(entityEngine)
-					.with(sprite, new Transform(), size, origin, new Tint(),
+					.with(sprite, new Transform(), sprite, origin, new Tint(),
 							new AssetComponent(asset),
 							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()))
 					.build();

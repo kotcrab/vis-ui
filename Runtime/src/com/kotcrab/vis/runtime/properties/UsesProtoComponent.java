@@ -16,7 +16,7 @@
 
 package com.kotcrab.vis.runtime.properties;
 
-import com.kotcrab.vis.runtime.component.ProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
 
 /**
  * Component implementing this interface uses {@link ProtoComponent} for serialization. Such components must use

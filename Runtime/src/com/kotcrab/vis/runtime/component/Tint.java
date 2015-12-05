@@ -22,23 +22,23 @@ import com.kotcrab.vis.runtime.properties.TintOwner;
 
 /** @author Kotcrab */
 public class Tint extends Component implements TintOwner {
-	public Color color;
+	public Color tint;
 
 	public Tint () {
-		color = Color.WHITE;
+		tint = Color.WHITE;
 	}
 
-	public Tint (Color color) {
-		this.color = color;
+	public Tint (Color tint) {
+		this.tint = tint;
 	}
 
 	@Override
 	public Color getTint () {
-		return color;
+		return tint;
 	}
 
 	@Override
 	public void setTint (Color tint) {
-		this.color = tint;
+		this.tint = tint;
 	}
 }

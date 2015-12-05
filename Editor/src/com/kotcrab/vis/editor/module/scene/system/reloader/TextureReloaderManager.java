@@ -48,7 +48,7 @@ public class TextureReloaderManager extends Manager { //TODO: migrate all reload
 			VisSprite sprite = spriteCm.get(entity);
 			VisAssetDescriptor asset = assetCm.get(entity).asset;
 
-			sprite.region = textureCache.getRegion(asset);
+			sprite.setRegion(textureCache.getRegion(asset));
 		}
 	}
 }

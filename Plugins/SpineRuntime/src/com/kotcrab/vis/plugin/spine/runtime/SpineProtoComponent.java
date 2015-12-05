@@ -32,10 +32,10 @@
 package com.kotcrab.vis.plugin.spine.runtime;
 
 import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.runtime.component.ProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
 
 /** @author Kotcrab */
-public class SpineProtoComponent extends ProtoComponent {
+public class SpineProtoComponent extends ProtoComponent<SpineComponent> {
 	public float x, y;
 	public boolean flipX, flipY;
 	public Color color;
@@ -55,5 +55,10 @@ public class SpineProtoComponent extends ProtoComponent {
 
 		playOnStart = spineComponent.isPlayOnStart();
 		defaultAnimation = spineComponent.getDefaultAnimation();
+	}
+
+	@Override
+	public void fill (SpineComponent target) {
+
 	}
 }

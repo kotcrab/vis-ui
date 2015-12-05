@@ -24,7 +24,7 @@ import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.component.AssetComponent;
 import com.kotcrab.vis.runtime.component.MusicComponent;
-import com.kotcrab.vis.runtime.component.MusicProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.MusicProtoComponent;
 
 /**
  * Inflates {@link MusicProtoComponent} into {@link MusicComponent}
