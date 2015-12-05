@@ -36,6 +36,7 @@ public class TextRenderSystem extends DeferredEntityProcessingSystem {
 	private ComponentMapper<VisText> textCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
+
 	private Batch batch;
 	private ShaderProgram distanceFieldShader;
 
@@ -53,7 +54,7 @@ public class TextRenderSystem extends DeferredEntityProcessingSystem {
 	protected void process (int entityId) {
 		//TODO: optimize texts
 		VisText text = textCm.get(entityId);
-		batch.setTransformMatrix(text.translationMatrix);
+		batch.setTransformMatrix(text.getTranslationMatrix());
 		if (text.isDistanceFieldShaderEnabled()) batch.setShader(distanceFieldShader);
 		text.getCache().draw(batch);
 		if (text.isDistanceFieldShaderEnabled()) batch.setShader(null);

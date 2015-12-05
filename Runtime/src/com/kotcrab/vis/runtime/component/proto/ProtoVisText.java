@@ -16,9 +16,7 @@
 
 package com.kotcrab.vis.runtime.component.proto;
 
-import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.runtime.component.VisText;
-import com.kotcrab.vis.runtime.properties.*;
 import com.kotcrab.vis.runtime.system.inflater.TextInflater;
 
 /**
@@ -26,35 +24,15 @@ import com.kotcrab.vis.runtime.system.inflater.TextInflater;
  * @author Kotcrab
  * @see TextInflater
  */
-public class ProtoVisText extends ProtoComponent<VisText> implements PositionOwner, OriginOwner, RotationOwner, ScaleOwner, TintOwner {
-	public float x, y;
-	public float originX, originY;
-	public float rotation;
-	public float scaleX = 1, scaleY = 1;
-	public Color tint = Color.WHITE;
-
+public class ProtoVisText extends ProtoComponent<VisText>{
 	public String text;
 	public boolean autoSetOriginToCenter;
-
 	public boolean isUsesDistanceField;
 
 	public ProtoVisText () {
 	}
 
 	public ProtoVisText (VisText component) {
-		x = component.getX();
-		y = component.getY();
-
-		originX = component.getOriginX();
-		originY = component.getOriginY();
-
-		rotation = component.getRotation();
-
-		scaleX = component.getScaleX();
-		scaleY = component.getScaleY();
-
-		tint = component.getTint().cpy();
-
 		text = component.getText();
 		autoSetOriginToCenter = component.isAutoSetOriginToCenter();
 
@@ -63,97 +41,8 @@ public class ProtoVisText extends ProtoComponent<VisText> implements PositionOwn
 
 	@Override
 	public void fill (VisText component) {
-		component.setPosition(x, y);
-		component.setOrigin(originX, originY);
-		component.setRotation(rotation);
-		component.setScale(scaleX, scaleY);
-
-		component.setText(text, tint);
-
+		component.setText(text);
 		component.setAutoSetOriginToCenter(autoSetOriginToCenter);
-
 		component.setDistanceFieldShaderEnabled(isUsesDistanceField);
-	}
-
-	@Override
-	public float getX () {
-		return x;
-	}
-
-	@Override
-	public void setX (float x) {
-		this.x = x;
-	}
-
-	@Override
-	public float getY () {
-		return y;
-	}
-
-	@Override
-	public void setY (float y) {
-		this.y = y;
-	}
-
-	@Override
-	public void setPosition (float x, float y) {
-		this.x = x;
-		this.y = y;
-	}
-
-	@Override
-	public float getOriginX () {
-		return originX;
-	}
-
-	@Override
-	public float getOriginY () {
-		return originY;
-	}
-
-	@Override
-	public void setOrigin (float x, float y) {
-		this.originX = x;
-		this.originY = y;
-	}
-
-	@Override
-	public float getRotation () {
-		return rotation;
-	}
-
-	@Override
-	public void setRotation (float rotation) {
-		this.rotation = rotation;
-	}
-
-	@Override
-	public float getScaleX () {
-		return scaleX;
-	}
-
-	@Override
-	public float getScaleY () {
-		return scaleY;
-	}
-
-	@Override
-	public void setScale (float x, float y) {
-		this.scaleX = x;
-		this.scaleY = y;
-	}
-
-	public void setScaleY (float scaleY) {
-		this.scaleY = scaleY;
-	}
-
-	@Override
-	public Color getTint () {
-		return tint;
-	}
-
-	@Override
-	public void setTint (Color tint) {
-		this.tint = this.tint;
 	}
 }

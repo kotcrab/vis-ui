@@ -33,6 +33,7 @@ import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisText;
+import com.kotcrab.vis.runtime.component.VisTextChanged;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 import com.kotcrab.vis.ui.util.value.VisWidgetValue;
@@ -116,7 +117,7 @@ public abstract class TextUITable extends SpecificUITable {
 					throw new UnsupportedAssetDescriptorException(asset);
 
 				text.setFont(fontCache.getGeneric(newAsset, properties.getSceneModuleContainer().getScene().pixelsPerUnit));
-
+				entity.edit().create(VisTextChanged.class).contentChanged = true;
 				assetRef.asset = newAsset;
 			}
 
@@ -151,6 +152,7 @@ public abstract class TextUITable extends SpecificUITable {
 		EntityUtils.stream(properties.getSelectedEntities(), VisText.class, (entity, text) -> {
 			if (textField.getText().equals("<multiple values>") == false) { //TODO: lets hope that nobody will use <multiple values> as their text
 				text.setText(textField.getText());
+				entity.edit().create(VisTextChanged.class).contentChanged = true;
 			}
 		});
 

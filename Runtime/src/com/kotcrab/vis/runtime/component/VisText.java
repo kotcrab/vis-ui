@@ -22,33 +22,28 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFontCache;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisText;
-import com.kotcrab.vis.runtime.properties.*;
+import com.kotcrab.vis.runtime.properties.BoundsOwner;
+import com.kotcrab.vis.runtime.properties.SizeOwner;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
+import com.kotcrab.vis.runtime.util.annotation.VisInternal;
 
 /**
- * Text component storing all text properties
+ * Text component storing all text properties.
  * @author Kotcrab
  */
-public class VisText extends Component implements PositionOwner, SizeOwner, BoundsOwner, ScaleOwner,
-		RotationOwner, OriginOwner, TintOwner, UsesProtoComponent {
+public class VisText extends Component implements SizeOwner, BoundsOwner, UsesProtoComponent {
 	private boolean distanceFieldShaderEnabled;
+	private boolean autoSetOriginToCenter = true;
+	private CharSequence text;
 
 	private transient BitmapFontCache cache;
 	private transient GlyphLayout textLayout;
 
-	private float x = 0, y = 0;
-	private float originX = 0, originY = 0;
-	private float scaleX = 1, scaleY = 1;
-	private float rotation = 0;
-	private Color color = Color.WHITE;
-	private Rectangle boundingRectangle;
-	private boolean autoSetOriginToCenter = true;
-	public Matrix4 translationMatrix;
-	private CharSequence text;
+	private Rectangle bounds = new Rectangle();
+	private Matrix4 translationMatrix;
 
 	/** Creates empty component, {@link #init(BitmapFont, String)} must be called before use */
 	public VisText () {
@@ -65,8 +60,6 @@ public class VisText extends Component implements PositionOwner, SizeOwner, Boun
 		translationMatrix = new Matrix4();
 		textLayout = new GlyphLayout();
 		setText(text);
-		if (autoSetOriginToCenter == true) setOriginCenter();
-		translate();
 	}
 
 	public VisText (VisText other) {
@@ -74,46 +67,35 @@ public class VisText extends Component implements PositionOwner, SizeOwner, Boun
 
 		setAutoSetOriginToCenter(other.isAutoSetOriginToCenter());
 		setDistanceFieldShaderEnabled(other.isDistanceFieldShaderEnabled());
-		setX(other.getX());
-		setY(other.getY());
-		setOrigin(other.getOriginX(), other.getOriginY());
-		setScale(other.getScaleX(), other.getScaleY());
-		setRotation(other.getRotation());
-		setTint(other.getTint());
 	}
 
 	public void setFont (BitmapFont font) {
 		cache = new BitmapFontCache(font);
 		setText(text);
-		setTint(color);
-	}
-
-	private void translate () {
-		translationMatrix.idt();
-		translationMatrix.translate(x + originX, y + originY, 0);
-		translationMatrix.rotate(0, 0, 1, rotation);
-		translationMatrix.scale(scaleX, scaleY, 1);
-		translationMatrix.translate(-originX, -originY, 0);
-		translationMatrix.translate(0, textLayout.height, 0);
-		calculateBoundingRectangle();
 	}
 
 	public BitmapFontCache getCache () {
 		return cache;
 	}
 
-	protected void textChanged () {
-		if (autoSetOriginToCenter == true) setOriginCenter();
-		translate();
+	@VisInternal
+	public void updateCache (Color tint) {
+		cache.clear();
+		cache.setColor(tint);
+		textLayout = cache.setText(text, 0, 0);
 	}
 
-	private void calculateBoundingRectangle () {
-		Polygon polygon = new Polygon(new float[]{0, 0, textLayout.width, 0, textLayout.width, textLayout.height, 0, textLayout.height});
-		polygon.setPosition(x, y);
-		polygon.setRotation(rotation);
-		polygon.setScale(scaleX, scaleY);
-		polygon.setOrigin(originX, originY);
-		boundingRectangle = polygon.getBoundingRectangle();
+	@VisInternal
+	public void updateBounds (Rectangle bounds) {
+		this.bounds.set(bounds);
+	}
+
+	public GlyphLayout getGlyphLayout () {
+		return textLayout;
+	}
+
+	public Matrix4 getTranslationMatrix () {
+		return translationMatrix;
 	}
 
 	public String getText () {
@@ -122,19 +104,6 @@ public class VisText extends Component implements PositionOwner, SizeOwner, Boun
 
 	public void setText (CharSequence str) {
 		this.text = str;
-		cache.clear();
-		textLayout = cache.setText(str, 0, 0);
-		cache.setColor(color);
-		textChanged();
-	}
-
-	public void setText (CharSequence str, Color color) {
-		this.text = str;
-		this.color = color;
-		cache.clear();
-		textLayout = cache.setText(str, 0, 0);
-		cache.setColor(color);
-		textChanged();
 	}
 
 	public boolean isAutoSetOriginToCenter () {
@@ -143,18 +112,14 @@ public class VisText extends Component implements PositionOwner, SizeOwner, Boun
 
 	public void setAutoSetOriginToCenter (boolean autoSetOriginToCenter) {
 		this.autoSetOriginToCenter = autoSetOriginToCenter;
-		textChanged();
 	}
 
-	public void setOriginCenter () {
-		setOrigin(textLayout.width / 2, -textLayout.height / 2);
+	public boolean isDistanceFieldShaderEnabled () {
+		return distanceFieldShaderEnabled;
 	}
 
-	@Override
-	public void setPosition (float x, float y) {
-		this.x = x;
-		this.y = y;
-		translate();
+	public void setDistanceFieldShaderEnabled (boolean distanceFieldShaderEnabled) {
+		this.distanceFieldShaderEnabled = distanceFieldShaderEnabled;
 	}
 
 	@Override
@@ -168,108 +133,12 @@ public class VisText extends Component implements PositionOwner, SizeOwner, Boun
 	}
 
 	@Override
-	public float getX () {
-		return x;
-	}
-
-	@Override
-	public void setX (float x) {
-		this.x = x;
-		translate();
-	}
-
-	@Override
-	public float getY () {
-		return y;
-	}
-
-	@Override
-	public void setY (float y) {
-		this.y = y;
-		translate();
-	}
-
-	@Override
-	public void setOrigin (float originX, float originY) {
-		this.originX = originX;
-		this.originY = originY;
-		translate();
-	}
-
-	@Override
-	public float getOriginX () {
-		return originX;
-	}
-
-	@Override
-	public float getOriginY () {
-		return originY;
-	}
-
-	@Override
-	public void setScale (float scaleX, float scaleY) {
-		this.scaleX = scaleX;
-		this.scaleY = scaleY;
-		translate();
-	}
-
-	public void setScale (float scaleXY) {
-		scaleX = scaleXY;
-		scaleY = scaleXY;
-		translate();
-	}
-
-	@Override
-	public float getScaleX () {
-		return scaleX;
-	}
-
-	@Override
-	public float getScaleY () {
-		return scaleY;
-	}
-
-	@Override
-	public float getRotation () {
-		return rotation;
-	}
-
-	@Override
-	public void setRotation (float rotation) {
-		this.rotation = rotation;
-		translate();
-	}
-
-	@Override
-	public Color getTint () {
-		return color;
-	}
-
-	@Override
-	public void setTint (Color tint) {
-		this.color = tint;
-		setText(text);
-	}
-
-	public void setColor (float r, float g, float b, float a) {
-		setTint(new Color(r, g, b, a));
-	}
-
-	@Override
 	public Rectangle getBoundingRectangle () {
-		return boundingRectangle;
+		return bounds;
 	}
 
 	@Override
-	public ProtoComponent toProtoComponent () {
+	public ProtoComponent<VisText> toProtoComponent () {
 		return new ProtoVisText(this);
-	}
-
-	public boolean isDistanceFieldShaderEnabled () {
-		return distanceFieldShaderEnabled;
-	}
-
-	public void setDistanceFieldShaderEnabled (boolean distanceFieldShaderEnabled) {
-		this.distanceFieldShaderEnabled = distanceFieldShaderEnabled;
 	}
 }

@@ -82,6 +82,7 @@ import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.system.TextUpdateSystem;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
@@ -118,6 +119,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private ComponentMapper<VisGroup> groupCm;
 
 	private EntityProxyCache entityProxyCache;
+	private TextUpdateSystem textUpdateSystem;
 	private ZIndexManipulator zIndexManipulator;
 	private EntitiesCollector entitiesCollector;
 	private GroupIdProviderSystem groupIdProvider;
@@ -374,21 +376,23 @@ public class EntityManipulatorModule extends SceneModule {
 		undoModule.execute(new EntitiesRemovedAction(sceneContainer, entityEngine, entities));
 	}
 
-	public void processDropPayload (Object obj) {
+	public void processDropPayload (Object payload) {
 		if (scene.getActiveLayer().locked) {
 			statusBar.setText("Layer is locked!");
 			return;
 		}
 
-		boolean setEntityPosToMouse = true;
+		Holder<Boolean> setEntityPosToMouse = Holder.of(true);
+
+		boolean updatePositionLater = false;
 
 		Entity entity = null;
 
 		//TODO: refactor this
 
-		if (obj instanceof CreatePointPayload) {
-			CreatePointPayload pointPayload = (CreatePointPayload) obj;
-			if (pointPayload.centerPosAfterCreation) setEntityPosToMouse = false;
+		if (payload instanceof CreatePointPayload) {
+			CreatePointPayload pointPayload = (CreatePointPayload) payload;
+			if (pointPayload.centerPosAfterCreation) setEntityPosToMouse.value = false;
 
 			entity = new EntityBuilder(entityEngine)
 					.with(new Point())
@@ -396,8 +400,8 @@ public class EntityManipulatorModule extends SceneModule {
 					.with(new ExporterDropsComponent(Renderable.class, Layer.class))
 					.build();
 
-		} else if (obj instanceof TextureAssetDescriptor) {
-			TextureAssetDescriptor asset = (TextureAssetDescriptor) obj;
+		} else if (payload instanceof TextureAssetDescriptor) {
+			TextureAssetDescriptor asset = (TextureAssetDescriptor) payload;
 
 			VisSprite sprite = new VisSprite(textureCache.getRegion(asset));
 			sprite.setSize(sprite.getRegion().getRegionWidth() / scene.pixelsPerUnit, sprite.getRegion().getRegionHeight() / scene.pixelsPerUnit);
@@ -409,19 +413,23 @@ public class EntityManipulatorModule extends SceneModule {
 							new Renderable(0), new Layer(scene.getActiveLayerId()))
 					.build();
 
-		} else if (obj instanceof BmpFontAsset || obj instanceof TtfFontAsset) {
-			VisAssetDescriptor asset = (VisAssetDescriptor) obj;
+		} else if (payload instanceof BmpFontAsset || payload instanceof TtfFontAsset) {
+			VisAssetDescriptor asset = (VisAssetDescriptor) payload;
 
 			entity = new EntityBuilder(entityEngine)
 					.with(new VisText(fontCache.getGeneric(asset, scene.pixelsPerUnit), FontCacheModule.DEFAULT_TEXT),
+							new Transform(), new Origin(), new Tint(),
+							new Invisible(), //don't render text before it has been updated
 							new PixelsPerUnitComponent(scene.pixelsPerUnit),
 							new AssetReference(asset),
 							new Renderable(0), new Layer(scene.getActiveLayerId()),
 							new ExporterDropsComponent(PixelsPerUnitComponent.class))
 					.build();
 
-		} else if (obj instanceof SpriterAsset) {
-			SpriterAsset asset = (SpriterAsset) obj;
+			entity.edit().create(VisTextChanged.class).contentChanged = true;
+			updatePositionLater = true; //update position later after text bounds has been calculated
+		} else if (payload instanceof SpriterAsset) {
+			SpriterAsset asset = (SpriterAsset) payload;
 
 			float scale = 1f / scene.pixelsPerUnit;
 
@@ -432,8 +440,8 @@ public class EntityManipulatorModule extends SceneModule {
 							new ExporterDropsComponent(SpriterPropertiesComponent.class))
 					.build();
 
-		} else if (obj instanceof ParticleAsset) {
-			ParticleAsset asset = (ParticleAsset) obj;
+		} else if (payload instanceof ParticleAsset) {
+			ParticleAsset asset = (ParticleAsset) payload;
 			float scale = 1f / scene.pixelsPerUnit;
 
 			try {
@@ -449,8 +457,8 @@ public class EntityManipulatorModule extends SceneModule {
 				return;
 			}
 
-		} else if (obj instanceof SoundAsset) {
-			SoundAsset asset = (SoundAsset) obj;
+		} else if (payload instanceof SoundAsset) {
+			SoundAsset asset = (SoundAsset) payload;
 
 			entity = new EntityBuilder(entityEngine)
 					.with(new VisSound(null), new Position(), //editor does not require sound to be loaded, we can pass null sound here
@@ -459,8 +467,8 @@ public class EntityManipulatorModule extends SceneModule {
 							new ExporterDropsComponent(Position.class, Renderable.class, Layer.class, VisGroup.class))
 					.build();
 
-		} else if (obj instanceof MusicAsset) {
-			MusicAsset asset = (MusicAsset) obj;
+		} else if (payload instanceof MusicAsset) {
+			MusicAsset asset = (MusicAsset) payload;
 
 			entity = new EntityBuilder(entityEngine)
 					.with(new VisMusic(new DummyMusic()), new Position(),
@@ -472,7 +480,7 @@ public class EntityManipulatorModule extends SceneModule {
 		}
 
 		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
-			Entity supportEntity = support.processDropPayload(entityEngine, scene, obj);
+			Entity supportEntity = support.processDropPayload(entityEngine, scene, payload);
 			if (supportEntity != null) {
 				entity = supportEntity;
 				break;
@@ -484,22 +492,32 @@ public class EntityManipulatorModule extends SceneModule {
 
 			EntityProxy proxy = entityProxyCache.get(entity);
 
-			if (setEntityPosToMouse) {
-				if (editingSettings.isSnapEnabledOrKeyPressed()) {
-					float gridSize = gridSettings.config.gridSize;
-					float x = MathUtils.floor(camera.getInputX() / gridSize) * gridSize;
-					float y = MathUtils.floor(camera.getInputY() / gridSize) * gridSize;
-					proxy.setPosition(x, y);
+			Runnable updatePosRunnable = () -> {
+				if (setEntityPosToMouse.value) {
+					if (editingSettings.isSnapEnabledOrKeyPressed()) {
+						float gridSize = gridSettings.config.gridSize;
+						float x = MathUtils.floor(camera.getInputX() / gridSize) * gridSize;
+						float y = MathUtils.floor(camera.getInputY() / gridSize) * gridSize;
+						proxy.setPosition(x, y);
+					} else {
+						float x = camera.getInputX() - proxy.getWidth() / 2;
+						float y = camera.getInputY() - proxy.getHeight() / 2;
+						proxy.setPosition(x, y);
+					}
 				} else {
-					float x = camera.getInputX() - proxy.getWidth() / 2;
-					float y = camera.getInputY() - proxy.getHeight() / 2;
+					float x = camera.getX() - proxy.getWidth() / 2;
+					float y = camera.getY() - proxy.getHeight() / 2;
 					proxy.setPosition(x, y);
 				}
+			};
+
+			if (updatePositionLater) {
+				Gdx.app.postRunnable(updatePosRunnable);
 			} else {
-				float x = camera.getX() - proxy.getWidth() / 2;
-				float y = camera.getY() - proxy.getHeight() / 2;
-				proxy.setPosition(x, y);
+				updatePosRunnable.run();
 			}
+
+			proxy.getEntity().edit().remove(Invisible.class);
 
 			undoModule.add(new EntitiesAddedAction(sceneContainer, entityEngine, entity));
 

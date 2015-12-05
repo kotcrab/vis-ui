@@ -24,7 +24,7 @@ import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 
 /** @author Kotcrab */
-public class VisSpriteRenderSystem extends DeferredEntityProcessingSystem {
+public class SpriteRenderSystem extends DeferredEntityProcessingSystem {
 	private ComponentMapper<VisSprite> spriteCm;
 	private ComponentMapper<Transform> transformCm;
 	private ComponentMapper<Origin> originCm;
@@ -32,7 +32,7 @@ public class VisSpriteRenderSystem extends DeferredEntityProcessingSystem {
 	private RenderBatchingSystem renderSystem;
 	private Batch batch;
 
-	public VisSpriteRenderSystem (EntityProcessPrincipal principal) {
+	public SpriteRenderSystem (EntityProcessPrincipal principal) {
 		super(Aspect.all(VisSprite.class).exclude(Invisible.class), principal);
 	}
 

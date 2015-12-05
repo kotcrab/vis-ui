@@ -4,8 +4,13 @@
 -Changes in SpriteComponent:
  -Renamed to VisSprite
  -Uses TextureRegion directly
- -Properties like position, scale are controlled by following components: Transform, Origin, Tint
+ -Properties like position, scale, rotation, are controlled by following components: Transform, Origin, Tint
   -Changes in those components will be reflected in render immediately
+-Changes in TextComponent:
+ -Renamed to VisText
+ -Properties like position, scale, rotation are controlled by following components: Transform, Origin, Tint
+  -Changes in those components WILL NOT be reflected in render immediately, you must add new VisTextChanged component to Entity
+  -Additionally if you changed text or tint after you VisTextChanged component you must set VisTextChanged#contnetChanged to true
 -Renaming components:
  -TextComponent -> VisText
  -SoundComponent -> VisSound
@@ -13,6 +18,8 @@
  -ParticleComponent -> VisParticle
  -Spriter -> VisSpriter
  -SpineComponent -> VisSpine
+ -IDComponent -> VisID
+ -GroupComponent -> VisGroup
  -VariablesComponent -> Variables
  -ShaderComponent -> Shader
  -RenderableComponent -> Renderable
@@ -23,8 +30,6 @@
  -PhysicsComponent -> PhysicsBody
  -LayerComponent -> Layer
  -InvisibleComponent -> Invisible
- -IDComponent -> VisID
- -GroupComponent -> VisGroup
  -AssetComponent -> AssetReference
 -Removed all PropertiesAccessor classes, now Components implements Owner classes for example every component that store position implements PositionOwner
 -API Change: Removed ArtemisUtils

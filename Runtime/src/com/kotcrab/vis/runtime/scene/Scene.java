@@ -87,11 +87,13 @@ public class Scene {
 			if (runtimeConfig.useBox2dSpriteUpdateSystem) engineConfig.setSystem(new PhysicsSpriteUpdateSystem());
 		}
 
+		engineConfig.setSystem(new TextUpdateSystem());
+
 		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(context.batch, false);
 		engineConfig.setSystem(batchingSystem);
 
 		//common render systems
-		engineConfig.setSystem(new VisSpriteRenderSystem(batchingSystem));
+		engineConfig.setSystem(new SpriteRenderSystem(batchingSystem));
 		engineConfig.setSystem(new TextRenderSystem(batchingSystem, distanceFieldShader));
 		engineConfig.setSystem(new SpriterRenderSystem(batchingSystem));
 

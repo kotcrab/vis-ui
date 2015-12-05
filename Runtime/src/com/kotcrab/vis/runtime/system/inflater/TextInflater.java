@@ -27,6 +27,7 @@ import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisText;
+import com.kotcrab.vis.runtime.component.VisTextChanged;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisText;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
@@ -37,6 +38,7 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 public class TextInflater extends InflaterSystem {
 	private ComponentMapper<AssetReference> assetCm;
 	private ComponentMapper<VisText> textCm;
+	private ComponentMapper<VisTextChanged> changedCm;
 	private ComponentMapper<ProtoVisText> protoCm;
 
 	private RuntimeConfiguration configuration;
@@ -78,6 +80,7 @@ public class TextInflater extends InflaterSystem {
 		protoComponent.fill(text);
 		//text.setFontSize(fontSize); //font size must be handled manually from SceneLoader because it is not a public property for TextEntity
 
+		changedCm.create(entityId);
 		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);
 	}

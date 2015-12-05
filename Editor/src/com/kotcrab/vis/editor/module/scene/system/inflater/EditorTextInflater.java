@@ -23,17 +23,20 @@ import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisText;
+import com.kotcrab.vis.runtime.component.VisTextChanged;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisText;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
 public class EditorTextInflater extends InflaterSystem {
 	private FontCacheModule fontCache;
-	private float pixelsPerUnit;
 
 	private ComponentMapper<AssetReference> assetCm;
 	private ComponentMapper<VisText> textCm;
+	private ComponentMapper<VisTextChanged> changedCm;
 	private ComponentMapper<ProtoVisText> protoCm;
+
+	private float pixelsPerUnit;
 
 	public EditorTextInflater (float pixelsPerUnit) {
 		super(Aspect.all(ProtoVisText.class, AssetReference.class));
@@ -52,6 +55,7 @@ public class EditorTextInflater extends InflaterSystem {
 
 		protoComponent.fill(text);
 
+		changedCm.create(entityId);
 		protoCm.remove(entityId);
 	}
 }
