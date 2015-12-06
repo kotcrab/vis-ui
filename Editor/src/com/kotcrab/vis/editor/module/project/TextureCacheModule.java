@@ -103,12 +103,14 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		}
 
 		try {
-			if (atlasesFolder.exists()) {
-				FileHandle[] files = atlasesFolder.list();
 
-				for (FileHandle file : files)
+			if (atlasesFolder.exists()) {
+				FileUtils.streamRecursively(atlasesFolder, file -> {
 					if (file.extension().equals("atlas"))
 						updateAtlas(file);
+
+					return false;
+				});
 			}
 		} catch (Exception e) {
 			Log.error("Error encountered while loading one of atlases");

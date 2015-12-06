@@ -5,6 +5,7 @@
 -Fixed crash when trying to add PhysicsPropertiesComponent to SpriterComponent
 -Fixed crash when using PhysicsPropertiesComponent with entities not supporting origin
 -Fixed issue when position of Point wasn't saved properly
+-Fixed issue with loading texture atlas from nested directories
 
 [0.2.5]
 -Added PointComponent - can be placed on scene, for example for spawn points
