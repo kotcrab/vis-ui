@@ -47,7 +47,7 @@ public class VisMusic extends Component implements UsesProtoComponent { //emulat
 	}
 
 	@Override
-	public ProtoComponent toProtoComponent () {
+	public ProtoComponent<VisMusic> toProtoComponent () {
 		return new ProtoVisMusic(this);
 	}
 

@@ -75,7 +75,7 @@ public class VisSound extends Component implements UsesProtoComponent {
 	}
 
 	@Override
-	public ProtoComponent toProtoComponent () {
+	public ProtoComponent<VisSound> toProtoComponent () {
 		return new ProtoVisSound();
 	}
 }

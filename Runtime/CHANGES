@@ -18,6 +18,7 @@
  -ParticleComponent -> VisParticle
  -Spriter -> VisSpriter
  -SpineComponent -> VisSpine
+ -SpriteComponent -> VisSprite
  -IDComponent -> VisID
  -GroupComponent -> VisGroup
  -VariablesComponent -> Variables

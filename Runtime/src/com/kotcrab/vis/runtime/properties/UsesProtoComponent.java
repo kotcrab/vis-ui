@@ -25,5 +25,5 @@ import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
  * @author Kotcrab
  */
 public interface UsesProtoComponent {
-	ProtoComponent toProtoComponent ();
+	ProtoComponent<?> toProtoComponent ();
 }

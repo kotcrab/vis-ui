@@ -47,7 +47,7 @@ public class VisParticle extends Component implements UsesProtoComponent, Positi
 	}
 
 	@Override
-	public ProtoComponent toProtoComponent () {
+	public ProtoComponent<VisParticle> toProtoComponent () {
 		return new ProtoVisParticle(this);
 	}
 

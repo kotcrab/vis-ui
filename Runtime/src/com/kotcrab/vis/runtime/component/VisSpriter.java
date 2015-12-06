@@ -109,7 +109,7 @@ public class VisSpriter extends Component implements PositionOwner, SizeOwner, B
 	}
 
 	@Override
-	public ProtoComponent toProtoComponent () {
+	public ProtoComponent<VisSpriter> toProtoComponent () {
 		return new ProtoVisSpriter(this);
 	}
 
