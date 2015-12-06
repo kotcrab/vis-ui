@@ -18,8 +18,8 @@ package com.kotcrab.vis.runtime.system.render;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.runtime.component.Invisible;
 import com.kotcrab.vis.runtime.component.VisParticle;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
@@ -49,13 +49,14 @@ public class ParticleRenderSystem extends DeferredEntityProcessingSystem {
 	@Override
 	protected void process (int entityId) {
 		VisParticle particle = particleCm.get(entityId);
+		ParticleEffect effect = particle.getEffect();
 
-		if (ignoreActive || particle.active)
-			particle.effect.update(Gdx.graphics.getDeltaTime());
+		if (ignoreActive || particle.isActiveOnStart())
+			effect.update(world.delta);
 
-		particle.effect.draw(batch);
+		effect.draw(batch);
 
-		if (particle.effect.isComplete())
-			particle.effect.reset();
+		if (effect.isComplete())
+			effect.reset();
 	}
 }

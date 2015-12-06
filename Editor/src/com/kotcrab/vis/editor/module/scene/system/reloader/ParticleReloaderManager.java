@@ -22,6 +22,7 @@ import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisParticle;
+import com.kotcrab.vis.runtime.component.VisParticleChanged;
 
 /** @author Kotcrab */
 public class ParticleReloaderManager extends Manager {
@@ -29,6 +30,7 @@ public class ParticleReloaderManager extends Manager {
 	private float pixelsPerUnit;
 
 	private ComponentMapper<VisParticle> particleCm;
+	private ComponentMapper<VisParticleChanged> changedCm;
 	private ComponentMapper<AssetReference> assetCm;
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
@@ -53,12 +55,10 @@ public class ParticleReloaderManager extends Manager {
 			VisParticle particle = particleCm.get(entity);
 			VisAssetDescriptor asset = assetCm.get(entity).asset;
 
-			particle.effect.dispose();
+			particle.getEffect().dispose();
 
-			float x = particle.getX();
-			float y = particle.getY();
-			particle.effect = particleCache.get(asset, 1f / pixelsPerUnit);
-			particle.setPosition(x, y);
+			particle.setEffect(particleCache.get(asset, 1f / pixelsPerUnit));
+			changedCm.create(entity);
 		}
 	}
 }

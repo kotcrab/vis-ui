@@ -33,7 +33,8 @@ import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
-import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.module.project.Project;
+import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.scene.system.*;
 import com.kotcrab.vis.editor.module.scene.system.inflater.*;
 import com.kotcrab.vis.editor.module.scene.system.reloader.*;
@@ -46,6 +47,7 @@ import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.BiHolder;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.system.CameraManager;
+import com.kotcrab.vis.runtime.system.ParticleUpdateSystem;
 import com.kotcrab.vis.runtime.system.TextUpdateSystem;
 import com.kotcrab.vis.runtime.system.render.*;
 import com.kotcrab.vis.runtime.util.BootstrapInvocationStrategy;
@@ -112,6 +114,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		createEssentialsSystems(config);
 
 		config.setSystem(new TextUpdateSystem());
+		config.setSystem(new ParticleUpdateSystem());
 
 		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, true);
 		config.setSystem(batchingSystem);

@@ -24,6 +24,7 @@ import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisParticle;
+import com.kotcrab.vis.runtime.component.VisParticleChanged;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
 
 /**
@@ -33,6 +34,7 @@ import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
 public class ParticleInflater extends InflaterSystem {
 	private ComponentMapper<AssetReference> assetCm;
 	private ComponentMapper<VisParticle> partcielCm;
+	private ComponentMapper<VisParticleChanged> changedCm;
 	private ComponentMapper<ProtoVisParticle> protoCm;
 
 	private RuntimeConfiguration configuration;
@@ -59,11 +61,11 @@ public class ParticleInflater extends InflaterSystem {
 			throw new IllegalStateException("Can't load scene, particle effect is missing: " + path.getPath());
 
 		VisParticle particle = partcielCm.create(entityId);
-		particle.effect = new ParticleEffect(effect);
-		particle.setPosition(protoComponent.x, protoComponent.y);
-		particle.active = protoComponent.active;
-		particle.effect.scaleEffect(1f / pixelsPerUnit);
+		particle.setEffect(new ParticleEffect(effect));
+		protoComponent.fill(particle);
+		particle.getEffect().scaleEffect(1f / pixelsPerUnit);
 
+		changedCm.create(entityId);
 		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);
 	}

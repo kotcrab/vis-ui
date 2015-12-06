@@ -20,18 +20,18 @@ import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
-import com.kotcrab.vis.runtime.properties.PositionOwner;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
+import com.kotcrab.vis.runtime.util.annotation.VisInternal;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
 /**
  * Stores particle effect
  * @author Kotcrab
  */
-public class VisParticle extends Component implements UsesProtoComponent, PositionOwner {
-	public transient ParticleEffect effect;
+public class VisParticle extends Component implements UsesProtoComponent {
+	private transient ParticleEffect effect;
 	@ATProperty(fieldName = "Active on start", tooltip = "Controls whether to automatically start this effect on runtime.\nIn editor, particle effect are always active.")
-	public boolean active = true;
+	private boolean activeOnStart = true;
 
 	public VisParticle () {
 	}
@@ -40,46 +40,34 @@ public class VisParticle extends Component implements UsesProtoComponent, Positi
 		this.effect = effect;
 	}
 
-	public VisParticle (VisParticle original, ParticleEffect effect) {
-		this.effect = effect;
-		setPosition(original.getX(), original.getY());
-		this.active = original.active;
-	}
-
 	@Override
 	public ProtoComponent<VisParticle> toProtoComponent () {
 		return new ProtoVisParticle(this);
 	}
 
-	@Override
-	public float getX () {
-		return effect.getEmitters().get(0).getX();
-	}
-
-	@Override
-	public void setX (float x) {
-		effect.setPosition(x, getY());
-		reset();
-	}
-
-	@Override
-	public float getY () {
-		return effect.getEmitters().get(0).getY();
-	}
-
-	@Override
-	public void setY (float y) {
-		effect.setPosition(getX(), y);
-		reset();
-	}
-
-	@Override
-	public void setPosition (float x, float y) {
+	@VisInternal
+	public void updatePosition (float x, float y) {
 		effect.setPosition(x, y);
 		reset();
 	}
 
 	public void reset () {
 		effect.reset();
+	}
+
+	public void setEffect (ParticleEffect effect) {
+		this.effect = effect;
+	}
+
+	public ParticleEffect getEffect () {
+		return effect;
+	}
+
+	public boolean isActiveOnStart () {
+		return activeOnStart;
+	}
+
+	public void setActiveOnStart (boolean activeOnStart) {
+		this.activeOnStart = activeOnStart;
 	}
 }

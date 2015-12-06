@@ -88,6 +88,7 @@ public class Scene {
 		}
 
 		engineConfig.setSystem(new TextUpdateSystem());
+		engineConfig.setSystem(new ParticleUpdateSystem());
 
 		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(context.batch, false);
 		engineConfig.setSystem(batchingSystem);

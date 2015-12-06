@@ -446,7 +446,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 			try {
 				entity = new EntityBuilder(entityEngine)
-						.with(new VisParticle(particleCache.get(asset, scale)), new PixelsPerUnitComponent(scene.pixelsPerUnit),
+						.with(new VisParticle(particleCache.get(asset, scale)), new Position(),
+								new PixelsPerUnitComponent(scene.pixelsPerUnit),
 								new AssetReference(asset),
 								new Renderable(0), new Layer(scene.getActiveLayerId()),
 								new ExporterDropsComponent(PixelsPerUnitComponent.class))

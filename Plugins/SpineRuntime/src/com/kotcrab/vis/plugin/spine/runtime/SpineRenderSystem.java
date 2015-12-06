@@ -33,7 +33,6 @@ package com.kotcrab.vis.plugin.spine.runtime;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import com.kotcrab.vis.runtime.component.Invisible;
@@ -63,7 +62,7 @@ public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 	@Override
 	protected void process (int entityId) {
 		VisSpine spine = spineCm.get(entityId);
-		spine.state.update(Gdx.graphics.getDeltaTime());
+		spine.state.update(world.delta);
 		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
 		skeletonRenderer.draw(batch, spine.skeleton); // Draw the skeleton images.

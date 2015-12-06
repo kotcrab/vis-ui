@@ -16,7 +16,7 @@
 
 package com.kotcrab.vis.runtime.component;
 
-import com.artemis.PooledComponent;
+import com.artemis.Component;
 
 /**
  * If entity has this component then it means it's {@link VisText} cached values are outdated and must
@@ -24,15 +24,11 @@ import com.artemis.PooledComponent;
  * text content has changed you must set {@link #contentChanged} to true.
  * @author Kotcrab
  */
-public class VisTextChanged extends PooledComponent {
-	public boolean contentChanged;
+public class VisTextChanged extends Component {
+	public boolean contentChanged = false;
+	public boolean persistent = false;
 
 	@Deprecated
 	public VisTextChanged () {
-	}
-
-	@Override
-	protected void reset () {
-		contentChanged = false;
 	}
 }

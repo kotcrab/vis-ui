@@ -66,7 +66,7 @@ public class TextUpdateSystem extends IteratingSystem {
 		translationMatrix.translate(-origin.originX, -origin.originY, 0);
 		translationMatrix.translate(0, layout.height, 0);
 
-		//assign vertices, similar to
+		//assign vertices, similar to: (we can skip zeros)
 		//Polygon polygon = new Polygon(new float[]{0, 0,
 		// 											textLayout.width, 0,
 		// 											textLayout.width, textLayout.height,
@@ -82,6 +82,6 @@ public class TextUpdateSystem extends IteratingSystem {
 		polygon.setOrigin(origin.originX, origin.originY);
 		text.updateBounds(polygon.getBoundingRectangle());
 
-		changedCm.remove(entityId);
+		if (changed.persistent == false) changedCm.remove(entityId);
 	}
 }

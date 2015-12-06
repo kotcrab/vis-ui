@@ -14,27 +14,11 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component.proto;
+package com.kotcrab.vis.runtime.component;
 
-import com.kotcrab.vis.runtime.component.VisParticle;
+import com.artemis.Component;
 
-/**
- * {@link ProtoComponent} for {@link VisParticle}
- * @author Kotcrab
- * @see ProtoVisParticle
- */
-public class ProtoVisParticle extends ProtoComponent<VisParticle> {
-	public boolean activeOnStart;
-
-	public ProtoVisParticle () {
-	}
-
-	public ProtoVisParticle (VisParticle particle) {
-		activeOnStart = particle.isActiveOnStart();
-	}
-
-	@Override
-	public void fill (VisParticle target) {
-		target.setActiveOnStart(activeOnStart);
-	}
+/** @author Kotcrab */
+public class VisParticleChanged extends Component {
+	public boolean persistent;
 }
