@@ -36,6 +36,8 @@ import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import com.kotcrab.vis.runtime.component.Invisible;
+import com.kotcrab.vis.runtime.component.Tint;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
@@ -43,6 +45,8 @@ import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 /** @author Kotcrab */
 public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 	private ComponentMapper<VisSpine> spineCm;
+	private ComponentMapper<Transform> transformCm;
+	private ComponentMapper<Tint> tintCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
@@ -62,6 +66,13 @@ public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 	@Override
 	protected void process (int entityId) {
 		VisSpine spine = spineCm.get(entityId);
+		Transform transform = transformCm.get(entityId);
+		Tint tint = tintCm.get(entityId);
+
+		if (transform.isDirty() || tint.isDirty()) {
+			spine.updateValues(transform.getX(), transform.getY(), tint.getTint());
+		}
+
 		spine.state.update(world.delta);
 		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.

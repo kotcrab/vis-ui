@@ -16,15 +16,14 @@
 
 package com.kotcrab.vis.editor.proxy;
 
-import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.badlogic.gdx.graphics.Color;
-import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.component.Origin;
+import com.kotcrab.vis.runtime.component.Tint;
+import com.kotcrab.vis.runtime.component.Transform;
+import com.kotcrab.vis.runtime.component.VisText;
 
 /** @author Kotcrab */
 public class TextProxy extends EntityProxy {
-	private ComponentMapper<VisTextChanged> changedCm;
-
 	public TextProxy (Entity entity) {
 		super(entity);
 	}
@@ -36,8 +35,6 @@ public class TextProxy extends EntityProxy {
 	@Override
 	protected void reloadAccessors () {
 		Entity entity = getEntity();
-
-		changedCm = entity.getWorld().getMapper(VisTextChanged.class);
 
 		VisText text = entity.getComponent(VisText.class);
 		Transform transform = entity.getComponent(Transform.class);
@@ -54,47 +51,5 @@ public class TextProxy extends EntityProxy {
 	@Override
 	public String getEntityName () {
 		return "Text";
-	}
-
-	@Override
-	public void setX (float x) {
-		super.setX(x);
-		changedCm.create(getEntity());
-	}
-
-	@Override
-	public void setY (float y) {
-		super.setY(y);
-		changedCm.create(getEntity());
-	}
-
-	@Override
-	public void setPosition (float x, float y) {
-		super.setPosition(x, y);
-		changedCm.create(getEntity());
-	}
-
-	@Override
-	public void setOrigin (float x, float y) {
-		super.setOrigin(x, y);
-		changedCm.create(getEntity());
-	}
-
-	@Override
-	public void setScale (float x, float y) {
-		super.setScale(x, y);
-		changedCm.create(getEntity());
-	}
-
-	@Override
-	public void setColor (Color color) {
-		super.setColor(color);
-		changedCm.create(getEntity()).contentChanged = true;
-	}
-
-	@Override
-	public void setRotation (float rotation) {
-		super.setRotation(rotation);
-		changedCm.create(getEntity());
 	}
 }

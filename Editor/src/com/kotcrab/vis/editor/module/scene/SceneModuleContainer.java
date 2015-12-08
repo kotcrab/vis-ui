@@ -47,9 +47,7 @@ import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.BiHolder;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.system.CameraManager;
-import com.kotcrab.vis.runtime.system.update.ParticleUpdateSystem;
-import com.kotcrab.vis.runtime.system.update.SpriterUpdateSystem;
-import com.kotcrab.vis.runtime.system.update.TextUpdateSystem;
+import com.kotcrab.vis.runtime.system.DirtyCleanerSystem;
 import com.kotcrab.vis.runtime.system.render.*;
 import com.kotcrab.vis.runtime.util.BootstrapInvocationStrategy;
 import com.kotcrab.vis.runtime.util.EntityEngine;
@@ -114,10 +112,6 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new EntityProxyCache(scene.pixelsPerUnit));
 		createEssentialsSystems(config);
 
-		config.setSystem(new TextUpdateSystem());
-		config.setSystem(new SpriterUpdateSystem());
-		config.setSystem(new ParticleUpdateSystem());
-
 		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, true);
 		config.setSystem(batchingSystem);
 
@@ -129,6 +123,8 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new ParticleRenderSystem(batchingSystem, true));
 		config.setSystem(new SoundAndMusicRenderSystem(batchingSystem, scene.pixelsPerUnit));
 		config.setSystem(new PointRenderSystem(batchingSystem, scene.pixelsPerUnit));
+
+		config.setSystem(new DirtyCleanerSystem());
 	}
 
 	public static void createEssentialsSystems (EntityEngineConfiguration config) {

@@ -57,20 +57,19 @@ public class EditorSpineInflaterSystem extends InflaterSystem {
 		AssetReference assetRef = assetCm.get(entityId);
 		ProtoVisSpine protoComponent = protoCm.get(entityId);
 
-		VisSpine visSpine = new VisSpine(spineCache.get(assetRef.asset));
+		VisSpine spine = new VisSpine(spineCache.get(assetRef.asset));
 
-		visSpine.setPosition(protoComponent.x, protoComponent.y);
-		visSpine.setFlip(protoComponent.flipX, protoComponent.flipY);
+		spine.setFlip(protoComponent.flipX, protoComponent.flipY);
 
-		visSpine.setPlayOnStart(protoComponent.playOnStart);
-		visSpine.setDefaultAnimation(protoComponent.defaultAnimation);
+		spine.setPlayOnStart(protoComponent.playOnStart);
+		spine.setDefaultAnimation(protoComponent.defaultAnimation);
 
-		visSpine.updateDefaultAnimations();
+		spine.updateDefaultAnimations();
 
 		SpinePreview spinePreview = previewCm.get(entityId);
 		spinePreview.updateAnimation = true;
 
-		world.getEntity(entityId).edit().add(visSpine);
+		world.getEntity(entityId).edit().add(spine);
 
 		protoCm.remove(entityId);
 	}

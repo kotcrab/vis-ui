@@ -26,7 +26,7 @@ import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.PhysicsProperties;
-import com.kotcrab.vis.runtime.component.Polygon;
+import com.kotcrab.vis.runtime.component.VisPolygon;
 import com.kotcrab.vis.runtime.component.Shader;
 import com.kotcrab.vis.runtime.component.Variables;
 import com.kotcrab.vis.ui.VisUI;
@@ -54,7 +54,7 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 
 		//TODO: [plugin] plugin entry point
 		componentClasses.add(Shader.class);
-		componentClasses.add(Polygon.class);
+		componentClasses.add(VisPolygon.class);
 		componentClasses.add(PhysicsProperties.class);
 		componentClasses.add(Variables.class);
 

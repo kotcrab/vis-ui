@@ -35,7 +35,7 @@ import java.util.UUID;
 
 /** @author Kotcrab */
 public abstract class EntityProxy {
-	private ComponentMapper<Polygon> polygonCm;
+	private ComponentMapper<VisPolygon> polygonCm;
 
 	private Entity entity;
 	private VisUUIDManager uuidManager;
@@ -62,7 +62,7 @@ public abstract class EntityProxy {
 			uuid = entity.getComponent(VisUUID.class).getUUID();
 
 			//TODO: [misc] proxies may use injected component mappers to acuire other components, not they are using getComponent on entity directly
-			polygonCm = entity.getWorld().getMapper(Polygon.class);
+			polygonCm = entity.getWorld().getMapper(VisPolygon.class);
 		}
 	}
 
@@ -235,7 +235,7 @@ public abstract class EntityProxy {
 	}
 
 	protected void updatePolygon (float x, float y) {
-		Polygon polygon = polygonCm.getSafe(entity);
+		VisPolygon polygon = polygonCm.getSafe(entity);
 		float dx = getX() - x;
 		float dy = getY() - y;
 		if (polygon != null) {

@@ -82,7 +82,6 @@ import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
-import com.kotcrab.vis.runtime.system.update.TextUpdateSystem;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
@@ -119,7 +118,6 @@ public class EntityManipulatorModule extends SceneModule {
 	private ComponentMapper<VisGroup> groupCm;
 
 	private EntityProxyCache entityProxyCache;
-	private TextUpdateSystem textUpdateSystem;
 	private ZIndexManipulator zIndexManipulator;
 	private EntitiesCollector entitiesCollector;
 	private GroupIdProviderSystem groupIdProvider;
@@ -395,7 +393,7 @@ public class EntityManipulatorModule extends SceneModule {
 			if (pointPayload.centerPosAfterCreation) setEntityPosToMouse.value = false;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(new Point())
+					.with(new Point(), new Transform())
 					.with(new Renderable(0), new Layer(scene.getActiveLayerId()))
 					.with(new ExporterDropsComponent(Renderable.class, Layer.class))
 					.build();
@@ -419,15 +417,16 @@ public class EntityManipulatorModule extends SceneModule {
 			entity = new EntityBuilder(entityEngine)
 					.with(new VisText(fontCache.getGeneric(asset, scene.pixelsPerUnit), FontCacheModule.DEFAULT_TEXT),
 							new Transform(), new Origin(), new Tint(),
-							new Invisible(), //don't render text before it has been updated
 							new PixelsPerUnit(scene.pixelsPerUnit),
 							new AssetReference(asset),
 							new Renderable(0), new Layer(scene.getActiveLayerId()),
 							new ExporterDropsComponent(PixelsPerUnit.class))
 					.build();
 
-			entity.edit().create(VisTextChanged.class).contentChanged = true;
 			updatePositionLater = true; //update position later after text bounds has been calculated
+
+			//TODO: [misc] workaround, before text is updated it is rendered at 0, 0 which is visible at one frome, just move it outside camera for now
+			entity.getComponent(Transform.class).setPosition(camera.getInputX() - 1000000, camera.getInputY() - 10000);
 		} else if (payload instanceof SpriterAsset) {
 			SpriterAsset asset = (SpriterAsset) payload;
 
@@ -435,7 +434,6 @@ public class EntityManipulatorModule extends SceneModule {
 
 			entity = new EntityBuilder(entityEngine)
 					.with(spriterCache.createComponent(asset, scale), new SpriterProperties(scale), new Transform(),
-							new VisSpriterChanged(),
 							new AssetReference(asset),
 							new Renderable(0), new Layer(scene.getActiveLayerId()),
 							new ExporterDropsComponent(SpriterProperties.class))
@@ -518,8 +516,6 @@ public class EntityManipulatorModule extends SceneModule {
 			} else {
 				updatePosRunnable.run();
 			}
-
-			proxy.getEntity().edit().remove(Invisible.class);
 
 			undoModule.add(new EntitiesAddedAction(sceneContainer, entityEngine, entity));
 

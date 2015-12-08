@@ -24,7 +24,6 @@ import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisText;
-import com.kotcrab.vis.runtime.component.VisTextChanged;
 
 /** @author Kotcrab */
 public class FontReloaderManager extends Manager {
@@ -32,7 +31,6 @@ public class FontReloaderManager extends Manager {
 	private float pixelInUnits;
 
 	private ComponentMapper<VisText> textCm;
-	private ComponentMapper<VisTextChanged> changedCm;
 	private ComponentMapper<AssetReference> assetCm;
 	private AspectSubscriptionManager subscriptionManager;
 	private EntitySubscription subscription;
@@ -63,8 +61,6 @@ public class FontReloaderManager extends Manager {
 
 			if (asset instanceof TtfFontAsset && reloadTtfFonts)
 				text.setFont(fontCache.get((TtfFontAsset) asset, pixelInUnits));
-
-			changedCm.create(id).contentChanged = true;
 		}
 	}
 }

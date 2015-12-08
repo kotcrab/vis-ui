@@ -35,18 +35,21 @@ import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.systems.EntityProcessingSystem;
-import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.plugin.spine.components.SpinePreview;
 import com.kotcrab.vis.plugin.spine.components.SpineScale;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
 import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.Tint;
+import com.kotcrab.vis.runtime.component.Transform;
 
 /** @author Kotcrab */
 public class SpineScaleUpdaterSystem extends EntityProcessingSystem {
 	private SpineCacheModule spineCache;
 
 	private ComponentMapper<VisSpine> spineCm;
+	private ComponentMapper<Transform> transformCm;
+	private ComponentMapper<Tint> tintCm;
 	private ComponentMapper<AssetReference> assetCm;
 	private ComponentMapper<SpineScale> scaleCm;
 	private ComponentMapper<SpinePreview> previewCm;
@@ -62,23 +65,23 @@ public class SpineScaleUpdaterSystem extends EntityProcessingSystem {
 		if (scaleComponent.updateScale) {
 			scaleComponent.updateScale = false;
 
-			VisSpine visSpine = spineCm.get(e);
+			VisSpine spine = spineCm.get(e);
+			Transform transform = transformCm.get(e);
 			AssetReference assetRef = assetCm.get(e);
 			SpinePreview previewComponent = previewCm.get(e);
 
 			SpineAssetDescriptor old = (SpineAssetDescriptor) assetRef.asset;
 			assetRef.asset = new SpineAssetDescriptor(old.getAtlasPath(), old.getSkeletonPath(), scaleComponent.scale);
 
-			float x = visSpine.getX(), y = visSpine.getY();
-			boolean flipX = visSpine.isFlipX(), flipY = visSpine.isFlipY();
-			Color color = visSpine.getTint();
+			float x = transform.getX(), y = transform.getY();
+			boolean flipX = spine.isFlipX(), flipY = spine.isFlipY();
 
-			visSpine.onDeserialize(spineCache.get(assetRef.asset));
+			spine.onDeserialize(spineCache.get(assetRef.asset));
 			previewComponent.updateAnimation = true;
 
-			visSpine.setPosition(x, y);
-			visSpine.setFlip(flipX, flipY);
-			visSpine.setTint(color);
+			transform.setPosition(x, y);
+			spine.setFlip(flipX, flipY);
+			tintCm.get(e).setDirty(true);
 		}
 	}
 }

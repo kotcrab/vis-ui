@@ -21,6 +21,7 @@ import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.runtime.component.Invisible;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.component.VisParticle;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
@@ -31,6 +32,7 @@ import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
  */
 public class ParticleRenderSystem extends DeferredEntityProcessingSystem {
 	private ComponentMapper<VisParticle> particleCm;
+	private ComponentMapper<Transform> transformCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
@@ -49,7 +51,13 @@ public class ParticleRenderSystem extends DeferredEntityProcessingSystem {
 	@Override
 	protected void process (int entityId) {
 		VisParticle particle = particleCm.get(entityId);
+		Transform transform = transformCm.get(entityId);
+
 		ParticleEffect effect = particle.getEffect();
+
+		if (transform.isDirty()) {
+			particle.updateValues(transform.getX(), transform.getY());
+		}
 
 		if (ignoreActive || particle.isActiveOnStart())
 			effect.update(world.delta);

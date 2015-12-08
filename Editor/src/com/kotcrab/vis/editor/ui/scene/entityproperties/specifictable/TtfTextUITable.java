@@ -26,7 +26,6 @@ import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisText;
-import com.kotcrab.vis.runtime.component.VisTextChanged;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
@@ -89,7 +88,6 @@ public class TtfTextUITable extends TextUITable {
 				TtfFontAsset newAsset = new TtfFontAsset(ttfAsset.getPath(), fontSize);
 				assetRef.asset = newAsset;
 				text.setFont(fontCache.get(newAsset, properties.getSceneModuleContainer().getScene().pixelsPerUnit));
-				entity.edit().create(VisTextChanged.class).contentChanged = true;
 			}
 		}
 	}

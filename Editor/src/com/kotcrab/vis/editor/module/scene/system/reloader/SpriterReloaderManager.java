@@ -22,6 +22,7 @@ import com.kotcrab.vis.editor.module.project.SpriterCacheModule;
 import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
 import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.component.VisSpriter;
 
 /** @author Kotcrab */
@@ -30,6 +31,7 @@ public class SpriterReloaderManager extends Manager {
 	private SpriterCacheModule spriterCache;
 
 	private ComponentMapper<VisSpriter> spriterCm;
+	private ComponentMapper<Transform> transformCm;
 	private ComponentMapper<AssetReference> assetCm;
 
 	private AspectSubscriptionManager subscriptionManager;
@@ -53,6 +55,7 @@ public class SpriterReloaderManager extends Manager {
 
 			VisSpriter newSpriter = spriterCache.cloneComponent(asset, spriter);
 			entity.edit().remove(spriter).add(newSpriter);
+			transformCm.get(entity).setDirty(true);
 
 			//we've replaced SpriterComponent in entity so proxy needs manual reloading
 			entityProxyCache.get(entity).reload();

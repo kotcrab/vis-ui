@@ -111,21 +111,21 @@ public class SpriteProxy extends EntityProxy {
 
 		private float[] getVertices () {
 			float[] vertices = this.vertices;
-			float localX = -origin.originX;
-			float localY = -origin.originY;
+			float localX = -origin.getOriginX();
+			float localY = -origin.getOriginY();
 			float localX2 = localX + sprite.getWidth();
 			float localY2 = localY + sprite.getHeight();
-			float worldOriginX = transform.x - localX;
-			float worldOriginY = transform.y - localY;
-			if (transform.scaleX != 1 || transform.scaleY != 1) {
-				localX *= transform.scaleX;
-				localY *= transform.scaleY;
-				localX2 *= transform.scaleX;
-				localY2 *= transform.scaleY;
+			float worldOriginX = transform.getX() - localX;
+			float worldOriginY = transform.getY() - localY;
+			if (transform.getScaleX() != 1 || transform.getScaleY() != 1) {
+				localX *= transform.getScaleX();
+				localY *= transform.getScaleY();
+				localX2 *= transform.getScaleX();
+				localY2 *= transform.getScaleY();
 			}
-			if (transform.rotation != 0) {
-				final float cos = MathUtils.cosDeg(transform.rotation);
-				final float sin = MathUtils.sinDeg(transform.rotation);
+			if (transform.getRotation() != 0) {
+				final float cos = MathUtils.cosDeg(transform.getRotation());
+				final float sin = MathUtils.sinDeg(transform.getRotation());
 				final float localXCos = localX * cos;
 				final float localXSin = localX * sin;
 				final float localYCos = localY * cos;

@@ -42,6 +42,8 @@ import com.esotericsoftware.spine.attachments.*;
 import com.kotcrab.vis.plugin.spine.components.SpineBounds;
 import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
 import com.kotcrab.vis.runtime.component.Invisible;
+import com.kotcrab.vis.runtime.component.Tint;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
@@ -50,6 +52,8 @@ import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 	private ComponentMapper<VisSpine> spineCm;
 	private ComponentMapper<SpineBounds> boundsCm;
+	private ComponentMapper<Transform> transformCm;
+	private ComponentMapper<Tint> tintCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
@@ -69,10 +73,18 @@ public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 	@Override
 	protected void process (int entityId) {
 		VisSpine spine = spineCm.get(entityId);
+		Transform transform = transformCm.get(entityId);
+		Tint tint = tintCm.get(entityId);
+
 		spine.state.update(world.delta);
 		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
 		skeletonRenderer.draw(batch, spine.skeleton); // Draw the skeleton images.
+
+		if (transform.isDirty() || tint.isDirty()) {
+			spine.updateValues(transform.getX(), transform.getY(), tint.getTint());
+		}
+
 
 		SpineBounds boundsComponent = boundsCm.get(entityId);
 

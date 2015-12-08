@@ -54,9 +54,7 @@ import com.kotcrab.vis.plugin.spine.components.SpinePreview;
 import com.kotcrab.vis.plugin.spine.components.SpineScale;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
-import com.kotcrab.vis.runtime.component.AssetReference;
-import com.kotcrab.vis.runtime.component.Layer;
-import com.kotcrab.vis.runtime.component.Renderable;
+import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.EntityEngine;
@@ -132,7 +130,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 
 			return new EntityBuilder(engine)
 					.with(new VisSpine(spineCache.get(asset)), new SpinePreview(), new SpineScale(1f / pixelsPerUnit), new SpineBounds(),
-							new AssetReference(asset),
+							new AssetReference(asset), new Transform(), new Tint(),
 							new Renderable(0), new Layer(scene.getActiveLayerId()),
 							new ExporterDropsComponent(SpinePreview.class, SpineScale.class, SpineBounds.class))
 					.build();

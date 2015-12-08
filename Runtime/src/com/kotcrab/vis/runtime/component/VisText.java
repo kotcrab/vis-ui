@@ -35,8 +35,11 @@ import com.kotcrab.vis.runtime.util.annotation.VisInternal;
  * @author Kotcrab
  */
 public class VisText extends Component implements SizeOwner, BoundsOwner, UsesProtoComponent {
+	private transient boolean dirty = true;
+
 	private boolean distanceFieldShaderEnabled;
 	private boolean autoSetOriginToCenter = true;
+
 	private CharSequence text;
 
 	private transient BitmapFontCache cache;
@@ -83,6 +86,7 @@ public class VisText extends Component implements SizeOwner, BoundsOwner, UsesPr
 		cache.clear();
 		cache.setColor(tint);
 		textLayout = cache.setText(text, 0, 0);
+		dirty = false;
 	}
 
 	@VisInternal
@@ -104,6 +108,11 @@ public class VisText extends Component implements SizeOwner, BoundsOwner, UsesPr
 
 	public void setText (CharSequence str) {
 		this.text = str;
+		dirty = true;
+	}
+
+	public boolean isDirty () {
+		return dirty;
 	}
 
 	public boolean isAutoSetOriginToCenter () {

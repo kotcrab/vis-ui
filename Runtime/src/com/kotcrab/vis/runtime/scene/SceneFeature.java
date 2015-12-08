@@ -20,19 +20,13 @@ import com.artemis.BaseSystem;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.data.SceneData;
-import com.kotcrab.vis.runtime.system.CameraManager;
-import com.kotcrab.vis.runtime.system.LayerManager;
-import com.kotcrab.vis.runtime.system.VisGroupManager;
-import com.kotcrab.vis.runtime.system.VisIDManager;
+import com.kotcrab.vis.runtime.system.*;
 import com.kotcrab.vis.runtime.system.inflater.*;
 import com.kotcrab.vis.runtime.system.physics.Box2dDebugRenderSystem;
 import com.kotcrab.vis.runtime.system.physics.PhysicsBodyManager;
 import com.kotcrab.vis.runtime.system.physics.PhysicsSpriteUpdateSystem;
 import com.kotcrab.vis.runtime.system.physics.PhysicsSystem;
 import com.kotcrab.vis.runtime.system.render.*;
-import com.kotcrab.vis.runtime.system.update.ParticleUpdateSystem;
-import com.kotcrab.vis.runtime.system.update.SpriterUpdateSystem;
-import com.kotcrab.vis.runtime.system.update.TextUpdateSystem;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /**
@@ -154,30 +148,6 @@ public enum SceneFeature {
 		}
 	}),
 
-	/** Updates particles cached data after it's position changed. Can be disabled. */
-	PARTICLE_UPDATE_SYSTEM(new SystemProvider() {
-		@Override
-		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
-			return new ParticleUpdateSystem();
-		}
-	}),
-
-	/** Updates text cached values after it's transform or other values changed. Can be disabled. */
-	TEXT_UPDATE_SYSTEM(new SystemProvider() {
-		@Override
-		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
-			return new TextUpdateSystem();
-		}
-	}),
-
-	/** Updates spriter skeleton cached values after it's transform or other values changed. Can be disabled. */
-	SPRITER_UPDATE_SYSTEM(new SystemProvider() {
-		@Override
-		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
-			return new SpriterUpdateSystem();
-		}
-	}),
-
 	/** Essential system for other renderers, cannot be disabled when any other renderer is used. */
 	RENDER_BATCHING_SYSTEM(new SystemProvider() {
 		@Override
@@ -220,6 +190,17 @@ public enum SceneFeature {
 		@Override
 		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
 			return new SpriterRenderSystem(config.getSystem(RenderBatchingSystem.class));
+		}
+	}),
+
+	/**
+	 * Cleans dirty flags from transform, origin and tint components. Safe to disable however may cause serious
+	 * performance issues when disabled.
+	 */
+	DIRTY_CLEANER_SYSTEM(new SystemProvider() {
+		@Override
+		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
+			return new DirtyCleanerSystem();
 		}
 	}),
 

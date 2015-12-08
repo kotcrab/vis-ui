@@ -27,6 +27,7 @@ import com.kotcrab.vis.runtime.scene.SceneViewport;
 public class RuntimeJsonTags {
 	public static void registerTags (JsonTagRegistrar registrar) {
 		registrar.register("String", String.class);
+		registrar.register("Class", Class.class);
 
 		registrar.register("SceneData", SceneData.class);
 		registrar.register("SceneViewport", SceneViewport.class);
@@ -50,12 +51,13 @@ public class RuntimeJsonTags {
 		registrar.register("AssetReference", AssetReference.class);
 		registrar.register("VisGroup", VisGroup.class);
 		registrar.register("VisID", VisID.class);
+		registrar.register("VisPolygon", VisPolygon.class);
 		registrar.register("Invisible", Invisible.class);
 		registrar.register("Layer", Layer.class);
 		registrar.register("Renderable", Renderable.class);
 		registrar.register("Variables", Variables.class);
 		registrar.register("PhysicsProperties", PhysicsProperties.class);
-		registrar.register("Polygon", Polygon.class);
+		registrar.register("Point", Point.class);
 
 		registrar.register("ProtoVisSprite", ProtoVisSprite.class);
 		registrar.register("ProtoVisMusic", ProtoVisMusic.class);

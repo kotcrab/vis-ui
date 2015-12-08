@@ -16,20 +16,16 @@
 
 package com.kotcrab.vis.editor.proxy;
 
-import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.util.gdx.ParticleUtils;
 import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.component.VisParticle;
-import com.kotcrab.vis.runtime.component.VisParticleChanged;
 import com.kotcrab.vis.runtime.properties.BoundsOwner;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
 
 /** @author Kotcrab */
 public class ParticleProxy extends EntityProxy {
-	private ComponentMapper<VisParticleChanged> changedCm;
-
 	private VisParticle particle;
 
 	private Accessor accessor;
@@ -50,27 +46,7 @@ public class ParticleProxy extends EntityProxy {
 		particle = entity.getComponent(VisParticle.class);
 		Transform transform = entity.getComponent(Transform.class);
 
-		changedCm = entity.getWorld().getMapper(VisParticleChanged.class);
-
 		enableBasicProperties(transform, accessor, accessor);
-	}
-
-	@Override
-	public void setX (float x) {
-		super.setX(x);
-		changedCm.create(getEntity());
-	}
-
-	@Override
-	public void setPosition (float x, float y) {
-		super.setPosition(x, y);
-		changedCm.create(getEntity());
-	}
-
-	@Override
-	public void setY (float y) {
-		super.setY(y);
-		changedCm.create(getEntity());
 	}
 
 	@Override

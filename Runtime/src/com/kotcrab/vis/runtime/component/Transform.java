@@ -28,9 +28,10 @@ import com.kotcrab.vis.runtime.properties.ScaleOwner;
  * @author Kotcrab
  */
 public class Transform extends Component implements PositionOwner, ScaleOwner, RotationOwner {
-	public float x = 0, y = 0;
-	public float scaleX = 1, scaleY = 1;
-	public float rotation = 0;
+	private transient boolean dirty = true;
+	private float x = 0, y = 0;
+	private float scaleX = 1, scaleY = 1;
+	private float rotation = 0;
 
 	public Transform () {
 	}
@@ -59,6 +60,7 @@ public class Transform extends Component implements PositionOwner, ScaleOwner, R
 	public void setPosition (float x, float y) {
 		this.x = x;
 		this.y = y;
+		dirty = true;
 	}
 
 	@Override
@@ -69,6 +71,7 @@ public class Transform extends Component implements PositionOwner, ScaleOwner, R
 	@Override
 	public void setRotation (float rotation) {
 		this.rotation = rotation;
+		dirty = true;
 	}
 
 	@Override
@@ -85,5 +88,14 @@ public class Transform extends Component implements PositionOwner, ScaleOwner, R
 	public void setScale (float scaleX, float scaleY) {
 		this.scaleX = scaleX;
 		this.scaleY = scaleY;
+		dirty = true;
+	}
+
+	public boolean isDirty () {
+		return dirty;
+	}
+
+	public void setDirty (boolean dirty) {
+		this.dirty = dirty;
 	}
 }

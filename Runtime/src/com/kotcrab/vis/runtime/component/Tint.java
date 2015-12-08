@@ -22,7 +22,8 @@ import com.kotcrab.vis.runtime.properties.TintOwner;
 
 /** @author Kotcrab */
 public class Tint extends Component implements TintOwner {
-	public Color tint;
+	private transient boolean dirty = true;
+	private Color tint;
 
 	public Tint () {
 		tint = Color.WHITE;
@@ -40,5 +41,14 @@ public class Tint extends Component implements TintOwner {
 	@Override
 	public void setTint (Color tint) {
 		this.tint = tint;
+		dirty = true;
+	}
+
+	public boolean isDirty () {
+		return dirty;
+	}
+
+	public void setDirty (boolean dirty) {
+		this.dirty = dirty;
 	}
 }

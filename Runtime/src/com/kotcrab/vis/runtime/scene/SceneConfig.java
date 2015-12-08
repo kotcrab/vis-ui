@@ -30,9 +30,10 @@ public class SceneConfig {
 		registerFeatureGroup(SceneFeatureGroup.ESSENTIAL);
 		registerFeatureGroup(SceneFeatureGroup.INFLATER);
 		registerFeatureGroup(SceneFeatureGroup.PHYSICS);
-		registerFeatureGroup(SceneFeatureGroup.UPDATE);
 		registerFeatureGroup(SceneFeatureGroup.RENDERER);
 		registerFeatureGroup(SceneFeatureGroup.PHYSICS_DEBUG);
+
+		registerFeature(SceneFeature.DIRTY_CLEANER_SYSTEM);
 
 		disable(SceneFeature.GROUP_ID_MANAGER);
 		disable(SceneFeature.BOX2D_DEBUG_RENDER_SYSTEM);

@@ -69,7 +69,7 @@ public class PointProxy extends EntityProxy {
 
 		@Override
 		public Rectangle getBoundingRectangle () {
-			return bounds.set(transform.x - renderSize / 2, transform.y - renderSize / 2, renderSize, renderSize);
+			return bounds.set(transform.getX() - renderSize / 2, transform.getY() - renderSize / 2, renderSize, renderSize);
 		}
 	}
 }

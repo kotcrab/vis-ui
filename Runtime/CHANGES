@@ -13,20 +13,15 @@
  -Renamed to VisSprite
  -Uses TextureRegion directly
  -Properties like position, scale, rotation, are controlled by following components: Transform, Origin, Tint
-  -Changes in those components will be reflected in render immediately
 -Changes in TextComponent:
  -Renamed to VisText
  -Properties like position, scale, rotation are controlled by following components: Transform, Origin, Tint
-  -Changes in those components WILL NOT be reflected in render immediately, you must add new VisTextChanged component to Entity
-  -Additionally if you changed text or tint after you add VisTextChanged component you must additionally set VisTextChanged#contnetChanged to true
 -Changes in ParticleComponent:
  -Renamed to VisParticle
  -Position is now controlled by Transform component.
-  -Changes in that component WILL NOT be reflected in render immediately, you must add new VisParticleChanged component to Entity
 -Changes in SpriterComponent:
    -Renamed to VisSpriter
    -Position and rotation is now controlled by Transform component.
-    -Changes in that component WILL NOT be reflected in render immediately, you must add new VisSpriterChanged component to Entity
 -Renaming components:
  -TextComponent -> VisText
  -SoundComponent -> VisSound
@@ -40,7 +35,7 @@
  -VariablesComponent -> Variables
  -ShaderComponent -> Shader
  -RenderableComponent -> Renderable
- -PolygonComponent -> Polygon
+ -PolygonComponent -> VisPolygon
  -PointComponent -> Point (position is now stored in Transform component)
  -PhysicsSpriteComponent -> PhysicsSprite
  -PhysicsPropertiesComponent -> PhysicsProperties

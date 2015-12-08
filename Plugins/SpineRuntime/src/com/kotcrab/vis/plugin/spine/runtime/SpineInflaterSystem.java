@@ -62,17 +62,16 @@ public class SpineInflaterSystem extends InflaterSystem {
 		SpineAssetDescriptor asset = (SpineAssetDescriptor) assetRef.asset;
 
 		SkeletonData skeleton = manager.get(asset.getSkeletonPath(), SkeletonData.class);
-		VisSpine visSpine = new VisSpine(skeleton);
+		VisSpine spine = new VisSpine(skeleton);
 
-		visSpine.setPosition(protoComponent.x, protoComponent.y);
-		visSpine.setFlip(protoComponent.flipX, protoComponent.flipY);
+		spine.setFlip(protoComponent.flipX, protoComponent.flipY);
 
-		visSpine.setPlayOnStart(protoComponent.playOnStart);
-		visSpine.setDefaultAnimation(protoComponent.defaultAnimation);
+		spine.setPlayOnStart(protoComponent.playOnStart);
+		spine.setDefaultAnimation(protoComponent.defaultAnimation);
 
-		visSpine.updateDefaultAnimations();
+		spine.updateDefaultAnimations();
 
-		world.getEntity(entityId).edit().add(visSpine);
+		world.getEntity(entityId).edit().add(spine);
 
 		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);

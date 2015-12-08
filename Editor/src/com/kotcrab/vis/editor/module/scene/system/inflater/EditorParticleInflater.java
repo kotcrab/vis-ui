@@ -22,7 +22,6 @@ import com.kotcrab.vis.editor.entity.PixelsPerUnit;
 import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisParticle;
-import com.kotcrab.vis.runtime.component.VisParticleChanged;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
@@ -33,7 +32,6 @@ public class EditorParticleInflater extends InflaterSystem {
 
 	private ComponentMapper<AssetReference> assetCm;
 	private ComponentMapper<VisParticle> partcielCm;
-	private ComponentMapper<VisParticleChanged> changedCm;
 	private ComponentMapper<ProtoVisParticle> protoCm;
 
 	public EditorParticleInflater (float pixelsPerUnit) {
@@ -51,7 +49,6 @@ public class EditorParticleInflater extends InflaterSystem {
 		particle.setEffect(particleCache.get(assetRef.asset, 1f / pixelsPerUnit));
 		protoComponent.fill(particle);
 
-		changedCm.create(entityId);
 		protoCm.remove(entityId);
 	}
 }

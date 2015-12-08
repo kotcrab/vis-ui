@@ -14,31 +14,33 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system.update;
+package com.kotcrab.vis.runtime.system;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
-import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.component.Origin;
+import com.kotcrab.vis.runtime.component.Tint;
+import com.kotcrab.vis.runtime.component.Transform;
 
 /** @author Kotcrab */
-public class SpriterUpdateSystem extends IteratingSystem {
-	private ComponentMapper<VisSpriter> spriterCm;
-	private ComponentMapper<VisSpriterChanged> changedCm;
+public class DirtyCleanerSystem extends IteratingSystem {
 	private ComponentMapper<Transform> transformCm;
+	private ComponentMapper<Origin> originCm;
+	private ComponentMapper<Tint> tintCm;
 
-	public SpriterUpdateSystem () {
-		super(Aspect.all(VisSpriter.class, VisSpriterChanged.class));
+	public DirtyCleanerSystem () {
+		super(Aspect.one(Transform.class, Origin.class, Tint.class));
 	}
 
 	@Override
 	protected void process (int entityId) {
-		VisSpriter spriter = spriterCm.get(entityId);
-		VisSpriterChanged changed = changedCm.get(entityId);
-		Transform transform = transformCm.get(entityId);
+		Transform transform = transformCm.getSafe(entityId);
+		Origin origin = originCm.getSafe(entityId);
+		Tint tint = tintCm.getSafe(entityId);
 
-		spriter.updateValues(transform.x, transform.y, transform.rotation);
-
-		if (changed.persistent == false) changedCm.remove(entityId);
+		if (transform != null) transform.setDirty(false);
+		if (origin != null) origin.setDirty(false);
+		if (tint != null) tint.setDirty(false);
 	}
 }

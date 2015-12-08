@@ -32,7 +32,7 @@ public class PhysicsBodyManager extends EntitySystem {
 
 	private ComponentMapper<PhysicsProperties> physicsPropCm;
 	private ComponentMapper<PhysicsBody> physicsCm;
-	private ComponentMapper<Polygon> polygonCm;
+	private ComponentMapper<VisPolygon> polygonCm;
 	private ComponentMapper<PhysicsSprite> physicsSpriteCm;
 	private ComponentMapper<Transform> transformCm;
 	private ComponentMapper<Origin> originCm;
@@ -41,7 +41,7 @@ public class PhysicsBodyManager extends EntitySystem {
 	private RuntimeConfiguration runtimeConfig;
 
 	public PhysicsBodyManager (RuntimeConfiguration runtimeConfig) {
-		super(Aspect.all(PhysicsProperties.class, Polygon.class, VisSprite.class));
+		super(Aspect.all(PhysicsProperties.class, VisPolygon.class, VisSprite.class));
 		this.runtimeConfig = runtimeConfig;
 	}
 
@@ -58,12 +58,12 @@ public class PhysicsBodyManager extends EntitySystem {
 	@Override
 	public void inserted (Entity entity) {
 		PhysicsProperties physicsProperties = physicsPropCm.get(entity);
-		Polygon polygon = polygonCm.get(entity);
+		VisPolygon polygon = polygonCm.get(entity);
 		Transform transform = transformCm.get(entity);
 
 		if (physicsProperties.adjustOrigin) originCm.get(entity).setOrigin(0, 0);
 
-		Vector2 worldPos = new Vector2(transform.x, transform.y);
+		Vector2 worldPos = new Vector2(transform.getX(), transform.getY());
 
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(worldPos);
@@ -104,7 +104,7 @@ public class PhysicsBodyManager extends EntitySystem {
 
 		entity.edit()
 				.add(new PhysicsBody(body))
-				.add(new PhysicsSprite(transform.rotation));
+				.add(new PhysicsSprite(transform.getRotation()));
 	}
 
 	@Override

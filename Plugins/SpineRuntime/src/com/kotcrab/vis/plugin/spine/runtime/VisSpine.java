@@ -38,13 +38,12 @@ import com.esotericsoftware.spine.AnimationStateData;
 import com.esotericsoftware.spine.Skeleton;
 import com.esotericsoftware.spine.SkeletonData;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
-import com.kotcrab.vis.runtime.properties.TintOwner;
 import com.kotcrab.vis.runtime.properties.FlipOwner;
-import com.kotcrab.vis.runtime.properties.PositionOwner;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
+import com.kotcrab.vis.runtime.util.annotation.VisInternal;
 
 /** @author Kotcrab */
-public class VisSpine extends Component implements PositionOwner, FlipOwner, TintOwner, UsesProtoComponent {
+public class VisSpine extends Component implements FlipOwner, UsesProtoComponent {
 	public transient Skeleton skeleton;
 	public transient AnimationStateData stateData;
 	public transient AnimationState state;
@@ -62,9 +61,7 @@ public class VisSpine extends Component implements PositionOwner, FlipOwner, Tin
 
 		init(skeletonData);
 
-		setPosition(other.getX(), other.getY());
 		setFlip(other.isFlipX(), other.isFlipY());
-		setTint(other.getTint());
 	}
 
 	private void init (SkeletonData skeletonData) {
@@ -82,38 +79,19 @@ public class VisSpine extends Component implements PositionOwner, FlipOwner, Tin
 			state.setAnimation(0, defaultAnimation, true);
 	}
 
-	/** Called by framework */
+	@VisInternal
+	public void updateValues (float x, float y, Color color) {
+		skeleton.setPosition(x, y);
+		skeleton.setColor(color);
+	}
+
+	@VisInternal
 	public void updateDefaultAnimations () {
 		if (defaultAnimation == null)
 			defaultAnimation = skeleton.getData().getAnimations().get(0).getName();
 
 		if (playOnStart)
 			state.setAnimation(0, defaultAnimation, true);
-	}
-
-	@Override
-	public float getX () {
-		return skeleton.getX();
-	}
-
-	@Override
-	public void setX (float x) {
-		skeleton.setX(x);
-	}
-
-	@Override
-	public float getY () {
-		return skeleton.getY();
-	}
-
-	@Override
-	public void setY (float y) {
-		skeleton.setY(y);
-	}
-
-	@Override
-	public void setPosition (float x, float y) {
-		skeleton.setPosition(x, y);
 	}
 
 	@Override
@@ -129,16 +107,6 @@ public class VisSpine extends Component implements PositionOwner, FlipOwner, Tin
 	@Override
 	public boolean isFlipX () {
 		return skeleton.getFlipX();
-	}
-
-	@Override
-	public void setTint (Color tint) {
-		skeleton.setColor(tint);
-	}
-
-	@Override
-	public Color getTint () {
-		return skeleton.getColor();
 	}
 
 	public Skeleton getSkeleton () {
@@ -162,7 +130,7 @@ public class VisSpine extends Component implements PositionOwner, FlipOwner, Tin
 	}
 
 	@Override
-	public ProtoComponent toProtoComponent () {
+	public ProtoComponent<VisSpine> toProtoComponent () {
 		return new ProtoVisSpine(this);
 	}
 }

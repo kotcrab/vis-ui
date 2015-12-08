@@ -159,7 +159,7 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 			}
 
 			if (tintUsed) {
-				batch.setColor(tintCm.get(job.entityId).tint);
+				batch.setColor(tintCm.get(job.entityId).getTint());
 			} else {
 				batch.setColor(Color.WHITE);
 			}

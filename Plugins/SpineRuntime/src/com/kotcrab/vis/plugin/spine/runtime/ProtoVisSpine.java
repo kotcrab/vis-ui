@@ -31,14 +31,11 @@
 
 package com.kotcrab.vis.plugin.spine.runtime;
 
-import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
 
 /** @author Kotcrab */
 public class ProtoVisSpine extends ProtoComponent<VisSpine> {
-	public float x, y;
 	public boolean flipX, flipY;
-	public Color color;
 
 	public boolean playOnStart;
 	public String defaultAnimation;
@@ -47,9 +44,6 @@ public class ProtoVisSpine extends ProtoComponent<VisSpine> {
 	}
 
 	public ProtoVisSpine (VisSpine visSpine) {
-		x = visSpine.getX();
-		y = visSpine.getY();
-
 		flipX = visSpine.isFlipX();
 		flipY = visSpine.isFlipY();
 

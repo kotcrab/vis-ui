@@ -24,6 +24,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.Invisible;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.component.VisSpriter;
 import com.kotcrab.vis.runtime.spriter.Drawer;
 import com.kotcrab.vis.runtime.spriter.Timeline.Key;
@@ -33,10 +34,10 @@ import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 /** @author Kotcrab */
 public class SpriterRenderSystem extends DeferredEntityProcessingSystem {
 	private ComponentMapper<VisSpriter> spriterCm;
+	private ComponentMapper<Transform> transformCm;
 	private ComponentMapper<AssetReference> assetCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
-	private Batch batch;
 
 	private SpriterDrawer drawer;
 
@@ -46,14 +47,20 @@ public class SpriterRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void initialize () {
-		batch = renderBatchingSystem.getBatch();
+		Batch batch = renderBatchingSystem.getBatch();
 		drawer = new SpriterDrawer((SpriteBatch) batch);
 	}
 
 	@Override
 	protected void process (int entityId) {
 		VisSpriter spriter = spriterCm.get(entityId);
+		Transform transform = transformCm.get(entityId);
 		SpriterAsset asset = (SpriterAsset) assetCm.get(entityId).asset;
+
+		if (transform.isDirty()) {
+			spriter.updateValues(transform.getX(), transform.getY(), transform.getRotation());
+		}
+
 		if (spriter.isAnimationPlaying() == false) spriter.getPlayer().setTime(0);
 		spriter.getPlayer().update();
 

@@ -24,7 +24,6 @@ import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisParticle;
-import com.kotcrab.vis.runtime.component.VisParticleChanged;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
 
 /**
@@ -34,7 +33,6 @@ import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
 public class ParticleInflater extends InflaterSystem {
 	private ComponentMapper<AssetReference> assetCm;
 	private ComponentMapper<VisParticle> partcielCm;
-	private ComponentMapper<VisParticleChanged> changedCm;
 	private ComponentMapper<ProtoVisParticle> protoCm;
 
 	private RuntimeConfiguration configuration;
@@ -65,7 +63,6 @@ public class ParticleInflater extends InflaterSystem {
 		protoComponent.fill(particle);
 		particle.getEffect().scaleEffect(1f / pixelsPerUnit);
 
-		changedCm.create(entityId);
 		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 		protoCm.remove(entityId);
 	}

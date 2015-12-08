@@ -36,6 +36,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.plugin.spine.components.SpineBounds;
 import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
+import com.kotcrab.vis.runtime.component.Tint;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.properties.BoundsOwner;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
 
@@ -56,11 +58,13 @@ public class SpineProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		VisSpine visSpine = getEntity().getComponent(VisSpine.class);
+		VisSpine spine = getEntity().getComponent(VisSpine.class);
+		Transform transform = getEntity().getComponent(Transform.class);
+		Tint tint = getEntity().getComponent(Tint.class);
 		boundsComponent = getEntity().getComponent(SpineBounds.class);
-		enableBasicProperties(visSpine, accessor, accessor);
-		enableTint(visSpine);
-		enableFlip(visSpine);
+		enableBasicProperties(transform, accessor, accessor);
+		enableTint(tint);
+		enableFlip(spine);
 	}
 
 	@Override

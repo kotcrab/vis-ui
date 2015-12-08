@@ -20,8 +20,9 @@ import com.artemis.Component;
 import com.kotcrab.vis.runtime.properties.OriginOwner;
 
 /** @author Kotcrab */
-public class Origin extends Component implements OriginOwner{
-	public float originX, originY;
+public class Origin extends Component implements OriginOwner {
+	private transient boolean dirty = true;
+	private float originX, originY;
 
 	public Origin () {
 	}
@@ -45,5 +46,13 @@ public class Origin extends Component implements OriginOwner{
 	public void setOrigin (float originX, float originY) {
 		this.originX = originX;
 		this.originY = originY;
+	}
+
+	public boolean isDirty () {
+		return dirty;
+	}
+
+	public void setDirty (boolean dirty) {
+		this.dirty = dirty;
 	}
 }

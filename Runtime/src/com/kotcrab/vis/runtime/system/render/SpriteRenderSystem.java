@@ -47,6 +47,7 @@ public class SpriteRenderSystem extends DeferredEntityProcessingSystem {
 		Transform transform = transformCm.get(entityId);
 		Origin origin = originCm.get(entityId);
 
-		batch.draw(sprite.getRegion(), transform.x, transform.y, origin.originX, origin.originY, sprite.getWidth(), sprite.getHeight(), transform.scaleX, transform.scaleY, transform.rotation);
+		batch.draw(sprite.getRegion(), transform.getX(), transform.getY(), origin.getOriginX(), origin.getOriginY(),
+				sprite.getWidth(), sprite.getHeight(), transform.getScaleX(), transform.getScaleY(), transform.getRotation());
 	}
 }
