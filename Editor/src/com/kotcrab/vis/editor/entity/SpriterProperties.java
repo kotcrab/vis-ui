@@ -17,23 +17,21 @@
 package com.kotcrab.vis.editor.entity;
 
 import com.artemis.Component;
-import com.artemis.Entity;
-import com.artemis.World;
+import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
-import java.util.UUID;
+/** @author Kotcrab */
+public class SpriterProperties extends Component {
+	@ATProperty(fieldName = "Scale", min = 0.000001f)
+	public float scale;
 
-/**
- * VisEditor UUID is managed separately than Artemis {@link World} {@link Entity} UUID.
- * @author Kotcrab
- */
-public class UUIDComponent extends Component {
-	private UUID uuid;
+	public int animation = 0;
 
-	public UUIDComponent () {
-		uuid = UUID.randomUUID();
-	}
+	@ATProperty(fieldName = "Play animation on start")
+	public boolean playOnStart = false;
+	@ATProperty(fieldName = "Preview in editor")
+	public boolean previewInEditor = false;
 
-	public UUID getUUID () {
-		return uuid;
+	public SpriterProperties (float scale) {
+		this.scale = scale;
 	}
 }

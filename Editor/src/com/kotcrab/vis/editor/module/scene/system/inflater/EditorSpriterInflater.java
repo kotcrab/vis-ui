@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.module.scene.system.inflater;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.kotcrab.vis.editor.entity.SpriterPropertiesComponent;
+import com.kotcrab.vis.editor.entity.SpriterProperties;
 import com.kotcrab.vis.editor.module.project.SpriterCacheModule;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
 import com.kotcrab.vis.runtime.component.AssetReference;
@@ -29,7 +29,7 @@ import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 /** @author Kotcrab */
 public class EditorSpriterInflater extends InflaterSystem {
 	private ComponentMapper<ProtoVisSpriter> protoCm;
-	private ComponentMapper<SpriterPropertiesComponent> propertiesCm;
+	private ComponentMapper<SpriterProperties> propertiesCm;
 	private ComponentMapper<AssetReference> assetCm;
 	private SpriterCacheModule cache;
 
@@ -41,7 +41,7 @@ public class EditorSpriterInflater extends InflaterSystem {
 	public void inserted (int entityId) {
 		AssetReference assetRef = assetCm.get(entityId);
 		ProtoVisSpriter protoComponent = protoCm.get(entityId);
-		SpriterPropertiesComponent propsComponent = propertiesCm.get(entityId);
+		SpriterProperties propsComponent = propertiesCm.get(entityId);
 
 		SpriterAsset asset = (SpriterAsset) assetRef.asset;
 

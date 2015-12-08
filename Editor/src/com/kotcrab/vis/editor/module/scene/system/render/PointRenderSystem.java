@@ -24,7 +24,7 @@ import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.runtime.component.Invisible;
 import com.kotcrab.vis.runtime.component.Point;
-import com.kotcrab.vis.runtime.component.Position;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
@@ -35,7 +35,7 @@ public class PointRenderSystem extends DeferredEntityProcessingSystem {
 
 	private CameraModule camera;
 
-	private ComponentMapper<Position> posCm;
+	private ComponentMapper<Transform> transformCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
@@ -57,10 +57,10 @@ public class PointRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (int entityId) {
-		Position pos = posCm.get(entityId);
+		Transform transform = transformCm.get(entityId);
 
 		float renderSize = baseRenderSize * camera.getZoom();
 		renderSize = Math.min(renderSize, baseRenderSize);
-		batch.draw(icon, pos.x - renderSize / 2, pos.y - renderSize / 2, renderSize, renderSize);
+		batch.draw(icon, transform.x - renderSize / 2, transform.y - renderSize / 2, renderSize, renderSize);
 	}
 }

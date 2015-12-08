@@ -17,7 +17,7 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.components;
 
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.entity.SpriterPropertiesComponent;
+import com.kotcrab.vis.editor.entity.SpriterProperties;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
@@ -30,12 +30,12 @@ import com.kotcrab.vis.ui.widget.VisSelectBox;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /** @author Kotcrab */
-public class SpriterPropertiesComponentTable extends AutoComponentTable<SpriterPropertiesComponent> {
+public class SpriterPropertiesComponentTable extends AutoComponentTable<SpriterProperties> {
 
 	private VisSelectBox<String> animSelectBox;
 
 	public SpriterPropertiesComponentTable (ModuleInjector injector) {
-		super(injector, SpriterPropertiesComponent.class, false);
+		super(injector, SpriterProperties.class, false);
 	}
 
 	@Override
@@ -84,14 +84,14 @@ public class SpriterPropertiesComponentTable extends AutoComponentTable<SpriterP
 		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 		if (proxies.size() == 1) {
 			VisSpriter spriter = EntityUtils.getFirstEntityComponent(proxies, VisSpriter.class);
-			SpriterPropertiesComponent properties = EntityUtils.getFirstEntityComponent(proxies, SpriterPropertiesComponent.class);
+			SpriterProperties properties = EntityUtils.getFirstEntityComponent(proxies, SpriterProperties.class);
 			Entity entity = spriter.player.getEntity();
 
 			properties.animation = entity.getAnimation(animSelectBox.getSelected()).id;
 		}
 
 		EntityUtils.stream(proxies, VisSpriter.class, (entity, spriterComponent) -> {
-			SpriterPropertiesComponent propertiesComponent = entity.getComponent(SpriterPropertiesComponent.class);
+			SpriterProperties propertiesComponent = entity.getComponent(SpriterProperties.class);
 			spriterComponent.player.setScale(propertiesComponent.scale);
 			spriterComponent.playOnStart = propertiesComponent.playOnStart;
 			spriterComponent.defaultAnimation = propertiesComponent.animation;

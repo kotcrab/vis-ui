@@ -21,7 +21,12 @@ import com.kotcrab.vis.runtime.properties.PositionOwner;
 import com.kotcrab.vis.runtime.properties.RotationOwner;
 import com.kotcrab.vis.runtime.properties.ScaleOwner;
 
-/** @author Kotcrab */
+/**
+ * Holds entities position, scale and rotation. Note that it is not guaranteed that scale and rotation will be supported
+ * by all others entities type, additionally depending on other components changes in this may not be reflected instantly and
+ * you may need to add *Changed component to update cached values.
+ * @author Kotcrab
+ */
 public class Transform extends Component implements PositionOwner, ScaleOwner, RotationOwner {
 	public float x = 0, y = 0;
 	public float scaleX = 1, scaleY = 1;

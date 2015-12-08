@@ -19,13 +19,13 @@ package com.kotcrab.vis.editor.proxy;
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.module.scene.system.render.PointRenderSystem;
-import com.kotcrab.vis.runtime.component.Position;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.properties.BoundsOwner;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
 
 /** @author Kotcrab */
 public class PointProxy extends EntityProxy {
-	private Position pos;
+	private Transform transform;
 	private Accessor accessor;
 	private float renderSize;
 
@@ -41,8 +41,8 @@ public class PointProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		pos = getEntity().getComponent(Position.class);
-		enableBasicProperties(pos, accessor, accessor);
+		transform = getEntity().getComponent(Transform.class);
+		enableBasicProperties(transform, accessor, accessor);
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class PointProxy extends EntityProxy {
 
 		@Override
 		public Rectangle getBoundingRectangle () {
-			return bounds.set(pos.x - renderSize / 2, pos.y - renderSize / 2, renderSize, renderSize);
+			return bounds.set(transform.x - renderSize / 2, transform.y - renderSize / 2, renderSize, renderSize);
 		}
 	}
 }

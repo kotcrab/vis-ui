@@ -19,13 +19,13 @@ package com.kotcrab.vis.editor.proxy;
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.module.scene.system.render.SoundAndMusicRenderSystem;
-import com.kotcrab.vis.runtime.component.Position;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.properties.BoundsOwner;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
 
 /** @author Kotcrab */
 public class AudioProxy extends EntityProxy {
-	private Position pos;
+	private Transform transform;
 	private Accessor accessor;
 
 	private boolean music;
@@ -44,8 +44,8 @@ public class AudioProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		pos = getEntity().getComponent(Position.class);
-		enableBasicProperties(pos, accessor, accessor);
+		transform = getEntity().getComponent(Transform.class);
+		enableBasicProperties(transform, accessor, accessor);
 	}
 
 	@Override
@@ -72,7 +72,7 @@ public class AudioProxy extends EntityProxy {
 
 		@Override
 		public Rectangle getBoundingRectangle () {
-			return bounds.set(pos.getX(), pos.getY(), renderSize, renderSize);
+			return bounds.set(transform.getX(), transform.getY(), renderSize, renderSize);
 		}
 	}
 }

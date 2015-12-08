@@ -72,7 +72,7 @@ public class EntityScheme {
 		}
 
 		for (Component component : components) {
-			if (component instanceof ExporterDropsComponent || component instanceof UUIDComponent)
+			if (component instanceof ExporterDropsComponent || component instanceof VisUUID)
 				continue;
 
 			if (dropsComponent != null && dropsComponent.componentsToDrop.contains(component.getClass(), false))

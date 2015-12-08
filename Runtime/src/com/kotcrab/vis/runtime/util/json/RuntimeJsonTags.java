@@ -32,37 +32,37 @@ public class RuntimeJsonTags {
 		registrar.register("SceneViewport", SceneViewport.class);
 		registrar.register("LayerCordsSystem", LayerCordsSystem.class);
 
-		registrar.register("PathAsset", PathAsset.class);
-		registrar.register("BmpFontAsset", BmpFontAsset.class);
-		registrar.register("TtfFontAsset", TtfFontAsset.class);
 		registrar.register("AtlasRegionAsset", AtlasRegionAsset.class);
-		registrar.register("TextureRegionAsset", TextureRegionAsset.class);
+		registrar.register("BmpFontAsset", BmpFontAsset.class);
+		registrar.register("MusicAsset", MusicAsset.class);
+		registrar.register("ParticleAsset", ParticleAsset.class);
+		registrar.register("PathAsset", PathAsset.class);
 		registrar.register("ShaderAsset", ShaderAsset.class);
+		registrar.register("SoundAsset", SoundAsset.class);
 		registrar.register("SpriterAsset", SpriterAsset.class);
+		registrar.register("TextureRegionAsset", TextureRegionAsset.class);
+		registrar.register("TtfFontAsset", TtfFontAsset.class);
 
 		registrar.register("Transform", Transform.class);
-		registrar.register("Position", Position.class);
 		registrar.register("Tint", Tint.class);
 		registrar.register("Origin", Origin.class);
 
-		registrar.register("VisSprite", VisSprite.class);
-
-		registrar.register("AssetComponent", AssetReference.class);
-		registrar.register("GroupComponent", VisGroup.class);
-		registrar.register("IDComponent", VisID.class);
-		registrar.register("InvisibleComponent", Invisible.class);
-		registrar.register("LayerComponent", Layer.class);
-		registrar.register("RenderableComponent", Renderable.class);
-		registrar.register("VariablesComponent", Variables.class);
-		registrar.register("PhysicsPropertiesComponent", PhysicsProperties.class);
-		registrar.register("PolygonComponent", Polygon.class);
+		registrar.register("AssetReference", AssetReference.class);
+		registrar.register("VisGroup", VisGroup.class);
+		registrar.register("VisID", VisID.class);
+		registrar.register("Invisible", Invisible.class);
+		registrar.register("Layer", Layer.class);
+		registrar.register("Renderable", Renderable.class);
+		registrar.register("Variables", Variables.class);
+		registrar.register("PhysicsProperties", PhysicsProperties.class);
+		registrar.register("Polygon", Polygon.class);
 
 		registrar.register("ProtoVisSprite", ProtoVisSprite.class);
-		registrar.register("MusicProtoComponent", ProtoVisMusic.class);
-		registrar.register("SoundProtoComponent", ProtoVisSound.class);
-		registrar.register("ParticleProtoComponent", ProtoVisParticle.class);
-		registrar.register("TextProtoComponent", ProtoVisText.class);
-		registrar.register("ShaderProtoComponent", ProtoShader.class);
-		registrar.register("SpriterProtoComponent", ProtoVisSpriter.class);
+		registrar.register("ProtoVisMusic", ProtoVisMusic.class);
+		registrar.register("ProtoVisSound", ProtoVisSound.class);
+		registrar.register("ProtoVisParticle", ProtoVisParticle.class);
+		registrar.register("ProtoVisText", ProtoVisText.class);
+		registrar.register("ProtoShader", ProtoShader.class);
+		registrar.register("ProtoVisSpriter", ProtoVisSpriter.class);
 	}
 }

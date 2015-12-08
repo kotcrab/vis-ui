@@ -19,7 +19,7 @@ package com.kotcrab.vis.runtime.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
-import com.kotcrab.vis.runtime.component.Position;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.component.VisParticle;
 import com.kotcrab.vis.runtime.component.VisParticleChanged;
 
@@ -27,7 +27,7 @@ import com.kotcrab.vis.runtime.component.VisParticleChanged;
 public class ParticleUpdateSystem extends IteratingSystem {
 	private ComponentMapper<VisParticle> particleCm;
 	private ComponentMapper<VisParticleChanged> changedCm;
-	private ComponentMapper<Position> posCm;
+	private ComponentMapper<Transform> transformCm;
 
 	public ParticleUpdateSystem () {
 		super(Aspect.all(VisParticle.class, VisParticleChanged.class));
@@ -37,7 +37,7 @@ public class ParticleUpdateSystem extends IteratingSystem {
 	protected void process (int entityId) {
 		VisParticle particle = particleCm.get(entityId);
 		VisParticleChanged changed = changedCm.get(entityId);
-		Position position = posCm.get(entityId);
+		Transform position = transformCm.get(entityId);
 
 		particle.updatePosition(position.x, position.y);
 

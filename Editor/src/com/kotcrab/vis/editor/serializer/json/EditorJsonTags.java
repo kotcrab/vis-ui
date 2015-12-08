@@ -29,9 +29,9 @@ public class EditorJsonTags {
 		registrar.register("EditorLayer", EditorLayer.class);
 		registrar.register("EntityScheme", EntityScheme.class);
 
-		registrar.register("UUIDComponent", UUIDComponent.class);
-		registrar.register("PixelsPerUnitComponent", PixelsPerUnitComponent.class);
+		registrar.register("VisUUID", VisUUID.class);
+		registrar.register("PixelsPerUnit", PixelsPerUnit.class);
 		registrar.register("ExporterDropsComponent", ExporterDropsComponent.class);
-		registrar.register("SpriterPropertiesComponent", SpriterPropertiesComponent.class);
+		registrar.register("SpriterProperties", SpriterProperties.class);
 	}
 }

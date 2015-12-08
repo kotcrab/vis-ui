@@ -19,6 +19,10 @@
  -Properties like position, scale, rotation are controlled by following components: Transform, Origin, Tint
   -Changes in those components WILL NOT be reflected in render immediately, you must add new VisTextChanged component to Entity
   -Additionally if you changed text or tint after you VisTextChanged component you must set VisTextChanged#contnetChanged to true
+-Changes in ParticleComponent:
+ -Renamed to VisParticle
+ -Position is now controlled by Transform component.
+  -Changes in that component WILL NOT be reflected in render immediately, you must add new VisParticleChanged component to Entity
 -Renaming components:
  -TextComponent -> VisText
  -SoundComponent -> VisSound
@@ -33,7 +37,7 @@
  -ShaderComponent -> Shader
  -RenderableComponent -> Renderable
  -PolygonComponent -> Polygon
- -PointComponent -> Point (position is now stored in Position component)
+ -PointComponent -> Point (position is now stored in Transform component)
  -PhysicsSpriteComponent -> PhysicsSprite
  -PhysicsPropertiesComponent -> PhysicsProperties
  -PhysicsComponent -> PhysicsBody

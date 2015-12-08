@@ -20,12 +20,12 @@ import com.artemis.*;
 import com.artemis.EntitySubscription.SubscriptionListener;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.entity.UUIDComponent;
+import com.kotcrab.vis.editor.entity.VisUUID;
 
 import java.util.UUID;
 
 public class VisUUIDManager extends Manager {
-	private ComponentMapper<UUIDComponent> idCm;
+	private ComponentMapper<VisUUID> idCm;
 	private AspectSubscriptionManager subscriptionManager;
 
 	private EntitySubscription subscription;
@@ -34,7 +34,7 @@ public class VisUUIDManager extends Manager {
 
 	@Override
 	protected void initialize () {
-		subscription = subscriptionManager.get(Aspect.all(UUIDComponent.class));
+		subscription = subscriptionManager.get(Aspect.all(VisUUID.class));
 
 		subscription.addSubscriptionListener(new SubscriptionListener() {
 			@Override

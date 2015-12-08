@@ -22,8 +22,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.component.Invisible;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.component.VisMusic;
-import com.kotcrab.vis.runtime.component.Position;
 import com.kotcrab.vis.runtime.component.VisSound;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
@@ -33,7 +33,7 @@ import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 	public static final int ICON_SIZE = 76;
 
-	private ComponentMapper<Position> posCm;
+	private ComponentMapper<Transform> posCm;
 	private ComponentMapper<VisMusic> musicCm;
 
 	private TextureRegion soundIcon;
@@ -45,7 +45,7 @@ public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 	private float renderSize;
 
 	public SoundAndMusicRenderSystem (EntityProcessPrincipal principal, float pixelsPerUnit) {
-		super(Aspect.all(Position.class).one(VisSound.class, VisMusic.class).exclude(Invisible.class), principal);
+		super(Aspect.all(Transform.class).one(VisSound.class, VisMusic.class).exclude(Invisible.class), principal);
 		soundIcon = Icons.SOUND_BIG.textureRegion();
 		musicIcon = Icons.MUSIC_BIG.textureRegion();
 
@@ -59,11 +59,11 @@ public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (int entityId) {
-		Position pos = posCm.get(entityId);
+		Transform ptransforms = posCm.get(entityId);
 
 		if (musicCm.has(entityId))
-			batch.draw(musicIcon, pos.getX(), pos.getY(), renderSize, renderSize);
+			batch.draw(musicIcon, ptransforms.getX(), ptransforms.getY(), renderSize, renderSize);
 		else
-			batch.draw(soundIcon, pos.getX(), pos.getY(), renderSize, renderSize);
+			batch.draw(soundIcon, ptransforms.getX(), ptransforms.getY(), renderSize, renderSize);
 	}
 }

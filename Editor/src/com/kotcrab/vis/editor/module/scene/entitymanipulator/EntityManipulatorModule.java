@@ -37,9 +37,9 @@ import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
-import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
-import com.kotcrab.vis.editor.entity.SpriterPropertiesComponent;
-import com.kotcrab.vis.editor.entity.UUIDComponent;
+import com.kotcrab.vis.editor.entity.PixelsPerUnit;
+import com.kotcrab.vis.editor.entity.SpriterProperties;
+import com.kotcrab.vis.editor.entity.VisUUID;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
@@ -420,10 +420,10 @@ public class EntityManipulatorModule extends SceneModule {
 					.with(new VisText(fontCache.getGeneric(asset, scene.pixelsPerUnit), FontCacheModule.DEFAULT_TEXT),
 							new Transform(), new Origin(), new Tint(),
 							new Invisible(), //don't render text before it has been updated
-							new PixelsPerUnitComponent(scene.pixelsPerUnit),
+							new PixelsPerUnit(scene.pixelsPerUnit),
 							new AssetReference(asset),
 							new Renderable(0), new Layer(scene.getActiveLayerId()),
-							new ExporterDropsComponent(PixelsPerUnitComponent.class))
+							new ExporterDropsComponent(PixelsPerUnit.class))
 					.build();
 
 			entity.edit().create(VisTextChanged.class).contentChanged = true;
@@ -434,10 +434,10 @@ public class EntityManipulatorModule extends SceneModule {
 			float scale = 1f / scene.pixelsPerUnit;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(spriterCache.createComponent(asset, scale), new SpriterPropertiesComponent(scale),
+					.with(spriterCache.createComponent(asset, scale), new SpriterProperties(scale),
 							new AssetReference(asset),
 							new Renderable(0), new Layer(scene.getActiveLayerId()),
-							new ExporterDropsComponent(SpriterPropertiesComponent.class))
+							new ExporterDropsComponent(SpriterProperties.class))
 					.build();
 
 		} else if (payload instanceof ParticleAsset) {
@@ -446,11 +446,11 @@ public class EntityManipulatorModule extends SceneModule {
 
 			try {
 				entity = new EntityBuilder(entityEngine)
-						.with(new VisParticle(particleCache.get(asset, scale)), new Position(),
-								new PixelsPerUnitComponent(scene.pixelsPerUnit),
+						.with(new VisParticle(particleCache.get(asset, scale)), new Transform(),
+								new PixelsPerUnit(scene.pixelsPerUnit),
 								new AssetReference(asset),
 								new Renderable(0), new Layer(scene.getActiveLayerId()),
-								new ExporterDropsComponent(PixelsPerUnitComponent.class))
+								new ExporterDropsComponent(PixelsPerUnit.class))
 						.build();
 			} catch (EditorRuntimeException e) {
 				Log.exception(e);
@@ -462,20 +462,20 @@ public class EntityManipulatorModule extends SceneModule {
 			SoundAsset asset = (SoundAsset) payload;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(new VisSound(null), new Position(), //editor does not require sound to be loaded, we can pass null sound here
+					.with(new VisSound(null), new Transform(), //editor does not require sound to be loaded, we can pass null sound here
 							new AssetReference(asset),
 							new Renderable(0), new Layer(scene.getActiveLayerId()),
-							new ExporterDropsComponent(Position.class, Renderable.class, Layer.class, VisGroup.class))
+							new ExporterDropsComponent(Transform.class, Renderable.class, Layer.class, VisGroup.class))
 					.build();
 
 		} else if (payload instanceof MusicAsset) {
 			MusicAsset asset = (MusicAsset) payload;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(new VisMusic(new DummyMusic()), new Position(),
+					.with(new VisMusic(new DummyMusic()), new Transform(),
 							new AssetReference(asset),
 							new Renderable(0), new Layer(scene.getActiveLayerId()),
-							new ExporterDropsComponent(Position.class, Renderable.class, Layer.class, VisGroup.class))
+							new ExporterDropsComponent(Transform.class, Renderable.class, Layer.class, VisGroup.class))
 					.build();
 
 		}
@@ -489,7 +489,7 @@ public class EntityManipulatorModule extends SceneModule {
 		}
 
 		if (entity != null) {
-			entity.edit().add(new UUIDComponent());
+			entity.edit().add(new VisUUID());
 
 			EntityProxy proxy = entityProxyCache.get(entity);
 

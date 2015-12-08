@@ -14,47 +14,17 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.editor.entity;
 
 import com.artemis.Component;
-import com.kotcrab.vis.runtime.properties.PositionOwner;
 
 /** @author Kotcrab */
-public class Position extends Component implements PositionOwner {
-	public float x;
-	public float y;
+public class PixelsPerUnit extends Component {
+	public final float pixelsPerUnits;
+	public final float scale;
 
-	public Position () {
-	}
-
-	public Position (float x, float y) {
-		this.x = x;
-		this.y = y;
-	}
-
-	@Override
-	public float getX () {
-		return x;
-	}
-
-	@Override
-	public void setX (float x) {
-		this.x = x;
-	}
-
-	@Override
-	public float getY () {
-		return y;
-	}
-
-	@Override
-	public void setY (float y) {
-		this.y = y;
-	}
-
-	@Override
-	public void setPosition (float x, float y) {
-		this.x = x;
-		this.y = y;
+	public PixelsPerUnit (float pixelsPerUnit) {
+		this.pixelsPerUnits = pixelsPerUnit;
+		this.scale = 1f / pixelsPerUnit;
 	}
 }

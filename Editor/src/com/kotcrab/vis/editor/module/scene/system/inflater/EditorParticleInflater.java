@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.module.scene.system.inflater;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.kotcrab.vis.editor.entity.PixelsPerUnitComponent;
+import com.kotcrab.vis.editor.entity.PixelsPerUnit;
 import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisParticle;
@@ -37,7 +37,7 @@ public class EditorParticleInflater extends InflaterSystem {
 	private ComponentMapper<ProtoVisParticle> protoCm;
 
 	public EditorParticleInflater (float pixelsPerUnit) {
-		super(Aspect.all(ProtoVisParticle.class, PixelsPerUnitComponent.class, AssetReference.class));
+		super(Aspect.all(ProtoVisParticle.class, PixelsPerUnit.class, AssetReference.class));
 		this.pixelsPerUnit = pixelsPerUnit;
 	}
 

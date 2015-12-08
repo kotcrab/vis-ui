@@ -24,7 +24,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.editor.entity.EntityScheme;
-import com.kotcrab.vis.editor.entity.UUIDComponent;
+import com.kotcrab.vis.editor.entity.VisUUID;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
 import com.kotcrab.vis.editor.module.scene.system.VisUUIDManager;
 import com.kotcrab.vis.editor.util.polygon.Clipper;
@@ -59,7 +59,7 @@ public abstract class EntityProxy {
 
 		if (entity != null) {
 			uuidManager = entity.getWorld().getSystem(VisUUIDManager.class);
-			uuid = entity.getComponent(UUIDComponent.class).getUUID();
+			uuid = entity.getComponent(VisUUID.class).getUUID();
 
 			//TODO: [misc] proxies may use injected component mappers to acuire other components, not they are using getComponent on entity directly
 			polygonCm = entity.getWorld().getMapper(Polygon.class);

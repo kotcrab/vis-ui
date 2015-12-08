@@ -20,7 +20,7 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.util.gdx.ParticleUtils;
-import com.kotcrab.vis.runtime.component.Position;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.component.VisParticle;
 import com.kotcrab.vis.runtime.component.VisParticleChanged;
 import com.kotcrab.vis.runtime.properties.BoundsOwner;
@@ -48,11 +48,11 @@ public class ParticleProxy extends EntityProxy {
 		Entity entity = getEntity();
 
 		particle = entity.getComponent(VisParticle.class);
-		Position pos = entity.getComponent(Position.class);
+		Transform transform = entity.getComponent(Transform.class);
 
 		changedCm = entity.getWorld().getMapper(VisParticleChanged.class);
 
-		enableBasicProperties(pos, accessor, accessor);
+		enableBasicProperties(transform, accessor, accessor);
 	}
 
 	@Override

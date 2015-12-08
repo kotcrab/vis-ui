@@ -21,7 +21,7 @@ import com.artemis.Entity;
 import com.artemis.InvocationStrategy;
 import com.artemis.utils.Bag;
 import com.artemis.utils.EntityBuilder;
-import com.kotcrab.vis.editor.entity.UUIDComponent;
+import com.kotcrab.vis.editor.entity.VisUUID;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
@@ -55,8 +55,8 @@ public class ProtoEntity {
 		Bag<Component> components = sceneIOModule.cloneEntityComponents(this.components);
 
 		components.forEach((component) -> {
-			if (preserveUUID == false && component instanceof UUIDComponent) {
-				builder.with(new UUIDComponent());
+			if (preserveUUID == false && component instanceof VisUUID) {
+				builder.with(new VisUUID());
 			} else {
 				builder.with(component);
 			}
