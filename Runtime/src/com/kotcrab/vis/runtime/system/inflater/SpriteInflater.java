@@ -32,7 +32,7 @@ import com.kotcrab.vis.runtime.util.PathUtils;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 /** @author Kotcrab */
-public class VisSpriteInflater extends InflaterSystem {
+public class SpriteInflater extends InflaterSystem {
 	private ComponentMapper<VisSprite> spriteCm;
 	private ComponentMapper<ProtoVisSprite> protoCm;
 	private ComponentMapper<AssetReference> assetCm;
@@ -40,7 +40,7 @@ public class VisSpriteInflater extends InflaterSystem {
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
-	public VisSpriteInflater (RuntimeConfiguration configuration, AssetManager manager) {
+	public SpriteInflater (RuntimeConfiguration configuration, AssetManager manager) {
 		super(Aspect.all(ProtoVisSprite.class, AssetReference.class));
 		this.configuration = configuration;
 		this.manager = manager;

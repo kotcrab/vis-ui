@@ -21,22 +21,20 @@ import com.artemis.InvocationStrategy;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.data.LayerData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
+import com.kotcrab.vis.runtime.scene.SceneConfig.ConfigElement;
+import com.kotcrab.vis.runtime.scene.SceneConfig.FeatureElement;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
-import com.kotcrab.vis.runtime.system.*;
-import com.kotcrab.vis.runtime.system.inflater.*;
-import com.kotcrab.vis.runtime.system.physics.Box2dDebugRenderSystem;
-import com.kotcrab.vis.runtime.system.physics.PhysicsBodyManager;
-import com.kotcrab.vis.runtime.system.physics.PhysicsSpriteUpdateSystem;
-import com.kotcrab.vis.runtime.system.physics.PhysicsSystem;
-import com.kotcrab.vis.runtime.system.render.*;
-import com.kotcrab.vis.runtime.util.*;
+import com.kotcrab.vis.runtime.system.CameraManager;
+import com.kotcrab.vis.runtime.util.AfterSceneInit;
+import com.kotcrab.vis.runtime.util.BootstrapInvocationStrategy;
+import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /**
  * Base class of VisRuntime scene system. Scene are typically constructed using {@link VisAssetManager} with {@link SceneLoader}
@@ -55,53 +53,29 @@ public class Scene {
 		AssetManager assetsManager = context.assetsManager;
 		RuntimeConfiguration runtimeConfig = context.configuration;
 
-		ShaderProgram distanceFieldShader = null;
-		if (assetsManager.isLoaded(SceneLoader.DISTANCE_FIELD_SHADER)) {
-			distanceFieldShader = assetsManager.get(SceneLoader.DISTANCE_FIELD_SHADER, ShaderProgram.class);
-		}
-
 		EntityEngineConfiguration engineConfig = new EntityEngineConfiguration();
 
-		engineConfig.setSystem(cameraManager = new CameraManager(data.viewport, data.width, data.height, data.pixelsPerUnit));
-		engineConfig.setSystem(new VisIDManager());
-		if (runtimeConfig.useVisGroupManager) engineConfig.setSystem(new VisGroupManager(data.groupIds));
-		engineConfig.setSystem(new LayerManager(data.layers));
+		if (parameter == null) parameter = new SceneParameter();
+		SceneConfig config = parameter.config;
+		config.sort();
 
-		engineConfig.setSystem(new VisSpriteInflater(runtimeConfig, assetsManager));
-		engineConfig.setSystem(new SoundInflater(runtimeConfig, assetsManager));
-		engineConfig.setSystem(new MusicInflater(runtimeConfig, assetsManager));
-		engineConfig.setSystem(new ParticleInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
-		engineConfig.setSystem(new TextInflater(runtimeConfig, assetsManager, data.pixelsPerUnit));
-		engineConfig.setSystem(new ShaderInflater(assetsManager));
-		engineConfig.setSystem(new SpriterInflater(assetsManager));
+		for (FeatureElement element : config.getDefaultFeatures()) {
+			if (element.disabled) continue;
+			engineConfig.setSystem(element.provider.create(engineConfig, context, data));
+		}
 
-		if (parameter != null) {
-			for (BaseSystem system : parameter.systems) {
-				engineConfig.setSystem(system);
+		for (ConfigElement element : config.getElements()) {
+			engineConfig.setSystem(element.provider.create(engineConfig, context, data));
+		}
+
+		cameraManager = engineConfig.getSystem(CameraManager.class);
+
+		if (parameter.respectScenePhysicsSettings) {
+			if (data.physicsSettings.physicsEnabled) {
+				config.enable(SceneFeatureGroup.PHYSICS);
+			} else {
+				config.disable(SceneFeatureGroup.PHYSICS);
 			}
-		}
-
-		if (data.physicsSettings.physicsEnabled) {
-			engineConfig.setSystem(new PhysicsSystem(data.physicsSettings));
-			engineConfig.setSystem(new PhysicsBodyManager(context.configuration));
-			if (runtimeConfig.useBox2dSpriteUpdateSystem) engineConfig.setSystem(new PhysicsSpriteUpdateSystem());
-		}
-
-		engineConfig.setSystem(new TextUpdateSystem());
-		engineConfig.setSystem(new ParticleUpdateSystem());
-
-		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(context.batch, false);
-		engineConfig.setSystem(batchingSystem);
-
-		//common render systems
-		engineConfig.setSystem(new SpriteRenderSystem(batchingSystem));
-		engineConfig.setSystem(new TextRenderSystem(batchingSystem, distanceFieldShader));
-		engineConfig.setSystem(new SpriterRenderSystem(batchingSystem));
-
-		engineConfig.setSystem(new ParticleRenderSystem(engineConfig.getSystem(RenderBatchingSystem.class), false));
-
-		if (data.physicsSettings.physicsEnabled && runtimeConfig.useBox2dDebugRenderer) {
-			engineConfig.setSystem(new Box2dDebugRenderSystem());
 		}
 
 		for (EntitySupport support : context.supports) {

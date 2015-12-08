@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.runtime.scene;
 
-import com.artemis.BaseSystem;
 import com.artemis.Component;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
@@ -205,6 +204,12 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	/** Allows to add additional system and managers into {@link EntityEngine} */
 	static public class SceneParameter extends AssetLoaderParameters<Scene> {
-		public Array<BaseSystem> systems = new Array<BaseSystem>();
+		public SceneConfig config = new SceneConfig();
+		/**
+		 * If true (the default) scene data will be used to determinate whether physics systems needs
+		 * to be enabled in {@link SceneConfig}. When this is set to false and you want to use physics you must manually
+		 * enable it in config.
+		 */
+		public boolean respectScenePhysicsSettings = true;
 	}
 }
