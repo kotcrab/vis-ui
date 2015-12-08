@@ -1,8 +1,14 @@
-!IMPORTANT!
-Changelog was moved to CHANGES.md file. This file will be soon removed.
-https://github.com/kotcrab/VisEditor/tree/master/Editor/CHANGES.md
+#### Version: 0.3.0 (LibGDX 1.7.1)
+- Old project from previous versions have to be converted using project converter before loading
+- Scene files are now saved using Json format
+- **Improved**: It's possible to store any asset file in any directory
+- **Fixed**: crash when trying to load particle with missing texture
+- **Misc**: Removed 'beta' update channel
+- **Misc**: Other bug fixes
 
-[0.2.6] [Snapshot]
+#### Old changelog file:
+```
+[0.2.6]
 -Fixed issue with unmodifiable entity properties on Entity with TextComponent or PhysicsPropertiesComponent
 -Fixed issue when TextComponent color wasn't applied to text after reloading scene
 -Fixed issues with entering float values in TextComponent properties fields
@@ -60,3 +66,4 @@ https://github.com/kotcrab/VisEditor/tree/master/Editor/CHANGES.md
 
 [0.2.0]
 -First public release
+```

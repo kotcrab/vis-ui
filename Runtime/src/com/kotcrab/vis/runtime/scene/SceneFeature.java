@@ -141,7 +141,7 @@ public enum SceneFeature {
 	}),
 
 	/** Manages updating positions of VisSprites that have physics components attached. Can be disabled. */
-	PHYSICS_SPRITER_UPDATE_SYSTEM(new SystemProvider() {
+	PHYSICS_SPRITE_UPDATE_SYSTEM(new SystemProvider() {
 		@Override
 		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
 			return new PhysicsSpriteUpdateSystem();
