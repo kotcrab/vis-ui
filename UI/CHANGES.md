@@ -1,4 +1,6 @@
-#### Version: 0.9.5-SNAPSHOT (LibGDX 1.7.1)
+#### Version: 1.0.0-SNAPSHOT (LibGDX 1.7.1)
+
+#### Version: 0.9.5 (LibGDX 1.7.1)
 - **Added**: constructor `SimpleFormValidator(Disableable)`.
 - **Added**: `ActorUtils#keepWithinStage(Actor)`.
 - **Deprecated**: `ColumnGroup`. Will be removed in future versions. Use libGDX's `VerticalGroup` which supports more features.
