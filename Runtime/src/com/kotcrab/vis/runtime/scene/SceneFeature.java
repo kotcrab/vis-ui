@@ -20,13 +20,19 @@ import com.artemis.BaseSystem;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.data.SceneData;
-import com.kotcrab.vis.runtime.system.*;
+import com.kotcrab.vis.runtime.system.CameraManager;
+import com.kotcrab.vis.runtime.system.LayerManager;
+import com.kotcrab.vis.runtime.system.VisGroupManager;
+import com.kotcrab.vis.runtime.system.VisIDManager;
 import com.kotcrab.vis.runtime.system.inflater.*;
 import com.kotcrab.vis.runtime.system.physics.Box2dDebugRenderSystem;
 import com.kotcrab.vis.runtime.system.physics.PhysicsBodyManager;
 import com.kotcrab.vis.runtime.system.physics.PhysicsSpriteUpdateSystem;
 import com.kotcrab.vis.runtime.system.physics.PhysicsSystem;
 import com.kotcrab.vis.runtime.system.render.*;
+import com.kotcrab.vis.runtime.system.update.ParticleUpdateSystem;
+import com.kotcrab.vis.runtime.system.update.SpriterUpdateSystem;
+import com.kotcrab.vis.runtime.system.update.TextUpdateSystem;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /**
@@ -148,6 +154,14 @@ public enum SceneFeature {
 		}
 	}),
 
+	/** Updates particles cached data after it's position changed. Can be disabled. */
+	PARTICLE_UPDATE_SYSTEM(new SystemProvider() {
+		@Override
+		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
+			return new ParticleUpdateSystem();
+		}
+	}),
+
 	/** Updates text cached values after it's transform or other values changed. Can be disabled. */
 	TEXT_UPDATE_SYSTEM(new SystemProvider() {
 		@Override
@@ -156,11 +170,11 @@ public enum SceneFeature {
 		}
 	}),
 
-	/** Updates particles cached data after it's position changed. Can be disabled. */
-	PARTICLE_UPDATE_SYSTEM(new SystemProvider() {
+	/** Updates spriter skeleton cached values after it's transform or other values changed. Can be disabled. */
+	SPRITER_UPDATE_SYSTEM(new SystemProvider() {
 		@Override
 		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
-			return new ParticleUpdateSystem();
+			return new SpriterUpdateSystem();
 		}
 	}),
 

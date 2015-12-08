@@ -18,13 +18,9 @@ package com.kotcrab.vis.runtime.component.proto;
 
 import com.kotcrab.vis.runtime.component.VisSpriter;
 import com.kotcrab.vis.runtime.properties.FlipOwner;
-import com.kotcrab.vis.runtime.properties.PositionOwner;
-import com.kotcrab.vis.runtime.properties.RotationOwner;
 
 /** @author Kotcrab */
-public class ProtoVisSpriter extends ProtoComponent<VisSpriter> implements PositionOwner, RotationOwner, FlipOwner {
-	public float x, y;
-	public float rotation;
+public class ProtoVisSpriter extends ProtoComponent<VisSpriter> implements FlipOwner {
 	public float scale;
 	public boolean flipX, flipY;
 
@@ -35,63 +31,20 @@ public class ProtoVisSpriter extends ProtoComponent<VisSpriter> implements Posit
 	}
 
 	public ProtoVisSpriter (VisSpriter comp) {
-		x = comp.getX();
-		y = comp.getY();
-
-		scale = comp.player.getScale();
-
-		rotation = comp.getRotation();
+		scale = comp.getPlayer().getScale();
 
 		flipX = comp.isFlipX();
 		flipY = comp.isFlipY();
 
-		playOnStart = comp.playOnStart;
-		defaultAnimation = comp.defaultAnimation;
+		playOnStart = comp.isPlayOnStart();
+		defaultAnimation = comp.getDefaultAnimation();
 	}
 
 	@Override
 	public void fill (VisSpriter comp) {
-		comp.setPosition(x, y);
-		comp.player.setScale(scale);
-		comp.setRotation(rotation);
+		comp.getPlayer().setScale(scale);
 		comp.setFlip(flipX, flipY);
 		comp.onDeserialize(playOnStart, defaultAnimation);
-	}
-
-	@Override
-	public float getX () {
-		return x;
-	}
-
-	@Override
-	public void setX (float x) {
-		this.x = x;
-	}
-
-	@Override
-	public float getY () {
-		return y;
-	}
-
-	@Override
-	public void setY (float y) {
-		this.y = y;
-	}
-
-	@Override
-	public void setPosition (float x, float y) {
-		this.x = x;
-		this.y = y;
-	}
-
-	@Override
-	public float getRotation () {
-		return rotation;
-	}
-
-	@Override
-	public void setRotation (float rotation) {
-		this.rotation = rotation;
 	}
 
 	@Override

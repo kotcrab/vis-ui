@@ -46,7 +46,7 @@ public class VisParticle extends Component implements UsesProtoComponent {
 	}
 
 	@VisInternal
-	public void updatePosition (float x, float y) {
+	public void updateValues (float x, float y) {
 		effect.setPosition(x, y);
 		reset();
 	}

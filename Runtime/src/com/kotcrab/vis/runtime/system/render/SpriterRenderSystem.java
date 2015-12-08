@@ -54,12 +54,12 @@ public class SpriterRenderSystem extends DeferredEntityProcessingSystem {
 	protected void process (int entityId) {
 		VisSpriter spriter = spriterCm.get(entityId);
 		SpriterAsset asset = (SpriterAsset) assetCm.get(entityId).asset;
-		if (spriter.animationPlaying == false) spriter.player.setTime(0);
-		spriter.player.update();
+		if (spriter.isAnimationPlaying() == false) spriter.getPlayer().setTime(0);
+		spriter.getPlayer().update();
 
-		drawer.setLoader(spriter.loader);
+		drawer.setLoader(spriter.getLoader());
 		drawer.setImageScale(asset.getImageScale());
-		drawer.draw(spriter.player);
+		drawer.draw(spriter.getPlayer());
 	}
 
 	public class SpriterDrawer extends Drawer<Sprite> {

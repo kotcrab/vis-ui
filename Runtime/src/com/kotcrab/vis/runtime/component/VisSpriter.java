@@ -21,21 +21,24 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisSpriter;
-import com.kotcrab.vis.runtime.properties.*;
+import com.kotcrab.vis.runtime.properties.BoundsOwner;
+import com.kotcrab.vis.runtime.properties.FlipOwner;
+import com.kotcrab.vis.runtime.properties.SizeOwner;
+import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.spriter.Data;
 import com.kotcrab.vis.runtime.spriter.Loader;
 import com.kotcrab.vis.runtime.spriter.Player;
-import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
+import com.kotcrab.vis.runtime.util.annotation.VisInternal;
 
 /** @author Kotcrab */
-public class VisSpriter extends Component implements PositionOwner, SizeOwner, BoundsOwner, FlipOwner, RotationOwner, UsesProtoComponent {
-	public final Loader<Sprite> loader;
-	public final Player player;
+public class VisSpriter extends Component implements SizeOwner, BoundsOwner, FlipOwner, UsesProtoComponent {
+	private final Loader<Sprite> loader;
+	private final Player player;
 
-	public boolean playOnStart = false;
-	public int defaultAnimation = 0;
+	private boolean playOnStart = false;
+	private int defaultAnimation = 0;
 
-	public boolean animationPlaying;
+	private boolean animationPlaying;
 
 	public VisSpriter (Loader<Sprite> loader, Data data, float scale) {
 		this.loader = loader;
@@ -51,29 +54,10 @@ public class VisSpriter extends Component implements PositionOwner, SizeOwner, B
 		if (playOnStart) animationPlaying = true;
 	}
 
-	@Override
-	public float getX () {
-		return player.getX();
-	}
-
-	@Override
-	public void setX (float x) {
-		player.setPosition(x, player.getY());
-	}
-
-	@Override
-	public float getY () {
-		return player.getY();
-	}
-
-	@Override
-	public void setY (float y) {
-		player.setPosition(player.getX(), y);
-	}
-
-	@Override
-	public void setPosition (float x, float y) {
+	@VisInternal
+	public void updateValues (float x, float y, float rotation) {
 		player.setPosition(x, y);
+		player.setAngle(rotation);
 	}
 
 	@Override
@@ -113,13 +97,35 @@ public class VisSpriter extends Component implements PositionOwner, SizeOwner, B
 		return new ProtoVisSpriter(this);
 	}
 
-	@Override
-	public float getRotation () {
-		return player.getAngle();
+	public Loader<Sprite> getLoader () {
+		return loader;
 	}
 
-	@Override
-	public void setRotation (float rotation) {
-		player.setAngle(rotation);
+	public Player getPlayer () {
+		return player;
+	}
+
+	public boolean isPlayOnStart () {
+		return playOnStart;
+	}
+
+	public void setPlayOnStart (boolean playOnStart) {
+		this.playOnStart = playOnStart;
+	}
+
+	public int getDefaultAnimation () {
+		return defaultAnimation;
+	}
+
+	public void setDefaultAnimation (int defaultAnimation) {
+		this.defaultAnimation = defaultAnimation;
+	}
+
+	public boolean isAnimationPlaying () {
+		return animationPlaying;
+	}
+
+	public void setAnimationPlaying (boolean animationPlaying) {
+		this.animationPlaying = animationPlaying;
 	}
 }

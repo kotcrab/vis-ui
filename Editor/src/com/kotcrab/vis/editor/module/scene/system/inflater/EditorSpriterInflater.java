@@ -50,7 +50,7 @@ public class EditorSpriterInflater extends InflaterSystem {
 		protoComponent.fill(component);
 		world.getEntity(entityId).edit().add(component);
 
-		if (propsComponent.previewInEditor == false) component.animationPlaying = false;
+		if (propsComponent.previewInEditor == false) component.setAnimationPlaying(false);
 
 		protoCm.remove(entityId);
 	}

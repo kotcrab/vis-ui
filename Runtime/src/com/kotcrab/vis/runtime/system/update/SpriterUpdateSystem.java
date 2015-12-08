@@ -14,32 +14,30 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.system;
+package com.kotcrab.vis.runtime.system.update;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
-import com.kotcrab.vis.runtime.component.Transform;
-import com.kotcrab.vis.runtime.component.VisParticle;
-import com.kotcrab.vis.runtime.component.VisParticleChanged;
+import com.kotcrab.vis.runtime.component.*;
 
 /** @author Kotcrab */
-public class ParticleUpdateSystem extends IteratingSystem {
-	private ComponentMapper<VisParticle> particleCm;
-	private ComponentMapper<VisParticleChanged> changedCm;
+public class SpriterUpdateSystem extends IteratingSystem {
+	private ComponentMapper<VisSpriter> spriterCm;
+	private ComponentMapper<VisSpriterChanged> changedCm;
 	private ComponentMapper<Transform> transformCm;
 
-	public ParticleUpdateSystem () {
-		super(Aspect.all(VisParticle.class, VisParticleChanged.class));
+	public SpriterUpdateSystem () {
+		super(Aspect.all(VisSpriter.class, VisSpriterChanged.class));
 	}
 
 	@Override
 	protected void process (int entityId) {
-		VisParticle particle = particleCm.get(entityId);
-		VisParticleChanged changed = changedCm.get(entityId);
-		Transform position = transformCm.get(entityId);
+		VisSpriter spriter = spriterCm.get(entityId);
+		VisSpriterChanged changed = changedCm.get(entityId);
+		Transform transform = transformCm.get(entityId);
 
-		particle.updatePosition(position.x, position.y);
+		spriter.updateValues(transform.x, transform.y, transform.rotation);
 
 		if (changed.persistent == false) changedCm.remove(entityId);
 	}

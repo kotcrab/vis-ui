@@ -16,11 +16,15 @@
 
 package com.kotcrab.vis.editor.proxy;
 
+import com.artemis.ComponentMapper;
 import com.artemis.Entity;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.component.VisSpriter;
+import com.kotcrab.vis.runtime.component.VisSpriterChanged;
 
 /** @author Kotcrab */
 public class SpriterProxy extends EntityProxy {
+	private ComponentMapper<VisSpriterChanged> changedCm;
 
 	public SpriterProxy (Entity entity) {
 		super(entity);
@@ -32,10 +36,39 @@ public class SpriterProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		VisSpriter spriter = getEntity().getComponent(VisSpriter.class);
-		enableBasicProperties(spriter, spriter, spriter);
+		Entity entity = getEntity();
+
+		VisSpriter spriter = entity.getComponent(VisSpriter.class);
+		Transform transform = entity.getComponent(Transform.class);
+		enableBasicProperties(transform, spriter, spriter);
 		enableFlip(spriter);
-		enableRotation(spriter);
+		enableRotation(transform);
+
+		changedCm = entity.getWorld().getMapper(VisSpriterChanged.class);
+	}
+
+	@Override
+	public void setX (float x) {
+		super.setX(x);
+		changedCm.create(getEntity());
+	}
+
+	@Override
+	public void setY (float y) {
+		super.setY(y);
+		changedCm.create(getEntity());
+	}
+
+	@Override
+	public void setPosition (float x, float y) {
+		super.setPosition(x, y);
+		changedCm.create(getEntity());
+	}
+
+	@Override
+	public void setRotation (float rotation) {
+		super.setRotation(rotation);
+		changedCm.create(getEntity());
 	}
 
 	@Override

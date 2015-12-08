@@ -82,7 +82,7 @@ import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
-import com.kotcrab.vis.runtime.system.TextUpdateSystem;
+import com.kotcrab.vis.runtime.system.update.TextUpdateSystem;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
@@ -434,7 +434,8 @@ public class EntityManipulatorModule extends SceneModule {
 			float scale = 1f / scene.pixelsPerUnit;
 
 			entity = new EntityBuilder(entityEngine)
-					.with(spriterCache.createComponent(asset, scale), new SpriterProperties(scale),
+					.with(spriterCache.createComponent(asset, scale), new SpriterProperties(scale), new Transform(),
+							new VisSpriterChanged(),
 							new AssetReference(asset),
 							new Renderable(0), new Layer(scene.getActiveLayerId()),
 							new ExporterDropsComponent(SpriterProperties.class))

@@ -62,7 +62,7 @@ public class SpriterPropertiesComponentTable extends AutoComponentTable<SpriterP
 			VisSpriter spriter = EntityUtils.getFirstEntity(proxies).getComponent(VisSpriter.class);
 			animSelectBox.setDisabled(false);
 
-			Entity entity = spriter.player.getEntity();
+			Entity entity = spriter.getPlayer().getEntity();
 
 			Array<String> animations = new Array<>(entity.animations());
 
@@ -85,18 +85,18 @@ public class SpriterPropertiesComponentTable extends AutoComponentTable<SpriterP
 		if (proxies.size() == 1) {
 			VisSpriter spriter = EntityUtils.getFirstEntityComponent(proxies, VisSpriter.class);
 			SpriterProperties properties = EntityUtils.getFirstEntityComponent(proxies, SpriterProperties.class);
-			Entity entity = spriter.player.getEntity();
+			Entity entity = spriter.getPlayer().getEntity();
 
 			properties.animation = entity.getAnimation(animSelectBox.getSelected()).id;
 		}
 
 		EntityUtils.stream(proxies, VisSpriter.class, (entity, spriterComponent) -> {
 			SpriterProperties propertiesComponent = entity.getComponent(SpriterProperties.class);
-			spriterComponent.player.setScale(propertiesComponent.scale);
-			spriterComponent.playOnStart = propertiesComponent.playOnStart;
-			spriterComponent.defaultAnimation = propertiesComponent.animation;
-			spriterComponent.player.setAnimation(propertiesComponent.animation);
-			spriterComponent.animationPlaying = propertiesComponent.previewInEditor;
+			spriterComponent.getPlayer().setScale(propertiesComponent.scale);
+			spriterComponent.setPlayOnStart(propertiesComponent.playOnStart);
+			spriterComponent.setDefaultAnimation(propertiesComponent.animation);
+			spriterComponent.getPlayer().setAnimation(propertiesComponent.animation);
+			spriterComponent.setAnimationPlaying(propertiesComponent.previewInEditor);
 		});
 	}
 }

@@ -77,11 +77,10 @@ public class SpriterCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	public VisSpriter cloneComponent (SpriterAsset asset, VisSpriter original) {
-		VisSpriter clone = createComponent(asset, original.player.getScale());
-		clone.setPosition(original.getX(), original.getY());
+		VisSpriter clone = createComponent(asset, original.getPlayer().getScale());
 		clone.setFlip(original.isFlipX(), original.isFlipY());
-		clone.onDeserialize(original.playOnStart, original.defaultAnimation);
-		clone.animationPlaying = original.animationPlaying;
+		clone.onDeserialize(original.isPlayOnStart(), original.getDefaultAnimation());
+		clone.setAnimationPlaying(original.isAnimationPlaying());
 		return clone;
 	}
 }
