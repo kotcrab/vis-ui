@@ -18,7 +18,7 @@
     - Renamed to `VisParticle`
     - Position is now controlled by `Transform` component.
 - Changes in `SpriterComponent`:
-    - Renamed to VisSpriter
+    - Renamed to `VisSpriter`
     - Position and rotation is now controlled by `Transform` component.
 - Renaming components:
     - `TextComponent` -> `VisText`

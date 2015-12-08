@@ -1,4 +1,4 @@
-#### Version: 0.3.0 (LibGDX 1.7.1)
+#### Version: 0.3.0
 - Old project from previous versions have to be converted using project converter before loading
 - Scene files are now saved using Json format
 - **Improved**: It's possible to store any asset file in any directory
