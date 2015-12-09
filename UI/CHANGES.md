@@ -1,4 +1,5 @@
 #### Version: 1.0.0-SNAPSHOT (LibGDX 1.7.1)
+- **Added**: VisTextField#toString() now returns field text
 
 #### Version: 0.9.5 (LibGDX 1.7.1)
 - **Added**: constructor `SimpleFormValidator(Disableable)`.

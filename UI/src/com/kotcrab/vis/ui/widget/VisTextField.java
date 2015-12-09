@@ -216,6 +216,11 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		invalidateHierarchy();
 	}
 
+	@Override
+	public String toString () {
+		return getText();
+	}
+
 	protected void calculateOffsets () {
 		float visibleWidth = getWidth();
 		if (style.background != null)
