@@ -28,7 +28,6 @@ import com.kotcrab.vis.runtime.data.LayerData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneConfig.ConfigElement;
-import com.kotcrab.vis.runtime.scene.SceneConfig.FeatureElement;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.system.CameraManager;
 import com.kotcrab.vis.runtime.util.AfterSceneInit;
@@ -59,12 +58,8 @@ public class Scene {
 		SceneConfig config = parameter.config;
 		config.sort();
 
-		for (FeatureElement element : config.getDefaultFeatures()) {
+		for (ConfigElement element : config.getConfigElements()) {
 			if (element.disabled) continue;
-			engineConfig.setSystem(element.provider.create(engineConfig, context, data));
-		}
-
-		for (ConfigElement element : config.getElements()) {
 			engineConfig.setSystem(element.provider.create(engineConfig, context, data));
 		}
 

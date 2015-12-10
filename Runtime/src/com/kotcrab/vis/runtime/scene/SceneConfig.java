@@ -19,21 +19,18 @@ package com.kotcrab.vis.runtime.scene;
 import com.artemis.BaseSystem;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.Comparator;
-
 /** @author Kotcrab */
 public class SceneConfig {
-	private Array<FeatureElement> defaultFeatures = new Array<FeatureElement>();
 	private Array<ConfigElement> elements = new Array<ConfigElement>();
 
 	public SceneConfig () {
-		registerFeatureGroup(SceneFeatureGroup.ESSENTIAL);
-		registerFeatureGroup(SceneFeatureGroup.INFLATER);
-		registerFeatureGroup(SceneFeatureGroup.PHYSICS);
-		registerFeatureGroup(SceneFeatureGroup.RENDERER);
-		registerFeatureGroup(SceneFeatureGroup.PHYSICS_DEBUG);
+		registerFeatureGroup(SceneFeatureGroup.ESSENTIAL, Priority.VIS_ESSENTIAL);
+		registerFeatureGroup(SceneFeatureGroup.INFLATER, Priority.VIS_INFLATER);
+		registerFeatureGroup(SceneFeatureGroup.PHYSICS, Priority.VHS_PHYSICS);
+		registerFeatureGroup(SceneFeatureGroup.RENDERER, Priority.VIS_RENDERER);
+		registerFeatureGroup(SceneFeatureGroup.PHYSICS_DEBUG, Priority.VIS_OTHER);
 
-		registerFeature(SceneFeature.DIRTY_CLEANER_SYSTEM);
+		registerFeature(SceneFeature.DIRTY_CLEANER_SYSTEM, Priority.VIS_OTHER);
 
 		disable(SceneFeature.GROUP_ID_MANAGER);
 		disable(SceneFeature.BOX2D_DEBUG_RENDER_SYSTEM);
@@ -58,7 +55,7 @@ public class SceneConfig {
 	}
 
 	public SceneConfig disable (SceneFeature feature) {
-		for (FeatureElement element : defaultFeatures) {
+		for (ConfigElement element : elements) {
 			if (element.feature == feature) {
 				element.disabled = true;
 				return this;
@@ -77,7 +74,7 @@ public class SceneConfig {
 	}
 
 	public SceneConfig enable (SceneFeature feature) {
-		for (FeatureElement element : defaultFeatures) {
+		for (ConfigElement element : elements) {
 			if (element.feature == feature) {
 				element.disabled = false;
 				return this;
@@ -96,7 +93,7 @@ public class SceneConfig {
 	}
 
 	public SceneConfig replace (SceneFeature feature, SystemProvider newProvider) {
-		for (FeatureElement element : defaultFeatures) {
+		for (ConfigElement element : elements) {
 			if (element.feature == feature) {
 				element.provider = newProvider;
 				return this;
@@ -106,13 +103,13 @@ public class SceneConfig {
 		return this;
 	}
 
-	private void registerFeature (SceneFeature feature) {
-		defaultFeatures.add(new FeatureElement(feature));
+	private void registerFeature (SceneFeature feature, int priority) {
+		elements.add(new ConfigElement(feature, feature.defaultProvider, priority));
 	}
 
-	private void registerFeatureGroup (SceneFeatureGroup group) {
+	private void registerFeatureGroup (SceneFeatureGroup group, int priority) {
 		for (SceneFeature feature : group.features) {
-			registerFeature(feature);
+			registerFeature(feature, priority);
 		}
 	}
 
@@ -120,49 +117,42 @@ public class SceneConfig {
 		elements.sort();
 	}
 
-	Array<FeatureElement> getDefaultFeatures () {
-		return defaultFeatures;
-	}
-
-	Array<ConfigElement> getElements () {
+	Array<ConfigElement> getConfigElements () {
 		return elements;
 	}
 
-	static class ConfigElement implements Comparator<ConfigElement> {
+	static class ConfigElement implements Comparable<ConfigElement> {
+		SceneFeature feature;
+		boolean disabled; //disabled can be only set if feature is set
+
 		SystemProvider provider;
 		int priority;
 
-		public ConfigElement (SystemProvider provider, int priority) {
-			this.priority = priority;
+		public ConfigElement (SceneFeature feature, SystemProvider provider, int priority) {
+			this.feature = feature;
 			this.provider = provider;
+			this.priority = priority;
+		}
+
+		public ConfigElement (SystemProvider provider, int priority) {
+			this.provider = provider;
+			this.priority = priority;
 		}
 
 		@Override
-		public int compare (ConfigElement o1, ConfigElement o2) {
-			return Integer.compare(o1.priority, o2.priority);
-		}
-	}
-
-	static class FeatureElement {
-		SceneFeature feature;
-		SystemProvider provider;
-		boolean disabled;
-
-		public FeatureElement (SceneFeature feature) {
-			this.feature = feature;
-			this.provider = feature.defaultProvider;
-		}
-
-		public FeatureElement (SceneFeature feature, boolean disabled) {
-			this.feature = feature;
-			this.provider = feature.defaultProvider;
-			this.disabled = disabled;
+		public int compareTo (ConfigElement other) {
+			return Integer.compare(priority, other.priority);
 		}
 	}
 
 	public static class Priority {
 		public static final int LOWEST = Integer.MIN_VALUE;
 		public static final int LOW = -100000;
+		public static final int VIS_ESSENTIAL = -10000;
+		public static final int VIS_INFLATER = -9000;
+		public static final int VHS_PHYSICS = -8000;
+		public static final int VIS_RENDERER = -7000;
+		public static final int VIS_OTHER = -5000;
 		public static final int NORMAL = 0;
 		public static final int HIGH = 100000;
 		public static final int HIGHEST = Integer.MAX_VALUE;
