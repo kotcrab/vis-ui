@@ -61,6 +61,7 @@ public class MenuBarModule extends EditorModule {
 
 	private MenuItem undoMenuItem;
 	private Menu editMenu;
+	private Menu toolsMenu;
 
 	public MenuBarModule () {
 		editor = Editor.instance;
@@ -75,7 +76,7 @@ public class MenuBarModule extends EditorModule {
 		createFileMenu();
 		createEditMenu();
 		createSceneMenu();
-		//createToolsMenu();
+		createToolsMenu();
 		createHelpMenu();
 
 		container = new VisTable(true);
@@ -147,16 +148,15 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera Zoom", () -> App.eventBus.post(new SceneMenuBarEvent(RESET_ZOOM))));
 
 	}
+	
+	private void createToolsMenu () {
+		toolsMenu = new Menu("Tools");
+		menuBar.addMenu(toolsMenu);
 
-//	private void createToolsMenu () {
-//		Menu menu = new Menu("Tools");
-//		menuBar.addMenu(menu);
-//
 //		menu.addItem(createMenuItem("Hiero", null, () -> System.out.println("not yet")));
 //		menu.addItem(createMenuItem("Particle Editor", null, () -> System.out.println("not yet")));
 //		menu.addSeparator();
-//
-//	}
+	}
 
 	private void createHelpMenu () {
 		Menu menu = new Menu("Help");
@@ -172,8 +172,8 @@ public class MenuBarModule extends EditorModule {
 		return container;
 	}
 
-	public MenuBar getMenuBar () {
-		return menuBar;
+	public Menu getToolsMenu () {
+		return toolsMenu;
 	}
 
 	@Override
@@ -231,7 +231,7 @@ public class MenuBarModule extends EditorModule {
 		updateUndoButtonText();
 	}
 
-	private enum ControllerPolicy {
+	public enum ControllerPolicy {
 		NONE, PROJECT, SCENE
 	}
 }

@@ -261,6 +261,20 @@ font-small
   orig: 256, 128
   offset: 0, 22
   index: -1
+grey
+  rotate: false
+  xy: 312, 232
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+menu-bg
+  rotate: false
+  xy: 312, 232
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
 icon-arrow-left
   rotate: false
   xy: 284, 215
@@ -354,12 +368,12 @@ icon-trash
   index: -1
 list-selection
   rotate: false
-  xy: 312, 232
+  xy: 273, 16
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
-menu-bg
+vis-blue
   rotate: false
   xy: 273, 16
   size: 1, 1
@@ -653,6 +667,13 @@ tree-selection
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
+  offset: 0, 0
+  index: -1
+vis-red
+  rotate: false
+  xy: 313, 196
+  size: 1, 1
+  orig: 1, 1
   offset: 0, 0
   index: -1
 white
