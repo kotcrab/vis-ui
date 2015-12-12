@@ -1,5 +1,7 @@
 #### Version: 1.0.0-SNAPSHOT (LibGDX 1.7.1)
 - **Added**: VisTextField#toString() now returns field text
+- **Skin**: 
+    - **Added**: Drawables: `grey`, `vis-blue`, `vis-red`
 
 #### Version: 0.9.5 (LibGDX 1.7.1)
 - **Added**: constructor `SimpleFormValidator(Disableable)`.
