@@ -41,6 +41,7 @@ public class VisContainers {
 		editorMC.add(new ExtensionStorageModule());
 
 		editorMC.add(new GsonModule());
+		editorMC.add(new StyleProviderModule());
 		editorMC.add(new AppFileAccessModule());
 		editorMC.add(new VisTwitterReader());
 		editorMC.add(new WebAPIModule());
