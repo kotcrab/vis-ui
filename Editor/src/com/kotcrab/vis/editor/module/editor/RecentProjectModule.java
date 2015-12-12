@@ -85,12 +85,26 @@ public class RecentProjectModule extends EditorModule {
 			if (recentProjects.contains(entry, false)) return;
 			recentProjects.add(entry);
 
-			json.toJson(recentProjects, storageFile);
+			save();
 		}
 	}
 
 	public Array<RecentProjectEntry> getRecentProjects () {
 		return recentProjects;
+	}
+
+	public void clear () {
+		recentProjects.clear();
+		save();
+	}
+
+	public void remove (RecentProjectEntry entry) {
+		recentProjects.removeValue(entry, true);
+		save();
+	}
+
+	private void save () {
+		json.toJson(recentProjects, storageFile);
 	}
 
 	public static class RecentProjectEntry {

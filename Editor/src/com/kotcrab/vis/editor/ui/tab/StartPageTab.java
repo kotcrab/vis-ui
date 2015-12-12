@@ -18,10 +18,12 @@ package com.kotcrab.vis.editor.ui.tab;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Editor;
+import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.ProjectIOModule;
 import com.kotcrab.vis.editor.module.editor.RecentProjectModule;
@@ -31,6 +33,7 @@ import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.LinkLabel.LinkLabelListener;
+import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
@@ -41,12 +44,15 @@ import com.kotcrab.vis.ui.widget.VisTable;
 public class StartPageTab extends MainContentTab implements LinkLabelListener {
 	private static final String NEW_PROJECT_LINK = "\\*NEW_PROJECT";
 	private static final String LOAD_PROJECT_LINK = "\\*LOAD_PROJECT";
+	private static final String CLEAR_RECENT_PROJECTS_LIST = "\\*CLEAR_RECENT_PROJECTS_LIST";
 
 	private VisTwitterReader twitterReader;
 	private RecentProjectModule recentProjectsModule;
 	private ProjectIOModule projectIOModule;
 
 	private Stage stage;
+
+	private VisTable recentProjectListTable;
 
 	public StartPageTab (ModuleInjector injector) {
 		super(false, false);
@@ -72,17 +78,11 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 		quickAccessTable.add(loadProjectLinkLabel).row();
 
 		VisTable recentProjectsTable = new VisTable(false);
+		recentProjectListTable = new VisTable(false);
 		recentProjectsTable.add("Recent projects").row();
+		recentProjectsTable.add(recentProjectListTable);
 
-		Array<RecentProjectEntry> recentProjects = recentProjectsModule.getRecentProjects();
-		if (recentProjects.size == 0)
-			recentProjectsTable.add(new VisLabel("No recently opened projects", Color.GRAY));
-
-		for (RecentProjectEntry entry : recentProjects) {
-			LinkLabel label = new LinkLabel(entry.name, entry.projectPath);
-			label.setListener(this);
-			recentProjectsTable.add(label).row();
-		}
+		updateRecentProjectList();
 
 		VisTable leftSide = new VisTable(false);
 		leftSide.add("Welcome to VisEditor").colspan(2).spaceBottom(8).row();
@@ -95,6 +95,56 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 		content.add(twitterReader.getTable()).fillY().expandY().pad(3).width(400).right();
 
 		return content;
+	}
+
+	public void updateRecentProjectList () {
+		recentProjectListTable.clear();
+
+		Array<RecentProjectEntry> recentProjects = recentProjectsModule.getRecentProjects();
+		if (recentProjects.size == 0) {
+			recentProjectListTable.add(new VisLabel("No recently opened projects", Color.GRAY));
+		}
+
+		for (RecentProjectEntry entry : recentProjects) {
+			LinkLabel label = new LinkLabel(entry.name, entry.projectPath);
+			label.setListener(this);
+
+			VisImageButton removeButton = new VisImageButton(Icons.CLOSE.drawable(), "Remove from list");
+			removeButton.setVisible(false);
+			removeButton.addListener(new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent changeEvent, Actor actor) {
+					recentProjectsModule.remove(entry);
+					updateRecentProjectList();
+				}
+			});
+
+			VisTable tableRow = new VisTable(false);
+			tableRow.setTouchable(Touchable.enabled);
+			tableRow.addListener(new InputListener() { // handle enter/exit events for show remove button
+				@Override
+				public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+					super.enter(event, x, y, pointer, fromActor);
+					removeButton.setVisible(true);
+				}
+
+				@Override
+				public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+					super.exit(event, x, y, pointer, toActor);
+					removeButton.setVisible(false);
+				}
+			});
+
+			tableRow.add(label).expand().left();
+			tableRow.add(removeButton).padLeft(8).right();
+			recentProjectListTable.add(tableRow).fill().row();
+		}
+
+		if (recentProjects.size > 0) {
+			LinkLabel clearListLink = new LinkLabel("Clear List", CLEAR_RECENT_PROJECTS_LIST);
+			clearListLink.setListener(this);
+			recentProjectListTable.add(clearListLink).expand().left();
+		}
 	}
 
 	@Override
@@ -110,6 +160,10 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 				break;
 			case LOAD_PROJECT_LINK:
 				Editor.instance.loadProjectDialog();
+				break;
+			case CLEAR_RECENT_PROJECTS_LIST:
+				recentProjectsModule.clear();
+				updateRecentProjectList();
 				break;
 			default:
 				projectIOModule.loadHandleError(stage, Gdx.files.absolute(url));
