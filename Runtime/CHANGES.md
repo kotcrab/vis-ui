@@ -25,7 +25,7 @@
     - `SoundComponent` -> `VisSound`
     - `MusicComponent` -> `VisMusic`
     - `ParticleComponent` -> `VisParticle`
-    - `Spriter` -> `VisSpriter`
+    - `SpriterComponent` -> `VisSpriter`
     - `SpineComponent` -> `VisSpine`
     - `SpriteComponent` -> `VisSprite`
     - `IDComponent` -> `VisID`
