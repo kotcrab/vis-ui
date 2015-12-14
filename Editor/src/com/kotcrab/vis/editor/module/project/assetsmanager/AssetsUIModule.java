@@ -174,7 +174,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 		if (metadata.lastDirectory != null) {
 			FileHandle dir = Gdx.files.absolute(metadata.lastDirectory);
-			if (dir.exists()) {
+			if (dir.exists() && dir.path().startsWith(project.getVisDirectory().path())) {
 				changeCurrentDirectory(dir, HistoryPolicy.IGNORE);
 			}
 		}
