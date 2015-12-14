@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.module.scene.entitymanipulator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Buttons;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -32,12 +33,19 @@ import com.kotcrab.vis.editor.scene.EditorScene;
  * @author Kotcrab
  */
 public class RectangularSelection {
+	private static final Color INNER_MODE_BORDER_COLOR = new Color(0.11f, 0.63f, 0.89f, 1);
+	private static final Color INNER_MODE_FILL_COLOR = new Color(0.05f, 0.33f, 0.49f, 0.3f);
+	private static final Color OVERLAP_MODE_BORDER_COLOR = new Color(0.11f, 0.88f, 0.2f, 1);
+	private static final Color OVERLAP_MODE_FILL_COLOR = new Color(0.13f, 0.49f, 0.05f, 0.3f);
+
 	private EditorScene scene;
 	private EntityManipulatorModule entityManipulatorModule;
-	private EntityProxyCache proxyCache;
 
+	private EntityProxyCache proxyCache;
 	private Rectangle currentRect = null;
 	private Rectangle rectToDraw = null;
+	private float touchDownPositionX;
+	private SelectionMode selectionMode = SelectionMode.Inner;
 
 	public RectangularSelection (EditorScene scene, EntityManipulatorModule entityManipulatorModule, EntityProxyCache proxyCache) {
 		this.scene = scene;
@@ -49,12 +57,15 @@ public class RectangularSelection {
 		if (rectToDraw != null) {
 			Gdx.gl20.glEnable(GL20.GL_BLEND);
 
-			shapeRenderer.setColor(0.11f, 0.63f, 0.89f, 1);
+			Color border = selectionMode == SelectionMode.Inner ? INNER_MODE_BORDER_COLOR : OVERLAP_MODE_BORDER_COLOR;
+			Color fill = selectionMode == SelectionMode.Inner ? INNER_MODE_FILL_COLOR : OVERLAP_MODE_FILL_COLOR;
+
+			shapeRenderer.setColor(border);
 			shapeRenderer.begin(ShapeType.Line);
 			shapeRenderer.rect(rectToDraw.getX(), rectToDraw.getY(), rectToDraw.getWidth(), rectToDraw.getHeight());
 			shapeRenderer.end();
 
-			shapeRenderer.setColor(0.05f, 0.33f, 0.49f, 0.3f);
+			shapeRenderer.setColor(fill);
 			shapeRenderer.begin(ShapeType.Filled);
 			shapeRenderer.rect(rectToDraw.getX(), rectToDraw.getY(), rectToDraw.getWidth(), rectToDraw.getHeight());
 			shapeRenderer.end();
@@ -64,9 +75,15 @@ public class RectangularSelection {
 	public void findContainedComponents () {
 		Array<EntityProxy> matchingEntities = new Array<>();
 
-		for (EntityProxy entity : proxyCache.getCache().values())
-			if (rectToDraw.contains(entity.getBoundingRectangle()) && entity.getLayerID() == scene.getActiveLayerId())
-				matchingEntities.add(entity);
+		if (selectionMode == SelectionMode.Inner) {
+			for (EntityProxy entity : proxyCache.getCache().values())
+				if (rectToDraw.contains(entity.getBoundingRectangle()) && entity.getLayerID() == scene.getActiveLayerId())
+					matchingEntities.add(entity);
+		} else {
+			for (EntityProxy entity : proxyCache.getCache().values())
+				if (rectToDraw.overlaps(entity.getBoundingRectangle()) && entity.getLayerID() == scene.getActiveLayerId())
+					matchingEntities.add(entity);
+		}
 
 		entityManipulatorModule.softSelectionReset();
 		matchingEntities.forEach(entityManipulatorModule::selectAppend);
@@ -74,6 +91,7 @@ public class RectangularSelection {
 
 	public boolean touchDown (float x, float y, int button) {
 		if (button == Buttons.LEFT) {
+			touchDownPositionX = x;
 			currentRect = new Rectangle(x, y, 0, 0);
 			updateDrawableRect();
 			return true;
@@ -84,6 +102,14 @@ public class RectangularSelection {
 
 	public boolean touchDragged (float x, float y) {
 		if (currentRect != null) {
+
+			// check gesture direction at X axis to change selection mode
+			if (x < touchDownPositionX) {
+				selectionMode = SelectionMode.Overlap;
+			} else {
+				selectionMode = SelectionMode.Inner;
+			}
+
 			currentRect.setSize(x - currentRect.x, y - currentRect.y);
 			updateDrawableRect();
 			return true;
@@ -122,5 +148,16 @@ public class RectangularSelection {
 		else
 			rectToDraw = new Rectangle(x, y, width, height);
 
+	}
+
+	private enum SelectionMode {
+		/**
+		 * Selects only inner objects
+		 */
+		Inner,
+		/**
+		 * Selects inner and overlapping objects
+		 */
+		Overlap
 	}
 }
