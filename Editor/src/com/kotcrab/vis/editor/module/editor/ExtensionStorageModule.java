@@ -23,6 +23,7 @@ import com.kotcrab.vis.editor.plugin.ContainerExtension;
 import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.plugin.ExporterPlugin;
+import com.kotcrab.vis.editor.plugin.api.ComponentTransformerProvider;
 
 import java.lang.reflect.Constructor;
 
@@ -34,8 +35,9 @@ public class ExtensionStorageModule extends EditorModule {
 	private Array<EditorEntitySupport> objectSupports = new Array<>();
 	private Array<ExporterPlugin> exporterPlugins = new Array<>();
 	private Array<ContainerExtension<?>> containerExtensions = new Array<>();
+	private Array<ComponentTransformerProvider> componentTransformerProviders = new Array<>();
 
-	public void addObjectSupport (EditorEntitySupport support) {
+	public void addEntitySupport (EditorEntitySupport support) {
 		objectSupports.add(support);
 	}
 
@@ -47,12 +49,20 @@ public class ExtensionStorageModule extends EditorModule {
 		exporterPlugins.add(exporterPlugin);
 	}
 
+	public void addComponentTransformerProvider (ComponentTransformerProvider provider) {
+		componentTransformerProviders.add(provider);
+	}
+
 	public Array<EditorEntitySupport> getObjectSupports () {
 		return objectSupports;
 	}
 
 	public Array<ExporterPlugin> getExporterPlugins () {
 		return exporterPlugins;
+	}
+
+	public Array<ComponentTransformerProvider> getComponentTransformerProviders () {
+		return componentTransformerProviders;
 	}
 
 	@Override

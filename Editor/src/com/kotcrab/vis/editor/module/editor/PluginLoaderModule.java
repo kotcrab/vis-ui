@@ -25,6 +25,7 @@ import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.plugin.*;
+import com.kotcrab.vis.editor.plugin.api.ComponentTransformerProvider;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
 import com.kotcrab.vis.editor.ui.dialog.PluginDetailsDialog;
@@ -183,7 +184,7 @@ public class PluginLoaderModule extends EditorModule {
 				Object object = cons.newInstance();
 
 				if (object instanceof EditorEntitySupport) {
-					pluginContainer.addObjectSupport((EditorEntitySupport) object);
+					pluginContainer.addEntitySupport((EditorEntitySupport) object);
 					continue;
 				}
 
@@ -194,6 +195,10 @@ public class PluginLoaderModule extends EditorModule {
 
 				if (object instanceof ExporterPlugin) {
 					pluginContainer.addExporterPlugin((ExporterPlugin) object);
+				}
+
+				if (object instanceof ComponentTransformerProvider) {
+					pluginContainer.addComponentTransformerProvider((ComponentTransformerProvider) object);
 				}
 
 				if (object instanceof EntitySupport)
