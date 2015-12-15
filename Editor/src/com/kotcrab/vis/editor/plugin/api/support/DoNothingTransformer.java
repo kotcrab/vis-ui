@@ -14,22 +14,17 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.plugin.api;
+package com.kotcrab.vis.editor.plugin.api.support;
 
+import com.artemis.Component;
+import com.artemis.Entity;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.plugin.api.support.ComponentTransformer;
-import com.kotcrab.vis.editor.plugin.api.support.ConditionalComponentTransformer;
 
 /** @author Kotcrab */
-public interface ComponentTransformerProvider {
-	void registerTransformers (ObjectMap<Class, ComponentTransformer> transformers);
-
-	void registerConditionalTransformers (Array<ConditionalComponentTransformer> condTransformers);
-
-	void registerClassMaps (ObjectMap<Class, Class> classMap);
-
-	int getSourceProjectVersions ();
-
-	int getTargetProjectVersions ();
+public class DoNothingTransformer extends ComponentTransformer<Component> {
+	@Override
+	public void transform (Entity entity, Array<Component> components, Component component) {
+		components.add(component);
+	}
 }

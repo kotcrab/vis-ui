@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.function.Consumer;
 
 /**
  * File related utils.
@@ -139,6 +140,17 @@ public class FileUtils {
 				streamRecursively(file, consumer);
 			else
 				consumer.accept(file);
+		}
+	}
+
+	public static void streamDirectoriesRecursively (FileHandle folder, Consumer<FileHandle> consumer) {
+		if (folder.isDirectory() == false) throw new IllegalStateException("File must be directory!");
+
+		for (FileHandle file : folder.list()) {
+			consumer.accept(folder);
+			if (file.isDirectory()) {
+				streamDirectoriesRecursively(file, consumer);
+			}
 		}
 	}
 

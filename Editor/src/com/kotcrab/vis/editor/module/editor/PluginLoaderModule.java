@@ -195,10 +195,12 @@ public class PluginLoaderModule extends EditorModule {
 
 				if (object instanceof ExporterPlugin) {
 					pluginContainer.addExporterPlugin((ExporterPlugin) object);
+					continue;
 				}
 
 				if (object instanceof ComponentTransformerProvider) {
 					pluginContainer.addComponentTransformerProvider((ComponentTransformerProvider) object);
+					continue;
 				}
 
 				if (object instanceof EntitySupport)

@@ -56,6 +56,7 @@ public class VisContainers {
 		editorMC.add(new EditorSettingsIOModule());
 		editorMC.add(new AnalyticsModule());
 		editorMC.add(new EditingSettingsModule());
+		editorMC.add(new EmptyMenuFillerModule());
 
 		editorMC.add(new GeneralSettingsModule());
 		editorMC.add(new ColorSettingsModule());
