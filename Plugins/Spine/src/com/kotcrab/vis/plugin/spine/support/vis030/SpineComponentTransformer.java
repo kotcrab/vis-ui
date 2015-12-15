@@ -33,6 +33,7 @@ package com.kotcrab.vis.plugin.spine.support.vis030;
 
 import com.artemis.Component;
 import com.artemis.Entity;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.plugin.api.support.ComponentTransformer;
 import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
@@ -47,5 +48,19 @@ public class SpineComponentTransformer extends ComponentTransformer<SpineCompone
 		spine.defaultAnimation = component.getDefaultAnimation();
 		spine.playOnStart = component.isPlayOnStart();
 		components.add(spine);
+
+		try {
+			//halp please
+			Object transform = Class.forName("com.kotcrab.vis.editor.converter.support.vis030.runtime.component.Transform").getConstructor().newInstance();
+			transform.getClass().getMethod("setPosition", float.class, float.class).invoke(transform, component.getX(), component.getY());
+
+			Object tint = Class.forName("com.kotcrab.vis.editor.converter.support.vis030.runtime.component.Tint").getConstructor().newInstance();
+			tint.getClass().getMethod("setTint", Color.class).invoke(tint, component.getColor());
+
+			components.add((Component) transform);
+			components.add((Component) tint);
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException(e);
+		}
 	}
 }
