@@ -19,9 +19,9 @@ package com.kotcrab.vis.editor.ui.dialog;
 import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsIOModule;
-import com.kotcrab.vis.editor.module.project.DefaultExporter;
-import com.kotcrab.vis.editor.module.project.DefaultExporterSettings;
-import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.editor.extension.DefaultExporter;
+import com.kotcrab.vis.editor.extension.DefaultExporterSettings;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
 
@@ -54,7 +54,7 @@ public class DefaultExporterSettingsDialog extends VisWindow {
 
 		skipDefaultCheck = new VisCheckBox("Skip default values");
 
-		VisImage skipDefaultHelpImage = new VisImage(Icons.QUESTION.drawable());
+		VisImage skipDefaultHelpImage = new VisImage(Icons.QUESTION_BIG.drawable());
 		new Tooltip(skipDefaultHelpImage, "Reduces output file size by skipping default values like '0' or 'null'.\n" +
 				"Typically there is no need to disable it but you can do it if you want to inspect\n" +
 				"output scene file.", Align.left);
@@ -63,7 +63,7 @@ public class DefaultExporterSettingsDialog extends VisWindow {
 
 		miniamlOutputCheck = new VisCheckBox("Use minimal output type");
 
-		VisImage minimalOutputHelpImage = new VisImage(Icons.QUESTION.drawable());
+		VisImage minimalOutputHelpImage = new VisImage(Icons.QUESTION_BIG.drawable());
 		new Tooltip(minimalOutputHelpImage, "If checked output JSON will use minimal format, unnecessary double quotes\n" +
 				"will be skipped unless needed. This format may not be supported by all JSON parsers.\nUncheck" +
 				"this to disable minimal format.", Align.left);

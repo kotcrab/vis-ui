@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
-import com.kotcrab.vis.runtime.component.PolygonComponent;
+import com.kotcrab.vis.runtime.component.VisPolygon;
 
 /** @author Kotcrab */
 public class ChangePolygonAction implements UndoableAction {
@@ -36,18 +36,15 @@ public class ChangePolygonAction implements UndoableAction {
 
 	public ChangePolygonAction (EntityManipulatorModule entityManipulator, EntityProxy proxy) {
 		this.entityManipulator = entityManipulator;
-		if (proxy.getEntities().size > 1)
-			throw new IllegalStateException("This action supports only one entity per proxy");
-
 		this.proxy = proxy;
 
-		PolygonComponent component = proxy.getEntities().first().getComponent(PolygonComponent.class);
+		VisPolygon component = proxy.getEntity().getComponent(VisPolygon.class);
 		oldVertices = copyArray(component.vertices);
 		oldFaces = component.faces;
 	}
 
 	public void takeSnapshot () {
-		PolygonComponent component = proxy.getEntities().first().getComponent(PolygonComponent.class);
+		VisPolygon component = proxy.getEntity().getComponent(VisPolygon.class);
 		vertices = copyArray(component.vertices);
 		faces = component.faces;
 	}
@@ -77,7 +74,7 @@ public class ChangePolygonAction implements UndoableAction {
 
 		proxy.reload();
 
-		PolygonComponent component = proxy.getEntities().first().getComponent(PolygonComponent.class);
+		VisPolygon component = proxy.getEntity().getComponent(VisPolygon.class);
 		component.vertices = newPoints;
 		component.faces = newVertices;
 

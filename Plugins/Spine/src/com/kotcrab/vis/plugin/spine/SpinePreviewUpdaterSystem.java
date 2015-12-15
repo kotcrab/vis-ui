@@ -34,34 +34,33 @@ package com.kotcrab.vis.plugin.spine;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
-import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
+import com.kotcrab.vis.plugin.spine.components.SpinePreview;
+import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
 
 /** @author Kotcrab */
-@Wire
 public class SpinePreviewUpdaterSystem extends EntityProcessingSystem {
-	private ComponentMapper<SpineComponent> spineCm;
-	private ComponentMapper<SpinePreviewComponent> previewCm;
+	private ComponentMapper<VisSpine> spineCm;
+	private ComponentMapper<SpinePreview> previewCm;
 
 	public SpinePreviewUpdaterSystem () {
-		super(Aspect.all(SpineComponent.class, SpinePreviewComponent.class));
+		super(Aspect.all(VisSpine.class, SpinePreview.class));
 	}
 
 	@Override
 	protected void process (Entity e) {
-		SpinePreviewComponent previewComponent = previewCm.get(e);
+		SpinePreview previewComponent = previewCm.get(e);
 
 		if (previewComponent.updateAnimation) {
 			previewComponent.updateAnimation = false;
 
-			SpineComponent spineComponent = spineCm.get(e);
+			VisSpine visSpine = spineCm.get(e);
 
-			spineComponent.state.clearTrack(0);
-			spineComponent.skeleton.setToSetupPose();
+			visSpine.state.clearTrack(0);
+			visSpine.skeleton.setToSetupPose();
 
 			if (previewComponent.previewEnabled)
-				spineComponent.state.setAnimation(0, spineComponent.defaultAnimation, true);
+				visSpine.state.setAnimation(0, visSpine.defaultAnimation, true);
 		}
 	}
 }

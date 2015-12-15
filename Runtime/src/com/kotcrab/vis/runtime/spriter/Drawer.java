@@ -239,7 +239,7 @@ public abstract class Drawer<R> {
 	}
 
 	/**
-	 * Sets the color for drawing lines, rectangles and circles.
+	 * Sets the tint for drawing lines, rectangles and circles.
 	 * @param r the red value between 0.0 - 1.0
 	 * @param g the green value between 0.0 - 1.0
 	 * @param b the blue value between 0.0 - 1.0

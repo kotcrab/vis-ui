@@ -19,34 +19,33 @@ package com.kotcrab.vis.runtime.system.physics;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.kotcrab.vis.runtime.component.PhysicsComponent;
-import com.kotcrab.vis.runtime.component.PhysicsSpriteComponent;
-import com.kotcrab.vis.runtime.component.SpriteComponent;
+import com.kotcrab.vis.runtime.component.PhysicsBody;
+import com.kotcrab.vis.runtime.component.PhysicsSprite;
+import com.kotcrab.vis.runtime.component.Transform;
+import com.kotcrab.vis.runtime.component.VisSprite;
 
 /** @author Kotcrab */
-@Wire
 public class PhysicsSpriteUpdateSystem extends EntityProcessingSystem {
-	private ComponentMapper<PhysicsComponent> physicsCm;
-	private ComponentMapper<SpriteComponent> spriteCm;
-	private ComponentMapper<PhysicsSpriteComponent> physicsSpriteCm;
+	private ComponentMapper<PhysicsBody> physicsCm;
+	private ComponentMapper<PhysicsSprite> physicsSpriteCm;
+	private ComponentMapper<Transform> transformCm;
 
 	public PhysicsSpriteUpdateSystem () {
-		super(Aspect.all(PhysicsComponent.class, PhysicsSpriteComponent.class, SpriteComponent.class));
+		super(Aspect.all(PhysicsBody.class, PhysicsSprite.class, VisSprite.class));
 	}
 
 	@Override
 	protected void process (Entity e) {
-		PhysicsComponent physics = physicsCm.get(e);
+		PhysicsBody physics = physicsCm.get(e);
 		if (physics.body == null) return;
-		SpriteComponent sprite = spriteCm.get(e);
-		PhysicsSpriteComponent physicsSprite = physicsSpriteCm.get(e);
+		PhysicsSprite physicsSprite = physicsSpriteCm.get(e);
+		Transform transform = transformCm.get(e);
 
-		Vector2 pos = physics.body.getPosition();
-		sprite.setPosition(pos.x, pos.y);
-		sprite.setRotation(physicsSprite.originalRotation + physics.body.getAngle() * MathUtils.radiansToDegrees);
+		Vector2 bodyPos = physics.body.getPosition();
+		transform.setPosition(bodyPos.x, bodyPos.y);
+		transform.setRotation(physicsSprite.originalRotation + physics.body.getAngle() * MathUtils.radiansToDegrees);
 	}
 }

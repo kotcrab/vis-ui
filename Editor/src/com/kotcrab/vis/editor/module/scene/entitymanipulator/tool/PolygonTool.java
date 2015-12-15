@@ -35,16 +35,15 @@ import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangePolygonAction;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
-import com.kotcrab.vis.editor.util.gdx.EventStopper;
-import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
-import com.kotcrab.vis.ui.util.value.VisValue;
 import com.kotcrab.vis.editor.util.polygon.Clipper;
 import com.kotcrab.vis.editor.util.polygon.Clipper.Polygonizer;
 import com.kotcrab.vis.editor.util.polygon.PolygonUtils;
-import com.kotcrab.vis.runtime.component.PolygonComponent;
+import com.kotcrab.vis.editor.util.scene2d.EventStopper;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
+import com.kotcrab.vis.runtime.component.VisPolygon;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.value.VisValue;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -71,7 +70,7 @@ public class PolygonTool extends BaseSelectionTool {
 	private TextureRegion polygonDown = Assets.getMiscRegion("polygon-down");
 
 	private EntityProxy proxy;
-	private PolygonComponent component;
+	private VisPolygon component;
 	private Vector2 selectedVertex;
 	private Vector2 overVertex;
 	private Vector2 lineOverStartVertex;
@@ -520,7 +519,7 @@ public class PolygonTool extends BaseSelectionTool {
 			return;
 		}
 
-		if (selection.size() > 1 || selection.first() instanceof GroupEntityProxy) {
+		if (selection.size() > 1) {
 			statusLabel.setText(SELECT_ONLY_ONE);
 			overVertex = null;
 			selectedVertex = null;
@@ -529,14 +528,14 @@ public class PolygonTool extends BaseSelectionTool {
 
 		proxy = selection.first();
 
-		if (proxy.hasComponent(PolygonComponent.class) == false) {
+		if (proxy.hasComponent(VisPolygon.class) == false) {
 			statusLabel.setText(NO_POLYGON_IN_SELECTION);
 			overVertex = null;
 			selectedVertex = null;
 			return;
 		}
 
-		component = proxy.getEntities().get(0).getComponent(PolygonComponent.class);
+		component = proxy.getEntity().getComponent(VisPolygon.class);
 
 		statusLabel.setVisible(false);
 		buttonTable.setVisible(true);

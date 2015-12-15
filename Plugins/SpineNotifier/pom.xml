@@ -5,14 +5,14 @@
     <parent>
         <artifactId>vis-parent</artifactId>
         <groupId>com.kotcrab.vis</groupId>
-        <version>1.1.2</version>
+        <version>1.2.6</version>
         <relativePath>../../Parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>vis-editor-spine-notifier</artifactId>
     <packaging>jar</packaging>
-    <version>0.2.6-SNAPSHOT</version>
+    <version>0.3.0-SNAPSHOT</version>
     <name>VisEditor Spine Notification</name>
 
     <properties>
@@ -45,7 +45,7 @@
                             <Plugin-Description>Notifies if Spine integration plugin may be enabled</Plugin-Description>
                             <Plugin-Provider>Kotcrab</Plugin-Provider>
                             <Plugin-Version>${project.version}</Plugin-Version>
-                            <Plugin-Compatibility>3</Plugin-Compatibility>
+                            <Plugin-Compatibility>4</Plugin-Compatibility>
                         </manifestEntries>
                     </archive>
                     <outputDirectory>../../Editor/target/plugins/spine-notifier</outputDirectory>

@@ -52,10 +52,9 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 		VisTable updateTable = new VisTable(true);
 		updateTable.add("Update channel:");
 		updateTable.add(updateChannelSelectBox);
-		VisImage updateHelpImage = new VisImage(Icons.QUESTION.drawable());
+		VisImage updateHelpImage = new VisImage(Icons.QUESTION_BIG.drawable());
 		new Tooltip(updateHelpImage, "Select update channel that will be used for update checking:\n" +
 				"Stable: The most stable builds, should be bug free in theory.\n" +
-				"Beta: Experimentally builds made before stable release, may contain bugs.\n" +
 				"Cutting Edge: Built after every single change, expect a lot of bugs and a lot of builds.", Align.left);
 		updateTable.add(updateHelpImage).size(22);
 
@@ -68,6 +67,12 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 
 	@Override
 	public void loadConfigToTable () {
+		//beta update channel was removed in 0.3.0
+		if (config.updateChannel == UpdateChannelType.BETA) {
+			config.updateChannel = UpdateChannelType.STABLE;
+			settingsSave();
+		}
+
 		confirmExitCheck.setChecked(config.confirmExit);
 		checkForUpdatesCheck.setChecked(config.checkForUpdates);
 		updateChannelSelectBox.setSelectedEnum(config.updateChannel);

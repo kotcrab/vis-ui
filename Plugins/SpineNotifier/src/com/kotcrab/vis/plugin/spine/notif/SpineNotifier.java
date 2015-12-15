@@ -38,7 +38,7 @@ import com.kotcrab.vis.editor.module.editor.EditorModule;
 import com.kotcrab.vis.editor.module.editor.PluginFilesAccessModule;
 import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
-import com.kotcrab.vis.editor.plugin.ContainerExtension;
+import com.kotcrab.vis.editor.plugin.api.ContainerExtension;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
 @VisPlugin

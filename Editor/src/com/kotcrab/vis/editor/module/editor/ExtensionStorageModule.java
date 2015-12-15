@@ -17,15 +17,23 @@
 package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.assets.*;
+import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
+import com.kotcrab.vis.editor.assets.transaction.generator.*;
+import com.kotcrab.vis.editor.extension.AssetType;
+import com.kotcrab.vis.editor.extension.DefaultExporter;
+import com.kotcrab.vis.editor.extension.SpriterAssetsFileSorter;
+import com.kotcrab.vis.editor.extension.SpriterUIContextGenerator;
 import com.kotcrab.vis.editor.module.Module;
-import com.kotcrab.vis.editor.module.project.DefaultExporter;
-import com.kotcrab.vis.editor.plugin.ContainerExtension;
-import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
-import com.kotcrab.vis.editor.plugin.ExporterPlugin;
-import com.kotcrab.vis.editor.plugin.api.ComponentTransformerProvider;
+import com.kotcrab.vis.editor.plugin.api.*;
+import com.kotcrab.vis.editor.plugin.api.ContainerExtension.ExtensionScope;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * Holds plugins loaded by {@link PluginLoaderModule}. Others modules (even from different containers like 'project' or 'scene') then can access them.
@@ -33,8 +41,19 @@ import java.lang.reflect.Constructor;
  */
 public class ExtensionStorageModule extends EditorModule {
 	private Array<EditorEntitySupport> objectSupports = new Array<>();
+
 	private Array<ExporterPlugin> exporterPlugins = new Array<>();
 	private Array<ContainerExtension<?>> containerExtensions = new Array<>();
+	private Array<ResourceLoader> resourceLoaders = new Array<>();
+	private Array<AssetTypeStorage> assetTypeStorages = new Array<>();
+	private Array<AssetsUIContextGeneratorProvider> assetsContextGenProviders = new Array<>();
+	private Array<AssetsFileSorter> assetsFileSorters = new Array<>();
+	private Array<AssetDescriptorProvider<?>> assetDescriptorProviders = new Array<>();
+	private Array<AssetTransactionGenerator> assetTransactionGens = new Array<>();
+
+	private Array<AssetDirectoryDescriptor> assetDirectoryDescriptors = new Array<>();
+
+	// Add methods
 	private Array<ComponentTransformerProvider> componentTransformerProviders = new Array<>();
 
 	public void addEntitySupport (EditorEntitySupport support) {
@@ -49,16 +68,61 @@ public class ExtensionStorageModule extends EditorModule {
 		exporterPlugins.add(exporterPlugin);
 	}
 
+	public void addResourceLoader (ResourceLoader loader) {
+		resourceLoaders.add(loader);
+	}
+
+	public void addAssetTypeStorage (AssetTypeStorage storage) {
+		assetTypeStorages.add(storage);
+	}
+
+	public void addAssetContextGeneratorProvider (AssetsUIContextGeneratorProvider contextProvider) {
+		assetsContextGenProviders.add(contextProvider);
+	}
+
+	public void addAssetFileSorter (AssetsFileSorter sorter) {
+		assetsFileSorters.add(sorter);
+	}
+
+	public void addAssetDescriptorProvider (AssetDescriptorProvider<?> provider) {
+		assetDescriptorProviders.add(provider);
+	}
+
+	public void addAssetTransactionGenerators (AssetTransactionGenerator generator) {
+		assetTransactionGens.add(generator);
+	}
+
+	// Getters
+	public Array<EditorEntitySupport> getEntitiesSupports () {
+		return objectSupports;
+	}
+
 	public void addComponentTransformerProvider (ComponentTransformerProvider provider) {
 		componentTransformerProviders.add(provider);
 	}
 
-	public Array<EditorEntitySupport> getObjectSupports () {
-		return objectSupports;
-	}
-
 	public Array<ExporterPlugin> getExporterPlugins () {
 		return exporterPlugins;
+	}
+
+	public Array<AssetDirectoryDescriptor> getAssetDirectoryDescriptors () {
+		return assetDirectoryDescriptors;
+	}
+
+	public Array<AssetsUIContextGeneratorProvider> getAssetsContextGeneratorsProviders () {
+		return assetsContextGenProviders;
+	}
+
+	public Array<AssetsFileSorter> getAssetsFileSorters () {
+		return assetsFileSorters;
+	}
+
+	public Array<AssetDescriptorProvider<?>> getAssetDescriptorProviders () {
+		return assetDescriptorProviders;
+	}
+
+	public Array<AssetTransactionGenerator> getAssetTransactionGenerator () {
+		return assetTransactionGens;
 	}
 
 	public Array<ComponentTransformerProvider> getComponentTransformerProviders () {
@@ -66,8 +130,61 @@ public class ExtensionStorageModule extends EditorModule {
 	}
 
 	@Override
-	public void postInit () {
+	public void init () {
+		addDefaultExtensions();
+
+		resourceLoaders.forEach(loader -> {
+			Log.debug("ExtensionStorage::ResourceLoader", "Loading " + loader.getName());
+			loader.load();
+		});
+
+		assetTypeStorages.forEach(storage -> {
+			try {
+				for (Field field : storage.getClass().getDeclaredFields()) {
+					if (Modifier.isStatic(field.getModifiers())) {
+						if (field.getType().isAssignableFrom(AssetDirectoryDescriptor.class)) {
+							assetDirectoryDescriptors.add((AssetDirectoryDescriptor) field.get(storage));
+						}
+					}
+				}
+			} catch (ReflectiveOperationException e) {
+				throw new IllegalStateException(e);
+			}
+		});
+	}
+
+	private void addDefaultExtensions () {
 		exporterPlugins.add(new DefaultExporter());
+
+		assetTypeStorages.add(new AssetType());
+		assetsContextGenProviders.add(SpriterUIContextGenerator::new);
+		assetsFileSorters.add(new SpriterAssetsFileSorter());
+
+		assetDescriptorProviders.add(new BmpFontDescriptorProvider());
+		assetDescriptorProviders.add(new ParticleDescriptorProvider());
+		assetDescriptorProviders.add(new MusicDescriptorProvider());
+		assetDescriptorProviders.add(new SoundDescriptorProvider());
+		assetDescriptorProviders.add(new TextureRegionDescriptorProvider());
+		assetDescriptorProviders.add(new AtlasRegionDescriptorProvider());
+		assetDescriptorProviders.add(new TtfFontDescriptorProvider());
+		assetDescriptorProviders.add(new ShaderDescriptorProvider());
+		assetDescriptorProviders.add(new SpriterDescriptorProvider());
+
+		assetTransactionGens.add(new AtlasRegionAssetTransactionGenerator());
+		assetTransactionGens.add(new MusicAssetTransactionGenerator());
+		assetTransactionGens.add(new SoundAssetTransactionGenerator());
+		assetTransactionGens.add(new ParticleAssetTransactionGenerator());
+		assetTransactionGens.add(new BmpFontAssetTransactionGenerator());
+		assetTransactionGens.add(new TextureRegionAssetTransactionGenerator());
+		assetTransactionGens.add(new TtfAssetTransactionGenerator());
+	}
+
+	@Override
+	public void dispose () {
+		resourceLoaders.forEach(loader -> {
+			Log.debug("ExtensionStorage::ResourceLoader", "Unloading " + loader.getName());
+			loader.dispose();
+		});
 	}
 
 	public <T extends Module> Array<T> getContainersExtensions (Class<T> baseModuleType, ExtensionScope scope) {

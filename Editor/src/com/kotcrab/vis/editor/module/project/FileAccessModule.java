@@ -33,11 +33,6 @@ public class FileAccessModule extends ProjectModule {
 
 	private FileHandle sceneFolder;
 	private FileHandle gfxFolder;
-	private FileHandle shaderFolder;
-	private FileHandle ttfFontFolder;
-	private FileHandle bmpFontFolder;
-	private FileHandle particleFolder;
-	private FileHandle spriterFolder;
 
 	@Override
 	public void init () {
@@ -47,15 +42,10 @@ public class FileAccessModule extends ProjectModule {
 
 		sceneFolder = assetsFolder.child("scene");
 		gfxFolder = assetsFolder.child("gfx");
-		shaderFolder = assetsFolder.child("shader");
-		ttfFontFolder = assetsFolder.child("font");
-		bmpFontFolder = assetsFolder.child("bmpfont");
-		particleFolder = assetsFolder.child("particle");
-		spriterFolder = assetsFolder.child("spriter");
 	}
 
 	public Array<FileHandle> getSceneFiles () {
-		Array<FileHandle> files = FileUtils.listRecursive(getSceneFolder());
+		Array<FileHandle> files = FileUtils.listRecursive(getAssetsFolder());
 
 		Iterator<FileHandle> it = files.iterator();
 
@@ -86,56 +76,17 @@ public class FileAccessModule extends ProjectModule {
 		return moduleFolder;
 	}
 
-	public FileHandle getSceneFolder () {
-		return sceneFolder;
-	}
-
+	@Deprecated
 	public FileHandle getGfxFolder () {
 		return gfxFolder;
 	}
 
-	public FileHandle getShaderFolder () {
-		return shaderFolder;
-	}
-
-	public FileHandle getParticleFolder () {
-		return particleFolder;
-	}
-
-	public FileHandle getSpriterFolder () {
-		return spriterFolder;
-	}
-
-	public FileHandle getBMPFontFolder () {
-		return bmpFontFolder;
-	}
-
-	public String getBMPFontFolderRelative () {
-		return relativizeToAssetsFolder(bmpFontFolder);
-	}
-
-	public FileHandle getTTFFontFolder () {
-		return ttfFontFolder;
-	}
-
-	public String getTTFFontFolderRelative () {
-		return relativizeToAssetsFolder(ttfFontFolder);
-	}
-
 	public String relativizeToVisFolder (FileHandle file) {
-		return relativizeToVisFolder(file.path());
-	}
-
-	public String relativizeToVisFolder (String absolutePath) {
-		return FileUtils.relativize(visFolder, absolutePath);
+		return FileUtils.relativize(visFolder, file);
 	}
 
 	public String relativizeToAssetsFolder (FileHandle file) {
-		return relativizeToAssetsFolder(file.path());
-	}
-
-	public String relativizeToAssetsFolder (String absolutePath) {
-		return FileUtils.relativize(assetsFolder, absolutePath);
+		return FileUtils.relativize(assetsFolder, file);
 	}
 
 	public String derelativizeFromAssetsFolder (String relativePath) {

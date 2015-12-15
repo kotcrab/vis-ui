@@ -23,9 +23,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.ui.util.value.PrefHeightIfVisibleValue;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.value.PrefHeightIfVisibleValue;
 import com.kotcrab.vis.ui.widget.*;
 
 /**
@@ -36,6 +38,8 @@ public class SelectFileDialog extends VisWindow {
 	private String[] extensions;
 	private boolean hideExtension;
 	private FileHandle folder;
+	private AssetsMetadataModule assetsMetadata;
+	private AssetDirectoryDescriptor dirDescriptor;
 	private FileDialogListener listener;
 
 	private ObjectMap<String, FileHandle> fileMap = new ObjectMap<>();
@@ -51,9 +55,16 @@ public class SelectFileDialog extends VisWindow {
 
 	/** @param extensions multiple extensions can be passed separated with | for example: mp3|wav|ogg */
 	public SelectFileDialog (String extensions, boolean hideExtension, FileHandle folder, FileDialogListener listener) {
+		this(extensions, hideExtension, folder, null, null, listener);
+	}
+
+	/** @param extensions multiple extensions can be passed separated with | for example: mp3|wav|ogg */
+	public SelectFileDialog (String extensions, boolean hideExtension, FileHandle folder, AssetsMetadataModule assetsMetadata, AssetDirectoryDescriptor dirDescriptor, FileDialogListener listener) {
 		super("Select File");
 		this.hideExtension = hideExtension;
 		this.folder = folder;
+		this.assetsMetadata = assetsMetadata;
+		this.dirDescriptor = dirDescriptor;
 		this.listener = listener;
 		this.extensions = extensions.split("\\|");
 
@@ -72,7 +83,7 @@ public class SelectFileDialog extends VisWindow {
 		buttonsTable.add(cancelButton = new VisTextButton("Cancel"));
 		buttonsTable.add(okButton = new VisTextButton("OK"));
 
-		noFilesLabel = new VisLabel("There isn't any available file to select");
+		noFilesLabel = new VisLabel("There isn't any available file to select.");
 
 		add(noFilesLabel).height(PrefHeightIfVisibleValue.INSTANCE).center().spaceBottom(0).row();
 		add(fileList).expand().fill().height(PrefHeightIfVisibleValue.INSTANCE).row();
@@ -139,11 +150,19 @@ public class SelectFileDialog extends VisWindow {
 
 	private void buildFileList (FileHandle directory) {
 		for (FileHandle file : directory.list()) {
-			if (file.isDirectory()) buildFileList(file);
+			if (file.isDirectory()) {
+				buildFileList(file);
+				continue;
+			}
+
+			if (assetsMetadata != null && dirDescriptor != null) {
+				if (assetsMetadata.isDirectoryMarkedAs(file, dirDescriptor) == false) continue;
+			}
 
 			for (String extension : extensions) {
-				if (file.extension().equals(extension))
+				if (file.extension().equals(extension)) {
 					fileMap.put(file.path().substring(folder.path().length() + 1, file.path().length() - (hideExtension ? file.extension().length() + 1 : 0)), file);
+				}
 			}
 		}
 

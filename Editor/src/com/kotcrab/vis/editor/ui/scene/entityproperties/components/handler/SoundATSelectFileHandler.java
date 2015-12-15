@@ -16,10 +16,32 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties.components.handler;
 
+import com.artemis.Entity;
+import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.extension.AssetType;
+import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.runtime.assets.SoundAsset;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
+
 /** @author Kotcrab */
-public class SoundATSelectFileHandler extends AudioATSelectFileHandler {
+public class SoundATSelectFileHandler implements ATSelectFileHandler {
+	private FileAccessModule fileAccess;
+
 	@Override
-	protected String getAudioRoot () {
-		return "sound";
+	public void applyChanges (Entity entity, FileHandle file) {
+		AssetReference asset = entity.getComponent(AssetReference.class);
+		asset.asset = new SoundAsset(fileAccess.relativizeToAssetsFolder(file));
+	}
+
+	@Override
+	public String getAssetDirectoryDescriptorId () {
+		return AssetType.DIRECTORY_SOUND.getId();
+	}
+
+	@Override
+	public String getLabelValue (Entity entity) {
+		SoundAsset asset = (SoundAsset) entity.getComponent(AssetReference.class).asset;
+		return asset.getPath();
 	}
 }

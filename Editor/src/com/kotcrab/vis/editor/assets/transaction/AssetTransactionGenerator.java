@@ -23,11 +23,12 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 /**
  * Interface for classes that are able to create assets transaction for specific {@link VisAssetDescriptor}.
  * Asset transaction is operation where asset file is moved or renamed.
+ * @author Kotcrab
  */
 public interface AssetTransactionGenerator {
 	void setTransactionStorage (FileHandle backupDirectory);
 
-	boolean isSupported (VisAssetDescriptor descriptor);
+	boolean isSupported (VisAssetDescriptor descriptor, FileHandle file);
 
 	AssetTransaction analyze (ModuleInjector injector, AssetProviderResult providerResult, FileHandle source, FileHandle target, String relativeTargetPath);
 }

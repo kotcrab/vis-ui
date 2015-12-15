@@ -24,8 +24,12 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.plugin.*;
-import com.kotcrab.vis.editor.plugin.api.ComponentTransformerProvider;
+import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
+import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.kotcrab.vis.editor.plugin.FailedPluginDescriptor;
+import com.kotcrab.vis.editor.plugin.PluginDescriptor;
+import com.kotcrab.vis.editor.plugin.api.*;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
 import com.kotcrab.vis.editor.ui.dialog.PluginDetailsDialog;
@@ -33,7 +37,7 @@ import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.ui.toast.LoadingPluginsFailedToast;
 import com.kotcrab.vis.editor.util.ChildFirstURLClassLoader;
 import com.kotcrab.vis.editor.util.FileUtils;
-import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
@@ -59,7 +63,7 @@ public class PluginLoaderModule extends EditorModule {
 	private static final String TAG = "PluginLoader";
 	private static final String PLUGINS_FOLDER_PATH = App.JAR_FOLDER_PATH + "plugins";
 
-	private ExtensionStorageModule pluginContainer;
+	private ExtensionStorageModule extensionStorage;
 	private PluginSettingsModule settings;
 	private ToastModule toastModule;
 
@@ -71,7 +75,7 @@ public class PluginLoaderModule extends EditorModule {
 	private String currentlyLoadingPlugin; //name of plugin that is loaded, used to throw exception if plugin loading failed
 
 	@Override
-	public void postInit () {
+	public void init () {
 		FileHandle pluginsFolder = Gdx.files.absolute(PLUGINS_FOLDER_PATH);
 		Log.debug(TAG, "Loading plugins from: " + pluginsFolder);
 
@@ -85,8 +89,9 @@ public class PluginLoaderModule extends EditorModule {
 			toastModule.show(new DetailsToast("Plugin loading failed! (" + currentlyLoadingPlugin + ")", e));
 		}
 
-		if (failedPlugins.size > 0)
+		if (failedPlugins.size > 0) {
 			toastModule.show(new LoadingPluginsFailedToast(failedPlugins));
+		}
 	}
 
 	private void loadPluginsDescriptors (Array<FileHandle> pluginsFolders) throws IOException {
@@ -184,29 +189,60 @@ public class PluginLoaderModule extends EditorModule {
 				Object object = cons.newInstance();
 
 				if (object instanceof EditorEntitySupport) {
-					pluginContainer.addEntitySupport((EditorEntitySupport) object);
+					extensionStorage.addEntitySupport((EditorEntitySupport) object);
 					continue;
 				}
 
 				if (object instanceof ContainerExtension) {
-					pluginContainer.addContainerExtension((ContainerExtension) object);
+					extensionStorage.addContainerExtension((ContainerExtension) object);
 					continue;
 				}
 
 				if (object instanceof ExporterPlugin) {
-					pluginContainer.addExporterPlugin((ExporterPlugin) object);
+					extensionStorage.addExporterPlugin((ExporterPlugin) object);
+					continue;
+				}
+
+				if (object instanceof ResourceLoader) {
+					extensionStorage.addResourceLoader((ResourceLoader) object);
+					continue;
+				}
+
+				if (object instanceof AssetTypeStorage) {
+					extensionStorage.addAssetTypeStorage((AssetTypeStorage) object);
+					continue;
+				}
+
+				if (object instanceof AssetsUIContextGeneratorProvider) {
+					extensionStorage.addAssetContextGeneratorProvider((AssetsUIContextGeneratorProvider) object);
 					continue;
 				}
 
 				if (object instanceof ComponentTransformerProvider) {
-					pluginContainer.addComponentTransformerProvider((ComponentTransformerProvider) object);
+					extensionStorage.addComponentTransformerProvider((ComponentTransformerProvider) object);
 					continue;
 				}
 
-				if (object instanceof EntitySupport)
+				if (object instanceof AssetsFileSorter) {
+					extensionStorage.addAssetFileSorter((AssetsFileSorter) object);
 					continue;
+				}
 
-				Log.warn("Plugin '" + descriptor.folderName + "' was successfully loaded but it's plugin class '" + clazz.getSimpleName() + "' object wasn't recognized.");
+				if (object instanceof AssetDescriptorProvider) {
+					extensionStorage.addAssetDescriptorProvider((AssetDescriptorProvider<?>) object);
+					continue;
+				}
+
+				if (object instanceof AssetTransactionGenerator) {
+					extensionStorage.addAssetTransactionGenerators((AssetTransactionGenerator) object);
+					continue;
+				}
+
+				if (object instanceof EntitySupport) {
+					continue;
+				}
+
+				Log.warn("Plugin '" + descriptor.folderName + "' was successfully loaded but it's main plugin class '" + clazz.getSimpleName() + "' object wasn't recognized.");
 			}
 		}
 	}

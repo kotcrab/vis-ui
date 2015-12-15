@@ -40,7 +40,7 @@ public class TextureRegionAssetTransactionGenerator implements AssetTransactionG
 	}
 
 	@Override
-	public boolean isSupported (VisAssetDescriptor descriptor) {
+	public boolean isSupported (VisAssetDescriptor descriptor, FileHandle file) {
 		return descriptor instanceof TextureRegionAsset;
 	}
 

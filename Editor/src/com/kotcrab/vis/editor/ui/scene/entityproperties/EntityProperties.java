@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.artemis.Component;
+import com.artemis.Entity;
 import com.artemis.EntityEdit;
 import com.artemis.utils.Bag;
 import com.badlogic.gdx.Gdx;
@@ -40,6 +41,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
@@ -49,12 +51,13 @@ import com.kotcrab.vis.editor.module.project.SupportModule;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
-import com.kotcrab.vis.editor.module.scene.VisComponentManipulator;
 import com.kotcrab.vis.editor.module.scene.action.ComponentAddAction;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntitiesSelection;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragment;
+import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.ui.TintImage;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.PhysicsPropertiesComponentTable;
@@ -65,18 +68,20 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.GroupUITab
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.TtfTextUITable;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
-import com.kotcrab.vis.editor.util.gdx.EventStopper;
-import com.kotcrab.vis.editor.util.gdx.FieldUtils;
-import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
-import com.kotcrab.vis.ui.util.value.VisValue;
+import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
+import com.kotcrab.vis.editor.util.scene2d.EventStopper;
+import com.kotcrab.vis.editor.util.scene2d.FieldUtils;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.value.FloatProxyValue;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ActorUtils;
 import com.kotcrab.vis.ui.util.TableUtils;
+import com.kotcrab.vis.ui.util.value.VisValue;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
@@ -103,6 +108,7 @@ public class EntityProperties extends VisTable implements Disposable {
 	private StatusBarModule statusBarModule;
 	private ToastModule toastModule;
 	private ColorPickerModule colorPickerModule;
+	private ExtensionStorageModule extensionStorage;
 
 	private FileAccessModule fileAccessModule;
 	private FontCacheModule fontCacheModule;
@@ -117,7 +123,6 @@ public class EntityProperties extends VisTable implements Disposable {
 	private ColorPicker picker;
 	private Tab parentTab;
 
-	private Array<EntityProxy> entities;
 	private boolean groupSelected;
 
 	private ChangeListener sharedChangeListener;
@@ -166,12 +171,11 @@ public class EntityProperties extends VisTable implements Disposable {
 	private IndeterminateCheckbox yFlipCheck;
 	private SceneModuleContainer sceneMC;
 
-	public EntityProperties (SceneModuleContainer sceneMC, Tab parentSceneTab, Array<EntityProxy> entities) {
+	public EntityProperties (SceneModuleContainer sceneMC, Tab parentSceneTab) {
 		super(true);
 		sceneMC.injectModules(this);
 
 		this.sceneMC = sceneMC;
-		this.entities = entities;
 		this.parentTab = parentSceneTab;
 		this.picker = colorPickerModule.getPicker();
 
@@ -230,7 +234,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		pickerListener = new ColorPickerAdapter() {
 			@Override
 			public void finished (Color newColor) {
-				for (EntityProxy entity : entities)
+				for (EntityProxy entity : entityManipulator.getSelectedEntities())
 					entity.setColor(newColor);
 
 				parentTab.dirty();
@@ -250,8 +254,10 @@ public class EntityProperties extends VisTable implements Disposable {
 
 		componentSelectDialog = new ComponentSelectDialog(this, clazz -> {
 			try {
-				if (getProxies().size == 0) return; //nothing is selected
-				undoModule.execute(new ComponentAddAction(componentManipulator, getProxies(), clazz));
+				ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
+
+				if (entities.size() == 0) return; //nothing is selected
+				undoModule.execute(new ComponentAddAction(sceneMC, entities, clazz));
 				entityComponentChanged = true;
 			} catch (ReflectiveOperationException e) {
 				Log.exception(e);
@@ -261,8 +267,8 @@ public class EntityProperties extends VisTable implements Disposable {
 
 		addComponentButton = new VisTextButton("Add Component");
 		addComponentButton.addListener(new VisChangeListener((event, actor) -> {
-			boolean anyComponent = componentSelectDialog.build();
-			if (anyComponent == false) {
+			boolean anyComponentAvailable = componentSelectDialog.build();
+			if (anyComponentAvailable == false) {
 				statusBarModule.setText("There isn't any available component");
 				return;
 			}
@@ -278,14 +284,14 @@ public class EntityProperties extends VisTable implements Disposable {
 
 		//TODO: [plugin] plugin entry point
 		registerComponentTable(new RenderableComponentTable(sceneMC));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, ShaderComponent.class, true));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, PolygonComponent.class, true));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, Shader.class, true));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, VisPolygon.class, true));
 		registerComponentTable(new PhysicsPropertiesComponentTable(sceneMC));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, VariablesComponent.class, true));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, Variables.class, true));
 		registerComponentTable(new SpriterPropertiesComponentTable(sceneMC));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, MusicComponent.class, false));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, SoundComponent.class, false));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, ParticleComponent.class, false));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, VisMusic.class, false));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, VisSound.class, false));
+		registerComponentTable(new AutoComponentTable<>(sceneMC, VisParticle.class, false));
 
 		propertiesTable = new VisTable(true);
 
@@ -390,6 +396,8 @@ public class EntityProperties extends VisTable implements Disposable {
 		propertiesTable.reset();
 		TableUtils.setSpacingDefaults(propertiesTable);
 
+		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
+
 		VisTable rotationTintTable = new VisTable(true);
 		if (EntityUtils.isRotationSupportedForEntities(entities)) rotationTintTable.add(rotationTable);
 		rotationTintTable.add().expand().fill();
@@ -422,8 +430,8 @@ public class EntityProperties extends VisTable implements Disposable {
 		}
 
 		activeComponentTables.clear();
-		if (entities.size > 0) {
-			Bag<Component> components = entities.get(0).getEntities().get(0).getComponents(new Bag<>());
+		if (entities.size() > 0) {
+			Bag<Component> components = entities.get(0).getEntity().getComponents(new Bag<>());
 
 			for (Component component : components) {
 				if (component == null) continue;
@@ -459,7 +467,8 @@ public class EntityProperties extends VisTable implements Disposable {
 	}
 
 	private boolean checkEntityList (SpecificUITable table) {
-		if (entities.size == 0) return false;
+		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
+		if (entities.size() == 0) return false;
 
 		for (EntityProxy entity : entities) {
 			if (table.isSupported(entity) == false) return false;
@@ -510,7 +519,7 @@ public class EntityProperties extends VisTable implements Disposable {
 
 		snapshots = new SnapshotUndoableActionGroup();
 
-		for (EntityProxy entity : entities) {
+		for (EntityProxy entity : entityManipulator.getSelectedEntities()) {
 			snapshots.add(new SnapshotUndoableAction(entity));
 		}
 	}
@@ -528,10 +537,6 @@ public class EntityProperties extends VisTable implements Disposable {
 
 	public NumberInputField createNewNumberField () {
 		return new NumberInputField(sharedFocusListener, sharedChangeListener);
-	}
-
-	public Array<EntityProxy> getProxies () {
-		return entities;
 	}
 
 	public ChangeListener getSharedChangeListener () {
@@ -570,6 +575,8 @@ public class EntityProperties extends VisTable implements Disposable {
 	}
 
 	private void setTintUIForEntities () {
+		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
+
 		Color firstColor = entities.first().getColor();
 		for (EntityProxy entity : entities) {
 			if (!firstColor.equals(entity.getColor())) {
@@ -583,11 +590,14 @@ public class EntityProperties extends VisTable implements Disposable {
 	}
 
 	private String getEntitiesFieldValue (FloatProxyValue floatProxyValue) {
+		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
 		return EntityUtils.getEntitiesCommonFloatValue(entities, floatProxyValue);
 	}
 
 	private void setValuesToEntity () {
-		for (int i = 0; i < entities.size; i++) {
+		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
+
+		for (int i = 0; i < entities.size(); i++) {
 			EntityProxy entity = entities.get(i);
 
 			//TODO support indeterminate textfield
@@ -620,12 +630,11 @@ public class EntityProperties extends VisTable implements Disposable {
 	}
 
 	private void updateValues () {
-		groupSelected = false;
-		entities.forEach(proxy -> {
-			if (proxy instanceof GroupEntityProxy) groupSelected = true;
-		});
+		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
 
-		if (entities.size == 0) {
+		groupSelected = ArrayUtils.has(entityManipulator.getSelection().getFragmentedSelection(), GroupSelectionFragment.class);
+
+		if (entities.size() == 0) {
 			setVisible(false);
 		} else {
 			setVisible(true);
@@ -641,6 +650,8 @@ public class EntityProperties extends VisTable implements Disposable {
 	}
 
 	private void updateBasicValues (boolean updateInvalidFields) {
+		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
+
 		if (groupSelected) {
 			idField.setText("<id cannot be set for group>");
 			idField.setDisabled(true);
@@ -684,14 +695,14 @@ public class EntityProperties extends VisTable implements Disposable {
 	}
 
 	public void loadSupportsSpecificTables (SupportModule supportModule) {
-		for (EditorEntitySupport support : supportModule.getSupports()) {
+		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
 			Array<SpecificUITable> uiTables = support.getUIPropertyTables();
 			if (uiTables != null) {
 				for (SpecificUITable table : uiTables)
 					registerSpecificTable(table);
 			}
 
-			Array<ComponentTable> componentTables = support.getComponentsUITables();
+			Array<ComponentTable<?>> componentTables = support.getComponentsUITables();
 			if (componentTables != null) {
 				for (ComponentTable table : componentTables)
 					registerComponentTable(table);
@@ -707,6 +718,14 @@ public class EntityProperties extends VisTable implements Disposable {
 	private void registerComponentTable (ComponentTable table) {
 		componentTables.add(table);
 		table.setProperties(this);
+	}
+
+	public ImmutableArray<EntityProxy> getSelectedEntities () {
+		return entityManipulator.getSelectedEntities();
+	}
+
+	public EntitiesSelection getSelection () {
+		return entityManipulator.getSelection();
 	}
 
 	private static class SnapshotUndoableActionGroup extends UndoableActionGroup {
@@ -747,7 +766,8 @@ public class EntityProperties extends VisTable implements Disposable {
 		}
 
 		private void createSnapshot (IntMap<Bag<Component>> target) {
-			proxy.getEntities().forEach(entity -> target.put(entity.getId(), sceneIO.cloneEntityComponents(entity.getComponents(new Bag<>()))));
+			Entity entity = proxy.getEntity();
+			target.put(entity.getId(), sceneIO.cloneEntityComponents(entity.getComponents(new Bag<>())));
 		}
 
 		public boolean isSnapshotsEquals () {
@@ -767,15 +787,14 @@ public class EntityProperties extends VisTable implements Disposable {
 		}
 
 		private void replaceComponents (IntMap<Bag<Component>> source) {
-			proxy.getEntities().forEach(entity -> {
-				Bag<Component> oldComponents = new Bag<>();
-				entity.getComponents(oldComponents);
-				EntityEdit editor = entity.edit();
-				oldComponents.forEach(editor::remove);
+			Entity entity = proxy.getEntity();
+			Bag<Component> oldComponents = new Bag<>();
+			entity.getComponents(oldComponents);
+			EntityEdit editor = entity.edit();
+			oldComponents.forEach(editor::remove);
 
-				Bag<Component> newComponent = source.get(entity.getId());
-				newComponent.forEach(editor::add);
-			});
+			Bag<Component> newComponent = source.get(entity.getId());
+			newComponent.forEach(editor::add);
 			proxy.reload();
 		}
 

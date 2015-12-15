@@ -19,6 +19,7 @@ package com.kotcrab.vis.editor.module.scene.action;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /** @author Kotcrab */
 public class GroupAction implements UndoableAction {
@@ -28,8 +29,8 @@ public class GroupAction implements UndoableAction {
 	private final int groupIdBefore;
 
 	/** @param group if true group will be created, if false ungroup will be performed */
-	public GroupAction (Array<EntityProxy> entities, int groupId, int groupIdBefore, boolean group) {
-		this.entities = new Array<>(entities);
+	public GroupAction (ImmutableArray<EntityProxy> entities, int groupId, int groupIdBefore, boolean group) {
+		this.entities = new Array<>(entities.toArray());
 		this.groupIdBefore = groupIdBefore;
 		this.groupId = groupId;
 		this.group = group;

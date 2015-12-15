@@ -1,3 +1,7 @@
+!IMPORTANT!
+Changelog was moved to CHANGES.md file. This file will be soon removed.
+https://github.com/kotcrab/VisEditor/tree/master/Editor/CHANGES.md
+
 [0.2.6] [Snapshot]
 -Fixed issue with unmodifiable entity properties on Entity with TextComponent or PhysicsPropertiesComponent
 -Fixed issue when TextComponent color wasn't applied to text after reloading scene

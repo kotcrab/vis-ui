@@ -34,82 +34,67 @@ package com.kotcrab.vis.plugin.spine;
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
-import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.plugin.spine.components.SpineBounds;
+import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
+import com.kotcrab.vis.runtime.component.Tint;
+import com.kotcrab.vis.runtime.component.Transform;
+import com.kotcrab.vis.runtime.properties.BoundsOwner;
+import com.kotcrab.vis.runtime.properties.SizeOwner;
 
 /** @author Kotcrab */
 public class SpineProxy extends EntityProxy {
+	private SpineBounds boundsComponent;
 
-	private SpineComponent spineComponent;
-	private SpineBoundsComponent boundsComponent;
+	private Accessor accessor;
 
 	public SpineProxy (Entity entity) {
 		super(entity);
 	}
 
 	@Override
-	protected BasicPropertiesAccessor initAccessors () {
-		spineComponent = entity.getComponent(SpineComponent.class);
-		boundsComponent = entity.getComponent(SpineBoundsComponent.class);
-		enableColor(spineComponent);
-		enableFlip(spineComponent);
-		return new BasicPropertiesAccessor() {
-			private Rectangle bounds;
+	protected void createAccessors () {
+		accessor = new Accessor();
+	}
 
-			@Override
-			public float getX () {
-				return spineComponent.getX();
-			}
-
-			@Override
-			public void setX (float x) {
-				spineComponent.setX(x);
-			}
-
-			@Override
-			public float getY () {
-				return spineComponent.getY();
-			}
-
-			@Override
-			public void setY (float y) {
-				spineComponent.setY(y);
-			}
-
-			@Override
-			public void setPosition (float x, float y) {
-				spineComponent.setPosition(x, y);
-			}
-
-			@Override
-			public float getWidth () {
-				boundsComponent.boundsRequested = true;
-				return boundsComponent.bounds.width;
-			}
-
-			@Override
-			public float getHeight () {
-				boundsComponent.boundsRequested = true;
-				return boundsComponent.bounds.height;
-			}
-
-			@Override
-			public Rectangle getBoundingRectangle () {
-				boundsComponent.boundsRequested = true;
-				return boundsComponent.bounds;
-			}
-
-		};
+	@Override
+	protected void reloadAccessors () {
+		VisSpine spine = getEntity().getComponent(VisSpine.class);
+		Transform transform = getEntity().getComponent(Transform.class);
+		Tint tint = getEntity().getComponent(Tint.class);
+		boundsComponent = getEntity().getComponent(SpineBounds.class);
+		enableBasicProperties(transform, accessor, accessor);
+		enableTint(tint);
+		enableFlip(spine);
 	}
 
 	@Override
 	public String getEntityName () {
-		return "SpineEntity";
+		return "Spine Skeleton";
 	}
 
-	@Override
-	protected boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
-		return false;
+	private class Accessor implements SizeOwner, BoundsOwner {
+		private Rectangle bounds = new Rectangle();
+
+		public Accessor () {
+			bounds = new Rectangle();
+		}
+
+		@Override
+		public float getWidth () {
+			boundsComponent.boundsRequested = true;
+			return boundsComponent.bounds.width;
+		}
+
+		@Override
+		public float getHeight () {
+			boundsComponent.boundsRequested = true;
+			return boundsComponent.bounds.height;
+		}
+
+		@Override
+		public Rectangle getBoundingRectangle () {
+			boundsComponent.boundsRequested = true;
+			return boundsComponent.bounds;
+		}
 	}
 }

@@ -21,7 +21,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.kotcrab.annotation.CallSuper;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
-import com.kotcrab.vis.editor.module.scene.EntityProxyCache;
+import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;

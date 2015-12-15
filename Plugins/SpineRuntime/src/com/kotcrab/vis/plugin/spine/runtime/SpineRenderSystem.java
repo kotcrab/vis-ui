@@ -33,20 +33,20 @@ package com.kotcrab.vis.plugin.spine.runtime;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
-import com.artemis.annotations.Wire;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.esotericsoftware.spine.SkeletonRenderer;
-import com.kotcrab.vis.runtime.component.InvisibleComponent;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.component.Invisible;
+import com.kotcrab.vis.runtime.component.Tint;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /** @author Kotcrab */
-@Wire
 public class SpineRenderSystem extends DeferredEntityProcessingSystem {
-	private ComponentMapper<SpineComponent> spineCm;
+	private ComponentMapper<VisSpine> spineCm;
+	private ComponentMapper<Transform> transformCm;
+	private ComponentMapper<Tint> tintCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
@@ -54,7 +54,7 @@ public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 	private SkeletonRenderer skeletonRenderer;
 
 	public SpineRenderSystem (EntityProcessPrincipal principal) {
-		super(Aspect.all(SpineComponent.class).exclude(InvisibleComponent.class), principal);
+		super(Aspect.all(VisSpine.class).exclude(Invisible.class), principal);
 		skeletonRenderer = new SkeletonRenderer();
 	}
 
@@ -64,9 +64,16 @@ public class SpineRenderSystem extends DeferredEntityProcessingSystem {
 	}
 
 	@Override
-	protected void process (Entity e) {
-		SpineComponent spine = spineCm.get(e);
-		spine.state.update(Gdx.graphics.getDeltaTime());
+	protected void process (int entityId) {
+		VisSpine spine = spineCm.get(entityId);
+		Transform transform = transformCm.get(entityId);
+		Tint tint = tintCm.get(entityId);
+
+		if (transform.isDirty() || tint.isDirty()) {
+			spine.updateValues(transform.getX(), transform.getY(), tint.getTint());
+		}
+
+		spine.state.update(world.delta);
 		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
 		skeletonRenderer.draw(batch, spine.skeleton); // Draw the skeleton images.

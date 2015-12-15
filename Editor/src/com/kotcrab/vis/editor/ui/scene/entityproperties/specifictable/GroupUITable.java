@@ -16,8 +16,11 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragment;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
+import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
@@ -53,13 +56,14 @@ public class GroupUITable extends SpecificUITable {
 
 	@Override
 	public boolean isSupported (EntityProxy entity) {
-		if (properties.getProxies().size != 1) return false;
-		return entity instanceof GroupEntityProxy;
+		ImmutableArray<SelectionFragment> selection = properties.getSelection().getFragmentedSelection();
+		if (selection.size() != 1) return false;
+		return ArrayUtils.has(selection, GroupSelectionFragment.class);
 	}
 
 	@Override
 	public void updateUIValues () {
-		GroupEntityProxy groupProxy = (GroupEntityProxy) properties.getProxies().get(0);
+		GroupSelectionFragment groupProxy = (GroupSelectionFragment) properties.getSelection().getFragmentedSelection().get(0);
 		int id = groupProxy.getGroupId();
 		idLabel.setText(String.valueOf(id));
 		idField.setText(properties.getSceneModuleContainer().getScene().getGroupStringId(id));
@@ -67,7 +71,7 @@ public class GroupUITable extends SpecificUITable {
 
 	@Override
 	public void setValuesToEntities () {
-		GroupEntityProxy groupProxy = (GroupEntityProxy) properties.getProxies().get(0);
+		GroupSelectionFragment groupProxy = (GroupSelectionFragment) properties.getSelection().getFragmentedSelection().get(0);
 		int id = groupProxy.getGroupId();
 
 		properties.getSceneModuleContainer().getScene().setGroupStringId(id, idField.getText());

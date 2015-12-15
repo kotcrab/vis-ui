@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 
 /**
@@ -25,7 +26,7 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
  */
 public interface AssetDescriptorProvider<T extends VisAssetDescriptor> {
 	/** Provides asset descriptor for given path or null if this provider can't provide descriptor for given path */
-	T provide (FileHandle file, String relativePath);
+	T provide (AssetsMetadataModule metadata, FileHandle file, String relativePath);
 
 	T parametrize (T rawAsset, T other);
 }

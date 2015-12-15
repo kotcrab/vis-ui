@@ -17,13 +17,11 @@
 package com.kotcrab.vis.runtime.system.physics;
 
 import com.artemis.BaseSystem;
-import com.artemis.annotations.Wire;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.kotcrab.vis.runtime.data.PhysicsSettings;
 
 /** @author Kotcrab */
-@Wire
 public class PhysicsSystem extends BaseSystem {
 	private static final float TIME_STEP = 1f / 60f;
 	private static final int VELOCITY_ITERATIONS = 6;

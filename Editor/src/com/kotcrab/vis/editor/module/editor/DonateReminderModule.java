@@ -56,7 +56,7 @@ public class DonateReminderModule extends EditorModule {
 		if (runCounter.counter % 50 == 0) {
 			VisTable table = new VisTable(true);
 
-			table.add("If you like VisEditor, please consider").spaceRight(3);
+			table.add("If you like VisEditor please consider").spaceRight(3);
 			table.add(new LinkLabel("donating.", DONATE_URL));
 			LinkLabel hide = new LinkLabel("Hide");
 			table.add(hide);

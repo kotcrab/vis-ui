@@ -17,6 +17,8 @@
 package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 
 /**
@@ -25,9 +27,14 @@ import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
  */
 public class AtlasRegionDescriptorProvider implements AssetDescriptorProvider<AtlasRegionAsset> {
 	@Override
-	public AtlasRegionAsset provide (FileHandle file, String relativePath) {
-		if (relativePath.startsWith("atlas"))
+	public AtlasRegionAsset provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
+		if (ProjectPathUtils.isTextureAtlas(file)) {
 			return new AtlasRegionAsset(relativePath, null); //usage analyzer ignores region name
+		}
+
+		if (ProjectPathUtils.isTextureAtlasImage(file)) {
+			return new AtlasRegionAsset(relativePath.substring(0, relativePath.lastIndexOf(".")) + ".atlas", null);
+		}
 
 		return null;
 	}

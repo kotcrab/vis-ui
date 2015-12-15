@@ -20,16 +20,15 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
 import com.kotcrab.vis.editor.util.Holder;
-import com.kotcrab.vis.editor.util.vis.ArrayUtils;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.component.PhysicsPropertiesComponent;
+import com.kotcrab.vis.runtime.component.PhysicsProperties;
 
 /** @author Kotcrab */
-public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsPropertiesComponent> {
+public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsProperties> {
 	private IndeterminateCheckbox adjustOriginCheck;
 
 	public PhysicsPropertiesComponentTable (ModuleInjector injector) {
-		super(injector, PhysicsPropertiesComponent.class, true);
+		super(injector, PhysicsProperties.class, true);
 	}
 
 	@Override
@@ -42,9 +41,9 @@ public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsP
 	public void componentAddedToEntities () {
 		super.componentAddedToEntities();
 
-		EntityUtils.stream(properties.getProxies(), (proxy, entity) -> {
-			if (proxy.hasComponent(PhysicsPropertiesComponent.class)) {
-				if (entity.getComponent(PhysicsPropertiesComponent.class).adjustOrigin && proxy.isOriginSupported()) {
+		EntityUtils.stream(properties.getSelectedEntities(), (proxy, entity) -> {
+			if (proxy.hasComponent(PhysicsProperties.class)) {
+				if (entity.getComponent(PhysicsProperties.class).adjustOrigin && proxy.isOriginSupported()) {
 					proxy.setOrigin(0, 0);
 				}
 			}
@@ -59,9 +58,9 @@ public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsP
 			boolean adjustOrigin = adjustOriginCheck.isChecked();
 			if (adjustOrigin) {
 
-				Holder<Boolean> uiUpdatedNeeded = new Holder<>(false);
+				Holder<Boolean> uiUpdatedNeeded = Holder.of(false);
 
-				ArrayUtils.stream(properties.getProxies(), proxy -> {
+				EntityUtils.stream(properties.getSelectedEntities(), (proxy, entity) -> {
 					if (proxy.isOriginSupported() && (proxy.getOriginX() != 0 || proxy.getOriginY() != 0)) {
 						uiUpdatedNeeded.value = true;
 						proxy.setOrigin(0, 0);

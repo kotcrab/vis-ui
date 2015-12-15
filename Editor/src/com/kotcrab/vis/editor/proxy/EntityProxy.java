@@ -22,68 +22,77 @@ import com.artemis.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.kotcrab.vis.editor.entity.EntityScheme;
-import com.kotcrab.vis.editor.entity.UUIDComponent;
-import com.kotcrab.vis.editor.module.scene.VisUUIDManager;
+import com.kotcrab.vis.editor.entity.VisUUID;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
+import com.kotcrab.vis.editor.module.scene.system.VisUUIDManager;
 import com.kotcrab.vis.editor.util.polygon.Clipper;
-import com.kotcrab.vis.runtime.accessor.*;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.*;
-import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
+import com.kotcrab.vis.runtime.properties.*;
 
 import java.util.UUID;
 
 /** @author Kotcrab */
 public abstract class EntityProxy {
-	private ComponentMapper<PolygonComponent> polygonCm;
+	private ComponentMapper<VisPolygon> polygonCm;
 
-	protected Entity entity;
-	protected VisUUIDManager uuidManager;
-	protected UUID uuid;
+	private Entity entity;
+	private VisUUIDManager uuidManager;
+	private UUID uuid;
 
-	protected BasicPropertiesAccessor basicAccessor;
+	private PositionOwner positionOwner;
+	private SizeOwner sizeOwner;
+	private BoundsOwner boundsOwner;
 
-	protected SizePropertiesAccessor sizeAccessor;
-	protected OriginPropertiesAccessor originAccessor;
-	protected ScalePropertiesAccessor scaleAccessor;
-	protected ColorPropertiesAccessor colorAccessor;
-	protected RotationPropertiesAccessor rotationAccessor;
-	protected FlipPropertiesAccessor flipAccessor;
+	private TintOwner tintOwner;
+	private FlipOwner flipOwner;
+	private OriginOwner originOwner;
+	private RotationOwner rotationOwner;
+	private ScaleOwner scaleOwner;
 
-	private Array<Entity> entitiesArray = new Array<>(1);
+	private Resizable resizable;
 
 	public EntityProxy (Entity entity) {
 		this.entity = entity;
 		init();
-		entitiesArray.add(entity);
 
 		if (entity != null) {
-			uuidManager = entity.getWorld().getManager(VisUUIDManager.class);
-			uuid = entity.getComponent(UUIDComponent.class).getUUID();
+			uuidManager = entity.getWorld().getSystem(VisUUIDManager.class);
+			uuid = entity.getComponent(VisUUID.class).getUUID();
 
-			polygonCm = entity.getWorld().getMapper(PolygonComponent.class);
+			//TODO: [misc] proxies may use injected component mappers to acuire other components, not they are using getComponent on entity directly
+			polygonCm = entity.getWorld().getMapper(VisPolygon.class);
 		}
 	}
 
 	protected void init () {
-		if (entity.getComponent(RenderableComponent.class) == null || entity.getComponent(LayerComponent.class) == null)
+		if (entity.getComponent(Renderable.class) == null || entity.getComponent(Layer.class) == null)
 			throw new IllegalArgumentException("Proxy cannot be used for non renderable entities. Entity must contain RenderableComponent and LayerComponent");
 
-		basicAccessor = initAccessors();
+		createAccessors();
+		reloadAccessors();
+		checkAccessors();
 	}
 
-	protected abstract BasicPropertiesAccessor initAccessors ();
-
-	/** Reloads this proxy, must be called if there is chance that this entity was removed and then radded by UndoableAction. */
+	/**
+	 * Reloads this proxy, must be called if there is chance that this entity was removed and then radded by UndoableAction
+	 * or it's components used by proxy changed.
+	 */
 	public void reload () {
 		entity = uuidManager.get(uuid);
-		basicAccessor = initAccessors();
-		entitiesArray.clear();
-		entitiesArray.add(entity);
+		reloadAccessors();
+		checkAccessors();
 	}
+
+	private void checkAccessors () {
+		if (positionOwner == null || sizeOwner == null || boundsOwner == null)
+			throw new IllegalStateException("Basic accessors are not set, did you call #enableBasicProperties in #createAccessors?");
+	}
+
+	protected abstract void createAccessors ();
+
+	protected abstract void reloadAccessors ();
 
 	public EntityScheme getScheme () {
 		return new EntityScheme(entity);
@@ -109,7 +118,7 @@ public abstract class EntityProxy {
 	}
 
 	public int getLastGroupId () {
-		GroupComponent gdc = entity.getComponent(GroupComponent.class);
+		VisGroup gdc = entity.getComponent(VisGroup.class);
 
 		if (gdc == null || gdc.groupIds.size == 0) {
 			return -1;
@@ -128,6 +137,16 @@ public abstract class EntityProxy {
 			return groupIds.get(index);
 	}
 
+	public int getGroupIdAfter (int gid) {
+		IntArray groupIds = getGroupComponent().groupIds;
+		int index = groupIds.indexOf(gid) + 1;
+
+		if (index >= groupIds.size)
+			return -1;
+		else
+			return groupIds.get(index);
+	}
+
 	public boolean groupsContains (int gid) {
 		return getGroupComponent().groupIds.contains(gid);
 	}
@@ -136,11 +155,11 @@ public abstract class EntityProxy {
 		return new IntArray(getGroupComponent().groupIds);
 	}
 
-	private GroupComponent getGroupComponent () {
-		GroupComponent gdc = entity.getComponent(GroupComponent.class);
+	private VisGroup getGroupComponent () {
+		VisGroup gdc = entity.getComponent(VisGroup.class);
 
 		if (gdc == null) {
-			gdc = new GroupComponent();
+			gdc = new VisGroup();
 			entity.edit().add(gdc);
 		}
 
@@ -148,7 +167,7 @@ public abstract class EntityProxy {
 	}
 
 	public String getId () {
-		IDComponent idc = entity.getComponent(IDComponent.class);
+		VisID idc = entity.getComponent(VisID.class);
 		if (idc != null)
 			return idc.id;
 		else
@@ -156,12 +175,12 @@ public abstract class EntityProxy {
 	}
 
 	public void setId (String id) {
-		IDComponent idc = entity.getComponent(IDComponent.class);
+		VisID idc = entity.getComponent(VisID.class);
 
 		if (idc != null)
 			idc.id = id;
 		else
-			entity.edit().add(new IDComponent(id));
+			entity.edit().add(new VisID(id));
 	}
 
 	public boolean hasComponent (Class<? extends Component> clazz) {
@@ -169,48 +188,54 @@ public abstract class EntityProxy {
 	}
 
 	public int getZIndex () {
-		return entity.getComponent(RenderableComponent.class).zIndex;
+		return entity.getComponent(Renderable.class).zIndex;
 	}
 
 	public void setZIndex (int zIndex) {
-		entity.getComponent(RenderableComponent.class).zIndex = zIndex;
+		entity.getComponent(Renderable.class).zIndex = zIndex;
 	}
 
 	public int getLayerID () {
-		return entity.getComponent(LayerComponent.class).layerId;
+		return entity.getComponent(Layer.class).layerId;
 	}
 
 	public void setLayerId (int layerId) {
-		entity.getComponent(LayerComponent.class).layerId = layerId;
+		entity.getComponent(Layer.class).layerId = layerId;
+	}
+
+	protected void enableBasicProperties (PositionOwner posOwner, SizeOwner sizeOwner, BoundsOwner boundsOwner) {
+		this.positionOwner = posOwner;
+		this.sizeOwner = sizeOwner;
+		this.boundsOwner = boundsOwner;
 	}
 
 	//basic properties
 
 	public float getX () {
-		return basicAccessor.getX();
+		return positionOwner.getX();
 	}
 
 	public void setX (float x) {
 		updatePolygon(x, getY());
-		basicAccessor.setX(x);
+		positionOwner.setX(x);
 	}
 
 	public float getY () {
-		return basicAccessor.getY();
+		return positionOwner.getY();
 	}
 
 	public void setY (float y) {
 		updatePolygon(getX(), y);
-		basicAccessor.setY(y);
+		positionOwner.setY(y);
 	}
 
 	public void setPosition (float x, float y) {
 		updatePolygon(x, y);
-		basicAccessor.setPosition(x, y);
+		positionOwner.setPosition(x, y);
 	}
 
 	protected void updatePolygon (float x, float y) {
-		PolygonComponent polygon = polygonCm.getSafe(entity);
+		VisPolygon polygon = polygonCm.getSafe(entity);
 		float dx = getX() - x;
 		float dy = getY() - y;
 		if (polygon != null) {
@@ -223,164 +248,162 @@ public abstract class EntityProxy {
 	}
 
 	public float getWidth () {
-		return basicAccessor.getWidth();
+		return sizeOwner.getWidth();
 	}
 
 	public float getHeight () {
-		return basicAccessor.getHeight();
+		return sizeOwner.getHeight();
 	}
 
 	public Rectangle getBoundingRectangle () {
-		return basicAccessor.getBoundingRectangle();
+		return boundsOwner.getBoundingRectangle();
 	}
 
 	//resize properties
 
-	protected void enableResize (SizePropertiesAccessor sizeAccessor) {
-		this.sizeAccessor = sizeAccessor;
+	protected void enableResize (Resizable resizable) {
+		if (resizable == null) throw new IllegalStateException("resizeable can't be null");
+		this.resizable = resizable;
 	}
 
 	public boolean isResizeSupported () {
-		return sizeAccessor != null;
+		return resizable != null;
 	}
 
 	public void setSize (float width, float height) {
-		sizeAccessor.setSize(width, height);
+		if (resizable == null) return;
+		resizable.setSize(width, height);
 	}
 
 	//origin properties
 
-	protected void enableOrigin (OriginPropertiesAccessor originAccessor) {
-		this.originAccessor = originAccessor;
+	protected void enableOrigin (OriginOwner originOwner) {
+		if (originOwner == null) throw new IllegalStateException("originOwner can't be null");
+		this.originOwner = originOwner;
 	}
 
 	public boolean isOriginSupported () {
-		return originAccessor != null;
+		return originOwner != null;
 	}
 
 	public float getOriginX () {
-		return originAccessor.getOriginX();
+		if (originOwner == null) return 0;
+		return originOwner.getOriginX();
 	}
 
 	public float getOriginY () {
-		return originAccessor.getOriginY();
+		if (originOwner == null) return 0;
+		return originOwner.getOriginY();
 	}
 
 	public void setOrigin (float x, float y) {
-		originAccessor.setOrigin(x, y);
+		if (originOwner == null) return;
+		originOwner.setOrigin(x, y);
 	}
 
 	//scale properties
 
-	protected void enableScale (ScalePropertiesAccessor scaleAccessor) {
-		this.scaleAccessor = scaleAccessor;
+	protected void enableScale (ScaleOwner scaleOwner) {
+		if (scaleOwner == null) throw new IllegalStateException("scaleOwner can't be null");
+		this.scaleOwner = scaleOwner;
 	}
 
 	public boolean isScaleSupported () {
-		return scaleAccessor != null;
+		return scaleOwner != null;
 	}
 
 	public float getScaleX () {
-		return scaleAccessor.getScaleX();
+		if (scaleOwner == null) return 0;
+		return scaleOwner.getScaleX();
 	}
 
 	public float getScaleY () {
-		return scaleAccessor.getScaleY();
+		if (scaleOwner == null) return 0;
+		return scaleOwner.getScaleY();
 	}
 
 	public void setScale (float x, float y) {
-		scaleAccessor.setScale(x, y);
+		if (scaleOwner == null) return;
+		scaleOwner.setScale(x, y);
 	}
 
-	//color properties
+	//tint properties
 
-	protected void enableColor (ColorPropertiesAccessor colorAccessor) {
-		this.colorAccessor = colorAccessor;
+	protected void enableTint (TintOwner tintOwner) {
+		if (tintOwner == null) throw new IllegalStateException("tintOwner can't be null");
+		this.tintOwner = tintOwner;
 	}
 
 	public boolean isColorSupported () {
-		return colorAccessor != null;
+		return tintOwner != null;
 	}
 
 	public Color getColor () {
-		return colorAccessor.getColor();
+		if (tintOwner == null) return Color.CLEAR;
+		return tintOwner.getTint();
 	}
 
 	public void setColor (Color color) {
-		colorAccessor.setColor(color);
+		if (tintOwner == null) return;
+		tintOwner.setTint(color);
 	}
 
 	//rotation properties
 
-	protected void enableRotation (RotationPropertiesAccessor rotationAccessor) {
-		this.rotationAccessor = rotationAccessor;
+	protected void enableRotation (RotationOwner rotationOwner) {
+		if (rotationOwner == null) throw new IllegalStateException("rotationOwner can't be null");
+		this.rotationOwner = rotationOwner;
 	}
 
 	public boolean isRotationSupported () {
-		return rotationAccessor != null;
+		return rotationOwner != null;
 	}
 
 	public float getRotation () {
-		return rotationAccessor.getRotation();
+		if (rotationOwner == null) return 0;
+		return rotationOwner.getRotation();
 	}
 
 	public void setRotation (float rotation) {
-		rotationAccessor.setRotation(rotation);
+		if (rotationOwner == null) return;
+		rotationOwner.setRotation(rotation);
 	}
 
 	//flip properties
 
-	protected void enableFlip (FlipPropertiesAccessor flipAccessor) {
-		this.flipAccessor = flipAccessor;
+	protected void enableFlip (FlipOwner flipOwner) {
+		if (flipOwner == null) throw new IllegalStateException("flipOwner can't be null");
+		this.flipOwner = flipOwner;
 	}
 
 	public boolean isFlipSupported () {
-		return flipAccessor != null;
+		return flipOwner != null;
 	}
 
 	public boolean isFlipX () {
-		return flipAccessor.isFlipX();
+		if (flipOwner == null) return false;
+		return flipOwner.isFlipX();
 	}
 
 	public boolean isFlipY () {
-		return flipAccessor.isFlipY();
+		if (flipOwner == null) return false;
+		return flipOwner.isFlipY();
 	}
 
 	public void setFlip (boolean x, boolean y) {
-		flipAccessor.setFlip(x, y);
+		if (flipOwner == null) return;
+		flipOwner.setFlip(x, y);
 	}
 
 	//others
 
 	public abstract String getEntityName ();
 
-	VisAssetDescriptor getAssetDescriptor () {
-		return entity.getComponent(AssetComponent.class).asset;
+	public Entity getEntity () {
+		return entity;
 	}
 
-	public void setAssetDescriptor (VisAssetDescriptor asset) {
-		checkAssetDescriptor(asset);
-
-		AssetComponent adc = entity.getComponent(AssetComponent.class);
-
-		if (adc != null)
-			adc.asset = asset;
-		else
-			entity.edit().add(new AssetComponent(asset));
-	}
-
-	public void checkAssetDescriptor (VisAssetDescriptor assetDescriptor) {
-		if (isAssetsDescriptorSupported(assetDescriptor) == false)
-			throw new UnsupportedAssetDescriptorException(assetDescriptor);
-	}
-
-	protected abstract boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor);
-
-	public Array<Entity> getEntities () {
-		return entitiesArray;
-	}
-
-	public boolean compareProxyByID (EntityProxy other) {
+	public boolean compareProxyByUUID (EntityProxy other) {
 		return uuid.equals(other.uuid);
 	}
 }

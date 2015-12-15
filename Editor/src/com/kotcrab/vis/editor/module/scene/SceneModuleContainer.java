@@ -19,7 +19,7 @@ package com.kotcrab.vis.editor.module.scene;
 import com.artemis.BaseSystem;
 import com.artemis.Component;
 import com.artemis.ComponentMapper;
-import com.artemis.Manager;
+import com.artemis.InvocationStrategy;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -32,15 +32,24 @@ import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
-import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
+import com.kotcrab.vis.editor.module.project.Project;
+import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import com.kotcrab.vis.editor.module.scene.system.*;
+import com.kotcrab.vis.editor.module.scene.system.inflater.*;
+import com.kotcrab.vis.editor.module.scene.system.reloader.*;
+import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem;
+import com.kotcrab.vis.editor.module.scene.system.render.PointRenderSystem;
+import com.kotcrab.vis.editor.module.scene.system.render.SoundAndMusicRenderSystem;
+import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.BiHolder;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.system.CameraManager;
-import com.kotcrab.vis.runtime.system.ParticleRenderSystem;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
-import com.kotcrab.vis.runtime.util.ArtemisUtils;
+import com.kotcrab.vis.runtime.system.DirtyCleanerSystem;
+import com.kotcrab.vis.runtime.system.render.*;
+import com.kotcrab.vis.runtime.util.BootstrapInvocationStrategy;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
@@ -64,43 +73,62 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	private EntityEngine engine;
 	private EntityEngineConfiguration config;
 
-	public SceneModuleContainer (ProjectModuleContainer projectModuleContainer, SceneTab sceneTab, EditorScene scene, Batch batch) {
-		this.editorModuleContainer = projectModuleContainer.getEditorContainer();
-		this.projectModuleContainer = projectModuleContainer;
+	public SceneModuleContainer (ProjectModuleContainer projectMC, SceneTab sceneTab, EditorScene scene, Batch batch) {
+		this.editorModuleContainer = projectMC.getEditorContainer();
+		this.projectModuleContainer = projectMC;
 		this.scene = scene;
 		this.sceneTab = sceneTab;
 
 		config = new EntityEngineConfiguration();
 
-		config.setManager(new CameraManager(SceneViewport.SCREEN, 0, 0, scene.pixelsPerUnit)); //size ignored for screen viewport
-		config.setManager(new LayerManipulatorManager());
-		config.setManager(new ZIndexManipulatorManager());
-		config.setManager(new EntitySerializerManager());
-		config.setManager(new TextureReloaderManager(projectModuleContainer.get(TextureCacheModule.class)));
-		config.setManager(new ParticleReloaderManager(projectModuleContainer.get(ParticleCacheModule.class), scene.pixelsPerUnit));
-		config.setManager(new FontReloaderManager(projectModuleContainer.get(FontCacheModule.class), scene.pixelsPerUnit));
-		config.setManager(new ShaderReloaderManager(projectModuleContainer.get(ShaderCacheModule.class)));
-		config.setManager(new SpriterReloaderManager(projectModuleContainer.get(SpriterCacheModule.class)));
-		config.setManager(new VisUUIDManager());
-		config.setManager(new EntityCounterManager());
+		config.setSystem(new CameraManager(SceneViewport.SCREEN, 0, 0, scene.pixelsPerUnit)); //size ignored for screen viewport
+		config.setSystem(new LayerManipulator());
+		config.setSystem(new ZIndexManipulator());
+		config.setSystem(new TextureReloaderManager());
+		config.setSystem(new ParticleReloaderManager(scene.pixelsPerUnit));
+		config.setSystem(new FontReloaderManager(scene.pixelsPerUnit));
+		config.setSystem(new ShaderReloaderManager());
+		config.setSystem(new SpriterReloaderManager());
+		config.setSystem(new VisUUIDManager());
+		config.setSystem(new EntityCounterManager());
 
-		config.setSystem(new GroupIdProviderSystem(), true);
-		config.setSystem(new GroupProxyProviderSystem(), true);
+		config.setSystem(new EditorMusicInflater());
+		config.setSystem(new EditorParticleInflater(scene.pixelsPerUnit));
+		config.setSystem(new EditorShaderInflater());
+		config.setSystem(new EditorSoundInflater());
+		config.setSystem(new EditorVisSpriteInflater());
+		config.setSystem(new EditorSpriterInflater());
+		config.setSystem(new EditorTextInflater(scene.pixelsPerUnit));
+
+		for (EditorEntitySupport support : editorModuleContainer.get(ExtensionStorageModule.class).getEntitiesSupports()) {
+			support.registerInflatersSystems(config);
+		}
+
+		config.setSystem(new EntitiesCollector());
+		config.setSystem(new GroupIdProviderSystem());
 		config.setSystem(new GridRendererSystem(batch, this));
 		config.setSystem(new VisComponentManipulator());
 
-		createEssentialsSystems(config, scene.pixelsPerUnit);
+		config.setSystem(new EntityProxyCache(scene.pixelsPerUnit));
+		createEssentialsSystems(config);
 
-		ArtemisUtils.createCommonSystems(config, batch, Assets.distanceFieldShader, true);
-		RenderBatchingSystem renderBatchingSystem = config.getSystem(RenderBatchingSystem.class);
-		config.setSystem(new ParticleRenderSystem(renderBatchingSystem, true), true);
-		config.setSystem(new SoundAndMusicRenderSystem(renderBatchingSystem, scene.pixelsPerUnit), true);
-		config.setSystem(new PointRenderSystem(renderBatchingSystem, scene.pixelsPerUnit), true);
+		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, true);
+		config.setSystem(batchingSystem);
+
+		//common render systems
+		config.setSystem(new SpriteRenderSystem(batchingSystem));
+		config.setSystem(new TextRenderSystem(batchingSystem, Assets.distanceFieldShader));
+		config.setSystem(new SpriterRenderSystem(batchingSystem));
+
+		config.setSystem(new ParticleRenderSystem(batchingSystem, true));
+		config.setSystem(new SoundAndMusicRenderSystem(batchingSystem, scene.pixelsPerUnit));
+		config.setSystem(new PointRenderSystem(batchingSystem, scene.pixelsPerUnit));
+
+		config.setSystem(new DirtyCleanerSystem());
 	}
 
-	public static void createEssentialsSystems (EntityEngineConfiguration config, float pixelsPerUnit) {
-		config.setManager(new EntityProxyCache(pixelsPerUnit));
-		config.setSystem(new AssetsUsageAnalyzerSystem(), true);
+	public static void createEssentialsSystems (EntityEngineConfiguration config) {
+		config.setSystem(new AssetsUsageAnalyzer());
 	}
 
 	public static void populateEngine (final EntityEngine engine, EditorScene scene) {
@@ -114,17 +142,11 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		if (alreadyInjected) return true;
 
 		//artemis already handles injecting objects inside systems
-		if (target instanceof BaseSystem || target instanceof Manager) return false;
+		if (target instanceof BaseSystem) return false;
 
 		if (BaseSystem.class.isAssignableFrom(type)) {
 			field.setAccessible(true);
 			field.set(target, engine != null ? engine.getSystem(type.asSubclass(BaseSystem.class)) : config.getSystem(type.asSubclass(BaseSystem.class)));
-			return true;
-		}
-
-		if (Manager.class.isAssignableFrom(type)) {
-			field.setAccessible(true);
-			field.set(target, engine != null ? engine.getManager(type.asSubclass(Manager.class)) : config.getManager(type.asSubclass(Manager.class)));
 			return true;
 		}
 
@@ -170,7 +192,9 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		populateEngine(engine, scene);
 
 		engine.getSystems().forEach(this::injectModules);
-		engine.getManagers().forEach(this::injectModules);
+		engine.setInvocationStrategy(new BootstrapInvocationStrategy());
+		engine.process();
+		engine.setInvocationStrategy(new InvocationStrategy());
 
 		try {
 			for (BiHolder<Object, Field> target : delayedCompMapperToInject) {
@@ -217,7 +241,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	@Override
 	public void resize () {
 		super.resize();
-		engine.getManager(CameraManager.class).resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		engine.getSystem(CameraManager.class).resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	public void render (Batch batch) {

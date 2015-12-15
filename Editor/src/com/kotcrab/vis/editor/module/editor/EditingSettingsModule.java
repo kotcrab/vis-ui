@@ -25,7 +25,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ToggleToolbarEvent;
 import com.kotcrab.vis.editor.event.ToolbarEventType;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
-import com.kotcrab.vis.editor.util.gdx.ModalInputListener;
+import com.kotcrab.vis.editor.util.scene2d.ModalInputListener;
 
 /** @author Kotcrab */
 @EventBusSubscriber

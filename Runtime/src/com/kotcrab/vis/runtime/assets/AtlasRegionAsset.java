@@ -16,14 +16,12 @@
 
 package com.kotcrab.vis.runtime.assets;
 
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
-
 /**
  * References single region from TextureAtlas. RegionName is ignored during assets comparison.
  * @author Kotcrab
  */
 public class AtlasRegionAsset extends PathAsset implements TextureAssetDescriptor {
-	@VisTag(1) private String regionName; //ignored in descriptor compassion
+	private String regionName; //ignored in descriptor compassion
 
 	@Deprecated
 	public AtlasRegionAsset () {

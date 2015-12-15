@@ -16,13 +16,13 @@
 
 package com.kotcrab.vis.editor.ui;
 
-import com.badlogic.gdx.files.FileHandle;
-import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
+import com.kotcrab.vis.editor.module.project.SceneCacheModule;
+import com.kotcrab.vis.editor.module.project.SceneTabsModule;
+import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
-import com.kotcrab.vis.editor.util.gdx.TableBuilder;
+import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -31,7 +31,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 public class NoProjectFilesOpenView extends VisTable {
 	private char bullet = 8226;
 
-	public NoProjectFilesOpenView (ProjectModuleContainer projectContainer) {
+	public NoProjectFilesOpenView (ProjectModuleContainer projectMC) {
 		super(true);
 
 		defaults().left();
@@ -40,18 +40,14 @@ public class NoProjectFilesOpenView extends VisTable {
 		//TODO: recent scene files list
 
 		LinkLabel newSceneLabel = new LinkLabel("New Scene");
-		newSceneLabel.setListener(url -> getStage().addActor(new NewSceneDialog(projectContainer).fadeIn()));
+		newSceneLabel.setListener(url -> getStage().addActor(new NewSceneDialog(projectMC).fadeIn()));
 		LinkLabel openSceneLabel = new LinkLabel("Existing Scene");
 		openSceneLabel.setListener(url -> {
-			AssetsUIModule assetsUi = projectContainer.get(AssetsUIModule.class);
-			FileAccessModule fileAccess = projectContainer.get(FileAccessModule.class);
-			StatusBarModule statusBar = projectContainer.findInHierarchy(StatusBarModule.class);
-			FileHandle sceneFolder = fileAccess.getSceneFolder();
+			FileAccessModule fileAccess = projectMC.get(FileAccessModule.class);
+			SceneTabsModule sceneTabs = projectMC.findInHierarchy(SceneTabsModule.class);
+			SceneCacheModule sceneCache = projectMC.findInHierarchy(SceneCacheModule.class);
 
-			if (assetsUi.getCurrentDirectory().equals(sceneFolder))
-				statusBar.setText("Double click scene file in panel above to open it");
-			else
-				assetsUi.changeCurrentDirectory(sceneFolder);
+			getStage().addActor(new SelectFileDialog("scene", fileAccess.getAssetsFolder(), sceneTabs::open).fadeIn());
 		});
 
 		add(new VisLabel("No files are open")).center().row();

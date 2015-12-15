@@ -17,33 +17,32 @@
 package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
-import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
-import com.kotcrab.vis.runtime.assets.SpriterAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.SpriterComponent;
+import com.kotcrab.vis.runtime.component.Transform;
+import com.kotcrab.vis.runtime.component.VisSpriter;
 
 /** @author Kotcrab */
 public class SpriterProxy extends EntityProxy {
-
 	public SpriterProxy (Entity entity) {
 		super(entity);
 	}
 
 	@Override
-	protected BasicPropertiesAccessor initAccessors () {
-		SpriterComponent c = entity.getComponent(SpriterComponent.class);
-		enableFlip(c);
-		enableRotation(c);
-		return c;
+	protected void createAccessors () {
+	}
+
+	@Override
+	protected void reloadAccessors () {
+		Entity entity = getEntity();
+
+		VisSpriter spriter = entity.getComponent(VisSpriter.class);
+		Transform transform = entity.getComponent(Transform.class);
+		enableBasicProperties(transform, spriter, spriter);
+		enableFlip(spriter);
+		enableRotation(transform);
 	}
 
 	@Override
 	public String getEntityName () {
-		return "SpriterEntity";
-	}
-
-	@Override
-	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
-		return assetDescriptor instanceof SpriterAsset;
+		return "Spriter Skeleton";
 	}
 }

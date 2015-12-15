@@ -33,23 +33,27 @@ package com.kotcrab.vis.plugin.spine;
 
 import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
+import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
+@VisPlugin
 public class SpineAssetDescriptorProvider implements AssetDescriptorProvider<SpineAssetDescriptor> {
 	@Override
-	public SpineAssetDescriptor provide (FileHandle file, String relativePath) {
-		if (relativePath.startsWith("spine") == false) return null;
+	public SpineAssetDescriptor provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
+		if (metadata.isDirectoryMarkedAs(file, SpineAssetType.DIRECTORY_SPINE) == false) return null;
 
 		if (relativePath.endsWith("atlas")) {
 			String skelPath = findSkelPath(file, relativePath);
-			if (skelPath == null) return null; //skeleton does not exist
+			if (skelPath == null) return null; //matching skeleton does not exist
 			return new SpineAssetDescriptor(relativePath, skelPath, -1); //scale is ignored when comparing
 		}
 
 		if (relativePath.endsWith("skel") || relativePath.endsWith("json")) {
-			if (FileUtils.siblingExists(file, "atlas"))
+			if (FileUtils.siblingExists(file, "atlas")) {
 				return new SpineAssetDescriptor(FileUtils.replaceExtension(relativePath, "atlas"), relativePath, -1); //scale is ignored when comparing
+			}
 		}
 
 		return null;

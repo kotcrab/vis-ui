@@ -31,58 +31,50 @@
 
 package com.kotcrab.vis.plugin.spine.runtime;
 
-import com.artemis.*;
-import com.artemis.annotations.Wire;
-import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
 import com.esotericsoftware.spine.SkeletonData;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
-@Wire
-public class SpineInflaterSystem extends EntityProcessingSystem {
-	private ComponentMapper<AssetComponent> assetCm;
-	private ComponentMapper<SpineProtoComponent> protoCm;
-
-	private EntityTransmuter transmuter;
+public class SpineInflaterSystem extends InflaterSystem {
+	private ComponentMapper<AssetReference> assetCm;
+	private ComponentMapper<VisSpine> spineCm;
+	private ComponentMapper<ProtoVisSpine> protoCm;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
 	public SpineInflaterSystem (RuntimeConfiguration configuration, AssetManager manager) {
-		super(Aspect.all(SpineProtoComponent.class, AssetComponent.class));
+		super(Aspect.all(ProtoVisSpine.class, AssetReference.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
-	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SpineProtoComponent.class);
-		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
-		transmuter = factory.build();
-	}
+	public void inserted (int entityId) {
+		AssetReference assetRef = assetCm.get(entityId);
+		ProtoVisSpine protoComponent = protoCm.get(entityId);
 
-	@Override
-	protected void process (Entity e) {
-		AssetComponent assetComponent = assetCm.get(e);
-		SpineProtoComponent protoComponent = protoCm.get(e);
-
-		SpineAssetDescriptor asset = (SpineAssetDescriptor) assetComponent.asset;
+		SpineAssetDescriptor asset = (SpineAssetDescriptor) assetRef.asset;
 
 		SkeletonData skeleton = manager.get(asset.getSkeletonPath(), SkeletonData.class);
-		SpineComponent spineComponent = new SpineComponent(skeleton);
+		VisSpine spine = new VisSpine(skeleton);
 
-		spineComponent.setPosition(protoComponent.x, protoComponent.y);
-		spineComponent.setFlip(protoComponent.flipX, protoComponent.flipY);
+		spine.setFlip(protoComponent.flipX, protoComponent.flipY);
 
-		spineComponent.setPlayOnStart(protoComponent.playOnStart);
-		spineComponent.setDefaultAnimation(protoComponent.defaultAnimation);
+		spine.setPlayOnStart(protoComponent.playOnStart);
+		spine.setDefaultAnimation(protoComponent.defaultAnimation);
 
-		spineComponent.updateDefaultAnimations();
+		spine.updateDefaultAnimations();
 
-		transmuter.transmute(e);
-		e.edit().add(spineComponent);
+		world.getEntity(entityId).edit().add(spine);
+
+		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
+		protoCm.remove(entityId);
 	}
 }
 

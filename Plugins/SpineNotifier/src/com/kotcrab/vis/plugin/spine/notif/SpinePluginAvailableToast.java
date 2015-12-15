@@ -36,7 +36,7 @@ import com.kotcrab.vis.editor.module.editor.ToastModule.ToastTable;
 import com.kotcrab.vis.editor.plugin.PluginFileHandle;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
-import com.kotcrab.vis.editor.util.gdx.TableBuilder;
+import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 
 public class SpinePluginAvailableToast extends ToastTable {

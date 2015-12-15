@@ -16,11 +16,9 @@
 
 package com.kotcrab.vis.runtime.assets;
 
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
-
 /** @author Kotcrab */
 public class SpriterAsset extends PathAsset {
-	@VisTag(1) private float imageScale;
+	private float imageScale;
 
 	@Deprecated
 	public SpriterAsset () {

@@ -16,31 +16,38 @@
 
 package com.kotcrab.vis.runtime.system.physics;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.Manager;
-import com.artemis.annotations.Wire;
+import com.artemis.EntitySystem;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.component.Transform;
 
 /** @author Kotcrab */
-@Wire
-public class PhysicsBodyManager extends Manager {
+public class PhysicsBodyManager extends EntitySystem {
 	private PhysicsSystem physicsSystem;
 
-	private ComponentMapper<PhysicsPropertiesComponent> physicsPropCm;
-	private ComponentMapper<PhysicsComponent> physicsCm;
-	private ComponentMapper<PolygonComponent> polygonCm;
-	private ComponentMapper<SpriteComponent> spriteCm;
-	private ComponentMapper<PhysicsSpriteComponent> physicsSpriteCm;
+	private ComponentMapper<PhysicsProperties> physicsPropCm;
+	private ComponentMapper<PhysicsBody> physicsCm;
+	private ComponentMapper<VisPolygon> polygonCm;
+	private ComponentMapper<PhysicsSprite> physicsSpriteCm;
+	private ComponentMapper<Transform> transformCm;
+	private ComponentMapper<Origin> originCm;
 
 	private World world;
 	private RuntimeConfiguration runtimeConfig;
 
 	public PhysicsBodyManager (RuntimeConfiguration runtimeConfig) {
+		super(Aspect.all(PhysicsProperties.class, VisPolygon.class, VisSprite.class));
 		this.runtimeConfig = runtimeConfig;
+	}
+
+	@Override
+	protected void processSystem () {
+
 	}
 
 	@Override
@@ -49,18 +56,14 @@ public class PhysicsBodyManager extends Manager {
 	}
 
 	@Override
-	public void added (int entityId) {
-		Entity entity = super.world.getEntity(entityId);
-		if (physicsPropCm.has(entityId) == false || polygonCm.has(entityId) == false || spriteCm.has(entityId) == false)
-			return;
+	public void inserted (Entity entity) {
+		PhysicsProperties physicsProperties = physicsPropCm.get(entity);
+		VisPolygon polygon = polygonCm.get(entity);
+		Transform transform = transformCm.get(entity);
 
-		PhysicsPropertiesComponent physicsProperties = physicsPropCm.get(entityId);
-		PolygonComponent polygon = polygonCm.get(entityId);
-		SpriteComponent sprite = spriteCm.get(entityId);
+		if (physicsProperties.adjustOrigin) originCm.get(entity).setOrigin(0, 0);
 
-		if (physicsProperties.adjustOrigin) sprite.setOrigin(0, 0);
-
-		Vector2 worldPos = new Vector2(sprite.getX(), sprite.getY());
+		Vector2 worldPos = new Vector2(transform.getX(), transform.getY());
 
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(worldPos);
@@ -100,14 +103,14 @@ public class PhysicsBodyManager extends Manager {
 		}
 
 		entity.edit()
-				.add(new PhysicsComponent(body))
-				.add(new PhysicsSpriteComponent(sprite.getRotation()));
+				.add(new PhysicsBody(body))
+				.add(new PhysicsSprite(transform.getRotation()));
 	}
 
 	@Override
-	public void deleted (int entityId) {
-		if (runtimeConfig.autoDisposeBox2dBodyOnEntityRemove == false || physicsCm.has(entityId) == false) return;
-		PhysicsComponent physics = physicsCm.get(entityId);
+	public void removed (Entity entity) {
+		if (runtimeConfig.autoDisposeBox2dBodyOnEntityRemove == false || physicsCm.has(entity) == false) return;
+		PhysicsBody physics = physicsCm.get(entity);
 		if (physics.body == null) return;
 		world.destroyBody(physics.body);
 		physics.body = null;

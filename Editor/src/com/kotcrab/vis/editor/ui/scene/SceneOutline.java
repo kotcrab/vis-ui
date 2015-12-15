@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.editor.ui.scene;
 
-import com.artemis.Entity;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Tree.Node;
@@ -25,14 +24,17 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.ObjectMap.Values;
-import com.kotcrab.vis.editor.module.scene.EntityProxyCache;
-import com.kotcrab.vis.editor.module.scene.EntityProxyCache.EntityProxyCacheListener;
-import com.kotcrab.vis.editor.module.scene.GroupProxyProviderSystem;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragment;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.SingleSelectionFragment;
+import com.kotcrab.vis.editor.module.scene.system.EntitiesCollector;
+import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
+import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache.EntityProxyCacheListener;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
-import com.kotcrab.vis.editor.util.gdx.EventStopper;
+import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.util.scene2d.EventStopper;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisScrollPane;
@@ -46,18 +48,18 @@ import com.kotcrab.vis.ui.widget.VisTree;
 public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 	private EntityManipulatorModule entityManipulator;
 
-	private Array<EntityProxy> selectedEntities;
 	private EntityProxyCache proxyCache;
-	private GroupProxyProviderSystem groupProxyProvider;
+	private EntitiesCollector entitiesCollector;
 
-	private IntArray expandedNodes = new IntArray();
+	private EditorScene scene;
+
 	private VisTree tree;
+	private IntArray expandedNodes = new IntArray();
 
-	public SceneOutline (SceneModuleContainer sceneMC, Array<EntityProxy> selectedEntities) {
+	public SceneOutline (SceneModuleContainer sceneMC) {
 		super(true);
 		sceneMC.injectModules(this);
-
-		this.selectedEntities = selectedEntities;
+		scene = sceneMC.getScene();
 
 		proxyCache.addListener(this);
 
@@ -67,17 +69,25 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 		tree.getSelection().setProgrammaticChangeEvents(false);
 
 		tree.addListener(new ClickListener() {
-			OutlineNode selection;
+			Node selection;
 
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
 				//tree will deselect item after double click so we on first click store selection
 				if (getTapCount() == 1 && tree.getSelection().size() == 1) {
-					selection = (OutlineNode) tree.getSelection().getLastSelected();
+					selection = tree.getSelection().getLastSelected();
 				}
 
 				if (getTapCount() == 2 && selection != null) {
-					sceneMC.getSceneTab().centerAround(selection.proxy);
+					if (selection instanceof ProxyNode) {
+						sceneMC.getSceneTab().centerAround(((ProxyNode) selection).proxy);
+					}
+
+					if (selection instanceof GroupNode) {
+						GroupNode groupNode = (GroupNode) selection;
+						sceneMC.getSceneTab().centerAroundGroup(groupNode.layerId, groupNode.groupId);
+					}
+
 					selection = null;
 				}
 			}
@@ -95,48 +105,13 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 		add(scrollPane).expand().fill();
 		pack();
 
-		cacheChanged(); //do first update
+		rebuildOutline(); //do first update
 	}
 
 	public void selectedEntitiesChanged () {
 		tree.getSelection().clear();
-		for (EntityProxy proxy : selectedEntities) {
-			highlightProxy(tree.getNodes(), proxy);
-		}
-	}
-
-	private boolean highlightProxy (Array<Node> nodes, EntityProxy proxy) {
-		for (Node n : nodes) {
-			OutlineNode node = (OutlineNode) n;
-			if (node.proxy.compareProxyByID(proxy)) {
-				tree.getSelection().add(n);
-				return true;
-			}
-
-			if (n.getChildren().size > 0) {
-				boolean wasExpanded = n.isExpanded();
-				n.setExpanded(true);
-				if (highlightProxy(n.getChildren(), proxy)) return true;
-				if (wasExpanded == false) n.setExpanded(false);
-			}
-		}
-
-		return false;
-	}
-
-	private void buildGroupNodeState (Array<Node> nodes) {
-		for (Node n : nodes) {
-			OutlineNode node = (OutlineNode) n;
-
-			if (node.getChildren().size > 0) {
-				GroupEntityProxy groupProxy = (GroupEntityProxy) node.proxy;
-
-				if (node.isExpanded()) {
-					expandedNodes.add(groupProxy.getGroupId());
-				}
-
-				buildGroupNodeState(node.getChildren());
-			}
+		for (SelectionFragment fragment : entityManipulator.getSelection().getFragmentedSelection()) {
+			highlightProxy(tree.getNodes(), fragment);
 		}
 	}
 
@@ -146,26 +121,105 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 		tree.clearChildren();
 
 		Values<EntityProxy> proxies = proxyCache.getCache().values();
-
-		Array<Entity> ignoreEntities = new Array<>();
+		Array<EntityProxy> ignoreProxies = new Array<>();
 
 		for (EntityProxy proxy : proxies) {
-			if (ignoreEntities.contains(proxy.getEntities().get(0), true)) {
+			if (ignoreProxies.contains(proxy, true)) {
 				continue;
 			}
 
 			int gid = proxy.getLastGroupId();
 			if (gid != -1) {
-				GroupEntityProxy groupProxy = groupProxyProvider.getGroupEntityProxy(gid);
-				ignoreEntities.addAll(groupProxy.getEntities());
-				buildTreeRecursively(groupProxy, null);
-				continue;
+				Array<EntityProxy> result = entitiesCollector.collect(proxy.getLayerID(), gid);
+				ignoreProxies.addAll(result);
+				buildTreeRecursively(result, gid, null);
+			} else {
+				tree.add(new ProxyNode(proxy));
 			}
-
-			tree.add(new OutlineNode(proxy));
 		}
 
 		expandedNodes.clear();
+	}
+
+	private void buildTreeRecursively (Array<EntityProxy> groupProxies, int gid, Node parent) {
+		GroupNode groupRoot = new GroupNode(groupProxies.first().getLayerID(), gid);
+		if (parent == null)
+			tree.add(groupRoot);
+		else
+			parent.add(groupRoot);
+
+		if (expandedNodes.contains(gid)) {
+			groupRoot.setExpanded(true);
+		}
+
+		Array<EntityProxy> ignoreProxies = new Array<>();
+
+		for (EntityProxy proxy : groupProxies) {
+			if (ignoreProxies.contains(proxy, true)) {
+				continue;
+			}
+
+			int gidBefore = proxy.getGroupIdBefore(gid);
+			if (gidBefore != -1) {
+				Array<EntityProxy> result = entitiesCollector.collect(proxy.getLayerID(), gidBefore);
+				ignoreProxies.addAll(result);
+				buildTreeRecursively(result, gidBefore, groupRoot);
+				continue;
+			}
+
+			groupRoot.add(new ProxyNode(proxy));
+		}
+	}
+
+	private void buildGroupNodeState (Array<Node> nodes) {
+		for (Node n : nodes) {
+
+			if (n.getChildren().size > 0) {
+
+				if (n instanceof GroupNode) {
+					GroupNode groupNode = (GroupNode) n;
+
+					if (groupNode.isExpanded()) {
+						expandedNodes.add(groupNode.groupId);
+					}
+
+					buildGroupNodeState(groupNode.getChildren());
+				}
+			}
+		}
+	}
+
+	private boolean highlightProxy (Array<Node> nodes, SelectionFragment selFragment) {
+		for (Node node : nodes) {
+			if (node instanceof ProxyNode && selFragment instanceof SingleSelectionFragment) {
+				ProxyNode proxyNode = (ProxyNode) node;
+				SingleSelectionFragment fragment = (SingleSelectionFragment) selFragment;
+
+				if (proxyNode.proxy.compareProxyByUUID(fragment.getProxy())) {
+					tree.getSelection().add(node);
+					return true;
+				}
+			}
+
+			if (node instanceof GroupNode && selFragment instanceof GroupSelectionFragment) {
+				GroupNode groupNode = (GroupNode) node;
+				GroupSelectionFragment fragment = (GroupSelectionFragment) selFragment;
+
+				if (groupNode.groupId == fragment.getGroupId()) {
+					tree.getSelection().add(node);
+					return true;
+				}
+			}
+
+			if (node.getChildren().size > 0) {
+				boolean wasExpanded = node.isExpanded();
+				node.setExpanded(true);
+				if (highlightProxy(node.getChildren(), selFragment)) return true;
+				if (wasExpanded == false) node.setExpanded(false);
+			}
+		}
+
+		return false;
 	}
 
 	@Override
@@ -173,43 +227,21 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 		rebuildOutline();
 	}
 
-	private void buildTreeRecursively (GroupEntityProxy groupProxy, Node parent) {
-		OutlineNode groupRoot = new OutlineNode(groupProxy);
-		if (parent == null) {
-			tree.add(groupRoot);
-		} else {
-			parent.add(groupRoot);
-		}
+	private static class GroupNode extends Node {
+		private final int layerId;
+		private final int groupId;
 
-		if (expandedNodes.contains(groupProxy.getGroupId())) {
-			groupRoot.setExpanded(true);
-		}
-
-		Array<Entity> ignoreEntities = new Array<>();
-
-		for (Entity entity : groupProxy.getEntities()) {
-			EntityProxy proxy = proxyCache.get(entity);
-
-			if (ignoreEntities.contains(proxy.getEntities().get(0), true)) {
-				continue;
-			}
-
-			int gidBefore = proxy.getGroupIdBefore(groupProxy.getGroupId());
-			if (gidBefore != -1) {
-				GroupEntityProxy nestedGroupProxy = groupProxyProvider.getGroupEntityProxy(gidBefore);
-				ignoreEntities.addAll(nestedGroupProxy.getEntities());
-				buildTreeRecursively(nestedGroupProxy, groupRoot);
-				continue;
-			}
-
-			groupRoot.add(new OutlineNode(proxy));
+		public GroupNode (int layerId, int groupId) {
+			super(new VisLabel("Group (id: " + groupId + ")", "small"));
+			this.layerId = layerId;
+			this.groupId = groupId;
 		}
 	}
 
-	private static class OutlineNode extends Node {
+	private static class ProxyNode extends Node {
 		private EntityProxy proxy;
 
-		public OutlineNode (EntityProxy proxy) {
+		public ProxyNode (EntityProxy proxy) {
 			super(new VisLabel(proxy.getEntityName(), "small"));
 			this.proxy = proxy;
 		}

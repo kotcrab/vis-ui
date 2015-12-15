@@ -16,73 +16,47 @@
 
 package com.kotcrab.vis.runtime.system.inflater;
 
-import com.artemis.*;
-import com.artemis.annotations.Wire;
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SpriteComponent;
-import com.kotcrab.vis.runtime.component.SpriteProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisSprite;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisSprite;
 import com.kotcrab.vis.runtime.util.PathUtils;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
-/**
- * Inflates {@link SpriteProtoComponent} into {@link SpriteComponent}
- * @author Kotcrab
- */
-@Wire
-public class SpriteInflater extends Manager {
-	private ComponentMapper<SpriteProtoComponent> protoCm;
-	private ComponentMapper<AssetComponent> assetCm;
-
-	private Entity flyweight;
-
-	private EntityTransmuter transmuter;
+/** @author Kotcrab */
+public class SpriteInflater extends InflaterSystem {
+	private ComponentMapper<VisSprite> spriteCm;
+	private ComponentMapper<ProtoVisSprite> protoCm;
+	private ComponentMapper<AssetReference> assetCm;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
 	public SpriteInflater (RuntimeConfiguration configuration, AssetManager manager) {
+		super(Aspect.all(ProtoVisSprite.class, AssetReference.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
-	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SpriteProtoComponent.class);
-		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
-		transmuter = factory.build();
-	}
-
-	@Override
-	protected void setWorld (World world) {
-		super.setWorld(world);
-		flyweight = Entity.createFlyweight(world);
-	}
-
-	@Override
-	public void added (int entityId) {
-		flyweight.id = entityId;
-		if (protoCm.has(entityId) == false) return;
-
-		SpriteProtoComponent proto = protoCm.get(entityId);
-		AssetComponent assetComponent = assetCm.get(entityId);
-
-		VisAssetDescriptor asset = assetComponent.asset;
+	public void inserted (int entityId) {
+		VisAssetDescriptor asset =  assetCm.get(entityId).asset;
 
 		String atlasPath;
 		String atlasRegion;
 
 		if (asset instanceof TextureRegionAsset) {
 			TextureRegionAsset regionAsset = (TextureRegionAsset) asset;
-			atlasPath = "gfx/textures.atlas";
-			atlasRegion = PathUtils.removeFirstSeparator(PathUtils.removeExtension(regionAsset.getPath())); //remove gfx/ and file extension
+			atlasPath = "textures.atlas";
+			atlasRegion = PathUtils.removeExtension(regionAsset.getPath());
 
 		} else if (asset instanceof AtlasRegionAsset) {
 			AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
@@ -96,19 +70,11 @@ public class SpriteInflater extends Manager {
 		TextureAtlas atlas = manager.get(atlasPath, TextureAtlas.class);
 		TextureRegion region = atlas.findRegion(atlasRegion);
 		if (region == null) throw new IllegalStateException("Can't load scene, gfx asset is missing: " + atlasRegion);
-		Sprite sprite = new Sprite(region);
 
-		SpriteComponent spriteComponent = new SpriteComponent(sprite);
-
-		sprite.setPosition(proto.x, proto.y);
-		sprite.setSize(proto.width, proto.height);
-		sprite.setOrigin(proto.originX, proto.originY);
-		sprite.setRotation(proto.rotation);
-		sprite.setScale(proto.scaleX, proto.scaleY);
-		sprite.setColor(proto.tint);
-		sprite.setFlip(proto.flipX, proto.flipY);
-
-		transmuter.transmute(flyweight);
-		flyweight.edit().add(spriteComponent);
+		VisSprite sprite = spriteCm.create(entityId);
+		sprite.setRegion(region);
+		protoCm.get(entityId).fill(sprite);
+		protoCm.remove(entityId);
+		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
 	}
 }

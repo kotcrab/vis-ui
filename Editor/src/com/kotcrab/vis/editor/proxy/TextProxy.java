@@ -17,36 +17,39 @@
 package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
-import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
-import com.kotcrab.vis.runtime.assets.BmpFontAsset;
-import com.kotcrab.vis.runtime.assets.TtfFontAsset;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.component.Origin;
+import com.kotcrab.vis.runtime.component.Tint;
+import com.kotcrab.vis.runtime.component.Transform;
+import com.kotcrab.vis.runtime.component.VisText;
 
 /** @author Kotcrab */
 public class TextProxy extends EntityProxy {
-
 	public TextProxy (Entity entity) {
 		super(entity);
 	}
 
 	@Override
-	protected BasicPropertiesAccessor initAccessors () {
-		TextComponent c = entity.getComponent(TextComponent.class);
-		enableOrigin(c);
-		enableScale(c);
-		enableColor(c);
-		enableRotation(c);
-		return c;
+	protected void createAccessors () {
+	}
+
+	@Override
+	protected void reloadAccessors () {
+		Entity entity = getEntity();
+
+		VisText text = entity.getComponent(VisText.class);
+		Transform transform = entity.getComponent(Transform.class);
+		Origin origin = entity.getComponent(Origin.class);
+		Tint tint = entity.getComponent(Tint.class);
+
+		enableBasicProperties(transform, text, text);
+		enableOrigin(origin);
+		enableScale(transform);
+		enableTint(tint);
+		enableRotation(transform);
 	}
 
 	@Override
 	public String getEntityName () {
-		return "TextEntity";
-	}
-
-	@Override
-	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
-		return assetDescriptor instanceof BmpFontAsset || assetDescriptor instanceof TtfFontAsset;
+		return "Text";
 	}
 }

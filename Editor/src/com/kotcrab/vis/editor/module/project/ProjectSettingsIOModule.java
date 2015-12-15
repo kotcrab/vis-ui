@@ -24,7 +24,7 @@ import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsIOModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
-import com.kotcrab.vis.editor.util.KryoUtils;
+import com.kotcrab.vis.editor.util.vis.KryoUtils;
 
 import java.io.File;
 import java.io.FileInputStream;

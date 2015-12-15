@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.module.scene.entitymanipulator;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 public class EntityMoveTimerTask extends Task {
 	public static final int UP = 0x0001;
@@ -28,30 +27,28 @@ public class EntityMoveTimerTask extends Task {
 	public static final int RIGHT = 0x0008;
 
 	private final EditorScene scene;
-	private EntityManipulatorModule entityManipulatorModule;
-	private final ImmutableArray<EntityProxy> selectedEntities;
+	private final EntityManipulatorModule entityManipulator;
 
 	private int direction;
 	private float delta;
 
-	public EntityMoveTimerTask (EditorScene scene, EntityManipulatorModule entityManipulatorModule, ImmutableArray<EntityProxy> selectedEntities) {
+	public EntityMoveTimerTask (EditorScene scene, EntityManipulatorModule entityManipulator) {
 		this.scene = scene;
-		this.entityManipulatorModule = entityManipulatorModule;
-		this.selectedEntities = selectedEntities;
+		this.entityManipulator = entityManipulator;
 	}
 
 	@Override
 	public void run () {
 		if (scene.getActiveLayer().locked) return;
 
-		for (EntityProxy entity : selectedEntities) {
+		for (EntityProxy entity : entityManipulator.getSelectedEntities()) {
 			if ((direction & UP) != 0) entity.setY(entity.getY() + delta);
 			if ((direction & DOWN) != 0) entity.setY(entity.getY() + delta * -1);
 			if ((direction & LEFT) != 0) entity.setX(entity.getX() + delta * -1);
 			if ((direction & RIGHT) != 0) entity.setX(entity.getX() + delta);
 		}
 
-		entityManipulatorModule.selectedEntitiesChanged();
+		entityManipulator.selectedEntitiesChanged();
 	}
 
 	public void set (int direction, float delta) {

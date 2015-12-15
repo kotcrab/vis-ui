@@ -22,44 +22,53 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.extension.AssetType;
 import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.module.project.SupportModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
-import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 //TODO refactor
+//TODO filter system in assets ui module
 
 /**
  * Displays single item inside assets manager.
  * @author Kotcrab
  */
 public class FileItem extends Table {
+	private ExtensionStorageModule extensionStorage;
+	private AssetsMetadataModule assetsMetadata;
+
 	private FileAccessModule fileAccess;
-	private SupportModule supportModule;
 	private TextureCacheModule textureCache;
 
 	private FileHandle file;
+	private boolean isMainFile;
 
 	private TextureRegion region;
-	private FileType type;
+	private String type;
 
 	private VisLabel name;
 
 	private EditorEntitySupport support;
 
-	public FileItem (ModuleInjector injector, FileHandle file) {
+	public FileItem (ModuleInjector injector, FileHandle file, boolean isMainFile) {
 		super(VisUI.getSkin());
 		injector.injectModules(this);
 		this.file = file;
+		this.isMainFile = isMainFile;
 		init();
 	}
 
@@ -78,19 +87,63 @@ public class FileItem extends Table {
 		String ext = file.extension();
 		String relativePath = fileAccess.relativizeToAssetsFolder(file);
 
-		boolean texture = ProjectPathUtils.isTexture(relativePath, ext);
-		boolean atlas = ProjectPathUtils.isTextureAtlas(file, relativePath);
+		boolean texture = ProjectPathUtils.isTexture(file);
+		boolean atlas = ProjectPathUtils.isTextureAtlas(file);
+
+		if (file.isDirectory()) {
+			type = AssetType.DIRECTORY;
+
+			Drawable icon;
+			AssetDirectoryDescriptor desc = assetsMetadata.getAsDirectoryDescriptor(file);
+			if (desc != null) {
+				icon = desc.getAssetsViewIcon();
+			} else {
+				icon = Icons.FOLDER_MEDIUM.drawable();
+			}
+			add(new VisImage(icon, Scaling.fillX)).row();
+
+			name = new VisLabel(file.nameWithoutExtension());
+		}
+
+		if (ProjectPathUtils.isTrueTypeFont(file)) {
+			createDefaultView(AssetType.TTF_FONT, "TTF Font", true);
+			return;
+		}
+
+		if (ProjectPathUtils.isBitmapFont(file)) {
+			createDefaultView(AssetType.BMP_FONT_FILE, "BMP Font", true);
+			return;
+		}
+
+		if (ProjectPathUtils.isBitmapFontTexture(file)) {
+			createDefaultView(AssetType.BMP_FONT_TEXTURE, "BMP Font Texture", true);
+			return;
+		}
+
+		if (ProjectPathUtils.isTextureAtlasImage(file)) {
+			createDefaultView(AssetType.TEXTURE_ATLAS_IMAGE, "TextureAtlas Image", true);
+			return;
+		}
 
 		if (texture || atlas) {
-			type = texture ? FileType.TEXTURE : FileType.TEXTURE_ATLAS;
+			type = texture ? AssetType.TEXTURE : AssetType.TEXTURE_ATLAS;
 
-			name = new VisLabel(file.nameWithoutExtension(), "small");
+			//don't create region preview for files excluded from texture cache
+			AssetDirectoryDescriptor desc = assetsMetadata.getAsDirectoryDescriptorRecursively(file);
+			if (desc != null && desc.isExcludeFromTextureCache()) {
+				createDefaultView(type, texture ? "Texture" : "Texture Atlas", true);
+				return;
+			}
+
+			name = new VisLabel(texture ? file.nameWithoutExtension() : file.name(), "small");
+
 			TextureRegion region;
 
-			if (atlas)
+			if (atlas) {
 				region = textureCache.getRegion(new AtlasRegionAsset(relativePath, null));
-			else
+			} else {
 				region = textureCache.getRegion(new TextureRegionAsset(relativePath));
+			}
 
 			Image img = new Image(region);
 			img.setScaling(Scaling.fit);
@@ -101,82 +154,73 @@ public class FileItem extends Table {
 			return;
 		}
 
-		if (relativePath.startsWith("font") && ext.equals("ttf")) {
-			createDefaultView(FileType.TTF_FONT, "TTF Font", true);
+		if (ProjectPathUtils.isParticle(file)) {
+			createDefaultView(AssetType.PARTICLE_EFFECT, "Particle Effect", true);
 			return;
 		}
 
-		if (relativePath.startsWith("bmpfont") && ext.equals("fnt") && FileUtils.siblingExists(file, "png")) {
-			createDefaultView(FileType.BMP_FONT_FILE, "BMP Font", true);
+		if (ProjectPathUtils.isMusicFile(assetsMetadata, file)) {
+			createDefaultView(AssetType.MUSIC, "Music");
 			return;
 		}
 
-		if (relativePath.startsWith("bmpfont") && ext.equals("png") && FileUtils.siblingExists(file, "fnt")) {
-			createDefaultView(FileType.BMP_FONT_TEXTURE, "BMP Font Texture", true);
+		if (ProjectPathUtils.isSoundFile(assetsMetadata, file)) {
+			createDefaultView(AssetType.SOUND, "Sound");
 			return;
 		}
 
-		if (relativePath.startsWith("particle") && ext.equals("p")) {
-			createDefaultView(FileType.PARTICLE_EFFECT, "Particle Effect", true);
+		if (ProjectPathUtils.isFragmentShader(file)) {
+			createDefaultView(AssetType.FRAGMENT_SHADER, "Fragment Shader", true);
 			return;
 		}
 
-		if (relativePath.startsWith("music") && (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3"))) {
-			createDefaultView(FileType.MUSIC, "Music");
+		if (ProjectPathUtils.isVertexShader(file)) {
+			createDefaultView(AssetType.VERTEX_SHADER, "Vertex Shader", true);
 			return;
 		}
 
-		if (relativePath.startsWith("sound") && (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3"))) {
-			createDefaultView(FileType.SOUND, "Sound");
+		if (ProjectPathUtils.isImportedSpriterAnimationDir(assetsMetadata, file)) {
+			createDefaultView(AssetType.SPRITER_SCML, "Spriter Animation", true);
 			return;
 		}
 
-		if (relativePath.startsWith("shader") && ext.equals("frag")) {
-			createDefaultView(FileType.FRAGMENT_SHADER, "Fragment Shader", true);
+		if (ProjectPathUtils.isScene(file)) {
+			createDefaultView(AssetType.SCENE, "Scene", true);
 			return;
 		}
 
-		if (relativePath.startsWith("shader") && ext.equals("vert")) {
-			createDefaultView(FileType.VERTEX_SHADER, "Vertex Shader", true);
-			return;
-		}
-
-		if (relativePath.startsWith("spriter") && ext.equals("scml") && file.parent().child(".vis").exists()) {
-			createDefaultView(FileType.SPRITER_SCML, "Spriter Animation", true);
-			return;
-		}
-
-		support = findSupportForDirectory(ext, relativePath);
+		support = findSupportForDirectory(file, relativePath);
 		if (support != null) {
 			ContentItemProperties item = support.getContentItemProperties(relativePath, ext);
 			if (item != null) {
-				createDefaultView(FileType.NON_STANDARD, item.title, item.hideExtension);
+				createDefaultView(item.type, item.title, item.hideExtension);
 				return;
 			}
 		}
 
-		type = FileType.UNKNOWN;
+		type = AssetType.UNKNOWN;
 		name = new VisLabel(file.name());
 	}
 
-	private EditorEntitySupport findSupportForDirectory (String ext, String relativePath) {
-		for (EditorEntitySupport support : supportModule.getSupports())
-			if (support.isSupportedDirectory(relativePath, ext)) return support;
+	private EditorEntitySupport findSupportForDirectory (FileHandle file, String relativePath) {
+		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
+			if (support.isSupportedDirectory(file, relativePath)) return support;
+		}
 
 		return null;
 	}
 
-	private void createDefaultView (FileType type, String itemTypeName) {
+	private void createDefaultView (String type, String itemTypeName) {
 		createDefaultView(type, itemTypeName, false);
 	}
 
-	private void createDefaultView (FileType type, String itemTypeName, boolean hideExtension) {
+	private void createDefaultView (String type, String itemTypeName, boolean hideExtension) {
 		this.type = type;
 
-		VisLabel tagLabel = new VisLabel((hideExtension ? "" : file.extension().toUpperCase() + " ") + itemTypeName, Color.GRAY);
-		tagLabel.setWrap(true);
-		tagLabel.setAlignment(Align.center);
-		add(tagLabel).expandX().fillX().row();
+		VisLabel assetTypeLabel = new VisLabel((hideExtension ? "" : file.extension().toUpperCase() + " ") + itemTypeName, Color.GRAY);
+		assetTypeLabel.setWrap(true);
+		assetTypeLabel.setAlignment(Align.center);
+		add(assetTypeLabel).expandX().fillX().row();
 		name = new VisLabel(file.nameWithoutExtension());
 	}
 
@@ -191,7 +235,11 @@ public class FileItem extends Table {
 		return file;
 	}
 
-	public FileType getType () {
+	public boolean isMainFile () {
+		return isMainFile;
+	}
+
+	public String getType () {
 		return type;
 	}
 

@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
@@ -36,10 +37,19 @@ import com.kotcrab.vis.editor.module.VisContainers;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.MenuBarModule;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
-import com.kotcrab.vis.editor.module.project.*;
-import com.kotcrab.vis.editor.module.scene.*;
+import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
+import com.kotcrab.vis.editor.module.project.SceneIOModule;
+import com.kotcrab.vis.editor.module.project.SceneTabsModule;
+import com.kotcrab.vis.editor.module.scene.CameraModule;
+import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
+import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.AlignmentToolsDialog;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
+import com.kotcrab.vis.editor.module.scene.system.EntityCounterManager;
+import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
+import com.kotcrab.vis.editor.module.scene.system.reloader.*;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
@@ -48,11 +58,12 @@ import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
-import com.kotcrab.vis.editor.util.gdx.FocusUtils;
-import com.kotcrab.vis.ui.util.value.VisValue;
+import com.kotcrab.vis.editor.util.scene2d.FocusUtils;
 import com.kotcrab.vis.editor.util.vis.CreatePointPayload;
 import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.value.VisValue;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
@@ -63,7 +74,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 public class SceneTab extends MainContentTab implements DragAndDropTarget, CloseTabWhenMovingResources {
 	private EditorScene scene;
 
-	private ExtensionStorageModule pluginContainer;
+	private ExtensionStorageModule extensionStorage;
 	private MenuBarModule menuBarModule;
 	private StatusBarModule statusBarModule;
 	private SceneTabsModule sceneTabs;
@@ -96,9 +107,10 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 		stage = Editor.instance.getStage();
 
 		sceneMC = new SceneModuleContainer(projectMC, this, scene, stage.getBatch());
-		VisContainers.createSceneModules(sceneMC, projectMC.findInHierarchy(ExtensionStorageModule.class));
+		ExtensionStorageModule extensionStorage = projectMC.findInHierarchy(ExtensionStorageModule.class);
+		VisContainers.createSceneModules(sceneMC, extensionStorage);
 
-		for (EditorEntitySupport support : projectMC.get(SupportModule.class).getSupports()) {
+		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
 			support.registerSystems(sceneMC, sceneMC.getEntityEngineConfiguration());
 		}
 
@@ -106,8 +118,8 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 		sceneMC.injectModules(this);
 		engine = sceneMC.getEntityEngine();
 
-		entityCounter = engine.getManager(EntityCounterManager.class);
-		entityProxyCache = engine.getManager(EntityProxyCache.class);
+		entityCounter = engine.getSystem(EntityCounterManager.class);
+		entityProxyCache = engine.getSystem(EntityProxyCache.class);
 
 		VisTable leftColumn = new VisTable(false);
 		VisTable rightColumn = new VisTable(false);
@@ -234,27 +246,27 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 	@Subscribe
 	public void handleResourceReloaded (ResourceReloadedEvent event) {
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_TEXTURES) != 0) {
-			sceneMC.getEntityEngine().getManager(TextureReloaderManager.class).reloadTextures();
+			sceneMC.getEntityEngine().getSystem(TextureReloaderManager.class).reloadTextures();
 		}
 
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_PARTICLES) != 0) {
-			sceneMC.getEntityEngine().getManager(ParticleReloaderManager.class).reloadParticles();
+			sceneMC.getEntityEngine().getSystem(ParticleReloaderManager.class).reloadParticles();
 		}
 
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_SHADERS) != 0) {
-			sceneMC.getEntityEngine().getManager(ShaderReloaderManager.class).reloadShaders();
+			sceneMC.getEntityEngine().getSystem(ShaderReloaderManager.class).reloadShaders();
 		}
 
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_BMP_FONTS) != 0) {
-			sceneMC.getEntityEngine().getManager(FontReloaderManager.class).reloadFonts(true, false);
+			sceneMC.getEntityEngine().getSystem(FontReloaderManager.class).reloadFonts(true, false);
 		}
 
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_TTF_FONTS) != 0) {
-			sceneMC.getEntityEngine().getManager(FontReloaderManager.class).reloadFonts(false, true);
+			sceneMC.getEntityEngine().getSystem(FontReloaderManager.class).reloadFonts(false, true);
 		}
 
 		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_SPRITER_DATA) != 0) {
-			sceneMC.getEntityEngine().getManager(SpriterReloaderManager.class).reloadSpriterData();
+			sceneMC.getEntityEngine().getSystem(SpriterReloaderManager.class).reloadSpriterData();
 		}
 	}
 
@@ -314,7 +326,9 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 	@Override
 	public boolean save () {
 		super.save();
-		scene.setSchemes(sceneMC.getEntityEngine().getManager(EntityProxyCache.class).getSchemes());
+		//TODO: this deserves async task when scene has many entities
+
+		scene.setSchemes(sceneMC.getEntityEngine().getSystem(EntityProxyCache.class).getEntitySchemes());
 		try {
 			FileHandle sceneFile = sceneIOModule.getFileHandleForScene(scene);
 			FileHandle backupTarget = sceneIOModule.getSceneBackupFolder().child(scene.path);
@@ -367,7 +381,23 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 
 	public void centerAround (EntityProxy entity) {
 		entityManipulator.findEntityBaseGroupAndSelect(entity);
-		cameraModule.setPosition(entity.getX() + entity.getWidth() / 2, entity.getY() + entity.getHeight() / 2);
+		centerCameraAroundSelection();
+	}
+
+	public void centerAroundGroup (int layerId, int groupId) {
+		entityManipulator.selectAll(layerId, groupId);
+		centerCameraAroundSelection();
+	}
+
+	private void centerCameraAroundSelection () {
+		ImmutableArray<SelectionFragment> fragments = entityManipulator.getSelection().getFragmentedSelection();
+		if (fragments.size() == 0) return;
+
+		Rectangle rect = fragments.first().getBoundingRectangle();
+
+		for (SelectionFragment fragment : fragments) {
+			rect.merge(fragment.getBoundingRectangle());
+		}
 	}
 
 	public void focusSelf () {

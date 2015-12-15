@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
@@ -35,6 +34,7 @@ import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
+import com.kotcrab.vis.editor.util.vis.TextureCacheFilter;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
@@ -50,6 +50,7 @@ import org.apache.commons.io.FilenameUtils;
 public class TextureCacheModule extends ProjectModule implements WatchListener {
 	private StatusBarModule statusBar;
 
+	private AssetsMetadataModule assetsMetadata;
 	private FileAccessModule fileAccess;
 	private AssetsWatcherModule watcher;
 
@@ -58,6 +59,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	private Settings settings;
 
+	private TextureCacheFilter cacheFilter;
+
 	private TextureRegion loadingRegion;
 	private TextureRegion missingRegion;
 
@@ -65,6 +68,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	private FileHandle cacheFile;
 	private FileHandle atlasesFolder;
+	private FileHandle assetsFolder;
 	private TextureAtlas cache;
 
 	private ObjectMap<String, TextureAtlas> atlases = new ObjectMap<>();
@@ -84,6 +88,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		settings.useIndexes = false;
 		settings.fast = true;
 
+		cacheFilter = new TextureCacheFilter(assetsMetadata);
+
 		loadingRegion = Assets.icons.findRegion("refresh-big");
 		missingRegion = Assets.icons.findRegion("file-question-big");
 
@@ -93,6 +99,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 		gfxPath = fileAccess.getAssetsFolder().child("gfx").path();
 		atlasesFolder = fileAccess.getAssetsFolder().child("atlas");
+		assetsFolder = fileAccess.getAssetsFolder();
 
 		watcher.addListener(this);
 
@@ -103,15 +110,11 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		}
 
 		try {
-
-			if (atlasesFolder.exists()) {
-				FileUtils.streamRecursively(atlasesFolder, file -> {
-					if (file.extension().equals("atlas"))
-						updateAtlas(file);
-
-					return false;
-				});
-			}
+			FileUtils.streamRecursively(assetsFolder, file -> {
+				if (file.extension().equals("atlas")) {
+					updateAtlas(file);
+				}
+			});
 		} catch (Exception e) {
 			Log.error("Error encountered while loading one of atlases");
 			Log.exception(e);
@@ -125,8 +128,9 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	}
 
 	private void packageAndReloadCache () {
-		if (packagingEnabled)
-			TexturePacker.process(settings, gfxPath, cachePath, "cache");
+		if (packagingEnabled) {
+			TexturePacker.process(settings, gfxPath, cachePath, "cache", cacheFilter);
+		}
 
 		Gdx.app.postRunnable(this::reloadCache);
 	}
@@ -194,9 +198,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 	@Override
 	public void fileChanged (FileHandle file) {
-		String relativePath = fileAccess.relativizeToAssetsFolder(file);
-
-		if (ProjectPathUtils.isTexture(relativePath, file.extension())) {
+		if (ProjectPathUtils.isTexture(file)) {
 			cacheWaitTimer.clear();
 			cacheWaitTimer.scheduleTask(new Task() {
 				@Override
@@ -206,9 +208,9 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 			}, 0.5f);
 		}
 
-		if (ProjectPathUtils.isTextureAtlas(file, relativePath)) {
+		if (ProjectPathUtils.isTextureAtlas(file) || ProjectPathUtils.isTextureAtlasImage(file)) {
 			atlasWaitTimer.clear();
-			cacheWaitTimer.scheduleTask(new Task() {
+			atlasWaitTimer.scheduleTask(new Task() {
 				@Override
 				public void run () {
 					updateAtlas(file);
@@ -226,13 +228,6 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		if (descriptor instanceof AtlasRegionAsset) return getAtlasRegion((AtlasRegionAsset) descriptor);
 
 		throw new UnsupportedAssetDescriptorException(descriptor);
-	}
-
-	public Sprite getSprite (VisAssetDescriptor descriptor, float pixelsPerUnit) {
-		Sprite sprite = new Sprite(getRegion(descriptor));
-		sprite.setSize(sprite.getWidth() / pixelsPerUnit, sprite.getHeight() / pixelsPerUnit);
-		sprite.setOrigin(sprite.getOriginX() / pixelsPerUnit, sprite.getOriginY() / pixelsPerUnit);
-		return sprite;
 	}
 
 	private TextureRegion getCachedGfxRegion (TextureRegionAsset asset) {

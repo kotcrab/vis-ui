@@ -43,4 +43,13 @@ public class VisBagUtils {
 
 		return array;
 	}
+
+	public static <E> Bag<E> toBag (Array<E> array) {
+		Bag<E> bag = new Bag<E>(array.size);
+
+		for (E element : array)
+			bag.add(element);
+
+		return bag;
+	}
 }

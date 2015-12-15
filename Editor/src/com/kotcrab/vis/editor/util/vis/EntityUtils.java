@@ -18,12 +18,11 @@ package com.kotcrab.vis.editor.util.vis;
 
 import com.artemis.Component;
 import com.artemis.Entity;
-import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.util.NumberUtils;
 import com.kotcrab.vis.editor.util.value.*;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -32,7 +31,7 @@ import java.util.function.Consumer;
  * @author Kotcrab
  */
 public class EntityUtils {
-	public static String getEntitiesCommonFloatValue (Array<EntityProxy> entities, FloatProxyValue objValue) {
+	public static String getEntitiesCommonFloatValue (ImmutableArray<EntityProxy> entities, FloatProxyValue objValue) {
 		float value = objValue.getFloat(entities.first());
 
 		for (EntityProxy entity : entities)
@@ -41,7 +40,7 @@ public class EntityUtils {
 		return NumberUtils.floatToString(value);
 	}
 
-	public static String getEntitiesCommonIntegerValue (Array<EntityProxy> entities, IntegerProxyValue objValue) {
+	public static String getEntitiesCommonIntegerValue (ImmutableArray<EntityProxy> entities, IntegerProxyValue objValue) {
 		int value = objValue.getInteger(entities.first());
 
 		for (EntityProxy entity : entities)
@@ -50,7 +49,7 @@ public class EntityUtils {
 		return String.valueOf(value);
 	}
 
-	public static void setCommonCheckBoxState (Array<EntityProxy> entities, IndeterminateCheckbox target, BooleanProxyValue value) {
+	public static void setCommonCheckBoxState (ImmutableArray<EntityProxy> entities, IndeterminateCheckbox target, BooleanProxyValue value) {
 		boolean enabled = value.getBoolean(entities.first());
 
 		for (EntityProxy entity : entities) {
@@ -63,7 +62,7 @@ public class EntityUtils {
 		target.setChecked(enabled);
 	}
 
-	public static String getCommonString (Array<EntityProxy> entities, String ifNotCommon, StringProxyValue value) {
+	public static String getCommonString (ImmutableArray<EntityProxy> entities, String ifNotCommon, StringProxyValue value) {
 		String firstText = value.getString(entities.first());
 
 		for (EntityProxy entity : entities) {
@@ -73,58 +72,50 @@ public class EntityUtils {
 		return firstText;
 	}
 
-	public static String getEntitiesCommonFloatValue (Array<EntityProxy> proxies, FloatEntityValue objValue) {
-		float value = objValue.getFloat(proxies.first().getEntities().first());
+	public static String getEntitiesCommonFloatValue (ImmutableArray<EntityProxy> proxies, FloatEntityValue objValue) {
+		float value = objValue.getFloat(proxies.first().getEntity());
 
 		for (EntityProxy proxy : proxies) {
-			for (Entity entity : proxy.getEntities()) {
-				if (value != objValue.getFloat(entity)) return "?";
-			}
+			if (value != objValue.getFloat(proxy.getEntity())) return "?";
 		}
 
 		return NumberUtils.floatToString(value);
 	}
 
-	public static String getEntitiesCommonIntegerValue (Array<EntityProxy> proxies, IntegerEntityValue objValue) {
-		int value = objValue.getInteger(proxies.first().getEntities().first());
+	public static String getEntitiesCommonIntegerValue (ImmutableArray<EntityProxy> proxies, IntegerEntityValue objValue) {
+		int value = objValue.getInteger(proxies.first().getEntity());
 
 		for (EntityProxy proxy : proxies) {
-			for (Entity entity : proxy.getEntities()) {
-				if (value != objValue.getInteger(entity)) return "?";
-			}
+			if (value != objValue.getInteger(proxy.getEntity())) return "?";
 		}
 
 		return String.valueOf(value);
 	}
 
-	public static void setCommonCheckBoxState (Array<EntityProxy> proxies, IndeterminateCheckbox target, BooleanEntityValue value) {
-		boolean enabled = value.getBoolean(proxies.first().getEntities().first());
+	public static void setCommonCheckBoxState (ImmutableArray<EntityProxy> proxies, IndeterminateCheckbox target, BooleanEntityValue value) {
+		boolean enabled = value.getBoolean(proxies.first().getEntity());
 
 		for (EntityProxy proxy : proxies) {
-			for (Entity entity : proxy.getEntities()) {
-				if (enabled != value.getBoolean(entity)) {
-					target.setIndeterminate(true);
-					return;
-				}
+			if (enabled != value.getBoolean(proxy.getEntity())) {
+				target.setIndeterminate(true);
+				return;
 			}
 		}
 
 		target.setChecked(enabled);
 	}
 
-	public static String getCommonString (Array<EntityProxy> proxies, String ifNotCommon, StringEntityValue value) {
-		String firstText = value.getString(proxies.first().getEntities().first());
+	public static String getCommonString (ImmutableArray<EntityProxy> proxies, String ifNotCommon, StringEntityValue value) {
+		String firstText = value.getString(proxies.first().getEntity());
 
 		for (EntityProxy proxy : proxies) {
-			for (Entity entity : proxy.getEntities()) {
-				if (value.getString(entity).equals(firstText) == false) return ifNotCommon;
-			}
+			if (value.getString(proxy.getEntity()).equals(firstText) == false) return ifNotCommon;
 		}
 
 		return firstText;
 	}
 
-	public static String getCommonId (Array<EntityProxy> entities) {
+	public static String getCommonId (ImmutableArray<EntityProxy> entities) {
 		String firstId = entities.first().getId();
 		if (firstId == null) firstId = "";
 
@@ -140,7 +131,7 @@ public class EntityUtils {
 		return firstId;
 	}
 
-	public static boolean isScaleSupportedForEntities (Array<EntityProxy> entities) {
+	public static boolean isScaleSupportedForEntities (ImmutableArray<EntityProxy> entities) {
 		for (EntityProxy entity : entities) {
 			if (entity.isScaleSupported() == false) return false;
 		}
@@ -148,7 +139,7 @@ public class EntityUtils {
 		return true;
 	}
 
-	public static boolean isOriginSupportedForEntities (Array<EntityProxy> entities) {
+	public static boolean isOriginSupportedForEntities (ImmutableArray<EntityProxy> entities) {
 		for (EntityProxy entity : entities) {
 			if (entity.isOriginSupported() == false) return false;
 		}
@@ -156,7 +147,7 @@ public class EntityUtils {
 		return true;
 	}
 
-	public static boolean isRotationSupportedForEntities (Array<EntityProxy> entities) {
+	public static boolean isRotationSupportedForEntities (ImmutableArray<EntityProxy> entities) {
 		for (EntityProxy entity : entities) {
 			if (entity.isRotationSupported() == false) return false;
 		}
@@ -164,7 +155,7 @@ public class EntityUtils {
 		return true;
 	}
 
-	public static boolean isTintSupportedForEntities (Array<EntityProxy> entities) {
+	public static boolean isTintSupportedForEntities (ImmutableArray<EntityProxy> entities) {
 		for (EntityProxy entity : entities) {
 			if (entity.isColorSupported() == false) return false;
 		}
@@ -172,7 +163,7 @@ public class EntityUtils {
 		return true;
 	}
 
-	public static boolean isFlipSupportedForEntities (Array<EntityProxy> entities) {
+	public static boolean isFlipSupportedForEntities (ImmutableArray<EntityProxy> entities) {
 		for (EntityProxy entity : entities) {
 			if (entity.isFlipSupported() == false) return false;
 		}
@@ -180,11 +171,11 @@ public class EntityUtils {
 		return true;
 	}
 
-	public static boolean isComponentCommon (Component component, Array<EntityProxy> entities) {
+	public static boolean isComponentCommon (Component component, ImmutableArray<EntityProxy> entities) {
 		return isComponentCommon(component.getClass(), entities);
 	}
 
-	public static boolean isComponentCommon (Class<? extends Component> componentClazz, Array<EntityProxy> entities) {
+	public static boolean isComponentCommon (Class<? extends Component> componentClazz, ImmutableArray<EntityProxy> entities) {
 		for (EntityProxy entity : entities) {
 			if (entity.hasComponent(componentClazz) == false) return false;
 		}
@@ -192,45 +183,28 @@ public class EntityUtils {
 		return true;
 	}
 
-	public static <T extends Component> void stream (Array<EntityProxy> proxies, Class<T> componentClass, BiConsumer<Entity, T> consumer) {
+	public static <T extends Component> void stream (ImmutableArray<EntityProxy> proxies, Class<T> componentClass, BiConsumer<Entity, T> consumer) {
 		stream(proxies, entity -> consumer.accept(entity, entity.getComponent(componentClass)));
 	}
 
-	public static void stream (Array<EntityProxy> proxies, Consumer<Entity> consumer) {
-		for (int i = 0; i < proxies.size; i++) {
-			Array<Entity> entities = proxies.get(i).getEntities();
-
-			for (int j = 0; j < entities.size; j++) {
-				consumer.accept(entities.get(j));
-			}
+	public static void stream (ImmutableArray<EntityProxy> proxies, Consumer<Entity> consumer) {
+		for (int i = 0; i < proxies.size(); i++) {
+			consumer.accept(proxies.get(i).getEntity());
 		}
 	}
 
-	public static void stream (Array<EntityProxy> proxies, BiConsumer<EntityProxy, Entity> consumer) {
-		for (int i = 0; i < proxies.size; i++) {
+	public static void stream (ImmutableArray<EntityProxy> proxies, BiConsumer<EntityProxy, Entity> consumer) {
+		for (int i = 0; i < proxies.size(); i++) {
 			EntityProxy proxy = proxies.get(i);
-			Array<Entity> entities = proxy.getEntities();
-
-			for (int j = 0; j < entities.size; j++) {
-				consumer.accept(proxy, entities.get(j));
-			}
+			consumer.accept(proxy, proxy.getEntity());
 		}
 	}
 
-	public static boolean isMultipleEntitiesSelected (Array<EntityProxy> proxies) {
-		if (proxies.size > 1) {
-			return true;
-		} else {
-			EntityProxy proxy = proxies.get(0);
-			return (proxy instanceof GroupEntityProxy && proxy.getEntities().size > 1);
-		}
+	public static Entity getFirstEntity (ImmutableArray<EntityProxy> proxies) {
+		return proxies.first().getEntity();
 	}
 
-	public static Entity getFirstEntity (Array<EntityProxy> proxies) {
-		return proxies.first().getEntities().first();
-	}
-
-	public static <T extends Component> T getFirstEntityComponent (Array<EntityProxy> proxies, Class<T> componentClass) {
+	public static <T extends Component> T getFirstEntityComponent (ImmutableArray<EntityProxy> proxies, Class<T> componentClass) {
 		return getFirstEntity(proxies).getComponent(componentClass);
 	}
 }

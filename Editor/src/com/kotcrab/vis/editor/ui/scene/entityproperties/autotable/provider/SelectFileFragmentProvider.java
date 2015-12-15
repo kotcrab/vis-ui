@@ -17,23 +17,24 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
-import com.artemis.Entity;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.ATSelectFileHandlerGroup;
 import com.kotcrab.vis.editor.util.Holder;
-import com.kotcrab.vis.ui.util.value.VisWidgetValue;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
+import com.kotcrab.vis.ui.util.value.VisWidgetValue;
 import com.kotcrab.vis.ui.widget.Tooltip;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -49,6 +50,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 	private static final int MAX_FILE_LABEL_WIDTH = 175;
 
 	private FileAccessModule fileAccessModule;
+	private AssetsMetadataModule assetsMetadata;
 	private Stage stage;
 
 	private ObjectMap<String, ATSelectFileHandlerGroup> handlerGroups = new ObjectMap<>();
@@ -74,17 +76,17 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 
 		uiTable.add(table).expandX().fillX().row();
 
-		Holder<ATSelectFileHandler> holder = new Holder<>(getHandler(annotation));
+		Holder<ATSelectFileHandler> holder = Holder.of(getHandler(annotation));
 
 		fileDialogLabels.put(field, new SelectFileDialogSet(fileLabel, tooltip, holder.value));
 
-		FileHandle folder = fileAccessModule.getAssetsFolder().child(annotation.relativeFolderPath());
+		FileHandle folder = fileAccessModule.getAssetsFolder();
 
-		final SelectFileDialog selectFontDialog = new SelectFileDialog(annotation.extension(), annotation.hideExtension(), folder, file -> {
-			for (EntityProxy proxy : properties.getProxies()) {
-				for (Entity entity : proxy.getEntities()) {
-					holder.value.applyChanges(entity, file);
-				}
+		AssetDirectoryDescriptor directoryDescriptor = assetsMetadata.getDirectoryDescriptorForId(holder.value.getAssetDirectoryDescriptorId());
+		final SelectFileDialog selectFontDialog = new SelectFileDialog(annotation.extension(), annotation.hideExtension(),
+				folder, assetsMetadata, directoryDescriptor, file -> {
+			for (EntityProxy proxy : properties.getSelectedEntities()) {
+				holder.value.applyChanges(proxy.getEntity(), file);
 			}
 
 			properties.getParentTab().dirty();
@@ -133,7 +135,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 	}
 
 	@Override
-	public void updateUIFromEntities (Array<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
+	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
 		SelectFileDialogSet set = fileDialogLabels.get(field);
 		String path = getCommonString(proxies, "<?>", set.handler::getLabelValue);
 		set.fileLabel.setText(path);

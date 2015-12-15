@@ -18,25 +18,37 @@ package com.kotcrab.vis.editor.entity;
 
 import com.artemis.Component;
 import com.artemis.Entity;
+import com.artemis.annotations.Transient;
 import com.artemis.utils.Bag;
 import com.artemis.utils.EntityBuilder;
-import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.component.GroupComponent;
-import com.kotcrab.vis.runtime.component.IDComponent;
+import com.kotcrab.vis.runtime.component.VisGroup;
+import com.kotcrab.vis.runtime.component.VisID;
 import com.kotcrab.vis.runtime.data.EntityData;
+import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.EntityEngine;
-import com.kotcrab.vis.runtime.util.UsesProtoComponent;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 /** @author Kotcrab */
 public class EntityScheme {
-	@VisTag(0) public ImmutableBag<Component> components;
+	private static transient final Bag<Component> fillBag = new Bag<>();
+
+	public Array<Component> components;
 
 	public EntityScheme (Entity entity) {
-		Bag<Component> components = new Bag<>();
-		entity.getComponents(components);
-		this.components = components;
+		fillBag.clear();
+		entity.getComponents(fillBag);
+		components = new Array<>(fillBag.size());
+
+		for (Component component : fillBag) {
+			if (component.getClass().isAnnotationPresent(Transient.class)) continue;
+
+			if (component instanceof UsesProtoComponent) {
+				components.add(((UsesProtoComponent) component).toProtoComponent());
+			} else {
+				components.add(component);
+			}
+		}
+
 	}
 
 	public Entity build (EntityEngine engine) {
@@ -60,22 +72,19 @@ public class EntityScheme {
 		}
 
 		for (Component component : components) {
-			if (component instanceof ExporterDropsComponent)
-				continue;
-
-			if (component instanceof UUIDComponent)
+			if (component instanceof ExporterDropsComponent || component instanceof VisUUID)
 				continue;
 
 			if (dropsComponent != null && dropsComponent.componentsToDrop.contains(component.getClass(), false))
 				continue;
 
 			if (component instanceof UsesProtoComponent) {
-				dataComponents.add(((UsesProtoComponent) component).getProtoComponent());
-			} else if (component instanceof GroupComponent) { //strip empty GroupComponents
-				GroupComponent gdc = (GroupComponent) component;
+				dataComponents.add(((UsesProtoComponent) component).toProtoComponent());
+			} else if (component instanceof VisGroup) { //strip empty GroupComponents
+				VisGroup gdc = (VisGroup) component;
 				if (gdc.groupIds.size > 0) dataComponents.add(component);
-			} else if (component instanceof IDComponent) { //strip empty IDComponents
-				IDComponent idc = (IDComponent) component;
+			} else if (component instanceof VisID) { //strip empty IDComponents
+				VisID idc = (VisID) component;
 				if (idc.id != null && idc.id.equals("") == false) {
 					dataComponents.add(component);
 				}

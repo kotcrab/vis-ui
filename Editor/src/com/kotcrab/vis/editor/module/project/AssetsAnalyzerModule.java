@@ -20,19 +20,18 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.assets.*;
+import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.assets.transaction.AssetProviderResult;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransaction;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionException;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
-import com.kotcrab.vis.editor.assets.transaction.generator.*;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.module.project.AssetsUsages.SceneUsages;
-import com.kotcrab.vis.editor.module.scene.AssetsUsageAnalyzerSystem;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
-import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.kotcrab.vis.editor.module.scene.system.AssetsUsageAnalyzer;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
@@ -50,9 +49,11 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
  * @author Kotcrab
  */
 public class AssetsAnalyzerModule extends ProjectModule {
+	private ExtensionStorageModule extensionStorage;
+
+	private AssetsMetadataModule assetsMetadata;
 	private ToastModule toastModule;
 	private FileAccessModule fileAccess;
-	private SupportModule supportModule;
 	private TabsModule tabsModule;
 	private SceneTabsModule sceneTabsModule;
 	private QuickAccessModule quickAccessModule;
@@ -60,27 +61,10 @@ public class AssetsAnalyzerModule extends ProjectModule {
 
 	private Stage stage;
 
-	private Array<AssetDescriptorProvider> providers = new Array<>();
-	private Array<AssetTransactionGenerator> transactionsGens = new Array<>();
-
 	private FileHandle transactionBackupRoot;
 
 	@Override
 	public void init () {
-		providers.add(new BmpFontDescriptorProvider());
-		providers.add(new PathDescriptorProvider());
-		providers.add(new TextureRegionDescriptorProvider());
-		providers.add(new AtlasRegionDescriptorProvider());
-		providers.add(new TtfFontDescriptorProvider());
-		providers.add(new ShaderDescriptorProvider());
-		providers.add(new SpriterDescriptorProvider());
-
-		transactionsGens.add(new AtlasRegionAssetTransactionGenerator());
-		transactionsGens.add(new BasicAssetTransactionGenerator());
-		transactionsGens.add(new BmpFontAssetTransactionGenerator());
-		transactionsGens.add(new TextureRegionAssetTransactionGenerator());
-		transactionsGens.add(new TtfAssetTransactionGenerator());
-
 		transactionBackupRoot = fileAccess.getModuleFolder(".transactionBackup");
 	}
 
@@ -91,20 +75,11 @@ public class AssetsAnalyzerModule extends ProjectModule {
 	}
 
 	private AssetProviderResult provideDescriptor (FileHandle file, String relativePath) {
-		for (AssetDescriptorProvider provider : providers) {
-			VisAssetDescriptor desc = provider.provide(file, relativePath);
+		Array<AssetDescriptorProvider<?>> providers = extensionStorage.getAssetDescriptorProviders();
+
+		for (AssetDescriptorProvider<?> provider : providers) {
+			VisAssetDescriptor desc = provider.provide(assetsMetadata, file, relativePath);
 			if (desc != null) return new AssetProviderResult(provider, desc);
-		}
-
-		for (EditorEntitySupport support : supportModule.getSupports()) {
-			Array<AssetDescriptorProvider> providers = support.getAssetDescriptorProviders();
-
-			if (providers != null) {
-				for (AssetDescriptorProvider provider : providers) {
-					VisAssetDescriptor desc = provider.provide(file, relativePath);
-					if (desc != null) return new AssetProviderResult(provider, desc);
-				}
-			}
 		}
 
 		return null;
@@ -118,7 +93,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 	}
 
 	public AssetsUsages analyzeUsages (FileHandle file) {
-		String path = fileAccess.relativizeToAssetsFolder(file.path());
+		String path = fileAccess.relativizeToAssetsFolder(file);
 		VisAssetDescriptor searchFor = provideDescriptor(file, path).descriptor;
 		AssetsUsages usages = new AssetsUsages(file);
 
@@ -132,15 +107,16 @@ public class AssetsAnalyzerModule extends ProjectModule {
 			if (sceneTab == null) {
 				//scene is not loaded, manually prepare engine and populate it
 				EntityEngineConfiguration config = new EntityEngineConfiguration();
-				SceneModuleContainer.createEssentialsSystems(config, scene.pixelsPerUnit);
+				SceneModuleContainer.createEssentialsSystems(config);
 				engine = new EntityEngine(config);
 				SceneModuleContainer.populateEngine(engine, scene);
+				engine.process();
 			} else {
 				engine = sceneTab.getSceneMC().getEntityEngine();
 			}
 
 			SceneUsages sceneUsages = new SceneUsages(scene);
-			engine.getSystem(AssetsUsageAnalyzerSystem.class).collectUsages(sceneUsages.ids, searchFor);
+			engine.getSystem(AssetsUsageAnalyzer.class).collectUsages(sceneUsages.ids, searchFor);
 			if (sceneUsages.ids.size > 0) usages.list.add(sceneUsages);
 		}
 
@@ -156,17 +132,9 @@ public class AssetsAnalyzerModule extends ProjectModule {
 		AssetProviderResult result = provideDescriptor(file, relativePath);
 		if (result != null) {
 
-			for (AssetTransactionGenerator gen : transactionsGens) {
-				if (gen.isSupported(result.descriptor)) return gen;
-			}
-
-			for (EditorEntitySupport support : supportModule.getSupports()) {
-				Array<AssetTransactionGenerator> gens = support.getAssetTransactionGenerators();
-				if (gens != null) {
-					for (AssetTransactionGenerator gen : gens) {
-						if (gen.isSupported(result.descriptor)) return gen;
-					}
-				}
+			Array<AssetTransactionGenerator> gens = extensionStorage.getAssetTransactionGenerator();
+			for (AssetTransactionGenerator gen : gens) {
+				if (gen.isSupported(result.descriptor, file)) return gen;
 			}
 		}
 

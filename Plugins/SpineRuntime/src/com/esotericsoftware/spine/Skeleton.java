@@ -409,7 +409,7 @@ public class Skeleton {
 		return color;
 	}
 
-	/** A convenience method for setting the skeleton color. The color can also be set by modifying {@link #getColor()}. */
+	/** A convenience method for setting the skeleton tint. The tint can also be set by modifying {@link #getColor()}. */
 	public void setColor (Color color) {
 		this.color.set(color);
 	}

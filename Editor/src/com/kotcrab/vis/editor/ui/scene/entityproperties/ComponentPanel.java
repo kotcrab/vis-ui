@@ -23,11 +23,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
-import com.kotcrab.vis.editor.module.scene.VisComponentManipulator;
+import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
 import com.kotcrab.vis.editor.module.scene.action.ComponentRemoveAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.VisUI;
@@ -75,7 +75,7 @@ public class ComponentPanel extends VisTable {
 				UndoableActionGroup undoableActionGroup = new UndoableActionGroup("Remove components");
 
 				for (EntityProxy proxy : proxies) {
-					undoableActionGroup.add(new ComponentRemoveAction(componentManipulator, proxy, componentTable.getComponentClass()));
+					undoableActionGroup.add(new ComponentRemoveAction(injector, proxy, componentTable.getComponentClass()));
 				}
 
 				undoableActionGroup.finalizeGroup();

@@ -17,8 +17,8 @@
 package com.kotcrab.vis.editor.ui.dialog;
 
 import com.badlogic.gdx.Gdx;
-import com.kotcrab.vis.editor.util.AsyncTask;
-import com.kotcrab.vis.editor.util.AsyncTaskListener;
+import com.kotcrab.vis.editor.util.async.AsyncTask;
+import com.kotcrab.vis.editor.util.async.AsyncTaskListener;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.VisLabel;

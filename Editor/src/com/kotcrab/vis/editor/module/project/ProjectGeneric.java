@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 
 /**
  * Generic editor project, that does not really on any game framework.
@@ -26,9 +25,9 @@ import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
  */
 public class ProjectGeneric extends Project {
 	/** absolute path */
-	@Tag(0) private String visDirectory;
+	private String visDirectory;
 	/** absolute path */
-	@Tag(1) private String assetsOutput;
+	private String assetsOutput;
 
 	public ProjectGeneric (String visDirectory, String assetsOutput) {
 		this.visDirectory = visDirectory;

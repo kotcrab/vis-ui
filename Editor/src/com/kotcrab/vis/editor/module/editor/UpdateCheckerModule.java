@@ -89,9 +89,6 @@ public class UpdateCheckerModule extends EditorModule {
 				case STABLE:
 					table.add("New stable build is available! (" + timestamp + ")");
 					break;
-				case BETA:
-					table.add("New beta build is available! (" + timestamp + ")");
-					break;
 				case EDGE:
 					table.add("New cutting edge build is available! (" + timestamp + ")");
 					break;

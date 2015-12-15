@@ -22,10 +22,10 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
+import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
-import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.ui.InputValidator;
-import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.*;
 
@@ -107,7 +107,7 @@ public class StringStringMapView extends VisTable {
 					//TODO: [misc] we can reuse fields to reduce overhead
 					VisValidatableTextField keyField = new VisValidatableTextField(keyExistsValidator);
 					VisTextField valueField = new VisTextField();
-					VisImageButton deleteButton = new VisImageButton(VisUI.getSkin().getDrawable("icon-close"));
+					VisImageButton deleteButton = new VisImageButton(Icons.CLOSE.drawable());
 
 					keyFields.add(keyField);
 					valueFields.add(valueField);

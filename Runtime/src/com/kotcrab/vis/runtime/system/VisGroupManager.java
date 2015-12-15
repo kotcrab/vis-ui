@@ -18,20 +18,18 @@ package com.kotcrab.vis.runtime.system;
 
 import com.artemis.*;
 import com.artemis.EntitySubscription.SubscriptionListener;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
 import com.badlogic.gdx.utils.IntMap;
-import com.kotcrab.vis.runtime.component.GroupComponent;
+import com.kotcrab.vis.runtime.component.VisGroup;
 
 /**
  * Allows to get entities by their string id that was set in VisEditor
  * @author Kotcrab
  */
-@Wire
 public class VisGroupManager extends Manager {
-	private ComponentMapper<GroupComponent> groupCm;
+	private ComponentMapper<VisGroup> groupCm;
 	private AspectSubscriptionManager subscriptionManager;
 
 	private IntMap<String> groupsIds;
@@ -43,7 +41,7 @@ public class VisGroupManager extends Manager {
 
 	@Override
 	protected void initialize () {
-		EntitySubscription subscription = subscriptionManager.get(Aspect.all(GroupComponent.class));
+		EntitySubscription subscription = subscriptionManager.get(Aspect.all(VisGroup.class));
 
 		subscription.addSubscriptionListener(new SubscriptionListener() {
 			@Override

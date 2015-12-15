@@ -21,12 +21,14 @@ import com.badlogic.gdx.files.FileHandle;
 
 /**
  * Handler interface for {@link ATSelectFile}. All handlers must implement this interface. Handlers may use
- * any module from VisEditor SceneModuleContainer scope if those fields are annotated by @InjectModule annotation.
+ * any module from VisEditor SceneModuleContainer scope.
  * Handlers must have no arg constructor.
  * @author Kotcrab
  */
 public interface ATSelectFileHandler {
 	void applyChanges (Entity entity, FileHandle file);
+
+	String getAssetDirectoryDescriptorId ();
 
 	String getLabelValue (Entity entity);
 }

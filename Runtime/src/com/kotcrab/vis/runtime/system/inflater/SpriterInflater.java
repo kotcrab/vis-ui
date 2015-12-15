@@ -16,60 +16,40 @@
 
 package com.kotcrab.vis.runtime.system.inflater;
 
-import com.artemis.*;
-import com.artemis.annotations.Wire;
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SpriterComponent;
-import com.kotcrab.vis.runtime.component.SpriterProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisSpriter;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisSpriter;
 import com.kotcrab.vis.runtime.util.SpriterData;
 
 /** @author Kotcrab */
-@Wire
-public class SpriterInflater extends Manager {
-	private ComponentMapper<SpriterProtoComponent> protoCm;
-	private ComponentMapper<AssetComponent> assetCm;
-
-	private Entity flyweight;
-
-	private EntityTransmuter transmuter;
+public class SpriterInflater extends InflaterSystem {
+	private ComponentMapper<ProtoVisSpriter> protoCm;
+	private ComponentMapper<AssetReference> assetCm;
 
 	private AssetManager manager;
 
 	public SpriterInflater (AssetManager manager) {
+		super(Aspect.all(ProtoVisSpriter.class, AssetReference.class));
 		this.manager = manager;
 	}
 
 	@Override
-	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SpriterProtoComponent.class);
-		transmuter = factory.build();
-	}
+	public void inserted (int entityId) {
+		AssetReference assetRef = assetCm.get(entityId);
+		ProtoVisSpriter protoComponent = protoCm.get(entityId);
 
-	@Override
-	protected void setWorld (World world) {
-		super.setWorld(world);
-		flyweight = Entity.createFlyweight(world);
-	}
-
-	@Override
-	public void added (int entityId) {
-		flyweight.id = entityId;
-		if (protoCm.has(entityId) == false) return;
-
-		AssetComponent assetComponent = assetCm.get(entityId);
-		SpriterProtoComponent protoComponent = protoCm.get(entityId);
-
-		SpriterAsset asset = (SpriterAsset) assetComponent.asset;
+		SpriterAsset asset = (SpriterAsset) assetRef.asset;
 		SpriterData data = manager.get(asset.getPath(), SpriterData.class);
 		if (data == null)
 			throw new IllegalStateException("Can't load scene, spriter data is missing: " + asset.getPath());
-		SpriterComponent component = new SpriterComponent(data.loader, data.data, protoComponent.scale);
-
+		VisSpriter component = new VisSpriter(data.loader, data.data, protoComponent.scale);
 		protoComponent.fill(component);
+		world.getEntity(entityId).edit().add(component);
 
-		transmuter.transmute(flyweight);
-		flyweight.edit().add(component);
+		protoCm.remove(entityId);
 	}
 }

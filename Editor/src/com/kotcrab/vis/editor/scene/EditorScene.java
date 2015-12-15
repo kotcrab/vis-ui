@@ -20,13 +20,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
-import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.util.BaseObservable;
 import com.kotcrab.vis.runtime.data.PhysicsSettings;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
-import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
 
 import java.util.Comparator;
 
@@ -35,6 +33,8 @@ import java.util.Comparator;
  * @author Kotcrab
  */
 public class EditorScene extends BaseObservable {
+	private static final int VERSION_CODE = 1;
+
 	public static final int ACTIVE_LAYER_CHANGED = 0;
 	public static final int LAYER_ADDED = 1;
 	public static final int LAYER_INSERTED = 2;
@@ -42,29 +42,26 @@ public class EditorScene extends BaseObservable {
 	public static final int LAYERS_SORTED = 4;
 	public static final int LAYER_DATA_CHANGED = 5;
 
-	private static final Comparator<Layer> LAYER_COMPARATOR = (o1, o2) -> (int) Math.signum(o1.id - o2.id);
+	private static final Comparator<EditorLayer> LAYER_COMPARATOR = (o1, o2) -> (int) Math.signum(o1.id - o2.id);
+
+	private int versionCode = VERSION_CODE;
 
 	/** Scene file, path is relative to project Vis folder */
-	@Tag(0) public String path;
-	@Tag(1) public float width;
-	@Tag(2) public float height;
+	public String path;
+	public float width;
+	public float height;
 	/** This value is float to avoid calculations problems */
-	@Tag(7) public float pixelsPerUnit;
-	@Tag(3) public SceneViewport viewport;
+	public float pixelsPerUnit;
+	public SceneViewport viewport;
 
-	@Tag(10) public PhysicsSettings physicsSettings = new PhysicsSettings();
+	public PhysicsSettings physicsSettings = new PhysicsSettings();
 
-	@Tag(9) @Deprecated @DeprecatedOn(versionCode = 11)
-	private EditorPhysicsSettings _physicsSettings;
+	private Array<EditorLayer> layers = new Array<>();
+	private int activeLayerId;
 
-	@Tag(4) private Array<Layer> layers = new Array<>();
-	@Tag(5) private int activeLayerId;
+	private IntMap<String> groupIds = new IntMap<>();
 
-	@Tag(8) private IntMap<String> groupIds = new IntMap<>();
-
-	@Tag(6) private Array<EntityScheme> schemes; //for serialization
-
-	//last tag is 10
+	private Array<EntityScheme> schemes; //for serialization
 
 	public EditorScene (FileHandle file, SceneViewport viewport, float width, float height, int pixelsPerUnit) {
 		if (width < 0 || height < 0) throw new IllegalArgumentException("Invalid scene size");
@@ -75,7 +72,7 @@ public class EditorScene extends BaseObservable {
 		this.height = height;
 		this.pixelsPerUnit = pixelsPerUnit;
 
-		layers.add(new Layer("Background", 0));
+		layers.add(new EditorLayer("Background", 0));
 		schemes = new Array<>();
 	}
 
@@ -112,8 +109,8 @@ public class EditorScene extends BaseObservable {
 		return groupIds;
 	}
 
-	public Layer getActiveLayer () {
-		for (Layer layer : layers) {
+	public EditorLayer getActiveLayer () {
+		for (EditorLayer layer : layers) {
 			if (layer.id == activeLayerId)
 				return layer;
 		}
@@ -135,35 +132,35 @@ public class EditorScene extends BaseObservable {
 		return false;
 	}
 
-	public Layer getLayerById (int id) {
-		for (Layer layer : layers) {
+	public EditorLayer getLayerById (int id) {
+		for (EditorLayer layer : layers) {
 			if (layer.id == id) return layer;
 		}
 
 		return null;
 	}
 
-	public Layer getLayerByName (String name) {
-		for (Layer layer : layers) {
+	public EditorLayer getLayerByName (String name) {
+		for (EditorLayer layer : layers) {
 			if (layer.name.equals(name)) return layer;
 		}
 
 		return null;
 	}
 
-	public ImmutableArray<Layer> getLayers () {
+	public ImmutableArray<EditorLayer> getLayers () {
 		return new ImmutableArray<>(layers);
 	}
 
-	public Layer addLayer (String name) {
-		Layer layer = new Layer(name, getFreeLayerID());
+	public EditorLayer addLayer (String name) {
+		EditorLayer layer = new EditorLayer(name, getFreeLayerID());
 		layers.add(layer);
 		layers.sort(LAYER_COMPARATOR);
 		postNotification(LAYER_ADDED);
 		return layer;
 	}
 
-	public void insertLayer (Layer layer) {
+	public void insertLayer (EditorLayer layer) {
 		if (isLayerIdUsed(layer.id))
 			throw new IllegalStateException("Layer with this id already exist!");
 
@@ -172,7 +169,7 @@ public class EditorScene extends BaseObservable {
 		postNotification(LAYER_INSERTED);
 	}
 
-	public boolean removeLayer (Layer layer) {
+	public boolean removeLayer (EditorLayer layer) {
 		boolean result = layers.removeValue(layer, true);
 		layers.sort(LAYER_COMPARATOR);
 		if (layer.id == activeLayerId)
@@ -198,7 +195,7 @@ public class EditorScene extends BaseObservable {
 	}
 
 	private boolean isLayerIdUsed (int id) {
-		for (Layer layer : layers) {
+		for (EditorLayer layer : layers) {
 			if (layer.id == id)
 				return true;
 		}

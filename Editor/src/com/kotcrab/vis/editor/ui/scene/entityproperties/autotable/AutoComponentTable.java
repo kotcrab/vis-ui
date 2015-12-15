@@ -17,13 +17,12 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
 
 import com.artemis.Component;
-import com.artemis.Entity;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.ComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider.*;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.autotable.*;
 
 import java.lang.annotation.Annotation;
@@ -102,7 +101,7 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 	public void updateUIValues () {
 		try {
 
-			Array<EntityProxy> proxies = properties.getProxies();
+			ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 
 			for (Field field : componentClass.getDeclaredFields()) {
 				Class type = field.getType();
@@ -123,18 +122,15 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 	public void setValuesToEntities () {
 		try {
 
-			for (EntityProxy proxy : properties.getProxies()) {
-				for (Entity entity : proxy.getEntities()) {
+			for (EntityProxy proxy : properties.getSelectedEntities()) {
+				T component = proxy.getEntity().getComponent(componentClass);
 
-					T component = entity.getComponent(componentClass);
-
-					for (Field field : componentClass.getDeclaredFields()) {
-						Class type = field.getType();
-						for (Annotation annotation : field.getAnnotations()) {
-							AutoTableFragmentProvider fragmentProvider = fragmentProviders.get(annotation.annotationType());
-							if (fragmentProvider != null) {
-								fragmentProvider.setToEntities(type, field, component);
-							}
+				for (Field field : componentClass.getDeclaredFields()) {
+					Class type = field.getType();
+					for (Annotation annotation : field.getAnnotations()) {
+						AutoTableFragmentProvider fragmentProvider = fragmentProviders.get(annotation.annotationType());
+						if (fragmentProvider != null) {
+							fragmentProvider.setToEntities(type, field, component);
 						}
 					}
 				}

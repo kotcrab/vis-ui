@@ -21,13 +21,14 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.proxy.GroupEntityProxy;
-import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragment;
+import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.component.PhysicsPropertiesComponent;
-import com.kotcrab.vis.runtime.component.PolygonComponent;
-import com.kotcrab.vis.runtime.component.ShaderComponent;
-import com.kotcrab.vis.runtime.component.VariablesComponent;
+import com.kotcrab.vis.runtime.component.PhysicsProperties;
+import com.kotcrab.vis.runtime.component.VisPolygon;
+import com.kotcrab.vis.runtime.component.Shader;
+import com.kotcrab.vis.runtime.component.Variables;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
@@ -52,10 +53,10 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 		setBackground(VisUI.getSkin().getDrawable("tooltip-bg"));
 
 		//TODO: [plugin] plugin entry point
-		componentClasses.add(ShaderComponent.class);
-		componentClasses.add(PolygonComponent.class);
-		componentClasses.add(PhysicsPropertiesComponent.class);
-		componentClasses.add(VariablesComponent.class);
+		componentClasses.add(Shader.class);
+		componentClasses.add(VisPolygon.class);
+		componentClasses.add(PhysicsProperties.class);
+		componentClasses.add(Variables.class);
 
 		buttonStyle = new VisTextButtonStyle(VisUI.getSkin().get(VisTextButtonStyle.class));
 
@@ -120,14 +121,12 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 	public boolean build () {
 		scrollPaneTable.clearChildren();
 
-		if (properties.getProxies().first() instanceof GroupEntityProxy) {
-			return false;
-		}
+		if(ArrayUtils.has(properties.getSelection().getFragmentedSelection(), GroupSelectionFragment.class)) return false;
 
 		boolean atLeastOneComponentAdded = false;
 
 		for (Class<? extends Component> clazz : componentClasses) {
-			if (EntityUtils.isComponentCommon(clazz, properties.getProxies()) == false) {
+			if (EntityUtils.isComponentCommon(clazz, properties.getSelectedEntities()) == false) {
 				VisTextButton button = new VisTextButton(clazz.getSimpleName(), buttonStyle);
 				button.setFocusBorderEnabled(false);
 				scrollPaneTable.add(button).expandX().fillX().row();

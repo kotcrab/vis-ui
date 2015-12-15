@@ -21,10 +21,10 @@ import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangeLayerProperties;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.scene.Layer;
+import com.kotcrab.vis.editor.scene.EditorLayer;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
-import com.kotcrab.vis.editor.util.gdx.TableBuilder;
-import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.form.FormInputValidator;
@@ -39,7 +39,7 @@ public class LayerSettingsDialog extends VisWindow {
 		super("Layer Settings");
 		injector.injectModules(this);
 
-		Layer layer = scene.getActiveLayer();
+		EditorLayer layer = scene.getActiveLayer();
 
 		TableUtils.setSpacingDefaults(this);
 		setModal(true);

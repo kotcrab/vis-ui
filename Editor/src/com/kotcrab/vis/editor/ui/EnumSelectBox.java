@@ -32,7 +32,14 @@ public class EnumSelectBox<T extends Enum<T> & PrettyEnum> extends VisSelectBox<
 	private OrderedMap<String, T> enumMap = new OrderedMap<>();
 
 	public EnumSelectBox (Class<T> enumClass) {
-		for (T value : enumClass.getEnumConstants()) enumMap.put(value.toPrettyString(), value);
+		try {
+			for (T value : enumClass.getEnumConstants()) {
+				if (enumClass.getField(value.toString()).isAnnotationPresent(Deprecated.class)) continue;
+				enumMap.put(value.toPrettyString(), value);
+			}
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException(e);
+		}
 
 		addListener(new ChangeListener() {
 			@Override

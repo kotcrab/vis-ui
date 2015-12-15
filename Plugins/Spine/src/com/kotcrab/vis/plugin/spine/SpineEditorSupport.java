@@ -36,12 +36,9 @@ import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.kryo.Serializer;
-import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
-import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
-import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.ContentItemProperties;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
@@ -50,48 +47,38 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
 import com.kotcrab.vis.editor.util.FileUtils;
-import com.kotcrab.vis.editor.util.gdx.VisDragAndDrop;
-import com.kotcrab.vis.editor.util.gdx.VisDropSource;
+import com.kotcrab.vis.editor.util.scene2d.VisDragAndDrop;
+import com.kotcrab.vis.editor.util.scene2d.VisDropSource;
+import com.kotcrab.vis.plugin.spine.components.SpineBounds;
+import com.kotcrab.vis.plugin.spine.components.SpinePreview;
+import com.kotcrab.vis.plugin.spine.components.SpineScale;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
-import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.LayerComponent;
-import com.kotcrab.vis.runtime.component.RenderableComponent;
+import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
+import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
+/** @author Kotcrab */
 @VisPlugin
 public class SpineEditorSupport extends EditorEntitySupport {
+	private AssetsMetadataModule assetsMetadata;
+
 	private SpineCacheModule spineCache;
 	private FileAccessModule fileAccess;
-
-	private Array<Serializer> serializers = new Array<>();
-	private Array<Class<?>> serializedTypes = new Array<>();
-	private Array<AssetDescriptorProvider> assetProviders = new Array<>();
 
 	private float pixelsPerUnit;
 
 	@Override
-	public void bindModules (ProjectModuleContainer projectMC) {
-		SceneIOModule sceneIOModule = projectMC.get(SceneIOModule.class);
-		spineCache = projectMC.get(SpineCacheModule.class);
-		fileAccess = projectMC.get(FileAccessModule.class);
-
-		serializers.add(new SpineComponentSerializer(sceneIOModule.getKryo(), spineCache));
-		assetProviders.add(new SpineAssetDescriptorProvider());
-
-		serializedTypes.add(SpinePreviewComponent.class);
-		serializedTypes.add(SpineScaleComponent.class);
-		serializedTypes.add(SpineBoundsComponent.class);
-		serializedTypes.add(SpineAssetDescriptor.class);
+	public void registerInflatersSystems (EntityEngineConfiguration config) {
+		config.setSystem(new EditorSpineInflaterSystem());
 	}
 
 	@Override
 	public void registerSystems (SceneModuleContainer sceneMC, EntityEngineConfiguration config) {
 		RenderBatchingSystem renderBatchingSystem = config.getSystem(RenderBatchingSystem.class);
-		config.setSystem(new SpineEditorRenderSystem(renderBatchingSystem), true);
+		config.setSystem(new SpineEditorRenderSystem(renderBatchingSystem));
 
 		config.setSystem(new SpinePreviewUpdaterSystem());
 		config.setSystem(new SpineScaleUpdaterSystem());
@@ -107,22 +94,17 @@ public class SpineEditorSupport extends EditorEntitySupport {
 	}
 
 	@Override
-	public boolean isSupportedDirectory (String relativePath, String extension) {
-		return relativePath.startsWith("spine/");
-	}
-
-	@Override
-	public Array<AssetDescriptorProvider> getAssetDescriptorProviders () {
-		return assetProviders;
+	public boolean isSupportedDirectory (FileHandle file, String relativePath) {
+		return assetsMetadata.isDirectoryMarkedAs(file, SpineAssetType.DIRECTORY_SPINE);
 	}
 
 	@Override
 	public ContentItemProperties getContentItemProperties (String relativePath, String extension) {
 		if (extension.equals("json"))
-			return new ContentItemProperties("Spine Json Skeleton", true);
+			return new ContentItemProperties(SpineAssetType.JSON_SKELETON, "Spine Json Skeleton", true);
 
 		if (extension.equals("skel"))
-			return new ContentItemProperties("Spine Binary Skeleton", true);
+			return new ContentItemProperties(SpineAssetType.BINARY_SKELETON, "Spine Binary Skeleton", true);
 
 		return null;
 	}
@@ -147,10 +129,10 @@ public class SpineEditorSupport extends EditorEntitySupport {
 			SpineAssetDescriptor asset = (SpineAssetDescriptor) payload;
 
 			return new EntityBuilder(engine)
-					.with(new SpineComponent(spineCache.get(asset)), new SpinePreviewComponent(), new SpineScaleComponent(1f / pixelsPerUnit), new SpineBoundsComponent(),
-							new AssetComponent(asset),
-							new RenderableComponent(0), new LayerComponent(scene.getActiveLayerId()),
-							new ExporterDropsComponent(SpinePreviewComponent.class, SpineScaleComponent.class, SpineBoundsComponent.class))
+					.with(new VisSpine(spineCache.get(asset)), new SpinePreview(), new SpineScale(1f / pixelsPerUnit), new SpineBounds(),
+							new AssetReference(asset), new Transform(), new Tint(),
+							new Renderable(0), new Layer(scene.getActiveLayerId()),
+							new ExporterDropsComponent(SpinePreview.class, SpineScale.class, SpineBounds.class))
 					.build();
 		}
 
@@ -159,18 +141,8 @@ public class SpineEditorSupport extends EditorEntitySupport {
 
 	@Override
 	public EntityProxy resolveProxy (Entity entity) {
-		if (entity.getComponent(SpineComponent.class) != null) return new SpineProxy(entity);
+		if (entity.getComponent(VisSpine.class) != null) return new SpineProxy(entity);
 
 		return null;
-	}
-
-	@Override
-	public Array<Serializer> getSerializers () {
-		return serializers;
-	}
-
-	@Override
-	public Array<Class<?>> getSerializedTypes () {
-		return serializedTypes;
 	}
 }

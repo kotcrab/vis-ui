@@ -40,7 +40,7 @@ import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonJson;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModule;
-import com.kotcrab.vis.editor.plugin.ContainerExtension;
+import com.kotcrab.vis.editor.plugin.api.ContainerExtension;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;

@@ -18,25 +18,31 @@ package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.editor.module.scene.PointRenderSystem;
-import com.kotcrab.vis.runtime.accessor.BasicPropertiesAccessor;
-import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.PointComponent;
+import com.kotcrab.vis.editor.module.scene.system.render.PointRenderSystem;
+import com.kotcrab.vis.runtime.component.Transform;
+import com.kotcrab.vis.runtime.properties.BoundsOwner;
+import com.kotcrab.vis.runtime.properties.SizeOwner;
 
 /** @author Kotcrab */
 public class PointProxy extends EntityProxy {
-	private PointComponent pos;
+	private Transform transform;
+	private Accessor accessor;
 	private float renderSize;
 
 	public PointProxy (Entity entity, float pixelsPerUnit) {
 		super(entity);
-		pos = entity.getComponent(PointComponent.class);
 		renderSize = PointRenderSystem.ICON_SIZE / pixelsPerUnit;
 	}
 
 	@Override
-	protected BasicPropertiesAccessor initAccessors () {
-		return new Accessor();
+	protected void createAccessors () {
+		accessor = new Accessor();
+	}
+
+	@Override
+	protected void reloadAccessors () {
+		transform = getEntity().getComponent(Transform.class);
+		enableBasicProperties(transform, accessor, accessor);
 	}
 
 	@Override
@@ -44,42 +50,11 @@ public class PointProxy extends EntityProxy {
 		return "Point";
 	}
 
-	@Override
-	public boolean isAssetsDescriptorSupported (VisAssetDescriptor assetDescriptor) {
-		return false;
-	}
-
-	private class Accessor implements BasicPropertiesAccessor {
+	private class Accessor implements SizeOwner, BoundsOwner {
 		private Rectangle bounds = new Rectangle();
 
 		public Accessor () {
 			bounds = new Rectangle();
-		}
-
-		@Override
-		public float getX () {
-			return pos.x;
-		}
-
-		@Override
-		public void setX (float x) {
-			pos.x = x;
-		}
-
-		@Override
-		public float getY () {
-			return pos.y;
-		}
-
-		@Override
-		public void setY (float y) {
-			pos.y = y;
-		}
-
-		@Override
-		public void setPosition (float x, float y) {
-			pos.x = x;
-			pos.y = y;
 		}
 
 		@Override
@@ -94,7 +69,7 @@ public class PointProxy extends EntityProxy {
 
 		@Override
 		public Rectangle getBoundingRectangle () {
-			return bounds.set(pos.x - renderSize / 2, pos.y - renderSize / 2, renderSize, renderSize);
+			return bounds.set(transform.getX() - renderSize / 2, transform.getY() - renderSize / 2, renderSize, renderSize);
 		}
 	}
 }

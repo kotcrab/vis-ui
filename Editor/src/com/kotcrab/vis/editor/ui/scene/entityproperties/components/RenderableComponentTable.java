@@ -19,18 +19,18 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.components;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
-import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
-import com.kotcrab.vis.runtime.component.RenderableComponent;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
+import com.kotcrab.vis.runtime.component.Renderable;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /** @author Kotcrab */
-public class RenderableComponentTable extends AutoComponentTable<RenderableComponent> {
+public class RenderableComponentTable extends AutoComponentTable<Renderable> {
 	private RenderBatchingSystem batchingSystem;
 
 	private NumberInputField zIndexField;
 
 	public RenderableComponentTable (ModuleInjector projectInjector) {
-		super(projectInjector, RenderableComponent.class, false);
+		super(projectInjector, Renderable.class, false);
 	}
 
 	@Override

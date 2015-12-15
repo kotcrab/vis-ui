@@ -18,13 +18,10 @@ package com.kotcrab.vis.editor.module.scene.action;
 
 import com.artemis.Component;
 import com.artemis.Entity;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.editor.entity.UUIDComponent;
-import com.kotcrab.vis.editor.module.scene.VisComponentManipulator;
+import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
-
-import java.util.UUID;
 
 /** @author Kotcrab */
 public class ComponentRemoveAction implements UndoableAction {
@@ -32,10 +29,10 @@ public class ComponentRemoveAction implements UndoableAction {
 	private final EntityProxy target;
 	private final Class<? extends Component> componentClazz;
 
-	private ObjectMap<UUID, Component> componentMap = new ObjectMap<>();
+	private Component component;
 
-	public ComponentRemoveAction (VisComponentManipulator componentManipulator, EntityProxy target, Class<? extends Component> componentClazz) {
-		this.componentManipulator = componentManipulator;
+	public ComponentRemoveAction (ModuleInjector injector, EntityProxy target, Class<? extends Component> componentClazz) {
+		injector.injectModules(this);
 		this.target = target;
 		this.componentClazz = componentClazz;
 	}
@@ -44,25 +41,17 @@ public class ComponentRemoveAction implements UndoableAction {
 	public void execute () {
 		target.reload();
 
-		for (Entity entity : target.getEntities()) {
-			UUIDComponent uuid = entity.getComponent(UUIDComponent.class);
-			Component component = entity.getComponent(componentClazz);
-
-			componentMap.put(uuid.getUUID(), component);
-
-			componentManipulator.addJob(entity, component, false);
-		}
-
+		Entity entity = target.getEntity();
+		component = entity.getComponent(componentClazz);
+		componentManipulator.addJob(entity, component, false);
 	}
 
 	@Override
 	public void undo () {
 		target.reload();
 
-		for (Entity entity : target.getEntities()) {
-			UUIDComponent uuid = entity.getComponent(UUIDComponent.class);
-			componentManipulator.addJob(entity, componentMap.get(uuid.getUUID()), true);
-		}
+		Entity entity = target.getEntity();
+		componentManipulator.addJob(entity, component, true);
 	}
 
 	@Override

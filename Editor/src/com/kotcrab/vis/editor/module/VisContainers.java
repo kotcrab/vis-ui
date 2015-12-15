@@ -21,20 +21,27 @@ import com.kotcrab.vis.editor.module.editor.PluginLoaderModule.PluginSettingsMod
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.scene.*;
-import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
+import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
-import com.kotcrab.vis.editor.plugin.ContainerExtension.ExtensionScope;
+import com.kotcrab.vis.editor.plugin.api.ContainerExtension.ExtensionScope;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 
 /** @author Kotcrab */
 public class VisContainers {
 	public static void createEditorModules (EditorModuleContainer editorMC, TabbedPaneListener tabsModuleListener, TabbedPaneListener quickAccessModuleListener) {
-		editorMC.add(new ProjectIOModule());
 		editorMC.add(new InputModule());
 		editorMC.add(new GlobalInputModule());
 
+		editorMC.add(new ToastModule());
+		editorMC.add(new EditorSettingsIOModule());
+
+		editorMC.add(new PluginSettingsModule());
 		editorMC.add(new PluginLoaderModule());
+
 		editorMC.add(new ExtensionStorageModule());
+
+		editorMC.add(new GsonModule());
+		editorMC.add(new StyleProviderModule());
 		editorMC.add(new AppFileAccessModule());
 		editorMC.add(new VisTwitterReader());
 		editorMC.add(new WebAPIModule());
@@ -49,11 +56,10 @@ public class VisContainers {
 		editorMC.add(new FileChooserModule());
 		editorMC.add(new MenuBarModule());
 		editorMC.add(new ToolbarModule());
-		editorMC.add(new ToastModule());
 		editorMC.add(new QuickAccessModule(quickAccessModuleListener));
 		editorMC.add(new StatusBarModule());
 		editorMC.add(new UIDebugControllerModule());
-		editorMC.add(new EditorSettingsIOModule());
+		editorMC.add(new ProjectIOModule());
 		editorMC.add(new AnalyticsModule());
 		editorMC.add(new EditingSettingsModule());
 		editorMC.add(new EmptyMenuFillerModule());
@@ -61,7 +67,6 @@ public class VisContainers {
 		editorMC.add(new GeneralSettingsModule());
 		editorMC.add(new ColorSettingsModule());
 		editorMC.add(new ExperimentalSettingsModule());
-		editorMC.add(new PluginSettingsModule());
 		editorMC.add(new GridSettingsModule());
 
 		editorMC.add(new DevelopmentSpeedupModule());
@@ -70,6 +75,7 @@ public class VisContainers {
 	public static void createProjectModules (ProjectModuleContainer projectMC, ExtensionStorageModule extensionStorage) {
 		projectMC.add(new FileAccessModule());
 		projectMC.add(new AssetsWatcherModule());
+		projectMC.add(new AssetsMetadataModule());
 		projectMC.add(new TextureCacheModule());
 		projectMC.add(new FontCacheModule());
 		projectMC.add(new ParticleCacheModule());

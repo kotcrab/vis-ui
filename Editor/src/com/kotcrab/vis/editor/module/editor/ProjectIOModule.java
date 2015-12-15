@@ -20,35 +20,25 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
+import com.google.gson.Gson;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.project.*;
-import com.kotcrab.vis.editor.module.project.converter.DummyConverter;
 import com.kotcrab.vis.editor.module.project.converter.ProjectConverter;
-import com.kotcrab.vis.editor.module.project.converter.ProjectConverter8to9;
-import com.kotcrab.vis.editor.serializer.ArraySerializer;
-import com.kotcrab.vis.editor.serializer.VisTaggedFieldSerializer;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
-import com.kotcrab.vis.editor.util.AsyncTask;
-import com.kotcrab.vis.editor.util.AsyncTaskListener;
 import com.kotcrab.vis.editor.util.CopyFileVisitor;
-import com.kotcrab.vis.editor.util.SteppedAsyncTask;
+import com.kotcrab.vis.editor.util.async.AsyncTask;
+import com.kotcrab.vis.editor.util.async.AsyncTaskListener;
+import com.kotcrab.vis.editor.util.async.SteppedAsyncTask;
 import com.kotcrab.vis.editor.util.vis.EditorException;
+import com.kotcrab.vis.editor.util.vis.WikiPages;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import org.apache.commons.io.IOUtils;
-import org.objenesis.strategy.StdInstantiatorStrategy;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -58,40 +48,29 @@ import java.util.zip.ZipOutputStream;
  * @author Kotcrab
  */
 public class ProjectIOModule extends EditorModule {
+	//confirm dialog buttons
+	private static final int OK = 0;
+	private static final int CONVERTING_HELP = 1;
+
 	private static final String TAG = "ProjectIOModule";
 
-	public static final String PROJECT_FILE = "project.data";
+	public static final String PROJECT_FILE = "project.json";
 
 	private StatusBarModule statusBar;
+	private GsonModule gsonModule;
 
 	private Stage stage;
 
-	private Kryo kryo;
+	private Gson gson;
 
 	private Array<ProjectConverter> projectConverters = new Array<>();
 	private AsyncTaskProgressDialog taskDialog;
 
 	@Override
 	public void init () {
-		kryo = new Kryo();
-		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
-		kryo.setDefaultSerializer(VisTaggedFieldSerializer.class);
-		kryo.register(Array.class, new ArraySerializer(), 10);
-		kryo.register(ProjectLibGDX.class, 11);
-		kryo.register(ProjectGeneric.class, 12);
+		gson = gsonModule.getCommonGson();
 
 		//TODO: [plugins] plugin entry point
-		projectConverters.add(new DummyConverter(1, 8));
-		projectConverters.add(new DummyConverter(2, 8));
-		projectConverters.add(new DummyConverter(3, 8));
-		projectConverters.add(new DummyConverter(4, 8));
-		projectConverters.add(new DummyConverter(5, 8));
-		projectConverters.add(new DummyConverter(6, 8));
-		projectConverters.add(new DummyConverter(7, 8));
-		projectConverters.add(new ProjectConverter8to9());
-		projectConverters.add(new DummyConverter(9, 12));
-		projectConverters.add(new DummyConverter(10, 12));
-		projectConverters.add(new DummyConverter(11, 12));
 
 		for (ProjectConverter converter : projectConverters)
 			container.injectModules(converter);
@@ -139,6 +118,18 @@ public class ProjectIOModule extends EditorModule {
 
 		if (versionFile.exists()) {
 			ProjectVersionDescriptor descriptor = ProjectVersionModule.getNewJson().fromJson(ProjectVersionDescriptor.class, versionFile);
+
+			if (descriptor.versionCode < 20) {
+				String[] buttons = {"How to convert project", "OK"};
+				Integer[] returns = {CONVERTING_HELP, OK};
+				DialogUtils.showConfirmDialog(stage, "Warning", "This project uses old project format and must be converted before loading." +
+						"\nSee help page for more details.", buttons, returns, result -> {
+					if (result == CONVERTING_HELP) Gdx.net.openURI(WikiPages.CONVERTING_FROM_VISEDITOR_025);
+				});
+
+				return;
+			}
+
 			if (descriptor.versionCode > App.VERSION_CODE) {
 				DialogUtils.showOptionDialog(stage, "Warning",
 						"This project was opened in newer version of VisEditor.\nSome functions may not work properly. Do you want to continue?",
@@ -195,14 +186,14 @@ public class ProjectIOModule extends EditorModule {
 
 	public Project readProjectDataFile (FileHandle dataFile) {
 		try {
-			Input input = new Input(new FileInputStream(dataFile.file()));
-			Project project = (Project) kryo.readClassAndObject(input);
-			input.close();
+			BufferedReader reader = new BufferedReader(new FileReader(dataFile.file()));
+			Project project = gson.fromJson(reader, Project.class);
+			reader.close();
 
 			project.updateRoot(dataFile);
 
 			return project;
-		} catch (FileNotFoundException e) {
+		} catch (IOException e) {
 			Log.exception(e);
 			throw new IllegalStateException(e);
 		}
@@ -291,10 +282,10 @@ public class ProjectIOModule extends EditorModule {
 
 	private void saveProjectFile (Project project, FileHandle projectFile) {
 		try {
-			Output output = new Output(new FileOutputStream(projectFile.file()));
-			kryo.writeClassAndObject(output, project);
-			output.close();
-		} catch (FileNotFoundException e) {
+			FileWriter writer = new FileWriter(projectFile.file());
+			gson.toJson(project, writer);
+			writer.close();
+		} catch (IOException e) {
 			Log.exception(e);
 		}
 	}

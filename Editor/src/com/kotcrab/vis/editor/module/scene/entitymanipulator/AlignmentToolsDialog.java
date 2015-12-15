@@ -18,15 +18,15 @@ package com.kotcrab.vis.editor.module.scene.entitymanipulator;
 
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.MoveEntityAction;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.util.gdx.EventStopper;
-import com.kotcrab.vis.editor.util.gdx.VisChangeListener;
+import com.kotcrab.vis.editor.util.scene2d.EventStopper;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.VisImageButton;
@@ -35,13 +35,11 @@ import com.kotcrab.vis.ui.widget.VisTable;
 
 /** @author Kotcrab */
 public class AlignmentToolsDialog extends VisTable {
+	private EntityManipulatorModule entityManipulator;
 	private UndoModule undoModule;
 
-	private Array<EntityProxy> selectedEntities;
-
-	public AlignmentToolsDialog (ModuleInjector injector, Array<EntityProxy> selectedEntities) {
+	public AlignmentToolsDialog (ModuleInjector injector) {
 		injector.injectModules(this);
-		this.selectedEntities = selectedEntities;
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);
@@ -93,7 +91,8 @@ public class AlignmentToolsDialog extends VisTable {
 	}
 
 	private void alignSelected (int align) {
-		if (selectedEntities.size == 0) return;
+		ImmutableArray<EntityProxy> selectedEntities = entityManipulator.getSelectedEntities();
+		if (selectedEntities.size() == 0) return;
 
 		UndoableActionGroup undoableGroup = new UndoableActionGroup("Change Alignment");
 
@@ -144,7 +143,8 @@ public class AlignmentToolsDialog extends VisTable {
 	}
 
 	private void alignSelectedCenter (boolean yAlign) {
-		if (selectedEntities.size == 0) return;
+		ImmutableArray<EntityProxy> selectedEntities = entityManipulator.getSelectedEntities();
+		if (selectedEntities.size() == 0) return;
 
 		UndoableActionGroup undoableGroup = new UndoableActionGroup("Change Alignment");
 
@@ -157,7 +157,7 @@ public class AlignmentToolsDialog extends VisTable {
 				targetPos += proxy.getY();
 		}
 
-		targetPos /= selectedEntities.size;
+		targetPos /= selectedEntities.size();
 
 		for (EntityProxy proxy : selectedEntities) {
 			MoveEntityAction action = new MoveEntityAction(proxy);

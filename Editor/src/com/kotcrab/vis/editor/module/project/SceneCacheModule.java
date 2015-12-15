@@ -17,9 +17,11 @@
 package com.kotcrab.vis.editor.module.project;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
+import com.kotcrab.vis.editor.util.vis.EditorException;
 
 /**
  * Caches loaded scenes, so only one instance of each scene is loaded in editor.
@@ -29,17 +31,27 @@ public class SceneCacheModule extends ProjectModule implements WatchListener {
 	private SceneIOModule sceneIO;
 	private AssetsWatcherModule assetsWatcherModule;
 
+	private Stage stage;
+
 	private ObjectMap<FileHandle, EditorScene> scenes = new ObjectMap<>();
 
-	public EditorScene get (FileHandle fullPath) {
-		EditorScene scene = scenes.get(fullPath);
+	public EditorScene get (FileHandle file) {
+		EditorScene scene = scenes.get(file);
 
 		if (scene == null) {
-			scene = sceneIO.load(fullPath);
-			scenes.put(fullPath, scene);
+			scene = sceneIO.load(file);
+			scenes.put(file, scene);
 		}
 
 		return scene;
+	}
+
+	public EditorScene getSafely (FileHandle file) throws EditorException {
+		try {
+			return get(file);
+		} catch (Exception e) {
+			throw new EditorException("Error occurred during scene loading", e);
+		}
 	}
 
 	@Override

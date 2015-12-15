@@ -75,7 +75,7 @@ public abstract class BaseSelectionTool extends Tool {
 				mouseInsideSelected = true;
 
 				//multiple select made easy
-				if (UIUtils.ctrl() == false) entityManipulator.resetSelection();
+				if (UIUtils.ctrl() == false) entityManipulator.softSelectionReset();
 
 				EntityProxy result = findEntityWithSmallestSurfaceArea(x, y);
 				if (result != null && entityManipulator.isSelected(result) == false)
@@ -111,7 +111,7 @@ public abstract class BaseSelectionTool extends Tool {
 
 		if (button == Buttons.RIGHT && cameraDragged == false) {
 			if (isMouseInsideSelectedEntities(x, y) == false)
-				if (UIUtils.ctrl() == false) entityManipulator.resetSelection();
+				if (UIUtils.ctrl() == false) entityManipulator.softSelectionReset();
 
 			EntityProxy result = findEntityWithSmallestSurfaceArea(x, y);
 			if (result != null && entityManipulator.isSelected(result) == false)

@@ -17,15 +17,14 @@
 package com.kotcrab.vis.runtime.assets;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
 
 /**
  * Asset descriptor for shader programs
  * @author Kotcrab
  */
 public class ShaderAsset implements VisAssetDescriptor {
-	@VisTag(0) private String relativeVertPath;
-	@VisTag(1) private String relativeFragPath;
+	private String relativeVertPath;
+	private String relativeFragPath;
 
 	@Deprecated
 	public ShaderAsset () {

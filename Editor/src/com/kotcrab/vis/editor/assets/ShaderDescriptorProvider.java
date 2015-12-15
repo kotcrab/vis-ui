@@ -17,20 +17,20 @@
 package com.kotcrab.vis.editor.assets;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.ShaderAsset;
 
 /*** @author Kotcrab */
 public class ShaderDescriptorProvider implements AssetDescriptorProvider<ShaderAsset> {
 	@Override
-	public ShaderAsset provide (FileHandle file, String relativePath) {
-		if (relativePath.startsWith("shader") == false) return null;
-
-		if (relativePath.endsWith("vert")) {
+	public ShaderAsset provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
+		if (ProjectPathUtils.isVertexShader(file)) {
 			String frag = relativePath.substring(0, relativePath.length() - 4) + "frag";
 			return new ShaderAsset(relativePath, frag);
 		}
 
-		if (relativePath.endsWith("frag")) {
+		if (ProjectPathUtils.isFragmentShader(file)) {
 			String vert = relativePath.substring(0, relativePath.length() - 4) + "vert";
 			return new ShaderAsset(vert, relativePath);
 		}

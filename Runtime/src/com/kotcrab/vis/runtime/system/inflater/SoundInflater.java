@@ -16,64 +16,46 @@
 
 package com.kotcrab.vis.runtime.system.inflater;
 
-import com.artemis.*;
-import com.artemis.annotations.Wire;
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.SoundComponent;
-import com.kotcrab.vis.runtime.component.SoundProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisSound;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisSound;
 
 /**
- * Inflates {@link SoundProtoComponent} into {@link SoundComponent}
+ * Inflates {@link ProtoVisSound} into {@link VisSound}
  * @author Kotcrab
  */
-@Wire
-public class SoundInflater extends Manager {
-	private ComponentMapper<SoundProtoComponent> soundCm;
-	private ComponentMapper<AssetComponent> assetCm;
-
-	private Entity flyweight;
-
-	private EntityTransmuter transmuter;
+public class SoundInflater extends InflaterSystem {
+	private ComponentMapper<ProtoVisSound> protoCm;
+	private ComponentMapper<VisSound> soundCm;
+	private ComponentMapper<AssetReference> assetCm;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
 
 	public SoundInflater (RuntimeConfiguration configuration, AssetManager manager) {
+		super(Aspect.all(ProtoVisSound.class, AssetReference.class));
 		this.configuration = configuration;
 		this.manager = manager;
 	}
 
 	@Override
-	protected void setWorld (World world) {
-		super.setWorld(world);
-		flyweight = Entity.createFlyweight(world);
-	}
+	public void inserted (int entityId) {
+		AssetReference assetRef = assetCm.get(entityId);
 
-	@Override
-	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(SoundProtoComponent.class);
-		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
-		transmuter = factory.build();
-	}
-
-	@Override
-	public void added (int entityId) {
-		flyweight.id = entityId;
-		if (soundCm.has(entityId) == false) return;
-
-		AssetComponent assetComponent = assetCm.get(entityId);
-
-		PathAsset asset = (PathAsset) assetComponent.asset;
+		PathAsset asset = (PathAsset) assetRef.asset;
 
 		Sound sound = manager.get(asset.getPath(), Sound.class);
-		if (sound == null) throw new IllegalStateException("Can't load scene sound is missing: " + asset.getPath());
-		SoundComponent soundComponent = new SoundComponent(sound);
+		if (sound == null) throw new IllegalStateException("Can't load scene, sound is missing: " + asset.getPath());
+		VisSound visSound = soundCm.create(entityId);
+		visSound.sound = sound;
 
-		transmuter.transmute(flyweight);
-		flyweight.edit().add(soundComponent);
+		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
+		protoCm.remove(entityId);
 	}
 }

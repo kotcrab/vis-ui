@@ -16,28 +16,24 @@
 
 package com.kotcrab.vis.runtime.system.inflater;
 
-import com.artemis.*;
-import com.artemis.annotations.Wire;
+import com.artemis.Aspect;
+import com.artemis.ComponentMapper;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.assets.PathAsset;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.ParticleComponent;
-import com.kotcrab.vis.runtime.component.ParticleProtoComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisParticle;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
 
 /**
- * Inflates {@link ParticleProtoComponent} into {@link ParticleComponent}
+ * Inflates {@link ProtoVisParticle} into {@link VisParticle}
  * @author Kotcrab
  */
-@Wire
-public class ParticleInflater extends Manager {
-	private ComponentMapper<AssetComponent> assetCm;
-	private ComponentMapper<ParticleProtoComponent> protoCm;
-
-	private Entity flyweight;
-
-	private EntityTransmuter transmuter;
+public class ParticleInflater extends InflaterSystem {
+	private ComponentMapper<AssetReference> assetCm;
+	private ComponentMapper<VisParticle> partcielCm;
+	private ComponentMapper<ProtoVisParticle> protoCm;
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
@@ -45,44 +41,29 @@ public class ParticleInflater extends Manager {
 	private float pixelsPerUnit;
 
 	public ParticleInflater (RuntimeConfiguration configuration, AssetManager manager, float pixelsPerUnit) {
+		super(Aspect.all(ProtoVisParticle.class, AssetReference.class));
 		this.configuration = configuration;
 		this.manager = manager;
 		this.pixelsPerUnit = pixelsPerUnit;
 	}
 
 	@Override
-	protected void setWorld (World world) {
-		super.setWorld(world);
-		flyweight = Entity.createFlyweight(world);
-	}
+	protected void inserted (int entityId) {
+		AssetReference assetRef = assetCm.get(entityId);
+		ProtoVisParticle protoComponent = protoCm.get(entityId);
 
-	@Override
-	protected void initialize () {
-		EntityTransmuterFactory factory = new EntityTransmuterFactory(world).remove(ParticleProtoComponent.class);
-		if (configuration.removeAssetsComponentAfterInflating) factory.remove(AssetComponent.class);
-		transmuter = factory.build();
-	}
-
-	@Override
-	public void added (int entityId) {
-		flyweight.id = entityId;
-		if (protoCm.has(entityId) == false) return;
-
-		AssetComponent assetComponent = assetCm.get(entityId);
-		ParticleProtoComponent protoComponent = protoCm.get(entityId);
-
-		PathAsset path = (PathAsset) assetComponent.asset;
+		PathAsset path = (PathAsset) assetRef.asset;
 
 		ParticleEffect effect = manager.get(path.getPath(), ParticleEffect.class);
 		if (effect == null)
-			throw new IllegalStateException("Can't load scene particle effect is missing: " + path.getPath());
+			throw new IllegalStateException("Can't load scene, particle effect is missing: " + path.getPath());
 
-		ParticleComponent particleComponent = new ParticleComponent(new ParticleEffect(effect));
-		particleComponent.setPosition(protoComponent.x, protoComponent.y);
-		particleComponent.active = protoComponent.active;
-		particleComponent.effect.scaleEffect(1f / pixelsPerUnit);
+		VisParticle particle = partcielCm.create(entityId);
+		particle.setEffect(new ParticleEffect(effect));
+		protoComponent.fill(particle);
+		particle.getEffect().scaleEffect(1f / pixelsPerUnit);
 
-		transmuter.transmute(flyweight);
-		flyweight.edit().add(particleComponent);
+		if (configuration.removeAssetsComponentAfterInflating) assetCm.remove(entityId);
+		protoCm.remove(entityId);
 	}
 }

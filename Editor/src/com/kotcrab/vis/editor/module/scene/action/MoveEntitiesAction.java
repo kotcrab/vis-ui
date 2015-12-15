@@ -28,9 +28,9 @@ public class MoveEntitiesAction implements UndoableAction {
 	private Array<EntityPositionData> oldDatas = new Array<>();
 	private Array<EntityPositionData> newDatas = new Array<>();
 
-	public MoveEntitiesAction (EntityManipulatorModule entityManipulatorModule, Array<EntityProxy> entities) {
-		this.entityManipulatorModule = entityManipulatorModule;
-		this.entities = new Array<>(entities);
+	public MoveEntitiesAction (EntityManipulatorModule entityManipulator) {
+		this.entityManipulatorModule = entityManipulator;
+		this.entities = new Array<>(entityManipulator.getSelectedEntities().toArray());
 
 		for (EntityProxy entity : entities) {
 			EntityPositionData positionData = new EntityPositionData();

@@ -16,14 +16,12 @@
 
 package com.kotcrab.vis.runtime.data;
 
-import com.kotcrab.vis.runtime.util.annotation.VisTag;
-
 /** @author Kotcrab */
 public class PhysicsSettings {
-	@VisTag(0) public boolean physicsEnabled;
-	@VisTag(1) public float gravityX;
-	@VisTag(2) public float gravityY;
-	@VisTag(3) public boolean allowSleep;
+	public boolean physicsEnabled;
+	public float gravityX;
+	public float gravityY;
+	public boolean allowSleep;
 
 	public PhysicsSettings () {
 	}

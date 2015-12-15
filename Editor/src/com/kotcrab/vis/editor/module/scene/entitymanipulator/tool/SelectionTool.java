@@ -22,7 +22,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
-import com.kotcrab.vis.editor.module.scene.GridRendererSystem.GridSettingsModule;
+import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.module.scene.action.MoveEntityAction;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;

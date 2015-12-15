@@ -1,3 +1,7 @@
+!IMPORTANT!
+Changelog was moved to CHANGES.md file. This file will be soon removed.
+https://github.com/kotcrab/VisEditor/tree/master/Runtime/CHANGES.md
+
 [0.2.6] [LibGDX 1.7.0] [Artemis 0.13.1] [Snapshot]
 -Fixed rotation of sprite ignored when creating physics body
 -Box2d bodies are automatically disposed when entity is removed from EntityEngine (can be disabled in RuntimeConfiguration)

@@ -17,16 +17,15 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.artemis.Entity;
-import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
-import com.kotcrab.vis.editor.util.gdx.FieldUtils;
+import com.kotcrab.vis.editor.util.scene2d.FieldUtils;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
-import com.kotcrab.vis.runtime.component.AssetComponent;
-import com.kotcrab.vis.runtime.component.TextComponent;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.VisText;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
@@ -57,24 +56,12 @@ public class TtfTextUITable extends TextUITable {
 	}
 
 	@Override
-	protected FileHandle getFontFolder () {
-		return fileAccess.getTTFFontFolder();
-	}
-
-	@Override
-	int getRelativeFontFolderLength () {
-		return fileAccess.getTTFFontFolderRelative().length();
-	}
-
-	@Override
 	public boolean isSupported (EntityProxy proxy) {
-		if (proxy.hasComponent(TextComponent.class) == false) return false;
+		if (proxy.hasComponent(VisText.class) == false) return false;
 
-		for (Entity entity : proxy.getEntities()) {
-			VisAssetDescriptor asset = entity.getComponent(AssetComponent.class).asset;
-			if (asset instanceof TtfFontAsset == false)
-				return false;
-		}
+		VisAssetDescriptor asset = proxy.getEntity().getComponent(AssetReference.class).asset;
+		if (asset instanceof TtfFontAsset == false)
+			return false;
 
 		return true;
 	}
@@ -83,26 +70,24 @@ public class TtfTextUITable extends TextUITable {
 	public void updateUIValues () {
 		super.updateUIValues();
 
-		sizeInputField.setText(EntityUtils.getEntitiesCommonFloatValue(properties.getProxies(),
-				(Entity entity) -> ((TtfFontAsset) entity.getComponent(AssetComponent.class).asset).getFontSize()));
+		sizeInputField.setText(EntityUtils.getEntitiesCommonFloatValue(properties.getSelectedEntities(),
+				(Entity entity) -> ((TtfFontAsset) entity.getComponent(AssetReference.class).asset).getFontSize()));
 	}
 
 	@Override
 	protected void updateEntitiesValues () {
-		for (EntityProxy proxy : properties.getProxies()) {
-			for (Entity entity : proxy.getEntities()) {
-				AssetComponent assetComponent = entity.getComponent(AssetComponent.class);
-				TextComponent text = entity.getComponent(TextComponent.class);
+		for (EntityProxy proxy : properties.getSelectedEntities()) {
+			Entity entity = proxy.getEntity();
+			AssetReference assetRef = entity.getComponent(AssetReference.class);
+			VisText text = entity.getComponent(VisText.class);
 
-				TtfFontAsset ttfAsset = (TtfFontAsset) assetComponent.asset;
-				int fontSize = FieldUtils.getInt(sizeInputField, ttfAsset.getFontSize());
+			TtfFontAsset ttfAsset = (TtfFontAsset) assetRef.asset;
+			int fontSize = FieldUtils.getInt(sizeInputField, ttfAsset.getFontSize());
 
-				if (ttfAsset.getFontSize() != fontSize) {
-					TtfFontAsset newAsset = new TtfFontAsset(ttfAsset.getPath(), fontSize);
-					assetComponent.asset = newAsset;
-					text.setFont(fontCache.get(newAsset, properties.getSceneModuleContainer().getScene().pixelsPerUnit));
-				}
-
+			if (ttfAsset.getFontSize() != fontSize) {
+				TtfFontAsset newAsset = new TtfFontAsset(ttfAsset.getPath(), fontSize);
+				assetRef.asset = newAsset;
+				text.setFont(fontCache.get(newAsset, properties.getSceneModuleContainer().getScene().pixelsPerUnit));
 			}
 		}
 	}

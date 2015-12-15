@@ -16,9 +16,7 @@
 
 package com.kotcrab.vis.runtime.scene;
 
-import com.artemis.BaseSystem;
 import com.artemis.Component;
-import com.artemis.Manager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetLoaderParameters;
@@ -39,7 +37,8 @@ import com.badlogic.gdx.utils.Json;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.assets.*;
-import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.proto.ProtoShader;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.font.BitmapFontProvider;
@@ -49,6 +48,8 @@ import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.SpriterData;
+import com.kotcrab.vis.runtime.util.json.LibgdxJsonTagRegistrar;
+import com.kotcrab.vis.runtime.util.json.RuntimeJsonTags;
 
 /**
  * Scene loader for {@link AssetManager}. Allow to load entire scene file with all required dependencies such as textures, sounds etc.
@@ -85,35 +86,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	public static Json getJson () {
 		Json json = new Json();
-		json.addClassTag("SceneData", SceneData.class);
-		json.addClassTag("SceneViewport", SceneViewport.class);
-		json.addClassTag("LayerCordsSystem", LayerCordsSystem.class);
-
-		json.addClassTag("PathAsset", PathAsset.class);
-		json.addClassTag("BmpFontAsset", BmpFontAsset.class);
-		json.addClassTag("TtfFontAsset", TtfFontAsset.class);
-		json.addClassTag("AtlasRegionAsset", AtlasRegionAsset.class);
-		json.addClassTag("TextureRegionAsset", TextureRegionAsset.class);
-		json.addClassTag("ShaderAsset", ShaderAsset.class);
-		json.addClassTag("SpriterAsset", SpriterAsset.class);
-
-		json.addClassTag("AssetComponent", AssetComponent.class);
-		json.addClassTag("GroupComponent", GroupComponent.class);
-		json.addClassTag("IDComponent", IDComponent.class);
-		json.addClassTag("InvisibleComponent", InvisibleComponent.class);
-		json.addClassTag("LayerComponent", LayerComponent.class);
-		json.addClassTag("RenderableComponent", RenderableComponent.class);
-		json.addClassTag("VariablesComponent", VariablesComponent.class);
-		json.addClassTag("PhysicsPropertiesComponent", PhysicsPropertiesComponent.class);
-		json.addClassTag("PolygonComponent", PolygonComponent.class);
-
-		json.addClassTag("SpriteProtoComponent", SpriteProtoComponent.class);
-		json.addClassTag("MusicProtoComponent", MusicProtoComponent.class);
-		json.addClassTag("SoundProtoComponent", SoundProtoComponent.class);
-		json.addClassTag("ParticleProtoComponent", ParticleProtoComponent.class);
-		json.addClassTag("TextProtoComponent", TextProtoComponent.class);
-		json.addClassTag("ShaderProtoComponent", ShaderProtoComponent.class);
-		json.addClassTag("SpriterProtoComponent", SpriterProtoComponent.class);
+		RuntimeJsonTags.registerTags(new LibgdxJsonTagRegistrar(json));
 
 		json.setSerializer(IntMap.class, new IntMapJsonSerializer());
 
@@ -149,11 +122,12 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 	private void loadDependencies (Array<AssetDescriptor> dependencies, Array<EntityData> entities) {
 		for (EntityData entityData : entities) {
 			for (Component component : entityData.components) {
-				if (component instanceof AssetComponent) {
-					VisAssetDescriptor asset = ((AssetComponent) component).asset;
+				if (component instanceof AssetReference) {
+					VisAssetDescriptor asset = ((AssetReference) component).asset;
 
+					//TODO refactor
 					if (asset instanceof TextureRegionAsset) {
-						dependencies.add(new AssetDescriptor<TextureAtlas>("gfx/textures.atlas", TextureAtlas.class));
+						dependencies.add(new AssetDescriptor<TextureAtlas>("textures.atlas", TextureAtlas.class));
 
 					} else if (asset instanceof AtlasRegionAsset) {
 						AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;
@@ -162,23 +136,31 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 					} else if (asset instanceof BmpFontAsset) {
 						checkShader(dependencies);
 						bmpFontProvider.load(dependencies, asset);
+
 					} else if (asset instanceof TtfFontAsset) {
 						ttfFontProvider.load(dependencies, asset);
-					} else if (asset instanceof PathAsset) {
-						PathAsset pathAsset = (PathAsset) asset;
-						String path = pathAsset.getPath();
 
-						if (path.startsWith("sound/")) dependencies.add(new AssetDescriptor<Sound>(path, Sound.class));
-						if (path.startsWith("music/")) dependencies.add(new AssetDescriptor<Music>(path, Music.class));
-						if (path.startsWith("particle/"))
-							dependencies.add(new AssetDescriptor<ParticleEffect>(path, ParticleEffect.class));
-						if (path.startsWith("spriter/"))
-							dependencies.add(new AssetDescriptor<SpriterData>(path, SpriterData.class));
+					} else if (asset instanceof ParticleAsset) {
+						PathAsset particleAsset = (ParticleAsset) asset;
+						dependencies.add(new AssetDescriptor<ParticleEffect>(particleAsset.getPath(), ParticleEffect.class));
+
+					} else if (asset instanceof SoundAsset) {
+						SoundAsset soundAsset = (SoundAsset) asset;
+						dependencies.add(new AssetDescriptor<Sound>(soundAsset.getPath(), Sound.class));
+
+					} else if (asset instanceof MusicAsset) {
+						MusicAsset musicAsset = (MusicAsset) asset;
+						dependencies.add(new AssetDescriptor<Music>(musicAsset.getPath(), Music.class));
+
+					} else if (asset instanceof SpriterAsset) {
+						SpriterAsset spriterAsset = (SpriterAsset) asset;
+						dependencies.add(new AssetDescriptor<SpriterData>(spriterAsset.getPath(), SpriterData.class));
+
 					}
 				}
 
-				if (component instanceof ShaderProtoComponent) {
-					ShaderProtoComponent shaderComponent = (ShaderProtoComponent) component;
+				if (component instanceof ProtoShader) {
+					ProtoShader shaderComponent = (ProtoShader) component;
 					ShaderAsset asset = shaderComponent.asset;
 					if (asset != null) {
 						String path = asset.getFragPath().substring(0, asset.getFragPath().length() - 5);
@@ -222,8 +204,12 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 	/** Allows to add additional system and managers into {@link EntityEngine} */
 	static public class SceneParameter extends AssetLoaderParameters<Scene> {
-		public Array<BaseSystem> systems = new Array<BaseSystem>();
-		public Array<BaseSystem> passiveSystems = new Array<BaseSystem>();
-		public Array<Manager> managers = new Array<Manager>();
+		public SceneConfig config = new SceneConfig();
+		/**
+		 * If true (the default) scene data will be used to determinate whether physics systems needs
+		 * to be enabled in {@link SceneConfig}. When this is set to false and you want to use physics you must manually
+		 * enable it in config.
+		 */
+		public boolean respectScenePhysicsSettings = true;
 	}
 }

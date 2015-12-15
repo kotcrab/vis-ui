@@ -34,51 +34,54 @@ package com.kotcrab.vis.plugin.spine;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
-import com.badlogic.gdx.graphics.Color;
+import com.kotcrab.vis.plugin.spine.components.SpinePreview;
+import com.kotcrab.vis.plugin.spine.components.SpineScale;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
-import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
-import com.kotcrab.vis.runtime.component.AssetComponent;
+import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
+import com.kotcrab.vis.runtime.component.AssetReference;
+import com.kotcrab.vis.runtime.component.Tint;
+import com.kotcrab.vis.runtime.component.Transform;
 
 /** @author Kotcrab */
-@Wire
 public class SpineScaleUpdaterSystem extends EntityProcessingSystem {
 	private SpineCacheModule spineCache;
 
-	private ComponentMapper<SpineComponent> spineCm;
-	private ComponentMapper<AssetComponent> assetCm;
-	private ComponentMapper<SpineScaleComponent> scaleCm;
-	private ComponentMapper<SpinePreviewComponent> previewCm;
+	private ComponentMapper<VisSpine> spineCm;
+	private ComponentMapper<Transform> transformCm;
+	private ComponentMapper<Tint> tintCm;
+	private ComponentMapper<AssetReference> assetCm;
+	private ComponentMapper<SpineScale> scaleCm;
+	private ComponentMapper<SpinePreview> previewCm;
 
 	public SpineScaleUpdaterSystem () {
-		super(Aspect.all(SpineComponent.class, SpineScaleComponent.class, AssetComponent.class));
+		super(Aspect.all(VisSpine.class, SpineScale.class, AssetReference.class));
 	}
 
 	@Override
 	protected void process (Entity e) {
-		SpineScaleComponent scaleComponent = scaleCm.get(e);
+		SpineScale scaleComponent = scaleCm.get(e);
 
 		if (scaleComponent.updateScale) {
 			scaleComponent.updateScale = false;
 
-			SpineComponent spineComponent = spineCm.get(e);
-			AssetComponent assetComponent = assetCm.get(e);
-			SpinePreviewComponent previewComponent = previewCm.get(e);
+			VisSpine spine = spineCm.get(e);
+			Transform transform = transformCm.get(e);
+			AssetReference assetRef = assetCm.get(e);
+			SpinePreview previewComponent = previewCm.get(e);
 
-			SpineAssetDescriptor old = (SpineAssetDescriptor) assetComponent.asset;
-			assetComponent.asset = new SpineAssetDescriptor(old.getAtlasPath(), old.getSkeletonPath(), scaleComponent.scale);
+			SpineAssetDescriptor old = (SpineAssetDescriptor) assetRef.asset;
+			assetRef.asset = new SpineAssetDescriptor(old.getAtlasPath(), old.getSkeletonPath(), scaleComponent.scale);
 
-			float x = spineComponent.getX(), y = spineComponent.getY();
-			boolean flipX = spineComponent.isFlipX(), flipY = spineComponent.isFlipY();
-			Color color = spineComponent.getColor();
+			float x = transform.getX(), y = transform.getY();
+			boolean flipX = spine.isFlipX(), flipY = spine.isFlipY();
 
-			spineComponent.onDeserialize(spineCache.get(assetComponent.asset));
+			spine.onDeserialize(spineCache.get(assetRef.asset));
 			previewComponent.updateAnimation = true;
 
-			spineComponent.setPosition(x, y);
-			spineComponent.setFlip(flipX, flipY);
-			spineComponent.setColor(color);
+			transform.setPosition(x, y);
+			spine.setFlip(flipX, flipY);
+			tintCm.get(e).setDirty(true);
 		}
 	}
 }

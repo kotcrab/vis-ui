@@ -33,26 +33,27 @@ package com.kotcrab.vis.plugin.spine;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
-import com.artemis.annotations.Wire;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import com.esotericsoftware.spine.Slot;
 import com.esotericsoftware.spine.attachments.*;
-import com.kotcrab.vis.plugin.spine.runtime.SpineComponent;
-import com.kotcrab.vis.runtime.component.InvisibleComponent;
-import com.kotcrab.vis.runtime.system.RenderBatchingSystem;
+import com.kotcrab.vis.plugin.spine.components.SpineBounds;
+import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
+import com.kotcrab.vis.runtime.component.Invisible;
+import com.kotcrab.vis.runtime.component.Tint;
+import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /** @author Kotcrab */
-@Wire
 public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
-	private ComponentMapper<SpineComponent> spineCm;
-	private ComponentMapper<SpineBoundsComponent> boundsCm;
+	private ComponentMapper<VisSpine> spineCm;
+	private ComponentMapper<SpineBounds> boundsCm;
+	private ComponentMapper<Transform> transformCm;
+	private ComponentMapper<Tint> tintCm;
 
 	private RenderBatchingSystem renderBatchingSystem;
 	private Batch batch;
@@ -60,7 +61,7 @@ public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 	private SkeletonRenderer skeletonRenderer;
 
 	public SpineEditorRenderSystem (EntityProcessPrincipal principal) {
-		super(Aspect.all(SpineComponent.class, SpineBoundsComponent.class).exclude(InvisibleComponent.class), principal);
+		super(Aspect.all(VisSpine.class, SpineBounds.class).exclude(Invisible.class), principal);
 		skeletonRenderer = new SkeletonRenderer();
 	}
 
@@ -70,19 +71,27 @@ public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 	}
 
 	@Override
-	protected void process (Entity e) {
-		SpineComponent spine = spineCm.get(e);
-		spine.state.update(Gdx.graphics.getDeltaTime());
+	protected void process (int entityId) {
+		VisSpine spine = spineCm.get(entityId);
+		Transform transform = transformCm.get(entityId);
+		Tint tint = tintCm.get(entityId);
+
+		spine.state.update(world.delta);
 		spine.state.apply(spine.skeleton); // Poses skeleton using current animations. This sets the bones' local SRT.
 		spine.skeleton.updateWorldTransform(); // Uses the bones' local SRT to compute their world SRT.
 		skeletonRenderer.draw(batch, spine.skeleton); // Draw the skeleton images.
 
-		SpineBoundsComponent boundsComponent = boundsCm.get(e);
+		if (transform.isDirty() || tint.isDirty()) {
+			spine.updateValues(transform.getX(), transform.getY(), tint.getTint());
+		}
+
+
+		SpineBounds boundsComponent = boundsCm.get(entityId);
 
 		if (boundsComponent.boundsRequested) {
 			boundsComponent.boundsRequested = false;
 
-			Array<Slot> slots = spineCm.get(e).skeleton.getSlots();
+			Array<Slot> slots = spineCm.get(entityId).skeleton.getSlots();
 			boundsComponent.bounds = null;
 
 			for (Slot slot : slots) {

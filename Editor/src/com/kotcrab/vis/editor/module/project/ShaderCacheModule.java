@@ -27,6 +27,8 @@ import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
+import com.kotcrab.vis.editor.util.FileUtils;
+import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.ShaderAsset;
 
 /**
@@ -58,11 +60,10 @@ public class ShaderCacheModule extends ProjectModule implements WatchListener {
 
 	private void reloadShaders (boolean showSuccessMessage) {
 		shaders.clear();
-		Array<FileHandle> files = new Array<>(fileAccess.getShaderFolder().list());
 		Array<FileHandle> handled = new Array<>();
 
-		for (FileHandle file : files) {
-			if (handled.contains(file, false)) continue;
+		FileUtils.streamRecursively(fileAccess.getAssetsFolder(), file -> {
+			if (handled.contains(file, false)) return;
 
 			FileHandle vertexFile = null;
 			FileHandle fragmentFile = null;
@@ -84,17 +85,17 @@ public class ShaderCacheModule extends ProjectModule implements WatchListener {
 				handled.add(fragmentFile);
 
 			if (vertexFile == null && fragmentFile == null) {
-				continue;
+				return;
 			}
 
 			if (vertexFile == null || vertexFile.exists() == false) {
 				toastModule.show(new DetailsToast("Shader compilation not possible, missing vertex file!", "Error", "Missing vertex file for fragment: " + fragmentFile.name()));
-				continue;
+				return;
 			}
 
 			if (fragmentFile == null || fragmentFile.exists() == false) {
 				toastModule.show(new DetailsToast("Shader compilation not possible, missing fragment file!", "Error", "Missing fragment file for fragment: " + vertexFile.name()));
-				continue;
+				return;
 			}
 
 			ShaderProgram shader = new ShaderProgram(vertexFile, fragmentFile);
@@ -109,13 +110,12 @@ public class ShaderCacheModule extends ProjectModule implements WatchListener {
 				ShaderAsset asset = new ShaderAsset(vertPath, fragPath);
 				shaders.put(asset, shader);
 			}
-		}
+		});
 	}
 
 	@Override
 	public void fileChanged (FileHandle file) {
-		String relativePath = fileAccess.relativizeToAssetsFolder(file);
-		if (relativePath.startsWith("shader") == false) return;
+		if(ProjectPathUtils.isVertexShader(file) == false && ProjectPathUtils.isFragmentShader(file) == false) return;
 
 		if (reloadTask.isScheduled()) return;
 

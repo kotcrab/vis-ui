@@ -17,9 +17,10 @@
 package com.kotcrab.vis.editor.module.project.assetsmanager;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.ui.widget.VisLabel;
 
 /**
@@ -28,14 +29,22 @@ import com.kotcrab.vis.ui.widget.VisLabel;
  */
 public class FolderItem extends Table {
 	private FileHandle file;
-	private VisLabel name;
 
 	public FolderItem (FileHandle file) {
+		this(file, false);
+	}
+
+	public FolderItem (FileHandle file, boolean root) {
 		this.file = file;
-		name = new VisLabel(file.name(), "small");
+		VisLabel name = new VisLabel(file.name(), "small");
 		name.setEllipsis(true);
-		add(new Image(VisUI.getSkin().getDrawable("icon-folder"))).size(20).padTop(3);
-		add(name).expand().fill().padRight(6);
+		add(new Image(Icons.FOLDER.drawable())).size(20).padTop(3);
+		add(name).expand().fill().padRight(5);
+		if (root) {
+			VisLabel rootLabel = new VisLabel("[root]", "small");
+			rootLabel.setColor(Color.GRAY);
+			add(rootLabel);
+		}
 	}
 
 	public FileHandle getFile () {

@@ -18,21 +18,21 @@ package com.kotcrab.vis.editor.ui.tab;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.editor.ProjectIOModule;
 import com.kotcrab.vis.editor.module.editor.RecentProjectModule;
 import com.kotcrab.vis.editor.module.editor.RecentProjectModule.RecentProjectEntry;
+import com.kotcrab.vis.editor.module.editor.StyleProviderModule;
 import com.kotcrab.vis.editor.module.editor.VisTwitterReader;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
-import com.kotcrab.vis.ui.widget.LinkLabel;
+import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.LinkLabel.LinkLabelListener;
-import com.kotcrab.vis.ui.widget.VisLabel;
-import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
  * Main tab that is displayed after editor is launched. Provides VisEditor twitter feed and recent projects list.
@@ -41,12 +41,16 @@ import com.kotcrab.vis.ui.widget.VisTable;
 public class StartPageTab extends MainContentTab implements LinkLabelListener {
 	private static final String NEW_PROJECT_LINK = "\\*NEW_PROJECT";
 	private static final String LOAD_PROJECT_LINK = "\\*LOAD_PROJECT";
+	private static final String CLEAR_RECENT_PROJECTS_LIST = "\\*CLEAR_RECENT_PROJECTS_LIST";
 
 	private VisTwitterReader twitterReader;
+	private StyleProviderModule styleProvider;
 	private RecentProjectModule recentProjectsModule;
-	private ProjectIOModule projectIOModule;
+	private ProjectIOModule projectIO;
 
 	private Stage stage;
+
+	private VisTable recentProjectListTable;
 
 	public StartPageTab (ModuleInjector injector) {
 		super(false, false);
@@ -67,26 +71,21 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 		loadProjectLinkLabel.setListener(this);
 
 		VisTable quickAccessTable = new VisTable(false);
-		quickAccessTable.add("Start creating!").row();
+		quickAccessTable.defaults().left();
+		quickAccessTable.add("Start creating").row();
 		quickAccessTable.add(newProjectLinkLabel).row();
 		quickAccessTable.add(loadProjectLinkLabel).row();
 
 		VisTable recentProjectsTable = new VisTable(false);
+		recentProjectListTable = new VisTable(false);
 		recentProjectsTable.add("Recent projects").row();
+		recentProjectsTable.add(recentProjectListTable).growX();
 
-		Array<RecentProjectEntry> recentProjects = recentProjectsModule.getRecentProjects();
-		if (recentProjects.size == 0)
-			recentProjectsTable.add(new VisLabel("No recently opened projects", Color.GRAY));
-
-		for (RecentProjectEntry entry : recentProjects) {
-			LinkLabel label = new LinkLabel(entry.name, entry.projectPath);
-			label.setListener(this);
-			recentProjectsTable.add(label).row();
-		}
+		rebuildRecentProjectList();
 
 		VisTable leftSide = new VisTable(false);
-		leftSide.add("Welcome to VisEditor!").colspan(2).spaceBottom(8).row();
-		leftSide.add(quickAccessTable).spaceRight(24);
+		leftSide.add("Welcome to VisEditor").colspan(2).spaceBottom(8).row();
+		leftSide.add(quickAccessTable).spaceRight(36);
 		leftSide.add(recentProjectsTable).top();
 
 		VisTable content = new VisTable(false);
@@ -95,6 +94,60 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 		content.add(twitterReader.getTable()).fillY().expandY().pad(3).width(400).right();
 
 		return content;
+	}
+
+	public void rebuildRecentProjectList () {
+		recentProjectListTable.clear();
+		recentProjectListTable.defaults().left();
+
+		Array<RecentProjectEntry> recentProjects = recentProjectsModule.getRecentProjects();
+		if (recentProjects.size == 0) {
+			recentProjectListTable.add(new VisLabel("No recently opened projects", Color.GRAY));
+		}
+
+		for (RecentProjectEntry entry : recentProjects) {
+			LinkLabel label = new LinkLabel(entry.name, entry.projectPath);
+			label.setListener(this);
+
+			VisImageButton removeButton = new VisImageButton(styleProvider.transparentXButton());
+			new Tooltip(removeButton, "Remove from list");
+			removeButton.setFocusBorderEnabled(false);
+			removeButton.setVisible(false);
+			removeButton.addListener(new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent changeEvent, Actor actor) {
+					recentProjectsModule.remove(entry);
+					rebuildRecentProjectList();
+				}
+			});
+
+			VisTable tableRow = new VisTable(false);
+			tableRow.setTouchable(Touchable.enabled);
+			tableRow.addListener(new InputListener() { // handle enter/exit events for show remove button
+				@Override
+				public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+					super.enter(event, x, y, pointer, fromActor);
+					removeButton.setVisible(true);
+				}
+
+				@Override
+				public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+					super.exit(event, x, y, pointer, toActor);
+					removeButton.setVisible(false);
+				}
+			});
+
+			tableRow.add(label).left();
+			tableRow.add().growX();
+			tableRow.add(removeButton).padLeft(8).right();
+			recentProjectListTable.add(tableRow).growX().row();
+		}
+
+		if (recentProjects.size > 0) {
+			LinkLabel clearListLink = new LinkLabel("Clear List", CLEAR_RECENT_PROJECTS_LIST);
+			clearListLink.setListener(this);
+			recentProjectListTable.add(clearListLink).padTop(8);
+		}
 	}
 
 	@Override
@@ -111,8 +164,12 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 			case LOAD_PROJECT_LINK:
 				Editor.instance.loadProjectDialog();
 				break;
-			default:
-				projectIOModule.loadHandleError(stage, Gdx.files.absolute(url));
+			case CLEAR_RECENT_PROJECTS_LIST:
+				recentProjectsModule.clear();
+				rebuildRecentProjectList();
+				break;
+			default: // recent project label clicked
+				projectIO.loadHandleError(stage, Gdx.files.absolute(url));
 				break;
 		}
 	}

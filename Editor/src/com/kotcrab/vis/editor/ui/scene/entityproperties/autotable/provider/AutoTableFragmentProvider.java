@@ -17,10 +17,10 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
-import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 import java.lang.reflect.Field;
@@ -52,7 +52,7 @@ public abstract class AutoTableFragmentProvider<A> {
 
 	public abstract void createUI (A annotation, Class type, Field field) throws ReflectiveOperationException;
 
-	public abstract void updateUIFromEntities (Array<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException;
+	public abstract void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException;
 
 	public abstract void setToEntities (Class type, Field field, Component component) throws ReflectiveOperationException;
 }
