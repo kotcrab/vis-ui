@@ -189,7 +189,7 @@ public class PluginLoaderModule extends EditorModule {
 				Object object = cons.newInstance();
 
 				if (object instanceof EditorEntitySupport) {
-					extensionStorage.addObjectSupport((EditorEntitySupport) object);
+					extensionStorage.addEntitySupport((EditorEntitySupport) object);
 					continue;
 				}
 
@@ -215,6 +215,11 @@ public class PluginLoaderModule extends EditorModule {
 
 				if (object instanceof AssetsUIContextGeneratorProvider) {
 					extensionStorage.addAssetContextGeneratorProvider((AssetsUIContextGeneratorProvider) object);
+					continue;
+				}
+
+				if (object instanceof ComponentTransformerProvider) {
+					extensionStorage.addComponentTransformerProvider((ComponentTransformerProvider) object);
 					continue;
 				}
 

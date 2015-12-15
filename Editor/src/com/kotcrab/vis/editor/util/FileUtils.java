@@ -140,6 +140,17 @@ public class FileUtils extends com.kotcrab.vis.ui.widget.file.FileUtils {
 		}
 	}
 
+	public static void streamDirectoriesRecursively (FileHandle folder, Consumer<FileHandle> consumer) {
+		if (folder.isDirectory() == false) throw new IllegalStateException("File must be directory!");
+
+		for (FileHandle file : folder.list()) {
+			consumer.accept(folder);
+			if (file.isDirectory()) {
+				streamDirectoriesRecursively(file, consumer);
+			}
+		}
+	}
+
 	/**
 	 * Removes the first directory separator from a path
 	 * <p>

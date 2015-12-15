@@ -45,7 +45,6 @@ public class ExtensionStorageModule extends EditorModule {
 	private Array<ExporterPlugin> exporterPlugins = new Array<>();
 	private Array<ContainerExtension<?>> containerExtensions = new Array<>();
 	private Array<ResourceLoader> resourceLoaders = new Array<>();
-
 	private Array<AssetTypeStorage> assetTypeStorages = new Array<>();
 	private Array<AssetsUIContextGeneratorProvider> assetsContextGenProviders = new Array<>();
 	private Array<AssetsFileSorter> assetsFileSorters = new Array<>();
@@ -55,8 +54,9 @@ public class ExtensionStorageModule extends EditorModule {
 	private Array<AssetDirectoryDescriptor> assetDirectoryDescriptors = new Array<>();
 
 	// Add methods
+	private Array<ComponentTransformerProvider> componentTransformerProviders = new Array<>();
 
-	public void addObjectSupport (EditorEntitySupport support) {
+	public void addEntitySupport (EditorEntitySupport support) {
 		objectSupports.add(support);
 	}
 
@@ -93,9 +93,12 @@ public class ExtensionStorageModule extends EditorModule {
 	}
 
 	// Getters
-
 	public Array<EditorEntitySupport> getEntitiesSupports () {
 		return objectSupports;
+	}
+
+	public void addComponentTransformerProvider (ComponentTransformerProvider provider) {
+		componentTransformerProviders.add(provider);
 	}
 
 	public Array<ExporterPlugin> getExporterPlugins () {
@@ -120,6 +123,10 @@ public class ExtensionStorageModule extends EditorModule {
 
 	public Array<AssetTransactionGenerator> getAssetTransactionGenerator () {
 		return assetTransactionGens;
+	}
+
+	public Array<ComponentTransformerProvider> getComponentTransformerProviders () {
+		return componentTransformerProviders;
 	}
 
 	@Override
