@@ -48,7 +48,10 @@ public class TextureReloaderManager extends Manager { //TODO: migrate all reload
 			VisSprite sprite = spriteCm.get(entity);
 			VisAssetDescriptor asset = assetCm.get(entity).asset;
 
+			boolean flipX = sprite.isFlipX();
+			boolean flipY = sprite.isFlipX();
 			sprite.setRegion(textureCache.getRegion(asset));
+			sprite.setFlip(flipX, flipY);
 		}
 	}
 }
