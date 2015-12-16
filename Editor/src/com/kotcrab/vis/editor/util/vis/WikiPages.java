@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.util.vis;
 
 /** @author Kotcrab */
 public class WikiPages {
-	public static final String CONVERTING_FROM_VISEDITOR_025 = "https://github.com/kotcrab/VisEditor/wiki/Converting-projects-from-VisEditor-0.2.5";
+	public static final String CONVERTING_FROM_VISEDITOR_02X = "https://github.com/kotcrab/VisEditor/wiki/Converting-projects-from-VisEditor-0.2.x";
 	public static final String DAMAGED_ASSETS_METADATA = "https://github.com/kotcrab/VisEditor/wiki/Troubleshooting:-Damaged-Assets-Metadata";
 	public static final String MARKING_DIRECTORIES = "https://github.com/kotcrab/VisEditor/wiki/Marking-Assets-Directories";
 }

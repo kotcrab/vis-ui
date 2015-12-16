@@ -124,7 +124,7 @@ public class ProjectIOModule extends EditorModule {
 				Integer[] returns = {CONVERTING_HELP, OK};
 				DialogUtils.showConfirmDialog(stage, "Warning", "This project uses old project format and must be converted before loading." +
 						"\nSee help page for more details.", buttons, returns, result -> {
-					if (result == CONVERTING_HELP) Gdx.net.openURI(WikiPages.CONVERTING_FROM_VISEDITOR_025);
+					if (result == CONVERTING_HELP) Gdx.net.openURI(WikiPages.CONVERTING_FROM_VISEDITOR_02X);
 				});
 
 				return;
