@@ -58,13 +58,6 @@ public class Scene {
 		SceneConfig config = parameter.config;
 		config.sort();
 
-		for (ConfigElement element : config.getConfigElements()) {
-			if (element.disabled) continue;
-			engineConfig.setSystem(element.provider.create(engineConfig, context, data));
-		}
-
-		cameraManager = engineConfig.getSystem(CameraManager.class);
-
 		if (parameter.respectScenePhysicsSettings) {
 			if (data.physicsSettings.physicsEnabled) {
 				config.enable(SceneFeatureGroup.PHYSICS);
@@ -72,6 +65,13 @@ public class Scene {
 				config.disable(SceneFeatureGroup.PHYSICS);
 			}
 		}
+
+		for (ConfigElement element : config.getConfigElements()) {
+			if (element.disabled) continue;
+			engineConfig.setSystem(element.provider.create(engineConfig, context, data));
+		}
+
+		cameraManager = engineConfig.getSystem(CameraManager.class);
 
 		for (EntitySupport support : context.supports) {
 			support.registerSystems(runtimeConfig, engineConfig, assetsManager);
