@@ -44,6 +44,7 @@ public class Transform extends Component implements PositionOwner, ScaleOwner, R
 	@Override
 	public void setX (float x) {
 		this.x = x;
+		dirty = true;
 	}
 
 	@Override
@@ -54,6 +55,7 @@ public class Transform extends Component implements PositionOwner, ScaleOwner, R
 	@Override
 	public void setY (float y) {
 		this.y = y;
+		dirty = true;
 	}
 
 	@Override

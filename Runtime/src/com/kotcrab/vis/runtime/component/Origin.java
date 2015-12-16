@@ -46,6 +46,7 @@ public class Origin extends Component implements OriginOwner {
 	public void setOrigin (float originX, float originY) {
 		this.originX = originX;
 		this.originY = originY;
+		dirty = true;
 	}
 
 	public boolean isDirty () {

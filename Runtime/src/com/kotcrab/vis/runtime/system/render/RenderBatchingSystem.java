@@ -37,6 +37,7 @@ import com.kotcrab.vis.runtime.util.BagUtils;
  * Plugable render system that uses subsystems to render entities. Entities are rendered sorted by their layer and zIndex
  * , if entity layer or zIndex has changed, {@link #markDirty()} must be called in order to resort the scene. System
  * will automatically resort if entity was added.
+ * @author Kotcrab
  * @author Daan van Yperen
  */
 @Wire(failOnNull = false)
