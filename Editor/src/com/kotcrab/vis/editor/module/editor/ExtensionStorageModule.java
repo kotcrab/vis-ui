@@ -54,8 +54,6 @@ public class ExtensionStorageModule extends EditorModule {
 	private Array<AssetDirectoryDescriptor> assetDirectoryDescriptors = new Array<>();
 
 	// Add methods
-	private Array<ComponentTransformerProvider> componentTransformerProviders = new Array<>();
-
 	public void addEntitySupport (EditorEntitySupport support) {
 		objectSupports.add(support);
 	}
@@ -76,11 +74,11 @@ public class ExtensionStorageModule extends EditorModule {
 		assetTypeStorages.add(storage);
 	}
 
-	public void addAssetContextGeneratorProvider (AssetsUIContextGeneratorProvider contextProvider) {
+	public void addAssetsContextGeneratorProvider (AssetsUIContextGeneratorProvider contextProvider) {
 		assetsContextGenProviders.add(contextProvider);
 	}
 
-	public void addAssetFileSorter (AssetsFileSorter sorter) {
+	public void addAssetsFileSorter (AssetsFileSorter sorter) {
 		assetsFileSorters.add(sorter);
 	}
 
@@ -88,17 +86,13 @@ public class ExtensionStorageModule extends EditorModule {
 		assetDescriptorProviders.add(provider);
 	}
 
-	public void addAssetTransactionGenerators (AssetTransactionGenerator generator) {
+	public void addAssetTransactionGenerator (AssetTransactionGenerator generator) {
 		assetTransactionGens.add(generator);
 	}
 
 	// Getters
 	public Array<EditorEntitySupport> getEntitiesSupports () {
 		return objectSupports;
-	}
-
-	public void addComponentTransformerProvider (ComponentTransformerProvider provider) {
-		componentTransformerProviders.add(provider);
 	}
 
 	public Array<ExporterPlugin> getExporterPlugins () {
@@ -123,10 +117,6 @@ public class ExtensionStorageModule extends EditorModule {
 
 	public Array<AssetTransactionGenerator> getAssetTransactionGenerator () {
 		return assetTransactionGens;
-	}
-
-	public Array<ComponentTransformerProvider> getComponentTransformerProviders () {
-		return componentTransformerProviders;
 	}
 
 	@Override

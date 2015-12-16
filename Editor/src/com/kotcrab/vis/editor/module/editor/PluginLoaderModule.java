@@ -51,6 +51,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.Iterator;
+import java.util.function.Consumer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -63,7 +64,7 @@ public class PluginLoaderModule extends EditorModule {
 	private static final String TAG = "PluginLoader";
 	private static final String PLUGINS_FOLDER_PATH = App.JAR_FOLDER_PATH + "plugins";
 
-	private ExtensionStorageModule extensionStorage;
+	private ExtensionStorageModule extStorage;
 	private PluginSettingsModule settings;
 	private ToastModule toastModule;
 
@@ -74,19 +75,32 @@ public class PluginLoaderModule extends EditorModule {
 
 	private String currentlyLoadingPlugin; //name of plugin that is loaded, used to throw exception if plugin loading failed
 
+	private ObjectMap<Class<?>, Consumer<?>> pluginsClassesRegistrars = new ObjectMap<>();
+
 	@Override
 	public void init () {
 		FileHandle pluginsFolder = Gdx.files.absolute(PLUGINS_FOLDER_PATH);
 		Log.debug(TAG, "Loading plugins from: " + pluginsFolder);
+
+		addPluginClassRegistrar(ContainerExtension.class, containerExt -> extStorage.addContainerExtension(containerExt));
+		addPluginClassRegistrar(ExporterPlugin.class, exporter -> extStorage.addExporterPlugin(exporter));
+		addPluginClassRegistrar(ResourceLoader.class, loader -> extStorage.addResourceLoader(loader));
+		addPluginClassRegistrar(AssetTypeStorage.class, storage -> extStorage.addAssetTypeStorage(storage));
+		addPluginClassRegistrar(AssetDescriptorProvider.class, provider -> extStorage.addAssetDescriptorProvider(provider));
+		addPluginClassRegistrar(AssetTransactionGenerator.class, generator -> extStorage.addAssetTransactionGenerator(generator));
+		addPluginClassRegistrar(AssetsFileSorter.class, sorter -> extStorage.addAssetsFileSorter(sorter));
+		addPluginClassRegistrar(AssetsUIContextGeneratorProvider.class, provider -> extStorage.addAssetsContextGeneratorProvider(provider));
+		addPluginClassRegistrar(EditorEntitySupport.class, entitySupport -> extStorage.addEntitySupport(entitySupport));
+		addPluginClassRegistrar(EntitySupport.class, entitySupport -> { //no action is required for EntitySupport
+		});
 
 		try {
 			loadPluginsDescriptors(new Array<>(pluginsFolder.list()));
 			verifyPlugins();
 			loadPluginsJars();
 			loadMainPluginsClasses();
-		} catch (IOException | ReflectiveOperationException | LinkageError e) {
-			Log.exception(e);
-			toastModule.show(new DetailsToast("Plugin loading failed! (" + currentlyLoadingPlugin + ")", e));
+		} catch (IOException | LinkageError e) {
+			loadingCurrentPluginFailed(e);
 		}
 
 		if (failedPlugins.size > 0) {
@@ -140,7 +154,7 @@ public class PluginLoaderModule extends EditorModule {
 		}
 	}
 
-	private void loadPluginsJars () throws IOException, ClassNotFoundException {
+	private void loadPluginsJars () throws IOException {
 		Array<URL> urls = new Array<>();
 
 		for (PluginDescriptor descriptor : pluginsToLoad) {
@@ -154,16 +168,20 @@ public class PluginLoaderModule extends EditorModule {
 		Thread.currentThread().setContextClassLoader(classLoader);
 
 		for (PluginDescriptor descriptor : pluginsToLoad) {
-			if (descriptor.compatibility != App.PLUGIN_COMPATIBILITY_CODE)
-				Log.warn(TAG, "Loading: " + descriptor.folderName + " (compatibility code mismatch! Will try to load anyway!)");
-			else
-				Log.debug(TAG, "Loading: " + descriptor.folderName);
+			try {
+				if (descriptor.compatibility != App.PLUGIN_COMPATIBILITY_CODE)
+					Log.warn(TAG, "Loading: " + descriptor.folderName + " (compatibility code mismatch! Will try to load anyway!)");
+				else
+					Log.debug(TAG, "Loading: " + descriptor.folderName);
 
-			currentlyLoadingPlugin = descriptor.folderName;
+				currentlyLoadingPlugin = descriptor.folderName;
 
-			JarFile jarFile = new JarFile(descriptor.file.path());
-			loadJarClasses(classLoader, descriptor, jarFile.entries());
-			IOUtils.closeQuietly(jarFile);
+				JarFile jarFile = new JarFile(descriptor.file.path());
+				loadJarClasses(classLoader, descriptor, jarFile.entries());
+				IOUtils.closeQuietly(jarFile);
+			} catch (IOException | ReflectiveOperationException | LinkageError e) {
+				loadingCurrentPluginFailed(e);
+			}
 		}
 	}
 
@@ -181,70 +199,54 @@ public class PluginLoaderModule extends EditorModule {
 		}
 	}
 
-	private void loadMainPluginsClasses () throws ReflectiveOperationException {
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private void loadMainPluginsClasses () {
 		for (PluginDescriptor descriptor : pluginsToLoad) {
-
-			for (Class<?> clazz : descriptor.pluginClasses) {
-				Constructor<?> cons = clazz.getConstructor();
-				Object object = cons.newInstance();
-
-				if (object instanceof EditorEntitySupport) {
-					extensionStorage.addEntitySupport((EditorEntitySupport) object);
-					continue;
+			try {
+				for (Class<?> clazz : descriptor.pluginClasses) {
+					Constructor<?> cons = clazz.getConstructor();
+					Object object = cons.newInstance();
+					getClassRegistrarRecursively(descriptor, clazz, clazz).accept(object);
 				}
-
-				if (object instanceof ContainerExtension) {
-					extensionStorage.addContainerExtension((ContainerExtension) object);
-					continue;
-				}
-
-				if (object instanceof ExporterPlugin) {
-					extensionStorage.addExporterPlugin((ExporterPlugin) object);
-					continue;
-				}
-
-				if (object instanceof ResourceLoader) {
-					extensionStorage.addResourceLoader((ResourceLoader) object);
-					continue;
-				}
-
-				if (object instanceof AssetTypeStorage) {
-					extensionStorage.addAssetTypeStorage((AssetTypeStorage) object);
-					continue;
-				}
-
-				if (object instanceof AssetsUIContextGeneratorProvider) {
-					extensionStorage.addAssetContextGeneratorProvider((AssetsUIContextGeneratorProvider) object);
-					continue;
-				}
-
-				if (object instanceof ComponentTransformerProvider) {
-					extensionStorage.addComponentTransformerProvider((ComponentTransformerProvider) object);
-					continue;
-				}
-
-				if (object instanceof AssetsFileSorter) {
-					extensionStorage.addAssetFileSorter((AssetsFileSorter) object);
-					continue;
-				}
-
-				if (object instanceof AssetDescriptorProvider) {
-					extensionStorage.addAssetDescriptorProvider((AssetDescriptorProvider<?>) object);
-					continue;
-				}
-
-				if (object instanceof AssetTransactionGenerator) {
-					extensionStorage.addAssetTransactionGenerators((AssetTransactionGenerator) object);
-					continue;
-				}
-
-				if (object instanceof EntitySupport) {
-					continue;
-				}
-
-				Log.warn("Plugin '" + descriptor.folderName + "' was successfully loaded but it's main plugin class '" + clazz.getSimpleName() + "' object wasn't recognized.");
+			} catch (ReflectiveOperationException | LinkageError e) {
+				loadingCurrentPluginFailed(e);
 			}
 		}
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	private Consumer getClassRegistrarRecursively (PluginDescriptor descriptor, Class<?> mainClass, Class<?> clazz) {
+		Consumer consumer = pluginsClassesRegistrars.get(clazz);
+		if (consumer == null) {
+			for (Class interfaceClass : clazz.getInterfaces()) {
+				Consumer interfaceConsumer = pluginsClassesRegistrars.get(interfaceClass);
+				if (interfaceConsumer != null) return interfaceConsumer;
+			}
+
+			Class parent = clazz.getSuperclass();
+
+			if (parent != null) {
+				return getClassRegistrarRecursively(descriptor, mainClass, parent);
+			} else {
+				//default consumer when no registrar have been found
+				return ignored -> Log.warn("Plugin '" + descriptor.folderName + "' was successfully loaded but it's main plugin class '"
+						+ mainClass.getSimpleName() + "' object wasn't recognized.");
+			}
+		}
+		return consumer;
+	}
+
+	/**
+	 * Preferred way of add main plugins class registrars because it uses generic and allows to use lambdas
+	 * without object casting.
+	 */
+	private <T> void addPluginClassRegistrar (Class<T> clazz, Consumer<T> consumer) {
+		pluginsClassesRegistrars.put(clazz, consumer);
+	}
+
+	private void loadingCurrentPluginFailed (Throwable e) {
+		Log.exception(e);
+		toastModule.show(new DetailsToast("Plugin loading failed! (" + currentlyLoadingPlugin + ")", e));
 	}
 
 	private Array<PluginDescriptor> getAllPlugins () {
