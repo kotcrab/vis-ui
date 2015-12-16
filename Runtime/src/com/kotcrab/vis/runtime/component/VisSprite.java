@@ -34,6 +34,12 @@ public class VisSprite extends Component implements FlipOwner, SizeOwner, Resiza
 	public VisSprite () {
 	}
 
+	public VisSprite (VisSprite sprite) {
+		setRegion(sprite.region);
+		this.width = sprite.width;
+		this.height = sprite.height;
+	}
+
 	public VisSprite (TextureRegion region) {
 		setRegion(region);
 	}
