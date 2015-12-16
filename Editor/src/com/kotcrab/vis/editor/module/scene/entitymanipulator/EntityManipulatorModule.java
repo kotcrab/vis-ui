@@ -252,8 +252,15 @@ public class EntityManipulatorModule extends SceneModule {
 			return;
 		}
 
-		int baseGid = entitiesSelection.getSelection().first().getGroupsIds().peek();
-		Array<EntityProxy> targetEntities = entitiesCollector.collect(scene.getActiveLayerId(), baseGid);
+		Array<EntityProxy> targetEntities;
+
+		IntArray groupIds = entitiesSelection.getSelection().first().getGroupsIds();
+		if (groupIds.size != 0) {
+			targetEntities = entitiesCollector.collect(scene.getActiveLayerId(), groupIds.peek());
+		} else {
+			targetEntities = new Array<>();
+			targetEntities.addAll(entitiesSelection.getSelection().toArray());
+		}
 
 		stage.addActor(new SelectLayerDialog(scene.getLayers(), scene.getActiveLayer(), result -> {
 			undoModule.execute(new ChangeEntitiesLayerAction(renderBatchingSystem, this, targetEntities, result.id));
