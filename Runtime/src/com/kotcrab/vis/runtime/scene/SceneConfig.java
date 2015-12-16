@@ -30,7 +30,7 @@ public class SceneConfig {
 		registerFeatureGroup(SceneFeatureGroup.RENDERER, Priority.VIS_RENDERER);
 		registerFeatureGroup(SceneFeatureGroup.PHYSICS_DEBUG, Priority.VIS_OTHER);
 
-		registerFeature(SceneFeature.DIRTY_CLEANER_SYSTEM, Priority.VIS_OTHER);
+		registerFeature(SceneFeature.DIRTY_CLEANER_SYSTEM, Priority.VIS_LOW);
 
 		disable(SceneFeature.GROUP_ID_MANAGER);
 		disable(SceneFeature.BOX2D_DEBUG_RENDER_SYSTEM);
@@ -141,20 +141,26 @@ public class SceneConfig {
 
 		@Override
 		public int compareTo (ConfigElement other) {
-			return Integer.compare(priority, other.priority);
+			return -Integer.compare(priority, other.priority);
 		}
 	}
 
+	/**
+	 * Defines priorities for entity engine systems. Systems with high priorities will be processed before systems with
+	 * low priorities.
+	 */
 	public static class Priority {
 		public static final int LOWEST = Integer.MIN_VALUE;
 		public static final int LOW = -100000;
-		public static final int VIS_ESSENTIAL = -10000;
-		public static final int VIS_INFLATER = -9000;
-		public static final int VHS_PHYSICS = -8000;
-		public static final int VIS_RENDERER = -7000;
-		public static final int VIS_OTHER = -5000;
 		public static final int NORMAL = 0;
 		public static final int HIGH = 100000;
 		public static final int HIGHEST = Integer.MAX_VALUE;
+
+		public static final int VIS_LOW = -200000;
+		public static final int VIS_ESSENTIAL = 200000;
+		public static final int VIS_INFLATER = 19000;
+		public static final int VHS_PHYSICS = 18000;
+		public static final int VIS_RENDERER = 17000;
+		public static final int VIS_OTHER = 16000;
 	}
 }
