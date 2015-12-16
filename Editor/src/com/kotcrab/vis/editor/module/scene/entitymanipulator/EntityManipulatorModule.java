@@ -413,7 +413,7 @@ public class EntityManipulatorModule extends SceneModule {
 			Origin origin = new Origin(sprite.getWidth() / 2, sprite.getHeight() / 2);
 
 			entity = new EntityBuilder(entityEngine)
-					.with(sprite, new Transform(), sprite, origin, new Tint(),
+					.with(sprite, new Transform(), origin, new Tint(),
 							new AssetReference(asset),
 							new Renderable(0), new Layer(scene.getActiveLayerId()))
 					.build();
