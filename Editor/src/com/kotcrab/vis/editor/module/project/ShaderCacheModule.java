@@ -62,7 +62,7 @@ public class ShaderCacheModule extends ProjectModule implements WatchListener {
 		shaders.clear();
 		Array<FileHandle> handled = new Array<>();
 
-		FileUtils.streamRecursively(fileAccess.getAssetsFolder(), file -> {
+		FileUtils.streamFilesRecursively(fileAccess.getAssetsFolder(), file -> {
 			if (handled.contains(file, false)) return;
 
 			FileHandle vertexFile = null;

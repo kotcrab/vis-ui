@@ -110,7 +110,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		}
 
 		try {
-			FileUtils.streamRecursively(assetsFolder, file -> {
+			FileUtils.streamFilesRecursively(assetsFolder, file -> {
 				if (file.extension().equals("atlas")) {
 					updateAtlas(file);
 				}

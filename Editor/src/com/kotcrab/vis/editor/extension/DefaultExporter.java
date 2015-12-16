@@ -31,20 +31,21 @@ import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.plugin.api.AssetsFileSorter;
 import com.kotcrab.vis.editor.plugin.api.ExporterPlugin;
-import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.scene.EditorLayer;
+import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.ui.dialog.DefaultExporterSettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
+import com.kotcrab.vis.editor.util.FileUtils;
+import com.kotcrab.vis.editor.util.FileUtils.ApacheFileUtils;
+import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.editor.util.async.SteppedAsyncTask;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.editor.util.vis.TextureCacheFilter;
 import com.kotcrab.vis.runtime.data.LayerData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
-import org.apache.commons.io.FileUtils;
 
-import java.io.IOException;
 import java.util.UUID;
 
 /**
@@ -185,21 +186,17 @@ public class DefaultExporter implements ExporterPlugin {
 		}
 
 		private int calculateSteps () {
-			int steps = 0;
-			steps++; //clean old assets, new dirs
-			steps++; //package textures
+			Holder<Integer> steps = Holder.of(0);
+			steps.value++; //clean old assets, new dirs
+			steps.value++; //package textures
 
-			int assetsDirCounter = visAssetsDir.list(file -> {
-				//exclude exclude empty folders
-				return file.isDirectory() && file.list().length > 0;
-			}).length;
-			steps += assetsDirCounter;
+			FileUtils.streamDirectoriesRecursively(visAssetsDir, file -> steps.value++);
 
 			String[] ext = {"scene"};
-			int sceneCounter = FileUtils.listFiles(visAssetsDir.file(), ext, true).size();
-			steps += sceneCounter;
+			int sceneCounter = ApacheFileUtils.listFiles(visAssetsDir.file(), ext, true).size();
+			steps.value += sceneCounter;
 
-			return steps;
+			return steps.value;
 		}
 
 		private void cleanOldAssets () {
@@ -219,46 +216,35 @@ public class DefaultExporter implements ExporterPlugin {
 		}
 
 		private void copyAssets () {
-			for (FileHandle file : visAssetsDir.list()) {
-				if (file.isDirectory() == false) {
-
-					AssetsFileSorter fileSorter = null;
-					String relativePath = fileAccess.relativizeToAssetsFolder(file);
-					for (AssetsFileSorter sorter : extensionStorage.getAssetsFileSorters()) {
-						if (sorter.isSupported(assetsMetadata, file, relativePath)) {
-							fileSorter = sorter;
-							break;
-						}
+			FileUtils.streamDirectoriesRecursively(visAssetsDir, folder -> {
+				setMessage("Processing assets directory: " + folder.name());
+				AssetsFileSorter fileSorter = null;
+				String relativeFolderPath = fileAccess.relativizeToAssetsFolder(folder);
+				for (AssetsFileSorter sorter : extensionStorage.getAssetsFileSorters()) {
+					if (sorter.isSupported(assetsMetadata, folder, relativeFolderPath)) {
+						fileSorter = sorter;
+						break;
 					}
+				}
 
-					String ext = file.extension();
-
+				for (FileHandle file : folder.list()) {
+					if (file.isDirectory()) continue;
 					if (ProjectPathUtils.isScene(file)) continue;
 
-					if (fileSorter != null && fileSorter.isExportedFile(file)) {
-						file.copyTo(outAssetsDir.child(file.name()));
+					String relativeFilePath = fileAccess.relativizeToAssetsFolder(file);
+
+					if (fileSorter != null) {
+						if (fileSorter.isExportedFile(file)) file.copyTo(outAssetsDir.child(relativeFilePath));
 					} else {
-						if (ProjectPathUtils.isTexture(file)) continue;
-						file.copyTo(outAssetsDir.child(file.name()));
+						file.copyTo(outAssetsDir.child(relativeFilePath));
 					}
-					continue;
 				}
 
-				if (file.list().length == 0) continue;
-
-				setMessage("Copying assets directory: " + file.name());
-
-				try {
-					FileUtils.copyDirectory(file.file(), outAssetsDir.child(file.name()).file(), f -> f.getName().equals(".vis") == false);
-				} catch (IOException e) {
-					Log.exception(e);
-				}
 				nextStep();
-			}
+			});
 		}
 
 		private void exportScenes (FileHandle sceneDir, FileHandle outDir) {
-			outDir.mkdirs();
 
 			scene = null;
 
@@ -267,6 +253,7 @@ public class DefaultExporter implements ExporterPlugin {
 
 				if (ProjectPathUtils.isScene(file)) {
 					setMessage("Exporting scene: " + file.name());
+					outDir.mkdirs();
 
 					executeOnOpenGL(() -> scene = sceneCache.get(file));
 

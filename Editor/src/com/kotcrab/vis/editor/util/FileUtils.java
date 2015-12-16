@@ -132,19 +132,33 @@ public class FileUtils extends com.kotcrab.vis.ui.widget.file.FileUtils {
 	public static void streamRecursively (FileHandle folder, Consumer<FileHandle> consumer) {
 		if (folder.isDirectory() == false) throw new IllegalStateException("Folder must be directory!");
 
+		consumer.accept(folder);
 		for (FileHandle file : folder.list()) {
-			if (file.isDirectory())
+			consumer.accept(file);
+
+			if (file.isDirectory()) {
 				streamRecursively(file, consumer);
-			else
+			}
+		}
+	}
+
+	public static void streamFilesRecursively (FileHandle folder, Consumer<FileHandle> consumer) {
+		if (folder.isDirectory() == false) throw new IllegalStateException("Folder must be directory!");
+
+		for (FileHandle file : folder.list()) {
+			if (file.isDirectory()) {
+				streamFilesRecursively(file, consumer);
+			} else {
 				consumer.accept(file);
+			}
 		}
 	}
 
 	public static void streamDirectoriesRecursively (FileHandle folder, Consumer<FileHandle> consumer) {
 		if (folder.isDirectory() == false) throw new IllegalStateException("File must be directory!");
 
+		consumer.accept(folder);
 		for (FileHandle file : folder.list()) {
-			consumer.accept(folder);
 			if (file.isDirectory()) {
 				streamDirectoriesRecursively(file, consumer);
 			}
@@ -161,5 +175,9 @@ public class FileUtils extends com.kotcrab.vis.ui.widget.file.FileUtils {
 	 */
 	public static String removeFirstSeparator (String path) {
 		return path.substring(path.indexOf('/') + 1);
+	}
+
+	public static class ApacheFileUtils extends org.apache.commons.io.FileUtils {
+
 	}
 }
