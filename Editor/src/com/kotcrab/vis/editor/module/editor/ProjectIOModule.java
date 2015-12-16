@@ -24,7 +24,9 @@ import com.google.gson.Gson;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.VersionCodes;
 import com.kotcrab.vis.editor.module.project.*;
+import com.kotcrab.vis.editor.module.project.converter.DummyConverter;
 import com.kotcrab.vis.editor.module.project.converter.ProjectConverter;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
 import com.kotcrab.vis.editor.util.CopyFileVisitor;
@@ -71,6 +73,8 @@ public class ProjectIOModule extends EditorModule {
 		gson = gsonModule.getCommonGson();
 
 		//TODO: [plugins] plugin entry point
+
+		projectConverters.add(new DummyConverter(VersionCodes.EDITOR_030, VersionCodes.EDITOR_031));
 
 		for (ProjectConverter converter : projectConverters)
 			container.injectModules(converter);

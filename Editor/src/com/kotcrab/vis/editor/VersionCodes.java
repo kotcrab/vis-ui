@@ -21,4 +21,5 @@ public class VersionCodes {
 	public static final int EDITOR_025 = 11;
 	public static final int EDITOR_026 = 12;
 	public static final int EDITOR_030 = 20;
+	public static final int EDITOR_031 = 21;
 }

@@ -1,3 +1,5 @@
+#### Version: 0.3.1
+
 #### Version: 0.3.0
 - Old project from previous versions have to be converted using project converter before loading
 - Scene files are now saved using Json format

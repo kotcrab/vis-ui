@@ -1,3 +1,5 @@
+#### Version: 0.3.1 (LibGDX 1.7.1, Artemis 1.2.1)
+
 #### Version: 0.3.0 (LibGDX 1.7.1, Artemis 1.2.1)
 - API Change: `SceneParameter.systems` removed, added config field.
     - Adding system in 0.2.6: `parameter.systems.add(new MySystem())`
