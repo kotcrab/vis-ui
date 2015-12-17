@@ -25,7 +25,7 @@ import com.badlogic.gdx.files.FileHandle;
  */
 public class ProjectGeneric extends Project {
 	/** absolute path */
-	private String visDirectory;
+	private transient String visDirectory;
 	/** absolute path */
 	private String assetsOutput;
 
@@ -36,7 +36,7 @@ public class ProjectGeneric extends Project {
 
 	@Override
 	public void updateRoot (FileHandle projectDataFile) {
-		this.visDirectory = projectDataFile.parent().path();
+		visDirectory = projectDataFile.parent().path();
 	}
 
 	@Override

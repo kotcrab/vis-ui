@@ -26,7 +26,7 @@ import com.badlogic.gdx.files.FileHandle;
  */
 public class ProjectLibGDX extends Project {
 	/** Gradle root */
-	private String root;
+	private transient String root;
 	/** typically gradleRoot/core/src/ */
 	private String source;
 	/** typically gradleRoot/android/asset/ */
