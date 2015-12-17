@@ -24,7 +24,7 @@ import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 /**
  * @author Kotcrab
  */
-interface SystemProvider {
+public interface SystemProvider {
 	/**
 	 * Called when this provider should create new instance of {@link BaseSystem}
 	 * @param config current config. Note that is considered unsafe to retrieve system during this method however you can
