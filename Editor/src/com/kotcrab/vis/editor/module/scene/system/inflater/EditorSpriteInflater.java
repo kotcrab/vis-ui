@@ -25,13 +25,13 @@ import com.kotcrab.vis.runtime.component.proto.ProtoVisSprite;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
-public class EditorVisSpriteInflater extends InflaterSystem {
+public class EditorSpriteInflater extends InflaterSystem {
 	private ComponentMapper<VisSprite> spriteCm;
 	private ComponentMapper<ProtoVisSprite> protoCm;
 	private ComponentMapper<AssetReference> assetCm;
 	private TextureCacheModule textureCache;
 
-	public EditorVisSpriteInflater () {
+	public EditorSpriteInflater () {
 		super(Aspect.all(ProtoVisSprite.class, AssetReference.class));
 	}
 

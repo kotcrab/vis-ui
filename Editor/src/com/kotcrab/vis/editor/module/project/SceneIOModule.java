@@ -21,31 +21,24 @@ import com.artemis.Entity;
 import com.artemis.utils.Bag;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.IntArray;
-import com.badlogic.gdx.utils.IntMap;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.google.common.eventbus.Subscribe;
 import com.google.gson.Gson;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.ProjectMenuBarEvent;
 import com.kotcrab.vis.editor.event.ProjectMenuBarEventType;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
+import com.kotcrab.vis.editor.module.editor.ClonerModule;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.GsonModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.serializer.cloner.BagCloner;
-import com.kotcrab.vis.editor.serializer.cloner.IntArrayCloner;
-import com.kotcrab.vis.editor.serializer.cloner.IntMapCloner;
-import com.kotcrab.vis.editor.serializer.cloner.ObjectMapCloner;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
 import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.component.Invisible;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
+import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.util.EntityEngine;
-import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
-import com.rits.cloning.Cloner;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -62,16 +55,14 @@ import java.io.IOException;
 public class SceneIOModule extends ProjectModule {
 	private static final String TAG = "SceneIOModule";
 
+	private Stage stage;
 	private GsonModule gsonModule;
+	private ExtensionStorageModule extensionStorage;
+	private ClonerModule cloner;
 
-	protected Cloner cloner;
-	protected Gson gson;
+	private FileAccessModule fileAccessModule;
 
-	protected Stage stage;
-
-	protected ExtensionStorageModule extensionStorage;
-
-	protected FileAccessModule fileAccessModule;
+	private Gson gson;
 
 	private FileHandle assetsFolder;
 	private FileHandle sceneBackupFolder;
@@ -80,14 +71,6 @@ public class SceneIOModule extends ProjectModule {
 	public void init () {
 		assetsFolder = fileAccessModule.getAssetsFolder();
 		sceneBackupFolder = fileAccessModule.getModuleFolder(".sceneBackup");
-
-		cloner = new Cloner();
-		cloner.setNullTransient(true);
-		//TODO: [plugins] plugin entry point?
-		cloner.registerFastCloner(Bag.class, new BagCloner());
-		cloner.registerFastCloner(IntArray.class, new IntArrayCloner());
-		cloner.registerFastCloner(IntMap.class, new IntMapCloner());
-		cloner.registerFastCloner(ObjectMap.class, new ObjectMapCloner());
 
 		gson = gsonModule.getCommonGson();
 	}

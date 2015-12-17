@@ -31,6 +31,7 @@ import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
+import com.kotcrab.vis.editor.module.editor.ClonerModule;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.Project;
@@ -67,6 +68,8 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 	private Array<BiHolder<Object, Field>> delayedCompMapperToInject = new Array<>();
 
+	private ClonerModule cloner;
+
 	private EditorScene scene;
 	private SceneTab sceneTab;
 
@@ -79,16 +82,21 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		this.scene = scene;
 		this.sceneTab = sceneTab;
 
+		cloner = editorModuleContainer.get(ClonerModule.class);
+
 		config = new EntityEngineConfiguration();
 
 		config.setSystem(new CameraManager(SceneViewport.SCREEN, 0, 0, scene.pixelsPerUnit)); //size ignored for screen viewport
 		config.setSystem(new LayerManipulator());
 		config.setSystem(new ZIndexManipulator());
+		config.setSystem(new DirtySetterSystem());
+
 		config.setSystem(new TextureReloaderManager());
 		config.setSystem(new ParticleReloaderManager(scene.pixelsPerUnit));
 		config.setSystem(new FontReloaderManager(scene.pixelsPerUnit));
 		config.setSystem(new ShaderReloaderManager());
 		config.setSystem(new SpriterReloaderManager());
+
 		config.setSystem(new VisUUIDManager());
 		config.setSystem(new EntityCounterManager());
 
@@ -96,7 +104,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new EditorParticleInflater(scene.pixelsPerUnit));
 		config.setSystem(new EditorShaderInflater());
 		config.setSystem(new EditorSoundInflater());
-		config.setSystem(new EditorVisSpriteInflater());
+		config.setSystem(new EditorSpriteInflater());
 		config.setSystem(new EditorSpriterInflater());
 		config.setSystem(new EditorTextInflater(scene.pixelsPerUnit));
 
@@ -119,8 +127,8 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new SpriteRenderSystem(batchingSystem));
 		config.setSystem(new TextRenderSystem(batchingSystem, Assets.distanceFieldShader));
 		config.setSystem(new SpriterRenderSystem(batchingSystem));
-
 		config.setSystem(new ParticleRenderSystem(batchingSystem, true));
+
 		config.setSystem(new SoundAndMusicRenderSystem(batchingSystem, scene.pixelsPerUnit));
 		config.setSystem(new PointRenderSystem(batchingSystem, scene.pixelsPerUnit));
 
@@ -131,9 +139,9 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new AssetsUsageAnalyzer());
 	}
 
-	public static void populateEngine (final EntityEngine engine, EditorScene scene) {
+	public static void populateEngine (EntityEngine engine, ClonerModule cloner, EditorScene scene) {
 		Array<EntityScheme> schemes = scene.getSchemes();
-		schemes.forEach(entityScheme -> entityScheme.build(engine));
+		schemes.forEach(entityScheme -> entityScheme.build(engine, cloner.getCloner()));
 	}
 
 	@Override
@@ -189,7 +197,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		modules.forEach(sceneModule -> sceneModule.setEntityEngine(engine));
 
 		Log.debug("SceneModuleContainer", "Populating EntityEngine");
-		populateEngine(engine, scene);
+		populateEngine(engine, cloner, scene);
 
 		engine.getSystems().forEach(this::injectModules);
 		engine.setInvocationStrategy(new BootstrapInvocationStrategy());

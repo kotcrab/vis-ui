@@ -27,6 +27,7 @@ import com.kotcrab.vis.runtime.component.VisID;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.EntityEngine;
+import com.rits.cloning.Cloner;
 
 /** @author Kotcrab */
 public class EntityScheme {
@@ -51,10 +52,11 @@ public class EntityScheme {
 
 	}
 
-	public Entity build (EntityEngine engine) {
+	public Entity build (EntityEngine engine, Cloner cloner) {
 		EntityBuilder builder = new EntityBuilder(engine);
 
-		components.forEach(builder::with);
+		Array<Component> clonedComps = cloner.deepClone(components);
+		clonedComps.forEach(builder::with);
 
 		return builder.build();
 	}

@@ -1,4 +1,5 @@
 #### Version: 0.3.1
+- **Fixed**: Wrong entities position after opening same scene for the second time
 
 #### Version: 0.3.0
 - Old project from previous versions have to be converted using project converter before loading

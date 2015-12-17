@@ -25,10 +25,7 @@ import com.kotcrab.vis.editor.assets.transaction.AssetProviderResult;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransaction;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionException;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
-import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
-import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
-import com.kotcrab.vis.editor.module.editor.TabsModule;
-import com.kotcrab.vis.editor.module.editor.ToastModule;
+import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.project.AssetsUsages.SceneUsages;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.system.AssetsUsageAnalyzer;
@@ -49,14 +46,15 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
  * @author Kotcrab
  */
 public class AssetsAnalyzerModule extends ProjectModule {
+	private ClonerModule clonerModule;
 	private ExtensionStorageModule extensionStorage;
+	private ToastModule toastModule;
+	private TabsModule tabsModule;
+	private QuickAccessModule quickAccessModule;
 
 	private AssetsMetadataModule assetsMetadata;
-	private ToastModule toastModule;
-	private FileAccessModule fileAccess;
-	private TabsModule tabsModule;
 	private SceneTabsModule sceneTabsModule;
-	private QuickAccessModule quickAccessModule;
+	private FileAccessModule fileAccess;
 	private SceneCacheModule sceneCache;
 
 	private Stage stage;
@@ -109,7 +107,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 				EntityEngineConfiguration config = new EntityEngineConfiguration();
 				SceneModuleContainer.createEssentialsSystems(config);
 				engine = new EntityEngine(config);
-				SceneModuleContainer.populateEngine(engine, scene);
+				SceneModuleContainer.populateEngine(engine, clonerModule, scene);
 				engine.process();
 			} else {
 				engine = sceneTab.getSceneMC().getEntityEngine();
