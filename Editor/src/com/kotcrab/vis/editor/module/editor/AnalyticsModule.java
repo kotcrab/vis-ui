@@ -16,96 +16,13 @@
 
 package com.kotcrab.vis.editor.module.editor;
 
-import com.brsanthu.googleanalytics.AppViewHit;
-import com.brsanthu.googleanalytics.ExceptionHit;
-import com.brsanthu.googleanalytics.GoogleAnalytics;
-import com.google.common.eventbus.Subscribe;
-import com.kotcrab.vis.editor.App;
-import com.kotcrab.vis.editor.event.ExceptionEvent;
-import com.kotcrab.vis.editor.module.EventBusSubscriber;
-import com.kotcrab.vis.editor.ui.toast.EnableAnalyticsToast;
-import com.kotcrab.vis.editor.ui.toast.EnableAnalyticsToast.EnableAnalyticsToastListener;
-import org.apache.commons.codec.binary.Base64;
-
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.Charset;
-
-/** @author Kotcrab */
-@EventBusSubscriber
+/**
+ * Deprecated, left here because removing @{@link AnalyticsState} enum would invalidate user preferences file.
+ * @author Kotcrab
+ */
+@Deprecated
 public class AnalyticsModule extends EditorModule {
-	public static final String ID = "VUEtNDMwODg5MjAtNQ==";
-
-	private ToastModule toastModule;
-	private GeneralSettingsModule generalSettings;
-
-	private GoogleAnalytics analytics;
-
-	@Override
-	public void postInit () {
-		if (generalSettings.getAnalyticsState() == AnalyticsState.SHOW_QUESTION) {
-			toastModule.show(new EnableAnalyticsToast(new EnableAnalyticsToastListener() {
-				@Override
-				public void agreed () {
-					generalSettings.setAnalyticsState(AnalyticsState.ENABLED);
-					postAppStarted();
-				}
-
-				@Override
-				public void disagreed () {
-					generalSettings.setAnalyticsState(AnalyticsState.DISABLED);
-				}
-			}));
-		} else {
-			postAppStarted();
-		}
-	}
-
-	@Override
-	public void dispose () {
-		if (prepare()) analytics.post(new AppViewHit("VisEditor", App.VERSION, "Exit"));
-		if (analytics != null) analytics.close();
-	}
-
-	private void postAppStarted () {
-		if (prepare()) analytics.postAsync(new AppViewHit("VisEditor", App.VERSION, "Startup"));
-	}
-
-	@Subscribe
-	public void handleExceptionEvent (ExceptionEvent event) {
-		if (prepare()) {
-			StackTraceElement[] elements = event.throwable.getStackTrace();
-			String fullMsg = event.throwable + " " + (elements.length > 0 ? elements[0] + " " : "") + event.throwable.getMessage();
-			byte[] output = new byte[150]; //GA only allows 150 bytes
-			int returnValue = truncateUtf8(fullMsg, output);
-			String truncateMsg = new String(output, 0, returnValue);
-			analytics.postAsync(new ExceptionHit(truncateMsg, true));
-		}
-	}
-
-	public static int truncateUtf8 (String input, byte[] output) {
-		ByteBuffer outBuf = ByteBuffer.wrap(output);
-		CharBuffer inBuf = CharBuffer.wrap(input.toCharArray());
-
-		Charset utf8 = Charset.forName("UTF-8");
-		utf8.newEncoder().encode(inBuf, outBuf, true);
-		return outBuf.position();
-	}
-
-	private boolean prepare () {
-		if (isAnalyticsEnabled() == false) return false;
-
-		if (analytics == null) {
-			analytics = new GoogleAnalytics(new String(Base64.decodeBase64(ID.getBytes())));
-		}
-
-		return true;
-	}
-
-	private boolean isAnalyticsEnabled () {
-		return generalSettings.getAnalyticsState() == AnalyticsState.ENABLED;
-	}
-
+	@Deprecated
 	public enum AnalyticsState {
 		SHOW_QUESTION, ENABLED, DISABLED
 	}

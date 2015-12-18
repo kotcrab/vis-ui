@@ -114,11 +114,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.brsanthu</groupId>
-            <artifactId>google-analytics-java</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
         </dependency>

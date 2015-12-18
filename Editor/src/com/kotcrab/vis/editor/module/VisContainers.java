@@ -61,7 +61,6 @@ public class VisContainers {
 		editorMC.add(new StatusBarModule());
 		editorMC.add(new UIDebugControllerModule());
 		editorMC.add(new ProjectIOModule());
-		editorMC.add(new AnalyticsModule());
 		editorMC.add(new EditingSettingsModule());
 		editorMC.add(new EmptyMenuFillerModule());
 

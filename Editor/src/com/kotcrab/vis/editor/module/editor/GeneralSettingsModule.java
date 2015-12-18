@@ -35,7 +35,6 @@ import com.kotcrab.vis.ui.widget.VisTable;
 public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 	private VisCheckBox confirmExitCheck;
 	private VisCheckBox checkForUpdatesCheck;
-	private VisCheckBox analyticsCheck;
 	private EnumSelectBox<UpdateChannelType> updateChannelSelectBox;
 
 	public GeneralSettingsModule () {
@@ -62,7 +61,6 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 		settingsTable.add(confirmExitCheck = new VisCheckBox("Confirm exit", config.confirmExit)).row();
 		settingsTable.add(checkForUpdatesCheck = new VisCheckBox("Check for updates", config.checkForUpdates)).row();
 		settingsTable.add(updateTable).row();
-		settingsTable.add(analyticsCheck = new VisCheckBox("Send anonymous usage statistics", config.analyticsState == AnalyticsState.ENABLED)).row();
 	}
 
 	@Override
@@ -84,11 +82,6 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 		config.checkForUpdates = checkForUpdatesCheck.isChecked();
 		config.updateChannel = updateChannelSelectBox.getSelectedEnum();
 
-		if (analyticsCheck.isChecked())
-			config.analyticsState = AnalyticsState.ENABLED;
-		else
-			config.analyticsState = AnalyticsState.DISABLED;
-
 		settingsSave();
 	}
 
@@ -104,16 +97,6 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 		return config.updateChannel;
 	}
 
-	public AnalyticsState getAnalyticsState () {
-		return config.analyticsState;
-	}
-
-	public void setAnalyticsState (AnalyticsState state) {
-		config.analyticsState = state;
-		analyticsCheck.setChecked(config.analyticsState == AnalyticsState.ENABLED);
-		settingsSave();
-	}
-
 	@Override
 	public int getListPriority () {
 		return PRIORITY_HIGHEST;
@@ -123,6 +106,6 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 		@Tag(0) boolean confirmExit = true;
 		@Tag(1) boolean checkForUpdates = true;
 		@Tag(2) UpdateChannelType updateChannel = UpdateChannelType.STABLE;
-		@Tag(3) AnalyticsState analyticsState = AnalyticsState.SHOW_QUESTION;
+		private @Tag(3) @Deprecated AnalyticsState analyticsState = AnalyticsState.SHOW_QUESTION;
 	}
 }
