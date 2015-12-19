@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.module.scene.entitymanipulator.tool;
 
 /** @author Kotcrab */
 public class Tools {
-	public static final int SELECTION_TOOL = 0;
-	public static final int POLYGON_TOOL = 1;
+	private static final String PREFIX = "com.kotcrab.vis.editor.tools.";
+	public static final String SELECTION_TOOL = PREFIX + "SelectionTool";
+	public static final String POLYGON_TOOL = PREFIX + "PolygonTool";
 }

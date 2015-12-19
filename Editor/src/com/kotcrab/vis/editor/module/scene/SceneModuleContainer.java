@@ -39,9 +39,10 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.scene.system.*;
 import com.kotcrab.vis.editor.module.scene.system.inflater.*;
 import com.kotcrab.vis.editor.module.scene.system.reloader.*;
+import com.kotcrab.vis.editor.module.scene.system.render.EditorParticleRenderSystem;
 import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem;
 import com.kotcrab.vis.editor.module.scene.system.render.PointRenderSystem;
-import com.kotcrab.vis.editor.module.scene.system.render.SoundAndMusicRenderSystem;
+import com.kotcrab.vis.editor.module.scene.system.render.AudioRenderSystem;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
@@ -129,8 +130,10 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new SpriterRenderSystem(batchingSystem));
 		config.setSystem(new ParticleRenderSystem(batchingSystem, true));
 
-		config.setSystem(new SoundAndMusicRenderSystem(batchingSystem, scene.pixelsPerUnit));
+		//entities sprites render systems
+		config.setSystem(new AudioRenderSystem(batchingSystem, scene.pixelsPerUnit));
 		config.setSystem(new PointRenderSystem(batchingSystem, scene.pixelsPerUnit));
+		config.setSystem(new EditorParticleRenderSystem(batchingSystem, scene.pixelsPerUnit));
 
 		config.setSystem(new DirtyCleanerSystem());
 	}

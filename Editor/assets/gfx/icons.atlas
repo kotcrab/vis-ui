@@ -6,7 +6,7 @@ filter: Nearest,Nearest
 repeat: none
 align-bottom
   rotate: false
-  xy: 470, 58
+  xy: 548, 58
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -27,14 +27,14 @@ align-center-y
   index: -1
 align-left
   rotate: false
-  xy: 562, 104
+  xy: 640, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 align-right
   rotate: false
-  xy: 494, 58
+  xy: 572, 58
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -55,14 +55,14 @@ cursor
   index: -1
 exit
   rotate: false
-  xy: 586, 104
+  xy: 664, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 export
   rotate: false
-  xy: 518, 58
+  xy: 596, 58
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -97,14 +97,14 @@ folder-medium
   index: -1
 folder-music-medium
   rotate: false
-  xy: 470, 82
+  xy: 548, 82
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
   index: -1
 folder-open
   rotate: false
-  xy: 610, 104
+  xy: 688, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -118,7 +118,7 @@ folder-sound-medium
   index: -1
 folder-spriter-medium
   rotate: false
-  xy: 516, 82
+  xy: 594, 82
   size: 44, 44
   orig: 44, 44
   offset: 0, 0
@@ -139,7 +139,7 @@ import
   index: -1
 info
   rotate: false
-  xy: 634, 104
+  xy: 712, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -160,7 +160,7 @@ layer-down
   index: -1
 layer-remove
   rotate: false
-  xy: 658, 104
+  xy: 736, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -181,14 +181,14 @@ load
   index: -1
 locked
   rotate: false
-  xy: 682, 104
+  xy: 760, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 more
   rotate: false
-  xy: 562, 86
+  xy: 640, 86
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -207,6 +207,13 @@ new
   orig: 22, 22
   offset: 0, 0
   index: -1
+particle-big
+  rotate: false
+  xy: 158, 50
+  size: 76, 76
+  orig: 76, 76
+  offset: 0, 0
+  index: -1
 plus
   rotate: false
   xy: 238, 2
@@ -216,21 +223,21 @@ plus
   index: -1
 point-big
   rotate: false
-  xy: 158, 50
+  xy: 236, 50
   size: 76, 76
   orig: 76, 76
   offset: 0, 0
   index: -1
 polygon
   rotate: false
-  xy: 706, 104
+  xy: 784, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 question-big
   rotate: false
-  xy: 236, 50
+  xy: 314, 50
   size: 76, 76
   orig: 76, 76
   offset: 0, 0
@@ -244,7 +251,7 @@ redo
   index: -1
 refresh-big
   rotate: false
-  xy: 314, 50
+  xy: 392, 50
   size: 76, 76
   orig: 76, 76
   offset: 0, 0
@@ -258,7 +265,7 @@ save
   index: -1
 search
   rotate: false
-  xy: 730, 104
+  xy: 808, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -279,14 +286,14 @@ settings-view
   index: -1
 sound-big
   rotate: false
-  xy: 392, 50
+  xy: 470, 50
   size: 76, 76
   orig: 76, 76
   offset: 0, 0
   index: -1
 undo
   rotate: false
-  xy: 754, 104
+  xy: 832, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0

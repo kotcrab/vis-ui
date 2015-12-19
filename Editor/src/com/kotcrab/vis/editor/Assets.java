@@ -28,6 +28,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
  * @author Kotcrab
  */
 public class Assets {
+	public static final int ICON_SIZE = 22;
+	public static final int FOLDER_ROOT_ICON_SIZE = 44;
+	public static final int BIG_ICON_SIZE = 76;
+
 	public static TextureAtlas icons; //TODO [misc] remove statics
 	public static TextureAtlas misc;
 

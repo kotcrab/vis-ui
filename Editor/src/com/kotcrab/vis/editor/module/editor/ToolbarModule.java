@@ -140,15 +140,14 @@ public class ToolbarModule extends EditorModule {
 	}
 
 	private static class ToolButton extends VisImageButton {
+		private String toolId;
 
-		private int toolId;
-
-		public ToolButton (Drawable imageUp, String tooltipText, int toolId) {
+		public ToolButton (Drawable imageUp, String tooltipText, String toolId) {
 			super(imageUp, tooltipText);
 			this.toolId = toolId;
 		}
 
-		public int getToolId () {
+		public String getToolId () {
 			return toolId;
 		}
 
@@ -169,7 +168,7 @@ public class ToolbarModule extends EditorModule {
 
 		private ToolbarEventType type;
 
-		private int toolId = -1;
+		private String toolId = null;
 
 		public ToolbarButtonBuilder icon (Icons icon) {
 			this.icon = icon;
@@ -196,7 +195,7 @@ public class ToolbarModule extends EditorModule {
 			return this;
 		}
 
-		public ToolbarButtonBuilder eventTool (int toolId) {
+		public ToolbarButtonBuilder eventTool (String toolId) {
 			this.toolId = toolId;
 			this.group = toolsGroup;
 			this.toggle = true;
@@ -211,7 +210,7 @@ public class ToolbarModule extends EditorModule {
 		public VisImageButton build () {
 			VisImageButton button;
 
-			if (toolId != -1) {
+			if (toolId != null) {
 				button = new ToolButton(icon.drawable(), text, toolId);
 				button.addListener(new EventButtonChangeListener(new ToolSwitchedEvent(toolId)));
 			} else {

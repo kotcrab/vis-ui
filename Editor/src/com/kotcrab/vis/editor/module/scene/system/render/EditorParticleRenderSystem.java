@@ -21,16 +21,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.component.Invisible;
-import com.kotcrab.vis.runtime.component.Point;
+import com.kotcrab.vis.runtime.component.VisParticle;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
 
 /** @author Kotcrab */
-public class PointRenderSystem extends AbstractIconRenderSystem {
+public class EditorParticleRenderSystem extends AbstractIconRenderSystem {
 	private TextureRegion icon;
 
-	public PointRenderSystem (EntityProcessPrincipal principal, float pixelsPerUnit) {
-		super(Aspect.all(Point.class).exclude(Invisible.class), principal, pixelsPerUnit, Assets.BIG_ICON_SIZE);
-		icon = Icons.POINT_BIG.textureRegion();
+	public EditorParticleRenderSystem (EntityProcessPrincipal principal, float pixelsPerUnit) {
+		super(Aspect.all(VisParticle.class).exclude(Invisible.class), principal, pixelsPerUnit, Assets.BIG_ICON_SIZE);
+		icon = Icons.PARTICLE_BIG.textureRegion();
 	}
 
 	@Override

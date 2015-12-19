@@ -70,6 +70,7 @@ public enum Icons {
 	SOUND_BIG("sound-big"),
 	MUSIC_BIG("music-big"),
 	POINT_BIG("point-big"),
+	PARTICLE_BIG("particle-big"),
 
 	FOLDER_PARENT("icon-folder-parent", true),
 	CLOSE("icon-close", true),

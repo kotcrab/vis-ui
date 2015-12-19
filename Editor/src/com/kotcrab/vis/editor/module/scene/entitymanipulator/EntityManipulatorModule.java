@@ -53,10 +53,7 @@ import com.kotcrab.vis.editor.module.scene.RendererModule;
 import com.kotcrab.vis.editor.module.scene.SceneModule;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.*;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.SelectionTool;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tool;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tools;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.*;
 import com.kotcrab.vis.editor.module.scene.system.EntitiesCollector;
 import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.system.GroupIdProviderSystem;
@@ -785,10 +782,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 	@Subscribe
 	public void handleToolSwitch (ToolSwitchedEvent event) {
-		if (event.newToolId == Tools.SELECTION_TOOL)
-			switchTool(selectionTool);
-		if (event.newToolId == Tools.POLYGON_TOOL)
-			switchTool(polygonTool);
+		if (event.newToolId.equals(Tools.SELECTION_TOOL)) switchTool(selectionTool);
+		if (event.newToolId.equals(Tools.POLYGON_TOOL)) switchTool(polygonTool);
 	}
 
 	@Override

@@ -18,52 +18,33 @@ package com.kotcrab.vis.editor.module.scene.system.render;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.runtime.component.Invisible;
 import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.component.VisMusic;
 import com.kotcrab.vis.runtime.component.VisSound;
-import com.kotcrab.vis.runtime.system.delegate.DeferredEntityProcessingSystem;
 import com.kotcrab.vis.runtime.system.delegate.EntityProcessPrincipal;
-import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 
 /** @author Kotcrab */
-public class SoundAndMusicRenderSystem extends DeferredEntityProcessingSystem {
-	public static final int ICON_SIZE = 76;
-
-	private ComponentMapper<Transform> posCm;
+public class AudioRenderSystem extends AbstractIconRenderSystem {
 	private ComponentMapper<VisMusic> musicCm;
 
 	private TextureRegion soundIcon;
 	private TextureRegion musicIcon;
 
-	private RenderBatchingSystem renderBatchingSystem;
-	private Batch batch;
-
-	private float renderSize;
-
-	public SoundAndMusicRenderSystem (EntityProcessPrincipal principal, float pixelsPerUnit) {
-		super(Aspect.all(Transform.class).one(VisSound.class, VisMusic.class).exclude(Invisible.class), principal);
+	public AudioRenderSystem (EntityProcessPrincipal principal, float pixelsPerUnit) {
+		super(Aspect.all(Transform.class).one(VisSound.class, VisMusic.class).exclude(Invisible.class), principal, pixelsPerUnit, Assets.BIG_ICON_SIZE);
 		soundIcon = Icons.SOUND_BIG.textureRegion();
 		musicIcon = Icons.MUSIC_BIG.textureRegion();
-
-		renderSize = ICON_SIZE / pixelsPerUnit;
 	}
 
 	@Override
-	protected void initialize () {
-		batch = renderBatchingSystem.getBatch();
-	}
-
-	@Override
-	protected void process (int entityId) {
-		Transform ptransforms = posCm.get(entityId);
-
+	protected TextureRegion getIconForEntity (int entityId) {
 		if (musicCm.has(entityId))
-			batch.draw(musicIcon, ptransforms.getX(), ptransforms.getY(), renderSize, renderSize);
+			return musicIcon;
 		else
-			batch.draw(soundIcon, ptransforms.getX(), ptransforms.getY(), renderSize, renderSize);
+			return soundIcon;
 	}
 }

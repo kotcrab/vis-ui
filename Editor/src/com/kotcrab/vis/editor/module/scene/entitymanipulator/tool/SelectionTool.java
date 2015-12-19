@@ -82,9 +82,9 @@ public class SelectionTool extends BaseSelectionTool {
 								snapX = x;
 								snapY = y;
 							} else {
-								//for multiple be use imprecise value
+								//for multiple use imprecise value
 								//selection may not always be on grid square that mouse points to (it will aligned to some other square)
-								//but this method allows to align selection of many entities
+								//but this method allows to align selection of many entities at once
 								snapX = entity.getX();
 								snapY = entity.getY();
 							}

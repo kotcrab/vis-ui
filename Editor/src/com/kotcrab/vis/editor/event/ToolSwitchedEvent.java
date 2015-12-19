@@ -18,9 +18,9 @@ package com.kotcrab.vis.editor.event;
 
 /** @author Kotcrab */
 public class ToolSwitchedEvent {
-	public final int newToolId;
+	public final String newToolId;
 
-	public ToolSwitchedEvent (int newToolId) {
+	public ToolSwitchedEvent (String newToolId) {
 		this.newToolId = newToolId;
 	}
 }

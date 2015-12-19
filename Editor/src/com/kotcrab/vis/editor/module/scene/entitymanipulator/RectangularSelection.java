@@ -76,13 +76,15 @@ public class RectangularSelection {
 		Array<EntityProxy> matchingEntities = new Array<>();
 
 		if (selectionMode == SelectionMode.Inner) {
-			for (EntityProxy entity : proxyCache.getCache().values())
+			for (EntityProxy entity : proxyCache.getCache().values()) {
 				if (rectToDraw.contains(entity.getBoundingRectangle()) && entity.getLayerID() == scene.getActiveLayerId())
 					matchingEntities.add(entity);
+			}
 		} else {
-			for (EntityProxy entity : proxyCache.getCache().values())
+			for (EntityProxy entity : proxyCache.getCache().values()) {
 				if (rectToDraw.overlaps(entity.getBoundingRectangle()) && entity.getLayerID() == scene.getActiveLayerId())
 					matchingEntities.add(entity);
+			}
 		}
 
 		entityManipulatorModule.softSelectionReset();
@@ -151,13 +153,9 @@ public class RectangularSelection {
 	}
 
 	private enum SelectionMode {
-		/**
-		 * Selects only inner objects
-		 */
+		/** Selects only inner objects */
 		Inner,
-		/**
-		 * Selects inner and overlapping objects
-		 */
+		/** Selects inner and overlapping objects */
 		Overlap
 	}
 }

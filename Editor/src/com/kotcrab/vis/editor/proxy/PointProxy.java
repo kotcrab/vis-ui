@@ -18,7 +18,7 @@ package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.editor.module.scene.system.render.PointRenderSystem;
+import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.properties.BoundsOwner;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
@@ -31,7 +31,7 @@ public class PointProxy extends EntityProxy {
 
 	public PointProxy (Entity entity, float pixelsPerUnit) {
 		super(entity);
-		renderSize = PointRenderSystem.ICON_SIZE / pixelsPerUnit;
+		renderSize = Assets.BIG_ICON_SIZE / pixelsPerUnit;
 	}
 
 	@Override

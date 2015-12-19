@@ -18,20 +18,21 @@ package com.kotcrab.vis.editor.proxy;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.editor.util.gdx.ParticleUtils;
+import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.runtime.component.Transform;
-import com.kotcrab.vis.runtime.component.VisParticle;
 import com.kotcrab.vis.runtime.properties.BoundsOwner;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
 
 /** @author Kotcrab */
 public class ParticleProxy extends EntityProxy {
-	private VisParticle particle;
-
 	private Accessor accessor;
 
-	public ParticleProxy (Entity entity) {
+	private float renderSize;
+	private Transform transform;
+
+	public ParticleProxy (Entity entity, float pixelsPerUnit) {
 		super(entity);
+		renderSize = Assets.BIG_ICON_SIZE / pixelsPerUnit;
 	}
 
 	@Override
@@ -43,8 +44,7 @@ public class ParticleProxy extends EntityProxy {
 	protected void reloadAccessors () {
 		Entity entity = getEntity();
 
-		particle = entity.getComponent(VisParticle.class);
-		Transform transform = entity.getComponent(Transform.class);
+		transform = entity.getComponent(Transform.class);
 
 		enableBasicProperties(transform, accessor, accessor);
 	}
@@ -73,8 +73,7 @@ public class ParticleProxy extends EntityProxy {
 
 		@Override
 		public Rectangle getBoundingRectangle () {
-			ParticleUtils.calculateBoundingRectangle(particle.getEffect(), bounds, false);
-			return bounds;
+			return bounds.set(transform.getX() - renderSize / 2, transform.getY() - renderSize / 2, renderSize, renderSize);
 		}
 	}
 }
