@@ -63,7 +63,7 @@ public class MouseLoopingModule extends EditorModule {
 
 				if (mousePos.x <= screenBounds.x) {
 					awtRobot.mouseMove(screenBounds.x + screenBounds.width, mousePos.y);
-				} else if (mousePos.x >= screenBounds.x + screenBounds.width)
+				} else if (mousePos.x >= screenBounds.x + screenBounds.width - 1)
 					awtRobot.mouseMove(screenBounds.x, mousePos.y);
 
 				if (mousePos.y <= screenBounds.y) {
@@ -75,7 +75,7 @@ public class MouseLoopingModule extends EditorModule {
 
 			@Override
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				if(resetOnTouchUp) catchEnabled = false;
+				if (resetOnTouchUp) catchEnabled = false;
 			}
 		});
 	}
