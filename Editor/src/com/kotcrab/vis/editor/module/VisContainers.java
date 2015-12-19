@@ -42,6 +42,7 @@ public class VisContainers {
 
 		editorMC.add(new ClonerModule());
 		editorMC.add(new GsonModule());
+		editorMC.add(new MouseLoopingModule());
 		editorMC.add(new StyleProviderModule());
 		editorMC.add(new AppFileAccessModule());
 		editorMC.add(new VisTwitterReader());

@@ -350,6 +350,10 @@ public class Editor extends ApplicationAdapter {
 		return stage;
 	}
 
+	public EditorFrame getSwingFrame () {
+		return frame;
+	}
+
 	public void requestProjectUnload () {
 		if (tabsModule.getDirtyTabCount() > 0)
 			stage.addActor(new UnsavedResourcesDialog(tabsModule, () -> doProjectUnloading()).fadeIn());
