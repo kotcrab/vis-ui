@@ -22,18 +22,16 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.module.editor.MouseLoopingModule;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /** @author Kotcrab */
-public class RotateTool extends SelectionTool {
+public class RotateTool extends BaseGizmoTool {
 	public static final String TOOL_ID = App.PACKAGE + ".tools.RotateTool";
 
 	private static final Vector3 tmpV3 = new Vector3();
@@ -41,7 +39,6 @@ public class RotateTool extends SelectionTool {
 	private CameraModule camera;
 	private MouseLoopingModule mouseLooping;
 
-	private Rectangle totalBounds;
 	private float circleCenterX;
 	private float circleCenterY;
 	private float innerRadius;
@@ -55,23 +52,12 @@ public class RotateTool extends SelectionTool {
 	public void render (ShapeRenderer shapeRenderer) {
 		super.render(shapeRenderer);
 
-		totalBounds = null;
-
-		for (SelectionFragment fragment : entityManipulator.getSelection().getFragmentedSelection()) {
-			Rectangle fragBounds = fragment.getBoundingRectangle();
-
-			if (totalBounds == null)
-				totalBounds = new Rectangle(fragBounds);
-			else
-				totalBounds.merge(fragBounds);
-		}
-
-		if (totalBounds != null) {
+		if (totalSelectionBounds != null) {
 			innerRadius = camera.getZoom() * 0.6f;
 			outerRadius = camera.getZoom() * 0.7f;
 
-			circleCenterX = totalBounds.x + totalBounds.width / 2;
-			circleCenterY = totalBounds.y + totalBounds.height / 2;
+			circleCenterX = totalSelectionBounds.x + totalSelectionBounds.width / 2;
+			circleCenterY = totalSelectionBounds.y + totalSelectionBounds.height / 2;
 
 			shapeRenderer.setColor(Color.WHITE);
 			shapeRenderer.begin(ShapeType.Line);
@@ -131,7 +117,7 @@ public class RotateTool extends SelectionTool {
 
 		super.touchDragged(event, x, y, pointer);
 
-		if (insideRotateArea && totalBounds != null) {
+		if (insideRotateArea && totalSelectionBounds != null) {
 			float rotationDelta = startingRotationValue - getRotationFromVirtualMouse();
 			ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
 			for (int i = 0; i < entities.size(); i++) {
@@ -174,11 +160,6 @@ public class RotateTool extends SelectionTool {
 	protected boolean isMouseInsideSelectedEntities (float x, float y) {
 		if (insideRotateArea) return true;
 		return super.isMouseInsideSelectedEntities(x, y);
-	}
-
-	@Override
-	public boolean isRenderBoundsEnabled () {
-		return false;
 	}
 
 	@Override

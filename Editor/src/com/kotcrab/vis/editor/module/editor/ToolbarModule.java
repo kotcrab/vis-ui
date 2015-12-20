@@ -30,6 +30,7 @@ import com.kotcrab.vis.editor.event.ToolbarEvent;
 import com.kotcrab.vis.editor.event.ToolbarEventType;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.RotateTool;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.ScaleTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.SelectionTool;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
@@ -71,7 +72,8 @@ public class ToolbarModule extends EditorModule {
 		table.addSeparator(true);
 		table.add(new ToolbarButtonBuilder().icon(Icons.TOOL_MOVE).text("Select and move entities (F1)").eventTool(SelectionTool.TOOL_ID).build());
 		table.add(new ToolbarButtonBuilder().icon(Icons.TOOL_ROTATE).text("Rotate entities (F2)").eventTool(RotateTool.TOOL_ID).build());
-		table.add(new ToolbarButtonBuilder().icon(Icons.POLYGON).text("Edit polygons (F3)").eventTool(PolygonTool.TOOL_ID).build());
+		table.add(new ToolbarButtonBuilder().icon(Icons.TOOL_SCALE).text("Scale entities (F3)").eventTool(ScaleTool.TOOL_ID).build());
+		table.add(new ToolbarButtonBuilder().icon(Icons.POLYGON).text("Edit polygons (F4)").eventTool(PolygonTool.TOOL_ID).build());
 
 		table.addSeparator(true);
 		table.add(new ToolbarButtonBuilder().icon(Icons.SETTINGS_VIEW).text("Enable grid snapping (%)").eventToolbar(ToolbarEventType.GRID_SNAP_SETTING_CHANGED).toggle().build());

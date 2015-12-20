@@ -42,9 +42,7 @@ import com.kotcrab.vis.editor.entity.SpriterProperties;
 import com.kotcrab.vis.editor.entity.VisUUID;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.RotateTool;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.SelectionTool;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.*;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
@@ -56,7 +54,6 @@ import com.kotcrab.vis.editor.module.scene.RendererModule;
 import com.kotcrab.vis.editor.module.scene.SceneModule;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.*;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tool;
 import com.kotcrab.vis.editor.module.scene.system.EntitiesCollector;
 import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.system.GroupIdProviderSystem;
@@ -913,6 +910,10 @@ public class EntityManipulatorModule extends SceneModule {
 				App.eventBus.post(new ToolSwitchedEvent(RotateTool.TOOL_ID));
 			}
 			if (keycode == Keys.F3) {
+				switchTool(ScaleTool.TOOL_ID);
+				App.eventBus.post(new ToolSwitchedEvent(ScaleTool.TOOL_ID));
+			}
+			if (keycode == Keys.F4) {
 				switchTool(PolygonTool.TOOL_ID);
 				App.eventBus.post(new ToolSwitchedEvent(PolygonTool.TOOL_ID));
 			}

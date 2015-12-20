@@ -298,14 +298,14 @@ tool-move
   orig: 22, 22
   offset: 0, 0
   index: -1
-tool-resize
+tool-rotate
   rotate: false
   xy: 310, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
-tool-rotate
+tool-scale
   rotate: false
   xy: 310, 2
   size: 22, 22

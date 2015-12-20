@@ -27,6 +27,7 @@ import com.kotcrab.vis.editor.extension.SpriterAssetsFileSorter;
 import com.kotcrab.vis.editor.extension.SpriterUIContextGenerator;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.RotateTool;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.ScaleTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.SelectionTool;
 import com.kotcrab.vis.editor.plugin.api.impl.ReflectionToolProvider;
 import com.kotcrab.vis.editor.module.Module;
@@ -211,6 +212,7 @@ public class ExtensionStorageModule extends EditorModule {
 
 		toolProviders.add(new ReflectionToolProvider<>(SelectionTool.class));
 		toolProviders.add(new ReflectionToolProvider<>(RotateTool.class));
+		toolProviders.add(new ReflectionToolProvider<>(ScaleTool.class));
 		toolProviders.add(new ReflectionToolProvider<>(PolygonTool.class));
 	}
 
