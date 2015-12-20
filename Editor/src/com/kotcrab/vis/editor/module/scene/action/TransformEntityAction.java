@@ -19,12 +19,13 @@ package com.kotcrab.vis.editor.module.scene.action;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 
-public class MoveEntityAction implements UndoableAction {
-	private EntityPositionData oldData = new EntityPositionData();
-	private EntityPositionData newData = new EntityPositionData();
+/** @author Kotcrab */
+public class TransformEntityAction implements UndoableAction {
+	private EntityTransformData oldData = new EntityTransformData();
+	private EntityTransformData newData = new EntityTransformData();
 	private EntityProxy entity;
 
-	public MoveEntityAction (EntityProxy entity) {
+	public TransformEntityAction (EntityProxy entity) {
 		this.entity = entity;
 		oldData.saveFrom(entity);
 	}
@@ -50,17 +51,20 @@ public class MoveEntityAction implements UndoableAction {
 		return "Entity Move";
 	}
 
-	private static class EntityPositionData {
+	private static class EntityTransformData {
 		public float x;
 		public float y;
+		public float rotation;
 
 		public void saveFrom (EntityProxy entity) {
 			x = entity.getX();
 			y = entity.getY();
+			rotation = entity.getRotation();
 		}
 
 		public void loadTo (EntityProxy entity) {
 			entity.setPosition(x, y);
+			entity.setRotation(rotation);
 		}
 	}
 

@@ -21,7 +21,7 @@ import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
-import com.kotcrab.vis.editor.module.scene.action.MoveEntityAction;
+import com.kotcrab.vis.editor.module.scene.action.TransformEntityAction;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.scene2d.EventStopper;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
@@ -110,7 +110,7 @@ public class AlignmentToolsDialog extends VisTable {
 			}
 
 			for (EntityProxy proxy : selectedEntities) {
-				MoveEntityAction action = new MoveEntityAction(proxy);
+				TransformEntityAction action = new TransformEntityAction(proxy);
 				proxy.setX(targetX);
 				action.saveNewData(proxy);
 				undoableGroup.add(action);
@@ -131,7 +131,7 @@ public class AlignmentToolsDialog extends VisTable {
 			}
 
 			for (EntityProxy proxy : selectedEntities) {
-				MoveEntityAction action = new MoveEntityAction(proxy);
+				TransformEntityAction action = new TransformEntityAction(proxy);
 				proxy.setY(targetY);
 				action.saveNewData(proxy);
 				undoableGroup.add(action);
@@ -160,7 +160,7 @@ public class AlignmentToolsDialog extends VisTable {
 		targetPos /= selectedEntities.size();
 
 		for (EntityProxy proxy : selectedEntities) {
-			MoveEntityAction action = new MoveEntityAction(proxy);
+			TransformEntityAction action = new TransformEntityAction(proxy);
 
 			if (yAlign == true)
 				proxy.setX(targetPos);

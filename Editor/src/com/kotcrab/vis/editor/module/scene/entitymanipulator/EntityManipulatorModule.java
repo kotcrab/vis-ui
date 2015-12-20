@@ -131,6 +131,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private Tool currentTool;
 	private SelectionTool selectionTool;
+	private RotateScaleTool rotateScaleTool;
 	private PolygonTool polygonTool;
 
 	private EntitiesSelection entitiesSelection;
@@ -176,11 +177,13 @@ public class EntityManipulatorModule extends SceneModule {
 		entityMoveTimerTask = new EntityMoveTimerTask(scene, this);
 
 		selectionTool = new SelectionTool();
+		rotateScaleTool = new RotateScaleTool();
 		polygonTool = new PolygonTool();
 
 		entitiesSelection = new EntitiesSelection(entitiesCollector, scene.getActiveLayerId());
 
 		selectionTool.setModules(sceneContainer, scene);
+		rotateScaleTool.setModules(sceneContainer, scene);
 		polygonTool.setModules(sceneContainer, scene);
 
 		switchTool(selectionTool);
@@ -755,7 +758,7 @@ public class EntityManipulatorModule extends SceneModule {
 		batch.end();
 		shapeRenderer.setProjectionMatrix(camera.getCombinedMatrix());
 
-		if (entitiesSelection.size() > 0) {
+		if (currentTool.isRenderBoundsEnabled() && entitiesSelection.size() > 0) {
 			shapeRenderer.setColor(Color.WHITE);
 			shapeRenderer.begin(ShapeType.Line);
 
@@ -783,6 +786,7 @@ public class EntityManipulatorModule extends SceneModule {
 	@Subscribe
 	public void handleToolSwitch (ToolSwitchedEvent event) {
 		if (event.newToolId.equals(Tools.SELECTION_TOOL)) switchTool(selectionTool);
+		if (event.newToolId.equals(Tools.ROTATE_SCALE_TOOL)) switchTool(rotateScaleTool);
 		if (event.newToolId.equals(Tools.POLYGON_TOOL)) switchTool(polygonTool);
 	}
 
@@ -897,6 +901,10 @@ public class EntityManipulatorModule extends SceneModule {
 				App.eventBus.post(new ToolSwitchedEvent(Tools.SELECTION_TOOL));
 			}
 			if (keycode == Keys.F2) {
+				switchTool(rotateScaleTool);
+				App.eventBus.post(new ToolSwitchedEvent(Tools.ROTATE_SCALE_TOOL));
+			}
+			if (keycode == Keys.F3) {
 				switchTool(polygonTool);
 				App.eventBus.post(new ToolSwitchedEvent(Tools.POLYGON_TOOL));
 			}

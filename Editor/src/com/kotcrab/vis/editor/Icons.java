@@ -61,6 +61,8 @@ public enum Icons {
 	POLYGON("polygon"),
 	PLUS("plus"),
 
+	TOOL_ROTATE_SCALE("tool-rotate-scale"),
+
 	FOLDER_MEDIUM("folder-medium"),
 	FOLDER_SOUND_MEDIUM("folder-sound-medium"),
 	FOLDER_MUSIC_MEDIUM("folder-music-medium"),

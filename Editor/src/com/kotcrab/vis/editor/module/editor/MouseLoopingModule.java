@@ -18,10 +18,8 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 
-import javax.swing.SwingUtilities;
 import java.awt.*;
 
 /**
@@ -29,13 +27,20 @@ import java.awt.*;
  * @author Kotcrab
  */
 public class MouseLoopingModule extends EditorModule {
+	private static final int MARGIN = 15;
+
 	private GlobalInputModule globalInput;
 
 	private boolean catchEnabled = false;
-	private boolean resetOnTouchUp = true;
 
 	private Robot awtRobot;
 	private Rectangle screenBounds;
+
+	private float virtualDeltaX;
+	private float virtualDeltaY;
+
+	private float virtualMouseX;
+	private float virtualMouseY;
 
 	@Override
 	public void init () {
@@ -48,10 +53,12 @@ public class MouseLoopingModule extends EditorModule {
 		globalInput.addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (catchEnabled == false) return false;
-				Point pos = new Point((int) x, (int) y);
-				SwingUtilities.convertPointToScreen(pos, Editor.instance.getSwingFrame());
-				screenBounds = getScreenBoundsAt(pos);
+				Point mousePos = MouseInfo.getPointerInfo().getLocation();
+
+				virtualDeltaX = 0;
+				virtualDeltaY = 0;
+				virtualMouseX = mousePos.x;
+				virtualMouseY = mousePos.y;
 				return true;
 			}
 
@@ -61,31 +68,78 @@ public class MouseLoopingModule extends EditorModule {
 
 				Point mousePos = MouseInfo.getPointerInfo().getLocation();
 
+				int moveDeltaX = 0;
+				int moveDeltaY = 0;
+
 				if (mousePos.x <= screenBounds.x) {
-					awtRobot.mouseMove(screenBounds.x + screenBounds.width, mousePos.y);
-				} else if (mousePos.x >= screenBounds.x + screenBounds.width - 1)
-					awtRobot.mouseMove(screenBounds.x, mousePos.y);
+					moveDeltaX = screenBounds.width - MARGIN;
+				} else if (mousePos.x >= screenBounds.x + screenBounds.width - 1) {
+					moveDeltaX = -screenBounds.width + MARGIN;
+				}
 
 				if (mousePos.y <= screenBounds.y) {
-					awtRobot.mouseMove(mousePos.x, screenBounds.y + screenBounds.height);
+					moveDeltaY = screenBounds.height - MARGIN;
 				} else if (mousePos.y >= screenBounds.y + screenBounds.height - 1) {
-					awtRobot.mouseMove(mousePos.x, screenBounds.y);
+					moveDeltaY = -screenBounds.height + MARGIN;
 				}
+
+				boolean move = false;
+				int newMouseX = mousePos.x;
+				int newMouseY = mousePos.y;
+
+				if (moveDeltaX != 0) {
+					newMouseX = mousePos.x + moveDeltaX;
+					virtualDeltaX -= moveDeltaX;
+					move = true;
+				}
+
+				if (moveDeltaY != 0) {
+					newMouseY = mousePos.y + moveDeltaY;
+					virtualDeltaY -= moveDeltaY;
+					move = true;
+				}
+
+				if (move) {
+					awtRobot.mouseMove(newMouseX, newMouseY);
+					mousePos.setLocation(newMouseX, newMouseY); //manually update mousePos
+				}
+
+				virtualMouseX = mousePos.x + virtualDeltaX;
+				virtualMouseY = mousePos.y + virtualDeltaY;
 			}
 
 			@Override
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				if (resetOnTouchUp) catchEnabled = false;
+				catchEnabled = false;
+				virtualMouseX = 0;
+				virtualMouseY = 0;
 			}
 		});
 	}
 
-	public void setCatchEnabled (boolean catchEnabled) {
-		this.catchEnabled = catchEnabled;
+	/**
+	 * Enables cursor looping. Looping will be auto disabled after touchUp event. This should be called only once for
+	 * single touchDown event. May be called after touchDown event already occurred.
+	 */
+	public void loopCursor () {
+		this.catchEnabled = true;
+		virtualMouseX = MouseInfo.getPointerInfo().getLocation().x;
+		virtualMouseY = MouseInfo.getPointerInfo().getLocation().y;
+		screenBounds = getScreenBoundsAt(MouseInfo.getPointerInfo().getLocation());
 	}
 
-	public void setResetOnTouchUp (boolean resetOnTouchUp) {
-		this.resetOnTouchUp = resetOnTouchUp;
+	public float getVirtualMouseX () {
+		if (catchEnabled)
+			return virtualMouseX;
+		else
+			return MouseInfo.getPointerInfo().getLocation().x;
+	}
+
+	public float getVirtualMouseY () {
+		if (catchEnabled)
+			return virtualMouseY;
+		else
+			return MouseInfo.getPointerInfo().getLocation().y;
 	}
 
 	private Rectangle getScreenBoundsAt (Point pos) {

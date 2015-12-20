@@ -20,5 +20,6 @@ package com.kotcrab.vis.editor.module.scene.entitymanipulator.tool;
 public class Tools {
 	private static final String PREFIX = "com.kotcrab.vis.editor.tools.";
 	public static final String SELECTION_TOOL = PREFIX + "SelectionTool";
+	public static final String ROTATE_SCALE_TOOL = PREFIX + "RotateScaleTool";
 	public static final String POLYGON_TOOL = PREFIX + "PolygonTool";
 }

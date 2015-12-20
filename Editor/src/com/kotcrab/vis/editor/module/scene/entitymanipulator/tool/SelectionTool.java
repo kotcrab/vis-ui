@@ -22,8 +22,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
+import com.kotcrab.vis.editor.module.scene.action.TransformEntityAction;
 import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
-import com.kotcrab.vis.editor.module.scene.action.MoveEntityAction;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
@@ -33,12 +33,12 @@ public class SelectionTool extends BaseSelectionTool {
 	private EditingSettingsModule editingSettings;
 	private GridSettingsModule gridSettings;
 
-	private Array<Pos> startingEntityPos = new Array<>();
+	protected Array<EntityTransform> startingEntityProps = new Array<>();
 
 	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 		boolean result = super.touchDown(event, x, y, pointer, button);
-		entityManipulator.getSelectedEntities().forEach(proxy -> startingEntityPos.add(new Pos(proxy)));
+		entityManipulator.getSelectedEntities().forEach(proxy -> startingEntityProps.add(new EntityTransform(proxy)));
 		return result;
 	}
 
@@ -53,7 +53,7 @@ public class SelectionTool extends BaseSelectionTool {
 			if (dragged == false) {
 				moveActions.clear();
 				for (EntityProxy proxy : entityManipulator.getSelectedEntities())
-					moveActions.add(new MoveEntityAction(proxy));
+					moveActions.add(new TransformEntityAction(proxy));
 			}
 
 			if (rectSelectionTouchDraggedResult == false) {
@@ -67,9 +67,9 @@ public class SelectionTool extends BaseSelectionTool {
 					ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
 					for (int i = 0; i < entities.size(); i++) {
 						EntityProxy entity = entities.get(i);
-						Pos startingPos = startingEntityPos.get(i);
+						EntityTransform startingProps = startingEntityProps.get(i);
 
-						entity.setPosition(startingPos.x + totalDeltaX, startingPos.y + totalDeltaY);
+						entity.setPosition(startingProps.x + totalDeltaX, startingProps.y + totalDeltaY);
 
 						if (editingSettings.isSnapEnabledOrKeyPressed()) {
 							float gridSize = gridSettings.config.gridSize;
@@ -115,7 +115,7 @@ public class SelectionTool extends BaseSelectionTool {
 
 			UndoableActionGroup group = new UndoableActionGroup("Move Entity", "Move Entities");
 
-			for (MoveEntityAction action : moveActions)
+			for (TransformEntityAction action : moveActions)
 				group.add(action);
 
 			group.finalizeGroup();
@@ -129,16 +129,18 @@ public class SelectionTool extends BaseSelectionTool {
 	@Override
 	protected void resetAfterTouchUp () {
 		super.resetAfterTouchUp();
-		startingEntityPos.clear();
+		startingEntityProps.clear();
 	}
 
-	private static class Pos {
+	protected static class EntityTransform {
 		float x;
 		float y;
+		float rotation;
 
-		public Pos (EntityProxy proxy) {
+		public EntityTransform (EntityProxy proxy) {
 			x = proxy.getX();
 			y = proxy.getY();
+			rotation = proxy.getRotation();
 		}
 	}
 }

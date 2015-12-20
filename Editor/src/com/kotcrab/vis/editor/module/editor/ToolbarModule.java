@@ -68,7 +68,8 @@ public class ToolbarModule extends EditorModule {
 
 		table.addSeparator(true);
 		table.add(new ToolbarButtonBuilder().icon(Icons.CURSOR).text("Select entities (F1)").eventTool(Tools.SELECTION_TOOL).build());
-		table.add(new ToolbarButtonBuilder().icon(Icons.POLYGON).text("Edit polygons (F2)").eventTool(Tools.POLYGON_TOOL).build());
+		table.add(new ToolbarButtonBuilder().icon(Icons.TOOL_ROTATE_SCALE).text("Rotate and scale entities (F2)").eventTool(Tools.ROTATE_SCALE_TOOL).build());
+		table.add(new ToolbarButtonBuilder().icon(Icons.POLYGON).text("Edit polygons (F3)").eventTool(Tools.POLYGON_TOOL).build());
 
 		table.addSeparator(true);
 		table.add(new ToolbarButtonBuilder().icon(Icons.SETTINGS_VIEW).text("Enable grid snapping (%)").eventToolbar(ToolbarEventType.GRID_SNAP_SETTING_CHANGED).toggle().build());

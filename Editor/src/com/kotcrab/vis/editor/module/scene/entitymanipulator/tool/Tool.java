@@ -21,17 +21,17 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.kotcrab.annotation.CallSuper;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
-import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
+import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
  * @author Kotcrab
  */
-public class Tool extends InputListener {
+public abstract class Tool extends InputListener {
 	private boolean loaded = false;
 
 	protected EntityManipulatorModule entityManipulator;
@@ -78,5 +78,9 @@ public class Tool extends InputListener {
 
 	public VisTable getToolPropertiesUI () {
 		return null;
+	}
+
+	public boolean isRenderBoundsEnabled () {
+		return true;
 	}
 }

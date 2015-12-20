@@ -291,23 +291,30 @@ sound-big
   orig: 76, 76
   offset: 0, 0
   index: -1
-undo
+tool-rotate-scale
   rotate: false
   xy: 832, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
-unlocked
+undo
   rotate: false
   xy: 310, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
-warning
+unlocked
   rotate: false
   xy: 310, 2
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+warning
+  rotate: false
+  xy: 856, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
