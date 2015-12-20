@@ -31,9 +31,11 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangePolygonAction;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.BaseSelectionTool;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.polygon.Clipper;
 import com.kotcrab.vis.editor.util.polygon.Clipper.Polygonizer;
@@ -51,6 +53,8 @@ import com.kotcrab.vis.ui.widget.VisTextButton;
 
 /** @author Kotcrab */
 public class PolygonTool extends BaseSelectionTool {
+	public static final String TOOL_ID = App.PACKAGE + ".tools.PolygonTool";
+
 	public static final Polygonizer DEFAULT_POLYGONIZER = Polygonizer.EWJORDAN;
 
 	private static final String NO_POLYGON_IN_SELECTION = "No polygon component in selected entity";
@@ -545,6 +549,11 @@ public class PolygonTool extends BaseSelectionTool {
 	@Override
 	public VisTable getToolPropertiesUI () {
 		return uiTable;
+	}
+
+	@Override
+	public String getToolId () {
+		return TOOL_ID;
 	}
 
 	private static class Edge {

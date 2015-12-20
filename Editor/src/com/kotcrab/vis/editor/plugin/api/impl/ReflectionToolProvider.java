@@ -14,12 +14,25 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.module.scene.entitymanipulator.tool;
+package com.kotcrab.vis.editor.plugin.api.impl;
+
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tool;
+import com.kotcrab.vis.editor.plugin.api.ToolProvider;
 
 /** @author Kotcrab */
-public class Tools {
-	private static final String PREFIX = "com.kotcrab.vis.editor.tools.";
-	public static final String SELECTION_TOOL = PREFIX + "SelectionTool";
-	public static final String ROTATE_SCALE_TOOL = PREFIX + "RotateScaleTool";
-	public static final String POLYGON_TOOL = PREFIX + "PolygonTool";
+public class ReflectionToolProvider<T extends Tool> implements ToolProvider<T> {
+	private Class<T> toolClass;
+
+	public ReflectionToolProvider (Class<T> toolClass) {
+		this.toolClass = toolClass;
+	}
+
+	@Override
+	public T createTool () {
+		try {
+			return toolClass.getConstructor().newInstance();
+		} catch (ReflectiveOperationException e) {
+			throw new IllegalStateException(e);
+		}
+	}
 }

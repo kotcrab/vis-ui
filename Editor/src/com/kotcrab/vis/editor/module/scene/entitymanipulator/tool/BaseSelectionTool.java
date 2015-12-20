@@ -22,8 +22,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
-import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.editor.module.scene.action.TransformEntityAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.RectangularSelection;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 
@@ -37,15 +35,13 @@ public abstract class BaseSelectionTool extends Tool {
 	protected float lastTouchX, lastTouchY;
 	protected float dragStartX, dragStartY;
 
-	protected boolean mouseInsideSelected;
+	private boolean mouseInsideSelected;
 	protected boolean cameraDragged;
 	protected boolean dragging;
 	protected boolean dragged;
 
-	protected RectangularSelection rectangularSelection;
+	private RectangularSelection rectangularSelection;
 	protected boolean rectSelectionTouchDraggedResult;
-
-	protected Array<TransformEntityAction> moveActions = new Array<>();
 
 	@Override
 	public void init () {

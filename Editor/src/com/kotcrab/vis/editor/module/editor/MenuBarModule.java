@@ -33,6 +33,7 @@ import com.kotcrab.vis.editor.ui.dialog.AboutDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.scene2d.MenuUtils;
+import com.kotcrab.vis.editor.util.vis.WikiPages;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.*;
 
@@ -163,7 +164,7 @@ public class MenuBarModule extends EditorModule {
 		menuBar.addMenu(menu);
 
 		menu.addItem(createMenuItem("Website", Icons.GLOBE, () -> Gdx.net.openURI("http://vis.kotcrab.com")));
-		menu.addItem(createMenuItem("Documentation", null, () -> Gdx.net.openURI("https://github.com/kotcrab/VisEditor/wiki/Quick-Start")));
+		menu.addItem(createMenuItem("Documentation", null, () -> Gdx.net.openURI(WikiPages.QUICK_START)));
 		menu.addItem(createMenuItem("Show Log", null, () -> FileUtils.open(Log.getLogFile())));
 		menu.addItem(createMenuItem("About", Icons.INFO, () -> stage.addActor(new AboutDialog().fadeIn())));
 	}

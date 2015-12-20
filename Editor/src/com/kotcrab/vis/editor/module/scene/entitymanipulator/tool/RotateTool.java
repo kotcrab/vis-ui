@@ -25,6 +25,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.module.editor.MouseLoopingModule;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
@@ -32,7 +33,9 @@ import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /** @author Kotcrab */
-public class RotateScaleTool extends SelectionTool {
+public class RotateTool extends SelectionTool {
+	public static final String TOOL_ID = App.PACKAGE + ".tools.RotateTool";
+
 	private static final Vector3 tmpV3 = new Vector3();
 
 	private CameraModule camera;
@@ -176,5 +179,10 @@ public class RotateScaleTool extends SelectionTool {
 	@Override
 	public boolean isRenderBoundsEnabled () {
 		return false;
+	}
+
+	@Override
+	public String getToolId () {
+		return TOOL_ID;
 	}
 }

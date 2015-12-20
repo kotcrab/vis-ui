@@ -43,8 +43,10 @@ public class App {
 	private static boolean initialized;
 
 	private static final String TAG = "App";
+	/** Editor package name */
+	public static final String PACKAGE = "com.kotcrab.vis.editor";
 
-	/** VisEditor version code, also used as project version code.. */
+	/** VisEditor version code, also used as project version code. */
 	public static final int VERSION_CODE = 21;
 
 	/**

@@ -83,4 +83,6 @@ public abstract class Tool extends InputListener {
 	public boolean isRenderBoundsEnabled () {
 		return true;
 	}
+
+	public abstract String getToolId ();
 }

@@ -21,6 +21,7 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
 import com.kotcrab.vis.editor.module.scene.action.TransformEntityAction;
 import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
@@ -30,10 +31,13 @@ import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /** @author Kotcrab */
 public class SelectionTool extends BaseSelectionTool {
+	public static final String TOOL_ID = App.PACKAGE + ".tools.SelectionTool";
+
 	private EditingSettingsModule editingSettings;
 	private GridSettingsModule gridSettings;
 
 	protected Array<EntityTransform> startingEntityProps = new Array<>();
+	protected Array<TransformEntityAction> moveActions = new Array<>();
 
 	@Override
 	public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
@@ -142,5 +146,10 @@ public class SelectionTool extends BaseSelectionTool {
 			y = proxy.getY();
 			rotation = proxy.getRotation();
 		}
+	}
+
+	@Override
+	public String getToolId () {
+		return TOOL_ID;
 	}
 }

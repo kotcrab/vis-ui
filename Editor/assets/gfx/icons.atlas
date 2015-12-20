@@ -291,30 +291,44 @@ sound-big
   orig: 76, 76
   offset: 0, 0
   index: -1
-tool-rotate-scale
+tool-move
   rotate: false
   xy: 832, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
-undo
+tool-resize
   rotate: false
   xy: 310, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
-unlocked
+tool-rotate
   rotate: false
   xy: 310, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
-warning
+undo
   rotate: false
   xy: 856, 104
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+unlocked
+  rotate: false
+  xy: 334, 26
+  size: 22, 22
+  orig: 22, 22
+  offset: 0, 0
+  index: -1
+warning
+  rotate: false
+  xy: 334, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0

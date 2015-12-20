@@ -25,6 +25,10 @@ import com.kotcrab.vis.editor.extension.AssetType;
 import com.kotcrab.vis.editor.extension.DefaultExporter;
 import com.kotcrab.vis.editor.extension.SpriterAssetsFileSorter;
 import com.kotcrab.vis.editor.extension.SpriterUIContextGenerator;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.RotateTool;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.SelectionTool;
+import com.kotcrab.vis.editor.plugin.api.impl.ReflectionToolProvider;
 import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
@@ -40,84 +44,121 @@ import java.lang.reflect.Modifier;
  * @author Kotcrab
  */
 public class ExtensionStorageModule extends EditorModule {
-	private Array<EditorEntitySupport> objectSupports = new Array<>();
+	private Array<EditorEntitySupport> entitiesSupport = new Array<>();
+
+	public void addEntitySupport (EditorEntitySupport support) {
+		entitiesSupport.add(support);
+	}
+
+	public Array<EditorEntitySupport> getEntitiesSupports () {
+		return entitiesSupport;
+	}
+
+	// ----------------
 
 	private Array<ExporterPlugin> exporterPlugins = new Array<>();
-	private Array<ContainerExtension<?>> containerExtensions = new Array<>();
-	private Array<ResourceLoader> resourceLoaders = new Array<>();
-	private Array<AssetTypeStorage> assetTypeStorages = new Array<>();
-	private Array<AssetsUIContextGeneratorProvider> assetsContextGenProviders = new Array<>();
-	private Array<AssetsFileSorter> assetsFileSorters = new Array<>();
-	private Array<AssetDescriptorProvider<?>> assetDescriptorProviders = new Array<>();
-	private Array<AssetTransactionGenerator> assetTransactionGens = new Array<>();
-
-	private Array<AssetDirectoryDescriptor> assetDirectoryDescriptors = new Array<>();
-
-	// Add methods
-	public void addEntitySupport (EditorEntitySupport support) {
-		objectSupports.add(support);
-	}
-
-	public void addContainerExtension (ContainerExtension extension) {
-		containerExtensions.add(extension);
-	}
 
 	public void addExporterPlugin (ExporterPlugin exporterPlugin) {
 		exporterPlugins.add(exporterPlugin);
-	}
-
-	public void addResourceLoader (ResourceLoader loader) {
-		resourceLoaders.add(loader);
-	}
-
-	public void addAssetTypeStorage (AssetTypeStorage storage) {
-		assetTypeStorages.add(storage);
-	}
-
-	public void addAssetsContextGeneratorProvider (AssetsUIContextGeneratorProvider contextProvider) {
-		assetsContextGenProviders.add(contextProvider);
-	}
-
-	public void addAssetsFileSorter (AssetsFileSorter sorter) {
-		assetsFileSorters.add(sorter);
-	}
-
-	public void addAssetDescriptorProvider (AssetDescriptorProvider<?> provider) {
-		assetDescriptorProviders.add(provider);
-	}
-
-	public void addAssetTransactionGenerator (AssetTransactionGenerator generator) {
-		assetTransactionGens.add(generator);
-	}
-
-	// Getters
-	public Array<EditorEntitySupport> getEntitiesSupports () {
-		return objectSupports;
 	}
 
 	public Array<ExporterPlugin> getExporterPlugins () {
 		return exporterPlugins;
 	}
 
-	public Array<AssetDirectoryDescriptor> getAssetDirectoryDescriptors () {
-		return assetDirectoryDescriptors;
+	// ----------------
+
+	private Array<ContainerExtension<?>> containerExtensions = new Array<>();
+
+	public void addContainerExtension (ContainerExtension<?> extension) {
+		containerExtensions.add(extension);
+	}
+
+	// ----------------
+
+	private Array<ResourceLoader> resourceLoaders = new Array<>();
+
+	public void addResourceLoader (ResourceLoader loader) {
+		resourceLoaders.add(loader);
+	}
+
+	// ----------------
+
+	private Array<ToolProvider<?>> toolProviders = new Array<>();
+
+	public void addToolProvider (ToolProvider<?> provider) {
+		toolProviders.add(provider);
+	}
+
+	public Array<ToolProvider<?>> getToolProviders () {
+		return toolProviders;
+	}
+
+	// ----------------
+
+	private Array<AssetTypeStorage> assetTypeStorages = new Array<>();
+
+	public void addAssetTypeStorage (AssetTypeStorage storage) {
+		assetTypeStorages.add(storage);
+	}
+
+	// ----------------
+
+	private Array<AssetsUIContextGeneratorProvider> assetsContextGenProviders = new Array<>();
+
+	public void addAssetsContextGeneratorProvider (AssetsUIContextGeneratorProvider contextProvider) {
+		assetsContextGenProviders.add(contextProvider);
 	}
 
 	public Array<AssetsUIContextGeneratorProvider> getAssetsContextGeneratorsProviders () {
 		return assetsContextGenProviders;
 	}
 
+	// ----------------
+
+	private Array<AssetsFileSorter> assetsFileSorters = new Array<>();
+
+	public void addAssetsFileSorter (AssetsFileSorter sorter) {
+		assetsFileSorters.add(sorter);
+	}
+
 	public Array<AssetsFileSorter> getAssetsFileSorters () {
 		return assetsFileSorters;
+	}
+
+	// ----------------
+
+	private Array<AssetDescriptorProvider<?>> assetDescriptorProviders = new Array<>();
+
+	public void addAssetDescriptorProvider (AssetDescriptorProvider<?> provider) {
+		assetDescriptorProviders.add(provider);
+	}
+
+	// ----------------
+
+	private Array<AssetTransactionGenerator> assetTransactionGens = new Array<>();
+
+	public void addAssetTransactionGenerator (AssetTransactionGenerator generator) {
+		assetTransactionGens.add(generator);
+	}
+
+	public Array<AssetTransactionGenerator> getAssetTransactionGenerator () {
+		return assetTransactionGens;
+	}
+
+	// ----------------
+
+	private Array<AssetDirectoryDescriptor> assetDirectoryDescriptors = new Array<>();
+
+	public Array<AssetDirectoryDescriptor> getAssetDirectoryDescriptors () {
+		return assetDirectoryDescriptors;
 	}
 
 	public Array<AssetDescriptorProvider<?>> getAssetDescriptorProviders () {
 		return assetDescriptorProviders;
 	}
 
-	public Array<AssetTransactionGenerator> getAssetTransactionGenerator () {
-		return assetTransactionGens;
-	}
+	// ----------------
 
 	@Override
 	public void init () {
@@ -167,6 +208,10 @@ public class ExtensionStorageModule extends EditorModule {
 		assetTransactionGens.add(new BmpFontAssetTransactionGenerator());
 		assetTransactionGens.add(new TextureRegionAssetTransactionGenerator());
 		assetTransactionGens.add(new TtfAssetTransactionGenerator());
+
+		toolProviders.add(new ReflectionToolProvider<>(SelectionTool.class));
+		toolProviders.add(new ReflectionToolProvider<>(RotateTool.class));
+		toolProviders.add(new ReflectionToolProvider<>(PolygonTool.class));
 	}
 
 	@Override

@@ -42,6 +42,9 @@ import com.kotcrab.vis.editor.entity.SpriterProperties;
 import com.kotcrab.vis.editor.entity.VisUUID;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.RotateTool;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.SelectionTool;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
@@ -53,13 +56,14 @@ import com.kotcrab.vis.editor.module.scene.RendererModule;
 import com.kotcrab.vis.editor.module.scene.SceneModule;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.*;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.*;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.Tool;
 import com.kotcrab.vis.editor.module.scene.system.EntitiesCollector;
 import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.system.GroupIdProviderSystem;
 import com.kotcrab.vis.editor.module.scene.system.ZIndexManipulator;
 import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.kotcrab.vis.editor.plugin.api.ToolProvider;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorLayer;
 import com.kotcrab.vis.editor.scene.EditorScene;
@@ -130,9 +134,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private SceneOutline sceneOutline;
 
 	private Tool currentTool;
-	private SelectionTool selectionTool;
-	private RotateScaleTool rotateScaleTool;
-	private PolygonTool polygonTool;
+	private ObjectMap<String, Tool> tools = new ObjectMap<>();
 
 	private EntitiesSelection entitiesSelection;
 
@@ -176,17 +178,19 @@ public class EntityManipulatorModule extends SceneModule {
 
 		entityMoveTimerTask = new EntityMoveTimerTask(scene, this);
 
-		selectionTool = new SelectionTool();
-		rotateScaleTool = new RotateScaleTool();
-		polygonTool = new PolygonTool();
+		for (ToolProvider<?> provider : extensionStorage.getToolProviders()) {
+			Tool tool = provider.createTool();
+			tools.put(tool.getToolId(), tool);
+		}
 
 		entitiesSelection = new EntitiesSelection(entitiesCollector, scene.getActiveLayerId());
 
-		selectionTool.setModules(sceneContainer, scene);
-		rotateScaleTool.setModules(sceneContainer, scene);
-		polygonTool.setModules(sceneContainer, scene);
+		for (Tool tool : tools.values()) {
+			tool.setModules(sceneContainer, scene);
+		}
 
-		switchTool(selectionTool);
+		//switch to SelectionTool or default to first available tool
+		switchTool(tools.get(SelectionTool.TOOL_ID, tools.values().toArray().first()));
 
 		scene.addObservable(notificationId -> {
 			if (notificationId == EditorScene.ACTIVE_LAYER_CHANGED) {
@@ -532,6 +536,23 @@ public class EntityManipulatorModule extends SceneModule {
 		}
 	}
 
+	@Subscribe
+	public void handleUndoableModuleEvent (UndoableModuleEvent event) {
+		sceneOutline.rebuildOutline();
+		renderBatchingSystem.markDirty();
+	}
+
+	@Subscribe
+	public void handleToolSwitch (ToolSwitchedEvent event) {
+		switchTool(event.newToolId);
+	}
+
+	public void switchTool (String toolId) {
+		Tool newTool = tools.get(toolId);
+		if (newTool == null) throw new IllegalStateException("Could not find tool with ID: " + toolId);
+		switchTool(newTool);
+	}
+
 	public void switchTool (Tool tool) {
 		if (currentTool != null) currentTool.deactivated();
 		currentTool = tool;
@@ -777,19 +798,6 @@ public class EntityManipulatorModule extends SceneModule {
 		currentTool.render(batch);
 	}
 
-	@Subscribe
-	public void handleUndoableModuleEvent (UndoableModuleEvent event) {
-		sceneOutline.rebuildOutline();
-		renderBatchingSystem.markDirty();
-	}
-
-	@Subscribe
-	public void handleToolSwitch (ToolSwitchedEvent event) {
-		if (event.newToolId.equals(Tools.SELECTION_TOOL)) switchTool(selectionTool);
-		if (event.newToolId.equals(Tools.ROTATE_SCALE_TOOL)) switchTool(rotateScaleTool);
-		if (event.newToolId.equals(Tools.POLYGON_TOOL)) switchTool(polygonTool);
-	}
-
 	@Override
 	public void dispose () {
 		layersDialog.dispose();
@@ -897,16 +905,16 @@ public class EntityManipulatorModule extends SceneModule {
 
 			if (UIUtils.ctrl() && keycode == Keys.S) sceneTab.save();
 			if (keycode == Keys.F1) {
-				switchTool(selectionTool);
-				App.eventBus.post(new ToolSwitchedEvent(Tools.SELECTION_TOOL));
+				switchTool(SelectionTool.TOOL_ID);
+				App.eventBus.post(new ToolSwitchedEvent(SelectionTool.TOOL_ID));
 			}
 			if (keycode == Keys.F2) {
-				switchTool(rotateScaleTool);
-				App.eventBus.post(new ToolSwitchedEvent(Tools.ROTATE_SCALE_TOOL));
+				switchTool(RotateTool.TOOL_ID);
+				App.eventBus.post(new ToolSwitchedEvent(RotateTool.TOOL_ID));
 			}
 			if (keycode == Keys.F3) {
-				switchTool(polygonTool);
-				App.eventBus.post(new ToolSwitchedEvent(Tools.POLYGON_TOOL));
+				switchTool(PolygonTool.TOOL_ID);
+				App.eventBus.post(new ToolSwitchedEvent(PolygonTool.TOOL_ID));
 			}
 
 			if (UIUtils.ctrl()) {
