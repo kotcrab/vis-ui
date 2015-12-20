@@ -75,30 +75,30 @@ public class PluginLoaderModule extends EditorModule {
 
 	private String currentlyLoadingPlugin; //name of plugin that is loaded, used to throw exception if plugin loading failed
 
-	private ObjectMap<Class<?>, Consumer<?>> pluginsClassesRegistrars = new ObjectMap<>();
+	private ObjectMap<Class<?>, Consumer<?>> entryPointsRegistrars = new ObjectMap<>();
 
 	@Override
 	public void init () {
 		FileHandle pluginsFolder = Gdx.files.absolute(PLUGINS_FOLDER_PATH);
 		Log.debug(TAG, "Loading plugins from: " + pluginsFolder);
 
-		addPluginClassRegistrar(ContainerExtension.class, containerExt -> extStorage.addContainerExtension(containerExt));
-		addPluginClassRegistrar(ExporterPlugin.class, exporter -> extStorage.addExporterPlugin(exporter));
-		addPluginClassRegistrar(ResourceLoader.class, loader -> extStorage.addResourceLoader(loader));
-		addPluginClassRegistrar(AssetTypeStorage.class, storage -> extStorage.addAssetTypeStorage(storage));
-		addPluginClassRegistrar(AssetDescriptorProvider.class, provider -> extStorage.addAssetDescriptorProvider(provider));
-		addPluginClassRegistrar(AssetTransactionGenerator.class, generator -> extStorage.addAssetTransactionGenerator(generator));
-		addPluginClassRegistrar(AssetsFileSorter.class, sorter -> extStorage.addAssetsFileSorter(sorter));
-		addPluginClassRegistrar(AssetsUIContextGeneratorProvider.class, provider -> extStorage.addAssetsContextGeneratorProvider(provider));
-		addPluginClassRegistrar(EditorEntitySupport.class, entitySupport -> extStorage.addEntitySupport(entitySupport));
-		addPluginClassRegistrar(EntitySupport.class, entitySupport -> { //no action is required for EntitySupport
+		addEntryPointRegistrar(ContainerExtension.class, containerExt -> extStorage.addContainerExtension(containerExt));
+		addEntryPointRegistrar(ExporterPlugin.class, exporter -> extStorage.addExporterPlugin(exporter));
+		addEntryPointRegistrar(ResourceLoader.class, loader -> extStorage.addResourceLoader(loader));
+		addEntryPointRegistrar(AssetTypeStorage.class, storage -> extStorage.addAssetTypeStorage(storage));
+		addEntryPointRegistrar(AssetDescriptorProvider.class, provider -> extStorage.addAssetDescriptorProvider(provider));
+		addEntryPointRegistrar(AssetTransactionGenerator.class, generator -> extStorage.addAssetTransactionGenerator(generator));
+		addEntryPointRegistrar(AssetsFileSorter.class, sorter -> extStorage.addAssetsFileSorter(sorter));
+		addEntryPointRegistrar(AssetsUIContextGeneratorProvider.class, provider -> extStorage.addAssetsContextGeneratorProvider(provider));
+		addEntryPointRegistrar(EditorEntitySupport.class, entitySupport -> extStorage.addEntitySupport(entitySupport));
+		addEntryPointRegistrar(EntitySupport.class, entitySupport -> { //no action is required for EntitySupport
 		});
 
 		try {
 			loadPluginsDescriptors(new Array<>(pluginsFolder.list()));
 			verifyPlugins();
 			loadPluginsJars();
-			loadMainPluginsClasses();
+			loadEntryPointClasses();
 		} catch (IOException | LinkageError e) {
 			loadingCurrentPluginFailed(e);
 		}
@@ -200,7 +200,7 @@ public class PluginLoaderModule extends EditorModule {
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	private void loadMainPluginsClasses () {
+	private void loadEntryPointClasses () {
 		for (PluginDescriptor descriptor : pluginsToLoad) {
 			try {
 				for (Class<?> clazz : descriptor.pluginClasses) {
@@ -215,33 +215,33 @@ public class PluginLoaderModule extends EditorModule {
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	private Consumer getClassRegistrarRecursively (PluginDescriptor descriptor, Class<?> mainClass, Class<?> clazz) {
-		Consumer consumer = pluginsClassesRegistrars.get(clazz);
+	private Consumer getClassRegistrarRecursively (PluginDescriptor descriptor, Class<?> entryPointClass, Class<?> clazz) {
+		Consumer consumer = entryPointsRegistrars.get(clazz);
 		if (consumer == null) {
 			for (Class interfaceClass : clazz.getInterfaces()) {
-				Consumer interfaceConsumer = pluginsClassesRegistrars.get(interfaceClass);
+				Consumer interfaceConsumer = entryPointsRegistrars.get(interfaceClass);
 				if (interfaceConsumer != null) return interfaceConsumer;
 			}
 
 			Class parent = clazz.getSuperclass();
 
 			if (parent != null) {
-				return getClassRegistrarRecursively(descriptor, mainClass, parent);
+				return getClassRegistrarRecursively(descriptor, entryPointClass, parent);
 			} else {
 				//default consumer when no registrar have been found
-				return ignored -> Log.warn("Plugin '" + descriptor.folderName + "' was successfully loaded but it's main plugin class '"
-						+ mainClass.getSimpleName() + "' object wasn't recognized.");
+				return ignored -> Log.warn("Plugin '" + descriptor.folderName + "' was successfully loaded but it's plugin entry point class '"
+						+ entryPointClass.getSimpleName() + "' object wasn't recognized.");
 			}
 		}
 		return consumer;
 	}
 
 	/**
-	 * Preferred way of add main plugins class registrars because it uses generic and allows to use lambdas
+	 * Preferred way of add entry point registrars because it uses generic and allows to use lambdas
 	 * without object casting.
 	 */
-	private <T> void addPluginClassRegistrar (Class<T> clazz, Consumer<T> consumer) {
-		pluginsClassesRegistrars.put(clazz, consumer);
+	private <T> void addEntryPointRegistrar (Class<T> clazz, Consumer<T> consumer) {
+		entryPointsRegistrars.put(clazz, consumer);
 	}
 
 	private void loadingCurrentPluginFailed (Throwable e) {
