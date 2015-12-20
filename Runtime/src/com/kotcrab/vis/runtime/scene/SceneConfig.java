@@ -36,11 +36,13 @@ public class SceneConfig {
 		disable(SceneFeature.BOX2D_DEBUG_RENDER_SYSTEM);
 	}
 
+	/** @deprecated use {@link #addSystem(Class)} */
 	@Deprecated
 	public SceneConfig addSystem (BaseSystem system) {
 		return addSystem(new SimpleSystemProvider(system));
 	}
 
+	/** @deprecated use {@link #addSystem(Class, int)} */
 	@Deprecated
 	public SceneConfig addSystem (BaseSystem system, int priority) {
 		return addSystem(new SimpleSystemProvider(system), priority);
