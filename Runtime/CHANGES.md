@@ -1,5 +1,10 @@
 #### Version: 0.3.1 (LibGDX 1.7.1, Artemis 1.2.1)
-- **Fixed**: `SystemProvider` interface is now public 
+- **API Deprecated**: `SceneConfig#addSystem(BaseSystem system)`, `SceneConfig#addSystem(BaseSystem system, int priority)` and `SimpleSystemProvider`
+    - Use `SceneConfig#addSystem(Class<? extends BaseSystem> system)` and `SceneConfig#Class<? extends BaseSystem> systemClass, int priority`
+    - Adding system in 0.3.0: `parameter.config.addSystem(new MySystem())`
+    - Adding system now: `parameter.config.addSystem(MySystem.class)`
+    - If you need to pass custom arguments to system constructor implement `SystemProvider` directly.
+- **Fixed**: `SystemProvider` interface is now public
 
 #### Version: 0.3.0 (LibGDX 1.7.1, Artemis 1.2.1)
 - API Change: `SceneParameter.systems` removed, added config field.

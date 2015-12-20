@@ -36,12 +36,22 @@ public class SceneConfig {
 		disable(SceneFeature.BOX2D_DEBUG_RENDER_SYSTEM);
 	}
 
+	@Deprecated
 	public SceneConfig addSystem (BaseSystem system) {
 		return addSystem(new SimpleSystemProvider(system));
 	}
 
+	@Deprecated
 	public SceneConfig addSystem (BaseSystem system, int priority) {
 		return addSystem(new SimpleSystemProvider(system), priority);
+	}
+
+	public SceneConfig addSystem (Class<? extends BaseSystem> systemClass) {
+		return addSystem(new ReflectionSystemProvider(systemClass));
+	}
+
+	public SceneConfig addSystem (Class<? extends BaseSystem> systemClass, int priority) {
+		return addSystem(new ReflectionSystemProvider(systemClass), priority);
 	}
 
 	public SceneConfig addSystem (SystemProvider provider, int priority) {

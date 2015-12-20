@@ -17,26 +17,26 @@
 package com.kotcrab.vis.runtime.scene;
 
 import com.artemis.BaseSystem;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /** @author Kotcrab */
-@Deprecated
-public class SimpleSystemProvider implements SystemProvider {
-	private boolean used;
-	private BaseSystem system;
+public class ReflectionSystemProvider implements SystemProvider {
+	private Class<? extends BaseSystem> systemClass;
 
-	public SimpleSystemProvider (BaseSystem system) {
-		this.system = system;
+	public ReflectionSystemProvider (Class<? extends BaseSystem> systemClass) {
+		this.systemClass = systemClass;
 	}
 
 	@Override
 	public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
-		if (used) {
-			throw new IllegalStateException("Attempted to retrieve system from SimpleSystemProvider twice, this is not supported. Implement SystemProvider directly.");
+		try {
+			return ClassReflection.newInstance(systemClass);
+		} catch (ReflectionException e) {
+			throw new IllegalStateException("Failed to create system using reflection", e);
 		}
-		used = true;
-		return system;
 	}
 }
