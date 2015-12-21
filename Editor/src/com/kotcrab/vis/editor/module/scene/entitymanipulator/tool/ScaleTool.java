@@ -17,21 +17,34 @@
 package com.kotcrab.vis.editor.module.scene.entitymanipulator.tool;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 
 /** @author Kotcrab */
 public class ScaleTool extends BaseGizmoTool {
 	public static final String TOOL_ID = App.PACKAGE + ".tools.ScaleTool";
 
+	private Stage stage;
+
+	@Override
+	public void activated () {
+		super.activated();
+		DialogUtils.showOKDialog(stage, "Warning", "Scale tool is not ready yet in this snapshot");
+	}
+
 	@Override
 	public void render (ShapeRenderer shapeRenderer) {
 		super.render(shapeRenderer);
 
-//		if (totalSelectionBounds != null) {
+		if (totalSelectionBounds != null) {
+			float centerX = totalSelectionBounds.x + totalSelectionBounds.width / 2;
+			float centerY = totalSelectionBounds.y + totalSelectionBounds.height / 2;
+
 //			shapeRenderer.begin(ShapeType.Filled);
-//			shapeRenderer.rect(totalSelectionBounds.x, totalSelectionBounds.y, 0.1f, 0.1f);
+//			shapeRenderer.rect(centerX, centerY, 0.1f, 0.1f);
 //			shapeRenderer.end();
-//		}
+		}
 	}
 
 	@Override

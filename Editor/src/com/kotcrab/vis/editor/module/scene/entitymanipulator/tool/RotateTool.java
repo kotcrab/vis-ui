@@ -127,7 +127,7 @@ public class RotateTool extends BaseGizmoTool {
 				if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
 					//TODO: snap value should be customizable
 					rotationDelta = Math.round(rotationDelta / 30) * 30;
-					entity.setRotation(rotationDelta);
+					entity.setRotation(-rotationDelta);
 				} else
 					entity.setRotation(startingProps.rotation - rotationDelta);
 
