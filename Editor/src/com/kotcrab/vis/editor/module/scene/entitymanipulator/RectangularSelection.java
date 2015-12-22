@@ -88,7 +88,8 @@ public class RectangularSelection {
 		}
 
 		entityManipulatorModule.softSelectionReset();
-		matchingEntities.forEach(entityManipulatorModule::selectAppend);
+		matchingEntities.forEach(entityManipulatorModule::fastSelectAppend);
+		entityManipulatorModule.selectedEntitiesChanged();
 	}
 
 	public boolean touchDown (float x, float y, int button) {

@@ -603,6 +603,15 @@ public class EntityManipulatorModule extends SceneModule {
 
 	/** Appends to current selection, however if entity layer is different than current layer then selection will be reset */
 	public void selectAppend (EntityProxy proxy) {
+		fastSelectAppend(proxy);
+		selectedEntitiesChanged();
+	}
+
+	/**
+	 * Appends to current selection without notifying other components, useful when appending multiple entities.
+	 * {@link #selectedEntitiesChanged()} must be called after all entities all added to selection.
+	 */
+	void fastSelectAppend (EntityProxy proxy) {
 		EditorLayer layer = scene.getLayerById(proxy.getLayerID());
 		if (layer.locked) return;
 
@@ -614,7 +623,6 @@ public class EntityManipulatorModule extends SceneModule {
 		checkProxyGid(proxy);
 
 		entitiesSelection.append(proxy);
-		selectedEntitiesChanged();
 	}
 
 	private void checkProxyGid (EntityProxy proxy) {

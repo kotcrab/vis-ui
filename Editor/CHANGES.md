@@ -5,6 +5,7 @@
 - **Fixed**: Exporting scenes which had used groups with string id's set
 - **Fixed**: Editor crash after undoing changes made in Entity Properties dialog
 - **Fixed**: Random editor crashes when working with multiple layers and groups
+- **Improved**: Rectangular selection is much faster when selecting many entities
 - **Removed**: Optional usage analytics 
 
 #### Version: 0.3.0
