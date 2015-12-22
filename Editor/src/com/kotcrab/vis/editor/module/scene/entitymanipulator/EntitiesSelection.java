@@ -126,12 +126,7 @@ public class EntitiesSelection {
 	}
 
 	boolean isEnterIntoGroupValid () {
-		if (selectedProxies.size != 1) return false;
-
-		return selectedProxies.first().getGroupIdBefore(groupId) != -1;
-	}
-
-	int getNestedGroupId () {
-		return selectedProxies.first().getGroupIdBefore(groupId);
+		if (selectionFragments.size != 1) return false;
+		return selectionFragments.first() instanceof GroupSelectionFragment;
 	}
 }

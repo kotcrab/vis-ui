@@ -130,6 +130,7 @@ public abstract class EntityProxy {
 	public int getGroupIdBefore (int gid) {
 		IntArray groupIds = getGroupComponent().groupIds;
 		int index = groupIds.indexOf(gid) - 1;
+		if (gid == -1) return groupIds.peek();
 
 		if (index < 0)
 			return -1;
@@ -140,6 +141,7 @@ public abstract class EntityProxy {
 	public int getGroupIdAfter (int gid) {
 		IntArray groupIds = getGroupComponent().groupIds;
 		int index = groupIds.indexOf(gid) + 1;
+		if (gid == -1) return groupIds.peek();
 
 		if (index >= groupIds.size)
 			return -1;

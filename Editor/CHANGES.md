@@ -1,5 +1,6 @@
 #### Version: 0.3.1
 - **Fixed**: Wrong entities position after opening same scene for the second time
+- **Fixed**: Missing "Enter into Group" button after right clicking entities group
 - **Removed**: Optional usage analytics 
 
 #### Version: 0.3.0

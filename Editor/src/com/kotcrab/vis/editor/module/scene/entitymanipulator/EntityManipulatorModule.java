@@ -42,7 +42,6 @@ import com.kotcrab.vis.editor.entity.SpriterProperties;
 import com.kotcrab.vis.editor.entity.VisUUID;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.*;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
@@ -54,6 +53,7 @@ import com.kotcrab.vis.editor.module.scene.RendererModule;
 import com.kotcrab.vis.editor.module.scene.SceneModule;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.*;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.*;
 import com.kotcrab.vis.editor.module.scene.system.EntitiesCollector;
 import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.system.GroupIdProviderSystem;
@@ -213,14 +213,14 @@ public class EntityManipulatorModule extends SceneModule {
 		entityPopupMenu.clearChildren();
 
 		if (entitiesSelection.isEnterIntoGroupValid()) {
-			entityPopupMenu.addItem(MenuUtils.createMenuItem("Enter Into Group", () -> {
+			entityPopupMenu.addItem(MenuUtils.createMenuItem("Enter into Group", () -> {
 
 				if (entitiesSelection.isEnterIntoGroupValid() == false) {
 					DialogUtils.showErrorDialog(stage, "Group was deselected");
 					return;
 				}
 
-				int newSelectionGid = entitiesSelection.getNestedGroupId();
+				int newSelectionGid = entitiesSelection.getSelection().first().getGroupIdBefore(entitiesSelection.getGroupId());
 				groupBreadcrumb.addGroup(newSelectionGid);
 				entitiesSelection = new EntitiesSelection(entitiesCollector, scene.getActiveLayerId(), newSelectionGid);
 				selectAll();
