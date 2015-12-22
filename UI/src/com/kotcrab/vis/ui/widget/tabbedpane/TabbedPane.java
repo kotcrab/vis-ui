@@ -35,6 +35,7 @@ import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.IdentityMap;
 import com.badlogic.gdx.utils.IdentityMap.Entry;
 import com.badlogic.gdx.utils.Scaling;
+import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.i18n.BundleText;
 import com.kotcrab.vis.ui.layout.DragPane;
@@ -64,6 +65,7 @@ import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
  */
 public class TabbedPane {
 	private TabbedPaneStyle style;
+	private Sizes sizes;
 	private VisImageButtonStyle sharedCloseActiveButtonStyle;
 
 	private DragPane tabsPane;
@@ -87,7 +89,12 @@ public class TabbedPane {
 	}
 
 	public TabbedPane (TabbedPaneStyle style) {
+		this(style, VisUI.getSizes());
+	}
+
+	public TabbedPane (TabbedPaneStyle style, Sizes sizes) {
 		this.style = style;
+		this.sizes = sizes;
 		listeners = new Array<TabbedPaneListener>();
 
 		sharedCloseActiveButtonStyle = VisUI.getSkin().get("close-active-tab", VisImageButtonStyle.class);
@@ -489,7 +496,7 @@ public class TabbedPane {
 
 			add(button);
 			if (tab.isCloseableByUser()) {
-				add(closeButton).size(14, button.getHeight());
+				add(closeButton).size(14 * sizes.scaleFactor, button.getHeight());
 			}
 		}
 
