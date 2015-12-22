@@ -191,7 +191,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 		scene.addObservable(notificationId -> {
 			if (notificationId == EditorScene.ACTIVE_LAYER_CHANGED) {
-				softSelectionReset();
+				hardSelectionReset();
 			}
 		});
 	}
@@ -687,7 +687,7 @@ public class EntityManipulatorModule extends SceneModule {
 		selectedEntitiesChanged();
 	}
 
-	/** Resets selection without changing current groupId and wihtout calling {@link #selectedEntitiesChanged()} */
+	/** Resets selection without changing current groupId and without calling {@link #selectedEntitiesChanged()} */
 	void silentSelectionReset () {
 		entitiesSelection.clearSelection();
 	}

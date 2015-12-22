@@ -45,14 +45,14 @@ public class ChangeEntitiesLayerAction extends UndoableActionGroup {
 	public void execute () {
 		super.execute();
 		renderBatchingSystem.markDirty();
-		entityManipulator.softSelectionReset();
+		entityManipulator.hardSelectionReset();
 	}
 
 	@Override
 	public void undo () {
 		super.undo();
 		renderBatchingSystem.markDirty();
-		entityManipulator.softSelectionReset();
+		entityManipulator.hardSelectionReset();
 	}
 
 	private class ChangeEntityLayerAction implements UndoableAction {

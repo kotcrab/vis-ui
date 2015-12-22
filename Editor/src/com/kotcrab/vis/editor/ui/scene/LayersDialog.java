@@ -384,8 +384,9 @@ public class LayersDialog extends VisTable implements Disposable {
 			layer.locked = !layer.locked;
 			updateButtonsImages();
 
-			if (layer.locked)
+			if (layer.locked) {
 				entityManipulator.softSelectionReset();
+			}
 
 			sceneTab.dirty();
 		}

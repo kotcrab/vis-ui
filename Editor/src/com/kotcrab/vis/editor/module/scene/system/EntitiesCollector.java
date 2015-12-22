@@ -25,8 +25,8 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragm
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.SingleSelectionFragment;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.runtime.component.VisGroup;
 import com.kotcrab.vis.runtime.component.Layer;
+import com.kotcrab.vis.runtime.component.VisGroup;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /** @author Kotcrab */
@@ -67,11 +67,16 @@ public class EntitiesCollector extends EntityProcessingSystem {
 		process();
 		setEnabled(false);
 
-		if (result.size == 0) throw new IllegalStateException("EntitiesCollector didn't find any matching entity");
-		if (result.size == 1)
+		if (result.size == 0) {
+			throw new IllegalStateException("EntitiesCollector didn't find any matching entity " +
+					"(was searching for group id: " + groupId + " on layer id: " + layerId + ")");
+		}
+
+		if (result.size == 1) {
 			return new Result(result, new SingleSelectionFragment(result.first()));
-		else
+		} else {
 			return new Result(result, new GroupSelectionFragment(new ImmutableArray<>(result), groupId));
+		}
 	}
 
 	@Override
