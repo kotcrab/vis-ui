@@ -97,13 +97,28 @@ public class EntitiesSelection {
 		if (lastProxyGid != -1) {
 			if (isGroupIdAlreadySelected(lastProxyGid) == false) {
 				Result result = collector.createSelectionFragment(layerId, lastProxyGid);
-				selectionFragments.add(result.fragment);
 				selectedProxies.addAll(result.proxies.toArray());
+				selectionFragments.add(result.fragment);
 			}
 		} else {
 			SelectionFragment fragment = new SingleSelectionFragment(proxy);
 			selectedProxies.add(proxy);
 			selectionFragments.add(fragment);
+		}
+	}
+
+	void deselect (EntityProxy proxy) {
+		int lastProxyGid = (groupId == -1) ? proxy.getLastGroupId() : proxy.getGroupIdBefore(groupId);
+
+		if (lastProxyGid != -1) {
+			Result result = collector.createSelectionFragment(layerId, lastProxyGid);
+
+			selectedProxies.removeAll(result.proxies, true);
+			selectionFragments.removeValue(result.fragment, false); //must use equals compare
+		} else {
+			SelectionFragment fragment = new SingleSelectionFragment(proxy);
+			selectedProxies.removeValue(proxy, true);
+			selectionFragments.removeValue(fragment, false); //use equals
 		}
 	}
 
@@ -116,13 +131,6 @@ public class EntitiesSelection {
 		}
 
 		return false;
-	}
-
-	void deselect (EntityProxy proxy) {
-		Result result = collector.createSelectionFragment(layerId, (groupId == -1) ? proxy.getLastGroupId() : proxy.getGroupIdBefore(groupId));
-
-		selectionFragments.removeValue(result.fragment, false); //must use equals compare
-		selectedProxies.removeAll(result.proxies, true);
 	}
 
 	boolean isEnterIntoGroupValid () {
