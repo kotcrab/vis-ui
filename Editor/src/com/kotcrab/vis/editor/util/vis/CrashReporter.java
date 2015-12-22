@@ -45,8 +45,8 @@ public class CrashReporter {
 		this.crashReport = new StringBuilder();
 
 		printHeader();
-		printThreadInfo();
 		printLog();
+		printThreadInfo();
 
 		report = crashReport.toString();
 	}
