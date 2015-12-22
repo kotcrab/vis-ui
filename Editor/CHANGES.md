@@ -2,6 +2,7 @@
 - **Fixed**: Wrong entities position after opening same scene for the second time
 - **Fixed**: Sprite flip Y property was ignored after reloading scene
 - **Fixed**: Missing "Enter into Group" button after right clicking entities group
+- **Fixed**: Exporting scenes which had used groups with string id's set
 - **Removed**: Optional usage analytics 
 
 #### Version: 0.3.0
