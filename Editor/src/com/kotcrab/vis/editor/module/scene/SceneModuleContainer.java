@@ -39,14 +39,15 @@ import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.scene.system.*;
 import com.kotcrab.vis.editor.module.scene.system.inflater.*;
 import com.kotcrab.vis.editor.module.scene.system.reloader.*;
+import com.kotcrab.vis.editor.module.scene.system.render.AudioRenderSystem;
 import com.kotcrab.vis.editor.module.scene.system.render.EditorParticleRenderSystem;
 import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem;
 import com.kotcrab.vis.editor.module.scene.system.render.PointRenderSystem;
-import com.kotcrab.vis.editor.module.scene.system.render.AudioRenderSystem;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.BiHolder;
+import com.kotcrab.vis.editor.util.vis.NoneInvocationStrategy;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.system.CameraManager;
 import com.kotcrab.vis.runtime.system.DirtyCleanerSystem;
@@ -63,6 +64,9 @@ import java.lang.reflect.ParameterizedType;
  * @author Kotcrab
  */
 public class SceneModuleContainer extends ModuleContainer<SceneModule> implements ModuleInput {
+	private static final NoneInvocationStrategy noneInvStrategy = new NoneInvocationStrategy();
+	private static final InvocationStrategy stdInvStrategy = new InvocationStrategy();
+
 	private Project project;
 	private EditorModuleContainer editorModuleContainer;
 	private ProjectModuleContainer projectModuleContainer;
@@ -261,6 +265,16 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 		for (int i = 0; i < modules.size; i++)
 			modules.get(i).render(batch);
+	}
+
+	/**
+	 * Must be called after changing entity components and those changes must be instantly reflected in entity. Will
+	 * also result in notify all subscribers of entities changes.
+	 */
+	public void updateEntitiesStates () {
+		engine.setInvocationStrategy(noneInvStrategy);
+		engine.process();
+		engine.setInvocationStrategy(stdInvStrategy);
 	}
 
 	public void onShow () {

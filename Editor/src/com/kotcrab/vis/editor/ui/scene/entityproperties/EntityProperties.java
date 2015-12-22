@@ -795,6 +795,7 @@ public class EntityProperties extends VisTable implements Disposable {
 
 			Bag<Component> newComponent = source.get(entity.getId());
 			newComponent.forEach(editor::add);
+			sceneMC.updateEntitiesStates();
 			proxy.reload();
 		}
 
