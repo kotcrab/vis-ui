@@ -899,6 +899,24 @@ public class EntityManipulatorModule extends SceneModule {
 
 	@Override
 	public boolean keyDown (InputEvent event, int keycode) {
+		if (UIUtils.ctrl() && keycode == Keys.S) sceneTab.save();
+		if (keycode == Keys.F1) {
+			switchTool(SelectionTool.TOOL_ID);
+			App.eventBus.post(new ToolSwitchedEvent(SelectionTool.TOOL_ID));
+		}
+		if (keycode == Keys.F2) {
+			switchTool(RotateTool.TOOL_ID);
+			App.eventBus.post(new ToolSwitchedEvent(RotateTool.TOOL_ID));
+		}
+		if (keycode == Keys.F3) {
+			switchTool(ScaleTool.TOOL_ID);
+			App.eventBus.post(new ToolSwitchedEvent(ScaleTool.TOOL_ID));
+		}
+		if (keycode == Keys.F4) {
+			switchTool(PolygonTool.TOOL_ID);
+			App.eventBus.post(new ToolSwitchedEvent(PolygonTool.TOOL_ID));
+		}
+
 		if (scene.getActiveLayer().locked) return false;
 		boolean result = currentTool.keyDown(event, keycode);
 
@@ -906,24 +924,6 @@ public class EntityManipulatorModule extends SceneModule {
 			if (keycode == Keys.FORWARD_DEL) { //Delete
 				deleteSelectedEntities();
 				return true;
-			}
-
-			if (UIUtils.ctrl() && keycode == Keys.S) sceneTab.save();
-			if (keycode == Keys.F1) {
-				switchTool(SelectionTool.TOOL_ID);
-				App.eventBus.post(new ToolSwitchedEvent(SelectionTool.TOOL_ID));
-			}
-			if (keycode == Keys.F2) {
-				switchTool(RotateTool.TOOL_ID);
-				App.eventBus.post(new ToolSwitchedEvent(RotateTool.TOOL_ID));
-			}
-			if (keycode == Keys.F3) {
-				switchTool(ScaleTool.TOOL_ID);
-				App.eventBus.post(new ToolSwitchedEvent(ScaleTool.TOOL_ID));
-			}
-			if (keycode == Keys.F4) {
-				switchTool(PolygonTool.TOOL_ID);
-				App.eventBus.post(new ToolSwitchedEvent(PolygonTool.TOOL_ID));
 			}
 
 			if (UIUtils.ctrl()) {
