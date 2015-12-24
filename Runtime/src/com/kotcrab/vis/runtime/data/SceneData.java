@@ -18,6 +18,7 @@ package com.kotcrab.vis.runtime.data;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
+import com.kotcrab.vis.runtime.component.Variables;
 import com.kotcrab.vis.runtime.scene.Scene;
 import com.kotcrab.vis.runtime.scene.SceneLoader;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
@@ -33,6 +34,7 @@ public class SceneData {
 	public float pixelsPerUnit;
 
 	public PhysicsSettings physicsSettings;
+	public Variables variables;
 
 	public IntMap<String> groupIds;
 

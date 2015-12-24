@@ -20,8 +20,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.util.BaseObservable;
+import com.kotcrab.vis.runtime.component.Variables;
 import com.kotcrab.vis.runtime.data.PhysicsSettings;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
@@ -33,7 +35,7 @@ import java.util.Comparator;
  * @author Kotcrab
  */
 public class EditorScene extends BaseObservable {
-	private static final int VERSION_CODE = 1;
+	private static final int VERSION_CODE = 2;
 
 	public static final int ACTIVE_LAYER_CHANGED = 0;
 	public static final int LAYER_ADDED = 1;
@@ -55,6 +57,7 @@ public class EditorScene extends BaseObservable {
 	public SceneViewport viewport;
 
 	public PhysicsSettings physicsSettings = new PhysicsSettings();
+	public Variables variables;
 
 	private Array<EditorLayer> layers = new Array<>();
 	private int activeLayerId;
@@ -80,6 +83,12 @@ public class EditorScene extends BaseObservable {
 	public void onDeserialize () {
 		super.onDeserialize();
 		forceSortLayers();
+
+		if (versionCode == 1) {
+			Log.info("Scene::onDeserialize", "Updating scene " + path + " to versionCode 2");
+			variables = new Variables();
+			versionCode = 2;
+		}
 	}
 
 	public void setSchemes (Array<EntityScheme> schemes) {

@@ -17,27 +17,20 @@
 package com.kotcrab.vis.editor.ui.scene;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
-import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.util.form.FormValidator;
-import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
  * Dialog used to change scene settings
  * @author Kotcrab
  */
-public class SceneSettingsDialog extends VisWindow {
-	private SceneTab sceneTab;
-	private EditorScene scene;
-
+public class SceneSettingsDialog extends AbstractSceneSettingsDialog {
 	private VisValidatableTextField widthField;
 	private VisValidatableTextField heightField;
 
@@ -45,28 +38,16 @@ public class SceneSettingsDialog extends VisWindow {
 
 	private VisLabel errorLabel;
 
-	private VisTextButton cancelButton;
-	private VisTextButton saveButton;
-
 	public SceneSettingsDialog (SceneTab tab) {
-		super("Scene Settings");
-
-		this.sceneTab = tab;
-		scene = tab.getScene();
-
-		addCloseButton();
-		closeOnEscape();
-		setModal(true);
-
-		createUI();
-		createListeners();
+		super("Scene Settings", tab);
 		createValidators();
 
 		pack();
 		centerWindow();
 	}
 
-	private void createUI () {
+	@Override
+	protected void createUI () {
 		viewportModeSelectBox = new EnumSelectBox<>(SceneViewport.class);
 		viewportModeSelectBox.setSelectedEnum(scene.viewport);
 
@@ -97,56 +78,20 @@ public class SceneSettingsDialog extends VisWindow {
 		add(sizeTable).expand().fill();
 		row();
 
-		VisTable buttonTable = new VisTable(true);
-		buttonTable.defaults().minWidth(70);
-
-		cancelButton = new VisTextButton("Cancel");
-		saveButton = new VisTextButton("Save");
-		saveButton.setDisabled(true);
-
-		buttonTable.add().fill().expand();
-		buttonTable.add(cancelButton);
-		buttonTable.add(saveButton);
-
-		add(buttonTable).colspan(2).fill().expand();
+		add(getButtonTable()).colspan(2).fill().expand();
 		padBottom(5);
 	}
 
-	private void createListeners () {
-		cancelButton.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				fadeOut();
-			}
-		});
-
-		saveButton.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				if (sceneTab.isDirty()) {
-					DialogUtils.showOptionDialog(getStage(), "Save settings", "This will save any previous changes in scene, continue?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
-						@Override
-						public void yes () {
-							setValuesToSceneAndSave();
-						}
-					});
-				} else
-					setValuesToSceneAndSave();
-
-				fadeOut();
-			}
-		});
-	}
-
-	private void setValuesToSceneAndSave () {
+	@Override
+	protected void setValuesToScene () {
 		scene.viewport = viewportModeSelectBox.getSelectedEnum();
 		scene.width = Float.valueOf(widthField.getText());
 		scene.height = Float.valueOf(heightField.getText());
-		sceneTab.save();
 	}
 
 	private void createValidators () {
-		FormValidator validator = new FormValidator(saveButton, errorLabel);
+		getSaveButton().setDisabled(true);
+		FormValidator validator = new FormValidator(getSaveButton(), errorLabel);
 
 		validator.floatNumber(widthField, "Width must be a number");
 		validator.floatNumber(heightField, "Height must be a number");

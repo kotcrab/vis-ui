@@ -43,7 +43,7 @@ public class GsonModule extends EditorModule {
 
 		GsonBuilder builder = new GsonBuilder()
 				.setPrettyPrinting()
-				.excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+				.excludeFieldsWithModifiers(Modifier.TRANSIENT, Modifier.STATIC)
 				.registerTypeAdapterFactory(RuntimeTypeAdapterFactory.of(Project.class, "@class")
 						.registerSubtype(ProjectLibGDX.class)
 						.registerSubtype(ProjectGeneric.class))

@@ -24,6 +24,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.RuntimeContext;
+import com.kotcrab.vis.runtime.component.Variables;
 import com.kotcrab.vis.runtime.data.LayerData;
 import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
@@ -43,11 +44,13 @@ public class Scene {
 	private CameraManager cameraManager;
 	private EntityEngine engine;
 
+	private Variables variables;
 	private Array<LayerData> layerData;
 
 	/** Used by framework, not indented for external use */
 	public Scene (RuntimeContext context, SceneData data, SceneParameter parameter) {
 		layerData = data.layers;
+		variables = data.variables;
 
 		AssetManager assetsManager = context.assetsManager;
 		RuntimeConfiguration runtimeConfig = context.configuration;
@@ -109,6 +112,10 @@ public class Scene {
 
 	public Array<LayerData> getLayerData () {
 		return layerData;
+	}
+
+	public Variables getSceneVariables () {
+		return variables;
 	}
 
 	public LayerData getLayerDataByName (String name) {

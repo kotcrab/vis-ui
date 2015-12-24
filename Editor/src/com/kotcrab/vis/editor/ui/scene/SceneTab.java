@@ -281,6 +281,9 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 			case SHOW_SCENE_SETTINGS:
 				stage.addActor(new SceneSettingsDialog(this).fadeIn());
 				break;
+			case SHOW_SCENE_VARIABLES_SETTINGS:
+				stage.addActor(new VariablesSettingsDialog(this).fadeIn());
+				break;
 			case SHOW_PHYSICS_SETTINGS:
 				stage.addActor(new PhysicsSettingsDialog(sceneMC).fadeIn());
 				break;

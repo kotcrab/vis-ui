@@ -4,6 +4,10 @@
     - Adding system in 0.3.0: `parameter.config.addSystem(new MySystem())`
     - Adding system now: `parameter.config.addSystem(MySystem.class)`
     - If you need to pass custom arguments to system constructor implement `SystemProvider` directly.
+- **API Changes**: `Variables#variables` field is now final
+- **API Addition**: `Variables#put`, `putInt`, `putFloat`, `putBoolean` methods for adding new variables
+- **API Addition**: `Variables` copy constructors and `Variables#setFrom(Variables)` method
+- **API Addition**: `Scene#getSceneVariables` returns scene variables set from VisEditor
 - **Fixed**: `SystemProvider` interface is now public
 
 #### Version: 0.3.0 (LibGDX 1.7.1, Artemis 1.2.1)

@@ -26,7 +26,27 @@ import com.kotcrab.vis.runtime.util.autotable.ATStringStringMap;
  */
 public class Variables extends Component {
 	@ATStringStringMap
-	public ObjectMap<String, String> variables = new ObjectMap<String, String>();
+	public final ObjectMap<String, String> variables = new ObjectMap<String, String>();
+
+	public Variables () {
+	}
+
+	public Variables (Variables vars) {
+		this(vars.variables);
+	}
+
+	public Variables (ObjectMap<String, String> newVars) {
+		variables.putAll(newVars);
+	}
+
+	public void setFrom (Variables newVars) {
+		setFrom(newVars.variables);
+	}
+
+	public void setFrom (ObjectMap<String, String> newVars) {
+		variables.clear();
+		variables.putAll(newVars);
+	}
 
 	public String get (String variableName) {
 		return variables.get(variableName);
@@ -64,5 +84,21 @@ public class Variables extends Component {
 		String stringVal = get(variableName);
 		if (stringVal == null) return defaultValue;
 		return Boolean.valueOf(get(variableName));
+	}
+
+	public void put (String variableName, String value) {
+		variables.put(variableName, value);
+	}
+
+	public void putFloat (String variableName, float value) {
+		variables.put(variableName, String.valueOf(value));
+	}
+
+	public void putInt (String variableName, int value) {
+		variables.put(variableName, String.valueOf(value));
+	}
+
+	public void putBoolean (String variableName, boolean value) {
+		variables.put(variableName, String.valueOf(value));
 	}
 }

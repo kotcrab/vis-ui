@@ -48,7 +48,7 @@ public class StringStringMapFragmentProvider extends AutoTableFragmentProvider<A
 		if (proxies.size() > 1)
 			view.multipleSelected();
 		else
-			view.setMap(EntityUtils.getFirstEntityComponent(proxies, Variables.class).variables);
+			view.setMap(EntityUtils.getFirstEntityComponent(proxies, Variables.class));
 	}
 
 	@Override

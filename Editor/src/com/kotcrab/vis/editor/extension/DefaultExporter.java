@@ -264,6 +264,7 @@ public class DefaultExporter implements ExporterPlugin {
 					sceneData.height = scene.height;
 					sceneData.pixelsPerUnit = scene.pixelsPerUnit;
 					sceneData.physicsSettings = scene.physicsSettings;
+					sceneData.variables = scene.variables;
 
 					sceneData.groupIds = new IntMap<>(scene.getGroups());
 

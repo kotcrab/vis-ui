@@ -142,6 +142,7 @@ public class MenuBarModule extends EditorModule {
 
 		menu.addSeparator();
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Scene Settings...", () -> App.eventBus.post(new SceneMenuBarEvent(SHOW_SCENE_SETTINGS))));
+		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Scene Variables...", () -> App.eventBus.post(new SceneMenuBarEvent(SHOW_SCENE_VARIABLES_SETTINGS))));
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Physics Settings...", () -> App.eventBus.post(new SceneMenuBarEvent(SHOW_PHYSICS_SETTINGS))));
 		menu.addSeparator();
 		//DO NOT replace this with method reference!!!

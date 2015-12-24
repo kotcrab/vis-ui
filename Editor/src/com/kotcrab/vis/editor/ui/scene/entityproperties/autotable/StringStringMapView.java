@@ -25,16 +25,19 @@ import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
+import com.kotcrab.vis.runtime.component.Variables;
 import com.kotcrab.vis.ui.InputValidator;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.*;
+
+import java.util.Optional;
 
 /** @author Kotcrab */
 public class StringStringMapView extends VisTable {
 	private static final int FIELD_WIDTH = 100;
 
 	private String emptyMsg;
-	private EntityProperties properties;
+	private Optional<EntityProperties> properties;
 	private boolean multipleSelected;
 
 	private ObjectMap<String, String> map;
@@ -45,9 +48,10 @@ public class StringStringMapView extends VisTable {
 	private Array<VisTextField> valueFields = new Array<>();
 	private VisValidatableTextField newVariableField;
 
+	/** @param properties may be null if not using with {@link EntityProperties} */
 	public StringStringMapView (String emptyMsg, EntityProperties properties) {
 		this.emptyMsg = emptyMsg;
-		this.properties = properties;
+		this.properties = Optional.ofNullable(properties);
 		updateUIFromMap();
 
 		left();
@@ -76,6 +80,10 @@ public class StringStringMapView extends VisTable {
 					return false;
 			}
 		});
+	}
+
+	public void setMap (Variables vars) {
+		setMap(vars.variables);
 	}
 
 	public void setMap (ObjectMap<String, String> newMap) {
@@ -117,8 +125,11 @@ public class StringStringMapView extends VisTable {
 
 					keyField.setRestoreLastValid(true);
 
-					properties.setupStdPropertiesTextField(keyField);
-					properties.setupStdPropertiesTextField(valueField);
+					properties.ifPresent(props -> {
+						props.setupStdPropertiesTextField(keyField);
+						props.setupStdPropertiesTextField(valueField);
+					});
+
 
 					add(keyField).width(FIELD_WIDTH).padRight(4);
 					add(valueField).width(FIELD_WIDTH).padRight(4);
@@ -126,10 +137,10 @@ public class StringStringMapView extends VisTable {
 					row();
 
 					deleteButton.addListener(new VisChangeListener((event, actor) -> {
-						properties.beginSnapshot();
+						properties.ifPresent(EntityProperties::beginSnapshot);
 						map.remove(keyField.getText());
 						updateUIFromMap();
-						properties.endSnapshot();
+						properties.ifPresent(EntityProperties::endSnapshot);
 					}
 					));
 				}
