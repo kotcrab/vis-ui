@@ -22,6 +22,7 @@ import com.artemis.annotations.Transient;
 import com.artemis.utils.Bag;
 import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.component.Invisible;
 import com.kotcrab.vis.runtime.component.VisGroup;
 import com.kotcrab.vis.runtime.component.VisID;
 import com.kotcrab.vis.runtime.data.EntityData;
@@ -29,19 +30,37 @@ import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.rits.cloning.Cloner;
 
+import java.util.UUID;
+
 /** @author Kotcrab */
 public class EntityScheme {
 	private static transient final Bag<Component> fillBag = new Bag<>();
 
-	public Array<Component> components;
+	private transient UUID schemeUUID;
+	private Array<Component> components;
 
-	public EntityScheme (Entity entity) {
+	public static EntityScheme of (Entity entity) {
+		return new EntityScheme(entity, null, CloningPolicy.DEFAULT);
+	}
+
+	public static EntityScheme clonedOf (Entity entity, Cloner cloner, CloningPolicy cloningPolicy) {
+		return new EntityScheme(entity, cloner, cloningPolicy);
+	}
+
+	public static EntityScheme clonedOf (Entity entity, Cloner cloner) {
+		return new EntityScheme(entity, cloner, CloningPolicy.DEFAULT);
+	}
+
+	private EntityScheme (Entity entity, Cloner cloner, CloningPolicy cloningPolicy) {
 		fillBag.clear();
 		entity.getComponents(fillBag);
 		components = new Array<>(fillBag.size());
 
 		for (Component component : fillBag) {
 			if (component.getClass().isAnnotationPresent(Transient.class)) continue;
+			if (cloningPolicy == CloningPolicy.SKIP_INVISIBLE && component instanceof Invisible) continue;
+
+			if (component instanceof VisUUID) schemeUUID = ((VisUUID) component).getUUID();
 
 			if (component instanceof UsesProtoComponent) {
 				components.add(((UsesProtoComponent) component).toProtoComponent());
@@ -50,13 +69,32 @@ public class EntityScheme {
 			}
 		}
 
+		if (schemeUUID == null) throw new IllegalStateException("Missing VisUUID component in Entity");
+
+		if (cloner != null) {
+			components = cloner.deepClone(components);
+		}
 	}
 
-	public Entity build (EntityEngine engine, Cloner cloner) {
+	public Entity build (EntityEngine engine, Cloner cloner, UUIDPolicy uuidPolicy) {
 		EntityBuilder builder = new EntityBuilder(engine);
 
 		Array<Component> clonedComps = cloner.deepClone(components);
-		clonedComps.forEach(builder::with);
+
+		switch (uuidPolicy) {
+			case PRESERVE:
+				clonedComps.forEach(builder::with);
+				break;
+			case ASSIGN_NEW:
+				for (Component component : clonedComps) {
+					if (component instanceof VisUUID) {
+						builder.with(new VisUUID()); //will assign new random UUID
+					} else {
+						builder.with(component);
+					}
+				}
+				break;
+		}
 
 		return builder.build();
 	}
@@ -96,5 +134,40 @@ public class EntityScheme {
 		}
 
 		return new EntityData(dataComponents);
+	}
+
+	public Array<Component> getComponents () {
+		return components;
+	}
+
+	/**
+	 * Returns this scheme UUID. Note that if scheme was deserlzied a UUID lookup on component will be performed first, if
+	 * there is no {@link VisUUID} component an exception will be thrown.
+	 * @throws IllegalStateException when VisUUID component is missing on deserialized instance
+	 */
+	public UUID getSchemeUUID () {
+		if (schemeUUID == null) {
+			for (Component component : components) {
+				if (component instanceof VisUUID) {
+					schemeUUID = ((VisUUID) component).getUUID();
+					break;
+				}
+			}
+
+			//uuid was not found
+			if (schemeUUID == null) {
+				throw new IllegalStateException("Missing VisUUID component in EntityScheme");
+			}
+		}
+
+		return schemeUUID;
+	}
+
+	public enum CloningPolicy {
+		DEFAULT, SKIP_INVISIBLE
+	}
+
+	public enum UUIDPolicy {
+		PRESERVE, ASSIGN_NEW
 	}
 }

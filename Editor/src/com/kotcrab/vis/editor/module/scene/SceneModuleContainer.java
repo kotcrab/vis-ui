@@ -28,6 +28,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.EntityScheme;
+import com.kotcrab.vis.editor.entity.EntityScheme.UUIDPolicy;
 import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
@@ -148,7 +149,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 	public static void populateEngine (EntityEngine engine, ClonerModule cloner, EditorScene scene) {
 		Array<EntityScheme> schemes = scene.getSchemes();
-		schemes.forEach(entityScheme -> entityScheme.build(engine, cloner.getCloner()));
+		schemes.forEach(entityScheme -> entityScheme.build(engine, cloner.getCloner(), UUIDPolicy.PRESERVE));
 	}
 
 	@Override

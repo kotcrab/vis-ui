@@ -16,9 +16,6 @@
 
 package com.kotcrab.vis.editor.module.project;
 
-import com.artemis.Component;
-import com.artemis.Entity;
-import com.artemis.utils.Bag;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.google.common.eventbus.Subscribe;
@@ -33,12 +30,7 @@ import com.kotcrab.vis.editor.module.editor.GsonModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.NewSceneDialog;
 import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
-import com.kotcrab.vis.editor.util.vis.ProtoEntity;
-import com.kotcrab.vis.runtime.component.Invisible;
-import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
-import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
-import com.kotcrab.vis.runtime.util.EntityEngine;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -46,7 +38,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Allows to load VisEditor scenes. This API should not be used directly. See {@link SceneCacheModule}
+ * Allows to load VisEditor scenes. This API should not be used directly, see {@link SceneCacheModule}
  * @author Kotcrab
  * @see SceneCacheModule
  */
@@ -80,27 +72,6 @@ public class SceneIOModule extends ProjectModule {
 		if (event.type == ProjectMenuBarEventType.SHOW_NEW_SCENE_DIALOG) {
 			stage.addActor(new NewSceneDialog(projectContainer).fadeIn());
 		}
-	}
-
-	public ProtoEntity createProtoEntity (EntityEngine entityEngine, Entity entity, boolean preserveEntityId) {
-		return new ProtoEntity(this, entityEngine, entity, preserveEntityId);
-	}
-
-	public Bag<Component> cloneEntityComponents (Bag<Component> components) {
-		Bag<Component> clonedComponents = new Bag<>();
-
-		components.forEach(component -> {
-			if (component instanceof Invisible) return;
-
-			if (component instanceof UsesProtoComponent) {
-				ProtoComponent protoComponent = ((UsesProtoComponent) component).toProtoComponent();
-				clonedComponents.add(cloner.deepClone(protoComponent));
-			} else {
-				clonedComponents.add(cloner.deepClone(component));
-			}
-		});
-
-		return clonedComponents;
 	}
 
 	public EditorScene load (FileHandle fullPathFile) {

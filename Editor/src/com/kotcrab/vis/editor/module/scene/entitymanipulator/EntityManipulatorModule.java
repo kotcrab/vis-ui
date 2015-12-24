@@ -36,17 +36,12 @@ import com.badlogic.gdx.utils.*;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
-import com.kotcrab.vis.editor.entity.PixelsPerUnit;
-import com.kotcrab.vis.editor.entity.SpriterProperties;
-import com.kotcrab.vis.editor.entity.VisUUID;
+import com.kotcrab.vis.editor.entity.*;
+import com.kotcrab.vis.editor.entity.EntityScheme.UUIDPolicy;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
-import com.kotcrab.vis.editor.module.editor.EditingSettingsModule;
-import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
-import com.kotcrab.vis.editor.module.editor.StatusBarModule;
-import com.kotcrab.vis.editor.module.editor.ToastModule;
+import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.editor.module.scene.RendererModule;
@@ -77,7 +72,6 @@ import com.kotcrab.vis.editor.util.scene2d.MenuUtils;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.vis.CreatePointPayload;
 import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
-import com.kotcrab.vis.editor.util.vis.ProtoEntity;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
@@ -100,6 +94,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private EditingSettingsModule editingSettings;
 	private GridSettingsModule gridSettings;
 	private ExtensionStorageModule extensionStorage;
+	private ClonerModule cloner;
 
 	private SceneIOModule sceneIO;
 
@@ -136,7 +131,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private EntitiesSelection entitiesSelection;
 
 	private float copyAttachX, copyAttachY;
-	private Array<ProtoEntity> entitiesClipboard = new Array<>();
+	private Array<EntityScheme> entitiesClipboard = new Array<>();
 
 	private boolean mouseDragged;
 	/** popup menu position in scene cords system */
@@ -277,7 +272,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private void copy () {
 		if (entitiesSelection.size() > 0) {
 			entitiesClipboard.clear();
-			entitiesSelection.forEachEntity(entity -> entitiesClipboard.add(sceneIO.createProtoEntity(entityEngine, entity, false)));
+			entitiesSelection.forEachEntity(entity -> entitiesClipboard.add(EntityScheme.clonedOf(entity, cloner.getCloner())));
 
 			EntityProxy proxy = entitiesSelection.peek();
 
@@ -307,9 +302,11 @@ public class EntityManipulatorModule extends SceneModule {
 			Holder<Integer> freeGidHolder = Holder.of(groupIdProvider.getFreeGroupId());
 
 			entitiesClipboard.forEach(protoEntity -> {
-				Entity entity = protoEntity.build();
+				Entity entity = protoEntity.build(entityEngine, cloner.getCloner(), UUIDPolicy.ASSIGN_NEW);
 				entities.add(entity);
 				if (scene.getActiveLayer().visible == false) entity.edit().add(new Invisible());
+				sceneContainer.updateEntitiesStates();
+
 				proxies.add(entityProxyCache.get(entity));
 
 				VisGroup groups = groupCm.getSafe(entity);
@@ -497,6 +494,8 @@ public class EntityManipulatorModule extends SceneModule {
 
 		if (entity != null) {
 			entity.edit().add(new VisUUID());
+
+			sceneContainer.updateEntitiesStates();
 
 			EntityProxy proxy = entityProxyCache.get(entity);
 

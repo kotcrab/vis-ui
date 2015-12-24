@@ -33,6 +33,10 @@ public class VisUUID extends Component {
 		uuid = UUID.randomUUID();
 	}
 
+	public VisUUID (UUID uuid) {
+		this.uuid = uuid;
+	}
+
 	public UUID getUUID () {
 		return uuid;
 	}

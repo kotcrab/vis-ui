@@ -95,7 +95,7 @@ public abstract class EntityProxy {
 	protected abstract void reloadAccessors ();
 
 	public EntityScheme getScheme () {
-		return new EntityScheme(entity);
+		return EntityScheme.of(entity);
 	}
 
 	public void addGroup (int groupId) {
@@ -166,6 +166,10 @@ public abstract class EntityProxy {
 		}
 
 		return gdc;
+	}
+
+	public UUID getUUID () {
+		return uuid;
 	}
 
 	public String getId () {

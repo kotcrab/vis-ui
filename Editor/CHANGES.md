@@ -1,11 +1,12 @@
 #### Version: 0.3.1
 - **Fixed**: Wrong entities position after opening same scene for the second time
-- **Fixed**: Sprite flip Y property was ignored after reloading scene
-- **Fixed**: Missing "Enter into Group" button after right clicking entities group
-- **Fixed**: Exporting scenes which had used groups with string id's set
-- **Fixed**: Editor crash after undoing changes made in Entity Properties dialog
-- **Fixed**: Random editor crashes when working with multiple layers and groups
-- **Fixed**: Fixed some key shortcuts not working on locked layers
+- **Fixed**: Sprite flip Y property was ignored after reloading scene ([#103](https://github.com/kotcrab/VisEditor/issues/103))
+- **Fixed**: Missing "Enter into Group" button after right clicking entities group ([#102](https://github.com/kotcrab/VisEditor/issues/102))
+- **Fixed**: Exporting scenes which had used groups with string id's set ([#104](https://github.com/kotcrab/VisEditor/issues/104))
+- **Fixed**: Editor crash after undoing changes made in Entity Properties dialog ([#106](https://github.com/kotcrab/VisEditor/issues/106))
+- **Fixed**: Random editor crashes when working with multiple layers and groups ([#104](https://github.com/kotcrab/VisEditor/issues/104))
+- **Fixed**: Fixed some key shortcuts not working on locked layers ([#109](https://github.com/kotcrab/VisEditor/issues/109))
+- **Fixed**: Issues with bounding box problems after undo ([#108](https://github.com/kotcrab/VisEditor/issues/108))
 - **Improved**: Rectangular selection is much faster when selecting many entities
 - **Removed**: Optional usage analytics 
 

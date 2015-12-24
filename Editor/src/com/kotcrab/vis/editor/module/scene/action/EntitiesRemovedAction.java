@@ -17,69 +17,35 @@
 package com.kotcrab.vis.editor.module.scene.action;
 
 import com.artemis.Entity;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectSet;
-import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.editor.module.project.SceneIOModule;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
-import com.kotcrab.vis.editor.util.undo.UndoableAction;
-import com.kotcrab.vis.editor.util.vis.ProtoEntity;
+import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**
  * Performs removing entities from engine and allows to undo this operation.
  * @author Kotcrab
  */
-public class EntitiesRemovedAction implements UndoableAction {
-	private EntityManipulatorModule entityManipulator;
-	private SceneIOModule sceneIO;
-
-	private EntityEngine engine;
-	private ObjectSet<Entity> entities;
-
-	private Array<ProtoEntity> protoEntities = new Array<>();
-
-	public EntitiesRemovedAction (ModuleInjector injector, EntityEngine engine, Entity entity) {
-		injector.injectModules(this);
-		this.engine = engine;
-		this.entities = new ObjectSet<>();
-		entities.add(entity);
+public class EntitiesRemovedAction extends AbstractEntityLifecycleAction{
+	public EntitiesRemovedAction (SceneModuleContainer sceneMC, EntityEngine engine, Entity entity) {
+		super(sceneMC, engine, entity);
 	}
 
-	public EntitiesRemovedAction (ModuleInjector injector, EntityEngine engine, ObjectSet<Entity> newEntities) {
-		injector.injectModules(this);
-		this.engine = engine;
-		this.entities = new ObjectSet<>(newEntities);
+	public EntitiesRemovedAction (SceneModuleContainer sceneMC, EntityEngine engine, ObjectSet<Entity> newEntities) {
+		super(sceneMC, engine, newEntities);
 	}
 
 	@Override
 	public void execute () {
-		protoEntities.clear();
-
-		entities.forEach((entity) -> {
-			protoEntities.add(sceneIO.createProtoEntity(engine, entity, true));
-			entity.deleteFromWorld();
-		});
-
-		entityManipulator.softSelectionReset();
-		entityManipulator.markSceneDirty();
+		removeEntitiesFromEngine();
 	}
 
 	@Override
 	public void undo () {
-		entities.clear();
-
-		protoEntities.forEach(protoEntity -> {
-			entities.add(protoEntity.build()); //build will also add to entity engine
-		});
-
-		entityManipulator.softSelectionReset();
-		entities.forEach(entityManipulator::selectAppend);
-		entityManipulator.markSceneDirty();
+		addEntitiesFromStoredSchemes();
 	}
 
 	@Override
 	public String getActionName () {
-		return entities.size == 1 ? "Remove Entity" : "Remove Entities";
+		return getSchemesCount() == 1 ? "Remove Entity" : "Remove Entities";
 	}
 }

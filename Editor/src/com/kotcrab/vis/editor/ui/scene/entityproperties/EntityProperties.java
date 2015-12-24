@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.artemis.Component;
 import com.artemis.Entity;
-import com.artemis.EntityEdit;
 import com.artemis.utils.Bag;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -35,15 +34,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Array.ArrayIterable;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.entity.EntityScheme;
+import com.kotcrab.vis.editor.entity.EntityScheme.CloningPolicy;
+import com.kotcrab.vis.editor.entity.EntityScheme.UUIDPolicy;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
-import com.kotcrab.vis.editor.module.editor.ColorPickerModule;
-import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
-import com.kotcrab.vis.editor.module.editor.StatusBarModule;
-import com.kotcrab.vis.editor.module.editor.ToastModule;
+import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
@@ -90,6 +89,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.util.Iterator;
+import java.util.UUID;
 
 /**
  * Entity properties dialog, used to display and change all data about currently selected entities. Multiple selection
@@ -109,6 +109,7 @@ public class EntityProperties extends VisTable implements Disposable {
 	private ToastModule toastModule;
 	private ColorPickerModule colorPickerModule;
 	private ExtensionStorageModule extensionStorage;
+	private ClonerModule cloner;
 
 	private FileAccessModule fileAccessModule;
 	private FontCacheModule fontCacheModule;
@@ -753,8 +754,8 @@ public class EntityProperties extends VisTable implements Disposable {
 	private class SnapshotUndoableAction implements UndoableAction {
 		private EntityProxy proxy;
 
-		private IntMap<Bag<Component>> snapshot1 = new IntMap<>();
-		private IntMap<Bag<Component>> snapshot2 = new IntMap<>();
+		private ObjectMap<UUID, EntityScheme> snapshot1 = new ObjectMap<>();
+		private ObjectMap<UUID, EntityScheme> snapshot2 = new ObjectMap<>();
 
 		public SnapshotUndoableAction (EntityProxy proxy) {
 			this.proxy = proxy;
@@ -765,9 +766,8 @@ public class EntityProperties extends VisTable implements Disposable {
 			createSnapshot(snapshot2);
 		}
 
-		private void createSnapshot (IntMap<Bag<Component>> target) {
-			Entity entity = proxy.getEntity();
-			target.put(entity.getId(), sceneIO.cloneEntityComponents(entity.getComponents(new Bag<>())));
+		private void createSnapshot (ObjectMap<UUID, EntityScheme> target) {
+			target.put(proxy.getUUID(), EntityScheme.clonedOf(proxy.getEntity(), cloner.getCloner(), CloningPolicy.SKIP_INVISIBLE));
 		}
 
 		public boolean isSnapshotsEquals () {
@@ -786,15 +786,13 @@ public class EntityProperties extends VisTable implements Disposable {
 			replaceComponents(snapshot1);
 		}
 
-		private void replaceComponents (IntMap<Bag<Component>> source) {
+		private void replaceComponents (ObjectMap<UUID, EntityScheme> source) {
 			Entity entity = proxy.getEntity();
-			Bag<Component> oldComponents = new Bag<>();
-			entity.getComponents(oldComponents);
-			EntityEdit editor = entity.edit();
-			oldComponents.forEach(editor::remove);
+			entity.deleteFromWorld();
 
-			Bag<Component> newComponent = source.get(entity.getId());
-			newComponent.forEach(editor::add);
+			EntityScheme newScheme = source.get(proxy.getUUID());
+			newScheme.build(sceneMC.getEntityEngine(), cloner.getCloner(), UUIDPolicy.PRESERVE);
+
 			sceneMC.updateEntitiesStates();
 			proxy.reload();
 		}

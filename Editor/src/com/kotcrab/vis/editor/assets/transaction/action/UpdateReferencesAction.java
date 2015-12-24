@@ -63,7 +63,7 @@ public class UpdateReferencesAction implements UndoableAction {
 			EditorScene scene = sceneCache.get(sceneFile);
 
 			for (EntityScheme scheme : scene.getSchemes()) {
-				for (Component component : scheme.components) {
+				for (Component component : scheme.getComponents()) {
 					if (component instanceof AssetReference) {
 						AssetReference assetRef = (AssetReference) component;
 						if (assetRef.asset.compare(asset1)) {

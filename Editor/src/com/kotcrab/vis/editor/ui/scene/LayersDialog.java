@@ -24,13 +24,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.editor.Icons;
-import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.editor.module.scene.system.LayerManipulator;
+import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.EntitiesRemovedAction;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
-import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.module.scene.system.LayerManipulator;
 import com.kotcrab.vis.editor.scene.EditorLayer;
+import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.util.ObservableListener;
 import com.kotcrab.vis.editor.util.scene2d.DefaultInputDialogListener;
 import com.kotcrab.vis.editor.util.scene2d.EventStopper;
@@ -77,7 +77,7 @@ public class LayersDialog extends VisTable implements Disposable {
 
 	private ObservableListener sceneObservable;
 
-	public LayersDialog (SceneTab sceneTab, EntityEngineConfiguration engineConfig, ModuleInjector sceneMC) {
+	public LayersDialog (SceneTab sceneTab, EntityEngineConfiguration engineConfig, SceneModuleContainer sceneMC) {
 		super(true);
 		this.sceneTab = sceneTab;
 		this.scene = sceneTab.getScene();
