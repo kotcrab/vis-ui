@@ -123,9 +123,10 @@ public class MouseLoopingModule extends EditorModule {
 	 */
 	public void loopCursor () {
 		this.catchEnabled = true;
-		virtualMouseX = MouseInfo.getPointerInfo().getLocation().x;
-		virtualMouseY = MouseInfo.getPointerInfo().getLocation().y;
-		screenBounds = getScreenBoundsAt(MouseInfo.getPointerInfo().getLocation());
+		Point mousePos = MouseInfo.getPointerInfo().getLocation();
+		virtualMouseX = mousePos.x;
+		virtualMouseY = mousePos.y;
+		screenBounds = getScreenBoundsAt(mousePos);
 	}
 
 	public float getVirtualMouseX () {
@@ -140,6 +141,11 @@ public class MouseLoopingModule extends EditorModule {
 			return virtualMouseY;
 		else
 			return MouseInfo.getPointerInfo().getLocation().y;
+	}
+
+	/** @return true if mouse cords are on virtual screen (was looped at least once in any direction) */
+	public boolean isOnVirtualScreen () {
+		return virtualDeltaX != 0 || virtualDeltaY != 0;
 	}
 
 	private Rectangle getScreenBoundsAt (Point pos) {

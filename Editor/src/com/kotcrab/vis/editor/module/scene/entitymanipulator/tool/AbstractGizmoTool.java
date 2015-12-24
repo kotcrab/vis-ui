@@ -18,10 +18,13 @@ package com.kotcrab.vis.editor.module.scene.entitymanipulator.tool;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
+import com.kotcrab.vis.editor.module.editor.MouseLoopingModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
 
 /** @author Kotcrab */
-public abstract class BaseGizmoTool extends SelectionTool {
+public abstract class AbstractGizmoTool extends SelectionTool {
+	protected MouseLoopingModule mouseLooping;
+
 	protected Rectangle totalSelectionBounds;
 
 	@Override

@@ -140,11 +140,15 @@ public class SelectionTool extends BaseSelectionTool {
 		float x;
 		float y;
 		float rotation;
+		float scaleX;
+		float scaleY;
 
 		public EntityTransform (EntityProxy proxy) {
 			x = proxy.getX();
 			y = proxy.getY();
 			rotation = proxy.getRotation();
+			scaleX = proxy.getScaleX();
+			scaleY = proxy.getScaleY();
 		}
 	}
 

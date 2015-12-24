@@ -1,4 +1,6 @@
 #### Version: 0.3.1
+- **Added**: Scale entities tool
+- **Added**: Rotate entities tool
 - **Fixed**: Wrong entities position after opening same scene for the second time
 - **Fixed**: Sprite flip Y property was ignored after reloading scene ([#103](https://github.com/kotcrab/VisEditor/issues/103))
 - **Fixed**: Missing "Enter into Group" button after right clicking entities group ([#102](https://github.com/kotcrab/VisEditor/issues/102))

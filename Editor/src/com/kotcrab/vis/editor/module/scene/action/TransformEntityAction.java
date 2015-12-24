@@ -55,16 +55,21 @@ public class TransformEntityAction implements UndoableAction {
 		public float x;
 		public float y;
 		public float rotation;
+		public float scaleX;
+		public float scaleY;
 
 		public void saveFrom (EntityProxy entity) {
 			x = entity.getX();
 			y = entity.getY();
 			rotation = entity.getRotation();
+			scaleX = entity.getScaleX();
+			scaleY = entity.getScaleY();
 		}
 
 		public void loadTo (EntityProxy entity) {
 			entity.setPosition(x, y);
 			entity.setRotation(rotation);
+			entity.setScale(scaleX, scaleY);
 		}
 	}
 
