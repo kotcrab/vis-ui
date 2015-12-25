@@ -132,7 +132,6 @@
             <groupId>uk.com.robust-it</groupId>
             <artifactId>cloning</artifactId>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -202,4 +201,29 @@
 
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>publicapi-javadoc</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>2.10.3</version>
+                        <configuration>
+                            <doclet>com.kotcrab.vis.doclet.PublicApiDoclet</doclet>
+                            <docletPath>\;.;${project.build.outputDirectory};</docletPath>
+                            <docletArtifact>
+                                <groupId>com.kotcrab.vis</groupId>
+                                <artifactId>vis-publicapi-doclet</artifactId>
+                                <version>1.0.0</version>
+                            </docletArtifact>
+                            <additionalparam>-Xdoclint:none</additionalparam>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

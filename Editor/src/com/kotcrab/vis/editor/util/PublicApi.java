@@ -16,10 +16,7 @@
 
 package com.kotcrab.vis.editor.util;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Types annotated by this annotation are considered as part of VisEditor public API and may be used in plugins. Those
@@ -30,9 +27,13 @@ import java.lang.annotation.Target;
  * <p>
  * This annotation will be used to generate VisEditor Javadoc containing only public API classes. If you believe that some
  * class should be part of public API but doesn't have this annotation contact Kotcrab.
+ * <p>
+ * Phrases such as: "MUST", "MUST NOT", "SHOULD", "SHOULD NOT" must be interpreted as defined in RFC2119.
  * @author Kotcrab
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.SOURCE)
+@Documented
+@PublicApi
 public @interface PublicApi {
 }
