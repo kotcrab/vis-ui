@@ -22,7 +22,12 @@ import com.kotcrab.vis.editor.App;
 
 import java.io.File;
 
-/** @author Kotcrab */
+/**
+ * Provides access to VisEditor common storage directories. All folders provided by this are shared between different
+ * VisEditor versions. Note that those directories SHOULD NOT be used by plugins, see {@link PluginFilesAccessModule} if
+ * you need that.
+ * @author Kotcrab
+ */
 public class AppFileAccessModule extends EditorModule {
 	/**
 	 * VisEditor cache folder path, stores application-wide cache data (different than project cache data, that is stored inside project). This SHOULD NOT be used by plugins
@@ -33,7 +38,7 @@ public class AppFileAccessModule extends EditorModule {
 	/** VisEditor metadata folder path. This SHOULD NOT be used by plugins see {@link PluginFilesAccessModule} */
 	private static final String METADATA_FOLDER_PATH = App.APP_FOLDER_PATH + "metadata" + File.separator;
 
-	/** VisEditor general purpose directory for configuration files. This is diffrent from settings folder which is used exclusively by {@link EditorSettingsIOModule} */
+	/** VisEditor general purpose directory for configuration files. This is different from settings folder which is used exclusively by {@link EditorSettingsIOModule} */
 	private static final String CONFIG_FOLDER_PATH = App.APP_FOLDER_PATH + "config" + File.separator;
 
 	private FileHandle cacheFolder;

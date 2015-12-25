@@ -106,6 +106,7 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 		@Tag(0) boolean confirmExit = true;
 		@Tag(1) boolean checkForUpdates = true;
 		@Tag(2) UpdateChannelType updateChannel = UpdateChannelType.STABLE;
+		/** @deprecated left here because removing it would invalidate user preferences file */
 		private @Tag(3) @Deprecated AnalyticsState analyticsState = AnalyticsState.SHOW_QUESTION;
 	}
 }
