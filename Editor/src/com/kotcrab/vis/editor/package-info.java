@@ -14,19 +14,5 @@
  * limitations under the License.
  */
 
+/** Main VisEditor package */
 package com.kotcrab.vis.editor;
-
-import com.kotcrab.vis.editor.util.PublicApi;
-
-/**
- * Contains VisEditor versions codes numbers matched to x.y.z version. Note that single x.y.z may have multiple
- * codes assigned (see {@link App#VERSION_CODE}), in that case only the last one is assigned to x.y.z version.
- * @author Kotcrab
- */
-@PublicApi
-public class VersionCodes {
-	public static final int EDITOR_025 = 11;
-	public static final int EDITOR_026 = 12;
-	public static final int EDITOR_030 = 20;
-	public static final int EDITOR_031 = 21;
-}

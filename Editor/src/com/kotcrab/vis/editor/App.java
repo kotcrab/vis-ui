@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor;
 
 import com.kotcrab.vis.editor.event.EventBusExceptionEvent;
 import com.kotcrab.vis.editor.event.VisEventBus;
+import com.kotcrab.vis.editor.module.editor.AppFileAccessModule;
 import com.kotcrab.vis.editor.module.editor.PluginFilesAccessModule;
 import com.kotcrab.vis.editor.util.JarUtils;
 import com.kotcrab.vis.editor.util.PublicApi;
@@ -35,7 +36,7 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 /**
- * Provides access to version fields, basic app data folders path, {@link VisEventBus}.
+ * Provides access to version fields, basic app paths, build time stamps, and {@link VisEventBus}.
  * @author Kotcrab
  */
 @PublicApi
@@ -43,10 +44,15 @@ public class App {
 	private static boolean initialized;
 
 	private static final String TAG = "App";
+
 	/** Editor package name */
 	public static final String PACKAGE = "com.kotcrab.vis.editor";
 
-	/** VisEditor version code, also used as project version code. */
+	/**
+	 * VisEditor version code number, also used as project version code. Note that single VisEditor x.y.z version (eg. 0.3.0)
+	 * may have multiple version codes. Version code is incremented after new editor release and after incompatible
+	 * change is made to project system.
+	 */
 	public static final int VERSION_CODE = 21;
 
 	/**
@@ -73,7 +79,8 @@ public class App {
 
 	/**
 	 * VisEditor folder path in `user.home` folder, actual location depends on OS. This SHOULD NOT be used by plugins
-	 * see {@link PluginFilesAccessModule}
+	 * see {@link PluginFilesAccessModule}.
+	 * @see AppFileAccessModule
 	 */
 	public static final String APP_FOLDER_PATH = USER_HOME_PATH + ".viseditor" + File.separator;
 
@@ -84,13 +91,13 @@ public class App {
 		App.eventBus.post(new EventBusExceptionEvent(exception, context));
 	});
 
-	/** Performs App init, called only once by editor. */
+	/** Performs App init, called only once by VisEditor. */
 	public static void init () {
-		if (initialized) throw new IllegalStateException("App cannot be initialized twice");
+		if (initialized) throw new IllegalStateException("App cannot be initialized twice!");
 		new File(APP_FOLDER_PATH).mkdir();
 
 		Log.init();
-//		com.esotericsoftware.minlog.Log.TRACE();
+		//com.esotericsoftware.minlog.Log.TRACE();
 		System.setProperty(SimpleLogger.DEFAULT_LOG_LEVEL_KEY, "ERROR");
 
 		checkCharset();

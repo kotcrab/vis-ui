@@ -26,8 +26,6 @@ import com.kotcrab.vis.editor.event.ProjectStatusEvent;
 import com.kotcrab.vis.editor.event.ProjectStatusEvent.Status;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.project.Project;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.util.Iterator;
 
@@ -122,23 +120,20 @@ public class RecentProjectModule extends EditorModule {
 		@Override
 		public boolean equals (Object o) {
 			if (this == o) return true;
-
 			if (o == null || getClass() != o.getClass()) return false;
 
-			RecentProjectEntry entry = (RecentProjectEntry) o;
+			RecentProjectEntry that = (RecentProjectEntry) o;
 
-			return new EqualsBuilder()
-					.append(name, entry.name)
-					.append(projectPath, entry.projectPath)
-					.isEquals();
+			if (!name.equals(that.name)) return false;
+			return projectPath.equals(that.projectPath);
+
 		}
 
 		@Override
 		public int hashCode () {
-			return new HashCodeBuilder(17, 37)
-					.append(name)
-					.append(projectPath)
-					.toHashCode();
+			int result = name.hashCode();
+			result = 31 * result + projectPath.hashCode();
+			return result;
 		}
 	}
 }

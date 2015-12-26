@@ -192,7 +192,7 @@ public class EditorFrame extends JFrame {
 
 					if (controller.fatalExceptionOccurred) {
 						Log.fatal("Initialization error");
-						JOptionPane.showMessageDialog(null, "An error occurred during editor initialization, please check log: " + Log.getLogStoragePath());
+						JOptionPane.showMessageDialog(null, "An error occurred during editor initialization, please check log: " + Log.getLogFile().parent().path());
 						System.exit(-5);
 					}
 

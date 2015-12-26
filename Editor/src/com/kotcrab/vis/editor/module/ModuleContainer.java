@@ -37,7 +37,7 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 	private boolean initFinished = false;
 	private static final String TAG = "ModuleContainer";
 
-	private boolean logTrace = Log.LOG_LEVEL == Log.TRACE;
+	private boolean logTrace = (Log.getLogLevel() == Log.TRACE);
 
 	public void add (T module) {
 		modules.add(module);
