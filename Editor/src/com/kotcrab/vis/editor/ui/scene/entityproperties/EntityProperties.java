@@ -66,8 +66,8 @@ import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
 import com.kotcrab.vis.editor.util.scene2d.EventStopper;
 import com.kotcrab.vis.editor.util.scene2d.FieldUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
+import com.kotcrab.vis.editor.util.undo.MonoUndoableActionGroup;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
-import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.value.FloatProxyValue;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
@@ -701,24 +701,23 @@ public class EntityProperties extends VisTable implements Disposable {
 		return entityManipulator.getSelection();
 	}
 
-	private static class SnapshotUndoableActionGroup extends UndoableActionGroup {
+	private static class SnapshotUndoableActionGroup extends MonoUndoableActionGroup<SnapshotUndoableAction> {
 		public SnapshotUndoableActionGroup () {
 			super("Change Entity Properties", "Change Entities Properties");
 		}
 
 		public void dropUnchanged () {
-			Iterator<UndoableAction> iterator = actions.iterator();
+			Iterator<SnapshotUndoableAction> iterator = actions.iterator();
 
 			while (iterator.hasNext()) {
-				SnapshotUndoableAction action = (SnapshotUndoableAction) iterator.next();
+				SnapshotUndoableAction action = iterator.next();
 				if (action.isSnapshotsEquals()) iterator.remove();
 			}
 		}
 
 		public void takeSecondSnapshot () {
-			for (UndoableAction action : actions) {
-				SnapshotUndoableAction sAction = (SnapshotUndoableAction) action;
-				sAction.takeSecondSnapshot();
+			for (SnapshotUndoableAction action : actions) {
+				action.takeSecondSnapshot();
 			}
 		}
 	}

@@ -16,83 +16,19 @@
 
 package com.kotcrab.vis.editor.util.undo;
 
-import com.badlogic.gdx.utils.Array;
-
 /**
  * Allows to chain multiple {@link UndoableAction} into single group.
  * @author Kotcrab
  */
-public class UndoableActionGroup implements UndoableAction {
-	protected Array<UndoableAction> actions = new Array<>();
-
-	private boolean finalized;
-	private boolean reversed;
-
-	private String singularActionName;
-	private String pluralActionName;
-
+public class UndoableActionGroup extends MonoUndoableActionGroup<UndoableAction> {
 	public UndoableActionGroup () {
 	}
 
 	public UndoableActionGroup (String actionName) {
-		this.singularActionName = actionName;
-		this.pluralActionName = actionName;
+		super(actionName);
 	}
 
 	public UndoableActionGroup (String singularActionName, String pluralActionName) {
-		this.singularActionName = singularActionName;
-		this.pluralActionName = pluralActionName;
-	}
-
-	@Override
-	public void execute () {
-		if (!finalized) throw new IllegalStateException("Group must be finalized before use");
-
-		if (reversed) {
-			actions.reverse();
-			reversed = false;
-		}
-
-		for (UndoableAction a : actions)
-			a.execute();
-	}
-
-	@Override
-	public void undo () {
-		if (!finalized) throw new IllegalStateException("Group must be finalized before use");
-
-		if (reversed == false) {
-			actions.reverse();
-			reversed = true;
-		}
-
-		for (UndoableAction a : actions)
-			a.undo();
-	}
-
-	public void finalizeGroup () {
-		finalized = true;
-	}
-
-	public int size () {
-		return actions.size;
-	}
-
-	public void add (UndoableAction action) {
-		if (finalized) throw new IllegalStateException("Cannot add action to finalized group");
-
-		actions.add(action);
-	}
-
-	public void execute (UndoableAction action) {
-		if (finalized) throw new IllegalStateException("Cannot add action to finalized group");
-
-		action.execute();
-		add(action);
-	}
-
-	@Override
-	public String getActionName () {
-		return size() == 1 ? singularActionName : pluralActionName;
+		super(singularActionName, pluralActionName);
 	}
 }
