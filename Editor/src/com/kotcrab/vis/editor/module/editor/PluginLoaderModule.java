@@ -91,6 +91,8 @@ public class PluginLoaderModule extends EditorModule {
 		addEntryPointRegistrar(AssetsFileSorter.class, sorter -> extStorage.addAssetsFileSorter(sorter));
 		addEntryPointRegistrar(AssetsUIContextGeneratorProvider.class, provider -> extStorage.addAssetsContextGeneratorProvider(provider));
 		addEntryPointRegistrar(EditorEntitySupport.class, entitySupport -> extStorage.addEntitySupport(entitySupport));
+		addEntryPointRegistrar(ComponentTableProvider.class, provider -> extStorage.addComponentTableProvider(provider));
+		addEntryPointRegistrar(UserAddableComponentProvider.class, provider -> extStorage.addUserAddableComponentProvider(provider));
 		addEntryPointRegistrar(EntitySupport.class, entitySupport -> { //no action is required for EntitySupport
 		});
 

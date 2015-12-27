@@ -69,6 +69,7 @@ import com.kotcrab.vis.ui.util.value.VisValue;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 import java.util.EnumSet;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -77,6 +78,8 @@ import java.util.function.Consumer;
  * @author Kotcrab
  */
 public class SceneTab extends MainContentTab implements DragAndDropTarget, CloseTabWhenMovingResources {
+	private static final String TAG = "SceneTab";
+
 	private EditorScene scene;
 
 	private ExtensionStorageModule extensionStorage;
@@ -270,8 +273,8 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 	@Subscribe
 	public void handleResourceReloaded (ResourceReloadedEvent event) {
 		for (ResourceType type : event.resourceTypes) {
-			reloaders.get(type, resourceType -> Log.error("Missing reloader for resourceType: " + resourceType))
-					.accept(type); //invoke reloader
+			Optional.ofNullable(reloaders.get(type))
+					.ifPresent(reloader -> reloader.accept(type));
 		}
 	}
 

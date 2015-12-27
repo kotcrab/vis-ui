@@ -17,10 +17,13 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties;
 
 import com.artemis.Component;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
+import com.kotcrab.vis.runtime.util.annotation.VisInternal;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
- * Specific objects tables allow to add custom widgets for {@link EntityProperties} dialog.
+ * Specific objects tables allow to add custom widgets for {@link EntityProperties} dialog. Consider using
+ * {@link AutoComponentTable} for simple components.
  * @author Kotcrab
  */
 public abstract class ComponentTable<T extends Component> extends VisTable {
@@ -36,20 +39,26 @@ public abstract class ComponentTable<T extends Component> extends VisTable {
 
 	protected abstract void init ();
 
+	@VisInternal
 	public void setProperties (EntityProperties properties) {
 		if (this.properties != null) throw new IllegalArgumentException("Properties already assigned!");
 		this.properties = properties;
 		init();
 	}
 
+	/** @return component class that this {@link ComponentTable} supports. */
 	public abstract Class<T> getComponentClass ();
 
+	/** @return true if component can be removed by user from editor, false otherwise. */
 	public abstract boolean isRemovable ();
 
+	/** Called when this table must update it's UI values using values from component */
 	public abstract void updateUIValues ();
 
+	/** Called when this table must set component values from current UI values */
 	public abstract void setValuesToEntities ();
 
+	/** Called when new component was added to any of the entities. */
 	public void componentAddedToEntities () {
 	}
 }

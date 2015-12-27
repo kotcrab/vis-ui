@@ -29,8 +29,8 @@ public class RenderableComponentTable extends AutoComponentTable<Renderable> {
 
 	private NumberInputField zIndexField;
 
-	public RenderableComponentTable (ModuleInjector projectInjector) {
-		super(projectInjector, Renderable.class, false);
+	public RenderableComponentTable (ModuleInjector sceneMC) {
+		super(sceneMC, Renderable.class, false);
 	}
 
 	@Override

@@ -38,6 +38,7 @@ public class VisContainers {
 		editorMC.add(new PluginSettingsModule());
 		editorMC.add(new PluginLoaderModule());
 
+		editorMC.add(new DefaultExtensionRegistrarModule());
 		editorMC.add(new ExtensionStorageModule());
 
 		editorMC.add(new ClonerModule());

@@ -21,20 +21,21 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
+import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragment;
+import com.kotcrab.vis.editor.plugin.api.UserAddableComponentProvider;
 import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.component.PhysicsProperties;
-import com.kotcrab.vis.runtime.component.VisPolygon;
-import com.kotcrab.vis.runtime.component.Shader;
-import com.kotcrab.vis.runtime.component.Variables;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.VisTextButton.VisTextButtonStyle;
 
 /** @author Kotcrab */
 public class ComponentSelectDialog extends VisTable { //TODO search field when we will have more components
+	private ExtensionStorageModule extensionStorage;
+
 	private EntityProperties properties;
 	private ComponentSelectDialogListener listener;
 
@@ -46,17 +47,17 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 
 	private InputListener inputListener;
 
-	public ComponentSelectDialog (EntityProperties properties, ComponentSelectDialogListener listener) {
+	public ComponentSelectDialog (SceneModuleContainer sceneMC, EntityProperties properties, ComponentSelectDialogListener listener) {
 		super(false);
 		this.properties = properties;
 		this.listener = listener;
+		sceneMC.injectModules(this);
+
 		setBackground(VisUI.getSkin().getDrawable("tooltip-bg"));
 
-		//TODO: [plugin] plugin entry point
-		componentClasses.add(Shader.class);
-		componentClasses.add(VisPolygon.class);
-		componentClasses.add(PhysicsProperties.class);
-		componentClasses.add(Variables.class);
+		for (UserAddableComponentProvider provider : extensionStorage.getUserAddableComponentProviders()) {
+			componentClasses.add(provider.provide());
+		}
 
 		buttonStyle = new VisTextButtonStyle(VisUI.getSkin().get(VisTextButtonStyle.class));
 
@@ -121,7 +122,8 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 	public boolean build () {
 		scrollPaneTable.clearChildren();
 
-		if(ArrayUtils.has(properties.getSelection().getFragmentedSelection(), GroupSelectionFragment.class)) return false;
+		if (ArrayUtils.has(properties.getSelection().getFragmentedSelection(), GroupSelectionFragment.class))
+			return false;
 
 		boolean atLeastOneComponentAdded = false;
 

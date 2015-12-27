@@ -151,7 +151,6 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		contentTree.getSelection().set(node); // select first item in tree
 		changeCurrentDirectory(((FolderItem) node.getActor()).getFile(), HistoryPolicy.IGNORE);
 
-		//TODO: [plugins] plugin entry point
 		Array<AssetsUIContextGeneratorProvider> providers = extensionStorage.getAssetsContextGeneratorsProviders();
 		for (AssetsUIContextGeneratorProvider provider : providers) {
 			contextGenerators.add(provider.provide());

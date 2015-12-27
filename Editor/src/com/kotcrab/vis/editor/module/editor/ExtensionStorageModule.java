@@ -18,18 +18,8 @@ package com.kotcrab.vis.editor.module.editor;
 
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.assets.*;
+import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
-import com.kotcrab.vis.editor.assets.transaction.generator.*;
-import com.kotcrab.vis.editor.extension.AssetType;
-import com.kotcrab.vis.editor.extension.DefaultExporter;
-import com.kotcrab.vis.editor.extension.SpriterAssetsFileSorter;
-import com.kotcrab.vis.editor.extension.SpriterUIContextGenerator;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.RotateTool;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.ScaleTool;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.SelectionTool;
-import com.kotcrab.vis.editor.plugin.api.impl.ReflectionToolProvider;
 import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
@@ -135,6 +125,10 @@ public class ExtensionStorageModule extends EditorModule {
 		assetDescriptorProviders.add(provider);
 	}
 
+	public Array<AssetDescriptorProvider<?>> getAssetDescriptorProviders () {
+		return assetDescriptorProviders;
+	}
+
 	// ----------------
 
 	private Array<AssetTransactionGenerator> assetTransactionGens = new Array<>();
@@ -155,16 +149,35 @@ public class ExtensionStorageModule extends EditorModule {
 		return assetDirectoryDescriptors;
 	}
 
-	public Array<AssetDescriptorProvider<?>> getAssetDescriptorProviders () {
-		return assetDescriptorProviders;
+	// ----------------
+
+	private Array<ComponentTableProvider> componentTableProviders = new Array<>();
+
+	public Array<ComponentTableProvider> getComponentTableProviders () {
+		return componentTableProviders;
+	}
+
+	public void addComponentTableProvider (ComponentTableProvider provider) {
+		componentTableProviders.add(provider);
+	}
+
+	// ----------------
+
+	private Array<UserAddableComponentProvider> userAddableComponentProviders = new Array<>();
+
+	public Array<UserAddableComponentProvider> getUserAddableComponentProviders () {
+		return userAddableComponentProviders;
+	}
+
+	public void addUserAddableComponentProvider (UserAddableComponentProvider provider) {
+		userAddableComponentProviders.add(provider);
 	}
 
 	// ----------------
 
 	@Override
-	public void init () {
-		addDefaultExtensions();
 
+	public void init () {
 		resourceLoaders.forEach(loader -> {
 			Log.debug("ExtensionStorage::ResourceLoader", "Loading " + loader.getName());
 			loader.load();
@@ -185,37 +198,6 @@ public class ExtensionStorageModule extends EditorModule {
 		});
 	}
 
-	private void addDefaultExtensions () {
-		exporterPlugins.add(new DefaultExporter());
-
-		assetTypeStorages.add(new AssetType());
-		assetsContextGenProviders.add(SpriterUIContextGenerator::new);
-		assetsFileSorters.add(new SpriterAssetsFileSorter());
-
-		assetDescriptorProviders.add(new BmpFontDescriptorProvider());
-		assetDescriptorProviders.add(new ParticleDescriptorProvider());
-		assetDescriptorProviders.add(new MusicDescriptorProvider());
-		assetDescriptorProviders.add(new SoundDescriptorProvider());
-		assetDescriptorProviders.add(new TextureRegionDescriptorProvider());
-		assetDescriptorProviders.add(new AtlasRegionDescriptorProvider());
-		assetDescriptorProviders.add(new TtfFontDescriptorProvider());
-		assetDescriptorProviders.add(new ShaderDescriptorProvider());
-		assetDescriptorProviders.add(new SpriterDescriptorProvider());
-
-		assetTransactionGens.add(new AtlasRegionAssetTransactionGenerator());
-		assetTransactionGens.add(new MusicAssetTransactionGenerator());
-		assetTransactionGens.add(new SoundAssetTransactionGenerator());
-		assetTransactionGens.add(new ParticleAssetTransactionGenerator());
-		assetTransactionGens.add(new BmpFontAssetTransactionGenerator());
-		assetTransactionGens.add(new TextureRegionAssetTransactionGenerator());
-		assetTransactionGens.add(new TtfAssetTransactionGenerator());
-
-		toolProviders.add(new ReflectionToolProvider<>(SelectionTool.class));
-		toolProviders.add(new ReflectionToolProvider<>(RotateTool.class));
-		toolProviders.add(new ReflectionToolProvider<>(ScaleTool.class));
-		toolProviders.add(new ReflectionToolProvider<>(PolygonTool.class));
-	}
-
 	@Override
 	public void dispose () {
 		resourceLoaders.forEach(loader -> {
@@ -227,7 +209,7 @@ public class ExtensionStorageModule extends EditorModule {
 	public <T extends Module> Array<T> getContainersExtensions (Class<T> baseModuleType, ExtensionScope scope) {
 		Array<T> modules = new Array<>();
 
-		for (ContainerExtension extension : containerExtensions) {
+		for (ContainerExtension<?> extension : containerExtensions) {
 			if (extension.getScope() == scope) {
 				try {
 					Constructor<?> cons = extension.getClass().getConstructor();

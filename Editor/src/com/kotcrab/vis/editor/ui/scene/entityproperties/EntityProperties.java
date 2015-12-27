@@ -46,7 +46,6 @@ import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
-import com.kotcrab.vis.editor.module.project.SupportModule;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
@@ -56,12 +55,9 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorMo
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragment;
 import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.kotcrab.vis.editor.plugin.api.ComponentTableProvider;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.TintImage;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.components.PhysicsPropertiesComponentTable;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.components.RenderableComponentTable;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.components.SpriterPropertiesComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.BMPTextUITable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.GroupUITable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
@@ -75,7 +71,6 @@ import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.editor.util.value.FloatProxyValue;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
-import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ActorUtils;
@@ -253,7 +248,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		createRotationTintTable();
 		createFlipTable();
 
-		componentSelectDialog = new ComponentSelectDialog(this, clazz -> {
+		componentSelectDialog = new ComponentSelectDialog(sceneMC, this, clazz -> {
 			try {
 				ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
 
@@ -279,20 +274,14 @@ public class EntityProperties extends VisTable implements Disposable {
 			ActorUtils.keepWithinStage(getStage(), componentSelectDialog);
 		}));
 
+		//deprecated api
 		registerSpecificTable(new TtfTextUITable());
 		registerSpecificTable(new BMPTextUITable());
 		registerSpecificTable(new GroupUITable());
 
-		//TODO: [plugin] plugin entry point
-		registerComponentTable(new RenderableComponentTable(sceneMC));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, Shader.class, true));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, VisPolygon.class, true));
-		registerComponentTable(new PhysicsPropertiesComponentTable(sceneMC));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, Variables.class, true));
-		registerComponentTable(new SpriterPropertiesComponentTable(sceneMC));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, VisMusic.class, false));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, VisSound.class, false));
-		registerComponentTable(new AutoComponentTable<>(sceneMC, VisParticle.class, false));
+		for (ComponentTableProvider provider : extensionStorage.getComponentTableProviders()) {
+			registerComponentTable(provider.provide(sceneMC));
+		}
 
 		propertiesTable = new VisTable(true);
 
@@ -695,7 +684,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		}
 	}
 
-	public void loadSupportsSpecificTables (SupportModule supportModule) {
+	public void loadSupportsSpecificTables () {
 		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
 			Array<SpecificUITable> uiTables = support.getUIPropertyTables();
 			if (uiTables != null) {
@@ -705,18 +694,19 @@ public class EntityProperties extends VisTable implements Disposable {
 
 			Array<ComponentTable<?>> componentTables = support.getComponentsUITables();
 			if (componentTables != null) {
-				for (ComponentTable table : componentTables)
+				for (ComponentTable<?> table : componentTables)
 					registerComponentTable(table);
 			}
 		}
 	}
 
+	@Deprecated
 	private void registerSpecificTable (SpecificUITable specificUITable) {
 		specificTables.add(specificUITable);
 		specificUITable.setProperties(this);
 	}
 
-	private void registerComponentTable (ComponentTable table) {
+	private void registerComponentTable (ComponentTable<?> table) {
 		componentTables.add(table);
 		table.setProperties(this);
 	}

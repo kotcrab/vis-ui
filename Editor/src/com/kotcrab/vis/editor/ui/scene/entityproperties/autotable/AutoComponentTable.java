@@ -30,7 +30,7 @@ import java.lang.reflect.Field;
 
 /**
  * Uses magic of annotations and reflection to automatically build and update specific table for component.
- * Only some primitives fields are supported. Component fields must be marked with one of auto table annotations
+ * Component fields must be marked with one of auto table annotations.
  * (see util.autotable package in runtime).
  * @author Kotcrab
  */
@@ -43,14 +43,14 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 
 	private ObjectMap<Class<? extends Annotation>, AutoTableFragmentProvider> fragmentProviders = new ObjectMap<>();
 
-	public AutoComponentTable (ModuleInjector injector, Class<T> componentClass, boolean removable) {
+	public AutoComponentTable (ModuleInjector sceneMC, Class<T> componentClass, boolean removable) {
 		super(true);
-		this.injector = injector;
+		this.injector = sceneMC;
 		this.removable = removable;
 		this.componentClass = componentClass;
-		injector.injectModules(this);
+		sceneMC.injectModules(this);
 
-		//TODO: [plugin] plugin entry point here
+		//TODO: [plugin] plugin entry point
 		fragmentProviders.put(ATProperty.class, new PropertyFragmentProvider());
 		fragmentProviders.put(ATSelectFile.class, new SelectFileFragmentProvider());
 		fragmentProviders.put(ATVector2Array.class, new Vector2ViewFragmentProvider());

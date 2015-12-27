@@ -22,7 +22,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * General annotation used to annotate VisPlugins main classes
+ * General annotation used to annotate VisEditor plugins entry point classes. Entry points must be annotated
+ * by this annotation or it won't be loaded by VisEditor (the class itself will be loaded but it won't be registered as
+ * valid entry point). Marking class that isn't entry point with this annotation will result in warning printed in
+ * VisEditor.
  * @author Kotcrab
  */
 @Target(ElementType.TYPE)
