@@ -712,7 +712,6 @@ public class EntityManipulatorModule extends SceneModule {
 		entityProperties.selectedEntitiesChanged();
 		sceneOutline.selectedEntitiesChanged();
 		currentTool.selectedEntitiesChanged();
-		markSceneDirty();
 	}
 
 	/**

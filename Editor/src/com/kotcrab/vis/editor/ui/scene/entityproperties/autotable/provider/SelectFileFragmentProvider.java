@@ -83,16 +83,16 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 		FileHandle folder = fileAccessModule.getAssetsFolder();
 
 		AssetDirectoryDescriptor directoryDescriptor = assetsMetadata.getDirectoryDescriptorForId(holder.value.getAssetDirectoryDescriptorId());
-		final SelectFileDialog selectFontDialog = new SelectFileDialog(annotation.extension(), annotation.hideExtension(),
-				folder, assetsMetadata, directoryDescriptor, file -> {
-			for (EntityProxy proxy : properties.getSelectedEntities()) {
-				holder.value.applyChanges(proxy.getEntity(), file);
-			}
+		final SelectFileDialog selectFontDialog = new SelectFileDialog(annotation.extension(), annotation.hideExtension(), folder, assetsMetadata, directoryDescriptor,
+				file -> {
+					for (EntityProxy proxy : properties.getSelectedEntities()) {
+						holder.value.applyChanges(proxy.getEntity(), file);
+					}
 
-			properties.getParentTab().dirty();
-			properties.selectedEntitiesChanged();
-			properties.endSnapshot();
-		});
+					properties.getParentTab().dirty();
+					properties.selectedEntitiesChanged();
+					properties.endSnapshot();
+				});
 
 		selectFileButton.addListener(new ChangeListener() {
 			@Override

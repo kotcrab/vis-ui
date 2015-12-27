@@ -89,7 +89,7 @@ import java.util.UUID;
 /**
  * Entity properties dialog, used to display and change all data about currently selected entities. Multiple selection
  * is supported, even when entities have different values, <?> is used in float input fields, and intermediate checkbox are used
- * for boolean support. Undo is supported. Plugin can add custom properties tables (see {@link SpecificUITable} and {@link ComponentTable}),
+ * for boolean support. Undo is supported. Plugin can add custom properties tables (see {@link ComponentTable}),
  * but they must support all base features of this dialog (multiple selection support, undo, etc.). See any class
  * from 'specifictable' and 'components' child packages for examples.
  * @author Kotcrab
@@ -152,8 +152,8 @@ public class EntityProperties extends VisTable implements Disposable {
 	private Array<SpecificUITable> specificTables = new Array<>();
 	private SpecificUITable activeSpecificTable;
 
-	private Array<ComponentTable> componentTables = new Array<>();
-	private Array<ComponentTable> activeComponentTables = new Array<>();
+	private Array<ComponentTable<?>> componentTables = new Array<>();
+	private Array<ComponentTable<?>> activeComponentTables = new Array<>();
 
 	private VisValidatableTextField idField;
 	private NumberInputField xField;
@@ -405,7 +405,7 @@ public class EntityProperties extends VisTable implements Disposable {
 
 		activeSpecificTable = null;
 		for (SpecificUITable table : specificTables) {
-			if (checkEntityList(table)) {
+			if (checkIfUITableSupportedForSelection(table)) {
 				activeSpecificTable = table;
 				propertiesTable.add(new Separator()).fillX().row();
 				propertiesTable.add(table).row();
@@ -414,7 +414,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		}
 
 		if (entityComponentChanged == true) {
-			for (ComponentTable table : componentTables) {
+			for (ComponentTable<?> table : componentTables) {
 				table.componentAddedToEntities();
 			}
 		}
@@ -427,7 +427,7 @@ public class EntityProperties extends VisTable implements Disposable {
 				if (component == null) continue;
 
 				if (EntityUtils.isComponentCommon(component, entities)) {
-					ComponentTable componentTable = getComponentTable(component);
+					ComponentTable<?> componentTable = getComponentTable(component);
 
 					if (componentTable != null) {
 						activeComponentTables.add(componentTable);
@@ -446,17 +446,18 @@ public class EntityProperties extends VisTable implements Disposable {
 		invalidateHierarchy();
 	}
 
-	private <T extends Component> ComponentTable getComponentTable (T component) {
+	private <T extends Component> ComponentTable<T> getComponentTable (T component) {
 		if (componentTables.size == 0) return null;
 
-		for (ComponentTable table : componentTables) {
-			if (table.getComponentClass().equals(component.getClass())) return table;
+		for (ComponentTable<?> table : componentTables) {
+			if (table.getComponentClass().equals(component.getClass()))
+				return (ComponentTable<T>) table;
 		}
 
 		return null;
 	}
 
-	private boolean checkEntityList (SpecificUITable table) {
+	private boolean checkIfUITableSupportedForSelection (SpecificUITable table) {
 		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
 		if (entities.size() == 0) return false;
 
@@ -579,7 +580,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		tint.setColor(firstColor);
 	}
 
-	private String getEntitiesFieldValue (FloatProxyValue floatProxyValue) {
+	private String getEntitiesFieldFloatValue (FloatProxyValue floatProxyValue) {
 		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
 		return EntityUtils.getEntitiesCommonFloatValue(entities, floatProxyValue);
 	}
@@ -615,7 +616,7 @@ public class EntityProperties extends VisTable implements Disposable {
 		}
 
 		if (activeSpecificTable != null) activeSpecificTable.setValuesToEntities();
-		for (ComponentTable table : new ArrayIterable<>(activeComponentTables))
+		for (ComponentTable<?> table : new ArrayIterable<>(activeComponentTables))
 			table.setValuesToEntities();
 	}
 
@@ -633,7 +634,7 @@ public class EntityProperties extends VisTable implements Disposable {
 
 			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
 
-			for (ComponentTable table : activeComponentTables) {
+			for (ComponentTable<?> table : activeComponentTables) {
 				table.updateUIValues();
 			}
 		}
@@ -650,28 +651,28 @@ public class EntityProperties extends VisTable implements Disposable {
 			idField.setDisabled(false);
 		}
 
-		xField.setText(getEntitiesFieldValue(EntityProxy::getX));
-		yField.setText(getEntitiesFieldValue(EntityProxy::getY));
+		xField.setText(getEntitiesFieldFloatValue(EntityProxy::getX));
+		yField.setText(getEntitiesFieldFloatValue(EntityProxy::getY));
 
 		if (EntityUtils.isScaleSupportedForEntities(entities)) {
 			if (updateInvalidFields || xScaleField.isInputValid())
-				xScaleField.setText(getEntitiesFieldValue(EntityProxy::getScaleX));
+				xScaleField.setText(getEntitiesFieldFloatValue(EntityProxy::getScaleX));
 
 			if (updateInvalidFields || yScaleField.isInputValid())
-				yScaleField.setText(getEntitiesFieldValue(EntityProxy::getScaleY));
+				yScaleField.setText(getEntitiesFieldFloatValue(EntityProxy::getScaleY));
 		}
 
 		if (EntityUtils.isOriginSupportedForEntities(entities)) {
 			if (updateInvalidFields || xOriginField.isInputValid())
-				xOriginField.setText(getEntitiesFieldValue(EntityProxy::getOriginX));
+				xOriginField.setText(getEntitiesFieldFloatValue(EntityProxy::getOriginX));
 
 			if (updateInvalidFields || yOriginField.isInputValid())
-				yOriginField.setText(getEntitiesFieldValue(EntityProxy::getOriginY));
+				yOriginField.setText(getEntitiesFieldFloatValue(EntityProxy::getOriginY));
 		}
 
 		if (EntityUtils.isRotationSupportedForEntities(entities)) {
 			if (updateInvalidFields || rotationField.isInputValid())
-				rotationField.setText(getEntitiesFieldValue(EntityProxy::getRotation));
+				rotationField.setText(getEntitiesFieldFloatValue(EntityProxy::getRotation));
 		}
 
 		if (EntityUtils.isTintSupportedForEntities(entities)) {
