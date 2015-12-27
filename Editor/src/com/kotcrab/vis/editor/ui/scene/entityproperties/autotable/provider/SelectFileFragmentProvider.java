@@ -58,7 +58,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 	private ObjectMap<Field, SelectFileDialogSet> fileDialogLabels = new ObjectMap<>();
 
 	@Override
-	public void createUI (ATSelectFile annotation, Class type, Field field) {
+	public void createUI (ATSelectFile annotation, Field field, Class<?> fieldType) {
 		String fieldName = annotation.fieldName().equals("") ? field.getName() : annotation.fieldName();
 
 		VisLabel fileLabel = new VisLabel();
@@ -135,7 +135,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 	}
 
 	@Override
-	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
+	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Field field, Class<?> fieldType) throws ReflectiveOperationException {
 		SelectFileDialogSet set = fileDialogLabels.get(field);
 		String path = getCommonString(proxies, "<?>", set.handler::getLabelValue);
 		set.fileLabel.setText(path);
@@ -144,13 +144,13 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 	}
 
 	@Override
-	public void setToEntities (Class type, Field field, Component component) throws ReflectiveOperationException {
+	public void setToEntities (Component component, Field field, Class<?> fieldType) throws ReflectiveOperationException {
 
 	}
 
 	@Override
-	public Object getUiByField (Class type, Field field) {
-		return fileDialogLabels.get(field);
+	public Actor getUIByField (Class type, Field field) {
+		return fileDialogLabels.get(field).fileLabel;
 	}
 
 	private static class SelectFileDialogSet {

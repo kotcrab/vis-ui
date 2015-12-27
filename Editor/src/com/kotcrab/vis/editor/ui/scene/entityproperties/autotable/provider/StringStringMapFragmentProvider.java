@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.StringStringMapView;
@@ -32,7 +33,7 @@ public class StringStringMapFragmentProvider extends AutoTableFragmentProvider<A
 	private ObjectMap<Field, StringStringMapView> views = new ObjectMap<>();
 
 	@Override
-	public void createUI (ATStringStringMap annotation, Class type, Field field) throws ReflectiveOperationException {
+	public void createUI (ATStringStringMap annotation, Field field, Class<?> fieldType) throws ReflectiveOperationException {
 		StringStringMapView view = new StringStringMapView("No variables", properties);
 		views.put(field, view);
 
@@ -42,7 +43,7 @@ public class StringStringMapFragmentProvider extends AutoTableFragmentProvider<A
 	}
 
 	@Override
-	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
+	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Field field, Class<?> fieldType) throws ReflectiveOperationException {
 		StringStringMapView view = views.get(field);
 
 		if (proxies.size() > 1)
@@ -52,13 +53,13 @@ public class StringStringMapFragmentProvider extends AutoTableFragmentProvider<A
 	}
 
 	@Override
-	public void setToEntities (Class type, Field field, Component component) throws ReflectiveOperationException {
+	public void setToEntities (Component component, Field field, Class<?> fieldType) throws ReflectiveOperationException {
 		StringStringMapView view = views.get(field);
 		view.updateMapFromUI();
 	}
 
 	@Override
-	public Object getUiByField (Class type, Field field) {
+	public Actor getUIByField (Class type, Field field) {
 		return views.get(field);
 	}
 }

@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.Vector2ArrayView;
@@ -32,7 +33,7 @@ public class Vector2ViewFragmentProvider extends AutoTableFragmentProvider<ATVec
 	private ObjectMap<Field, Vector2ArrayView> views = new ObjectMap<>();
 
 	@Override
-	public void createUI (ATVector2Array annotation, Class type, Field field) {
+	public void createUI (ATVector2Array annotation, Field field, Class<?> fieldType) {
 		Vector2ArrayView view = new Vector2ArrayView();
 		views.put(field, view);
 
@@ -41,7 +42,7 @@ public class Vector2ViewFragmentProvider extends AutoTableFragmentProvider<ATVec
 	}
 
 	@Override
-	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
+	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Field field, Class<?> fieldType) throws ReflectiveOperationException {
 		Vector2ArrayView view = views.get(field);
 
 		if (proxies.size() > 1)
@@ -51,12 +52,12 @@ public class Vector2ViewFragmentProvider extends AutoTableFragmentProvider<ATVec
 	}
 
 	@Override
-	public void setToEntities (Class type, Field field, Component component) throws ReflectiveOperationException {
+	public void setToEntities (Component component, Field field, Class<?> fieldType) throws ReflectiveOperationException {
 
 	}
 
 	@Override
-	public Object getUiByField (Class type, Field field) {
+	public Actor getUIByField (Class type, Field field) {
 		return views.get(field);
 	}
 }

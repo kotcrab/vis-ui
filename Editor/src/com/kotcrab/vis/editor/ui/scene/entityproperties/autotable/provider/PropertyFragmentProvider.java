@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
 import com.artemis.Entity;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
@@ -44,20 +45,20 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 	private ObjectMap<Field, IndeterminateCheckbox> checkboxFields = new ObjectMap<>();
 
 	@Override
-	public void createUI (ATProperty annotation, Class type, Field field) throws ReflectiveOperationException {
+	public void createUI (ATProperty annotation, Field field, Class<?> fieldType) throws ReflectiveOperationException {
 		ATReflectedProperty reflAnnotation = field.getDeclaredAnnotation(ATReflectedProperty.class);
 		if (reflAnnotation != null)
-			type = reflAnnotation.targetType();
+			fieldType = reflAnnotation.targetType();
 
-		if (type.equals(Integer.TYPE) == false && type.equals(Float.TYPE) == false && type.equals(Boolean.TYPE) == false
-				&& type.equals(Integer.class) == false && type.equals(Float.class) == false && type.equals(Boolean.class) == false) {
-			throw new UnsupportedOperationException("Field of this type is not supported by PropertyFragmentProvider: " + type);
+		if (fieldType.equals(Integer.TYPE) == false && fieldType.equals(Float.TYPE) == false && fieldType.equals(Boolean.TYPE) == false
+				&& fieldType.equals(Integer.class) == false && fieldType.equals(Float.class) == false && fieldType.equals(Boolean.class) == false) {
+			throw new UnsupportedOperationException("Field of this type is not supported by PropertyFragmentProvider: " + fieldType);
 		}
 
 		String fieldName = annotation.fieldName().equals("") ? field.getName() : annotation.fieldName();
 		String tooltipText = annotation.tooltip();
 
-		if (type.equals(Boolean.TYPE)) {
+		if (fieldType.equals(Boolean.TYPE)) {
 			IndeterminateCheckbox checkbox = new IndeterminateCheckbox(fieldName);
 			checkbox.addListener(properties.getSharedCheckBoxChangeListener());
 
@@ -68,7 +69,7 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 			uiTable.add(table).left().expandX().row();
 			checkboxFields.put(field, checkbox);
 		} else {
-			NumberInputField numberInputField = new NumberInputField(properties.getSharedFocusListener(), properties.getSharedChangeListener(), type.equals(Float.TYPE));
+			NumberInputField numberInputField = new NumberInputField(properties.getSharedFocusListener(), properties.getSharedChangeListener(), fieldType.equals(Float.TYPE));
 			if (tooltipText.equals("") == false) new Tooltip(numberInputField, tooltipText);
 
 			if (annotation.max() != Float.MAX_VALUE)
@@ -92,12 +93,12 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 	}
 
 	@Override
-	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Class type, Field field) {
+	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Field field, Class<?> fieldType) {
 		ATReflectedProperty reflection = field.getDeclaredAnnotation(ATReflectedProperty.class);
 		if (reflection != null)
-			type = reflection.targetType();
+			fieldType = reflection.targetType();
 
-		if (type.equals(Boolean.TYPE)) {
+		if (fieldType.equals(Boolean.TYPE)) {
 			IndeterminateCheckbox checkbox = checkboxFields.get(field);
 
 			EntityUtils.setCommonCheckBoxState(proxies, checkbox, (Entity entity) -> {
@@ -111,7 +112,7 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 		} else {
 			NumberInputField inputField = numberFields.get(field);
 
-			if (type.equals(Integer.TYPE)) {
+			if (fieldType.equals(Integer.TYPE)) {
 				inputField.setText(EntityUtils.getEntitiesCommonIntegerValue(proxies,
 						(Entity entity) -> {
 							try {
@@ -134,12 +135,12 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 	}
 
 	@Override
-	public void setToEntities (Class type, Field field, Component component) throws ReflectiveOperationException {
+	public void setToEntities (Component component, Field field, Class<?> fieldType) throws ReflectiveOperationException {
 		ATReflectedProperty reflection = field.getDeclaredAnnotation(ATReflectedProperty.class);
 		if (reflection != null)
-			type = reflection.targetType();
+			fieldType = reflection.targetType();
 
-		if (type.equals(Boolean.TYPE)) {
+		if (fieldType.equals(Boolean.TYPE)) {
 			IndeterminateCheckbox checkbox = checkboxFields.get(field);
 			if (checkbox.isIndeterminate() == false) propertyAccessors.get(field).set(component, checkbox.isChecked());
 			return;
@@ -148,19 +149,19 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 		NumberInputField inputField = numberFields.get(field);
 		inputField.validateInput();
 
-		if (type.equals(Integer.TYPE)) {
+		if (fieldType.equals(Integer.TYPE)) {
 			int value = FieldUtils.getInt(inputField, (Integer) propertyAccessors.get(field).get(component));
 			propertyAccessors.get(field).set(component, value);
 		}
 
-		if (type.equals(Float.TYPE)) {
+		if (fieldType.equals(Float.TYPE)) {
 			float value = FieldUtils.getFloat(inputField, (Float) propertyAccessors.get(field).get(component));
 			propertyAccessors.get(field).set(component, value);
 		}
 	}
 
 	@Override
-	public Object getUiByField (Class type, Field field) {
+	public Actor getUIByField (Class type, Field field) {
 		if (type.equals(Boolean.TYPE))
 			return checkboxFields.get(field);
 		else

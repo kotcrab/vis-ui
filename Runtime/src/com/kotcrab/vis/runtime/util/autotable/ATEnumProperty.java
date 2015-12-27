@@ -30,5 +30,5 @@ import java.lang.annotation.Target;
 public @interface ATEnumProperty {
 	String fieldName () default "";
 
-	Class<? extends EnumNameProvider> uiNameProvider ();
+	Class<? extends EnumNameProvider<?>> uiNameProvider ();
 }

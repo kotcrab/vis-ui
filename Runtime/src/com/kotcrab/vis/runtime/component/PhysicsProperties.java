@@ -20,6 +20,7 @@ import com.artemis.Component;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.kotcrab.vis.runtime.util.BodyTypeEnumNameProvider;
 import com.kotcrab.vis.runtime.util.autotable.ATEnumProperty;
+import com.kotcrab.vis.runtime.util.autotable.ATFieldId;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
 /** @author Kotcrab */
@@ -52,6 +53,7 @@ public class PhysicsProperties extends Component {
 	public boolean active = true;
 	@ATProperty(fieldName = "Sleeping Allowed")
 	public boolean sleepingAllowed = true;
+	@ATFieldId(id = "adjustOrigin")
 	@ATProperty(fieldName = "Auto Adjust Origin")
 	public boolean adjustOrigin = true;
 

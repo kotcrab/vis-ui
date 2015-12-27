@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
 
 import com.artemis.Component;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
@@ -34,14 +35,14 @@ import java.lang.reflect.Field;
  * (see util.autotable package in runtime).
  * @author Kotcrab
  */
-@SuppressWarnings("unchecked")
 public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 	private Class<T> componentClass;
+	private ObjectMap<String, Field> fieldIdsMap = new ObjectMap<>();
 
 	private ModuleInjector injector;
 	private boolean removable;
 
-	private ObjectMap<Class<? extends Annotation>, AutoTableFragmentProvider> fragmentProviders = new ObjectMap<>();
+	private ObjectMap<Class<? extends Annotation>, AutoTableFragmentProvider<?>> fragmentProviders = new ObjectMap<>();
 
 	public AutoComponentTable (ModuleInjector sceneMC, Class<T> componentClass, boolean removable) {
 		super(true);
@@ -71,7 +72,7 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 	@Override
 	protected void init () {
 		//init fragments
-		for (AutoTableFragmentProvider provider : fragmentProviders.values()) {
+		for (AutoTableFragmentProvider<?> provider : fragmentProviders.values()) {
 			provider.setObjects(componentClass, this, injector, properties);
 			injector.injectModules(provider);
 			provider.init();
@@ -83,11 +84,17 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 		try {
 
 			for (Field field : componentClass.getDeclaredFields()) {
-				Class type = field.getType();
+				Class<?> fieldType = field.getType();
 				for (Annotation annotation : field.getAnnotations()) {
+					if (annotation instanceof ATFieldId) {
+						ATFieldId atFieldId = (ATFieldId) annotation;
+						fieldIdsMap.put(atFieldId.id(), field);
+						continue;
+					}
+
 					AutoTableFragmentProvider fragmentProvider = fragmentProviders.get(annotation.annotationType());
 					if (fragmentProvider != null) {
-						fragmentProvider.createUI(annotation, type, field);
+						fragmentProvider.createUI(annotation, field, fieldType);
 					}
 				}
 			}
@@ -104,11 +111,11 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 			ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 
 			for (Field field : componentClass.getDeclaredFields()) {
-				Class type = field.getType();
+				Class<?> type = field.getType();
 				for (Annotation annotation : field.getAnnotations()) {
-					AutoTableFragmentProvider fragmentProvider = fragmentProviders.get(annotation.annotationType());
+					AutoTableFragmentProvider<?> fragmentProvider = fragmentProviders.get(annotation.annotationType());
 					if (fragmentProvider != null) {
-						fragmentProvider.updateUIFromEntities(proxies, type, field);
+						fragmentProvider.updateUIFromEntities(proxies, field, type);
 					}
 				}
 			}
@@ -126,11 +133,11 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 				T component = proxy.getEntity().getComponent(componentClass);
 
 				for (Field field : componentClass.getDeclaredFields()) {
-					Class type = field.getType();
+					Class<?> type = field.getType();
 					for (Annotation annotation : field.getAnnotations()) {
-						AutoTableFragmentProvider fragmentProvider = fragmentProviders.get(annotation.annotationType());
+						AutoTableFragmentProvider<?> fragmentProvider = fragmentProviders.get(annotation.annotationType());
 						if (fragmentProvider != null) {
-							fragmentProvider.setToEntities(type, field, component);
+							fragmentProvider.setToEntities(component, field, type);
 						}
 					}
 				}
@@ -141,18 +148,17 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 		}
 	}
 
-	protected <Widget> Widget getUiByField (String fieldName, Class<Widget> uiType) {
-		try {
-			Field field = componentClass.getDeclaredField(fieldName);
-			Class type = field.getType();
-			for (AutoTableFragmentProvider provider : fragmentProviders.values()) {
-				Object obj = provider.getUiByField(type, field);
-				if (obj != null) return (Widget) obj;
-			}
-		} catch (NoSuchFieldException e) {
-			throw new IllegalStateException(e);
+	protected <WT extends Actor> WT getUIByFieldId (String fieldId, Class<WT> widgetType) {
+		Field field = fieldIdsMap.get(fieldId);
+		if (field == null)
+			throw new IllegalStateException("Could not find field with fieldId: " + fieldId + " in type " + componentClass.getSimpleName());
+
+		Class<?> type = field.getType();
+		for (AutoTableFragmentProvider<?> provider : fragmentProviders.values()) {
+			Actor actor = provider.getUIByField(type, field);
+			if (actor != null) return widgetType.cast(actor);
 		}
 
-		return null;
+		throw new IllegalStateException("Registered fragment providers could not return field with fieldId: " + fieldId + " in type " + componentClass.getSimpleName());
 	}
 }

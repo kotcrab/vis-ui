@@ -22,7 +22,6 @@ import com.artemis.utils.Bag;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -133,8 +132,6 @@ public class EntityProperties extends VisTable implements Disposable {
 	private SnapshotUndoableActionGroup snapshots;
 
 	//UI
-	private boolean entityComponentChanged;
-
 	private VisTable propertiesTable;
 
 	private VisTable idTable;
@@ -254,7 +251,6 @@ public class EntityProperties extends VisTable implements Disposable {
 
 				if (entities.size() == 0) return; //nothing is selected
 				undoModule.execute(new ComponentAddAction(sceneMC, entities, clazz));
-				entityComponentChanged = true;
 			} catch (ReflectiveOperationException e) {
 				Log.exception(e);
 				toastModule.show(new DetailsToast("Component creation failed!", e));
@@ -413,12 +409,6 @@ public class EntityProperties extends VisTable implements Disposable {
 			}
 		}
 
-		if (entityComponentChanged == true) {
-			for (ComponentTable<?> table : componentTables) {
-				table.componentAddedToEntities();
-			}
-		}
-
 		activeComponentTables.clear();
 		if (entities.size() > 0) {
 			Bag<Component> components = entities.get(0).getEntity().getComponents(new Bag<>());
@@ -480,15 +470,6 @@ public class EntityProperties extends VisTable implements Disposable {
 			return super.getPrefHeight() + 5;
 		else
 			return 0;
-	}
-
-	@Override
-	public void draw (Batch batch, float parentAlpha) {
-		super.draw(batch, parentAlpha);
-		if (entityComponentChanged == true) {
-			selectedEntitiesChanged();
-			entityComponentChanged = false;
-		}
 	}
 
 	public void selectedEntitiesChanged () {

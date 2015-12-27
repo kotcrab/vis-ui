@@ -34,25 +34,22 @@ public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsP
 	@Override
 	protected void init () {
 		super.init();
-		adjustOriginCheck = getUiByField("adjustOrigin", IndeterminateCheckbox.class);
+		adjustOriginCheck = getUIByFieldId("adjustOrigin", IndeterminateCheckbox.class);
 	}
 
 	@Override
-	public void componentAddedToEntities () {
-		super.componentAddedToEntities();
-
-		EntityUtils.stream(properties.getSelectedEntities(), (proxy, entity) -> {
-			if (proxy.hasComponent(PhysicsProperties.class)) {
-				if (entity.getComponent(PhysicsProperties.class).adjustOrigin && proxy.isOriginSupported()) {
-					proxy.setOrigin(0, 0);
-				}
-			}
-		});
+	public void updateUIValues () {
+		super.updateUIValues();
+		adjustOriginIfNeeded();
 	}
 
 	@Override
 	public void setValuesToEntities () {
 		super.setValuesToEntities();
+		adjustOriginIfNeeded();
+	}
+
+	private void adjustOriginIfNeeded () {
 
 		if (adjustOriginCheck.isIndeterminate() == false) {
 			boolean adjustOrigin = adjustOriginCheck.isChecked();

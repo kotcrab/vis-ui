@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
 import com.artemis.Entity;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoTableEnumSelectBox;
@@ -35,13 +36,13 @@ public class EnumSelectBoxFragmentProvider extends AutoTableFragmentProvider<ATE
 	private ObjectMap<Field, EnumSelectBoxSet> enumSelectBoxes = new ObjectMap<>();
 
 	@Override
-	public void createUI (ATEnumProperty annotation, Class type, Field field) throws ReflectiveOperationException {
+	public void createUI (ATEnumProperty annotation, Field field, Class<?> fieldType) throws ReflectiveOperationException {
 		String fieldName = annotation.fieldName().equals("") ? field.getName() : annotation.fieldName();
 
-		Constructor constructor = annotation.uiNameProvider().getConstructor();
-		EnumNameProvider nameProvider = (EnumNameProvider) constructor.newInstance();
+		Constructor<? extends EnumNameProvider> constructor = annotation.uiNameProvider().getConstructor();
+		EnumNameProvider nameProvider = constructor.newInstance();
 
-		AutoTableEnumSelectBox selectBox = new AutoTableEnumSelectBox<>(type, nameProvider);
+		AutoTableEnumSelectBox selectBox = new AutoTableEnumSelectBox(fieldType, nameProvider);
 		selectBox.getSelection().setProgrammaticChangeEvents(false);
 		selectBox.addListener(properties.getSharedSelectBoxChangeListener());
 		enumSelectBoxes.put(field, new EnumSelectBoxSet(selectBox, nameProvider));
@@ -53,7 +54,7 @@ public class EnumSelectBoxFragmentProvider extends AutoTableFragmentProvider<ATE
 	}
 
 	@Override
-	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException {
+	public void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Field field, Class<?> fieldType) throws ReflectiveOperationException {
 		EnumSelectBoxSet set = enumSelectBoxes.get(field);
 
 		String commonValue = EntityUtils.getCommonString(proxies, AutoTableEnumSelectBox.INDETERMINATE,
@@ -74,7 +75,7 @@ public class EnumSelectBoxFragmentProvider extends AutoTableFragmentProvider<ATE
 	}
 
 	@Override
-	public void setToEntities (Class type, Field field, Component component) throws ReflectiveOperationException {
+	public void setToEntities (Component component, Field field, Class<?> fieldType) throws ReflectiveOperationException {
 		EnumSelectBoxSet set = enumSelectBoxes.get(field);
 
 		if (set.selectBox.isIndeterminate() == false) {
@@ -83,8 +84,8 @@ public class EnumSelectBoxFragmentProvider extends AutoTableFragmentProvider<ATE
 	}
 
 	@Override
-	public Object getUiByField (Class type, Field field) {
-		return enumSelectBoxes.get(field);
+	public Actor getUIByField (Class type, Field field) {
+		return enumSelectBoxes.get(field).selectBox;
 	}
 
 	private static class EnumSelectBoxSet {

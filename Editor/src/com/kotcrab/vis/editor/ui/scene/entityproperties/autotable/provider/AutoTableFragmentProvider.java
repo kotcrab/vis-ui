@@ -17,19 +17,21 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 /** @author Kotcrab */
-public abstract class AutoTableFragmentProvider<A> {
+public abstract class AutoTableFragmentProvider<A extends Annotation> {
 	public static final int LABEL_WIDTH = 170;
 
-	protected Class componentClass;
+	protected Class<? extends Component> componentClass;
 
 	protected VisTable uiTable;
 
@@ -41,18 +43,18 @@ public abstract class AutoTableFragmentProvider<A> {
 
 	}
 
-	public final void setObjects (Class componentClass, VisTable uiTable, ModuleInjector injector, EntityProperties properties) {
+	public final void setObjects (Class<? extends Component> componentClass, VisTable uiTable, ModuleInjector injector, EntityProperties properties) {
 		this.properties = properties;
 		this.injector = injector;
 		this.uiTable = uiTable;
 		this.componentClass = componentClass;
 	}
 
-	public abstract Object getUiByField (Class type, Field field);
+	public abstract Actor getUIByField (Class<?> type, Field field);
 
-	public abstract void createUI (A annotation, Class type, Field field) throws ReflectiveOperationException;
+	public abstract void createUI (A annotation, Field field, Class<?> fieldType) throws ReflectiveOperationException;
 
-	public abstract void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Class type, Field field) throws ReflectiveOperationException;
+	public abstract void updateUIFromEntities (ImmutableArray<EntityProxy> proxies, Field field, Class<?> fieldType) throws ReflectiveOperationException;
 
-	public abstract void setToEntities (Class type, Field field, Component component) throws ReflectiveOperationException;
+	public abstract void setToEntities (Component component, Field field, Class<?> fieldType) throws ReflectiveOperationException;
 }

@@ -57,8 +57,4 @@ public abstract class ComponentTable<T extends Component> extends VisTable {
 
 	/** Called when this table must set component values from current UI values */
 	public abstract void setValuesToEntities ();
-
-	/** Called when new component was added to any of the entities. */
-	public void componentAddedToEntities () {
-	}
 }

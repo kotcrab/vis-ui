@@ -36,7 +36,7 @@ public class RenderableComponentTable extends AutoComponentTable<Renderable> {
 	@Override
 	protected void init () {
 		super.init();
-		zIndexField = getUiByField("zIndex", NumberInputField.class);
+		zIndexField = getUIByFieldId("zIndex", NumberInputField.class);
 		zIndexField.addListener(new VisChangeListener((event, actor) -> {
 			if (zIndexField.isInputValid()) {
 				batchingSystem.markDirty();

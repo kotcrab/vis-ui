@@ -14,25 +14,19 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.component;
+package com.kotcrab.vis.runtime.util.autotable;
 
-import com.artemis.Component;
-import com.kotcrab.vis.runtime.util.autotable.ATFieldId;
-import com.kotcrab.vis.runtime.util.autotable.ATProperty;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * All renderable entities must have this component, stores entity zIndex
+ * Special auto table annotation used to annotate field that AutoTable UI widget can be acquired from code.
  * @author Kotcrab
  */
-public class Renderable extends Component {
-	@ATFieldId(id = "zIndex")
-	@ATProperty(fieldName = "Z Index", min = 0)
-	public int zIndex;
-
-	public Renderable () {
-	}
-
-	public Renderable (int zIndex) {
-		this.zIndex = zIndex;
-	}
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ATFieldId {
+	String id();
 }
