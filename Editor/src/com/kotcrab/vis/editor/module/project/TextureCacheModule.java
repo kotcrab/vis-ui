@@ -30,6 +30,7 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
+import com.kotcrab.vis.editor.event.ResourceReloadedEvent.ResourceType;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
@@ -40,6 +41,8 @@ import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 import org.apache.commons.io.FilenameUtils;
+
+import java.util.EnumSet;
 
 /**
  * Allows to get loaded textures from project 'gfx' assets directory and allows to get loaded atlases from project 'atlas' asset directory.
@@ -155,7 +158,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 			disposeCacheLater(oldCache);
 
-			App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_TEXTURES));
+			App.eventBus.post(new ResourceReloadedEvent(EnumSet.of(ResourceType.TEXTURES)));
 		} else
 			Log.error("Texture cache not ready, probably they aren't any textures in project or packer failed");
 	}
@@ -180,8 +183,8 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 		if (file.exists()) {
 			atlases.put(relativePath, new TextureAtlas(file));
-			App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_TEXTURES));
-			App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_TEXTURE_ATLASES));
+			App.eventBus.post(new ResourceReloadedEvent(EnumSet.of(ResourceType.TEXTURES)));
+			App.eventBus.post(new ResourceReloadedEvent(EnumSet.of(ResourceType.TEXTURE_ATLASES)));
 		}
 	}
 

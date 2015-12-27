@@ -21,12 +21,15 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
+import com.kotcrab.vis.editor.event.ResourceReloadedEvent.ResourceType;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.PathAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
+
+import java.util.EnumSet;
 
 /**
  * Allows to get loaded particles from project asset directory.
@@ -70,7 +73,7 @@ public class ParticleCacheModule extends ProjectModule implements WatchListener 
 	@Override
 	public void fileChanged (FileHandle file) {
 		if (ProjectPathUtils.isParticle(file)) {
-			App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_PARTICLES));
+			App.eventBus.post(new ResourceReloadedEvent(EnumSet.of(ResourceType.PARTICLES)));
 		}
 	}
 

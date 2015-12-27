@@ -16,22 +16,22 @@
 
 package com.kotcrab.vis.editor.event;
 
+import com.google.common.collect.Sets;
+
+import java.util.Set;
+
 /**
  * Posted when scene should reload various types of resources
  * @author Kotcrab
  */
 public class ResourceReloadedEvent {
-	public static final int RESOURCE_TEXTURES = 0x0001;
-	public static final int RESOURCE_TEXTURE_ATLASES = 0x0002;
-	public static final int RESOURCE_PARTICLES = 0x0004;
-	public static final int RESOURCE_BMP_FONTS = 0x0008;
-	public static final int RESOURCE_TTF_FONTS = 0x0016;
-	public static final int RESOURCE_SHADERS = 0x0032;
-	public static final int RESOURCE_SPRITER_DATA = 0x0064;
+	public enum ResourceType {
+		TEXTURES, TEXTURE_ATLASES, PARTICLES, BMP_FONTS, TTF_FONTS, SHADERS, SPRITER_DATA;
+	}
 
-	public final int resourceType;
+	public final Set<ResourceType> resourceTypes;
 
-	public ResourceReloadedEvent (int resourceType) {
-		this.resourceType = resourceType;
+	public ResourceReloadedEvent (Set<ResourceType> resourceTypes) {
+		this.resourceTypes = Sets.immutableEnumSet(resourceTypes);
 	}
 }

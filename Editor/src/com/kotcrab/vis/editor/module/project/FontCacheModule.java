@@ -26,12 +26,15 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
+import com.kotcrab.vis.editor.event.ResourceReloadedEvent.ResourceType;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 import com.kotcrab.vis.runtime.assets.TtfFontAsset;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
+
+import java.util.EnumSet;
 
 /**
  * Allows to get loaded fonts from project asset directory. Fonts can be reloaded automatically.
@@ -78,14 +81,14 @@ public class FontCacheModule extends ProjectModule implements WatchListener {
 		TmpFontsMap font = ttfFonts.remove(file);
 		if (font != null) font.dispose();
 
-		App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_TTF_FONTS));
+		App.eventBus.post(new ResourceReloadedEvent(EnumSet.of(ResourceType.TTF_FONTS)));
 	}
 
 	private void refreshBmpFont (FileHandle file) {
 		BmpFontsMap bmpFont = bmpFonts.remove(file);
 		if (bmpFont != null) bmpFont.dispose();
 
-		App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_BMP_FONTS));
+		App.eventBus.post(new ResourceReloadedEvent(EnumSet.of(ResourceType.BMP_FONTS)));
 	}
 
 	public BitmapFont getGeneric (VisAssetDescriptor asset, float pixelsPerUnit) {

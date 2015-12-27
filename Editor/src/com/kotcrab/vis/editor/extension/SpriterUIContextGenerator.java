@@ -21,6 +21,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
+import com.kotcrab.vis.editor.event.ResourceReloadedEvent.ResourceType;
 import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.SpriterDataIOModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIContextGenerator;
@@ -36,6 +37,7 @@ import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.util.EnumSet;
 
 /** @author Kotcrab */
 public class SpriterUIContextGenerator implements AssetsUIContextGenerator {
@@ -149,7 +151,7 @@ public class SpriterUIContextGenerator implements AssetsUIContextGenerator {
 				nextStep();
 			}
 
-			App.eventBus.postToMainThread(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_SPRITER_DATA));
+			App.eventBus.postToMainThread(new ResourceReloadedEvent(EnumSet.of(ResourceType.SPRITER_DATA)));
 		}
 	}
 }

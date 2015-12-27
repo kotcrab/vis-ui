@@ -26,11 +26,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Editor;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.event.*;
+import com.kotcrab.vis.editor.event.ResourceReloadedEvent.ResourceType;
 import com.kotcrab.vis.editor.module.ContentTable;
 import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.VisContainers;
@@ -66,6 +68,9 @@ import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.value.VisValue;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+import java.util.EnumSet;
+import java.util.function.Consumer;
+
 /**
  * Main tab for scene editor, allows to edit scene, holds and provides all features related to it. Uses it's own
  * {@link ModuleContainer} ({@link SceneModuleContainer})
@@ -93,13 +98,21 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 	private EntityCounterManager entityCounter;
 	private EntityProxyCache entityProxyCache;
 
+	private TextureReloaderManager textureReloaderManager;
+	private ParticleReloaderManager particleReloaderManager;
+	private ShaderReloaderManager shaderReloaderManager;
+	private FontReloaderManager fontReloaderManager;
+	private SpriterReloaderManager spriterReloaderManager;
+
 	private ContentTable content;
 
 	private boolean savedAtLeastOnce;
 	private boolean lastSaveFailed;
 
+	private ObjectMap<ResourceType, Consumer<ResourceType>> reloaders = new ObjectMap<>();
+
 	private Target dropTarget;
-	private final AlignmentToolsDialog alignmentTools;
+	private AlignmentToolsDialog alignmentTools;
 
 	public SceneTab (EditorScene scene, ProjectModuleContainer projectMC) {
 		super(true);
@@ -117,6 +130,8 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 		sceneMC.init();
 		sceneMC.injectModules(this);
 		engine = sceneMC.getEntityEngine();
+
+		registerResourceReloaders();
 
 		entityCounter = engine.getSystem(EntityCounterManager.class);
 		entityProxyCache = engine.getSystem(EntityProxyCache.class);
@@ -169,7 +184,16 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 		App.eventBus.register(this);
 
 		//reload all assets on next frame (after EntityEngine registers all entities)
-		Gdx.app.postRunnable(() -> handleResourceReloaded(new ResourceReloadedEvent(Integer.MAX_VALUE)));
+		Gdx.app.postRunnable(() -> handleResourceReloaded(new ResourceReloadedEvent(EnumSet.allOf(ResourceType.class))));
+	}
+
+	private void registerResourceReloaders () {
+		reloaders.put(ResourceType.TEXTURES, resourceType -> textureReloaderManager.reloadTextures());
+		reloaders.put(ResourceType.PARTICLES, resourceType -> particleReloaderManager.reloadParticles());
+		reloaders.put(ResourceType.SHADERS, resourceType -> shaderReloaderManager.reloadShaders());
+		reloaders.put(ResourceType.BMP_FONTS, resourceType -> fontReloaderManager.reloadFonts(true, false));
+		reloaders.put(ResourceType.TTF_FONTS, resourceType -> fontReloaderManager.reloadFonts(false, true));
+		reloaders.put(ResourceType.SPRITER_DATA, resourceType -> spriterReloaderManager.reloadSpriterData());
 	}
 
 	@Override
@@ -245,28 +269,9 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 
 	@Subscribe
 	public void handleResourceReloaded (ResourceReloadedEvent event) {
-		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_TEXTURES) != 0) {
-			sceneMC.getEntityEngine().getSystem(TextureReloaderManager.class).reloadTextures();
-		}
-
-		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_PARTICLES) != 0) {
-			sceneMC.getEntityEngine().getSystem(ParticleReloaderManager.class).reloadParticles();
-		}
-
-		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_SHADERS) != 0) {
-			sceneMC.getEntityEngine().getSystem(ShaderReloaderManager.class).reloadShaders();
-		}
-
-		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_BMP_FONTS) != 0) {
-			sceneMC.getEntityEngine().getSystem(FontReloaderManager.class).reloadFonts(true, false);
-		}
-
-		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_TTF_FONTS) != 0) {
-			sceneMC.getEntityEngine().getSystem(FontReloaderManager.class).reloadFonts(false, true);
-		}
-
-		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_SPRITER_DATA) != 0) {
-			sceneMC.getEntityEngine().getSystem(SpriterReloaderManager.class).reloadSpriterData();
+		for (ResourceType type : event.resourceTypes) {
+			reloaders.get(type, resourceType -> Log.error("Missing reloader for resourceType: " + resourceType))
+					.accept(type); //invoke reloader
 		}
 	}
 

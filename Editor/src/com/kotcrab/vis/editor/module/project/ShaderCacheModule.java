@@ -24,12 +24,15 @@ import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
+import com.kotcrab.vis.editor.event.ResourceReloadedEvent.ResourceType;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.ShaderAsset;
+
+import java.util.EnumSet;
 
 /**
  * @author Kotcrab
@@ -115,7 +118,7 @@ public class ShaderCacheModule extends ProjectModule implements WatchListener {
 
 	@Override
 	public void fileChanged (FileHandle file) {
-		if(ProjectPathUtils.isVertexShader(file) == false && ProjectPathUtils.isFragmentShader(file) == false) return;
+		if (ProjectPathUtils.isVertexShader(file) == false && ProjectPathUtils.isFragmentShader(file) == false) return;
 
 		if (reloadTask.isScheduled()) return;
 
@@ -132,7 +135,7 @@ public class ShaderCacheModule extends ProjectModule implements WatchListener {
 			ObjectMap<ShaderAsset, ShaderProgram> shadersCopy = new ObjectMap<>(shaders);
 
 			reloadShaders(true);
-			App.eventBus.post(new ResourceReloadedEvent(ResourceReloadedEvent.RESOURCE_SHADERS));
+			App.eventBus.post(new ResourceReloadedEvent(EnumSet.of(ResourceType.SHADERS)));
 
 			for (ShaderProgram shader : shadersCopy.values()) {
 				shader.dispose();

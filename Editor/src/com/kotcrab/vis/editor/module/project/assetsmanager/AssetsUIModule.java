@@ -33,6 +33,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.event.ResourceReloadedEvent;
+import com.kotcrab.vis.editor.event.ResourceReloadedEvent.ResourceType;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.QuickAccessModule;
@@ -567,9 +568,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 	@Subscribe
 	public void handleResourceReloaded (ResourceReloadedEvent event) {
-		if ((event.resourceType & ResourceReloadedEvent.RESOURCE_TEXTURE_ATLASES) != 0) {
-			refreshFilesList();
-		}
+		if(event.resourceTypes.contains(ResourceType.TEXTURE_ATLASES)) refreshFilesList();
 	}
 
 	private class AssetsPopupMenu extends PopupMenu {
