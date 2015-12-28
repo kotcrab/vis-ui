@@ -22,12 +22,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.ContentItemProperties;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
-import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.util.scene2d.VisDragAndDrop;
+import com.kotcrab.vis.editor.util.vis.SortedEntityEngineConfiguration;
 import com.kotcrab.vis.runtime.util.EntityEngine;
-import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /**
  * @author Kotcrab
@@ -38,16 +37,10 @@ public abstract class EditorEntitySupport {
 
 	}
 
-	public void registerInflatersSystems (EntityEngineConfiguration config) {
-
-	}
-
 	/**
-	 * Called when support should register it's {@link EntityEngine} systems and managers. WARNING: Do not store
-	 * modules from {@link SceneModuleContainer} because this method is called for each scene and scene modules are
-	 * scene context sensitive.
+	 * Called when support should register it's {@link EntityEngine} systems and managers.
 	 */
-	public void registerSystems (SceneModuleContainer sceneMC, EntityEngineConfiguration config) {
+	public void registerSystems (SortedEntityEngineConfiguration config) {
 
 	}
 

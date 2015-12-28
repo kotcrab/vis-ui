@@ -161,7 +161,7 @@ public class EntityManipulatorModule extends SceneModule {
 				hardSelectionReset();
 			}
 		});
-		layersDialog = new LayersDialog(sceneTab, engineConfiguration, sceneContainer);
+		layersDialog = new LayersDialog(sceneTab, sceneContainer);
 		alignmentToolsDialog = new AlignmentToolsDialog(sceneContainer);
 		sceneOutline = new SceneOutline(sceneContainer);
 		createContextMenus();

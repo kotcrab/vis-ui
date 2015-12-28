@@ -39,7 +39,6 @@ import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.undo.MonoUndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
-import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.VisBagUtils;
 import com.kotcrab.vis.ui.VisUI;
@@ -77,12 +76,11 @@ public class LayersDialog extends VisTable implements Disposable {
 
 	private ObservableListener sceneObservable;
 
-	public LayersDialog (SceneTab sceneTab, EntityEngineConfiguration engineConfig, SceneModuleContainer sceneMC) {
+	public LayersDialog (SceneTab sceneTab, SceneModuleContainer sceneMC) {
 		super(true);
 		this.sceneTab = sceneTab;
 		this.scene = sceneTab.getScene();
 		sceneMC.injectModules(this);
-		layerManipulator = engineConfig.getSystem(LayerManipulator.class);
 
 		setBackground(VisUI.getSkin().getDrawable("window-bg"));
 		setTouchable(Touchable.enabled);

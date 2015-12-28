@@ -14,23 +14,25 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.util;
+package com.kotcrab.vis.editor.util.vis;
 
 import com.artemis.BaseSystem;
 import com.artemis.WorldConfiguration;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.runtime.scene.SceneConfig.Priority;
 
-/**
- * Similar to {@link WorldConfiguration} however it allows to get added systems and managers.
- * @author Kotcrab
- */
-public class EntityEngineConfiguration {
+/** @author Kotcrab */
+public class SortedEntityEngineConfiguration {
 	private boolean built;
-	private Array<BaseSystem> systems = new Array<BaseSystem>();
+	private Array<ConfigElement> elements = new Array<>();
 
-	public void setSystem (BaseSystem system) {
+	public void setSystem (BaseSystem system, Priority priority) {
+		setSystem(system, priority.toIntValue());
+	}
+
+	public void setSystem (BaseSystem system, int priority) {
 		checkBeforeAdd();
-		systems.add(system);
+		elements.add(new ConfigElement(system, priority));
 	}
 
 	private void checkBeforeAdd () {
@@ -38,10 +40,11 @@ public class EntityEngineConfiguration {
 	}
 
 	public <C extends BaseSystem> C getSystem (Class<C> clazz) {
-		if (built) throw new IllegalStateException("This configuration was already build and it's contents cannot be accessed!");
+		if (built)
+			throw new IllegalStateException("This configuration was already build and it's contents cannot be accessed!");
 
-		for (int i = 0; i < systems.size; i++) {
-			BaseSystem system = systems.get(i);
+		for (int i = 0; i < elements.size; i++) {
+			BaseSystem system = elements.get(i).system;
 			if (system.getClass() == clazz) return clazz.cast(system);
 		}
 
@@ -51,12 +54,28 @@ public class EntityEngineConfiguration {
 	public WorldConfiguration build () {
 		if (built) throw new IllegalStateException("Cannot built configuration twice!");
 		built = true;
+		elements.sort();
 		WorldConfiguration config = new WorldConfiguration();
 
-		for (BaseSystem system : systems) {
-			config.setSystem(system);
+		for (ConfigElement element : elements) {
+			config.setSystem(element.system);
 		}
 
 		return config;
+	}
+
+	private static class ConfigElement implements Comparable<ConfigElement> {
+		public BaseSystem system;
+		public int priority;
+
+		public ConfigElement (BaseSystem system, int priority) {
+			this.system = system;
+			this.priority = priority;
+		}
+
+		@Override
+		public int compareTo (ConfigElement other) {
+			return -Integer.compare(priority, other.priority);
+		}
 	}
 }

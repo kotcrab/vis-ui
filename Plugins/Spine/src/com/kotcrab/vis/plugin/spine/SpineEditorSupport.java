@@ -40,13 +40,13 @@ import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.ContentItemProperties;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
-import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisDragAndDrop;
 import com.kotcrab.vis.editor.util.scene2d.VisDropSource;
+import com.kotcrab.vis.editor.util.vis.SortedEntityEngineConfiguration;
 import com.kotcrab.vis.plugin.spine.components.SpineBounds;
 import com.kotcrab.vis.plugin.spine.components.SpinePreview;
 import com.kotcrab.vis.plugin.spine.components.SpineScale;
@@ -54,9 +54,9 @@ import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
 import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
+import com.kotcrab.vis.runtime.scene.SceneConfig.Priority;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.EntityEngine;
-import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /** @author Kotcrab */
 @VisPlugin
@@ -66,22 +66,15 @@ public class SpineEditorSupport extends EditorEntitySupport {
 	private SpineCacheModule spineCache;
 	private FileAccessModule fileAccess;
 
-	private float pixelsPerUnit;
-
 	@Override
-	public void registerInflatersSystems (EntityEngineConfiguration config) {
-		config.setSystem(new EditorSpineInflaterSystem());
-	}
-
-	@Override
-	public void registerSystems (SceneModuleContainer sceneMC, EntityEngineConfiguration config) {
+	public void registerSystems (SortedEntityEngineConfiguration config) {
 		RenderBatchingSystem renderBatchingSystem = config.getSystem(RenderBatchingSystem.class);
-		config.setSystem(new SpineEditorRenderSystem(renderBatchingSystem));
+		config.setSystem(new SpineEditorRenderSystem(renderBatchingSystem), Priority.VIS_RENDERER);
 
-		config.setSystem(new SpinePreviewUpdaterSystem());
-		config.setSystem(new SpineScaleUpdaterSystem());
+		config.setSystem(new EditorSpineInflaterSystem(), Priority.VIS_INFLATER);
 
-		pixelsPerUnit = sceneMC.getScene().pixelsPerUnit;
+		config.setSystem(new SpinePreviewUpdaterSystem(), Priority.NORMAL);
+		config.setSystem(new SpineScaleUpdaterSystem(), Priority.NORMAL);
 	}
 
 	@Override
@@ -120,7 +113,7 @@ public class SpineEditorSupport extends EditorEntitySupport {
 			SpineAssetDescriptor asset = (SpineAssetDescriptor) payload;
 
 			return new EntityBuilder(engine)
-					.with(new VisSpine(spineCache.get(asset)), new SpinePreview(), new SpineScale(1f / pixelsPerUnit), new SpineBounds(),
+					.with(new VisSpine(spineCache.get(asset)), new SpinePreview(), new SpineScale(1f / scene.pixelsPerUnit), new SpineBounds(),
 							new AssetReference(asset), new Transform(), new Tint(),
 							new Renderable(0), new Layer(scene.getActiveLayerId()),
 							new ExporterDropsComponent(SpinePreview.class, SpineScale.class, SpineBounds.class))

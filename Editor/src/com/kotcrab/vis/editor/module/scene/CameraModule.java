@@ -35,28 +35,25 @@ import com.kotcrab.vis.runtime.system.CameraManager;
 public class CameraModule extends SceneModule {
 	private SceneMetadataModule metadataModule;
 
+	private CameraManager manager;
+
 	private SceneMetadata metadata;
 
 	private OrthographicCamera camera;
 	private Viewport viewport;
 	private CameraZoomController zoomController;
 
-	private Vector3 unprojectVec;
+	private Vector3 unprojectVec = new Vector3();
 
 	private float lastX;
 	private float lastY;
 
 	@Override
-	public void added () {
-		unprojectVec = new Vector3();
-		CameraManager manager = engineConfiguration.getSystem(CameraManager.class);
+	public void init () {
 		camera = manager.getCamera();
 		viewport = manager.getViewport();
 		zoomController = new CameraZoomController(camera, unprojectVec);
-	}
 
-	@Override
-	public void init () {
 		metadata = metadataModule.getMap().get(scene.path);
 
 		if (metadata == null) {

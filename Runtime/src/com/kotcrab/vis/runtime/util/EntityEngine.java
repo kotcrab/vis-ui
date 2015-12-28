@@ -18,6 +18,7 @@ package com.kotcrab.vis.runtime.util;
 
 import com.artemis.SystemInvocationStrategy;
 import com.artemis.World;
+import com.artemis.WorldConfiguration;
 
 /**
  * Contains all the Scene systems and entities. You can use this to create, delete and retrieve entities. Each Scene has
@@ -29,6 +30,10 @@ import com.artemis.World;
 public class EntityEngine extends World {
 	public EntityEngine (EntityEngineConfiguration configuration) {
 		super(configuration.build());
+	}
+
+	public EntityEngine (WorldConfiguration configuration) {
+		super(configuration);
 	}
 
 	@Override

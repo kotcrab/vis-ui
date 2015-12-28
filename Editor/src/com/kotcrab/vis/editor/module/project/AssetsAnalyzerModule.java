@@ -33,9 +33,9 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
+import com.kotcrab.vis.editor.util.vis.SortedEntityEngineConfiguration;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.EntityEngine;
-import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
@@ -104,9 +104,9 @@ public class AssetsAnalyzerModule extends ProjectModule {
 			//TODO: analyze only current opened tabs
 			if (sceneTab == null) {
 				//scene is not loaded, manually prepare engine and populate it
-				EntityEngineConfiguration config = new EntityEngineConfiguration();
+				SortedEntityEngineConfiguration config = new SortedEntityEngineConfiguration();
 				SceneModuleContainer.createEssentialsSystems(config);
-				engine = new EntityEngine(config);
+				engine = new EntityEngine(config.build());
 				SceneModuleContainer.populateEngine(engine, clonerModule, scene);
 				engine.process();
 			} else {

@@ -52,7 +52,6 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
 import com.kotcrab.vis.editor.module.scene.system.EntityCounterManager;
 import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.system.reloader.*;
-import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
@@ -125,10 +124,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 		sceneMC = new SceneModuleContainer(projectMC, this, scene, stage.getBatch());
 		ExtensionStorageModule extensionStorage = projectMC.findInHierarchy(ExtensionStorageModule.class);
 		VisContainers.createSceneModules(sceneMC, extensionStorage);
-
-		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
-			support.registerSystems(sceneMC, sceneMC.getEntityEngineConfiguration());
-		}
 
 		sceneMC.init();
 		sceneMC.injectModules(this);

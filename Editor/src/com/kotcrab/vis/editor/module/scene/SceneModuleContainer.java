@@ -49,16 +49,18 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.BiHolder;
 import com.kotcrab.vis.editor.util.vis.NoneInvocationStrategy;
+import com.kotcrab.vis.editor.util.vis.SortedEntityEngineConfiguration;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.runtime.system.CameraManager;
 import com.kotcrab.vis.runtime.system.DirtyCleanerSystem;
 import com.kotcrab.vis.runtime.system.render.*;
 import com.kotcrab.vis.runtime.util.BootstrapInvocationStrategy;
 import com.kotcrab.vis.runtime.util.EntityEngine;
-import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+
+import static com.kotcrab.vis.runtime.scene.SceneConfig.Priority.*;
 
 /**
  * Module container for scene scope modules.
@@ -80,7 +82,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	private SceneTab sceneTab;
 
 	private EntityEngine engine;
-	private EntityEngineConfiguration config;
+	private SortedEntityEngineConfiguration config;
 
 	public SceneModuleContainer (ProjectModuleContainer projectMC, SceneTab sceneTab, EditorScene scene, Batch batch) {
 		this.editorModuleContainer = projectMC.getEditorContainer();
@@ -90,61 +92,60 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 		cloner = editorModuleContainer.get(ClonerModule.class);
 
-		config = new EntityEngineConfiguration();
+		config = new SortedEntityEngineConfiguration();
 
-		config.setSystem(new CameraManager(SceneViewport.SCREEN, 0, 0, scene.pixelsPerUnit)); //size ignored for screen viewport
-		config.setSystem(new LayerManipulator());
-		config.setSystem(new ZIndexManipulator());
-		config.setSystem(new DirtySetterSystem());
+		config.setSystem(new CameraManager(SceneViewport.SCREEN, 0, 0, scene.pixelsPerUnit), VIS_ESSENTIAL); //size ignored for screen viewport
+		config.setSystem(new LayerManipulator(), VIS_ESSENTIAL);
+		config.setSystem(new ZIndexManipulator(), VIS_ESSENTIAL);
+		config.setSystem(new DirtySetterSystem(), VIS_ESSENTIAL);
 
-		config.setSystem(new TextureReloaderManager());
-		config.setSystem(new ParticleReloaderManager(scene.pixelsPerUnit));
-		config.setSystem(new FontReloaderManager(scene.pixelsPerUnit));
-		config.setSystem(new ShaderReloaderManager());
-		config.setSystem(new SpriterReloaderManager());
+		config.setSystem(new VisUUIDManager(), VIS_ESSENTIAL);
+		config.setSystem(new EntityCounterManager(), VIS_ESSENTIAL);
 
-		config.setSystem(new VisUUIDManager());
-		config.setSystem(new EntityCounterManager());
+		config.setSystem(new GridRendererSystem(batch, this), VIS_RENDERER.before());
+		config.setSystem(new TextureReloaderManager(), VIS_RENDERER);
+		config.setSystem(new ParticleReloaderManager(scene.pixelsPerUnit), VIS_RENDERER);
+		config.setSystem(new FontReloaderManager(scene.pixelsPerUnit), VIS_RENDERER);
+		config.setSystem(new ShaderReloaderManager(), VIS_RENDERER);
+		config.setSystem(new SpriterReloaderManager(), VIS_RENDERER);
 
-		config.setSystem(new EditorMusicInflater());
-		config.setSystem(new EditorParticleInflater(scene.pixelsPerUnit));
-		config.setSystem(new EditorShaderInflater());
-		config.setSystem(new EditorSoundInflater());
-		config.setSystem(new EditorSpriteInflater());
-		config.setSystem(new EditorSpriterInflater());
-		config.setSystem(new EditorTextInflater(scene.pixelsPerUnit));
+		config.setSystem(new EditorMusicInflater(), VIS_INFLATER);
+		config.setSystem(new EditorParticleInflater(scene.pixelsPerUnit), VIS_INFLATER);
+		config.setSystem(new EditorShaderInflater(), VIS_INFLATER);
+		config.setSystem(new EditorSoundInflater(), VIS_INFLATER);
+		config.setSystem(new EditorSpriteInflater(), VIS_INFLATER);
+		config.setSystem(new EditorSpriterInflater(), VIS_INFLATER);
+		config.setSystem(new EditorTextInflater(scene.pixelsPerUnit), VIS_INFLATER);
 
-		for (EditorEntitySupport support : editorModuleContainer.get(ExtensionStorageModule.class).getEntitiesSupports()) {
-			support.registerInflatersSystems(config);
-		}
-
-		config.setSystem(new EntitiesCollector());
-		config.setSystem(new GroupIdProviderSystem());
-		config.setSystem(new GridRendererSystem(batch, this));
-		config.setSystem(new VisComponentManipulator());
-
-		config.setSystem(new EntityProxyCache(scene.pixelsPerUnit));
+		config.setSystem(new EntitiesCollector(), NORMAL);
+		config.setSystem(new GroupIdProviderSystem(), NORMAL);
+		config.setSystem(new VisComponentManipulator(), NORMAL);
+		config.setSystem(new EntityProxyCache(scene.pixelsPerUnit), NORMAL);
 		createEssentialsSystems(config);
 
 		RenderBatchingSystem batchingSystem = new RenderBatchingSystem(batch, true);
-		config.setSystem(batchingSystem);
+		config.setSystem(batchingSystem, VIS_RENDERER);
 
 		//common render systems
-		config.setSystem(new SpriteRenderSystem(batchingSystem));
-		config.setSystem(new TextRenderSystem(batchingSystem, Assets.distanceFieldShader));
-		config.setSystem(new SpriterRenderSystem(batchingSystem));
-		config.setSystem(new ParticleRenderSystem(batchingSystem, true));
+		config.setSystem(new SpriteRenderSystem(batchingSystem), VIS_RENDERER);
+		config.setSystem(new TextRenderSystem(batchingSystem, Assets.distanceFieldShader), VIS_RENDERER);
+		config.setSystem(new SpriterRenderSystem(batchingSystem), VIS_RENDERER);
+		config.setSystem(new ParticleRenderSystem(batchingSystem, true), VIS_RENDERER);
 
 		//entities sprites render systems
-		config.setSystem(new AudioRenderSystem(batchingSystem, scene.pixelsPerUnit));
-		config.setSystem(new PointRenderSystem(batchingSystem, scene.pixelsPerUnit));
-		config.setSystem(new EditorParticleRenderSystem(batchingSystem, scene.pixelsPerUnit));
+		config.setSystem(new AudioRenderSystem(batchingSystem, scene.pixelsPerUnit), VIS_RENDERER);
+		config.setSystem(new PointRenderSystem(batchingSystem, scene.pixelsPerUnit), VIS_RENDERER);
+		config.setSystem(new EditorParticleRenderSystem(batchingSystem, scene.pixelsPerUnit), VIS_RENDERER);
 
-		config.setSystem(new DirtyCleanerSystem());
+		config.setSystem(new DirtyCleanerSystem(), VIS_LOW);
+
+		for (EditorEntitySupport support : editorModuleContainer.get(ExtensionStorageModule.class).getEntitiesSupports()) {
+			support.registerSystems(config);
+		}
 	}
 
-	public static void createEssentialsSystems (EntityEngineConfiguration config) {
-		config.setSystem(new AssetsUsageAnalyzer());
+	public static void createEssentialsSystems (SortedEntityEngineConfiguration config) {
+		config.setSystem(new AssetsUsageAnalyzer(), NORMAL);
 	}
 
 	public static void populateEngine (EntityEngine engine, ClonerModule cloner, EditorScene scene) {
@@ -200,7 +201,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	@Override
 	public void init () {
 		super.init();
-		engine = new EntityEngine(config);
+		engine = new EntityEngine(config.build());
 
 		modules.forEach(sceneModule -> sceneModule.setEntityEngine(engine));
 
@@ -229,10 +230,6 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		if (module != null) return module;
 
 		return projectModuleContainer.findInHierarchy(moduleClass);
-	}
-
-	public EntityEngineConfiguration getEntityEngineConfiguration () {
-		return config;
 	}
 
 	public SceneTab getSceneTab () {
@@ -294,9 +291,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 	}
 
 	public EntityEngine getEntityEngine () {
-		if (engine == null)
-			throw new IllegalStateException("SceneModuleContainer wasn't initialized yet, use #getEntityEngineConfiguration if you need to get engine system or manager!");
-
+		if (engine == null) throw new IllegalStateException("SceneModuleContainer wasn't initialized yet!");
 		return engine;
 	}
 

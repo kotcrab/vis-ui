@@ -26,7 +26,7 @@ public class SceneConfig {
 	public SceneConfig () {
 		registerFeatureGroup(SceneFeatureGroup.ESSENTIAL, Priority.VIS_ESSENTIAL);
 		registerFeatureGroup(SceneFeatureGroup.INFLATER, Priority.VIS_INFLATER);
-		registerFeatureGroup(SceneFeatureGroup.PHYSICS, Priority.VHS_PHYSICS);
+		registerFeatureGroup(SceneFeatureGroup.PHYSICS, Priority.VIS_PHYSICS);
 		registerFeatureGroup(SceneFeatureGroup.RENDERER, Priority.VIS_RENDERER);
 		registerFeatureGroup(SceneFeatureGroup.PHYSICS_DEBUG, Priority.VIS_OTHER);
 
@@ -52,17 +52,26 @@ public class SceneConfig {
 		return addSystem(new ReflectionSystemProvider(systemClass));
 	}
 
+	public SceneConfig addSystem (Class<? extends BaseSystem> systemClass, Priority priority) {
+		return addSystem(new ReflectionSystemProvider(systemClass), priority.toIntValue());
+	}
+
 	public SceneConfig addSystem (Class<? extends BaseSystem> systemClass, int priority) {
 		return addSystem(new ReflectionSystemProvider(systemClass), priority);
 	}
 
-	public SceneConfig addSystem (SystemProvider provider, int priority) {
-		elements.add(new ConfigElement(provider, priority));
+	public SceneConfig addSystem (SystemProvider provider) {
+		elements.add(new ConfigElement(provider, Priority.NORMAL.toIntValue()));
 		return this;
 	}
 
-	public SceneConfig addSystem (SystemProvider provider) {
-		elements.add(new ConfigElement(provider, Priority.NORMAL));
+	public SceneConfig addSystem (SystemProvider provider, Priority priority) {
+		elements.add(new ConfigElement(provider, priority.toIntValue()));
+		return this;
+	}
+
+	public SceneConfig addSystem (SystemProvider provider, int priority) {
+		elements.add(new ConfigElement(provider, priority));
 		return this;
 	}
 
@@ -115,11 +124,11 @@ public class SceneConfig {
 		return this;
 	}
 
-	private void registerFeature (SceneFeature feature, int priority) {
-		elements.add(new ConfigElement(feature, feature.defaultProvider, priority));
+	private void registerFeature (SceneFeature feature, Priority priority) {
+		elements.add(new ConfigElement(feature, feature.defaultProvider, priority.toIntValue()));
 	}
 
-	private void registerFeatureGroup (SceneFeatureGroup group, int priority) {
+	private void registerFeatureGroup (SceneFeatureGroup group, Priority priority) {
 		for (SceneFeature feature : group.features) {
 			registerFeature(feature, priority);
 		}
@@ -161,18 +170,37 @@ public class SceneConfig {
 	 * Defines priorities for entity engine systems. Systems with high priorities will be processed before systems with
 	 * low priorities.
 	 */
-	public static class Priority {
-		public static final int LOWEST = Integer.MIN_VALUE;
-		public static final int LOW = -100000;
-		public static final int NORMAL = 0;
-		public static final int HIGH = 100000;
-		public static final int HIGHEST = Integer.MAX_VALUE;
+	public enum Priority {
+		LOWEST(Integer.MIN_VALUE),
+		LOW(-100000),
+		NORMAL(0),
+		HIGH(100000),
+		HIGHEST(Integer.MAX_VALUE),
 
-		public static final int VIS_LOW = -200000;
-		public static final int VIS_ESSENTIAL = 200000;
-		public static final int VIS_INFLATER = 19000;
-		public static final int VHS_PHYSICS = 18000;
-		public static final int VIS_RENDERER = 17000;
-		public static final int VIS_OTHER = 16000;
+		VIS_LOW(-200000),
+		VIS_ESSENTIAL(20000),
+		VIS_INFLATER(19000),
+		VIS_RELOADER(18500),
+		VIS_PHYSICS(18000),
+		VIS_RENDERER(17000),
+		VIS_OTHER(16000);
+
+		private final int intValue;
+
+		Priority (int intValue) {
+			this.intValue = intValue;
+		}
+
+		public int toIntValue () {
+			return intValue;
+		}
+
+		public int after () {
+			return toIntValue() - 1;
+		}
+
+		public int before () {
+			return toIntValue() + 1;
+		}
 	}
 }
