@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.Icons;
@@ -99,9 +100,8 @@ public abstract class TextUITable extends SpecificUITable {
 
 		selectFontDialog = new SelectFileDialog(getFontExtension(), fileAccess.getAssetsFolder(), file -> {
 			for (EntityProxy proxy : properties.getSelectedEntities()) {
-				Entity entity = proxy.getEntity();
-				VisText text = entity.getComponent(VisText.class);
-				AssetReference assetRef = entity.getComponent(AssetReference.class);
+				VisText text = proxy.getComponent(VisText.class);
+				AssetReference assetRef = proxy.getComponent(AssetReference.class);
 				VisAssetDescriptor asset = assetRef.asset;
 
 				VisAssetDescriptor newAsset = null;
@@ -120,7 +120,7 @@ public abstract class TextUITable extends SpecificUITable {
 			}
 
 			properties.getParentTab().dirty();
-			properties.selectedEntitiesChanged();
+			properties.selectedEntitiesValuesChanged();
 			properties.endSnapshot();
 		});
 
@@ -155,10 +155,17 @@ public abstract class TextUITable extends SpecificUITable {
 
 		updateEntitiesValues();
 
-		EntityUtils.stream(properties.getSelectedEntities(), VisText.class, (entity, text) -> {
+		EntityUtils.stream(properties.getSelectedEntities(), VisText.class, (proxy, text) -> {
 			if (autoCenterOrigin.isIndeterminate() == false) {
 				text.setAutoSetOriginToCenter(autoCenterOrigin.isChecked());
-				properties.selectedEntitiesBasicValuesChanged();
+
+				if (autoCenterOrigin.isChecked()) {
+					GlyphLayout layout = text.getGlyphLayout();
+					if (text.getGlyphLayout().width / 2 != getOriginX() || text.getGlyphLayout().height / 2 != getOriginY()) {
+						proxy.setOrigin(layout.width / 2, layout.height / 2);
+						properties.requestAdditionalUIValuesUpdate();
+					}
+				}
 			}
 		});
 	}

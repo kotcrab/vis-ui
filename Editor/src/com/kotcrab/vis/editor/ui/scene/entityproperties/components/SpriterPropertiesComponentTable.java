@@ -90,8 +90,8 @@ public class SpriterPropertiesComponentTable extends AutoComponentTable<SpriterP
 			properties.animation = entity.getAnimation(animSelectBox.getSelected()).id;
 		}
 
-		EntityUtils.stream(proxies, VisSpriter.class, (entity, spriterComponent) -> {
-			SpriterProperties propertiesComponent = entity.getComponent(SpriterProperties.class);
+		EntityUtils.stream(proxies, VisSpriter.class, (proxy, spriterComponent) -> {
+			SpriterProperties propertiesComponent = proxy.getComponent(SpriterProperties.class);
 			spriterComponent.getPlayer().setScale(propertiesComponent.scale);
 			spriterComponent.setPlayOnStart(propertiesComponent.playOnStart);
 			spriterComponent.setDefaultAnimation(propertiesComponent.animation);

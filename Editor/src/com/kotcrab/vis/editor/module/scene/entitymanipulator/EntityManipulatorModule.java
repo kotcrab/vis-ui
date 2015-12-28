@@ -535,6 +535,7 @@ public class EntityManipulatorModule extends SceneModule {
 	@Subscribe
 	public void handleUndoableModuleEvent (UndoableModuleEvent event) {
 		sceneOutline.rebuildOutline();
+		entityProperties.selectedEntitiesChanged();
 		renderBatchingSystem.markDirty();
 	}
 
@@ -804,7 +805,6 @@ public class EntityManipulatorModule extends SceneModule {
 	@Override
 	public void dispose () {
 		layersDialog.dispose();
-		entityProperties.dispose();
 	}
 
 	public EntityProperties getEntityProperties () {

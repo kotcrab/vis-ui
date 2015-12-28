@@ -38,13 +38,13 @@ public class ChangePolygonAction implements UndoableAction {
 		this.entityManipulator = entityManipulator;
 		this.proxy = proxy;
 
-		VisPolygon component = proxy.getEntity().getComponent(VisPolygon.class);
+		VisPolygon component = proxy.getComponent(VisPolygon.class);
 		oldVertices = copyArray(component.vertices);
 		oldFaces = component.faces;
 	}
 
 	public void takeSnapshot () {
-		VisPolygon component = proxy.getEntity().getComponent(VisPolygon.class);
+		VisPolygon component = proxy.getComponent(VisPolygon.class);
 		vertices = copyArray(component.vertices);
 		faces = component.faces;
 	}
@@ -74,7 +74,7 @@ public class ChangePolygonAction implements UndoableAction {
 
 		proxy.reload();
 
-		VisPolygon component = proxy.getEntity().getComponent(VisPolygon.class);
+		VisPolygon component = proxy.getComponent(VisPolygon.class);
 		component.vertices = newPoints;
 		component.faces = newVertices;
 

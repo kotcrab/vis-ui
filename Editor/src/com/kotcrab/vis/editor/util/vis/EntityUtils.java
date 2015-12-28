@@ -183,20 +183,13 @@ public class EntityUtils {
 		return true;
 	}
 
-	public static <T extends Component> void stream (ImmutableArray<EntityProxy> proxies, Class<T> componentClass, BiConsumer<Entity, T> consumer) {
-		stream(proxies, entity -> consumer.accept(entity, entity.getComponent(componentClass)));
+	public static <T extends Component> void stream (ImmutableArray<EntityProxy> proxies, Class<T> componentClass, BiConsumer<EntityProxy, T> consumer) {
+		stream(proxies, proxy -> consumer.accept(proxy, proxy.getComponent(componentClass)));
 	}
 
-	public static void stream (ImmutableArray<EntityProxy> proxies, Consumer<Entity> consumer) {
+	public static void stream (ImmutableArray<EntityProxy> proxies, Consumer<EntityProxy> consumer) {
 		for (int i = 0; i < proxies.size(); i++) {
-			consumer.accept(proxies.get(i).getEntity());
-		}
-	}
-
-	public static void stream (ImmutableArray<EntityProxy> proxies, BiConsumer<EntityProxy, Entity> consumer) {
-		for (int i = 0; i < proxies.size(); i++) {
-			EntityProxy proxy = proxies.get(i);
-			consumer.accept(proxy, proxy.getEntity());
+			consumer.accept(proxies.get(i));
 		}
 	}
 

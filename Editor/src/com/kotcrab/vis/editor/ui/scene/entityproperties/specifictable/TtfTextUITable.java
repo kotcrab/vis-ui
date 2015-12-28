@@ -59,7 +59,7 @@ public class TtfTextUITable extends TextUITable {
 	public boolean isSupported (EntityProxy proxy) {
 		if (proxy.hasComponent(VisText.class) == false) return false;
 
-		VisAssetDescriptor asset = proxy.getEntity().getComponent(AssetReference.class).asset;
+		VisAssetDescriptor asset = proxy.getComponent(AssetReference.class).asset;
 		if (asset instanceof TtfFontAsset == false)
 			return false;
 
@@ -77,9 +77,8 @@ public class TtfTextUITable extends TextUITable {
 	@Override
 	protected void updateEntitiesValues () {
 		for (EntityProxy proxy : properties.getSelectedEntities()) {
-			Entity entity = proxy.getEntity();
-			AssetReference assetRef = entity.getComponent(AssetReference.class);
-			VisText text = entity.getComponent(VisText.class);
+			AssetReference assetRef = proxy.getComponent(AssetReference.class);
+			VisText text = proxy.getComponent(VisText.class);
 
 			TtfFontAsset ttfAsset = (TtfFontAsset) assetRef.asset;
 			int fontSize = FieldUtils.getInt(sizeInputField, ttfAsset.getFontSize());

@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.components;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
-import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.component.PhysicsProperties;
 
@@ -54,17 +53,12 @@ public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsP
 		if (adjustOriginCheck.isIndeterminate() == false) {
 			boolean adjustOrigin = adjustOriginCheck.isChecked();
 			if (adjustOrigin) {
-
-				Holder<Boolean> uiUpdatedNeeded = Holder.of(false);
-
-				EntityUtils.stream(properties.getSelectedEntities(), (proxy, entity) -> {
+				EntityUtils.stream(properties.getSelectedEntities(), proxy -> {
 					if (proxy.isOriginSupported() && (proxy.getOriginX() != 0 || proxy.getOriginY() != 0)) {
-						uiUpdatedNeeded.value = true;
 						proxy.setOrigin(0, 0);
+						properties.requestAdditionalUIValuesUpdate();
 					}
 				});
-
-				if (uiUpdatedNeeded.value) properties.selectedEntitiesBasicValuesChanged();
 			}
 		}
 	}

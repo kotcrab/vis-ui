@@ -41,7 +41,7 @@ public class PointProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		transform = getEntity().getComponent(Transform.class);
+		transform = getComponent(Transform.class);
 		enableBasicProperties(transform, accessor, accessor);
 	}
 

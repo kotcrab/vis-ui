@@ -32,10 +32,8 @@ public class SpriterProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		Entity entity = getEntity();
-
-		VisSpriter spriter = entity.getComponent(VisSpriter.class);
-		Transform transform = entity.getComponent(Transform.class);
+		VisSpriter spriter = getComponent(VisSpriter.class);
+		Transform transform = getComponent(Transform.class);
 		enableBasicProperties(transform, spriter, spriter);
 		enableFlip(spriter);
 		enableRotation(transform);

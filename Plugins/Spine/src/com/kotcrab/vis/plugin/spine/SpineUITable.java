@@ -148,8 +148,7 @@ public class SpineUITable extends SpecificUITable {
 		Array<HashSet<String>> allAnimNames = new Array<>();
 
 		for (EntityProxy proxy : proxies) {
-			Entity entity = proxy.getEntity();
-			VisSpine visSpine = entity.getComponent(VisSpine.class);
+			VisSpine visSpine = proxy.getComponent(VisSpine.class);
 			Array<Animation> animations = visSpine.getSkeleton().getData().getAnimations();
 
 			HashSet<String> animNames = new HashSet<>(animations.size);
@@ -186,10 +185,9 @@ public class SpineUITable extends SpecificUITable {
 	@Override
 	public void setValuesToEntities () {
 		for (EntityProxy proxy : properties.getSelectedEntities()) {
-			Entity entity = proxy.getEntity();
-			VisSpine visSpine = entity.getComponent(VisSpine.class);
-			SpinePreview previewComponent = entity.getComponent(SpinePreview.class);
-			SpineScale scaleComponent = entity.getComponent(SpineScale.class);
+			VisSpine visSpine = proxy.getComponent(VisSpine.class);
+			SpinePreview previewComponent = proxy.getComponent(SpinePreview.class);
+			SpineScale scaleComponent = proxy.getComponent(SpineScale.class);
 
 			if (animSelectBox.getSelection().first().equals(NO_COMMON_ANIMATION) == false) {
 				visSpine.setDefaultAnimation(animSelectBox.getSelection().first());

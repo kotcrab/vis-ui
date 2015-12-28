@@ -35,7 +35,6 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangePolygonAction;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.BaseSelectionTool;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.polygon.Clipper;
 import com.kotcrab.vis.editor.util.polygon.Clipper.Polygonizer;
@@ -539,7 +538,7 @@ public class PolygonTool extends BaseSelectionTool {
 			return;
 		}
 
-		component = proxy.getEntity().getComponent(VisPolygon.class);
+		component = proxy.getComponent(VisPolygon.class);
 
 		statusLabel.setVisible(false);
 		buttonTable.setVisible(true);

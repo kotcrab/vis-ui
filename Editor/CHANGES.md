@@ -10,6 +10,7 @@
 - **Fixed**: Random editor crashes when working with multiple layers and groups ([#104](https://github.com/kotcrab/VisEditor/issues/104))
 - **Fixed**: Fixed some key shortcuts not working on locked layers ([#109](https://github.com/kotcrab/VisEditor/issues/109))
 - **Fixed**: Issues with bounding box problems after undo ([#108](https://github.com/kotcrab/VisEditor/issues/108))
+- **Fixed**: Negative y origin on text when using "Auto set origin to center"  
 - **Improved**: Rectangular selection is much faster when selecting many entities
 - **Removed**: Optional usage analytics 
 

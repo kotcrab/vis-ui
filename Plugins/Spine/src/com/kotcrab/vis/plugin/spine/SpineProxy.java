@@ -58,10 +58,10 @@ public class SpineProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		VisSpine spine = getEntity().getComponent(VisSpine.class);
-		Transform transform = getEntity().getComponent(Transform.class);
-		Tint tint = getEntity().getComponent(Tint.class);
-		boundsComponent = getEntity().getComponent(SpineBounds.class);
+		VisSpine spine = getComponent(VisSpine.class);
+		Transform transform = getComponent(Transform.class);
+		Tint tint = getComponent(Tint.class);
+		boundsComponent = getComponent(SpineBounds.class);
 		enableBasicProperties(transform, accessor, accessor);
 		enableTint(tint);
 		enableFlip(spine);

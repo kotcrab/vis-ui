@@ -89,7 +89,7 @@ public class TextRenderSystem extends DeferredEntityProcessingSystem {
 		GlyphLayout layout = text.getGlyphLayout();
 
 		if (text.isAutoSetOriginToCenter()) {
-			origin.setOrigin(layout.width / 2, -layout.height / 2);
+			origin.setOrigin(layout.width / 2, layout.height / 2);
 		}
 
 		translationMatrix.idt();

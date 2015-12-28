@@ -42,9 +42,7 @@ public class ParticleProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		Entity entity = getEntity();
-
-		transform = entity.getComponent(Transform.class);
+		transform = getComponent(Transform.class);
 
 		enableBasicProperties(transform, accessor, accessor);
 	}

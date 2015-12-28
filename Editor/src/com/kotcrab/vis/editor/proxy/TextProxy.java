@@ -34,12 +34,10 @@ public class TextProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		Entity entity = getEntity();
-
-		VisText text = entity.getComponent(VisText.class);
-		Transform transform = entity.getComponent(Transform.class);
-		Origin origin = entity.getComponent(Origin.class);
-		Tint tint = entity.getComponent(Tint.class);
+		VisText text = getComponent(VisText.class);
+		Transform transform = getComponent(Transform.class);
+		Origin origin = getComponent(Origin.class);
+		Tint tint = getComponent(Tint.class);
 
 		enableBasicProperties(transform, text, text);
 		enableOrigin(origin);

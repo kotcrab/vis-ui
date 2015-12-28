@@ -32,15 +32,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Array.ArrayIterable;
-import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.google.common.eventbus.Subscribe;
-import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.entity.EntityScheme.CloningPolicy;
 import com.kotcrab.vis.editor.entity.EntityScheme.UUIDPolicy;
-import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
@@ -93,8 +89,7 @@ import java.util.UUID;
  * from 'specifictable' and 'components' child packages for examples.
  * @author Kotcrab
  */
-//TODO: needs refactoring on how changes to entities made during components UI tables updates are handled
-public class EntityProperties extends VisTable implements Disposable {
+public class EntityProperties extends VisTable {
 	public static final int LABEL_WIDTH = 60;
 	public static final int AXIS_LABEL_WIDTH = 10;
 	public static final int FIELD_WIDTH = 70;
@@ -130,6 +125,9 @@ public class EntityProperties extends VisTable implements Disposable {
 
 	private boolean snapshotInProgress;
 	private SnapshotUndoableActionGroup snapshots;
+
+	private boolean uiValuesUpdateInProgress;
+	private boolean additionalUIValuesUpdateRequested;
 
 	//UI
 	private VisTable propertiesTable;
@@ -293,18 +291,6 @@ public class EntityProperties extends VisTable implements Disposable {
 		addListener(new EventStopper());
 
 		pack();
-
-		App.eventBus.register(this);
-	}
-
-	@Override
-	public void dispose () {
-		App.eventBus.unregister(this);
-	}
-
-	@Subscribe
-	public void handleUndoableModuleEvent (UndoableModuleEvent event) {
-		selectedEntitiesChanged();
 	}
 
 	private void createIdTable () {
@@ -472,17 +458,23 @@ public class EntityProperties extends VisTable implements Disposable {
 			return 0;
 	}
 
+	/** This must not be called from {@link ComponentTable} */
 	public void selectedEntitiesChanged () {
 		rebuildPropertiesTable();
-		updateValues();
+		updateUIValues(true);
 	}
 
+	/** This should not be called from {@link ComponentTable} */
 	public void selectedEntitiesValuesChanged () {
-		updateValues();
+		updateUIValues(true);
 	}
 
-	public void selectedEntitiesBasicValuesChanged () {
-		updateBasicValues(false);
+	public void requestAdditionalUIValuesUpdate () {
+		if (uiValuesUpdateInProgress) {
+			additionalUIValuesUpdateRequested = true;
+		} else {
+			updateUIValues(true);
+		}
 	}
 
 	public void beginSnapshot () {
@@ -601,7 +593,7 @@ public class EntityProperties extends VisTable implements Disposable {
 			table.setValuesToEntities();
 	}
 
-	private void updateValues () {
+	private void updateUIValues (boolean updateInvalidFields) {
 		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
 
 		groupSelected = ArrayUtils.has(entityManipulator.getSelection().getFragmentedSelection(), GroupSelectionFragment.class);
@@ -611,12 +603,21 @@ public class EntityProperties extends VisTable implements Disposable {
 		} else {
 			setVisible(true);
 
-			updateBasicValues(true);
+			updateBasicValues(updateInvalidFields);
+
+			uiValuesUpdateInProgress = true;
 
 			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
 
 			for (ComponentTable<?> table : activeComponentTables) {
 				table.updateUIValues();
+			}
+
+			uiValuesUpdateInProgress = false;
+
+			if (additionalUIValuesUpdateRequested) {
+				additionalUIValuesUpdateRequested = false;
+				Gdx.app.postRunnable(() -> updateUIValues(false));
 			}
 		}
 	}

@@ -90,7 +90,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 					}
 
 					properties.getParentTab().dirty();
-					properties.selectedEntitiesChanged();
+					properties.selectedEntitiesValuesChanged();
 					properties.endSnapshot();
 				});
 
@@ -150,7 +150,9 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 
 	@Override
 	public Actor getUIByField (Class type, Field field) {
-		return fileDialogLabels.get(field).fileLabel;
+		SelectFileDialogSet set = fileDialogLabels.get(field);
+		if(set == null) return null;
+		return set.fileLabel;
 	}
 
 	private static class SelectFileDialogSet {

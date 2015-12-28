@@ -55,7 +55,7 @@ public class BMPTextUITable extends TextUITable {
 	public boolean isSupported (EntityProxy proxy) {
 		if (proxy.hasComponent(VisText.class) == false) return false;
 
-		VisAssetDescriptor asset = proxy.getEntity().getComponent(AssetReference.class).asset;
+		VisAssetDescriptor asset = proxy.getComponent(AssetReference.class).asset;
 		if (asset instanceof BmpFontAsset == false)
 			return false;
 
@@ -71,9 +71,8 @@ public class BMPTextUITable extends TextUITable {
 	@Override
 	protected void updateEntitiesValues () {
 		for (EntityProxy proxy : properties.getSelectedEntities()) {
-			Entity entity = proxy.getEntity();
-			VisText text = entity.getComponent(VisText.class);
-			AssetReference assetRef = entity.getComponent(AssetReference.class);
+			VisText text = proxy.getComponent(VisText.class);
+			AssetReference assetRef = proxy.getComponent(AssetReference.class);
 
 			if (distanceFieldCheck.isIndeterminate() == false) {
 				text.setDistanceFieldShaderEnabled(distanceFieldCheck.isChecked());

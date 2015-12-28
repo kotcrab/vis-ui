@@ -40,11 +40,10 @@ public class SpriteProxy extends EntityProxy {
 
 	@Override
 	protected void reloadAccessors () {
-		Entity entity = getEntity();
-		sprite = entity.getComponent(VisSprite.class);
-		transform = entity.getComponent(Transform.class);
-		origin = entity.getComponent(Origin.class);
-		Tint tint = entity.getComponent(Tint.class);
+		sprite = getComponent(VisSprite.class);
+		transform = getComponent(Transform.class);
+		origin = getComponent(Origin.class);
+		Tint tint = getComponent(Tint.class);
 
 		enableBasicProperties(transform, sprite, accessor);
 		enableOrigin(origin);

@@ -130,7 +130,7 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 		try {
 
 			for (EntityProxy proxy : properties.getSelectedEntities()) {
-				T component = proxy.getEntity().getComponent(componentClass);
+				T component = proxy.getComponent(componentClass);
 
 				for (Field field : componentClass.getDeclaredFields()) {
 					Class<?> type = field.getType();

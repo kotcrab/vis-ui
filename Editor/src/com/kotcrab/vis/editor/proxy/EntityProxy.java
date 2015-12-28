@@ -409,6 +409,10 @@ public abstract class EntityProxy {
 		return entity;
 	}
 
+	public <T extends Component> T getComponent (Class<T> type) {
+		return entity.getComponent(type);
+	}
+
 	public boolean compareProxyByUUID (EntityProxy other) {
 		return uuid.equals(other.uuid);
 	}
