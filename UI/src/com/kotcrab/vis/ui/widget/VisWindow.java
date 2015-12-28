@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.VisUI;
 
@@ -145,6 +146,13 @@ public class VisWindow extends Window {
 			public void changed (ChangeEvent event, Actor actor) {
 				close();
 			}
+		});
+		closeButton.addListener(new ClickListener() {
+			@Override
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+				event.cancel();
+				return true;
+			}			
 		});
 
 		if (titleLabel.getLabelAlign() == Align.center && titleTable.getChildren().size == 2)
