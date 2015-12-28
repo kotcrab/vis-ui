@@ -25,6 +25,8 @@ import com.google.gson.GsonBuilder;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectGeneric;
 import com.kotcrab.vis.editor.module.project.ProjectLibGDX;
+import com.kotcrab.vis.editor.plugin.api.GsonConfigurator;
+import com.kotcrab.vis.editor.plugin.api.GsonConfigurator.VisGsonBuilder;
 import com.kotcrab.vis.editor.serializer.json.*;
 import com.kotcrab.vis.runtime.component.AssetReference;
 
@@ -54,11 +56,10 @@ public class GsonModule extends EditorModule {
 				.registerTypeAdapter(Class.class, classSerializer = new ClassJsonSerializer(Thread.currentThread().getContextClassLoader()))
 				.registerTypeAdapter(AssetReference.class, new AssetComponentSerializer());
 
-		//TODO: [plugin] plugin entry point, allow plugin to simpler serializer registration, currently requires making EditorEntitySupport
-		//register plugins serializers
-		extensionStorage.getEntitiesSupports().forEach(
-				support -> support.getJsonTypeAdapters().forEach(
-						typeObjectEntry -> builder.registerTypeAdapter(typeObjectEntry.key, typeObjectEntry.value)));
+		VisGsonBuilder visBuilder = new VisGsonBuilder(builder);
+		for (GsonConfigurator configurator : extensionStorage.getGsonConfigurators()) {
+			configurator.configure(visBuilder);
+		}
 
 		gson = builder.create();
 

@@ -175,6 +175,18 @@ public class ExtensionStorageModule extends EditorModule {
 
 	// ----------------
 
+	private Array<GsonConfigurator> gsonConfigurators = new Array<>();
+
+	public Array<GsonConfigurator> getGsonConfigurators () {
+		return gsonConfigurators;
+	}
+
+	public void addGsonConfigurator (GsonConfigurator configurator) {
+		gsonConfigurators.add(configurator);
+	}
+
+	// ----------------
+
 	@Override
 
 	public void init () {

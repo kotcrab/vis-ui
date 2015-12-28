@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.plugin;
 import com.artemis.Entity;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.ContentItemProperties;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
@@ -29,8 +28,6 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.util.scene2d.VisDragAndDrop;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
-
-import java.lang.reflect.Type;
 
 /**
  * @author Kotcrab
@@ -70,9 +67,4 @@ public abstract class EditorEntitySupport {
 	public abstract Entity processDropPayload (EntityEngine engine, EditorScene scene, Object payload);
 
 	public abstract EntityProxy resolveProxy (Entity entity);
-
-	/** @return json type adapters (serializer and deserializers) used for serializing this entity. */
-	public ObjectMap<Type, Object> getJsonTypeAdapters () {
-		return new ObjectMap<>();
-	}
 }
