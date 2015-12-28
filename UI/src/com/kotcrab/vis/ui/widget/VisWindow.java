@@ -159,12 +159,23 @@ public class VisWindow extends Window {
 			titleTable.getCell(titleLabel).padLeft(closeButton.getWidth() * 2);
 	}
 
-	/** Will make this window close when escape key was pressed. After pressing escape {@link #close()} is called. */
+	/** Will make this window close when escape key or back key was pressed. After pressing escape or back, {@link #close()} is called. 
+	 * Back key is Android and iOS only*/
 	public void closeOnEscape () {
 		addListener(new InputListener() {
 			@Override
 			public boolean keyDown (InputEvent event, int keycode) {
 				if (keycode == Keys.ESCAPE) {
+					close();
+					return true;
+				}
+
+				return false;
+			}
+			
+			@Override
+			public boolean keyUp (InputEvent event, int keycode) {
+				if (keycode == Keys.BACK) {
 					close();
 					return true;
 				}
