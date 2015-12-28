@@ -20,21 +20,20 @@ import com.artemis.Component;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.data.EntityData;
-import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
+import com.kotcrab.vis.runtime.scene.SceneConfig;
 
 /**
- * Implemented by plugin classes that can provide support for custom types entities
+ * Implemented by plugin classes that can provide support for custom types entities.
  * @author Kotcrab
  */
 public interface EntitySupport {
-	/** Called when entity support should add it's loader into AssetsManager */
+	/** Called when entity support should add it's loader into AssetsManager. */
 	void setLoaders (AssetManager manager);
 
-	/** Called when EntitySupport should resolve required dependencies for Entity and add them into dependency list */
+	/** Called when EntitySupport should resolve required dependencies for Entity and add them into dependency list. */
 	void resolveDependencies (Array<AssetDescriptor> dependencies, EntityData entityData, Component component);
 
-	/** Called when EntitySupport should register system that it requires, such as render system or inflater systems */
-	void registerSystems (RuntimeConfiguration configuration, EntityEngineConfiguration engineConfig, AssetManager manager);
+	/** Called when EntitySupport should register all it's required systems. */
+	void registerSceneSystems (SceneConfig config);
 }

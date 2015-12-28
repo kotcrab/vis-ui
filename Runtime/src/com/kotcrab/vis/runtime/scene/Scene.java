@@ -69,16 +69,16 @@ public class Scene {
 			}
 		}
 
+		for (EntitySupport support : context.supports) {
+			support.registerSceneSystems(config);
+		}
+
 		for (ConfigElement element : config.getConfigElements()) {
 			if (element.disabled) continue;
 			engineConfig.setSystem(element.provider.create(engineConfig, context, data));
 		}
 
 		cameraManager = engineConfig.getSystem(CameraManager.class);
-
-		for (EntitySupport support : context.supports) {
-			support.registerSystems(runtimeConfig, engineConfig, assetsManager);
-		}
 
 		engine = new EntityEngine(engineConfig);
 	}

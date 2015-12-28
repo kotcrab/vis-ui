@@ -31,6 +31,7 @@
 
 package com.kotcrab.vis.plugin.spine.runtime;
 
+import com.artemis.BaseSystem;
 import com.artemis.Component;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
@@ -38,12 +39,16 @@ import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.spine.SkeletonData;
 import com.esotericsoftware.spine.SkeletonRenderer;
 import com.kotcrab.vis.plugin.spine.runtime.SkeletonDataLoader.SkeletonDataLoaderParameter;
-import com.kotcrab.vis.runtime.RuntimeConfiguration;
+import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.data.EntityData;
+import com.kotcrab.vis.runtime.data.SceneData;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
+import com.kotcrab.vis.runtime.scene.SceneConfig;
+import com.kotcrab.vis.runtime.scene.SceneConfig.Priority;
+import com.kotcrab.vis.runtime.scene.SystemProvider;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
@@ -74,9 +79,19 @@ public class SpineSupport implements EntitySupport {
 	}
 
 	@Override
-	public void registerSystems (RuntimeConfiguration configuration, EntityEngineConfiguration engineConfig, AssetManager manager) {
-		RenderBatchingSystem renderBatchingSystem = engineConfig.getSystem(RenderBatchingSystem.class);
-		engineConfig.setSystem(new SpineRenderSystem(renderBatchingSystem));
-		engineConfig.setSystem(new SpineInflaterSystem(configuration, manager));
+	public void registerSceneSystems (SceneConfig config) {
+		config.addSystem(new SystemProvider() {
+			@Override
+			public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
+				return new SpineInflaterSystem(context.configuration, context.assetsManager);
+			}
+		}, Priority.VIS_INFLATER);
+
+		config.addSystem(new SystemProvider() {
+			@Override
+			public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
+				return new SpineRenderSystem(config.getSystem(RenderBatchingSystem.class));
+			}
+		}, Priority.VIS_RENDERER);
 	}
 }
