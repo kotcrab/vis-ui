@@ -122,7 +122,7 @@ public class ComponentSelectDialog extends VisTable { //TODO search field when w
 	public boolean build () {
 		scrollPaneTable.clearChildren();
 
-		if (ArrayUtils.has(properties.getSelection().getFragmentedSelection(), GroupSelectionFragment.class))
+		if (ArrayUtils.has(properties.getFragmentedSelection(), GroupSelectionFragment.class))
 			return false;
 
 		boolean atLeastOneComponentAdded = false;

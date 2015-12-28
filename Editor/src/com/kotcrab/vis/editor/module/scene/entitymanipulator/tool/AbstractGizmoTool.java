@@ -33,7 +33,7 @@ public abstract class AbstractGizmoTool extends SelectionTool {
 
 		totalSelectionBounds = null;
 
-		for (SelectionFragment fragment : entityManipulator.getSelection().getFragmentedSelection()) {
+		for (SelectionFragment fragment : entityManipulator.getFragmentedSelection()) {
 			Rectangle fragBounds = fragment.getBoundingRectangle();
 
 			if (totalSelectionBounds == null)

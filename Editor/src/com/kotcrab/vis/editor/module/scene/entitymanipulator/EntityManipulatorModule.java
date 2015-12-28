@@ -835,8 +835,8 @@ public class EntityManipulatorModule extends SceneModule {
 		return entitiesSelection.getSelection();
 	}
 
-	public EntitiesSelection getSelection () {
-		return entitiesSelection;
+	public ImmutableArray<SelectionFragment> getFragmentedSelection () {
+		return entitiesSelection.getFragmentedSelection();
 	}
 
 	@Override

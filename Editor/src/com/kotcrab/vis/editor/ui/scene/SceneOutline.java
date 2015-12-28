@@ -110,7 +110,7 @@ public class SceneOutline extends VisTable implements EntityProxyCacheListener {
 
 	public void selectedEntitiesChanged () {
 		tree.getSelection().clear();
-		for (SelectionFragment fragment : entityManipulator.getSelection().getFragmentedSelection()) {
+		for (SelectionFragment fragment : entityManipulator.getFragmentedSelection()) {
 			highlightProxy(tree.getNodes(), fragment);
 		}
 	}

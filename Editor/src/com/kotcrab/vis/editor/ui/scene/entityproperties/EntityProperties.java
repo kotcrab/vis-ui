@@ -39,15 +39,14 @@ import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
 import com.kotcrab.vis.editor.module.scene.action.ComponentAddAction;
-import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntitiesSelection;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragment;
+import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
 import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.plugin.api.ComponentTableProvider;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.BMPTextUITable;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.GroupUITable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.TtfTextUITable;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
@@ -80,6 +79,7 @@ public class EntityProperties extends VisTable {
 	public static final int LABEL_WIDTH = 60;
 	public static final int AXIS_LABEL_WIDTH = 10;
 	public static final int FIELD_WIDTH = 70;
+	public static final int ROW_WIDTH = 245;
 
 	private StatusBarModule statusBarModule;
 	private ToastModule toastModule;
@@ -110,6 +110,7 @@ public class EntityProperties extends VisTable {
 	//UI
 	private VisTable propertiesTable;
 	private BasicEntityPropertiesTable basicProperties;
+	private GroupPropertiesTable groupProperties;
 
 	private ComponentSelectDialog componentSelectDialog;
 	private VisTextButton addComponentButton;
@@ -182,10 +183,11 @@ public class EntityProperties extends VisTable {
 		};
 
 		basicProperties = new BasicEntityPropertiesTable(this, colorPickerModule.getPicker());
+		groupProperties = new GroupPropertiesTable(this);
 
 		componentSelectDialog = new ComponentSelectDialog(sceneMC, this, clazz -> {
 			try {
-				ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
+				ImmutableArray<EntityProxy> entities = getSelectedEntities();
 
 				if (entities.size() == 0) return; //nothing is selected
 				undoModule.execute(new ComponentAddAction(sceneMC, entities, clazz));
@@ -211,7 +213,6 @@ public class EntityProperties extends VisTable {
 		//deprecated api
 		registerSpecificTable(new TtfTextUITable());
 		registerSpecificTable(new BMPTextUITable());
-		registerSpecificTable(new GroupUITable());
 
 		for (ComponentTableProvider provider : extensionStorage.getComponentTableProviders()) {
 			registerComponentTable(provider.provide(sceneMC));
@@ -237,10 +238,14 @@ public class EntityProperties extends VisTable {
 		propertiesTable.reset();
 		TableUtils.setSpacingDefaults(propertiesTable);
 
-		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
+		ImmutableArray<EntityProxy> entities = getSelectedEntities();
 
 		basicProperties.rebuildPropertiesTable();
 		propertiesTable.add(basicProperties).row();
+		if (groupSelected) {
+			propertiesTable.addSeparator().padTop(0).padBottom(0).spaceTop(3).spaceBottom(3);
+			propertiesTable.add(groupProperties).row();
+		}
 
 		activeSpecificTable = null;
 		for (SpecificUITable table : specificTables) {
@@ -291,7 +296,7 @@ public class EntityProperties extends VisTable {
 	}
 
 	private boolean checkIfUITableSupportedForSelection (SpecificUITable table) {
-		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
+		ImmutableArray<EntityProxy> entities = getSelectedEntities();
 		if (entities.size() == 0) return false;
 
 		for (EntityProxy entity : entities) {
@@ -317,6 +322,7 @@ public class EntityProperties extends VisTable {
 
 	/** This must not be called from {@link ComponentTable} */
 	public void selectedEntitiesChanged () {
+		groupSelected = ArrayUtils.has(getFragmentedSelection(), GroupSelectionFragment.class);
 		rebuildPropertiesTable();
 		updateUIValues(true);
 	}
@@ -340,7 +346,7 @@ public class EntityProperties extends VisTable {
 
 		snapshots = new SnapshotUndoableActionGroup();
 
-		for (EntityProxy entity : entityManipulator.getSelectedEntities()) {
+		for (EntityProxy entity : getSelectedEntities()) {
 			snapshots.add(new SnapshotUndoableAction(entity));
 		}
 	}
@@ -397,6 +403,7 @@ public class EntityProperties extends VisTable {
 
 	private void setValuesToEntities () {
 		basicProperties.setValuesToEntity();
+		if (groupSelected) groupProperties.setValuesToSceneGroupData();
 
 		if (activeSpecificTable != null) activeSpecificTable.setValuesToEntities();
 		for (ComponentTable<?> table : new ArrayIterable<>(activeComponentTables))
@@ -404,9 +411,7 @@ public class EntityProperties extends VisTable {
 	}
 
 	private void updateUIValues (boolean updateInvalidFields) {
-		ImmutableArray<EntityProxy> entities = entityManipulator.getSelectedEntities();
-
-		groupSelected = ArrayUtils.has(entityManipulator.getSelection().getFragmentedSelection(), GroupSelectionFragment.class);
+		ImmutableArray<EntityProxy> entities = getSelectedEntities();
 
 		if (entities.size() == 0) {
 			setVisible(false);
@@ -414,6 +419,7 @@ public class EntityProperties extends VisTable {
 			setVisible(true);
 
 			basicProperties.updateUIValues(updateInvalidFields);
+			if (groupSelected) groupProperties.updateUIValues();
 
 			uiValuesUpdateInProgress = true;
 
@@ -431,7 +437,6 @@ public class EntityProperties extends VisTable {
 			}
 		}
 	}
-
 
 	public boolean isGroupSelected () {
 		return groupSelected;
@@ -468,8 +473,8 @@ public class EntityProperties extends VisTable {
 		return entityManipulator.getSelectedEntities();
 	}
 
-	public EntitiesSelection getSelection () {
-		return entityManipulator.getSelection();
+	public ImmutableArray<SelectionFragment> getFragmentedSelection () {
+		return entityManipulator.getFragmentedSelection();
 	}
 
 	private static class SnapshotUndoableActionGroup extends MonoUndoableActionGroup<SnapshotUndoableAction> {

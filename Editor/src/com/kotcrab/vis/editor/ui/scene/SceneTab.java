@@ -401,7 +401,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 	}
 
 	private void centerCameraAroundSelection () {
-		ImmutableArray<SelectionFragment> fragments = entityManipulator.getSelection().getFragmentedSelection();
+		ImmutableArray<SelectionFragment> fragments = entityManipulator.getFragmentedSelection();
 		if (fragments.size() == 0) return;
 
 		Rectangle rect = fragments.first().getBoundingRectangle();
