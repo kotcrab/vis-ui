@@ -43,7 +43,6 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorMo
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.GroupSelectionFragment;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
 import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
-import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.plugin.api.ComponentTableProvider;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.BMPTextUITable;
@@ -215,7 +214,9 @@ public class EntityProperties extends VisTable {
 		registerSpecificTable(new BMPTextUITable());
 
 		for (ComponentTableProvider provider : extensionStorage.getComponentTableProviders()) {
-			registerComponentTable(provider.provide(sceneMC));
+			ComponentTable<?> table = provider.provide(sceneMC);
+			componentTables.add(table);
+			table.setProperties(this);
 		}
 
 		propertiesTable = new VisTable(true);
@@ -442,31 +443,10 @@ public class EntityProperties extends VisTable {
 		return groupSelected;
 	}
 
-	public void loadSupportsSpecificTables () {
-		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
-			Array<SpecificUITable> uiTables = support.getUIPropertyTables();
-			if (uiTables != null) {
-				for (SpecificUITable table : uiTables)
-					registerSpecificTable(table);
-			}
-
-			Array<ComponentTable<?>> componentTables = support.getComponentsUITables();
-			if (componentTables != null) {
-				for (ComponentTable<?> table : componentTables)
-					registerComponentTable(table);
-			}
-		}
-	}
-
 	@Deprecated
 	private void registerSpecificTable (SpecificUITable specificUITable) {
 		specificTables.add(specificUITable);
 		specificUITable.setProperties(this);
-	}
-
-	private void registerComponentTable (ComponentTable<?> table) {
-		componentTables.add(table);
-		table.setProperties(this);
 	}
 
 	public ImmutableArray<EntityProxy> getSelectedEntities () {

@@ -191,11 +191,6 @@ public class EntityManipulatorModule extends SceneModule {
 		});
 	}
 
-	@Override
-	public void postInit () {
-		entityProperties.loadSupportsSpecificTables();
-	}
-
 	private void createContextMenus () {
 		entityPopupMenu = new PopupMenu();
 

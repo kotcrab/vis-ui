@@ -35,7 +35,6 @@ import com.artemis.Entity;
 import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
-import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
 import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
@@ -45,7 +44,6 @@ import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisDragAndDrop;
 import com.kotcrab.vis.editor.util.scene2d.VisDropSource;
@@ -84,13 +82,6 @@ public class SpineEditorSupport extends EditorEntitySupport {
 		config.setSystem(new SpineScaleUpdaterSystem());
 
 		pixelsPerUnit = sceneMC.getScene().pixelsPerUnit;
-	}
-
-	@Override
-	public Array<SpecificUITable> getUIPropertyTables () {
-		Array<SpecificUITable> array = new Array<>(1);
-		array.add(new SpineUITable());
-		return array;
 	}
 
 	@Override

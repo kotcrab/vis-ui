@@ -75,12 +75,15 @@ public class SpineScaleUpdaterSystem extends EntityProcessingSystem {
 
 			float x = transform.getX(), y = transform.getY();
 			boolean flipX = spine.isFlipX(), flipY = spine.isFlipY();
+			String defaultAnim = spine.getDefaultAnimation();
 
 			spine.onDeserialize(spineCache.get(assetRef.asset));
+
 			previewComponent.updateAnimation = true;
 
 			transform.setPosition(x, y);
 			spine.setFlip(flipX, flipY);
+			spine.setDefaultAnimation(defaultAnim);
 			tintCm.get(e).setDirty(true);
 		}
 	}

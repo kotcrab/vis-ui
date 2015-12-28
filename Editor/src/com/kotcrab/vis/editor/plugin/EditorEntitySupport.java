@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.plugin;
 import com.artemis.Entity;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetsUIModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.ContentItemProperties;
@@ -27,8 +26,6 @@ import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.ComponentTable;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
 import com.kotcrab.vis.editor.util.scene2d.VisDragAndDrop;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
@@ -77,16 +74,5 @@ public abstract class EditorEntitySupport {
 	/** @return json type adapters (serializer and deserializers) used for serializing this entity. */
 	public ObjectMap<Type, Object> getJsonTypeAdapters () {
 		return new ObjectMap<>();
-	}
-
-	/** This must return new instances every time this is called. */
-	@Deprecated
-	public Array<SpecificUITable> getUIPropertyTables () {
-		return null;
-	}
-
-	/** This must return new instances every time this is called. */
-	public Array<ComponentTable<?>> getComponentsUITables () {
-		return null;
 	}
 }

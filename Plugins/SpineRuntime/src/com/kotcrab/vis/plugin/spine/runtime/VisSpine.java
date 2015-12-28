@@ -41,6 +41,7 @@ import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
 import com.kotcrab.vis.runtime.properties.FlipOwner;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.annotation.VisInternal;
+import com.kotcrab.vis.runtime.util.autotable.ATProperty;
 
 /** @author Kotcrab */
 public class VisSpine extends Component implements FlipOwner, UsesProtoComponent {
@@ -48,6 +49,7 @@ public class VisSpine extends Component implements FlipOwner, UsesProtoComponent
 	public transient AnimationStateData stateData;
 	public transient AnimationState state;
 
+	@ATProperty(fieldName = "Play animation on start")
 	public boolean playOnStart;
 	public String defaultAnimation;
 
@@ -75,8 +77,9 @@ public class VisSpine extends Component implements FlipOwner, UsesProtoComponent
 
 	public void onDeserialize (SkeletonData skeletonData) {
 		init(skeletonData);
-		if (playOnStart)
+		if (playOnStart) {
 			state.setAnimation(0, defaultAnimation, true);
+		}
 	}
 
 	@VisInternal

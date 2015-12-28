@@ -32,19 +32,18 @@
 package com.kotcrab.vis.plugin.spine;
 
 import com.artemis.Entity;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.spine.Animation;
 import com.kotcrab.vis.editor.Icons;
+import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
 import com.kotcrab.vis.editor.util.scene2d.FieldUtils;
-import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
+import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.plugin.spine.components.SpinePreview;
 import com.kotcrab.vis.plugin.spine.components.SpineScale;
@@ -58,26 +57,32 @@ import com.kotcrab.vis.ui.widget.VisTable;
 
 import java.util.HashSet;
 
-public class SpineUITable extends SpecificUITable {
+/** @author Kotcrab */
+public class VisSpineComponentTable extends AutoComponentTable<VisSpine> {
 	private static final String NO_COMMON_ANIMATION = "<?>";
 
-	private IndeterminateCheckbox playAnimationOnStart;
 	private IndeterminateCheckbox preview;
-	private VisSelectBox<String> animSelectBox;
-
 	private NumberInputField scaleField;
+	private VisSelectBox<String> animSelectBox;
 
 	private Image warningImage;
 	private Tooltip onlyCommonAnimationTooltip;
 	private Tooltip noCommonAnimationTooltip;
 
+	public VisSpineComponentTable (ModuleInjector injector) {
+		super(injector, VisSpine.class, false);
+	}
+
 	@Override
 	protected void init () {
-		preview = new IndeterminateCheckbox("Preview in editor");
-		playAnimationOnStart = new IndeterminateCheckbox("Play animation on start");
+		super.init();
 
+		warningImage = new Image(Icons.WARNING.drawable());
+		onlyCommonAnimationTooltip = new Tooltip("Only showing animations that are common for all selected objects!");
+		noCommonAnimationTooltip = new Tooltip("There isn't any common animation for selected objects");
+
+		preview = new IndeterminateCheckbox("Preview in editor");
 		preview.addListener(properties.getSharedCheckBoxChangeListener());
-		playAnimationOnStart.addListener(properties.getSharedCheckBoxChangeListener());
 
 		scaleField = new NumberInputField(properties.getSharedFocusListener(), properties.getSharedChangeListener());
 		scaleField.addValidator(new GreaterThanValidator(0));
@@ -89,43 +94,29 @@ public class SpineUITable extends SpecificUITable {
 		animSelectBox = new VisSelectBox<>();
 		animSelectBox.setItems("<none>");
 		animSelectBox.getSelection().setProgrammaticChangeEvents(false);
-		animSelectBox.addListener(new ChangeListener() {
-			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				createCommonAnimationsList();
-			}
-		});
 		animSelectBox.addListener(properties.getSharedSelectBoxChangeListener());
+		animSelectBox.addListener(new VisChangeListener((event, actor) -> createCommonAnimationsList()));
 
-		warningImage = new Image(Icons.WARNING.drawable());
+		VisTable animTable = new VisTable(true);
+		animTable.add(new VisLabel("Animation"));
+		animTable.add(animSelectBox);
+		animTable.add(warningImage);
 
-		onlyCommonAnimationTooltip = new Tooltip("Only showing animations that are common for all selected objects!");
-		noCommonAnimationTooltip = new Tooltip("There isn't any common animation for selected objects");
-
-		padTop(0);
-		padLeft(3);
-		left();
-		defaults().left();
-		add(preview).spaceBottom(0).row();
-		add(playAnimationOnStart).spaceBottom(2).row();
-		add(TableBuilder.build(new VisLabel("Animation:"), animSelectBox, warningImage)).row();
-		add(scaleTable);
-	}
-
-	@Override
-	public boolean isSupported (EntityProxy proxy) {
-		return proxy.hasComponent(VisSpine.class);
+		add(preview).row();
+		add(scaleTable).row();
+		add(animTable).row();
 	}
 
 	@Override
 	public void updateUIValues () {
-		Tooltip.removeTooltip(warningImage);
-		warningImage.setVisible(false);
+		super.updateUIValues();
 
 		ImmutableArray<EntityProxy> proxies = properties.getSelectedEntities();
 
+		Tooltip.removeTooltip(warningImage);
+		warningImage.setVisible(false);
+
 		EntityUtils.setCommonCheckBoxState(proxies, preview, (Entity entity) -> entity.getComponent(SpinePreview.class).previewEnabled);
-		EntityUtils.setCommonCheckBoxState(proxies, playAnimationOnStart, (Entity entity) -> entity.getComponent(VisSpine.class).isPlayOnStart());
 
 		createCommonAnimationsList();
 		String commonAnimation = EntityUtils.getCommonString(proxies, NO_COMMON_ANIMATION, (Entity entity) -> entity.getComponent(VisSpine.class).getDefaultAnimation());
@@ -184,6 +175,8 @@ public class SpineUITable extends SpecificUITable {
 
 	@Override
 	public void setValuesToEntities () {
+		super.setValuesToEntities();
+
 		for (EntityProxy proxy : properties.getSelectedEntities()) {
 			VisSpine visSpine = proxy.getComponent(VisSpine.class);
 			SpinePreview previewComponent = proxy.getComponent(SpinePreview.class);
@@ -194,8 +187,6 @@ public class SpineUITable extends SpecificUITable {
 				previewComponent.updateAnimation = true;
 			}
 
-			if (playAnimationOnStart.isIndeterminate() == false)
-				visSpine.setPlayOnStart(playAnimationOnStart.isChecked());
 			if (preview.isIndeterminate() == false) {
 				if (previewComponent.previewEnabled != preview.isChecked()) {
 					previewComponent.updateAnimation = true;
@@ -209,5 +200,6 @@ public class SpineUITable extends SpecificUITable {
 				scaleComponent.updateScale = true;
 			}
 		}
+
 	}
 }
