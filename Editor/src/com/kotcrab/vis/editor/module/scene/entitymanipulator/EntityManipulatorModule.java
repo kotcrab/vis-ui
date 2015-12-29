@@ -54,7 +54,7 @@ import com.kotcrab.vis.editor.module.scene.system.EntityProxyCache;
 import com.kotcrab.vis.editor.module.scene.system.GroupIdProviderSystem;
 import com.kotcrab.vis.editor.module.scene.system.ZIndexManipulator;
 import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem.GridSettingsModule;
-import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.kotcrab.vis.editor.plugin.api.EditorEntitySupport;
 import com.kotcrab.vis.editor.plugin.api.ToolProvider;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorLayer;
@@ -97,6 +97,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private ClonerModule cloner;
 
 	private SceneIOModule sceneIO;
+	private ProjectExtensionStorageModule projectExtensionStorage;
 
 	private CameraModule camera;
 	private UndoModule undoModule;
@@ -479,7 +480,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 		}
 
-		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
+		for (EditorEntitySupport support : projectExtensionStorage.getEntitySupports()) {
 			Entity supportEntity = support.processDropPayload(entityEngine, scene, payload);
 			if (supportEntity != null) {
 				entity = supportEntity;

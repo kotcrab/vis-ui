@@ -24,15 +24,15 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.EntityScheme;
-import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
-import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.kotcrab.vis.editor.module.project.ProjectExtensionStorageModule;
+import com.kotcrab.vis.editor.plugin.api.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.*;
 import com.kotcrab.vis.runtime.component.*;
 
 public class EntityProxyCache extends Manager {
 	private static final String TAG = "EntityProxyCache";
 
-	private ExtensionStorageModule extensionStorage;
+	private ProjectExtensionStorageModule projectExtensionStorage;
 
 	private AspectSubscriptionManager subscriptionManager;
 
@@ -79,7 +79,7 @@ public class EntityProxyCache extends Manager {
 		EntityProxy proxy = getInternalProxyFor(entity);
 
 		if (proxy == null) {
-			for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
+			for (EditorEntitySupport support : projectExtensionStorage.getEntitySupports()) {
 				proxy = support.resolveProxy(entity);
 				if (proxy != null)
 					return proxy;

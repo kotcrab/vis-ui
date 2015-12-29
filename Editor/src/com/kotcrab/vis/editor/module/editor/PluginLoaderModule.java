@@ -26,7 +26,6 @@ import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
-import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.plugin.FailedPluginDescriptor;
 import com.kotcrab.vis.editor.plugin.PluginDescriptor;
 import com.kotcrab.vis.editor.plugin.api.*;
@@ -90,7 +89,7 @@ public class PluginLoaderModule extends EditorModule {
 		addEntryPointRegistrar(AssetTransactionGenerator.class, generator -> extStorage.addAssetTransactionGenerator(generator));
 		addEntryPointRegistrar(AssetsFileSorter.class, sorter -> extStorage.addAssetsFileSorter(sorter));
 		addEntryPointRegistrar(AssetsUIContextGeneratorProvider.class, provider -> extStorage.addAssetsContextGeneratorProvider(provider));
-		addEntryPointRegistrar(EditorEntitySupport.class, entitySupport -> extStorage.addEntitySupport(entitySupport));
+		addEntryPointRegistrar(EditorEntitySupportProvider.class, provider -> extStorage.addEntitySupportProvider(provider));
 		addEntryPointRegistrar(ComponentTableProvider.class, provider -> extStorage.addComponentTableProvider(provider));
 		addEntryPointRegistrar(UserAddableComponentProvider.class, provider -> extStorage.addUserAddableComponentProvider(provider));
 		addEntryPointRegistrar(GsonConfigurator.class, configurator -> extStorage.addGsonConfigurator(configurator));

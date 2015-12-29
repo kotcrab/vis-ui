@@ -34,8 +34,8 @@ import com.kotcrab.vis.editor.module.ModuleContainer;
 import com.kotcrab.vis.editor.module.ModuleInput;
 import com.kotcrab.vis.editor.module.editor.ClonerModule;
 import com.kotcrab.vis.editor.module.editor.EditorModuleContainer;
-import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.Project;
+import com.kotcrab.vis.editor.module.project.ProjectExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.scene.system.*;
 import com.kotcrab.vis.editor.module.scene.system.inflater.*;
@@ -44,7 +44,7 @@ import com.kotcrab.vis.editor.module.scene.system.render.AudioRenderSystem;
 import com.kotcrab.vis.editor.module.scene.system.render.EditorParticleRenderSystem;
 import com.kotcrab.vis.editor.module.scene.system.render.GridRendererSystem;
 import com.kotcrab.vis.editor.module.scene.system.render.PointRenderSystem;
-import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.kotcrab.vis.editor.plugin.api.EditorEntitySupport;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.BiHolder;
@@ -139,7 +139,7 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 
 		config.setSystem(new DirtyCleanerSystem(), VIS_LOW);
 
-		for (EditorEntitySupport support : editorModuleContainer.get(ExtensionStorageModule.class).getEntitiesSupports()) {
+		for (EditorEntitySupport support : projectMC.get(ProjectExtensionStorageModule.class).getEntitySupports()) {
 			support.registerSystems(config);
 		}
 	}

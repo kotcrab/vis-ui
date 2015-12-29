@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.plugin;
+package com.kotcrab.vis.editor.plugin.api;
 
 import com.artemis.Entity;
 import com.badlogic.gdx.files.FileHandle;
@@ -31,16 +31,16 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
 /**
  * @author Kotcrab
  */
-public abstract class EditorEntitySupport {
+public interface EditorEntitySupport {
 	/** Called after injecting modules. */
-	public void init () {
+	default void init () {
 
 	}
 
 	/**
 	 * Called when support should register it's {@link EntityEngine} systems and managers.
 	 */
-	public void registerSystems (SortedEntityEngineConfiguration config) {
+	default void registerSystems (SortedEntityEngineConfiguration config) {
 
 	}
 
@@ -49,15 +49,15 @@ public abstract class EditorEntitySupport {
 	 * EditorEntitySupport for currently tested file.
 	 * @return true if supported, false otherwise
 	 */
-	public abstract boolean isSupportedDirectory (FileHandle file, String relativePath);
+	boolean isSupportedDirectory (FileHandle file, String relativePath);
 
 	/** Returns {@link ContentItemProperties} for given file, that is displayed in {@link AssetsUIModule} */
-	public abstract ContentItemProperties getContentItemProperties (String relativePath, String extension);
+	ContentItemProperties getContentItemProperties (String relativePath, String extension);
 
 	/** Called when EditorEntitySupport must create drop source for assets drag and drop */
-	public abstract Source createDropSource (VisDragAndDrop dragAndDrop, FileItem item);
+	Source createDropSource (VisDragAndDrop dragAndDrop, FileItem item);
 
-	public abstract Entity processDropPayload (EntityEngine engine, EditorScene scene, Object payload);
+	Entity processDropPayload (EntityEngine engine, EditorScene scene, Object payload);
 
-	public abstract EntityProxy resolveProxy (Entity entity);
+	EntityProxy resolveProxy (Entity entity);
 }

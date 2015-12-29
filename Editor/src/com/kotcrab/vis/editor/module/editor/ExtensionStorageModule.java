@@ -22,7 +22,6 @@ import com.kotcrab.vis.editor.assets.AssetDescriptorProvider;
 import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
 import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
-import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
 import com.kotcrab.vis.editor.plugin.api.*;
 import com.kotcrab.vis.editor.plugin.api.ContainerExtension.ExtensionScope;
 
@@ -35,14 +34,14 @@ import java.lang.reflect.Modifier;
  * @author Kotcrab
  */
 public class ExtensionStorageModule extends EditorModule {
-	private Array<EditorEntitySupport> entitiesSupport = new Array<>();
+	private Array<EditorEntitySupportProvider> entitySupportProviders = new Array<>();
 
-	public void addEntitySupport (EditorEntitySupport support) {
-		entitiesSupport.add(support);
+	public void addEntitySupportProvider (EditorEntitySupportProvider support) {
+		entitySupportProviders.add(support);
 	}
 
-	public Array<EditorEntitySupport> getEntitiesSupports () {
-		return entitiesSupport;
+	public Array<EditorEntitySupportProvider> getEntitySupportProviders () {
+		return entitySupportProviders;
 	}
 
 	// ----------------

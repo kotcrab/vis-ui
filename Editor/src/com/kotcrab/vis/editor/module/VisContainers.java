@@ -88,7 +88,7 @@ public class VisContainers {
 		projectMC.add(new ProjectVersionModule());
 		projectMC.add(new SceneIOModule());
 		projectMC.add(new ProjectSettingsIOModule());
-		projectMC.add(new SupportModule());
+		projectMC.add(new ProjectExtensionStorageModule());
 		projectMC.add(new SceneMetadataModule());
 		projectMC.add(new AssetsAnalyzerModule());
 		projectMC.add(new TextureNameCheckerModule());

@@ -40,7 +40,7 @@ import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.ContentItemProperties;
 import com.kotcrab.vis.editor.module.project.assetsmanager.FileItem;
-import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.kotcrab.vis.editor.plugin.api.EditorEntitySupport;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.util.FileUtils;
@@ -53,14 +53,12 @@ import com.kotcrab.vis.plugin.spine.components.SpineScale;
 import com.kotcrab.vis.plugin.spine.runtime.SpineAssetDescriptor;
 import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
 import com.kotcrab.vis.runtime.component.*;
-import com.kotcrab.vis.runtime.plugin.VisPlugin;
 import com.kotcrab.vis.runtime.scene.SceneConfig.Priority;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /** @author Kotcrab */
-@VisPlugin
-public class SpineEditorSupport extends EditorEntitySupport {
+public class SpineEditorSupport implements EditorEntitySupport {
 	private AssetsMetadataModule assetsMetadata;
 
 	private SpineCacheModule spineCache;

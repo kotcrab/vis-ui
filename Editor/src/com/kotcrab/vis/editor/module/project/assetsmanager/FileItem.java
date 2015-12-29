@@ -28,11 +28,11 @@ import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.extension.AssetType;
 import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.editor.module.project.ProjectExtensionStorageModule;
 import com.kotcrab.vis.editor.module.project.TextureCacheModule;
-import com.kotcrab.vis.editor.plugin.EditorEntitySupport;
+import com.kotcrab.vis.editor.plugin.api.EditorEntitySupport;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
@@ -48,9 +48,9 @@ import com.kotcrab.vis.ui.widget.VisLabel;
  * @author Kotcrab
  */
 public class FileItem extends Table {
-	private ExtensionStorageModule extensionStorage;
 	private AssetsMetadataModule assetsMetadata;
 
+	private ProjectExtensionStorageModule projectExtensionStorage;
 	private FileAccessModule fileAccess;
 	private TextureCacheModule textureCache;
 
@@ -203,7 +203,7 @@ public class FileItem extends Table {
 	}
 
 	private EditorEntitySupport findSupportForDirectory (FileHandle file, String relativePath) {
-		for (EditorEntitySupport support : extensionStorage.getEntitiesSupports()) {
+		for (EditorEntitySupport support : projectExtensionStorage.getEntitySupports()) {
 			if (support.isSupportedDirectory(file, relativePath)) return support;
 		}
 
