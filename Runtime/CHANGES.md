@@ -1,4 +1,5 @@
-#### Version: 0.3.1 (LibGDX 1.7.1, Artemis 1.2.1)
+#### Version: 0.3.1 (LibGDX 1.7.2, Artemis 1.3.1)
+- Updated to LibGDX 1.7.2 and Artemis 1.3.1
 - **API Deprecated**: `SceneConfig#addSystem(BaseSystem system)`, `SceneConfig#addSystem(BaseSystem system, int priority)` and `SimpleSystemProvider`
     - Use `SceneConfig#addSystem(Class<? extends BaseSystem> system)` and `SceneConfig#Class<? extends BaseSystem> systemClass, int priority`
     - Adding system in 0.3.0: `parameter.config.addSystem(new MySystem())`
