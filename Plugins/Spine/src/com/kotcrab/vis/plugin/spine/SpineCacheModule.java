@@ -48,7 +48,7 @@ import com.kotcrab.vis.runtime.util.UnsupportedAssetDescriptorException;
 
 //TODO support dynamic refreshing
 @VisPlugin
-public class SpineCacheModule extends ProjectModule implements ContainerExtension<ProjectModule> {
+public class SpineCacheModule extends ProjectModule implements ContainerExtension {
 	private FileAccessModule fileAccess;
 
 	private ObjectMap<FileHandle, TextureAtlas> atlases = new ObjectMap<>();

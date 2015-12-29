@@ -16,15 +16,38 @@
 
 package com.kotcrab.vis.editor.plugin.api;
 
-import com.kotcrab.vis.editor.module.Module;
+import com.kotcrab.vis.editor.module.editor.EditorModule;
+import com.kotcrab.vis.editor.module.project.ProjectModule;
+import com.kotcrab.vis.editor.module.scene.SceneModule;
+import com.kotcrab.vis.editor.util.PublicApi;
 
 /**
- * Interface allowing to inject custom modules into VisEditor modules containers
- * @param <T> type of base module depending on container that you want to inject your module into
+ * Interface allowing to inject custom modules into VisEditor modules containers. Classes implementing this interface
+ * must extend correct class depending of their scope returned by {@link #getScope()}, see {@link ExtensionScope} enum.
  * @author Kotcrab
  */
-public interface ContainerExtension<T extends Module> {
-	enum ExtensionScope {EDITOR, PROJECT, SCENE}
+@PublicApi
+public interface ContainerExtension {
+	enum ExtensionScope {
+		/** Modules using this scope must extend {@link EditorModule} */
+		EDITOR(EditorModule.class),
+		/** Modules using this scope must extend {@link ProjectModule} */
+		PROJECT(ProjectModule.class),
+		/** Modules using this scope must extend {@link SceneModule} */
+		SCENE(SceneModule.class);
 
+		private final Class<?> expectedClass;
+
+		ExtensionScope (Class<?> expectedClass) {
+			this.expectedClass = expectedClass;
+		}
+
+		public void verify (Class<?> clazz) {
+			if (expectedClass.isAssignableFrom(clazz)) return;
+			throw new IllegalStateException("Module " + clazz.getSimpleName() + " extends invalid class, should extend " + expectedClass.getSimpleName());
+		}
+	}
+
+	/** @return scope of this extension. */
 	ExtensionScope getScope ();
 }

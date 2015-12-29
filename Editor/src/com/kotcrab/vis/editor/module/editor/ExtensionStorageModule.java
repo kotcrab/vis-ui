@@ -58,9 +58,9 @@ public class ExtensionStorageModule extends EditorModule {
 
 	// ----------------
 
-	private Array<ContainerExtension<?>> containerExtensions = new Array<>();
+	private Array<ContainerExtension> containerExtensions = new Array<>();
 
-	public void addContainerExtension (ContainerExtension<?> extension) {
+	public void addContainerExtension (ContainerExtension extension) {
 		containerExtensions.add(extension);
 	}
 
@@ -220,12 +220,13 @@ public class ExtensionStorageModule extends EditorModule {
 	public <T extends Module> Array<T> getContainersExtensions (Class<T> baseModuleType, ExtensionScope scope) {
 		Array<T> modules = new Array<>();
 
-		for (ContainerExtension<?> extension : containerExtensions) {
+		for (ContainerExtension extension : containerExtensions) {
 			if (extension.getScope() == scope) {
 				try {
 					Constructor<?> cons = extension.getClass().getConstructor();
 					Object module = cons.newInstance();
-					modules.add((T) module);
+					scope.verify(extension.getClass());
+					modules.add(baseModuleType.cast(module));
 				} catch (ReflectiveOperationException e) {
 					throw new IllegalStateException(e);
 				}

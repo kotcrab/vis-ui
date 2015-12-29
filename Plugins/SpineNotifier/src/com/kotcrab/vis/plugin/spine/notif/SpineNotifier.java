@@ -42,7 +42,7 @@ import com.kotcrab.vis.editor.plugin.api.ContainerExtension;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
 @VisPlugin
-public class SpineNotifier extends EditorModule implements ContainerExtension<EditorModule> {
+public class SpineNotifier extends EditorModule implements ContainerExtension {
 	private PluginSettingsModule pluginSettings;
 
 	private Json json;
