@@ -1,4 +1,4 @@
-#### Version: 1.0.0-SNAPSHOT (LibGDX 1.7.1)
+#### Version: 1.0.0-SNAPSHOT (LibGDX 1.7.2)
 - **Added**: constructor TabbedPane(TabbedPaneStyle style, Sizes sizes)
 - **Added**: VisTextField#toString() now returns field text
 - **Fixed**: TabbedPane: Tab close button too small when using SkinScale.X2
