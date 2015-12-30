@@ -52,33 +52,25 @@ public class VisUI {
 	/** Defines possible built-in skin scales. */
 	public enum SkinScale {
 		/** Standard VisUI skin */
-		X1 {
-			@Override
-			public FileHandle getSkinFile () {
-				return Gdx.files.classpath("com/kotcrab/vis/ui/skin/x1/uiskin.json");
-			}
+		X1("com/kotcrab/vis/ui/skin/x1/uiskin.json", "default"),
+		/** VisUI skin 2x upscaled */
+		X2("com/kotcrab/vis/ui/skin/x2/uiskin.json", "x2");
 
-			@Override
-			public String getSizesName () {
-				return "default";
-			}
-		},
-		/** VisUI skin 2x unscaled */
-		X2 {
-			@Override
-			public FileHandle getSkinFile () {
-				return Gdx.files.classpath("com/kotcrab/vis/ui/skin/x2/uiskin.json");
-			}
+		private final String classpath;
+		private final String sizesName;
 
-			@Override
-			public String getSizesName () {
-				return "x2";
-			}
-		};
+		SkinScale (String classpath, String sizesName) {
+			this.classpath = classpath;
+			this.sizesName = sizesName;
+		}
 
-		public abstract FileHandle getSkinFile ();
+		public FileHandle getSkinFile () {
+			return Gdx.files.classpath(classpath);
+		}
 
-		public abstract String getSizesName ();
+		public String getSizesName () {
+			return sizesName;
+		}
 	}
 
 	/** Loads default VisUI skin with {@link SkinScale#X1}. */

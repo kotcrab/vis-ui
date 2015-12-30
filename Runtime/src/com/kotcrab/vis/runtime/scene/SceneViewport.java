@@ -23,30 +23,20 @@ import com.kotcrab.vis.runtime.util.PrettyEnum;
  * @author Kotcrab
  */
 public enum SceneViewport implements PrettyEnum {
-	STRETCH {
-		@Override
-		public String toPrettyString () {
-			return "Stretch Viewport";
-		}
-	}, FIT {
-		@Override
-		public String toPrettyString () {
-			return "Fit Viewport";
-		}
-	}, FILL {
-		@Override
-		public String toPrettyString () {
-			return "Fill Viewport";
-		}
-	}, SCREEN {
-		@Override
-		public String toPrettyString () {
-			return "Screen Viewport";
-		}
-	}, EXTEND {
-		@Override
-		public String toPrettyString () {
-			return "Extend Viewport";
-		}
+	STRETCH("Stretch Viewport"),
+	FIT("Fit Viewport"),
+	FILL("Fill Viewport"),
+	SCREEN("Screen Viewport"),
+	EXTEND("Extend Viewport");
+
+	private final String prettyString;
+
+	SceneViewport (String prettyString) {
+		this.prettyString = prettyString;
+	}
+
+	@Override
+	public String toPrettyString () {
+		return prettyString;
 	}
 }
