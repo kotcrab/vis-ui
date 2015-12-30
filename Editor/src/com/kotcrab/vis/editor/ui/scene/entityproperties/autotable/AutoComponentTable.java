@@ -71,7 +71,7 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 
 	@Override
 	protected void init () {
-		//init fragments
+		//init fragment providers
 		for (AutoTableFragmentProvider<?> provider : fragmentProviders.values()) {
 			provider.setObjects(componentClass, this, injector, properties);
 			injector.injectModules(provider);
@@ -148,7 +148,7 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 		}
 	}
 
-	protected <WT extends Actor> WT getUIByFieldId (String fieldId, Class<WT> widgetType) {
+	protected <T1 extends Actor> T1 getUIByFieldId (String fieldId, Class<T1> widgetType) {
 		Field field = fieldIdsMap.get(fieldId);
 		if (field == null)
 			throw new IllegalStateException("Could not find field with fieldId: " + fieldId + " in type " + componentClass.getSimpleName());
