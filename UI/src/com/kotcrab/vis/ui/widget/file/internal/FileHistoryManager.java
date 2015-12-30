@@ -31,7 +31,7 @@ import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.file.FileChooser.HistoryPolicy;
 import com.kotcrab.vis.ui.widget.file.FileChooserStyle;
 
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
+import static com.kotcrab.vis.ui.widget.file.internal.FileChooserText.*;
 
 /**
  * Manages {@link FileChooser} history of directories that user navigated into. This is internal VisUI API however this class

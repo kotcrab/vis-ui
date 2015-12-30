@@ -3,6 +3,7 @@
 - **Changed**: `GreaterThanValidator#setEquals(boolean)` renamed to `setUseEquals`
 - **Changed**: `FormInputValidator#validateInput` is now final and can't be overridden
 - **Changed**: `FormInputValidator#getLastResult` is now package-private
+- **Changed**: `FileChooserText` moved to `com.kotcrab.vis.ui.widget.file.internal` (was not part of public API)
 - **Added**: constructor `TabbedPane(TabbedPaneStyle style, Sizes sizes)`
 - **Added**: `VisTextField#toString()` now returns field text
 - **Fixed**: `TabbedPane`: Tab close button too small when using `SkinScale.X2`

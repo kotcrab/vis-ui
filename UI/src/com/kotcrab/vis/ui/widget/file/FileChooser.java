@@ -50,7 +50,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
+import static com.kotcrab.vis.ui.widget.file.internal.FileChooserText.*;
 
 /**
  * Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called. FileChooser is heavy widget

@@ -32,7 +32,7 @@ import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 
-import static com.kotcrab.vis.ui.widget.file.FileChooserText.*;
+import static com.kotcrab.vis.ui.widget.file.internal.FileChooserText.*;
 
 /**
  * Internal VisUI API.
