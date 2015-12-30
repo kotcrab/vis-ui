@@ -21,8 +21,10 @@ import com.kotcrab.vis.ui.InputValidator;
 /**
  * Base class for all validators used in {@link SimpleFormValidator}. Implementing custom {@link FormInputValidator} doesn't
  * differ from creating standard {@link InputValidator}. You just need to supply error message which will be displayed
- * when form is invalid. Because implementing custom {@link FormInputValidator} does not require any more changes you can
- * use {@link ValidatorWrapper} for existing {@link InputValidator}s.
+ * when form validation failed on this validator. Because implementing custom {@link FormInputValidator} does not require
+ * any more changes you can use {@link ValidatorWrapper} for existing {@link InputValidator}s.
+ * @see InputValidator
+ * @see ValidatorWrapper
  * @author Kotcrab
  */
 public abstract class FormInputValidator implements InputValidator {
@@ -34,24 +36,20 @@ public abstract class FormInputValidator implements InputValidator {
 		this.errorMsg = errorMsg;
 	}
 
-	public void setErrorMsg (String errorMsg) {
-		this.errorMsg = errorMsg;
-	}
-
-	public String getErrorMsg () {
-		return errorMsg;
-	}
-
-	protected boolean getLastResult () {
-		return result;
-	}
-
-	/** Should not be overridden by child class, use {@link #validate(String)}. */
 	@Override
-	public boolean validateInput (String input) {
+	public final boolean validateInput (String input) {
 		result = validate(input);
 		return result;
 	}
+
+	/**
+	 * Called by FormInputValidator when input should be validated, for proper validator behaviour this must be used
+	 * instead of {@link #validateInput(String)}.
+	 * Last result of this function will be stored because it is required by FromValidator.
+	 * @param input that should be validated.
+	 * @return if input is valid, false otherwise.
+	 */
+	protected abstract boolean validate (String input);
 
 	/**
 	 * When called, error message of this validator won't be displayed if input field is empty, however from still will
@@ -63,7 +61,7 @@ public abstract class FormInputValidator implements InputValidator {
 		return this;
 	}
 
-	/** See {@link #hideErrorOnEmptyInput()} */
+	/** @see {@link #hideErrorOnEmptyInput()} */
 	public void setHideErrorOnEmptyInput (boolean hideErrorOnEmptyInput) {
 		this.hideErrorOnEmptyInput = hideErrorOnEmptyInput;
 	}
@@ -72,12 +70,15 @@ public abstract class FormInputValidator implements InputValidator {
 		return hideErrorOnEmptyInput;
 	}
 
-	/**
-	 * Called by FormInputValidator when input should be validated, for proper validator behaviour this must be used
-	 * instead of {@link #validateInput(String)}.
-	 * Last result of this function will be stored because it is required by FromValidator.
-	 * @param input that should be validated.
-	 * @return if input is valid, false otherwise.
-	 */
-	protected abstract boolean validate (String input);
+	public void setErrorMsg (String errorMsg) {
+		this.errorMsg = errorMsg;
+	}
+
+	public String getErrorMsg () {
+		return errorMsg;
+	}
+
+	boolean getLastResult () {
+		return result;
+	}
 }
