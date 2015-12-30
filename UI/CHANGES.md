@@ -1,7 +1,8 @@
 #### Version: 1.0.0-SNAPSHOT (LibGDX 1.7.2)
-- **Added**: constructor TabbedPane(TabbedPaneStyle style, Sizes sizes)
-- **Added**: VisTextField#toString() now returns field text
-- **Fixed**: TabbedPane: Tab close button too small when using SkinScale.X2
+- **Added**: constructor `TabbedPane(TabbedPaneStyle style, Sizes sizes)`
+- **Added**: `VisTextField#toString()` now returns field text
+- **Fixed**: `TabbedPane`: Tab close button too small when using `SkinScale.X2`
+- **Removed deprecated API**: `ColumnGroup` (use libGDX's `VerticalGroup`)
 - **Skin**: 
     - **Added**: Drawables: `grey`, `vis-blue`, `vis-red`
 
