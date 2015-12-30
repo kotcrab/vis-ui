@@ -38,7 +38,7 @@ import com.kotcrab.vis.ui.widget.color.internal.Palette;
 import com.kotcrab.vis.ui.widget.color.internal.PickerCommons;
 import com.kotcrab.vis.ui.widget.color.internal.VerticalChannelBar;
 
-import static com.kotcrab.vis.ui.widget.color.ColorPickerText.HEX;
+import static com.kotcrab.vis.ui.widget.color.internal.ColorPickerText.HEX;
 
 /**
  * Color Picker widget, allows user to select color. ColorPicker is relatively heavy widget and should be reused if possible.

@@ -25,7 +25,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
-import static com.kotcrab.vis.ui.widget.color.ColorPickerText.*;
+import static com.kotcrab.vis.ui.widget.color.internal.ColorPickerText.*;
 
 /**
  * Color Picker dialog, allows user to select color. ColorPicker is relatively heavy dialog and should be reused whenever possible.
