@@ -72,24 +72,33 @@ public class OsUtils {
 	 * Creates platform dependant shortcut text. Converts int keycodes to String text. Eg. Keys.CONTROL_LEFT,
 	 * Keys.SHIFT_LEFT, Keys.F5 will be converted to Ctrl+Shift+F5 on Windows and Linux, and to ⌘⇧F5 on Mac.
 	 * <p>
-	 * CONTROL_LEFT and CONTROL_RIGHT are mapped to Ctrl. The same goes for Alt (ALT_LEFT, ALT_RIGHT) and Shift (SHIFT_LEFT, SHIFT_RIGHT).
+	 * CONTROL_LEFT and CONTROL_RIGHT and SYM are mapped to Ctrl. The same goes for Alt (ALT_LEFT, ALT_RIGHT) and Shift (SHIFT_LEFT, SHIFT_RIGHT).
+	 * <p>
+	 * Keycodes equal to {@link Integer#MIN_VALUE} will be ignored.
 	 * @param keycodes keycodes from {@link Keys} that are used to create shortcut text
 	 * @return the platform dependent shortcut text
 	 */
 	public static String getShortcutFor (int... keycodes) {
 		StringBuilder builder = new StringBuilder();
+
 		String separatorString = "+";
 		String ctrlKey = "Ctrl";
 		String altKey = "Alt";
 		String shiftKey = "Shift";
+
 		if (OsUtils.isMac()) {
 			separatorString = "";
 			ctrlKey = "\u2318";
 			altKey = "\u2325";
 			shiftKey = "\u21E7";
 		}
+
 		for (int i = 0; i < keycodes.length; i++) {
-			if (keycodes[i] == Keys.CONTROL_LEFT || keycodes[i] == Keys.CONTROL_RIGHT) {
+			if (keycodes[i] == Integer.MIN_VALUE) {
+				continue;
+			}
+
+			if (keycodes[i] == Keys.CONTROL_LEFT || keycodes[i] == Keys.CONTROL_RIGHT || keycodes[i] == Keys.SYM) {
 				builder.append(ctrlKey);
 			} else if (keycodes[i] == Keys.SHIFT_LEFT || keycodes[i] == Keys.SHIFT_RIGHT) {
 				builder.append(shiftKey);
@@ -103,6 +112,7 @@ public class OsUtils {
 				builder.append(separatorString);
 			}
 		}
+
 		return builder.toString();
 	}
 
