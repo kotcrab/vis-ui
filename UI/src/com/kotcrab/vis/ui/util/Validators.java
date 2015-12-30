@@ -82,7 +82,8 @@ public class Validators {
 			}
 		}
 
-		public void setEquals (boolean equals) {
+		/*** @param useEquals if true <= comparison will be used, if false < will be used. */
+		public void setUseEquals (boolean equals) {
 			this.equals = equals;
 		}
 
@@ -94,7 +95,7 @@ public class Validators {
 	/** Validates whether input is greater (alternatively greater or equal) than provided number. */
 	public static class GreaterThanValidator implements InputValidator {
 		private float greaterThan;
-		private boolean equals;
+		private boolean useEquals;
 
 		public GreaterThanValidator (float greaterThan) {
 			this.greaterThan = greaterThan;
@@ -103,21 +104,22 @@ public class Validators {
 		/** @param inputCanBeEqual if true >= comparison will be used, if false > will be used. */
 		public GreaterThanValidator (float greaterThan, boolean inputCanBeEqual) {
 			this.greaterThan = greaterThan;
-			this.equals = inputCanBeEqual;
+			this.useEquals = inputCanBeEqual;
 		}
 
 		@Override
 		public boolean validateInput (String input) {
 			try {
 				float value = Float.valueOf(input);
-				return equals ? value >= greaterThan : value > greaterThan;
+				return useEquals ? value >= greaterThan : value > greaterThan;
 			} catch (NumberFormatException ex) {
 				return false;
 			}
 		}
 
-		public void setEquals (boolean equals) {
-			this.equals = equals;
+		/*** @param useEquals if true >= comparison will be used, if false > will be used. */
+		public void setUseEquals (boolean useEquals) {
+			this.useEquals = useEquals;
 		}
 
 		public void setGreaterThan (float greaterThan) {
