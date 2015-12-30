@@ -34,14 +34,12 @@ import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.InputDialogAdapter;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
-import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService;
+import com.kotcrab.vis.ui.widget.file.internal.*;
 import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.DriveCheckerListener;
 import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.RootMode;
-import com.kotcrab.vis.ui.widget.file.internal.FavoritesIO;
-import com.kotcrab.vis.ui.widget.file.internal.FileChooserWinService;
 import com.kotcrab.vis.ui.widget.file.internal.FileChooserWinService.RootNameListener;
-import com.kotcrab.vis.ui.widget.file.internal.FileHistoryManager;
 import com.kotcrab.vis.ui.widget.file.internal.FileHistoryManager.FileHistoryCallback;
+import com.kotcrab.vis.ui.widget.file.internal.FilePopupMenu.FilePopupMenuCallback;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -175,7 +173,17 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		shortcutsFavoritesPanel = new VerticalGroup();
 		rebuildShortcutsFavoritesPanel();
 
-		fileMenu = new FilePopupMenu(style.popupMenuStyleName, this);
+		fileMenu = new FilePopupMenu(this, style, new FilePopupMenuCallback() {
+			@Override
+			public void showNewDirDialog () {
+				showNewDirectoryDialog();
+			}
+
+			@Override
+			public boolean delete (FileHandle fileHandle) throws IOException {
+				return fileDeleter.delete(fileHandle);
+			}
+		});
 
 		rebuildShortcutsList();
 
@@ -906,7 +914,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		fileWatcherThread = null;
 	}
 
-	void showNewDirectoryDialog () {
+	private void showNewDirectoryDialog () {
 		DialogUtils.showInputDialog(getStage(), NEW_DIRECTORY_DIALOG_TITLE.get(), NEW_DIRECTORY_DIALOG_TEXT.get(), true, new InputDialogAdapter() {
 			@Override
 			public void finished (String input) {
@@ -929,17 +937,14 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	/**
 	 * Sets {@link FileDeleter} that will be used for deleting files. You cannot set your own file deleter, {@link FileDeleter}
-	 * interface is public, delete must be either {@link DefaultFileDeleter} or {@link JNAFileDeleter}. {@link JNAFileDeleter}
-	 * supports moving file to system trash instead of deleting it permanently, but it requires JNA library in your project.
+	 * interface is not public, deleter must be either {@link DefaultFileDeleter} or {@link JNAFileDeleter}. {@link JNAFileDeleter}
+	 * supports moving file to system trash instead of deleting it permanently, however it requires JNA library in your
+	 * project classpath.
 	 */
 	public void setFileDeleter (FileDeleter fileDeleter) {
 		if (fileDeleter == null) throw new IllegalStateException("fileDeleter can't be null");
 		this.fileDeleter = fileDeleter;
-		fileMenu.fileDeleterChanged();
-	}
-
-	public FileDeleter getFileDeleter () {
-		return fileDeleter;
+		fileMenu.fileDeleterChanged(fileDeleter.hasTrash());
 	}
 
 	public void setIconProvider (FileIconProvider iconProvider) {

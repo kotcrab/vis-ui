@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.ui.widget.file;
+package com.kotcrab.vis.ui.widget.file.internal;
 
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Gdx;
@@ -27,6 +27,8 @@ import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
+import com.kotcrab.vis.ui.widget.file.FileChooser;
+import com.kotcrab.vis.ui.widget.file.FileChooserStyle;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -39,7 +41,10 @@ import static com.kotcrab.vis.ui.widget.file.internal.FileChooserText.*;
  * @author Kotcrab
  */
 public class FilePopupMenu extends PopupMenu {
-	private FileChooser chooser;
+	private final FileChooser chooser;
+	private final FileChooserStyle style;
+	private final FilePopupMenuCallback callback;
+
 	private boolean trashAvailable;
 
 	private FileHandle file;
@@ -50,11 +55,11 @@ public class FilePopupMenu extends PopupMenu {
 	private MenuItem addToFavorites;
 	private MenuItem removeFromFavorites;
 
-	public FilePopupMenu (String styleName, final FileChooser fileChooser) {
-		super(styleName);
-		this.chooser = fileChooser;
-
-		FileChooserStyle style = fileChooser.getChooserStyle();
+	public FilePopupMenu (final FileChooser chooser, FileChooserStyle chooserStyle, final FilePopupMenuCallback callback) {
+		super(chooserStyle.popupMenuStyleName);
+		this.chooser = chooser;
+		this.style = chooserStyle;
+		this.callback = callback;
 
 		delete = new MenuItem(CONTEXT_MENU_DELETE.get(), style.iconTrash);
 		newDirectory = new MenuItem(CONTEXT_MENU_NEW_DIRECTORY.get(), style.iconFolderNew);
@@ -65,13 +70,13 @@ public class FilePopupMenu extends PopupMenu {
 		delete.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
-				DialogUtils.showOptionDialog(fileChooser.getStage(), POPUP_TITLE.get(),
+				DialogUtils.showOptionDialog(chooser.getStage(), POPUP_TITLE.get(),
 						trashAvailable ? CONTEXT_MENU_MOVE_TO_TRASH_WARNING.get() : CONTEXT_MENU_DELETE_WARNING.get(),
 						OptionDialogType.YES_NO, new OptionDialogAdapter() {
 							@Override
 							public void yes () {
 								try {
-									boolean success = chooser.getFileDeleter().delete(file);
+									boolean success = callback.delete(file);
 									if (success == false)
 										DialogUtils.showErrorDialog(getStage(), POPUP_DELETE_FILE_FAILED.get());
 								} catch (IOException e) {
@@ -87,7 +92,7 @@ public class FilePopupMenu extends PopupMenu {
 		newDirectory.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
-				chooser.showNewDirectoryDialog();
+				callback.showNewDirDialog();
 			}
 		});
 
@@ -157,8 +162,14 @@ public class FilePopupMenu extends PopupMenu {
 		if (favorites.contains(this.file, false)) addItem(removeFromFavorites);
 	}
 
-	void fileDeleterChanged () {
-		trashAvailable = chooser.getFileDeleter().hasTrash();
+	public void fileDeleterChanged (boolean trashAvailable) {
+		this.trashAvailable = trashAvailable;
 		delete.setText(trashAvailable ? CONTEXT_MENU_MOVE_TO_TRASH.get() : CONTEXT_MENU_DELETE.get());
+	}
+
+	public interface FilePopupMenuCallback {
+		void showNewDirDialog ();
+
+		boolean delete (FileHandle fileHandle) throws IOException;
 	}
 }
