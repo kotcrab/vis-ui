@@ -259,7 +259,7 @@ public class PluginLoaderModule extends EditorModule {
 		private PluginLoaderModule loader;
 		private Stage stage;
 
-		private ObjectMap<String, VisCheckBox> pluginsCheckBoxes = new ObjectMap<>();
+		private ObjectMap<String, PluginCheckboxPair> pluginsCheckBoxes = new ObjectMap<>();
 		private VisTable pluginsTable;
 
 		public PluginSettingsModule () {
@@ -302,7 +302,7 @@ public class PluginLoaderModule extends EditorModule {
 			pluginsCheckBoxes.clear();
 
 			for (PluginDescriptor descriptor : loader.getAllPlugins()) {
-				VisCheckBox checkBox = new VisCheckBox(descriptor.folderName);
+				VisCheckBox checkBox = new VisCheckBox(descriptor.name);
 				checkBox.setProgrammaticChangeEvents(false);
 
 				LinkLabel detailsLabel = new LinkLabel("Details");
@@ -311,7 +311,7 @@ public class PluginLoaderModule extends EditorModule {
 				pluginsTable.add(checkBox);
 				pluginsTable.add().expandX().fillX();
 				pluginsTable.add(detailsLabel).padRight(3).row();
-				pluginsCheckBoxes.put(descriptor.folderName, checkBox);
+				pluginsCheckBoxes.put(descriptor.folderName, new PluginCheckboxPair(descriptor, checkBox));
 
 				if (descriptor.license != null) {
 					checkBox.addListener(new VisChangeListener((event, actor) -> {
@@ -343,7 +343,7 @@ public class PluginLoaderModule extends EditorModule {
 					continue;
 				}
 
-				pluginsCheckBoxes.get(plugin).setChecked(true);
+				pluginsCheckBoxes.get(plugin).checkBox.setChecked(true);
 			}
 		}
 
@@ -351,8 +351,8 @@ public class PluginLoaderModule extends EditorModule {
 		public void settingsApply () {
 			if (pluginsCheckBoxes.size > 0) {
 				config.pluginsIdsToLoad.clear();
-				for (VisCheckBox checkBox : pluginsCheckBoxes.values()) {
-					if (checkBox.isChecked()) config.pluginsIdsToLoad.add(checkBox.getText().toString());
+				for (PluginCheckboxPair set : pluginsCheckBoxes.values()) {
+					if (set.checkBox.isChecked()) config.pluginsIdsToLoad.add(set.descriptor.folderName);
 				}
 
 				settingsSave();
@@ -370,7 +370,18 @@ public class PluginLoaderModule extends EditorModule {
 
 		@Override
 		public void loadConfigToTable () {
-		} //unused, we load config in onShow
+			//unused, we load config in onShow
+		}
+	}
+
+	private static class PluginCheckboxPair {
+		public PluginDescriptor descriptor;
+		public VisCheckBox checkBox;
+
+		public PluginCheckboxPair (PluginDescriptor descriptor, VisCheckBox checkBox) {
+			this.descriptor = descriptor;
+			this.checkBox = checkBox;
+		}
 	}
 
 	public static class PluginsConfig {
