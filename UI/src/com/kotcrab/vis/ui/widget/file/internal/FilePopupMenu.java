@@ -36,10 +36,7 @@ import java.io.IOException;
 
 import static com.kotcrab.vis.ui.widget.file.internal.FileChooserText.*;
 
-/**
- * Internal VisUI API.
- * @author Kotcrab
- */
+/** @author Kotcrab */
 public class FilePopupMenu extends PopupMenu {
 	private final FileChooser chooser;
 	private final FileChooserStyle style;

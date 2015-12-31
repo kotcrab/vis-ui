@@ -53,6 +53,7 @@ import static com.kotcrab.vis.ui.widget.file.internal.FileChooserText.*;
 /**
  * Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called. FileChooser is heavy widget
  * and should be reused whenever possible. Chooser is platform dependent and can be only used on desktop.
+ * <p>
  * FileChooser will be centered on screen after adding to Stage use {@link #setCenterOnAdd(boolean)} to change this.
  * @author Kotcrab
  * @since 0.1.0
