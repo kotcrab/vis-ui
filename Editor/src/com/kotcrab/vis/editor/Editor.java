@@ -47,6 +47,7 @@ import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.util.ThreadUtils;
 import com.kotcrab.vis.editor.util.async.AsyncTask;
 import com.kotcrab.vis.editor.util.scene2d.VisGroup;
+import com.kotcrab.vis.editor.util.vis.LaunchConfiguration;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialog;
@@ -70,6 +71,7 @@ public class Editor extends ApplicationAdapter {
 	public static Editor instance;
 
 	private EditorFrame frame;
+	private LaunchConfiguration launchConfig;
 
 	@SkipWire private Stage stage;
 	private VisGroup stageRoot;
@@ -106,8 +108,9 @@ public class Editor extends ApplicationAdapter {
 	private Tab quickAccessTab;
 	private ScreenViewport stageViewport;
 
-	public Editor (EditorFrame frame) {
+	public Editor (EditorFrame frame, LaunchConfiguration launchConfig) {
 		this.frame = frame;
+		this.launchConfig = launchConfig;
 	}
 
 	@Override
@@ -141,7 +144,7 @@ public class Editor extends ApplicationAdapter {
 
 		Log.debug("Loading completed");
 
-		if (experimentalSettings.isUIScale() || frame.getLaunchConfig().scaleUIEnabled) {
+		if (experimentalSettings.isUIScale() || launchConfig.scaleUIEnabled) {
 			stageViewport.setUnitsPerPixel(0.5f);
 		}
 	}
@@ -344,6 +347,10 @@ public class Editor extends ApplicationAdapter {
 	private void exit (boolean restartAfterExit) {
 		if (restartAfterExit) App.startNewInstance();
 		Gdx.app.exit();
+	}
+
+	public LaunchConfiguration getLaunchConfig () {
+		return launchConfig;
 	}
 
 	public Stage getStage () {

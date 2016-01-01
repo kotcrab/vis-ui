@@ -70,6 +70,7 @@ public class VisContainers {
 		editorMC.add(new ExperimentalSettingsModule());
 		editorMC.add(new GridSettingsModule());
 
+		editorMC.add(new ProjectAutoLoader());
 		editorMC.add(new DevelopmentSpeedupModule());
 	}
 

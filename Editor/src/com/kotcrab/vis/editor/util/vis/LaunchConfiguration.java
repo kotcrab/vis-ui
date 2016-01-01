@@ -26,4 +26,15 @@ public class LaunchConfiguration {
 	public boolean scaleUIEnabled = false;
 	/** Allows software OpenGL rendering if hardware acceleration was not available. **/
 	public boolean allowSoftwareMode = false;
+
+	/** Project that will be loaded after editor startup */
+	public String projectPath;
+	/** Scene that will be loaded after editor startup, only used if {@link #projectPath was set} */
+	public String scenePath;
+
+	public void verify () {
+		if (scenePath != null && projectPath == null) {
+			throw new IllegalStateException("--scene cannot be used without specifying project using --project <project path>");
+		}
+	}
 }

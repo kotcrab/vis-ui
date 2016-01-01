@@ -66,7 +66,7 @@ public class EditorFrame extends JFrame {
 		config.backgroundFPS = 0; //default is 60, when in background it takes a lot of cpu, maybe vsync causes it?
 		config.allowSoftwareMode = launchConfig.allowSoftwareMode;
 
-		editor = new Editor(this);
+		editor = new Editor(this, launchConfig);
 
 		editorCanvas = new LwjglCanvas(editor, config);
 		Canvas canvas = editorCanvas.getCanvas();
@@ -79,16 +79,14 @@ public class EditorFrame extends JFrame {
 		splashController.shouldClose = true;
 	}
 
-	public LaunchConfiguration getLaunchConfig () {
-		return launchConfig;
-	}
-
 	public static void main (String[] args) {
 		App.init();
 
 		LaunchConfiguration launchConfig = new LaunchConfiguration();
 
-		for (String arg : args) {
+		//TODO: needs some better parser
+		for (int i = 0; i < args.length; i++) {
+			String arg = args[i];
 			if (arg.equals("--no-splash")) {
 				launchConfig.showSplash = false;
 				continue;
@@ -104,8 +102,30 @@ public class EditorFrame extends JFrame {
 				continue;
 			}
 
+			if (arg.equals("--project")) {
+				if (i + 1 >= args.length) {
+					throw new IllegalStateException("Not enough parameters for --project <project path>");
+				}
+
+				launchConfig.projectPath = args[i + 1];
+				i++;
+				continue;
+			}
+
+			if (arg.equals("--scene")) {
+				if (i + 1 >= args.length) {
+					throw new IllegalStateException("Not enough parameters for --scene <scene path>");
+				}
+
+				launchConfig.scenePath = args[i + 1];
+				i++;
+				continue;
+			}
+
 			Log.warn("Unrecognized command line argument: " + arg);
 		}
+
+		launchConfig.verify();
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
