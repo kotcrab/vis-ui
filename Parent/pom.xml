@@ -6,7 +6,7 @@
 
     <groupId>com.kotcrab.vis</groupId>
     <artifactId>vis-parent</artifactId>
-    <version>1.2.9-SNAPSHOT</version>
+    <version>1.2.10-SNAPSHOT</version>
     <description>Common Maven parent for Vis sub-modules</description>
 
     <name>VisParent</name>
@@ -187,6 +187,12 @@
                 <groupId>org.jooq</groupId>
                 <artifactId>joor</artifactId>
                 <version>0.9.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>1.4.8</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
