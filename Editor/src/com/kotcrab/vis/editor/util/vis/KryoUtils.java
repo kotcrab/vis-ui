@@ -20,6 +20,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
+import com.esotericsoftware.kryo.util.DefaultClassResolver;
+import com.esotericsoftware.kryo.util.MapReferenceResolver;
 import com.kotcrab.vis.editor.serializer.ArraySerializer;
 import com.kotcrab.vis.editor.serializer.ColorSerializer;
 import com.kotcrab.vis.editor.serializer.UUIDSerializer;
@@ -30,12 +32,31 @@ import java.util.UUID;
 /** @author Kotcrab */
 public class KryoUtils {
 	public static Kryo getCommonSettingsKryo () {
-		Kryo kryo = new Kryo();
+		Kryo kryo = new Kryo(new VisKryoClassResolver(), new MapReferenceResolver());
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 		kryo.setDefaultSerializer(new SettingsSerializerFactory());
 		kryo.register(Array.class, new ArraySerializer(), 10);
 		kryo.register(UUID.class, new UUIDSerializer(), 11);
 		kryo.register(Color.class, new ColorSerializer(), 11);
 		return kryo;
+	}
+
+	private static class VisKryoClassResolver extends DefaultClassResolver {
+		private String OLD_UPDATE_CHANNEL_TYPE = "com.kotcrab.vis.editor.webapi.UpdateChannelType";
+
+		@Override
+		protected Class<?> getTypeByName (String className) {
+
+			//UpdateChannelType was moved to another package, needs remap to still support older editor versions
+			if (className.startsWith(OLD_UPDATE_CHANNEL_TYPE)) {
+				try {
+					return Class.forName("com.kotcrab.vis.editor.util.vis.UpdateChannelType" + className.substring(OLD_UPDATE_CHANNEL_TYPE.length()));
+				} catch (ClassNotFoundException e) {
+					throw new IllegalStateException(e);
+				}
+			}
+
+			return super.getTypeByName(className);
+		}
 	}
 }

@@ -21,19 +21,23 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
-import com.kotcrab.vis.editor.webapi.EditorBuild;
-import com.kotcrab.vis.editor.webapi.UpdateChannelType;
-import com.kotcrab.vis.editor.webapi.WebAPIEditorVersionListener;
+import com.kotcrab.vis.editor.util.vis.UpdateChannelType;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Update checker module that checks one of three update channels: stable, beta and cutting edge.
  */
 public class UpdateCheckerModule extends EditorModule {
 	private static final String TAG = "UpdateChecker";
+	private static final Pattern BUILD_TIMESTAMP_PATTERN = Pattern.compile("[0-9]{6}.*-[0-9]");
 
-	private WebAPIModule webAPI;
 	private GeneralSettingsModule settings;
 	private ToastModule toastModule;
 	private MenuBarModule menuBar;
@@ -47,7 +51,7 @@ public class UpdateCheckerModule extends EditorModule {
 
 		UpdateChannelType updateChannel = settings.getUpdateChannel();
 
-		webAPI.getReleases(updateChannel, new WebAPIEditorVersionListener() {
+		getReleases(updateChannel, new ReleasesListener() {
 			@Override
 			public void result (Array<EditorBuild> builds) {
 				String parts[] = App.getBuildTimestamp().split("-");
@@ -103,7 +107,50 @@ public class UpdateCheckerModule extends EditorModule {
 		});
 	}
 
-	@Override
-	public void dispose () {
+	public void getReleases (UpdateChannelType updateChannel, ReleasesListener listener) {
+		new Thread(() -> {
+			try {
+				Document doc = null;
+				doc = Jsoup.connect(updateChannel.getStorageURL()).get();
+				Elements links = doc.select("a[href]");
+
+				Array<EditorBuild> builds = new Array<>();
+
+				for (int i = 1; i < links.size(); i++) { //first link is ../ so we skip it
+					String url = links.get(i).absUrl("href");
+					Matcher matcher = BUILD_TIMESTAMP_PATTERN.matcher(url);
+					matcher.find();
+					String timestamp = matcher.group();
+
+					builds.add(new EditorBuild(timestamp, url));
+				}
+
+				listener.result(builds);
+			} catch (Exception e) {
+				Log.exception(e);
+				listener.failed(e);
+			}
+		}, "VisWebReleaseListGetter").start();
 	}
+
+	private interface ReleasesListener {
+		void result (Array<EditorBuild> builds);
+
+		void failed (Exception e);
+	}
+
+	/**
+	 * Describes single editor build
+	 * @author Kotcrab
+	 */
+	private static class EditorBuild {
+		public String timestamp;
+		public String url;
+
+		public EditorBuild (String timestamp, String url) {
+			this.timestamp = timestamp;
+			this.url = url;
+		}
+	}
+
 }

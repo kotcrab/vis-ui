@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.webapi;
+package com.kotcrab.vis.editor.util.vis;
 
 import com.kotcrab.vis.runtime.util.PrettyEnum;
 import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
@@ -23,7 +23,7 @@ import com.kotcrab.vis.runtime.util.annotation.DeprecatedOn;
  * Possible VisEditor update channels.
  * @author Kotcrab
  */
-public enum UpdateChannelType implements PrettyEnum, ReleaseInformationProvider {
+public enum UpdateChannelType implements PrettyEnum {
 	STABLE {
 		@Override
 		public String toPrettyString () {
@@ -57,5 +57,7 @@ public enum UpdateChannelType implements PrettyEnum, ReleaseInformationProvider 
 		public String getStorageURL () {
 			return "http://dl.kotcrab.com/vis/editor/edge/";
 		}
-	}
+	};
+
+	public abstract String getStorageURL ();
 }
