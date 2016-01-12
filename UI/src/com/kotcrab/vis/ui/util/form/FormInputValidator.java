@@ -16,7 +16,7 @@
 
 package com.kotcrab.vis.ui.util.form;
 
-import com.kotcrab.vis.ui.InputValidator;
+import com.kotcrab.vis.ui.util.InputValidator;
 
 /**
  * Base class for all validators used in {@link SimpleFormValidator}. Implementing custom {@link FormInputValidator} doesn't
