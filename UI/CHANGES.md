@@ -7,6 +7,7 @@
 - **Changed**: `FileChooser#getFileDeleter` removed
 - **Added**: constructor `TabbedPane(TabbedPaneStyle style, Sizes sizes)`
 - **Added**: `VisTextField#toString()` now returns field text
+- **Added**: `PrefWidthIfVisibleValue`
 - **Fixed**: `TabbedPane`: Tab close button too small when using `SkinScale.X2`
 - **Removed deprecated API**: `ColumnGroup` (use libGDX's `VerticalGroup`)
 - **Skin**: 
@@ -39,7 +40,7 @@
 -API Addition: IntDigitsOnlyFilter
 -API Addition: DragPane
 -API Addition: VisValue, VisWidgetValue - standard Table Values can be used as lambadas if you are using Java 1.8
--APi Addition: PrefHeightIfVisibleValue
+-API Addition: PrefHeightIfVisibleValue
 -ColorPicker:
  -API Change: added ColorPickerListener#reset (Color previousColor, Color newColor)
  -Rewritten using shaders, huge performance boost, now usable on gwt and low end devices
