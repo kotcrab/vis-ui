@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
- * Table in tables simplified
+ * Table in tables. Simplified.
  * @author Kotcrab
  */
 public class TableBuilder {
@@ -35,9 +35,9 @@ public class TableBuilder {
 		return build(new VisTable(true), actors);
 	}
 
-	public static VisTable build (int verticalSpacing, Actor... actors) {
+	public static VisTable build (int rightSpacing, Actor... actors) {
 		VisTable table = new VisTable(true);
-		table.defaults().spaceRight(verticalSpacing);
+		table.defaults().spaceRight(rightSpacing);
 		return build(table, actors);
 	}
 

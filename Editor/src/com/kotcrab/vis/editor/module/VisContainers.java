@@ -72,6 +72,9 @@ public class VisContainers {
 
 		editorMC.add(new ProjectAutoLoader());
 		editorMC.add(new DevelopmentSpeedupModule());
+
+		editorMC.add(new BuildToolsCheckerModule());
+		editorMC.add(new PluginApiManagerModule());
 	}
 
 	public static void createProjectModules (ProjectModuleContainer projectMC, ExtensionStorageModule extensionStorage) {

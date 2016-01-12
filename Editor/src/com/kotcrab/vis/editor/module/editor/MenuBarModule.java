@@ -30,6 +30,7 @@ import com.kotcrab.vis.editor.ui.ButtonListener;
 import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
 import com.kotcrab.vis.editor.ui.SceneStatusWidgetController;
 import com.kotcrab.vis.editor.ui.dialog.AboutDialog;
+import com.kotcrab.vis.editor.ui.dialog.PluginApiManagerDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.scene2d.MenuUtils;
@@ -51,7 +52,7 @@ public class MenuBarModule extends EditorModule {
 
 	private MenuBar menuBar;
 
-	private VisTable container;
+	private VisTable mainTable;
 
 	private ProjectStatusWidgetController projectController;
 	private SceneStatusWidgetController sceneController;
@@ -80,12 +81,12 @@ public class MenuBarModule extends EditorModule {
 		createToolsMenu();
 		createHelpMenu();
 
-		container = new VisTable(true);
-		container.setBackground(VisUI.getSkin().getDrawable("menu-bg"));
+		mainTable = new VisTable(true);
+		mainTable.setBackground(VisUI.getSkin().getDrawable("menu-bg"));
 
-		container.add(menuBar.getTable());
-		container.add().expand().fill();
-		container.add(updateInfoTable).expand().fill();
+		mainTable.add(menuBar.getTable());
+		mainTable.add().expand().fill();
+		mainTable.add(updateInfoTable).expand().fill();
 	}
 
 	private void createFileMenu () {
@@ -150,10 +151,12 @@ public class MenuBarModule extends EditorModule {
 		menu.addItem(createMenuItem(ControllerPolicy.SCENE, "Reset Camera Zoom", () -> App.eventBus.post(new SceneMenuBarEvent(RESET_ZOOM))));
 
 	}
-	
+
 	private void createToolsMenu () {
 		toolsMenu = new Menu("Tools");
 		menuBar.addMenu(toolsMenu);
+
+		toolsMenu.addItem(createMenuItem("Plugin API Manager", null, () -> stage.addActor(new PluginApiManagerDialog(container).fadeIn())));
 
 //		menu.addItem(createMenuItem("Hiero", null, () -> System.out.println("not yet")));
 //		menu.addItem(createMenuItem("Particle Editor", null, () -> System.out.println("not yet")));
@@ -165,13 +168,13 @@ public class MenuBarModule extends EditorModule {
 		menuBar.addMenu(menu);
 
 		menu.addItem(createMenuItem("Website", Icons.GLOBE, () -> Gdx.net.openURI("http://vis.kotcrab.com")));
-		menu.addItem(createMenuItem("Documentation", null, () -> Gdx.net.openURI(WikiPages.QUICK_START)));
+		menu.addItem(createMenuItem("Documentation", null, WikiPages.QUICK_START::open));
 		menu.addItem(createMenuItem("Show Log", null, () -> FileUtils.open(Log.getLogFile())));
 		menu.addItem(createMenuItem("About", Icons.INFO, () -> stage.addActor(new AboutDialog().fadeIn())));
 	}
 
 	public Table getTable () {
-		return container;
+		return mainTable;
 	}
 
 	public Menu getToolsMenu () {
