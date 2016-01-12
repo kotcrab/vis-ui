@@ -60,6 +60,7 @@ public enum Icons {
 	CURSOR("cursor"),
 	POLYGON("polygon"),
 	PLUS("plus"),
+	PROGRESS("progress"),
 
 	TOOL_MOVE("tool-move"),
 	TOOL_ROTATE("tool-rotate"),
