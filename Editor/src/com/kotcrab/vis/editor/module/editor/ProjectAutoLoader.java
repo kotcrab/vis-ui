@@ -50,7 +50,7 @@ public class ProjectAutoLoader extends EditorModule {
 		sceneFile = getAbsoluteHandleIfExists(config.scenePath);
 
 		if (projectFile.isPresent() == false) {
-			Log.warn(TAG, "Could not find project: " + config.projectPath);
+			if (config.projectPath != null) Log.warn(TAG, "Could not find project: " + config.projectPath);
 			return;
 		}
 
