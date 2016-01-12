@@ -641,7 +641,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 				Integer[] returns = {HELP, OK};
 				DialogUtils.showConfirmDialog(getStage(), "Warning", "This directory is already marked, changing it may\n" +
 						"result in unexpected errors if asset files are used in scenes.", buttons, returns, result -> {
-					if (result == HELP) Gdx.net.openURI(WikiPages.MARKING_DIRECTORIES);
+					if (result == HELP) WikiPages.MARKING_DIRECTORIES.open();
 					if (result == OK) markDirectory(dir, fullCodeName);
 				});
 			} else {

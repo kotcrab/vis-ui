@@ -16,7 +16,6 @@
 
 package com.kotcrab.vis.editor.module.project;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -185,7 +184,7 @@ public class AssetsMetadataModule extends ProjectModule {
 			content.add(message).row();
 			content.add(TableBuilder.build(12, help, details, ignore)).right();
 
-			help.setListener(url -> Gdx.net.openURI(WikiPages.DAMAGED_ASSETS_METADATA));
+			help.setListener(url -> WikiPages.DAMAGED_ASSETS_METADATA.open());
 			ignore.setListener(url -> fadeOut());
 
 			pack();

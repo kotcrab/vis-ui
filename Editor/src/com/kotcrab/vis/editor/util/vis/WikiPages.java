@@ -16,10 +16,26 @@
 
 package com.kotcrab.vis.editor.util.vis;
 
+import com.badlogic.gdx.Gdx;
+
 /** @author Kotcrab */
-public class WikiPages {
-	public static final String QUICK_START = "https://github.com/kotcrab/VisEditor/wiki/Quick-Start";
-	public static final String CONVERTING_FROM_VISEDITOR_02X = "https://github.com/kotcrab/VisEditor/wiki/Converting-projects-from-VisEditor-0.2.x";
-	public static final String DAMAGED_ASSETS_METADATA = "https://github.com/kotcrab/VisEditor/wiki/Troubleshooting:-Damaged-Assets-Metadata";
-	public static final String MARKING_DIRECTORIES = "https://github.com/kotcrab/VisEditor/wiki/Marking-Assets-Directories";
+public enum WikiPages {
+	QUICK_START("https://github.com/kotcrab/VisEditor/wiki/Quick-Start"),
+	CONVERTING_FROM_VISEDITOR_02X("https://github.com/kotcrab/VisEditor/wiki/Converting-projects-from-VisEditor-0.2.x"),
+	DAMAGED_ASSETS_METADATA("https://github.com/kotcrab/VisEditor/wiki/Troubleshooting:-Damaged-Assets-Metadata"),
+	MARKING_DIRECTORIES("https://github.com/kotcrab/VisEditor/wiki/Marking-Assets-Directories");
+
+	private final String url;
+
+	WikiPages (String url) {
+		this.url = url;
+	}
+
+	public String url () {
+		return url;
+	}
+
+	public void open () {
+		Gdx.net.openURI(url);
+	}
 }
