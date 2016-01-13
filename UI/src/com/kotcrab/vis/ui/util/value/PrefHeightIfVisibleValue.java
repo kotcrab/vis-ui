@@ -22,9 +22,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 
 /**
- * Value that returns widget preferred height if it's visible. If widget is inedible then returns 0.
+ * Value that returns widget preferred height if it's visible. If widget is invisible then returns 0.
  * This can be only added to classes extending {@link Widget} or {@link Table}, if you try to add it to any other class
- * you will get {@link IllegalStateException}.
+ * you will get {@link IllegalStateException} during runtime.
  * @author Kotcrab
  * @since 0.9.3
  */

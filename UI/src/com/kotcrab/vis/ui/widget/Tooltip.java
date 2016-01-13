@@ -250,7 +250,7 @@ public class Tooltip extends VisTable {
 				float tooltipY = targetPos.y - getHeight() - 6;
 				float stageHeight = target.getStage().getHeight();
 
-				//is there is enough space to display above widget
+				//is there enough space to display above widget?
 				if (stageHeight - tooltipY > stageHeight)
 					setY(targetPos.y + target.getHeight() + 6); //display above widget
 				else
