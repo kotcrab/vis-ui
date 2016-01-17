@@ -47,7 +47,7 @@ public class Lexer {
 				if (globalStyleRegex.matcher(usl.substring(i)).matches() == false)
 					Utils.throwException("Unexpected '.' or invalid global style block declaration", usl, i);
 
-				i = leaGlobalStyleDeclaration(ctx, usl, i + 1);
+				i = lexGlobalStyleDeclaration(ctx, usl, i + 1);
 
 			} else if (ch == '-') { //meta style definition
 				if (metaStyleRegex.matcher(usl.substring(i)).matches() == false)
@@ -131,7 +131,7 @@ public class Lexer {
 		return i;
 	}
 
-	private static int leaGlobalStyleDeclaration (LexerContext ctx, String usl, int i) {
+	private static int lexGlobalStyleDeclaration (LexerContext ctx, String usl, int i) {
 		int end = usl.indexOf(':', i);
 		if (end == -1) Utils.throwException("Global style definition end could not be found", usl, i);
 
