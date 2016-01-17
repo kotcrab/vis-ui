@@ -15,7 +15,7 @@
 	menuitem-grey: { a: 1, b: 0.65, g: 0.65, r: 0.65 }
 	vis-blue: { a: 1, b: 0.886, g: 0.631, r: 0.105 }
 	vis-red: { a: 1, b: 0.047, g: 0, r: 0.862 }
-  	link-label: { a: 1, b: 0.886, g: 0.631, r: 0.105 }
+	link-label: { a: 1, b: 0.886, g: 0.631, r: 0.105 }
 }
 
 .font: { font: default-font, fontColor: white,  }
@@ -53,7 +53,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	#SelectBox$SelectBoxStyle: {
 		default inherits .font, .font-disabled: {
 			background: default-select,
-		 	scrollStyle: default,
+			scrollStyle: default,
 			listStyle: { font: default-font, selection: padded-list-selection, background: select-box-list-bg }
 		}
 	}
@@ -88,7 +88,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	}
 	
 	#TextField$TextFieldStyle: {
-	    -base: { selection: selection, background: textfield, cursor: cursor, messageFont: default-font, messageFontColor: grey }
+		-base: { selection: selection, background: textfield, cursor: cursor, messageFont: default-font, messageFontColor: grey }
 		default inherits .font, .font-disabled, base: { }
 		small inherits .font-small, .font-small-disabled, base: { }
 	}
@@ -102,47 +102,47 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	#Touchpad$TouchpadStyle: { default: { background: default-pane, knob: touchpad-knob } }
 	#Tree$TreeStyle: { default: { minus: tree-minus, plus: tree-plus, selection: tree-selection, over: tree-over } }
 
-    #TextTooltip$TextTooltipStyle: {
-    	default: {
-    		background: default-pane,
-    	    label inherits .font: { }
-        }
-    }
+	#TextTooltip$TextTooltipStyle: {
+		default: {
+			background: default-pane,
+			label inherits .font: { }
+		}
+	}
 }
 
 #com.kotcrab.vis.ui.Sizes: {
-    default: {
-        scaleFactor: 1,
+	default: {
+		scaleFactor: 1,
 
-        spacingBottom: 8,
-        spacingRight: 6,
+		spacingBottom: 8,
+		spacingRight: 6,
 
-        menuItemIconSize: 22,
+		menuItemIconSize: 22,
 
-        numberSelectorButtonSize: 12,
-        numberSelectorButtonsWidth: 12,
-        numberSelectorFieldSize: 40,
-        numberSelectorFieldRightPadding: 1
-    }
+		numberSelectorButtonSize: 12,
+		numberSelectorButtonsWidth: 12,
+		numberSelectorFieldSize: 40,
+		numberSelectorFieldRightPadding: 1
+	}
 
-    x2: {
-        scaleFactor: 2,
+	x2: {
+		scaleFactor: 2,
 
-        spacingBottom: 8,
-        spacingRight: 6,
+		spacingBottom: 8,
+		spacingRight: 6,
 
-        menuItemIconSize: 44,
+		menuItemIconSize: 44,
 
-        numberSelectorButtonSize: 24,
-        numberSelectorButtonsWidth: 20,
-        numberSelectorFieldSize: 80,
-        numberSelectorFieldRightPadding: 5
-    }
+		numberSelectorButtonSize: 24,
+		numberSelectorButtonsWidth: 20,
+		numberSelectorFieldSize: 80,
+		numberSelectorFieldRightPadding: 5
+	}
 }
 
 package com.kotcrab.vis.ui.widget {
 	#VisTextField$VisTextFieldStyle: {
-	    -base: { selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor }
+		-base: { selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor }
 		default inherits .focus-border, .font, .font-disabled, base: { }
 		small inherits .focus-border, .font-small, .font-small-disabled, base: { }
 	}
@@ -183,15 +183,15 @@ package com.kotcrab.vis.ui.widget {
 		default inherits noborder: {background: button, border: border}
 	}
 
-    #Menu$MenuStyle extends PopupMenuStyle: {
-        -base: { openButtonStyleName: "menu-bar" }
-        default inherits base: {}
-        noborder inherits base: {}
-    }
+	#Menu$MenuStyle extends PopupMenuStyle: {
+		-base: { openButtonStyleName: "menu-bar" }
+		default inherits base: {}
+		noborder inherits base: {}
+	}
 
-    #MenuBar$MenuBarStyle: {
-        default: { background: menu-bg }
-    }
+	#MenuBar$MenuBarStyle: {
+		default: { background: menu-bg }
+	}
 
 	#Separator$SeparatorStyle: {
 		default: {background: separator, thickness: 4}
@@ -213,12 +213,12 @@ package com.kotcrab.vis.ui.widget {
 	}
 
 	#Tooltip$TooltipStyle: {
-	    default: { background: tooltip-bg }
+		default: { background: tooltip-bg }
 	}
 
-    #LinkLabel$LinkLabelStyle: {
-        default inherits .font: { fontColor: link-label, underline: white }
-    }
+	#LinkLabel$LinkLabelStyle: {
+		default inherits .font: { fontColor: link-label, underline: white }
+	}
 
 	#tabbedpane.TabbedPane$TabbedPaneStyle: {
 		default: { background: menu-bg, bottomBar: list-selection,
@@ -226,24 +226,24 @@ package com.kotcrab.vis.ui.widget {
 	}
 
 	#file.FileChooserStyle: {
-	    default: { highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right,
-	               iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive,
-	               iconFolderStar: icon-folder-star, iconTrash: icon-trash, iconFileText: icon-file-text, iconFileImage: icon-file-image,
-	               iconFilePdf: icon-file-pdf, iconFileAudio: icon-file-audio }
+		default: { highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right,
+				   iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive,
+				   iconFolderStar: icon-folder-star, iconTrash: icon-trash, iconFileText: icon-file-text, iconFileImage: icon-file-image,
+				   iconFilePdf: icon-file-pdf, iconFileAudio: icon-file-audio }
 	}
 
 	#color.ColorPickerWidgetStyle: {
-        default: { barSelector: color-picker-bar-selector, cross: color-picker-cross, iconArrowRight: icon-arrow-right
-                   verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }
+		default: { barSelector: color-picker-bar-selector, cross: color-picker-cross, iconArrowRight: icon-arrow-right
+				   verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }
 	}
 
 	#color.ColorPickerStyle extends ~WindowStyle: {
-        default: { pickerStyle: { barSelector: color-picker-bar-selector, cross: color-picker-cross, iconArrowRight: icon-arrow-right
-                   verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }}
+		default: { pickerStyle: { barSelector: color-picker-bar-selector, cross: color-picker-cross, iconArrowRight: icon-arrow-right
+				   verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }}
 	}
 }
 
 #com.kotcrab.vis.ui.util.form.SimpleFormValidator$FormValidatorStyle: {
-    default: { errorLabelColor: vis-red, validLabelColor: white }
-    smooth inherits default: { colorTransition: true, colorTransitionDuration: 0.3 }
+	default: { errorLabelColor: vis-red, validLabelColor: white }
+	smooth inherits default: { colorTransition: true, colorTransitionDuration: 0.3 }
 }
