@@ -76,7 +76,7 @@ public abstract class TextUITable extends SpecificUITable {
 		fontLabel = new VisLabel();
 		fontLabel.setColor(Color.GRAY);
 		fontLabel.setEllipsis(true);
-		fontLabelTooltip = new Tooltip(fontLabel, "");
+		fontLabelTooltip = new Tooltip.Builder("").target(fontLabel).build();
 		selectFontButton = new VisImageButton(Icons.MORE.drawable());
 
 		fontPropertiesTable = new VisTable(true);

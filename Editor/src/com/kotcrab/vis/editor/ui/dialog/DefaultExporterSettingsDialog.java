@@ -55,18 +55,18 @@ public class DefaultExporterSettingsDialog extends VisWindow {
 		skipDefaultCheck = new VisCheckBox("Skip default values");
 
 		VisImage skipDefaultHelpImage = new VisImage(Icons.QUESTION_BIG.drawable());
-		new Tooltip(skipDefaultHelpImage, "Reduces output file size by skipping default values like '0' or 'null'.\n" +
+		new Tooltip.Builder("Reduces output file size by skipping default values like '0' or 'null'.\n" +
 				"Typically there is no need to disable it but you can do it if you want to inspect\n" +
-				"output scene file.", Align.left);
+				"output scene file.", Align.left).target(skipDefaultHelpImage).build();
 		add(skipDefaultCheck);
 		add(skipDefaultHelpImage).size(22).row();
 
 		miniamlOutputCheck = new VisCheckBox("Use minimal output type");
 
 		VisImage minimalOutputHelpImage = new VisImage(Icons.QUESTION_BIG.drawable());
-		new Tooltip(minimalOutputHelpImage, "If checked output JSON will use minimal format, unnecessary double quotes\n" +
+		new Tooltip.Builder("If checked output JSON will use minimal format, unnecessary double quotes\n" +
 				"will be skipped unless needed. This format may not be supported by all JSON parsers.\nUncheck" +
-				"this to disable minimal format.", Align.left);
+				"this to disable minimal format.", Align.left).target(minimalOutputHelpImage).build();
 		add(miniamlOutputCheck);
 		add(minimalOutputHelpImage).size(22).row();
 

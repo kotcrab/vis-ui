@@ -55,23 +55,41 @@ public class Tooltip extends VisTable {
 	private float fadeTime = DEFAULT_FADE_TIME;
 	private float appearDelayTime = DEFAULT_APPEAR_DELAY_TIME;
 
-	/** Creates new Tooltip without setting tooltip target */
+	private Tooltip (Builder builder) {
+		super(true);
+
+		TooltipStyle style = builder.style;
+		if (style == null) style = VisUI.getSkin().get("default", TooltipStyle.class);
+
+		init(style, builder.target, builder.content);
+	}
+
+	@Deprecated
+	/** @deprecated use {@link Tooltip.Builder} */
 	public Tooltip (String text) {
 		this("default", null, text, Align.center);
 	}
 
+	@Deprecated
+	/** @deprecated use {@link Tooltip.Builder} */
 	public Tooltip (Actor target, String text) {
 		this("default", target, text, Align.center);
 	}
 
+	@Deprecated
+	/** @deprecated use {@link Tooltip.Builder} */
 	public Tooltip (Actor target, String text, int textAlign) {
 		this("default", target, text, textAlign);
 	}
 
+	@Deprecated
+	/** @deprecated use {@link Tooltip.Builder} */
 	public Tooltip (String styleName, Actor target, String text) {
 		this(styleName, target, text, Align.center);
 	}
 
+	@Deprecated
+	/** @deprecated use {@link Tooltip.Builder} */
 	public Tooltip (String styleName, Actor target, String text, int textAlign) {
 		super(true);
 
@@ -80,22 +98,29 @@ public class Tooltip extends VisTable {
 		init(VisUI.getSkin().get(styleName, TooltipStyle.class), target, label);
 	}
 
-	/** Creates new Tooltip without setting tooltip target */
+	@Deprecated
+	/** @deprecated use {@link Tooltip.Builder} */
 	public Tooltip (Actor content) {
 		super(true);
 		init(VisUI.getSkin().get("default", TooltipStyle.class), null, content);
 	}
 
+	@Deprecated
+	/** @deprecated use {@link Tooltip.Builder} */
 	public Tooltip (Actor target, Actor content) {
 		this("default", target, content);
 	}
 
+	@Deprecated
+	/** @deprecated use {@link Tooltip.Builder} */
 	public Tooltip (String styleName, Actor target, Actor content) {
 		super(true);
 
 		init(VisUI.getSkin().get(styleName, TooltipStyle.class), target, content);
 	}
 
+	@Deprecated
+	/** @deprecated use {@link Tooltip.Builder} */
 	public Tooltip (Actor target, Actor content, TooltipStyle style) {
 		super(true);
 		init(style, target, content);
@@ -286,6 +311,45 @@ public class Tooltip extends VisTable {
 
 		public TooltipStyle (Drawable background) {
 			this.background = background;
+		}
+	}
+
+	public static class Builder {
+		private final Actor content;
+
+		private Actor target = null;
+		private TooltipStyle style = null;
+
+		public Builder (Actor content) {
+			this.content = content;
+		}
+
+		public Builder (String text) {
+			this(text, Align.center);
+		}
+
+		public Builder (String text, int textAlign) {
+			VisLabel label = new VisLabel(text);
+			label.setAlignment(textAlign);
+			this.content = label;
+		}
+
+		public Builder target (Actor target) {
+			this.target = target;
+			return this;
+		}
+
+		public Builder style (String styleName) {
+			return style(VisUI.getSkin().get(styleName, TooltipStyle.class));
+		}
+
+		public Builder style (TooltipStyle style) {
+			this.style = style;
+			return this;
+		}
+
+		public Tooltip build () {
+			return new Tooltip(this);
 		}
 	}
 }

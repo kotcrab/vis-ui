@@ -52,9 +52,10 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 		updateTable.add("Update channel:");
 		updateTable.add(updateChannelSelectBox);
 		VisImage updateHelpImage = new VisImage(Icons.QUESTION_BIG.drawable());
-		new Tooltip(updateHelpImage, "Select update channel that will be used for update checking:\n" +
+		new Tooltip.Builder("Select update channel that will be used for update checking:\n" +
 				"Stable: The most stable builds, should be bug free in theory.\n" +
-				"Cutting Edge: Built after every single change, expect a lot of bugs and a lot of builds.", Align.left);
+				"Cutting Edge: Built after every single change, expect a lot of bugs and a lot of builds.", Align.left)
+				.target(updateHelpImage).build();
 		updateTable.add(updateHelpImage).size(22);
 
 		settingsTable.defaults().left();

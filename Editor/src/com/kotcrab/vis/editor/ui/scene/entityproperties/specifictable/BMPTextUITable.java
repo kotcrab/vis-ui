@@ -43,7 +43,7 @@ public class BMPTextUITable extends TextUITable {
 
 		fontPropertiesTable.add(distanceFieldCheck);
 
-		new Tooltip(distanceFieldCheck, "Use distance field shader for this text");
+		new Tooltip.Builder("Use distance field shader for this text").target(distanceFieldCheck).build();
 	}
 
 	@Override

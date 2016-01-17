@@ -159,7 +159,7 @@ com.kotcrab.vis.ui.widget.color.ColorPickerStyle: {
 },
 com.kotcrab.vis.ui.util.form.SimpleFormValidator$FormValidatorStyle: {
 	default: {errorLabelColor: vis-red, validLabelColor: white },
-	smooth: {colorTransition: true, colorTransitionDuration: 0.3, errorLabelColor: vis-red, validLabelColor: white }
+	smooth: {colorTransitionDuration: 0.3, errorLabelColor: vis-red, validLabelColor: white }
 }
 
 }

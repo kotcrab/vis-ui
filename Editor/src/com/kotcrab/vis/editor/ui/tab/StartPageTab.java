@@ -107,11 +107,11 @@ public class StartPageTab extends MainContentTab implements LinkLabelListener {
 
 		for (RecentProjectEntry entry : recentProjects) {
 			LinkLabel label = new LinkLabel(entry.name, entry.projectPath);
-			new Tooltip(label, entry.projectPath);
+			new Tooltip.Builder(entry.projectPath).target(label).build();
 			label.setListener(this);
 
 			VisImageButton removeButton = new VisImageButton(styleProvider.transparentXButton());
-			new Tooltip(removeButton, "Remove from list");
+			new Tooltip.Builder("Remove from list").target(removeButton).build();
 			removeButton.setFocusBorderEnabled(false);
 			removeButton.setVisible(false);
 			removeButton.addListener(new ChangeListener() {

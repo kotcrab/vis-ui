@@ -78,8 +78,8 @@ public class VisSpineComponentTable extends AutoComponentTable<VisSpine> {
 		super.init();
 
 		warningImage = new Image(Icons.WARNING.drawable());
-		onlyCommonAnimationTooltip = new Tooltip("Only showing animations that are common for all selected objects!");
-		noCommonAnimationTooltip = new Tooltip("There isn't any common animation for selected objects");
+		onlyCommonAnimationTooltip = new Tooltip.Builder("Only showing animations that are common for all selected objects!").build();
+		noCommonAnimationTooltip = new Tooltip.Builder("There isn't any common animation for selected objects").build();
 
 		preview = new IndeterminateCheckbox("Preview in editor");
 		preview.addListener(properties.getSharedCheckBoxChangeListener());

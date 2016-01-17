@@ -52,7 +52,7 @@ public class VisImageButton extends Button implements Focusable, BorderOwner {
 
 	public VisImageButton (Drawable imageUp, String tooltipText) {
 		this(imageUp, null, null);
-		if (tooltipText != null) new Tooltip(this, tooltipText);
+		if (tooltipText != null) new Tooltip.Builder(tooltipText).target(this).build();
 	}
 
 	public VisImageButton (Drawable imageUp, Drawable imageDown) {

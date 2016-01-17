@@ -62,7 +62,7 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 			IndeterminateCheckbox checkbox = new IndeterminateCheckbox(fieldName);
 			checkbox.addListener(properties.getSharedCheckBoxChangeListener());
 
-			if (tooltipText.equals("") == false) new Tooltip(checkbox, tooltipText);
+			if (tooltipText.equals("") == false) new Tooltip.Builder(tooltipText).target(checkbox).build();
 
 			VisTable table = new VisTable(true);
 			table.add(checkbox).left();
@@ -70,7 +70,7 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 			checkboxFields.put(field, checkbox);
 		} else {
 			NumberInputField numberInputField = new NumberInputField(properties.getSharedFocusListener(), properties.getSharedChangeListener(), fieldType.equals(Float.TYPE));
-			if (tooltipText.equals("") == false) new Tooltip(numberInputField, tooltipText);
+			if (tooltipText.equals("") == false) new Tooltip.Builder(tooltipText).target(numberInputField).build();
 
 			if (annotation.max() != Float.MAX_VALUE)
 				numberInputField.addValidator(new LesserThanValidator(annotation.max(), true));

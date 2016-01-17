@@ -72,7 +72,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 		table.add(fileLabel).width(new VisWidgetValue(context -> Math.min(context.getMinWidth(), MAX_FILE_LABEL_WIDTH)));
 		table.add(selectFileButton);
 
-		Tooltip tooltip = new Tooltip(fileLabel, "");
+		Tooltip tooltip = new Tooltip.Builder("").target(fileLabel).build();
 
 		uiTable.add(table).expandX().fillX().row();
 
