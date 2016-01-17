@@ -62,7 +62,7 @@ public class NewProjectDialog extends VisWindow {
 		projectTypeTable.add(projectTypeList).expandX().fillX();
 
 		add(projectTypeTable).top().minWidth(150);
-		add(new Separator(true)).fillY().expandY().padTop(2).padBottom(2);
+		add(new Separator()).fillY().expandY().padTop(2).padBottom(2);
 		add(containerTable).expand().fill().minWidth(300);
 
 		projectTypeList.addListener(new VisChangeListener((event, actor) -> {
