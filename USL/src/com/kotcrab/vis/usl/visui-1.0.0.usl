@@ -18,10 +18,11 @@
   	link-label: { a: 1, b: 0.886, g: 0.631, r: 0.105 }
 }
 
-.font: { font: default-font, fontColor: white, disabledFontColor: grey }
-.font-nodisabled: { font: default-font, fontColor: white }
-.font-small: { font: small-font, fontColor: white, disabledFontColor: grey }
-.font-small-nodisabled: { font: small-font, fontColor: white }
+.font: { font: default-font, fontColor: white,  }
+.font-disabled: { disabledFontColor: grey }
+
+.font-small: { font: small-font, fontColor: white }
+.font-disabled: { disabledFontColor: grey }
 
 .focus-border: { focusBorder: border }
 .focus-border-dark-blue: { focusBorder: border-dark-blue }
@@ -39,8 +40,8 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	}
 	
 	#TextButton$TextButtonStyle extends ButtonStyle: {
-		default inherits .font: { over: button-over, disabled: button }
-		blue inherits .font: { over: button-blue-over, disabled: button }
+		default inherits .font, .font-disabled: { over: button-over, disabled: button }
+		blue inherits .font, .font-disabled: { over: button-blue-over, disabled: button }
 		toggle inherits default, .font: {}
 	}
 	
@@ -50,7 +51,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	}
 	
 	#SelectBox$SelectBoxStyle: {
-		default inherits .font: {
+		default inherits .font, .font-disabled: {
 			background: default-select,
 		 	scrollStyle: default,
 			listStyle: { font: default-font, selection: padded-list-selection, background: select-box-list-bg }
@@ -80,21 +81,21 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	}
 	
 	#Label$LabelStyle: {
-		default inherits .font-nodisabled: { }
+		default inherits .font: { }
 		link-label inherits default: { fontColor: link-label }
-		small inherits .font-small-nodisabled: { }
+		small inherits .font-small: { }
 		menuitem-shortcut: { font: default-font, fontColor: menuitem-grey }
 	}
 	
 	#TextField$TextFieldStyle: {
 	    -base: { selection: selection, background: textfield, cursor: cursor, messageFont: default-font, messageFontColor: grey }
-		default inherits .font, base: { }
-		small inherits .font-small, base: { }
+		default inherits .font, .font-disabled, base: { }
+		small inherits .font-small, .font-small-disabled, base: { }
 	}
 	
 	#CheckBox$CheckBoxStyle: {
-		default inherits .font: { checkboxOn: check-on, checkboxOff: check-off }
-		radio inherits .font: { checkboxOn: radio-on, checkboxOff: radio-off }
+		default inherits .font, .font-disabled: { checkboxOn: check-on, checkboxOff: check-off }
+		radio inherits .font, .font-disabled: { checkboxOn: radio-on, checkboxOff: radio-off }
 	}
 	
 	#List$ListStyle: { default: { fontColorUnselected: white, selection: padded-list-selection, fontColorSelected: white, font: default-font } }
@@ -104,7 +105,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
     #TextTooltip$TextTooltipStyle: {
     	default: {
     		background: default-pane,
-    	    label inherits .font-nodisabled: { }
+    	    label inherits .font: { }
         }
     }
 }
@@ -142,8 +143,8 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 package com.kotcrab.vis.ui.widget {
 	#VisTextField$VisTextFieldStyle: {
 	    -base: { selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor }
-		default inherits .focus-border, .font, base: { }
-		small inherits .focus-border, .font-small, base: { }
+		default inherits .focus-border, .font, .font-disabled, base: { }
+		small inherits .focus-border, .font-small, .font-small-disabled, base: { }
 	}
 	
 	#VisTextButton$VisTextButtonStyle extends TextButtonStyle: {
@@ -216,12 +217,12 @@ package com.kotcrab.vis.ui.widget {
 	}
 
     #LinkLabel$LinkLabelStyle: {
-        default inherits .font-nodisabled: { fontColor: link-label, underline: white }
+        default inherits .font: { fontColor: link-label, underline: white }
     }
 
 	#tabbedpane.TabbedPane$TabbedPaneStyle: {
 		default: { background: menu-bg, bottomBar: list-selection,
-					buttonStyle inherits .font: { down: button-down, up: button, checked: button-down, over: button-over, disabled: button } }
+					buttonStyle inherits .font, .font-disabled: { down: button-down, up: button, checked: button-down, over: button-over, disabled: button } }
 	}
 
 	#file.FileChooserStyle: {

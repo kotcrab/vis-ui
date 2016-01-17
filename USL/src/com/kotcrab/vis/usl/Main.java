@@ -10,7 +10,7 @@ public class Main {
 	public static void main (String[] args) {
 		if (args.length < 2) {
 			System.out.println("Usage: <input usl file> <output json file>");
-			System.exit(-2);
+			System.exit(1);
 		}
 
 		File input = new File(args[0]);
@@ -18,19 +18,22 @@ public class Main {
 
 		if (input.exists() == false) {
 			System.out.println("Input file does not exist");
-			System.exit(-3);
+			System.exit(2);
 		}
 
+		System.out.println("Parsing USL...");
 		String usl = USL.parse(input);
 
 		try {
-			if (output.exists() == false)
+			if (output.exists() == false) {
 				output.createNewFile();
+			}
 
+			System.out.println("Writing JSON " + output.getPath() + "...");
 			PrintStream out = new PrintStream(new FileOutputStream(output));
 			out.print(usl);
 			out.close();
-			System.out.println("Done.");
+			System.out.println("Success.");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
