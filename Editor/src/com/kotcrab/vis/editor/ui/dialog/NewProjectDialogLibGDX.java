@@ -30,7 +30,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
-import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
+import com.kotcrab.vis.ui.widget.file.SingleFileChooserListener;
 
 /**
  * LibGDX project subdialog for {@link NewProjectDialog}
@@ -109,7 +109,7 @@ public class NewProjectDialogLibGDX extends VisTable {
 		chooseRootButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				fileChooserModule.pickFileOrDirectory(new FileChooserAdapter() {
+				fileChooserModule.pickFileOrDirectory(new SingleFileChooserListener() {
 					@Override
 					public void selected (FileHandle file) {
 						projectRoot.setText(file.file().getAbsolutePath());

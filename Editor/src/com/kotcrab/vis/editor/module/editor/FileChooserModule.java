@@ -22,7 +22,6 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.file.FileChooser.Mode;
 import com.kotcrab.vis.ui.widget.file.FileChooser.SelectionMode;
-import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
 import com.kotcrab.vis.ui.widget.file.FileChooserListener;
 import com.kotcrab.vis.ui.widget.file.JNAFileDeleter;
 
@@ -49,11 +48,6 @@ public class FileChooserModule extends EditorModule {
 			}
 
 			@Override
-			public void selected (FileHandle file) {
-				if (listener != null) listener.selected(file);
-			}
-
-			@Override
 			public void canceled () {
 				if (listener != null) listener.canceled();
 			}
@@ -65,19 +59,19 @@ public class FileChooserModule extends EditorModule {
 		chooser.centerWindow();
 	}
 
-	public void pickFile (FileChooserAdapter listener) {
+	public void pickFile (FileChooserListener listener) {
 		pick(listener, SelectionMode.FILES);
 	}
 
-	public void pickDirectory (FileChooserAdapter listener) {
+	public void pickDirectory (FileChooserListener listener) {
 		pick(listener, SelectionMode.DIRECTORIES);
 	}
 
-	public void pickFileOrDirectory (FileChooserAdapter listener) {
+	public void pickFileOrDirectory (FileChooserListener listener) {
 		pick(listener, SelectionMode.FILES_AND_DIRECTORIES);
 	}
 
-	private void pick (FileChooserAdapter listener, SelectionMode mode) {
+	private void pick (FileChooserListener listener, SelectionMode mode) {
 		this.listener = listener;
 
 		chooser.setMode(Mode.OPEN);
@@ -85,19 +79,19 @@ public class FileChooserModule extends EditorModule {
 		stage.addActor(chooser.fadeIn());
 	}
 
-	public void saveFile (FileChooserAdapter listener) {
+	public void saveFile (FileChooserListener listener) {
 		pick(listener, SelectionMode.FILES);
 	}
 
-	public void saveDirectory (FileChooserAdapter listener) {
+	public void saveDirectory (FileChooserListener listener) {
 		pick(listener, SelectionMode.DIRECTORIES);
 	}
 
-	public void saveFileOrDirectory (FileChooserAdapter listener) {
+	public void saveFileOrDirectory (FileChooserListener listener) {
 		pick(listener, SelectionMode.FILES_AND_DIRECTORIES);
 	}
 
-	private void save (FileChooserAdapter listener, SelectionMode mode) {
+	private void save (FileChooserListener listener, SelectionMode mode) {
 		this.listener = listener;
 
 		chooser.setMode(Mode.SAVE);

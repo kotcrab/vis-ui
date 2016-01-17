@@ -56,7 +56,7 @@ import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
-import com.kotcrab.vis.ui.widget.file.FileChooserAdapter;
+import com.kotcrab.vis.ui.widget.file.SingleFileChooserListener;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
@@ -374,7 +374,7 @@ public class Editor extends ApplicationAdapter {
 	}
 
 	public void loadProjectDialog () {
-		fileChooser.pickFileOrDirectory(new FileChooserAdapter() {
+		fileChooser.pickFileOrDirectory(new SingleFileChooserListener() {
 			@Override
 			public void selected (FileHandle file) {
 				editorMC.get(ProjectIOModule.class).loadHandleError(stage, file);

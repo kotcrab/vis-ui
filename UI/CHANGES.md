@@ -1,11 +1,15 @@
 #### Version: 1.0.0-SNAPSHOT (LibGDX 1.7.2)
-- **Changed**: `InputValidator` moved to `com.kotcrab.vis.ui.util` package 
+- **Changed**: `InputValidator` moved to `com.kotcrab.vis.ui.util` package
 - **Changed**: `LesserThanValidator#setEquals(boolean)` renamed to `setUseEquals`
 - **Changed**: `GreaterThanValidator#setEquals(boolean)` renamed to `setUseEquals`
 - **Changed**: `FormInputValidator#validateInput` is now final and can't be overridden
 - **Changed**: `FormInputValidator#getLastResult` is now package-private
 - **Changed**: `FileChooserText`, `FilePopupMenu` and `ColorPickerText` moved to `internal` subpackages (were not part of public API)
 - **Changed**: `FileChooser#getFileDeleter` removed
+- **Changed**: `FileChooserListener` was refactored
+    - `FileChooserListener#selected(FileHandle)` removed
+    - If user can select single file use `SingleFileChooserListener`
+    - If user can select multiple files use `StreamingFileChooserListener` or use `FileChooserListener` directly
 - **Added**: constructor `TabbedPane(TabbedPaneStyle style, Sizes sizes)`
 - **Added**: `VisTextField#toString()` now returns field text
 - **Added**: `PrefWidthIfVisibleValue`

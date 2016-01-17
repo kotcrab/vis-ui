@@ -33,9 +33,4 @@ public class FileChooserAdapter implements FileChooserListener {
 	public void selected (Array<FileHandle> files) {
 
 	}
-
-	@Override
-	public void selected (FileHandle file) {
-
-	}
 }
