@@ -10,12 +10,18 @@
     - `FileChooserListener#selected(FileHandle)` removed
     - If user can select single file use `SingleFileChooserListener`
     - If user can select multiple files use `StreamingFileChooserListener` or use `FileChooserListener` directly
+- **Removed**: `SeparatorStyle#vertical`, was not used
+- **Removed**: constructor `Separator (boolean vertical)`
 - **Added**: constructor `TabbedPane(TabbedPaneStyle style, Sizes sizes)`
 - **Added**: `VisTextField#toString()` now returns field text
 - **Added**: `PrefWidthIfVisibleValue`
 - **Fixed**: `TabbedPane`: Tab close button too small when using `SkinScale.X2`
 - **Removed deprecated API**: `ColumnGroup` (use libGDX's `VerticalGroup`)
 - **Skin**: 
+    - **Changed**: Color `menuitem-grey` renamed to `menuitem`
+    - **Removed**: `FormValidatorStyle#colorTransition`, no longer needed. 
+        - If `colorTransitionDuration` is set to 0 then transition will be skipped.
+    - **Removed**: `vertical` `SeparatorStyle`, no longer needed
     - **Added**: Drawables: `grey`, `vis-blue`, `vis-red`
 
 #### Version: 0.9.5 (LibGDX 1.7.1)

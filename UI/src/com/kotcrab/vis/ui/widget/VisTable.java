@@ -43,7 +43,7 @@ public class VisTable extends Table {
 	 * If vertical == false then inserts new row after separator (not before!)
 	 */
 	public Cell<Separator> addSeparator (boolean vertical) {
-		Cell<Separator> cell = add(new Separator(vertical)).padTop(2).padBottom(2);
+		Cell<Separator> cell = add(new Separator()).padTop(2).padBottom(2);
 
 		if (vertical)
 			cell.fillY().expandY();

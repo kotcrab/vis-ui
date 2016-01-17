@@ -24,8 +24,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Disableable;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.ui.util.InputValidator;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.InputValidator;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.util.Validators.GreaterThanValidator;
 import com.kotcrab.vis.ui.util.Validators.LesserThanValidator;
@@ -271,7 +271,7 @@ public class SimpleFormValidator {
 			}
 
 			Color targetColor = errorMsgText != null ? style.errorLabelColor : style.validLabelColor;
-			if (targetColor != null && style.colorTransition) {
+			if (targetColor != null && style.colorTransitionDuration != 0) {
 				messageLabel.addAction(Actions.color(targetColor, style.colorTransitionDuration));
 			} else {
 				messageLabel.setColor(targetColor);
@@ -321,7 +321,6 @@ public class SimpleFormValidator {
 		/** Optional */
 		public Color validLabelColor;
 
-		public boolean colorTransition;
 		public float colorTransitionDuration;
 
 		public FormValidatorStyle () {
@@ -335,7 +334,6 @@ public class SimpleFormValidator {
 		public FormValidatorStyle (FormValidatorStyle other) {
 			this.errorLabelColor = other.errorLabelColor;
 			this.validLabelColor = other.validLabelColor;
-			this.colorTransition = other.colorTransition;
 			this.colorTransitionDuration = other.colorTransitionDuration;
 		}
 	}

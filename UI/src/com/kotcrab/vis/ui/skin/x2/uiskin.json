@@ -4,14 +4,15 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	small-font: {file: font-small.fnt }
 },
 com.badlogic.gdx.graphics.Color: {
-	green: {a: 1, b: 0, g: 1, r: 0 },
-	white: {a: 1, b: 1, g: 1, r: 1 },
-	red: {a: 1, b: 0, g: 0, r: 1 },
 	black: {a: 1, b: 0, g: 0, r: 0 },
+	white: {a: 1, b: 1, g: 1, r: 1 },
+	green: {a: 1, b: 0, g: 1, r: 0 },
+	red: {a: 1, b: 0, g: 0, r: 1 },
+	blue: {a: 1, b: 1, g: 0, r: 0 },
 	grey: {a: 1, b: 0.32, g: 0.32, r: 0.32 },
-	menuitem-grey: {a: 1, b: 0.65, g: 0.65, r: 0.65 },
 	vis-blue: {a: 1, b: 0.886, g: 0.631, r: 0.105 },
 	vis-red: {a: 1, b: 0.047, g: 0, r: 0.862 },
+	menuitem: {a: 1, b: 0.65, g: 0.65, r: 0.65 },
 	link-label: {a: 1, b: 0.886, g: 0.631, r: 0.105 }
 },
 com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
@@ -25,7 +26,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey, down: button-down, up: button },
 	blue: {over: button-blue-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey, down: button-blue-down, up: button-blue },
-	toggle: {font: default-font, fontColor: white, disabledFontColor: grey, checked: button-down, down: button-down, up: button, over: button-over, disabled: button }
+	toggle: {font: default-font, fontColor: white, checked: button-down, down: button-down, up: button, over: button-over, disabled: button, disabledFontColor: grey }
 },
 com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
 	list: {vScroll: scroll, vScrollKnob: scroll-knob-vertical, hScroll: scroll-horizontal, hScrollKnob: scroll-knob-horizontal },
@@ -55,7 +56,7 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {font: default-font, fontColor: white },
 	link-label: {fontColor: link-label, font: default-font },
 	small: {font: small-font, fontColor: white },
-	menuitem-shortcut: {font: default-font, fontColor: menuitem-grey }
+	menuitem-shortcut: {font: default-font, fontColor: menuitem }
 },
 com.badlogic.gdx.scenes.scene2d.ui.TextField$TextFieldStyle: {
 	default: {font: default-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, cursor: cursor, messageFont: default-font, messageFontColor: grey },
@@ -87,9 +88,9 @@ com.kotcrab.vis.ui.widget.VisTextField$VisTextFieldStyle: {
 },
 com.kotcrab.vis.ui.widget.VisTextButton$VisTextButtonStyle: {
 	default: {focusBorder: border, down: button-down, up: button, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey },
-	toggle: {focusBorder: border, checked: button-down, down: button-down, up: button, font: default-font, fontColor: white, disabledFontColor: grey, over: button-over, disabled: button },
+	toggle: {focusBorder: border, checked: button-down, down: button-down, up: button, font: default-font, fontColor: white, over: button-over, disabled: button, disabledFontColor: grey },
 	blue: {focusBorder: border-dark-blue, down: button-blue-down, up: button-blue, over: button-blue-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey },
-	menu-bar: {over: button-down, font: default-font, fontColor: white, disabledFontColor: grey, down: button-down, up: button, disabled: button }
+	menu-bar: {over: button-down, font: default-font, fontColor: white, down: button-down, up: button, disabled: button, disabledFontColor: grey }
 },
 com.kotcrab.vis.ui.widget.VisImageButton$VisImageButtonStyle: {
 	default: {down: button-down, up: button, over: button-over, disabled: button, focusBorder: border },
@@ -101,11 +102,11 @@ com.kotcrab.vis.ui.widget.VisImageButton$VisImageButtonStyle: {
 },
 com.kotcrab.vis.ui.widget.VisImageTextButton$VisImageTextButtonStyle: {
 	default: {down: button-down, up: button, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey, focusBorder: border },
-	toggle: {checked: button-down, down: button-down, up: button, font: default-font, fontColor: white, disabledFontColor: grey, over: button-over, disabled: button, focusBorder: border },
+	toggle: {checked: button-down, down: button-down, up: button, font: default-font, fontColor: white, over: button-over, disabled: button, disabledFontColor: grey, focusBorder: border },
 	blue: {down: button-blue-down, up: button-blue, over: button-blue-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey, focusBorder: border-dark-blue },
 	default-noborder: {down: button-down, up: button, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey },
-	toggle-noborder: {checked: button-down, down: button-down, up: button, font: default-font, fontColor: white, disabledFontColor: grey, over: button-over, disabled: button },
-	menu-bar: {over: button-down, font: default-font, fontColor: white, disabledFontColor: grey, down: button-down, up: button, disabled: button }
+	toggle-noborder: {checked: button-down, down: button-down, up: button, font: default-font, fontColor: white, over: button-over, disabled: button, disabledFontColor: grey },
+	menu-bar: {over: button-down, font: default-font, fontColor: white, down: button-down, up: button, disabled: button, disabledFontColor: grey }
 },
 com.kotcrab.vis.ui.widget.VisCheckBox$VisCheckBoxStyle: {
 	default: {checkboxOver: check-over-off, checkboxOnOver: check-over-on, checkboxOffDown: check-down, checkboxOnDown: check-down-on, checkboxOffDisabled: check-off, checkboxOnDisabled: check-on-disabled, errorBorder: border-error, focusBorder: border, checkboxOn: check-on, checkboxOff: check-off, font: default-font, fontColor: white, disabledFontColor: grey },
@@ -124,7 +125,6 @@ com.kotcrab.vis.ui.widget.MenuBar$MenuBarStyle: {
 },
 com.kotcrab.vis.ui.widget.Separator$SeparatorStyle: {
 	default: {background: separator, thickness: 4 },
-	vertical: {vertical: true, background: separator, thickness: 4 },
 	menu: {background: separator-menu, thickness: 3 }
 },
 com.kotcrab.vis.ui.widget.VisSplitPane$VisSplitPaneStyle: {
@@ -134,7 +134,7 @@ com.kotcrab.vis.ui.widget.VisSplitPane$VisSplitPaneStyle: {
 com.kotcrab.vis.ui.widget.MenuItem$MenuItemStyle: {
 	default: {subMenu: sub-menu, down: button-down, up: button, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey },
 	blue: {down: button-blue-down, up: button-blue, over: button-blue-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey },
-	toggle: {checked: button-down, down: button-down, up: button, font: default-font, fontColor: white, disabledFontColor: grey, over: button-over, disabled: button, subMenu: sub-menu }
+	toggle: {checked: button-down, down: button-down, up: button, font: default-font, fontColor: white, over: button-over, disabled: button, disabledFontColor: grey, subMenu: sub-menu }
 },
 com.kotcrab.vis.ui.widget.NumberSelector$NumberSelectorStyle: {
 	default: {down: select-down, up: select-up }

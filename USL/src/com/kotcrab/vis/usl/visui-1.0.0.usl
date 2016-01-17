@@ -7,14 +7,16 @@
 }
 
 #com.badlogic.gdx.graphics.Color: {
-	green: { a: 1, b: 0, g: 1, r: 0 }
-	white: { a: 1, b: 1, g: 1, r: 1 }
-	red: { a: 1, b: 0, g: 0, r: 1 }
 	black: { a: 1, b: 0, g: 0, r: 0 }
+	white: { a: 1, b: 1, g: 1, r: 1 }
+	green: { a: 1, b: 0, g: 1, r: 0 }
+	red: { a: 1, b: 0, g: 0, r: 1 }
+	blue: { a: 1, b: 1, g: 0, r: 0 }
 	grey: { a: 1, b: 0.32, g: 0.32, r: 0.32 }
-	menuitem-grey: { a: 1, b: 0.65, g: 0.65, r: 0.65 }
 	vis-blue: { a: 1, b: 0.886, g: 0.631, r: 0.105 }
 	vis-red: { a: 1, b: 0.047, g: 0, r: 0.862 }
+
+	menuitem: { a: 1, b: 0.65, g: 0.65, r: 0.65 }
 	link-label: { a: 1, b: 0.886, g: 0.631, r: 0.105 }
 }
 
@@ -22,7 +24,7 @@
 .font-disabled: { disabledFontColor: grey }
 
 .font-small: { font: small-font, fontColor: white }
-.font-disabled: { disabledFontColor: grey }
+.font-small-disabled: { disabledFontColor: grey }
 
 .focus-border: { focusBorder: border }
 .focus-border-dark-blue: { focusBorder: border-dark-blue }
@@ -84,7 +86,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 		default inherits .font: { }
 		link-label inherits default: { fontColor: link-label }
 		small inherits .font-small: { }
-		menuitem-shortcut: { font: default-font, fontColor: menuitem-grey }
+		menuitem-shortcut: { font: default-font, fontColor: menuitem }
 	}
 	
 	#TextField$TextFieldStyle: {
@@ -195,7 +197,6 @@ package com.kotcrab.vis.ui.widget {
 
 	#Separator$SeparatorStyle: {
 		default: {background: separator, thickness: 4}
-		vertical inherits default: {vertical: true}
 		menu: {background: separator-menu, thickness: 3}
 	}
 	
@@ -245,5 +246,5 @@ package com.kotcrab.vis.ui.widget {
 
 #com.kotcrab.vis.ui.util.form.SimpleFormValidator$FormValidatorStyle: {
 	default: { errorLabelColor: vis-red, validLabelColor: white }
-	smooth inherits default: { colorTransition: true, colorTransitionDuration: 0.3 }
+	smooth inherits default: { colorTransitionDuration: 0.3 }
 }
