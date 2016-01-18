@@ -82,6 +82,7 @@ class TestApplication extends ApplicationAdapter {
 		stage.addActor(new TestDialogUtils());
 		stage.addActor(new TestValidator());
 		stage.addActor(new TestBuilders());
+//		stage.addActor(new TestTabbedPane());
 	}
 
 	private void createMenus () {

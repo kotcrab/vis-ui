@@ -18,9 +18,11 @@
 - **Added**: `VisTextField#toString()` now returns field text
 - **Added**: `PrefWidthIfVisibleValue`
 - **Fixed**: `TabbedPane`: Tab close button too small when using `SkinScale.X2`
+- **Fixed**: `TabbedPane`: In vertical mode, tabs buttons were centered instead of being aligned at the top 
 - **Removed deprecated API**: `ColumnGroup` (use libGDX's `VerticalGroup`)
 - **Skin**: 
     - **Changed**: Color `menuitem-grey` renamed to `menuitem`
+    - **Changed**: `TabbedPaneStyle#bottomBar` renamed to `separatorBar`
     - **Removed**: `FormValidatorStyle#colorTransition`, no longer needed. 
         - If `colorTransitionDuration` is set to 0 then transition will be skipped.
     - **Removed**: `vertical` `SeparatorStyle`, no longer needed

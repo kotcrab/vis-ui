@@ -146,7 +146,7 @@ com.kotcrab.vis.ui.widget.LinkLabel$LinkLabelStyle: {
 	default: {fontColor: link-label, underline: white, font: default-font }
 },
 com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane$TabbedPaneStyle: {
-	default: {background: menu-bg, bottomBar: list-selection, buttonStyle: {down: button-down, up: button, checked: button-down, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey} }
+	default: {background: menu-bg, separatorBar: list-selection, buttonStyle: {down: button-down, up: button, checked: button-down, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey} }
 },
 com.kotcrab.vis.ui.widget.file.FileChooserStyle: {
 	default: {highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right, iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive, iconFolderStar: icon-folder-star, iconTrash: icon-trash, iconFileText: icon-file-text, iconFileImage: icon-file-image, iconFilePdf: icon-file-pdf, iconFileAudio: icon-file-audio }

@@ -23,10 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
@@ -110,20 +107,20 @@ public class TabbedPane {
 		tabs = new Array<Tab>();
 		tabsButtonMap = new IdentityMap<Tab, TabButtonTable>();
 
-		mainTable.add(tabsPane);
+		Cell<DragPane> tabsPaneCell = mainTable.add(tabsPane);
 
-		// if height is not set bottomBar may sometimes disappear
-		if (style.bottomBar != null) {
+		//note: if separatorBar height/width is not set it may sometimes disappear
+		if (style.separatorBar != null) {
 			if (style.vertical) {
-				// TODO Separate image. One that actually looks good.
-				mainTable.add(new Image(style.bottomBar)).expand().fill().width(style.bottomBar.getMinWidth());
+				tabsPaneCell.top().expandY();
+				mainTable.add(new Image(style.separatorBar)).grow().width(style.separatorBar.getMinWidth());
 			} else {
-				mainTable.getCell(tabsPane).left().expandX();
+				tabsPaneCell.left().expandX();
 				mainTable.row();
-				mainTable.add(new Image(style.bottomBar)).expand().fill().height(style.bottomBar.getMinHeight());
+				mainTable.add(new Image(style.separatorBar)).grow().height(style.separatorBar.getMinHeight());
 			}
 		} else {
-			//make sure that tab will fill available space even when there is not bottomBar image set
+			//make sure that tab will fill available space even when there is not separatorBar image set
 			mainTable.add().expand().fill();
 		}
 	}
@@ -200,7 +197,7 @@ public class TabbedPane {
 			buttonTable.select();
 			notifyListenersSwitched(tab);
 		} else if (tab == activeTab) {
-			buttonTable.select(); // maintains current previous tab while rebuilding
+			buttonTable.select(); // maintains currently selected tab while rebuilding
 		}
 	}
 
@@ -424,11 +421,12 @@ public class TabbedPane {
 	}
 
 	public static class TabbedPaneStyle {
-		public Drawable bottomBar;
 		public Drawable background;
 		public VisTextButtonStyle buttonStyle;
+		/** Optional. */
+		public Drawable separatorBar;
 		/** Optional, defaults to false. */
-		public boolean vertical;
+		public boolean vertical = false;
 		/** Optional, defaults to true. */
 		public boolean draggable = true;
 
@@ -436,21 +434,21 @@ public class TabbedPane {
 		}
 
 		public TabbedPaneStyle (TabbedPaneStyle other) {
-			this.bottomBar = other.bottomBar;
 			this.background = other.background;
 			this.buttonStyle = other.buttonStyle;
+			this.separatorBar = other.separatorBar;
 			this.vertical = other.vertical;
 			this.draggable = other.draggable;
 		}
 
-		public TabbedPaneStyle (Drawable background, Drawable bottomBar, VisTextButtonStyle buttonStyle) {
+		public TabbedPaneStyle (Drawable background, Drawable separatorBar, VisTextButtonStyle buttonStyle) {
 			this.background = background;
-			this.bottomBar = bottomBar;
+			this.separatorBar = separatorBar;
 			this.buttonStyle = buttonStyle;
 		}
 
-		public TabbedPaneStyle (Drawable bottomBar, Drawable background, VisTextButtonStyle buttonStyle, boolean vertical, boolean draggable) {
-			this.bottomBar = bottomBar;
+		public TabbedPaneStyle (Drawable separatorBar, Drawable background, VisTextButtonStyle buttonStyle, boolean vertical, boolean draggable) {
+			this.separatorBar = separatorBar;
 			this.background = background;
 			this.buttonStyle = buttonStyle;
 			this.vertical = vertical;

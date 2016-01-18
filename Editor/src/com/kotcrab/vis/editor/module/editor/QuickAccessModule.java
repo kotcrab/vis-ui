@@ -45,7 +45,7 @@ public class QuickAccessModule extends EditorModule {
 		TabbedPaneStyle tabStyle = new TabbedPaneStyle(VisUI.getSkin().get(TabbedPaneStyle.class));
 		tabStyle.buttonStyle = new VisTextButtonStyle(VisUI.getSkin().get("toggle", VisTextButtonStyle.class));
 		tabStyle.buttonStyle.font = VisUI.getSkin().getFont("small-font");
-		tabStyle.bottomBar = null;
+		tabStyle.separatorBar = null;
 
 		tabbedPane = new TabbedPane(tabStyle);
 		tabbedPane.addListener(listener);
