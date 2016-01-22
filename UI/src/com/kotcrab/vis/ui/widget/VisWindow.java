@@ -40,10 +40,16 @@ public class VisWindow extends Window {
 
 	public VisWindow (String title) {
 		this(title, true);
+		getTitleLabel().setAlignment(VisUI.getDefaultTitleAlign());
 	}
 
 	public VisWindow (String title, boolean showWindowBorder) {
 		super(title, VisUI.getSkin(), showWindowBorder ? "default" : "noborder");
+		getTitleLabel().setAlignment(VisUI.getDefaultTitleAlign());
+	}
+
+	public VisWindow (String title, String styleName) {
+		super(title, VisUI.getSkin(), styleName);
 		getTitleLabel().setAlignment(VisUI.getDefaultTitleAlign());
 	}
 
@@ -149,18 +155,20 @@ public class VisWindow extends Window {
 		});
 		closeButton.addListener(new ClickListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
 				event.cancel();
 				return true;
-			}			
+			}
 		});
 
 		if (titleLabel.getLabelAlign() == Align.center && titleTable.getChildren().size == 2)
 			titleTable.getCell(titleLabel).padLeft(closeButton.getWidth() * 2);
 	}
 
-	/** Will make this window close when escape key or back key was pressed. After pressing escape or back, {@link #close()} is called. 
-	 * Back key is Android and iOS only*/
+	/**
+	 * Will make this window close when escape key or back key was pressed. After pressing escape or back, {@link #close()} is called.
+	 * Back key is Android and iOS only
+	 */
 	public void closeOnEscape () {
 		addListener(new InputListener() {
 			@Override
@@ -172,7 +180,7 @@ public class VisWindow extends Window {
 
 				return false;
 			}
-			
+
 			@Override
 			public boolean keyUp (InputEvent event, int keycode) {
 				if (keycode == Keys.BACK) {

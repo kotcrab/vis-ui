@@ -18,6 +18,7 @@
 - **Removed**: `SeparatorStyle#vertical`, was not used
 - **Removed**: constructor `Separator (boolean vertical)`
 - **Added**: constructor `TabbedPane(TabbedPaneStyle style, Sizes sizes)`
+- **Added**: constructor `VisWindow(String title, String styleName)`
 - **Added**: `VisTextField#toString()` now returns field text
 - **Added**: `PrefWidthIfVisibleValue`
 - **Fixed**: `TabbedPane`: Tab close button too small when using `SkinScale.X2`
@@ -30,6 +31,7 @@
         - If `colorTransitionDuration` is set to 0 then transition will be skipped.
     - **Removed**: `vertical` `SeparatorStyle`, no longer needed
     - **Added**: Drawables: `grey`, `vis-blue`, `vis-red`
+    - **Added**: `resizeable` Window style
 
 #### Version: 0.9.5 (LibGDX 1.7.1)
 - **Added**: constructor `SimpleFormValidator(Disableable)`.
