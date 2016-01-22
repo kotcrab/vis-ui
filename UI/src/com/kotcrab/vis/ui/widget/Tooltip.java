@@ -64,66 +64,18 @@ public class Tooltip extends VisTable {
 		init(style, builder.target, builder.content);
 	}
 
-	@Deprecated
-	/** @deprecated use {@link Tooltip.Builder} */
-	public Tooltip (String text) {
-		this("default", null, text, Align.center);
+	public Tooltip () {
+		this("default");
 	}
 
-	@Deprecated
-	/** @deprecated use {@link Tooltip.Builder} */
-	public Tooltip (Actor target, String text) {
-		this("default", target, text, Align.center);
-	}
-
-	@Deprecated
-	/** @deprecated use {@link Tooltip.Builder} */
-	public Tooltip (Actor target, String text, int textAlign) {
-		this("default", target, text, textAlign);
-	}
-
-	@Deprecated
-	/** @deprecated use {@link Tooltip.Builder} */
-	public Tooltip (String styleName, Actor target, String text) {
-		this(styleName, target, text, Align.center);
-	}
-
-	@Deprecated
-	/** @deprecated use {@link Tooltip.Builder} */
-	public Tooltip (String styleName, Actor target, String text, int textAlign) {
+	public Tooltip (String styleName) {
 		super(true);
-
-		VisLabel label = new VisLabel(text);
-		label.setAlignment(textAlign);
-		init(VisUI.getSkin().get(styleName, TooltipStyle.class), target, label);
+		init(VisUI.getSkin().get(styleName, TooltipStyle.class), null, null);
 	}
 
-	@Deprecated
-	/** @deprecated use {@link Tooltip.Builder} */
-	public Tooltip (Actor content) {
+	public Tooltip (TooltipStyle style) {
 		super(true);
-		init(VisUI.getSkin().get("default", TooltipStyle.class), null, content);
-	}
-
-	@Deprecated
-	/** @deprecated use {@link Tooltip.Builder} */
-	public Tooltip (Actor target, Actor content) {
-		this("default", target, content);
-	}
-
-	@Deprecated
-	/** @deprecated use {@link Tooltip.Builder} */
-	public Tooltip (String styleName, Actor target, Actor content) {
-		super(true);
-
-		init(VisUI.getSkin().get(styleName, TooltipStyle.class), target, content);
-	}
-
-	@Deprecated
-	/** @deprecated use {@link Tooltip.Builder} */
-	public Tooltip (Actor target, Actor content, TooltipStyle style) {
-		super(true);
-		init(style, target, content);
+		init(style, null, null);
 	}
 
 	/**

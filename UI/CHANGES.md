@@ -10,8 +10,11 @@
     - `FileChooserListener#selected(FileHandle)` removed
     - If user can select single file use `SingleFileChooserListener`
     - If user can select multiple files use `StreamingFileChooserListener` or use `FileChooserListener` directly
-- **Changed**: Deprecated all Tooltip constructors, will be removed in next version
+- **Removed**: Removed all `Tooltip` constructors except those taking style
     - Use `new Tooltip.Builder(...)` eg. `new Tooltip.Builder("Tooltip Text").target(label).build()`
+    - **Changed**: constructor `Tooltip (String text)` is now `Tooltip (String styleName)`
+    - **Added**: constructor `Tooltip ()` 
+    - **Added**: constructor `Tooltip (TooltipStyle)` 
 - **Removed**: `SeparatorStyle#vertical`, was not used
 - **Removed**: constructor `Separator (boolean vertical)`
 - **Added**: constructor `TabbedPane(TabbedPaneStyle style, Sizes sizes)`
