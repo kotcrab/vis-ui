@@ -26,13 +26,13 @@ import com.kotcrab.vis.ui.widget.*;
 
 public class TestTextAreaAndScroll extends VisWindow {
 
-	public TestTextAreaAndScroll (boolean useVisWidgets) {
+	public TestTextAreaAndScroll () {
 		super("textarea / scrollpane");
 
 		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
-		if (useVisWidgets)
+		if (TestApplication.USE_VIS_WIDGETS)
 			addVisWidgets();
 		else
 			addNormalWidgets();

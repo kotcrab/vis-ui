@@ -47,8 +47,8 @@ public class TestLauncher {
 }
 
 class TestApplication extends ApplicationAdapter {
-	private static final int TESTS_VERSION = 4;
-	private static final boolean USE_VIS_WIDGETS = true;
+	private static final int TESTS_VERSION = 5;
+	public static final boolean USE_VIS_WIDGETS = true;
 
 	private Stage stage;
 	private MenuBar menuBar;
@@ -73,11 +73,11 @@ class TestApplication extends ApplicationAdapter {
 		stage.addActor(new TestCollapsible());
 		stage.addActor(new TestColorPicker());
 		if (Gdx.app.getType() == ApplicationType.Desktop) stage.addActor(new TestFileChooser());
-		stage.addActor(new TestWindow(USE_VIS_WIDGETS));
-		stage.addActor(new TestSplitPane(USE_VIS_WIDGETS));
-		stage.addActor(new TestTextAreaAndScroll(USE_VIS_WIDGETS));
-		stage.addActor(new TestTree(USE_VIS_WIDGETS));
-		stage.addActor(new TestVertical(USE_VIS_WIDGETS));
+		stage.addActor(new TestWindow());
+		stage.addActor(new TestSplitPane());
+		stage.addActor(new TestTextAreaAndScroll());
+		stage.addActor(new TestTree());
+		stage.addActor(new TestVertical());
 		stage.addActor(new TestFormValidator());
 		stage.addActor(new TestDialogUtils());
 		stage.addActor(new TestValidator());
@@ -150,11 +150,11 @@ class TestApplication extends ApplicationAdapter {
 
 	private PopupMenu createSubMenu () {
 		PopupMenu menu = new PopupMenu();
-		menu.addItem(new MenuItem("Submenuitem #1"));
-		menu.addItem(new MenuItem("Submenuitem #2"));
+		menu.addItem(new MenuItem("submenuitem #1"));
+		menu.addItem(new MenuItem("submenuitem #2"));
 		menu.addSeparator();
-		menu.addItem(new MenuItem("Submenuitem #3"));
-		menu.addItem(new MenuItem("Submenuitem #4"));
+		menu.addItem(new MenuItem("submenuitem #3"));
+		menu.addItem(new MenuItem("submenuitem #4"));
 		return menu;
 	}
 

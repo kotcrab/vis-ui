@@ -28,13 +28,13 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestSplitPane extends VisWindow {
 
-	public TestSplitPane (boolean useVisWidgets) {
+	public TestSplitPane () {
 		super("splitpane");
 
 		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
-		if (useVisWidgets)
+		if (TestApplication.USE_VIS_WIDGETS)
 			addVisWidgets();
 		else
 			addNormalWidgets();

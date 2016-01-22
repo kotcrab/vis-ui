@@ -28,13 +28,13 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestTree extends VisWindow {
 
-	public TestTree (boolean useVisWidgets) {
+	public TestTree () {
 		super("tree");
 
 		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
-		if (useVisWidgets)
+		if (TestApplication.USE_VIS_WIDGETS)
 			addVisWidgets();
 		else
 			addNormalWidgets();

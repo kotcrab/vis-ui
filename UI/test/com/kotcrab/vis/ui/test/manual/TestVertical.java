@@ -27,13 +27,13 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestVertical extends VisWindow {
 
-	public TestVertical (boolean useVisWidgets) {
+	public TestVertical () {
 		super("vertical");
 
 		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
-		if (useVisWidgets)
+		if (TestApplication.USE_VIS_WIDGETS)
 			addVisWidgets();
 		else
 			addNormalWidgets();

@@ -25,13 +25,13 @@ import com.kotcrab.vis.ui.widget.Tooltip;
 
 public class TestWindow extends VisWindow {
 
-	public TestWindow (boolean useVisWidgets) {
+	public TestWindow () {
 		super("test window");
 
 		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
-		if (useVisWidgets)
+		if (TestApplication.USE_VIS_WIDGETS)
 			addVisWidgets();
 		else
 			addNormalWidgets();
