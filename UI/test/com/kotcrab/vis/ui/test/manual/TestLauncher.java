@@ -20,8 +20,8 @@ import com.badlogic.gdx.Application.ApplicationType;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -38,10 +38,9 @@ import com.kotcrab.vis.ui.widget.PopupMenu;
 public class TestLauncher {
 
 	public static void main (String[] args) {
-		LwjglApplicationConfiguration c = new LwjglApplicationConfiguration();
-		c.width = 1280;
-		c.height = 720;
-		new LwjglApplication(new TestApplication(), c);
+		Lwjgl3ApplicationConfiguration c = new Lwjgl3ApplicationConfiguration();
+		c.setWindowedMode(1280, 720);
+		new Lwjgl3Application(new TestApplication(), c);
 	}
 
 }

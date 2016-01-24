@@ -19,7 +19,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <gdx.version>1.7.2</gdx.version>
+        <gdx.version>1.9.0</gdx.version>
         <arguments/>
         <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
@@ -74,7 +74,7 @@
 
         <dependency>
             <groupId>com.badlogicgames.gdx</groupId>
-            <artifactId>gdx-backend-lwjgl</artifactId>
+            <artifactId>gdx-backend-lwjgl3</artifactId>
             <version>${gdx.version}</version>
             <scope>test</scope>
         </dependency>
