@@ -21,6 +21,7 @@
 - **Added**: constructor `VisWindow(String title, String styleName)`
 - **Added**: `VisTextField#toString()` now returns field text
 - **Added**: `PrefWidthIfVisibleValue`
+- **Added**: `HorizontalFlowGroup` and `VerticalFlowGroup`
 - **Fixed**: `TabbedPane`: Tab close button too small when using `SkinScale.X2`
 - **Fixed**: `TabbedPane`: In vertical mode, tabs buttons were centered instead of being aligned at the top 
 - **Removed deprecated API**: `ColumnGroup` (use libGDX's `VerticalGroup`)

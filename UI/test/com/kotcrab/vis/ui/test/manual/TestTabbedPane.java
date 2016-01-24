@@ -34,6 +34,8 @@ public class TestTabbedPane extends VisWindow {
 
 		TableUtils.setSpacingDefaults(this);
 
+		setResizable(true);
+
 		final VisTable container = new VisTable();
 
 		TabbedPaneStyle style = VisUI.getSkin().get("default", TabbedPaneStyle.class);
@@ -63,6 +65,10 @@ public class TestTabbedPane extends VisWindow {
 		tabbedPane.add(new TestTab("tab3"));
 		tabbedPane.add(new TestTab("tab4"));
 		tabbedPane.add(new TestTab("tab5"));
+		tabbedPane.add(new TestTab("tab6"));
+		tabbedPane.add(new TestTab("tab7"));
+		tabbedPane.add(new TestTab("tab8"));
+		tabbedPane.add(new TestTab("tab9"));
 
 //		debugAll();
 		setSize(300, 200);

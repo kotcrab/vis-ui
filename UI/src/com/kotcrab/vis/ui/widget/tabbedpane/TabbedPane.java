@@ -36,6 +36,8 @@ import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.i18n.BundleText;
 import com.kotcrab.vis.ui.layout.DragPane;
+import com.kotcrab.vis.ui.layout.HorizontalFlowGroup;
+import com.kotcrab.vis.ui.layout.VerticalFlowGroup;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils;
 import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
@@ -99,7 +101,7 @@ public class TabbedPane {
 		group = new ButtonGroup<Button>();
 
 		mainTable = new VisTable();
-		tabsPane = new DragPane(style.vertical); // TODO Use flow layout.
+		tabsPane = new DragPane(style.vertical ? new VerticalFlowGroup() : new HorizontalFlowGroup());
 		configureDragPane(style);
 
 		mainTable.setBackground(style.background);
@@ -112,10 +114,10 @@ public class TabbedPane {
 		//note: if separatorBar height/width is not set it may sometimes disappear
 		if (style.separatorBar != null) {
 			if (style.vertical) {
-				tabsPaneCell.top().expandY();
+				tabsPaneCell.top().growY();
 				mainTable.add(new Image(style.separatorBar)).grow().width(style.separatorBar.getMinWidth());
 			} else {
-				tabsPaneCell.left().expandX();
+				tabsPaneCell.left().growX();
 				mainTable.row();
 				mainTable.add(new Image(style.separatorBar)).grow().height(style.separatorBar.getMinHeight());
 			}
