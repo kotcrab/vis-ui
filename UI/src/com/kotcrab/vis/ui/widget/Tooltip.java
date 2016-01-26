@@ -119,8 +119,9 @@ public class Tooltip extends VisTable {
 
 			@Override
 			public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
-				if (pointer == -1)
+				if (pointer == -1) {
 					fadeOut();
+				}
 			}
 		});
 	}
@@ -248,8 +249,7 @@ public class Tooltip extends VisTable {
 
 		@Override
 		public boolean mouseMoved (InputEvent event, float x, float y) {
-			if (isVisible() && getActions().size == 0)
-				fadeOut();
+			if (isVisible() && getActions().size == 0) fadeOut();
 
 			return false;
 		}

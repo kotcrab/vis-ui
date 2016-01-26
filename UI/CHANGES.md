@@ -22,6 +22,7 @@
 - **Added**: `VisTextField#toString()` now returns field text
 - **Added**: `PrefWidthIfVisibleValue`
 - **Added**: `HorizontalFlowGroup` and `VerticalFlowGroup`
+- **Added**: `LinkLabel`, `VisTextField`, `VisTextArea` and `VisSplitPane` supports system cursors when using LWJGL3 or GWT backend
 - **Fixed**: `TabbedPane`: Tab close button too small when using `SkinScale.X2`
 - **Fixed**: `TabbedPane`: In vertical mode, tabs buttons were centered instead of being aligned at the top 
 - **Removed deprecated API**: `ColumnGroup` (use libGDX's `VerticalGroup`)

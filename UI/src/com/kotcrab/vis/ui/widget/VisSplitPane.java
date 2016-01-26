@@ -16,7 +16,9 @@
 
 package com.kotcrab.vis.ui.widget;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -26,6 +28,7 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SplitPane.SplitPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.Layout;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
@@ -91,6 +94,32 @@ public class VisSplitPane extends WidgetGroup {
 	}
 
 	private void initialize () {
+		addListener(new ClickListener() {
+			SystemCursor currentCursor;
+			SystemCursor targetCursor;
+
+			@Override
+			public boolean mouseMoved (InputEvent event, float x, float y) {
+				if (handleBounds.contains(x, y)) {
+					if (vertical) {
+						targetCursor = SystemCursor.VerticalResize;
+					} else {
+						targetCursor = SystemCursor.HorizontalResize;
+					}
+				} else {
+					targetCursor = SystemCursor.Arrow;
+				}
+
+				if (currentCursor != targetCursor) {
+					Gdx.graphics.setSystemCursor(targetCursor);
+					currentCursor = targetCursor;
+					return true;
+				}
+
+				return false;
+			}
+		});
+
 		addListener(new InputListener() {
 			int draggingPointer = -1;
 

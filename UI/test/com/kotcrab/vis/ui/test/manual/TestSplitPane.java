@@ -27,6 +27,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestSplitPane extends VisWindow {
+	private boolean vertical = false;
 
 	public TestSplitPane () {
 		super("splitpane");
@@ -52,7 +53,7 @@ public class TestSplitPane extends VisWindow {
 		table.add(label);
 		table2.add(label2);
 
-		VisSplitPane splitPane = new VisSplitPane(table, table2, false);
+		VisSplitPane splitPane = new VisSplitPane(table, table2, vertical);
 		add(splitPane).fill().expand();
 	}
 

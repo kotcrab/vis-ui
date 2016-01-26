@@ -19,6 +19,7 @@ package com.kotcrab.vis.ui.widget;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.BitmapFont.BitmapFontData;
@@ -134,7 +135,23 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 
 	protected void initialize () {
 		addListener(inputListener = createInputListener());
-		addListener(clickListener = new ClickListener());
+		addListener(clickListener = new ClickListener() {
+			@Override
+			public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+				super.enter(event, x, y, pointer, fromActor);
+				if (pointer == -1) {
+					Gdx.graphics.setSystemCursor(SystemCursor.Ibeam);
+				}
+			}
+
+			@Override
+			public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+				super.exit(event, x, y, pointer, toActor);
+				if (pointer == -1) {
+					Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+				}
+			}
+		});
 	}
 
 	protected InputListener createInputListener () {
