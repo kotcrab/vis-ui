@@ -69,8 +69,9 @@ public class StyleMerger {
 					if (inherit.startsWith(".")) {
 						StyleIdentifier styleToInherit = findStyle(globalStyles, inherit);
 
-						if (styleToInherit == null)
+						if (styleToInherit == null) {
 							throw new USLException("Style to inherit: '" + inherit + "' not found, block: " + block.fullName);
+						}
 
 						for (Identifier id : styleToInherit.content) {
 							if (findIdentifier(style.content, id.name) == null)
@@ -103,12 +104,14 @@ public class StyleMerger {
 			if (inherit.startsWith(".")) {
 				StyleIdentifier styleToInherit = findStyle(globalStyles, inherit);
 
-				if (styleToInherit == null)
+				if (styleToInherit == null) {
 					throw new USLException("Style to inherit: '" + inherit + "' not found, block: " + blockName);
+				}
 
 				for (Identifier id : styleToInherit.content) {
-					if (findIdentifier(content, id.name) == null)
+					if (findIdentifier(content, id.name) == null) {
 						content.add(id);
+					}
 				}
 			}
 		}

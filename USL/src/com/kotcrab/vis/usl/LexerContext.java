@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-/** Class holding properites required for USL {@link Lexer} */
+/** Class holding properties required for USL {@link Lexer} */
 public class LexerContext {
 	final File workingDirectory;
 

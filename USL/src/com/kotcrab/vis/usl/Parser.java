@@ -233,10 +233,12 @@ public class Parser {
 	}
 
 	private void postCheck () {
-		if (identifiers.size() > 0) System.out.println("Post check warning: identifier stack not empty after parsing");
+		if (identifiers.size() > 0) System.out.println("Post check warning: identifier stack not empty after parsing. " +
+				"Some identifiers not closed or internal parser error.");
 
-		for (StyleIdentifier id : globalStyles)
+		for (StyleIdentifier id : globalStyles) {
 			postCheckStyleId(id);
+		}
 
 		for (StyleBlock block : styleBlocks) {
 			for (StyleIdentifier id : block.styles)
@@ -247,8 +249,9 @@ public class Parser {
 	private void postCheckStyleId (StyleIdentifier styleId) {
 		if (styleId.name.contains(" ")) throwContainsSpaceException(styleId);
 
-		for (Identifier id : styleId.content)
+		for (Identifier id : styleId.content) {
 			postCheckId(id);
+		}
 	}
 
 	private void postCheckId (Identifier id) {

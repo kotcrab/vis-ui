@@ -249,24 +249,25 @@ public class Lexer {
 
 	private static void loadIncludeMappings () {
 		includeMappings = new HashMap<String, String>();
-		includeMappings.put("gdx", "gdx.usl");
-		includeMappings.put("visui-0.7.7", "visui-0.7.7.usl");
-		includeMappings.put("visui-0.8.0", "visui-0.8.0.usl");
-		includeMappings.put("visui-0.8.1", "visui-0.8.1.usl");
-		includeMappings.put("visui-0.8.2", "visui-0.8.2.usl");
-		includeMappings.put("visui-0.9.0", "visui-0.9.0.usl");
-		includeMappings.put("visui-0.9.1", "visui-0.9.1.usl");
-		includeMappings.put("visui-0.9.2", "visui-0.9.2.usl");
-		includeMappings.put("visui-0.9.3", "visui-0.9.3.usl");
-		includeMappings.put("visui-0.9.4", "visui-0.9.4.usl");
-		includeMappings.put("visui-0.9.5", "visui-0.9.5.usl");
-		includeMappings.put("visui", "visui-0.9.5.usl"); //stable
-		includeMappings.put("visui-1.0.0", "visui-1.0.0.usl"); //snapshot
+		includeMappings.put("gdx", "styles/gdx.usl");
+		includeMappings.put("visui-0.7.7", "styles/visui-0.7.7.usl");
+		includeMappings.put("visui-0.8.0", "styles/visui-0.8.0.usl");
+		includeMappings.put("visui-0.8.1", "styles/visui-0.8.1.usl");
+		includeMappings.put("visui-0.8.2", "styles/visui-0.8.2.usl");
+		includeMappings.put("visui-0.9.0", "styles/visui-0.9.0.usl");
+		includeMappings.put("visui-0.9.1", "styles/visui-0.9.1.usl");
+		includeMappings.put("visui-0.9.2", "styles/visui-0.9.2.usl");
+		includeMappings.put("visui-0.9.3", "styles/visui-0.9.3.usl");
+		includeMappings.put("visui-0.9.4", "styles/visui-0.9.4.usl");
+		includeMappings.put("visui-0.9.5", "styles/visui-0.9.5.usl");
+		includeMappings.put("visui", "styles/visui-0.9.5.usl"); //stable
+		includeMappings.put("visui-1.0.0", "styles/visui-1.0.0.usl"); //snapshot
 	}
 
 	private static int skipLineComment (String usl, int i) {
-		for (; i < usl.length(); i++)
+		for (; i < usl.length(); i++) {
 			if (usl.charAt(i) == '\n') break;
+		}
 
 		return i;
 	}

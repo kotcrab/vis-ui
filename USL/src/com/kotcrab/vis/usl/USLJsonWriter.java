@@ -31,16 +31,18 @@ public class USLJsonWriter {
 				writeIdentifiers(style.content);
 				out.append(" }");
 
-				if (j == styles.size() - 1)
+				if (j == styles.size() - 1) {
 					out.append("\n");
-				else
+				} else {
 					out.append(",\n");
+				}
 			}
 
-			if (i == styleBlocks.size() - 1)
+			if (i == styleBlocks.size() - 1) {
 				out.append("}\n");
-			else
+			} else {
 				out.append("},\n");
+			}
 
 		}
 
@@ -64,8 +66,9 @@ public class USLJsonWriter {
 				out.append("}");
 			}
 
-			if (i != content.size() - 1)
+			if (i != content.size() - 1) {
 				out.append(", ");
+			}
 		}
 	}
 }
