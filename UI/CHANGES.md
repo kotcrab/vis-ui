@@ -14,6 +14,7 @@
     - `FileChooserListener#selected(FileHandle)` removed
     - If user can select single file use `SingleFileChooserListener`
     - If user can select multiple files use `StreamingFileChooserListener` or use `FileChooserListener` directly
+- **Changed**: `VisTextField#toString()` now returns field text
 - **Removed**: Removed all `Tooltip` constructors except those taking style
     - Use `new Tooltip.Builder(...)` eg. `new Tooltip.Builder("Tooltip Text").target(label).build()`
     - **Changed**: constructor `Tooltip (String text)` is now `Tooltip (String styleName)`
@@ -23,10 +24,9 @@
 - **Removed**: constructor `Separator (boolean vertical)`
 - **Added**: constructor `TabbedPane(TabbedPaneStyle style, Sizes sizes)`
 - **Added**: constructor `VisWindow(String title, String styleName)`
-- **Added**: `VisTextField#toString()` now returns field text
 - **Added**: `PrefWidthIfVisibleValue`
 - **Added**: `HorizontalFlowGroup` and `VerticalFlowGroup`
-- **Added**: `ButtonBar`
+- **Added**: `ButtonBar` - convenient class for creating button panels arranged in platform dependant order.
     - `FileChooser`, `ColorPicker` and `Dialogs` will now show buttons in platform dependant order
 - **Added**: `LinkLabel`, `VisTextField`, `VisTextArea` and `VisSplitPane` supports system cursors when using LWJGL3 or GWT backend
 - **Fixed**: `TabbedPane`: Tab close button too small when using `SkinScale.X2`
@@ -37,9 +37,9 @@
     - **Changed**: `TabbedPaneStyle#bottomBar` renamed to `separatorBar`
     - **Removed**: `FormValidatorStyle#colorTransition`, no longer needed. 
         - If `colorTransitionDuration` is set to 0 then transition will be skipped.
-    - **Removed**: `vertical` `SeparatorStyle`, no longer needed
+    - **Removed**: `SeparatorStyle#vertical`, no longer needed
     - **Added**: Drawables: `grey`, `vis-blue`, `vis-red`
-    - **Added**: `resizeable` Window style
+    - **Added**: New `Window` style: `resizeable` 
 
 #### Version: 0.9.5 (LibGDX 1.7.1)
 - **Added**: constructor `SimpleFormValidator(Disableable)`.
