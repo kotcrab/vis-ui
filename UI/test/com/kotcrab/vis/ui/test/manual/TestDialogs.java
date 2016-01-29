@@ -21,18 +21,18 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.util.dialog.ConfirmDialogListener;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.InputDialogAdapter;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
-public class TestDialogUtils extends VisWindow {
+public class TestDialogs extends VisWindow {
 
-	public TestDialogUtils () {
-		super("dialogutils");
+	public TestDialogs () {
+		super("dialogs");
 
 		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
@@ -68,7 +68,7 @@ public class TestDialogUtils extends VisWindow {
 
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				DialogUtils.showOKDialog(getStage(), "VisUI demo", "Everything is OK!");
+				Dialogs.showOKDialog(getStage(), "VisUI demo", "Everything is OK!");
 			}
 		});
 
@@ -76,7 +76,7 @@ public class TestDialogUtils extends VisWindow {
 
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				DialogUtils.showErrorDialog(getStage(), "Error occurred while trying to show error popup");
+				Dialogs.showErrorDialog(getStage(), "Error occurred while trying to show error popup");
 			}
 		});
 
@@ -84,7 +84,7 @@ public class TestDialogUtils extends VisWindow {
 
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				DialogUtils.showErrorDialog(getStage(), "Error occurred while trying to show error popup", new IllegalStateException(
+				Dialogs.showErrorDialog(getStage(), "Error occurred while trying to show error popup", new IllegalStateException(
 						"Carrots cannot be casted to Potatoes"));
 			}
 		});
@@ -92,10 +92,10 @@ public class TestDialogUtils extends VisWindow {
 		showInputDialog.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				DialogUtils.showInputDialog(getStage(), "enter your name", "name: ", new InputDialogAdapter() {
+				Dialogs.showInputDialog(getStage(), "enter your name", "name: ", new InputDialogAdapter() {
 					@Override
 					public void finished (String input) {
-						DialogUtils.showOKDialog(getStage(), "result", "your name is: " + input);
+						Dialogs.showOKDialog(getStage(), "result", "your name is: " + input);
 					}
 				});
 			}
@@ -104,10 +104,10 @@ public class TestDialogUtils extends VisWindow {
 		showInputDialogIntOnly.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				DialogUtils.showInputDialog(getStage(), "enter int number", null, Validators.INTEGERS, new InputDialogAdapter() {
+				Dialogs.showInputDialog(getStage(), "enter int number", null, Validators.INTEGERS, new InputDialogAdapter() {
 					@Override
 					public void finished (String input) {
-						DialogUtils.showOKDialog(getStage(), "result", "you entered: " + input);
+						Dialogs.showOKDialog(getStage(), "result", "you entered: " + input);
 					}
 				});
 			}
@@ -116,20 +116,20 @@ public class TestDialogUtils extends VisWindow {
 		showOptionDialog.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				DialogUtils.showOptionDialog(getStage(), "option dialog", "do you want to do something?", OptionDialogType.YES_NO_CANCEL, new OptionDialogAdapter() {
+				Dialogs.showOptionDialog(getStage(), "option dialog", "do you want to do something?", OptionDialogType.YES_NO_CANCEL, new OptionDialogAdapter() {
 					@Override
 					public void yes () {
-						DialogUtils.showOKDialog(getStage(), "result", "pressed: yes");
+						Dialogs.showOKDialog(getStage(), "result", "pressed: yes");
 					}
 
 					@Override
 					public void no () {
-						DialogUtils.showOKDialog(getStage(), "result", "pressed: no");
+						Dialogs.showOKDialog(getStage(), "result", "pressed: no");
 					}
 
 					@Override
 					public void cancel () {
-						DialogUtils.showOKDialog(getStage(), "result", "pressed: cancel");
+						Dialogs.showOKDialog(getStage(), "result", "pressed: cancel");
 					}
 				});
 			}
@@ -143,17 +143,17 @@ public class TestDialogUtils extends VisWindow {
 				final int something = 3;
 
 				//confirmdialog may return result of any type, here we are just using ints
-				DialogUtils.showConfirmDialog(getStage(), "confirm dialog", "what do you want?",
+				Dialogs.showConfirmDialog(getStage(), "confirm dialog", "what do you want?",
 						new String[]{"nothing", "everything", "something"}, new Integer[]{nothing, everything, something},
 						new ConfirmDialogListener<Integer>() {
 							@Override
 							public void result (Integer result) {
 								if (result == nothing)
-									DialogUtils.showOKDialog(getStage(), "result", "pressed: nothing");
+									Dialogs.showOKDialog(getStage(), "result", "pressed: nothing");
 								if (result == everything)
-									DialogUtils.showOKDialog(getStage(), "result", "pressed: everything");
+									Dialogs.showOKDialog(getStage(), "result", "pressed: everything");
 								if (result == something)
-									DialogUtils.showOKDialog(getStage(), "result", "pressed: something");
+									Dialogs.showOKDialog(getStage(), "result", "pressed: something");
 
 							}
 						});

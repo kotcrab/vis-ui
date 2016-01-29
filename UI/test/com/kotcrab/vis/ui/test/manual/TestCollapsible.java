@@ -18,7 +18,7 @@ package com.kotcrab.vis.ui.test.manual;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.*;
 
 public class TestCollapsible extends VisWindow {
@@ -77,7 +77,7 @@ public class TestCollapsible extends VisWindow {
 		dummyButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				DialogUtils.showOKDialog(getStage(), "message", "this button is for showcase only, please don't press");
+				Dialogs.showOKDialog(getStage(), "message", "this button is for showcase only, please don't press");
 			}
 		});
 	}

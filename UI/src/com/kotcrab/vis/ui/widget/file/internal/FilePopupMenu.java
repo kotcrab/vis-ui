@@ -22,8 +22,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
@@ -67,7 +67,7 @@ public class FilePopupMenu extends PopupMenu {
 		delete.addListener(new ClickListener() {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
-				DialogUtils.showOptionDialog(chooser.getStage(), POPUP_TITLE.get(),
+				Dialogs.showOptionDialog(chooser.getStage(), POPUP_TITLE.get(),
 						trashAvailable ? CONTEXT_MENU_MOVE_TO_TRASH_WARNING.get() : CONTEXT_MENU_DELETE_WARNING.get(),
 						OptionDialogType.YES_NO, new OptionDialogAdapter() {
 							@Override
@@ -75,9 +75,9 @@ public class FilePopupMenu extends PopupMenu {
 								try {
 									boolean success = callback.delete(file);
 									if (success == false)
-										DialogUtils.showErrorDialog(getStage(), POPUP_DELETE_FILE_FAILED.get());
+										Dialogs.showErrorDialog(getStage(), POPUP_DELETE_FILE_FAILED.get());
 								} catch (IOException e) {
-									DialogUtils.showErrorDialog(getStage(), POPUP_DELETE_FILE_FAILED.get(), e);
+									Dialogs.showErrorDialog(getStage(), POPUP_DELETE_FILE_FAILED.get(), e);
 									e.printStackTrace();
 								}
 								chooser.refresh();

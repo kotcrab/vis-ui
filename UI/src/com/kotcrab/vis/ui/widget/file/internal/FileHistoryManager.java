@@ -24,7 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
@@ -146,7 +146,7 @@ public class FileHistoryManager {
 			callback.setDirectory(dir, HistoryPolicy.IGNORE);
 			return true;
 		} else {
-			DialogUtils.showErrorDialog(callback.getStage(), DIRECTORY_NO_LONGER_EXISTS.get());
+			Dialogs.showErrorDialog(callback.getStage(), DIRECTORY_NO_LONGER_EXISTS.get());
 			return false;
 		}
 	}

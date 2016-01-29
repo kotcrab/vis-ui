@@ -31,8 +31,8 @@ import com.kotcrab.vis.editor.ui.EnumSelectBox;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.util.form.FormInputValidator;
 import com.kotcrab.vis.ui.util.form.FormValidator;
@@ -170,7 +170,7 @@ public class NewSceneDialog extends VisWindow {
 						Float.valueOf(widthField.getText()), Float.valueOf(heightField.getText()), Integer.valueOf(pixelsPerUnitField.getText()));
 				statusBar.setText("Scene created: " + targetFile.path().substring(1));
 
-				DialogUtils.showOptionDialog(getStage(), "Message", "Open this new scene in editor?", OptionDialogType.YES_NO, new OptionDialogAdapter() {
+				Dialogs.showOptionDialog(getStage(), "Message", "Open this new scene in editor?", OptionDialogType.YES_NO, new OptionDialogAdapter() {
 					@Override
 					public void yes () {
 						sceneTabsModule.open(assetsFolder.child(targetFile.path()));

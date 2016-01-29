@@ -76,8 +76,8 @@ import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -207,7 +207,7 @@ public class EntityManipulatorModule extends SceneModule {
 			entityPopupMenu.addItem(MenuUtils.createMenuItem("Enter into Group", () -> {
 
 				if (entitiesSelection.isEnterIntoGroupValid() == false) {
-					DialogUtils.showErrorDialog(stage, "Group was deselected");
+					Dialogs.showErrorDialog(stage, "Group was deselected");
 					return;
 				}
 
@@ -234,7 +234,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private void moveToLayer (boolean showGroupMoveWarning) {
 		if (showGroupMoveWarning && entitiesSelection.getGroupId() != -1) {
-			DialogUtils.showOptionDialog(stage, "Warning", "This will move whole group (including parent groups) to another layer.",
+			Dialogs.showOptionDialog(stage, "Warning", "This will move whole group (including parent groups) to another layer.",
 					OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 						@Override
 						public void yes () {

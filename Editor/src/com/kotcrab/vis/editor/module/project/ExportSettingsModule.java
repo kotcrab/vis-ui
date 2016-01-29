@@ -24,7 +24,7 @@ import com.kotcrab.vis.editor.module.project.ExportSettingsModule.ExportConfig;
 import com.kotcrab.vis.editor.plugin.api.ExporterPlugin;
 import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -71,7 +71,7 @@ public class ExportSettingsModule extends ProjectSettingsModule<ExportConfig> {
 			ExporterPlugin exporter = exportersManager.getExportersMap().get(uuid);
 
 			if (exporter.isSettingsUsed() == false)
-				DialogUtils.showOKDialog(stage, "Message", "This exporter does not have any additional settings");
+				Dialogs.showOKDialog(stage, "Message", "This exporter does not have any additional settings");
 			else
 				exporter.showSettings();
 		}));

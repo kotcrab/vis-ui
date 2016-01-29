@@ -52,7 +52,7 @@
     <!-- I18N files -->
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/ButtonBar.properties" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/ColorPicker.properties" />
-	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/DialogUtils.properties" />
+	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/Dialogs.properties" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/FileChooser.properties" />
 	<extend-configuration-property name="gdx.files.classpath" value="com/kotcrab/vis/ui/i18n/TabbedPane.properties" />
 

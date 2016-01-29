@@ -49,9 +49,9 @@ import com.kotcrab.vis.editor.util.async.AsyncTask;
 import com.kotcrab.vis.editor.util.scene2d.VisGroup;
 import com.kotcrab.vis.editor.util.vis.LaunchConfiguration;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialog;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialog;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -277,7 +277,7 @@ public class Editor extends ApplicationAdapter {
 	}
 
 	public void showRestartDialog () {
-		OptionDialog optionDialog = DialogUtils.showOptionDialog(stage, "Restart?",
+		OptionDialog optionDialog = Dialogs.showOptionDialog(stage, "Restart?",
 				"Editor restart is required to apply changes", OptionDialogType.YES_NO, new OptionDialogAdapter() {
 					@Override
 					public void yes () {
@@ -327,7 +327,7 @@ public class Editor extends ApplicationAdapter {
 		}
 
 		if (settings.isConfirmExit()) {
-			OptionDialog dialog = DialogUtils.showOptionDialog(stage, "Confirm Exit", "Are you sure you want to exit VisEditor?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+			OptionDialog dialog = Dialogs.showOptionDialog(stage, "Confirm Exit", "Are you sure you want to exit VisEditor?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 				@Override
 				public void yes () {
 					exit(false);
@@ -388,7 +388,7 @@ public class Editor extends ApplicationAdapter {
 
 	public void projectLoaded (final Project project) {
 		if (projectLoaded) {
-			DialogUtils.showOptionDialog(stage, "Warning", "Other project is already loaded, unload it and continue?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+			Dialogs.showOptionDialog(stage, "Warning", "Other project is already loaded, unload it and continue?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 				@Override
 				public void yes () {
 					switchProject(project);

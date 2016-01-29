@@ -42,8 +42,8 @@ import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.VisBagUtils;
 import com.kotcrab.vis.ui.VisUI;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.VisImageButton;
 import com.kotcrab.vis.ui.widget.VisImageButton.VisImageButtonStyle;
@@ -96,7 +96,7 @@ public class LayersDialog extends VisTable implements Disposable {
 		layerRemoveButton.setGenerateDisabledImage(true);
 
 		layerAddButton.addListener(new VisChangeListener((event, actor) ->
-				DialogUtils.showInputDialog(getStage(), "New Layer", "Name:", true,
+				Dialogs.showInputDialog(getStage(), "New Layer", "Name:", true,
 						input -> scene.getLayerByName(input) == null,
 						(DefaultInputDialogListener) input -> undoModule.execute(new LayerAddedAction(input)))));
 
@@ -106,7 +106,7 @@ public class LayersDialog extends VisTable implements Disposable {
 		layerSettingsButton.addListener(new VisChangeListener((event1, actor1) -> getStage().addActor(new LayerSettingsDialog(sceneMC, scene).fadeIn())));
 
 		layerRemoveButton.addListener(new VisChangeListener((event, actor) ->
-				DialogUtils.showOptionDialog(getStage(), "Delete Layer", "Are you sure you want to delete layer '" + scene.getActiveLayer().name + "'?",
+				Dialogs.showOptionDialog(getStage(), "Delete Layer", "Are you sure you want to delete layer '" + scene.getActiveLayer().name + "'?",
 						OptionDialogType.YES_NO, new OptionDialogAdapter() {
 							@Override
 							public void yes () {

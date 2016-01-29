@@ -20,7 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.kotcrab.vis.editor.util.async.AsyncTask;
 import com.kotcrab.vis.editor.util.async.AsyncTaskListener;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisProgressBar;
 import com.kotcrab.vis.ui.widget.VisWindow;
@@ -73,7 +73,7 @@ public class AsyncTaskProgressDialog extends VisWindow {
 
 			@Override
 			public void failed (String reason, Exception ex) {
-				DialogUtils.showErrorDialog(getStage(), reason == null ? "Unknown error occurred" : reason, ex);
+				Dialogs.showErrorDialog(getStage(), reason == null ? "Unknown error occurred" : reason, ex);
 				if (listener != null) listener.failed(reason, ex);
 			}
 		});

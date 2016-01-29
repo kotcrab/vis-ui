@@ -31,8 +31,8 @@ import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.InputModule;
 import com.kotcrab.vis.editor.plugin.api.ExporterPlugin;
 import com.kotcrab.vis.editor.util.scene2d.ModalInputListener;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialog;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialog;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 
 import java.util.Optional;

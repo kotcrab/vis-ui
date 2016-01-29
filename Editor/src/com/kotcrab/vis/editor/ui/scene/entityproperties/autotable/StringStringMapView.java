@@ -27,7 +27,7 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.runtime.component.Variables;
 import com.kotcrab.vis.ui.util.InputValidator;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.*;
 
 import java.util.Optional;
@@ -69,7 +69,7 @@ public class StringStringMapView extends VisTable {
 				if (keycode == Keys.ENTER) {
 					String newKey = newVariableField.getText();
 					if (map.containsKey(newKey)) {
-						DialogUtils.showErrorDialog(getStage(), "Variable with that name already exists!");
+						Dialogs.showErrorDialog(getStage(), "Variable with that name already exists!");
 					}
 
 					newVariableField.setText("");

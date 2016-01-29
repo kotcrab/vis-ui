@@ -24,9 +24,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialog;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialog;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogListener;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisDialog;
@@ -111,7 +111,7 @@ public class DisableableDialogsModule extends EditorModule {
 			}
 		};
 
-		OptionDialog dialog = DialogUtils.showOptionDialog(stage, title, text, type, wrapperListener);
+		OptionDialog dialog = Dialogs.showOptionDialog(stage, title, text, type, wrapperListener);
 		insertActorInDialogButtonTable(dialog, dontShowAgain).padRight(10);
 		dialog.pack();
 

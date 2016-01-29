@@ -19,8 +19,8 @@ package com.kotcrab.vis.editor.ui.scene;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.scene.EditorScene;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
@@ -77,7 +77,7 @@ public abstract class AbstractSceneSettingsDialog extends VisWindow {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				if (sceneTab.isDirty()) {
-					DialogUtils.showOptionDialog(getStage(), "Save settings", "This will save any previous changes in scene, continue?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+					Dialogs.showOptionDialog(getStage(), "Save settings", "This will save any previous changes in scene, continue?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 						@Override
 						public void yes () {
 							setValuesToSceneAndSave();

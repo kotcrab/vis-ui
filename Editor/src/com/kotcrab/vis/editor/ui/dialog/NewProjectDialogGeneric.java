@@ -24,7 +24,7 @@ import com.kotcrab.vis.editor.module.editor.FileChooserModule;
 import com.kotcrab.vis.editor.module.editor.ProjectIOModule;
 import com.kotcrab.vis.editor.module.project.ProjectGeneric;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.form.FormInputValidator;
 import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.VisLabel;
@@ -168,7 +168,7 @@ public class NewProjectDialogGeneric extends VisTable {
 			projectIO.createGenericProject(project);
 			dialog.fadeOut();
 		} else
-			DialogUtils.showErrorDialog(getStage(), error);
+			Dialogs.showErrorDialog(getStage(), error);
 
 	}
 }

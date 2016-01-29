@@ -35,8 +35,8 @@ import com.kotcrab.vis.editor.util.async.AsyncTaskListener;
 import com.kotcrab.vis.editor.util.async.SteppedAsyncTask;
 import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.editor.util.vis.WikiPages;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import org.apache.commons.io.IOUtils;
 
@@ -84,7 +84,7 @@ public class ProjectIOModule extends EditorModule {
 		try {
 			load(projectRoot);
 		} catch (EditorException e) {
-			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
+			Dialogs.showErrorDialog(stage, e.getMessage(), e);
 			Log.exception(e);
 		}
 	}
@@ -126,7 +126,7 @@ public class ProjectIOModule extends EditorModule {
 			if (descriptor.versionCode < 20) {
 				String[] buttons = {"How to convert project", "OK"};
 				Integer[] returns = {CONVERTING_HELP, OK};
-				DialogUtils.showConfirmDialog(stage, "Warning", "This project uses old project format and must be converted before loading." +
+				Dialogs.showConfirmDialog(stage, "Warning", "This project uses old project format and must be converted before loading." +
 						"\nSee help page for more details.", buttons, returns, result -> {
 					if (result == CONVERTING_HELP) WikiPages.CONVERTING_FROM_VISEDITOR_02X.open();
 				});
@@ -135,7 +135,7 @@ public class ProjectIOModule extends EditorModule {
 			}
 
 			if (descriptor.versionCode > App.VERSION_CODE) {
-				DialogUtils.showOptionDialog(stage, "Warning",
+				Dialogs.showOptionDialog(stage, "Warning",
 						"This project was opened in newer version of VisEditor.\nSome functions may not work properly. Do you want to continue?",
 						OptionDialogType.YES_NO, new OptionDialogAdapter() {
 							@Override
@@ -298,7 +298,7 @@ public class ProjectIOModule extends EditorModule {
 		try {
 			load(projectFile);
 		} catch (EditorException e) {
-			DialogUtils.showErrorDialog(stage, "Error occurred while loading project", e);
+			Dialogs.showErrorDialog(stage, "Error occurred while loading project", e);
 			Log.exception(e);
 		}
 	}

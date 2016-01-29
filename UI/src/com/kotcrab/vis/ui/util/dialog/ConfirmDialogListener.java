@@ -17,7 +17,7 @@
 package com.kotcrab.vis.ui.util.dialog;
 
 /**
- * Used to get events from {@link DialogUtils} confirm dialog.
+ * Used to get events from {@link Dialogs} confirm dialog.
  * @author Kotcrab
  */
 public interface ConfirmDialogListener<T> {

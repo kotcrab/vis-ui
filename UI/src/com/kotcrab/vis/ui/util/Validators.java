@@ -16,11 +16,11 @@
 
 package com.kotcrab.vis.ui.util;
 
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
- * Provides premade validators that can be used with for example with {@link VisValidatableTextField} or {@link DialogUtils}
+ * Provides premade validators that can be used with for example with {@link VisValidatableTextField} or {@link Dialogs}
  * when displaying input dialogs.
  * @author Kotcrab
  */

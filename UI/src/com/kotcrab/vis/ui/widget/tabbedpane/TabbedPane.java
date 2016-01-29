@@ -38,8 +38,8 @@ import com.kotcrab.vis.ui.i18n.BundleText;
 import com.kotcrab.vis.ui.layout.DragPane;
 import com.kotcrab.vis.ui.layout.HorizontalFlowGroup;
 import com.kotcrab.vis.ui.layout.VerticalFlowGroup;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.Draggable;
 import com.kotcrab.vis.ui.widget.VisImageButton;
@@ -287,7 +287,7 @@ public class TabbedPane {
 		}
 
 		if (tab.isDirty() && mainTable.getStage() != null) {
-			DialogUtils.showOptionDialog(mainTable.getStage(), Text.UNSAVED_DIALOG_TITLE.get(), Text.UNSAVED_DIALOG_TEXT.get(),
+			Dialogs.showOptionDialog(mainTable.getStage(), Text.UNSAVED_DIALOG_TITLE.get(), Text.UNSAVED_DIALOG_TEXT.get(),
 					OptionDialogType.YES_NO_CANCEL, new OptionDialogAdapter() {
 						@Override
 						public void yes () {

@@ -36,7 +36,7 @@ import com.kotcrab.vis.editor.ui.tab.CloseTabWhenMovingResources;
 import com.kotcrab.vis.editor.util.vis.SortedEntityEngineConfiguration;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.util.EntityEngine;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
 /**
@@ -179,7 +179,7 @@ public class AssetsAnalyzerModule extends ProjectModule {
 			AssetProviderResult result = provideDescriptor(source, path);
 			transaction = gen.analyze(projectContainer, result, source, target, fileAccess.relativizeToAssetsFolder(target));
 		} catch (AssetTransactionException e) {
-			DialogUtils.showErrorDialog(stage, "Error occurred during asset transaction preparation, nothing was changed.", e);
+			Dialogs.showErrorDialog(stage, "Error occurred during asset transaction preparation, nothing was changed.", e);
 		}
 
 		//TODO support for transaction execute undo

@@ -59,8 +59,8 @@ import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.editor.util.vis.WikiPages;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.layout.GridGroup;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.file.FileChooser.HistoryPolicy;
@@ -501,7 +501,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		}
 
 		if (fileSorter != null && fileSorter.isMainFile(file) == false) {
-			DialogUtils.showOKDialog(stage, "Message", "This file type is unsupported in this marked directory.");
+			Dialogs.showOKDialog(stage, "Message", "This file type is unsupported in this marked directory.");
 			return;
 		}
 
@@ -521,7 +521,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 					quickAccessModule.addTab(tab);
 					atlasViews.put(file, tab);
 				} else {
-					DialogUtils.showErrorDialog(stage, "Unknown error encountered during atlas loading");
+					Dialogs.showErrorDialog(stage, "Unknown error encountered during atlas loading");
 					return;
 				}
 			} else
@@ -639,14 +639,14 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 				//TODO: add safe remark feature
 				String[] buttons = {"Help", "Change Anyway"};
 				Integer[] returns = {HELP, OK};
-				DialogUtils.showConfirmDialog(getStage(), "Warning", "This directory is already marked, changing it may\n" +
+				Dialogs.showConfirmDialog(getStage(), "Warning", "This directory is already marked, changing it may\n" +
 						"result in unexpected errors if asset files are used in scenes.", buttons, returns, result -> {
 					if (result == HELP) WikiPages.MARKING_DIRECTORIES.open();
 					if (result == OK) markDirectory(dir, fullCodeName);
 				});
 			} else {
 				if (dir.list().length > 0) {
-					DialogUtils.showOptionDialog(getStage(), "Warning", "This directory already contains files. Marking it \n" +
+					Dialogs.showOptionDialog(getStage(), "Warning", "This directory already contains files. Marking it \n" +
 									"may cause unexpected errors if assets files are used in scenes.", OptionDialogType.YES_CANCEL,
 							new OptionDialogAdapter() {
 								@Override
@@ -719,7 +719,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 	private void deleteWithErrorDialogIfNeeded (FileHandle file) {
 		if (FileUtils.delete(file) == false) {
-			DialogUtils.showErrorDialog(stage, "Error occurred while deleting file, file may be used by system");
+			Dialogs.showErrorDialog(stage, "Error occurred while deleting file, file may be used by system");
 		}
 	}
 

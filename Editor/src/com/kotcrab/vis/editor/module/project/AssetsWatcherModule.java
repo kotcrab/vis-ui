@@ -20,7 +20,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.util.DirectoryWatcher;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 
 import java.io.IOException;
 
@@ -42,7 +42,7 @@ public class AssetsWatcherModule extends ProjectModule {
 		try {
 			watcher.start();
 		} catch (IOException e) {
-			DialogUtils.showErrorDialog(stage, "Error creating file watch service, automatic files reloading will not work!", e);
+			Dialogs.showErrorDialog(stage, "Error creating file watch service, automatic files reloading will not work!", e);
 			Log.exception(e);
 		}
 	}

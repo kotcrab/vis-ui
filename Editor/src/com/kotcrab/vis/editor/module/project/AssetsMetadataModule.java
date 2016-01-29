@@ -31,7 +31,7 @@ import com.kotcrab.vis.editor.module.editor.ToastModule.ToastTable;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.editor.util.vis.WikiPages;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 
 import java.io.BufferedReader;
@@ -191,12 +191,12 @@ public class AssetsMetadataModule extends ProjectModule {
 		}
 
 		DamagedAssetsMetadataToast setDetailsMessage (String message, String detailsText) {
-			details.setListener(url -> DialogUtils.showErrorDialog(getStage(), message, detailsText));
+			details.setListener(url -> Dialogs.showErrorDialog(getStage(), message, detailsText));
 			return this;
 		}
 
 		DamagedAssetsMetadataToast setDetailsMessage (Exception e) {
-			details.setListener(url -> DialogUtils.showErrorDialog(getStage(), "Error cause: " + e.getMessage(), e));
+			details.setListener(url -> Dialogs.showErrorDialog(getStage(), "Error cause: " + e.getMessage(), e));
 			return this;
 		}
 	}

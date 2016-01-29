@@ -4,6 +4,10 @@
 - **Changed**: `GreaterThanValidator#setEquals(boolean)` renamed to `setUseEquals`
 - **Changed**: `FormInputValidator#validateInput` is now final and can't be overridden
 - **Changed**: `FormInputValidator#getLastResult` is now package-private
+- **Changed**: `DialogUtils` renamed to `Dialogs`
+ - **Changed**: `DialogUtils.properties` is now `Dialogs.properties`
+ - **Changed**: `VisUI#setDialogUtilsBundle(...)` is now `VisUI#setDialogsBundle(...)`
+ - **Changed**: `VisUI#getDialogUtilsBundle()` is now `VisUI#getDialogsBundle()`
 - **Changed**: `FileChooserText`, `FilePopupMenu` and `ColorPickerText` moved to `internal` subpackages (were not part of public API)
 - **Changed**: `FileChooser#getFileDeleter` removed
 - **Changed**: `FileChooserListener` was refactored

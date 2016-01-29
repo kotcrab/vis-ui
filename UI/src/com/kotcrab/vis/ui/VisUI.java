@@ -24,7 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.I18NBundle;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.ButtonBar;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
@@ -51,7 +51,7 @@ public class VisUI {
 
 	private static I18NBundle buttonBarBundle;
 	private static I18NBundle fileChooserBundle;
-	private static I18NBundle dialogUtilsBundle;
+	private static I18NBundle dialogsBundle;
 	private static I18NBundle tabbedPaneBundle;
 	private static I18NBundle colorPickerBundle;
 
@@ -169,22 +169,22 @@ public class VisUI {
 		VisUI.fileChooserBundle = fileChooserBundle;
 	}
 
-	/** Returns I18N bundle used by {@link DialogUtils}, if current bundle is null, a default bundle is set and returned */
-	public static I18NBundle getDialogUtilsBundle () {
-		if (dialogUtilsBundle == null) {
-			FileHandle file = Gdx.files.classpath("com/kotcrab/vis/ui/i18n/DialogUtils");
-			dialogUtilsBundle = I18NBundle.createBundle(file, new Locale("en"));
+	/** Returns I18N bundle used by {@link Dialogs}, if current bundle is null, a default bundle is set and returned */
+	public static I18NBundle getDialogsBundle () {
+		if (dialogsBundle == null) {
+			FileHandle file = Gdx.files.classpath("com/kotcrab/vis/ui/i18n/Dialogs");
+			dialogsBundle = I18NBundle.createBundle(file, new Locale("en"));
 		}
 
-		return dialogUtilsBundle;
+		return dialogsBundle;
 	}
 
 	/**
-	 * Changes bundle used by {@link DialogUtils}, will not affect already created dialogs.
-	 * If set to null then {@link #getDialogUtilsBundle()} will return default bundle
+	 * Changes bundle used by {@link Dialogs}, will not affect already created dialogs.
+	 * If set to null then {@link #getDialogsBundle()} will return default bundle
 	 */
-	public static void setDialogUtilsBundle (I18NBundle dialogUtilsBundle) {
-		VisUI.dialogUtilsBundle = dialogUtilsBundle;
+	public static void setDialogsBundle (I18NBundle dialogsBundle) {
+		VisUI.dialogsBundle = dialogsBundle;
 	}
 
 	/** Returns I18N bundle used by {@link TabbedPane}, if current bundle is null, a default bundle is set and returned */

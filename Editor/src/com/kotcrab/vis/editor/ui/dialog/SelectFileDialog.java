@@ -26,7 +26,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.value.PrefHeightIfVisibleValue;
 import com.kotcrab.vis.ui.widget.*;
 
@@ -140,7 +140,7 @@ public class SelectFileDialog extends VisWindow {
 		FileHandle file = fileMap.get(fileList.getSelected());
 
 		if (file == null) {
-			DialogUtils.showErrorDialog(getStage(), "You must select file!");
+			Dialogs.showErrorDialog(getStage(), "You must select file!");
 			return;
 		}
 

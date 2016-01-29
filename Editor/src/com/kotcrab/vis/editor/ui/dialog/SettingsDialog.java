@@ -28,7 +28,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.Module;
 import com.kotcrab.vis.editor.module.editor.SettableModule;
 import com.kotcrab.vis.editor.module.project.ProjectModule;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.*;
 
 import java.util.Comparator;
@@ -112,7 +112,7 @@ public class SettingsDialog extends VisWindow {
 
 	private boolean applySettingsIfPossible () {
 		if (isCurrentSettingsValid() == false) {
-			DialogUtils.showErrorDialog(getStage(), settingsInvalidError);
+			Dialogs.showErrorDialog(getStage(), settingsInvalidError);
 			return false;
 		}
 

@@ -29,8 +29,8 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.OsUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.InputDialogAdapter;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
@@ -499,12 +499,12 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void showDialog (String text) {
-		DialogUtils.showOKDialog(getStage(), POPUP_TITLE.get(), text);
+		Dialogs.showOKDialog(getStage(), POPUP_TITLE.get(), text);
 	}
 
 	private void showOverwriteQuestion (final Array<FileHandle> filesList) {
 		String text = filesList.size == 1 ? POPUP_FILE_EXIST_OVERWRITE.get() : POPUP_MULTIPLE_FILE_EXIST_OVERWRITE.get();
-		DialogUtils.showOptionDialog(getStage(), POPUP_TITLE.get(), text, OptionDialogType.YES_NO, new OptionDialogAdapter() {
+		Dialogs.showOptionDialog(getStage(), POPUP_TITLE.get(), text, OptionDialogType.YES_NO, new OptionDialogAdapter() {
 			@Override
 			public void yes () {
 				notifyListenerAndCloseDialog(filesList);
@@ -921,16 +921,16 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void showNewDirectoryDialog () {
-		DialogUtils.showInputDialog(getStage(), NEW_DIRECTORY_DIALOG_TITLE.get(), NEW_DIRECTORY_DIALOG_TEXT.get(), true, new InputDialogAdapter() {
+		Dialogs.showInputDialog(getStage(), NEW_DIRECTORY_DIALOG_TITLE.get(), NEW_DIRECTORY_DIALOG_TEXT.get(), true, new InputDialogAdapter() {
 			@Override
 			public void finished (String input) {
 				if (FileUtils.isValidFileName(input) == false) {
-					DialogUtils.showErrorDialog(getStage(), NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS.get());
+					Dialogs.showErrorDialog(getStage(), NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS.get());
 				}
 
 				for (FileHandle file : currentDirectory.list()) {
 					if (file.name().equals(input)) {
-						DialogUtils.showErrorDialog(getStage(), NEW_DIRECTORY_DIALOG_ALREADY_EXISTS.get());
+						Dialogs.showErrorDialog(getStage(), NEW_DIRECTORY_DIALOG_ALREADY_EXISTS.get());
 						return;
 					}
 				}

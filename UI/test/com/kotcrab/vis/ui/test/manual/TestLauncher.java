@@ -29,7 +29,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.VisUI.SkinScale;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.Menu;
 import com.kotcrab.vis.ui.widget.MenuBar;
 import com.kotcrab.vis.ui.widget.MenuItem;
@@ -78,7 +78,7 @@ class TestApplication extends ApplicationAdapter {
 		stage.addActor(new TestTree());
 		stage.addActor(new TestVertical());
 		stage.addActor(new TestFormValidator());
-		stage.addActor(new TestDialogUtils());
+		stage.addActor(new TestDialogs());
 		stage.addActor(new TestValidator());
 		stage.addActor(new TestBuilders());
 //		stage.addActor(new TestTabbedPane());
@@ -160,7 +160,7 @@ class TestApplication extends ApplicationAdapter {
 		helpMenu.addItem(new MenuItem("about", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				DialogUtils.showOKDialog(stage, "about", "tests version: " + TESTS_VERSION + " \nvisui version: " + VisUI.VERSION);
+				Dialogs.showOKDialog(stage, "about", "tests version: " + TESTS_VERSION + " \nvisui version: " + VisUI.VERSION);
 			}
 		}));
 

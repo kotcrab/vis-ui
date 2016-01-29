@@ -63,7 +63,7 @@ import com.kotcrab.vis.editor.util.scene2d.FocusUtils;
 import com.kotcrab.vis.editor.util.vis.CreatePointPayload;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.value.VisValue;
 import com.kotcrab.vis.ui.widget.VisTable;
 
@@ -355,13 +355,13 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 				return true;
 			} else {
 				lastSaveFailed = true;
-				DialogUtils.showErrorDialog(stage, "Unknown error encountered while saving resource");
+				Dialogs.showErrorDialog(stage, "Unknown error encountered while saving resource");
 			}
 
 		} catch (Exception e) {
 			lastSaveFailed = true;
 			Log.exception(e);
-			DialogUtils.showErrorDialog(stage, "Unknown error encountered while saving resource", e);
+			Dialogs.showErrorDialog(stage, "Unknown error encountered while saving resource", e);
 		}
 
 		return false;

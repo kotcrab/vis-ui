@@ -30,7 +30,7 @@ import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.*;
 import org.imgscalr.Scalr;
@@ -108,12 +108,12 @@ public class SpriterImportDialog extends VisWindow {
 			try {
 				checkSettings();
 			} catch (EditorException e) {
-				DialogUtils.showErrorDialog(getStage(), e.getMessage());
+				Dialogs.showErrorDialog(getStage(), e.getMessage());
 				return;
 			}
 
 			if (warnings.size > 0) {
-				DialogUtils.showConfirmDialog(getStage(), "Warning", "Some problem were found during files check",
+				Dialogs.showConfirmDialog(getStage(), "Warning", "Some problem were found during files check",
 						new String[]{"Details", "Import Anyway"},
 						new Integer[]{0, 1}, result -> {
 							if (result == 0) {
@@ -209,7 +209,7 @@ public class SpriterImportDialog extends VisWindow {
 					}
 				}
 			} catch (IOException e) {
-				DialogUtils.showErrorDialog(getStage(), "");
+				Dialogs.showErrorDialog(getStage(), "");
 				Log.exception(e);
 			}
 		}

@@ -29,7 +29,7 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.scene2d.VisTabbedPaneListener;
 import com.kotcrab.vis.editor.util.vis.EditorException;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 
 /**
@@ -61,7 +61,7 @@ public class SceneTabsModule extends ProjectModule implements VisTabbedPaneListe
 		try {
 			open(request.sceneFile);
 		} catch (KryoException e) {
-			DialogUtils.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
+			Dialogs.showErrorDialog(stage, "Failed to load scene due to corrupted file.", e);
 			Log.exception(e);
 		}
 	}
@@ -70,7 +70,7 @@ public class SceneTabsModule extends ProjectModule implements VisTabbedPaneListe
 		try {
 			open(sceneCache.getSafely(file));
 		} catch (EditorException e) {
-			DialogUtils.showErrorDialog(stage, e.getMessage(), e);
+			Dialogs.showErrorDialog(stage, e.getMessage(), e);
 			Log.exception(e);
 		}
 	}

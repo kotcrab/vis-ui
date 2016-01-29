@@ -40,7 +40,7 @@ import com.kotcrab.vis.ui.widget.*;
  * @author Kotcrab
  * @since 0.2.0
  */
-public class DialogUtils {
+public class Dialogs {
 	private static final int BUTTON_CANCEL = 0;
 	private static final int BUTTON_YES = 1;
 	private static final int BUTTON_NO = 2;
@@ -198,7 +198,7 @@ public class DialogUtils {
 	}
 
 	/**
-	 * Dialog with input field and optional {@link InputValidator}. Can be used directly although you should use {@link DialogUtils}
+	 * Dialog with input field and optional {@link InputValidator}. Can be used directly although you should use {@link Dialogs}
 	 * showInputDialog methods.
 	 */
 	public static class InputDialog extends VisWindow {
@@ -322,7 +322,7 @@ public class DialogUtils {
 	}
 
 	/**
-	 * Dialog with text and buttons like Yes, No, Cancel. Can be used directly although you should use {@link DialogUtils}
+	 * Dialog with text and buttons like Yes, No, Cancel. Can be used directly although you should use {@link Dialogs}
 	 * showOptionDialog methods.
 	 */
 	public static class OptionDialog extends VisDialog {
@@ -387,7 +387,7 @@ public class DialogUtils {
 
 	/**
 	 * Dialog with text and exception stacktrace available after pressing Details button.
-	 * Can be used directly although you should use {@link DialogUtils} showErrorDialog methods.
+	 * Can be used directly although you should use {@link Dialogs} showErrorDialog methods.
 	 */
 	public static class ErrorDialog extends VisDialog {
 		private VisTable detailsTable = new VisTable(true);
@@ -445,7 +445,7 @@ public class DialogUtils {
 	}
 
 	/**
-	 * Dialog with title, text and n amount of buttons. Can be used directly although you should use {@link DialogUtils}
+	 * Dialog with title, text and n amount of buttons. Can be used directly although you should use {@link Dialogs}
 	 * showConfirmDialog methods.
 	 * @author Javier
 	 * @author Kotcrab
@@ -480,7 +480,7 @@ public class DialogUtils {
 		}
 	}
 
-	/** {@link DialogUtils} I18N properties. */
+	/** {@link Dialogs} I18N properties. */
 	private enum Text implements BundleText {
 		YES("yes"),
 		NO("no"),
@@ -500,7 +500,7 @@ public class DialogUtils {
 		}
 
 		private static I18NBundle getBundle () {
-			return VisUI.getDialogUtilsBundle();
+			return VisUI.getDialogsBundle();
 		}
 
 		@Override

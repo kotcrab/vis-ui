@@ -24,7 +24,7 @@ import com.kotcrab.vis.editor.module.editor.FileChooserModule;
 import com.kotcrab.vis.editor.module.editor.ProjectIOModule;
 import com.kotcrab.vis.editor.module.project.ProjectLibGDX;
 import com.kotcrab.vis.ui.util.TableUtils;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -153,7 +153,7 @@ public class NewProjectDialogLibGDX extends VisTable {
 			projectIO.createLibGDXProject(project);
 			dialog.fadeOut();
 		} else
-			DialogUtils.showErrorDialog(getStage(), error);
+			Dialogs.showErrorDialog(getStage(), error);
 
 	}
 }

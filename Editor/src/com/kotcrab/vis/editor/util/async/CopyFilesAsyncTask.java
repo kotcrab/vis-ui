@@ -20,7 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.ui.util.dialog.ConfirmDialogListener;
-import com.kotcrab.vis.ui.util.dialog.DialogUtils;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -70,7 +70,7 @@ public class CopyFilesAsyncTask extends AsyncTask implements ConfirmDialogListen
 
 					if (overwritePolicy == OverwritePolicy.ASK) {
 						latch = new CountDownLatch(1);
-						DialogUtils.showConfirmDialog(stage, "Overwrite?",
+						Dialogs.showConfirmDialog(stage, "Overwrite?",
 								"File '" + task.file.name() + "' already exists in target directory, overwrite it?", dialogButtons, dialogReturns, this);
 						latch.await();
 					}
