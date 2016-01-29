@@ -30,6 +30,8 @@ public class Sizes {
 	public float spacingRight;
 	public float spacingLeft;
 
+	public float buttonBarSpacing;
+
 	public float menuItemIconSize;
 
 	public float numberSelectorButtonSize;

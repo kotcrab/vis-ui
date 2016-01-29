@@ -35,6 +35,8 @@ public class ButtonBar {
 	public static final String LINUX_ORDER = "L H NYACBEFO R";
 
 	private ObjectMap<Character, Button> buttons = new ObjectMap<Character, Button>();
+
+	private boolean ignoreSpacing;
 	private String order;
 
 	public ButtonBar (String order) {
@@ -49,6 +51,19 @@ public class ButtonBar {
 			order = OSX_ORDER;
 		} else //default to linux order
 			order = LINUX_ORDER;
+	}
+
+	public boolean isIgnoreSpacing () {
+		return ignoreSpacing;
+	}
+
+	/** @param ignoreSpacing if true spacing symbols in order will be ignored */
+	public void setIgnoreSpacing (boolean ignoreSpacing) {
+		this.ignoreSpacing = ignoreSpacing;
+	}
+
+	public String getOrder () {
+		return order;
 	}
 
 	public void setOrder (String order) {
@@ -84,7 +99,7 @@ public class ButtonBar {
 		for (int i = 0; i < order.length(); i++) {
 			char ch = order.charAt(i);
 
-			if (ch == ' ' && spacingValid) {
+			if (ignoreSpacing == false && ch == ' ' && spacingValid) {
 				table.add().width(10);
 				spacingValid = false;
 			}

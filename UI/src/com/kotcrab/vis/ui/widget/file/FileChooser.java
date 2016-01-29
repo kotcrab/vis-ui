@@ -34,6 +34,7 @@ import com.kotcrab.vis.ui.util.dialog.DialogUtils.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.InputDialogAdapter;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.ButtonBar.ButtonType;
 import com.kotcrab.vis.ui.widget.file.internal.*;
 import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.DriveCheckerListener;
 import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.RootMode;
@@ -341,8 +342,11 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		buttonTable.defaults().minWidth(70).right();
 		add(buttonTable).padTop(3).padBottom(3).padRight(2).fillX().expandX();
 
-		buttonTable.add(cancelButton).expand().right();
-		buttonTable.add(confirmButton);
+		ButtonBar buttonBar = new ButtonBar();
+		buttonBar.setIgnoreSpacing(true);
+		buttonBar.setButton(ButtonType.CANCEL, cancelButton);
+		buttonBar.setButton(ButtonType.OK, confirmButton);
+		buttonTable.add(buttonBar.createTable()).expand().right();
 
 		cancelButton.addListener(new ChangeListener() {
 			@Override

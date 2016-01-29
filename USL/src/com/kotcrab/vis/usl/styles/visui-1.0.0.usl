@@ -120,6 +120,8 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 		spacingBottom: 8,
 		spacingRight: 6,
 
+		buttonBarSpacing: 10,
+
 		menuItemIconSize: 22,
 
 		numberSelectorButtonSize: 12,
@@ -133,6 +135,8 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 
 		spacingBottom: 8,
 		spacingRight: 6,
+
+		buttonBarSpacing: 10,
 
 		menuItemIconSize: 44,
 

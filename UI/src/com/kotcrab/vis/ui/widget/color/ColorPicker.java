@@ -21,6 +21,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Disposable;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.widget.ButtonBar;
+import com.kotcrab.vis.ui.widget.ButtonBar.ButtonType;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
@@ -91,12 +93,12 @@ public class ColorPicker extends VisWindow implements Disposable {
 	}
 
 	private VisTable createButtons () {
-		VisTable table = new VisTable(true);
-		table.defaults().right();
-		table.add(restoreButton = new VisTextButton(RESTORE.get()));
-		table.add(okButton = new VisTextButton(OK.get()));
-		table.add(cancelButton = new VisTextButton(CANCEL.get()));
-		return table;
+		ButtonBar buttonBar = new ButtonBar();
+		buttonBar.setIgnoreSpacing(true);
+		buttonBar.setButton(ButtonType.LEFT, restoreButton = new VisTextButton(RESTORE.get()));
+		buttonBar.setButton(ButtonType.OK, okButton = new VisTextButton(OK.get()));
+		buttonBar.setButton(ButtonType.CANCEL, cancelButton = new VisTextButton(CANCEL.get()));
+		return buttonBar.createTable();
 	}
 
 	private void createListeners () {

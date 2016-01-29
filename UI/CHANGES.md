@@ -22,6 +22,8 @@
 - **Added**: `VisTextField#toString()` now returns field text
 - **Added**: `PrefWidthIfVisibleValue`
 - **Added**: `HorizontalFlowGroup` and `VerticalFlowGroup`
+- **Added**: `ButtonBar`
+    - `FileChooser`, `ColorPicker` and `Dialogs` will now show buttons in platform dependant order
 - **Added**: `LinkLabel`, `VisTextField`, `VisTextArea` and `VisSplitPane` supports system cursors when using LWJGL3 or GWT backend
 - **Fixed**: `TabbedPane`: Tab close button too small when using `SkinScale.X2`
 - **Fixed**: `TabbedPane`: In vertical mode, tabs buttons were centered instead of being aligned at the top 
