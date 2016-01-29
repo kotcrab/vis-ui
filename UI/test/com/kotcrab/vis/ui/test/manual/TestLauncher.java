@@ -83,6 +83,7 @@ class TestApplication extends ApplicationAdapter {
 		stage.addActor(new TestBuilders());
 //		stage.addActor(new TestTabbedPane());
 //		stage.addActor(new TestFlowGroup());
+//		stage.addActor(new TestButtonBar());
 
 		stage.addListener(new InputListener() {
 			boolean debug = false;
