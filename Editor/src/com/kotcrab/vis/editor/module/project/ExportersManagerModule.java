@@ -87,6 +87,17 @@ public class ExportersManagerModule extends ProjectModule {
 
 		inputListener = new ExportInputListener();
 		inputModule.addListener(inputListener);
+
+		Optional<OptionDialog> dialog = disableableDialogs.showOptionDialog("fds", DefaultDialogOption.YES, stage, "Export",
+				String.format("Project will be exported to directory: %s.\nAll current contents of this folder will be removed.", project.getAssetOutputDirectory()),
+				OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+					@Override
+					public void yes () {
+						export(false);
+					}
+				});
+
+		dialog.ifPresent(optDialog -> optDialog.setYesButtonText("Export"));
 	}
 
 	@Override

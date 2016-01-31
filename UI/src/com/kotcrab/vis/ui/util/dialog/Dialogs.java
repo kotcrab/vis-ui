@@ -34,18 +34,16 @@ import com.kotcrab.vis.ui.i18n.BundleText;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.ButtonBar.ButtonType;
 
 /**
- * Utilities for displaying various type of dialogs, equivalent of JOptionPane from Swing.
+ * Utilities for displaying various type of dialogs. Equivalent of JOptionPane from Swing.
  * @author Kotcrab
  * @since 0.2.0
  */
 public class Dialogs {
-	private static final int BUTTON_CANCEL = 0;
-	private static final int BUTTON_YES = 1;
-	private static final int BUTTON_NO = 2;
-	private static final int BUTTON_OK = 3;
-	private static final int BUTTON_DETAILS = 4;
+	private static final int BUTTON_OK = 1;
+	private static final int BUTTON_DETAILS = 2;
 
 	/**
 	 * Dialog with given text and single OK button.
@@ -54,7 +52,7 @@ public class Dialogs {
 	public static VisDialog showOKDialog (Stage stage, String title, String text) {
 		VisDialog dialog = new VisDialog(title);
 		dialog.text(text);
-		dialog.button(Text.OK.get()).padBottom(3);
+		dialog.button(ButtonType.OK.getText()).padBottom(3);
 		dialog.pack();
 		dialog.centerWindow();
 		stage.addActor(dialog.fadeIn());
@@ -219,9 +217,10 @@ public class Dialogs {
 				closeOnEscape();
 			}
 
-			VisTable buttonsTable = new VisTable(true);
-			buttonsTable.add(cancelButton = new VisTextButton(Text.CANCEL.get()));
-			buttonsTable.add(okButton = new VisTextButton(Text.OK.get()));
+			ButtonBar buttonBar = new ButtonBar();
+			buttonBar.setIgnoreSpacing(true);
+			buttonBar.setButton(ButtonType.CANCEL, cancelButton = new VisTextButton(ButtonType.CANCEL.getText()));
+			buttonBar.setButton(ButtonType.OK, okButton = new VisTextButton(ButtonType.OK.getText()));
 
 			VisTable fieldTable = new VisTable(true);
 
@@ -236,7 +235,7 @@ public class Dialogs {
 
 			add(fieldTable).padTop(3).spaceBottom(4);
 			row();
-			add(buttonsTable).padBottom(3);
+			add(buttonBar.createTable()).padBottom(3);
 
 			addListeners();
 
@@ -325,62 +324,78 @@ public class Dialogs {
 	 * Dialog with text and buttons like Yes, No, Cancel. Can be used directly although you should use {@link Dialogs}
 	 * showOptionDialog methods.
 	 */
-	public static class OptionDialog extends VisDialog {
-		private OptionDialogListener listener;
+	public static class OptionDialog extends VisWindow {
+		private final ButtonBar buttonBar;
 
-		private VisTextButton yesButton = new VisTextButton(Text.YES.get());
-		private VisTextButton noButton = new VisTextButton(Text.NO.get());
-		private VisTextButton cancelButton = new VisTextButton(Text.CANCEL.get());
-
-		public OptionDialog (String title, String text, OptionDialogType type, OptionDialogListener listener) {
+		public OptionDialog (String title, String text, OptionDialogType type, final OptionDialogListener listener) {
 			super(title);
 
-			this.listener = listener;
-
-			text(new VisLabel(text, Align.center));
+			add(new VisLabel(text, Align.center));
+			row();
+			defaults().space(6);
 			defaults().padBottom(3);
+
+			buttonBar = new ButtonBar();
+			buttonBar.setIgnoreSpacing(true);
+
+			ChangeListener yesBtnListener = new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent event, Actor actor) {
+					listener.yes();
+					fadeOut();
+				}
+			};
+
+			ChangeListener noBtnListener = new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent event, Actor actor) {
+					listener.no();
+					fadeOut();
+				}
+			};
+
+			ChangeListener cancelBtnListener = new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent event, Actor actor) {
+					listener.cancel();
+					fadeOut();
+				}
+			};
 
 			switch (type) {
 				case YES_NO:
-					button(yesButton, BUTTON_YES);
-					button(noButton, BUTTON_NO);
+					buttonBar.setButton(ButtonType.YES, yesBtnListener);
+					buttonBar.setButton(ButtonType.NO, noBtnListener);
 					break;
 				case YES_CANCEL:
-					button(yesButton, BUTTON_YES);
-					button(cancelButton, BUTTON_CANCEL);
+					buttonBar.setButton(ButtonType.YES, yesBtnListener);
+					buttonBar.setButton(ButtonType.CANCEL, cancelBtnListener);
 					break;
 				case YES_NO_CANCEL:
-					button(yesButton, BUTTON_YES);
-					button(noButton, BUTTON_NO);
-					button(cancelButton, BUTTON_CANCEL);
+					buttonBar.setButton(ButtonType.YES, yesBtnListener);
+					buttonBar.setButton(ButtonType.NO, noBtnListener);
+					buttonBar.setButton(ButtonType.CANCEL, cancelBtnListener);
 					break;
 			}
+
+			add(buttonBar.createTable());
 
 			pack();
 			centerWindow();
 		}
 
-		@Override
-		protected void result (Object object) {
-			int result = (Integer) object;
-
-			if (result == BUTTON_YES) listener.yes();
-			if (result == BUTTON_NO) listener.no();
-			if (result == BUTTON_CANCEL) listener.cancel();
-		}
-
 		public OptionDialog setNoButtonText (String text) {
-			noButton.setText(text);
+			buttonBar.getTextButton(ButtonType.NO).setText(text);
 			return this;
 		}
 
 		public OptionDialog setYesButtonText (String text) {
-			yesButton.setText(text);
+			buttonBar.getTextButton(ButtonType.YES).setText(text);
 			return this;
 		}
 
 		public OptionDialog setCancelButtonText (String text) {
-			cancelButton.setText(text);
+			buttonBar.getTextButton(ButtonType.CANCEL).setText(text);
 			return this;
 		}
 	}
@@ -426,7 +441,7 @@ public class Dialogs {
 				button(Text.DETAILS.get(), BUTTON_DETAILS);
 			}
 
-			button(Text.OK.get(), BUTTON_OK).padBottom(3);
+			button(ButtonType.OK.getText(), BUTTON_OK).padBottom(3);
 			pack();
 			centerWindow();
 		}
@@ -482,16 +497,11 @@ public class Dialogs {
 
 	/** {@link Dialogs} I18N properties. */
 	private enum Text implements BundleText {
-		YES("yes"),
-		NO("no"),
-		CANCEL("cancel"),
-		OK("ok"),
-		ERROR("error"),
-
 		DETAILS("details"),
 		DETAILS_COLON("detailsColon"),
 		COPY("copy"),
-		COPIED("copied");
+		COPIED("copied"),
+		ERROR("error");
 
 		private final String name;
 

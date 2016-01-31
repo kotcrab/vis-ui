@@ -20,7 +20,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
@@ -29,7 +28,7 @@ import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialog;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogListener;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
-import com.kotcrab.vis.ui.widget.VisDialog;
+import com.kotcrab.vis.ui.widget.VisWindow;
 
 import java.util.Optional;
 
@@ -118,13 +117,17 @@ public class DisableableDialogsModule extends EditorModule {
 		return Optional.of(dialog);
 	}
 
-	private <T extends Actor> Cell<T> insertActorInDialogButtonTable (VisDialog target, T newActor) {
-		Array<Actor> oldActors = new Array<>(target.getButtonsTable().getChildren());
-		Table table = target.getButtonsTable();
-		table.clearChildren();
+	private <T extends Actor> Cell<T> insertActorInDialogButtonTable (VisWindow target, T newActor) { //TODO refactor this
+		Array<Actor> oldActors = new Array<>(target.getChildren());
+		target.clearChildren();
 
-		Cell<T> cell = table.add(newActor);
-		oldActors.forEach(table::add);
+		oldActors.removeIndex(0); //remove first item which is window label
+		target.add(oldActors.removeIndex(0)).colspan(2); //remove and re add main text label
+		target.row();
+
+		Cell<T> cell = target.add(newActor);
+
+		oldActors.forEach(target::add);
 
 		return cell;
 	}

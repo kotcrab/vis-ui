@@ -77,14 +77,31 @@ public class ButtonBar {
 	}
 
 	public void setButton (ButtonType type, String text, ChangeListener listener) {
-		setButton(type, new VisTextButton(text, listener));
+		setButton(type, new VisTextButton(text), listener);
 	}
 
 	public void setButton (ButtonType type, Button button) {
+		setButton(type, button, null);
+	}
+
+	public void setButton (ButtonType type, Button button, ChangeListener listener) {
 		if (type == null) throw new IllegalArgumentException("type can't be null");
 		if (button == null) throw new IllegalArgumentException("button can't be null");
 		if (buttons.containsKey(type.id)) buttons.remove(type.id);
 		buttons.put(type.id, button);
+		if (listener != null) button.addListener(listener);
+	}
+
+	public Button getButton (ButtonType type) {
+		return buttons.get(type.getId());
+	}
+
+	/**
+	 * @return stored button casted to {@link VisTextButton}. Will throw {@link ClassCastException} in case stored button
+	 * type is wrong. This may be safely used when button was created using {@link #setButton(ButtonType, String, ChangeListener)}.
+	 */
+	public VisTextButton getTextButton (ButtonType type) {
+		return (VisTextButton) getButton(type);
 	}
 
 	/**

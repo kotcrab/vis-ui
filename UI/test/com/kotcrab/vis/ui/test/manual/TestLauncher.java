@@ -182,13 +182,14 @@ class TestApplication extends ApplicationAdapter {
 
 	@Override
 	public void resize (int width, int height) {
+		if(width == 0 && height == 0) return; //see https://github.com/libgdx/libgdx/issues/3673#issuecomment-177606278
 		stage.getViewport().update(width, height, true);
 	}
 
 	@Override
 	public void render () {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		stage.act(Gdx.graphics.getDeltaTime());
+		stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
 		stage.draw();
 	}
 

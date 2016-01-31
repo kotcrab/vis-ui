@@ -15,6 +15,8 @@
     - If user can select single file use `SingleFileChooserListener`
     - If user can select multiple files use `StreamingFileChooserListener` or use `FileChooserListener` directly
 - **Changed**: `VisTextField#toString()` now returns field text
+- **Changed**: `OptionDialog` now extends `VisWindow` (was extending `VisDialog`)
+- **Changed**: `OptionDialog` and `InputDialog` now will show buttons in platform dependant order using `ButtonBar`
 - **Removed**: Removed all `Tooltip` constructors except those taking style
     - Use `new Tooltip.Builder(...)` eg. `new Tooltip.Builder("Tooltip Text").target(label).build()`
     - **Changed**: constructor `Tooltip (String text)` is now `Tooltip (String styleName)`
@@ -39,7 +41,9 @@
         - If `colorTransitionDuration` is set to 0 then transition will be skipped.
     - **Removed**: `SeparatorStyle#vertical`, no longer needed
     - **Added**: Drawables: `grey`, `vis-blue`, `vis-red`
-    - **Added**: New `Window` style: `resizeable` 
+    - **Added**: New `Window` style: `resizeable`
+- **I18N**:
+    - **Removed**: Dialogs bundle entries: yes, no, cancel, ok. Now handled by `ButtonBar` bundle. 
 
 #### Version: 0.9.5 (LibGDX 1.7.1)
 - **Added**: constructor `SimpleFormValidator(Disableable)`.
