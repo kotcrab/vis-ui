@@ -5,9 +5,15 @@
 - **Changed**: `FormInputValidator#validateInput` is now final and can't be overridden
 - **Changed**: `FormInputValidator#getLastResult` is now package-private
 - **Changed**: `DialogUtils` renamed to `Dialogs`
- - **Changed**: `DialogUtils.properties` is now `Dialogs.properties`
- - **Changed**: `VisUI#setDialogUtilsBundle(...)` is now `VisUI#setDialogsBundle(...)`
- - **Changed**: `VisUI#getDialogUtilsBundle()` is now `VisUI#getDialogsBundle()`
+    - **Changed**: `DialogUtils.properties` is now `Dialogs.properties`
+    - **Changed**: `VisUI#setDialogUtilsBundle(...)` is now `VisUI#setDialogsBundle(...)`
+    - **Changed**: `VisUI#getDialogUtilsBundle()` is now `VisUI#getDialogsBundle()`
+    - **Added**: `showDetailsDialog (Stage stage, String text, String title, String details)`
+    - **Added**: `showDetailsDialog (Stage stage, String text, String title, String details, boolean expandDetails)`
+- **Changed**: `ErrorDialog` renamed to `DetailsDialog`
+    - **Changed**: Constructor `ErrorDialog (String text, String stacktrace)` changed to `DetailsDialog (String text, String title, String details)`
+    - **Added**: `DetailsDialog#setDetailsVisible(...)`
+    - **Added**: `DetailsDialog#setCopyDetailsButtonVisible(...)`
 - **Changed**: `FileChooserText`, `FilePopupMenu` and `ColorPickerText` moved to `internal` subpackages (were not part of public API)
 - **Changed**: `FileChooser#getFileDeleter` removed
 - **Changed**: `FileChooserListener` was refactored

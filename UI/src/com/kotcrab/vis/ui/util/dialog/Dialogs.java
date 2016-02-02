@@ -27,10 +27,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.StringBuilder;
-import com.kotcrab.vis.ui.util.InputValidator;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.i18n.BundleText;
+import com.kotcrab.vis.ui.util.InputValidator;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.Validators;
 import com.kotcrab.vis.ui.widget.*;
@@ -141,12 +141,12 @@ public class Dialogs {
 	}
 
 	/** Dialog with title "Error" and provided text. */
-	public static ErrorDialog showErrorDialog (Stage stage, String text) {
+	public static DetailsDialog showErrorDialog (Stage stage, String text) {
 		return showErrorDialog(stage, text, (String) null);
 	}
 
 	/** Dialog with title "Error", provided text and exception stacktrace available after pressing 'Details' button. */
-	public static ErrorDialog showErrorDialog (Stage stage, String text, Exception exception) {
+	public static DetailsDialog showErrorDialog (Stage stage, String text, Exception exception) {
 		if (exception == null)
 			return showErrorDialog(stage, text, (String) null);
 		else
@@ -154,8 +154,24 @@ public class Dialogs {
 	}
 
 	/** Dialog with title "Error", provided text, and provided details available after pressing 'Details' button. */
-	public static ErrorDialog showErrorDialog (Stage stage, String text, String details) {
-		ErrorDialog dialog = new ErrorDialog(text, details);
+	public static DetailsDialog showErrorDialog (Stage stage, String text, String details) {
+		DetailsDialog dialog = new DetailsDialog(text, Text.ERROR.get(), details);
+		stage.addActor(dialog.fadeIn());
+		return dialog;
+	}
+
+	/** Dialog with given title, provided text, and more details available after pressing 'Details' button. */
+	public static DetailsDialog showDetailsDialog (Stage stage, String text, String title, String details) {
+		return showDetailsDialog(stage, text, title, details, false);
+	}
+
+	/**
+	 * Dialog with given title, provided text, and more details available after pressing 'Details' button.
+	 * @param expandDetails if true details will be visible without need to press 'Details' button
+	 */
+	public static DetailsDialog showDetailsDialog (Stage stage, String text, String title, String details, boolean expandDetails) {
+		DetailsDialog dialog = new DetailsDialog(text, title, details);
+		dialog.setDetailsVisible(expandDetails);
 		stage.addActor(dialog.fadeIn());
 		return dialog;
 	}
@@ -404,25 +420,29 @@ public class Dialogs {
 	 * Dialog with text and exception stacktrace available after pressing Details button.
 	 * Can be used directly although you should use {@link Dialogs} showErrorDialog methods.
 	 */
-	public static class ErrorDialog extends VisDialog {
+	public static class DetailsDialog extends VisDialog {
 		private VisTable detailsTable = new VisTable(true);
 		private Cell<?> detailsCell;
+		private boolean detailsVisible;
 
-		public ErrorDialog (String text, String stackTrace) {
-			super(Text.ERROR.get());
+		private VisTextButton copyButton;
+		private VisLabel detailsLabel;
+
+		public DetailsDialog (String text, String title, String details) {
+			super(title);
 
 			text(text);
 
-			if (stackTrace != null) {
-				final VisTextButton copyButton = new VisTextButton(Text.COPY.get());
-				final VisLabel errorLabel = new VisLabel(stackTrace);
+			if (details != null) {
+				copyButton = new VisTextButton(Text.COPY.get());
+				detailsLabel = new VisLabel(details);
 
 				Sizes sizes = VisUI.getSizes();
 
 				copyButton.addListener(new ChangeListener() {
 					@Override
 					public void changed (ChangeEvent event, Actor actor) {
-						Gdx.app.getClipboard().setContents((errorLabel.getText().toString()));
+						Gdx.app.getClipboard().setContents((detailsLabel.getText().toString()));
 						copyButton.setText(Text.COPIED.get());
 					}
 				});
@@ -431,12 +451,12 @@ public class Dialogs {
 				detailsTable.add(copyButton);
 				detailsTable.row();
 
-				VisTable errorTable = new VisTable();
-				errorTable.add(errorLabel).top().expand().fillX();
-				detailsTable.add(createScrollPane(errorTable)).colspan(2).minWidth(600 * sizes.scaleFactor).height(300 * sizes.scaleFactor);
+				VisTable detailsTable = new VisTable();
+				detailsTable.add(detailsLabel).top().expand().fillX();
+				this.detailsTable.add(createScrollPane(detailsTable)).colspan(2).minWidth(600 * sizes.scaleFactor).height(300 * sizes.scaleFactor);
 
 				getContentTable().row();
-				detailsCell = getContentTable().add(detailsTable);
+				detailsCell = getContentTable().add(this.detailsTable);
 				detailsCell.setActor(null);
 				button(Text.DETAILS.get(), BUTTON_DETAILS);
 			}
@@ -451,11 +471,51 @@ public class Dialogs {
 			int result = (Integer) object;
 
 			if (result == BUTTON_DETAILS) {
-				detailsCell.setActor(detailsCell.hasActor() ? null : detailsTable);
-				pack();
-				centerWindow();
+				setDetailsVisible(!detailsVisible);
 				cancel();
 			}
+		}
+
+		public void setWrapDetails (boolean wrap) {
+			detailsLabel.setWrap(wrap);
+		}
+
+		public void setCopyDetailsButtonVisible (boolean visible) {
+			copyButton.setVisible(visible);
+		}
+
+		public boolean isCopyDetailsButtonVisible () {
+			return copyButton.isVisible();
+		}
+
+		/**
+		 * Changes visibility of details pane. Note that Window must be added to Stage or Window won't be packed properly and
+		 * it's size will be wrong. If Window is not added to Stage packing will be performed next frame, if it is still
+		 * not added at that point, Window size will be incorrect.
+		 */
+		public void setDetailsVisible (boolean visible) {
+			if (detailsVisible == visible) return;
+			detailsVisible = visible;
+			detailsCell.setActor(detailsCell.hasActor() ? null : detailsTable);
+
+			//looks like Stage is required to properly pack window
+			//if it's null do packing next frame and hope that window have been already added to Stage at that point
+			if (getStage() == null) {
+				Gdx.app.postRunnable(new Runnable() {
+					@Override
+					public void run () {
+						pack();
+						centerWindow();
+					}
+				});
+			} else {
+				pack();
+				centerWindow();
+			}
+		}
+
+		public boolean isDetailsVisible () {
+			return detailsVisible;
 		}
 	}
 

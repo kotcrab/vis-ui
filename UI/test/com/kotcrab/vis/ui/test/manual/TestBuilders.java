@@ -91,7 +91,7 @@ public class TestBuilders extends VisWindow {
 		add(gridButton);
 
 		pack();
-		setPosition(31, 75);
+		setPosition(31, 35);
 
 		new GridTableBuilder(4);
 	}
