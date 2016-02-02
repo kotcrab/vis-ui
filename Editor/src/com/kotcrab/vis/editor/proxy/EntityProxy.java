@@ -268,7 +268,7 @@ public abstract class EntityProxy {
 	//resize properties
 
 	protected void enableResize (Resizable resizable) {
-		if (resizable == null) throw new IllegalStateException("resizeable can't be null");
+		if (resizable == null) throw new IllegalStateException("resizable can't be null");
 		this.resizable = resizable;
 	}
 

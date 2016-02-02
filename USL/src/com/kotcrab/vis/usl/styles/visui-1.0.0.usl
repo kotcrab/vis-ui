@@ -67,7 +67,7 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 	
 	#Window$WindowStyle: {
 		default: { titleFont: default-font, background: window, titleFontColor: white }
-		resizeable inherits default: { background: window-resizeable }
+		resizable inherits default: { background: window-resizable }
 		noborder inherits default: { background: window-noborder }
 		dialog inherits default: { stageBackground: dialogDim }
 	}

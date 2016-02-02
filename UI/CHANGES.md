@@ -47,7 +47,7 @@
         - If `colorTransitionDuration` is set to 0 then transition will be skipped.
     - **Removed**: `SeparatorStyle#vertical`, no longer needed
     - **Added**: Drawables: `grey`, `vis-blue`, `vis-red`
-    - **Added**: New `Window` style: `resizeable`
+    - **Added**: New `Window` style: `resizable`
 - **I18N**:
     - **Removed**: Dialogs bundle entries: yes, no, cancel, ok. Now handled by `ButtonBar` bundle. 
 

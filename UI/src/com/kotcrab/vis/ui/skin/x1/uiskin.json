@@ -41,7 +41,7 @@ com.badlogic.gdx.scenes.scene2d.ui.SplitPane$SplitPaneStyle: {
 },
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: {titleFont: default-font, background: window, titleFontColor: white },
-	resizeable: {background: window-resizeable, titleFont: default-font, titleFontColor: white },
+	resizable: {background: window-resizable, titleFont: default-font, titleFontColor: white },
 	noborder: {background: window-noborder, titleFont: default-font, titleFontColor: white },
 	dialog: {stageBackground: dialogDim, titleFont: default-font, background: window, titleFontColor: white }
 },

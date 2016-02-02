@@ -699,7 +699,7 @@ window-noborder
   orig: 27, 61
   offset: 0, 0
   index: -1
-window-resizeable
+window-resizable
   rotate: false
   xy: 1, 29
   size: 27, 84
