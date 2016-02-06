@@ -25,6 +25,7 @@ import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.adapter.ArrayAdapter;
 import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.ListView.ItemClickListener;
 
 /** @author Kotcrab */
 public class TestListView extends VisWindow {
@@ -42,7 +43,7 @@ public class TestListView extends VisWindow {
 		}
 
 		final TestAdapter adapter = new TestAdapter(array);
-		ListView view = new ListView(adapter);
+		ListView<Model> view = new ListView<Model>(adapter);
 
 		final VisValidatableTextField nameField = new VisValidatableTextField();
 		VisTextButton addButton = new VisTextButton("Add");
@@ -62,6 +63,13 @@ public class TestListView extends VisWindow {
 				//by changing array using adapter view will be invalidated automatically
 				adapter.add(new Model(nameField.getText(), Color.GRAY));
 				nameField.setText("");
+			}
+		});
+
+		view.setItemClickListener(new ItemClickListener<Model>() {
+			@Override
+			public void clicked ( Model item) {
+				System.out.println("Clicked: " + item.name);
 			}
 		});
 

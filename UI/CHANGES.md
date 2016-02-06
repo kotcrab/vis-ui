@@ -30,6 +30,7 @@
     - **Added**: constructor `Tooltip (TooltipStyle)` 
 - **Removed**: `SeparatorStyle#vertical`, was not used
 - **Removed**: constructor `Separator (boolean vertical)`
+- **Added**: `ListView` and `ItemAdapter` API
 - **Added**: constructor `TabbedPane(TabbedPaneStyle style, Sizes sizes)`
 - **Added**: constructor `VisWindow(String title, String styleName)`
 - **Added**: `PrefWidthIfVisibleValue`

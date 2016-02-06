@@ -30,8 +30,8 @@ import com.kotcrab.vis.ui.util.adapter.ListAdapter;
  * @see ArrayListAdapter
  * @since 1.0.0
  */
-public class ListView {
-	private ListAdapter<?> adapter;
+public class ListView<ItemT> {
+	private ListAdapter<ItemT> adapter;
 
 	private VisTable mainTable;
 	private VisScrollPane scrollPane;
@@ -41,13 +41,16 @@ public class ListView {
 
 	private Actor header;
 	private Actor footer;
+	private ItemClickListener<ItemT> clickListener;
 
-	public ListView (ListAdapter<?> adapter) {
+	public ListView (ListAdapter<ItemT> adapter) {
 		mainTable = new VisTable();
 		scrollTable = new VisTable();
 		itemsTable = new VisTable();
 
 		scrollPane = new VisScrollPane(scrollTable);
+		scrollPane.setOverscroll(false, true);
+		scrollPane.setFadeScrollBars(false);
 		mainTable.add(scrollPane).grow();
 
 		setAdapter(adapter);
@@ -102,11 +105,15 @@ public class ListView {
 		return scrollPane;
 	}
 
-	public void setAdapter (ListAdapter<?> adapter) {
+	public void setAdapter (ListAdapter<ItemT> adapter) {
 		if (this.adapter != null) this.adapter.setListView(null);
 		this.adapter = adapter;
 		adapter.setListView(this);
 		invalidateDataSet();
+	}
+
+	public void setItemClickListener (ItemClickListener<ItemT> listener) {
+		adapter.setItemClickListener(listener);
 	}
 
 	public Actor getHeader () {
@@ -127,4 +134,7 @@ public class ListView {
 		invalidateView();
 	}
 
+	public interface ItemClickListener<ItemT> {
+		void clicked (ItemT item);
+	}
 }

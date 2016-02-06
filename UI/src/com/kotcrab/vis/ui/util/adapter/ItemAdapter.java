@@ -23,6 +23,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
  * @author Kotcrab
  * @since 1.0.0
  */
-public interface ItemAdapter<T> {
-	Actor getView (T item);
+public interface ItemAdapter<ItemT> {
+	Actor getView (ItemT item);
 }

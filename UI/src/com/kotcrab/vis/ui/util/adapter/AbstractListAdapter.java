@@ -17,7 +17,12 @@
 package com.kotcrab.vis.ui.util.adapter;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.widget.ListView;
+import com.kotcrab.vis.ui.widget.ListView.ItemClickListener;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
@@ -26,23 +31,57 @@ import com.kotcrab.vis.ui.widget.VisTable;
  */
 public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends CachedItemAdapter<ItemT, ViewT>
 		implements ListAdapter<ItemT> {
-	protected ListView view;
+	protected ListView<ItemT> view;
+
+	private ObjectMap<ViewT, ItemT> viewMap = new ObjectMap<ViewT, ItemT>();
+	private ItemClickListener<ItemT> clickListener;
 
 	@Override
 	public void fillTable (VisTable itemsTable) {
-		for (ItemT item : iterable()) {
-			itemsTable.add(getView(item)).growX();
+		viewMap.clear();
+		for (final ItemT item : iterable()) {
+			final ViewT view = getView(item);
+			viewMap.put(view, item);
+
+			boolean listenerMissing = true;
+			for (EventListener listener : view.getListeners()) {
+				if (ListClickListener.class.isInstance(listener)) {
+					listenerMissing = false;
+					break;
+				}
+			}
+			if (listenerMissing) view.addListener(new ListClickListener(item));
+
+			itemsTable.add(view).growX();
 			itemsTable.row();
 		}
 	}
 
 	@Override
-	public void setListView (ListView view) {
+	public void setListView (ListView<ItemT> view) {
 		this.view = view;
+	}
+
+	@Override
+	public void setItemClickListener (ItemClickListener<ItemT> listener) {
+		clickListener = listener;
 	}
 
 	@Override
 	public void invalidateDataSet () {
 		view.invalidateDataSet();
+	}
+
+	private class ListClickListener extends ClickListener {
+		private ItemT item;
+
+		public ListClickListener (ItemT item) {
+			this.item = item;
+		}
+
+		@Override
+		public void clicked (InputEvent event, float x, float y) {
+			clickListener.clicked(item);
+		}
 	}
 }

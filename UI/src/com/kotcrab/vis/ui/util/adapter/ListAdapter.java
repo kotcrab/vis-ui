@@ -17,6 +17,7 @@
 package com.kotcrab.vis.ui.util.adapter;
 
 import com.kotcrab.vis.ui.widget.ListView;
+import com.kotcrab.vis.ui.widget.ListView.ItemClickListener;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
@@ -28,12 +29,14 @@ import com.kotcrab.vis.ui.widget.VisTable;
  * @see ArrayListAdapter
  * @since 1.0.0
  */
-public interface ListAdapter<T> {
-	void setListView (ListView view);
+public interface ListAdapter<ItemT> {
+	void setListView (ListView<ItemT> view);
+
+	void setItemClickListener(ItemClickListener<ItemT> listener);
 
 	void invalidateDataSet ();
 
-	Iterable<T> iterable ();
+	Iterable<ItemT> iterable ();
 
 	void fillTable (VisTable itemsTable);
 }
