@@ -40,53 +40,53 @@ public abstract class ArrayListAdapter<ItemT, ViewT extends Actor> extends Abstr
 
 	public ItemT set (int index, ItemT element) {
 		ItemT res = list.set(index, element);
-		invalidateDataSet();
+		itemsChanged();
 		return res;
 	}
 
-	public boolean add (ItemT itemT) {
-		boolean res = list.add(itemT);
-		invalidateDataSet();
+	public boolean add (ItemT element) {
+		boolean res = list.add(element);
+		itemAdded(element);
 		return res;
 	}
 
 	public void add (int index, ItemT element) {
 		list.add(index, element);
-		invalidateDataSet();
+		itemAdded(element);
 	}
 
 	public ItemT remove (int index) {
 		ItemT res = list.remove(index);
-		invalidateDataSet();
+		if (res != null) itemRemoved(res);
 		return res;
 	}
 
-	public boolean remove (Object o) {
-		boolean res = list.remove(o);
-		invalidateDataSet();
+	public boolean remove (ItemT item) {
+		boolean res = list.remove(item);
+		if (res) itemRemoved(item);
 		return res;
 	}
 
 	public void clear () {
 		list.clear();
-		invalidateDataSet();
+		itemsChanged();
 	}
 
 	public boolean addAll (Collection<? extends ItemT> c) {
 		boolean res = list.addAll(c);
-		invalidateDataSet();
+		itemsChanged();
 		return res;
 	}
 
 	public boolean addAll (int index, Collection<? extends ItemT> c) {
 		boolean res = list.addAll(index, c);
-		invalidateDataSet();
+		itemsChanged();
 		return res;
 	}
 
 	public boolean removeAll (Collection<?> c) {
 		boolean res = list.removeAll(c);
-		invalidateDataSet();
+		itemsChanged();
 		return res;
 	}
 }

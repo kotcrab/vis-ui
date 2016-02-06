@@ -32,6 +32,7 @@ import com.kotcrab.vis.ui.util.adapter.ListAdapter;
  */
 public class ListView<ItemT> {
 	private ListAdapter<ItemT> adapter;
+	private ListAdapterListener adapaterListener = new ListAdapterListener();
 
 	private VisTable mainTable;
 	private VisScrollPane scrollPane;
@@ -41,7 +42,6 @@ public class ListView<ItemT> {
 
 	private Actor header;
 	private Actor footer;
-	private ItemClickListener<ItemT> clickListener;
 
 	public ListView (ListAdapter<ItemT> adapter) {
 		mainTable = new VisTable();
@@ -54,18 +54,6 @@ public class ListView<ItemT> {
 		mainTable.add(scrollPane).grow();
 
 		setAdapter(adapter);
-	}
-
-	/**
-	 * Notifies view that underlying items data changed and view needs to be refreshed. Note that if modifying items
-	 * data using adapter this will be called automatically.
-	 */
-	public void invalidateDataSet () {
-		rebuildView(true);
-	}
-
-	private void invalidateView () {
-		rebuildView(false);
 	}
 
 	private void rebuildView (boolean full) {
@@ -106,10 +94,10 @@ public class ListView<ItemT> {
 	}
 
 	public void setAdapter (ListAdapter<ItemT> adapter) {
-		if (this.adapter != null) this.adapter.setListView(null);
+		if (this.adapter != null) this.adapter.setListView(null, null);
 		this.adapter = adapter;
-		adapter.setListView(this);
-		invalidateDataSet();
+		adapter.setListView(this, adapaterListener);
+		rebuildView(true);
 	}
 
 	public void setItemClickListener (ItemClickListener<ItemT> listener) {
@@ -122,7 +110,7 @@ public class ListView<ItemT> {
 
 	public void setHeader (Actor header) {
 		this.header = header;
-		invalidateView();
+		rebuildView(false);
 	}
 
 	public Actor getFooter () {
@@ -131,10 +119,16 @@ public class ListView<ItemT> {
 
 	public void setFooter (Actor footer) {
 		this.footer = footer;
-		invalidateView();
+		rebuildView(false);
 	}
 
 	public interface ItemClickListener<ItemT> {
 		void clicked (ItemT item);
+	}
+
+	public class ListAdapterListener {
+		public void invalidateDataSet () {
+			rebuildView(true);
+		}
 	}
 }

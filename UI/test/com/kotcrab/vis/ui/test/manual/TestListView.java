@@ -99,7 +99,6 @@ public class TestListView extends VisWindow {
 
 		@Override
 		protected VisTable createView (Model item) {
-//			System.out.println("Create " + item.name);
 			VisLabel label = new VisLabel(item.name);
 			label.setColor(item.color);
 
@@ -107,6 +106,11 @@ public class TestListView extends VisWindow {
 			table.left();
 			table.add(label);
 			return table;
+		}
+
+		@Override
+		protected void updateView (VisTable view, Model item) {
+			super.updateView(view, item);
 		}
 
 		@Override

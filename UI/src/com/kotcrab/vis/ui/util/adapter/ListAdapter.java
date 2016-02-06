@@ -18,23 +18,22 @@ package com.kotcrab.vis.ui.util.adapter;
 
 import com.kotcrab.vis.ui.widget.ListView;
 import com.kotcrab.vis.ui.widget.ListView.ItemClickListener;
+import com.kotcrab.vis.ui.widget.ListView.ListAdapterListener;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
  * Adapter used to display items list in {@link ListView}. Classes implementing this interface should store array and
- * provide delegates to methods changing array state, such as add/remove etc. Those delegates should call
- * {@link #invalidateDataSet()}.
+ * provide delegates to methods that change array state, such as add/remove etc. Those delegates should call
+ * {@link ListAdapterListener#invalidateDataSet()}.
  * @author Kotcrab
  * @see ArrayAdapter
  * @see ArrayListAdapter
  * @since 1.0.0
  */
 public interface ListAdapter<ItemT> {
-	void setListView (ListView<ItemT> view);
+	void setListView (ListView<ItemT> view, ListAdapterListener viewListener);
 
-	void setItemClickListener(ItemClickListener<ItemT> listener);
-
-	void invalidateDataSet ();
+	void setItemClickListener (ItemClickListener<ItemT> listener);
 
 	Iterable<ItemT> iterable ();
 

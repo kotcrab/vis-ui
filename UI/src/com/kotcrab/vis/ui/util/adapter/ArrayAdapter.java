@@ -40,85 +40,85 @@ public abstract class ArrayAdapter<ItemT, ViewT extends Actor> extends AbstractL
 
 	public void add (ItemT value) {
 		array.add(value);
-		invalidateDataSet();
+		itemAdded(value);
 	}
 
 	public void addAll (Array<? extends ItemT> array) {
 		this.array.addAll(array);
-		invalidateDataSet();
+		itemsChanged();
 	}
 
 	public void addAll (Array<? extends ItemT> array, int start, int count) {
 		this.array.addAll(array, start, count);
-		invalidateDataSet();
+		itemsChanged();
 	}
 
 	public void addAll (ItemT... array) {
 		this.array.addAll(array);
-		invalidateDataSet();
+		itemsChanged();
 	}
 
 	public void addAll (ItemT[] array, int start, int count) {
 		this.array.addAll(array, start, count);
-		invalidateDataSet();
+		itemsChanged();
 	}
 
 	public void set (int index, ItemT value) {
 		array.set(index, value);
-		invalidateDataSet();
+		itemsChanged();
 	}
 
 	public void insert (int index, ItemT value) {
 		array.insert(index, value);
-		invalidateDataSet();
+		itemsChanged();
 	}
 
 	public void swap (int first, int second) {
 		array.swap(first, second);
-		invalidateDataSet();
+		itemsChanged();
 	}
 
 	public boolean removeValue (ItemT value, boolean identity) {
 		boolean res = array.removeValue(value, identity);
-		invalidateDataSet();
+		if (res) itemRemoved(value);
 		return res;
 	}
 
 	public ItemT removeIndex (int index) {
 		ItemT item = array.removeIndex(index);
-		invalidateDataSet();
+		if (item != null) itemRemoved(item);
 		return item;
 	}
 
 	public void removeRange (int start, int end) {
 		array.removeRange(start, end);
-		invalidateDataSet();
+		itemsChanged();
 	}
 
 	public boolean removeAll (Array<? extends ItemT> array, boolean identity) {
 		boolean res = this.array.removeAll(array, identity);
-		invalidateDataSet();
+		itemsChanged();
 		return res;
 	}
 
 	public void clear () {
 		array.clear();
-		invalidateDataSet();
+		itemsChanged();
 	}
 
 	public void shuffle () {
 		array.shuffle();
-		invalidateDataSet();
+		itemsChanged();
 	}
 
 	public void reverse () {
 		array.reverse();
-		invalidateDataSet();
+		itemsChanged();
 	}
 
 	public ItemT pop () {
 		ItemT item = array.pop();
-		invalidateDataSet();
+		itemsChanged();
 		return item;
 	}
 }

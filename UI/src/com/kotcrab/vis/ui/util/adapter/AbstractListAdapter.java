@@ -28,15 +28,30 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.util.adapter.AbstractListAdapter.SelectionPolicy.SelectionDisabled;
 import com.kotcrab.vis.ui.widget.ListView;
 import com.kotcrab.vis.ui.widget.ListView.ItemClickListener;
+import com.kotcrab.vis.ui.widget.ListView.ListAdapterListener;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
+ * Basic {@link ListAdapter} implementation using {@link CachedItemAdapter}. Supports item selection. Classes
+ * extending this should store provided list and provide delegates for all common methods that change array state.
+ * Those delegates should call {@link #itemAdded(Object)} or {@link #itemRemoved(Object)} in order to properly update
+ * view cache. When changes to array are to big to be handled by those two methods {@link #itemsChanged()} should be
+ * called.
+ * <p>
+ * When view does not existed in cache and must be created {@link #createView(Object)} is called. When item view exists
+ * in cache {@link #updateView(Actor, Object)} will be called.
+ * <p>
+ * Enabling item selection requires calling {@link #setSelectionPolicy(SelectionPolicy)} (see {@link SelectionPolicy}
+ * internal classes for built-in policies implementations) and overriding {@link #selectView(Actor)} and {@link #deselectView(Actor)}.
  * @author Kotcrab
+ * @see ArrayAdapter
+ * @see ArrayListAdapter
  * @since 1.0.0
  */
 public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends CachedItemAdapter<ItemT, ViewT>
 		implements ListAdapter<ItemT> {
 	protected ListView<ItemT> view;
+	protected ListAdapterListener viewListener;
 
 	private SelectionPolicy<ItemT, ViewT> selectionPolicy = new SelectionDisabled<ItemT, ViewT>();
 	private ListSelection<ItemT, ViewT> selection = new ListSelection<ItemT, ViewT>(this);
@@ -69,8 +84,9 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 	}
 
 	@Override
-	public void setListView (ListView<ItemT> view) {
+	public void setListView (ListView<ItemT> view, ListAdapterListener viewListener) {
 		this.view = view;
+		this.viewListener = viewListener;
 	}
 
 	@Override
@@ -78,9 +94,18 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 		clickListener = listener;
 	}
 
-	@Override
-	public void invalidateDataSet () {
-		view.invalidateDataSet();
+	protected void itemAdded (ItemT item) {
+		viewListener.invalidateDataSet();
+	}
+
+	protected void itemRemoved (ItemT item) {
+		getViews().remove(item);
+		viewListener.invalidateDataSet();
+	}
+
+	public void itemsChanged () {
+		getViews().clear();
+		viewListener.invalidateDataSet();
 	}
 
 	@Override

@@ -17,18 +17,17 @@
 package com.kotcrab.vis.ui.util.adapter;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-
-import java.util.WeakHashMap;
+import com.badlogic.gdx.utils.ObjectMap;
 
 /**
- * Implementation of ItemAdapter that caches created views. Provides two method that are called when new view should be
- * created and when old view should be updated (see {@link #createView(Object)} and {@link #updateView(Actor, Object)}).
- * Internal cache uses {@link WeakHashMap} to allow garbage collector remove old objects and views.
+ * Implementation of {@link ItemAdapter} that caches created views. Provides two methods that are called when new view
+ * should be created and when old view should be updated (see {@link #createView(Object)} and {@link #updateView(Actor, Object)}).
+ * Internal cache is not cleared automatically and obsolete entries must be removed manually.
  * @author Kotcrab
  * @since 1.0.0
  */
 public abstract class CachedItemAdapter<ItemT, ViewT extends Actor> implements ItemAdapter<ItemT> {
-	private WeakHashMap<ItemT, ViewT> views = new WeakHashMap<ItemT, ViewT>();
+	private ObjectMap<ItemT, ViewT> views = new ObjectMap<ItemT, ViewT>();
 
 	@Override
 	public final ViewT getView (ItemT item) {
@@ -46,7 +45,7 @@ public abstract class CachedItemAdapter<ItemT, ViewT extends Actor> implements I
 	}
 
 	/** @return internal views cache map */
-	protected WeakHashMap<ItemT, ViewT> getViews () {
+	protected ObjectMap<ItemT, ViewT> getViews () {
 		return views;
 	}
 
