@@ -19,6 +19,7 @@ package com.kotcrab.vis.ui.test.manual;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
@@ -68,7 +69,7 @@ public class TestListView extends VisWindow {
 
 		view.setItemClickListener(new ItemClickListener<Model>() {
 			@Override
-			public void clicked ( Model item) {
+			public void clicked (Model item) {
 				System.out.println("Clicked: " + item.name);
 			}
 		});
@@ -87,22 +88,35 @@ public class TestListView extends VisWindow {
 		}
 	}
 
-	private static class TestAdapter extends ArrayAdapter<Model, VisLabel> {
+	private static class TestAdapter extends ArrayAdapter<Model, VisTable> {
+		private final Drawable bg = VisUI.getSkin().getDrawable("window-bg");
+		private final Drawable selection = VisUI.getSkin().getDrawable("selection");
+
 		public TestAdapter (Array<Model> array) {
 			super(array);
+			setSelectionPolicy(new SelectionPolicy.MultipleSelection<Model, VisTable>());
 		}
 
 		@Override
-		protected VisLabel createView (Model item) {
+		protected VisTable createView (Model item) {
 //			System.out.println("Create " + item.name);
-			VisLabel t = new VisLabel(item.name);
-			t.setColor(item.color);
-			return t;
+			VisLabel label = new VisLabel(item.name);
+			label.setColor(item.color);
+
+			VisTable table = new VisTable();
+			table.left();
+			table.add(label);
+			return table;
 		}
 
 		@Override
-		protected void updateView (VisLabel view, Model item) {
-//			System.out.println("Update " + item.name);
+		protected void selectView (VisTable view) {
+			view.setBackground(selection);
+		}
+
+		@Override
+		protected void deselectView (VisTable view) {
+			view.setBackground(bg);
 		}
 	}
 }
