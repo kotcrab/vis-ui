@@ -39,7 +39,7 @@ public class TestListView extends VisWindow {
 		Array<Model> array = new Array<Model>();
 		for (int i = 1; i <= 3; i++) {
 			array.add(new Model("Windows" + i, VisUI.getSkin().getColor("vis-red")));
-			array.add(new Model("Linux" + i, VisUI.getSkin().getColor("vis-blue")));
+			array.add(new Model("Linux" + i, Color.GREEN));
 			array.add(new Model("OSX" + i, Color.WHITE));
 		}
 
@@ -90,11 +90,11 @@ public class TestListView extends VisWindow {
 
 	private static class TestAdapter extends ArrayAdapter<Model, VisTable> {
 		private final Drawable bg = VisUI.getSkin().getDrawable("window-bg");
-		private final Drawable selection = VisUI.getSkin().getDrawable("selection");
+		private final Drawable selection = VisUI.getSkin().getDrawable("list-selection");
 
 		public TestAdapter (Array<Model> array) {
 			super(array);
-			setSelectionPolicy(new SelectionPolicy.MultipleSelection<Model, VisTable>());
+			setSelectionMode(SelectionMode.SINGLE);
 		}
 
 		@Override

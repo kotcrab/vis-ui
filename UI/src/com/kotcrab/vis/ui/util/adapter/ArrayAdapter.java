@@ -32,6 +32,21 @@ public abstract class ArrayAdapter<ItemT, ViewT extends Actor> extends AbstractL
 	}
 
 	@Override
+	public int indexOf (ItemT item) {
+		return array.indexOf(item, true);
+	}
+
+	@Override
+	public int size () {
+		return array.size;
+	}
+
+	@Override
+	public ItemT get (int index) {
+		return array.get(index);
+	}
+
+	@Override
 	public Iterable<ItemT> iterable () {
 		return array;
 	}

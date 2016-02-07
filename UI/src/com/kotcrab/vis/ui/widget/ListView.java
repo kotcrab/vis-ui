@@ -32,7 +32,7 @@ import com.kotcrab.vis.ui.util.adapter.ListAdapter;
  */
 public class ListView<ItemT> {
 	private ListAdapter<ItemT> adapter;
-	private ListAdapterListener adapaterListener = new ListAdapterListener();
+	private ListAdapterListener adapterListener = new ListAdapterListener();
 
 	private VisTable mainTable;
 	private VisScrollPane scrollPane;
@@ -96,7 +96,7 @@ public class ListView<ItemT> {
 	public void setAdapter (ListAdapter<ItemT> adapter) {
 		if (this.adapter != null) this.adapter.setListView(null, null);
 		this.adapter = adapter;
-		adapter.setListView(this, adapaterListener);
+		adapter.setListView(this, adapterListener);
 		rebuildView(true);
 	}
 

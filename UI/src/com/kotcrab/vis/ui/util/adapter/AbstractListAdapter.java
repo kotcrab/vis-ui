@@ -17,15 +17,13 @@
 package com.kotcrab.vis.ui.util.adapter;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.ui.util.adapter.AbstractListAdapter.SelectionPolicy.SelectionDisabled;
 import com.kotcrab.vis.ui.widget.ListView;
 import com.kotcrab.vis.ui.widget.ListView.ItemClickListener;
 import com.kotcrab.vis.ui.widget.ListView.ListAdapterListener;
@@ -35,14 +33,14 @@ import com.kotcrab.vis.ui.widget.VisTable;
  * Basic {@link ListAdapter} implementation using {@link CachedItemAdapter}. Supports item selection. Classes
  * extending this should store provided list and provide delegates for all common methods that change array state.
  * Those delegates should call {@link #itemAdded(Object)} or {@link #itemRemoved(Object)} in order to properly update
- * view cache. When changes to array are to big to be handled by those two methods {@link #itemsChanged()} should be
+ * view cache. When changes to array are too big to be handled by those two methods {@link #itemsChanged()} should be
  * called.
  * <p>
  * When view does not existed in cache and must be created {@link #createView(Object)} is called. When item view exists
  * in cache {@link #updateView(Actor, Object)} will be called.
  * <p>
- * Enabling item selection requires calling {@link #setSelectionPolicy(SelectionPolicy)} (see {@link SelectionPolicy}
- * internal classes for built-in policies implementations) and overriding {@link #selectView(Actor)} and {@link #deselectView(Actor)}.
+ * Enabling item selection requires calling {@link #setSelectionMode(SelectionMode)} and overriding
+ * {@link #selectView(Actor)} and {@link #deselectView(Actor)}.
  * @author Kotcrab
  * @see ArrayAdapter
  * @see ArrayListAdapter
@@ -53,18 +51,15 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 	protected ListView<ItemT> view;
 	protected ListAdapterListener viewListener;
 
-	private SelectionPolicy<ItemT, ViewT> selectionPolicy = new SelectionDisabled<ItemT, ViewT>();
-	private ListSelection<ItemT, ViewT> selection = new ListSelection<ItemT, ViewT>(this);
-
-	private ObjectMap<ViewT, ItemT> viewMap = new ObjectMap<ViewT, ItemT>();
 	private ItemClickListener<ItemT> clickListener;
+
+	private SelectionMode selectionMode = SelectionMode.DISABLED;
+	private ListSelection<ItemT, ViewT> selection = new ListSelection<ItemT, ViewT>(this);
 
 	@Override
 	public void fillTable (VisTable itemsTable) {
-		viewMap.clear();
 		for (final ItemT item : iterable()) {
 			final ViewT view = getView(item);
-			viewMap.put(view, item);
 
 			boolean listenerMissing = true;
 			for (EventListener listener : view.getListeners()) {
@@ -113,8 +108,13 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 
 	}
 
-	public SelectionPolicy<ItemT, ViewT> getSelectionPolicy () {
-		return selectionPolicy;
+	public SelectionMode getSelectionMode () {
+		return selectionMode;
+	}
+
+	public void setSelectionMode (SelectionMode selectionMode) {
+		if (selectionMode == null) throw new IllegalArgumentException("selectionMode can't be null");
+		this.selectionMode = selectionMode;
 	}
 
 	/** @return selected items */
@@ -122,19 +122,14 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 		return selection;
 	}
 
-	public void setSelectionPolicy (SelectionPolicy<ItemT, ViewT> selectionPolicy) {
-		if (selectionPolicy == null) throw new IllegalArgumentException("selectionPolicy can't be null");
-		this.selectionPolicy = selectionPolicy;
-	}
-
 	protected void selectView (ViewT view) {
-		if (selectionPolicy instanceof SelectionDisabled) return;
-		throw new UnsupportedOperationException("selectView must be implemented when `selectionPolicy` is different than SelectionDisabled");
+		if (selectionMode == SelectionMode.DISABLED) return;
+		throw new UnsupportedOperationException("selectView must be implemented when `selectionMode` is different than SelectionMode.DISABLED");
 	}
 
 	protected void deselectView (ViewT view) {
-		if (selectionPolicy instanceof SelectionDisabled) return;
-		throw new UnsupportedOperationException("deselectView must be implemented when `selectionPolicy` is different than SelectionDisabled");
+		if (selectionMode == SelectionMode.DISABLED) return;
+		throw new UnsupportedOperationException("deselectView must be implemented when `selectionMode` is different than SelectionMode.DISABLED");
 	}
 
 	private class ListClickListener extends ClickListener {
@@ -148,12 +143,7 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 
 		@Override
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-			if (selection.getArray().contains(item, true) == false) {
-				selection.select(item, view);
-			} else {
-				selection.deselect(item, view);
-			}
-			return true;
+			return selection.touchDown(view, item);
 		}
 
 		@Override
@@ -162,52 +152,44 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 		}
 	}
 
-	public interface SelectionPolicy<ItemT, ViewT extends Actor> {
-		boolean accept (ListSelection<ItemT, ViewT> selection, ItemT newItem);
-
-		public static class SelectionDisabled<ItemT, ViewT extends Actor> implements SelectionPolicy<ItemT, ViewT> {
-			@Override
-			public boolean accept (ListSelection<ItemT, ViewT> selection, ItemT newItem) {
-				return false;
-			}
-		}
-
-		public static class SingleSelection<ItemT, ViewT extends Actor> implements SelectionPolicy<ItemT, ViewT> {
-			@Override
-			public boolean accept (ListSelection<ItemT, ViewT> selection, ItemT newItem) {
-				selection.deselectAll();
-				return true;
-			}
-		}
-
-		public static class MultipleSelection<ItemT, ViewT extends Actor> implements SelectionPolicy<ItemT, ViewT> {
-			@Override
-			public boolean accept (ListSelection<ItemT, ViewT> selection, ItemT newItem) {
-				if (Gdx.input.isKeyPressed(Keys.CONTROL_LEFT) == false) {
-					selection.deselectAll();
-				}
-				return true;
-			}
-		}
+	public enum SelectionMode {
+		DISABLED, SINGLE, MULTIPLE
 	}
 
 	public static class ListSelection<ItemT, ViewT extends Actor> {
-		private AbstractListAdapter<ItemT, ViewT> listAdapter;
+		private AbstractListAdapter<ItemT, ViewT> adapter;
+
+		public static final int DEFAULT_KEY = -1;
+		private int groupMultiSelectKey = DEFAULT_KEY; //shift by default
+		private int multiSelectKey = DEFAULT_KEY; //ctrl (or command on mac) by default
 
 		private Array<ItemT> selection = new Array<ItemT>();
 
-		private ListSelection (AbstractListAdapter<ItemT, ViewT> listAdapter) {
-			this.listAdapter = listAdapter;
+		private ListSelection (AbstractListAdapter<ItemT, ViewT> adapter) {
+			this.adapter = adapter;
 		}
 
 		public boolean select (ItemT item) {
-			return select(item, listAdapter.getViews().get(item));
+			return select(item, adapter.getViews().get(item));
+		}
+
+		public boolean deselect (ItemT item) {
+			return deselect(item, adapter.getViews().get(item));
 		}
 
 		boolean select (ItemT item, ViewT view) {
-			if (listAdapter.selectionPolicy.accept(this, item) == false) return false;
+			if (adapter.getSelectionMode() == SelectionMode.MULTIPLE && getArray().size >= 1 && isGroupMultiSelectKeyPressed()) {
+				selectGroup(item);
+			}
+
+			doSelect(item, view);
+
+			return false;
+		}
+
+		private boolean doSelect (ItemT item, ViewT view) {
 			if (selection.contains(item, true) == false) {
-				listAdapter.selectView(view);
+				adapter.selectView(view);
 				selection.add(item);
 				return true;
 			}
@@ -215,13 +197,30 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 			return false;
 		}
 
-		public boolean deselect (ItemT item) {
-			return deselect(item, listAdapter.getViews().get(item));
+		private void selectGroup (ItemT newItem) {
+			int thisSelectionIndex = adapter.indexOf(newItem);
+			int lastSelectionIndex = adapter.indexOf(getArray().peek());
+
+			int start;
+			int end;
+
+			if (thisSelectionIndex > lastSelectionIndex) {
+				start = lastSelectionIndex;
+				end = thisSelectionIndex;
+			} else {
+				start = thisSelectionIndex;
+				end = lastSelectionIndex;
+			}
+
+			for (int i = start; i < end; i++) {
+				ItemT item = adapter.get(i);
+				doSelect(item, adapter.getViews().get(item));
+			}
 		}
 
 		boolean deselect (ItemT item, ViewT view) {
 			if (selection.contains(item, true) == false) return false;
-			listAdapter.deselectView(view);
+			adapter.deselectView(view);
 			selection.removeValue(item, true);
 			return true;
 		}
@@ -236,6 +235,35 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 		/** @return internal array, MUST NOT be modified directly */
 		public Array<ItemT> getArray () {
 			return selection;
+		}
+
+		boolean touchDown (ViewT view, ItemT item) {
+			if (adapter.getSelectionMode() == SelectionMode.DISABLED) return false;
+
+			if (isMultiSelectKeyPressed() == false && isGroupMultiSelectKeyPressed() == false) {
+				deselectAll();
+			}
+
+			if (getArray().contains(item, true) == false) {
+				if (adapter.getSelectionMode() == SelectionMode.SINGLE) deselectAll();
+				return select(item, view);
+			} else {
+				return deselect(item, view);
+			}
+		}
+
+		private boolean isMultiSelectKeyPressed () {
+			if (multiSelectKey == DEFAULT_KEY)
+				return UIUtils.ctrl();
+			else
+				return Gdx.input.isKeyPressed(multiSelectKey);
+		}
+
+		private boolean isGroupMultiSelectKeyPressed () {
+			if (groupMultiSelectKey == DEFAULT_KEY)
+				return UIUtils.shift();
+			else
+				return Gdx.input.isKeyPressed(groupMultiSelectKey);
 		}
 	}
 }

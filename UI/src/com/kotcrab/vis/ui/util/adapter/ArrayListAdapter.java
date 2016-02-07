@@ -27,65 +27,82 @@ import java.util.Collection;
  * @since 1.0.0
  */
 public abstract class ArrayListAdapter<ItemT, ViewT extends Actor> extends AbstractListAdapter<ItemT, ViewT> {
-	private ArrayList<ItemT> list;
+	private ArrayList<ItemT> array;
 
-	public ArrayListAdapter (ArrayList<ItemT> list) {
-		this.list = list;
+	public ArrayListAdapter (ArrayList<ItemT> array) {
+		this.array = array;
 	}
 
 	@Override
 	public Iterable<ItemT> iterable () {
-		return list;
+		return array;
 	}
 
+	@Override
+	public int size () {
+		return array.size();
+	}
+
+	@Override
+	public int indexOf (ItemT item) {
+		return array.indexOf(item);
+	}
+
+	@Override
+	public ItemT get (int index) {
+		return array.get(index);
+	}
+
+	// Delegates
+
 	public ItemT set (int index, ItemT element) {
-		ItemT res = list.set(index, element);
+		ItemT res = array.set(index, element);
 		itemsChanged();
 		return res;
 	}
 
 	public boolean add (ItemT element) {
-		boolean res = list.add(element);
+		boolean res = array.add(element);
 		itemAdded(element);
 		return res;
 	}
 
 	public void add (int index, ItemT element) {
-		list.add(index, element);
+		array.add(index, element);
 		itemAdded(element);
 	}
 
 	public ItemT remove (int index) {
-		ItemT res = list.remove(index);
+		ItemT res = array.remove(index);
 		if (res != null) itemRemoved(res);
 		return res;
 	}
 
 	public boolean remove (ItemT item) {
-		boolean res = list.remove(item);
+		boolean res = array.remove(item);
 		if (res) itemRemoved(item);
 		return res;
 	}
 
 	public void clear () {
-		list.clear();
+		array.clear();
 		itemsChanged();
 	}
 
 	public boolean addAll (Collection<? extends ItemT> c) {
-		boolean res = list.addAll(c);
+		boolean res = array.addAll(c);
 		itemsChanged();
 		return res;
 	}
 
 	public boolean addAll (int index, Collection<? extends ItemT> c) {
-		boolean res = list.addAll(index, c);
+		boolean res = array.addAll(index, c);
 		itemsChanged();
 		return res;
 	}
 
 	public boolean removeAll (Collection<?> c) {
-		boolean res = list.removeAll(c);
+		boolean res = array.removeAll(c);
 		itemsChanged();
 		return res;
 	}

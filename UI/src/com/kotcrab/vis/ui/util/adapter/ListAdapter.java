@@ -33,9 +33,15 @@ import com.kotcrab.vis.ui.widget.VisTable;
 public interface ListAdapter<ItemT> {
 	void setListView (ListView<ItemT> view, ListAdapterListener viewListener);
 
+	void fillTable (VisTable itemsTable);
+
 	void setItemClickListener (ItemClickListener<ItemT> listener);
 
 	Iterable<ItemT> iterable ();
 
-	void fillTable (VisTable itemsTable);
+	int size ();
+
+	int indexOf (ItemT item);
+
+	ItemT get(int index);
 }
