@@ -84,7 +84,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private Array<FileHandle> favorites;
 
 	private FileHandle currentDirectory;
-	private ObjectMap<FileHandle, FileItem> items = new ObjectMap();
+	private ObjectMap<FileHandle, FileItem> items = new ObjectMap<FileHandle, FileItem>();
 	private Array<FileItem> selectedItems = new Array<FileItem>();
 	private ShortcutItem selectedShortcut;
 
@@ -731,6 +731,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		setDirectory(directory, HistoryPolicy.CLEAR);
 	}
 
+	@Override
 	public void setDirectory (FileHandle directory, HistoryPolicy historyPolicy) {
 		if (directory.equals(currentDirectory)) return;
 		if (directory.exists() == false) throw new IllegalStateException("Provided directory does not exist!");

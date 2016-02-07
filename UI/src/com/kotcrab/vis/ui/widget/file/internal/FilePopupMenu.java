@@ -38,9 +38,7 @@ import static com.kotcrab.vis.ui.widget.file.internal.FileChooserText.*;
 
 /** @author Kotcrab */
 public class FilePopupMenu extends PopupMenu {
-	private final FileChooser chooser;
 	private final FileChooserStyle style;
-	private final FilePopupMenuCallback callback;
 
 	private boolean trashAvailable;
 
@@ -54,9 +52,7 @@ public class FilePopupMenu extends PopupMenu {
 
 	public FilePopupMenu (final FileChooser chooser, FileChooserStyle chooserStyle, final FilePopupMenuCallback callback) {
 		super(chooserStyle.popupMenuStyleName);
-		this.chooser = chooser;
 		this.style = chooserStyle;
-		this.callback = callback;
 
 		delete = new MenuItem(CONTEXT_MENU_DELETE.get(), style.iconTrash);
 		newDirectory = new MenuItem(CONTEXT_MENU_NEW_DIRECTORY.get(), style.iconFolderNew);
