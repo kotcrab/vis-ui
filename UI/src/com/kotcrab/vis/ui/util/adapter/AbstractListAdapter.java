@@ -17,6 +17,7 @@
 package com.kotcrab.vis.ui.util.adapter;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -117,8 +118,12 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 		this.selectionMode = selectionMode;
 	}
 
-	/** @return selected items */
-	public ListSelection<ItemT, ViewT> getSelection () {
+	/** @return selected items, must not be modified */
+	public Array<ItemT> getSelection () {
+		return selection.getSelection();
+	}
+
+	public ListSelection<ItemT, ViewT> getSelectionManager () {
 		return selection;
 	}
 
@@ -153,9 +158,24 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 	}
 
 	public enum SelectionMode {
-		DISABLED, SINGLE, MULTIPLE
+		/** Selecting items is not possible. */
+		DISABLED,
+		/**
+		 * Only one element can be selected. {@link AbstractListAdapter#selectView(Actor)} and
+		 * {@link AbstractListAdapter#deselectView(Actor)} must be implemented.
+		 */
+		SINGLE,
+		/**
+		 * Multiple elements can be selected. {@link AbstractListAdapter#selectView(Actor)} and
+		 * {@link AbstractListAdapter#deselectView(Actor)} must be implemented.
+		 */
+		MULTIPLE
 	}
 
+	/**
+	 * Manages selection of {@link AbstractListAdapter} items.
+	 * @author Kotcrab
+	 */
 	public static class ListSelection<ItemT, ViewT extends Actor> {
 		private AbstractListAdapter<ItemT, ViewT> adapter;
 
@@ -178,7 +198,7 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 		}
 
 		boolean select (ItemT item, ViewT view) {
-			if (adapter.getSelectionMode() == SelectionMode.MULTIPLE && getArray().size >= 1 && isGroupMultiSelectKeyPressed()) {
+			if (adapter.getSelectionMode() == SelectionMode.MULTIPLE && selection.size >= 1 && isGroupMultiSelectKeyPressed()) {
 				selectGroup(item);
 			}
 
@@ -199,7 +219,7 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 
 		private void selectGroup (ItemT newItem) {
 			int thisSelectionIndex = adapter.indexOf(newItem);
-			int lastSelectionIndex = adapter.indexOf(getArray().peek());
+			int lastSelectionIndex = adapter.indexOf(selection.peek());
 
 			int start;
 			int end;
@@ -233,7 +253,7 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 		}
 
 		/** @return internal array, MUST NOT be modified directly */
-		public Array<ItemT> getArray () {
+		public Array<ItemT> getSelection () {
 			return selection;
 		}
 
@@ -244,12 +264,30 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 				deselectAll();
 			}
 
-			if (getArray().contains(item, true) == false) {
+			if (selection.contains(item, true) == false) {
 				if (adapter.getSelectionMode() == SelectionMode.SINGLE) deselectAll();
 				return select(item, view);
 			} else {
 				return deselect(item, view);
 			}
+		}
+
+		public int getMultiSelectKey () {
+			return multiSelectKey;
+		}
+
+		/** @param multiSelectKey from {@link Keys} or {@link ListSelection#DEFAULT_KEY} to restore default */
+		public void setMultiSelectKey (int multiSelectKey) {
+			this.multiSelectKey = multiSelectKey;
+		}
+
+		public int getGroupMultiSelectKey () {
+			return groupMultiSelectKey;
+		}
+
+		/** @param groupMultiSelectKey from {@link Keys} or {@link ListSelection#DEFAULT_KEY} to restore default */
+		public void setGroupMultiSelectKey (int groupMultiSelectKey) {
+			this.groupMultiSelectKey = groupMultiSelectKey;
 		}
 
 		private boolean isMultiSelectKeyPressed () {

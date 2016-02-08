@@ -27,6 +27,7 @@ import com.kotcrab.vis.ui.util.adapter.ArrayAdapter;
 import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.ListView.ItemClickListener;
+import com.kotcrab.vis.ui.widget.ListView.UpdatePolicy;
 
 /** @author Kotcrab */
 public class TestListView extends VisWindow {
@@ -45,6 +46,7 @@ public class TestListView extends VisWindow {
 
 		final TestAdapter adapter = new TestAdapter(array);
 		ListView<Model> view = new ListView<Model>(adapter);
+		view.setUpdatePolicy(UpdatePolicy.ON_DRAW);
 
 		final VisValidatableTextField nameField = new VisValidatableTextField();
 		VisTextButton addButton = new VisTextButton("Add");

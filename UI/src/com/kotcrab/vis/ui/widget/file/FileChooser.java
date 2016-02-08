@@ -802,7 +802,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		return multiSelectKey;
 	}
 
-	/** @param multiSelectKey from {@link Keys} or {@link FileChooser#DEFAULT_KEY} to restore to default */
+	/** @param multiSelectKey from {@link Keys} or {@link FileChooser#DEFAULT_KEY} to restore default */
 	public void setMultiSelectKey (int multiSelectKey) {
 		this.multiSelectKey = multiSelectKey;
 	}
@@ -811,7 +811,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		return groupMultiSelectKey;
 	}
 
-	/** @param groupMultiSelectKey from {@link Keys} or {@link FileChooser#DEFAULT_KEY} to restore to default */
+	/** @param groupMultiSelectKey from {@link Keys} or {@link FileChooser#DEFAULT_KEY} to restore default */
 	public void setGroupMultiSelectKey (int groupMultiSelectKey) {
 		this.groupMultiSelectKey = groupMultiSelectKey;
 	}

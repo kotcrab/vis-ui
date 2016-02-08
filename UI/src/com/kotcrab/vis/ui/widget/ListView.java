@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui.widget;
 
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.kotcrab.vis.ui.util.adapter.ArrayAdapter;
@@ -34,6 +35,9 @@ public class ListView<ItemT> {
 	private ListAdapter<ItemT> adapter;
 	private ListAdapterListener adapterListener = new ListAdapterListener();
 
+	private UpdatePolicy updatePolicy = UpdatePolicy.IMMEDIATELY;
+	private boolean dataInvalidated = false;
+
 	private VisTable mainTable;
 	private VisScrollPane scrollPane;
 
@@ -44,7 +48,13 @@ public class ListView<ItemT> {
 	private Actor footer;
 
 	public ListView (ListAdapter<ItemT> adapter) {
-		mainTable = new VisTable();
+		mainTable = new VisTable() {
+			@Override
+			public void draw (Batch batch, float parentAlpha) {
+				if (updatePolicy == UpdatePolicy.ON_DRAW && dataInvalidated) rebuildView(true);
+				super.draw(batch, parentAlpha);
+			}
+		};
 		scrollTable = new VisTable();
 		itemsTable = new VisTable();
 
@@ -122,13 +132,29 @@ public class ListView<ItemT> {
 		rebuildView(false);
 	}
 
+	public void setUpdatePolicy (UpdatePolicy updatePolicy) {
+		this.updatePolicy = updatePolicy;
+	}
+
+	public UpdatePolicy getUpdatePolicy () {
+		return updatePolicy;
+	}
+
 	public interface ItemClickListener<ItemT> {
 		void clicked (ItemT item);
 	}
 
 	public class ListAdapterListener {
 		public void invalidateDataSet () {
-			rebuildView(true);
+			if (updatePolicy == UpdatePolicy.IMMEDIATELY) rebuildView(true);
+			if (updatePolicy == UpdatePolicy.ON_DRAW) dataInvalidated = true;
 		}
+	}
+
+	public enum UpdatePolicy {
+		/** If list data was was invalidated then views are updated before drawing list. */
+		ON_DRAW,
+		/** If list data was was invalidated then views are updated immediately after data invalidation. */
+		IMMEDIATELY
 	}
 }
