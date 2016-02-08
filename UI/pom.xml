@@ -19,7 +19,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <gdx.version>1.9.1</gdx.version>
+        <gdx.version>1.9.2</gdx.version>
         <arguments/>
         <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
