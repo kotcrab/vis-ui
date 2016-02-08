@@ -3,6 +3,7 @@ package com.kotcrab.vis.usl;
 import com.kotcrab.vis.usl.Token.Type;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +21,8 @@ public class Lexer {
 	private static final Pattern metaStyleRegex = Pattern.compile("^-[a-zA-Z0-9-_ ]+:.*$", Pattern.DOTALL);
 
 	private static HashMap<String, String> includeMappings;
+
+	private static IncludeCache includeCache = new IncludeCache();
 
 	static void lexUsl (LexerContext ctx, String usl) {
 		for (int i = 0; i < usl.length(); ) {
@@ -221,9 +224,9 @@ public class Lexer {
 
 			if (includeMappings == null) loadIncludeMappings();
 
-			String fileName = includeMappings.get(includeName);
-			if (fileName != null)
-				content = streamToString(USL.class.getResourceAsStream(fileName));
+			String filePath = includeMappings.get(includeName);
+			if (filePath != null)
+				content = loadIncludeContent(filePath);
 			else
 				Utils.throwException("Invalid internal include file: " + includeName, usl, i);
 
@@ -247,18 +250,25 @@ public class Lexer {
 		return -1;
 	}
 
+	private static String loadIncludeContent (String filePath) {
+		if (filePath.startsWith("http://"))
+			return fileToString(includeCache.loadInclude(filePath));
+		else
+			return streamToString(USL.class.getResourceAsStream(filePath));
+	}
+
 	private static void loadIncludeMappings () {
 		includeMappings = new HashMap<String, String>();
 		includeMappings.put("gdx", "styles/gdx.usl");
-		includeMappings.put("visui-0.7.7", "styles/visui-0.7.7.usl");
-		includeMappings.put("visui-0.8.0", "styles/visui-0.8.0.usl");
-		includeMappings.put("visui-0.8.1", "styles/visui-0.8.1.usl");
-		includeMappings.put("visui-0.8.2", "styles/visui-0.8.2.usl");
-		includeMappings.put("visui-0.9.0", "styles/visui-0.9.0.usl");
-		includeMappings.put("visui-0.9.1", "styles/visui-0.9.1.usl");
-		includeMappings.put("visui-0.9.2", "styles/visui-0.9.2.usl");
-		includeMappings.put("visui-0.9.3", "styles/visui-0.9.3.usl");
-		includeMappings.put("visui-0.9.4", "styles/visui-0.9.4.usl");
+		includeMappings.put("visui-0.7.7", "http://apps.kotcrab.com/vis/usl/visui-0.7.7.usl");
+		includeMappings.put("visui-0.8.0", "http://apps.kotcrab.com/vis/usl/visui-0.8.0.usl");
+		includeMappings.put("visui-0.8.1", "http://apps.kotcrab.com/vis/usl/visui-0.8.1.usl");
+		includeMappings.put("visui-0.8.2", "http://apps.kotcrab.com/vis/usl/visui-0.8.2.usl");
+		includeMappings.put("visui-0.9.0", "http://apps.kotcrab.com/vis/usl/visui-0.9.0.usl");
+		includeMappings.put("visui-0.9.1", "http://apps.kotcrab.com/vis/usl/visui-0.9.1.usl");
+		includeMappings.put("visui-0.9.2", "http://apps.kotcrab.com/vis/usl/visui-0.9.2.usl");
+		includeMappings.put("visui-0.9.3", "http://apps.kotcrab.com/vis/usl/visui-0.9.3.usl");
+		includeMappings.put("visui-0.9.4", "http://apps.kotcrab.com/vis/usl/visui-0.9.4.usl");
 		includeMappings.put("visui-0.9.5", "styles/visui-0.9.5.usl");
 		includeMappings.put("visui", "styles/visui-0.9.5.usl"); //stable
 		includeMappings.put("visui-1.0.0", "styles/visui-1.0.0.usl"); //snapshot
@@ -282,6 +292,15 @@ public class Lexer {
 		}
 
 		return null;
+	}
+
+	private static String fileToString (File file) {
+		try {
+			Scanner s = new Scanner(file).useDelimiter("\\A");
+			return s.hasNext() ? s.next() : "";
+		} catch (FileNotFoundException e) {
+			throw new IllegalStateException("Error reading file", e);
+		}
 	}
 
 	private static String streamToString (InputStream is) {
