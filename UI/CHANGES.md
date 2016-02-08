@@ -1,4 +1,4 @@
-#### Version: 1.0.0-SNAPSHOT (LibGDX 1.9.1)
+#### Version: 1.0.0-SNAPSHOT (LibGDX 1.9.2)
 - **Changed**: `InputValidator` moved to `com.kotcrab.vis.ui.util` package
 - **Changed**: `LesserThanValidator#setEquals(boolean)` renamed to `setUseEquals`
 - **Changed**: `GreaterThanValidator#setEquals(boolean)` renamed to `setUseEquals`
