@@ -1,6 +1,7 @@
 package com.kotcrab.vis.usl.test;
 
 import com.kotcrab.vis.usl.USL;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class USLParserTest {
@@ -23,7 +24,7 @@ public class USLParserTest {
 				"}");
 	}
 
-	//	@Ignore
+	@Ignore
 	@Test
 	public void testRemote () throws Exception {
 		USL.parse(null, "include <visui-0.7.7>");
