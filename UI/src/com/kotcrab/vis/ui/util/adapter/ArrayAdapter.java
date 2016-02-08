@@ -19,6 +19,8 @@ package com.kotcrab.vis.ui.util.adapter;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.Comparator;
+
 /**
  * Built-in adapter implementation for {@link Array}.
  * @author Kotcrab
@@ -44,6 +46,11 @@ public abstract class ArrayAdapter<ItemT, ViewT extends Actor> extends AbstractL
 	@Override
 	public ItemT get (int index) {
 		return array.get(index);
+	}
+
+	@Override
+	protected void sort (Comparator<ItemT> comparator) {
+		array.sort(comparator);
 	}
 
 	@Override

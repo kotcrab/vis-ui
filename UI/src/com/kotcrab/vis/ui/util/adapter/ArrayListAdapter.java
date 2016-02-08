@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 
 /**
  * Built-in adapter implementation for {@link ArrayList}.
@@ -51,6 +52,11 @@ public abstract class ArrayListAdapter<ItemT, ViewT extends Actor> extends Abstr
 	@Override
 	public ItemT get (int index) {
 		return array.get(index);
+	}
+
+	@Override
+	protected void sort (Comparator<ItemT> comparator) {
+		array.sort(comparator);
 	}
 
 	// Delegates

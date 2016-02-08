@@ -30,6 +30,8 @@ import com.kotcrab.vis.ui.widget.ListView.ItemClickListener;
 import com.kotcrab.vis.ui.widget.ListView.ListAdapterListener;
 import com.kotcrab.vis.ui.widget.VisTable;
 
+import java.util.Comparator;
+
 /**
  * Basic {@link ListAdapter} implementation using {@link CachedItemAdapter}. Supports item selection. Classes
  * extending this should store provided list and provide delegates for all common methods that change array state.
@@ -57,8 +59,11 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 	private SelectionMode selectionMode = SelectionMode.DISABLED;
 	private ListSelection<ItemT, ViewT> selection = new ListSelection<ItemT, ViewT>(this);
 
+	private Comparator<ItemT> itemsComparator;
+
 	@Override
 	public void fillTable (VisTable itemsTable) {
+		if (itemsComparator != null) sort(itemsComparator);
 		for (final ItemT item : iterable()) {
 			final ViewT view = getView(item);
 
@@ -118,6 +123,15 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 		this.selectionMode = selectionMode;
 	}
 
+	/**
+	 * Sets items comparator allowing to define order in which items will be displayed in list view. This will sort
+	 * underlaying array before building views.
+	 * @param comparator that will be used to compare items
+	 */
+	public void setItemsSorter (Comparator<ItemT> comparator) {
+		this.itemsComparator = comparator;
+	}
+
 	/** @return selected items, must not be modified */
 	public Array<ItemT> getSelection () {
 		return selection.getSelection();
@@ -156,6 +170,8 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 			clickListener.clicked(item);
 		}
 	}
+
+	protected abstract void sort (Comparator<ItemT> comparator);
 
 	public enum SelectionMode {
 		/** Selecting items is not possible. */

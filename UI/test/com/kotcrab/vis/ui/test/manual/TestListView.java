@@ -29,6 +29,8 @@ import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.ListView.ItemClickListener;
 import com.kotcrab.vis.ui.widget.ListView.UpdatePolicy;
 
+import java.util.Comparator;
+
 /** @author Kotcrab */
 public class TestListView extends VisWindow {
 	public TestListView () {
@@ -97,6 +99,13 @@ public class TestListView extends VisWindow {
 		public TestAdapter (Array<Model> array) {
 			super(array);
 			setSelectionMode(SelectionMode.SINGLE);
+
+			setItemsSorter(new Comparator<Model>() {
+				@Override
+				public int compare (Model o1, Model o2) {
+					return o1.name.toLowerCase().compareTo(o2.name.toLowerCase());
+				}
+			});
 		}
 
 		@Override
