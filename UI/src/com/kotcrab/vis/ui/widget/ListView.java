@@ -83,7 +83,7 @@ public class ListView<ItemT> {
 		scrollTable.row();
 
 		if (footer != null) {
-			scrollTable.add(header).growX();
+			scrollTable.add(footer).growX();
 			scrollTable.row();
 		}
 	}

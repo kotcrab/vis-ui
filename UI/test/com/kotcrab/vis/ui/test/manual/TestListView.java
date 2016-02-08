@@ -50,6 +50,11 @@ public class TestListView extends VisWindow {
 		ListView<Model> view = new ListView<Model>(adapter);
 		view.setUpdatePolicy(UpdatePolicy.ON_DRAW);
 
+		VisTable footerTable = new VisTable();
+		footerTable.addSeparator();
+		footerTable.add("Table Footer");
+		view.setFooter(footerTable);
+
 		final VisValidatableTextField nameField = new VisValidatableTextField();
 		VisTextButton addButton = new VisTextButton("Add");
 
