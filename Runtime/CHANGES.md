@@ -14,6 +14,7 @@
 - **API Addition**: `Variables#put`, `putInt`, `putFloat`, `putBoolean` methods for adding new variables
 - **API Addition**: `Variables` copy constructors and `Variables#setFrom(Variables)` method
 - **API Addition**: `Scene#getSceneVariables` returns scene variables set from VisEditor
+- **API Addition**: new `Transform` constructors
 - **Fixed**: `SystemProvider` interface is now public
 
 #### Version: 0.3.0 (LibGDX 1.7.1, Artemis 1.2.1)

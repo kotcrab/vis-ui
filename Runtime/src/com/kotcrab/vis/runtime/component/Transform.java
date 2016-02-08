@@ -36,6 +36,19 @@ public class Transform extends Component implements PositionOwner, ScaleOwner, R
 	public Transform () {
 	}
 
+	public Transform (float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	public Transform (float x, float y, float scaleX, float scaleY, float rotation) {
+		this.x = x;
+		this.y = y;
+		this.scaleX = scaleX;
+		this.scaleY = scaleY;
+		this.rotation = rotation;
+	}
+
 	@Override
 	public float getX () {
 		return x;
