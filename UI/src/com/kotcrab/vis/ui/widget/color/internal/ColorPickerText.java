@@ -17,7 +17,7 @@
 package com.kotcrab.vis.ui.widget.color.internal;
 
 import com.badlogic.gdx.utils.I18NBundle;
-import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.Locales;
 import com.kotcrab.vis.ui.i18n.BundleText;
 
 /**
@@ -39,7 +39,7 @@ public enum ColorPickerText implements BundleText {
 	}
 
 	private static I18NBundle getBundle () {
-		return VisUI.getColorPickerBundle();
+		return Locales.getColorPickerBundle();
 	}
 
 	@Override

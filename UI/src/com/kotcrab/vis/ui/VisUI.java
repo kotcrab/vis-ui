@@ -23,14 +23,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.GdxRuntimeException;
-import com.badlogic.gdx.utils.I18NBundle;
-import com.kotcrab.vis.ui.util.dialog.Dialogs;
-import com.kotcrab.vis.ui.widget.ButtonBar;
-import com.kotcrab.vis.ui.widget.color.ColorPicker;
-import com.kotcrab.vis.ui.widget.file.FileChooser;
-import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane;
-
-import java.util.Locale;
 
 /**
  * Allows to easily load VisUI skin and change default title alignment and I18N bundles.
@@ -48,12 +40,6 @@ public class VisUI {
 
 	private static SkinScale scale;
 	private static Skin skin;
-
-	private static I18NBundle buttonBarBundle;
-	private static I18NBundle fileChooserBundle;
-	private static I18NBundle dialogsBundle;
-	private static I18NBundle tabbedPaneBundle;
-	private static I18NBundle colorPickerBundle;
 
 	/** Defines possible built-in skin scales. */
 	public enum SkinScale {
@@ -149,96 +135,6 @@ public class VisUI {
 	 */
 	public static void setDefaultTitleAlign (int defaultTitleAlign) {
 		VisUI.defaultTitleAlign = defaultTitleAlign;
-	}
-
-	/** Returns I18N bundle used by {@link FileChooser}, if current bundle is null, a default bundle is set and returned */
-	public static I18NBundle getFileChooserBundle () {
-		if (fileChooserBundle == null) {
-			FileHandle file = Gdx.files.classpath("com/kotcrab/vis/ui/i18n/FileChooser");
-			fileChooserBundle = I18NBundle.createBundle(file, new Locale("en"));
-		}
-
-		return fileChooserBundle;
-	}
-
-	/**
-	 * Changes bundle used by {@link FileChooser}, will not affect already created FileChoosers.
-	 * If set to null then {@link #getFileChooserBundle()} will return default bundle
-	 */
-	public static void setFileChooserBundle (I18NBundle fileChooserBundle) {
-		VisUI.fileChooserBundle = fileChooserBundle;
-	}
-
-	/** Returns I18N bundle used by {@link Dialogs}, if current bundle is null, a default bundle is set and returned */
-	public static I18NBundle getDialogsBundle () {
-		if (dialogsBundle == null) {
-			FileHandle file = Gdx.files.classpath("com/kotcrab/vis/ui/i18n/Dialogs");
-			dialogsBundle = I18NBundle.createBundle(file, new Locale("en"));
-		}
-
-		return dialogsBundle;
-	}
-
-	/**
-	 * Changes bundle used by {@link Dialogs}, will not affect already created dialogs.
-	 * If set to null then {@link #getDialogsBundle()} will return default bundle
-	 */
-	public static void setDialogsBundle (I18NBundle dialogsBundle) {
-		VisUI.dialogsBundle = dialogsBundle;
-	}
-
-	/** Returns I18N bundle used by {@link TabbedPane}, if current bundle is null, a default bundle is set and returned */
-	public static I18NBundle getTabbedPaneBundle () {
-		if (tabbedPaneBundle == null) {
-			FileHandle file = Gdx.files.classpath("com/kotcrab/vis/ui/i18n/TabbedPane");
-			tabbedPaneBundle = I18NBundle.createBundle(file, new Locale("en"));
-		}
-
-		return tabbedPaneBundle;
-	}
-
-	/**
-	 * Changes bundle used by {@link TabbedPane}, will not affect already created TabbedPane.
-	 * If set to null then {@link #getTabbedPaneBundle()} will return default bundle
-	 */
-	public static void setTabbedPaneBundle (I18NBundle tabbedPaneBundle) {
-		VisUI.tabbedPaneBundle = tabbedPaneBundle;
-	}
-
-	/** Returns I18N bundle used by {@link ColorPicker}, if current bundle is null, a default bundle is set and returned */
-	public static I18NBundle getColorPickerBundle () {
-		if (colorPickerBundle == null) {
-			FileHandle file = Gdx.files.classpath("com/kotcrab/vis/ui/i18n/ColorPicker");
-			colorPickerBundle = I18NBundle.createBundle(file, new Locale("en"));
-		}
-
-		return colorPickerBundle;
-	}
-
-	/**
-	 * Changes bundle used by {@link ColorPicker}, will not affect already created pickers.
-	 * If set to null then {@link #getColorPickerBundle()} will return default bundle
-	 */
-	public static void setColorPickerBundle (I18NBundle colorPickerBundle) {
-		VisUI.colorPickerBundle = colorPickerBundle;
-	}
-
-	/** Returns I18N bundle used by {@link ButtonBar}, if current bundle is null, a default bundle is set and returned */
-	public static I18NBundle getButtonBarBundle () {
-		if (buttonBarBundle == null) {
-			FileHandle file = Gdx.files.classpath("com/kotcrab/vis/ui/i18n/ButtonBar");
-			buttonBarBundle = I18NBundle.createBundle(file, new Locale("en"));
-		}
-
-		return buttonBarBundle;
-	}
-
-	/**
-	 * Changes bundle used by {@link ButtonBar}, will not affect already created bars.
-	 * If set to null then {@link #getButtonBarBundle()} ()} will return default bundle
-	 */
-	public static void setButtonBarBundle (I18NBundle buttonBarBundle) {
-		VisUI.buttonBarBundle = buttonBarBundle;
 	}
 
 	/**

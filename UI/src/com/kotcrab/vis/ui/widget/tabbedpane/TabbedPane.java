@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.IdentityMap;
 import com.badlogic.gdx.utils.IdentityMap.Entry;
 import com.badlogic.gdx.utils.Scaling;
+import com.kotcrab.vis.ui.Locales;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.i18n.BundleText;
@@ -635,7 +636,7 @@ public class TabbedPane {
 		}
 
 		private static I18NBundle getBundle () {
-			return VisUI.getTabbedPaneBundle();
+			return Locales.getTabbedPaneBundle();
 		}
 
 		@Override

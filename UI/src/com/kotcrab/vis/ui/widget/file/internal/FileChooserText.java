@@ -17,7 +17,7 @@
 package com.kotcrab.vis.ui.widget.file.internal;
 
 import com.badlogic.gdx.utils.I18NBundle;
-import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.Locales;
 import com.kotcrab.vis.ui.i18n.BundleText;
 
 /**
@@ -76,7 +76,7 @@ public enum FileChooserText implements BundleText {
 	}
 
 	private static I18NBundle getBundle () {
-		return VisUI.getFileChooserBundle();
+		return Locales.getFileChooserBundle();
 	}
 
 	@Override

@@ -19,7 +19,7 @@ package com.kotcrab.vis.ui.widget;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.Locales;
 import com.kotcrab.vis.ui.util.OsUtils;
 
 /**
@@ -162,7 +162,7 @@ public class ButtonBar {
 		}
 
 		public final String getText () {
-			return VisUI.getButtonBarBundle().get(key);
+			return Locales.getButtonBarBundle().get(key);
 		}
 
 		@Override

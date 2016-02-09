@@ -50,6 +50,7 @@
     - **Added**: Drawables: `grey`, `vis-blue`, `vis-red`
     - **Added**: New `Window` style: `resizable`
 - **I18N**:
+    - **Changed** Bundle management moved to `Locales` class. Instead of calling `VisUI.setXYZBundle(...)` call `Locales.setXYZBundle(...)`
     - **Removed**: Dialogs bundle entries: yes, no, cancel, ok. Now handled by `ButtonBar` bundle. 
 
 #### Version: 0.9.5 (LibGDX 1.7.1)

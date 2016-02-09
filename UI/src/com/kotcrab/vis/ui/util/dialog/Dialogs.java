@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.I18NBundle;
 import com.badlogic.gdx.utils.StringBuilder;
+import com.kotcrab.vis.ui.Locales;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.i18n.BundleText;
@@ -570,7 +571,7 @@ public class Dialogs {
 		}
 
 		private static I18NBundle getBundle () {
-			return VisUI.getDialogsBundle();
+			return Locales.getDialogsBundle();
 		}
 
 		@Override
