@@ -1,16 +1,16 @@
 VisEditor [![](http://kotcrab.com:8080/buildStatus/icon?job=viseditor-edge)](http://kotcrab.com:8080/job/viseditor-edge/)
 =========
 
-[VisEditor](http://vis.kotcrab.com/) is cross platform 2d game level editor, it allows to easily create game scenes using drag and drop editor. 
+[VisEditor](http://vis.kotcrab.com/) is cross platform 2D game level editor, it allows to easily create game scenes using intuitive drag and drop editor. 
 
-VisEditor doesn't force you to use single game framework, scenes are exported in JSON format. Many file formats are supported: images, sounds, particles, shaders, Spine animations and more coming soon. Box2d physics is supported as well.
+VisEditor doesn't force you to use single game framework, scenes are exported in JSON format. Many assets file formats are supported: images, sounds, fonts, particles, GLSL shaders, Spine and Spriter animations with more features coming soon. Box2d physics and polygon edition is supported as well.
 
-See [Quick Start](https://github.com/kotcrab/VisEditor/wiki/Quick-Start) guide.
+See [Quick Start](https://github.com/kotcrab/VisEditor/wiki/Quick-Start) guide to get stared with using VisEditor.
 
 #### Runtime
-VisEditor currently have libGDX runtime using [artemis-odb](https://github.com/junkdog/artemis-odb) for entity-component-system framework. With that runtime you can load your scene in just few lines of code.
+VisEditor currently have libGDX runtime which uses [artemis-odb](https://github.com/junkdog/artemis-odb) for entity-component-system framework. With that runtime you can load your scene in just few lines of code.
 
-LibGDX runtime is a good start if you want to write your own runtime, if you do so don't forget to let me know and I will link it here.
+LibGDX runtime source code is a good start if you want to create your own runtime, if you do so don't forget to let me know and I will gladly link it here.
 
 #### Community
 You can follow Vis development on my Twitter channels: [@VisEditor](https://twitter.com/VisEditor) and [@kotcrab](https://twitter.com/kotcrab) or read my [blog](http://kotcrab.com/).
