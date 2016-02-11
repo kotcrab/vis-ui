@@ -23,6 +23,8 @@
 		<exclude name="widget/file/FileChooserListener.java" />
 		<exclude name="widget/file/FileUtils.java" />
 		<exclude name="widget/file/JNAFileDeleter.java" />
+		<exclude name="widget/file/SingleFileChooserListener.java" />
+		<exclude name="widget/file/StreamingFileChooserListener.java" />
         <exclude name="widget/file/internal/**" />
 		<exclude name="util/form/FormValidator.java" />
 	</source>

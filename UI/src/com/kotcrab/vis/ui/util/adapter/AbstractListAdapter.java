@@ -25,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 import com.kotcrab.vis.ui.widget.ListView;
 import com.kotcrab.vis.ui.widget.ListView.ItemClickListener;
 import com.kotcrab.vis.ui.widget.ListView.ListAdapterListener;
@@ -69,7 +70,7 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 
 			boolean listenerMissing = true;
 			for (EventListener listener : view.getListeners()) {
-				if (ListClickListener.class.isInstance(listener)) {
+				if (ClassReflection.isInstance(ListClickListener.class, listener)) {
 					listenerMissing = false;
 					break;
 				}

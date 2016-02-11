@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 
 /**
@@ -56,7 +57,7 @@ public abstract class ArrayListAdapter<ItemT, ViewT extends Actor> extends Abstr
 
 	@Override
 	protected void sort (Comparator<ItemT> comparator) {
-		array.sort(comparator);
+		Collections.sort(array, comparator);
 	}
 
 	// Delegates
