@@ -162,7 +162,9 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 
 		@Override
 		public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-			return selection.touchDown(view, item);
+			super.touchDown(event, x, y, pointer, button);
+			selection.touchDown(view, item);
+			return true;
 		}
 
 		@Override
@@ -205,32 +207,27 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 			this.adapter = adapter;
 		}
 
-		public boolean select (ItemT item) {
-			return select(item, adapter.getViews().get(item));
+		public void select (ItemT item) {
+			select(item, adapter.getViews().get(item));
 		}
 
-		public boolean deselect (ItemT item) {
-			return deselect(item, adapter.getViews().get(item));
+		public void deselect (ItemT item) {
+			deselect(item, adapter.getViews().get(item));
 		}
 
-		boolean select (ItemT item, ViewT view) {
+		void select (ItemT item, ViewT view) {
 			if (adapter.getSelectionMode() == SelectionMode.MULTIPLE && selection.size >= 1 && isGroupMultiSelectKeyPressed()) {
 				selectGroup(item);
 			}
 
 			doSelect(item, view);
-
-			return false;
 		}
 
-		private boolean doSelect (ItemT item, ViewT view) {
+		private void doSelect (ItemT item, ViewT view) {
 			if (selection.contains(item, true) == false) {
 				adapter.selectView(view);
 				selection.add(item);
-				return true;
 			}
-
-			return false;
 		}
 
 		private void selectGroup (ItemT newItem) {
@@ -254,11 +251,10 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 			}
 		}
 
-		boolean deselect (ItemT item, ViewT view) {
-			if (selection.contains(item, true) == false) return false;
+		void deselect (ItemT item, ViewT view) {
+			if (selection.contains(item, true) == false) return;
 			adapter.deselectView(view);
 			selection.removeValue(item, true);
-			return true;
 		}
 
 		public void deselectAll () {
@@ -273,8 +269,8 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 			return selection;
 		}
 
-		boolean touchDown (ViewT view, ItemT item) {
-			if (adapter.getSelectionMode() == SelectionMode.DISABLED) return false;
+		void touchDown (ViewT view, ItemT item) {
+			if (adapter.getSelectionMode() == SelectionMode.DISABLED) return;
 
 			if (isMultiSelectKeyPressed() == false && isGroupMultiSelectKeyPressed() == false) {
 				deselectAll();
@@ -282,9 +278,9 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 
 			if (selection.contains(item, true) == false) {
 				if (adapter.getSelectionMode() == SelectionMode.SINGLE) deselectAll();
-				return select(item, view);
+				select(item, view);
 			} else {
-				return deselect(item, view);
+				deselect(item, view);
 			}
 		}
 

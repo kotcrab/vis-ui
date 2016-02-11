@@ -151,6 +151,7 @@ public class ListView<ItemT> {
 		}
 	}
 
+	/** Controls when list view's views are updated after underlying data was invalidated. */
 	public enum UpdatePolicy {
 		/** If list data was was invalidated then views are updated before drawing list. */
 		ON_DRAW,
