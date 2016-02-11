@@ -169,7 +169,7 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 
 		@Override
 		public void clicked (InputEvent event, float x, float y) {
-			clickListener.clicked(item);
+			if (clickListener != null) clickListener.clicked(item);
 		}
 	}
 
