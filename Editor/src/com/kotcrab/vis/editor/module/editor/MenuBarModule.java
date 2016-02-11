@@ -30,12 +30,12 @@ import com.kotcrab.vis.editor.ui.ButtonListener;
 import com.kotcrab.vis.editor.ui.ProjectStatusWidgetController;
 import com.kotcrab.vis.editor.ui.SceneStatusWidgetController;
 import com.kotcrab.vis.editor.ui.dialog.AboutDialog;
-import com.kotcrab.vis.editor.ui.dialog.PluginApiManagerDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.scene2d.MenuUtils;
 import com.kotcrab.vis.editor.util.vis.WikiPages;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.*;
 
 import static com.kotcrab.vis.editor.event.ProjectMenuBarEventType.EXPORT;
@@ -156,7 +156,8 @@ public class MenuBarModule extends EditorModule {
 		toolsMenu = new Menu("Tools");
 		menuBar.addMenu(toolsMenu);
 
-		toolsMenu.addItem(createMenuItem("Plugin API Manager", null, () -> stage.addActor(new PluginApiManagerDialog(container).fadeIn())));
+//		toolsMenu.addItem(createMenuItem("Plugin API Manager", null, () -> stage.addActor(new PluginApiManagerDialog(container).fadeIn())));
+		toolsMenu.addItem(createMenuItem("Plugin API Manager", null, () -> Dialogs.showOKDialog(stage, "Message", "Plugin API Manager is not avaiable yet.")));
 
 //		menu.addItem(createMenuItem("Hiero", null, () -> System.out.println("not yet")));
 //		menu.addItem(createMenuItem("Particle Editor", null, () -> System.out.println("not yet")));

@@ -62,7 +62,7 @@ public class PluginApiManagerDialog extends BaseDialog {
 				checkingBuildToolsTable.clearChildren();
 				TableBuilder.build(checkingBuildToolsTable,
 						new Image(Icons.CHECK.drawable()),
-						new VisLabel("Build tools are available"));
+						new VisLabel("Build tools are installed correctly"));
 
 				checkingBuildToolsTable.addAction(Actions.sequence(Actions.delay(2), VisActions.fadeOutAndRemove()));
 				return;
