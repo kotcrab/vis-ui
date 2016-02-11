@@ -249,7 +249,14 @@ package com.kotcrab.vis.ui.widget {
 	}
 }
 
-#com.kotcrab.vis.ui.util.form.SimpleFormValidator$FormValidatorStyle: {
-	default: { errorLabelColor: vis-red, validLabelColor: white }
-	smooth inherits default: { colorTransitionDuration: 0.3 }
+package com.kotcrab.vis.ui.util {
+    #form.SimpleFormValidator$FormValidatorStyle: {
+        default: { errorLabelColor: vis-red, validLabelColor: white }
+        smooth inherits default: { colorTransitionDuration: 0.3 }
+    }
+
+    #adapter.SimpleListAdapter$SimpleListAdapterStyle: {
+        default: { background: window-bg, selection: list-selection }
+    }
 }
+

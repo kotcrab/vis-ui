@@ -34,6 +34,7 @@ import com.kotcrab.vis.ui.util.adapter.ListAdapter;
 public class ListView<ItemT> {
 	private ListAdapter<ItemT> adapter;
 	private ListAdapterListener adapterListener = new ListAdapterListener();
+	private ItemClickListener<ItemT> clickListener;
 
 	private UpdatePolicy updatePolicy = UpdatePolicy.IMMEDIATELY;
 	private boolean dataInvalidated = false;
@@ -48,6 +49,9 @@ public class ListView<ItemT> {
 	private Actor footer;
 
 	public ListView (ListAdapter<ItemT> adapter) {
+		if(adapter == null) throw new IllegalArgumentException("adapter can't be null");
+		this.adapter = adapter;
+
 		mainTable = new VisTable() {
 			@Override
 			public void draw (Batch batch, float parentAlpha) {
@@ -63,7 +67,8 @@ public class ListView<ItemT> {
 		scrollPane.setFadeScrollBars(false);
 		mainTable.add(scrollPane).grow();
 
-		setAdapter(adapter);
+		adapter.setListView(this, adapterListener);
+		rebuildView(true);
 	}
 
 	private void rebuildView (boolean full) {
@@ -103,14 +108,8 @@ public class ListView<ItemT> {
 		return scrollPane;
 	}
 
-	public void setAdapter (ListAdapter<ItemT> adapter) {
-		if (this.adapter != null) this.adapter.setListView(null, null);
-		this.adapter = adapter;
-		adapter.setListView(this, adapterListener);
-		rebuildView(true);
-	}
-
 	public void setItemClickListener (ItemClickListener<ItemT> listener) {
+		this.clickListener = listener;
 		adapter.setItemClickListener(listener);
 	}
 
