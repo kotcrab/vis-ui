@@ -16,12 +16,14 @@
 
 package com.kotcrab.vis.ui.test.manual;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.file.FileChooser.Mode;
+import com.kotcrab.vis.ui.widget.file.StreamingFileChooserListener;
 
 public class TestFileChooser extends VisWindow {
 
@@ -30,6 +32,12 @@ public class TestFileChooser extends VisWindow {
 
 		FileChooser.setFavoritesPrefsName("com.kotcrab.vis.ui.test.manual");
 		final FileChooser chooser = new FileChooser(Mode.OPEN);
+		chooser.setListener(new StreamingFileChooserListener() {
+			@Override
+			public void selected (FileHandle file) {
+				System.out.println(file.path());
+			}
+		});
 
 		VisTextButton show = new VisTextButton("show");
 
