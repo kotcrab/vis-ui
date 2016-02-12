@@ -447,7 +447,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			}
 		}
 
-		if (files.size == 0) {
+		if (files.size != 0) {
 			listener.selected(files);
 		}
 
