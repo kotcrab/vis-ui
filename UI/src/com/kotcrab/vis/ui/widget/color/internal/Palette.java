@@ -16,8 +16,11 @@
 
 package com.kotcrab.vis.ui.widget.color.internal;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Cursor.SystemCursor;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -61,6 +64,22 @@ public class Palette extends ShaderImage {
 			@Override
 			public void touchDragged (InputEvent event, float x, float y, int pointer) {
 				updateValueFromTouch(x, y);
+			}
+			
+			@Override
+			public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+				super.enter(event, x, y, pointer, fromActor);
+				if (pointer == -1) {
+					Gdx.graphics.setSystemCursor(SystemCursor.Crosshair);
+				}
+			}
+
+			@Override
+			public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
+				super.exit(event, x, y, pointer, toActor);
+				if (pointer == -1) {
+					Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+				}
 			}
 		});
 	}
