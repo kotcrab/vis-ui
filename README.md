@@ -3,7 +3,7 @@ VisEditor [![](http://kotcrab.com:8080/buildStatus/icon?job=viseditor-edge)](htt
 
 [VisEditor](http://vis.kotcrab.com/) is cross platform 2D game level editor, it allows to easily create game scenes using intuitive drag and drop editor. 
 
-VisEditor doesn't force you to use single game framework, scenes are exported in JSON format. Many assets file formats are supported: images, sounds, fonts, particles, GLSL shaders, Spine and Spriter animations with more features coming soon. Box2d physics and polygon edition is supported as well.
+VisEditor doesn't force you to use single game framework, scenes are exported in JSON format. Many assets file formats are supported: images, sounds, fonts, particles, GLSL shaders, Spine and Spriter animations with more features coming soon. Box2d physics is supported as well.
 
 See [Quick Start](https://github.com/kotcrab/VisEditor/wiki/Quick-Start) guide to get stared with using VisEditor.
 
