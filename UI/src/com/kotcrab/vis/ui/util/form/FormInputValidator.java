@@ -61,7 +61,7 @@ public abstract class FormInputValidator implements InputValidator {
 		return this;
 	}
 
-	/** @see {@link #hideErrorOnEmptyInput()} */
+	/** @see #hideErrorOnEmptyInput() */
 	public void setHideErrorOnEmptyInput (boolean hideErrorOnEmptyInput) {
 		this.hideErrorOnEmptyInput = hideErrorOnEmptyInput;
 	}
