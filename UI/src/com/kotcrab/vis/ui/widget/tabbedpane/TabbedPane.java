@@ -115,10 +115,10 @@ public class TabbedPane {
 		//note: if separatorBar height/width is not set it may sometimes disappear
 		if (style.separatorBar != null) {
 			if (style.vertical) {
-				tabsPaneCell.top().growY();
+				tabsPaneCell.top().growY().minSize(0,0);
 				mainTable.add(new Image(style.separatorBar)).grow().width(style.separatorBar.getMinWidth());
 			} else {
-				tabsPaneCell.left().growX();
+				tabsPaneCell.left().growX().minSize(0,0);
 				mainTable.row();
 				mainTable.add(new Image(style.separatorBar)).grow().height(style.separatorBar.getMinHeight());
 			}
