@@ -24,7 +24,7 @@ import com.kotcrab.vis.ui.util.OsUtils;
 
 /**
  * Convenient class for creating button panels with buttons such as "Ok", "Cancel", "Yes" etc. Buttons are arranged in
- * platform dependant order. Built-in orders support Windows, Mac, and Linux. When no platform matches ButtonBar
+ * platform dependent order. Built-in orders support Windows, Mac, and Linux. When no platform matches ButtonBar
  * defaults to Linux order.
  * User may specify custom order, see {@link ButtonType} for buttons ids.
  * @author Kotcrab

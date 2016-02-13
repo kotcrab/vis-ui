@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Layout;
 import com.badlogic.gdx.utils.SnapshotArray;
 
 /**
- * Arrange actors in single column filling available vertical space. Creates new columns and expands horizontally as
+ * Arranges actors in single column filling available vertical space. Creates new columns and expands horizontally as
  * necessary.
  * Children automatically overflow to next column when necessary.
  * <p>

@@ -23,7 +23,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Layout;
 import com.badlogic.gdx.utils.SnapshotArray;
 
 /**
- * Arrange actors in rows filling available horizontal space. Creates new rows and expands vertically as necessary.
+ * Arranges actors in rows filling available horizontal space. Creates new rows and expands vertically as necessary.
  * Children automatically overflow to next row when necessary.
  * <p>
  * Can be embedded in scroll pane however in that case scrolling in X direction must be disabled.
