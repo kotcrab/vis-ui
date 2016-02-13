@@ -41,7 +41,7 @@ public class AboutDialog extends VisWindow {
 		VisTable contentTable = new VisTable(false);
 		contentTable.defaults().expand().left();
 
-		contentTable.add(new VisLabel("VisEditor - game level editor\nCopyright 2014-2015 Paweł Pastuszak\nLicensed under Apache2 license")).spaceBottom(8).row();
+		contentTable.add(new VisLabel("VisEditor - game level editor\nCopyright 2014-2016 Paweł Pastuszak\nLicensed under Apache2 license")).spaceBottom(8).row();
 		contentTable.add(new VisLabel("Farseer Physics Engine - polygon decomposition algorithms")).spaceBottom(8).row();
 		contentTable.add(new VisLabel("Thanks to all contributors and supporters,\nand thanks to you for using this software. <3", Align.center)).center().row();
 
