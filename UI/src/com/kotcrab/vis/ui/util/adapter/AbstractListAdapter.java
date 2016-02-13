@@ -38,7 +38,8 @@ import java.util.Comparator;
  * extending this should store provided list and provide delegates for all common methods that change array state.
  * Those delegates should call {@link #itemAdded(Object)} or {@link #itemRemoved(Object)} in order to properly update
  * view cache. When changes to array are too big to be handled by those two methods {@link #itemsChanged()} should be
- * called.
+ * called. When only items fields has changed, and no new item were added or removed you should call
+ * {@link #itemsDataChanged()}.
  * <p>
  * When view does not existed in cache and must be created {@link #createView(Object)} is called. When item view exists
  * in cache {@link #updateView(Actor, Object)} will be called.
@@ -105,8 +106,21 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 		viewListener.invalidateDataSet();
 	}
 
+	/**
+	 * Notifies adapter that underlying collection has changed, ie. some items were added or removed. This does not need to
+	 * be called when only the fields of stored objects changed see {@link #itemsDataChanged()}.
+	 */
 	public void itemsChanged () {
 		getViews().clear();
+		viewListener.invalidateDataSet();
+	}
+
+	/**
+	 * Notifies adapter that data of items has changed. This means that objects fields in underlying collection has changed
+	 * and views needs updating. This must not be called if some items were removed or added from collection for that
+	 * {@link #itemsChanged()}
+	 */
+	public void itemsDataChanged () {
 		viewListener.invalidateDataSet();
 	}
 
