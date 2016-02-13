@@ -1,5 +1,6 @@
 #### Version: 1.0.1 (LibGDX 1.9.2)
 - **Fixed**: Not being able to resize window with `TabbedPane`
+- **Fixed**: `OptionDialog` not modal by default
 
 #### Version: 1.0.0 (LibGDX 1.9.2)
 - **Changed**: `InputValidator` moved to `com.kotcrab.vis.ui.util` package

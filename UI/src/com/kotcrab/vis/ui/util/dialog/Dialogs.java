@@ -347,6 +347,8 @@ public class Dialogs {
 		public OptionDialog (String title, String text, OptionDialogType type, final OptionDialogListener listener) {
 			super(title);
 
+			setModal(true);
+
 			add(new VisLabel(text, Align.center));
 			row();
 			defaults().space(6);
