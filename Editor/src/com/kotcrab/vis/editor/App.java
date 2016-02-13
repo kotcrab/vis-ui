@@ -53,7 +53,7 @@ public class App {
 	 * may have multiple version codes. Version code is incremented after new editor release and after incompatible
 	 * change is made to project system.
 	 */
-	public static final int VERSION_CODE = 21;
+	public static final int VERSION_CODE = 22;
 
 	/**
 	 * VisEditor plugin version code. This only informs about plugin format version, even if this code matches plugin
@@ -62,7 +62,7 @@ public class App {
 	public static final int PLUGIN_COMPATIBILITY_CODE = 4;
 
 	/** VisEditor version in text format: x.y.z, may be x.y.z-SNAPSHOT if this version is snapshot */
-	public static final String VERSION = "0.3.1";
+	public static final String VERSION = "0.3.2-SNAPSHOT";
 
 	/** If true this version is snapshot */
 	public static final boolean SNAPSHOT = VERSION.contains("SNAPSHOT");

@@ -1,3 +1,5 @@
+#### Version: 0.3.2
+
 #### Version: 0.3.1
 - **Added**: Scale entities tool
 - **Added**: Rotate entities tool

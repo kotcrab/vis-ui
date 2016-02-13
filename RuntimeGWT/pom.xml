@@ -14,7 +14,7 @@
     <artifactId>vis-runtime-gwt</artifactId>
     <packaging>jar</packaging>
     <name>VisRuntimeGWT</name>
-    <version>0.3.1</version>
+    <version>0.3.2-SNAPSHOT</version>
 
     <scm>
         <connection>scm:git:git@github.com:kotcrab/VisEditor.git</connection>

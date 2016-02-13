@@ -12,7 +12,7 @@
     <artifactId>vis-runtime</artifactId>
     <packaging>jar</packaging>
     <name>VisRuntime</name>
-    <version>0.3.1</version>
+    <version>0.3.2-SNAPSHOT</version>
     <description>LibGDX Runtime for VisEditor</description>
     <url>https://github.com/kotcrab/VisEditor</url>
 

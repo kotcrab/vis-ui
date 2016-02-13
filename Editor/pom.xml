@@ -12,13 +12,13 @@
     <artifactId>vis-editor</artifactId>
     <packaging>jar</packaging>
     <name>VisEditor</name>
-    <version>0.3.1</version>
+    <version>0.3.2-SNAPSHOT</version>
     <description>Scene Editor for LibGDX</description>
     <url>https://github.com/kotcrab/VisEditor</url>
 
     <properties>
         <jdk.version>1.8</jdk.version>
-        <visui.version>1.0.0-SNAPSHOT</visui.version>
+        <visui.version>1.0.1-SNAPSHOT</visui.version>
         <build.ci.timestamp>unknown, not built using CI</build.ci.timestamp>
     </properties>
 
@@ -76,6 +76,11 @@
         <dependency>
             <groupId>com.badlogicgames.box2dlights</groupId>
             <artifactId>box2dlights</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.onedaybeard.artemis</groupId>
+            <artifactId>artemis-odb</artifactId>
         </dependency>
 
         <dependency>

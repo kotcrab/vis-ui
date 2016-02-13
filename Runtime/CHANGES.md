@@ -1,3 +1,5 @@
+#### Version: 0.3.2 (LibGDX 1.9.2, Artemis 1.3.1)
+
 #### Version: 0.3.1 (LibGDX 1.9.2, Artemis 1.3.1)
 - Updated to LibGDX 1.9.2 and Artemis 1.3.1
 - **API Deprecated**: `SceneConfig#addSystem(BaseSystem system)`, `SceneConfig#addSystem(BaseSystem system, int priority)` and `SimpleSystemProvider`
