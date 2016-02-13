@@ -5,7 +5,7 @@
     <parent>
         <artifactId>vis-parent</artifactId>
         <groupId>com.kotcrab.vis</groupId>
-        <version>1.3.2</version>
+        <version>1.3.3</version>
         <relativePath>../../Parent/pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
