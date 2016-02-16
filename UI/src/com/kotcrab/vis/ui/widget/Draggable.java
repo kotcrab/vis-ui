@@ -87,6 +87,7 @@ public class Draggable extends InputListener {
 	private boolean blockInput = BLOCK_INPUT;
 	private boolean invisibleWhenDragged = INVISIBLE_ON_DRAG;
 	private boolean keepWithinParent = KEEP_WITHIN_PARENT;
+	private float deadzoneRadius;
 	private float fadingTime = DEFAULT_FADING_TIME;
 	private float movingTime = DEFAULT_FADING_TIME;
 	private float alpha = DEFAULT_ALPHA;
@@ -192,6 +193,18 @@ public class Draggable extends InputListener {
 	 */
 	public void setKeepWithinParent (final boolean keepWithinParent) {
 		this.keepWithinParent = keepWithinParent;
+	}
+
+	/** @return distance from the widget's parent in which the actor is not dragged out of parent bounds. */
+	public float getDeadzoneRadius () {
+		return deadzoneRadius;
+	}
+
+	/** @param deadzoneRadius distance from the widget's parent in which the actor is not dragged out of parent bounds. Defaults to
+	 *           0f. Values lower or equal to 0 are ignored during dragging. If {@link #isKeptWithinParent()} returns true, this
+	 *           value is ignored and actor is always kept within parent. */
+	public void setDeadzoneRadius (float deadzoneRadius) {
+		this.deadzoneRadius = deadzoneRadius;
 	}
 
 	/** @return time after which the dragged actor copy disappears. */
@@ -305,14 +318,25 @@ public class Draggable extends InputListener {
 	/** @param event will extract stage coordinates from the event, respecting mimic offset and other dragging settings. */
 	protected void getStageCoordinates (final InputEvent event) {
 		if (keepWithinParent) {
-			final Actor parent = mimic.getActor().getParent();
-			if (parent != null) {
-				MIMIC_COORDINATES.set(Vector2.Zero);
-				parent.localToStageCoordinates(MIMIC_COORDINATES);
-				final float parentX = MIMIC_COORDINATES.x;
-				final float parentY = MIMIC_COORDINATES.y;
-				final float parentEndX = parentX + parent.getWidth();
-				final float parentEndY = parentY + parent.getHeight();
+			getStageCoordinatesWithinParent(event);
+		} else if (deadzoneRadius > 0f) {
+			getStageCoordinatesWithDeadzone(event);
+		} else {
+			getStageCoordinatesWithOffset(event);
+		}
+	}
+
+	private void getStageCoordinatesWithDeadzone (final InputEvent event) {
+		final Actor parent = mimic.getActor().getParent();
+		if (parent != null) {
+			MIMIC_COORDINATES.set(Vector2.Zero);
+			parent.localToStageCoordinates(MIMIC_COORDINATES);
+			final float parentX = MIMIC_COORDINATES.x;
+			final float parentY = MIMIC_COORDINATES.y;
+			final float parentEndX = parentX + parent.getWidth();
+			final float parentEndY = parentY + parent.getHeight();
+			if (isWithinDeadzone(event, parentX, parentY, parentEndX, parentEndY)) {
+				// Keeping within parent bounds:
 				MIMIC_COORDINATES.set(event.getStageX() + offsetX, event.getStageY() + offsetY);
 				if (MIMIC_COORDINATES.x < parentX) {
 					MIMIC_COORDINATES.x = parentX;
@@ -326,11 +350,49 @@ public class Draggable extends InputListener {
 				}
 				STAGE_COORDINATES.set(MathUtils.clamp(event.getStageX(), parentX, parentEndX - 1f),
 					MathUtils.clamp(event.getStageY(), parentY, parentEndY - 1f));
+			} else {
+				getStageCoordinatesWithOffset(event);
 			}
 		} else {
-			MIMIC_COORDINATES.set(event.getStageX() + offsetX, event.getStageY() + offsetY);
-			STAGE_COORDINATES.set(event.getStageX(), event.getStageY());
+			getStageCoordinatesWithOffset(event);
 		}
+	}
+
+	private boolean isWithinDeadzone (InputEvent event, float parentX, float parentY, float parentEndX, float parentEndY) {
+		return parentX - deadzoneRadius <= event.getStageX() && parentEndX + deadzoneRadius >= event.getStageX()
+			&& parentY - deadzoneRadius <= event.getStageY() && parentEndY + deadzoneRadius >= event.getStageY();
+	}
+
+	private void getStageCoordinatesWithinParent (final InputEvent event) {
+		final Actor parent = mimic.getActor().getParent();
+		if (parent != null) {
+			MIMIC_COORDINATES.set(Vector2.Zero);
+			parent.localToStageCoordinates(MIMIC_COORDINATES);
+			final float parentX = MIMIC_COORDINATES.x;
+			final float parentY = MIMIC_COORDINATES.y;
+			final float parentEndX = parentX + parent.getWidth();
+			final float parentEndY = parentY + parent.getHeight();
+			MIMIC_COORDINATES.set(event.getStageX() + offsetX, event.getStageY() + offsetY);
+			if (MIMIC_COORDINATES.x < parentX) {
+				MIMIC_COORDINATES.x = parentX;
+			} else if (MIMIC_COORDINATES.x + mimic.getWidth() > parentEndX) {
+				MIMIC_COORDINATES.x = parentEndX - mimic.getWidth();
+			}
+			if (MIMIC_COORDINATES.y < parentY) {
+				MIMIC_COORDINATES.y = parentY;
+			} else if (MIMIC_COORDINATES.y + mimic.getHeight() > parentEndY) {
+				MIMIC_COORDINATES.y = parentEndY - mimic.getHeight();
+			}
+			STAGE_COORDINATES.set(MathUtils.clamp(event.getStageX(), parentX, parentEndX - 1f),
+				MathUtils.clamp(event.getStageY(), parentY, parentEndY - 1f));
+		} else {
+			getStageCoordinatesWithOffset(event);
+		}
+	}
+
+	private void getStageCoordinatesWithOffset (final InputEvent event) {
+		MIMIC_COORDINATES.set(event.getStageX() + offsetX, event.getStageY() + offsetY);
+		STAGE_COORDINATES.set(event.getStageX(), event.getStageY());
 	}
 
 	@Override
@@ -367,7 +429,7 @@ public class Draggable extends InputListener {
 	}
 
 	/** @param hidingAction will be attached to the mimic actor. */
-	protected void addMimicHidingAction (final Action hidingAction, float delay) {
+	protected void addMimicHidingAction (final Action hidingAction, final float delay) {
 		mimic.addAction(Actions.sequence(hidingAction, Actions.removeActor()));
 		mimic.getActor().addAction(Actions.delay(delay, Actions.visible(true)));
 	}
