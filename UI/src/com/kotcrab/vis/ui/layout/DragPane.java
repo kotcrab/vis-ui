@@ -604,7 +604,7 @@ public class DragPane extends Container<WidgetGroup> {
 		}
 
 		/**
-		 * Limits {@link DragPane} children amount to a certain number.
+		 * Limits {@link DragPane} children amount to a certain number. Never rejects own children.
 		 * @author MJ
 		 * @since 0.9.3
 		 */
@@ -621,7 +621,7 @@ public class DragPane extends Container<WidgetGroup> {
 
 			@Override
 			public boolean accept (final DragPane dragPane, final Actor actor) {
-				return dragPane.getChildren().size < max;
+				return dragPane.contains(actor) || dragPane.getChildren().size < max;
 			}
 		}
 	}
