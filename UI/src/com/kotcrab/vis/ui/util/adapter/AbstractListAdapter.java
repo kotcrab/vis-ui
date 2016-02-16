@@ -88,6 +88,7 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 
 	@Override
 	public void setListView (ListView<ItemT> view, ListAdapterListener viewListener) {
+		if(view != null) throw new IllegalStateException("Adapter was already asigned to ListView");
 		this.view = view;
 		this.viewListener = viewListener;
 	}

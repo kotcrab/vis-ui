@@ -51,6 +51,12 @@ public abstract class ArrayListAdapter<ItemT, ViewT extends Actor> extends Abstr
 	}
 
 	@Override
+	public void add (ItemT element) {
+		array.add(element);
+		itemAdded(element);
+	}
+
+	@Override
 	public ItemT get (int index) {
 		return array.get(index);
 	}
@@ -65,12 +71,6 @@ public abstract class ArrayListAdapter<ItemT, ViewT extends Actor> extends Abstr
 	public ItemT set (int index, ItemT element) {
 		ItemT res = array.set(index, element);
 		itemsChanged();
-		return res;
-	}
-
-	public boolean add (ItemT element) {
-		boolean res = array.add(element);
-		itemAdded(element);
 		return res;
 	}
 

@@ -24,24 +24,35 @@ import com.kotcrab.vis.ui.widget.VisTable;
 /**
  * Adapter used to display items list in {@link ListView}. Classes implementing this interface should store array and
  * provide delegates to methods that change array state, such as add/remove etc. Those delegates should call
- * {@link ListAdapterListener#invalidateDataSet()}.
+ * {@link ListAdapterListener#invalidateDataSet()}. Single instance of ListAdapter can only be used for one ListView.
+ * Implementations must support setting item click listener.
  * @author Kotcrab
  * @see ArrayAdapter
  * @see ArrayListAdapter
  * @since 1.0.0
  */
 public interface ListAdapter<ItemT> {
+	/** Called by {@link ListView} when this adapter is assigned to it. */
 	void setListView (ListView<ItemT> view, ListAdapterListener viewListener);
 
+	/** Called by {@link ListView} when this adapter should create and add all views to provided itemsTable. */
 	void fillTable (VisTable itemsTable);
 
+	/** Called by {@link ListView} when it's item click listener changed. */
 	void setItemClickListener (ItemClickListener<ItemT> listener);
 
+	/** @return iterable for internal collection */
 	Iterable<ItemT> iterable ();
 
+	/** @return size of internal collection */
 	int size ();
 
+	/** @return index of element in internal collection */
 	int indexOf (ItemT item);
 
-	ItemT get(int index);
+	/** Adds item to internal collection */
+	void add (ItemT item);
+
+	/** @return element for given index */
+	ItemT get (int index);
 }

@@ -49,6 +49,12 @@ public abstract class ArrayAdapter<ItemT, ViewT extends Actor> extends AbstractL
 	}
 
 	@Override
+	public void add (ItemT element) {
+		array.add(element);
+		itemAdded(element);
+	}
+
+	@Override
 	protected void sort (Comparator<ItemT> comparator) {
 		array.sort(comparator);
 	}
@@ -59,11 +65,6 @@ public abstract class ArrayAdapter<ItemT, ViewT extends Actor> extends AbstractL
 	}
 
 	//Delegates
-
-	public void add (ItemT value) {
-		array.add(value);
-		itemAdded(value);
-	}
 
 	public void addAll (Array<? extends ItemT> array) {
 		this.array.addAll(array);
