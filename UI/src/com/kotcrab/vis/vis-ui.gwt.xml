@@ -69,4 +69,5 @@
 
 	<extend-configuration-property name="gdx.reflect.exclude" value="com.kotcrab.vis.ui.widget.file" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.file.FileChooserStyle" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.util.adapter.SimpleListAdapter" />
 </module>
