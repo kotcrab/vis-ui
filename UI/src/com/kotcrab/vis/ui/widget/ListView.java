@@ -64,6 +64,7 @@ public class ListView<ItemT> {
 
 		scrollPane = new VisScrollPane(scrollTable);
 		scrollPane.setOverscroll(false, true);
+		scrollPane.setFlickScroll(false);
 		scrollPane.setFadeScrollBars(false);
 		mainTable.add(scrollPane).grow();
 
@@ -91,6 +92,10 @@ public class ListView<ItemT> {
 			scrollTable.add(footer).growX();
 			scrollTable.row();
 		}
+	}
+
+	public ListAdapter<ItemT> getAdapter () {
+		return adapter;
 	}
 
 	/**

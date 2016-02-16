@@ -1,6 +1,10 @@
 #### Version: 1.0.1 (LibGDX 1.9.2)
+- **Added**: `ListView#getListAdapter()`
 - **Fixed**: Not being able to resize window with `TabbedPane`
 - **Fixed**: `OptionDialog` not modal by default
+- **Fixed**: `SimpleListAdapter` not working on GWT
+- **Fixed**: `VisCheckBox` focus border appeared was displayed in wrong place when using `Cell#growX()`
+- **Changed**: `DragPane`: `LimitChildren` listener now never rejects own children, even when max children amount is achieved.
 
 #### Version: 1.0.0 (LibGDX 1.9.2)
 - **Changed**: `InputValidator` moved to `com.kotcrab.vis.ui.util` package
