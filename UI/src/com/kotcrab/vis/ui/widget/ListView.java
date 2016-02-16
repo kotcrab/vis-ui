@@ -33,13 +33,12 @@ import com.kotcrab.vis.ui.util.adapter.ListAdapter;
  */
 public class ListView<ItemT> {
 	private ListAdapter<ItemT> adapter;
-	private ListAdapterListener adapterListener = new ListAdapterListener();
 	private ItemClickListener<ItemT> clickListener;
 
 	private UpdatePolicy updatePolicy = UpdatePolicy.IMMEDIATELY;
 	private boolean dataInvalidated = false;
 
-	private VisTable mainTable;
+	private ListViewTable<ItemT> mainTable;
 	private VisScrollPane scrollPane;
 
 	private VisTable scrollTable;
@@ -49,16 +48,10 @@ public class ListView<ItemT> {
 	private Actor footer;
 
 	public ListView (ListAdapter<ItemT> adapter) {
-		if(adapter == null) throw new IllegalArgumentException("adapter can't be null");
+		if (adapter == null) throw new IllegalArgumentException("adapter can't be null");
 		this.adapter = adapter;
 
-		mainTable = new VisTable() {
-			@Override
-			public void draw (Batch batch, float parentAlpha) {
-				if (updatePolicy == UpdatePolicy.ON_DRAW && dataInvalidated) rebuildView(true);
-				super.draw(batch, parentAlpha);
-			}
-		};
+		mainTable = new ListViewTable<ItemT>(this);
 		scrollTable = new VisTable();
 		itemsTable = new VisTable();
 
@@ -68,7 +61,7 @@ public class ListView<ItemT> {
 		scrollPane.setFadeScrollBars(false);
 		mainTable.add(scrollPane).grow();
 
-		adapter.setListView(this, adapterListener);
+		adapter.setListView(this, new ListAdapterListener());
 		rebuildView(true);
 	}
 
@@ -98,10 +91,8 @@ public class ListView<ItemT> {
 		return adapter;
 	}
 
-	/**
-	 * @return main table containing scroll pane and all items view
-	 */
-	public VisTable getMainTable () {
+	/** @return main table containing scroll pane and all items view */
+	public ListViewTable<ItemT> getMainTable () {
 		return mainTable;
 	}
 
@@ -161,5 +152,24 @@ public class ListView<ItemT> {
 		ON_DRAW,
 		/** If list data was was invalidated then views are updated immediately after data invalidation. */
 		IMMEDIATELY
+	}
+
+	/** ListView main table. */
+	public static class ListViewTable<ItemT> extends VisTable {
+		private ListView<ItemT> listView;
+
+		private ListViewTable (ListView<ItemT> listView) {
+			this.listView = listView;
+		}
+
+		@Override
+		public void draw (Batch batch, float parentAlpha) {
+			if (listView.updatePolicy == UpdatePolicy.ON_DRAW && listView.dataInvalidated) listView.rebuildView(true);
+			super.draw(batch, parentAlpha);
+		}
+
+		public ListView<ItemT> getListView () {
+			return listView;
+		}
 	}
 }

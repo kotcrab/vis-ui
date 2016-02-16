@@ -5,6 +5,7 @@
 - **Fixed**: `SimpleListAdapter` not working on GWT
 - **Fixed**: `VisCheckBox` focus border appeared was displayed in wrong place when using `Cell#growX()`
 - **Changed**: `DragPane`: `LimitChildren` listener now never rejects own children, even when max children amount is achieved.
+- **API Changed**: `ListView#getMainTable()` now returns `ListViewTable<ItemT>` instead of `VisTable`
 - **API Changed**: Added `ListAdapter.add(ItemT)`
 
 #### Version: 1.0.0 (LibGDX 1.9.2)
