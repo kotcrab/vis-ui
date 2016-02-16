@@ -114,6 +114,7 @@ class TestApplication extends ApplicationAdapter {
 		Menu windowMenu = new Menu("Window");
 		Menu helpMenu = new Menu("Help");
 
+		fileMenu.addItem(createTestsMenu());
 		fileMenu.addItem(new MenuItem("menuitem #1"));
 		fileMenu.addItem(new MenuItem("menuitem #2").setShortcut("f1"));
 		fileMenu.addItem(new MenuItem("menuitem #3").setShortcut("f2"));
@@ -171,6 +172,39 @@ class TestApplication extends ApplicationAdapter {
 		menuBar.addMenu(helpMenu);
 	}
 
+	private MenuItem createTestsMenu () {
+		MenuItem item = new MenuItem("start test");
+
+		PopupMenu menu = new PopupMenu();
+		menu.addItem(new MenuItem("tabbed pane", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				stage.addActor(new TestTabbedPane());
+			}
+		}));
+		menu.addItem(new MenuItem("flow groups", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				stage.addActor(new TestFlowGroup());
+			}
+		}));
+		menu.addItem(new MenuItem("button bar", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				stage.addActor(new TestButtonBar());
+			}
+		}));
+		menu.addItem(new MenuItem("list view", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				stage.addActor(new TestListView());
+			}
+		}));
+
+		item.setSubMenu(menu);
+		return item;
+	}
+
 	private PopupMenu createSubMenu () {
 		PopupMenu menu = new PopupMenu();
 		menu.addItem(new MenuItem("submenuitem #1"));
@@ -183,7 +217,7 @@ class TestApplication extends ApplicationAdapter {
 
 	@Override
 	public void resize (int width, int height) {
-		if(width == 0 && height == 0) return; //see https://github.com/libgdx/libgdx/issues/3673#issuecomment-177606278
+		if (width == 0 && height == 0) return; //see https://github.com/libgdx/libgdx/issues/3673#issuecomment-177606278
 		stage.getViewport().update(width, height, true);
 	}
 
