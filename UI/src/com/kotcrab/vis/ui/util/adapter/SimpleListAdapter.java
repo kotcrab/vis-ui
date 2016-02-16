@@ -62,7 +62,7 @@ public class SimpleListAdapter<ItemT> extends ArrayAdapter<ItemT, VisTable> {
 		view.setBackground(style.background);
 	}
 
-	private static class SimpleListAdapterStyle {
+	public static class SimpleListAdapterStyle {
 		public Drawable background;
 		public Drawable selection;
 
