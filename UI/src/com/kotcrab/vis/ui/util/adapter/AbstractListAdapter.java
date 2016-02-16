@@ -88,7 +88,7 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 
 	@Override
 	public void setListView (ListView<ItemT> view, ListAdapterListener viewListener) {
-		if(this.view != null) throw new IllegalStateException("Adapter was already asigned to ListView");
+		if (this.view != null) throw new IllegalStateException("Adapter was already asigned to ListView");
 		this.view = view;
 		this.viewListener = viewListener;
 	}
@@ -110,6 +110,10 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 	/**
 	 * Notifies adapter that underlying collection has changed, ie. some items were added or removed. This does not need to
 	 * be called when only the fields of stored objects changed see {@link #itemsDataChanged()}.
+	 * <p>
+	 * WARNING: When using {@link ListView.UpdatePolicy#MANUAL} this won't cause to rebuild {@link ListView}. This method
+	 * only notifies ListView that it needs rebuilding however when using {@link ListView.UpdatePolicy#MANUAL} mode it
+	 * will be ignored.
 	 */
 	public void itemsChanged () {
 		getViews().clear();
@@ -120,6 +124,10 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 	 * Notifies adapter that data of items has changed. This means that objects fields in underlying collection has changed
 	 * and views needs updating. This must not be called if some items were removed or added from collection for that
 	 * {@link #itemsChanged()}
+	 * <p>
+	 * WARNING: When using {@link ListView.UpdatePolicy#MANUAL} this won't cause to rebuild {@link ListView}. This method
+	 * only notifies ListView that it needs rebuilding however when using {@link ListView.UpdatePolicy#MANUAL} mode it
+	 * will be ignored.
 	 */
 	public void itemsDataChanged () {
 		viewListener.invalidateDataSet();
@@ -249,6 +257,8 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 		private void selectGroup (ItemT newItem) {
 			int thisSelectionIndex = adapter.indexOf(newItem);
 			int lastSelectionIndex = adapter.indexOf(selection.peek());
+
+			if (lastSelectionIndex == -1) return;
 
 			int start;
 			int end;

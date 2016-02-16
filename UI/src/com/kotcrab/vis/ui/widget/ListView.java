@@ -19,6 +19,7 @@ package com.kotcrab.vis.ui.widget;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.kotcrab.vis.ui.util.adapter.AbstractListAdapter;
 import com.kotcrab.vis.ui.util.adapter.ArrayAdapter;
 import com.kotcrab.vis.ui.util.adapter.ArrayListAdapter;
 import com.kotcrab.vis.ui.util.adapter.ListAdapter;
@@ -62,6 +63,10 @@ public class ListView<ItemT> {
 		mainTable.add(scrollPane).grow();
 
 		adapter.setListView(this, new ListAdapterListener());
+		rebuildView(true);
+	}
+
+	public void rebuildView () {
 		rebuildView(true);
 	}
 
@@ -151,7 +156,14 @@ public class ListView<ItemT> {
 		/** If list data was was invalidated then views are updated before drawing list. */
 		ON_DRAW,
 		/** If list data was was invalidated then views are updated immediately after data invalidation. */
-		IMMEDIATELY
+		IMMEDIATELY,
+		/**
+		 * In manual mode ListView must be rebuild manually by calling {@link #rebuildView()}. Notification from adapter
+		 * about need to rebuild view will be ignored (see {@link AbstractListAdapter#itemsChanged()}). This mode should
+		 * be only used when it's really required to have manual control over how {@link ListView} rebuilds. Note that
+		 * ListView should be rebuild before user interacts with it.
+		 */
+		MANUAL
 	}
 
 	/** ListView main table. */

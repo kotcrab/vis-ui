@@ -1,5 +1,6 @@
 #### Version: 1.0.1 (LibGDX 1.9.2)
 - **Added**: `ListView#getListAdapter()`
+- **Added**: `ListView#rebuildView()` and `UpdatePolicy.MANUAL`
 - **Fixed**: Not being able to resize window with `TabbedPane`
 - **Fixed**: `OptionDialog` not modal by default
 - **Fixed**: `SimpleListAdapter` not working on GWT
