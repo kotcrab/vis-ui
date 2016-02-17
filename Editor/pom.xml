@@ -142,6 +142,14 @@
             <groupId>org.jooq</groupId>
             <artifactId>joor</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.apple</groupId>
+            <artifactId>AppleJavaExtensions</artifactId>
+            <version>1.4</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>

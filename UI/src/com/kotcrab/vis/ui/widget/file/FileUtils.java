@@ -16,11 +16,13 @@
 
 package com.kotcrab.vis.ui.widget.file;
 
+import com.apple.eio.FileManager;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.util.OsUtils;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -99,5 +101,21 @@ public class FileUtils {
 	/** Converts {@link File} to absolute {@link FileHandle}. */
 	public static FileHandle toFileHandle (File file) {
 		return Gdx.files.absolute(file.getAbsolutePath());
+	}
+
+	/** Shows given directory in system explorer window. */
+	public static void showDirInExplorer (FileHandle dir) throws IOException {
+		File dirToShow;
+		if (dir.isDirectory()) {
+			dirToShow = dir.file();
+		} else {
+			dirToShow = dir.parent().file();
+		}
+
+		if (OsUtils.isMac()) {
+			FileManager.revealInFinder(dirToShow);
+		} else {
+			Desktop.getDesktop().open(dirToShow);
+		}
 	}
 }

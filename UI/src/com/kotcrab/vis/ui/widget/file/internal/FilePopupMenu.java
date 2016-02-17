@@ -29,8 +29,8 @@ import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.PopupMenu;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.file.FileChooserStyle;
+import com.kotcrab.vis.ui.widget.file.FileUtils;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 
@@ -93,10 +93,7 @@ public class FilePopupMenu extends PopupMenu {
 			@Override
 			public void clicked (InputEvent event, float x, float y) {
 				try {
-					if (file.isDirectory())
-						Desktop.getDesktop().open(file.file());
-					else
-						Desktop.getDesktop().open(file.parent().file());
+					FileUtils.showDirInExplorer(file);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

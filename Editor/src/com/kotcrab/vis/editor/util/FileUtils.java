@@ -60,7 +60,7 @@ public class FileUtils extends com.kotcrab.vis.ui.widget.file.FileUtils {
 
 	public static void open (FileHandle file) {
 		try {
-			Desktop.getDesktop().open(file.file());
+			Desktop.getDesktop().edit(file.file());
 		} catch (IOException e) {
 			Log.exception(e);
 		}
@@ -68,10 +68,7 @@ public class FileUtils extends com.kotcrab.vis.ui.widget.file.FileUtils {
 
 	public static void browse (FileHandle dir) {
 		try {
-			if (dir.isDirectory())
-				Desktop.getDesktop().open(dir.file());
-			else
-				Desktop.getDesktop().open(dir.parent().file());
+			showDirInExplorer(dir);
 		} catch (IOException e) {
 			Log.exception(e);
 		}
