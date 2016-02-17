@@ -20,6 +20,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.ui.util.OsUtils;
 
 import java.awt.Desktop;
 import java.io.File;
@@ -60,7 +61,11 @@ public class FileUtils extends com.kotcrab.vis.ui.widget.file.FileUtils {
 
 	public static void open (FileHandle file) {
 		try {
-			Desktop.getDesktop().edit(file.file());
+			if (OsUtils.isMac()) {
+				Runtime.getRuntime().exec("open " + file.path()); //see #123
+			} else {
+				Desktop.getDesktop().edit(file.file());
+			}
 		} catch (IOException e) {
 			Log.exception(e);
 		}
