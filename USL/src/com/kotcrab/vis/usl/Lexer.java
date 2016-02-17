@@ -271,8 +271,9 @@ public class Lexer {
 		includeMappings.put("visui-0.9.4", "http://apps.kotcrab.com/vis/usl/visui-0.9.4.usl");
 		includeMappings.put("visui-0.9.5", "styles/visui-0.9.5.usl");
 		includeMappings.put("visui-1.0.0", "styles/visui-1.0.0.usl");
-		includeMappings.put("visui", "styles/visui-1.0.0.usl");
-		includeMappings.put("visui-1.0.1", "styles/visui-1.0.1.usl"); //snapshot
+		includeMappings.put("visui-1.0.1", "styles/visui-1.0.1.usl");
+		includeMappings.put("visui", "styles/visui-1.0.1.usl");
+		includeMappings.put("visui-1.0.2", "styles/visui-1.0.2.usl"); //snapshot
 	}
 
 	private static int skipLineComment (String usl, int i) {
