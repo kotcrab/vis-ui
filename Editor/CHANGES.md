@@ -1,4 +1,6 @@
 #### Version: 0.3.2
+- **Fixed**: [#130](https://github.com/kotcrab/VisEditor/issues/130) - Exit dialog not showed on non Windows OSes
+- **Fixed (UI)**: Minor bug: tabs panel wrong height
 
 #### Version: 0.3.1
 - **Added**: Scale entities tool
