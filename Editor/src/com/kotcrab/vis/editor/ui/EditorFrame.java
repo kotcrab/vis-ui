@@ -35,7 +35,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
-import java.util.Set;
 
 /**
  * VisEditor AWT/Swing based frame that holds {@link LwjglCanvas}. {@link LwjglApplication} is not used directly,
@@ -54,7 +53,7 @@ public class EditorFrame extends JFrame {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing (WindowEvent e) {
-				performEditorExit();
+				editor.requestExit();
 			}
 		});
 
@@ -153,25 +152,6 @@ public class EditorFrame extends JFrame {
 		});
 	}
 
-	/**
-	 * Performs editor exit, if editor is still running, this will cause to display "Do you really want to exit?" dialog in editor window.
-	 * If editor LibGDX thread died, for example after uncaught GdxRuntimeException this will simply kill app.
-	 */
-	private void performEditorExit () {
-		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-
-		for (Thread thread : threadSet) {
-			if (thread.getName().contains("LWJGL Timer")) {
-				editor.requestExit();
-				return;
-			}
-		}
-
-		Log.fatal("Editor LibGDX thread is not running, performing force exit.");
-		Log.dispose();
-		System.exit(-4);
-	}
-
 	@Override
 	public void dispose () {
 		super.dispose();
@@ -212,7 +192,7 @@ public class EditorFrame extends JFrame {
 
 					if (controller.fatalExceptionOccurred) {
 						Log.fatal("Initialization error");
-						JOptionPane.showMessageDialog(null, "An error occurred during editor initialization, please check log: " + Log.getLogFile().parent().path());
+						JOptionPane.showMessageDialog(null, "An error occurred during editor initialization. Please check log");
 						System.exit(-5);
 					}
 
