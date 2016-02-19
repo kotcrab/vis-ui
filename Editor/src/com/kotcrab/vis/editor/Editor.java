@@ -53,6 +53,7 @@ import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialog;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
+import com.kotcrab.vis.ui.util.value.PrefHeightIfVisibleValue;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
@@ -228,7 +229,7 @@ public class Editor extends ApplicationAdapter {
 	private void createModulesUI () {
 		uiRoot.add(editorMC.get(MenuBarModule.class).getTable()).fillX().expandX().row();
 		uiRoot.add(editorMC.get(ToolbarModule.class).getTable()).fillX().expandX().row();
-		uiRoot.add(editorMC.get(TabsModule.class).getTable()).fillX().expandX().row();
+		uiRoot.add(editorMC.get(TabsModule.class).getTable()).height(PrefHeightIfVisibleValue.INSTANCE).fillX().expandX().row();
 		uiRoot.add(mainContentTable).expand().fill().row();
 		uiRoot.add(editorMC.get(QuickAccessModule.class).getTable()).fillX().expandX().row();
 		uiRoot.add(editorMC.get(StatusBarModule.class).getTable()).fillX().expandX().row();
