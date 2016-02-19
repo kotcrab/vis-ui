@@ -71,7 +71,7 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 
 			boolean listenerMissing = true;
 			for (EventListener listener : view.getListeners()) {
-				if (ClassReflection.isInstance(ListClickListener.class, listener)) {
+				if (listener instanceof AbstractListAdapter.ListClickListener) {
 					listenerMissing = false;
 					break;
 				}
