@@ -37,7 +37,7 @@ public class VariablesSettingsDialog extends AbstractSceneSettingsDialog {
 	protected void createUI () {
 		workingCopy = new Variables(scene.variables);
 
-		variablesMapView = new StringStringMapView("No variables set", null);
+		variablesMapView = new StringStringMapView("No variables set (press enter in field\nto create variable)", null);
 		variablesMapView.setMap(workingCopy);
 
 		VisScrollPane scrollPane = new VisScrollPane(variablesMapView);

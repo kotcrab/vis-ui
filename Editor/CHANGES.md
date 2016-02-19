@@ -1,5 +1,6 @@
 #### Version: 0.3.2
 - **Fixed**: [#130](https://github.com/kotcrab/VisEditor/issues/130) - Exit dialog not showed on non Windows OSes
+- **Fixed**: Unable to open variables settings dialog for newly created scenes
 - **Fixed (UI)**: Minor bug: tabs panel wrong height
 
 #### Version: 0.3.1

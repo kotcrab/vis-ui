@@ -57,7 +57,7 @@ public class EditorScene extends BaseObservable {
 	public SceneViewport viewport;
 
 	public PhysicsSettings physicsSettings = new PhysicsSettings();
-	public Variables variables;
+	public Variables variables = new Variables();
 
 	private Array<EditorLayer> layers = new Array<>();
 	private int activeLayerId;
@@ -83,6 +83,8 @@ public class EditorScene extends BaseObservable {
 	public void onDeserialize () {
 		super.onDeserialize();
 		forceSortLayers();
+
+		if (variables == null) variables = new Variables();
 
 		if (versionCode == 1) {
 			Log.info("Scene::onDeserialize", "Updating scene " + path + " to versionCode 2");
