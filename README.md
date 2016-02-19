@@ -1,7 +1,7 @@
 VisEditor [![](http://kotcrab.com:8080/buildStatus/icon?job=viseditor-edge)](http://kotcrab.com:8080/job/viseditor-edge/)
 =========
 
-[VisEditor](http://vis.kotcrab.com/) is cross platform 2D game level editor, it allows to easily create game scenes using intuitive drag and drop editor. 
+[VisEditor](https://vis.kotcrab.com/) is cross platform 2D game level editor, it allows to easily create game scenes using intuitive drag and drop editor. 
 
 VisEditor doesn't force you to use single game framework, scenes are exported in JSON format. Many assets file formats are supported: images, sounds, fonts, particles, GLSL shaders, Spine and Spriter animations with more features coming soon. Box2d physics is supported as well.
 
@@ -13,7 +13,7 @@ VisEditor currently have libGDX runtime which uses [artemis-odb](https://github.
 LibGDX runtime source code is a good start if you want to create your own runtime, if you do so don't forget to let me know and I will gladly link it here.
 
 #### Community
-You can follow Vis development on my Twitter channels: [@VisEditor](https://twitter.com/VisEditor) and [@kotcrab](https://twitter.com/kotcrab) or read my [blog](http://kotcrab.com/).
+You can follow Vis development on my Twitter channels: [@VisEditor](https://twitter.com/VisEditor) and [@kotcrab](https://twitter.com/kotcrab) or read my [blog](https://kotcrab.com/).
 You can also join our [forum and IRC channel](https://github.com/kotcrab/VisEditor/wiki/IRC-Channel-and-Forum)!
 
 #### Subprojects
