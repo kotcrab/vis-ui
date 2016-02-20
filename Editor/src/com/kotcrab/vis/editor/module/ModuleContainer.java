@@ -134,10 +134,8 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 
 	protected boolean injectField (Object target, Field field, Class<?> type) throws ReflectiveOperationException {
 		if (Module.class.isAssignableFrom(type)) {
-			if (Module.class.isAssignableFrom(type)) {
-				field.setAccessible(true);
-				field.set(target, findInHierarchy(type.asSubclass(Module.class)));
-			}
+			field.setAccessible(true);
+			field.set(target, findInHierarchy(type.asSubclass(Module.class)));
 
 			return true;
 		}

@@ -16,150 +16,66 @@
 
 package com.kotcrab.vis.editor.module.editor;
 
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.kotcrab.vis.editor.Log;
-
-import java.awt.*;
+import com.badlogic.gdx.Gdx;
+import com.kotcrab.vis.ui.util.OsUtils;
 
 /**
- * Allows to catch mouse inside current screen. Used for example when dragging objects. Uses AWT Robot.
+ * Allows to catch mouse inside current screen. Used for example when dragging objects.
+ * @see AWTMouseLoopingModule
  * @author Kotcrab
  */
-public class MouseLoopingModule extends EditorModule {
-	private static final int MARGIN = 15;
-
-	private GlobalInputModule globalInput;
-
-	private boolean catchEnabled = false;
-
-	private Robot awtRobot;
-	private Rectangle screenBounds;
-
-	private float virtualDeltaX;
-	private float virtualDeltaY;
-
-	private float virtualMouseX;
-	private float virtualMouseY;
-
-	@Override
-	public void init () {
-		try {
-			awtRobot = new Robot();
-		} catch (AWTException e) {
-			Log.exception(e);
-		}
-
-		globalInput.addListener(new InputListener() {
-			@Override
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				Point mousePos = MouseInfo.getPointerInfo().getLocation();
-
-				virtualDeltaX = 0;
-				virtualDeltaY = 0;
-				virtualMouseX = mousePos.x;
-				virtualMouseY = mousePos.y;
-				return true;
-			}
-
-			@Override
-			public void touchDragged (InputEvent event, float x, float y, int pointer) {
-				if (catchEnabled == false || screenBounds == null) return;
-
-				Point mousePos = MouseInfo.getPointerInfo().getLocation();
-
-				int moveDeltaX = 0;
-				int moveDeltaY = 0;
-
-				if (mousePos.x <= screenBounds.x) {
-					moveDeltaX = screenBounds.width - MARGIN;
-				} else if (mousePos.x >= screenBounds.x + screenBounds.width - 1) {
-					moveDeltaX = -screenBounds.width + MARGIN;
-				}
-
-				if (mousePos.y <= screenBounds.y) {
-					moveDeltaY = screenBounds.height - MARGIN;
-				} else if (mousePos.y >= screenBounds.y + screenBounds.height - 1) {
-					moveDeltaY = -screenBounds.height + MARGIN;
-				}
-
-				boolean move = false;
-				int newMouseX = mousePos.x;
-				int newMouseY = mousePos.y;
-
-				if (moveDeltaX != 0) {
-					newMouseX = mousePos.x + moveDeltaX;
-					virtualDeltaX -= moveDeltaX;
-					move = true;
-				}
-
-				if (moveDeltaY != 0) {
-					newMouseY = mousePos.y + moveDeltaY;
-					virtualDeltaY -= moveDeltaY;
-					move = true;
-				}
-
-				if (move) {
-					awtRobot.mouseMove(newMouseX, newMouseY);
-					mousePos.setLocation(newMouseX, newMouseY); //manually update mousePos
-				}
-
-				virtualMouseX = mousePos.x + virtualDeltaX;
-				virtualMouseY = mousePos.y + virtualDeltaY;
-			}
-
-			@Override
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				catchEnabled = false;
-				virtualMouseX = 0;
-				virtualMouseY = 0;
-			}
-		});
-	}
+public abstract class MouseLoopingModule extends EditorModule {
+	/** @return true if implementation can support mouse looping, false otherwise */
+	public abstract boolean isLoopingSupported();
 
 	/**
 	 * Enables cursor looping. Looping will be auto disabled after touchUp event. This should be called only once for
-	 * single touchDown event. May be called after touchDown event already occurred.
+	 * single touchDown event. May be called after touchDown event already occurred. If implementation does not support
+	 * looping no action is performed.
 	 */
-	public void loopCursor () {
-		this.catchEnabled = true;
-		Point mousePos = MouseInfo.getPointerInfo().getLocation();
-		virtualMouseX = mousePos.x;
-		virtualMouseY = mousePos.y;
-		screenBounds = getScreenBoundsAt(mousePos);
-	}
+	public abstract void loopCursor ();
 
-	public float getVirtualMouseX () {
-		if (catchEnabled)
-			return virtualMouseX;
-		else
-			return MouseInfo.getPointerInfo().getLocation().x;
-	}
+	public abstract float getVirtualMouseX ();
 
-	public float getVirtualMouseY () {
-		if (catchEnabled)
-			return virtualMouseY;
-		else
-			return MouseInfo.getPointerInfo().getLocation().y;
-	}
+	public abstract float getVirtualMouseY ();
 
 	/** @return true if mouse cords are on virtual screen (was looped at least once in any direction) */
-	public boolean isOnVirtualScreen () {
-		return virtualDeltaX != 0 || virtualDeltaY != 0;
+	public abstract boolean isOnVirtualScreen ();
+
+	/**
+	 * Creates and returns new instance of {@link MouseLoopingModule}. Returned instance may not support looping
+	 * module if platform does not support it, see {@link #isLoopingSupported()}.
+	 */
+	public static MouseLoopingModule newInstance () {
+		if (OsUtils.isMac()) return new DefaultMouseLoopingModule();
+
+		return new AWTMouseLoopingModule();
 	}
 
-	private Rectangle getScreenBoundsAt (Point pos) {
-		GraphicsEnvironment env = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		GraphicsDevice devices[] = env.getScreenDevices();
-
-		for (GraphicsDevice gd : devices) {
-			GraphicsConfiguration config = gd.getDefaultConfiguration();
-			Rectangle screenBounds = config.getBounds();
-			if (screenBounds.contains(pos)) {
-				return config.getBounds();
-			}
+	private static class DefaultMouseLoopingModule extends MouseLoopingModule {
+		@Override
+		public boolean isLoopingSupported () {
+			return false;
 		}
 
-		return null;
+		@Override
+		public void loopCursor () {
+
+		}
+
+		@Override
+		public float getVirtualMouseX () {
+			return Gdx.input.getX();
+		}
+
+		@Override
+		public float getVirtualMouseY () {
+			return Gdx.input.getY();
+		}
+
+		@Override
+		public boolean isOnVirtualScreen () {
+			return false;
+		}
 	}
 }
