@@ -42,4 +42,9 @@ public abstract class PathAsset implements VisAssetDescriptor {
 		if (asset instanceof PathAsset == false) return false;
 		return relativePath.equals(((PathAsset) asset).getPath());
 	}
+
+	@Override
+	public String toString () {
+		return "VisAssetDescriptor: " + relativePath;
+	}
 }

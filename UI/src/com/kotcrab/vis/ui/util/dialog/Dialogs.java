@@ -342,6 +342,7 @@ public class Dialogs {
 	 * showOptionDialog methods.
 	 */
 	public static class OptionDialog extends VisWindow {
+		//NOTE: when updating this class, don't forget about Editor's DisableableOptionDialog
 		private final ButtonBar buttonBar;
 
 		public OptionDialog (String title, String text, OptionDialogType type, final OptionDialogListener listener) {

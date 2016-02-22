@@ -19,16 +19,16 @@ package com.kotcrab.vis.editor.module.editor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter.OutputType;
-import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialog;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogListener;
-import com.kotcrab.vis.ui.widget.VisCheckBox;
-import com.kotcrab.vis.ui.widget.VisWindow;
+import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.ButtonBar.ButtonType;
 
 import java.util.Optional;
 
@@ -39,6 +39,7 @@ import java.util.Optional;
 public class DisableableDialogsModule extends EditorModule {
 	private static final String VIS_PREFIX = "com.kotcrab.vis.editor.";
 	public static final String DIALOG_PROJECT_EXPORT = VIS_PREFIX + "EXPORT_PROJECT_DIALOG";
+	public static final String POLYGON_TOOL_ROTATED_UNSUPPORTED = VIS_PREFIX + "POLYGON_TOOL_ROTATED_UNSUPPORTED_DIALOG";
 
 	private AppFileAccessModule fileAccess;
 
@@ -65,7 +66,7 @@ public class DisableableDialogsModule extends EditorModule {
 		json.toJson(disabledDialogs, configFile);
 	}
 
-	public Optional<OptionDialog> showOptionDialog (String dialogId, DefaultDialogOption defaultOption, Stage stage, String title, String text, OptionDialogType type, OptionDialogListener listener) {
+	public Optional<DisableableOptionDialog> showOptionDialog (String dialogId, DefaultDialogOption defaultOption, Stage stage, String title, String text, OptionDialogType type, OptionDialogListener listener) {
 		if (disabledDialogs.contains(dialogId, false)) {
 			switch (defaultOption) {
 				case YES:
@@ -110,29 +111,95 @@ public class DisableableDialogsModule extends EditorModule {
 			}
 		};
 
-		OptionDialog dialog = Dialogs.showOptionDialog(stage, title, text, type, wrapperListener);
-		insertActorInDialogButtonTable(dialog, dontShowAgain).padRight(10);
-		dialog.pack();
-
+		DisableableOptionDialog dialog = new DisableableOptionDialog(title, text, type, wrapperListener, dontShowAgain);
+		stage.addActor(dialog.fadeIn());
 		return Optional.of(dialog);
-	}
-
-	private <T extends Actor> Cell<T> insertActorInDialogButtonTable (VisWindow target, T newActor) { //TODO refactor this
-		Array<Actor> oldActors = new Array<>(target.getChildren());
-		target.clearChildren();
-
-		oldActors.removeIndex(0); //remove first item which is window label
-		target.add(oldActors.removeIndex(0)).colspan(2); //remove and re add main text label
-		target.row();
-
-		Cell<T> cell = target.add(newActor);
-
-		oldActors.forEach(target::add);
-
-		return cell;
 	}
 
 	public enum DefaultDialogOption {
 		YES, NO, CANCEL
+	}
+
+	/** @see OptionDialog */
+	public static class DisableableOptionDialog extends VisWindow {
+		private final ButtonBar buttonBar;
+
+		public DisableableOptionDialog (String title, String text, OptionDialogType type, final OptionDialogListener listener, VisCheckBox dontShowAgain) {
+			super(title);
+
+			setModal(true);
+
+			add(new VisLabel(text, Align.center)).colspan(2);
+			row();
+			defaults().space(6);
+			defaults().padBottom(3);
+
+			buttonBar = new ButtonBar();
+			buttonBar.setIgnoreSpacing(true);
+
+			ChangeListener yesBtnListener = new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent event, Actor actor) {
+					listener.yes();
+					fadeOut();
+				}
+			};
+
+			ChangeListener noBtnListener = new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent event, Actor actor) {
+					listener.no();
+					fadeOut();
+				}
+			};
+
+			ChangeListener cancelBtnListener = new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent event, Actor actor) {
+					listener.cancel();
+					fadeOut();
+				}
+			};
+
+			switch (type) {
+				case YES_NO:
+					buttonBar.setButton(ButtonType.YES, yesBtnListener);
+					buttonBar.setButton(ButtonType.NO, noBtnListener);
+					break;
+				case YES_CANCEL:
+					buttonBar.setButton(ButtonType.YES, yesBtnListener);
+					buttonBar.setButton(ButtonType.CANCEL, cancelBtnListener);
+					break;
+				case YES_NO_CANCEL:
+					buttonBar.setButton(ButtonType.YES, yesBtnListener);
+					buttonBar.setButton(ButtonType.NO, noBtnListener);
+					buttonBar.setButton(ButtonType.CANCEL, cancelBtnListener);
+					break;
+			}
+
+			add(dontShowAgain).left();
+			add(buttonBar.createTable()).expandX().center();
+
+			pack();
+			centerWindow();
+		}
+
+		public DisableableOptionDialog setNoButtonText (String text) {
+			buttonBar.getTextButton(ButtonType.NO).setText(text);
+			pack();
+			return this;
+		}
+
+		public DisableableOptionDialog setYesButtonText (String text) {
+			buttonBar.getTextButton(ButtonType.YES).setText(text);
+			pack();
+			return this;
+		}
+
+		public DisableableOptionDialog setCancelButtonText (String text) {
+			buttonBar.getTextButton(ButtonType.CANCEL).setText(text);
+			pack();
+			return this;
+		}
 	}
 }

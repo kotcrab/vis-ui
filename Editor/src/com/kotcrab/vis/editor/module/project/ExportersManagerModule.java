@@ -27,11 +27,11 @@ import com.kotcrab.vis.editor.event.ProjectMenuBarEventType;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.DisableableDialogsModule;
 import com.kotcrab.vis.editor.module.editor.DisableableDialogsModule.DefaultDialogOption;
+import com.kotcrab.vis.editor.module.editor.DisableableDialogsModule.DisableableOptionDialog;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.InputModule;
 import com.kotcrab.vis.editor.plugin.api.ExporterPlugin;
 import com.kotcrab.vis.editor.util.scene2d.ModalInputListener;
-import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialog;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 
@@ -58,8 +58,8 @@ public class ExportersManagerModule extends ProjectModule {
 	@Subscribe
 	public void handleProjectMenuBarEvent (ProjectMenuBarEvent event) {
 		if (event.type == ProjectMenuBarEventType.EXPORT) {
-			Optional<OptionDialog> dialog = disableableDialogs.showOptionDialog(DisableableDialogsModule.DIALOG_PROJECT_EXPORT, DefaultDialogOption.YES, stage, "Export",
-					String.format("Project will be exported to directory: %s.\nAll current contents of this folder will be removed.", project.getAssetOutputDirectory()),
+			Optional<DisableableOptionDialog> dialog = disableableDialogs.showOptionDialog(DisableableDialogsModule.DIALOG_PROJECT_EXPORT, DefaultDialogOption.YES, stage, "Export",
+					String.format("Project will be exported to directory: %s.\nAll current contents of that folder will be removed.", project.getAssetOutputDirectory()),
 					OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 						@Override
 						public void yes () {

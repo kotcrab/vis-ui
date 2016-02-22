@@ -33,25 +33,38 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Assets;
+import com.kotcrab.vis.editor.module.editor.DisableableDialogsModule;
+import com.kotcrab.vis.editor.module.editor.DisableableDialogsModule.DefaultDialogOption;
+import com.kotcrab.vis.editor.module.editor.DisableableDialogsModule.DisableableOptionDialog;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.module.scene.action.ChangePolygonAction;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
+import com.kotcrab.vis.editor.ui.dialog.PolygonAutoTraceDialog;
 import com.kotcrab.vis.editor.util.polygon.Clipper;
 import com.kotcrab.vis.editor.util.polygon.Clipper.Polygonizer;
 import com.kotcrab.vis.editor.util.polygon.PolygonUtils;
 import com.kotcrab.vis.editor.util.scene2d.EventStopper;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
+import com.kotcrab.vis.runtime.assets.TextureAssetDescriptor;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
+import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisPolygon;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.util.value.VisValue;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 
+import java.util.Optional;
+
 /** @author Kotcrab */
 public class PolygonTool extends BaseSelectionTool {
+	public static final String TAG = "PolygonTool";
 	public static final String TOOL_ID = App.PACKAGE + ".tools.PolygonTool";
 
 	public static final Polygonizer DEFAULT_POLYGONIZER = Polygonizer.EWJORDAN;
@@ -62,6 +75,7 @@ public class PolygonTool extends BaseSelectionTool {
 	private static final float POLYGON_RECT_SIZE = 16f;
 
 	private StatusBarModule statusBar;
+	private DisableableDialogsModule disableableDialogs;
 	private Stage stage;
 
 	private Color lineOverColor = new Color(0, 88 / 255f, 131 / 255f, 1);
@@ -491,7 +505,7 @@ public class PolygonTool extends BaseSelectionTool {
 
 		buttonTable.setVisible(false);
 		buttonTable.add(makeDefaultButton = new VisTextButton("Set From Bounds")).row();
-//		buttonTable.add(traceButton = new VisTextButton("Auto trace")).row();
+		buttonTable.add(traceButton = new VisTextButton("Auto Trace")).row();
 
 		dynamicUpdateCheck = new VisCheckBox("Dynamic faces update", true);
 
@@ -501,6 +515,51 @@ public class PolygonTool extends BaseSelectionTool {
 		uiTable.add(dynamicUpdateCheck).expand(false, false).fill(false, false).center().padBottom(3);
 
 		makeDefaultButton.addListener(new VisChangeListener((event, actor) -> makeDefaultPolygon()));
+
+		traceButton.addListener(new VisChangeListener((event, actor) -> {
+			EntityProxy entity = entityManipulator.getSelectedEntities().first();
+			VisAssetDescriptor assetDescriptor = entity.getComponent(AssetReference.class).getAsset();
+			if (assetDescriptor instanceof TextureAssetDescriptor == false) {
+				Dialogs.showOKDialog(stage, "Message", "Auto Trace can only be used with sprite entities");
+				return;
+			}
+
+			if (entity.getRotation() != 0) {
+				Optional<DisableableOptionDialog> dialog = disableableDialogs.showOptionDialog(DisableableDialogsModule.POLYGON_TOOL_ROTATED_UNSUPPORTED, DefaultDialogOption.YES, stage, "Warning",
+						"Auto tracer does not support rotated entities",
+						OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+							@Override
+							public void yes () {
+								showAutoTracerDialog(entity, assetDescriptor);
+							}
+						});
+
+				dialog.ifPresent(optDialog -> optDialog.setYesButtonText("Continue Anyway"));
+			} else {
+				showAutoTracerDialog(entity, assetDescriptor);
+			}
+		}));
+	}
+
+	private void showAutoTracerDialog (EntityProxy entity, VisAssetDescriptor assetDescriptor) {
+		stage.addActor(new PolygonAutoTraceDialog(sceneMC, assetDescriptor, vertices -> {
+			ChangePolygonAction action = new ChangePolygonAction(entityManipulator, proxy);
+
+			//convert to world cords
+			Rectangle bounds = entity.getBoundingRectangle();
+			for (Vector2 vertex : vertices) {
+				vertex.set(bounds.x + bounds.getWidth() * vertex.x, bounds.y + bounds.getHeight() * vertex.y);
+			}
+
+			component.vertices.clear();
+			component.vertices.addAll(vertices);
+			selectedVertex = null;
+
+			updateComponentFaces();
+			action.takeSnapshot();
+			undoModule.add(action);
+			entityManipulator.selectedEntitiesValuesChanged();
+		}).fadeIn());
 	}
 
 	@Override
