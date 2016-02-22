@@ -405,16 +405,19 @@ public class Dialogs {
 
 		public OptionDialog setNoButtonText (String text) {
 			buttonBar.getTextButton(ButtonType.NO).setText(text);
+			pack();
 			return this;
 		}
 
 		public OptionDialog setYesButtonText (String text) {
 			buttonBar.getTextButton(ButtonType.YES).setText(text);
+			pack();
 			return this;
 		}
 
 		public OptionDialog setCancelButtonText (String text) {
 			buttonBar.getTextButton(ButtonType.CANCEL).setText(text);
+			pack();
 			return this;
 		}
 	}

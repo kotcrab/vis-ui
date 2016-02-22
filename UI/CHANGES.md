@@ -1,4 +1,5 @@
 #### Version: 1.0.2 (LibGDX 1.9.2)
+- **Fixed**: `OptionDialog#set(...)ButtonText` now updates dialog size
 
 #### Version: 1.0.1 (LibGDX 1.9.2)
 - **Added**: `ListView#getListAdapter()`
