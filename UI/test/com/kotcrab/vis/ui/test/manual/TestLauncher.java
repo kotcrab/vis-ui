@@ -200,6 +200,13 @@ class TestApplication extends ApplicationAdapter {
 				stage.addActor(new TestListView());
 			}
 		}));
+		menu.addSeparator();
+		menu.addItem(new MenuItem("test issue #131", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				stage.addActor(new TestIssue131());
+			}
+		}));
 
 		item.setSubMenu(menu);
 		return item;

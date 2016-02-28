@@ -1,5 +1,6 @@
 #### Version: 1.0.2 (LibGDX 1.9.2)
 - **Fixed**: `OptionDialog#set(...)ButtonText` now updates dialog size
+- **Fixed**: [#131](https://github.com/kotcrab/VisEditor/issues/131) - fixed issue when copying numbers between `VisTextField`s with `FloatDigitsOnlyFilter` decimal point was lost
 
 #### Version: 1.0.1 (LibGDX 1.9.2)
 - **Added**: `ListView#getListAdapter()`

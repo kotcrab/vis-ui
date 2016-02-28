@@ -30,7 +30,18 @@ public class FloatDigitsOnlyFilter extends IntDigitsOnlyFilter {
 
 	@Override
 	public boolean acceptChar (VisTextField field, char c) {
-		if (c == '.' && field.getText().contains(".") == false) return true;
+		int selectionStart = field.getSelectionStart();
+		int cursorPos = field.getCursorPosition();
+		String text;
+		if (selectionStart != cursorPos) { //issue #131
+			String beforeSelection = field.getText().substring(0, Math.min(selectionStart, cursorPos));
+			String afterSelection = field.getText().substring(Math.max(selectionStart, cursorPos));
+			text = beforeSelection + afterSelection;
+		} else {
+			text = field.getText();
+		}
+
+		if (c == '.' && text.contains(".") == false) return true;
 		return super.acceptChar(field, c);
 	}
 }
