@@ -33,7 +33,7 @@ public class FloatDigitsOnlyFilter extends IntDigitsOnlyFilter {
 		int selectionStart = field.getSelectionStart();
 		int cursorPos = field.getCursorPosition();
 		String text;
-		if (selectionStart != cursorPos) { //issue #131
+		if (field.isTextSelected()) { //issue #131
 			String beforeSelection = field.getText().substring(0, Math.min(selectionStart, cursorPos));
 			String afterSelection = field.getText().substring(Math.max(selectionStart, cursorPos));
 			text = beforeSelection + afterSelection;

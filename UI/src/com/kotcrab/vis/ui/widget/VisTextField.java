@@ -689,6 +689,10 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		return hasSelection ? text.substring(Math.min(selectionStart, cursor), Math.max(selectionStart, cursor)) : "";
 	}
 
+	public boolean isTextSelected () {
+		return hasSelection;
+	}
+
 	/** Sets the selected text. */
 	public void setSelection (int selectionStart, int selectionEnd) {
 		if (selectionStart < 0) throw new IllegalArgumentException("selectionStart must be >= 0");
