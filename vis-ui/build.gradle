@@ -1,5 +1,7 @@
 apply plugin: "java"
+apply plugin: 'maven'
 
+group = 'com.kotcrab.vis'
 version = '1.0.2'
 sourceCompatibility = 1.6
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'

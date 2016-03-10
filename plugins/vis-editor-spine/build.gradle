@@ -1,15 +1,7 @@
-buildscript {
-    repositories {
-        jcenter()
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-
-    dependencies {
-    }
-}
-
 apply plugin: "java"
+apply plugin: 'maven'
 
+group = 'com.kotcrab.vis'
 version = '0.3.2-SNAPSHOT'
 
 ext {
