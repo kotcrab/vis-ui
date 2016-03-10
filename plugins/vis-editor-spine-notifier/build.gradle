@@ -1,0 +1,48 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+    }
+}
+
+apply plugin: "java"
+
+version = '0.3.2-SNAPSHOT'
+
+ext {
+    pluginId = name
+    pluginName = 'VisEditor Spine Notification'
+    pluginDescription = ''
+    pluginProvider = 'Kotcrab'
+    pluginVersion = version
+    pluginCompatibility = 4
+    pluginLicense = ''
+}
+
+sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = [ 'src/' ]
+
+processResources {
+    from ('src/') {
+        include ('**/*.txt')
+    }
+}
+
+jar {
+    manifest {
+        attributes (
+                "Plugin-Id": pluginId,
+                "Plugin-Name": pluginName,
+                "Plugin-Description": pluginDescription,
+                "Plugin-Provider": pluginProvider,
+                "Plugin-Version": pluginVersion,
+                "Plugin-Compatibility": pluginCompatibility,
+                "Plugin-License": pluginLicense
+        )
+    }
+}

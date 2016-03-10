@@ -1,0 +1,49 @@
+buildscript {
+    repositories {
+        jcenter()
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+    }
+}
+
+apply plugin: "java"
+
+version = '0.3.2-SNAPSHOT'
+sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/'
+        }
+        resources {
+            srcDir 'assets/'
+        }
+    }
+}
+
+eclipse.project {
+    name = appName + "-editor"
+}
+
+processResources {
+    from ('src/') {
+        include ('**/*.png')
+    }
+}
+
+jar {
+    manifest {
+        attributes (
+                "Build-Timestamp": new Date().format("yyyy/MM/dd HH:mm:ss"),
+                "Archiver-Version": archiverVersion,
+                "Built-By": builtBy,
+                "Class-Path": configurations.runtime.files.collect { "lib/" + it.name }.join(' '),
+                "Build-Jdk": JavaVersion.current(),
+                "Main-Class": mainClassName,
+        )
+    }
+}

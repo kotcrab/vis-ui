@@ -1,0 +1,24 @@
+apply plugin: "java"
+
+version = '1.0.2'
+sourceCompatibility = 1.6
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+processResources {
+    from ('src/') {
+        include ('**/*.json')
+        include ('**/*.fnt')
+        include ('**/*.atlas')
+        include ('**/*.png')
+        include ('**/*.xml')
+        include ('**/*.properties')
+        include ('**/*.vert')
+        include ('**/*.frag')
+    }
+}
+
+eclipse.project {
+    name = appName + "-ui"
+}

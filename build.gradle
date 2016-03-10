@@ -1,0 +1,185 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+
+    dependencies {
+        classpath "com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3"
+    }
+}
+
+apply plugin: 'distribution'
+
+allprojects {
+    apply plugin: "eclipse"
+    apply plugin: "idea"
+    apply plugin: "nebula.provided-base"
+    apply plugin: "nebula.optional-base"
+
+    version = '1.3.3'
+    ext {
+        // Build Properties
+        appName = 'vis'
+        mainClassName = 'com.kotcrab.vis.editor.ui.EditorFrame'
+        archiverVersion = 'n/a'
+        builtBy = 'dev'
+        // Dependency Properties
+        gdxVersion = '1.9.2'
+        box2dLightsVersion = '1.4'
+        jnaVersion = '4.1.0'
+        jnaPlatformVersion = '3.5.2'
+        appleJavaExtensionsVersion = '1.4'
+        junitVersion = '4.12'
+        artemisVersion = '1.3.1'
+        kryoVersion = '3.0.1'
+        commonsIoVersion = '2.4'
+        commonsLangVersion = '3.3.2'
+        guavaVersion = '18.0'
+        jsoupVersion = '1.8.2'
+        slf4jVersion = '1.7.12'
+        imgscalrVersion = '4.2'
+        gsonVersion = '2.4'
+        cloningVersion = '1.9.2'
+        joorVersion = '0.9.5'
+        callsuperVersion = '0.1.2'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+    }
+}
+
+project(':vis-editor') {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":vis-runtime")
+        compile project(":vis-ui")
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
+        compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
+        compile "com.esotericsoftware:kryo:$kryoVersion"
+        compile "commons-io:commons-io:$commonsIoVersion"
+        compile "org.apache.commons:commons-lang3:$commonsLangVersion"
+        compile "net.java.dev.jna:jna:$jnaVersion"
+        compile "net.java.dev.jna:platform:$jnaPlatformVersion"
+        compile "com.google.guava:guava:$guavaVersion"
+        compile "org.jsoup:jsoup:$jsoupVersion"
+        compile "org.slf4j:slf4j-simple:$slf4jVersion"
+        compile "org.imgscalr:imgscalr-lib:$imgscalrVersion"
+        compile "com.google.code.gson:gson:$gsonVersion"
+        compile "uk.com.robust-it:cloning:$cloningVersion"
+        compile "org.jooq:joor:$joorVersion"
+        compile "com.kotcrab.annotation:callsuper:$callsuperVersion"
+        provided "com.apple:AppleJavaExtensions:$appleJavaExtensionsVersion", optional
+    }
+}
+
+project(':vis-runtime') {
+    apply plugin: "java"
+
+    dependencies {
+        provided "com.badlogicgames.gdx:gdx:$gdxVersion"
+        provided "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        provided "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        provided "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
+        compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
+        provided "net.onedaybeard.artemis:artemis-odb-processor:$artemisVersion"
+    }
+}
+
+project(':vis-runtime-gwt') {
+    apply plugin: "java"
+
+    dependencies {
+        compile project(":vis-runtime")
+        provided "com.badlogicgames.gdx:gdx:$gdxVersion"
+        provided "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+        provided "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+    }
+}
+
+project (':vis-ui') {
+    apply plugin: "java"
+
+    dependencies {
+        provided "com.badlogicgames.gdx:gdx:$gdxVersion"
+        provided "net.java.dev.jna:jna:$jnaVersion"
+        provided "net.java.dev.jna:platform:$jnaPlatformVersion"
+        provided "com.apple:AppleJavaExtensions:$appleJavaExtensionsVersion", optional
+        testCompile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion"
+        testCompile "junit:junit:$junitVersion"
+    }
+}
+
+project (':plugins:vis-editor-spine') {
+    apply plugin: 'java'
+
+    dependencies {
+        provided project(':vis-editor')
+        provided project(':plugins:vis-runtime-spine')
+    }
+}
+
+project (':plugins:vis-runtime-spine') {
+    apply plugin: 'java'
+
+    dependencies {
+        provided project(':vis-runtime')
+        provided "com.badlogicgames.gdx:gdx:$gdxVersion"
+    }
+}
+
+project (':plugins:vis-editor-spine-notifier') {
+    apply plugin: 'java'
+
+    dependencies {
+        provided project(':vis-editor')
+        provided "com.badlogicgames.gdx:gdx:$gdxVersion"
+    }
+}
+
+tasks.eclipse.doLast {
+    delete ".project"
+}
+
+distributions {
+    main {
+        baseName = "Vis-Editor"
+        contents {
+            project(':vis-editor') {
+                from jar
+                into('lib') {
+                    from configurations.runtime
+                }
+            }
+
+            def plugin = project(':plugins:vis-editor-spine')
+            into('plugins/spine') {
+                from plugin.jar
+            }
+
+            plugin = project(':plugins:vis-runtime-spine')
+            into('plugins/spine/lib') {
+                from plugin.jar
+            }
+
+            plugin = project(':plugins:vis-editor-spine-notifier')
+            into('plugins/spine-notifier') {
+                from plugin.jar
+            }
+        }
+    }
+}
