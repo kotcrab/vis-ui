@@ -25,17 +25,17 @@ ext {
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-sourceSets.main.java.srcDirs = [ 'src/' ]
+sourceSets.main.java.srcDirs = ['src/']
 
 processResources {
-    from ('src/') {
-        include ('**/*.txt')
+    from('src/') {
+        include('**/*.txt')
     }
 }
 
 jar {
     manifest {
-        attributes (
+        attributes(
                 "Plugin-Id": pluginId,
                 "Plugin-Name": pluginName,
                 "Plugin-Description": pluginDescription,

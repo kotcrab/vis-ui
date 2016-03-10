@@ -15,15 +15,15 @@ version = '0.3.2-SNAPSHOT'
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-sourceSets.main.java.srcDirs = [ 'src/' ]
+sourceSets.main.java.srcDirs = ['src/']
 
 processResources {
-    from ('src/') {
-        include ('**/*.xml')
+    from('src/') {
+        include('**/*.xml')
     }
 }
 
-task dist(type:Zip) {
+task dist(type: Zip) {
     from jar
     into('lib') {
         from configurations.runtime

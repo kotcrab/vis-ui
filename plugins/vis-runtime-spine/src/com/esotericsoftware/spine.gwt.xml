@@ -31,7 +31,7 @@
   -->
 
 <module rename-to="com.esotericsoftware.spine">
-	<source path="spine">
-		<include name="**/*"/>
-	</source>
+    <source path="spine">
+        <include name="**/*"/>
+    </source>
 </module>

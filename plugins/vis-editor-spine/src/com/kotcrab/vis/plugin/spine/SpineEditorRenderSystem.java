@@ -85,7 +85,6 @@ public class SpineEditorRenderSystem extends DeferredEntityProcessingSystem {
 			spine.updateValues(transform.getX(), transform.getY(), tint.getTint());
 		}
 
-
 		SpineBounds boundsComponent = boundsCm.get(entityId);
 
 		if (boundsComponent.boundsRequested) {
