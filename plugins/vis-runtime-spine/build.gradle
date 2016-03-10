@@ -1,6 +1,6 @@
 apply plugin: "java"
 apply plugin: 'maven'
-apply from: '../deploy.gradle'
+apply from: '$../../deploy.gradle'
 
 group = 'com.kotcrab.vis'
 version = '0.3.2-SNAPSHOT'
