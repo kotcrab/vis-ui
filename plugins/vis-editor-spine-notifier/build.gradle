@@ -19,7 +19,7 @@ ext {
     pluginProvider = 'Kotcrab'
     pluginVersion = version
     pluginCompatibility = 4
-    pluginLicense = ''
+    pluginLicense = 'com/kotcrab/vis/plugin/spine/notif/LICENSE.txt'
 }
 
 sourceCompatibility = 1.8
