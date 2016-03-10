@@ -81,13 +81,13 @@ public class PluginDescriptor {
 			throw new EditorException("Failed to parse compatibility code, value must be integer!", e);
 		}
 
-		if (licenseFile != null) {
+		if (licenseFile != null && !licenseFile.isEmpty()) {
 			JarFile jar = null;
 			try {
 				jar = new JarFile(file.file());
 				JarEntry licenseEntry = jar.getJarEntry(licenseFile);
 				license = StreamUtils.copyStreamToString(jar.getInputStream(licenseEntry));
-			} catch (IOException e) {
+			} catch (Exception e) {
 				throw new EditorException("Failed to read license file for plugin: " + file.extension(), e);
 			} finally {
 				IOUtils.closeQuietly(jar);
