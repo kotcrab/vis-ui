@@ -135,7 +135,7 @@ public class PluginLoaderModule extends EditorModule {
 				failedPlugins.add(new FailedPluginDescriptor(folder, e));
 				Log.exception(e);
 			} catch (EditorException e) {
-				Log.error(TAG, "Failed (invalid manifest): " + folder.name());
+				Log.error(TAG, "Failed: " + folder.name());
 				failedPlugins.add(new FailedPluginDescriptor(folder, e));
 				Log.exception(e);
 			}
