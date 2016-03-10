@@ -1,0 +1,27 @@
+apply plugin: "java"
+apply plugin: 'maven'
+apply from: '../deploy.gradle'
+
+group = 'com.kotcrab.vis'
+version = '1.0.2'
+sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+processResources {
+    from ('src/') {
+        include ('**/*.json')
+        include ('**/*.fnt')
+        include ('**/*.atlas')
+        include ('**/*.png')
+        include ('**/*.xml')
+        include ('**/*.properties')
+        include ('**/*.vert')
+        include ('**/*.frag')
+    }
+}
+
+eclipse.project {
+    name = appName + "-ui"
+}
