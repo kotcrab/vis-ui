@@ -7,6 +7,7 @@ buildscript {
 
     dependencies {
         classpath "com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3"
+        classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
     }
 }
 
@@ -18,7 +19,7 @@ allprojects {
     apply plugin: "nebula.provided-base"
     apply plugin: "nebula.optional-base"
 
-    version = '1.3.3'
+    version = '0.3.2-SNAPSHOT'
     ext {
         // Build Properties
         appName = 'vis'
@@ -169,7 +170,7 @@ task wrapper(type: Wrapper) {
 
 distributions {
     main {
-        baseName = "Vis-Editor"
+        baseName = "VisEditor"
         contents {
             project(':editor') {
                 from jar

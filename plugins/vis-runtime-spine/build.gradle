@@ -4,7 +4,7 @@ apply from: '../../deploy.gradle'
 
 group = 'com.kotcrab.vis'
 version = '0.3.2-SNAPSHOT'
-
+archivesBaseName = "vis-runtime-spine"
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -12,7 +12,7 @@ sourceSets.main.java.srcDirs = ['src/']
 
 processResources {
     from('src/') {
-        include('**/*.xml')
+        exclude ('**/*.java')
     }
 }
 
@@ -20,5 +20,18 @@ task dist(type: Zip) {
     from jar
     into('lib') {
         from configurations.runtime
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.project {
+                name 'vis-runtime-spine'
+                artifactId 'vis-runtime-spine'
+                packaging 'jar'
+                description 'VisRuntime Spine Integration plugin'
+            }
+        }
     }
 }

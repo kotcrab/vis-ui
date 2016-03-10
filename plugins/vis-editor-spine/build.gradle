@@ -1,6 +1,5 @@
 apply plugin: "java"
 apply plugin: 'maven'
-apply from: '../../deploy.gradle'
 
 group = 'com.kotcrab.vis'
 version = '0.3.2-SNAPSHOT'
@@ -22,8 +21,7 @@ sourceSets.main.java.srcDirs = ['src/']
 
 processResources {
     from('src/') {
-        include('**/*.txt')
-        include('**/*.png')
+        exclude ('**/*.java')
     }
 }
 

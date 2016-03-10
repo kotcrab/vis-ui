@@ -1,6 +1,5 @@
 apply plugin: "java"
 apply plugin: 'maven'
-apply from: '../../deploy.gradle'
 
 group = 'com.kotcrab.vis'
 version = '0.3.2-SNAPSHOT'
@@ -12,7 +11,7 @@ ext {
     pluginProvider = 'Kotcrab'
     pluginVersion = version
     pluginCompatibility = 4
-    pluginLicense = 'com/kotcrab/vis/plugin/spine/notif/LICENSE.txt'
+    pluginLicense = 'com/kotcrab/vis/plugin/spine/notif/LICENSE'
 }
 
 sourceCompatibility = 1.8
@@ -22,7 +21,7 @@ sourceSets.main.java.srcDirs = ['src/']
 
 processResources {
     from('src/') {
-        include('**/*.txt')
+        exclude ('**/*.java')
     }
 }
 

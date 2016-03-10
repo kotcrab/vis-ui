@@ -4,6 +4,7 @@ apply from: '../deploy.gradle'
 
 group = 'com.kotcrab.vis'
 version = '0.3.2-SNAPSHOT'
+archivesBaseName = "vis-runtime"
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -11,12 +12,23 @@ sourceSets.main.java.srcDirs = [ "src/" ]
 
 processResources {
     from ('src/') {
-        include ('**/*.xml')
-        include ('**/*.vert')
-        include ('**/*.frag')
+        exclude ('**/*.java')
     }
 }
 
 eclipse.project {
     name = appName + "-runtime"
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.project {
+                name 'vis-runtime'
+                artifactId 'vis-runtime'
+                packaging 'jar'
+                description 'LibGDX Runtime for VisEditor'
+            }
+        }
+    }
 }

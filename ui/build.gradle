@@ -4,6 +4,7 @@ apply from: '../deploy.gradle'
 
 group = 'com.kotcrab.vis'
 version = '1.0.2-SNAPSHOT'
+archivesBaseName = "vis-ui"
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -17,4 +18,17 @@ processResources {
 
 eclipse.project {
     name = appName + "-ui"
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.project {
+                name 'vis-ui'
+                artifactId 'vis-ui'
+                packaging 'jar'
+                description 'UI toolkit and flat design skin for scene2d.ui'
+            }
+        }
+    }
 }
