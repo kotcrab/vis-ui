@@ -57,7 +57,7 @@ public class EditorFrame extends JFrame {
 			}
 		});
 
-		setIconImage(loadImage("/com/kotcrab/vis/editor/icon.png"));
+		setIconImage(loadImage("/icon.png"));
 
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.width = 1280;
@@ -179,7 +179,7 @@ public class EditorFrame extends JFrame {
 
 	private static class Splash extends JWindow {
 		public Splash (SplashController controller) {
-			getContentPane().add(new JLabel(new ImageIcon(loadImage("/com/kotcrab/vis/editor/splash.png"))), BorderLayout.CENTER);
+			getContentPane().add(new JLabel(new ImageIcon(loadImage("/splash.png"))), BorderLayout.CENTER);
 			pack();
 			setLocationRelativeTo(null);
 

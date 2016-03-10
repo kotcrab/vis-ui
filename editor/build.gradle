@@ -40,3 +40,9 @@ jar {
         )
     }
 }
+
+task run(dependsOn: jar, type: JavaExec ) {
+    main = mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    ignoreExitValue = true
+}
