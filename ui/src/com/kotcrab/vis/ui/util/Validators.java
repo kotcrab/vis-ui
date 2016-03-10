@@ -65,7 +65,7 @@ public class Validators {
 			this.lesserThan = lesserThan;
 		}
 
-		/** @param inputCanBeEqual if true <= comparison will be used, if false < will be used. */
+		/** @param inputCanBeEqual if true &lt;= comparison will be used, if false &lt; will be used. */
 		public LesserThanValidator (float lesserThan, boolean inputCanBeEqual) {
 			this.lesserThan = lesserThan;
 			this.equals = inputCanBeEqual;
@@ -81,7 +81,7 @@ public class Validators {
 			}
 		}
 
-		/*** @param equals if true <= comparison will be used, if false < will be used. */
+		/*** @param equals if true &lt;= comparison will be used, if false &lt; will be used. */
 		public void setUseEquals (boolean equals) {
 			this.equals = equals;
 		}
@@ -100,7 +100,7 @@ public class Validators {
 			this.greaterThan = greaterThan;
 		}
 
-		/** @param inputCanBeEqual if true >= comparison will be used, if false > will be used. */
+		/** @param inputCanBeEqual if true &gt;= comparison will be used, if false &gt; will be used. */
 		public GreaterThanValidator (float greaterThan, boolean inputCanBeEqual) {
 			this.greaterThan = greaterThan;
 			this.useEquals = inputCanBeEqual;
@@ -116,7 +116,7 @@ public class Validators {
 			}
 		}
 
-		/*** @param useEquals if true >= comparison will be used, if false > will be used. */
+		/*** @param useEquals if true &gt;= comparison will be used, if false &gt; will be used. */
 		public void setUseEquals (boolean useEquals) {
 			this.useEquals = useEquals;
 		}

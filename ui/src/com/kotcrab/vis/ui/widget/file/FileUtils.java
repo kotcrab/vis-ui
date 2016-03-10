@@ -46,10 +46,10 @@ public class FileUtils {
 
 	/**
 	 * Converts byte file size to human readable, eg:<br>
-	 * 500->500 B<br>
-	 * 1024->1 KB<br>
-	 * 123456->120.6 KB<br>
-	 * 10000000000->9.3 GB<br>
+	 * 500 becomes 500 B<br>
+	 * 1024 becomes 1 KB<br>
+	 * 123456 becomes 120.6 KB<br>
+	 * 10000000000 becomes 9.3 GB<br>
 	 * Max supported unit is exabyte (EB).
 	 * @param size file size in bytes.
 	 * @return human readable file size.
