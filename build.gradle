@@ -163,6 +163,10 @@ tasks.eclipse.doLast {
     delete ".project"
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.11'
+}
+
 distributions {
     main {
         baseName = "Vis-Editor"

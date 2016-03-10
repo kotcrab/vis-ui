@@ -24,7 +24,7 @@ eclipse.project {
 
 processResources {
     from ('src/') {
-        include ('**/*.png')
+        exclude ('**/*.java')
     }
 }
 
