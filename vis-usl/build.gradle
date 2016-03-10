@@ -1,0 +1,20 @@
+apply plugin: "java"
+apply plugin: 'maven'
+
+group = 'com.kotcrab.vis'
+version = '0.1.2'
+sourceCompatibility = 1.6
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+processResources {
+    from ('src/') {
+        include ('**/*.xml')
+        include ('**/*.usl')
+    }
+}
+
+eclipse.project {
+    name = appName + "-usl"
+}

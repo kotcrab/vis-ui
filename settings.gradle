@@ -1,2 +1,2 @@
-include 'vis-editor', 'vis-runtime', 'vis-runtime-gwt', 'vis-ui'
+include 'vis-editor', 'vis-runtime', 'vis-runtime-gwt', 'vis-ui', 'vis-usl'
 include 'plugins:vis-editor-spine', 'plugins:vis-runtime-spine', 'plugins:vis-editor-spine-notifier'

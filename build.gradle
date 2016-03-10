@@ -151,6 +151,14 @@ project (':plugins:vis-editor-spine-notifier') {
     }
 }
 
+project (':vis-usl') {
+    apply plugin: 'java'
+
+    dependencies {
+        testCompile "junit:junit:$junitVersion"
+    }
+}
+
 tasks.eclipse.doLast {
     delete ".project"
 }
