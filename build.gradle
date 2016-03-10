@@ -114,9 +114,9 @@ project (':ui') {
     apply plugin: "java"
 
     dependencies {
-        provided "com.badlogicgames.gdx:gdx:$gdxVersion"
-        provided "net.java.dev.jna:jna:$jnaVersion"
-        provided "net.java.dev.jna:platform:$jnaPlatformVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+        compile "net.java.dev.jna:jna:$jnaVersion", optional
+        compile "net.java.dev.jna:platform:$jnaPlatformVersion", optional
         provided "com.apple:AppleJavaExtensions:$appleJavaExtensionsVersion", optional
         testCompile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion"
