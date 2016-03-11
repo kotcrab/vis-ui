@@ -24,14 +24,14 @@ eclipse.project {
 }
 
 processResources {
-    from ('src/') {
-        exclude ('**/*.java')
+    from('src/') {
+        exclude('**/*.java')
     }
 }
 
 jar {
     manifest {
-        attributes (
+        attributes(
                 "Build-Timestamp": buildTimestamp,
                 "Class-Path": configurations.runtime.files.collect { "lib/" + it.name }.join(' '),
                 "Build-Jdk": JavaVersion.current(),
@@ -53,7 +53,31 @@ uploadArchives {
     }
 }
 
-task run(dependsOn: jar, type: JavaExec ) {
+task copyPlugins (dependsOn: [':plugins:vis-editor-spine:jar', ':plugins:vis-editor-spine-notifier:jar']) {
+    def spine = project(':plugins:vis-editor-spine')
+    def spineRuntime = project(':plugins:vis-runtime-spine')
+    def spineNotifier = project(':plugins:vis-editor-spine-notifier')
+
+    doLast {
+        copy {
+            from spine.jar
+            into sourceSets.main.output.classesDir.path + '/plugins/spine'
+        }
+
+        copy {
+            from spineRuntime.jar
+            into sourceSets.main.output.classesDir.path + '/plugins/spine/lib'
+        }
+
+        copy {
+            from spineNotifier.jar
+            into sourceSets.main.output.classesDir.path + '/plugins/spine-notifier'
+        }
+    }
+}
+
+
+task run(dependsOn: copyPlugins, type: JavaExec) {
     main = mainClassName
     classpath = sourceSets.main.runtimeClasspath
     ignoreExitValue = true
