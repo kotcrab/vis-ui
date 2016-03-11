@@ -1,8 +1,10 @@
 apply plugin: 'java'
 apply plugin: 'maven'
+apply from: '../deploy.gradle'
 
 group = 'com.kotcrab.vis'
 version = '0.3.2-SNAPSHOT'
+archivesBaseName = "vis-editor"
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
@@ -37,6 +39,19 @@ jar {
                 "Build-Jdk": JavaVersion.current(),
                 "Main-Class": mainClassName,
         )
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.project {
+                name 'vis-editor'
+                artifactId 'vis-editor'
+                packaging 'jar'
+                description 'Scene Editor for LibGDX'
+            }
+        }
     }
 }
 

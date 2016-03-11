@@ -11,7 +11,7 @@ ext {
     pluginProvider = 'Kotcrab'
     pluginVersion = version
     pluginCompatibility = 4
-    pluginLicense = 'com/kotcrab/vis/plugin/spine/LICENSE.txt'
+    pluginLicense = 'com/kotcrab/vis/plugin/spine/LICENSE'
 }
 
 sourceCompatibility = 1.8

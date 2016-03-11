@@ -1,6 +1,7 @@
 apply plugin: 'maven'
 apply plugin: 'signing'
-apply plugin: 'io.codearte.nexus-staging'
+
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
@@ -22,6 +23,7 @@ javadoc {
 }
 
 signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
     sign configurations.archives
 }
 

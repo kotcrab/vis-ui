@@ -12,6 +12,7 @@ buildscript {
 }
 
 apply plugin: 'distribution'
+apply plugin: 'io.codearte.nexus-staging'
 
 allprojects {
     apply plugin: "eclipse"
