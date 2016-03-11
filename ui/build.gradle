@@ -9,6 +9,14 @@ sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
 sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.test.java.srcDirs = [ "test/" ]
+
+test {
+    useJUnit {
+        include "**/*Test.**"
+        exclude 'com.kotcrab.vis.ui.test.manual.**'
+    }
+}
 
 processResources {
     from ('src/') {
