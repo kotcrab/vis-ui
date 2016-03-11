@@ -22,7 +22,6 @@ import com.badlogic.gdx.utils.StreamUtils;
 import com.kotcrab.vis.editor.util.vis.EditorException;
 import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -73,7 +72,7 @@ public class PluginDescriptor {
 		String licenseFile = attributes.getValue(PLUGIN_LICENSE);
 
 		if (id == null || name == null || description == null || provider == null || version == null || comp == null)
-			throw new EditorException("Missing one of required field in plugin manifest, plugin: " + file.extension());
+			throw new EditorException("Missing one of required field in plugin manifest, plugin: " + file.name());
 
 		try {
 			compatibility = Integer.valueOf(comp);
@@ -88,7 +87,7 @@ public class PluginDescriptor {
 				JarEntry licenseEntry = jar.getJarEntry(licenseFile);
 				license = StreamUtils.copyStreamToString(jar.getInputStream(licenseEntry));
 			} catch (Exception e) {
-				throw new EditorException("Failed to read license file for plugin: " + file.extension(), e);
+				throw new EditorException("Failed to read license file for plugin: " + file.name(), e);
 			} finally {
 				IOUtils.closeQuietly(jar);
 			}
