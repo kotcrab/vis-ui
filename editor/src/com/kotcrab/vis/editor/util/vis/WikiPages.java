@@ -22,7 +22,7 @@ import com.badlogic.gdx.Gdx;
 public enum WikiPages {
 	QUICK_START("https://github.com/kotcrab/VisEditor/wiki/Quick-Start"),
 	CONVERTING_FROM_VISEDITOR_02X("https://github.com/kotcrab/VisEditor/wiki/Converting-projects-from-VisEditor-0.2.x"),
-	DAMAGED_ASSETS_METADATA("https://github.com/kotcrab/VisEditor/wiki/Troubleshooting:-Damaged-Assets-Metadata"),
+	DAMAGED_ASSETS_METADATA("https://github.com/kotcrab/VisEditor/wiki/Damaged-Assets-Metadata"),
 	MARKING_DIRECTORIES("https://github.com/kotcrab/VisEditor/wiki/Marking-Assets-Directories");
 
 	private final String url;
