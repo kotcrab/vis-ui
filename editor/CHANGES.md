@@ -1,6 +1,6 @@
 #### Version: 0.3.2
-- **Added**: [#58](https://github.com/kotcrab/VisEditor/issues/58) - Polygon auto tracing (available via Polygon Tool)
-- **Fixed**: [#130](https://github.com/kotcrab/VisEditor/issues/130) - Exit dialog not showed on non Windows OSes
+- **Added**: [#58](https://github.com/kotcrab/vis-editor/issues/58) - Polygon auto tracing (available via Polygon Tool)
+- **Fixed**: [#130](https://github.com/kotcrab/vis-editor/issues/130) - Exit dialog not showed on non Windows OSes
 - **Fixed**: Unable to open variables settings dialog for newly created scenes
 - **Fixed**: Minor bug: tabs panel wrong height
 
@@ -10,13 +10,13 @@
 - **Added**: It's now possible to set scene variables, added "Scene Variables" dialog
 - **Added**: New command line arguments: `--project` and `--scene` for auto loading project 
 - **Fixed**: Wrong entities position after opening same scene for the second time
-- **Fixed**: Sprite flip Y property was ignored after reloading scene ([#103](https://github.com/kotcrab/VisEditor/issues/103))
-- **Fixed**: Missing "Enter into Group" button after right clicking entities group ([#102](https://github.com/kotcrab/VisEditor/issues/102))
-- **Fixed**: Exporting scenes which had used groups with string id's set ([#104](https://github.com/kotcrab/VisEditor/issues/104))
-- **Fixed**: Editor crash after undoing changes made in Entity Properties dialog ([#106](https://github.com/kotcrab/VisEditor/issues/106))
-- **Fixed**: Random editor crashes when working with multiple layers and groups ([#104](https://github.com/kotcrab/VisEditor/issues/104))
-- **Fixed**: Fixed some key shortcuts not working on locked layers ([#109](https://github.com/kotcrab/VisEditor/issues/109))
-- **Fixed**: Issues with bounding box problems after undo ([#108](https://github.com/kotcrab/VisEditor/issues/108))
+- **Fixed**: Sprite flip Y property was ignored after reloading scene ([#103](https://github.com/kotcrab/vis-editor/issues/103))
+- **Fixed**: Missing "Enter into Group" button after right clicking entities group ([#102](https://github.com/kotcrab/vis-editor/issues/102))
+- **Fixed**: Exporting scenes which had used groups with string id's set ([#104](https://github.com/kotcrab/vis-editor/issues/104))
+- **Fixed**: Editor crash after undoing changes made in Entity Properties dialog ([#106](https://github.com/kotcrab/vis-editor/issues/106))
+- **Fixed**: Random editor crashes when working with multiple layers and groups ([#104](https://github.com/kotcrab/vis-editor/issues/104))
+- **Fixed**: Fixed some key shortcuts not working on locked layers ([#109](https://github.com/kotcrab/vis-editor/issues/109))
+- **Fixed**: Issues with bounding box problems after undo ([#108](https://github.com/kotcrab/vis-editor/issues/108))
 - **Fixed**: Negative y origin on text when using "Auto set origin to center"  
 - **Improved**: Rectangular selection is much faster when selecting many entities
 - **Removed**: Optional usage analytics 

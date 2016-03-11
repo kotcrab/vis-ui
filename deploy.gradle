@@ -41,7 +41,7 @@ uploadArchives {
             }
 
             pom.project {
-                url 'https://github.com/kotcrab/VisEditor/'
+                url 'https://github.com/kotcrab/vis-editor/'
 
                 scm {
                     connection 'scm:git:git@github.com:kotcrab/VisEditor.git'

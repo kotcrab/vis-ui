@@ -1,7 +1,7 @@
 #### Version: 1.0.2 (LibGDX 1.9.2)
 - **Added**: `VisTextField#isTextSelected()`
 - **Fixed**: `OptionDialog#set(...)ButtonText` now updates dialog size
-- **Fixed**: [#131](https://github.com/kotcrab/VisEditor/issues/131) - fixed issue when copying numbers between `VisTextField`s with `FloatDigitsOnlyFilter` decimal point was lost
+- **Fixed**: [#131](https://github.com/kotcrab/vis-editor/issues/131) - fixed issue when copying numbers between `VisTextField`s with `FloatDigitsOnlyFilter` decimal point was lost
 
 #### Version: 1.0.1 (LibGDX 1.9.2)
 - **Added**: `ListView#getListAdapter()`
@@ -220,7 +220,7 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
  -API Change: Renamed: setGroupMultiselectKey to setGroupMultiSelectKey, getGroupMultiselectKey to getGroupMultiSelectKey,
                        setMultiselectKey to setMultiSelectKey, getMultiselectKey to getMultiSelectKey
                        setMultiselectionEnabled to setMultiSelectionEnabled, isMultiselectionEnabled to isMultiSelectionEnabled
- -Fixed issue with very slow chooser creation on computers with floppy disk drivers installed ( https://github.com/kotcrab/VisEditor/issues/11#issuecomment-136892177 )
+ -Fixed issue with very slow chooser creation on computers with floppy disk drivers installed ( https://github.com/kotcrab/vis-editor/issues/11#issuecomment-136892177 )
  -Fixed crash in when user tried to use history buttons for no longer existing directory
  -Fixed multiple selection when selection mode was set to FILES or DIRECTORIES
  -Added support for the back and forward mouse button for navigating in the history
@@ -249,8 +249,8 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -API Addition: FormValidator#directory(...)
 -API Addition: FormValidator#directoryEmpty(...)
 -API Addition: FormValidator#directoryNotEmpty(...)
--Optimized FileChooser ( https://github.com/kotcrab/VisEditor/issues/11 )
--Fixed issue when FileChooser confirm button text wasn't updated after changing mode ( https://github.com/kotcrab/VisEditor/pull/14 )
+-Optimized FileChooser ( https://github.com/kotcrab/vis-editor/issues/11 )
+-Fixed issue when FileChooser confirm button text wasn't updated after changing mode ( https://github.com/kotcrab/vis-editor/pull/14 )
 -Fixed issue when FileChooser would crash on file delete dialog
 -Added 'blue' button style
 -Added New Directory item in FileChooser popup menu ("contextMenuNewDirectory" was added to FileChooser I18N file)
@@ -269,13 +269,13 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 -FileChooser now will refresh files list after some files were changed in current directory
 -FileChooser I18N: added property: popupSelectedFileDoesNotExist. Removed: popupOk, popupYes, popupNo (replaced by DialogUtils)
 -Added some constructors that allows to use widgets without depending on VisUI.getSkin()
--Fixed infinite key repeat bug on Android in VisTextField ( https://github.com/kotcrab/VisEditor/issues/9 )
+-Fixed infinite key repeat bug on Android in VisTextField ( https://github.com/kotcrab/vis-editor/issues/9 )
 -Fixed small gap with empty title in NumberSelector
 -Fixed issue where FileChooser file list wasn't rebuilt after setting new file filter
--Fixed issue where NumberSelector won't allow to enter value if min is greater than 0 ( related to https://github.com/kotcrab/VisEditor/issues/7 )
--Fixed closeOnEscape() with multiple windows (windows were closed in improper order) ( https://github.com/kotcrab/VisEditor/issues/10 )
+-Fixed issue where NumberSelector won't allow to enter value if min is greater than 0 ( related to https://github.com/kotcrab/vis-editor/issues/7 )
+-Fixed closeOnEscape() with multiple windows (windows were closed in improper order) ( https://github.com/kotcrab/vis-editor/issues/10 )
 -Fixed invalid title align in VisWindow after adding close button when title align is not set to center
--Fixed issue with disappearing MenuItem after opening PopupMenu while holding right mouse button and dragging down ( https://github.com/kotcrab/VisEditor/commit/a17e309b980b5d0db061a315685501e405811ff6 )
+-Fixed issue with disappearing MenuItem after opening PopupMenu while holding right mouse button and dragging down ( https://github.com/kotcrab/vis-editor/commit/a17e309b980b5d0db061a315685501e405811ff6 )
 -FileChooser, ColorPicker, Tooltip, Menu and MenuBar now can use styles defined in skin file
 -ColorPicker now supports I18N (added VisUI.setColorPickerBundle(I18NBundle))
 
