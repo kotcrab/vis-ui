@@ -3,7 +3,7 @@ apply plugin: 'maven'
 apply from: '../deploy.gradle'
 
 group = 'com.kotcrab.vis'
-version = '0.1.2'
+version = '0.1.2-SNAPSHOT'
 archivesBaseName = "vis-usl"
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
