@@ -39,6 +39,7 @@ public class TestLauncher {
 
 	public static void main (String[] args) {
 		Lwjgl3ApplicationConfiguration c = new Lwjgl3ApplicationConfiguration();
+		c.setTitle("VisUI test application");
 		c.setWindowedMode(1280, 720);
 		new Lwjgl3Application(new TestApplication(), c);
 	}

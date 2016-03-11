@@ -40,3 +40,9 @@ uploadArchives {
         }
     }
 }
+
+task run(dependsOn: jar, type: JavaExec ) {
+    main = 'com.kotcrab.vis.ui.test.manual.TestLauncher'
+    classpath = sourceSets.test.runtimeClasspath
+    ignoreExitValue = true
+}
