@@ -32,9 +32,7 @@ processResources {
 jar {
     manifest {
         attributes (
-                "Build-Timestamp": new Date().format("yyyy/MM/dd HH:mm:ss"),
-                "Archiver-Version": archiverVersion,
-                "Built-By": builtBy,
+                "Build-Timestamp": buildTimestamp,
                 "Class-Path": configurations.runtime.files.collect { "lib/" + it.name }.join(' '),
                 "Build-Jdk": JavaVersion.current(),
                 "Main-Class": mainClassName,

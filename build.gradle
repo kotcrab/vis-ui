@@ -25,8 +25,6 @@ allprojects {
         // Build Properties
         appName = 'vis'
         mainClassName = 'com.kotcrab.vis.editor.ui.EditorFrame'
-        archiverVersion = 'n/a'
-        builtBy = 'dev'
         // Dependency Properties
         gdxVersion = '1.9.2'
         box2dLightsVersion = '1.4'

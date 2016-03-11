@@ -104,14 +104,12 @@ public class App {
 
 		try {
 			buildTimestamp = readTimestamp();
+			if (buildTimestamp != null && buildTimestamp.equals("not built using CI") == false) {
+				buildTimestampValid = true;
+			}
 		} catch (IOException e) {
 			Log.exception(e);
 		}
-
-		if (buildTimestamp == null)
-			buildTimestamp = "unknown, not built using CI";
-		else
-			buildTimestampValid = true;
 
 		Log.info("Build: " + App.buildTimestamp);
 		initialized = true;
