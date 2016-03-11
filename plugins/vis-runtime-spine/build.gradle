@@ -1,0 +1,22 @@
+apply plugin: "java"
+apply plugin: 'maven'
+
+group = 'com.kotcrab.vis'
+version = '0.3.2-SNAPSHOT'
+sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = ['src/']
+
+processResources {
+    from('src/') {
+        exclude ('**/*.java')
+    }
+}
+
+task dist(type: Zip) {
+    from jar
+    into('lib') {
+        from configurations.runtime
+    }
+}

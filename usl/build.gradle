@@ -1,0 +1,34 @@
+apply plugin: "java"
+apply plugin: 'maven'
+apply from: '../deploy.gradle'
+
+group = 'com.kotcrab.vis'
+version = '0.1.2'
+archivesBaseName = "vis-usl"
+sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+processResources {
+    from ('src/') {
+        exclude ('**/*.java')
+    }
+}
+
+eclipse.project {
+    name = appName + "-usl"
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.project {
+                name 'vis-usl'
+                artifactId 'vis-usl'
+                packaging 'jar'
+                description 'UI styling language for scene2d.ui'
+            }
+        }
+    }
+}

@@ -1,0 +1,27 @@
+apply plugin: "java"
+apply plugin: 'maven'
+apply from: '../deploy.gradle'
+
+group = 'com.kotcrab.vis'
+version = '0.3.2-SNAPSHOT'
+archivesBaseName = "vis-runtime-gwt"
+sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+eclipse.project {
+    name = appName + "-runtime-gwt"
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.project {
+                name 'vis-runtime-gwt'
+                artifactId 'vis-runtime-gwt'
+                packaging 'jar'
+            }
+        }
+    }
+}

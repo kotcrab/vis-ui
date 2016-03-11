@@ -1,0 +1,62 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply from: '../deploy.gradle'
+
+group = 'com.kotcrab.vis'
+version = '0.3.2-SNAPSHOT'
+archivesBaseName = "vis-editor"
+sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src/'
+        }
+        resources {
+            srcDir 'assets/'
+        }
+    }
+}
+
+eclipse.project {
+    name = appName + "-editor"
+}
+
+processResources {
+    from ('src/') {
+        exclude ('**/*.java')
+    }
+}
+
+jar {
+    manifest {
+        attributes (
+                "Build-Timestamp": new Date().format("yyyy/MM/dd HH:mm:ss"),
+                "Archiver-Version": archiverVersion,
+                "Built-By": builtBy,
+                "Class-Path": configurations.runtime.files.collect { "lib/" + it.name }.join(' '),
+                "Build-Jdk": JavaVersion.current(),
+                "Main-Class": mainClassName,
+        )
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.project {
+                name 'vis-editor'
+                artifactId 'vis-editor'
+                packaging 'jar'
+                description 'Scene Editor for LibGDX'
+            }
+        }
+    }
+}
+
+task run(dependsOn: jar, type: JavaExec ) {
+    main = mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    ignoreExitValue = true
+}
