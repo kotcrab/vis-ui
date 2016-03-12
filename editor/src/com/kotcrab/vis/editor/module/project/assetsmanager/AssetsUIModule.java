@@ -61,10 +61,12 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.layout.GridGroup;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.InputDialogAdapter;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.file.FileChooser.HistoryPolicy;
 import com.kotcrab.vis.ui.widget.file.FileChooserStyle;
+import com.kotcrab.vis.ui.widget.file.internal.FileChooserText;
 import com.kotcrab.vis.ui.widget.file.internal.FileHistoryManager;
 import com.kotcrab.vis.ui.widget.file.internal.FileHistoryManager.FileHistoryCallback;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
@@ -134,6 +136,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	private VisTree contentTree;
 
 	private VisImageButton navigateToParentButton;
+	private VisImageButton createFolderButton;
 
 	private VisLabel contentTitleLabel;
 	private VisLabel dirDescriptorTitleLabel;
@@ -307,11 +310,15 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 		navigateToParentButton = new VisImageButton(Icons.FOLDER_PARENT.drawable(), "Go to Parent Directory");
 		navigateToParentButton.setGenerateDisabledImage(true);
+
+		createFolderButton = new VisImageButton(Icons.FOLDER_NEW.drawable(), "Create New Folder");
+
 		VisImageButton exploreButton = new VisImageButton(Icons.FOLDER_OPEN.drawable(), "Open in Explorer");
 //		VisImageButton settingsButton = new VisImageButton(Icons.SETTINGS_VIEW.drawable(), "Change view");
 //		VisImageButton importButton = new VisImageButton(Icons.IMPORT.drawable(), "Import");
 
 		toolbarTable.add(navigateToParentButton);
+		toolbarTable.add(createFolderButton);
 		toolbarTable.add(fileHistoryManager.getButtonsTable());
 		toolbarTable.add(contentTitleLabel).left().expand();
 		toolbarTable.add(dirDescriptorTitleLabel);
@@ -324,6 +331,29 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			if (currentDirectory.equals(assetsFolder)) return;
 			changeCurrentDirectory(currentDirectory.parent());
 		}));
+
+		createFolderButton.addListener(new VisChangeListener((event, actor) -> {
+			Dialogs.showInputDialog(mainTable.getStage(),FileChooserText.NEW_DIRECTORY_DIALOG_TITLE.get(), FileChooserText.NEW_DIRECTORY_DIALOG_TEXT.get(), true, new InputDialogAdapter() {
+				@Override
+				public void finished (String input) {
+					if (FileUtils.isValidFileName(input) == false) {
+						Dialogs.showErrorDialog(mainTable.getStage(), FileChooserText.NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS.get());
+						return;
+					}
+
+					for (FileHandle file : currentDirectory.list()) {
+						if (file.name().equals(input)) {
+							Dialogs.showErrorDialog(mainTable.getStage(), FileChooserText.NEW_DIRECTORY_DIALOG_ALREADY_EXISTS.get());
+							return;
+						}
+					}
+
+					currentDirectory.child(input).mkdirs();
+					refreshFilesList();
+				}
+			});
+		}));
+
 		exploreButton.addListener(new VisChangeListener((event, actor) -> FileUtils.browse(currentDirectory)));
 	}
 
