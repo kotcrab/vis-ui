@@ -62,11 +62,11 @@ import com.kotcrab.vis.ui.layout.GridGroup;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.InputDialogAdapter;
-import com.kotcrab.vis.ui.util.dialog.InputDialogListener;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.file.FileChooser.HistoryPolicy;
 import com.kotcrab.vis.ui.widget.file.FileChooserStyle;
+import com.kotcrab.vis.ui.widget.file.internal.FileChooserText;
 import com.kotcrab.vis.ui.widget.file.internal.FileHistoryManager;
 import com.kotcrab.vis.ui.widget.file.internal.FileHistoryManager.FileHistoryCallback;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
@@ -311,8 +311,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		navigateToParentButton = new VisImageButton(Icons.FOLDER_PARENT.drawable(), "Go to Parent Directory");
 		navigateToParentButton.setGenerateDisabledImage(true);
 
-		createFolderButton = new VisImageButton(Icons.NEW.drawable(), "Create New Folder");
-		createFolderButton.setFocusBorderEnabled(false);
+		createFolderButton = new VisImageButton(Icons.FOLDER_NEW.drawable(), "Create New Folder");
 
 		VisImageButton exploreButton = new VisImageButton(Icons.FOLDER_OPEN.drawable(), "Open in Explorer");
 //		VisImageButton settingsButton = new VisImageButton(Icons.SETTINGS_VIEW.drawable(), "Change view");
@@ -334,15 +333,22 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		}));
 
 		createFolderButton.addListener(new VisChangeListener((event, actor) -> {
-			Dialogs.showInputDialog(mainTable.getStage(), "Create New Folder", "Folder Name", new InputDialogAdapter() {
+			Dialogs.showInputDialog(mainTable.getStage(),FileChooserText.NEW_DIRECTORY_DIALOG_TITLE.get(), FileChooserText.NEW_DIRECTORY_DIALOG_TEXT.get(), true, new InputDialogAdapter() {
 				@Override
 				public void finished (String input) {
-					FileHandle handle = currentDirectory.child(input);
-
-					if (!handle.exists()) {
-						handle.mkdirs();
+					if (FileUtils.isValidFileName(input) == false) {
+						Dialogs.showErrorDialog(mainTable.getStage(), FileChooserText.NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS.get());
+						return;
 					}
 
+					for (FileHandle file : currentDirectory.list()) {
+						if (file.name().equals(input)) {
+							Dialogs.showErrorDialog(mainTable.getStage(), FileChooserText.NEW_DIRECTORY_DIALOG_ALREADY_EXISTS.get());
+							return;
+						}
+					}
+
+					currentDirectory.child(input).mkdirs();
 					refreshFilesList();
 				}
 			});

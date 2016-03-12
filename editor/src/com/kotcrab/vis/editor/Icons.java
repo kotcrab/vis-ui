@@ -78,6 +78,7 @@ public enum Icons {
 	POINT_BIG("point-big"),
 	PARTICLE_BIG("particle-big"),
 
+	FOLDER_NEW("icon-folder-new", true),
 	FOLDER_PARENT("icon-folder-parent", true),
 	CLOSE("icon-close", true),
 	FOLDER("icon-folder", true),
