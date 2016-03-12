@@ -75,10 +75,6 @@ public class Log {
 
 			logFileWriter.flush();
 
-			boolean openGlCrash = false;
-			if (e.getMessage() != null && e.getMessage().contains("No OpenGL context found in the current thread."))
-				openGlCrash = true;
-
 			if (App.eventBus != null) App.eventBus.post(new ExceptionEvent(e, true));
 
 			try {
@@ -87,13 +83,11 @@ public class Log {
 				ex.printStackTrace();
 			}
 
-			if (openGlCrash) {
-				String error = "An unexpected error occurred and editor had to shutdown, please check log: " + logFile.getParent();
-				if (MathUtils.randomBoolean(0.001f)) error += " ¯\\_(ツ)_/¯";
-				JOptionPane.showMessageDialog(null, error);
+			String error = "An unexpected error occurred and editor had to shutdown, please check log: " + logFile.getParent();
+			if (MathUtils.randomBoolean(0.001f)) error += " ¯\\_(ツ)_/¯";
+			JOptionPane.showMessageDialog(null, error);
 
-				System.exit(-3);
-			}
+			System.exit(-3);
 		});
 
 		prepareLogFile();
@@ -128,7 +122,7 @@ public class Log {
 
 		File[] files = logDirectory.listFiles();
 
-		if(files != null) {
+		if (files != null) {
 			//we are deleting files that are not from current month
 			for (File f : files) {
 				if (f.getName().contains(fileNameYearMonth) == false) f.delete();

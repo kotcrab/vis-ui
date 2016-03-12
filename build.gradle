@@ -24,9 +24,10 @@ allprojects {
     ext {
         // Build Properties
         appName = 'vis'
-        mainClassName = 'com.kotcrab.vis.editor.ui.EditorFrame'
+        mainClassName = 'com.kotcrab.vis.editor.Main'
         // Dependency Properties
         gdxVersion = '1.9.2'
+        editorGdxVersion = '1.9.3-SNAPSHOT'
         box2dLightsVersion = '1.4'
         jnaVersion = '4.1.0'
         jnaPlatformVersion = '3.5.2'
@@ -60,13 +61,13 @@ project(':editor') {
     dependencies {
         compile project(":runtime")
         compile project(":ui")
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
-        compile "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx:$editorGdxVersion"
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$editorGdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$editorGdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-freetype:$editorGdxVersion"
+        compile "com.badlogicgames.gdx:gdx-freetype-platform:$editorGdxVersion:natives-desktop"
+        compile "com.badlogicgames.gdx:gdx-box2d:$editorGdxVersion"
+        compile "com.badlogicgames.gdx:gdx-box2d-platform:$editorGdxVersion:natives-desktop"
         compile "com.badlogicgames.box2dlights:box2dlights:$box2dLightsVersion"
         compile "net.onedaybeard.artemis:artemis-odb:$artemisVersion"
         compile "com.esotericsoftware:kryo:$kryoVersion"

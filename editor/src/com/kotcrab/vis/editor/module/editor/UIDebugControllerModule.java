@@ -23,6 +23,9 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Layout;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
+import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 
 /**
  * Module controlling UI debug mode which can be enabled by pressing F12 key.
@@ -39,6 +42,15 @@ public class UIDebugControllerModule extends EditorModule {
 	private InputListener inputListener = new InputListener() {
 		@Override
 		public boolean keyDown (InputEvent event, int keycode) {
+			if (keycode == Keys.F8) {
+				Dialogs.showOptionDialog(stage, "Warning", "Throw IllegalStateException? This will crash application.", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+					@Override
+					public void yes () {
+						throw new IllegalStateException();
+					}
+				});
+			}
+
 			if (keycode == Keys.F11) {
 				for (Actor actor : stage.getRoot().getChildren()) {
 					if (actor instanceof WidgetGroup) {

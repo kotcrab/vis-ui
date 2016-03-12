@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor;
 import com.artemis.annotations.SkipWire;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.lwjgl.LwjglGraphics;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -35,7 +34,6 @@ import com.kotcrab.vis.editor.module.editor.*;
 import com.kotcrab.vis.editor.module.project.Project;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.plugin.api.ContainerExtension.ExtensionScope;
-import com.kotcrab.vis.editor.ui.EditorFrame;
 import com.kotcrab.vis.editor.ui.NoProjectFilesOpenView;
 import com.kotcrab.vis.editor.ui.WindowListener;
 import com.kotcrab.vis.editor.ui.dialog.AsyncTaskProgressDialog;
@@ -44,6 +42,7 @@ import com.kotcrab.vis.editor.ui.dialog.SettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
+import com.kotcrab.vis.editor.util.GLFWIconSetter;
 import com.kotcrab.vis.editor.util.ThreadUtils;
 import com.kotcrab.vis.editor.util.async.AsyncTask;
 import com.kotcrab.vis.editor.util.scene2d.VisGroup;
@@ -65,18 +64,17 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 import java.lang.reflect.Field;
 
 /**
- * VisEditor main ApplicationAdapter class. The main() method is located in {@link EditorFrame}
+ * VisEditor main ApplicationAdapter class. The main() method is located in {@link Main}
  * @author Kotcrab
  */
 public class Editor extends ApplicationAdapter {
 	public static Editor instance;
 
-	private EditorFrame frame;
 	private LaunchConfiguration launchConfig;
 
 	@SkipWire private Stage stage;
 	private VisGroup stageRoot;
-	private Table uiRoot;
+	private VisTable uiRoot;
 
 	private EditorModuleContainer editorMC;
 	private ProjectModuleContainer projectMC;
@@ -109,8 +107,7 @@ public class Editor extends ApplicationAdapter {
 	private Tab quickAccessTab;
 	private ScreenViewport stageViewport;
 
-	public Editor (EditorFrame frame, LaunchConfiguration launchConfig) {
-		this.frame = frame;
+	public Editor (LaunchConfiguration launchConfig) {
 		this.launchConfig = launchConfig;
 	}
 
@@ -120,6 +117,9 @@ public class Editor extends ApplicationAdapter {
 
 		Log.debug("Starting loading");
 
+		GLFWIconSetter.newInstance().setIcon(Gdx.files.absolute(App.APP_FOLDER_PATH).child("cache/iconCache"),
+				Gdx.files.internal("icon.ico"), Gdx.files.internal("icon.png"));
+
 		Assets.load();
 
 		VisUI.load();
@@ -127,14 +127,10 @@ public class Editor extends ApplicationAdapter {
 		FileChooser.setFavoritesPrefsName("com.kotcrab.vis.editor");
 		Log.debug("VisUI " + VisUI.VERSION + " loaded");
 
-		if (Gdx.graphics instanceof LwjglGraphics && ((LwjglGraphics) Gdx.graphics).isSoftwareMode()) {
-			Log.info("Running in software mode");
-		}
-
 		stage = createStage();
 		Gdx.input.setInputProcessor(stage);
 
-		uiRoot = new Table();
+		uiRoot = new VisTable();
 		uiRoot.setFillParent(true);
 
 		stage.addActor(uiRoot);
@@ -237,6 +233,7 @@ public class Editor extends ApplicationAdapter {
 
 	@Override
 	public void resize (int width, int height) {
+		if(width == 0 && height == 0) return;
 		stage.getViewport().update(width, height, true);
 		editorMC.resize();
 		projectMC.resize();
@@ -254,8 +251,6 @@ public class Editor extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
-		frame.dispose();
-
 		editorMC.dispose();
 		if (projectLoaded) projectMC.dispose();
 
@@ -449,10 +444,12 @@ public class Editor extends ApplicationAdapter {
 	private void mainContentTabChanged (MainContentTab tab) {
 		this.tab = tab;
 
+		String newTitle;
 		if (tab == null)
-			frame.setTitle("VisEditor");
+			newTitle = "VisEditor";
 		else
-			frame.setTitle("VisEditor - " + tab.getTabTitle());
+			newTitle = "VisEditor - " + tab.getTabTitle();
+		Gdx.graphics.setTitle(newTitle);
 
 		tabContentTable.clear();
 
