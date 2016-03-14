@@ -17,12 +17,15 @@
 package com.kotcrab.vis.editor.util.vis;
 
 import com.badlogic.gdx.files.FileHandle;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.project.AssetsMetadataModule;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 import com.kotcrab.vis.editor.util.FileUtils;
+import com.kotcrab.vis.editor.util.SimpleImageInfo;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 
 /** @author Kotcrab */
 public class TextureCacheFilter implements FilenameFilter {
@@ -33,11 +36,22 @@ public class TextureCacheFilter implements FilenameFilter {
 	}
 
 	@Override
-	public boolean accept (File dir, String name) {
-		FileHandle file = FileUtils.toFileHandle(dir);
-		if (ProjectPathUtils.isTextureAtlasImage(file.child(name))) return false;
+	public boolean accept (File baseDir, String name) {
+		FileHandle dir = FileUtils.toFileHandle(baseDir);
+		FileHandle file = dir.child(name);
+		if (file.isDirectory()) return true;
+		if (ProjectPathUtils.isTexture(file) == false) return false;
+		try {
+			SimpleImageInfo imgInfo = new SimpleImageInfo(file.file());
+			if (imgInfo.getWidth() > 1024 && imgInfo.getHeight() > 1024) return false;
+		} catch (IOException e) {
+			Log.exception(e);
+		} catch (EditorException e) {
+			Log.warn("Unsupported image file type: " + file);
+		}
+		if (ProjectPathUtils.isTextureAtlasImage(file)) return false;
 
-		AssetDirectoryDescriptor desc = metadata.getAsDirectoryDescriptorRecursively(file);
+		AssetDirectoryDescriptor desc = metadata.getAsDirectoryDescriptorRecursively(dir);
 		if (desc != null && desc.isExcludeFromTextureCache()) return false;
 
 		return true;
