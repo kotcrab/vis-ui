@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor;
 
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.math.MathUtils;
 import com.kotcrab.vis.editor.event.ExceptionEvent;
 import com.kotcrab.vis.editor.event.VisEventBus;
 import com.kotcrab.vis.editor.util.ExceptionUtils;
@@ -25,7 +24,6 @@ import com.kotcrab.vis.editor.util.PublicApi;
 import com.kotcrab.vis.editor.util.vis.CrashReporter;
 import com.kotcrab.vis.ui.widget.file.FileUtils;
 
-import javax.swing.JOptionPane;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,6 +37,7 @@ public class Log {
 	private static boolean initialized;
 
 	private static final boolean DEBUG_INTERRUPTED = false;
+	private static final String REPORTING_TOOL_JAR = App.JAR_FOLDER_PATH + "tools/crash-reporter.jar";
 
 	/*** Highest log level possible, all messages will be logged. */
 	public static final int TRACE = 6;
@@ -78,14 +77,18 @@ public class Log {
 			if (App.eventBus != null) App.eventBus.post(new ExceptionEvent(e, true));
 
 			try {
-				new CrashReporter(logFile).processReport();
+				File crashReport = new CrashReporter(logFile).processReport();
+				if (new File(REPORTING_TOOL_JAR).exists() == false) {
+					Log.warn("Crash reporting tool not present, skipping crash report sending.");
+				} else {
+					Runtime.getRuntime().exec("\"" + System.getProperty("java.home") + "/bin/java" + "\" " +
+							"-jar \"" + REPORTING_TOOL_JAR + "\" " +
+							"\"" + App.getRestartCommand().replace("\"", "%") + "\" " +
+							"\"" + crashReport.getAbsolutePath() + "\"");
+				}
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
-
-			String error = "An unexpected error occurred and editor had to shutdown, please check log: " + logFile.getParent();
-			if (MathUtils.randomBoolean(0.001f)) error += " ¯\\_(ツ)_/¯";
-			JOptionPane.showMessageDialog(null, error);
 
 			System.exit(-3);
 		});

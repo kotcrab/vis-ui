@@ -1,0 +1,33 @@
+apply plugin: "java"
+apply plugin: 'maven'
+
+group = 'com.kotcrab.vis'
+archivesBaseName = "vis-editor-crash-reporter"
+sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceSets.main.java.srcDirs = [ "src/" ]
+
+processResources {
+    from ('src/') {
+        exclude ('**/*.java')
+    }
+}
+
+eclipse.project {
+    name = appName + "-crash-reporter"
+}
+
+task run(dependsOn: jar, type: JavaExec) {
+    main = 'com.kotcrab.vis.editor.CrashReporter'
+    classpath = sourceSets.main.runtimeClasspath
+    ignoreExitValue = true
+}
+
+jar {
+    manifest {
+        attributes(
+                "Main-Class": 'com.kotcrab.vis.editor.CrashReporter'
+        )
+    }
+}
