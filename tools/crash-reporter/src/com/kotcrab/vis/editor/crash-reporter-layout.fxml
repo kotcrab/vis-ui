@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kotcrab.vis.editor.CrashReporter">
+   <children>
+      <Label text="VisEditor Crash Reporter">
+         <font>
+            <Font size="23.0" />
+         </font>
+      </Label>
+      <Label prefHeight="44.0" prefWidth="479.0" text="An unexpected error occurred and editor had to shutdown. Crash reported has been created. Would like to submit this crash report to VisEditor team to help fix this issue?" wrapText="true" />
+      <Label text="Describe what happened:" />
+      <TextArea fx:id="detailsTextArea" prefHeight="121.0" wrapText="true" />
+      <Hyperlink onAction="#handleShowReport" text="See what this report contains" />
+      <BorderPane>
+         <right>
+            <HBox fx:id="buttonsBox" spacing="5.0" BorderPane.alignment="CENTER">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#handleSend" text="Send" />
+                  <Button mnemonicParsing="false" onAction="#handleRestart" text="Restart" />
+                  <Button mnemonicParsing="false" onAction="#handleSendAndRestart" prefWidth="108.0" text="Send and Restart" />
+               </children>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
+            </HBox>
+         </right>
+         <left>
+            <HBox fx:id="progressBox" spacing="5.0" visible="false" BorderPane.alignment="CENTER">
+               <children>
+                  <Label text="Uploading...">
+                     <padding>
+                        <Insets bottom="5.0" right="5.0" top="5.0" />
+                     </padding>
+                     <graphic>
+                        <ProgressBar prefHeight="18.0" prefWidth="88.0" />
+                     </graphic>
+                  </Label>
+               </children>
+            </HBox>
+         </left>
+      </BorderPane>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</VBox>

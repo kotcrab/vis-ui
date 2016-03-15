@@ -111,7 +111,7 @@ project(':runtime-gwt') {
     }
 }
 
-project (':ui') {
+project(':ui') {
     apply plugin: "java"
 
     dependencies {
@@ -125,7 +125,7 @@ project (':ui') {
     }
 }
 
-project (':plugins:vis-editor-spine') {
+project(':plugins:vis-editor-spine') {
     apply plugin: 'java'
 
     dependencies {
@@ -134,7 +134,7 @@ project (':plugins:vis-editor-spine') {
     }
 }
 
-project (':plugins:vis-runtime-spine') {
+project(':plugins:vis-runtime-spine') {
     apply plugin: 'java'
 
     dependencies {
@@ -143,7 +143,7 @@ project (':plugins:vis-runtime-spine') {
     }
 }
 
-project (':plugins:vis-editor-spine-notifier') {
+project(':plugins:vis-editor-spine-notifier') {
     apply plugin: 'java'
 
     dependencies {
@@ -152,7 +152,15 @@ project (':plugins:vis-editor-spine-notifier') {
     }
 }
 
-project (':usl') {
+project(':usl') {
+    apply plugin: 'java'
+
+    dependencies {
+        testCompile "junit:junit:$junitVersion"
+    }
+}
+
+project(':tools:crash-reporter') {
     apply plugin: 'java'
 
     dependencies {
@@ -192,6 +200,12 @@ distributions {
             plugin = project(':plugins:vis-editor-spine-notifier')
             into('plugins/spine-notifier') {
                 from plugin.jar
+            }
+
+            def tool = project(':tools:crash-reporter')
+            into('tools') {
+                from tool.jar
+                rename("(.*).jar", "crash-reporter.jar")
             }
         }
     }

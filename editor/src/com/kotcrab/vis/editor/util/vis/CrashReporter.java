@@ -51,10 +51,11 @@ public class CrashReporter {
 		report = crashReport.toString();
 	}
 
-	public void processReport () throws IOException {
+	public File processReport () throws IOException {
 		File crashReportFile = new File(logFile.getParent(), "viseditor-crash " + new SimpleDateFormat("yy-MM-dd HH-mm-ss").format(new Date()) + ".txt");
 		FileUtils.writeStringToFile(crashReportFile, report);
 		Log.info(TAG, "Crash saved to file: " + crashReportFile.getAbsolutePath());
+		return crashReportFile;
 	}
 
 	private void printHeader () {
