@@ -2,7 +2,6 @@ apply plugin: "java"
 apply plugin: 'maven'
 
 group = 'com.kotcrab.vis'
-version = '0.3.2-SNAPSHOT'
 
 ext {
     pluginId = name
