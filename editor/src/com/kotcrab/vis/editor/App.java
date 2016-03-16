@@ -21,6 +21,7 @@ import com.kotcrab.vis.editor.event.VisEventBus;
 import com.kotcrab.vis.editor.module.editor.AppFileAccessModule;
 import com.kotcrab.vis.editor.module.editor.PluginFilesAccessModule;
 import com.kotcrab.vis.editor.util.JarUtils;
+import com.kotcrab.vis.editor.util.PlatformUtils;
 import com.kotcrab.vis.editor.util.PublicApi;
 import org.slf4j.impl.SimpleLogger;
 
@@ -161,8 +162,6 @@ public class App {
 	}
 
 	static String getRestartCommand () {
-		String java = System.getProperty("java.home") + "/bin/java";
-
 		List<String> vmArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
 		StringBuilder vmArgsOneLine = new StringBuilder();
 		for (String arg : vmArguments) {
@@ -170,7 +169,7 @@ public class App {
 				vmArgsOneLine.append(arg).append(" ");
 		}
 
-		final StringBuilder cmd = new StringBuilder("\"" + java + "\" " + vmArgsOneLine);
+		final StringBuilder cmd = new StringBuilder(PlatformUtils.getJavaBinPath() + " " + vmArgsOneLine);
 
 		String[] mainCommand = System.getProperty("sun.java.command").split(" ");
 

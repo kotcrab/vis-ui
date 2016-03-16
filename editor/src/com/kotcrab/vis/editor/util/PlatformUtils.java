@@ -16,8 +16,11 @@
 
 package com.kotcrab.vis.editor.util;
 
+import com.kotcrab.vis.ui.util.OsUtils;
 import com.sun.jna.Native;
 import com.sun.jna.platform.unix.X11;
+
+import java.io.File;
 
 /** @author Kotcrab */
 public class PlatformUtils {
@@ -34,5 +37,16 @@ public class PlatformUtils {
 
 	public static boolean isX11 () {
 		return x11;
+	}
+
+	public static String getJavaBinPath () {
+		if (OsUtils.isWindows()) {
+			File javaBin = new File(System.getProperty("java.home") + "/bin/java.exe");
+			if (javaBin.exists()) {
+				return "\"" + javaBin.getAbsolutePath() + "\"";
+			}
+		}
+
+		return "java";
 	}
 }

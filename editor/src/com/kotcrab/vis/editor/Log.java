@@ -20,6 +20,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.event.ExceptionEvent;
 import com.kotcrab.vis.editor.event.VisEventBus;
 import com.kotcrab.vis.editor.util.ExceptionUtils;
+import com.kotcrab.vis.editor.util.PlatformUtils;
 import com.kotcrab.vis.editor.util.PublicApi;
 import com.kotcrab.vis.editor.util.vis.CrashReporter;
 import com.kotcrab.vis.ui.widget.file.FileUtils;
@@ -81,7 +82,7 @@ public class Log {
 				if (new File(REPORTING_TOOL_JAR).exists() == false) {
 					Log.warn("Crash reporting tool not present, skipping crash report sending.");
 				} else {
-					Runtime.getRuntime().exec("\"" + System.getProperty("java.home") + "/bin/java" + "\" " +
+					Runtime.getRuntime().exec(PlatformUtils.getJavaBinPath() + " " +
 							"-jar \"" + REPORTING_TOOL_JAR + "\" " +
 							"\"" + App.getRestartCommand().replace("\"", "%") + "\" " +
 							"\"" + crashReport.getAbsolutePath() + "\"");
