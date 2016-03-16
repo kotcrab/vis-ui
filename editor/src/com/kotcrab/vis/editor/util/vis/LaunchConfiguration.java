@@ -21,7 +21,6 @@ package com.kotcrab.vis.editor.util.vis;
  * @author Kotcrab
  */
 public class LaunchConfiguration {
-	public boolean showSplash = true;
 	/** If true ui scaling mode was enabled from command line arguments, this may be false if ui scaling is enabled from settings */
 	public boolean scaleUIEnabled = false;
 
