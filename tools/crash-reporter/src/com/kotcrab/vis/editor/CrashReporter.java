@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
@@ -54,6 +55,7 @@ public class CrashReporter extends Application {
 		Scene scene = new Scene(root);
 
 		stage.setTitle("VisEditor Crash Reporter");
+		stage.getIcons().add(new Image(CrashReporter.class.getResourceAsStream("icon.png")));
 		stage.setScene(scene);
 		stage.setResizable(false);
 		stage.sizeToScene();
