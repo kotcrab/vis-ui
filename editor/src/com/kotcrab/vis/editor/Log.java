@@ -24,6 +24,9 @@ import com.kotcrab.vis.editor.util.PlatformUtils;
 import com.kotcrab.vis.editor.util.PublicApi;
 import com.kotcrab.vis.editor.util.vis.CrashReporter;
 import com.kotcrab.vis.ui.widget.file.FileUtils;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.PumpStreamHandler;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -82,10 +85,14 @@ public class Log {
 				if (new File(REPORTING_TOOL_JAR).exists() == false) {
 					Log.warn("Crash reporting tool not present, skipping crash report sending.");
 				} else {
-					Runtime.getRuntime().exec(PlatformUtils.getJavaBinPath() + " " +
-							"-jar \"" + REPORTING_TOOL_JAR + "\" " +
-							"\"" + App.getRestartCommand().replace("\"", "%") + "\" " +
-							"\"" + crashReport.getAbsolutePath() + "\"");
+					CommandLine cmdLine = new CommandLine(PlatformUtils.getJavaBinPath());
+					cmdLine.addArgument("-jar");
+					cmdLine.addArgument(REPORTING_TOOL_JAR);
+					cmdLine.addArgument(ApplicationUtils.getRestartCommand().replace("\"", "%"));
+					cmdLine.addArgument(crashReport.getAbsolutePath());
+					DefaultExecutor executor = new DefaultExecutor();
+					executor.setStreamHandler(new PumpStreamHandler(null, null, null));
+					executor.execute(cmdLine);
 				}
 			} catch (IOException ex) {
 				ex.printStackTrace();

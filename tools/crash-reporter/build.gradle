@@ -6,11 +6,11 @@ archivesBaseName = "vis-editor-crash-reporter"
 sourceCompatibility = 1.8
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-sourceSets.main.java.srcDirs = [ "src/" ]
+sourceSets.main.java.srcDirs = ["src/"]
 
 processResources {
-    from ('src/') {
-        exclude ('**/*.java')
+    from('src/') {
+        exclude('**/*.java')
     }
 }
 
@@ -29,5 +29,9 @@ jar {
         attributes(
                 "Main-Class": 'com.kotcrab.vis.editor.CrashReporter'
         )
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }

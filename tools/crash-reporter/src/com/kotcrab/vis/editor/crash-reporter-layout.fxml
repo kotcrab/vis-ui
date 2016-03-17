@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
 <VBox xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.kotcrab.vis.editor.CrashReporter">
    <children>
       <Label text="VisEditor Crash Reporter">
@@ -29,7 +28,7 @@
                <children>
                   <Button mnemonicParsing="false" onAction="#handleSend" text="Send" />
                   <Button mnemonicParsing="false" onAction="#handleRestart" text="Restart" />
-                  <Button mnemonicParsing="false" onAction="#handleSendAndRestart" prefWidth="108.0" text="Send and Restart" />
+                  <Button mnemonicParsing="false" onAction="#handleSendAndRestart" prefWidth="108.0" text="Send and Restart" HBox.hgrow="SOMETIMES" />
                </children>
                <BorderPane.margin>
                   <Insets />

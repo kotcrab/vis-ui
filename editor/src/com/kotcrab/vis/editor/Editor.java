@@ -341,7 +341,7 @@ public class Editor extends ApplicationAdapter {
 	}
 
 	private void exit (boolean restartAfterExit) {
-		if (restartAfterExit) App.startNewInstance();
+		if (restartAfterExit) ApplicationUtils.startNewInstance();
 		Gdx.app.exit();
 	}
 

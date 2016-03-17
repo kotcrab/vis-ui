@@ -37,6 +37,7 @@ allprojects {
         kryoVersion = '3.0.1'
         commonsIoVersion = '2.4'
         commonsLangVersion = '3.3.2'
+        commonsExecVersion = '1.3'
         guavaVersion = '18.0'
         jsoupVersion = '1.8.2'
         slf4jVersion = '1.7.12'
@@ -48,7 +49,6 @@ allprojects {
     }
 
     repositories {
-        mavenLocal()
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
@@ -73,6 +73,7 @@ project(':editor') {
         compile "com.esotericsoftware:kryo:$kryoVersion"
         compile "commons-io:commons-io:$commonsIoVersion"
         compile "org.apache.commons:commons-lang3:$commonsLangVersion"
+        compile "org.apache.commons:commons-exec:$commonsExecVersion"
         compile "net.java.dev.jna:jna:$jnaVersion"
         compile "net.java.dev.jna:platform:$jnaPlatformVersion"
         compile "com.google.guava:guava:$guavaVersion"
@@ -164,6 +165,7 @@ project(':tools:crash-reporter') {
     apply plugin: 'java'
 
     dependencies {
+        compile "org.apache.commons:commons-exec:$commonsExecVersion"
         testCompile "junit:junit:$junitVersion"
     }
 }

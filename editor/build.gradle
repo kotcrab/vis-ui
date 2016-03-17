@@ -75,8 +75,20 @@ task copyExtJars (dependsOn: [':plugins:vis-editor-spine:jar', ':plugins:vis-edi
     }
 }
 
+task copyTools (dependsOn: [':tools:crash-reporter:jar']) {
+    def reporter = project(':tools:crash-reporter')
 
-task run(dependsOn: copyExtJars, type: JavaExec) {
+    doLast {
+        copy {
+            from reporter.jar
+            rename("(.*).jar", "crash-reporter.jar")
+            into sourceSets.main.output.classesDir.path + '/tools/'
+        }
+    }
+}
+
+//task run(dependsOn: [copyExtJars, copyTools], type: JavaExec) {
+task run(dependsOn: [copyExtJars], type: JavaExec) {
     main = mainClassName
     classpath = sourceSets.main.runtimeClasspath
     ignoreExitValue = true

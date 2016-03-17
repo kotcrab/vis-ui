@@ -21,18 +21,15 @@ import com.kotcrab.vis.editor.event.VisEventBus;
 import com.kotcrab.vis.editor.module.editor.AppFileAccessModule;
 import com.kotcrab.vis.editor.module.editor.PluginFilesAccessModule;
 import com.kotcrab.vis.editor.util.JarUtils;
-import com.kotcrab.vis.editor.util.PlatformUtils;
 import com.kotcrab.vis.editor.util.PublicApi;
 import org.slf4j.impl.SimpleLogger;
 
 import javax.swing.JOptionPane;
 import java.io.File;
 import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.List;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
@@ -158,47 +155,6 @@ public class App {
 				JOptionPane.showMessageDialog(null, charsetChangeFailed, "Fatal error", JOptionPane.ERROR_MESSAGE);
 				throw new IllegalStateException(charsetChangeFailed, e);
 			}
-		}
-	}
-
-	static String getRestartCommand () {
-		List<String> vmArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
-		StringBuilder vmArgsOneLine = new StringBuilder();
-		for (String arg : vmArguments) {
-			if (arg.contains("-agentlib") == false)
-				vmArgsOneLine.append(arg).append(" ");
-		}
-
-		final StringBuilder cmd = new StringBuilder(PlatformUtils.getJavaBinPath() + " " + vmArgsOneLine);
-
-		String[] mainCommand = System.getProperty("sun.java.command").split(" ");
-
-		if (mainCommand[0].endsWith(".jar"))
-			cmd.append("-jar " + new File(mainCommand[0]).getPath());
-		else
-			cmd.append("-cp \"" + System.getProperty("java.class.path") + "\" " + mainCommand[0]);
-
-		for (int i = 1; i < mainCommand.length; i++) {
-			cmd.append(" ");
-			cmd.append(mainCommand[i]);
-		}
-
-		//if launching from idea, not in debug mode
-		String ideaLauncher = "-Didea.launcher.bin.path=";
-		int ideaLauncherStart = cmd.indexOf(ideaLauncher);
-		if (ideaLauncherStart != -1) {
-			cmd.insert(ideaLauncherStart + ideaLauncher.length(), "\"");
-			cmd.insert(cmd.indexOf("-cp ", ideaLauncherStart) - 1, "\"");
-		}
-
-		return cmd.toString();
-	}
-
-	static void startNewInstance () {
-		try {
-			Runtime.getRuntime().exec(getRestartCommand());
-		} catch (Exception e) {
-			Log.exception(e);
 		}
 	}
 }

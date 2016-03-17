@@ -12,6 +12,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
 
 import java.awt.Desktop;
 import java.io.*;
@@ -96,7 +98,9 @@ public class CrashReporter extends Application {
 	private void restart () {
 		new Thread(() -> {
 			try {
-				Runtime.getRuntime().exec(restartCommand);
+				CommandLine cmdLine = CommandLine.parse(restartCommand);
+				DefaultExecutor executor = new DefaultExecutor();
+				executor.execute(cmdLine);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
