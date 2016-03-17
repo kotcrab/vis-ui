@@ -84,7 +84,13 @@ public class CrashReporter extends Application {
 
 	@FXML
 	private void handleShowReport (ActionEvent event) throws IOException {
-		Desktop.getDesktop().open(reportFile);
+		new Thread(() -> {
+			try {
+				Desktop.getDesktop().open(reportFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}).start();
 	}
 
 	private void restart () {
