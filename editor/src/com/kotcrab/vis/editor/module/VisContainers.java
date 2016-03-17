@@ -60,7 +60,7 @@ public class VisContainers {
 		editorMC.add(new ToolbarModule());
 		editorMC.add(new QuickAccessModule(quickAccessModuleListener));
 		editorMC.add(new StatusBarModule());
-		editorMC.add(new UIDebugControllerModule());
+		editorMC.add(new DebugFeaturesControllerModule());
 		editorMC.add(new ProjectIOModule());
 		editorMC.add(new EditingSettingsModule());
 		editorMC.add(new EmptyMenuFillerModule());

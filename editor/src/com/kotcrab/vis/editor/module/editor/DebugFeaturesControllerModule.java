@@ -23,25 +23,48 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Layout;
+import com.kotcrab.vis.editor.ApplicationUtils;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 
 /**
- * Module controlling UI debug mode which can be enabled by pressing F12 key.
+ * Module controlling debug features such as UI debug mode which can be enabled by pressing F12 key. Debug mode
+ * must be enabled first by pressing F9.
  * @author Kotcrab
  */
-public class UIDebugControllerModule extends EditorModule {
+public class DebugFeaturesControllerModule extends EditorModule {
 	private StatusBarModule statusBar;
 	private GlobalInputModule inputModule;
 
 	private Stage stage;
 
-	private boolean debugEnabled;
+	private boolean debugEnabled = false;
+	private boolean uiDebugEnabled;
 
 	private InputListener inputListener = new InputListener() {
 		@Override
 		public boolean keyDown (InputEvent event, int keycode) {
+			if (keycode == Keys.F9) {
+				debugEnabled = !debugEnabled;
+				if (debugEnabled)
+					statusBar.setText("Debug mode enabled");
+				else
+					statusBar.setText("Debug mode disabled");
+
+			}
+
+			if (debugEnabled == false) return false;
+
+			if (keycode == Keys.F7) {
+				Dialogs.showOptionDialog(stage, "Warning", "Start new instance of application?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+					@Override
+					public void yes () {
+						ApplicationUtils.startNewInstance();
+					}
+				});
+			}
+
 			if (keycode == Keys.F8) {
 				Dialogs.showOptionDialog(stage, "Warning", "Throw IllegalStateException? This will crash application.", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 					@Override
@@ -62,10 +85,10 @@ public class UIDebugControllerModule extends EditorModule {
 			}
 
 			if (keycode == Keys.F12) {
-				debugEnabled = !debugEnabled;
-				stage.setDebugAll(debugEnabled);
+				uiDebugEnabled = !uiDebugEnabled;
+				stage.setDebugAll(uiDebugEnabled);
 
-				if (debugEnabled)
+				if (uiDebugEnabled)
 					statusBar.setText("UI debug mode was enabled! (press F12 to disable)");
 				else
 					statusBar.setText("UI debug mode was disabled!");
