@@ -20,13 +20,8 @@ import com.badlogic.gdx.files.FileHandle;
 import com.kotcrab.vis.editor.event.ExceptionEvent;
 import com.kotcrab.vis.editor.event.VisEventBus;
 import com.kotcrab.vis.editor.util.ExceptionUtils;
-import com.kotcrab.vis.editor.util.PlatformUtils;
 import com.kotcrab.vis.editor.util.PublicApi;
-import com.kotcrab.vis.editor.util.vis.CrashReporter;
 import com.kotcrab.vis.ui.widget.file.FileUtils;
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.PumpStreamHandler;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -41,7 +36,6 @@ public class Log {
 	private static boolean initialized;
 
 	private static final boolean DEBUG_INTERRUPTED = false;
-	private static final String REPORTING_TOOL_JAR = App.JAR_FOLDER_PATH + "tools/crash-reporter.jar";
 
 	/*** Highest log level possible, all messages will be logged. */
 	public static final int TRACE = 6;
@@ -69,38 +63,7 @@ public class Log {
 	public static void init () {
 		if (initialized) throw new IllegalStateException("Log cannot be initialized twice!");
 		initialized = true;
-
 		System.setErr(new ErrorStreamInterceptor(System.err));
-
-		Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
-			Log.exception(e);
-			Log.fatal("Uncaught exception occurred, error report will be saved");
-
-			logFileWriter.flush();
-
-			if (App.eventBus != null) App.eventBus.post(new ExceptionEvent(e, true));
-
-			try {
-				File crashReport = new CrashReporter(logFile).processReport();
-				if (new File(REPORTING_TOOL_JAR).exists() == false) {
-					Log.warn("Crash reporting tool not present, skipping crash report sending.");
-				} else {
-					CommandLine cmdLine = new CommandLine(PlatformUtils.getJavaBinPath());
-					cmdLine.addArgument("-jar");
-					cmdLine.addArgument(REPORTING_TOOL_JAR);
-					cmdLine.addArgument(ApplicationUtils.getRestartCommand().replace("\"", "%"));
-					cmdLine.addArgument(crashReport.getAbsolutePath());
-					DefaultExecutor executor = new DefaultExecutor();
-					executor.setStreamHandler(new PumpStreamHandler(null, null, null));
-					executor.execute(cmdLine);
-				}
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-
-			System.exit(-3);
-		});
-
 		prepareLogFile();
 	}
 
@@ -243,6 +206,10 @@ public class Log {
 
 	private static String getTimestamp () {
 		return msgDateFormat.format(new Date());
+	}
+
+	static void flushFile () {
+		logFileWriter.flush();
 	}
 
 	private static class ErrorStreamInterceptor extends PrintStream {

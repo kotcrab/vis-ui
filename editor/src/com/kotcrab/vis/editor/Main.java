@@ -19,7 +19,16 @@ package com.kotcrab.vis.editor;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
+import com.kotcrab.vis.editor.event.ExceptionEvent;
+import com.kotcrab.vis.editor.util.PlatformUtils;
+import com.kotcrab.vis.editor.util.vis.CrashReporter;
 import com.kotcrab.vis.editor.util.vis.LaunchConfiguration;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.PumpStreamHandler;
+
+import java.io.File;
+import java.io.IOException;
 
 /** @author Kotcrab */
 public class Main {
@@ -76,6 +85,34 @@ public class Main {
 			}
 		});
 
-		new Lwjgl3Application(editor, config);
+		try {
+			new Lwjgl3Application(editor, config);
+		} catch (Exception e) {
+			Log.exception(e);
+			Log.fatal("Uncaught exception occurred, error report will be saved");
+			Log.flushFile();
+
+			if (App.eventBus != null) App.eventBus.post(new ExceptionEvent(e, true));
+
+			try {
+				File crashReport = new CrashReporter(Log.getLogFile().file()).processReport();
+				if (new File(App.CRASH_REPORTING_TOOL_JAR).exists() == false) {
+					Log.warn("Crash reporting tool not present, skipping crash report sending.");
+				} else {
+					CommandLine cmdLine = new CommandLine(PlatformUtils.getJavaBinPath());
+					cmdLine.addArgument("-jar");
+					cmdLine.addArgument(App.CRASH_REPORTING_TOOL_JAR);
+					cmdLine.addArgument(ApplicationUtils.getRestartCommand().replace("\"", "%"));
+					cmdLine.addArgument(crashReport.getAbsolutePath(), false);
+					DefaultExecutor executor = new DefaultExecutor();
+					executor.setStreamHandler(new PumpStreamHandler(null, null, null));
+					executor.execute(cmdLine);
+				}
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+
+			System.exit(-3);
+		}
 	}
 }

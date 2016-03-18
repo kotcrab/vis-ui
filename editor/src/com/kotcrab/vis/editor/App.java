@@ -72,6 +72,7 @@ public class App {
 
 	/** Path to folder that editor jar is located, if launched from Maven or IDE this will point to Maven /target/ folder. */
 	public static final String JAR_FOLDER_PATH = JarUtils.getJarPath(App.class);
+	static final String CRASH_REPORTING_TOOL_JAR = App.JAR_FOLDER_PATH + "tools/crash-reporter.jar";
 
 	private static final String USER_HOME_PATH = System.getProperty("user.home") + File.separator;
 
