@@ -87,10 +87,11 @@ public class Main {
 
 		try {
 			new Lwjgl3Application(editor, config);
+			Log.dispose();
 		} catch (Exception e) {
 			Log.exception(e);
 			Log.fatal("Uncaught exception occurred, error report will be saved");
-			Log.flushFile();
+			Log.flush();
 
 			if (App.eventBus != null) App.eventBus.post(new ExceptionEvent(e, true));
 
@@ -112,6 +113,7 @@ public class Main {
 				ex.printStackTrace();
 			}
 
+			Log.dispose();
 			System.exit(-3);
 		}
 	}

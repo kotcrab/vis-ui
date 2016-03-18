@@ -22,6 +22,7 @@ import com.kotcrab.vis.editor.event.VisEventBus;
 import com.kotcrab.vis.editor.util.ExceptionUtils;
 import com.kotcrab.vis.editor.util.PublicApi;
 import com.kotcrab.vis.ui.widget.file.FileUtils;
+import org.apache.commons.io.output.TeeOutputStream;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -56,15 +57,16 @@ public class Log {
 	static int LOG_LEVEL = DEBUG;
 
 	private static File logFile;
-	private static PrintWriter logFileWriter;
+	private static BufferedOutputStream logFileStream;
 	private static SimpleDateFormat msgDateFormat = new SimpleDateFormat("[HH:mm]");
 
 	/** Initializes logging facility, called once by VisEditor. */
 	public static void init () {
 		if (initialized) throw new IllegalStateException("Log cannot be initialized twice!");
 		initialized = true;
-		System.setErr(new ErrorStreamInterceptor(System.err));
 		prepareLogFile();
+		System.setOut(new PrintStream(new TeeOutputStream(System.out, logFileStream)));
+		System.setErr(new PrintStream(new TeeOutputStream(System.err, logFileStream)));
 	}
 
 	/**
@@ -73,7 +75,12 @@ public class Log {
 	 */
 	public static void dispose () {
 		info("Exiting");
-		logFileWriter.close();
+		try {
+			logFileStream.flush();
+			logFileStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/** @return {@link FileHandle} to log file that is currently being used by this logging facility. */
@@ -105,13 +112,14 @@ public class Log {
 
 		try {
 			logFile = new File(logDirectory, "viseditor " + fileName + ".txt");
+			boolean fileExists = logFile.exists();
 			logFile.createNewFile();
-			logFileWriter = new PrintWriter(new FileWriter(logFile, true));
+			logFileStream = new BufferedOutputStream(new FileOutputStream(logFile, true));
+			if (fileExists) logFileStream.write(System.lineSeparator().getBytes());
 		} catch (IOException e) {
 			exception(e);
 		}
 
-		logFileWriter.println();
 		info("VisEditor " + App.VERSION + " (version code: " + App.VERSION_CODE + ")");
 		info("Started: " + fileName);
 	}
@@ -195,7 +203,6 @@ public class Log {
 
 	private static void print (String msg) {
 		msg = getTimestamp() + msg;
-		logFileWriter.println(msg);
 		System.out.println(msg);
 	}
 
@@ -208,19 +215,11 @@ public class Log {
 		return msgDateFormat.format(new Date());
 	}
 
-	static void flushFile () {
-		logFileWriter.flush();
-	}
-
-	private static class ErrorStreamInterceptor extends PrintStream {
-		public ErrorStreamInterceptor (OutputStream out) {
-			super(out, true);
-		}
-
-		@Override
-		public void print (String s) {
-			super.print(s);
-			if (logFileWriter != null) logFileWriter.println(s);
+	static void flush () {
+		try {
+			logFileStream.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 }

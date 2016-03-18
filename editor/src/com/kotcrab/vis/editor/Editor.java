@@ -233,7 +233,7 @@ public class Editor extends ApplicationAdapter {
 
 	@Override
 	public void resize (int width, int height) {
-		if(width == 0 && height == 0) return;
+		if (width == 0 && height == 0) return;
 		stage.getViewport().update(width, height, true);
 		editorMC.resize();
 		projectMC.resize();
@@ -251,14 +251,12 @@ public class Editor extends ApplicationAdapter {
 
 	@Override
 	public void dispose () {
-		editorMC.dispose();
+		if (editorMC != null) editorMC.dispose();
 		if (projectLoaded) projectMC.dispose();
 
-		stage.dispose();
+		if(stage != null) stage.dispose();
 		Assets.dispose();
 		VisUI.dispose();
-
-		Log.dispose();
 
 		//make sure that application will exit eventually
 		Thread exitThread = new Thread(() -> {

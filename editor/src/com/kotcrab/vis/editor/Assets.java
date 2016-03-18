@@ -49,9 +49,12 @@ public class Assets {
 	}
 
 	public static void dispose () {
-		icons.dispose();
-		misc.dispose();
-		distanceFieldShader.dispose();
+		if (icons != null) icons.dispose();
+		if (misc != null) misc.dispose();
+		if (distanceFieldShader != null) distanceFieldShader.dispose();
+		icons = null;
+		misc = null;
+		distanceFieldShader = null;
 	}
 
 	public static Drawable getMisc (String name) {

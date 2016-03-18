@@ -16,17 +16,15 @@
 
 package com.kotcrab.vis.editor.util.vis;
 
-import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.input.ReversedLinesFileReader;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -77,7 +75,7 @@ public class CrashReporter {
 		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
 
 		for (Thread t : threadSet) {
-			println("Thread: " + t.getName() + " Daemon: " + t.isDaemon() + " State: " + t.getState());
+			println("Thread: " + t.getName() + ", daemon: " + t.isDaemon() + ", state: " + t.getState());
 			for (StackTraceElement e : t.getStackTrace()) {
 				crashReport.append("\t");
 				println(e.toString());
@@ -91,25 +89,13 @@ public class CrashReporter {
 	}
 
 	private void printLog () throws IOException {
-		println("--- Log file (last 200 lines) ---");
+		println("--- Log file ---");
 
-		ReversedLinesFileReader reader = new ReversedLinesFileReader(logFile);
-		Array<String> logLines = new Array<>();
-
-		for (int i = 0; i < 200; i++) {
-			String line = reader.readLine();
-			if (line == null) break;
-			logLines.add(line);
-		}
-
-		logLines.reverse();
-
-		for (String s : logLines)
-			println(s);
+		List<String> logLines = FileUtils.readLines(logFile);
+		logLines.forEach(this::println);
 
 		println("---------------------------------");
 		println();
-		IOUtils.closeQuietly(reader);
 	}
 
 	private void println () {

@@ -41,7 +41,7 @@ public class CrashReporter extends Application {
 		restartCommand = args[0].replace("%", "\"");
 		reportFile = new File(args[1]);
 		if (reportFile.exists() == false) {
-			System.out.println("Report file does not exists: " + args[1]);
+			System.out.println("Report file does not exist: " + args[1]);
 			System.exit(0);
 		}
 
