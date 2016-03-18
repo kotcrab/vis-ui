@@ -97,7 +97,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 
 		cacheFilter = new TextureCacheFilter(assetsMetadata);
 
-		missingRegion = Assets.icons.findRegion("file-question-big");
+		missingRegion = Assets.getIconRegion("file-question-big");
 
 		FileHandle out = fileAccess.getModuleFolder(".textureCache");
 		cacheFilePath = out.path();

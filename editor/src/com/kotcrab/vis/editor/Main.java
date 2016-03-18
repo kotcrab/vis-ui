@@ -31,7 +31,10 @@ import org.apache.commons.exec.PumpStreamHandler;
 import java.io.File;
 import java.io.IOException;
 
-/** @author Kotcrab */
+/**
+ * Main VisEditor class
+ * @author Kotcrab
+ */
 public class Main {
 	private static Editor editor;
 
@@ -98,12 +101,12 @@ public class Main {
 
 			try {
 				File crashReport = new CrashReporter(Log.getLogFile().file()).processReport();
-				if (new File(App.CRASH_REPORTING_TOOL_JAR).exists() == false) {
+				if (new File(App.TOOL_CRASH_REPORTER_PATH).exists() == false) {
 					Log.warn("Crash reporting tool not present, skipping crash report sending.");
 				} else {
 					CommandLine cmdLine = new CommandLine(PlatformUtils.getJavaBinPath());
 					cmdLine.addArgument("-jar");
-					cmdLine.addArgument(App.CRASH_REPORTING_TOOL_JAR);
+					cmdLine.addArgument(App.TOOL_CRASH_REPORTER_PATH);
 					cmdLine.addArgument(ApplicationUtils.getRestartCommand().replace("\"", "%"));
 					cmdLine.addArgument(crashReport.getAbsolutePath(), false);
 					DefaultExecutor executor = new DefaultExecutor();

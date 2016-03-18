@@ -28,8 +28,9 @@ public abstract class Module implements Disposable {
 
 	/**
 	 * Called when module was removed from container. Modules can be only removed before module container initialization.
-	 * So if this is called {@link #init()} and other method won't be called. (expect {@link #added()} which was called already)
-	 * This is different than {@link #dispose()} which is called when whole module container is disposed.
+	 * So if this is called {@link #init()} and other method won't be ever called. (expect {@link #added()} which was called already)
+	 * This is different than {@link #dispose()} which is called when whole module container is disposed in which case
+	 * remove won't be called.
 	 */
 	public void removed () {
 

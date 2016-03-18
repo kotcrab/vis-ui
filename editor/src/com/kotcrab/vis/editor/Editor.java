@@ -65,7 +65,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneListener;
 import java.lang.reflect.Field;
 
 /**
- * VisEditor main ApplicationAdapter class. The main() method is located in {@link Main}
+ * VisEditor main ApplicationAdapter class. The main() method is located in {@link Main}.
  * @author Kotcrab
  */
 public class Editor extends ApplicationAdapter {

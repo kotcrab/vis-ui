@@ -46,21 +46,26 @@ public abstract class GLFWIconSetter {
 	 */
 	public abstract void setIcon (FileHandle iconCacheFolder, FileHandle icoFile, FileHandle pngFile) throws IllegalStateException;
 
+	/**
+	 * @return new instance of {@GLFWIconSetter} implementation for current platform or {@link DefaultGLFWIconSetter} when
+	 * no other implementation is available
+	 */
 	public static GLFWIconSetter newInstance () {
 		if (OsUtils.isWindows()) return new WinGLFWIconSetter();
 		if (PlatformUtils.isX11()) return new X11GLFWIconSetter();
 		return new DefaultGLFWIconSetter();
 	}
 
+	/** Icon setter implementation for Windows */
 	private static class WinGLFWIconSetter extends GLFWIconSetter {
 		@Override
 		public void setIcon (FileHandle iconCacheFolder, FileHandle icoFile, FileHandle pngFile) {
+			//WinAPi can't read icon from JAR, needs copying to some other location
 			FileHandle cachedIco = iconCacheFolder.child(icoFile.name());
-			if(cachedIco.exists() == false) icoFile.copyTo(cachedIco);
+			if (cachedIco.exists() == false) icoFile.copyTo(cachedIco);
 
 			try {
-				HANDLE hImage = User32.INSTANCE.LoadImage(Kernel32.INSTANCE.GetModuleHandle(""),
-						cachedIco.path(),
+				HANDLE hImage = User32.INSTANCE.LoadImage(Kernel32.INSTANCE.GetModuleHandle(""), cachedIco.path(),
 						WinUser.IMAGE_ICON, 0, 0, WinUser.LR_LOADFROMFILE);
 				User32.INSTANCE.SendMessageW(User32.INSTANCE.GetActiveWindow(), User32.WM_SETICON, new WPARAM(User32.BIG_ICON), hImage);
 			} catch (Exception e) {
@@ -83,6 +88,7 @@ public abstract class GLFWIconSetter {
 		}
 	}
 
+	/** Icon setter implementation for X11 */
 	private static class X11GLFWIconSetter extends GLFWIconSetter {
 		private static final int MAX_PROPERTY_LENGTH = 1024;
 
@@ -225,6 +231,7 @@ public abstract class GLFWIconSetter {
 		}
 	}
 
+	/** Fallback implementation for unsupported platforms, does nothing. */
 	private static class DefaultGLFWIconSetter extends GLFWIconSetter {
 		@Override
 		public void setIcon (FileHandle iconCacheFolder, FileHandle icoFile, FileHandle pngFile) {

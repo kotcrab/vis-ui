@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 
 /**
  * Modules annotated by this annotation will automatically register and unregister to main event bus ({@link App#eventBus})
- * Registration happens after {@link Module#init()} is called but before {@link Module#postInit()} is called. Unregistration
+ * Registration happens after {@link Module#init()} is called but before {@link Module#postInit()} is called. Deregistration
  * happens after {@link Module#dispose()} was called. This process is managed by {@link ModuleContainer}.
  * @author Kotcrab
  */

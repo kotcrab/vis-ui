@@ -72,7 +72,7 @@ public class App {
 
 	/** Path to folder that editor jar is located, if launched from Maven or IDE this will point to Maven /target/ folder. */
 	public static final String JAR_FOLDER_PATH = JarUtils.getJarPath(App.class);
-	static final String CRASH_REPORTING_TOOL_JAR = App.JAR_FOLDER_PATH + "tools/crash-reporter.jar";
+	static final String TOOL_CRASH_REPORTER_PATH = App.JAR_FOLDER_PATH + "tools/crash-reporter.jar";
 
 	private static final String USER_HOME_PATH = System.getProperty("user.home") + File.separator;
 
@@ -91,7 +91,7 @@ public class App {
 	});
 
 	/** Performs App init, called only once by VisEditor. */
-	public static void init () {
+	static void init () {
 		if (initialized) throw new IllegalStateException("App cannot be initialized twice!");
 		new File(APP_FOLDER_PATH).mkdir();
 
@@ -129,7 +129,7 @@ public class App {
 		String className = clazz.getSimpleName() + ".class";
 		String classPath = clazz.getResource(className).toString();
 		if (!classPath.startsWith("jar")) {
-			// Class not from JAR
+			// class not from JAR
 			return null;
 		}
 		String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) +

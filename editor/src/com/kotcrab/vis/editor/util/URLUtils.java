@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
 
 /**
  * URL related utils.
- * @author Kotcrab
  */
 public class URLUtils {
 	private static final Pattern urlPattern = Pattern.compile(

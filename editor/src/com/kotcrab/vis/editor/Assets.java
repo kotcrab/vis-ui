@@ -32,12 +32,12 @@ public class Assets {
 	public static final int FOLDER_ROOT_ICON_SIZE = 44;
 	public static final int BIG_ICON_SIZE = 76;
 
-	public static TextureAtlas icons; //TODO [misc] remove statics
-	public static TextureAtlas misc;
+	private static TextureAtlas icons;
+	private static TextureAtlas misc;
 
-	public static ShaderProgram distanceFieldShader;
+	private static ShaderProgram distanceFieldShader;
 
-	public static void load () {
+	static void load () {
 		icons = new TextureAtlas("gfx/icons.atlas");
 		misc = new TextureAtlas("gfx/misc.atlas");
 
@@ -48,13 +48,25 @@ public class Assets {
 		}
 	}
 
-	public static void dispose () {
+	static void dispose () {
 		if (icons != null) icons.dispose();
 		if (misc != null) misc.dispose();
 		if (distanceFieldShader != null) distanceFieldShader.dispose();
 		icons = null;
 		misc = null;
 		distanceFieldShader = null;
+	}
+
+	public static ShaderProgram getDistanceFieldShader () {
+		return distanceFieldShader;
+	}
+
+	public static Drawable getIcon (String name) {
+		return new TextureRegionDrawable(getIconRegion(name));
+	}
+
+	public static TextureRegion getIconRegion (String name) {
+		return icons.findRegion(name);
 	}
 
 	public static Drawable getMisc (String name) {

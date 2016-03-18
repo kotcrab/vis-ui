@@ -20,13 +20,13 @@ import com.kotcrab.vis.editor.util.undo.UndoableAction;
 import com.kotcrab.vis.editor.util.undo.UndoableActionGroup;
 
 /**
- * UndoableActionGroup for assets transactions. The only diffrence is that this class does not allow immediate action execution.
+ * UndoableActionGroup for assets transactions. The only difference is that this class does not allow immediate action execution.
  * @author Kotcrab
  */
 public class AssetTransaction extends UndoableActionGroup {
 	@Override
 	public void execute (UndoableAction action) {
-		throw new UnsupportedOperationException("execute (UndoableAction) not supported for AssetTransaction use: add (UndoableAction) instead!");
+		throw new UnsupportedOperationException("#execute(UndoableAction) not supported for AssetTransaction use: #add(UndoableAction) instead!");
 	}
 
 	@Override

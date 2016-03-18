@@ -109,6 +109,6 @@ public enum Icons {
 		if (fromVisUI)
 			return VisUI.getSkin().getRegion(name);
 		else
-			return Assets.icons.findRegion(name);
+			return Assets.getIconRegion(name);
 	}
 }
