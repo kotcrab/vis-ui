@@ -20,6 +20,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 import com.kotcrab.vis.editor.event.ExceptionEvent;
+import com.kotcrab.vis.editor.util.ApplicationUtils;
 import com.kotcrab.vis.editor.util.PlatformUtils;
 import com.kotcrab.vis.editor.util.vis.CrashReporter;
 import com.kotcrab.vis.editor.util.vis.LaunchConfiguration;

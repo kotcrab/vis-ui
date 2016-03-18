@@ -42,6 +42,7 @@ import com.kotcrab.vis.editor.ui.dialog.SettingsDialog;
 import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
+import com.kotcrab.vis.editor.util.ApplicationUtils;
 import com.kotcrab.vis.editor.util.GLFWIconSetter;
 import com.kotcrab.vis.editor.util.ThreadUtils;
 import com.kotcrab.vis.editor.util.async.AsyncTask;

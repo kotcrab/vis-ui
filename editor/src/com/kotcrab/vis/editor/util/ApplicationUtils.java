@@ -1,6 +1,6 @@
-package com.kotcrab.vis.editor;
+package com.kotcrab.vis.editor.util;
 
-import com.kotcrab.vis.editor.util.PlatformUtils;
+import com.kotcrab.vis.editor.Log;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.commons.exec.DefaultExecutor;
