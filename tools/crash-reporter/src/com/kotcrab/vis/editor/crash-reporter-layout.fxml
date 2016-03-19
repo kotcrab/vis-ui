@@ -22,7 +22,7 @@
             <Label prefHeight="44.0" text="An unexpected error occurred and editor had to shutdown. Crash reported has been&#10;created. Would like to submit this crash report to VisEditor team to help fix this issue?" wrapText="true" />
          </children>
       </HBox>
-      <Label text="Describe what happened:" />
+      <Label text="Describe what happened: (optional)" />
       <TextArea fx:id="detailsTextArea" prefHeight="121.0" wrapText="true" />
       <Hyperlink onAction="#handleShowReport" text="See what this report contains" />
       <HBox prefWidth="200.0">
