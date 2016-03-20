@@ -21,9 +21,11 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter;
 import com.kotcrab.vis.editor.event.ExceptionEvent;
 import com.kotcrab.vis.editor.util.ApplicationUtils;
+import com.kotcrab.vis.editor.util.ExceptionUtils;
 import com.kotcrab.vis.editor.util.PlatformUtils;
 import com.kotcrab.vis.editor.util.vis.CrashReporter;
 import com.kotcrab.vis.editor.util.vis.LaunchConfiguration;
+import com.kotcrab.vis.ui.util.OsUtils;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.PumpStreamHandler;
@@ -119,6 +121,15 @@ public class Main {
 
 			Log.dispose();
 			System.exit(-3);
+		} catch (ExceptionInInitializerError err) {
+			if (OsUtils.isMac() && err.getCause() instanceof IllegalStateException) {
+				if (ExceptionUtils.getStackTrace(err).contains("Please run the JVM with -XstartOnFirstThread.")) {
+					System.out.println("Application was not launched on first thread. Restarting with -XstartOnFirstThread, add VM argument -XstartOnFirstThread to avoid this.");
+					ApplicationUtils.startNewInstance();
+				}
+			}
+
+			throw err;
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.kotcrab.vis.editor.util;
 
 import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.ui.util.OsUtils;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;
 import org.apache.commons.exec.DefaultExecutor;
@@ -14,9 +15,15 @@ public class ApplicationUtils {
 	public static String getRestartCommand () {
 		List<String> vmArguments = ManagementFactory.getRuntimeMXBean().getInputArguments();
 		StringBuilder vmArgsOneLine = new StringBuilder();
+
+		if (OsUtils.isMac()) {
+			vmArgsOneLine.append("-XstartOnFirstThread ");
+		}
+
 		for (String arg : vmArguments) {
-			if (arg.contains("-agentlib") == false)
+			if (arg.contains("-agentlib") == false) {
 				vmArgsOneLine.append(arg).append(" ");
+			}
 		}
 
 		final StringBuilder cmd = new StringBuilder(PlatformUtils.getJavaBinPath() + " " + vmArgsOneLine);
