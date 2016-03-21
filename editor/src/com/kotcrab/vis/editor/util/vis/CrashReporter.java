@@ -32,6 +32,7 @@ import java.util.Set;
  * @author Kotcrab
  */
 public class CrashReporter {
+	public static final String DATE_FORMAT = "yy-MM-dd HH-mm-ss";
 	private static final String TAG = "CrashReporter";
 
 	private StringBuilder crashReport;

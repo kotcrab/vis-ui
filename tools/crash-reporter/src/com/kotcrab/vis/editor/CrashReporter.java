@@ -22,7 +22,7 @@ import java.net.URL;
 import java.nio.file.Files;
 
 public class CrashReporter extends Application {
-	private static final String PATH = "http://apps.kotcrab.com/vis/crashes/report.php";
+	private static final String REPORT_URL = "http://apps.kotcrab.com/vis/crashes/report.php";
 
 	private static String restartCommand;
 	private static File reportFile;
@@ -114,7 +114,7 @@ public class CrashReporter extends Application {
 			@Override
 			public Void call () {
 				try {
-					HttpURLConnection connection = (HttpURLConnection) new URL(PATH + "?filename=" + reportFile.getName()).openConnection();
+					HttpURLConnection connection = (HttpURLConnection) new URL(REPORT_URL + "?filename=" + reportFile.getName()).openConnection();
 					connection.setDoOutput(true);
 					connection.setRequestMethod("POST");
 					OutputStream os = connection.getOutputStream();

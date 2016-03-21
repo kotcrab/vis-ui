@@ -1,7 +1,7 @@
 #### Version: 0.3.2
 - **Improved**: Texture cache speed improved - new texture are available immediately after they are added to project assets. Fixes issues when large textures were loading infinitely.
 - **Added**: [#58](https://github.com/kotcrab/vis-editor/issues/58) - Polygon auto tracing (available via Polygon Tool)
-- **Added**: Crash reporter
+- **Added**: Crash and internal exception reporter
 - **Fixed**: [#130](https://github.com/kotcrab/vis-editor/issues/130) - Exit dialog not showed on non Windows OSes
 - **Fixed**: Unable to open variables settings dialog for newly created scenes
 - **Fixed**: Minor bug: tabs panel wrong height

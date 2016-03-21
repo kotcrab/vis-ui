@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.ui.toast;
 
 import com.kotcrab.vis.editor.module.editor.ToastModule;
+import com.kotcrab.vis.editor.module.editor.ToastModule.ToastTable;
 import com.kotcrab.vis.editor.ui.dialog.DetailsDialog;
 import com.kotcrab.vis.editor.util.ExceptionUtils;
 import com.kotcrab.vis.ui.widget.LinkLabel;
@@ -27,7 +28,13 @@ import com.kotcrab.vis.ui.widget.VisTable;
  * @author Kotcrab
  * @see ToastModule
  */
-public class DetailsToast extends VisTable {
+public class DetailsToast extends ToastTable {
+	private final String text;
+	private final String detailsDialogTitle;
+	private final String details;
+
+	protected VisTable linkLabelsTable;
+
 	public DetailsToast (String text, Throwable cause) {
 		this(text, "Exception Details", ExceptionUtils.getStackTrace(cause));
 	}
@@ -37,10 +44,21 @@ public class DetailsToast extends VisTable {
 	}
 
 	public DetailsToast (String text, String detailsDialogTitle, String details) {
-		LinkLabel label = new LinkLabel("Details");
-		label.setListener(url -> getStage().addActor(new DetailsDialog(text, detailsDialogTitle, details).fadeIn()));
+		this.text = text;
+		this.detailsDialogTitle = detailsDialogTitle;
+		this.details = details;
 
-		add(text).expand().fill().row();
-		add(label).right();
+		content.add(text).expand().fill().row();
+
+		linkLabelsTable = new VisTable(true);
+		content.add(linkLabelsTable).spaceRight(12).right();
+		addLabels();
+		pack();
+	}
+
+	protected void addLabels () {
+		LinkLabel detailsLabel = new LinkLabel("Details");
+		detailsLabel.setListener(url -> getStage().addActor(new DetailsDialog(text, detailsDialogTitle, details).fadeIn()));
+		linkLabelsTable.add(detailsLabel);
 	}
 }

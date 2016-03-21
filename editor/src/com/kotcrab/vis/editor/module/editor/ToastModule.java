@@ -92,7 +92,7 @@ public class ToastModule extends EditorModule {
 		}
 	}
 
-	public static class ToastTable extends Table {
+	public static class ToastTable extends VisTable {
 		private ToastModule toastModule;
 		protected final Table content;
 

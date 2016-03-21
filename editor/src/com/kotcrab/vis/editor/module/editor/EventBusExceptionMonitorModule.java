@@ -19,7 +19,7 @@ package com.kotcrab.vis.editor.module.editor;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.event.EventBusExceptionEvent;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
-import com.kotcrab.vis.editor.ui.toast.DetailsToast;
+import com.kotcrab.vis.editor.ui.toast.InternalExceptionToast;
 
 /** @author Kotcrab */
 @EventBusSubscriber
@@ -28,6 +28,6 @@ public class EventBusExceptionMonitorModule extends EditorModule {
 
 	@Subscribe
 	public void handleEventBusException (EventBusExceptionEvent event) {
-		toastModule.show(new DetailsToast("Internal exception occurred", event.exception));
+		toastModule.show(new InternalExceptionToast("Internal exception occurred", event.exception));
 	}
 }

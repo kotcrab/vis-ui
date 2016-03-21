@@ -23,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Layout;
+import com.kotcrab.vis.editor.App;
+import com.kotcrab.vis.editor.event.EventBusExceptionEvent;
 import com.kotcrab.vis.editor.util.ApplicationUtils;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
@@ -56,11 +58,20 @@ public class DebugFeaturesControllerModule extends EditorModule {
 
 			if (debugEnabled == false) return false;
 
-			if (keycode == Keys.F7) {
+			if (keycode == Keys.F6) {
 				Dialogs.showOptionDialog(stage, "Warning", "Start new instance of application?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
 					@Override
 					public void yes () {
 						ApplicationUtils.startNewInstance();
+					}
+				});
+			}
+
+			if (keycode == Keys.F7) {
+				Dialogs.showOptionDialog(stage, "Warning", "Simulate internal exception?", OptionDialogType.YES_CANCEL, new OptionDialogAdapter() {
+					@Override
+					public void yes () {
+						App.eventBus.post(new EventBusExceptionEvent(new IllegalStateException(), null));
 					}
 				});
 			}
