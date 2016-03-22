@@ -6,7 +6,6 @@ target/
 ## Java
 
 *.class
-*.jar
 *.war
 *.ear
 hs_err_pid*
