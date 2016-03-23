@@ -31,6 +31,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public abstract class AsyncTask {
 	private Thread thread;
+	private String threadName;
 	private Runnable runnable;
 
 	private int progressPercent;
@@ -39,6 +40,7 @@ public abstract class AsyncTask {
 	private AsyncTaskListener listener;
 
 	public AsyncTask (String threadName) {
+		this.threadName = threadName;
 		runnable = () -> {
 			try {
 				execute();
@@ -115,6 +117,7 @@ public abstract class AsyncTask {
 	}
 
 	public void setMessage (String message) {
+		Log.debug("AsyncTask::" + threadName, message);
 		this.message = message;
 		if (listener != null) listener.messageChanged(message);
 	}
