@@ -52,7 +52,7 @@ uploadArchives {
     }
 }
 
-task copyExtJars (dependsOn: [':plugins:vis-editor-spine:jar', ':plugins:vis-editor-spine-notifier:jar']) {
+task copyExtJars(dependsOn: [':plugins:vis-editor-spine:jar', ':plugins:vis-editor-spine-notifier:jar']) {
     def spine = project(':plugins:vis-editor-spine')
     def spineRuntime = project(':plugins:vis-runtime-spine')
     def spineNotifier = project(':plugins:vis-editor-spine-notifier')
@@ -75,7 +75,7 @@ task copyExtJars (dependsOn: [':plugins:vis-editor-spine:jar', ':plugins:vis-edi
     }
 }
 
-task copyTools (dependsOn: [':tools:crash-reporter:jar']) {
+task copyTools(dependsOn: [':tools:crash-reporter:jar']) {
     def reporter = project(':tools:crash-reporter')
 
     doLast {
@@ -92,4 +92,7 @@ task run(dependsOn: [copyExtJars], type: JavaExec) {
     main = mainClassName
     classpath = sourceSets.main.runtimeClasspath
     ignoreExitValue = true
+    if (project.hasProperty("runArgs")) {
+        args = Eval.me(runArgs)
+    }
 }
