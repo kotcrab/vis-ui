@@ -19,7 +19,10 @@ package com.kotcrab.vis.editor.proxy;
 import com.artemis.Entity;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.kotcrab.vis.runtime.component.*;
+import com.kotcrab.vis.runtime.component.Origin;
+import com.kotcrab.vis.runtime.component.Tint;
+import com.kotcrab.vis.runtime.component.Transform;
+import com.kotcrab.vis.runtime.component.VisSprite;
 import com.kotcrab.vis.runtime.properties.BoundsOwner;
 
 /** @author Kotcrab */

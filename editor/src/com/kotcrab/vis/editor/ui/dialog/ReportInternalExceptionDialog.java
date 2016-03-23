@@ -82,6 +82,6 @@ public class ReportInternalExceptionDialog extends BaseDialog {
 	}
 
 	public interface ReportInternalExceptionDialogListener {
-		void success();
+		void success ();
 	}
 }

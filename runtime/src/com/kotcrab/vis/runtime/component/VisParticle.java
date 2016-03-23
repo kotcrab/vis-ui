@@ -18,8 +18,8 @@ package com.kotcrab.vis.runtime.component;
 
 import com.artemis.Component;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
-import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
 import com.kotcrab.vis.runtime.component.proto.ProtoComponent;
+import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.annotation.VisInternal;
 import com.kotcrab.vis.runtime.util.autotable.ATProperty;

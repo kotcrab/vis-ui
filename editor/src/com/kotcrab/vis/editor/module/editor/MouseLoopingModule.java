@@ -21,12 +21,12 @@ import com.kotcrab.vis.ui.util.OsUtils;
 
 /**
  * Allows to catch mouse inside current screen. Used for example when dragging objects.
- * @see AWTMouseLoopingModule
  * @author Kotcrab
+ * @see AWTMouseLoopingModule
  */
 public abstract class MouseLoopingModule extends EditorModule {
 	/** @return true if implementation can support mouse looping, false otherwise */
-	public abstract boolean isLoopingSupported();
+	public abstract boolean isLoopingSupported ();
 
 	/**
 	 * Enables cursor looping. Looping will be auto disabled after touchUp event. This should be called only once for

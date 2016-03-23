@@ -333,7 +333,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		}));
 
 		createFolderButton.addListener(new VisChangeListener((event, actor) -> {
-			Dialogs.showInputDialog(mainTable.getStage(),FileChooserText.NEW_DIRECTORY_DIALOG_TITLE.get(), FileChooserText.NEW_DIRECTORY_DIALOG_TEXT.get(), true, new InputDialogAdapter() {
+			Dialogs.showInputDialog(mainTable.getStage(), FileChooserText.NEW_DIRECTORY_DIALOG_TITLE.get(), FileChooserText.NEW_DIRECTORY_DIALOG_TEXT.get(), true, new InputDialogAdapter() {
 				@Override
 				public void finished (String input) {
 					if (FileUtils.isValidFileName(input) == false) {
@@ -597,7 +597,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 
 	@Subscribe
 	public void handleResourceReloaded (ResourceReloadedEvent event) {
-		if(event.resourceTypes.contains(ResourceType.TEXTURE_ATLASES)) refreshFilesList();
+		if (event.resourceTypes.contains(ResourceType.TEXTURE_ATLASES)) refreshFilesList();
 	}
 
 	private class AssetsPopupMenu extends PopupMenu {

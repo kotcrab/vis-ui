@@ -25,7 +25,7 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
  * Performs removing entities from engine and allows to undo this operation.
  * @author Kotcrab
  */
-public class EntitiesRemovedAction extends AbstractEntityLifecycleAction{
+public class EntitiesRemovedAction extends AbstractEntityLifecycleAction {
 	public EntitiesRemovedAction (SceneModuleContainer sceneMC, EntityEngine engine, Entity entity) {
 		super(sceneMC, engine, entity);
 	}

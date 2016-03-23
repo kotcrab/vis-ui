@@ -151,7 +151,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 	@Override
 	public Actor getUIByField (Class type, Field field) {
 		SelectFileDialogSet set = fileDialogLabels.get(field);
-		if(set == null) return null;
+		if (set == null) return null;
 		return set.fileLabel;
 	}
 

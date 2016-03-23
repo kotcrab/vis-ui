@@ -1,6 +1,5 @@
 <code_scheme name="vis-intellij-formatter">
   <option name="AUTODETECT_INDENTS" value="false" />
-  <option name="INSERT_INNER_CLASS_IMPORTS" value="true" />
   <option name="PACKAGES_TO_USE_IMPORT_ON_DEMAND">
     <value />
   </option>

@@ -86,7 +86,7 @@ public class EnumSelectBoxFragmentProvider extends AutoTableFragmentProvider<ATE
 	@Override
 	public Actor getUIByField (Class type, Field field) {
 		EnumSelectBoxSet set = enumSelectBoxes.get(field);
-		if(set == null) return null;
+		if (set == null) return null;
 		return set.selectBox;
 	}
 

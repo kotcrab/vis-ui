@@ -141,8 +141,8 @@ public class ScaleTool extends AbstractGizmoTool {
 
 				if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
 					float ratio = startingProps.scaleX / startingProps.scaleY;
-					if(mouseInsideRectX) scaleDeltaY = scaleDeltaX / ratio;
-					if(mouseInsideRectY) scaleDeltaX = scaleDeltaY / ratio;
+					if (mouseInsideRectX) scaleDeltaY = scaleDeltaX / ratio;
+					if (mouseInsideRectY) scaleDeltaX = scaleDeltaY / ratio;
 					entity.setScale(startingProps.scaleX - scaleDeltaX, startingProps.scaleY - scaleDeltaY);
 				} else {
 					entity.setScale(

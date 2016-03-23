@@ -233,8 +233,9 @@ public class Parser {
 	}
 
 	private void postCheck () {
-		if (identifiers.size() > 0) System.out.println("Post check warning: identifier stack not empty after parsing. " +
-				"Some identifiers not closed or internal parser error.");
+		if (identifiers.size() > 0)
+			System.out.println("Post check warning: identifier stack not empty after parsing. " +
+					"Some identifiers not closed or internal parser error.");
 
 		for (StyleIdentifier id : globalStyles) {
 			postCheckStyleId(id);

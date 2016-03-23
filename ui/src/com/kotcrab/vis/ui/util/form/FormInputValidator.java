@@ -23,9 +23,9 @@ import com.kotcrab.vis.ui.util.InputValidator;
  * differ from creating standard {@link InputValidator}. You just need to supply error message which will be displayed
  * when form validation failed on this validator. Because implementing custom {@link FormInputValidator} does not require
  * any more changes you can use {@link ValidatorWrapper} for existing {@link InputValidator}s.
+ * @author Kotcrab
  * @see InputValidator
  * @see ValidatorWrapper
- * @author Kotcrab
  */
 public abstract class FormInputValidator implements InputValidator {
 	private String errorMsg;

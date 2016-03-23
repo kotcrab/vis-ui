@@ -19,18 +19,17 @@ package com.kotcrab.vis.runtime.system.delegate;
 /**
  * Delegated processing is achieved by implementing
  * the EntityProcessAgent interface.
- *
  * @author Daan van Yperen
  */
 public interface EntityProcessAgent {
 
 	/** Prepare to receive a set of entities. */
-	public void begin();
+	public void begin ();
 
 	/** Done receiving entities. */
-	public void end();
+	public void end ();
 
 	/** Process the entity. */
-	public void process(int e);
+	public void process (int e);
 
 }

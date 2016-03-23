@@ -27,8 +27,11 @@ import com.badlogic.gdx.utils.JsonWriter.OutputType;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialog;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogListener;
-import com.kotcrab.vis.ui.widget.*;
+import com.kotcrab.vis.ui.widget.ButtonBar;
 import com.kotcrab.vis.ui.widget.ButtonBar.ButtonType;
+import com.kotcrab.vis.ui.widget.VisCheckBox;
+import com.kotcrab.vis.ui.widget.VisLabel;
+import com.kotcrab.vis.ui.widget.VisWindow;
 
 import java.util.Optional;
 

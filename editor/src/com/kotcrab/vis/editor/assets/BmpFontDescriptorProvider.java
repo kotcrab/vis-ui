@@ -29,7 +29,8 @@ import com.kotcrab.vis.runtime.assets.BmpFontAsset;
 public class BmpFontDescriptorProvider implements AssetDescriptorProvider<BmpFontAsset> {
 	@Override
 	public BmpFontAsset provide (AssetsMetadataModule metadata, FileHandle file, String relativePath) {
-		if(ProjectPathUtils.isBitmapFont(file) == false && ProjectPathUtils.isBitmapFontTexture(file) == false) return null;
+		if (ProjectPathUtils.isBitmapFont(file) == false && ProjectPathUtils.isBitmapFontTexture(file) == false)
+			return null;
 
 		if (relativePath.endsWith("fnt"))
 			return new BmpFontAsset(relativePath, null);

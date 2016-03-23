@@ -34,8 +34,8 @@ package com.kotcrab.vis.plugin.spine;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.kotcrab.vis.plugin.spine.components.SpinePreview;
-import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
 import com.kotcrab.vis.plugin.spine.runtime.ProtoVisSpine;
+import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 

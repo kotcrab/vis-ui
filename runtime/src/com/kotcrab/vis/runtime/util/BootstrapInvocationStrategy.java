@@ -29,7 +29,7 @@ public class BootstrapInvocationStrategy extends SystemInvocationStrategy {
 		Object[] systemsData = systems.getData();
 		for (int i = 0, s = systems.size(); s > i; i++) {
 			BaseSystem system = (BaseSystem) systemsData[i];
-			if(system instanceof BootstrapSystem) {
+			if (system instanceof BootstrapSystem) {
 				system.process();
 				updateEntityStates();
 			}

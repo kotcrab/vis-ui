@@ -24,8 +24,8 @@ import java.awt.*;
 
 /**
  * Uses AWT Robot which is not supported on all platforms.
- * @see MouseLoopingModule
  * @author Kotcrab
+ * @see MouseLoopingModule
  */
 class AWTMouseLoopingModule extends MouseLoopingModule {
 	private static final int MARGIN = 15;

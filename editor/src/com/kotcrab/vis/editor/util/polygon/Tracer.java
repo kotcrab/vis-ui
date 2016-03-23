@@ -46,7 +46,7 @@ public class Tracer {
 				polygons[i][ii] = outline.get(ii);
 				polygons[i][ii].x /= width;
 				polygons[i][ii].y /= width;
-				polygons[i][ii].y = 1*height/width - polygons[i][ii].y;
+				polygons[i][ii].y = 1 * height / width - polygons[i][ii].y;
 			}
 		}
 

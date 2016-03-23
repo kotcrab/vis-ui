@@ -255,7 +255,7 @@ public class Editor extends ApplicationAdapter {
 		if (editorMC != null) editorMC.dispose();
 		if (projectLoaded) projectMC.dispose();
 
-		if(stage != null) stage.dispose();
+		if (stage != null) stage.dispose();
 		Assets.dispose();
 		VisUI.dispose();
 

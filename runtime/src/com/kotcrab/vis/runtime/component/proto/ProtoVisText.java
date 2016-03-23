@@ -24,7 +24,7 @@ import com.kotcrab.vis.runtime.system.inflater.TextInflater;
  * @author Kotcrab
  * @see TextInflater
  */
-public class ProtoVisText extends ProtoComponent<VisText>{
+public class ProtoVisText extends ProtoComponent<VisText> {
 	public String text;
 	public boolean autoSetOriginToCenter;
 	public boolean isUsesDistanceField;

@@ -28,5 +28,5 @@ public abstract class VisCloner<T> implements IFastCloner {
 		return cloneObject((T) t, cloner, clones);
 	}
 
-	protected abstract T cloneObject(T t, IDeepCloner cloner, Map<Object, Object> clones);
+	protected abstract T cloneObject (T t, IDeepCloner cloner, Map<Object, Object> clones);
 }

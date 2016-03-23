@@ -48,7 +48,7 @@ public class SpriteInflater extends InflaterSystem {
 
 	@Override
 	public void inserted (int entityId) {
-		VisAssetDescriptor asset =  assetCm.get(entityId).asset;
+		VisAssetDescriptor asset = assetCm.get(entityId).asset;
 
 		String atlasPath;
 		String atlasRegion;

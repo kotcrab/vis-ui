@@ -130,7 +130,6 @@ public class StringStringMapView extends VisTable {
 						props.setupStdPropertiesTextField(valueField);
 					});
 
-
 					add(keyField).width(FIELD_WIDTH).padRight(4);
 					add(valueField).width(FIELD_WIDTH).padRight(4);
 					add(deleteButton).height(valueField.getHeight());

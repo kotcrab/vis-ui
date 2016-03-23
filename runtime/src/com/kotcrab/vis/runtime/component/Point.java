@@ -19,7 +19,7 @@ package com.kotcrab.vis.runtime.component;
 import com.artemis.Component;
 
 /** @author Kotcrab */
-public class Point extends Component  {
+public class Point extends Component {
 	public Point () {
 	}
 }

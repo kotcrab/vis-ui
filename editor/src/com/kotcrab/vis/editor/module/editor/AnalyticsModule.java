@@ -17,8 +17,8 @@
 package com.kotcrab.vis.editor.module.editor;
 
 /**
- * @deprecated no longer used, left here because removing {@link AnalyticsState} enum would invalidate user preferences file.
  * @author Kotcrab
+ * @deprecated no longer used, left here because removing {@link AnalyticsState} enum would invalidate user preferences file.
  */
 @Deprecated
 public class AnalyticsModule extends EditorModule {

@@ -48,7 +48,7 @@ public class IntMapJsonSerializer<T> implements JsonSerializer<IntMap<T>>, JsonD
 			JsonObject object = element.getAsJsonObject();
 			Entry<String, JsonElement> entry = object.entrySet().iterator().next();
 			int mapKey = Integer.parseInt(entry.getKey());
-			Class<?> mapObjectClass =  GsonUtils.readClassProperty(object, context);
+			Class<?> mapObjectClass = GsonUtils.readClassProperty(object, context);
 			intMap.put(mapKey, context.deserialize(entry.getValue(), mapObjectClass));
 		}
 

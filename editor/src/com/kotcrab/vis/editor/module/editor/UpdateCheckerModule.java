@@ -119,7 +119,7 @@ public class UpdateCheckerModule extends EditorModule {
 				for (int i = 1; i < links.size(); i++) { //first link is ../ so we skip it
 					String url = links.get(i).absUrl("href");
 					Matcher matcher = BUILD_TIMESTAMP_PATTERN.matcher(url);
-					if(matcher.find()) {
+					if (matcher.find()) {
 						String timestamp = matcher.group();
 						builds.add(new EditorBuild(timestamp, url));
 					}

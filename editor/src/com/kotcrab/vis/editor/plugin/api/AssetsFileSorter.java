@@ -33,5 +33,5 @@ public interface AssetsFileSorter {
 	 */
 	boolean isMainFile (FileHandle file);
 
-	boolean isExportedFile(FileHandle file);
+	boolean isExportedFile (FileHandle file);
 }

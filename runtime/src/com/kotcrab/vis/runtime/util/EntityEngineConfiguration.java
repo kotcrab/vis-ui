@@ -38,7 +38,8 @@ public class EntityEngineConfiguration {
 	}
 
 	public <C extends BaseSystem> C getSystem (Class<C> clazz) {
-		if (built) throw new IllegalStateException("This configuration was already build and it's contents cannot be accessed!");
+		if (built)
+			throw new IllegalStateException("This configuration was already build and it's contents cannot be accessed!");
 
 		for (int i = 0; i < systems.size; i++) {
 			BaseSystem system = systems.get(i);

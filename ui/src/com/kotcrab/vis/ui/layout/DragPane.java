@@ -17,11 +17,7 @@
 package com.kotcrab.vis.ui.layout;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
 import com.badlogic.gdx.scenes.scene2d.ui.VerticalGroup;
@@ -60,8 +56,8 @@ public class DragPane extends Container<WidgetGroup> {
 
 	/**
 	 * @param group must append its actors through standard {@link WidgetGroup#addActor(Actor)} method. Must support
-	 *           {@link WidgetGroup#addActorAfter(Actor, Actor)} and {@link WidgetGroup#addActorBefore(Actor, Actor)} methods. Note
-	 *           that {@link com.badlogic.gdx.scenes.scene2d.ui.Table} does not meet these requirements.
+	 * {@link WidgetGroup#addActorAfter(Actor, Actor)} and {@link WidgetGroup#addActorBefore(Actor, Actor)} methods. Note
+	 * that {@link com.badlogic.gdx.scenes.scene2d.ui.Table} does not meet these requirements.
 	 * @see VerticalGroup
 	 * @see HorizontalGroup
 	 * @see GridGroup
@@ -337,7 +333,7 @@ public class DragPane extends Container<WidgetGroup> {
 
 		/**
 		 * @param policy determines behavior of dragged actors. Allows to prohibit actors from being added to a {@link DragPane}.
-		 *           Cannot be null.
+		 * Cannot be null.
 		 * @see #setPolicy(Policy)
 		 */
 		public DefaultDragListener (final Policy policy) {
@@ -346,7 +342,7 @@ public class DragPane extends Container<WidgetGroup> {
 
 		/**
 		 * @param policy determines behavior of dragged actors. Allows to prohibit actors from being added to a {@link DragPane}.
-		 *           Cannot be null.
+		 * Cannot be null.
 		 * @see DefaultPolicy
 		 */
 		public void setPolicy (final Policy policy) {
@@ -613,7 +609,7 @@ public class DragPane extends Container<WidgetGroup> {
 
 			/**
 			 * @param max if {@link DragPane}'s children amount equals (or is greater than) this value, other children will not be
-			 *           accepted.
+			 * accepted.
 			 */
 			public LimitChildren (final int max) {
 				this.max = max;
