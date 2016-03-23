@@ -5,6 +5,7 @@
 - **Fixed**: [#130](https://github.com/kotcrab/vis-editor/issues/130) - Exit dialog not showed on non Windows OSes
 - **Fixed**: Unable to open variables settings dialog for newly created scenes
 - **Fixed**: Minor bug: tabs panel wrong height
+- **Fixed**: Invisible TTF fonts
 
 #### Version: 0.3.1
 - **Added**: Scale entities tool

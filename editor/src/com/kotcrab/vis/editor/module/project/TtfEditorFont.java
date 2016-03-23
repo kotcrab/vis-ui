@@ -48,6 +48,7 @@ public class TtfEditorFont {
 
 		if (font == null) {
 			font = generator.generateFont(getParameterForSize(size));
+			font.setUseIntegerPositions(false);
 			font.getData().setScale(1f / pixelsPerUnit);
 			bitmapFonts.put(size, font);
 		}
