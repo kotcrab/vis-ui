@@ -19,7 +19,9 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
+import com.kotcrab.vis.editor.ui.IndeterminateTextField;
 import com.kotcrab.vis.editor.ui.TintImage;
 import com.kotcrab.vis.editor.util.scene2d.FieldUtils;
 import com.kotcrab.vis.editor.util.value.FloatProxyValue;
@@ -27,12 +29,15 @@ import com.kotcrab.vis.editor.util.vis.EntityUtils;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.value.VisValue;
+import com.kotcrab.vis.ui.widget.Tooltip;
+import com.kotcrab.vis.ui.widget.VisImage;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import com.kotcrab.vis.ui.widget.color.ColorPicker;
 import com.kotcrab.vis.ui.widget.color.ColorPickerAdapter;
 import com.kotcrab.vis.ui.widget.color.ColorPickerListener;
+
+import java.util.EnumSet;
 
 import static com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties.*;
 
@@ -53,7 +58,7 @@ public class BasicEntityPropertiesTable extends VisTable {
 	private VisTable tintTable;
 	private VisTable flipTable;
 
-	private VisValidatableTextField idField;
+	private IndeterminateTextField idField;
 	private NumberInputField xField;
 	private NumberInputField yField;
 	private NumberInputField xScaleField;
@@ -63,6 +68,13 @@ public class BasicEntityPropertiesTable extends VisTable {
 	private NumberInputField rotationField;
 	private IndeterminateCheckbox xFlipCheck;
 	private IndeterminateCheckbox yFlipCheck;
+
+	private VisImage positionLock = createLockImage();
+	private VisImage originLock = createLockImage();
+	private VisImage scaleLock = createLockImage();
+	private VisImage rotationLock = createLockImage();
+
+	private EnumSet<LockableField> lockedFields = EnumSet.noneOf(LockableField.class);
 
 	public BasicEntityPropertiesTable (EntityProperties properties, ColorPicker picker) {
 		this.properties = properties;
@@ -90,12 +102,19 @@ public class BasicEntityPropertiesTable extends VisTable {
 		};
 	}
 
+	private VisImage createLockImage () {
+		VisImage image = new VisImage(Icons.LOCKED.drawable());
+		new Tooltip.Builder("This property is locked by other component setting").target(image).build();
+		image.setVisible(false);
+		return image;
+	}
+
 	private void createIdTable () {
+		idField = new IndeterminateTextField();
 		idTable = new VisTable(true);
 		idTable.add(new VisLabel("ID"));
-		idTable.add(idField = new VisValidatableTextField()).expandX().fillX();
-
-		properties.setupStdPropertiesTextField(idField);
+		idTable.add(idField.getTextField()).expandX().fillX();
+		properties.setupStdPropertiesTextField(idField.getTextField());
 	}
 
 	private void createPositionTable () {
@@ -104,7 +123,8 @@ public class BasicEntityPropertiesTable extends VisTable {
 		positionTable.add(new VisLabel("X")).width(AXIS_LABEL_WIDTH);
 		positionTable.add(xField = properties.createNewNumberField()).width(FIELD_WIDTH);
 		positionTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
-		positionTable.add(yField = properties.createNewNumberField()).width(FIELD_WIDTH);
+		positionTable.add(yField = properties.createNewNumberField()).width(FIELD_WIDTH).spaceRight(0);
+		positionTable.add(positionLock);
 	}
 
 	private void createScaleTable () {
@@ -113,7 +133,8 @@ public class BasicEntityPropertiesTable extends VisTable {
 		scaleTable.add(new VisLabel("X")).width(AXIS_LABEL_WIDTH);
 		scaleTable.add(xScaleField = properties.createNewNumberField()).width(FIELD_WIDTH);
 		scaleTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
-		scaleTable.add(yScaleField = properties.createNewNumberField()).width(FIELD_WIDTH);
+		scaleTable.add(yScaleField = properties.createNewNumberField()).width(FIELD_WIDTH).spaceRight(0);
+		scaleTable.add(scaleLock);
 	}
 
 	private void createOriginTable () {
@@ -122,7 +143,8 @@ public class BasicEntityPropertiesTable extends VisTable {
 		originTable.add(new VisLabel("X")).width(AXIS_LABEL_WIDTH);
 		originTable.add(xOriginField = properties.createNewNumberField()).width(FIELD_WIDTH);
 		originTable.add(new VisLabel("Y")).width(AXIS_LABEL_WIDTH);
-		originTable.add(yOriginField = properties.createNewNumberField()).width(FIELD_WIDTH);
+		originTable.add(yOriginField = properties.createNewNumberField()).width(FIELD_WIDTH).spaceRight(0);
+		originTable.add(originLock);
 	}
 
 	private void createRotationTintTable () {
@@ -144,7 +166,8 @@ public class BasicEntityPropertiesTable extends VisTable {
 		rotationTable = new VisTable(true);
 		rotationTable.add(new VisLabel("Rotation")).width(LABEL_WIDTH);
 		rotationTable.add(new VisLabel(" ")).width(AXIS_LABEL_WIDTH);
-		rotationTable.add(rotationField = properties.createNewNumberField()).width(FIELD_WIDTH);
+		rotationTable.add(rotationField = properties.createNewNumberField()).width(FIELD_WIDTH).spaceRight(0);
+		rotationTable.add(rotationLock);
 	}
 
 	private void createFlipTable () {
@@ -156,6 +179,25 @@ public class BasicEntityPropertiesTable extends VisTable {
 
 		xFlipCheck.addListener(properties.getSharedCheckBoxChangeListener());
 		yFlipCheck.addListener(properties.getSharedCheckBoxChangeListener());
+	}
+
+	public void lockField (LockableField field) {
+		if (lockedFields.contains(field) == false) {
+			field.lockFields(this);
+		}
+		lockedFields.add(field);
+	}
+
+	public void unlockField (LockableField field) {
+		if (lockedFields.contains(field)) {
+			field.unlockFields(this);
+		}
+		lockedFields.remove(field);
+	}
+
+	public void unlockAllFields () {
+		lockedFields.forEach(field -> field.unlockFields(this));
+		lockedFields.clear();
 	}
 
 	public void rebuildPropertiesTable () {
@@ -199,8 +241,7 @@ public class BasicEntityPropertiesTable extends VisTable {
 		for (int i = 0; i < entities.size(); i++) {
 			EntityProxy entity = entities.get(i);
 
-			//TODO support indeterminate textfield
-			if (properties.isGroupSelected() == false && idField.getText().equals("<?>") == false)
+			if (properties.isGroupSelected() == false && idField.isIndeterminate() == false)
 				entity.setId(idField.getText().equals("") ? null : idField.getText());
 
 			entity.setPosition(FieldUtils.getFloat(xField, entity.getX()), FieldUtils.getFloat(yField, entity.getY()));
@@ -231,7 +272,13 @@ public class BasicEntityPropertiesTable extends VisTable {
 			idField.setText("<id cannot be set for group>");
 			idField.setDisabled(true);
 		} else {
-			idField.setText(EntityUtils.getCommonId(entities));
+			String id = EntityUtils.getCommonId(entities);
+			if (id == null) {
+				idField.setIndeterminate(true);
+			} else {
+				idField.setIndeterminate(false);
+				idField.setText(id);
+			}
 			idField.setDisabled(false);
 		}
 
@@ -271,7 +318,7 @@ public class BasicEntityPropertiesTable extends VisTable {
 
 	private String getEntitiesFieldFloatValue (FloatProxyValue floatProxyValue) {
 		ImmutableArray<EntityProxy> entities = properties.getSelectedEntities();
-		return EntityUtils.getEntitiesCommonFloatValue(entities, floatProxyValue);
+		return EntityUtils.getCommonFloatValue(entities, floatProxyValue);
 	}
 
 	private void setTintUIForEntities () {
@@ -289,4 +336,65 @@ public class BasicEntityPropertiesTable extends VisTable {
 		tint.setColor(firstColor);
 	}
 
+	public enum LockableField {
+		POSITION {
+			@Override
+			protected void lockFields (BasicEntityPropertiesTable table) {
+				table.xField.setDisabled(true);
+				table.yField.setDisabled(true);
+				table.positionLock.setVisible(true);
+			}
+
+			@Override
+			protected void unlockFields (BasicEntityPropertiesTable table) {
+				table.xField.setDisabled(false);
+				table.yField.setDisabled(false);
+				table.positionLock.setVisible(false);
+			}
+		}, SCALE {
+			@Override
+			protected void lockFields (BasicEntityPropertiesTable table) {
+				table.xScaleField.setDisabled(true);
+				table.yScaleField.setDisabled(true);
+				table.scaleLock.setVisible(true);
+			}
+
+			@Override
+			protected void unlockFields (BasicEntityPropertiesTable table) {
+				table.xScaleField.setDisabled(false);
+				table.yScaleField.setDisabled(false);
+				table.scaleLock.setVisible(false);
+			}
+		}, ORIGIN {
+			@Override
+			protected void lockFields (BasicEntityPropertiesTable table) {
+				table.xOriginField.setDisabled(true);
+				table.yOriginField.setDisabled(true);
+				table.originLock.setVisible(true);
+			}
+
+			@Override
+			protected void unlockFields (BasicEntityPropertiesTable table) {
+				table.xOriginField.setDisabled(false);
+				table.yOriginField.setDisabled(false);
+				table.originLock.setVisible(false);
+			}
+		}, ROTATION {
+			@Override
+			protected void lockFields (BasicEntityPropertiesTable table) {
+				table.rotationField.setDisabled(true);
+				table.rotationLock.setVisible(true);
+			}
+
+			@Override
+			protected void unlockFields (BasicEntityPropertiesTable table) {
+				table.rotationField.setDisabled(false);
+				table.rotationLock.setVisible(false);
+			}
+		};
+
+		protected abstract void lockFields (BasicEntityPropertiesTable table);
+
+		protected abstract void unlockFields (BasicEntityPropertiesTable table);
+	}
 }

@@ -53,6 +53,7 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 
 		//TODO: [plugin] plugin entry point
 		fragmentProviders.put(ATProperty.class, new PropertyFragmentProvider());
+		fragmentProviders.put(ATTextProperty.class, new TextPropertyFragmentProvider());
 		fragmentProviders.put(ATSelectFile.class, new SelectFileFragmentProvider());
 		fragmentProviders.put(ATVector2Array.class, new Vector2ViewFragmentProvider());
 		fragmentProviders.put(ATEnumProperty.class, new EnumSelectBoxFragmentProvider());
@@ -155,7 +156,7 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 
 		Class<?> type = field.getType();
 		for (AutoTableFragmentProvider<?> provider : fragmentProviders.values()) {
-			Actor actor = provider.getUIByField(type, field);
+			Object actor = provider.getUIByField(type, field);
 			if (actor != null) return widgetType.cast(actor);
 		}
 

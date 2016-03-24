@@ -29,6 +29,10 @@ import com.kotcrab.vis.runtime.properties.BoundsOwner;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.annotation.VisInternal;
+import com.kotcrab.vis.runtime.util.autotable.ATFieldId;
+import com.kotcrab.vis.runtime.util.autotable.ATProperty;
+import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
+import com.kotcrab.vis.runtime.util.autotable.ATTextProperty;
 
 /**
  * Text component storing all text properties.
@@ -37,11 +41,18 @@ import com.kotcrab.vis.runtime.util.annotation.VisInternal;
 public class VisText extends Component implements SizeOwner, BoundsOwner, UsesProtoComponent {
 	private transient boolean dirty = true;
 
-	private boolean distanceFieldShaderEnabled;
+	@ATFieldId(id = "autoSetOriginToCenter")
+	@ATProperty(fieldName = "Auto Set Origin to Center")
 	private boolean autoSetOriginToCenter = true;
+	@ATFieldId(id = "distanceFieldShaderEnabled")
+	@ATProperty(fieldName = "Enable Distance Field", tooltip = "Controls whether to use distance field shader for rendering this text.\nNote that " +
+			"this is only useful for fonts that were generated for\ndistance field shader and may produce unexpected results on standard fonts.")
+	private boolean distanceFieldShaderEnabled;
 
+	@ATTextProperty(fieldName = "Text")
 	private CharSequence text;
 
+	@ATSelectFile(fieldName = "Font", extension = "ext handler overrides", handlerAlias = "font", extHandlerAlias = "font")
 	private transient BitmapFontCache cache;
 	private transient GlyphLayout textLayout;
 

@@ -30,7 +30,7 @@ import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
  * Stores entity Music
  * @author Kotcrab
  */
-public class VisMusic extends Component implements UsesProtoComponent { //emulated on gwt
+public class VisMusic extends Component implements UsesProtoComponent {
 	@ATSelectFile(fieldName = "Music", extension = "mp3|wav|ogg", hideExtension = false, handlerAlias = "music")
 	@ATProperty(fieldName = "Loop")
 	@ATReflectedProperty(targetType = boolean.class, getterName = "isLooping", setterName = "setLooping")

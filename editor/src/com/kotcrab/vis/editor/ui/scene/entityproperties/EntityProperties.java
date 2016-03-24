@@ -21,6 +21,7 @@ import com.artemis.Entity;
 import com.artemis.utils.Bag;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -45,9 +46,6 @@ import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
 import com.kotcrab.vis.editor.module.scene.system.VisComponentManipulator;
 import com.kotcrab.vis.editor.plugin.api.ComponentTableProvider;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.BMPTextUITable;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.SpecificUITable;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.specifictable.TtfTextUITable;
 import com.kotcrab.vis.editor.ui.toast.DetailsToast;
 import com.kotcrab.vis.editor.util.gdx.ArrayUtils;
 import com.kotcrab.vis.editor.util.scene2d.EventStopper;
@@ -64,6 +62,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -77,7 +76,7 @@ import java.util.UUID;
 public class EntityProperties extends VisTable {
 	public static final int LABEL_WIDTH = 60;
 	public static final int AXIS_LABEL_WIDTH = 10;
-	public static final int FIELD_WIDTH = 70;
+	public static final int FIELD_WIDTH = 65;
 	public static final int ROW_WIDTH = 245;
 
 	private StatusBarModule statusBarModule;
@@ -103,8 +102,7 @@ public class EntityProperties extends VisTable {
 	private boolean snapshotInProgress;
 	private SnapshotUndoableActionGroup snapshots;
 
-	private boolean uiValuesUpdateInProgress;
-	private boolean additionalUIValuesUpdateRequested;
+	private boolean uiValuesUpdateRequested;
 
 	//UI
 	private VisTable propertiesTable;
@@ -113,9 +111,6 @@ public class EntityProperties extends VisTable {
 
 	private ComponentSelectDialog componentSelectDialog;
 	private VisTextButton addComponentButton;
-
-	private Array<SpecificUITable> specificTables = new Array<>();
-	private SpecificUITable activeSpecificTable;
 
 	private Array<ComponentTable<?>> componentTables = new Array<>();
 	private Array<ComponentTable<?>> activeComponentTables = new Array<>();
@@ -209,10 +204,6 @@ public class EntityProperties extends VisTable {
 			ActorUtils.keepWithinStage(getStage(), componentSelectDialog);
 		}));
 
-		//deprecated api
-		registerSpecificTable(new TtfTextUITable());
-		registerSpecificTable(new BMPTextUITable());
-
 		for (ComponentTableProvider provider : extensionStorage.getComponentTableProviders()) {
 			ComponentTable<?> table = provider.provide(sceneMC);
 			componentTables.add(table);
@@ -248,16 +239,6 @@ public class EntityProperties extends VisTable {
 			propertiesTable.add(groupProperties).row();
 		}
 
-		activeSpecificTable = null;
-		for (SpecificUITable table : specificTables) {
-			if (checkIfUITableSupportedForSelection(table)) {
-				activeSpecificTable = table;
-				propertiesTable.add(new Separator()).fillX().row();
-				propertiesTable.add(table).row();
-				break;
-			}
-		}
-
 		activeComponentTables.clear();
 		if (entities.size() > 0) {
 			Bag<Component> components = entities.get(0).getEntity().getComponents(new Bag<>());
@@ -277,6 +258,8 @@ public class EntityProperties extends VisTable {
 			}
 		}
 
+		revalidateFieldLocks();
+
 		if (groupSelected == false) {
 			propertiesTable.addSeparator().padTop(0).padBottom(0).spaceTop(3).spaceBottom(3);
 			propertiesTable.add(addComponentButton).spaceBottom(3).fill(false);
@@ -289,22 +272,12 @@ public class EntityProperties extends VisTable {
 		if (componentTables.size == 0) return null;
 
 		for (ComponentTable<?> table : componentTables) {
-			if (table.getComponentClass().equals(component.getClass()))
+			if (table.getComponentClass().equals(component.getClass())) {
 				return (ComponentTable<T>) table;
+			}
 		}
 
 		return null;
-	}
-
-	private boolean checkIfUITableSupportedForSelection (SpecificUITable table) {
-		ImmutableArray<EntityProxy> entities = getSelectedEntities();
-		if (entities.size() == 0) return false;
-
-		for (EntityProxy entity : entities) {
-			if (table.isSupported(entity) == false) return false;
-		}
-
-		return true;
 	}
 
 	@Override
@@ -333,12 +306,21 @@ public class EntityProperties extends VisTable {
 		updateUIValues(true);
 	}
 
-	public void requestAdditionalUIValuesUpdate () {
-		if (uiValuesUpdateInProgress) {
-			additionalUIValuesUpdateRequested = true;
-		} else {
-			updateUIValues(true);
+	@Override
+	public void draw (Batch batch, float parentAlpha) {
+		super.draw(batch, parentAlpha);
+		if (uiValuesUpdateRequested) {
+			uiValuesUpdateRequested = false;
+			updateUIValues(false);
 		}
+	}
+
+	/**
+	 * Called from {@link #setValuesToEntities()} when some value was modified and UI requires update. Update will be
+	 * performed on next frame.
+	 */
+	public void requestUIValuesUpdate () {
+		uiValuesUpdateRequested = true;
 	}
 
 	public void beginSnapshot () {
@@ -406,7 +388,6 @@ public class EntityProperties extends VisTable {
 		basicProperties.setValuesToEntity();
 		if (groupSelected) groupProperties.setValuesToSceneGroupData();
 
-		if (activeSpecificTable != null) activeSpecificTable.setValuesToEntities();
 		for (ComponentTable<?> table : new ArrayIterable<>(activeComponentTables))
 			table.setValuesToEntities();
 	}
@@ -422,31 +403,34 @@ public class EntityProperties extends VisTable {
 			basicProperties.updateUIValues(updateInvalidFields);
 			if (groupSelected) groupProperties.updateUIValues();
 
-			uiValuesUpdateInProgress = true;
-
-			if (activeSpecificTable != null) activeSpecificTable.updateUIValues();
-
 			for (ComponentTable<?> table : activeComponentTables) {
 				table.updateUIValues();
 			}
+		}
+	}
 
-			uiValuesUpdateInProgress = false;
+	public void lockField (BasicEntityPropertiesTable.LockableField field) {
+		basicProperties.lockField(field);
+	}
 
-			if (additionalUIValuesUpdateRequested) {
-				additionalUIValuesUpdateRequested = false;
-				Gdx.app.postRunnable(() -> updateUIValues(false));
+	/**
+	 * Notifies {@link EntityProperties} that new values will change field lock status and revalidation is needed.
+	 */
+	public void revalidateFieldLocks () {
+		basicProperties.unlockAllFields();
+		for (EntityProxy proxy : getSelectedEntities()) {
+			Bag<Component> components = proxy.getEntity().getComponents(new Bag<>());
+
+			for (Component component : components) {
+				if (component == null) continue;
+				Optional.ofNullable(getComponentTable(component))
+						.ifPresent(componentTable -> componentTable.lockFields(component));
 			}
 		}
 	}
 
 	public boolean isGroupSelected () {
 		return groupSelected;
-	}
-
-	@Deprecated
-	private void registerSpecificTable (SpecificUITable specificUITable) {
-		specificTables.add(specificUITable);
-		specificUITable.setProperties(this);
 	}
 
 	public ImmutableArray<EntityProxy> getSelectedEntities () {

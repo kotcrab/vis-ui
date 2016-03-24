@@ -113,7 +113,7 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 			NumberInputField inputField = numberFields.get(field);
 
 			if (fieldType.equals(Integer.TYPE)) {
-				inputField.setText(EntityUtils.getEntitiesCommonIntegerValue(proxies,
+				inputField.setText(EntityUtils.getCommonIntegerValue(proxies,
 						(Entity entity) -> {
 							try {
 								return (int) propertyAccessors.get(field).get(entity.getComponent(componentClass));
@@ -122,7 +122,7 @@ public class PropertyFragmentProvider extends AutoTableFragmentProvider<ATProper
 							}
 						}));
 			} else {
-				inputField.setText(EntityUtils.getEntitiesCommonFloatValue(proxies,
+				inputField.setText(EntityUtils.getCommonFloatValue(proxies,
 						(Entity entity) -> {
 							try {
 								return (float) propertyAccessors.get(field).get(entity.getComponent(componentClass));

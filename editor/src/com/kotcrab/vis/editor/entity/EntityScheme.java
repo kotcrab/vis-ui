@@ -22,9 +22,7 @@ import com.artemis.annotations.Transient;
 import com.artemis.utils.Bag;
 import com.artemis.utils.EntityBuilder;
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.vis.runtime.component.Invisible;
-import com.kotcrab.vis.runtime.component.VisGroup;
-import com.kotcrab.vis.runtime.component.VisID;
+import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.data.EntityData;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.EntityEngine;
@@ -94,6 +92,12 @@ public class EntityScheme {
 					}
 				}
 				break;
+		}
+
+		for (Component component : clonedComps) {
+			if (component instanceof Transform) ((Transform) component).setDirty(true);
+			if (component instanceof Origin) ((Origin) component).setDirty(true);
+			if (component instanceof Tint) ((Tint) component).setDirty(true);
 		}
 
 		return builder.build();

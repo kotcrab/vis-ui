@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.provider;
 
 import com.artemis.Component;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.EntityProperties;
@@ -50,7 +49,7 @@ public abstract class AutoTableFragmentProvider<A extends Annotation> {
 		this.componentClass = componentClass;
 	}
 
-	public abstract Actor getUIByField (Class<?> type, Field field);
+	public abstract Object getUIByField (Class<?> type, Field field);
 
 	public abstract void createUI (A annotation, Field field, Class<?> fieldType) throws ReflectiveOperationException;
 

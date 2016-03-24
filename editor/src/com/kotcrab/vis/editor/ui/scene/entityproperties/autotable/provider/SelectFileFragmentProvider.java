@@ -30,10 +30,12 @@ import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescrip
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.ui.dialog.SelectFileDialog;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.ATSelectFileHandlerGroup;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.components.handler.ATExtSelectFileHandler;
 import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
+import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.value.VisWidgetValue;
 import com.kotcrab.vis.ui.widget.Tooltip;
 import com.kotcrab.vis.ui.widget.VisImageButton;
@@ -68,6 +70,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 		VisImageButton selectFileButton = new VisImageButton(Icons.MORE.drawable());
 
 		VisTable table = new VisTable(true);
+		table.left();
 		table.add(new VisLabel(fieldName));
 		table.add(fileLabel).width(new VisWidgetValue(context -> Math.min(context.getMinWidth(), MAX_FILE_LABEL_WIDTH)));
 		table.add(selectFileButton);
@@ -76,17 +79,20 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 
 		uiTable.add(table).expandX().fillX().row();
 
-		Holder<ATSelectFileHandler> holder = Holder.of(getHandler(annotation));
+		ATSelectFileHandlerGroup group = getHandlerGroup(annotation);
+		ATSelectFileHandler handler = group.getByAlias(annotation.handlerAlias());
+		ATExtSelectFileHandler extHandler = group.getExtByAlias(annotation.extHandlerAlias());
+		if (handler == null)
+			throw new IllegalStateException("Could not find handler for alias: " + annotation.handlerAlias() + " in group: " + annotation.handlerGroupClass());
 
-		fileDialogLabels.put(field, new SelectFileDialogSet(fileLabel, tooltip, holder.value));
-
+		Holder<ATSelectFileHandler> handlerHolder = Holder.of(handler);
 		FileHandle folder = fileAccessModule.getAssetsFolder();
 
-		AssetDirectoryDescriptor directoryDescriptor = assetsMetadata.getDirectoryDescriptorForId(holder.value.getAssetDirectoryDescriptorId());
-		final SelectFileDialog selectFontDialog = new SelectFileDialog(annotation.extension(), annotation.hideExtension(), folder, assetsMetadata, directoryDescriptor,
+		AssetDirectoryDescriptor directoryDescriptor = assetsMetadata.getDirectoryDescriptorForId(handlerHolder.value.getAssetDirectoryDescriptorId());
+		final SelectFileDialog selectFileDialog = new SelectFileDialog(annotation.extension(), annotation.hideExtension(), folder, assetsMetadata, directoryDescriptor,
 				file -> {
 					for (EntityProxy proxy : properties.getSelectedEntities()) {
-						holder.value.applyChanges(proxy.getEntity(), file);
+						handlerHolder.value.applyChanges(proxy.getEntity(), file);
 					}
 
 					properties.getParentTab().dirty();
@@ -97,14 +103,26 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 		selectFileButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				selectFontDialog.rebuildFileList();
+				if (extHandler != null) {
+					String extension = extHandler.resolveExtension(properties.getSelectedEntities());
+					if (extension == null) {
+						Dialogs.showOKDialog(stage, "Message", "Select file dialog can't be showed for current selection because there is no common extension" +
+								"for selected entities.");
+						return;
+					}
+					selectFileDialog.setExtensions(extension);
+				}
+
+				selectFileDialog.rebuildFileList();
 				properties.beginSnapshot();
-				stage.addActor(selectFontDialog.fadeIn());
+				stage.addActor(selectFileDialog.fadeIn());
 			}
 		});
+
+		fileDialogLabels.put(field, new SelectFileDialogSet(fileLabel, tooltip, selectFileDialog, handler, extHandler));
 	}
 
-	private ATSelectFileHandler getHandler (ATSelectFile annotation) {
+	private ATSelectFileHandlerGroup getHandlerGroup (ATSelectFile annotation) {
 		String groupClassName = annotation.handlerGroupClass();
 		String handlerAlias = annotation.handlerAlias();
 
@@ -125,10 +143,7 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 				handlerGroups.put(groupClassName, group);
 			}
 
-			ATSelectFileHandler handler = group.getByAlias(handlerAlias);
-			if (handler == null)
-				throw new IllegalStateException("Could not find handler for alias: " + handlerAlias + " in group: " + groupClassName);
-			return handler;
+			return group;
 		} catch (ReflectiveOperationException e) {
 			throw new IllegalStateException("AutoTable failed to create ATSelectFile handler for class: " + groupClassName, e);
 		}
@@ -158,12 +173,17 @@ public class SelectFileFragmentProvider extends AutoTableFragmentProvider<ATSele
 	private static class SelectFileDialogSet {
 		public VisLabel fileLabel;
 		public Tooltip tooltip;
+		public SelectFileDialog selectFileDialog;
 		public ATSelectFileHandler handler;
+		public ATExtSelectFileHandler extHandler;
 
-		public SelectFileDialogSet (VisLabel fileLabel, Tooltip tooltip, ATSelectFileHandler handler) {
+		public SelectFileDialogSet (VisLabel fileLabel, Tooltip tooltip, SelectFileDialog selectFileDialog,
+									ATSelectFileHandler handler, ATExtSelectFileHandler extHandler) {
 			this.fileLabel = fileLabel;
 			this.tooltip = tooltip;
+			this.selectFileDialog = selectFileDialog;
 			this.handler = handler;
+			this.extHandler = extHandler;
 		}
 	}
 }

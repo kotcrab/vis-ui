@@ -66,7 +66,7 @@ public class SelectFileDialog extends VisWindow {
 		this.assetsMetadata = assetsMetadata;
 		this.dirDescriptor = dirDescriptor;
 		this.listener = listener;
-		this.extensions = extensions.split("\\|");
+		setExtensions(extensions);
 
 		setModal(true);
 		addCloseButton();
@@ -167,6 +167,10 @@ public class SelectFileDialog extends VisWindow {
 		}
 
 		fileList.setItems(fileMap.keys().toArray());
+	}
+
+	public void setExtensions (String extensions) {
+		this.extensions = extensions.split("\\|");
 	}
 
 	public interface FileDialogListener {

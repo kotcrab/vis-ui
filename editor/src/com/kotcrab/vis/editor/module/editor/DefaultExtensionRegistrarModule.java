@@ -35,6 +35,7 @@ import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentT
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.PhysicsPropertiesComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.RenderableComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.SpriterPropertiesComponentTable;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.components.TextPropertiesComponentTable;
 import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
 
@@ -92,6 +93,7 @@ public class DefaultExtensionRegistrarModule extends EditorModule {
 		compTableReg.accept(sceneMC -> new AutoComponentTable<>(sceneMC, VisMusic.class, false));
 		compTableReg.accept(sceneMC -> new AutoComponentTable<>(sceneMC, VisSound.class, false));
 		compTableReg.accept(sceneMC -> new AutoComponentTable<>(sceneMC, VisParticle.class, false));
+		compTableReg.accept(sceneMC -> new TextPropertiesComponentTable(sceneMC));
 
 		Consumer<UserAddableComponentProvider> userAddCompReg = provider -> extensionStorage.addUserAddableComponentProvider(provider);
 		userAddCompReg.accept(() -> Shader.class);

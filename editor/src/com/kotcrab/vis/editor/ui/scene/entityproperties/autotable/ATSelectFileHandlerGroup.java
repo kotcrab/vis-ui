@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
 
 import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.components.handler.ATExtSelectFileHandler;
 import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 
 /** @author Kotcrab */
@@ -24,4 +25,6 @@ public interface ATSelectFileHandlerGroup {
 	void setInjector (ModuleInjector injector);
 
 	ATSelectFileHandler getByAlias (String alias);
+
+	ATExtSelectFileHandler getExtByAlias (String alias);
 }

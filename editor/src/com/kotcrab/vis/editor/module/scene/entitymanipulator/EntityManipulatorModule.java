@@ -505,6 +505,7 @@ public class EntityManipulatorModule extends SceneModule {
 					} else {
 						float x = camera.getInputX() - proxy.getWidth() / 2;
 						float y = camera.getInputY() - proxy.getHeight() / 2;
+
 						proxy.setPosition(x, y);
 					}
 				} else {
@@ -515,7 +516,9 @@ public class EntityManipulatorModule extends SceneModule {
 			};
 
 			if (updatePositionLater) {
-				Gdx.app.postRunnable(updatePosRunnable);
+				//delay executions two frames to make sure all systems will update entities state, prolly not the best
+				//method but can't find alternative now
+				Gdx.app.postRunnable(() -> Gdx.app.postRunnable(updatePosRunnable));
 			} else {
 				updatePosRunnable.run();
 			}

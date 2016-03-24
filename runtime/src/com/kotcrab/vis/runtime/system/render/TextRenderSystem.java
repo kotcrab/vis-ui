@@ -67,14 +67,17 @@ public class TextRenderSystem extends DeferredEntityProcessingSystem {
 
 	@Override
 	protected void process (int entityId) {
-
 		text = textCm.get(entityId);
 		transform = transformCm.get(entityId);
 		tint = tintCm.get(entityId);
 		origin = originCm.get(entityId);
 
-		if (text.isDirty() || tint.isDirty()) text.updateCache(tint.getTint());
-		if (transform.isDirty() || origin.isDirty()) updateText(entityId);
+		if (text.isDirty() || tint.isDirty()) {
+			text.updateCache(tint.getTint());
+			updateText(entityId);
+		} else if (transform.isDirty() || origin.isDirty()) {
+			updateText(entityId);
+		}
 
 		//TODO: optimize texts
 		VisText text = textCm.get(entityId);

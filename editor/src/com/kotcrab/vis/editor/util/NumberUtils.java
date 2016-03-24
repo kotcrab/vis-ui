@@ -23,17 +23,11 @@ package com.kotcrab.vis.editor.util;
 public class NumberUtils {
 	/** @return float with 2 decimal places precision */
 	public static String floatToString (float d) {
-		//fk this function
-		if (d == (long) d) //if does not have decimal places
-			return String.format("%d", (long) d);
-		else {
-			//round to four decimal places //TODO: editor setting for choosing rounding precession
-			d = Math.round(d * 10000);
-			d = d / 10000;
-			String s = String.valueOf(d);
+		//round to four decimal places //TODO: editor setting for choosing rounding precession
+		d = Math.round(d * 10000);
+		d = d / 10000;
+		String s = String.valueOf(d);
 
-			//remove trailing zeros if exists
-			return s.contains(".") ? s.replaceAll("0*$", "").replaceAll("\\.$", "") : s;
-		}
+		return s;
 	}
 }

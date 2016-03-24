@@ -23,22 +23,36 @@ import com.kotcrab.vis.runtime.util.autotable.ATSelectFileHandler;
 
 /** @author Kotcrab */
 public class VisATSelectFileHandlerGroup implements ATSelectFileHandlerGroup {
-	//if this class is ever to be moved don't forget to update ATSelectFile default handler
+	//if this class is ever to be moved don't forget to update ATSelectFile and ATExtendedSelectFile default handler
 
 	private ObjectMap<String, ATSelectFileHandler> handlers = new ObjectMap<>();
+	private ObjectMap<String, ATExtSelectFileHandler> extHandlers = new ObjectMap<>();
 
 	@Override
 	public void setInjector (ModuleInjector injector) {
 		handlers.put("shader", new ShaderATSelectFileHandler());
 		handlers.put("music", new MusicATSelectFileHandler());
 		handlers.put("sound", new SoundATSelectFileHandler());
+		handlers.put("font", new FontATSelectFileHandler());
 
-		for (ATSelectFileHandler handler : handlers.values())
+		extHandlers.put("font", new FontATExtSelectFileHandler());
+
+		for (ATSelectFileHandler handler : handlers.values()) {
 			injector.injectModules(handler);
+		}
+
+		for (ATExtSelectFileHandler handler : extHandlers.values()) {
+			injector.injectModules(handler);
+		}
 	}
 
 	@Override
 	public ATSelectFileHandler getByAlias (String alias) {
 		return handlers.get(alias);
+	}
+
+	@Override
+	public ATExtSelectFileHandler getExtByAlias (String alias) {
+		return extHandlers.get(alias);
 	}
 }

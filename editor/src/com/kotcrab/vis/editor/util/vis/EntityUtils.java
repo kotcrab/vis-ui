@@ -31,7 +31,7 @@ import java.util.function.Consumer;
  * @author Kotcrab
  */
 public class EntityUtils {
-	public static String getEntitiesCommonFloatValue (ImmutableArray<EntityProxy> entities, FloatProxyValue objValue) {
+	public static String getCommonFloatValue (ImmutableArray<EntityProxy> entities, FloatProxyValue objValue) {
 		float value = objValue.getFloat(entities.first());
 
 		for (EntityProxy entity : entities)
@@ -40,13 +40,70 @@ public class EntityUtils {
 		return NumberUtils.floatToString(value);
 	}
 
-	public static String getEntitiesCommonIntegerValue (ImmutableArray<EntityProxy> entities, IntegerProxyValue objValue) {
+	public static String getCommonFloatValue (ImmutableArray<EntityProxy> proxies, FloatEntityValue objValue) {
+		float value = objValue.getFloat(proxies.first().getEntity());
+
+		for (EntityProxy proxy : proxies) {
+			if (value != objValue.getFloat(proxy.getEntity())) return "?";
+		}
+
+		return NumberUtils.floatToString(value);
+	}
+
+	public static String getCommonIntegerValue (ImmutableArray<EntityProxy> entities, IntegerProxyValue objValue) {
 		int value = objValue.getInteger(entities.first());
 
 		for (EntityProxy entity : entities)
 			if (value != objValue.getInteger(entity)) return "?";
 
 		return String.valueOf(value);
+	}
+
+	public static String getCommonIntegerValue (ImmutableArray<EntityProxy> proxies, IntegerEntityValue objValue) {
+		int value = objValue.getInteger(proxies.first().getEntity());
+
+		for (EntityProxy proxy : proxies) {
+			if (value != objValue.getInteger(proxy.getEntity())) return "?";
+		}
+
+		return String.valueOf(value);
+	}
+
+	public static String getCommonString (ImmutableArray<EntityProxy> entities, String ifNotCommon, StringProxyValue value) {
+		String firstText = value.getString(entities.first());
+
+		for (EntityProxy entity : entities) {
+			if (value.getString(entity).equals(firstText) == false) return ifNotCommon;
+		}
+
+		return firstText;
+	}
+
+	public static String getCommonString (ImmutableArray<EntityProxy> proxies, String ifNotCommon, StringEntityValue value) {
+		String firstText = value.getString(proxies.first().getEntity());
+
+		for (EntityProxy proxy : proxies) {
+			if (value.getString(proxy.getEntity()).equals(firstText) == false) return ifNotCommon;
+		}
+
+		return firstText;
+	}
+
+	/** @return common id or null if none exists */
+	public static String getCommonId (ImmutableArray<EntityProxy> entities) {
+		String firstId = entities.first().getId();
+		if (firstId == null) firstId = "";
+
+		for (EntityProxy entity : entities) {
+			String entityId = entity.getId();
+			if (entityId == null) entityId = "";
+
+			if (firstId.equals(entityId) == false) {
+				return null;
+			}
+		}
+
+		return firstId;
 	}
 
 	public static void setCommonCheckBoxState (ImmutableArray<EntityProxy> entities, IndeterminateCheckbox target, BooleanProxyValue value) {
@@ -62,36 +119,6 @@ public class EntityUtils {
 		target.setChecked(enabled);
 	}
 
-	public static String getCommonString (ImmutableArray<EntityProxy> entities, String ifNotCommon, StringProxyValue value) {
-		String firstText = value.getString(entities.first());
-
-		for (EntityProxy entity : entities) {
-			if (value.getString(entity).equals(firstText) == false) return ifNotCommon;
-		}
-
-		return firstText;
-	}
-
-	public static String getEntitiesCommonFloatValue (ImmutableArray<EntityProxy> proxies, FloatEntityValue objValue) {
-		float value = objValue.getFloat(proxies.first().getEntity());
-
-		for (EntityProxy proxy : proxies) {
-			if (value != objValue.getFloat(proxy.getEntity())) return "?";
-		}
-
-		return NumberUtils.floatToString(value);
-	}
-
-	public static String getEntitiesCommonIntegerValue (ImmutableArray<EntityProxy> proxies, IntegerEntityValue objValue) {
-		int value = objValue.getInteger(proxies.first().getEntity());
-
-		for (EntityProxy proxy : proxies) {
-			if (value != objValue.getInteger(proxy.getEntity())) return "?";
-		}
-
-		return String.valueOf(value);
-	}
-
 	public static void setCommonCheckBoxState (ImmutableArray<EntityProxy> proxies, IndeterminateCheckbox target, BooleanEntityValue value) {
 		boolean enabled = value.getBoolean(proxies.first().getEntity());
 
@@ -103,32 +130,6 @@ public class EntityUtils {
 		}
 
 		target.setChecked(enabled);
-	}
-
-	public static String getCommonString (ImmutableArray<EntityProxy> proxies, String ifNotCommon, StringEntityValue value) {
-		String firstText = value.getString(proxies.first().getEntity());
-
-		for (EntityProxy proxy : proxies) {
-			if (value.getString(proxy.getEntity()).equals(firstText) == false) return ifNotCommon;
-		}
-
-		return firstText;
-	}
-
-	public static String getCommonId (ImmutableArray<EntityProxy> entities) {
-		String firstId = entities.first().getId();
-		if (firstId == null) firstId = "";
-
-		for (EntityProxy entity : entities) {
-			String entityId = entity.getId();
-			if (entityId == null) entityId = "";
-
-			if (firstId.equals(entityId) == false) {
-				return "<?>";
-			}
-		}
-
-		return firstId;
 	}
 
 	public static boolean isScaleSupportedForEntities (ImmutableArray<EntityProxy> entities) {

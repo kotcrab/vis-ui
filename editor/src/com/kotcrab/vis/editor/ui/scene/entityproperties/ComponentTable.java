@@ -49,6 +49,15 @@ public abstract class ComponentTable<T extends Component> extends VisTable {
 	/** @return component class that this {@link ComponentTable} supports. */
 	public abstract Class<T> getComponentClass ();
 
+	/**
+	 * Called when this table should lock fields that won't be editable by user. This is always called if component
+	 * is present in entity. The purpose of this method is to lock fields even when multiple entities is selected in
+	 * which case {@link #updateUIValues()} would never be called. Framework takes care of resetting lock state.
+	 */
+	public void lockFields (T component) {
+
+	}
+
 	/** @return true if component can be removed by user from editor, false otherwise. */
 	public abstract boolean isRemovable ();
 

@@ -16,7 +16,10 @@
 
 package com.kotcrab.vis.editor.ui.scene.entityproperties.components;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.module.ModuleInjector;
+import com.kotcrab.vis.editor.ui.scene.entityproperties.BasicEntityPropertiesTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
 import com.kotcrab.vis.editor.util.vis.EntityUtils;
@@ -34,32 +37,27 @@ public class PhysicsPropertiesComponentTable extends AutoComponentTable<PhysicsP
 	protected void init () {
 		super.init();
 		adjustOriginCheck = getUIByFieldId("adjustOrigin", IndeterminateCheckbox.class);
-	}
+		adjustOriginCheck.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				if (adjustOriginCheck.isIndeterminate() == false && adjustOriginCheck.isChecked()) {
+					EntityUtils.stream(properties.getSelectedEntities(), proxy -> {
+						if (proxy.getOriginX() != 0 || proxy.getOriginY() != 0) {
+							proxy.setOrigin(0, 0);
+							properties.requestUIValuesUpdate();
+						}
+					});
+				}
 
-	@Override
-	public void updateUIValues () {
-		super.updateUIValues();
-		adjustOriginIfNeeded();
-	}
-
-	@Override
-	public void setValuesToEntities () {
-		super.setValuesToEntities();
-		adjustOriginIfNeeded();
-	}
-
-	private void adjustOriginIfNeeded () {
-
-		if (adjustOriginCheck.isIndeterminate() == false) {
-			boolean adjustOrigin = adjustOriginCheck.isChecked();
-			if (adjustOrigin) {
-				EntityUtils.stream(properties.getSelectedEntities(), proxy -> {
-					if (proxy.isOriginSupported() && (proxy.getOriginX() != 0 || proxy.getOriginY() != 0)) {
-						proxy.setOrigin(0, 0);
-						properties.requestAdditionalUIValuesUpdate();
-					}
-				});
+				properties.revalidateFieldLocks();
 			}
+		});
+	}
+
+	@Override
+	public void lockFields (PhysicsProperties component) {
+		if (component.adjustOrigin) {
+			properties.lockField(BasicEntityPropertiesTable.LockableField.ORIGIN);
 		}
 	}
 }

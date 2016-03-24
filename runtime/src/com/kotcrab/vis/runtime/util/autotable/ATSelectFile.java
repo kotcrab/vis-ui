@@ -51,4 +51,10 @@ public @interface ATSelectFile {
 
 	/** @return handler alias that is used in group returned by {@link #handlerGroupClass()} */
 	String handlerAlias ();
+
+	/**
+	 * @return extended handler alias that is used in group returned by {@link #handlerGroupClass()}. Extended
+	 * handles can provide functionality available only via editor API.
+	 */
+	String extHandlerAlias () default "";
 }

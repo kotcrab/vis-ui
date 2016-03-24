@@ -1,11 +1,15 @@
 #### Version: 0.3.2
 - **Improved**: Texture cache speed improved - new texture are available immediately after they are added to project assets. Fixes issues when large textures were loading infinitely.
+- **Improved**: Entity Properties will now show when field is locked and can't be edited
+- **Improved**: When multiple entities are selected and ID is ambiguous then it will be marked in Entity Properties
 - **Added**: [#58](https://github.com/kotcrab/vis-editor/issues/58) - Polygon auto tracing (available via Polygon Tool)
 - **Added**: Crash and internal exception reporter
 - **Fixed**: [#130](https://github.com/kotcrab/vis-editor/issues/130) - Exit dialog not showed on non Windows OSes
 - **Fixed**: Unable to open variables settings dialog for newly created scenes
 - **Fixed**: Minor bug: tabs panel wrong height
 - **Fixed**: Invisible TTF fonts
+- **Fixed**: Unable to change Z index and scale when using text entities with auto set origin to center enabled
+- **Fixed**: Undoing entity delete could place it at wrong position
 
 #### Version: 0.3.1
 - **Added**: Scale entities tool

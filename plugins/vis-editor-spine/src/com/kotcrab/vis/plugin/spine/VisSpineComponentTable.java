@@ -128,7 +128,7 @@ public class VisSpineComponentTable extends AutoComponentTable<VisSpine> {
 		} else
 			animSelectBox.setSelected(commonAnimation);
 
-		scaleField.setText(EntityUtils.getEntitiesCommonFloatValue(proxies, (Entity entity) -> entity.getComponent(SpineScale.class).scale));
+		scaleField.setText(EntityUtils.getCommonFloatValue(proxies, (Entity entity) -> entity.getComponent(SpineScale.class).scale));
 	}
 
 	private void createCommonAnimationsList () {
