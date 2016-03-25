@@ -215,7 +215,7 @@ public class Log {
 		return msgDateFormat.format(new Date());
 	}
 
-	static void flush () {
+	public static void flush () {
 		try {
 			logFileStream.flush();
 		} catch (IOException e) {

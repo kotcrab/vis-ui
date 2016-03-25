@@ -170,7 +170,10 @@ public class MenuBarModule extends EditorModule {
 
 		menu.addItem(createMenuItem("Website", Icons.GLOBE, () -> Gdx.net.openURI("http://vis.kotcrab.com")));
 		menu.addItem(createMenuItem("Documentation", null, WikiPages.QUICK_START::open));
-		menu.addItem(createMenuItem("Show Log", null, () -> FileUtils.open(Log.getLogFile())));
+		menu.addItem(createMenuItem("Show Log", null, () -> {
+			Log.flush();
+			FileUtils.open(Log.getLogFile());
+		}));
 		menu.addItem(createMenuItem("About", Icons.INFO, () -> stage.addActor(new AboutDialog().fadeIn())));
 	}
 
