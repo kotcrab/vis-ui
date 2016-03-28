@@ -26,8 +26,10 @@ import com.kotcrab.vis.editor.event.OpenSceneRequest;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
 import com.kotcrab.vis.editor.module.editor.TabsModule;
 import com.kotcrab.vis.editor.scene.EditorScene;
+import com.kotcrab.vis.editor.ui.dialog.LoadingAssetsFailedDialog;
 import com.kotcrab.vis.editor.ui.scene.SceneTab;
 import com.kotcrab.vis.editor.util.scene2d.VisTabbedPaneListener;
+import com.kotcrab.vis.editor.util.vis.AssetLoadingException;
 import com.kotcrab.vis.editor.util.vis.EditorException;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
@@ -80,11 +82,20 @@ public class SceneTabsModule extends ProjectModule implements VisTabbedPaneListe
 		SceneTab oldTab = getTabByScene(scene);
 
 		if (oldTab == null) {
-			SceneTab tab = new SceneTab(scene, projectContainer);
-			loadedTabs.add(tab);
-			tabsModule.addTab(tab);
-		} else
+			try {
+				SceneTab tab = new SceneTab(scene, projectContainer);
+				loadedTabs.add(tab);
+				tabsModule.addTab(tab);
+			} catch (AssetLoadingException e) {
+				Log.exception(e);
+				stage.addActor(new LoadingAssetsFailedDialog(e.failedResourceDescriptors).fadeIn());
+			} catch (Exception e) {
+				Log.exception(e);
+				Dialogs.showErrorDialog(stage, "Error occurred during scene loading", e);
+			}
+		} else {
 			tabsModule.switchTab(oldTab);
+		}
 	}
 
 	public SceneTab getTabByScene (EditorScene scene) {

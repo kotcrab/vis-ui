@@ -33,6 +33,9 @@ package com.kotcrab.vis.plugin.spine;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.module.scene.AssetsLoadingMonitorModule;
 import com.kotcrab.vis.plugin.spine.components.SpinePreview;
 import com.kotcrab.vis.plugin.spine.runtime.ProtoVisSpine;
 import com.kotcrab.vis.plugin.spine.runtime.VisSpine;
@@ -42,6 +45,7 @@ import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 /** @author Kotcrab */
 public class EditorSpineInflaterSystem extends InflaterSystem {
 	private SpineCacheModule spineCache;
+	private AssetsLoadingMonitorModule loadingMonitor;
 
 	private ComponentMapper<AssetReference> assetCm;
 	private ComponentMapper<VisSpine> spineCm;
@@ -57,19 +61,24 @@ public class EditorSpineInflaterSystem extends InflaterSystem {
 		AssetReference assetRef = assetCm.get(entityId);
 		ProtoVisSpine protoComponent = protoCm.get(entityId);
 
-		VisSpine spine = new VisSpine(spineCache.get(assetRef.asset));
+		try {
+			VisSpine spine = new VisSpine(spineCache.get(assetRef.asset));
 
-		spine.setFlip(protoComponent.flipX, protoComponent.flipY);
+			spine.setFlip(protoComponent.flipX, protoComponent.flipY);
 
-		spine.setPlayOnStart(protoComponent.playOnStart);
-		spine.setDefaultAnimation(protoComponent.defaultAnimation);
+			spine.setPlayOnStart(protoComponent.playOnStart);
+			spine.setDefaultAnimation(protoComponent.defaultAnimation);
 
-		spine.updateDefaultAnimations();
+			spine.updateDefaultAnimations();
 
-		SpinePreview spinePreview = previewCm.get(entityId);
-		spinePreview.updateAnimation = true;
+			SpinePreview spinePreview = previewCm.get(entityId);
+			spinePreview.updateAnimation = true;
 
-		world.getEntity(entityId).edit().add(spine);
+			world.getEntity(entityId).edit().add(spine);
+		} catch (GdxRuntimeException e) {
+			Log.exception(e);
+			loadingMonitor.addFailedResource(assetRef.asset, e);
+		}
 
 		protoCm.remove(entityId);
 	}

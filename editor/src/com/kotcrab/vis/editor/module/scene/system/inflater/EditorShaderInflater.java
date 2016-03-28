@@ -18,7 +18,10 @@ package com.kotcrab.vis.editor.module.scene.system.inflater;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.project.ShaderCacheModule;
+import com.kotcrab.vis.editor.module.scene.AssetsLoadingMonitorModule;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.Shader;
 import com.kotcrab.vis.runtime.component.proto.ProtoShader;
@@ -26,9 +29,11 @@ import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
 public class EditorShaderInflater extends InflaterSystem {
+	private ShaderCacheModule shaderCache;
+	private AssetsLoadingMonitorModule loadingMonitor;
+
 	private ComponentMapper<Shader> shaderCm;
 	private ComponentMapper<ProtoShader> protoCm;
-	private ShaderCacheModule shaderCache;
 
 	public EditorShaderInflater () {
 		super(Aspect.all(ProtoShader.class, AssetReference.class));
@@ -41,7 +46,13 @@ public class EditorShaderInflater extends InflaterSystem {
 		Shader shader = shaderCm.create(entityId);
 		shader.asset = protoComponent.asset;
 		if (shader.asset != null) {
-			shader.shader = shaderCache.get(shader.asset);
+			ShaderProgram program = shaderCache.get(shader.asset);
+			if (program == null) {
+				String errorMsg = "Failed to load shader: " + shader.asset;
+				Log.fatal(errorMsg);
+				loadingMonitor.addFailedResource(shader.asset, new IllegalStateException(errorMsg));
+			}
+			shader.shader = program;
 		}
 
 		protoCm.remove(entityId);

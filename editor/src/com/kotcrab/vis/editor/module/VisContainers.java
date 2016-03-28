@@ -107,6 +107,7 @@ public class VisContainers {
 		sceneMC.add(new UndoModule());
 		sceneMC.add(new EntityManipulatorModule());
 		sceneMC.add(new SceneAccessModule());
+		sceneMC.add(new AssetsLoadingMonitorModule());
 		sceneMC.addAll(extensionStorage.getContainersExtensions(SceneModule.class, ExtensionScope.SCENE));
 	}
 }

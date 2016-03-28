@@ -19,7 +19,10 @@ package com.kotcrab.vis.editor.module.scene.system.inflater;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
+import com.kotcrab.vis.editor.module.scene.AssetsLoadingMonitorModule;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisText;
@@ -29,6 +32,7 @@ import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 /** @author Kotcrab */
 public class EditorTextInflater extends InflaterSystem {
 	private FontCacheModule fontCache;
+	private AssetsLoadingMonitorModule loadingMonitor;
 
 	private ComponentMapper<AssetReference> assetCm;
 	private ComponentMapper<VisText> textCm;
@@ -46,7 +50,14 @@ public class EditorTextInflater extends InflaterSystem {
 		VisAssetDescriptor asset = assetCm.get(entityId).asset;
 		ProtoVisText protoComponent = protoCm.get(entityId);
 
-		BitmapFont font = fontCache.getGeneric(asset, pixelsPerUnit);
+		BitmapFont font;
+		try {
+			font = fontCache.getGeneric(asset, pixelsPerUnit);
+		} catch (GdxRuntimeException e) {
+			Log.exception(e);
+			font = new BitmapFont();
+			loadingMonitor.addFailedResource(asset, e);
+		}
 
 		VisText text = textCm.create(entityId);
 		text.init(font, protoComponent.text);

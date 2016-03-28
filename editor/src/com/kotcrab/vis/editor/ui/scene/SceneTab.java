@@ -26,6 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Payload;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Source;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop.Target;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
@@ -43,9 +44,7 @@ import com.kotcrab.vis.editor.module.project.FileAccessModule;
 import com.kotcrab.vis.editor.module.project.ProjectModuleContainer;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
-import com.kotcrab.vis.editor.module.scene.CameraModule;
-import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
-import com.kotcrab.vis.editor.module.scene.UndoModule;
+import com.kotcrab.vis.editor.module.scene.*;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.AlignmentToolsDialog;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.EntityManipulatorModule;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.SelectionFragment;
@@ -60,6 +59,7 @@ import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.MainContentTab;
 import com.kotcrab.vis.editor.ui.tabbedpane.TabViewMode;
 import com.kotcrab.vis.editor.util.scene2d.FocusUtils;
+import com.kotcrab.vis.editor.util.vis.AssetLoadingException;
 import com.kotcrab.vis.editor.util.vis.CreatePointPayload;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
@@ -93,6 +93,7 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 	private EntityManipulatorModule entityManipulator;
 	private UndoModule undoModule;
 	private CameraModule cameraModule;
+	private AssetsLoadingMonitorModule resourcesLoadingMonitor;
 
 	private Stage stage;
 
@@ -127,6 +128,10 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 
 		sceneMC.init();
 		sceneMC.injectModules(this);
+		Array<FailedAssetDescriptor> failedDescriptors = resourcesLoadingMonitor.getFailedDescriptors();
+		if (failedDescriptors.size > 0) {
+			throw new AssetLoadingException("Failed to load some scene assets", failedDescriptors);
+		}
 		engine = sceneMC.getEntityEngine();
 
 		registerResourceReloaders();

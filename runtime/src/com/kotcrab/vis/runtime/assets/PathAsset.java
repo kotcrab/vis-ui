@@ -45,6 +45,6 @@ public abstract class PathAsset implements VisAssetDescriptor {
 
 	@Override
 	public String toString () {
-		return "VisAssetDescriptor: " + relativePath;
+		return "PathAsset: " + relativePath;
 	}
 }

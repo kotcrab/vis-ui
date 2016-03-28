@@ -14,13 +14,20 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.runtime.assets;
+package com.kotcrab.vis.editor.util.vis;
+
+import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.module.scene.FailedAssetDescriptor;
+import com.kotcrab.vis.runtime.util.ImmutableArray;
 
 /**
- * Descriptors implementing this interface must reference some texture type asset for example TextureRegion form TextureAtlas
  * @author Kotcrab
- * @see AtlasRegionAsset
- * @see TextureRegionAsset
  */
-public interface TextureAssetDescriptor extends VisAssetDescriptor {
+public class AssetLoadingException extends EditorRuntimeException {
+	public final ImmutableArray<FailedAssetDescriptor> failedResourceDescriptors;
+
+	public AssetLoadingException (String message, Array<FailedAssetDescriptor> failedResourceDescriptors) {
+		super(message);
+		this.failedResourceDescriptors = new ImmutableArray<>(failedResourceDescriptors);
+	}
 }

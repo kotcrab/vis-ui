@@ -18,8 +18,11 @@ package com.kotcrab.vis.editor.module.scene.system.inflater;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.SpriterProperties;
 import com.kotcrab.vis.editor.module.project.SpriterCacheModule;
+import com.kotcrab.vis.editor.module.scene.AssetsLoadingMonitorModule;
 import com.kotcrab.vis.runtime.assets.SpriterAsset;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisSpriter;
@@ -28,10 +31,12 @@ import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
 public class EditorSpriterInflater extends InflaterSystem {
+	private SpriterCacheModule cache;
+	private AssetsLoadingMonitorModule loadingMonitor;
+
 	private ComponentMapper<ProtoVisSpriter> protoCm;
 	private ComponentMapper<SpriterProperties> propertiesCm;
 	private ComponentMapper<AssetReference> assetCm;
-	private SpriterCacheModule cache;
 
 	public EditorSpriterInflater () {
 		super(Aspect.all(ProtoVisSpriter.class, AssetReference.class));
@@ -45,12 +50,18 @@ public class EditorSpriterInflater extends InflaterSystem {
 
 		SpriterAsset asset = (SpriterAsset) assetRef.asset;
 
-		VisSpriter component = cache.createComponent(asset, protoComponent.scale);
+		try {
+			VisSpriter component = cache.createComponent(asset, protoComponent.scale);
 
-		protoComponent.fill(component);
-		world.getEntity(entityId).edit().add(component);
+			protoComponent.fill(component);
+			world.getEntity(entityId).edit().add(component);
 
-		if (propsComponent.previewInEditor == false) component.setAnimationPlaying(false);
+			if (propsComponent.previewInEditor == false) component.setAnimationPlaying(false);
+		} catch (GdxRuntimeException e) {
+			Log.exception(e);
+//			world.getEntity(entityId).edit().add(new VisSpriter(null, null, 1));
+			loadingMonitor.addFailedResource(assetRef.asset, e);
+		}
 
 		protoCm.remove(entityId);
 	}

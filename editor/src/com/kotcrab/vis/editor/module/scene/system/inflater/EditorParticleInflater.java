@@ -18,8 +18,12 @@ package com.kotcrab.vis.editor.module.scene.system.inflater;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
+import com.kotcrab.vis.editor.Log;
 import com.kotcrab.vis.editor.entity.PixelsPerUnit;
 import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
+import com.kotcrab.vis.editor.module.scene.AssetsLoadingMonitorModule;
+import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisParticle;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisParticle;
@@ -28,6 +32,7 @@ import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 /** @author Kotcrab */
 public class EditorParticleInflater extends InflaterSystem {
 	private ParticleCacheModule particleCache;
+	private AssetsLoadingMonitorModule loadingMonitor;
 	private float pixelsPerUnit;
 
 	private ComponentMapper<AssetReference> assetCm;
@@ -46,7 +51,14 @@ public class EditorParticleInflater extends InflaterSystem {
 
 		VisParticle particle = partcielCm.create(entityId);
 
-		particle.setEffect(particleCache.get(assetRef.asset, 1f / pixelsPerUnit));
+		try {
+			particle.setEffect(particleCache.get(assetRef.asset, 1f / pixelsPerUnit));
+		} catch (EditorRuntimeException e) {
+			Log.exception(e);
+			particle.setEffect(new ParticleEffect());
+			loadingMonitor.addFailedResource(assetRef.asset, e);
+		}
+
 		protoComponent.fill(particle);
 
 		protoCm.remove(entityId);

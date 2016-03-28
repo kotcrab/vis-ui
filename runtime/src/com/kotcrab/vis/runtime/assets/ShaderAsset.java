@@ -74,4 +74,9 @@ public class ShaderAsset implements VisAssetDescriptor {
 		result = 31 * result + relativeFragPath.hashCode();
 		return result;
 	}
+
+	@Override
+	public String toString () {
+		return "ShaderAsset: " + relativeFragPath;
+	}
 }

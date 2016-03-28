@@ -18,7 +18,12 @@ package com.kotcrab.vis.editor.module.scene.system.inflater;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
+import com.kotcrab.vis.editor.Log;
+import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.editor.module.scene.AssetsLoadingMonitorModule;
 import com.kotcrab.vis.editor.util.gdx.DummyMusic;
+import com.kotcrab.vis.runtime.assets.MusicAsset;
+import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.component.VisMusic;
 import com.kotcrab.vis.runtime.component.proto.ProtoVisMusic;
@@ -26,6 +31,10 @@ import com.kotcrab.vis.runtime.system.inflater.InflaterSystem;
 
 /** @author Kotcrab */
 public class EditorMusicInflater extends InflaterSystem {
+	private FileAccessModule fileAccessModule;
+	private AssetsLoadingMonitorModule loadingMonitor;
+
+	private ComponentMapper<AssetReference> assetCm;
 	private ComponentMapper<VisMusic> musicCm;
 	private ComponentMapper<ProtoVisMusic> protoCm;
 
@@ -36,6 +45,20 @@ public class EditorMusicInflater extends InflaterSystem {
 	@Override
 	protected void inserted (int entityId) {
 		ProtoVisMusic protoVisMusic = protoCm.get(entityId);
+
+		VisAssetDescriptor assetDescriptor = assetCm.get(entityId).asset;
+
+		if (assetDescriptor instanceof MusicAsset) {
+			String path = ((MusicAsset) assetDescriptor).getPath();
+			boolean exists = fileAccessModule.getAssetsFolder().child(path).exists();
+			if (exists == false) {
+				String errorMsg = "Music file does not exist: " + path;
+				Log.fatal(errorMsg);
+				loadingMonitor.addFailedResource(assetDescriptor, new IllegalStateException(errorMsg));
+			}
+		} else {
+			throw new IllegalStateException("Unsupported asset descriptor for music inflater: " + assetDescriptor);
+		}
 
 		VisMusic music = musicCm.create(entityId);
 		music.music = new DummyMusic();

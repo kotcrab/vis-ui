@@ -2,6 +2,7 @@
 - **Improved**: Texture cache speed improved - new texture are available immediately after they are added to project assets. Fixes issues when large textures were loading infinitely.
 - **Improved**: Entity Properties will now show when field is locked and can't be edited
 - **Improved**: When multiple entities are selected and ID is ambiguous then it will be marked in Entity Properties
+- **Improved**: If some scene assets are missing then dialog with missing files list will be showed 
 - **Added**: [#58](https://github.com/kotcrab/vis-editor/issues/58) - Polygon auto tracing (available via Polygon Tool)
 - **Added**: Crash and internal exception reporter
 - **Fixed**: [#130](https://github.com/kotcrab/vis-editor/issues/130) - Exit dialog not showed on non Windows OSes
