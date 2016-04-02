@@ -26,7 +26,7 @@ public class Tint extends Component implements TintOwner {
 	private Color tint;
 
 	public Tint () {
-		tint = Color.WHITE;
+		tint = Color.WHITE.cpy();
 	}
 
 	public Tint (Color tint) {
@@ -50,5 +50,23 @@ public class Tint extends Component implements TintOwner {
 
 	public void setDirty (boolean dirty) {
 		this.dirty = dirty;
+	}
+
+	public Tint set (int rgba) {
+		tint.set(rgba);
+		dirty = true;
+		return this;
+	}
+
+	public Tint set (float r, float g, float b, float a) {
+		tint.set(r, g, b, a);
+		dirty = true;
+		return this;
+	}
+
+	public Tint set (Tint other) {
+		tint.set(other.getTint());
+		dirty = true;
+		return this;
 	}
 }
