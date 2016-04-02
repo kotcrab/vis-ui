@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
 
 import com.artemis.Component;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
@@ -149,7 +148,7 @@ public class AutoComponentTable<T extends Component> extends ComponentTable<T> {
 		}
 	}
 
-	protected <T1 extends Actor> T1 getUIByFieldId (String fieldId, Class<T1> widgetType) {
+	protected <T1> T1 getUIByFieldId (String fieldId, Class<T1> widgetType) {
 		Field field = fieldIdsMap.get(fieldId);
 		if (field == null)
 			throw new IllegalStateException("Could not find field with fieldId: " + fieldId + " in type " + componentClass.getSimpleName());

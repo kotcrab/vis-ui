@@ -29,10 +29,7 @@ import com.kotcrab.vis.runtime.properties.BoundsOwner;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.annotation.VisInternal;
-import com.kotcrab.vis.runtime.util.autotable.ATFieldId;
-import com.kotcrab.vis.runtime.util.autotable.ATProperty;
-import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
-import com.kotcrab.vis.runtime.util.autotable.ATTextProperty;
+import com.kotcrab.vis.runtime.util.autotable.*;
 
 /**
  * Text component storing all text properties.
@@ -50,6 +47,7 @@ public class VisText extends Component implements SizeOwner, BoundsOwner, UsesPr
 	private boolean distanceFieldShaderEnabled;
 
 	@ATTextProperty(fieldName = "Text")
+	@ATFieldId(id = "text")
 	private CharSequence text;
 
 	@ATSelectFile(fieldName = "Font", extension = "ext handler overrides", handlerAlias = "font", extHandlerAlias = "font")

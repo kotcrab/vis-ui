@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.FontCacheModule;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
+import com.kotcrab.vis.editor.ui.IndeterminateTextField;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.BasicEntityPropertiesTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.IndeterminateCheckbox;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.NumberInputField;
@@ -59,6 +60,7 @@ public class TextPropertiesComponentTable extends AutoComponentTable<VisText> {
 		super.init();
 		autoSetOriginToCenter = getUIByFieldId("autoSetOriginToCenter", IndeterminateCheckbox.class);
 		distanceFieldShaderEnabled = getUIByFieldId("distanceFieldShaderEnabled", IndeterminateCheckbox.class);
+		IndeterminateTextField textField = getUIByFieldId("text", IndeterminateTextField.class);
 
 		autoSetOriginToCenter.addListener(new ChangeListener() {
 			@Override
@@ -91,6 +93,15 @@ public class TextPropertiesComponentTable extends AutoComponentTable<VisText> {
 				}
 
 				return new BmpFontAsset(original.getPath(), data);
+			}
+		});
+
+		textField.getTextField().addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				EntityUtils.stream(properties.getSelectedEntities(), VisText.class, (proxy, text) -> {
+					text.setText(text.getText()); //force dirty state
+				});
 			}
 		});
 
