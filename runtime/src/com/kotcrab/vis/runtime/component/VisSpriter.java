@@ -41,8 +41,13 @@ public class VisSpriter extends Component implements SizeOwner, BoundsOwner, Fli
 	private boolean animationPlaying;
 
 	public VisSpriter (Loader<Sprite> loader, Data data, float scale) {
+		this(loader, data, scale, 0);
+	}
+
+	public VisSpriter (Loader<Sprite> loader, Data data, float scale, int entityIndex) {
+		if (entityIndex < 0) throw new IllegalArgumentException("entityIndex must be >= 0");
 		this.loader = loader;
-		player = new Player(data.getEntity(0));
+		player = new Player(data.getEntity(entityIndex));
 		player.setScale(scale);
 		player.update();
 	}
