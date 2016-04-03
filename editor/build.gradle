@@ -92,6 +92,10 @@ task run(dependsOn: [copyExtJars], type: JavaExec) {
     main = mainClassName
     classpath = sourceSets.main.runtimeClasspath
     ignoreExitValue = true
+    jvmArgs "-Dfile.encoding=UTF-8"
+    if (System.properties['os.name'].toLowerCase().contains('mac')) {
+        jvmArgs "-XstartOnFirstThread"
+    }
     if (project.hasProperty("runArgs")) {
         args = Eval.me(runArgs)
     }
