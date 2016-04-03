@@ -128,8 +128,9 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 
 			final boolean tintUsed = tintCm.has(job.entityId);
 
-			if (usingFromEditor == false)
+			if (usingFromEditor == false) {
 				cordsSystem = layerManager.getData(layerCm.get(job.entityId).layerId).cordsSystem;
+			}
 
 			// agent changed? end() the last agent, and begin() the next agent.
 			if (agent != activeAgent) {
@@ -151,9 +152,11 @@ public class RenderBatchingSystem extends BaseSystem implements EntityProcessPri
 
 				switch (activeCordsSystem) {
 					case WORLD:
+						cameraManager.getViewport().apply();
 						batch.setProjectionMatrix(cameraManager.getCombined());
 						break;
 					case SCREEN:
+						cameraManager.getUiViewport().apply();
 						batch.setProjectionMatrix(cameraManager.getUiCombined());
 						break;
 				}

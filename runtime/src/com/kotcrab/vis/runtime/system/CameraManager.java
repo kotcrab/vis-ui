@@ -100,6 +100,7 @@ public class CameraManager extends Manager {
 	public void resize (int width, int height) {
 		viewport.update(width, height);
 		uiViewport.update(width, height);
+		viewport.apply();
 	}
 
 	private static class CameraSet {

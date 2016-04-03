@@ -1,5 +1,6 @@
 #### Version: 0.3.2 (LibGDX 1.9.2, Artemis 1.3.1)
 - **Fixed**: Changing entity tint could affect tint of all entities 
+- **Fixed**: FitViewport was not applied when rendering
 - **API Addition**: `Tint#set(int rgba)`, `Tint#set(float r, float g, float b, float a)`, `Tint#set(Tint other)` 
 - **API Addition**: constructor `VisSpriter (Loader<Sprite> loader, Data data, float scale, int entityIndex)`
 
