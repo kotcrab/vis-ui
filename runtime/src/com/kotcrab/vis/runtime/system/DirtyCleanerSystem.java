@@ -19,6 +19,7 @@ package com.kotcrab.vis.runtime.system;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.systems.IteratingSystem;
+import com.kotcrab.vis.runtime.component.Invisible;
 import com.kotcrab.vis.runtime.component.Origin;
 import com.kotcrab.vis.runtime.component.Tint;
 import com.kotcrab.vis.runtime.component.Transform;
@@ -30,7 +31,7 @@ public class DirtyCleanerSystem extends IteratingSystem {
 	private ComponentMapper<Tint> tintCm;
 
 	public DirtyCleanerSystem () {
-		super(Aspect.one(Transform.class, Origin.class, Tint.class));
+		super(Aspect.one(Transform.class, Origin.class, Tint.class).exclude(Invisible.class));
 	}
 
 	@Override
