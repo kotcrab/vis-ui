@@ -722,6 +722,11 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		hasSelection = false;
 	}
 
+	/** Clears VisTextField text. If programmatic change events are disabled then this will not fire change event. */
+	public void clearText () {
+		setText("");
+	}
+
 	/** Sets the cursor position and clears any selection. */
 	public void setCursorPosition (int cursorPosition) {
 		if (cursorPosition < 0) throw new IllegalArgumentException("cursorPosition must be >= 0");
