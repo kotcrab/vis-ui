@@ -2,6 +2,7 @@
 - **Added**: `VisTextField#isTextSelected()`
 - **Added**: `VisTextField#clearText()`
 - **Added**: `FloatingGroup`
+- **Added**: `VisWindow#isKeepWithinParent` and `VisWindow#setKeepWithinParent` 
 - **Fixed**: `OptionDialog#set(...)ButtonText` now updates dialog size
 - **Fixed**: [#131](https://github.com/kotcrab/vis-editor/issues/131) - fixed issue when copying numbers between `VisTextField`s with `FloatDigitsOnlyFilter` decimal point was lost
 - **Fixed**: `ListView#AbstractListAdapter` error on GWT

@@ -17,6 +17,7 @@
 package com.kotcrab.vis.ui.widget;
 
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -37,6 +38,7 @@ public class VisWindow extends Window {
 	public static float FADE_TIME = 0.3f;
 
 	private boolean centerOnAdd;
+	private boolean keepWithinParent = false;
 
 	public VisWindow (String title) {
 		this(title, true);
@@ -191,5 +193,26 @@ public class VisWindow extends Window {
 				return false;
 			}
 		});
+	}
+
+	public boolean isKeepWithinParent () {
+		return keepWithinParent;
+	}
+
+	public void setKeepWithinParent (boolean keepWithinParent) {
+		this.keepWithinParent = keepWithinParent;
+	}
+
+	@Override
+	public void draw (Batch batch, float parentAlpha) {
+		if (keepWithinParent && getParent() != null) {
+			float parentWidth = getParent().getWidth();
+			float parentHeight = getParent().getHeight();
+			if (getX() < 0) setX(0);
+			if (getRight() > parentWidth) setX(parentWidth - getWidth());
+			if (getY() < 0) setY(0);
+			if (getTop() > parentHeight) setY(parentHeight - getHeight());
+		}
+		super.draw(batch, parentAlpha);
 	}
 }
