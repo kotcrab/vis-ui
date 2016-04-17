@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
+import com.kotcrab.vis.ui.VisUI;
 
 /**
  * Compatible with {@link Image}. Does not provide additional features.
@@ -44,6 +45,10 @@ public class VisImage extends Image {
 
 	public VisImage (Texture texture) {
 		super(texture);
+	}
+
+	public VisImage (String drawableName) {
+		super(VisUI.getSkin(), drawableName);
 	}
 
 	public VisImage (Skin skin, String drawableName) {
