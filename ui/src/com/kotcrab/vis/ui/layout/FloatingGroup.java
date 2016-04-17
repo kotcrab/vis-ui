@@ -32,8 +32,6 @@ import com.kotcrab.vis.ui.widget.VisWindow;
  * @since 1.0.2
  */
 public class FloatingGroup extends WidgetGroup {
-	private float prefWidth;
-	private float prefHeight;
 	private boolean useChildrenPreferredSize = false;
 
 	/**
@@ -48,10 +46,9 @@ public class FloatingGroup extends WidgetGroup {
 	}
 
 	/** Creates floating group with fixed area size. */
-	public FloatingGroup (float prefWidth, float prefHeight) {
+	public FloatingGroup (float width, float height) {
 		setTouchable(Touchable.childrenOnly);
-		setPrefWidth(prefWidth);
-		setPrefHeight(prefHeight);
+		setSize(width, height);
 	}
 
 	@Override
@@ -88,21 +85,11 @@ public class FloatingGroup extends WidgetGroup {
 
 	@Override
 	public float getPrefWidth () {
-		return prefWidth;
+		return getWidth();
 	}
 
 	@Override
 	public float getPrefHeight () {
-		return prefHeight;
-	}
-
-	public void setPrefWidth (float prefWidth) {
-		this.prefWidth = prefWidth;
-		invalidate();
-	}
-
-	public void setPrefHeight (float prefHeight) {
-		this.prefHeight = prefHeight;
-		invalidate();
+		return getHeight();
 	}
 }
