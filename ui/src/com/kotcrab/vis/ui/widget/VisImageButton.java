@@ -24,6 +24,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.FocusManager;
@@ -33,6 +35,9 @@ import com.kotcrab.vis.ui.util.BorderOwner;
 
 /**
  * Due to scope of changes made this widget is not compatible with standard {@link ImageButton}.
+ * <p>
+ * When listening for button press {@link ChangeListener} should be always preferred (instead of {@link ClickListener}).
+ * {@link ClickListener} does not support disabling button and will still report button presses.
  * @author Kotcrab
  * @see ImageButton
  */

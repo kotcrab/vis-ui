@@ -23,6 +23,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox.CheckBoxStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.FocusManager;
@@ -34,6 +36,9 @@ import com.kotcrab.vis.ui.util.BorderOwner;
  * A checkbox is a button that contains an image indicating the checked or unchecked state and a label.
  * Extends functionality of standard {@link CheckBox}, style supports more checkbox states, focus and error border. Due
  * to scope of changes made this widget is not compatible with {@link CheckBox}.
+ * <p>
+ * When listening for checkbox press {@link ChangeListener} should be always preferred (instead of {@link ClickListener}).
+ * {@link ClickListener} does not support disabling checkbox and will still report checkbox presses.
  * @author Nathan Sweet
  * @author Kotcrab
  * @see CheckBox

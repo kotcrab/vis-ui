@@ -31,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
@@ -41,6 +42,9 @@ import com.kotcrab.vis.ui.util.OsUtils;
 /**
  * MenuItem displayed in {@link Menu} and {@link PopupMenu}. MenuItem contains text or text with icon.
  * Best icon size is 22px. MenuItem can also have a hotkey text.
+ * <p>
+ * When listening for menu item press {@link ChangeListener} should be always preferred (instead of {@link ClickListener}).
+ * {@link ClickListener} does not support disabling menu item and will still report item clicks.
  * @author Kotcrab
  */
 public class MenuItem extends Button {

@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
@@ -30,6 +31,9 @@ import com.kotcrab.vis.ui.util.BorderOwner;
 
 /**
  * Extends functionality of standard {@link TextButton}, supports focus border. Compatible with standard {@link TextButton}.
+ * <p>
+ * When listening for button press {@link ChangeListener} should be always preferred (instead of {@link ClickListener}).
+ * {@link ClickListener} does not support disabling button and will still report button presses.
  * @author Kotcrab
  * @see TextButton
  */
