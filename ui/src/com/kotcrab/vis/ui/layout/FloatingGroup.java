@@ -53,13 +53,14 @@ public class FloatingGroup extends WidgetGroup {
 
 	@Override
 	public void layout () {
+		if (useChildrenPreferredSize == false) return;
 		SnapshotArray<Actor> children = getChildren();
 
 		for (int i = 0; i < children.size; i++) {
 			Actor child = children.get(i);
 			float width = child.getWidth();
 			float height = child.getHeight();
-			if (useChildrenPreferredSize && child instanceof Layout) {
+			if (child instanceof Layout) {
 				Layout layout = (Layout) child;
 				width = layout.getPrefWidth();
 				height = layout.getPrefHeight();
