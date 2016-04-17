@@ -34,6 +34,7 @@ import com.kotcrab.vis.ui.widget.VisWindow;
 public class FloatingGroup extends WidgetGroup {
 	private float prefWidth;
 	private float prefHeight;
+	private boolean useChildrenPreferredSize = false;
 
 	/**
 	 * Creates floating group without preferred sizes set. Group size should be controlled by parent, note that
@@ -48,9 +49,9 @@ public class FloatingGroup extends WidgetGroup {
 
 	/** Creates floating group with fixed area size. */
 	public FloatingGroup (float prefWidth, float prefHeight) {
-		this.prefWidth = prefWidth;
-		this.prefHeight = prefHeight;
 		setTouchable(Touchable.childrenOnly);
+		setPrefWidth(prefWidth);
+		setPrefHeight(prefHeight);
 	}
 
 	@Override
@@ -61,7 +62,7 @@ public class FloatingGroup extends WidgetGroup {
 			Actor child = children.get(i);
 			float width = child.getWidth();
 			float height = child.getHeight();
-			if (child instanceof Layout) {
+			if (useChildrenPreferredSize && child instanceof Layout) {
 				Layout layout = (Layout) child;
 				width = layout.getPrefWidth();
 				height = layout.getPrefHeight();
@@ -69,6 +70,20 @@ public class FloatingGroup extends WidgetGroup {
 
 			child.setBounds(child.getX(), child.getY(), width, height);
 		}
+	}
+
+	public boolean isUseChildrenPreferredSize () {
+		return useChildrenPreferredSize;
+	}
+
+	/**
+	 * If true then children preferred size will be used whenever possible when doing group layout. If set to true
+	 * changing widget and height using {@link Actor#getWidth()} and {@link Actor#getHeight()} may not have effect
+	 * for instances of {@link Layout} (depending on implementation). Default is false.
+	 */
+	public void setUseChildrenPreferredSize (boolean useChildrenPreferredSize) {
+		this.useChildrenPreferredSize = useChildrenPreferredSize;
+		invalidate();
 	}
 
 	@Override
@@ -79,5 +94,15 @@ public class FloatingGroup extends WidgetGroup {
 	@Override
 	public float getPrefHeight () {
 		return prefHeight;
+	}
+
+	public void setPrefWidth (float prefWidth) {
+		this.prefWidth = prefWidth;
+		invalidate();
+	}
+
+	public void setPrefHeight (float prefHeight) {
+		this.prefHeight = prefHeight;
+		invalidate();
 	}
 }
