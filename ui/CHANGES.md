@@ -4,6 +4,7 @@
 - **Added**: `FloatingGroup`
 - **Added**: `VisWindow#isKeepWithinParent` and `VisWindow#setKeepWithinParent` 
 - **Added**: constructor `VisImage (String drawableName)`
+- **Added**: `VisUI.load(String internalVisSkinPath)`
 - **Fixed**: `OptionDialog#set(...)ButtonText` now updates dialog size
 - **Fixed**: [#131](https://github.com/kotcrab/vis-editor/issues/131) - fixed issue when copying numbers between `VisTextField`s with `FloatDigitsOnlyFilter` decimal point was lost
 - **Fixed**: `ListView#AbstractListAdapter` error on GWT

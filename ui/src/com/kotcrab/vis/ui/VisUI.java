@@ -76,6 +76,11 @@ public class VisUI {
 		load(scale.getSkinFile());
 	}
 
+	/** Loads skin from provided internal file path. Skin must be compatible with default VisUI skin. */
+	public static void load (String internalVisSkinPath) {
+		load(Gdx.files.internal(internalVisSkinPath));
+	}
+
 	/** Loads skin from provided file. Skin must be compatible with default VisUI skin. */
 	public static void load (FileHandle visSkinFile) {
 		checkBeforeLoad();
