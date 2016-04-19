@@ -27,9 +27,14 @@ public class USLJsonWriter {
 				StyleIdentifier style = styles.get(j);
 				if (style.metaStyle) continue;
 
-				out.append("\t").append(style.name).append(": {");
-				writeIdentifiers(style.content);
-				out.append(" }");
+				out.append("\t").append(style.name).append(": ");
+				if (style.content.size() == 1 && style.content.get(0) instanceof AliasIdentifier) {
+					writeIdentifiers(style.content);
+				} else {
+					out.append("{");
+					writeIdentifiers(style.content);
+					out.append(" }");
+				}
 
 				if (j == styles.size() - 1) {
 					out.append("\n");
@@ -57,13 +62,13 @@ public class USLJsonWriter {
 				BasicIdentifier bid = (BasicIdentifier) id;
 				if (bid.content.equals("NULL")) continue;
 				out.append(bid.name).append(": ").append(bid.content);
-			}
-
-			if (id instanceof GroupIdentifier) {
+			} else if (id instanceof GroupIdentifier) {
 				GroupIdentifier gid = (GroupIdentifier) id;
 				out.append(gid.name).append(": {");
 				writeIdentifiers(gid.content);
 				out.append("}");
+			} else if (id instanceof AliasIdentifier) {
+				out.append(id.name);
 			}
 
 			if (i != content.size() - 1) {

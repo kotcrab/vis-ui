@@ -33,3 +33,12 @@ uploadArchives {
         }
     }
 }
+
+task run(type: JavaExec) {
+    main = 'com.kotcrab.vis.usl.Main'
+    classpath = sourceSets.main.runtimeClasspath
+    ignoreExitValue = true
+    if (project.hasProperty("runArgs")) {
+        args = Eval.me(runArgs)
+    }
+}

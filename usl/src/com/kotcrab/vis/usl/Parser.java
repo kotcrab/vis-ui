@@ -123,6 +123,13 @@ public class Parser {
 				}
 			}
 
+			//handles case where JSON alias is used (IDENTIFIER_CONTENT occurs right after IDENTIFIER)
+			if (t.type == Type.IDENTIFIER_CONTENT && identifiers.size() == 1) {
+				identifiers.pop().content.add(new AliasIdentifier(t.content));
+				i++;
+				continue;
+			}
+
 			if (t.type == Type.INHERITS || t.type == Type.IDENTIFIER_CONTENT || t.type == Type.LCURL || t.type == Type.META_STYLE) {
 				i++;
 				continue;

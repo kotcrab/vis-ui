@@ -24,6 +24,14 @@ public class USLParserTest {
 				"}");
 	}
 
+	@Test
+	public void testJsonAlias () {
+		USL.parse(null, "#com.badlogic.gdx.graphics.Color: {\n" +
+				"    green: {a: 1, b: 0, g: 1, r: 0 }\n" +
+				"    green-alias: green\n" +
+				"}");
+	}
+
 	@Ignore
 	@Test
 	public void testRemote () throws Exception {

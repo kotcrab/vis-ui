@@ -1,7 +1,7 @@
 package com.kotcrab.vis.usl.lang;
 
 /** Represents identifier of USL lang, see subclasses. */
-public class Identifier {
+public abstract class Identifier {
 	public String name;
 
 	public Identifier () {
