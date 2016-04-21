@@ -142,6 +142,16 @@ public class Draggable extends InputListener {
 		actor.addListener(this);
 	}
 
+	/** @return during dragging, this is the offset value on X axis from the start of the dragged widget. */
+	public float getOffsetX () {
+		return offsetX;
+	}
+
+	/** @return during dragging, this is the offset value on Y axis from the start of the dragged widget. */
+	public float getOffsetY () {
+		return offsetY;
+	}
+
 	/** @return alpha color value of dragged actor copy. */
 	public float getAlpha () {
 		return alpha;
@@ -252,7 +262,7 @@ public class Draggable extends InputListener {
 		if (!isValid(actor) || isDisabled(actor)) {
 			return false;
 		}
-		if (listener == null || listener.onStart(actor, event.getStageX(), event.getStageY())) {
+		if (listener == null || listener.onStart(this, actor, event.getStageX(), event.getStageY())) {
 			attachMimic(actor, event, x, y);
 			return true;
 		}
@@ -397,7 +407,7 @@ public class Draggable extends InputListener {
 			getStageCoordinates(event);
 			mimic.setPosition(MIMIC_COORDINATES.x, MIMIC_COORDINATES.y);
 			if (listener != null) {
-				listener.onDrag(mimic.getActor(), STAGE_COORDINATES.x, STAGE_COORDINATES.y);
+				listener.onDrag(this, mimic.getActor(), STAGE_COORDINATES.x, STAGE_COORDINATES.y);
 			}
 		}
 	}
@@ -409,7 +419,7 @@ public class Draggable extends InputListener {
 			getStageCoordinates(event);
 			mimic.setPosition(MIMIC_COORDINATES.x, MIMIC_COORDINATES.y);
 			if (listener == null || mimic.getActor().getStage() != null
-					&& listener.onEnd(mimic.getActor(), STAGE_COORDINATES.x, STAGE_COORDINATES.y)) {
+					&& listener.onEnd(this, mimic.getActor(), STAGE_COORDINATES.x, STAGE_COORDINATES.y)) {
 				// Drag end approved - fading out.
 				addMimicHidingAction(Actions.fadeOut(fadingTime, fadingInterpolation), fadingTime);
 			} else {
@@ -440,28 +450,31 @@ public class Draggable extends InputListener {
 		boolean CANCEL = false, APPROVE = true;
 
 		/**
+		 * @param draggable source of event.
 		 * @param actor is about to be dragged.
 		 * @param stageX stage coordinate on X axis where the drag started.
 		 * @param stageY stage coordinate on Y axis where the drag started.
 		 * @return if true, actor will not be dragged.
 		 */
-		boolean onStart (Actor actor, float stageX, float stageY);
+		boolean onStart (Draggable draggable, Actor actor, float stageX, float stageY);
 
 		/**
+		 * @param draggable source of event.
 		 * @param actor is being dragged.
 		 * @param stageX stage coordinate on X axis with current cursor position.
 		 * @param stageY stage coordinate on Y axis with current cursor position.
 		 */
-		void onDrag (Actor actor, float stageX, float stageY);
+		void onDrag (Draggable draggable, Actor actor, float stageX, float stageY);
 
 		/**
+		 * @param draggable source of event.
 		 * @param actor is about to stop being dragged.
 		 * @param stageX stage coordinate on X axis where the drag ends.
 		 * @param stageY stage coordinate on X axis where the drag ends.
 		 * @return if true, "mirror" of the actor will quickly fade out. If false, mirror will return to the original actor's
 		 * position.
 		 */
-		boolean onEnd (Actor actor, float stageX, float stageY);
+		boolean onEnd (Draggable draggable, Actor actor, float stageX, float stageY);
 	}
 
 	/**
@@ -471,16 +484,16 @@ public class Draggable extends InputListener {
 	 */
 	public static class DragAdapter implements DragListener {
 		@Override
-		public boolean onStart (final Actor actor, final float stageX, final float stageY) {
+		public boolean onStart (final Draggable draggable, final Actor actor, final float stageX, final float stageY) {
 			return APPROVE;
 		}
 
 		@Override
-		public void onDrag (final Actor actor, final float stageX, final float stageY) {
+		public void onDrag (final Draggable draggable, final Actor actor, final float stageX, final float stageY) {
 		}
 
 		@Override
-		public boolean onEnd (final Actor actor, final float stageX, final float stageY) {
+		public boolean onEnd (final Draggable draggable, final Actor actor, final float stageX, final float stageY) {
 			return APPROVE;
 		}
 	}

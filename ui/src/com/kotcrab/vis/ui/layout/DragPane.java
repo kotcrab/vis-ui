@@ -94,6 +94,24 @@ public class DragPane extends Container<WidgetGroup> {
 		return getActor() instanceof GridGroup;
 	}
 
+	/** @return true if children are displayed with a {@link VerticalFlowGroup}.
+	 * @see #getVerticalFlowGroup() */
+	public boolean isVerticalFlow () {
+		return getActor() instanceof VerticalFlowGroup;
+	}
+
+	/** @return true if children are displayed with a {@link HorizontalFlowGroup}.
+	 * @see #getHorizontalFlowGroup() */
+	public boolean isHorizontalFlow () {
+		return getActor() instanceof HorizontalFlowGroup;
+	}
+
+	/** @return true if children are displayed with a {@link FloatingGroup}.
+	 * @see #getFloatingGroup() */
+	public boolean isFloating () {
+		return getActor() instanceof FloatingGroup;
+	}
+
 	@Override
 	public SnapshotArray<Actor> getChildren () {
 		return getActor().getChildren();
@@ -148,6 +166,27 @@ public class DragPane extends Container<WidgetGroup> {
 	 */
 	public GridGroup getGridGroup () {
 		return (GridGroup) getActor();
+	}
+
+	/** @return internally managed group of actors.
+	 * @throws ClassCastException if drag pane is not horizontal flow.
+	 * @see #isHorizontalFlow() */
+	public HorizontalFlowGroup getHorizontalFlowGroup () {
+		return (HorizontalFlowGroup)getActor();
+	}
+
+	/** @return internally managed group of actors.
+	 * @throws ClassCastException if drag pane is not vertical flow.
+	 * @see #isVerticalFlow() */
+	public VerticalFlowGroup getVerticalFlowGroup () {
+		return (VerticalFlowGroup)getActor();
+	}
+
+	/** @return internally managed group of actors.
+	 * @throws ClassCastException if drag pane is not floating.
+	 * @see #isFloating() */
+	public FloatingGroup getFloatingGroup () {
+		return (FloatingGroup)getActor();
 	}
 
 	/** @return dragging listener automatically added to all panes' children. */
@@ -353,41 +392,52 @@ public class DragPane extends Container<WidgetGroup> {
 		}
 
 		@Override
-		public boolean onStart (final Actor actor, final float stageX, final float stageY) {
+		public boolean onStart (final Draggable draggable, final Actor actor, final float stageX, final float stageY) {
 			return APPROVE;
 		}
 
 		@Override
-		public void onDrag (final Actor actor, final float stageX, final float stageY) {
+		public void onDrag (final Draggable draggable, final Actor actor, final float stageX, final float stageY) {
 		}
 
 		@Override
-		public boolean onEnd (final Actor actor, final float stageX, final float stageY) {
+		public boolean onEnd (final Draggable draggable, final Actor actor, final float stageX, final float stageY) {
 			if (actor == null || actor.getStage() == null) {
 				return CANCEL;
 			}
 			final Actor overActor = actor.getStage().hit(stageX, stageY, true);
-			if (overActor == null || overActor == actor || overActor.isAscendantOf(actor)) {
+			if (overActor == null || overActor == actor) {
+				return CANCEL;
+			} else if (overActor.isAscendantOf(actor)) {
+				final DragPane dragPane = getDragPane(actor);
+				if (dragPane != null && dragPane.isFloating()) {
+					DRAG_POSITION.set(stageX, stageY);
+					return addToFloatingGroup(draggable, actor, dragPane);
+				}
 				return CANCEL;
 			}
 			DRAG_POSITION.set(stageX, stageY);
 			if (overActor instanceof DragPane) {
-				return addDirectlyToPane(actor, (DragPane) overActor);
+				return addDirectlyToPane(draggable, actor, (DragPane) overActor);
 			}
 			final DragPane dragPane = getDragPane(overActor);
 			if (accept(actor, dragPane)) {
-				return addActor(actor, overActor, dragPane);
+				return addActor(draggable, actor, overActor, dragPane);
 			}
 			return CANCEL;
 		}
 
 		/**
+		 * @param draggable is attached to the actor.
 		 * @param actor dragged actor.
 		 * @param dragPane is directly under the dragged actor. If accepts the actor, it should be added to its content.
 		 * @return true if actor was accepted.
 		 */
-		protected boolean addDirectlyToPane (final Actor actor, final DragPane dragPane) {
+		protected boolean addDirectlyToPane (final Draggable draggable, final Actor actor, final DragPane dragPane) {
 			if (accept(actor, dragPane)) {
+				if (dragPane.isFloating()) {
+					return addToFloatingGroup(draggable, actor, dragPane);
+				}
 				// Dragged directly to a pane. Assuming no padding, adding last:
 				dragPane.addActor(actor);
 				return APPROVE;
@@ -405,18 +455,21 @@ public class DragPane extends Container<WidgetGroup> {
 		}
 
 		/**
+		 * @param draggable is attached to the actor.
 		 * @param actor is being dragged.
 		 * @param overActor is directly under the dragged actor.
 		 * @param dragPane contains the actor under dragged widget.
 		 * @return true if actor is accepted and added to the group.
 		 */
-		protected boolean addActor (final Actor actor, final Actor overActor, final DragPane dragPane) {
+		protected boolean addActor (final Draggable draggable, final Actor actor, final Actor overActor, final DragPane dragPane) {
 			final Actor directPaneChild = getActorInDragPane(overActor, dragPane);
 			directPaneChild.stageToLocalCoordinates(DRAG_POSITION);
-			if (dragPane.isVertical()) {
+			if (dragPane.isVertical() || dragPane.isVerticalFlow()) {
 				return addToVerticalGroup(actor, dragPane, directPaneChild);
-			} else if (dragPane.isHorizontal()) {
+			} else if (dragPane.isHorizontal() || dragPane.isHorizontalFlow()) {
 				return addToHorizontalGroup(actor, dragPane, directPaneChild);
+			} else if (dragPane.isFloating()) {
+				return addToFloatingGroup(draggable, actor, dragPane);
 			} // This is the default behavior for grid and unknown groups:
 			return addToOtherGroup(actor, dragPane, directPaneChild);
 		}
@@ -466,6 +519,36 @@ public class DragPane extends Container<WidgetGroup> {
 			} else {
 				dragPane.addActorBefore(directPaneChild, actor);
 			}
+			return APPROVE;
+		}
+
+		/** @param draggable attached to dragged actor.
+		 * @param actor is being dragged.
+		 * @param dragPane is under the actor. Stores a {@link FloatingGroup}.
+		 * @return true if actor was accepted by the group. */
+		protected boolean addToFloatingGroup (final Draggable draggable, final Actor actor, final DragPane dragPane) {
+			final FloatingGroup group = dragPane.getFloatingGroup();
+			dragPane.stageToLocalCoordinates(DRAG_POSITION);
+			float x = DRAG_POSITION.x + draggable.getOffsetX();
+			if (x < 0f || x + actor.getWidth() > dragPane.getWidth()) {
+				// Normalizing value if set to keep within parent's bounds:
+				if (draggable.isKeptWithinParent()) {
+					x = x < 0f ? 0f : dragPane.getWidth() - actor.getWidth() - 1f;
+				} else {
+					return CANCEL;
+				}
+			}
+			float y = DRAG_POSITION.y + draggable.getOffsetY();
+			if (y < 0f || y + actor.getHeight() > dragPane.getHeight()) {
+				if (draggable.isKeptWithinParent()) {
+					y = y < 0f ? 0f : dragPane.getHeight() - actor.getHeight() - 1f;
+				} else {
+					return CANCEL;
+				}
+			}
+			actor.remove();
+			actor.setPosition(x, y);
+			group.addActor(actor);
 			return APPROVE;
 		}
 
