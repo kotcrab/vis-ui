@@ -360,7 +360,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		}
 
 		// vis
-		if (inputValid == false)
+		if (isDisabled() == false && inputValid == false && style.errorBorder != null)
 			style.errorBorder.draw(batch, getX(), getY(), getWidth(), getHeight());
 		else if (focusBorderEnabled && drawBorder && style.focusBorder != null)
 			style.focusBorder.draw(batch, getX(), getY(), getWidth(), getHeight());

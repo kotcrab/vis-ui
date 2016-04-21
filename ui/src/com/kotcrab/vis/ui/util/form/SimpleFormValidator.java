@@ -55,6 +55,8 @@ public class SimpleFormValidator {
 	private Array<Disableable> disableTargets = new Array<Disableable>();
 	private Label messageLabel;
 
+	private boolean treatDisabledFieldsAsValid = true;
+
 	/**
 	 * @param targetToDisable target actor that will be disabled if form is invalid. Eg. you can pass form Confirm button.
 	 * May be null.
@@ -204,6 +206,21 @@ public class SimpleFormValidator {
 	/** @param successMsg message that will be displayed on {@link #messageLabel} if all fields were valid. May be null. */
 	public void setSuccessMessage (String successMsg) {
 		this.successMsg = successMsg;
+		updateWidgets();
+	}
+
+	public boolean isTreatDisabledFieldsAsValid () {
+		return treatDisabledFieldsAsValid;
+	}
+
+	/**
+	 * If true then this FormValidator will treat disabled fields as valid regardless of their validator states.
+	 * Default is true. Changing this cause form to be revalidated.
+	 * @since 1.0.2
+	 */
+	public void setTreatDisabledFieldsAsValid (boolean treatDisabledFieldAsValid) {
+		this.treatDisabledFieldsAsValid = treatDisabledFieldAsValid;
+		checkAll();
 	}
 
 	private void checkAll () {
@@ -219,6 +236,10 @@ public class SimpleFormValidator {
 		}
 
 		for (CheckedButtonWrapper wrapper : buttons) {
+			if (treatDisabledFieldsAsValid && wrapper.button.isDisabled()) {
+				continue;
+			}
+
 			if (wrapper.button.isChecked() != wrapper.mustBeChecked) {
 				errorMsgText = wrapper.errorMsg;
 				formInvalid = true;
@@ -231,8 +252,11 @@ public class SimpleFormValidator {
 		}
 
 		for (VisValidatableTextField field : fields) {
-			if (field.isInputValid() == false) {
+			if (treatDisabledFieldsAsValid && field.isDisabled()) {
+				continue;
+			}
 
+			if (field.isInputValid() == false) {
 				Array<InputValidator> validators = field.getValidators();
 				for (InputValidator v : validators) {
 					if (v instanceof FormInputValidator == false) {
@@ -243,8 +267,9 @@ public class SimpleFormValidator {
 					FormInputValidator validator = (FormInputValidator) v;
 
 					if (validator.getLastResult() == false) {
-						if (!(validator.isHideErrorOnEmptyInput() && field.getText().equals("")))
+						if (!(validator.isHideErrorOnEmptyInput() && field.getText().equals(""))) {
 							errorMsgText = validator.getErrorMsg();
+						}
 
 						formInvalid = true;
 						break;
