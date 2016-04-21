@@ -529,13 +529,22 @@ public class DragPane extends Container<WidgetGroup> {
 		protected boolean addToFloatingGroup (final Draggable draggable, final Actor actor, final DragPane dragPane) {
 			final FloatingGroup group = dragPane.getFloatingGroup();
 			dragPane.stageToLocalCoordinates(DRAG_POSITION);
-			final float x = DRAG_POSITION.x + draggable.getOffsetX();
+			float x = DRAG_POSITION.x + draggable.getOffsetX();
 			if (x < 0f || x + actor.getWidth() > dragPane.getWidth()) {
-				return CANCEL;
+				// Normalizing value if set to keep within parent's bounds:
+				if (draggable.isKeptWithinParent()) {
+					x = x < 0f ? 0f : dragPane.getWidth() - actor.getWidth() - 1f;
+				} else {
+					return CANCEL;
+				}
 			}
-			final float y = DRAG_POSITION.y + draggable.getOffsetY();
+			float y = DRAG_POSITION.y + draggable.getOffsetY();
 			if (y < 0f || y + actor.getHeight() > dragPane.getHeight()) {
-				return CANCEL;
+				if (draggable.isKeptWithinParent()) {
+					y = y < 0f ? 0f : dragPane.getHeight() - actor.getHeight() - 1f;
+				} else {
+					return CANCEL;
+				}
 			}
 			actor.remove();
 			actor.setPosition(x, y);
