@@ -33,6 +33,8 @@ import com.kotcrab.vis.ui.widget.VisWindow;
  */
 public class FloatingGroup extends WidgetGroup {
 	private boolean useChildrenPreferredSize = false;
+	private float prefWidth = 0f;
+	private float prefHeight = 0f;
 
 	/**
 	 * Creates floating group without preferred sizes set. Group size should be controlled by parent, note that
@@ -45,10 +47,15 @@ public class FloatingGroup extends WidgetGroup {
 		setTouchable(Touchable.childrenOnly);
 	}
 
-	/** Creates floating group with fixed area size. */
-	public FloatingGroup (float width, float height) {
+	/**
+	 * Creates floating group with fixed area size.
+	 * @param prefHeight preferred height of group. If set to to lower than 0 then {@link #getHeight()} is used as preferred height.
+	 * @param prefWidth preferred width of group. If set to to lower than 0 then {@link #getWidth()} is used as preferred width.
+	 */
+	public FloatingGroup (float prefWidth, float prefHeight) {
 		setTouchable(Touchable.childrenOnly);
-		setSize(width, height);
+		setPrefWidth(prefWidth);
+		setPrefHeight(prefHeight);
 	}
 
 	@Override
@@ -86,11 +93,21 @@ public class FloatingGroup extends WidgetGroup {
 
 	@Override
 	public float getPrefWidth () {
-		return getWidth();
+		return prefWidth < 0f ? getWidth() : prefWidth;
 	}
 
 	@Override
 	public float getPrefHeight () {
-		return getHeight();
+		return prefHeight < 0f ? getHeight() : prefHeight;
+	}
+
+	public void setPrefWidth (float prefWidth) {
+		this.prefWidth = prefWidth;
+		invalidate();
+	}
+
+	public void setPrefHeight (float prefHeight) {
+		this.prefHeight = prefHeight;
+		invalidate();
 	}
 }
