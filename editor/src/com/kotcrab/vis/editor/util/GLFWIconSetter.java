@@ -47,7 +47,7 @@ public abstract class GLFWIconSetter {
 	public abstract void setIcon (FileHandle iconCacheFolder, FileHandle icoFile, FileHandle pngFile) throws IllegalStateException;
 
 	/**
-	 * @return new instance of {@GLFWIconSetter} implementation for current platform or {@link DefaultGLFWIconSetter} when
+	 * @return new instance of {@link GLFWIconSetter} implementation for current platform or {@link DefaultGLFWIconSetter} when
 	 * no other implementation is available
 	 */
 	public static GLFWIconSetter newInstance () {
@@ -60,7 +60,7 @@ public abstract class GLFWIconSetter {
 	private static class WinGLFWIconSetter extends GLFWIconSetter {
 		@Override
 		public void setIcon (FileHandle iconCacheFolder, FileHandle icoFile, FileHandle pngFile) {
-			//WinAPi can't read icon from JAR, needs copying to some other location
+			//WinAPI can't read icon from JAR, needs copying to some other location
 			FileHandle cachedIco = iconCacheFolder.child(icoFile.name());
 			if (cachedIco.exists() == false) icoFile.copyTo(cachedIco);
 
@@ -188,7 +188,7 @@ public abstract class GLFWIconSetter {
 			NativeLongByReference bytes_after_return = new NativeLongByReference();
 			PointerByReference prop_return = new PointerByReference();
 
-			//https://tronche.com/gui/x/xlib/window-information/XGetWindowProperty.html
+			// https://tronche.com/gui/x/xlib/window-information/XGetWindowProperty.html
 			if (x11.XGetWindowProperty(display, window, property, new NativeLong(0), new NativeLong(MAX_PROPERTY_LENGTH),
 					false, req_type, actual_type_return, actual_format_return, nitems_return, bytes_after_return, prop_return)
 					!= X11.Success) {
