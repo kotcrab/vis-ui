@@ -2,6 +2,7 @@
 - **Changed**: [#163](https://github.com/kotcrab/vis-editor/issues/163) - When `VisCheckBox` or `VisTextField` is disabled and is marked as invalid then error border won't be drawn. 
 - **Changed**: [#163](https://github.com/kotcrab/vis-editor/issues/163) - Added `SimpleFormValidator#setTreatDisabledFieldsAsValid` (and it's getter) - allow to control whether to mark form as invalid when invalid but disabled field is encountered. If set to true then all disabled fields are treated as valid, regardless of their state.
     - Defaults to true! Set to false to preserve old behaviour.
+- **API Changed**: `DragListener`: `Draggable` argument was added to each method
 - **Added**: `VisTextField#isTextSelected()`
 - **Added**: `VisTextField#clearText()`
 - **Added**: `FloatingGroup`
