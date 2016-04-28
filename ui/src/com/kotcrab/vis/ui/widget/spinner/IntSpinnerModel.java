@@ -70,21 +70,27 @@ public class IntSpinnerModel implements SpinnerModel {
 	}
 
 	@Override
-	public void increment () {
+	public boolean increment () {
 		if (current + step > max) {
-			this.current = max;
+			if (current == max) return false;
+			current = max;
 		} else {
-			this.current += step;
+			current += step;
 		}
+
+		return true;
 	}
 
 	@Override
-	public void decrement () {
+	public boolean decrement () {
 		if (current - step < min) {
-			this.current = min;
+			if (current == min) return false;
+			current = min;
 		} else {
-			this.current -= step;
+			current -= step;
 		}
+
+		return true;
 	}
 
 	@Override

@@ -16,12 +16,13 @@
 
 package com.kotcrab.vis.ui.test.manual;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
-import com.kotcrab.vis.ui.widget.NumberSelector.NumberSelectorListener;
 import com.kotcrab.vis.ui.widget.Tooltip;
 import com.kotcrab.vis.ui.widget.spinner.*;
 
@@ -128,12 +129,47 @@ public class TestWindow extends VisWindow {
 
 		// ---
 
-		VisTable listTable = new VisTable();
+		VisTable listSpinnerTable = new VisTable();
 		VisList<String> list = new VisList<String>();
 		list.setItems("item 1", "item 2", "item 3", "item 4");
 
-		listTable.add(new VisLabel("list: "));
-		listTable.add(list);
+		listSpinnerTable.add(new VisLabel("list: "));
+		listSpinnerTable.add(list);
+
+		Array<String> stringArray = new Array<String>();
+		stringArray.add("a");
+		stringArray.add("b");
+		stringArray.add("c");
+		stringArray.add("d");
+		stringArray.add("e");
+		final ArraySpinnerModel<String> arrayModel = new ArraySpinnerModel<String>(stringArray);
+		Spinner arraySpinner = new Spinner("array", arrayModel);
+
+		final IntSpinnerModel intModel = new IntSpinnerModel(10, 5, 20, 2);
+		Spinner intSpinner = new Spinner("int", intModel);
+
+		VisTable spinnerTable = new VisTable(true);
+		spinnerTable.add(new VisLabel("spinners")).colspan(2).row();
+		spinnerTable.add(intSpinner);
+		spinnerTable.add(arraySpinner).row();
+		spinnerTable.add(new Spinner("simple float", new SimpleFloatSpinnerModel(10f, 5f, 20f, 1.5f, 1)));
+		spinnerTable.add(new Spinner("float", new FloatSpinnerModel("1", "0", "10", "0.5", 2))).width(100);
+
+		arraySpinner.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				System.out.println("changed array spinner to: " + arrayModel.getCurrent());
+			}
+		});
+
+		intSpinner.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				System.out.println("changed int spinner to: " + intModel.getValue());
+			}
+		});
+
+		listSpinnerTable.add(spinnerTable).padLeft(10f);
 
 		// ---
 
@@ -141,32 +177,8 @@ public class TestWindow extends VisWindow {
 		VisSelectBox<String> selectBox = new VisSelectBox<String>();
 		selectBox.setItems("item 1", "item 2", "item 3", "item 4");
 
-		NumberSelector numberSelector;
-
 		selectorsTable.add(new VisLabel("select box: "));
 		selectorsTable.add(selectBox);
-		selectorsTable.add(numberSelector = new NumberSelector("number selector:", 0, 0, 100, 1));
-		selectorsTable.add(new NumberSelector(null, 15, 10, 20, 0.1f, 1)).row();
-
-		numberSelector.addChangeListener(new NumberSelectorListener() {
-			@Override
-			public void changed (float number) {
-				System.out.println("changed: " + number);
-			}
-		});
-
-		// ---
-
-		VisTable spinnersTable = new VisTable(true);
-
-		Array<String> stringArray = new Array<String>();
-		stringArray.add("a");
-		stringArray.add("b");
-		stringArray.add("c");
-		selectorsTable.add(new Spinner("spinner sfloat", new SimpleFloatSpinnerModel(0, 0, 100, 1, 0)));
-		selectorsTable.add(new Spinner("spinner int", new IntSpinnerModel(10, 5, 20, 2)));
-		selectorsTable.add(new Spinner("spinner array", new ArraySpinnerModel<String>(stringArray)));
-		selectorsTable.add(new Spinner("spinner float", new FloatSpinnerModel("1", "0", "10", "0.5", 2))).width(150);
 
 		// ---
 
@@ -186,7 +198,7 @@ public class TestWindow extends VisWindow {
 		add(radioTable).row();
 		add(textFieldTable).row();
 		add(progressbarTable).row();
-		add(listTable).row();
+		add(listSpinnerTable).row();
 		add(selectorsTable).row();
 		add(linkTable).row();
 		add(linkTable2).padBottom(3).row();

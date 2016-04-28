@@ -69,21 +69,27 @@ public class FloatSpinnerModel implements SpinnerModel {
 	}
 
 	@Override
-	public void increment () {
+	public boolean increment () {
 		if (current.add(step).compareTo(max) > 0) {
+			if (current.compareTo(max) == 0) return false;
 			current = max.setScale(scale, BigDecimal.ROUND_HALF_UP);
 		} else {
 			current = current.add(step);
 		}
+
+		return true;
 	}
 
 	@Override
-	public void decrement () {
+	public boolean decrement () {
 		if (current.subtract(step).compareTo(min) < 0) {
+			if (current.compareTo(min) == 0) return false;
 			current = min.setScale(scale, BigDecimal.ROUND_HALF_UP);
 		} else {
 			current = current.subtract(step);
 		}
+
+		return true;
 	}
 
 	@Override

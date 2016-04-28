@@ -72,15 +72,17 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 	}
 
 	@Override
-	public void increment () {
-		if (currentIndex + 1 >= items.size) return;
+	public boolean increment () {
+		if (currentIndex + 1 >= items.size) return false;
 		setCurrent(currentIndex + 1);
+		return true;
 	}
 
 	@Override
-	public void decrement () {
-		if (currentIndex - 1 < 0) return;
+	public boolean decrement () {
+		if (currentIndex - 1 < 0) return false;
 		setCurrent(currentIndex - 1);
+		return true;
 	}
 
 	@Override

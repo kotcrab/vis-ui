@@ -110,6 +110,7 @@ public class Spinner extends VisTable {
 		upButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
+				event.stop();
 				getStage().setScrollFocus(getTextField());
 				increment(true);
 			}
@@ -118,6 +119,7 @@ public class Spinner extends VisTable {
 		downButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
+				event.stop();
 				getStage().setScrollFocus(getTextField());
 				decrement(true);
 			}
@@ -131,6 +133,7 @@ public class Spinner extends VisTable {
 		textField.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
+				event.stop();
 				model.textChanged();
 			}
 		});
@@ -192,8 +195,8 @@ public class Spinner extends VisTable {
 	}
 
 	private void increment (boolean fireEvent) {
-		model.increment();
-		notifyValueChanged(fireEvent);
+		boolean valueChanged = model.increment();
+		if (valueChanged) notifyValueChanged(fireEvent);
 	}
 
 	public void decrement () {
@@ -201,8 +204,8 @@ public class Spinner extends VisTable {
 	}
 
 	private void decrement (boolean fireEvent) {
-		model.decrement();
-		notifyValueChanged(fireEvent);
+		boolean valueChanged = model.decrement();
+		if (valueChanged) notifyValueChanged(fireEvent);
 	}
 
 	/** If false, methods changing spinner value form code won't trigger change event, it will be fired only when user has changed value. */

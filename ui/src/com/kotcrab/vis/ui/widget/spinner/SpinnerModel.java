@@ -33,14 +33,16 @@ public interface SpinnerModel {
 	/**
 	 * Steps model up by one. Depending of the implementation this could move model to next item or increment it's value by
 	 * arbitrary amount. There is no need to call {@link Spinner#notifyValueChanged(boolean)} as this is handled by spinner itself.
+	 * @return true when value was changed, false otherwise
 	 */
-	void increment ();
+	boolean increment ();
 
 	/**
 	 * Steps model down by one. Depending of the implementation this could move model to previous item or decrement it's value by
 	 * arbitrary amount. There is no need to call {@link Spinner#notifyValueChanged(boolean)} as this is handled by spinner itself.
+	 * @return true when value was changed, false otherwise
 	 */
-	void decrement ();
+	boolean decrement ();
 
 	/** @return text representation of current model value */
 	String getText ();
