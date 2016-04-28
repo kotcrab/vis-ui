@@ -62,12 +62,13 @@
 
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.Sizes" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.spinner" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.dialog" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.color" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.tabbedpane" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.util.form" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.util.adapter.SimpleListAdapter" />
 
-	<extend-configuration-property name="gdx.reflect.exclude" value="com.kotcrab.vis.ui.widget.file" />
-	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.file.FileChooserStyle" />
-	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.util.adapter.SimpleListAdapter" />
+    <extend-configuration-property name="gdx.reflect.exclude" value="com.kotcrab.vis.ui.widget.file" />
+    <extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.file.FileChooserStyle" />
 </module>

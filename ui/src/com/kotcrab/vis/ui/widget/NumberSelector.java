@@ -30,6 +30,7 @@ import com.badlogic.gdx.utils.Timer.Task;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.*;
+import com.kotcrab.vis.ui.widget.spinner.Spinner;
 
 import java.math.BigDecimal;
 
@@ -39,7 +40,9 @@ import java.math.BigDecimal;
  * selector precision, see {@link #setPrecision(int)}. Similar to JSpinner from Swing.
  * @author Javier, Kotcrab
  * @since 0.7.0
+ * @deprecated since 1.0.2 replaced by {@link Spinner}. Will be removed in future major version.
  */
+@Deprecated
 public class NumberSelector extends VisTable {
 	private Array<NumberSelectorListener> listeners = new Array<NumberSelectorListener>();
 

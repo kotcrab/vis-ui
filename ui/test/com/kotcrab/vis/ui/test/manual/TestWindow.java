@@ -17,11 +17,13 @@
 package com.kotcrab.vis.ui.test.manual;
 
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.NumberSelector.NumberSelectorListener;
 import com.kotcrab.vis.ui.widget.Tooltip;
+import com.kotcrab.vis.ui.widget.spinner.*;
 
 public class TestWindow extends VisWindow {
 
@@ -152,6 +154,19 @@ public class TestWindow extends VisWindow {
 				System.out.println("changed: " + number);
 			}
 		});
+
+		// ---
+
+		VisTable spinnersTable = new VisTable(true);
+
+		Array<String> stringArray = new Array<String>();
+		stringArray.add("a");
+		stringArray.add("b");
+		stringArray.add("c");
+		selectorsTable.add(new Spinner("spinner sfloat", new SimpleFloatSpinnerModel(0, 0, 100, 1, 0)));
+		selectorsTable.add(new Spinner("spinner int", new IntSpinnerModel(10, 5, 20, 2)));
+		selectorsTable.add(new Spinner("spinner array", new ArraySpinnerModel<String>(stringArray)));
+		selectorsTable.add(new Spinner("spinner float", new FloatSpinnerModel("1", "0", "10", "0.5", 2))).width(150);
 
 		// ---
 

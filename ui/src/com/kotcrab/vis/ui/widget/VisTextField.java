@@ -139,7 +139,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 			@Override
 			public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
 				super.enter(event, x, y, pointer, fromActor);
-				if (pointer == -1) {
+				if (pointer == -1 && isDisabled() == false) {
 					Gdx.graphics.setSystemCursor(SystemCursor.Ibeam);
 				}
 			}

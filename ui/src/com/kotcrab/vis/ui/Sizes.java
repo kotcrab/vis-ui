@@ -34,9 +34,18 @@ public class Sizes {
 
 	public float menuItemIconSize;
 
+	@Deprecated
 	public float numberSelectorButtonSize;
+	@Deprecated
 	public float numberSelectorButtonsWidth;
+	@Deprecated
 	public float numberSelectorFieldSize;
+	@Deprecated
 	public float numberSelectorFieldRightPadding;
+
+	public float spinnerButtonSize;
+	public float spinnerButtonsWidth;
+	public float spinnerFieldSize;
+	public float spinnerFieldRightPadding;
 }
 

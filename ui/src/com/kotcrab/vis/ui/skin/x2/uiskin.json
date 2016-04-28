@@ -80,8 +80,8 @@ com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 	default: {background: default-pane, label: {font: default-font, fontColor: white} }
 },
 com.kotcrab.vis.ui.Sizes: {
-	default: {scaleFactor: 1, spacingBottom: 8, spacingRight: 6, buttonBarSpacing: 10, menuItemIconSize: 22, numberSelectorButtonSize: 12, numberSelectorButtonsWidth: 12, numberSelectorFieldSize: 40, numberSelectorFieldRightPadding: 1 },
-	x2: {scaleFactor: 2, spacingBottom: 8, spacingRight: 6, buttonBarSpacing: 10, menuItemIconSize: 44, numberSelectorButtonSize: 24, numberSelectorButtonsWidth: 20, numberSelectorFieldSize: 80, numberSelectorFieldRightPadding: 5 }
+	default: {scaleFactor: 1, spacingBottom: 8, spacingRight: 6, buttonBarSpacing: 10, menuItemIconSize: 22, numberSelectorButtonSize: 12, numberSelectorButtonsWidth: 12, numberSelectorFieldSize: 40, numberSelectorFieldRightPadding: 1, spinnerButtonSize: 12, spinnerButtonsWidth: 12, spinnerFieldSize: 40, spinnerFieldRightPadding: 1 },
+	x2: {scaleFactor: 2, spacingBottom: 8, spacingRight: 6, buttonBarSpacing: 10, menuItemIconSize: 44, numberSelectorButtonSize: 24, numberSelectorButtonsWidth: 20, numberSelectorFieldSize: 80, numberSelectorFieldRightPadding: 5, spinnerButtonSize: 24, spinnerButtonsWidth: 20, spinnerFieldSize: 80, spinnerFieldRightPadding: 5 }
 },
 com.kotcrab.vis.ui.widget.VisTextField$VisTextFieldStyle: {
 	default: {focusBorder: border, font: default-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor },
@@ -148,6 +148,9 @@ com.kotcrab.vis.ui.widget.LinkLabel$LinkLabelStyle: {
 },
 com.kotcrab.vis.ui.widget.tabbedpane.TabbedPane$TabbedPaneStyle: {
 	default: {background: menu-bg, separatorBar: list-selection, buttonStyle: {down: button-down, up: button, checked: button-down, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey} }
+},
+com.kotcrab.vis.ui.widget.spinner.Spinner$SpinnerStyle: {
+	default: {down: select-down, up: select-up }
 },
 com.kotcrab.vis.ui.widget.file.FileChooserStyle: {
 	default: {highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right, iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive, iconFolderStar: icon-folder-star, iconTrash: icon-trash, iconFileText: icon-file-text, iconFileImage: icon-file-image, iconFilePdf: icon-file-pdf, iconFileAudio: icon-file-audio }

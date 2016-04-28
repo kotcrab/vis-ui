@@ -143,7 +143,7 @@ public class VisValidatableTextField extends VisTextField {
 	}
 
 	/**
-	 * If true this field will automatically restore text before edition stared if it loses keyboard focus while field is in invalid text.
+	 * If true this field will automatically restore last valid text if it loses keyboard focus during text edition.
 	 * This can't be called while field is selected, doing so will result in IllegalStateException. Default is false.
 	 */
 	public void setRestoreLastValid (boolean restoreLastValid) {
@@ -154,10 +154,10 @@ public class VisValidatableTextField extends VisTextField {
 
 		if (restoreLastValid) {
 			if (restoreFocusListener == null) restoreFocusListener = new LastValidFocusListener();
-
 			addListener(restoreFocusListener);
-		} else
+		} else {
 			removeListener(restoreFocusListener);
+		}
 	}
 
 	public void restoreLastValidText () {
@@ -172,8 +172,9 @@ public class VisValidatableTextField extends VisTextField {
 	private class LastValidFocusListener extends FocusListener {
 		@Override
 		public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
-			if (focused && restoreLastValid)
+			if (focused && restoreLastValid) {
 				lastValid = getText();
+			}
 
 			if (focused == false && isInputValid() == false && restoreLastValid) {
 				restoreLastValidText();

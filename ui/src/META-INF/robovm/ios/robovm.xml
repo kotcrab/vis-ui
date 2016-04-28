@@ -19,5 +19,6 @@
         <pattern>com.kotcrab.vis.ui.Sizes</pattern>
         <pattern>com.kotcrab.vis.ui.widget.**</pattern>
         <pattern>com.kotcrab.vis.ui.util.form.**</pattern>
+        <pattern>com.kotcrab.vis.ui.util.adapter.SimpleListAdapter</pattern>
     </forceLinkClasses>
 </config>

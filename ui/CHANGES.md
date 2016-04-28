@@ -3,6 +3,8 @@
 - **Changed**: [#163](https://github.com/kotcrab/vis-editor/issues/163) - Added `SimpleFormValidator#setTreatDisabledFieldsAsValid` (and it's getter) - allow to control whether to mark form as invalid when invalid but disabled field is encountered. If set to true then all disabled fields are treated as valid, regardless of their state.
     - Defaults to true! Set to false to preserve old behaviour.
 - **API Changed**: `DragListener`: `Draggable` argument was added to each method
+- **API Deprecated**: `Sizes#numberSelectorButtonSize`, `numberSelectorButtonsWidth`, `numberSelectorFieldSize`, `numberSelectorFieldRightPadding` replaced by `spinnerButtonSize`. `spinnerButtonsWidth`, `spinnerFieldSize`, `spinnerFieldRightPadding`
+- **API Deprecated**: `NumberSelector` - replaced by `Spinner`, `NumberSelector` will be removed in future version
 - **Added**: `VisTextField#isTextSelected()`
 - **Added**: `VisTextField#clearText()`
 - **Added**: `FloatingGroup`
@@ -12,6 +14,7 @@
 - **Fixed**: `OptionDialog#set(...)ButtonText` now updates dialog size
 - **Fixed**: [#131](https://github.com/kotcrab/vis-editor/issues/131) - fixed issue when copying numbers between `VisTextField`s with `FloatDigitsOnlyFilter` decimal point was lost
 - **Fixed**: `ListView#AbstractListAdapter` error on GWT
+- **Fixed**: `VisTextField` was changing system cursor when it was disabled
 
 #### Version: 1.0.1 (LibGDX 1.9.2)
 - **Added**: `ListView#getListAdapter()`
