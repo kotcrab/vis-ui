@@ -138,6 +138,11 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 						bmpFontProvider.load(dependencies, asset);
 
 					} else if (asset instanceof TtfFontAsset) {
+						if (ttfFontProvider == null) {
+							throw new IllegalStateException("TTF fonts are not enabled, ensure that gdx-freetype was " +
+									"added to your project and call `manager.enableFreeType(new FreeTypeFontProvider())` " +
+									"before scene loading!");
+						}
 						ttfFontProvider.load(dependencies, asset);
 
 					} else if (asset instanceof ParticleAsset) {
