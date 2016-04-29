@@ -61,7 +61,7 @@ public class SpineInflaterSystem extends InflaterSystem {
 
 		SpineAssetDescriptor asset = (SpineAssetDescriptor) assetRef.asset;
 
-		SkeletonData skeleton = manager.get(asset.getSkeletonPath(), SkeletonData.class);
+		SkeletonData skeleton = manager.get(asset.getArbitrarySkeletonPath(), SkeletonData.class);
 		VisSpine spine = new VisSpine(skeleton);
 
 		spine.setFlip(protoComponent.flipX, protoComponent.flipY);

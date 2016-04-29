@@ -1,6 +1,8 @@
 #### Version: 0.3.2 (LibGDX 1.9.2, Artemis 1.3.1)
 - **Fixed**: Changing entity tint could affect tint of all entities 
 - **Fixed**: FitViewport was not applied when rendering
+- **Fixed**: Spine runtime was not allowing not use multiple instances of same animation with different scales
+    - To get `SpineAsset` assets from `AssetManager` use `spineAsset.getArbitrarySkeletonPath()` instead of `spineAsset.getSkeletonPath()`
 - **API Addition**: `Scene#getPixelsPerUnit()`
 - **API Addition**: `Tint#set(int rgba)`, `Tint#set(float r, float g, float b, float a)`, `Tint#set(Tint other)` 
 - **API Addition**: constructor `VisSpriter (Loader<Sprite> loader, Data data, float scale, int entityIndex)`

@@ -72,8 +72,8 @@ public class SpineSupport implements EntitySupport {
 			if (asset instanceof SpineAssetDescriptor) {
 				SpineAssetDescriptor spineAsset = (SpineAssetDescriptor) asset;
 
-				SkeletonDataLoaderParameter parameter = new SkeletonDataLoaderParameter(spineAsset.getAtlasPath(), spineAsset.getScale());
-				dependencies.add(new AssetDescriptor<SkeletonData>(spineAsset.getSkeletonPath(), SkeletonData.class, parameter));
+				SkeletonDataLoaderParameter parameter = new SkeletonDataLoaderParameter(spineAsset.getAtlasPath(), spineAsset.getSkeletonPath(), spineAsset.getScale());
+				dependencies.add(new AssetDescriptor<SkeletonData>(spineAsset.getArbitrarySkeletonPath(), SkeletonData.class, parameter));
 			}
 		}
 	}

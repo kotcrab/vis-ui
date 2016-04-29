@@ -67,6 +67,10 @@ public class SpineAssetDescriptor implements VisAssetDescriptor {
 		return scale;
 	}
 
+	public String getArbitrarySkeletonPath () {
+		return String.valueOf(scale) + "." + getSkeletonPath();
+	}
+
 	@Override
 	public String toString () {
 		return "SpineAsset: " + skeletonPath;

@@ -76,17 +76,17 @@ public class SkeletonDataLoader extends AsynchronousAssetLoader<SkeletonData, Sk
 	@Override
 	public void loadAsync (AssetManager manager, String fileName, FileHandle file, SkeletonDataLoaderParameter parameter) {
 		skeletonData = null;
-		TextureAtlas atlas = manager.get(parameter.atlasName, TextureAtlas.class);
+		TextureAtlas atlas = manager.get(parameter.atlasPath, TextureAtlas.class);
 
 		String extension = file.extension();
 		if (extension.toLowerCase().equals("skel")) {
 			SkeletonBinary skeletonBinary = new SkeletonBinary(atlas);
 			skeletonBinary.setScale(parameter.scale);
-			skeletonData = skeletonBinary.readSkeletonData(file);
+			skeletonData = skeletonBinary.readSkeletonData(resolve(parameter.skeletonPath));
 		} else {
 			SkeletonJson skeletonJson = new SkeletonJson(atlas);
 			skeletonJson.setScale(parameter.scale);
-			skeletonData = skeletonJson.readSkeletonData(file);
+			skeletonData = skeletonJson.readSkeletonData(resolve(parameter.skeletonPath));
 		}
 	}
 
@@ -98,7 +98,7 @@ public class SkeletonDataLoader extends AsynchronousAssetLoader<SkeletonData, Sk
 	@Override
 	public Array<AssetDescriptor> getDependencies (String fileName, FileHandle file, SkeletonDataLoaderParameter parameter) {
 		Array<AssetDescriptor> deps = new Array<AssetDescriptor>();
-		deps.add(new AssetDescriptor(parameter.atlasName, TextureAtlas.class));
+		deps.add(new AssetDescriptor(parameter.atlasPath, TextureAtlas.class));
 		return deps;
 	}
 
@@ -109,16 +109,18 @@ public class SkeletonDataLoader extends AsynchronousAssetLoader<SkeletonData, Sk
 	 */
 	static public class SkeletonDataLoaderParameter extends AssetLoaderParameters<SkeletonData> {
 		// A SkeletonJson must be loaded from an atlas.
-		public String atlasName;
+		public String atlasPath;
+		public String skeletonPath;
 		public float scale;
 
-		public SkeletonDataLoaderParameter (String atlasPath, float scale) {
-			this.atlasName = atlasPath;
+		public SkeletonDataLoaderParameter (String atlasPath, String skeletonPath, float scale) {
+			this.atlasPath = atlasPath;
+			this.skeletonPath = skeletonPath;
 			this.scale = scale;
 		}
 
-		public SkeletonDataLoaderParameter (String atlasPath) {
-			this(atlasPath, 1);
+		public SkeletonDataLoaderParameter (String atlasPath, String skeletonPath) {
+			this(atlasPath, skeletonPath, 1);
 		}
 	}
 }
