@@ -5,14 +5,12 @@ import com.kotcrab.vis.ui.util.InputValidator;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 /**
- * {@link Spinner} model allowing to browse through items from object {@link Array}. Once created model items can't be
- * changed. To change items
- * you must create new model and set it in {@link Spinner}.
+ * {@link Spinner} model allowing to browse through items from object {@link Array}.
  * <p>
- * Note that this (by default) uses item's toString() method to get string representation of objects used to validate that user has
- * entered valid value which due to {@link VisValidatableTextField} nature has to be done for every entered letter. Item's toString()
- * should cache it's result internally to optimize this check. To customize how string representation is obtained
- * override {@link #itemToString(Object)}
+ * Note that this (by default) uses item's toString() method to get string representation of objects used to validate
+ * that user has entered valid value which due to {@link VisValidatableTextField} nature has to be done for every
+ * entered letter. Item's toString() should cache it's result internally to optimize this check. To customize how string
+ * representation is obtained override {@link #itemToString(Object)}
  * @author Kotcrab
  * @since 1.0.2
  */
@@ -23,6 +21,11 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 	private T current;
 	private int currentIndex;
 
+	/**
+	 * Creates new instance of {@link ArraySpinnerModel} using provided items
+	 * @param items array containing items for the model. It is copied to new array in order to prevent accidental
+	 * modification.
+	 */
 	public ArraySpinnerModel (Array<T> items) {
 		if (items.size == 0) throw new IllegalArgumentException("items array can't be empty");
 		this.items = new Array<T>(items);
@@ -40,7 +43,6 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 				return getItemIndexForText(input) != -1;
 			}
 		});
-
 		spinner.notifyValueChanged(true);
 	}
 
@@ -90,6 +92,31 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 		return itemToString(current);
 	}
 
+	/** Notifies model that items has changed and view must be refreshed. This will trigger a change event. */
+	public void invalidateDataSet () {
+		if (items.size == 0) throw new IllegalArgumentException("items array can't be empty");
+		if (currentIndex > items.size - 1) {
+			setCurrent(items.peek());
+		}
+		spinner.notifyValueChanged(true);
+	}
+
+	/** @return array containing model items. If you modify returned array you must call {@link #invalidateDataSet()}. */
+	public Array<T> getItems () {
+		return items;
+	}
+
+	/** Changes items of this model, array can't be empty. Current index is not preserved. This will trigger a change event. */
+	public void setItems (Array<T> items) {
+		this.items = new Array<T>(items);
+		this.currentIndex = 0;
+		invalidateDataSet();
+	}
+
+	public int getCurrentIndex () {
+		return currentIndex;
+	}
+
 	public T getCurrent () {
 		return current;
 	}
@@ -99,8 +126,13 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 		this.current = items.get(newIndex);
 	}
 
+	/** @param item if does not exist in items array, model item will be set to first item. */
 	public void setCurrent (T item) {
 		int index = items.indexOf(item, true);
-		if (index != -1) setCurrent(index);
+		if (index == -1) {
+			setCurrent(0);
+		} else {
+			setCurrent(index);
+		}
 	}
 }
