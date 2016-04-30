@@ -225,6 +225,10 @@ public class Spinner extends VisTable {
 		getTextField().setMaxLength(maxLength);
 	}
 
+	public SpinnerModel getModel () {
+		return model;
+	}
+
 	/**
 	 * Called by {@link SpinnerModel}. Notifies when underlying model value has changed and spinner text field must updated.
 	 * Typically there is no need to call this method manually.

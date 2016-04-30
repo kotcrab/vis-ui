@@ -1,5 +1,6 @@
 package com.kotcrab.vis.ui.widget.spinner;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.util.InputValidator;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
@@ -10,25 +11,31 @@ import com.kotcrab.vis.ui.widget.VisValidatableTextField;
  * Note that this (by default) uses item's toString() method to get string representation of objects used to validate
  * that user has entered valid value which due to {@link VisValidatableTextField} nature has to be done for every
  * entered letter. Item's toString() should cache it's result internally to optimize this check. To customize how string
- * representation is obtained override {@link #itemToString(Object)}
+ * representation is obtained override {@link #itemToString(Object)}.
  * @author Kotcrab
  * @since 1.0.2
  */
 public class ArraySpinnerModel<T> implements SpinnerModel {
 	private Spinner spinner;
 
-	private Array<T> items;
+	private Array<T> items = new Array<T>();
 	private T current;
 	private int currentIndex;
 
 	/**
-	 * Creates new instance of {@link ArraySpinnerModel} using provided items
+	 * Creates empty instance with no items set. Note that spinner with empty array model will be always treated as in
+	 * invalid state.
+	 */
+	public ArraySpinnerModel () {
+	}
+
+	/**
+	 * Creates new instance of {@link ArraySpinnerModel} using provided items.
 	 * @param items array containing items for the model. It is copied to new array in order to prevent accidental
-	 * modification.
+	 * modification. Array may be empty however in such case spinner will be always in invalid input state.
 	 */
 	public ArraySpinnerModel (Array<T> items) {
-		if (items.size == 0) throw new IllegalArgumentException("items array can't be empty");
-		this.items = new Array<T>(items);
+		items.addAll(items);
 	}
 
 	@Override
@@ -48,10 +55,11 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 
 	/**
 	 * Creates string representation displayed in {@link Spinner} for given object. By default toString() is used.
-	 * @param item that string representation should be created
+	 * @param item that string representation should be created. It is necessary to check if item is null!
 	 * @return string representation of item
 	 */
 	protected String itemToString (T item) {
+		if (item == null) return "";
 		return item.toString();
 	}
 
@@ -94,10 +102,7 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 
 	/** Notifies model that items has changed and view must be refreshed. This will trigger a change event. */
 	public void invalidateDataSet () {
-		if (items.size == 0) throw new IllegalArgumentException("items array can't be empty");
-		if (currentIndex > items.size - 1) {
-			setCurrent(items.peek());
-		}
+		setCurrent(MathUtils.clamp(currentIndex, 0, items.size - 1));
 		spinner.notifyValueChanged(true);
 	}
 
@@ -106,24 +111,33 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 		return items;
 	}
 
-	/** Changes items of this model, array can't be empty. Current index is not preserved. This will trigger a change event. */
-	public void setItems (Array<T> items) {
-		this.items = new Array<T>(items);
-		this.currentIndex = 0;
+	/** Changes items of this model. Current index is not preserved. This will trigger a change event. */
+	public void setItems (Array<T> newItems) {
+		items.clear();
+		items.addAll(newItems);
+		currentIndex = 0;
 		invalidateDataSet();
 	}
 
+	/** @return current item index or -1 if items array is empty */
 	public int getCurrentIndex () {
 		return currentIndex;
 	}
 
+	/** @return current item or null if items array is empty */
 	public T getCurrent () {
 		return current;
 	}
 
+	/** Sets current item. If array is empty then current value will be set to null. */
 	public void setCurrent (int newIndex) {
-		this.currentIndex = newIndex;
-		this.current = items.get(newIndex);
+		if (items.size == 0) {
+			current = null;
+			currentIndex = -1;
+		} else {
+			currentIndex = newIndex;
+			current = items.get(newIndex);
+		}
 	}
 
 	/** @param item if does not exist in items array, model item will be set to first item. */
