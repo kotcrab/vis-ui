@@ -35,7 +35,7 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 	 * modification. Array may be empty however in such case spinner will be always in invalid input state.
 	 */
 	public ArraySpinnerModel (Array<T> items) {
-		items.addAll(items);
+		this.items.addAll(items);
 	}
 
 	@Override
