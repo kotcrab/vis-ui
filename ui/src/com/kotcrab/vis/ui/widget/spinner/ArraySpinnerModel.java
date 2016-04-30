@@ -15,9 +15,7 @@ import com.kotcrab.vis.ui.widget.VisValidatableTextField;
  * @author Kotcrab
  * @since 1.0.2
  */
-public class ArraySpinnerModel<T> implements SpinnerModel {
-	private Spinner spinner;
-
+public class ArraySpinnerModel<T> extends AbstractSpinnerModel {
 	private Array<T> items = new Array<T>();
 	private T current;
 	private int currentIndex;
@@ -27,6 +25,7 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 	 * invalid state.
 	 */
 	public ArraySpinnerModel () {
+		super(false);
 	}
 
 	/**
@@ -35,15 +34,14 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 	 * modification. Array may be empty however in such case spinner will be always in invalid input state.
 	 */
 	public ArraySpinnerModel (Array<T> items) {
+		super(false);
 		this.items.addAll(items);
 	}
 
 	@Override
 	public void bind (Spinner spinner) {
-		if (this.spinner != null)
-			throw new IllegalStateException("ArraySpinnerModel can be only used by single instance of Spinner");
-		this.spinner = spinner;
-		setCurrent(0);
+		super.bind(spinner);
+		updateCurrentItem(0);
 		spinner.getTextField().addValidator(new InputValidator() {
 			@Override
 			public boolean validateInput (String input) {
@@ -78,20 +76,34 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 		String text = spinner.getTextField().getText();
 		int index = getItemIndexForText(text);
 		if (index == -1) return;
-		setCurrent(index);
+		updateCurrentItem(index);
 	}
 
 	@Override
-	public boolean increment () {
-		if (currentIndex + 1 >= items.size) return false;
-		setCurrent(currentIndex + 1);
+	public boolean incrementModel () {
+		if (currentIndex + 1 >= items.size) {
+			if (isWrap()) {
+				updateCurrentItem(0);
+				return true;
+			}
+
+			return false;
+		}
+		updateCurrentItem(currentIndex + 1);
 		return true;
 	}
 
 	@Override
-	public boolean decrement () {
-		if (currentIndex - 1 < 0) return false;
-		setCurrent(currentIndex - 1);
+	public boolean decrementModel () {
+		if (currentIndex - 1 < 0) {
+			if (isWrap()) {
+				updateCurrentItem(items.size - 1);
+				return true;
+			}
+
+			return false;
+		}
+		updateCurrentItem(currentIndex - 1);
 		return true;
 	}
 
@@ -102,7 +114,7 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 
 	/** Notifies model that items has changed and view must be refreshed. This will trigger a change event. */
 	public void invalidateDataSet () {
-		setCurrent(MathUtils.clamp(currentIndex, 0, items.size - 1));
+		updateCurrentItem(MathUtils.clamp(currentIndex, 0, items.size - 1));
 		spinner.notifyValueChanged(true);
 	}
 
@@ -131,22 +143,37 @@ public class ArraySpinnerModel<T> implements SpinnerModel {
 
 	/** Sets current item. If array is empty then current value will be set to null. */
 	public void setCurrent (int newIndex) {
+		setCurrent(newIndex, spinner.isProgrammaticChangeEvents());
+	}
+
+	/** Sets current item. If array is empty then current value will be set to null. */
+	public void setCurrent (int newIndex, boolean fireEvent) {
+		updateCurrentItem(newIndex);
+		spinner.notifyValueChanged(fireEvent);
+	}
+
+	/** @param item if does not exist in items array, model item will be set to first item. */
+	public void setCurrent (T item) {
+		setCurrent(item, spinner.isProgrammaticChangeEvents());
+	}
+
+	/** @param item if does not exist in items array, model item will be set to first item. */
+	public void setCurrent (T item, boolean fireEvent) {
+		int index = items.indexOf(item, true);
+		if (index == -1) {
+			setCurrent(0, fireEvent);
+		} else {
+			setCurrent(index, fireEvent);
+		}
+	}
+
+	private void updateCurrentItem (int newIndex) {
 		if (items.size == 0) {
 			current = null;
 			currentIndex = -1;
 		} else {
 			currentIndex = newIndex;
 			current = items.get(newIndex);
-		}
-	}
-
-	/** @param item if does not exist in items array, model item will be set to first item. */
-	public void setCurrent (T item) {
-		int index = items.indexOf(item, true);
-		if (index == -1) {
-			setCurrent(0);
-		} else {
-			setCurrent(index);
 		}
 	}
 }

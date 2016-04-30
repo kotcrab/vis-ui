@@ -12,9 +12,7 @@ import com.kotcrab.vis.ui.widget.VisValidatableTextField;
  * @see FloatSpinnerModel
  * @since 1.0.2
  */
-public class IntSpinnerModel implements SpinnerModel {
-	private Spinner spinner;
-
+public class IntSpinnerModel extends AbstractSpinnerModel {
 	private BoundsValidator boundsValidator = new BoundsValidator();
 	private IntDigitsOnlyFilter textFieldFilter;
 
@@ -28,6 +26,7 @@ public class IntSpinnerModel implements SpinnerModel {
 	}
 
 	public IntSpinnerModel (int initialValue, int min, int max, int step) {
+		super(false);
 		if (min > max) throw new IllegalArgumentException("min can't be > max");
 		if (step <= 0) throw new IllegalArgumentException("step must be > 0");
 
@@ -39,9 +38,7 @@ public class IntSpinnerModel implements SpinnerModel {
 
 	@Override
 	public void bind (Spinner spinner) {
-		if (this.spinner != null)
-			throw new IllegalStateException("IntSpinnerModel can be only used by single instance of Spinner");
-		this.spinner = spinner;
+		super.bind(spinner);
 
 		VisValidatableTextField valueText = spinner.getTextField();
 		valueText.getValidators().clear();
@@ -70,9 +67,16 @@ public class IntSpinnerModel implements SpinnerModel {
 	}
 
 	@Override
-	public boolean increment () {
+	public boolean incrementModel () {
 		if (current + step > max) {
-			if (current == max) return false;
+			if (current == max) {
+				if (isWrap()) {
+					current = min;
+					return true;
+				}
+
+				return false;
+			}
 			current = max;
 		} else {
 			current += step;
@@ -82,9 +86,16 @@ public class IntSpinnerModel implements SpinnerModel {
 	}
 
 	@Override
-	public boolean decrement () {
+	public boolean decrementModel () {
 		if (current - step < min) {
-			if (current == min) return false;
+			if (current == min) {
+				if (isWrap()) {
+					current = max;
+					return true;
+				}
+
+				return false;
+			}
 			current = min;
 		} else {
 			current -= step;

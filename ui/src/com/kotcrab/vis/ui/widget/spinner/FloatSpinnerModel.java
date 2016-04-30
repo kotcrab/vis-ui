@@ -13,9 +13,7 @@ import java.math.BigDecimal;
  * @see IntSpinnerModel
  * @since 1.0.2
  */
-public class FloatSpinnerModel implements SpinnerModel {
-	private Spinner spinner;
-
+public class FloatSpinnerModel extends AbstractSpinnerModel {
 	private InputValidator boundsValidator = new BoundsValidator();
 	private NumberDigitsTextFieldFilter textFieldFilter;
 
@@ -38,6 +36,7 @@ public class FloatSpinnerModel implements SpinnerModel {
 	}
 
 	public FloatSpinnerModel (BigDecimal initialValue, BigDecimal min, BigDecimal max, BigDecimal step, int scale) {
+		super(false);
 		this.current = initialValue;
 		this.max = max;
 		this.min = min;
@@ -51,9 +50,7 @@ public class FloatSpinnerModel implements SpinnerModel {
 
 	@Override
 	public void bind (Spinner spinner) {
-		if (this.spinner != null)
-			throw new IllegalStateException("FastFloatSpinnerModel can be only used by single instance of Spinner");
-		this.spinner = spinner;
+		super.bind(spinner);
 		setScale(scale);
 		spinner.notifyValueChanged(true);
 	}
@@ -69,9 +66,16 @@ public class FloatSpinnerModel implements SpinnerModel {
 	}
 
 	@Override
-	public boolean increment () {
+	public boolean incrementModel () {
 		if (current.add(step).compareTo(max) > 0) {
-			if (current.compareTo(max) == 0) return false;
+			if (current.compareTo(max) == 0) {
+				if (isWrap()) {
+					current = min.setScale(scale, BigDecimal.ROUND_HALF_UP);
+					return true;
+				}
+
+				return false;
+			}
 			current = max.setScale(scale, BigDecimal.ROUND_HALF_UP);
 		} else {
 			current = current.add(step);
@@ -81,9 +85,17 @@ public class FloatSpinnerModel implements SpinnerModel {
 	}
 
 	@Override
-	public boolean decrement () {
+	public boolean decrementModel () {
 		if (current.subtract(step).compareTo(min) < 0) {
-			if (current.compareTo(min) == 0) return false;
+			if (current.compareTo(min) == 0) {
+				if (isWrap()) {
+					current = max.setScale(scale, BigDecimal.ROUND_HALF_UP);
+					return true;
+				}
+
+				return false;
+			}
+
 			current = min.setScale(scale, BigDecimal.ROUND_HALF_UP);
 		} else {
 			current = current.subtract(step);

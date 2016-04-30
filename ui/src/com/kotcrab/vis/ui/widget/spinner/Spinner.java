@@ -191,21 +191,19 @@ public class Spinner extends VisTable {
 	}
 
 	public void increment () {
-		increment(programmaticChangeEvents);
+		model.increment(programmaticChangeEvents);
 	}
 
 	private void increment (boolean fireEvent) {
-		boolean valueChanged = model.increment();
-		if (valueChanged) notifyValueChanged(fireEvent);
+		model.increment(fireEvent);
 	}
 
 	public void decrement () {
-		decrement(programmaticChangeEvents);
+		model.decrement(programmaticChangeEvents);
 	}
 
 	private void decrement (boolean fireEvent) {
-		boolean valueChanged = model.decrement();
-		if (valueChanged) notifyValueChanged(fireEvent);
+		model.decrement(fireEvent);
 	}
 
 	/** If false, methods changing spinner value form code won't trigger change event, it will be fired only when user has changed value. */

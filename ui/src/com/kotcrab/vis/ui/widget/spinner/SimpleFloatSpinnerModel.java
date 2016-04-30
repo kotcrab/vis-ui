@@ -17,9 +17,7 @@ import java.math.BigDecimal;
  * @see IntSpinnerModel
  * @since 1.0.2
  */
-public class SimpleFloatSpinnerModel implements SpinnerModel {
-	private Spinner spinner;
-
+public class SimpleFloatSpinnerModel extends AbstractSpinnerModel {
 	private InputValidator boundsValidator = new BoundsValidator();
 	private NumberDigitsTextFieldFilter textFieldFilter;
 
@@ -38,6 +36,7 @@ public class SimpleFloatSpinnerModel implements SpinnerModel {
 	}
 
 	public SimpleFloatSpinnerModel (float initialValue, float min, float max, float step, int precision) {
+		super(false);
 		if (min > max) throw new IllegalArgumentException("min can't be > max");
 		if (step <= 0) throw new IllegalArgumentException("step must be > 0");
 		if (precision < 0) throw new IllegalArgumentException("precision must be >= 0");
@@ -51,9 +50,7 @@ public class SimpleFloatSpinnerModel implements SpinnerModel {
 
 	@Override
 	public void bind (Spinner spinner) {
-		if (this.spinner != null)
-			throw new IllegalStateException("FastFloatSpinnerModel can be only used by single instance of Spinner");
-		this.spinner = spinner;
+		super.bind(spinner);
 		setPrecision(precision);
 		spinner.notifyValueChanged(true);
 	}
@@ -69,9 +66,15 @@ public class SimpleFloatSpinnerModel implements SpinnerModel {
 	}
 
 	@Override
-	public boolean increment () {
+	public boolean incrementModel () {
 		if (current + step > max) {
-			if (current == max) return false;
+			if (current == max) {
+				if (isWrap()) {
+					current = min;
+					return true;
+				}
+				return false;
+			}
 			current = max;
 		} else {
 			current += step;
@@ -81,9 +84,15 @@ public class SimpleFloatSpinnerModel implements SpinnerModel {
 	}
 
 	@Override
-	public boolean decrement () {
+	public boolean decrementModel () {
 		if (current - step < min) {
-			if (current == min) return false;
+			if (current == min) {
+				if (isWrap()) {
+					current = max;
+					return true;
+				}
+				return false;
+			}
 			current = min;
 		} else {
 			this.current -= step;
