@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.module.scene.entitymanipulator.tool;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.kotcrab.annotation.CallSuper;
 import com.kotcrab.vis.editor.module.scene.CameraModule;
 import com.kotcrab.vis.editor.module.scene.SceneModuleContainer;
 import com.kotcrab.vis.editor.module.scene.UndoModule;
@@ -43,7 +42,6 @@ public abstract class Tool extends InputListener {
 
 	protected EntityProxyCache entityProxyCache;
 
-	@CallSuper
 	public void setModules (SceneModuleContainer moduleContainer, EditorScene scene) {
 		if (loaded) return;
 		this.sceneMC = moduleContainer;

@@ -45,7 +45,6 @@ allprojects {
         gsonVersion = '2.4'
         cloningVersion = '1.9.2'
         joorVersion = '0.9.5'
-        callsuperVersion = '0.1.2'
     }
 
     repositories {
@@ -83,7 +82,6 @@ project(':editor') {
         compile "com.google.code.gson:gson:$gsonVersion"
         compile "uk.com.robust-it:cloning:$cloningVersion"
         compile "org.jooq:joor:$joorVersion"
-        compile "com.kotcrab.annotation:callsuper:$callsuperVersion"
         provided "com.apple:AppleJavaExtensions:$appleJavaExtensionsVersion", optional
     }
 }

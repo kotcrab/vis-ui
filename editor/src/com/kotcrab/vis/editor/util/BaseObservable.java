@@ -17,7 +17,6 @@
 package com.kotcrab.vis.editor.util;
 
 import com.badlogic.gdx.utils.Array;
-import com.kotcrab.annotation.CallSuper;
 
 /**
  * Default implementation of {@link Observable}
@@ -31,7 +30,6 @@ public class BaseObservable implements Observable, AfterDeserialize {
 	}
 
 	@Override
-	@CallSuper
 	public void onDeserialize () {
 		listeners = new Array<>();
 	}
