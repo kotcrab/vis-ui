@@ -88,6 +88,7 @@ public class VisValidatableTextField extends VisTextField {
 
 	private void init () {
 		setProgrammaticChangeEvents(true);
+		setIgnoreEqualsTextChange(false);
 	}
 
 	@Override

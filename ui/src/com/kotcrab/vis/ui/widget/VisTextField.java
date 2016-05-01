@@ -112,6 +112,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	private boolean drawBorder;
 	private boolean focusBorderEnabled = true;
 	private boolean inputValid = true;
+	private boolean ignoreEqualsTextChange = true;
 
 	public VisTextField () {
 		this("", VisUI.getSkin().get(VisTextFieldStyle.class));
@@ -639,7 +640,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	/** @param str If null, "" is used. */
 	public void setText (String str) {
 		if (str == null) str = "";
-		if (str.equals(text)) return;
+		if (ignoreEqualsTextChange && str.equals(text)) return;
 
 		clearSelection();
 		String oldText = text;
@@ -659,7 +660,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	 * @return True if the text was changed.
 	 */
 	boolean changeText (String oldText, String newText) {
-		if (newText.equals(oldText)) return false;
+		if (ignoreEqualsTextChange && newText.equals(oldText)) return false;
 		text = newText;
 		beforeChangeEventFired();
 		ChangeEvent changeEvent = Pools.obtain(ChangeEvent.class);
@@ -869,6 +870,22 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	@Override
 	public void setFocusBorderEnabled (boolean focusBorderEnabled) {
 		this.focusBorderEnabled = focusBorderEnabled;
+	}
+
+	/** @see #setIgnoreEqualsTextChange(boolean) */
+	public boolean isIgnoreEqualsTextChange () {
+		return ignoreEqualsTextChange;
+	}
+
+	/**
+	 * Allows to control whether change event is sent when text field's text is changed to same same as was it before.
+	 * Eg. current text field is 'abc' and {@link #setText(String)} is called it with 'abc' again.
+	 * @param ignoreEqualsTextChange if true then setting text to the same as it was before will NOT fire change event.
+	 * Default is true however it is false default {@link VisValidatableTextField} to prevent form refreshment issues -
+	 * see issue VisEditor#165
+	 */
+	public void setIgnoreEqualsTextChange (boolean ignoreEqualsTextChange) {
+		this.ignoreEqualsTextChange = ignoreEqualsTextChange;
 	}
 
 	static public class VisTextFieldStyle extends TextFieldStyle {

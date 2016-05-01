@@ -11,10 +11,12 @@
 - **Added**: `VisWindow#isKeepWithinParent` and `VisWindow#setKeepWithinParent` 
 - **Added**: constructor `VisImage (String drawableName)`
 - **Added**: `VisUI.load(String internalVisSkinPath)`
+- **Added**: `VisTextField#setIgnoreEqualsTextChange(...)` - see [#165](https://github.com/kotcrab/vis-editor/issues/165)
 - **Fixed**: `OptionDialog#set(...)ButtonText` now updates dialog size
 - **Fixed**: [#131](https://github.com/kotcrab/vis-editor/issues/131) - fixed issue when copying numbers between `VisTextField`s with `FloatDigitsOnlyFilter` decimal point was lost
 - **Fixed**: `ListView#AbstractListAdapter` error on GWT
 - **Fixed**: `VisTextField` was changing system cursor when it was disabled
+- **Fixed**: [#165](https://github.com/kotcrab/vis-editor/issues/165) - fixed form not refreshed when text field content was changed to the same as before
 
 #### Version: 1.0.1 (LibGDX 1.9.2)
 - **Added**: `ListView#getListAdapter()`
