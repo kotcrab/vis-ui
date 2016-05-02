@@ -169,7 +169,7 @@ project(':tools:crash-reporter') {
 }
 
 nexusStaging {
-    packageGroup = "com.kotcrab.vis"
+    packageGroup = "com.kotcrab"
     username = ossrhUsername
     password = ossrhPassword
 }
