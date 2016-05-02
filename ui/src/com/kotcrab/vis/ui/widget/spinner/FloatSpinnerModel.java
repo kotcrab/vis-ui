@@ -51,7 +51,7 @@ public class FloatSpinnerModel extends AbstractSpinnerModel {
 	@Override
 	public void bind (Spinner spinner) {
 		super.bind(spinner);
-		setScale(scale);
+		setScale(scale, false);
 		spinner.notifyValueChanged(true);
 	}
 
@@ -119,6 +119,10 @@ public class FloatSpinnerModel extends AbstractSpinnerModel {
 	 * allow 0.00 and etc.
 	 */
 	public void setScale (final int scale) {
+		setScale(scale, true);
+	}
+
+	private void setScale (final int scale, boolean notifySpinner) {
 		if (scale < 0) throw new IllegalStateException("Scale can't be < 0");
 		this.scale = scale;
 		current = current.setScale(scale, BigDecimal.ROUND_HALF_UP);
@@ -149,6 +153,9 @@ public class FloatSpinnerModel extends AbstractSpinnerModel {
 			textFieldFilter.setAcceptNegativeValues(true);
 		}
 
+		if (notifySpinner) {
+			spinner.notifyValueChanged(spinner.isProgrammaticChangeEvents());
+		}
 	}
 
 	public void setValue (BigDecimal newValue) {
@@ -189,7 +196,7 @@ public class FloatSpinnerModel extends AbstractSpinnerModel {
 
 		if (current.compareTo(min) < 0) {
 			current = min.setScale(scale, BigDecimal.ROUND_HALF_UP);
-			spinner.notifyValueChanged(true);
+			spinner.notifyValueChanged(spinner.isProgrammaticChangeEvents());
 		}
 	}
 
@@ -205,7 +212,7 @@ public class FloatSpinnerModel extends AbstractSpinnerModel {
 
 		if (current.compareTo(max) > 0) {
 			current = max.setScale(scale, BigDecimal.ROUND_HALF_UP);
-			spinner.notifyValueChanged(true);
+			spinner.notifyValueChanged(spinner.isProgrammaticChangeEvents());
 		}
 	}
 

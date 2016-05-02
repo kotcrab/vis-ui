@@ -51,7 +51,7 @@ public class SimpleFloatSpinnerModel extends AbstractSpinnerModel {
 	@Override
 	public void bind (Spinner spinner) {
 		super.bind(spinner);
-		setPrecision(precision);
+		setPrecision(precision, false);
 		spinner.notifyValueChanged(true);
 	}
 
@@ -123,6 +123,10 @@ public class SimpleFloatSpinnerModel extends AbstractSpinnerModel {
 	 * allow 0.00 and etc.
 	 */
 	public void setPrecision (final int precision) {
+		setPrecision(precision, true);
+	}
+
+	private void setPrecision (final int precision, boolean notifySpinner) {
 		if (precision < 0) throw new IllegalStateException("Precision can't be < 0");
 		this.precision = precision;
 
@@ -152,6 +156,9 @@ public class SimpleFloatSpinnerModel extends AbstractSpinnerModel {
 			textFieldFilter.setAcceptNegativeValues(true);
 		}
 
+		if (notifySpinner) {
+			spinner.notifyValueChanged(spinner.isProgrammaticChangeEvents());
+		}
 	}
 
 	public void setValue (float newValue) {
@@ -192,7 +199,7 @@ public class SimpleFloatSpinnerModel extends AbstractSpinnerModel {
 
 		if (current < min) {
 			current = min;
-			spinner.notifyValueChanged(true);
+			spinner.notifyValueChanged(spinner.isProgrammaticChangeEvents());
 		}
 	}
 
@@ -208,7 +215,7 @@ public class SimpleFloatSpinnerModel extends AbstractSpinnerModel {
 
 		if (current > max) {
 			current = max;
-			spinner.notifyValueChanged(true);
+			spinner.notifyValueChanged(spinner.isProgrammaticChangeEvents());
 		}
 	}
 

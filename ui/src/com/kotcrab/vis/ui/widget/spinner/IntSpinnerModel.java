@@ -147,7 +147,7 @@ public class IntSpinnerModel extends AbstractSpinnerModel {
 
 		if (current < min) {
 			current = min;
-			spinner.notifyValueChanged(true);
+			spinner.notifyValueChanged(spinner.isProgrammaticChangeEvents());
 		}
 	}
 
@@ -163,7 +163,7 @@ public class IntSpinnerModel extends AbstractSpinnerModel {
 
 		if (current > max) {
 			current = max;
-			spinner.notifyValueChanged(true);
+			spinner.notifyValueChanged(spinner.isProgrammaticChangeEvents());
 		}
 	}
 
