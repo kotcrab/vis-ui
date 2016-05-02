@@ -46,7 +46,15 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 		blue inherits .font, .font-disabled: { over: button-blue-over, disabled: button }
 		toggle inherits default, .font: {}
 	}
-	
+
+	//all styles inherited without any change required
+	#ImageButton$ImageButtonStyle extends ButtonStyle: {
+	}
+
+	//all styles inherited without any change required
+	#ImageTextButton$ImageTextButtonStyle extends TextButtonStyle: {
+	}
+
 	#ScrollPane$ScrollPaneStyle: {
 		list: { vScroll: scroll, vScrollKnob: scroll-knob-vertical, hScroll: scroll-horizontal, hScrollKnob: scroll-knob-horizontal }
 		default inherits list: { background: border }
@@ -130,9 +138,9 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 		numberSelectorFieldRightPadding: 1
 
 		spinnerButtonSize: 12,
-        spinnerButtonsWidth: 12,
-        spinnerFieldSize: 40,
-        spinnerFieldRightPadding: 1
+		spinnerButtonsWidth: 12,
+		spinnerFieldSize: 40,
+		spinnerFieldRightPadding: 1
 	}
 
 	x2: {
@@ -151,9 +159,9 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 		numberSelectorFieldRightPadding: 5,
 
 		spinnerButtonSize: 24,
-        spinnerButtonsWidth: 20,
-        spinnerFieldSize: 80,
-        spinnerFieldRightPadding: 5
+		spinnerButtonsWidth: 20,
+		spinnerFieldSize: 80,
+		spinnerFieldRightPadding: 5
 	}
 }
 
@@ -242,8 +250,8 @@ package com.kotcrab.vis.ui.widget {
 	}
 
 	#spinner.Spinner$SpinnerStyle: {
-       	default: { down: select-down, up: select-up }
-    }
+		default: { down: select-down, up: select-up }
+	}
 
 	#file.FileChooserStyle: {
 		default: { highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right,
@@ -264,13 +272,13 @@ package com.kotcrab.vis.ui.widget {
 }
 
 package com.kotcrab.vis.ui.util {
-    #form.SimpleFormValidator$FormValidatorStyle: {
-        default: { errorLabelColor: vis-red, validLabelColor: white }
-        smooth inherits default: { colorTransitionDuration: 0.3 }
-    }
+	#form.SimpleFormValidator$FormValidatorStyle: {
+		default: { errorLabelColor: vis-red, validLabelColor: white }
+		smooth inherits default: { colorTransitionDuration: 0.3 }
+	}
 
-    #adapter.SimpleListAdapter$SimpleListAdapterStyle: {
-        default: { background: window-bg, selection: list-selection }
-    }
+	#adapter.SimpleListAdapter$SimpleListAdapterStyle: {
+		default: { background: window-bg, selection: list-selection }
+	}
 }
 
