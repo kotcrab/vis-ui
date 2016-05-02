@@ -118,8 +118,12 @@ public class Editor extends ApplicationAdapter {
 
 		Log.debug("Starting loading");
 
-		GLFWIconSetter.newInstance().setIcon(Gdx.files.absolute(App.APP_FOLDER_PATH).child("cache/iconCache"),
-				Gdx.files.internal("icon.ico"), Gdx.files.internal("icon.png"));
+		try {
+			GLFWIconSetter.newInstance().setIcon(Gdx.files.absolute(App.APP_FOLDER_PATH).child("cache/iconCache"),
+					Gdx.files.internal("icon.ico"), Gdx.files.internal("icon.png"));
+		} catch (IllegalStateException e) {
+			Log.exception(e);
+		}
 
 		Assets.load();
 
