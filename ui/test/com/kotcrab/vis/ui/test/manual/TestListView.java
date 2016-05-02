@@ -24,7 +24,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.adapter.ArrayAdapter;
-import com.kotcrab.vis.ui.util.form.FormValidator;
+import com.kotcrab.vis.ui.util.form.SimpleFormValidator;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.ListView.ItemClickListener;
 import com.kotcrab.vis.ui.widget.ListView.UpdatePolicy;
@@ -58,7 +58,7 @@ public class TestListView extends VisWindow {
 		final VisValidatableTextField nameField = new VisValidatableTextField();
 		VisTextButton addButton = new VisTextButton("Add");
 
-		FormValidator validator = new FormValidator(addButton);
+		SimpleFormValidator validator = new SimpleFormValidator(addButton);
 		validator.notEmpty(nameField, "");
 
 		add(new VisLabel("New Name:"));
