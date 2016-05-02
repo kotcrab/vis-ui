@@ -168,6 +168,12 @@ project(':tools:crash-reporter') {
     }
 }
 
+nexusStaging {
+    packageGroup = "com.kotcrab.vis"
+    username = ossrhUsername
+    password = ossrhPassword
+}
+
 tasks.eclipse.doLast {
     delete ".project"
 }
