@@ -20,6 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.Locales;
+import com.kotcrab.vis.ui.Sizes;
+import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.OsUtils;
 
 /**
@@ -35,23 +37,38 @@ public class ButtonBar {
 	public static final String OSX_ORDER = "L H BEF NYCOA R";
 	public static final String LINUX_ORDER = "L H NYACBEFO R";
 
+	private Sizes sizes;
+
 	private ObjectMap<Character, Button> buttons = new ObjectMap<Character, Button>();
 
 	private boolean ignoreSpacing;
 	private String order;
 
-	public ButtonBar (String order) {
-		if (order == null) throw new IllegalArgumentException("order can't be null");
-		this.order = order;
+	public ButtonBar () {
+		this(VisUI.getSizes(), getDefaultOrder());
 	}
 
-	public ButtonBar () {
+	public ButtonBar (String order) {
+		this(VisUI.getSizes(), order);
+	}
+
+	public ButtonBar (Sizes sizes) {
+		this(sizes, getDefaultOrder());
+	}
+
+	public ButtonBar (Sizes sizes, String order) {
+		if (sizes == null) throw new IllegalArgumentException("sizes can't be null");
+		this.sizes = sizes;
+		setOrder(order);
+	}
+
+	private static String getDefaultOrder () {
 		if (OsUtils.isWindows()) {
-			order = WINDOWS_ORDER;
+			return WINDOWS_ORDER;
 		} else if (OsUtils.isMac()) {
-			order = OSX_ORDER;
+			return OSX_ORDER;
 		} else //default to linux order
-			order = LINUX_ORDER;
+			return LINUX_ORDER;
 	}
 
 	public boolean isIgnoreSpacing () {
@@ -118,7 +135,7 @@ public class ButtonBar {
 			char ch = order.charAt(i);
 
 			if (ignoreSpacing == false && ch == ' ' && spacingValid) {
-				table.add().width(10);
+				table.add().width(sizes.buttonBarSpacing);
 				spacingValid = false;
 			}
 
@@ -133,9 +150,7 @@ public class ButtonBar {
 		return table;
 	}
 
-	/**
-	 * Defines possible button types for {@link ButtonBar}
-	 */
+	/** Defines possible button types for {@link ButtonBar} */
 	public enum ButtonType {
 		LEFT("left", 'L'),
 		RIGHT("right", 'R'),
