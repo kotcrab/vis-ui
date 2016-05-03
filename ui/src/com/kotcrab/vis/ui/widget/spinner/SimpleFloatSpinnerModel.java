@@ -1,7 +1,6 @@
 package com.kotcrab.vis.ui.widget.spinner;
 
 import com.kotcrab.vis.ui.util.*;
-import com.kotcrab.vis.ui.widget.NumberSelector;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 
 import java.math.BigDecimal;
@@ -10,8 +9,6 @@ import java.math.BigDecimal;
  * Spinner models allowing to select float values. Uses float to store values, good for small numbers
  * with low precession. If high precession is required or very big numbers are used then {@link FloatSpinnerModel} should be used.
  * If only ints are needed then {@link IntSpinnerModel} should be used.
- * <p>
- * Implements the same behaviour as deprecated {@link NumberSelector}.
  * @author Kotcrab
  * @see FloatSpinnerModel
  * @see IntSpinnerModel

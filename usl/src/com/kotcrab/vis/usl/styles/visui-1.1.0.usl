@@ -132,11 +132,6 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 
 		menuItemIconSize: 22,
 
-		numberSelectorButtonSize: 12,
-		numberSelectorButtonsWidth: 12,
-		numberSelectorFieldSize: 40,
-		numberSelectorFieldRightPadding: 1
-
 		spinnerButtonSize: 12,
 		spinnerButtonsWidth: 12,
 		spinnerFieldSize: 40,
@@ -152,11 +147,6 @@ package com.badlogic.gdx.scenes.scene2d.ui {
 		buttonBarSpacing: 10,
 
 		menuItemIconSize: 44,
-
-		numberSelectorButtonSize: 24,
-		numberSelectorButtonsWidth: 20,
-		numberSelectorFieldSize: 80,
-		numberSelectorFieldRightPadding: 5,
 
 		spinnerButtonSize: 24,
 		spinnerButtonsWidth: 20,
