@@ -69,7 +69,7 @@ public class TabbedPane {
 	private VisImageButtonStyle sharedCloseActiveButtonStyle;
 
 	private DragPane tabsPane;
-	private VisTable mainTable;
+	private TabbedPaneTable mainTable;
 
 	private Array<Tab> tabs;
 	private IdentityMap<Tab, TabButtonTable> tabsButtonMap;
@@ -101,7 +101,7 @@ public class TabbedPane {
 
 		group = new ButtonGroup<Button>();
 
-		mainTable = new VisTable();
+		mainTable = new TabbedPaneTable(this);
 		tabsPane = new DragPane(style.vertical ? new VerticalFlowGroup() : new HorizontalFlowGroup());
 		configureDragPane(style);
 
@@ -111,21 +111,24 @@ public class TabbedPane {
 		tabsButtonMap = new IdentityMap<Tab, TabButtonTable>();
 
 		Cell<DragPane> tabsPaneCell = mainTable.add(tabsPane);
+		Cell<Image> separatorCell = null;
 
-		//note: if separatorBar height/width is not set it may sometimes disappear
+		//note: if separatorBar height/width is not set explicitly it may sometimes disappear
 		if (style.separatorBar != null) {
 			if (style.vertical) {
 				tabsPaneCell.top().growY().minSize(0, 0);
-				mainTable.add(new Image(style.separatorBar)).grow().width(style.separatorBar.getMinWidth());
+				separatorCell = mainTable.add(new Image(style.separatorBar)).grow().width(style.separatorBar.getMinWidth());
 			} else {
 				tabsPaneCell.left().growX().minSize(0, 0);
 				mainTable.row();
-				mainTable.add(new Image(style.separatorBar)).grow().height(style.separatorBar.getMinHeight());
+				separatorCell = mainTable.add(new Image(style.separatorBar)).grow().height(style.separatorBar.getMinHeight());
 			}
 		} else {
-			//make sure that tab will fill available space even when there is not separatorBar image set
+			//make sure that tab will fill available space even when there is no separatorBar image set
 			mainTable.add().expand().fill();
 		}
+
+		mainTable.setPaneCells(tabsPaneCell, separatorCell);
 	}
 
 	private void configureDragPane (TabbedPaneStyle style) {
@@ -384,7 +387,7 @@ public class TabbedPane {
 		return tab.isDirty() ? "*" + tab.getTabTitle() : tab.getTabTitle();
 	}
 
-	public Table getTable () {
+	public TabbedPaneTable getTable () {
 		return mainTable;
 	}
 
@@ -456,6 +459,34 @@ public class TabbedPane {
 			this.buttonStyle = buttonStyle;
 			this.vertical = vertical;
 			this.draggable = draggable;
+		}
+	}
+
+	public static class TabbedPaneTable extends VisTable {
+		private TabbedPane tabbedPane;
+		private Cell<DragPane> tabsPaneCell;
+		private Cell<Image> separatorCell;
+
+		public TabbedPaneTable (TabbedPane tabbedPane) {
+			this.tabbedPane = tabbedPane;
+		}
+
+		private void setPaneCells (Cell<DragPane> tabsPaneCell, Cell<Image> separatorCell) {
+			this.tabsPaneCell = tabsPaneCell;
+			this.separatorCell = separatorCell;
+		}
+
+		public Cell<DragPane> getTabsPaneCell () {
+			return tabsPaneCell;
+		}
+
+		/** @return separator cell or null if separator is not used */
+		public Cell<Image> getSeparatorCell () {
+			return separatorCell;
+		}
+
+		public TabbedPane getTabbedPane () {
+			return tabbedPane;
 		}
 	}
 
