@@ -565,6 +565,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	private void rebuildFileList () {
 		filesListRebuildScheduled = false;
+		FileHandle[] selectedFiles = new FileHandle[selectedItems.size];
+		for (int i = 0; i < selectedFiles.length; i++) {
+			selectedFiles[i] = selectedItems.get(i).file;
+		}
 		deselectAll();
 
 		fileTable.clear();
@@ -586,6 +590,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		fileScrollPane.setScrollX(0);
 		fileScrollPane.setScrollY(0);
+		selectFiles(selectedFiles);
 	}
 
 	/**
@@ -662,6 +667,20 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			item.select(false);
 
 		removeInvalidSelections();
+		updateSelectedFileFieldText();
+	}
+
+	/**
+	 * Sets chooser selected files. Compared to {@link #setSelectedFiles(FileHandle...)} does not remove invalid files
+	 * from selection. Private API.
+	 */
+	private void selectFiles (FileHandle... files) {
+		for (FileHandle file : files) {
+			FileItem item = items.get(file);
+			if (item != null) {
+				item.select(false);
+			}
+		}
 		updateSelectedFileFieldText();
 	}
 
@@ -936,8 +955,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 					}
 				}
 
-				currentDirectory.child(input).mkdirs();
+				FileHandle newDir = currentDirectory.child(input);
+				newDir.mkdirs();
 				refresh();
+				selectFiles(newDir);
 			}
 		});
 	}
