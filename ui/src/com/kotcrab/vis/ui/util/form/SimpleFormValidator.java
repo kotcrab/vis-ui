@@ -167,14 +167,14 @@ public class SimpleFormValidator {
 	public void checked (Button button, String errorMsg) {
 		buttons.add(new CheckedButtonWrapper(button, true, errorMsg));
 		button.addListener(changeListener);
-		checkAll();
+		validate();
 	}
 
 	/** Validates if given button (usually checkbox) is unchecked. Use VisCheckBox to additionally support error border around it. */
 	public void unchecked (Button button, String errorMsg) {
 		buttons.add(new CheckedButtonWrapper(button, false, errorMsg));
 		button.addListener(changeListener);
-		checkAll();
+		validate();
 	}
 
 	/**
@@ -184,7 +184,7 @@ public class SimpleFormValidator {
 	public void add (VisValidatableTextField field) {
 		if (fields.contains(field, true) == false) fields.add(field);
 		field.addListener(changeListener); //addListener won't allow to add same listener twice
-		checkAll();
+		validate();
 	}
 
 	public void addDisableTarget (Disableable disableable) {
@@ -220,10 +220,15 @@ public class SimpleFormValidator {
 	 */
 	public void setTreatDisabledFieldsAsValid (boolean treatDisabledFieldAsValid) {
 		this.treatDisabledFieldsAsValid = treatDisabledFieldAsValid;
-		checkAll();
+		validate();
 	}
 
-	private void checkAll () {
+	/**
+	 * Performs full check of this form, typically there is no need to call this method manually since form will be automatically
+	 * validated upon field content change. However calling this might be required when change made to field state does not
+	 * cause change event to be fired. For example disabling or enabling field.
+	 */
+	public void validate () {
 		formInvalid = false;
 		errorMsgText = null;
 
@@ -307,7 +312,7 @@ public class SimpleFormValidator {
 	private class ChangeSharedListener extends ChangeListener {
 		@Override
 		public void changed (ChangeEvent event, Actor actor) {
-			checkAll();
+			validate();
 		}
 	}
 
