@@ -1,0 +1,16 @@
+{
+com.badlogic.gdx.graphics.Color: {
+	green: {a: 1, b: 0, g: 1, r: 0 },
+	green-alias: green
+},
+com.Test: {
+	green: {a: 1, b: 0, g: 1, r: 0 }
+},
+Skin$TintedDrawable: {
+	dialogDim: {name: white, color: {r: 0, g: 0, b: 0, a: 0.45} }
+},
+Skin$TintedDrawable2: {
+	dialogDim: {name: white, color: {r: 0, g: 0, b: 0, a: 0.45} }
+}
+
+}

@@ -25,14 +25,14 @@ public class Lexer {
 	private static IncludeCache includeCache = new IncludeCache();
 
 	static void lexUsl (LexerContext ctx, String usl) {
+		usl = usl.replace("\r\n", "\n");
+		usl = removeComments(usl);
+
 		for (int i = 0; i < usl.length(); ) {
 			char ch = usl.charAt(i);
 
 			if (Character.isWhitespace(ch)) { //white space
 				i++;
-
-			} else if (usl.startsWith("//", i)) { //line comment
-				i = skipLineComment(usl, i);
 
 			} else if (usl.startsWith(INCLUDE + " ", i)) { //include <type> <path> directive
 				i = parseAndLexInclude(ctx, usl, i + INCLUDE.length() + 1);
@@ -82,6 +82,28 @@ public class Lexer {
 				Utils.throwException("Unrecognized symbol '" + usl.substring(i, usl.indexOf(" ", i)) + "'", usl, i);
 			}
 		}
+	}
+
+	private static String removeComments (String usl) {
+		StringBuilder newUsl = new StringBuilder(usl.length());
+		boolean insideComment = false;
+		for (int i = 0; i < usl.length(); i++) {
+			char ch = usl.charAt(i);
+
+			if (usl.startsWith("//", i)) {
+				insideComment = true;
+			}
+
+			if (ch == '\n' && insideComment) {
+				insideComment = false;
+			}
+
+			if (insideComment == false) {
+				newUsl.append(ch);
+			}
+		}
+
+		return newUsl.toString();
 	}
 
 	private static int lexPackage (LexerContext ctx, String usl, int i) {
@@ -275,14 +297,6 @@ public class Lexer {
 		includeMappings.put("visui-1.0.2", "styles/visui-1.0.2.usl");
 		includeMappings.put("visui", "styles/visui-1.0.2.usl");
 		includeMappings.put("visui-1.1.0", "styles/visui-1.1.0.usl"); //snapshot
-	}
-
-	private static int skipLineComment (String usl, int i) {
-		for (; i < usl.length(); i++) {
-			if (usl.charAt(i) == '\n') break;
-		}
-
-		return i;
 	}
 
 	private static <T> T peek (List<T> list) {

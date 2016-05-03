@@ -1,0 +1,33 @@
+//header
+#com.badlogic.gdx.graphics.Color: { //after block end
+    //block header
+    green: {a: 1, b: 0, g: 1, r: 0 } //after identifier block
+    green-alias: green //after alias
+}
+//footer
+
+#com.Test: {
+    green: //after block id
+            {a: 1, b: 0, //inside identifier
+            //new line inside identifier
+            g: 1, r: 0
+            //new line before identifier end
+            }
+}
+
+
+#Skin$TintedDrawable: {
+	dialogDim: { name: white, color: { r: 0, g: 0, b: 0, a:
+	 //between identifier id and content
+	0.45
+	 //double nested
+	}
+	 //nested
+	}
+}
+
+#Skin$TintedDrawable2: {
+	dialogDim: { name: white, color:
+	 //between identifier id and content block
+	{ r: 0, g: 0, b: 0, a: 0.45 } }
+}

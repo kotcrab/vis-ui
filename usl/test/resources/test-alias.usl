@@ -1,0 +1,4 @@
+#com.badlogic.gdx.graphics.Color: {
+    green: {a: 1, b: 0, g: 1, r: 0 }
+    green-alias: green
+}
