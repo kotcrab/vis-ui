@@ -39,6 +39,9 @@ public class TestListView extends VisWindow {
 		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
+		addCloseButton();
+		closeOnEscape();
+
 		Array<Model> array = new Array<Model>();
 		for (int i = 1; i <= 3; i++) {
 			array.add(new Model("Windows" + i, VisUI.getSkin().getColor("vis-red")));

@@ -31,6 +31,9 @@ public class TestButtonBar extends VisWindow {
 	public TestButtonBar () {
 		super("buttonbar");
 
+		addCloseButton();
+		closeOnEscape();
+
 		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 

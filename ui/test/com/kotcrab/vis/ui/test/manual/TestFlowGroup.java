@@ -32,6 +32,10 @@ public class TestFlowGroup extends VisWindow {
 		TableUtils.setSpacingDefaults(this);
 		columnDefaults(0).left();
 
+		setResizable(true);
+		addCloseButton();
+		closeOnEscape();
+
 		WidgetGroup group = new VerticalFlowGroup(2);
 
 		String lorem = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi luctus magna sit amet tellus egestas tincidunt. " +
@@ -62,8 +66,6 @@ public class TestFlowGroup extends VisWindow {
 		scrollPane.setScrollingDisabled(group instanceof HorizontalFlowGroup, group instanceof VerticalFlowGroup);
 		add(scrollPane).grow();
 
-		setResizable(true);
-		setModal(true);
 		setSize(300, 150);
 		centerWindow();
 	}

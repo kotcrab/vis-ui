@@ -35,6 +35,8 @@ public class TestTabbedPane extends VisWindow {
 		TableUtils.setSpacingDefaults(this);
 
 		setResizable(true);
+		addCloseButton();
+		closeOnEscape();
 
 		final VisTable container = new VisTable();
 
