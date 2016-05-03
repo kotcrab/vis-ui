@@ -56,6 +56,8 @@ public class PopupMenu extends Table {
 	public PopupMenu (PopupMenuStyle style) {
 		this.style = style;
 		setTouchable(Touchable.enabled);
+		pad(0);
+		setBackground(style.background);
 		createListeners();
 	}
 
@@ -141,7 +143,6 @@ public class PopupMenu extends Table {
 
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
-		if (style.background != null) style.background.draw(batch, getX(), getY(), getWidth(), getHeight());
 		super.draw(batch, parentAlpha);
 		if (style.border != null) style.border.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
