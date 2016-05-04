@@ -55,6 +55,7 @@ public class EntityScheme {
 		components = new Array<>(fillBag.size());
 
 		for (Component component : fillBag) {
+			if (component == null) continue;
 			if (component.getClass().isAnnotationPresent(Transient.class)) continue;
 			if (cloningPolicy == CloningPolicy.SKIP_INVISIBLE && component instanceof Invisible) continue;
 
