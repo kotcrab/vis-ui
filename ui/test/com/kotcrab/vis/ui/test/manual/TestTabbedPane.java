@@ -70,7 +70,10 @@ public class TestTabbedPane extends VisWindow {
 		tabbedPane.add(new TestTab("tab6"));
 		tabbedPane.add(new TestTab("tab7"));
 		tabbedPane.add(new TestTab("tab8"));
-		tabbedPane.add(new TestTab("tab9"));
+
+		Tab tab = new TestTab("tab9");
+		tabbedPane.add(tab);
+		tabbedPane.disableTab(tab, true);
 
 //		debugAll();
 		setSize(300, 200);

@@ -23,7 +23,10 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.UIUtils;
@@ -113,19 +116,23 @@ public class TabbedPane {
 		Cell<DragPane> tabsPaneCell = mainTable.add(tabsPane);
 		Cell<Image> separatorCell = null;
 
+		if (style.vertical) {
+			tabsPaneCell.top().growY().minSize(0, 0);
+		} else {
+			tabsPaneCell.left().growX().minSize(0, 0);
+		}
+
 		//note: if separatorBar height/width is not set explicitly it may sometimes disappear
 		if (style.separatorBar != null) {
 			if (style.vertical) {
-				tabsPaneCell.top().growY().minSize(0, 0);
 				separatorCell = mainTable.add(new Image(style.separatorBar)).grow().width(style.separatorBar.getMinWidth());
 			} else {
-				tabsPaneCell.left().growX().minSize(0, 0);
 				mainTable.row();
 				separatorCell = mainTable.add(new Image(style.separatorBar)).grow().height(style.separatorBar.getMinHeight());
 			}
 		} else {
 			//make sure that tab will fill available space even when there is no separatorBar image set
-			mainTable.add().expand().fill();
+			mainTable.add().grow();
 		}
 
 		mainTable.setPaneCells(tabsPaneCell, separatorCell);
@@ -140,6 +147,15 @@ public class TabbedPane {
 			draggable.setKeepWithinParent(true);
 			draggable.setBlockInput(true);
 			draggable.setFadingTime(0f);
+			draggable.setListener(new DragPane.DefaultDragListener() {
+				@Override
+				public boolean onStart (Draggable draggable, Actor actor, float stageX, float stageY) {
+					if (actor instanceof TabButtonTable) {
+						if (((TabButtonTable) actor).closeButton.isOver()) return CANCEL;
+					}
+					return super.onStart(draggable, actor, stageX, stageY);
+				}
+			});
 			tabsPane.setDraggable(draggable);
 		}
 	}
@@ -577,20 +593,20 @@ public class TabbedPane {
 
 				@Override
 				public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
-					if (!button.isDisabled() && !isDown && activeTab != tab) {
+					if (!button.isDisabled() && !isDown && activeTab != tab && pointer == -1) {
 						setDefaultUpImage();
 					}
 				}
 
 				@Override
 				public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-					if (!button.isDisabled() && activeTab != tab && Gdx.input.justTouched() == false) {
+					if (!button.isDisabled() && activeTab != tab && Gdx.input.justTouched() == false && pointer == -1) {
 						setCloseButtonOnMouseMove();
 					}
 				}
 
 				private void setCloseButtonOnMouseMove () {
-					if (UIUtils.left()) {
+					if (isDown) {
 						closeButtonStyle.up = buttonStyle.down;
 					} else {
 						closeButtonStyle.up = buttonStyle.over;

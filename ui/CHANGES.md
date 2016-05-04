@@ -5,10 +5,12 @@
 - **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get it's cells for customization)
 - **Changed**: `FileChooser` now tries to maintain selection while rebuilding file list
 - **Changed**: `FileChooser` will now select new folder after creating it 
+- **Changed**: `TabbedPane`'s Tab now can't be dragged using it's close button  
 - **Removed deprecated API**: `NumberSelector` - replaced by `Spinner`
 - **Removed deprecated API**: `Sizes#numberSelectorButtonSize`, `numberSelectorButtonsWidth`, `numberSelectorFieldSize`, `numberSelectorFieldRightPadding`
 - **Fixed**: `Sizes.buttonBarSpacing` was ignored by `ButtonBar`
     - **Added**: constructors `ButtonBar(Sizes sizes, String order)` and `ButtonBar(Sizes sizes)`
+- **Fixed**: `TabbedPane` layout when no separator image is used. Fixed misc issue with close button style on touch down. 
 - **Skin changes**:
     - **Added**: drawable `window-border-bg.9`
     - **Added**: style `BaseToastStyle`
