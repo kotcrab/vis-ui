@@ -119,8 +119,11 @@ public class CrashReporter extends Application {
 					connection.setRequestMethod("POST");
 					OutputStream os = connection.getOutputStream();
 
+					if (detailsTextArea.getText().equals("") == false) {
+						os.write(("Details: " + detailsTextArea.getText()).getBytes());
+						os.write('\n');
+					}
 					os.write(report.getBytes());
-					os.write(("Details: " + detailsTextArea.getText()).getBytes());
 					os.flush();
 					os.close();
 
