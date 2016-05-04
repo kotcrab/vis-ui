@@ -456,7 +456,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	private VisScrollPane createScrollPane (VisTable table) {
 		VisScrollPane scrollPane = new VisScrollPane(table);
-		scrollPane.setOverscroll(false, true);
+		scrollPane.setOverscroll(false, false);
 		scrollPane.setFadeScrollBars(false);
 		scrollPane.setScrollingDisabled(true, false);
 		return scrollPane;
