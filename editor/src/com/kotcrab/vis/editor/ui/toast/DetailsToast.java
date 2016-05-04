@@ -17,11 +17,11 @@
 package com.kotcrab.vis.editor.ui.toast;
 
 import com.kotcrab.vis.editor.module.editor.ToastModule;
-import com.kotcrab.vis.editor.module.editor.ToastModule.ToastTable;
 import com.kotcrab.vis.editor.ui.dialog.DetailsDialog;
 import com.kotcrab.vis.editor.util.ExceptionUtils;
 import com.kotcrab.vis.ui.widget.LinkLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
+import com.kotcrab.vis.ui.widget.toast.ToastTable;
 
 /**
  * Used to display toast with short message and additional details available in separate dialog after pressing "Details" button. For example exception with stacktrace as details.
@@ -48,12 +48,11 @@ public class DetailsToast extends ToastTable {
 		this.detailsDialogTitle = detailsDialogTitle;
 		this.details = details;
 
-		content.add(text).expand().fill().row();
+		add(text).expand().fill().row();
 
 		linkLabelsTable = new VisTable(true);
-		content.add(linkLabelsTable).spaceRight(12).right();
+		add(linkLabelsTable).spaceRight(12).right();
 		addLabels();
-		pack();
 	}
 
 	protected void addLabels () {

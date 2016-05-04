@@ -259,6 +259,11 @@ package com.kotcrab.vis.ui.widget {
 		default: { pickerStyle: { barSelector: color-picker-bar-selector, cross: color-picker-cross, iconArrowRight: icon-arrow-right
 				   verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }}
 	}
+
+	#toast.Toast$ToastStyle: {
+	    default: { background: tooltip-bg, closeButtonStyleName: "close" }
+	    dark: { background: window-border-bg, closeButtonStyleName: "close-window" }
+	}
 }
 
 package com.kotcrab.vis.ui.util {

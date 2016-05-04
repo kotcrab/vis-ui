@@ -32,12 +32,12 @@
 package com.kotcrab.vis.plugin.spine.notif;
 
 import com.kotcrab.vis.editor.Editor;
-import com.kotcrab.vis.editor.module.editor.ToastModule.ToastTable;
 import com.kotcrab.vis.editor.plugin.PluginFileHandle;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog;
 import com.kotcrab.vis.editor.ui.dialog.LicenseDialog.LicenseDialogListener;
 import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.ui.widget.LinkLabel;
+import com.kotcrab.vis.ui.widget.toast.ToastTable;
 
 public class SpinePluginAvailableToast extends ToastTable {
 	public SpinePluginAvailableToast (SpineNotifier spineNotifier) {
@@ -45,8 +45,8 @@ public class SpinePluginAvailableToast extends ToastTable {
 		LinkLabel ignore = new LinkLabel("Later");
 		LinkLabel enable = new LinkLabel("Enable");
 
-		content.add("Spine integration plugin can be enabled!").row();
-		content.add(TableBuilder.build(12, ignoreForever, ignore, enable)).right();
+		add("Spine integration plugin can be enabled!").row();
+		add(TableBuilder.build(12, ignoreForever, ignore, enable)).right();
 
 		ignoreForever.setListener(url -> {
 			spineNotifier.ignoreForever();

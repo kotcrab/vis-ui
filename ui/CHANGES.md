@@ -1,6 +1,7 @@
 #### Version: 1.1.0 (LibGDX 1.9.2)
 - **Added**: default styles for `ImageButton` and `ImageTextButton`. Note: this is only applies to standard scene2d widgets. VisUI widgets equivalents (`VisImageButton`, `VisImageTextButton`) already had them.
 - **Added**: `SimpleFormValidator#validate`
+- **Added**: `ToastManager`, `Toast`, `ToastTable`
 - **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get it's cells for customization)
 - **Changed**: `FileChooser` now tries to maintain selection while rebuilding file list
 - **Changed**: `FileChooser` will now select new folder after creating it 
@@ -8,6 +9,9 @@
 - **Removed deprecated API**: `Sizes#numberSelectorButtonSize`, `numberSelectorButtonsWidth`, `numberSelectorFieldSize`, `numberSelectorFieldRightPadding`
 - **Fixed**: `Sizes.buttonBarSpacing` was ignored by `ButtonBar`
     - **Added**: constructors `ButtonBar(Sizes sizes, String order)` and `ButtonBar(Sizes sizes)`
+- **Skin changes**:
+    - **Added**: drawable `window-border-bg.9`
+    - **Added**: style `BaseToastStyle`
 
 #### Version: 1.0.2 (LibGDX 1.9.2)
 - **Changed**: [#163](https://github.com/kotcrab/vis-editor/issues/163) - When `VisCheckBox` or `VisTextField` is disabled and is marked as invalid then error border won't be drawn. 

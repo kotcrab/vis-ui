@@ -66,6 +66,7 @@
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.dialog" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.color" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.tabbedpane" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.widget.toast" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.util.form" />
     <extend-configuration-property name="gdx.reflect.include" value="com.kotcrab.vis.ui.util.adapter.SimpleListAdapter" />
 

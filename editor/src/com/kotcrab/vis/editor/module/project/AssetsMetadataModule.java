@@ -27,12 +27,12 @@ import com.kotcrab.vis.editor.extension.AssetType;
 import com.kotcrab.vis.editor.module.editor.ExtensionStorageModule;
 import com.kotcrab.vis.editor.module.editor.GsonModule;
 import com.kotcrab.vis.editor.module.editor.ToastModule;
-import com.kotcrab.vis.editor.module.editor.ToastModule.ToastTable;
 import com.kotcrab.vis.editor.module.project.assetsmanager.AssetDirectoryDescriptor;
 import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.editor.util.vis.WikiPages;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.widget.LinkLabel;
+import com.kotcrab.vis.ui.widget.toast.ToastTable;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -181,13 +181,11 @@ public class AssetsMetadataModule extends ProjectModule {
 			details = new LinkLabel("Details");
 			LinkLabel ignore = new LinkLabel("Ignore");
 
-			content.add(message).row();
-			content.add(TableBuilder.build(12, help, details, ignore)).right();
-
 			help.setListener(url -> WikiPages.DAMAGED_ASSETS_METADATA.open());
 			ignore.setListener(url -> fadeOut());
 
-			pack();
+			add(message).row();
+			add(TableBuilder.build(12, help, details, ignore)).right();
 		}
 
 		DamagedAssetsMetadataToast setDetailsMessage (String message, String detailsText) {

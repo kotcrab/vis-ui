@@ -86,6 +86,7 @@ class TestApplication extends ApplicationAdapter {
 //		stage.addActor(new TestFlowGroup());
 //		stage.addActor(new TestButtonBar());
 //		stage.addActor(new TestListView());
+//		stage.addActor(new TestToasts(stage));
 
 		stage.addListener(new InputListener() {
 			boolean debug = false;
@@ -201,6 +202,12 @@ class TestApplication extends ApplicationAdapter {
 				stage.addActor(new TestListView());
 			}
 		}));
+		menu.addItem(new MenuItem("toasts", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				stage.addActor(new TestToasts(stage));
+			}
+		}));
 		menu.addSeparator();
 		menu.addItem(new MenuItem("test issue #131", new ChangeListener() {
 			@Override
@@ -227,6 +234,11 @@ class TestApplication extends ApplicationAdapter {
 	public void resize (int width, int height) {
 		if (width == 0 && height == 0) return; //see https://github.com/libgdx/libgdx/issues/3673#issuecomment-177606278
 		stage.getViewport().update(width, height, true);
+
+		WindowResizeEvent resizeEvent = new WindowResizeEvent();
+		for (Actor actor : stage.getActors()) {
+			actor.fire(resizeEvent);
+		}
 	}
 
 	@Override
@@ -241,5 +253,4 @@ class TestApplication extends ApplicationAdapter {
 		VisUI.dispose();
 		stage.dispose();
 	}
-
 }

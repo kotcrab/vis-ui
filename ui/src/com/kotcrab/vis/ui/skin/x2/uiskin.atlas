@@ -691,6 +691,14 @@ window
   orig: 27, 61
   offset: 0, 0
   index: -1
+window-border-bg
+  rotate: false
+  xy: 104, 34
+  size: 3, 3
+  split: 1, 1, 1, 1
+  orig: 3, 3
+  offset: 0, 0
+  index: -1
 window-noborder
   rotate: false
   xy: 129, 52

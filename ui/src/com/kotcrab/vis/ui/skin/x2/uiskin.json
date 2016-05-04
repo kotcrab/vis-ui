@@ -171,6 +171,10 @@ com.kotcrab.vis.ui.widget.color.ColorPickerWidgetStyle: {
 com.kotcrab.vis.ui.widget.color.ColorPickerStyle: {
 	default: {pickerStyle: {barSelector: color-picker-bar-selector, cross: color-picker-cross, iconArrowRight: icon-arrow-right, verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal}, titleFont: default-font, background: window, titleFontColor: white }
 },
+com.kotcrab.vis.ui.widget.toast.Toast$ToastStyle: {
+	default: {background: tooltip-bg, closeButtonStyleName: "close" },
+	dark: {background: window-border-bg, closeButtonStyleName: "close-window" }
+},
 com.kotcrab.vis.ui.util.form.SimpleFormValidator$FormValidatorStyle: {
 	default: {errorLabelColor: vis-red, validLabelColor: white },
 	smooth: {colorTransitionDuration: 0.3, errorLabelColor: vis-red, validLabelColor: white }
