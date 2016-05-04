@@ -228,12 +228,12 @@ public class Editor extends ApplicationAdapter {
 	}
 
 	private void createModulesUI () {
-		uiRoot.add(editorMC.get(MenuBarModule.class).getTable()).fillX().expandX().row();
-		uiRoot.add(editorMC.get(ToolbarModule.class).getTable()).fillX().expandX().row();
-		uiRoot.add(editorMC.get(TabsModule.class).getTable()).height(PrefHeightIfVisibleValue.INSTANCE).fillX().expandX().row();
-		uiRoot.add(mainContentTable).expand().fill().row();
-		uiRoot.add(editorMC.get(QuickAccessModule.class).getTable()).fillX().expandX().row();
-		uiRoot.add(editorMC.get(StatusBarModule.class).getTable()).fillX().expandX().row();
+		uiRoot.add(editorMC.get(MenuBarModule.class).getTable()).growX().row();
+		uiRoot.add(editorMC.get(ToolbarModule.class).getTable()).growX().row();
+		uiRoot.add(editorMC.get(TabsModule.class).getTable()).height(PrefHeightIfVisibleValue.INSTANCE).growX().row();
+		uiRoot.add(mainContentTable).grow().row();
+		uiRoot.add(editorMC.get(QuickAccessModule.class).getTable()).height(PrefHeightIfVisibleValue.INSTANCE).growX().row();
+		uiRoot.add(editorMC.get(StatusBarModule.class).getTable()).growX().row();
 	}
 
 	@Override
