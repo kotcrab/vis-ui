@@ -222,10 +222,6 @@ package com.kotcrab.vis.ui.widget {
 		default: { subMenu: sub-menu }
 	}
 	
-	#NumberSelector$NumberSelectorStyle: {
-		default: { down: select-down, up: select-up }
-	}
-
 	#Tooltip$TooltipStyle: {
 		default: { background: tooltip-bg }
 	}
