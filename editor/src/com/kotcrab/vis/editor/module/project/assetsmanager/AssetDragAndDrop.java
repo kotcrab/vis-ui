@@ -35,6 +35,7 @@ import com.kotcrab.vis.editor.extension.AssetType;
 import com.kotcrab.vis.editor.module.ModuleInjector;
 import com.kotcrab.vis.editor.module.project.*;
 import com.kotcrab.vis.editor.scheme.SpriterAssetData;
+import com.kotcrab.vis.editor.ui.tabbedpane.DefaultDragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.scene2d.VisDragAndDrop;
@@ -54,7 +55,7 @@ public class AssetDragAndDrop implements Disposable {
 	private SpriterDataIOModule spriterDataIO;
 
 	private VisDragAndDrop dragAndDrop;
-	private DragAndDropTarget dropTarget;
+	private DragAndDropTarget dropTarget = new DefaultDragAndDropTarget();
 
 	public AssetDragAndDrop (ModuleInjector injector) {
 		injector.injectModules(this);
@@ -64,8 +65,11 @@ public class AssetDragAndDrop implements Disposable {
 		dragAndDrop.setDragTime(0);
 	}
 
-	public void setDropTarget (DragAndDropTarget dropTarget) {
-		this.dropTarget = dropTarget;
+	public void setDropTarget (DragAndDropTarget newDropTarget) {
+		dropTarget = newDropTarget;
+		if (dropTarget == null) {
+			dropTarget = new DefaultDragAndDropTarget();
+		}
 	}
 
 	public void rebuild (Array<Actor> mainActors, Array<Actor> miscActors, Values<TextureAtlasViewTab> atlasesViews) {
@@ -214,7 +218,6 @@ public class AssetDragAndDrop implements Disposable {
 		dragAndDrop.setDragActorPosition(-img.getWidth() * invZoom / 2, img.getHeight() - img.getHeight() * invZoom / 2);
 
 		return payload;
-
 	}
 
 	public void clear () {

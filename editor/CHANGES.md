@@ -11,6 +11,7 @@
 - **Fixed**: Invisible TTF fonts
 - **Fixed**: Unable to change Z index and scale when using text entities with auto set origin to center enabled
 - **Fixed**: Undoing entity delete could place it at wrong position
+- **Fixed**: Crash when user tried to drag atlas region before any scene had been opened 
 
 #### Version: 0.3.1
 - **Added**: Scale entities tool

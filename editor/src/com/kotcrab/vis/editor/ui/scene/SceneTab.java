@@ -238,7 +238,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 		return cameraModule.getZoom();
 	}
 
-	@Override
 	public EntityEngine getEntityEngine () {
 		return engine;
 	}
