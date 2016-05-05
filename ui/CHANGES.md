@@ -5,6 +5,7 @@
 - **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get it's cells for customization)
 - **Changed**: `FileChooser` now tries to maintain selection while rebuilding file list
 - **Changed**: `FileChooser` will now select new folder after creating it 
+- **Changed**: `FileChooser` will be automatically refreshed when added to `Stage`
 - **Changed**: `TabbedPane`'s Tab now can't be dragged using it's close button  
 - **Removed deprecated API**: `NumberSelector` - replaced by `Spinner`
 - **Removed deprecated API**: `Sizes#numberSelectorButtonSize`, `numberSelectorButtonsWidth`, `numberSelectorFieldSize`, `numberSelectorFieldRightPadding`
