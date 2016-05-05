@@ -136,6 +136,14 @@ public class ToastManager {
 		return removed;
 	}
 
+	public void clear () {
+		toasts.clear();
+		for (Timer.Task task : timersTasks.values()) {
+			task.cancel();
+		}
+		timersTasks.clear();
+	}
+
 	private void updateToastsPositions () {
 		float y = stage.getHeight() - screenPadding;
 
