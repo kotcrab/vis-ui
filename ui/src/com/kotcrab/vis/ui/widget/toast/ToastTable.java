@@ -6,7 +6,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
  * Base class for all toast content tables. Note that using this class is not required ({@link VisTable} can be used directly)
  * however it's preferred because it provides access to {@link Toast} instance and {@link #fadeOut()} method.
  * @author Kotcrab
- * @since 1.1.0ł
+ * @since 1.1.0
  */
 public abstract class ToastTable extends VisTable {
 	protected Toast toast;
