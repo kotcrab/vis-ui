@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
@@ -27,21 +28,21 @@ public class Toast {
 
 	private ToastManager toastManager;
 
-	private VisTable mainTable;
-	private VisTable contentTable;
+	private Table mainTable;
+	private Table contentTable;
 
 	/** @param content table content, preferably instance of {@link ToastTable} */
-	public Toast (VisTable content) {
+	public Toast (Table content) {
 		this("default", content);
 	}
 
 	/** @param content table content, preferably instance of {@link ToastTable} */
-	public Toast (String styleName, VisTable content) {
+	public Toast (String styleName, Table content) {
 		this(VisUI.getSkin().get(styleName, ToastStyle.class), content);
 	}
 
 	/** @param content table content, preferably instance of {@link ToastTable} */
-	public Toast (ToastStyle style, VisTable content) {
+	public Toast (ToastStyle style, Table content) {
 		this.style = style;
 		this.contentTable = content;
 		if (content instanceof ToastTable) {
@@ -81,17 +82,17 @@ public class Toast {
 		}, Actions.removeActor()));
 	}
 
-	public VisTable fadeIn () {
+	public Table fadeIn () {
 		mainTable.setColor(1, 1, 1, 0);
 		mainTable.addAction(Actions.fadeIn(VisWindow.FADE_TIME, Interpolation.fade));
 		return mainTable;
 	}
 
-	public VisTable getContentTable () {
+	public Table getContentTable () {
 		return contentTable;
 	}
 
-	public VisTable getMainTable () {
+	public Table getMainTable () {
 		return mainTable;
 	}
 

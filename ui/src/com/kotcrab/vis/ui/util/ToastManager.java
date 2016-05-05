@@ -1,7 +1,9 @@
 package com.kotcrab.vis.ui.util;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Timer;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.toast.MessageToast;
@@ -31,6 +33,7 @@ public class ToastManager {
 	private int screenPadding = 20;
 	private int messagePadding = 5;
 	private Array<Toast> toasts = new Array<Toast>();
+	private ObjectMap<Toast, Timer.Task> timersTasks = new ObjectMap<Toast, Timer.Task>();
 
 	public ToastManager (Stage stage) {
 		this.stage = stage;
@@ -41,9 +44,44 @@ public class ToastManager {
 		show(text, UNTIL_CLOSED);
 	}
 
+	/** Displays basic toast with provided text as message. Toast will be displayed for given amount of seconds. */
+	public void show (String text, float timeSec) {
+		VisTable table = new VisTable();
+		table.add(text).grow();
+		show(table, timeSec);
+	}
+
 	/** Displays toast with provided table as toast's content. Toast will be displayed until it is closed by user. */
-	public void show (VisTable table) {
+	public void show (Table table) {
 		show(table, UNTIL_CLOSED);
+	}
+
+	/** Displays toast with provided table as toast's content. Toast will be displayed for given amount of seconds. */
+	public void show (Table table, float timeSec) {
+		show(new Toast(table), timeSec);
+	}
+
+	/**
+	 * Displays toast with provided table as toast's content. If this toast was already displayed then it reuses
+	 * stored {@link Toast} instance.
+	 * Toast will be displayed until it is closed by user.
+	 */
+	public void show (ToastTable toastTable) {
+		show(toastTable, UNTIL_CLOSED);
+	}
+
+	/**
+	 * Displays toast with provided table as toast's content. If this toast was already displayed then it reuses
+	 * stored {@link Toast} instance.
+	 * Toast will be displayed for given amount of seconds.
+	 */
+	public void show (ToastTable toastTable, float timeSec) {
+		Toast toast = toastTable.getToast();
+		if (toast != null) {
+			show(toast, timeSec);
+		} else {
+			show(new Toast(toastTable), timeSec);
+		}
 	}
 
 	/** Displays toast. Toast will be displayed until it is closed by user. */
@@ -51,34 +89,31 @@ public class ToastManager {
 		show(toast, UNTIL_CLOSED);
 	}
 
-	/** Displays basic toast with provided text as message. Toast will be displayed for given amount of seconds. */
-	public void show (String text, int timeSec) {
-		VisTable table = new VisTable();
-		table.add(text).grow();
-		show(table, timeSec);
-	}
-
-	/** Displays toast with provided table as toast's content. Toast will be displayed for given amount of seconds. */
-	public void show (VisTable table, int timeSec) {
-		show(new Toast(table), timeSec);
-	}
-
 	/** Displays toast. Toast will be displayed for given amount of seconds. */
-	public void show (final Toast toast, int timeSec) {
+	public void show (final Toast toast, float timeSec) {
+		Table toastMainTable = toast.getMainTable();
+		if (toastMainTable.getStage() != null) {
+			remove(toast);
+		}
 		toasts.add(toast);
+
 		toast.setToastManager(this);
-		toast.getMainTable().pack();
-		stage.addActor(toast.getMainTable());
 		toast.fadeIn();
+		toastMainTable.pack();
+		stage.addActor(toastMainTable);
+
 		updateToastsPositions();
 
 		if (timeSec > 0) {
-			Timer.schedule(new Timer.Task() {
+			Timer.Task fadeOutTask = new Timer.Task() {
 				@Override
 				public void run () {
 					toast.fadeOut();
+					timersTasks.remove(toast);
 				}
-			}, timeSec);
+			};
+			timersTasks.put(toast, fadeOutTask);
+			Timer.schedule(fadeOutTask, timeSec);
 		}
 	}
 
@@ -92,16 +127,20 @@ public class ToastManager {
 	 * @return true when toast was removed, false otherwise
 	 */
 	public boolean remove (Toast toast) {
-		boolean success = toasts.removeValue(toast, true);
-		updateToastsPositions();
-		return success;
+		boolean removed = toasts.removeValue(toast, true);
+		if (removed) {
+			Timer.Task timerTask = timersTasks.remove(toast);
+			if (timerTask != null) timerTask.cancel();
+			updateToastsPositions();
+		}
+		return removed;
 	}
 
 	private void updateToastsPositions () {
 		float y = stage.getHeight() - screenPadding;
 
 		for (Toast toast : toasts) {
-			VisTable table = toast.getMainTable();
+			Table table = toast.getMainTable();
 			table.setPosition(stage.getWidth() - table.getWidth() - screenPadding, y - table.getHeight());
 			y = y - table.getHeight() - messagePadding;
 		}

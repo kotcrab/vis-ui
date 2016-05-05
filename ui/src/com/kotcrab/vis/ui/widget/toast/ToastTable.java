@@ -4,11 +4,12 @@ import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
  * Base class for all toast content tables. Note that using this class is not required ({@link VisTable} can be used directly)
- * however it's preferred because it provides access to {@link Toast} instance and {@link #fadeOut()} method.
+ * however it's preferred because it provides access to {@link Toast} instance and {@link #fadeOut()} method. Using ToastTable
+ * also allows to reuse {@link Toast} instance instead of creating new one everytime you want to show toast.
  * @author Kotcrab
  * @since 1.1.0
  */
-public abstract class ToastTable extends VisTable {
+public class ToastTable extends VisTable {
 	protected Toast toast;
 
 	public ToastTable () {
@@ -24,8 +25,13 @@ public abstract class ToastTable extends VisTable {
 		toast.fadeOut();
 	}
 
-	/** Called by framework when this ToastTable was assigned to it's toast container */
+	/** Called by framework when this ToastTable was assigned to it's toast container. */
 	public void setToast (Toast toast) {
 		this.toast = toast;
+	}
+
+	/** @return toast that this table belongs to or null if none */
+	public Toast getToast () {
+		return toast;
 	}
 }
