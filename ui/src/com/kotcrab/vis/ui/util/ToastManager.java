@@ -144,6 +144,12 @@ public class ToastManager {
 		timersTasks.clear();
 	}
 
+	public void toFront () {
+		for (Toast toast : toasts) {
+			toast.getMainTable().toFront();
+		}
+	}
+
 	private void updateToastsPositions () {
 		float y = stage.getHeight() - screenPadding;
 
