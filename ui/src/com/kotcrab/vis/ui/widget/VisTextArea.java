@@ -98,7 +98,9 @@ public class VisTextArea extends VisTextField {
 				int i = start;
 				for (; i <= end; i++)
 					if (glyphPositions[i] > x) break;
-				if (glyphPositions[i] - x <= x - glyphPositions[i - 1]) return i;
+				if (glyphPositions[i] - x <= x - glyphPositions[i - 1]) {
+					return Math.min(i, text.length());
+				}
 				return Math.max(0, i - 1);
 			}
 		} else {

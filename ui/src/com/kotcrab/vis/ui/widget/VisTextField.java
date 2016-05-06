@@ -458,7 +458,9 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	/** Copies the contents of this TextField to the {@link Clipboard} implementation set on this TextField. */
 	public void copy () {
 		if (hasSelection && !passwordMode) {
-			clipboard.setContents(text.substring(Math.min(cursor, selectionStart), Math.max(cursor, selectionStart)));
+			int beginIndex = Math.min(cursor, selectionStart);
+			int endIndex = Math.max(cursor, selectionStart);
+			clipboard.setContents(text.substring(Math.max(0, beginIndex), Math.min(text.length(), endIndex)));
 		}
 	}
 
