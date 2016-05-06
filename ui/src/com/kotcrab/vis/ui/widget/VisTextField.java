@@ -90,6 +90,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	private float selectionX, selectionWidth;
 
 	String undoText = "";
+	int undoCursorPos = 0;
 	long lastChangeTime;
 
 	boolean passwordMode;
@@ -1042,8 +1043,11 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 				}
 				if (keycode == Keys.Z) {
 					String oldText = text;
+					int oldCursorPos = getCursorPosition();
 					setText(undoText);
+					VisTextField.this.setCursorPosition(undoCursorPos);
 					undoText = oldText;
+					undoCursorPos = oldCursorPos;
 					updateDisplayText();
 					return true;
 				}
@@ -1194,10 +1198,12 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 						text = insert(cursor++, insertion, text);
 						scheduleKeyTypedRepeatTask(event != null ? event.getKeyCode() : keyTypedRepeatTask.keycode, character);
 					}
-					String tempUndoText = undoText;
 					if (changeText(oldText, text)) {
 						long time = System.currentTimeMillis();
-						if (time - 750 > lastChangeTime) undoText = oldText;
+						if (time - 750 > lastChangeTime) {
+							undoText = oldText;
+							undoCursorPos = getCursorPosition() - 1;
+						}
 						lastChangeTime = time;
 					} else
 						cursor = oldCursor;
