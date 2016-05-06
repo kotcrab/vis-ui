@@ -1055,7 +1055,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		@Override
 		public boolean delete (FileHandle file) {
-			return file.delete();
+			return file.deleteDirectory();
 		}
 	}
 

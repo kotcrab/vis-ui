@@ -12,6 +12,8 @@
 - **Fixed**: `Sizes.buttonBarSpacing` was ignored by `ButtonBar`
     - **Added**: constructors `ButtonBar(Sizes sizes, String order)` and `ButtonBar(Sizes sizes)`
 - **Fixed**: `TabbedPane` layout when no separator image is used. Fixed misc issue with close button style on touch down. 
+- **Fixed**: `FileChooser` NPE when error occurred during directory deleting
+- **Fixed**: `FileChooser` non empty directories are now deleted correctly when using default `FileChooser` deleter
 - **Skin changes**:
     - **Added**: drawable `window-border-bg.9`
     - **Added**: style `BaseToastStyle`

@@ -70,10 +70,11 @@ public class FilePopupMenu extends PopupMenu {
 							public void yes () {
 								try {
 									boolean success = callback.delete(file);
-									if (success == false)
-										Dialogs.showErrorDialog(getStage(), POPUP_DELETE_FILE_FAILED.get());
+									if (success == false) {
+										Dialogs.showErrorDialog(chooser.getStage(), POPUP_DELETE_FILE_FAILED.get());
+									}
 								} catch (IOException e) {
-									Dialogs.showErrorDialog(getStage(), POPUP_DELETE_FILE_FAILED.get(), e);
+									Dialogs.showErrorDialog(chooser.getStage(), POPUP_DELETE_FILE_FAILED.get(), e);
 									e.printStackTrace();
 								}
 								chooser.refresh();
