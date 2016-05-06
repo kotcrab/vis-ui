@@ -95,7 +95,8 @@ com.kotcrab.vis.ui.Sizes: {
 },
 com.kotcrab.vis.ui.widget.VisTextField$VisTextFieldStyle: {
 	default: {focusBorder: border, font: default-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor },
-	small: {focusBorder: border, font: small-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor }
+	small: {focusBorder: border, font: small-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor },
+	label: {selection: selection, errorBorder: border-error, font: default-font, fontColor: white, disabledFontColor: grey }
 },
 com.kotcrab.vis.ui.widget.VisTextButton$VisTextButtonStyle: {
 	default: {focusBorder: border, down: button-down, up: button, over: button-over, disabled: button, font: default-font, fontColor: white, disabledFontColor: grey },

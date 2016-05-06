@@ -117,6 +117,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	private boolean focusBorderEnabled = true;
 	private boolean inputValid = true;
 	private boolean ignoreEqualsTextChange = true;
+	private boolean readOnly = false;
 
 	public VisTextField () {
 		this("", VisUI.getSkin().get(VisTextFieldStyle.class));
@@ -821,6 +822,19 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		}
 	}
 
+	public boolean isReadOnly () {
+		return readOnly;
+	}
+
+	public void setReadOnly (boolean readOnly) {
+		this.readOnly = readOnly;
+		if (disabled) {
+			FocusManager.resetFocus(getStage(), this);
+			keyRepeatTask.cancel();
+			keyTypedRepeatTask.cancel();
+		}
+	}
+
 	protected void moveCursor (boolean forward, boolean jump) {
 		int limit = forward ? text.length() : 0;
 		int charOffset = forward ? 0 : -1;
@@ -980,7 +994,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 			setCursorPosition(x, y);
 			selectionStart = cursor;
 			if (stage != null) stage.setKeyboardFocus(VisTextField.this);
-			keyboard.show(true);
+			if(readOnly == false) keyboard.show(true);
 			hasSelection = true;
 			return true;
 		}
@@ -1027,7 +1041,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 			boolean jump = ctrl && !passwordMode;
 
 			if (ctrl) {
-				if (keycode == Keys.V) {
+				if (keycode == Keys.V && readOnly == false) {
 					paste(clipboard.getContents(), true);
 					repeat = true;
 				}
@@ -1035,7 +1049,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 					copy();
 					return true;
 				}
-				if (keycode == Keys.X) {
+				if (keycode == Keys.X && readOnly == false) {
 					cut(true);
 					return true;
 				}
@@ -1043,7 +1057,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 					selectAll();
 					return true;
 				}
-				if (keycode == Keys.Z) {
+				if (keycode == Keys.Z && readOnly == false) {
 					String oldText = text;
 					int oldCursorPos = getCursorPosition();
 					setText(undoText);
@@ -1056,8 +1070,8 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 			}
 
 			if (UIUtils.shift()) {
-				if (keycode == Keys.INSERT) paste(clipboard.getContents(), true);
-				if (keycode == Keys.FORWARD_DEL) cut(true);
+				if (keycode == Keys.INSERT && readOnly == false) paste(clipboard.getContents(), true);
+				if (keycode == Keys.FORWARD_DEL && readOnly == false) cut(true);
 				selection:
 				{
 					int temp = cursor;
@@ -1144,7 +1158,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 
 		@Override
 		public boolean keyTyped (InputEvent event, char character) {
-			if (disabled) return false;
+			if (disabled || readOnly) return false;
 
 			//issue #9, infinite key repeat bug on Android because keyUp is called before keyTyped and task is cancelled too early
 			if (keyTypedRepeatTask.isScheduled() && Gdx.input.isKeyPressed(keyTypedRepeatTask.keycode) == false) {

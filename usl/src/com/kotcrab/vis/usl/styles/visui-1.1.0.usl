@@ -160,6 +160,7 @@ package com.kotcrab.vis.ui.widget {
 		-base: { selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor }
 		default inherits .focus-border, .font, .font-disabled, base: { }
 		small inherits .focus-border, .font-small, .font-small-disabled, base: { }
+		label inherits .font, .font-disabled: { selection: selection, errorBorder: border-error }
 	}
 	
 	#VisTextButton$VisTextButtonStyle extends TextButtonStyle: {
