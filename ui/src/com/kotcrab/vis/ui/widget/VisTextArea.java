@@ -34,7 +34,7 @@ import com.badlogic.gdx.utils.Pools;
 
 /**
  * A multiple-line text input field, entirely based on {@link TextField}.
- * @author Kotcrab
+ * @author Kotcrab (few modictaions, orginal {@link TextArea} is missing authors)
  * @see TextArea
  */
 public class VisTextArea extends VisTextField {

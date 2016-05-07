@@ -3,6 +3,7 @@
 - **Added**: `SimpleFormValidator#validate`
 - **Added**: `ToastManager`, `Toast`, `ToastTable`
 - **Added**: VisTextField read-only mode (`VisTextField#setReadOnly(boolean)`)
+- **Added**: `VisTextField#keyTypedRepeatTime`
 - **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get it's cells for customization)
 - **Changed**: `FileChooser` now tries to maintain selection while rebuilding file list
 - **Changed**: `FileChooser` will now select new folder after creating it 

@@ -69,7 +69,10 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	static private final Vector2 tmp3 = new Vector2();
 
 	static public float keyRepeatInitialTime = 0.4f;
-	static public float keyRepeatTime = 0.05f;
+	/** Repeat times for keys handled by {@link InputListener#keyDown(InputEvent, int)} such as navigation arrows */
+	static public float keyRepeatTime = 0.04f;
+	/** Repeat times for keys handled by {@link InputListener#keyTyped(InputEvent, char)} such as letters */
+	static public float keyTypedRepeatTime = 0.13f;
 
 	protected String text;
 	protected int cursor, selectionStart;
@@ -828,11 +831,6 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 
 	public void setReadOnly (boolean readOnly) {
 		this.readOnly = readOnly;
-		if (disabled) {
-			FocusManager.resetFocus(getStage(), this);
-			keyRepeatTask.cancel();
-			keyTypedRepeatTask.cancel();
-		}
 	}
 
 	protected void moveCursor (boolean forward, boolean jump) {
@@ -994,7 +992,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 			setCursorPosition(x, y);
 			selectionStart = cursor;
 			if (stage != null) stage.setKeyboardFocus(VisTextField.this);
-			if(readOnly == false) keyboard.show(true);
+			if (readOnly == false) keyboard.show(true);
 			hasSelection = true;
 			return true;
 		}
@@ -1135,7 +1133,9 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 			if (!keyRepeatTask.isScheduled() || keyRepeatTask.keycode != keycode) {
 				keyRepeatTask.keycode = keycode;
 				keyRepeatTask.cancel();
-				Timer.schedule(keyRepeatTask, keyRepeatInitialTime, keyRepeatTime);
+				if (Gdx.input.isKeyPressed(keyRepeatTask.keycode)) { //issue #179
+					Timer.schedule(keyRepeatTask, keyRepeatInitialTime, keyRepeatTime);
+				}
 			}
 		}
 
@@ -1144,7 +1144,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 				keyTypedRepeatTask.character = character;
 				keyTypedRepeatTask.keycode = keycode;
 				keyTypedRepeatTask.cancel();
-				Timer.schedule(keyTypedRepeatTask, keyRepeatInitialTime, keyRepeatTime);
+				Timer.schedule(keyTypedRepeatTask, keyRepeatInitialTime, keyTypedRepeatTime);
 			}
 		}
 
@@ -1158,13 +1158,15 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 
 		@Override
 		public boolean keyTyped (InputEvent event, char character) {
-			if (disabled || readOnly) return false;
+			if (disabled) return false;
 
 			//issue #9, infinite key repeat bug on Android because keyUp is called before keyTyped and task is cancelled too early
 			if (keyTypedRepeatTask.isScheduled() && Gdx.input.isKeyPressed(keyTypedRepeatTask.keycode) == false) {
 				keyTypedRepeatTask.cancel();
 				return false;
 			}
+
+			if (readOnly) return false;
 
 			// Disallow "typing" most ASCII control characters, which would show up as a space when onlyFontChars is true.
 			switch (character) {
