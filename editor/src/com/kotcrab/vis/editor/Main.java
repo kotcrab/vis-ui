@@ -123,7 +123,7 @@ public class Main {
 			System.exit(-3);
 		} catch (ExceptionInInitializerError err) {
 			if (OsUtils.isMac() && err.getCause() instanceof IllegalStateException) {
-				if (ExceptionUtils.getStackTrace(err).contains("Please run the JVM with -XstartOnFirstThread.")) {
+				if (ExceptionUtils.getStackTrace(err).contains("XstartOnFirstThread")) {
 					System.out.println("Application was not launched on first thread. Restarting with -XstartOnFirstThread, add VM argument -XstartOnFirstThread to avoid this.");
 					ApplicationUtils.startNewInstance();
 				}
