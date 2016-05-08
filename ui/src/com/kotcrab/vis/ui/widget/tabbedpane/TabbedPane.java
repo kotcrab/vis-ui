@@ -438,7 +438,22 @@ public class TabbedPane {
 		}
 	}
 
+	/** Returns tabs in order in which they are stored in tabbed pane, sorted by their index and ignoring their order in UI. */
 	public Array<Tab> getTabs () {
+		return tabs;
+	}
+
+	/**
+	 * Returns tabs in order in which they are displayed in the UI - user may drag and move tabs which DOES NOT affect
+	 * their index. Use {@link #getTabs()} if you don't care about UI order. This creates new array every time it's called!
+	 */
+	public Array<Tab> getUIOrderedTabs () {
+		Array<Tab> tabs = new Array<Tab>();
+		for (Actor actor : getTabsPane().getChildren()) {
+			if (actor instanceof TabButtonTable) {
+				tabs.add(((TabButtonTable) actor).tab);
+			}
+		}
 		return tabs;
 	}
 
@@ -663,12 +678,12 @@ public class TabbedPane {
 			}
 		}
 
-		public void select () {
+		private void select () {
 			button.setChecked(true);
 			switchToNewTab();
 		}
 
-		public void deselect () {
+		private void deselect () {
 			closeButton.setStyle(closeButtonStyle);
 		}
 	}
