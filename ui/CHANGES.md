@@ -11,6 +11,7 @@
 - **Changed**: `FileChooser` will be automatically refreshed when added to `Stage`
 - **Changed**: `TabbedPane`'s Tab now can't be dragged using it's close button  
 - **Changed**: Synced `VisTextField` ans `VisTextArea` with equivalents of those classes libgdx
+- **Changed**: Tooltip now won't fade out when mouse moved, it will only fade out on mouse exit or click (set `Tooltip.MOUSE_MOVED_FADEOUT` to true to preserve old behaviour)
 - **Removed deprecated API**: `NumberSelector` - replaced by `Spinner`
 - **Removed deprecated API**: `Sizes#numberSelectorButtonSize`, `numberSelectorButtonsWidth`, `numberSelectorFieldSize`, `numberSelectorFieldRightPadding`
 - **Fixed**: `Sizes.buttonBarSpacing` was ignored by `ButtonBar`

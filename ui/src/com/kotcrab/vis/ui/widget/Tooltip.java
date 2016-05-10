@@ -41,13 +41,19 @@ import com.kotcrab.vis.ui.util.ActorUtils;
  * @since 0.5.0
  */
 public class Tooltip extends VisTable {
-	public static final float DEFAULT_FADE_TIME = 0.3f;
-	public static final float DEFAULT_APPEAR_DELAY_TIME = 0.6f;
+	public static float DEFAULT_FADE_TIME = 0.3f;
+	public static float DEFAULT_APPEAR_DELAY_TIME = 0.6f;
+	/**
+	 * Controlls whether to fade out tooltip when mouse was moved. Changing this will not affect already existing tooltips.
+	 * @see #setMouseMoveFadeOut(boolean)
+	 */
+	public static boolean MOUSE_MOVED_FADEOUT = false;
 
 	private Actor target;
 	private Actor content;
 	private Cell<Actor> contentCell;
 
+	private boolean mouseMoveFadeOut = MOUSE_MOVED_FADEOUT;
 	private TooltipInputListener listener;
 
 	private DisplayTask displayTask;
@@ -201,6 +207,18 @@ public class Tooltip extends VisTable {
 		this.fadeTime = fadeTime;
 	}
 
+	public boolean isMouseMoveFadeOut () {
+		return mouseMoveFadeOut;
+	}
+
+	/**
+	 * @param mouseMoveFadeOut if true tooltip fill fade out when mouse was moved. If false tooltip will only fadeout on
+	 * mouse click or when mouse has exited target widget. Default is {@link Tooltip#MOUSE_MOVED_FADEOUT}.
+	 */
+	public void setMouseMoveFadeOut (boolean mouseMoveFadeOut) {
+		this.mouseMoveFadeOut = mouseMoveFadeOut;
+	}
+
 	private class DisplayTask extends Task {
 		@Override
 		public void run () {
@@ -249,8 +267,7 @@ public class Tooltip extends VisTable {
 
 		@Override
 		public boolean mouseMoved (InputEvent event, float x, float y) {
-			if (isVisible() && getActions().size == 0) fadeOut();
-
+			if (mouseMoveFadeOut && isVisible() && getActions().size == 0) fadeOut();
 			return false;
 		}
 	}
