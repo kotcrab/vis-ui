@@ -95,7 +95,7 @@ public class Toast {
 				toastManager.remove(Toast.this);
 				return true;
 			}
-		}, Actions.removeActor()));
+		}));
 	}
 
 	public Table fadeIn () {

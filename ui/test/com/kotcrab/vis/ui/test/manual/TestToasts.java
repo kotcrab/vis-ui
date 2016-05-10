@@ -19,6 +19,7 @@ package com.kotcrab.vis.ui.test.manual;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.ToastManager;
 import com.kotcrab.vis.ui.widget.*;
@@ -47,6 +48,30 @@ public class TestToasts extends VisWindow {
 			}
 		});
 
+		final VisSelectBox<String> alignment = new VisSelectBox<String>();
+		alignment.setItems("top left", "top right", "bottom left", "bottom right");
+		alignment.setSelectedIndex(1);
+		alignment.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				int alignIndex = alignment.getSelectedIndex();
+				switch (alignIndex) {
+					case 0:
+						toastManager.setAlignment(Align.topLeft);
+						break;
+					case 1:
+						toastManager.setAlignment(Align.topRight);
+						break;
+					case 2:
+						toastManager.setAlignment(Align.bottomLeft);
+						break;
+					case 3:
+						toastManager.setAlignment(Align.bottomRight);
+						break;
+				}
+			}
+		});
+
 		VisTextButton textToastButton = new VisTextButton("text only");
 		textToastButton.addListener(new ChangeListener() {
 			@Override
@@ -54,7 +79,6 @@ public class TestToasts extends VisWindow {
 				toastManager.show("Text only toast", 3);
 			}
 		});
-		add(textToastButton);
 
 		VisTextButton messageToastButton = new VisTextButton("message toast");
 		messageToastButton.addListener(new ChangeListener() {
@@ -63,7 +87,6 @@ public class TestToasts extends VisWindow {
 				showSimpleToast();
 			}
 		});
-		add(messageToastButton);
 
 		VisTextButton customToastButton = new VisTextButton("custom toast");
 		customToastButton.addListener(new ChangeListener() {
@@ -78,7 +101,27 @@ public class TestToasts extends VisWindow {
 				toastManager.show(new Toast("dark", content));
 			}
 		});
-		add(customToastButton);
+
+		VisTextButton clearButton = new VisTextButton("clear");
+		clearButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				toastManager.clear();
+			}
+		});
+
+		VisTable alignTable = new VisTable(true);
+		alignTable.add("Alignment: ");
+		alignTable.add(alignment);
+		alignTable.add(clearButton);
+
+		VisTable toastBtnTable = new VisTable(true);
+		toastBtnTable.add(textToastButton);
+		toastBtnTable.add(messageToastButton);
+		toastBtnTable.add(customToastButton);
+
+		add(alignTable).row();
+		add(toastBtnTable).row();
 
 		pack();
 		centerWindow();

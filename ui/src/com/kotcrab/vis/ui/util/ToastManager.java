@@ -18,6 +18,7 @@ package com.kotcrab.vis.ui.util;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.Timer;
@@ -27,7 +28,7 @@ import com.kotcrab.vis.ui.widget.toast.Toast;
 import com.kotcrab.vis.ui.widget.toast.ToastTable;
 
 /**
- * Utility for displaying toast messages at upper right corner of application screen. Toasts can be closed by users or they
+ * Utility for displaying toast messages at corner of application screen (by default top right). Toasts can be closed by users or they
  * can automatically disappear after a period of time. Typically only one instance of ToastManager is used per
  * application window.
  * <p>
@@ -48,6 +49,8 @@ public class ToastManager {
 
 	private int screenPadding = 20;
 	private int messagePadding = 5;
+	private int alignment = Align.topRight;
+
 	private Array<Toast> toasts = new Array<Toast>();
 	private ObjectMap<Toast, Timer.Task> timersTasks = new ObjectMap<Toast, Timer.Task>();
 
@@ -145,6 +148,7 @@ public class ToastManager {
 	public boolean remove (Toast toast) {
 		boolean removed = toasts.removeValue(toast, true);
 		if (removed) {
+			toast.getMainTable().remove();
 			Timer.Task timerTask = timersTasks.remove(toast);
 			if (timerTask != null) timerTask.cancel();
 			updateToastsPositions();
@@ -153,11 +157,15 @@ public class ToastManager {
 	}
 
 	public void clear () {
+		for (Toast toast : toasts) {
+			toast.getMainTable().remove();
+		}
 		toasts.clear();
 		for (Timer.Task task : timersTasks.values()) {
 			task.cancel();
 		}
 		timersTasks.clear();
+		updateToastsPositions();
 	}
 
 	public void toFront () {
@@ -167,12 +175,17 @@ public class ToastManager {
 	}
 
 	private void updateToastsPositions () {
-		float y = stage.getHeight() - screenPadding;
+		boolean bottom = (alignment & Align.bottom) != 0;
+		boolean left = (alignment & Align.left) != 0;
+		float y = bottom ? screenPadding : stage.getHeight() - screenPadding;
 
 		for (Toast toast : toasts) {
 			Table table = toast.getMainTable();
-			table.setPosition(stage.getWidth() - table.getWidth() - screenPadding, y - table.getHeight());
-			y = y - table.getHeight() - messagePadding;
+			table.setPosition(
+					left ? screenPadding : stage.getWidth() - table.getWidth() - screenPadding,
+					bottom ? y : y - table.getHeight());
+
+			y += (table.getHeight() + messagePadding) * (bottom ? 1 : -1);
 		}
 	}
 
@@ -193,6 +206,19 @@ public class ToastManager {
 	/** Sets padding between messages */
 	public void setMessagePadding (int messagePadding) {
 		this.messagePadding = messagePadding;
+		updateToastsPositions();
+	}
+
+	public int getAlignment () {
+		return alignment;
+	}
+
+	/**
+	 * Sets toast messages screen alignment. By default toasts are displayed in application top right corner
+	 * @param alignment one of {@link Align#topLeft}, {@link Align#topRight}, {@link Align#bottomLeft} or {@link Align#bottomRight},
+	 */
+	public void setAlignment (int alignment) {
+		this.alignment = alignment;
 		updateToastsPositions();
 	}
 }
