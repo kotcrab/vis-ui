@@ -19,7 +19,9 @@ package com.kotcrab.vis.editor.util;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.kotcrab.vis.ui.util.OsUtils;
-import com.sun.jna.*;
+import com.sun.jna.Memory;
+import com.sun.jna.Native;
+import com.sun.jna.Pointer;
 import com.sun.jna.platform.unix.X11;
 import com.sun.jna.platform.unix.X11.Atom;
 import com.sun.jna.platform.unix.X11.Display;
@@ -29,11 +31,10 @@ import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinDef.WPARAM;
 import com.sun.jna.platform.win32.WinNT.HANDLE;
 import com.sun.jna.platform.win32.WinUser;
-import com.sun.jna.ptr.IntByReference;
-import com.sun.jna.ptr.NativeLongByReference;
-import com.sun.jna.ptr.PointerByReference;
 import com.sun.jna.win32.StdCallLibrary;
 import com.sun.jna.win32.W32APIOptions;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWNativeX11;
 
 /**
  * @author Kotcrab
@@ -90,20 +91,16 @@ public abstract class GLFWIconSetter {
 
 	/** Icon setter implementation for X11 */
 	private static class X11GLFWIconSetter extends GLFWIconSetter {
-		private static final int MAX_PROPERTY_LENGTH = 1024;
-
 		private static final String _NET_WM_ICON = "_NET_WM_ICON";
-		private static final String _NET_CLIENT_LIST = "_NET_CLIENT_LIST";
-		private static final String _NET_WM_PID = "_NET_WM_PID";
 
 		private final X11 x11;
 
-		public X11GLFWIconSetter () {
+		public X11GLFWIconSetter() {
 			x11 = X11.INSTANCE;
 		}
 
 		@Override
-		public void setIcon (FileHandle iconCacheFolder, FileHandle icoFile, FileHandle pngFile) {
+		public void setIcon(FileHandle iconCacheFolder, FileHandle icoFile, FileHandle pngFile) {
 			Display display = null;
 			try {
 				display = x11.XOpenDisplay(null);
@@ -120,7 +117,7 @@ public abstract class GLFWIconSetter {
 				int bufIndex = 2;
 				for (int i = 0; i < pixmap.getWidth(); i++) {
 					for (int ii = 0; ii < pixmap.getHeight(); ii++) {
-						int color = pixmap.getPixel(pixmap.getWidth() - ii, i);
+						int color = pixmap.getPixel(ii, i);
 
 						//assuming pixmap is RGBA8888, buffer for x11 is ARGB8888
 						//probably not very optimized
@@ -133,13 +130,12 @@ public abstract class GLFWIconSetter {
 					}
 				}
 
-				int pid = CLibrary.INSTANCE.getpid();
-				Window window = getWindowForPid(display, pid);
+				Window window = new Window(GLFWNativeX11.glfwGetX11Window(GLFW.glfwGetCurrentContext()));
 
 				Pointer ptr = new Memory(buffer.length * 8);
 				ptr.write(0, buffer, 0, buffer.length);
-				x11.XChangeProperty(display, window, getAtom(display, _NET_WM_ICON),
-						X11.XA_CARDINAL, 32, X11.PropModeReplace, ptr, buffer.length);
+				x11.XChangeProperty(display, window, getAtom(display, _NET_WM_ICON), X11.XA_CARDINAL, 32,
+						X11.PropModeReplace, ptr, buffer.length);
 
 				pixmap.dispose();
 			} catch (Exception e) {
@@ -151,85 +147,11 @@ public abstract class GLFWIconSetter {
 			}
 		}
 
-		public Window getWindowForPid (Display display, int pid) {
-			Window rootWindow = x11.XDefaultRootWindow(display);
-
-			byte[] bytes = getProperty(display, rootWindow, X11.XA_WINDOW, getAtom(display, _NET_CLIENT_LIST));
-			int size = bytes.length / X11.Window.SIZE;
-
-			for (int i = 0; i < size; i++) {
-				Window window = new Window(bytesToLong(bytes, X11.XID.SIZE * i));
-				if (bytesToLong(getProperty(display, window, X11.XA_CARDINAL, getAtom(display, _NET_WM_PID))) == pid)
-					return window;
-			}
-
-			throw new IllegalStateException("Failed to get Window for pid");
-		}
-
-		private Atom getAtom (Display display, String atom_name) {
+		private Atom getAtom(Display display, String atom_name) {
 			return x11.XInternAtom(display, atom_name, false);
 		}
-
-		private long bytesToLong (byte[] bytes) {
-			return bytesToLong(bytes, 0);
-		}
-
-		private long bytesToLong (byte[] bytes, int offset) {
-			return ((0xFF & bytes[3 + offset]) << 24) |
-					((0xFF & bytes[2 + offset]) << 16) |
-					((0xFF & bytes[1 + offset]) << 8) |
-					(0xFF & bytes[offset]);
-		}
-
-		public byte[] getProperty (Display display, Window window, X11.Atom req_type, X11.Atom property) {
-			X11.AtomByReference actual_type_return = new X11.AtomByReference();
-			IntByReference actual_format_return = new IntByReference();
-			NativeLongByReference nitems_return = new NativeLongByReference();
-			NativeLongByReference bytes_after_return = new NativeLongByReference();
-			PointerByReference prop_return = new PointerByReference();
-
-			// https://tronche.com/gui/x/xlib/window-information/XGetWindowProperty.html
-			if (x11.XGetWindowProperty(display, window, property, new NativeLong(0), new NativeLong(MAX_PROPERTY_LENGTH),
-					false, req_type, actual_type_return, actual_format_return, nitems_return, bytes_after_return, prop_return)
-					!= X11.Success) {
-				throw new IllegalStateException("Failed to get " + x11.XGetAtomName(display, property) + " property.");
-			}
-
-			Pointer prop = prop_return.getValue();
-
-			int format = actual_format_return.getValue();
-			long nitems = nitems_return.getValue().longValue();
-
-			int nbytes;
-			switch (format) {
-				case 32:
-					nbytes = Native.LONG_SIZE;
-					break;
-				case 16:
-					nbytes = Native.LONG_SIZE / 2;
-					break;
-				case 8:
-					nbytes = 1;
-					break;
-				case 0:
-					nbytes = 0;
-					break;
-				default:
-					throw new IllegalStateException("Unknown property return format");
-			}
-
-			int length = Math.min((int) nitems * nbytes, MAX_PROPERTY_LENGTH);
-			byte[] ret = prop.getByteArray(0, length);
-			x11.XFree(prop);
-			return ret;
-		}
-
-		private interface CLibrary extends Library {
-			CLibrary INSTANCE = (CLibrary) Native.loadLibrary("c", CLibrary.class);
-
-			int getpid ();
-		}
 	}
+
 
 	/** Fallback implementation for unsupported platforms, does nothing. */
 	private static class DefaultGLFWIconSetter extends GLFWIconSetter {
