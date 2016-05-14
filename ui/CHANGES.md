@@ -6,10 +6,12 @@
 - **Added**: `VisTextField#keyTypedRepeatTime`
 - **Added**: `TabbedPane#getUIOrderedTabs()`
 - **Added**: `FileChooser#setFavoriteFolderButtonVisible(true)` - FileChooser now can display 'add folder to favorites' button in the toolbar 
+- **Added**: `MenuItem#getSubMenuIconCell()` and `MenuItem#getShortcutCell()` 
 - **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get it's cells for customization)
 - **Changed**: `FileChooser` now tries to maintain selection while rebuilding file list
 - **Changed**: `FileChooser` will now select new folder after creating it 
 - **Changed**: `FileChooser` will be automatically refreshed when added to `Stage`
+- **Changed**: `FileChooser` when typing file names manually suggestion will be showed
 - **Changed**: `TabbedPane`'s Tab now can't be dragged using it's close button  
 - **Changed**: Synced `VisTextField` ans `VisTextArea` with equivalents of those classes libgdx
 - **Changed**: Tooltip now won't fade out when mouse moved, it will only fade out on mouse exit or click (set `Tooltip.MOUSE_MOVED_FADEOUT` to true to preserve old behaviour)

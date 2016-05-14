@@ -120,6 +120,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private VisTextButton confirmButton;
 
 	private FilePopupMenu fileMenu;
+	private SuggestionPopupMenu fileNameSuggestionPopup;
 
 	public FileChooser (Mode mode) {
 		this((FileHandle) null, mode);
@@ -181,7 +182,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		shortcutsFavoritesPanel = new VerticalGroup();
 		rebuildShortcutsFavoritesPanel();
 
-		fileMenu = new FilePopupMenu(this, style, new FilePopupMenuCallback() {
+		fileMenu = new FilePopupMenu(this, new FilePopupMenuCallback() {
 			@Override
 			public void showNewDirDialog () {
 				showNewDirectoryDialog();
@@ -192,6 +193,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				showFileDeleteDialog(file);
 			}
 		});
+
+		fileNameSuggestionPopup = new SuggestionPopupMenu(this);
 
 		rebuildShortcutsList();
 
@@ -365,6 +368,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
 				deselectAll(false);
+				fileNameSuggestionPopup.fileNameKeyTyped(getStage(), items.keys(), selectedFileTextField);
 				return false;
 			}
 		});
@@ -630,7 +634,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		fileScrollPane.setScrollX(0);
 		fileScrollPane.setScrollY(0);
-		selectFiles(selectedFiles);
+		highlightFiles(selectedFiles);
 	}
 
 	/**
@@ -714,9 +718,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	/**
 	 * Sets chooser selected files. Compared to {@link #setSelectedFiles(FileHandle...)} does not remove invalid files
-	 * from selection. Private API.
+	 * from selection.
 	 */
-	private void selectFiles (FileHandle... files) {
+	public void highlightFiles (FileHandle... files) {
 		for (FileHandle file : files) {
 			FileItem item = items.get(file);
 			if (item != null) {
@@ -742,6 +746,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 			selectedFileTextField.setText(b.toString());
 		}
+		selectedFileTextField.setCursorPosition(selectedFileTextField.getText().length());
 	}
 
 	private void removeInvalidSelections () {
@@ -901,7 +906,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			return Gdx.input.isKeyPressed(groupMultiSelectKey);
 	}
 
-	FileChooserStyle getChooserStyle () {
+	public FileChooserStyle getChooserStyle () {
 		return style;
 	}
 
@@ -1015,7 +1020,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				FileHandle newDir = currentDirectory.child(input);
 				newDir.mkdirs();
 				refresh();
-				selectFiles(newDir);
+				highlightFiles(newDir);
 			}
 		});
 	}

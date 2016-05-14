@@ -48,9 +48,9 @@ public class FilePopupMenu extends PopupMenu {
 	private MenuItem addToFavorites;
 	private MenuItem removeFromFavorites;
 
-	public FilePopupMenu (final FileChooser chooser, FileChooserStyle chooserStyle, final FilePopupMenuCallback callback) {
-		super(chooserStyle.popupMenuStyleName);
-		this.style = chooserStyle;
+	public FilePopupMenu (final FileChooser chooser, final FilePopupMenuCallback callback) {
+		super(chooser.getChooserStyle().popupMenuStyleName);
+		this.style = chooser.getChooserStyle();
 
 		delete = new MenuItem(CONTEXT_MENU_DELETE.get(), style.iconTrash);
 		newDirectory = new MenuItem(CONTEXT_MENU_NEW_DIRECTORY.get(), style.iconFolderNew);

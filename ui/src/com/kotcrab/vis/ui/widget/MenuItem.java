@@ -312,6 +312,14 @@ public class MenuItem extends Button {
 		label.setText(text);
 	}
 
+	public Cell<Image> getSubMenuIconCell () {
+		return subMenuIconCell;
+	}
+
+	public Cell<VisLabel> getShortcutCell () {
+		return getCell(shortcutLabel);
+	}
+
 	static public class MenuItemStyle extends TextButtonStyle {
 		public Drawable subMenu;
 
