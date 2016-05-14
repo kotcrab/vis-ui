@@ -26,6 +26,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.kotcrab.vis.ui.FocusManager;
+import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.OsUtils;
@@ -186,8 +188,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			}
 
 			@Override
-			public boolean delete (FileHandle fileHandle) throws IOException {
-				return fileDeleter.delete(fileHandle);
+			public void showFileDelDialog (FileHandle file) {
+				showFileDeleteDialog(file);
 			}
 		});
 
@@ -1017,6 +1019,26 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		});
 	}
 
+	private void showFileDeleteDialog (final FileHandle fileToDelete) {
+		Dialogs.showOptionDialog(getStage(), POPUP_TITLE.get(),
+				fileDeleter.hasTrash() ? CONTEXT_MENU_MOVE_TO_TRASH_WARNING.get() : CONTEXT_MENU_DELETE_WARNING.get(),
+				OptionDialogType.YES_NO, new OptionDialogAdapter() {
+					@Override
+					public void yes () {
+						try {
+							boolean success = fileDeleter.delete(fileToDelete);
+							if (success == false) {
+								Dialogs.showErrorDialog(getStage(), POPUP_DELETE_FILE_FAILED.get());
+							}
+						} catch (IOException e) {
+							Dialogs.showErrorDialog(getStage(), POPUP_DELETE_FILE_FAILED.get(), e);
+							e.printStackTrace();
+						}
+						refresh();
+					}
+				});
+	}
+
 	/**
 	 * Sets {@link FileChooser.FileDeleter} that will be used for deleting files. You cannot set your own file deleter, {@link FileChooser.FileDeleter}
 	 * interface is not public, deleter must be either {@link DefaultFileDeleter} or {@link JNAFileDeleter}. {@link JNAFileDeleter}
@@ -1108,7 +1130,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		}
 	}
 
-	private class FileItem extends Table {
+	private class FileItem extends Table implements Focusable {
 		public FileHandle file;
 		private VisLabel name;
 		private VisLabel size;
@@ -1159,6 +1181,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			addListener(new InputListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+					FocusManager.switchFocus(getStage(), FileItem.this);
+					getStage().setKeyboardFocus(FileItem.this);
 					return true;
 				}
 
@@ -1168,6 +1192,16 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 						fileMenu.build(favorites, file);
 						fileMenu.showMenu(getStage(), event.getStageX(), event.getStageY());
 					}
+				}
+
+				@Override
+				public boolean keyDown (InputEvent event, int keycode) {
+					if (keycode == Keys.FORWARD_DEL) {
+						showFileDeleteDialog(file);
+						return true;
+					}
+
+					return false;
 				}
 			});
 
@@ -1265,9 +1299,18 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			if (removeFromList) selectedItems.removeValue(this, true);
 		}
 
+		@Override
+		public void focusLost () {
+
+		}
+
+		@Override
+		public void focusGained () {
+
+		}
 	}
 
-	private class ShortcutItem extends Table implements RootNameListener {
+	private class ShortcutItem extends Table implements RootNameListener, Focusable {
 		public File file;
 		private VisLabel name;
 
@@ -1292,6 +1335,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			addListener(new InputListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+					FocusManager.switchFocus(getStage(), ShortcutItem.this);
+					getStage().setKeyboardFocus(ShortcutItem.this);
 					return true;
 				}
 
@@ -1301,6 +1346,18 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 						fileMenu.buildForFavorite(favorites, file);
 						fileMenu.showMenu(getStage(), event.getStageX(), event.getStageY());
 					}
+				}
+
+				@Override
+				public boolean keyDown (InputEvent event, int keycode) {
+					if (keycode == Keys.FORWARD_DEL) {
+						FileHandle gdxFile = Gdx.files.absolute(file.getAbsolutePath());
+						if (favorites.contains(gdxFile, false)) {
+							removeFavorite(gdxFile);
+						}
+						return true;
+					}
+					return false;
 				}
 			});
 
@@ -1355,6 +1412,14 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		@Override
 		public void setRootName (String newName) {
 			setLabelText(newName);
+		}
+
+		@Override
+		public void focusGained () {
+		}
+
+		@Override
+		public void focusLost () {
 		}
 	}
 
