@@ -89,6 +89,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	TextFieldFilter filter;
 	OnscreenKeyboard keyboard = new DefaultOnscreenKeyboard();
 	boolean focusTraversal = true, onlyFontChars = true, disabled;
+	boolean enterKeyFocusTraversal = false;
 	private int textHAlign = Align.left;
 	private float selectionX, selectionWidth;
 
@@ -623,6 +624,15 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	/** If true (the default), tab/shift+tab will move to the next text field. */
 	public void setFocusTraversal (boolean focusTraversal) {
 		this.focusTraversal = focusTraversal;
+	}
+
+	/**
+	 * If true, enter will move to the next text field with has focus traversal enabled.
+	 * False by default. Note that to enable or disable focus traversal completely you must
+	 * use {@link #setFocusTraversal(boolean)}
+	 */
+	public void setEnterKeyFocusTraversal (boolean enterKeyFocusTraversal) {
+		this.enterKeyFocusTraversal = enterKeyFocusTraversal;
 	}
 
 	/** @return May be null. */
@@ -1184,7 +1194,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 
 			if (UIUtils.isMac && Gdx.input.isKeyPressed(Keys.SYM)) return true;
 
-			if ((character == TAB || character == ENTER_ANDROID) && focusTraversal) {
+			if (focusTraversal && (character == TAB || (character == ENTER_ANDROID && enterKeyFocusTraversal))) {
 				next(UIUtils.shift());
 			} else {
 				boolean delete = character == DELETE;
