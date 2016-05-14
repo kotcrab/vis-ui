@@ -33,6 +33,7 @@ public class FileChooserStyle {
 	public Drawable iconTrash;
 	public Drawable iconStar;
 	public Drawable iconStarOutline;
+	public Drawable iconRefresh;
 
 	public Drawable iconFileText;
 	public Drawable iconFileImage;

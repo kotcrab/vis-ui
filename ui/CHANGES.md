@@ -21,10 +21,12 @@
 - **Fixed**: `FileChooser` NPE when error occurred during directory deleting
 - **Fixed**: `FileChooser` non empty directories are now deleted correctly when using default `FileChooser` deleter
 - **Skin changes**:
-    - **Changed**: `FileChooserStyle`: added drawable fields: `iconStar` and `iconStarOutline`
-    - **Added**: drawable `window-border-bg.9`, `icon-star`, `icon-star-outline`
+    - **Changed**: `FileChooserStyle`: added drawable fields: `iconStar`, `iconStarOutline`, `iconRefresh`
+    - **Added**: drawable `window-border-bg.9`, `icon-star`, `icon-star-outline`, `icon-refresh`
     - **Added**: style `BaseToastStyle`
     - **Added**: VisTextField `label` style - if combined with read-only mode allows to create selectable labels
+- **I18N Changes**:
+    - **FileChooser**: added `CONTEXT_MENU_REFRESH` 
 
 #### Version: 1.0.2 (LibGDX 1.9.2)
 - **Changed**: [#163](https://github.com/kotcrab/vis-editor/issues/163) - When `VisCheckBox` or `VisTextField` is disabled and is marked as invalid then error border won't be drawn. 

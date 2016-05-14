@@ -58,6 +58,7 @@ public enum FileChooserText implements BundleText {
 	CONTEXT_MENU_DELETE("contextMenuDelete"),
 	CONTEXT_MENU_MOVE_TO_TRASH("contextMenuMoveToTrash"),
 	CONTEXT_MENU_SHOW_IN_EXPLORER("contextMenuShowInExplorer"),
+	CONTEXT_MENU_REFRESH("contextMenuRefresh"),
 	CONTEXT_MENU_ADD_TO_FAVORITES("contextMenuAddToFavorites"),
 	CONTEXT_MENU_REMOVE_FROM_FAVORITES("contextMenuRemoveFromFavorites"),
 	CONTEXT_MENU_DELETE_WARNING("contextMenuDeleteWarning"),

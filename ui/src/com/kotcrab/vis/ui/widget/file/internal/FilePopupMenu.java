@@ -19,7 +19,9 @@ package com.kotcrab.vis.ui.widget.file.internal;
 import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.MenuItem;
@@ -42,6 +44,7 @@ public class FilePopupMenu extends PopupMenu {
 	private MenuItem delete;
 	private MenuItem newDirectory;
 	private MenuItem showInExplorer;
+	private MenuItem refresh;
 	private MenuItem addToFavorites;
 	private MenuItem removeFromFavorites;
 
@@ -52,6 +55,7 @@ public class FilePopupMenu extends PopupMenu {
 		delete = new MenuItem(CONTEXT_MENU_DELETE.get(), style.iconTrash);
 		newDirectory = new MenuItem(CONTEXT_MENU_NEW_DIRECTORY.get(), style.iconFolderNew);
 		showInExplorer = new MenuItem(CONTEXT_MENU_SHOW_IN_EXPLORER.get());
+		refresh = new MenuItem(CONTEXT_MENU_REFRESH.get(), style.iconRefresh);
 		addToFavorites = new MenuItem(CONTEXT_MENU_ADD_TO_FAVORITES.get(), style.iconFolderStar);
 		removeFromFavorites = new MenuItem(CONTEXT_MENU_REMOVE_FROM_FAVORITES.get(), style.iconFolderStar);
 
@@ -77,6 +81,13 @@ public class FilePopupMenu extends PopupMenu {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			}
+		});
+
+		refresh.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				chooser.refresh();
 			}
 		});
 
@@ -106,6 +117,7 @@ public class FilePopupMenu extends PopupMenu {
 		clearChildren();
 
 		addItem(newDirectory);
+		addItem(refresh);
 		addSeparator();
 
 		if (file.type() == FileType.Absolute || file.type() == FileType.External) addItem(delete);

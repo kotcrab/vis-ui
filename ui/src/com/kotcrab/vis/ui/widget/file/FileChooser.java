@@ -204,6 +204,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		centerWindow();
 
 		createListeners();
+		setFavoriteFolderButtonVisible(false);
 	}
 
 	private void createToolbar () {

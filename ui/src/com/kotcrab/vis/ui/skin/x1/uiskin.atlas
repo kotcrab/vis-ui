@@ -6,7 +6,7 @@ filter: Nearest,Nearest
 repeat: none
 border
   rotate: false
-  xy: 296, 156
+  xy: 279, 1
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -28,7 +28,7 @@ border-circle-error
   index: -1
 border-dark-blue
   rotate: false
-  xy: 325, 205
+  xy: 275, 1
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -36,7 +36,7 @@ border-dark-blue
   index: -1
 border-error
   rotate: false
-  xy: 292, 154
+  xy: 63, 1
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -152,21 +152,21 @@ check-on
   index: -1
 check-on-disabled
   rotate: false
-  xy: 269, 22
+  xy: 269, 5
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 check-over-off
   rotate: false
-  xy: 269, 7
+  xy: 314, 209
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 textfield-over
   rotate: false
-  xy: 269, 7
+  xy: 314, 209
   size: 14, 14
   split: 1, 1, 1, 1
   orig: 14, 14
@@ -174,42 +174,42 @@ textfield-over
   index: -1
 check-over-on
   rotate: false
-  xy: 314, 209
+  xy: 278, 137
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 color-picker-bar-selector
   rotate: false
-  xy: 278, 137
+  xy: 291, 17
   size: 7, 14
   orig: 7, 14
   offset: 0, 0
   index: -1
 color-picker-cross
   rotate: false
-  xy: 269, 1
+  xy: 284, 152
   size: 5, 5
   orig: 5, 5
   offset: 0, 0
   index: -1
 color-picker-selector-horizontal
   rotate: false
-  xy: 284, 7
+  xy: 309, 160
   size: 3, 1
   orig: 3, 1
   offset: 0, 0
   index: -1
 color-picker-selector-vertical
   rotate: false
-  xy: 331, 236
+  xy: 281, 73
   size: 1, 3
   orig: 1, 3
   offset: 0, 0
   index: -1
 cursor
   rotate: false
-  xy: 292, 10
+  xy: 67, 1
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -224,7 +224,7 @@ default
   index: -1
 default-pane
   rotate: false
-  xy: 307, 199
+  xy: 269, 1
   size: 5, 3
   split: 1, 1, 1, 1
   orig: 5, 3
@@ -248,7 +248,7 @@ default-select
   index: -1
 default-select-selection
   rotate: false
-  xy: 68, 6
+  xy: 283, 1
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -263,14 +263,14 @@ font-small
   index: -1
 grey
   rotate: false
-  xy: 329, 222
+  xy: 331, 238
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 menu-bg
   rotate: false
-  xy: 329, 222
+  xy: 331, 238
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -359,6 +359,13 @@ icon-folder-star
   orig: 22, 22
   offset: 2, 4
   index: -1
+icon-refresh
+  rotate: false
+  xy: 269, 20
+  size: 14, 16
+  orig: 22, 22
+  offset: 4, 3
+  index: -1
 icon-star
   rotate: false
   xy: 391, 241
@@ -382,14 +389,14 @@ icon-trash
   index: -1
 list-selection
   rotate: false
-  xy: 322, 196
+  xy: 329, 222
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 vis-blue
   rotate: false
-  xy: 322, 196
+  xy: 329, 222
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -432,49 +439,49 @@ progressbar-vertical
   index: -1
 radio-down
   rotate: false
-  xy: 281, 104
+  xy: 281, 122
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 radio-down-on
   rotate: false
-  xy: 281, 89
+  xy: 281, 107
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 radio-off
   rotate: false
-  xy: 281, 74
+  xy: 281, 92
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 radio-on
   rotate: false
-  xy: 284, 59
+  xy: 281, 77
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 radio-on-disabled
   rotate: false
-  xy: 284, 44
+  xy: 284, 62
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 radio-over-off
   rotate: false
-  xy: 284, 29
+  xy: 284, 47
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
   index: -1
 radio-over-on
   rotate: false
-  xy: 284, 14
+  xy: 284, 32
   size: 14, 14
   orig: 14, 14
   offset: 0, 0
@@ -498,7 +505,7 @@ scroll-horizontal
   index: -1
 scroll-knob-horizontal
   rotate: false
-  xy: 281, 119
+  xy: 284, 14
   size: 6, 17
   split: 2, 2, 0, 17
   pad: -1, -1, 6, 6
@@ -515,63 +522,63 @@ scroll-knob-vertical
   index: -1
 select-box-list-bg
   rotate: false
-  xy: 281, 5
+  xy: 291, 15
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 window-bg
   rotate: false
-  xy: 281, 5
+  xy: 291, 15
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 select-down
   rotate: false
-  xy: 284, 153
+  xy: 296, 155
   size: 7, 4
   orig: 7, 4
   offset: 0, 0
   index: -1
 select-up
   rotate: false
-  xy: 284, 9
+  xy: 63, 5
   size: 7, 4
   orig: 7, 4
   offset: 0, 0
   index: -1
 selection
   rotate: false
-  xy: 296, 154
+  xy: 322, 196
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator
   rotate: false
-  xy: 296, 12
+  xy: 293, 150
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 tree-over
   rotate: false
-  xy: 296, 12
+  xy: 293, 150
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator-menu
   rotate: false
-  xy: 325, 199
+  xy: 296, 153
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 slider
   rotate: false
-  xy: 68, 1
+  xy: 307, 198
   size: 1, 4
   orig: 1, 4
   offset: 0, 0
@@ -620,35 +627,35 @@ splitpane
   index: -1
 splitpane-over
   rotate: false
-  xy: 309, 160
+  xy: 309, 201
   size: 4, 1
   orig: 4, 1
   offset: 0, 0
   index: -1
 splitpane-vertical
   rotate: false
-  xy: 70, 1
+  xy: 287, 1
   size: 1, 4
   orig: 1, 4
   offset: 0, 0
   index: -1
 splitpane-vertical-over
   rotate: false
-  xy: 72, 1
+  xy: 71, 1
   size: 1, 4
   orig: 1, 4
   offset: 0, 0
   index: -1
 sub-menu
   rotate: false
-  xy: 63, 2
+  xy: 284, 6
   size: 4, 7
   orig: 4, 7
   offset: 0, 0
   index: -1
 tooltip-bg
   rotate: false
-  xy: 325, 201
+  xy: 325, 205
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -663,7 +670,7 @@ touchpad-knob
   index: -1
 tree-minus
   rotate: false
-  xy: 275, 1
+  xy: 290, 152
   size: 5, 5
   orig: 8, 8
   offset: 1, 2
@@ -677,7 +684,7 @@ tree-plus
   index: -1
 tree-selection
   rotate: false
-  xy: 300, 156
+  xy: 304, 156
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -685,14 +692,14 @@ tree-selection
   index: -1
 vis-red
   rotate: false
-  xy: 76, 8
+  xy: 289, 12
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 white
   rotate: false
-  xy: 72, 6
+  xy: 71, 6
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
@@ -707,7 +714,7 @@ window
   index: -1
 window-border-bg
   rotate: false
-  xy: 304, 156
+  xy: 325, 201
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
