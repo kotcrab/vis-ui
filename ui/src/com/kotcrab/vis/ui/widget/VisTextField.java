@@ -106,7 +106,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	private int visibleTextStart, visibleTextEnd;
 	private int maxLength = 0;
 
-	private float blinkTime = 0.32f;
+	private float blinkTime = 0.45f;
 	boolean cursorOn = true;
 	long lastBlink;
 
