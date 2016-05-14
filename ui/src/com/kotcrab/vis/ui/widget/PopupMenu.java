@@ -108,7 +108,7 @@ public class PopupMenu extends Table {
 	}
 
 	public void addItem (MenuItem item) {
-		super.add(item).fillX().row();
+		super.add(item).fillX().expandX().row();
 		pack();
 
 		item.addListener(sharedMenuItemListener);
