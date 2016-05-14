@@ -31,6 +31,8 @@ public class FileChooserStyle {
 	public Drawable iconFolderNew;
 	public Drawable iconDrive;
 	public Drawable iconTrash;
+	public Drawable iconStar;
+	public Drawable iconStarOutline;
 
 	public Drawable iconFileText;
 	public Drawable iconFileImage;

@@ -33,8 +33,10 @@ import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.InputDialogAdapter;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
+import com.kotcrab.vis.ui.util.value.PrefWidthIfVisibleValue;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.ButtonBar.ButtonType;
+import com.kotcrab.vis.ui.widget.Tooltip;
 import com.kotcrab.vis.ui.widget.file.internal.*;
 import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.DriveCheckerListener;
 import com.kotcrab.vis.ui.widget.file.internal.DriveCheckerService.RootMode;
@@ -109,6 +111,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private VerticalGroup shortcutsRootsPanel;
 	private VerticalGroup shortcutsFavoritesPanel;
 
+	private VisImageButton favoriteFolderButton;
+	private Tooltip favoriteFolderButtonTooltip;
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextField;
 	private VisTextButton confirmButton;
@@ -226,11 +230,19 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		});
 
 		VisImageButton folderParentButton = new VisImageButton(style.iconFolderParent, PARENT_DIRECTORY.get());
+		favoriteFolderButton = new VisImageButton(style.iconStar);
+		favoriteFolderButtonTooltip = new Tooltip.Builder(CONTEXT_MENU_ADD_TO_FAVORITES.get()).target(favoriteFolderButton).build();
 		VisImageButton folderNewButton = new VisImageButton(style.iconFolderNew, NEW_DIRECTORY.get());
 
 		toolbarTable.add(historyManager.getButtonsTable());
 		toolbarTable.add(currentPath).expand().fill();
 		toolbarTable.add(folderParentButton);
+		toolbarTable.add(favoriteFolderButton).width(PrefWidthIfVisibleValue.INSTANCE).spaceRight(new Value() {
+			@Override
+			public float get (Actor context) {
+				return favoriteFolderButton.isVisible() ? sizes.spacingRight : 0;
+			}
+		});
 		toolbarTable.add(folderNewButton);
 
 		folderParentButton.addListener(new ChangeListener() {
@@ -246,6 +258,17 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			}
 		});
 
+		favoriteFolderButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				if (favorites.contains(currentDirectory, false)) {
+					removeFavorite(currentDirectory);
+				} else {
+					addFavorite(currentDirectory);
+				}
+			}
+		});
+
 		folderNewButton.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
@@ -254,6 +277,20 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		});
 
 		addListener(historyManager.getDefaultClickListener());
+	}
+
+	private void updateFavoriteFolderButton () {
+		VisLabel label = (VisLabel) favoriteFolderButtonTooltip.getContent();
+
+		if (favorites.contains(currentDirectory, false)) {
+			favoriteFolderButton.getStyle().imageUp = style.iconStar;
+			label.setText(CONTEXT_MENU_REMOVE_FROM_FAVORITES.get());
+		} else {
+			favoriteFolderButton.getStyle().imageUp = style.iconStarOutline;
+			label.setText(CONTEXT_MENU_ADD_TO_FAVORITES.get());
+		}
+
+		favoriteFolderButtonTooltip.pack();
 	}
 
 	private void createCenterContentPanel () {
@@ -627,6 +664,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		favoritesIO.saveFavorites(favorites);
 		rebuildShortcutsFavoritesPanel();
 		rebuildShortcutsList(false);
+		updateFavoriteFolderButton();
 	}
 
 	/**
@@ -639,6 +677,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		favoritesIO.saveFavorites(favorites);
 		rebuildShortcutsFavoritesPanel();
 		rebuildShortcutsList(false);
+		updateFavoriteFolderButton();
 		return removed;
 	}
 
@@ -763,6 +802,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		rebuildFileList();
 
 		if (historyPolicy == HistoryPolicy.CLEAR) historyManager.historyClear();
+
+		updateFavoriteFolderButton();
 	}
 
 	@Override
@@ -802,6 +843,14 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				getTitleLabel().setText(TITLE_CHOOSE_FILES_AND_DIRECTORIES.get());
 				break;
 		}
+	}
+
+	public void setFavoriteFolderButtonVisible (boolean favoriteFolderButtonVisible) {
+		favoriteFolderButton.setVisible(favoriteFolderButtonVisible);
+	}
+
+	public boolean isFavoriteFolderButtonVisible () {
+		return favoriteFolderButton.isVisible();
 	}
 
 	public boolean isMultiSelectionEnabled () {

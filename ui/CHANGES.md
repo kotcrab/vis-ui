@@ -5,6 +5,7 @@
 - **Added**: VisTextField read-only mode (`VisTextField#setReadOnly(boolean)`)
 - **Added**: `VisTextField#keyTypedRepeatTime`
 - **Added**: `TabbedPane#getUIOrderedTabs()`
+- **Added**: `FileChooser#setFavoriteFolderButtonVisible(true)` - FileChooser now can display 'add folder to favorites' button in the toolbar 
 - **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get it's cells for customization)
 - **Changed**: `FileChooser` now tries to maintain selection while rebuilding file list
 - **Changed**: `FileChooser` will now select new folder after creating it 
@@ -20,7 +21,8 @@
 - **Fixed**: `FileChooser` NPE when error occurred during directory deleting
 - **Fixed**: `FileChooser` non empty directories are now deleted correctly when using default `FileChooser` deleter
 - **Skin changes**:
-    - **Added**: drawable `window-border-bg.9`
+    - **Changed**: `FileChooserStyle`: added drawable fields: `iconStar` and `iconStarOutline`
+    - **Added**: drawable `window-border-bg.9`, `icon-star`, `icon-star-outline`
     - **Added**: style `BaseToastStyle`
     - **Added**: VisTextField `label` style - if combined with read-only mode allows to create selectable labels
 
