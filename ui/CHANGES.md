@@ -10,6 +10,7 @@
 - **Added**: `FileChooser#setPrefsName()` 
 - **Added**: `MenuItem#getSubMenuIconCell()` and `MenuItem#getShortcutCell()` 
 - **Added**: `VisTextField#setEnterKeyFocusTraversal(boolean)`
+- **Added**: `PopupMenuListener`
 - **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get it's cells for customization)
 - **Changed**: `FileChooser` now tries to maintain selection while rebuilding file list
 - **Changed**: `FileChooser` will now select new folder after creating it 
