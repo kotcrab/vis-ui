@@ -39,6 +39,7 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
@@ -97,9 +98,9 @@ public class VisTwitterReader extends EditorModule {
 		containerTable.row();
 		statusesCell = containerTable.add(new VisLabel("Loading...", Align.center)).colspan(3).expand().fill();
 
-		if (twitterCache == null || twitterCache.isOutdated())
+		if (twitterCache == null || twitterCache.isOutdated()) {
 			updateCache();
-		else {
+		} else {
 			Log.debug("Twitter cache is up to date");
 			buildTwitterTable(twitterCache);
 		}
@@ -114,8 +115,27 @@ public class VisTwitterReader extends EditorModule {
 
 				TwitterCache cache = new TwitterCache();
 
-				for (Element el : elements)
-					cache.tweets.add(el.text().replace("…", ""));
+				for (Element tweet : elements) {
+					StringBuilder builder = new StringBuilder();
+					for (Node tweetNode : tweet.childNodes()) {
+						String text;
+						if (tweetNode instanceof Element) {
+							Element tweetElement = (Element) tweetNode;
+							text = tweetElement.text();
+						} else {
+							text = tweetNode.toString();
+						}
+						//0x2026 ... char
+						//0xA0 no-break space
+						text = text.replace(Character.toString((char) 0x2026), "").replace(Character.toString((char) 0xA0), " ");
+						if (text.equals(" ")) continue;
+						if (text.endsWith(" ")) {
+							text = text.substring(0, text.length() - 1);
+						}
+						builder.append(text).append(" ");
+					}
+					cache.tweets.add(builder.toString());
+				}
 
 				buildTwitterTable(cache);
 			} catch (IOException e) {
@@ -148,13 +168,15 @@ public class VisTwitterReader extends EditorModule {
 						hashtag = true;
 					}
 
-					VisLabel label;
-					if (url != null)
-						label = new LinkLabel(hashtag ? part + " " : getTrimmedUrl(url), url);
-					else
-						label = new VisLabel(part + " ");
+					if (url != null) {
+						LinkLabel label = new LinkLabel(hashtag ? part : getTrimmedUrl(url), url);
+						tweetTable.addActor(label);
+						tweetTable.addActor(new VisLabel(" "));
+					} else {
+						VisLabel label = new VisLabel(part + " ");
+						tweetTable.addActor(label);
+					}
 
-					tweetTable.addActor(label);
 				}
 				statusesTable.add(tweetTable).width(new VisValue(context -> scrollPane.getScrollWidth() - 10)).spaceBottom(4).padRight(4).row();
 				statusesTable.addSeparator().spaceBottom(4);
@@ -168,9 +190,9 @@ public class VisTwitterReader extends EditorModule {
 
 	private CharSequence getTrimmedUrl (String url) {
 		if (url.length() > 40)
-			return url.substring(0, 20) + "..." + url.substring(url.length() - 20, url.length()) + " ";
+			return url.substring(0, 20) + "..." + url.substring(url.length() - 20, url.length());
 		else
-			return url + " ";
+			return url;
 	}
 
 	private void readCache () {
