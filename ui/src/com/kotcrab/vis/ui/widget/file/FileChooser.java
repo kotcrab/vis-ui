@@ -216,7 +216,6 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		});
 
 		fileNameSuggestionPopup = new FileSuggestionPopup(this);
-		dirsSuggestionPopup = new DirsSuggestionPopup(this);
 
 		rebuildShortcutsList();
 
@@ -243,14 +242,33 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		final VisImageButton showRecentDirButton = new VisImageButton(style.expandDropdown);
 		showRecentDirButton.setFocusBorderEnabled(false);
 
+		dirsSuggestionPopup = new DirsSuggestionPopup(this, currentPath);
+		dirsSuggestionPopup.setListener(new PopupMenu.PopupMenuListener() {
+			@Override
+			public void activeItemChanged (MenuItem newItem, boolean changedByKeyboard) {
+				if (changedByKeyboard == false || newItem == null) return;
+
+				currentPath.setText(newItem.getText().toString());
+				currentPath.setCursorPosition(currentPath.getText().length());
+			}
+		});
+
 		currentPath.addListener(new InputListener() {
 			@Override
-			public boolean keyDown (InputEvent event, int keycode) {
+			public boolean keyTyped (InputEvent event, char character) {
+				if (event.getKeyCode() == Keys.ENTER) {
+					dirsSuggestionPopup.remove();
+					return false;
+				}
 				float targetWidth = currentPath.getWidth() + showRecentDirButton.getWidth();
-				dirsSuggestionPopup.pathFieldKeyTyped(getStage(), currentPath, targetWidth - 20);
+				dirsSuggestionPopup.pathFieldKeyTyped(getStage(), targetWidth - 20);
 				dirsSuggestionPopup.setWidth(targetWidth);
 				dirsSuggestionPopup.layout();
+				return false;
+			}
 
+			@Override
+			public boolean keyDown (InputEvent event, int keycode) {
 				if (keycode == Keys.ENTER) {
 					FileHandle file = Gdx.files.absolute(currentPath.getText());
 					if (file.exists()) {
@@ -263,7 +281,17 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 					}
 					event.stop();
 				}
+
 				return false;
+			}
+		});
+
+		currentPath.addListener(new FocusListener() {
+			@Override
+			public void keyboardFocusChanged (FocusEvent event, Actor actor, boolean focused) {
+				if (focused == false) {
+					currentPath.setText(currentDirectory.path());
+				}
 			}
 		});
 
@@ -271,7 +299,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				float targetWidth = currentPath.getWidth() + showRecentDirButton.getWidth();
-				dirsSuggestionPopup.showRecentDirectories(getStage(), recentDirectories, currentPath, targetWidth - 20);
+				dirsSuggestionPopup.showRecentDirectories(getStage(), recentDirectories, targetWidth - 20);
 				dirsSuggestionPopup.setWidth(targetWidth);
 				dirsSuggestionPopup.layout();
 			}
@@ -471,7 +499,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		addListener(new InputListener() {
 			@Override
 			public boolean keyDown (InputEvent event, int keycode) {
-				if (keycode == Keys.A && UIUtils.ctrl()) {
+				if (keycode == Keys.A && UIUtils.ctrl() && getStage().getKeyboardFocus() instanceof VisTextField == false) {
 					selectAll();
 					return true;
 				}

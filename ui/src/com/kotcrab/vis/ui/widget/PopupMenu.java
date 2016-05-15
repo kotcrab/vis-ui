@@ -35,23 +35,24 @@ import com.kotcrab.vis.ui.util.ActorUtils;
  * <p>
  * If you want to add right click menu to actor you can use getDefaultInputListener() to get premade default listener.
  * <p>
- * Since 1.0.2 arrow keys can be used to navigate menu hierarchy
+ * Since 1.0.2 arrow keys can be used to navigate menu hierarchy.
  * @author Kotcrab
  */
 public class PopupMenu extends Table {
 	private PopupMenuStyle style;
+	private PopupMenuListener listener;
 
 	private InputListener stageListener;
 	private InputListener sharedMenuItemInputListener;
+
 	private ChangeListener sharedMenuItemChangeListener;
 
 	private InputListener defaultInputListener;
-
 	/** The parent sub-menu, that this popup menu belongs to or null if this sub menu is root */
 	private PopupMenu parentSubMenu;
+
 	/** The current sub-menu, set by MenuItem */
 	private PopupMenu activeSubMenu;
-
 	private MenuItem activeItem;
 
 	public PopupMenu () {
@@ -111,7 +112,7 @@ public class PopupMenu extends Table {
 				if (pointer == -1 && event.getListenerActor() instanceof MenuItem) {
 					MenuItem item = (MenuItem) event.getListenerActor();
 					if (item.isDisabled() == false) {
-						activeItem = item;
+						setActiveItem(item, false);
 					}
 				}
 			}
@@ -138,7 +139,7 @@ public class PopupMenu extends Table {
 		for (int i = startIndex; i < children.size; i++) {
 			Actor actor = children.get(i);
 			if (actor instanceof MenuItem && ((MenuItem) actor).isDisabled() == false) {
-				activeItem = (MenuItem) actor;
+				setActiveItem((MenuItem) actor, true);
 				break;
 			}
 		}
@@ -150,7 +151,7 @@ public class PopupMenu extends Table {
 		for (int i = startIndex; i >= 0; i--) {
 			Actor actor = children.get(i);
 			if (actor instanceof MenuItem && ((MenuItem) actor).isDisabled() == false) {
-				activeItem = (MenuItem) actor;
+				setActiveItem((MenuItem) actor, true);
 				break;
 			}
 		}
@@ -236,10 +237,15 @@ public class PopupMenu extends Table {
 	public boolean remove () {
 		if (getStage() != null) getStage().removeListener(stageListener);
 		if (activeSubMenu != null) activeSubMenu.remove();
-		activeItem = null;
+		setActiveItem(null, false);
 		parentSubMenu = null;
 		activeSubMenu = null;
 		return super.remove();
+	}
+
+	private void setActiveItem (MenuItem newItem, boolean keyboardChange) {
+		activeItem = newItem;
+		if (listener != null) listener.activeItemChanged(newItem, keyboardChange);
 	}
 
 	public MenuItem getActiveItem () {
@@ -248,6 +254,28 @@ public class PopupMenu extends Table {
 
 	void setParentMenu (PopupMenu parentSubMenu) {
 		this.parentSubMenu = parentSubMenu;
+	}
+
+	public PopupMenuListener getListener () {
+		return listener;
+	}
+
+	public void setListener (PopupMenuListener listener) {
+		this.listener = listener;
+	}
+
+	/**
+	 * Listener used to get events from {@link PopupMenu}.
+	 * @since 1.0.2
+	 */
+	public interface PopupMenuListener {
+		/**
+		 * Called when active menu item (the highlighted one) has changed. This can't be used to listen when
+		 * {@link MenuItem} was pressed, add {@link ChangeListener} to {@link MenuItem} directly to achieve this.
+		 * @param newActiveItem new item that is now active. May be null.
+		 * @param changedByKeyboard whether the change occurred by keyboard (arrows keys) or by mouse.
+		 */
+		void activeItemChanged (MenuItem newActiveItem, boolean changedByKeyboard);
 	}
 
 	static public class PopupMenuStyle {

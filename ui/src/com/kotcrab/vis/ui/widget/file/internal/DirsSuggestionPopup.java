@@ -28,17 +28,20 @@ import com.kotcrab.vis.ui.widget.file.FileChooser;
 
 /** @author Kotcrab */
 public class DirsSuggestionPopup extends AbstractSuggestionPopup {
-	public DirsSuggestionPopup (FileChooser chooser) {
+	private final VisTextField pathField;
+
+	public DirsSuggestionPopup (FileChooser chooser, VisTextField pathField) {
 		super(chooser);
+		this.pathField = pathField;
 	}
 
-	public void pathFieldKeyTyped (Stage stage, VisTextField pathField, float width) {
+	public void pathFieldKeyTyped (Stage stage, float width) {
 		if (pathField.getText().length() == 0) {
 			remove();
 			return;
 		}
 
-		int suggestions = createDirSuggestions(pathField, width);
+		int suggestions = createDirSuggestions(width);
 		if (suggestions == 0) {
 			remove();
 			return;
@@ -47,7 +50,7 @@ public class DirsSuggestionPopup extends AbstractSuggestionPopup {
 		showMenu(stage, pathField);
 	}
 
-	private int createDirSuggestions (VisTextField pathField, float width) {
+	private int createDirSuggestions (float width) {
 		clearChildren();
 		int suggestions = 0;
 
@@ -62,7 +65,7 @@ public class DirsSuggestionPopup extends AbstractSuggestionPopup {
 			if (file.exists() == false || file.isDirectory() == false) continue;
 			if (file.name().startsWith(partialPath) == false || file.name().equals(partialPath)) continue;
 
-			MenuItem item = createMenuItem((file.name()));
+			MenuItem item = createMenuItem(file.path());
 			item.getLabel().setEllipsis(true);
 			item.getLabelCell().width(width);
 			addItem(item);
@@ -83,7 +86,7 @@ public class DirsSuggestionPopup extends AbstractSuggestionPopup {
 		return suggestions;
 	}
 
-	public void showRecentDirectories (Stage stage, Array<FileHandle> recentDirectories, VisTextField pathField, float width) {
+	public void showRecentDirectories (Stage stage, Array<FileHandle> recentDirectories, float width) {
 		int suggestions = createRecentDirSuggestions(recentDirectories, width);
 		if (suggestions == 0) {
 			remove();
