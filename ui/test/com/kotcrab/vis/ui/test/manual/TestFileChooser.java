@@ -30,7 +30,7 @@ public class TestFileChooser extends VisWindow {
 	public TestFileChooser () {
 		super("filechooser");
 
-		FileChooser.setFavoritesPrefsName("com.kotcrab.vis.ui.test.manual");
+		FileChooser.setDefaultPrefsName("com.kotcrab.vis.ui.test.manual");
 		final FileChooser chooser = new FileChooser(Mode.OPEN);
 		chooser.setListener(new StreamingFileChooserListener() {
 			@Override

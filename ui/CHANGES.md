@@ -1,4 +1,5 @@
 #### Version: 1.1.0 (LibGDX 1.9.2)
+- **API Deprecated**: `FileChooser.setFavoritesPrefsName()` replaced by `FileChooser.setDefaultPrefsName()`
 - **Added**: default styles for `ImageButton` and `ImageTextButton`. Note: this is only applies to standard scene2d widgets. VisUI widgets equivalents (`VisImageButton`, `VisImageTextButton`) already had them.
 - **Added**: `SimpleFormValidator#validate`
 - **Added**: `ToastManager`, `Toast`, `ToastTable`
@@ -6,6 +7,7 @@
 - **Added**: `VisTextField#keyTypedRepeatTime`
 - **Added**: `TabbedPane#getUIOrderedTabs()`
 - **Added**: `FileChooser#setFavoriteFolderButtonVisible(true)` - FileChooser now can display 'add folder to favorites' button in the toolbar 
+- **Added**: `FileChooser#setPrefsName()` 
 - **Added**: `MenuItem#getSubMenuIconCell()` and `MenuItem#getShortcutCell()` 
 - **Added**: `VisTextField#setEnterKeyFocusTraversal(boolean)`
 - **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get it's cells for customization)
@@ -23,8 +25,9 @@
 - **Fixed**: `TabbedPane` layout when no separator image is used. Fixed misc issue with close button style on touch down. 
 - **Fixed**: `FileChooser` NPE when error occurred during directory deleting
 - **Fixed**: `FileChooser` non empty directories are now deleted correctly when using default `FileChooser` deleter
+- **Fixed**: `FileChooser` crash when user manually entered path to file instead of directory
 - **Skin changes**:
-    - **Changed**: `FileChooserStyle`: added drawable fields: `iconStar`, `iconStarOutline`, `iconRefresh`
+    - **Changed**: `FileChooserStyle`: added drawable fields: `iconStar`, `iconStarOutline`, `iconRefresh`, `expandDropdown`
     - **Added**: drawable `window-border-bg.9`, `icon-star`, `icon-star-outline`, `icon-refresh`
     - **Added**: style `BaseToastStyle`
     - **Added**: VisTextField `label` style - if combined with read-only mode allows to create selectable labels

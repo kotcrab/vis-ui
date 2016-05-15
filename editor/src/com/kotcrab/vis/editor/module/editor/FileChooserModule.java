@@ -38,6 +38,7 @@ public class FileChooserModule extends EditorModule {
 
 	@Override
 	public void init () {
+		FileChooser.setDefaultPrefsName("com.kotcrab.vis.editor");
 		chooser = new FileChooser(Mode.OPEN);
 		chooser.setSelectionMode(SelectionMode.FILES_AND_DIRECTORIES);
 		chooser.setFileDeleter(new JNAFileDeleter());

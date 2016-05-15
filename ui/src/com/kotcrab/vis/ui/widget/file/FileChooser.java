@@ -56,8 +56,8 @@ import java.util.Iterator;
 import static com.kotcrab.vis.ui.widget.file.internal.FileChooserText.*;
 
 /**
- * Chooser for files, before using {@link FileChooser#setFavoritesPrefsName(String)} should be called. FileChooser is heavy widget
- * and should be reused whenever possible. Chooser is platform dependent and can be only used on desktop.
+ * Widget allowing user to choose files. FileChooser is heavy widget and should be reused whenever possible, typically
+ * one instance is enough for application. Chooser is platform dependent and can be only used on desktop.
  * <p>
  * FileChooser will be centered on screen after adding to Stage use {@link #setCenterOnAdd(boolean)} to change this.
  * @author Kotcrab
@@ -84,8 +84,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private int groupMultiSelectKey = DEFAULT_KEY; //shift by default
 	private int multiSelectKey = DEFAULT_KEY; //ctrl (or command on mac) by default
 
-	private FavoritesIO favoritesIO;
+	private PreferencesIO preferencesIO;
 	private Array<FileHandle> favorites;
+	private Array<FileHandle> recentDirectories;
 
 	private FileHandle currentDirectory;
 	private ObjectMap<FileHandle, FileItem> items = new ObjectMap<FileHandle, FileItem>();
@@ -120,12 +121,18 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private VisTextButton confirmButton;
 
 	private FilePopupMenu fileMenu;
-	private SuggestionPopupMenu fileNameSuggestionPopup;
+	private FileSuggestionPopup fileNameSuggestionPopup;
+	private DirsSuggestionPopup dirsSuggestionPopup;
 
+	/** @param mode whether this chooser will be used to open or save files */
 	public FileChooser (Mode mode) {
 		this((FileHandle) null, mode);
 	}
 
+	/**
+	 * @param directory starting chooser directory
+	 * @param mode whether this chooser will be used to open or save files
+	 */
 	public FileChooser (FileHandle directory, Mode mode) {
 		super("");
 
@@ -139,10 +146,19 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		init(directory);
 	}
 
+	/**
+	 * @param title chooser window title
+	 * @param mode whether this chooser will be used to open or save files
+	 */
 	public FileChooser (String title, Mode mode) {
 		this("default", title, mode);
 	}
 
+	/**
+	 * @param styleName skin style name
+	 * @param title chooser window title
+	 * @param mode whether this chooser will be used to open or save files
+	 */
 	public FileChooser (String styleName, String title, Mode mode) {
 		super(title);
 		this.mode = mode;
@@ -154,11 +170,17 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	/**
-	 * Sets file name that will be used to store favorites, if not changed default will be used that may be shared with other
-	 * programs, should be package name e.g. com.seriouscompay.seriousprogram
+	 * @param prefsName file name that will be used to store chooser preferences such as favorites or recent directories
+	 * Should be your application package name e.g. com.seriouscompay.seriousprogram
 	 */
+	public static void setDefaultPrefsName (String prefsName) {
+		PreferencesIO.setDefaultPrefsName(prefsName);
+	}
+
+	/** @deprecated replaced by {@link #setDefaultPrefsName(String)} */
+	@Deprecated
 	public static void setFavoritesPrefsName (String name) {
-		FavoritesIO.setFavoritesPrefsName(name);
+		PreferencesIO.setDefaultPrefsName(name);
 	}
 
 	private void init (FileHandle directory) {
@@ -168,9 +190,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		addCloseButton();
 		closeOnEscape();
 
-		favoritesIO = new FavoritesIO();
-		favoritesIO.checkIfUsingDefaultName();
-		favorites = favoritesIO.loadFavorites();
+		preferencesIO = new PreferencesIO();
+		reloadPreferences(false);
 
 		createToolbar();
 		createCenterContentPanel();
@@ -194,7 +215,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			}
 		});
 
-		fileNameSuggestionPopup = new SuggestionPopupMenu(this);
+		fileNameSuggestionPopup = new FileSuggestionPopup(this);
+		dirsSuggestionPopup = new DirsSuggestionPopup(this);
 
 		rebuildShortcutsList();
 
@@ -218,20 +240,40 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		historyManager = new FileHistoryManager(style, this);
 
 		currentPath = new VisTextField();
+		final VisImageButton showRecentDirButton = new VisImageButton(style.expandDropdown);
+		showRecentDirButton.setFocusBorderEnabled(false);
 
 		currentPath.addListener(new InputListener() {
 			@Override
 			public boolean keyDown (InputEvent event, int keycode) {
+				float targetWidth = currentPath.getWidth() + showRecentDirButton.getWidth();
+				dirsSuggestionPopup.pathFieldKeyTyped(getStage(), currentPath, targetWidth - 20);
+				dirsSuggestionPopup.setWidth(targetWidth);
+				dirsSuggestionPopup.layout();
+
 				if (keycode == Keys.ENTER) {
 					FileHandle file = Gdx.files.absolute(currentPath.getText());
-					if (file.exists())
+					if (file.exists()) {
+						if (file.isDirectory() == false) file = file.parent();
 						setDirectory(file, HistoryPolicy.ADD);
-					else {
+						addRecentDirectory(file);
+					} else {
 						showDialog(POPUP_DIRECTORY_DOES_NOT_EXIST.get());
 						currentPath.setText(currentDirectory.path());
 					}
+					event.stop();
 				}
 				return false;
+			}
+		});
+
+		showRecentDirButton.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				float targetWidth = currentPath.getWidth() + showRecentDirButton.getWidth();
+				dirsSuggestionPopup.showRecentDirectories(getStage(), recentDirectories, currentPath, targetWidth - 20);
+				dirsSuggestionPopup.setWidth(targetWidth);
+				dirsSuggestionPopup.layout();
 			}
 		});
 
@@ -241,7 +283,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		VisImageButton folderNewButton = new VisImageButton(style.iconFolderNew, NEW_DIRECTORY.get());
 
 		toolbarTable.add(historyManager.getButtonsTable());
-		toolbarTable.add(currentPath).expand().fill();
+		toolbarTable.add(currentPath).spaceRight(0).expand().fill();
+		toolbarTable.add(showRecentDirButton).width(15 * sizes.scaleFactor).growY();
 		toolbarTable.add(folderParentButton);
 		toolbarTable.add(favoriteFolderButton).width(PrefWidthIfVisibleValue.INSTANCE).spaceRight(new Value() {
 			@Override
@@ -368,7 +411,12 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
 				deselectAll(false);
-				fileNameSuggestionPopup.fileNameKeyTyped(getStage(), items.keys(), selectedFileTextField);
+				fileNameSuggestionPopup.pathFieldKeyTyped(getStage(), items.keys(), selectedFileTextField);
+
+				FileHandle enteredFile = currentDirectory.child(selectedFileTextField.getText());
+				if (items.containsKey(enteredFile)) {
+					highlightFiles(enteredFile);
+				}
 				return false;
 			}
 		});
@@ -476,6 +524,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	@Override
 	protected void close () {
 		listener.canceled();
+		fileNameSuggestionPopup.remove();
+		dirsSuggestionPopup.remove();
 		super.close();
 	}
 
@@ -668,7 +718,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	 */
 	public void addFavorite (FileHandle favourite) {
 		favorites.add(favourite);
-		favoritesIO.saveFavorites(favorites);
+		preferencesIO.saveFavorites(favorites);
 		rebuildShortcutsFavoritesPanel();
 		rebuildShortcutsList(false);
 		updateFavoriteFolderButton();
@@ -681,11 +731,23 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	 */
 	public boolean removeFavorite (FileHandle favorite) {
 		boolean removed = favorites.removeValue(favorite, false);
-		favoritesIO.saveFavorites(favorites);
+		preferencesIO.saveFavorites(favorites);
 		rebuildShortcutsFavoritesPanel();
 		rebuildShortcutsList(false);
 		updateFavoriteFolderButton();
 		return removed;
+	}
+
+	private void addRecentDirectory (FileHandle file) {
+		if (recentDirectories.contains(file, false)) return;
+		recentDirectories.insert(0, file);
+		if (recentDirectories.size > AbstractSuggestionPopup.MAX_SUGGESTIONS) recentDirectories.pop();
+		preferencesIO.saveRecentDirectories(recentDirectories);
+	}
+
+	public void clearRecentDirectories () {
+		recentDirectories.clear();
+		preferencesIO.saveRecentDirectories(recentDirectories);
 	}
 
 	@Override
@@ -921,6 +983,17 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		this.watchingFilesEnabled = watchingFilesEnabled;
 	}
 
+	public void setPrefsName (String prefsName) {
+		preferencesIO = new PreferencesIO(prefsName);
+		reloadPreferences(true);
+	}
+
+	private void reloadPreferences (boolean rebuildUI) {
+		favorites = preferencesIO.loadFavorites();
+		recentDirectories = preferencesIO.loadRecentDirectories();
+		if (rebuildUI) rebuildShortcutsFavoritesPanel();
+	}
+
 	@Override
 	public void draw (Batch batch, float parentAlpha) {
 		super.draw(batch, parentAlpha);
@@ -935,6 +1008,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		if (stage != null) {
 			refresh();
+			rebuildShortcutsFavoritesPanel(); //if by any chance multiple choosers changed favorites
 		}
 
 		if (watchingFilesEnabled) {

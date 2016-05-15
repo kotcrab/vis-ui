@@ -24,55 +24,70 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Json;
 
 /** @author Kotcrab */
-public class FavoritesIO {
-	private static final String DEFAULT_FAVORITES_PREFS_NAME = "com.kotcrab.vis.ui.widget.file.filechooser_favorites";
-	private static String favoritesPrefsName = DEFAULT_FAVORITES_PREFS_NAME;
-	private static String keyName = "favorites";
+public class PreferencesIO {
+	private static final String VIS_DEFAULT_PREFS_NAME = "com.kotcrab.vis.ui.widget.file.filechooser_favorites";
+	private static String defaultPrefsName = VIS_DEFAULT_PREFS_NAME;
+
+	private String favoritesKeyName = "favorites";
+	private String recentDirKeyName = "recentDirectories";
 
 	private Preferences prefs;
 	private Json json = new Json();
 
-	public FavoritesIO () {
-		prefs = Gdx.app.getPreferences(favoritesPrefsName);
+	public PreferencesIO () {
+		this(defaultPrefsName);
 	}
 
-	public static String getFavoritesPrefsName () {
-		return favoritesPrefsName;
-	}
-
-	public static void setFavoritesPrefsName (String favoritesPrefsName) {
-		if (favoritesPrefsName == null) throw new IllegalStateException("favoritesPrefsName can't be null");
-		FavoritesIO.favoritesPrefsName = favoritesPrefsName;
-	}
-
-	public Array<FileHandle> loadFavorites () {
-		String data = prefs.getString(keyName, null);
-		if (data == null)
-			return new Array<FileHandle>();
-		else
-			return json.fromJson(FavouriteData.class, data).toFileHandleArray();
-	}
-
-	public void saveFavorites (Array<FileHandle> favorites) {
-		prefs.putString(keyName, json.toJson(new FavouriteData(favorites)));
-		prefs.flush();
+	public PreferencesIO (String prefsName) {
+		prefs = Gdx.app.getPreferences(prefsName);
+		checkIfUsingDefaultName();
 	}
 
 	public void checkIfUsingDefaultName () {
-		if (favoritesPrefsName.equals(DEFAULT_FAVORITES_PREFS_NAME)) {
-			Gdx.app.log("VisUI", "Warning, using default favorites preference name for file chooser! (see FileChooser.setFavoritesPrefsName(String))");
+		if (defaultPrefsName.equals(VIS_DEFAULT_PREFS_NAME)) {
+			Gdx.app.log("VisUI", "Warning, using default preferences file name for file chooser! (see FileChooser.setDefaultPrefsName(String))");
 		}
 	}
 
-	@SuppressWarnings("unused")
-	private static class FavouriteData {
+	public static void setDefaultPrefsName (String prefsName) {
+		if (prefsName == null) throw new IllegalStateException("prefsName can't be null");
+		PreferencesIO.defaultPrefsName = prefsName;
+	}
+
+	public Array<FileHandle> loadFavorites () {
+		String data = prefs.getString(favoritesKeyName, null);
+		if (data == null)
+			return new Array<FileHandle>();
+		else
+			return json.fromJson(FileArrayData.class, data).toFileHandleArray();
+	}
+
+	public void saveFavorites (Array<FileHandle> favorites) {
+		prefs.putString(favoritesKeyName, json.toJson(new FileArrayData(favorites)));
+		prefs.flush();
+	}
+
+	public Array<FileHandle> loadRecentDirectories () {
+		String data = prefs.getString(recentDirKeyName, null);
+		if (data == null)
+			return new Array<FileHandle>();
+		else
+			return json.fromJson(FileArrayData.class, data).toFileHandleArray();
+	}
+
+	public void saveRecentDirectories (Array<FileHandle> recentDirs) {
+		prefs.putString(recentDirKeyName, json.toJson(new FileArrayData(recentDirs)));
+		prefs.flush();
+	}
+
+	private static class FileArrayData {
 		public Array<FileHandleData> data;
 
-		public FavouriteData () {
+		public FileArrayData () {
 
 		}
 
-		public FavouriteData (Array<FileHandle> favourites) {
+		public FileArrayData (Array<FileHandle> favourites) {
 			data = new Array<FileHandleData>();
 			for (FileHandle file : favourites)
 				data.add(new FileHandleData(file));
@@ -81,14 +96,14 @@ public class FavoritesIO {
 		public Array<FileHandle> toFileHandleArray () {
 			Array<FileHandle> files = new Array<FileHandle>();
 
-			for (FileHandleData fileData : data)
+			for (FileHandleData fileData : data) {
 				files.add(fileData.toFileHandle());
+			}
 
 			return files;
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private static class FileHandleData {
 		public FileType type;
 		public String path;

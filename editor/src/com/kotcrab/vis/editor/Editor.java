@@ -56,7 +56,6 @@ import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
 import com.kotcrab.vis.ui.util.value.PrefHeightIfVisibleValue;
 import com.kotcrab.vis.ui.widget.VisSplitPane;
 import com.kotcrab.vis.ui.widget.VisTable;
-import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.file.SingleFileChooserListener;
 import com.kotcrab.vis.ui.widget.tabbedpane.Tab;
 import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
@@ -129,7 +128,6 @@ public class Editor extends ApplicationAdapter {
 
 		VisUI.load();
 		VisUI.setDefaultTitleAlign(Align.center);
-		FileChooser.setFavoritesPrefsName("com.kotcrab.vis.editor");
 		Log.debug("VisUI " + VisUI.VERSION + " loaded");
 
 		stage = createStage();
