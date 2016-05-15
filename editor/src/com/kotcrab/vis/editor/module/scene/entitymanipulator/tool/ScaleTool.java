@@ -25,6 +25,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
@@ -34,6 +35,8 @@ public class ScaleTool extends AbstractGizmoTool {
 	public static final String TOOL_ID = App.PACKAGE + ".tools.ScaleTool";
 
 	private static final Vector3 tmpV3 = new Vector3();
+
+	private Stage stage;
 
 	private Color xRect = Color.GREEN;
 	private Color xRectOver = Color.FOREST;
@@ -56,9 +59,9 @@ public class ScaleTool extends AbstractGizmoTool {
 			float centerX = totalSelectionBounds.x + totalSelectionBounds.width / 2;
 			float centerY = totalSelectionBounds.y + totalSelectionBounds.height / 2;
 
-			float centerRectSize = 0.1f * camera.getZoom();
-			float lineLengthX = 1 * camera.getZoom();
-			float lineLengthY = 1 * camera.getZoom();
+			float centerRectSize = 0.1f * camera.getZoom() * 100f / scene.pixelsPerUnit;
+			float lineLengthX = 1 * camera.getZoom() * 100f / scene.pixelsPerUnit;
+			float lineLengthY = 1 * camera.getZoom() * 100f / scene.pixelsPerUnit;
 			if (Gdx.input.isButtonPressed(Buttons.LEFT)) {
 				if (mouseLooping.isOnVirtualScreen() == false) {
 					if (mouseInsideRectX) lineLengthX = camera.getInputX() - centerX;
@@ -141,13 +144,13 @@ public class ScaleTool extends AbstractGizmoTool {
 
 				if (Gdx.input.isKeyPressed(Keys.SHIFT_LEFT)) {
 					float ratio = startingProps.scaleX / startingProps.scaleY;
-					if (mouseInsideRectX) scaleDeltaY = scaleDeltaX / ratio;
-					if (mouseInsideRectY) scaleDeltaX = scaleDeltaY / ratio;
+					if (mouseInsideRectX) scaleDeltaY = scaleDeltaX / ratio * 0.05f;
+					if (mouseInsideRectY) scaleDeltaX = scaleDeltaY / ratio * 0.05f;
 					entity.setScale(startingProps.scaleX - scaleDeltaX, startingProps.scaleY - scaleDeltaY);
 				} else {
 					entity.setScale(
-							mouseInsideRectX ? startingProps.scaleX - scaleDeltaX : entity.getScaleX(),
-							mouseInsideRectY ? startingProps.scaleY - scaleDeltaY : entity.getScaleY());
+							mouseInsideRectX ? startingProps.scaleX - scaleDeltaX * 0.05f : entity.getScaleX(),
+							mouseInsideRectY ? startingProps.scaleY - scaleDeltaY * 0.05f : entity.getScaleY());
 				}
 
 				dragged = true; //touchUp in parent class will save undo action
@@ -159,7 +162,7 @@ public class ScaleTool extends AbstractGizmoTool {
 	}
 
 	private void unprojectVirtualMouseCords (Vector3 v3) {
-		camera.unproject(v3.set(mouseLooping.getVirtualMouseX(), mouseLooping.getVirtualMouseY(), 0));
+		stage.getCamera().unproject(v3.set(mouseLooping.getVirtualMouseX(), mouseLooping.getVirtualMouseY(), 0));
 	}
 
 	@Override

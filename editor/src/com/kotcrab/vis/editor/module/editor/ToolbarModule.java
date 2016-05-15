@@ -57,6 +57,7 @@ public class ToolbarModule extends EditorModule {
 	private Array<VisImageButton> savableScope = new Array<>();
 	private Array<VisImageButton> sceneScope = new Array<>();
 	private final ButtonGroup<ToolButton> toolsGroup;
+	private String activeToolId = SelectionTool.TOOL_ID;
 
 	public ToolbarModule () {
 		toolsGroup = new ButtonGroup<>();
@@ -112,8 +113,9 @@ public class ToolbarModule extends EditorModule {
 	@Subscribe
 	public void handleToolSwitch (ToolSwitchedEvent event) {
 		for (ToolButton b : toolsGroup.getButtons()) {
-			if (b.getToolId() == event.newToolId) {
+			if (b.getToolId().equals(event.newToolId)) {
 				b.setChecked(true);
+				activeToolId = event.newToolId;
 				break;
 			}
 		}
@@ -129,6 +131,10 @@ public class ToolbarModule extends EditorModule {
 
 			return false;
 		});
+	}
+
+	public String getActiveToolId () {
+		return activeToolId;
 	}
 
 	public Table getTable () {

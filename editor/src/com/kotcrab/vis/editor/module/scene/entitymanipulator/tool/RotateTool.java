@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.proxy.EntityProxy;
 import com.kotcrab.vis.editor.util.gdx.ShapeRendererUtils;
@@ -33,6 +34,8 @@ public class RotateTool extends AbstractGizmoTool {
 	public static final String TOOL_ID = App.PACKAGE + ".tools.RotateTool";
 
 	private static final Vector3 tmpV3 = new Vector3();
+
+	private Stage stage;
 
 	private float circleCenterX;
 	private float circleCenterY;
@@ -48,8 +51,8 @@ public class RotateTool extends AbstractGizmoTool {
 		super.render(shapeRenderer);
 
 		if (totalSelectionBounds != null) {
-			innerRadius = camera.getZoom() * 0.6f;
-			outerRadius = camera.getZoom() * 0.7f;
+			innerRadius = camera.getZoom() * 0.6f * 100f / scene.pixelsPerUnit;
+			outerRadius = camera.getZoom() * 0.7f * 100f / scene.pixelsPerUnit;
 
 			circleCenterX = totalSelectionBounds.x + totalSelectionBounds.width / 2;
 			circleCenterY = totalSelectionBounds.y + totalSelectionBounds.height / 2;
@@ -130,14 +133,14 @@ public class RotateTool extends AbstractGizmoTool {
 	}
 
 	private float getRotationFromVirtualMouse () {
-		camera.unproject(tmpV3.set(mouseLooping.getVirtualMouseX(), mouseLooping.getVirtualMouseY(), 0));
+		stage.getCamera().unproject(tmpV3.set(mouseLooping.getVirtualMouseX(), mouseLooping.getVirtualMouseY(), 0));
 		float virtualX = tmpV3.x;
 		float virtualY = tmpV3.y;
 
 		float deltaX = virtualX - dragStartX;
 		float deltaY = virtualY - dragStartY;
 
-		return deltaX * 10 + deltaY * 10;
+		return deltaX + deltaY;
 	}
 
 	@Override

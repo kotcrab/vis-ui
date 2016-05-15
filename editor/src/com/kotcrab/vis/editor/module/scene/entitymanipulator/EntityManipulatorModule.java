@@ -91,6 +91,7 @@ public class EntityManipulatorModule extends SceneModule {
 
 	private StatusBarModule statusBar;
 	private ToastModule toastModule;
+	private ToolbarModule toolbarModule;
 	private EditingSettingsModule editingSettings;
 	private GridSettingsModule gridSettings;
 	private ExtensionStorageModule extensionStorage;
@@ -183,7 +184,7 @@ public class EntityManipulatorModule extends SceneModule {
 		}
 
 		//switch to SelectionTool or default to first available tool
-		switchTool(tools.get(SelectionTool.TOOL_ID, tools.values().toArray().first()));
+		switchTool(tools.get(toolbarModule.getActiveToolId(), tools.values().toArray().first()));
 
 		scene.addObservable(notificationId -> {
 			if (notificationId == EditorScene.ACTIVE_LAYER_CHANGED) {
