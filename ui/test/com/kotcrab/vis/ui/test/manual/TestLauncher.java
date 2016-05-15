@@ -143,6 +143,7 @@ class TestApplication extends ApplicationAdapter {
 		editMenu.addSeparator();
 		editMenu.addItem(new MenuItem("menuitem #7"));
 		editMenu.addItem(new MenuItem("menuitem #8"));
+		editMenu.addItem(createDoubleNestedMenu());
 
 		MenuItem disabledItem = new MenuItem("disabled menuitem");
 		disabledItem.setDisabled(true);
@@ -172,6 +173,19 @@ class TestApplication extends ApplicationAdapter {
 		menuBar.addMenu(editMenu);
 		menuBar.addMenu(windowMenu);
 		menuBar.addMenu(helpMenu);
+	}
+
+	private MenuItem createDoubleNestedMenu () {
+		MenuItem doubleNestedMenuItem = new MenuItem("submenu nested x2");
+		doubleNestedMenuItem.setSubMenu(createSubMenu());
+
+		PopupMenu nestedMenu = new PopupMenu();
+		nestedMenu.addItem(doubleNestedMenuItem);
+		nestedMenu.addItem(new MenuItem("single nested"));
+
+		MenuItem menuItem = new MenuItem("submenu nested");
+		menuItem.setSubMenu(nestedMenu);
+		return menuItem;
 	}
 
 	private MenuItem createTestsMenu () {

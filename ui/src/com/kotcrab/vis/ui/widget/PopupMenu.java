@@ -16,6 +16,7 @@
 
 package com.kotcrab.vis.ui.widget;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.*;
@@ -23,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.SnapshotArray;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ActorUtils;
 
@@ -32,18 +34,25 @@ import com.kotcrab.vis.ui.util.ActorUtils;
  * menu from touchDown you have to call event.stop() otherwise menu will by immediately closed.
  * <p>
  * If you want to add right click menu to actor you can use getDefaultInputListener() to get premade default listener.
+ * <p>
+ * Since 1.0.2 arrow keys can be used to navigate menu hierarchy
  * @author Kotcrab
  */
 public class PopupMenu extends Table {
 	private PopupMenuStyle style;
 
 	private InputListener stageListener;
-	private ChangeListener sharedMenuItemListener;
+	private InputListener sharedMenuItemInputListener;
+	private ChangeListener sharedMenuItemChangeListener;
 
 	private InputListener defaultInputListener;
 
-	/** The current subMenu, set by MenuItem */
-	private PopupMenu subMenu;
+	/** The parent sub-menu, that this popup menu belongs to or null if this sub menu is root */
+	private PopupMenu parentSubMenu;
+	/** The current sub-menu, set by MenuItem */
+	private PopupMenu activeSubMenu;
+
+	private MenuItem activeItem;
 
 	public PopupMenu () {
 		this("default");
@@ -64,38 +73,87 @@ public class PopupMenu extends Table {
 	private void createListeners () {
 		stageListener = new InputListener() {
 			@Override
-			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				if (menuStructureContains(x, y) == false) {
-					remove();
-					return true;
+			public boolean keyDown (InputEvent event, int keycode) {
+				SnapshotArray<Actor> children = getChildren();
+
+				if (children.size == 0 || activeSubMenu != null) return false;
+
+				if (keycode == Input.Keys.DOWN) {
+					selectNextItem();
 				}
 
-				return true;
-			}
+				if (activeItem == null) return false;
 
-			@Override
-			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				//handles situation where menuitem was clicked in subMenu
-				if (subMenu != null) removeIfNeeded(x, y);
-			}
+				if (keycode == Input.Keys.UP) {
+					selectPreviousItem();
+				}
 
-			private boolean removeIfNeeded (float x, float y) {
-				if (contains(x, y) == false) {
-					remove();
-					return true;
+				if (keycode == Input.Keys.LEFT && activeItem.containerMenu.parentSubMenu != null) {
+					activeItem.containerMenu.parentSubMenu.setActiveSubMenu(null);
+				}
+
+				if (keycode == Input.Keys.RIGHT && activeItem.getSubMenu() != null) {
+					activeItem.showSubMenu();
+					activeSubMenu.selectNextItem();
+				}
+
+				if (keycode == Input.Keys.ENTER) {
+					activeItem.fireChangeEvent();
 				}
 
 				return false;
 			}
 		};
 
-		sharedMenuItemListener = new ChangeListener() {
+		sharedMenuItemInputListener = new InputListener() {
 			@Override
-			public void changed (ChangeEvent event, Actor actor) {
-				if (event.isStopped() == false)
-					remove();
+			public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
+				if (pointer == -1 && event.getListenerActor() instanceof MenuItem) {
+					MenuItem item = (MenuItem) event.getListenerActor();
+					if (item.isDisabled() == false) {
+						activeItem = item;
+					}
+				}
 			}
 		};
+
+		sharedMenuItemChangeListener = new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				if (event.isStopped() == false) removeHierarchy();
+			}
+		};
+	}
+
+	private void removeHierarchy () {
+		if (activeItem != null && activeItem.containerMenu.parentSubMenu != null) {
+			activeItem.containerMenu.parentSubMenu.removeHierarchy();
+		}
+		remove();
+	}
+
+	private void selectNextItem () {
+		SnapshotArray<Actor> children = getChildren();
+		int startIndex = activeItem == null ? 0 : children.indexOf(activeItem, true) + 1;
+		for (int i = startIndex; i < children.size; i++) {
+			Actor actor = children.get(i);
+			if (actor instanceof MenuItem && ((MenuItem) actor).isDisabled() == false) {
+				activeItem = (MenuItem) actor;
+				break;
+			}
+		}
+	}
+
+	private void selectPreviousItem () {
+		SnapshotArray<Actor> children = getChildren();
+		int startIndex = children.indexOf(activeItem, true) - 1;
+		for (int i = startIndex; i >= 0; i--) {
+			Actor actor = children.get(i);
+			if (actor instanceof MenuItem && ((MenuItem) actor).isDisabled() == false) {
+				activeItem = (MenuItem) actor;
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -110,8 +168,8 @@ public class PopupMenu extends Table {
 	public void addItem (MenuItem item) {
 		super.add(item).fillX().expandX().row();
 		pack();
-
-		item.addListener(sharedMenuItemListener);
+		item.addListener(sharedMenuItemChangeListener);
+		item.addListener(sharedMenuItemInputListener);
 	}
 
 	public void addSeparator () {
@@ -158,17 +216,14 @@ public class PopupMenu extends Table {
 		return getX() <= x && getX() + getWidth() >= x && getY() <= y && getY() + getHeight() >= y;
 	}
 
-	public boolean menuStructureContains (float x, float y) {
-		if (contains(x, y)) return true;
-		if (subMenu != null) return subMenu.menuStructureContains(x, y);
-		return false;
-	}
-
 	/** Called by framework, when PopupMenu is added to MenuItem as submenu */
-	void setSubMenu (PopupMenu subMenu) {
-		if (this.subMenu == subMenu) return;
-		if (this.subMenu != null) this.subMenu.remove();
-		this.subMenu = subMenu;
+	void setActiveSubMenu (PopupMenu newSubMenu) {
+		if (activeSubMenu == newSubMenu) return;
+		if (activeSubMenu != null) activeSubMenu.remove();
+		activeSubMenu = newSubMenu;
+		if (newSubMenu != null) {
+			newSubMenu.setParentMenu(this);
+		}
 	}
 
 	@Override
@@ -180,8 +235,19 @@ public class PopupMenu extends Table {
 	@Override
 	public boolean remove () {
 		if (getStage() != null) getStage().removeListener(stageListener);
-		if (subMenu != null) subMenu.remove();
+		if (activeSubMenu != null) activeSubMenu.remove();
+		activeItem = null;
+		parentSubMenu = null;
+		activeSubMenu = null;
 		return super.remove();
+	}
+
+	public MenuItem getActiveItem () {
+		return activeItem;
+	}
+
+	void setParentMenu (PopupMenu parentSubMenu) {
+		this.parentSubMenu = parentSubMenu;
 	}
 
 	static public class PopupMenuStyle {

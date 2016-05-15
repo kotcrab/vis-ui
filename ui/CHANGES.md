@@ -15,7 +15,7 @@
 - **Changed**: `FileChooser` when typing file names manually suggestion will be showed
 - **Changed**: `TabbedPane`'s Tab now can't be dragged using it's close button  
 - **Changed**: Synced `VisTextField` ans `VisTextArea` with equivalents of those classes libgdx
-- **Changed**: Tooltip now won't fade out when mouse moved, it will only fade out on mouse exit or click (set `Tooltip.MOUSE_MOVED_FADEOUT` to true to preserve old behaviour)
+- **Changed**: PopupMenu now support menu navigation using arrows keys
 - **Removed deprecated API**: `NumberSelector` - replaced by `Spinner`
 - **Removed deprecated API**: `Sizes#numberSelectorButtonSize`, `numberSelectorButtonsWidth`, `numberSelectorFieldSize`, `numberSelectorFieldRightPadding`
 - **Fixed**: `Sizes.buttonBarSpacing` was ignored by `ButtonBar`
@@ -366,7 +366,7 @@ API Addition: VisCheckBox.setStateInvalid(boolean) and VisCheckBox.isStateInvali
 * Renaming:
    Validators.integers renamed to Validators.INTEGERS
    Validators.floats renamed to Validators.FLOAT
-   PopupMenu#displayMenu renamed to PopupMenu#dshowMenu
+   PopupMenu#displayMenu renamed to PopupMenu#showMenu
    Skin Change: Separator 'height' renamed to 'thickness'
 * Moving classes / reorganizing:
    VisTable moved to com.kotcrab.vis.ui.widget package

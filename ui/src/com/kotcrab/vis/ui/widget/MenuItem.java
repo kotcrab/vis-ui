@@ -20,10 +20,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -34,6 +31,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Pools;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
@@ -50,18 +48,20 @@ import com.kotcrab.vis.ui.util.OsUtils;
 public class MenuItem extends Button {
 	//MenuItem is modified version of TextButton
 
-	private Image image;
-	private Label label;
 	private MenuItemStyle style;
 
+	private Image image;
 	private boolean generateDisabledImage = true;
-
+	private Label label;
 	private Color shortcutLabelColor;
 	private VisLabel shortcutLabel;
-
-	private PopupMenu subMenu;
 	private Image subMenuImage;
 	private Cell<Image> subMenuIconCell;
+
+	private PopupMenu subMenu;
+
+	/** Menu that this item belongs to */
+	PopupMenu containerMenu;
 
 	public MenuItem (String text) {
 		this(text, (Image) null, VisUI.getSkin().get(MenuItemStyle.class));
@@ -120,45 +120,26 @@ public class MenuItem extends Button {
 		add(shortcutLabel = new VisLabel("", "menuitem-shortcut")).padLeft(10).right();
 		shortcutLabelColor = shortcutLabel.getStyle().fontColor;
 
-		subMenuIconCell = add(subMenuImage = new Image(style.subMenu)).padLeft(3).padRight(3).size(style.subMenu.getMinWidth(), style.subMenu.getMinHeight());
+		subMenuIconCell = add(subMenuImage = new Image(style.subMenu)).padLeft(3).padRight(3)
+				.size(style.subMenu.getMinWidth(), style.subMenu.getMinHeight());
 		subMenuIconCell.setActor(null);
 
 		addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				//makes submenu item not clickable
-				if (subMenu != null)
+				if (subMenu != null) { //makes submenu item not clickable
 					event.stop();
+				}
 			}
 		});
 
 		addListener(new InputListener() {
 			@Override
 			public void enter (InputEvent event, float x, float y, int pointer, Actor fromActor) {
-				if (subMenu == null || isDisabled()) {
-					//hides last visible submenu (if any)
-					PopupMenu parent = (PopupMenu) getParent();
-					parent.setSubMenu(null);
+				if (subMenu == null || isDisabled()) { //hides last visible submenu (if any)
+					hideSubMenu();
 				} else {
-					Stage stage = getStage();
-					Vector2 pos = localToStageCoordinates(new Vector2(0, 0));
-
-					float subMenuX;
-					if (pos.x + getWidth() + subMenu.getWidth() >= stage.getWidth()) { //if won't fit on screen
-						subMenuX = pos.x - getWidth() + 3;
-					} else {
-						subMenuX = pos.x + getWidth() - 1;
-					}
-					subMenu.setPosition(subMenuX, pos.y - subMenu.getHeight() + getHeight());
-
-					if (subMenu.getY() < 0) {
-						subMenu.setY(subMenu.getY() + subMenu.getHeight() - getHeight());
-					}
-
-					stage.addActor(subMenu);
-
-					PopupMenu parent = (PopupMenu) getParent();
-					parent.setSubMenu(subMenu);
+					showSubMenu();
 				}
 			}
 		});
@@ -167,10 +148,60 @@ public class MenuItem extends Button {
 	public void setSubMenu (final PopupMenu subMenu) {
 		this.subMenu = subMenu;
 
-		if (subMenu == null)
+		if (subMenu == null) {
 			subMenuIconCell.setActor(null);
-		else
+		} else {
 			subMenuIconCell.setActor(subMenuImage);
+		}
+	}
+
+	public PopupMenu getSubMenu () {
+		return subMenu;
+	}
+
+	void packContainerMenu () {
+		if (containerMenu != null) containerMenu.pack();
+	}
+
+	@Override
+	protected void setParent (Group parent) {
+		super.setParent(parent);
+		if (parent instanceof PopupMenu)
+			containerMenu = (PopupMenu) parent;
+		else
+			containerMenu = null;
+	}
+
+	void hideSubMenu () {
+		if (containerMenu != null) {
+			containerMenu.setActiveSubMenu(null);
+		}
+	}
+
+	void showSubMenu () {
+		Stage stage = getStage();
+		Vector2 pos = localToStageCoordinates(new Vector2(0, 0));
+
+		float subMenuX;
+		if (pos.x + getWidth() + subMenu.getWidth() >= stage.getWidth()) { //if won't fit on screen
+			subMenuX = pos.x - getWidth() + 3;
+		} else {
+			subMenuX = pos.x + getWidth() - 1;
+		}
+		subMenu.setPosition(subMenuX, pos.y - subMenu.getHeight() + getHeight());
+
+		if (subMenu.getY() < 0) {
+			subMenu.setY(subMenu.getY() + subMenu.getHeight() - getHeight());
+		}
+
+		stage.addActor(subMenu);
+		containerMenu.setActiveSubMenu(subMenu);
+	}
+
+	void fireChangeEvent () {
+		ChangeListener.ChangeEvent changeEvent = Pools.obtain(ChangeListener.ChangeEvent.class);
+		fire(changeEvent);
+		Pools.free(changeEvent);
 	}
 
 	@Override
@@ -222,6 +253,15 @@ public class MenuItem extends Button {
 		super.draw(batch, parentAlpha);
 	}
 
+	@Override
+	public boolean isOver () {
+		if (containerMenu == null || containerMenu.getActiveItem() == null) {
+			return super.isOver();
+		} else {
+			return containerMenu.getActiveItem() == this;
+		}
+	}
+
 	public boolean isGenerateDisabledImage () {
 		return generateDisabledImage;
 	}
@@ -255,7 +295,7 @@ public class MenuItem extends Button {
 	 */
 	public MenuItem setShortcut (String text) {
 		shortcutLabel.setText(text);
-		packParentMenu();
+		packContainerMenu();
 		return this;
 	}
 
@@ -271,15 +311,8 @@ public class MenuItem extends Button {
 	 */
 	public MenuItem setShortcut (int... keycodes) {
 		shortcutLabel.setText(OsUtils.getShortcutFor(keycodes));
-		packParentMenu();
+		packContainerMenu();
 		return this;
-	}
-
-	private void packParentMenu () {
-		if (getParent() instanceof PopupMenu) {
-			PopupMenu menu = (PopupMenu) getParent();
-			menu.pack();
-		}
 	}
 
 	@Override
