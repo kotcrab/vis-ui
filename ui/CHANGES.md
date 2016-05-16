@@ -8,9 +8,11 @@
 - **Added**: `TabbedPane#getUIOrderedTabs()`
 - **Added**: `FileChooser#setFavoriteFolderButtonVisible(true)` - FileChooser now can display 'add folder to favorites' button in the toolbar 
 - **Added**: `FileChooser#setPrefsName()` 
+- **Added**: `FileTypeFilter`, `FileChooser#setFileTypeFilter(...)` 
 - **Added**: `MenuItem#getSubMenuIconCell()` and `MenuItem#getShortcutCell()` 
 - **Added**: `VisTextField#setEnterKeyFocusTraversal(boolean)`
 - **Added**: `PopupMenuListener`
+- **Added**: `ConstantIfVisibleValue`
 - **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get it's cells for customization)
 - **Changed**: `FileChooser` now tries to maintain selection while rebuilding file list
 - **Changed**: `FileChooser` will now select new folder after creating it 
@@ -33,7 +35,7 @@
     - **Added**: style `BaseToastStyle`
     - **Added**: VisTextField `label` style - if combined with read-only mode allows to create selectable labels
 - **I18N Changes**:
-    - **FileChooser**: added `CONTEXT_MENU_REFRESH` 
+    - **FileChooser**: added `CONTEXT_MENU_REFRESH`, `FILE_TYPE`, `ALL_FILES`
 
 #### Version: 1.0.2 (LibGDX 1.9.2)
 - **Changed**: [#163](https://github.com/kotcrab/vis-editor/issues/163) - When `VisCheckBox` or `VisTextField` is disabled and is marked as invalid then error border won't be drawn. 

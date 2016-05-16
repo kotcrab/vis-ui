@@ -32,6 +32,8 @@ public enum FileChooserText implements BundleText {
 
 	CANCEL("cancel"),
 	FILE_NAME("fileName"),
+	FILE_TYPE("fileType"),
+	ALL_FILES("allFiles"),
 	DESKTOP("desktop"),
 	COMPUTER("computer"),
 

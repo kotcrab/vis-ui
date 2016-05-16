@@ -19,10 +19,13 @@ package com.kotcrab.vis.ui.test.manual;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.kotcrab.vis.ui.util.TableUtils;
+import com.kotcrab.vis.ui.widget.VisCheckBox;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisWindow;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.file.FileChooser.Mode;
+import com.kotcrab.vis.ui.widget.file.FileTypeFilter;
 import com.kotcrab.vis.ui.widget.file.StreamingFileChooserListener;
 
 public class TestFileChooser extends VisWindow {
@@ -38,20 +41,48 @@ public class TestFileChooser extends VisWindow {
 				System.out.println(file.path());
 			}
 		});
+		final FileTypeFilter typeFilter = new FileTypeFilter(true);
+		typeFilter.addRule("Image files (*.png, *.jpg, *.gif)", "png", "jpg", "gif");
+		typeFilter.addRule("Text files (*.txt)", "txt");
+		typeFilter.addRule("Audio files (*.mp3, *.wav, *.ogg)", "mp3", "wav", "ogg");
 
-		VisTextButton show = new VisTextButton("show");
+		VisTextButton open = new VisTextButton("mode open");
+		VisTextButton save = new VisTextButton("mode save");
+		final VisCheckBox useTypeFilter = new VisCheckBox("use type filter");
 
-		show.addListener(new ChangeListener() {
+		TableUtils.setSpacingDefaults(this);
+
+		open.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
+				chooser.setMode(Mode.OPEN);
 				getStage().addActor(chooser.fadeIn());
 			}
 		});
+		save.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				chooser.setMode(Mode.SAVE);
+				getStage().addActor(chooser.fadeIn());
+			}
+		});
+		useTypeFilter.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				if (useTypeFilter.isChecked()) {
+					chooser.setFileTypeFilter(typeFilter);
+				} else {
+					chooser.setFileTypeFilter(null);
+				}
+			}
+		});
 
-		add(show);
+		add(open);
+		add(save).row();
+		add(useTypeFilter).colspan(2).left().row();
 
 		pack();
-		setPosition(1038, 66);
+		setPosition(950, 20);
 	}
 
 }

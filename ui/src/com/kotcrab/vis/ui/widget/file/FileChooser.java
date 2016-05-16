@@ -35,6 +35,8 @@ import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.InputDialogAdapter;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
+import com.kotcrab.vis.ui.util.value.ConstantIfVisibleValue;
+import com.kotcrab.vis.ui.util.value.PrefHeightIfVisibleValue;
 import com.kotcrab.vis.ui.util.value.PrefWidthIfVisibleValue;
 import com.kotcrab.vis.ui.widget.*;
 import com.kotcrab.vis.ui.widget.ButtonBar.ButtonType;
@@ -72,6 +74,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private SelectionMode selectionMode = SelectionMode.FILES;
 	private FileChooserListener listener = new FileChooserAdapter();
 	private FileFilter fileFilter = new DefaultFileFilter(this);
+	private FileTypeFilter fileTypeFilter = null;
+	private FileTypeFilter.Rule activeFileTypeRule = null;
 	private FileIconProvider iconProvider = new DefaultFileIconProvider(this);
 
 	private DriveCheckerService driveCheckerService = DriveCheckerService.getInstance();
@@ -98,11 +102,12 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private boolean shortcutsListRebuildScheduled;
 	private boolean filesListRebuildScheduled;
 
+	private FileHistoryManager historyManager;
+
 	// UI
 	private FileChooserStyle style;
-	private Sizes sizes;
 
-	private FileHistoryManager historyManager;
+	private Sizes sizes;
 
 	private VisSplitPane mainSplitPane;
 
@@ -118,11 +123,13 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private Tooltip favoriteFolderButtonTooltip;
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextField;
+	private VisSelectBox<FileTypeFilter.Rule> fileTypeSelectBox;
 	private VisTextButton confirmButton;
 
 	private FilePopupMenu fileMenu;
 	private FileSuggestionPopup fileNameSuggestionPopup;
 	private DirsSuggestionPopup dirsSuggestionPopup;
+	private VisLabel fileTypeLabel;
 
 	/** @param mode whether this chooser will be used to open or save files */
 	public FileChooser (Mode mode) {
@@ -228,6 +235,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		centerWindow();
 
 		createListeners();
+
+		setFileTypeFilter(null);
 		setFavoriteFolderButtonVisible(false);
 	}
 
@@ -314,12 +323,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		toolbarTable.add(currentPath).spaceRight(0).expand().fill();
 		toolbarTable.add(showRecentDirButton).width(15 * sizes.scaleFactor).growY();
 		toolbarTable.add(folderParentButton);
-		toolbarTable.add(favoriteFolderButton).width(PrefWidthIfVisibleValue.INSTANCE).spaceRight(new Value() {
-			@Override
-			public float get (Actor context) {
-				return favoriteFolderButton.isVisible() ? sizes.spacingRight : 0;
-			}
-		});
+		toolbarTable.add(favoriteFolderButton).width(PrefWidthIfVisibleValue.INSTANCE).spaceRight(new ConstantIfVisibleValue(sizes.spacingRight));
 		toolbarTable.add(folderNewButton);
 
 		folderParentButton.addListener(new ChangeListener() {
@@ -432,8 +436,26 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		VisLabel nameLabel = new VisLabel(FILE_NAME.get());
 		selectedFileTextField = new VisTextField();
 
-		table.add(nameLabel);
-		table.add(selectedFileTextField).expand().fill();
+		fileTypeLabel = new VisLabel(FILE_TYPE.get());
+		fileTypeSelectBox = new VisSelectBox<FileTypeFilter.Rule>();
+		fileTypeSelectBox.getSelection().setProgrammaticChangeEvents(false);
+
+		fileTypeSelectBox.addListener(new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				activeFileTypeRule = fileTypeSelectBox.getSelected();
+				rebuildFileList();
+			}
+		});
+
+		table.defaults().left();
+		table.add(nameLabel).spaceBottom(new ConstantIfVisibleValue(fileTypeSelectBox, 5f));
+		table.add(selectedFileTextField).expandX().fillX()
+				.spaceBottom(new ConstantIfVisibleValue(fileTypeSelectBox, 5f)).row();
+		table.add(fileTypeLabel).height(PrefHeightIfVisibleValue.INSTANCE)
+				.spaceBottom(new ConstantIfVisibleValue(sizes.spacingBottom));
+		table.add(fileTypeSelectBox).height(PrefHeightIfVisibleValue.INSTANCE)
+				.spaceBottom(new ConstantIfVisibleValue(sizes.spacingBottom)).expand().fill();
 
 		selectedFileTextField.addListener(new InputListener() {
 			@Override
@@ -449,9 +471,30 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			}
 		});
 
-		add(table).expandX().fillX().pad(3).padRight(2).padBottom(2f);
+		add(table).expandX().fillX().pad(3f).padRight(2f).padBottom(2f);
 		row();
+	}
 
+	private void updateFileTypeSelectBox () {
+		if (fileTypeFilter == null) {
+			fileTypeLabel.setVisible(false);
+			fileTypeSelectBox.setVisible(false);
+			fileTypeSelectBox.invalidateHierarchy();
+			return;
+		} else {
+			fileTypeLabel.setVisible(true);
+			fileTypeSelectBox.setVisible(true);
+			fileTypeSelectBox.invalidateHierarchy();
+		}
+
+		Array<FileTypeFilter.Rule> rules = new Array<FileTypeFilter.Rule>(fileTypeFilter.getRules());
+		if (fileTypeFilter.isAllTypesAllowed()) {
+			FileTypeFilter.Rule allTypesRule = new FileTypeFilter.Rule(ALL_FILES.get());
+			rules.add(allTypesRule);
+		}
+
+		fileTypeSelectBox.setItems(rules);
+		fileTypeSelectBox.setSelected(activeFileTypeRule);
 	}
 
 	private void createBottomButtons () {
@@ -693,7 +736,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		fileTable.clear();
 		items.clear();
-		FileHandle[] files = currentDirectory.list(fileFilter);
+		FileHandle[] files = listFilteredCurrentDirectory();
 		currentPath.setText(currentDirectory.path());
 
 		if (files.length == 0) return;
@@ -907,12 +950,51 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		return currentDirectory;
 	}
 
+	/** List currently set directory with all active filters */
+	private FileHandle[] listFilteredCurrentDirectory () {
+		FileHandle[] files = currentDirectory.list(fileFilter);
+		if (fileTypeFilter == null || activeFileTypeRule == null) return files;
+
+		FileHandle[] filtered = new FileHandle[files.length];
+
+		int count = 0;
+		for (FileHandle file : files) {
+			if (file.isDirectory() == false && activeFileTypeRule.accept(file) == false) continue;
+			filtered[count++] = file;
+		}
+
+		if (count == 0) return new FileHandle[0];
+
+		FileHandle[] newFiltered = new FileHandle[count];
+		System.arraycopy(filtered, 0, newFiltered, 0, count);
+		return newFiltered;
+	}
+
 	public FileFilter getFileFilter () {
 		return fileFilter;
 	}
 
 	public void setFileFilter (FileFilter fileFilter) {
 		this.fileFilter = fileFilter;
+		rebuildFileList();
+	}
+
+	/**
+	 * Sets new {@link FileTypeFilter}. Note that if you modify {@link FileTypeFilter} you must call this method again with
+	 * modified instance to apply changes.
+	 */
+	public void setFileTypeFilter (FileTypeFilter fileTypeFilter) {
+		if (fileTypeFilter == null) {
+			this.fileTypeFilter = null;
+			this.activeFileTypeRule = null;
+		} else {
+			if (fileTypeFilter.getRules().size == 0)
+				throw new IllegalArgumentException("FileTypeFilter doesn't have any rules added");
+			this.fileTypeFilter = new FileTypeFilter(fileTypeFilter);
+			this.activeFileTypeRule = this.fileTypeFilter.getRules().first();
+		}
+
+		updateFileTypeSelectBox();
 		rebuildFileList();
 	}
 
