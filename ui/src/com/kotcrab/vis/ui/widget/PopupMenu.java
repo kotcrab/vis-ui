@@ -74,6 +74,14 @@ public class PopupMenu extends Table {
 	private void createListeners () {
 		stageListener = new InputListener() {
 			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				if (getRootMenu().subMenuStructureContains(x, y) == false) {
+					remove();
+				}
+				return true;
+			}
+
+			@Override
 			public boolean keyDown (InputEvent event, int keycode) {
 				SnapshotArray<Actor> children = getChildren();
 
@@ -124,6 +132,17 @@ public class PopupMenu extends Table {
 				if (event.isStopped() == false) removeHierarchy();
 			}
 		};
+	}
+
+	private PopupMenu getRootMenu () {
+		if (parentSubMenu != null) return parentSubMenu.getRootMenu();
+		return this;
+	}
+
+	private boolean subMenuStructureContains (float x, float y) {
+		if (contains(x, y)) return true;
+		if (activeSubMenu != null) return activeSubMenu.subMenuStructureContains(x, y);
+		return false;
 	}
 
 	private void removeHierarchy () {

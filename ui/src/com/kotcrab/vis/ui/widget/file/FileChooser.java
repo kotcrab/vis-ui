@@ -552,8 +552,6 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	@Override
 	protected void close () {
 		listener.canceled();
-		fileNameSuggestionPopup.remove();
-		dirsSuggestionPopup.remove();
 		super.close();
 	}
 
