@@ -397,7 +397,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		};
 		mainSplitPane.setSplitAmount(0.3f);
 		mainSplitPane.setMinSplitAmount(0.05f);
-		mainSplitPane.setMaxSplitAmount(0.8913f);
+		mainSplitPane.setMaxSplitAmount(0.80f);
 
 		row();
 		add(mainSplitPane).expand().fill();
