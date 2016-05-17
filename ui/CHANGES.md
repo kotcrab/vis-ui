@@ -35,7 +35,7 @@
     - **Added**: style `BaseToastStyle`
     - **Added**: VisTextField `label` style - if combined with read-only mode allows to create selectable labels
 - **I18N Changes**:
-    - **FileChooser**: added `CONTEXT_MENU_REFRESH`, `FILE_TYPE`, `ALL_FILES`
+    - **FileChooser**: added keys `contextMenuRefresh`, `fileType`, `allFiles`
 
 #### Version: 1.0.2 (LibGDX 1.9.2)
 - **Changed**: [#163](https://github.com/kotcrab/vis-editor/issues/163) - When `VisCheckBox` or `VisTextField` is disabled and is marked as invalid then error border won't be drawn. 
