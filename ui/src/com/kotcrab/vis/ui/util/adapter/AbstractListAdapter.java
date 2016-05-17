@@ -67,27 +67,29 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 		if (itemsComparator != null) sort(itemsComparator);
 		for (final ItemT item : iterable()) {
 			final ViewT view = getView(item);
-
-			boolean listenerMissing = true;
-			for (EventListener listener : view.getListeners()) {
-				if (listener instanceof AbstractListAdapter.ListClickListener) {
-					listenerMissing = false;
-					break;
-				}
-			}
-			if (listenerMissing) {
-				view.setTouchable(Touchable.enabled);
-				view.addListener(new ListClickListener(view, item));
-			}
-
+			prepareViewBeforeAddingToTable(item, view);
 			itemsTable.add(view).growX();
 			itemsTable.row();
 		}
 	}
 
+	protected void prepareViewBeforeAddingToTable (ItemT item, ViewT view) {
+		boolean listenerMissing = true;
+		for (EventListener listener : view.getListeners()) {
+			if (listener instanceof AbstractListAdapter.ListClickListener) {
+				listenerMissing = false;
+				break;
+			}
+		}
+		if (listenerMissing) {
+			view.setTouchable(Touchable.enabled);
+			view.addListener(new ListClickListener(view, item));
+		}
+	}
+
 	@Override
 	public void setListView (ListView<ItemT> view, ListAdapterListener viewListener) {
-		if (this.view != null) throw new IllegalStateException("Adapter was already asigned to ListView");
+		if (this.view != null) throw new IllegalStateException("Adapter was already assigned to ListView");
 		this.view = view;
 		this.viewListener = viewListener;
 	}
@@ -148,11 +150,15 @@ public abstract class AbstractListAdapter<ItemT, ViewT extends Actor> extends Ca
 
 	/**
 	 * Sets items comparator allowing to define order in which items will be displayed in list view. This will sort
-	 * underlaying array before building views.
+	 * underlying array before building views.
 	 * @param comparator that will be used to compare items
 	 */
 	public void setItemsSorter (Comparator<ItemT> comparator) {
 		this.itemsComparator = comparator;
+	}
+
+	public Comparator<ItemT> getItemsSorter () {
+		return itemsComparator;
 	}
 
 	/** @return selected items, must not be modified */

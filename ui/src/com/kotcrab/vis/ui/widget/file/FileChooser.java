@@ -25,7 +25,6 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.Sizes;
@@ -93,7 +92,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private Array<FileHandle> recentDirectories;
 
 	private FileHandle currentDirectory;
-	private ObjectMap<FileHandle, FileItem> items = new ObjectMap<FileHandle, FileItem>();
+	private Array<FileHandle> currentFiles = new Array<FileHandle>();
+	private FileListAdapter fileListAdapter;
 	private Array<FileItem> selectedItems = new Array<FileItem>();
 	private ShortcutItem selectedShortcut;
 
@@ -111,13 +111,11 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	private VisSplitPane mainSplitPane;
 
-	private VisTable fileTable;
-	private VisScrollPane fileScrollPane;
-
 	private VisTable shortcutsTable;
 	private VerticalGroup shortcutsMainPanel;
 	private VerticalGroup shortcutsRootsPanel;
 	private VerticalGroup shortcutsFavoritesPanel;
+	private ListView<FileHandle> fileListView;
 
 	private VisImageButton favoriteFolderButton;
 	private Tooltip favoriteFolderButtonTooltip;
@@ -375,16 +373,17 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void createCenterContentPanel () {
-		// fileTable is contained in fileScrollPane contained in fileScrollPaneTable contained in mainSplitPane
-		// same for shortcuts
-		fileTable = new VisTable();
-		fileScrollPane = createScrollPane(fileTable);
+		fileListAdapter = new FileListAdapter(this, currentFiles);
+		fileListView = new ListView<FileHandle>(fileListAdapter);
+		setDefaultScrollPaneAttr(fileListView.getScrollPane());
+
 		VisTable fileScrollPaneTable = new VisTable();
-		fileScrollPaneTable.add(fileScrollPane).pad(2).top().expand().fillX();
+		fileScrollPaneTable.add(fileListView.getMainTable()).pad(2).top().expand().fillX();
 		fileScrollPaneTable.setTouchable(Touchable.enabled);
 
+		// shortcutsTable is contained in shortcutsScrollPane contained in shortcutsScrollPaneTable contained in mainSplitPane
 		shortcutsTable = new VisTable();
-		final VisScrollPane shortcutsScrollPane = createScrollPane(shortcutsTable);
+		final VisScrollPane shortcutsScrollPane = setDefaultScrollPaneAttr(new VisScrollPane(shortcutsTable));
 		VisTable shortcutsScrollPaneTable = new VisTable();
 		shortcutsScrollPaneTable.add(shortcutsScrollPane).pad(2).top().expand().fillX();
 
@@ -461,10 +460,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
 				deselectAll(false);
-				fileNameSuggestionPopup.pathFieldKeyTyped(getStage(), items.keys(), selectedFileTextField);
+				fileNameSuggestionPopup.pathFieldKeyTyped(getStage(), currentFiles, selectedFileTextField);
 
 				FileHandle enteredFile = currentDirectory.child(selectedFileTextField.getText());
-				if (items.containsKey(enteredFile)) {
+				if (currentFiles.contains(enteredFile, false)) {
 					highlightFiles(enteredFile);
 				}
 				return false;
@@ -617,9 +616,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		fadeOut();
 	}
 
-	private VisScrollPane createScrollPane (VisTable table) {
-		VisScrollPane scrollPane = new VisScrollPane(table);
+	private VisScrollPane setDefaultScrollPaneAttr (VisScrollPane scrollPane) {
 		scrollPane.setOverscroll(false, false);
+		scrollPane.setFlickScroll(false);
 		scrollPane.setFadeScrollBars(false);
 		scrollPane.setScrollingDisabled(true, false);
 		return scrollPane;
@@ -734,25 +733,21 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		}
 		deselectAll();
 
-		fileTable.clear();
-		items.clear();
 		FileHandle[] files = listFilteredCurrentDirectory();
 		currentPath.setText(currentDirectory.path());
 
-		if (files.length == 0) return;
+		currentFiles.clear();
 
-		Array<FileHandle> fileList = FileUtils.sortFiles(files);
-
-		for (FileHandle file : fileList) {
-			if (file.file() != null) {
-				FileItem item = new FileItem(file);
-				fileTable.add(item).expand().fill().row();
-				items.put(file, item);
-			}
+		if (files.length == 0) {
+			fileListAdapter.itemsChanged();
+			return;
 		}
 
-		fileScrollPane.setScrollX(0);
-		fileScrollPane.setScrollY(0);
+		currentFiles.addAll(FileUtils.sortFiles(files));
+		fileListAdapter.itemsChanged();
+
+		fileListView.getScrollPane().setScrollX(0);
+		fileListView.getScrollPane().setScrollY(0);
 		highlightFiles(selectedFiles);
 	}
 
@@ -765,7 +760,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		deselectAll(false);
 
 		for (FileHandle file : files) {
-			FileItem item = items.get(file);
+			FileItem item = fileListAdapter.getViews().get(file);
 			if (item != null) {
 				item.select(false);
 			}
@@ -840,7 +835,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void selectAll () {
-		for (FileItem item : items.values())
+		for (FileItem item : fileListAdapter.getOrderedViews())
 			item.select(false);
 
 		removeInvalidSelections();
@@ -853,7 +848,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	 */
 	public void highlightFiles (FileHandle... files) {
 		for (FileHandle file : files) {
-			FileItem item = items.get(file);
+			FileItem item = fileListAdapter.getViews().get(file);
 			if (item != null) {
 				item.select(false);
 			}
@@ -1318,12 +1313,13 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		}
 	}
 
-	private class FileItem extends Table implements Focusable {
+	/** Internal FileChooser API. */
+	public class FileItem extends Table implements Focusable {
 		public FileHandle file;
 		private VisLabel name;
 		private VisLabel size;
 
-		public FileItem (final FileHandle file) {
+		private FileItem (final FileHandle file) {
 			this.file = file;
 			setTouchable(Touchable.enabled);
 			name = new VisLabel(file.name());
@@ -1336,33 +1332,13 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 			Drawable icon = iconProvider.provideIcon(file);
 
-			if (icon != null) add(new Image(icon)).padTop(3);
-			Cell<VisLabel> labelCell = add(name).padLeft(icon == null ? 22 : 0);
+			if (icon != null) add(new Image(icon)).padTop(3).minWidth(22 * sizes.scaleFactor);
+			add(name).minWidth(1).padLeft(icon == null ? 22 : 0);
 
-			labelCell.width(new Value() {
-				@Override
-				public float get (Actor context) {
-					int padding = (int) (file.isDirectory() ? 35 * sizes.scaleFactor : 60 * sizes.scaleFactor);
-					return mainSplitPane.getSecondWidgetBounds().width - getUsedWidth() - padding;
-				}
-			});
-
-			add(size).expandX().right().padRight(6);
+			add().growX().minWidth(0);
+			add(size).right().padRight(6);
 
 			addListener();
-		}
-
-		private int getUsedWidth () {
-			@SuppressWarnings("rawtypes")
-			Array<Cell> cells = getCells();
-
-			int width = 0;
-			for (Cell<?> cell : cells) {
-				if (cell.getActor() == name) continue;
-				width += cell.getActor().getWidth();
-			}
-
-			return width;
 		}
 
 		private void addListener () {
@@ -1430,10 +1406,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				}
 
 				private void selectGroup () {
-					Array<Cell> cells = fileTable.getCells();
+					Array<FileItem> actors = fileListAdapter.getOrderedViews();
 
-					int thisSelectionIndex = getItemId(cells, FileItem.this);
-					int lastSelectionIndex = getItemId(cells, selectedItems.get(selectedItems.size - 2));
+					int thisSelectionIndex = getItemId(actors, FileItem.this);
+					int lastSelectionIndex = getItemId(actors, selectedItems.get(selectedItems.size - 2));
 
 					int start;
 					int end;
@@ -1447,14 +1423,14 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 					}
 
 					for (int i = start; i < end; i++) {
-						FileItem item = (FileItem) cells.get(i).getActor();
+						FileItem item = actors.get(i);
 						item.select(false);
 					}
 				}
 
-				private int getItemId (Array<Cell> cells, FileItem item) {
-					for (int i = 0; i < cells.size; i++) {
-						if (cells.get(i).getActor() == item) return i;
+				private int getItemId (Array<FileItem> actors, FileItem item) {
+					for (int i = 0; i < actors.size; i++) {
+						if (actors.get(i) == item) return i;
 					}
 
 					throw new IllegalStateException("Item not found in cells");
@@ -1572,7 +1548,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 						if (file.isDirectory()) {
 							setDirectory(Gdx.files.absolute(file.getAbsolutePath()), HistoryPolicy.ADD);
-							getStage().setScrollFocus(fileScrollPane);
+							getStage().setScrollFocus(fileListView.getScrollPane());
 						}
 					}
 				}

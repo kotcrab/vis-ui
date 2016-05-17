@@ -20,7 +20,7 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
@@ -31,7 +31,7 @@ public class FileSuggestionPopup extends AbstractSuggestionPopup {
 		super(chooser);
 	}
 
-	public void pathFieldKeyTyped (Stage stage, ObjectMap.Keys<FileHandle> files, VisTextField pathField) {
+	public void pathFieldKeyTyped (Stage stage, Array<FileHandle> files, VisTextField pathField) {
 		if (pathField.getText().length() == 0) {
 			remove();
 			return;
@@ -46,7 +46,7 @@ public class FileSuggestionPopup extends AbstractSuggestionPopup {
 		showMenu(stage, pathField);
 	}
 
-	private int createSuggestions (ObjectMap.Keys<FileHandle> files, VisTextField fileNameField) {
+	private int createSuggestions (Array<FileHandle> files, VisTextField fileNameField) {
 		clearChildren();
 		int suggestions = 0;
 		for (final FileHandle file : files) {
