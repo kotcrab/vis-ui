@@ -1223,8 +1223,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	/**
-	 * Sets {@link FileChooser.FileDeleter} that will be used for deleting files. You cannot set your own file deleter, {@link FileChooser.FileDeleter}
-	 * interface is not public, deleter must be either {@link DefaultFileDeleter} or {@link JNAFileDeleter}. {@link JNAFileDeleter}
+	 * Sets {@link FileChooser.FileDeleter} that will be used for deleting files. You SHOULD NOT set your own file deleter.
+	 * You should use either {@link DefaultFileDeleter} or JNAFileDeleter from vis-ui-contrib project. JNAFileDeleter
 	 * supports moving file to system trash instead of deleting it permanently, however it requires JNA library in your
 	 * project classpath.
 	 */
@@ -1295,7 +1295,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		}
 	}
 
-	interface FileDeleter {
+	public interface FileDeleter {
 		boolean hasTrash ();
 
 		boolean delete (FileHandle file) throws IOException;
