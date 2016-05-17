@@ -23,7 +23,7 @@ import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.file.FileChooser.Mode;
 import com.kotcrab.vis.ui.widget.file.FileChooser.SelectionMode;
 import com.kotcrab.vis.ui.widget.file.FileChooserListener;
-import com.kotcrab.vis.ui.widget.file.JNAFileDeleter;
+import com.kotcrab.vis.ui.contrib.widget.file.JNAFileDeleter;
 
 /**
  * Provides shared file chooser instance

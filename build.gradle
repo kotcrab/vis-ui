@@ -26,6 +26,7 @@ allprojects {
         appName = 'vis'
         mainClassName = 'com.kotcrab.vis.editor.Main'
         // Dependency Properties
+        visuiContribVersion = '1.1.0-SNAPSHOT'
         gdxVersion = '1.9.3'
         editorGdxVersion = '1.9.3'
         box2dLightsVersion = '1.4'
@@ -60,6 +61,7 @@ project(':editor') {
     dependencies {
         compile project(":runtime")
         compile project(":ui")
+        compile "com.kotcrab.vis:vis-ui-contrib:$visuiContribVersion"
         compile "com.badlogicgames.gdx:gdx:$editorGdxVersion"
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$editorGdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$editorGdxVersion:natives-desktop"
@@ -115,8 +117,6 @@ project(':ui') {
 
     dependencies {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-        compile "net.java.dev.jna:jna:$jnaVersion", optional
-        compile "net.java.dev.jna:platform:$jnaPlatformVersion", optional
         provided "com.apple:AppleJavaExtensions:$appleJavaExtensionsVersion", optional
         testCompile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
