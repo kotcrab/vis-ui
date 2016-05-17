@@ -45,9 +45,9 @@ uploadArchives {
                 url 'https://github.com/kotcrab/vis-editor/'
 
                 scm {
-                    connection 'scm:git:git@github.com:kotcrab/VisEditor.git'
-                    developerConnection 'scm:git:git@github.com:kotcrab/VisEditor.git'
-                    url 'git@github.com:kotcrab/VisEditor.git'
+                    connection 'scm:git:git@github.com:kotcrab/vis-editor.git'
+                    developerConnection 'scm:git:git@github.com:kotcrab/vis-editor.git'
+                    url 'git@github.com:kotcrab/vis-editor.git'
                 }
 
                 licenses {
