@@ -1319,7 +1319,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		private VisLabel name;
 		private VisLabel size;
 
-		private FileItem (final FileHandle file) {
+		public FileItem (final FileHandle file) {
 			this.file = file;
 			setTouchable(Touchable.enabled);
 			name = new VisLabel(file.name());
