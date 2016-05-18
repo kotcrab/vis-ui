@@ -34,26 +34,21 @@ public class GridGroup extends WidgetGroup {
 	private float lastPrefHeight;
 	private boolean sizeInvalid = true;
 
-	private int itemWidth = 256;
-	private int itemHeight = 256;
+	private float itemWidth = 256;
+	private float itemHeight = 256;
 	private float spacing = 8;
 
 	public GridGroup () {
 		setTouchable(Touchable.childrenOnly);
 	}
 
-	public GridGroup (int itemSize) {
+	public GridGroup (float itemSize) {
 		this.itemWidth = itemSize;
 		this.itemHeight = itemSize;
 		setTouchable(Touchable.childrenOnly);
 	}
 
-	public GridGroup (float spacing) {
-		this.spacing = spacing;
-		setTouchable(Touchable.childrenOnly);
-	}
-
-	public GridGroup (int itemSize, float spacing) {
+	public GridGroup (float itemSize, float spacing) {
 		this.spacing = spacing;
 		this.itemWidth = itemSize;
 		this.itemHeight = itemSize;
@@ -135,31 +130,31 @@ public class GridGroup extends WidgetGroup {
 		invalidateHierarchy();
 	}
 
-	public void setItemSize (int itemSize) {
+	public void setItemSize (float itemSize) {
 		this.itemWidth = itemSize;
 		this.itemHeight = itemSize;
 		invalidateHierarchy();
 	}
 
-	public void setItemSize (int itemWidth, int itemHeight) {
+	public void setItemSize (float itemWidth, float itemHeight) {
 		this.itemWidth = itemWidth;
 		this.itemHeight = itemHeight;
 		invalidateHierarchy();
 	}
 
-	public int getItemWidth () {
+	public float getItemWidth () {
 		return itemWidth;
 	}
 
-	public void setItemWidth (int itemWidth) {
+	public void setItemWidth (float itemWidth) {
 		this.itemWidth = itemWidth;
 	}
 
-	public int getItemHeight () {
+	public float getItemHeight () {
 		return itemHeight;
 	}
 
-	public void setItemHeight (int itemHeight) {
+	public void setItemHeight (float itemHeight) {
 		this.itemHeight = itemHeight;
 	}
 

@@ -1,6 +1,8 @@
 #### Version: 1.1.0 (LibGDX 1.9.3)
 - **API Moved**: `JNAFileDeleter` was moved to [vis-ui-contrib](https://github.com/kotcrab/vis-ui-contrib) project
 - **API Deprecated**: `FileChooser.setFavoritesPrefsName()` replaced by `FileChooser.setDefaultPrefsName()`
+- **API Changed**: GridGroup is now taking float for item size instead of int.
+    - **Warning:** There were two constructors `GridGroup (float spacing)` and `GridGroup (int itemSize)`. Constructor taking float spacing was removed. Constructor taking int item size now takes float. 
 - **Added**: default styles for `ImageButton` and `ImageTextButton`. Note: this is only applies to standard scene2d widgets. VisUI widgets equivalents (`VisImageButton`, `VisImageTextButton`) already had them.
 - **Added**: `SimpleFormValidator#validate`
 - **Added**: `ToastManager`, `Toast`, `ToastTable`
@@ -32,7 +34,7 @@
 - **Fixed**: `FileChooser` crash when user manually entered path to file instead of directory
 - **Skin changes**:
     - **Changed**: `FileChooserStyle`: added drawable fields: `iconStar`, `iconStarOutline`, `iconRefresh`, `expandDropdown`
-    - **Added**: drawable `window-border-bg.9`, `icon-star`, `icon-star-outline`, `icon-refresh`
+    - **Added**: drawable `window-border-bg.9`, `icon-star`, `icon-star-outline`, `icon-refresh`, `icon-list-settings`
     - **Added**: style `BaseToastStyle`
     - **Added**: VisTextField `label` style - if combined with read-only mode allows to create selectable labels
 - **I18N Changes**:
