@@ -15,7 +15,9 @@
 - **Added**: `MenuItem#getSubMenuIconCell()` and `MenuItem#getShortcutCell()` 
 - **Added**: `VisTextField#setEnterKeyFocusTraversal(boolean)`
 - **Added**: `PopupMenuListener`
+- **Added**: `PopupMenu#showMenu (Stage stage, Actor actor)`
 - **Added**: `ConstantIfVisibleValue`
+- **Added**: `Sizes#borderSize`
 - **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get it's cells for customization)
 - **Changed**: `FileChooser` now tries to maintain selection while rebuilding file list
 - **Changed**: `FileChooser` will now select new folder after creating it 
@@ -23,12 +25,13 @@
 - **Changed**: `FileChooser` when typing file names manually suggestion will be showed
 - **Changed**: `TabbedPane`'s Tab now can't be dragged using it's close button  
 - **Changed**: Synced `VisTextField` ans `VisTextArea` with equivalents of those classes libgdx
-- **Changed**: PopupMenu now support menu navigation using arrows keys
+- **Changed**: `PopupMenu` now support menu navigation using arrows keys
+- **Changed**: `PopupMenu` now optionality takes `Sizes` instance (added constructor `PopupMenu (Sizes sizes, PopupMenuStyle style)`)
 - **Removed deprecated API**: `NumberSelector` - replaced by `Spinner`
 - **Removed deprecated API**: `Sizes#numberSelectorButtonSize`, `numberSelectorButtonsWidth`, `numberSelectorFieldSize`, `numberSelectorFieldRightPadding`
 - **Fixed**: `Sizes.buttonBarSpacing` was ignored by `ButtonBar`
     - **Added**: constructors `ButtonBar(Sizes sizes, String order)` and `ButtonBar(Sizes sizes)`
-- **Fixed**: `TabbedPane` layout when no separator image is used. Fixed misc issue with close button style on touch down. 
+- **Fixed**: `TabbedPane` layout when no separator image was used. Fixed misc issue with close button style on touch down. 
 - **Fixed**: `FileChooser` NPE when error occurred during directory deleting
 - **Fixed**: `FileChooser` non empty directories are now deleted correctly when using default `FileChooser` deleter
 - **Fixed**: `FileChooser` crash when user manually entered path to file instead of directory

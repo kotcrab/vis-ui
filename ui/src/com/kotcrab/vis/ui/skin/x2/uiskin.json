@@ -92,6 +92,8 @@ com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 com.kotcrab.vis.ui.Sizes: {
 	default: {scaleFactor: 1, spacingBottom: 8, spacingRight: 6, buttonBarSpacing: 10, menuItemIconSize: 22, spinnerButtonSize: 12, spinnerButtonsWidth: 12, spinnerFieldSize: 40, spinnerFieldRightPadding: 1 },
 	x2: {scaleFactor: 2, spacingBottom: 8, spacingRight: 6, buttonBarSpacing: 10, menuItemIconSize: 44, spinnerButtonSize: 24, spinnerButtonsWidth: 20, spinnerFieldSize: 80, spinnerFieldRightPadding: 5 }
+	default: {scaleFactor: 1, spacingBottom: 8, spacingRight: 6, buttonBarSpacing: 10, menuItemIconSize: 22, borderSize: 1, spinnerButtonSize: 12, spinnerButtonsWidth: 12, spinnerFieldSize: 40, spinnerFieldRightPadding: 1 },
+	x2: {scaleFactor: 2, spacingBottom: 8, spacingRight: 6, buttonBarSpacing: 10, menuItemIconSize: 44, borderSize: 1, spinnerButtonSize: 24, spinnerButtonsWidth: 20, spinnerFieldSize: 80, spinnerFieldRightPadding: 5 }
 },
 com.kotcrab.vis.ui.widget.VisTextField$VisTextFieldStyle: {
 	default: {focusBorder: border, font: default-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, backgroundOver: textfield-over, errorBorder: border-error, cursor: cursor },

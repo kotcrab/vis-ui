@@ -19,12 +19,14 @@ package com.kotcrab.vis.ui.widget;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.SnapshotArray;
+import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ActorUtils;
 
@@ -39,6 +41,9 @@ import com.kotcrab.vis.ui.util.ActorUtils;
  * @author Kotcrab
  */
 public class PopupMenu extends Table {
+	private static final Vector2 tmpVector = new Vector2();
+
+	private Sizes sizes;
 	private PopupMenuStyle style;
 	private PopupMenuListener listener;
 
@@ -64,6 +69,11 @@ public class PopupMenu extends Table {
 	}
 
 	public PopupMenu (PopupMenuStyle style) {
+		this(VisUI.getSizes(), style);
+	}
+
+	public PopupMenu (Sizes sizes, PopupMenuStyle style) {
+		this.sizes = sizes;
 		this.style = style;
 		setTouchable(Touchable.enabled);
 		pad(0);
@@ -201,6 +211,15 @@ public class PopupMenu extends Table {
 	 * menu will be displayed
 	 */
 	public InputListener getDefaultInputListener () {
+		return getDefaultInputListener(Buttons.RIGHT);
+	}
+
+	/**
+	 * Returns input listener that can be added to scene2d actor. When mouse button is pressed on that actor,
+	 * menu will be displayed
+	 * @param mouseButton from {@link Buttons}
+	 */
+	public InputListener getDefaultInputListener (int mouseButton) {
 		if (defaultInputListener == null) {
 			defaultInputListener = new InputListener() {
 				@Override
@@ -210,7 +229,7 @@ public class PopupMenu extends Table {
 
 				@Override
 				public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-					if (event.getButton() == Buttons.RIGHT)
+					if (event.getButton() == button)
 						showMenu(event.getStage(), event.getStageX(), event.getStageY());
 				}
 			};
@@ -225,11 +244,33 @@ public class PopupMenu extends Table {
 		if (style.border != null) style.border.draw(batch, getX(), getY(), getWidth(), getHeight());
 	}
 
+	/**
+	 * Shows menu as given stage coordinates
+	 * @param stage stage instance that this menu is being added to
+	 * @param x stage x position
+	 * @param y stage y position
+	 */
 	public void showMenu (Stage stage, float x, float y) {
 		setPosition(x, y - getHeight());
 		if (stage.getHeight() - getY() > stage.getHeight()) setY(getY() + getHeight());
 		ActorUtils.keepWithinStage(stage, this);
 		stage.addActor(this);
+	}
+
+	/**
+	 * Shows menu below (or above if not enough space) given actor.
+	 * @param stage stage instance that this menu is being added to
+	 * @param actor used to get calculate menu position in stage, menu will be displayed above or below it
+	 */
+	public void showMenu (Stage stage, Actor actor) {
+		Vector2 pos = actor.localToStageCoordinates(tmpVector.setZero());
+		float menuY;
+		if (pos.y - getHeight() <= 0) {
+			menuY = pos.y + actor.getHeight() + getHeight() - sizes.borderSize;
+		} else {
+			menuY = pos.y + sizes.borderSize;
+		}
+		showMenu(stage, pos.x, menuY);
 	}
 
 	public boolean contains (float x, float y) {

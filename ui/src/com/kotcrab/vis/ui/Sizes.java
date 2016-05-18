@@ -34,6 +34,12 @@ public class Sizes {
 
 	public float menuItemIconSize;
 
+	/**
+	 * Size of focus border. 1 for standard Vis skin. This is used to avoid showing overlapping borders when two widgets
+	 * have borders (for example button can have it's own focus border which without this padding would overlap with menu border)
+	 */
+	public float borderSize;
+
 	public float spinnerButtonSize;
 	public float spinnerButtonsWidth;
 	public float spinnerFieldSize;
