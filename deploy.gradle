@@ -18,13 +18,13 @@ artifacts {
 }
 
 javadoc {
-    onlyIf { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+    onlyIf { isReleaseVersion || gradle.taskGraph.hasTask("uploadArchives") }
     options.encoding = 'UTF-8'
     options.addStringOption('Xdoclint:none', '-quiet')
 }
 
 signing {
-    required { isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives") }
+    required { isReleaseVersion || gradle.taskGraph.hasTask("uploadArchives") }
     sign configurations.archives
 }
 

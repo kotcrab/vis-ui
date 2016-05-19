@@ -35,6 +35,7 @@
 - **Fixed**: `FileChooser` NPE when error occurred during directory deleting
 - **Fixed**: `FileChooser` non empty directories are now deleted correctly when using default `FileChooser` deleter
 - **Fixed**: `FileChooser` crash when user manually entered path to file instead of directory
+- **Fixed**: `FocusManager` calling `focusLost()` when the widget that was already focused tried to gain focus again
 - **Skin changes**:
     - **Changed**: `FileChooserStyle`: added drawable fields: `iconStar`, `iconStarOutline`, `iconRefresh`, `expandDropdown`
     - **Added**: drawable `window-border-bg.9`, `icon-star`, `icon-star-outline`, `icon-refresh`, `icon-list-settings`
