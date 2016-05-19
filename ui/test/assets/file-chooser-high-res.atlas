@@ -1,0 +1,111 @@
+
+file-chooser-high-res.png
+size: 1024,512
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+icon-file-audio-big
+  rotate: false
+  xy: 2, 266
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+icon-file-audio-medium
+  rotate: false
+  xy: 406, 134
+  size: 130, 130
+  orig: 130, 130
+  offset: 0, 0
+  index: -1
+icon-file-audio-small
+  rotate: false
+  xy: 538, 204
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+icon-file-image-big
+  rotate: false
+  xy: 2, 64
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+icon-file-image-medium
+  rotate: false
+  xy: 608, 336
+  size: 130, 130
+  orig: 130, 130
+  offset: 0, 0
+  index: -1
+icon-file-image-small
+  rotate: false
+  xy: 608, 274
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+icon-file-pdf-big
+  rotate: false
+  xy: 204, 266
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+icon-file-pdf-medium
+  rotate: false
+  xy: 740, 336
+  size: 130, 130
+  orig: 130, 130
+  offset: 0, 0
+  index: -1
+icon-file-pdf-small
+  rotate: false
+  xy: 2, 2
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+icon-file-text-big
+  rotate: false
+  xy: 204, 64
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+icon-file-text-medium
+  rotate: false
+  xy: 872, 336
+  size: 130, 130
+  orig: 130, 130
+  offset: 0, 0
+  index: -1
+icon-file-text-small
+  rotate: false
+  xy: 538, 142
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1
+icon-folder-big
+  rotate: false
+  xy: 406, 266
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+icon-folder-medium
+  rotate: false
+  xy: 406, 2
+  size: 130, 130
+  orig: 130, 130
+  offset: 0, 0
+  index: -1
+icon-folder-small
+  rotate: false
+  xy: 670, 274
+  size: 60, 60
+  orig: 60, 60
+  offset: 0, 0
+  index: -1

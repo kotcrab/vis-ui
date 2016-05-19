@@ -70,7 +70,14 @@ public enum FileChooserText implements BundleText {
 	NEW_DIRECTORY_DIALOG_TITLE("newDirectoryDialogTitle"),
 	NEW_DIRECTORY_DIALOG_TEXT("newDirectoryDialogText"),
 	NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS("newDirectoryDialogIllegalCharacters"),
-	NEW_DIRECTORY_DIALOG_ALREADY_EXISTS("newDirectoryDialogAlreadyExists");
+	NEW_DIRECTORY_DIALOG_ALREADY_EXISTS("newDirectoryDialogAlreadyExists"),
+
+	CHANGE_VIEW_MODE("changeViewMode"),
+	VIEW_MODE_LIST("viewModeList"),
+	VIEW_MODE_DETAILS("viewModeDetails"),
+	VIEW_MODE_BIG_ICONS("viewModeBigIcons"),
+	VIEW_MODE_MEDIUM_ICONS("viewModeMediumIcons"),
+	VIEW_MODE_SMALL_ICONS("viewModeSmallIcons");
 
 	private final String name;
 

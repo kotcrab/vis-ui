@@ -109,6 +109,7 @@ public class FilePopupMenu extends PopupMenu {
 	public void build () {
 		clearChildren();
 		addItem(newDirectory);
+		addItem(refresh);
 	}
 
 	public void build (Array<FileHandle> favorites, FileHandle file) {

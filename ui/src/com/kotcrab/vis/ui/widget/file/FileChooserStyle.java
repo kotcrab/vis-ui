@@ -34,6 +34,7 @@ public class FileChooserStyle {
 	public Drawable iconStar;
 	public Drawable iconStarOutline;
 	public Drawable iconRefresh;
+	public Drawable iconListSettings;
 
 	public Drawable iconFileText;
 	public Drawable iconFileImage;

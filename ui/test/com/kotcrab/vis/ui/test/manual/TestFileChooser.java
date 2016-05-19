@@ -35,6 +35,9 @@ public class TestFileChooser extends VisWindow {
 
 		FileChooser.setDefaultPrefsName("com.kotcrab.vis.ui.test.manual");
 		final FileChooser chooser = new FileChooser(Mode.OPEN);
+		chooser.setSelectionMode(FileChooser.SelectionMode.FILES_AND_DIRECTORIES);
+		chooser.setMultiSelectionEnabled(true);
+		chooser.setIconProvider(new ImgScalrFileChooserIconProvider(chooser));
 		chooser.setListener(new StreamingFileChooserListener() {
 			@Override
 			public void selected (FileHandle file) {

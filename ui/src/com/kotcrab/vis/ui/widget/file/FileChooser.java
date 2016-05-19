@@ -25,10 +25,12 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.Sizes;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.layout.GridGroup;
 import com.kotcrab.vis.ui.util.OsUtils;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
@@ -70,12 +72,13 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private static final ShortcutsComparator SHORTCUTS_COMPARATOR = new ShortcutsComparator();
 
 	private Mode mode;
+	private ViewMode viewMode = ViewMode.DETAILS;
 	private SelectionMode selectionMode = SelectionMode.FILES;
 	private FileChooserListener listener = new FileChooserAdapter();
 	private FileFilter fileFilter = new DefaultFileFilter(this);
 	private FileTypeFilter fileTypeFilter = null;
 	private FileTypeFilter.Rule activeFileTypeRule = null;
-	private FileIconProvider iconProvider = new DefaultFileIconProvider(this);
+	private FileIconProvider iconProvider;
 
 	private DriveCheckerService driveCheckerService = DriveCheckerService.getInstance();
 	private FileChooserWinService chooserWinService = FileChooserWinService.getInstance();
@@ -118,16 +121,18 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private ListView<FileHandle> fileListView;
 
 	private VisImageButton favoriteFolderButton;
+	private VisImageButton viewModeButton;
 	private Tooltip favoriteFolderButtonTooltip;
 	private VisTextField currentPath;
 	private VisTextField selectedFileTextField;
 	private VisSelectBox<FileTypeFilter.Rule> fileTypeSelectBox;
-	private VisTextButton confirmButton;
 
+	private VisTextButton confirmButton;
 	private FilePopupMenu fileMenu;
 	private FileSuggestionPopup fileNameSuggestionPopup;
 	private DirsSuggestionPopup dirsSuggestionPopup;
 	private VisLabel fileTypeLabel;
+	private PopupMenu viewModePopupMenu;
 
 	/** @param mode whether this chooser will be used to open or save files */
 	public FileChooser (Mode mode) {
@@ -195,10 +200,13 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		addCloseButton();
 		closeOnEscape();
 
+		iconProvider = new DefaultFileIconProvider(this);
 		preferencesIO = new PreferencesIO();
 		reloadPreferences(false);
 
 		createToolbar();
+		viewModePopupMenu = new PopupMenu(style.popupMenuStyleName);
+		createViewModePopupMenu();
 		createCenterContentPanel();
 		createFileTextBox();
 		createBottomButtons();
@@ -236,6 +244,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		setFileTypeFilter(null);
 		setFavoriteFolderButtonVisible(false);
+//		setViewModeButtonVisible(false);
 	}
 
 	private void createToolbar () {
@@ -315,6 +324,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		VisImageButton folderParentButton = new VisImageButton(style.iconFolderParent, PARENT_DIRECTORY.get());
 		favoriteFolderButton = new VisImageButton(style.iconStar);
 		favoriteFolderButtonTooltip = new Tooltip.Builder(CONTEXT_MENU_ADD_TO_FAVORITES.get()).target(favoriteFolderButton).build();
+		viewModeButton = new VisImageButton(style.iconListSettings);
+		new Tooltip.Builder(CHANGE_VIEW_MODE.get()).target(viewModeButton).build();
 		VisImageButton folderNewButton = new VisImageButton(style.iconFolderNew, NEW_DIRECTORY.get());
 
 		toolbarTable.add(historyManager.getButtonsTable());
@@ -322,6 +333,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		toolbarTable.add(showRecentDirButton).width(15 * sizes.scaleFactor).growY();
 		toolbarTable.add(folderParentButton);
 		toolbarTable.add(favoriteFolderButton).width(PrefWidthIfVisibleValue.INSTANCE).spaceRight(new ConstantIfVisibleValue(sizes.spacingRight));
+		toolbarTable.add(viewModeButton).width(PrefWidthIfVisibleValue.INSTANCE).spaceRight(new ConstantIfVisibleValue(sizes.spacingRight));
 		toolbarTable.add(folderNewButton);
 
 		folderParentButton.addListener(new ChangeListener() {
@@ -356,6 +368,31 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		});
 
 		addListener(historyManager.getDefaultClickListener());
+	}
+
+	private void createViewModePopupMenu () {
+		rebuildViewModePopupMenu();
+		viewModeButton.addListener(new InputListener() {
+			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				viewModePopupMenu.showMenu(getStage(), viewModeButton);
+				event.stop();
+				return true;
+			}
+		});
+	}
+
+	private void rebuildViewModePopupMenu () {
+		viewModePopupMenu.clear();
+		for (final ViewMode mode : ViewMode.values()) {
+			if (mode.thumbnailMode && iconProvider.isThumbnailModesSupported() == false) continue;
+			viewModePopupMenu.addItem(new MenuItem(mode.getBundleText(), new ChangeListener() {
+				@Override
+				public void changed (ChangeEvent event, Actor actor) {
+					setViewMode(mode);
+				}
+			}));
+		}
 	}
 
 	private void updateFavoriteFolderButton () {
@@ -911,6 +948,17 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		refresh();
 	}
 
+	public ViewMode getViewMode () {
+		return viewMode;
+	}
+
+	public void setViewMode (ViewMode viewMode) {
+		if (this.viewMode == viewMode) return;
+		this.viewMode = viewMode;
+		iconProvider.viewModeChanged(viewMode);
+		rebuildFileList();
+	}
+
 	public void setDirectory (String directory) {
 		setDirectory(Gdx.files.absolute(directory), HistoryPolicy.CLEAR);
 	}
@@ -933,6 +981,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		if (historyPolicy == HistoryPolicy.ADD) historyManager.historyAdd();
 
 		currentDirectory = directory;
+		iconProvider.directoryChanged(directory);
+
 		rebuildFileList();
 
 		if (historyPolicy == HistoryPolicy.CLEAR) historyManager.historyClear();
@@ -1026,6 +1076,14 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		return favoriteFolderButton.isVisible();
 	}
 
+	public void setViewModeButtonVisible (boolean viewModeButtonVisible) {
+		viewModeButton.setVisible(viewModeButtonVisible);
+	}
+
+	public boolean isViewModeButtonVisible () {
+		return viewModeButton.isVisible();
+	}
+
 	public boolean isMultiSelectionEnabled () {
 		return multiSelectionEnabled;
 	}
@@ -1075,6 +1133,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		return style;
 	}
 
+	public Sizes getSizes () {
+		return sizes;
+	}
+
 	/**
 	 * If false file chooser won't pool directories for changes, adding new files or connecting new drive won't refresh file list.
 	 * This must be called when file chooser is not added to Stage
@@ -1112,6 +1174,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		if (stage != null) {
 			refresh();
 			rebuildShortcutsFavoritesPanel(); //if by any chance multiple choosers changed favorites
+			deselectAll();
 		}
 
 		if (watchingFilesEnabled) {
@@ -1236,6 +1299,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	public void setIconProvider (FileIconProvider iconProvider) {
 		this.iconProvider = iconProvider;
+		rebuildViewModePopupMenu();
 	}
 
 	public enum Mode {
@@ -1250,32 +1314,140 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		ADD, CLEAR, IGNORE
 	}
 
+	public enum ViewMode {
+		DETAILS(false, VIEW_MODE_DETAILS),
+
+		BIG_ICONS(true, VIEW_MODE_BIG_ICONS),
+		MEDIUM_ICONS(true, VIEW_MODE_MEDIUM_ICONS),
+		SMALL_ICONS(true, VIEW_MODE_SMALL_ICONS),
+
+		LIST(false, VIEW_MODE_LIST);
+
+		private final FileChooserText bundleText;
+		private final boolean thumbnailMode;
+
+		ViewMode (boolean thumbnailMode, FileChooserText bundleText) {
+			this.thumbnailMode = thumbnailMode;
+			this.bundleText = bundleText;
+		}
+
+		public String getBundleText () {
+			return bundleText.get();
+		}
+
+		public void setupGridGroup (Sizes sizes, GridGroup group) {
+			if (isGridMode() == false) return;
+			if (this == LIST) {
+				group.setItemSize(getGridSize(sizes), 22 * sizes.scaleFactor);
+				return;
+			}
+			group.setItemSize(getGridSize(sizes));
+		}
+
+		public boolean isGridMode () {
+			return isThumbnailMode() || this == LIST;
+		}
+
+		public boolean isThumbnailMode () {
+			return thumbnailMode;
+		}
+
+		public float getGridSize (Sizes sizes) {
+			switch (this) {
+				case DETAILS:
+					return -1;
+				case BIG_ICONS:
+					return sizes.fileChooserViewModeBigIconsSize;
+				case MEDIUM_ICONS:
+					return sizes.fileChooserViewModeMediumIconsSize;
+				case SMALL_ICONS:
+					return sizes.fileChooserViewModeSmallIconsSize;
+				case LIST:
+					return sizes.fileChooserViewModeListWidthSize;
+				default:
+					return -1;
+			}
+		}
+	}
+
 	/**
 	 * Provides icons that will be used for file thumbnail on file list. If not set default is used that supports
 	 * directories and few basic file types. If you want to add your custom icon your should extend {@link DefaultFileIconProvider}
 	 */
 	public interface FileIconProvider {
 		/** @return icon that will be used for this file or null if no icon should be displayed */
-		Drawable provideIcon (FileHandle file);
+		Drawable provideIcon (FileItem item, FileHandle file);
+
+		/**
+		 * @return true if this icon provider can supply proper icons for {@link ViewMode#BIG_ICONS}, {@link ViewMode#MEDIUM_ICONS}
+		 * and {@link ViewMode#SMALL_ICONS} view modes, false otherwise. If false thumbnail view modes won't be available for selection.
+		 */
+		boolean isThumbnailModesSupported ();
+
+		void directoryChanged (FileHandle newDirectory);
+
+		void viewModeChanged (ViewMode newViewMode);
 	}
 
 	public static class DefaultFileIconProvider implements FileIconProvider {
-		private FileChooser chooser;
+		protected FileChooser chooser;
+		protected FileChooserStyle style;
+
+		protected FileItem currentItem;
+		protected FileHandle currentFile;
 
 		public DefaultFileIconProvider (FileChooser chooser) {
 			this.chooser = chooser;
+			this.style = chooser.style;
 		}
 
 		@Override
-		public Drawable provideIcon (FileHandle file) {
-			FileChooserStyle style = chooser.style;
-			if (file.isDirectory()) return style.iconFolder;
-			String ext = file.extension();
-			if (ext.equals("jpg") || ext.equals("png")) return style.iconFileImage;
-			if (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) return style.iconFileAudio;
-			if (ext.equals("pdf")) return style.iconFilePdf;
-			if (ext.equals("txt")) return style.iconFileText;
+		public Drawable provideIcon (FileItem item, FileHandle file) {
+			this.currentItem = item;
+			this.currentFile = file;
+
+			if (file.isDirectory()) return getDirIcon();
+			String ext = file.extension().toLowerCase();
+			if (ext.equals("jpg") || ext.equals("png") || ext.equals("bmp")) return getImageIcon();
+			if (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) return getAudioIcon();
+			if (ext.equals("pdf")) return getPdfIcon();
+			if (ext.equals("txt")) return getTextIcon();
 			return null;
+		}
+
+		protected Drawable getDirIcon () {
+			return style.iconFolder;
+		}
+
+		protected Drawable getImageIcon () {
+			return style.iconFileImage;
+		}
+
+		protected Drawable getAudioIcon () {
+			return style.iconFileAudio;
+		}
+
+		protected Drawable getPdfIcon () {
+			return style.iconFilePdf;
+		}
+
+		protected Drawable getTextIcon () {
+			return style.iconFileText;
+		}
+
+		@Override
+		public boolean isThumbnailModesSupported () {
+			return false;
+		}
+
+		@Override
+		public void directoryChanged (FileHandle newDirectory) {
+
+		}
+
+		@Override
+		public void viewModeChanged (ViewMode newViewMode) {
+
 		}
 	}
 
@@ -1315,14 +1487,16 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	/** Internal FileChooser API. */
 	public class FileItem extends Table implements Focusable {
-		public FileHandle file;
+		private FileHandle file;
 		private VisLabel name;
 		private VisLabel size;
+		private Image iconImage;
 
-		public FileItem (final FileHandle file) {
+		public FileItem (final FileHandle file, ViewMode viewMode) {
 			this.file = file;
 			setTouchable(Touchable.enabled);
-			name = new VisLabel(file.name());
+
+			name = new VisLabel(file.name(), viewMode == ViewMode.SMALL_ICONS ? "small" : "default");
 			name.setEllipsis(true);
 
 			if (file.isDirectory())
@@ -1330,15 +1504,29 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			else
 				size = new VisLabel(FileUtils.readableFileSize(file.length()));
 
-			Drawable icon = iconProvider.provideIcon(file);
+			Drawable icon = iconProvider.provideIcon(this, file);
 
-			if (icon != null) add(new Image(icon)).padTop(3).minWidth(22 * sizes.scaleFactor);
-			add(name).minWidth(1).padLeft(icon == null ? 22 : 0);
-
-			add().growX().minWidth(0);
-			add(size).right().padRight(6);
+			if (viewMode.isThumbnailMode()) {
+				add(iconImage = new Image(icon, Scaling.none)).padTop(3).grow().row();
+				add(name).minWidth(1);
+			} else {
+				if (icon != null) add(iconImage = new Image(icon)).padTop(3).minWidth(22 * sizes.scaleFactor);
+				add(name).minWidth(1).padLeft(icon == null ? 22 : 0);
+				add().growX().minWidth(0);
+				if (viewMode == ViewMode.DETAILS) {
+					add(size).right().padRight(6);
+				}
+			}
 
 			addListener();
+		}
+
+		/**
+		 * Updates file item icon, can be used for asynchronous icon loading. Note that icon provided must not return null
+		 * even if this item icon will be loaded later.
+		 */
+		public void setIcon (Drawable icon) {
+			iconImage.setDrawable(icon);
 		}
 
 		private void addListener () {
@@ -1471,6 +1659,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		@Override
 		public void focusGained () {
 
+		}
+
+		public FileHandle getFile () {
+			return file;
 		}
 	}
 

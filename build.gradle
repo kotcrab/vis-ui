@@ -121,6 +121,7 @@ project(':ui') {
         testCompile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
         testCompile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         testCompile "junit:junit:$junitVersion"
+        testCompile "org.imgscalr:imgscalr-lib:4.2"
     }
 }
 

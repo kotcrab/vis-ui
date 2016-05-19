@@ -44,5 +44,10 @@ public class Sizes {
 	public float spinnerButtonsWidth;
 	public float spinnerFieldSize;
 	public float spinnerFieldRightPadding;
+
+	public float fileChooserViewModeBigIconsSize;
+	public float fileChooserViewModeMediumIconsSize;
+	public float fileChooserViewModeSmallIconsSize;
+	public float fileChooserViewModeListWidthSize;
 }
 

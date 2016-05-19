@@ -24,6 +24,12 @@ processResources {
     }
 }
 
+processTestResources {
+    from ('test/') {
+        exclude ('**/*.java')
+    }
+}
+
 eclipse.project {
     name = appName + "-ui"
 }
