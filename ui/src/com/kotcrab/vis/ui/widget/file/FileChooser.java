@@ -1409,7 +1409,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			FileHandle file = item.getFile();
 			if (file.isDirectory()) return getDirIcon(item);
 			String ext = file.extension().toLowerCase();
-			if (ext.equals("jpg") || ext.equals("png") || ext.equals("bmp")) return getImageIcon(item);
+			if (ext.equals("jpg") || ext.equals("jpeg") || ext.equals("png") || ext.equals("bmp")) return getImageIcon(item);
 			if (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) return getAudioIcon(item);
 			if (ext.equals("pdf")) return getPdfIcon(item);
 			if (ext.equals("txt")) return getTextIcon(item);
