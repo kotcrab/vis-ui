@@ -62,37 +62,37 @@ public class HighResFileChooserIconProvider extends FileChooser.DefaultFileIconP
 	}
 
 	@Override
-	protected Drawable getDirIcon () {
+	protected Drawable getDirIcon (FileChooser.FileItem item) {
 		Drawable icon = getIcon(iconFolderBig, chooser.getViewMode());
-		if (icon == null) return super.getDirIcon();
+		if (icon == null) return super.getDirIcon(item);
 		return icon;
 	}
 
 	@Override
-	protected Drawable getImageIcon () {
+	protected Drawable getImageIcon (FileChooser.FileItem item) {
 		Drawable icon = getIcon(iconFileImage, chooser.getViewMode());
-		if (icon == null) return super.getImageIcon();
+		if (icon == null) return super.getImageIcon(item);
 		return icon;
 	}
 
 	@Override
-	protected Drawable getAudioIcon () {
+	protected Drawable getAudioIcon (FileChooser.FileItem item) {
 		Drawable icon = getIcon(iconFileAudio, chooser.getViewMode());
-		if (icon == null) return super.getAudioIcon();
+		if (icon == null) return super.getAudioIcon(item);
 		return icon;
 	}
 
 	@Override
-	protected Drawable getPdfIcon () {
+	protected Drawable getPdfIcon (FileChooser.FileItem item) {
 		Drawable icon = getIcon(iconFilePdf, chooser.getViewMode());
-		if (icon == null) return super.getPdfIcon();
+		if (icon == null) return super.getPdfIcon(item);
 		return icon;
 	}
 
 	@Override
-	protected Drawable getTextIcon () {
+	protected Drawable getTextIcon (FileChooser.FileItem item) {
 		Drawable icon = getIcon(iconFileText, chooser.getViewMode());
-		if (icon == null) return super.getTextIcon();
+		if (icon == null) return super.getTextIcon(item);
 		return icon;
 	}
 

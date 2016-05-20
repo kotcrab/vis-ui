@@ -56,12 +56,11 @@ public class ImgScalrFileChooserIconProvider extends HighResFileChooserIconProvi
 	}
 
 	@Override
-	protected Drawable getImageIcon () {
+	protected Drawable getImageIcon (final FileChooser.FileItem item) {
 		if (chooser.getViewMode().isThumbnailMode()) {
-			final FileChooser.FileItem item = currentItem;
-			final FileHandle file = currentFile;
 			final FileChooser.ViewMode viewMode = chooser.getViewMode();
 			final float thumbSize = viewMode.getGridSize(chooser.getSizes());
+			final FileHandle file = item.getFile();
 
 			Thumbnail thumbnail = getThumbnail(file);
 			if (thumbnail == null) {
@@ -76,7 +75,7 @@ public class ImgScalrFileChooserIconProvider extends HighResFileChooserIconProvi
 				@Override
 				public void run () {
 					try {
-						ImageInfo imageInfo = new ImageInfo(currentFile);
+						ImageInfo imageInfo = new ImageInfo(file);
 						if (imageInfo.width > MAX_IMAGE_WIDTH || imageInfo.height > MAX_IMAGE_HEIGHT) return;
 
 						final BufferedImage imageFile = ImageIO.read(file.file());
@@ -95,7 +94,7 @@ public class ImgScalrFileChooserIconProvider extends HighResFileChooserIconProvi
 			});
 		}
 
-		return super.getImageIcon();
+		return super.getImageIcon(item);
 	}
 
 	private void updateItemImage (final Thumbnail thumbnail, final FileChooser.ViewMode viewMode, final FileChooser.FileItem item,

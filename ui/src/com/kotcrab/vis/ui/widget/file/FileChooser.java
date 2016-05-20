@@ -244,7 +244,6 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		setFileTypeFilter(null);
 		setFavoriteFolderButtonVisible(false);
-//		setViewModeButtonVisible(false);
 	}
 
 	private void createToolbar () {
@@ -1376,7 +1375,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	 */
 	public interface FileIconProvider {
 		/** @return icon that will be used for this file or null if no icon should be displayed */
-		Drawable provideIcon (FileItem item, FileHandle file);
+		Drawable provideIcon (FileItem item);
 
 		/**
 		 * @return true if this icon provider can supply proper icons for {@link ViewMode#BIG_ICONS}, {@link ViewMode#MEDIUM_ICONS}
@@ -1393,49 +1392,44 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		protected FileChooser chooser;
 		protected FileChooserStyle style;
 
-		protected FileItem currentItem;
-		protected FileHandle currentFile;
-
 		public DefaultFileIconProvider (FileChooser chooser) {
 			this.chooser = chooser;
 			this.style = chooser.style;
 		}
 
 		@Override
-		public Drawable provideIcon (FileItem item, FileHandle file) {
-			this.currentItem = item;
-			this.currentFile = file;
-
-			if (file.isDirectory()) return getDirIcon();
+		public Drawable provideIcon (FileItem item) {
+			FileHandle file = item.getFile();
+			if (file.isDirectory()) return getDirIcon(item);
 			String ext = file.extension().toLowerCase();
-			if (ext.equals("jpg") || ext.equals("png") || ext.equals("bmp")) return getImageIcon();
-			if (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) return getAudioIcon();
-			if (ext.equals("pdf")) return getPdfIcon();
-			if (ext.equals("txt")) return getTextIcon();
-			return getDefaultIcon();
+			if (ext.equals("jpg") || ext.equals("png") || ext.equals("bmp")) return getImageIcon(item);
+			if (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) return getAudioIcon(item);
+			if (ext.equals("pdf")) return getPdfIcon(item);
+			if (ext.equals("txt")) return getTextIcon(item);
+			return getDefaultIcon(item);
 		}
 
-		protected Drawable getDirIcon () {
+		protected Drawable getDirIcon (FileItem item) {
 			return style.iconFolder;
 		}
 
-		protected Drawable getImageIcon () {
+		protected Drawable getImageIcon (FileItem item) {
 			return style.iconFileImage;
 		}
 
-		protected Drawable getAudioIcon () {
+		protected Drawable getAudioIcon (FileItem item) {
 			return style.iconFileAudio;
 		}
 
-		protected Drawable getPdfIcon () {
+		protected Drawable getPdfIcon (FileItem item) {
 			return style.iconFilePdf;
 		}
 
-		protected Drawable getTextIcon () {
+		protected Drawable getTextIcon (FileItem item) {
 			return style.iconFileText;
 		}
 
-		protected Drawable getDefaultIcon () {
+		protected Drawable getDefaultIcon (FileItem item) {
 			return null;
 		}
 
@@ -1508,7 +1502,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			else
 				size = new VisLabel(FileUtils.readableFileSize(file.length()));
 
-			Drawable icon = iconProvider.provideIcon(this, file);
+			Drawable icon = iconProvider.provideIcon(this);
 
 			if (viewMode.isThumbnailMode()) {
 				add(iconImage = new Image(icon, Scaling.none)).padTop(3).grow().row();

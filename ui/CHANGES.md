@@ -3,6 +3,7 @@
 - **API Deprecated**: `FileChooser.setFavoritesPrefsName()` replaced by `FileChooser.setDefaultPrefsName()`
 - **API Changed**: GridGroup is now taking float for item size instead of int.
     - **Warning:** There were two constructors `GridGroup (float spacing)` and `GridGroup (int itemSize)`. Constructor taking float spacing was removed. Constructor taking int item size now takes float. 
+- **API Changed**: Refactored `FileChoose.FileIconProvider`, new methods added. `#provideIcon` takes `FileChooser.FileItem`, was `FileHandle`
 - **Added**: default styles for `ImageButton` and `ImageTextButton`. Note: this is only applies to standard scene2d widgets. VisUI widgets equivalents (`VisImageButton`, `VisImageTextButton`) already had them.
 - **Added**: `SimpleFormValidator#validate`
 - **Added**: `ToastManager`, `Toast`, `ToastTable`
@@ -18,6 +19,7 @@
 - **Added**: `PopupMenu#showMenu (Stage stage, Actor actor)`
 - **Added**: `ConstantIfVisibleValue`
 - **Added**: `Sizes#borderSize`
+- **Added**: `Sizes#fileChooserViewModeBigIconsSize`, `fileChooserViewModeMediumIconsSize`, `fileChooserViewModeSmallIconsSize`, `fileChooserViewModeListWidthSize`
 - **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get it's cells for customization)
 - **Changed**: `FileChooser` now tries to maintain selection while rebuilding file list
 - **Changed**: `FileChooser` will now select new folder after creating it 
@@ -37,12 +39,13 @@
 - **Fixed**: `FileChooser` crash when user manually entered path to file instead of directory
 - **Fixed**: `FocusManager` calling `focusLost()` when the widget that was already focused tried to gain focus again
 - **Skin changes**:
-    - **Changed**: `FileChooserStyle`: added drawable fields: `iconStar`, `iconStarOutline`, `iconRefresh`, `expandDropdown`
+    - **Changed**: `FileChooserStyle`: added drawable fields: `iconStar`, `iconStarOutline`, `iconRefresh`, `iconListSettings`, `expandDropdown`
     - **Added**: drawable `window-border-bg.9`, `icon-star`, `icon-star-outline`, `icon-refresh`, `icon-list-settings`
     - **Added**: style `BaseToastStyle`
     - **Added**: VisTextField `label` style - if combined with read-only mode allows to create selectable labels
 - **I18N Changes**:
-    - **FileChooser**: added keys `contextMenuRefresh`, `fileType`, `allFiles`
+    - **FileChooser**: added keys `contextMenuRefresh`, `fileType`, `allFiles`, `changeViewMode`, `viewModeList`, 
+                                    `viewModeDetails`, `viewModeBigIcons`, `viewModeMediumIcons`, `viewModeSmallIcons`
 
 #### Version: 1.0.2 (LibGDX 1.9.2)
 - **Changed**: [#163](https://github.com/kotcrab/vis-editor/issues/163) - When `VisCheckBox` or `VisTextField` is disabled and is marked as invalid then error border won't be drawn. 
