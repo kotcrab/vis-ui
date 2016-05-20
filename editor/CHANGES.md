@@ -15,6 +15,7 @@
 - **Fixed**: Twitter view URL parsing issues
 - **Fixed**: When opening new scene selection tool as used instead of currently active tool
 - **Fixed**: [https://github.com/kotcrab/vis-editor/issues/181] - invalid rotate and scale tools size when using non default pixels per unit values 
+- **Fixed**: Error when opening project that doesn't have `vis/assets/gfx` folder
 
 #### Version: 0.3.1
 - **Added**: Scale entities tool

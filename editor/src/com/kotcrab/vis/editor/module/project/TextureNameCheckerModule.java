@@ -39,7 +39,7 @@ public class TextureNameCheckerModule extends ProjectModule implements WatchList
 	public void init () {
 		assetsWatcher.addListener(this);
 
-		FileUtils.streamFilesRecursively(fileAccess.getGfxFolder(), this::fileCreated);
+		FileUtils.streamFilesRecursively(fileAccess.getAssetsFolder(), this::fileCreated);
 	}
 
 	@Override
@@ -51,11 +51,9 @@ public class TextureNameCheckerModule extends ProjectModule implements WatchList
 	public void fileCreated (FileHandle file) {
 		if (warningShown) return;
 
-		String relativePath = fileAccess.relativizeToAssetsFolder(file);
-		if (relativePath.startsWith("gfx") == false || ProjectPathUtils.isTexture(file) == false) return;
+		if (ProjectPathUtils.isTexture(file) == false) return;
 
 		String pathWithoutExt = file.pathWithoutExtension();
-
 		if (paths.contains(pathWithoutExt)) {
 			//TODO details dialog supporting auto text wrapping
 			toastModule.show(new DetailsToast("Warning, found invalid textures in gfx directory", "Details",
@@ -65,17 +63,14 @@ public class TextureNameCheckerModule extends ProjectModule implements WatchList
 							"\nand `image.jpg`. It is recommend to remove one of those conflicting files, otherwise " +
 							"\nonly one of them will be available.\n\nFile: " + pathWithoutExt));
 			warningShown = true;
-		} else
+		} else {
 			paths.add(pathWithoutExt);
+		}
 	}
 
 	@Override
 	public void fileDeleted (FileHandle file) {
 		if (warningShown) return;
-
-		String relativePath = fileAccess.relativizeToAssetsFolder(file);
-		if (relativePath.startsWith("gfx") == false) return;
-
 		String pathWithoutExt = file.pathWithoutExtension();
 		paths.remove(pathWithoutExt);
 	}
