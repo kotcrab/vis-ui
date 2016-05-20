@@ -374,8 +374,15 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		viewModeButton.addListener(new InputListener() {
 			@Override
 			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-				viewModePopupMenu.showMenu(getStage(), viewModeButton);
-				event.stop();
+				//show menu on next frame, without it menu would be closed instantly it was opened
+				//the other solution is to call event.stop but this could lead to some other PopupMenu not being closed
+				//on touchDown event because event.stop stops event propagation
+				Gdx.app.postRunnable(new Runnable() {
+					@Override
+					public void run () {
+						viewModePopupMenu.showMenu(getStage(), viewModeButton);
+					}
+				});
 				return true;
 			}
 		});
@@ -446,7 +453,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 			@Override
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				if (button == Buttons.RIGHT && selectedItems.size == 0) {
+				if (button == Buttons.RIGHT) {
 					fileMenu.build();
 					fileMenu.showMenu(getStage(), event.getStageX(), event.getStageY());
 				}
@@ -1526,6 +1533,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		public void setIcon (Drawable icon, Scaling scaling) {
 			iconImage.setDrawable(icon);
 			iconImage.setScaling(scaling);
+			iconImage.invalidateHierarchy();
 		}
 
 		private void addListener () {
