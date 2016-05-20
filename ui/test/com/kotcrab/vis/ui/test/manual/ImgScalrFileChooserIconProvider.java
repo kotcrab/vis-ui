@@ -24,15 +24,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.badlogic.gdx.utils.*;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 import org.imgscalr.Scalr;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -41,6 +42,8 @@ public class ImgScalrFileChooserIconProvider extends HighResFileChooserIconProvi
 	private static final Color tmpColor = new Color();
 	private static final int MAX_CACHED = 600;
 	private static final int MAX_THREADS = 1;
+	private static final int MAX_IMAGE_WIDTH = 4096;
+	private static final int MAX_IMAGE_HEIGHT = 4096;
 
 	private final FileChooser chooser;
 	private ExecutorService executor = Executors.newFixedThreadPool(MAX_THREADS);
@@ -73,6 +76,9 @@ public class ImgScalrFileChooserIconProvider extends HighResFileChooserIconProvi
 				@Override
 				public void run () {
 					try {
+						ImageInfo imageInfo = new ImageInfo(currentFile);
+						if (imageInfo.width > MAX_IMAGE_WIDTH || imageInfo.height > MAX_IMAGE_HEIGHT) return;
+
 						final BufferedImage imageFile = ImageIO.read(file.file());
 						final BufferedImage scaledImg = Scalr.resize(imageFile, Scalr.Method.BALANCED, Scalr.Mode.AUTOMATIC, (int) thumbSize);
 
@@ -108,7 +114,7 @@ public class ImgScalrFileChooserIconProvider extends HighResFileChooserIconProvi
 					}
 
 					thumbnail.addThumb(viewMode, texture);
-					item.setIcon(thumbnail.getThumb(viewMode));
+					item.setIcon(thumbnail.getThumb(viewMode), Scaling.fit);
 				} catch (GdxRuntimeException e) {
 					e.printStackTrace();
 				}
@@ -198,6 +204,72 @@ public class ImgScalrFileChooserIconProvider extends HighResFileChooserIconProvi
 	public void dispose () {
 		executor.shutdown();
 		super.dispose();
+	}
+
+	private static class ImageInfo {
+		private int height;
+		private int width;
+
+		public ImageInfo (FileHandle file) {
+			process(file);
+		}
+
+		public void process (FileHandle file) {
+			width = -1;
+			height = -1;
+			InputStream is = null;
+			try {
+				is = new FileInputStream(file.file());
+				processStream(is);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				StreamUtils.closeQuietly(is);
+			}
+		}
+
+		private void processStream (InputStream is) throws IOException {
+			int c1 = is.read();
+			int c2 = is.read();
+			int c3 = is.read();
+
+			if (c1 == 0xFF && c2 == 0xD8) { // JPG
+				while (c3 == 255) {
+					int marker = is.read();
+					int len = readInt(is, 2, true);
+					if (marker == 192 || marker == 193 || marker == 194) {
+						is.skip(1);
+						height = readInt(is, 2, true);
+						width = readInt(is, 2, true);
+						break;
+					}
+					is.skip(len - 2);
+					c3 = is.read();
+				}
+			} else if (c1 == 137 && c2 == 80 && c3 == 78) { // PNG
+				is.skip(15);
+				width = readInt(is, 2, true);
+				is.skip(2);
+				height = readInt(is, 2, true);
+			} else if (c1 == 66 && c2 == 77) { // BMP
+				is.skip(15);
+				width = readInt(is, 2, false);
+				is.skip(2);
+				height = readInt(is, 2, false);
+			}
+
+		}
+
+		private int readInt (InputStream is, int noOfBytes, boolean bigEndian) throws IOException {
+			int ret = 0;
+			int sv = bigEndian ? ((noOfBytes - 1) * 8) : 0;
+			int cnt = bigEndian ? -8 : 8;
+			for (int i = 0; i < noOfBytes; i++) {
+				ret |= is.read() << sv;
+				sv += cnt;
+			}
+			return ret;
+		}
 	}
 
 	private static class Thumbnail implements Disposable {

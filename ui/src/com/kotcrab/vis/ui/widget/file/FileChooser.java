@@ -1412,7 +1412,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			if (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) return getAudioIcon();
 			if (ext.equals("pdf")) return getPdfIcon();
 			if (ext.equals("txt")) return getTextIcon();
-			return null;
+			return getDefaultIcon();
 		}
 
 		protected Drawable getDirIcon () {
@@ -1433,6 +1433,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		protected Drawable getTextIcon () {
 			return style.iconFileText;
+		}
+
+		protected Drawable getDefaultIcon () {
+			return null;
 		}
 
 		@Override
@@ -1525,8 +1529,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		 * Updates file item icon, can be used for asynchronous icon loading. Note that icon provided must not return null
 		 * even if this item icon will be loaded later.
 		 */
-		public void setIcon (Drawable icon) {
+		public void setIcon (Drawable icon, Scaling scaling) {
 			iconImage.setDrawable(icon);
+			iconImage.setScaling(scaling);
 		}
 
 		private void addListener () {
