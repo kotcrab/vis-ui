@@ -38,6 +38,7 @@
 - **Fixed**: `FileChooser` non empty directories are now deleted correctly when using default `FileChooser` deleter
 - **Fixed**: `FileChooser` crash when user manually entered path to file instead of directory
 - **Fixed**: `FocusManager` calling `focusLost()` when the widget that was already focused tried to gain focus again
+- **Fixed**: `VisSplitPane` was not implementing `hit(...)` which could result in widget that was underneath split pane's handle get touch events  
 - **Skin changes**:
     - **Changed**: `FileChooserStyle`: added drawable fields: `iconStar`, `iconStarOutline`, `iconRefresh`, `iconListSettings`, `expandDropdown`
     - **Added**: drawable `window-border-bg.9`, `icon-star`, `icon-star-outline`, `icon-refresh`, `icon-list-settings`

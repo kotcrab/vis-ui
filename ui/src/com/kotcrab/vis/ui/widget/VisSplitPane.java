@@ -25,6 +25,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SplitPane.SplitPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
@@ -328,6 +329,16 @@ public class VisSplitPane extends WidgetGroup {
 		handle.draw(batch, handleBounds.x, handleBounds.y, handleBounds.width, handleBounds.height);
 		resetTransform(batch);
 
+	}
+
+	@Override
+	public Actor hit (float x, float y, boolean touchable) {
+		if (touchable && getTouchable() == Touchable.disabled) return null;
+		if (handleBounds.contains(x, y)) {
+			return this;
+		} else {
+			return super.hit(x, y, touchable);
+		}
 	}
 
 	/** @param split The split amount between the min and max amount. */
