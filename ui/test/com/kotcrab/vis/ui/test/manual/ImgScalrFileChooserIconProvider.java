@@ -78,6 +78,11 @@ public class ImgScalrFileChooserIconProvider extends HighResFileChooserIconProvi
 						ImageInfo imageInfo = new ImageInfo(file);
 						if (imageInfo.width > MAX_IMAGE_WIDTH || imageInfo.height > MAX_IMAGE_HEIGHT) return;
 
+						if (imageInfo.width < thumbSize || imageInfo.height < thumbSize) {
+							updateItemImageFromFile(fThumbnail, viewMode, item);
+							return;
+						}
+
 						final BufferedImage imageFile = ImageIO.read(file.file());
 						final BufferedImage scaledImg = Scalr.resize(imageFile, Scalr.Method.BALANCED, Scalr.Mode.AUTOMATIC, (int) thumbSize);
 
@@ -86,7 +91,7 @@ public class ImgScalrFileChooserIconProvider extends HighResFileChooserIconProvi
 							tmpThumbFile = FileHandle.tempFile("filechooser");
 							ImageIO.write(scaledImg, "png", tmpThumbFile.file());
 						}
-						updateItemImage(fThumbnail, viewMode, item, scaledImg, tmpThumbFile);
+						updateItemImageFromScaled(fThumbnail, viewMode, item, scaledImg, tmpThumbFile);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -97,8 +102,8 @@ public class ImgScalrFileChooserIconProvider extends HighResFileChooserIconProvi
 		return super.getImageIcon(item);
 	}
 
-	private void updateItemImage (final Thumbnail thumbnail, final FileChooser.ViewMode viewMode, final FileChooser.FileItem item,
-								  final BufferedImage scaledImg, final FileHandle thumbFile) {
+	private void updateItemImageFromScaled (final Thumbnail thumbnail, final FileChooser.ViewMode viewMode, final FileChooser.FileItem item,
+											final BufferedImage scaledImg, final FileHandle thumbFile) {
 		Gdx.app.postRunnable(new Runnable() {
 			@Override
 			public void run () {
@@ -112,6 +117,21 @@ public class ImgScalrFileChooserIconProvider extends HighResFileChooserIconProvi
 						texture = new Texture(thumbFile);
 					}
 
+					thumbnail.addThumb(viewMode, texture);
+					item.setIcon(thumbnail.getThumb(viewMode), Scaling.fit);
+				} catch (GdxRuntimeException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	private void updateItemImageFromFile (final Thumbnail thumbnail, final FileChooser.ViewMode viewMode, final FileChooser.FileItem item) {
+		Gdx.app.postRunnable(new Runnable() {
+			@Override
+			public void run () {
+				try {
+					Texture texture = new Texture(item.getFile());
 					thumbnail.addThumb(viewMode, texture);
 					item.setIcon(thumbnail.getThumb(viewMode), Scaling.fit);
 				} catch (GdxRuntimeException e) {
