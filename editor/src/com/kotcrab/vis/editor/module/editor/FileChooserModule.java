@@ -19,11 +19,11 @@ package com.kotcrab.vis.editor.module.editor;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
+import com.kotcrab.vis.editor.util.vis.JNAFileDeleter;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
 import com.kotcrab.vis.ui.widget.file.FileChooser.Mode;
 import com.kotcrab.vis.ui.widget.file.FileChooser.SelectionMode;
 import com.kotcrab.vis.ui.widget.file.FileChooserListener;
-import com.kotcrab.vis.ui.contrib.widget.file.JNAFileDeleter;
 
 /**
  * Provides shared file chooser instance

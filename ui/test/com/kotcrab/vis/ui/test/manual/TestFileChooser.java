@@ -38,7 +38,7 @@ public class TestFileChooser extends VisWindow {
 		chooser.setSelectionMode(FileChooser.SelectionMode.FILES_AND_DIRECTORIES);
 		chooser.setMultiSelectionEnabled(true);
 		chooser.setFavoriteFolderButtonVisible(true);
-		chooser.setIconProvider(new ImgScalrFileChooserIconProvider(chooser));
+//		chooser.setIconProvider(new ImgScalrFileChooserIconProvider(chooser));
 		chooser.setListener(new StreamingFileChooserListener() {
 			@Override
 			public void selected (FileHandle file) {
