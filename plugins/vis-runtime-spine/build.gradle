@@ -9,7 +9,7 @@ sourceSets.main.java.srcDirs = ['src/']
 
 processResources {
     from('src/') {
-        exclude ('**/*.java')
+        exclude('**/*.java')
     }
 }
 

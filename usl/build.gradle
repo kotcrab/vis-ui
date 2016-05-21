@@ -8,13 +8,13 @@ archivesBaseName = "vis-usl"
 sourceCompatibility = 1.7
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-sourceSets.main.java.srcDirs = [ "src/" ]
-sourceSets.test.java.srcDirs = [ "test/java" ]
-sourceSets.test.resources.srcDirs = [ "test/resources" ]
+sourceSets.main.java.srcDirs = ["src/"]
+sourceSets.test.java.srcDirs = ["test/java"]
+sourceSets.test.resources.srcDirs = ["test/resources"]
 
 processResources {
-    from ('src/') {
-        exclude ('**/*.java')
+    from('src/') {
+        exclude('**/*.java')
     }
 }
 
