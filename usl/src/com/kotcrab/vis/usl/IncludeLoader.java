@@ -55,7 +55,7 @@ public class IncludeLoader {
 			File tmpFile = new File(tmpFolder, includeName);
 			if (cacheFile.exists()) return cacheFile;
 
-			boolean snapshot = includeName.endsWith("-SNAPSHOT");
+			boolean snapshot = includeName.endsWith("-SNAPSHOT.usl");
 
 			for (String includeSource : includeSources) {
 				if (includeSource.startsWith("https://") || includeSource.startsWith("http://")) {
