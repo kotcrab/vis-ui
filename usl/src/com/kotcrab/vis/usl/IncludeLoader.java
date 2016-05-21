@@ -100,6 +100,6 @@ public class IncludeLoader {
 	}
 
 	public void addIncludeSource (String path) {
-		includeSources.add(path);
+		includeSources.add(0, path);
 	}
 }
