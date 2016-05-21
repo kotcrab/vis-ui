@@ -209,10 +209,9 @@ color-picker-selector-vertical
   index: -1
 cursor
   rotate: false
-  xy: 608, 467
-  size: 3, 3
-  split: 1, 1, 1, 1
-  orig: 3, 3
+  xy: 590, 399
+  size: 1, 1
+  orig: 1, 1
   offset: 0, 0
   index: -1
 default
@@ -232,7 +231,7 @@ default-pane
   index: -1
 default-pane-no-border
   rotate: false
-  xy: 590, 399
+  xy: 573, 432
   size: 1, 1
   split: 0, 0, 0, 0
   orig: 1, 1
@@ -248,7 +247,7 @@ default-select
   index: -1
 default-select-selection
   rotate: false
-  xy: 535, 323
+  xy: 608, 467
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -263,14 +262,14 @@ font-small
   index: -1
 grey
   rotate: false
-  xy: 573, 432
+  xy: 573, 430
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 menu-bg
   rotate: false
-  xy: 573, 432
+  xy: 573, 430
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -396,14 +395,14 @@ icon-trash
   index: -1
 list-selection
   rotate: false
-  xy: 573, 430
+  xy: 563, 389
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 vis-blue
   rotate: false
-  xy: 573, 430
+  xy: 563, 389
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -529,14 +528,14 @@ scroll-knob-vertical
   index: -1
 select-box-list-bg
   rotate: false
-  xy: 563, 389
+  xy: 565, 389
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 window-bg
   rotate: false
-  xy: 563, 389
+  xy: 565, 389
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -557,28 +556,28 @@ select-up
   index: -1
 selection
   rotate: false
-  xy: 565, 389
+  xy: 539, 325
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator
   rotate: false
-  xy: 539, 325
+  xy: 592, 399
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 tree-over
   rotate: false
-  xy: 539, 325
+  xy: 592, 399
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 separator-menu
   rotate: false
-  xy: 592, 399
+  xy: 594, 399
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
@@ -662,7 +661,7 @@ sub-menu
   index: -1
 tooltip-bg
   rotate: false
-  xy: 460, 85
+  xy: 535, 323
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -691,7 +690,7 @@ tree-plus
   index: -1
 tree-selection
   rotate: false
-  xy: 783, 472
+  xy: 460, 85
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
@@ -699,14 +698,14 @@ tree-selection
   index: -1
 vis-red
   rotate: false
-  xy: 594, 399
+  xy: 539, 323
   size: 1, 1
   orig: 1, 1
   offset: 0, 0
   index: -1
 white
   rotate: false
-  xy: 818, 479
+  xy: 783, 472
   size: 3, 3
   orig: 3, 3
   offset: 0, 0
@@ -721,7 +720,7 @@ window
   index: -1
 window-border-bg
   rotate: false
-  xy: 512, 281
+  xy: 818, 479
   size: 3, 3
   split: 1, 1, 1, 1
   orig: 3, 3
