@@ -122,6 +122,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	private boolean inputValid = true;
 	private boolean ignoreEqualsTextChange = true;
 	private boolean readOnly = false;
+	private float cursorPercentHeight = 0.8f;
 
 	public VisTextField () {
 		this("", VisUI.getSkin().get(VisTextFieldStyle.class));
@@ -400,9 +401,11 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	}
 
 	protected void drawCursor (Drawable cursorPatch, Batch batch, BitmapFont font, float x, float y) {
+		float cursorHeight = textHeight * cursorPercentHeight;
+		float cursorYPadding = (textHeight - cursorHeight) / 2;
 		cursorPatch.draw(batch,
 				x + textOffset + glyphPositions.get(cursor) - glyphPositions.get(visibleTextStart) + fontOffset + font.getData().cursorX,
-				y - textHeight - font.getDescent(), cursorPatch.getMinWidth(), textHeight);
+				y - textHeight - font.getDescent() + cursorYPadding, cursorPatch.getMinWidth(), cursorHeight);
 	}
 
 	void updateDisplayText () {
@@ -757,6 +760,13 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 
 	public int getCursorPosition () {
 		return cursor;
+	}
+
+	/** @param cursorPercentHeight cursor size, value from 0..1 range */
+	public void setCursorPercentHeight (float cursorPercentHeight) {
+		if (cursorPercentHeight < 0 || cursorPercentHeight > 1)
+			throw new IllegalArgumentException("cursorPercentHeight must be >= 0 and <= 1");
+		this.cursorPercentHeight = cursorPercentHeight;
 	}
 
 	/** Default is an instance of {@link DefaultOnscreenKeyboard}. */

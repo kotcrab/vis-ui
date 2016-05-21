@@ -15,6 +15,7 @@
 - **Added**: `FileTypeFilter`, `FileChooser#setFileTypeFilter(...)` 
 - **Added**: `MenuItem#getSubMenuIconCell()` and `MenuItem#getShortcutCell()` 
 - **Added**: `VisTextField#setEnterKeyFocusTraversal(boolean)`
+- **Added**: `VisTextField#setCursorPercentHeight`
 - **Added**: `PopupMenuListener`
 - **Added**: `PopupMenu#showMenu (Stage stage, Actor actor)`
 - **Added**: `ConstantIfVisibleValue`
@@ -44,6 +45,7 @@
     - **Added**: drawable `window-border-bg.9`, `icon-star`, `icon-star-outline`, `icon-refresh`, `icon-list-settings`
     - **Added**: style `BaseToastStyle`
     - **Added**: VisTextField `label` style - if combined with read-only mode allows to create selectable labels
+    - **Updated**: `cursor` drawable (`cursor.9.png`)
 - **I18N Changes**:
     - **FileChooser**: added keys `contextMenuRefresh`, `fileType`, `allFiles`, `changeViewMode`, `viewModeList`, 
                                     `viewModeDetails`, `viewModeBigIcons`, `viewModeMediumIcons`, `viewModeSmallIcons`
