@@ -1,4 +1,4 @@
-//LibGDX default style in USL format, useful for including in other files ( include <gdx> )
+//LibGDX default style in USL format, useful for including in other files (include <gdx>)
 
 #com.badlogic.gdx.graphics.g2d.BitmapFont: { default-font: { file: default.fnt } }
 #com.badlogic.gdx.graphics.Color: {

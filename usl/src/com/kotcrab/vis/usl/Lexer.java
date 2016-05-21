@@ -19,11 +19,7 @@ package com.kotcrab.vis.usl;
 import com.kotcrab.vis.usl.Token.Type;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /** USL Lexer that turns USL file intro stream of tokens */
@@ -36,9 +32,7 @@ public class Lexer {
 	private static final Pattern globalStyleRegex = Pattern.compile("^\\.[a-zA-Z0-9-_]+:.*$", Pattern.DOTALL);
 	private static final Pattern metaStyleRegex = Pattern.compile("^-[a-zA-Z0-9-_ ]+:.*$", Pattern.DOTALL);
 
-	private static HashMap<String, String> includeMappings;
-
-	private static IncludeCache includeCache = new IncludeCache();
+	private static IncludeLoader includeLoader = new IncludeLoader();
 
 	static void lexUsl (LexerContext ctx, String usl) {
 		usl = usl.replace("\r\n", "\n");
@@ -255,25 +249,16 @@ public class Lexer {
 	private static int parseAndLexInclude (LexerContext ctx, String usl, int i) {
 		if (usl.startsWith("<", i)) {
 			int includeEnd = usl.indexOf(">", i);
-			if (includeEnd == -1) Utils.throwException("Invalid include format", usl, i);
+			if (includeEnd == -1) Utils.throwException("Invalid include format, '>` expected", usl, i);
 
-			String content = null;
 			String includeName = usl.substring(i + 1, includeEnd);
-
-			if (includeMappings == null) loadIncludeMappings();
-
-			String filePath = includeMappings.get(includeName);
-			if (filePath != null)
-				content = loadIncludeContent(filePath);
-			else
-				Utils.throwException("Invalid internal include file: " + includeName, usl, i);
-
+			String content = includeLoader.loadInclude(includeName);
 			lexUsl(ctx, content);
 
 			return includeEnd + 1;
 		} else if (usl.startsWith("\"", i)) {
 			int includeEnd = usl.indexOf("\"", i + 1);
-			if (includeEnd == -1) Utils.throwException("Invalid include format", usl, i);
+			if (includeEnd == -1) Utils.throwException("Invalid include format, '\"' expected", usl, i);
 
 			String path = usl.substring(i + 1, includeEnd);
 			File file = new File(path);
@@ -288,31 +273,8 @@ public class Lexer {
 		return -1;
 	}
 
-	private static String loadIncludeContent (String filePath) {
-		if (filePath.startsWith("http://"))
-			return fileToString(includeCache.loadInclude(filePath));
-		else
-			return streamToString(USL.class.getResourceAsStream(filePath));
-	}
-
-	private static void loadIncludeMappings () {
-		includeMappings = new HashMap<String, String>();
-		includeMappings.put("gdx", "styles/gdx.usl");
-		includeMappings.put("visui-0.7.7", "http://apps.kotcrab.com/vis/usl/visui-0.7.7.usl");
-		includeMappings.put("visui-0.8.0", "http://apps.kotcrab.com/vis/usl/visui-0.8.0.usl");
-		includeMappings.put("visui-0.8.1", "http://apps.kotcrab.com/vis/usl/visui-0.8.1.usl");
-		includeMappings.put("visui-0.8.2", "http://apps.kotcrab.com/vis/usl/visui-0.8.2.usl");
-		includeMappings.put("visui-0.9.0", "http://apps.kotcrab.com/vis/usl/visui-0.9.0.usl");
-		includeMappings.put("visui-0.9.1", "http://apps.kotcrab.com/vis/usl/visui-0.9.1.usl");
-		includeMappings.put("visui-0.9.2", "http://apps.kotcrab.com/vis/usl/visui-0.9.2.usl");
-		includeMappings.put("visui-0.9.3", "http://apps.kotcrab.com/vis/usl/visui-0.9.3.usl");
-		includeMappings.put("visui-0.9.4", "http://apps.kotcrab.com/vis/usl/visui-0.9.4.usl");
-		includeMappings.put("visui-0.9.5", "styles/visui-0.9.5.usl");
-		includeMappings.put("visui-1.0.0", "styles/visui-1.0.0.usl");
-		includeMappings.put("visui-1.0.1", "styles/visui-1.0.1.usl");
-		includeMappings.put("visui-1.0.2", "styles/visui-1.0.2.usl");
-		includeMappings.put("visui", "styles/visui-1.0.2.usl");
-		includeMappings.put("visui-1.1.0", "styles/visui-1.1.0.usl"); //snapshot
+	public static void addIncludeSource (String path) {
+		includeLoader.addIncludeSource(path);
 	}
 
 	private static <T> T peek (List<T> list) {
@@ -327,17 +289,4 @@ public class Lexer {
 		return null;
 	}
 
-	private static String fileToString (File file) {
-		try {
-			Scanner s = new Scanner(file).useDelimiter("\\A");
-			return s.hasNext() ? s.next() : "";
-		} catch (FileNotFoundException e) {
-			throw new IllegalStateException("Error reading file", e);
-		}
-	}
-
-	private static String streamToString (InputStream is) {
-		Scanner s = new Scanner(is).useDelimiter("\\A");
-		return s.hasNext() ? s.next() : "";
-	}
 }
