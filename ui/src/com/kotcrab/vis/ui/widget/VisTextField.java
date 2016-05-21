@@ -71,8 +71,6 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	static public float keyRepeatInitialTime = 0.4f;
 	/** Repeat times for keys handled by {@link InputListener#keyDown(InputEvent, int)} such as navigation arrows */
 	static public float keyRepeatTime = 0.04f;
-	/** Repeat times for keys handled by {@link InputListener#keyTyped(InputEvent, char)} such as letters */
-	static public float keyTypedRepeatTime = 0.13f;
 
 	protected String text;
 	protected int cursor, selectionStart;
@@ -115,7 +113,6 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 
 	// vis fields
 	VisTextFieldStyle style;
-	KeyTypedRepeatTask keyTypedRepeatTask = new KeyTypedRepeatTask();
 	private ClickListener clickListener;
 	private boolean drawBorder;
 	private boolean focusBorderEnabled = true;
@@ -309,10 +306,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 	public void draw (Batch batch, float parentAlpha) {
 		Stage stage = getStage();
 		boolean focused = stage != null && stage.getKeyboardFocus() == this;
-		if (!focused) {
-			keyTypedRepeatTask.cancel();
-			keyRepeatTask.cancel();
-		}
+		if (!focused) keyRepeatTask.cancel();
 
 		final BitmapFont font = style.font;
 		final Color fontColor = (disabled && style.disabledFontColor != null) ? style.disabledFontColor
@@ -841,7 +835,6 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		if (disabled) {
 			FocusManager.resetFocus(getStage(), this);
 			keyRepeatTask.cancel();
-			keyTypedRepeatTask.cancel();
 		}
 	}
 
@@ -979,16 +972,6 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		@Override
 		public void run () {
 			inputListener.keyDown(null, keycode);
-		}
-	}
-
-	class KeyTypedRepeatTask extends Task {
-		char character;
-		int keycode;
-
-		@Override
-		public void run () {
-			inputListener.keyTyped(null, character);
 		}
 	}
 
@@ -1162,34 +1145,16 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 			}
 		}
 
-		protected void scheduleKeyTypedRepeatTask (int keycode, char character) {
-			if (!keyTypedRepeatTask.isScheduled() || keyTypedRepeatTask.character != character) {
-				keyTypedRepeatTask.character = character;
-				keyTypedRepeatTask.keycode = keycode;
-				keyTypedRepeatTask.cancel();
-				Timer.schedule(keyTypedRepeatTask, keyRepeatInitialTime, keyTypedRepeatTime);
-			}
-		}
-
 		@Override
 		public boolean keyUp (InputEvent event, int keycode) {
 			if (disabled) return false;
 			keyRepeatTask.cancel();
-			if (keyTypedRepeatTask.keycode == keycode) keyTypedRepeatTask.cancel();
 			return true;
 		}
 
 		@Override
 		public boolean keyTyped (InputEvent event, char character) {
-			if (disabled) return false;
-
-			//issue #9, infinite key repeat bug on Android because keyUp is called before keyTyped and task is cancelled too early
-			if (keyTypedRepeatTask.isScheduled() && Gdx.input.isKeyPressed(keyTypedRepeatTask.keycode) == false) {
-				keyTypedRepeatTask.cancel();
-				return false;
-			}
-
-			if (readOnly) return false;
+			if (disabled || readOnly) return false;
 
 			// Disallow "typing" most ASCII control characters, which would show up as a space when onlyFontChars is true.
 			switch (character) {
@@ -1224,8 +1189,6 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 						if (backspace && cursor > 0) {
 							text = text.substring(0, cursor - 1) + text.substring(cursor--);
 							renderOffset = 0;
-							scheduleKeyTypedRepeatTask(event != null ? event.getKeyCode() : keyTypedRepeatTask.keycode, character);
-
 						}
 						if (delete && cursor < text.length()) {
 							text = text.substring(0, cursor) + text.substring(cursor + 1);
@@ -1237,7 +1200,6 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 						if (!withinMaxLength(text.length())) return true;
 						String insertion = enter ? "\n" : String.valueOf(character);
 						text = insert(cursor++, insertion, text);
-						scheduleKeyTypedRepeatTask(event != null ? event.getKeyCode() : keyTypedRepeatTask.keycode, character);
 					}
 					if (changeText(oldText, text)) {
 						long time = System.currentTimeMillis();

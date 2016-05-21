@@ -8,7 +8,6 @@
 - **Added**: `SimpleFormValidator#validate`
 - **Added**: `ToastManager`, `Toast`, `ToastTable`
 - **Added**: VisTextField read-only mode (`VisTextField#setReadOnly(boolean)`)
-- **Added**: `VisTextField#keyTypedRepeatTime`
 - **Added**: `TabbedPane#getUIOrderedTabs()`
 - **Added**: `FileChooser#setFavoriteFolderButtonVisible(true)` - FileChooser now can display 'add folder to favorites' button in the toolbar 
 - **Added**: `FileChooser#setPrefsName()` 
