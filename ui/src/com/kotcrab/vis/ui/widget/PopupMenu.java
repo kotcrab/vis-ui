@@ -219,7 +219,7 @@ public class PopupMenu extends Table {
 	 * menu will be displayed
 	 * @param mouseButton from {@link Buttons}
 	 */
-	public InputListener getDefaultInputListener (int mouseButton) {
+	public InputListener getDefaultInputListener (final int mouseButton) {
 		if (defaultInputListener == null) {
 			defaultInputListener = new InputListener() {
 				@Override
@@ -229,7 +229,7 @@ public class PopupMenu extends Table {
 
 				@Override
 				public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-					if (event.getButton() == button)
+					if (event.getButton() == mouseButton)
 						showMenu(event.getStage(), event.getStageX(), event.getStageY());
 				}
 			};
