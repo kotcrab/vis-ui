@@ -29,7 +29,7 @@
 - **Changed**: `TabbedPane`'s Tab now can't be dragged using it's close button  
 - **Changed**: Synced `VisTextField` ans `VisTextArea` with equivalents of those classes libgdx
 - **Changed**: `PopupMenu` now support menu navigation using arrows keys
-- **Changed**: `PopupMenu` now optionality takes `Sizes` instance (added constructor `PopupMenu (Sizes sizes, PopupMenuStyle style)`)
+- **Changed**: `PopupMenu` now optionally takes `Sizes` instance (added constructor `PopupMenu (Sizes sizes, PopupMenuStyle style)`)
 - **Removed deprecated API**: `NumberSelector` - replaced by `Spinner`
 - **Removed deprecated API**: `Sizes#numberSelectorButtonSize`, `numberSelectorButtonsWidth`, `numberSelectorFieldSize`, `numberSelectorFieldRightPadding`
 - **Fixed**: `Sizes.buttonBarSpacing` was ignored by `ButtonBar`
@@ -40,6 +40,7 @@
 - **Fixed**: `FileChooser` crash when user manually entered path to file instead of directory
 - **Fixed**: `FocusManager` calling `focusLost()` when the widget that was already focused tried to gain focus again
 - **Fixed**: `VisSplitPane` was not implementing `hit(...)` which could result in widget that was underneath split pane's handle get touch events  
+- **Fixed**: Now it's not possible to call `VisWindow#fadeOut` multiple times
 - **Skin changes**:
     - **Changed**: `FileChooserStyle`: added drawable fields: `iconStar`, `iconStarOutline`, `iconRefresh`, `iconListSettings`, `expandDropdown`
     - **Added**: drawable `window-border-bg.9`, `icon-star`, `icon-star-outline`, `icon-refresh`, `icon-list-settings`

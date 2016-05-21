@@ -40,6 +40,8 @@ public class VisWindow extends Window {
 	private boolean centerOnAdd;
 	private boolean keepWithinParent = false;
 
+	private boolean fadeOutActionRunning;
+
 	public VisWindow (String title) {
 		this(title, true);
 		getTitleLabel().setAlignment(VisUI.getDefaultTitleAlign());
@@ -108,9 +110,20 @@ public class VisWindow extends Window {
 		if (parent != null) setPosition((parent.getWidth() - getWidth()) / 2, (parent.getHeight() - getHeight()) / 2);
 	}
 
-	/** Fade outs this window, when fade out animation is completed, window is removed from Stage */
+	/**
+	 * Fade outs this window, when fade out animation is completed, window is removed from Stage. Calling this for the
+	 * second time won't have any effect if previous animation is still running.
+	 */
 	public void fadeOut (float time) {
-		addAction(Actions.sequence(Actions.fadeOut(time, Interpolation.fade), Actions.removeActor()));
+		if (fadeOutActionRunning) return;
+		fadeOutActionRunning = true;
+		addAction(Actions.sequence(Actions.fadeOut(time, Interpolation.fade), Actions.removeActor(), new Action() {
+			@Override
+			public boolean act (float delta) {
+				fadeOutActionRunning = false;
+				return true;
+			}
+		}));
 	}
 
 	/** @return this window for the purpose of chaining methods eg. stage.addActor(new MyWindow(stage).fadeIn(0.3f)); */
