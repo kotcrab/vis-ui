@@ -19,7 +19,7 @@ artifacts {
 
 javadoc {
     def generateJavadoc = project.hasProperty("generateJavadoc");
-    onlyIf { (isReleaseVersion && gradle.taskGraph.hasTask("uploadArchives")) || generateJavadoc }
+    onlyIf { (isReleaseVersion || gradle.taskGraph.hasTask("uploadArchives")) || generateJavadoc }
 
     options.encoding = 'UTF-8'
     options.addStringOption('Xdoclint:none', '-quiet')
