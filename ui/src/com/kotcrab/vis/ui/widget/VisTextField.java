@@ -872,7 +872,10 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		Stage stage = getStage();
 		FocusManager.switchFocus(stage, VisTextField.this);
 		setCursorPosition(0);
-		selectionStart = cursor;
+		selectionStart = 0;
+		//make sure textOffset was updated, prevent issue when there was long text selected and it was changed to short text
+		//and field was focused. Without it textOffset would stay at max value and only one last letter will be visible in field
+		calculateOffsets();
 		if (stage != null) stage.setKeyboardFocus(VisTextField.this);
 		keyboard.show(true);
 		hasSelection = true;
