@@ -79,4 +79,6 @@ task compileUsl << {
     x2File.text = json
 }
 
-task compileSkin(dependsOn: ['compileUsl', 'packSkin'])
+task compileSkin(dependsOn: ['compileUsl', 'packSkin']) {
+    description 'Pack skin textures into texture atlases and compile USL into JSON'
+}

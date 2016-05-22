@@ -4,6 +4,13 @@
 - **API Changed**: GridGroup is now taking float for item size instead of int.
     - **Warning:** There were two constructors `GridGroup (float spacing)` and `GridGroup (int itemSize)`. Constructor taking float spacing was removed. Constructor taking int item size now takes float. 
 - **API Changed**: Refactored `FileChoose.FileIconProvider`, new methods added. `#provideIcon` takes `FileChooser.FileItem`, was `FileHandle`
+- **API Changed**: Refactored `VisCheckBox`
+    - Style was refactored to separate checkbox background and tick drawable (see bellow for full skin drawables changes)
+    - `VisCheckBoxStyle` now extends `TextButtonStyle`, was `CheckBox` (fields was renamed to properly communicate their functions)
+    - `getImage()` removed, use `getBackgroundImage()` or `getTickImage()` 
+    - `getImageCell()` removed, use `getImageStackCell()`
+    - protected `getCheckboxImage()` removed, override `getCheckboxBgImage()` or `getCheckboxTickImage()`
+    - `getStyle()` returns `VisCheckBoxStyle`, was `CheckBoxStyle`
 - **Added**: default styles for `ImageButton` and `ImageTextButton`. Note: this is only applies to standard scene2d widgets. VisUI widgets equivalents (`VisImageButton`, `VisImageTextButton`) already had them.
 - **Added**: `SimpleFormValidator#validate`
 - **Added**: `ToastManager`, `Toast`, `ToastTable`
@@ -20,7 +27,7 @@
 - **Added**: `ConstantIfVisibleValue`
 - **Added**: `Sizes#borderSize`
 - **Added**: `Sizes#fileChooserViewModeBigIconsSize`, `fileChooserViewModeMediumIconsSize`, `fileChooserViewModeSmallIconsSize`, `fileChooserViewModeListWidthSize`
-- **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get it's cells for customization)
+- **Changed**: [#169](https://github.com/kotcrab/vis-editor/issues/169) - `TabbedPane#getTable()` returns `TabbedPaneTable` (holds reference to `TabbedPane` and allow to easily get its cells for customization)
 - **Changed**: `FileChooser` now tries to maintain selection while rebuilding file list
 - **Changed**: `FileChooser` will now select new folder after creating it 
 - **Changed**: `FileChooser` will be automatically refreshed when added to `Stage`
@@ -46,9 +53,11 @@
     - **Added**: style `BaseToastStyle`
     - **Added**: VisTextField `label` style - if combined with read-only mode allows to create selectable labels
     - **Updated**: `cursor` drawable (`cursor.9.png`)
+    - **Removed**: `check-down-on`, `check-down`, `check-on-disabled`, `check-over-off`, `check-over-on`, `radio-down-on`, `radio-down`, `radio-on-disabled`, `radio-over-off`, `radio-over-on`
+    - **Added**: `vis-check`, `vis-check-over`, `vis-check-down`, `vis-check-tick`, `vis-check-tick-disabled`, `vis-radio`, `vis-radio-over`, `vis-radio-down`, `vis-radio-tick`, `vis-radio-tick-disabled`
 - **I18N Changes**:
-    - **FileChooser**: added keys `contextMenuRefresh`, `fileType`, `allFiles`, `changeViewMode`, `viewModeList`, 
-                                    `viewModeDetails`, `viewModeBigIcons`, `viewModeMediumIcons`, `viewModeSmallIcons`
+    - **FileChooser**: added keys `contextMenuRefresh`, `fileType`, `allFiles`, `changeViewMode`, `viewModeList`, `viewModeDetails`, `viewModeBigIcons`, `viewModeMediumIcons`, `viewModeSmallIcons`
+- **Misc**: Added Gradle tasks to package VisUI skin textures and compile USL into JSON (`gradlew :ui:compileSkin`)
 
 #### Version: 1.0.2 (LibGDX 1.9.2)
 - **Changed**: [#163](https://github.com/kotcrab/vis-editor/issues/163) - When `VisCheckBox` or `VisTextField` is disabled and is marked as invalid then error border won't be drawn. 
