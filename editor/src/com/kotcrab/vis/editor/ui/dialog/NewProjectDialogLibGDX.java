@@ -25,12 +25,15 @@ import com.kotcrab.vis.editor.module.editor.ProjectIOModule;
 import com.kotcrab.vis.editor.module.project.ProjectLibGDX;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
+import com.kotcrab.vis.ui.util.form.FormInputValidator;
 import com.kotcrab.vis.ui.util.form.FormValidator;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisTextButton;
 import com.kotcrab.vis.ui.widget.VisValidatableTextField;
 import com.kotcrab.vis.ui.widget.file.SingleFileChooserListener;
+
+import java.io.File;
 
 /**
  * LibGDX project subdialog for {@link NewProjectDialog}
@@ -112,7 +115,9 @@ public class NewProjectDialogLibGDX extends VisTable {
 				fileChooserModule.pickFileOrDirectory(new SingleFileChooserListener() {
 					@Override
 					public void selected (FileHandle file) {
-						projectRoot.setText(file.file().getAbsolutePath());
+						String path = file.file().getAbsolutePath();
+						if (path.endsWith(File.separator) == false) path += File.separator;
+						projectRoot.setText(path);
 					}
 				});
 			}
@@ -143,6 +148,19 @@ public class NewProjectDialogLibGDX extends VisTable {
 		validator.fileExists(projectRoot, "Project folder does not exist!");
 		validator.fileExists(sourceLoc, projectRoot, "Source folder does not exist!", false);
 		validator.fileExists(assetsLoc, projectRoot, "Assets folder does not exist!", false);
+
+		validator.custom(sourceLoc, new FormInputValidator("Source folder can't be the same as project root") {
+			@Override
+			protected boolean validate (String input) {
+				return !new File(projectRoot.getText()).equals(new File(projectRoot.getText() + input));
+			}
+		});
+		validator.custom(assetsLoc, new FormInputValidator("Assets folder can't be the same as project root") {
+			@Override
+			protected boolean validate (String input) {
+				return !new File(projectRoot.getText()).equals(new File(projectRoot.getText() + input));
+			}
+		});
 	}
 
 	private void createProject () {
@@ -152,8 +170,8 @@ public class NewProjectDialogLibGDX extends VisTable {
 		if (error == null) {
 			projectIO.createLibGDXProject(project);
 			dialog.fadeOut();
-		} else
+		} else {
 			Dialogs.showErrorDialog(getStage(), error);
-
+		}
 	}
 }

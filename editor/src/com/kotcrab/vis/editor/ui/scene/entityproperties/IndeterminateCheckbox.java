@@ -63,7 +63,7 @@ public class IndeterminateCheckbox extends VisCheckBox {
 	}
 
 	@Override
-	protected Drawable getCheckboxImage () {
+	protected Drawable getCheckboxTickImage () {
 		if (isIndeterminate()) {
 			if (isOver())
 				return INDETERMINATE_OVER;
@@ -71,7 +71,7 @@ public class IndeterminateCheckbox extends VisCheckBox {
 				return INDETERMINATE;
 		}
 
-		return super.getCheckboxImage();
+		return super.getCheckboxTickImage();
 	}
 
 	@Override
