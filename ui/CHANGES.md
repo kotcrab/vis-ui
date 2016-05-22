@@ -5,7 +5,7 @@
     - **Warning:** There were two constructors `GridGroup (float spacing)` and `GridGroup (int itemSize)`. Constructor taking float spacing was removed. Constructor taking int item size now takes float. 
 - **API Changed**: Refactored `FileChoose.FileIconProvider`, new methods added. `#provideIcon` takes `FileChooser.FileItem`, was `FileHandle`
 - **API Changed**: Refactored `VisCheckBox`
-    - Style was refactored to separate checkbox background and tick drawable (see bellow for full skin drawables changes)
+    - Style was refactored to separate checkbox background and tick drawable (see below for full skin drawables changes)
     - `VisCheckBoxStyle` now extends `TextButtonStyle`, was `CheckBox` (fields was renamed to properly communicate their functions)
     - `getImage()` removed, use `getBackgroundImage()` or `getTickImage()` 
     - `getImageCell()` removed, use `getImageStackCell()`

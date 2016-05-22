@@ -33,7 +33,7 @@ import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.ActorUtils;
 
 /**
- * Tooltips are widgets that appear bellow other widget on mouse pointer hover. Each actor can have only one tooltip.
+ * Tooltips are widgets that appear below other widget on mouse pointer hover. Each actor can have only one tooltip.
  * <p>
  * LibGDX 1.6.4 introduced it's own systems of tooltips. VisUI tooltips existed before that and are unrelated and
  * incompatible with libGDX tooltips. VisUI tooltips will remain supported.
@@ -250,7 +250,7 @@ public class Tooltip extends VisTable {
 				if (stageHeight - tooltipY > stageHeight)
 					setY(targetPos.y + target.getHeight() + 6); //display above widget
 				else
-					setY(tooltipY); //display bellow
+					setY(tooltipY); //display below
 
 				displayTask.cancel();
 				Timer.schedule(displayTask, appearDelayTime);

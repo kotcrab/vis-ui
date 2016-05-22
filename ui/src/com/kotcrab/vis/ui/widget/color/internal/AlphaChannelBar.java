@@ -20,7 +20,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 /**
- * Channel bar intended for alpha channel, renders alpha grid bellow channel texture.
+ * Channel bar intended for alpha channel, renders alpha grid below channel texture.
  * @author Kotcrab
  */
 public class AlphaChannelBar extends ChannelBar {

@@ -21,7 +21,7 @@ import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
 
 /**
- * Toast with provided user message and arbitrary amount of {@link LinkLabel} bellow it acting as action buttons.
+ * Toast with provided user message and arbitrary amount of {@link LinkLabel} below it acting as action buttons.
  * @author Kotcrab
  * @see ToastTable
  * @since 1.1.0
