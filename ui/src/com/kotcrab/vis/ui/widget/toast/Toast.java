@@ -30,7 +30,8 @@ import com.kotcrab.vis.ui.widget.VisTable;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 /**
- * Base class for all toast. To create your own toast you should extend {@link ToastTable} class.
+ * Base class for all toasts. Toast is a wrapper around actual toast content table. It has close button and reference to
+ * {@link ToastManager}. To create your own toast you should generally extend {@link ToastTable} class.
  * <p>
  * If you want further customization and modify other aspects of toast (such as close button) override
  * {@link #createMainTable()}.
