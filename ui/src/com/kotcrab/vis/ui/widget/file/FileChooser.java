@@ -21,6 +21,7 @@ import com.badlogic.gdx.Input.Buttons;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
@@ -68,6 +69,7 @@ import static com.kotcrab.vis.ui.widget.file.internal.FileChooserText.*;
  */
 public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private static final long FILE_WATCHER_CHECK_DELAY_MILLIS = 2000;
+	private static final Vector2 tmpVector = new Vector2();
 
 	private static final ShortcutsComparator SHORTCUTS_COMPARATOR = new ShortcutsComparator();
 
@@ -453,7 +455,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 			@Override
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-				if (button == Buttons.RIGHT) {
+				if (button == Buttons.RIGHT && fileMenu.isAddedToStage() == false) {
 					fileMenu.build();
 					fileMenu.showMenu(getStage(), event.getStageX(), event.getStageY());
 				}
@@ -587,6 +589,22 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				if (keycode == Keys.A && UIUtils.ctrl() && getStage().getKeyboardFocus() instanceof VisTextField == false) {
 					selectAll();
 					return true;
+				}
+
+				return false;
+			}
+
+			@Override
+			public boolean keyTyped (InputEvent event, char character) {
+				if (getStage().getKeyboardFocus() instanceof VisTextField) return false;
+				if (Character.isLetterOrDigit(character) == false) return false;
+				String name = String.valueOf(character);
+				for (FileHandle file : currentFiles) {
+					if (file.name().toLowerCase().startsWith(name)) {
+						deselectAll();
+						highlightFiles(file);
+						return true;
+					}
 				}
 
 				return false;
@@ -895,6 +913,11 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			if (item != null) {
 				item.select(false);
 			}
+		}
+		if (files.length > 0) {
+			FileItem item = fileListAdapter.getViews().get(files[0]);
+			item.localToParentCoordinates(tmpVector.setZero());
+			fileListView.getScrollPane().scrollTo(tmpVector.x, tmpVector.y, item.getWidth(), item.getHeight(), false, true);
 		}
 		updateSelectedFileFieldText();
 	}
@@ -1409,7 +1432,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			FileHandle file = item.getFile();
 			if (file.isDirectory()) return getDirIcon(item);
 			String ext = file.extension().toLowerCase();
-			if (ext.equals("jpg") || ext.equals("jpeg") || ext.equals("png") || ext.equals("bmp")) return getImageIcon(item);
+			if (ext.equals("jpg") || ext.equals("jpeg") || ext.equals("png") || ext.equals("bmp"))
+				return getImageIcon(item);
 			if (ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3")) return getAudioIcon(item);
 			if (ext.equals("pdf")) return getPdfIcon(item);
 			if (ext.equals("txt")) return getTextIcon(item);

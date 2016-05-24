@@ -145,6 +145,10 @@ public class FilePopupMenu extends PopupMenu {
 		if (favorites.contains(this.file, false)) addItem(removeFromFavorites);
 	}
 
+	public boolean isAddedToStage () {
+		return getStage() != null;
+	}
+
 	public void fileDeleterChanged (boolean trashAvailable) {
 		delete.setText(trashAvailable ? CONTEXT_MENU_MOVE_TO_TRASH.get() : CONTEXT_MENU_DELETE.get());
 	}
