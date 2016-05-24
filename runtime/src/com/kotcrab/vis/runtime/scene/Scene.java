@@ -47,12 +47,16 @@ public class Scene {
 	private Variables variables;
 	private Array<LayerData> layerData;
 	private float pixelsPerUnit;
+	private float width;
+	private float height;
 
 	/** Used by framework, not indented for external use */
 	public Scene (RuntimeContext context, SceneData data, SceneParameter parameter) {
 		layerData = data.layers;
 		variables = data.variables;
 		pixelsPerUnit = data.pixelsPerUnit;
+		width = data.width;
+		height = data.height;
 
 		AssetManager assetsManager = context.assetsManager;
 		RuntimeConfiguration runtimeConfig = context.configuration;
@@ -130,6 +134,14 @@ public class Scene {
 
 	public float getPixelsPerUnit () {
 		return pixelsPerUnit;
+	}
+
+	public float getSceneWidth () {
+		return width;
+	}
+
+	public float getSceneHeight () {
+		return height;
 	}
 
 	public EntityEngine getEntityEngine () {
