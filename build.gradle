@@ -180,7 +180,7 @@ tasks.eclipse.doLast {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.11'
+    gradleVersion = '2.13'
 }
 
 distributions {
