@@ -1,4 +1,5 @@
 #### Version: 1.1.1 (LibGDX 1.9.3)
+- **Fixed**: NPE in FileChooser crash when navigating to other directory
 
 #### Version: 1.1.0 (LibGDX 1.9.3)
 - **API Moved**: `JNAFileDeleter` was moved to [vis-ui-contrib](https://github.com/kotcrab/vis-ui-contrib) project

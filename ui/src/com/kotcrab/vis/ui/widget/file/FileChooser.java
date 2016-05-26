@@ -916,8 +916,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		}
 		if (files.length > 0) {
 			FileItem item = fileListAdapter.getViews().get(files[0]);
-			item.localToParentCoordinates(tmpVector.setZero());
-			fileListView.getScrollPane().scrollTo(tmpVector.x, tmpVector.y, item.getWidth(), item.getHeight(), false, true);
+			if (item != null) {
+				item.localToParentCoordinates(tmpVector.setZero());
+				fileListView.getScrollPane().scrollTo(tmpVector.x, tmpVector.y, item.getWidth(), item.getHeight(), false, true);
+			}
 		}
 		updateSelectedFileFieldText();
 	}
@@ -1366,11 +1368,16 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		public void setupGridGroup (Sizes sizes, GridGroup group) {
 			if (isGridMode() == false) return;
+			float gridSize = getGridSize(sizes);
+			if (gridSize < 0) {
+				throw new IllegalStateException("FileChooser's ViewMode " + this.toString() + " has invalid size defined in Sizes. " +
+						"Expected value greater than 0, got: " + gridSize + ". Check your skin Sizes definition.");
+			}
 			if (this == LIST) {
-				group.setItemSize(getGridSize(sizes), 22 * sizes.scaleFactor);
+				group.setItemSize(gridSize, 22 * sizes.scaleFactor);
 				return;
 			}
-			group.setItemSize(getGridSize(sizes));
+			group.setItemSize(gridSize);
 		}
 
 		public boolean isGridMode () {
