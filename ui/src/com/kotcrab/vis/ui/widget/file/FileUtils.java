@@ -24,7 +24,6 @@ import com.kotcrab.vis.ui.util.OsUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -123,14 +122,8 @@ public class FileUtils {
 				Class desktopClass = Class.forName("java.awt.Desktop");
 				Object desktop = desktopClass.getMethod("getDesktop").invoke(null);
 				desktopClass.getMethod("open", File.class).invoke(desktop, dirToShow);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (NoSuchMethodException e) {
-				e.printStackTrace();
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				Gdx.app.log("VisUI", "Can't open file " + dirToShow.getPath(), e);
 			}
 		}
 	}

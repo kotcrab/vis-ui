@@ -49,9 +49,7 @@ public class FileChooserWinService {
 
 	public static synchronized FileChooserWinService getInstance () {
 		if (OsUtils.isWindows() == false) return null;
-
 		if (instance == null) instance = new FileChooserWinService();
-
 		return instance;
 	}
 
