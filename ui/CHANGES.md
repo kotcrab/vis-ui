@@ -1,4 +1,5 @@
 #### Version: 1.1.2 (LibGDX 1.9.3)
+- **Misc**: Disabling Android Lint is no longer necessary
 
 #### Version: 1.1.1 (LibGDX 1.9.3)
 - **Fixed**: NPE in FileChooser crash when navigating to other directory

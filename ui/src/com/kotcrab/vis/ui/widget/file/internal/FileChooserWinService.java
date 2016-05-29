@@ -20,11 +20,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.kotcrab.vis.ui.util.OsUtils;
-import sun.awt.shell.ShellFolder;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -43,6 +43,10 @@ public class FileChooserWinService {
 	private Map<File, ListenerSet> listeners = new HashMap<File, ListenerSet>();
 	private final ExecutorService pool;
 
+	private boolean shellFolderSupported = false;
+	private Method getShellFolderMethod;
+	private Method getShellFolderDisplayNameMethod;
+
 	public static synchronized FileChooserWinService getInstance () {
 		if (OsUtils.isWindows() == false) return null;
 
@@ -51,8 +55,18 @@ public class FileChooserWinService {
 		return instance;
 	}
 
+	@SuppressWarnings("unchecked")
 	protected FileChooserWinService () {
 		pool = Executors.newFixedThreadPool(3, new ServiceThreadFactory("SystemDisplayNameGetter"));
+
+		try {
+			Class shellFolderClass = Class.forName("sun.awt.shell.ShellFolder");
+			getShellFolderMethod = shellFolderClass.getMethod("getShellFolder", File.class);
+			getShellFolderDisplayNameMethod = shellFolderClass.getMethod("getDisplayName");
+			shellFolderSupported = true;
+		} catch (ClassNotFoundException ignored) { //ShellFolder not supported on current JVM, ignoring
+		} catch (NoSuchMethodException ignored) {
+		}
 
 		File[] roots = File.listRoots();
 
@@ -104,11 +118,16 @@ public class FileChooserWinService {
 	}
 
 	private String getSystemDisplayName (File f) {
+		if (shellFolderSupported == false) return null;
 		String name;
 
 		try {
-			name = ShellFolder.getShellFolder(f).getDisplayName();
-		} catch (FileNotFoundException e) {
+			//name = ShellFolder.getShellFolder(f).getDisplayName();
+			Object shellFolder = getShellFolderMethod.invoke(null, f);
+			name = (String) getShellFolderDisplayNameMethod.invoke(shellFolder);
+		} catch (InvocationTargetException e) {
+			return null;
+		} catch (IllegalAccessException e) {
 			return null;
 		}
 

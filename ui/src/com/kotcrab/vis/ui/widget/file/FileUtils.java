@@ -22,9 +22,9 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.util.OsUtils;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -104,6 +104,7 @@ public class FileUtils {
 	}
 
 	/** Shows given directory in system explorer window. */
+	@SuppressWarnings("unchecked")
 	public static void showDirInExplorer (FileHandle dir) throws IOException {
 		File dirToShow;
 		if (dir.isDirectory()) {
@@ -115,7 +116,22 @@ public class FileUtils {
 		if (OsUtils.isMac()) {
 			FileManager.revealInFinder(dirToShow);
 		} else {
-			Desktop.getDesktop().open(dirToShow);
+			try {
+				// Using reflection to avoid importing AWT desktop which would trigger Android Lint errors
+				// This is desktop only, rarely called, performance drop is negligible
+				// Basically 'Desktop.getDesktop().open(dirToShow);'
+				Class desktopClass = Class.forName("java.awt.Desktop");
+				Object desktop = desktopClass.getMethod("getDesktop").invoke(null);
+				desktopClass.getMethod("open", File.class).invoke(desktop, dirToShow);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
