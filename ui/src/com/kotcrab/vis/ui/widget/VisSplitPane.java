@@ -36,6 +36,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.CursorManager;
 
 /**
  * Extends functionality of standard {@link SplitPane}. Style supports handle over {@link Drawable}. Due to scope of
@@ -107,14 +108,16 @@ public class VisSplitPane extends WidgetGroup {
 					} else {
 						targetCursor = SystemCursor.HorizontalResize;
 					}
-				} else {
-					targetCursor = SystemCursor.Arrow;
-				}
 
-				if (currentCursor != targetCursor) {
-					Gdx.graphics.setSystemCursor(targetCursor);
-					currentCursor = targetCursor;
-					return true;
+					if (currentCursor != targetCursor) {
+						Gdx.graphics.setSystemCursor(targetCursor);
+						currentCursor = targetCursor;
+					}
+				} else {
+					if(currentCursor != null) {
+						CursorManager.restoreDefaultCursor();
+						currentCursor = null;
+					}
 				}
 
 				return false;

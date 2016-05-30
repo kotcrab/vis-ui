@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.kotcrab.vis.ui.VisUI;
+import com.kotcrab.vis.ui.util.CursorManager;
 
 /**
  * Simple LinkLabel allows to create label with clickable link and underline on mouse over. Link can have custom text.
@@ -110,7 +111,7 @@ public class LinkLabel extends VisLabel {
 			@Override
 			public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
 				super.exit(event, x, y, pointer, toActor);
-				Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+				CursorManager.restoreDefaultCursor();
 			}
 		});
 	}

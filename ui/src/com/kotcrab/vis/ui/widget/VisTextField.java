@@ -45,6 +45,7 @@ import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.Focusable;
 import com.kotcrab.vis.ui.VisUI;
 import com.kotcrab.vis.ui.util.BorderOwner;
+import com.kotcrab.vis.ui.util.CursorManager;
 
 import java.lang.StringBuilder;
 
@@ -156,7 +157,7 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 			public void exit (InputEvent event, float x, float y, int pointer, Actor toActor) {
 				super.exit(event, x, y, pointer, toActor);
 				if (pointer == -1) {
-					Gdx.graphics.setSystemCursor(SystemCursor.Arrow);
+					CursorManager.restoreDefaultCursor();
 				}
 			}
 		});
