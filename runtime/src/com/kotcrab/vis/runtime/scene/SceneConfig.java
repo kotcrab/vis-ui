@@ -162,7 +162,11 @@ public class SceneConfig {
 
 		@Override
 		public int compareTo (ConfigElement other) {
-			return -Integer.compare(priority, other.priority);
+			return -compare(priority, other.priority);
+		}
+
+		private int compare (int x, int y) {
+			return (x < y) ? -1 : ((x == y) ? 0 : 1);
 		}
 	}
 

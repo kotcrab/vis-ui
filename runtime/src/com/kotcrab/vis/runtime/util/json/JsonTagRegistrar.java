@@ -17,7 +17,6 @@
 package com.kotcrab.vis.runtime.util.json;
 
 /** @author Kotcrab */
-@FunctionalInterface
 public interface JsonTagRegistrar {
 	void register (String tag, Class<?> clazz);
 }
