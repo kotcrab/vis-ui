@@ -49,6 +49,11 @@ public class TemplateBasedParserTest {
 		testUsingTemplate("/test-comments.usl", "/test-comments-expected.json");
 	}
 
+	@Test
+	public void testMinus () throws Exception {
+		testUsingTemplate("/test-minus.usl", "/test-minus-expected.json");
+	}
+
 	private void testUsingTemplate (String uslPath, String jsonPath) throws Exception {
 		String expected = readFile(jsonPath);
 		String result = USL.parse(null, readFile(uslPath));

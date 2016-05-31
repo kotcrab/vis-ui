@@ -23,6 +23,7 @@ import com.badlogic.gdx.graphics.Cursor;
  * Manages default cursor of VisUI app. If you are using custom cursor you must set it here otherwise some VisUI widget
  * that changes cursors will reset it to default system cursor.
  * @author Kotcrab
+ * @since 1.1.2
  */
 public class CursorManager {
 	private static Cursor defaultCursor;

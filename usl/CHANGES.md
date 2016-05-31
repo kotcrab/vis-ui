@@ -1,4 +1,5 @@
 #### Version: 0.2.1
+- Fixed parsing negative values (eg. pressedOffsetY: -1)
 
 #### Version: 0.2.0
 - Java 7 is minimum required version

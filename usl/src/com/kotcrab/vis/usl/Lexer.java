@@ -62,9 +62,10 @@ public class Lexer {
 
 				i = lexGlobalStyleDeclaration(ctx, usl, i + 1);
 
-			} else if (ch == '-') { //meta style definition
-				if (metaStyleRegex.matcher(usl.substring(i)).matches() == false)
+			} else if (ch == '-' && peek(ctx.tokens).type != Type.IDENTIFIER) { //meta style definition
+				if (metaStyleRegex.matcher(usl.substring(i)).matches() == false) {
 					Utils.throwException("Unexpected '-'", usl, i);
+				}
 
 				//put meta token and continue, lexIdentifier will be called in next loop
 				ctx.tokens.add(new Token(usl, i, Type.META_STYLE));
