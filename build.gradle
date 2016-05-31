@@ -8,7 +8,7 @@ buildscript {
     dependencies {
         classpath "com.netflix.nebula:gradle-extra-configurations-plugin:3.0.3"
         classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
-        classpath "com.kotcrab.vis:vis-usl:0.2.0"
+        classpath "com.kotcrab.vis:vis-usl:0.2.1"
         classpath "com.badlogicgames.gdx:gdx-tools:1.9.2"
     }
 }
