@@ -51,7 +51,7 @@ public class VisTextArea extends VisTextField {
 	int firstLineShowing;
 
 	/** Number of lines showed by the text area * */
-	private int linesShowing;
+	int linesShowing;
 
 	/** Variable to maintain the x offset of the cursor when moving up and down. If it's set to -1, the offset is reset * */
 	float moveOffset;
@@ -340,7 +340,6 @@ public class VisTextArea extends VisTextField {
 			super.moveCursor(forward, jump);
 		}
 		updateCurrentLine();
-
 	}
 
 	@Override

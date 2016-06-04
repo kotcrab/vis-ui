@@ -87,6 +87,7 @@ class TestApplication extends ApplicationAdapter {
 //		stage.addActor(new TestButtonBar());
 //		stage.addActor(new TestListView());
 //		stage.addActor(new TestToasts(stage));
+		stage.addActor(new TestHighlightTextArea());
 
 		stage.addListener(new InputListener() {
 			boolean debug = false;
@@ -220,6 +221,12 @@ class TestApplication extends ApplicationAdapter {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				stage.addActor(new TestToasts(stage));
+			}
+		}));
+		menu.addItem(new MenuItem("highlight textarea", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				stage.addActor(new TestHighlightTextArea());
 			}
 		}));
 		menu.addSeparator();
