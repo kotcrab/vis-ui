@@ -1,5 +1,6 @@
 #### Version: 1.1.2 (LibGDX 1.9.3)
 - **Added**: `CursorManager`
+- **Fixed**: VisSplitPane was not restoring default cursor when user dragged pointer outside od pane area 
 - **Misc**: Disabling Android Lint is no longer necessary
 
 #### Version: 1.1.1 (LibGDX 1.9.3)
