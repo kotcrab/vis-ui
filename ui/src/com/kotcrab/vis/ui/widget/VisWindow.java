@@ -117,13 +117,13 @@ public class VisWindow extends Window {
 	public void fadeOut (float time) {
 		if (fadeOutActionRunning) return;
 		fadeOutActionRunning = true;
-		addAction(Actions.sequence(Actions.fadeOut(time, Interpolation.fade), Actions.removeActor(), new Action() {
+		addAction(Actions.sequence(Actions.fadeOut(time, Interpolation.fade), new Action() {
 			@Override
 			public boolean act (float delta) {
 				fadeOutActionRunning = false;
 				return true;
 			}
-		}));
+		}, Actions.removeActor()));
 	}
 
 	/** @return this window for the purpose of chaining methods eg. stage.addActor(new MyWindow(stage).fadeIn(0.3f)); */
