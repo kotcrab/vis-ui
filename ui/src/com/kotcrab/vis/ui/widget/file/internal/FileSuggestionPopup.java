@@ -24,6 +24,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.MenuItem;
 import com.kotcrab.vis.ui.widget.VisTextField;
 import com.kotcrab.vis.ui.widget.file.FileChooser;
+import com.kotcrab.vis.ui.widget.file.FileTypeFilter;
 
 /** @author Kotcrab */
 public class FileSuggestionPopup extends AbstractSuggestionPopup {
@@ -46,12 +47,12 @@ public class FileSuggestionPopup extends AbstractSuggestionPopup {
 		showMenu(stage, pathField);
 	}
 
-	private int createSuggestions (Array<FileHandle> files, VisTextField fileNameField) {
+	private int createSuggestions (Array<FileHandle> files, final VisTextField fileNameField) {
 		clearChildren();
 		int suggestions = 0;
 		for (final FileHandle file : files) {
 			if (file.name().startsWith(fileNameField.getText()) && file.name().equals(fileNameField.getText()) == false) {
-				MenuItem item = createMenuItem((getTrimmedName(file.name())));
+				MenuItem item = createMenuItem(getTrimmedName(file.name()));
 				item.addListener(new ChangeListener() {
 					@Override
 					public void changed (ChangeEvent event, Actor actor) {
@@ -64,6 +65,25 @@ public class FileSuggestionPopup extends AbstractSuggestionPopup {
 
 			if (suggestions == MAX_SUGGESTIONS) {
 				break;
+			}
+		}
+
+		if (chooser.getMode() == FileChooser.Mode.SAVE && suggestions == 0 //don't show matches when there are files that actually exist and matched previous search
+				&& chooser.getActiveFileTypeFilterRule() != null && fileNameField.getText().matches(".*\\.")) {
+			FileTypeFilter.Rule rule = chooser.getActiveFileTypeFilterRule();
+
+			for (String extension : rule.getExtensions()) {
+				MenuItem item = createMenuItem(fileNameField.getText() + extension);
+				final String arbitraryPath = fileNameField.getText() + extension;
+				item.addListener(new ChangeListener() {
+					@Override
+					public void changed (ChangeEvent event, Actor actor) {
+						fileNameField.setText(arbitraryPath);
+						fileNameField.setCurosrAtTextEnd();
+					}
+				});
+				addItem(item);
+				suggestions++;
 			}
 		}
 

@@ -74,7 +74,7 @@ public class FileTypeFilter {
 		return allTypesAllowed;
 	}
 
-	/** Defines single rule for {@link FileTypeFilter}. Rule instances are final. */
+	/** Defines single rule for {@link FileTypeFilter}. Rule instances are immutable. */
 	public static class Rule {
 		private final String description;
 		private final Array<String> extensions = new Array<String>();
@@ -85,10 +85,11 @@ public class FileTypeFilter {
 			this.allowAll = true;
 		}
 
-		public Rule (String description, String... extList) {
+		public Rule (String description, String... extensionList) {
 			this.description = description;
 			this.allowAll = false;
-			for (String ext : extList) {
+			for (String ext : extensionList) {
+				if (ext.startsWith(".")) ext = ext.substring(1);
 				extensions.add(ext.toLowerCase());
 			}
 		}
@@ -101,6 +102,11 @@ public class FileTypeFilter {
 
 		public String getDescription () {
 			return description;
+		}
+
+		/** @return copy of extension list. */
+		public Array<String> getExtensions () {
+			return new Array<String>(extensions);
 		}
 
 		@Override

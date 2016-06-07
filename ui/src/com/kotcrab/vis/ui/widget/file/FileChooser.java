@@ -639,9 +639,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			Array<FileHandle> files = getFileListFromSelected();
 			notifyListenerAndCloseDialog(files);
 		} else {
-			if (selectionMode == SelectionMode.FILES)
+			if (selectionMode == SelectionMode.FILES) {
 				showDialog(POPUP_CHOOSE_FILE.get());
-			else {
+			} else {
 				// this part is executed when nothing is selected but selection mode is `directories` or `files and directories`
 				// it is perfectly valid, nothing is selected so that means the current chooser directory have to be
 				// selected and passed to listener
@@ -714,8 +714,22 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 				return null;
 			} else {
+				//if user typed no extension or extension is wrong and there is active file type rule
+				//then the first extension rule will be appended/replaced automatically to entered file name
+				if (activeFileTypeRule != null) {
+					Array<String> ruleExts = activeFileTypeRule.getExtensions();
+					if (ruleExts.contains(file.extension(), false) == false) {
+						file = file.sibling(file.nameWithoutExtension() + "." + ruleExts.first());
+					}
+				}
+
 				list.add(file);
-				return list;
+				if (file.exists()) {
+					showOverwriteQuestion(list);
+					return null;
+				} else {
+					return list;
+				}
 			}
 		}
 
@@ -940,7 +954,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 			selectedFileTextField.setText(b.toString());
 		}
-		selectedFileTextField.setCursorPosition(selectedFileTextField.getText().length());
+		selectedFileTextField.setCurosrAtTextEnd();
 	}
 
 	private void removeInvalidSelections () {
@@ -1072,6 +1086,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		updateFileTypeSelectBox();
 		rebuildFileList();
+	}
+
+	public FileTypeFilter.Rule getActiveFileTypeFilterRule () {
+		return activeFileTypeRule;
 	}
 
 	public SelectionMode getSelectionMode () {

@@ -3,6 +3,7 @@
 - **Added**: `VisTextField#setCurosrAtTextEnd()`
 - **Fixed**: VisSplitPane was not restoring default cursor when user dragged pointer outside od pane area 
 - **Fixed**: [#188](https://github.com/kotcrab/vis-editor/issues/188) - same instance of `VisDialog` couldn't be closed for the second time using close button 
+- **Changed**: `FileChooser` in save mode with active file type filter rule will automatically append rule extensions if user have't typed extension or extensions was wrong
 - **Misc**: Disabling Android Lint is no longer necessary
 
 #### Version: 1.1.1 (LibGDX 1.9.3)
