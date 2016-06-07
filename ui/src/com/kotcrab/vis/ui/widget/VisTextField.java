@@ -757,6 +757,10 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 		return cursor;
 	}
 
+	public void setCurosrAtTextEnd () {
+		setCursorPosition(getText().length());
+	}
+
 	/** @param cursorPercentHeight cursor size, value from 0..1 range */
 	public void setCursorPercentHeight (float cursorPercentHeight) {
 		if (cursorPercentHeight < 0 || cursorPercentHeight > 1)

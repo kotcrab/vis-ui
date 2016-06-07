@@ -1,5 +1,6 @@
 #### Version: 1.1.2 (LibGDX 1.9.3)
 - **Added**: `CursorManager`
+- **Added**: `VisTextField#setCurosrAtTextEnd()`
 - **Fixed**: VisSplitPane was not restoring default cursor when user dragged pointer outside od pane area 
 - **Fixed**: [#188](https://github.com/kotcrab/vis-editor/issues/188) - same instance of `VisDialog` couldn't be closed for the second time using close button 
 - **Misc**: Disabling Android Lint is no longer necessary
