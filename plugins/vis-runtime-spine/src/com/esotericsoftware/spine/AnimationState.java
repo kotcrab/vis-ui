@@ -1,10 +1,10 @@
-/*
+/******************************************************************************
  * Spine Runtimes Software License
  * Version 2.3
- *
+ * 
  * Copyright (c) 2013-2015, Esoteric Software
  * All rights reserved.
- *
+ * 
  * You are granted a perpetual, non-exclusive, non-sublicensable and
  * non-transferable license to use, install, execute and perform the Spine
  * Runtimes Software (the "Software") and derivative works solely for personal
@@ -16,7 +16,7 @@
  * or other intellectual property or proprietary rights notices on or in the
  * Software, including any copy thereof. Redistributions in binary or source
  * form must include this license and terms.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
@@ -27,7 +27,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ *****************************************************************************/
 
 package com.esotericsoftware.spine;
 
@@ -37,7 +37,7 @@ import com.badlogic.gdx.utils.Pool.Poolable;
 
 /** Stores state for an animation and automatically mixes between animations. */
 public class AnimationState {
-	private final AnimationStateData data;
+	private AnimationStateData data;
 	private Array<TrackEntry> tracks = new Array();
 	private final Array<Event> events = new Array();
 	private final Array<AnimationStateListener> listeners = new Array();
@@ -48,6 +48,10 @@ public class AnimationState {
 			return new TrackEntry();
 		}
 	};
+
+	/** Creates an uninitialized AnimationState. The animation state data must be set. */
+	public AnimationState () {
+	}
 
 	public AnimationState (AnimationStateData data) {
 		if (data == null) throw new IllegalArgumentException("data cannot be null.");
@@ -60,20 +64,28 @@ public class AnimationState {
 			TrackEntry current = tracks.get(i);
 			if (current == null) continue;
 
+			TrackEntry next = current.next;
+			if (next != null) {
+				float nextTime = current.lastTime - next.delay;
+				if (nextTime >= 0) {
+					float nextDelta = delta * next.timeScale;
+					next.time = nextTime + nextDelta; // For start event to see correct time.
+					current.time += delta * current.timeScale; // For end event to see correct time.
+					setCurrent(i, next);
+					next.time -= nextDelta; // Prevent increasing time twice, below.
+					current = next;
+				}
+			} else if (!current.loop && current.lastTime >= current.endTime) {
+				// End non-looping animation when it reaches its end time and there is no next entry.
+				clearTrack(i);
+				continue;
+			}
+
 			current.time += delta * current.timeScale;
 			if (current.previous != null) {
 				float previousDelta = delta * current.previous.timeScale;
 				current.previous.time += previousDelta;
 				current.mixTime += previousDelta;
-			}
-
-			TrackEntry next = current.next;
-			if (next != null) {
-				next.time = current.lastTime - next.delay;
-				if (next.time >= 0) setCurrent(i, next);
-			} else {
-				// End non-looping animation when it reaches its end time and there is no next entry.
-				if (!current.loop && current.lastTime >= current.endTime) clearTrack(i);
 			}
 		}
 	}
@@ -120,7 +132,7 @@ public class AnimationState {
 
 			// Check if completed the animation or a loop iteration.
 			if (loop ? (lastTime % endTime > time % endTime) : (lastTime < endTime && time >= endTime)) {
-				int count = (int) (time / endTime);
+				int count = (int)(time / endTime);
 				if (current.listener != null) current.listener.complete(i, count);
 				for (int ii = 0, nn = listeners.size; ii < nn; ii++)
 					listeners.get(ii).complete(i, count);
@@ -225,10 +237,8 @@ public class AnimationState {
 		return addAnimation(trackIndex, animation, loop, delay);
 	}
 
-	/**
-	 * Adds an animation to be played delay seconds after the current or last queued animation.
-	 * @param delay May be <= 0 to use duration of previous animation minus any mix duration plus the negative delay.
-	 */
+	/** Adds an animation to be played delay seconds after the current or last queued animation.
+	 * @param delay May be <= 0 to use duration of previous animation minus any mix duration plus the negative delay. */
 	public TrackEntry addAnimation (int trackIndex, Animation animation, boolean loop, float delay) {
 		TrackEntry entry = trackEntryPool.obtain();
 		entry.animation = animation;
@@ -271,6 +281,10 @@ public class AnimationState {
 		listeners.removeValue(listener, true);
 	}
 
+	public void clearListeners () {
+		listeners.clear();
+	}
+
 	public float getTimeScale () {
 		return timeScale;
 	}
@@ -281,6 +295,10 @@ public class AnimationState {
 
 	public AnimationStateData getData () {
 		return data;
+	}
+
+	public void setData (AnimationStateData data) {
+		this.data = data;
 	}
 
 	/** Returns the list of tracks that have animations, which may contain nulls. */
@@ -413,10 +431,8 @@ public class AnimationState {
 		/** Invoked when the current animation triggers an event. */
 		public void event (int trackIndex, Event event);
 
-		/**
-		 * Invoked when the current animation has completed.
-		 * @param loopCount The number of times the animation reached the end.
-		 */
+		/** Invoked when the current animation has completed.
+		 * @param loopCount The number of times the animation reached the end. */
 		public void complete (int trackIndex, int loopCount);
 
 		/** Invoked just after the current animation is set. */

@@ -1,10 +1,10 @@
-/*
+/******************************************************************************
  * Spine Runtimes Software License
  * Version 2.3
- *
+ * 
  * Copyright (c) 2013-2015, Esoteric Software
  * All rights reserved.
- *
+ * 
  * You are granted a perpetual, non-exclusive, non-sublicensable and
  * non-transferable license to use, install, execute and perform the Spine
  * Runtimes Software (the "Software") and derivative works solely for personal
@@ -16,7 +16,7 @@
  * or other intellectual property or proprietary rights notices on or in the
  * Software, including any copy thereof. Redistributions in binary or source
  * form must include this license and terms.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
@@ -27,7 +27,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ *****************************************************************************/
 
 package com.esotericsoftware.spine;
 
@@ -36,8 +36,10 @@ public class Event {
 	int intValue;
 	float floatValue;
 	String stringValue;
+	final float time;
 
-	public Event (EventData data) {
+	public Event (float time, EventData data) {
+		this.time = time;
 		this.data = data;
 	}
 
@@ -63,6 +65,10 @@ public class Event {
 
 	public void setString (String stringValue) {
 		this.stringValue = stringValue;
+	}
+
+	public float getTime () {
+		return time;
 	}
 
 	public EventData getData () {

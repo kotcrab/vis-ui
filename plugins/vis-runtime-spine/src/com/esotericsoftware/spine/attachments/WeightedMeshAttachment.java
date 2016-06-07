@@ -1,10 +1,10 @@
-/*
+/******************************************************************************
  * Spine Runtimes Software License
  * Version 2.3
- *
+ * 
  * Copyright (c) 2013-2015, Esoteric Software
  * All rights reserved.
- *
+ * 
  * You are granted a perpetual, non-exclusive, non-sublicensable and
  * non-transferable license to use, install, execute and perform the Spine
  * Runtimes Software (the "Software") and derivative works solely for personal
@@ -16,7 +16,7 @@
  * or other intellectual property or proprietary rights notices on or in the
  * Software, including any copy thereof. Redistributions in binary or source
  * form must include this license and terms.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
@@ -27,21 +27,22 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ *****************************************************************************/
 
 package com.esotericsoftware.spine.attachments;
+
+import com.esotericsoftware.spine.Bone;
+import com.esotericsoftware.spine.Skeleton;
+import com.esotericsoftware.spine.Slot;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.FloatArray;
 import com.badlogic.gdx.utils.NumberUtils;
-import com.esotericsoftware.spine.Bone;
-import com.esotericsoftware.spine.Skeleton;
-import com.esotericsoftware.spine.Slot;
 
 /** Attachment that displays a texture region. */
-public class SkinnedMeshAttachment extends Attachment {
+public class WeightedMeshAttachment extends Attachment implements FfdAttachment {
 	private TextureRegion region;
 	private String path;
 	private int[] bones;
@@ -50,12 +51,14 @@ public class SkinnedMeshAttachment extends Attachment {
 	private float[] worldVertices;
 	private final Color color = new Color(1, 1, 1, 1);
 	private int hullLength;
+	private WeightedMeshAttachment parentMesh;
+	private boolean inheritFFD;
 
 	// Nonessential.
-	private int[] edges;
+	private short[] edges;
 	private float width, height;
 
-	public SkinnedMeshAttachment (String name) {
+	public WeightedMeshAttachment (String name) {
 		super(name);
 	}
 
@@ -73,8 +76,7 @@ public class SkinnedMeshAttachment extends Attachment {
 		float[] regionUVs = this.regionUVs;
 		int verticesLength = regionUVs.length;
 		int worldVerticesLength = verticesLength / 2 * 5;
-		if (worldVertices == null || worldVertices.length != worldVerticesLength)
-			worldVertices = new float[worldVerticesLength];
+		if (worldVertices == null || worldVertices.length != worldVerticesLength) worldVertices = new float[worldVerticesLength];
 
 		float u, v, width, height;
 		if (region == null) {
@@ -86,7 +88,7 @@ public class SkinnedMeshAttachment extends Attachment {
 			width = region.getU2() - u;
 			height = region.getV2() - v;
 		}
-		if (region instanceof AtlasRegion && ((AtlasRegion) region).rotate) {
+		if (region instanceof AtlasRegion && ((AtlasRegion)region).rotate) {
 			for (int i = 0, w = 3; i < verticesLength; i += 2, w += 5) {
 				worldVertices[w] = u + regionUVs[i + 1] * width;
 				worldVertices[w + 1] = v + height - regionUVs[i] * height;
@@ -99,7 +101,8 @@ public class SkinnedMeshAttachment extends Attachment {
 		}
 	}
 
-	public void updateWorldVertices (Slot slot, boolean premultipliedAlpha) {
+	/** @return The updated world vertices. */
+	public float[] updateWorldVertices (Slot slot, boolean premultipliedAlpha) {
 		Skeleton skeleton = slot.getSkeleton();
 		Color skeletonColor = skeleton.getColor();
 		Color meshColor = slot.getColor();
@@ -107,10 +110,10 @@ public class SkinnedMeshAttachment extends Attachment {
 		float a = skeletonColor.a * meshColor.a * regionColor.a * 255;
 		float multiplier = premultipliedAlpha ? a : 255;
 		float color = NumberUtils.intToFloatColor( //
-				((int) a << 24) //
-						| ((int) (skeletonColor.b * meshColor.b * regionColor.b * multiplier) << 16) //
-						| ((int) (skeletonColor.g * meshColor.g * regionColor.g * multiplier) << 8) //
-						| (int) (skeletonColor.r * meshColor.r * regionColor.r * multiplier));
+			((int)a << 24) //
+				| ((int)(skeletonColor.b * meshColor.b * regionColor.b * multiplier) << 16) //
+				| ((int)(skeletonColor.g * meshColor.g * regionColor.g * multiplier) << 8) //
+				| (int)(skeletonColor.r * meshColor.r * regionColor.r * multiplier));
 
 		float[] worldVertices = this.worldVertices;
 		float x = skeleton.getX(), y = skeleton.getY();
@@ -124,10 +127,10 @@ public class SkinnedMeshAttachment extends Attachment {
 				float wx = 0, wy = 0;
 				int nn = bones[v++] + v;
 				for (; v < nn; v++, b += 3) {
-					Bone bone = (Bone) skeletonBones[bones[v]];
+					Bone bone = (Bone)skeletonBones[bones[v]];
 					float vx = weights[b], vy = weights[b + 1], weight = weights[b + 2];
-					wx += (vx * bone.getM00() + vy * bone.getM01() + bone.getWorldX()) * weight;
-					wy += (vx * bone.getM10() + vy * bone.getM11() + bone.getWorldY()) * weight;
+					wx += (vx * bone.getA() + vy * bone.getB() + bone.getWorldX()) * weight;
+					wy += (vx * bone.getC() + vy * bone.getD() + bone.getWorldY()) * weight;
 				}
 				worldVertices[w] = wx + x;
 				worldVertices[w + 1] = wy + y;
@@ -139,16 +142,21 @@ public class SkinnedMeshAttachment extends Attachment {
 				float wx = 0, wy = 0;
 				int nn = bones[v++] + v;
 				for (; v < nn; v++, b += 3, f += 2) {
-					Bone bone = (Bone) skeletonBones[bones[v]];
+					Bone bone = (Bone)skeletonBones[bones[v]];
 					float vx = weights[b] + ffd[f], vy = weights[b + 1] + ffd[f + 1], weight = weights[b + 2];
-					wx += (vx * bone.getM00() + vy * bone.getM01() + bone.getWorldX()) * weight;
-					wy += (vx * bone.getM10() + vy * bone.getM11() + bone.getWorldY()) * weight;
+					wx += (vx * bone.getA() + vy * bone.getB() + bone.getWorldX()) * weight;
+					wy += (vx * bone.getC() + vy * bone.getD() + bone.getWorldY()) * weight;
 				}
 				worldVertices[w] = wx + x;
 				worldVertices[w + 1] = wy + y;
 				worldVertices[w + 2] = color;
 			}
 		}
+		return worldVertices;
+	}
+
+	public boolean applyFFD (Attachment sourceAttachment) {
+		return this == sourceAttachment || (inheritFFD && parentMesh == sourceAttachment);
 	}
 
 	public float[] getWorldVertices () {
@@ -168,10 +176,8 @@ public class SkinnedMeshAttachment extends Attachment {
 		return weights;
 	}
 
-	/**
-	 * For each bone affecting the vertex, the vertex position in the bone's coordinate system and the weight for the bone's
-	 * influence. Ie: x, y, weight, ...
-	 */
+	/** For each bone affecting the vertex, the vertex position in the bone's coordinate system and the weight for the bone's
+	 * influence. Ie: x, y, weight, ... */
 	public void setWeights (float[] weights) {
 		this.weights = weights;
 	}
@@ -214,11 +220,11 @@ public class SkinnedMeshAttachment extends Attachment {
 		this.hullLength = hullLength;
 	}
 
-	public void setEdges (int[] edges) {
+	public void setEdges (short[] edges) {
 		this.edges = edges;
 	}
 
-	public int[] getEdges () {
+	public short[] getEdges () {
 		return edges;
 	}
 
@@ -236,5 +242,33 @@ public class SkinnedMeshAttachment extends Attachment {
 
 	public void setHeight (float height) {
 		this.height = height;
+	}
+
+	/** Returns the source mesh if this is a linked mesh, else returns null. */
+	public WeightedMeshAttachment getParentMesh () {
+		return parentMesh;
+	}
+
+	/** @param parentMesh May be null. */
+	public void setParentMesh (WeightedMeshAttachment parentMesh) {
+		this.parentMesh = parentMesh;
+		if (parentMesh != null) {
+			bones = parentMesh.bones;
+			weights = parentMesh.weights;
+			regionUVs = parentMesh.regionUVs;
+			triangles = parentMesh.triangles;
+			hullLength = parentMesh.hullLength;
+			edges = parentMesh.edges;
+			width = parentMesh.width;
+			height = parentMesh.height;
+		}
+	}
+
+	public boolean getInheritFFD () {
+		return inheritFFD;
+	}
+
+	public void setInheritFFD (boolean inheritFFD) {
+		this.inheritFFD = inheritFFD;
 	}
 }

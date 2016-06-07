@@ -1,10 +1,10 @@
-/*
+/******************************************************************************
  * Spine Runtimes Software License
  * Version 2.3
- *
+ * 
  * Copyright (c) 2013-2015, Esoteric Software
  * All rights reserved.
- *
+ * 
  * You are granted a perpetual, non-exclusive, non-sublicensable and
  * non-transferable license to use, install, execute and perform the Spine
  * Runtimes Software (the "Software") and derivative works solely for personal
@@ -16,7 +16,7 @@
  * or other intellectual property or proprietary rights notices on or in the
  * Software, including any copy thereof. Redistributions in binary or source
  * form must include this license and terms.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
@@ -27,30 +27,26 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ *****************************************************************************/
 
 package com.esotericsoftware.spine;
 
-import com.badlogic.gdx.math.MathUtils;
+import static com.badlogic.gdx.math.MathUtils.*;
+import static com.badlogic.gdx.math.Matrix3.*;
+
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Vector2;
 
-import static com.badlogic.gdx.math.Matrix3.*;
-
-public class Bone {
+public class Bone implements Updatable {
 	final BoneData data;
 	final Skeleton skeleton;
 	final Bone parent;
-	float x, y;
-	float rotation, rotationIK;
-	float scaleX, scaleY;
-	boolean flipX, flipY;
+	float x, y, rotation, scaleX, scaleY, shearX, shearY;
+	float appliedRotation, appliedScaleX, appliedScaleY;
 
-	float m00, m01, worldX; // a b x
-	float m10, m11, worldY; // c d y
-	float worldRotation;
-	float worldScaleX, worldScaleY;
-	boolean worldFlipX, worldFlipY;
+	float a, b, worldX;
+	float c, d, worldY;
+	float worldSignX, worldSignY;
 
 	Bone (BoneData data) {
 		this.data = data;
@@ -68,10 +64,8 @@ public class Bone {
 		setToSetupPose();
 	}
 
-	/**
-	 * Copy constructor.
-	 * @param parent May be null.
-	 */
+	/** Copy constructor.
+	 * @param parent May be null. */
 	public Bone (Bone bone, Skeleton skeleton, Bone parent) {
 		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
 		this.skeleton = skeleton;
@@ -80,56 +74,136 @@ public class Bone {
 		x = bone.x;
 		y = bone.y;
 		rotation = bone.rotation;
-		rotationIK = bone.rotationIK;
 		scaleX = bone.scaleX;
 		scaleY = bone.scaleY;
-		flipX = bone.flipX;
-		flipY = bone.flipY;
+		shearX = bone.shearX;
+		shearY = bone.shearY;
 	}
 
-	/** Computes the world SRT using the parent bone and the local SRT. */
+	/** Same as {@link #updateWorldTransform()}. This method exists for Bone to implement {@link Updatable}. */
+	public void update () {
+		updateWorldTransform(x, y, rotation, scaleX, scaleY, shearX, shearY);
+	}
+
+	/** Computes the world SRT using the parent bone and this bone's local SRT. */
 	public void updateWorldTransform () {
-		Skeleton skeleton = this.skeleton;
+		updateWorldTransform(x, y, rotation, scaleX, scaleY, shearX, shearY);
+	}
+
+	/** Computes the world SRT using the parent bone and the specified local SRT. */
+	public void updateWorldTransform (float x, float y, float rotation, float scaleX, float scaleY, float shearX, float shearY) {
+		appliedRotation = rotation;
+		appliedScaleX = scaleX;
+		appliedScaleY = scaleY;
+
+		float rotationY = rotation + 90 + shearY;
+		float la = cosDeg(rotation + shearX) * scaleX, lb = cosDeg(rotationY) * scaleY;
+		float lc = sinDeg(rotation + shearX) * scaleX, ld = sinDeg(rotationY) * scaleY;
+
 		Bone parent = this.parent;
-		float x = this.x, y = this.y;
-		if (parent != null) {
-			worldX = x * parent.m00 + y * parent.m01 + parent.worldX;
-			worldY = x * parent.m10 + y * parent.m11 + parent.worldY;
-			if (data.inheritScale) {
-				worldScaleX = parent.worldScaleX * scaleX;
-				worldScaleY = parent.worldScaleY * scaleY;
-			} else {
-				worldScaleX = scaleX;
-				worldScaleY = scaleY;
+		if (parent == null) { // Root bone.
+			Skeleton skeleton = this.skeleton;
+			if (skeleton.flipX) {
+				x = -x;
+				la = -la;
+				lb = -lb;
 			}
-			worldRotation = data.inheritRotation ? parent.worldRotation + rotationIK : rotationIK;
-			worldFlipX = parent.worldFlipX ^ flipX;
-			worldFlipY = parent.worldFlipY ^ flipY;
-		} else {
-			boolean skeletonFlipX = skeleton.flipX, skeletonFlipY = skeleton.flipY;
-			worldX = skeletonFlipX ? -x : x;
-			worldY = skeletonFlipY ? -y : y;
-			worldScaleX = scaleX;
-			worldScaleY = scaleY;
-			worldRotation = rotationIK;
-			worldFlipX = skeletonFlipX ^ flipX;
-			worldFlipY = skeletonFlipY ^ flipY;
+			if (skeleton.flipY) {
+				y = -y;
+				lc = -lc;
+				ld = -ld;
+			}
+			a = la;
+			b = lb;
+			c = lc;
+			d = ld;
+			worldX = x;
+			worldY = y;
+			worldSignX = Math.signum(scaleX);
+			worldSignY = Math.signum(scaleY);
+			return;
 		}
-		float cos = MathUtils.cosDeg(worldRotation);
-		float sin = MathUtils.sinDeg(worldRotation);
-		if (worldFlipX) {
-			m00 = -cos * worldScaleX;
-			m01 = sin * worldScaleY;
+
+		float pa = parent.a, pb = parent.b, pc = parent.c, pd = parent.d;
+		worldX = pa * x + pb * y + parent.worldX;
+		worldY = pc * x + pd * y + parent.worldY;
+		worldSignX = parent.worldSignX * Math.signum(scaleX);
+		worldSignY = parent.worldSignY * Math.signum(scaleY);
+
+		if (data.inheritRotation && data.inheritScale) {
+			a = pa * la + pb * lc;
+			b = pa * lb + pb * ld;
+			c = pc * la + pd * lc;
+			d = pc * lb + pd * ld;
 		} else {
-			m00 = cos * worldScaleX;
-			m01 = -sin * worldScaleY;
-		}
-		if (worldFlipY) {
-			m10 = -sin * worldScaleX;
-			m11 = -cos * worldScaleY;
-		} else {
-			m10 = sin * worldScaleX;
-			m11 = cos * worldScaleY;
+			if (data.inheritRotation) { // No scale inheritance.
+				pa = 1;
+				pb = 0;
+				pc = 0;
+				pd = 1;
+				do {
+					float cos = cosDeg(parent.appliedRotation), sin = sinDeg(parent.appliedRotation);
+					float temp = pa * cos + pb * sin;
+					pb = pa * -sin + pb * cos;
+					pa = temp;
+					temp = pc * cos + pd * sin;
+					pd = pc * -sin + pd * cos;
+					pc = temp;
+
+					if (!parent.data.inheritRotation) break;
+					parent = parent.parent;
+				} while (parent != null);
+				a = pa * la + pb * lc;
+				b = pa * lb + pb * ld;
+				c = pc * la + pd * lc;
+				d = pc * lb + pd * ld;
+			} else if (data.inheritScale) { // No rotation inheritance.
+				pa = 1;
+				pb = 0;
+				pc = 0;
+				pd = 1;
+				do {
+					float r = parent.appliedRotation, cos = cosDeg(r), sin = sinDeg(r);
+					float psx = parent.appliedScaleX, psy = parent.appliedScaleY;
+					float za = cos * psx, zb = -sin * psy, zc = sin * psx, zd = cos * psy;
+					float temp = pa * za + pb * zc;
+					pb = pa * zb + pb * zd;
+					pa = temp;
+					temp = pc * za + pd * zc;
+					pd = pc * zb + pd * zd;
+					pc = temp;
+
+					if (psx < 0) r = -r;
+					cos = cosDeg(-r);
+					sin = sinDeg(-r);
+					temp = pa * cos + pb * sin;
+					pb = pa * -sin + pb * cos;
+					pa = temp;
+					temp = pc * cos + pd * sin;
+					pd = pc * -sin + pd * cos;
+					pc = temp;
+
+					if (!parent.data.inheritScale) break;
+					parent = parent.parent;
+				} while (parent != null);
+				a = pa * la + pb * lc;
+				b = pa * lb + pb * ld;
+				c = pc * la + pd * lc;
+				d = pc * lb + pd * ld;
+			} else {
+				a = la;
+				b = lb;
+				c = lc;
+				d = ld;
+			}
+			if (skeleton.flipX) {
+				a = -a;
+				b = -b;
+			}
+			if (skeleton.flipY) {
+				c = -c;
+				d = -d;
+			}
 		}
 	}
 
@@ -138,11 +212,10 @@ public class Bone {
 		x = data.x;
 		y = data.y;
 		rotation = data.rotation;
-		rotationIK = rotation;
 		scaleX = data.scaleX;
 		scaleY = data.scaleY;
-		flipX = data.flipX;
-		flipY = data.flipY;
+		shearX = data.shearX;
+		shearY = data.shearY;
 	}
 
 	public BoneData getData () {
@@ -178,22 +251,12 @@ public class Bone {
 		this.y = y;
 	}
 
-	/** Returns the forward kinetics rotation. */
 	public float getRotation () {
 		return rotation;
 	}
 
 	public void setRotation (float rotation) {
 		this.rotation = rotation;
-	}
-
-	/** Returns the inverse kinetics rotation, as calculated by any IK constraints. */
-	public float getRotationIK () {
-		return rotationIK;
-	}
-
-	public void setRotationIK (float rotationIK) {
-		this.rotationIK = rotationIK;
 	}
 
 	public float getScaleX () {
@@ -222,36 +285,36 @@ public class Bone {
 		scaleY = scale;
 	}
 
-	public boolean getFlipX () {
-		return flipX;
+	public float getShearX () {
+		return shearX;
 	}
 
-	public void setFlipX (boolean flipX) {
-		this.flipX = flipX;
+	public void setShearX (float shearX) {
+		this.shearX = shearX;
 	}
 
-	public boolean getFlipY () {
-		return flipY;
+	public float getShearY () {
+		return shearY;
 	}
 
-	public void setFlipY (boolean flipY) {
-		this.flipY = flipY;
+	public void setShearY (float shearY) {
+		this.shearY = shearY;
 	}
 
-	public float getM00 () {
-		return m00;
+	public float getA () {
+		return a;
 	}
 
-	public float getM01 () {
-		return m01;
+	public float getB () {
+		return b;
 	}
 
-	public float getM10 () {
-		return m10;
+	public float getC () {
+		return c;
 	}
 
-	public float getM11 () {
-		return m11;
+	public float getD () {
+		return d;
 	}
 
 	public float getWorldX () {
@@ -262,33 +325,37 @@ public class Bone {
 		return worldY;
 	}
 
-	public float getWorldRotation () {
-		return worldRotation;
+	public float getWorldSignX () {
+		return worldSignX;
+	}
+
+	public float getWorldSignY () {
+		return worldSignY;
+	}
+
+	public float getWorldRotationX () {
+		return atan2(c, a) * radDeg;
+	}
+
+	public float getWorldRotationY () {
+		return atan2(d, b) * radDeg;
 	}
 
 	public float getWorldScaleX () {
-		return worldScaleX;
+		return (float)Math.sqrt(a * a + b * b) * worldSignX;
 	}
 
 	public float getWorldScaleY () {
-		return worldScaleY;
-	}
-
-	public boolean getWorldFlipX () {
-		return worldFlipX;
-	}
-
-	public boolean getWorldFlipY () {
-		return worldFlipY;
+		return (float)Math.sqrt(c * c + d * d) * worldSignY;
 	}
 
 	public Matrix3 getWorldTransform (Matrix3 worldTransform) {
 		if (worldTransform == null) throw new IllegalArgumentException("worldTransform cannot be null.");
 		float[] val = worldTransform.val;
-		val[M00] = m00;
-		val[M01] = m01;
-		val[M10] = m10;
-		val[M11] = m11;
+		val[M00] = a;
+		val[M01] = b;
+		val[M10] = c;
+		val[M11] = d;
 		val[M02] = worldX;
 		val[M12] = worldY;
 		val[M20] = 0;
@@ -299,21 +366,17 @@ public class Bone {
 
 	public Vector2 worldToLocal (Vector2 world) {
 		float x = world.x - worldX, y = world.y - worldY;
-		float m00 = this.m00, m10 = this.m10, m01 = this.m01, m11 = this.m11;
-		if (worldFlipX != worldFlipY) {
-			m00 = -m00;
-			m11 = -m11;
-		}
-		float invDet = 1 / (m00 * m11 - m01 * m10);
-		world.x = (x * m00 * invDet - y * m01 * invDet);
-		world.y = (y * m11 * invDet - x * m10 * invDet);
+		float a = this.a, b = this.b, c = this.c, d = this.d;
+		float invDet = 1 / (a * d - b * c);
+		world.x = (x * d * invDet - y * b * invDet);
+		world.y = (y * a * invDet - x * c * invDet);
 		return world;
 	}
 
 	public Vector2 localToWorld (Vector2 local) {
 		float x = local.x, y = local.y;
-		local.x = x * m00 + y * m01 + worldX;
-		local.y = x * m10 + y * m11 + worldY;
+		local.x = x * a + y * b + worldX;
+		local.y = x * c + y * d + worldY;
 		return local;
 	}
 
