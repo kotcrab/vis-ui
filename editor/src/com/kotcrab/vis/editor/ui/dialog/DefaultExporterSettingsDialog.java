@@ -31,7 +31,8 @@ public class DefaultExporterSettingsDialog extends VisWindow {
 	private DefaultExporterSettings settings;
 
 	private final VisCheckBox skipDefaultCheck;
-	private final VisCheckBox miniamlOutputCheck;
+	private final VisCheckBox minimalOutputCheck;
+	private final VisCheckBox packageSeparateAtlasForEachSceneCheck;
 
 	public DefaultExporterSettingsDialog (EditorSettingsIOModule settingsIO, DefaultExporterSettings settings) {
 		super("Settings");
@@ -61,14 +62,21 @@ public class DefaultExporterSettingsDialog extends VisWindow {
 		add(skipDefaultCheck);
 		add(skipDefaultHelpImage).size(22).row();
 
-		miniamlOutputCheck = new VisCheckBox("Use minimal output type");
-
+		minimalOutputCheck = new VisCheckBox("Use minimal output type");
 		VisImage minimalOutputHelpImage = new VisImage(Icons.QUESTION_BIG.drawable());
 		new Tooltip.Builder("If checked output JSON will use minimal format, unnecessary double quotes\n" +
 				"will be skipped unless needed. This format may not be supported by all JSON parsers.\nUncheck" +
 				"this to disable minimal format.", Align.left).target(minimalOutputHelpImage).build();
-		add(miniamlOutputCheck);
+		add(minimalOutputCheck);
 		add(minimalOutputHelpImage).size(22).row();
+
+		packageSeparateAtlasForEachSceneCheck = new VisCheckBox("Package separate atlas for each scene");
+		VisImage packageSeparateAtlasForEachSceneHelpImage = new VisImage(Icons.QUESTION_BIG.drawable());
+		new Tooltip.Builder("If checked each exported scene will have it's own separate texture atlas. This is useful\n" +
+				"when you have many texture assets but they are split between scenes.\nNote when this is checked 'master'" +
+				"atlas containing all texture will not be created.", Align.left).target(packageSeparateAtlasForEachSceneHelpImage).build();
+		add(packageSeparateAtlasForEachSceneCheck);
+		add(packageSeparateAtlasForEachSceneHelpImage).size(22).row();
 
 		add(buttonTable).right().colspan(2);
 
@@ -90,12 +98,14 @@ public class DefaultExporterSettingsDialog extends VisWindow {
 
 	private void setUIFromSettings () {
 		skipDefaultCheck.setChecked(settings.skipDefaultValues);
-		miniamlOutputCheck.setChecked(settings.useMinimalOutputType);
+		minimalOutputCheck.setChecked(settings.useMinimalOutputType);
+		packageSeparateAtlasForEachSceneCheck.setChecked(settings.packageSeparateAtlasForEachScene);
 	}
 
 	private void setToSettings () {
 		settings.skipDefaultValues = skipDefaultCheck.isChecked();
-		settings.useMinimalOutputType = miniamlOutputCheck.isChecked();
+		settings.useMinimalOutputType = minimalOutputCheck.isChecked();
+		settings.packageSeparateAtlasForEachScene = packageSeparateAtlasForEachSceneCheck.isChecked();
 		settingsIO.save(settings, DefaultExporter.SETTINGS_FILE_NAME);
 	}
 }

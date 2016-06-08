@@ -72,7 +72,7 @@ public enum SceneFeature {
 	INFLATER_SPRITE(new SystemProvider() {
 		@Override
 		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
-			return new SpriteInflater(context.configuration, context.assetsManager);
+			return new SpriteInflater(context.configuration, context.assetsManager, data.textureAtlasPath);
 		}
 	}),
 

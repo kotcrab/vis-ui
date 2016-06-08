@@ -32,6 +32,7 @@ public class SceneData {
 	public float width;
 	public float height;
 	public float pixelsPerUnit;
+	public String textureAtlasPath;
 
 	public PhysicsSettings physicsSettings;
 	public Variables variables;

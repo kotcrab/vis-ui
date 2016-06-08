@@ -5,6 +5,7 @@
 - **Improved**: If some scene assets are missing then dialog with missing files list will be showed 
 - **Added**: [#58](https://github.com/kotcrab/vis-editor/issues/58) - Polygon auto tracing (available via Polygon Tool)
 - **Added**: Crash and internal exception reporter
+- **Added**: Option in default exporter to package separate texture atlas for each scene
 - **Fixed**: [#130](https://github.com/kotcrab/vis-editor/issues/130) - Exit dialog not showed on non Windows OSes
 - **Fixed**: Unable to open variables settings dialog for newly created scenes
 - **Fixed**: Minor bug: tabs panel wrong height
