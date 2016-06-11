@@ -1297,6 +1297,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			public void finished (String input) {
 				if (FileUtils.isValidFileName(input) == false) {
 					Dialogs.showErrorDialog(getStage(), NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS.get());
+					return;
 				}
 
 				for (FileHandle file : currentDirectory.list()) {
