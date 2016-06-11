@@ -1,3 +1,5 @@
+#### Version: 0.3.3
+
 #### Version: 0.3.2
 - **Improved**: Texture cache speed improved - new texture are available immediately after they are added to project assets. Fixes issues when large textures were loading infinitely.
 - **Improved**: Entity Properties will now show when field is locked and can't be edited

@@ -22,7 +22,7 @@ allprojects {
     apply plugin: "nebula.provided-base"
     apply plugin: "nebula.optional-base"
 
-    version = '0.3.2'
+    version = '0.3.3-SNAPSHOT'
     ext {
         // Build Properties
         appName = 'vis'
