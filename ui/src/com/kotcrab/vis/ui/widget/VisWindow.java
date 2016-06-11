@@ -27,6 +27,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.kotcrab.vis.ui.FocusManager;
 import com.kotcrab.vis.ui.VisUI;
 
 /**
@@ -117,13 +118,21 @@ public class VisWindow extends Window {
 	public void fadeOut (float time) {
 		if (fadeOutActionRunning) return;
 		fadeOutActionRunning = true;
+		final Touchable previousTouchable = getTouchable();
+		setTouchable(Touchable.disabled);
+		Stage stage = getStage();
+		if (stage.getKeyboardFocus().isDescendantOf(this)) {
+			FocusManager.resetFocus(stage);
+		}
 		addAction(Actions.sequence(Actions.fadeOut(time, Interpolation.fade), new Action() {
 			@Override
 			public boolean act (float delta) {
+				setTouchable(previousTouchable);
+				remove();
 				fadeOutActionRunning = false;
 				return true;
 			}
-		}, Actions.removeActor()));
+		}));
 	}
 
 	/** @return this window for the purpose of chaining methods eg. stage.addActor(new MyWindow(stage).fadeIn(0.3f)); */

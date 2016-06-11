@@ -4,6 +4,9 @@
 - **Fixed**: VisSplitPane was not restoring default cursor when user dragged pointer outside od pane area 
 - **Fixed**: [#188](https://github.com/kotcrab/vis-editor/issues/188) - same instance of `VisDialog` couldn't be closed for the second time using close button 
 - **Changed**: `FileChooser` in save mode with active file type filter rule will automatically append rule extensions if user have't typed extension or extensions was wrong
+- **Changed**: When `VisWindow#fadeOut()` is called then window touchable is set to disabled. Additionally keyboard focus is reset if any window child `Actor` owns keyboard focus.
+   - This is done to prevent user input after fade out animation has started.
+   - After fade out has finished window touchable property will be restored to previous value which was set before fade out started.
 - **Misc**: Disabling Android Lint is no longer necessary
 
 #### Version: 1.1.1 (LibGDX 1.9.3)
