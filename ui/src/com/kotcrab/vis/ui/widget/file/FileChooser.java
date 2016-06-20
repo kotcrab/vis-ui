@@ -420,7 +420,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private void createCenterContentPanel () {
 		fileListAdapter = new FileListAdapter(this, currentFiles);
 		fileListView = new ListView<FileHandle>(fileListAdapter);
-		setDefaultScrollPaneAttr(fileListView.getScrollPane());
+		setupDefaultScrollPane(fileListView.getScrollPane());
 
 		VisTable fileScrollPaneTable = new VisTable();
 		fileScrollPaneTable.add(fileListView.getMainTable()).pad(2).top().expand().fillX();
@@ -428,7 +428,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		// shortcutsTable is contained in shortcutsScrollPane contained in shortcutsScrollPaneTable contained in mainSplitPane
 		shortcutsTable = new VisTable();
-		final VisScrollPane shortcutsScrollPane = setDefaultScrollPaneAttr(new VisScrollPane(shortcutsTable));
+		final VisScrollPane shortcutsScrollPane = setupDefaultScrollPane(new VisScrollPane(shortcutsTable));
 		VisTable shortcutsScrollPaneTable = new VisTable();
 		shortcutsScrollPaneTable.add(shortcutsScrollPane).pad(2).top().expand().fillX();
 
@@ -677,7 +677,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		fadeOut();
 	}
 
-	private VisScrollPane setDefaultScrollPaneAttr (VisScrollPane scrollPane) {
+	protected VisScrollPane setupDefaultScrollPane (VisScrollPane scrollPane) {
 		scrollPane.setOverscroll(false, false);
 		scrollPane.setFlickScroll(false);
 		scrollPane.setFadeScrollBars(false);
