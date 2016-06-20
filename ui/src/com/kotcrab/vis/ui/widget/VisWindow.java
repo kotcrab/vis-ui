@@ -121,7 +121,7 @@ public class VisWindow extends Window {
 		final Touchable previousTouchable = getTouchable();
 		setTouchable(Touchable.disabled);
 		Stage stage = getStage();
-		if (stage.getKeyboardFocus().isDescendantOf(this)) {
+		if (stage.getKeyboardFocus() != null && stage.getKeyboardFocus().isDescendantOf(this)) {
 			FocusManager.resetFocus(stage);
 		}
 		addAction(Actions.sequence(Actions.fadeOut(time, Interpolation.fade), new Action() {
