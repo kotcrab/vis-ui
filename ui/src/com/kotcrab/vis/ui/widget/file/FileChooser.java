@@ -83,6 +83,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private FileIconProvider iconProvider;
 
 	private DriveCheckerService driveCheckerService = DriveCheckerService.getInstance();
+	private Array<DriveCheckerListener> driveCheckerListeners = new Array<DriveCheckerListener>();
 	private FileChooserWinService chooserWinService = FileChooserWinService.getInstance();
 
 	private FileDeleter fileDeleter = new DefaultFileDeleter();
@@ -773,10 +774,12 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		shortcutsRootsPanel.clear();
 		File[] roots = File.listRoots();
 
+		driveCheckerListeners.clear();
 		for (final File root : roots) {
-			driveCheckerService.addListener(root, mode == Mode.OPEN ? RootMode.READABLE : RootMode.WRITABLE, new DriveCheckerListener() {
+			DriveCheckerListener listener = new DriveCheckerListener() {
 				@Override
 				public void rootMode (File root, RootMode mode) {
+					if (driveCheckerListeners.removeValue(this, true) == false) return;
 					String initialName = root.toString();
 
 					if (initialName.equals("/")) initialName = COMPUTER.get();
@@ -788,7 +791,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 					shortcutsRootsPanel.addActor(item);
 					shortcutsRootsPanel.getChildren().sort(SHORTCUTS_COMPARATOR);
 				}
-			});
+			};
+			driveCheckerListeners.add(listener);
+			driveCheckerService.addListener(root, mode == Mode.OPEN ? RootMode.READABLE : RootMode.WRITABLE, listener);
 		}
 	}
 
