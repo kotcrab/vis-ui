@@ -692,6 +692,10 @@ public class VisTextField extends Widget implements Disableable, Focusable, Bord
 
 	}
 
+	public boolean getProgrammaticChangeEvents () {
+		return programmaticChangeEvents;
+	}
+
 	/**
 	 * If false, methods that change the text will not fire {@link ChangeEvent}, the event will be fired only when user changes
 	 * the text.
