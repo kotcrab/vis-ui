@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
@@ -27,6 +28,10 @@ import com.kotcrab.vis.ui.util.highlight.Highlight;
 import com.kotcrab.vis.ui.util.highlight.Highlighter;
 
 /**
+ * Text area implementation supporting highlighting words and scrolling in both X and Y directions.
+ * <p>
+ * For best scroll pane settings you should create scroll pane using {@link #createCompatibleScrollPane()}.
+ * @see Highlighter
  * @author Kotcrab
  * @since 1.1.2
  */
@@ -38,25 +43,26 @@ public class HighlightTextArea extends ScrollableTextArea {
 
 	private Highlighter highlighter;
 
-	private float maxLineWidth = 0;
+	private float maxAreaWidth = 0;
+	private float maxAreaHeight = 0;
 
 	public HighlightTextArea (String text) {
 		super(text);
+		softwrap = false;
 	}
 
-	public void setHighlighter (Highlighter highlighter) {
-		this.highlighter = highlighter;
-		highlighterChanged();
+	public HighlightTextArea (String text, String styleName) {
+		super(text, styleName);
 	}
 
-	public Highlighter getHighlighter () {
-		return highlighter;
+	public HighlightTextArea (String text, VisTextFieldStyle style) {
+		super(text, style);
 	}
 
 	@Override
 	void updateDisplayText () {
 		super.updateDisplayText();
-		highlighterChanged();
+		processHighlighter();
 	}
 
 	@Override
@@ -116,9 +122,10 @@ public class HighlightTextArea extends ScrollableTextArea {
 			}
 		}
 
+		maxAreaWidth = 0;
 		for (String line : text.split("\\n")) {
 			layout.setText(style.font, line);
-			maxLineWidth = Math.max(maxLineWidth, layout.width + 30);
+			maxAreaWidth = Math.max(maxAreaWidth, layout.width + 30);
 		}
 
 		layoutPool.free(layout);
@@ -126,6 +133,7 @@ public class HighlightTextArea extends ScrollableTextArea {
 
 	@Override
 	protected void drawText (Batch batch, BitmapFont font, float x, float y) {
+		maxAreaHeight = 0;
 		float offsetY = 0;
 		for (int i = firstLineShowing * 2; i < (firstLineShowing + linesShowing) * 2 && i < linesBreak.size; i += 2) {
 			for (Chunk chunk : renderChunks) {
@@ -136,20 +144,44 @@ public class HighlightTextArea extends ScrollableTextArea {
 			}
 
 			offsetY -= font.getLineHeight();
+			maxAreaHeight += font.getLineHeight();
 		}
+
+		maxAreaHeight += 30;
 	}
 
-	public void highlighterChanged () {
+	private void processHighlighter () {
 		if (highlights == null) return;
 		highlights.clear();
 		if (highlighter != null) highlighter.process(this, highlights);
 		chunkUpdateScheduled = true;
 	}
 
-//	@Override
-//	public float getWidth () {
-//		return maxLineWidth;
-//	}
+	public void setHighlighter (Highlighter highlighter) {
+		this.highlighter = highlighter;
+		processHighlighter();
+	}
+
+	public Highlighter getHighlighter () {
+		return highlighter;
+	}
+
+	@Override
+	public float getPrefWidth () {
+		return maxAreaWidth + 5;
+	}
+
+	@Override
+	public float getPrefHeight () {
+		return maxAreaHeight + 5;
+	}
+
+	@Override
+	public ScrollPane createCompatibleScrollPane () {
+		ScrollPane scrollPane = super.createCompatibleScrollPane();
+		scrollPane.setScrollingDisabled(false, false);
+		return scrollPane;
+	}
 
 	private static class Chunk {
 		String text;

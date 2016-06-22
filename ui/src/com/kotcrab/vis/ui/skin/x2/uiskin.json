@@ -95,6 +95,7 @@ com.kotcrab.vis.ui.Sizes: {
 },
 com.kotcrab.vis.ui.widget.VisTextField$VisTextFieldStyle: {
 	default: {focusBorder: border, errorBorder: border-error, font: default-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, backgroundOver: textfield-over, cursor: cursor },
+	textArea: {errorBorder: border-error, font: default-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, cursor: cursor },
 	small: {focusBorder: border, errorBorder: border-error, font: small-font, fontColor: white, disabledFontColor: grey, selection: selection, background: textfield, backgroundOver: textfield-over, cursor: cursor },
 	label: {selection: selection, errorBorder: border-error, font: default-font, fontColor: white, disabledFontColor: grey }
 },

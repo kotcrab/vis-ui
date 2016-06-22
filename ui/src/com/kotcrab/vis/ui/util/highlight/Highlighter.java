@@ -46,7 +46,6 @@ public class Highlighter {
 	}
 
 	/**
-	 * @param textArea text rea
 	 * @param highlights current highlights, new highlights can be added to this list however it should not be modified in any other ways
 	 */
 	public void process (HighlightTextArea textArea, Array<Highlight> highlights) {

@@ -37,6 +37,7 @@ public class TestTextAreaAndScroll extends VisWindow {
 		else
 			addNormalWidgets();
 
+		setResizable(true);
 		setSize(180, 380);
 		setPosition(28, 300);
 	}
@@ -65,8 +66,7 @@ public class TestTextAreaAndScroll extends VisWindow {
 	}
 
 	private void addVisWidgets () {
-		VisTextArea textArea = new VisTextArea("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec iaculis odio.");
-		textArea.setPrefRows(5);
+		ScrollableTextArea textArea = new ScrollableTextArea("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec iaculis odio.\nFun thing: This text area supports scrolling.");
 
 		// ---
 
@@ -81,7 +81,7 @@ public class TestTextAreaAndScroll extends VisWindow {
 
 		// ---
 
-		add(textArea).row();
-		add(scrollPane).spaceTop(8).fillX().expandX().row();
+		add(textArea.createCompatibleScrollPane()).growX().height(100).row();
+		add(scrollPane).spaceTop(8).growX().row();
 	}
 }

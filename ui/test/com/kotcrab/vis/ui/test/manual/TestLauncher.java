@@ -87,7 +87,7 @@ class TestApplication extends ApplicationAdapter {
 //		stage.addActor(new TestButtonBar());
 //		stage.addActor(new TestListView());
 //		stage.addActor(new TestToasts(stage));
-		stage.addActor(new TestHighlightTextArea());
+//		stage.addActor(new TestHighlightTextArea());
 
 		stage.addListener(new InputListener() {
 			boolean debug = false;

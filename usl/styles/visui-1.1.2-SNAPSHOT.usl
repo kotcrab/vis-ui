@@ -162,6 +162,7 @@ package com.kotcrab.vis.ui.widget {
 	#VisTextField$VisTextFieldStyle: {
 		-base: { selection: selection, background: textfield, backgroundOver: textfield-over, cursor: cursor }
 		default inherits .focus-border, .error-border, .font, .font-disabled, base: { }
+		textArea inherits default: { backgroundOver: NULL, focusBorder: NULL }
 		small inherits .focus-border, .error-border, .font-small, .font-small-disabled, base: { }
 		label inherits .error-border, .font, .font-disabled: { selection: selection }
 	}

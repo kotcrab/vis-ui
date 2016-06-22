@@ -20,7 +20,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.highlight.Highlighter;
 import com.kotcrab.vis.ui.widget.HighlightTextArea;
-import com.kotcrab.vis.ui.widget.VisScrollPane;
 import com.kotcrab.vis.ui.widget.VisWindow;
 
 public class TestHighlightTextArea extends VisWindow {
@@ -46,18 +45,12 @@ public class TestHighlightTextArea extends VisWindow {
 				"}");
 
 		Highlighter highlighter = new Highlighter();
-		highlighter.word(Color.valueOf("66CCB3"), "class", "private", "public", "protected", "if", "else", "void");
-		highlighter.word(Color.valueOf("BED6FF"), "int", "float", "boolean");
-		highlighter.word(Color.valueOf("EFC090"), "foo", "bar");
-		highlighter.regex(Color.valueOf("75715E"), "/\\*(?:.|[\\n\\r])*?\\*/"); //block comments
+		//it is much more reliable to use regex for keyword detection
+		highlighter.regex(Color.valueOf("66CCB3"), "\\b(class|private|protected|public|if|else|void)\\b");
+		highlighter.regex(Color.valueOf("BED6FF"), "\\b(int|float|boolean|public|if|else|void)\\b");
+		highlighter.regex(Color.valueOf("EFC090"), "\\b(foo|bar|)\\b");
+		highlighter.regex(Color.valueOf("75715E"), "/\\*(?:.|[\\n\\r])*?\\*/"); //block comments (/* comment */)
 		textArea.setHighlighter(highlighter);
-
-		VisScrollPane scrollPane = new VisScrollPane(textArea);
-		scrollPane.setOverscroll(false, false);
-		scrollPane.setFlickScroll(false);
-		scrollPane.setScrollbarsOnTop(true);
-//		scrollPane.setScrollingDisabled(false, false);
-
-		add(scrollPane).grow();
+		add(textArea.createCompatibleScrollPane()).grow();
 	}
 }

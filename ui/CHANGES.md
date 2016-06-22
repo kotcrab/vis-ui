@@ -1,4 +1,4 @@
-#### Version: 1.1.2 (LibGDX 1.9.3)
+#### Version: 1.1.2-SNAPSHOT (LibGDX 1.9.3)
 - **Added**: `CursorManager`
 - **Added** `ScrollableTextArea` and `HighlightTextArea` with `Highlighter` API - Warning! Experimental, API and behaviour may change at any time!
 - **Added**: `VisTextField#setCurosrAtTextEnd()`, `#getProgrammaticChangeEvents()`
@@ -10,6 +10,8 @@
 - **Changed**: When `VisWindow#fadeOut()` is called then window touchable is set to disabled. Additionally keyboard focus is reset if any window child `Actor` owns keyboard focus.
    - This is done to prevent user input after fade out animation has started.
    - After fade out has finished window touchable property will be restored to previous value which was set before fade out started.
+- **Skin changes**:
+   - **Added**: `VisTextArea` style `textArea` - no background drawable and focus border is disabled
 - **Misc**: Disabling Android Lint is no longer necessary
 
 #### Version: 1.1.1 (LibGDX 1.9.3)

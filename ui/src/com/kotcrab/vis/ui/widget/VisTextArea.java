@@ -58,6 +58,13 @@ public class VisTextArea extends VisTextField {
 
 	private float prefRows;
 
+	/**
+	 * Allows to disable, enable disabling softwrapping. Note this isn't exposed property because TextArea can't handle it's by default.
+	 * You must have text area which can calculate its max width such as {@link HighlightTextArea}
+	 */
+	boolean softwrap = true;
+	float cursorX;
+
 	public VisTextArea () {
 		super();
 	}
@@ -265,7 +272,8 @@ public class VisTextArea extends VisTextField {
 	protected void drawCursor (Drawable cursorPatch, Batch batch, BitmapFont font, float x, float y) {
 		float textOffset = cursor >= glyphPositions.size || cursorLine * 2 >= linesBreak.size ? 0
 				: glyphPositions.get(cursor) - glyphPositions.get(linesBreak.items[cursorLine * 2]);
-		cursorPatch.draw(batch, x + textOffset + fontOffset + font.getData().cursorX,
+		cursorX = textOffset + fontOffset + font.getData().cursorX;
+		cursorPatch.draw(batch, x + cursorX,
 				y - font.getDescent() / 2 - (cursorLine - firstLineShowing + 1) * font.getLineHeight(), cursorPatch.getMinWidth(),
 				font.getLineHeight());
 	}
@@ -293,7 +301,7 @@ public class VisTextArea extends VisTextField {
 				} else {
 					lastSpace = (continueCursor(i, 0) ? lastSpace : i);
 					layout.setText(font, text.subSequence(lineStart, i + 1));
-					if (layout.width > maxWidthLine) {
+					if (layout.width > maxWidthLine && softwrap) {
 						if (lineStart >= lastSpace) {
 							lastSpace = i - 1;
 						}
@@ -362,7 +370,7 @@ public class VisTextArea extends VisTextField {
 	}
 
 	public float getCursorX () {
-		return textOffset + fontOffset + style.font.getData().cursorX;
+		return cursorX;
 	}
 
 	public float getCursorY () {
