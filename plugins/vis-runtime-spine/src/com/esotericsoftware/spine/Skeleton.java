@@ -1,10 +1,10 @@
-/*
+/******************************************************************************
  * Spine Runtimes Software License
  * Version 2.3
- *
+ * 
  * Copyright (c) 2013-2015, Esoteric Software
  * All rights reserved.
- *
+ * 
  * You are granted a perpetual, non-exclusive, non-sublicensable and
  * non-transferable license to use, install, execute and perform the Spine
  * Runtimes Software (the "Software") and derivative works solely for personal
@@ -16,7 +16,7 @@
  * or other intellectual property or proprietary rights notices on or in the
  * Software, including any copy thereof. Redistributions in binary or source
  * form must include this license and terms.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
@@ -27,7 +27,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ *****************************************************************************/
 
 package com.esotericsoftware.spine;
 
@@ -37,7 +37,7 @@ import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.spine.attachments.Attachment;
 import com.esotericsoftware.spine.attachments.MeshAttachment;
 import com.esotericsoftware.spine.attachments.RegionAttachment;
-import com.esotericsoftware.spine.attachments.SkinnedMeshAttachment;
+import com.esotericsoftware.spine.attachments.WeightedMeshAttachment;
 
 public class Skeleton {
 	final SkeletonData data;
@@ -45,7 +45,8 @@ public class Skeleton {
 	final Array<Slot> slots;
 	Array<Slot> drawOrder;
 	final Array<IkConstraint> ikConstraints;
-	private final Array<Array<Bone>> boneCache = new Array();
+	final Array<TransformConstraint> transformConstraints;
+	private final Array<Updatable> updateCache = new Array();
 	Skin skin;
 	final Color color;
 	float time;
@@ -75,6 +76,10 @@ public class Skeleton {
 		for (IkConstraintData ikConstraintData : data.ikConstraints)
 			ikConstraints.add(new IkConstraint(ikConstraintData, this));
 
+		transformConstraints = new Array(data.transformConstraints.size);
+		for (TransformConstraintData transformConstraintData : data.transformConstraints)
+			transformConstraints.add(new TransformConstraint(transformConstraintData, this));
+
 		color = new Color(1, 1, 1, 1);
 
 		updateCache();
@@ -102,13 +107,12 @@ public class Skeleton {
 			drawOrder.add(slots.get(skeleton.slots.indexOf(slot, true)));
 
 		ikConstraints = new Array(skeleton.ikConstraints.size);
-		for (IkConstraint ikConstraint : skeleton.ikConstraints) {
-			Bone target = bones.get(skeleton.bones.indexOf(ikConstraint.target, true));
-			Array<Bone> ikBones = new Array(ikConstraint.bones.size);
-			for (Bone bone : ikConstraint.bones)
-				ikBones.add(bones.get(skeleton.bones.indexOf(bone, true)));
-			ikConstraints.add(new IkConstraint(ikConstraint, ikBones, target));
-		}
+		for (IkConstraint ikConstraint : skeleton.ikConstraints)
+			ikConstraints.add(new IkConstraint(ikConstraint, this));
+
+		transformConstraints = new Array(skeleton.transformConstraints.size);
+		for (TransformConstraint transformConstraint : skeleton.transformConstraints)
+			transformConstraints.add(new TransformConstraint(transformConstraint, this));
 
 		skin = skeleton.skin;
 		color = new Color(skeleton.color);
@@ -119,72 +123,53 @@ public class Skeleton {
 		updateCache();
 	}
 
-	/** Caches information about bones and IK constraints. Must be called if bones or IK constraints are added or removed. */
+	/** Caches information about bones and constraints. Must be called if bones or constraints are added or removed. */
 	public void updateCache () {
 		Array<Bone> bones = this.bones;
-		Array<Array<Bone>> boneCache = this.boneCache;
+		Array<Updatable> updateCache = this.updateCache;
 		Array<IkConstraint> ikConstraints = this.ikConstraints;
+		Array<TransformConstraint> transformConstraints = this.transformConstraints;
 		int ikConstraintsCount = ikConstraints.size;
+		int transformConstraintsCount = transformConstraints.size;
+		updateCache.clear();
 
-		int arrayCount = ikConstraintsCount + 1;
-		while (boneCache.size < arrayCount)
-			boneCache.add(new Array());
-		for (int i = 0; i < arrayCount; i++)
-			boneCache.get(i).clear();
-
-		Array<Bone> nonIkBones = boneCache.first();
-
-		outer:
 		for (int i = 0, n = bones.size; i < n; i++) {
 			Bone bone = bones.get(i);
-			Bone current = bone;
-			do {
-				for (int ii = 0; ii < ikConstraintsCount; ii++) {
-					IkConstraint ikConstraint = ikConstraints.get(ii);
-					Bone parent = ikConstraint.bones.first();
-					Bone child = ikConstraint.bones.peek();
-					while (true) {
-						if (current == child) {
-							boneCache.get(ii).add(bone);
-							boneCache.get(ii + 1).add(bone);
-							continue outer;
-						}
-						if (child == parent) break;
-						child = child.parent;
-					}
+			updateCache.add(bone);
+			for (int ii = 0; ii < ikConstraintsCount; ii++) {
+				IkConstraint ikConstraint = ikConstraints.get(ii);
+				if (bone == ikConstraint.bones.peek()) {
+					updateCache.add(ikConstraint);
+					break;
 				}
-				current = current.parent;
-			} while (current != null);
-			nonIkBones.add(bone);
+			}
+		}
+
+		for (int i = 0; i < transformConstraintsCount; i++) {
+			TransformConstraint transformConstraint = transformConstraints.get(i);
+			for (int ii = updateCache.size - 1; ii >= 0; ii--) {
+				if (updateCache.get(ii) == transformConstraint.bone) {
+					updateCache.insert(ii + 1, transformConstraint);
+					break;
+				}
+			}
 		}
 	}
 
-	/** Updates the world transform for each bone and applies IK constraints. */
+	/** Updates the world transform for each bone and applies constraints. */
 	public void updateWorldTransform () {
-		Array<Bone> bones = this.bones;
-		for (int i = 0, nn = bones.size; i < nn; i++) {
-			Bone bone = bones.get(i);
-			bone.rotationIK = bone.rotation;
-		}
-		Array<Array<Bone>> boneCache = this.boneCache;
-		Array<IkConstraint> ikConstraints = this.ikConstraints;
-		int i = 0, last = ikConstraints.size;
-		while (true) {
-			Array<Bone> updateBones = boneCache.get(i);
-			for (int ii = 0, nn = updateBones.size; ii < nn; ii++)
-				updateBones.get(ii).updateWorldTransform();
-			if (i == last) break;
-			ikConstraints.get(i).apply();
-			i++;
-		}
+		Array<Updatable> updateCache = this.updateCache;
+		for (int i = 0, n = updateCache.size; i < n; i++)
+			updateCache.get(i).update();
 	}
 
-	/** Sets the bones and slots to their setup pose values. */
+	/** Sets the bones, constraints, and slots to their setup pose values. */
 	public void setToSetupPose () {
 		setBonesToSetupPose();
 		setSlotsToSetupPose();
 	}
 
+	/** Sets the bones and constraints to their setup pose values. */
 	public void setBonesToSetupPose () {
 		Array<Bone> bones = this.bones;
 		for (int i = 0, n = bones.size; i < n; i++)
@@ -192,9 +177,19 @@ public class Skeleton {
 
 		Array<IkConstraint> ikConstraints = this.ikConstraints;
 		for (int i = 0, n = ikConstraints.size; i < n; i++) {
-			IkConstraint ikConstraint = ikConstraints.get(i);
-			ikConstraint.bendDirection = ikConstraint.data.bendDirection;
-			ikConstraint.mix = ikConstraint.data.mix;
+			IkConstraint constraint = ikConstraints.get(i);
+			constraint.bendDirection = constraint.data.bendDirection;
+			constraint.mix = constraint.data.mix;
+		}
+
+		Array<TransformConstraint> transformConstraints = this.transformConstraints;
+		for (int i = 0, n = transformConstraints.size; i < n; i++) {
+			TransformConstraint constraint = transformConstraints.get(i);
+			TransformConstraintData data = constraint.data;
+			constraint.rotateMix = data.rotateMix;
+			constraint.translateMix = data.translateMix;
+			constraint.scaleMix = data.scaleMix;
+			constraint.shearMix = data.shearMix;
 		}
 	}
 
@@ -278,22 +273,18 @@ public class Skeleton {
 		return skin;
 	}
 
-	/**
-	 * Sets a skin by name.
-	 * @see #setSkin(Skin)
-	 */
+	/** Sets a skin by name.
+	 * @see #setSkin(Skin) */
 	public void setSkin (String skinName) {
 		Skin skin = data.findSkin(skinName);
 		if (skin == null) throw new IllegalArgumentException("Skin not found: " + skinName);
 		setSkin(skin);
 	}
 
-	/**
-	 * Sets the skin used to look up attachments before looking in the {@link SkeletonData#getDefaultSkin() default skin}.
+	/** Sets the skin used to look up attachments before looking in the {@link SkeletonData#getDefaultSkin() default skin}.
 	 * Attachments from the new skin are attached if the corresponding attachment from the old skin was attached. If there was no
 	 * old skin, each slot's setup mode attachment is attached from the new skin.
-	 * @param newSkin May be null.
-	 */
+	 * @param newSkin May be null. */
 	public void setSkin (Skin newSkin) {
 		if (newSkin != null) {
 			if (skin != null)
@@ -354,21 +345,34 @@ public class Skeleton {
 	}
 
 	/** @return May be null. */
-	public IkConstraint findIkConstraint (String ikConstraintName) {
-		if (ikConstraintName == null) throw new IllegalArgumentException("ikConstraintName cannot be null.");
+	public IkConstraint findIkConstraint (String constraintName) {
+		if (constraintName == null) throw new IllegalArgumentException("constraintName cannot be null.");
 		Array<IkConstraint> ikConstraints = this.ikConstraints;
 		for (int i = 0, n = ikConstraints.size; i < n; i++) {
 			IkConstraint ikConstraint = ikConstraints.get(i);
-			if (ikConstraint.data.name.equals(ikConstraintName)) return ikConstraint;
+			if (ikConstraint.data.name.equals(constraintName)) return ikConstraint;
 		}
 		return null;
 	}
 
-	/**
-	 * Returns the axis aligned bounding box (AABB) of the region, mesh, and skinned mesh attachments for the current pose.
+	public Array<TransformConstraint> getTransformConstraints () {
+		return transformConstraints;
+	}
+
+	/** @return May be null. */
+	public TransformConstraint findTransformConstraint (String constraintName) {
+		if (constraintName == null) throw new IllegalArgumentException("constraintName cannot be null.");
+		Array<TransformConstraint> transformConstraints = this.transformConstraints;
+		for (int i = 0, n = transformConstraints.size; i < n; i++) {
+			TransformConstraint constraint = transformConstraints.get(i);
+			if (constraint.data.name.equals(constraintName)) return constraint;
+		}
+		return null;
+	}
+
+	/** Returns the axis aligned bounding box (AABB) of the region, mesh, and skinned mesh attachments for the current pose.
 	 * @param offset The distance from the skeleton origin to the bottom left corner of the AABB.
-	 * @param size The width and height of the AABB.
-	 */
+	 * @param size The width and height of the AABB. */
 	public void getBounds (Vector2 offset, Vector2 size) {
 		Array<Slot> drawOrder = this.drawOrder;
 		float minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE;
@@ -377,19 +381,13 @@ public class Skeleton {
 			float[] vertices = null;
 			Attachment attachment = slot.attachment;
 			if (attachment instanceof RegionAttachment) {
-				RegionAttachment region = (RegionAttachment) attachment;
-				region.updateWorldVertices(slot, false);
-				vertices = region.getWorldVertices();
+				vertices = ((RegionAttachment)attachment).updateWorldVertices(slot, false);
 
 			} else if (attachment instanceof MeshAttachment) {
-				MeshAttachment mesh = (MeshAttachment) attachment;
-				mesh.updateWorldVertices(slot, true);
-				vertices = mesh.getWorldVertices();
+				vertices = ((MeshAttachment)attachment).updateWorldVertices(slot, true);
 
-			} else if (attachment instanceof SkinnedMeshAttachment) {
-				SkinnedMeshAttachment mesh = (SkinnedMeshAttachment) attachment;
-				mesh.updateWorldVertices(slot, true);
-				vertices = mesh.getWorldVertices();
+			} else if (attachment instanceof WeightedMeshAttachment) {
+				vertices = ((WeightedMeshAttachment)attachment).updateWorldVertices(slot, true);
 			}
 			if (vertices != null) {
 				for (int ii = 0, nn = vertices.length; ii < nn; ii += 5) {
@@ -409,7 +407,7 @@ public class Skeleton {
 		return color;
 	}
 
-	/** A convenience method for setting the skeleton tint. The tint can also be set by modifying {@link #getColor()}. */
+	/** A convenience method for setting the skeleton color. The color can also be set by modifying {@link #getColor()}. */
 	public void setColor (Color color) {
 		this.color.set(color);
 	}

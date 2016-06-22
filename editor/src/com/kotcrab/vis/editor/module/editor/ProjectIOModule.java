@@ -74,8 +74,9 @@ public class ProjectIOModule extends EditorModule {
 
 		//TODO: [plugins] plugin entry point
 
-		projectConverters.add(new DummyConverter(VersionCodes.EDITOR_030, VersionCodes.EDITOR_031));
-		projectConverters.add(new DummyConverter(VersionCodes.EDITOR_031, VersionCodes.EDITOR_032));
+		projectConverters.add(new DummyConverter(VersionCodes.EDITOR_030, VersionCodes.EDITOR_033));
+		projectConverters.add(new DummyConverter(VersionCodes.EDITOR_031, VersionCodes.EDITOR_033));
+		projectConverters.add(new DummyConverter(VersionCodes.EDITOR_032, VersionCodes.EDITOR_033));
 
 		for (ProjectConverter converter : projectConverters)
 			container.injectModules(converter);

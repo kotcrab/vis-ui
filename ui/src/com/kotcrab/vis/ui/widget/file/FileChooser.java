@@ -83,6 +83,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private FileIconProvider iconProvider;
 
 	private DriveCheckerService driveCheckerService = DriveCheckerService.getInstance();
+	private Array<DriveCheckerListener> driveCheckerListeners = new Array<DriveCheckerListener>();
 	private FileChooserWinService chooserWinService = FileChooserWinService.getInstance();
 
 	private FileDeleter fileDeleter = new DefaultFileDeleter();
@@ -278,7 +279,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 					return false;
 				}
 				float targetWidth = currentPath.getWidth() + showRecentDirButton.getWidth();
-				dirsSuggestionPopup.pathFieldKeyTyped(getStage(), targetWidth - 20);
+				dirsSuggestionPopup.pathFieldKeyTyped(getChooserStage(), targetWidth - 20);
 				dirsSuggestionPopup.setWidth(targetWidth);
 				dirsSuggestionPopup.layout();
 				return false;
@@ -316,7 +317,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
 				float targetWidth = currentPath.getWidth() + showRecentDirButton.getWidth();
-				dirsSuggestionPopup.showRecentDirectories(getStage(), recentDirectories, targetWidth - 20);
+				dirsSuggestionPopup.showRecentDirectories(getChooserStage(), recentDirectories, targetWidth - 20);
 				dirsSuggestionPopup.setWidth(targetWidth);
 				dirsSuggestionPopup.layout();
 			}
@@ -382,7 +383,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				Gdx.app.postRunnable(new Runnable() {
 					@Override
 					public void run () {
-						viewModePopupMenu.showMenu(getStage(), viewModeButton);
+						viewModePopupMenu.showMenu(getChooserStage(), viewModeButton);
 					}
 				});
 				return true;
@@ -420,7 +421,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private void createCenterContentPanel () {
 		fileListAdapter = new FileListAdapter(this, currentFiles);
 		fileListView = new ListView<FileHandle>(fileListAdapter);
-		setDefaultScrollPaneAttr(fileListView.getScrollPane());
+		setupDefaultScrollPane(fileListView.getScrollPane());
 
 		VisTable fileScrollPaneTable = new VisTable();
 		fileScrollPaneTable.add(fileListView.getMainTable()).pad(2).top().expand().fillX();
@@ -428,7 +429,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		// shortcutsTable is contained in shortcutsScrollPane contained in shortcutsScrollPaneTable contained in mainSplitPane
 		shortcutsTable = new VisTable();
-		final VisScrollPane shortcutsScrollPane = setDefaultScrollPaneAttr(new VisScrollPane(shortcutsTable));
+		final VisScrollPane shortcutsScrollPane = setupDefaultScrollPane(new VisScrollPane(shortcutsTable));
 		VisTable shortcutsScrollPaneTable = new VisTable();
 		shortcutsScrollPaneTable.add(shortcutsScrollPane).pad(2).top().expand().fillX();
 
@@ -457,7 +458,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 				if (button == Buttons.RIGHT && fileMenu.isAddedToStage() == false) {
 					fileMenu.build();
-					fileMenu.showMenu(getStage(), event.getStageX(), event.getStageY());
+					fileMenu.showMenu(getChooserStage(), event.getStageX(), event.getStageY());
 				}
 			}
 		});
@@ -505,7 +506,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
 				deselectAll(false);
-				fileNameSuggestionPopup.pathFieldKeyTyped(getStage(), currentFiles, selectedFileTextField);
+				fileNameSuggestionPopup.pathFieldKeyTyped(getChooserStage(), currentFiles, selectedFileTextField);
 
 				FileHandle enteredFile = currentDirectory.child(selectedFileTextField.getText());
 				if (currentFiles.contains(enteredFile, false)) {
@@ -586,7 +587,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		addListener(new InputListener() {
 			@Override
 			public boolean keyDown (InputEvent event, int keycode) {
-				if (keycode == Keys.A && UIUtils.ctrl() && getStage().getKeyboardFocus() instanceof VisTextField == false) {
+				if (keycode == Keys.A && UIUtils.ctrl() && getChooserStage().getKeyboardFocus() instanceof VisTextField == false) {
 					selectAll();
 					return true;
 				}
@@ -596,7 +597,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 			@Override
 			public boolean keyTyped (InputEvent event, char character) {
-				if (getStage().getKeyboardFocus() instanceof VisTextField) return false;
+				if (getChooserStage().getKeyboardFocus() instanceof VisTextField) return false;
 				if (Character.isLetterOrDigit(character) == false) return false;
 				String name = String.valueOf(character);
 				for (FileHandle file : currentFiles) {
@@ -639,9 +640,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			Array<FileHandle> files = getFileListFromSelected();
 			notifyListenerAndCloseDialog(files);
 		} else {
-			if (selectionMode == SelectionMode.FILES)
+			if (selectionMode == SelectionMode.FILES) {
 				showDialog(POPUP_CHOOSE_FILE.get());
-			else {
+			} else {
 				// this part is executed when nothing is selected but selection mode is `directories` or `files and directories`
 				// it is perfectly valid, nothing is selected so that means the current chooser directory have to be
 				// selected and passed to listener
@@ -677,7 +678,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		fadeOut();
 	}
 
-	private VisScrollPane setDefaultScrollPaneAttr (VisScrollPane scrollPane) {
+	protected VisScrollPane setupDefaultScrollPane (VisScrollPane scrollPane) {
 		scrollPane.setOverscroll(false, false);
 		scrollPane.setFlickScroll(false);
 		scrollPane.setFadeScrollBars(false);
@@ -714,20 +715,34 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 				return null;
 			} else {
+				//if user typed no extension or extension is wrong and there is active file type rule
+				//then the first extension rule will be appended/replaced automatically to entered file name
+				if (activeFileTypeRule != null) {
+					Array<String> ruleExts = activeFileTypeRule.getExtensions();
+					if (ruleExts.contains(file.extension(), false) == false) {
+						file = file.sibling(file.nameWithoutExtension() + "." + ruleExts.first());
+					}
+				}
+
 				list.add(file);
-				return list;
+				if (file.exists()) {
+					showOverwriteQuestion(list);
+					return null;
+				} else {
+					return list;
+				}
 			}
 		}
 
 	}
 
 	private void showDialog (String text) {
-		Dialogs.showOKDialog(getStage(), POPUP_TITLE.get(), text);
+		Dialogs.showOKDialog(getChooserStage(), POPUP_TITLE.get(), text);
 	}
 
 	private void showOverwriteQuestion (final Array<FileHandle> filesList) {
 		String text = filesList.size == 1 ? POPUP_FILE_EXIST_OVERWRITE.get() : POPUP_MULTIPLE_FILE_EXIST_OVERWRITE.get();
-		Dialogs.showOptionDialog(getStage(), POPUP_TITLE.get(), text, OptionDialogType.YES_NO, new OptionDialogAdapter() {
+		Dialogs.showOptionDialog(getChooserStage(), POPUP_TITLE.get(), text, OptionDialogType.YES_NO, new OptionDialogAdapter() {
 			@Override
 			public void yes () {
 				notifyListenerAndCloseDialog(filesList);
@@ -759,10 +774,12 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		shortcutsRootsPanel.clear();
 		File[] roots = File.listRoots();
 
+		driveCheckerListeners.clear();
 		for (final File root : roots) {
-			driveCheckerService.addListener(root, mode == Mode.OPEN ? RootMode.READABLE : RootMode.WRITABLE, new DriveCheckerListener() {
+			DriveCheckerListener listener = new DriveCheckerListener() {
 				@Override
 				public void rootMode (File root, RootMode mode) {
+					if (driveCheckerListeners.removeValue(this, true) == false) return;
 					String initialName = root.toString();
 
 					if (initialName.equals("/")) initialName = COMPUTER.get();
@@ -774,7 +791,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 					shortcutsRootsPanel.addActor(item);
 					shortcutsRootsPanel.getChildren().sort(SHORTCUTS_COMPARATOR);
 				}
-			});
+			};
+			driveCheckerListeners.add(listener);
+			driveCheckerService.addListener(root, mode == Mode.OPEN ? RootMode.READABLE : RootMode.WRITABLE, listener);
 		}
 	}
 
@@ -940,7 +959,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 			selectedFileTextField.setText(b.toString());
 		}
-		selectedFileTextField.setCursorPosition(selectedFileTextField.getText().length());
+		selectedFileTextField.setCurosrAtTextEnd();
 	}
 
 	private void removeInvalidSelections () {
@@ -1074,6 +1093,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		rebuildFileList();
 	}
 
+	public FileTypeFilter.Rule getActiveFileTypeFilterRule () {
+		return activeFileTypeRule;
+	}
+
 	public SelectionMode getSelectionMode () {
 		return selectionMode;
 	}
@@ -1168,12 +1191,16 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		return sizes;
 	}
 
+	private Stage getChooserStage () {
+		return getStage();
+	}
+
 	/**
 	 * If false file chooser won't pool directories for changes, adding new files or connecting new drive won't refresh file list.
 	 * This must be called when file chooser is not added to Stage
 	 */
 	public void setWatchingFilesEnabled (boolean watchingFilesEnabled) {
-		if (getStage() != null)
+		if (getChooserStage() != null)
 			throw new IllegalStateException("Pooling setting cannot be changed when file chooser is added to Stage!");
 
 		this.watchingFilesEnabled = watchingFilesEnabled;
@@ -1274,16 +1301,17 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void showNewDirectoryDialog () {
-		Dialogs.showInputDialog(getStage(), NEW_DIRECTORY_DIALOG_TITLE.get(), NEW_DIRECTORY_DIALOG_TEXT.get(), true, new InputDialogAdapter() {
+		Dialogs.showInputDialog(getChooserStage(), NEW_DIRECTORY_DIALOG_TITLE.get(), NEW_DIRECTORY_DIALOG_TEXT.get(), true, new InputDialogAdapter() {
 			@Override
 			public void finished (String input) {
 				if (FileUtils.isValidFileName(input) == false) {
-					Dialogs.showErrorDialog(getStage(), NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS.get());
+					Dialogs.showErrorDialog(getChooserStage(), NEW_DIRECTORY_DIALOG_ILLEGAL_CHARACTERS.get());
+					return;
 				}
 
 				for (FileHandle file : currentDirectory.list()) {
 					if (file.name().equals(input)) {
-						Dialogs.showErrorDialog(getStage(), NEW_DIRECTORY_DIALOG_ALREADY_EXISTS.get());
+						Dialogs.showErrorDialog(getChooserStage(), NEW_DIRECTORY_DIALOG_ALREADY_EXISTS.get());
 						return;
 					}
 				}
@@ -1297,7 +1325,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	private void showFileDeleteDialog (final FileHandle fileToDelete) {
-		Dialogs.showOptionDialog(getStage(), POPUP_TITLE.get(),
+		Dialogs.showOptionDialog(getChooserStage(), POPUP_TITLE.get(),
 				fileDeleter.hasTrash() ? CONTEXT_MENU_MOVE_TO_TRASH_WARNING.get() : CONTEXT_MENU_DELETE_WARNING.get(),
 				OptionDialogType.YES_NO, new OptionDialogAdapter() {
 					@Override
@@ -1305,10 +1333,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 						try {
 							boolean success = fileDeleter.delete(fileToDelete);
 							if (success == false) {
-								Dialogs.showErrorDialog(getStage(), POPUP_DELETE_FILE_FAILED.get());
+								Dialogs.showErrorDialog(getChooserStage(), POPUP_DELETE_FILE_FAILED.get());
 							}
 						} catch (IOException e) {
-							Dialogs.showErrorDialog(getStage(), POPUP_DELETE_FILE_FAILED.get(), e);
+							Dialogs.showErrorDialog(getChooserStage(), POPUP_DELETE_FILE_FAILED.get(), e);
 							e.printStackTrace();
 						}
 						refresh();
@@ -1571,8 +1599,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			addListener(new InputListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-					FocusManager.switchFocus(getStage(), FileItem.this);
-					getStage().setKeyboardFocus(FileItem.this);
+					FocusManager.switchFocus(getChooserStage(), FileItem.this);
+					getChooserStage().setKeyboardFocus(FileItem.this);
 					return true;
 				}
 
@@ -1580,7 +1608,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 					if (event.getButton() == Buttons.RIGHT) {
 						fileMenu.build(favorites, file);
-						fileMenu.showMenu(getStage(), event.getStageX(), event.getStageY());
+						fileMenu.showMenu(getChooserStage(), event.getStageX(), event.getStageY());
 					}
 				}
 
@@ -1729,8 +1757,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			addListener(new InputListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-					FocusManager.switchFocus(getStage(), ShortcutItem.this);
-					getStage().setKeyboardFocus(ShortcutItem.this);
+					FocusManager.switchFocus(getChooserStage(), ShortcutItem.this);
+					getChooserStage().setKeyboardFocus(ShortcutItem.this);
 					return true;
 				}
 
@@ -1738,7 +1766,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
 					if (event.getButton() == Buttons.RIGHT) {
 						fileMenu.buildForFavorite(favorites, file);
-						fileMenu.showMenu(getStage(), event.getStageX(), event.getStageY());
+						fileMenu.showMenu(getChooserStage(), event.getStageX(), event.getStageY());
 					}
 				}
 
@@ -1778,7 +1806,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 						if (file.isDirectory()) {
 							setDirectory(Gdx.files.absolute(file.getAbsolutePath()), HistoryPolicy.ADD);
-							getStage().setScrollFocus(fileListView.getScrollPane());
+							getChooserStage().setScrollFocus(fileListView.getScrollPane());
 						}
 					}
 				}

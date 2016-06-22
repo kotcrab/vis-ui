@@ -39,11 +39,13 @@ public class SpriteInflater extends InflaterSystem {
 
 	private RuntimeConfiguration configuration;
 	private AssetManager manager;
+	private String sceneTextureAtlasPath;
 
-	public SpriteInflater (RuntimeConfiguration configuration, AssetManager manager) {
+	public SpriteInflater (RuntimeConfiguration configuration, AssetManager manager, String sceneTextureAtlasPath) {
 		super(Aspect.all(ProtoVisSprite.class, AssetReference.class));
 		this.configuration = configuration;
 		this.manager = manager;
+		this.sceneTextureAtlasPath = sceneTextureAtlasPath;
 	}
 
 	@Override
@@ -55,7 +57,7 @@ public class SpriteInflater extends InflaterSystem {
 
 		if (asset instanceof TextureRegionAsset) {
 			TextureRegionAsset regionAsset = (TextureRegionAsset) asset;
-			atlasPath = "textures.atlas";
+			atlasPath = sceneTextureAtlasPath;
 			atlasRegion = PathUtils.removeExtension(regionAsset.getPath());
 
 		} else if (asset instanceof AtlasRegionAsset) {

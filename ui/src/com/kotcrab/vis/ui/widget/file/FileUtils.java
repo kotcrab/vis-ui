@@ -90,9 +90,12 @@ public class FileUtils {
 	 */
 	public static boolean isValidFileName (String name) {
 		try {
-			if (OsUtils.isWindows()) if (name.contains(">") || name.contains("<")) return false;
+			if (OsUtils.isWindows()) {
+				if (name.contains(">") || name.contains("<")) return false;
+				name = name.toLowerCase(); //Windows is case insensitive
+			}
 			return new File(name).getCanonicalFile().getName().equals(name);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			return false;
 		}
 	}

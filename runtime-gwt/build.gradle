@@ -20,6 +20,7 @@ uploadArchives {
                 name 'vis-runtime-gwt'
                 artifactId 'vis-runtime-gwt'
                 packaging 'jar'
+                description 'GWT support for VisRuntime'
             }
         }
     }

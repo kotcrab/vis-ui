@@ -22,4 +22,5 @@ import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
 public class DefaultExporterSettings {
 	@Tag(0) public boolean skipDefaultValues = true;
 	@Tag(1) public boolean useMinimalOutputType = true;
+	@Tag(2) public boolean packageSeparateAtlasForEachScene = false;
 }

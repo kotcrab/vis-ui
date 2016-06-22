@@ -127,7 +127,7 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 
 					//TODO refactor
 					if (asset instanceof TextureRegionAsset) {
-						dependencies.add(new AssetDescriptor<TextureAtlas>("textures.atlas", TextureAtlas.class));
+						dependencies.add(new AssetDescriptor<TextureAtlas>(data.textureAtlasPath, TextureAtlas.class));
 
 					} else if (asset instanceof AtlasRegionAsset) {
 						AtlasRegionAsset regionAsset = (AtlasRegionAsset) asset;

@@ -1,3 +1,5 @@
+#### Version: 0.3.3
+
 #### Version: 0.3.2
 - **Improved**: Texture cache speed improved - new texture are available immediately after they are added to project assets. Fixes issues when large textures were loading infinitely.
 - **Improved**: Entity Properties will now show when field is locked and can't be edited
@@ -5,6 +7,7 @@
 - **Improved**: If some scene assets are missing then dialog with missing files list will be showed 
 - **Added**: [#58](https://github.com/kotcrab/vis-editor/issues/58) - Polygon auto tracing (available via Polygon Tool)
 - **Added**: Crash and internal exception reporter
+- **Added**: Option in default exporter to package separate texture atlas for each scene
 - **Fixed**: [#130](https://github.com/kotcrab/vis-editor/issues/130) - Exit dialog not showed on non Windows OSes
 - **Fixed**: Unable to open variables settings dialog for newly created scenes
 - **Fixed**: Minor bug: tabs panel wrong height

@@ -101,6 +101,17 @@ public class VisSplitPane extends WidgetGroup {
 			SystemCursor targetCursor;
 
 			@Override
+			public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+				return true;
+			}
+
+			@Override
+			public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+				CursorManager.restoreDefaultCursor();
+				currentCursor = null;
+			}
+
+			@Override
 			public boolean mouseMoved (InputEvent event, float x, float y) {
 				if (handleBounds.contains(x, y)) {
 					if (vertical) {

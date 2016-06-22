@@ -1,10 +1,10 @@
-/*
+/******************************************************************************
  * Spine Runtimes Software License
  * Version 2.3
- *
+ * 
  * Copyright (c) 2013-2015, Esoteric Software
  * All rights reserved.
- *
+ * 
  * You are granted a perpetual, non-exclusive, non-sublicensable and
  * non-transferable license to use, install, execute and perform the Spine
  * Runtimes Software (the "Software") and derivative works solely for personal
@@ -16,7 +16,7 @@
  * or other intellectual property or proprietary rights notices on or in the
  * Software, including any copy thereof. Redistributions in binary or source
  * form must include this license and terms.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
@@ -27,20 +27,21 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ *****************************************************************************/
 
 package com.esotericsoftware.spine.attachments;
+
+import com.esotericsoftware.spine.Bone;
+import com.esotericsoftware.spine.Skeleton;
+import com.esotericsoftware.spine.Slot;
+
+import static com.badlogic.gdx.graphics.g2d.Batch.*;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.NumberUtils;
-import com.esotericsoftware.spine.Bone;
-import com.esotericsoftware.spine.Skeleton;
-import com.esotericsoftware.spine.Slot;
-
-import static com.badlogic.gdx.graphics.g2d.Batch.*;
 
 /** Attachment that displays a texture region. */
 public class RegionAttachment extends Attachment {
@@ -72,7 +73,7 @@ public class RegionAttachment extends Attachment {
 		float localX = -localX2;
 		float localY = -localY2;
 		if (region instanceof AtlasRegion) {
-			AtlasRegion region = (AtlasRegion) this.region;
+			AtlasRegion region = (AtlasRegion)this.region;
 			if (region.rotate) {
 				localX += region.offsetX / region.originalWidth * width;
 				localY += region.offsetY / region.originalHeight * height;
@@ -119,7 +120,7 @@ public class RegionAttachment extends Attachment {
 		if (region == null) throw new IllegalArgumentException("region cannot be null.");
 		this.region = region;
 		float[] vertices = this.vertices;
-		if (region instanceof AtlasRegion && ((AtlasRegion) region).rotate) {
+		if (region instanceof AtlasRegion && ((AtlasRegion)region).rotate) {
 			vertices[U3] = region.getU();
 			vertices[V3] = region.getV2();
 			vertices[U4] = region.getU();
@@ -145,7 +146,8 @@ public class RegionAttachment extends Attachment {
 		return region;
 	}
 
-	public void updateWorldVertices (Slot slot, boolean premultipliedAlpha) {
+	/** @return The updated world vertices. */
+	public float[] updateWorldVertices (Slot slot, boolean premultipliedAlpha) {
 		Skeleton skeleton = slot.getSkeleton();
 		Color skeletonColor = skeleton.getColor();
 		Color slotColor = slot.getColor();
@@ -153,16 +155,16 @@ public class RegionAttachment extends Attachment {
 		float a = skeletonColor.a * slotColor.a * regionColor.a * 255;
 		float multiplier = premultipliedAlpha ? a : 255;
 		float color = NumberUtils.intToFloatColor( //
-				((int) a << 24) //
-						| ((int) (skeletonColor.b * slotColor.b * regionColor.b * multiplier) << 16) //
-						| ((int) (skeletonColor.g * slotColor.g * regionColor.g * multiplier) << 8) //
-						| (int) (skeletonColor.r * slotColor.r * regionColor.r * multiplier));
+			((int)a << 24) //
+				| ((int)(skeletonColor.b * slotColor.b * regionColor.b * multiplier) << 16) //
+				| ((int)(skeletonColor.g * slotColor.g * regionColor.g * multiplier) << 8) //
+				| (int)(skeletonColor.r * slotColor.r * regionColor.r * multiplier));
 
 		float[] vertices = this.vertices;
 		float[] offset = this.offset;
 		Bone bone = slot.getBone();
 		float x = skeleton.getX() + bone.getWorldX(), y = skeleton.getY() + bone.getWorldY();
-		float m00 = bone.getM00(), m01 = bone.getM01(), m10 = bone.getM10(), m11 = bone.getM11();
+		float m00 = bone.getA(), m01 = bone.getB(), m10 = bone.getC(), m11 = bone.getD();
 		float offsetX, offsetY;
 
 		offsetX = offset[BRX];
@@ -188,6 +190,7 @@ public class RegionAttachment extends Attachment {
 		vertices[X4] = offsetX * m00 + offsetY * m01 + x; // ur
 		vertices[Y4] = offsetX * m10 + offsetY * m11 + y;
 		vertices[C4] = color;
+		return vertices;
 	}
 
 	public float[] getWorldVertices () {

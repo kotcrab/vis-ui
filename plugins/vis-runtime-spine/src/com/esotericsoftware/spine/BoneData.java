@@ -1,10 +1,10 @@
-/*
+/******************************************************************************
  * Spine Runtimes Software License
  * Version 2.3
- *
+ * 
  * Copyright (c) 2013-2015, Esoteric Software
  * All rights reserved.
- *
+ * 
  * You are granted a perpetual, non-exclusive, non-sublicensable and
  * non-transferable license to use, install, execute and perform the Spine
  * Runtimes Software (the "Software") and derivative works solely for personal
@@ -16,7 +16,7 @@
  * or other intellectual property or proprietary rights notices on or in the
  * Software, including any copy thereof. Redistributions in binary or source
  * form must include this license and terms.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE "AS IS" AND ANY EXPRESS OR
  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
@@ -27,7 +27,7 @@
  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+ *****************************************************************************/
 
 package com.esotericsoftware.spine;
 
@@ -37,10 +37,7 @@ public class BoneData {
 	final BoneData parent;
 	final String name;
 	float length;
-	float x, y;
-	float rotation;
-	float scaleX = 1, scaleY = 1;
-	boolean flipX, flipY;
+	float x, y, rotation, scaleX = 1, scaleY = 1, shearX, shearY;
 	boolean inheritScale = true, inheritRotation = true;
 
 	// Nonessential.
@@ -53,10 +50,8 @@ public class BoneData {
 		this.parent = parent;
 	}
 
-	/**
-	 * Copy constructor.
-	 * @param parent May be null.
-	 */
+	/** Copy constructor.
+	 * @param parent May be null. */
 	public BoneData (BoneData bone, BoneData parent) {
 		if (bone == null) throw new IllegalArgumentException("bone cannot be null.");
 		this.parent = parent;
@@ -67,8 +62,8 @@ public class BoneData {
 		rotation = bone.rotation;
 		scaleX = bone.scaleX;
 		scaleY = bone.scaleY;
-		flipX = bone.flipX;
-		flipY = bone.flipY;
+		shearX = bone.shearX;
+		shearY = bone.shearY;
 	}
 
 	/** @return May be null. */
@@ -138,20 +133,20 @@ public class BoneData {
 		this.scaleY = scaleY;
 	}
 
-	public boolean getFlipX () {
-		return flipX;
+	public float getShearX () {
+		return shearX;
 	}
 
-	public void setFlipX (boolean flipX) {
-		this.flipX = flipX;
+	public void setShearX (float shearX) {
+		this.shearX = shearX;
 	}
 
-	public boolean getFlipY () {
-		return flipY;
+	public float getShearY () {
+		return shearY;
 	}
 
-	public void setFlipY (boolean flipY) {
-		this.flipY = flipY;
+	public void setShearY (float shearY) {
+		this.shearY = shearY;
 	}
 
 	public boolean getInheritScale () {
