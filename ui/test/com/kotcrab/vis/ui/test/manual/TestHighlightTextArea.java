@@ -48,7 +48,7 @@ public class TestHighlightTextArea extends VisWindow {
 		//it is much more reliable to use regex for keyword detection
 		highlighter.regex(Color.valueOf("66CCB3"), "\\b(class|private|protected|public|if|else|void)\\b");
 		highlighter.regex(Color.valueOf("BED6FF"), "\\b(int|float|boolean|public|if|else|void)\\b");
-		highlighter.regex(Color.valueOf("EFC090"), "\\b(foo|bar|)\\b");
+		highlighter.regex(Color.valueOf("EFC090"), "\\b(foo|bar)\\b");
 		highlighter.regex(Color.valueOf("75715E"), "/\\*(?:.|[\\n\\r])*?\\*/"); //block comments (/* comment */)
 		textArea.setHighlighter(highlighter);
 		add(textArea.createCompatibleScrollPane()).grow();
