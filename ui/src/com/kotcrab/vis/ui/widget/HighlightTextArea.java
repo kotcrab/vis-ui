@@ -31,8 +31,8 @@ import com.kotcrab.vis.ui.util.highlight.Highlighter;
  * Text area implementation supporting highlighting words and scrolling in both X and Y directions.
  * <p>
  * For best scroll pane settings you should create scroll pane using {@link #createCompatibleScrollPane()}.
- * @see Highlighter
  * @author Kotcrab
+ * @see Highlighter
  * @since 1.1.2
  */
 public class HighlightTextArea extends ScrollableTextArea {
@@ -102,10 +102,20 @@ public class HighlightTextArea extends ScrollableTextArea {
 					}
 				} else {
 					//protect against overlapping highlights
-					while (highlight.getStart() < lineProgress) {
+					boolean noMatch = false;
+					while (highlight.getStart() <= lineProgress) {
 						highlightIdx++;
+						if (highlightIdx >= highlights.size) {
+							noMatch = true;
+							break;
+						}
 						highlight = highlights.get(highlightIdx);
+						if (highlight.getStart() > lineEnd) {
+							noMatch = true;
+							break;
+						}
 					}
+					if (noMatch) break;
 					renderChunks.add(new Chunk(text.substring(lineProgress, highlight.getStart()), defaultColor, chunkOffset, lineIdx));
 					lineProgress = highlight.getStart();
 				}
