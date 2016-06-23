@@ -108,13 +108,25 @@ public class ScrollableTextArea extends VisTextArea implements Cullable {
 	}
 
 	@Override
+	public void setText (String str) {
+		super.setText(str);
+		if (programmaticChangeEvents == false) { //changeText WILL NOT be called when programmaticChangeEvents are disabled
+			updateScrollLayout();
+		}
+	}
+
+	@Override
 	boolean changeText (String oldText, String newText) {
 		boolean changed = super.changeText(oldText, newText);
+		updateScrollLayout();
+		return changed;
+	}
+
+	private void updateScrollLayout () {
 		invalidateHierarchy();
 		layout();
 		if (getParent() instanceof ScrollPane) ((ScrollPane) getParent()).layout();
 		updateScrollPosition();
-		return changed;
 	}
 
 	public class ScrollTextAreaListener extends TextAreaListener {
