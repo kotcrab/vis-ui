@@ -164,8 +164,10 @@ public class PopupMenu extends Table {
 
 	private void selectNextItem () {
 		SnapshotArray<Actor> children = getChildren();
+		if (children.size < 2) return;
 		int startIndex = activeItem == null ? 0 : children.indexOf(activeItem, true) + 1;
-		for (int i = startIndex; i < children.size; i++) {
+		for (int i = startIndex; ; i++) {
+			if (i >= children.size) i = 0;
 			Actor actor = children.get(i);
 			if (actor instanceof MenuItem && ((MenuItem) actor).isDisabled() == false) {
 				setActiveItem((MenuItem) actor, true);
@@ -176,8 +178,10 @@ public class PopupMenu extends Table {
 
 	private void selectPreviousItem () {
 		SnapshotArray<Actor> children = getChildren();
+		if (children.size < 2) return;
 		int startIndex = children.indexOf(activeItem, true) - 1;
-		for (int i = startIndex; i >= 0; i--) {
+		for (int i = startIndex; ; i--) {
+			if (i == -1) i = children.size - 1;
 			Actor actor = children.get(i);
 			if (actor instanceof MenuItem && ((MenuItem) actor).isDisabled() == false) {
 				setActiveItem((MenuItem) actor, true);
