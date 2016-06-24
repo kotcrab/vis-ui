@@ -24,6 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * Highlighter rule using regex to detect text matches.
  * @author Kotcrab
  * @since 1.1.2
  */

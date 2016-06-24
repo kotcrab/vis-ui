@@ -21,6 +21,7 @@ import com.badlogic.gdx.utils.Array;
 import com.kotcrab.vis.ui.widget.HighlightTextArea;
 
 /**
+ * Highlighter rule using {@link String#indexOf(String)} to detect text matches.
  * @author Kotcrab
  * @since 1.1.2
  */

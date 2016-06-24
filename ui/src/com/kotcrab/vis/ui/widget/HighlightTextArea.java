@@ -31,6 +31,10 @@ import com.kotcrab.vis.ui.util.highlight.Highlighter;
  * Text area implementation supporting highlighting words and scrolling in both X and Y directions.
  * <p>
  * For best scroll pane settings you should create scroll pane using {@link #createCompatibleScrollPane()}.
+ * <p>
+ * Note about overlapping highlights: this text area can handle overlapping highlights, highlights that starts earlier
+ * have higher priority. If two highlights have the exactly the same start point, then it is undefined which highlight
+ * will be used and depends on how array containing highlights will be sorted.
  * @author Kotcrab
  * @see Highlighter
  * @since 1.1.2
@@ -160,13 +164,21 @@ public class HighlightTextArea extends ScrollableTextArea {
 		maxAreaHeight += 30;
 	}
 
-	private void processHighlighter () {
+	/**
+	 * Processes highlighter rules, collects created highlights and schedules text area displayed text update. This should be called
+	 * after highlighter rules has changed to update highlights.
+	 */
+	public void processHighlighter () {
 		if (highlights == null) return;
 		highlights.clear();
 		if (highlighter != null) highlighter.process(this, highlights);
 		chunkUpdateScheduled = true;
 	}
 
+	/**
+	 * Changes highlighter of text area. Note that you don't have to call {@link #processHighlighter()} after changing
+	 * highlighter - you only have to call it when highlighter rules has changed.
+	 */
 	public void setHighlighter (Highlighter highlighter) {
 		this.highlighter = highlighter;
 		processHighlighter();
