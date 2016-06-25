@@ -83,6 +83,7 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 	//ConfirmDialog buttons
 	private static final int OK = 0;
 	private static final int HELP = 1;
+	private static final int CANCEL = 2;
 
 	private TabsModule tabsModule;
 	private QuickAccessModule quickAccessModule;
@@ -667,8 +668,8 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 		private void safeMarkDirectory (FileHandle dir, boolean dirMarked, String fullCodeName) {
 			if (dirMarked) {
 				//TODO: add safe remark feature
-				String[] buttons = {"Help", "Change Anyway"};
-				Integer[] returns = {HELP, OK};
+				String[] buttons = {"Help", "Change Anyway", "Cancel"};
+				Integer[] returns = {HELP, OK, CANCEL};
 				Dialogs.showConfirmDialog(getStage(), "Warning", "This directory is already marked, changing it may\n" +
 						"result in unexpected errors if asset files are used in scenes.", buttons, returns, result -> {
 					if (result == HELP) WikiPages.MARKING_DIRECTORIES.open();
