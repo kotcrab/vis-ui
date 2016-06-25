@@ -1,4 +1,5 @@
 #### Version: 0.3.3 (LibGDX 1.9.3, Artemis 1.3.1)
+- `Added`: `EntityComposer` API - simplifies building VisRuntime entities 
 
 #### Version: 0.3.2 (LibGDX 1.9.3, Artemis 1.3.1)
 - Updated to LibGDX 1.9.3

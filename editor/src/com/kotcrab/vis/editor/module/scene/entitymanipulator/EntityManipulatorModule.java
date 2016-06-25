@@ -75,7 +75,12 @@ import com.kotcrab.vis.editor.util.vis.EditorRuntimeException;
 import com.kotcrab.vis.runtime.assets.*;
 import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
+import com.kotcrab.vis.runtime.util.entity.composer.EntityComposer;
+import com.kotcrab.vis.runtime.util.entity.composer.ParticleEntityComposer;
+import com.kotcrab.vis.runtime.util.entity.composer.SpriteEntityComposer;
+import com.kotcrab.vis.runtime.util.entity.composer.TextEntityComposer;
 import com.kotcrab.vis.ui.util.dialog.Dialogs;
 import com.kotcrab.vis.ui.util.dialog.Dialogs.OptionDialogType;
 import com.kotcrab.vis.ui.util.dialog.OptionDialogAdapter;
@@ -111,6 +116,7 @@ public class EntityManipulatorModule extends SceneModule {
 	private Stage stage;
 
 	private ComponentMapper<VisGroup> groupCm;
+	private EntityComposer entityComposer;
 
 	private EntityProxyCache entityProxyCache;
 	private ZIndexManipulator zIndexManipulator;
@@ -191,6 +197,12 @@ public class EntityManipulatorModule extends SceneModule {
 				hardSelectionReset();
 			}
 		});
+	}
+
+	@Override
+	public void setEntityEngine (EntityEngine entityEngine) {
+		super.setEntityEngine(entityEngine);
+		entityComposer = new EntityComposer(entityEngine, scene.pixelsPerUnit);
 	}
 
 	private void createContextMenus () {
@@ -403,27 +415,21 @@ public class EntityManipulatorModule extends SceneModule {
 		} else if (payload instanceof TextureAssetDescriptor) {
 			TextureAssetDescriptor asset = (TextureAssetDescriptor) payload;
 
-			VisSprite sprite = new VisSprite(textureCache.getRegion(asset));
-			sprite.setSize(sprite.getRegion().getRegionWidth() / scene.pixelsPerUnit, sprite.getRegion().getRegionHeight() / scene.pixelsPerUnit);
-			Origin origin = new Origin(sprite.getWidth() / 2, sprite.getHeight() / 2);
-
-			entity = new EntityBuilder(entityEngine)
-					.with(sprite, new Transform(), origin, new Tint(),
-							new AssetReference(asset),
-							new Renderable(0), new Layer(scene.getActiveLayerId()))
-					.build();
-
+			SpriteEntityComposer composer = entityComposer.sprite(textureCache.getRegion(asset), 0, 0);
+			composer.getOrigin().setOrigin(composer.getSprite().getWidth() / 2, composer.getSprite().getHeight() / 2);
+			composer.getLayer().layerId = scene.getActiveLayerId();
+			composer.setAssetDescriptor(asset);
+			entity = composer.finish();
 		} else if (payload instanceof BmpFontAsset || payload instanceof TtfFontAsset) {
 			VisAssetDescriptor asset = (VisAssetDescriptor) payload;
 
-			entity = new EntityBuilder(entityEngine)
-					.with(new VisText(fontCache.getGeneric(asset, scene.pixelsPerUnit), FontCacheModule.DEFAULT_TEXT),
-							new Transform(), new Origin(), new Tint(),
-							new PixelsPerUnit(scene.pixelsPerUnit),
-							new AssetReference(asset),
-							new Renderable(0), new Layer(scene.getActiveLayerId()),
-							new ExporterDropsComponent(PixelsPerUnit.class))
-					.build();
+			TextEntityComposer composer = entityComposer.text(fontCache.getGeneric(asset, scene.pixelsPerUnit), FontCacheModule.DEFAULT_TEXT, 0, 0);
+			composer.getLayer().layerId = scene.getActiveLayerId();
+			composer.setAssetDescriptor(asset);
+			entity = composer.finish();
+			entity.edit()
+					.add(new PixelsPerUnit(scene.pixelsPerUnit))
+					.add(new ExporterDropsComponent(PixelsPerUnit.class));
 
 			updatePositionLater = true; //update position later after text bounds has been calculated
 
@@ -446,13 +452,14 @@ public class EntityManipulatorModule extends SceneModule {
 			float scale = 1f / scene.pixelsPerUnit;
 
 			try {
-				entity = new EntityBuilder(entityEngine)
-						.with(new VisParticle(particleCache.get(asset, scale)), new Transform(),
-								new PixelsPerUnit(scene.pixelsPerUnit),
-								new AssetReference(asset),
-								new Renderable(0), new Layer(scene.getActiveLayerId()),
-								new ExporterDropsComponent(PixelsPerUnit.class))
-						.build();
+				ParticleEntityComposer composer = entityComposer.particle(particleCache.get(asset, scale), 0, 0);
+				composer.getLayer().layerId = scene.getActiveLayerId();
+				composer.setAssetDescriptor(asset);
+				entity = composer.finish();
+
+				entity.edit()
+						.add(new PixelsPerUnit(scene.pixelsPerUnit))
+						.add(new ExporterDropsComponent(PixelsPerUnit.class));
 			} catch (EditorRuntimeException e) {
 				Log.exception(e);
 				toastModule.show(new DetailsToast("Particle system cannot be created.\nProbably, particle texture is missing.", e));
