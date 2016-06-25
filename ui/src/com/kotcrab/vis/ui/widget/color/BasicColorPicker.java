@@ -49,7 +49,7 @@ import static com.kotcrab.vis.ui.widget.color.internal.ColorPickerText.HEX;
  * preview of current and new color and hex field that can be disabled. See {@link ExtendedColorPicker} if you need
  * more features.
  * <p>
- * Alpha channel can be only set from hex field and it disabled by defualt, use {@link #setAllowAlphaEdit(boolean)} to enable.
+ * Alpha channel can be only set from hex field and it disabled by default, use {@link #setAllowAlphaEdit(boolean)} to enable.
  * @author Kotcrab
  * @see ColorPicker
  * @see BasicColorPicker
@@ -321,8 +321,8 @@ public class BasicColorPicker extends VisTable implements Disposable {
 		public void changed (ChangeEvent event, Actor actor) {
 			updateLinkedWidget();
 
-			updateUI();
 			updateValuesFromHSVFields();
+			updateUI();
 		}
 	}
 }
