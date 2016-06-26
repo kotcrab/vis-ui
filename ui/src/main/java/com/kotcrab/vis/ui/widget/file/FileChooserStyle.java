@@ -41,6 +41,7 @@ public class FileChooserStyle {
 	public Drawable iconFilePdf;
 	public Drawable iconFileAudio;
 
+	public Drawable contextMenuSelectedItem;
 	public Drawable expandDropdown;
 
 	public FileChooserStyle () {

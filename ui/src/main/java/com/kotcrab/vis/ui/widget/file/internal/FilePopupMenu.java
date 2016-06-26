@@ -39,6 +39,8 @@ import static com.kotcrab.vis.ui.widget.file.internal.FileChooserText.*;
 public class FilePopupMenu extends PopupMenu {
 	private final FileChooserStyle style;
 
+	private SortingPopupMenu sortingPopupMenu;
+
 	private FileHandle file;
 
 	private MenuItem delete;
@@ -47,10 +49,13 @@ public class FilePopupMenu extends PopupMenu {
 	private MenuItem refresh;
 	private MenuItem addToFavorites;
 	private MenuItem removeFromFavorites;
+	private MenuItem sortBy;
 
 	public FilePopupMenu (final FileChooser chooser, final FilePopupMenuCallback callback) {
 		super(chooser.getChooserStyle().popupMenuStyleName);
 		this.style = chooser.getChooserStyle();
+
+		sortingPopupMenu = new SortingPopupMenu(chooser);
 
 		delete = new MenuItem(CONTEXT_MENU_DELETE.get(), style.iconTrash);
 		newDirectory = new MenuItem(CONTEXT_MENU_NEW_DIRECTORY.get(), style.iconFolderNew);
@@ -58,6 +63,8 @@ public class FilePopupMenu extends PopupMenu {
 		refresh = new MenuItem(CONTEXT_MENU_REFRESH.get(), style.iconRefresh);
 		addToFavorites = new MenuItem(CONTEXT_MENU_ADD_TO_FAVORITES.get(), style.iconFolderStar);
 		removeFromFavorites = new MenuItem(CONTEXT_MENU_REMOVE_FROM_FAVORITES.get(), style.iconFolderStar);
+		sortBy = new MenuItem(CONTEXT_MENU_SORT_BY.get());
+		sortBy.setSubMenu(sortingPopupMenu);
 
 		delete.addListener(new ClickListener() {
 			@Override
@@ -107,17 +114,21 @@ public class FilePopupMenu extends PopupMenu {
 	}
 
 	public void build () {
+		sortingPopupMenu.build();
 		clearChildren();
 		addItem(newDirectory);
+		addItem(sortBy);
 		addItem(refresh);
 	}
 
 	public void build (Array<FileHandle> favorites, FileHandle file) {
+		sortingPopupMenu.build();
 		this.file = file;
 
 		clearChildren();
 
 		addItem(newDirectory);
+		addItem(sortBy);
 		addItem(refresh);
 		addSeparator();
 

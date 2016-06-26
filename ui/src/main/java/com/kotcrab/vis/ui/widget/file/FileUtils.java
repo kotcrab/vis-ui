@@ -25,7 +25,6 @@ import com.kotcrab.vis.ui.util.OsUtils;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.Arrays;
 import java.util.Comparator;
 
 /**
@@ -34,12 +33,33 @@ import java.util.Comparator;
  */
 public class FileUtils {
 
-	private static final String[] UNITS = new String[]{"B", "KB", "MB", "GB", "TB", "EB"};
+	private static final String[] UNITS = new String[]{"B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
 
-	private static final Comparator<FileHandle> FILE_COMPARATOR = new Comparator<FileHandle>() {
+	/** Sorts file by names ignoring upper case */
+	public static final Comparator<FileHandle> FILE_NAME_COMPARATOR = new Comparator<FileHandle>() {
 		@Override
 		public int compare (FileHandle f1, FileHandle f2) {
 			return f1.name().toLowerCase().compareTo(f2.name().toLowerCase());
+		}
+	};
+
+	/** Sorts file by modified date then by name. */
+	public static final Comparator<FileHandle> FILE_MODIFIED_DATE_COMPARATOR = new Comparator<FileHandle>() {
+		@Override
+		public int compare (FileHandle f1, FileHandle f2) {
+			long l1 = f1.lastModified();
+			long l2 = f2.lastModified();
+			return l1 > l2 ? 1 : (l1 == l2 ? FILE_NAME_COMPARATOR.compare(f1, f2) : -1);
+		}
+	};
+
+	/** Sorts file by their size then by name. */
+	public static final Comparator<FileHandle> FILE_SIZE_COMPARATOR = new Comparator<FileHandle>() {
+		@Override
+		public int compare (FileHandle f1, FileHandle f2) {
+			long l1 = f1.length();
+			long l2 = f2.length();
+			return l1 > l2 ? -1 : (l1 == l2 ? FILE_NAME_COMPARATOR.compare(f1, f2) : 1);
 		}
 	};
 
@@ -49,7 +69,7 @@ public class FileUtils {
 	 * 1024 becomes 1 KB<br>
 	 * 123456 becomes 120.6 KB<br>
 	 * 10000000000 becomes 9.3 GB<br>
-	 * Max supported unit is exabyte (EB).
+	 * Max supported unit is yottabyte (YB).
 	 * @param size file size in bytes.
 	 * @return human readable file size.
 	 */
@@ -63,13 +83,32 @@ public class FileUtils {
 	 * Sorts file list, using this rules: directories first, sorted by names ignoring uppercase, then files sorted by names
 	 * ignoring uppercase.
 	 * @param files list to sort
-	 * @return sorted list
+	 * @return sorted file list
 	 */
 	public static Array<FileHandle> sortFiles (FileHandle[] files) {
+		return sortFiles(files, FILE_NAME_COMPARATOR);
+	}
+
+	/**
+	 * Sorts file list, using this rules: directories first, sorted using provided comparator, then files sorted using provided comparator.
+	 * @param files list to sort
+	 * @param comparator comparator used to sort files and directories list
+	 * @return sorted file list
+	 */
+	public static Array<FileHandle> sortFiles (FileHandle[] files, Comparator<FileHandle> comparator) {
+		return sortFiles(files, comparator, false);
+	}
+
+	/**
+	 * Sorts file list, using this rules: directories first, sorted using provided comparator, then files sorted using provided comparator.
+	 * @param files list to sort
+	 * @param comparator comparator used to sort files list
+	 * @param descending if true then sorted list will be in reversed order
+	 * @return sorted file list
+	 */
+	public static Array<FileHandle> sortFiles (FileHandle[] files, Comparator<FileHandle> comparator, boolean descending) {
 		Array<FileHandle> directoriesList = new Array<FileHandle>();
 		Array<FileHandle> filesList = new Array<FileHandle>();
-
-		Arrays.sort(files, FILE_COMPARATOR);
 
 		for (FileHandle f : files) {
 			if (f.isDirectory()) {
@@ -77,6 +116,14 @@ public class FileUtils {
 			} else {
 				filesList.add(f);
 			}
+		}
+
+		directoriesList.sort(comparator);
+		filesList.sort(comparator);
+
+		if (descending) {
+			directoriesList.reverse();
+			filesList.reverse();
 		}
 
 		directoriesList.addAll(filesList); // combine lists

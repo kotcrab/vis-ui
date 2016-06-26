@@ -249,8 +249,8 @@ package com.kotcrab.vis.ui.widget {
 				   iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive,
 				   iconFolderStar: icon-folder-star, iconTrash: icon-trash, iconStar: icon-star, iconStarOutline: icon-star-outline, iconRefresh: icon-refresh
 				   iconFileText: icon-file-text, iconFileImage: icon-file-image, iconFilePdf: icon-file-pdf, iconFileAudio: icon-file-audio
-				   iconListSettings: icon-list-settings
-				   expandDropdown: select-down }
+				   iconListSettings: icon-list-settings,
+				   contextMenuSelectedItem: vis-radio-tick, expandDropdown: select-down }
 	}
 
 	#color.ColorPickerWidgetStyle: {

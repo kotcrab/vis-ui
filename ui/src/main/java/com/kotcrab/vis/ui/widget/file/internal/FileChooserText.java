@@ -66,6 +66,13 @@ public enum FileChooserText implements BundleText {
 	CONTEXT_MENU_DELETE_WARNING("contextMenuDeleteWarning"),
 	CONTEXT_MENU_MOVE_TO_TRASH_WARNING("contextMenuMoveToTrashWarning"),
 	CONTEXT_MENU_NEW_DIRECTORY("contextMenuNewDirectory"),
+	CONTEXT_MENU_SORT_BY("contextMenuSortBy"),
+
+	SORT_BY_NAME("sortByName"),
+	SORT_BY_DATE("sortByDate"),
+	SORT_BY_SIZE("sortBySize"),
+	SORT_BY_ASCENDING("sortByAscending"),
+	SORT_BY_DESCENDING("sortByDescending"),
 
 	NEW_DIRECTORY_DIALOG_TITLE("newDirectoryDialogTitle"),
 	NEW_DIRECTORY_DIALOG_TEXT("newDirectoryDialogText"),

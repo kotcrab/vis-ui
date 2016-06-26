@@ -78,6 +78,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private Mode mode;
 	private ViewMode viewMode = ViewMode.DETAILS;
 	private SelectionMode selectionMode = SelectionMode.FILES;
+	private FileSorting sorting = FileSorting.NAME;
+	private boolean sortingOrderAscending = true;
 	private FileChooserListener listener = new FileChooserAdapter();
 	private FileFilter fileFilter = new DefaultFileFilter(this);
 	private FileDeleter fileDeleter = new DefaultFileDeleter();
@@ -831,7 +833,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		maxDateLabelWidth = 0;
 		maxSizeLabelWidth = 0;
 
-		currentFiles.addAll(FileUtils.sortFiles(files));
+		currentFiles.addAll(FileUtils.sortFiles(files, sorting.comparator, !sortingOrderAscending));
 		fileListAdapter.itemsChanged();
 
 		fileListView.getScrollPane().setScrollX(0);
@@ -944,6 +946,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		if (files.length > 0) {
 			FileItem item = fileListAdapter.getViews().get(files[0]);
 			if (item != null) {
+				if (item.getParent() instanceof Table) { //table at this point may need additional layout to calculate proper target scroll cords
+					((Table) item.getParent()).layout();
+				}
 				item.localToParentCoordinates(tmpVector.setZero());
 				fileListView.getScrollPane().scrollTo(tmpVector.x, tmpVector.y, item.getWidth(), item.getHeight(), false, true);
 			}
@@ -1128,6 +1133,30 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				getTitleLabel().setText(TITLE_CHOOSE_FILES_AND_DIRECTORIES.get());
 				break;
 		}
+	}
+
+	public FileSorting getSorting () {
+		return sorting;
+	}
+
+	public void setSorting (FileSorting sorting, boolean sortingOrderAscending) {
+		this.sorting = sorting;
+		this.sortingOrderAscending = sortingOrderAscending;
+		rebuildFileList();
+	}
+
+	public void setSorting (FileSorting sorting) {
+		this.sorting = sorting;
+		rebuildFileList();
+	}
+
+	public boolean isSortingOrderAscending () {
+		return sortingOrderAscending;
+	}
+
+	public void setSortingOrderAscending (boolean sortingOrderAscending) {
+		this.sortingOrderAscending = sortingOrderAscending;
+		rebuildFileList();
 	}
 
 	public void setFavoriteFolderButtonVisible (boolean favoriteFolderButtonVisible) {
@@ -1375,6 +1404,18 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	public enum SelectionMode {
 		FILES, DIRECTORIES, FILES_AND_DIRECTORIES
+	}
+
+	public enum FileSorting {
+		NAME(FileUtils.FILE_NAME_COMPARATOR),
+		MODIFIED_DATE(FileUtils.FILE_MODIFIED_DATE_COMPARATOR),
+		SIZE(FileUtils.FILE_SIZE_COMPARATOR);
+
+		private Comparator<FileHandle> comparator;
+
+		FileSorting (Comparator<FileHandle> comparator) {
+			this.comparator = comparator;
+		}
 	}
 
 	public enum HistoryPolicy {

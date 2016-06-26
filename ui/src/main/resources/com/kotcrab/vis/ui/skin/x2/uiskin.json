@@ -162,7 +162,7 @@ com.kotcrab.vis.ui.widget.spinner.Spinner$SpinnerStyle: {
 	default: {down: select-down, up: select-up }
 },
 com.kotcrab.vis.ui.widget.file.FileChooserStyle: {
-	default: {highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right, iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive, iconFolderStar: icon-folder-star, iconTrash: icon-trash, iconStar: icon-star, iconStarOutline: icon-star-outline, iconRefresh: icon-refresh, iconFileText: icon-file-text, iconFileImage: icon-file-image, iconFilePdf: icon-file-pdf, iconFileAudio: icon-file-audio, iconListSettings: icon-list-settings, expandDropdown: select-down }
+	default: {highlight: list-selection, popupMenuStyleName: "default", iconArrowLeft: icon-arrow-left, iconArrowRight: icon-arrow-right, iconFolder: icon-folder, iconFolderParent: icon-folder-parent, iconFolderNew: icon-folder-new, iconDrive: icon-drive, iconFolderStar: icon-folder-star, iconTrash: icon-trash, iconStar: icon-star, iconStarOutline: icon-star-outline, iconRefresh: icon-refresh, iconFileText: icon-file-text, iconFileImage: icon-file-image, iconFilePdf: icon-file-pdf, iconFileAudio: icon-file-audio, iconListSettings: icon-list-settings, contextMenuSelectedItem: vis-radio-tick, expandDropdown: select-down }
 },
 com.kotcrab.vis.ui.widget.color.ColorPickerWidgetStyle: {
 	default: {barSelector: color-picker-bar-selector, cross: color-picker-cross, iconArrowRight: icon-arrow-right, verticalSelector: color-picker-selector-vertical, horizontalSelector: color-picker-selector-horizontal }
