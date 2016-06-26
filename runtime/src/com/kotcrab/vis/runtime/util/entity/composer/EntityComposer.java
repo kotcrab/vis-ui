@@ -22,13 +22,22 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.runtime.component.VisSprite;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
-/** @author Kotcrab */
+/**
+ * Utility class simplifying creation of VisRuntime entities.
+ * @author Kotcrab
+ * @since 0.3.2
+ */
 public class EntityComposer {
 	private float pixelsPerUnit;
 	private SpriteEntityComposer spriteComposer;
 	private TextEntityComposer textComposer;
 	private ParticleEntityComposer particleComposer;
 
+	/**
+	 * Creates new instance of EntityComposer bound to specified {@link EntityEngine} instance.
+	 * @param engine entity engine of current scene
+	 * @param pixelsPerUnit pixels per unit of current scene
+	 */
 	public EntityComposer (EntityEngine engine, float pixelsPerUnit) {
 		this.pixelsPerUnit = pixelsPerUnit;
 		spriteComposer = new SpriteEntityComposer(engine);
@@ -36,6 +45,14 @@ public class EntityComposer {
 		particleComposer = new ParticleEntityComposer(engine);
 	}
 
+	/**
+	 * Begins creation of sprite type entity.
+	 * @param region texture region for sprite
+	 * @param x x entity position
+	 * @param y y entity position
+	 * @return shared instance of {@link SpriteEntityComposer} which allows further customization. Note you must call
+	 * {@link SpriteEntityComposer#finish()} after creating entity to allow creating next entities.
+	 */
 	public SpriteEntityComposer sprite (TextureRegion region, float x, float y) {
 		spriteComposer.begin();
 		spriteComposer.getTransform().setPosition(x, y);
@@ -45,6 +62,14 @@ public class EntityComposer {
 		return spriteComposer;
 	}
 
+	/**
+	 * Begins creation of sprite type entity.
+	 * @param sprite {@link VisSprite} template for new entity
+	 * @param x x entity position
+	 * @param y y entity position
+	 * @return shared instance of {@link SpriteEntityComposer} which allows further customization. Note you must call
+	 * {@link SpriteEntityComposer#finish()} after creating entity to allow creating next entities.
+	 */
 	public SpriteEntityComposer sprite (VisSprite sprite, float x, float y) {
 		spriteComposer.begin();
 		spriteComposer.getTransform().setPosition(x, y);
@@ -53,6 +78,15 @@ public class EntityComposer {
 		return spriteComposer;
 	}
 
+	/**
+	 * Begins creation of text type entity.
+	 * @param font {@link BitmapFont} used for text, can be either loaded directly from bmp font data or generated using TrueType
+	 * @param text initial text of entity
+	 * @param x x entity position
+	 * @param y y entity position
+	 * @return shared instance of {@link TextEntityComposer} which allows further customization. Note you must call
+	 * {@link TextEntityComposer#finish()} after creating entity to allow creating next entities.
+	 */
 	public TextEntityComposer text (BitmapFont font, String text, float x, float y) {
 		textComposer.begin();
 		textComposer.getTransform().setPosition(x, y);
@@ -60,6 +94,14 @@ public class EntityComposer {
 		return textComposer;
 	}
 
+	/**
+	 * Begins creation of particle type entity.
+	 * @param effect {@link ParticleEffect} that this entity will use
+	 * @param x x entity position
+	 * @param y y entity position
+	 * @return shared instance of {@link ParticleEntityComposer} which allows further customization. Note you must call
+	 * {@link ParticleEntityComposer#finish()} after creating entity to allow creating next entities.
+	 */
 	public ParticleEntityComposer particle (ParticleEffect effect, float x, float y) {
 		particleComposer.begin();
 		particleComposer.getTransform().setPosition(x, y);

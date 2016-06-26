@@ -22,7 +22,12 @@ import com.kotcrab.vis.runtime.component.Tint;
 import com.kotcrab.vis.runtime.component.VisText;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
-/** @author Kotcrab */
+/**
+ * Text type entity composer.
+ * @author Kotcrab
+ * @see EntityComposer
+ * @since 0.3.2
+ */
 public class TextEntityComposer extends RenderableEntityComposer {
 	private ComponentMapper<VisText> textCm;
 	private ComponentMapper<Tint> tintCm;

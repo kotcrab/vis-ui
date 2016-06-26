@@ -20,7 +20,12 @@ import com.artemis.ComponentMapper;
 import com.kotcrab.vis.runtime.component.VisParticle;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
-/** @author Kotcrab */
+/**
+ * Particle type entity composer.
+ * @author Kotcrab
+ * @see EntityComposer
+ * @since 0.3.2
+ */
 public class ParticleEntityComposer extends RenderableEntityComposer {
 	private ComponentMapper<VisParticle> particleCm;
 

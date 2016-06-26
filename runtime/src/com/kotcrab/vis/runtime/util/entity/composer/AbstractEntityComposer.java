@@ -22,6 +22,15 @@ import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
 import com.kotcrab.vis.runtime.component.AssetReference;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
+/**
+ * Base class for all entity composers. Subclasses can use {@link ComponentMapper} which will be automatically injected from Artemis.
+ * <p>
+ * Even though entity composers can be used directly, it is recommenced to use {@link EntityComposer} utility which
+ * reuses composers and provides useful utility methods.
+ * @author Kotcrab
+ * @see EntityComposer
+ * @since 0.3.2
+ */
 public abstract class AbstractEntityComposer {
 	private EntityEngine engine;
 
@@ -35,30 +44,42 @@ public abstract class AbstractEntityComposer {
 		engine.inject(this);
 	}
 
+	/** Called when composer should create component for new instances. */
 	protected void createComponents () {
 	}
 
+	/** Begins creation of new entity. You must call {@link #finish()} after creating entity to allow creating next entities. */
 	public void begin () {
 		if (inProgress) {
 			throw new IllegalStateException("Only one type of entity can be created at a time. " +
-					"Call #create to finalize creating entity and allow to create next entities");
+					"Call #finish to finalize creating entity and allow creating next entities");
 		}
 		inProgress = true;
 		entity = engine.createEntity();
 		createComponents();
 	}
 
-	public void setAssetDescriptor (VisAssetDescriptor asset) {
-		assetReferenceCm.create(entity).asset = asset;
-	}
-
+	/**
+	 * Ends creation of new entity and prepares for creating new entity. After this is called you may call {@link #begin()}
+	 * to start creating new entity.
+	 * @return newly created entity
+	 */
 	public Entity finish () {
+		if (inProgress == false) {
+			throw new IllegalStateException("Call #begin first to start creating new entity.");
+		}
 		inProgress = false;
 		Entity entityTmp = entity;
 		entity = null;
 		return entityTmp;
 	}
 
+	/** Sets asset descriptor associated to this entity */
+	public void setAssetDescriptor (VisAssetDescriptor asset) {
+		assetReferenceCm.create(entity).asset = asset;
+	}
+
+	/** @return entity under construction or null if {@link #begin()} was not called. */
 	public Entity getEntity () {
 		return entity;
 	}

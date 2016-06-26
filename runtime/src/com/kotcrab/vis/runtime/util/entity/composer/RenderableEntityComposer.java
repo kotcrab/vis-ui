@@ -22,6 +22,12 @@ import com.kotcrab.vis.runtime.component.Renderable;
 import com.kotcrab.vis.runtime.component.Transform;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
+/**
+ * Base class for entity composers that create renderable entities.
+ * @author Kotcrab
+ * @see EntityComposer
+ * @since 0.3.2
+ */
 public abstract class RenderableEntityComposer extends AbstractEntityComposer {
 	private ComponentMapper<Renderable> renderableCm;
 	private ComponentMapper<Layer> layerCm;
