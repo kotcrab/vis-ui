@@ -190,8 +190,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	}
 
 	/**
-	 * @param prefsName file name that will be used to store chooser preferences such as favorites or recent directories
-	 * Should be your application package name e.g. com.seriouscompay.seriousprogram
+	 * @param prefsName file name that will be used to store chooser preferences such as favorites or recent directories.
+	 * Should be your application package name with appended `.filechooser` e.g. com.seriouscompay.seriousprogram.filechooser.
+	 * This name should be unique and should not be reused with other preferences of your application to avoid key collisions.
 	 */
 	public static void setDefaultPrefsName (String prefsName) {
 		PreferencesIO.setDefaultPrefsName(prefsName);
