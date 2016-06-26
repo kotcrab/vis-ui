@@ -101,17 +101,6 @@ project(':runtime') {
     }
 }
 
-project(':runtime-gwt') {
-    apply plugin: "java"
-
-    dependencies {
-        compile project(":runtime")
-        provided "com.badlogicgames.gdx:gdx:$gdxVersion"
-        provided "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
-        provided "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
-    }
-}
-
 project(':ui') {
     apply plugin: "java"
 

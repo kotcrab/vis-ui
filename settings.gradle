@@ -1,3 +1,3 @@
-include 'editor', 'runtime', 'runtime-gwt', 'ui', 'usl'
+include 'editor', 'runtime', 'ui', 'usl'
 include 'plugins:vis-editor-spine', 'plugins:vis-runtime-spine', 'plugins:vis-editor-spine-notifier'
 include 'tools:crash-reporter'
