@@ -7,14 +7,6 @@ archivesBaseName = "vis-runtime"
 sourceCompatibility = 1.6
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-sourceSets.main.java.srcDirs = ["src/"]
-
-processResources {
-    from('src/') {
-        exclude('**/*.java')
-    }
-}
-
 eclipse.project {
     name = appName + "-runtime"
 }
