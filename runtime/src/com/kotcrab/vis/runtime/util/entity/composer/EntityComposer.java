@@ -20,6 +20,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kotcrab.vis.runtime.component.VisSprite;
+import com.kotcrab.vis.runtime.scene.Scene;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 
 /**
@@ -32,6 +33,17 @@ public class EntityComposer {
 	private SpriteEntityComposer spriteComposer;
 	private TextEntityComposer textComposer;
 	private ParticleEntityComposer particleComposer;
+
+	private int defaultLayerId = 0;
+	private int defaultZIndex = 0;
+
+	/**
+	 * Creates new instance of EntityComposer bound to specified {@link Scene} instance.
+	 * @param scene scene that this composer will be bound to
+	 */
+	public EntityComposer (Scene scene) {
+		this(scene.getEntityEngine(), scene.getPixelsPerUnit());
+	}
 
 	/**
 	 * Creates new instance of EntityComposer bound to specified {@link EntityEngine} instance.
@@ -55,7 +67,7 @@ public class EntityComposer {
 	 */
 	public SpriteEntityComposer sprite (TextureRegion region, float x, float y) {
 		spriteComposer.begin();
-		spriteComposer.getTransform().setPosition(x, y);
+		setupRenderableEntity(spriteComposer, x, y);
 		VisSprite sprite = spriteComposer.getSprite();
 		spriteComposer.getSprite().setRegion(region);
 		spriteComposer.getSprite().setSize(sprite.getRegion().getRegionWidth() / pixelsPerUnit, sprite.getRegion().getRegionHeight() / pixelsPerUnit);
@@ -72,7 +84,7 @@ public class EntityComposer {
 	 */
 	public SpriteEntityComposer sprite (VisSprite sprite, float x, float y) {
 		spriteComposer.begin();
-		spriteComposer.getTransform().setPosition(x, y);
+		setupRenderableEntity(spriteComposer, x, y);
 		spriteComposer.getSprite().setRegion(sprite.getRegion());
 		spriteComposer.getSprite().setSize(sprite.getWidth(), sprite.getHeight());
 		return spriteComposer;
@@ -89,7 +101,7 @@ public class EntityComposer {
 	 */
 	public TextEntityComposer text (BitmapFont font, String text, float x, float y) {
 		textComposer.begin();
-		textComposer.getTransform().setPosition(x, y);
+		setupRenderableEntity(textComposer, x, y);
 		textComposer.getText().init(font, text);
 		return textComposer;
 	}
@@ -104,8 +116,33 @@ public class EntityComposer {
 	 */
 	public ParticleEntityComposer particle (ParticleEffect effect, float x, float y) {
 		particleComposer.begin();
-		particleComposer.getTransform().setPosition(x, y);
+		setupRenderableEntity(particleComposer, x, y);
 		particleComposer.getParticle().setEffect(effect);
 		return particleComposer;
+	}
+
+	private void setupRenderableEntity (RenderableEntityComposer composer, float x, float y) {
+		composer.getTransform().setPosition(x, y);
+		composer.getLayer().layerId = defaultLayerId;
+		composer.getRenderable().zIndex = defaultZIndex;
+
+	}
+
+	public int getDefaultLayerId () {
+		return defaultLayerId;
+	}
+
+	/** Sets default layer id for newly created entities. */
+	public void setDefaultLayerId (int defaultLayerId) {
+		this.defaultLayerId = defaultLayerId;
+	}
+
+	public int getDefaultZIndex () {
+		return defaultZIndex;
+	}
+
+	/** Sets default z index for newly created entities. */
+	public void setDefaultZIndex (int defaultZIndex) {
+		this.defaultZIndex = defaultZIndex;
 	}
 }
