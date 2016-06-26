@@ -25,6 +25,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.*;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Scaling;
 import com.kotcrab.vis.ui.FocusManager;
@@ -53,6 +54,7 @@ import com.kotcrab.vis.ui.widget.file.internal.FilePopupMenu.FilePopupMenuCallba
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -78,6 +80,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private SelectionMode selectionMode = SelectionMode.FILES;
 	private FileChooserListener listener = new FileChooserAdapter();
 	private FileFilter fileFilter = new DefaultFileFilter(this);
+	private FileDeleter fileDeleter = new DefaultFileDeleter();
 	private FileTypeFilter fileTypeFilter = null;
 	private FileTypeFilter.Rule activeFileTypeRule = null;
 	private FileIconProvider iconProvider;
@@ -86,7 +89,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private Array<DriveCheckerListener> driveCheckerListeners = new Array<DriveCheckerListener>();
 	private FileChooserWinService chooserWinService = FileChooserWinService.getInstance();
 
-	private FileDeleter fileDeleter = new DefaultFileDeleter();
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 	public static final int DEFAULT_KEY = -1;
 	private boolean multiSelectionEnabled = false;
@@ -122,6 +125,8 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private VerticalGroup shortcutsRootsPanel;
 	private VerticalGroup shortcutsFavoritesPanel;
 	private ListView<FileHandle> fileListView;
+	private float maxDateLabelWidth;
+	private float maxSizeLabelWidth;
 
 	private VisImageButton favoriteFolderButton;
 	private VisImageButton viewModeButton;
@@ -822,6 +827,9 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			fileListAdapter.itemsChanged();
 			return;
 		}
+
+		maxDateLabelWidth = 0;
+		maxSizeLabelWidth = 0;
 
 		currentFiles.addAll(FileUtils.sortFiles(files));
 		fileListAdapter.itemsChanged();
@@ -1552,37 +1560,38 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	/** Internal FileChooser API. */
 	public class FileItem extends Table implements Focusable {
 		private FileHandle file;
-		private VisLabel name;
-		private VisLabel size;
 		private Image iconImage;
 
 		public FileItem (final FileHandle file, ViewMode viewMode) {
 			this.file = file;
 			setTouchable(Touchable.enabled);
 
-			name = new VisLabel(file.name(), viewMode == ViewMode.SMALL_ICONS ? "small" : "default");
+			VisLabel name = new VisLabel(file.name(), viewMode == ViewMode.SMALL_ICONS ? "small" : "default");
 			name.setEllipsis(true);
-
-			if (file.isDirectory())
-				size = new VisLabel("");
-			else
-				size = new VisLabel(FileUtils.readableFileSize(file.length()));
 
 			Drawable icon = iconProvider.provideIcon(this);
 
+			left();
 			if (viewMode.isThumbnailMode()) {
 				add(iconImage = new Image(icon, Scaling.none)).padTop(3).grow().row();
 				add(name).minWidth(1);
 			} else {
-				if (icon != null) add(iconImage = new Image(icon)).padTop(3).minWidth(22 * sizes.scaleFactor);
-				add(name).minWidth(1).padLeft(icon == null ? 22 : 0);
-				add().growX().minWidth(0);
+				add(iconImage = new Image(icon)).padTop(3).minWidth(22 * sizes.scaleFactor);
+				add(name).minWidth(1).growX().padRight(10);
+
+				VisLabel size = new VisLabel(file.isDirectory() ? "" : FileUtils.readableFileSize(file.length()), "small");
+				VisLabel dateLabel = new VisLabel(dateFormat.format(file.lastModified()), "small");
+				size.setAlignment(Align.right);
+
 				if (viewMode == ViewMode.DETAILS) {
-					add(size).right().padRight(6);
+					maxSizeLabelWidth = Math.max(size.getWidth(), maxSizeLabelWidth);
+					maxDateLabelWidth = Math.max(dateLabel.getWidth(), maxDateLabelWidth);
+					add(size).right().padRight(10).width(maxSizeLabelWidth);
+					add(dateLabel).padRight(6).width(maxDateLabelWidth);
 				}
 			}
 
-			addListener();
+			addListeners();
 		}
 
 		/**
@@ -1595,7 +1604,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 			iconImage.invalidateHierarchy();
 		}
 
-		private void addListener () {
+		private void addListeners () {
 			addListener(new InputListener() {
 				@Override
 				public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
