@@ -25,7 +25,7 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
 /**
  * Utility class simplifying creation of VisRuntime entities.
  * @author Kotcrab
- * @since 0.3.2
+ * @since 0.3.3
  */
 public class EntityComposer {
 	private float pixelsPerUnit;

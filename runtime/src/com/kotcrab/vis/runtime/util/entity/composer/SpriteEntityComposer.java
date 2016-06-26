@@ -26,7 +26,7 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
  * Sprite type entity composer.
  * @author Kotcrab
  * @see EntityComposer
- * @since 0.3.2
+ * @since 0.3.3
  */
 public class SpriteEntityComposer extends RenderableEntityComposer {
 	private ComponentMapper<VisSprite> spriteCm;

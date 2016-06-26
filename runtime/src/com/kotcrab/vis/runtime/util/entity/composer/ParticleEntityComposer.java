@@ -24,7 +24,7 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
  * Particle type entity composer.
  * @author Kotcrab
  * @see EntityComposer
- * @since 0.3.2
+ * @since 0.3.3
  */
 public class ParticleEntityComposer extends RenderableEntityComposer {
 	private ComponentMapper<VisParticle> particleCm;

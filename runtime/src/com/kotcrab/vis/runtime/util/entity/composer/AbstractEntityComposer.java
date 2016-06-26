@@ -29,7 +29,7 @@ import com.kotcrab.vis.runtime.util.EntityEngine;
  * reuses composers and provides useful utility methods.
  * @author Kotcrab
  * @see EntityComposer
- * @since 0.3.2
+ * @since 0.3.3
  */
 public abstract class AbstractEntityComposer {
 	private EntityEngine engine;
