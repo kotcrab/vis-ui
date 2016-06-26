@@ -128,7 +128,6 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private VerticalGroup shortcutsFavoritesPanel;
 	private ListView<FileHandle> fileListView;
 	private float maxDateLabelWidth;
-	private float maxSizeLabelWidth;
 
 	private VisImageButton favoriteFolderButton;
 	private VisImageButton viewModeButton;
@@ -832,7 +831,6 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		}
 
 		maxDateLabelWidth = 0;
-		maxSizeLabelWidth = 0;
 
 		currentFiles.addAll(FileUtils.sortFiles(files, sorting.comparator, !sortingOrderAscending));
 		fileListAdapter.itemsChanged();
@@ -1626,10 +1624,14 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				size.setAlignment(Align.right);
 
 				if (viewMode == ViewMode.DETAILS) {
-					maxSizeLabelWidth = Math.max(size.getWidth(), maxSizeLabelWidth);
 					maxDateLabelWidth = Math.max(dateLabel.getWidth(), maxDateLabelWidth);
-					add(size).right().padRight(10).width(maxSizeLabelWidth);
-					add(dateLabel).padRight(6).width(maxDateLabelWidth);
+					add(size).right().padRight(file.isDirectory() ? 0 : 10);
+					add(dateLabel).padRight(6).width(new Value() {
+						@Override
+						public float get (Actor context) {
+							return maxDateLabelWidth;
+						}
+					});
 				}
 			}
 
