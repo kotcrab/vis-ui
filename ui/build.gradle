@@ -9,25 +9,10 @@ archivesBaseName = "vis-ui"
 sourceCompatibility = 1.6
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
 
-sourceSets.main.java.srcDirs = ["src/"]
-sourceSets.test.java.srcDirs = ["test/"]
-
 test {
     useJUnit {
         include "**/*Test.**"
         exclude 'com.kotcrab.vis.ui.test.manual.**'
-    }
-}
-
-processResources {
-    from('src/') {
-        exclude('**/*.java')
-    }
-}
-
-processTestResources {
-    from('test/') {
-        exclude('**/*.java')
     }
 }
 
@@ -60,17 +45,17 @@ task packSkin << {
     def basePath = rootProject.projectDir.absolutePath + "/ui/"
 
     def x1Input = new File(basePath + "assets-raw/x1").absolutePath
-    def x1Output = new File(basePath + "src/com/kotcrab/vis/ui/skin/x1/").absolutePath
+    def x1Output = new File(basePath + "src/main/resources/com/kotcrab/vis/ui/skin/x1/").absolutePath
     com.badlogic.gdx.tools.texturepacker.TexturePacker.process(x1Input, x1Output, "uiskin")
     def x2Input = new File(basePath + "assets-raw/x2").absolutePath
-    def x2Output = new File(basePath + "src/com/kotcrab/vis/ui/skin/x2/").absolutePath
+    def x2Output = new File(basePath + "src/main/resources/com/kotcrab/vis/ui/skin/x2/").absolutePath
     com.badlogic.gdx.tools.texturepacker.TexturePacker.process(x2Input, x2Output, "uiskin")
 }
 
 task compileUsl << {
     description 'Pack skin textures into texture atlases'
 
-    def basePath = rootProject.projectDir.absolutePath + "/ui/src/com/kotcrab/vis/ui/skin/"
+    def basePath = rootProject.projectDir.absolutePath + "/ui/src/main/resources/com/kotcrab/vis/ui/skin/"
     def x1File = new File(basePath + "x1/uiskin.json")
     def x2File = new File(basePath + "x2/uiskin.json")
     com.kotcrab.vis.usl.Lexer.addIncludeSource(rootProject.projectDir.absolutePath + "/usl/styles")

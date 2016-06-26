@@ -1,6 +1,6 @@
 //VisUI 1.1.0 style
 //This is test file used to verify that USL parser is working correctly
-//DO NOT USE THIS FILE AS YOUR BASE FOR USL SKIN - look at directory usl/src/com/kotcrab/vis/usl/styles
+//DO NOT USE THIS FILE AS YOUR BASE FOR USL SKIN - look at directory usl/styles
 
 #com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	default-font: { file: default.fnt }
