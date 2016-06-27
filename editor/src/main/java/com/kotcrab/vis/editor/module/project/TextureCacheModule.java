@@ -21,7 +21,6 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
@@ -35,6 +34,7 @@ import com.kotcrab.vis.editor.event.ResourceReloadedEvent.ResourceType;
 import com.kotcrab.vis.editor.module.editor.StatusBarModule;
 import com.kotcrab.vis.editor.util.DirectoryWatcher.WatchListener;
 import com.kotcrab.vis.editor.util.FileUtils;
+import com.kotcrab.vis.editor.util.gdx.VisTexturePacker;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.editor.util.vis.TextureCacheFilter;
 import com.kotcrab.vis.runtime.assets.AtlasRegionAsset;
@@ -136,7 +136,7 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	private void packageAndReloadCache () {
 		if (packagingEnabled) {
 			if (DEBUG_LOG) Log.debug(TAG, "Rebuilding texture cache");
-			TexturePacker.process(settings, assetFolderPath, cacheFilePath, "cache", cacheFilter);
+			VisTexturePacker.process(settings, assetFolderPath, cacheFilePath, "cache", cacheFilter);
 			if (DEBUG_LOG) Log.debug(TAG, "Texture cache rebuilt");
 		}
 

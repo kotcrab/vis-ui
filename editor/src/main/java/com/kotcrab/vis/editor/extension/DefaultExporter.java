@@ -19,7 +19,6 @@ package com.kotcrab.vis.editor.extension;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.IntMap;
 import com.badlogic.gdx.utils.Json;
@@ -40,6 +39,7 @@ import com.kotcrab.vis.editor.ui.dialog.UnsavedResourcesDialog;
 import com.kotcrab.vis.editor.util.FileUtils;
 import com.kotcrab.vis.editor.util.Holder;
 import com.kotcrab.vis.editor.util.async.SteppedAsyncTask;
+import com.kotcrab.vis.editor.util.gdx.VisTexturePacker;
 import com.kotcrab.vis.editor.util.vis.ProjectPathUtils;
 import com.kotcrab.vis.editor.util.vis.TextureCacheFilter;
 import com.kotcrab.vis.runtime.assets.TextureRegionAsset;
@@ -226,7 +226,7 @@ public class DefaultExporter implements ExporterPlugin {
 				exportSceneTextures(visAssetsDir, sceneTextureDir);
 			} else {
 				setMessage("Packaging textures");
-				TexturePacker.process(texturePackerSettings, visAssetsDir.path(), outAssetsDir.path(), "textures", textureCacheFilter);
+				VisTexturePacker.process(texturePackerSettings, visAssetsDir.path(), outAssetsDir.path(), "textures", textureCacheFilter);
 				nextStep();
 			}
 		}
@@ -325,7 +325,7 @@ public class DefaultExporter implements ExporterPlugin {
 					));
 
 					String outTexturePath = "scene-textures/" + FileUtils.relativize(visAssetsDir, file);
-					TexturePacker.process(texturePackerSettings, sceneTextureDir.path(), outAssetsDir.child(outTexturePath).parent().path(),
+					VisTexturePacker.process(texturePackerSettings, sceneTextureDir.path(), outAssetsDir.child(outTexturePath).parent().path(),
 							file.nameWithoutExtension(), textureCacheFilter);
 					sceneTextureDir.deleteDirectory();
 					nextStep();
