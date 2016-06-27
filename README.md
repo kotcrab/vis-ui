@@ -16,6 +16,9 @@ LibGDX runtime source code is a good start if you want to create your own runtim
 You can follow Vis development on my Twitter channels: [@VisEditor](https://twitter.com/VisEditor) and [@kotcrab](https://twitter.com/kotcrab) or read my [blog](https://kotcrab.com/).
 You can also join our [forum and IRC channel](https://github.com/kotcrab/vis-editor/wiki/IRC-Channel-and-Forum)!
 
+#### VisUI
+[VisUI](https://github.com/kotcrab/vis-editor/wiki/VisUI) is a UI library developed alognside VisEditor. It consist of UI skin and many useful widgets, such as file chooser or color picker. More details can be found on [wiki page](https://github.com/kotcrab/vis-editor/wiki/VisUI).
+
 #### Subprojects
 * [VisUI](https://github.com/kotcrab/vis-editor/wiki/VisUI) - flat design skin and scene2d.ui toolkit for libGDX - [CHANGES](https://github.com/kotcrab/vis-editor/blob/master/UI/CHANGES.md) file - [Documentation](https://github.com/kotcrab/vis-editor/wiki/VisUI)  
 * [USL](https://github.com/kotcrab/vis-editor/wiki/USL) - UI Styling Language for scene2d.ui
