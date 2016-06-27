@@ -86,6 +86,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private FileTypeFilter fileTypeFilter = null;
 	private FileTypeFilter.Rule activeFileTypeRule = null;
 	private FileIconProvider iconProvider;
+	private boolean saveLastDirectory = false;
 
 	private DriveCheckerService driveCheckerService = DriveCheckerService.getInstance();
 	private Array<DriveCheckerListener> driveCheckerListeners = new Array<DriveCheckerListener>();
@@ -242,10 +243,15 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		rebuildShortcutsList();
 
-		if (directory == null)
-			setDirectory(Gdx.files.absolute(System.getProperty("user.home")), HistoryPolicy.IGNORE);
-		else
+		if (directory == null) {
+			FileHandle startingDir = null;
+			if (saveLastDirectory) startingDir = preferencesIO.loadLastDirectory();
+			if (startingDir == null || startingDir.exists() == false)
+				startingDir = Gdx.files.absolute(System.getProperty("user.home"));
+			setDirectory(startingDir, HistoryPolicy.IGNORE);
+		} else {
 			setDirectory(directory, HistoryPolicy.IGNORE);
+		}
 
 		setSize(500, 600);
 		centerWindow();
@@ -664,6 +670,14 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	protected void close () {
 		listener.canceled();
 		super.close();
+	}
+
+	@Override
+	public void fadeOut () {
+		super.fadeOut();
+		if (saveLastDirectory) {
+			preferencesIO.saveLastDirectory(currentDirectory);
+		}
 	}
 
 	private void notifyListenerAndCloseDialog (Array<FileHandle> files) {
@@ -1396,6 +1410,19 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	public void setIconProvider (FileIconProvider iconProvider) {
 		this.iconProvider = iconProvider;
 		rebuildViewModePopupMenu();
+	}
+
+	public boolean isSaveLastDirectory () {
+		return saveLastDirectory;
+	}
+
+	/**
+	 * @param saveLastDirectory if true then chooser will store last directory user browsed in preferences file. Note that
+	 * this only applies to using chooser between separate app launches. When single instance of chooser is reused in single
+	 * app session then last directory is always remembered. Default is false.
+	 */
+	public void setSaveLastDirectory (boolean saveLastDirectory) {
+		this.saveLastDirectory = saveLastDirectory;
 	}
 
 	public enum Mode {

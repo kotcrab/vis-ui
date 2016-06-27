@@ -30,6 +30,7 @@ public class PreferencesIO {
 
 	private String favoritesKeyName = "favorites";
 	private String recentDirKeyName = "recentDirectories";
+	private String lastDirKeyName = "lastDirectory";
 
 	private Preferences prefs;
 	private Json json = new Json();
@@ -77,6 +78,17 @@ public class PreferencesIO {
 
 	public void saveRecentDirectories (Array<FileHandle> recentDirs) {
 		prefs.putString(recentDirKeyName, json.toJson(new FileArrayData(recentDirs)));
+		prefs.flush();
+	}
+
+	public FileHandle loadLastDirectory () {
+		String data = prefs.getString(lastDirKeyName, null);
+		if (data == null) return null;
+		return json.fromJson(FileHandleData.class, data).toFileHandle();
+	}
+
+	public void saveLastDirectory (FileHandle file) {
+		prefs.putString(lastDirKeyName, json.toJson(new FileHandleData(file)));
 		prefs.flush();
 	}
 
