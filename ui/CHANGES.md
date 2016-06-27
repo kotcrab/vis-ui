@@ -11,6 +11,7 @@
 - **Fixed**: [#196](https://github.com/kotcrab/vis-editor/issues/196) - `ColorPicker` sending old color to listener instead of new
 - **Changed**: `FileChooser` in save mode with active file type filter rule will automatically append rule extensions if user have't typed extension or extensions was wrong
 - **Changed**: `FileChooser` now shows files modified date when using details view mode
+- **Changed**: `FileChooser` will no longer show files when selection mode is `DIRECTORIES` - this behaviour can be changed in `DefaultFileFilter`
 - **Changed**: When `VisWindow#fadeOut()` is called then window touchable is set to disabled. Additionally keyboard focus is reset if any window child `Actor` owns keyboard focus.
    - This is done to prevent user input after fade out animation has started.
    - After fade out has finished window touchable property will be restored to previous value which was set before fade out started.

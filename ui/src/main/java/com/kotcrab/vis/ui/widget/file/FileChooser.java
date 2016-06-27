@@ -1132,6 +1132,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 				getTitleLabel().setText(TITLE_CHOOSE_FILES_AND_DIRECTORIES.get());
 				break;
 		}
+		rebuildFileList();
 	}
 
 	public FileSorting getSorting () {
@@ -1565,6 +1566,7 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 	public static class DefaultFileFilter implements FileFilter {
 		private FileChooser chooser;
+		private boolean ignoreChooserSelectionMode = false;
 
 		public DefaultFileFilter (FileChooser chooser) {
 			this.chooser = chooser;
@@ -1574,8 +1576,20 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		public boolean accept (File f) {
 			if (f.isHidden()) return false;
 			if (chooser.getMode() == Mode.OPEN ? f.canRead() == false : f.canWrite() == false) return false;
+			if (ignoreChooserSelectionMode == false && f.isDirectory() == false &&
+					chooser.getSelectionMode() == SelectionMode.DIRECTORIES) {
+				return false;
+			}
 
 			return true;
+		}
+
+		public boolean isIgnoreChooserSelectionMode () {
+			return ignoreChooserSelectionMode;
+		}
+
+		public void setIgnoreChooserSelectionMode (boolean ignoreChooserSelectionMode) {
+			this.ignoreChooserSelectionMode = ignoreChooserSelectionMode;
 		}
 	}
 
