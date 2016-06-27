@@ -1,6 +1,7 @@
 #### Version: 0.3.3 (LibGDX 1.9.3, Artemis 1.3.1)
 - GWT platform is no longer officially supported
-- `Added`: `EntityComposer` API - simplifies building VisRuntime entities 
+- **Added**: `EntityComposer` API - simplifies building VisRuntime entities
+- **Removed deprecated API**: `SceneConfig#addSystem(BaseSystem system)`, `SceneConfig#addSystem(BaseSystem system, int priority)` and `SimpleSystemProvider` (see 0.3.1 release notes for migration steps)
 
 #### Version: 0.3.2 (LibGDX 1.9.3, Artemis 1.3.1)
 - Updated to LibGDX 1.9.3
@@ -16,10 +17,10 @@
 #### Version: 0.3.1 (LibGDX 1.9.2, Artemis 1.3.1)
 - Updated to LibGDX 1.9.2 and Artemis 1.3.1
 - **API Deprecated**: `SceneConfig#addSystem(BaseSystem system)`, `SceneConfig#addSystem(BaseSystem system, int priority)` and `SimpleSystemProvider`
-    - Use `SceneConfig#addSystem(Class<? extends BaseSystem> system)` and `SceneConfig#Class<? extends BaseSystem> systemClass, int priority`
+    - Use `SceneConfig#addSystem(Class<? extends BaseSystem> system)` and `SceneConfig#addSystem(Class<? extends BaseSystem> systemClass, int priority)`
     - Adding system in 0.3.0: `parameter.config.addSystem(new MySystem())`
     - Adding system now: `parameter.config.addSystem(MySystem.class)`
-    - If you need to pass custom arguments to system constructor implement `SystemProvider` directly.
+    - If you need to pass custom arguments to system constructor implement `SystemProvider` interface directly.
 - **API Change**: `Variables#variables` field is now final
 - **API Change**: `SceneConfig.Priority` is now an enum (should not require any code change)
 - **API Changes in `EntitySupport`**:
