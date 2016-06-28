@@ -29,7 +29,7 @@ import com.kotcrab.vis.ui.widget.tabbedpane.TabbedPaneAdapter;
 
 public class TestTabbedPane extends VisWindow {
 
-	public TestTabbedPane () {
+	public TestTabbedPane (boolean vertical) {
 		super("tabbed pane");
 
 		TableUtils.setSpacingDefaults(this);
@@ -41,7 +41,7 @@ public class TestTabbedPane extends VisWindow {
 		final VisTable container = new VisTable();
 
 		TabbedPaneStyle style = VisUI.getSkin().get("default", TabbedPaneStyle.class);
-		style.vertical = false;
+		style.vertical = vertical;
 		TabbedPane tabbedPane = new TabbedPane(style);
 		tabbedPane.addListener(new TabbedPaneAdapter() {
 			@Override
@@ -77,8 +77,7 @@ public class TestTabbedPane extends VisWindow {
 
 //		debugAll();
 		setSize(300, 200);
-		setPosition(795, 18);
-
+		centerWindow();
 	}
 
 	private class TestTab extends Tab {

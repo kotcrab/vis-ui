@@ -196,7 +196,13 @@ class TestApplication extends ApplicationAdapter {
 		menu.addItem(new MenuItem("tabbed pane", new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				stage.addActor(new TestTabbedPane());
+				stage.addActor(new TestTabbedPane(false));
+			}
+		}));
+		menu.addItem(new MenuItem("tabbed pane (vertical)", new ChangeListener() {
+			@Override
+			public void changed (ChangeEvent event, Actor actor) {
+				stage.addActor(new TestTabbedPane(true));
 			}
 		}));
 		menu.addItem(new MenuItem("flow groups", new ChangeListener() {

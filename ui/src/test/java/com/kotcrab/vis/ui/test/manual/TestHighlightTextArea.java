@@ -34,7 +34,7 @@ public class TestHighlightTextArea extends VisWindow {
 		addVisWidgets();
 
 		setSize(280, 380);
-		setPosition(28, 300);
+		centerWindow();
 	}
 
 	private void addVisWidgets () {
@@ -43,11 +43,10 @@ public class TestHighlightTextArea extends VisWindow {
 				"  float bar;\n" +
 				"  String foobar;\n" +
 				"}");
-
 		Highlighter highlighter = new Highlighter();
 		//it is much more reliable to use regex for keyword detection
-		highlighter.regex(Color.valueOf("66CCB3"), "\\b(class|private|protected|public|if|else|void)\\b");
-		highlighter.regex(Color.valueOf("BED6FF"), "\\b(int|float|boolean|public|if|else|void)\\b");
+		highlighter.regex(Color.valueOf("66CCB3"), "\\b(class|private|protected|public|if|else|void|for|while|continue|break)\\b");
+		highlighter.regex(Color.valueOf("BED6FF"), "\\b(int|float|boolean|short|long|char)\\b");
 		highlighter.regex(Color.valueOf("EFC090"), "\\b(foo|bar)\\b");
 		highlighter.regex(Color.valueOf("75715E"), "/\\*(?:.|[\\n\\r])*?\\*/"); //block comments (/* comment */)
 		textArea.setHighlighter(highlighter);
