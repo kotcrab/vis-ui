@@ -27,6 +27,8 @@
 		<exclude name="widget/file/StreamingFileChooserListener.java" />
         <exclude name="widget/file/internal/**" />
 		<exclude name="util/form/FormValidator.java" />
+		<exclude name="util/highlight/Highlighter.java" />
+		<exclude name="util/highlight/RegexHighlightRule.java" />
 	</source>
 
     <!-- X1 skin -->

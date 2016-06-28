@@ -24,6 +24,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
+import com.kotcrab.vis.ui.util.highlight.BaseHighlighter;
 import com.kotcrab.vis.ui.util.highlight.Highlight;
 import com.kotcrab.vis.ui.util.highlight.Highlighter;
 
@@ -45,7 +46,7 @@ public class HighlightTextArea extends ScrollableTextArea {
 	private boolean chunkUpdateScheduled = true;
 	private Color defaultColor = Color.WHITE;
 
-	private Highlighter highlighter;
+	private BaseHighlighter highlighter;
 
 	private float maxAreaWidth = 0;
 	private float maxAreaHeight = 0;
@@ -179,12 +180,12 @@ public class HighlightTextArea extends ScrollableTextArea {
 	 * Changes highlighter of text area. Note that you don't have to call {@link #processHighlighter()} after changing
 	 * highlighter - you only have to call it when highlighter rules has changed.
 	 */
-	public void setHighlighter (Highlighter highlighter) {
+	public void setHighlighter (BaseHighlighter highlighter) {
 		this.highlighter = highlighter;
 		processHighlighter();
 	}
 
-	public Highlighter getHighlighter () {
+	public BaseHighlighter getHighlighter () {
 		return highlighter;
 	}
 

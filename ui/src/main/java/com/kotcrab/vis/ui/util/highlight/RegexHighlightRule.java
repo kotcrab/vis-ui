@@ -24,7 +24,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Highlighter rule using regex to detect text matches.
+ * Highlighter rule using regex to detect text matches. Regexes and thus this rule can't be used on GWT.
  * @author Kotcrab
  * @since 1.1.2
  */
