@@ -22,6 +22,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
+import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.ObjectMap.Entry;
 import com.badlogic.gdx.utils.Timer;
@@ -281,14 +282,20 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 		if (region == null) {
 			if (cache != null) region = cache.findRegion(regionName);
 			if (region == null) {
-				Texture texture = textures.get(relativePath);
-				if (texture == null) {
-					texture = new Texture(Gdx.files.absolute(fileAccess.derelativizeFromAssetsFolder(relativePath)));
-					if (DEBUG_LOG) Log.debug(TAG, "Load texture " + relativePath);
-					textures.put(relativePath, texture);
-				}
+				try {
 
-				region = new TextureRegion(texture);
+					Texture texture = textures.get(relativePath);
+					if (texture == null) {
+						texture = new Texture(Gdx.files.absolute(fileAccess.derelativizeFromAssetsFolder(relativePath)));
+						if (DEBUG_LOG) Log.debug(TAG, "Load texture " + relativePath);
+						textures.put(relativePath, texture);
+					}
+
+					region = new TextureRegion(texture);
+				} catch (GdxRuntimeException e) {
+					Log.exception(e);
+					return missingRegion;
+				}
 			} else if (DEBUG_LOG) {
 				Log.debug(TAG, "Using cached region " + relativePath);
 			}
