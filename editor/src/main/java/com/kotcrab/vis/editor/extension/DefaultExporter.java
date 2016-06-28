@@ -319,7 +319,7 @@ public class DefaultExporter implements ExporterPlugin {
 								VisAssetDescriptor asset = ((StoresAssetDescriptor) component).getAsset();
 								if (asset instanceof TextureRegionAsset == false) return;
 								String path = ((TextureRegionAsset) asset).getPath();
-								FileHandle targetTextureDirectory = sceneTextureDir.child(Gdx.files.absolute(path).parent().path());
+								FileHandle targetTextureDirectory = sceneTextureDir.child(Gdx.files.absolute(path).path());
 								visAssetsDir.child(path).copyTo(targetTextureDirectory);
 							}
 					));
