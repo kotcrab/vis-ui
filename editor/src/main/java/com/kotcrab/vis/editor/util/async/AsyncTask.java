@@ -32,7 +32,6 @@ import java.util.concurrent.atomic.AtomicReference;
 public abstract class AsyncTask {
 	private Thread thread;
 	private String threadName;
-	private Runnable runnable;
 
 	private int progressPercent;
 	private String message;
@@ -41,15 +40,19 @@ public abstract class AsyncTask {
 
 	public AsyncTask (String threadName) {
 		this.threadName = threadName;
-		runnable = () -> {
+		Runnable runnable = () -> {
 			try {
 				execute();
 			} catch (Exception e) {
-				Log.exception(e);
-				failed(e.getMessage(), e);
+				Gdx.app.postRunnable(() -> {
+					Log.exception(e);
+					failed(e.getMessage(), e);
+				});
 			}
 
-			if (listener != null) listener.finished();
+			Gdx.app.postRunnable(() -> {
+				if (listener != null) listener.finished();
+			});
 		};
 		thread = new Thread(runnable, threadName);
 	}
@@ -58,15 +61,15 @@ public abstract class AsyncTask {
 		thread.start();
 	}
 
-	public void failed (String reason) {
+	protected void failed (String reason) {
 		if (listener != null) listener.failed(reason);
 	}
 
-	public void failed (String reason, Exception ex) {
+	protected void failed (String reason, Exception ex) {
 		if (listener != null) listener.failed(reason, ex);
 	}
 
-	public abstract void execute () throws Exception;
+	protected abstract void execute () throws Exception;
 
 	/**
 	 * Executes runnable on OpenGL thread. This methods blocks until runnable finished executing. Note that this
@@ -92,7 +95,9 @@ public abstract class AsyncTask {
 
 			Exception e = exceptionAt.get();
 			if (e != null) {
-				failed(e.getMessage(), e);
+				Gdx.app.postRunnable(() -> {
+					failed(e.getMessage(), e);
+				});
 			}
 		} catch (InterruptedException e) {
 			Log.exception(e);
@@ -108,10 +113,6 @@ public abstract class AsyncTask {
 		if (listener != null) listener.progressChanged(progressPercent);
 	}
 
-	public void setRunnable (Runnable runnable) {
-		this.runnable = runnable;
-	}
-
 	public String getMessage () {
 		return message;
 	}
@@ -119,7 +120,9 @@ public abstract class AsyncTask {
 	public void setMessage (String message) {
 		Log.debug("AsyncTask::" + threadName, message);
 		this.message = message;
-		if (listener != null) listener.messageChanged(message);
+		Gdx.app.postRunnable(() -> {
+			if (listener != null) listener.messageChanged(message);
+		});
 	}
 
 	public void setListener (AsyncTaskListener listener) {
