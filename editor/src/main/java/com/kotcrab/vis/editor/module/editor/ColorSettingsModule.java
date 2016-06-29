@@ -29,6 +29,7 @@ import com.kotcrab.vis.editor.util.BiHolder;
 import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
 import com.kotcrab.vis.editor.util.scene2d.VisColorPickerListener;
+import com.kotcrab.vis.editor.util.vis.PrettyEnumNameProvider;
 import com.kotcrab.vis.runtime.util.PrettyEnum;
 import com.kotcrab.vis.ui.widget.VisLabel;
 import com.kotcrab.vis.ui.widget.VisTable;
@@ -69,7 +70,7 @@ public class ColorSettingsModule extends EditorSettingsModule<ColorConfig> {
 		prepareTable();
 		colorPicker = colorPickerModule.getPicker();
 
-		presetsSelectBox = new EnumSelectBox<>(PresetType.class);
+		presetsSelectBox = new EnumSelectBox<>(PresetType.class, new PrettyEnumNameProvider<>());
 		presetsSelectBox.addListener(new VisChangeListener((event, actor) -> updateAllImages()));
 
 		settingsTable.defaults().expand(false, false).left();

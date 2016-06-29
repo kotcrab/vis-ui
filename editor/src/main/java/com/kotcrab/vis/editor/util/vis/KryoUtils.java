@@ -17,6 +17,7 @@
 package com.kotcrab.vis.editor.util.vis;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Kryo.DefaultInstantiatorStrategy;
@@ -36,8 +37,9 @@ public class KryoUtils {
 		kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 		kryo.setDefaultSerializer(new SettingsSerializerFactory());
 		kryo.register(Array.class, new ArraySerializer(), 10);
-		kryo.register(UUID.class, new UUIDSerializer(), 11);
+		kryo.register(UUID.class, new UUIDSerializer(), 12);
 		kryo.register(Color.class, new ColorSerializer(), 11);
+		kryo.register(Texture.TextureFilter.class, 13);
 		return kryo;
 	}
 

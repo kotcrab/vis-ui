@@ -89,8 +89,6 @@ public class TextureCacheModule extends ProjectModule implements WatchListener {
 	@Override
 	public void init () {
 		settings = new Settings();
-		settings.filterMag = Texture.TextureFilter.Linear;
-		settings.filterMin = Texture.TextureFilter.Linear;
 		settings.maxWidth = 4096;
 		settings.maxHeight = 4096;
 		settings.combineSubdirectories = true;

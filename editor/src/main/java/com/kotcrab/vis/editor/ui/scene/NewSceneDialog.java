@@ -28,6 +28,7 @@ import com.kotcrab.vis.editor.module.project.SceneCacheModule;
 import com.kotcrab.vis.editor.module.project.SceneIOModule;
 import com.kotcrab.vis.editor.module.project.SceneTabsModule;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
+import com.kotcrab.vis.editor.util.vis.PrettyEnumNameProvider;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.ui.util.TableUtils;
@@ -88,7 +89,7 @@ public class NewSceneDialog extends VisWindow {
 	private void createUI () {
 		nameTextField = new VisValidatableTextField();
 		pathTextField = new VisValidatableTextField("/scene/");
-		viewportModeSelectBox = new EnumSelectBox<>(SceneViewport.class);
+		viewportModeSelectBox = new EnumSelectBox<>(SceneViewport.class, new PrettyEnumNameProvider<>());
 
 		errorLabel = new VisLabel();
 		errorLabel.setColor(Color.RED);

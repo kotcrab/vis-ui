@@ -19,23 +19,23 @@ package com.kotcrab.vis.editor.ui;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.OrderedMap;
-import com.kotcrab.vis.runtime.util.PrettyEnum;
+import com.kotcrab.vis.runtime.util.autotable.EnumNameProvider;
 import com.kotcrab.vis.ui.widget.VisSelectBox;
 
 /**
  * Select box. For enums. Extends standard VisUI {@link VisSelectBox}
  * @author Kotcrab
  */
-public class EnumSelectBox<T extends Enum<T> & PrettyEnum> extends VisSelectBox<String> {
-	private EnumListListener<T> listener;
+public class EnumSelectBox<E extends Enum<E>> extends VisSelectBox<String> {
+	private EnumListListener<E> listener;
 
-	private OrderedMap<String, T> enumMap = new OrderedMap<>();
+	private OrderedMap<String, E> enumMap = new OrderedMap<>();
 
-	public EnumSelectBox (Class<T> enumClass) {
+	public EnumSelectBox (Class<E> enumClass, EnumNameProvider<E> nameProvider) {
 		try {
-			for (T value : enumClass.getEnumConstants()) {
+			for (E value : enumClass.getEnumConstants()) {
 				if (enumClass.getField(value.toString()).isAnnotationPresent(Deprecated.class)) continue;
-				enumMap.put(value.toPrettyString(), value);
+				enumMap.put(nameProvider.getPrettyName(value), value);
 			}
 		} catch (ReflectiveOperationException e) {
 			throw new IllegalStateException(e);
@@ -52,15 +52,19 @@ public class EnumSelectBox<T extends Enum<T> & PrettyEnum> extends VisSelectBox<
 		setItems(enumMap.orderedKeys());
 	}
 
-	public void setSelectedEnum (T newEnum) {
+	protected OrderedMap<String, E> getEnumMap () {
+		return enumMap;
+	}
+
+	public void setSelectedEnum (E newEnum) {
 		setSelected(enumMap.findKey(newEnum, true));
 	}
 
-	public T getSelectedEnum () {
+	public E getSelectedEnum () {
 		return enumMap.get(getSelected());
 	}
 
-	public void setListener (EnumListListener<T> listener) {
+	public void setListener (EnumListListener<E> listener) {
 		this.listener = listener;
 	}
 

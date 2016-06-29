@@ -18,37 +18,21 @@ package com.kotcrab.vis.editor.ui.scene.entityproperties.autotable;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.OrderedMap;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
-import com.kotcrab.vis.editor.ui.EnumSelectBox.EnumListListener;
 import com.kotcrab.vis.runtime.util.autotable.EnumNameProvider;
-import com.kotcrab.vis.ui.widget.VisSelectBox;
 
-/**
- * Similar to {@link EnumSelectBox} but uses name provider ({@link EnumNameProvider}
- * @author Kotcrab
- */
-public class AutoTableEnumSelectBox<T extends Enum<T>> extends VisSelectBox<String> {
+/** @author Kotcrab */
+public class AutoTableEnumSelectBox<E extends Enum<E>> extends EnumSelectBox<E> {
 	public static final String INDETERMINATE = "<?>";
 
-	private EnumListListener<T> listener;
-
-	private OrderedMap<String, T> enumMap = new OrderedMap<>();
-
-	public AutoTableEnumSelectBox (Class<T> enumClass, EnumNameProvider<T> nameProvider) {
-		for (T value : enumClass.getEnumConstants()) enumMap.put(nameProvider.getPrettyName(value), value);
-
+	public AutoTableEnumSelectBox (Class<E> enumClass, EnumNameProvider<E> nameProvider) {
+		super(enumClass, nameProvider);
 		addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				if (listener != null)
-					listener.changed(enumMap.get(getSelected()));
-
-				setItems(enumMap.orderedKeys()); //removes INDETERMINATE if set
+				setItems(getEnumMap().orderedKeys()); //removes INDETERMINATE if set
 			}
 		});
-
-		setItems(enumMap.orderedKeys());
 	}
 
 	public void setIndeterminate (boolean indeterminate) {
@@ -57,20 +41,8 @@ public class AutoTableEnumSelectBox<T extends Enum<T>> extends VisSelectBox<Stri
 			setItems(getItems().toArray());
 			setSelected(INDETERMINATE);
 		} else {
-			setItems(enumMap.orderedKeys());
+			setItems(getEnumMap().orderedKeys());
 		}
-	}
-
-	public void setSelectedEnum (T newEnum) {
-		setSelected(enumMap.findKey(newEnum, true));
-	}
-
-	public T getSelectedEnum () {
-		return enumMap.get(getSelected());
-	}
-
-	public void setListener (EnumListListener<T> listener) {
-		this.listener = listener;
 	}
 
 	public boolean isIndeterminate () {

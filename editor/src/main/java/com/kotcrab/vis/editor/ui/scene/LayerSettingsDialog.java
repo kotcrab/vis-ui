@@ -25,6 +25,7 @@ import com.kotcrab.vis.editor.scene.EditorScene;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
 import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
+import com.kotcrab.vis.editor.util.vis.PrettyEnumNameProvider;
 import com.kotcrab.vis.runtime.scene.LayerCordsSystem;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.util.form.FormInputValidator;
@@ -51,7 +52,7 @@ public class LayerSettingsDialog extends VisWindow {
 		VisLabel idLabel = new VisLabel();
 		idLabel.setColor(Color.GRAY);
 		VisValidatableTextField nameField = new VisValidatableTextField();
-		EnumSelectBox<LayerCordsSystem> cordsSelectBox = new EnumSelectBox<>(LayerCordsSystem.class);
+		EnumSelectBox<LayerCordsSystem> cordsSelectBox = new EnumSelectBox<>(LayerCordsSystem.class, new PrettyEnumNameProvider<>());
 		add(new VisLabel("Layer ID"), idLabel);
 		row();
 		add(new VisLabel("Name"), nameField);

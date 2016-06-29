@@ -18,7 +18,6 @@ package com.kotcrab.vis.editor.extension;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.IntMap;
@@ -86,24 +85,27 @@ public class DefaultExporter implements ExporterPlugin {
 	@Override
 	public void init (Project project) {
 		this.project = project;
-		settings = settingsIO.load(SETTINGS_FILE_NAME, DefaultExporterSettings.class);
+		reloadSettings();
 
 		visAssetsDir = fileAccess.getAssetsFolder();
 		tmpDir = fileAccess.getModuleFolder(".defaultExporter").child("tmp");
 		tmpDir.mkdirs();
 
+		json = SceneLoader.getJson();
+
+		textureCacheFilter = new TextureCacheFilter(assetsMetadata);
+	}
+
+	private void reloadSettings () {
+		settings = settingsIO.load(SETTINGS_FILE_NAME, DefaultExporterSettings.class);
 		texturePackerSettings = new Settings();
-		texturePackerSettings.filterMag = Texture.TextureFilter.Linear;
-		texturePackerSettings.filterMin = Texture.TextureFilter.Linear;
+		texturePackerSettings.filterMag = settings.magTextureFilter;
+		texturePackerSettings.filterMin = settings.migTextureFilter;
 		texturePackerSettings.maxHeight = 2048;
 		texturePackerSettings.maxWidth = 2048;
 		texturePackerSettings.combineSubdirectories = true;
 		texturePackerSettings.silent = true;
 		texturePackerSettings.useIndexes = false;
-
-		json = SceneLoader.getJson();
-
-		textureCacheFilter = new TextureCacheFilter(assetsMetadata);
 	}
 
 	@Override
@@ -123,6 +125,8 @@ public class DefaultExporter implements ExporterPlugin {
 
 	@Override
 	public void export (boolean quick) {
+		reloadSettings();
+
 		if (tabsModule.getDirtyTabCount() > 0)
 			stage.addActor(new UnsavedResourcesDialog(tabsModule, () -> beforeExport(quick)).fadeIn());
 		else

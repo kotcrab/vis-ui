@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.ui.scene;
 
 import com.badlogic.gdx.graphics.Color;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
+import com.kotcrab.vis.editor.util.vis.PrettyEnumNameProvider;
 import com.kotcrab.vis.runtime.scene.SceneViewport;
 import com.kotcrab.vis.ui.util.FloatDigitsOnlyFilter;
 import com.kotcrab.vis.ui.util.TableUtils;
@@ -48,7 +49,7 @@ public class SceneSettingsDialog extends AbstractSceneSettingsDialog {
 
 	@Override
 	protected void createUI () {
-		viewportModeSelectBox = new EnumSelectBox<>(SceneViewport.class);
+		viewportModeSelectBox = new EnumSelectBox<>(SceneViewport.class, new PrettyEnumNameProvider<>());
 		viewportModeSelectBox.setSelectedEnum(scene.viewport);
 
 		//TODO error msg can't fit on window, for now we don't display it at all

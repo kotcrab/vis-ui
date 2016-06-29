@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package com.kotcrab.vis.editor.extension;
+package com.kotcrab.vis.editor.util.vis;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.esotericsoftware.kryo.serializers.TaggedFieldSerializer.Tag;
+import com.kotcrab.vis.runtime.util.autotable.EnumNameProvider;
 
 /** @author Kotcrab */
-public class DefaultExporterSettings {
-	@Tag(0) public boolean skipDefaultValues = true;
-	@Tag(1) public boolean useMinimalOutputType = true;
-	@Tag(2) public boolean packageSeparateAtlasForEachScene = false;
-	@Tag(3) public Texture.TextureFilter magTextureFilter = Texture.TextureFilter.Nearest;
-	@Tag(4) public Texture.TextureFilter migTextureFilter = Texture.TextureFilter.Nearest;
+public class DefaultEnumNameProvider<E extends Enum<E>> implements EnumNameProvider<E> {
+	@Override
+	public String getPrettyName (E value) {
+		return value.toString();
+	}
 }

@@ -16,12 +16,16 @@
 
 package com.kotcrab.vis.editor.ui.dialog;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Align;
 import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.extension.DefaultExporter;
 import com.kotcrab.vis.editor.extension.DefaultExporterSettings;
 import com.kotcrab.vis.editor.module.editor.EditorSettingsIOModule;
+import com.kotcrab.vis.editor.ui.EnumSelectBox;
+import com.kotcrab.vis.editor.util.scene2d.TableBuilder;
 import com.kotcrab.vis.editor.util.scene2d.VisChangeListener;
+import com.kotcrab.vis.editor.util.vis.DefaultEnumNameProvider;
 import com.kotcrab.vis.ui.util.TableUtils;
 import com.kotcrab.vis.ui.widget.*;
 
@@ -33,6 +37,8 @@ public class DefaultExporterSettingsDialog extends VisWindow {
 	private final VisCheckBox skipDefaultCheck;
 	private final VisCheckBox minimalOutputCheck;
 	private final VisCheckBox packageSeparateAtlasForEachSceneCheck;
+	private final EnumSelectBox<Texture.TextureFilter> migFilterSelectBox;
+	private final EnumSelectBox<Texture.TextureFilter> magFilterSelectBox;
 
 	public DefaultExporterSettingsDialog (EditorSettingsIOModule settingsIO, DefaultExporterSettings settings) {
 		super("Settings");
@@ -78,6 +84,11 @@ public class DefaultExporterSettingsDialog extends VisWindow {
 		add(packageSeparateAtlasForEachSceneCheck);
 		add(packageSeparateAtlasForEachSceneHelpImage).size(22).row();
 
+		migFilterSelectBox = new EnumSelectBox<>(Texture.TextureFilter.class, new DefaultEnumNameProvider<>());
+		magFilterSelectBox = new EnumSelectBox<>(Texture.TextureFilter.class, new DefaultEnumNameProvider<>());
+		add(TableBuilder.build(new VisLabel("Mig Texture Filter"), migFilterSelectBox)).row();
+		add(TableBuilder.build(new VisLabel("Mag Texture Filter"), magFilterSelectBox)).row();
+
 		add(buttonTable).right().colspan(2);
 
 		cancelButton.addListener(new VisChangeListener((event1, actor1) -> {
@@ -100,12 +111,16 @@ public class DefaultExporterSettingsDialog extends VisWindow {
 		skipDefaultCheck.setChecked(settings.skipDefaultValues);
 		minimalOutputCheck.setChecked(settings.useMinimalOutputType);
 		packageSeparateAtlasForEachSceneCheck.setChecked(settings.packageSeparateAtlasForEachScene);
+		migFilterSelectBox.setSelectedEnum(settings.migTextureFilter);
+		magFilterSelectBox.setSelectedEnum(settings.magTextureFilter);
 	}
 
 	private void setToSettings () {
 		settings.skipDefaultValues = skipDefaultCheck.isChecked();
 		settings.useMinimalOutputType = minimalOutputCheck.isChecked();
 		settings.packageSeparateAtlasForEachScene = packageSeparateAtlasForEachSceneCheck.isChecked();
+		settings.migTextureFilter = migFilterSelectBox.getSelectedEnum();
+		settings.magTextureFilter = magFilterSelectBox.getSelectedEnum();
 		settingsIO.save(settings, DefaultExporter.SETTINGS_FILE_NAME);
 	}
 }

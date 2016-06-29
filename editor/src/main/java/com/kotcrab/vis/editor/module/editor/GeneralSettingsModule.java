@@ -22,6 +22,7 @@ import com.kotcrab.vis.editor.Icons;
 import com.kotcrab.vis.editor.module.editor.AnalyticsModule.AnalyticsState;
 import com.kotcrab.vis.editor.module.editor.GeneralSettingsModule.GeneralConfig;
 import com.kotcrab.vis.editor.ui.EnumSelectBox;
+import com.kotcrab.vis.editor.util.vis.PrettyEnumNameProvider;
 import com.kotcrab.vis.editor.util.vis.UpdateChannelType;
 import com.kotcrab.vis.ui.widget.Tooltip;
 import com.kotcrab.vis.ui.widget.VisCheckBox;
@@ -45,7 +46,7 @@ public class GeneralSettingsModule extends EditorSettingsModule<GeneralConfig> {
 	public void buildTable () {
 		prepareTable();
 
-		updateChannelSelectBox = new EnumSelectBox<>(UpdateChannelType.class);
+		updateChannelSelectBox = new EnumSelectBox<>(UpdateChannelType.class, new PrettyEnumNameProvider<>());
 		updateChannelSelectBox.setSelectedEnum(config.updateChannel);
 
 		VisTable updateTable = new VisTable(true);
