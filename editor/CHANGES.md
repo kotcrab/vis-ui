@@ -1,4 +1,5 @@
 #### Version: 0.3.3
+- **Changed**: By default `Linear` filter will be used for packaged textures
 
 #### Version: 0.3.2
 - **Improved**: Texture cache speed improved - new texture are available immediately after they are added to project assets. Fixes issues when large textures were loading infinitely.

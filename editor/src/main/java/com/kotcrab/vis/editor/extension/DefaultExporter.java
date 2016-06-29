@@ -18,6 +18,7 @@ package com.kotcrab.vis.editor.extension;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 import com.badlogic.gdx.utils.IntMap;
@@ -92,6 +93,8 @@ public class DefaultExporter implements ExporterPlugin {
 		tmpDir.mkdirs();
 
 		texturePackerSettings = new Settings();
+		texturePackerSettings.filterMag = Texture.TextureFilter.Linear;
+		texturePackerSettings.filterMin = Texture.TextureFilter.Linear;
 		texturePackerSettings.maxHeight = 2048;
 		texturePackerSettings.maxWidth = 2048;
 		texturePackerSettings.combineSubdirectories = true;
