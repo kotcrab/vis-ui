@@ -121,7 +121,7 @@ public class VisWindow extends Window {
 		final Touchable previousTouchable = getTouchable();
 		setTouchable(Touchable.disabled);
 		Stage stage = getStage();
-		if (stage.getKeyboardFocus() != null && stage.getKeyboardFocus().isDescendantOf(this)) {
+		if (stage != null && stage.getKeyboardFocus() != null && stage.getKeyboardFocus().isDescendantOf(this)) {
 			FocusManager.resetFocus(stage);
 		}
 		addAction(Actions.sequence(Actions.fadeOut(time, Interpolation.fade), new Action() {
@@ -129,6 +129,7 @@ public class VisWindow extends Window {
 			public boolean act (float delta) {
 				setTouchable(previousTouchable);
 				remove();
+				getColor().a = 1f;
 				fadeOutActionRunning = false;
 				return true;
 			}

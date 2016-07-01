@@ -1,6 +1,7 @@
 #### Version: 1.1.3-SNAPSHOT (LibGDX 1.9.3)
 - **API Changed**: `FileChooser.setSaveLastDirectory` is now static and must be called before creating chooser to properly restore saved directory.
  - Last directory will not be saved when user has canceled selection dialog
+- **Changed**: `VisWindow#fadeOut` will reset alpha back to 1f after completing action.
 
 #### Version: 1.1.2 (LibGDX 1.9.3)
 - **Added**: `CursorManager`
