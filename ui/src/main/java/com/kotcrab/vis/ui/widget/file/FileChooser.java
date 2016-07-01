@@ -71,9 +71,10 @@ import static com.kotcrab.vis.ui.widget.file.internal.FileChooserText.*;
  */
 public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private static final long FILE_WATCHER_CHECK_DELAY_MILLIS = 2000;
+	private static final ShortcutsComparator SHORTCUTS_COMPARATOR = new ShortcutsComparator();
 	private static final Vector2 tmpVector = new Vector2();
 
-	private static final ShortcutsComparator SHORTCUTS_COMPARATOR = new ShortcutsComparator();
+	private static boolean saveLastDirectory = false;
 
 	private Mode mode;
 	private ViewMode viewMode = ViewMode.DETAILS;
@@ -86,7 +87,6 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 	private FileTypeFilter fileTypeFilter = null;
 	private FileTypeFilter.Rule activeFileTypeRule = null;
 	private FileIconProvider iconProvider;
-	private boolean saveLastDirectory = false;
 
 	private DriveCheckerService driveCheckerService = DriveCheckerService.getInstance();
 	private Array<DriveCheckerListener> driveCheckerListeners = new Array<DriveCheckerListener>();
@@ -1412,17 +1412,17 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		rebuildViewModePopupMenu();
 	}
 
-	public boolean isSaveLastDirectory () {
+	public static boolean isSaveLastDirectory () {
 		return saveLastDirectory;
 	}
 
 	/**
 	 * @param saveLastDirectory if true then chooser will store last directory user browsed in preferences file. Note that
 	 * this only applies to using chooser between separate app launches. When single instance of chooser is reused in single
-	 * app session then last directory is always remembered. Default is false.
+	 * app session then last directory is always remembered. Default is false. This must be called before creating FileChooser.
 	 */
-	public void setSaveLastDirectory (boolean saveLastDirectory) {
-		this.saveLastDirectory = saveLastDirectory;
+	public static void setSaveLastDirectory (boolean saveLastDirectory) {
+		FileChooser.saveLastDirectory = saveLastDirectory;
 	}
 
 	public enum Mode {
