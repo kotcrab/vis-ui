@@ -672,14 +672,6 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 		super.close();
 	}
 
-	@Override
-	public void fadeOut () {
-		super.fadeOut();
-		if (saveLastDirectory) {
-			preferencesIO.saveLastDirectory(currentDirectory);
-		}
-	}
-
 	private void notifyListenerAndCloseDialog (Array<FileHandle> files) {
 		if (files == null) return;
 
@@ -694,6 +686,10 @@ public class FileChooser extends VisWindow implements FileHistoryCallback {
 
 		if (files.size != 0) {
 			listener.selected(files);
+
+			if (saveLastDirectory) {
+				preferencesIO.saveLastDirectory(currentDirectory);
+			}
 		}
 
 		fadeOut();
