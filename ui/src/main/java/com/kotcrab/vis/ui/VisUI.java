@@ -34,7 +34,7 @@ public class VisUI {
 	public static final String VERSION = "1.1.3";
 
 	private static final String TARGET_GDX_VERSION = "1.9.3";
-	private static boolean setSkipGdxVersionCheck = false;
+	private static boolean skipGdxVersionCheck = false;
 
 	private static int defaultTitleAlign = Align.left;
 
@@ -98,7 +98,7 @@ public class VisUI {
 
 	private static void checkBeforeLoad () {
 		if (skin != null) throw new GdxRuntimeException("VisUI cannot be loaded twice");
-		if (setSkipGdxVersionCheck == false && Version.VERSION.equals(TARGET_GDX_VERSION) == false) {
+		if (skipGdxVersionCheck == false && Version.VERSION.equals(TARGET_GDX_VERSION) == false) {
 			Gdx.app.log("VisUI", "Warning, using invalid libGDX version for VisUI " + VERSION + ".\n" +
 					"You are using libGDX " + Version.VERSION + " but you need " + TARGET_GDX_VERSION + ". This may cause " +
 					"unexpected problems and runtime exceptions.");
@@ -149,6 +149,6 @@ public class VisUI {
 	 * @see <a href="https://github.com/kotcrab/vis-editor/wiki/VisUI#libgdx-compatibility">Version compatiblity table (online)</a>
 	 */
 	public static void setSkipGdxVersionCheck (boolean setSkipGdxVersionCheck) {
-		VisUI.setSkipGdxVersionCheck = setSkipGdxVersionCheck;
+		VisUI.skipGdxVersionCheck = setSkipGdxVersionCheck;
 	}
 }
