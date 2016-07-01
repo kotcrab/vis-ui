@@ -107,14 +107,12 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		config.setSystem(new ParticleReloaderManager(scene.pixelsPerUnit), VIS_RENDERER);
 		config.setSystem(new FontReloaderManager(scene.pixelsPerUnit), VIS_RENDERER);
 		config.setSystem(new ShaderReloaderManager(), VIS_RENDERER);
-		config.setSystem(new SpriterReloaderManager(), VIS_RENDERER);
 
 		config.setSystem(new EditorMusicInflater(), VIS_INFLATER);
 		config.setSystem(new EditorParticleInflater(scene.pixelsPerUnit), VIS_INFLATER);
 		config.setSystem(new EditorShaderInflater(), VIS_INFLATER);
 		config.setSystem(new EditorSoundInflater(), VIS_INFLATER);
 		config.setSystem(new EditorSpriteInflater(), VIS_INFLATER);
-		config.setSystem(new EditorSpriterInflater(), VIS_INFLATER);
 		config.setSystem(new EditorTextInflater(scene.pixelsPerUnit), VIS_INFLATER);
 
 		config.setSystem(new EntitiesCollector(), NORMAL);
@@ -129,7 +127,6 @@ public class SceneModuleContainer extends ModuleContainer<SceneModule> implement
 		//common render systems
 		config.setSystem(new SpriteRenderSystem(batchingSystem), VIS_RENDERER);
 		config.setSystem(new TextRenderSystem(batchingSystem, Assets.getDistanceFieldShader()), VIS_RENDERER);
-		config.setSystem(new SpriterRenderSystem(batchingSystem), VIS_RENDERER);
 		config.setSystem(new ParticleRenderSystem(batchingSystem, true), VIS_RENDERER);
 
 		//entities sprites render systems

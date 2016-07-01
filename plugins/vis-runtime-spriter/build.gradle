@@ -1,0 +1,32 @@
+apply plugin: "java"
+apply plugin: 'maven'
+apply from: '../../deploy.gradle'
+
+group = 'com.kotcrab.vis'
+sourceCompatibility = 1.6
+archivesBaseName = "vis-runtime-spriter"
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+task dist(type: Zip) {
+    from jar
+    into('lib') {
+        from configurations.runtime
+    }
+}
+
+eclipse.project {
+    name = appName + "-runtime-spriter"
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.project {
+                name 'vis-runtime-spriter'
+                artifactId 'vis-runtime-spriter'
+                packaging 'jar'
+                description 'Spriter plugin and support for VisRuntime'
+            }
+        }
+    }
+}

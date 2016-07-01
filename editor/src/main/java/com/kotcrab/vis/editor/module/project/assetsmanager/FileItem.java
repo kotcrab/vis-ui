@@ -179,11 +179,6 @@ public class FileItem extends Table {
 			return;
 		}
 
-		if (ProjectPathUtils.isImportedSpriterAnimationDir(assetsMetadata, file)) {
-			createDefaultView(AssetType.SPRITER_SCML, "Spriter Animation", true);
-			return;
-		}
-
 		if (ProjectPathUtils.isScene(file)) {
 			createDefaultView(AssetType.SCENE, "Scene", true);
 			return;
@@ -191,7 +186,7 @@ public class FileItem extends Table {
 
 		support = findSupportForDirectory(file, relativePath);
 		if (support != null) {
-			ContentItemProperties item = support.getContentItemProperties(relativePath, ext);
+			ContentItemProperties item = support.getContentItemProperties(file, relativePath, ext);
 			if (item != null) {
 				createDefaultView(item.type, item.title, item.hideExtension);
 				return;

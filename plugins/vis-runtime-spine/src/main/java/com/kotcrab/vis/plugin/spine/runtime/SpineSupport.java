@@ -37,7 +37,6 @@ import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.spine.SkeletonData;
-import com.esotericsoftware.spine.SkeletonRenderer;
 import com.kotcrab.vis.plugin.spine.runtime.SkeletonDataLoader.SkeletonDataLoaderParameter;
 import com.kotcrab.vis.runtime.RuntimeContext;
 import com.kotcrab.vis.runtime.assets.VisAssetDescriptor;
@@ -54,12 +53,6 @@ import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 @VisPlugin
 public class SpineSupport implements EntitySupport {
-	private SkeletonRenderer skeletonRenderer;
-
-	public SpineSupport () {
-		skeletonRenderer = new SkeletonRenderer();
-	}
-
 	@Override
 	public void setLoaders (AssetManager manager) {
 		manager.setLoader(SkeletonData.class, new SkeletonDataLoader());

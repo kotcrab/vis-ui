@@ -105,7 +105,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 	private ParticleReloaderManager particleReloaderManager;
 	private ShaderReloaderManager shaderReloaderManager;
 	private FontReloaderManager fontReloaderManager;
-	private SpriterReloaderManager spriterReloaderManager;
 
 	private ContentTable content;
 
@@ -196,7 +195,6 @@ public class SceneTab extends MainContentTab implements DragAndDropTarget, Close
 		reloaders.put(ResourceType.SHADERS, resourceType -> shaderReloaderManager.reloadShaders());
 		reloaders.put(ResourceType.BMP_FONTS, resourceType -> fontReloaderManager.reloadFonts(true, false));
 		reloaders.put(ResourceType.TTF_FONTS, resourceType -> fontReloaderManager.reloadFonts(false, true));
-		reloaders.put(ResourceType.SPRITER_DATA, resourceType -> spriterReloaderManager.reloadSpriterData());
 	}
 
 	@Override

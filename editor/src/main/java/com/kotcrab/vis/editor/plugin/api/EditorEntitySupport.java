@@ -52,7 +52,7 @@ public interface EditorEntitySupport {
 	boolean isSupportedDirectory (FileHandle file, String relativePath);
 
 	/** Returns {@link ContentItemProperties} for given file, that is displayed in {@link AssetsUIModule} */
-	ContentItemProperties getContentItemProperties (String relativePath, String extension);
+	ContentItemProperties getContentItemProperties (FileHandle file, String relativePath, String extension);
 
 	/** Called when EditorEntitySupport must create drop source for assets drag and drop */
 	Source createDropSource (VisDragAndDrop dragAndDrop, FileItem item);

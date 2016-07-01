@@ -21,8 +21,6 @@ import com.kotcrab.vis.editor.assets.transaction.AssetTransactionGenerator;
 import com.kotcrab.vis.editor.assets.transaction.generator.*;
 import com.kotcrab.vis.editor.extension.AssetType;
 import com.kotcrab.vis.editor.extension.DefaultExporter;
-import com.kotcrab.vis.editor.extension.SpriterAssetsFileSorter;
-import com.kotcrab.vis.editor.extension.SpriterUIContextGenerator;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.PolygonTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.RotateTool;
 import com.kotcrab.vis.editor.module.scene.entitymanipulator.tool.ScaleTool;
@@ -34,7 +32,6 @@ import com.kotcrab.vis.editor.plugin.api.impl.ReflectionToolProvider;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.autotable.AutoComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.PhysicsPropertiesComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.RenderableComponentTable;
-import com.kotcrab.vis.editor.ui.scene.entityproperties.components.SpriterPropertiesComponentTable;
 import com.kotcrab.vis.editor.ui.scene.entityproperties.components.TextPropertiesComponentTable;
 import com.kotcrab.vis.runtime.component.*;
 import com.kotcrab.vis.runtime.plugin.VisPlugin;
@@ -54,8 +51,6 @@ public class DefaultExtensionRegistrarModule extends EditorModule {
 		extensionStorage.addExporterPlugin(new DefaultExporter());
 
 		extensionStorage.addAssetTypeStorage(new AssetType());
-		extensionStorage.addAssetsFileSorter(new SpriterAssetsFileSorter());
-		extensionStorage.addAssetsContextGeneratorProvider(SpriterUIContextGenerator::new);
 
 		Consumer<AssetDescriptorProvider<?>> descProvReg = provider -> extensionStorage.addAssetDescriptorProvider(provider);
 		descProvReg.accept(new BmpFontDescriptorProvider());
@@ -66,7 +61,6 @@ public class DefaultExtensionRegistrarModule extends EditorModule {
 		descProvReg.accept(new AtlasRegionDescriptorProvider());
 		descProvReg.accept(new TtfFontDescriptorProvider());
 		descProvReg.accept(new ShaderDescriptorProvider());
-		descProvReg.accept(new SpriterDescriptorProvider());
 
 		Consumer<AssetTransactionGenerator> genReg = generator -> extensionStorage.addAssetTransactionGenerator(generator);
 		genReg.accept(new AtlasRegionAssetTransactionGenerator());
@@ -89,7 +83,6 @@ public class DefaultExtensionRegistrarModule extends EditorModule {
 		compTableReg.accept(sceneMC -> new AutoComponentTable<>(sceneMC, VisPolygon.class, true));
 		compTableReg.accept(sceneMC -> new PhysicsPropertiesComponentTable(sceneMC));
 		compTableReg.accept(sceneMC -> new AutoComponentTable<>(sceneMC, Variables.class, true));
-		compTableReg.accept(sceneMC -> new SpriterPropertiesComponentTable(sceneMC));
 		compTableReg.accept(sceneMC -> new AutoComponentTable<>(sceneMC, VisMusic.class, false));
 		compTableReg.accept(sceneMC -> new AutoComponentTable<>(sceneMC, VisSound.class, false));
 		compTableReg.accept(sceneMC -> new AutoComponentTable<>(sceneMC, VisParticle.class, false));

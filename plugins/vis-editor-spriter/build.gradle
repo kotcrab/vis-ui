@@ -1,0 +1,29 @@
+apply plugin: "java"
+apply plugin: 'maven'
+
+group = 'com.kotcrab.vis'
+
+ext {
+    pluginId = name
+    pluginName = 'VisEditor Spriter Integration'
+    pluginDescription = 'Spriter integration for VisEditor'
+    pluginProvider = 'Kotcrab'
+    pluginVersion = version
+    pluginCompatibility = 4
+}
+
+sourceCompatibility = 1.8
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+jar {
+    manifest {
+        attributes(
+                "Plugin-Id": pluginId,
+                "Plugin-Name": pluginName,
+                "Plugin-Description": pluginDescription,
+                "Plugin-Provider": pluginProvider,
+                "Plugin-Version": pluginVersion,
+                "Plugin-Compatibility": pluginCompatibility,
+        )
+    }
+}

@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public class ResourceReloadedEvent {
 	public enum ResourceType {
-		TEXTURES, TEXTURE_ATLASES, PARTICLES, BMP_FONTS, TTF_FONTS, SHADERS, SPRITER_DATA;
+		TEXTURES, TEXTURE_ATLASES, PARTICLES, BMP_FONTS, TTF_FONTS, SHADERS;
 	}
 
 	public final Set<ResourceType> resourceTypes;

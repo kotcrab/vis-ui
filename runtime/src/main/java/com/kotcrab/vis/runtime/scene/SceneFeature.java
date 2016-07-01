@@ -116,14 +116,6 @@ public enum SceneFeature {
 		}
 	}),
 
-	/** Inflates spriter proto components into actual spriter components. Can be disabled. */
-	INFLATER_SPRITER(new SystemProvider() {
-		@Override
-		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
-			return new SpriterInflater(context.assetsManager);
-		}
-	}),
-
 	/** Essential physics system managing box2d world. Cannot be disabled if physics is used. */
 	PHYSICS_SYSTEM(new SystemProvider() {
 		@Override
@@ -182,14 +174,6 @@ public enum SceneFeature {
 		@Override
 		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
 			return new ParticleRenderSystem(config.getSystem(RenderBatchingSystem.class), false);
-		}
-	}),
-
-	/** Renders spriters skeleton animations. Can be disabled. */
-	SPRITER_RENDER_SYSTEM(new SystemProvider() {
-		@Override
-		public BaseSystem create (EntityEngineConfiguration config, RuntimeContext context, SceneData data) {
-			return new SpriterRenderSystem(config.getSystem(RenderBatchingSystem.class));
 		}
 	}),
 

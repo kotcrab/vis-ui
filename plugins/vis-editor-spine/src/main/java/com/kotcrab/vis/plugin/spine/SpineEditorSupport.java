@@ -81,7 +81,7 @@ public class SpineEditorSupport implements EditorEntitySupport {
 	}
 
 	@Override
-	public ContentItemProperties getContentItemProperties (String relativePath, String extension) {
+	public ContentItemProperties getContentItemProperties (FileHandle file, String relativePath, String extension) {
 		if (extension.equals("json"))
 			return new ContentItemProperties(SpineAssetType.JSON_SKELETON, "Spine Json Skeleton", true);
 

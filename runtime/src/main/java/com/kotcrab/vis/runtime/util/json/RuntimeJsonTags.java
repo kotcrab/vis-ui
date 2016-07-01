@@ -40,7 +40,6 @@ public class RuntimeJsonTags {
 		registrar.register("PathAsset", PathAsset.class);
 		registrar.register("ShaderAsset", ShaderAsset.class);
 		registrar.register("SoundAsset", SoundAsset.class);
-		registrar.register("SpriterAsset", SpriterAsset.class);
 		registrar.register("TextureRegionAsset", TextureRegionAsset.class);
 		registrar.register("TtfFontAsset", TtfFontAsset.class);
 
@@ -65,6 +64,11 @@ public class RuntimeJsonTags {
 		registrar.register("ProtoVisParticle", ProtoVisParticle.class);
 		registrar.register("ProtoVisText", ProtoVisText.class);
 		registrar.register("ProtoShader", ProtoShader.class);
-		registrar.register("ProtoVisSpriter", ProtoVisSpriter.class);
+
+		try { //for compatibility after moving Spriter to plugin
+			registrar.register("SpriterAsset", Thread.currentThread().getContextClassLoader().loadClass("com.kotcrab.vis.plugin.spriter.runtime.assets.SpriterAsset"));
+			registrar.register("ProtoVisSpriter", Thread.currentThread().getContextClassLoader().loadClass("com.kotcrab.vis.plugin.spriter.runtime.component.ProtoVisSpriter"));
+		} catch (ClassNotFoundException ignored) {
+		}
 	}
 }

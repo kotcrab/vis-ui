@@ -36,8 +36,11 @@ import com.badlogic.gdx.utils.*;
 import com.google.common.eventbus.Subscribe;
 import com.kotcrab.vis.editor.App;
 import com.kotcrab.vis.editor.Log;
-import com.kotcrab.vis.editor.entity.*;
+import com.kotcrab.vis.editor.entity.EntityScheme;
 import com.kotcrab.vis.editor.entity.EntityScheme.UUIDPolicy;
+import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
+import com.kotcrab.vis.editor.entity.PixelsPerUnit;
+import com.kotcrab.vis.editor.entity.VisUUID;
 import com.kotcrab.vis.editor.event.ToolSwitchedEvent;
 import com.kotcrab.vis.editor.event.UndoableModuleEvent;
 import com.kotcrab.vis.editor.module.EventBusSubscriber;
@@ -110,7 +113,6 @@ public class EntityManipulatorModule extends SceneModule {
 	private TextureCacheModule textureCache;
 	private ParticleCacheModule particleCache;
 	private FontCacheModule fontCache;
-	private SpriterCacheModule spriterCache;
 	private RendererModule rendererModule;
 
 	private Stage stage;
@@ -435,18 +437,6 @@ public class EntityManipulatorModule extends SceneModule {
 
 			//TODO: [misc] workaround, before text is updated it is rendered at 0, 0 which is visible at one frome, just move it outside camera for now
 			entity.getComponent(Transform.class).setPosition(camera.getInputX() - 1000000, camera.getInputY() - 10000);
-		} else if (payload instanceof SpriterAsset) {
-			SpriterAsset asset = (SpriterAsset) payload;
-
-			float scale = 1f / scene.pixelsPerUnit;
-
-			entity = new EntityBuilder(entityEngine)
-					.with(spriterCache.createComponent(asset, scale), new SpriterProperties(scale), new Transform(),
-							new AssetReference(asset),
-							new Renderable(0), new Layer(scene.getActiveLayerId()),
-							new ExporterDropsComponent(SpriterProperties.class))
-					.build();
-
 		} else if (payload instanceof ParticleAsset) {
 			ParticleAsset asset = (ParticleAsset) payload;
 			float scale = 1f / scene.pixelsPerUnit;

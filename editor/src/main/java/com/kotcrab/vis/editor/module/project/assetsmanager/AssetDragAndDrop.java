@@ -33,8 +33,10 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.ObjectMap.Values;
 import com.kotcrab.vis.editor.extension.AssetType;
 import com.kotcrab.vis.editor.module.ModuleInjector;
-import com.kotcrab.vis.editor.module.project.*;
-import com.kotcrab.vis.editor.scheme.SpriterAssetData;
+import com.kotcrab.vis.editor.module.project.FileAccessModule;
+import com.kotcrab.vis.editor.module.project.FontCacheModule;
+import com.kotcrab.vis.editor.module.project.ParticleCacheModule;
+import com.kotcrab.vis.editor.module.project.TextureCacheModule;
 import com.kotcrab.vis.editor.ui.tabbedpane.DefaultDragAndDropTarget;
 import com.kotcrab.vis.editor.ui.tabbedpane.DragAndDropTarget;
 import com.kotcrab.vis.editor.util.FileUtils;
@@ -52,7 +54,6 @@ public class AssetDragAndDrop implements Disposable {
 	private TextureCacheModule textureCache;
 	private FontCacheModule fontCache;
 	private ParticleCacheModule particleCache;
-	private SpriterDataIOModule spriterDataIO;
 
 	private VisDragAndDrop dragAndDrop;
 	private DragAndDropTarget dropTarget = new DefaultDragAndDropTarget();
@@ -192,15 +193,9 @@ public class AssetDragAndDrop implements Disposable {
 			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Sound \n (drop on scene to add)").setPayload(new SoundAsset(relativePath)));
 		}
 
-		if (item.getType().equals(AssetType.SPRITER_SCML)) {
-			FileHandle dataFile = item.getFile().parent().child(".vis").child("data.json");
-			if (dataFile.exists() == false) return;
-			SpriterAssetData data = spriterDataIO.loadData(dataFile);
-			dragAndDrop.addSource(new VisDropSource(dragAndDrop, item).defaultView("New Spriter Animation \n (drop on scene to add)").setPayload(new SpriterAsset(relativePath, data.imageScale)));
-		}
-
 		if (item.getType().equals(AssetType.UNKNOWN) == false && item.getSupport() != null) {
-			dragAndDrop.addSource(item.getSupport().createDropSource(dragAndDrop, item));
+			Source source = item.getSupport().createDropSource(dragAndDrop, item);
+			if (source != null) dragAndDrop.addSource(source);
 		}
 	}
 

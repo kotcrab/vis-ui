@@ -35,10 +35,13 @@ uploadArchives {
     }
 }
 
-task copyExtJars(dependsOn: [':plugins:vis-editor-spine:jar', ':plugins:vis-editor-spine-notifier:jar']) {
+task copyExtJars(dependsOn: [':plugins:vis-editor-spine:jar', ':plugins:vis-editor-spine-notifier:jar', ':plugins:vis-editor-spriter:jar']) {
     def spine = project(':plugins:vis-editor-spine')
     def spineRuntime = project(':plugins:vis-runtime-spine')
     def spineNotifier = project(':plugins:vis-editor-spine-notifier')
+
+    def spriter = project(':plugins:vis-editor-spriter')
+    def spriterRuntime = project(':plugins:vis-runtime-spriter')
 
     doLast {
         copy {
@@ -54,6 +57,16 @@ task copyExtJars(dependsOn: [':plugins:vis-editor-spine:jar', ':plugins:vis-edit
         copy {
             from spineNotifier.jar
             into sourceSets.main.output.classesDir.path + '/plugins/spine-notifier'
+        }
+
+        copy {
+            from spriter.jar
+            into sourceSets.main.output.classesDir.path + '/plugins/spriter'
+        }
+
+        copy {
+            from spriterRuntime.jar
+            into sourceSets.main.output.classesDir.path + '/plugins/spriter/lib'
         }
     }
 }
@@ -82,4 +95,18 @@ task run(dependsOn: [copyExtJars], type: JavaExec) {
     if (project.hasProperty("runArgs")) {
         args = Eval.me(runArgs)
     }
+}
+
+
+task packEditorTextures << {
+    description 'Packages editor textures'
+
+    def basePath = rootProject.projectDir.absolutePath + "/editor/"
+
+    def iconsInput = new File(basePath + "assets-raw/icons").absolutePath
+    def iconsOutput = new File(basePath + "src/main/resources/gfx").absolutePath
+    com.badlogic.gdx.tools.texturepacker.TexturePacker.process(iconsInput, iconsOutput, "icons")
+    def miscInput = new File(basePath + "assets-raw/misc").absolutePath
+    def miscOutput = new File(basePath + "src/main/resources/gfx").absolutePath
+    com.badlogic.gdx.tools.texturepacker.TexturePacker.process(miscInput, miscOutput, "misc")
 }

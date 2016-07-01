@@ -69,14 +69,6 @@ public class ProjectPathUtils {
 		return file.extension().equals("png") && FileUtils.sibling(file, "fnt").exists();
 	}
 
-	public static boolean isNotImportedSpriterAnimationDir (AssetsMetadataModule metadata, FileHandle file) {
-		return metadata.isDirectoryMarkedAs(file, AssetType.DIRECTORY_SPRITER) && file.parent().child(".vis").exists() == false;
-	}
-
-	public static boolean isImportedSpriterAnimationDir (AssetsMetadataModule metadata, FileHandle file) {
-		return metadata.isDirectoryMarkedAs(file, AssetType.DIRECTORY_SPRITER) && file.parent().child(".vis").exists();
-	}
-
 	public static boolean isAudioFile (FileHandle file) {
 		String ext = file.extension();
 		return ext.equals("wav") || ext.equals("ogg") || ext.equals("mp3");

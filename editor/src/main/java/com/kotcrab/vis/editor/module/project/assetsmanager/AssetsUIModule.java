@@ -175,7 +175,10 @@ public class AssetsUIModule extends ProjectModule implements WatchListener, VisT
 			metadata = json.fromJson(AssetsUIModuleMetadata.class, metadataFile);
 		else
 			metadata = new AssetsUIModuleMetadata();
+	}
 
+	@Override
+	public void postInit () {
 		if (metadata.lastDirectory != null) {
 			FileHandle dir = Gdx.files.absolute(metadata.lastDirectory);
 			if (dir.exists() && dir.path().startsWith(project.getVisDirectory().path())) {

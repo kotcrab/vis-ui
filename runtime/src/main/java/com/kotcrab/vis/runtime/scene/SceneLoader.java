@@ -47,7 +47,6 @@ import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.util.EntityEngine;
 import com.kotcrab.vis.runtime.util.ImmutableArray;
-import com.kotcrab.vis.runtime.util.SpriterData;
 import com.kotcrab.vis.runtime.util.json.LibgdxJsonTagRegistrar;
 import com.kotcrab.vis.runtime.util.json.RuntimeJsonTags;
 
@@ -156,10 +155,6 @@ public class SceneLoader extends AsynchronousAssetLoader<Scene, SceneParameter> 
 					} else if (asset instanceof MusicAsset) {
 						MusicAsset musicAsset = (MusicAsset) asset;
 						dependencies.add(new AssetDescriptor<Music>(musicAsset.getPath(), Music.class));
-
-					} else if (asset instanceof SpriterAsset) {
-						SpriterAsset spriterAsset = (SpriterAsset) asset;
-						dependencies.add(new AssetDescriptor<SpriterData>(spriterAsset.getPath(), SpriterData.class));
 
 					}
 				}

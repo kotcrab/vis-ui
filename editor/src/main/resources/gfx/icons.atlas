@@ -13,28 +13,28 @@ align-bottom
   index: -1
 align-center-x
   rotate: false
-  xy: 94, 26
+  xy: 594, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 align-center-y
   rotate: false
-  xy: 94, 2
+  xy: 94, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 align-left
   rotate: false
-  xy: 640, 104
+  xy: 94, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 align-right
   rotate: false
-  xy: 572, 58
+  xy: 618, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -55,35 +55,35 @@ check
   index: -1
 cursor
   rotate: false
-  xy: 664, 104
+  xy: 642, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 exit
   rotate: false
-  xy: 596, 58
+  xy: 142, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 export
   rotate: false
-  xy: 142, 26
+  xy: 142, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 eye
   rotate: false
-  xy: 142, 2
+  xy: 666, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 eye-disabled
   rotate: false
-  xy: 688, 104
+  xy: 166, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -111,7 +111,7 @@ folder-music-medium
   index: -1
 folder-open
   rotate: false
-  xy: 166, 26
+  xy: 166, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -123,79 +123,72 @@ folder-sound-medium
   orig: 44, 44
   offset: 0, 0
   index: -1
-folder-spriter-medium
-  rotate: false
-  xy: 594, 82
-  size: 44, 44
-  orig: 44, 44
-  offset: 0, 0
-  index: -1
 globe
   rotate: false
-  xy: 166, 2
+  xy: 690, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 import
   rotate: false
-  xy: 712, 104
+  xy: 190, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 info
   rotate: false
-  xy: 190, 26
+  xy: 190, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 layer-add
   rotate: false
-  xy: 190, 2
+  xy: 714, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 layer-down
   rotate: false
-  xy: 736, 104
+  xy: 214, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 layer-remove
   rotate: false
-  xy: 214, 26
+  xy: 214, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 layer-up
   rotate: false
-  xy: 214, 2
+  xy: 738, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 load
   rotate: false
-  xy: 760, 104
+  xy: 238, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 locked
   rotate: false
-  xy: 238, 26
+  xy: 238, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 more
   rotate: false
-  xy: 640, 86
+  xy: 572, 64
   size: 16, 16
   orig: 16, 16
   offset: 0, 0
@@ -209,7 +202,7 @@ music-big
   index: -1
 new
   rotate: false
-  xy: 238, 2
+  xy: 762, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -223,7 +216,7 @@ particle-big
   index: -1
 plus
   rotate: false
-  xy: 784, 104
+  xy: 262, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -237,14 +230,14 @@ point-big
   index: -1
 polygon
   rotate: false
-  xy: 262, 26
+  xy: 262, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 progress
   rotate: false
-  xy: 262, 2
+  xy: 786, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -258,7 +251,7 @@ question-big
   index: -1
 redo
   rotate: false
-  xy: 808, 104
+  xy: 286, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -272,28 +265,28 @@ refresh-big
   index: -1
 save
   rotate: false
-  xy: 286, 26
+  xy: 286, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 search
   rotate: false
-  xy: 286, 2
+  xy: 810, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 settings
   rotate: false
-  xy: 832, 104
+  xy: 310, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 settings-view
   rotate: false
-  xy: 310, 26
+  xy: 310, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
@@ -307,42 +300,42 @@ sound-big
   index: -1
 tool-move
   rotate: false
-  xy: 310, 2
+  xy: 834, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 tool-rotate
   rotate: false
-  xy: 856, 104
+  xy: 334, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 tool-scale
   rotate: false
-  xy: 334, 26
+  xy: 334, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 undo
   rotate: false
-  xy: 334, 2
+  xy: 858, 104
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 unlocked
   rotate: false
-  xy: 880, 104
+  xy: 358, 26
   size: 22, 22
   orig: 22, 22
   offset: 0, 0
   index: -1
 warning
   rotate: false
-  xy: 358, 26
+  xy: 358, 2
   size: 22, 22
   orig: 22, 22
   offset: 0, 0

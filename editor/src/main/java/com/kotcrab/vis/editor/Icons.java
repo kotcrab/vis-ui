@@ -70,7 +70,6 @@ public enum Icons {
 	FOLDER_MEDIUM("folder-medium"),
 	FOLDER_SOUND_MEDIUM("folder-sound-medium"),
 	FOLDER_MUSIC_MEDIUM("folder-music-medium"),
-	FOLDER_SPRITER_MEDIUM("folder-spriter-medium"),
 
 	QUESTION_BIG("question-big"),
 	SOUND_BIG("sound-big"),

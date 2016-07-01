@@ -111,7 +111,6 @@ public class EntityProxyCache extends Manager {
 		if (entity.getComponent(VisSound.class) != null) return new AudioProxy(entity, false, pixelsPerUnit);
 		if (entity.getComponent(VisMusic.class) != null) return new AudioProxy(entity, true, pixelsPerUnit);
 		if (entity.getComponent(VisText.class) != null) return new TextProxy(entity);
-		if (entity.getComponent(VisSpriter.class) != null) return new SpriterProxy(entity);
 		if (entity.getComponent(Point.class) != null) return new PointProxy(entity, pixelsPerUnit);
 		if (entity.getComponent(VisSprite.class) != null) return new SpriteProxy(entity);
 

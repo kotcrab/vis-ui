@@ -46,7 +46,6 @@ public class AssetType implements AssetTypeStorage {
 	public static final String PARTICLE_EFFECT = FILE_TYPE + "ParticleEffect";
 	public static final String FRAGMENT_SHADER = FILE_TYPE + "FragmentShader";
 	public static final String VERTEX_SHADER = FILE_TYPE + "VertexShader";
-	public static final String SPRITER_SCML = FILE_TYPE + "SpriterScml";
 	public static final String SCENE = FILE_TYPE + "Scene";
 
 	public static final AssetDirectoryDescriptor DIRECTORY_MUSIC
@@ -55,10 +54,5 @@ public class AssetType implements AssetTypeStorage {
 
 	public static final AssetDirectoryDescriptor DIRECTORY_SOUND
 			= new AssetDirectoryDescriptorBuilder(DIRECTORY_TYPE + "Sound", "Sound Files", Icons.FOLDER_SOUND_MEDIUM.drawable())
-			.build();
-
-	public static final AssetDirectoryDescriptor DIRECTORY_SPRITER
-			= new AssetDirectoryDescriptorBuilder(DIRECTORY_TYPE + "Spriter", "Spriter Animation", Icons.FOLDER_SPRITER_MEDIUM.drawable())
-			.excludeFromTextureCache()
 			.build();
 }

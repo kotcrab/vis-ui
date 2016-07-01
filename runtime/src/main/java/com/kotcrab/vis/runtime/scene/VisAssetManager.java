@@ -26,8 +26,6 @@ import com.kotcrab.vis.runtime.font.FreeTypeFontProvider;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
 import com.kotcrab.vis.runtime.scene.SceneLoader.SceneParameter;
 import com.kotcrab.vis.runtime.util.ShaderLoader;
-import com.kotcrab.vis.runtime.util.SpriterData;
-import com.kotcrab.vis.runtime.util.SpriterDataLoader;
 
 /**
  * Simplified {@link AssetManager} for VisRuntime. Automatically sets AssetManger required loaders, and allows to
@@ -48,7 +46,6 @@ public class VisAssetManager extends AssetManager {
 		sceneLoader.setBatch(batch);
 		setLoader(Scene.class, sceneLoader);
 		setLoader(ShaderProgram.class, new ShaderLoader());
-		setLoader(SpriterData.class, new SpriterDataLoader());
 	}
 
 	public SceneLoader getSceneLoader () {

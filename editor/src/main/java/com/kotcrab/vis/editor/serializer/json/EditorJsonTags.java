@@ -16,7 +16,10 @@
 
 package com.kotcrab.vis.editor.serializer.json;
 
-import com.kotcrab.vis.editor.entity.*;
+import com.kotcrab.vis.editor.entity.EntityScheme;
+import com.kotcrab.vis.editor.entity.ExporterDropsComponent;
+import com.kotcrab.vis.editor.entity.PixelsPerUnit;
+import com.kotcrab.vis.editor.entity.VisUUID;
 import com.kotcrab.vis.editor.scene.EditorLayer;
 import com.kotcrab.vis.runtime.util.json.JsonTagRegistrar;
 import com.kotcrab.vis.runtime.util.json.RuntimeJsonTags;
@@ -32,6 +35,10 @@ public class EditorJsonTags {
 		registrar.register("VisUUID", VisUUID.class);
 		registrar.register("PixelsPerUnit", PixelsPerUnit.class);
 		registrar.register("ExporterDropsComponent", ExporterDropsComponent.class);
-		registrar.register("SpriterProperties", SpriterProperties.class);
+
+		try { //for compatibility after moving Spriter to plugin
+			registrar.register("SpriterProperties", Thread.currentThread().getContextClassLoader().loadClass("com.kotcrab.vis.plugin.spriter.component.SpriterProperties"));
+		} catch (ClassNotFoundException ignored) {
+		}
 	}
 }

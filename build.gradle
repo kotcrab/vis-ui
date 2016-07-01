@@ -142,6 +142,24 @@ project(':plugins:vis-editor-spine-notifier') {
     }
 }
 
+project(':plugins:vis-editor-spriter') {
+    apply plugin: 'java'
+
+    dependencies {
+        provided project(':editor')
+        provided project(':plugins:vis-runtime-spriter')
+    }
+}
+
+project(':plugins:vis-runtime-spriter') {
+    apply plugin: 'java'
+
+    dependencies {
+        provided project(':runtime')
+        provided "com.badlogicgames.gdx:gdx:$gdxVersion"
+    }
+}
+
 project(':usl') {
     apply plugin: 'java'
 
@@ -170,7 +188,11 @@ tasks.eclipse.doLast {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.13'
+    gradleVersion = '2.14'
+}
+
+task uploadRuntimeAndPluginArchives(dependsOn: [':runtime:uploadArchives', ':plugins:vis-runtime-spriter:uploadArchives']) {
+    description 'Upload runtime and plugin runtimes archives'
 }
 
 distributions {
@@ -188,14 +210,21 @@ distributions {
             into('plugins/spine') {
                 from plugin.jar
             }
-
             plugin = project(':plugins:vis-runtime-spine')
             into('plugins/spine/lib') {
                 from plugin.jar
             }
-
             plugin = project(':plugins:vis-editor-spine-notifier')
             into('plugins/spine-notifier') {
+                from plugin.jar
+            }
+
+            plugin = project(':plugins:vis-editor-spriter')
+            into('plugins/spriter') {
+                from plugin.jar
+            }
+            plugin = project(':plugins:vis-runtime-spriter')
+            into('plugins/spriter/lib') {
                 from plugin.jar
             }
 

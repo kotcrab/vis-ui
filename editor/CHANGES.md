@@ -1,5 +1,6 @@
 #### Version: 0.3.3
 - **Added**: Option in default exporter to change texture filter mode which will be used for packaged scene textures
+- **Changed**: Spriter support was moved to built-in plugin, if your project uses Spriter go to Plugins settings and enable Spriter integration
 
 #### Version: 0.3.2
 - **Improved**: Texture cache speed improved - new texture are available immediately after they are added to project assets. Fixes issues when large textures were loading infinitely.

@@ -2,6 +2,10 @@
 - GWT platform is no longer officially supported
 - **Added**: `EntityComposer` API - simplifies building VisRuntime entities
 - **Removed deprecated API**: `SceneConfig#addSystem(BaseSystem system)`, `SceneConfig#addSystem(BaseSystem system, int priority)` and `SimpleSystemProvider` (see 0.3.1 release notes for migration steps)
+- **Changed**: Spriter was removed from core and is now available as separate plugin
+ - No changes should be necessary except adding new Gradle dependency (`vis-runtime-spriter`) and changing imports declaration
+ - After adding runtime dependency register Spriter support with `visAssetManager.registerSupport(new SpriterSupport());`
+ - `SceneFeature#INFLATER_SPRITER` and `SPRITER_RENDER_SYSTEM` were removed, simply don't use register plugin if you don't want to use those
 
 #### Version: 0.3.2 (LibGDX 1.9.3, Artemis 1.3.1)
 - Updated to LibGDX 1.9.3
