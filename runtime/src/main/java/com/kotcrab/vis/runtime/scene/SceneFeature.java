@@ -26,7 +26,10 @@ import com.kotcrab.vis.runtime.system.physics.Box2dDebugRenderSystem;
 import com.kotcrab.vis.runtime.system.physics.PhysicsBodyManager;
 import com.kotcrab.vis.runtime.system.physics.PhysicsSpriteUpdateSystem;
 import com.kotcrab.vis.runtime.system.physics.PhysicsSystem;
-import com.kotcrab.vis.runtime.system.render.*;
+import com.kotcrab.vis.runtime.system.render.ParticleRenderSystem;
+import com.kotcrab.vis.runtime.system.render.RenderBatchingSystem;
+import com.kotcrab.vis.runtime.system.render.SpriteRenderSystem;
+import com.kotcrab.vis.runtime.system.render.TextRenderSystem;
 import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 
 /**

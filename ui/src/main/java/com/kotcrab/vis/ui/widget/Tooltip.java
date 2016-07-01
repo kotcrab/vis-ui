@@ -44,7 +44,7 @@ public class Tooltip extends VisTable {
 	public static float DEFAULT_FADE_TIME = 0.3f;
 	public static float DEFAULT_APPEAR_DELAY_TIME = 0.6f;
 	/**
-	 * Controlls whether to fade out tooltip when mouse was moved. Changing this will not affect already existing tooltips.
+	 * Controls whether to fade out tooltip when mouse was moved. Changing this will not affect already existing tooltips.
 	 * @see #setMouseMoveFadeOut(boolean)
 	 */
 	public static boolean MOUSE_MOVED_FADEOUT = false;

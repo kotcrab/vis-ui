@@ -42,7 +42,7 @@ public class Main {
 
 	public static void main (String[] args) throws Exception {
 		App.init();
-		if(OsUtils.isMac())System.setProperty("java.awt.headless", "true");
+		if (OsUtils.isMac()) System.setProperty("java.awt.headless", "true");
 
 		LaunchConfiguration launchConfig = new LaunchConfiguration();
 

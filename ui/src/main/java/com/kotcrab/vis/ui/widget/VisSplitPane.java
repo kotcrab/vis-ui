@@ -125,7 +125,7 @@ public class VisSplitPane extends WidgetGroup {
 						currentCursor = targetCursor;
 					}
 				} else {
-					if(currentCursor != null) {
+					if (currentCursor != null) {
 						CursorManager.restoreDefaultCursor();
 						currentCursor = null;
 					}

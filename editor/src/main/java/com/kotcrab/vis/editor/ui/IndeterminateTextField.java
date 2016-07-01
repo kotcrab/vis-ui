@@ -39,7 +39,7 @@ public class IndeterminateTextField {
 		textField.addListener(new ChangeListener() {
 			@Override
 			public void changed (ChangeEvent event, Actor actor) {
-				if(indeterminate) {
+				if (indeterminate) {
 					textField.getStyle().fontColor = Color.WHITE;
 					indeterminate = false;
 				}

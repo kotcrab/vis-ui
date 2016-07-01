@@ -94,20 +94,26 @@ public class DragPane extends Container<WidgetGroup> {
 		return getActor() instanceof GridGroup;
 	}
 
-	/** @return true if children are displayed with a {@link VerticalFlowGroup}.
-	 * @see #getVerticalFlowGroup() */
+	/**
+	 * @return true if children are displayed with a {@link VerticalFlowGroup}.
+	 * @see #getVerticalFlowGroup()
+	 */
 	public boolean isVerticalFlow () {
 		return getActor() instanceof VerticalFlowGroup;
 	}
 
-	/** @return true if children are displayed with a {@link HorizontalFlowGroup}.
-	 * @see #getHorizontalFlowGroup() */
+	/**
+	 * @return true if children are displayed with a {@link HorizontalFlowGroup}.
+	 * @see #getHorizontalFlowGroup()
+	 */
 	public boolean isHorizontalFlow () {
 		return getActor() instanceof HorizontalFlowGroup;
 	}
 
-	/** @return true if children are displayed with a {@link FloatingGroup}.
-	 * @see #getFloatingGroup() */
+	/**
+	 * @return true if children are displayed with a {@link FloatingGroup}.
+	 * @see #getFloatingGroup()
+	 */
 	public boolean isFloating () {
 		return getActor() instanceof FloatingGroup;
 	}
@@ -168,25 +174,31 @@ public class DragPane extends Container<WidgetGroup> {
 		return (GridGroup) getActor();
 	}
 
-	/** @return internally managed group of actors.
+	/**
+	 * @return internally managed group of actors.
 	 * @throws ClassCastException if drag pane is not horizontal flow.
-	 * @see #isHorizontalFlow() */
+	 * @see #isHorizontalFlow()
+	 */
 	public HorizontalFlowGroup getHorizontalFlowGroup () {
-		return (HorizontalFlowGroup)getActor();
+		return (HorizontalFlowGroup) getActor();
 	}
 
-	/** @return internally managed group of actors.
+	/**
+	 * @return internally managed group of actors.
 	 * @throws ClassCastException if drag pane is not vertical flow.
-	 * @see #isVerticalFlow() */
+	 * @see #isVerticalFlow()
+	 */
 	public VerticalFlowGroup getVerticalFlowGroup () {
-		return (VerticalFlowGroup)getActor();
+		return (VerticalFlowGroup) getActor();
 	}
 
-	/** @return internally managed group of actors.
+	/**
+	 * @return internally managed group of actors.
 	 * @throws ClassCastException if drag pane is not floating.
-	 * @see #isFloating() */
+	 * @see #isFloating()
+	 */
 	public FloatingGroup getFloatingGroup () {
-		return (FloatingGroup)getActor();
+		return (FloatingGroup) getActor();
 	}
 
 	/** @return dragging listener automatically added to all panes' children. */
@@ -522,10 +534,12 @@ public class DragPane extends Container<WidgetGroup> {
 			return APPROVE;
 		}
 
-		/** @param draggable attached to dragged actor.
+		/**
+		 * @param draggable attached to dragged actor.
 		 * @param actor is being dragged.
 		 * @param dragPane is under the actor. Stores a {@link FloatingGroup}.
-		 * @return true if actor was accepted by the group. */
+		 * @return true if actor was accepted by the group.
+		 */
 		protected boolean addToFloatingGroup (final Draggable draggable, final Actor actor, final DragPane dragPane) {
 			final FloatingGroup group = dragPane.getFloatingGroup();
 			dragPane.stageToLocalCoordinates(DRAG_POSITION);

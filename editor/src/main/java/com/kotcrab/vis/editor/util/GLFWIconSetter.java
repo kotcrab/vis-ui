@@ -95,12 +95,12 @@ public abstract class GLFWIconSetter {
 
 		private final X11 x11;
 
-		public X11GLFWIconSetter() {
+		public X11GLFWIconSetter () {
 			x11 = X11.INSTANCE;
 		}
 
 		@Override
-		public void setIcon(FileHandle iconCacheFolder, FileHandle icoFile, FileHandle pngFile) {
+		public void setIcon (FileHandle iconCacheFolder, FileHandle icoFile, FileHandle pngFile) {
 			Display display = null;
 			try {
 				display = x11.XOpenDisplay(null);
@@ -147,11 +147,10 @@ public abstract class GLFWIconSetter {
 			}
 		}
 
-		private Atom getAtom(Display display, String atom_name) {
+		private Atom getAtom (Display display, String atom_name) {
 			return x11.XInternAtom(display, atom_name, false);
 		}
 	}
-
 
 	/** Fallback implementation for unsupported platforms, does nothing. */
 	private static class DefaultGLFWIconSetter extends GLFWIconSetter {

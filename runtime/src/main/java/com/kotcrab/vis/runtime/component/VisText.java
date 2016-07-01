@@ -29,7 +29,10 @@ import com.kotcrab.vis.runtime.properties.BoundsOwner;
 import com.kotcrab.vis.runtime.properties.SizeOwner;
 import com.kotcrab.vis.runtime.properties.UsesProtoComponent;
 import com.kotcrab.vis.runtime.util.annotation.VisInternal;
-import com.kotcrab.vis.runtime.util.autotable.*;
+import com.kotcrab.vis.runtime.util.autotable.ATFieldId;
+import com.kotcrab.vis.runtime.util.autotable.ATProperty;
+import com.kotcrab.vis.runtime.util.autotable.ATSelectFile;
+import com.kotcrab.vis.runtime.util.autotable.ATTextProperty;
 
 /**
  * Text component storing all text properties.
