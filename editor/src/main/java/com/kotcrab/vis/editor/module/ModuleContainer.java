@@ -136,7 +136,6 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 		if (Module.class.isAssignableFrom(type)) {
 			field.setAccessible(true);
 			field.set(target, findInHierarchy(type.asSubclass(Module.class)));
-
 			return true;
 		}
 
@@ -184,12 +183,21 @@ public abstract class ModuleContainer<T extends Module> implements ModuleInjecto
 	}
 
 	public void dispose () {
+		if (initFinished == false) {
+			Log.warn("Attempt to dispose uninitialized module container " + getClass().getSimpleName());
+			return;
+		}
 		for (int i = 0; i < modules.size; i++) {
 			Module module = modules.get(i);
 			module.dispose();
 
 			if (module.getClass().isAnnotationPresent(EventBusSubscriber.class)) {
-				App.eventBus.unregister(module);
+				try {
+					App.eventBus.unregister(module);
+				} catch (IllegalArgumentException e) {
+					Log.error("Failed to unregister module " + module.getClass());
+					Log.exception(e);
+				}
 			}
 		}
 
