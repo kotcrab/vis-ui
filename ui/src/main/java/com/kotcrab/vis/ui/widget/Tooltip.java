@@ -68,6 +68,10 @@ public class Tooltip extends VisTable {
 		if (style == null) style = VisUI.getSkin().get("default", TooltipStyle.class);
 
 		init(style, builder.target, builder.content);
+		if (builder.width != -1) {
+			contentCell.width(builder.width);
+			pack();
+		}
 	}
 
 	public Tooltip () {
@@ -186,6 +190,24 @@ public class Tooltip extends VisTable {
 		pack();
 	}
 
+	public Cell<Actor> getContentCell () {
+		return contentCell;
+	}
+
+	/**
+	 * Changes text tooltip to specified text. If tooltip content is not instance of VisLabel then previous tooltip content
+	 * will be replaced by VisLabel instance.
+	 * @param text next tooltip text
+	 */
+	public void setText (String text) {
+		if (content instanceof VisLabel) {
+			((VisLabel) content).setText(text);
+		} else {
+			setContent(new VisLabel(text));
+		}
+		pack();
+	}
+
 	@Override
 	public void setPosition (float x, float y) {
 		super.setPosition((int) x, (int) y);
@@ -288,6 +310,7 @@ public class Tooltip extends VisTable {
 
 		private Actor target = null;
 		private TooltipStyle style = null;
+		private float width = -1;
 
 		public Builder (Actor content) {
 			this.content = content;
@@ -314,6 +337,16 @@ public class Tooltip extends VisTable {
 
 		public Builder style (TooltipStyle style) {
 			this.style = style;
+			return this;
+		}
+
+		/** Sets tooltip width. If tooltip content is text only then calling this will automatically enable label wrapping. */
+		public Builder width (float width) {
+			if (width < 0) throw new IllegalArgumentException("width must be > 0");
+			this.width = width;
+			if (content instanceof VisLabel) {
+				((VisLabel) content).setWrap(true);
+			}
 			return this;
 		}
 

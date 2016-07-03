@@ -1,4 +1,5 @@
 #### Version: 1.1.4-SNAPSHOT (LibGDX 1.9.3)
+- **Added**: `Tooltip.Builder#width()`, `Tooltip#setText(String)`, `Tooltip#getContentCell()`
 
 #### Version: 1.1.3 (LibGDX 1.9.3)
 - **API Changed**: `FileChooser.setSaveLastDirectory` is now static and must be called before creating chooser to properly restore saved directory.
@@ -7,7 +8,7 @@
 
 #### Version: 1.1.2 (LibGDX 1.9.3)
 - **Added**: `CursorManager`
-- **Added** `ScrollableTextArea` and `HighlightTextArea` with `Highlighter` API
+- **Added**: `ScrollableTextArea` and `HighlightTextArea` with `Highlighter` API
 - **Added**: `VisTextField#setCurosrAtTextEnd()`, `#getProgrammaticChangeEvents()`
 - **Added**: `FileChooser` file sorting options available under right click menu
 - **Added**: `FileChooser#setSorting(FileSorting)` and `#setSortingOrderAscending` along with appropriate getters
