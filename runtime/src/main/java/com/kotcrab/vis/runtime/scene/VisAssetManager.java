@@ -21,6 +21,7 @@ import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.kotcrab.vis.runtime.RuntimeConfiguration;
 import com.kotcrab.vis.runtime.font.FontProvider;
 import com.kotcrab.vis.runtime.font.FreeTypeFontProvider;
 import com.kotcrab.vis.runtime.plugin.EntitySupport;
@@ -42,7 +43,7 @@ public class VisAssetManager extends AssetManager {
 	public VisAssetManager (FileHandleResolver resolver, Batch batch) {
 		super(resolver);
 		if (batch == null) throw new IllegalStateException("Batch cannot be null");
-		sceneLoader = new SceneLoader();
+		sceneLoader = new SceneLoader(resolver, new RuntimeConfiguration());
 		sceneLoader.setBatch(batch);
 		setLoader(Scene.class, sceneLoader);
 		setLoader(ShaderProgram.class, new ShaderLoader());

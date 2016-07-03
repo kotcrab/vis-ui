@@ -43,7 +43,7 @@ import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 public class SpriterSupport implements EntitySupport {
 	@Override
 	public void setLoaders (AssetManager manager) {
-		manager.setLoader(SpriterData.class, new SpriterDataLoader());
+		manager.setLoader(SpriterData.class, new SpriterDataLoader(manager.getFileHandleResolver()));
 	}
 
 	@Override

@@ -55,7 +55,7 @@ import com.kotcrab.vis.runtime.util.EntityEngineConfiguration;
 public class SpineSupport implements EntitySupport {
 	@Override
 	public void setLoaders (AssetManager manager) {
-		manager.setLoader(SkeletonData.class, new SkeletonDataLoader());
+		manager.setLoader(SkeletonData.class, new SkeletonDataLoader(manager.getFileHandleResolver()));
 	}
 
 	@Override
