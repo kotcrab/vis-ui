@@ -1,4 +1,6 @@
 buildscript {
+    ext.kotlinVersion = '1.0.3'
+
     repositories {
         mavenCentral()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
@@ -10,6 +12,7 @@ buildscript {
         classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3"
         classpath "com.kotcrab.vis:vis-usl:0.2.1"
         classpath "com.badlogicgames.gdx:gdx-tools:1.9.2"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
     }
 }
 
@@ -46,7 +49,6 @@ allprojects {
         imgscalrVersion = '4.2'
         gsonVersion = '2.4'
         cloningVersion = '1.9.2'
-        joorVersion = '0.9.5'
     }
 
     repositories {
@@ -62,6 +64,8 @@ project(':editor') {
     dependencies {
         compile project(":runtime")
         compile project(":ui")
+        compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
+        compile "org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion"
         compile "com.badlogicgames.gdx:gdx:$editorGdxVersion"
         compile "com.badlogicgames.gdx:gdx-backend-lwjgl3:$editorGdxVersion"
         compile "com.badlogicgames.gdx:gdx-platform:$editorGdxVersion:natives-desktop"
@@ -84,8 +88,10 @@ project(':editor') {
         compile "org.imgscalr:imgscalr-lib:$imgscalrVersion"
         compile "com.google.code.gson:gson:$gsonVersion"
         compile "uk.com.robust-it:cloning:$cloningVersion"
-        compile "org.jooq:joor:$joorVersion"
         provided "com.apple:AppleJavaExtensions:$appleJavaExtensionsVersion", optional
+
+        testCompile project(":plugins:vis-runtime-spine")
+        testCompile project(":plugins:vis-runtime-spriter")
     }
 }
 
